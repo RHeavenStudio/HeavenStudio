@@ -9,7 +9,7 @@ namespace RhythmHeavenMania.Editor
     {
         public EventParameterManager eventParameterManager;
 
-        // this is fucking retarded
+        // this is fucking r#####ded
         private void LateUpdate()
         {
             eventParameterManager.canDisable = true;
