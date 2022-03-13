@@ -4,9 +4,9 @@ using UnityEngine;
 using System;
 using Starpelly;
 
-using RhythmHeavenMania.Util;
+using HeavenStudio.Util;
 
-namespace RhythmHeavenMania.Games.Scripts_DrummingPractice
+namespace HeavenStudio.Games.Scripts_DrummingPractice
 {
     public class Drummer : MonoBehaviour
     {

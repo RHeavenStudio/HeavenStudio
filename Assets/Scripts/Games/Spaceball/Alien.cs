@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace RhythmHeavenMania.Games.Scripts_Spaceball
+namespace HeavenStudio.Games.Scripts_Spaceball
 {
     public class Alien : MonoBehaviour
     {

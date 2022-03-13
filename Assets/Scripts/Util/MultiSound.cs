@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
-namespace RhythmHeavenMania.Util
+namespace HeavenStudio.Util
 {
     public class MultiSound : MonoBehaviour
     {

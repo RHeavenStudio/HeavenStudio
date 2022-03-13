@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.IO;
 using UnityEngine;
 
-namespace RhythmHeavenMania.Util
+namespace HeavenStudio.Util
 {
     public class Audio
     {

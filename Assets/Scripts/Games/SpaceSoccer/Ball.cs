@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using UnityEngine;
 
 using NaughtyBezierCurves;
-using RhythmHeavenMania.Util;
+using HeavenStudio.Util;
 
-namespace RhythmHeavenMania.Games.Scripts_SpaceSoccer
+namespace HeavenStudio.Games.Scripts_SpaceSoccer
 {
     public class Ball : MonoBehaviour
     {

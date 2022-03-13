@@ -6,7 +6,7 @@ using TMPro;
 
 using DG.Tweening;
 
-namespace RhythmHeavenMania.Editor.Track
+namespace HeavenStudio.Editor.Track
 {
     public class TempoTimelineObj : MonoBehaviour
     {

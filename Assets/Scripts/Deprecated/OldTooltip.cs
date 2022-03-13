@@ -5,9 +5,9 @@ using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
 using TMPro;
-using RhythmHeavenMania.Common;
+using HeavenStudio.Common;
 
-namespace RhythmHeavenMania.Deprecated
+namespace HeavenStudio.Deprecated
 {
     public class Tooltip : MonoBehaviour
     {

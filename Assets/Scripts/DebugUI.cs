@@ -4,7 +4,7 @@ using UnityEngine;
 
 using TMPro;
 
-namespace RhythmHeavenMania
+namespace HeavenStudio
 {
     public class DebugUI : MonoBehaviour
     {
@@ -31,7 +31,7 @@ namespace RhythmHeavenMania
 
         private void Start()
         {
-            CreateDebugUI(out Title); SetText(Title, "Rhythm Heaven Mania v1.0 BRAEDON DEBUG PLAYTEST");
+            CreateDebugUI(out Title); SetText(Title, "Heaven Studio DEMO");
             CreateDebugUI(out SongPosBeats);
             CreateDebugUI(out SongPos);
             CreateDebugUI(out SecPerBeat);

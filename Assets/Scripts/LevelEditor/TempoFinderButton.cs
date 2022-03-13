@@ -4,7 +4,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.EventSystems;
 
-namespace RhythmHeavenMania.Editor 
+namespace HeavenStudio.Editor 
 {
     public class TempoFinderButton : Button, IPointerDownHandler
     {

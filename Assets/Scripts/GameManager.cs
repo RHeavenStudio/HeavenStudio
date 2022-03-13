@@ -6,9 +6,9 @@ using UnityEngine;
 
 using Starpelly;
 using Newtonsoft.Json;
-using RhythmHeavenMania.Games;
+using HeavenStudio.Games;
 
-namespace RhythmHeavenMania
+namespace HeavenStudio
 {
     public class GameManager : MonoBehaviour
     {

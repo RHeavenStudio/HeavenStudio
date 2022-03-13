@@ -2,9 +2,9 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-using RhythmHeavenMania.Util;
+using HeavenStudio.Util;
 
-namespace RhythmHeavenMania
+namespace HeavenStudio
 {
     public class SoundEffects : MonoBehaviour
     {

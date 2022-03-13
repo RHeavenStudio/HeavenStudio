@@ -5,7 +5,7 @@ using UnityEngine.Audio;
 
 using Starpelly;
 
-namespace RhythmHeavenMania
+namespace HeavenStudio
 {
     // [RequireComponent(typeof(AudioSource))]
     public class Conductor : MonoBehaviour

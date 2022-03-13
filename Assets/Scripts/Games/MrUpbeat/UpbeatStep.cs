@@ -4,9 +4,9 @@ using UnityEngine;
 using System;
 using Starpelly;
 
-using RhythmHeavenMania.Util;
+using HeavenStudio.Util;
 
-namespace RhythmHeavenMania.Games.Scripts_MrUpbeat
+namespace HeavenStudio.Games.Scripts_MrUpbeat
 {
     public class UpbeatStep : PlayerActionObject
     {

@@ -4,9 +4,9 @@ using UnityEngine;
 
 using DG.Tweening;
 
-using RhythmHeavenMania.Util;
+using HeavenStudio.Util;
 
-namespace RhythmHeavenMania.Games.Scripts_RhythmRally
+namespace HeavenStudio.Games.Scripts_RhythmRally
 {
     public class Paddlers : PlayerActionObject
     {

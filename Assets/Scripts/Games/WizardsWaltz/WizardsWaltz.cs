@@ -5,9 +5,9 @@ using UnityEngine;
 using System;
 using Starpelly;
 
-using RhythmHeavenMania.Util;
+using HeavenStudio.Util;
 
-namespace RhythmHeavenMania.Games
+namespace HeavenStudio.Games
 {
     using Scripts_WizardsWaltz;
 

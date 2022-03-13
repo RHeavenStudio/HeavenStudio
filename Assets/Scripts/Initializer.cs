@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Audio;
 
-namespace RhythmHeavenMania
+namespace HeavenStudio
 {
     public class Initializer : MonoBehaviour
     {
@@ -56,7 +56,7 @@ namespace RhythmHeavenMania
 
             if (editor)
             {
-                this.GetComponent<RhythmHeavenMania.Editor.Editor>().Init();
+                this.GetComponent<HeavenStudio.Editor.Editor>().Init();
             }
             else
             {

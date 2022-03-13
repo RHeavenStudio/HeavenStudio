@@ -4,9 +4,9 @@ using System;
 using UnityEngine;
 using NaughtyBezierCurves;
 
-using RhythmHeavenMania.Util;
+using HeavenStudio.Util;
 
-namespace RhythmHeavenMania.Games.Scripts_BlueBear
+namespace HeavenStudio.Games.Scripts_BlueBear
 {
     public class Treat : PlayerActionObject
     {

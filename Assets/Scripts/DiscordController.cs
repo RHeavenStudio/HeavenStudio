@@ -6,7 +6,7 @@ using System.Text;
 using Discord;
 using System;
 
-namespace RhythmHeavenMania.DiscordRPC
+namespace HeavenStudio.DiscordRPC
 {
     public class DiscordController : MonoBehaviour
     {

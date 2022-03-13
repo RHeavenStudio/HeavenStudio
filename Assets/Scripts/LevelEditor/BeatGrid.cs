@@ -5,7 +5,7 @@ using UnityEngine.UI;
 
 using TMPro;
 
-namespace RhythmHeavenMania.Editor
+namespace HeavenStudio.Editor
 {
     public class BeatGrid : MonoBehaviour
     {

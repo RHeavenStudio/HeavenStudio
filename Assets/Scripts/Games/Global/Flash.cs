@@ -2,10 +2,10 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-using RhythmHeavenMania.Util;
+using HeavenStudio.Util;
 using System.Linq;
 
-namespace RhythmHeavenMania.Games.Global
+namespace HeavenStudio.Games.Global
 {
     public class Flash : MonoBehaviour
     {

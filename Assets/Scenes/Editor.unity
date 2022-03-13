@@ -1683,7 +1683,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 1423699437}
-        m_TargetAssemblyTypeName: RhythmHeavenMania.Editor.Editor, Assembly-CSharp
+        m_TargetAssemblyTypeName: HeavenStudio.Editor.Editor, Assembly-CSharp
         m_MethodName: Fullscreen
         m_Mode: 1
         m_Arguments:
@@ -2196,7 +2196,7 @@ MonoBehaviour:
       m_PersistentCalls:
         m_Calls:
         - m_Target: {fileID: 798021450}
-          m_TargetAssemblyTypeName: RhythmHeavenMania.Editor.TimelineEventObj, Assembly-CSharp
+          m_TargetAssemblyTypeName: HeavenStudio.Editor.TimelineEventObj, Assembly-CSharp
           m_MethodName: OnRightDown
           m_Mode: 1
           m_Arguments:
@@ -2212,7 +2212,7 @@ MonoBehaviour:
       m_PersistentCalls:
         m_Calls:
         - m_Target: {fileID: 798021450}
-          m_TargetAssemblyTypeName: RhythmHeavenMania.Editor.TimelineEventObj, Assembly-CSharp
+          m_TargetAssemblyTypeName: HeavenStudio.Editor.TimelineEventObj, Assembly-CSharp
           m_MethodName: DragRight
           m_Mode: 1
           m_Arguments:
@@ -2228,7 +2228,7 @@ MonoBehaviour:
       m_PersistentCalls:
         m_Calls:
         - m_Target: {fileID: 798021450}
-          m_TargetAssemblyTypeName: RhythmHeavenMania.Editor.TimelineEventObj, Assembly-CSharp
+          m_TargetAssemblyTypeName: HeavenStudio.Editor.TimelineEventObj, Assembly-CSharp
           m_MethodName: DragEnter
           m_Mode: 1
           m_Arguments:
@@ -2244,7 +2244,7 @@ MonoBehaviour:
       m_PersistentCalls:
         m_Calls:
         - m_Target: {fileID: 798021450}
-          m_TargetAssemblyTypeName: RhythmHeavenMania.Editor.TimelineEventObj, Assembly-CSharp
+          m_TargetAssemblyTypeName: HeavenStudio.Editor.TimelineEventObj, Assembly-CSharp
           m_MethodName: DragExit
           m_Mode: 1
           m_Arguments:
@@ -2691,7 +2691,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 689207021}
-        m_TargetAssemblyTypeName: RhythmHeavenMania.Editor.Track.TempoTimeline, Assembly-CSharp
+        m_TargetAssemblyTypeName: HeavenStudio.Editor.Track.TempoTimeline, Assembly-CSharp
         m_MethodName: UpdateOffsetFromText
         m_Mode: 1
         m_Arguments:
@@ -7706,7 +7706,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 1423699437}
-        m_TargetAssemblyTypeName: RhythmHeavenMania.Editor.Editor, Assembly-CSharp
+        m_TargetAssemblyTypeName: HeavenStudio.Editor.Editor, Assembly-CSharp
         m_MethodName: SaveRemix
         m_Mode: 6
         m_Arguments:
@@ -9133,7 +9133,7 @@ MonoBehaviour:
       m_PersistentCalls:
         m_Calls:
         - m_Target: {fileID: 781200689}
-          m_TargetAssemblyTypeName: RhythmHeavenMania.Editor.GridGameSelectorGame,
+          m_TargetAssemblyTypeName: HeavenStudio.Editor.GridGameSelectorGame,
             Assembly-CSharp
           m_MethodName: OnClick
           m_Mode: 1
@@ -9341,7 +9341,7 @@ MonoBehaviour:
       m_PersistentCalls:
         m_Calls:
         - m_Target: {fileID: 798021450}
-          m_TargetAssemblyTypeName: RhythmHeavenMania.Editor.TimelineEventObj, Assembly-CSharp
+          m_TargetAssemblyTypeName: HeavenStudio.Editor.TimelineEventObj, Assembly-CSharp
           m_MethodName: OnClick
           m_Mode: 1
           m_Arguments:
@@ -9357,7 +9357,7 @@ MonoBehaviour:
       m_PersistentCalls:
         m_Calls:
         - m_Target: {fileID: 798021450}
-          m_TargetAssemblyTypeName: RhythmHeavenMania.Editor.TimelineEventObj, Assembly-CSharp
+          m_TargetAssemblyTypeName: HeavenStudio.Editor.TimelineEventObj, Assembly-CSharp
           m_MethodName: OnDown
           m_Mode: 1
           m_Arguments:
@@ -11476,7 +11476,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 1423699437}
-        m_TargetAssemblyTypeName: RhythmHeavenMania.Editor.Editor, Assembly-CSharp
+        m_TargetAssemblyTypeName: HeavenStudio.Editor.Editor, Assembly-CSharp
         m_MethodName: SelectMusic
         m_Mode: 1
         m_Arguments:
@@ -11621,7 +11621,7 @@ MonoBehaviour:
       m_PersistentCalls:
         m_Calls:
         - m_Target: {fileID: 1154875947}
-          m_TargetAssemblyTypeName: RhythmHeavenMania.Editor.GridGameSelector, Assembly-CSharp
+          m_TargetAssemblyTypeName: HeavenStudio.Editor.GridGameSelector, Assembly-CSharp
           m_MethodName: Drag
           m_Mode: 1
           m_Arguments:
@@ -11637,7 +11637,7 @@ MonoBehaviour:
       m_PersistentCalls:
         m_Calls:
         - m_Target: {fileID: 1154875947}
-          m_TargetAssemblyTypeName: RhythmHeavenMania.Editor.GridGameSelector, Assembly-CSharp
+          m_TargetAssemblyTypeName: HeavenStudio.Editor.GridGameSelector, Assembly-CSharp
           m_MethodName: Drop
           m_Mode: 1
           m_Arguments:
@@ -13984,7 +13984,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 689207021}
-        m_TargetAssemblyTypeName: RhythmHeavenMania.Editor.Track.TempoTimeline, Assembly-CSharp
+        m_TargetAssemblyTypeName: HeavenStudio.Editor.Track.TempoTimeline, Assembly-CSharp
         m_MethodName: UpdateStartingBPMFromText
         m_Mode: 1
         m_Arguments:
@@ -15097,7 +15097,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 1265865542}
-        m_TargetAssemblyTypeName: RhythmHeavenMania.Editor.TempoFinder, Assembly-CSharp
+        m_TargetAssemblyTypeName: HeavenStudio.Editor.TempoFinder, Assembly-CSharp
         m_MethodName: SwitchTempoDialog
         m_Mode: 1
         m_Arguments:
@@ -16575,7 +16575,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 1423699437}
-        m_TargetAssemblyTypeName: RhythmHeavenMania.Editor.Editor, Assembly-CSharp
+        m_TargetAssemblyTypeName: HeavenStudio.Editor.Editor, Assembly-CSharp
         m_MethodName: OpenRemix
         m_Mode: 1
         m_Arguments:
@@ -16827,7 +16827,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 1423699437}
-        m_TargetAssemblyTypeName: RhythmHeavenMania.Editor.Editor, Assembly-CSharp
+        m_TargetAssemblyTypeName: HeavenStudio.Editor.Editor, Assembly-CSharp
         m_MethodName: LoadRemix
         m_Mode: 5
         m_Arguments:
@@ -17378,7 +17378,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 423099699}
-        m_TargetAssemblyTypeName: RhythmHeavenMania.Editor.CommandManager, Assembly-CSharp
+        m_TargetAssemblyTypeName: HeavenStudio.Editor.CommandManager, Assembly-CSharp
         m_MethodName: Undo
         m_Mode: 1
         m_Arguments:
@@ -19548,7 +19548,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 1861169747}
-        m_TargetAssemblyTypeName: RhythmHeavenMania.Editor.Track.Timeline, Assembly-CSharp
+        m_TargetAssemblyTypeName: HeavenStudio.Editor.Track.Timeline, Assembly-CSharp
         m_MethodName: SetPlaybackSpeed
         m_Mode: 0
         m_Arguments:
@@ -19577,7 +19577,7 @@ MonoBehaviour:
       m_PersistentCalls:
         m_Calls:
         - m_Target: {fileID: 1861169747}
-          m_TargetAssemblyTypeName: RhythmHeavenMania.Editor.Track.Timeline, Assembly-CSharp
+          m_TargetAssemblyTypeName: HeavenStudio.Editor.Track.Timeline, Assembly-CSharp
           m_MethodName: ResetPlaybackSpeed
           m_Mode: 1
           m_Arguments:
@@ -20199,7 +20199,7 @@ MonoBehaviour:
       m_PersistentCalls:
         m_Calls:
         - m_Target: {fileID: 798021450}
-          m_TargetAssemblyTypeName: RhythmHeavenMania.Editor.TimelineEventObj, Assembly-CSharp
+          m_TargetAssemblyTypeName: HeavenStudio.Editor.TimelineEventObj, Assembly-CSharp
           m_MethodName: OnLeftDown
           m_Mode: 1
           m_Arguments:
@@ -20215,7 +20215,7 @@ MonoBehaviour:
       m_PersistentCalls:
         m_Calls:
         - m_Target: {fileID: 798021450}
-          m_TargetAssemblyTypeName: RhythmHeavenMania.Editor.TimelineEventObj, Assembly-CSharp
+          m_TargetAssemblyTypeName: HeavenStudio.Editor.TimelineEventObj, Assembly-CSharp
           m_MethodName: DragLeft
           m_Mode: 1
           m_Arguments:
@@ -20231,7 +20231,7 @@ MonoBehaviour:
       m_PersistentCalls:
         m_Calls:
         - m_Target: {fileID: 798021450}
-          m_TargetAssemblyTypeName: RhythmHeavenMania.Editor.TimelineEventObj, Assembly-CSharp
+          m_TargetAssemblyTypeName: HeavenStudio.Editor.TimelineEventObj, Assembly-CSharp
           m_MethodName: DragEnter
           m_Mode: 1
           m_Arguments:
@@ -20247,7 +20247,7 @@ MonoBehaviour:
       m_PersistentCalls:
         m_Calls:
         - m_Target: {fileID: 798021450}
-          m_TargetAssemblyTypeName: RhythmHeavenMania.Editor.TimelineEventObj, Assembly-CSharp
+          m_TargetAssemblyTypeName: HeavenStudio.Editor.TimelineEventObj, Assembly-CSharp
           m_MethodName: DragExit
           m_Mode: 1
           m_Arguments:
@@ -20829,7 +20829,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 423099699}
-        m_TargetAssemblyTypeName: RhythmHeavenMania.Editor.CommandManager, Assembly-CSharp
+        m_TargetAssemblyTypeName: HeavenStudio.Editor.CommandManager, Assembly-CSharp
         m_MethodName: Redo
         m_Mode: 1
         m_Arguments:

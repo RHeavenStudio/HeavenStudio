@@ -1,6 +1,6 @@
 using UnityEngine;
 
-namespace RhythmHeavenMania.DiscordRPC
+namespace HeavenStudio.DiscordRPC
 {
     public class DiscordRPC : MonoBehaviour
     {

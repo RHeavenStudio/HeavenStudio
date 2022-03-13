@@ -4,7 +4,7 @@ using UnityEngine;
 
 using DG.Tweening;
 
-namespace RhythmHeavenMania
+namespace HeavenStudio
 {
     public class CircleCursor : MonoBehaviour
     {

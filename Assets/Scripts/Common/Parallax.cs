@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace RhythmHeavenMania.Common
+namespace HeavenStudio.Common
 {
     public class Parallax : MonoBehaviour
     {

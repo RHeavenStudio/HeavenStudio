@@ -7,7 +7,7 @@ using UnityEngine.EventSystems;
 using TMPro;
 using Starpelly;
 
-namespace RhythmHeavenMania.Editor.Track
+namespace HeavenStudio.Editor.Track
 {
     public class Timeline : MonoBehaviour
     {

@@ -13,13 +13,13 @@ using TMPro;
 using Starpelly;
 using SFB;
 
-using RhythmHeavenMania.Editor.Track;
-using RhythmHeavenMania.Util;
+using HeavenStudio.Editor.Track;
+using HeavenStudio.Util;
 
 using System.IO.Compression;
 using System.Text;
 
-namespace RhythmHeavenMania.Editor
+namespace HeavenStudio.Editor
 {
     public class Editor : MonoBehaviour
     {

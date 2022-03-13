@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
-using RhythmHeavenMania.Editor.Track;
+using HeavenStudio.Editor.Track;
 
-namespace RhythmHeavenMania.Editor.Commands
+namespace HeavenStudio.Editor.Commands
 {
     public class Selection : IAction
     {

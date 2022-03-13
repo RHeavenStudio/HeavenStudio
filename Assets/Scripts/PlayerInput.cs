@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace RhythmHeavenMania
+namespace HeavenStudio
 {
     public class PlayerInput
     {

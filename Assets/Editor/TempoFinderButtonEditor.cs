@@ -1,9 +1,9 @@
 using UnityEditor;
 using UnityEditor.UI;
 using UnityEngine;
-using RhythmHeavenMania;
+using HeavenStudio;
 
-namespace RhythmHeavenMania.Editor
+namespace HeavenStudio.Editor
 {
     [CustomEditor(typeof(TempoFinderButton))]
     public class TempoFinderButtonEditor : ButtonEditor

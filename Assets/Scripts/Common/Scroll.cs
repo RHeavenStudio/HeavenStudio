@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace RhythmHeavenMania.Common
+namespace HeavenStudio.Common
 {
     public class Scroll : MonoBehaviour
     {

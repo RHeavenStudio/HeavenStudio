@@ -5,7 +5,7 @@ using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 using DG.Tweening;
 
-namespace RhythmHeavenMania
+namespace HeavenStudio
 {
     public class GlobalGameManager : MonoBehaviour
     {

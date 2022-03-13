@@ -5,8 +5,13 @@ using NaughtyBezierCurves;
 using DG.Tweening;
 using System;
 
-using RhythmHeavenMania.Util;
-namespace RhythmHeavenMania.Games
+<<<<<<< Updated upstream
+using HeavenStudio.Util;
+namespace HeavenStudio.Games
+=======
+using HeavenStudio.Util;
+namespace HeavenStudio.Games.BuiltToScaleDS
+>>>>>>> Stashed changes
 {
     using Scripts_BuiltToScaleDS;
     

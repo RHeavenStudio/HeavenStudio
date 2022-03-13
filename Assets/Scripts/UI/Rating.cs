@@ -5,9 +5,9 @@ using UnityEngine.UI;
 using TMPro;
 using DG.Tweening;
 
-using RhythmHeavenMania.Util;
+using HeavenStudio.Util;
 
-namespace RhythmHeavenMania
+namespace HeavenStudio
 {
     public class Rating : MonoBehaviour
     {

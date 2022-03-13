@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
-using RhythmHeavenMania.Util;
+using HeavenStudio.Util;
 
-namespace RhythmHeavenMania.Games.Scripts_ForkLifter
+namespace HeavenStudio.Games.Scripts_ForkLifter
 {
     public class ForkLifterHand : MonoBehaviour
     {

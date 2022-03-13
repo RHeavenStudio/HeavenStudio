@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace RhythmHeavenMania.Editor.Commands
+namespace HeavenStudio.Editor.Commands
 {
     public interface IAction
     {

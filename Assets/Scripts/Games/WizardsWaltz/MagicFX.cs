@@ -1,10 +1,10 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using RhythmHeavenMania.Util;
+using HeavenStudio.Util;
 using System;
 
-namespace RhythmHeavenMania.Games.Scripts_WizardsWaltz
+namespace HeavenStudio.Games.Scripts_WizardsWaltz
 {
     public class MagicFX : MonoBehaviour
     {

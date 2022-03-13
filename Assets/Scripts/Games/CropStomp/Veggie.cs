@@ -4,9 +4,9 @@ using UnityEngine;
 using NaughtyBezierCurves;
 using DG.Tweening;
 
-using RhythmHeavenMania.Util;
+using HeavenStudio.Util;
 
-namespace RhythmHeavenMania.Games.Scripts_CropStomp
+namespace HeavenStudio.Games.Scripts_CropStomp
 {
     public class Veggie : PlayerActionObject
     {

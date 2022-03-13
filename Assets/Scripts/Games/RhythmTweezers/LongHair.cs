@@ -2,9 +2,9 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-using RhythmHeavenMania.Util;
+using HeavenStudio.Util;
 
-namespace RhythmHeavenMania.Games.Scripts_RhythmTweezers
+namespace HeavenStudio.Games.Scripts_RhythmTweezers
 {
     public class LongHair : PlayerActionObject
     {

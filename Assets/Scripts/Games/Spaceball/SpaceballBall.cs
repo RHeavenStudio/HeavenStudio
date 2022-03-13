@@ -2,11 +2,11 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-using RhythmHeavenMania.Util;
+using HeavenStudio.Util;
 
 using DG.Tweening;
 
-namespace RhythmHeavenMania.Games.Scripts_Spaceball
+namespace HeavenStudio.Games.Scripts_Spaceball
 {
     public class SpaceballBall : PlayerActionObject
     {

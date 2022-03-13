@@ -3,11 +3,11 @@ using System.Collections.Generic;
 using UnityEngine;
 using DG.Tweening;
 
-using RhythmHeavenMania.Util;
+using HeavenStudio.Util;
 
-using RhythmHeavenMania.Games;
+using HeavenStudio.Games;
 
-namespace RhythmHeavenMania
+namespace HeavenStudio
 {
     public class Minigames
     {

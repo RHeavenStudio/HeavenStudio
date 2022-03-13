@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
-using RhythmHeavenMania.Editor.Track;
+using HeavenStudio.Editor.Track;
 
-namespace RhythmHeavenMania.Editor
+namespace HeavenStudio.Editor
 {
     public class Selections : MonoBehaviour
     {

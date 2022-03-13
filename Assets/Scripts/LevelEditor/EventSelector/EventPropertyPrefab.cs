@@ -7,9 +7,9 @@ using System;
 using TMPro;
 using Starpelly;
 
-using RhythmHeavenMania.Util;
+using HeavenStudio.Util;
 
-namespace RhythmHeavenMania.Editor
+namespace HeavenStudio.Editor
 {
     public class EventPropertyPrefab : MonoBehaviour
     {

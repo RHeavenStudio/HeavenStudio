@@ -1,9 +1,9 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-using RhythmHeavenMania.Util;
+using HeavenStudio.Util;
 
-namespace RhythmHeavenMania.Games
+namespace HeavenStudio.Games
 {
     using Scripts_DJSchool;
 

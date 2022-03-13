@@ -1,4 +1,4 @@
-namespace RhythmHeavenMania
+namespace HeavenStudio
 {
     public class GameEvent
     {

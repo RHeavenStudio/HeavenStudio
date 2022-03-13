@@ -4,7 +4,7 @@ using UnityEngine;
 
 using DG.Tweening;
 
-namespace RhythmHeavenMania.Games.Scripts_KarateMan
+namespace HeavenStudio.Games.Scripts_KarateMan
 {
     // Physics in Rhythm Heaven Mania? nah im just fuckin lazy
     public class CookingPotDestroyEffect : MonoBehaviour

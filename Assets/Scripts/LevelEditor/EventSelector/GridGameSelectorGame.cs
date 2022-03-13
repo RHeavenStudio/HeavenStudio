@@ -1,7 +1,7 @@
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace RhythmHeavenMania.Editor
+namespace HeavenStudio.Editor
 {
     public class GridGameSelectorGame : MonoBehaviour
     {

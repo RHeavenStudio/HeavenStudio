@@ -5,9 +5,9 @@ using UnityEngine.UI;
 
 using Starpelly;
 
-using RhythmHeavenMania.Editor.Track;
+using HeavenStudio.Editor.Track;
 
-namespace RhythmHeavenMania.Editor
+namespace HeavenStudio.Editor
 {
     public class BoxSelection : MonoBehaviour
     {

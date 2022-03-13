@@ -3,10 +3,10 @@ using System.Collections.Generic;
 using UnityEngine;
 
 using DG.Tweening;
-using RhythmHeavenMania.Util;
+using HeavenStudio.Util;
 using Starpelly;
 
-namespace RhythmHeavenMania.Games.Scripts_DJSchool
+namespace HeavenStudio.Games.Scripts_DJSchool
 {
     public class Student : PlayerActionObject
     {

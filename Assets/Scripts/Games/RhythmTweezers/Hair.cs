@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using System;
 
-namespace RhythmHeavenMania.Games.Scripts_RhythmTweezers
+namespace HeavenStudio.Games.Scripts_RhythmTweezers
 {
     public class Hair : PlayerActionObject
     {

@@ -1,11 +1,18 @@
 using DG.Tweening;
+<<<<<<< Updated upstream
 using NaughtyBezierCurves;
-using RhythmHeavenMania.Util;
+using HeavenStudio.Util;
 using System;
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace RhythmHeavenMania.Games
+namespace HeavenStudio.Games
+=======
+
+using HeavenStudio.Util;
+
+namespace HeavenStudio.Games.CropStomp
+>>>>>>> Stashed changes
 {
     using Scripts_CropStomp;
 

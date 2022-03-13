@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using UnityEngine;
 using System;
 
-namespace RhythmHeavenMania.Games.Scripts_BuiltToScaleDS
+namespace HeavenStudio.Games.Scripts_BuiltToScaleDS
 {
-    using RhythmHeavenMania.Util;
+    using HeavenStudio.Util;
     public class Blocks : PlayerActionObject
     {
         public float createBeat;

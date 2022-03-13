@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace RhythmHeavenMania.Games
+namespace HeavenStudio.Games
 {
     public class Minigame : MonoBehaviour
     {

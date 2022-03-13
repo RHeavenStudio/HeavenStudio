@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace RhythmHeavenMania.Util
+namespace HeavenStudio.Util
 {
     public class Sound : MonoBehaviour
     {

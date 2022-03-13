@@ -3,7 +3,7 @@ using UnityEngine;
 using TMPro;
 using System.Linq;
 
-namespace RhythmHeavenMania.Editor 
+namespace HeavenStudio.Editor 
 {
     public class BPMText : MonoBehaviour
     {

@@ -2,9 +2,9 @@ using UnityEngine;
 
 // this is a script for testing
 
-using RhythmHeavenMania.Editor;
+using HeavenStudio.Editor;
 
-namespace RhythmHeavenMania.Tests
+namespace HeavenStudio.Tests
 {
     public class WTF : MonoBehaviour
     {

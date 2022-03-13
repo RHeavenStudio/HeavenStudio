@@ -4,9 +4,9 @@ using UnityEngine;
 
 using Newtonsoft.Json;
 
-using RhythmHeavenMania.Util;
+using HeavenStudio.Util;
 
-namespace RhythmHeavenMania
+namespace HeavenStudio
 {
     [Serializable]
     public class Beatmap

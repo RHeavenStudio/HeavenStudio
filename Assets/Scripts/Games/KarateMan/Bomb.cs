@@ -2,9 +2,9 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-using RhythmHeavenMania.Util;
+using HeavenStudio.Util;
 
-namespace RhythmHeavenMania.Games.Scripts_KarateMan
+namespace HeavenStudio.Games.Scripts_KarateMan
 {
     public class Bomb : PlayerActionObject
     {

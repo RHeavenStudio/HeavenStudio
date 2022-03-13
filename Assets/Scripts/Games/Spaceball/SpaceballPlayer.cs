@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using UnityEngine;
 
 using DG.Tweening;
-using RhythmHeavenMania.Util;
+using HeavenStudio.Util;
 
-namespace RhythmHeavenMania.Games.Scripts_Spaceball
+namespace HeavenStudio.Games.Scripts_Spaceball
 {
     public class SpaceballPlayer : MonoBehaviour
     {

@@ -6,7 +6,7 @@ using UnityEngine.UI;
 using Starpelly;
 using DG.Tweening;
 
-namespace RhythmHeavenMania.Editor.Track
+namespace HeavenStudio.Editor.Track
 {
     public class TimelineEventObj : MonoBehaviour
     {

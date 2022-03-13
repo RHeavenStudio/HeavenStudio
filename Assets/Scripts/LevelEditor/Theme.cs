@@ -1,7 +1,7 @@
 using System;
 using UnityEngine;
 
-namespace RhythmHeavenMania.Editor
+namespace HeavenStudio.Editor
 {
     [Serializable]
     public class Theme

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using System;
 
-namespace RhythmHeavenMania.Games.Scripts_WizardsWaltz
+namespace HeavenStudio.Games.Scripts_WizardsWaltz
 {
     public class Plant : PlayerActionObject
     {

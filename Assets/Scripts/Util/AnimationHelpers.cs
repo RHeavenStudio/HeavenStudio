@@ -1,6 +1,6 @@
 using UnityEngine;
 
-namespace RhythmHeavenMania.Util
+namespace HeavenStudio.Util
 {
     public static class AnimationHelpers
     {

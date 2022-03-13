@@ -4,9 +4,9 @@ using UnityEngine;
 
 using DG.Tweening;
 
-using RhythmHeavenMania.Util;
+using HeavenStudio.Util;
 
-namespace RhythmHeavenMania.Games.Scripts_ForkLifter
+namespace HeavenStudio.Games.Scripts_ForkLifter
 {
     public class ForkLifterPlayer : MonoBehaviour
     {

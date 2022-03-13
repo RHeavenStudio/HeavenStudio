@@ -1,7 +1,7 @@
 using UnityEngine;
 using UnityEngine.Audio;
 
-namespace RhythmHeavenMania
+namespace HeavenStudio
 {
     public class Settings : MonoBehaviour
     {
