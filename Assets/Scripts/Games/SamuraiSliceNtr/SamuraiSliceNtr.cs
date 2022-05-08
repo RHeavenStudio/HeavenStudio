@@ -23,6 +23,12 @@ namespace HeavenStudio.Games
 
     public class SamuraiSliceNtr : Minigame
     {
+        public enum ObjectType {
+            Melon,
+            Fish,
+            Demon
+        }
+
         [Header("References")]
         public NtrSamurai player;
         public GameObject launcher;
