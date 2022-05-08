@@ -29,7 +29,7 @@ namespace HeavenStudio.Games.Scripts_FanClub
 
         float clappingStartTime = 0f;
 
-        public Queue<KeyValuePair<float, int>> upcomingHits;
+        public SortedList<float, int> upcomingHits;
         public float startBeat;
         public int type;
         public bool doCharge = false;
@@ -39,7 +39,7 @@ namespace HeavenStudio.Games.Scripts_FanClub
         public void Init()
         {
             if (player)
-                upcomingHits = new Queue<KeyValuePair<float, int>>();    // beat, type
+                upcomingHits = new SortedList<float, int>();    // beat, type
             
             inputHit = true;
             hasHit = true;
@@ -53,7 +53,12 @@ namespace HeavenStudio.Games.Scripts_FanClub
         public void AddHit(float beat, int type)
         {
             inputHit = false;
-            upcomingHits.Enqueue(new KeyValuePair<float, int>(beat, type));
+            try
+            {
+                upcomingHits.Add(beat, type);
+            }
+            catch (ArgumentException)
+            {}
         }
 
         public void Hit(bool _hit, int type = 0, bool fromAutoplay = false)
@@ -77,15 +82,18 @@ namespace HeavenStudio.Games.Scripts_FanClub
             {
                 if (upcomingHits?.Count > 0)
                 {
-                    var next = upcomingHits.Dequeue();
+                    var k = upcomingHits.Keys[0];
+                    var v = upcomingHits[k];
 
-                    startBeat = next.Key;
-                    type = next.Value == 2 ? 0 : next.Value;
-                    doCharge = (next.Value == 2);
+                    startBeat = k;
+                    type = v == 2 ? 0 : v;
+                    doCharge = (v == 2);
 
                     // reset our shit to prepare for next hit
                     hasHit = false;
                     ResetState();
+
+                    upcomingHits.Remove(k);
                 }
                 else if (Conductor.instance.GetPositionFromBeat(startBeat, 1) >= Minigame.EndTime())
                 {

@@ -173,6 +173,42 @@ TextureImporter:
   - first:
       213: -928842840566755790
     second: fan_Hand03
+  - first:
+      213: -1633484853686196032
+    second: idol_Clt_body_up
+  - first:
+      213: -1683005477360016522
+    second: idol_Clt_body_down0
+  - first:
+      213: -6684664956765449452
+    second: idol_Clt_body_down1
+  - first:
+      213: -4046640891417002374
+    second: psyllium
+  - first:
+      213: 7431816273384491690
+    second: idol_mike02
+  - first:
+      213: -7664577289212602306
+    second: idol_Hnd_08
+  - first:
+      213: -3960305690750155392
+    second: idol_Hnd_09
+  - first:
+      213: -546228402893326850
+    second: idol_Hnd_10
+  - first:
+      213: -170988832995438424
+    second: ntrIdol_heartEffect
+  - first:
+      213: -4684268937190979842
+    second: idol_Arm_06
+  - first:
+      213: 4268582668646798735
+    second: idol_Arm_07
+  - first:
+      213: 4845979151013781269
+    second: idol_Arm_08
   externalObjects: {}
   serializedVersion: 11
   mipmaps:
@@ -895,7 +931,7 @@ TextureImporter:
       name: idol_Hnd_06
       rect:
         serializedVersion: 2
-        x: 1021
+        x: 1022
         y: 1018
         width: 53
         height: 59
@@ -1173,7 +1209,7 @@ TextureImporter:
         width: 319
         height: 157
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
@@ -1194,7 +1230,7 @@ TextureImporter:
         width: 155
         height: 197
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
@@ -1215,7 +1251,7 @@ TextureImporter:
         width: 165
         height: 183
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
@@ -1236,7 +1272,7 @@ TextureImporter:
         width: 167
         height: 181
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
@@ -1257,7 +1293,7 @@ TextureImporter:
         width: 167
         height: 179
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
@@ -1278,7 +1314,7 @@ TextureImporter:
         width: 167
         height: 173
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
@@ -1299,7 +1335,7 @@ TextureImporter:
         width: 139
         height: 215
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
@@ -1320,7 +1356,7 @@ TextureImporter:
         width: 97
         height: 233
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
@@ -1341,7 +1377,7 @@ TextureImporter:
         width: 163
         height: 139
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
@@ -1362,7 +1398,7 @@ TextureImporter:
         width: 75
         height: 127
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
@@ -1383,7 +1419,7 @@ TextureImporter:
         width: 75
         height: 133
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
@@ -1404,7 +1440,7 @@ TextureImporter:
         width: 67
         height: 141
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
@@ -1425,7 +1461,7 @@ TextureImporter:
         width: 59
         height: 173
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
@@ -1446,7 +1482,7 @@ TextureImporter:
         width: 65
         height: 163
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
@@ -1467,7 +1503,7 @@ TextureImporter:
         width: 93
         height: 103
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
@@ -1488,7 +1524,7 @@ TextureImporter:
         width: 71
         height: 91
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
@@ -1509,7 +1545,7 @@ TextureImporter:
         width: 87
         height: 91
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
@@ -1530,7 +1566,7 @@ TextureImporter:
         width: 71
         height: 97
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
@@ -1551,7 +1587,7 @@ TextureImporter:
         width: 67
         height: 93
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
@@ -1572,7 +1608,7 @@ TextureImporter:
         width: 61
         height: 85
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
@@ -1593,7 +1629,7 @@ TextureImporter:
         width: 83
         height: 93
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
@@ -1614,7 +1650,7 @@ TextureImporter:
         width: 93
         height: 73
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
@@ -1622,6 +1658,258 @@ TextureImporter:
       bones: []
       spriteID: 23e8ad39b561c13f0800000000000000
       internalID: -928842840566755790
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: idol_Clt_body_up
+      rect:
+        serializedVersion: 2
+        x: 388
+        y: 1496
+        width: 65
+        height: 67
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 0c8ad0e1e22b459e0800000000000000
+      internalID: -1633484853686196032
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: idol_Clt_body_down0
+      rect:
+        serializedVersion: 2
+        x: 563
+        y: 1505
+        width: 66
+        height: 53
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 6736bee6f63c4a8e0800000000000000
+      internalID: -1683005477360016522
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: idol_Clt_body_down1
+      rect:
+        serializedVersion: 2
+        x: 732
+        y: 1516
+        width: 80
+        height: 50
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 4135e7183ac4b33a0800000000000000
+      internalID: -6684664956765449452
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: psyllium
+      rect:
+        serializedVersion: 2
+        x: 1967
+        y: 1818
+        width: 49
+        height: 139
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: a7ef48d9c8177d7c0800000000000000
+      internalID: -4046640891417002374
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: idol_mike02
+      rect:
+        serializedVersion: 2
+        x: 1505
+        y: 660
+        width: 59
+        height: 45
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: aaacc03768d132760800000000000000
+      internalID: 7431816273384491690
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: idol_Hnd_08
+      rect:
+        serializedVersion: 2
+        x: 1047
+        y: 1152
+        width: 67
+        height: 61
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: e38d4fa6093f1a590800000000000000
+      internalID: -7664577289212602306
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: idol_Hnd_09
+      rect:
+        serializedVersion: 2
+        x: 1183
+        y: 1152
+        width: 47
+        height: 67
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 08501e4f4fa2a09c0800000000000000
+      internalID: -3960305690750155392
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: idol_Hnd_10
+      rect:
+        serializedVersion: 2
+        x: 1301
+        y: 1152
+        width: 53
+        height: 69
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: ef5705f59286b68f0800000000000000
+      internalID: -546228402893326850
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: ntrIdol_heartEffect
+      rect:
+        serializedVersion: 2
+        x: 1569
+        y: 756
+        width: 67
+        height: 69
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 8a09fb4ff8680adf0800000000000000
+      internalID: -170988832995438424
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: idol_Arm_06
+      rect:
+        serializedVersion: 2
+        x: 1359
+        y: 1298
+        width: 45
+        height: 111
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: ef6c55e48322efeb0800000000000000
+      internalID: -4684268937190979842
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: idol_Arm_07
+      rect:
+        serializedVersion: 2
+        x: 1868
+        y: 1134
+        width: 49
+        height: 95
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: f85d41b325d0d3b30800000000000000
+      internalID: 4268582668646798735
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: idol_Arm_08
+      rect:
+        serializedVersion: 2
+        x: 1872
+        y: 1010
+        width: 27
+        height: 63
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 51f102ddc50604340800000000000000
+      internalID: 4845979151013781269
       vertices: []
       indices: 
       edges: []

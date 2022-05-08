@@ -54,6 +54,12 @@ namespace HeavenStudio.Games.Scripts_Spaceball
             hitRot = Holder.transform.eulerAngles.z;
 
             Jukebox.PlayOneShotGame("spaceball/hit");
+            
+            // jank fix for a bug with autoplay - freeform
+            if (GameManager.instance.autoplay && Conductor.instance.isPlaying && GameManager.instance.canInput)
+            {
+                Jukebox.PlayOneShotGame("spaceball/swing");
+            }
 
             randomEndPosX = Random.Range(40f, 55f);
 

@@ -1,0 +1,420 @@
+fileFormatVersion: 2
+guid: eab6bdf53b08c644db9afb05df441329
+TextureImporter:
+  internalIDToNameTable:
+  - first:
+      213: -5433990084076523720
+    second: sprsh_cointoss_closed_empty
+  - first:
+      213: -8498782790087183868
+    second: sprsh_cointoss_open1
+  - first:
+      213: 8877829940631261346
+    second: sprsh_cointoss_open2
+  - first:
+      213: -5521979624778624695
+    second: sprsh_cointoss_pickup
+  - first:
+      213: 2232159536878381623
+    second: sprsh_cointoss_faceup
+  - first:
+      213: -944311714195494487
+    second: sprsh_cointoss_closed_90
+  - first:
+      213: -7697469388782037618
+    second: sprsh_cointoss_closed_45
+  - first:
+      213: 2613108315380807148
+    second: sprsh_cointoss_closed_01
+  - first:
+      213: -2139501716810875626
+    second: sprsh_cointoss_closed_02
+  - first:
+      213: -6732762079424716711
+    second: sprsh_cointoss_whoosh
+  - first:
+      213: 8809700866171767180
+    second: sprsh_cointoss_sleeve
+  - first:
+      213: 6470816140695940745
+    second: sprsh_cointoss_45
+  - first:
+      213: -8904420264161679176
+    second: sprsh_cointoss_shockwave
+  externalObjects: {}
+  serializedVersion: 11
+  mipmaps:
+    mipMapMode: 0
+    enableMipMap: 0
+    sRGBTexture: 1
+    linearTexture: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapsPreserveCoverage: 0
+    alphaTestReferenceValue: 0.5
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+  bumpmap:
+    convertToNormalMap: 0
+    externalNormalMap: 0
+    heightScale: 0.25
+    normalMapFilter: 0
+  isReadable: 0
+  streamingMipmaps: 0
+  streamingMipmapsPriority: 0
+  vTOnly: 0
+  grayScaleToAlpha: 0
+  generateCubemap: 6
+  cubemapConvolution: 0
+  seamlessCubemap: 0
+  textureFormat: 1
+  maxTextureSize: 2048
+  textureSettings:
+    serializedVersion: 2
+    filterMode: 1
+    aniso: 1
+    mipBias: 0
+    wrapU: 1
+    wrapV: 1
+    wrapW: 1
+  nPOTScale: 0
+  lightmap: 0
+  compressionQuality: 50
+  spriteMode: 2
+  spriteExtrude: 1
+  spriteMeshType: 1
+  alignment: 0
+  spritePivot: {x: 0.5, y: 0.5}
+  spritePixelsToUnits: 100
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spriteGenerateFallbackPhysicsShape: 1
+  alphaUsage: 1
+  alphaIsTransparency: 1
+  spriteTessellationDetail: -1
+  textureType: 8
+  textureShape: 1
+  singleChannelComponent: 0
+  flipbookRows: 1
+  flipbookColumns: 1
+  maxTextureSizeSet: 0
+  compressionQualitySet: 0
+  textureFormatSet: 0
+  ignorePngGamma: 0
+  applyGammaDecoding: 0
+  platformSettings:
+  - serializedVersion: 3
+    buildTarget: DefaultTexturePlatform
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 3
+    buildTarget: Standalone
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  spriteSheet:
+    serializedVersion: 2
+    sprites:
+    - serializedVersion: 2
+      name: sprsh_cointoss_closed_empty
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 1700
+        width: 668
+        height: 344
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 83faf9d1fc69694b0800000000000000
+      internalID: -5433990084076523720
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: sprsh_cointoss_open1
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 1284
+        width: 664
+        height: 406
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 40276a5b4124e0a80800000000000000
+      internalID: -8498782790087183868
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: sprsh_cointoss_open2
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 836
+        width: 666
+        height: 438
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 2a057a35b43643b70800000000000000
+      internalID: 8877829940631261346
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: sprsh_cointoss_pickup
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 390
+        width: 668
+        height: 438
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 9411028b9ccfd53b0800000000000000
+      internalID: -5521979624778624695
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: sprsh_cointoss_faceup
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 70
+        width: 860
+        height: 310
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 73ae2a5b5493afe10800000000000000
+      internalID: 2232159536878381623
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: sprsh_cointoss_closed_90
+      rect:
+        serializedVersion: 2
+        x: 676
+        y: 1668
+        width: 726
+        height: 380
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 9a92326cf7125e2f0800000000000000
+      internalID: -944311714195494487
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: sprsh_cointoss_closed_45
+      rect:
+        serializedVersion: 2
+        x: 676
+        y: 1286
+        width: 728
+        height: 374
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: e851434bf581d2590800000000000000
+      internalID: -7697469388782037618
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: sprsh_cointoss_closed_01
+      rect:
+        serializedVersion: 2
+        x: 676
+        y: 900
+        width: 728
+        height: 376
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: ce574e10b20a34420800000000000000
+      internalID: 2613108315380807148
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: sprsh_cointoss_closed_02
+      rect:
+        serializedVersion: 2
+        x: 676
+        y: 486
+        width: 728
+        height: 404
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 61d362d2686fe42e0800000000000000
+      internalID: -2139501716810875626
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: sprsh_cointoss_whoosh
+      rect:
+        serializedVersion: 2
+        x: 1412
+        y: 1092
+        width: 184
+        height: 920
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 9506baa7f8c6092a0800000000000000
+      internalID: -6732762079424716711
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: sprsh_cointoss_sleeve
+      rect:
+        serializedVersion: 2
+        x: 1606
+        y: 1350
+        width: 344
+        height: 566
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: c898e911348524a70800000000000000
+      internalID: 8809700866171767180
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: sprsh_cointoss_45
+      rect:
+        serializedVersion: 2
+        x: 1829
+        y: 1094
+        width: 215
+        height: 212
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 98eab010ff4fcc950800000000000000
+      internalID: 6470816140695940745
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: sprsh_cointoss_shockwave
+      rect:
+        serializedVersion: 2
+        x: 1604
+        y: 1092
+        width: 216
+        height: 216
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 8b86ad782f42d6480800000000000000
+      internalID: -8904420264161679176
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    outline: []
+    physicsShape: []
+    bones: []
+    spriteID: 5e97eb03825dee720800000000000000
+    internalID: 0
+    vertices: []
+    indices: 
+    edges: []
+    weights: []
+    secondaryTextures: []
+  spritePackingTag: 
+  pSDRemoveMatte: 0
+  pSDShowRemoveMatteOption: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

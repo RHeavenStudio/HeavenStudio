@@ -92,7 +92,7 @@ namespace HeavenStudio.Editor
             }
             else if(type is bool)
             {
-                toggle.isOn = (bool)type;
+                toggle.isOn = System.Convert.ToBoolean(parameterManager.entity[propertyName]); // ' (bool)type ' always results in false
 
                 toggle.onValueChanged.AddListener(delegate
                 {

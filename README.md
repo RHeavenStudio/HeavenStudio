@@ -19,6 +19,13 @@
 ![image](https://user-images.githubusercontent.com/40370440/154824159-07800021-9264-4293-92cf-d3f6e0155f5b.png)
 
 
+## Prebuilt Binaries
+This project is still in development, so there are currently no release builds yet. GitHub Actions creates experimental builds on each commmit, but minimal support will be provided.
+
+- [Windows](https://nightly.link/megaminerjenny/HeavenStudio/workflows/main/master/StandaloneWindows64-build.zip)
+- [Linux](https://nightly.link/megaminerjenny/HeavenStudio/workflows/main/master/StandaloneLinux64-build.zip)
+- [MacOS](https://nightly.link/megaminerjenny/HeavenStudio/workflows/main/master/StandaloneOSX-build.zip)
+
 ## Self-Building
 #### Note: Mac-OS and Linux-based builds not tested.
 Heaven Studio is made in [Unity 2020.3.25f1](https://unity3d.com/unity/whats-new/2020.3.25),

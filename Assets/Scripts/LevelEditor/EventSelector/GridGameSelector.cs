@@ -39,21 +39,24 @@ namespace HeavenStudio.Editor
 
         private void Update()
         {
-            if (gameOpen)
+            if(!Conductor.instance.NotStopped())
             {
-                if (Input.GetKeyDown(KeyCode.DownArrow))
+                if (gameOpen)
                 {
-                    UpdateIndex(currentEventIndex + 1);
+                    if (Input.GetKeyDown(KeyCode.DownArrow))
+                    {
+                        UpdateIndex(currentEventIndex + 1);
+                    }
+                    else if (Input.GetKeyDown(KeyCode.UpArrow))
+                    {
+                        UpdateIndex(currentEventIndex - 1);
+                    }
                 }
-                else if (Input.GetKeyDown(KeyCode.UpArrow))
-                {
-                    UpdateIndex(currentEventIndex - 1);
-                }
-            }
 
-            if (Input.mouseScrollDelta.y != 0)
-            {
-                UpdateIndex(currentEventIndex - Mathf.RoundToInt(Input.mouseScrollDelta.y));
+                if (Input.mouseScrollDelta.y != 0)
+                {
+                    UpdateIndex(currentEventIndex - Mathf.RoundToInt(Input.mouseScrollDelta.y));
+                }
             }
         }
 
