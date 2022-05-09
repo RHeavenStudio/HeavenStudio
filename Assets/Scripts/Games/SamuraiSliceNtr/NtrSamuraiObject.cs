@@ -55,6 +55,9 @@ namespace HeavenStudio.Games.Scripts_NtrSamurai
             {
                 switch (flyProg)
                 {
+                    case 2:
+                        // TODO: fishe bounce
+                        break;
                     case 1:
                         float flyDur = 3f;
                         switch (type)
@@ -94,9 +97,18 @@ namespace HeavenStudio.Games.Scripts_NtrSamurai
 
         void DoLaunch()
         {
-            // todo: other launches
             switch (type)
             {
+                case (int) SamuraiSliceNtr.ObjectType.Fish:
+                    if (flyProg == 2)
+                    {
+                        //did second bounce, start returning to samurai
+                    }
+                    else 
+                    {
+                        //start first bounce
+                    }
+                    break;
                 case (int) SamuraiSliceNtr.ObjectType.Demon:
                     hitProg = SamuraiSliceNtr.instance.ScheduleInput(startBeat + 2f, 4f, InputType.STANDARD_DOWN, HitSuccess, HitMiss, LaunchThrough);
                     SamuraiSliceNtr.instance.ScheduleAutoplayInput(startBeat + 2f, 4f, InputType.STANDARD_ALT_DOWN, DoSliceAutoplay, LaunchThrough, LaunchThrough);
