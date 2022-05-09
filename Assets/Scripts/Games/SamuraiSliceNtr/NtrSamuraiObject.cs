@@ -12,7 +12,7 @@ namespace HeavenStudio.Games.Scripts_NtrSamurai
 {
     public class NtrSamuraiObject : MonoBehaviour
     {
-
+        public Animator anim;
         public float startBeat;
         public int type;
         public PlayerActionEvent launchProg;
@@ -26,9 +26,25 @@ namespace HeavenStudio.Games.Scripts_NtrSamurai
 
         void Awake()
         {
+            switch (type)
+            {
+                case (int) SamuraiSliceNtr.ObjectType.Demon:
+                    anim.Play("ObjDemon");
+                    break;
+                default:
+                    anim.Play("ObjMelon");
+                    break;
+            }
+
             launchProg = SamuraiSliceNtr.instance.ScheduleInput(startBeat, 2f, InputType.STANDARD_ALT_DOWN, LaunchSuccess, LaunchMiss, LaunchThrough);
+            SamuraiSliceNtr.instance.ScheduleAutoplayInput(startBeat, 2f, InputType.STANDARD_ALT_DOWN, DoLaunchAutoplay, LaunchThrough, LaunchThrough);
             currentCurve = SamuraiSliceNtr.instance.InCurve;
             transform.rotation = Quaternion.Euler(0, 0, transform.rotation.eulerAngles.z + (360f * startBeat));
+
+            var cond = Conductor.instance;
+            float flyPos = cond.GetPositionFromBeat(launchProg.startBeat, 3f);
+            transform.position = currentCurve.GetPoint(flyPos);
+            transform.rotation = Quaternion.Euler(0, 0, transform.rotation.eulerAngles.z + (-360f * Time.deltaTime));
         }
 
         void Update()
@@ -40,7 +56,17 @@ namespace HeavenStudio.Games.Scripts_NtrSamurai
                 switch (flyProg)
                 {
                     case 1:
-                        flyPos = cond.GetPositionFromBeat(hitProg.startBeat, 3f);
+                        float flyDur = 3f;
+                        switch (type)
+                        {
+                            case (int) SamuraiSliceNtr.ObjectType.Demon:
+                                flyDur = 5f;
+                                break;
+                            default:
+                                flyDur = 3f;
+                                break;
+                        }
+                        flyPos = cond.GetPositionFromBeat(hitProg.startBeat, flyDur);
                         transform.position = currentCurve.GetPoint(flyPos);
                         transform.rotation = Quaternion.Euler(0, 0, transform.rotation.eulerAngles.z + (4 * 360f * Time.deltaTime));
 
@@ -69,8 +95,29 @@ namespace HeavenStudio.Games.Scripts_NtrSamurai
         void DoLaunch()
         {
             // todo: other launches
-            hitProg = SamuraiSliceNtr.instance.ScheduleInput(startBeat + 2f, 2f, InputType.STANDARD_DOWN, HitSuccess, HitMiss, LaunchThrough);
-            currentCurve = SamuraiSliceNtr.instance.LaunchCurve;
+            switch (type)
+            {
+                case (int) SamuraiSliceNtr.ObjectType.Demon:
+                    hitProg = SamuraiSliceNtr.instance.ScheduleInput(startBeat + 2f, 4f, InputType.STANDARD_DOWN, HitSuccess, HitMiss, LaunchThrough);
+                    SamuraiSliceNtr.instance.ScheduleAutoplayInput(startBeat + 2f, 4f, InputType.STANDARD_ALT_DOWN, DoSliceAutoplay, LaunchThrough, LaunchThrough);
+                    currentCurve = SamuraiSliceNtr.instance.LaunchHighCurve;
+                    break;
+                default:
+                    hitProg = SamuraiSliceNtr.instance.ScheduleInput(startBeat + 2f, 2f, InputType.STANDARD_DOWN, HitSuccess, HitMiss, LaunchThrough);
+                    SamuraiSliceNtr.instance.ScheduleAutoplayInput(startBeat + 2f, 2f, InputType.STANDARD_ALT_DOWN, DoSliceAutoplay, LaunchThrough, LaunchThrough);
+                    currentCurve = SamuraiSliceNtr.instance.LaunchCurve;
+                    break;
+            }
+        }
+
+        void DoLaunchAutoplay(PlayerActionEvent caller, float state)
+        {
+            SamuraiSliceNtr.instance.DoStep();
+        }
+
+        void DoSliceAutoplay(PlayerActionEvent caller, float state)
+        {
+            SamuraiSliceNtr.instance.DoSlice();
         }
 
         public void LaunchSuccess(PlayerActionEvent caller, float state)
@@ -91,7 +138,7 @@ namespace HeavenStudio.Games.Scripts_NtrSamurai
 
         public void HitSuccess(PlayerActionEvent caller, float state)
         {
-            flyProg = 2;
+            flyProg = -1;
             hitProg.Disable();
             Jukebox.PlayOneShotGame("samuraiSliceNtr/ntrSamurai_launchImpact");
 

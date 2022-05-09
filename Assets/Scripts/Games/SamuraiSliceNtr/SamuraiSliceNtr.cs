@@ -69,25 +69,34 @@ namespace HeavenStudio.Games
             }
 
             if (PlayerInput.AltPressed())
-            {
-                Jukebox.PlayOneShotGame("samuraiSliceNtr/ntrSamurai_launchThrough");
-                player.Step(false);
-                launcher.GetComponent<Animator>().Play("Launch", -1, 0);
-            }
+                DoStep();
             if (PlayerInput.AltPressedUp() && player.isStepping())
+                DoUnStep();
+            if (PlayerInput.Pressed())
+                DoSlice();
+        }
+
+        public void DoStep()
+        {
+            Jukebox.PlayOneShotGame("samuraiSliceNtr/ntrSamurai_launchThrough");
+            player.Step(false);
+            launcher.GetComponent<Animator>().Play("Launch", -1, 0);
+        }
+
+        public void DoUnStep()
+        {
+            player.Step(true);
+            launcher.GetComponent<Animator>().Play("UnStep", -1, 0);
+        }
+
+        public void DoSlice()
+        {
+            if (player.isStepping())
             {
-                player.Step(true);
                 launcher.GetComponent<Animator>().Play("UnStep", -1, 0);
             }
-            if (PlayerInput.Pressed())
-            {
-                if (player.isStepping())
-                {
-                    launcher.GetComponent<Animator>().Play("UnStep", -1, 0);
-                }
-                Jukebox.PlayOneShotGame("samuraiSliceNtr/ntrSamurai_through");
-                player.Slash();
-            }
+            Jukebox.PlayOneShotGame("samuraiSliceNtr/ntrSamurai_through");
+            player.Slash();
         }
 
         public void Bop(float beat, float length) 
