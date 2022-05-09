@@ -45,8 +45,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   curve: {fileID: 1462365472650033565}
   handleType: 0
-  leftHandleLocalPosition: {x: 0.0052609444, y: 0.58228874, z: 0}
-  rightHandleLocalPosition: {x: -0.0052609444, y: -0.58228874, z: -0}
+  leftHandleLocalPosition: {x: 0.1393727, y: 3.775873, z: 0}
+  rightHandleLocalPosition: {x: -0.1393727, y: -3.775873, z: -0}
 --- !u!1 &937100263647621981
 GameObject:
   m_ObjectHideFlags: 0
@@ -155,7 +155,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1001630848251458450}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 1.708657, y: 1.142926, z: 0}
+  m_LocalPosition: {x: 1.69, y: 2, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 3624237236111505140}
@@ -175,8 +175,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   curve: {fileID: 6708362649413049134}
   handleType: 0
-  leftHandleLocalPosition: {x: 1.5086958, y: -11.22174, z: -0}
-  rightHandleLocalPosition: {x: -1.5086958, y: 11.22174, z: 0}
+  leftHandleLocalPosition: {x: 1.1311803, y: -6.2807984, z: -0}
+  rightHandleLocalPosition: {x: -1.1311803, y: 6.2807984, z: 0}
 --- !u!1 &1047116324139242617
 GameObject:
   m_ObjectHideFlags: 0
@@ -202,7 +202,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1047116324139242617}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: 0, y: -1.83, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 16156449826625334}
@@ -337,7 +337,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1096937998501878782}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: 0, y: -1.83, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 1701613923184664570}
@@ -410,8 +410,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   curve: {fileID: 9026471934783822949}
   handleType: 0
-  leftHandleLocalPosition: {x: -15.662312, y: -13.002692, z: -5}
-  rightHandleLocalPosition: {x: 15.662312, y: 13.002692, z: 5}
+  leftHandleLocalPosition: {x: -6.820738, y: -14.687874, z: -5}
+  rightHandleLocalPosition: {x: 6.820738, y: 14.687874, z: 5}
 --- !u!1 &1465141136420999014
 GameObject:
   m_ObjectHideFlags: 0
@@ -457,8 +457,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   curve: {fileID: 9026471934783822949}
   handleType: 0
-  leftHandleLocalPosition: {x: -0.36546516, y: 2.3672214, z: -0.061336376}
-  rightHandleLocalPosition: {x: 0.36546516, y: -2.3672214, z: 0.061336376}
+  leftHandleLocalPosition: {x: -2.520605, y: 13.437961, z: -0.060546875}
+  rightHandleLocalPosition: {x: 2.520605, y: -13.437961, z: 0.060546875}
 --- !u!1 &1658320474579320115
 GameObject:
   m_ObjectHideFlags: 0
@@ -793,6 +793,11 @@ MonoBehaviour:
   firstEnable: 0
   player: {fileID: 214776018637632651}
   launcher: {fileID: 4891380524077004048}
+  objectPrefab: {fileID: 6099937243404387549}
+  objectHolder: {fileID: 1299793573897405768}
+  InCurve: {fileID: 9026471934783822949}
+  LaunchCurve: {fileID: 6708362649413049134}
+  LaunchHighCurve: {fileID: 1462365472650033565}
 --- !u!1 &4108952951172268738
 GameObject:
   m_ObjectHideFlags: 0
@@ -818,7 +823,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 4108952951172268738}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 1.708657, y: 1.142926, z: 0}
+  m_LocalPosition: {x: 1.69, y: 2, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 3637030213139620066}
@@ -838,8 +843,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   curve: {fileID: 1462365472650033565}
   handleType: 0
-  leftHandleLocalPosition: {x: 1.2708733, y: -28.906633, z: -0}
-  rightHandleLocalPosition: {x: -1.2708733, y: 28.906633, z: 0}
+  leftHandleLocalPosition: {x: 1.6597776, y: -40.282097, z: -0}
+  rightHandleLocalPosition: {x: -1.6597776, y: 40.282097, z: 0}
 --- !u!1 &4135345985768278720
 GameObject:
   m_ObjectHideFlags: 0
@@ -1049,8 +1054,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   curve: {fileID: 6708362649413049134}
   handleType: 0
-  leftHandleLocalPosition: {x: 0.010666847, y: 6.6697683, z: 0}
-  rightHandleLocalPosition: {x: -0.010666847, y: -6.6697683, z: -0}
+  leftHandleLocalPosition: {x: 0.06496096, y: 15.047452, z: 0}
+  rightHandleLocalPosition: {x: -0.06496096, y: -15.047452, z: -0}
 --- !u!1 &4368734430661778639
 GameObject:
   m_ObjectHideFlags: 0
@@ -1352,7 +1357,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 5060424513113237891}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: 0, y: -1.83, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 1369730509308531784}
@@ -1379,7 +1384,7 @@ MonoBehaviour:
   keyPoints:
   - {fileID: 845985676196869210}
   - {fileID: 539761622366528806}
-  normalizedTime: 0.62
+  normalizedTime: 0.5
 --- !u!1 &5475903568382209088
 GameObject:
   m_ObjectHideFlags: 0
@@ -1719,6 +1724,7 @@ GameObject:
   - component: {fileID: 5589869724872896603}
   - component: {fileID: 1526694151397649385}
   - component: {fileID: 6574142642051032078}
+  - component: {fileID: 4085388639274871693}
   m_Layer: 0
   m_Name: Object
   m_TagString: Untagged
@@ -1779,7 +1785,7 @@ SpriteRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 0
+  m_SortingOrder: 100
   m_Sprite: {fileID: 5006231994873080166, guid: 410272bf8a685fe4caa52d69b027a25e, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
@@ -1810,6 +1816,22 @@ Animator:
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorControllerStateOnDisable: 0
+--- !u!114 &4085388639274871693
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6099937243404387549}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ae0b3df22f9080c4cad91e4b72fe7105, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  startBeat: 0
+  type: 0
+  launchProg: {fileID: 0}
+  hitProg: {fileID: 0}
 --- !u!1 &6342228038902775119
 GameObject:
   m_ObjectHideFlags: 0

@@ -3,6 +3,9 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+using DG.Tweening;
+using NaughtyBezierCurves;
+
 namespace HeavenStudio.Games.Loaders
 {
     using static Minigames;
@@ -11,6 +14,13 @@ namespace HeavenStudio.Games.Loaders
         public static Minigame AddGame(EventCaller eventCaller) {
             return new Minigame("samuraiSliceNtr", "Samurai Slice (DS) \n<color=#eb5454>[WIP don't use]</color>", "000000", false, false, new List<GameAction>()
             {
+                new GameAction("spawn object",                   delegate
+                {
+                    SamuraiSliceNtr.instance.ObjectIn(eventCaller.currentEntity.beat, eventCaller.currentEntity.type);
+                }, 8, false, new List<Param>()
+                {
+                    new Param("type", SamuraiSliceNtr.ObjectType.Melon, "Object", "The object to spawn")
+                }),
                 //new GameAction("start bopping",                   delegate { SamuraiSliceNtr.instance.Bop(eventCaller.currentEntity.beat, eventCaller.currentEntity.length); }, 1),
             });
         }
@@ -32,6 +42,12 @@ namespace HeavenStudio.Games
         [Header("References")]
         public NtrSamurai player;
         public GameObject launcher;
+        public GameObject objectPrefab;
+        public Transform objectHolder;
+
+        public BezierCurve3D InCurve;
+        public BezierCurve3D LaunchCurve;
+        public BezierCurve3D LaunchHighCurve;
 
         //game scene
         public static SamuraiSliceNtr instance;
@@ -78,6 +94,18 @@ namespace HeavenStudio.Games
         {
             bop.length = length;
             bop.startBeat = beat;
+        }
+
+        public void ObjectIn(float beat, int type = (int) ObjectType.Melon)
+        {
+            var mobj = GameObject.Instantiate(objectPrefab, objectHolder);
+            var mobjDat = mobj.GetComponent<NtrSamuraiObject>();
+            mobjDat.startBeat = beat;
+            mobjDat.type = type;
+
+            mobj.SetActive(true);
+
+            Jukebox.PlayOneShotGame("samuraiSliceNtr/ntrSamurai_in00");
         }
     }
 }
