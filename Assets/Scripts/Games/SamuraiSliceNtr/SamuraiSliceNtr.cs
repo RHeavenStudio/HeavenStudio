@@ -49,6 +49,10 @@ namespace HeavenStudio.Games
         public BezierCurve3D LaunchCurve;
         public BezierCurve3D LaunchHighCurve;
 
+        public BezierCurve3D NgLaunchCurve;
+        public BezierCurve3D DebrisLeftCurve;
+        public BezierCurve3D DebrisRightCurve;
+
         //game scene
         public static SamuraiSliceNtr instance;
 

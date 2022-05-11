@@ -10,7 +10,7 @@ namespace HeavenStudio.Games.Scripts_NtrSamurai
         public Animator animator;
 
         [Header("Properties")]
-        bool stepping;
+        public bool stepping;
 
         public void Init()
         {
