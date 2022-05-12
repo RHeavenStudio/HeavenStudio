@@ -12,6 +12,7 @@ namespace HeavenStudio.Games.Scripts_NtrSamurai
 {
     public class NtrSamuraiObject : MonoBehaviour
     {
+        public ParticleSystem moneyBurst;
         public Animator anim;
         public float startBeat;
         public int type;
@@ -22,6 +23,7 @@ namespace HeavenStudio.Games.Scripts_NtrSamurai
         public Transform doubleLaunchPos;
 
         int flyProg = 0;
+        public int holdingCash = 1;
         bool flying = true;
         bool missedLaunch = false;
         bool missedHit = false;
@@ -249,6 +251,12 @@ namespace HeavenStudio.Games.Scripts_NtrSamurai
             if (type == (int) SamuraiSliceNtr.ObjectType.Demon)
             {
                 anim.Play("ObjDemonDebris01");
+            }
+
+            if (holdingCash > 0)
+            {
+                moneyBurst.Emit(holdingCash);
+                Jukebox.PlayOneShotGame("samuraiSliceNtr/ntrSamurai_scoreMany", pitch: UnityEngine.Random.Range(0.95f, 1.05f));
             }
         }
 

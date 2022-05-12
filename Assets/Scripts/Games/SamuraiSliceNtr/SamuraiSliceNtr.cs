@@ -16,10 +16,11 @@ namespace HeavenStudio.Games.Loaders
             {
                 new GameAction("spawn object",                   delegate
                 {
-                    SamuraiSliceNtr.instance.ObjectIn(eventCaller.currentEntity.beat, eventCaller.currentEntity.type);
+                    SamuraiSliceNtr.instance.ObjectIn(eventCaller.currentEntity.beat, eventCaller.currentEntity.type, (int) eventCaller.currentEntity.valA);
                 }, 8, false, new List<Param>()
                 {
-                    new Param("type", SamuraiSliceNtr.ObjectType.Melon, "Object", "The object to spawn")
+                    new Param("type", SamuraiSliceNtr.ObjectType.Melon, "Object", "The object to spawn"),
+                    new Param("valA", new EntityTypes.Integer(0, 30, 1), "Money", "The amount of coins the object spills out when sliced"),
                 }),
                 //new GameAction("start bopping",                   delegate { SamuraiSliceNtr.instance.Bop(eventCaller.currentEntity.beat, eventCaller.currentEntity.length); }, 1),
             });
@@ -109,12 +110,13 @@ namespace HeavenStudio.Games
             bop.startBeat = beat;
         }
 
-        public void ObjectIn(float beat, int type = (int) ObjectType.Melon)
+        public void ObjectIn(float beat, int type = (int) ObjectType.Melon, int value = 1)
         {
             var mobj = GameObject.Instantiate(objectPrefab, objectHolder);
             var mobjDat = mobj.GetComponent<NtrSamuraiObject>();
             mobjDat.startBeat = beat;
             mobjDat.type = type;
+            mobjDat.holdingCash = value;
 
             mobj.SetActive(true);
 
