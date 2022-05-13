@@ -245,6 +245,7 @@ namespace HeavenStudio.Games.Scripts_NtrSamurai
 
             mobj.transform.position = transform.position;
             mobj.transform.rotation = transform.rotation;
+            mobj.GetComponent<SpriteRenderer>().sortingOrder = 4;
             mobj.SetActive(true);
 
             this.startBeat = caller.startBeat + caller.timer;
@@ -256,7 +257,7 @@ namespace HeavenStudio.Games.Scripts_NtrSamurai
             if (holdingCash > 0)
             {
                 moneyBurst.Emit(holdingCash);
-                Jukebox.PlayOneShotGame("samuraiSliceNtr/ntrSamurai_scoreMany", pitch: UnityEngine.Random.Range(0.95f, 1.05f));
+                Jukebox.PlayOneShotGame((holdingCash > 2) ? "samuraiSliceNtr/ntrSamurai_scoreMany" : "samuraiSliceNtr/ntrSamurai_ng", pitch: UnityEngine.Random.Range(0.95f, 1.05f));
             }
         }
 
