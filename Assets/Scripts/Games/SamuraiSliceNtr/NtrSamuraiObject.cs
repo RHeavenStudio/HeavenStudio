@@ -12,21 +12,28 @@ namespace HeavenStudio.Games.Scripts_NtrSamurai
 {
     public class NtrSamuraiObject : MonoBehaviour
     {
+        [Header("Objects")]
         public ParticleSystem moneyBurst;
         public Animator anim;
+        public NtrSamuraiObject secondHalf;
+
+        [Header("Transforms")]
+        public Transform doubleLaunchPos;
+        public Transform heldPos;
+        
         public float startBeat;
         public int type;
         public bool isDebris = false;
-        public PlayerActionEvent launchProg;
-        public PlayerActionEvent hitProg;
-        BezierCurve3D currentCurve;
-        public Transform doubleLaunchPos;
-
-        int flyProg = 0;
         public int holdingCash = 1;
+
+        BezierCurve3D currentCurve;
+        int flyProg = 0;
         bool flying = true;
         bool missedLaunch = false;
         bool missedHit = false;
+
+        PlayerActionEvent launchProg;
+        PlayerActionEvent hitProg;
 
         void Awake()
         {
@@ -95,6 +102,15 @@ namespace HeavenStudio.Games.Scripts_NtrSamurai
             {
                 switch (flyProg)
                 {
+                    case -2:
+                        flyPos = cond.GetPositionFromBeat(startBeat + 2f, 2f);
+                        if (heldPos == null || flyPos > 1f)
+                        {
+                            GameObject.Destroy(gameObject);
+                            return;
+                        }
+                        transform.position = heldPos.position;
+                        break;
                     case -1:
                         flyPos = cond.GetPositionFromBeat(startBeat, 1f);
                         transform.position = currentCurve.GetPoint(flyPos);
@@ -103,7 +119,13 @@ namespace HeavenStudio.Games.Scripts_NtrSamurai
                         if (flyPos > 1f)
                         {
                             Jukebox.PlayOneShotGame("samuraiSliceNtr/ntrSamurai_catch");
-                            GameObject.Destroy(gameObject);
+                            if (!isDebris)
+                            {
+                                NtrSamuraiChild child = SamuraiSliceNtr.instance.CreateChild(startBeat + 1f);
+                                heldPos = child.DebrisPosR;
+                                secondHalf.heldPos = child.DebrisPosL;
+                            }
+                            flyProg = -2;
                             return;
                         }
                         break;
@@ -247,6 +269,8 @@ namespace HeavenStudio.Games.Scripts_NtrSamurai
             mobj.transform.rotation = transform.rotation;
             mobj.GetComponent<SpriteRenderer>().sortingOrder = 4;
             mobj.SetActive(true);
+
+            secondHalf = mobjDat;
 
             this.startBeat = caller.startBeat + caller.timer;
             if (type == (int) SamuraiSliceNtr.ObjectType.Demon)

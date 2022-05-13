@@ -44,6 +44,7 @@ namespace HeavenStudio.Games
         public NtrSamurai player;
         public GameObject launcher;
         public GameObject objectPrefab;
+        public GameObject childParent;
         public Transform objectHolder;
 
         public BezierCurve3D InCurve;
@@ -71,6 +72,7 @@ namespace HeavenStudio.Games
             if (cond.ReportBeat(ref bop.lastReportedBeat, bop.startBeat % 1))
             {
                 player.Bop();
+                childParent.GetComponent<NtrSamuraiChild>().Bop();
             }
 
             if (PlayerInput.AltPressed())
@@ -121,6 +123,20 @@ namespace HeavenStudio.Games
             mobj.SetActive(true);
 
             Jukebox.PlayOneShotGame("samuraiSliceNtr/ntrSamurai_in00");
+        }
+
+        public NtrSamuraiChild CreateChild(float beat)
+        {
+            var mobj = GameObject.Instantiate(childParent, objectHolder);
+            var mobjDat = mobj.GetComponent<NtrSamuraiChild>();
+            mobjDat.startBeat = beat;
+            mobjDat.isMain = false;
+
+            mobjDat.Bop();
+
+            mobj.SetActive(true);
+
+            return mobjDat;
         }
     }
 }
