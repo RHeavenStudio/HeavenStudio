@@ -102,7 +102,7 @@ namespace HeavenStudio.Games.Scripts_NtrSamurai
             {
                 switch (flyProg)
                 {
-                    case -2:
+                    case -2:    // being carried by a child
                         flyPos = cond.GetPositionFromBeat(startBeat + 2f, 2f);
                         if (heldPos == null || flyPos > 1f)
                         {
@@ -111,7 +111,7 @@ namespace HeavenStudio.Games.Scripts_NtrSamurai
                         }
                         transform.position = heldPos.position;
                         break;
-                    case -1:
+                    case -1:    // sliced by samurai, falling towards child
                         flyPos = cond.GetPositionFromBeat(startBeat, 1f);
                         transform.position = currentCurve.GetPoint(flyPos);
                         transform.rotation = Quaternion.Euler(0, 0, transform.rotation.eulerAngles.z + ((isDebris? 360f : -360f) * Time.deltaTime));
@@ -129,14 +129,21 @@ namespace HeavenStudio.Games.Scripts_NtrSamurai
                             return;
                         }
                         break;
-                    case 2:
+                    case 2:     // fish first bounce
                         float jumpPos = cond.GetPositionFromBeat(launchProg.startBeat, 2f);
                         float yMul = jumpPos * 2f - 1f;
                         float yWeight = -(yMul*yMul) + 1f;
                         transform.position = doubleLaunchPos.position + new Vector3(0, 4.5f * yWeight);
                         transform.rotation = Quaternion.Euler(0, 0, transform.rotation.eulerAngles.z + (-2 * 360f * Time.deltaTime));
+                        
+                        if (jumpPos > 2f)
+                        {
+                            // missed...
+                            GameObject.Destroy(gameObject);
+                            return;
+                        }
                         break;
-                    case 1:
+                    case 1:     // launched from board to samurai
                         float flyDur = 3f;
                         switch (type)
                         {
@@ -153,18 +160,20 @@ namespace HeavenStudio.Games.Scripts_NtrSamurai
 
                         if (flyPos > 1f)
                         {
+                            // missed...
                             GameObject.Destroy(gameObject);
                             return;
                         }
                         break;
 
-                    default:
+                    default:    // object initial spawn, flying towards board
                         flyPos = cond.GetPositionFromBeat(launchProg.startBeat, 3f);
                         transform.position = currentCurve.GetPoint(flyPos);
                         transform.rotation = Quaternion.Euler(0, 0, transform.rotation.eulerAngles.z + (-360f * Time.deltaTime));
 
                         if (flyPos > 1f)
                         {
+                            // missed...
                             GameObject.Destroy(gameObject);
                             return;
                         }
