@@ -426,6 +426,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1830610768569119064}
   - component: {fileID: 7243799481117956737}
+  - component: {fileID: 2758052627408405448}
   m_Layer: 0
   m_Name: Mako_Root
   m_TagString: Untagged
@@ -460,6 +461,20 @@ SortingGroup:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
+--- !u!114 &2758052627408405448
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1077334898981724717}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 001bfcff024077442be36970f043aa29, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Player: {fileID: 3947857039937820479}
+  Shadow: {fileID: 7614897430818020021}
 --- !u!1 &1627322113308099569
 GameObject:
   m_ObjectHideFlags: 0
@@ -1393,6 +1408,7 @@ MonoBehaviour:
   EligibleHits: []
   scheduledInputs: []
   firstEnable: 0
+  Mako: {fileID: 2758052627408405448}
 --- !u!1 &4202158720299178413
 GameObject:
   m_ObjectHideFlags: 0

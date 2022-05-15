@@ -1,6 +1,7 @@
 using HeavenStudio.Util;
 using System.Collections;
 using System.Collections.Generic;
+
 using System;
 using UnityEngine;
 
@@ -19,8 +20,12 @@ namespace HeavenStudio.Games.Loaders
 
 namespace HeavenStudio.Games
 {
+    using Scripts_PajamaParty;
     public class PajamaParty : Minigame
     {
+        [Header("Objects")]
+        public CtrPillowPlayer Mako;
+
         //game scene
         public static PajamaParty instance;
 
