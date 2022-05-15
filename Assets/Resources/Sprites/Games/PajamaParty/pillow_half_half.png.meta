@@ -139,7 +139,7 @@ TextureImporter:
   compressionQuality: 50
   spriteMode: 2
   spriteExtrude: 1
-  spriteMeshType: 1
+  spriteMeshType: 0
   alignment: 0
   spritePivot: {x: 0.5, y: 0.5}
   spritePixelsToUnits: 100
@@ -232,10 +232,10 @@ TextureImporter:
       name: pillow_half_half_2
       rect:
         serializedVersion: 2
-        x: 517
-        y: 1719
-        width: 645
-        height: 323
+        x: 520
+        y: 1748
+        width: 587
+        height: 293
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -274,10 +274,10 @@ TextureImporter:
       name: pillow_half_half_4
       rect:
         serializedVersion: 2
-        x: 30
-        y: 1590
-        width: 828
-        height: 118
+        x: 32
+        y: 1596
+        width: 812
+        height: 101
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -295,9 +295,9 @@ TextureImporter:
       name: pillow_half_half_5
       rect:
         serializedVersion: 2
-        x: 882
+        x: 883
         y: 1659
-        width: 48
+        width: 46
         height: 50
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
@@ -614,8 +614,8 @@ TextureImporter:
         y: 403
         width: 314
         height: 579
-      alignment: 0
-      pivot: {x: 0.5, y: 0.5}
+      alignment: 2
+      pivot: {x: 0.5, y: 1}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
