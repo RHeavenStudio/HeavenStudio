@@ -117,27 +117,27 @@ namespace HeavenStudio.Games
                 {
                     if (normalizedBeat > 1)
                     {
-                        GameCamera.instance.camera.transform.localPosition = new Vector3(0, 0, currentZoomCamDistance);
+                        GameCamera.additionalPosition = new Vector3(0, 0, currentZoomCamDistance + 10);
                     }
                     else
                     {
                         if (currentZoomCamLength < 0)
                         {
-                            GameCamera.instance.camera.transform.localPosition = new Vector3(0, 0, currentZoomCamDistance);
+                            GameCamera.additionalPosition = new Vector3(0, 0, currentZoomCamDistance + 10);
                         }
                         else
                         {
                             EasingFunction.Function func = EasingFunction.GetEasingFunction(lastEase);
 
-                            float newPosZ = func(lastCamDistance, currentZoomCamDistance, normalizedBeat);
-                            GameCamera.instance.camera.transform.localPosition = new Vector3(0, 0, newPosZ);
+                            float newPosZ = func(lastCamDistance + 10, currentZoomCamDistance + 10, normalizedBeat);
+                            GameCamera.additionalPosition = new Vector3(0, 0, newPosZ);
                         }
                     }
                 }
                 else
                 {
                     // ?
-                    GameCamera.instance.camera.transform.localPosition = new Vector3(0, 0, -10f);
+                    GameCamera.additionalPosition = new Vector3(0, 0, 0);
                 }
             }
         }
