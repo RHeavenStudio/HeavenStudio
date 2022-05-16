@@ -13,7 +13,7 @@ namespace HeavenStudio.Games.Scripts_PajamaParty
         public GameObject Player;
         public GameObject Shadow;
 
-        Animator anim;
+        public Animator anim;
         float startJumpTime = Single.MinValue;
         float jumpLength = 0;
         float jumpHeight = 0;

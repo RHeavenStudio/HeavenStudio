@@ -17,7 +17,7 @@ namespace HeavenStudio.Games.Loaders
                 new GameAction("jump (side to middle)",     delegate { }, 4f, true),
                 new GameAction("jump (back to front)",      delegate { }, 4f, true),
                 //idem
-                new GameAction("slumber",                   delegate { }, 8f, true),
+                new GameAction("slumber",                   delegate {PajamaParty.instance.DoSleepSequence(eventCaller.currentEntity.beat);}, 8f, true),
                 new GameAction("throw",                     delegate { }, 8f, true),
                 //cosmetic
                 new GameAction("open / close background",   delegate { }, 2f, true),
@@ -47,6 +47,39 @@ namespace HeavenStudio.Games
         void Update()
         {
             
+        }
+
+        public void DoSleepSequence(float beat)
+        {
+            var cond = Conductor.instance;
+            BeatAction.New(Mako.Player, new List<BeatAction.Action>()
+            {
+                new BeatAction.Action(
+                    beat,
+                    delegate { Mako.anim.Play("MakoSleep00", -1, 0); 
+                            Mako.anim.speed = 1f / cond.pitchedSecPerBeat; 
+                        }
+                ),
+                new BeatAction.Action(
+                    beat + 0.5f,
+                    delegate { Mako.anim.Play("MakoSleep01", -1, 0); 
+                            Mako.anim.speed = 1f; 
+                        }
+                ),
+                new BeatAction.Action(
+                    beat + 3,
+                    delegate { Mako.anim.Play("MakoReadySleep", -1, 0); 
+                            Mako.anim.speed = 1f / cond.pitchedSecPerBeat; 
+                        }
+                ),
+                // test
+                new BeatAction.Action(
+                    beat + 4f,
+                    delegate { Mako.anim.Play("MakoSleepJust", -1, 0); 
+                            Mako.anim.speed = 1f; 
+                        }
+                ),
+            });
         }
 
         public void DoBedImpact()
