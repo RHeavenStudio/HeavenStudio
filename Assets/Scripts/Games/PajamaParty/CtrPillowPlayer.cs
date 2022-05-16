@@ -28,7 +28,7 @@ namespace HeavenStudio.Games.Scripts_PajamaParty
         void Update()
         {
             var cond = Conductor.instance;
-            //test
+            // TESTING REMOVE FOR PROD
             if (PlayerInput.Pressed())
             {
                 PlayerJump(cond.songPositionInBeats);
@@ -50,10 +50,10 @@ namespace HeavenStudio.Games.Scripts_PajamaParty
             {
                 if (hasJumped)
                 {
-                    //TODO: proper landing anim
                     hasJumped = false;
-                    anim.Play("MakoBeat", -1, 0);
-                    anim.speed = 1f;
+                    PajamaParty.instance.DoBedImpact();
+                    anim.Play("MakoLand", -1, 0);
+                    anim.speed = 1f / cond.pitchedSecPerBeat;
                 }
                 startJumpTime = Single.MinValue;
                 Player.transform.localPosition = new Vector3(0, 0);

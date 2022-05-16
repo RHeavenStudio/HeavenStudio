@@ -13,6 +13,15 @@ namespace HeavenStudio.Games.Loaders
         public static Minigame AddGame(EventCaller eventCaller) {
             return new Minigame("pajamaParty", "Pajama Party \n<color=#eb5454>[WIP don't use]</color>", "000000", false, false, new List<GameAction>()
             {
+                // both same timing
+                new GameAction("jump (side to middle)",     delegate { }, 4f, true),
+                new GameAction("jump (back to front)",      delegate { }, 4f, true),
+                //idem
+                new GameAction("slumber",                   delegate { }, 8f, true),
+                new GameAction("throw",                     delegate { }, 8f, true),
+                //cosmetic
+                new GameAction("open / close background",   delegate { }, 2f, true),
+                // do shit with mako's face?
             });
         }
     }
@@ -25,6 +34,7 @@ namespace HeavenStudio.Games
     {
         [Header("Objects")]
         public CtrPillowPlayer Mako;
+        public GameObject Bed;
 
         //game scene
         public static PajamaParty instance;
@@ -37,6 +47,11 @@ namespace HeavenStudio.Games
         void Update()
         {
             
+        }
+
+        public void DoBedImpact()
+        {
+            Bed.GetComponent<Animator>().Play("BedImpact", -1, 0);
         }
     }
 }
