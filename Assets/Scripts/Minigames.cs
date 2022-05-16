@@ -149,6 +149,28 @@ namespace HeavenStudio
                     {
                         new Param("toggle", true, "Enable Inputs")
                     }),
+
+                    new GameAction("move camera",              delegate 
+                    {
+                        //TODO: move cam
+                    }, 1f, true, new List<Param>() 
+                    {
+                        new Param("valA", new EntityTypes.Float(-50, 50, 0), "Right / Left"),
+                        new Param("valB", new EntityTypes.Float(-50, 50, 0), "Up / Down"),
+                        new Param("valC", new EntityTypes.Float(-0, 250, 10), "In / Out"),
+                        new Param("ease", EasingFunction.Ease.Linear, "Ease Type")
+                    } ),
+
+                    new GameAction("rotate camera",            delegate 
+                    {
+                        //TODO: rot cam
+                    }, 1f, true, new List<Param>() 
+                    {
+                        new Param("valA", new EntityTypes.Integer(-360, 360, 0), "Pitch"),
+                        new Param("valB", new EntityTypes.Integer(-360, 360, 0), "Yaw"),
+                        new Param("valC", new EntityTypes.Integer(-360, 360, 0), "Roll"),
+                        new Param("ease", EasingFunction.Ease.Linear, "Ease Type")
+                    } ),
                 }),
                 new Minigame("countIn", "Count-Ins", "", false, true, new List<GameAction>()
                 {

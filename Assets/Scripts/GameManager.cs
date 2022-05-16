@@ -444,7 +444,7 @@ namespace HeavenStudio
 
         public void ResetCamera()
         {
-            GameCamera.transform.localPosition = new Vector3(0, 0, -10);
+            HeavenStudio.GameCamera.ResetAdditionalTransforms();
         }
     }
 }
