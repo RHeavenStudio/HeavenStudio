@@ -61,7 +61,7 @@ namespace HeavenStudio.Games
 
             float normalizedBeat = Conductor.instance.GetPositionFromBeat(startBeat,timer);
             // allows ace detection with this new system
-            float stateProg = ((normalizedBeat - Minigame.EarlyTime()) / (Minigame.LateTime() - Minigame.EarlyTime()) - 0.5f) * 2;
+            float stateProg = ((normalizedBeat - Minigame.PerfectTime()) / (Minigame.LateTime() - Minigame.PerfectTime()) - 0.5f) * 2;
             StateCheck(normalizedBeat);
 
             //BUGFIX: ActionEvents destroyed too early
@@ -124,7 +124,10 @@ namespace HeavenStudio.Games
         //For the Autoplay
         public override void OnAce()
         {
-            Hit(0f);
+            float normalizedBeat = Conductor.instance.GetPositionFromBeat(startBeat,timer);
+            // allows ace detection with this new system
+            float stateProg = ((normalizedBeat - Minigame.PerfectTime()) / (Minigame.LateTime() - Minigame.PerfectTime()) - 0.5f) * 2;
+            Hit(stateProg);
         }
 
         //The state parameter is either -1 -> Early, 0 -> Perfect, 1 -> Late
