@@ -40,7 +40,7 @@ namespace HeavenStudio.Games.Scripts_PajamaParty
                 float yWeight = -(yMul*yMul) + 1f;
                 Monkey.transform.localPosition = new Vector3(0, jumpHeight * yWeight);
                 Shadow.transform.localScale = new Vector3((1f-yWeight*0.2f) * 1.2f, (1f-yWeight*0.2f) * 0.8f, 1f);
-                anim.Play("MonkeyJump", 0, jumpPos);
+                anim.Play("MonkeyJump", -1, jumpPos);
                 anim.speed = 0;
             }
             else

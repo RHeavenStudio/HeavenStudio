@@ -67,7 +67,7 @@ namespace HeavenStudio.Games.Scripts_PajamaParty
                 Player.transform.localPosition = new Vector3(0, jumpHeight * yWeight);
                 Shadow.transform.localScale = new Vector3((1f-yWeight*0.2f) * 1.65f, (1f-yWeight*0.2f), 1f);
                 // handles the shirt lifting
-                anim.Play("MakoJump", 0, jumpPos);
+                anim.Play("MakoJump", -1, jumpPos);
                 anim.speed = 0;
             }
             else
@@ -113,7 +113,7 @@ namespace HeavenStudio.Games.Scripts_PajamaParty
                     }
                     //TODO: change when locales are a thing
                     Jukebox.PlayOneShotGame("pajamaParty/jp/catch" + UnityEngine.Random.Range(0, 2)); //bruh
-                    
+
                     anim.speed = 1f;
                     Projectile.SetActive(false);
                     hasThrown = false;
