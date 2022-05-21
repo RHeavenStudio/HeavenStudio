@@ -106,15 +106,14 @@ namespace HeavenStudio.Games.Scripts_PajamaParty
                     if (throwLength == 1f)    //ew hardcoded change later
                     {
                         anim.Play("MakoCatchNg", -1, 0);
-                        //TODO: change when locales are a thing
-                        Jukebox.PlayOneShotGame("pajamaParty/jp/catchNg" + UnityEngine.Random.Range(0, 2)); //bruh
                     }
                     else
                     {
                         anim.Play("MakoCatch", -1, 0);
-                        //TODO: change when locales are a thing
-                        Jukebox.PlayOneShotGame("pajamaParty/jp/catchJust");
                     }
+                    //TODO: change when locales are a thing
+                    Jukebox.PlayOneShotGame("pajamaParty/jp/catch" + UnityEngine.Random.Range(0, 2)); //bruh
+                    
                     anim.speed = 1f;
                     Projectile.SetActive(false);
                     hasThrown = false;

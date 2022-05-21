@@ -18,7 +18,7 @@ namespace HeavenStudio.Games.Loaders
                 new GameAction("jump (back to front)",      delegate {PajamaParty.instance.DoFiveJump(eventCaller.currentEntity.beat);}, 4f, false),
                 //idem
                 new GameAction("slumber",                   delegate {PajamaParty.instance.DoSleepSequence(eventCaller.currentEntity.beat);}, 8f, false),
-                new GameAction("throw",                     delegate { }, 8f, false),
+                new GameAction("throw",                     delegate {PajamaParty.instance.DoThrowSequence(eventCaller.currentEntity.beat);}, 8f, false),
                 //cosmetic
                 new GameAction("open / close background",   delegate { }, 2f, true),
                 // do shit with mako's face? (talking?)
@@ -66,6 +66,20 @@ namespace HeavenStudio.Games
                 new MultiSound.Sound("pajamaParty/five3", beat + 1f),
                 new MultiSound.Sound("pajamaParty/five4", beat + 1.5f),
                 new MultiSound.Sound("pajamaParty/five5", beat + 2f)
+            });
+        }
+
+        public void DoThrowSequence(float beat)
+        {
+            MultiSound.Play(new MultiSound.Sound[] { 
+                new MultiSound.Sound("pajamaParty/throw1", beat), 
+                new MultiSound.Sound("pajamaParty/throw2", beat + 0.5f),
+                new MultiSound.Sound("pajamaParty/throw3", beat + 1f),
+                //TODO: change when locales are a thing
+                //new MultiSound.Sound("pajamaParty/en/throw4a", beat + 1.5f),    //will only play if this clip exists (aka just en)
+                new MultiSound.Sound("pajamaParty/charge", beat + 2f),
+                new MultiSound.Sound("pajamaParty/jp/throw4", beat + 2f),
+                new MultiSound.Sound("pajamaParty/jp/throw5", beat + 3f),
             });
         }
 
