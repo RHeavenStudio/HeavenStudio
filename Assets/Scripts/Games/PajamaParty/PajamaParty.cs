@@ -168,8 +168,8 @@ namespace HeavenStudio.Games
                 new MultiSound.Sound("pajamaParty/siesta1", beat), 
                 new MultiSound.Sound("pajamaParty/siesta2", beat + 0.5f),
                 new MultiSound.Sound("pajamaParty/siesta3", beat + 1f),
-                new MultiSound.Sound("pajamaParty/siesta4", beat + 2.5f),
-                new MultiSound.Sound("pajamaParty/siesta5", beat + 4f)
+                new MultiSound.Sound("pajamaParty/siesta3", beat + 2.5f),
+                new MultiSound.Sound("pajamaParty/siesta3", beat + 4f)
             });
 
             BeatAction.New(Mako.Player, new List<BeatAction.Action>()
@@ -188,18 +188,14 @@ namespace HeavenStudio.Games
                 ),
                 new BeatAction.Action(
                     beat + 3,
-                    delegate { Mako.anim.Play("MakoReadySleep", -1, 0); 
-                            Mako.anim.speed = 1f / cond.pitchedSecPerBeat;
-                        }
-                ),
-                //test
-                    new BeatAction.Action(
-                        beat + 4,
-                        delegate { Mako.anim.Play("MakoSleepJust", -1, 0); 
-                                Mako.anim.speed = 1f;
+                    delegate { 
+                            if (Mako.canSleep)
+                            {
+                                Mako.anim.Play("MakoReadySleep", -1, 0); 
+                                Mako.anim.speed = 1f / cond.pitchedSecPerBeat;
                             }
-                    ),
-                //
+                        }
+                )
             });
         }
 
