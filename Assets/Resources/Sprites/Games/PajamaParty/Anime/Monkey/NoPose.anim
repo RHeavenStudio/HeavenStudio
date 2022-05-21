@@ -67,7 +67,7 @@ AnimationClip:
       m_Curve:
       - serializedVersion: 3
         time: 0
-        value: {x: 0, y: 0, z: 21.22}
+        value: {x: 0, y: 0, z: 24.39}
         inSlope: {x: 0, y: 0, z: 0}
         outSlope: {x: 0, y: 0, z: 0}
         tangentMode: 0
@@ -292,7 +292,7 @@ AnimationClip:
       m_Curve:
       - serializedVersion: 3
         time: 0
-        value: {x: -0.14, y: 0.21, z: 0}
+        value: {x: -0.12, y: 0.21, z: 0}
         inSlope: {x: 0, y: 0, z: 0}
         outSlope: {x: 0, y: 0, z: 0}
         tangentMode: 0
@@ -340,7 +340,7 @@ AnimationClip:
       m_Curve:
       - serializedVersion: 3
         time: 0
-        value: {x: 0, y: 0.8, z: -0.28111556}
+        value: {x: 0, y: 0.8, z: 0}
         inSlope: {x: 0, y: 0, z: 0}
         outSlope: {x: 0, y: 0, z: 0}
         tangentMode: 0
@@ -2147,7 +2147,7 @@ AnimationClip:
       m_Curve:
       - serializedVersion: 3
         time: 0
-        value: 21.22
+        value: 24.39
         inSlope: 0
         outSlope: 0
         tangentMode: 136
@@ -2242,7 +2242,7 @@ AnimationClip:
       m_Curve:
       - serializedVersion: 3
         time: 0
-        value: -0.14
+        value: -0.12
         inSlope: 0
         outSlope: 0
         tangentMode: 136
@@ -2850,7 +2850,7 @@ AnimationClip:
       m_Curve:
       - serializedVersion: 3
         time: 0
-        value: -0.28111556
+        value: 0
         inSlope: 0
         outSlope: 0
         tangentMode: 136
@@ -4044,8 +4044,8 @@ AnimationClip:
       m_PreInfinity: 2
       m_PostInfinity: 2
       m_RotationOrder: 4
-    attribute: m_LocalEulerAngles.x
-    path: ArmL
+    attribute: m_LocalEulerAngles.z
+    path: LegOther/LegAttatch
     classID: 4
     script: {fileID: 0}
   - curve:
@@ -4055,7 +4055,7 @@ AnimationClip:
       m_PostInfinity: 2
       m_RotationOrder: 4
     attribute: m_LocalEulerAngles.y
-    path: ArmL
+    path: LegOther/LegAttatch
     classID: 4
     script: {fileID: 0}
   - curve:
@@ -4064,8 +4064,8 @@ AnimationClip:
       m_PreInfinity: 2
       m_PostInfinity: 2
       m_RotationOrder: 4
-    attribute: m_LocalEulerAngles.z
-    path: ArmL
+    attribute: m_LocalEulerAngles.x
+    path: LegOther/LegAttatch
     classID: 4
     script: {fileID: 0}
   - curve:
@@ -4315,7 +4315,7 @@ AnimationClip:
       m_PostInfinity: 2
       m_RotationOrder: 4
     attribute: m_LocalEulerAngles.x
-    path: LegOther/LegAttatch
+    path: ArmL
     classID: 4
     script: {fileID: 0}
   - curve:
@@ -4325,7 +4325,7 @@ AnimationClip:
       m_PostInfinity: 2
       m_RotationOrder: 4
     attribute: m_LocalEulerAngles.y
-    path: LegOther/LegAttatch
+    path: ArmL
     classID: 4
     script: {fileID: 0}
   - curve:
@@ -4335,7 +4335,7 @@ AnimationClip:
       m_PostInfinity: 2
       m_RotationOrder: 4
     attribute: m_LocalEulerAngles.z
-    path: LegOther/LegAttatch
+    path: ArmL
     classID: 4
     script: {fileID: 0}
   m_HasGenericRootTransform: 0

@@ -4,6 +4,7 @@ using System.Collections.Generic;
 
 using System;
 using UnityEngine;
+using UnityEngine.Rendering;
 
 namespace HeavenStudio.Games.Loaders
 {
@@ -35,13 +36,53 @@ namespace HeavenStudio.Games
         [Header("Objects")]
         public CtrPillowPlayer Mako;
         public GameObject Bed;
+        public GameObject MonkeyPrefab;
+
+        [Header("Positions")]
+        public Transform SpawnRoot;
 
         //game scene
         public static PajamaParty instance;
+        CtrPillowMonkey[,] monkeys;
 
         void Awake()
         {
             instance = this;
+
+            //spawn monkeys
+            // is 5x5 grid with row 0, col 2 being empty (the player)
+            // m  m  m  m  m
+            // m  m  m  m  m
+            // m  m  m  m  m
+            // m  m  m  m  m
+            // m  m  P  m  m
+            monkeys = new CtrPillowMonkey[5,5];
+            float RADIUS = 2.5f;
+            float scale = 1.0f;
+            int sorting = 10;
+            //set our start position (at Mako + 2*radius to the right)
+            Vector3 spawnPos = SpawnRoot.position + new Vector3(-RADIUS*3, 0);
+            for (int y = 0; y < 5; y++)
+            {
+                for (int x = 0; x < 5; x++)
+                {
+                    //on x-axis we go left to right
+                    spawnPos += new Vector3(RADIUS*scale, 0);
+                    if (!(y == 0 && x == 2)) //don't spawn at the player's position
+                    {
+                        GameObject mobj = Instantiate(MonkeyPrefab, SpawnRoot.parent);
+                        CtrPillowMonkey monkey = mobj.GetComponent<CtrPillowMonkey>();
+                        mobj.GetComponent<SortingGroup>().sortingOrder = sorting;
+                        mobj.transform.localPosition = new Vector3(spawnPos.x, spawnPos.y, spawnPos.z);
+                        mobj.transform.localScale = new Vector3(scale, scale);
+                        monkeys[x, y] = monkey;
+                    }
+                }
+                // on the y-axis we go front to back (player to the rear)
+                scale -= 0.1f;
+                spawnPos = SpawnRoot.position - new Vector3(RADIUS*3*scale, -RADIUS/3.75f*(y+1), -RADIUS/5f*(y+1));
+                sorting--;
+            }
         }
 
         void Update()
@@ -56,6 +97,30 @@ namespace HeavenStudio.Games
                 new MultiSound.Sound("pajamaParty/three2", beat + 1f),
                 new MultiSound.Sound("pajamaParty/three3", beat + 2f),
             });
+
+            BeatAction.New(Bed, new List<BeatAction.Action>()
+            {
+                new BeatAction.Action(
+                    beat,
+                    delegate {
+                        JumpCol(0, beat);
+                        JumpCol(4, beat);
+                    }
+                ),
+                new BeatAction.Action(
+                    beat + 1,
+                    delegate {
+                        JumpCol(1, beat + 1);
+                        JumpCol(3, beat + 1);
+                    }
+                ),
+                new BeatAction.Action(
+                    beat + 2,
+                    delegate {
+                        JumpCol(2, beat + 2);
+                    }
+                ),
+            });
         }
 
         public void DoFiveJump(float beat)
@@ -66,6 +131,15 @@ namespace HeavenStudio.Games
                 new MultiSound.Sound("pajamaParty/five3", beat + 1f),
                 new MultiSound.Sound("pajamaParty/five4", beat + 1.5f),
                 new MultiSound.Sound("pajamaParty/five5", beat + 2f)
+            });
+
+            BeatAction.New(Bed, new List<BeatAction.Action>()
+            {
+                new BeatAction.Action( beat,        delegate { JumpRow(4, beat); }),
+                new BeatAction.Action( beat + 0.5f, delegate { JumpRow(3, beat + 0.5f); }),
+                new BeatAction.Action( beat + 1f,   delegate { JumpRow(2, beat + 1f); }),
+                new BeatAction.Action( beat + 1.5f, delegate { JumpRow(1, beat + 1.5f); }),
+                new BeatAction.Action( beat + 2f,   delegate { JumpRow(0, beat + 2f); }),
             });
         }
 
@@ -130,6 +204,36 @@ namespace HeavenStudio.Games
         public void DoBedImpact()
         {
             Bed.GetComponent<Animator>().Play("BedImpact", -1, 0);
+        }
+
+        public void JumpRow(int row, float beat)
+        {
+            if (row > 4 || row < 0)
+            {
+                return;
+            }
+            for (int i = 0; i < 5; i++)
+            {
+                if (!(i == 2 && row == 0))
+                {
+                    monkeys[i, row].Jump(beat);
+                }
+            }
+        }
+
+        public void JumpCol(int col, float beat)
+        {
+            if (col > 4 || col < 0)
+            {
+                return;
+            }
+            for (int i = 0; i < 5; i++)
+            {
+                if (!(col == 2 && i == 0))
+                {
+                    monkeys[col, i].Jump(beat);
+                }
+            }
         }
     }
 }
