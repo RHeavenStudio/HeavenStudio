@@ -40,8 +40,8 @@ namespace HeavenStudio.Games.Scripts_PajamaParty
                 float yWeight = -(yMul*yMul) + 1f;
                 Monkey.transform.localPosition = new Vector3(0, jumpHeight * yWeight);
                 Shadow.transform.localScale = new Vector3((1f-yWeight*0.2f) * 1.2f, (1f-yWeight*0.2f) * 0.8f, 1f);
-                // anim.Play("MakoJump", 0, jumpPos);
-                // anim.speed = 0;
+                anim.Play("MonkeyJump", 0, jumpPos);
+                anim.speed = 0;
             }
             else
             {
@@ -49,8 +49,9 @@ namespace HeavenStudio.Games.Scripts_PajamaParty
                 {
                     hasJumped = false;
                     PajamaParty.instance.DoBedImpact();
-                    // anim.Play("MakoLand", -1, 0);
-                    // anim.speed = 1f / cond.pitchedSecPerBeat;
+                    //temp
+                    anim.Play("MonkeyBeat", -1, 0);
+                    anim.speed = 1f / cond.pitchedSecPerBeat;
                 }
                 startJumpTime = Single.MinValue;
                 Monkey.transform.localPosition = new Vector3(0, 0);
