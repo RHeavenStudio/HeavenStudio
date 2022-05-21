@@ -18,6 +18,7 @@ namespace HeavenStudio.Games.Scripts_PajamaParty
         float startJumpTime = Single.MinValue;
         float jumpLength = 0;
         float jumpHeight = 0;
+        bool jumpNg = false;
 
         private bool hasJumped = false;
         private bool canJump = true;
@@ -43,9 +44,10 @@ namespace HeavenStudio.Games.Scripts_PajamaParty
             var cond = Conductor.instance;
 
             // TESTING REMOVE FOR PROD
-                if (PlayerInput.Pressed() && canJump)
+                if (PlayerInput.Pressed() && canJump && !PajamaParty.instance.IsExpectingInputNow())
                 {
-                    PlayerJump(cond.songPositionInBeats);
+                    Jukebox.PlayOneShot("miss");
+                    PlayerJump(cond.songPositionInBeats, true, false);
                 }
                 if (PlayerInput.AltPressed() && canCharge)
                 {
@@ -78,8 +80,14 @@ namespace HeavenStudio.Games.Scripts_PajamaParty
                     canCharge = true;
                     hasJumped = false;
                     PajamaParty.instance.DoBedImpact();
-                    anim.Play("MakoLand", -1, 0);
+                    if (jumpNg)
+                        anim.Play("MakoCatchNg", -1, 0);
+                    else if (jumpHeight != 4f)
+                        anim.Play("MakoCatch", -1, 0);
+                    else
+                        anim.Play("MakoLand", -1, 0);
                     anim.speed = 1f / cond.pitchedSecPerBeat;
+                    jumpNg = false;
                 }
                 startJumpTime = Single.MinValue;
                 Player.transform.localPosition = new Vector3(0, 0);
@@ -140,15 +148,16 @@ namespace HeavenStudio.Games.Scripts_PajamaParty
             }
         }
 
-        public void PlayerJump(float beat)
+        public void PlayerJump(float beat, bool pressout = false, bool ng = false)
         {
             startJumpTime = beat;
             canCharge = false;
             canJump = false;
 
             //temp
-            jumpLength = 1f;
-            jumpHeight = 4f;
+            jumpLength = (ng || pressout) ? 0.5f : 1f;
+            jumpHeight = (ng || pressout) ? 2f : 4f;
+            jumpNg = ng;
         }
 
         public void StartCharge()
@@ -187,6 +196,70 @@ namespace HeavenStudio.Games.Scripts_PajamaParty
                         }
                     )
                 });
+            }
+        }
+
+        public void PlayerThrough(float beat)
+        {
+            var cond = Conductor.instance;
+            anim.Play("MakoThrough", -1, 0);
+            anim.speed = (1f / cond.pitchedSecPerBeat) * 0.5f;
+            canCharge = false;
+            canJump = false;
+            BeatAction.New(Player, new List<BeatAction.Action>()
+            {
+                new BeatAction.Action(
+                    beat + 0.75f,
+                    delegate { 
+                        canCharge = true;
+                        canJump = true;
+                    }
+                )
+            });
+        }
+
+        public void ScheduleJump(float beat)
+        {
+            PajamaParty.instance.ScheduleInput(beat, 2f, InputType.STANDARD_DOWN, JumpJustOrNg, JumpThrough, JumpOut);
+        }
+
+        public void JumpJustOrNg(PlayerActionEvent caller, float state)
+        {
+            if (canJump)
+            { 
+                var cond = Conductor.instance;
+                Debug.Log("" + state);
+                if (state <= -1f || state >= 1f)
+                {
+                    Jukebox.PlayOneShot("miss");
+                    PlayerJump(cond.songPositionInBeats, false, true);
+                }
+                else
+                {
+                    Jukebox.PlayOneShotGame("pajamaParty/jumpJust");
+                    PlayerJump(cond.songPositionInBeats, false, false);
+                }
+                caller.CanHit(false);
+            }
+        }
+
+        public void JumpOut(PlayerActionEvent caller)
+        {
+            // if (canJump)
+            // {
+            //     var cond = Conductor.instance;
+            //     Jukebox.PlayOneShot("miss");
+            //     PlayerJump(cond.songPositionInBeats, true, false);
+            //     caller.CanHit(false);
+            // }
+        }
+
+        public void JumpThrough(PlayerActionEvent caller)
+        {
+            if (canJump)
+            {    
+                var cond = Conductor.instance;
+                PlayerThrough(cond.songPositionInBeats);
             }
         }
 

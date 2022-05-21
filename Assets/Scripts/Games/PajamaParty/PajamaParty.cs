@@ -57,7 +57,7 @@ namespace HeavenStudio.Games
             // m  m  m  m  m
             // m  m  P  m  m
             monkeys = new CtrPillowMonkey[5,5];
-            float RADIUS = 2.5f;
+            float RADIUS = 2.75f;
             float scale = 1.0f;
             int sorting = 10;
             //set our start position (at Mako + 2*radius to the right)
@@ -92,6 +92,7 @@ namespace HeavenStudio.Games
 
         public void DoThreeJump(float beat)
         {
+            Mako.ScheduleJump(beat);
             MultiSound.Play(new MultiSound.Sound[] { 
                 new MultiSound.Sound("pajamaParty/three1", beat), 
                 new MultiSound.Sound("pajamaParty/three2", beat + 1f),
@@ -125,6 +126,7 @@ namespace HeavenStudio.Games
 
         public void DoFiveJump(float beat)
         {
+            Mako.ScheduleJump(beat);
             MultiSound.Play(new MultiSound.Sound[] { 
                 new MultiSound.Sound("pajamaParty/five1", beat), 
                 new MultiSound.Sound("pajamaParty/five2", beat + 0.5f),

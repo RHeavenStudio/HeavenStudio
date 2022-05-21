@@ -6,7 +6,7 @@ namespace HeavenStudio.Games
 {
     public class Minigame : MonoBehaviour
     {
-        public static float earlyTime = 0.90f, perfectTime = 0.93f, lateTime = 1.06f, endTime = 1.10f;
+        public static float earlyTime = 0.90f, perfectTime = 0.94f, lateTime = 1.06f, endTime = 1.10f;
         public List<Minigame.Eligible> EligibleHits = new List<Minigame.Eligible>();
 
         [System.Serializable]
