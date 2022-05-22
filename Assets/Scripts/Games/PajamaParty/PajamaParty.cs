@@ -147,6 +147,7 @@ namespace HeavenStudio.Games
 
         public void DoThrowSequence(float beat)
         {
+            Mako.ScheduleThrow(beat);
             MultiSound.Play(new MultiSound.Sound[] { 
                 new MultiSound.Sound("pajamaParty/throw1", beat), 
                 new MultiSound.Sound("pajamaParty/throw2", beat + 0.5f),
@@ -154,8 +155,12 @@ namespace HeavenStudio.Games
                 //TODO: change when locales are a thing
                 //new MultiSound.Sound("pajamaParty/en/throw4a", beat + 1.5f),    //will only play if this clip exists (aka just en)
                 new MultiSound.Sound("pajamaParty/charge", beat + 2f),
-                new MultiSound.Sound("pajamaParty/jp/throw4", beat + 2f),
-                new MultiSound.Sound("pajamaParty/jp/throw5", beat + 3f),
+            });
+
+            BeatAction.New(Mako.Player, new List<BeatAction.Action>()
+            {
+                new BeatAction.Action( beat + 2f, delegate { MonkeyCharge(beat + 2f); } ),
+                new BeatAction.Action( beat + 3f, delegate { MonkeyThrow(beat + 3f); } ),
             });
         }
 
@@ -230,6 +235,28 @@ namespace HeavenStudio.Games
                 if (!(col == 2 && i == 0))
                 {
                     monkeys[col, i].Jump(beat);
+                }
+            }
+        }
+
+        public void MonkeyCharge(float beat)
+        {
+            foreach (CtrPillowMonkey monkey in monkeys)
+            {
+                if (monkey != null)
+                {
+                    monkey.Charge(beat);
+                }
+            }
+        }
+
+        public void MonkeyThrow(float beat)
+        {
+            foreach (CtrPillowMonkey monkey in monkeys)
+            {
+                if (monkey != null)
+                {
+                    monkey.Throw(beat);
                 }
             }
         }

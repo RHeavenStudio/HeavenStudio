@@ -13,6 +13,7 @@ namespace HeavenStudio.Games.Scripts_PajamaParty
         public GameObject Player;
         public GameObject Shadow;
         public GameObject Projectile;
+        public GameObject Projectile_Root;
 
         public Animator anim;
         float startJumpTime = Single.MinValue;
@@ -32,6 +33,7 @@ namespace HeavenStudio.Games.Scripts_PajamaParty
         // true = throw, false = dropped ("Out")
         bool throwType = true;
         bool hasThrown = false;
+        bool throwNg = false;
 
         public bool canSleep = false;
 
@@ -104,7 +106,7 @@ namespace HeavenStudio.Games.Scripts_PajamaParty
                     hasThrown = true;
                     float yMul = jumpPos * 2f - 1f;
                     float yWeight = -(yMul*yMul) + 1f;
-                    Projectile.transform.localPosition = new Vector3(0, throwHeight * yWeight + 0.5f);
+                    Projectile_Root.transform.localPosition = new Vector3(0, throwHeight * yWeight + 0.5f);
                 }
                 else
                 {
@@ -117,11 +119,11 @@ namespace HeavenStudio.Games.Scripts_PajamaParty
             {
                 Projectile.GetComponent<Animator>().Play("NoPose", -1, 0);
                 startThrowTime = Single.MinValue;
-                Projectile.transform.localPosition = new Vector3(0, 0);
+                Projectile_Root.transform.localPosition = new Vector3(0, 0);
                 Projectile.transform.rotation = Quaternion.Euler(0, 0, 0);
                 if (hasThrown)
                 {
-                    if (throwLength == 1f)    //ew hardcoded change later
+                    if (throwNg)
                     {
                         anim.Play("MakoCatchNg", -1, 0);
                     }
@@ -135,7 +137,7 @@ namespace HeavenStudio.Games.Scripts_PajamaParty
                     anim.speed = 1f;
                     Projectile.SetActive(false);
                     hasThrown = false;
-
+                    throwNg = false;
 
                     canCharge = true;
                     canJump = true;
@@ -145,6 +147,7 @@ namespace HeavenStudio.Games.Scripts_PajamaParty
 
         public void ProjectileThrow(float beat, bool drop = false, bool ng = false)
         {
+            throwNg = ng;
             Projectile.SetActive(true);
             startThrowTime = beat;
             if (drop)
@@ -220,6 +223,7 @@ namespace HeavenStudio.Games.Scripts_PajamaParty
             var cond = Conductor.instance;
             anim.Play("MakoThrough", -1, 0);
             anim.speed = (1f / cond.pitchedSecPerBeat) * 0.5f;
+            charging = false;
             canCharge = false;
             canJump = false;
             BeatAction.New(Player, new List<BeatAction.Action>()
@@ -245,7 +249,6 @@ namespace HeavenStudio.Games.Scripts_PajamaParty
                 if (canJump)
                 { 
                     var cond = Conductor.instance;
-                    Debug.Log("" + state);
                     if (state <= -1f || state >= 1f)
                     {
                         Jukebox.PlayOneShot("miss");
@@ -272,6 +275,48 @@ namespace HeavenStudio.Games.Scripts_PajamaParty
             }
         //////
 
+        // throw cue
+            public void ScheduleThrow(float beat)
+            {
+                PajamaParty.instance.ScheduleInput(beat, 2f, InputType.STANDARD_ALT_DOWN, ChargeJustOrNg, ThrowThrough, JumpOut);
+                PajamaParty.instance.ScheduleInput(beat, 3f, InputType.STANDARD_ALT_UP, ThrowJustOrNg, ThrowThrough, JumpOut);
+            }
+
+            public void ChargeJustOrNg(PlayerActionEvent caller, float state) {
+                StartCharge();
+                throwNg = (state <= -1f || state >= 1f);
+                Jukebox.PlayOneShotGame("pajamaParty/jp/throw4");
+            }
+
+            public void ThrowJustOrNg(PlayerActionEvent caller, float state)
+            {
+                if (charging)
+                { 
+                    var cond = Conductor.instance;
+                    if (state <= -1f || state >= 1f)
+                    {
+                        Jukebox.PlayOneShot("miss");
+                        EndCharge(cond.songPositionInBeats, true, true);
+                    }
+                    else
+                    {
+                        Jukebox.PlayOneShotGame("pajamaParty/jp/throw5");
+                        EndCharge(cond.songPositionInBeats, true, (throwNg || false));
+                    }
+                    caller.CanHit(false);
+                }
+            }
+
+            public void ThrowThrough(PlayerActionEvent caller)
+            {
+                if (canCharge)
+                {    
+                    var cond = Conductor.instance;
+                    PlayerThrough(cond.songPositionInBeats);
+                }
+            }
+        //
+
         // sleep cue
             public void StartSleepSequence(float beat)
             {
@@ -287,7 +332,7 @@ namespace HeavenStudio.Games.Scripts_PajamaParty
 
                 Projectile.GetComponent<Animator>().Play("NoPose", -1, 0);
                 startThrowTime = Single.MinValue;
-                Projectile.transform.localPosition = new Vector3(0, 0);
+                Projectile_Root.transform.localPosition = new Vector3(0, 0);
                 Projectile.transform.rotation = Quaternion.Euler(0, 0, 0);
                 if (hasThrown)
                 {
