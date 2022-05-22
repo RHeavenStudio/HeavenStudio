@@ -362,9 +362,31 @@ namespace HeavenStudio.Games.Scripts_PajamaParty
                 BeatAction.New(Player, new List<BeatAction.Action>()
                 {
                     new BeatAction.Action(
+                        beat,
+                        delegate { anim.Play("MakoSleep00", -1, 0); 
+                            anim.speed = 1f / cond.pitchedSecPerBeat;
+                        }
+                    ),
+                    new BeatAction.Action(
+                        beat + 0.5f,
+                        delegate { anim.Play("MakoSleep01", -1, 0); 
+                            anim.speed = 1f;
+                        }
+                    ),
+                    new BeatAction.Action(
                         beat + 1f,
                         delegate { 
                             canSleep = true;
+                        }
+                    ),
+                    new BeatAction.Action(
+                        beat + 3f,
+                        delegate { 
+                            if (canSleep)
+                            {
+                                anim.Play("MakoReadySleep", -1, 0); 
+                                anim.speed = 1f / cond.pitchedSecPerBeat;
+                            }
                         }
                     ),
                     new BeatAction.Action(

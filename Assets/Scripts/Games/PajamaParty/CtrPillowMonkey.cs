@@ -106,5 +106,36 @@ namespace HeavenStudio.Games.Scripts_PajamaParty
             startThrowTime = beat;
             Projectile.SetActive(true);
         }
+
+        public void ReadySleep(float beat)
+        {
+            var cond = Conductor.instance;
+            startThrowTime = Single.MinValue;
+            Projectile.transform.localPosition = new Vector3(0, 0);
+            Projectile.transform.rotation = Quaternion.Euler(0, 0, 0);
+            if (hasThrown)
+            {
+                Projectile.SetActive(false);
+                hasThrown = false;
+            }
+
+            startJumpTime = Single.MinValue;
+            Monkey.transform.localPosition = new Vector3(0, 0);
+            Shadow.transform.localScale = new Vector3(1.2f, 0.8f, 1f);
+
+            BeatAction.New(Monkey, new List<BeatAction.Action>()
+            {
+                new BeatAction.Action( beat, delegate { 
+                        anim.Play("MonkeySleep00", -1, 0);
+                        anim.speed = 1f / cond.pitchedSecPerBeat;
+                    }
+                ),
+                new BeatAction.Action( beat + 0.5f, delegate { 
+                        anim.Play("MonkeySleep01", -1, 0);
+                        anim.speed = 1f;
+                    }
+                ),
+            });
+        }
     }
 }

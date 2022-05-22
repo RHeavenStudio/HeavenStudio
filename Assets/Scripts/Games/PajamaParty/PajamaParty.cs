@@ -168,6 +168,7 @@ namespace HeavenStudio.Games
         {
             var cond = Conductor.instance;
             Mako.StartSleepSequence(beat);
+            MonkeySleep(beat);
 
             MultiSound.Play(new MultiSound.Sound[] { 
                 new MultiSound.Sound("pajamaParty/siesta1", beat), 
@@ -175,32 +176,6 @@ namespace HeavenStudio.Games
                 new MultiSound.Sound("pajamaParty/siesta3", beat + 1f),
                 new MultiSound.Sound("pajamaParty/siesta3", beat + 2.5f),
                 new MultiSound.Sound("pajamaParty/siesta3", beat + 4f)
-            });
-
-            BeatAction.New(Mako.Player, new List<BeatAction.Action>()
-            {
-                new BeatAction.Action(
-                    beat,
-                    delegate { Mako.anim.Play("MakoSleep00", -1, 0); 
-                            Mako.anim.speed = 1f / cond.pitchedSecPerBeat;
-                        }
-                ),
-                new BeatAction.Action(
-                    beat + 0.5f,
-                    delegate { Mako.anim.Play("MakoSleep01", -1, 0); 
-                            Mako.anim.speed = 1f;
-                        }
-                ),
-                new BeatAction.Action(
-                    beat + 3,
-                    delegate { 
-                            if (Mako.canSleep)
-                            {
-                                Mako.anim.Play("MakoReadySleep", -1, 0); 
-                                Mako.anim.speed = 1f / cond.pitchedSecPerBeat;
-                            }
-                        }
-                )
             });
         }
 
@@ -257,6 +232,17 @@ namespace HeavenStudio.Games
                 if (monkey != null)
                 {
                     monkey.Throw(beat);
+                }
+            }
+        }
+
+        public void MonkeySleep(float beat)
+        {
+            foreach (CtrPillowMonkey monkey in monkeys)
+            {
+                if (monkey != null)
+                {
+                    monkey.ReadySleep(beat);
                 }
             }
         }
