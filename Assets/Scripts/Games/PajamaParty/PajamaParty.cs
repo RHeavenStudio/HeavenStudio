@@ -18,10 +18,14 @@ namespace HeavenStudio.Games.Loaders
                 new GameAction("jump (side to middle)",     delegate {PajamaParty.instance.DoThreeJump(eventCaller.currentEntity.beat);}, 4f, false),
                 new GameAction("jump (back to front)",      delegate {PajamaParty.instance.DoFiveJump(eventCaller.currentEntity.beat);}, 4f, false),
                 //idem
-                new GameAction("slumber",                   delegate {PajamaParty.instance.DoSleepSequence(eventCaller.currentEntity.beat);}, 8f, false),
+                new GameAction("slumber",                   delegate {var e = eventCaller.currentEntity; PajamaParty.instance.DoSleepSequence(e.beat, e.toggle);}, 8f, false, parameters: new List<Param>()
+                    {
+                        new Param("toggle", false, "Alt. Animation", "Use an alternate animation for Mako")
+                    }
+                ),
                 new GameAction("throw",                     delegate {PajamaParty.instance.DoThrowSequence(eventCaller.currentEntity.beat);}, 8f, false),
                 //cosmetic
-                new GameAction("open / close background",   delegate { }, 2f, true),
+                // new GameAction("open / close background",   delegate { }, 2f, true),
                 // do shit with mako's face? (talking?)
             });
         }
@@ -75,6 +79,8 @@ namespace HeavenStudio.Games
                         mobj.GetComponent<SortingGroup>().sortingOrder = sorting;
                         mobj.transform.localPosition = new Vector3(spawnPos.x, spawnPos.y, spawnPos.z);
                         mobj.transform.localScale = new Vector3(scale, scale);
+                        monkey.row = y;
+                        monkey.col = x;
                         monkeys[x, y] = monkey;
                     }
                 }
@@ -111,8 +117,8 @@ namespace HeavenStudio.Games
                 new BeatAction.Action(
                     beat + 1,
                     delegate {
-                        JumpCol(1, beat + 1);
-                        JumpCol(3, beat + 1);
+                        JumpCol(1, beat + 1, 3);
+                        JumpCol(3, beat + 1, 3);
                     }
                 ),
                 new BeatAction.Action(
@@ -138,9 +144,9 @@ namespace HeavenStudio.Games
             BeatAction.New(Bed, new List<BeatAction.Action>()
             {
                 new BeatAction.Action( beat,        delegate { JumpRow(4, beat); }),
-                new BeatAction.Action( beat + 0.5f, delegate { JumpRow(3, beat + 0.5f); }),
+                new BeatAction.Action( beat + 0.5f, delegate { JumpRow(3, beat + 0.5f, 2); }),
                 new BeatAction.Action( beat + 1f,   delegate { JumpRow(2, beat + 1f); }),
-                new BeatAction.Action( beat + 1.5f, delegate { JumpRow(1, beat + 1.5f); }),
+                new BeatAction.Action( beat + 1.5f, delegate { JumpRow(1, beat + 1.5f, 2); }),
                 new BeatAction.Action( beat + 2f,   delegate { JumpRow(0, beat + 2f); }),
             });
         }
@@ -164,10 +170,10 @@ namespace HeavenStudio.Games
             });
         }
 
-        public void DoSleepSequence(float beat)
+        public void DoSleepSequence(float beat, bool alt = false)
         {
             var cond = Conductor.instance;
-            Mako.StartSleepSequence(beat);
+            Mako.StartSleepSequence(beat, alt);
             MonkeySleep(beat);
 
             MultiSound.Play(new MultiSound.Sound[] { 
@@ -184,7 +190,7 @@ namespace HeavenStudio.Games
             Bed.GetComponent<Animator>().Play("BedImpact", -1, 0);
         }
 
-        public void JumpRow(int row, float beat)
+        public void JumpRow(int row, float beat, int alt = 1)
         {
             if (row > 4 || row < 0)
             {
@@ -194,12 +200,12 @@ namespace HeavenStudio.Games
             {
                 if (!(i == 2 && row == 0))
                 {
-                    monkeys[i, row].Jump(beat);
+                    monkeys[i, row].Jump(beat, alt);
                 }
             }
         }
 
-        public void JumpCol(int col, float beat)
+        public void JumpCol(int col, float beat, int alt = 1)
         {
             if (col > 4 || col < 0)
             {
@@ -209,7 +215,7 @@ namespace HeavenStudio.Games
             {
                 if (!(col == 2 && i == 0))
                 {
-                    monkeys[col, i].Jump(beat);
+                    monkeys[col, i].Jump(beat, alt);
                 }
             }
         }

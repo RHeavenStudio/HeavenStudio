@@ -318,7 +318,7 @@ namespace HeavenStudio.Games.Scripts_PajamaParty
         //
 
         // sleep cue
-            public void StartSleepSequence(float beat)
+            public void StartSleepSequence(float beat, bool alt)
             {
                 if (hasJumped)
                 {
@@ -384,7 +384,7 @@ namespace HeavenStudio.Games.Scripts_PajamaParty
                         delegate { 
                             if (canSleep)
                             {
-                                anim.Play("MakoReadySleep", -1, 0); 
+                                anim.Play(alt ? "MakoReadySleep01" : "MakoReadySleep", -1, 0); 
                                 anim.speed = 1f / cond.pitchedSecPerBeat;
                             }
                         }
