@@ -15,15 +15,22 @@ namespace HeavenStudio.Games.Loaders
             return new Minigame("pajamaParty", "Pajama Party", "965076", false, false, new List<GameAction>()
             {
                 // both same timing
-                new GameAction("jump (side to middle)",     delegate {PajamaParty.instance.DoThreeJump(eventCaller.currentEntity.beat);}, 4f, false),
-                new GameAction("jump (back to front)",      delegate {PajamaParty.instance.DoFiveJump(eventCaller.currentEntity.beat);}, 4f, false),
+                new GameAction("jump (side to middle)",     delegate {PajamaParty.instance.DoThreeJump(eventCaller.currentEntity.beat);}, 4f, false, 
+                    inactiveFunction: delegate {PajamaParty.WarnThreeJump(eventCaller.currentEntity.beat);}
+                ),
+                new GameAction("jump (back to front)",      delegate {PajamaParty.instance.DoFiveJump(eventCaller.currentEntity.beat);}, 4f, false, 
+                    inactiveFunction: delegate {PajamaParty.WarnFiveJump(eventCaller.currentEntity.beat);}
+                    ),
                 //idem
                 new GameAction("slumber",                   delegate {var e = eventCaller.currentEntity; PajamaParty.instance.DoSleepSequence(e.beat, e.toggle);}, 8f, false, parameters: new List<Param>()
                     {
                         new Param("toggle", false, "Alt. Animation", "Use an alternate animation for Mako")
-                    }
+                    }, 
+                    inactiveFunction: delegate {var e = eventCaller.currentEntity; PajamaParty.WarnSleepSequence(e.beat, e.toggle);}
                 ),
-                new GameAction("throw",                     delegate {PajamaParty.instance.DoThrowSequence(eventCaller.currentEntity.beat);}, 8f, false),
+                new GameAction("throw",                     delegate {PajamaParty.instance.DoThrowSequence(eventCaller.currentEntity.beat);}, 8f, false, 
+                    inactiveFunction: delegate {PajamaParty.WarnThrowSequence(eventCaller.currentEntity.beat);}
+                ),
                 //cosmetic
                 // new GameAction("open / close background",   delegate { }, 2f, true),
                 // do shit with mako's face? (talking?)
@@ -48,6 +55,13 @@ namespace HeavenStudio.Games
         //game scene
         public static PajamaParty instance;
         CtrPillowMonkey[,] monkeys;
+
+        //cues while unoaded
+        static float WantThreeJump = Single.MinValue;
+        static float WantFiveJump = Single.MinValue;
+        static float WantThrowSequence = Single.MinValue;
+        static float WantSleepSequence = Single.MinValue;
+        static bool WantSleepType = false;
 
         void Awake()
         {
@@ -91,19 +105,39 @@ namespace HeavenStudio.Games
             }
         }
 
-        void Update()
+        public override void OnGameSwitch(float beat)
         {
-            
+            if (WantThreeJump != Single.MinValue)
+            {
+                DoThreeJump(WantThreeJump, false);
+                WantThreeJump = Single.MinValue;
+            }
+            if (WantFiveJump != Single.MinValue)
+            {
+                DoFiveJump(WantFiveJump, false);
+                WantFiveJump = Single.MinValue;
+            }
+            if (WantThrowSequence != Single.MinValue)
+            {
+                DoThrowSequence(WantThrowSequence, false);
+                WantThrowSequence = Single.MinValue;
+            }
+            if (WantSleepSequence != Single.MinValue)
+            {
+                DoSleepSequence(WantSleepSequence, WantSleepType, false);
+                WantSleepSequence = Single.MinValue;
+            }
         }
 
-        public void DoThreeJump(float beat)
+        public void DoThreeJump(float beat, bool doSound = true)
         {
             Mako.ScheduleJump(beat);
-            MultiSound.Play(new MultiSound.Sound[] { 
-                new MultiSound.Sound("pajamaParty/three1", beat), 
-                new MultiSound.Sound("pajamaParty/three2", beat + 1f),
-                new MultiSound.Sound("pajamaParty/three3", beat + 2f),
-            });
+            if (doSound)
+                MultiSound.Play(new MultiSound.Sound[] { 
+                    new MultiSound.Sound("pajamaParty/three1", beat), 
+                    new MultiSound.Sound("pajamaParty/three2", beat + 1f),
+                    new MultiSound.Sound("pajamaParty/three3", beat + 2f),
+                });
 
             BeatAction.New(Bed, new List<BeatAction.Action>()
             {
@@ -130,16 +164,27 @@ namespace HeavenStudio.Games
             });
         }
 
-        public void DoFiveJump(float beat)
+        public static void WarnThreeJump(float beat)
+        {
+            MultiSound.Play(new MultiSound.Sound[] { 
+                new MultiSound.Sound("pajamaParty/three1", beat), 
+                new MultiSound.Sound("pajamaParty/three2", beat + 1f),
+                new MultiSound.Sound("pajamaParty/three3", beat + 2f),
+            }, forcePlay:true);
+            WantThreeJump = beat;
+        }
+
+        public void DoFiveJump(float beat, bool doSound = true)
         {
             Mako.ScheduleJump(beat);
-            MultiSound.Play(new MultiSound.Sound[] { 
-                new MultiSound.Sound("pajamaParty/five1", beat), 
-                new MultiSound.Sound("pajamaParty/five2", beat + 0.5f),
-                new MultiSound.Sound("pajamaParty/five3", beat + 1f),
-                new MultiSound.Sound("pajamaParty/five4", beat + 1.5f),
-                new MultiSound.Sound("pajamaParty/five5", beat + 2f)
-            });
+            if (doSound)
+                MultiSound.Play(new MultiSound.Sound[] { 
+                    new MultiSound.Sound("pajamaParty/five1", beat), 
+                    new MultiSound.Sound("pajamaParty/five2", beat + 0.5f),
+                    new MultiSound.Sound("pajamaParty/five3", beat + 1f),
+                    new MultiSound.Sound("pajamaParty/five4", beat + 1.5f),
+                    new MultiSound.Sound("pajamaParty/five5", beat + 2f)
+                });
 
             BeatAction.New(Bed, new List<BeatAction.Action>()
             {
@@ -151,17 +196,23 @@ namespace HeavenStudio.Games
             });
         }
 
-        public void DoThrowSequence(float beat)
+        public static void WarnFiveJump(float beat)
+        {
+            MultiSound.Play(new MultiSound.Sound[] { 
+                new MultiSound.Sound("pajamaParty/five1", beat), 
+                new MultiSound.Sound("pajamaParty/five2", beat + 0.5f),
+                new MultiSound.Sound("pajamaParty/five3", beat + 1f),
+                new MultiSound.Sound("pajamaParty/five4", beat + 1.5f),
+                new MultiSound.Sound("pajamaParty/five5", beat + 2f)
+            }, forcePlay:true);
+            WantFiveJump = beat;
+        }
+
+        public void DoThrowSequence(float beat, bool doSound = true)
         {
             Mako.ScheduleThrow(beat);
-            MultiSound.Play(new MultiSound.Sound[] { 
-                new MultiSound.Sound("pajamaParty/throw1", beat), 
-                new MultiSound.Sound("pajamaParty/throw2", beat + 0.5f),
-                new MultiSound.Sound("pajamaParty/throw3", beat + 1f),
-                //TODO: change when locales are a thing
-                //new MultiSound.Sound("pajamaParty/en/throw4a", beat + 1.5f),    //will only play if this clip exists (aka just en)
-                new MultiSound.Sound("pajamaParty/charge", beat + 2f),
-            });
+            if (doSound)
+                PlayThrowSequenceSound(beat);
 
             BeatAction.New(Mako.Player, new List<BeatAction.Action>()
             {
@@ -170,19 +221,50 @@ namespace HeavenStudio.Games
             });
         }
 
-        public void DoSleepSequence(float beat, bool alt = false)
+        public static void WarnThrowSequence(float beat)
+        {
+            PlayThrowSequenceSound(beat, true);
+            WantThrowSequence = beat;
+        }
+
+        public static void PlayThrowSequenceSound(float beat, bool force = false)
+        {
+            MultiSound.Play(new MultiSound.Sound[] { 
+                new MultiSound.Sound("pajamaParty/throw1", beat), 
+                new MultiSound.Sound("pajamaParty/throw2", beat + 0.5f),
+                new MultiSound.Sound("pajamaParty/throw3", beat + 1f),
+                //TODO: change when locales are a thing
+                //new MultiSound.Sound("pajamaParty/en/throw4a", beat + 1.5f),    //will only play if this clip exists (aka just en)
+                new MultiSound.Sound("pajamaParty/charge", beat + 2f),
+            }, forcePlay: force);
+        }
+
+        public void DoSleepSequence(float beat, bool alt = false, bool doSound = true)
         {
             var cond = Conductor.instance;
             Mako.StartSleepSequence(beat, alt);
             MonkeySleep(beat);
+            if (doSound)
+                MultiSound.Play(new MultiSound.Sound[] { 
+                    new MultiSound.Sound("pajamaParty/siesta1", beat), 
+                    new MultiSound.Sound("pajamaParty/siesta2", beat + 0.5f),
+                    new MultiSound.Sound("pajamaParty/siesta3", beat + 1f),
+                    new MultiSound.Sound("pajamaParty/siesta3", beat + 2.5f),
+                    new MultiSound.Sound("pajamaParty/siesta3", beat + 4f)
+                });
+        }
 
+        public static void WarnSleepSequence(float beat, bool alt = false)
+        {
             MultiSound.Play(new MultiSound.Sound[] { 
                 new MultiSound.Sound("pajamaParty/siesta1", beat), 
                 new MultiSound.Sound("pajamaParty/siesta2", beat + 0.5f),
                 new MultiSound.Sound("pajamaParty/siesta3", beat + 1f),
                 new MultiSound.Sound("pajamaParty/siesta3", beat + 2.5f),
                 new MultiSound.Sound("pajamaParty/siesta3", beat + 4f)
-            });
+            }, forcePlay: true);
+            WantSleepSequence = beat;
+            WantSleepType = alt;
         }
 
         public void DoBedImpact()
