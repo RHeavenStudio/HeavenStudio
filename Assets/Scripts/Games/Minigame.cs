@@ -164,7 +164,6 @@ namespace HeavenStudio.Games
             float a = bpm / 120f;
             float b = (Mathf.Log(a) + 2f) * 0.5f;
             float r = Mathf.Lerp(a, b, 0.25f);
-            Debug.Log("Timing Window Scale is: " + r);
             return r * f;
         }
 

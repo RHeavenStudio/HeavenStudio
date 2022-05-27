@@ -174,7 +174,6 @@ namespace HeavenStudio.Games
                     Player.player = true;
                 }
                 Spectators.Add(mobj);
-                fan.Init();
 
                 //prepare spawn point of next spectator
                 spawnPos.x += RADIUS * 2;
@@ -534,7 +533,7 @@ namespace HeavenStudio.Games
             DisableBop(beat, (doJump) ? 6.25f : 5.25f);
             DisableSpecBop(beat + 0.5f, 6f);
 
-            Prepare(beat + 1f);
+            Prepare(beat + 1f, 3);
             Prepare(beat + 2.5f);
             Prepare(beat + 3f, 2);
             Prepare(beat + 4f, 1);
@@ -648,11 +647,11 @@ namespace HeavenStudio.Games
                     {
                         string clipName = Spectators[i].GetComponent<Animator>().GetCurrentAnimatorClipInfo(0)[0].clip.name;
                         if (clipName == "FanBeat" || clipName == "NoPose")
-                            Spectators[i].GetComponent<Animator>().Play(anim);
+                            Spectators[i].GetComponent<Animator>().Play(anim, -1, 0);
                     }
                     continue;
                 }
-                Spectators[i].GetComponent<Animator>().Play(anim);
+                Spectators[i].GetComponent<Animator>().Play(anim, -1, 0);
             }
         }
 
