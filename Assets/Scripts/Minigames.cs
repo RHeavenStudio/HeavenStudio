@@ -209,6 +209,10 @@ namespace HeavenStudio
                     new GameAction("four (alt)",                delegate { SoundEffects.Count(3, true); }, 1f, hidden: true),
                     new GameAction("go! (alt)",                 delegate { SoundEffects.Go(true); }, 1f, hidden: true),
                 }),
+                new Minigame("textbox", "Textboxes", "", false, true, new List<GameAction>()
+                {
+
+                }),
             };
             
             BuildLoadRunnerList();
