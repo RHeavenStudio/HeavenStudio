@@ -81,13 +81,13 @@ namespace HeavenStudio
 
             // this entire thing is a mess redo it later
             //pos
-            positionEvents = EventCaller.GetAllInGameManagerList("gameManager", new string[] { "move camera" });
+            positionEvents = EventCaller.GetAllInGameManagerList("vfx", new string[] { "move camera" });
 
             //rot
-            rotationEvents = EventCaller.GetAllInGameManagerList("gameManager", new string[] { "rotate camera" });
+            rotationEvents = EventCaller.GetAllInGameManagerList("vfx", new string[] { "rotate camera" });
 
             //scale (TODO)
-            // scaleEvents = EventCaller.GetAllInGameManagerList("gameManager", new string[] { "scale camera" });
+            // scaleEvents = EventCaller.GetAllInGameManagerList("vfx", new string[] { "scale camera" });
 
             UpdateCameraTranslate();
             UpdateCameraRotate();

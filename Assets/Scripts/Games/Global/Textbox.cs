@@ -21,20 +21,22 @@ namespace HeavenStudio.Games.Global
             BottomRight
         }
 
-        private List<Beatmap.Entity> showEvents = new List<Beatmap.Entity>();
+        private List<Beatmap.Entity> textboxEvents = new List<Beatmap.Entity>();
+        private List<Beatmap.Entity> openCaptionsEvents = new List<Beatmap.Entity>();
         Textbox instance;
 
         [Header("Objects")]
-        public GameObject Enabler;
-        public TMP_Text Label;
-        public RectTransform LabelRect;
+        public GameObject TextboxEnabler;
+        public TMP_Text TextboxLabel;
+        public RectTransform TextboxLabelRect;
         public SpriteRenderer UL;
         public SpriteRenderer UR;
         public SpriteRenderer DL;
         public SpriteRenderer DR;
 
-        float TextboxWidth = 1f;
-        float TextboxHeight = 1f;
+        public GameObject OpenCaptionsEnabler;
+        public TMP_Text OpenCaptionsLabel;
+        public RectTransform OpenCaptionsLabelRect;
 
         float XAnchor = 1.5f;
         float YAnchor = 1.75f;
@@ -49,34 +51,39 @@ namespace HeavenStudio.Games.Global
         public void Start()
         {
             GameManager.instance.onBeatChanged += OnBeatChanged;
-            Enabler.SetActive(false);
+            TextboxEnabler.SetActive(false);
+            OpenCaptionsEnabler.SetActive(false);
             UpdateTextboxDisplay();
+            UpdateOpenCaptionsDisplay();
         }
 
         public void Update()
         {
             UpdateTextboxDisplay();
+            UpdateOpenCaptionsDisplay();
         }
 
         public void OnBeatChanged(float beat)
         {
-            Enabler.SetActive(false);
+            TextboxEnabler.SetActive(false);
+            OpenCaptionsEnabler.SetActive(false);
 
-            showEvents = EventCaller.GetAllInGameManagerList("textbox", new string[] { "display textbox" });
+            textboxEvents = EventCaller.GetAllInGameManagerList("vfx", new string[] { "display textbox" });
+            openCaptionsEvents = EventCaller.GetAllInGameManagerList("vfx", new string[] { "display open captions" });
 
             UpdateTextboxDisplay();
+            UpdateOpenCaptionsDisplay();
         }
 
         private void UpdateTextboxDisplay()
         {
-            foreach (var e in showEvents)
+            foreach (var e in textboxEvents)
             {
                 float prog = Conductor.instance.GetPositionFromBeat(e.beat, e.length);
                 if (prog >= 0f)
                 {
-                    Debug.Log("showing textbox");
-                    Enabler.SetActive(true);
-                    Label.text = e.text1;
+                    TextboxEnabler.SetActive(true);
+                    TextboxLabel.text = e.text1;
 
                     Vector2 tScale = Vector2.Scale(textboxSize, new Vector2(e.valA, e.valB));
 
@@ -84,47 +91,102 @@ namespace HeavenStudio.Games.Global
                     UR.size = tScale;
                     DL.size = tScale;
                     DR.size = tScale;
-                    LabelRect.sizeDelta = new Vector2(11.2f * e.valA, 2.2f * e.valB);
+                    TextboxLabelRect.sizeDelta = new Vector2(11.2f * e.valA, 2.2f * e.valB);
 
                     // ouch
                     switch (e.type)
                     {
                         case (int) TextboxAnchor.TopLeft:
-                            Enabler.transform.localPosition = new Vector3(-XAnchor, YAnchor);
+                            TextboxEnabler.transform.localPosition = new Vector3(-XAnchor, YAnchor);
                             break;
                         case (int) TextboxAnchor.TopMiddle:
-                            Enabler.transform.localPosition = new Vector3(0, YAnchor);
+                            TextboxEnabler.transform.localPosition = new Vector3(0, YAnchor);
                             break;
                         case (int) TextboxAnchor.TopRight:
-                            Enabler.transform.localPosition = new Vector3(XAnchor, YAnchor);
+                            TextboxEnabler.transform.localPosition = new Vector3(XAnchor, YAnchor);
                             break;
                         case (int) TextboxAnchor.Left:
-                            Enabler.transform.localPosition = new Vector3(-XAnchor, 0);
+                            TextboxEnabler.transform.localPosition = new Vector3(-XAnchor, 0);
                             break;
                         case (int) TextboxAnchor.Middle:
-                            Enabler.transform.localPosition = new Vector3(0, 0);
+                            TextboxEnabler.transform.localPosition = new Vector3(0, 0);
                             break;
                         case (int) TextboxAnchor.Right:
-                            Enabler.transform.localPosition = new Vector3(XAnchor, 0);
+                            TextboxEnabler.transform.localPosition = new Vector3(XAnchor, 0);
                             break;
                         case (int) TextboxAnchor.BottomLeft:
-                            Enabler.transform.localPosition = new Vector3(-XAnchor, -YAnchor);
+                            TextboxEnabler.transform.localPosition = new Vector3(-XAnchor, -YAnchor);
                             break;
                         case (int) TextboxAnchor.BottomMiddle:
-                            Enabler.transform.localPosition = new Vector3(0, -YAnchor);
+                            TextboxEnabler.transform.localPosition = new Vector3(0, -YAnchor);
                             break;
                         case (int) TextboxAnchor.BottomRight:
-                            Enabler.transform.localPosition = new Vector3(XAnchor, -YAnchor);
+                            TextboxEnabler.transform.localPosition = new Vector3(XAnchor, -YAnchor);
                             break;
                         default:
-                            Enabler.transform.localPosition = new Vector3(0, 0);
+                            TextboxEnabler.transform.localPosition = new Vector3(0, 0);
                             break;
                     }
                 }
                 if (prog > 1f || prog < 0f)
                 {
-                    Enabler.transform.localPosition = new Vector3(0, 0);
-                    Enabler.SetActive(false);
+                    TextboxEnabler.transform.localPosition = new Vector3(0, 0);
+                    TextboxEnabler.SetActive(false);
+                }
+            }
+        }
+
+        private void UpdateOpenCaptionsDisplay()
+        {
+            foreach (var e in openCaptionsEvents)
+            {
+                float prog = Conductor.instance.GetPositionFromBeat(e.beat, e.length);
+                if (prog >= 0f)
+                {
+                    OpenCaptionsEnabler.SetActive(true);
+                    OpenCaptionsLabel.text = e.text1;
+
+                    OpenCaptionsLabelRect.sizeDelta = new Vector2(18f * e.valA, 2.5f * e.valB);
+
+                    // ouch
+                    switch (e.type)
+                    {
+                        case (int) TextboxAnchor.TopLeft:
+                            OpenCaptionsEnabler.transform.localPosition = new Vector3(-XAnchor, YAnchor);
+                            break;
+                        case (int) TextboxAnchor.TopMiddle:
+                            OpenCaptionsEnabler.transform.localPosition = new Vector3(0, YAnchor);
+                            break;
+                        case (int) TextboxAnchor.TopRight:
+                            OpenCaptionsEnabler.transform.localPosition = new Vector3(XAnchor, YAnchor);
+                            break;
+                        case (int) TextboxAnchor.Left:
+                            OpenCaptionsEnabler.transform.localPosition = new Vector3(-XAnchor, 0);
+                            break;
+                        case (int) TextboxAnchor.Middle:
+                            OpenCaptionsEnabler.transform.localPosition = new Vector3(0, 0);
+                            break;
+                        case (int) TextboxAnchor.Right:
+                            OpenCaptionsEnabler.transform.localPosition = new Vector3(XAnchor, 0);
+                            break;
+                        case (int) TextboxAnchor.BottomLeft:
+                            OpenCaptionsEnabler.transform.localPosition = new Vector3(-XAnchor, -YAnchor);
+                            break;
+                        case (int) TextboxAnchor.BottomMiddle:
+                            OpenCaptionsEnabler.transform.localPosition = new Vector3(0, -YAnchor);
+                            break;
+                        case (int) TextboxAnchor.BottomRight:
+                            OpenCaptionsEnabler.transform.localPosition = new Vector3(XAnchor, -YAnchor);
+                            break;
+                        default:
+                            OpenCaptionsEnabler.transform.localPosition = new Vector3(0, 0);
+                            break;
+                    }
+                }
+                if (prog > 1f || prog < 0f)
+                {
+                    OpenCaptionsEnabler.transform.localPosition = new Vector3(0, 0);
+                    OpenCaptionsEnabler.SetActive(false);
                 }
             }
         }
