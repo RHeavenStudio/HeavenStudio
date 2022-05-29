@@ -245,6 +245,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Enabler: {fileID: 2449944616565789187}
   Label: {fileID: 3543095556225304552}
+  LabelRect: {fileID: 8507740893123418255}
   UL: {fileID: 498937228777825068}
   UR: {fileID: 9082163354905669343}
   DL: {fileID: 7156380762621578582}
@@ -548,7 +549,7 @@ RectTransform:
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 10, y: 2}
+  m_SizeDelta: {x: 11.2, y: 2.2}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &8181308765472729390
 CanvasRenderer:
@@ -641,7 +642,7 @@ MonoBehaviour:
   m_VertexBufferAutoSizeReduction: 0
   m_useMaxVisibleDescender: 1
   m_pageToDisplay: 1
-  m_margin: {x: 0.25, y: 0, z: 0.25, w: 0}
+  m_margin: {x: 1, y: 0, z: 1, w: 0}
   m_isUsingLegacyAnimationComponent: 0
   m_isVolumetricText: 0
   m_hasFontAssetChanged: 0

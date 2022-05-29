@@ -27,6 +27,7 @@ namespace HeavenStudio.Games.Global
         [Header("Objects")]
         public GameObject Enabler;
         public TMP_Text Label;
+        public RectTransform LabelRect;
         public SpriteRenderer UL;
         public SpriteRenderer UR;
         public SpriteRenderer DL;
@@ -37,6 +38,8 @@ namespace HeavenStudio.Games.Global
 
         float XAnchor = 1.5f;
         float YAnchor = 1.75f;
+
+        Vector2 textboxSize = new Vector2(3f, 0.75f);
 
         public void Awake()
         {
@@ -74,6 +77,14 @@ namespace HeavenStudio.Games.Global
                     Debug.Log("showing textbox");
                     Enabler.SetActive(true);
                     Label.text = e.text1;
+
+                    Vector2 tScale = Vector2.Scale(textboxSize, new Vector2(e.valA, e.valB));
+
+                    UL.size = tScale;
+                    UR.size = tScale;
+                    DL.size = tScale;
+                    DR.size = tScale;
+                    LabelRect.sizeDelta = new Vector2(11.2f * e.valA, 2.2f * e.valB);
 
                     // ouch
                     switch (e.type)

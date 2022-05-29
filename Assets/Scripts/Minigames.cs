@@ -215,8 +215,10 @@ namespace HeavenStudio
                     {
                     }, 1f, true, new List<Param>() 
                     {
-                        new Param("text1", "", "Text", "The text to display in the textbox"),
-                        new Param("type", Games.Global.Textbox.TextboxAnchor.TopMiddle, "Anchor", "Where to anchor the textbox")
+                        new Param("text1", "", "Text", "The text to display in the textbox (Rich Text is supported!)"),
+                        new Param("type", Games.Global.Textbox.TextboxAnchor.TopMiddle, "Anchor", "Where to anchor the textbox"),
+                        new Param("valA", new EntityTypes.Float(0.25f, 4, 1), "Textbox Width", "Textbox width multiplier"),
+                        new Param("valB", new EntityTypes.Float(0.5f, 8, 1), "Textbox Height", "Textbox height multiplier")
                     } ),
                 }),
             };
