@@ -23,6 +23,7 @@ namespace HeavenStudio.Games.Global
 
         private List<Beatmap.Entity> textboxEvents = new List<Beatmap.Entity>();
         private List<Beatmap.Entity> openCaptionsEvents = new List<Beatmap.Entity>();
+        private List<Beatmap.Entity> idolEvents = new List<Beatmap.Entity>();
         Textbox instance;
 
         [Header("Objects")]
@@ -38,10 +39,17 @@ namespace HeavenStudio.Games.Global
         public TMP_Text OpenCaptionsLabel;
         public RectTransform OpenCaptionsLabelRect;
 
+        public GameObject IdolEnabler;
+        public Animator IdolAnimator;
+        public TMP_Text IdolSongLabel;
+        public TMP_Text IdolArtistLabel;
+
         float XAnchor = 1.5f;
         float YAnchor = 1.75f;
 
         Vector2 textboxSize = new Vector2(3f, 0.75f);
+
+        bool idolShown = false;
 
         public void Awake()
         {
@@ -61,6 +69,7 @@ namespace HeavenStudio.Games.Global
         {
             UpdateTextboxDisplay();
             UpdateOpenCaptionsDisplay();
+            UpdateIdolDisplay();
         }
 
         public void OnBeatChanged(float beat)
@@ -70,9 +79,13 @@ namespace HeavenStudio.Games.Global
 
             textboxEvents = EventCaller.GetAllInGameManagerList("vfx", new string[] { "display textbox" });
             openCaptionsEvents = EventCaller.GetAllInGameManagerList("vfx", new string[] { "display open captions" });
+            idolEvents = EventCaller.GetAllInGameManagerList("vfx", new string[] { "display song artist" });
 
             UpdateTextboxDisplay();
             UpdateOpenCaptionsDisplay();
+
+            IdolAnimator.Play("NoPose", -1, 0);
+            UpdateIdolDisplay();
         }
 
         private void UpdateTextboxDisplay()
@@ -187,6 +200,32 @@ namespace HeavenStudio.Games.Global
                 {
                     OpenCaptionsEnabler.transform.localPosition = new Vector3(0, 0);
                     OpenCaptionsEnabler.SetActive(false);
+                }
+            }
+        }
+
+        private void UpdateIdolDisplay()
+        {
+            var cond = Conductor.instance;
+            foreach (var e in idolEvents)
+            {
+                float prog = cond.GetPositionFromBeat(e.beat, e.length);
+                if (prog >= 0f && prog <= 1f)
+                {
+                    float inp = cond.GetPositionFromBeat(e.beat, 1);
+                    IdolSongLabel.text = e.text1;
+                    IdolArtistLabel.text = e.text2;
+
+                    IdolAnimator.Play("IdolShow", -1, Mathf.Min(inp, 1));
+                    IdolAnimator.speed = 0;
+
+                    idolShown = true;
+                }
+                else if (idolShown)
+                {
+                    IdolAnimator.Play("IdolHide", -1, 0);
+                    IdolAnimator.speed = (1f / cond.pitchedSecPerBeat) * 0.5f;
+                    idolShown = false;
                 }
             }
         }

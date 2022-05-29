@@ -252,6 +252,13 @@ namespace HeavenStudio
                         new Param("valA", new EntityTypes.Float(0.25f, 4, 1), "Captions Width", "Captions width multiplier"),
                         new Param("valB", new EntityTypes.Float(0.5f, 8, 1), "Captions Height", "Captions height multiplier")
                     } ),
+                    new GameAction("display song artist",           delegate 
+                    {
+                    }, 1f, true, new List<Param>() 
+                    {
+                        new Param("text1", "", "Title", "Text to display in the upper label (Rich Text is supported!)"),
+                        new Param("text2", "", "Artist", "Text to display in the lower label (Rich Text is supported!)"),
+                    } ),
                 }),
             };
 
