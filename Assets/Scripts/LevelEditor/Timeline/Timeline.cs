@@ -302,13 +302,16 @@ namespace HeavenStudio.Editor.Track
             float moveSpeed = 750;
             if (Input.GetKey(KeyCode.LeftShift)) moveSpeed *= 2;
 
-            if (Input.GetKey(KeyCode.LeftArrow) || Input.GetKey(KeyCode.A))
+            if (!Editor.instance.editingInputField)
             {
-                TimelineContent.transform.localPosition += new Vector3(moveSpeed * Time.deltaTime, 0);
-            }
-            else if (Input.GetKey(KeyCode.RightArrow) || Input.GetKey(KeyCode.D))
-            {
-                TimelineContent.transform.localPosition += new Vector3(-moveSpeed * Time.deltaTime, 0);
+                if (Input.GetKey(KeyCode.LeftArrow) || Input.GetKey(KeyCode.A))
+                {
+                    TimelineContent.transform.localPosition += new Vector3(moveSpeed * Time.deltaTime, 0);
+                }
+                else if (Input.GetKey(KeyCode.RightArrow) || Input.GetKey(KeyCode.D))
+                {
+                    TimelineContent.transform.localPosition += new Vector3(-moveSpeed * Time.deltaTime, 0);
+                }
             }
 
             if (Conductor.instance.isPlaying)
@@ -346,6 +349,10 @@ namespace HeavenStudio.Editor.Track
         #region PlayChecks
         public void PlayCheck(bool fromStart)
         {
+            if (Editor.instance.editingInputField)
+            {
+                return;
+            }
             if (fromStart)
             {
                 if (!Conductor.instance.isPlaying && !Conductor.instance.isPaused)

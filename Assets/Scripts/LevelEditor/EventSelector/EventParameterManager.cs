@@ -18,6 +18,7 @@ namespace HeavenStudio.Editor
         [SerializeField] private GameObject BooleanP;
         [SerializeField] private GameObject DropdownP;
         [SerializeField] private GameObject ColorP;
+        [SerializeField] private GameObject StringP;
 
         public Beatmap.Entity entity;
 
@@ -120,6 +121,10 @@ namespace HeavenStudio.Editor
             {
                 prefab = ColorP;
             }
+            else if(objType == typeof(string))
+            {
+                prefab = StringP;
+            }
 
             GameObject input = Instantiate(prefab);
             input.transform.SetParent(this.gameObject.transform);
@@ -137,6 +142,7 @@ namespace HeavenStudio.Editor
 
         private void DestroyParams()
         {
+            Editor.instance.editingInputField = false;
             active = false;
             for (int i = childCountAtStart; i < transform.childCount; i++)
             {

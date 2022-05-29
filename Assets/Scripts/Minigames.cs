@@ -211,10 +211,16 @@ namespace HeavenStudio
                 }),
                 new Minigame("textbox", "Textboxes", "", false, true, new List<GameAction>()
                 {
-
+                    new GameAction("display textbox",           delegate 
+                    {
+                    }, 1f, true, new List<Param>() 
+                    {
+                        new Param("text1", "", "Text", "The text to display in the textbox"),
+                        new Param("type", Games.Global.Textbox.TextboxAnchor.TopMiddle, "Anchor", "Where to anchor the textbox")
+                    } ),
                 }),
             };
-            
+
             BuildLoadRunnerList();
             foreach(var load in loadRunners)
             {

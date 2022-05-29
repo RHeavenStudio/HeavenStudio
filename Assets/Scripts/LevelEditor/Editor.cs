@@ -61,6 +61,7 @@ namespace HeavenStudio.Editor
         private bool fullscreen;
         public bool discordDuringTesting = false;
         public bool canSelect = true;
+        public bool editingInputField = false;
 
         public static Editor instance { get; private set; }
 
@@ -75,6 +76,7 @@ namespace HeavenStudio.Editor
         {
             GameCamera.instance.camera.targetTexture = ScreenRenderTexture;
             GameManager.instance.CursorCam.targetTexture = ScreenRenderTexture;
+            GameManager.instance.OverlayCamera.targetTexture = ScreenRenderTexture;
             Screen.texture = ScreenRenderTexture;
 
             GameManager.instance.Init();
@@ -413,7 +415,8 @@ namespace HeavenStudio.Editor
                 MainCanvas.enabled = false;
                 EditorCamera.enabled = false;
                 GameCamera.instance.camera.targetTexture = null;
-                GameCamera.instance.camera.transform.parent.GetChild(1).GetComponent<Camera>().enabled = false;
+                GameManager.instance.CursorCam.enabled = false;
+                GameManager.instance.OverlayCamera.targetTexture = null;
                 fullscreen = true;
             }
             else
@@ -421,7 +424,8 @@ namespace HeavenStudio.Editor
                 MainCanvas.enabled = true;
                 EditorCamera.enabled = true;
                 GameCamera.instance.camera.targetTexture = ScreenRenderTexture;
-                GameCamera.instance.camera.transform.parent.GetChild(1).GetComponent<Camera>().enabled = true;
+                GameManager.instance.CursorCam.enabled = true;
+                GameManager.instance.OverlayCamera.targetTexture = ScreenRenderTexture;
                 fullscreen = false;
             }
         }
