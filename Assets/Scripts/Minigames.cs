@@ -252,6 +252,14 @@ namespace HeavenStudio
                         new Param("valA", new EntityTypes.Float(0.25f, 4, 1), "Captions Width", "Captions width multiplier"),
                         new Param("valB", new EntityTypes.Float(0.5f, 8, 1), "Captions Height", "Captions height multiplier")
                     } ),
+                    new GameAction("display closed captions",           delegate 
+                    {
+                    }, 1f, true, new List<Param>() 
+                    {
+                        new Param("text1", "", "Text", "The text to display in the captions (Rich Text is supported!)"),
+                        new Param("type", Games.Global.Textbox.ClosedCaptionsAnchor.Top, "Anchor", "Where to anchor the captions"),
+                        new Param("valA", new EntityTypes.Float(0.5f, 4, 1), "Captions Height", "Captions height multiplier")
+                    } ),
                     new GameAction("display song artist",           delegate 
                     {
                     }, 1f, true, new List<Param>() 

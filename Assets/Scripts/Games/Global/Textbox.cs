@@ -4,6 +4,7 @@ using UnityEngine;
 using UnityEngine.UI;
 
 using TMPro;
+using HeavenStudio.TextboxUtilities;
 
 namespace HeavenStudio.Games.Global
 {
@@ -21,19 +22,21 @@ namespace HeavenStudio.Games.Global
             BottomRight
         }
 
+        public enum ClosedCaptionsAnchor {
+            Top,
+            Bottom,
+        }
+
         private List<Beatmap.Entity> textboxEvents = new List<Beatmap.Entity>();
         private List<Beatmap.Entity> openCaptionsEvents = new List<Beatmap.Entity>();
         private List<Beatmap.Entity> idolEvents = new List<Beatmap.Entity>();
+        private List<Beatmap.Entity> closedCaptionsEvents = new List<Beatmap.Entity>();
+
         Textbox instance;
 
         [Header("Objects")]
         public GameObject TextboxEnabler;
-        public TMP_Text TextboxLabel;
-        public RectTransform TextboxLabelRect;
-        public SpriteRenderer UL;
-        public SpriteRenderer UR;
-        public SpriteRenderer DL;
-        public SpriteRenderer DR;
+        public TextboxObject TextboxObject;
 
         public GameObject OpenCaptionsEnabler;
         public TMP_Text OpenCaptionsLabel;
@@ -43,6 +46,11 @@ namespace HeavenStudio.Games.Global
         public Animator IdolAnimator;
         public TMP_Text IdolSongLabel;
         public TMP_Text IdolArtistLabel;
+
+        public GameObject ClosedCaptionsEnabler;
+        public TMP_Text ClosedCaptionsLabel;
+        public RectTransform ClosedCaptionsLabelRect;
+        public RectTransform ClosedCaptionsBgRect;
 
         float XAnchor = 1.5f;
         float YAnchor = 1.75f;
@@ -61,8 +69,10 @@ namespace HeavenStudio.Games.Global
             GameManager.instance.onBeatChanged += OnBeatChanged;
             TextboxEnabler.SetActive(false);
             OpenCaptionsEnabler.SetActive(false);
+            ClosedCaptionsEnabler.SetActive(false);
             UpdateTextboxDisplay();
             UpdateOpenCaptionsDisplay();
+            UpdateClosedCaptionsDisplay();
         }
 
         public void Update()
@@ -70,22 +80,30 @@ namespace HeavenStudio.Games.Global
             UpdateTextboxDisplay();
             UpdateOpenCaptionsDisplay();
             UpdateIdolDisplay();
+            UpdateClosedCaptionsDisplay();
         }
 
         public void OnBeatChanged(float beat)
         {
             TextboxEnabler.SetActive(false);
             OpenCaptionsEnabler.SetActive(false);
+            ClosedCaptionsEnabler.SetActive(false);
 
             textboxEvents = EventCaller.GetAllInGameManagerList("vfx", new string[] { "display textbox" });
             openCaptionsEvents = EventCaller.GetAllInGameManagerList("vfx", new string[] { "display open captions" });
             idolEvents = EventCaller.GetAllInGameManagerList("vfx", new string[] { "display song artist" });
+            closedCaptionsEvents = EventCaller.GetAllInGameManagerList("vfx", new string[] { "display closed captions" });
 
             UpdateTextboxDisplay();
             UpdateOpenCaptionsDisplay();
+            UpdateClosedCaptionsDisplay();
 
-            IdolAnimator.Play("NoPose", -1, 0);
             UpdateIdolDisplay();
+            if (!idolShown)
+            {
+                IdolAnimator.Play("NoPose", -1, 0);
+                IdolAnimator.speed = 1;
+            }
         }
 
         private void UpdateTextboxDisplay()
@@ -96,15 +114,8 @@ namespace HeavenStudio.Games.Global
                 if (prog >= 0f)
                 {
                     TextboxEnabler.SetActive(true);
-                    TextboxLabel.text = e.text1;
-
-                    Vector2 tScale = Vector2.Scale(textboxSize, new Vector2(e.valA, e.valB));
-
-                    UL.size = tScale;
-                    UR.size = tScale;
-                    DL.size = tScale;
-                    DR.size = tScale;
-                    TextboxLabelRect.sizeDelta = new Vector2(11.2f * e.valA, 2.2f * e.valB);
+                    TextboxObject.SetText(e.text1);
+                    TextboxObject.Resize(e.valA, e.valB);
 
                     // ouch
                     switch (e.type)
@@ -226,6 +237,36 @@ namespace HeavenStudio.Games.Global
                     IdolAnimator.Play("IdolHide", -1, 0);
                     IdolAnimator.speed = (1f / cond.pitchedSecPerBeat) * 0.5f;
                     idolShown = false;
+                }
+            }
+        }
+
+        private void UpdateClosedCaptionsDisplay()
+        {
+            foreach (var e in closedCaptionsEvents)
+            {
+                float prog = Conductor.instance.GetPositionFromBeat(e.beat, e.length);
+                if (prog >= 0f)
+                {
+                    ClosedCaptionsEnabler.SetActive(true);
+                    ClosedCaptionsLabel.text = e.text1;
+
+                    ClosedCaptionsLabelRect.sizeDelta = new Vector2(9f, e.valA);
+                    ClosedCaptionsBgRect.sizeDelta = new Vector2(9f, e.valA);
+
+                    switch (e.type)
+                    {
+                        case (int) ClosedCaptionsAnchor.Bottom:
+                            ClosedCaptionsEnabler.transform.localPosition = new Vector3(0, -2.5f + e.valA/2);
+                            break;
+                        default:
+                            ClosedCaptionsEnabler.transform.localPosition = new Vector3(0, 2.5f - e.valA/2);
+                            break;
+                    }
+                }
+                if (prog > 1f || prog < 0f)
+                {
+                    ClosedCaptionsEnabler.SetActive(false);
                 }
             }
         }
