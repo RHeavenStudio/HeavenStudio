@@ -223,7 +223,6 @@ namespace HeavenStudio.Editor
             {
                 if (paths.Length > 0)
                 {
-                    Debug.Log(Path.Combine(paths));
                     Conductor.instance.musicSource.clip = await LoadClip(Path.Combine(paths)); 
                     changedMusic = true;
                     
@@ -236,7 +235,6 @@ namespace HeavenStudio.Editor
             {
                 if (paths.Length > 0)
                 {
-                    Debug.Log("file://" + Path.Combine(paths));
                     Conductor.instance.musicSource.clip = await LoadClip("file://" + Path.Combine(paths));
                     changedMusic = true;
 
