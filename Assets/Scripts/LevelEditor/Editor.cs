@@ -218,10 +218,12 @@ namespace HeavenStudio.Editor
                 new ExtensionFilter("Music Files", "mp3", "ogg", "wav")
             };
 
+            #if UNITY_STANDALONE_WINDOWS
             StandaloneFileBrowser.OpenFilePanelAsync("Open File", "", extensions, false, async (string[] paths) => 
             {
                 if (paths.Length > 0)
                 {
+                    Debug.Log(Path.Combine(paths));
                     Conductor.instance.musicSource.clip = await LoadClip(Path.Combine(paths)); 
                     changedMusic = true;
                     
@@ -229,6 +231,20 @@ namespace HeavenStudio.Editor
                 }
             } 
             );
+            #else
+            StandaloneFileBrowser.OpenFilePanelAsync("Open File", "", extensions, false, async (string[] paths) =>
+            {
+                if (paths.Length > 0)
+                {
+                    Debug.Log("file://" + Path.Combine(paths));
+                    Conductor.instance.musicSource.clip = await LoadClip("file://" + Path.Combine(paths));
+                    changedMusic = true;
+
+                    Timeline.FitToSong();
+                }
+            }
+            );
+            #endif
         }
 
         private async Task<AudioClip> LoadClip(string path)
@@ -294,7 +310,7 @@ namespace HeavenStudio.Editor
             {
                 new ExtensionFilter("Heaven Studio Remix File", "tengoku")
             };
-
+            
             StandaloneFileBrowser.SaveFilePanelAsync("Save Remix As", "", "remix_level", extensions, (string path) =>
             {
                 if (path != String.Empty)
@@ -337,6 +353,7 @@ namespace HeavenStudio.Editor
             Timeline.instance.TempoInfo.UpdateStartingBPMText();
             Timeline.instance.VolumeInfo.UpdateStartingVolumeText();
             Timeline.instance.TempoInfo.UpdateOffsetText();
+            Timeline.FitToSong();
         }
 
         public void OpenRemix()
