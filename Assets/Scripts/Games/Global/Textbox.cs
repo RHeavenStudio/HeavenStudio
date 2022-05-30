@@ -111,7 +111,7 @@ namespace HeavenStudio.Games.Global
             foreach (var e in textboxEvents)
             {
                 float prog = Conductor.instance.GetPositionFromBeat(e.beat, e.length);
-                if (prog >= 0f)
+                if (prog >= 0f && prog <= 1f)
                 {
                     TextboxEnabler.SetActive(true);
                     TextboxObject.SetText(e.text1);
@@ -151,6 +151,8 @@ namespace HeavenStudio.Games.Global
                             TextboxEnabler.transform.localPosition = new Vector3(0, 0);
                             break;
                     }
+
+                    return;
                 }
                 if (prog > 1f || prog < 0f)
                 {
@@ -165,7 +167,7 @@ namespace HeavenStudio.Games.Global
             foreach (var e in openCaptionsEvents)
             {
                 float prog = Conductor.instance.GetPositionFromBeat(e.beat, e.length);
-                if (prog >= 0f)
+                if (prog >= 0f && prog <= 1f)
                 {
                     OpenCaptionsEnabler.SetActive(true);
                     OpenCaptionsLabel.text = e.text1;
@@ -206,6 +208,8 @@ namespace HeavenStudio.Games.Global
                             OpenCaptionsEnabler.transform.localPosition = new Vector3(0, 0);
                             break;
                     }
+
+                    return;
                 }
                 if (prog > 1f || prog < 0f)
                 {
@@ -231,6 +235,8 @@ namespace HeavenStudio.Games.Global
                     IdolAnimator.speed = 0;
 
                     idolShown = true;
+
+                    return;
                 }
                 else if (idolShown)
                 {
@@ -246,7 +252,7 @@ namespace HeavenStudio.Games.Global
             foreach (var e in closedCaptionsEvents)
             {
                 float prog = Conductor.instance.GetPositionFromBeat(e.beat, e.length);
-                if (prog >= 0f)
+                if (prog >= 0f && prog <= 1f)
                 {
                     ClosedCaptionsEnabler.SetActive(true);
                     ClosedCaptionsLabel.text = e.text1;
@@ -263,6 +269,8 @@ namespace HeavenStudio.Games.Global
                             ClosedCaptionsEnabler.transform.localPosition = new Vector3(0, 2.5f - e.valA/2);
                             break;
                     }
+
+                    return;
                 }
                 if (prog > 1f || prog < 0f)
                 {
