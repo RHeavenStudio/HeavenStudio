@@ -83,7 +83,8 @@ namespace HeavenStudio.Games
             BigCall,
             Squat,
             Wink,
-            Dab
+            Dab,
+            None
         }
         public enum KamoneResponseType {
             Through,
@@ -127,6 +128,7 @@ namespace HeavenStudio.Games
         public GameEvent specBop = new GameEvent();
         public GameEvent noBop = new GameEvent();
         public GameEvent noResponse = new GameEvent();
+        public GameEvent noCall = new GameEvent();
         public GameEvent noSpecBop = new GameEvent();
 
         private static int performanceType = (int) IdolPerformanceType.Normal;
@@ -312,6 +314,12 @@ namespace HeavenStudio.Games
             noResponse.startBeat = beat;
         }
 
+        private void DisableCall(float beat, float length)
+        {
+            noCall.length = length;
+            noCall.startBeat = beat;
+        }
+
         private void DisableSpecBop(float beat, float length)
         {
             float bt = Conductor.instance.songPositionInBeats;
@@ -334,6 +342,7 @@ namespace HeavenStudio.Games
             idolJumpStartTime = Single.MinValue;
             DisableResponse(beat, length + 0.5f);
             DisableBop(beat, length + 0.5f);
+            DisableCall(beat, length + 0.5f);
 
             switch (type)
             {
@@ -387,6 +396,7 @@ namespace HeavenStudio.Games
                     idolAnimator.Play("IdolDab" + GetPerformanceSuffix(), -1, 0);
                     Jukebox.PlayOneShotGame("fanClub/arisa_dab");
                     break;
+                default: break;
             }
         }
 
@@ -428,12 +438,38 @@ namespace HeavenStudio.Games
             }
         }
 
+        private void DoIdolPeace(bool sync = true)
+        {
+            if (!(Conductor.instance.songPositionInBeats >= noCall.startBeat && Conductor.instance.songPositionInBeats < noCall.startBeat + noCall.length))
+            {
+                if (sync)
+                    idolAnimator.Play("IdolPeace" + GetPerformanceSuffix(), -1, 0);
+                else
+                    idolAnimator.Play("IdolPeaceNoSync" + GetPerformanceSuffix(), -1, 0);
+            }
+        }
+
         private void DoIdolResponse()
         {
             if (responseToggle)
             {
                 if (!(Conductor.instance.songPositionInBeats >= noResponse.startBeat && Conductor.instance.songPositionInBeats < noResponse.startBeat + noResponse.length))
                     idolAnimator.Play("IdolResponse" + GetPerformanceSuffix(), -1, 0);
+            }
+        }
+
+        private void DoIdolCall(int part = 0, bool big = false)
+        {
+            if (!(Conductor.instance.songPositionInBeats >= noCall.startBeat && Conductor.instance.songPositionInBeats < noCall.startBeat + noCall.length))
+            {
+                if (big)
+                {
+                    idolAnimator.Play("IdolBigCall" + part + GetPerformanceSuffix(), -1, 0);
+                }
+                else
+                {
+                    idolAnimator.Play("IdolCall" + part + GetPerformanceSuffix(), -1, 0);
+                }
             }
         }
 
@@ -457,11 +493,11 @@ namespace HeavenStudio.Games
 
             BeatAction.New(Arisa, new List<BeatAction.Action>()
             {
-                new BeatAction.Action(beat,         delegate { Arisa.GetComponent<Animator>().Play("IdolPeace" + GetPerformanceSuffix(), -1, 0);}),
-                new BeatAction.Action(beat + 1f,    delegate { Arisa.GetComponent<Animator>().Play("IdolPeace" + GetPerformanceSuffix(), -1, 0);}),
-                new BeatAction.Action(beat + 2f,    delegate { Arisa.GetComponent<Animator>().Play("IdolPeace" + GetPerformanceSuffix(), -1, 0);}),
+                new BeatAction.Action(beat,         delegate { DoIdolPeace();}),
+                new BeatAction.Action(beat + 1f,    delegate { DoIdolPeace();}),
+                new BeatAction.Action(beat + 2f,    delegate { DoIdolPeace();}),
                 new BeatAction.Action(beat + 2.5f,  delegate { DisableSpecBop(beat + 2.5f, 5f);}),
-                new BeatAction.Action(beat + 3f,    delegate { Arisa.GetComponent<Animator>().Play("IdolPeaceNoSync" + GetPerformanceSuffix()); PlayPrepare(); }),
+                new BeatAction.Action(beat + 3f,    delegate { DoIdolPeace(false); PlayPrepare(); }),
 
                 new BeatAction.Action(beat + 4f,    delegate { PlayOneClap(beat + 4f); DoIdolClaps();}),
                 new BeatAction.Action(beat + 5f,    delegate { PlayOneClap(beat + 5f); DoIdolClaps();}),
@@ -497,14 +533,10 @@ namespace HeavenStudio.Games
         public void CallKamone(float beat, bool noSound = false, int type = 0, int responseType = (int) KamoneResponseType.Through)
         {
             bool doJump = (responseType == (int) KamoneResponseType.Jump || responseType == (int) KamoneResponseType.JumpFast);
-            BeatAction.Action call0;
-            BeatAction.Action call1;
+            bool isBig = (responseType == (int) KamoneResponseType.ThroughFast || responseType == (int) KamoneResponseType.JumpFast);
             DisableResponse(beat, 2f);
-            if (responseType == (int) KamoneResponseType.ThroughFast || responseType == (int) KamoneResponseType.JumpFast)
+            if (isBig)
             {
-                call0 = new BeatAction.Action(beat,         delegate { Arisa.GetComponent<Animator>().Play("IdolBigCall0" + GetPerformanceSuffix(), -1, 0); });
-                call1 = new BeatAction.Action(beat + 1f,    delegate { Arisa.GetComponent<Animator>().Play("IdolBigCall1" + GetPerformanceSuffix(), -1, 0); });
-
                 if (!noSound)
                 {
                     MultiSound.Play(new MultiSound.Sound[] { 
@@ -516,9 +548,6 @@ namespace HeavenStudio.Games
             }
             else
             {
-                call0 = new BeatAction.Action(beat,         delegate { Arisa.GetComponent<Animator>().Play("IdolCall0" + GetPerformanceSuffix(), -1, 0); });
-                call1 = new BeatAction.Action(beat + 0.75f, delegate { Arisa.GetComponent<Animator>().Play("IdolCall1" + GetPerformanceSuffix(), -1, 0); });
-
                 if (!noSound)
                 {
                     MultiSound.Play(new MultiSound.Sound[] { 
@@ -540,8 +569,8 @@ namespace HeavenStudio.Games
 
             BeatAction.New(Arisa, new List<BeatAction.Action>()
             {
-                call0,
-                call1,
+                new BeatAction.Action(beat,                         delegate { DoIdolCall(0, isBig); }),
+                new BeatAction.Action(beat + (isBig ? 1f : 0.75f),  delegate { DoIdolCall(1, isBig); }),
                 new BeatAction.Action(beat + 1f,    delegate { PlayPrepare(); }),
 
                 new BeatAction.Action(beat + 2f,    delegate { PlayLongClap(beat + 2f); DoIdolResponse(); }),
