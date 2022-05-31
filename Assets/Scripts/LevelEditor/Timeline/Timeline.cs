@@ -258,24 +258,29 @@ namespace HeavenStudio.Editor.Track
 
             if (Input.GetKeyDown(KeyCode.Space))
             {
-                if (Input.GetKey(KeyCode.LeftShift))
+                if (!Editor.instance.editingInputField)
                 {
-                    PlayCheck(false);
-                }
-                else
-                {
-                    PlayCheck(true);
+                    if (Input.GetKey(KeyCode.LeftShift))
+                    {
+                        PlayCheck(false);
+                    }
+                    else
+                    {
+                        PlayCheck(true);
+                    }
                 }
             }
 
             if (Input.GetKeyDown(KeyCode.P))
             {
-                AutoPlayToggle();
+                if (!Editor.instance.editingInputField)
+                    AutoPlayToggle();
             }
 
             if (Input.GetKeyDown(KeyCode.M))
             {
-                MetronomeToggle();
+                if (!Editor.instance.editingInputField)
+                    MetronomeToggle();
             }
 
 
@@ -349,10 +354,6 @@ namespace HeavenStudio.Editor.Track
         #region PlayChecks
         public void PlayCheck(bool fromStart)
         {
-            if (Editor.instance.editingInputField)
-            {
-                return;
-            }
             if (fromStart)
             {
                 if (!Conductor.instance.isPlaying && !Conductor.instance.isPaused)

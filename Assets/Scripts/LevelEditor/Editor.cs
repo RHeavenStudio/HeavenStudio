@@ -108,14 +108,18 @@ namespace HeavenStudio.Editor
         {
             if (Input.GetKeyDown(KeyCode.Tab))
             {
-                Fullscreen();
+                if (!Editor.instance.editingInputField)
+                    Fullscreen();
             }
 
             if (Input.GetKeyDown(KeyCode.Delete))
             {
-                List<TimelineEventObj> ev = new List<TimelineEventObj>();
-                for (int i = 0; i < Selections.instance.eventsSelected.Count; i++) ev.Add(Selections.instance.eventsSelected[i]);
-                CommandManager.instance.Execute(new Commands.Deletion(ev));
+                if (!Editor.instance.editingInputField)
+                {
+                    List<TimelineEventObj> ev = new List<TimelineEventObj>();
+                    for (int i = 0; i < Selections.instance.eventsSelected.Count; i++) ev.Add(Selections.instance.eventsSelected[i]);
+                    CommandManager.instance.Execute(new Commands.Deletion(ev));
+                }
             }
 
             if (CommandManager.instance.canUndo())
