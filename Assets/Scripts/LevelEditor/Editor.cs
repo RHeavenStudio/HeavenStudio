@@ -314,7 +314,7 @@ namespace HeavenStudio.Editor
                 {
                     var levelFile = archive.CreateEntry("remix.json", System.IO.Compression.CompressionLevel.NoCompression);
                     using (var zipStream = levelFile.Open())
-                        zipStream.Write(Encoding.ASCII.GetBytes(GetJson()), 0, Encoding.ASCII.GetBytes(GetJson()).Length);
+                        zipStream.Write(Encoding.UTF8.GetBytes(GetJson()), 0, Encoding.UTF8.GetBytes(GetJson()).Length);
 
                     if (changedMusic || currentRemixPath != path)
                     {
@@ -371,7 +371,7 @@ namespace HeavenStudio.Editor
                                         {
                                             stream.CopyTo(ms);
                                             bytes = ms.ToArray();
-                                            string json = Encoding.Default.GetString(bytes);
+                                            string json = Encoding.UTF8.GetString(bytes);
                                             LoadRemix(json);
                                         }
                                     }
