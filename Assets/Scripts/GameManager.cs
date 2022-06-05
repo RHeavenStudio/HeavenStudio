@@ -20,10 +20,11 @@ namespace HeavenStudio
 
         [Header("Components")]
         public TextAsset txt;
-        public Camera GameCamera, CursorCam;
+        public Camera GameCamera, CursorCam, OverlayCamera;
         public CircleCursor CircleCursor;
         [HideInInspector] public GameObject GamesHolder;
         public Games.Global.Flash fade;
+        public GameObject textbox;
 
         [Header("Games")]
         public string currentGame;
@@ -87,6 +88,9 @@ namespace HeavenStudio
             Conductor.instance.SetBpm(Beatmap.bpm);
             Conductor.instance.SetVolume(Beatmap.musicVolume);
             Conductor.instance.firstBeatOffset = Beatmap.firstBeatOffset;
+
+            GameObject textbox = Instantiate(Resources.Load<GameObject>("Prefabs/Common/Textbox"));
+            textbox.name = "Textbox";
 
             if (playOnStart)
             {

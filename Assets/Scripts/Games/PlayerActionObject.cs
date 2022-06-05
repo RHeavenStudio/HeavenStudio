@@ -33,7 +33,7 @@ namespace HeavenStudio.Games
         {
             if (aceTimes == 0)
             {
-                if (triggersAutoplay && (GameManager.instance.autoplay || autoPlay) && GameManager.instance.canInput && normalizedBeat > 0.99f)
+                if (triggersAutoplay && (GameManager.instance.autoplay || autoPlay) && GameManager.instance.canInput && normalizedBeat > 0.995f)
                 {
                     OnAce();
                     if (!autoPlay)

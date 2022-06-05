@@ -291,10 +291,9 @@ namespace HeavenStudio.Games
 
             if (shakeTween != null)
                 shakeTween.Kill(true);
-            
-            var camTrans = GameCamera.instance.transform;
-            camTrans.localPosition = new Vector3(camTrans.localPosition.x, 0.75f, camTrans.localPosition.z);
-            camTrans.DOLocalMoveY(0f, 0.5f).SetEase(Ease.OutElastic, 1f);
+
+            DOTween.Punch(() => GameCamera.additionalPosition, x => GameCamera.additionalPosition = x, new Vector3(0, 0.75f, 0), 
+                Conductor.instance.pitchedSecPerBeat*0.5f, 18, 1f);
 
             isStepping = true;
         }

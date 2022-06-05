@@ -150,27 +150,28 @@ namespace HeavenStudio
                         new Param("toggle", true, "Enable Inputs")
                     }),
 
+                    // DEPRECATED! Now in VFX
                     new GameAction("move camera",              delegate 
                     {
-                        //TODO: move cam
                     }, 1f, true, new List<Param>() 
                     {
                         new Param("valA", new EntityTypes.Float(-50, 50, 0), "Right / Left"),
                         new Param("valB", new EntityTypes.Float(-50, 50, 0), "Up / Down"),
                         new Param("valC", new EntityTypes.Float(-0, 250, 10), "In / Out"),
                         new Param("ease", EasingFunction.Ease.Linear, "Ease Type")
-                    } ),
+                    },
+                    hidden: true ),
 
                     new GameAction("rotate camera",            delegate 
                     {
-                        //TODO: rot cam
                     }, 1f, true, new List<Param>() 
                     {
                         new Param("valA", new EntityTypes.Integer(-360, 360, 0), "Pitch"),
                         new Param("valB", new EntityTypes.Integer(-360, 360, 0), "Yaw"),
                         new Param("valC", new EntityTypes.Integer(-360, 360, 0), "Roll"),
                         new Param("ease", EasingFunction.Ease.Linear, "Ease Type")
-                    } ),
+                    },
+                    hidden: true ),
                 }),
                 new Minigame("countIn", "Count-Ins", "", false, true, new List<GameAction>()
                 {
@@ -209,8 +210,66 @@ namespace HeavenStudio
                     new GameAction("four (alt)",                delegate { SoundEffects.Count(3, true); }, 1f, hidden: true),
                     new GameAction("go! (alt)",                 delegate { SoundEffects.Go(true); }, 1f, hidden: true),
                 }),
+                new Minigame("vfx", "Visual Effects", "", false, true, new List<GameAction>()
+                {
+                    new GameAction("move camera",              delegate 
+                    {
+                        //TODO: move cam
+                    }, 1f, true, new List<Param>() 
+                    {
+                        new Param("valA", new EntityTypes.Float(-50, 50, 0), "Right / Left"),
+                        new Param("valB", new EntityTypes.Float(-50, 50, 0), "Up / Down"),
+                        new Param("valC", new EntityTypes.Float(-0, 250, 10), "In / Out"),
+                        new Param("ease", EasingFunction.Ease.Linear, "Ease Type")
+                    } ),
+
+                    new GameAction("rotate camera",            delegate 
+                    {
+                        //TODO: rot cam
+                    }, 1f, true, new List<Param>() 
+                    {
+                        new Param("valA", new EntityTypes.Integer(-360, 360, 0), "Pitch"),
+                        new Param("valB", new EntityTypes.Integer(-360, 360, 0), "Yaw"),
+                        new Param("valC", new EntityTypes.Integer(-360, 360, 0), "Roll"),
+                        new Param("ease", EasingFunction.Ease.Linear, "Ease Type")
+                    } ),
+
+                    new GameAction("display textbox",           delegate 
+                    {
+                    }, 1f, true, new List<Param>() 
+                    {
+                        new Param("text1", "", "Text", "The text to display in the textbox (Rich Text is supported!)"),
+                        new Param("type", Games.Global.Textbox.TextboxAnchor.TopMiddle, "Anchor", "Where to anchor the textbox"),
+                        new Param("valA", new EntityTypes.Float(0.25f, 4, 1), "Textbox Width", "Textbox width multiplier"),
+                        new Param("valB", new EntityTypes.Float(0.5f, 8, 1), "Textbox Height", "Textbox height multiplier")
+                    } ),
+                    new GameAction("display open captions",           delegate 
+                    {
+                    }, 1f, true, new List<Param>() 
+                    {
+                        new Param("text1", "", "Text", "The text to display in the captions (Rich Text is supported!)"),
+                        new Param("type", Games.Global.Textbox.TextboxAnchor.BottomMiddle, "Anchor", "Where to anchor the captions"),
+                        new Param("valA", new EntityTypes.Float(0.25f, 4, 1), "Captions Width", "Captions width multiplier"),
+                        new Param("valB", new EntityTypes.Float(0.5f, 8, 1), "Captions Height", "Captions height multiplier")
+                    } ),
+                    new GameAction("display closed captions",           delegate 
+                    {
+                    }, 1f, true, new List<Param>() 
+                    {
+                        new Param("text1", "", "Text", "The text to display in the captions (Rich Text is supported!)"),
+                        new Param("type", Games.Global.Textbox.ClosedCaptionsAnchor.Top, "Anchor", "Where to anchor the captions"),
+                        new Param("valA", new EntityTypes.Float(0.5f, 4, 1), "Captions Height", "Captions height multiplier")
+                    } ),
+                    new GameAction("display song artist",           delegate 
+                    {
+                    }, 1f, true, new List<Param>() 
+                    {
+                        new Param("text1", "", "Title", "Text to display in the upper label (Rich Text is supported!)"),
+                        new Param("text2", "", "Artist", "Text to display in the lower label (Rich Text is supported!)"),
+                    } ),
+                }),
             };
-            
+
             BuildLoadRunnerList();
             foreach(var load in loadRunners)
             {

@@ -36,6 +36,10 @@ namespace HeavenStudio.Editor
         public bool colorTableActive;
         public ColorPreview colorPreview;
 
+        [Header("String")]  //why wasn't this a thing before
+        [Space(10)]
+        public TMP_InputField inputFieldString;
+
         private string propertyName;
 
         public void SetProperties(string propertyName, object type, string caption)
@@ -61,10 +65,16 @@ namespace HeavenStudio.Editor
                     parameterManager.entity[propertyName] = (int)slider.value;
                 });
 
+                inputField.onSelect.AddListener(delegate
+                {
+                    Editor.instance.editingInputField = true;
+                });
+
                 inputField.onEndEdit.AddListener(delegate
                 {
                     slider.value = Mathf.RoundToInt(System.Convert.ToSingle(System.Convert.ToSingle(inputField.text)));
                     parameterManager.entity[propertyName] = (int)slider.value;
+                    Editor.instance.editingInputField = false;
                 });
             }
             else if (objType == typeof(EntityTypes.Float))
@@ -84,10 +94,16 @@ namespace HeavenStudio.Editor
                     parameterManager.entity[propertyName] = newValue;
                 });
 
+                inputField.onSelect.AddListener(delegate
+                {
+                    Editor.instance.editingInputField = true;
+                });
+
                 inputField.onEndEdit.AddListener(delegate 
                 {
                     slider.value = (float)System.Math.Round(System.Convert.ToSingle(inputField.text), 4);
                     parameterManager.entity[propertyName] = slider.value;
+                    Editor.instance.editingInputField = false;
                 });
             }
             else if(type is bool)
@@ -142,6 +158,24 @@ namespace HeavenStudio.Editor
 
                 colorPreview.ChangeColor(paramCol);
                 ColorTable.gameObject.SetActive(false);
+            }
+            //why the FUCK wasn't this a thing before lmao
+            else if(objType == typeof(string))
+            {
+                // Debug.Log("entity " + propertyName + " is: " + (string)(parameterManager.entity[propertyName]));
+                inputFieldString.text = (string)(parameterManager.entity[propertyName]);
+
+                inputFieldString.onSelect.AddListener(delegate
+                {
+                    Editor.instance.editingInputField = true;
+                });
+
+                inputFieldString.onEndEdit.AddListener(delegate
+                {
+                    // Debug.Log("setting " + propertyName + " to: " + inputFieldString.text);
+                    parameterManager.entity[propertyName] = inputFieldString.text;
+                    Editor.instance.editingInputField = false;
+                });
             }
         }
 
