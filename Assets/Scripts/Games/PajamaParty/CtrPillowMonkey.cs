@@ -58,11 +58,10 @@ namespace HeavenStudio.Games.Scripts_PajamaParty
                     else
                         t = jumpPos;
                     Monkey.transform.rotation = Quaternion.Euler(0, 0, Mathf.Lerp(22.5f, -22.5f, t));
-                    anim.Play("MonkeyJump0" + jumpAlt, -1, jumpPos);
+                    anim.DoScaledAnimation("MonkeyJump0" + jumpAlt, startJumpTime, jumpLength);
                 }
                 else
-                    anim.Play("MonkeyJump", -1, jumpPos);
-                anim.speed = 0;
+                    anim.DoScaledAnimation("MonkeyJump", startJumpTime, jumpLength);
             }
             else
             {
@@ -70,8 +69,7 @@ namespace HeavenStudio.Games.Scripts_PajamaParty
                 {
                     hasJumped = false;
                     PajamaParty.instance.DoBedImpact();
-                    anim.Play("MonkeyLand", -1, 0);
-                    anim.speed = 1f / cond.pitchedSecPerBeat;
+                    anim.DoScaledAnimationAsync("MonkeyLand");
                     Monkey.transform.rotation = Quaternion.Euler(0, 0, 0);
                     jumpAlt = 0;
                 }
@@ -97,8 +95,7 @@ namespace HeavenStudio.Games.Scripts_PajamaParty
                 Projectile.transform.rotation = Quaternion.Euler(0, 0, 0);
                 if (hasThrown)
                 {
-                    anim.Play("MonkeyBeat", -1, 0);
-                    anim.speed = 1f;
+                    anim.DoUnscaledAnimation("MonkeyBeat");
                     Projectile.SetActive(false);
                     hasThrown = false;
                 }
@@ -117,14 +114,12 @@ namespace HeavenStudio.Games.Scripts_PajamaParty
 
         public void Charge(float beat)
         {
-            anim.Play("MonkeyReady", -1, 0);
-            anim.speed = 1f;
+            anim.DoUnscaledAnimation("MonkeyReady");
         }
 
         public void Throw(float beat)
         {
-            anim.Play("MonkeyThrow", -1, 0);
-            anim.speed = 1f;
+            anim.DoUnscaledAnimation("MonkeyThrow");
             startThrowTime = beat;
             Projectile.SetActive(true);
         }
@@ -148,57 +143,25 @@ namespace HeavenStudio.Games.Scripts_PajamaParty
             List<BeatAction.Action> seq = 
                 new List<BeatAction.Action>()
                 {
-                    new BeatAction.Action( beat, delegate { 
-                            anim.Play("MonkeySleep00", -1, 0);
-                            anim.speed = 1f / cond.pitchedSecPerBeat;
-                        }
-                    ),
-                    new BeatAction.Action( beat + 0.5f, delegate { 
-                            anim.Play("MonkeySleep01", -1, 0);
-                            anim.speed = 1f;
-                        }
-                    ),
+                    new BeatAction.Action( beat, delegate { anim.DoScaledAnimationAsync("MonkeySleep00"); }),
+                    new BeatAction.Action( beat + 0.5f, delegate { anim.DoUnscaledAnimation("MonkeySleep01"); }),
                 };
             
             if (col == 0 || col == 4)
             {
-                seq.Add(new BeatAction.Action( beat + 1f, delegate { 
-                        anim.Play("MonkeySleep02", -1, 0);
-                        anim.speed = 1f / cond.pitchedSecPerBeat;
-                    }
-                ));
+                seq.Add(new BeatAction.Action( beat + 1f, delegate { anim.DoScaledAnimationAsync("MonkeySleep02"); }));
             }
             else if (col == 1 || col == 3)
             {
-                seq.Add(new BeatAction.Action( beat + 1.5f, delegate { 
-                        anim.Play("MonkeyReadySleep", -1, 0);
-                        anim.speed = 1f / cond.pitchedSecPerBeat;
-                    }
-                ));
-                seq.Add(new BeatAction.Action( beat + 2.5f, delegate { 
-                        anim.Play("MonkeySleep02", -1, 0);
-                        anim.speed = 1f / cond.pitchedSecPerBeat;
-                    }
-                ));
+                seq.Add(new BeatAction.Action( beat + 1.5f, delegate { anim.DoScaledAnimationAsync("MonkeyReadySleep"); }));
+                seq.Add(new BeatAction.Action( beat + 2.5f, delegate { anim.DoScaledAnimationAsync("MonkeySleep02"); }));
             }
             else
             {
-                seq.Add(new BeatAction.Action( beat + 3f, delegate { 
-                        anim.Play("MonkeyReadySleep", -1, 0);
-                        anim.speed = 1f / cond.pitchedSecPerBeat;
-                    }
-                ));
-                seq.Add(new BeatAction.Action( beat + 4f, delegate { 
-                        anim.Play("MonkeySleep02", -1, 0);
-                        anim.speed = 1f / cond.pitchedSecPerBeat;
-                    }
-                ));
+                seq.Add(new BeatAction.Action( beat + 3f, delegate { anim.DoScaledAnimationAsync("MonkeyReadySleep"); }));
+                seq.Add(new BeatAction.Action( beat + 4f, delegate { anim.DoScaledAnimationAsync("MonkeySleep02"); }));
             }
-            seq.Add(new BeatAction.Action( beat + 7f, delegate { 
-                    anim.Play("MonkeyAwake", -1, 0);
-                    anim.speed = 1f / cond.pitchedSecPerBeat;
-                }
-            ));
+            seq.Add(new BeatAction.Action( beat + 7f, delegate { anim.DoScaledAnimationAsync("MonkeyAwake"); }));
 
             BeatAction.New(Monkey, seq);
         }
