@@ -85,7 +85,7 @@ namespace HeavenStudio
             bool negativeOffset = firstBeatOffset < 0f;
             bool negativeStartTime = false;
 
-            Debug.Log("starting playback @ beat " + beat);
+            // Debug.Log("starting playback @ beat " + beat + ", offset is " + firstBeatOffset);
 
             var startPos = GetSongPosFromBeat(beat);
             if (negativeOffset)
@@ -103,9 +103,8 @@ namespace HeavenStudio
             }
             
             //TODO: make this take into account past tempo changes
-            songPosBeat = time / secPerBeat;
-            songPositionInBeats = songPosBeat;
-            Debug.Log("offset starting playback @ beat " + songPosBeat);
+            songPosBeat = GetBeatFromSongPos(time - firstBeatOffset);
+            // Debug.Log("corrected starting playback @ beat " + songPosBeat);
 
             isPlaying = true;
             isPaused = false;
@@ -237,6 +236,14 @@ namespace HeavenStudio
             return GetBeatFromPosition(position, targetBeat - margin, margin);
         }
 
+        private List<Beatmap.TempoChange> GetSortedTempoChanges(Beatmap chart)
+        {
+            //iterate over all tempo changes, adding to counter
+            List<Beatmap.TempoChange> tempoChanges = chart.tempoChanges;
+            tempoChanges.Sort((x, y) => x.beat.CompareTo(y.beat)); //sorts all tempo changes by ascending time (GameManager already does this but juste en cas...)
+            return tempoChanges;
+        }
+
         public float GetSongPosFromBeat(float beat)
         {
             Beatmap chart = GameManager.instance.Beatmap;
@@ -249,9 +256,7 @@ namespace HeavenStudio
             float lastTempoChangeBeat = 0f;
 
             //iterate over all tempo changes, adding to counter
-            List<Beatmap.TempoChange> tempoChanges = chart.tempoChanges;
-            tempoChanges.Sort((x, y) => x.beat.CompareTo(y.beat)); //sorts all tempo changes by ascending time (GameManager already does this but juste en cas...)
-
+            List<Beatmap.TempoChange> tempoChanges = GetSortedTempoChanges(chart);
             foreach (var t in tempoChanges)
             {
                 if (t.beat > beat)
@@ -273,8 +278,50 @@ namespace HeavenStudio
             counter += (beat - lastTempoChangeBeat) * secPerBeat;
 
             // Debug.Log("GetSongPosFromBeat returning " + counter);
-            return counter - firstBeatOffset;
+            return counter;
         }
+
+        //thank you @wooningcharithri#7419 for the psuedo-code
+            private float BeatsToSecs(float beats, float bpm)
+            {
+                // Debug.Log("BeatsToSecs returning " + beats / bpm * 60);
+                return beats / bpm * 60f;
+            }
+            private float SecsToBeats(float s, float bpm)
+            {
+                // Debug.Log("SecsToBeats returning " + s / 60f / bpm);
+                return s / 60f * bpm;
+            }
+
+            public float GetBeatFromSongPos(float seconds)
+            {
+                // Debug.Log("Getting beat of seconds " + seconds);
+                Beatmap chart = GameManager.instance.Beatmap;
+                float lastTempoChangeBeat = 0f;
+                float lastBpm = chart.bpm;
+                float counterSeconds = -firstBeatOffset;
+                
+                List<Beatmap.TempoChange> tempoChanges = GetSortedTempoChanges(chart);
+                foreach (var t in tempoChanges)
+                {
+                    float beatToNext = t.beat - lastTempoChangeBeat;
+                    float secToNext = BeatsToSecs(beatToNext, lastBpm);
+                    float nextSecs = counterSeconds + secToNext;
+
+                    // Debug.Log("nextSecs is " + nextSecs + ", seconds " + seconds);
+                    if (nextSecs >= seconds)
+                        break;
+                    
+                    lastTempoChangeBeat = t.beat;
+                    lastBpm = t.tempo;
+                    counterSeconds = nextSecs;
+                }
+
+                // Debug.Log("lastTempoChangeBeat is " + lastTempoChangeBeat + ", counterSeconds is " + counterSeconds);
+
+                return lastTempoChangeBeat + SecsToBeats(seconds - counterSeconds, lastBpm);
+            }
+        //
 
         // convert real seconds to beats
         public float GetRestFromRealTime(float seconds)
@@ -296,9 +343,7 @@ namespace HeavenStudio
         public float SongLengthInBeats()
         {
             if (!musicSource.clip) return 0;
-            
-            //TODO: make this take into account past tempo changes
-            return musicSource.clip.length / secPerBeat;
+            return GetBeatFromSongPos(musicSource.clip.length);
         }
 
         public bool SongPosLessThanClipLength(float t)

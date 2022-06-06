@@ -333,14 +333,14 @@ namespace HeavenStudio
                 //for tempo changes, just go over all of em until the last one we pass
                 for (int t = 0; t < tempoChanges.Count; t++)
                 {
-                    Debug.Log("checking tempo event " + t + " against beat " + beat + "( tc beat " + tempoChanges[t] + ")");
+                    // Debug.Log("checking tempo event " + t + " against beat " + beat + "( tc beat " + tempoChanges[t] + ")");
                     if (tempoChanges[t] > beat)
                     {
                         break;
                     }
                     currentTempoEvent = t;
                 }
-                Debug.Log("currentTempoEvent is now " + currentTempoEvent);
+                // Debug.Log("currentTempoEvent is now " + currentTempoEvent);
             }
         }
 
