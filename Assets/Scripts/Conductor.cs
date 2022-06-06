@@ -85,6 +85,8 @@ namespace HeavenStudio
             bool negativeOffset = firstBeatOffset < 0f;
             bool negativeStartTime = false;
 
+            Debug.Log("starting playback @ beat " + beat);
+
             var startPos = GetSongPosFromBeat(beat);
             if (negativeOffset)
             {
@@ -99,8 +101,11 @@ namespace HeavenStudio
                 else
                     time = startPos;
             }
-
-            songPosBeat = time / secPerBeat; 
+            
+            //TODO: make this take into account past tempo changes
+            songPosBeat = time / secPerBeat;
+            songPositionInBeats = songPosBeat;
+            Debug.Log("offset starting playback @ beat " + songPosBeat);
 
             isPlaying = true;
             isPaused = false;
@@ -234,7 +239,41 @@ namespace HeavenStudio
 
         public float GetSongPosFromBeat(float beat)
         {
-            return secPerBeat * beat;
+            Beatmap chart = GameManager.instance.Beatmap;
+            SetBpm(chart.bpm);
+
+            //initial counter
+            float counter = 0f;
+
+            //time of last tempo change, to know how much to add to counter
+            float lastTempoChangeBeat = 0f;
+
+            //iterate over all tempo changes, adding to counter
+            List<Beatmap.TempoChange> tempoChanges = chart.tempoChanges;
+            tempoChanges.Sort((x, y) => x.beat.CompareTo(y.beat)); //sorts all tempo changes by ascending time (GameManager already does this but juste en cas...)
+
+            foreach (var t in tempoChanges)
+            {
+                if (t.beat > beat)
+                {
+                    // this tempo change is past our requested time, abort
+                    break;
+                }
+                // Debug.Log("tempo change at " + t.beat);
+
+                counter += (t.beat - lastTempoChangeBeat) * secPerBeat;
+                // Debug.Log("counter is now " + counter);
+
+                // now update to new bpm
+                SetBpm(t.tempo);
+                lastTempoChangeBeat = t.beat;
+            }
+
+            //passed all past tempo changes, now extrapolate from last tempo change until requested position
+            counter += (beat - lastTempoChangeBeat) * secPerBeat;
+
+            // Debug.Log("GetSongPosFromBeat returning " + counter);
+            return counter - firstBeatOffset;
         }
 
         // convert real seconds to beats
@@ -257,6 +296,8 @@ namespace HeavenStudio
         public float SongLengthInBeats()
         {
             if (!musicSource.clip) return 0;
+            
+            //TODO: make this take into account past tempo changes
             return musicSource.clip.length / secPerBeat;
         }
 
