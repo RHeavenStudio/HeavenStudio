@@ -203,6 +203,10 @@ namespace HeavenStudio
             if (result)
             {
                 lastReportedBeat += 1f;
+                if (lastReportedBeat < songPositionInBeats)
+                {
+                    lastReportedBeat = Mathf.Round(songPositionInBeats);
+                }
             }
             return result;
         }
