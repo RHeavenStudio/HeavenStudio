@@ -106,10 +106,8 @@ namespace HeavenStudio.Games.Scripts_FanClub
                 }
                 if (PlayerInput.Pressing())
                 {
-                    Debug.Log("song pos: " + cond.songPositionInBeats + ", clap start: " + clappingStartTime);
                     if (clappingStartTime != Single.MinValue && cond.songPositionInBeats > clappingStartTime + 2f && !stopCharge)
                     {
-                        Debug.Log("ChargeOut");
                         animator.Play("FanClapCharge", -1, 0);
                         stopCharge = true;
                     }
@@ -118,7 +116,6 @@ namespace HeavenStudio.Games.Scripts_FanClub
                 {
                     if (clappingStartTime != Single.MinValue && cond.songPositionInBeats > clappingStartTime + 2f && stopCharge && !FanClub.instance.IsExpectingInputNow())
                     {
-                        Debug.Log("JumpOut");
                         JumpStart(false);
                     }
                     else
@@ -169,7 +166,6 @@ namespace HeavenStudio.Games.Scripts_FanClub
             animator.Play("FanClap", -1, 0);
             Jukebox.PlayOneShotGame("fanClub/play_clap");
             Jukebox.PlayOneShotGame("fanClub/crap_impact");
-            Debug.Log("Setting clappingStartTime to " + cond.songPositionInBeats);
             clappingStartTime = cond.songPositionInBeats;
 
             if (doCharge)
