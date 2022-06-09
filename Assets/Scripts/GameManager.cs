@@ -159,6 +159,18 @@ namespace HeavenStudio
             List<float> entities = Beatmap.entities.Select(c => c.beat).ToList();
             List<float> tempoChanges = Beatmap.tempoChanges.Select(c => c.beat).ToList();
 
+            if (currentTempoEvent < Beatmap.tempoChanges.Count && currentTempoEvent >= 0)
+            {
+                // Debug.Log("Checking Tempo Change at " + tempoChanges[currentTempoEvent] + ", current beat " + Conductor.instance.songPositionInBeats);
+                if (Conductor.instance.songPositionInBeats >= tempoChanges[currentTempoEvent])
+                {
+                    // Debug.Log("Tempo Change at " + Conductor.instance.songPositionInBeats + " of bpm " + Beatmap.tempoChanges[currentTempoEvent].tempo);
+                    Conductor.instance.SetBpm(Beatmap.tempoChanges[currentTempoEvent].tempo);
+                    Conductor.instance.timeSinceLastTempoChange = Time.time;
+                    currentTempoEvent++;
+                }
+            }
+
             if (currentEvent < Beatmap.entities.Count && currentEvent >= 0)
             {
                 if (Conductor.instance.songPositionInBeats >= entities[currentEvent] /*&& SongPosLessThanClipLength(Conductor.instance.songPositionInBeats)*/)
@@ -192,18 +204,6 @@ namespace HeavenStudio
                     }
 
                     // currentEvent += gameManagerEntities.Count;
-                }
-            }
-
-            if (currentTempoEvent < Beatmap.tempoChanges.Count && currentTempoEvent >= 0)
-            {
-                // Debug.Log("Checking Tempo Change at " + tempoChanges[currentTempoEvent] + ", current beat " + Conductor.instance.songPositionInBeats);
-                if (Conductor.instance.songPositionInBeats >= tempoChanges[currentTempoEvent])
-                {
-                    // Debug.Log("Tempo Change at " + Conductor.instance.songPositionInBeats + " of bpm " + Beatmap.tempoChanges[currentTempoEvent].tempo);
-                    Conductor.instance.SetBpm(Beatmap.tempoChanges[currentTempoEvent].tempo);
-                    Conductor.instance.timeSinceLastTempoChange = Time.time;
-                    currentTempoEvent++;
                 }
             }
         }

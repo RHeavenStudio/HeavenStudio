@@ -270,7 +270,7 @@ namespace HeavenStudio.Games
         public void StartMarching(float beat)
         {
             marchStartBeat = beat;
-            marchOffset = (marchStartBeat % 1) * Conductor.instance.secPerBeat / Conductor.instance.musicSource.pitch;
+            marchOffset = marchStartBeat % 1;
             currentMarchBeat = 0;
             stepCount = 0;
 

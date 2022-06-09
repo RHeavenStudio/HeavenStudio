@@ -189,23 +189,20 @@ namespace HeavenStudio
                     {
                         Util.Jukebox.PlayOneShot("metronome");
                     }
-                    else if (songPosition <= lastReportedBeat)
+                    else if (songPositionInBeats < lastReportedBeat)
                     {
-                        lastReportedBeat = (songPosition - (songPosition % secPerBeat));
+                        lastReportedBeat = Mathf.Round(songPositionInBeats);
                     }
                 }
             }
         }
 
-        public bool ReportBeat(ref float lastReportedBeat, float offset = 0, bool shiftBeatToOffset = false)
+        public bool ReportBeat(ref float lastReportedBeat, float offset = 0, bool shiftBeatToOffset = true)
         {
-            bool result = songPosition > (lastReportedBeat + offset) + secPerBeat;
-            if (result == true)
+            bool result = songPositionInBeats + (shiftBeatToOffset ? offset : 0f) >= (lastReportedBeat) + 1f;
+            if (result)
             {
-                lastReportedBeat = (songPosition - (songPosition % secPerBeat));
-
-                if (!shiftBeatToOffset)
-                    lastReportedBeat += offset;
+                lastReportedBeat += 1f;
             }
             return result;
         }
