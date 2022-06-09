@@ -240,9 +240,18 @@ namespace HeavenStudio.Games.Global
                 }
                 else if (idolShown)
                 {
-                    IdolAnimator.Play("IdolHide", -1, 0);
-                    IdolAnimator.speed = (1f / cond.pitchedSecPerBeat) * 0.5f;
-                    idolShown = false;
+                    if (prog < 1f)
+                    {
+                        IdolAnimator.Play("NoPose", -1, 0);
+                        IdolAnimator.speed = 1;
+                        idolShown = false;
+                    }
+                    else
+                    {
+                        IdolAnimator.Play("IdolHide", -1, 0);
+                        IdolAnimator.speed = (1f / cond.pitchedSecPerBeat) * 0.5f;
+                        idolShown = false;
+                    }
                 }
             }
         }
