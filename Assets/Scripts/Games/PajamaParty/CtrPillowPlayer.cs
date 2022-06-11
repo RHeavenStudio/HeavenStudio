@@ -114,12 +114,12 @@ namespace HeavenStudio.Games.Scripts_PajamaParty
             }
             else
             {
-                Projectile.GetComponent<Animator>().Play("NoPose", -1, 0);
                 startThrowTime = Single.MinValue;
                 Projectile_Root.transform.localPosition = new Vector3(0, 0);
-                Projectile.transform.rotation = Quaternion.Euler(0, 0, 0);
                 if (hasThrown)
                 {
+                    Projectile.GetComponent<Animator>().Play("NoPose", -1, 0);
+                    Projectile.transform.rotation = Quaternion.Euler(0, 0, 0);
                     if (throwNg)
                     {
                         anim.DoUnscaledAnimation("MakoCatchNg");

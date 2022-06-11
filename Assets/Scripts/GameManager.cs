@@ -1,4 +1,5 @@
 using System;
+using System.IO;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -31,7 +32,7 @@ namespace HeavenStudio
         Coroutine currentGameSwitchIE;
 
         [Header("Properties")]
-        public int currentEvent, currentTempoEvent;
+        public int currentEvent, currentTempoEvent, currentPreEvent, currentPreSwitch;
         public float startOffset;
         public bool playOnStart;
         public float startBeat;
@@ -40,6 +41,8 @@ namespace HeavenStudio
         public bool canInput = true;
 
         public event Action<float> onBeatChanged;
+
+        public Dictionary<string, AssetBundle> loadedAssetBundles = new Dictionary<string, AssetBundle>();
 
         public int BeatmapEntities()
         {
@@ -57,7 +60,11 @@ namespace HeavenStudio
 
         public void Init()
         {
+            currentPreEvent= 0;
+            currentPreSwitch = 0;
+ 
             this.transform.localScale = new Vector3(30000000, 30000000);
+            
             SpriteRenderer sp = this.gameObject.AddComponent<SpriteRenderer>();
             sp.enabled = false;
             sp.color = Color.black;
@@ -148,6 +155,35 @@ namespace HeavenStudio
             }
         }
 
+        public IEnumerator LoadAssetBundleAsync(string gameName)
+        {
+            string minigameBundle = GetGameInfo(gameName).wantAssetBundle;
+            if (minigameBundle == null || minigameBundle == "") 
+            {
+                yield break;
+            }
+            if (loadedAssetBundles.ContainsKey(gameName)) 
+            {
+                yield break;
+            }
+            AssetBundleCreateRequest asyncBundleRequest = AssetBundle.LoadFromFileAsync(Path.Combine(Application.streamingAssetsPath, minigameBundle));
+            yield return asyncBundleRequest;
+
+            if (loadedAssetBundles.ContainsKey(gameName)) 
+            {
+                yield break;
+            }
+
+            AssetBundle localAssetBundle = asyncBundleRequest.assetBundle;
+            yield return localAssetBundle;
+
+            if (loadedAssetBundles.ContainsKey(gameName)) 
+            {
+                yield break;
+            }
+            loadedAssetBundles.Add(gameName, localAssetBundle);
+        }
+
         // LateUpdate works a bit better(?) but causes some bugs (like issues with bop animations).
         private void Update()
         {
@@ -168,6 +204,54 @@ namespace HeavenStudio
                     Conductor.instance.SetBpm(Beatmap.tempoChanges[currentTempoEvent].tempo);
                     Conductor.instance.timeSinceLastTempoChange = Time.time;
                     currentTempoEvent++;
+                }
+            }
+
+            float seekTime = 8f;
+            //seek ahead to preload games that have assetbundles
+            //check game switches first
+            var gameSwitchs = Beatmap.entities.FindAll(c => c.datamodel.Split(1) == "switchGame");
+            if (currentPreSwitch < gameSwitchs.Count && currentPreSwitch >= 0)
+            {
+                if (Conductor.instance.songPositionInBeats + seekTime >= gameSwitchs[currentPreSwitch].beat)
+                {
+                    string gameName = gameSwitchs[currentPreSwitch].datamodel.Split(2);
+                    Debug.Log("checking if assetbundle for game " + gameName);
+                    string minigameBundle = GetGameInfo(gameName).wantAssetBundle;
+                    if (!(minigameBundle == null || minigameBundle == "")) 
+                    {
+                        if (!loadedAssetBundles.ContainsKey(gameName))
+                        {
+                            Debug.Log("ASYNC loading assetbundle for game " + gameName);
+                            StartCoroutine(LoadAssetBundleAsync(gameName));
+                        }
+                    }
+                    currentPreSwitch++;
+                }
+            }
+            //then check game entities
+            if (currentPreEvent < Beatmap.entities.Count && currentPreEvent >= 0)
+            {
+                if (Conductor.instance.songPositionInBeats + seekTime >= entities[currentPreEvent])
+                {
+                    var entitiesAtSameBeat = Beatmap.entities.FindAll(c => c.beat == Beatmap.entities[currentPreEvent].beat && !EventCaller.FXOnlyGames().Contains(EventCaller.instance.GetMinigame(c.datamodel.Split('/')[0])));
+                    for (int i = 0; i < entitiesAtSameBeat.Count; i++)
+                    {
+                        string gameName = entitiesAtSameBeat[i].datamodel.Split('/')[0];
+                        Debug.Log("checking if assetbundle for game " + gameName);
+                        string minigameBundle = GetGameInfo(gameName).wantAssetBundle;
+                        if (minigameBundle == null || minigameBundle == "") 
+                        {
+                            continue;
+                        }
+
+                        if (!loadedAssetBundles.ContainsKey(gameName))
+                        {
+                            Debug.Log("ASYNC loading assetbundle for game " + gameName);
+                            StartCoroutine(LoadAssetBundleAsync(gameName));
+                        }
+                    }
+                    currentPreEvent++;
                 }
             }
 
@@ -281,6 +365,7 @@ namespace HeavenStudio
                 List<float> entities = Beatmap.entities.Select(c => c.beat).ToList();
 
                 currentEvent = entities.IndexOf(Mathp.GetClosestInList(entities, beat));
+                currentPreEvent = entities.IndexOf(Mathp.GetClosestInList(entities, beat));
 
                 var gameSwitchs = Beatmap.entities.FindAll(c => c.datamodel.Split(1) == "switchGame");
 
@@ -289,6 +374,7 @@ namespace HeavenStudio
                 if (gameSwitchs.Count > 0)
                 {
                     int index = gameSwitchs.FindIndex(c => c.beat == Mathp.GetClosestInList(gameSwitchs.Select(c => c.beat).ToList(), beat));
+                    currentPreSwitch = index;
                     var closestGameSwitch = gameSwitchs[index];
                     if (closestGameSwitch.beat <= beat)
                     {
@@ -433,6 +519,19 @@ namespace HeavenStudio
                             else
                                 return !newGameInfo.fxOnly;
                         }).ToList()[0].datamodel.Split(0);
+                }
+                else
+                {
+                    if (gameInfo.wantAssetBundle != "")
+                    {
+                        //game is packed in an assetbundle, load from that instead
+                        if (!loadedAssetBundles.ContainsKey(name))
+                        {
+                            var bundle = AssetBundle.LoadFromFile(Path.Combine(Application.streamingAssetsPath, gameInfo.wantAssetBundle));
+                            loadedAssetBundles.Add(name, bundle);
+                        }
+                        return loadedAssetBundles[name].LoadAsset<GameObject>(name);
+                    }
                 }
             }
             return Resources.Load<GameObject>($"Games/{name}");

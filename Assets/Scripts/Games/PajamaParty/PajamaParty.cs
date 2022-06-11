@@ -34,7 +34,10 @@ namespace HeavenStudio.Games.Loaders
                 //cosmetic
                 // new GameAction("open / close background",   delegate { }, 2f, true),
                 // do shit with mako's face? (talking?)
-            });
+            },
+            new List<string>() {"ctr", "normal"},
+            "ctrpillow/common"
+            );
         }
     }
 }

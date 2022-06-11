@@ -21,7 +21,6 @@ namespace HeavenStudio.Games
             public float createBeat;
         }
 
-
         public List<PlayerActionEvent> scheduledInputs = new List<PlayerActionEvent>();
 
         /**

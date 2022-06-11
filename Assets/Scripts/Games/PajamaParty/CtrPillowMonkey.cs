@@ -91,10 +91,10 @@ namespace HeavenStudio.Games.Scripts_PajamaParty
             else
             {
                 startThrowTime = Single.MinValue;
-                Projectile.transform.localPosition = new Vector3(0, 0);
-                Projectile.transform.rotation = Quaternion.Euler(0, 0, 0);
                 if (hasThrown)
                 {
+                    Projectile.transform.localPosition = new Vector3(0, 0);
+                    Projectile.transform.rotation = Quaternion.Euler(0, 0, 0);
                     anim.DoUnscaledAnimation("MonkeyBeat");
                     Projectile.SetActive(false);
                     hasThrown = false;
