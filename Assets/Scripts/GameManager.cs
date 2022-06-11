@@ -157,7 +157,7 @@ namespace HeavenStudio
 
         public IEnumerator LoadAssetBundleAsync(string gameName)
         {
-            string inf = GetGameInfo(gameName);
+            var inf = GetGameInfo(gameName);
             if (!inf.usesAssetBundle) 
             {
                 yield break;
@@ -218,7 +218,7 @@ namespace HeavenStudio
                 {
                     string gameName = gameSwitchs[currentPreSwitch].datamodel.Split(2);
                     Debug.Log("checking if assetbundle for game " + gameName);
-                    string inf = GetGameInfo(gameName);
+                    var inf = GetGameInfo(gameName);
                     if (inf.usesAssetBundle) 
                     {
                         if (!loadedAssetBundles.ContainsKey(gameName))
@@ -240,7 +240,7 @@ namespace HeavenStudio
                     {
                         string gameName = entitiesAtSameBeat[i].datamodel.Split('/')[0];
                         Debug.Log("checking if assetbundle for game " + gameName);
-                        string inf = GetGameInfo(gameName);
+                        var inf = GetGameInfo(gameName);
                         if (!inf.usesAssetBundle) 
                         {
                             continue;
