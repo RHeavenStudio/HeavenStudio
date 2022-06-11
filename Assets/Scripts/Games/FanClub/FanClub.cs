@@ -56,7 +56,10 @@ namespace HeavenStudio.Games.Loaders
                     },
                     inactiveFunction: delegate { var e = eventCaller.currentEntity; FanClub.SetPerformanceType(e.type); }
                 ),
-            });
+            },
+            new List<string>() {"ntr", "normal"},
+            "ntridol"
+            );
         }
     }
 }
