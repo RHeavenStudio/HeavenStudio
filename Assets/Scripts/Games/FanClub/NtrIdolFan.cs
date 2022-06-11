@@ -28,18 +28,25 @@ namespace HeavenStudio.Games.Scripts_FanClub
 
         float clappingStartTime = Single.MinValue;
 
-        public void AddHit(float beat, int type)
+        public void AddHit(float beat, int type = 0)
         {
             if (player)
             {
-                if (type == 0)  // normal clap
-                    FanClub.instance.ScheduleInput(beat, 1f, InputType.STANDARD_DOWN, ClapJust, ClapThrough, Out);
-                else if (type == 1) // jump
-                    FanClub.instance.ScheduleInput(beat, 1f, InputType.STANDARD_UP, JumpJust, JumpThrough, JumpOut);
-                else if (type == 2) //"kamone" charge
-                    FanClub.instance.ScheduleInput(beat, 1f, InputType.STANDARD_DOWN, ChargeClapJust, ClapThrough, Out);
-                else    //"kamone" long clap (first)
-                    FanClub.instance.ScheduleInput(beat, 1f, InputType.STANDARD_DOWN, LongClapJust, ClapThrough, Out);
+                switch (type)
+                {
+                    case 0:
+                        FanClub.instance.ScheduleInput(beat, 1f, InputType.STANDARD_DOWN, ClapJust, ClapThrough, Out);
+                        break;
+                    case 1:
+                        FanClub.instance.ScheduleInput(beat, 1f, InputType.STANDARD_UP, JumpJust, JumpThrough, JumpOut);
+                        break;
+                    case 2:
+                        FanClub.instance.ScheduleInput(beat, 1f, InputType.STANDARD_DOWN, ChargeClapJust, ClapThrough, Out);
+                        break;
+                    default:
+                        FanClub.instance.ScheduleInput(beat, 1f, InputType.STANDARD_DOWN, LongClapJust, ClapThrough, Out);
+                        break;
+                }
             }
         }
 
@@ -107,12 +114,9 @@ namespace HeavenStudio.Games.Scripts_FanClub
                 }
                 if (PlayerInput.PressedUp())
                 {
-                    if (stopCharge)
+                    if (clappingStartTime != Single.MinValue && cond.songPositionInBeats > clappingStartTime + 2f && stopCharge && !FanClub.instance.IsExpectingInputNow())
                     {
-                        if (!FanClub.instance.IsExpectingInputNow())
-                        {
-                            JumpStart(false);
-                        }
+                        JumpStart(false);
                     }
                     else
                     {

@@ -22,7 +22,7 @@ TextureImporter:
     second: NorthOn
   - first:
       213: -8244262083605341031
-    second: EastOn
+    second: WestOn
   - first:
       213: -4789233240444048905
     second: RightOn
@@ -38,6 +38,30 @@ TextureImporter:
   - first:
       213: -5863448563183388835
     second: UpOn
+  - first:
+      213: -598839719690993186
+    second: ShoulderLeftOn
+  - first:
+      213: 7882489078324362733
+    second: ShoulderRightOn
+  - first:
+      213: -1348493139139215224
+    second: ShoulderLeftOff
+  - first:
+      213: 6499095914430324874
+    second: ShoulderRightOff
+  - first:
+      213: -7444272823696498285
+    second: ShouldersOn
+  - first:
+      213: -5368843543446870761
+    second: ShouldersOff
+  - first:
+      213: 5518843884416884346
+    second: ShouldersRightOn
+  - first:
+      213: 3724681018647327355
+    second: ShouldersLeftOn
   externalObjects: {}
   serializedVersion: 11
   mipmaps:
@@ -68,7 +92,7 @@ TextureImporter:
   maxTextureSize: 2048
   textureSettings:
     serializedVersion: 2
-    filterMode: 1
+    filterMode: 2
     aniso: 1
     mipBias: 0
     wrapU: 1
@@ -190,7 +214,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: WestOn
+      name: EastOn
       rect:
         serializedVersion: 2
         x: 191
@@ -253,7 +277,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: EastOn
+      name: WestOn
       rect:
         serializedVersion: 2
         x: 431
@@ -374,6 +398,174 @@ TextureImporter:
       bones: []
       spriteID: d57fda00998d0aea0800000000000000
       internalID: -5863448563183388835
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: ShoulderLeftOn
+      rect:
+        serializedVersion: 2
+        x: 511
+        y: 984
+        width: 38
+        height: 38
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: ed18c6e927e70b7f0800000000000000
+      internalID: -598839719690993186
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: ShoulderRightOn
+      rect:
+        serializedVersion: 2
+        x: 551
+        y: 984
+        width: 38
+        height: 38
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: ded7b63bd0a346d60800000000000000
+      internalID: 7882489078324362733
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: ShoulderLeftOff
+      rect:
+        serializedVersion: 2
+        x: 511
+        y: 944
+        width: 38
+        height: 38
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 8804e8372a0394de0800000000000000
+      internalID: -1348493139139215224
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: ShoulderRightOff
+      rect:
+        serializedVersion: 2
+        x: 551
+        y: 944
+        width: 38
+        height: 38
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: a80efccec4d613a50800000000000000
+      internalID: 6499095914430324874
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: ShouldersOn
+      rect:
+        serializedVersion: 2
+        x: 591
+        y: 984
+        width: 78
+        height: 38
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 391e97cee41a0b890800000000000000
+      internalID: -7444272823696498285
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: ShouldersOff
+      rect:
+        serializedVersion: 2
+        x: 591
+        y: 944
+        width: 78
+        height: 38
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 715233a1e390e75b0800000000000000
+      internalID: -5368843543446870761
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: ShouldersRightOn
+      rect:
+        serializedVersion: 2
+        x: 671
+        y: 984
+        width: 78
+        height: 38
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: a7e5185d54fd69c40800000000000000
+      internalID: 5518843884416884346
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: ShouldersLeftOn
+      rect:
+        serializedVersion: 2
+        x: 671
+        y: 944
+        width: 78
+        height: 38
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: b723d1af6a9b0b330800000000000000
+      internalID: 3724681018647327355
       vertices: []
       indices: 
       edges: []

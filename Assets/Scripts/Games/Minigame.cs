@@ -116,7 +116,7 @@ namespace HeavenStudio.Games
                     float t1 = closest.startBeat + closest.timer;
                     float t2 = toCompare.startBeat + toCompare.timer;
 
-                    Debug.Log("t1=" + t1 + " -- t2=" + t2);
+                    // Debug.Log("t1=" + t1 + " -- t2=" + t2);
 
                     if (t2 < t1) closest = toCompare;
                 }

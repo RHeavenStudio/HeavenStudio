@@ -296,7 +296,7 @@ namespace HeavenStudio.Editor.Track
             if (movingPlayback)
             {
                 RectTransformUtility.ScreenPointToLocalPointInRectangle(TimelineContent, Input.mousePosition, Editor.instance.EditorCamera, out lastMousePos);
-                TimelineSlider.localPosition = new Vector3(Mathf.Clamp(Mathp.Round2Nearest(lastMousePos.x + 0.12f, Timeline.SnapInterval()), 0, Mathf.Infinity), TimelineSlider.transform.localPosition.y);
+                TimelineSlider.localPosition = new Vector3(Mathf.Max(Mathp.Round2Nearest(lastMousePos.x + 0.12f, Timeline.SnapInterval()), 0), TimelineSlider.transform.localPosition.y);
 
                 if (TimelineSlider.localPosition.x != lastBeatPos)
                     Conductor.instance.SetBeat(TimelineSlider.transform.localPosition.x);

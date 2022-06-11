@@ -151,13 +151,25 @@ namespace HeavenStudio
         // LateUpdate works a bit better(?) but causes some bugs (like issues with bop animations).
         private void Update()
         {
-            if (Beatmap.entities.Count < 1)
+            if (BeatmapEntities() < 1) //bruh really you forgot to ckeck tempo changes
                 return;
             if (!Conductor.instance.isPlaying)
                 return;
 
             List<float> entities = Beatmap.entities.Select(c => c.beat).ToList();
             List<float> tempoChanges = Beatmap.tempoChanges.Select(c => c.beat).ToList();
+
+            if (currentTempoEvent < Beatmap.tempoChanges.Count && currentTempoEvent >= 0)
+            {
+                // Debug.Log("Checking Tempo Change at " + tempoChanges[currentTempoEvent] + ", current beat " + Conductor.instance.songPositionInBeats);
+                if (Conductor.instance.songPositionInBeats >= tempoChanges[currentTempoEvent])
+                {
+                    // Debug.Log("Tempo Change at " + Conductor.instance.songPositionInBeats + " of bpm " + Beatmap.tempoChanges[currentTempoEvent].tempo);
+                    Conductor.instance.SetBpm(Beatmap.tempoChanges[currentTempoEvent].tempo);
+                    Conductor.instance.timeSinceLastTempoChange = Time.time;
+                    currentTempoEvent++;
+                }
+            }
 
             if (currentEvent < Beatmap.entities.Count && currentEvent >= 0)
             {
@@ -192,16 +204,6 @@ namespace HeavenStudio
                     }
 
                     // currentEvent += gameManagerEntities.Count;
-                }
-            }
-
-            if (currentTempoEvent < Beatmap.tempoChanges.Count && currentTempoEvent >= 0)
-            {
-                if (Conductor.instance.songPositionInBeats >= tempoChanges[currentTempoEvent])
-                {
-                    Conductor.instance.songBpm = Beatmap.tempoChanges[currentTempoEvent].tempo;
-                    Conductor.instance.timeSinceLastTempoChange = Time.time;
-                    currentTempoEvent++;
                 }
             }
         }
@@ -325,9 +327,20 @@ namespace HeavenStudio
 
             if (Beatmap.tempoChanges.Count > 0)
             {
+                currentTempoEvent = 0;
                 List<float> tempoChanges = Beatmap.tempoChanges.Select(c => c.beat).ToList();
 
-                currentTempoEvent = tempoChanges.IndexOf(Mathp.GetClosestInList(tempoChanges, beat));
+                //for tempo changes, just go over all of em until the last one we pass
+                for (int t = 0; t < tempoChanges.Count; t++)
+                {
+                    // Debug.Log("checking tempo event " + t + " against beat " + beat + "( tc beat " + tempoChanges[t] + ")");
+                    if (tempoChanges[t] > beat)
+                    {
+                        break;
+                    }
+                    currentTempoEvent = t;
+                }
+                // Debug.Log("currentTempoEvent is now " + currentTempoEvent);
             }
         }
 

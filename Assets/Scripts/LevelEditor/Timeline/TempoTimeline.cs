@@ -129,11 +129,7 @@ namespace HeavenStudio.Editor.Track
         }
 
         private void AddTempoChange(bool create, Beatmap.TempoChange tempoChange_ = null)
-        {
-            // TEMP: DISABLED UNTIL CRITICAL FIXES
-            if (create)
-                return;
-               
+        {      
             GameObject tempoChange = Instantiate(RefTempoChange.gameObject, this.transform);
 
             tempoChange.transform.GetChild(0).GetComponent<Image>().color = EditorTheme.theme.properties.TempoLayerCol.Hex2RGB();
