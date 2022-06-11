@@ -29,6 +29,8 @@ namespace HeavenStudio
             public List<string> tags;
             public string wantAssetBundle = "";
 
+            public bool usesAssetBundle => (wantAssetBundle != "");
+
             public Minigame(string name, string displayName, string color, bool threeD, bool fxOnly, List<GameAction> actions, List<string> tags = null, string assetBundle = "")
             {
                 this.name = name;

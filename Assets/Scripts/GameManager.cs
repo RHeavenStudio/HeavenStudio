@@ -157,16 +157,17 @@ namespace HeavenStudio
 
         public IEnumerator LoadAssetBundleAsync(string gameName)
         {
-            string minigameBundle = GetGameInfo(gameName).wantAssetBundle;
-            if (minigameBundle == null || minigameBundle == "") 
+            string inf = GetGameInfo(gameName);
+            if (!inf.usesAssetBundle) 
             {
                 yield break;
             }
+
             if (loadedAssetBundles.ContainsKey(gameName)) 
             {
                 yield break;
             }
-            AssetBundleCreateRequest asyncBundleRequest = AssetBundle.LoadFromFileAsync(Path.Combine(Application.streamingAssetsPath, minigameBundle));
+            AssetBundleCreateRequest asyncBundleRequest = AssetBundle.LoadFromFileAsync(Path.Combine(Application.streamingAssetsPath, inf.wantAssetBundle));
             yield return asyncBundleRequest;
 
             if (loadedAssetBundles.ContainsKey(gameName)) 
@@ -217,8 +218,8 @@ namespace HeavenStudio
                 {
                     string gameName = gameSwitchs[currentPreSwitch].datamodel.Split(2);
                     Debug.Log("checking if assetbundle for game " + gameName);
-                    string minigameBundle = GetGameInfo(gameName).wantAssetBundle;
-                    if (!(minigameBundle == null || minigameBundle == "")) 
+                    string inf = GetGameInfo(gameName);
+                    if (inf.usesAssetBundle) 
                     {
                         if (!loadedAssetBundles.ContainsKey(gameName))
                         {
@@ -239,8 +240,8 @@ namespace HeavenStudio
                     {
                         string gameName = entitiesAtSameBeat[i].datamodel.Split('/')[0];
                         Debug.Log("checking if assetbundle for game " + gameName);
-                        string minigameBundle = GetGameInfo(gameName).wantAssetBundle;
-                        if (minigameBundle == null || minigameBundle == "") 
+                        string inf = GetGameInfo(gameName);
+                        if (!inf.usesAssetBundle) 
                         {
                             continue;
                         }
@@ -522,7 +523,7 @@ namespace HeavenStudio
                 }
                 else
                 {
-                    if (gameInfo.wantAssetBundle != "")
+                    if (gameInfo.usesAssetBundle)
                     {
                         //game is packed in an assetbundle, load from that instead
                         if (!loadedAssetBundles.ContainsKey(name))
