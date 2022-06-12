@@ -34,10 +34,16 @@ namespace HeavenStudio
             public List<string> supportedLocales;
 
             public bool usesAssetBundle => (wantAssetBundle != "");
+            public bool hasLocales => (supportedLocales.Count > 0);
+            public bool AssetsLoaded => (((hasLocales && localeLoaded && currentLoadedLocale == defaultLocale) || (!hasLocales)) && commonLoaded);
 
-            private AssetBundle bundleCommon;
+            private AssetBundle bundleCommon = null;
+            private bool commonLoaded = false;
+            private bool commonPreloaded = false;
             private string currentLoadedLocale = "";
-            private AssetBundle bundleLocalized;
+            private AssetBundle bundleLocalized = null;
+            private bool localeLoaded = false;
+            private bool localePreloaded = false;
 
             public Minigame(string name, string displayName, string color, bool threeD, bool fxOnly, List<GameAction> actions, List<string> tags = null, string assetBundle = "", string defaultLocale = "en", List<string> supportedLocales = null)
             {
@@ -56,59 +62,74 @@ namespace HeavenStudio
 
             public AssetBundle GetLocalizedAssetBundle()
             {
+                if (!hasLocales) return null;
                 if (!usesAssetBundle) return null;
                 if (bundleLocalized == null || currentLoadedLocale != defaultLocale) //TEMPORARY: use the game's default locale until we add localization support
                 {
+                    if (localeLoaded) return bundleLocalized;
                     // TODO: try/catch for missing assetbundles
-                    bundleLocalized = AssetBundle.LoadFromFile(Path.Combine(Application.streamingAssetsPath, wantAssetBundle + "/locale." + defaultLocale));
                     currentLoadedLocale = defaultLocale;
+                    bundleLocalized = AssetBundle.LoadFromFile(Path.Combine(Application.streamingAssetsPath, wantAssetBundle + "/locale." + defaultLocale));
+                    localeLoaded = true;
                 }
                 return bundleLocalized;
             }
 
             public AssetBundle GetCommonAssetBundle()
             {
+                if (commonLoaded) return bundleCommon;
                 if (!usesAssetBundle) return null;
                 if (bundleCommon == null)
                 {
                     // TODO: try/catch for missing assetbundles
                     bundleCommon = AssetBundle.LoadFromFile(Path.Combine(Application.streamingAssetsPath, wantAssetBundle + "/common"));
+                    commonLoaded = true;
                 }
                 return bundleCommon;
             }
 
             public IEnumerator LoadCommonAssetBundleAsync()
             {
+                if (commonPreloaded || commonLoaded) yield break;
+                commonPreloaded = true;
                 if (!usesAssetBundle) yield break;
+                if (bundleCommon != null) yield break;
 
-                if (bundleCommon != null) yield break;
                 AssetBundleCreateRequest asyncBundleRequest = AssetBundle.LoadFromFileAsync(Path.Combine(Application.streamingAssetsPath, wantAssetBundle + "/common"));
-                yield return asyncBundleRequest;
                 if (bundleCommon != null) yield break;
+                yield return asyncBundleRequest;
 
                 AssetBundle localAssetBundle = asyncBundleRequest.assetBundle;
-                yield return localAssetBundle;
                 if (bundleCommon != null) yield break;
+                yield return localAssetBundle;
+
+                if (localAssetBundle == null) yield break;
 
                 bundleCommon = localAssetBundle;
+                commonLoaded = true;
             }
 
             public IEnumerator LoadLocalizedAssetBundleAsync()
             {
+                if (localePreloaded) yield break;
+                localePreloaded = true;
+                if (!hasLocales) yield break;
                 if (!usesAssetBundle) yield break;
-                if (currentLoadedLocale == defaultLocale) yield break;
+                if (localeLoaded && bundleLocalized != null && currentLoadedLocale == defaultLocale) yield break;
 
-                if (bundleLocalized != null) yield break;
                 AssetBundleCreateRequest asyncBundleRequest = AssetBundle.LoadFromFileAsync(Path.Combine(Application.streamingAssetsPath, wantAssetBundle + "/locale." + defaultLocale));
+                if (localeLoaded && bundleLocalized != null && currentLoadedLocale == defaultLocale) yield break;
                 yield return asyncBundleRequest;
-                if (bundleLocalized != null) yield break;
 
                 AssetBundle localAssetBundle = asyncBundleRequest.assetBundle;
+                if (localeLoaded && bundleLocalized != null && currentLoadedLocale == defaultLocale) yield break;
                 yield return localAssetBundle;
-                if (bundleLocalized != null) yield break;
 
-                currentLoadedLocale = defaultLocale;
+                if (localAssetBundle == null) yield break;
+
                 bundleLocalized = localAssetBundle;
+                currentLoadedLocale = defaultLocale;
+                localeLoaded = true;
             }
         }
 

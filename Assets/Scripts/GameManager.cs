@@ -152,6 +152,49 @@ namespace HeavenStudio
             }
         }
 
+        public void SeekAheadAndPreload(float start, float seekTime = 8f)
+        {
+            //seek ahead to preload games that have assetbundles
+            //check game switches first
+            var gameSwitchs = Beatmap.entities.FindAll(c => c.datamodel.Split(1) == "switchGame");
+            if (currentPreSwitch < gameSwitchs.Count && currentPreSwitch >= 0)
+            {
+                if (start + seekTime >= gameSwitchs[currentPreSwitch].beat)
+                {
+                    string gameName = gameSwitchs[currentPreSwitch].datamodel.Split(2);
+                    var inf = GetGameInfo(gameName);
+                    if (inf.usesAssetBundle && !inf.AssetsLoaded) 
+                    {
+                        Debug.Log("ASYNC loading assetbundle for game " + gameName);
+                        StartCoroutine(inf.LoadCommonAssetBundleAsync());
+                        StartCoroutine(inf.LoadLocalizedAssetBundleAsync());
+                    }
+                    currentPreSwitch++;
+                }
+            }
+            //then check game entities
+            List<float> entities = Beatmap.entities.Select(c => c.beat).ToList();
+            if (currentPreEvent < Beatmap.entities.Count && currentPreEvent >= 0)
+            {
+                if (start + seekTime >= entities[currentPreEvent])
+                {
+                    var entitiesAtSameBeat = Beatmap.entities.FindAll(c => c.beat == Beatmap.entities[currentPreEvent].beat && !EventCaller.FXOnlyGames().Contains(EventCaller.instance.GetMinigame(c.datamodel.Split('/')[0])));
+                    for (int i = 0; i < entitiesAtSameBeat.Count; i++)
+                    {
+                        string gameName = entitiesAtSameBeat[i].datamodel.Split('/')[0];
+                        var inf = GetGameInfo(gameName);
+                        if (inf.usesAssetBundle && !inf.AssetsLoaded) 
+                        {
+                            Debug.Log("ASYNC loading assetbundle for game " + gameName);
+                            StartCoroutine(inf.LoadCommonAssetBundleAsync());
+                            StartCoroutine(inf.LoadLocalizedAssetBundleAsync());
+                        }
+                    }
+                    currentPreEvent++;
+                }
+            }
+        }
+
         // LateUpdate works a bit better(?) but causes some bugs (like issues with bop animations).
         private void Update()
         {
@@ -177,45 +220,7 @@ namespace HeavenStudio
 
             float seekTime = 8f;
             //seek ahead to preload games that have assetbundles
-            //check game switches first
-            var gameSwitchs = Beatmap.entities.FindAll(c => c.datamodel.Split(1) == "switchGame");
-            if (currentPreSwitch < gameSwitchs.Count && currentPreSwitch >= 0)
-            {
-                if (Conductor.instance.songPositionInBeats + seekTime >= gameSwitchs[currentPreSwitch].beat)
-                {
-                    string gameName = gameSwitchs[currentPreSwitch].datamodel.Split(2);
-                    Debug.Log("checking if assetbundle for game " + gameName);
-                    var inf = GetGameInfo(gameName);
-                    if (inf.usesAssetBundle) 
-                    {
-                        Debug.Log("ASYNC loading assetbundle for game " + gameName);
-                        StartCoroutine(inf.LoadCommonAssetBundleAsync());
-                        StartCoroutine(inf.LoadLocalizedAssetBundleAsync());
-                    }
-                    currentPreSwitch++;
-                }
-            }
-            //then check game entities
-            if (currentPreEvent < Beatmap.entities.Count && currentPreEvent >= 0)
-            {
-                if (Conductor.instance.songPositionInBeats + seekTime >= entities[currentPreEvent])
-                {
-                    var entitiesAtSameBeat = Beatmap.entities.FindAll(c => c.beat == Beatmap.entities[currentPreEvent].beat && !EventCaller.FXOnlyGames().Contains(EventCaller.instance.GetMinigame(c.datamodel.Split('/')[0])));
-                    for (int i = 0; i < entitiesAtSameBeat.Count; i++)
-                    {
-                        string gameName = entitiesAtSameBeat[i].datamodel.Split('/')[0];
-                        Debug.Log("checking if assetbundle for game " + gameName);
-                        var inf = GetGameInfo(gameName);
-                        if (inf.usesAssetBundle) 
-                        {
-                            Debug.Log("ASYNC loading assetbundle for game " + gameName);
-                            StartCoroutine(inf.LoadCommonAssetBundleAsync());
-                            StartCoroutine(inf.LoadLocalizedAssetBundleAsync());
-                        }
-                    }
-                    currentPreEvent++;
-                }
-            }
+            SeekAheadAndPreload(Conductor.instance.songPositionInBeats, seekTime);
 
             if (currentEvent < Beatmap.entities.Count && currentEvent >= 0)
             {
@@ -390,6 +395,8 @@ namespace HeavenStudio
                 }
                 // Debug.Log("currentTempoEvent is now " + currentTempoEvent);
             }
+
+            SeekAheadAndPreload(beat);
         }
 
         #endregion

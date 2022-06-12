@@ -41,7 +41,7 @@ namespace HeavenStudio.Games.Loaders
             },
             new List<string>() {"ntr", "aim"},
             "ntrcoin", "en",
-            new List<string>() {"en"}
+            new List<string>() {}
             );
         }
     }
