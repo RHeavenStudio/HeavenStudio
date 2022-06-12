@@ -1,5 +1,4 @@
 using System;
-using System.IO;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -41,8 +40,6 @@ namespace HeavenStudio
         public bool canInput = true;
 
         public event Action<float> onBeatChanged;
-
-        public Dictionary<string, AssetBundle> loadedAssetBundles = new Dictionary<string, AssetBundle>();
 
         public int BeatmapEntities()
         {
@@ -155,36 +152,6 @@ namespace HeavenStudio
             }
         }
 
-        public IEnumerator LoadAssetBundleAsync(string gameName)
-        {
-            var inf = GetGameInfo(gameName);
-            if (!inf.usesAssetBundle) 
-            {
-                yield break;
-            }
-
-            if (loadedAssetBundles.ContainsKey(gameName)) 
-            {
-                yield break;
-            }
-            AssetBundleCreateRequest asyncBundleRequest = AssetBundle.LoadFromFileAsync(Path.Combine(Application.streamingAssetsPath, inf.wantAssetBundle));
-            yield return asyncBundleRequest;
-
-            if (loadedAssetBundles.ContainsKey(gameName)) 
-            {
-                yield break;
-            }
-
-            AssetBundle localAssetBundle = asyncBundleRequest.assetBundle;
-            yield return localAssetBundle;
-
-            if (loadedAssetBundles.ContainsKey(gameName)) 
-            {
-                yield break;
-            }
-            loadedAssetBundles.Add(gameName, localAssetBundle);
-        }
-
         // LateUpdate works a bit better(?) but causes some bugs (like issues with bop animations).
         private void Update()
         {
@@ -221,11 +188,9 @@ namespace HeavenStudio
                     var inf = GetGameInfo(gameName);
                     if (inf.usesAssetBundle) 
                     {
-                        if (!loadedAssetBundles.ContainsKey(gameName))
-                        {
-                            Debug.Log("ASYNC loading assetbundle for game " + gameName);
-                            StartCoroutine(LoadAssetBundleAsync(gameName));
-                        }
+                        Debug.Log("ASYNC loading assetbundle for game " + gameName);
+                        StartCoroutine(inf.LoadCommonAssetBundleAsync());
+                        StartCoroutine(inf.LoadLocalizedAssetBundleAsync());
                     }
                     currentPreSwitch++;
                 }
@@ -241,15 +206,11 @@ namespace HeavenStudio
                         string gameName = entitiesAtSameBeat[i].datamodel.Split('/')[0];
                         Debug.Log("checking if assetbundle for game " + gameName);
                         var inf = GetGameInfo(gameName);
-                        if (!inf.usesAssetBundle) 
-                        {
-                            continue;
-                        }
-
-                        if (!loadedAssetBundles.ContainsKey(gameName))
+                        if (inf.usesAssetBundle) 
                         {
                             Debug.Log("ASYNC loading assetbundle for game " + gameName);
-                            StartCoroutine(LoadAssetBundleAsync(gameName));
+                            StartCoroutine(inf.LoadCommonAssetBundleAsync());
+                            StartCoroutine(inf.LoadLocalizedAssetBundleAsync());
                         }
                     }
                     currentPreEvent++;
@@ -526,12 +487,7 @@ namespace HeavenStudio
                     if (gameInfo.usesAssetBundle)
                     {
                         //game is packed in an assetbundle, load from that instead
-                        if (!loadedAssetBundles.ContainsKey(name))
-                        {
-                            var bundle = AssetBundle.LoadFromFile(Path.Combine(Application.streamingAssetsPath, gameInfo.wantAssetBundle));
-                            loadedAssetBundles.Add(name, bundle);
-                        }
-                        return loadedAssetBundles[name].LoadAsset<GameObject>(name);
+                        return gameInfo.GetCommonAssetBundle().LoadAsset<GameObject>(name);
                     }
                 }
             }
