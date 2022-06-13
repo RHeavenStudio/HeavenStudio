@@ -16,6 +16,7 @@ namespace HeavenStudio.Editor
         public string SelectedMinigame;
 
         [Header("Components")]
+        public GameObject SelectedGameIcon;
         public GameObject GameEventSelector;
         public GameObject EventRef;
         public GameObject CurrentSelected;
@@ -96,6 +97,10 @@ namespace HeavenStudio.Editor
 
         public void SelectGame(string gameName, int index)
         {
+            if (SelectedGameIcon != null)
+            {
+                SelectedGameIcon.GetComponent<GridGameSelectorGame>().UnClickIcon();
+            }
             mg = EventCaller.instance.minigames.Find(c => c.displayName == gameName);
             SelectedMinigame = gameName;
             gameOpen = true;
@@ -103,7 +108,9 @@ namespace HeavenStudio.Editor
             DestroyEvents();
             AddEvents();
 
-            transform.GetChild(index).GetChild(0).gameObject.SetActive(true);
+            // transform.GetChild(index).GetChild(0).gameObject.SetActive(true);
+            SelectedGameIcon = transform.GetChild(index).gameObject;
+            SelectedGameIcon.GetComponent<GridGameSelectorGame>().ClickIcon();
 
             currentEventIndex = 0;
             UpdateIndex(0, false);

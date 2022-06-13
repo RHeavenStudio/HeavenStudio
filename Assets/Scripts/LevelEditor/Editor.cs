@@ -86,6 +86,8 @@ namespace HeavenStudio.Editor
             {
                 GameObject GameIcon_ = Instantiate(GridGameSelector.GetChild(0).gameObject, GridGameSelector);
                 GameIcon_.GetComponent<Image>().sprite = GameIcon(EventCaller.instance.minigames[i].name);
+                GameIcon_.GetComponent<GridGameSelectorGame>().MaskTex = GameIconMask(EventCaller.instance.minigames[i].name);
+                GameIcon_.GetComponent<GridGameSelectorGame>().UnClickIcon();
                 GameIcon_.gameObject.SetActive(true);
                 GameIcon_.name = EventCaller.instance.minigames[i].displayName;
             }
@@ -213,6 +215,11 @@ namespace HeavenStudio.Editor
         public static Sprite GameIcon(string name)
         {
             return Resources.Load<Sprite>($"Sprites/Editor/GameIcons/{name}");
+        }
+
+        public static Texture GameIconMask(string name)
+        {
+            return Resources.Load<Texture>($"Sprites/Editor/GameIcons/{name}_mask");
         }
 
         #region Dialogs
