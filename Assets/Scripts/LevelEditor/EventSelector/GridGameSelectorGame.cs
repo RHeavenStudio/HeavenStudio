@@ -1,5 +1,8 @@
 using UnityEngine;
+using UnityEngine.Rendering;
 using UnityEngine.UI;
+
+using DG.Tweening;
 
 namespace HeavenStudio.Editor
 {
@@ -36,12 +39,16 @@ namespace HeavenStudio.Editor
 
         public void ClickIcon()
         {
+            // GetComponent<Canvas>().sortingOrder = 1501;
+            transform.DOScale(new Vector3(1.15f, 1.15f, 1f), 0.1f);
             BgTex = Resources.Load<Texture>($"Sprites/GeneralPurpose/Circle");
             SetupTextures();
         }
 
         public void UnClickIcon()
         {
+            // GetComponent<Canvas>().sortingOrder = 1500;
+            transform.DOScale(new Vector3(1f, 1f, 1f), 0.1f);
             BgTex = Resources.Load<Texture>($"Sprites/GeneralPurpose/Square");
             SetupTextures();
         }
