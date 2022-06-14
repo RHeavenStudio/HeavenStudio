@@ -453,6 +453,9 @@ namespace HeavenStudio.Editor
             }
             else
             {
+                EditorLetterbox.SetActive(true);
+                GameLetterbox.SetActive(false);
+
                 MainCanvas.enabled = true;
                 EditorCamera.enabled = true;
                 GameCamera.instance.camera.targetTexture = ScreenRenderTexture;
@@ -460,8 +463,9 @@ namespace HeavenStudio.Editor
                 GameManager.instance.OverlayCamera.targetTexture = ScreenRenderTexture;
                 fullscreen = false;
 
-                EditorLetterbox.SetActive(true);
-                GameLetterbox.SetActive(false);
+                GameCamera.instance.camera.rect = new Rect(0, 0, 1, 1);
+                GameManager.instance.CursorCam.rect = new Rect(0, 0, 1, 1);
+                GameManager.instance.OverlayCamera.rect = new Rect(0, 0, 1, 1);
             }
         }
 
