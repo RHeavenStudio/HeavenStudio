@@ -37,9 +37,9 @@ namespace HeavenStudio.Editor
             GridGameSelector.SelectGame(this.gameObject.name, this.transform.GetSiblingIndex());
         }
 
+        //TODO: animate between shapes
         public void ClickIcon()
         {
-            // GetComponent<Canvas>().sortingOrder = 1501;
             transform.DOScale(new Vector3(1.15f, 1.15f, 1f), 0.1f);
             BgTex = Resources.Load<Texture>($"Sprites/GeneralPurpose/Circle");
             SetupTextures();
@@ -47,7 +47,6 @@ namespace HeavenStudio.Editor
 
         public void UnClickIcon()
         {
-            // GetComponent<Canvas>().sortingOrder = 1500;
             transform.DOScale(new Vector3(1f, 1f, 1f), 0.1f);
             BgTex = Resources.Load<Texture>($"Sprites/GeneralPurpose/Square");
             SetupTextures();

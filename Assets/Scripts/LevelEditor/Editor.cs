@@ -28,6 +28,9 @@ namespace HeavenStudio.Editor
         [SerializeField] private Canvas MainCanvas;
         [SerializeField] public Camera EditorCamera;
 
+        [SerializeField] public GameObject EditorLetterbox;
+        [SerializeField] public GameObject GameLetterbox;
+
         [Header("Rect")]
         [SerializeField] private RenderTexture ScreenRenderTexture;
         [SerializeField] private RawImage Screen;
@@ -438,6 +441,9 @@ namespace HeavenStudio.Editor
         {
             if (fullscreen == false)
             {
+                EditorLetterbox.SetActive(false);
+                GameLetterbox.SetActive(true);
+
                 MainCanvas.enabled = false;
                 EditorCamera.enabled = false;
                 GameCamera.instance.camera.targetTexture = null;
@@ -453,6 +459,9 @@ namespace HeavenStudio.Editor
                 GameManager.instance.CursorCam.enabled = true;
                 GameManager.instance.OverlayCamera.targetTexture = ScreenRenderTexture;
                 fullscreen = false;
+
+                EditorLetterbox.SetActive(true);
+                GameLetterbox.SetActive(false);
             }
         }
 
