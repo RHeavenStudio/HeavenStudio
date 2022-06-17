@@ -99,7 +99,7 @@ namespace HeavenStudio.Games
         public enum StageAnimations {
             Reset,
             Flash,
-            //TODO: spotlight
+            Spot
         }
         public enum IdolPerformanceType {
             Normal,
@@ -118,6 +118,9 @@ namespace HeavenStudio.Games
         public GameObject ArisaShadow;
         public GameObject spectator;
         public GameObject spectatorAnchor;
+
+        [Header("References")]
+        public Material spectatorMat;
 
         // end userdata
 
@@ -200,6 +203,8 @@ namespace HeavenStudio.Games
             {
                 idolAnimator.Play("NoPose" + GetPerformanceSuffix(), -1, 0);
             }
+
+            ToSpot();
         }
 
         public static string GetPerformanceSuffix()
@@ -410,11 +415,26 @@ namespace HeavenStudio.Games
             {
                 case (int) StageAnimations.Reset:
                     StageAnimator.Play("Bg", -1, 0);
+                    ToSpot();
                     break;
                 case (int) StageAnimations.Flash:
                     StageAnimator.Play("Bg_Light", -1, 0);
+                    ToSpot();
+                    break;
+                case (int) StageAnimations.Spot:
+                    StageAnimator.Play("Bg_Spot", -1, 0);
+                    ToSpot(false);
                     break;
             }
+        }
+
+        public void ToSpot(bool unspot = true)
+        {
+            Arisa.GetComponent<NtrIdolAri>().ToSpot(unspot);
+            if (unspot)
+                spectatorMat.SetColor("_Color", new Color(1, 1, 1, 1));
+            else
+                spectatorMat.SetColor("_Color", new Color(117/255f, 177/255f, 209/255f, 1));
         }
 
         private void DoIdolJump(float beat, float length = 3f)
