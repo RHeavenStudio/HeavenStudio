@@ -34,12 +34,14 @@ namespace HeavenStudio.Games.Scripts_PajamaParty
         bool throwType = true;
         bool hasThrown = false;
         bool throwNg = false;
+        bool longSleep = false;
 
         public bool canSleep = false;
 
         void Awake()
         {
             anim = Player.GetComponent<Animator>();
+            longSleep = false;
         }
 
         // Update is called once per frame
@@ -306,7 +308,7 @@ namespace HeavenStudio.Games.Scripts_PajamaParty
         //
 
         // sleep cue
-            public void StartSleepSequence(float beat, bool alt)
+            public void StartSleepSequence(float beat, bool alt, int action)
             {
                 if (hasJumped)
                 {
@@ -346,6 +348,11 @@ namespace HeavenStudio.Games.Scripts_PajamaParty
                 startJumpTime = Single.MinValue;
                 Player.transform.localPosition = new Vector3(0, 0);
                 Shadow.transform.localScale = new Vector3(1.65f, 1f, 1f);
+
+                if (action == (int) PajamaParty.SleepType.NoAwake)
+                {
+                    longSleep = true;
+                }
 
                 BeatAction.New(Player, new List<BeatAction.Action>()
                 {
@@ -394,16 +401,20 @@ namespace HeavenStudio.Games.Scripts_PajamaParty
                         Jukebox.PlayOneShotGame("pajamaParty/siesta4");
                         anim.DoScaledAnimationAsync("MakoSleepJust");
 
-                        BeatAction.New(Player, new List<BeatAction.Action>()
+                        if (!longSleep)
                         {
-                            new BeatAction.Action(
-                                caller.startBeat + 7f,
-                                delegate { 
-                                    anim.DoScaledAnimationAsync("MakoAwake");
-                                    Jukebox.PlayOneShotGame("pajamaParty/siestaDone");
-                                }
-                            ),
-                        });
+                            BeatAction.New(Player, new List<BeatAction.Action>()
+                            {
+                                new BeatAction.Action(
+                                    caller.startBeat + 7f,
+                                    delegate { 
+                                        anim.DoScaledAnimationAsync("MakoAwake");
+                                        Jukebox.PlayOneShotGame("pajamaParty/siestaDone");
+                                    }
+                                ),
+                            });
+                        }
+                        longSleep = false;
                     }
                 }
             }

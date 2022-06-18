@@ -22,8 +22,9 @@ namespace HeavenStudio.Games.Loaders
                         inactiveFunction: delegate {PajamaParty.WarnFiveJump(eventCaller.currentEntity.beat);}
                         ),
                     //idem
-                    new GameAction("slumber",                   delegate {var e = eventCaller.currentEntity; PajamaParty.instance.DoSleepSequence(e.beat, e.toggle);}, 8f, false, parameters: new List<Param>()
+                    new GameAction("slumber",                   delegate {var e = eventCaller.currentEntity; PajamaParty.instance.DoSleepSequence(e.beat, e.toggle, e.type);}, 8f, false, parameters: new List<Param>()
                         {
+                            new Param("type", PajamaParty.SleepType.Normal, "Sleep Type", "Type of sleep action to use"),
                             new Param("toggle", false, "Alt. Animation", "Use an alternate animation for Mako")
                         }, 
                         inactiveFunction: delegate {var e = eventCaller.currentEntity; PajamaParty.WarnSleepSequence(e.beat, e.toggle);}
@@ -66,6 +67,12 @@ namespace HeavenStudio.Games
         static float WantThrowSequence = Single.MinValue;
         static float WantSleepSequence = Single.MinValue;
         static bool WantSleepType = false;
+        static int WantSleepAction = (int) PajamaParty.SleepType.Normal;
+
+        public enum SleepType {
+            Normal,
+            NoAwake,
+        }
 
         void Awake()
         {
@@ -128,7 +135,7 @@ namespace HeavenStudio.Games
             }
             if (WantSleepSequence != Single.MinValue)
             {
-                DoSleepSequence(WantSleepSequence, WantSleepType, false);
+                DoSleepSequence(WantSleepSequence, WantSleepType, WantSleepAction, false);
                 WantSleepSequence = Single.MinValue;
             }
         }
@@ -245,11 +252,11 @@ namespace HeavenStudio.Games
             }, forcePlay: force);
         }
 
-        public void DoSleepSequence(float beat, bool alt = false, bool doSound = true)
+        public void DoSleepSequence(float beat, bool alt = false, int action = (int) PajamaParty.SleepType.Normal, bool doSound = true)
         {
             var cond = Conductor.instance;
-            Mako.StartSleepSequence(beat, alt);
-            MonkeySleep(beat);
+            Mako.StartSleepSequence(beat, alt, action);
+            MonkeySleep(beat, action);
             if (doSound)
                 MultiSound.Play(new MultiSound.Sound[] { 
                     new MultiSound.Sound("pajamaParty/siesta1", beat), 
@@ -330,13 +337,13 @@ namespace HeavenStudio.Games
             }
         }
 
-        public void MonkeySleep(float beat)
+        public void MonkeySleep(float beat, int action)
         {
             foreach (CtrPillowMonkey monkey in monkeys)
             {
                 if (monkey != null)
                 {
-                    monkey.ReadySleep(beat);
+                    monkey.ReadySleep(beat, action);
                 }
             }
         }

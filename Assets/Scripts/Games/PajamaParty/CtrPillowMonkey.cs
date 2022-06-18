@@ -124,7 +124,7 @@ namespace HeavenStudio.Games.Scripts_PajamaParty
             Projectile.SetActive(true);
         }
 
-        public void ReadySleep(float beat)
+        public void ReadySleep(float beat, int action)
         {
             var cond = Conductor.instance;
             startThrowTime = Single.MinValue;
@@ -161,7 +161,9 @@ namespace HeavenStudio.Games.Scripts_PajamaParty
                 seq.Add(new BeatAction.Action( beat + 3f, delegate { anim.DoScaledAnimationAsync("MonkeyReadySleep"); }));
                 seq.Add(new BeatAction.Action( beat + 4f, delegate { anim.DoScaledAnimationAsync("MonkeySleep02"); }));
             }
-            seq.Add(new BeatAction.Action( beat + 7f, delegate { anim.DoScaledAnimationAsync("MonkeyAwake"); }));
+
+            if (action != (int) PajamaParty.SleepType.NoAwake)
+                seq.Add(new BeatAction.Action( beat + 7f, delegate { anim.DoScaledAnimationAsync("MonkeyAwake"); }));
 
             BeatAction.New(Monkey, seq);
         }
