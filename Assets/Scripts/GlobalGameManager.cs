@@ -49,7 +49,7 @@ namespace HeavenStudio
             Init();
             DontDestroyOnLoad(this.gameObject);
             instance = this;
-            Starpelly.OS.Windows.ChangeWindowTitle($"Heaven Studio DEMO");
+            Starpelly.OS.ChangeWindowTitle("Heaven Studio DEMO");
         }
 
         public static GameObject CreateFade()

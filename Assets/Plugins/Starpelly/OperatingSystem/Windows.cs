@@ -1,12 +1,13 @@
+#if UNITY_STANDALONE_WIN || UNITY_EDITOR_WIN
 using System;
 using System.Runtime.InteropServices;
 
 using Starpelly.Enums.Windows;
 using System.Text;
 
-namespace Starpelly.OS
+namespace Starpelly.OperatingSystem
 {
-    public class Windows
+    public class Windows : IOperatingSystem
     {
         /// <summary>
         /// Gets the current title of the game window.
@@ -29,7 +30,7 @@ namespace Starpelly.OS
         /// Changes the game's window title.
         /// </summary>
         /// <param name="newTitle">The title the window will be changed to.</param>
-        public static void ChangeWindowTitle(string newTitle)
+        public void ChangeWindowTitle(string newTitle)
         {
             var windowPtr = User32.FindWindow(null, GetActiveWindowTitle());
             User32.SetWindowText(windowPtr, newTitle);
@@ -137,3 +138,4 @@ namespace Starpelly.OS
 
     }
 }
+#endif

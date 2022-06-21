@@ -1,3 +1,4 @@
+#if UNITY_STANDALONE_WIN || UNITY_EDITOR_WIN
 using System;
 using System.Runtime.InteropServices;
 using System.Text;
@@ -5,7 +6,7 @@ using System.Text;
 using Starpelly.Common;
 using Starpelly.Enums.Windows;
 
-namespace Starpelly.OS
+namespace Starpelly.OperatingSystem
 {
     public class User32
     {
@@ -54,3 +55,4 @@ namespace Starpelly.OS
         #endregion
     }
 }
+#endif
