@@ -23,17 +23,18 @@ namespace HeavenStudio.Games
 
         public List<PlayerActionEvent> scheduledInputs = new List<PlayerActionEvent>();
 
-        /**
-         * Schedule an Input for a later time in the minigame. Executes the methods put in parameters
-         * 
-         * float                     startBeat   : When the scheduling started (In beats)
-         * float                     timer       : How many beats later should the input be expected
-         * InputType                 inputType   : The type of the input that's expected (Press, release, A, B, Directions..) (Check InputType class for a list)
-         * ActionEventCallbackState  OnHit       : Method to run if the Input has been Hit
-         * ActionEventCallback       OnMiss      : Method to run if the Input has been Missed
-         * ActionEventCallback       OnBlank     : Method to run whenever there's an Input while this is Scheduled (Shouldn't be used too much)
-         */
-        public PlayerActionEvent ScheduleInput(float startBeat,
+        /// <summary>
+        /// Schedule an Input for a later time in the minigame. Executes the methods put in parameters
+        /// </summary>
+        /// <param name="startBeat">When the scheduling started (in beats)</param>
+        /// <param name="timer">How many beats later should the input be expected</param>
+        /// <param name="inputType">The type of the input that's expected (Press, Release, A, B, Directions>)</param>
+        /// <param name="OnHit">Method to run if the Input has been Hit</param>
+        /// <param name="OnMiss">Method to run if the Input has been Missed</param>
+        /// <param name="OnBlank">Method to run whenever there's an Input while this is Scheduled (Shouldn't be used too much)</param>
+        /// <returns></returns>
+        public PlayerActionEvent ScheduleInput(
+            float startBeat,
             float timer,
             InputType inputType,
             PlayerActionEvent.ActionEventCallbackState OnHit,
