@@ -116,7 +116,7 @@ namespace HeavenStudio.Games
         {
             get
             {
-                ColorUtility.TryParseHtmlString("#D8FFC1", out _defaultBgColor);
+                ColorUtility.TryParseHtmlString("#A14FA1", out _defaultBgColor);
                 return _defaultBgColor;
             }
         }

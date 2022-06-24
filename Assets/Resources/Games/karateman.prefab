@@ -6243,8 +6243,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   anim: {fileID: 0}
   HitEffect: {fileID: 7248900332218536963}
-  HitParticle: {fileID: 7248900332593533644}
-  RockParticle: {fileID: 7248900332432276694}
   BulbHit: {fileID: 7248900333007582906}
   head: {fileID: 7248900332283351264}
   heads:
@@ -17765,6 +17763,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   EligibleHits: []
+  scheduledInputs: []
   firstEnable: 0
   LightBulbColors:
   - {r: 0, g: 0, b: 0, a: 0}
@@ -17772,7 +17771,7 @@ MonoBehaviour:
   - {r: 233, g: 233, b: 0, a: 1}
   - {r: 0, g: 0, b: 0, a: 0}
   BackgroundColors:
-  - {r: 0.9411765, g: 0.9137255, b: 0.4392157, a: 1}
+  - {r: 0.9843137, g: 0.7921569, b: 0.24313726, a: 1}
   - {r: 0.99607843, g: 0.60784316, b: 0.98039216, a: 1}
   - {r: 0.42745098, g: 0.6666667, b: 0.8784314, a: 1}
   - {r: 1, g: 0.09411766, b: 0, a: 1}
@@ -17822,7 +17821,7 @@ MonoBehaviour:
   BGFXSprite: {fileID: 7037067448840752386}
   BGType: 0
   BGFXType: 0
-  BGColor: {r: 0.94117653, g: 0.91372555, b: 0.43921572, a: 1}
+  BGColor: {r: 0.9843137, g: 0.7921569, b: 0.24313726, a: 1}
   Shadow: 0
   ShadowColor: {r: 0, g: 0, b: 0, a: 0}
   potHitEffect: {fileID: 7248900332593533644}
@@ -17931,7 +17930,7 @@ SpriteRenderer:
   m_SortingLayer: 0
   m_SortingOrder: -300
   m_Sprite: {fileID: 7482667652216324306, guid: ef2fa2a75dc283e40b9d4fe1f20dc6fb, type: 3}
-  m_Color: {r: 0.94117653, g: 0.91372555, b: 0.43921572, a: 1}
+  m_Color: {r: 0.9843137, g: 0.7921569, b: 0.24313726, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
