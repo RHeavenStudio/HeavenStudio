@@ -23,7 +23,11 @@ namespace HeavenStudio.Games.Loaders
                     new Param("valA", new EntityTypes.Integer(0, 30, 1), "Money", "The amount of coins the object spills out when sliced"),
                 }),
                 //new GameAction("start bopping",                   delegate { SamuraiSliceNtr.instance.Bop(eventCaller.currentEntity.beat, eventCaller.currentEntity.length); }, 1),
-            });
+            },
+            new List<string>() {"ntr", "normal"},
+            "ntrsamurai", "en",
+            new List<string>() {"en"}
+            );
         }
     }
 }

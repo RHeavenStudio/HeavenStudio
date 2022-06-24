@@ -12,8 +12,12 @@ namespace HeavenStudio.Games.Loaders
         public static Minigame AddGame(EventCaller eventCaller) {
             return new Minigame("spaceSoccer", "Space Soccer", "B888F8", false, false, new List<GameAction>()
             {
-                new GameAction("ball dispense",         delegate { SpaceSoccer.instance.Dispense(eventCaller.currentEntity.beat); }, 2f,
-                inactiveFunction: delegate { SpaceSoccer.DispenseSound(eventCaller.currentEntity.beat); }),
+                new GameAction("ball dispense",         delegate { SpaceSoccer.instance.Dispense(eventCaller.currentEntity.beat, !eventCaller.currentEntity.toggle); }, 2f,
+                parameters: new List<Param>()
+                    {
+                        new Param("toggle", false, "Disable Sound", "Disables the dispense sound")
+                    },
+                inactiveFunction: delegate { if (!eventCaller.currentEntity.toggle) { SpaceSoccer.DispenseSound(eventCaller.currentEntity.beat); } }),
                 new GameAction("keep-up",               delegate { }, 4f, true),
                 new GameAction("high kick-toe!",        delegate { }, 3f, false, new List<Param>() 
                 {

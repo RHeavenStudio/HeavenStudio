@@ -40,7 +40,7 @@ namespace HeavenStudio.Util
             FindJukebox().GetComponent<AudioSource>().volume = volume;
         }
 
-        public static Sound PlayOneShot(string name, float beat = -1, float pitch = 1f, float volume = 1f, bool looping = false)
+        public static Sound PlayOneShot(string name, float beat = -1, float pitch = 1f, float volume = 1f, bool looping = false, string game = null)
         {
             GameObject oneShot = new GameObject("oneShot");
 
@@ -49,7 +49,29 @@ namespace HeavenStudio.Util
             audioSource.playOnAwake = false;
 
             Sound snd = oneShot.AddComponent<Sound>();
-            AudioClip clip = Resources.Load<AudioClip>($"Sfx/{name}");
+            AudioClip clip = null;
+            if (game != null)
+            {
+                string soundName = name.Split('/')[2];
+                var inf = GameManager.instance.GetGameInfo(game);
+                //first try the game's common assetbundle
+                // Debug.Log("Jukebox loading sound " + soundName + " from common");
+                clip = inf.GetCommonAssetBundle()?.LoadAsset<AudioClip>(soundName);
+                //then the localized one
+                if (clip == null)
+                {
+                    // Debug.Log("Jukebox loading sound " + soundName + " from locale");
+                    clip = inf.GetLocalizedAssetBundle()?.LoadAsset<AudioClip>(soundName);
+                }
+            }
+
+            //can't load from assetbundle, load from resources
+            if (clip == null)
+            {
+                // Debug.Log("Jukebox loading sound " + name + " from resources");
+                clip = Resources.Load<AudioClip>($"Sfx/{name}");
+            }
+
             snd.clip = clip;
             snd.beat = beat;
             snd.pitch = pitch;
@@ -62,7 +84,7 @@ namespace HeavenStudio.Util
             return snd;
         }
 
-        public static Sound PlayOneShotScheduled(string name, double targetTime, float pitch = 1f, float volume = 1f, bool looping = false)
+        public static Sound PlayOneShotScheduled(string name, double targetTime, float pitch = 1f, float volume = 1f, bool looping = false, string game = null)
         {
             GameObject oneShot = new GameObject("oneShotScheduled");
 
@@ -70,8 +92,26 @@ namespace HeavenStudio.Util
             audioSource.playOnAwake = false;
 
             var snd = oneShot.AddComponent<Sound>();
+            AudioClip clip = null;
+            if (game != null)
+            {
+                string soundName = name.Split('/')[2];
+                var inf = GameManager.instance.GetGameInfo(game);
+                //first try the game's common assetbundle
+                // Debug.Log("Jukebox loading sound " + soundName + " from common");
+                clip = inf.GetCommonAssetBundle()?.LoadAsset<AudioClip>(soundName);
+                //then the localized one
+                if (clip == null)
+                {
+                    // Debug.Log("Jukebox loading sound " + soundName + " from locale");
+                    clip = inf.GetLocalizedAssetBundle()?.LoadAsset<AudioClip>(soundName);
+                }
+            }
 
-            var clip = Resources.Load<AudioClip>($"Sfx/{name}");
+            //can't load from assetbundle, load from resources
+            if (clip == null)
+                clip = Resources.Load<AudioClip>($"Sfx/{name}");
+
             audioSource.clip = clip;
             snd.clip = clip;
             snd.pitch = pitch;
@@ -89,9 +129,11 @@ namespace HeavenStudio.Util
 
         public static Sound PlayOneShotGame(string name, float beat = -1, float pitch = 1f, float volume = 1f, bool looping = false, bool forcePlay = false)
         {
-            if (GameManager.instance.currentGame == name.Split('/')[0] || forcePlay)
+            string gameName = name.Split('/')[0];
+            var inf = GameManager.instance.GetGameInfo(gameName);
+            if (GameManager.instance.currentGame == gameName || forcePlay)
             {
-                return PlayOneShot($"games/{name}", beat, pitch, volume, looping);
+                return PlayOneShot($"games/{name}", beat, pitch, volume, looping, inf.usesAssetBundle ? gameName : null);
             }
 
             return null;
@@ -99,13 +141,17 @@ namespace HeavenStudio.Util
 
         public static Sound PlayOneShotScheduledGame(string name, double targetTime, float pitch = 1f, float volume = 1f, bool looping = false, bool forcePlay = false)
         {
-            if (GameManager.instance.currentGame == name.Split('/')[0] || forcePlay)
+            string gameName = name.Split('/')[0];
+            var inf = GameManager.instance.GetGameInfo(gameName);
+            if (GameManager.instance.currentGame == gameName || forcePlay)
             {
-                return PlayOneShotScheduled($"games/{name}", targetTime, pitch, volume, looping);
+                return PlayOneShotScheduled($"games/{name}", targetTime, pitch, volume, looping, inf.usesAssetBundle ? gameName : null);
             }
 
             return null;
         }
+
+        //TODO: playing sounds from assetbundles
 
         public static void KillLoop(Sound source, float fadeTime)
         {

@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+
 using UnityEngine;
 using DG.Tweening;
 
@@ -10,6 +11,7 @@ using HeavenStudio.Games;
 using System;
 using System.Linq;
 using System.Reflection;
+using System.IO;
 
 namespace HeavenStudio
 {
@@ -26,7 +28,24 @@ namespace HeavenStudio
             public bool fxOnly;
             public List<GameAction> actions = new List<GameAction>();
 
-            public Minigame(string name, string displayName, string color, bool threeD, bool fxOnly, List<GameAction> actions)
+            public List<string> tags;
+            public string defaultLocale = "en";
+            public string wantAssetBundle = "";
+            public List<string> supportedLocales;
+
+            public bool usesAssetBundle => (wantAssetBundle != "");
+            public bool hasLocales => (supportedLocales.Count > 0);
+            public bool AssetsLoaded => (((hasLocales && localeLoaded && currentLoadedLocale == defaultLocale) || (!hasLocales)) && commonLoaded);
+
+            private AssetBundle bundleCommon = null;
+            private bool commonLoaded = false;
+            private bool commonPreloaded = false;
+            private string currentLoadedLocale = "";
+            private AssetBundle bundleLocalized = null;
+            private bool localeLoaded = false;
+            private bool localePreloaded = false;
+
+            public Minigame(string name, string displayName, string color, bool threeD, bool fxOnly, List<GameAction> actions, List<string> tags = null, string assetBundle = "", string defaultLocale = "en", List<string> supportedLocales = null)
             {
                 this.name = name;
                 this.displayName = displayName;
@@ -34,6 +53,83 @@ namespace HeavenStudio
                 this.actions = actions;
                 this.threeD = threeD;
                 this.fxOnly = fxOnly;
+
+                this.tags = tags ?? new List<string>();
+                this.wantAssetBundle = assetBundle;
+                this.defaultLocale = defaultLocale;
+                this.supportedLocales = supportedLocales ?? new List<string>();
+            }
+
+            public AssetBundle GetLocalizedAssetBundle()
+            {
+                if (!hasLocales) return null;
+                if (!usesAssetBundle) return null;
+                if (bundleLocalized == null || currentLoadedLocale != defaultLocale) //TEMPORARY: use the game's default locale until we add localization support
+                {
+                    if (localeLoaded) return bundleLocalized;
+                    // TODO: try/catch for missing assetbundles
+                    currentLoadedLocale = defaultLocale;
+                    bundleLocalized = AssetBundle.LoadFromFile(Path.Combine(Application.streamingAssetsPath, wantAssetBundle + "/locale." + defaultLocale));
+                    localeLoaded = true;
+                }
+                return bundleLocalized;
+            }
+
+            public AssetBundle GetCommonAssetBundle()
+            {
+                if (commonLoaded) return bundleCommon;
+                if (!usesAssetBundle) return null;
+                if (bundleCommon == null)
+                {
+                    // TODO: try/catch for missing assetbundles
+                    bundleCommon = AssetBundle.LoadFromFile(Path.Combine(Application.streamingAssetsPath, wantAssetBundle + "/common"));
+                    commonLoaded = true;
+                }
+                return bundleCommon;
+            }
+
+            public IEnumerator LoadCommonAssetBundleAsync()
+            {
+                if (commonPreloaded || commonLoaded) yield break;
+                commonPreloaded = true;
+                if (!usesAssetBundle) yield break;
+                if (bundleCommon != null) yield break;
+
+                AssetBundleCreateRequest asyncBundleRequest = AssetBundle.LoadFromFileAsync(Path.Combine(Application.streamingAssetsPath, wantAssetBundle + "/common"));
+                if (bundleCommon != null) yield break;
+                yield return asyncBundleRequest;
+
+                AssetBundle localAssetBundle = asyncBundleRequest.assetBundle;
+                if (bundleCommon != null) yield break;
+                yield return localAssetBundle;
+
+                if (localAssetBundle == null) yield break;
+
+                bundleCommon = localAssetBundle;
+                commonLoaded = true;
+            }
+
+            public IEnumerator LoadLocalizedAssetBundleAsync()
+            {
+                if (localePreloaded) yield break;
+                localePreloaded = true;
+                if (!hasLocales) yield break;
+                if (!usesAssetBundle) yield break;
+                if (localeLoaded && bundleLocalized != null && currentLoadedLocale == defaultLocale) yield break;
+
+                AssetBundleCreateRequest asyncBundleRequest = AssetBundle.LoadFromFileAsync(Path.Combine(Application.streamingAssetsPath, wantAssetBundle + "/locale." + defaultLocale));
+                if (localeLoaded && bundleLocalized != null && currentLoadedLocale == defaultLocale) yield break;
+                yield return asyncBundleRequest;
+
+                AssetBundle localAssetBundle = asyncBundleRequest.assetBundle;
+                if (localeLoaded && bundleLocalized != null && currentLoadedLocale == defaultLocale) yield break;
+                yield return localAssetBundle;
+
+                if (localAssetBundle == null) yield break;
+
+                bundleLocalized = localAssetBundle;
+                currentLoadedLocale = defaultLocale;
+                localeLoaded = true;
             }
         }
 

@@ -10,6 +10,9 @@ public class NtrIdolAri : MonoBehaviour
     public ParticleSystem idolKissEffect;
     public ParticleSystem idolWinkArrEffect;
 
+    [Header("References")]
+    public Material coreMat;
+
     public void ClapParticle()
     {
         idolClapEffect.Play();
@@ -28,5 +31,13 @@ public class NtrIdolAri : MonoBehaviour
     public void WinkArrangeParticle()
     {
         idolWinkArrEffect.Play();
+    }
+
+    public void ToSpot(bool unspot = true)
+    {
+        if (unspot)
+            coreMat.SetColor("_AddColor", new Color(0, 0, 0, 0));
+        else
+            coreMat.SetColor("_AddColor", new Color(0, 100/255f, 200/255f, 0));
     }
 }
