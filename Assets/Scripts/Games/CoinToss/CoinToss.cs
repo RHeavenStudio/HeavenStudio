@@ -38,11 +38,7 @@ namespace HeavenStudio.Games.Loaders
                     new Param("colorA", Color.white, "Start Color", "The starting color in the fade"),
                     new Param("colorB", CoinToss.defaultFgColor, "End Color", "The ending color in the fade")
                 } ),
-            },
-            new List<string>() {"ntr", "aim"},
-            "ntrcoin", "en",
-            new List<string>() {}
-            );
+            });
         }
     }
 }

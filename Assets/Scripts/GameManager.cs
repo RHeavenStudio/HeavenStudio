@@ -31,7 +31,7 @@ namespace HeavenStudio
         Coroutine currentGameSwitchIE;
 
         [Header("Properties")]
-        public int currentEvent, currentTempoEvent, currentPreEvent, currentPreSwitch;
+        public int currentEvent, currentTempoEvent;
         public float startOffset;
         public bool playOnStart;
         public float startBeat;
@@ -57,11 +57,7 @@ namespace HeavenStudio
 
         public void Init()
         {
-            currentPreEvent= 0;
-            currentPreSwitch = 0;
- 
             this.transform.localScale = new Vector3(30000000, 30000000);
-            
             SpriteRenderer sp = this.gameObject.AddComponent<SpriteRenderer>();
             sp.enabled = false;
             sp.color = Color.black;
@@ -152,49 +148,6 @@ namespace HeavenStudio
             }
         }
 
-        public void SeekAheadAndPreload(float start, float seekTime = 8f)
-        {
-            //seek ahead to preload games that have assetbundles
-            //check game switches first
-            var gameSwitchs = Beatmap.entities.FindAll(c => c.datamodel.Split(1) == "switchGame");
-            if (currentPreSwitch < gameSwitchs.Count && currentPreSwitch >= 0)
-            {
-                if (start + seekTime >= gameSwitchs[currentPreSwitch].beat)
-                {
-                    string gameName = gameSwitchs[currentPreSwitch].datamodel.Split(2);
-                    var inf = GetGameInfo(gameName);
-                    if (inf.usesAssetBundle && !inf.AssetsLoaded) 
-                    {
-                        Debug.Log("ASYNC loading assetbundle for game " + gameName);
-                        StartCoroutine(inf.LoadCommonAssetBundleAsync());
-                        StartCoroutine(inf.LoadLocalizedAssetBundleAsync());
-                    }
-                    currentPreSwitch++;
-                }
-            }
-            //then check game entities
-            List<float> entities = Beatmap.entities.Select(c => c.beat).ToList();
-            if (currentPreEvent < Beatmap.entities.Count && currentPreEvent >= 0)
-            {
-                if (start + seekTime >= entities[currentPreEvent])
-                {
-                    var entitiesAtSameBeat = Beatmap.entities.FindAll(c => c.beat == Beatmap.entities[currentPreEvent].beat && !EventCaller.FXOnlyGames().Contains(EventCaller.instance.GetMinigame(c.datamodel.Split('/')[0])));
-                    for (int i = 0; i < entitiesAtSameBeat.Count; i++)
-                    {
-                        string gameName = entitiesAtSameBeat[i].datamodel.Split('/')[0];
-                        var inf = GetGameInfo(gameName);
-                        if (inf.usesAssetBundle && !inf.AssetsLoaded) 
-                        {
-                            Debug.Log("ASYNC loading assetbundle for game " + gameName);
-                            StartCoroutine(inf.LoadCommonAssetBundleAsync());
-                            StartCoroutine(inf.LoadLocalizedAssetBundleAsync());
-                        }
-                    }
-                    currentPreEvent++;
-                }
-            }
-        }
-
         // LateUpdate works a bit better(?) but causes some bugs (like issues with bop animations).
         private void Update()
         {
@@ -217,10 +170,6 @@ namespace HeavenStudio
                     currentTempoEvent++;
                 }
             }
-
-            float seekTime = 8f;
-            //seek ahead to preload games that have assetbundles
-            SeekAheadAndPreload(Conductor.instance.songPositionInBeats, seekTime);
 
             if (currentEvent < Beatmap.entities.Count && currentEvent >= 0)
             {
@@ -332,7 +281,6 @@ namespace HeavenStudio
                 List<float> entities = Beatmap.entities.Select(c => c.beat).ToList();
 
                 currentEvent = entities.IndexOf(Mathp.GetClosestInList(entities, beat));
-                currentPreEvent = entities.IndexOf(Mathp.GetClosestInList(entities, beat));
 
                 var gameSwitchs = Beatmap.entities.FindAll(c => c.datamodel.Split(1) == "switchGame");
 
@@ -341,7 +289,6 @@ namespace HeavenStudio
                 if (gameSwitchs.Count > 0)
                 {
                     int index = gameSwitchs.FindIndex(c => c.beat == Mathp.GetClosestInList(gameSwitchs.Select(c => c.beat).ToList(), beat));
-                    currentPreSwitch = index;
                     var closestGameSwitch = gameSwitchs[index];
                     if (closestGameSwitch.beat <= beat)
                     {
@@ -395,8 +342,6 @@ namespace HeavenStudio
                 }
                 // Debug.Log("currentTempoEvent is now " + currentTempoEvent);
             }
-
-            SeekAheadAndPreload(beat);
         }
 
         #endregion
@@ -488,14 +433,6 @@ namespace HeavenStudio
                             else
                                 return !newGameInfo.fxOnly;
                         }).ToList()[0].datamodel.Split(0);
-                }
-                else
-                {
-                    if (gameInfo.usesAssetBundle)
-                    {
-                        //game is packed in an assetbundle, load from that instead
-                        return gameInfo.GetCommonAssetBundle().LoadAsset<GameObject>(name);
-                    }
                 }
             }
             return Resources.Load<GameObject>($"Games/{name}");

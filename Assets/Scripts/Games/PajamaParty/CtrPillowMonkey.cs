@@ -91,10 +91,10 @@ namespace HeavenStudio.Games.Scripts_PajamaParty
             else
             {
                 startThrowTime = Single.MinValue;
+                Projectile.transform.localPosition = new Vector3(0, 0);
+                Projectile.transform.rotation = Quaternion.Euler(0, 0, 0);
                 if (hasThrown)
                 {
-                    Projectile.transform.localPosition = new Vector3(0, 0);
-                    Projectile.transform.rotation = Quaternion.Euler(0, 0, 0);
                     anim.DoUnscaledAnimation("MonkeyBeat");
                     Projectile.SetActive(false);
                     hasThrown = false;
@@ -124,7 +124,7 @@ namespace HeavenStudio.Games.Scripts_PajamaParty
             Projectile.SetActive(true);
         }
 
-        public void ReadySleep(float beat, int action)
+        public void ReadySleep(float beat)
         {
             var cond = Conductor.instance;
             startThrowTime = Single.MinValue;
@@ -161,9 +161,7 @@ namespace HeavenStudio.Games.Scripts_PajamaParty
                 seq.Add(new BeatAction.Action( beat + 3f, delegate { anim.DoScaledAnimationAsync("MonkeyReadySleep"); }));
                 seq.Add(new BeatAction.Action( beat + 4f, delegate { anim.DoScaledAnimationAsync("MonkeySleep02"); }));
             }
-
-            if (action != (int) PajamaParty.SleepType.NoAwake)
-                seq.Add(new BeatAction.Action( beat + 7f, delegate { anim.DoScaledAnimationAsync("MonkeyAwake"); }));
+            seq.Add(new BeatAction.Action( beat + 7f, delegate { anim.DoScaledAnimationAsync("MonkeyAwake"); }));
 
             BeatAction.New(Monkey, seq);
         }

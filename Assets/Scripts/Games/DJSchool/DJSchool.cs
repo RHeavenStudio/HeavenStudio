@@ -25,11 +25,7 @@ namespace HeavenStudio.Games.Loaders
                 {
                     new Param("type", DJSchool.DJVoice.Standard, "Voice", "The voice line to play"),
                 }),
-            },
-            new List<string>() {"ntr", "normal"},
-            "ntrdj", "en",
-            new List<string>(){}
-            );
+            });
         }
     }
 }
