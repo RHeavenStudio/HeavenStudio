@@ -26,6 +26,11 @@ namespace HeavenStudio.Games
     public class RhythmSomen : Minigame
     {
         public Animator SomenPlayer;
+        public Animator FrontArm;
+        public Animator EffectHit;
+        public Animator EffectSweat;
+        public Animator EffectExclam;
+        public Animator EffectShock;
         public Animator CloseCrane;
         public Animator FarCrane;
         public GameObject Player;
@@ -48,11 +53,19 @@ namespace HeavenStudio.Games
             {
              SomenPlayer.Play("HeadBob", -1, 0);
             }
+
+            if (PlayerInput.Pressed() && !IsExpectingInputNow())
+            {
+            Jukebox.PlayOneShotGame("rhythmSomen/somen_mistake");
+            FrontArm.Play("ArmPluck", -1, 0);
+            EffectSweat.Play("BlobSweating", -1, 0);
+            }
         }
 
         public void DoFarCrane(float beat)
         {
             //Far Drop Multisound
+            ScheduleInput(beat, 3f, InputType.STANDARD_DOWN, CatchSuccess, CatchMiss, CatchEmpty);
             MultiSound.Play(new MultiSound.Sound[] {
             new MultiSound.Sound("rhythmSomen/somen_lowerfar", beat),
             new MultiSound.Sound("rhythmSomen/somen_drop", beat + 1f),
@@ -71,6 +84,7 @@ namespace HeavenStudio.Games
         public void DoCloseCrane(float beat)
         {
             //Close Drop Multisound
+            ScheduleInput(beat, 2f, InputType.STANDARD_DOWN, CatchSuccess, CatchMiss, CatchEmpty);
             MultiSound.Play(new MultiSound.Sound[] {
             new MultiSound.Sound("rhythmSomen/somen_lowerclose", beat),
             new MultiSound.Sound("rhythmSomen/somen_drop", beat + 1f),
@@ -89,6 +103,8 @@ namespace HeavenStudio.Games
                 public void DoBothCrane(float beat)
         {
             //Both Drop Multisound
+            ScheduleInput(beat, 2f, InputType.STANDARD_DOWN, CatchSuccess, CatchMiss, CatchEmpty);
+            ScheduleInput(beat, 3f, InputType.STANDARD_DOWN, CatchSuccess, CatchMiss, CatchEmpty);
             MultiSound.Play(new MultiSound.Sound[] {
             new MultiSound.Sound("rhythmSomen/somen_lowerfar", beat),
             new MultiSound.Sound("rhythmSomen/somen_doublealarm", beat),
@@ -115,9 +131,26 @@ namespace HeavenStudio.Games
 
                 BeatAction.New(Player, new List<BeatAction.Action>() 
                     {
-                    new BeatAction.Action(beat,     delegate { SomenPlayer.Play("Exclam", -1, 0);}),
+                    new BeatAction.Action(beat,     delegate { EffectExclam.Play("ExclamAppear", -1, 0);}),
                     });
 
-        }
+             }
+
+             public void CatchSuccess(PlayerActionEvent caller, float state)
+            {
+            Jukebox.PlayOneShotGame("rhythmSomen/somen_catch");
+            FrontArm.Play("ArmPluck", -1, 0);
+            EffectHit.Play("HitAppear", -1, 0);
+             }
+
+             public void CatchMiss(PlayerActionEvent caller)
+            {
+            EffectShock.Play("ShockAppear", -1, 0);
+             }
+
+             public void CatchEmpty(PlayerActionEvent caller)
+            {
+
+             }
     }
 }
