@@ -16,7 +16,7 @@
 [Progress spreadsheet](https://docs.google.com/spreadsheets/d/1NXxIeL4nsdjChrxAZTPpk20QOKEdQWGbXIhT4TclB6k/edit?usp=sharing)
 
 ![image](https://user-images.githubusercontent.com/40370440/155040498-07365bd4-a0eb-40ef-839e-2c5dcfc5141f.png)
-![image](https://user-images.githubusercontent.com/40370440/154824159-07800021-9264-4293-92cf-d3f6e0155f5b.png)
+![image](https://cdn.discordapp.com/attachments/862760859318485032/991560061069578340/unknown.png)
 
 
 ## Prebuilt Binaries
