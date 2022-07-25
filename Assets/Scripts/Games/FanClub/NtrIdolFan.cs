@@ -122,6 +122,7 @@ namespace HeavenStudio.Games.Scripts_FanClub
                     {
                         animator.Play("FanFree", -1, 0);
                         stopBeat = false;
+                        clappingStartTime = Single.MinValue;
                     }
                 }
             }
@@ -204,6 +205,7 @@ namespace HeavenStudio.Games.Scripts_FanClub
             animator.Play("FanJump", -1, 0);
             Jukebox.PlayOneShotGame("fanClub/play_jump");
             jumpStartTime = cond.songPositionInBeats;
+            clappingStartTime = Single.MinValue;
             stopCharge = false;
         }
 
