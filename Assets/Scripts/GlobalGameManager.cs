@@ -59,6 +59,7 @@ namespace HeavenStudio
             DontDestroyOnLoad(this.gameObject);
             instance = this;
             Starpelly.OS.ChangeWindowTitle("Heaven Studio DEMO");
+            PlayerInput.InitInputControllers();
         }
 
         public static GameObject CreateFade()
@@ -140,6 +141,12 @@ namespace HeavenStudio
         {
             MasterVolume = value;
             AudioListener.volume = MasterVolume;
+        }
+
+        void OnApplicationQuit()
+        {
+            Debug.Log("Disconnecting JoyShocks...");
+            PlayerInput.DisconnectJoyshocks();
         }
     }
 }

@@ -198,6 +198,8 @@ namespace HeavenStudio
         // LateUpdate works a bit better(?) but causes some bugs (like issues with bop animations).
         private void Update()
         {
+            PlayerInput.UpdateInputControllers();
+
             if (BeatmapEntities() < 1) //bruh really you forgot to ckeck tempo changes
                 return;
             if (!Conductor.instance.isPlaying)

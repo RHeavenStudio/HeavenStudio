@@ -68,7 +68,7 @@ namespace HeavenStudio.Editor
 
         public void OnVolLabelChanged()
         {
-            volSlider.value = (float)System.Math.Round(System.Convert.ToSingle(volLabel.text), 2);
+            volSlider.value = (float)System.Math.Round(System.Convert.ToSingle(volLabel.text) / 100f, 2);
             GlobalGameManager.ChangeMasterVolume(volSlider.value);
         }
     }
