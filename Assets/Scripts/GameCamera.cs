@@ -15,6 +15,7 @@ namespace HeavenStudio
         private List<Beatmap.Entity> positionEvents = new List<Beatmap.Entity>();
         private List<Beatmap.Entity> rotationEvents = new List<Beatmap.Entity>();
         private List<Beatmap.Entity> scaleEvents = new List<Beatmap.Entity>();
+        private List<Beatmap.Entity> shakeEvents = new List<Beatmap.Entity>();
 
         /**
             default cam position, for quick-resetting
@@ -22,6 +23,7 @@ namespace HeavenStudio
         public static Vector3 defaultPosition = new Vector3(0, 0, -10);
         public static Vector3 defaultRotEluer = new Vector3(0, 0, 0);
         public static Vector3 defaultScale = new Vector3(16, 9, 1);
+        public static Vector3 defaultShake = new Vector3(0, 0, 0);
 
         /**
             camera's current transformation
@@ -30,6 +32,7 @@ namespace HeavenStudio
         private static Vector3 position;
         private static Vector3 rotEluer;
         private static Vector3 scale;
+        private static Vector3 shakeResult;
 
         /**
             camera's last transformation
@@ -38,6 +41,7 @@ namespace HeavenStudio
         private static Vector3 positionLast;
         private static Vector3 rotEluerLast;
         private static Vector3 scaleLast;
+        private static Vector3 shakeLast;
 
         /** 
             transformations to apply *after* the global transform, 
@@ -89,20 +93,27 @@ namespace HeavenStudio
             rotationEvents = EventCaller.GetAllInGameManagerList("vfx", new string[] { "rotate camera" });
             positionEvents.AddRange(EventCaller.GetAllInGameManagerList("gameManager", new string[] { "rotate camera" }));
 
+            //screen shake time baybee
+
+            shakeEvents = EventCaller.GetAllInGameManagerList("vfx", new string[] { "screen shake" });
+
+
             //scale (TODO)
             // scaleEvents = EventCaller.GetAllInGameManagerList("vfx", new string[] { "scale camera" });
 
             UpdateCameraTranslate();
             UpdateCameraRotate();
+            SetShakeIntensity();
         }
 
         private void Update()
         {
             UpdateCameraTranslate();
             UpdateCameraRotate();
+            SetShakeIntensity();
 
             Camera cam = GetCamera();
-            cam.transform.localPosition = position + additionalPosition;
+            cam.transform.localPosition = position + additionalPosition + shakeResult;
             cam.transform.eulerAngles = rotEluer + additionalRotEluer;
             cam.transform.localScale = Vector3.Scale(scale, additionalScale);
         }
@@ -139,10 +150,32 @@ namespace HeavenStudio
                     float dy = func(rotEluerLast.y, e.valB, Mathf.Min(prog, 1f));
                     float dz = func(rotEluerLast.z, e.valC, Mathf.Min(prog, 1f));
                     rotEluer = new Vector3(dx, dy, dz);
+
                 }
                 if (prog > 1f)
                 {
                     rotEluerLast = new Vector3(e.valA, e.valB, -e.valC);
+                }
+            }
+        }
+
+        //scren shake spaghetti
+        private void SetShakeIntensity()
+        {
+            foreach (var e in shakeEvents)
+            {
+                float prog = Conductor.instance.GetPositionFromBeat(e.beat, e.length);
+                if (prog >= 0f)
+                {
+                    EasingFunction.Function func = EasingFunction.GetEasingFunction(e.ease);
+                    float dx = func(positionLast.x, e.valA, Mathf.Min(prog, 1f));
+                    float dy = func(positionLast.y, e.valA, Mathf.Min(prog, 1f));
+                    shakeResult = new Vector3(Mathf.Cos(dx * e.length * 20f) * (e.valA / 2), Mathf.Cos(dy * e.length * 30f) * (e.valA / 2));
+
+                }
+                if (prog > 1f)
+                {
+                    shakeResult = new Vector3(0, 0);
                 }
             }
         }
@@ -152,6 +185,7 @@ namespace HeavenStudio
             position = defaultPosition;
             rotEluer = defaultRotEluer;
             scale = defaultScale;
+            shakeResult = defaultShake;
         }
 
         public static void ResetAdditionalTransforms()

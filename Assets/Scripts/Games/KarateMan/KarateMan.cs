@@ -81,9 +81,9 @@ namespace HeavenStudio.Games.Loaders
                 ),
                 new GameAction("set object colors",    delegate { var e = eventCaller.currentEntity; KarateMan.UpdateMaterialColour(e.colorA, e.colorB, e.colorC); }, 0.5f, false, new List<Param>()
                     {
-                        new Param("colorA", new Color(), "Joe Body Color", "The color to use for Karate Joe's body"),
-                        new Param("colorB", new Color(), "Joe Highlight Color", "The color to use for Karate Joe's highlights"),
-                        new Param("colorC", new Color(), "Item Color", "The color to use for the thrown items"),
+                        new Param("colorA", new Color(1,1,1,1), "Joe Body Color", "The color to use for Karate Joe's body"),
+                        new Param("colorB", new Color(0.81f,0.81f,0.81f,1), "Joe Highlight Color", "The color to use for Karate Joe's highlights"),
+                        new Param("colorC", new Color(1,1,1,1), "Item Color", "The color to use for the thrown items"),
                     },
                     inactiveFunction: delegate { var e = eventCaller.currentEntity; KarateMan.UpdateMaterialColour(e.colorA, e.colorB, e.colorC); }
                 ),

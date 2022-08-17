@@ -332,6 +332,14 @@ namespace HeavenStudio
                         new Param("ease", EasingFunction.Ease.Linear, "Ease")
                     }, hidden: false ),
 
+                    new GameAction("screen shake",              delegate
+                    {
+                        //TODO: move cam
+                    }, 1f, true, new List<Param>()
+                    {
+                        new Param("valA", new EntityTypes.Float(0, 10, 2), "Intensity")
+                    } ),
+
                     new GameAction("move camera",              delegate 
                     {
                         //TODO: move cam
