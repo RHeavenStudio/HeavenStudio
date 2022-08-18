@@ -11,11 +11,11 @@ using HeavenStudio.Util;
 
 namespace HeavenStudio.Properties
 {
-    public class RemixPropertyPrefab : MonoBehaviour
+    public class PropertyDefn : MonoBehaviour
     {
 
         public TMP_Text caption;
-        [SerializeField] private EventParameterManager parameterManager;
+        [SerializeField] private PropManager parameterManager;
 
         [Header("Integer and Float")]
         [Space(10)]
@@ -50,13 +50,13 @@ namespace HeavenStudio.Properties
                 slider.minValue = integer.min;
                 slider.maxValue = integer.max;
 
-                slider.value = Mathf.RoundToInt(System.Convert.ToSingle(PropController.instance["levelName"]));
+                slider.value = Mathf.RoundToInt(System.Convert.ToSingle(PropController.properties.instance[propertyName]));
                 inputField.text = slider.value.ToString();
 
                 slider.onValueChanged.AddListener(delegate
                 {
                     inputField.text = slider.value.ToString();
-                    PropController.Properties["Number"] = (int)slider.value;
+                    PropController.properties.instance[propertyName] = (int)slider.value;
                 });
 
                 inputField.onSelect.AddListener(delegate
@@ -67,17 +67,17 @@ namespace HeavenStudio.Properties
                 inputField.onEndEdit.AddListener(delegate
                 {
                     slider.value = Mathf.RoundToInt(System.Convert.ToSingle(System.Convert.ToSingle(inputField.text)));
-                    PropController.instance["levelName"] = (int)slider.value;
+                    PropController.properties.instance[propertyName] = (int)slider.value;
                     Editor.instance.editingInputField = false;
                 });
             }
             else if (type is bool)
             {
-                toggle.isOn = System.Convert.ToBoolean(PropController.instance["levelName"]); // ' (bool)type ' always results in false
+                toggle.isOn = System.Convert.ToBoolean(PropController.properties.instance[propertyName]); // ' (bool)type ' always results in false
 
                 toggle.onValueChanged.AddListener(delegate
                 {
-                    PropController.instance["levelName"] = toggle.isOn;
+                    PropController.properties.instance[propertyName] = toggle.isOn;
                 });
             }
             else if (objType.IsEnum)
@@ -94,7 +94,7 @@ namespace HeavenStudio.Properties
 
                     dropDownData.Add(optionData);
 
-                    if ((int)vals.GetValue(i) == (int)PropController.instance["levelName"])
+                    if ((int)vals.GetValue(i) == (int)PropController.properties.instance[propertyName])
                         selected = i;
                 }
                 dropdown.AddOptions(dropDownData);
@@ -102,14 +102,14 @@ namespace HeavenStudio.Properties
 
                 dropdown.onValueChanged.AddListener(delegate
                 {
-                    PropController.instance["levelName"] = (int)Enum.GetValues(objType).GetValue(dropdown.value);
+                    PropController.properties.instance[propertyName] = (int)Enum.GetValues(objType).GetValue(dropdown.value);
                 });
             }
             //why the FUCK wasn't this a thing before lmao
             else if (objType == typeof(string))
             {
-                // Debug.Log("entity " + propertyName + " is: " + (string)(PropController.instance["levelName"]));
-                inputFieldString.text = (string)(PropController.instance["levelName"]);
+                // Debug.Log("entity " + propertyName + " is: " + (string)(PropController.properties.instance[propertyName]));
+                inputFieldString.text = (string)(PropController.properties.instance[propertyName]);
 
                 inputFieldString.onSelect.AddListener(delegate
                 {
@@ -119,7 +119,7 @@ namespace HeavenStudio.Properties
                 inputFieldString.onEndEdit.AddListener(delegate
                 {
                     // Debug.Log("setting " + propertyName + " to: " + inputFieldString.text);
-                    PropController.instance["levelName"] = inputFieldString.text;
+                    PropController.properties.instance[propertyName] = inputFieldString.text;
                     Editor.instance.editingInputField = false;
                 });
             }

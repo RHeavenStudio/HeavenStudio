@@ -12,7 +12,7 @@ using HeavenStudio.Games;
 namespace HeavenStudio.Properties
 {
 
-    public class EventParameterManager : MonoBehaviour
+    public class PropManager : MonoBehaviour
     {
         [Header("Property Prefabs")]
         [SerializeField] private GameObject IntegerP;
@@ -30,7 +30,7 @@ namespace HeavenStudio.Properties
 
         public bool canDisable = true;
 
-        public static EventParameterManager instance { get; set; }
+        public static PropManager instance { get; set; }
 
         private void Awake()
         {
@@ -44,13 +44,32 @@ namespace HeavenStudio.Properties
 
     }
 
-        [Serializable]
+    [Serializable]
     public class Properties
     {
         //this is just copied from the beatmap lol
         public string levelName = "test";
         public string levelCreator = "testCreator";
         public int Number;
+
+        public object this[string propertyName]
+        {
+            get
+            {
+                return typeof(Entity).GetField(propertyName).GetValue(this);
+            }
+            set
+            {
+                try
+                {
+                    typeof(Entity).GetField(propertyName).SetValue(this, value);
+                }
+                catch (Exception ex)
+                {
+                    UnityEngine.Debug.LogError($"You probably misspelled a parameter, or defined the object type wrong. Exception log: {ex}");
+                }
+            }
+        }
 
     }
 
