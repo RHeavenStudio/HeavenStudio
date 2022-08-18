@@ -9,10 +9,11 @@ using Starpelly;
 
 using HeavenStudio.Util;
 
-namespace HeavenStudio.Editor
+namespace HeavenStudio.Properties
 {
     public class RemixPropertyPrefab : MonoBehaviour
     {
+
         public TMP_Text caption;
         [SerializeField] private EventParameterManager parameterManager;
 
@@ -28,13 +29,6 @@ namespace HeavenStudio.Editor
         [Header("Dropdown")]
         [Space(10)]
         public TMP_Dropdown dropdown;
-
-        [Header("Color")]
-        [Space(10)]
-        public Button ColorBTN;
-        public RectTransform ColorTable;
-        public bool colorTableActive;
-        public ColorPreview colorPreview;
 
         [Header("String")]  //why wasn't this a thing before
         [Space(10)]
@@ -56,13 +50,13 @@ namespace HeavenStudio.Editor
                 slider.minValue = integer.min;
                 slider.maxValue = integer.max;
 
-                slider.value = Mathf.RoundToInt(System.Convert.ToSingle(parameterManager.entity[propertyName]));
+                slider.value = Mathf.RoundToInt(System.Convert.ToSingle(PropController.Properties["levelName"]));
                 inputField.text = slider.value.ToString();
 
                 slider.onValueChanged.AddListener(delegate
                 {
                     inputField.text = slider.value.ToString();
-                    parameterManager.entity[propertyName] = (int)slider.value;
+                    PropController.Properties["Number"] = (int)slider.value;
                 });
 
                 inputField.onSelect.AddListener(delegate
@@ -73,46 +67,17 @@ namespace HeavenStudio.Editor
                 inputField.onEndEdit.AddListener(delegate
                 {
                     slider.value = Mathf.RoundToInt(System.Convert.ToSingle(System.Convert.ToSingle(inputField.text)));
-                    parameterManager.entity[propertyName] = (int)slider.value;
-                    Editor.instance.editingInputField = false;
-                });
-            }
-            else if (objType == typeof(EntityTypes.Float))
-            {
-                var fl = ((EntityTypes.Float)type);
-
-                slider.minValue = fl.min;
-                slider.maxValue = fl.max;
-
-                slider.value = System.Convert.ToSingle(parameterManager.entity[propertyName]);
-                inputField.text = slider.value.ToString("G");
-
-                slider.onValueChanged.AddListener(delegate
-                {
-                    var newValue = (float)System.Math.Round(slider.value, 4);
-                    inputField.text = newValue.ToString("G");
-                    parameterManager.entity[propertyName] = newValue;
-                });
-
-                inputField.onSelect.AddListener(delegate
-                {
-                    Editor.instance.editingInputField = true;
-                });
-
-                inputField.onEndEdit.AddListener(delegate
-                {
-                    slider.value = (float)System.Math.Round(System.Convert.ToSingle(inputField.text), 4);
-                    parameterManager.entity[propertyName] = slider.value;
+                    PropController.Properties["levelName"] = (int)slider.value;
                     Editor.instance.editingInputField = false;
                 });
             }
             else if (type is bool)
             {
-                toggle.isOn = System.Convert.ToBoolean(parameterManager.entity[propertyName]); // ' (bool)type ' always results in false
+                toggle.isOn = System.Convert.ToBoolean(PropController.Properties["levelName"]); // ' (bool)type ' always results in false
 
                 toggle.onValueChanged.AddListener(delegate
                 {
-                    parameterManager.entity[propertyName] = toggle.isOn;
+                    PropController.Properties["levelName"] = toggle.isOn;
                 });
             }
             else if (objType.IsEnum)
@@ -129,7 +94,7 @@ namespace HeavenStudio.Editor
 
                     dropDownData.Add(optionData);
 
-                    if ((int)vals.GetValue(i) == (int)parameterManager.entity[propertyName])
+                    if ((int)vals.GetValue(i) == (int)PropController.Properties["levelName"])
                         selected = i;
                 }
                 dropdown.AddOptions(dropDownData);
@@ -137,33 +102,14 @@ namespace HeavenStudio.Editor
 
                 dropdown.onValueChanged.AddListener(delegate
                 {
-                    parameterManager.entity[propertyName] = (int)Enum.GetValues(objType).GetValue(dropdown.value);
+                    PropController.Properties["levelName"] = (int)Enum.GetValues(objType).GetValue(dropdown.value);
                 });
-            }
-            else if (objType == typeof(Color))
-            {
-                colorPreview.colorPicker.onColorChanged += delegate
-                {
-                    parameterManager.entity[propertyName] = (Color)colorPreview.colorPicker.color;
-                };
-
-                Color paramCol = (Color)parameterManager.entity[propertyName];
-
-                ColorBTN.onClick.AddListener(delegate
-                {
-                    ColorTable.gameObject.SetActive(true);
-                    colorTableActive = true;
-                    colorPreview.ChangeColor(paramCol);
-                });
-
-                colorPreview.ChangeColor(paramCol);
-                ColorTable.gameObject.SetActive(false);
             }
             //why the FUCK wasn't this a thing before lmao
             else if (objType == typeof(string))
             {
-                // Debug.Log("entity " + propertyName + " is: " + (string)(parameterManager.entity[propertyName]));
-                inputFieldString.text = (string)(parameterManager.entity[propertyName]);
+                // Debug.Log("entity " + propertyName + " is: " + (string)(PropController.Properties["levelName"]));
+                inputFieldString.text = (string)(PropController.Properties["levelName"]);
 
                 inputFieldString.onSelect.AddListener(delegate
                 {
@@ -173,24 +119,9 @@ namespace HeavenStudio.Editor
                 inputFieldString.onEndEdit.AddListener(delegate
                 {
                     // Debug.Log("setting " + propertyName + " to: " + inputFieldString.text);
-                    parameterManager.entity[propertyName] = inputFieldString.text;
+                    PropController.Properties["levelName"] = inputFieldString.text;
                     Editor.instance.editingInputField = false;
                 });
-            }
-        }
-
-        private void Update()
-        {
-            if (colorTableActive)
-            {
-                if (!Editor.MouseInRectTransform(ColorTable))
-                {
-                    if (Input.GetMouseButtonDown(0))
-                    {
-                        ColorTable.gameObject.SetActive(false);
-                        colorTableActive = false;
-                    }
-                }
             }
         }
     }

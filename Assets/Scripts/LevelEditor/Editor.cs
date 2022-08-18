@@ -375,7 +375,7 @@ namespace HeavenStudio.Editor
 
         public void GetProperties(string json = "")
         {
-            PropController.instance.LoadProperties(json);
+            Properties.PropController.instance.LoadProperties(json);
             Debug.Log("properties sent");
         }
 
@@ -508,7 +508,7 @@ namespace HeavenStudio.Editor
         }
 
         public string GetPropertiesJson() =>
-            JsonConvert.SerializeObject(PropController.instance.properties);
+            JsonConvert.SerializeObject(Properties.PropController.instance.properties);
 
         public void SetGameEventTitle(string txt)
         {
