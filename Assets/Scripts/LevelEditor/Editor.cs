@@ -343,6 +343,10 @@ namespace HeavenStudio.Editor
                     using (var zipStream = levelFile.Open())
                         zipStream.Write(Encoding.UTF8.GetBytes(GetJson()), 0, Encoding.UTF8.GetBytes(GetJson()).Length);
 
+                    var PropertiesFile = archive.CreateEntry("properties.json", System.IO.Compression.CompressionLevel.NoCompression);
+                    using (var zipStream = PropertiesFile.Open())
+                        zipStream.Write(Encoding.UTF8.GetBytes(GetPropertiesJson()), 0, Encoding.UTF8.GetBytes(GetPropertiesJson()).Length);
+
                     if (changedMusic || currentRemixPath != path)
                     {
                         // this gets rid of the music file for some reason, someone remind me to find a fix for this soon
@@ -352,6 +356,8 @@ namespace HeavenStudio.Editor
                     var musicFile = archive.CreateEntry("song.ogg", System.IO.Compression.CompressionLevel.NoCompression);
                     using (var zipStream = musicFile.Open())
                         zipStream.Write(bytes, 0, bytes.Length);
+
+                    
                 }
 
                 currentRemixPath = path;
@@ -367,6 +373,11 @@ namespace HeavenStudio.Editor
             Timeline.instance.VolumeInfo.UpdateStartingVolumeText();
             Timeline.instance.TempoInfo.UpdateOffsetText();
             Timeline.FitToSong();
+        }
+
+        public void GetProperties(string json = "")
+        {
+            PropController.instance.LoadProperties(json);
         }
 
         public void OpenRemix()
@@ -416,6 +427,20 @@ namespace HeavenStudio.Editor
                                             Conductor.instance.musicSource.clip = OggVorbis.VorbisPlugin.ToAudioClip(bytes, "music");
                                             loadedMusic = true;
                                             Timeline.FitToSong();
+                                        }
+                                    }
+                                }
+                                if (entry.Name == "properties.json")
+                                {
+                                    using (var stream = entry.Open())
+                                    {
+                                        byte[] bytes;
+                                        using (var ms = new MemoryStream())
+                                        {
+                                            stream.CopyTo(ms);
+                                            bytes = ms.ToArray();
+                                            string json = Encoding.UTF8.GetString(bytes);
+                                            GetProperties(json);
                                         }
                                     }
                                 }
@@ -477,6 +502,13 @@ namespace HeavenStudio.Editor
         }
 
         public string GetJson()
+        {
+            string json = string.Empty;
+            json = JsonConvert.SerializeObject(GameManager.instance.Beatmap);
+            return json;
+        }
+
+        public string GetPropertiesJson()
         {
             string json = string.Empty;
             json = JsonConvert.SerializeObject(GameManager.instance.Beatmap);
