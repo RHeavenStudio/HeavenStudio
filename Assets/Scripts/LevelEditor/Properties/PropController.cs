@@ -11,6 +11,13 @@ using HeavenStudio.Games;
 
 namespace HeavenStudio.Properties
 {
+
+    public class EditInput
+    {
+        [Header("Properties")]
+        public bool editingInputField = false;
+    }
+
     public class PropManager : MonoBehaviour
     {
         [Header("Property Prefabs")]
@@ -91,12 +98,6 @@ namespace HeavenStudio.Properties
                 properties = new Properties();
             }
 
-        }
-
-        public class EditInput
-        {
-            [Header("Properties")]
-            public bool editingInputField = false;
         }
     }
 }

@@ -61,14 +61,14 @@ namespace HeavenStudio.Properties
 
                 inputField.onSelect.AddListener(delegate
                 {
-                    PropController.instance.EditInput.editingInputField = true;
+                    EditInput.editingInputField = true;
                 });
 
                 inputField.onEndEdit.AddListener(delegate
                 {
                     slider.value = Mathf.RoundToInt(System.Convert.ToSingle(System.Convert.ToSingle(inputField.text)));
                     PropController.instance.properties[propertyName] = (int)slider.value;
-                    PropController.instance.EditInput.editingInputField = false;
+                    EditInput.editingInputField = false;
                 });
             }
             else if (type is bool)
@@ -113,14 +113,14 @@ namespace HeavenStudio.Properties
 
                 inputFieldString.onSelect.AddListener(delegate
                 {
-                    PropController.instance.EditInput.editingInputField = true;
+                    EditInput.editingInputField = true;
                 });
 
                 inputFieldString.onEndEdit.AddListener(delegate
                 {
                     // Debug.Log("setting " + propertyName + " to: " + inputFieldString.text);
                     PropController.instance.properties[propertyName] = inputFieldString.text;
-                    PropController.instance.EditInput.editingInputField = false;
+                    EditInput.editingInputField = false;
                 });
             }
         }
