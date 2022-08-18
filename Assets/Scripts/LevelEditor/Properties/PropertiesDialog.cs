@@ -16,7 +16,7 @@ namespace HeavenStudio.Editor
 
         public void SwitchPropertiesDialog()
         {
-            if(propertiesMenu.activeSelf) {
+            if (propertiesMenu.activeSelf) {
                 propertiesMenu.SetActive(false);
             } else {
                 propertiesMenu.SetActive(true);
