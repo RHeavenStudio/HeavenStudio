@@ -50,7 +50,7 @@ namespace HeavenStudio.Properties
                 slider.minValue = integer.min;
                 slider.maxValue = integer.max;
 
-                slider.value = Mathf.RoundToInt(System.Convert.ToSingle(PropController.Properties["levelName"]));
+                slider.value = Mathf.RoundToInt(System.Convert.ToSingle(PropController.instance["levelName"]));
                 inputField.text = slider.value.ToString();
 
                 slider.onValueChanged.AddListener(delegate
@@ -67,17 +67,17 @@ namespace HeavenStudio.Properties
                 inputField.onEndEdit.AddListener(delegate
                 {
                     slider.value = Mathf.RoundToInt(System.Convert.ToSingle(System.Convert.ToSingle(inputField.text)));
-                    PropController.Properties["levelName"] = (int)slider.value;
+                    PropController.instance["levelName"] = (int)slider.value;
                     Editor.instance.editingInputField = false;
                 });
             }
             else if (type is bool)
             {
-                toggle.isOn = System.Convert.ToBoolean(PropController.Properties["levelName"]); // ' (bool)type ' always results in false
+                toggle.isOn = System.Convert.ToBoolean(PropController.instance["levelName"]); // ' (bool)type ' always results in false
 
                 toggle.onValueChanged.AddListener(delegate
                 {
-                    PropController.Properties["levelName"] = toggle.isOn;
+                    PropController.instance["levelName"] = toggle.isOn;
                 });
             }
             else if (objType.IsEnum)
@@ -94,7 +94,7 @@ namespace HeavenStudio.Properties
 
                     dropDownData.Add(optionData);
 
-                    if ((int)vals.GetValue(i) == (int)PropController.Properties["levelName"])
+                    if ((int)vals.GetValue(i) == (int)PropController.instance["levelName"])
                         selected = i;
                 }
                 dropdown.AddOptions(dropDownData);
@@ -102,14 +102,14 @@ namespace HeavenStudio.Properties
 
                 dropdown.onValueChanged.AddListener(delegate
                 {
-                    PropController.Properties["levelName"] = (int)Enum.GetValues(objType).GetValue(dropdown.value);
+                    PropController.instance["levelName"] = (int)Enum.GetValues(objType).GetValue(dropdown.value);
                 });
             }
             //why the FUCK wasn't this a thing before lmao
             else if (objType == typeof(string))
             {
-                // Debug.Log("entity " + propertyName + " is: " + (string)(PropController.Properties["levelName"]));
-                inputFieldString.text = (string)(PropController.Properties["levelName"]);
+                // Debug.Log("entity " + propertyName + " is: " + (string)(PropController.instance["levelName"]));
+                inputFieldString.text = (string)(PropController.instance["levelName"]);
 
                 inputFieldString.onSelect.AddListener(delegate
                 {
@@ -119,7 +119,7 @@ namespace HeavenStudio.Properties
                 inputFieldString.onEndEdit.AddListener(delegate
                 {
                     // Debug.Log("setting " + propertyName + " to: " + inputFieldString.text);
-                    PropController.Properties["levelName"] = inputFieldString.text;
+                    PropController.instance["levelName"] = inputFieldString.text;
                     Editor.instance.editingInputField = false;
                 });
             }
