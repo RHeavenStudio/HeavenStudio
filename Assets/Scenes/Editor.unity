@@ -14016,7 +14016,7 @@ MonoBehaviour:
   m_HandleRect: {fileID: 704039020}
   m_Direction: 0
   m_Value: 0
-  m_Size: 0.032871284
+  m_Size: 0.03287128
   m_NumberOfSteps: 0
   m_OnValueChanged:
     m_PersistentCalls:
@@ -19841,8 +19841,8 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 1589389272}
   m_HandleRect: {fileID: 1589389271}
   m_Direction: 2
-  m_Value: 1
-  m_Size: 0.9978523
+  m_Value: 0
+  m_Size: 1
   m_NumberOfSteps: 0
   m_OnValueChanged:
     m_PersistentCalls:
@@ -25461,7 +25461,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0.5}
   m_AnchorMax: {x: 1, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: 129.92245}
+  m_AnchoredPosition: {x: 0, y: 129.8409}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 1}
 --- !u!114 &1154875944
@@ -27527,7 +27527,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1252591648}
-  - component: {fileID: 1252591649}
   m_Layer: 5
   m_Name: String
   m_TagString: Untagged
@@ -27556,29 +27555,6 @@ RectTransform:
   m_AnchoredPosition: {x: -240.99994, y: 263.99997}
   m_SizeDelta: {x: 537.35, y: 50}
   m_Pivot: {x: 0.5, y: 0.5}
---- !u!114 &1252591649
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1252591647}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 3b7c76a246115c1459c963e93f7db056, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  caption: {fileID: 1980463955}
-  parameterManager: {fileID: 830452354}
-  slider: {fileID: 0}
-  inputField: {fileID: 0}
-  toggle: {fileID: 0}
-  dropdown: {fileID: 0}
-  ColorBTN: {fileID: 0}
-  ColorTable: {fileID: 0}
-  colorTableActive: 0
-  colorPreview: {fileID: 0}
-  inputFieldString: {fileID: 1425536044}
 --- !u!1 &1254178913
 GameObject:
   m_ObjectHideFlags: 0
@@ -35332,7 +35308,7 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 1292844878}
   m_HandleRect: {fileID: 1292844877}
   m_Direction: 2
-  m_Value: 1
+  m_Value: 0
   m_Size: 1
   m_NumberOfSteps: 0
   m_OnValueChanged:
@@ -44916,7 +44892,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &2086733128
 RectTransform:
   m_ObjectHideFlags: 0

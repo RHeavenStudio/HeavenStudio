@@ -11,7 +11,6 @@ using HeavenStudio.Games;
 
 namespace HeavenStudio.Properties
 {
-
     public class PropManager : MonoBehaviour
     {
         [Header("Property Prefabs")]
@@ -56,13 +55,13 @@ namespace HeavenStudio.Properties
         {
             get
             {
-                return typeof(Entity).GetField(propertyName).GetValue(this);
+                return typeof(Properties).GetField(propertyName).GetValue(this);
             }
             set
             {
                 try
                 {
-                    typeof(Entity).GetField(propertyName).SetValue(this, value);
+                    typeof(Properties).GetField(propertyName).SetValue(this, value);
                 }
                 catch (Exception ex)
                 {
@@ -92,6 +91,12 @@ namespace HeavenStudio.Properties
                 properties = new Properties();
             }
 
+        }
+
+        public class EditInput
+        {
+            [Header("Properties")]
+            public bool editingInputField = false;
         }
     }
 }
