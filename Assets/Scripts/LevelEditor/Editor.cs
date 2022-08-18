@@ -356,8 +356,6 @@ namespace HeavenStudio.Editor
                     var musicFile = archive.CreateEntry("song.ogg", System.IO.Compression.CompressionLevel.NoCompression);
                     using (var zipStream = musicFile.Open())
                         zipStream.Write(bytes, 0, bytes.Length);
-
-                    
                 }
 
                 currentRemixPath = path;
