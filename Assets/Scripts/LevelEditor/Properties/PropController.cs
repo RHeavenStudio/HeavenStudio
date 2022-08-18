@@ -21,7 +21,7 @@ namespace HeavenStudio.Editor
     {
         public static PropController instance { get; private set; } = new PropController();
 
-        public Properties properties;
+        public Properties properties = new Properties();
 
         public void LoadProperties(string json = "")
         {

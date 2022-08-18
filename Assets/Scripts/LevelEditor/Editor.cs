@@ -512,7 +512,7 @@ namespace HeavenStudio.Editor
         public string GetPropertiesJson()
         {
             string json = string.Empty;
-            json = JsonConvert.SerializeObject(GameManager.instance.Beatmap);
+            json = JsonConvert.SerializeObject(PropController.instance.properties);
             return json;
         }
 
