@@ -343,8 +343,8 @@ namespace HeavenStudio.Editor
                     using (var zipStream = levelFile.Open())
                         zipStream.Write(Encoding.UTF8.GetBytes(GetJson()), 0, Encoding.UTF8.GetBytes(GetJson()).Length);
 
-                    var PropertiesFile = archive.CreateEntry("properties.json", System.IO.Compression.CompressionLevel.NoCompression);
-                    using (var zipStream = PropertiesFile.Open())
+                    var propertiesFile = archive.CreateEntry("properties.json", System.IO.Compression.CompressionLevel.NoCompression);
+                    using (var zipStream = propertiesFile.Open())
                         zipStream.Write(Encoding.UTF8.GetBytes(GetPropertiesJson()), 0, Encoding.UTF8.GetBytes(GetPropertiesJson()).Length);
 
                     if (changedMusic || currentRemixPath != path)
