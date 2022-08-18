@@ -10,36 +10,31 @@ using HeavenStudio.Games;
 
 namespace HeavenStudio.Editor
 {
-    public class PropController : MonoBehaviour
-    {
-        public static PropController instance { get; private set; }
 
-        public Properties Properties = new Properties();
+    public class Properties
+    {
+        string levelName = "";
+        string levelCreator = "";
+    }
+
+    public class PropController
+    {
+        public static PropController instance { get; private set; } = new PropController();
+
+        public Properties properties;
 
         public void LoadProperties(string json = "")
         {
-            SortPropertyList();
-
             if (json != "")
             {
-                Properties = JsonConvert.DeserializeObject<Properties>(json);
+                properties = JsonConvert.DeserializeObject<Properties>(json);
+                //Debug.Log("property 1 =" + (string)(levelName));
             }
             else
             {
-                NewProperties();
+                properties = new Properties();
             }
-            Conductor.instance.SetBpm(Beatmap.bpm);
-            Conductor.instance.SetVolume(Beatmap.musicVolume);
-            Conductor.instance.firstBeatOffset = Beatmap.firstBeatOffset;
-            Stop(0);
-            SetCurrentEventToClosest(0);
 
-        }
-
-        public void SortPropertyList()
-        {
-            Beatmap.entities.Sort((x, y) => x.beat.CompareTo(y.beat));
-            Beatmap.tempoChanges.Sort((x, y) => x.beat.CompareTo(y.beat));
         }
     }
 }

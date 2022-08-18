@@ -378,6 +378,7 @@ namespace HeavenStudio.Editor
         public void GetProperties(string json = "")
         {
             PropController.instance.LoadProperties(json);
+            Debug.Log("properties sent");
         }
 
         public void OpenRemix()
@@ -430,7 +431,7 @@ namespace HeavenStudio.Editor
                                         }
                                     }
                                 }
-                                if (entry.Name == "properties.json")
+                                else if (entry.Name == "properties.json")
                                 {
                                     using (var stream = entry.Open())
                                     {
