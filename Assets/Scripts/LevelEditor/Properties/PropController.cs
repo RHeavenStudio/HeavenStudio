@@ -55,10 +55,14 @@ namespace HeavenStudio.Properties
     [Serializable]
     public class Properties
     {
+        public static Properties instance { get; private set; } = new Properties();
+
         //this is just copied from the beatmap lol
-        public string levelName = "test";
+        public string levelName = "asdf";
         public string levelCreator = "testCreator";
         public int Number;
+
+        public string datamodel;
 
         public object this[string propertyName]
         {
@@ -78,7 +82,6 @@ namespace HeavenStudio.Properties
                 }
             }
         }
-
     }
 
     public class PropController

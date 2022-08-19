@@ -15,7 +15,7 @@ namespace HeavenStudio.Properties
     {
 
         public TMP_Text caption;
-        [SerializeField] private PropManager parameterManager;
+        [SerializeField] private RemixParameterManager parameterManager;
 
         [Header("Integer and Float")]
         [Space(10)]

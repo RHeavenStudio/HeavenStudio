@@ -507,8 +507,12 @@ namespace HeavenStudio.Editor
             return json;
         }
 
-        public string GetPropertiesJson() =>
-            JsonConvert.SerializeObject(Properties.PropController.instance.properties);
+        public string GetPropertiesJson()
+        {
+            string json = string.Empty;
+            json = JsonConvert.SerializeObject(Properties.PropController.instance.properties);
+            return json;
+        }
 
         public void SetGameEventTitle(string txt)
         {
