@@ -62,8 +62,6 @@ namespace HeavenStudio.Properties
         public string levelCreator = "testCreator";
         public int Number;
 
-        public string datamodel;
-
         public object this[string propertyName]
         {
             get
