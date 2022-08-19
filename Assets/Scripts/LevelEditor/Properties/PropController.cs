@@ -58,8 +58,8 @@ namespace HeavenStudio.Properties
         public static Properties instance { get; private set; } = new Properties();
 
         //this is just copied from the beatmap lol
-        public string levelName = "asdf";
-        public string levelCreator = "testCreator";
+        public string levelName = "";
+        public string levelCreator = "";
         public int Number;
 
         public object this[string propertyName]

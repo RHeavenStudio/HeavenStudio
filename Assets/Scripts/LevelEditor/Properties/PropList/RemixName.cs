@@ -2,6 +2,8 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+using HeavenStudio.Util;
+
 namespace HeavenStudio.Properties
 {
     public class RemixName : MonoBehaviour
@@ -14,6 +16,7 @@ namespace HeavenStudio.Properties
         {
             Properties.instance.levelName = content;
             Debug.Log(Properties.instance.levelName);
+            RemixName.instance.content = Properties.instance.levelName;
         }
     }
 }

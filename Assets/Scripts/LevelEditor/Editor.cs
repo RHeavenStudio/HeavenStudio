@@ -510,7 +510,7 @@ namespace HeavenStudio.Editor
         public string GetPropertiesJson()
         {
             string json = string.Empty;
-            json = JsonConvert.SerializeObject(Properties.PropController.instance.properties);
+            json = JsonConvert.SerializeObject(Properties.Properties.instance);
             return json;
         }
 
