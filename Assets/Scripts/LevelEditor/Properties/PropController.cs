@@ -20,37 +20,7 @@ namespace HeavenStudio.Properties
         public bool editingInputField = false;
     }
 
-    public class PropManager : MonoBehaviour
-    {
-        [Header("Property Prefabs")]
-        [SerializeField] private GameObject IntegerP;
-        [SerializeField] private GameObject FloatP;
-        [SerializeField] private GameObject BooleanP;
-        [SerializeField] private GameObject DropdownP;
-        [SerializeField] private GameObject ColorP;
-        [SerializeField] private GameObject StringP;
-
-        public Beatmap.Entity entity;
-
-        public bool active;
-
-        private int childCountAtStart;
-
-        public bool canDisable = true;
-
-        public static PropManager instance { get; set; }
-
-        private void Awake()
-        {
-            instance = this;
-        }
-
-        private void Start()
-        {
-            childCountAtStart = transform.childCount;
-        }
-
-    }
+    
 
     [Serializable]
     public class Properties
@@ -62,24 +32,6 @@ namespace HeavenStudio.Properties
         public string levelCreator = "";
         public int Number;
 
-        public object this[string propertyName]
-        {
-            get
-            {
-                return typeof(Properties).GetField(propertyName).GetValue(this);
-            }
-            set
-            {
-                try
-                {
-                    typeof(Properties).GetField(propertyName).SetValue(this, value);
-                }
-                catch (Exception ex)
-                {
-                    UnityEngine.Debug.LogError($"You probably misspelled a parameter, or defined the object type wrong. Exception log: {ex}");
-                }
-            }
-        }
     }
 
     public class PropController
