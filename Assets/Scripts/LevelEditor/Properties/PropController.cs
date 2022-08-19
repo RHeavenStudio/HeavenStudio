@@ -14,6 +14,8 @@ namespace HeavenStudio.Properties
 
     public class EditInput
     {
+        public static EditInput instance { get; private set; } = new EditInput();
+
         [Header("Properties")]
         public bool editingInputField = false;
     }
