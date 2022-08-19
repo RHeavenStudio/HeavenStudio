@@ -95,6 +95,7 @@ namespace HeavenStudio.Properties
             if (json != "")
             {
                 properties = JsonConvert.DeserializeObject<Properties>(json);
+                RemixName.instance.Refresh(Properties.instance.levelName);
                 Debug.Log("levelName = " + (properties.levelName));
                 Debug.Log("levelCreator = " + (properties.levelCreator));
             }
