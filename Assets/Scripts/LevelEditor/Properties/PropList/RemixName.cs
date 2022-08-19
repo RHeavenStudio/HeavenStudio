@@ -16,7 +16,6 @@ namespace HeavenStudio.Properties
         {
             Properties.instance.levelName = content;
             Debug.Log(Properties.instance.levelName);
-            RemixName.instance.content = Properties.instance.levelName;
         }
     }
 }
