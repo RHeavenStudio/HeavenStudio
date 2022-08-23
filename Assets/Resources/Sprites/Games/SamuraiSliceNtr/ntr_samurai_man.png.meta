@@ -77,9 +77,6 @@ TextureImporter:
   - first:
       213: -3985528753034488826
     second: sword02
-  - first:
-      213: 4203110707174598171
-    second: legR02
   externalObjects: {}
   serializedVersion: 11
   mipmaps:
@@ -126,7 +123,7 @@ TextureImporter:
   spritePivot: {x: 0.5, y: 0.5}
   spritePixelsToUnits: 100
   spriteBorder: {x: 0, y: 0, z: 0, w: 0}
-  spriteGenerateFallbackPhysicsShape: 0
+  spriteGenerateFallbackPhysicsShape: 1
   alphaUsage: 1
   alphaIsTransparency: 1
   spriteTessellationDetail: -1
@@ -172,8 +169,8 @@ TextureImporter:
       name: head00
       rect:
         serializedVersion: 2
-        x: 9
-        y: 2291
+        x: 0
+        y: 2294
         width: 128
         height: 126
       alignment: 0
@@ -193,7 +190,7 @@ TextureImporter:
       name: head01
       rect:
         serializedVersion: 2
-        x: 19
+        x: 0
         y: 2087
         width: 84
         height: 149
@@ -214,7 +211,7 @@ TextureImporter:
       name: head02
       rect:
         serializedVersion: 2
-        x: 15
+        x: 0
         y: 1902
         width: 128
         height: 127
@@ -340,8 +337,8 @@ TextureImporter:
       name: attatch
       rect:
         serializedVersion: 2
-        x: 307
-        y: 945
+        x: 287
+        y: 1376
         width: 73
         height: 50
       alignment: 0
@@ -550,9 +547,9 @@ TextureImporter:
       name: sword00
       rect:
         serializedVersion: 2
-        x: 1329
-        y: 1095
-        width: 475
+        x: 1294
+        y: 1097
+        width: 477
         height: 241
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
@@ -571,10 +568,10 @@ TextureImporter:
       name: sword01
       rect:
         serializedVersion: 2
-        x: 727
+        x: 693
         y: 1097
-        width: 485
-        height: 356
+        width: 486
+        height: 358
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -614,7 +611,7 @@ TextureImporter:
       rect:
         serializedVersion: 2
         x: 755
-        y: 2210
+        y: 2230
         width: 326
         height: 190
       alignment: 0
@@ -689,27 +686,6 @@ TextureImporter:
       bones: []
       spriteID: 604164127be80b8c0800000000000000
       internalID: -3985528753034488826
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: legR02
-      rect:
-        serializedVersion: 2
-        x: 329
-        y: 1194
-        width: 229
-        height: 219
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: b1668cc4be2745a30800000000000000
-      internalID: 4203110707174598171
       vertices: []
       indices: 
       edges: []
