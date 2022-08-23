@@ -18,11 +18,11 @@ namespace HeavenStudio.Games.Loaders
                         new Param("toggle", false, "Disable Sound", "Disables the dispense sound")
                     },
                 inactiveFunction: delegate { if (!eventCaller.currentEntity.toggle) { SpaceSoccer.DispenseSound(eventCaller.currentEntity.beat); } }),
-                new GameAction("keep-up",               delegate { }, 4f, true),
                 new GameAction("high kick-toe!",        delegate { }, 3f, false, new List<Param>() 
                 {
                     new Param("swing", new EntityTypes.Float(0, 1, 0.5f), "Swing", "The amount of swing") 
                 }),
+                new GameAction("keep-up",               delegate { }, 4f, true, hidden: true),
             });
         }
     }
@@ -102,6 +102,8 @@ namespace HeavenStudio.Games
                 {
                     DispenseSound(beat);
                 }
+
+                kicker.canKick = true;
             }
         }
 

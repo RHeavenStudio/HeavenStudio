@@ -11,6 +11,7 @@ namespace HeavenStudio.Games.Scripts_NtrSamurai
     {
         [Header("Objects")]
         public ParticleSystem moneyBurst;
+        public ParticleSystem pickelBurst;
         public Animator anim;
         public NtrSamuraiObject secondHalf;
 
@@ -44,6 +45,9 @@ namespace HeavenStudio.Games.Scripts_NtrSamurai
                     case (int) SamuraiSliceNtr.ObjectType.Demon:
                         anim.Play("ObjDemonDebris02");
                         break;
+                    case (int) SamuraiSliceNtr.ObjectType.Melon2B2T:
+                        anim.Play("ObjMelonPickelDebris02");
+                        break;
                     default:
                         anim.Play("ObjMelonDebris");
                         break;
@@ -69,6 +73,9 @@ namespace HeavenStudio.Games.Scripts_NtrSamurai
                             new MultiSound.Sound("samuraiSliceNtr/ntrSamurai_in01", startBeat + 1.5f, 1.25f),
                             new MultiSound.Sound("samuraiSliceNtr/ntrSamurai_in01", startBeat + 2f),
                         });
+                        break;
+                    case (int) SamuraiSliceNtr.ObjectType.Melon2B2T:
+                        anim.Play("ObjMelonPickel");
                         break;
                     default:
                         anim.Play("ObjMelon");
@@ -280,8 +287,12 @@ namespace HeavenStudio.Games.Scripts_NtrSamurai
 
             this.startBeat = caller.startBeat + caller.timer;
             if (type == (int) SamuraiSliceNtr.ObjectType.Demon)
-            {
                 anim.Play("ObjDemonDebris01");
+            else if (type == (int) SamuraiSliceNtr.ObjectType.Melon2B2T)
+            {
+                Jukebox.PlayOneShotGame("samuraiSliceNtr/melon_dig");
+                pickelBurst.Play();
+                anim.Play("ObjMelonPickelDebris01");
             }
 
             if (holdingCash > 0)

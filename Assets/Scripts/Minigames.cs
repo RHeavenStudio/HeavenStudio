@@ -217,7 +217,13 @@ namespace HeavenStudio
                 new Minigame("gameManager", "Game Manager", "", false, true, new List<GameAction>()
                 {
                     new GameAction("switchGame",            delegate { GameManager.instance.SwitchGame(eventCaller.currentSwitchGame, eventCaller.currentEntity.beat); }, 0.5f, inactiveFunction: delegate { GameManager.instance.SwitchGame(eventCaller.currentSwitchGame, eventCaller.currentEntity.beat); }),
-                    new GameAction("end",                   delegate { Debug.Log("end"); GameManager.instance.Stop(0); Timeline.instance?.SetTimeButtonColors(true, false, false);}),
+                    new GameAction("end",                   delegate { 
+                        Debug.Log("end"); 
+                        if (Timeline.instance != null)
+                            Timeline.instance?.Stop(0);
+                        else
+                            GameManager.instance.Stop(0);
+                    }),
                     new GameAction("skill star",            delegate {  }, 1f, true),
                    
                     new GameAction("toggle inputs",            delegate
@@ -332,10 +338,7 @@ namespace HeavenStudio
                         new Param("ease", EasingFunction.Ease.Linear, "Ease")
                     }, hidden: false ),
 
-                    new GameAction("move camera",              delegate 
-                    {
-                        //TODO: move cam
-                    }, 1f, true, new List<Param>() 
+                    new GameAction("move camera",              delegate {}, 1f, true, new List<Param>() 
                     {
                         new Param("valA", new EntityTypes.Float(-50, 50, 0), "Right / Left"),
                         new Param("valB", new EntityTypes.Float(-50, 50, 0), "Up / Down"),
@@ -343,15 +346,18 @@ namespace HeavenStudio
                         new Param("ease", EasingFunction.Ease.Linear, "Ease Type")
                     } ),
 
-                    new GameAction("rotate camera",            delegate 
-                    {
-                        //TODO: rot cam
-                    }, 1f, true, new List<Param>() 
+                    new GameAction("rotate camera",            delegate {}, 1f, true, new List<Param>() 
                     {
                         new Param("valA", new EntityTypes.Integer(-360, 360, 0), "Pitch"),
                         new Param("valB", new EntityTypes.Integer(-360, 360, 0), "Yaw"),
                         new Param("valC", new EntityTypes.Integer(-360, 360, 0), "Roll"),
                         new Param("ease", EasingFunction.Ease.Linear, "Ease Type")
+                    } ),
+
+                    new GameAction("screen shake",              delegate {}, 1f, true, new List<Param>()
+                    {
+                        new Param("valA", new EntityTypes.Float(0, 10, 0), "Horizontal Intensity"),
+                        new Param("valB", new EntityTypes.Float(0, 10, 1), "Vertical Intensity")
                     } ),
 
                     new GameAction("display textbox",           delegate 

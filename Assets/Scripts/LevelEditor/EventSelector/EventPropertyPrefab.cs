@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using System;
-
+using System.Linq;
 using TMPro;
 using Starpelly;
 
@@ -47,135 +47,139 @@ namespace HeavenStudio.Editor
             this.propertyName = propertyName;
             this.caption.text = caption;
 
-            var objType = type.GetType();
-
-            if (objType == typeof(EntityTypes.Integer))
+            switch (type)
             {
-                var integer = ((EntityTypes.Integer)type);
+                case EntityTypes.Integer integer:
+                    slider.minValue = integer.min;
+                    slider.maxValue = integer.max;
 
-                slider.minValue = integer.min;
-                slider.maxValue = integer.max;
-
-                slider.value = Mathf.RoundToInt(System.Convert.ToSingle(parameterManager.entity[propertyName]));
-                inputField.text = slider.value.ToString();
-
-                slider.onValueChanged.AddListener(delegate 
-                {
+                    slider.wholeNumbers = true;
+                    slider.value = Convert.ToSingle(parameterManager.entity[propertyName]);
                     inputField.text = slider.value.ToString();
-                    parameterManager.entity[propertyName] = (int)slider.value;
-                });
 
-                inputField.onSelect.AddListener(delegate
-                {
-                    Editor.instance.editingInputField = true;
-                });
+                    slider.onValueChanged.AddListener(
+                        _ =>
+                        {
+                            inputField.text = slider.value.ToString();
+                            parameterManager.entity[propertyName] = (int) slider.value;
+                        }
+                    );
 
-                inputField.onEndEdit.AddListener(delegate
-                {
-                    slider.value = Mathf.RoundToInt(System.Convert.ToSingle(System.Convert.ToSingle(inputField.text)));
-                    parameterManager.entity[propertyName] = (int)slider.value;
-                    Editor.instance.editingInputField = false;
-                });
-            }
-            else if (objType == typeof(EntityTypes.Float))
-            {
-                var fl = ((EntityTypes.Float)type);
+                    inputField.onSelect.AddListener(
+                        _ =>
+                            Editor.instance.editingInputField = true
+                    );
 
-                slider.minValue = fl.min;
-                slider.maxValue = fl.max;
+                    inputField.onEndEdit.AddListener(
+                        _ =>
+                        {
+                            slider.value = Convert.ToSingle(inputField.text);
+                            parameterManager.entity[propertyName] = (int) slider.value;
+                            Editor.instance.editingInputField = false;
+                        }
+                    );
+                    break;
 
-                slider.value = System.Convert.ToSingle(parameterManager.entity[propertyName]);
-                inputField.text = slider.value.ToString("G");
+                case EntityTypes.Float fl:
+                    slider.minValue = fl.min;
+                    slider.maxValue = fl.max;
 
-                slider.onValueChanged.AddListener(delegate 
-                {
-                    var newValue = (float)System.Math.Round(slider.value, 4);
-                    inputField.text = newValue.ToString("G");
-                    parameterManager.entity[propertyName] = newValue;
-                });
+                    slider.value = Convert.ToSingle(parameterManager.entity[propertyName]);
+                    inputField.text = slider.value.ToString("G");
 
-                inputField.onSelect.AddListener(delegate
-                {
-                    Editor.instance.editingInputField = true;
-                });
+                    slider.onValueChanged.AddListener(
+                        _ =>
+                        {
+                            var newValue = (float) Math.Round(slider.value, 4);
+                            inputField.text = newValue.ToString("G");
+                            parameterManager.entity[propertyName] = newValue;
+                        }
+                    );
 
-                inputField.onEndEdit.AddListener(delegate 
-                {
-                    slider.value = (float)System.Math.Round(System.Convert.ToSingle(inputField.text), 4);
-                    parameterManager.entity[propertyName] = slider.value;
-                    Editor.instance.editingInputField = false;
-                });
-            }
-            else if(type is bool)
-            {
-                toggle.isOn = System.Convert.ToBoolean(parameterManager.entity[propertyName]); // ' (bool)type ' always results in false
+                    inputField.onSelect.AddListener(
+                        _ =>
+                            Editor.instance.editingInputField = true
+                    );
 
-                toggle.onValueChanged.AddListener(delegate
-                {
-                    parameterManager.entity[propertyName] = toggle.isOn;
-                });
-            }
-            else if (objType.IsEnum)
-            {
-                List<TMP_Dropdown.OptionData> dropDownData = new List<TMP_Dropdown.OptionData>();
-                var vals = Enum.GetValues(objType);
-                var selected = 0;
-                for (int i = 0; i < vals.Length; i++)
-                {
-                    string name = Enum.GetNames(objType)[i];
-                    TMP_Dropdown.OptionData optionData = new TMP_Dropdown.OptionData();
+                    inputField.onEndEdit.AddListener(
+                        _ =>
+                        {
+                            slider.value = (float) Math.Round(Convert.ToSingle(inputField.text), 4);
+                            parameterManager.entity[propertyName] = slider.value;
+                            Editor.instance.editingInputField = false;
+                        }
+                    );
+                    break;
 
-                    optionData.text = name;
+                case bool _:
+                    // ' (bool)type ' always results in false
+                    toggle.isOn = Convert.ToBoolean(parameterManager.entity[propertyName]);
 
-                    dropDownData.Add(optionData);
+                    toggle.onValueChanged.AddListener(
+                        _ => parameterManager.entity[propertyName] = toggle.isOn
+                    );
+                    break;
 
-                    if ((int)vals.GetValue(i) == (int)parameterManager.entity[propertyName])
-                        selected = i;
-                }
-                dropdown.AddOptions(dropDownData);
-                dropdown.value = selected;
-                
-                dropdown.onValueChanged.AddListener(delegate 
-                {
-                    parameterManager.entity[propertyName] = (int)Enum.GetValues(objType).GetValue(dropdown.value);
-                });
-            }
-            else if (objType == typeof(Color))
-            {
-                colorPreview.colorPicker.onColorChanged += delegate
-                {
-                    parameterManager.entity[propertyName] = (Color)colorPreview.colorPicker.color;
-                };
+                case Color _:
+                    colorPreview.colorPicker.onColorChanged += _ =>
+                        parameterManager.entity[propertyName] = colorPreview.colorPicker.color;
 
-                Color paramCol = (Color)parameterManager.entity[propertyName];
+                    var paramCol = (Color) parameterManager.entity[propertyName];
 
-                ColorBTN.onClick.AddListener(delegate
-                {
-                    ColorTable.gameObject.SetActive(true);
-                    colorTableActive = true;
+                    ColorBTN.onClick.AddListener(
+                        () =>
+                        {
+                            ColorTable.gameObject.SetActive(true);
+                            colorTableActive = true;
+                            colorPreview.ChangeColor(paramCol);
+                        }
+                    );
+
                     colorPreview.ChangeColor(paramCol);
-                });
+                    ColorTable.gameObject.SetActive(false);
+                    break;
 
-                colorPreview.ChangeColor(paramCol);
-                ColorTable.gameObject.SetActive(false);
-            }
-            //why the FUCK wasn't this a thing before lmao
-            else if(objType == typeof(string))
-            {
-                // Debug.Log("entity " + propertyName + " is: " + (string)(parameterManager.entity[propertyName]));
-                inputFieldString.text = (string)(parameterManager.entity[propertyName]);
+                case string _:
+                    inputFieldString.text = (string) parameterManager.entity[propertyName];
 
-                inputFieldString.onSelect.AddListener(delegate
-                {
-                    Editor.instance.editingInputField = true;
-                });
+                    inputFieldString.onSelect.AddListener(
+                        _ =>
+                            Editor.instance.editingInputField = true
+                    );
+                    inputFieldString.onEndEdit.AddListener(
+                        _ =>
+                        {;
+                            parameterManager.entity[propertyName] = inputFieldString.text;
+                            Editor.instance.editingInputField = false;
+                        }
+                    );
+                    break;
 
-                inputFieldString.onEndEdit.AddListener(delegate
-                {
-                    // Debug.Log("setting " + propertyName + " to: " + inputFieldString.text);
-                    parameterManager.entity[propertyName] = inputFieldString.text;
-                    Editor.instance.editingInputField = false;
-                });
+                case Enum enumKind:
+                    var enumType = enumKind.GetType();
+                    var enumVals = Enum.GetValues(enumType);
+                    var enumNames = Enum.GetNames(enumType).ToList();
+
+                    // Can we assume non-holey enum?
+                    // If we can we can simplify to dropdown.value = (int) parameterManager.entity[propertyName]
+                    var currentlySelected = (int) parameterManager.entity[propertyName];
+                    var selected = enumVals
+                        .Cast<object>()
+                        .ToList()
+                        .FindIndex(val => (int) val == currentlySelected);
+
+                    dropdown.AddOptions(enumNames);
+                    dropdown.value = selected;
+
+                    dropdown.onValueChanged.AddListener(_ =>
+                        parameterManager.entity[propertyName] = (int) enumVals.GetValue(dropdown.value)
+                    );
+                    break;
+
+                default:
+                    throw new ArgumentOutOfRangeException(
+                        nameof(type), type, "I don't know how to make a property of this type!"
+                    );
             }
         }
 

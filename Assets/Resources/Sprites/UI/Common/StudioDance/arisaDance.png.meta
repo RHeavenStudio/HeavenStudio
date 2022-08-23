@@ -155,6 +155,15 @@ TextureImporter:
   - first:
       213: -7448459852879131668
     second: arisaDance_50
+  - first:
+      213: 6703875778577109625
+    second: icon
+  - first:
+      213: 1086597860007614453
+    second: arisaDance_52
+  - first:
+      213: -1473077032702836631
+    second: arisaDance_53
   externalObjects: {}
   serializedVersion: 11
   mipmaps:
@@ -199,7 +208,7 @@ TextureImporter:
   spriteMeshType: 1
   alignment: 0
   spritePivot: {x: 0.5, y: 0.5}
-  spritePixelsToUnits: 100
+  spritePixelsToUnits: 300
   spriteBorder: {x: 0, y: 0, z: 0, w: 0}
   spriteGenerateFallbackPhysicsShape: 0
   alphaUsage: 1
@@ -218,7 +227,7 @@ TextureImporter:
   platformSettings:
   - serializedVersion: 3
     buildTarget: DefaultTexturePlatform
-    maxTextureSize: 2048
+    maxTextureSize: 4096
     resizeAlgorithm: 0
     textureFormat: -1
     textureCompression: 1
@@ -230,7 +239,7 @@ TextureImporter:
     forceMaximumCompressionQuality_BC6H_BC7: 0
   - serializedVersion: 3
     buildTarget: Standalone
-    maxTextureSize: 2048
+    maxTextureSize: 4096
     resizeAlgorithm: 0
     textureFormat: -1
     textureCompression: 1
@@ -247,16 +256,16 @@ TextureImporter:
       name: arisaDance_0
       rect:
         serializedVersion: 2
-        x: 39
-        y: 1850
-        width: 161
-        height: 177
-      alignment: 0
+        x: 85
+        y: 5518
+        width: 547
+        height: 595
+      alignment: 9
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
-      tessellationDetail: 0
+      tessellationDetail: -1
       bones: []
       spriteID: 4b3cbd425772e8870800000000000000
       internalID: 8686924115327304628
@@ -268,16 +277,16 @@ TextureImporter:
       name: arisaDance_1
       rect:
         serializedVersion: 2
-        x: 278
-        y: 1853
-        width: 160
-        height: 176
-      alignment: 0
+        x: 802
+        y: 5527
+        width: 544
+        height: 592
+      alignment: 9
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
-      tessellationDetail: 0
+      tessellationDetail: -1
       bones: []
       spriteID: 5937b4d87004ddcf0800000000000000
       internalID: -225954005119175787
@@ -289,16 +298,16 @@ TextureImporter:
       name: arisaDance_2
       rect:
         serializedVersion: 2
-        x: 518
-        y: 1852
-        width: 160
-        height: 177
-      alignment: 0
+        x: 1522
+        y: 5524
+        width: 544
+        height: 595
+      alignment: 9
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
-      tessellationDetail: 0
+      tessellationDetail: -1
       bones: []
       spriteID: 0952896c753d8e7a0800000000000000
       internalID: -6347591300831238768
@@ -310,16 +319,16 @@ TextureImporter:
       name: arisaDance_3
       rect:
         serializedVersion: 2
-        x: 761
-        y: 1850
-        width: 161
-        height: 177
-      alignment: 0
+        x: 2251
+        y: 5518
+        width: 547
+        height: 595
+      alignment: 9
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
-      tessellationDetail: 0
+      tessellationDetail: -1
       bones: []
       spriteID: 781e125502dfaf8a0800000000000000
       internalID: -6270421215850929785
@@ -331,16 +340,16 @@ TextureImporter:
       name: arisaDance_4
       rect:
         serializedVersion: 2
-        x: 999
-        y: 1848
-        width: 161
-        height: 177
-      alignment: 0
+        x: 2965
+        y: 5512
+        width: 547
+        height: 595
+      alignment: 9
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
-      tessellationDetail: 0
+      tessellationDetail: -1
       bones: []
       spriteID: 4046a240c5d51e530800000000000000
       internalID: 3882487003558339588
@@ -352,16 +361,16 @@ TextureImporter:
       name: arisaDance_5
       rect:
         serializedVersion: 2
-        x: 1239
-        y: 1848
-        width: 161
-        height: 177
-      alignment: 0
+        x: 3685
+        y: 5512
+        width: 547
+        height: 595
+      alignment: 9
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
-      tessellationDetail: 0
+      tessellationDetail: -1
       bones: []
       spriteID: ca5a742af27953050800000000000000
       internalID: 5779691927641761196
@@ -373,16 +382,16 @@ TextureImporter:
       name: arisaDance_6
       rect:
         serializedVersion: 2
-        x: 1479
-        y: 1850
-        width: 161
-        height: 176
-      alignment: 0
+        x: 4405
+        y: 5518
+        width: 547
+        height: 592
+      alignment: 9
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
-      tessellationDetail: 0
+      tessellationDetail: -1
       bones: []
       spriteID: 7a33900d8707882e0800000000000000
       internalID: -2123323560116538457
@@ -394,16 +403,16 @@ TextureImporter:
       name: arisaDance_7
       rect:
         serializedVersion: 2
-        x: 1718
-        y: 1850
-        width: 160
-        height: 179
-      alignment: 0
+        x: 5122
+        y: 5518
+        width: 544
+        height: 601
+      alignment: 9
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
-      tessellationDetail: 0
+      tessellationDetail: -1
       bones: []
       spriteID: e87429cb7eee690a0800000000000000
       internalID: -6875045102065924210
@@ -415,16 +424,16 @@ TextureImporter:
       name: arisaDance_8
       rect:
         serializedVersion: 2
-        x: 47
-        y: 1682
-        width: 81
-        height: 105
-      alignment: 0
+        x: 109
+        y: 5014
+        width: 307
+        height: 379
+      alignment: 9
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
-      tessellationDetail: 0
+      tessellationDetail: -1
       bones: []
       spriteID: 98d7527fdf4f409c0800000000000000
       internalID: -3961772400568861303
@@ -436,16 +445,16 @@ TextureImporter:
       name: arisaDance_9
       rect:
         serializedVersion: 2
-        x: 199
-        y: 1681
-        width: 81
-        height: 53
-      alignment: 0
+        x: 565
+        y: 5011
+        width: 307
+        height: 223
+      alignment: 9
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
-      tessellationDetail: 0
+      tessellationDetail: -1
       bones: []
       spriteID: 36ab343342be6d890800000000000000
       internalID: -7433495594216998301
@@ -457,16 +466,16 @@ TextureImporter:
       name: arisaDance_10
       rect:
         serializedVersion: 2
-        x: 356
-        y: 1672
-        width: 65
-        height: 67
-      alignment: 0
+        x: 1036
+        y: 4984
+        width: 259
+        height: 265
+      alignment: 9
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
-      tessellationDetail: 0
+      tessellationDetail: -1
       bones: []
       spriteID: 53db73a084b3e27f0800000000000000
       internalID: -635505316817552075
@@ -478,16 +487,16 @@ TextureImporter:
       name: arisaDance_11
       rect:
         serializedVersion: 2
-        x: 531
-        y: 1681
-        width: 66
-        height: 53
-      alignment: 0
+        x: 1561
+        y: 5011
+        width: 262
+        height: 223
+      alignment: 9
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
-      tessellationDetail: 0
+      tessellationDetail: -1
       bones: []
       spriteID: eb923c79ccb55f540800000000000000
       internalID: 5041036292188744126
@@ -499,16 +508,16 @@ TextureImporter:
       name: arisaDance_12
       rect:
         serializedVersion: 2
-        x: 700
-        y: 1692
-        width: 80
-        height: 50
-      alignment: 0
+        x: 2068
+        y: 5044
+        width: 304
+        height: 214
+      alignment: 9
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
-      tessellationDetail: 0
+      tessellationDetail: -1
       bones: []
       spriteID: 73b568839fe259f70800000000000000
       internalID: 9193305862276799287
@@ -520,16 +529,16 @@ TextureImporter:
       name: arisaDance_13
       rect:
         serializedVersion: 2
-        x: 837
-        y: 1683
-        width: 80
-        height: 53
-      alignment: 0
+        x: 2479
+        y: 5017
+        width: 304
+        height: 223
+      alignment: 9
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
-      tessellationDetail: 0
+      tessellationDetail: -1
       bones: []
       spriteID: 25462fbac5e698720800000000000000
       internalID: 2848929583589385298
@@ -541,16 +550,16 @@ TextureImporter:
       name: arisaDance_14
       rect:
         serializedVersion: 2
-        x: 956
-        y: 1685
-        width: 78
-        height: 53
-      alignment: 0
+        x: 2836
+        y: 5023
+        width: 298
+        height: 223
+      alignment: 9
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
-      tessellationDetail: 0
+      tessellationDetail: -1
       bones: []
       spriteID: b29d63796036a7ea0800000000000000
       internalID: -5874273883993482965
@@ -562,16 +571,16 @@ TextureImporter:
       name: arisaDance_15
       rect:
         serializedVersion: 2
-        x: 1086
-        y: 1683
-        width: 48
-        height: 66
-      alignment: 0
+        x: 3226
+        y: 5017
+        width: 208
+        height: 262
+      alignment: 9
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
-      tessellationDetail: 0
+      tessellationDetail: -1
       bones: []
       spriteID: 5af12a07b38be0080800000000000000
       internalID: -9219228821748572251
@@ -583,16 +592,16 @@ TextureImporter:
       name: arisaDance_16
       rect:
         serializedVersion: 2
-        x: 241
-        y: 1508
-        width: 59
-        height: 45
-      alignment: 0
+        x: 691
+        y: 4492
+        width: 241
+        height: 199
+      alignment: 9
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
-      tessellationDetail: 0
+      tessellationDetail: -1
       bones: []
       spriteID: fdc22bee70fbebcf0800000000000000
       internalID: -234540089786356513
@@ -604,16 +613,16 @@ TextureImporter:
       name: arisaDance_17
       rect:
         serializedVersion: 2
-        x: 369
-        y: 1492
-        width: 67
-        height: 69
-      alignment: 0
+        x: 1075
+        y: 4444
+        width: 265
+        height: 271
+      alignment: 9
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
-      tessellationDetail: 0
+      tessellationDetail: -1
       bones: []
       spriteID: 80e90a7044ee63f80800000000000000
       internalID: -8127046501590327800
@@ -625,16 +634,16 @@ TextureImporter:
       name: arisaDance_18
       rect:
         serializedVersion: 2
-        x: 33
-        y: 1278
-        width: 47
-        height: 137
-      alignment: 0
+        x: 67
+        y: 3802
+        width: 205
+        height: 475
+      alignment: 9
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
-      tessellationDetail: 0
+      tessellationDetail: -1
       bones: []
       spriteID: 5db44c59dc2461550800000000000000
       internalID: 6131161393459907541
@@ -646,16 +655,16 @@ TextureImporter:
       name: arisaDance_19
       rect:
         serializedVersion: 2
-        x: 149
-        y: 1280
-        width: 41
-        height: 135
-      alignment: 0
+        x: 415
+        y: 3808
+        width: 187
+        height: 469
+      alignment: 9
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
-      tessellationDetail: 0
+      tessellationDetail: -1
       bones: []
       spriteID: 61707c35c2a468340800000000000000
       internalID: 4865658001664968470
@@ -667,16 +676,16 @@ TextureImporter:
       name: arisaDance_20
       rect:
         serializedVersion: 2
-        x: 253
-        y: 1280
-        width: 35
-        height: 145
-      alignment: 0
+        x: 727
+        y: 3808
+        width: 169
+        height: 499
+      alignment: 9
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
-      tessellationDetail: 0
+      tessellationDetail: -1
       bones: []
       spriteID: 798034473d7d99b10800000000000000
       internalID: 1988858013649406103
@@ -688,16 +697,16 @@ TextureImporter:
       name: arisaDance_21
       rect:
         serializedVersion: 2
-        x: 349
-        y: 1280
-        width: 75
-        height: 139
-      alignment: 0
+        x: 1015
+        y: 3808
+        width: 289
+        height: 481
+      alignment: 9
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
-      tessellationDetail: 0
+      tessellationDetail: -1
       bones: []
       spriteID: 96a32cb3117e45c50800000000000000
       internalID: 6653196610736110185
@@ -709,16 +718,16 @@ TextureImporter:
       name: arisaDance_22
       rect:
         serializedVersion: 2
-        x: 509
-        y: 1280
-        width: 55
-        height: 137
-      alignment: 0
+        x: 1495
+        y: 3808
+        width: 229
+        height: 475
+      alignment: 9
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
-      tessellationDetail: 0
+      tessellationDetail: -1
       bones: []
       spriteID: 9da7a60b62139dc00800000000000000
       internalID: 925825240639634137
@@ -730,16 +739,16 @@ TextureImporter:
       name: arisaDance_23
       rect:
         serializedVersion: 2
-        x: 647
-        y: 1280
-        width: 63
-        height: 133
-      alignment: 0
+        x: 1909
+        y: 3808
+        width: 253
+        height: 463
+      alignment: 9
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
-      tessellationDetail: 0
+      tessellationDetail: -1
       bones: []
       spriteID: 82b1e6e5d6c3b0cc0800000000000000
       internalID: -3743832224795059416
@@ -751,16 +760,16 @@ TextureImporter:
       name: arisaDance_24
       rect:
         serializedVersion: 2
-        x: 791
-        y: 1280
-        width: 61
-        height: 127
-      alignment: 0
+        x: 2341
+        y: 3808
+        width: 247
+        height: 445
+      alignment: 9
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
-      tessellationDetail: 0
+      tessellationDetail: -1
       bones: []
       spriteID: bb13646841ddc8760800000000000000
       internalID: 7461581762867900859
@@ -772,16 +781,16 @@ TextureImporter:
       name: arisaDance_25
       rect:
         serializedVersion: 2
-        x: 938
-        y: 1278
-        width: 54
-        height: 123
-      alignment: 0
+        x: 2782
+        y: 3802
+        width: 226
+        height: 433
+      alignment: 9
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
-      tessellationDetail: 0
+      tessellationDetail: -1
       bones: []
       spriteID: 38e9e8e6aba665ba0800000000000000
       internalID: -6100571296275456381
@@ -793,16 +802,16 @@ TextureImporter:
       name: arisaDance_26
       rect:
         serializedVersion: 2
-        x: 1087
-        y: 1278
-        width: 47
-        height: 135
-      alignment: 0
+        x: 3229
+        y: 3802
+        width: 205
+        height: 469
+      alignment: 9
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
-      tessellationDetail: 0
+      tessellationDetail: -1
       bones: []
       spriteID: e51c2dc6c22199ca0800000000000000
       internalID: -6009752245735603874
@@ -814,16 +823,16 @@ TextureImporter:
       name: arisaDance_27
       rect:
         serializedVersion: 2
-        x: 1235
-        y: 1278
-        width: 43
-        height: 149
-      alignment: 0
+        x: 3673
+        y: 3802
+        width: 193
+        height: 511
+      alignment: 9
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
-      tessellationDetail: 0
+      tessellationDetail: -1
       bones: []
       spriteID: 940c82be9c86057f0800000000000000
       internalID: -625885131761467319
@@ -835,16 +844,16 @@ TextureImporter:
       name: arisaDance_28
       rect:
         serializedVersion: 2
-        x: 1359
-        y: 1282
-        width: 45
-        height: 111
-      alignment: 0
+        x: 4045
+        y: 3814
+        width: 199
+        height: 397
+      alignment: 9
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
-      tessellationDetail: 0
+      tessellationDetail: -1
       bones: []
       spriteID: e1d5468797ca84320800000000000000
       internalID: 2542471627361508638
@@ -856,16 +865,16 @@ TextureImporter:
       name: arisaDance_29
       rect:
         serializedVersion: 2
-        x: 1469
-        y: 1310
-        width: 49
-        height: 95
-      alignment: 0
+        x: 4375
+        y: 3898
+        width: 211
+        height: 349
+      alignment: 9
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
-      tessellationDetail: 0
+      tessellationDetail: -1
       bones: []
       spriteID: 5b8e682968d3cb4d0800000000000000
       internalID: -3117549193853998923
@@ -877,16 +886,16 @@ TextureImporter:
       name: arisaDance_30
       rect:
         serializedVersion: 2
-        x: 1425
-        y: 1154
-        width: 27
-        height: 63
-      alignment: 0
+        x: 4243
+        y: 3430
+        width: 145
+        height: 253
+      alignment: 9
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
-      tessellationDetail: 0
+      tessellationDetail: -1
       bones: []
       spriteID: 375c587fbf7bca970800000000000000
       internalID: 8767584867400926579
@@ -898,16 +907,16 @@ TextureImporter:
       name: arisaDance_31
       rect:
         serializedVersion: 2
-        x: 1301
-        y: 1152
-        width: 53
-        height: 69
-      alignment: 0
+        x: 3871
+        y: 3424
+        width: 223
+        height: 271
+      alignment: 9
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
-      tessellationDetail: 0
+      tessellationDetail: -1
       bones: []
       spriteID: 1688215b77cf8cfb0800000000000000
       internalID: -4627171026053986207
@@ -919,16 +928,16 @@ TextureImporter:
       name: arisaDance_32
       rect:
         serializedVersion: 2
-        x: 1183
-        y: 1152
-        width: 47
-        height: 67
-      alignment: 0
+        x: 3517
+        y: 3424
+        width: 205
+        height: 265
+      alignment: 9
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
-      tessellationDetail: 0
+      tessellationDetail: -1
       bones: []
       spriteID: 6475cef71dad85200800000000000000
       internalID: 169125579355608902
@@ -940,16 +949,16 @@ TextureImporter:
       name: arisaDance_33
       rect:
         serializedVersion: 2
-        x: 1047
-        y: 1152
-        width: 67
-        height: 61
-      alignment: 0
+        x: 3109
+        y: 3424
+        width: 265
+        height: 247
+      alignment: 9
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
-      tessellationDetail: 0
+      tessellationDetail: -1
       bones: []
       spriteID: 4cde4f4dc981587c0800000000000000
       internalID: -4069819626392588860
@@ -961,16 +970,16 @@ TextureImporter:
       name: arisaDance_34
       rect:
         serializedVersion: 2
-        x: 923
-        y: 1170
-        width: 45
-        height: 45
-      alignment: 0
+        x: 2737
+        y: 3478
+        width: 199
+        height: 199
+      alignment: 9
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
-      tessellationDetail: 0
+      tessellationDetail: -1
       bones: []
       spriteID: 179d2a7810c231e40800000000000000
       internalID: 5625888744598067569
@@ -982,16 +991,16 @@ TextureImporter:
       name: arisaDance_35
       rect:
         serializedVersion: 2
-        x: 703
-        y: 1160
-        width: 161
-        height: 49
-      alignment: 0
+        x: 2077
+        y: 3448
+        width: 547
+        height: 211
+      alignment: 9
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
-      tessellationDetail: 0
+      tessellationDetail: -1
       bones: []
       spriteID: 7ede0ed90560eb130800000000000000
       internalID: 3584309296749407719
@@ -1003,16 +1012,16 @@ TextureImporter:
       name: arisaDance_36
       rect:
         serializedVersion: 2
-        x: 561
-        y: 1166
-        width: 69
-        height: 41
-      alignment: 0
+        x: 1651
+        y: 3466
+        width: 271
+        height: 187
+      alignment: 9
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
-      tessellationDetail: 0
+      tessellationDetail: -1
       bones: []
       spriteID: 35b2e1d8c8f3f06e0800000000000000
       internalID: -1869205447439930541
@@ -1024,16 +1033,16 @@ TextureImporter:
       name: arisaDance_37
       rect:
         serializedVersion: 2
-        x: 435
-        y: 1158
-        width: 57
-        height: 51
-      alignment: 0
+        x: 1273
+        y: 3442
+        width: 235
+        height: 217
+      alignment: 9
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
-      tessellationDetail: 0
+      tessellationDetail: -1
       bones: []
       spriteID: 0550488169829b680800000000000000
       internalID: -8738908976814226096
@@ -1045,16 +1054,16 @@ TextureImporter:
       name: arisaDance_38
       rect:
         serializedVersion: 2
-        x: 291
-        y: 1078
-        width: 73
-        height: 135
-      alignment: 0
+        x: 841
+        y: 3202
+        width: 283
+        height: 469
+      alignment: 9
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
-      tessellationDetail: 0
+      tessellationDetail: -1
       bones: []
       spriteID: cf31b6fc5a8a62e70800000000000000
       internalID: 9090138327996896252
@@ -1066,16 +1075,16 @@ TextureImporter:
       name: arisaDance_39
       rect:
         serializedVersion: 2
-        x: 171
-        y: 1154
-        width: 41
-        height: 59
-      alignment: 0
+        x: 481
+        y: 3430
+        width: 187
+        height: 241
+      alignment: 9
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
-      tessellationDetail: 0
+      tessellationDetail: -1
       bones: []
       spriteID: 529a35096220267f0800000000000000
       internalID: -620931433970292443
@@ -1087,16 +1096,16 @@ TextureImporter:
       name: arisaDance_40
       rect:
         serializedVersion: 2
-        x: 35
-        y: 1160
-        width: 57
-        height: 47
-      alignment: 0
+        x: 73
+        y: 3448
+        width: 235
+        height: 205
+      alignment: 9
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
-      tessellationDetail: 0
+      tessellationDetail: -1
       bones: []
       spriteID: 87395565fe3d2b690800000000000000
       internalID: -7587769397266771080
@@ -1108,16 +1117,16 @@ TextureImporter:
       name: arisaDance_41
       rect:
         serializedVersion: 2
-        x: 33
-        y: 1032
-        width: 61
-        height: 47
-      alignment: 0
+        x: 67
+        y: 3064
+        width: 247
+        height: 205
+      alignment: 9
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
-      tessellationDetail: 0
+      tessellationDetail: -1
       bones: []
       spriteID: dffdf4ea63f479f70800000000000000
       internalID: 9193904260571455485
@@ -1129,16 +1138,16 @@ TextureImporter:
       name: arisaDance_42
       rect:
         serializedVersion: 2
-        x: 291
-        y: 946
-        width: 71
-        height: 61
-      alignment: 0
+        x: 841
+        y: 2806
+        width: 277
+        height: 247
+      alignment: 9
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
-      tessellationDetail: 0
+      tessellationDetail: -1
       bones: []
       spriteID: 355acccf53d154dc0800000000000000
       internalID: -3655483404829547181
@@ -1150,16 +1159,16 @@ TextureImporter:
       name: arisaDance_43
       rect:
         serializedVersion: 2
-        x: 443
-        y: 1016
-        width: 57
-        height: 69
-      alignment: 0
+        x: 1297
+        y: 3016
+        width: 235
+        height: 271
+      alignment: 9
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
-      tessellationDetail: 0
+      tessellationDetail: -1
       bones: []
       spriteID: a96acb98f0294c210800000000000000
       internalID: 1352366383550998170
@@ -1171,16 +1180,16 @@ TextureImporter:
       name: arisaDance_44
       rect:
         serializedVersion: 2
-        x: 585
-        y: 1014
-        width: 59
-        height: 71
-      alignment: 0
+        x: 1723
+        y: 3010
+        width: 241
+        height: 277
+      alignment: 9
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
-      tessellationDetail: 0
+      tessellationDetail: -1
       bones: []
       spriteID: ef5152f2c850a57f0800000000000000
       internalID: -623179498792872450
@@ -1192,16 +1201,16 @@ TextureImporter:
       name: arisaDance_45
       rect:
         serializedVersion: 2
-        x: 725
-        y: 1012
-        width: 69
-        height: 69
-      alignment: 0
+        x: 2143
+        y: 3004
+        width: 271
+        height: 271
+      alignment: 9
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
-      tessellationDetail: 0
+      tessellationDetail: -1
       bones: []
       spriteID: 142b798b16c8787f0800000000000000
       internalID: -610364873148747199
@@ -1213,16 +1222,16 @@ TextureImporter:
       name: arisaDance_46
       rect:
         serializedVersion: 2
-        x: 871
-        y: 1016
-        width: 63
-        height: 63
-      alignment: 0
+        x: 2581
+        y: 3016
+        width: 253
+        height: 253
+      alignment: 9
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
-      tessellationDetail: 0
+      tessellationDetail: -1
       bones: []
       spriteID: da55ea89ae12d1f20800000000000000
       internalID: 3394906985574847917
@@ -1234,16 +1243,16 @@ TextureImporter:
       name: arisaDance_47
       rect:
         serializedVersion: 2
-        x: 1021
-        y: 1018
-        width: 53
-        height: 59
-      alignment: 0
+        x: 3031
+        y: 3022
+        width: 223
+        height: 241
+      alignment: 9
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
-      tessellationDetail: 0
+      tessellationDetail: -1
       bones: []
       spriteID: 454b7bdb7880e3310800000000000000
       internalID: 1386555114373231700
@@ -1255,16 +1264,16 @@ TextureImporter:
       name: arisaDance_48
       rect:
         serializedVersion: 2
-        x: 1167
-        y: 1024
-        width: 51
-        height: 53
-      alignment: 0
+        x: 3469
+        y: 3040
+        width: 217
+        height: 223
+      alignment: 9
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
-      tessellationDetail: 0
+      tessellationDetail: -1
       bones: []
       spriteID: c723f66b77e22bff0800000000000000
       internalID: -21903956486704516
@@ -1276,16 +1285,16 @@ TextureImporter:
       name: arisaDance_49
       rect:
         serializedVersion: 2
-        x: 33
-        y: 918
-        width: 63
-        height: 29
-      alignment: 0
+        x: 67
+        y: 2722
+        width: 253
+        height: 151
+      alignment: 9
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
-      tessellationDetail: 0
+      tessellationDetail: -1
       bones: []
       spriteID: f261ce52ba4c13150800000000000000
       internalID: 5850673630285665839
@@ -1297,19 +1306,82 @@ TextureImporter:
       name: arisaDance_50
       rect:
         serializedVersion: 2
-        x: 35
-        y: 500
-        width: 169
-        height: 217
+        x: 73
+        y: 1468
+        width: 571
+        height: 715
       alignment: 9
-      pivot: {x: 0.24, y: 0.64}
+      pivot: {x: 0.26914185, y: 0.6274685}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
-      tessellationDetail: 0
+      tessellationDetail: -1
       bones: []
       spriteID: ceb81693a31c1a890800000000000000
       internalID: -7448459852879131668
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: icon
+      rect:
+        serializedVersion: 2
+        x: 238
+        y: 99
+        width: 805
+        height: 785
+      alignment: 9
+      pivot: {x: 0.039751552, y: 0.04076433}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 9721f608083f80d50800000000000000
+      internalID: 6703875778577109625
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: arisaDance_52
+      rect:
+        serializedVersion: 2
+        x: 3726
+        y: 4884
+        width: 541
+        height: 588
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 5f714732ffe541f00800000000000000
+      internalID: 1086597860007614453
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: arisaDance_53
+      rect:
+        serializedVersion: 2
+        x: 4446
+        y: 4898
+        width: 541
+        height: 586
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 96006f25e349e8be0800000000000000
+      internalID: -1473077032702836631
       vertices: []
       indices: 
       edges: []

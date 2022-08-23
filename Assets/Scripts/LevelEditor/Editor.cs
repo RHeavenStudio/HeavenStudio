@@ -70,6 +70,8 @@ namespace HeavenStudio.Editor
         public bool editingInputField = false;
         public bool isCursorEnabled = true;
 
+        private byte[] MusicBytes;
+
         public static Editor instance { get; private set; }
 
         private void Start()
@@ -158,7 +160,7 @@ namespace HeavenStudio.Editor
                 {
                     if (Input.GetKeyDown(KeyCode.N))
                     {
-                        LoadRemix("");
+                        NewRemix();
                     }
                     else if (Input.GetKeyDown(KeyCode.O))
                     {
@@ -294,6 +296,22 @@ namespace HeavenStudio.Editor
                 }
             }
 
+            try
+            {
+                if (clip != null)
+                    MusicBytes = OggVorbis.VorbisPlugin.GetOggVorbis(Conductor.instance.musicSource.clip, 1);
+                else
+                {
+                    MusicBytes = null;
+                    Debug.LogWarning("Failed to load music file! The stream is currently empty.");
+                }
+            }
+            catch (System.Exception)
+            {
+                MusicBytes = null;
+                Debug.LogWarning("Failed to load music file! The stream is currently empty.");
+            }
+
             return clip;
         }
 
@@ -343,20 +361,23 @@ namespace HeavenStudio.Editor
                     using (var zipStream = levelFile.Open())
                         zipStream.Write(Encoding.UTF8.GetBytes(GetJson()), 0, Encoding.UTF8.GetBytes(GetJson()).Length);
 
-                    if (changedMusic || currentRemixPath != path)
+                    if (MusicBytes != null)
                     {
-                        // this gets rid of the music file for some reason, someone remind me to find a fix for this soon
+                        var musicFile = archive.CreateEntry("song.ogg", System.IO.Compression.CompressionLevel.NoCompression);
+                        using (var zipStream = musicFile.Open())
+                            zipStream.Write(MusicBytes, 0, MusicBytes.Length);
                     }
-
-                    byte[] bytes = OggVorbis.VorbisPlugin.GetOggVorbis(Conductor.instance.musicSource.clip, 1);
-                    var musicFile = archive.CreateEntry("song.ogg", System.IO.Compression.CompressionLevel.NoCompression);
-                    using (var zipStream = musicFile.Open())
-                        zipStream.Write(bytes, 0, bytes.Length);
                 }
 
                 currentRemixPath = path;
                 UpdateEditorStatus(false);
             }
+        }
+
+        public void NewRemix()
+        {
+            MusicBytes = null;
+            LoadRemix("");
         }
 
         public void LoadRemix(string json = "")
@@ -367,6 +388,8 @@ namespace HeavenStudio.Editor
             Timeline.instance.VolumeInfo.UpdateStartingVolumeText();
             Timeline.instance.TempoInfo.UpdateOffsetText();
             Timeline.FitToSong();
+
+            currentRemixPath = string.Empty;
         }
 
         public void OpenRemix()
@@ -380,58 +403,45 @@ namespace HeavenStudio.Editor
             {
                 var path = Path.Combine(paths);
 
-                if (path != String.Empty)
-                {
-                    loadedMusic = false;
+                if (path == string.Empty) return;
+                loadedMusic = false;
 
-                    using (FileStream zipFile = File.Open(path, FileMode.Open))
+                using var zipFile = File.Open(path, FileMode.Open);
+                using var archive = new ZipArchive(zipFile, ZipArchiveMode.Read);
+
+                foreach (var entry in archive.Entries)
+                    switch (entry.Name)
                     {
-                        using (var archive = new ZipArchive(zipFile, ZipArchiveMode.Read))
+                        case "remix.json":
                         {
-                            foreach (ZipArchiveEntry entry in archive.Entries)
-                            {
-                                if (entry.Name == "remix.json")
-                                {
-                                    using (var stream = entry.Open())
-                                    {
-                                        byte[] bytes;
-                                        using (var ms = new MemoryStream())
-                                        {
-                                            stream.CopyTo(ms);
-                                            bytes = ms.ToArray();
-                                            string json = Encoding.UTF8.GetString(bytes);
-                                            LoadRemix(json);
-                                        }
-                                    }
-                                }
-                                else if (entry.Name == "song.ogg")
-                                {
-                                    using (var stream = entry.Open())
-                                    {
-                                        byte[] bytes;
-                                        using (var ms = new MemoryStream())
-                                        {
-                                            stream.CopyTo(ms);
-                                            bytes = ms.ToArray();
-                                            Conductor.instance.musicSource.clip = OggVorbis.VorbisPlugin.ToAudioClip(bytes, "music");
-                                            loadedMusic = true;
-                                            Timeline.FitToSong();
-                                        }
-                                    }
-                                }
-                            }
+                            using var stream = entry.Open();
+                            using var reader = new StreamReader(stream);
+                            LoadRemix(reader.ReadToEnd());
+
+                            break;
+                        }
+                        case "song.ogg":
+                        {
+                            using var stream = entry.Open();
+                            using var memoryStream = new MemoryStream();
+                            stream.CopyTo(memoryStream);
+                            MusicBytes = memoryStream.ToArray();
+                            Conductor.instance.musicSource.clip = OggVorbis.VorbisPlugin.ToAudioClip(MusicBytes, "music");
+                            loadedMusic = true;
+                            Timeline.FitToSong();
+
+                            break;
                         }
                     }
 
-                    if (!loadedMusic)
-                        Conductor.instance.musicSource.clip = null;
+                if (!loadedMusic)
+                    Conductor.instance.musicSource.clip = null;
 
-                    currentRemixPath = path;
-                    remixName = Path.GetFileName(path);
-                    UpdateEditorStatus(false);
-                    CommandManager.instance.Clear();
-                    Timeline.FitToSong();
-                }
+                currentRemixPath = path;
+                remixName = Path.GetFileName(path);
+                UpdateEditorStatus(false);
+                CommandManager.instance.Clear();
+                Timeline.FitToSong();
             });
         }
 
@@ -473,7 +483,7 @@ namespace HeavenStudio.Editor
         private void UpdateEditorStatus(bool updateTime)
         {
             if (discordDuringTesting || !Application.isEditor)
-            DiscordRPC.DiscordRPC.UpdateActivity("In Editor", $"{remixName}", updateTime);
+                DiscordRPC.DiscordRPC.UpdateActivity("In Editor", $"{remixName}", updateTime);
         }
 
         public string GetJson()

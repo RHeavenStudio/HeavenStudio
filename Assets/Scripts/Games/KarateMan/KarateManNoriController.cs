@@ -117,6 +117,7 @@ namespace HeavenStudio.Games.Scripts_KarateMan
         public void DoHit()
         {
             if (noriMode == (int) KarateMan.NoriMode.None) return;
+            if (MaxNori <= 0) return;
             float oldNori = Nori;
             if (noriMode == (int) KarateMan.NoriMode.Tengoku)
             {
@@ -135,7 +136,7 @@ namespace HeavenStudio.Games.Scripts_KarateMan
                         NoriHeartAnimators[i].Play("NoriFull", -1, (Time.time * PeriodHigh) % 1f);
                 }
             }
-            if (KarateMan.instance.NoriPerformance >= 0.6 && oldNori / MaxNori < 0.6)
+            if (KarateMan.instance.NoriPerformance >= 0.6f && oldNori / MaxNori < 0.6f)
             {
                 Jukebox.PlayOneShotGame("karateman/nori_just");
             }
@@ -145,6 +146,7 @@ namespace HeavenStudio.Games.Scripts_KarateMan
         public void DoNG()
         {
             if (noriMode == (int) KarateMan.NoriMode.None) return;
+            if (MaxNori <= 0) return;
             float oldNori = Nori;
             if (noriMode == (int) KarateMan.NoriMode.Tengoku)
             {
@@ -172,7 +174,7 @@ namespace HeavenStudio.Games.Scripts_KarateMan
                     }
                 }
             }
-            if (KarateMan.instance.NoriPerformance < 0.6 && oldNori / MaxNori >= 0.6)
+            if (KarateMan.instance.NoriPerformance < 0.6f && oldNori / MaxNori >= 0.6f)
             {
                 Jukebox.PlayOneShotGame("karateman/nori_ng");
             }
@@ -182,6 +184,7 @@ namespace HeavenStudio.Games.Scripts_KarateMan
         public void DoThrough()
         {
             if (noriMode == (int) KarateMan.NoriMode.None) return;
+            if (MaxNori <= 0) return;
             if (noriMode == (int) KarateMan.NoriMode.Tengoku)
             {
                 if (Nori >= MaxNori)
@@ -219,6 +222,7 @@ namespace HeavenStudio.Games.Scripts_KarateMan
         {
             var cond = Conductor.instance;
             if (noriMode == (int) KarateMan.NoriMode.None) return;
+            if (MaxNori <= 0) return;
             float flashPeriod;
             for (int i = 0; i < NoriHeartMaterials.Length; i++)
             {

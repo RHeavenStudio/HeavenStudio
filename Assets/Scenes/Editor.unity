@@ -7634,8 +7634,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 602.5, y: -3164.16}
-  m_SizeDelta: {x: 1165, y: 64}
+  m_AnchoredPosition: {x: 602.5, y: -3382.16}
+  m_SizeDelta: {x: 1165, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &344042805
 CanvasRenderer:
@@ -19238,8 +19238,8 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 1589389272}
   m_HandleRect: {fileID: 1589389271}
   m_Direction: 2
-  m_Value: 1
-  m_Size: 0.9972352
+  m_Value: 0
+  m_Size: 1
   m_NumberOfSteps: 0
   m_OnValueChanged:
     m_PersistentCalls:
@@ -24820,7 +24820,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0.5}
   m_AnchorMax: {x: 1, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: 129.91093}
+  m_AnchoredPosition: {x: 0, y: 129.9111}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 1}
 --- !u!114 &1154875944
@@ -28006,7 +28006,7 @@ RectTransform:
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
   m_AnchoredPosition: {x: 0, y: 0.000026703}
-  m_SizeDelta: {x: 64, y: 64}
+  m_SizeDelta: {x: 100, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1294339011
 MonoBehaviour:
@@ -35580,9 +35580,9 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 1423699437}
-        m_TargetAssemblyTypeName: RhythmHeavenMania.Editor.Editor, Assembly-CSharp
-        m_MethodName: LoadRemix
-        m_Mode: 5
+        m_TargetAssemblyTypeName: HeavenStudio.Editor.Editor, Assembly-CSharp
+        m_MethodName: NewRemix
+        m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
@@ -40746,7 +40746,7 @@ RectTransform:
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
   m_AnchoredPosition: {x: 0, y: 0.000026703}
-  m_SizeDelta: {x: 64, y: 64}
+  m_SizeDelta: {x: 100, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1973314442
 MonoBehaviour:
@@ -40768,7 +40768,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 3882487003558339588, guid: 62713d17eb1e1404bbafeb45c8b4b5b8, type: 3}
+  m_Sprite: {fileID: 6703875778577109625, guid: 62713d17eb1e1404bbafeb45c8b4b5b8, type: 3}
   m_Type: 0
   m_PreserveAspect: 1
   m_FillCenter: 1

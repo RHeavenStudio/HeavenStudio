@@ -41,7 +41,8 @@ namespace HeavenStudio.Games
         public enum ObjectType {
             Melon,
             Fish,
-            Demon
+            Demon,
+            Melon2B2T,
         }
 
         [Header("References")]

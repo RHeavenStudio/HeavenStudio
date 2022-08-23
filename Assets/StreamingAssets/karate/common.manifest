@@ -1,12 +1,12 @@
 ManifestFileVersion: 0
-CRC: 3318721259
+CRC: 1091441775
 Hashes:
   AssetFileHash:
     serializedVersion: 2
-    Hash: 4cfac5e8dc99494dc00682c7557b48a9
+    Hash: f85b652eadac4ff300c579adfa67313b
   TypeTreeHash:
     serializedVersion: 2
-    Hash: b85016ff9dcfb2997245f008dd1f64b6
+    Hash: 2b92e6f111bbb24dabe3a2c56ea02b28
 HashAppended: 0
 ClassTypes:
 - Class: 1
@@ -30,9 +30,9 @@ ClassTypes:
 - Class: 95
   Script: {instanceID: 0}
 - Class: 114
-  Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
-- Class: 114
   Script: {fileID: 11500000, guid: 30649d3a9faa99c48a7b1166b86bf2a0, type: 3}
+- Class: 114
+  Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
 - Class: 114
   Script: {fileID: 11500000, guid: 3f1678e3fe1b7c94f9a1558cfd247853, type: 3}
 - Class: 114
@@ -91,11 +91,13 @@ Assets:
 - Assets/Resources/Sprites/Games/KarateMan/anime/item/Item03.anim
 - Assets/Resources/Sprites/Games/KarateMan/effect/barrelWoodRecolorable.png
 - Assets/Resources/Sprites/Games/KarateMan/anime/item/Item09.anim
+- Assets/Resources/Sfx/games/karateman/gogoSwitch.ogg
 - Assets/Resources/Sfx/games/karateman/nori_ng.wav
 - Assets/Resources/Sprites/Games/KarateMan/effect/potStar.png
 - Assets/Resources/Sprites/Games/KarateMan/effect/kickFragment.png
 - Assets/Resources/Sfx/games/karateman/swingKick.wav
 - Assets/Resources/Sprites/Games/KarateMan/effect/barrelWood.png
+- Assets/Resources/Sfx/games/karateman/gogo.ogg
 - Assets/Resources/Sfx/games/karateman/offbeatLightbulbOut.wav
 - Assets/Resources/Sprites/Games/KarateMan/karate_bg_sunburst_1.png
 - Assets/Resources/Sprites/Games/KarateMan/anime/karateman/JabNoNuri.anim
@@ -134,6 +136,7 @@ Assets:
 - Assets/Resources/Sprites/Games/KarateMan/anime/word/Word04.anim
 - Assets/Resources/Sprites/Games/KarateMan/karate_bg_sunburst_2.png
 - Assets/Resources/Sprites/Games/KarateMan/karateman_nonurijab.mat
+- Assets/Resources/Sfx/games/karateman/rockHit_fullNori.wav
 - Assets/Resources/Sfx/games/karateman/lightbulbOut.ogg
 - Assets/Resources/Sprites/Games/KarateMan/anime/word/Word06.anim
 - Assets/Resources/Sprites/Games/KarateMan/anime/item/Item08.anim
@@ -166,6 +169,7 @@ Assets:
 - Assets/Resources/Sprites/Games/KarateMan/effect/karateman_bulbhit_fx_1.png
 - Assets/Resources/Sprites/Games/KarateMan/karateman_norimapping.mat
 - Assets/Resources/Sprites/Games/KarateMan/anime/karateman/UpperCut.anim
+- Assets/Resources/Sfx/games/karateman/potHit_lowNori.wav
 - Assets/Resources/Sprites/Games/KarateMan/anime/item/HitMark.controller
 - Assets/Resources/Sfx/games/karateman/lightbulbHit.ogg
 - Assets/Resources/Sprites/Games/KarateMan/effect/krt_pot.mat

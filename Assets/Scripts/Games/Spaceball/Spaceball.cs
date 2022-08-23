@@ -12,9 +12,15 @@ namespace HeavenStudio.Games.Loaders
         public static Minigame AddGame(EventCaller eventCaller) {
             return new Minigame("spaceball", "Spaceball", "00A518", false, false, new List<GameAction>()
             {
-                new GameAction("shoot",                 delegate { Spaceball.instance.Shoot(eventCaller.currentEntity.beat, false, eventCaller.currentEntity.type); }, 2, false),
-                new GameAction("shootHigh",             delegate { Spaceball.instance.Shoot(eventCaller.currentEntity.beat, true, eventCaller.currentEntity.type); }, 3),
-                new GameAction("costume",               delegate { Spaceball.instance.Costume(eventCaller.currentEntity.type); }, 1f, false, new List<Param>() 
+                new GameAction("shoot",                 delegate { Spaceball.instance.Shoot(eventCaller.currentEntity.beat, false, eventCaller.currentEntity.type); }, 2, false, new List<Param>()
+                {
+                    new Param("type", Spaceball.BallType.Baseball, "Type", "The type of ball/object to shoot") 
+                } ),
+				new GameAction("shootHigh",             delegate { Spaceball.instance.Shoot(eventCaller.currentEntity.beat, true, eventCaller.currentEntity.type); }, 3, false, new List<Param>()
+                {
+                    new Param("type", Spaceball.BallType.Baseball, "Type", "The type of ball/object to shoot") 
+                } ),
+				new GameAction("costume",               delegate { Spaceball.instance.Costume(eventCaller.currentEntity.type); }, 1f, false, new List<Param>() 
                 {
                     new Param("type", Spaceball.CostumeType.Standard, "Type", "The costume to change to") 
                 } ),
@@ -36,6 +42,11 @@ namespace HeavenStudio.Games
 
     public class Spaceball : Minigame
     {
+		public enum BallType {
+            Baseball,
+            Onigiri
+        }
+		
         public enum CostumeType {
             Standard,
             Bunny,

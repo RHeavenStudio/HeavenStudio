@@ -9,7 +9,7 @@ namespace HeavenStudio.Games.Scripts_SpaceSoccer
     public class Kicker : PlayerActionObject
     {
         [Header("Properties")]
-        public bool canKick;
+        public bool canKick = true; //why was this false by default???
         public bool canHighKick;
         private bool kickPrepare = false;
         public bool kickLeft;
@@ -168,21 +168,22 @@ namespace HeavenStudio.Games.Scripts_SpaceSoccer
                 kickLeft = true;
             }
 
-            List<Beatmap.Entity> keepUps = GameManager.instance.Beatmap.entities.FindAll(c => c.datamodel == "spaceSoccer/keep-up");
+            // List<Beatmap.Entity> keepUps = GameManager.instance.Beatmap.entities.FindAll(c => c.datamodel == "spaceSoccer/keep-up");
+            // for (int i = 0; i < keepUps.Count; i++)
+            // {
+            //     if ((keepUps[i].beat - 0.15f) <= Conductor.instance.songPositionInBeats && (keepUps[i].beat + keepUps[i].length) - 0.15f > Conductor.instance.songPositionInBeats)
+            //     {
+            //         canKick = true;
+            //         canHighKick = false;
+            //         break;
+            //     }
+            //     else
+            //     {
+            //         canKick = false;
+            //     }
+            // }
+
             List<Beatmap.Entity> highKicks = GameManager.instance.Beatmap.entities.FindAll(c => c.datamodel == "spaceSoccer/high kick-toe!");
-            for (int i = 0; i < keepUps.Count; i++)
-            {
-                if ((keepUps[i].beat - 0.15f) <= Conductor.instance.songPositionInBeats && (keepUps[i].beat + keepUps[i].length) - 0.15f > Conductor.instance.songPositionInBeats)
-                {
-                    canKick = true;
-                    canHighKick = false;
-                    break;
-                }
-                else
-                {
-                    canKick = false;
-                }
-            }
             for (int i = 0; i < highKicks.Count; i++)
             {
                 if ((highKicks[i].beat - 0.15f) <= Conductor.instance.songPositionInBeats && highKicks[i].beat + 1f > Conductor.instance.songPositionInBeats)
@@ -200,6 +201,7 @@ namespace HeavenStudio.Games.Scripts_SpaceSoccer
                 }
                 else
                 {
+                    canKick = true;
                     canHighKick = false;
                 }
             }
