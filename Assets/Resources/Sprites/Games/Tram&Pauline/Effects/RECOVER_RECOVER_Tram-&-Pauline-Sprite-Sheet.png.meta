@@ -4,31 +4,31 @@ TextureImporter:
   internalIDToNameTable:
   - first:
       213: -8612167718959245741
-    second: RECOVER_RECOVER_Tram-&-Pauline-Sprite-Sheet_0
+    second: Spike
   - first:
       213: 7390356721182759612
-    second: RECOVER_RECOVER_Tram-&-Pauline-Sprite-Sheet_1
+    second: Star
   - first:
       213: 4585644463669789579
-    second: RECOVER_RECOVER_Tram-&-Pauline-Sprite-Sheet_2
+    second: Mini
   - first:
       213: -2656649667344404000
-    second: RECOVER_RECOVER_Tram-&-Pauline-Sprite-Sheet_3
+    second: Club
   - first:
       213: 3694782256493479798
-    second: RECOVER_RECOVER_Tram-&-Pauline-Sprite-Sheet_4
+    second: Circle
   - first:
       213: -490691205786905204
-    second: RECOVER_RECOVER_Tram-&-Pauline-Sprite-Sheet_5
+    second: Bump
   - first:
       213: 982170280257405871
-    second: RECOVER_RECOVER_Tram-&-Pauline-Sprite-Sheet_6
+    second: Side
   - first:
       213: -1103487863999260978
-    second: RECOVER_RECOVER_Tram-&-Pauline-Sprite-Sheet_7
+    second: Puff
   - first:
       213: 5008395906669588822
-    second: RECOVER_RECOVER_Tram-&-Pauline-Sprite-Sheet_8
+    second: Dot
   externalObjects: {}
   serializedVersion: 11
   mipmaps:
@@ -190,7 +190,7 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: RECOVER_RECOVER_Tram-&-Pauline-Sprite-Sheet_0
+      name: Spike
       rect:
         serializedVersion: 2
         x: 1089
@@ -198,7 +198,7 @@ TextureImporter:
         width: 62
         height: 28
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
@@ -211,7 +211,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: RECOVER_RECOVER_Tram-&-Pauline-Sprite-Sheet_1
+      name: Star
       rect:
         serializedVersion: 2
         x: 1167
@@ -219,7 +219,7 @@ TextureImporter:
         width: 20
         height: 20
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
@@ -232,7 +232,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: RECOVER_RECOVER_Tram-&-Pauline-Sprite-Sheet_2
+      name: Mini
       rect:
         serializedVersion: 2
         x: 1213
@@ -240,7 +240,7 @@ TextureImporter:
         width: 14
         height: 13
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
@@ -253,15 +253,15 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: RECOVER_RECOVER_Tram-&-Pauline-Sprite-Sheet_3
+      name: Club
       rect:
         serializedVersion: 2
         x: 1248
-        y: 181
+        y: 180
         width: 30
         height: 31
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
@@ -274,7 +274,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: RECOVER_RECOVER_Tram-&-Pauline-Sprite-Sheet_4
+      name: Circle
       rect:
         serializedVersion: 2
         x: 1249
@@ -282,7 +282,7 @@ TextureImporter:
         width: 28
         height: 31
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
@@ -295,7 +295,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: RECOVER_RECOVER_Tram-&-Pauline-Sprite-Sheet_5
+      name: Bump
       rect:
         serializedVersion: 2
         x: 1208
@@ -303,7 +303,7 @@ TextureImporter:
         width: 22
         height: 20
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
@@ -316,7 +316,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: RECOVER_RECOVER_Tram-&-Pauline-Sprite-Sheet_6
+      name: Side
       rect:
         serializedVersion: 2
         x: 1166
@@ -324,7 +324,7 @@ TextureImporter:
         width: 23
         height: 19
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
@@ -337,7 +337,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: RECOVER_RECOVER_Tram-&-Pauline-Sprite-Sheet_7
+      name: Puff
       rect:
         serializedVersion: 2
         x: 1123
@@ -345,7 +345,7 @@ TextureImporter:
         width: 19
         height: 20
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
@@ -358,7 +358,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: RECOVER_RECOVER_Tram-&-Pauline-Sprite-Sheet_8
+      name: Dot
       rect:
         serializedVersion: 2
         x: 1083
@@ -366,7 +366,7 @@ TextureImporter:
         width: 16
         height: 13
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
