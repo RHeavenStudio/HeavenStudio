@@ -273,7 +273,7 @@ namespace HeavenStudio.Editor.Track
             SliderControl();
 
             #region Keyboard Shortcuts
-            if (!userIsEditingInputField)
+            if ((!userIsEditingInputField) && Editor.instance.isShortcutsEnabled)
             {
                 
                 if (Input.GetKeyDown(KeyCode.Space))
@@ -503,11 +503,13 @@ namespace HeavenStudio.Editor.Track
 
         #region Functions
 
-        public TimelineEventObj AddEventObject(string eventName, bool dragNDrop = false, Vector3 pos = new Vector3(), Beatmap.Entity entity = null, bool addEvent = false, string eventId = "")
+        public TimelineEventObj AddEventObject(string eventName, bool dragNDrop = false, Vector3 pos = new Vector3(), DynamicBeatmap.DynamicEntity entity = null, bool addEvent = false, string eventId = "")
         {
+            var game = EventCaller.instance.GetMinigame(eventName.Split(0));
+            var action = EventCaller.instance.GetGameAction(game, eventName.Split(1));
             GameObject g = Instantiate(TimelineEventObjRef.gameObject, TimelineEventObjRef.parent);
             g.transform.localPosition = pos;
-            g.transform.GetChild(3).GetComponent<TMP_Text>().text = eventName.Split('/')[1];
+            g.transform.GetChild(3).GetComponent<TMP_Text>().text = action.displayName;
 
             TimelineEventObj eventObj = g.GetComponent<TimelineEventObj>();
 
@@ -559,11 +561,11 @@ namespace HeavenStudio.Editor.Track
 
             if (addEvent)
             {
-                Beatmap.Entity tempEntity = entity;
+                DynamicBeatmap.DynamicEntity tempEntity = entity;
 
                 if (entity == null)
                 {
-                    Beatmap.Entity en = new Beatmap.Entity();
+                    DynamicBeatmap.DynamicEntity en = new DynamicBeatmap.DynamicEntity();
                     en.datamodel = eventName;
                     en.eventObj = eventObj;
 
@@ -572,9 +574,8 @@ namespace HeavenStudio.Editor.Track
 
                     tempEntity = en;
 
-                    // default param value
-                    var game = EventCaller.instance.GetMinigame(eventName.Split(0));
-                    var ep = EventCaller.instance.GetGameAction(game, eventName.Split(1)).parameters;
+                    // default param values
+                    var ep = action.parameters;
 
                     if (ep != null)
                     {
@@ -591,8 +592,13 @@ namespace HeavenStudio.Editor.Track
                             {
                                 returnVal = ((EntityTypes.Float)ep[i].parameter).val;
                             }
+                            else if (propertyType.IsEnum)
+                            {
+                                returnVal = (int) ep[i].parameter;
+                            }
 
-                            tempEntity[ep[i].propertyName] = returnVal;
+                            //tempEntity[ep[i].propertyName] = returnVal;
+                            tempEntity.CreateProperty(ep[i].propertyName, returnVal);
                         }
                     }
                 }
@@ -613,7 +619,7 @@ namespace HeavenStudio.Editor.Track
         private List<TimelineEventObj> duplicatedEventObjs = new List<TimelineEventObj>();
         public TimelineEventObj CopyEventObject(TimelineEventObj e)
         {
-            Beatmap.Entity clone = e.entity.DeepCopy();
+            DynamicBeatmap.DynamicEntity clone = e.entity.DeepCopy();
             TimelineEventObj dup = AddEventObject(clone.datamodel, false, new Vector3(clone.beat, -clone.track * Timeline.instance.LayerHeight()), clone, true, RandomID());
             duplicatedEventObjs.Add(dup);
 
@@ -626,7 +632,7 @@ namespace HeavenStudio.Editor.Track
             duplicatedEventObjs = new List<TimelineEventObj>();
         }
 
-        public void DestroyEventObject(Beatmap.Entity entity)
+        public void DestroyEventObject(DynamicBeatmap.DynamicEntity entity)
         {
             if (EventParameterManager.instance.entity == entity)
                 EventParameterManager.instance.Disable();

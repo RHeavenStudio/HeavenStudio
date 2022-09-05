@@ -37,6 +37,7 @@ namespace HeavenStudio.Games.Scripts_KarateMan
         static float PeriodHigh = 15 / 60f;
 
         int noriMode = (int)KarateMan.NoriMode.None;
+        bool playedJust = false;
 
         int inputsToSwitch = 0;
         //takes 12% of inputs to fill the nori bar
@@ -69,6 +70,7 @@ namespace HeavenStudio.Games.Scripts_KarateMan
                     NoriHolder = NoriHolderTengoku;
                     NoriManiaInk00.SetActive(false);
                     NoriManiaInk01.SetActive(false);
+                    playedJust = false;
                     break;
                 case (int) KarateMan.NoriMode.Mania:
                     MaxNori = 10;
@@ -77,6 +79,7 @@ namespace HeavenStudio.Games.Scripts_KarateMan
                     NoriHolder = NoriHolderMania00;
                     NoriManiaInk00.SetActive(true);
                     NoriManiaInk01.SetActive(false);
+                    playedJust = false;
 
                     inputsToSwitch = KarateMan.CountHitsToEnd(fromBeat);
                     break;
@@ -85,6 +88,7 @@ namespace HeavenStudio.Games.Scripts_KarateMan
                     Nori = 0;
                     NoriManiaInk00.SetActive(false);
                     NoriManiaInk01.SetActive(false);
+                    playedJust = false;
                     return;
             }
 
@@ -136,8 +140,9 @@ namespace HeavenStudio.Games.Scripts_KarateMan
                         NoriHeartAnimators[i].Play("NoriFull", -1, (Time.time * PeriodHigh) % 1f);
                 }
             }
-            if (KarateMan.instance.NoriPerformance >= 0.6f && oldNori / MaxNori < 0.6f)
+            if (KarateMan.instance.NoriPerformance >= 0.6f && oldNori / MaxNori < 0.6f && !playedJust)
             {
+                playedJust = true;
                 Jukebox.PlayOneShotGame("karateman/nori_just");
             }
             UpdateHeartColours();
@@ -176,6 +181,7 @@ namespace HeavenStudio.Games.Scripts_KarateMan
             }
             if (KarateMan.instance.NoriPerformance < 0.6f && oldNori / MaxNori >= 0.6f)
             {
+                playedJust = false;
                 Jukebox.PlayOneShotGame("karateman/nori_ng");
             }
             UpdateHeartColours();
@@ -189,6 +195,7 @@ namespace HeavenStudio.Games.Scripts_KarateMan
             {
                 if (Nori >= MaxNori)
                     Jukebox.PlayOneShotGame("karateman/nori_through");
+                playedJust = false;
                 Nori = 0;
                 foreach (Animator anim in NoriHeartAnimators)
                 {
@@ -215,6 +222,8 @@ namespace HeavenStudio.Games.Scripts_KarateMan
                     }
                 }
             }
+            if (KarateMan.instance.NoriPerformance < 0.6f)
+                playedJust = false;
             UpdateHeartColours();
         }
 

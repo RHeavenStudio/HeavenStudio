@@ -13,8 +13,8 @@ namespace HeavenStudio
     public class GameManager : MonoBehaviour
     {
         [Header("Lists")]
-        public Beatmap Beatmap = new Beatmap();
-        [HideInInspector] public List<Beatmap.Entity> playerEntities = new List<Beatmap.Entity>();
+        public DynamicBeatmap Beatmap = new DynamicBeatmap();
+        [HideInInspector] public List<DynamicBeatmap.DynamicEntity> playerEntities = new List<DynamicBeatmap.DynamicEntity>();
         private List<GameObject> preloadedGames = new List<GameObject>();
         public List<GameObject> SoundObjects = new List<GameObject>();
 
@@ -75,7 +75,7 @@ namespace HeavenStudio
             if (txt != null)
             {
                 string json = txt.text;
-                Beatmap = JsonConvert.DeserializeObject<Beatmap>(json);
+                Beatmap = JsonConvert.DeserializeObject<DynamicBeatmap>(json);
             }
             else
             {
@@ -116,25 +116,39 @@ namespace HeavenStudio
 
         public void NewRemix()
         {
-            Beatmap = new Beatmap();
+            Beatmap = new DynamicBeatmap();
             Beatmap.bpm = 120f;
             Beatmap.musicVolume = 100;
             Beatmap.firstBeatOffset = 0f;
             Conductor.instance.musicSource.clip = null;
         }
 
-        public void LoadRemix(string json = "")
+        public void LoadRemix(string json = "", string type = "riq", int version = 0)
         {
-            SortEventsList();
 
             if (json != "")
             {
-                Beatmap = JsonConvert.DeserializeObject<Beatmap>(json);
+                switch (type)
+                {
+                    case "tengoku":
+                    case "rhmania":
+                        Beatmap toConvert = JsonConvert.DeserializeObject<Beatmap>(json);
+                        Beatmap = DynamicBeatmap.BeatmapConverter(toConvert);
+                        break;
+                    case "riq":
+                        Beatmap = JsonConvert.DeserializeObject<DynamicBeatmap>(json);
+                        Beatmap.PostProcess();
+                        break;
+                    default:
+                        NewRemix();
+                        break;
+                }
             }
             else
             {
                 NewRemix();
             }
+            SortEventsList();
             Conductor.instance.SetBpm(Beatmap.bpm);
             Conductor.instance.SetVolume(Beatmap.musicVolume);
             Conductor.instance.firstBeatOffset = Beatmap.firstBeatOffset;
@@ -213,7 +227,7 @@ namespace HeavenStudio
                 // Debug.Log("Checking Tempo Change at " + tempoChanges[currentTempoEvent] + ", current beat " + Conductor.instance.songPositionInBeats);
                 if (Conductor.instance.songPositionInBeats >= tempoChanges[currentTempoEvent])
                 {
-                    // Debug.Log("Tempo Change at " + Conductor.instance.songPositionInBeats + " of bpm " + Beatmap.tempoChanges[currentTempoEvent].tempo);
+                    // Debug.Log("Tempo Change at " + Conductor.instance.songPositionInBeats + " of bpm " + DynamicBeatmap.tempoChanges[currentTempoEvent].tempo);
                     Conductor.instance.SetBpm(Beatmap.tempoChanges[currentTempoEvent].tempo);
                     Conductor.instance.timeSinceLastTempoChange = Time.time;
                     currentTempoEvent++;
@@ -323,6 +337,7 @@ namespace HeavenStudio
         {
             Beatmap.entities.Sort((x, y) => x.beat.CompareTo(y.beat));
             Beatmap.tempoChanges.Sort((x, y) => x.beat.CompareTo(y.beat));
+            Beatmap.volumeChanges.Sort((x, y) => x.beat.CompareTo(y.beat));
         }
 
         public void SetCurrentEventToClosest(float beat)

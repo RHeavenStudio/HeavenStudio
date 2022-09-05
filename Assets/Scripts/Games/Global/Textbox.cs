@@ -27,10 +27,10 @@ namespace HeavenStudio.Games.Global
             Bottom,
         }
 
-        private List<Beatmap.Entity> textboxEvents = new List<Beatmap.Entity>();
-        private List<Beatmap.Entity> openCaptionsEvents = new List<Beatmap.Entity>();
-        private List<Beatmap.Entity> idolEvents = new List<Beatmap.Entity>();
-        private List<Beatmap.Entity> closedCaptionsEvents = new List<Beatmap.Entity>();
+        private List<DynamicBeatmap.DynamicEntity> textboxEvents = new List<DynamicBeatmap.DynamicEntity>();
+        private List<DynamicBeatmap.DynamicEntity> openCaptionsEvents = new List<DynamicBeatmap.DynamicEntity>();
+        private List<DynamicBeatmap.DynamicEntity> idolEvents = new List<DynamicBeatmap.DynamicEntity>();
+        private List<DynamicBeatmap.DynamicEntity> closedCaptionsEvents = new List<DynamicBeatmap.DynamicEntity>();
 
         Textbox instance;
 
@@ -114,11 +114,11 @@ namespace HeavenStudio.Games.Global
                 if (prog >= 0f && prog <= 1f)
                 {
                     TextboxEnabler.SetActive(true);
-                    TextboxObject.SetText(e.text1);
-                    TextboxObject.Resize(e.valA, e.valB);
+                    TextboxObject.SetText(e["text1"]);
+                    TextboxObject.Resize(e["valA"], e["valB"]);
 
                     // ouch
-                    switch (e.type)
+                    switch (e["type"])
                     {
                         case (int) TextboxAnchor.TopLeft:
                             TextboxEnabler.transform.localPosition = new Vector3(-XAnchor, YAnchor);
@@ -170,12 +170,12 @@ namespace HeavenStudio.Games.Global
                 if (prog >= 0f && prog <= 1f)
                 {
                     OpenCaptionsEnabler.SetActive(true);
-                    OpenCaptionsLabel.text = e.text1;
+                    OpenCaptionsLabel.text = e["text1"];
 
-                    OpenCaptionsLabelRect.sizeDelta = new Vector2(18f * e.valA, 2.5f * e.valB);
+                    OpenCaptionsLabelRect.sizeDelta = new Vector2(18f * e["valA"], 2.5f * e["valB"]);
 
                     // ouch
-                    switch (e.type)
+                    switch (e["type"])
                     {
                         case (int) TextboxAnchor.TopLeft:
                             OpenCaptionsEnabler.transform.localPosition = new Vector3(-XAnchor, YAnchor);
@@ -228,8 +228,8 @@ namespace HeavenStudio.Games.Global
                 if (prog >= 0f && prog <= 1f)
                 {
                     float inp = cond.GetPositionFromBeat(e.beat, 1);
-                    IdolSongLabel.text = e.text1;
-                    IdolArtistLabel.text = e.text2;
+                    IdolSongLabel.text = e["text1"];
+                    IdolArtistLabel.text = e["text2"];
 
                     IdolAnimator.Play("IdolShow", -1, Mathf.Min(inp, 1));
                     IdolAnimator.speed = 0;
@@ -264,18 +264,18 @@ namespace HeavenStudio.Games.Global
                 if (prog >= 0f && prog <= 1f)
                 {
                     ClosedCaptionsEnabler.SetActive(true);
-                    ClosedCaptionsLabel.text = e.text1;
+                    ClosedCaptionsLabel.text = e["text1"];
 
-                    ClosedCaptionsLabelRect.sizeDelta = new Vector2(9f, e.valA);
-                    ClosedCaptionsBgRect.sizeDelta = new Vector2(9f, e.valA);
+                    ClosedCaptionsLabelRect.sizeDelta = new Vector2(9f, e["valA"]);
+                    ClosedCaptionsBgRect.sizeDelta = new Vector2(9f, e["valA"]);
 
-                    switch (e.type)
+                    switch (e["type"])
                     {
                         case (int) ClosedCaptionsAnchor.Bottom:
-                            ClosedCaptionsEnabler.transform.localPosition = new Vector3(0, -2.5f + e.valA/2);
+                            ClosedCaptionsEnabler.transform.localPosition = new Vector3(0, -2.5f + e["valA"]/2);
                             break;
                         default:
-                            ClosedCaptionsEnabler.transform.localPosition = new Vector3(0, 2.5f - e.valA/2);
+                            ClosedCaptionsEnabler.transform.localPosition = new Vector3(0, 2.5f - e["valA"]/2);
                             break;
                     }
 

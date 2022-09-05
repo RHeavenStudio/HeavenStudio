@@ -29,7 +29,7 @@ namespace HeavenStudio.Editor.Track
 
             for (int i = 0; i < GameManager.instance.Beatmap.tempoChanges.Count; i++)
             {
-                Beatmap.TempoChange tempoChange = GameManager.instance.Beatmap.tempoChanges[i];
+                DynamicBeatmap.TempoChange tempoChange = GameManager.instance.Beatmap.tempoChanges[i];
                 AddTempoChange(false, tempoChange);
             }
         }
@@ -140,7 +140,7 @@ namespace HeavenStudio.Editor.Track
             tempoTimelineObjs.Clear();
         }
 
-        public void AddTempoChange(bool create, Beatmap.TempoChange tempoChange_ = null)
+        public void AddTempoChange(bool create, DynamicBeatmap.TempoChange tempoChange_ = null)
         {      
             GameObject tempoChange = Instantiate(RefTempoChange.gameObject, this.transform);
 
@@ -157,7 +157,7 @@ namespace HeavenStudio.Editor.Track
                 tempoChange.transform.position = new Vector3(Editor.instance.EditorCamera.ScreenToWorldPoint(Input.mousePosition).x + 0.08f, tempoChange.transform.position.y);
                 tempoChange.transform.localPosition = new Vector3(Starpelly.Mathp.Round2Nearest(tempoChange.transform.localPosition.x, Timeline.SnapInterval()), tempoChange.transform.localPosition.y);
 
-                Beatmap.TempoChange tempoC = new Beatmap.TempoChange();
+                DynamicBeatmap.TempoChange tempoC = new DynamicBeatmap.TempoChange();
                 tempoC.beat = tempoChange.transform.localPosition.x;
                 tempoC.tempo = GameManager.instance.Beatmap.bpm;
 

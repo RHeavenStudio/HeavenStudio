@@ -4,7 +4,7 @@ using TMPro;
 
 namespace HeavenStudio.Editor 
 {
-    public class EditorSettings : MonoBehaviour
+    public class EditorSettings : TabsContent
     {
         public Toggle cursorCheckbox;
 
@@ -15,6 +15,14 @@ namespace HeavenStudio.Editor
             {
                 GameManager.instance.CursorCam.enabled = Editor.instance.isCursorEnabled;
             }
+        }
+
+        public override void OnOpenTab()
+        {
+        }
+
+        public override void OnCloseTab()
+        {
         }
     }
 }

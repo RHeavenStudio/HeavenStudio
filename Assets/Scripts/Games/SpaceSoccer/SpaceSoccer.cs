@@ -12,17 +12,30 @@ namespace HeavenStudio.Games.Loaders
         public static Minigame AddGame(EventCaller eventCaller) {
             return new Minigame("spaceSoccer", "Space Soccer", "B888F8", false, false, new List<GameAction>()
             {
-                new GameAction("ball dispense",         delegate { SpaceSoccer.instance.Dispense(eventCaller.currentEntity.beat, !eventCaller.currentEntity.toggle); }, 2f,
-                parameters: new List<Param>()
+                new GameAction("ball dispense", "Ball Dispense")
+                {
+                    function = delegate { SpaceSoccer.instance.Dispense(eventCaller.currentEntity.beat, !eventCaller.currentEntity["toggle"]); }, 
+                    defaultLength = 2f,
+                    parameters = new List<Param>()
                     {
                         new Param("toggle", false, "Disable Sound", "Disables the dispense sound")
                     },
-                inactiveFunction: delegate { if (!eventCaller.currentEntity.toggle) { SpaceSoccer.DispenseSound(eventCaller.currentEntity.beat); } }),
-                new GameAction("high kick-toe!",        delegate { }, 3f, false, new List<Param>() 
+                    inactiveFunction = delegate { if (!eventCaller.currentEntity["toggle"]) { SpaceSoccer.DispenseSound(eventCaller.currentEntity.beat); } }
+                },
+                new GameAction("high kick-toe!", "High Kick-Toe!")
                 {
-                    new Param("swing", new EntityTypes.Float(0, 1, 0.5f), "Swing", "The amount of swing") 
-                }),
-                new GameAction("keep-up",               delegate { }, 4f, true, hidden: true),
+                    defaultLength = 3f, 
+                    parameters = new List<Param>() 
+                    {
+                        new Param("swing", new EntityTypes.Float(0, 1, 0.5f), "Swing", "The amount of swing") 
+                    }
+                },
+                // This is still here for "backwards-compatibility" but is hidden in the editor (it does absolutely nothing however)
+                new GameAction("keep-up", "")
+                {
+                    defaultLength = 4f, 
+                    resizable = true
+                },
             });
         }
     }
@@ -69,7 +82,7 @@ namespace HeavenStudio.Games
 
         public override void OnGameSwitch(float beat)
         {
-            foreach(Beatmap.Entity entity in GameManager.instance.Beatmap.entities)
+            foreach(var entity in GameManager.instance.Beatmap.entities)
             {
                 if(entity.beat > beat) //the list is sorted based on the beat of the entity, so this should work fine.
                 {

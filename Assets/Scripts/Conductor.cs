@@ -245,9 +245,17 @@ namespace HeavenStudio
             return tempoChanges;
         }
 
+        private List<DynamicBeatmap.TempoChange> GetSortedTempoChanges(DynamicBeatmap chart)
+        {
+            //iterate over all tempo changes, adding to counter
+            List<DynamicBeatmap.TempoChange> tempoChanges = chart.tempoChanges;
+            tempoChanges.Sort((x, y) => x.beat.CompareTo(y.beat)); //sorts all tempo changes by ascending time (GameManager already does this but juste en cas...)
+            return tempoChanges;
+        }
+
         public float GetSongPosFromBeat(float beat)
         {
-            Beatmap chart = GameManager.instance.Beatmap;
+            var chart = GameManager.instance.Beatmap;
             SetBpm(chart.bpm);
 
             //initial counter
@@ -257,7 +265,7 @@ namespace HeavenStudio
             float lastTempoChangeBeat = 0f;
 
             //iterate over all tempo changes, adding to counter
-            List<Beatmap.TempoChange> tempoChanges = GetSortedTempoChanges(chart);
+            var tempoChanges = GetSortedTempoChanges(chart);
             foreach (var t in tempoChanges)
             {
                 if (t.beat > beat)
@@ -297,12 +305,12 @@ namespace HeavenStudio
             public float GetBeatFromSongPos(float seconds)
             {
                 // Debug.Log("Getting beat of seconds " + seconds);
-                Beatmap chart = GameManager.instance.Beatmap;
+                var chart = GameManager.instance.Beatmap;
                 float lastTempoChangeBeat = 0f;
                 float lastBpm = chart.bpm;
                 float counterSeconds = -firstBeatOffset;
                 
-                List<Beatmap.TempoChange> tempoChanges = GetSortedTempoChanges(chart);
+                var tempoChanges = GetSortedTempoChanges(chart);
                 foreach (var t in tempoChanges)
                 {
                     float beatToNext = t.beat - lastTempoChangeBeat;

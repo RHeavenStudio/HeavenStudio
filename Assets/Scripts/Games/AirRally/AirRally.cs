@@ -16,26 +16,45 @@ namespace HeavenStudio.Games.Loaders
         {
             return new Minigame("airRally", "Air Rally", "008c97", false, false, new List<GameAction>()
             {
-                new GameAction("set distance",                    delegate { AirRally.instance.SetDistance(e.currentEntity.type); }, .5f, false, new List<Param>()
+                new GameAction("set distance", "Set Distance")
                 {
-                    new Param("type", AirRally.DistanceSound.close, "Type", "How far is Forthington?")
-                }),
+                    function = delegate { AirRally.instance.SetDistance(e.currentEntity["type"]); }, 
+                    defaultLength = .5f, 
+                    parameters = new List<Param>()
+                    {
+                        new Param("type", AirRally.DistanceSound.close, "Type", "How far is Forthington?")
+                    }
+                },
                 //new GameAction("start rally",                    delegate { AirRally.instance.StartRally(true); }, .5f, false),
-                new GameAction("rally",                    delegate { AirRally.instance.Rally(e.currentEntity.beat, e.currentEntity.toggle, e.currentEntity.length); }, 2f, true, new List<Param>()
-                { 
-                    new Param("toggle", false, "Silent", "Make Forthington Silent"),
-                }),
-                new GameAction("ba bum bum bum",                    delegate { AirRally.instance.BaBumBumBum(e.currentEntity.beat, e.currentEntity.toggle, e.currentEntity.type); }, 7f, false, new List<Param>()
-                { 
-                    new Param("toggle", false, "Count", "Make Forthington Count"),
-                    new Param("type", AirRally.DistanceSound.close, "Type", "How far is Forthington?")
-                }),
-                new GameAction("forthington voice lines",                    delegate { AirRally.instance.ForthVoice(e.currentEntity.type, e.currentEntity.type2); }, 1f, false, new List<Param>()
-                { 
-                    new Param("type", AirRally.CountSound.one, "Type", "The number Forthington will say"),
-                    new Param("type", AirRally.DistanceSound.close, "Type", "How far is Forthington?")
-                }),
-                
+                new GameAction("rally", "Rally")
+                {
+                    function = delegate { AirRally.instance.Rally(e.currentEntity.beat, e.currentEntity["toggle"], e.currentEntity.length); }, 
+                    defaultLength = 2f, 
+                    resizable = true, 
+                    parameters = new List<Param>()
+                    { 
+                        new Param("toggle", false, "Silent", "Make Forthington Silent"),
+                    }
+                },
+                new GameAction("ba bum bum bum", "Ba Bum Bum Bum")
+                {
+                    function = delegate { AirRally.instance.BaBumBumBum(e.currentEntity.beat, e.currentEntity["toggle"], e.currentEntity["type"]); }, 
+                    defaultLength = 7f, 
+                    parameters = new List<Param>()
+                    { 
+                        new Param("toggle", false, "Count", "Make Forthington Count"),
+                        new Param("type", AirRally.DistanceSound.close, "Type", "How far is Forthington?")
+                    }
+                },
+                new GameAction("forthington voice lines", "Forthington Voice Lines")
+                {
+                    function = delegate { AirRally.instance.ForthVoice(e.currentEntity["type"], e.currentEntity["type2"]); }, 
+                    parameters = new List<Param>()
+                    { 
+                        new Param("type", AirRally.CountSound.one, "Type", "The number Forthington will say"),
+                        new Param("type2", AirRally.DistanceSound.close, "Type", "How far is Forthington?")
+                    }
+                }
             });
         }
     }

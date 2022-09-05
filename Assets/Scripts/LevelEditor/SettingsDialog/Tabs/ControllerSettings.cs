@@ -12,7 +12,7 @@ using static JSL;
 
 namespace HeavenStudio.Editor 
 {
-    public class ControllerSettings : MonoBehaviour
+    public class ControllerSettings : TabsContent
     {
         [SerializeField] private TMP_Text numConnectedLabel;
         [SerializeField] private TMP_Text currentControllerLabel;
@@ -244,6 +244,14 @@ namespace HeavenStudio.Editor
             JslSetRumbleFrequency(controller.GetHandle(), 0.5f, 0.5f, 160f, 320f);
             yield return new WaitForSeconds(0.25f);
             JslSetRumbleFrequency(controller.GetHandle(), 0f, 0f, 0f, 0f);
+        }
+
+        public override void OnOpenTab()
+        {
+        }
+
+        public override void OnCloseTab()
+        {
         }
     }
 }

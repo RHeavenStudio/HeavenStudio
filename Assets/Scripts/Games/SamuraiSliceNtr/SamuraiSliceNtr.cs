@@ -14,15 +14,19 @@ namespace HeavenStudio.Games.Loaders
         public static Minigame AddGame(EventCaller eventCaller) {
             return new Minigame("samuraiSliceNtr", "Samurai Slice (DS)", "00165D", false, false, new List<GameAction>()
             {
-                new GameAction("spawn object",                   delegate
+                new GameAction("spawn object", "Toss Object")
                 {
-                    SamuraiSliceNtr.instance.ObjectIn(eventCaller.currentEntity.beat, eventCaller.currentEntity.type, (int) eventCaller.currentEntity.valA);
-                }, 8, false, new List<Param>()
-                {
-                    new Param("type", SamuraiSliceNtr.ObjectType.Melon, "Object", "The object to spawn"),
-                    new Param("valA", new EntityTypes.Integer(0, 30, 1), "Money", "The amount of coins the object spills out when sliced"),
-                }),
-                //new GameAction("start bopping",                   delegate { SamuraiSliceNtr.instance.Bop(eventCaller.currentEntity.beat, eventCaller.currentEntity.length); }, 1),
+                    function = delegate
+                    {
+                        SamuraiSliceNtr.instance.ObjectIn(eventCaller.currentEntity.beat, eventCaller.currentEntity["type"], (int) eventCaller.currentEntity["valA"]);
+                    }, 
+                    defaultLength = 8,
+                    parameters = new List<Param>()
+                    {
+                        new Param("type", SamuraiSliceNtr.ObjectType.Melon, "Object", "The object to spawn"),
+                        new Param("valA", new EntityTypes.Integer(0, 30, 1), "Money", "The amount of coins the object spills out when sliced"),
+                    }
+                },
             },
             new List<string>() {"ntr", "normal"},
             "ntrsamurai", "en",

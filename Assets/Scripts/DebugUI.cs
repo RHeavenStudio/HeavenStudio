@@ -71,7 +71,6 @@ namespace HeavenStudio
 
                 SetText(currEvent, $"CurrentEvent: {GameManager.instance.Beatmap.entities[GameManager.instance.currentEvent - minus].datamodel}");
                 SetText(eventLength, $"Event Length: {GameManager.instance.Beatmap.entities[GameManager.instance.currentEvent - minus].length}");
-                SetText(eventType, $"Event Type: {GameManager.instance.Beatmap.entities[GameManager.instance.currentEvent - minus].type}");
             }
         }
 

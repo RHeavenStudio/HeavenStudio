@@ -15,14 +15,24 @@ namespace HeavenStudio.Games.Loaders
         public static Minigame AddGame(EventCaller eventCaller) {
             return new Minigame("trickClass", "Trick on the Class", "C0171D", false, false, new List<GameAction>()
             {
-                new GameAction("toss",                  delegate
+                new GameAction("toss", "Toss Object")
                 {
-                    TrickClass.instance.TossObject(eventCaller.currentEntity.beat, eventCaller.currentEntity.type);
-                }, 3, false, new List<Param>()
+                    function = delegate
+                    {
+                        TrickClass.instance.TossObject(eventCaller.currentEntity.beat, eventCaller.currentEntity["type"]);
+                    }, 
+                    defaultLength = 3,
+                    parameters = new List<Param>()
+                    {
+                        new Param("type", TrickClass.TrickObjType.Ball, "Object", "The object to toss")
+                    }
+                },
+                new GameAction("bop", "")
                 {
-                    new Param("type", TrickClass.TrickObjType.Ball, "Object", "The object to toss")
-                }),
-                new GameAction("bop",                   delegate { var e = eventCaller.currentEntity; TrickClass.instance.Bop(e.beat, e.length); }, 1, true, hidden: true),
+                    function = delegate { var e = eventCaller.currentEntity; TrickClass.instance.Bop(e.beat, e.length); },
+                    resizable = true, 
+                    hidden = true
+                },
             });
         }
     }
@@ -100,7 +110,7 @@ namespace HeavenStudio.Games
                 if (timeToEvent > 0f && timeToEvent <= 1f)
                 {
                     string anim = "WarnBall";
-                    switch (e.type)
+                    switch (e["type"])
                     {
                         case (int) TrickObjType.Plane:
                             anim = "WarnPlane";

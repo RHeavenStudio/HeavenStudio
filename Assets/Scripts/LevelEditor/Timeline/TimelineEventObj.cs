@@ -29,7 +29,7 @@ namespace HeavenStudio.Editor.Track
         // private GameObject moveTemp;
 
         [Header("Properties")]
-        public Beatmap.Entity entity;
+        public DynamicBeatmap.DynamicEntity entity;
         public float length;
         public bool eligibleToMove = false;
         private bool lastVisible;

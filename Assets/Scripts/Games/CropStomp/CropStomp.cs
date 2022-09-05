@@ -13,9 +13,21 @@ namespace HeavenStudio.Games.Loaders
         public static Minigame AddGame(EventCaller eventCaller) {
             return new Minigame("cropStomp", "Crop Stomp", "BFDEA6", false, false, new List<GameAction>()
             {
-                new GameAction("start marching",        delegate { CropStomp.instance.StartMarching(eventCaller.currentEntity.beat); }, 2f, false, inactiveFunction: delegate { CropStomp.MarchInactive(eventCaller.currentEntity.beat); }),
-                new GameAction("veggies",               delegate { }, 4f, true),
-                new GameAction("mole",               delegate { }, 2f, false),
+                new GameAction("start marching", "Start Marching")
+                {
+                    function = delegate { CropStomp.instance.StartMarching(eventCaller.currentEntity.beat); }, 
+                    defaultLength = 2f,
+                    inactiveFunction = delegate { CropStomp.MarchInactive(eventCaller.currentEntity.beat); }
+                },
+                new GameAction("veggies", "Veggies")
+                {
+                    defaultLength = 4f, 
+                    resizable = true
+                },
+                new GameAction("mole", "Mole")
+                {
+                    defaultLength = 2f
+                },
             });
         }
     }
@@ -162,7 +174,7 @@ namespace HeavenStudio.Games
             }
         }
 
-        List<Beatmap.Entity> cuedMoleSounds = new List<Beatmap.Entity>();
+        List<DynamicBeatmap.DynamicEntity> cuedMoleSounds = new List<DynamicBeatmap.DynamicEntity>();
         private void Update()
         {
             var cond = Conductor.instance;
@@ -317,7 +329,7 @@ namespace HeavenStudio.Games
                 return;
             }
             inactiveStart = beat;
-            Beatmap.Entity gameSwitch = GameManager.instance.Beatmap.entities.Find(c => c.beat >= beat && c.datamodel == "gameManager/switchGame/cropStomp");
+            DynamicBeatmap.DynamicEntity gameSwitch = GameManager.instance.Beatmap.entities.Find(c => c.beat >= beat && c.datamodel == "gameManager/switchGame/cropStomp");
             if (gameSwitch == null)
                 return;
             int length = Mathf.CeilToInt((gameSwitch.beat - beat)/2);

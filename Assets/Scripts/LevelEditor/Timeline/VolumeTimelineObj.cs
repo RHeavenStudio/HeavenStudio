@@ -15,7 +15,7 @@ namespace HeavenStudio.Editor.Track
         [SerializeField] private TMP_Text volumeTXT;
         [SerializeField] private RectTransform raycastRect;
 
-        public Beatmap.VolumeChange volumeChange;
+        public DynamicBeatmap.VolumeChange volumeChange;
 
         private float startPosX;
         private bool moving = false;

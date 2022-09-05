@@ -9,7 +9,7 @@ using TMPro;
 
 namespace HeavenStudio.Editor 
 {
-    public class CreditsLegalSettings : MonoBehaviour
+    public class CreditsLegalSettings : TabsContent
     {
         private int SecretCounter = 0;
         private bool SecretActive = false;
@@ -49,6 +49,14 @@ namespace HeavenStudio.Editor
             secretObject.SetActive(false);
             SecretActive = false;
             secretContent.CloseDanceWindow();
+        }
+
+        public override void OnOpenTab()
+        {
+        }
+
+        public override void OnCloseTab()
+        {
         }
     }
 }

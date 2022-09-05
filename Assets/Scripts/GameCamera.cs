@@ -12,10 +12,10 @@ namespace HeavenStudio
         public static GameCamera instance { get; private set; }
         public new Camera camera;
 
-        private List<Beatmap.Entity> positionEvents = new List<Beatmap.Entity>();
-        private List<Beatmap.Entity> rotationEvents = new List<Beatmap.Entity>();
-        private List<Beatmap.Entity> scaleEvents = new List<Beatmap.Entity>();
-        private List<Beatmap.Entity> shakeEvents = new List<Beatmap.Entity>();
+        private List<DynamicBeatmap.DynamicEntity> positionEvents = new List<DynamicBeatmap.DynamicEntity>();
+        private List<DynamicBeatmap.DynamicEntity> rotationEvents = new List<DynamicBeatmap.DynamicEntity>();
+        private List<DynamicBeatmap.DynamicEntity> scaleEvents = new List<DynamicBeatmap.DynamicEntity>();
+        private List<DynamicBeatmap.DynamicEntity> shakeEvents = new List<DynamicBeatmap.DynamicEntity>();
 
         /**
             default cam position, for quick-resetting
@@ -125,15 +125,15 @@ namespace HeavenStudio
                 float prog = Conductor.instance.GetPositionFromBeat(e.beat, e.length);
                 if (prog >= 0f)
                 {
-                    EasingFunction.Function func = EasingFunction.GetEasingFunction(e.ease);
-                    float dx = func(positionLast.x, e.valA, Mathf.Min(prog, 1f));
-                    float dy = func(positionLast.y, e.valB, Mathf.Min(prog, 1f));
-                    float dz = func(positionLast.z, -e.valC, Mathf.Min(prog, 1f));
+                    EasingFunction.Function func = EasingFunction.GetEasingFunction((EasingFunction.Ease) e["ease"]);
+                    float dx = func(positionLast.x, e["valA"], Mathf.Min(prog, 1f));
+                    float dy = func(positionLast.y, e["valB"], Mathf.Min(prog, 1f));
+                    float dz = func(positionLast.z, -e["valC"], Mathf.Min(prog, 1f));
                     position = new Vector3(dx, dy, dz);
                 }
                 if (prog > 1f)
                 {
-                    positionLast = new Vector3(e.valA, e.valB, -e.valC);
+                    positionLast = new Vector3(e["valA"], e["valB"], -e["valC"]);
                 }
             }
         }
@@ -145,16 +145,16 @@ namespace HeavenStudio
                 float prog = Conductor.instance.GetPositionFromBeat(e.beat, e.length);
                 if (prog >= 0f)
                 {
-                    EasingFunction.Function func = EasingFunction.GetEasingFunction(e.ease);
-                    float dx = func(rotEluerLast.x, e.valA, Mathf.Min(prog, 1f));
-                    float dy = func(rotEluerLast.y, e.valB, Mathf.Min(prog, 1f));
-                    float dz = func(-rotEluerLast.z, e.valC, Mathf.Min(prog, 1f));
+                    EasingFunction.Function func = EasingFunction.GetEasingFunction((EasingFunction.Ease) e["ease"]);
+                    float dx = func(rotEluerLast.x, e["valA"], Mathf.Min(prog, 1f));
+                    float dy = func(rotEluerLast.y, e["valB"], Mathf.Min(prog, 1f));
+                    float dz = func(-rotEluerLast.z, e["valC"], Mathf.Min(prog, 1f));
                     rotEluer = new Vector3(dx, dy, dz);    //I'm stupid and forgot to negate the rotation gfd 😢
 
                 }
                 if (prog > 1f)
                 {
-                    rotEluerLast = new Vector3(e.valA, e.valB, -e.valC);
+                    rotEluerLast = new Vector3(e["valA"], e["valB"], -e["valC"]);
                 }
             }
         }
@@ -167,7 +167,7 @@ namespace HeavenStudio
                 if (prog >= 0f)
                 {
                     float fac = Mathf.Cos(Time.time * 80f) * 0.5f;
-                    shakeResult = new Vector3(fac * e.valA, fac * e.valB);
+                    shakeResult = new Vector3(fac * e["valA"], fac * e["valB"]);
                 }
                 if (prog > 1f)
                 {

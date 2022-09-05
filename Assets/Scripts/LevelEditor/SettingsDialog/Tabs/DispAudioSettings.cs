@@ -6,7 +6,7 @@ using TMPro;
 
 namespace HeavenStudio.Editor 
 {
-    public class DispAudioSettings : MonoBehaviour
+    public class DispAudioSettings : TabsContent
     {
         public TMP_Dropdown resolutionsDropdown;
         public GameObject customSetter;
@@ -70,6 +70,14 @@ namespace HeavenStudio.Editor
         {
             volSlider.value = (float)System.Math.Round(System.Convert.ToSingle(volLabel.text) / 100f, 2);
             GlobalGameManager.ChangeMasterVolume(volSlider.value);
+        }
+
+        public override void OnOpenTab()
+        {
+        }
+
+        public override void OnCloseTab()
+        {
         }
     }
 }

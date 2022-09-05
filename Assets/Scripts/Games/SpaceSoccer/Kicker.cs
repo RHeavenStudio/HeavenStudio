@@ -183,7 +183,7 @@ namespace HeavenStudio.Games.Scripts_SpaceSoccer
             //     }
             // }
 
-            List<Beatmap.Entity> highKicks = GameManager.instance.Beatmap.entities.FindAll(c => c.datamodel == "spaceSoccer/high kick-toe!");
+            var highKicks = GameManager.instance.Beatmap.entities.FindAll(c => c.datamodel == "spaceSoccer/high kick-toe!");
             for (int i = 0; i < highKicks.Count; i++)
             {
                 if ((highKicks[i].beat - 0.15f) <= Conductor.instance.songPositionInBeats && highKicks[i].beat + 1f > Conductor.instance.songPositionInBeats)

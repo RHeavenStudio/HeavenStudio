@@ -13,58 +13,97 @@ namespace HeavenStudio.Games.Loaders
         public static Minigame AddGame(EventCaller eventCaller) {
             return new Minigame("karateman", "Karate Man", "70A8D8", false, false, new List<GameAction>()
             {
-                new GameAction("bop",                   delegate { KarateMan.instance.ToggleBop(eventCaller.currentEntity.toggle); }, 0.5f, false, new List<Param>()
+                new GameAction("bop", "Bop")
+                {
+                    function = delegate { KarateMan.instance.ToggleBop(eventCaller.currentEntity["toggle"]); },
+                    defaultLength = 0.5f,
+                    parameters = new List<Param>()
                     {
                         new Param("toggle", true, "Bop", "Whether to bop to the beat or not")
                     },
-                    inactiveFunction: delegate { KarateMan.ToggleBopUnloaded(eventCaller.currentEntity.toggle); }
-                ),
-                new GameAction("hit",                   delegate { var e = eventCaller.currentEntity; KarateMan.instance.CreateItem(e.beat, e.type, e.type2); }, 2, false, 
-                    new List<Param>()
+                    inactiveFunction = delegate { KarateMan.ToggleBopUnloaded(eventCaller.currentEntity["toggle"]); }
+                },
+                new GameAction("hit", "Toss Object") {
+                    function = delegate { var e = eventCaller.currentEntity; KarateMan.instance.CreateItem(e.beat, e["type"], e["type2"]); }, 
+                    defaultLength = 2,
+                    parameters = new List<Param>()
                     {
                         new Param("type", KarateMan.HitType.Pot, "Object", "The object to fire"),
                         new Param("type2", KarateMan.KarateManFaces.Normal, "Success Expression", "The facial expression to set Joe to on hit")
-                    }),
-                new GameAction("bulb",                  delegate { var e = eventCaller.currentEntity; KarateMan.instance.CreateBulbSpecial(e.beat, e.type, e.colorA, e.type2); }, 2, false, 
-                    new List<Param>()
+                    }
+                },
+                new GameAction("bulb", "Toss Lightbulb")
+                {
+                    function = delegate { var e = eventCaller.currentEntity; KarateMan.instance.CreateBulbSpecial(e.beat, e["type"], e["colorA"], e["type2"]); }, 
+                    defaultLength = 2,
+                    parameters = new List<Param>()
                     {
                         new Param("type", KarateMan.LightBulbType.Normal, "Type", "The preset bulb type. Yellow is used for kicks while Blue is used for combos"),
                         new Param("colorA", new Color(1f,1f,1f), "Custom Color", "The color to use when the bulb type is set to Custom"),
                         new Param("type2", KarateMan.KarateManFaces.Normal, "Success Expression", "The facial expression to set Joe to on hit")
-                    }),
-                new GameAction("kick",                  delegate { var e = eventCaller.currentEntity; KarateMan.instance.Kick(e.beat, e.toggle, e.type); }, 4f, false,
-                    new List<Param>()
+                    },
+                },
+                new GameAction("kick", "Special: Kick")
+                {
+                    function = delegate { var e = eventCaller.currentEntity; KarateMan.instance.Kick(e.beat, e["toggle"], e["type"]); }, 
+                    defaultLength = 4f,
+                    parameters = new List<Param>()
                     {
                         new Param("toggle", false, "Contains Ball", "Barrel contains a ball instead of a bomb?"),
                         new Param("type", KarateMan.KarateManFaces.Smirk, "Success Expression", "The facial expression to set Joe to on hit")
                     }
-                ),
-                new GameAction("combo",                 delegate { var e = eventCaller.currentEntity; KarateMan.instance.Combo(e.beat, e.type); }, 4f, false,
-                    new List<Param>()
+                },
+                new GameAction("combo", "Special: Combo")
+                {
+                    function = delegate { var e = eventCaller.currentEntity; KarateMan.instance.Combo(e.beat, e["type"]); }, 
+                    defaultLength = 4,
+                    parameters = new List<Param>()
                     {
                         new Param("type", KarateMan.KarateManFaces.Happy, "Success Expression", "The facial expression to set Joe to on hit")
                     }
-                ),
-                new GameAction("hitX",                  delegate { var e = eventCaller.currentEntity; KarateMan.instance.DoWord(e.beat, e.type); }, 1f, false, 
-                    new List<Param>()
+                },
+                new GameAction("hitX", "Warnings")
+                {
+                    function = delegate { var e = eventCaller.currentEntity; KarateMan.instance.DoWord(e.beat, e["type"]); }, 
+                    defaultLength = 1f,
+                    parameters = new List<Param>()
                     {
                         new Param("type", KarateMan.HitThree.HitThree, "Type", "The warning text to show")
                     },
-                    inactiveFunction: delegate { var e = eventCaller.currentEntity; KarateMan.DoWordSound(e.beat, e.type); }
-                ),
-                new GameAction("special camera",               delegate { var e = eventCaller.currentEntity; KarateMan.DoSpecialCamera(e.beat, e.length, e.toggle); }, 8f, true, new List<Param>()
+                    inactiveFunction = delegate { var e = eventCaller.currentEntity; KarateMan.DoWordSound(e.beat, e["type"]); }
+                },
+                new GameAction("special camera", "Special Camera")
+                {
+                    function = delegate { var e = eventCaller.currentEntity; KarateMan.DoSpecialCamera(e.beat, e.length, e["toggle"]); }, 
+                    defaultLength = 8f, 
+                    resizable = true, 
+                    parameters = new List<Param>()
                     {
                         new Param("toggle", true, "Return Camera", "Camera zooms back in?"),
                     },
-                    inactiveFunction: delegate { var e = eventCaller.currentEntity; KarateMan.DoSpecialCamera(e.beat, e.length, e.toggle); }    
-                ),
-                new GameAction("prepare",               delegate { var e = eventCaller.currentEntity; KarateMan.instance.Prepare(e.beat, e.length);}, 1f, true),
-                new GameAction("set gameplay modifiers",  delegate { var e = eventCaller.currentEntity; KarateMan.instance.SetGameplayMods(e.beat, e.type, e.toggle); }, 0.5f, false, new List<Param>()
+                    inactiveFunction = delegate { var e = eventCaller.currentEntity; KarateMan.DoSpecialCamera(e.beat, e.length, e["toggle"]); }    
+                },
+                new GameAction("prepare", "Preparation Stance")
                 {
-                    new Param("type", KarateMan.NoriMode.None, "Flow Bar type", "The type of Flow bar to use"),
-                    new Param("toggle", true, "Enable Combos", "Allow the player to combo? (Contextual combos will still be allowed even when off)"),
-                }),
-                new GameAction("set background effects",  delegate { var e = eventCaller.currentEntity; KarateMan.instance.SetBgAndShadowCol(e.beat, e.length, e.type, e.type2, e.colorA, e.colorB, e.type3); KarateMan.instance.SetBgTexture(e.type4, e.type5, e.colorC, e.colorD); }, 0.5f, true, new List<Param>()
+                    function = delegate { var e = eventCaller.currentEntity; KarateMan.instance.Prepare(e.beat, e.length);}, 
+                    resizable = true
+                },
+                new GameAction("set gameplay modifiers", "Gameplay Modifiers")
+                {
+                    function = delegate { var e = eventCaller.currentEntity; KarateMan.instance.SetGameplayMods(e.beat, e["type"], e["toggle"]); }, 
+                    defaultLength = 0.5f,
+                    parameters = new List<Param>()
+                    {
+                        new Param("type", KarateMan.NoriMode.None, "Flow Bar type", "The type of Flow bar to use"),
+                        new Param("toggle", true, "Enable Combos", "Allow the player to combo? (Contextual combos will still be allowed even when off)"),
+                    }
+                },
+                new GameAction("set background effects", "Background Appearance")
+                {
+                    function = delegate { var e = eventCaller.currentEntity; KarateMan.instance.SetBgAndShadowCol(e.beat, e.length, e["type"], e["type2"], e["colorA"], e["colorB"], e["type3"]); KarateMan.instance.SetBgTexture(e["type4"], e["type5"], e["colorC"], e["colorD"]); }, 
+                    defaultLength = 0.5f, 
+                    resizable = true, 
+                    parameters = new List<Param>()
                     {
                         new Param("type", KarateMan.BackgroundType.Yellow, "Background Type", "The preset background type"),
                         new Param("type2", KarateMan.ShadowType.Tinted, "Shadow Type", "The shadow type. If Tinted doesn't work with your background color try Custom"),
@@ -77,43 +116,96 @@ namespace HeavenStudio.Games.Loaders
                         new Param("colorD", new Color(), "Fading Filter Color", "When using the Fade background effect, make filter colour fade to this colour"),
 
                     },
-                    inactiveFunction: delegate { var e = eventCaller.currentEntity; KarateMan.SetBgEffectsUnloaded(e.beat, e.length, e.type, e.type2, e.colorA, e.colorB, e.type3, e.type4, e.type5, e.colorC, e.colorD); }
-                ),
-                new GameAction("set object colors",    delegate { var e = eventCaller.currentEntity; KarateMan.UpdateMaterialColour(e.colorA, e.colorB, e.colorC); }, 0.5f, false, new List<Param>()
+                    inactiveFunction = delegate { var e = eventCaller.currentEntity; KarateMan.SetBgEffectsUnloaded(e.beat, e.length, e["type"], e["type2"], e["colorA"], e["colorB"], e["type3"], e["type4"], e["type5"], e["colorC"], e["colorD"]); }
+                },
+                new GameAction("set object colors", "Object Colors")
+                {
+                    function = delegate { var e = eventCaller.currentEntity; KarateMan.UpdateMaterialColour(e["colorA"], e["colorB"], e["colorC"]); }, 
+                    defaultLength = 0.5f,
+                    parameters = new List<Param>()
                     {
                         new Param("colorA", new Color(1,1,1,1), "Joe Body Color", "The color to use for Karate Joe's body"),
                         new Param("colorB", new Color(0.81f,0.81f,0.81f,1), "Joe Highlight Color", "The color to use for Karate Joe's highlights"),
                         new Param("colorC", new Color(1,1,1,1), "Item Color", "The color to use for the thrown items"),
                     },
-                    inactiveFunction: delegate { var e = eventCaller.currentEntity; KarateMan.UpdateMaterialColour(e.colorA, e.colorB, e.colorC); }
-                ),
-                new GameAction("particle effects",  delegate { var e = eventCaller.currentEntity; KarateMan.instance.SetParticleEffect(e.beat, e.type, e.valA, e.valB); }, 0.5f, false, new List<Param>()
+                    inactiveFunction = delegate { var e = eventCaller.currentEntity; KarateMan.UpdateMaterialColour(e["colorA"], e["colorB"], e["colorC"]); }
+                },
+                new GameAction("particle effects", "Particle Effects")
                 {
-                    new Param("type", KarateMan.ParticleType.None, "Particle Type", "The type of particle effect to spawn. Using \"None\" will stop all effects"),
-                    new Param("valA", new EntityTypes.Float(0f, 64f, 1f), "Wind Strength", "The strength of the particle wind"),
-                    new Param("valB", new EntityTypes.Float(1f, 16f, 1f), "Particle Intensity", "The intensity of the particle effect")
-                }),
-                new GameAction("force facial expression",  delegate { KarateMan.instance.SetFaceExpression(eventCaller.currentEntity.type); }, 0.5f, false, new List<Param>()
+                    function = delegate { var e = eventCaller.currentEntity; KarateMan.instance.SetParticleEffect(e.beat, e["type"], e["valA"], e["valB"]); }, 
+                    defaultLength = 0.5f,
+                    parameters = new List<Param>()
+                    {
+                        new Param("type", KarateMan.ParticleType.None, "Particle Type", "The type of particle effect to spawn. Using \"None\" will stop all effects"),
+                        new Param("valA", new EntityTypes.Float(0f, 64f, 1f), "Wind Strength", "The strength of the particle wind"),
+                        new Param("valB", new EntityTypes.Float(1f, 16f, 1f), "Particle Intensity", "The intensity of the particle effect")
+                    }
+                },
+                new GameAction("force facial expression", "Set Facial Expression")
                 {
-                    new Param("type", KarateMan.KarateManFaces.Normal, "Facial Expression", "The facial expression to force Joe to. Special moves may override this")
-                }),
+                    function = delegate { KarateMan.instance.SetFaceExpression(eventCaller.currentEntity["type"]); }, 
+                    defaultLength = 0.5f,
+                    parameters = new List<Param>()
+                    {
+                        new Param("type", KarateMan.KarateManFaces.Normal, "Facial Expression", "The facial expression to force Joe to. Special moves may override this")
+                    }
+                },
 
                 // These are still here for backwards-compatibility but are hidden in the editor
-                new GameAction("pot",                   delegate { KarateMan.instance.CreateItem(eventCaller.currentEntity.beat, 0, (int) KarateMan.HitType.Pot); }, 2, hidden: true),
-                new GameAction("rock",                  delegate { KarateMan.instance.CreateItem(eventCaller.currentEntity.beat, 0, (int) KarateMan.HitType.Rock); }, 2, hidden: true),
-                new GameAction("ball",                  delegate { KarateMan.instance.CreateItem(eventCaller.currentEntity.beat, 0, (int) KarateMan.HitType.Ball); }, 2, hidden: true),
-                new GameAction("tacobell",              delegate { KarateMan.instance.CreateItem(eventCaller.currentEntity.beat, 0, (int) KarateMan.HitType.TacoBell); }, 2, hidden: true),
-                new GameAction("hit4",                  delegate { KarateMan.instance.DoWord(eventCaller.currentEntity.beat, (int) KarateMan.HitThree.HitFour); }, hidden: true),
-                new GameAction("bgfxon",                delegate { var e = eventCaller.currentEntity; KarateMan.instance.SetBgFx((int) KarateMan.BackgroundFXType.Sunburst, e.beat, e.length); }, hidden: true),
-                new GameAction("bgfxoff",               delegate { var e = eventCaller.currentEntity; KarateMan.instance.SetBgFx((int) KarateMan.BackgroundFXType.None, e.beat, e.length); }, hidden: true),
-                new GameAction("hit3",                  delegate { var e = eventCaller.currentEntity; KarateMan.instance.DoWord(e.beat, e.type); }, 1f, false, 
-                    new List<Param>()
+                new GameAction("pot", "")
+                {
+                    function = delegate { KarateMan.instance.CreateItem(eventCaller.currentEntity.beat, 0, (int) KarateMan.HitType.Pot); }, 
+                    defaultLength = 2, 
+                    hidden = true
+                },
+                new GameAction("rock", "")
+                {
+                    function = delegate { KarateMan.instance.CreateItem(eventCaller.currentEntity.beat, 0, (int) KarateMan.HitType.Rock); }, 
+                    defaultLength = 2, 
+                    hidden = true
+                },
+                new GameAction("ball", "")
+                {
+                    function = delegate { KarateMan.instance.CreateItem(eventCaller.currentEntity.beat, 0, (int) KarateMan.HitType.Ball); }, 
+                    defaultLength = 2, 
+                    hidden = true
+                },
+                new GameAction("tacobell", "")
+                {
+                    function = delegate { KarateMan.instance.CreateItem(eventCaller.currentEntity.beat, 0, (int) KarateMan.HitType.TacoBell); }, 
+                    defaultLength = 2, 
+                    hidden = true
+                },
+                new GameAction("bgfxon", "")
+                {
+                    function = delegate { var e = eventCaller.currentEntity; KarateMan.instance.SetBgFx((int) KarateMan.BackgroundFXType.Sunburst, e.beat, e.length); }, 
+                    hidden = true
+                },
+                new GameAction("bgfxoff", "")
+                {
+                    function = delegate { var e = eventCaller.currentEntity; KarateMan.instance.SetBgFx((int) KarateMan.BackgroundFXType.None, e.beat, e.length); }, 
+                    hidden = true
+                },
+                new GameAction("hit3", "")
+                {
+                    function = delegate { var e = eventCaller.currentEntity; KarateMan.instance.DoWord(e.beat, e["type"]); },
+                    parameters = new List<Param>()
                     {
                         new Param("type", KarateMan.HitThree.HitThree, "Type", "The warning text to show")
                     }, 
-                hidden: true),
-                new GameAction("set background color",  delegate { var e = eventCaller.currentEntity; KarateMan.instance.SetBgAndShadowCol(e.beat, e.length, e.type, e.type2, e.colorA, e.colorB, (int) KarateMan.currentBgEffect); }, 0.5f, false, 
-                    new List<Param>()
+                    hidden = true
+                },
+                new GameAction("hit4", "")
+                {
+                    function = delegate { KarateMan.instance.DoWord(eventCaller.currentEntity.beat, (int) KarateMan.HitThree.HitFour); },
+                    hidden = true
+                },
+                new GameAction("set background color", "")
+                {
+
+                    function = delegate { var e = eventCaller.currentEntity; KarateMan.instance.SetBgAndShadowCol(e.beat, e.length, e["type"], e["type2"], e["colorA"], e["colorB"], (int) KarateMan.currentBgEffect); }, 
+                    defaultLength = 0.5f,
+                    parameters = new List<Param>()
                     {
                         new Param("type", KarateMan.BackgroundType.Yellow, "Background Type", "The preset background type"),
                         new Param("type2", KarateMan.ShadowType.Tinted, "Shadow Type", "The shadow type. If Tinted doesn't work with your background color try Custom"),
@@ -121,22 +213,32 @@ namespace HeavenStudio.Games.Loaders
                         new Param("colorB", new Color(), "Custom Shadow Color", "The shadow color to use when shadow type is set to Custom"),
 
                     },
-                hidden: true),
-                new GameAction("set background fx",  delegate { var e = eventCaller.currentEntity; KarateMan.instance.SetBgFx(e.type, e.beat, e.length); }, 0.5f, false, new List<Param>()
-                {
-                    new Param("type", KarateMan.BackgroundFXType.None, "FX Type", "The background effect to be displayed")
+                    hidden = true
                 },
-                hidden: true),
-
-                 new GameAction("set background texture",  delegate { var e = eventCaller.currentEntity; KarateMan.instance.SetBgTexture(e.type, e.type2, e.colorA, e.colorB); }, 0.5f, false, new List<Param>()
+                new GameAction("set background fx", "")
                 {
-                    new Param("type", KarateMan.BackgroundTextureType.Plain, "Texture", "The type of background texture to use"),
-                    new Param("type2", KarateMan.ShadowType.Tinted, "Color Filter Type", "The method used to apply colour to the texture"),
-                    new Param("colorA", new Color(), "Custom Filter Color", "The filter color to use when color filter type is set to Custom"),
-                    new Param("colorB", new Color(), "Fading Filter Color", "When using the Fade background effect, make filter colour fade to this colour"),
+                    function = delegate { var e = eventCaller.currentEntity; KarateMan.instance.SetBgFx(e["type"], e.beat, e.length); }, 
+                    defaultLength = 0.5f,
+                    parameters = new List<Param>()
+                    {
+                        new Param("type", KarateMan.BackgroundFXType.None, "FX Type", "The background effect to be displayed")
+                    },
+                    hidden = true
                 },
-                hidden: true),
 
+                new GameAction("set background texture", "")
+                {
+                    function = delegate { var e = eventCaller.currentEntity; KarateMan.instance.SetBgTexture(e["type"], e["type2"], e["colorA"], e["colorB"]); }, 
+                    defaultLength = 0.5f,
+                    parameters = new List<Param>()
+                    {
+                        new Param("type", KarateMan.BackgroundTextureType.Plain, "Texture", "The type of background texture to use"),
+                        new Param("type2", KarateMan.ShadowType.Tinted, "Color Filter Type", "The method used to apply colour to the texture"),
+                        new Param("colorA", new Color(), "Custom Filter Color", "The filter color to use when color filter type is set to Custom"),
+                        new Param("colorB", new Color(), "Fading Filter Color", "When using the Fade background effect, make filter colour fade to this colour"),
+                    },
+                    hidden = true
+                },
             },
             new List<string>() {"agb", "ntr", "rvl", "ctr", "pco", "normal"},
             "karate", "en",
@@ -440,8 +542,8 @@ namespace HeavenStudio.Games
             BGEffect.transform.position = new Vector3(GameCamera.instance.transform.position.x, GameCamera.instance.transform.position.y, 0);
         }
 
-        static List<Beatmap.Entity> allHits = new List<Beatmap.Entity>();
-        static List<Beatmap.Entity> allEnds = new List<Beatmap.Entity>();
+        static List<DynamicBeatmap.DynamicEntity> allHits = new List<DynamicBeatmap.DynamicEntity>();
+        static List<DynamicBeatmap.DynamicEntity> allEnds = new List<DynamicBeatmap.DynamicEntity>();
         public static int CountHitsToEnd(float fromBeat)
         {
             allHits = EventCaller.GetAllInGameManagerList("karateman", new string[] { "hit", "bulb", "kick", "combo" });
@@ -452,7 +554,7 @@ namespace HeavenStudio.Games
             float endBeat = Single.MaxValue;
 
             //get the beat of the closest end event
-            foreach (Beatmap.Entity end in allEnds)
+            foreach (var end in allEnds)
             {
                 if (end.beat > fromBeat)
                 {
@@ -467,7 +569,7 @@ namespace HeavenStudio.Games
             string type;
             for (int i = 0; i < allHits.Count; i++)
             {
-                Beatmap.Entity h = allHits[i];
+                var h = allHits[i];
                 if (h.beat >= fromBeat)
                 {
                     if (h.beat < endBeat)
@@ -704,8 +806,8 @@ namespace HeavenStudio.Games
                 var e = bgfx[i];
                 if (e.beat > beat)
                     break;
-                SetBgAndShadowCol(e.beat, e.length, e.type, e.type2, e.colorA, e.colorB, e.type3);
-                SetBgTexture(e.type4, e.type5, e.colorC, e.colorD);
+                SetBgAndShadowCol(e.beat, e.length, e["type"], e["type2"], e["colorA"], e["colorB"], e["type3"]);
+                SetBgTexture(e["type4"], e["type5"], e["colorC"], e["colorD"]);
             }
             var camfx = GameManager.instance.Beatmap.entities.FindAll(en => en.datamodel == "karateman/special camera");
             for (int i = 0; i < camfx.Count; i++)
@@ -713,7 +815,7 @@ namespace HeavenStudio.Games
                 var e = camfx[i];
                 if (e.beat > beat)
                     break;
-                DoSpecialCamera(e.beat, e.length, e.toggle);
+                DoSpecialCamera(e.beat, e.length, e["toggle"]);
             }
             // has issues when creating a new hitx entity so this is deactivated for now
             // var hitx = GameManager.instance.Beatmap.entities.FindAll(en => en.datamodel == "karateman/hitX");
@@ -723,7 +825,7 @@ namespace HeavenStudio.Games
             //     if (e.beat > beat)
             //         break;
             //     Debug.Log("hitx");
-            //     DoWord(e.beat, e.type, false);
+            //     DoWord(e.beat, e["type"], false);
             // }
             
         }

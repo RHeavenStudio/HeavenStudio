@@ -15,7 +15,7 @@ namespace HeavenStudio.Editor.Track
         [SerializeField] private TMP_Text tempoTXT;
         [SerializeField] private RectTransform raycastRect;
 
-        public Beatmap.TempoChange tempoChange;
+        public DynamicBeatmap.TempoChange tempoChange;
 
         private float startPosX;
         private bool moving = false;
