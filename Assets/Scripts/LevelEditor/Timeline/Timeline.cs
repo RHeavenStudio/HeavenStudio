@@ -34,18 +34,54 @@ namespace HeavenStudio.Editor.Track
 
         public class CurrentTimelineState
         {
-            public bool selected;
-            public bool tempoChange;
-            public bool musicVolume;
+            public enum State
+            {
+                Selection,
+                TempoChange,
+                MusicVolume,
+                ChartSection
+            }
+
+            State currentState = State.Selection;
+
+            public bool selected { get { return currentState == State.Selection; } }
+            public bool tempoChange { get { return currentState == State.TempoChange; } }
+            public bool musicVolume { get { return currentState == State.MusicVolume; } }
+            public bool chartSection { get { return currentState == State.ChartSection; } }
 
             public void SetState(bool selected, bool tempoChange, bool musicVolume)
             {
                 if (Conductor.instance.NotStopped()) return;
 
-                this.selected = selected;
-                this.tempoChange = tempoChange;
-                this.musicVolume = musicVolume;
+                if (selected)
+                {
+                    currentState = State.Selection;
+                    instance.SelectionsBTN.transform.GetChild(0).GetComponent<Image>().color = Color.white;
+                }
+                else
+                    instance.SelectionsBTN.transform.GetChild(0).GetComponent<Image>().color = Color.gray;
+                if (tempoChange)
+                {
+                    currentState = State.TempoChange;
+                    instance.TempoChangeBTN.transform.GetChild(0).GetComponent<Image>().color = Color.white;
+                }
+                else
+                    instance.TempoChangeBTN.transform.GetChild(0).GetComponent<Image>().color = Color.gray;
+                if (musicVolume)
+                {
+                    currentState = State.MusicVolume;
+                    instance.MusicVolumeBTN.transform.GetChild(0).GetComponent<Image>().color = Color.white;
+                }
+                else
+                    instance.MusicVolumeBTN.transform.GetChild(0).GetComponent<Image>().color = Color.gray;
 
+            }
+
+            public void SetState(State state)
+            {
+                if (Conductor.instance.NotStopped()) return;
+
+                currentState = state;
                 if (selected)
                     instance.SelectionsBTN.transform.GetChild(0).GetComponent<Image>().color = Color.white;
                 else
@@ -58,7 +94,10 @@ namespace HeavenStudio.Editor.Track
                     instance.MusicVolumeBTN.transform.GetChild(0).GetComponent<Image>().color = Color.white;
                 else
                     instance.MusicVolumeBTN.transform.GetChild(0).GetComponent<Image>().color = Color.gray;
-
+                if (chartSection)
+                    instance.ChartSectionBTN.transform.GetChild(0).GetComponent<Image>().color = Color.white;
+                else
+                    instance.ChartSectionBTN.transform.GetChild(0).GetComponent<Image>().color = Color.gray;
             }
         }
 
@@ -84,6 +123,7 @@ namespace HeavenStudio.Editor.Track
         public Button SelectionsBTN;
         public Button TempoChangeBTN;
         public Button MusicVolumeBTN;
+        public Button ChartSectionBTN;
         public Slider PlaybackSpeed;
 
         public Vector3[] LayerCorners = new Vector3[4];
@@ -170,15 +210,19 @@ namespace HeavenStudio.Editor.Track
 
             SelectionsBTN.onClick.AddListener(delegate
             {
-                timelineState.SetState(true, false, false);
+                timelineState.SetState(CurrentTimelineState.State.Selection);
             });
             TempoChangeBTN.onClick.AddListener(delegate
             {
-                timelineState.SetState(false, true, false);
+                timelineState.SetState(CurrentTimelineState.State.TempoChange);
             });
             MusicVolumeBTN.onClick.AddListener(delegate
             {
-                timelineState.SetState(false, false, true);
+                timelineState.SetState(CurrentTimelineState.State.MusicVolume);
+            });
+            ChartSectionBTN.onClick.AddListener(delegate
+            {
+                timelineState.SetState(CurrentTimelineState.State.ChartSection);
             });
 
             Tooltip.AddTooltip(SongBeat.gameObject, "Current Beat");
@@ -195,13 +239,14 @@ namespace HeavenStudio.Editor.Track
             Tooltip.AddTooltip(SelectionsBTN.gameObject, "Tool: Selection <color=#adadad>[1]</color>");
             Tooltip.AddTooltip(TempoChangeBTN.gameObject, "Tool: Tempo Change <color=#adadad>[2]</color>");
             Tooltip.AddTooltip(MusicVolumeBTN.gameObject, "Tool: Music Volume <color=#adadad>[3]</color>");
+            Tooltip.AddTooltip(ChartSectionBTN.gameObject, "Tool: Beatmap Sections <color=#adadad>[4]</color>");
 
             Tooltip.AddTooltip(PlaybackSpeed.gameObject, "The preview's playback speed. Right click to reset to 1.0");
 
             SetTimeButtonColors(true, false, false);
             MetronomeBTN.transform.GetChild(0).GetComponent<Image>().color = Color.gray;
 
-            timelineState.SetState(true, false, false);
+            timelineState.SetState(CurrentTimelineState.State.Selection);
 
             AutoBtnUpdate();
         }
@@ -300,15 +345,19 @@ namespace HeavenStudio.Editor.Track
 
                 if (Input.GetKeyDown(KeyCode.Alpha1))
                 {
-                    timelineState.SetState(true, false, false);
+                    timelineState.SetState(CurrentTimelineState.State.Selection);
                 }
                 else if (Input.GetKeyDown(KeyCode.Alpha2))
                 {
-                    timelineState.SetState(false, true, false);
+                    timelineState.SetState(CurrentTimelineState.State.TempoChange);
                 }
                 else if (Input.GetKeyDown(KeyCode.Alpha3))
                 {
-                    timelineState.SetState(false, false, true);
+                    timelineState.SetState(CurrentTimelineState.State.MusicVolume);
+                }
+                else if (Input.GetKeyDown(KeyCode.Alpha4))
+                {
+                    timelineState.SetState(CurrentTimelineState.State.ChartSection);
                 }
 
 
