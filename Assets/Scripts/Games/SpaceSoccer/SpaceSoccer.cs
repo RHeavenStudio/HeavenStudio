@@ -34,7 +34,8 @@ namespace HeavenStudio.Games.Loaders
                 new GameAction("keep-up", "")
                 {
                     defaultLength = 4f, 
-                    resizable = true
+                    resizable = true,
+					hidden = true
                 },
             });
         }
