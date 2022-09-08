@@ -42,7 +42,7 @@ namespace HeavenStudio.Editor.Track
                 ChartSection
             }
 
-            State currentState = State.Selection;
+            public State currentState = State.Selection;
 
             public bool selected { get { return currentState == State.Selection; } }
             public bool tempoChange { get { return currentState == State.TempoChange; } }
@@ -57,6 +57,7 @@ namespace HeavenStudio.Editor.Track
                 {
                     currentState = State.Selection;
                     instance.SelectionsBTN.transform.GetChild(0).GetComponent<Image>().color = Color.white;
+                    instance.SelectionsBTN.GetComponent<TabButton>().Invoke("OnClick", 0);
                 }
                 else
                     instance.SelectionsBTN.transform.GetChild(0).GetComponent<Image>().color = Color.gray;
@@ -64,6 +65,7 @@ namespace HeavenStudio.Editor.Track
                 {
                     currentState = State.TempoChange;
                     instance.TempoChangeBTN.transform.GetChild(0).GetComponent<Image>().color = Color.white;
+                    instance.TempoChangeBTN.GetComponent<TabButton>().Invoke("OnClick", 0);
                 }
                 else
                     instance.TempoChangeBTN.transform.GetChild(0).GetComponent<Image>().color = Color.gray;
@@ -71,6 +73,7 @@ namespace HeavenStudio.Editor.Track
                 {
                     currentState = State.MusicVolume;
                     instance.MusicVolumeBTN.transform.GetChild(0).GetComponent<Image>().color = Color.white;
+                    instance.MusicVolumeBTN.GetComponent<TabButton>().Invoke("OnClick", 0);
                 }
                 else
                     instance.MusicVolumeBTN.transform.GetChild(0).GetComponent<Image>().color = Color.gray;
@@ -83,19 +86,31 @@ namespace HeavenStudio.Editor.Track
 
                 currentState = state;
                 if (selected)
+                {
                     instance.SelectionsBTN.transform.GetChild(0).GetComponent<Image>().color = Color.white;
+                    instance.SelectionsBTN.GetComponent<TabButton>().Invoke("OnClick", 0);
+                }
                 else
                     instance.SelectionsBTN.transform.GetChild(0).GetComponent<Image>().color = Color.gray;
                 if (tempoChange)
+                {
                     instance.TempoChangeBTN.transform.GetChild(0).GetComponent<Image>().color = Color.white;
+                    instance.TempoChangeBTN.GetComponent<TabButton>().Invoke("OnClick", 0);
+                }
                 else
                     instance.TempoChangeBTN.transform.GetChild(0).GetComponent<Image>().color = Color.gray;
                 if (musicVolume)
+                {
                     instance.MusicVolumeBTN.transform.GetChild(0).GetComponent<Image>().color = Color.white;
+                    instance.MusicVolumeBTN.GetComponent<TabButton>().Invoke("OnClick", 0);
+                }
                 else
                     instance.MusicVolumeBTN.transform.GetChild(0).GetComponent<Image>().color = Color.gray;
                 if (chartSection)
+                {
                     instance.ChartSectionBTN.transform.GetChild(0).GetComponent<Image>().color = Color.white;
+                    instance.ChartSectionBTN.GetComponent<TabButton>().Invoke("OnClick", 0);
+                }
                 else
                     instance.ChartSectionBTN.transform.GetChild(0).GetComponent<Image>().color = Color.gray;
             }
@@ -110,8 +125,7 @@ namespace HeavenStudio.Editor.Track
         [SerializeField] private RectTransform TimelineEventObjRef;
         [SerializeField] private RectTransform LayersRect;
 
-        public TempoTimeline TempoInfo;
-        public VolumeTimeline VolumeInfo;
+        public SpecialTimeline SpecialInfo;
         private RectTransform TimelineSongPosLine;
 
         [Header("Timeline Playbar")]
@@ -157,16 +171,7 @@ namespace HeavenStudio.Editor.Track
                 AddEventObject(e.datamodel, false, new Vector3(e.beat, -e.track * LayerHeight()), e, false, RandomID());
             }
 
-            //tempo changes
-            TempoInfo.ClearTempoTimeline();
-            for (int i = 0; i < GameManager.instance.Beatmap.tempoChanges.Count; i++)
-            {
-                var t = GameManager.instance.Beatmap.tempoChanges[i];
-
-                TempoInfo.AddTempoChange(false, t);
-            }
-
-            //volume changes
+            SpecialInfo.Setup();
         }
 
         public void Init()

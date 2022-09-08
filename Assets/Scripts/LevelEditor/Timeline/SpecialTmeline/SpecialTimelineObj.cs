@@ -33,18 +33,70 @@ namespace HeavenStudio.Editor.Track
                 {
                     if (Input.GetMouseButtonDown(0))
                     {
-                        Vector3 mousePos = Editor.instance.EditorCamera.ScreenToWorldPoint(Input.mousePosition);
-                        startPosX = mousePos.x - transform.position.x;
-                        moving = true;
-                        lastPosX = transform.localPosition.x;
+                        OnLeftClick();
                     }
                     else if (Input.GetMouseButtonDown(1))
                     {
-                        // transform.parent.GetComponent<TempoTimeline>().tempoTimelineObjs.Remove(this);
-                        Destroy(this.gameObject);
+                        OnRightClick();
+                    }
+                    hovering = true;
+                }
+                else
+                {
+                    hovering = false;
+                }
+
+                if (moving)
+                {
+                    Vector3 mousePos = Editor.instance.EditorCamera.ScreenToWorldPoint(Input.mousePosition);
+
+                    transform.position = new Vector3(mousePos.x - startPosX, transform.position.y, 0);
+                    transform.localPosition = new Vector3(Mathf.Clamp(Starpelly.Mathp.Round2Nearest(transform.localPosition.x, Timeline.SnapInterval()), 0, Mathf.Infinity), transform.localPosition.y);
+
+                    if (Input.GetMouseButtonUp(0))
+                    {
+                        if (!OnMove(transform.localPosition.x))
+                            transform.localPosition = new Vector3(lastPosX, transform.localPosition.y);
+
+                        moving = false;
+                        lastPosX = transform.localPosition.x;
                     }
                 }
             }
+            else
+            {
+                if (moving)
+                {
+                    if (!OnMove(transform.localPosition.x))
+                            transform.localPosition = new Vector3(lastPosX, transform.localPosition.y);
+                    moving = false;
+                    lastPosX = transform.localPosition.x;
+                }
+                hovering = false;
+            }
+        }
+
+        public void StartMove()
+        {
+            Vector3 mousePos = Editor.instance.EditorCamera.ScreenToWorldPoint(Input.mousePosition);
+            startPosX = mousePos.x - transform.position.x;
+            moving = true;
+            lastPosX = transform.localPosition.x;
+        }
+
+        public void DeleteObj()
+        {
+            transform.parent.GetComponent<SpecialTimeline>().specialTimelineObjs.Remove(this);
+            Destroy(this.gameObject);
+        }
+
+        //events
+        public virtual void Init() {}
+        public virtual void OnLeftClick() {}
+        public virtual void OnRightClick() {}
+        public virtual bool OnMove(float beat)
+        {
+            return true;
         }
     }
 }

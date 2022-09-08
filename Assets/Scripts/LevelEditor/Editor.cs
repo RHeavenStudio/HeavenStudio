@@ -409,9 +409,9 @@ namespace HeavenStudio.Editor
         {
             GameManager.instance.LoadRemix(json, type);
             Timeline.instance.LoadRemix();
-            Timeline.instance.TempoInfo.UpdateStartingBPMText();
-            Timeline.instance.VolumeInfo.UpdateStartingVolumeText();
-            Timeline.instance.TempoInfo.UpdateOffsetText();
+            // Timeline.instance.SpecialInfo.UpdateStartingBPMText();
+            // Timeline.instance.VolumeInfo.UpdateStartingVolumeText();
+            // Timeline.instance.SpecialInfo.UpdateOffsetText();
             Timeline.FitToSong();
 
             currentRemixPath = string.Empty;
