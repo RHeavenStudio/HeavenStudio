@@ -344,7 +344,7 @@ namespace HeavenStudio
             secPerBeat = 60f / songBpm;
         }
 
-        public void SetVolume(int percent)
+        public void SetVolume(float percent)
         {
             musicSource.volume = percent / 100f;
         }

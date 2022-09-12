@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using HeavenStudio.Editor.Track;
 
 namespace HeavenStudio.Editor
 {
@@ -20,6 +21,7 @@ namespace HeavenStudio.Editor
 
         public override void OnOpenTab()
         {
+            SpecialTimeline.instance.FixObjectsVisibility();
         }
 
         public override void OnCloseTab()

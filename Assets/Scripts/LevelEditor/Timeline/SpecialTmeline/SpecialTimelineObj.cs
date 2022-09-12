@@ -25,7 +25,7 @@ namespace HeavenStudio.Editor.Track
             rectTransform = GetComponent<RectTransform>();
         }
 
-        private void Update()
+        protected void Update()
         {
             if (!Conductor.instance.NotStopped())
             {
@@ -98,5 +98,6 @@ namespace HeavenStudio.Editor.Track
         {
             return true;
         }
+        public virtual void SetVisibility(Timeline.CurrentTimelineState.State state) {}
     }
 }

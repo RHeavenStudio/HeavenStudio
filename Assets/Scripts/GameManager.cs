@@ -31,7 +31,8 @@ namespace HeavenStudio
         Coroutine currentGameSwitchIE;
 
         [Header("Properties")]
-        public int currentEvent, currentTempoEvent, currentPreEvent, currentPreSwitch;
+        public int currentEvent, currentTempoEvent, currentVolumeEvent, currentSectionEvent, 
+            currentPreEvent, currentPreSwitch;
         public float startOffset;
         public bool playOnStart;
         public float startBeat;
@@ -220,8 +221,8 @@ namespace HeavenStudio
                 return;
 
             List<float> entities = Beatmap.entities.Select(c => c.beat).ToList();
-            List<float> tempoChanges = Beatmap.tempoChanges.Select(c => c.beat).ToList();
 
+            List<float> tempoChanges = Beatmap.tempoChanges.Select(c => c.beat).ToList();
             if (currentTempoEvent < Beatmap.tempoChanges.Count && currentTempoEvent >= 0)
             {
                 // Debug.Log("Checking Tempo Change at " + tempoChanges[currentTempoEvent] + ", current beat " + Conductor.instance.songPositionInBeats);
@@ -231,6 +232,19 @@ namespace HeavenStudio
                     Conductor.instance.SetBpm(Beatmap.tempoChanges[currentTempoEvent].tempo);
                     Conductor.instance.timeSinceLastTempoChange = Time.time;
                     currentTempoEvent++;
+                }
+            }
+
+            List<float> volumeChanges = Beatmap.volumeChanges.Select(c => c.beat).ToList();
+            if (currentVolumeEvent < Beatmap.volumeChanges.Count && currentVolumeEvent >= 0)
+            {
+                // Debug.Log("Checking Tempo Change at " + tempoChanges[currentTempoEvent] + ", current beat " + Conductor.instance.songPositionInBeats);
+                if (Conductor.instance.songPositionInBeats >= volumeChanges[currentVolumeEvent])
+                {
+                    // Debug.Log("Tempo Change at " + Conductor.instance.songPositionInBeats + " of bpm " + DynamicBeatmap.tempoChanges[currentTempoEvent].tempo);
+                    Conductor.instance.SetVolume(Beatmap.volumeChanges[currentVolumeEvent].volume);
+                    Conductor.instance.timeSinceLastTempoChange = Time.time;
+                    currentVolumeEvent++;
                 }
             }
 
@@ -411,6 +425,21 @@ namespace HeavenStudio
                     currentTempoEvent = t;
                 }
                 // Debug.Log("currentTempoEvent is now " + currentTempoEvent);
+            }
+
+            if (Beatmap.volumeChanges.Count > 0)
+            {
+                currentVolumeEvent = 0;
+                List<float> volumeChanges = Beatmap.volumeChanges.Select(c => c.beat).ToList();
+
+                for (int t = 0; t < volumeChanges.Count; t++)
+                {
+                    if (volumeChanges[t] > beat)
+                    {
+                        break;
+                    }
+                    currentVolumeEvent = t;
+                }
             }
 
             SeekAheadAndPreload(beat);

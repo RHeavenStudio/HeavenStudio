@@ -21,10 +21,22 @@ namespace HeavenStudio.Editor.Track
 
         public List<SpecialTimelineObj> specialTimelineObjs = new List<SpecialTimelineObj>();
 
+        [System.Flags]
+        public enum HoveringTypes
+        {
+            TempoChange = 1,
+            VolumeChange = 2,
+            SectionChange = 4,
+        }
+        public static HoveringTypes hoveringTypes = 0;
+
         private bool firstUpdate;
+
+        public static SpecialTimeline instance;
 
         private void Start()
         {
+            instance = this;
             rectTransform = this.GetComponent<RectTransform>();
 
             Setup();
@@ -50,6 +62,7 @@ namespace HeavenStudio.Editor.Track
         {
             if (!firstUpdate)
             {
+                hoveringTypes = 0;
                 firstUpdate = true;
             }
 
@@ -65,14 +78,25 @@ namespace HeavenStudio.Editor.Track
                         switch (Timeline.instance.timelineState.currentState)
                         {
                             case Timeline.CurrentTimelineState.State.TempoChange:
-                                AddTempoChange(true);
+                                if (!hoveringTypes.HasFlag(HoveringTypes.TempoChange))
+                                    AddTempoChange(true);
                                 break;
                             case Timeline.CurrentTimelineState.State.MusicVolume:
-                                AddVolumeChange(true);
+                                if (!hoveringTypes.HasFlag(HoveringTypes.VolumeChange))
+                                    AddVolumeChange(true);
                                 break;
                         }
                     }
                 }
+            }
+            hoveringTypes = 0;
+        }
+
+        public void FixObjectsVisibility()
+        {
+            foreach (SpecialTimelineObj obj in specialTimelineObjs)
+            {
+                obj.SetVisibility(Timeline.instance.timelineState.currentState);
             }
         }
 
@@ -125,9 +149,9 @@ namespace HeavenStudio.Editor.Track
         {      
             GameObject volumeChange = Instantiate(RefVolumeChange.gameObject, this.transform);
 
-            volumeChange.transform.GetChild(0).GetComponent<Image>().color = EditorTheme.theme.properties.TempoLayerCol.Hex2RGB();
-            volumeChange.transform.GetChild(1).GetComponent<Image>().color = EditorTheme.theme.properties.TempoLayerCol.Hex2RGB();
-            volumeChange.transform.GetChild(2).GetComponent<TMP_Text>().color = EditorTheme.theme.properties.TempoLayerCol.Hex2RGB();
+            volumeChange.transform.GetChild(0).GetComponent<Image>().color = EditorTheme.theme.properties.MusicLayerCol.Hex2RGB();
+            volumeChange.transform.GetChild(1).GetComponent<Image>().color = EditorTheme.theme.properties.MusicLayerCol.Hex2RGB();
+            volumeChange.transform.GetChild(2).GetComponent<TMP_Text>().color = EditorTheme.theme.properties.MusicLayerCol.Hex2RGB();
 
             volumeChange.SetActive(true);
 

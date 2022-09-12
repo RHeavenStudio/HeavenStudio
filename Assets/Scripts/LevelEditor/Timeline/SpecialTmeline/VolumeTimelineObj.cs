@@ -15,21 +15,26 @@ namespace HeavenStudio.Editor.Track
 
         public DynamicBeatmap.VolumeChange volumeChange;
 
-        private void Update()
+        new private void Update()
         {
+            base.Update();
             if (hovering)
             {
-                float newVolume = Input.mouseScrollDelta.y;
+                SpecialTimeline.hoveringTypes |= SpecialTimeline.HoveringTypes.VolumeChange;
+                if (Timeline.instance.timelineState.currentState == Timeline.CurrentTimelineState.State.MusicVolume)
+                {
+                    float newVolume = Input.mouseScrollDelta.y;
 
-                if (Input.GetKey(KeyCode.LeftShift))
-                    newVolume *= 5f;
-                if (Input.GetKey(KeyCode.LeftControl))
-                    newVolume /= 100f;
+                    if (Input.GetKey(KeyCode.LeftShift))
+                        newVolume *= 5f;
+                    if (Input.GetKey(KeyCode.LeftControl))
+                        newVolume /= 100f;
 
-                volumeChange.volume += newVolume;
+                    volumeChange.volume += newVolume;
 
-                //make sure volume is positive
-                volumeChange.volume = Mathf.Clamp(volumeChange.volume, 0, 100);
+                    //make sure volume is positive
+                    volumeChange.volume = Mathf.Clamp(volumeChange.volume, 0, 100);
+                }
             }
 
             UpdateVolume();
@@ -45,10 +50,40 @@ namespace HeavenStudio.Editor.Track
             UpdateVolume();
         }
 
+        public override void OnLeftClick()
+        {
+            if (Timeline.instance.timelineState.currentState == Timeline.CurrentTimelineState.State.MusicVolume)
+                StartMove();
+        }
+
         public override void OnRightClick()
         {
-            GameManager.instance.Beatmap.volumeChanges.Remove(volumeChange);
-            DeleteObj();
+            if (Timeline.instance.timelineState.currentState == Timeline.CurrentTimelineState.State.MusicVolume)
+            {
+                GameManager.instance.Beatmap.volumeChanges.Remove(volumeChange);
+                DeleteObj();
+            }
+        }
+
+        public override bool OnMove(float beat)
+        {
+            foreach (var volumeChange in GameManager.instance.Beatmap.volumeChanges)
+            {
+                if (this.volumeChange == volumeChange)
+                    continue;
+                if (beat > volumeChange.beat - Timeline.instance.snapInterval && beat < volumeChange.beat + Timeline.instance.snapInterval)
+                    return false;
+            }
+            this.volumeChange.beat = beat;
+            return true;
+        }
+
+        public override void SetVisibility(Timeline.CurrentTimelineState.State state)
+        {
+            if (state == Timeline.CurrentTimelineState.State.MusicVolume || state == Timeline.CurrentTimelineState.State.Selection)
+                gameObject.SetActive(true);
+            else
+                gameObject.SetActive(false);   
         }
     }
 }
