@@ -9,7 +9,7 @@ AudioManager:
   Doppler Factor: 1
   Default Speaker Mode: 2
   m_SampleRate: 48000
-  m_DSPBufferSize: 256
+  m_DSPBufferSize: 512
   m_VirtualVoiceCount: 512
   m_RealVoiceCount: 32
   m_EnableOutputSuspension: 1
@@ -17,4 +17,4 @@ AudioManager:
   m_AmbisonicDecoderPlugin: 
   m_DisableAudio: 0
   m_VirtualizeEffects: 1
-  m_RequestedDSPBufferSize: 256
+  m_RequestedDSPBufferSize: 512
