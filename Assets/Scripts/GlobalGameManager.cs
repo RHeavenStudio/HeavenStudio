@@ -59,6 +59,7 @@ namespace HeavenStudio
             DontDestroyOnLoad(this.gameObject);
             instance = this;
             Starpelly.OS.ChangeWindowTitle("Heaven Studio DEMO");
+            QualitySettings.maxQueuedFrames = 1;
             PlayerInput.InitInputControllers();
         }
 
