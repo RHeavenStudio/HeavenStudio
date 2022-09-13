@@ -52,6 +52,9 @@ namespace HeavenStudio.Editor.Track
             foreach (var volumeChange in GameManager.instance.Beatmap.volumeChanges)
                 AddVolumeChange(false, volumeChange);
 
+            foreach (var sectionChange in GameManager.instance.Beatmap.beatmapSections)
+                AddChartSection(false, sectionChange);
+
             Timeline.instance.timelineState.SetState(Timeline.CurrentTimelineState.State.Selection);
             FixObjectsVisibility();
         }
@@ -82,6 +85,10 @@ namespace HeavenStudio.Editor.Track
                             case Timeline.CurrentTimelineState.State.MusicVolume:
                                 if (!hoveringTypes.HasFlag(HoveringTypes.VolumeChange))
                                     AddVolumeChange(true);
+                                break;
+                            case Timeline.CurrentTimelineState.State.ChartSection:
+                                if (!hoveringTypes.HasFlag(HoveringTypes.SectionChange))
+                                    AddChartSection(true);
                                 break;
                         }
                     }
@@ -177,6 +184,43 @@ namespace HeavenStudio.Editor.Track
             volumeTimelineObj.SetVisibility(Timeline.instance.timelineState.currentState);
 
             specialTimelineObjs.Add(volumeTimelineObj);
+        }
+
+        public void AddChartSection(bool create, DynamicBeatmap.ChartSection chartSection_ = null)
+        {      
+            GameObject chartSection = Instantiate(RefSectionChange.gameObject, this.transform);
+
+            chartSection.transform.GetChild(0).GetComponent<Image>().color = EditorTheme.theme.properties.SectionLayerCol.Hex2RGB();
+            chartSection.transform.GetChild(1).GetComponent<Image>().color = EditorTheme.theme.properties.SectionLayerCol.Hex2RGB();
+            chartSection.transform.GetChild(2).GetComponent<TMP_Text>().color = EditorTheme.theme.properties.SectionLayerCol.Hex2RGB();
+
+            chartSection.SetActive(true);
+
+            SectionTimelineObj sectionTimelineObj = chartSection.GetComponent<SectionTimelineObj>();
+
+            if (create == true)
+            {
+                chartSection.transform.position = new Vector3(Editor.instance.EditorCamera.ScreenToWorldPoint(Input.mousePosition).x + 0.08f, chartSection.transform.position.y);
+                chartSection.transform.localPosition = new Vector3(Starpelly.Mathp.Round2Nearest(chartSection.transform.localPosition.x, Timeline.SnapInterval()), chartSection.transform.localPosition.y);
+
+                DynamicBeatmap.ChartSection sectionC = new DynamicBeatmap.ChartSection();
+                sectionC.beat = chartSection.transform.localPosition.x;
+                sectionC.sectionName = "New Section";
+                sectionC.startPerfect = false;
+                sectionC.isCheckpoint = false;
+
+                sectionTimelineObj.chartSection = sectionC;
+                GameManager.instance.Beatmap.beatmapSections.Add(sectionC);
+            }
+            else
+            {
+                chartSection.transform.localPosition = new Vector3(chartSection_.beat, chartSection.transform.localPosition.y);
+
+                sectionTimelineObj.chartSection = chartSection_;
+            }
+            sectionTimelineObj.SetVisibility(Timeline.instance.timelineState.currentState);
+
+            specialTimelineObjs.Add(sectionTimelineObj);
         }
     }
 }
