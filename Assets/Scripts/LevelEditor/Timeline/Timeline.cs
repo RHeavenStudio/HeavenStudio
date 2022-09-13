@@ -1,4 +1,4 @@
-using System.Collections;
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
@@ -119,11 +119,18 @@ namespace HeavenStudio.Editor.Track
         [Header("Timeline Components")]
         [SerializeField] private RectTransform TimelineSlider;
         [SerializeField] private RectTransform TimelineGridSelect;
+        [SerializeField] private RectTransform TimelineEventGrid;
         [SerializeField] private TMP_Text TimelinePlaybackBeat;
         public RectTransform TimelineContent;
         [SerializeField] private RectTransform TimelineSongPosLineRef;
         [SerializeField] private RectTransform TimelineEventObjRef;
         [SerializeField] private RectTransform LayersRect;
+
+        [Header("Timeline Inputs")]
+        public TMP_InputField FirstBeatOffset;
+        public TMP_InputField StartingTempoSpecialAll;
+        public TMP_InputField StartingTempoSpecialTempo;
+        public TMP_InputField StartingVolumeSpecialVolume;
 
         public SpecialTimeline SpecialInfo;
         private RectTransform TimelineSongPosLine;
@@ -172,6 +179,9 @@ namespace HeavenStudio.Editor.Track
             }
 
             SpecialInfo.Setup();
+            UpdateOffsetText();
+            UpdateStartingBPMText();
+            UpdateStartingVolText();
         }
 
         public void Init()
@@ -245,6 +255,10 @@ namespace HeavenStudio.Editor.Track
             Tooltip.AddTooltip(TempoChangeBTN.gameObject, "Tool: Tempo Change <color=#adadad>[2]</color>");
             Tooltip.AddTooltip(MusicVolumeBTN.gameObject, "Tool: Music Volume <color=#adadad>[3]</color>");
             Tooltip.AddTooltip(ChartSectionBTN.gameObject, "Tool: Beatmap Sections <color=#adadad>[4]</color>");
+
+            Tooltip.AddTooltip(StartingTempoSpecialAll.gameObject, "Starting Tempo (BPM)");
+            Tooltip.AddTooltip(StartingTempoSpecialTempo.gameObject, "Starting Tempo (BPM)");
+            Tooltip.AddTooltip(StartingVolumeSpecialVolume.gameObject, "Starting Volume (%)");
 
             Tooltip.AddTooltip(PlaybackSpeed.gameObject, "The preview's playback speed. Right click to reset to 1.0");
 
@@ -551,7 +565,7 @@ namespace HeavenStudio.Editor.Track
 
         public bool CheckIfMouseInTimeline()
         {
-            return (this.gameObject.activeSelf && RectTransformUtility.RectangleContainsScreenPoint(TimelineContent.transform.parent.gameObject.GetComponent<RectTransform>(), Input.mousePosition, Editor.instance.EditorCamera));
+            return (this.gameObject.activeSelf && RectTransformUtility.RectangleContainsScreenPoint(TimelineEventGrid, Input.mousePosition, Editor.instance.EditorCamera));
         }
         #endregion
 
@@ -735,6 +749,80 @@ namespace HeavenStudio.Editor.Track
                 PlaybackSpeed.transform.GetChild(3).GetComponent<TMP_Text>().text = $"Playback Speed: 1x";
                 PlaybackSpeed.value = 1f;
             }
+        }
+
+        public void UpdateOffsetText()
+        {
+            FirstBeatOffset.text = (GameManager.instance.Beatmap.firstBeatOffset * 1000f).ToString("G");
+        }
+
+        public void UpdateOffsetFromText()
+        {
+            // Failsafe against empty string.
+            if (String.IsNullOrEmpty(FirstBeatOffset.text))
+                FirstBeatOffset.text = "0";
+            
+            // Convert ms to s.
+            var newOffset = Convert.ToSingle(FirstBeatOffset.text) / 1000f;
+
+            // Limit decimal places to 4.
+            newOffset = (float)System.Math.Round(newOffset, 4);
+
+            GameManager.instance.Beatmap.firstBeatOffset = newOffset;
+
+            UpdateOffsetText();
+        }
+
+        public void UpdateStartingBPMText()
+        {
+            StartingTempoSpecialAll.text = GameManager.instance.Beatmap.bpm.ToString("G");
+            StartingTempoSpecialTempo.text = StartingTempoSpecialAll.text;
+        }
+
+        public void UpdateStartingBPMFromText(bool all)
+        {
+            string text = all ? StartingTempoSpecialAll.text : StartingTempoSpecialTempo.text;
+            // Failsafe against empty string.
+            if (String.IsNullOrEmpty(text))
+                text = "120";
+            
+            var newBPM = Convert.ToDouble(text);
+
+            // Failsafe against negative BPM.
+            if (newBPM < 1f)
+            {
+                text = "1";
+                newBPM = 1;
+            }
+
+            // Limit decimal places to 4.
+            newBPM = System.Math.Round(newBPM, 4);
+
+            GameManager.instance.Beatmap.bpm = (float) newBPM;
+
+            // In case the newBPM ended up differing from the inputted string.
+            UpdateStartingBPMText();
+
+            Timeline.instance.FitToSong();
+        }
+
+        public void UpdateStartingVolText()
+        {
+            StartingVolumeSpecialVolume.text = (GameManager.instance.Beatmap.musicVolume).ToString("G");
+        }
+
+        public void UpdateStartingVolFromText()
+        {
+            // Failsafe against empty string.
+            if (String.IsNullOrEmpty(StartingVolumeSpecialVolume.text))
+                StartingVolumeSpecialVolume.text = "100";
+            
+            var newVol = Convert.ToInt32(StartingVolumeSpecialVolume.text);
+            newVol = Mathf.Clamp(newVol, 0, 100);
+
+            GameManager.instance.Beatmap.musicVolume = newVol;
+
+            UpdateStartingVolText();
         }
 
         #endregion

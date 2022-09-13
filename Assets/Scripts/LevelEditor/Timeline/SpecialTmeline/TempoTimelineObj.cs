@@ -12,6 +12,7 @@ namespace HeavenStudio.Editor.Track
     {
         [Header("Components")]
         [SerializeField] private TMP_Text tempoTXT;
+        [SerializeField] private GameObject tempoLine;
 
         public DynamicBeatmap.TempoChange tempoChange;
 
@@ -83,7 +84,13 @@ namespace HeavenStudio.Editor.Track
         public override void SetVisibility(Timeline.CurrentTimelineState.State state)
         {
             if (state == Timeline.CurrentTimelineState.State.TempoChange || state == Timeline.CurrentTimelineState.State.Selection)
+            {
                 gameObject.SetActive(true);
+                if (state == Timeline.CurrentTimelineState.State.TempoChange)
+                    tempoLine.SetActive(true);
+                else
+                    tempoLine.SetActive(false);
+            }
             else
                 gameObject.SetActive(false);   
         }

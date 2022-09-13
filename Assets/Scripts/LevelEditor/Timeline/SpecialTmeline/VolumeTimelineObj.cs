@@ -12,6 +12,7 @@ namespace HeavenStudio.Editor.Track
     {
         [Header("Components")]
         [SerializeField] private TMP_Text volumeTXT;
+        [SerializeField] private GameObject volumeLine;
 
         public DynamicBeatmap.VolumeChange volumeChange;
 
@@ -81,7 +82,13 @@ namespace HeavenStudio.Editor.Track
         public override void SetVisibility(Timeline.CurrentTimelineState.State state)
         {
             if (state == Timeline.CurrentTimelineState.State.MusicVolume || state == Timeline.CurrentTimelineState.State.Selection)
+            {
                 gameObject.SetActive(true);
+                if (state == Timeline.CurrentTimelineState.State.MusicVolume)
+                    volumeLine.SetActive(true);
+                else
+                    volumeLine.SetActive(false);
+            }
             else
                 gameObject.SetActive(false);   
         }

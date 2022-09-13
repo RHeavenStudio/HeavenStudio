@@ -45,17 +45,15 @@ namespace HeavenStudio.Editor.Track
         public void Setup()
         {
             ClearSpecialTimeline();
-            for (int i = 0; i < GameManager.instance.Beatmap.tempoChanges.Count; i++)
-            {
-                DynamicBeatmap.TempoChange tempoChange = GameManager.instance.Beatmap.tempoChanges[i];
-                AddTempoChange(false, tempoChange);
-            }
 
-            for (int i = 0; i < GameManager.instance.Beatmap.volumeChanges.Count; i++)
-            {
-                DynamicBeatmap.VolumeChange volumeChange = GameManager.instance.Beatmap.volumeChanges[i];
+            foreach (var tempoChange in GameManager.instance.Beatmap.tempoChanges)
+                AddTempoChange(false, tempoChange);
+
+            foreach (var volumeChange in GameManager.instance.Beatmap.volumeChanges)
                 AddVolumeChange(false, volumeChange);
-            }
+
+            Timeline.instance.timelineState.SetState(Timeline.CurrentTimelineState.State.Selection);
+            FixObjectsVisibility();
         }
 
         private void Update()
@@ -139,6 +137,7 @@ namespace HeavenStudio.Editor.Track
 
                 tempoTimelineObj.tempoChange = tempoChange_;
             }
+            tempoTimelineObj.SetVisibility(Timeline.instance.timelineState.currentState);
 
             specialTimelineObjs.Add(tempoTimelineObj);
 
@@ -175,6 +174,7 @@ namespace HeavenStudio.Editor.Track
 
                 volumeTimelineObj.volumeChange = volumeChange_;
             }
+            volumeTimelineObj.SetVisibility(Timeline.instance.timelineState.currentState);
 
             specialTimelineObjs.Add(volumeTimelineObj);
         }
