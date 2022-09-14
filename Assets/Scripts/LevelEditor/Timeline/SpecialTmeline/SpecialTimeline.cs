@@ -192,7 +192,8 @@ namespace HeavenStudio.Editor.Track
 
             chartSection.transform.GetChild(0).GetComponent<Image>().color = EditorTheme.theme.properties.SectionLayerCol.Hex2RGB();
             chartSection.transform.GetChild(1).GetComponent<Image>().color = EditorTheme.theme.properties.SectionLayerCol.Hex2RGB();
-            chartSection.transform.GetChild(2).GetComponent<TMP_Text>().color = EditorTheme.theme.properties.SectionLayerCol.Hex2RGB();
+            chartSection.transform.GetChild(2).GetComponent<Image>().color = EditorTheme.theme.properties.SectionLayerCol.Hex2RGB();
+            chartSection.transform.GetChild(3).GetComponent<TMP_Text>().color = EditorTheme.theme.properties.SectionLayerCol.Hex2RGB();
 
             chartSection.SetActive(true);
 
