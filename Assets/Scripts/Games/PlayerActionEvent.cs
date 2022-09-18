@@ -52,7 +52,6 @@ namespace HeavenStudio.Games
             this.canHit = canHit;
         }
 
-        public static bool justHit = false;
 
         public void Update()
         {
@@ -139,7 +138,6 @@ namespace HeavenStudio.Games
             {
                 if(canHit)
                 {
-                    justHit = true;
                     OnHit(this, state);
                     CleanUp();
                 } else

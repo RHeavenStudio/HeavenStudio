@@ -6,7 +6,7 @@ namespace HeavenStudio.Games
 {
     public class Minigame : MonoBehaviour
     {
-        public static float earlyTime = 0.12f, perfectTime = 0.09f, aceEarlyTime = 0.025f, aceLateTime = 0.025f, lateTime = 0.09f, endTime = 0.12f;
+        public static float earlyTime = 0.1f, perfectTime = 0.08f, aceEarlyTime = 0.025f, aceLateTime = 0.025f, lateTime = 0.08f, endTime = 0.1f;
         public List<Minigame.Eligible> EligibleHits = new List<Minigame.Eligible>();
 
         [System.Serializable]
@@ -130,14 +130,8 @@ namespace HeavenStudio.Games
         //Useful for strict call and responses games like Tambourine
         public bool IsExpectingInputNow()
         {
-            if (PlayerActionEvent.justHit) 
-            {
-                PlayerActionEvent.justHit = false;
-                return true;
-            }
             PlayerActionEvent input = GetClosestScheduledInput();
             if (input == null) return false;
-            // Debug.Log(input.IsExpectingInputNow());
             return input.IsExpectingInputNow();
         }
 
