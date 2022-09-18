@@ -13,6 +13,7 @@ namespace HeavenStudio.Editor.Track
         [Header("Components")]
         [SerializeField] private TMP_Text sectionLabel;
         [SerializeField] private GameObject chartLine;
+        [SerializeField] private SectionDialog sectionDialog;
 
         public DynamicBeatmap.ChartSection chartSection;
 
@@ -27,7 +28,7 @@ namespace HeavenStudio.Editor.Track
             UpdateLabel();
         }
 
-        private void UpdateLabel()
+        public void UpdateLabel()
         {
             sectionLabel.text = chartSection.sectionName;
         }
@@ -47,8 +48,8 @@ namespace HeavenStudio.Editor.Track
         {
             if (Timeline.instance.timelineState.currentState == Timeline.CurrentTimelineState.State.ChartSection)
             {
-                GameManager.instance.Beatmap.beatmapSections.Remove(chartSection);
-                DeleteObj();
+                sectionDialog.SetSectionObj(this);
+                sectionDialog.SwitchSectionDialog();
             }
         }
 
@@ -82,7 +83,10 @@ namespace HeavenStudio.Editor.Track
                 }
             }
             else
+            {
                 gameObject.SetActive(false);   
+
+            }
         }
     }
 }

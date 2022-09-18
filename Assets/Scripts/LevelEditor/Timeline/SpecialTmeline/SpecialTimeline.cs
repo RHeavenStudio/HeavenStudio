@@ -67,7 +67,7 @@ namespace HeavenStudio.Editor.Track
                 firstUpdate = true;
             }
 
-            if (Timeline.instance.userIsEditingInputField)
+            if (Timeline.instance.userIsEditingInputField || Editor.instance.inAuthorativeMenu)
                 return;
 
             if (!Conductor.instance.NotStopped())
@@ -222,6 +222,8 @@ namespace HeavenStudio.Editor.Track
             sectionTimelineObj.SetVisibility(Timeline.instance.timelineState.currentState);
 
             specialTimelineObjs.Add(sectionTimelineObj);
+            //auto-open the dialog
+            sectionTimelineObj.OnRightClick();
         }
     }
 }
