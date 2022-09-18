@@ -16,10 +16,11 @@ namespace HeavenStudio.Games.Loaders
             {
                 new GameAction("toss", "Toss Coin")
                 {
-                    function = delegate { CoinToss.instance.TossCoin(eventCaller.currentEntity.beat, eventCaller.currentEntity["toggle"]); }, 
+                    function = delegate { CoinToss.instance.TossCoin(eventCaller.currentEntity.beat, eventCaller.currentEntity["type"], eventCaller.currentEntity["toggle"]); }, 
                     defaultLength = 7, 
                     parameters = new List<Param>()
                     {
+                        new Param("type", CoinToss.CoinVariation.Default, "Variation", "Special Coin Variations"),
                         new Param("toggle", false, "Audience Reaction", "Enable Audience Reaction"),
                     }
                 },
@@ -130,6 +131,12 @@ namespace HeavenStudio.Games
 
         public PlayerActionEvent coin;
 
+        public enum CoinVariation
+        {
+            Default,
+            Cowbell,
+        }
+
         private void Awake()
         {
             instance = this;
@@ -148,7 +155,7 @@ namespace HeavenStudio.Games
             //nothing
         }
 
-        public void TossCoin(float beat, bool audienceReacting)
+        public void TossCoin(float beat, int type, bool audienceReacting)
         {
             if (coin != null) return;
 
@@ -158,6 +165,24 @@ namespace HeavenStudio.Games
             //Game state says the hand is throwing the coin
             isThrowing = true;
 
+            switch (type)
+                {
+                    case (int) CoinToss.CoinVariation.Cowbell:
+                        //this was intentional. it was to avoid the throw and cowbells to go offbeat.
+                        Jukebox.PlayOneShotGame("coinToss/cowbell1");
+                        MultiSound.Play(new MultiSound.Sound[] {
+                        new MultiSound.Sound("coinToss/cowbell2", beat + 1f, offset: 0.01f),
+                        new MultiSound.Sound("coinToss/cowbell1", beat + 2f, offset: 0.01f),
+                        new MultiSound.Sound("coinToss/cowbell2", beat + 3f, offset: 0.01f),
+                        new MultiSound.Sound("coinToss/cowbell1", beat + 4f, offset: 0.01f),
+                        new MultiSound.Sound("coinToss/cowbell2", beat + 5f, offset: 0.01f),
+                        new MultiSound.Sound("coinToss/cowbell1", beat + 6f, offset: 0.01f),
+                        });
+                        break;
+                    default:
+                        break;
+                }
+            
             this.audienceReacting = audienceReacting;
 
             coin = ScheduleInput(beat, 6f, InputType.STANDARD_DOWN, CatchSuccess, CatchMiss, CatchEmpty);

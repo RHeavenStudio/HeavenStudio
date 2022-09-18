@@ -104,10 +104,10 @@ TextureImporter:
   platformSettings:
   - serializedVersion: 3
     buildTarget: DefaultTexturePlatform
-    maxTextureSize: 2048
+    maxTextureSize: 4096
     resizeAlgorithm: 0
     textureFormat: -1
-    textureCompression: 1
+    textureCompression: 2
     compressionQuality: 50
     crunchedCompression: 0
     allowsAlphaSplitting: 0
@@ -116,10 +116,22 @@ TextureImporter:
     forceMaximumCompressionQuality_BC6H_BC7: 0
   - serializedVersion: 3
     buildTarget: Standalone
-    maxTextureSize: 2048
+    maxTextureSize: 4096
     resizeAlgorithm: 0
     textureFormat: -1
-    textureCompression: 1
+    textureCompression: 2
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 3
+    buildTarget: WebGL
+    maxTextureSize: 4096
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 2
     compressionQuality: 50
     crunchedCompression: 0
     allowsAlphaSplitting: 0
@@ -134,9 +146,9 @@ TextureImporter:
       rect:
         serializedVersion: 2
         x: 0
-        y: 1700
-        width: 668
-        height: 344
+        y: 3400
+        width: 1336
+        height: 688
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -155,9 +167,9 @@ TextureImporter:
       rect:
         serializedVersion: 2
         x: 0
-        y: 1284
-        width: 664
-        height: 406
+        y: 2568
+        width: 1328
+        height: 812
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -176,9 +188,9 @@ TextureImporter:
       rect:
         serializedVersion: 2
         x: 0
-        y: 836
-        width: 666
-        height: 438
+        y: 1672
+        width: 1332
+        height: 876
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -197,9 +209,9 @@ TextureImporter:
       rect:
         serializedVersion: 2
         x: 0
-        y: 390
-        width: 668
-        height: 438
+        y: 780
+        width: 1336
+        height: 876
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -218,9 +230,9 @@ TextureImporter:
       rect:
         serializedVersion: 2
         x: 0
-        y: 70
-        width: 860
-        height: 310
+        y: 140
+        width: 1720
+        height: 620
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -238,10 +250,10 @@ TextureImporter:
       name: sprsh_cointoss_closed_90
       rect:
         serializedVersion: 2
-        x: 676
-        y: 1668
-        width: 726
-        height: 380
+        x: 1352
+        y: 3336
+        width: 1452
+        height: 752
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -259,10 +271,10 @@ TextureImporter:
       name: sprsh_cointoss_closed_45
       rect:
         serializedVersion: 2
-        x: 676
-        y: 1286
-        width: 728
-        height: 374
+        x: 1352
+        y: 2572
+        width: 1456
+        height: 748
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -280,10 +292,10 @@ TextureImporter:
       name: sprsh_cointoss_closed_01
       rect:
         serializedVersion: 2
-        x: 676
-        y: 900
-        width: 728
-        height: 376
+        x: 1352
+        y: 1800
+        width: 1456
+        height: 752
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -301,10 +313,10 @@ TextureImporter:
       name: sprsh_cointoss_closed_02
       rect:
         serializedVersion: 2
-        x: 676
-        y: 486
-        width: 728
-        height: 404
+        x: 1352
+        y: 972
+        width: 1456
+        height: 808
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -322,10 +334,10 @@ TextureImporter:
       name: sprsh_cointoss_whoosh
       rect:
         serializedVersion: 2
-        x: 1412
-        y: 1092
-        width: 184
-        height: 920
+        x: 2824
+        y: 2184
+        width: 368
+        height: 1840
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -343,10 +355,10 @@ TextureImporter:
       name: sprsh_cointoss_sleeve
       rect:
         serializedVersion: 2
-        x: 1606
-        y: 1350
-        width: 344
-        height: 566
+        x: 3212
+        y: 2700
+        width: 688
+        height: 1132
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -364,10 +376,10 @@ TextureImporter:
       name: sprsh_cointoss_45
       rect:
         serializedVersion: 2
-        x: 1829
-        y: 1094
-        width: 215
-        height: 212
+        x: 3658
+        y: 2188
+        width: 430
+        height: 424
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -385,10 +397,10 @@ TextureImporter:
       name: sprsh_cointoss_shockwave
       rect:
         serializedVersion: 2
-        x: 1604
-        y: 1092
-        width: 216
-        height: 216
+        x: 3208
+        y: 2184
+        width: 432
+        height: 432
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
