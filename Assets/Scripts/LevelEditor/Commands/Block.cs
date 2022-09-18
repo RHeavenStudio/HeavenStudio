@@ -64,7 +64,7 @@ namespace HeavenStudio.Editor.Commands
             {
                 Pos p = new Pos();
                 p.eventObj = eventObjs[i];
-                p.lastPos_ = eventObjs[i].lastPos_;
+                p.lastPos_ = eventObjs[i].moveStartPos;
                 p.previousPos = eventObjs[i].transform.localPosition;
                 this.pos.Add(p);
             }
