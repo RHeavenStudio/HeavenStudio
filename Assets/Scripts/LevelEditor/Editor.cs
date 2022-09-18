@@ -134,7 +134,7 @@ namespace HeavenStudio.Editor
                     Fullscreen();
                 }
 
-                if (Input.GetKeyDown(KeyCode.Delete))
+                if (Input.GetKeyDown(KeyCode.Delete) || Input.GetKeyDown(KeyCode.Backspace))
                 {
                     List<TimelineEventObj> ev = new List<TimelineEventObj>();
                     for (int i = 0; i < Selections.instance.eventsSelected.Count; i++) ev.Add(Selections.instance.eventsSelected[i]);
