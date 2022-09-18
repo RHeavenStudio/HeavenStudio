@@ -182,9 +182,11 @@ namespace HeavenStudio.Editor.Track
 
                         te.moving = true;
                     }
-
-                    this.transform.position = new Vector3(mousePos.x - startPosX, mousePos.y - startPosY - 0.40f, 0);
-                    this.transform.localPosition = new Vector3(Mathf.Max(Mathp.Round2Nearest(this.transform.localPosition.x, Timeline.SnapInterval()), 0), Timeline.instance.SnapToLayer(this.transform.localPosition.y));
+                    else
+                    {
+                        this.transform.position = new Vector3(mousePos.x - startPosX, mousePos.y - startPosY - 0.40f, 0);
+                        this.transform.localPosition = new Vector3(Mathf.Max(Mathp.Round2Nearest(this.transform.localPosition.x, Timeline.SnapInterval()), 0), Timeline.instance.SnapToLayer(this.transform.localPosition.y));
+                    }
 
                     if (lastPos != transform.localPosition)
                     {
@@ -314,6 +316,7 @@ namespace HeavenStudio.Editor.Track
                 if (eligibleToMove)
                 {
                     OnComplete(true);
+                    moveStartPos = transform.localPosition;
                 }
 
                 moving = false;
