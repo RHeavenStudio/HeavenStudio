@@ -130,9 +130,14 @@ namespace HeavenStudio.Games
         //Useful for strict call and responses games like Tambourine
         public bool IsExpectingInputNow()
         {
+            if (PlayerActionEvent.justHit) 
+            {
+                PlayerActionEvent.justHit = false;
+                return true;
+            }
             PlayerActionEvent input = GetClosestScheduledInput();
             if (input == null) return false;
-
+            // Debug.Log(input.IsExpectingInputNow());
             return input.IsExpectingInputNow();
         }
 

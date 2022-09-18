@@ -52,6 +52,8 @@ namespace HeavenStudio.Games
             this.canHit = canHit;
         }
 
+        public static bool justHit = false;
+
         public void Update()
         {
             if(!Conductor.instance.NotStopped()){CleanUp();} // If the song is stopped entirely in the editor, destroy itself as we don't want duplicates
@@ -70,6 +72,7 @@ namespace HeavenStudio.Games
 
             if (IsCorrectInput() && !autoplayOnly)
             {
+                justHit = true;
                 if (state.perfect)
                 {
                     Hit(stateProg);

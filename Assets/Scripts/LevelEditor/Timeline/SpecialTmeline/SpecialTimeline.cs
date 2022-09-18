@@ -109,7 +109,7 @@ namespace HeavenStudio.Editor.Track
         {
             foreach (SpecialTimelineObj obj in specialTimelineObjs)
             {
-                obj.DeleteObj();
+                Destroy(obj.gameObject);
             }
             specialTimelineObjs.Clear();
         }
