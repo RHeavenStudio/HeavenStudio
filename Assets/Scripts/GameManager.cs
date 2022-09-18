@@ -319,6 +319,10 @@ namespace HeavenStudio
             }
 
             KillAllSounds();
+
+            Minigame miniGame = currentGameO.GetComponent<Minigame>();
+            if (miniGame != null)
+                miniGame.OnPlay(beat);
         }
 
         public void Pause()

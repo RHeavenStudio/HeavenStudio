@@ -189,6 +189,11 @@ namespace HeavenStudio.Games
 
         }
 
+        public virtual void OnPlay(float beat)
+        {
+
+        }
+
         public int MultipleEventsAtOnce()
         {
             int sameTime = 0;
