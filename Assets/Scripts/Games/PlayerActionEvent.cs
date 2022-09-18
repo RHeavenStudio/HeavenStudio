@@ -72,7 +72,6 @@ namespace HeavenStudio.Games
 
             if (IsCorrectInput() && !autoplayOnly)
             {
-                justHit = true;
                 if (state.perfect)
                 {
                     Hit(stateProg);
@@ -140,6 +139,7 @@ namespace HeavenStudio.Games
             {
                 if(canHit)
                 {
+                    justHit = true;
                     OnHit(this, state);
                     CleanUp();
                 } else
