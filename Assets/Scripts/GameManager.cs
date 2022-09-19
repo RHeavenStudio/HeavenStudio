@@ -31,19 +31,28 @@ namespace HeavenStudio
         Coroutine currentGameSwitchIE;
 
         [Header("Properties")]
-        public int currentEvent, currentTempoEvent, currentPreEvent, currentPreSwitch;
+        public int currentEvent, currentTempoEvent, currentVolumeEvent, currentSectionEvent,
+            currentPreEvent, currentPreSwitch;
+        public float endBeat;
         public float startOffset;
         public bool playOnStart;
         public float startBeat;
         [NonSerialized] public GameObject currentGameO;
         public bool autoplay;
         public bool canInput = true;
+        public DynamicBeatmap.ChartSection currentSection, nextSection;
+        public float sectionProgress { get { 
+            if (currentSection == null) return 0;
+            if (nextSection == null) return (Conductor.instance.songPositionInBeats - currentSection.beat) / (endBeat - currentSection.beat); 
+            return (Conductor.instance.songPositionInBeats - currentSection.beat) / (nextSection.beat - currentSection.beat); 
+        }}
 
-        public event Action<float> onBeatChanged;
+    public event Action<float> onBeatChanged;
+        public event Action<DynamicBeatmap.ChartSection> onSectionChange;
 
         public int BeatmapEntities()
         {
-            return Beatmap.entities.Count + Beatmap.tempoChanges.Count;
+            return Beatmap.entities.Count + Beatmap.tempoChanges.Count + Beatmap.volumeChanges.Count + Beatmap.beatmapSections.Count;
         }
 
         public static GameManager instance { get; private set; }
@@ -218,19 +227,44 @@ namespace HeavenStudio
                 return;
             if (!Conductor.instance.isPlaying)
                 return;
+            
 
             List<float> entities = Beatmap.entities.Select(c => c.beat).ToList();
-            List<float> tempoChanges = Beatmap.tempoChanges.Select(c => c.beat).ToList();
 
+            List<float> tempoChanges = Beatmap.tempoChanges.Select(c => c.beat).ToList();
             if (currentTempoEvent < Beatmap.tempoChanges.Count && currentTempoEvent >= 0)
             {
-                // Debug.Log("Checking Tempo Change at " + tempoChanges[currentTempoEvent] + ", current beat " + Conductor.instance.songPositionInBeats);
                 if (Conductor.instance.songPositionInBeats >= tempoChanges[currentTempoEvent])
                 {
-                    // Debug.Log("Tempo Change at " + Conductor.instance.songPositionInBeats + " of bpm " + DynamicBeatmap.tempoChanges[currentTempoEvent].tempo);
                     Conductor.instance.SetBpm(Beatmap.tempoChanges[currentTempoEvent].tempo);
                     Conductor.instance.timeSinceLastTempoChange = Time.time;
                     currentTempoEvent++;
+                }
+            }
+
+            List<float> volumeChanges = Beatmap.volumeChanges.Select(c => c.beat).ToList();
+            if (currentVolumeEvent < Beatmap.volumeChanges.Count && currentVolumeEvent >= 0)
+            {
+                if (Conductor.instance.songPositionInBeats >= volumeChanges[currentVolumeEvent])
+                {
+                    Conductor.instance.SetVolume(Beatmap.volumeChanges[currentVolumeEvent].volume);
+                    currentVolumeEvent++;
+                }
+            }
+
+            List<float> chartSections = Beatmap.beatmapSections.Select(c => c.beat).ToList();
+            if (currentSectionEvent < Beatmap.beatmapSections.Count && currentSectionEvent >= 0)
+            {
+                if (Conductor.instance.songPositionInBeats >= chartSections[currentSectionEvent])
+                {
+                    Debug.Log("Section " + Beatmap.beatmapSections[currentSectionEvent].sectionName + " started");
+                    currentSection = Beatmap.beatmapSections[currentSectionEvent];
+                    currentSectionEvent++;
+                    if (currentSectionEvent < Beatmap.beatmapSections.Count)
+                        nextSection = Beatmap.beatmapSections[currentSectionEvent];
+                    else
+                        nextSection = null;
+                    onSectionChange?.Invoke(currentSection);
                 }
             }
 
@@ -273,6 +307,8 @@ namespace HeavenStudio
                     // currentEvent += gameManagerEntities.Count;
                 }
             }
+
+
         }
 
         public void ToggleInputs(bool inputs)
@@ -305,6 +341,10 @@ namespace HeavenStudio
             }
 
             KillAllSounds();
+
+            Minigame miniGame = currentGameO.GetComponent<Minigame>();
+            if (miniGame != null)
+                miniGame.OnPlay(beat);
         }
 
         public void Pause()
@@ -389,10 +429,17 @@ namespace HeavenStudio
                 {
                     SetGame(newGame);
                 }
+
+                List<DynamicBeatmap.DynamicEntity> allEnds = EventCaller.GetAllInGameManagerList("gameManager", new string[] { "end" });
+                if (allEnds.Count > 0)
+                    endBeat = allEnds.Select(c => c.beat).Min();
+                else
+                    endBeat = Conductor.instance.SongLengthInBeats();
             }
             else
             {
                 SetGame("noGame");
+                endBeat = Conductor.instance.SongLengthInBeats();
             }
 
             if (Beatmap.tempoChanges.Count > 0)
@@ -412,6 +459,39 @@ namespace HeavenStudio
                 }
                 // Debug.Log("currentTempoEvent is now " + currentTempoEvent);
             }
+
+            if (Beatmap.volumeChanges.Count > 0)
+            {
+                currentVolumeEvent = 0;
+                List<float> volumeChanges = Beatmap.volumeChanges.Select(c => c.beat).ToList();
+
+                for (int t = 0; t < volumeChanges.Count; t++)
+                {
+                    if (volumeChanges[t] > beat)
+                    {
+                        break;
+                    }
+                    currentVolumeEvent = t;
+                }
+            }
+
+            currentSection = null;
+            nextSection = null;
+            if (Beatmap.beatmapSections.Count > 0)
+            {
+                currentSectionEvent = 0;
+                List<float> beatmapSections = Beatmap.beatmapSections.Select(c => c.beat).ToList();
+
+                for (int t = 0; t < beatmapSections.Count; t++)
+                {
+                    if (beatmapSections[t] > beat)
+                    {
+                        break;
+                    }
+                    currentSectionEvent = t;
+                }
+            }
+            onSectionChange?.Invoke(currentSection);
 
             SeekAheadAndPreload(beat);
         }

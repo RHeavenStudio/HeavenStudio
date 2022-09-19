@@ -446,8 +446,24 @@ namespace HeavenStudio.Games
             cameraPosition = CameraPosition[0].position;
         }
 
+        public override void OnPlay(float beat)
+        {
+            var cond = Conductor.instance;
+            if (!cond.isPlaying)
+            {
+                SetBgEffectsToLast(beat);
+                // remove all children of the ItemHolder
+                foreach (Transform child in ItemHolder)
+                {
+                    Destroy(child.gameObject);
+                }
+            }
+        }
+
         private void Start()
         {
+            var cond = Conductor.instance;
+            
             GameCamera.additionalPosition = cameraPosition - GameCamera.defaultPosition;
             bgEffectAnimator = BGEffect.GetComponent<Animator>();
             bgEffectSpriteRenderer = BGEffect.GetComponent<SpriteRenderer>();
@@ -456,7 +472,8 @@ namespace HeavenStudio.Games
             bgBloodRenderer = BGBlood.GetComponent<SpriteRenderer>();
             bgRadialRenderer = BGRadial.GetComponent<SpriteRenderer>();
 
-            SetBgAndShadowCol(WantBgChangeStart, WantBgChangeLength, bgType, (int) currentShadowType, BackgroundColors[bgType], customShadowColour, (int)currentBgEffect);
+            SetBgEffectsToLast(cond.songPositionInBeats);
+            SetBgAndShadowCol(WantBgChangeStart, WantBgChangeLength, bgType, (int) currentShadowType, bgColour, customShadowColour, (int)currentBgEffect);
             SetBgTexture(textureType, textureFilterType, filterColour, filterColour);
             UpdateMaterialColour(BodyColor, HighlightColor, ItemColor);
             ToggleBop(WantBop);
@@ -806,10 +823,10 @@ namespace HeavenStudio.Games
                 var e = bgfx[i];
                 if (e.beat > beat)
                     break;
-                SetBgAndShadowCol(e.beat, e.length, e["type"], e["type2"], e["colorA"], e["colorB"], e["type3"]);
-                SetBgTexture(e["type4"], e["type5"], e["colorC"], e["colorD"]);
+                SetBgEffectsUnloaded(e.beat, e.length, e["type"], e["type2"], e["colorA"], e["colorB"], e["type3"], e["type4"], e["type5"], e["colorC"], e["colorD"]);
             }
             var camfx = GameManager.instance.Beatmap.entities.FindAll(en => en.datamodel == "karateman/special camera");
+            DoSpecialCamera(0, 0, true);
             for (int i = 0; i < camfx.Count; i++)
             {
                 var e = camfx[i];
@@ -817,17 +834,16 @@ namespace HeavenStudio.Games
                     break;
                 DoSpecialCamera(e.beat, e.length, e["toggle"]);
             }
-            // has issues when creating a new hitx entity so this is deactivated for now
-            // var hitx = GameManager.instance.Beatmap.entities.FindAll(en => en.datamodel == "karateman/hitX");
-            // for (int i = 0; i < hitx.Count; i++)
-            // {
-            //     var e = hitx[i];
-            //     if (e.beat > beat)
-            //         break;
-            //     Debug.Log("hitx");
-            //     DoWord(e.beat, e["type"], false);
-            // }
-            
+            var objfx = GameManager.instance.Beatmap.entities.FindAll(en => en.datamodel == "karateman/set object colors");
+            for (int i = 0; i < objfx.Count; i++)
+            {
+                var e = objfx[i];
+                if (e.beat > beat)
+                    break;
+                UpdateMaterialColour(e["colorA"], e["colorB"], e["colorC"]);
+            }
+            SetBgAndShadowCol(WantBgChangeStart, WantBgChangeLength, bgType, (int) currentShadowType, bgColour, customShadowColour, (int)currentBgEffect);
+            SetBgTexture(textureType, textureFilterType, filterColour, filterColour);
         }
 
         public static void SetBgEffectsUnloaded(float beat, float length, int newBgType, int newShadowType, Color bgCol, Color shadowCol, int bgFx, int texture, int textureFilter, Color filterCol, Color filterColNext)

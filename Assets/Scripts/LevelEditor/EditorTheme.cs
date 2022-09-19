@@ -19,8 +19,10 @@ namespace HeavenStudio.Editor
 
         [Header("Components")]
         [SerializeField] private Image layer;
+        [SerializeField] private Image specialLayers;
         [SerializeField] private Image tempoLayer;
         [SerializeField] private Image musicLayer;
+        [SerializeField] private Image sectionLayer;
 
         private void Awake()
         {
@@ -29,10 +31,14 @@ namespace HeavenStudio.Editor
 
         private void Start()
         {
+            specialLayers.GetComponent<Image>().color = theme.properties.SpecialLayersCol.Hex2RGB();
             tempoLayer.GetComponent<Image>().color = theme.properties.TempoLayerCol.Hex2RGB();
             musicLayer.GetComponent<Image>().color = theme.properties.MusicLayerCol.Hex2RGB();
+            sectionLayer.GetComponent<Image>().color = theme.properties.SectionLayerCol.Hex2RGB();
+            Tooltip.AddTooltip(specialLayers.gameObject, $"All Special Tracks");
             Tooltip.AddTooltip(tempoLayer.gameObject, $"Tempo Track");
             Tooltip.AddTooltip(musicLayer.gameObject, $"Music Volume Track");
+            Tooltip.AddTooltip(sectionLayer.gameObject, $"Remix Sections Track");
 
 
             layer.gameObject.SetActive(false);

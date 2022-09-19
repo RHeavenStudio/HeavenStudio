@@ -52,6 +52,7 @@ namespace HeavenStudio.Games
             this.canHit = canHit;
         }
 
+
         public void Update()
         {
             if(!Conductor.instance.NotStopped()){CleanUp();} // If the song is stopped entirely in the editor, destroy itself as we don't want duplicates

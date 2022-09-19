@@ -31,6 +31,8 @@ namespace HeavenStudio
         // Current time of the song
         private float time;
 
+        double lastAbsTime;
+
         // an AudioSource attached to this GameObject that will play the music.
         public AudioSource musicSource;
 
@@ -140,6 +142,7 @@ namespace HeavenStudio
                     musicSource.PlayScheduled(AudioSettings.dspTime);
                 }
             }
+            lastAbsTime = Time.realtimeSinceStartupAsDouble;
 
             // GameManager.instance.SetCurrentEventToClosest(songPositionInBeats);
         }
@@ -172,7 +175,9 @@ namespace HeavenStudio
 
             if (isPlaying)
             {
-                var dt = Time.unscaledDeltaTime * musicSource.pitch;
+                double absTime = Time.realtimeSinceStartupAsDouble;
+                float dt = (float) (absTime - lastAbsTime) * musicSource.pitch;
+                lastAbsTime = absTime;
 
                 time += dt;
 
@@ -344,7 +349,7 @@ namespace HeavenStudio
             secPerBeat = 60f / songBpm;
         }
 
-        public void SetVolume(int percent)
+        public void SetVolume(float percent)
         {
             musicSource.volume = percent / 100f;
         }

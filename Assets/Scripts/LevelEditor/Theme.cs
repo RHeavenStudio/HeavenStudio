@@ -12,8 +12,10 @@ namespace HeavenStudio.Editor
         [Serializable]
         public class Properties
         {
+            public string SpecialLayersCol;
             public string TempoLayerCol;
             public string MusicLayerCol;
+            public string SectionLayerCol;
 
             public string Layer1Col;
             public string Layer2Col;
