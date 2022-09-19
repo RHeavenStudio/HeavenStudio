@@ -183,10 +183,11 @@ namespace HeavenStudio.Editor
 
         public void Drag()
         {
-            if (Conductor.instance.NotStopped() || !Timeline.instance.timelineState.selected) return;
-
+            if (Conductor.instance.NotStopped() || Editor.instance.inAuthorativeMenu) return;
+            
             if (Timeline.instance.CheckIfMouseInTimeline() && dragTimes < 1)
             {
+                Timeline.instance.timelineState.SetState(Timeline.CurrentTimelineState.State.Selection);
                 dragTimes++;
 
                 TimelineEventObj eventObj;

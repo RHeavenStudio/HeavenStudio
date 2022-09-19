@@ -235,6 +235,12 @@ namespace HeavenStudio
                 game = EventCaller.instance.GetMinigame(e.datamodel.Split(0));
                 action = EventCaller.instance.GetGameAction(game, e.datamodel.Split(1));
 
+                if (game == null || action == null)
+                {
+                    //FUTURE: attempt to convert to a new entity if a converter exists for this datamodel
+                    UnityEngine.Debug.LogError($"Could not find game or gameaction from datamodel {e.datamodel} @ beat {e.beat}, skipping entity");
+                    continue;
+                }
                 // Debug.Log($"{game.name} {action.displayName} @ beat {e.beat}");
 
                 Dictionary<string, dynamic> dynamicData = new Dictionary<string, dynamic>();

@@ -134,7 +134,7 @@ namespace HeavenStudio.Editor
                     Fullscreen();
                 }
 
-                if (Input.GetKeyDown(KeyCode.Delete))
+                if (Input.GetKeyDown(KeyCode.Delete) || Input.GetKeyDown(KeyCode.Backspace))
                 {
                     List<TimelineEventObj> ev = new List<TimelineEventObj>();
                     for (int i = 0; i < Selections.instance.eventsSelected.Count; i++) ev.Add(Selections.instance.eventsSelected[i]);
@@ -409,9 +409,9 @@ namespace HeavenStudio.Editor
         {
             GameManager.instance.LoadRemix(json, type);
             Timeline.instance.LoadRemix();
-            Timeline.instance.TempoInfo.UpdateStartingBPMText();
-            Timeline.instance.VolumeInfo.UpdateStartingVolumeText();
-            Timeline.instance.TempoInfo.UpdateOffsetText();
+            // Timeline.instance.SpecialInfo.UpdateStartingBPMText();
+            // Timeline.instance.VolumeInfo.UpdateStartingVolumeText();
+            // Timeline.instance.SpecialInfo.UpdateOffsetText();
             Timeline.FitToSong();
 
             currentRemixPath = string.Empty;

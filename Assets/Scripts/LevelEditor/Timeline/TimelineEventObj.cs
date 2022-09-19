@@ -14,7 +14,7 @@ namespace HeavenStudio.Editor.Track
         private float startPosY;
 
         private Vector3 lastPos;
-        public Vector2 lastPos_;
+        public Vector2 moveStartPos;
         private RectTransform rectTransform;
 
         [Header("Components")]
@@ -50,7 +50,7 @@ namespace HeavenStudio.Editor.Track
 
         private void Start()
         {
-            lastPos_ = transform.localPosition;
+            moveStartPos = transform.localPosition;
 
             rectTransform = GetComponent<RectTransform>();
 
@@ -163,13 +163,16 @@ namespace HeavenStudio.Editor.Track
                         this.wasDuplicated = false;
                         this.moving = false;
 
+                        transform.localPosition = moveStartPos;
+                        OnComplete(false);
+
                         var te = Timeline.instance.CopyEventObject(this);
 
                         Selections.instance.DragSelect(te);
 
                         te.wasDuplicated = true;
                         te.transform.localPosition = transform.localPosition;
-                        te.lastPos_ = transform.localPosition;
+                        te.moveStartPos = transform.localPosition;
 
                         for (int i = 0; i < Timeline.instance.eventObjs.Count; i++)
                         {
@@ -179,12 +182,11 @@ namespace HeavenStudio.Editor.Track
 
                         te.moving = true;
                     }
-
-
-                    lastPos_ = transform.localPosition;
-
-                    this.transform.position = new Vector3(mousePos.x - startPosX, mousePos.y - startPosY - 0.40f, 0);
-                    this.transform.localPosition = new Vector3(Mathf.Max(Mathp.Round2Nearest(this.transform.localPosition.x, Timeline.SnapInterval()), 0), Timeline.instance.SnapToLayer(this.transform.localPosition.y));
+                    else
+                    {
+                        this.transform.position = new Vector3(mousePos.x - startPosX, mousePos.y - startPosY - 0.40f, 0);
+                        this.transform.localPosition = new Vector3(Mathf.Max(Mathp.Round2Nearest(this.transform.localPosition.x, Timeline.SnapInterval()), 0), Timeline.instance.SnapToLayer(this.transform.localPosition.y));
+                    }
 
                     if (lastPos != transform.localPosition)
                     {
@@ -281,7 +283,7 @@ namespace HeavenStudio.Editor.Track
             {
                 if (selected && Timeline.instance.timelineState.selected)
                 {
-                    lastPos_ = transform.localPosition;
+                    moveStartPos = transform.localPosition;
 
                     for (int i = 0; i < Timeline.instance.eventObjs.Count; i++)
                     {
@@ -314,6 +316,7 @@ namespace HeavenStudio.Editor.Track
                 if (eligibleToMove)
                 {
                     OnComplete(true);
+                    moveStartPos = transform.localPosition;
                 }
 
                 moving = false;

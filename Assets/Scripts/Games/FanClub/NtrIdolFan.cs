@@ -135,6 +135,7 @@ namespace HeavenStudio.Games.Scripts_FanClub
                 float yWeight = -(yMul*yMul) + 1f;
                 motionRoot.transform.localPosition = new Vector3(0, 3f * yWeight);
                 shadow.transform.localScale = new Vector3((1f-yWeight*0.8f) * 1.4f, (1f-yWeight*0.8f) * 1.4f, 1f);
+                animator.Play("FanJump", -1, 0);
             }
             else
             {
