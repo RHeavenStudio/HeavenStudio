@@ -21,6 +21,7 @@ namespace HeavenStudio
         [Header("Components")]
         public TextAsset txt;
         public Camera GameCamera, CursorCam, OverlayCamera;
+        public GameObject GameLetterbox;
         public CircleCursor CircleCursor;
         [HideInInspector] public GameObject GamesHolder;
         public Games.Global.Flash fade;
