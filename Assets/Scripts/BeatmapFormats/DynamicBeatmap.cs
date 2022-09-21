@@ -355,6 +355,12 @@ namespace HeavenStudio
                         if (!dynamicData.ContainsKey(param.propertyName))
                         {
                             type = param.parameter.GetType();
+                            //add property if it doesn't exist
+                            if (e[param.propertyName] == null)
+                            {
+                                dynamicData.Add(param.propertyName, param.parameter);
+                                continue;
+                            }
                             pType = e[param.propertyName].GetType();
                             if (pType == type)
                             {
