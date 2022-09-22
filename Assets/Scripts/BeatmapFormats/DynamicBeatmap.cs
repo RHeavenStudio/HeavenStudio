@@ -355,10 +355,19 @@ namespace HeavenStudio
                         if (!dynamicData.ContainsKey(param.propertyName))
                         {
                             type = param.parameter.GetType();
+                            //FUTURE: attempt to convert to a new entity if a converter exists for this datamodel
                             //add property if it doesn't exist
-                            if (e[param.propertyName] == null)
+                            if (!e.DynamicData.ContainsKey(param.propertyName))
                             {
-                                dynamicData.Add(param.propertyName, param.parameter);
+                                Debug.LogWarning($"Property {param.propertyName} does not exist in the entity's dynamic data! Adding...");
+                                if (type == typeof(EntityTypes.Integer))
+                                    dynamicData.Add(param.propertyName, (int)param.parameter);
+                                else if (type == typeof(EntityTypes.Float))
+                                    dynamicData.Add(param.propertyName, (float)param.parameter);
+                                else if (type.IsEnum && param.propertyName != "ease")
+                                    dynamicData.Add(param.propertyName, (int)param.parameter);
+                                else
+                                    dynamicData.Add(param.propertyName, Convert.ChangeType(param.parameter, type));
                                 continue;
                             }
                             pType = e[param.propertyName].GetType();
