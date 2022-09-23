@@ -238,7 +238,6 @@ namespace HeavenStudio
                 if (Conductor.instance.songPositionInBeats >= tempoChanges[currentTempoEvent])
                 {
                     Conductor.instance.SetBpm(Beatmap.tempoChanges[currentTempoEvent].tempo);
-                    Conductor.instance.timeSinceLastTempoChange = Time.time;
                     currentTempoEvent++;
                 }
             }

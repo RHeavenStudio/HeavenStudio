@@ -332,7 +332,7 @@ namespace HeavenStudio.Editor.Track
             if (!Conductor.instance.isPlaying && !Conductor.instance.isPaused)
             {
                 SongBeat.text = $"Beat {string.Format("{0:0.000}", TimelineSlider.localPosition.x)}";
-                SongPos.text = FormatTime(Conductor.instance.GetSongPosFromBeat(TimelineSlider.localPosition.x));
+                SongPos.text = FormatTime((float) Conductor.instance.GetSongPosFromBeat(TimelineSlider.localPosition.x));
             }
             else
             {
