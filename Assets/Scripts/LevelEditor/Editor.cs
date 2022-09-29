@@ -30,7 +30,7 @@ namespace HeavenStudio.Editor
         [SerializeField] public Camera EditorCamera;
 
         // [SerializeField] public GameObject EditorLetterbox;
-        [SerializeField] public GameObject GameLetterbox;
+        public GameObject GameLetterbox;
 
         [Header("Rect")]
         [SerializeField] private RenderTexture ScreenRenderTexture;
@@ -93,6 +93,7 @@ namespace HeavenStudio.Editor
             GameCamera.instance.camera.targetTexture = ScreenRenderTexture;
             GameManager.instance.CursorCam.targetTexture = ScreenRenderTexture;
             GameManager.instance.OverlayCamera.targetTexture = ScreenRenderTexture;
+            GameLetterbox = GameManager.instance.GameLetterbox;
             Screen.texture = ScreenRenderTexture;
 
             GameManager.instance.Init();

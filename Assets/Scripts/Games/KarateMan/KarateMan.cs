@@ -945,6 +945,9 @@ namespace HeavenStudio.Games
 
         void UpdateFilterColour(Color bgColor, Color filterColor)
         {
+            bgGradientRenderer = BGGradient.GetComponent<SpriteRenderer>();
+            bgBloodRenderer = BGBlood.GetComponent<SpriteRenderer>();
+            bgRadialRenderer = BGRadial.GetComponent<SpriteRenderer>();
             Color col;
             if (textureFilterType == (int) ShadowType.Tinted)
                 col = Color.LerpUnclamped(bgColor, ShadowBlendColor, 0.45f);

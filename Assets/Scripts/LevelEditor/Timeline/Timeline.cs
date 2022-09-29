@@ -282,6 +282,7 @@ namespace HeavenStudio.Editor.Track
             if (songBeats == 0) songBeats = 320;
             else songBeats += 10;
             TimelineContent.sizeDelta = new Vector2(songBeats, currentSizeDelta.y);
+            TimelineEventGrid.sizeDelta = new Vector2(songBeats, currentSizeDelta.y);
         }
 
         public void AutoBtnUpdate()
@@ -331,7 +332,7 @@ namespace HeavenStudio.Editor.Track
             if (!Conductor.instance.isPlaying && !Conductor.instance.isPaused)
             {
                 SongBeat.text = $"Beat {string.Format("{0:0.000}", TimelineSlider.localPosition.x)}";
-                SongPos.text = FormatTime(Conductor.instance.GetSongPosFromBeat(TimelineSlider.localPosition.x));
+                SongPos.text = FormatTime((float) Conductor.instance.GetSongPosFromBeat(TimelineSlider.localPosition.x));
             }
             else
             {

@@ -21,6 +21,7 @@ namespace HeavenStudio
         [Header("Components")]
         public TextAsset txt;
         public Camera GameCamera, CursorCam, OverlayCamera;
+        public GameObject GameLetterbox;
         public CircleCursor CircleCursor;
         [HideInInspector] public GameObject GamesHolder;
         public Games.Global.Flash fade;
@@ -237,7 +238,6 @@ namespace HeavenStudio
                 if (Conductor.instance.songPositionInBeats >= tempoChanges[currentTempoEvent])
                 {
                     Conductor.instance.SetBpm(Beatmap.tempoChanges[currentTempoEvent].tempo);
-                    Conductor.instance.timeSinceLastTempoChange = Time.time;
                     currentTempoEvent++;
                 }
             }

@@ -189,6 +189,21 @@ namespace HeavenStudio.Games
             //coin.perfectOnly = true;
         }
 
+        public void TossCoin(float beat)
+        {
+            if (coin != null) return;
+
+            //Play sound and animations
+            Jukebox.PlayOneShotGame("coinToss/throw");
+            handAnimator.Play("Throw", 0, 0);
+            //Game state says the hand is throwing the coin
+            isThrowing = true;
+            this.audienceReacting = false;
+
+            coin = ScheduleInput(beat, 6f, InputType.STANDARD_DOWN, CatchSuccess, CatchMiss, CatchEmpty);
+            //coin.perfectOnly = true;
+        }
+
         public void CatchSuccess(PlayerActionEvent caller, float state)
         {
             Jukebox.PlayOneShotGame("coinToss/catch");

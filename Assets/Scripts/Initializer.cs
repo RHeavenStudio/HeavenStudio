@@ -20,6 +20,7 @@ namespace HeavenStudio
             GameObject MainCamera = Cameras.transform.GetChild(0).gameObject;
             GameObject CursorCamera = Cameras.transform.GetChild(1).gameObject;
             GameObject OverlayCamera = Cameras.transform.GetChild(2).gameObject;
+            GameObject GameLetterbox = Cameras.transform.GetChild(3).gameObject;
 
             GameObject Cursor = Instantiate(Resources.Load<GameObject>("Prefabs/Cursor"));
             Cursor.name = "Cursor";
@@ -38,6 +39,7 @@ namespace HeavenStudio
             gameManager.GameCamera = MainCamera.GetComponent<Camera>();
             gameManager.CursorCam = CursorCamera.GetComponent<Camera>();
             gameManager.OverlayCamera = OverlayCamera.GetComponent<Camera>();
+            gameManager.GameLetterbox = GameLetterbox;
 
             GameObject Profiler = Instantiate(Resources.Load<GameObject>("Prefabs/GameProfiler"));
             Profiler.name = "GameProfiler";
