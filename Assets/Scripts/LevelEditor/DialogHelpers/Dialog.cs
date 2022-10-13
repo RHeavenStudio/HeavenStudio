@@ -12,8 +12,8 @@ namespace HeavenStudio.Editor
         [SerializeField] protected GameObject dialog;
         public void ForceState(bool onoff = false)
         {
-            Editor.instance.canSelect = onoff;
-            Editor.instance.inAuthorativeMenu = !onoff;
+            Editor.instance.canSelect = !onoff;
+            Editor.instance.inAuthorativeMenu = onoff;
             dialog.SetActive(onoff);
         }
 
