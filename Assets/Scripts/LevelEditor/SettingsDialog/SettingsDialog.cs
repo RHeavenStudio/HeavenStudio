@@ -1,14 +1,11 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
-using HeavenStudio.Editor.Track;
-
 using TMPro;
 
 namespace HeavenStudio.Editor 
 {
     public class SettingsDialog : Dialog
     {
+        [SerializeField] private TMP_Text BuildDateDisplay;
         private void Start() {}
 
         public void SwitchSettingsDialog()
@@ -22,6 +19,8 @@ namespace HeavenStudio.Editor
                 Editor.instance.canSelect = false;
                 Editor.instance.inAuthorativeMenu = true;
                 dialog.SetActive(true);
+
+                BuildDateDisplay.text = GlobalGameManager.buildTime;
             }
         }
 

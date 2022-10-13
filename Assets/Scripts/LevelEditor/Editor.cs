@@ -41,6 +41,7 @@ namespace HeavenStudio.Editor
         [Header("Components")]
         [SerializeField] private Timeline Timeline;
         [SerializeField] private TMP_Text GameEventSelectorTitle;
+        [SerializeField] private TMP_Text BuildDateDisplay;
 
         [Header("Toolbar")]
         [SerializeField] private Button NewBTN;
@@ -123,6 +124,8 @@ namespace HeavenStudio.Editor
 
             Tooltip.AddTooltip(EditorSettingsBTN.gameObject, "Editor Settings <color=#adadad>[Ctrl+Shift+O]</color>");
             UpdateEditorStatus(true);
+
+            BuildDateDisplay.text = GlobalGameManager.buildTime;
         }
 
         public void LateUpdate()
