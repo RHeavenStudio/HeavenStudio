@@ -9,7 +9,7 @@ namespace HeavenStudio.Games.Loaders
     public static class AgbSpaceDanceLoader
     {
         public static Minigame AddGame(EventCaller eventCaller) {
-            return new Minigame("spaceDance", "Space Dance \n<color=#eb5454>[WIP don't use]</color>", "FFFF34", false, false, new List<GameAction>()
+            return new Minigame("spaceDance", "Space Dance \n<color=#eb5454>[WIP]</color>", "FFFF34", false, false, new List<GameAction>()
             {
                 new GameAction("turn right", "Turn Right")
                 {
