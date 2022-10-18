@@ -15,12 +15,28 @@ namespace HeavenStudio.Games.Loaders
         public static Minigame AddGame(EventCaller eventCaller) {
             return new Minigame("mrUpbeat", "Mr. Upbeat", "FFFFFF", false, false, new List<GameAction>()
             {
-                new GameAction("prepare",               delegate { MrUpbeat.instance.SetInterval(eventCaller.currentEntity.beat); }, 0.5f, true, inactiveFunction: delegate { MrUpbeat.Beep(eventCaller.currentEntity.beat, eventCaller.currentEntity.length); }),
-                new GameAction("go",                    delegate { MrUpbeat.instance.Go(eventCaller.currentEntity.beat);  }, 4f, true),
-                new GameAction("ding!",                 delegate { MrUpbeat.instance.Ding(eventCaller.currentEntity.toggle); }, 0.5f, parameters: new List<Param>()
+                new GameAction("prepare", "Prepare")
                 {
-                    new Param("toggle", false, "Applause")
-                }),
+                    function = delegate { MrUpbeat.instance.SetInterval(eventCaller.currentEntity.beat); }, 
+                    defaultLength = 0.5f, 
+                    resizable = true, 
+                    inactiveFunction = delegate { MrUpbeat.Beep(eventCaller.currentEntity.beat, eventCaller.currentEntity.length); }
+                },
+                new GameAction("go", "Start Stepping")
+                {
+                    function = delegate { MrUpbeat.instance.Go(eventCaller.currentEntity.beat);  }, 
+                    defaultLength = 4f, 
+                    resizable = true
+                },
+                new GameAction("ding!", "Finish Stepping")
+                {
+                    function = delegate { MrUpbeat.instance.Ding(eventCaller.currentEntity["toggle"]); },
+                    defaultLength = 0.5f, 
+                    parameters = new List<Param>()
+                    {
+                        new Param("toggle", false, "Applause")
+                    }
+                },
             });
         }
     }
@@ -66,7 +82,7 @@ namespace HeavenStudio.Games
 
         private void Update()
         {
-            List<Beatmap.Entity> gos = GameManager.instance.Beatmap.entities.FindAll(c => c.datamodel == "mrUpbeat/go");
+            List<DynamicBeatmap.DynamicEntity> gos = GameManager.instance.Beatmap.entities.FindAll(c => c.datamodel == "mrUpbeat/go");
             for (int i = 0; i < gos.Count; i++)
             {
                 if ((gos[i].beat - 0.15f) <= Conductor.instance.songPositionInBeats && (gos[i].beat + gos[i].length) - 0.15f > Conductor.instance.songPositionInBeats)
@@ -102,7 +118,7 @@ namespace HeavenStudio.Games
 
         public override void OnGameSwitch(float beat)
         {
-            foreach (Beatmap.Entity entity in GameManager.instance.Beatmap.entities)
+            foreach (var entity in GameManager.instance.Beatmap.entities)
             {
                 if (entity.beat > beat) //the list is sorted based on the beat of the entity, so this should work fine.
                 {

@@ -15,8 +15,17 @@ namespace HeavenStudio.Games.Loaders
         public static Minigame AddGame(EventCaller eventCaller) {
             return new Minigame("wizardsWaltz", "Wizard's Waltz \n<color=#adadad>(Mahou Tsukai)</color>", "FFEF9C", false, false, new List<GameAction>()
             {
-                new GameAction("start interval",        delegate { WizardsWaltz.instance.SetIntervalStart(eventCaller.currentEntity.beat, eventCaller.currentEntity.length); }, 4f, true),
-                new GameAction("plant",        delegate { WizardsWaltz.instance.SpawnFlower(eventCaller.currentEntity.beat); }, 0.5f, false),
+                new GameAction("start interval", "Start Interval")
+                {
+                    function = delegate { WizardsWaltz.instance.SetIntervalStart(eventCaller.currentEntity.beat, eventCaller.currentEntity.length); }, 
+                    defaultLength = 4f, 
+                    resizable = true
+                },
+                new GameAction("plant", "Plant")
+                {
+                    function = delegate { WizardsWaltz.instance.SpawnFlower(eventCaller.currentEntity.beat); }, 
+                    defaultLength = 0.5f,
+                },
             });
         }
     }
@@ -51,7 +60,7 @@ namespace HeavenStudio.Games
             instance = this;
             wizard.Init();
 
-            Beatmap.Entity nextStart = GameManager.instance.Beatmap.entities.Find(c => c.datamodel == "wizardsWaltz/start interval" && c.beat + c.length >= Conductor.instance.songPositionInBeats);
+            var nextStart = GameManager.instance.Beatmap.entities.Find(c => c.datamodel == "wizardsWaltz/start interval" && c.beat + c.length >= Conductor.instance.songPositionInBeats);
 
             if (nextStart != null)
             {

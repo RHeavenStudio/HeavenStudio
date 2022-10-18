@@ -22,7 +22,7 @@ namespace HeavenStudio.Games.Global
 
         [SerializeField] private Color currentCol;
 
-        private List<Beatmap.Entity> allFadeEvents = new List<Beatmap.Entity>();
+        private List<DynamicBeatmap.DynamicEntity> allFadeEvents = new List<DynamicBeatmap.DynamicEntity>();
 
         private void Awake()
         {
@@ -64,7 +64,7 @@ namespace HeavenStudio.Games.Global
 
             if (allFadeEvents.Count > 0)
             {
-                Beatmap.Entity startEntity = null;
+                DynamicBeatmap.DynamicEntity startEntity = null;
 
                 for (int i = 0; i < allFadeEvents.Count; i++)
                 {
@@ -85,14 +85,14 @@ namespace HeavenStudio.Games.Global
                 {
                     if (!override_)
                     {
-                        Color colA = startEntity.colorA;
-                        Color colB = startEntity.colorB;
+                        Color colA = startEntity["colorA"];
+                        Color colB = startEntity["colorB"];
 
-                        startCol = new Color(colA.r, colA.g, colA.b, startEntity.valA);
-                        endCol = new Color(colB.r, colB.g, colB.b, startEntity.valB);
+                        startCol = new Color(colA.r, colA.g, colA.b, startEntity["valA"]);
+                        endCol = new Color(colB.r, colB.g, colB.b, startEntity["valB"]);
                     }
 
-                    SetFade(startEntity.beat, startEntity.length, startCol, endCol, startEntity.ease);
+                    SetFade(startEntity.beat, startEntity.length, startCol, endCol, (EasingFunction.Ease) startEntity["ease"]);
                 }
             }
         }

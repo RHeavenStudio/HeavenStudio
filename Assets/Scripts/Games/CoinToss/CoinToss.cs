@@ -14,40 +14,64 @@ namespace HeavenStudio.Games.Loaders
         {
             return new Minigame("coinToss", "Coin Toss", "B4E6F6", false, false, new List<GameAction>()
             {
-                new GameAction("toss",                 delegate { CoinToss.instance.TossCoin(eventCaller.currentEntity.beat, eventCaller.currentEntity.toggle); }, 7, false, parameters: new List<Param>()
+                new GameAction("toss", "Toss Coin")
                 {
-                    new Param("toggle", false, "Audience Reaction", "Enable Audience Reaction"),
-                }),
+                    function = delegate { CoinToss.instance.TossCoin(eventCaller.currentEntity.beat, eventCaller.currentEntity["type"], eventCaller.currentEntity["toggle"]); }, 
+                    defaultLength = 7, 
+                    parameters = new List<Param>()
+                    {
+                        new Param("type", CoinToss.CoinVariation.Default, "Variation", "Special Coin Variations"),
+                        new Param("toggle", false, "Audience Reaction", "Enable Audience Reaction"),
+                    }
+                },
+                new GameAction("set background color", "Set Background Color")
+                {
+                    function = delegate { var e = eventCaller.currentEntity; CoinToss.instance.ChangeBackgroundColor(e["colorA"], 0f); CoinToss.instance.ChangeBackgroundColor(e["colorB"], 0f, true); }, 
+                    defaultLength = 0.5f,  
+                    parameters = new List<Param>()
+                    {
+                        new Param("colorA", CoinToss.defaultBgColor, "Background Color", "The background color to change to"),
+                        new Param("colorB", CoinToss.defaultFgColor, "Foreground Color", "The foreground color to change to")
+                    } 
+                },
+                new GameAction("fade background color", "Fade Background Color")
+                {
+                    function = delegate { var e = eventCaller.currentEntity; CoinToss.instance.FadeBackgroundColor(e["colorA"], e["colorB"], e.length); CoinToss.instance.FadeBackgroundColor(e["colorC"], e["colorD"], e.length, true); },
+                    resizable = true, 
+                    parameters = new List<Param>()
+                    {
+                        new Param("colorA", Color.white, "BG Start Color", "The starting color in the fade"),
+                        new Param("colorB", CoinToss.defaultBgColor, "BG End Color", "The ending color in the fade"),
+                        new Param("colorC", Color.white, "FG Start Color", "The starting color in the fade"),
+                        new Param("colorD", CoinToss.defaultFgColor, "FG End Color", "The ending color in the fade")
+                    } 
+                },
 
-                new GameAction("set background color",  delegate { var e = eventCaller.currentEntity; CoinToss.instance.ChangeBackgroundColor(e.colorA, 0f); CoinToss.instance.ChangeBackgroundColor(e.colorB, 0f, true); }, 0.5f, false, new List<Param>()
-                {
-                    new Param("colorA", CoinToss.defaultBgColor, "Background Color", "The background color to change to"),
-                    new Param("colorB", CoinToss.defaultFgColor, "Foreground Color", "The foreground color to change to")
-                } ),
-                new GameAction("fade background color", delegate { var e = eventCaller.currentEntity; CoinToss.instance.FadeBackgroundColor(e.colorA, e.colorB, e.length); CoinToss.instance.FadeBackgroundColor(e.colorC, e.colorD, e.length, true); }, 1f, true, new List<Param>()
-                {
-                    new Param("colorA", Color.white, "BG Start Color", "The starting color in the fade"),
-                    new Param("colorB", CoinToss.defaultBgColor, "BG End Color", "The ending color in the fade"),
-                    new Param("colorC", Color.white, "FG Start Color", "The starting color in the fade"),
-                    new Param("colorD", CoinToss.defaultFgColor, "FG End Color", "The ending color in the fade")
-                } ),
-
-                
-                
                 //left in for backwards-compatibility, but cannot be placed
-
-                new GameAction("set foreground color", delegate { var e = eventCaller.currentEntity; CoinToss.instance.ChangeBackgroundColor(e.colorA, 0f, true); }, 0.5f, false, new List<Param>
-           
+                new GameAction("set foreground color", "")
                 {
-                    new Param("colorA", CoinToss.defaultFgColor, "Foreground Color", "The foreground color to change to")
+                    function = delegate { var e = eventCaller.currentEntity; CoinToss.instance.ChangeBackgroundColor(e["colorA"], 0f, true); }, 
+                    defaultLength = 0.5f, 
+                    parameters = new List<Param>
+            
+                    {
+                        new Param("colorA", CoinToss.defaultFgColor, "Foreground Color", "The foreground color to change to")
 
-                }, hidden: true ),
+                    }, 
+                    hidden = true 
+                },
 
-                new GameAction("fade foreground color", delegate { var e = eventCaller.currentEntity; CoinToss.instance.FadeBackgroundColor(e.colorA, e.colorB, e.length, true); }, 1f, true, new List<Param>()
+                new GameAction("fade foreground color", "")
                 {
-                    new Param("colorA", Color.white, "Start Color", "The starting color in the fade"),
-                    new Param("colorB", CoinToss.defaultFgColor, "End Color", "The ending color in the fade")
-                }, hidden: true ),
+                    function = delegate { var e = eventCaller.currentEntity; CoinToss.instance.FadeBackgroundColor(e["colorA"], e["colorB"], e.length, true); },
+                    resizable = true, 
+                    parameters = new List<Param>()
+                    {
+                        new Param("colorA", Color.white, "Start Color", "The starting color in the fade"),
+                        new Param("colorB", CoinToss.defaultFgColor, "End Color", "The ending color in the fade")
+                    }, 
+                    hidden = true 
+                },
             },
             new List<string>() {"ntr", "aim"},
             "ntrcoin", "en",
@@ -107,6 +131,12 @@ namespace HeavenStudio.Games
 
         public PlayerActionEvent coin;
 
+        public enum CoinVariation
+        {
+            Default,
+            Cowbell,
+        }
+
         private void Awake()
         {
             instance = this;
@@ -125,7 +155,7 @@ namespace HeavenStudio.Games
             //nothing
         }
 
-        public void TossCoin(float beat, bool audienceReacting)
+        public void TossCoin(float beat, int type, bool audienceReacting)
         {
             if (coin != null) return;
 
@@ -135,7 +165,40 @@ namespace HeavenStudio.Games
             //Game state says the hand is throwing the coin
             isThrowing = true;
 
+            switch (type)
+                {
+                    case (int) CoinToss.CoinVariation.Cowbell:
+                        //this was intentional. it was to avoid the throw and cowbells to go offbeat.
+                        Jukebox.PlayOneShotGame("coinToss/cowbell1");
+                        MultiSound.Play(new MultiSound.Sound[] {
+                        new MultiSound.Sound("coinToss/cowbell2", beat + 1f, offset: 0.01f),
+                        new MultiSound.Sound("coinToss/cowbell1", beat + 2f, offset: 0.01f),
+                        new MultiSound.Sound("coinToss/cowbell2", beat + 3f, offset: 0.01f),
+                        new MultiSound.Sound("coinToss/cowbell1", beat + 4f, offset: 0.01f),
+                        new MultiSound.Sound("coinToss/cowbell2", beat + 5f, offset: 0.01f),
+                        new MultiSound.Sound("coinToss/cowbell1", beat + 6f, offset: 0.01f),
+                        });
+                        break;
+                    default:
+                        break;
+                }
+            
             this.audienceReacting = audienceReacting;
+
+            coin = ScheduleInput(beat, 6f, InputType.STANDARD_DOWN, CatchSuccess, CatchMiss, CatchEmpty);
+            //coin.perfectOnly = true;
+        }
+
+        public void TossCoin(float beat)
+        {
+            if (coin != null) return;
+
+            //Play sound and animations
+            Jukebox.PlayOneShotGame("coinToss/throw");
+            handAnimator.Play("Throw", 0, 0);
+            //Game state says the hand is throwing the coin
+            isThrowing = true;
+            this.audienceReacting = false;
 
             coin = ScheduleInput(beat, 6f, InputType.STANDARD_DOWN, CatchSuccess, CatchMiss, CatchEmpty);
             //coin.perfectOnly = true;
@@ -144,7 +207,7 @@ namespace HeavenStudio.Games
         public void CatchSuccess(PlayerActionEvent caller, float state)
         {
             Jukebox.PlayOneShotGame("coinToss/catch");
-            if(this.audienceReacting) Jukebox.PlayOneShotGame("coinToss/applause");
+            if(this.audienceReacting) Jukebox.PlayOneShot("applause");
             handAnimator.Play("Catch_success", 0, 0);
 
             isThrowing = false; 
@@ -152,8 +215,8 @@ namespace HeavenStudio.Games
 
         public void CatchMiss(PlayerActionEvent caller)
         {
-            Jukebox.PlayOneShotGame("coinToss/miss");
-            if(this.audienceReacting) Jukebox.PlayOneShotGame("coinToss/disappointed");
+            Jukebox.PlayOneShot("miss");
+            if(this.audienceReacting) Jukebox.PlayOneShot("audience/disappointed");
             handAnimator.Play("Pickup", 0, 0);
 
             isThrowing = false;

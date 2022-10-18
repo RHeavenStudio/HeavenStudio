@@ -9,7 +9,7 @@ namespace HeavenStudio.Games.Loaders
     public static class AgbFireworkLoader
     {
         public static Minigame AddGame(EventCaller eventCaller) {
-            return new Minigame("fireworks", "Fireworks \n<color=#eb5454>[WIP]</color>", "000000", false, false, new List<GameAction>()
+            return new Minigame("fireworks", "Fireworks \n<color=#eb5454>[WIP]</color>", "0058CE", false, false, new List<GameAction>()
             {
             });
         }

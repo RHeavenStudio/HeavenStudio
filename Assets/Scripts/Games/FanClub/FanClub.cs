@@ -13,49 +13,76 @@ namespace HeavenStudio.Games.Loaders
         public static Minigame AddGame(EventCaller eventCaller) {
             return new Minigame("fanClub", "Fan Club", "FDFD00", false, false, new List<GameAction>()
                 {
-                    new GameAction("bop",                   delegate { var e = eventCaller.currentEntity; FanClub.instance.Bop(e.beat, e.length, e.type); }, 0.5f, true, parameters: new List<Param>()
+                    new GameAction("bop", "Bop")
                     {
-                        new Param("type", FanClub.IdolBopType.Both, "Bop target", "Who to make bop"),
-                    }),
-
-                    new GameAction("yeah, yeah, yeah",      delegate { var e = eventCaller.currentEntity; FanClub.instance.CallHai(e.beat, e.toggle); }, 8, false, parameters: new List<Param>()
+                        function = delegate { var e = eventCaller.currentEntity; FanClub.instance.Bop(e.beat, e.length, e["type"]); }, 
+                        defaultLength = 0.5f, 
+                        resizable = true, 
+                        parameters = new List<Param>()
+                        {
+                            new Param("type", FanClub.IdolBopType.Both, "Bop target", "Who to make bop"),
+                        }
+                    },
+                    new GameAction("yeah, yeah, yeah", "Yeah, Yeah, Yeah!")
+                    {
+                        function = delegate { var e = eventCaller.currentEntity; FanClub.instance.CallHai(e.beat, e["toggle"]); }, 
+                        defaultLength = 8,
+                        parameters = new List<Param>()
                         {
                             new Param("toggle", false, "Disable call", "Disable the idol's call")
                         },
-                        inactiveFunction: delegate { var e = eventCaller.currentEntity; FanClub.WarnHai(e.beat, e.toggle);}
-                    ),
-
-                    new GameAction("I suppose",             delegate { var e = eventCaller.currentEntity; FanClub.instance.CallKamone(e.beat, e.toggle, 0, e.type); }, 6, false, parameters: new List<Param>()
+                        inactiveFunction = delegate { var e = eventCaller.currentEntity; FanClub.WarnHai(e.beat, e["toggle"]);}
+                    },
+                    new GameAction("I suppose", "I Suppose!")
+                    {
+                        function = delegate { var e = eventCaller.currentEntity; FanClub.instance.CallKamone(e.beat, e["toggle"], 0, e["type"]); }, 
+                        defaultLength = 6, 
+                        parameters = new List<Param>()
                         {
                             new Param("type", FanClub.KamoneResponseType.Through, "Response type", "Type of response to use"),
                             new Param("toggle", false, "Disable call", "Disable the idol's call")
                         },
-                        inactiveFunction: delegate { var e = eventCaller.currentEntity; FanClub.WarnKamone(e.beat, e.toggle, 0, e.type);}
-                    ),
-
-                    new GameAction("double clap",           delegate { var e = eventCaller.currentEntity; FanClub.instance.CallBigReady(e.beat, e.toggle); }, 4, false, parameters: new List<Param>()
+                        inactiveFunction = delegate { var e = eventCaller.currentEntity; FanClub.WarnKamone(e.beat, e["toggle"], 0, e["type"]);}
+                    },
+                    new GameAction("double clap", "Double Clap")
+                    {
+                        function = delegate { var e = eventCaller.currentEntity; FanClub.instance.CallBigReady(e.beat, e["toggle"]); }, 
+                        defaultLength = 4,
+                        parameters = new List<Param>()
                         {
                             new Param("toggle", false, "Disable call", "Disable the call")
                         },
-                        inactiveFunction: delegate { var e = eventCaller.currentEntity; FanClub.WarnBigReady(e.beat, e.toggle); }
-                    ),
-
-                    new GameAction("play idol animation",   delegate { var e = eventCaller.currentEntity; FanClub.instance.PlayAnim(e.beat, e.length, e.type); }, 1, true, parameters: new List<Param>()
+                        inactiveFunction = delegate { var e = eventCaller.currentEntity; FanClub.WarnBigReady(e.beat, e["toggle"]); }
+                    },
+                    new GameAction("play idol animation", "Idol Coreography")
                     {
-                        new Param("type", FanClub.IdolAnimations.Bop, "Animation", "Animation to play")
-                    }),
-
-                    new GameAction("play stage animation",   delegate { var e = eventCaller.currentEntity; FanClub.instance.PlayAnimStage(e.beat, e.type); }, 1, true, parameters: new List<Param>()
+                        function = delegate { var e = eventCaller.currentEntity; FanClub.instance.PlayAnim(e.beat, e.length, e["type"]); },
+                        resizable = true, 
+                        parameters = new List<Param>()
+                        {
+                            new Param("type", FanClub.IdolAnimations.Bop, "Animation", "Animation to play")
+                        }
+                    },
+                    new GameAction("play stage animation", "Stage Coreography")
                     {
-                        new Param("type", FanClub.StageAnimations.Flash, "Animation", "Animation to play")
-                    }),
+                        function = delegate { var e = eventCaller.currentEntity; FanClub.instance.PlayAnimStage(e.beat, e["type"]); }, 
+                        resizable = true, 
+                        parameters = new List<Param>()
+                        {
+                            new Param("type", FanClub.StageAnimations.Flash, "Animation", "Animation to play")
+                        }
+                    },
+                    new GameAction("set performance type", "Coreography Type")
+                    {
 
-                    new GameAction("set performance type",   delegate { var e = eventCaller.currentEntity; FanClub.SetPerformanceType(e.type);}, 0.5f, false, parameters: new List<Param>()
+                        function = delegate { var e = eventCaller.currentEntity; FanClub.SetPerformanceType(e["type"]);},
+                        defaultLength = 0.5f,
+                        parameters = new List<Param>()
                         {
                             new Param("type", FanClub.IdolPerformanceType.Normal, "Performance Type", "Set of animations for the idol to use")
                         },
-                        inactiveFunction: delegate { var e = eventCaller.currentEntity; FanClub.SetPerformanceType(e.type); }
-                    ),
+                        inactiveFunction = delegate { var e = eventCaller.currentEntity; FanClub.SetPerformanceType(e["type"]); }
+                    },
                 },
                 new List<string>() {"ntr", "normal"},
                 "ntridol", "jp",

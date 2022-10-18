@@ -15,32 +15,74 @@ namespace HeavenStudio.Games.Loaders
         public static Minigame AddGame(EventCaller eventCaller) {
             return new Minigame("rhythmTweezers", "Rhythm Tweezers", "98b389", false, false, new List<GameAction>()
             {
-                new GameAction("start interval",        delegate { RhythmTweezers.instance.SetIntervalStart(eventCaller.currentEntity.beat, eventCaller.currentEntity.length); }, 4f, true),
-                new GameAction("short hair",            delegate { RhythmTweezers.instance.SpawnHair(eventCaller.currentEntity.beat); }, 0.5f),
-                new GameAction("long hair",             delegate { RhythmTweezers.instance.SpawnLongHair(eventCaller.currentEntity.beat); }, 0.5f),
-                new GameAction("next vegetable",        delegate { var e = eventCaller.currentEntity; RhythmTweezers.instance.NextVegetable(e.beat, e.type, e.colorA, e.colorB); }, 0.5f, false, new List<Param>() 
+                new GameAction("start interval", "Start Interval")
                 {
-                    new Param("type", RhythmTweezers.VegetableType.Onion, "Type", "The vegetable to switch to"),
-                    new Param("colorA", RhythmTweezers.defaultOnionColor, "Onion Color", "The color of the onion"),
-                    new Param("colorB", RhythmTweezers.defaultPotatoColor, "Potato Color", "The color of the potato")
-                } ),
-                new GameAction("change vegetable",      delegate { var e = eventCaller.currentEntity; RhythmTweezers.instance.ChangeVegetableImmediate(e.type, e.colorA, e.colorB); }, 0.5f, false, new List<Param>() 
+                    function = delegate { RhythmTweezers.instance.SetIntervalStart(eventCaller.currentEntity.beat, eventCaller.currentEntity.length); }, 
+                    defaultLength = 4f, 
+                    resizable = true
+                },
+                new GameAction("short hair", "Short Hair")
                 {
-                    new Param("type", RhythmTweezers.VegetableType.Onion, "Type", "The vegetable to switch to"),
-                    new Param("colorA", RhythmTweezers.defaultOnionColor, "Onion Color", "The color of the onion"),
-                    new Param("colorB", RhythmTweezers.defaultPotatoColor, "Potato Color", "The color of the potato")
-                } ),
-                new GameAction("set tweezer delay",     delegate { RhythmTweezers.instance.tweezerBeatOffset = eventCaller.currentEntity.length; }, 1f, true),
-                new GameAction("reset tweezer delay",   delegate { RhythmTweezers.instance.tweezerBeatOffset = 0f; }, 0.5f),
-                new GameAction("set background color",  delegate { var e = eventCaller.currentEntity; RhythmTweezers.instance.ChangeBackgroundColor(e.colorA, 0f); }, 0.5f, false, new List<Param>() 
+
+                    function = delegate { RhythmTweezers.instance.SpawnHair(eventCaller.currentEntity.beat); }, 
+                    defaultLength = 0.5f
+                },
+                new GameAction("long hair", "Curly Hair")
                 {
-                    new Param("colorA", RhythmTweezers.defaultBgColor, "Background Color", "The background color to change to")
-                } ),
-                new GameAction("fade background color", delegate { var e = eventCaller.currentEntity; RhythmTweezers.instance.FadeBackgroundColor(e.colorA, e.colorB, e.length); }, 1f, true, new List<Param>() 
+                    function = delegate { RhythmTweezers.instance.SpawnLongHair(eventCaller.currentEntity.beat); }, 
+                    defaultLength = 0.5f
+                },
+                new GameAction("next vegetable", "Swap Vegetable")
                 {
-                    new Param("colorA", Color.white, "Start Color", "The starting color in the fade"),
-                    new Param("colorB", RhythmTweezers.defaultBgColor, "End Color", "The ending color in the fade")
-                } ),
+                    function = delegate { var e = eventCaller.currentEntity; RhythmTweezers.instance.NextVegetable(e.beat, e["type"], e["colorA"], e["colorB"]); }, 
+                    defaultLength = 0.5f, 
+                    parameters = new List<Param>() 
+                    {
+                        new Param("type", RhythmTweezers.VegetableType.Onion, "Type", "The vegetable to switch to"),
+                        new Param("colorA", RhythmTweezers.defaultOnionColor, "Onion Color", "The color of the onion"),
+                        new Param("colorB", RhythmTweezers.defaultPotatoColor, "Potato Color", "The color of the potato")
+                    } 
+                },
+                new GameAction("change vegetable", "Change Vegetable (Instant)")
+                {
+                    function = delegate { var e = eventCaller.currentEntity; RhythmTweezers.instance.ChangeVegetableImmediate(e["type"], e["colorA"], e["colorB"]); }, 
+                    defaultLength = 0.5f, 
+                    parameters = new List<Param>() 
+                    {
+                        new Param("type", RhythmTweezers.VegetableType.Onion, "Type", "The vegetable to switch to"),
+                        new Param("colorA", RhythmTweezers.defaultOnionColor, "Onion Color", "The color of the onion"),
+                        new Param("colorB", RhythmTweezers.defaultPotatoColor, "Potato Color", "The color of the potato")
+                    }
+                },
+                new GameAction("set tweezer delay", "Offset Tweezer")
+                {
+                    function = delegate { RhythmTweezers.instance.tweezerBeatOffset = eventCaller.currentEntity.length; },
+                    resizable = true
+                },
+                new GameAction("reset tweezer delay", "Reset Tweezer Offset")
+                {
+                    function = delegate { RhythmTweezers.instance.tweezerBeatOffset = 0f; }, 
+                    defaultLength = 0.5f
+                },
+                new GameAction("set background color", "Background Colour")
+                {
+                    function = delegate { var e = eventCaller.currentEntity; RhythmTweezers.instance.ChangeBackgroundColor(e["colorA"], 0f); }, 
+                    defaultLength = 0.5f,
+                    parameters = new List<Param>() 
+                    {
+                        new Param("colorA", RhythmTweezers.defaultBgColor, "Background Color", "The background color to change to")
+                    } 
+                },
+                new GameAction("fade background color", "Background Fade")
+                {
+                    function = delegate { var e = eventCaller.currentEntity; RhythmTweezers.instance.FadeBackgroundColor(e["colorA"], e["colorB"], e.length); },
+                    resizable = true, 
+                    parameters = new List<Param>() 
+                    {
+                        new Param("colorA", Color.white, "Start Color", "The starting color in the fade"),
+                        new Param("colorB", RhythmTweezers.defaultBgColor, "End Color", "The ending color in the fade")
+                    } 
+                }
             });
         }
     }

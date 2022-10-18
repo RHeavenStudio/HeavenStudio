@@ -11,6 +11,8 @@ namespace HeavenStudio
     {
         public static GlobalGameManager instance { get; set; }
 
+        public static string buildTime = "00/00/0000 00:00:00";
+
         public static int loadedScene;
         public int lastLoadedScene;
         public static float fadeDuration;
@@ -59,7 +61,13 @@ namespace HeavenStudio
             DontDestroyOnLoad(this.gameObject);
             instance = this;
             Starpelly.OS.ChangeWindowTitle("Heaven Studio DEMO");
+            QualitySettings.maxQueuedFrames = 1;
             PlayerInput.InitInputControllers();
+            #if UNITY_EDITOR
+                buildTime = "(EDITOR) " + System.DateTime.UtcNow.ToString("dd/MM/yyyy hh:mm:ss");
+            #else
+                buildTime = AppInfo.Date.ToString("dd/MM/yyyy hh:mm:ss");
+            #endif
         }
 
         public static GameObject CreateFade()

@@ -12,18 +12,38 @@ namespace HeavenStudio.Games.Loaders
         public static Minigame AddGame(EventCaller eventCaller) {
             return new Minigame("clappyTrio", "The Clappy Trio", "29E7FF", false, false, new List<GameAction>()
             {
-                new GameAction("clap",                  delegate { ClappyTrio.instance.Clap(eventCaller.currentEntity.beat, eventCaller.currentEntity.length); }, 1, true),
-                new GameAction("bop",                   delegate { ClappyTrio.instance.Bop(eventCaller.currentEntity.beat); } ),
-                new GameAction("prepare",               delegate { ClappyTrio.instance.Prepare(eventCaller.currentEntity.toggle ? 3 : 0); }, parameters: new List<Param>()
+                new GameAction("clap", "Clap")
                 {
-                    new Param("toggle", false, "Alt", "Whether or not the alternate version should be played")
-                }),
-                new GameAction("change lion count",     delegate { ClappyTrio.instance.ChangeLionCount((int)eventCaller.currentEntity.valA); }, 0.5f, false, new List<Param>()
+                    function = delegate { ClappyTrio.instance.Clap(eventCaller.currentEntity.beat, eventCaller.currentEntity.length); }, 
+                    resizable = true
+                },
+                new GameAction("bop", "Bop")
                 {
-                    new Param("valA", new EntityTypes.Integer(3, 8, 3), "Lion Count", "The amount of lions")
-                }),
+                    function = delegate { ClappyTrio.instance.Bop(eventCaller.currentEntity.beat); } 
+                },
+                new GameAction("prepare", "Prepare Stance")
+                {
+                    function = delegate { ClappyTrio.instance.Prepare(eventCaller.currentEntity["toggle"] ? 3 : 0); }, 
+                    parameters = new List<Param>()
+                    {
+                        new Param("toggle", false, "Alt", "Whether or not the alternate version should be played")
+                    }
+                },
+                new GameAction("change lion count", "Change Lion Count")
+                {
+                    function = delegate { ClappyTrio.instance.ChangeLionCount((int)eventCaller.currentEntity["valA"]); }, 
+                    defaultLength = 0.5f,  
+                    parameters = new List<Param>()
+                    {
+                        new Param("valA", new EntityTypes.Integer(3, 8, 3), "Lion Count", "The amount of lions")
+                    }
+                },
                 // This is still here for backwards-compatibility but is hidden in the editor
-                new GameAction("prepare_alt",           delegate { ClappyTrio.instance.Prepare(3); }, hidden: true),
+                new GameAction("prepare_alt", "")
+                {
+                    function = delegate { ClappyTrio.instance.Prepare(3); }, 
+                    hidden = true
+                },
             });
         }
     }
@@ -59,7 +79,7 @@ namespace HeavenStudio.Games
         }
         public override void OnGameSwitch(float beat)
         {
-            Beatmap.Entity changeLion = GameManager.instance.Beatmap.entities.FindLast(c => c.datamodel == "clappyTrio/change lion count" && c.beat <= beat);
+            DynamicBeatmap.DynamicEntity changeLion = GameManager.instance.Beatmap.entities.FindLast(c => c.datamodel == "clappyTrio/change lion count" && c.beat <= beat);
             if(changeLion != null)
             {
                 EventCaller.instance.CallEvent(changeLion, true);

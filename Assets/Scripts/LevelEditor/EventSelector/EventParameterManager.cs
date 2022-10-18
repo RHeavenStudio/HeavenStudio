@@ -20,7 +20,7 @@ namespace HeavenStudio.Editor
         [SerializeField] private GameObject ColorP;
         [SerializeField] private GameObject StringP;
 
-        public Beatmap.Entity entity;
+        public DynamicBeatmap.DynamicEntity entity;
 
         public bool active;
 
@@ -61,13 +61,13 @@ namespace HeavenStudio.Editor
             Editor.instance.SetGameEventTitle($"Select game event for {gridGameSelector.SelectedMinigame.Replace("\n", "")}");
         }
 
-        public void StartParams(Beatmap.Entity entity)
+        public void StartParams(DynamicBeatmap.DynamicEntity entity)
         {
             active = true;
             AddParams(entity);
         }
 
-        private void AddParams(Beatmap.Entity entity)
+        private void AddParams(DynamicBeatmap.DynamicEntity entity)
         {
             var minigame = EventCaller.instance.GetMinigame(entity.datamodel.Split(0));
             int actionIndex = minigame.actions.IndexOf(minigame.actions.Find(c => c.actionName == entity.datamodel.Split(1)));
@@ -99,46 +99,70 @@ namespace HeavenStudio.Editor
         private void AddParam(string propertyName, object type, string caption, string tooltip = "")
         {
             GameObject prefab = IntegerP;
+            GameObject input;
 
             var objType = type.GetType();
 
             if (objType == typeof(EntityTypes.Integer))
             {
                 prefab = IntegerP;
+                input = InitPrefab(prefab, tooltip);
+                var property = input.GetComponent<NumberPropertyPrefab>();
+                property.SetProperties(propertyName, type, caption);
             }
             else if (objType == typeof(EntityTypes.Float))
             {
                 prefab = FloatP;
+                input = InitPrefab(prefab, tooltip);
+                var property = input.GetComponent<NumberPropertyPrefab>();
+                property.SetProperties(propertyName, type, caption);
             }
             else if(type is bool)
             {
                 prefab = BooleanP;
+                input = InitPrefab(prefab, tooltip);
+                var property = input.GetComponent<BoolPropertyPrefab>();
+                property.SetProperties(propertyName, type, caption);
             }
             else if (objType.IsEnum)
             {
                 prefab = DropdownP;
+                input = InitPrefab(prefab, tooltip);
+                var property = input.GetComponent<EnumPropertyPrefab>();
+                property.SetProperties(propertyName, type, caption);
             }
             else if (objType == typeof(Color))
             {
                 prefab = ColorP;
+                input = InitPrefab(prefab, tooltip);
+                var property = input.GetComponent<ColorPropertyPrefab>();
+                property.SetProperties(propertyName, type, caption);
             }
             else if(objType == typeof(string))
             {
                 prefab = StringP;
+                input = InitPrefab(prefab, tooltip);
+                var property = input.GetComponent<StringPropertyPrefab>();
+                property.SetProperties(propertyName, type, caption);
             }
+            else
+            {
+                Debug.LogError("Can't make property interface of type: " + type.GetType());
+                return;
+            }
+        }
 
+        private GameObject InitPrefab(GameObject prefab, string tooltip = "")
+        {
             GameObject input = Instantiate(prefab);
             input.transform.SetParent(this.gameObject.transform);
             input.SetActive(true);
             input.transform.localScale = Vector2.one;
 
-            if(tooltip != "")
-            {
+            if(tooltip != string.Empty)
                 Tooltip.AddTooltip(input, "", tooltip);
-            }
 
-            var property = input.GetComponent<EventPropertyPrefab>();
-            property.SetProperties(propertyName, type, caption);
+            return input;
         }
 
         private void DestroyParams()

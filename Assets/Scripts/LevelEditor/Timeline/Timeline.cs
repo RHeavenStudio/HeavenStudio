@@ -1,4 +1,4 @@
-using System.Collections;
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
@@ -34,45 +34,109 @@ namespace HeavenStudio.Editor.Track
 
         public class CurrentTimelineState
         {
-            public bool selected;
-            public bool tempoChange;
-            public bool musicVolume;
+            public enum State
+            {
+                Selection,
+                TempoChange,
+                MusicVolume,
+                ChartSection
+            }
+
+            public State currentState = State.Selection;
+
+            public bool selected { get { return currentState == State.Selection; } }
+            public bool tempoChange { get { return currentState == State.TempoChange; } }
+            public bool musicVolume { get { return currentState == State.MusicVolume; } }
+            public bool chartSection { get { return currentState == State.ChartSection; } }
 
             public void SetState(bool selected, bool tempoChange, bool musicVolume)
             {
                 if (Conductor.instance.NotStopped()) return;
 
-                this.selected = selected;
-                this.tempoChange = tempoChange;
-                this.musicVolume = musicVolume;
-
                 if (selected)
+                {
+                    currentState = State.Selection;
                     instance.SelectionsBTN.transform.GetChild(0).GetComponent<Image>().color = Color.white;
+                    instance.SelectionsBTN.GetComponent<TabButton>().Invoke("OnClick", 0);
+                }
                 else
                     instance.SelectionsBTN.transform.GetChild(0).GetComponent<Image>().color = Color.gray;
                 if (tempoChange)
+                {
+                    currentState = State.TempoChange;
                     instance.TempoChangeBTN.transform.GetChild(0).GetComponent<Image>().color = Color.white;
+                    instance.TempoChangeBTN.GetComponent<TabButton>().Invoke("OnClick", 0);
+                }
                 else
                     instance.TempoChangeBTN.transform.GetChild(0).GetComponent<Image>().color = Color.gray;
                 if (musicVolume)
+                {
+                    currentState = State.MusicVolume;
                     instance.MusicVolumeBTN.transform.GetChild(0).GetComponent<Image>().color = Color.white;
+                    instance.MusicVolumeBTN.GetComponent<TabButton>().Invoke("OnClick", 0);
+                }
                 else
                     instance.MusicVolumeBTN.transform.GetChild(0).GetComponent<Image>().color = Color.gray;
 
+            }
+
+            public void SetState(State state)
+            {
+                if (Conductor.instance.NotStopped()) return;
+
+                currentState = state;
+                if (selected)
+                {
+                    instance.SelectionsBTN.transform.GetChild(0).GetComponent<Image>().color = Color.white;
+                    instance.SelectionsBTN.GetComponent<TabButton>().Invoke("OnClick", 0);
+                }
+                else
+                    instance.SelectionsBTN.transform.GetChild(0).GetComponent<Image>().color = Color.gray;
+                if (tempoChange)
+                {
+                    instance.TempoChangeBTN.transform.GetChild(0).GetComponent<Image>().color = Color.white;
+                    instance.TempoChangeBTN.GetComponent<TabButton>().Invoke("OnClick", 0);
+                }
+                else
+                    instance.TempoChangeBTN.transform.GetChild(0).GetComponent<Image>().color = Color.gray;
+                if (musicVolume)
+                {
+                    instance.MusicVolumeBTN.transform.GetChild(0).GetComponent<Image>().color = Color.white;
+                    instance.MusicVolumeBTN.GetComponent<TabButton>().Invoke("OnClick", 0);
+                }
+                else
+                    instance.MusicVolumeBTN.transform.GetChild(0).GetComponent<Image>().color = Color.gray;
+                if (chartSection)
+                {
+                    instance.ChartSectionBTN.transform.GetChild(0).GetComponent<Image>().color = Color.white;
+                    instance.ChartSectionBTN.GetComponent<TabButton>().Invoke("OnClick", 0);
+                }
+                else
+                    instance.ChartSectionBTN.transform.GetChild(0).GetComponent<Image>().color = Color.gray;
             }
         }
 
         [Header("Timeline Components")]
         [SerializeField] private RectTransform TimelineSlider;
         [SerializeField] private RectTransform TimelineGridSelect;
+        [SerializeField] private RectTransform TimelineEventGrid;
         [SerializeField] private TMP_Text TimelinePlaybackBeat;
         public RectTransform TimelineContent;
         [SerializeField] private RectTransform TimelineSongPosLineRef;
         [SerializeField] private RectTransform TimelineEventObjRef;
         [SerializeField] private RectTransform LayersRect;
 
-        public TempoTimeline TempoInfo;
-        public VolumeTimeline VolumeInfo;
+        [SerializeField] private GameObject TimelineSectionDisplay;
+        [SerializeField] private TMP_Text TimelineSectionText;
+        [SerializeField] private Slider TimelineSectionProgress;
+
+        [Header("Timeline Inputs")]
+        public TMP_InputField FirstBeatOffset;
+        public TMP_InputField StartingTempoSpecialAll;
+        public TMP_InputField StartingTempoSpecialTempo;
+        public TMP_InputField StartingVolumeSpecialVolume;
+
+        public SpecialTimeline SpecialInfo;
         private RectTransform TimelineSongPosLine;
 
         [Header("Timeline Playbar")]
@@ -84,6 +148,7 @@ namespace HeavenStudio.Editor.Track
         public Button SelectionsBTN;
         public Button TempoChangeBTN;
         public Button MusicVolumeBTN;
+        public Button ChartSectionBTN;
         public Slider PlaybackSpeed;
 
         public Vector3[] LayerCorners = new Vector3[4];
@@ -117,16 +182,10 @@ namespace HeavenStudio.Editor.Track
                 AddEventObject(e.datamodel, false, new Vector3(e.beat, -e.track * LayerHeight()), e, false, RandomID());
             }
 
-            //tempo changes
-            TempoInfo.ClearTempoTimeline();
-            for (int i = 0; i < GameManager.instance.Beatmap.tempoChanges.Count; i++)
-            {
-                var t = GameManager.instance.Beatmap.tempoChanges[i];
-
-                TempoInfo.AddTempoChange(false, t);
-            }
-
-            //volume changes
+            SpecialInfo.Setup();
+            UpdateOffsetText();
+            UpdateStartingBPMText();
+            UpdateStartingVolText();
         }
 
         public void Init()
@@ -170,15 +229,19 @@ namespace HeavenStudio.Editor.Track
 
             SelectionsBTN.onClick.AddListener(delegate
             {
-                timelineState.SetState(true, false, false);
+                timelineState.SetState(CurrentTimelineState.State.Selection);
             });
             TempoChangeBTN.onClick.AddListener(delegate
             {
-                timelineState.SetState(false, true, false);
+                timelineState.SetState(CurrentTimelineState.State.TempoChange);
             });
             MusicVolumeBTN.onClick.AddListener(delegate
             {
-                timelineState.SetState(false, false, true);
+                timelineState.SetState(CurrentTimelineState.State.MusicVolume);
+            });
+            ChartSectionBTN.onClick.AddListener(delegate
+            {
+                timelineState.SetState(CurrentTimelineState.State.ChartSection);
             });
 
             Tooltip.AddTooltip(SongBeat.gameObject, "Current Beat");
@@ -195,15 +258,21 @@ namespace HeavenStudio.Editor.Track
             Tooltip.AddTooltip(SelectionsBTN.gameObject, "Tool: Selection <color=#adadad>[1]</color>");
             Tooltip.AddTooltip(TempoChangeBTN.gameObject, "Tool: Tempo Change <color=#adadad>[2]</color>");
             Tooltip.AddTooltip(MusicVolumeBTN.gameObject, "Tool: Music Volume <color=#adadad>[3]</color>");
+            Tooltip.AddTooltip(ChartSectionBTN.gameObject, "Tool: Beatmap Sections <color=#adadad>[4]</color>");
+
+            Tooltip.AddTooltip(StartingTempoSpecialAll.gameObject, "Starting Tempo (BPM)");
+            Tooltip.AddTooltip(StartingTempoSpecialTempo.gameObject, "Starting Tempo (BPM)");
+            Tooltip.AddTooltip(StartingVolumeSpecialVolume.gameObject, "Starting Volume (%)");
 
             Tooltip.AddTooltip(PlaybackSpeed.gameObject, "The preview's playback speed. Right click to reset to 1.0");
 
             SetTimeButtonColors(true, false, false);
             MetronomeBTN.transform.GetChild(0).GetComponent<Image>().color = Color.gray;
 
-            timelineState.SetState(true, false, false);
+            timelineState.SetState(CurrentTimelineState.State.Selection);
 
             AutoBtnUpdate();
+            GameManager.instance.onSectionChange += OnSectionChange;
         }
 
         public void FitToSong()
@@ -213,6 +282,7 @@ namespace HeavenStudio.Editor.Track
             if (songBeats == 0) songBeats = 320;
             else songBeats += 10;
             TimelineContent.sizeDelta = new Vector2(songBeats, currentSizeDelta.y);
+            TimelineEventGrid.sizeDelta = new Vector2(songBeats, currentSizeDelta.y);
         }
 
         public void AutoBtnUpdate()
@@ -262,18 +332,19 @@ namespace HeavenStudio.Editor.Track
             if (!Conductor.instance.isPlaying && !Conductor.instance.isPaused)
             {
                 SongBeat.text = $"Beat {string.Format("{0:0.000}", TimelineSlider.localPosition.x)}";
-                SongPos.text = FormatTime(Conductor.instance.GetSongPosFromBeat(TimelineSlider.localPosition.x));
+                SongPos.text = FormatTime((float) Conductor.instance.GetSongPosFromBeat(TimelineSlider.localPosition.x));
             }
             else
             {
                 SongBeat.text = $"Beat {string.Format("{0:0.000}", Conductor.instance.songPositionInBeats)}";
                 SongPos.text = FormatTime(Conductor.instance.songPosition);
             }
+            TimelineSectionProgress.value = GameManager.instance.sectionProgress;
 
             SliderControl();
 
             #region Keyboard Shortcuts
-            if (!userIsEditingInputField)
+            if ((!userIsEditingInputField) && Editor.instance.isShortcutsEnabled)
             {
                 
                 if (Input.GetKeyDown(KeyCode.Space))
@@ -300,15 +371,19 @@ namespace HeavenStudio.Editor.Track
 
                 if (Input.GetKeyDown(KeyCode.Alpha1))
                 {
-                    timelineState.SetState(true, false, false);
+                    timelineState.SetState(CurrentTimelineState.State.Selection);
                 }
                 else if (Input.GetKeyDown(KeyCode.Alpha2))
                 {
-                    timelineState.SetState(false, true, false);
+                    timelineState.SetState(CurrentTimelineState.State.TempoChange);
                 }
                 else if (Input.GetKeyDown(KeyCode.Alpha3))
                 {
-                    timelineState.SetState(false, false, true);
+                    timelineState.SetState(CurrentTimelineState.State.MusicVolume);
+                }
+                else if (Input.GetKeyDown(KeyCode.Alpha4))
+                {
+                    timelineState.SetState(CurrentTimelineState.State.ChartSection);
                 }
 
 
@@ -350,7 +425,7 @@ namespace HeavenStudio.Editor.Track
 
             TimelineContent.transform.localPosition = new Vector3(Mathf.Clamp(TimelineContent.transform.localPosition.x, Mathf.NegativeInfinity, 0), TimelineContent.transform.localPosition.y);
 
-            CurrentTempo.text = $"            = {Conductor.instance.songBpm}";
+            CurrentTempo.text = $"    = {Conductor.instance.songBpm}";
 
             LayersRect.GetWorldCorners(LayerCorners);
         }
@@ -497,17 +572,19 @@ namespace HeavenStudio.Editor.Track
 
         public bool CheckIfMouseInTimeline()
         {
-            return (this.gameObject.activeSelf && RectTransformUtility.RectangleContainsScreenPoint(TimelineContent.transform.parent.gameObject.GetComponent<RectTransform>(), Input.mousePosition, Editor.instance.EditorCamera));
+            return (this.gameObject.activeSelf && RectTransformUtility.RectangleContainsScreenPoint(TimelineEventGrid, Input.mousePosition, Editor.instance.EditorCamera));
         }
         #endregion
 
         #region Functions
 
-        public TimelineEventObj AddEventObject(string eventName, bool dragNDrop = false, Vector3 pos = new Vector3(), Beatmap.Entity entity = null, bool addEvent = false, string eventId = "")
+        public TimelineEventObj AddEventObject(string eventName, bool dragNDrop = false, Vector3 pos = new Vector3(), DynamicBeatmap.DynamicEntity entity = null, bool addEvent = false, string eventId = "")
         {
+            var game = EventCaller.instance.GetMinigame(eventName.Split(0));
+            var action = EventCaller.instance.GetGameAction(game, eventName.Split(1));
             GameObject g = Instantiate(TimelineEventObjRef.gameObject, TimelineEventObjRef.parent);
             g.transform.localPosition = pos;
-            g.transform.GetChild(3).GetComponent<TMP_Text>().text = eventName.Split('/')[1];
+            g.transform.GetChild(3).GetComponent<TMP_Text>().text = action.displayName;
 
             TimelineEventObj eventObj = g.GetComponent<TimelineEventObj>();
 
@@ -559,11 +636,11 @@ namespace HeavenStudio.Editor.Track
 
             if (addEvent)
             {
-                Beatmap.Entity tempEntity = entity;
+                DynamicBeatmap.DynamicEntity tempEntity = entity;
 
                 if (entity == null)
                 {
-                    Beatmap.Entity en = new Beatmap.Entity();
+                    DynamicBeatmap.DynamicEntity en = new DynamicBeatmap.DynamicEntity();
                     en.datamodel = eventName;
                     en.eventObj = eventObj;
 
@@ -572,9 +649,8 @@ namespace HeavenStudio.Editor.Track
 
                     tempEntity = en;
 
-                    // default param value
-                    var game = EventCaller.instance.GetMinigame(eventName.Split(0));
-                    var ep = EventCaller.instance.GetGameAction(game, eventName.Split(1)).parameters;
+                    // default param values
+                    var ep = action.parameters;
 
                     if (ep != null)
                     {
@@ -591,8 +667,13 @@ namespace HeavenStudio.Editor.Track
                             {
                                 returnVal = ((EntityTypes.Float)ep[i].parameter).val;
                             }
+                            else if (propertyType.IsEnum)
+                            {
+                                returnVal = (int) ep[i].parameter;
+                            }
 
-                            tempEntity[ep[i].propertyName] = returnVal;
+                            //tempEntity[ep[i].propertyName] = returnVal;
+                            tempEntity.CreateProperty(ep[i].propertyName, returnVal);
                         }
                     }
                 }
@@ -613,7 +694,7 @@ namespace HeavenStudio.Editor.Track
         private List<TimelineEventObj> duplicatedEventObjs = new List<TimelineEventObj>();
         public TimelineEventObj CopyEventObject(TimelineEventObj e)
         {
-            Beatmap.Entity clone = e.entity.DeepCopy();
+            DynamicBeatmap.DynamicEntity clone = e.entity.DeepCopy();
             TimelineEventObj dup = AddEventObject(clone.datamodel, false, new Vector3(clone.beat, -clone.track * Timeline.instance.LayerHeight()), clone, true, RandomID());
             duplicatedEventObjs.Add(dup);
 
@@ -626,7 +707,7 @@ namespace HeavenStudio.Editor.Track
             duplicatedEventObjs = new List<TimelineEventObj>();
         }
 
-        public void DestroyEventObject(Beatmap.Entity entity)
+        public void DestroyEventObject(DynamicBeatmap.DynamicEntity entity)
         {
             if (EventParameterManager.instance.entity == entity)
                 EventParameterManager.instance.Disable();
@@ -674,6 +755,95 @@ namespace HeavenStudio.Editor.Track
             {
                 PlaybackSpeed.transform.GetChild(3).GetComponent<TMP_Text>().text = $"Playback Speed: 1x";
                 PlaybackSpeed.value = 1f;
+            }
+        }
+
+        public void UpdateOffsetText()
+        {
+            FirstBeatOffset.text = (GameManager.instance.Beatmap.firstBeatOffset * 1000f).ToString("G");
+        }
+
+        public void UpdateOffsetFromText()
+        {
+            // Failsafe against empty string.
+            if (String.IsNullOrEmpty(FirstBeatOffset.text))
+                FirstBeatOffset.text = "0";
+            
+            // Convert ms to s.
+            var newOffset = Convert.ToSingle(FirstBeatOffset.text) / 1000f;
+
+            // Limit decimal places to 4.
+            newOffset = (float)System.Math.Round(newOffset, 4);
+
+            GameManager.instance.Beatmap.firstBeatOffset = newOffset;
+
+            UpdateOffsetText();
+        }
+
+        public void UpdateStartingBPMText()
+        {
+            StartingTempoSpecialAll.text = GameManager.instance.Beatmap.bpm.ToString("G");
+            StartingTempoSpecialTempo.text = StartingTempoSpecialAll.text;
+        }
+
+        public void UpdateStartingBPMFromText(bool all)
+        {
+            string text = all ? StartingTempoSpecialAll.text : StartingTempoSpecialTempo.text;
+            // Failsafe against empty string.
+            if (String.IsNullOrEmpty(text))
+                text = "120";
+            
+            var newBPM = Convert.ToDouble(text);
+
+            // Failsafe against negative BPM.
+            if (newBPM < 1f)
+            {
+                text = "1";
+                newBPM = 1;
+            }
+
+            // Limit decimal places to 4.
+            newBPM = System.Math.Round(newBPM, 4);
+
+            GameManager.instance.Beatmap.bpm = (float) newBPM;
+
+            // In case the newBPM ended up differing from the inputted string.
+            UpdateStartingBPMText();
+
+            Timeline.instance.FitToSong();
+        }
+
+        public void UpdateStartingVolText()
+        {
+            StartingVolumeSpecialVolume.text = (GameManager.instance.Beatmap.musicVolume).ToString("G");
+        }
+
+        public void UpdateStartingVolFromText()
+        {
+            // Failsafe against empty string.
+            if (String.IsNullOrEmpty(StartingVolumeSpecialVolume.text))
+                StartingVolumeSpecialVolume.text = "100";
+            
+            var newVol = Convert.ToInt32(StartingVolumeSpecialVolume.text);
+            newVol = Mathf.Clamp(newVol, 0, 100);
+
+            GameManager.instance.Beatmap.musicVolume = newVol;
+
+            UpdateStartingVolText();
+        }
+
+        public void OnSectionChange(DynamicBeatmap.ChartSection section)
+        {
+            if (section == null)
+            {
+                TimelineSectionDisplay.SetActive(false);
+            }
+            else
+            {
+                if (!TimelineSectionDisplay.activeSelf)
+                    TimelineSectionDisplay.SetActive(true);
+                TimelineSectionText.text = section.sectionName;
+                TimelineSectionProgress.value = GameManager.instance.sectionProgress;
             }
         }
 

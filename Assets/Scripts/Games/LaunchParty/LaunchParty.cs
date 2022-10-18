@@ -9,7 +9,7 @@ namespace HeavenStudio.Games.Loaders
     public static class RvlRocketLoader
     {
         public static Minigame AddGame(EventCaller eventCaller) {
-            return new Minigame("launch party", "Launch Party \n<color=#eb5454>[WIP]</color>", "000000", false, false, new List<GameAction>()
+            return new Minigame("launch party", "Launch Party \n<color=#eb5454>[WIP]</color>", "184CAA", false, false, new List<GameAction>()
             {
             });
         }

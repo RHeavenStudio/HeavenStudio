@@ -47,7 +47,7 @@ namespace HeavenStudio.Games.Scripts_SpaceSoccer
                 return;
             }
 
-            List<Beatmap.Entity> highKicks = GameManager.instance.Beatmap.entities.FindAll(c => c.datamodel == "spaceSoccer/high kick-toe!");
+            var highKicks = GameManager.instance.Beatmap.entities.FindAll(c => c.datamodel == "spaceSoccer/high kick-toe!");
             int numHighKicks = 0;
             //determine what state the ball was in for the previous kick.
             for(int i = 0; i < highKicks.Count; i++)

@@ -6,7 +6,7 @@ namespace HeavenStudio.Games
 {
     public class Minigame : MonoBehaviour
     {
-        public static float earlyTime = 0.1f, perfectTime = 0.08f, aceEarlyTime = 0.02f, aceLateTime = 0.02f, lateTime = 0.08f, endTime = 0.1f;
+        public static float earlyTime = 0.1f, perfectTime = 0.08f, aceEarlyTime = 0.025f, aceLateTime = 0.025f, lateTime = 0.08f, endTime = 0.1f;
         public List<Minigame.Eligible> EligibleHits = new List<Minigame.Eligible>();
 
         [System.Serializable]
@@ -132,7 +132,6 @@ namespace HeavenStudio.Games
         {
             PlayerActionEvent input = GetClosestScheduledInput();
             if (input == null) return false;
-
             return input.IsExpectingInputNow();
         }
 
@@ -186,6 +185,11 @@ namespace HeavenStudio.Games
         }
 
         public virtual void OnTimeChange()
+        {
+
+        }
+
+        public virtual void OnPlay(float beat)
         {
 
         }

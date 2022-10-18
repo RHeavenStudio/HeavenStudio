@@ -9,12 +9,27 @@ namespace HeavenStudio.Games.Loaders
     public static class AgbSpaceDanceLoader
     {
         public static Minigame AddGame(EventCaller eventCaller) {
-            return new Minigame("spaceDance", "Space Dance \n<color=#eb5454>[WIP don't use]</color>", "000000", false, false, new List<GameAction>()
+            return new Minigame("spaceDance", "Space Dance \n<color=#eb5454>[WIP don't use]</color>", "FFFF34", false, false, new List<GameAction>()
             {
-                new GameAction("turn right",                 delegate { SpaceDance.instance.DoTurnRight(eventCaller.currentEntity.beat); }, 2.0f, false),
-                new GameAction("sit down",                   delegate { SpaceDance.instance.DoSitDown(eventCaller.currentEntity.beat); }, 2.0f, false),
-                new GameAction("punch",                      delegate { SpaceDance.instance.DoPunch(eventCaller.currentEntity.beat); }, 2.0f, false),
-                new GameAction("bop",                      delegate { SpaceDance.instance.Bop(eventCaller.currentEntity.beat); }, 1.0f, false),
+                new GameAction("turn right", "Turn Right")
+                {
+                    function = delegate { SpaceDance.instance.DoTurnRight(eventCaller.currentEntity.beat); }, 
+                    defaultLength = 2.0f, 
+                },
+                new GameAction("sit down", "Sit Down")
+                {
+                    function = delegate { SpaceDance.instance.DoSitDown(eventCaller.currentEntity.beat); }, 
+                    defaultLength = 2.0f, 
+                },
+                new GameAction("punch", "Punch")
+                {
+                    function = delegate { SpaceDance.instance.DoPunch(eventCaller.currentEntity.beat); }, 
+                    defaultLength = 2.0f, 
+                },
+                new GameAction("bop", "Bop")
+                {
+                    function = delegate { SpaceDance.instance.Bop(eventCaller.currentEntity.beat); },
+                },
             });
         }
     }

@@ -14,26 +14,72 @@ namespace HeavenStudio.Games.Loaders
         public static Minigame AddGame(EventCaller eventCaller) {
             return new Minigame("tapTrial", "Tap Trial \n<color=#eb5454>[WIP]</color>", "93ffb3", false, false, new List<GameAction>()
             {
-                new GameAction("bop",                   delegate { TapTrial.instance.Bop(eventCaller.currentEntity.toggle); }, .5f, false, new List<Param>()
+                new GameAction("bop", "Bop")
                 {
-                    new Param("toggle", true, "Bop", "Whether both will bop to the beat or not")
-                }),
-                new GameAction("tap",                   delegate { TapTrial.instance.Tap(eventCaller.currentEntity.beat); }, 2.0f, false),
-                new GameAction("double tap",            delegate { TapTrial.instance.DoubleTap(eventCaller.currentEntity.beat); }, 2.0f, false),
-                new GameAction("triple tap",            delegate { TapTrial.instance.TripleTap(eventCaller.currentEntity.beat); }, 4.0f, false),
-                new GameAction("jump tap prep",            delegate { TapTrial.instance.JumpTapPrep(eventCaller.currentEntity.beat); }, 1.0f, false),
-                new GameAction("jump tap",              delegate { TapTrial.instance.JumpTap(eventCaller.currentEntity.beat); }, 2.0f, false),
-                new GameAction("final jump tap",        delegate { TapTrial.instance.FinalJumpTap(eventCaller.currentEntity.beat); }, 2.0f, false),
-                new GameAction("scroll event",        delegate { TapTrial.instance.scrollEvent(eventCaller.currentEntity.toggle, eventCaller.currentEntity.toggle); }, .5f, false, new List<Param>()
+                    function = delegate { TapTrial.instance.Bop(eventCaller.currentEntity["toggle"]); }, 
+                    defaultLength = .5f,
+                    parameters = new List<Param>()
+                    {
+                        new Param("toggle", true, "Bop", "Whether both will bop to the beat or not")
+                    }
+                },
+                new GameAction("tap", "Tap")
                 {
-                    new Param("toggle", false, "Scroll FX", "Will scroll"),
-                    new Param("toggle", false, "Flash FX", "Will flash to white"),
-                }),
-                new GameAction("giraffe events",        delegate { TapTrial.instance.giraffeEvent(eventCaller.currentEntity.toggle, eventCaller.currentEntity.toggle); }, .5f, false, new List<Param>()
+
+                    function = delegate { TapTrial.instance.Tap(eventCaller.currentEntity.beat); }, 
+                    defaultLength = 2.0f
+                },
+                new GameAction("double tap", "Double Tap")
                 {
-                    new Param("toggle", false, "Enter", "Giraffe will enter the scene"),
-                    new Param("toggle", false, "Exit", "Giraffe will exit the scene"),
-                })
+
+                    function = delegate { TapTrial.instance.DoubleTap(eventCaller.currentEntity.beat); }, 
+                    defaultLength = 2.0f
+                },
+                new GameAction("triple tap", "Triple Tap")
+                {
+
+                    function = delegate { TapTrial.instance.TripleTap(eventCaller.currentEntity.beat); }, 
+                    defaultLength = 4.0f
+                },
+                new GameAction("jump tap prep", "Prepare Stance")
+                {
+
+                    function = delegate { TapTrial.instance.JumpTapPrep(eventCaller.currentEntity.beat); }, 
+                },
+                new GameAction("jump tap", "Jump Tap")
+                {
+
+                    function = delegate { TapTrial.instance.JumpTap(eventCaller.currentEntity.beat); }, 
+                    defaultLength = 2.0f
+                },
+                new GameAction("final jump tap", "Final Jump Tap")
+                {
+
+                    function = delegate { TapTrial.instance.FinalJumpTap(eventCaller.currentEntity.beat); }, 
+                    defaultLength = 2.0f
+                },
+                new GameAction("scroll event", "Scroll Background")
+                {
+
+                    function = delegate { TapTrial.instance.scrollEvent(eventCaller.currentEntity["toggle"], eventCaller.currentEntity["toggle"]); }, 
+                    defaultLength = .5f,
+                    parameters = new List<Param>()
+                    {
+                        new Param("toggle", false, "Scroll FX", "Will scroll"),
+                        new Param("toggle", false, "Flash FX", "Will flash to white"),
+                    }
+                },
+                new GameAction("giraffe events", "Giraffe Animations")
+                {
+
+                    function = delegate { TapTrial.instance.giraffeEvent(eventCaller.currentEntity["toggle"], eventCaller.currentEntity["toggle"]); }, 
+                    defaultLength = .5f,
+                    parameters = new List<Param>()
+                    {
+                        new Param("toggle", false, "Enter", "Giraffe will enter the scene"),
+                        new Param("toggle", false, "Exit", "Giraffe will exit the scene"),
+                    }
+                }
             });
         }
     }

@@ -13,8 +13,16 @@ namespace HeavenStudio.Games.Loaders
         public static Minigame AddGame(EventCaller eventCaller) {
             return new Minigame("blueBear", "Blue Bear", "B4E6F6", false, false, new List<GameAction>()
             {
-                new GameAction("donut",                 delegate { BlueBear.instance.SpawnTreat(eventCaller.currentEntity.beat, false); }, 3, false),
-                new GameAction("cake",                  delegate { BlueBear.instance.SpawnTreat(eventCaller.currentEntity.beat, true); }, 4, false),
+                new GameAction("donut", "Donut")
+                {
+                    function = delegate { BlueBear.instance.SpawnTreat(eventCaller.currentEntity.beat, false); }, 
+                    defaultLength = 3,
+                },
+                new GameAction("cake", "Cake")
+                {
+                    function = delegate { BlueBear.instance.SpawnTreat(eventCaller.currentEntity.beat, true); }, 
+                    defaultLength = 4,
+                },
             });
         }
     }
