@@ -144,7 +144,7 @@ namespace HeavenStudio.Games
                     marchOtherCount += 1;
                     var marchOtherAnim = (marchOtherCount % 2 != 0 ? "MarchR" : "MarchL");
 
-                    Jukebox.PlayOneShotGame("marchingOrders/step1");
+                    Jukebox.PlayOneShotGame("marchingOrders/stepOther");
                     Cadet1.DoScaledAnimationAsync(marchOtherAnim, 0.5f);
                     Cadet2.DoScaledAnimationAsync(marchOtherAnim, 0.5f);
                     Cadet3.DoScaledAnimationAsync(marchOtherAnim, 0.5f);
@@ -160,7 +160,7 @@ namespace HeavenStudio.Games
             marchPlayerCount += 1;
                     var marchPlayerAnim = (marchPlayerCount % 2 != 0 ? "MarchR" : "MarchL");
 
-                    Jukebox.PlayOneShotGame("marchingOrders/step1");
+                    Jukebox.PlayOneShotGame("marchingOrders/stepOther");
                     CadetPlayer.DoScaledAnimationAsync(marchPlayerAnim, 0.5f);
             }
         }
@@ -216,7 +216,7 @@ namespace HeavenStudio.Games
             MultiSound.Play(new MultiSound.Sound[] {
             new MultiSound.Sound("marchingOrders/halt1", beat),
             new MultiSound.Sound("marchingOrders/halt2", beat + 1f),
-            new MultiSound.Sound("marchingOrders/step1", beat + 1f),
+            new MultiSound.Sound("marchingOrders/stepOther", beat + 1f),
             }, forcePlay:true);
             
             BeatAction.New(Player, new List<BeatAction.Action>() 
@@ -249,7 +249,7 @@ namespace HeavenStudio.Games
                     new MultiSound.Sound("marchingOrders/leftFaceTurn1", beat),
                     new MultiSound.Sound("marchingOrders/leftFaceTurn2", beat + 0.5f),
                     new MultiSound.Sound("marchingOrders/leftFaceTurn3", beat + turnLength + 1f),
-                    new MultiSound.Sound("marchingOrders/leftFaceTurn4", beat + turnLength + 2f),
+                    new MultiSound.Sound("marchingOrders/faceTurnOther", beat + turnLength + 2f),
                     }, forcePlay:true);
                     
                         BeatAction.New(Player, new List<BeatAction.Action>() 
@@ -260,12 +260,12 @@ namespace HeavenStudio.Games
                             });
                     break;
                 default:
-					ScheduleInput(beat, turnLength + 2f, InputType.DIRECTION_RIGHT_DOWN, RightSuccess, RightMiss, RightThrough);
+                    ScheduleInput(beat, turnLength + 2f, InputType.DIRECTION_RIGHT_DOWN, RightSuccess, RightMiss, RightThrough);
                     MultiSound.Play(new MultiSound.Sound[] {
                     new MultiSound.Sound("marchingOrders/rightFaceTurn1", beat),
                     new MultiSound.Sound("marchingOrders/rightFaceTurn2", beat + 0.5f),
                     new MultiSound.Sound("marchingOrders/rightFaceTurn3", beat + turnLength + 1f),
-                    new MultiSound.Sound("marchingOrders/rightFaceTurn4", beat + turnLength + 2f),
+                    new MultiSound.Sound("marchingOrders/faceTurnOther", beat + turnLength + 2f),
                     }, forcePlay:true);
                     
                         BeatAction.New(Player, new List<BeatAction.Action>() 
@@ -285,7 +285,7 @@ namespace HeavenStudio.Games
         }
         
         
-		
+        
         public static void AttentionSound(float beat)
         {
             MultiSound.Play(new MultiSound.Sound[] {
@@ -310,12 +310,12 @@ namespace HeavenStudio.Games
             new MultiSound.Sound("marchingOrders/halt2", beat + 1f),
             }, forcePlay:true);
         }
-		
-		
-		
-		public void LeftSuccess(PlayerActionEvent caller, float state)
+        
+        
+        
+        public void LeftSuccess(PlayerActionEvent caller, float state)
             {
-            //Jukebox.PlayOneShotGame("spaceDance/inputGood");
+            Jukebox.PlayOneShotGame("marchingOrders/faceTurnPlayer");
             CadetHeadPlayer.DoScaledAnimationAsync("FaceL", 0.5f);
              }
 
@@ -330,9 +330,9 @@ namespace HeavenStudio.Games
              }
 
 
-		public void RightSuccess(PlayerActionEvent caller, float state)
+        public void RightSuccess(PlayerActionEvent caller, float state)
             {
-            //Jukebox.PlayOneShotGame("spaceDance/inputGood");
+            Jukebox.PlayOneShotGame("marchingOrders/faceTurnPlayer");
             CadetHeadPlayer.DoScaledAnimationAsync("FaceR", 0.5f);
              }
 
