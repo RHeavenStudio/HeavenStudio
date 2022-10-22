@@ -244,7 +244,7 @@ namespace HeavenStudio.Games
             switch (type)
             {
                 case (int) MarchingOrders.DirectionFaceTurn.Left:
-                    //ScheduleInput(beat, turnLength + 2f, InputType.DIRECTION_RIGHT_DOWN, LeftSuccess, LeftMiss, LeftEmpty);
+                    ScheduleInput(beat, turnLength + 2f, InputType.DIRECTION_LEFT_DOWN, LeftSuccess, LeftMiss, LeftThrough);
                     MultiSound.Play(new MultiSound.Sound[] {
                     new MultiSound.Sound("marchingOrders/leftFaceTurn1", beat),
                     new MultiSound.Sound("marchingOrders/leftFaceTurn2", beat + 0.5f),
@@ -260,6 +260,7 @@ namespace HeavenStudio.Games
                             });
                     break;
                 default:
+					ScheduleInput(beat, turnLength + 2f, InputType.DIRECTION_RIGHT_DOWN, RightSuccess, RightMiss, RightThrough);
                     MultiSound.Play(new MultiSound.Sound[] {
                     new MultiSound.Sound("marchingOrders/rightFaceTurn1", beat),
                     new MultiSound.Sound("marchingOrders/rightFaceTurn2", beat + 0.5f),
@@ -284,6 +285,7 @@ namespace HeavenStudio.Games
         }
         
         
+		
         public static void AttentionSound(float beat)
         {
             MultiSound.Play(new MultiSound.Sound[] {
@@ -308,6 +310,42 @@ namespace HeavenStudio.Games
             new MultiSound.Sound("marchingOrders/halt2", beat + 1f),
             }, forcePlay:true);
         }
+		
+		
+		
+		public void LeftSuccess(PlayerActionEvent caller, float state)
+            {
+            //Jukebox.PlayOneShotGame("spaceDance/inputGood");
+            CadetHeadPlayer.DoScaledAnimationAsync("FaceL", 0.5f);
+             }
+
+        public void LeftMiss(PlayerActionEvent caller)
+            {
+            //Jukebox.PlayOneShotGame("spaceDance/inputBad2");
+             }
+
+        public void LeftThrough(PlayerActionEvent caller)
+            {
+
+             }
+
+
+		public void RightSuccess(PlayerActionEvent caller, float state)
+            {
+            //Jukebox.PlayOneShotGame("spaceDance/inputGood");
+            CadetHeadPlayer.DoScaledAnimationAsync("FaceR", 0.5f);
+             }
+
+        public void RightMiss(PlayerActionEvent caller)
+            {
+            //Jukebox.PlayOneShotGame("spaceDance/inputBad2");
+             }
+
+        public void RightThrough(PlayerActionEvent caller)
+            {
+
+             }
+
     }
 }
 
