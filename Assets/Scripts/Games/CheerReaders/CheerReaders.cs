@@ -6,7 +6,7 @@ using UnityEngine;
 namespace HeavenStudio.Games.Loaders
 {
     using static Minigames;
-    public static class AgbPanelShowLoader
+    public static class RvlBooksLoader
     {
         public static Minigame AddGame(EventCaller eventCaller)
         {
@@ -19,7 +19,6 @@ namespace HeavenStudio.Games.Loaders
 
 namespace HeavenStudio.Games
 {
-    using Scripts_Fireworks;
     public class CheerReaders : Minigame
     {
         // Start is called before the first frame update
