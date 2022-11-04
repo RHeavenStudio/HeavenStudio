@@ -34,13 +34,14 @@ namespace HeavenStudio.Games.Loaders
                 },
                 new GameAction("next vegetable", "Swap Vegetable")
                 {
-                    function = delegate { var e = eventCaller.currentEntity; RhythmTweezers.instance.NextVegetable(e.beat, e["type"], e["colorA"], e["colorB"]); }, 
+                    function = delegate { var e = eventCaller.currentEntity; RhythmTweezers.instance.NextVegetable(e.beat, e["type"], e["colorA"], e["colorB"], e["toggle"]); }, 
                     defaultLength = 0.5f, 
                     parameters = new List<Param>() 
                     {
                         new Param("type", RhythmTweezers.VegetableType.Onion, "Type", "The vegetable to switch to"),
                         new Param("colorA", RhythmTweezers.defaultOnionColor, "Onion Color", "The color of the onion"),
-                        new Param("colorB", RhythmTweezers.defaultPotatoColor, "Potato Color", "The color of the potato")
+                        new Param("colorB", RhythmTweezers.defaultPotatoColor, "Potato Color", "The color of the potato"),
+                        new Param("toggle", true, "Cash Sound", "The sound that plays on change")
                     } 
                 },
                 new GameAction("change vegetable", "Change Vegetable (Instant)")
@@ -228,11 +229,12 @@ namespace HeavenStudio.Games
         }
 
         const float vegDupeOffset = 16.7f;
-        public void NextVegetable(float beat, int type, Color onionColor, Color potatoColor)
+        public void NextVegetable(float beat, int type, Color onionColor, Color potatoColor, bool sound)
         {
             transitioning = true;
 
-            Jukebox.PlayOneShotGame("rhythmTweezers/register", beat);
+            if (sound)
+                Jukebox.PlayOneShotGame("rhythmTweezers/register", beat);
 
             Sprite nextVeggieSprite = type == 0 ? onionSprite : potatoSprite;
             Color nextColor = type == 0 ? onionColor : potatoColor;

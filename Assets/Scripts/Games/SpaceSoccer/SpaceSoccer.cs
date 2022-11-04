@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 using HeavenStudio.Util;
+using System;
 
 namespace HeavenStudio.Games.Loaders
 {
@@ -14,7 +15,7 @@ namespace HeavenStudio.Games.Loaders
             {
                 new GameAction("ball dispense", "Ball Dispense")
                 {
-                    function = delegate { SpaceSoccer.instance.Dispense(eventCaller.currentEntity.beat, !eventCaller.currentEntity["toggle"]); }, 
+                    function = delegate { SpaceSoccer.instance.Dispense(eventCaller.currentEntity.beat, !eventCaller.currentEntity["toggle"]); },
                     defaultLength = 2f,
                     parameters = new List<Param>()
                     {
@@ -24,20 +25,34 @@ namespace HeavenStudio.Games.Loaders
                 },
                 new GameAction("high kick-toe!", "High Kick-Toe!")
                 {
-                    defaultLength = 3f, 
-                    parameters = new List<Param>() 
+                    defaultLength = 3f,
+                    parameters = new List<Param>()
                     {
-                        new Param("swing", new EntityTypes.Float(0, 1, 0.5f), "Swing", "The amount of swing") 
+                        new Param("swing", new EntityTypes.Float(0, 1, 0.5f), "Swing", "The amount of swing")
                     }
+                },
+                new GameAction("down", "Down Voice")
+                {
+                    function = delegate { SpaceSoccer.Voice(eventCaller.currentEntity.beat, eventCaller.currentEntity["type"]); },
+                    defaultLength = 1f,
+                    parameters = new List<Param>()
+                    {
+                        new Param("type", SpaceSoccer.VoiceClip.Down, "Which Voice", "Choose the voiceclip to play")
+                    },
+                    inactiveFunction = delegate { SpaceSoccer.Voice(eventCaller.currentEntity.beat, eventCaller.currentEntity["type"]); }
                 },
                 // This is still here for "backwards-compatibility" but is hidden in the editor (it does absolutely nothing however)
                 new GameAction("keep-up", "")
                 {
-                    defaultLength = 4f, 
+                    defaultLength = 4f,
                     resizable = true,
-					hidden = true
+                    hidden = true
                 },
             });
+            /*new List<string>() {"ntr", "normal"},
+            "ntrlifting", "jp",
+            new List<string>() {"en", "jp"}
+            );*/
         }
     }
 }
@@ -48,6 +63,16 @@ namespace HeavenStudio.Games
 
     public class SpaceSoccer : Minigame
     {
+        public enum VoiceClip
+        {
+            Down,
+            And,
+            AndAlt,
+            Kick,
+            High,
+            Toe,
+        }
+
         [Header("Components")]
         [SerializeField] private GameObject ballRef;
         [SerializeField] private List<Kicker> kickers;
@@ -135,6 +160,12 @@ namespace HeavenStudio.Games
                 new MultiSound.Sound("spaceSoccer/dispenseTumble6", beat + 1.5f),
                 new MultiSound.Sound("spaceSoccer/dispenseTumble6B",beat + 1.75f),
                 }, forcePlay:true);
+        }
+
+        public static void Voice(float beat, int type)
+        {
+            string[] VoiceClips = { "down", "and", "andAlt", "kick", "highkicktoe1", "highkicktoe3" };
+            Jukebox.PlayOneShotGame("spaceSoccer/" + VoiceClips[type], forcePlay:true);
         }
     }
 

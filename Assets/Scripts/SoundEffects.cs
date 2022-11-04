@@ -8,7 +8,7 @@ namespace HeavenStudio
 {
     public class SoundEffects : MonoBehaviour
     {
-
+        public enum Langauges { English, Japanese, Korean }
         public enum CountNumbers { One, Two, Three, Four }
         public static string[] countNames = { "one", "two", "three", "four" };
         public static void Count(int type, bool alt)
@@ -98,6 +98,12 @@ namespace HeavenStudio
             else
                 sound += "2";
             Jukebox.PlayOneShot(sound);
+        }
+
+        public static void LanguageChange(Minigames minigame, int lang)
+        {
+            string[] languages = { "en", "jp", "ko" };
+            minigame.cueLanguage = languages[lang];
         }
     }
 

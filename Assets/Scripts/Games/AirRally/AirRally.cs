@@ -5,6 +5,7 @@ using NaughtyBezierCurves;
 using DG.Tweening;
 
 using HeavenStudio.Util;
+using System.Windows.Forms;
 
 namespace HeavenStudio.Games.Loaders
 {
@@ -54,8 +55,12 @@ namespace HeavenStudio.Games.Loaders
                         new Param("type", AirRally.CountSound.one, "Type", "The number Forthington will say"),
                         new Param("type2", AirRally.DistanceSound.close, "Type", "How far is Forthington?")
                     }
-                }
-            });
+                },
+            }//,
+            //new List<string>() { "rvl", "keep" },
+            //"rvlbadminton", "en",
+            //new List<string>() { "en", "jp" }
+            );
         }
     }
 }

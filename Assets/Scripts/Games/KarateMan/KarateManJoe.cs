@@ -141,7 +141,10 @@ namespace HeavenStudio.Games.Scripts_KarateMan
             {
                 if (!KarateMan.instance.IsExpectingInputNow())
                 {
-                    Punch(1);
+                    if (KarateMan.instance.IsNoriActive && KarateMan.instance.NoriPerformance >= 0.6f)
+                        Punch(2);
+                    else
+                        Punch(1);
                     Jukebox.PlayOneShotGame("karateman/swingNoHit", forcePlay: true);
                 }
             }
@@ -218,6 +221,19 @@ namespace HeavenStudio.Games.Scripts_KarateMan
                     lastPunchTime = Single.MinValue;
                     anim.DoNormalizedAnimation("JabNoNuri");
                     noNuriJabTime = cond.songPositionInBeats;
+                    break;
+                case 4:
+                    if (cond.songPositionInBeats - lastPunchTime < 0.25f + (Minigame.LateTime() - 1f))
+                    {
+                        lastPunchTime = Single.MinValue;
+                        anim.DoScaledAnimationAsync("Jab", 0.5f);
+                    }
+                    else
+                    {
+                        lastPunchTime = cond.songPositionInBeats;
+                        anim.DoScaledAnimationAsync("Straight", 0.5f);
+                        straight = true;
+                    }
                     break;
             }
             bop.startBeat = cond.songPositionInBeats + 0.5f;

@@ -24,12 +24,13 @@ namespace HeavenStudio.Games.Loaders
                     inactiveFunction = delegate { KarateMan.ToggleBopUnloaded(eventCaller.currentEntity["toggle"]); }
                 },
                 new GameAction("hit", "Toss Object") {
-                    function = delegate { var e = eventCaller.currentEntity; KarateMan.instance.CreateItem(e.beat, e["type"], e["type2"]); }, 
+                    function = delegate { var e = eventCaller.currentEntity; KarateMan.instance.CreateItem(e.beat, e["type"], e["type2"], e["type3"]); }, 
                     defaultLength = 2,
                     parameters = new List<Param>()
                     {
                         new Param("type", KarateMan.HitType.Pot, "Object", "The object to fire"),
-                        new Param("type2", KarateMan.KarateManFaces.Normal, "Success Expression", "The facial expression to set Joe to on hit")
+                        new Param("type2", KarateMan.KarateManFaces.Normal, "Success Expression", "The facial expression to set Joe to on hit"),
+                        new Param("type3", KarateMan.ForceObjectSound.None, "Force Sound", "Make the object play the specific sound no matter what")
                     }
                 },
                 new GameAction("bulb", "Toss Lightbulb")
@@ -64,11 +65,12 @@ namespace HeavenStudio.Games.Loaders
                 },
                 new GameAction("hitX", "Warnings")
                 {
-                    function = delegate { var e = eventCaller.currentEntity; KarateMan.instance.DoWord(e.beat, e["type"]); }, 
+                    function = delegate { var e = eventCaller.currentEntity; KarateMan.instance.DoWord(e.beat, e["type"], e["toggle"]); }, 
                     defaultLength = 1f,
                     parameters = new List<Param>()
                     {
-                        new Param("type", KarateMan.HitThree.HitThree, "Type", "The warning text to show")
+                        new Param("type", KarateMan.HitThree.HitThree, "Type", "The warning text to show"),
+                        new Param("toggle", true, "Voice Clip", "If the voice clip plays or not")
                     },
                     inactiveFunction = delegate { var e = eventCaller.currentEntity; KarateMan.DoWordSound(e.beat, e["type"]); }
                 },
@@ -90,11 +92,12 @@ namespace HeavenStudio.Games.Loaders
                 },
                 new GameAction("set gameplay modifiers", "Gameplay Modifiers")
                 {
-                    function = delegate { var e = eventCaller.currentEntity; KarateMan.instance.SetGameplayMods(e.beat, e["type"], e["toggle"]); }, 
+                    function = delegate { var e = eventCaller.currentEntity; KarateMan.instance.SetGameplayMods(e.beat, e["type"], e["type2"], e["toggle"]); }, 
                     defaultLength = 0.5f,
                     parameters = new List<Param>()
                     {
                         new Param("type", KarateMan.NoriMode.None, "Flow Bar type", "The type of Flow bar to use"),
+                        new Param("type2", KarateMan.HighNoriBg.None, "Flow Background", "The background type when you reach high flow"),
                         new Param("toggle", true, "Enable Combos", "Allow the player to combo? (Contextual combos will still be allowed even when off)"),
                     }
                 },
@@ -154,25 +157,25 @@ namespace HeavenStudio.Games.Loaders
                 // These are still here for backwards-compatibility but are hidden in the editor
                 new GameAction("pot", "")
                 {
-                    function = delegate { KarateMan.instance.CreateItem(eventCaller.currentEntity.beat, 0, (int) KarateMan.HitType.Pot); }, 
+                    function = delegate { KarateMan.instance.CreateItem(eventCaller.currentEntity.beat, 0, (int) KarateMan.HitType.Pot, 0); }, 
                     defaultLength = 2, 
                     hidden = true
                 },
                 new GameAction("rock", "")
                 {
-                    function = delegate { KarateMan.instance.CreateItem(eventCaller.currentEntity.beat, 0, (int) KarateMan.HitType.Rock); }, 
+                    function = delegate { KarateMan.instance.CreateItem(eventCaller.currentEntity.beat, 0, (int) KarateMan.HitType.Rock, 0); }, 
                     defaultLength = 2, 
                     hidden = true
                 },
                 new GameAction("ball", "")
                 {
-                    function = delegate { KarateMan.instance.CreateItem(eventCaller.currentEntity.beat, 0, (int) KarateMan.HitType.Ball); }, 
+                    function = delegate { KarateMan.instance.CreateItem(eventCaller.currentEntity.beat, 0, (int) KarateMan.HitType.Ball, 0); }, 
                     defaultLength = 2, 
                     hidden = true
                 },
                 new GameAction("tacobell", "")
                 {
-                    function = delegate { KarateMan.instance.CreateItem(eventCaller.currentEntity.beat, 0, (int) KarateMan.HitType.TacoBell); }, 
+                    function = delegate { KarateMan.instance.CreateItem(eventCaller.currentEntity.beat, 0, (int) KarateMan.HitType.TacoBell, 0); }, 
                     defaultLength = 2, 
                     hidden = true
                 },
@@ -188,7 +191,7 @@ namespace HeavenStudio.Games.Loaders
                 },
                 new GameAction("hit3", "")
                 {
-                    function = delegate { var e = eventCaller.currentEntity; KarateMan.instance.DoWord(e.beat, e["type"]); },
+                    function = delegate { var e = eventCaller.currentEntity; KarateMan.instance.DoWord(e.beat, e["type"], true); },
                     parameters = new List<Param>()
                     {
                         new Param("type", KarateMan.HitThree.HitThree, "Type", "The warning text to show")
@@ -197,7 +200,7 @@ namespace HeavenStudio.Games.Loaders
                 },
                 new GameAction("hit4", "")
                 {
-                    function = delegate { KarateMan.instance.DoWord(eventCaller.currentEntity.beat, (int) KarateMan.HitThree.HitFour); },
+                    function = delegate { KarateMan.instance.DoWord(eventCaller.currentEntity.beat, (int) KarateMan.HitThree.HitFour, true); },
                     hidden = true
                 },
                 new GameAction("set background color", "")
@@ -241,8 +244,8 @@ namespace HeavenStudio.Games.Loaders
                 },
             },
             new List<string>() {"agb", "ntr", "rvl", "ctr", "pco", "normal"},
-            "karate", "en",
-            new List<string>() {"en"}
+            "karate", "jp",
+            new List<string>() {"en", "jp", "ko"}
             );
         }
     }
@@ -251,6 +254,8 @@ namespace HeavenStudio.Games.Loaders
 namespace HeavenStudio.Games
 {
     using Scripts_KarateMan;
+    using static HeavenStudio.Util.MultiSound;
+
     public class KarateMan : Minigame
     {
         public static KarateMan instance;
@@ -347,12 +352,27 @@ namespace HeavenStudio.Games
             Blush
         }
 
+        public enum ForceObjectSound
+        {
+            None,
+            Onbeat,
+            Offbeat
+        }
+
         public enum NoriMode
         {
             None,
             Tengoku,
             Mania,
         }
+
+        public enum HighNoriBg
+        {
+            None = 0,
+            Sunburst = 1,
+            Rings = 2,
+        }
+
         public static bool IsComboEnable = true;   //only stops Out combo inputs, this basically makes combo contextual
         public bool IsNoriActive { get { return Nori.MaxNori > 0; } }
         public float NoriPerformance { get { if (IsNoriActive) return Nori.Nori / Nori.MaxNori; else return 1f; } }
@@ -404,6 +424,7 @@ namespace HeavenStudio.Games
 
         static int textureType = (int) BackgroundTextureType.Plain;
         static int textureFilterType = (int) ShadowType.Tinted;
+        static int highNoriBackground = 0;
         static Color filterColour = Color.white;
         static Color filterColourNext = Color.white;
         public GameObject BGGradient;
@@ -484,19 +505,21 @@ namespace HeavenStudio.Games
             var cond = Conductor.instance;
             if (!cond.isPlaying)
                 SetBgEffectsToLast(cond.songPositionInBeats);
-            
+
             switch (currentBgEffect)
             {
-                case (int) BackgroundFXType.Sunburst:
-                    bgEffectAnimator.DoNormalizedAnimation("Sunburst", (cond.songPositionInBeats*0.5f) % 1f);
+                case (int)BackgroundFXType.Sunburst:
+                    bgEffectAnimator.DoNormalizedAnimation("Sunburst", (cond.songPositionInBeats * 0.5f) % 1f);
                     break;
-                case (int) BackgroundFXType.Rings:
-                    bgEffectAnimator.DoNormalizedAnimation("Rings", (cond.songPositionInBeats*0.5f) % 1f);
+                case (int)BackgroundFXType.Rings:
+                    bgEffectAnimator.DoNormalizedAnimation("Rings", (cond.songPositionInBeats * 0.5f) % 1f);
                     break;
                 default:
                     bgEffectAnimator.Play("NoPose", -1, 0);
-                    break;
+                break;
             }
+
+
             if (cond.songPositionInBeats >= wordClearTime)
             {
                 Word.Play("NoPose");
@@ -554,6 +577,10 @@ namespace HeavenStudio.Games
                     UpdateFilterColour(col, Color.LerpUnclamped(filterColour, filterColourNext, fadeProg));
                 }
             }
+            if (IsNoriActive && NoriPerformance >= 0.6f && highNoriBackground != (int) HighNoriBg.None)
+                currentBgEffect = highNoriBackground;
+            else if (IsNoriActive && NoriPerformance < 0.6f && highNoriBackground != (int) HighNoriBg.None)
+                currentBgEffect = (int) BackgroundFXType.None;
 
             GameCamera.additionalPosition = cameraPosition - GameCamera.defaultPosition;
             BGEffect.transform.position = new Vector3(GameCamera.instance.transform.position.x, GameCamera.instance.transform.position.y, 0);
@@ -630,8 +657,7 @@ namespace HeavenStudio.Games
                     if (doSound)
                         MultiSound.Play(new MultiSound.Sound[] 
                         {
-                            new MultiSound.Sound("karateman/hit", beat + 0.5f, offset: hitVoiceOffset), 
-                            new MultiSound.Sound("karateman/two", beat + 1f),
+                            new MultiSound.Sound("karateman/hit", beat + 1f),
                         }, forcePlay: true);
                     break;
                 case (int) HitThree.HitThree:
@@ -640,8 +666,8 @@ namespace HeavenStudio.Games
                     if (doSound)
                         MultiSound.Play(new MultiSound.Sound[] 
                         {
-                            new MultiSound.Sound("karateman/hit", beat + 0.5f, offset: hitVoiceOffset), 
-                            new MultiSound.Sound("karateman/three", beat + 1f),
+                            new MultiSound.Sound("karateman/three", beat + 0.5f, offset: hitVoiceOffset), 
+                            new MultiSound.Sound("karateman/hit", beat + 1f),
                         }, forcePlay: true);
                     break;
                 case (int) HitThree.HitThreeAlt:
@@ -650,8 +676,8 @@ namespace HeavenStudio.Games
                     if (doSound)
                         MultiSound.Play(new MultiSound.Sound[] 
                         {
-                            new MultiSound.Sound("karateman/hitAlt", beat + 0.5f, offset: hitVoiceOffset), 
-                            new MultiSound.Sound("karateman/threeAlt", beat + 1f),
+                            new MultiSound.Sound("karateman/threeAlt", beat + 0.5f, offset: hitVoiceOffset), 
+                            new MultiSound.Sound("karateman/hitAlt", beat + 1f),
                         }, forcePlay: true);
                     break;
                 case (int) HitThree.HitFour:
@@ -660,8 +686,8 @@ namespace HeavenStudio.Games
                     if (doSound)
                         MultiSound.Play(new MultiSound.Sound[] 
                         {
-                            new MultiSound.Sound("karateman/hit", beat + 0.5f, offset: hitVoiceOffset), 
-                            new MultiSound.Sound("karateman/four", beat + 1f),
+                            new MultiSound.Sound("karateman/four", beat + 0.5f, offset: hitVoiceOffset), 
+                            new MultiSound.Sound("karateman/hit", beat + 1f),
                         }, forcePlay: true);
                     break;
                 case (int) HitThree.Grr:
@@ -694,11 +720,11 @@ namespace HeavenStudio.Games
             return word;
         }
 
-        public void CreateItem(float beat, int type, int expression)
+        public void CreateItem(float beat, int type, int expression, int sound)
         {
 
             string outSound;
-            if (Starpelly.Mathp.GetDecimalFromFloat(beat + 0.5f) == 0f)
+            if (Starpelly.Mathp.GetDecimalFromFloat(beat + 0.5f) == 0f && sound != (int)KarateMan.ForceObjectSound.Onbeat || sound == (int)KarateMan.ForceObjectSound.Offbeat)
                 outSound = "karateman/offbeatObjectOut";
             else
                 outSound = "karateman/objectOut";
@@ -709,7 +735,7 @@ namespace HeavenStudio.Games
                     CreateItemInstance(beat, "Item00", expression);
                     break;
                 case (int) HitType.Lightbulb:
-                    if (Starpelly.Mathp.GetDecimalFromFloat(beat + 0.5f) == 0f)
+                    if (Starpelly.Mathp.GetDecimalFromFloat(beat + 0.5f) == 0f && sound != (int)KarateMan.ForceObjectSound.Onbeat)
                         outSound = "karateman/offbeatLightbulbOut";
                     else
                         outSound = "karateman/lightbulbOut";
@@ -936,10 +962,12 @@ namespace HeavenStudio.Games
             UpdateFilterColour(bgColour, filterColour);
         }
 
-        public void SetGameplayMods(float beat, int mode, bool combo)
+        public void SetGameplayMods(float beat, int mode, int bg, bool combo)
         {
             NoriGO.SetActive(true);
             Nori.SetNoriMode(beat, mode);
+            highNoriBackground = bg;
+
             IsComboEnable = combo;
         }
 

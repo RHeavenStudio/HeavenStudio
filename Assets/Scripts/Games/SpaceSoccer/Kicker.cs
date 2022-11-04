@@ -116,13 +116,10 @@ namespace HeavenStudio.Games.Scripts_SpaceSoccer
                 ball.HighKick();
 
                 if (player)
-                Jukebox.PlayOneShotGame("spaceSoccer/highkicktoe1_hit");
+                Jukebox.PlayOneShotGame("spaceSoccer/highKickToeBallHit1");
             }
-            else
-            {
-                if (player)
-                    Jukebox.PlayOneShotGame("spaceSoccer/highkicktoe1");
-            }
+            if (player)
+                Jukebox.PlayOneShotGame("spaceSoccer/highkicktoe1");
 
             ResetState();
         }
@@ -142,12 +139,9 @@ namespace HeavenStudio.Games.Scripts_SpaceSoccer
             {
                 if (hit && ball)
                 {
-                    Jukebox.PlayOneShotGame("spaceSoccer/highkicktoe3_hit");
+                    Jukebox.PlayOneShotGame("spaceSoccer/highKickToeBallHit2");
                 }
-                else
-                {
-                    Jukebox.PlayOneShotGame("spaceSoccer/highkicktoe3");
-                }
+                Jukebox.PlayOneShotGame("spaceSoccer/highkicktoe3");
             }
 
             if (hit && ball)

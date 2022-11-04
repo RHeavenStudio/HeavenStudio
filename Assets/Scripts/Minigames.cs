@@ -12,17 +12,19 @@ using System;
 using System.Linq;
 using System.Reflection;
 using System.IO;
+using UnityEngine.UIElements;
 
 namespace HeavenStudio
 {
     
     public class Minigames
     {
+        public string cueLanguage;
         public class Minigame
         {
             public string name;
             public string displayName;
-            public string color;
+            public string color;            
             public GameObject holder;
             public bool threeD;
             public bool fxOnly;
@@ -238,13 +240,13 @@ namespace HeavenStudio
             {
                 new Minigame("gameManager", "Game Manager", "", false, true, new List<GameAction>()
                 {
-                    new GameAction("switchGame", "Switch Game", 0.5f, false, 
-                        function: delegate { GameManager.instance.SwitchGame(eventCaller.currentSwitchGame, eventCaller.currentEntity.beat); }, 
+                    new GameAction("switchGame", "Switch Game", 0.5f, false,
+                        function: delegate { GameManager.instance.SwitchGame(eventCaller.currentSwitchGame, eventCaller.currentEntity.beat); },
                         inactiveFunction: delegate { GameManager.instance.SwitchGame(eventCaller.currentSwitchGame, eventCaller.currentEntity.beat); }
                     ),
                     new GameAction("end", "End Remix",
-                        function: delegate { 
-                            Debug.Log("end"); 
+                        function: delegate {
+                            Debug.Log("end");
                             if (Timeline.instance != null)
                                 Timeline.instance?.Stop(0);
                             else
@@ -262,6 +264,13 @@ namespace HeavenStudio
                             GameManager.instance.ToggleInputs(eventCaller.currentEntity["toggle"]);
                         }
                     ),
+                    //new GameAction("cueLanguage", "Cue Language", 0.5f, false,
+                    //    new List<Param>()
+                    //    {
+                    //        new Param("type", SoundEffects.Langauges.English, "Language", "The language the cues will be in")
+                    //    },
+                    //    delegate { SoundEffects.LanguageChange(this, eventCaller.currentEntity["type"]); }
+                    //),
 
                     // These are still here for backwards-compatibility but are hidden in the editor
                     new GameAction("flash", "", 1f, true, 

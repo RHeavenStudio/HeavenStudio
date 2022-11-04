@@ -101,6 +101,8 @@ namespace HeavenStudio.Games
         private int marchOtherCount;
         private int marchPlayerCount;
         private int turnLength;
+
+        private string fastTurn;
         
         public static MarchingOrders instance;
         
@@ -181,8 +183,7 @@ namespace HeavenStudio.Games
         {
             MultiSound.Play(new MultiSound.Sound[] {
             new MultiSound.Sound("marchingOrders/attention1", beat),
-            new MultiSound.Sound("marchingOrders/attention2", beat + 0.25f),
-            new MultiSound.Sound("marchingOrders/attention3", beat + 0.75f),
+            new MultiSound.Sound("marchingOrders/attention2", beat + 0.5f),
             }, forcePlay:true);
             
             BeatAction.New(Player, new List<BeatAction.Action>() 
@@ -198,7 +199,9 @@ namespace HeavenStudio.Games
             
             MultiSound.Play(new MultiSound.Sound[] {
             new MultiSound.Sound("marchingOrders/march1", beat),
-            new MultiSound.Sound("marchingOrders/march2", beat + 1f),
+            new MultiSound.Sound("marchingOrders/march2", beat + 0.25f),
+            new MultiSound.Sound("marchingOrders/march3", beat + 0.45f),
+            new MultiSound.Sound("marchingOrders/marchStart", beat + 1f),
             }, forcePlay:true);
             
             BeatAction.New(Player, new List<BeatAction.Action>() 
@@ -234,9 +237,11 @@ namespace HeavenStudio.Games
             {
                 case (int) MarchingOrders.FaceTurnLength.Fast:
                     turnLength = 0;
+                    fastTurn = "fast";
                     break;
                 default:
                     turnLength = 1;
+                    fastTurn = "";
                     break;
             }
             
@@ -246,10 +251,10 @@ namespace HeavenStudio.Games
                 case (int) MarchingOrders.DirectionFaceTurn.Left:
                     //ScheduleInput(beat, turnLength + 2f, InputType.DIRECTION_RIGHT_DOWN, LeftSuccess, LeftMiss, LeftEmpty);
                     MultiSound.Play(new MultiSound.Sound[] {
-                    new MultiSound.Sound("marchingOrders/leftFaceTurn1", beat),
-                    new MultiSound.Sound("marchingOrders/leftFaceTurn2", beat + 0.5f),
+                    new MultiSound.Sound("marchingOrders/leftFaceTurn1" + fastTurn, beat),
+                    new MultiSound.Sound("marchingOrders/leftFaceTurn2" + fastTurn, beat + 0.5f),
                     new MultiSound.Sound("marchingOrders/leftFaceTurn3", beat + turnLength + 1f),
-                    new MultiSound.Sound("marchingOrders/leftFaceTurn4", beat + turnLength + 2f),
+                    new MultiSound.Sound("marchingOrders/turnAction", beat + turnLength + 2f),
                     }, forcePlay:true);
                     
                         BeatAction.New(Player, new List<BeatAction.Action>() 
@@ -261,10 +266,10 @@ namespace HeavenStudio.Games
                     break;
                 default:
                     MultiSound.Play(new MultiSound.Sound[] {
-                    new MultiSound.Sound("marchingOrders/rightFaceTurn1", beat),
-                    new MultiSound.Sound("marchingOrders/rightFaceTurn2", beat + 0.5f),
+                    new MultiSound.Sound("marchingOrders/rightFaceTurn1" + fastTurn, beat),
+                    new MultiSound.Sound("marchingOrders/rightFaceTurn2" + fastTurn, beat + 0.5f),
                     new MultiSound.Sound("marchingOrders/rightFaceTurn3", beat + turnLength + 1f),
-                    new MultiSound.Sound("marchingOrders/rightFaceTurn4", beat + turnLength + 2f),
+                    new MultiSound.Sound("marchingOrders/turnAction", beat + turnLength + 2f),
                     }, forcePlay:true);
                     
                         BeatAction.New(Player, new List<BeatAction.Action>() 
@@ -288,8 +293,7 @@ namespace HeavenStudio.Games
         {
             MultiSound.Play(new MultiSound.Sound[] {
             new MultiSound.Sound("marchingOrders/attention1", beat),
-            new MultiSound.Sound("marchingOrders/attention2", beat + 0.25f),
-            new MultiSound.Sound("marchingOrders/attention3", beat + 0.75f),
+            new MultiSound.Sound("marchingOrders/attention2", beat + 1f),
             }, forcePlay:true);
         }
         
@@ -297,7 +301,9 @@ namespace HeavenStudio.Games
         {
             MultiSound.Play(new MultiSound.Sound[] {
             new MultiSound.Sound("marchingOrders/march1", beat),
-            new MultiSound.Sound("marchingOrders/march2", beat + 1f),
+            new MultiSound.Sound("marchingOrders/march2", beat + 0.125f),
+            new MultiSound.Sound("marchingOrders/march3", beat + 0.25f),
+            new MultiSound.Sound("marchingOrders/marchStart", beat + 1f),
             }, forcePlay:true);
         }
         
