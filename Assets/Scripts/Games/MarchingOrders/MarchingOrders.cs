@@ -1,15 +1,13 @@
 //notes:
-//  BEFORE NEW PROPS
-// - minenice will also use this to test out randomly named parameters so coding has to rest until the new props update [DONE]
-// - see fan club for separate prefabs (cadets) [DONE]
-// - temporarily take sounds from rhre, wait until someone records the full code, including misses, or record it myself (unlikely) [IN PROGRESS]
-//  AFTER NEW PROPS
-// - testmod marching orders using speed
+//  CURRENT STATE
+// - rework on the marching cadet code (it sucks)
 // - see space soccer, mr upbeat, tunnel for keep-the-beat codes
 // - figure how to do custom bg changes when the upscaled textures are finished (see karate man, launch party once it releases)
 // - will use a textbox without going through the visual options but i wonder how..?? (see first contact if ever textboxes are implemented in said minigame)
 //  AFTER FEATURE COMPLETION
 // - delete all notes once the minigame is considered feature-complete
+// - polish. like a lot of polish
+// - of course, assetbundles!
 
 using HeavenStudio.Util;
 using System;
