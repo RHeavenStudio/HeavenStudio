@@ -39,7 +39,7 @@ namespace Bread2Unity
             var spritesFolderPath =
                 $"Assets\\Resources\\Sprites\\Games\\{char.ToUpperInvariant(rootPrefabName[0]) + rootPrefabName.Substring(1)}";
 
-            var animationsFolderPath = spritesFolderPath + $"/anim/{prefabData.Name}";
+            var animationsFolderPath = spritesFolderPath + $"/Animations/{prefabData.Name}";
             if (!Directory.Exists(animationsFolderPath))
             {
                 Directory.CreateDirectory(animationsFolderPath);
