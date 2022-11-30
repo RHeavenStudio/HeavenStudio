@@ -4,7 +4,6 @@ using System.IO;
 using System.Linq;
 using UnityEngine;
 using UnityEditor;
-
 using Bread2Unity;
 
 namespace Bread2Unity
@@ -13,9 +12,10 @@ namespace Bread2Unity
     {
         public const string EditorFolderName = "bread2unity";
         private GameObject _prefab;
-        private DataModel animation;
+        private DataModel _animation;
         private List<PrefabData> _prefabDataList = new List<PrefabData>();
         private List<string> _animationsIndexes;
+        private bool shouldRotate = false;
         private Vector2 _scrollPosition;
 
 
@@ -32,6 +32,7 @@ namespace Bread2Unity
 
         public void OnGUI()
         {
+            // Logo
             Texture logo =
                 (Texture)AssetDatabase.LoadAssetAtPath($"Assets/Editor/{EditorFolderName}/logo.png", typeof(Texture));
             GUILayout.Box(logo, GUILayout.ExpandWidth(true), GUILayout.Height(60));
@@ -40,7 +41,7 @@ namespace Bread2Unity
             GUIStyle desc = EditorStyles.label;
             desc.wordWrap = true;
             desc.fontStyle = FontStyle.BoldAndItalic;
-
+            // Description
             GUILayout.Box(
                 "bread2unity is a tool built with the purpose of converting RH Megamix animations to unity. And to generally speed up development by a lot.",
                 desc);
@@ -48,6 +49,7 @@ namespace Bread2Unity
             GUILayout.Space(60);
             EditorGUIUtility.labelWidth = 100;
 
+            // Prefab Selector
             GUILayout.BeginHorizontal();
             EditorGUILayout.PrefixLabel("Prefab");
             _prefab = (GameObject)EditorGUILayout.ObjectField(_prefab, typeof(GameObject), false);
@@ -55,6 +57,7 @@ namespace Bread2Unity
 
             EditorGUILayout.Separator();
 
+            // Prefab data input
             _scrollPosition = EditorGUILayout.BeginScrollView(_scrollPosition, GUILayout.MaxHeight(60));
             var plusGuiStyle = new GUIStyle(GUI.skin.button)
             {
@@ -88,15 +91,22 @@ namespace Bread2Unity
 
             EditorGUILayout.Separator();
 
+            // Add line button
             if (GUILayout.Button("+", plusGuiStyle, GUILayout.Height(40), GUILayout.Width(40)))
             {
                 _prefabDataList.Add(new PrefabData("", 0));
                 _animationsIndexes.Add("");
             }
 
-            EditorGUILayout.Separator();
+            GUILayout.Space(12f);
 
-            if (GUILayout.Button("Create Prefabs (WIP)") && _prefab != null)
+            // Rotate check box
+            shouldRotate = GUILayout.Toggle(shouldRotate, "Rotate Spritesheet");
+
+            GUILayout.Space(12f);
+            
+            // Create button
+            if (GUILayout.Button("Generate Assets") && _prefab != null)
             {
                 //Choose png and bccad files
                 var bccadFilePath = EditorUtility.OpenFilePanel("Open BCCAD File", null, "bccad");
@@ -105,7 +115,7 @@ namespace Bread2Unity
                 if (bccadFilePath != null && pngFilePath != null)
                 {
                     var bccad = BCCAD.Read(File.ReadAllBytes(bccadFilePath));
-                    var spriteTexture = SpriteCreator.ComputeSprites(bccad, pngFilePath, _prefab.name);
+                    var spriteTexture = SpriteCreator.ComputeSprites(bccad, pngFilePath, _prefab.name, shouldRotate);
                     //Create prefab from prefab data
                     for (int i = 0; i < _prefabDataList.Count; i++)
                     {
@@ -123,11 +133,15 @@ namespace Bread2Unity
                 }
             }
 
+            GUILayout.Space(12f);
+            
             if (GUILayout.Button("bccad test"))
             {
                 BccadTest.TestBccad();
             }
-
+            
+            GUILayout.Space(12f);
+            
             GUILayout.BeginHorizontal();
             if (GUILayout.Button("Bread Download", GUILayout.Height(40)))
             {

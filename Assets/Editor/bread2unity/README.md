@@ -4,7 +4,7 @@ Rhythm Heaven animation to Unity animation converter
 
 ### TODO
 
-- [ ] add option for rotate texture
+- [X] add option for rotate texture
 - [ ] remove npe (animationController)
 
 - [ ] change animations save location
