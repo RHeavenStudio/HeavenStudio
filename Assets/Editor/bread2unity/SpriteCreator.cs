@@ -11,7 +11,7 @@ namespace Bread2Unity
     public class SpriteCreator : MonoBehaviour
     {
         public const int PixelsPerUnit = 100;
-        public static Texture2D ComputeSprites(BCCAD bccad, string texturePath, string prefabName)
+        public static Texture2D ComputeSprites(BCCAD bccad, string texturePath, string prefabName, bool shouldRotate = false)
         {
             var textureName = Path.GetFileName(texturePath);
             var spritesFolder =
@@ -26,9 +26,9 @@ namespace Bread2Unity
                 $"{textureName}";
             var newTexture = new Texture2D(bccad.sheetW, bccad.sheetH);
             newTexture.LoadImage(File.ReadAllBytes(texturePath));
-            var rotatedTexture = RotateTexture(newTexture);
-            rotatedTexture.name = textureName.Substring(0, textureName.Length - ".png".Length);
-            File.WriteAllBytes(destTexturePath, rotatedTexture.EncodeToPNG());
+            var finalTexture = shouldRotate ? RotateTexture(newTexture) : newTexture;
+            finalTexture.name = textureName.Substring(0, textureName.Length - ".png".Length);
+            File.WriteAllBytes(destTexturePath, finalTexture.EncodeToPNG());
             AssetDatabase.ImportAsset(destTexturePath);
             var ti = AssetImporter.GetAtPath(destTexturePath) as TextureImporter;
             
@@ -43,17 +43,17 @@ namespace Bread2Unity
                 ti.textureCompression = TextureImporterCompression.Uncompressed;
                 var newData = new List<SpriteMetaData>();
                 var rectCtr = 0;
-                var heightRatio = (float)rotatedTexture.height / bccad.sheetH;
-                var widthRatio = (float)rotatedTexture.width / bccad.sheetW;
+                var heightRatio = (float)finalTexture.height / bccad.sheetH;
+                var widthRatio = (float)finalTexture.width / bccad.sheetW;
                 foreach (var r in bccad.regions)
                 {
                     var smd = new SpriteMetaData
                     {
                         pivot = new Vector2(0.5f, 0.5f),
                         alignment = 0,
-                        name = rotatedTexture.name + "_" + rectCtr,
+                        name = finalTexture.name + "_" + rectCtr,
                         rect = new Rect(r.regionX * widthRatio,
-                            rotatedTexture.height - (r.regionH + r.regionY) * heightRatio, r.regionW * widthRatio,
+                            finalTexture.height - (r.regionH + r.regionY) * heightRatio, r.regionW * widthRatio,
                             r.regionH * heightRatio)
                     };
 
@@ -65,7 +65,7 @@ namespace Bread2Unity
             }
 
             AssetDatabase.ImportAsset(destTexturePath, ImportAssetOptions.ForceUpdate);
-            return rotatedTexture;
+            return finalTexture;
         }
 
         public static Texture2D RotateTexture(Texture2D image)
