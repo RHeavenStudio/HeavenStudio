@@ -24,8 +24,7 @@ namespace Bread2Unity
 
         public bool FlipX;
         public bool FlipY;
-
-        public byte Opacity;
+        
 
         public byte designation;
         public short unknown;
@@ -35,7 +34,7 @@ namespace Bread2Unity
         public float brDepth;
         public Color Multicolor;
         public Color ScreenColor;
-        public Color GetColor() => new Color(Multicolor.r, Multicolor.g, Multicolor.b, Opacity / 255f);
+        // public Color GetColor() => new Color(Multicolor.r, Multicolor.g, Multicolor.b, Multicolor.a);
     }
 
     public struct RegionIndex

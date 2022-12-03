@@ -5,6 +5,7 @@ using System.Linq;
 using Bread2Unity;
 using UnityEditor;
 using UnityEditor.Animations;
+using UnityEditor.Graphs;
 using UnityEngine;
 using Animation = Bread2Unity.Animation;
 
@@ -89,29 +90,44 @@ namespace Bread2Unity
                 var zTransformCurve = new BccadCurve();
 
                 var rotationCurve = new BccadCurve();
-                
+
                 var flipXCurve = new BccadCurve();
                 var flipYCurve = new BccadCurve();
 
                 var scaleXCurve = new BccadCurve();
                 var scaleYCurve = new BccadCurve();
 
+                var rColorCurve = new BccadCurve();
+                var gColorCurve = new BccadCurve();
+                var bColorCurve = new BccadCurve();
+                var opacityCurve = new BccadCurve();
                 var spriteFrames = new List<ObjectReferenceKeyframe>();
 
                 var currentTime = 0f;
+                // Check to see if we need to animate colors
 
-                for (int stepIndex = 0; stepIndex < animation.Steps.Count; stepIndex++)
+                foreach (var step in animation.Steps)
                 {
-                    var currentStep = animation.Steps[stepIndex];
+                    var sprite = step.BccadSprite;
+                    foreach (var part in sprite.parts)
+                    {
+                        if (!partsOfGameObject.Contains(part))
+                            continue;
+                        var color = part.Multicolor * step.Color;
+                    }
+                }
+
+                foreach (var currentStep in animation.Steps)
+                {
                     var bccadSprite = currentStep.BccadSprite;
                     // Find the index of part of the game object
                     var partIndex = bccadSprite.parts.Select((value, index) => new { value, index })
                         .Where(pair => bccadPrefab.RegionToChild[pair.value.RegionIndex] == child)
                         .Select(pair => pair.index).DefaultIfEmpty(-1)
                         .FirstOrDefault();
-                    
+
                     enabledCurve.AddKey(currentTime, partIndex == -1 ? 0 : 1);
-                    
+
                     if (partIndex != -1)
                     {
                         var bccadSpritePart = bccadSprite.parts[partIndex];
@@ -121,7 +137,7 @@ namespace Bread2Unity
                         var height = bccadSpritePart.StretchY / bccadPrefab.HeightRatio;
                         var x = (bccadSpritePart.PosX + currentStep.TranslateX - 512f) /
                             SpriteCreator.PixelsPerUnit + sprite.bounds.size.x * 0.5f * width;
-                        var y = -(bccadSpritePart.PosY + currentStep.TranslateY- 512f) / SpriteCreator.PixelsPerUnit -
+                        var y = -(bccadSpritePart.PosY + currentStep.TranslateY - 512f) / SpriteCreator.PixelsPerUnit -
                                 sprite.bounds.size.y * 0.5f * height;
                         var z = -0.00001f * partIndex;
 
@@ -144,8 +160,14 @@ namespace Bread2Unity
 
                         flipXCurve.AddKey(currentTime, bccadSpritePart.FlipX ? 1 : 0);
                         flipYCurve.AddKey(currentTime, bccadSpritePart.FlipY ? 1 : 0);
-                        
+
                         rotationCurve.AddKey(currentTime, -bccadSpritePart.Rotation);
+
+                        var color = bccadSpritePart.Multicolor * currentStep.Color;
+                        rColorCurve.AddKey(currentTime, color.r);
+                        gColorCurve.AddKey(currentTime, color.g);
+                        bColorCurve.AddKey(currentTime, color.b);
+                        opacityCurve.AddKey(currentTime, color.a);
                     }
 
                     // Increase the time for the next frame
@@ -156,7 +178,7 @@ namespace Bread2Unity
                 {
                     enabledCurve.CopyLastKey(currentTime);
                 }
-                
+
                 var spriteBinding = new EditorCurveBinding
                 {
                     type = typeof(SpriteRenderer),
@@ -194,6 +216,17 @@ namespace Bread2Unity
                 {
                     animationClip.SetCurve(child.name, typeof(Transform), "localScale.x", scaleXCurve);
                     animationClip.SetCurve(child.name, typeof(Transform), "localScale.y", scaleYCurve);
+                }
+                
+                // We check if any of the steps color that have the game object is not white
+                var colorChanges = animation.Steps.Where(step => step.BccadSprite.parts.Any(part => partsOfGameObject.Contains(part)))
+                    .Any(step => !step.Color.Equals(Color.white));
+                if (colorChanges || partsOfGameObject.Select(part => part.Multicolor).Distinct().Count() > 1)
+                {
+                    animationClip.SetCurve(child.name, typeof(SpriteRenderer), "m_Color.r", rColorCurve);
+                    animationClip.SetCurve(child.name, typeof(SpriteRenderer), "m_Color.g", gColorCurve);
+                    animationClip.SetCurve(child.name, typeof(SpriteRenderer), "m_Color.b", bColorCurve);
+                    animationClip.SetCurve(child.name, typeof(SpriteRenderer), "m_Color.a", opacityCurve);
                 }
             }
 

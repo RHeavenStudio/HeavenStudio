@@ -60,7 +60,8 @@ namespace Bread2Unity
                         Convert.ToInt32(byteBuffer.ReadByte() & 0xff) / 255f,
                         Convert.ToInt32(byteBuffer.ReadByte() & 0xff) / 255f);
 
-                    part.Opacity = byteBuffer.ReadByte();
+                    part.Multicolor.a = byteBuffer.ReadByte() / 255f;
+                    
                     for (int k = 0; k < 12; k++)
                     {
                         byteBuffer.ReadByte();
@@ -118,7 +119,7 @@ namespace Bread2Unity
                     byteBuffer.ReadByte();
                     byteBuffer.ReadByte();
                     byteBuffer.ReadByte();
-                    step.Opacity = Convert.ToByte(Convert.ToInt32(byteBuffer.ReadShort()) & 0xFF);
+                    step.Color.a = Convert.ToInt32(byteBuffer.ReadShort() & 0xFF) / 255f;
                     anim.Steps.Add(step);
                 }
 

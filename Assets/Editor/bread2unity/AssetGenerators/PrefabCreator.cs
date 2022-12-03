@@ -56,8 +56,8 @@ namespace Bread2Unity
             var spriteRenderer = (SpriteRenderer)gameObjectPart.AddComponent(typeof(SpriteRenderer));
 
             spriteRenderer.sprite = sprite;
-            spriteRenderer.color = spritePart.GetColor();
             spriteRenderer.flipX = spritePart.FlipX;
+            spriteRenderer.color = spritePart.Multicolor;
             spriteRenderer.flipY = spritePart.FlipY;
             spriteRenderer.enabled = true;
             gameObjectPart.transform.SetParent(prefab.ParentObject.transform);
