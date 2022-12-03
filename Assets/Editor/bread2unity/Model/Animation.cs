@@ -24,12 +24,12 @@ namespace Bread2Unity
         
         public float Depth;
         
-        public float StretchX;
-        public float StretchY;
+        public float StretchX;//needs to add
+        public float StretchY; //needs to add
 
-        public float Rotation;
+        public float Rotation; //needs to add
 
-        public byte Opacity;
-        public Color Color;
+        public byte Opacity;//needs to add
+        public Color Color;//needs to add
     }
 }

@@ -49,7 +49,6 @@ namespace Bread2Unity
                 AnimatorController.CreateAnimatorControllerAtPath(
                     AssetDatabase.GenerateUniqueAssetPath(
                         $"{animationsFolderPath}/{prefabData.Name}Controller.controller"));
-            var bccadSprites = bccad.sprites;
 
             //get all of the parts associated with the game object
             var steps = prefabData.Animations.SelectMany(animation => animation.Steps);
@@ -120,9 +119,9 @@ namespace Bread2Unity
                         var sprite = sprites[bccadSpritePart.RegionIndex.Index];
                         var width = bccadSpritePart.StretchX / bccadPrefab.WidthRatio;
                         var height = bccadSpritePart.StretchY / bccadPrefab.HeightRatio;
-                        var x = (bccadSpritePart.PosX - 512f) /
+                        var x = (bccadSpritePart.PosX + currentStep.TranslateX - 512f) /
                             SpriteCreator.PixelsPerUnit + sprite.bounds.size.x * 0.5f * width;
-                        var y = -(bccadSpritePart.PosY - 512f) / SpriteCreator.PixelsPerUnit -
+                        var y = -(bccadSpritePart.PosY + currentStep.TranslateY- 512f) / SpriteCreator.PixelsPerUnit -
                                 sprite.bounds.size.y * 0.5f * height;
                         var z = -0.00001f * partIndex;
 
@@ -176,7 +175,9 @@ namespace Bread2Unity
                 if ((from part in partsOfGameObject select part.RegionIndex.Index).Distinct().Count() > 1)
                     AnimationUtility.SetObjectReferenceCurve(animationClip, spriteBinding, spriteFrames.ToArray());
                 if ((from part in partsOfGameObject select part.PosX).Distinct().Count() > 1 ||
-                    (from part in partsOfGameObject select part.PosY).Distinct().Count() > 1)
+                    (from part in partsOfGameObject select part.PosY).Distinct().Count() > 1 ||
+                    animation.Steps.Select(step => step.TranslateX).Distinct().Count() > 1 ||
+                    animation.Steps.Select(step => step.TranslateY).Distinct().Count() > 1)
                 {
                     animationClip.SetCurve(child.name, typeof(Transform), "localPosition.x", xTransformCurve);
                     animationClip.SetCurve(child.name, typeof(Transform), "localPosition.y", yTransformCurve);
