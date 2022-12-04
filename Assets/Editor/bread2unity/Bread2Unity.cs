@@ -110,26 +110,29 @@ namespace Bread2Unity
             {
                 //Choose png and bccad files
                 var bccadFilePath = EditorUtility.OpenFilePanel("Open BCCAD File", null, "bccad");
-                var bccadFileFolder = Path.GetDirectoryName(bccadFilePath);
-                var pngFilePath = EditorUtility.OpenFilePanel("Open Texture File", bccadFileFolder, "png");
-                if (bccadFilePath != null && pngFilePath != null)
+                if (!string.IsNullOrEmpty(bccadFilePath))
                 {
-                    var bccad = BCCAD.Read(File.ReadAllBytes(bccadFilePath));
-                    var spriteTexture = SpriteCreator.ComputeSprites(bccad, pngFilePath, _prefab.name, shouldRotate);
-                    //Create prefab from prefab data
-                    for (int i = 0; i < _prefabDataList.Count; i++)
+                    var bccadFileFolder = Path.GetDirectoryName(bccadFilePath);
+                    var pngFilePath = EditorUtility.OpenFilePanel("Open Texture File", bccadFileFolder, "png");
+                    if (!string.IsNullOrEmpty(pngFilePath))
                     {
-                        List<int> animationIndexes;
-                        var prefabData = _prefabDataList[i];
-                        if (_animationsIndexes[i].Equals(""))
-                            animationIndexes = new List<int>();
-                        else
-                            animationIndexes = _animationsIndexes[i].Split(',').Select(int.Parse).ToList();
-                        prefabData.Animations =
-                            animationIndexes.Select(index => bccad.animations[index]).ToList();
-                    }
+                        var bccad = BCCAD.Read(File.ReadAllBytes(bccadFilePath));
+                        var spriteTexture = SpriteCreator.ComputeSprites(bccad, pngFilePath, _prefab.name, shouldRotate);
+                        //Create prefab from prefab data
+                        for (int i = 0; i < _prefabDataList.Count; i++)
+                        {
+                            List<int> animationIndexes;
+                            var prefabData = _prefabDataList[i];
+                            if (_animationsIndexes[i].Equals(""))
+                                animationIndexes = new List<int>();
+                            else
+                                animationIndexes = _animationsIndexes[i].Split(',').Select(int.Parse).ToList();
+                            prefabData.Animations =
+                                animationIndexes.Select(index => bccad.animations[index]).ToList();
+                        }
 
-                    PrefabCreator.CreatePrefab(_prefab, bccad, _prefabDataList, spriteTexture);
+                        PrefabCreator.CreatePrefab(_prefab, bccad, _prefabDataList, spriteTexture);
+                    }
                 }
             }
 
