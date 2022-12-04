@@ -230,7 +230,6 @@ namespace Bread2Unity
                 }
             }
 
-            animationClip.frameRate = 30; //fps
             animationClip.name = animation.Name;
 
             return animationClip;
