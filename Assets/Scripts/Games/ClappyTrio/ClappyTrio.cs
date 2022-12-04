@@ -14,12 +14,16 @@ namespace HeavenStudio.Games.Loaders
             {
                 new GameAction("clap", "Clap")
                 {
-                    function = delegate { ClappyTrio.instance.Clap(eventCaller.currentEntity.beat, eventCaller.currentEntity.length); }, 
+                    function = delegate { var e = eventCaller.currentEntity; ClappyTrio.instance.Clap(e.beat, e.length); },
                     resizable = true
                 },
                 new GameAction("bop", "Bop")
                 {
-                    function = delegate { ClappyTrio.instance.Bop(eventCaller.currentEntity.beat); } 
+                    function = delegate { var e = eventCaller.currentEntity; ClappyTrio.instance.Bop(e.beat, e["toggle"]); },
+                    parameters = new List<Param>()
+                    {
+                        new Param("toggle", false, "Happy", "Whether or not they will be happy for you getting it right")
+                    },
                 },
                 new GameAction("prepare", "Prepare Stance")
                 {
@@ -52,6 +56,7 @@ namespace HeavenStudio.Games.Loaders
 namespace HeavenStudio.Games
 {
     using Scripts_ClappyTrio;
+    using UnityEngine.UIElements;
 
     public class ClappyTrio : Minigame
     {
@@ -61,6 +66,7 @@ namespace HeavenStudio.Games
 
         [SerializeField] private Sprite[] faces;
 
+        private bool reactHappy;
         private bool isClapping;
         private float currentClappingLength;
         private float lastClapStart;
@@ -112,6 +118,7 @@ namespace HeavenStudio.Games
 
         private void Update()
         {
+            float resetTime = 0f;
             if (isClapping)
             {
                 float songPosBeat = Conductor.instance.songPositionInBeats;
@@ -150,9 +157,15 @@ namespace HeavenStudio.Games
 
                             clapIndex++;
                         }
+                        resetTime = lastClapStart + length;
                         break;
                     }
                 }
+            }
+
+            if (Conductor.instance.songPositionInBeats > resetTime + 2)
+            {
+                reactHappy = false;
             }
         }
 
@@ -177,13 +190,17 @@ namespace HeavenStudio.Games
             Jukebox.PlayOneShotGame("clappyTrio/ready");
         }
 
-        public void Bop(float beat)
+        public void Bop(float beat, bool happy)
         {
+            reactHappy = happy;
             if (playerHitLast)
             {
                 for (int i = 0; i < Lion.Count; i++)
                 {
-                    SetFace(i, 1);
+                    if (reactHappy)
+                        SetFace(i, 1);
+                    else
+                        SetFace(i, 0);
                 }
             } else
             {

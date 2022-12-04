@@ -1,12 +1,12 @@
 ManifestFileVersion: 0
-CRC: 4021713305
+CRC: 1303085020
 Hashes:
   AssetFileHash:
     serializedVersion: 2
-    Hash: eb3193bb4e5ff3cdd381c1a45504e816
+    Hash: b69f25695ccdda8a03d1fe50182261f6
   TypeTreeHash:
     serializedVersion: 2
-    Hash: 2b92e6f111bbb24dabe3a2c56ea02b28
+    Hash: e8394596a85b1aa454fee3a11e4098fa
 HashAppended: 0
 ClassTypes:
 - Class: 1
@@ -82,6 +82,7 @@ SerializeReferenceClassIdentifiers:
   ClassName: UnityEngine.UI.MaskableGraphic/CullStateChangedEvent
 Assets:
 - Assets/Resources/Sprites/Games/KarateMan/karate_bg_rings_2.png
+- Assets/Resources/Sprites/Games/KarateMan/karate_bg_recolorable_seriousmode.png
 - Assets/Resources/Sprites/Games/KarateMan/effect/krt_rock.mat
 - Assets/Resources/Sprites/Games/KarateMan/effect/fire.png
 - Assets/Resources/Sprites/Games/KarateMan/anime/karateman/ToReady.anim
@@ -123,6 +124,7 @@ Assets:
 - Assets/Resources/Sprites/Games/KarateMan/anime/overlay/NoriNone.anim
 - Assets/Resources/Sprites/Games/KarateMan/anime/karateman/NoPose.anim
 - Assets/Resources/Sprites/Games/KarateMan/anime/karateman/Jab.anim
+- Assets/Resources/Sprites/Games/KarateMan/anime/word/Word06jp.anim
 - Assets/Resources/Sprites/Games/KarateMan/anime/karateman/Head/Face04.anim
 - Assets/Resources/Sfx/games/karateman/rockHit.ogg
 - Assets/Resources/Sfx/games/karateman/punchKickHit1.ogg
@@ -133,8 +135,10 @@ Assets:
 - Assets/Resources/Sfx/games/karateman/comboHit2.ogg
 - Assets/Resources/Sprites/Games/KarateMan/anime/karateman/LowJab.anim
 - Assets/Resources/Sprites/Games/KarateMan/karateman_cellshader.mat
+- Assets/Resources/Sprites/Games/KarateMan/anime/word/Word01jp.anim
 - Assets/Resources/Sprites/Games/KarateMan/anime/word/Word04.anim
 - Assets/Resources/Sprites/Games/KarateMan/karate_bg_sunburst_2.png
+- Assets/Resources/Sprites/Games/KarateMan/anime/word/Word05jp.anim
 - Assets/Resources/Sprites/Games/KarateMan/karateman_nonurijab.mat
 - Assets/Resources/Sfx/games/karateman/rockHit_fullNori.wav
 - Assets/Resources/Sfx/games/karateman/lightbulbOut.ogg
@@ -173,10 +177,11 @@ Assets:
 - Assets/Resources/Sfx/games/karateman/potHit_lowNori.wav
 - Assets/Resources/Sprites/Games/KarateMan/anime/item/HitMark.controller
 - Assets/Resources/Sfx/games/karateman/lightbulbHit.ogg
-- Assets/Resources/Sprites/Games/KarateMan/effect/krt_pot.mat
+- Assets/Resources/Sprites/Games/KarateMan/anime/word/Word03jp.anim
 - Assets/Resources/Sprites/Games/KarateMan/anime/item/HitMark.anim
-- Assets/Resources/Sprites/Games/KarateMan/effect/rockEmitter.png
+- Assets/Resources/Sprites/Games/KarateMan/effect/krt_pot.mat
 - Assets/Resources/Sfx/games/karateman/objectOut.ogg
+- Assets/Resources/Sprites/Games/KarateMan/effect/rockEmitter.png
 - Assets/Resources/Sfx/games/karateman/barrelOutCombos.ogg
 - Assets/Resources/Sprites/Games/KarateMan/anime/item/Item04.anim
 - Assets/Resources/Sfx/games/karateman/comboHit3.ogg
@@ -185,16 +190,21 @@ Assets:
 - Assets/Resources/Sprites/Games/KarateMan/anime/karateman/Head/Face01.anim
 - Assets/Resources/Sprites/Games/KarateMan/karateman_overlays.png
 - Assets/Resources/Sprites/Games/KarateMan/anime/word/Word01.anim
+- Assets/Resources/Sprites/Games/KarateMan/anime/word/Word04jp.anim
+- Assets/Resources/Sprites/Games/KarateMan/anime/word/Word07jp.anim
 - Assets/Resources/Sfx/games/karateman/barrelOutKicks.ogg
 - Assets/Resources/Sfx/games/karateman/bombKick.ogg
 - Assets/Resources/Sprites/Games/KarateMan/anime/item/Item01.anim
 - Assets/Resources/Sprites/Games/KarateMan/anime/word/Word02.anim
 - Assets/Resources/Sfx/games/karateman/alienHit.ogg
+- Assets/Resources/Sprites/Games/KarateMan/karate_bg_seriousmode_1.png
 - Assets/Resources/Sprites/Games/KarateMan/anime/bg/Rings.anim
+- Assets/Resources/Sprites/Games/KarateMan/anime/word/Word00jp.anim
 - Assets/Resources/Sfx/games/karateman/comboHit4.ogg
 - Assets/Resources/Sprites/Games/KarateMan/anime/karateman/Head/KarateManHead.controller
 - Assets/Resources/Sprites/Games/KarateMan/anime/item/Item06.anim
 - Assets/Resources/Sprites/Games/KarateMan/anime/karateman/KarateMan.controller
+- Assets/Resources/Sprites/Games/KarateMan/anime/word/Word02jp.anim
 - Assets/Resources/Sprites/Games/KarateMan/effect/barrelParts01.png
 - Assets/Resources/Sfx/games/karateman/punchKickHit2.ogg
 - Assets/Resources/Sprites/Games/KarateMan/effect/other.png
@@ -209,4 +219,5 @@ Assets:
 - Assets/Resources/Sfx/games/karateman/soccerHit.ogg
 - Assets/Resources/Sprites/Games/KarateMan/karateman_bulb_light.png
 - Assets/Resources/Sprites/Games/KarateMan/anime/karateman/Head/Face00.anim
+- Assets/Resources/Sprites/Games/KarateMan/karate_bg_seriousmode_2.png
 Dependencies: []

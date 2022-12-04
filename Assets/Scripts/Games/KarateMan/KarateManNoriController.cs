@@ -122,6 +122,7 @@ namespace HeavenStudio.Games.Scripts_KarateMan
         {
             if (noriMode == (int) KarateMan.NoriMode.None) return;
             if (MaxNori <= 0) return;
+            if (KarateMan.instance.HonkiMode) return;
             float oldNori = Nori;
             if (noriMode == (int) KarateMan.NoriMode.Tengoku)
             {
@@ -152,6 +153,7 @@ namespace HeavenStudio.Games.Scripts_KarateMan
         {
             if (noriMode == (int) KarateMan.NoriMode.None) return;
             if (MaxNori <= 0) return;
+            if (KarateMan.instance.HonkiMode) return;
             float oldNori = Nori;
             if (noriMode == (int) KarateMan.NoriMode.Tengoku)
             {
@@ -191,6 +193,7 @@ namespace HeavenStudio.Games.Scripts_KarateMan
         {
             if (noriMode == (int) KarateMan.NoriMode.None) return;
             if (MaxNori <= 0) return;
+            if (KarateMan.instance.HonkiMode) return;
             if (noriMode == (int) KarateMan.NoriMode.Tengoku)
             {
                 if (Nori >= MaxNori)

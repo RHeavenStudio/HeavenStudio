@@ -47,8 +47,12 @@ namespace HeavenStudio.Games.Loaders
                     
                     new GameAction("march", "March!")
                     {
-                        function = delegate { var e = eventCaller.currentEntity; MarchingOrders.instance.SargeMarch(e.beat); },
+                        function = delegate { var e = eventCaller.currentEntity; MarchingOrders.instance.SargeMarch(e.beat, e["toggle"]); },
                         defaultLength = 2f,
+                        parameters = new List<Param>
+                        {
+                            new Param("toggle", false, "Disable Voice", "Remove the sarge from saying 'MARCH' ")
+                        },
                         inactiveFunction = delegate { var e = eventCaller.currentEntity; MarchingOrders.MarchSound(e.beat);}
                     },
                     
@@ -192,19 +196,24 @@ namespace HeavenStudio.Games
                 });
         }
         
-        public void SargeMarch(float beat)
+        public void SargeMarch(float beat, bool noVoice)
         {
             marchOtherCount = 0;
             marchPlayerCount = 0;
-            
-            MultiSound.Play(new MultiSound.Sound[] {
-            new MultiSound.Sound("marchingOrders/march1", beat),
-            new MultiSound.Sound("marchingOrders/march2", beat + 0.25f),
-            new MultiSound.Sound("marchingOrders/march3", beat + 0.45f),
-            new MultiSound.Sound("marchingOrders/marchStart", beat + 1f),
-            }, forcePlay:true);
-            
-            BeatAction.New(Player, new List<BeatAction.Action>() 
+
+            if (!noVoice)
+            {
+                MultiSound.Play(new MultiSound.Sound[] {
+                    new MultiSound.Sound("marchingOrders/march1", beat),
+                    new MultiSound.Sound("marchingOrders/march2", beat + 0.25f),
+                    new MultiSound.Sound("marchingOrders/march3", beat + 0.45f),
+                    new MultiSound.Sound("marchingOrders/marchStart", beat + 1f),
+                }, forcePlay: true);
+            }
+
+            if (!noVoice)
+            {
+                BeatAction.New(Player, new List<BeatAction.Action>()
                 {
                 new BeatAction.Action(beat,     delegate { Sarge.DoScaledAnimationAsync("Talk", 0.5f);}),
                 new BeatAction.Action(beat + 1f,     delegate { Cadet1.DoScaledAnimationAsync("MarchL", 0.5f);}),
@@ -212,6 +221,17 @@ namespace HeavenStudio.Games
                 new BeatAction.Action(beat + 1f,     delegate { Cadet3.DoScaledAnimationAsync("MarchL", 0.5f);}),
                 new BeatAction.Action(beat + 1f,     delegate { CadetPlayer.DoScaledAnimationAsync("MarchL", 0.5f);}),
                 });
+            }
+            else
+            {
+                BeatAction.New(Player, new List<BeatAction.Action>()
+                {
+                new BeatAction.Action(beat + 1f,     delegate { Cadet1.DoScaledAnimationAsync("MarchL", 0.5f);}),
+                new BeatAction.Action(beat + 1f,     delegate { Cadet2.DoScaledAnimationAsync("MarchL", 0.5f);}),
+                new BeatAction.Action(beat + 1f,     delegate { Cadet3.DoScaledAnimationAsync("MarchL", 0.5f);}),
+                new BeatAction.Action(beat + 1f,     delegate { CadetPlayer.DoScaledAnimationAsync("MarchL", 0.5f);}),
+                });
+            }
         }
         
         public void SargeHalt(float beat)

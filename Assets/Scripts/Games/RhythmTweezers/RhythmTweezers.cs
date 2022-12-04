@@ -41,7 +41,7 @@ namespace HeavenStudio.Games.Loaders
                         new Param("type", RhythmTweezers.VegetableType.Onion, "Type", "The vegetable to switch to"),
                         new Param("colorA", RhythmTweezers.defaultOnionColor, "Onion Color", "The color of the onion"),
                         new Param("colorB", RhythmTweezers.defaultPotatoColor, "Potato Color", "The color of the potato"),
-                        new Param("toggle", true, "Cash Sound", "The sound that plays on change")
+                        new Param("toggle", false, "Disable SFX", "Disables the cash sound that plays on change")
                     } 
                 },
                 new GameAction("change vegetable", "Change Vegetable (Instant)")
@@ -229,11 +229,11 @@ namespace HeavenStudio.Games
         }
 
         const float vegDupeOffset = 16.7f;
-        public void NextVegetable(float beat, int type, Color onionColor, Color potatoColor, bool sound)
+        public void NextVegetable(float beat, int type, Color onionColor, Color potatoColor, bool disSound)
         {
             transitioning = true;
 
-            if (sound)
+            if (!disSound)
                 Jukebox.PlayOneShotGame("rhythmTweezers/register", beat);
 
             Sprite nextVeggieSprite = type == 0 ? onionSprite : potatoSprite;
