@@ -24,5 +24,5 @@ Rhythm Heaven animation to Unity animation converter
 - [ ] write a normal readme
 
 ### Bugs
-- [ ] fix camera taking pictures
-- [ ] mices are on top of frame (photo 16)
+- [X] fix camera taking pictures
+- [X] mices are on top of frame (photo 16)

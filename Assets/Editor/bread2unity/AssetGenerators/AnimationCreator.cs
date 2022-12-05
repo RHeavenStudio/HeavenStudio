@@ -28,7 +28,8 @@ namespace Bread2Unity
             {
                 Keyframe lastKey = keys.LastOrDefault();
 
-                base.AddKey(time, keys.Length > 0 ? lastKey.value : 1);
+                base.AddKey(new Keyframe(time, keys.Length > 0 ? lastKey.value : 1, float.PositiveInfinity,
+                    float.PositiveInfinity));
             }
         }
 
@@ -185,7 +186,7 @@ namespace Bread2Unity
                     animationClip.SetCurve(child.name, typeof(SpriteRenderer), "m_FlipY", flipYCurve);
                 if ((from part in partsOfGameObject select part.RegionIndex.Index).Distinct().Count() > 1)
                     AnimationUtility.SetObjectReferenceCurve(animationClip, spriteBinding, spriteFrames.ToArray());
-                
+
                 //Check if there is any need for z animation
                 var setOfZIndexes = new HashSet<float>();
                 foreach (var sprite in spritesAssociatedWithPrefab)
@@ -193,12 +194,12 @@ namespace Bread2Unity
                     for (int i = 0; i < sprite.parts.Count && setOfZIndexes.Count < 2; i++)
                     {
                         var part = sprite.parts[i];
-                        if(bccadPrefab.RegionToChild[part.RegionIndex] != child)
+                        if (bccadPrefab.RegionToChild[part.RegionIndex] != child)
                             continue;
                         setOfZIndexes.Add(i);
                     }
                 }
-                
+
                 if ((from part in partsOfGameObject select part.PosX).Distinct().Count() > 1 ||
                     (from part in partsOfGameObject select part.PosY).Distinct().Count() > 1 ||
                     setOfZIndexes.Count > 1 ||
