@@ -104,18 +104,7 @@ namespace Bread2Unity
                 var spriteFrames = new List<ObjectReferenceKeyframe>();
 
                 var currentTime = 0f;
-                // Check to see if we need to animate colors
 
-                foreach (var step in animation.Steps)
-                {
-                    var sprite = step.BccadSprite;
-                    foreach (var part in sprite.parts)
-                    {
-                        if (!partsOfGameObject.Contains(part))
-                            continue;
-                        var color = part.Multicolor * step.Color;
-                    }
-                }
 
                 foreach (var currentStep in animation.Steps)
                 {
@@ -196,8 +185,23 @@ namespace Bread2Unity
                     animationClip.SetCurve(child.name, typeof(SpriteRenderer), "m_FlipY", flipYCurve);
                 if ((from part in partsOfGameObject select part.RegionIndex.Index).Distinct().Count() > 1)
                     AnimationUtility.SetObjectReferenceCurve(animationClip, spriteBinding, spriteFrames.ToArray());
+                
+                //Check if there is any need for z animation
+                var setOfZIndexes = new HashSet<float>();
+                foreach (var sprite in spritesAssociatedWithPrefab)
+                {
+                    for (int i = 0; i < sprite.parts.Count && setOfZIndexes.Count < 2; i++)
+                    {
+                        var part = sprite.parts[i];
+                        if(bccadPrefab.RegionToChild[part.RegionIndex] != child)
+                            continue;
+                        setOfZIndexes.Add(i);
+                    }
+                }
+                
                 if ((from part in partsOfGameObject select part.PosX).Distinct().Count() > 1 ||
                     (from part in partsOfGameObject select part.PosY).Distinct().Count() > 1 ||
+                    setOfZIndexes.Count > 1 ||
                     animation.Steps.Select(step => step.TranslateX).Distinct().Count() > 1 ||
                     animation.Steps.Select(step => step.TranslateY).Distinct().Count() > 1)
                 {
@@ -217,9 +221,10 @@ namespace Bread2Unity
                     animationClip.SetCurve(child.name, typeof(Transform), "localScale.x", scaleXCurve);
                     animationClip.SetCurve(child.name, typeof(Transform), "localScale.y", scaleYCurve);
                 }
-                
+
                 // We check if any of the steps color that have the game object is not white
-                var colorChanges = animation.Steps.Where(step => step.BccadSprite.parts.Any(part => partsOfGameObject.Contains(part)))
+                var colorChanges = animation.Steps
+                    .Where(step => step.BccadSprite.parts.Any(part => partsOfGameObject.Contains(part)))
                     .Any(step => !step.Color.Equals(Color.white));
                 if (colorChanges || partsOfGameObject.Select(part => part.Multicolor).Distinct().Count() > 1)
                 {
