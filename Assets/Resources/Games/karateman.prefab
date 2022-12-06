@@ -67238,7 +67238,6 @@ MonoBehaviour:
   NoriHolderMania01: {fileID: 1719477137588232708}
   NoriManiaInk00: {fileID: 2663523590501458685}
   NoriManiaInk01: {fileID: 4222576282379005862}
-  HonkiBackground: {fileID: 0}
   NoriMaterial: {fileID: 2100000, guid: b1a39ae83b8f3994ea5ea73e28b253a8, type: 2}
   NoriColorsTengoku:
   - {r: 0.13333334, g: 0.4, b: 1, a: 1}
@@ -97349,6 +97348,7 @@ MonoBehaviour:
   BGGradient: {fileID: 2790469215453043610}
   BGBlood: {fileID: 5404947306895237780}
   BGRadial: {fileID: 8238140095837895901}
+  BGHonki: {fileID: 8078510951812902189}
   Wind: {fileID: 9003203273337395302}
   SnowEffect: {fileID: 6887086164110906535}
   SnowEffectGO: {fileID: 1216083719847348373}
@@ -108643,7 +108643,7 @@ GameObject:
   - component: {fileID: 8455187268343419869}
   - component: {fileID: 3391052867871953747}
   m_Layer: 0
-  m_Name: HonkiBackground
+  m_Name: BGhonki
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -108658,7 +108658,7 @@ Transform:
   m_GameObject: {fileID: 8078510951812902189}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalScale: {x: 0.3116809, y: 0.31249827, z: 1}
   m_Children: []
   m_Father: {fileID: 1483789816297415762}
   m_RootOrder: 7

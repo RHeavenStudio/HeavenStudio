@@ -105,6 +105,7 @@ namespace HeavenStudio.Games
         private int marchOtherCount;
         private int marchPlayerCount;
         private int turnLength;
+        private float nextMarch;
 
         private string fastTurn;
         
@@ -125,6 +126,59 @@ namespace HeavenStudio.Games
         void Awake()
         {
             instance = this;
+        }
+
+        public void LeftSuccess(PlayerActionEvent caller, float beat)
+        {
+            Jukebox.PlayOneShotGame("marchingOrders/turnActionPlayer");
+            CadetHeadPlayer.DoScaledAnimationAsync("FaceL", 0.5f);
+        }
+
+        public void GenericMiss(PlayerActionEvent caller)
+        {
+            Jukebox.PlayOneShot("miss");
+            Sarge.DoScaledAnimationAsync("Anger", 0.5f);
+            Steam.DoScaledAnimationAsync("Steam", 0.5f);
+        }
+
+        public void LeftEmpty(PlayerActionEvent caller)
+        {
+            
+        }
+
+        public void RightSuccess(PlayerActionEvent caller, float beat)
+        {
+            Jukebox.PlayOneShotGame("marchingOrders/turnActionPlayer");
+            CadetHeadPlayer.DoScaledAnimationAsync("FaceR", 0.5f);
+        }
+
+        public void RightEmpty(PlayerActionEvent caller)
+        {
+
+        }
+
+        public void MarchHit(PlayerActionEvent caller, float beat)
+        {
+            marchPlayerCount++;
+
+            Jukebox.PlayOneShotGame("marchingOrders/step1");
+            CadetPlayer.DoScaledAnimationAsync(marchPlayerCount % 2 != 0 ? "MarchR" : "MarchL", 0.5f);
+        }
+
+        public void MarchEmpty(PlayerActionEvent caller)
+        {
+            
+        }
+
+        public void HaltHit(PlayerActionEvent caller, float beat)
+        {
+            Jukebox.PlayOneShotGame("marchingOrders/step1");
+            CadetPlayer.DoScaledAnimationAsync("Halt", 0.5f);
+        }
+
+        public void HaltEmpty(PlayerActionEvent caller)
+        {
+
         }
 
         // Update is called once per frame
@@ -154,20 +208,31 @@ namespace HeavenStudio.Games
                     Cadet1.DoScaledAnimationAsync(marchOtherAnim, 0.5f);
                     Cadet2.DoScaledAnimationAsync(marchOtherAnim, 0.5f);
                     Cadet3.DoScaledAnimationAsync(marchOtherAnim, 0.5f);
+                    ScheduleInput(cond.songPositionInBeats - 1f, 1f, InputType.STANDARD_DOWN, MarchHit, GenericMiss, MarchEmpty);
                 }
             }
-            
+
             if (PlayerInput.Pressed() && !IsExpectingInputNow())
             {
-            Jukebox.PlayOneShot("miss");
-            Sarge.DoScaledAnimationAsync("Anger", 0.5f);
-            Steam.DoScaledAnimationAsync("Steam", 0.5f);
+                Jukebox.PlayOneShot("miss");
+                Sarge.DoScaledAnimationAsync("Anger", 0.5f);
+                Steam.DoScaledAnimationAsync("Steam", 0.5f);
             
-            marchPlayerCount += 1;
-                    var marchPlayerAnim = (marchPlayerCount % 2 != 0 ? "MarchR" : "MarchL");
+                marchPlayerCount++;
+                var marchPlayerAnim = (marchPlayerCount % 2 != 0 ? "MarchR" : "MarchL");
 
-                    Jukebox.PlayOneShotGame("marchingOrders/step1");
-                    CadetPlayer.DoScaledAnimationAsync(marchPlayerAnim, 0.5f);
+                Jukebox.PlayOneShotGame("marchingOrders/step1");
+                CadetPlayer.DoScaledAnimationAsync(marchPlayerAnim, 0.5f);
+            } 
+
+            if (PlayerInput.AltPressed() && !IsExpectingInputNow())
+            {
+                Jukebox.PlayOneShot("miss");
+                Sarge.DoScaledAnimationAsync("Anger", 0.5f);
+                Steam.DoScaledAnimationAsync("Steam", 0.5f);
+
+                Jukebox.PlayOneShotGame("marchingOrders/step1");
+                CadetPlayer.DoScaledAnimationAsync("Halt", 0.5f);
             }
         }
         
@@ -206,7 +271,7 @@ namespace HeavenStudio.Games
                 MultiSound.Play(new MultiSound.Sound[] {
                     new MultiSound.Sound("marchingOrders/march1", beat),
                     new MultiSound.Sound("marchingOrders/march2", beat + 0.25f),
-                    new MultiSound.Sound("marchingOrders/march3", beat + 0.45f),
+                    new MultiSound.Sound("marchingOrders/march3", beat + 0.5f),
                     new MultiSound.Sound("marchingOrders/marchStart", beat + 1f),
                 }, forcePlay: true);
             }
@@ -241,7 +306,8 @@ namespace HeavenStudio.Games
             new MultiSound.Sound("marchingOrders/halt2", beat + 1f),
             new MultiSound.Sound("marchingOrders/step1", beat + 1f),
             }, forcePlay:true);
-            
+
+            ScheduleInput(beat, 1f, InputType.STANDARD_ALT_DOWN, HaltHit, GenericMiss, HaltEmpty);
             BeatAction.New(Player, new List<BeatAction.Action>() 
                 {
                 new BeatAction.Action(beat,     delegate { Sarge.DoScaledAnimationAsync("Talk", 0.5f);}),
@@ -269,10 +335,10 @@ namespace HeavenStudio.Games
             switch (type)
             {
                 case (int) MarchingOrders.DirectionFaceTurn.Left:
-                    //ScheduleInput(beat, turnLength + 2f, InputType.DIRECTION_RIGHT_DOWN, LeftSuccess, LeftMiss, LeftEmpty);
+                    ScheduleInput(beat, turnLength + 2f, InputType.DIRECTION_LEFT_DOWN, LeftSuccess, GenericMiss, LeftEmpty);
                     MultiSound.Play(new MultiSound.Sound[] {
                     new MultiSound.Sound("marchingOrders/leftFaceTurn1" + fastTurn, beat),
-                    new MultiSound.Sound("marchingOrders/leftFaceTurn2" + fastTurn, beat + 0.5f),
+                    new MultiSound.Sound("marchingOrders/leftFaceTurn2" + fastTurn, beat + 0.6f),
                     new MultiSound.Sound("marchingOrders/leftFaceTurn3", beat + turnLength + 1f),
                     new MultiSound.Sound("marchingOrders/turnAction", beat + turnLength + 2f),
                     }, forcePlay:true);
@@ -285,9 +351,10 @@ namespace HeavenStudio.Games
                             });
                     break;
                 default:
+                    ScheduleInput(beat, turnLength + 2f, InputType.DIRECTION_RIGHT_DOWN, RightSuccess, GenericMiss, RightEmpty);
                     MultiSound.Play(new MultiSound.Sound[] {
                     new MultiSound.Sound("marchingOrders/rightFaceTurn1" + fastTurn, beat),
-                    new MultiSound.Sound("marchingOrders/rightFaceTurn2" + fastTurn, beat + 0.5f),
+                    new MultiSound.Sound("marchingOrders/rightFaceTurn2" + fastTurn, beat + 0.6f),
                     new MultiSound.Sound("marchingOrders/rightFaceTurn3", beat + turnLength + 1f),
                     new MultiSound.Sound("marchingOrders/turnAction", beat + turnLength + 2f),
                     }, forcePlay:true);
@@ -313,7 +380,7 @@ namespace HeavenStudio.Games
         {
             MultiSound.Play(new MultiSound.Sound[] {
             new MultiSound.Sound("marchingOrders/attention1", beat),
-            new MultiSound.Sound("marchingOrders/attention2", beat + 1f),
+            new MultiSound.Sound("marchingOrders/attention2", beat + 0.5f),
             }, forcePlay:true);
         }
         
@@ -321,8 +388,8 @@ namespace HeavenStudio.Games
         {
             MultiSound.Play(new MultiSound.Sound[] {
             new MultiSound.Sound("marchingOrders/march1", beat),
-            new MultiSound.Sound("marchingOrders/march2", beat + 0.125f),
-            new MultiSound.Sound("marchingOrders/march3", beat + 0.25f),
+            new MultiSound.Sound("marchingOrders/march2", beat + 0.25f),
+            new MultiSound.Sound("marchingOrders/march3", beat + 0.5f),
             new MultiSound.Sound("marchingOrders/marchStart", beat + 1f),
             }, forcePlay:true);
         }
