@@ -105,7 +105,10 @@ namespace HeavenStudio.Games
         private int marchOtherCount;
         private int marchPlayerCount;
         private int turnLength;
-        private float nextMarch;
+        private bool marchSuru;
+        private bool beatSuru;
+        private float marchTsugi;
+        private float beatTsugi;
 
         private string fastTurn;
         
@@ -185,33 +188,16 @@ namespace HeavenStudio.Games
         void Update()
         {
             var cond = Conductor.instance;
-            if (cond.ReportBeat(ref bop.lastReportedBeat, bop.startBeat % 1))
-            {
-                if (cond.songPositionInBeats >= bop.startBeat && cond.songPositionInBeats < bop.startBeat + bop.length)
-                {
-                    if (!(cond.songPositionInBeats >= noBop.startBeat && cond.songPositionInBeats < noBop.startBeat + noBop.length))
-                        Cadet1.DoScaledAnimationAsync("Bop", 0.5f);
-                        Cadet2.DoScaledAnimationAsync("Bop", 0.5f);
-                        Cadet3.DoScaledAnimationAsync("Bop", 0.5f);
-                        CadetPlayer.DoScaledAnimationAsync("Bop", 0.5f);
-                }
-            }
-            
-            if (cond.ReportBeat(ref marching.lastReportedBeat, bop.startBeat % 1))
-            {
-                if (cond.songPositionInBeats >= marching.startBeat && cond.songPositionInBeats < marching.startBeat + marching.length)
-                {
-                    marchOtherCount += 1;
-                    var marchOtherAnim = (marchOtherCount % 2 != 0 ? "MarchR" : "MarchL");
+            var currBeat = cond.songPositionInBeats;
 
-                    Jukebox.PlayOneShotGame("marchingOrders/step1");
-                    Cadet1.DoScaledAnimationAsync(marchOtherAnim, 0.5f);
-                    Cadet2.DoScaledAnimationAsync(marchOtherAnim, 0.5f);
-                    Cadet3.DoScaledAnimationAsync(marchOtherAnim, 0.5f);
-                    ScheduleInput(cond.songPositionInBeats - 1f, 1f, InputType.STANDARD_DOWN, MarchHit, GenericMiss, MarchEmpty);
-                }
+            if (marchSuru && (int) currBeat <= marching.length)
+            {
+                CadetsMarch(marchTsugi + (int) currBeat, marching.length);
             }
-
+            if (beatSuru && (int) currBeat <= bop.length)
+            {
+                Bop(beatTsugi + (int) currBeat, bop.length);
+            }
             if (PlayerInput.Pressed() && !IsExpectingInputNow())
             {
                 Jukebox.PlayOneShot("miss");
@@ -235,17 +221,39 @@ namespace HeavenStudio.Games
                 CadetPlayer.DoScaledAnimationAsync("Halt", 0.5f);
             }
         }
-        
+
         public void Bop(float beat, float length)
         {
             bop.length = length;
             bop.startBeat = beat;
+            beatSuru = true;
+            beatTsugi += 1f;
+
+            BeatAction.New(gameObject, new List<BeatAction.Action>()
+            {
+                new BeatAction.Action(beat, delegate { Cadet1.DoScaledAnimationAsync("Bop", 0.5f); }),
+                new BeatAction.Action(beat, delegate { Cadet2.DoScaledAnimationAsync("Bop", 0.5f); }),
+                new BeatAction.Action(beat, delegate { Cadet3.DoScaledAnimationAsync("Bop", 0.5f); }),
+                new BeatAction.Action(beat, delegate { CadetPlayer.DoScaledAnimationAsync("Bop", 0.5f); }),
+            });
         }
-        
+
         public void CadetsMarch(float beat, float length)
         {
             marching.length = length;
             marching.startBeat = beat;
+            marchOtherCount += 1;
+            marchSuru = true;
+            marchTsugi += 1f;
+            var marchOtherAnim = (marchOtherCount % 2 != 0 ? "MarchR" : "MarchL");
+
+            BeatAction.New(gameObject, new List<BeatAction.Action>()
+            {
+                new BeatAction.Action(beat, delegate { Cadet1.DoScaledAnimationAsync(marchOtherAnim, 0.5f); }),
+                new BeatAction.Action(beat, delegate { Cadet2.DoScaledAnimationAsync(marchOtherAnim, 0.5f); }),
+                new BeatAction.Action(beat, delegate { Cadet3.DoScaledAnimationAsync(marchOtherAnim, 0.5f); }),
+                new BeatAction.Action(beat, delegate { ScheduleInput(beat - 1f, 1f, InputType.STANDARD_DOWN, MarchHit, GenericMiss, MarchEmpty);})
+            });
         }
         
         public void SargeAttention(float beat)
