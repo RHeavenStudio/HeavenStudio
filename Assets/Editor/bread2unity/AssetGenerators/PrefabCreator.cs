@@ -1,11 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using Bread2Unity;
-using NUnit.Framework;
 using UnityEditor;
 using UnityEngine;
-using Animation = Bread2Unity.Animation;
 
 namespace Bread2Unity
 {
@@ -21,7 +18,7 @@ namespace Bread2Unity
             var root = PrefabUtility.LoadPrefabContents(prefabAssetPath);
             foreach (var prefabData in prefabDataList)
             {
-                var defaultSprite = bccad.sprites[prefabData.SpriteIndex];
+                var defaultSprite = bccad.Sprites[prefabData.SpriteIndex];
                 var bccadPrefab = new BccadPrefab(prefabData, bccad, texture);
                 var newPrefab = bccadPrefab.ParentObject;
                 newPrefab.transform.SetParent(root.transform);

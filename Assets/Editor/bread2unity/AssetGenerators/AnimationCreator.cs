@@ -2,37 +2,14 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using Bread2Unity;
 using UnityEditor;
 using UnityEditor.Animations;
-using UnityEditor.Graphs;
 using UnityEngine;
-using Animation = Bread2Unity.Animation;
 
 namespace Bread2Unity
 {
     public static class AnimationCreator
     {
-        private class BccadCurve : AnimationCurve
-        {
-            private float _prev;
-
-            public new void AddKey(float time, float value)
-            {
-                if (keys.Length != 0 && !(Math.Abs(value - _prev) > 0.000001)) return;
-                AddKey(new Keyframe(time, value, float.PositiveInfinity, float.PositiveInfinity));
-                _prev = value;
-            }
-
-            public void CopyLastKey(float time)
-            {
-                Keyframe lastKey = keys.LastOrDefault();
-
-                base.AddKey(new Keyframe(time, keys.Length > 0 ? lastKey.value : 1, float.PositiveInfinity,
-                    float.PositiveInfinity));
-            }
-        }
-
         public static void CreateAnimation(BccadPrefab bccadPrefab, BCCAD bccad, PrefabData prefabData,
             List<Sprite> sprites)
         {
@@ -42,10 +19,7 @@ namespace Bread2Unity
                 $"Assets\\Resources\\Sprites\\Games\\{char.ToUpperInvariant(rootPrefabName[0]) + rootPrefabName.Substring(1)}";
 
             var animationsFolderPath = spritesFolderPath + $"/Animations/{prefabData.Name}";
-            if (!Directory.Exists(animationsFolderPath))
-            {
-                Directory.CreateDirectory(animationsFolderPath);
-            }
+            if (!Directory.Exists(animationsFolderPath)) Directory.CreateDirectory(animationsFolderPath);
 
             var controller =
                 AnimatorController.CreateAnimatorControllerAtPath(
@@ -77,7 +51,7 @@ namespace Bread2Unity
         {
             var animationClip = new AnimationClip();
             var prefab = bccadPrefab.ParentObject;
-            for (int childIndex = 0; childIndex < prefab.transform.childCount; childIndex++)
+            for (var childIndex = 0; childIndex < prefab.transform.childCount; childIndex++)
             {
                 var child = prefab.transform.GetChild(childIndex).gameObject;
 
@@ -87,7 +61,7 @@ namespace Bread2Unity
                 var stepScaleX = new BccadCurve();
                 var stepScaleY = new BccadCurve();
                 var stepRotation = new BccadCurve();
-                
+
                 var enabledCurve = new BccadCurve();
 
                 var xTransformCurve = new BccadCurve();
@@ -116,7 +90,7 @@ namespace Bread2Unity
                     stepRotation.AddKey(currentTime, currentStep.Rotation);
                     stepScaleX.AddKey(currentTime, currentStep.StretchX);
                     stepScaleY.AddKey(currentTime, currentStep.StretchY);
-                    
+
                     var bccadSprite = currentStep.BccadSprite;
                     // Find the index of part of the game object
                     var partIndex = bccadSprite.parts.Select((value, index) => new { value, index })
@@ -180,11 +154,8 @@ namespace Bread2Unity
 
                 if (animation.Steps.Select(step => step.Rotation).Distinct().Count() > 1)
                     animationClip.SetCurve("", typeof(Transform), "localEulerAngles.z", stepRotation);
-                    
-                if (childIndex == 0)
-                {
-                    enabledCurve.CopyLastKey(currentTime);
-                }
+
+                if (childIndex == 0) enabledCurve.CopyLastKey(currentTime);
 
                 var spriteBinding = new EditorCurveBinding
                 {
@@ -207,15 +178,13 @@ namespace Bread2Unity
                 //Check if there is any need for z animation
                 var setOfZIndexes = new HashSet<float>();
                 foreach (var sprite in spritesAssociatedWithPrefab)
-                {
-                    for (int i = 0; i < sprite.parts.Count && setOfZIndexes.Count < 2; i++)
+                    for (var i = 0; i < sprite.parts.Count && setOfZIndexes.Count < 2; i++)
                     {
                         var part = sprite.parts[i];
                         if (bccadPrefab.RegionToChild[part.RegionIndex] != child)
                             continue;
                         setOfZIndexes.Add(i);
                     }
-                }
 
                 if ((from part in partsOfGameObject select part.PosX).Distinct().Count() > 1 ||
                     (from part in partsOfGameObject select part.PosY).Distinct().Count() > 1 ||
@@ -229,9 +198,7 @@ namespace Bread2Unity
                 }
 
                 if ((from part in partsOfGameObject select part.Rotation).Distinct().Count() > 1)
-                {
                     animationClip.SetCurve(child.name, typeof(Transform), "localEulerAngles.z", rotationCurve);
-                }
 
                 if ((from part in partsOfGameObject select part.StretchX).Distinct().Count() > 1 ||
                     (from part in partsOfGameObject select part.StretchY).Distinct().Count() > 1)
@@ -256,6 +223,26 @@ namespace Bread2Unity
             animationClip.name = animation.Name;
 
             return animationClip;
+        }
+
+        private class BccadCurve : AnimationCurve
+        {
+            private float _prev;
+
+            public new void AddKey(float time, float value)
+            {
+                if (keys.Length != 0 && !(Math.Abs(value - _prev) > 0.000001)) return;
+                AddKey(new Keyframe(time, value, float.PositiveInfinity, float.PositiveInfinity));
+                _prev = value;
+            }
+
+            public void CopyLastKey(float time)
+            {
+                var lastKey = keys.LastOrDefault();
+
+                base.AddKey(new Keyframe(time, keys.Length > 0 ? lastKey.value : 1, float.PositiveInfinity,
+                    float.PositiveInfinity));
+            }
         }
     }
 }

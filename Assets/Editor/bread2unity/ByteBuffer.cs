@@ -6,13 +6,13 @@ namespace Bread2Unity
     {
         private readonly byte[] _bytes;
 
-        public int ReadPoint{ get; private set; }
-
         public ByteBuffer(byte[] bytes)
         {
             _bytes = bytes;
             ReadPoint = 0;
         }
+
+        public int ReadPoint { get; private set; }
 
         public ushort ReadUShort()
         {
@@ -30,21 +30,21 @@ namespace Bread2Unity
 
         public float ReadFloat()
         {
-            float result = BitConverter.ToSingle(_bytes, ReadPoint);
+            var result = BitConverter.ToSingle(_bytes, ReadPoint);
             ReadPoint += sizeof(float);
             return result;
         }
 
         public byte ReadByte()
         {
-            byte result = _bytes[ReadPoint];
+            var result = _bytes[ReadPoint];
             ReadPoint += sizeof(byte);
             return result;
         }
 
         public int ReadInt()
         {
-            int result = BitConverter.ToInt32(_bytes, ReadPoint);
+            var result = BitConverter.ToInt32(_bytes, ReadPoint);
             ReadPoint += sizeof(int);
             return result;
         }

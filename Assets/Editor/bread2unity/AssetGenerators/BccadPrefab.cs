@@ -1,34 +1,34 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using Bread2Unity;
 using UnityEngine;
 
 namespace Bread2Unity
 {
     public class BccadPrefab
     {
-        public GameObject ParentObject { get; }
-        public readonly Dictionary<RegionIndex, GameObject> RegionToChild = new Dictionary<RegionIndex, GameObject>();
+        private readonly BCCAD _bccad;
         private readonly List<GameObject> _children = new List<GameObject>();
         private readonly PrefabData _data;
-        private readonly BCCAD _bccad;
-        public float HeightRatio { get; }
-        public float WidthRatio { get; }
+        public readonly Dictionary<RegionIndex, GameObject> RegionToChild = new Dictionary<RegionIndex, GameObject>();
 
         public BccadPrefab(PrefabData data, BCCAD bccad, Texture2D texture)
         {
             ParentObject = new GameObject(data.Name);
             _data = data;
-            HeightRatio = (float)texture.height / bccad.sheetH;
-            WidthRatio = (float)texture.width / bccad.sheetW;
+            HeightRatio = (float)texture.height / bccad.SheetH;
+            WidthRatio = (float)texture.width / bccad.SheetW;
             _bccad = bccad;
             CalculateParts();
         }
 
+        public GameObject ParentObject { get; }
+        public float HeightRatio { get; }
+        public float WidthRatio { get; }
+
         private void CalculateParts()
         {
-            var defaultSprite = _bccad.sprites[_data.SpriteIndex];
+            var defaultSprite = _bccad.Sprites[_data.SpriteIndex];
             if (_data.Animations.Count == 0)
             {
                 for (var index = 0; index < defaultSprite.parts.Count; index++)
@@ -74,10 +74,7 @@ namespace Bread2Unity
                     }
                 }
 
-                foreach (var r in regionsList)
-                {
-                    RegionToChild.Add(r, child);
-                }
+                foreach (var r in regionsList) RegionToChild.Add(r, child);
 
                 childIndex++;
             }
@@ -91,12 +88,8 @@ namespace Bread2Unity
             {
                 var regionsOfSprite = sprite.parts.Select(part => part.RegionIndex).ToArray();
                 if (regionsOfSprite.Intersect(regions).Any())
-                {
                     foreach (var r in regionsOfSprite)
-                    {
                         notAdjacentRegions.Remove(r);
-                    }
-                }
             }
 
             return notAdjacentRegions;
@@ -104,7 +97,7 @@ namespace Bread2Unity
 
         public List<Tuple<int, SpritePart, GameObject>> GetHiddenParts()
         {
-            var sprite = _bccad.sprites[_data.SpriteIndex];
+            var sprite = _bccad.Sprites[_data.SpriteIndex];
             // index, part, game object
             var hiddenParts = new List<Tuple<int, SpritePart, GameObject>>();
             var gameObjects = new List<GameObject>(_children);
@@ -120,12 +113,13 @@ namespace Bread2Unity
                 var region = RegionToChild.FirstOrDefault(keyValuePair => keyValuePair.Value == gameObject)
                     .Key;
                 var partIndexPairs = _data.Animations.SelectMany(anim => anim.Steps).Select(s => s.BccadSprite)
-                    .SelectMany(bccadSprite => bccadSprite.parts.Select((part, index) => new {part, index}));
-                
+                    .SelectMany(bccadSprite => bccadSprite.parts.Select((part, index) => new { part, index }));
+
                 // Get the first possible part that the game object can have.
                 var partIndexPair = partIndexPairs
                     .First(pair => pair.part.RegionIndex.Equals(region));
-                hiddenParts.Add(new Tuple<int, SpritePart, GameObject>(partIndexPair.index, partIndexPair.part, gameObject));
+                hiddenParts.Add(
+                    new Tuple<int, SpritePart, GameObject>(partIndexPair.index, partIndexPair.part, gameObject));
             }
 
             return hiddenParts;

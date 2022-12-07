@@ -1,52 +1,52 @@
-using System;
-using System.Collections;
 using System.Collections.Generic;
 
 namespace Bread2Unity
 {
     public class DataModel
     {
-        public List<Region> regions = new List<Region>();
-        public List<BccadSprite> sprites = new List<BccadSprite>();
-        public List<Animation> animations = new List<Animation>();
-        public int sheetW;
-        public int sheetH;
+        public List<Animation> Animations = new List<Animation>();
+        public List<Region> Regions = new List<Region>();
+        public int SheetH;
+        public int SheetW;
+        public List<BccadSprite> Sprites = new List<BccadSprite>();
     }
 
     public class Region
     {
-        public ushort regionX;
-        public ushort regionY;
-        public ushort regionW;
-        public ushort regionH;
+        public ushort RegionH;
+        public ushort RegionW;
+        public ushort RegionX;
+        public ushort RegionY;
 
         public override string ToString()
         {
-            return $"regionX: {regionX} regionY: {regionY} regionW: {regionW} regionH: {regionH}";
+            return $"regionX: {RegionX} regionY: {RegionY} regionW: {RegionW} regionH: {RegionH}";
         }
 
         protected bool Equals(Region other)
         {
-            return regionX == other.regionX && regionY == other.regionY && regionW == other.regionW &&
-                   regionH == other.regionH;
+            return RegionH == other.RegionH && RegionW == other.RegionW && RegionX == other.RegionX &&
+                   RegionY == other.RegionY;
         }
 
         public override bool Equals(object obj)
         {
             if (ReferenceEquals(null, obj)) return false;
             if (ReferenceEquals(this, obj)) return true;
-            if (obj.GetType() != this.GetType()) return false;
+            if (obj.GetType() != GetType()) return false;
             return Equals((Region)obj);
         }
 
         public override int GetHashCode()
         {
-            int hash = 23;
-            hash = hash * 31 + regionX;
-            hash = hash * 31 + regionY;
-            hash = hash * 31 + regionW;
-            hash = hash * 31 + regionH;
-            return hash;
+            unchecked
+            {
+                var hashCode = RegionH.GetHashCode();
+                hashCode = (hashCode * 397) ^ RegionW.GetHashCode();
+                hashCode = (hashCode * 397) ^ RegionX.GetHashCode();
+                hashCode = (hashCode * 397) ^ RegionY.GetHashCode();
+                return hashCode;
+            }
         }
     }
 }

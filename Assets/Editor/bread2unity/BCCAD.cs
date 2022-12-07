@@ -1,10 +1,7 @@
 using System;
 using System.Linq;
-using System.Runtime.CompilerServices;
 using System.Text;
-using Bread2Unity;
 using UnityEngine;
-using Animation = Bread2Unity.Animation;
 
 namespace Bread2Unity
 {
@@ -12,39 +9,39 @@ namespace Bread2Unity
     {
         public static BCCAD Read(byte[] bytes)
         {
-            BCCAD bccad = new BCCAD();
+            var bccad = new BCCAD();
             var byteBuffer = new ByteBuffer(bytes);
             byteBuffer.ReadInt(); //timestamp
-            bccad.sheetW = byteBuffer.ReadUShort();
-            bccad.sheetH = byteBuffer.ReadUShort();
+            bccad.SheetW = byteBuffer.ReadUShort();
+            bccad.SheetH = byteBuffer.ReadUShort();
             // Sprites
             var spritesNum = byteBuffer.ReadInt();
-            for (int i = 0; i < spritesNum; i++)
+            for (var i = 0; i < spritesNum; i++)
             {
-                BccadSprite bccadSprite = new BccadSprite();
+                var bccadSprite = new BccadSprite();
                 var partsNum = byteBuffer.ReadInt();
-                for (int j = 0; j < partsNum; j++)
+                for (var j = 0; j < partsNum; j++)
                 {
-                    SpritePart part = new SpritePart();
+                    var part = new SpritePart();
                     var region = new Region
                     {
-                        regionX = byteBuffer.ReadUShort(),
-                        regionY = byteBuffer.ReadUShort(),
-                        regionW = byteBuffer.ReadUShort(),
-                        regionH = byteBuffer.ReadUShort()
+                        RegionX = byteBuffer.ReadUShort(),
+                        RegionY = byteBuffer.ReadUShort(),
+                        RegionW = byteBuffer.ReadUShort(),
+                        RegionH = byteBuffer.ReadUShort()
                     };
-                    var result = bccad.regions.FindIndex(x => Equals(x, region));
+                    var result = bccad.Regions.FindIndex(x => Equals(x, region));
                     if (result == -1)
                     {
-                        bccad.regions.Add(region);
-                        part.RegionIndex = new RegionIndex(bccad.regions.Count - 1, 0);
+                        bccad.Regions.Add(region);
+                        part.RegionIndex = new RegionIndex(bccad.Regions.Count - 1, 0);
                     }
                     else
                     {
                         var repeatedNumber = bccadSprite.parts.Count(p => p.RegionIndex.Index == result);
                         part.RegionIndex = new RegionIndex(result, repeatedNumber);
-                        
                     }
+
                     part.PosX = byteBuffer.ReadShort();
                     part.PosY = byteBuffer.ReadShort();
                     part.StretchX = byteBuffer.ReadFloat();
@@ -61,11 +58,8 @@ namespace Bread2Unity
                         Convert.ToInt32(byteBuffer.ReadByte() & 0xff) / 255f);
 
                     part.Multicolor.a = byteBuffer.ReadByte() / 255f;
-                    
-                    for (int k = 0; k < 12; k++)
-                    {
-                        byteBuffer.ReadByte();
-                    }
+
+                    for (var k = 0; k < 12; k++) byteBuffer.ReadByte();
 
                     part.designation = byteBuffer.ReadByte();
                     part.unknown = byteBuffer.ReadShort();
@@ -76,30 +70,24 @@ namespace Bread2Unity
                     bccadSprite.parts.Add(part);
                 }
 
-                bccad.sprites.Add(bccadSprite);
+                bccad.Sprites.Add(bccadSprite);
             }
-            
+
             // Animations
             var animationsNum = byteBuffer.ReadInt();
-            for (int i = 0; i < animationsNum; i++)
+            for (var i = 0; i < animationsNum; i++)
             {
                 var anim = new Animation();
                 var nameBuilder = new StringBuilder();
                 var length = Convert.ToInt32(byteBuffer.ReadByte());
-                for (int j = 0; j < length; j++)
-                {
-                    nameBuilder.Append(Convert.ToChar(byteBuffer.ReadByte()));
-                }
+                for (var j = 0; j < length; j++) nameBuilder.Append(Convert.ToChar(byteBuffer.ReadByte()));
 
-                for (int j = 0; j < 4 - ((length + 1) % 4); j++)
-                {
-                    byteBuffer.ReadByte();
-                }
-                
+                for (var j = 0; j < 4 - (length + 1) % 4; j++) byteBuffer.ReadByte();
+
                 anim.Name = nameBuilder.ToString();
                 anim.InterpolationInt = byteBuffer.ReadInt();
                 var stepsNum = byteBuffer.ReadInt();
-                for (int j = 0; j < stepsNum; j++)
+                for (var j = 0; j < stepsNum; j++)
                 {
                     var spriteIndex = byteBuffer.ReadUShort();
                     var step = new AnimationStep
@@ -114,7 +102,7 @@ namespace Bread2Unity
                         Color = new Color(Convert.ToInt32(byteBuffer.ReadByte() & 0xff) / 255f,
                             Convert.ToInt32(byteBuffer.ReadByte() & 0xff) / 255f,
                             Convert.ToInt32(byteBuffer.ReadByte() & 0xff) / 255f),
-                        BccadSprite = bccad.sprites[spriteIndex]
+                        BccadSprite = bccad.Sprites[spriteIndex]
                     };
                     byteBuffer.ReadByte();
                     byteBuffer.ReadByte();
@@ -123,7 +111,7 @@ namespace Bread2Unity
                     anim.Steps.Add(step);
                 }
 
-                bccad.animations.Add(anim);
+                bccad.Animations.Add(anim);
             }
 
             return bccad;

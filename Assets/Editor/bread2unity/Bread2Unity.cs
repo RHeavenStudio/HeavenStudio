@@ -1,10 +1,8 @@
-using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using UnityEngine;
 using UnityEditor;
-using Bread2Unity;
+using UnityEngine;
 
 namespace Bread2Unity
 {
@@ -13,38 +11,22 @@ namespace Bread2Unity
         private const string EditorFolderName = "bread2unity";
         private const float Width = 657;
         private const float Height = 442;
-        private GameObject _prefab;
+        private readonly List<string> _animationsIndexes = new List<string>();
+        private readonly List<PrefabData> _prefabDataList = new List<PrefabData>();
         private DataModel _animation;
-        private List<PrefabData> _prefabDataList = new List<PrefabData>();
-        private List<string> _animationsIndexes = new List<string> ();
-        private bool _shouldRotate;
+        private GameObject _prefab;
         private Vector2 _scrollPosition;
-
-
-        [MenuItem("Tools/bread2unity")]
-        public static void ShowWindow()
-        {
-            var window = GetWindow<Bread2UnityGUI>("bread2unity");
-            var x = Screen.currentResolution.width / 2f - Width;
-            var y = Screen.currentResolution.height / 2f - Height;
-            window.position = new Rect(x,y,Width,Height);
-        }
-
-        public void CreateGUI()
-        {
-            _animationsIndexes.Add("");
-            _prefabDataList.Add(new PrefabData("", 0));
-        }
+        private bool _shouldRotate;
 
         public void OnGUI()
         {
             // Logo
-            Texture logo =
+            var logo =
                 (Texture)AssetDatabase.LoadAssetAtPath($"Assets/Editor/{EditorFolderName}/logo.png", typeof(Texture));
             GUILayout.Box(logo, GUILayout.ExpandWidth(true), GUILayout.Height(60));
             GUILayout.Space(30);
 
-            GUIStyle desc = EditorStyles.label;
+            var desc = EditorStyles.label;
             desc.wordWrap = true;
             desc.fontStyle = FontStyle.BoldAndItalic;
             // Description
@@ -110,7 +92,7 @@ namespace Bread2Unity
             _shouldRotate = GUILayout.Toggle(_shouldRotate, "Rotate Spritesheet");
 
             GUILayout.Space(12f);
-            
+
             // Create button
             if (GUILayout.Button("Generate Assets") && _prefab != null)
             {
@@ -123,9 +105,10 @@ namespace Bread2Unity
                     if (!string.IsNullOrEmpty(pngFilePath))
                     {
                         var bccad = BCCAD.Read(File.ReadAllBytes(bccadFilePath));
-                        var spriteTexture = SpriteCreator.ComputeSprites(bccad, pngFilePath, _prefab.name, _shouldRotate);
+                        var spriteTexture =
+                            SpriteCreator.ComputeSprites(bccad, pngFilePath, _prefab.name, _shouldRotate);
                         //Create prefab from prefab data
-                        for (int i = 0; i < _prefabDataList.Count; i++)
+                        for (var i = 0; i < _prefabDataList.Count; i++)
                         {
                             List<int> animationIndexes;
                             var prefabData = _prefabDataList[i];
@@ -134,7 +117,7 @@ namespace Bread2Unity
                             else
                                 animationIndexes = _animationsIndexes[i].Split(',').Select(int.Parse).ToList();
                             prefabData.Animations =
-                                animationIndexes.Select(index => bccad.animations[index]).ToList();
+                                animationIndexes.Select(index => bccad.Animations[index]).ToList();
                         }
 
                         PrefabCreator.CreatePrefab(_prefab, bccad, _prefabDataList, spriteTexture);
@@ -143,14 +126,28 @@ namespace Bread2Unity
             }
 
             GUILayout.Space(12f);
-            
+
             GUILayout.BeginHorizontal();
             if (GUILayout.Button("Bread Download", GUILayout.Height(40)))
-            {
                 Application.OpenURL("https://github.com/rhmodding/bread");
-            }
 
             GUILayout.EndHorizontal();
+        }
+
+        public void CreateGUI()
+        {
+            _animationsIndexes.Add("");
+            _prefabDataList.Add(new PrefabData("", 0));
+        }
+
+
+        [MenuItem("Tools/bread2unity")]
+        public static void ShowWindow()
+        {
+            var window = GetWindow<Bread2UnityGUI>("bread2unity");
+            var x = Screen.currentResolution.width / 2f - Width;
+            var y = Screen.currentResolution.height / 2f - Height;
+            window.position = new Rect(x, y, Width, Height);
         }
     }
 }

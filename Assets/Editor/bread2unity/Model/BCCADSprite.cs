@@ -1,5 +1,3 @@
-using System;
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -12,28 +10,29 @@ namespace Bread2Unity
 
     public class SpritePart
     {
-        public RegionIndex RegionIndex;
+        public float blDepth;
+        public float brDepth;
 
-        public short PosX;
-        public short PosY;
 
-        public float StretchX;
-        public float StretchY;
-
-        public float Rotation;
+        public byte designation;
 
         public bool FlipX;
         public bool FlipY;
-        
-
-        public byte designation;
-        public short unknown;
-        public float tlDepth;
-        public float blDepth;
-        public float trDepth;
-        public float brDepth;
         public Color Multicolor;
+
+        public short PosX;
+        public short PosY;
+        public RegionIndex RegionIndex;
+
+        public float Rotation;
         public Color ScreenColor;
+
+        public float StretchX;
+        public float StretchY;
+        public float tlDepth;
+        public float trDepth;
+
+        public short unknown;
         // public Color GetColor() => new Color(Multicolor.r, Multicolor.g, Multicolor.b, Multicolor.a);
     }
 
@@ -60,7 +59,7 @@ namespace Bread2Unity
 
         public override int GetHashCode()
         {
-            int hash = 23;
+            var hash = 23;
             hash = hash * 31 + Index;
             hash = hash * 31 + RepeatedNumber;
             return hash;

@@ -1,37 +1,33 @@
-using System;
 using System.Collections.Generic;
 using System.IO;
 using UnityEditor;
 using UnityEngine;
-
-using Bread2Unity;
 
 namespace Bread2Unity
 {
     public class SpriteCreator : MonoBehaviour
     {
         public const int PixelsPerUnit = 100;
-        public static Texture2D ComputeSprites(BCCAD bccad, string texturePath, string prefabName, bool shouldRotate = false)
+
+        public static Texture2D ComputeSprites(BCCAD bccad, string texturePath, string prefabName,
+            bool shouldRotate = false)
         {
             var textureName = Path.GetFileName(texturePath);
             var spritesFolder =
                 $"Assets\\Resources\\Sprites\\Games\\{char.ToUpperInvariant(prefabName[0]) + prefabName.Substring(1)}\\";
-            if (!Directory.Exists(spritesFolder))
-            {
-                Directory.CreateDirectory(spritesFolder);
-            }
+            if (!Directory.Exists(spritesFolder)) Directory.CreateDirectory(spritesFolder);
 
             var destTexturePath =
                 spritesFolder +
                 $"{textureName}";
-            var newTexture = new Texture2D(bccad.sheetW, bccad.sheetH);
+            var newTexture = new Texture2D(bccad.SheetW, bccad.SheetH);
             newTexture.LoadImage(File.ReadAllBytes(texturePath));
             var finalTexture = shouldRotate ? RotateTexture(newTexture) : newTexture;
             finalTexture.name = textureName.Substring(0, textureName.Length - ".png".Length);
             File.WriteAllBytes(destTexturePath, finalTexture.EncodeToPNG());
             AssetDatabase.ImportAsset(destTexturePath);
             var ti = AssetImporter.GetAtPath(destTexturePath) as TextureImporter;
-            
+
             if (ti != null)
             {
                 ti.isReadable = true;
@@ -43,18 +39,18 @@ namespace Bread2Unity
                 ti.textureCompression = TextureImporterCompression.Uncompressed;
                 var newData = new List<SpriteMetaData>();
                 var rectCtr = 0;
-                var heightRatio = (float)finalTexture.height / bccad.sheetH;
-                var widthRatio = (float)finalTexture.width / bccad.sheetW;
-                foreach (var r in bccad.regions)
+                var heightRatio = (float)finalTexture.height / bccad.SheetH;
+                var widthRatio = (float)finalTexture.width / bccad.SheetW;
+                foreach (var r in bccad.Regions)
                 {
                     var smd = new SpriteMetaData
                     {
                         pivot = new Vector2(0.5f, 0.5f),
                         alignment = 0,
                         name = finalTexture.name + "_" + rectCtr,
-                        rect = new Rect(r.regionX * widthRatio,
-                            finalTexture.height - (r.regionH + r.regionY) * heightRatio, r.regionW * widthRatio,
-                            r.regionH * heightRatio)
+                        rect = new Rect(r.RegionX * widthRatio,
+                            finalTexture.height - (r.RegionH + r.RegionY) * heightRatio, r.RegionW * widthRatio,
+                            r.RegionH * heightRatio)
                     };
 
                     newData.Add(smd);
@@ -70,11 +66,11 @@ namespace Bread2Unity
 
         public static Texture2D RotateTexture(Texture2D image)
         {
-            Texture2D
+            var
                 target = new Texture2D(image.height, image.width, image.format,
                     false); //flip image width<>height, as we rotated the image, it might be a rect. not a square image
 
-            Color32[] pixels = image.GetPixels32(0);
+            var pixels = image.GetPixels32(0);
             pixels = RotateTextureGrid(pixels, image.width, image.height);
             target.SetPixels32(pixels);
             target.Apply();
@@ -87,15 +83,11 @@ namespace Bread2Unity
 
         private static Color32[] RotateTextureGrid(Color32[] tex, int wid, int hi)
         {
-            Color32[] ret = new Color32[wid * hi]; //reminder we are flipping these in the target
+            var ret = new Color32[wid * hi]; //reminder we are flipping these in the target
 
-            for (int y = 0; y < hi; y++)
-            {
-                for (int x = 0; x < wid; x++)
-                {
-                    ret[(hi - 1) - y + x * hi] = tex[x + y * wid]; //juggle the pixels around
-                }
-            }
+            for (var y = 0; y < hi; y++)
+            for (var x = 0; x < wid; x++)
+                ret[hi - 1 - y + x * hi] = tex[x + y * wid]; //juggle the pixels around
 
             return ret;
         }
