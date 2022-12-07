@@ -10,24 +10,30 @@ namespace Bread2Unity
 {
     public class Bread2UnityGUI : EditorWindow
     {
-        public const string EditorFolderName = "bread2unity";
+        private const string EditorFolderName = "bread2unity";
+        private const float Width = 657;
+        private const float Height = 442;
         private GameObject _prefab;
         private DataModel _animation;
         private List<PrefabData> _prefabDataList = new List<PrefabData>();
-        private List<string> _animationsIndexes;
-        private bool shouldRotate = false;
+        private List<string> _animationsIndexes = new List<string> ();
+        private bool _shouldRotate;
         private Vector2 _scrollPosition;
 
 
         [MenuItem("Tools/bread2unity")]
         public static void ShowWindow()
         {
-            GetWindow<Bread2UnityGUI>("bread2unity");
+            var window = GetWindow<Bread2UnityGUI>("bread2unity");
+            var x = Screen.currentResolution.width / 2f - Width;
+            var y = Screen.currentResolution.height / 2f - Height;
+            window.position = new Rect(x,y,Width,Height);
         }
 
         public void CreateGUI()
         {
-            _animationsIndexes = new List<string>();
+            _animationsIndexes.Add("");
+            _prefabDataList.Add(new PrefabData("", 0));
         }
 
         public void OnGUI()
@@ -101,7 +107,7 @@ namespace Bread2Unity
             GUILayout.Space(12f);
 
             // Rotate check box
-            shouldRotate = GUILayout.Toggle(shouldRotate, "Rotate Spritesheet");
+            _shouldRotate = GUILayout.Toggle(_shouldRotate, "Rotate Spritesheet");
 
             GUILayout.Space(12f);
             
@@ -117,7 +123,7 @@ namespace Bread2Unity
                     if (!string.IsNullOrEmpty(pngFilePath))
                     {
                         var bccad = BCCAD.Read(File.ReadAllBytes(bccadFilePath));
-                        var spriteTexture = SpriteCreator.ComputeSprites(bccad, pngFilePath, _prefab.name, shouldRotate);
+                        var spriteTexture = SpriteCreator.ComputeSprites(bccad, pngFilePath, _prefab.name, _shouldRotate);
                         //Create prefab from prefab data
                         for (int i = 0; i < _prefabDataList.Count; i++)
                         {
