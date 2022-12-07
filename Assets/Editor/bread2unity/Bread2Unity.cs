@@ -138,13 +138,6 @@ namespace Bread2Unity
 
             GUILayout.Space(12f);
             
-            if (GUILayout.Button("bccad test"))
-            {
-                BccadTest.TestBccad();
-            }
-            
-            GUILayout.Space(12f);
-            
             GUILayout.BeginHorizontal();
             if (GUILayout.Button("Bread Download", GUILayout.Height(40)))
             {
