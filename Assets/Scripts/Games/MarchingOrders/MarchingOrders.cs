@@ -26,14 +26,14 @@ namespace HeavenStudio.Games.Loaders
                 {
                     new GameAction("bop", "Bop")
                     {
-                        function = delegate { var e = eventCaller.currentEntity; MarchingOrders.instance.Bop(e.beat, e.length); },
+                        function = delegate { var e = eventCaller.currentEntity; MarchingOrders.instance.BopAction(e.beat, e.length); },
                         defaultLength = 1f,
                         resizable = true
                     },
                     
                     new GameAction("marching", "Cadets March")
                     {
-                        function = delegate { var e = eventCaller.currentEntity; MarchingOrders.instance.CadetsMarch(e.beat, e.length); },
+                        function = delegate { var e = eventCaller.currentEntity; MarchingOrders.instance.MarchAction(e.beat, e.length); },
                         defaultLength = 4f,
                         resizable = true
                     },
@@ -105,10 +105,11 @@ namespace HeavenStudio.Games
         private int marchOtherCount;
         private int marchPlayerCount;
         private int turnLength;
-        private bool marchSuru;
-        private bool beatSuru;
+        // private bool marchSuru;
+        // private bool beatSuru;
         private float marchTsugi;
         private float beatTsugi;
+        private float steamTime;
 
         private string fastTurn;
         
@@ -190,13 +191,21 @@ namespace HeavenStudio.Games
             var cond = Conductor.instance;
             var currBeat = cond.songPositionInBeats;
 
-            if (marchSuru && (int) currBeat <= marching.length)
+            if (cond.ReportBeat(ref marching.lastReportedBeat, marching.startBeat % 1))
             {
-                CadetsMarch(marchTsugi + (int) currBeat, marching.length);
+                if (currBeat >= marching.startBeat && currBeat < marching.startBeat + marching.length)
+                {
+                    CadetsMarch(marchTsugi + (int)currBeat, marching.length);
+                }
+                //else
+                //marchSuru = false;
             }
-            if (beatSuru && (int) currBeat <= bop.length)
+            if (cond.ReportBeat(ref bop.lastReportedBeat, bop.startBeat % 1))
             {
-                Bop(beatTsugi + (int) currBeat, bop.length);
+                if (currBeat >= bop.startBeat && currBeat < bop.startBeat + bop.length)
+                {
+                    Bop(beatTsugi + (int)currBeat, bop.length);
+                }
             }
             if (PlayerInput.Pressed() && !IsExpectingInputNow())
             {
@@ -224,10 +233,8 @@ namespace HeavenStudio.Games
 
         public void Bop(float beat, float length)
         {
-            bop.length = length;
-            bop.startBeat = beat;
-            beatSuru = true;
-            beatTsugi += 1f;
+            // beatSuru = true;
+            beatTsugi += 0f;
 
             BeatAction.New(gameObject, new List<BeatAction.Action>()
             {
@@ -238,13 +245,17 @@ namespace HeavenStudio.Games
             });
         }
 
+        public void BopAction(float beat, float length)
+        {
+            bop.length = length;
+            bop.startBeat = beat;
+        }
+
         public void CadetsMarch(float beat, float length)
         {
-            marching.length = length;
-            marching.startBeat = beat;
             marchOtherCount += 1;
-            marchSuru = true;
-            marchTsugi += 1f;
+            // marchSuru = true;
+            marchTsugi += 0f;
             var marchOtherAnim = (marchOtherCount % 2 != 0 ? "MarchR" : "MarchL");
 
             BeatAction.New(gameObject, new List<BeatAction.Action>()
@@ -256,6 +267,12 @@ namespace HeavenStudio.Games
             });
         }
         
+        public void MarchAction(float beat, float length)
+        {
+            marching.length = length;
+            marching.startBeat = beat;
+        }
+
         public void SargeAttention(float beat)
         {
             MultiSound.Play(new MultiSound.Sound[] {
