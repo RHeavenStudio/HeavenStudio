@@ -73,6 +73,16 @@ namespace HeavenStudio.Games.Loaders
                             new Param("type2", MarchingOrders.FaceTurnLength.Normal, "Length", "How fast or slow the event lasts"),
                         }
                     },
+
+                    new GameAction("background", "Set the Background")
+                    {
+                        function = delegate { var e = eventCaller.currentEntity; MarchingOrders.instance.BackgroundColorSet(e.beat, e["type"]); },
+                        defaultLength = 2f,
+                        parameters = new List<Param>()
+                        {
+                            new Param("type", MarchingOrders.BackgroundColor.Blue, "Color", "The background color of Marching Orders"),
+                        }
+                    }
                 });
         }
     }
@@ -97,6 +107,8 @@ namespace HeavenStudio.Games
         public Animator CadetHeadPlayer;
         
         public GameObject Player;
+        public GameObject BGMain1;
+        public GameObject BGMain2;
         
         public GameEvent bop = new GameEvent();
         public GameEvent noBop = new GameEvent();
@@ -125,7 +137,12 @@ namespace HeavenStudio.Games
             Normal,
             Fast,
         }
-        
+        public enum BackgroundColor
+        {
+            Blue,
+            Yellow,
+            // custom
+        }
         // Start is called before the first frame update
         void Awake()
         {
@@ -400,7 +417,21 @@ namespace HeavenStudio.Games
                 });
         }
         
-        
+        public void BackgroundColorSet(float beat, int type)
+        {
+            switch(type)
+            {
+                case (int) MarchingOrders.BackgroundColor.Yellow:
+                    BGMain1.SetActive(false);
+                    BGMain2.SetActive(true);
+                    break;
+                default:
+                    BGMain1.SetActive(true);
+                    BGMain2.SetActive(false);
+                    break;
+            }
+        }
+
         public static void AttentionSound(float beat)
         {
             MultiSound.Play(new MultiSound.Sound[] {
