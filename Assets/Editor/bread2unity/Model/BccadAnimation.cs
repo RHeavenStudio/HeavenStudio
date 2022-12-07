@@ -3,7 +3,7 @@ using UnityEngine;
 
 namespace Bread2Unity
 {
-    public class Animation
+    public class BccadAnimation
     {
         public int InterpolationInt = 0;
         public string Name;
@@ -15,17 +15,16 @@ namespace Bread2Unity
     public class AnimationStep
     {
         public BccadSprite BccadSprite;
-        public Color Color; //needs to add
+        public Color Color;
+        
         public ushort Delay;
 
         public float Depth;
 
-        public byte Opacity; //needs to add
+        public float Rotation;
 
-        public float Rotation; //needs to add
-
-        public float StretchX; //needs to add
-        public float StretchY; //needs to add
+        public float StretchX;
+        public float StretchY;
 
         public short TranslateX;
         public short TranslateY;

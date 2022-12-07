@@ -77,7 +77,7 @@ namespace Bread2Unity
             var animationsNum = byteBuffer.ReadInt();
             for (var i = 0; i < animationsNum; i++)
             {
-                var anim = new Animation();
+                var anim = new BccadAnimation();
                 var nameBuilder = new StringBuilder();
                 var length = Convert.ToInt32(byteBuffer.ReadByte());
                 for (var j = 0; j < length; j++) nameBuilder.Append(Convert.ToChar(byteBuffer.ReadByte()));

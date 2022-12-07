@@ -56,6 +56,7 @@ namespace Bread2Unity
             spriteRenderer.flipX = spritePart.FlipX;
             spriteRenderer.color = spritePart.Multicolor;
             spriteRenderer.flipY = spritePart.FlipY;
+            spriteRenderer.sortingOrder = index;
             spriteRenderer.enabled = true;
             gameObjectPart.transform.SetParent(prefab.ParentObject.transform);
 
@@ -70,7 +71,7 @@ namespace Bread2Unity
                     SpriteCreator.PixelsPerUnit + sprite.bounds.size.x * 0.5f * width,
                     -(spritePart.PosY - 512f) / SpriteCreator.PixelsPerUnit -
                     sprite.bounds.size.y * 0.5f * height,
-                    -0.00001f * index);
+                    0);
             var rotation = Quaternion.AngleAxis(spritePart.Rotation, new Vector3(0, 0, -1));
             gameObjectPart.transform.localPosition = position;
             gameObjectPart.transform.localRotation = rotation;

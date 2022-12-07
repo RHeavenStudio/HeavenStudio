@@ -45,7 +45,7 @@ namespace Bread2Unity
             animator.runtimeAnimatorController = controller;
         }
 
-        private static AnimationClip CreateAnimationClip(BccadPrefab bccadPrefab, Animation animation,
+        private static AnimationClip CreateAnimationClip(BccadPrefab bccadPrefab, BccadAnimation bccadAnimation,
             List<Sprite> sprites,
             IReadOnlyCollection<BccadSprite> spritesAssociatedWithPrefab)
         {
@@ -66,7 +66,7 @@ namespace Bread2Unity
 
                 var xTransformCurve = new BccadCurve();
                 var yTransformCurve = new BccadCurve();
-                var zTransformCurve = new BccadCurve();
+                var sortOrderCurve = new BccadCurve();
 
                 var rotationCurve = new BccadCurve();
 
@@ -85,7 +85,7 @@ namespace Bread2Unity
                 var currentTime = 0f;
 
 
-                foreach (var currentStep in animation.Steps)
+                foreach (var currentStep in bccadAnimation.Steps)
                 {
                     stepRotation.AddKey(currentTime, currentStep.Rotation);
                     stepScaleX.AddKey(currentTime, currentStep.StretchX);
@@ -111,11 +111,9 @@ namespace Bread2Unity
                             SpriteCreator.PixelsPerUnit + sprite.bounds.size.x * 0.5f * width;
                         var y = -(bccadSpritePart.PosY + currentStep.TranslateY - 512f) / SpriteCreator.PixelsPerUnit -
                                 sprite.bounds.size.y * 0.5f * height;
-                        var z = -0.00001f * partIndex;
-
+                        
                         xTransformCurve.AddKey(currentTime, x);
                         yTransformCurve.AddKey(currentTime, y);
-                        zTransformCurve.AddKey(currentTime, z);
 
                         scaleXCurve.AddKey(currentTime, width);
                         scaleYCurve.AddKey(currentTime, height);
@@ -133,6 +131,9 @@ namespace Bread2Unity
                         flipXCurve.AddKey(currentTime, bccadSpritePart.FlipX ? 1 : 0);
                         flipYCurve.AddKey(currentTime, bccadSpritePart.FlipY ? 1 : 0);
 
+                        var sortOrder = partIndex;
+                        sortOrderCurve.AddKey(currentTime, sortOrder);
+                        
                         rotationCurve.AddKey(currentTime, -bccadSpritePart.Rotation);
 
                         var color = bccadSpritePart.Multicolor * currentStep.Color;
@@ -146,13 +147,13 @@ namespace Bread2Unity
                     currentTime += currentStep.Delay / 30f;
                 }
 
-                if (animation.Steps.Select(step => step.StretchX).Distinct().Count() > 1)
+                if (bccadAnimation.Steps.Select(step => step.StretchX).Distinct().Count() > 1)
                     animationClip.SetCurve("", typeof(Transform), "localScale.x", stepScaleX);
 
-                if (animation.Steps.Select(step => step.StretchY).Distinct().Count() > 1)
+                if (bccadAnimation.Steps.Select(step => step.StretchY).Distinct().Count() > 1)
                     animationClip.SetCurve("", typeof(Transform), "localScale.y", stepScaleY);
 
-                if (animation.Steps.Select(step => step.Rotation).Distinct().Count() > 1)
+                if (bccadAnimation.Steps.Select(step => step.Rotation).Distinct().Count() > 1)
                     animationClip.SetCurve("", typeof(Transform), "localEulerAngles.z", stepRotation);
 
                 if (childIndex == 0) enabledCurve.CopyLastKey(currentTime);
@@ -168,33 +169,14 @@ namespace Bread2Unity
                     sprite.parts.All(part => bccadPrefab.RegionToChild[part.RegionIndex] != child));
                 if (animateActive)
                     animationClip.SetCurve(child.name, typeof(GameObject), "m_IsActive", enabledCurve);
-                if ((from part in partsOfGameObject select part.FlipX).Distinct().Count() > 1)
-                    animationClip.SetCurve(child.name, typeof(SpriteRenderer), "m_FlipX", flipXCurve);
-                if ((from part in partsOfGameObject select part.FlipY).Distinct().Count() > 1)
-                    animationClip.SetCurve(child.name, typeof(SpriteRenderer), "m_FlipY", flipYCurve);
-                if ((from part in partsOfGameObject select part.RegionIndex.Index).Distinct().Count() > 1)
-                    AnimationUtility.SetObjectReferenceCurve(animationClip, spriteBinding, spriteFrames.ToArray());
-
-                //Check if there is any need for z animation
-                var setOfZIndexes = new HashSet<float>();
-                foreach (var sprite in spritesAssociatedWithPrefab)
-                    for (var i = 0; i < sprite.parts.Count && setOfZIndexes.Count < 2; i++)
-                    {
-                        var part = sprite.parts[i];
-                        if (bccadPrefab.RegionToChild[part.RegionIndex] != child)
-                            continue;
-                        setOfZIndexes.Add(i);
-                    }
 
                 if ((from part in partsOfGameObject select part.PosX).Distinct().Count() > 1 ||
                     (from part in partsOfGameObject select part.PosY).Distinct().Count() > 1 ||
-                    setOfZIndexes.Count > 1 ||
-                    animation.Steps.Select(step => step.TranslateX).Distinct().Count() > 1 ||
-                    animation.Steps.Select(step => step.TranslateY).Distinct().Count() > 1)
+                    bccadAnimation.Steps.Select(step => step.TranslateX).Distinct().Count() > 1 ||
+                    bccadAnimation.Steps.Select(step => step.TranslateY).Distinct().Count() > 1)
                 {
                     animationClip.SetCurve(child.name, typeof(Transform), "localPosition.x", xTransformCurve);
                     animationClip.SetCurve(child.name, typeof(Transform), "localPosition.y", yTransformCurve);
-                    animationClip.SetCurve(child.name, typeof(Transform), "localPosition.z", zTransformCurve);
                 }
 
                 if ((from part in partsOfGameObject select part.Rotation).Distinct().Count() > 1)
@@ -207,8 +189,30 @@ namespace Bread2Unity
                     animationClip.SetCurve(child.name, typeof(Transform), "localScale.y", scaleYCurve);
                 }
 
+                if ((from part in partsOfGameObject select part.FlipX).Distinct().Count() > 1)
+                    animationClip.SetCurve(child.name, typeof(SpriteRenderer), "m_FlipX", flipXCurve);
+                if ((from part in partsOfGameObject select part.FlipY).Distinct().Count() > 1)
+                    animationClip.SetCurve(child.name, typeof(SpriteRenderer), "m_FlipY", flipYCurve);
+                if ((from part in partsOfGameObject select part.RegionIndex.Index).Distinct().Count() > 1)
+                    AnimationUtility.SetObjectReferenceCurve(animationClip, spriteBinding, spriteFrames.ToArray());
+                
+                //Check if there is any need for sort order animation
+                var setOfSortingOrders = new HashSet<float>();
+                foreach (var sprite in spritesAssociatedWithPrefab)
+                    for (var i = 0; i < sprite.parts.Count && setOfSortingOrders.Count < 2; i++)
+                    {
+                        var part = sprite.parts[i];
+                        if (bccadPrefab.RegionToChild[part.RegionIndex] != child)
+                            continue;
+                        setOfSortingOrders.Add(i);
+                    }
+                if (setOfSortingOrders.Count > 1)
+                {
+                    animationClip.SetCurve(child.name, typeof(SpriteRenderer), "m_SortingOrder", sortOrderCurve);
+                }
+                
                 // We check if any of the steps color that have the game object is not white
-                var colorChanges = animation.Steps
+                var colorChanges = bccadAnimation.Steps
                     .Where(step => step.BccadSprite.parts.Any(part => partsOfGameObject.Contains(part)))
                     .Any(step => !step.Color.Equals(Color.white));
                 if (colorChanges || partsOfGameObject.Select(part => part.Multicolor).Distinct().Count() > 1)
@@ -220,7 +224,7 @@ namespace Bread2Unity
                 }
             }
 
-            animationClip.name = animation.Name;
+            animationClip.name = bccadAnimation.Name;
 
             return animationClip;
         }

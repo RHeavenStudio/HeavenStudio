@@ -4,7 +4,7 @@ namespace Bread2Unity
 {
     public class DataModel
     {
-        public List<Animation> Animations = new List<Animation>();
+        public List<BccadAnimation> Animations = new List<BccadAnimation>();
         public List<Region> Regions = new List<Region>();
         public int SheetH;
         public int SheetW;

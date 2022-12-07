@@ -4,7 +4,7 @@ namespace Bread2Unity
 {
     public class PrefabData
     {
-        public List<Animation> Animations;
+        public List<BccadAnimation> Animations;
         public string Name;
         public int SpriteIndex;
 

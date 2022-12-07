@@ -21,7 +21,7 @@ Rhythm Heaven animation to Unity animation converter
 - [X] add default line for bcaad data
 - [X] change window height and width
 - [x] fix imports
-- [ ] change sprite order with sprite renderer.
+- [X] change sprite order with sprite renderer.
 
 - [ ] write a normal readme
 
