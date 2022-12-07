@@ -17,8 +17,8 @@ Rhythm Heaven animation to Unity animation converter
 - [X] add scale from steps
 - [x] add translation from steps
 
-- [ ] remove bccad test
-
+- [X] remove bccad test
+- [ ] add default line for bcaad data
 - [ ] change window height and width
 
 - [ ] write a normal readme
