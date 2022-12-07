@@ -84,6 +84,10 @@ namespace Bread2Unity
                 var partsOfGameObject = spritesAssociatedWithPrefab.SelectMany(sprite => sprite.parts)
                     .Where(part => bccadPrefab.RegionToChild[part.RegionIndex] == child).ToList();
 
+                var stepScaleX = new BccadCurve();
+                var stepScaleY = new BccadCurve();
+                var stepRotation = new BccadCurve();
+                
                 var enabledCurve = new BccadCurve();
 
                 var xTransformCurve = new BccadCurve();
@@ -109,6 +113,10 @@ namespace Bread2Unity
 
                 foreach (var currentStep in animation.Steps)
                 {
+                    stepRotation.AddKey(currentTime, currentStep.Rotation);
+                    stepScaleX.AddKey(currentTime, currentStep.StretchX);
+                    stepScaleY.AddKey(currentTime, currentStep.StretchY);
+                    
                     var bccadSprite = currentStep.BccadSprite;
                     // Find the index of part of the game object
                     var partIndex = bccadSprite.parts.Select((value, index) => new { value, index })
@@ -164,6 +172,15 @@ namespace Bread2Unity
                     currentTime += currentStep.Delay / 30f;
                 }
 
+                if (animation.Steps.Select(step => step.StretchX).Distinct().Count() > 1)
+                    animationClip.SetCurve("", typeof(Transform), "localScale.x", stepScaleX);
+
+                if (animation.Steps.Select(step => step.StretchY).Distinct().Count() > 1)
+                    animationClip.SetCurve("", typeof(Transform), "localScale.y", stepScaleY);
+
+                if (animation.Steps.Select(step => step.Rotation).Distinct().Count() > 1)
+                    animationClip.SetCurve("", typeof(Transform), "localEulerAngles.z", stepRotation);
+                    
                 if (childIndex == 0)
                 {
                     enabledCurve.CopyLastKey(currentTime);

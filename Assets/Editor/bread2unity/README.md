@@ -13,8 +13,8 @@ Rhythm Heaven animation to Unity animation converter
 - [x] refactor files
 
 - [X] add color animations
-- [ ] add rotation from steps
-- [ ] add scale from steps
+- [X] add rotation from steps
+- [X] add scale from steps
 - [x] add translation from steps
 
 - [ ] remove bccad test
