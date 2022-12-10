@@ -834,13 +834,27 @@ namespace HeavenStudio.Games.Scripts_KarateMan
                             startBeat = Conductor.instance.songPositionInBeats;
                             status = FlyStatus.HitWeak;
                             Jukebox.PlayOneShotGame("karateman/hitNoNori", forcePlay: true);
-                            joe.Punch(3);
+                            if (startBeat >= KarateMan.instance.HonkiChanceStart && startBeat <= KarateMan.instance.HonkiChanceStart + KarateMan.instance.HonkiChanceLength)
+                            {
+                                KarateMan.instance.ActivateHonki(startBeat, false, false, false);
+                                joe.Punch(2);
+                            }
+                            else
+                                joe.Punch(3);
                             transform.rotation = Quaternion.Euler(0, 0, transform.rotation.eulerAngles.z - 30f);
                             KarateMan.instance.Nori.DoNG();
                             return;
                         }
                     }
                     bool straight = joe.Punch(ItemPunchHand());
+                    var kar = KarateMan.instance;
+                    var beat = Conductor.instance.songPositionInBeats;
+                    if (beat >= kar.HonkiChanceStart && beat <= kar.HonkiChanceStart + kar.HonkiChanceLength)
+                    {
+                        KarateMan.instance.ActivateHonki(startBeat, false, false, false);
+                        straight = joe.Punch(2);
+                    }
+                    transform.rotation = Quaternion.Euler(0, 0, transform.rotation.eulerAngles.z - 30f);
                     DoHitExpression(startBeat + 2f);
                     ItemHitEffect(straight);
                     status = FlyStatus.Hit;

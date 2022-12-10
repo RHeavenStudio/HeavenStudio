@@ -47,8 +47,17 @@ TextureImporter:
   - first:
       213: -1278344009149830369
     second: karateman_word_4
+  - first:
+      213: 479523865631597474
+    second: karateman_word_combo_ko
+  - first:
+      213: -8815329408293105640
+    second: karateman_word_grr_ko
+  - first:
+      213: -1319785177184087858
+    second: karateman_word_hit_ko
   externalObjects: {}
-  serializedVersion: 11
+  serializedVersion: 12
   mipmaps:
     mipMapMode: 0
     enableMipMap: 0
@@ -107,6 +116,7 @@ TextureImporter:
   textureFormatSet: 0
   ignorePngGamma: 0
   applyGammaDecoding: 0
+  cookieLightType: 1
   platformSettings:
   - serializedVersion: 3
     buildTarget: DefaultTexturePlatform
@@ -362,6 +372,69 @@ TextureImporter:
       bones: []
       spriteID: 5bc6cb56becfdd4e0800000000000000
       internalID: -1955128575254565707
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: karateman_word_combo_ko
+      rect:
+        serializedVersion: 2
+        x: 701
+        y: 349
+        width: 719
+        height: 461
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 2a32b484a6c97a600800000000000000
+      internalID: 479523865631597474
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: karateman_word_grr_ko
+      rect:
+        serializedVersion: 2
+        x: 1508
+        y: 341
+        width: 428
+        height: 477
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 81092a8db98a9a580800000000000000
+      internalID: -8815329408293105640
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: karateman_word_hit_ko
+      rect:
+        serializedVersion: 2
+        x: 2025
+        y: 430
+        width: 396
+        height: 339
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: ec0dd16bf5e2fade0800000000000000
+      internalID: -1319785177184087858
       vertices: []
       indices: 
       edges: []

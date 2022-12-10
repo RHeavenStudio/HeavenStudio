@@ -200,7 +200,7 @@ namespace HeavenStudio.Games
         {
             marchPlayerCount++;
 
-            Jukebox.PlayOneShotGame("marchingOrders/step1");
+            Jukebox.PlayOneShotGame("marchingOrders/step1", volume: 0.25f);
             CadetPlayer.DoScaledAnimationAsync(marchPlayerCount % 2 != 0 ? "MarchR" : "MarchL", 0.5f);
         }
 
@@ -211,7 +211,7 @@ namespace HeavenStudio.Games
 
         public void HaltHit(PlayerActionEvent caller, float beat)
         {
-            Jukebox.PlayOneShotGame("marchingOrders/step1");
+            Jukebox.PlayOneShotGame("marchingOrders/step1", volume: 0.25f);
             CadetPlayer.DoScaledAnimationAsync("Halt", 0.5f);
         }
 
@@ -242,29 +242,44 @@ namespace HeavenStudio.Games
                     Bop(beatTsugi + (int)currBeat, bop.length);
                 }
             }
-            if (PlayerInput.Pressed() && !IsExpectingInputNow())
+            if (!IsExpectingInputNow())
             {
-                Jukebox.PlayOneShot("miss");
-                Sarge.DoScaledAnimationAsync("Anger", 0.5f);
-                Steam.DoScaledAnimationAsync("Steam", 0.5f);
-            
-                marchPlayerCount++;
-                var marchPlayerAnim = (marchPlayerCount % 2 != 0 ? "MarchR" : "MarchL");
+                if (PlayerInput.Pressed())
+                {
+                    Jukebox.PlayOneShot("miss");
+                    Sarge.DoScaledAnimationAsync("Anger", 0.5f);
+                    Steam.DoScaledAnimationAsync("Steam", 0.5f);
 
-                Jukebox.PlayOneShotGame("marchingOrders/step1");
-                CadetPlayer.DoScaledAnimationAsync(marchPlayerAnim, 0.5f);
-            } 
+                    marchPlayerCount++;
+                    var marchPlayerAnim = (marchPlayerCount % 2 != 0 ? "MarchR" : "MarchL");
 
-            if (PlayerInput.AltPressed() && !IsExpectingInputNow())
-            {
-                Jukebox.PlayOneShot("miss");
-                Sarge.DoScaledAnimationAsync("Anger", 0.5f);
-                Steam.DoScaledAnimationAsync("Steam", 0.5f);
+                    CadetPlayer.DoScaledAnimationAsync(marchPlayerAnim, 0.5f);
+                }
+                if (PlayerInput.AltPressed())
+                {
+                    Jukebox.PlayOneShot("miss");
+                    Sarge.DoScaledAnimationAsync("Anger", 0.5f);
+                    Steam.DoScaledAnimationAsync("Steam", 0.5f);
 
-                Jukebox.PlayOneShotGame("marchingOrders/step1");
-                CadetPlayer.DoScaledAnimationAsync("Halt", 0.5f);
+                    CadetPlayer.DoScaledAnimationAsync("Halt", 0.5f);
+                }
+                if (PlayerInput.Pressed(true) && PlayerInput.GetSpecificDirection(PlayerInput.LEFT))
+                {
+                    Jukebox.PlayOneShot("miss");
+                    Sarge.DoScaledAnimationAsync("Anger", 0.5f);
+                    Steam.DoScaledAnimationAsync("Steam", 0.5f);
+
+                    CadetHeadPlayer.DoScaledAnimationAsync("FaceL", 0.5f);
+                }
+                if (PlayerInput.Pressed(true) && PlayerInput.GetSpecificDirection(PlayerInput.RIGHT))
+                {
+                    Jukebox.PlayOneShot("miss");
+                    Sarge.DoScaledAnimationAsync("Anger", 0.5f);
+                    Steam.DoScaledAnimationAsync("Steam", 0.5f);
+
+                    CadetHeadPlayer.DoScaledAnimationAsync("FaceR", 0.5f);
+                }
             }
-
             switch (background)
             {
                 case (int) MarchingOrders.BackgroundColor.Yellow:
@@ -320,6 +335,7 @@ namespace HeavenStudio.Games
                         Jukebox.PlayOneShotGame("marchingOrders/step1"); }
                     else ScheduleInput(beat - 1f, 1f, InputType.STANDARD_DOWN, MarchHit, GenericMiss, MarchEmpty);})
             });
+            Jukebox.PlayOneShotGame("marchingOrders/step1", volume: 0.75f);
         }
         
         public void MarchAction(float beat, float length, bool auto)
@@ -397,7 +413,7 @@ namespace HeavenStudio.Games
                 new MultiSound.Sound("marchingOrders/usagiOnna/halt2", beat + 0.2f),
                 new MultiSound.Sound("marchingOrders/usagiOnna/halt3", beat + 0.4f),
                 new MultiSound.Sound("marchingOrders/halt2", beat + 1f),
-                new MultiSound.Sound("marchingOrders/step1", beat + 1f),
+                new MultiSound.Sound("marchingOrders/step1", beat + 1f, volume: 0.75f),
                 }, forcePlay: true);
             }
 

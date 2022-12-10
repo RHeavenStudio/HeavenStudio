@@ -5,6 +5,7 @@ using UnityEngine;
 
 using HeavenStudio;
 using HeavenStudio.Util;
+using UnityEngine.UIElements;
 
 namespace HeavenStudio.Games.Scripts_KarateMan
 {
@@ -97,6 +98,7 @@ namespace HeavenStudio.Games.Scripts_KarateMan
             {
                 anim.speed = 1f;
                 anim.Play("Beat", -1, 0);
+                bop.startBeat = (int) cond.songPositionInBeats + KarateMan.BopLength;
                 lastChargeTime = Single.MinValue;
                 Debug.Log($"Bop Length {bop.length}, Bop Start Beat {bop.startBeat}");
             }

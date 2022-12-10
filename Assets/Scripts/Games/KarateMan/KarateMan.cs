@@ -470,6 +470,7 @@ namespace HeavenStudio.Games
         public bool IsNoriActive { get { return Nori.MaxNori > 0; } }
         public float NoriPerformance { get { if (IsNoriActive) return Nori.Nori / Nori.MaxNori; else return 1f; } }
         public float HonkiChanceLength;
+        public float HonkiChanceStart;
 
         public Color[] LightBulbColors;
         public Color[] BackgroundColors;
@@ -656,7 +657,6 @@ namespace HeavenStudio.Games
                     cameraAngle = CameraAngle.Normal;
                 cameraPosition = CameraPosition[0].position;
             }
-
             float fadeProg = cond.GetPositionFromBeat(bgFadeTime, bgFadeDuration);
             if (bgFadeTime != Single.MinValue && fadeProg >= 0)
             {
@@ -741,7 +741,16 @@ namespace HeavenStudio.Games
 
         public void Honki(float beat, float length, int type, bool deactivate, bool miss, bool noSound, bool alt)
         {
-            ActivateHonki(beat, deactivate, noSound, alt);
+            HonkiChanceStart = beat;
+            HonkiChanceLength = length;
+            /*if (beat >= HonkiChanceStart && beat <= HonkiChanceStart + HonkiChanceLength)
+            {
+                if (PlayerInput.Pressed() && IsExpectingInputNow())
+                    ActivateHonki(beat, deactivate, noSound, alt);
+            }*/
+            
+            if (type == (int) HonkiChanceType.IgnoreObject)
+                ActivateHonki(beat, deactivate, noSound, alt);
         }
 
         public void ActivateHonki(float beat, bool deactivate, bool noSound, bool alt)
@@ -929,13 +938,7 @@ namespace HeavenStudio.Games
             {
                 wordClearTime = clear;
             }
-            switch (language)
-            {
-                case (int) HitThreeGraphicLang.Japanese:
-                    return word + "jp";
-                default:
-                    return word;
-            }
+            return word;
         }
 
         float HitExpressionLength(int type)
@@ -1349,7 +1352,6 @@ namespace HeavenStudio.Games
         {
             WantBop = toggle;
         }
-
         public void Prepare(float beat, float length)
         {
             Joe.Prepare(beat, length);
