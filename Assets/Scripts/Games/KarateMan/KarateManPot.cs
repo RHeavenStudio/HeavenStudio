@@ -331,7 +331,7 @@ namespace HeavenStudio.Games.Scripts_KarateMan
                         Jukebox.PlayOneShotGame("karateman/bombBreak", volume: 0.25f);
                         return;
                     }
-                    else if (KarateMan.instance.IsNoriActive && KarateMan.instance.NoriPerformance >= 0.6f && KarateMan.NoriBreakSound && ItemBreakable() && cond.songPositionInBeats >= startBeat + curveTargetBeat && CurrentCurve.GetApproximateLength() > 16)
+                    else if ((KarateMan.instance.IsNoriActive && KarateMan.instance.NoriPerformance >= 0.6f || KarateMan.HonkiMode) && KarateMan.NoriBreakSound && ItemBreakable() && cond.songPositionInBeats >= startBeat + curveTargetBeat && CurrentCurve.GetApproximateLength() > 16)
                     {
                         ParticleSystem p = Instantiate(HitParticles[2], CurrentCurve.GetPoint(1f), Quaternion.identity, KarateMan.instance.ItemHolder);
                         p.Play();
@@ -679,14 +679,14 @@ namespace HeavenStudio.Games.Scripts_KarateMan
                 case ItemType.KickBarrel:
                     return 2;
                 case ItemType.Ball:
-                    if (KarateMan.instance.IsNoriActive && KarateMan.instance.NoriPerformance >= 0.6f && KarateMan.HighFlowPunch)
+                    if ((KarateMan.instance.IsNoriActive && KarateMan.instance.NoriPerformance >= 0.6f || KarateMan.HonkiMode) && KarateMan.HighFlowPunch)
                         return 4;
                     else if (KarateMan.instance.IsNoriActive && KarateMan.HighFlowPunch)
                         return 0;
                     else
                         return 2;
                 default:
-                    if (KarateMan.instance.IsNoriActive && KarateMan.instance.NoriPerformance >= 0.6f && KarateMan.HighFlowPunch)
+                    if ((KarateMan.instance.IsNoriActive && KarateMan.instance.NoriPerformance >= 0.6f || KarateMan.HonkiMode) && KarateMan.HighFlowPunch)
                         return 4;
                     else
                         return 0;

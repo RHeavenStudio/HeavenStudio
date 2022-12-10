@@ -15,8 +15,9 @@ namespace HeavenStudio.Games.Loaders
             {
                 new GameAction("bop", "Bop")
                 {
-                    function = delegate { KarateMan.instance.ToggleBop(eventCaller.currentEntity["toggle"]); },
+                    function = delegate { var e = eventCaller.currentEntity; KarateMan.instance.ToggleBop(e["toggle"], e.length); },
                     defaultLength = 0.5f,
+                    resizable = true,
                     parameters = new List<Param>()
                     {
                         new Param("toggle", true, "Bop", "Whether to bop to the beat or not")
@@ -286,6 +287,7 @@ namespace HeavenStudio.Games
 {
     using HeavenStudio.Editor;
     using Scripts_KarateMan;
+    using System.Windows.Forms.VisualStyles;
     using UnityEditor;
     using static HeavenStudio.Util.MultiSound;
 
@@ -467,6 +469,7 @@ namespace HeavenStudio.Games
         public static bool HonkiMode = false;
         public bool IsNoriActive { get { return Nori.MaxNori > 0; } }
         public float NoriPerformance { get { if (IsNoriActive) return Nori.Nori / Nori.MaxNori; else return 1f; } }
+        public float HonkiChanceLength;
 
         public Color[] LightBulbColors;
         public Color[] BackgroundColors;
@@ -524,8 +527,8 @@ namespace HeavenStudio.Games
         SpriteRenderer bgBloodRenderer;
         public GameObject BGRadial;
         SpriteRenderer bgRadialRenderer;
-        //public GameObject BGHonki;
-        //SpriteRenderer bgHonkiRenderer;
+        public GameObject BGHonki;
+        SpriteRenderer bgHonkiRenderer;
 
         [Header("Shadows")]
         static int currentShadowType = (int) ShadowType.Tinted;
@@ -553,6 +556,7 @@ namespace HeavenStudio.Games
         public static int SoundEffectsVersion = (int) SoundEffectTypes.Megamix3DS;
         public static float WantBgChangeStart = Single.MinValue;
         public static float WantBgChangeLength = 0f;
+        public static float BopLength = 1f;
 
         private void Awake()
         {
@@ -586,13 +590,13 @@ namespace HeavenStudio.Games
             bgGradientRenderer = BGGradient.GetComponent<SpriteRenderer>();
             bgBloodRenderer = BGBlood.GetComponent<SpriteRenderer>();
             bgRadialRenderer = BGRadial.GetComponent<SpriteRenderer>();
-            //bgHonkiRenderer = BGHonki.GetComponent<SpriteRenderer>();
+            bgHonkiRenderer = BGHonki.GetComponent<SpriteRenderer>();
 
             SetBgEffectsToLast(cond.songPositionInBeats);
             SetBgAndShadowCol(WantBgChangeStart, WantBgChangeLength, bgType, (int) currentShadowType, bgColour, customShadowColour, (int)currentBgEffect);
             SetBgTexture(textureType, textureFilterType, filterColour, filterColour);
             UpdateMaterialColour(BodyColor, HighlightColor, ItemColor);
-            ToggleBop(WantBop);
+            ToggleBop(WantBop, 1f);
         }
 
         private void Update()
@@ -756,14 +760,17 @@ namespace HeavenStudio.Games
             
             if (HonkiMode)
             { 
-                //BGHonki.SetActive(true);
+                BGHonki.SetActive(true);
                 BGGradient.SetActive(false);
                 BGBlood.SetActive(false);
                 BGRadial.SetActive(false);
+                SetBgAndShadowCol(beat, 0f, (int) BackgroundType.Custom, (int) ShadowType.Custom, Color.white, Color.black, (int) BackgroundFXType.None);
                 Nori.SetNoriMode(beat, (int) KarateMan.NoriMode.None);
+                BodyColor = Color.black;
+                HighlightColor = Color.white;
             }
-            //else
-                //BGHonki.SetActive(false);
+            else
+                BGHonki.SetActive(false);
         }
 
         public void DoWord(float beat, int type, int voiceType, int language, bool pitch, int graphLength, int voiceDelay, bool fast)
@@ -1328,12 +1335,14 @@ namespace HeavenStudio.Games
             Wind.windMain = windStrength;
         }
 
-        public void ToggleBop(bool toggle)
+        public void ToggleBop(bool toggle, float length)
         {
             if (toggle)
                 Joe.bop.length = Single.MaxValue;
             else
                 Joe.bop.length = 0;
+
+            BopLength = length;
         }
 
         public static void ToggleBopUnloaded(bool toggle)

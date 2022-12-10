@@ -55,6 +55,16 @@ namespace HeavenStudio.Games.Loaders
                         new Param("colorB", RhythmTweezers.defaultPotatoColor, "Potato Color", "The color of the potato")
                     }
                 },
+                new GameAction("no peeking", "No Peeking Hand")
+                {
+                    function = delegate { var e = eventCaller.currentEntity; RhythmTweezers.instance.SpawnHimitsuSigns(e.beat, e["type"], e["toggle"]); },
+                    defaultLength = 1f,
+                    parameters = new List<Param>()
+                    {
+                        new Param("type", RhythmTweezers.SignType.Full, "Sign Type", "The type of sign that appears"),
+                        new Param("toggle", false, "Remove Sign", "Removes the No Peeking sign")
+                    }
+                },
                 new GameAction("set tweezer delay", "Offset Tweezer")
                 {
                     function = delegate { RhythmTweezers.instance.tweezerBeatOffset = eventCaller.currentEntity.length; },
@@ -100,7 +110,12 @@ namespace HeavenStudio.Games
             Onion,
             Potato
         }
-
+        public enum SignType
+        {
+            Full,
+            Left,
+            Right
+        }
         [Header("References")]
         public Transform VegetableHolder;
         public SpriteRenderer Vegetable;
@@ -114,6 +129,8 @@ namespace HeavenStudio.Games
 
         public GameObject HairsHolder;
         public GameObject DroppedHairsHolder;
+
+        public Animator NoPeekingAnim;
         [NonSerialized] public int hairsLeft = 0;
 
         [Header("Variables")]
@@ -273,6 +290,33 @@ namespace HeavenStudio.Games
             VegetableDupe.color = newColor;
         }
 
+        public void SpawnHimitsuSigns(float beat, int type, bool remove)
+        {
+            switch (type)
+            {
+                case (int) RhythmTweezers.SignType.Full:
+                    if (!remove)
+                        NoPeekingAnim.DoScaledAnimationAsync("FullCover", 1.5f);
+                    else
+                        NoPeekingAnim.DoScaledAnimationAsync("SignDown", 1.5f);
+                    break;
+                case (int) RhythmTweezers.SignType.Left:
+                    if (!remove) 
+                        NoPeekingAnim.DoScaledAnimationAsync("LeftCover", 1.5f);
+                    else
+                        NoPeekingAnim.DoScaledAnimationAsync("SignDownLeft", 1.5f);
+                    break;
+                case (int) RhythmTweezers.SignType.Right:
+                    if (!remove) 
+                        NoPeekingAnim.DoScaledAnimationAsync("RightCover", 1.5f);
+                    else
+                        NoPeekingAnim.DoScaledAnimationAsync("SignDownRight", 1.5f);
+                    break;
+                default:
+                    NoPeekingAnim.DoScaledAnimationAsync("AnimeNone", 1.5f);
+                    break;
+            }
+        }
         public void ChangeBackgroundColor(Color color, float beats)
         {
             var seconds = Conductor.instance.secPerBeat * beats;

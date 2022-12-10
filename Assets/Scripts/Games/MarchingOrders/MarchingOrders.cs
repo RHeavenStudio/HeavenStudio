@@ -33,9 +33,13 @@ namespace HeavenStudio.Games.Loaders
                     
                     new GameAction("marching", "Cadets March")
                     {
-                        function = delegate { var e = eventCaller.currentEntity; MarchingOrders.instance.MarchAction(e.beat, e.length); },
+                        function = delegate { var e = eventCaller.currentEntity; MarchingOrders.instance.MarchAction(e.beat, e.length, e["toggle"]); },
                         defaultLength = 4f,
-                        resizable = true
+                        resizable = true,
+                        parameters = new List<Param>
+                        {
+                            new Param("toggle", false, "Auto March", "When enabled, will march automatically like at the end of Marchers")
+                        }
                     },
                     
                     new GameAction("attention", "Attention...")
@@ -65,12 +69,13 @@ namespace HeavenStudio.Games.Loaders
                     
                     new GameAction("face turn", "Direction to Turn")
                     {
-                        function = delegate { var e = eventCaller.currentEntity; MarchingOrders.instance.SargeFaceTurn(e.beat, e["type"], e["type2"]); },
+                        function = delegate { var e = eventCaller.currentEntity; MarchingOrders.instance.SargeFaceTurn(e.beat, e["type"], e["type2"], e["toggle"]); },
                         defaultLength = 4f,
                         parameters = new List<Param>()
                         {
                             new Param("type", MarchingOrders.DirectionFaceTurn.Right, "Direction", "The direction sarge wants the cadets to face"),
                             new Param("type2", MarchingOrders.FaceTurnLength.Normal, "Length", "How fast or slow the event lasts"),
+                            new Param("toggle", false, "Point", "Do the pointing animation instead of just the head turn")
                         }
                     },
 
@@ -81,6 +86,16 @@ namespace HeavenStudio.Games.Loaders
                         parameters = new List<Param>()
                         {
                             new Param("type", MarchingOrders.BackgroundColor.Blue, "Color", "The background color of Marching Orders"),
+                        }
+                    },
+
+                    new GameAction("game mod", "Game Modifiers")
+                    {
+                        function = delegate { var e = eventCaller.currentEntity; MarchingOrders.instance.GameplayMod(e.beat, e["toggle"]); },
+                        defaultLength = 1f,
+                        parameters = new List<Param>()
+                        {
+                            new Param("toggle", false, "Female Commandress", "Makes the Commander the Rabbit Girl"),
                         }
                     }
                 });
@@ -106,19 +121,22 @@ namespace HeavenStudio.Games
         public Animator CadetHead3;
         public Animator CadetHeadPlayer;
         
-        public GameObject Player;
         public GameObject BGMain1;
         public GameObject BGMain2;
         
         public GameEvent bop = new GameEvent();
         public GameEvent noBop = new GameEvent();
         public GameEvent marching = new GameEvent();
-        
+
+        private string path;
         private int marchOtherCount;
         private int marchPlayerCount;
         private int turnLength;
+        private int background;
         // private bool marchSuru;
         // private bool beatSuru;
+        private bool autoMarch;
+        private bool usagiVoice;
         private float marchTsugi;
         private float beatTsugi;
         private float steamTime;
@@ -246,6 +264,23 @@ namespace HeavenStudio.Games
                 Jukebox.PlayOneShotGame("marchingOrders/step1");
                 CadetPlayer.DoScaledAnimationAsync("Halt", 0.5f);
             }
+
+            switch (background)
+            {
+                case (int) MarchingOrders.BackgroundColor.Yellow:
+                    BGMain1.SetActive(false);
+                    BGMain2.SetActive(true);
+                    break;
+                default:
+                    BGMain1.SetActive(true);
+                    BGMain2.SetActive(false);
+                    break;
+            }
+
+            if (usagiVoice)
+                path = "usagiOnna/";
+            else
+                path = null;
         }
 
         public void Bop(float beat, float length)
@@ -280,24 +315,28 @@ namespace HeavenStudio.Games
                 new BeatAction.Action(beat, delegate { Cadet1.DoScaledAnimationAsync(marchOtherAnim, 0.5f); }),
                 new BeatAction.Action(beat, delegate { Cadet2.DoScaledAnimationAsync(marchOtherAnim, 0.5f); }),
                 new BeatAction.Action(beat, delegate { Cadet3.DoScaledAnimationAsync(marchOtherAnim, 0.5f); }),
-                new BeatAction.Action(beat, delegate { ScheduleInput(beat - 1f, 1f, InputType.STANDARD_DOWN, MarchHit, GenericMiss, MarchEmpty);})
+                new BeatAction.Action(beat, delegate { 
+                    if (autoMarch) {CadetPlayer.DoScaledAnimationAsync(marchOtherAnim, 0.5f); 
+                        Jukebox.PlayOneShotGame("marchingOrders/step1"); }
+                    else ScheduleInput(beat - 1f, 1f, InputType.STANDARD_DOWN, MarchHit, GenericMiss, MarchEmpty);})
             });
         }
         
-        public void MarchAction(float beat, float length)
+        public void MarchAction(float beat, float length, bool auto)
         {
             marching.length = length;
             marching.startBeat = beat;
+            autoMarch = auto;
         }
 
         public void SargeAttention(float beat)
         {
             MultiSound.Play(new MultiSound.Sound[] {
-            new MultiSound.Sound("marchingOrders/attention1", beat),
-            new MultiSound.Sound("marchingOrders/attention2", beat + 0.5f),
+            new MultiSound.Sound("marchingOrders/" + path + "attention1", beat),
+            new MultiSound.Sound("marchingOrders/" + path + "attention2", beat + 0.5f),
             }, forcePlay:true);
             
-            BeatAction.New(Player, new List<BeatAction.Action>() 
+            BeatAction.New(gameObject, new List<BeatAction.Action>() 
                 {
                 new BeatAction.Action(beat + 0.25f,     delegate { Sarge.DoScaledAnimationAsync("Talk", 0.5f);}),
                 });
@@ -311,16 +350,16 @@ namespace HeavenStudio.Games
             if (!noVoice)
             {
                 MultiSound.Play(new MultiSound.Sound[] {
-                    new MultiSound.Sound("marchingOrders/march1", beat),
-                    new MultiSound.Sound("marchingOrders/march2", beat + 0.25f),
-                    new MultiSound.Sound("marchingOrders/march3", beat + 0.5f),
+                    new MultiSound.Sound("marchingOrders/" + path + "march1", beat),
+                    new MultiSound.Sound("marchingOrders/" + path + "march2", beat + (usagiVoice ? 0.15f : 0.25f)),
+                    new MultiSound.Sound("marchingOrders/" + path + "march3", beat + (usagiVoice ? 0.25f : 0.5f)),
                     new MultiSound.Sound("marchingOrders/marchStart", beat + 1f),
                 }, forcePlay: true);
             }
 
             if (!noVoice)
             {
-                BeatAction.New(Player, new List<BeatAction.Action>()
+                BeatAction.New(gameObject, new List<BeatAction.Action>()
                 {
                 new BeatAction.Action(beat,     delegate { Sarge.DoScaledAnimationAsync("Talk", 0.5f);}),
                 new BeatAction.Action(beat + 1f,     delegate { Cadet1.DoScaledAnimationAsync("MarchL", 0.5f);}),
@@ -331,7 +370,7 @@ namespace HeavenStudio.Games
             }
             else
             {
-                BeatAction.New(Player, new List<BeatAction.Action>()
+                BeatAction.New(gameObject, new List<BeatAction.Action>()
                 {
                 new BeatAction.Action(beat + 1f,     delegate { Cadet1.DoScaledAnimationAsync("MarchL", 0.5f);}),
                 new BeatAction.Action(beat + 1f,     delegate { Cadet2.DoScaledAnimationAsync("MarchL", 0.5f);}),
@@ -343,14 +382,27 @@ namespace HeavenStudio.Games
         
         public void SargeHalt(float beat)
         {
-            MultiSound.Play(new MultiSound.Sound[] {
-            new MultiSound.Sound("marchingOrders/halt1", beat),
-            new MultiSound.Sound("marchingOrders/halt2", beat + 1f),
-            new MultiSound.Sound("marchingOrders/step1", beat + 1f),
-            }, forcePlay:true);
+            if (!usagiVoice)
+            {
+                MultiSound.Play(new MultiSound.Sound[] {
+                new MultiSound.Sound("marchingOrders/halt1", beat),
+                new MultiSound.Sound("marchingOrders/halt2", beat + 1f),
+                new MultiSound.Sound("marchingOrders/step1", beat + 1f),
+                }, forcePlay: true);
+            } 
+            else
+            {
+                MultiSound.Play(new MultiSound.Sound[] {
+                new MultiSound.Sound("marchingOrders/usagiOnna/halt1", beat),
+                new MultiSound.Sound("marchingOrders/usagiOnna/halt2", beat + 0.2f),
+                new MultiSound.Sound("marchingOrders/usagiOnna/halt3", beat + 0.4f),
+                new MultiSound.Sound("marchingOrders/halt2", beat + 1f),
+                new MultiSound.Sound("marchingOrders/step1", beat + 1f),
+                }, forcePlay: true);
+            }
 
             ScheduleInput(beat, 1f, InputType.STANDARD_ALT_DOWN, HaltHit, GenericMiss, HaltEmpty);
-            BeatAction.New(Player, new List<BeatAction.Action>() 
+            BeatAction.New(gameObject, new List<BeatAction.Action>() 
                 {
                 new BeatAction.Action(beat,     delegate { Sarge.DoScaledAnimationAsync("Talk", 0.5f);}),
                 new BeatAction.Action(beat + 1f,     delegate { Cadet1.DoScaledAnimationAsync("Halt", 0.5f);}),
@@ -359,7 +411,7 @@ namespace HeavenStudio.Games
                 });
         }
         
-        public void SargeFaceTurn(float beat, int type, int type2)
+        public void SargeFaceTurn(float beat, int type, int type2, bool toggle)
         {
             switch (type2)
             {
@@ -373,44 +425,76 @@ namespace HeavenStudio.Games
                     break;
             }
             
-            
+             
             switch (type)
             {
                 case (int) MarchingOrders.DirectionFaceTurn.Left:
                     ScheduleInput(beat, turnLength + 2f, InputType.DIRECTION_LEFT_DOWN, LeftSuccess, GenericMiss, LeftEmpty);
-                    MultiSound.Play(new MultiSound.Sound[] {
-                    new MultiSound.Sound("marchingOrders/leftFaceTurn1" + fastTurn, beat),
-                    new MultiSound.Sound("marchingOrders/leftFaceTurn2" + fastTurn, beat + 0.6f),
-                    new MultiSound.Sound("marchingOrders/leftFaceTurn3", beat + turnLength + 1f),
-                    new MultiSound.Sound("marchingOrders/turnAction", beat + turnLength + 2f),
-                    }, forcePlay:true);
+                    if (!usagiVoice)
+                    {
+                        MultiSound.Play(new MultiSound.Sound[] {
+                        new MultiSound.Sound("marchingOrders/leftFaceTurn1" + fastTurn, beat),
+                        new MultiSound.Sound("marchingOrders/leftFaceTurn2" + fastTurn, beat + 0.6f),
+                        new MultiSound.Sound("marchingOrders/leftFaceTurn3", beat + turnLength + 1f),
+                        new MultiSound.Sound("marchingOrders/turnAction", beat + turnLength + 2f),
+                        }, forcePlay: true);
+                    }
+                    else
+                    {
+                        MultiSound.Play(new MultiSound.Sound[] {
+                        new MultiSound.Sound("marchingOrders/usagiOnna/leftFaceTurn1" + fastTurn, beat),
+                        new MultiSound.Sound("marchingOrders/usagiOnna/leftFaceTurn2" + fastTurn, beat + 0.4f),
+                        new MultiSound.Sound("marchingOrders/usagiOnna/leftFaceTurn3" + fastTurn, beat + 0.6f),
+                        new MultiSound.Sound("marchingOrders/usagiOnna/leftFaceTurn4", beat + turnLength + 1f),
+                        new MultiSound.Sound("marchingOrders/turnAction", beat + turnLength + 2f),
+                        }, forcePlay: true);
+                    }
                     
-                        BeatAction.New(Player, new List<BeatAction.Action>() 
+                        BeatAction.New(gameObject, new List<BeatAction.Action>() 
                             {
-                            new BeatAction.Action(beat + turnLength + 2f,     delegate { CadetHead1.DoScaledAnimationAsync("FaceL", 0.5f);}),
-                            new BeatAction.Action(beat + turnLength + 2f,     delegate { CadetHead2.DoScaledAnimationAsync("FaceL", 0.5f);}),
-                            new BeatAction.Action(beat + turnLength + 2f,     delegate { CadetHead3.DoScaledAnimationAsync("FaceL", 0.5f);}),
+                            new BeatAction.Action(beat + turnLength + 2f,     delegate { if (!toggle) CadetHead1.DoScaledAnimationAsync("FaceL", 0.5f);
+                                else Cadet1.DoScaledAnimationAsync("PointL"); }),
+                            new BeatAction.Action(beat + turnLength + 2f,     delegate { if (!toggle) CadetHead2.DoScaledAnimationAsync("FaceL", 0.5f);
+                                else Cadet2.DoScaledAnimationAsync("PointL");}),
+                            new BeatAction.Action(beat + turnLength + 2f,     delegate { if (!toggle) CadetHead3.DoScaledAnimationAsync("FaceL", 0.5f);
+                                else Cadet3.DoScaledAnimationAsync("PointL");}),
                             });
                     break;
                 default:
                     ScheduleInput(beat, turnLength + 2f, InputType.DIRECTION_RIGHT_DOWN, RightSuccess, GenericMiss, RightEmpty);
-                    MultiSound.Play(new MultiSound.Sound[] {
-                    new MultiSound.Sound("marchingOrders/rightFaceTurn1" + fastTurn, beat),
-                    new MultiSound.Sound("marchingOrders/rightFaceTurn2" + fastTurn, beat + 0.6f),
-                    new MultiSound.Sound("marchingOrders/rightFaceTurn3", beat + turnLength + 1f),
-                    new MultiSound.Sound("marchingOrders/turnAction", beat + turnLength + 2f),
-                    }, forcePlay:true);
+                    if (!usagiVoice)
+                    {
+                        MultiSound.Play(new MultiSound.Sound[] {
+                        new MultiSound.Sound("marchingOrders/rightFaceTurn1" + fastTurn, beat),
+                        new MultiSound.Sound("marchingOrders/rightFaceTurn2" + fastTurn, beat + 0.6f),
+                        new MultiSound.Sound("marchingOrders/rightFaceTurn3", beat + turnLength + 1f),
+                        new MultiSound.Sound("marchingOrders/turnAction", beat + turnLength + 2f),
+                        }, forcePlay: true);
+                    }
+                    else
+                    {
+                        MultiSound.Play(new MultiSound.Sound[] {
+                        new MultiSound.Sound("marchingOrders/usagiOnna/rightFaceTurn1" + fastTurn, beat),
+                        new MultiSound.Sound("marchingOrders/usagiOnna/rightFaceTurn2" + fastTurn, beat + 0.4f),
+                        new MultiSound.Sound("marchingOrders/usagiOnna/rightFaceTurn3" + fastTurn, beat + 0.6f),
+                        new MultiSound.Sound("marchingOrders/usagiOnna/rightFaceTurn4", beat + turnLength + 1f),
+                        new MultiSound.Sound("marchingOrders/turnAction", beat + turnLength + 2f),
+                        }, forcePlay: true);
+                    }
                     
-                        BeatAction.New(Player, new List<BeatAction.Action>() 
+                        BeatAction.New(gameObject, new List<BeatAction.Action>() 
                             {
-                            new BeatAction.Action(beat + turnLength + 2f,     delegate { CadetHead1.DoScaledAnimationAsync("FaceR", 0.5f);}),
-                            new BeatAction.Action(beat + turnLength + 2f,     delegate { CadetHead2.DoScaledAnimationAsync("FaceR", 0.5f);}),
-                            new BeatAction.Action(beat + turnLength + 2f,     delegate { CadetHead3.DoScaledAnimationAsync("FaceR", 0.5f);}),
+                            new BeatAction.Action(beat + turnLength + 2f,     delegate { if (!toggle) CadetHead1.DoScaledAnimationAsync("FaceR", 0.5f);
+                                else Cadet1.DoScaledAnimationAsync("PointR");}),
+                            new BeatAction.Action(beat + turnLength + 2f,     delegate { if (!toggle) CadetHead2.DoScaledAnimationAsync("FaceR", 0.5f);
+                                else Cadet2.DoScaledAnimationAsync("PointR");}),
+                            new BeatAction.Action(beat + turnLength + 2f,     delegate { if (!toggle) CadetHead3.DoScaledAnimationAsync("FaceR", 0.5f);
+                                else Cadet3.DoScaledAnimationAsync("PointR");}),
                             });
                     break;
             }
             
-            BeatAction.New(Player, new List<BeatAction.Action>() 
+            BeatAction.New(gameObject, new List<BeatAction.Action>() 
                 {
                 new BeatAction.Action(beat,     delegate { Sarge.DoScaledAnimationAsync("Talk", 0.5f);}),
                 new BeatAction.Action(beat + turnLength + 1f,     delegate { Sarge.DoScaledAnimationAsync("Talk", 0.5f);}),
@@ -419,19 +503,14 @@ namespace HeavenStudio.Games
         
         public void BackgroundColorSet(float beat, int type)
         {
-            switch(type)
-            {
-                case (int) MarchingOrders.BackgroundColor.Yellow:
-                    BGMain1.SetActive(false);
-                    BGMain2.SetActive(true);
-                    break;
-                default:
-                    BGMain1.SetActive(true);
-                    BGMain2.SetActive(false);
-                    break;
-            }
+            background = type;
         }
 
+        public void GameplayMod(float beat, bool femCom)
+        {
+            if (femCom)
+                usagiVoice = true;
+        }
         public static void AttentionSound(float beat)
         {
             MultiSound.Play(new MultiSound.Sound[] {

@@ -178,7 +178,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   inList: 0
-  lastState: 0
   state:
     gameObject: {fileID: 0}
     early: 0
@@ -238,7 +237,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   EligibleHits: []
+  scheduledInputs: []
   firstEnable: 0
+  Rocket: {fileID: 521902303904860772}
+  Explosion: {fileID: 0}
 --- !u!1 &5813499711658895222
 GameObject:
   m_ObjectHideFlags: 0

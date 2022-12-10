@@ -53,7 +53,6 @@ namespace HeavenStudio.Games.Scripts_KarateMan
         private void Update()
         {
             var cond = Conductor.instance;
-
             if (cond.songPositionInBeats < bombGlowStart)
             {
                 bombGlowIntensity = 1f;
@@ -99,6 +98,7 @@ namespace HeavenStudio.Games.Scripts_KarateMan
                 anim.speed = 1f;
                 anim.Play("Beat", -1, 0);
                 lastChargeTime = Single.MinValue;
+                Debug.Log($"Bop Length {bop.length}, Bop Start Beat {bop.startBeat}");
             }
 
             if (inCombo && shouldComboId == -2)
@@ -141,7 +141,7 @@ namespace HeavenStudio.Games.Scripts_KarateMan
             {
                 if (!KarateMan.instance.IsExpectingInputNow())
                 {
-                    if (KarateMan.instance.IsNoriActive && KarateMan.instance.NoriPerformance >= 0.6f && KarateMan.HighFlowPunch)
+                    if ((KarateMan.instance.IsNoriActive && KarateMan.instance.NoriPerformance >= 0.6f || KarateMan.HonkiMode) && KarateMan.HighFlowPunch)
                         Punch(2);
                     else
                         Punch(1);
