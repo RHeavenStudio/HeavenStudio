@@ -1,18 +1,55 @@
 ManifestFileVersion: 0
-CRC: 1783745399
+CRC: 849020443
 Hashes:
   AssetFileHash:
     serializedVersion: 2
-    Hash: ca526e109180a5f208f1fce8cf8d1845
+    Hash: 14d53f8e3558f287ff8014de271b2fb1
   TypeTreeHash:
     serializedVersion: 2
-    Hash: 9a2ca7bdbd1871f7131daf57de908e0c
+    Hash: 23ad057f2907c3dfefd2ca37a876061f
 HashAppended: 0
 ClassTypes:
+- Class: 1
+  Script: {instanceID: 0}
+- Class: 4
+  Script: {instanceID: 0}
+- Class: 21
+  Script: {instanceID: 0}
+- Class: 28
+  Script: {instanceID: 0}
+- Class: 48
+  Script: {instanceID: 0}
+- Class: 74
+  Script: {instanceID: 0}
 - Class: 83
+  Script: {instanceID: 0}
+- Class: 91
+  Script: {instanceID: 0}
+- Class: 95
+  Script: {instanceID: 0}
+- Class: 114
+  Script: {fileID: 11500000, guid: cd6b3558bb367914eb7c7991d6c93205, type: 3}
+- Class: 114
+  Script: {fileID: 11500000, guid: a761d8a407e1d9d49afaed94b793ed75, type: 3}
+- Class: 114
+  Script: {fileID: 11500000, guid: 54f50efea631bab46b56ebad3e63c4e2, type: 3}
+- Class: 114
+  Script: {fileID: 11500000, guid: 066a41e004f415b4eb74d5e61a2aadbe, type: 3}
+- Class: 114
+  Script: {fileID: 11500000, guid: b0cca3244f403c24f819a870f31cdc29, type: 3}
+- Class: 115
+  Script: {instanceID: 0}
+- Class: 198
+  Script: {instanceID: 0}
+- Class: 199
+  Script: {instanceID: 0}
+- Class: 212
+  Script: {instanceID: 0}
+- Class: 213
   Script: {instanceID: 0}
 SerializeReferenceClassIdentifiers: []
 Assets:
+- Assets/Resources/Games/airRally.prefab
 - Assets/Resources/Sfx/games/airRally/hitForth_Close.ogg
 - Assets/Resources/Sfx/games/airRally/hitForth_Far.ogg
 - Assets/Resources/Sfx/games/airRally/hitBaxter_Farther.ogg
@@ -28,6 +65,7 @@ Assets:
 - Assets/Resources/Sfx/games/airRally/hitBaxter_Farthest2.ogg
 - Assets/Resources/Sfx/games/airRally/whooshForth_Farther2.ogg
 - Assets/Resources/Sfx/games/airRally/hitForth_Farther.ogg
+- Assets/Resources/Sfx/games/airRally/hitForth_Farther2.ogg
 - Assets/Resources/Sfx/games/airRally/hitBaxter_Far2.ogg
 - Assets/Resources/Sfx/games/airRally/hitBaxter_Close.ogg
 - Assets/Resources/Sfx/games/airRally/hitForth_Farthest2.ogg

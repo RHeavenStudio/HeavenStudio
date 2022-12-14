@@ -56,10 +56,10 @@ namespace HeavenStudio.Games.Loaders
                         new Param("type2", AirRally.DistanceSound.close, "Type", "How far is Forthington?")
                     }
                 },
-            }//,
-            //new List<string>() { "rvl", "keep" },
-            //"rvlbadminton", "en",
-            //new List<string>() { "en", "jp" }
+            },
+            new List<string>() { "rvl", "keep" },
+            "rvlbadminton", "jp",
+            new List<string>() { "en", "jp" }
             );
         }
     }
