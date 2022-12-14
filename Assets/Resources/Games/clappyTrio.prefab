@@ -768,6 +768,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 7762527136940295497}
+  - component: {fileID: 493128969980995429}
   m_Layer: 0
   m_Name: Sign
   m_TagString: Untagged
@@ -796,6 +797,25 @@ Transform:
   m_Father: {fileID: 7762527137795866598}
   m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!95 &493128969980995429
+Animator:
+  serializedVersion: 3
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7762527136940295502}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: c25cf9e572d277d45b2463c4b9fd47b6, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorControllerStateOnDisable: 0
 --- !u!1 &7762527137011453997
 GameObject:
   m_ObjectHideFlags: 0
@@ -2353,6 +2373,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   EligibleHits: []
+  scheduledInputs: []
   firstEnable: 0
   lionCount: 3
   Lion:
@@ -2363,6 +2384,8 @@ MonoBehaviour:
   - {fileID: -7678601869563919383, guid: bfb4e4bb08acdb14792cdd4c46253ab0, type: 3}
   - {fileID: -7561877552320588135, guid: bfb4e4bb08acdb14792cdd4c46253ab0, type: 3}
   - {fileID: 1205416701152040810, guid: bfb4e4bb08acdb14792cdd4c46253ab0, type: 3}
+  missBopCount: 0
+  Sign: {fileID: 493128969980995429}
   playerHitLast: 0
 --- !u!1 &7762527137853689186
 GameObject:

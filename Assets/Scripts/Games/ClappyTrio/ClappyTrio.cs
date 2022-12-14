@@ -12,6 +12,15 @@ namespace HeavenStudio.Games.Loaders
         public static Minigame AddGame(EventCaller eventCaller) {
             return new Minigame("clappyTrio", "The Clappy Trio", "29E7FF", false, false, new List<GameAction>()
             {
+                new GameAction("sign", "Sign Animation")
+                {
+                    function = delegate { var e = eventCaller.currentEntity; ClappyTrio.instance.SignAnime(e.beat, e["type"]); },
+                    defaultLength = 1f,
+                    parameters = new List<Param>()
+                    {
+                        new Param("type", ClappyTrio.SignType.FallDown, "Sign Anime", "The animation the sign will have")
+                    },
+                },
                 new GameAction("clap", "Clap")
                 {
                     function = delegate { var e = eventCaller.currentEntity; ClappyTrio.instance.Clap(e.beat, e.length); },
@@ -22,7 +31,7 @@ namespace HeavenStudio.Games.Loaders
                     function = delegate { var e = eventCaller.currentEntity; ClappyTrio.instance.Bop(e.beat, e["toggle"]); },
                     parameters = new List<Param>()
                     {
-                        new Param("toggle", false, "Happy", "Whether or not they will be happy for you getting it right")
+                        new Param("toggle", true, "Happy", "Whether or not they will be happy for you getting it right")
                     },
                 },
                 new GameAction("prepare", "Prepare Stance")
@@ -74,10 +83,17 @@ namespace HeavenStudio.Games
         public int missBopCount;
 
         private ClappyTrioPlayer ClappyTrioPlayer;
+        public Animator Sign;
 
         public bool playerHitLast = false;
 
         public static ClappyTrio instance { get; set; }
+
+        public enum SignType
+        {
+            FallDown,
+            RaiseUp
+        }
 
         private void Awake()
         {
@@ -93,6 +109,19 @@ namespace HeavenStudio.Games
             }
         }
 
+        public void SignAnime(float beat, int type)
+        {
+            switch(type)
+            {
+                case (int) SignType.RaiseUp:
+                    Sign.DoScaledAnimationAsync("RaiseUp", 0.5f);
+                    break;
+                default:
+                    Sign.DoScaledAnimationAsync("FallDown", 0.5f);
+                    break;
+            }
+            Jukebox.PlayOneShotGame("clappyTrio/sign");
+        }
         private void InitLions()
         {
             float startPos = -3.066667f;
