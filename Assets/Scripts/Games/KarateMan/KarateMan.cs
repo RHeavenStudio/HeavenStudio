@@ -75,7 +75,7 @@ namespace HeavenStudio.Games.Loaders
                 },
                 new GameAction("honki", "Serious Chance")
                 {
-                    function = delegate { var e = eventCaller.currentEntity; KarateMan.instance.Honki(e.beat, e.length, e["type"], e["toggle"], e["toggle2"], e["toggle3"], e["toggle4"]); },
+                    function = delegate { var e = eventCaller.currentEntity; KarateMan.instance.Honki(e.beat, e.length, e["type"], e["toggle"], e["toggle2"], e["type2"]); },
                     defaultLength = 1f,
                     resizable = true,
                     parameters = new List<Param>()
@@ -83,8 +83,7 @@ namespace HeavenStudio.Games.Loaders
                         new Param("type", KarateMan.HonkiChanceType.OneObject, "Serious Chance Type", "Whether all objects, one object or no object is required for Serious Mode"),
                         new Param("toggle", false, "Deactivate Serious", "This deactivates Serious Mode"),
                         new Param("toggle2", false, "Miss can Lose", "This makes it so if you miss too many times, Serious Mode deactivates"),
-                        new Param("toggle3", false, "Disable Sound", "Disables the 'GONG' sound when it activates"),
-                        new Param("toggle4", false, "Alt Sound", "Play the alternate sound, used in transitions of Remix 8")
+                        new Param("type2", KarateMan.HonkiSoundType.SeriousModeHit, "Sound", "Sound that plays on Switch"),
                     }
                 },
                 new GameAction("hitX", "Warnings")
@@ -331,7 +330,7 @@ namespace HeavenStudio.Games
         {
             English,
             Japanese,
-            //Korean
+            Korean
         }
 
         public enum HitThreeLength
@@ -358,6 +357,13 @@ namespace HeavenStudio.Games
             IgnoreObject
         }
         
+        public enum HonkiSoundType
+        {
+            SeriousModeHit,
+            SeriousModeTransition,
+            None
+        }
+
         public enum LightBulbType
         {
             Normal,
@@ -739,47 +745,50 @@ namespace HeavenStudio.Games
             cameraReturnLength = Mathf.Min(2f, length*0.5f);
         }
 
-        public void Honki(float beat, float length, int type, bool deactivate, bool miss, bool noSound, bool alt)
+        public void Honki(float beat, float length, int type, bool deactivate, bool miss, int sound)
         {
+            GameObject mobj = GameObject.Instantiate(Item, ItemHolder);
+            KarateManPot mobjDat = mobj.GetComponent<KarateManPot>();
             HonkiChanceStart = beat;
             HonkiChanceLength = length;
-            /*if (beat >= HonkiChanceStart && beat <= HonkiChanceStart + HonkiChanceLength)
-            {
-                if (PlayerInput.Pressed() && IsExpectingInputNow())
-                    ActivateHonki(beat, deactivate, noSound, alt);
-            }*/
+            mobjDat.deactivateHonki = deactivate;
+            mobjDat.honkiSound = sound;
             
             if (type == (int) HonkiChanceType.IgnoreObject)
-                ActivateHonki(beat, deactivate, noSound, alt);
+                ActivateHonki(beat, deactivate, sound);
         }
 
-        public void ActivateHonki(float beat, bool deactivate, bool noSound, bool alt)
+        public void ActivateHonki(float beat, bool deactivate, int sound)
         {
-            if (!noSound)
+            switch (sound)
             {
-                if (alt)
-                    Jukebox.PlayOneShotGame("karateman/gogoSwitch");
-                else
+                case (int)HonkiSoundType.SeriousModeHit:
                     Jukebox.PlayOneShotGame("karateman/gogo");
+                    break;
+                case (int)HonkiSoundType.SeriousModeTransition:
+                    Jukebox.PlayOneShotGame("karateman/gogoSwitch");
+                    break;
+                default:
+                    break;
             }
+
             if (!deactivate)
+            {
                 HonkiMode = true;
-            else
-                HonkiMode = false;
-            
-            if (HonkiMode)
-            { 
                 BGHonki.SetActive(true);
                 BGGradient.SetActive(false);
                 BGBlood.SetActive(false);
                 BGRadial.SetActive(false);
-                SetBgAndShadowCol(beat, 0f, (int) BackgroundType.Custom, (int) ShadowType.Custom, Color.white, Color.black, (int) BackgroundFXType.None);
-                Nori.SetNoriMode(beat, (int) KarateMan.NoriMode.None);
+                SetBgAndShadowCol(beat, 0f, (int)BackgroundType.Custom, (int)ShadowType.Custom, Color.white, Color.black, (int)BackgroundFXType.None);
+                Nori.SetNoriMode(beat, (int)KarateMan.NoriMode.None);
                 BodyColor = Color.black;
                 HighlightColor = Color.white;
             }
             else
+            {
+                HonkiMode = false;
                 BGHonki.SetActive(false);
+            }
         }
 
         public void DoWord(float beat, int type, int voiceType, int language, bool pitch, int graphLength, int voiceDelay, bool fast)
@@ -938,7 +947,15 @@ namespace HeavenStudio.Games
             {
                 wordClearTime = clear;
             }
-            return word;
+            switch (language)
+            {
+                case (int) HitThreeGraphicLang.Japanese:
+                    return word + "jp";
+                case (int) HitThreeGraphicLang.Korean:
+                    return word + "ko";
+                default:
+                    return word;
+            }
         }
 
         float HitExpressionLength(int type)

@@ -143,7 +143,7 @@ namespace HeavenStudio.Games.Scripts_KarateMan
             {
                 if (!KarateMan.instance.IsExpectingInputNow())
                 {
-                    if ((KarateMan.instance.IsNoriActive && KarateMan.instance.NoriPerformance >= 0.6f || KarateMan.HonkiMode) && KarateMan.HighFlowPunch)
+                    if ((KarateMan.instance.IsNoriActive && KarateMan.instance.NoriPerformance >= 0.6f) && KarateMan.HighFlowPunch)
                         Punch(2);
                     else
                         Punch(1);

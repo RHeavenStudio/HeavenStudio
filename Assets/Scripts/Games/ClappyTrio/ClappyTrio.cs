@@ -71,6 +71,7 @@ namespace HeavenStudio.Games
         private float currentClappingLength;
         private float lastClapStart;
         private int clapIndex;
+        public int missBopCount;
 
         private ClappyTrioPlayer ClappyTrioPlayer;
 
@@ -118,7 +119,6 @@ namespace HeavenStudio.Games
 
         private void Update()
         {
-            float resetTime = 0f;
             if (isClapping)
             {
                 float songPosBeat = Conductor.instance.songPositionInBeats;
@@ -157,15 +157,10 @@ namespace HeavenStudio.Games
 
                             clapIndex++;
                         }
-                        resetTime = lastClapStart + length;
+                        
                         break;
                     }
                 }
-            }
-
-            if (Conductor.instance.songPositionInBeats > resetTime + 2)
-            {
-                reactHappy = false;
             }
         }
 
@@ -211,11 +206,13 @@ namespace HeavenStudio.Games
                 {
                     for (int i = 0; i < Lion.Count; i++)
                     {
-                        if (i == Lion.Count - 1)
+                        if (i == Lion.Count - 1 || missBopCount < 2)
                         {
                             SetFace(i, 0);
+                            missBopCount += 1;
                         } else
                         {
+
                             SetFace(i, 2);
                         }
                     }

@@ -80,6 +80,7 @@ namespace HeavenStudio.Games.Scripts_ClappyTrio
                 clapEffect.SetActive(false);
                 Jukebox.PlayOneShot("miss");
                 ClappyTrio.instance.playerHitLast = false;
+                ClappyTrio.instance.missBopCount = 0;
 
                 if (clapStarted)
                     this.canHit = false;

@@ -34,8 +34,10 @@ namespace HeavenStudio.Games.Scripts_KarateMan
         [SerializeField] Color[] ItemBarrelMap;
         [SerializeField] Color[] ItemCookingLidMap;
 
+        public bool deactivateHonki = false;
         public bool KickBarrelContent = false;
         public int OnHitExpression = (int) KarateMan.KarateManFaces.Normal;
+        public int honkiSound = (int) KarateMan.HonkiSoundType.SeriousModeHit;
         public float HitExpressionLength = 2f;
         static float ItemHitNori = 0f;
 
@@ -669,6 +671,8 @@ namespace HeavenStudio.Games.Scripts_KarateMan
 
         int ItemPunchHand()
         {
+            if (KarateMan.HonkiMode && KarateMan.HighFlowPunch)
+                return 4;
             switch (type)
             {
                 case ItemType.Rock:
@@ -679,14 +683,14 @@ namespace HeavenStudio.Games.Scripts_KarateMan
                 case ItemType.KickBarrel:
                     return 2;
                 case ItemType.Ball:
-                    if ((KarateMan.instance.IsNoriActive && KarateMan.instance.NoriPerformance >= 0.6f || KarateMan.HonkiMode) && KarateMan.HighFlowPunch)
+                    if ((KarateMan.instance.IsNoriActive && KarateMan.instance.NoriPerformance >= 0.6f) && KarateMan.HighFlowPunch)
                         return 4;
                     else if (KarateMan.instance.IsNoriActive && KarateMan.HighFlowPunch)
                         return 0;
                     else
                         return 2;
                 default:
-                    if ((KarateMan.instance.IsNoriActive && KarateMan.instance.NoriPerformance >= 0.6f || KarateMan.HonkiMode) && KarateMan.HighFlowPunch)
+                    if ((KarateMan.instance.IsNoriActive && KarateMan.instance.NoriPerformance >= 0.6f) && KarateMan.HighFlowPunch)
                         return 4;
                     else
                         return 0;
@@ -836,7 +840,7 @@ namespace HeavenStudio.Games.Scripts_KarateMan
                             Jukebox.PlayOneShotGame("karateman/hitNoNori", forcePlay: true);
                             if (startBeat >= KarateMan.instance.HonkiChanceStart && startBeat <= KarateMan.instance.HonkiChanceStart + KarateMan.instance.HonkiChanceLength)
                             {
-                                KarateMan.instance.ActivateHonki(startBeat, false, false, false);
+                                KarateMan.instance.ActivateHonki(startBeat, deactivateHonki, honkiSound);
                                 joe.Punch(2);
                             }
                             else
@@ -851,7 +855,7 @@ namespace HeavenStudio.Games.Scripts_KarateMan
                     var beat = Conductor.instance.songPositionInBeats;
                     if (beat >= kar.HonkiChanceStart && beat <= kar.HonkiChanceStart + kar.HonkiChanceLength)
                     {
-                        KarateMan.instance.ActivateHonki(startBeat, false, false, false);
+                        KarateMan.instance.ActivateHonki(startBeat, deactivateHonki, honkiSound);
                         straight = joe.Punch(2);
                     }
                     transform.rotation = Quaternion.Euler(0, 0, transform.rotation.eulerAngles.z - 30f);

@@ -48,11 +48,11 @@ namespace HeavenStudio.Games.Loaders
                     resizable = true,
                     hidden = true
                 },
-            });
-            /*new List<string>() {"ntr", "normal"},
+            },
+            new List<string>() {"ntr", "normal"},
             "ntrlifting", "jp",
-            new List<string>() {"en", "jp"}
-            );*/
+            new List<string>() {"en", "jp", "ko"}
+            );
         }
     }
 }

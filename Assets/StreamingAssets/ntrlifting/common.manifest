@@ -1,21 +1,62 @@
 ManifestFileVersion: 0
-CRC: 549397105
+CRC: 975255815
 Hashes:
   AssetFileHash:
     serializedVersion: 2
-    Hash: 37e16cb7281221194da2b5f00b0b9752
+    Hash: 6205e6ea9b21ff850d91498589125c73
   TypeTreeHash:
     serializedVersion: 2
-    Hash: 9a2ca7bdbd1871f7131daf57de908e0c
+    Hash: fd281e67485b327c24c8408f4de7b131
 HashAppended: 0
 ClassTypes:
+- Class: 1
+  Script: {instanceID: 0}
+- Class: 4
+  Script: {instanceID: 0}
+- Class: 21
+  Script: {instanceID: 0}
+- Class: 28
+  Script: {instanceID: 0}
+- Class: 48
+  Script: {instanceID: 0}
+- Class: 74
+  Script: {instanceID: 0}
 - Class: 83
   Script: {instanceID: 0}
-SerializeReferenceClassIdentifiers: []
+- Class: 91
+  Script: {instanceID: 0}
+- Class: 95
+  Script: {instanceID: 0}
+- Class: 114
+  Script: {fileID: 11500000, guid: 54588eb7ee0680643aeaf61dcf609903, type: 3}
+- Class: 114
+  Script: {fileID: 11500000, guid: 6b323a3095c4c2e4db991ebafc1384cc, type: 3}
+- Class: 114
+  Script: {fileID: 11500000, guid: 924b8b91d38165d49bde41b195970f76, type: 3}
+- Class: 114
+  Script: {fileID: 11500000, guid: 066a41e004f415b4eb74d5e61a2aadbe, type: 3}
+- Class: 114
+  Script: {fileID: 11500000, guid: 45eb7daf344474546ba5079bf18eae01, type: 3}
+- Class: 114
+  Script: {fileID: 11500000, guid: b0cca3244f403c24f819a870f31cdc29, type: 3}
+- Class: 114
+  Script: {fileID: 11500000, guid: 848efddf5f5eaa94eacf8601e36f81bf, type: 3}
+- Class: 115
+  Script: {instanceID: 0}
+- Class: 212
+  Script: {instanceID: 0}
+- Class: 213
+  Script: {instanceID: 0}
+SerializeReferenceClassIdentifiers:
+- AssemblyName: Assembly-CSharp
+  ClassName: HeavenStudio.Games.Minigame/Eligible
 Assets:
+- Assets/Resources/Sfx/games/spaceSoccer/down.ogg
 - Assets/Resources/Sfx/games/spaceSoccer/dispenseTumble2.ogg
 - Assets/Resources/Sfx/games/spaceSoccer/jetStart.ogg
+- Assets/Resources/Games/spaceSoccer.prefab
 - Assets/Resources/Sfx/games/spaceSoccer/dispenseTumble6.ogg
+- Assets/Resources/Sfx/games/spaceSoccer/dispenseTumble6B.ogg
 - Assets/Resources/Sfx/games/spaceSoccer/dispenseTumble2B.ogg
 - Assets/Resources/Sfx/games/spaceSoccer/jetLong.ogg
 - Assets/Resources/Sfx/games/spaceSoccer/jetSpeedUp.ogg
@@ -23,10 +64,12 @@ Assets:
 - Assets/Resources/Sfx/games/spaceSoccer/dispenseTumble3.ogg
 - Assets/Resources/Sfx/games/spaceSoccer/dispenseNoise.ogg
 - Assets/Resources/Sfx/games/spaceSoccer/highKickToeBallHit2.ogg
+- Assets/Resources/Sfx/games/spaceSoccer/and.ogg
 - Assets/Resources/Sfx/games/spaceSoccer/jetShort.ogg
 - Assets/Resources/Sfx/games/spaceSoccer/highKickToeBallHit1.ogg
 - Assets/Resources/Sfx/games/spaceSoccer/dispenseTumble4.ogg
 - Assets/Resources/Sfx/games/spaceSoccer/ballHit.ogg
-- Assets/Resources/Sfx/games/spaceSoccer/dispenseTumble5.ogg
+- Assets/Resources/Sfx/games/spaceSoccer/andAlt.ogg
 - Assets/Resources/Sfx/games/spaceSoccer/missNeutral.wav
+- Assets/Resources/Sfx/games/spaceSoccer/dispenseTumble5.ogg
 Dependencies: []
