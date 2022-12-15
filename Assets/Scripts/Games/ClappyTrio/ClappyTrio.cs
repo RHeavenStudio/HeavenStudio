@@ -14,11 +14,12 @@ namespace HeavenStudio.Games.Loaders
             {
                 new GameAction("sign", "Sign Animation")
                 {
-                    function = delegate { var e = eventCaller.currentEntity; ClappyTrio.instance.SignAnime(e.beat, e["type"]); },
+                    function = delegate { var e = eventCaller.currentEntity; ClappyTrio.instance.SignAnime(e.beat, e["type"], e["toggle"]); },
                     defaultLength = 1f,
                     parameters = new List<Param>()
                     {
-                        new Param("type", ClappyTrio.SignType.FallDown, "Sign Anime", "The animation the sign will have")
+                        new Param("type", ClappyTrio.SignType.FallDown, "Sign Anime", "The animation the sign will have"),
+                        new Param("toggle", false, "Instant", "Skip the animation and instantly put the sign in a state"),
                     },
                 },
                 new GameAction("clap", "Clap")
@@ -83,7 +84,8 @@ namespace HeavenStudio.Games
         public int missBopCount;
 
         private ClappyTrioPlayer ClappyTrioPlayer;
-        public Animator Sign;
+        public Animator SignAnimator;
+        public GameObject Sign;
 
         public bool playerHitLast = false;
 
@@ -109,18 +111,31 @@ namespace HeavenStudio.Games
             }
         }
 
-        public void SignAnime(float beat, int type)
+        public void SignAnime(float beat, int type, bool toggle)
         {
-            switch(type)
+            switch (type)
             {
                 case (int) SignType.RaiseUp:
-                    Sign.DoScaledAnimationAsync("RaiseUp", 0.5f);
+                    if (toggle)
+                        Sign.SetActive(false);
+                    else
+                    {
+                        Sign.SetActive(true);
+                        SignAnimator.DoScaledAnimationAsync("RaiseUp", 0.5f);
+                    }
                     break;
                 default:
-                    Sign.DoScaledAnimationAsync("FallDown", 0.5f);
+                    if (toggle)
+                        Sign.SetActive(true);
+                    else
+                    {
+                        Sign.SetActive(true);
+                        SignAnimator.DoScaledAnimationAsync("FallDown", 0.5f);
+                    }
                     break;
             }
-            Jukebox.PlayOneShotGame("clappyTrio/sign");
+            if (!toggle)
+                Jukebox.PlayOneShotGame("clappyTrio/sign");
         }
         private void InitLions()
         {

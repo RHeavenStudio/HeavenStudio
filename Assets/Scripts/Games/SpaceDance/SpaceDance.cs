@@ -13,24 +13,27 @@ namespace HeavenStudio.Games.Loaders
             {
                 new GameAction("turn right", "Turn Right")
                 {
-                    function = delegate { SpaceDance.instance.DoTurnRight(eventCaller.currentEntity.beat); }, 
-                    defaultLength = 2.0f, 
+                    function = delegate { SpaceDance.instance.DoTurnRight(eventCaller.currentEntity.beat); },
+                    defaultLength = 2.0f,
                 },
                 new GameAction("sit down", "Sit Down")
                 {
-                    function = delegate { SpaceDance.instance.DoSitDown(eventCaller.currentEntity.beat); }, 
-                    defaultLength = 2.0f, 
+                    function = delegate { SpaceDance.instance.DoSitDown(eventCaller.currentEntity.beat); },
+                    defaultLength = 2.0f,
                 },
                 new GameAction("punch", "Punch")
                 {
-                    function = delegate { SpaceDance.instance.DoPunch(eventCaller.currentEntity.beat); }, 
-                    defaultLength = 2.0f, 
+                    function = delegate { SpaceDance.instance.DoPunch(eventCaller.currentEntity.beat); },
+                    defaultLength = 2.0f,
                 },
                 new GameAction("bop", "Bop")
                 {
                     function = delegate { SpaceDance.instance.Bop(eventCaller.currentEntity.beat); },
                 },
-            });
+            },
+            new List<string>() { "agb", "normal" },
+            "agbspacedance", "jp",
+            new List<string>() { "en", "jp" });
         }
     }
 }

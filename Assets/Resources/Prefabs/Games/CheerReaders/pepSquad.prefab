@@ -1455,13 +1455,14 @@ GameObject:
   m_Component:
   - component: {fileID: 8668900588687614320}
   - component: {fileID: 1440199623875397987}
+  - component: {fileID: -3890430144450321374}
   m_Layer: 0
   m_Name: pepSquad
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &8668900588687614320
 Transform:
   m_ObjectHideFlags: 0
@@ -1489,6 +1490,22 @@ SortingGroup:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
+--- !u!114 &-3890430144450321374
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2375284159521911160}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 52fc4bed1556bb449810725f94962f9b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  BaseModel: {fileID: 2375284159521911160}
+  BaseAnim: {fileID: 0}
+  row: 0
+  col: 0
 --- !u!1 &2790848980323074376
 GameObject:
   m_ObjectHideFlags: 0

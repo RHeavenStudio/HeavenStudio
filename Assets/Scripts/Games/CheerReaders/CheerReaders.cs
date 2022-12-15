@@ -46,32 +46,35 @@ namespace HeavenStudio.Games
             // c  c  c  c 
             // c  c  c  c  
             // c  c  c  P  
+            // char poses
             chars = new RvlCharacter[4, 3];
             float RADIUS = 2.75f;
             float scale = 1.0f;
             int sorting = 10;
+            //set our start position (at Mako + 2*radius to the right)
             Vector3 spawnPos = SpawnRoot.position + new Vector3(-RADIUS * 3, 0);
             for (int y = 0; y < 3; y++)
             {
                 for (int x = 0; x < 4; x++)
                 {
                     //on x-axis we go left to right
-                    spawnPos += new Vector3(RADIUS * scale, 0);
-                    if (!(y == 0 && x == 2)) //don't spawn at the player's position
+                    spawnPos += new Vector3(2.75f * scale, 0);
+                    if (!(y == 0 && x == 3)) //don't spawn at the player's position
                     {
                         GameObject mobj = Instantiate(PepSquadMember, SpawnRoot.parent);
-                        RvlCharacter character = mobj.GetComponent<RvlCharacter>();
+                        RvlCharacter member = mobj.GetComponent<RvlCharacter>();
                         mobj.GetComponent<SortingGroup>().sortingOrder = sorting;
                         mobj.transform.localPosition = new Vector3(spawnPos.x, spawnPos.y, spawnPos.z);
                         mobj.transform.localScale = new Vector3(scale, scale);
-                        character.row = y;
-                        character.col = x;
-                        chars[x, y] = character;
+                        member.row = y;
+                        member.col = x;
+                        chars[x, y] = member;
                     }
-                    scale -= 0.1f;
-                    spawnPos = SpawnRoot.position - new Vector3(RADIUS * 3 * scale, -RADIUS / 3.75f * (y + 1), -RADIUS / 5f * (y + 1));
-                    sorting--;
                 }
+                // on the y-axis we go front to back (player to the rear)
+                //scale -= 0.1f;
+                spawnPos = SpawnRoot.position - new Vector3(RADIUS * 3 * scale, -RADIUS / 1.75f * (y + 1), -RADIUS / 5f * (y + 1));
+                sorting--;
             }
 
             // Update is called once per frame
