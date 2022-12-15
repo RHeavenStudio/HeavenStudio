@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEditor;
 using UnityEngine;
+using UnityEngine.Rendering;
 
 namespace Bread2Unity
 {
@@ -22,6 +23,12 @@ namespace Bread2Unity
                 var bccadPrefab = new BccadPrefab(prefabData, bccad, texture);
                 var newPrefab = bccadPrefab.ParentObject;
                 newPrefab.transform.SetParent(root.transform);
+                if (defaultSprite.parts.Count() > 1 ||
+                    prefabData.Animations.Any(anim => anim.Steps.Any(step => step.BccadSprite.parts.Count > 1)))
+                {
+                    newPrefab.AddComponent(typeof(SortingGroup));
+                }
+
                 var sprites = Resources.LoadAll<Sprite>(spritesFolderPath).ToList()
                     .FindAll(s => s.name.Contains(texture.name));
                 for (var index = 0; index < defaultSprite.parts.Count; index++)
