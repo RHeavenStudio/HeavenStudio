@@ -23,7 +23,10 @@ namespace HeavenStudio.Games.Loaders
                     function = delegate { BlueBear.instance.SpawnTreat(eventCaller.currentEntity.beat, true); }, 
                     defaultLength = 4,
                 },
-            });
+            },
+            new List<string>() { "agb", "normal" },
+            "ctrbear", "en",
+            new List<string>() {});
         }
     }
 }

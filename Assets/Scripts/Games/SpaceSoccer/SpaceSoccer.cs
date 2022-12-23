@@ -49,7 +49,7 @@ namespace HeavenStudio.Games.Loaders
                     hidden = true
                 },
             },
-            new List<string>() {"ntr", "normal"},
+            new List<string>() {"ntr", "keep"},
             "ntrlifting", "jp",
             new List<string>() {"en", "jp", "ko"}
             );

@@ -73,7 +73,7 @@ namespace HeavenStudio.Games.Loaders
                 }
             },
             new List<string>() {"ntr", "normal"},
-            "ntrdj", "en",
+            "ntrdjschool", "en",
             new List<string>(){}
             );
         }

@@ -37,7 +37,11 @@ namespace HeavenStudio.Games.Loaders
                         new Param("toggle", false, "Applause")
                     }
                 },
-            });
+            },
+            new List<string>() { "agb", "keep" },
+            "agburaomote", "en",
+            new List<string>() {}
+            );
         }
     }
 }

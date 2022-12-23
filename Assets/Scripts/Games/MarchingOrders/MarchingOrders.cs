@@ -98,7 +98,10 @@ namespace HeavenStudio.Games.Loaders
                             new Param("toggle", false, "Female Commandress", "Makes the Commander the Rabbit Girl"),
                         }
                     }
-                });
+                },
+                new List<string>() { "agb", "normal" },
+                "agbmarcher", "jp",
+                new List<string>() { "en", "jp" });
         }
     }
 }

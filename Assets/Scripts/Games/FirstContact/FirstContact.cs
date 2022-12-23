@@ -68,7 +68,11 @@ namespace HeavenStudio.Games.Loaders
                 //{
                 //    new Param("type", FirstContact.VersionOfContact.FirstContact, "Version", "Version of First Contact to play"),
                 //}),
-            });
+            },
+            new List<string>() { "ctr", "repeat" },
+            "ctrinterpreter", "en",
+            new List<string>() {}
+            );
         }
     }
 }

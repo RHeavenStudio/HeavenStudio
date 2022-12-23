@@ -26,7 +26,11 @@ namespace HeavenStudio.Games.Loaders
                     function = delegate { WizardsWaltz.instance.SpawnFlower(eventCaller.currentEntity.beat); }, 
                     defaultLength = 0.5f,
                 },
-            });
+            },
+            new List<string>() { "agb", "repeat" },
+            "agbmahou", "en",
+            new List<string>() { }
+            );
         }
     }
 }

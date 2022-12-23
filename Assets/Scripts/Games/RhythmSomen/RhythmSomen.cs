@@ -30,7 +30,11 @@ namespace HeavenStudio.Games.Loaders
                 {
                     function = delegate { RhythmSomen.instance.DoBell(eventCaller.currentEntity.beat); },
                 },
-            });
+            },
+            new List<string>() { "pco", "normal" },
+            "pcosomen", "en",
+            new List<string>() {}
+            );
         }
     }
 }

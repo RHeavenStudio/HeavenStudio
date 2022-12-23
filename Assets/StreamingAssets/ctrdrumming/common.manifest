@@ -1,0 +1,53 @@
+ManifestFileVersion: 0
+CRC: 373815679
+Hashes:
+  AssetFileHash:
+    serializedVersion: 2
+    Hash: 1e6eb78ccaf126d92bc2eb43146a338c
+  TypeTreeHash:
+    serializedVersion: 2
+    Hash: 24858831cee49b85d2748aa7b285541a
+HashAppended: 0
+ClassTypes:
+- Class: 1
+  Script: {instanceID: 0}
+- Class: 4
+  Script: {instanceID: 0}
+- Class: 21
+  Script: {instanceID: 0}
+- Class: 28
+  Script: {instanceID: 0}
+- Class: 48
+  Script: {instanceID: 0}
+- Class: 74
+  Script: {instanceID: 0}
+- Class: 83
+  Script: {instanceID: 0}
+- Class: 91
+  Script: {instanceID: 0}
+- Class: 95
+  Script: {instanceID: 0}
+- Class: 114
+  Script: {fileID: 11500000, guid: 78423096340cc9740b0a87870976098f, type: 3}
+- Class: 114
+  Script: {fileID: 11500000, guid: 6a4698fb27db1ad4995391c5b6cd1ddb, type: 3}
+- Class: 114
+  Script: {fileID: 11500000, guid: c7db5828bf6ab644c92395762a28c7a8, type: 3}
+- Class: 115
+  Script: {instanceID: 0}
+- Class: 212
+  Script: {instanceID: 0}
+- Class: 213
+  Script: {instanceID: 0}
+SerializeReferenceClassIdentifiers:
+- AssemblyName: Assembly-CSharp
+  ClassName: HeavenStudio.Games.Minigame/Eligible
+- AssemblyName: Assembly-CSharp
+  ClassName: HeavenStudio.Games.Scripts_DrummingPractice.Drummer/MiiFace
+Assets:
+- Assets/Resources/Sfx/games/drummingPractice/hit.wav
+- Assets/Resources/Sfx/games/drummingPractice/miss.ogg
+- Assets/Resources/Games/drummingPractice.prefab
+- Assets/Resources/Sfx/games/drummingPractice/prepare.ogg
+- Assets/Resources/Sfx/games/drummingPractice/drum.ogg
+Dependencies: []

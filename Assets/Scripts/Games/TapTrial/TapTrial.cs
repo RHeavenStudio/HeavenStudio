@@ -80,7 +80,11 @@ namespace HeavenStudio.Games.Loaders
                         new Param("toggle", false, "Exit", "Giraffe will exit the scene"),
                     }
                 }
-            });
+            },
+            new List<string>() { "agb", "normal" },
+            "agbtap", "en",
+            new List<string>() {}
+            );
         }
     }
 }

@@ -57,7 +57,11 @@ namespace HeavenStudio.Games.Loaders
                 {
                     function = delegate { Spaceball.instance.PrepareDispenser(); }, 
                 },
-            });
+            },
+            new List<string>() { "agb", "normal" },
+            "agbbatter", "en",
+            new List<string>() {}
+            );
         }
     }
 }

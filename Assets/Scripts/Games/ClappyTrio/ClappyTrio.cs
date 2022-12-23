@@ -58,7 +58,10 @@ namespace HeavenStudio.Games.Loaders
                     function = delegate { ClappyTrio.instance.Prepare(3); }, 
                     hidden = true
                 },
-            });
+            },
+            new List<string>() { "agb", "normal" },
+            "agbclap", "en",
+            new List<string>() {});
         }
     }
 }

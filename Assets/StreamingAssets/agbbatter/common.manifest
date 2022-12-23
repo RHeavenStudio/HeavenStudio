@@ -1,0 +1,62 @@
+ManifestFileVersion: 0
+CRC: 3095913502
+Hashes:
+  AssetFileHash:
+    serializedVersion: 2
+    Hash: cd2fb22b499cc92df32f67105cab1e61
+  TypeTreeHash:
+    serializedVersion: 2
+    Hash: ccdea4f11573be886f8e89f61c29f052
+HashAppended: 0
+ClassTypes:
+- Class: 1
+  Script: {instanceID: 0}
+- Class: 4
+  Script: {instanceID: 0}
+- Class: 21
+  Script: {instanceID: 0}
+- Class: 28
+  Script: {instanceID: 0}
+- Class: 48
+  Script: {instanceID: 0}
+- Class: 74
+  Script: {instanceID: 0}
+- Class: 83
+  Script: {instanceID: 0}
+- Class: 91
+  Script: {instanceID: 0}
+- Class: 95
+  Script: {instanceID: 0}
+- Class: 114
+  Script: {fileID: 11500000, guid: 49dd9168d46a2ad41a47802c26b5dbb3, type: 3}
+- Class: 114
+  Script: {fileID: 11500000, guid: 9d5579033013148498d767bb11e43f60, type: 3}
+- Class: 114
+  Script: {fileID: 11500000, guid: 09594549474ef4447a9f830333a42aa9, type: 3}
+- Class: 114
+  Script: {fileID: 11500000, guid: aae9454ad2ee24c4e9988472183c51fd, type: 3}
+- Class: 114
+  Script: {fileID: 11500000, guid: fdd5be636e18a974c94d01c287c07dd7, type: 3}
+- Class: 115
+  Script: {instanceID: 0}
+- Class: 198
+  Script: {instanceID: 0}
+- Class: 199
+  Script: {instanceID: 0}
+- Class: 212
+  Script: {instanceID: 0}
+- Class: 213
+  Script: {instanceID: 0}
+SerializeReferenceClassIdentifiers:
+- AssemblyName: Assembly-CSharp
+  ClassName: HeavenStudio.Games.Minigame/Eligible
+- AssemblyName: Assembly-CSharp
+  ClassName: HeavenStudio.Games.Scripts_Spaceball.SpaceballPlayer/SpriteSheet
+Assets:
+- Assets/Resources/Sfx/games/spaceball/swing.wav
+- Assets/Resources/Games/spaceball.prefab
+- Assets/Resources/Sfx/games/spaceball/fall.wav
+- Assets/Resources/Sfx/games/spaceball/shoot.ogg
+- Assets/Resources/Sfx/games/spaceball/hit.ogg
+- Assets/Resources/Sfx/games/spaceball/longShoot.ogg
+Dependencies: []

@@ -34,10 +34,10 @@ namespace HeavenStudio.Games.Loaders
                     resizable = true,
                 }
 
-            }
-            //new List<string>() {"ntr", "aim"},
-            //"ntrcoin", "en",
-            //new List<string>() {}
+            },
+            new List<string>() {"ntr", "keep"},
+            "ntrtunnel", "en",
+            new List<string>() { "en", "jp", "ko" }
             );
         }
     }

@@ -28,7 +28,11 @@ namespace HeavenStudio.Games.Loaders
                         new Param("type", new EntityTypes.Integer(-24, 24, 0), "Semitones", "The number of semitones up or down this note should be pitched")
                     } 
                 },
-            });
+            },
+            new List<string>() { "ntr", "aim" },
+            "ntrassembly", "en",
+            new List<string>() {}
+            );
         }
     }
 }

@@ -73,7 +73,11 @@ namespace HeavenStudio.Games.Loaders
                         new Param("type2", RotateMode.Fast, "Rotation Mode", "The rotation mode to use")
                     } 
                 },
-            });
+            },
+            new List<string>() { "ntr", "keep" },
+            "ntrpingpong", "en",
+            new List<string>() {}
+            );
         }
     }
 }

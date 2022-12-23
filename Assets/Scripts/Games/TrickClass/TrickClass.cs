@@ -33,7 +33,11 @@ namespace HeavenStudio.Games.Loaders
                     resizable = true, 
                     hidden = true
                 },
-            });
+            },
+            new List<string>() { "pco", "normal" },
+            "pcotrick", "en",
+            new List<string>() {}
+            );
         }
     }
 }

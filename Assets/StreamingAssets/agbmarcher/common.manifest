@@ -1,18 +1,46 @@
 ManifestFileVersion: 0
-CRC: 74449943
+CRC: 4081915265
 Hashes:
   AssetFileHash:
     serializedVersion: 2
-    Hash: a2c4e732642fece9dcba40ab50e8aac3
+    Hash: 990fb4dd6ee9b648c6aea20612169e38
   TypeTreeHash:
     serializedVersion: 2
-    Hash: 9a2ca7bdbd1871f7131daf57de908e0c
+    Hash: ca7f2d214093f95dbd3b19fa2cbf7051
 HashAppended: 0
 ClassTypes:
+- Class: 1
+  Script: {instanceID: 0}
+- Class: 4
+  Script: {instanceID: 0}
+- Class: 21
+  Script: {instanceID: 0}
+- Class: 28
+  Script: {instanceID: 0}
+- Class: 48
+  Script: {instanceID: 0}
+- Class: 74
+  Script: {instanceID: 0}
 - Class: 83
+  Script: {instanceID: 0}
+- Class: 91
+  Script: {instanceID: 0}
+- Class: 95
+  Script: {instanceID: 0}
+- Class: 114
+  Script: {fileID: 11500000, guid: 88781b295be0fe245b61208a9de66199, type: 3}
+- Class: 115
+  Script: {instanceID: 0}
+- Class: 212
+  Script: {instanceID: 0}
+- Class: 213
   Script: {instanceID: 0}
 SerializeReferenceClassIdentifiers: []
 Assets:
+- Assets/Resources/Sfx/games/marchingOrders/halt2.ogg
 - Assets/Resources/Sfx/games/marchingOrders/marchStart.ogg
+- Assets/Resources/Sfx/games/marchingOrders/turnAction.wav
+- Assets/Resources/Games/marchingOrders.prefab
 - Assets/Resources/Sfx/games/marchingOrders/step1.ogg
+- Assets/Resources/Sfx/games/marchingOrders/turnActionPlayer.wav
 Dependencies: []

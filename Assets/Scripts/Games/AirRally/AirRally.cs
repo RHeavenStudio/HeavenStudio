@@ -58,7 +58,7 @@ namespace HeavenStudio.Games.Loaders
                 },
             },
             new List<string>() { "rvl", "keep" },
-            "rvlbadminton", "jp",
+            "rvlbadminton", "en",
             new List<string>() { "en", "jp" }
             );
         }

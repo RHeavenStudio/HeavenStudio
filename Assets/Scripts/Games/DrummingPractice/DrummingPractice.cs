@@ -52,7 +52,11 @@ namespace HeavenStudio.Games.Loaders
                         new Param("colorC", new Color(1, 247/255f, 0), "Streak Color", "The color of streaks that appear on a successful hit")
                     }
                 }
-            });
+            },
+            new List<string>() { "ctr", "normal" },
+            "ctrdrumming", "en",
+            new List<string>() {}
+            );
         }
     }
 }
