@@ -333,35 +333,6 @@ namespace HeavenStudio.Games.Scripts_KarateMan
                         Jukebox.PlayOneShotGame("karateman/bombBreak", volume: 0.25f);
                         return;
                     }
-                    else if ((KarateMan.instance.IsNoriActive && KarateMan.instance.NoriPerformance >= 0.6f || KarateMan.HonkiMode) && KarateMan.NoriBreakSound && ItemBreakable() && cond.songPositionInBeats >= startBeat + curveTargetBeat && CurrentCurve.GetApproximateLength() > 16)
-                    {
-                        ParticleSystem p = Instantiate(HitParticles[2], CurrentCurve.GetPoint(1f), Quaternion.identity, KarateMan.instance.ItemHolder);
-                        p.Play();
-
-                        GameObject.Destroy(ShadowInstance.gameObject);
-                        GameObject.Destroy(gameObject);
-
-                        if (cond.songPositionInBeats >= startBeat)
-                        {
-                            switch (type)
-                            {
-                                case ItemType.Pot:
-                                    Jukebox.PlayOneShotGame("karateman/potBreak", volume: 0.60f);
-                                    break;
-                                case ItemType.Bulb:
-                                    Jukebox.PlayOneShotGame("karateman/lightbulbBreak", volume: 0.65f);
-                                    break;
-                                case ItemType.Rock:
-                                case ItemType.TacoBell:
-                                    Jukebox.PlayOneShotGame("karateman/rockBreak", volume: 0.75f);
-                                    break;
-                                case ItemType.Ball:
-                                    Jukebox.PlayOneShotGame("karateman/soccerBreak", volume: 0.75f);
-                                    break;
-                            }
-                        }
-                        return;
-                    }
                     else if (cond.songPositionInBeats >= startBeat + Mathf.Max(2f, curveTargetBeat) || CurrentCurve == null)
                     {
 
@@ -469,6 +440,32 @@ namespace HeavenStudio.Games.Scripts_KarateMan
                 hitMark.transform.position = HitPosition[path].position;
             
             hitMark.SetActive(true);
+        }
+
+        void DestoryPot()
+        {
+            ParticleSystem p = Instantiate(HitParticles[2], CurrentCurve.GetPoint(1f), Quaternion.identity, KarateMan.instance.ItemHolder);
+            p.Play();
+
+            GameObject.Destroy(ShadowInstance.gameObject);
+            GameObject.Destroy(gameObject);
+
+            switch (type)
+            {
+                case ItemType.Pot:
+                    Jukebox.PlayOneShotGame("karateman/potBreak", volume: 0.60f);
+                    break;
+                case ItemType.Bulb:
+                    Jukebox.PlayOneShotGame("karateman/lightbulbBreak", volume: 0.65f);
+                    break;
+                case ItemType.Rock:
+                case ItemType.TacoBell:
+                    Jukebox.PlayOneShotGame("karateman/rockBreak", volume: 0.75f);
+                    break;
+                case ItemType.Ball:
+                    Jukebox.PlayOneShotGame("karateman/soccerBreak", volume: 0.75f);
+                    break;
+            }
         }
 
         //handles hitsound and particles
@@ -662,10 +659,16 @@ namespace HeavenStudio.Games.Scripts_KarateMan
 
                     break;
             }
-
             if (KarateMan.instance.IsNoriActive && KarateMan.instance.NoriPerformance >= 0.6f)
                 ItemHitNori = Conductor.instance.songPositionInBeats + curveTargetBeat + 1f;
             startBeat = Conductor.instance.songPositionInBeats;
+            if ((KarateMan.instance.IsNoriActive && KarateMan.instance.NoriPerformance >= 0.6f || KarateMan.HonkiMode) && KarateMan.NoriBreakSound && ItemBreakable())
+            {
+                BeatAction.New(gameObject, new List<BeatAction.Action>()
+                {
+                    new BeatAction.Action(startBeat + 1f + KarateMan.PotBreakDelay, delegate { DestoryPot(); })
+                });
+            }
             status = FlyStatus.Hit;
         }
 

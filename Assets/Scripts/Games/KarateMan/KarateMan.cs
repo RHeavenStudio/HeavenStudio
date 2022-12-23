@@ -120,7 +120,7 @@ namespace HeavenStudio.Games.Loaders
                 },
                 new GameAction("set gameplay modifiers", "Gameplay Modifiers")
                 {
-                    function = delegate { var e = eventCaller.currentEntity; KarateMan.instance.SetGameplayMods(e.beat, e["type"], e["type2"], e["toggle"], e["toggle2"], e["toggle3"], e["type3"]); }, 
+                    function = delegate { var e = eventCaller.currentEntity; KarateMan.instance.SetGameplayMods(e.beat, e["type"], e["type2"], e["toggle"], e["toggle2"], e["toggle3"], e["type3"], e["valA"]); }, 
                     defaultLength = 0.5f,
                     parameters = new List<Param>()
                     {
@@ -129,7 +129,8 @@ namespace HeavenStudio.Games.Loaders
                         new Param("toggle", true, "Enable Combos", "Allow the player to combo? (Contextual combos will still be allowed even when off)"),
                         new Param("toggle2", false, "Pot Break Sound", "Should there be a breaking sound when punching an object with high flow?"),
                         new Param("toggle3", false, "High Flow Punch", "Determines if Joe punches with the right hand when having high flow"),
-                        new Param("type3", KarateMan.SoundEffectTypes.Megamix3DS, "Sound Effect Ver", "The version of sounds that will play")
+                        new Param("type3", KarateMan.SoundEffectTypes.Megamix3DS, "Sound Effect Ver", "The version of sounds that will play"),
+                        new Param("valA", new EntityTypes.Float(0, 5), "Pot Break Delay", "Sets the pot break delay, used in Tengoku Arcade")
                     }
                 },
                 new GameAction("set background effects", "Background Appearance")
@@ -564,6 +565,7 @@ namespace HeavenStudio.Games
         public static float WantBgChangeStart = Single.MinValue;
         public static float WantBgChangeLength = 0f;
         public static float BopLength = 1f;
+        public static float PotBreakDelay = 0f;
 
         private void Awake()
         {
@@ -1253,7 +1255,7 @@ namespace HeavenStudio.Games
             UpdateFilterColour(bgColour, filterColour);
         }
 
-        public void SetGameplayMods(float beat, int mode, int bg, bool combo, bool noriBreak, bool highFlow, int soundVer)
+        public void SetGameplayMods(float beat, int mode, int bg, bool combo, bool noriBreak, bool highFlow, int soundVer, float breakDelay)
         {
             NoriGO.SetActive(true);
             Nori.SetNoriMode(beat, mode);
@@ -1261,6 +1263,7 @@ namespace HeavenStudio.Games
             NoriBreakSound = noriBreak;
             HighFlowPunch = highFlow;
             SoundEffectsVersion = soundVer;
+            PotBreakDelay = breakDelay;
 
             IsComboEnable = combo;
         }
