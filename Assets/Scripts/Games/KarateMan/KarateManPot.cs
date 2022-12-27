@@ -37,7 +37,7 @@ namespace HeavenStudio.Games.Scripts_KarateMan
         public bool deactivateHonki = false;
         public bool KickBarrelContent = false;
         public int OnHitExpression = (int) KarateMan.KarateManFaces.Normal;
-        public int honkiSound = (int) KarateMan.HonkiSoundType.SeriousModeHit;
+        public int honkiSound = (int) KarateMan.HonkiSoundType.SeriousHit;
         public float HitExpressionLength = 2f;
         static float ItemHitNori = 0f;
 
@@ -666,7 +666,7 @@ namespace HeavenStudio.Games.Scripts_KarateMan
             {
                 BeatAction.New(gameObject, new List<BeatAction.Action>()
                 {
-                    new BeatAction.Action(startBeat + 1f + KarateMan.PotBreakDelay, delegate { DestoryPot(); })
+                    new BeatAction.Action(startBeat + KarateMan.PotBreakDelay, delegate { DestoryPot(); })
                 });
             }
             status = FlyStatus.Hit;

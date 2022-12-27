@@ -101,7 +101,8 @@ namespace HeavenStudio.Games.Loaders
                 },
                 new List<string>() { "agb", "normal" },
                 "agbmarcher", "jp",
-                new List<string>() { "en", "jp" });
+                new List<string>() { "en", "jp" }
+                );
         }
     }
 }
