@@ -1,9 +1,9 @@
 ManifestFileVersion: 0
-CRC: 1529309278
+CRC: 1943351826
 Hashes:
   AssetFileHash:
     serializedVersion: 2
-    Hash: d29ba044111c12821c5ba89d9e3544d5
+    Hash: e1b9f69e4448eeb7996e05c90379d286
   TypeTreeHash:
     serializedVersion: 2
     Hash: 38f5159d7b5bfd1dee453bac07d11419
@@ -44,10 +44,18 @@ SerializeReferenceClassIdentifiers:
   ClassName: HeavenStudio.Games.Minigame/Eligible
 Assets:
 - Assets/Resources/Sfx/games/mrUpbeat/blip.ogg
+- Assets/Resources/Sprites/Games/MrUpbeat/Animations/Fall.anim
+- Assets/Resources/Sprites/Games/MrUpbeat/Animations/BlipAnimator.controller
+- Assets/Resources/Sprites/Games/MrUpbeat/Animations/Step.anim
+- Assets/Resources/Sprites/Games/MrUpbeat/Animations/MrUpbeatAnimator.controller
 - Assets/Resources/Sfx/games/mrUpbeat/metronomeRight.ogg
 - Assets/Resources/Games/mrUpbeat.prefab
+- Assets/Resources/Sprites/Games/MrUpbeat/mrupbeat_main.png
+- Assets/Resources/Sprites/Games/MrUpbeat/Animations/Blip.anim
 - Assets/Resources/Sfx/games/mrUpbeat/applause.ogg
+- Assets/Resources/Sprites/Games/MrUpbeat/Animations/Idle.anim
 - Assets/Resources/Sfx/games/mrUpbeat/metronomeLeft.ogg
 - Assets/Resources/Sfx/games/mrUpbeat/ding.ogg
+- Assets/Resources/Sprites/Games/MrUpbeat/Animations/BlipIdle.anim
 - Assets/Resources/Sfx/games/mrUpbeat/step.ogg
 Dependencies: []

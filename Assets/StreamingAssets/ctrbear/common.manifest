@@ -1,9 +1,9 @@
 ManifestFileVersion: 0
-CRC: 3191745410
+CRC: 1786727348
 Hashes:
   AssetFileHash:
     serializedVersion: 2
-    Hash: 79887e7979459f241251909c8c6d8b66
+    Hash: 519f01f3ea2e8969e3c2bcc1617a46d8
   TypeTreeHash:
     serializedVersion: 2
     Hash: 35766c4e021eaa8c162de5801df9604b
@@ -49,9 +49,30 @@ SerializeReferenceClassIdentifiers:
 - AssemblyName: Assembly-CSharp
   ClassName: HeavenStudio.Games.Minigame/Eligible
 Assets:
+- Assets/Resources/Sprites/Games/BlueBear/Materials/BlueBearCrumb.shader
 - Assets/Resources/Games/blueBear.prefab
+- Assets/Resources/Sprites/Games/BlueBear/Animations/Bags/CakeSquash.anim
+- Assets/Resources/Sprites/Games/BlueBear/Animations/HeadAndBody/BiteR.anim
+- Assets/Resources/Sprites/Games/BlueBear/story.png
+- Assets/Resources/Sprites/Games/BlueBear/Animations/Bags/DonutBag.controller
 - Assets/Resources/Sfx/games/blueBear/chompDonut.ogg
+- Assets/Resources/Sprites/Games/BlueBear/Animations/HeadAndBody/Idle.anim
 - Assets/Resources/Sfx/games/blueBear/chompCake.ogg
+- Assets/Resources/Sprites/Games/BlueBear/Animations/Bags/CakeIdle.anim
+- Assets/Resources/Sprites/Games/BlueBear/Materials/BlueBearCrumb.mat
 - Assets/Resources/Sfx/games/blueBear/donut.ogg
+- Assets/Resources/Sprites/Games/BlueBear/bear.png
+- Assets/Resources/Sprites/Games/BlueBear/Animations/Bags/DonutIdle.anim
+- Assets/Resources/Sprites/Games/BlueBear/Animations/Bags/CakeBag.controller
+- Assets/Resources/Sprites/Games/BlueBear/Animations/Bags/DonutSquash.anim
+- Assets/Resources/Sprites/Games/BlueBear/Animations/Bags/BagHolder.controller
+- Assets/Resources/Sprites/Games/BlueBear/crumb_32x32.png
+- Assets/Resources/Sprites/Games/BlueBear/crumb_8x8.png
+- Assets/Resources/Sprites/Games/BlueBear/crumb_16x16.png
+- Assets/Resources/Sprites/Games/BlueBear/Animations/Bags/Idle.anim
+- Assets/Resources/Sprites/Games/BlueBear/Animations/HeadAndBody/BiteL.anim
+- Assets/Resources/Sprites/Games/BlueBear/Animations/Bags/Squashing.anim
+- Assets/Resources/Sprites/Games/BlueBear/Animations/HeadAndBody/HeadAndBody.controller
+- Assets/Resources/Sprites/Games/BlueBear/Animations/HeadAndBody/Open.anim
 - Assets/Resources/Sfx/games/blueBear/cake.ogg
 Dependencies: []

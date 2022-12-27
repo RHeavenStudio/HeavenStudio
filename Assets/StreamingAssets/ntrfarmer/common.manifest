@@ -1,9 +1,9 @@
 ManifestFileVersion: 0
-CRC: 3059596632
+CRC: 1512021465
 Hashes:
   AssetFileHash:
     serializedVersion: 2
-    Hash: 21c56ef346ae11280d1ba10ea47a8ffa
+    Hash: 10b458235d9040b526d0239f2e81ed54
   TypeTreeHash:
     serializedVersion: 2
     Hash: aeabc832a383dc84a762fc4724547a27
@@ -47,14 +47,33 @@ SerializeReferenceClassIdentifiers:
 - AssemblyName: Assembly-CSharp
   ClassName: HeavenStudio.Games.Minigame/Eligible
 Assets:
+- Assets/Resources/Sprites/Games/CropStomp/Animations/Legs/LiftBack.anim
+- Assets/Resources/Sprites/Games/CropStomp/Animations/Legs/StepBack.anim
 - Assets/Resources/Sfx/games/cropStomp/moleHeh2.ogg
 - Assets/Resources/Sfx/games/cropStomp/moleHeh1.ogg
 - Assets/Resources/Sfx/games/cropStomp/GEUH.ogg
 - Assets/Resources/Sfx/games/cropStomp/veggieMiss.ogg
+- Assets/Resources/Sprites/Games/CropStomp/Animations/Legs/Legs.controller
+- Assets/Resources/Sprites/Games/CropStomp/Animations/Body/Stomp.anim
+- Assets/Resources/Sprites/Games/CropStomp/Animations/Body/Crouch.anim
+- Assets/Resources/Sprites/Games/CropStomp/Animations/Mole/Chuckle.anim
 - Assets/Resources/Sfx/games/cropStomp/moleNyeh.ogg
+- Assets/Resources/Sprites/Games/CropStomp/cropstompspritesheet.png
+- Assets/Resources/Sprites/Games/CropStomp/Animations/Mole/Wiggle.anim
 - Assets/Resources/Sfx/games/cropStomp/veggieKay.ogg
+- Assets/Resources/Sprites/Games/CropStomp/Animations/Body/Raise.anim
 - Assets/Resources/Sfx/games/cropStomp/veggieOh.ogg
 - Assets/Resources/Games/cropStomp.prefab
 - Assets/Resources/Sfx/games/cropStomp/stomp.ogg
 - Assets/Resources/Sfx/games/cropStomp/hmm.ogg
+- Assets/Resources/Sprites/Games/CropStomp/Animations/Body/Body.controller
+- Assets/Resources/Sprites/Games/CropStomp/Animations/Legs/StepFront.anim
+- Assets/Resources/Sprites/Games/CropStomp/Animations/Legs/LiftFront.anim
+- Assets/Resources/Sprites/Games/CropStomp/Animations/Legs/StompBack.anim
+- Assets/Resources/Sprites/Games/CropStomp/Animations/Legs/StompFront.anim
+- Assets/Resources/Sprites/Games/CropStomp/Animations/Mole/Mole.controller
+- Assets/Resources/Sprites/Games/CropStomp/Animations/Body/Idle.anim
+- Assets/Resources/Sprites/Games/CropStomp/Animations/Body/Pick.anim
+- Assets/Resources/Sprites/Games/CropStomp/Animations/Mole/Idle.anim
+- Assets/Resources/Sprites/Games/CropStomp/bg.png
 Dependencies: []

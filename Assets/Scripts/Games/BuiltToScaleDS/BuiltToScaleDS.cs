@@ -30,7 +30,7 @@ namespace HeavenStudio.Games.Loaders
                 },
             },
             new List<string>() { "ntr", "aim" },
-            "ntrassembly", "en",
+            "ntrassemble", "en",
             new List<string>() {}
             );
         }

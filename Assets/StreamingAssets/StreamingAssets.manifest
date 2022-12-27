@@ -1,5 +1,5 @@
 ManifestFileVersion: 0
-CRC: 991542728
+CRC: 1652878569
 AssetBundleManifest:
   AssetBundleInfos:
     Info_0:
@@ -40,7 +40,8 @@ AssetBundleManifest:
       Dependencies: {}
     Info_12:
       Name: agbmarcher/common
-      Dependencies: {}
+      Dependencies:
+        Dependency_0: ctrinterpreter/common
     Info_13:
       Name: agbmarcher/locale.en
       Dependencies: {}
@@ -90,6 +91,7 @@ AssetBundleManifest:
       Name: agbtap/common
       Dependencies:
         Dependency_0: ntridol/common
+        Dependency_1: ctrinterpreter/common
     Info_29:
       Name: agbbatter/common
       Dependencies: {}

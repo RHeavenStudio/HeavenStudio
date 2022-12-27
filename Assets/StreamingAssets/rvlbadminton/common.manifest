@@ -1,12 +1,12 @@
 ManifestFileVersion: 0
-CRC: 849020443
+CRC: 3940838460
 Hashes:
   AssetFileHash:
     serializedVersion: 2
-    Hash: 14d53f8e3558f287ff8014de271b2fb1
+    Hash: 6a52c0cd205b3e95e1f46c88ed336eab
   TypeTreeHash:
     serializedVersion: 2
-    Hash: 23ad057f2907c3dfefd2ca37a876061f
+    Hash: 10b3e57140bd49b75c65ffe83a0944b2
 HashAppended: 0
 ClassTypes:
 - Class: 1
@@ -18,6 +18,8 @@ ClassTypes:
 - Class: 28
   Script: {instanceID: 0}
 - Class: 48
+  Script: {instanceID: 0}
+- Class: 49
   Script: {instanceID: 0}
 - Class: 74
   Script: {instanceID: 0}
@@ -49,29 +51,161 @@ ClassTypes:
   Script: {instanceID: 0}
 SerializeReferenceClassIdentifiers: []
 Assets:
-- Assets/Resources/Games/airRally.prefab
-- Assets/Resources/Sfx/games/airRally/hitForth_Close.ogg
-- Assets/Resources/Sfx/games/airRally/hitForth_Far.ogg
-- Assets/Resources/Sfx/games/airRally/hitBaxter_Farther.ogg
-- Assets/Resources/Sfx/games/airRally/whooshForth_Far.ogg
-- Assets/Resources/Sfx/games/airRally/planesSlowDown.ogg
-- Assets/Resources/Sfx/games/airRally/hitForth_Farthest.ogg
-- Assets/Resources/Sfx/games/airRally/whooshForth_Farthest2.ogg
-- Assets/Resources/Sfx/games/airRally/hitBaxter_Farther2.ogg
-- Assets/Resources/Sfx/games/airRally/planesSpeedUp.ogg
-- Assets/Resources/Sfx/games/airRally/birdieCatch.ogg
-- Assets/Resources/Sfx/games/airRally/whooshForth_Farthest.ogg
-- Assets/Resources/Sfx/games/airRally/hitForth_Far2.ogg
+- Assets/Resources/Sprites/Games/AirRally/hitBaxter_Far2.ogg
+- Assets/Resources/Sprites/Games/AirRally/countIn1.ogg
+- Assets/Resources/Sprites/Games/AirRally/Forthington/Toss/animation_14.004.png
+- Assets/Resources/Sprites/Games/AirRally/baBumBumBum_Farther3.ogg
+- Assets/Resources/Sprites/Games/AirRally/countIn1Farther.ogg
+- Assets/Resources/Sprites/Games/AirRally/planesSpeedUp.ogg
 - Assets/Resources/Sfx/games/airRally/hitBaxter_Farthest2.ogg
+- Assets/Resources/Sfx/games/airRally/hitBaxter_Farther.ogg
+- Assets/Resources/Sprites/Games/AirRally/baBumBumBum_Far2.ogg
+- Assets/Resources/Sprites/Games/AirRally/baBumBumBum_FarAlt1.ogg
+- Assets/Resources/Sprites/Games/AirRally/Baxter/Hit/animation_07.000.png
+- Assets/Resources/Sprites/Games/AirRally/hitBaxter_Far.ogg
+- Assets/Resources/Sprites/Games/AirRally/baBumBumBum_Close4.ogg
+- Assets/Resources/Sprites/Games/AirRally/baBumBumBum_FarAlt2.ogg
+- Assets/Resources/Sprites/Games/AirRally/Cloud 1.mat
+- Assets/Resources/Sprites/Games/AirRally/countIn3Farthest.ogg
+- Assets/Resources/Sfx/games/airRally/planesSpeedUp.ogg
+- Assets/Resources/Sprites/Games/AirRally/nya_Farthest.ogg
+- Assets/Resources/Sprites/Games/AirRally/baBumBumBum_Farthest1.ogg
+- Assets/Resources/Sfx/games/airRally/whooshForth_Farthest.ogg
+- Assets/Resources/Sprites/Games/AirRally/hitForth_Far.ogg
+- Assets/Resources/Sprites/Games/AirRally/hitForth_Farthest.ogg
+- Assets/Resources/Sprites/Games/AirRally/countIn4Far.ogg
+- Assets/Resources/Sprites/Games/AirRally/Forthington/Toss/animation_14.003.png
+- Assets/Resources/Sprites/Games/AirRally/hitBaxter_Farthest2.ogg
+- Assets/Resources/Sprites/Games/AirRally/nya_Farther.ogg
+- Assets/Resources/Sprites/Games/AirRally/countIn1Far.ogg
+- Assets/Resources/Sprites/Games/AirRally/Forthington/Toss/animation_14.001.png
+- Assets/Resources/Sprites/Games/AirRally/countIn4Farther.ogg
+- Assets/Resources/Sprites/Games/AirRally/Baxter/Hit/animation_07.002.png
+- Assets/Resources/Sprites/Games/AirRally/baBumBumBum_Far3.ogg
+- Assets/Resources/Sprites/Games/AirRally/Baxter/CloseRally/Ready/CloseReady.anim
+- Assets/Resources/Sprites/Games/AirRally/Baxter/FarAndFartherRally/Ready/animation_05.001.png
+- Assets/Resources/Sprites/Games/AirRally/baBumBumBum_Far1.ogg
+- Assets/Resources/Sprites/Games/AirRally/Baxter/FarthestRally/Ready/animation_06.011.png
+- Assets/Resources/Sprites/Games/AirRally/AirRally_1.png
+- Assets/Resources/Sfx/games/airRally/whooshForth_Farther.ogg
+- Assets/Resources/Sprites/Games/AirRally/baBumBumBum_Farthest2.ogg
+- Assets/Resources/Sprites/Games/AirRally/Baxter/FarthestRally/Ready/animation_06.002.png
+- Assets/Resources/Sprites/Games/AirRally/Forthington/Forthington.controller
+- Assets/Resources/Sfx/games/airRally/hitForth_Close.ogg
+- Assets/Resources/Sprites/Games/AirRally/Forthington/Hit/animation_13.001.png
+- Assets/Resources/Sprites/Games/AirRally/hitForth_Far2.ogg
+- Assets/Resources/Sprites/Games/AirRally/nya_Close.ogg
+- Assets/Resources/Sprites/Games/AirRally/Baxter/CloseRally/Ready/Hit.anim
+- Assets/Resources/Sprites/Games/AirRally/Forthington/Hit/animation_13.000.png
+- Assets/Resources/Sfx/games/airRally/hitForth_Far.ogg
+- Assets/Resources/Sprites/Games/AirRally/Cloud.mat
+- Assets/Resources/Sprites/Games/AirRally/Forthington/Idle.anim
+- Assets/Resources/Sprites/Games/AirRally/Baxter/FarAndFartherRally/Ready/animation_05.000.png
+- Assets/Resources/Sprites/Games/AirRally/countIn3Farther.ogg
+- Assets/Resources/Sprites/Games/AirRally/whooshForth_Farther2.ogg
+- Assets/Resources/Sprites/Games/AirRally/Baxter/FarAndFartherRally/Ready/animation_05.002.png
+- Assets/Resources/Sprites/Games/AirRally/baBumBumBum_Farther4.ogg
+- Assets/Resources/Sprites/Games/AirRally/baBumBumBum_Close2.ogg
+- Assets/Resources/Sprites/Games/AirRally/Forthington/Toss/animation_14.000.png
+- Assets/Resources/Sprites/Games/AirRally/whooshForth_Far.ogg
+- Assets/Resources/Sprites/Games/AirRally/orig/AirRally_1.png
+- Assets/Resources/Sprites/Games/AirRally/Baxter/FarthestRally/animation_01.000.png
+- Assets/Resources/Sprites/Games/AirRally/Baxter/FarthestRally/Ready/animation_06.004.png
+- Assets/Resources/Sprites/Games/AirRally/baBumBumBum_FarAlt3.ogg
+- Assets/Resources/Sprites/Games/AirRally/Baxter/CloseRally/Ready/animation_04.001.png
+- Assets/Resources/Sprites/Games/AirRally/baBumBumBum_Farthest4.ogg
 - Assets/Resources/Sfx/games/airRally/whooshForth_Farther2.ogg
+- Assets/Resources/Sprites/Games/AirRally/Forthington/TalkShort/TalkShort.anim
+- Assets/Resources/Sprites/Games/AirRally/birdieCatch.ogg
+- Assets/Resources/Sprites/Games/AirRally/Forthington/Ready/animation_12.001.png
+- Assets/Resources/Sprites/Games/AirRally/whooshForth_Close.ogg
+- Assets/Resources/Sprites/Games/AirRally/whooshForth_Farthest.ogg
+- Assets/Resources/Sprites/Games/AirRally/Baxter/Hit/animation_07.003.png
+- Assets/Resources/Sprites/Games/AirRally/Forthington/animation_02.000.png
+- Assets/Resources/Sprites/Games/AirRally/baBumBumBum_FarAlt4.ogg
+- Assets/Resources/Sprites/Games/AirRally/hitForth_Farther.ogg
+- Assets/Resources/Sprites/Games/AirRally/Baxter/FarthestRally/Ready/animation_06.010.png
+- Assets/Resources/Sprites/Games/AirRally/countIn2.ogg
+- Assets/Resources/Sprites/Games/AirRally/Forthington/Hit/Hit.anim
+- Assets/Resources/Sprites/Games/AirRally/hitBaxter_Close.ogg
+- Assets/Resources/Sprites/Games/AirRally/Baxter/Hit/animation_07.005.png
+- Assets/Resources/Sprites/Games/AirRally/Forthington/Ready/animation_12.002.png
+- Assets/Resources/Sfx/games/airRally/whooshForth_Close.ogg
+- Assets/Resources/Sprites/Games/AirRally/countIn1Farthest.ogg
+- Assets/Resources/Sprites/Games/AirRally/Forthington/TalkShort/animation_16.001.png
+- Assets/Resources/Sprites/Games/AirRally/baBumBumBum_Close1.ogg
+- Assets/Resources/Sprites/Games/AirRally/Cloud_1.png
+- Assets/Resources/Sprites/Games/AirRally/Forthington/Ready/Ready.anim
+- Assets/Resources/Sprites/Games/AirRally/Baxter/CloseRally/Ready/animation_04.000.png
+- Assets/Resources/Sprites/Games/AirRally/hitForth_Close.ogg
+- Assets/Resources/Sprites/Games/AirRally/Baxter/Idle/animation_09.000.png
+- Assets/Resources/Sprites/Games/AirRally/Forthington/TalkShort/animation_16.000.png
+- Assets/Resources/Sprites/Games/AirRally/nya_Far.ogg
+- Assets/Resources/Sfx/games/airRally/planesSlowDown.ogg
+- Assets/Resources/Sprites/Games/AirRally/Cloud 2.mat
+- Assets/Resources/Sprites/Games/AirRally/Forthington/Toss/animation_14.002.png
+- Assets/Resources/Sfx/games/airRally/hitBaxter_Farther2.ogg
+- Assets/Resources/Sprites/Games/AirRally/planesSlowDown.ogg
+- Assets/Resources/Sprites/Games/AirRally/Baxter/FarthestRally/Ready/animation_06.001.png
+- Assets/Resources/Sprites/Games/AirRally/whooshForth_Farther.ogg
+- Assets/Resources/Sprites/Games/AirRally/hitBaxter_Farther2.ogg
+- Assets/Resources/Sprites/Games/AirRally/baBumBumBum_Close3.ogg
+- Assets/Resources/Sprites/Games/AirRally/whooshForth_Farthest2.ogg
+- Assets/Resources/Sprites/Games/AirRally/Baxter/Hit/animation_07.004.png
+- Assets/Resources/Sprites/Games/AirRally/Forthington/Ready/animation_12.000.png
 - Assets/Resources/Sfx/games/airRally/hitForth_Farther.ogg
 - Assets/Resources/Sfx/games/airRally/hitForth_Farther2.ogg
-- Assets/Resources/Sfx/games/airRally/hitBaxter_Far2.ogg
-- Assets/Resources/Sfx/games/airRally/hitBaxter_Close.ogg
+- Assets/Resources/Sprites/Games/AirRally/Baxter/FarAndFartherRally/Ready/animation_05.004.png
+- Assets/Resources/Sprites/Games/AirRally/Baxter/FarthestRally/Ready/animation_06.009.png
+- Assets/Resources/Sprites/Games/AirRally/hitForth_Farther2.ogg
+- Assets/Resources/Sprites/Games/AirRally/Baxter/CloseRally/Ready/animation_04.002.png
+- Assets/Resources/Sprites/Games/AirRally/countIn2Farthest.ogg
+- Assets/Resources/Sprites/Games/AirRally/countIn4.ogg
 - Assets/Resources/Sfx/games/airRally/hitForth_Farthest2.ogg
 - Assets/Resources/Sfx/games/airRally/hitBaxter_Far.ogg
+- Assets/Resources/Sprites/Games/AirRally/Baxter/FarAndFartherRally/Ready/animation_05.003.png
+- Assets/Resources/Sprites/Games/AirRally/Cloud_2.png
+- Assets/Resources/Sprites/Games/AirRally/countIn3.ogg
+- Assets/Resources/Sprites/Games/AirRally/Baxter/FarAndFartherRally/Ready/FarReady.anim
+- Assets/Resources/Sprites/Games/AirRally/hitBaxter_Farther.ogg
+- Assets/Resources/Games/airRally.prefab
+- Assets/Resources/Sprites/Games/AirRally/Forthington/Hit/animation_13.002.png
+- Assets/Resources/Sprites/Games/AirRally/baBumBumBum_Farther1.ogg
+- Assets/Resources/Sprites/Games/AirRally/baBumBumBum_Farthest3.ogg
+- Assets/Resources/Sprites/Games/AirRally/countIn3Far.ogg
+- Assets/Resources/Sprites/Games/AirRally/countIn2Far.ogg
+- Assets/Resources/Sprites/Games/AirRally/Baxter/FarthestRally/Ready/animation_06.007.png
+- Assets/Resources/Sprites/Games/AirRally/Cloud_0.png
+- Assets/Resources/Sprites/Games/AirRally/Baxter/CloseRally/Ready/Idle.anim
+- Assets/Resources/Sfx/games/airRally/whooshForth_Far.ogg
+- Assets/Resources/Sprites/Games/AirRally/Baxter/CloseRally/Ready/Baxter.controller
+- Assets/Resources/Sfx/games/airRally/hitForth_Farthest.ogg
+- Assets/Resources/Sprites/Games/AirRally/Baxter/FarthestRally/Ready/FarthestReady.anim
+- Assets/Resources/Sprites/Games/AirRally/Baxter/Hit/animation_07.001.png
+- Assets/Resources/Sfx/games/airRally/whooshForth_Farthest2.ogg
+- Assets/Resources/Sprites/Games/AirRally/baBumBumBum_Farther2.ogg
+- Assets/Resources/Sprites/Games/AirRally/Baxter/FarthestRally/Ready/animation_06.006.png
+- Assets/Resources/Sprites/Games/AirRally/data.json
+- Assets/Resources/Sfx/games/airRally/birdieCatch.ogg
+- Assets/Resources/Sprites/Games/AirRally/icon.png
+- Assets/Resources/Sprites/Games/AirRally/Baxter/FarthestRally/Ready/animation_06.005.png
+- Assets/Resources/Sfx/games/airRally/hitForth_Far2.ogg
+- Assets/Resources/Sprites/Games/AirRally/countIn2Farther.ogg
+- Assets/Resources/Sprites/Games/AirRally/AirRally_0.png
+- Assets/Resources/Sprites/Games/AirRally/Baxter/FarthestRally/Ready/animation_06.003.png
+- Assets/Resources/Sfx/games/airRally/hitBaxter_Far2.ogg
+- Assets/Resources/Sprites/Games/AirRally/Baxter/FarthestRally/Ready/animation_06.000.png
+- Assets/Resources/Sprites/Games/AirRally/Baxter/FarthestRally/Ready/animation_06.008.png
+- Assets/Resources/Sfx/games/airRally/hitBaxter_Close.ogg
 - Assets/Resources/Sfx/games/airRally/whooshForth_Far2.ogg
 - Assets/Resources/Sfx/games/airRally/hitBaxter_Farthest.ogg
-- Assets/Resources/Sfx/games/airRally/whooshForth_Farther.ogg
-- Assets/Resources/Sfx/games/airRally/whooshForth_Close.ogg
+- Assets/Resources/Sprites/Games/AirRally/Baxter/Hit/animation_07.006.png
+- Assets/Resources/Sprites/Games/AirRally/hitBaxter_Farthest.ogg
+- Assets/Resources/Sprites/Games/AirRally/countIn4Farthest.ogg
+- Assets/Resources/Sprites/Games/AirRally/templateAirRally.png
+- Assets/Resources/Sprites/Games/AirRally/baBumBumBum_Far4.ogg
+- Assets/Resources/Sprites/Games/AirRally/hitForth_Farthest2.ogg
+- Assets/Resources/Sprites/Games/AirRally/Forthington/Hit/animation_13.004.png
+- Assets/Resources/Sprites/Games/AirRally/whooshForth_Far2.ogg
+- Assets/Resources/Sprites/Games/AirRally/Forthington/Hit/animation_13.003.png
 Dependencies: []

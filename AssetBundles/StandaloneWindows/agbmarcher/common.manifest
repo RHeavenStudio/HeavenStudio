@@ -1,18 +1,123 @@
 ManifestFileVersion: 0
-CRC: 3495726078
+CRC: 4075114428
 Hashes:
   AssetFileHash:
     serializedVersion: 2
-    Hash: fd68986f1eab160bf07aa5705ceb1c9e
+    Hash: 5b242c70bc31194d9139176f078e47b4
   TypeTreeHash:
     serializedVersion: 2
-    Hash: 9a2ca7bdbd1871f7131daf57de908e0c
+    Hash: ca7f2d214093f95dbd3b19fa2cbf7051
 HashAppended: 0
 ClassTypes:
+- Class: 1
+  Script: {instanceID: 0}
+- Class: 4
+  Script: {instanceID: 0}
+- Class: 21
+  Script: {instanceID: 0}
+- Class: 28
+  Script: {instanceID: 0}
+- Class: 48
+  Script: {instanceID: 0}
+- Class: 74
+  Script: {instanceID: 0}
 - Class: 83
+  Script: {instanceID: 0}
+- Class: 91
+  Script: {instanceID: 0}
+- Class: 95
+  Script: {instanceID: 0}
+- Class: 114
+  Script: {fileID: 11500000, guid: 88781b295be0fe245b61208a9de66199, type: 3}
+- Class: 115
+  Script: {instanceID: 0}
+- Class: 212
+  Script: {instanceID: 0}
+- Class: 213
   Script: {instanceID: 0}
 SerializeReferenceClassIdentifiers: []
 Assets:
+- Assets/Resources/Sprites/Games/MarchingOrders/References/cadets/Test.006.09.png
+- Assets/Resources/Sprites/Games/MarchingOrders/References/sarge/Bomb.002.2.png
+- Assets/Resources/Sprites/Games/MarchingOrders/References/sarge/Leader.003.3.png
+- Assets/Resources/Sprites/Games/MarchingOrders/References/reference.png
+- Assets/Resources/Sprites/Games/MarchingOrders/References/cadets/TurnL.002.2.png
+- Assets/Resources/Sprites/Games/MarchingOrders/Animations/Cadets/Bop.anim
+- Assets/Resources/Sprites/Games/MarchingOrders/Marching_Orders_-_Sarge_and_Squadmates.png
+- Assets/Resources/Sprites/Games/MarchingOrders/Animations/Sarge/Anger.anim
+- Assets/Resources/Sprites/Games/MarchingOrders/References/cadets/FootUpL.004.4.png
+- Assets/Resources/Sprites/Games/MarchingOrders/References/cadets/Test.004.07.png
+- Assets/Resources/Sprites/Games/MarchingOrders/References/cadets/FootUpR.004.4.png
+- Assets/Resources/Sprites/Games/MarchingOrders/Animations/Sarge/Sarge.controller
+- Assets/Resources/Sfx/games/marchingOrders/halt2.ogg
+- Assets/Resources/Sprites/Games/MarchingOrders/References/cadets/FootUpR.003.3.png
+- Assets/Resources/Sprites/Games/MarchingOrders/References/cadets/TurnR.003.3.png
+- Assets/Resources/Sprites/Games/MarchingOrders/tex1_512x512_643398E2B2B0B578_13_waifu2x_art_noise3_scale_tta_1.png
 - Assets/Resources/Sfx/games/marchingOrders/marchStart.ogg
+- Assets/Resources/Sprites/Games/MarchingOrders/Animations/Cadets/CadetHead.controller
+- Assets/Resources/Sprites/Games/MarchingOrders/References/cadets/UpBeat.001.1.png
+- Assets/Resources/Sprites/Games/MarchingOrders/References/cadets/FootUpR.002.2.png
+- Assets/Resources/Sprites/Games/MarchingOrders/References/cadets/Test.003.06.png
+- Assets/Resources/Sprites/Games/MarchingOrders/Animations/Cadets/MarchL.anim
+- Assets/Resources/Sprites/Games/MarchingOrders/References/cadets/TurnR.002.2.png
+- Assets/Resources/Sprites/Games/MarchingOrders/Animations/Sarge/Idle.anim
+- Assets/Resources/Sprites/Games/MarchingOrders/References/cadets/Test.001.01.png
+- Assets/Resources/Sprites/Games/MarchingOrders/Animations/Cadets/FaceL.anim
+- Assets/Resources/Sprites/Games/MarchingOrders/References/cadets/UpBeat.000.0.png
+- Assets/Resources/Games/marchingOrders.prefab
+- Assets/Resources/Sprites/Games/MarchingOrders/References/cadets/UpBeat.003.3.png
 - Assets/Resources/Sfx/games/marchingOrders/step1.ogg
-Dependencies: []
+- Assets/Resources/Sprites/Games/MarchingOrders/References/cadets/Test.002.05.png
+- Assets/Resources/Sprites/Games/MarchingOrders/Animations/Sarge/Irritate.anim
+- Assets/Resources/Sfx/games/marchingOrders/turnActionPlayer.wav
+- Assets/Resources/Sprites/Games/MarchingOrders/References/cadets/FootUpL.001.1.png
+- Assets/Resources/Sprites/Games/MarchingOrders/References/cadets/TurnR.001.1.png
+- Assets/Resources/Sprites/Games/MarchingOrders/References/cadets/FootUpR.001.1.png
+- Assets/Resources/Sprites/Games/MarchingOrders/Animations/Cadets/Halt.anim
+- Assets/Resources/Sprites/Games/MarchingOrders/Animations/Cadets/PointR.anim
+- Assets/Resources/Sprites/Games/MarchingOrders/References/sarge/Bomb.004.4.png
+- Assets/Resources/Sprites/Games/MarchingOrders/References/cadets/FootUpL.000.0.png
+- Assets/Resources/Sprites/Games/MarchingOrders/Animations/Cadets/HeadIdle.anim
+- Assets/Resources/Sprites/Games/MarchingOrders/Animations/Cadets/MarchR.anim
+- Assets/Resources/Sprites/Games/MarchingOrders/References/cadets/TurnR.000.0.png
+- Assets/Resources/Sprites/Games/MarchingOrders/References/sarge/Bomb.001.1.png
+- Assets/Resources/Sprites/Games/MarchingOrders/References/cadets/FootUpL.003.3.png
+- Assets/Resources/Sprites/Games/MarchingOrders/Animations/Cadets/Idle.anim
+- Assets/Resources/Sprites/Games/MarchingOrders/References/sarge/LeaderIrritate.001.1.png
+- Assets/Resources/Sprites/Games/MarchingOrders/References/sarge/Bomb.003.3.png
+- Assets/Resources/Sprites/Games/MarchingOrders/References/sarge/Leader.000.0.png
+- Assets/Resources/Sprites/Games/MarchingOrders/Animations/Cadets/FaceR.anim
+- Assets/Resources/Sprites/Games/MarchingOrders/References/cadets/FootUpR.000.0.png
+- Assets/Resources/Sprites/Games/MarchingOrders/References/cadets/Test.005.08.png
+- Assets/Resources/Sprites/Games/MarchingOrders/References/cadets/TurnL.003.3.png
+- Assets/Resources/Sprites/Games/MarchingOrders/Animations/Cadets/PointL.anim
+- Assets/Resources/Sprites/Games/MarchingOrders/References/cadets/Test.000.00.png
+- Assets/Resources/Sprites/Games/MarchingOrders/References/sarge/LeaderIrritate.002.2.png
+- Assets/Resources/Sprites/Games/MarchingOrders/Animations/Cadets/Cadets.controller
+- Assets/Resources/Sprites/Games/MarchingOrders/Marching Orders - Background Sprites
+  (3DS).png
+- Assets/Resources/Sprites/Games/MarchingOrders/tex1_1024x1024_25508A84E62F266F_13_waifu2x_art_noise3_scale_tta_1.png
+- Assets/Resources/Sprites/Games/MarchingOrders/Animations/Sarge/Talk.anim
+- Assets/Resources/Sprites/Games/MarchingOrders/References/sarge/Bomb.000.0.png
+- Assets/Resources/Sfx/games/marchingOrders/turnAction.wav
+- Assets/Resources/Sprites/Games/MarchingOrders/References/sarge/Bomb.005.5.png
+- Assets/Resources/Sprites/Games/MarchingOrders/References/cadets/Test.007.10.png
+- Assets/Resources/Sprites/Games/MarchingOrders/reference.png
+- Assets/Resources/Sprites/Games/MarchingOrders/Animations/Steam/Steam.controller
+- Assets/Resources/Sprites/Games/MarchingOrders/References/cadets/Test.009.12.png
+- Assets/Resources/Sprites/Games/MarchingOrders/Animations/Steam/Steam.anim
+- Assets/Resources/Sprites/Games/MarchingOrders/References/cadets/UpBeat.002.2.png
+- Assets/Resources/Sprites/Games/MarchingOrders/References/cadets/Test.008.11.png
+- Assets/Resources/Sprites/Games/MarchingOrders/References/cadets/FootUpL.002.2.png
+- Assets/Resources/Sprites/Games/MarchingOrders/References/sarge/Bomb.006.6.png
+- Assets/Resources/Sprites/Games/MarchingOrders/References/cadets/TurnL.001.1.png
+- Assets/Resources/Sprites/Games/MarchingOrders/References/sarge/Leader.002.2.png
+- Assets/Resources/Sprites/Games/MarchingOrders/References/cadets/TurnL.000.0.png
+- Assets/Resources/Sprites/Games/MarchingOrders/References/reference2.png
+- Assets/Resources/Sprites/Games/MarchingOrders/References/reference3.png
+- Assets/Resources/Sprites/Games/MarchingOrders/References/sarge/LeaderIrritate.000.0.png
+- Assets/Resources/Sprites/Games/MarchingOrders/Marching_Orders_-_Background_Sprites_GBA.png
+- Assets/Resources/Sprites/Games/MarchingOrders/Animations/Steam/Idle.anim
+- Assets/Resources/Sprites/Games/MarchingOrders/References/sarge/Leader.001.1.png
+Dependencies:
+- C:/Users/Msi Gaming PC/Documents/GitHub/HeavenStudioAmyVer/AssetBundles/StandaloneWindows/ctrinterpreter/common
