@@ -347,14 +347,45 @@ AnimationClip:
     path: orange
     classID: 1
     script: {fileID: 0}
-  m_PPtrCurves:
   - curve:
-    - time: 0
-      value: {fileID: 6708733205153277002, guid: 5a65df7bb864c0248aac9cb3c640784b, type: 3}
-    attribute: m_Sprite
-    path: shoulder
-    classID: 212
+      serializedVersion: 2
+      m_Curve:
+      - serializedVersion: 3
+        time: 0
+        value: 0
+        inSlope: Infinity
+        outSlope: Infinity
+        tangentMode: 103
+        weightedMode: 0
+        inWeight: 0
+        outWeight: 0
+      m_PreInfinity: 2
+      m_PostInfinity: 2
+      m_RotationOrder: 4
+    attribute: m_IsActive
+    path: shoulder/normal
+    classID: 1
     script: {fileID: 0}
+  - curve:
+      serializedVersion: 2
+      m_Curve:
+      - serializedVersion: 3
+        time: 0
+        value: 1
+        inSlope: Infinity
+        outSlope: Infinity
+        tangentMode: 103
+        weightedMode: 0
+        inWeight: 0
+        outWeight: 0
+      m_PreInfinity: 2
+      m_PostInfinity: 2
+      m_RotationOrder: 4
+    attribute: m_IsActive
+    path: shoulder/grabbing
+    classID: 1
+    script: {fileID: 0}
+  m_PPtrCurves: []
   m_SampleRate: 60
   m_WrapMode: 0
   m_Bounds:
@@ -447,12 +478,19 @@ AnimationClip:
       customType: 0
       isPPtrCurve: 0
     - serializedVersion: 2
-      path: 2946186525
-      attribute: 0
+      path: 971876707
+      attribute: 2086281974
       script: {fileID: 0}
-      typeID: 212
-      customType: 23
-      isPPtrCurve: 1
+      typeID: 1
+      customType: 0
+      isPPtrCurve: 0
+    - serializedVersion: 2
+      path: 2189547052
+      attribute: 2086281974
+      script: {fileID: 0}
+      typeID: 1
+      customType: 0
+      isPPtrCurve: 0
     - serializedVersion: 2
       path: 976167654
       attribute: 1
@@ -474,8 +512,7 @@ AnimationClip:
       typeID: 4
       customType: 4
       isPPtrCurve: 0
-    pptrCurveMapping:
-    - {fileID: 6708733205153277002, guid: 5a65df7bb864c0248aac9cb3c640784b, type: 3}
+    pptrCurveMapping: []
   m_AnimationClipSettings:
     serializedVersion: 2
     m_AdditiveReferencePoseClip: {fileID: 0}
@@ -1426,6 +1463,44 @@ AnimationClip:
     attribute: m_LocalPosition.z
     path: armleft/hand
     classID: 4
+    script: {fileID: 0}
+  - curve:
+      serializedVersion: 2
+      m_Curve:
+      - serializedVersion: 3
+        time: 0
+        value: 0
+        inSlope: Infinity
+        outSlope: Infinity
+        tangentMode: 103
+        weightedMode: 0
+        inWeight: 0
+        outWeight: 0
+      m_PreInfinity: 2
+      m_PostInfinity: 2
+      m_RotationOrder: 4
+    attribute: m_IsActive
+    path: shoulder/normal
+    classID: 1
+    script: {fileID: 0}
+  - curve:
+      serializedVersion: 2
+      m_Curve:
+      - serializedVersion: 3
+        time: 0
+        value: 1
+        inSlope: Infinity
+        outSlope: Infinity
+        tangentMode: 103
+        weightedMode: 0
+        inWeight: 0
+        outWeight: 0
+      m_PreInfinity: 2
+      m_PostInfinity: 2
+      m_RotationOrder: 4
+    attribute: m_IsActive
+    path: shoulder/grabbing
+    classID: 1
     script: {fileID: 0}
   m_EulerEditorCurves:
   - curve:

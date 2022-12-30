@@ -10,13 +10,14 @@ namespace HeavenStudio.Games.Loaders
     using static Minigames;
     public static class CtrCatchLoader
     {
+        // minigame menu items
         public static Minigame AddGame(EventCaller eventCaller) {
-            return new Minigame("catchyTune", "Catchy Tune", "B4E6F6", false, false, new List<GameAction>()
+            return new Minigame("catchyTune", "Catchy Tune \n<color=#eb5454>[WIP]</color>", "B4E6F6", false, false, new List<GameAction>()
             {
                 new GameAction("orange", "Orange")
                 {
                     function = delegate {var e = eventCaller.currentEntity; CatchyTune.instance.DropFruit(e.beat, e["side"], false); }, 
-                    defaultLength = 4f,
+                    defaultLength = 5f,
                     parameters = new List<Param>()
                     {
                         new Param("side", CatchyTune.Side.Left, "Side", "The side the orange falls down")
@@ -26,12 +27,23 @@ namespace HeavenStudio.Games.Loaders
                 new GameAction("pineapple", "Pineapple")
                 {
                     function = delegate {var e = eventCaller.currentEntity; CatchyTune.instance.DropFruit(e.beat, e["side"], true); }, 
-                    defaultLength = 8f,
+                    defaultLength = 9f,
                     parameters = new List<Param>()
                     {
                         new Param("side", CatchyTune.Side.Left, "Side", "The side the pineapple falls down")
                     },
                 },
+
+                new GameAction("bop", "Bop")
+                {
+                    function = delegate {var e = eventCaller.currentEntity; CatchyTune.instance.Bop(e.beat, e["left"], e["right"]); }, 
+                    defaultLength = 1f,
+                    parameters = new List<Param>()
+                    {
+                        new Param("left" , true, "Left", "Plalin bops head"),
+                        new Param("right", true, "Right", "Alalin bops head")
+                    },
+                }
             });
         }
     }
@@ -60,11 +72,9 @@ namespace HeavenStudio.Games
         public GameObject pineappleBase;
         public Transform fruitHolder;
 
-        [Header("Curves")]
-        public BezierCurve3D leftCurve;
-        public BezierCurve3D rightCurve;
-
-
+        // when to stop playing the catch animation
+        private float stopCatchLeft = 0f;
+        private float stopCatchRight = 0f;
 
         public static CatchyTune instance;
 
@@ -72,22 +82,6 @@ namespace HeavenStudio.Games
         {
             instance = this;
         }
-
-        // private void Update()
-        // {
-        //     headAndBodyAnim.SetBool("ShouldOpenMouth", foodHolder.childCount != 0);
-
-        //     if (PlayerInput.GetAnyDirectionDown())
-        //     {
-        //         headAndBodyAnim.Play("BiteL", 0, 0);
-        //     }
-        //     else if (PlayerInput.Pressed())
-        //     {
-        //         headAndBodyAnim.Play("BiteR", 0, 0);
-        //     }
-        // }
-
-        List<DynamicBeatmap.DynamicEntity> spawnedOrangeEvents = new List<DynamicBeatmap.DynamicEntity>();
 
         const float orangeoffset = 0.5f;
         const float pineappleoffset = 0.5f;
@@ -117,8 +111,6 @@ namespace HeavenStudio.Games
             //     }
             // }
 
-
-
             // if (PlayerInput.GetAnyDirectionDown())
             // {
             //     plalinAnim.Play("catchOrange", 0, 0);
@@ -127,48 +119,34 @@ namespace HeavenStudio.Games
             // {
             //     alalinAnim.Play("catchOrange", 0, 0);
             // }
+
+            Conductor conductor = Conductor.instance;
+            if (conductor.isPlaying && !conductor.isPaused)
+            {
+                // print(stopCatchLeft + " " + stopCatchRight);
+                // print("current beat: " + conductor.songPositionInBeats);
+                if (stopCatchLeft > 0 && stopCatchLeft <= conductor.songPositionInBeats)
+                {
+                    plalinAnim.SetTrigger("stopCatch");
+                    stopCatchLeft = 0;
+                }
+
+                if (stopCatchRight > 0 && stopCatchRight <= conductor.songPositionInBeats)
+                {
+                    alalinAnim.SetTrigger("stopCatch");
+                    stopCatchRight = 0;
+                }
+
+
+            }
+
+
         }
 
-        
-        // private void LateUpdate()
-        // {
-        //     if (squashing)
-        //     {
-        //         var dState = donutBagAnim.GetCurrentAnimatorStateInfo(0);
-        //         var cState = cakeBagAnim.GetCurrentAnimatorStateInfo(0);
-
-        //         bool noDonutSquash = dState.IsName("DonutIdle");
-        //         bool noCakeSquash = cState.IsName("CakeIdle");
-
-        //         if (noDonutSquash && noCakeSquash)
-        //         {
-        //             squashing = false;
-        //             bagsAnim.Play("Idle", 0, 0);
-        //         }
-        //     }
-        // }
-
-        // public void SpawnTreat(float beat, bool isCake)
-        // {
-        //     var objectToSpawn = isCake ? cakeBase : donutBase;
-        //     var newTreat = GameObject.Instantiate(objectToSpawn, foodHolder);
-            
-        //     var treatComp = newTreat.GetComponent<Treat>();
-        //     treatComp.startBeat = beat;
-        //     treatComp.curve = isCake ? cakeCurve : donutCurve;
-
-        //     newTreat.SetActive(true);
-
-        //     Jukebox.PlayOneShotGame(isCake ? "blueBear/cake" : "blueBear/donut");
-
-        //     SquashBag(isCake);
-        // }
 
         public void DropFruit(float beat, int side, bool isPineapple)
         {
             var objectToSpawn = isPineapple ? pineappleBase : orangeBase;
-
-            print("side = " + side);
 
             if (side == (int)Side.Left || side == (int)Side.Both)
             {
@@ -181,17 +159,6 @@ namespace HeavenStudio.Games
             }
             
 
-            //float fruittimer = isPineapple ? 10f : 6f;
-
-            //if (side == Side.Left || side == Side.Both) {
-            //    PlayerActionEvent fruitcatch = ScheduleInput(beat, fruittimer, InputType.DIRECTION_DOWN, catchOrangeSuccess, isPineapple ? catchPineappleMiss : catchOrangeMiss, isPineapple ? catchPineappleMiss : catchOrangeMiss);
-            //}
-            //if (side == Side.Right || side == Side.Both) {
-            //    PlayerActionEvent fruitcatch = ScheduleInput(beat, fruittimer, InputType.STANDARD_DOWN, isPineapple ? catchPineappleSuccess : catchOrangeSuccess, isPineapple ? catchPineappleMiss : catchOrangeMiss, isPineapple ? catchPineappleMiss : catchOrangeMiss);
-            //}
-
-            
-
         }
 
         public void DropFruitSingle(float beat, bool side, GameObject objectToSpawn)
@@ -202,40 +169,41 @@ namespace HeavenStudio.Games
             fruitComp.startBeat = beat;
             fruitComp.side = side;
             newFruit.SetActive(true);
-
-            print("dropped fruit");
         }
 
-
-        public void catchOrangeSuccess(PlayerActionEvent caller)
+        public void Bop(float beat, bool left, bool right)
         {
-            plalinAnim.Play("catchOrange", 0, 0);
-            Jukebox.PlayOneShotGame("catchyTune/catchSuccess");
+            if (left && stopCatchLeft == 0)
+            {
+                plalinAnim.Play("bop", 0, 0);
+            }
+
+            if (right && stopCatchRight == 0)
+            {
+                alalinAnim.Play("bop", 0, 0);
+            }
         }
-        public void catchOrangeMiss(PlayerActionEvent caller)
+
+
+        public void catchSuccess(bool side, bool isPineapple, float beat)
+        {
+
+            if (side) {
+                alalinAnim.Play("catchOrange", 0, 0);
+                stopCatchRight = beat + 0.9f;
+            }
+            else
+            {
+                plalinAnim.Play("catchOrange", 0, 0);
+                stopCatchLeft = beat + 0.9f;
+            }
+        }
+
+        public void catchMiss(bool side, bool isPineapple)
         {
             return;
         }
 
-        public void catchPineappleSuccess(PlayerActionEvent caller)
-        {
-            //alalinAnim.Play("catchPineapple", 0, 0);
-            Jukebox.PlayOneShotGame("catchyTune/catchSuccess");
-        }
-
-        public void catchPineappleMiss(PlayerActionEvent caller)
-        {
-            return;
-        }
-
-        // void CatchOrangePlalin()
-        // {
-        //     plalinAnim.Play("catchOrange", 0, 0);
-        // }
-        // void CatchOrangeAlalin()
-        // {
-        //     alalinAnim.Play("catchOrange", 0, 0);
-        // }
 
 
     }
