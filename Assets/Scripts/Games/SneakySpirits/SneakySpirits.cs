@@ -6,10 +6,10 @@ using UnityEngine;
 namespace HeavenStudio.Games.Loaders
 {
     using static Minigames;
-    public static class AgbFireworkLoader
+    public static class AgbGhostLoader
     {
         public static Minigame AddGame(EventCaller eventCaller) {
-            return new Minigame("fireworks", "Fireworks \n<color=#eb5454>[INITIALIZATION ONLY]</color>", "0058CE", false, false, new List<GameAction>()
+            return new Minigame("sneakySpirits", "Sneaky Spirits \n<color=#eb5454>[INITIALIZATION ONLY]</color>", "0058CE", false, false, new List<GameAction>()
             {
             });
         }
@@ -18,8 +18,8 @@ namespace HeavenStudio.Games.Loaders
 
 namespace HeavenStudio.Games
 {
-    using Scripts_Fireworks;
-    public class Fireworks : Minigame
+    //using Scripts_SneakySpirits;
+    public class SneakySpirits : Minigame
     {
         // Start is called before the first frame update
         void Awake()
