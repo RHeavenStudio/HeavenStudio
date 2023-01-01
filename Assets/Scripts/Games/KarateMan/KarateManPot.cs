@@ -459,11 +459,19 @@ namespace HeavenStudio.Games.Scripts_KarateMan
                     Jukebox.PlayOneShotGame("karateman/lightbulbBreak", volume: 0.65f);
                     break;
                 case ItemType.Rock:
-                case ItemType.TacoBell:
                     Jukebox.PlayOneShotGame("karateman/rockBreak", volume: 0.75f);
                     break;
                 case ItemType.Ball:
                     Jukebox.PlayOneShotGame("karateman/soccerBreak", volume: 0.75f);
+                    break;
+                case ItemType.Cooking:
+                    Jukebox.PlayOneShotGame("karateman/cookingPotBreak", volume: 0.5f);
+                    break;
+                case ItemType.Alien:
+                    Jukebox.PlayOneShotGame("karateman/alienBreak");
+                    break;
+                case ItemType.TacoBell:
+                    Jukebox.PlayOneShotGame("karateman/tacobellBreak");
                     break;
             }
         }
@@ -735,6 +743,8 @@ namespace HeavenStudio.Games.Scripts_KarateMan
                 case ItemType.Rock:
                 case ItemType.Bulb:
                 case ItemType.Ball:
+                case ItemType.Cooking:
+                case ItemType.Alien:
                 case ItemType.TacoBell:
                     return true;
                 default: // bombs have their own way of breaking

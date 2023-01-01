@@ -17,7 +17,7 @@ namespace HeavenStudio.Games.Loaders
                     defaultLength = 4f,
                     parameters = new List<Param>()
                     {
-                        new Param("type", false, "Firework Type", "Choose a firework")
+                        new Param("type", Fireworks.FireworkType.Normal, "Firework Type", "Choose a firework")
                     },
                 }
             });
@@ -37,6 +37,13 @@ namespace HeavenStudio.Games
 
         public static Fireworks instance;
         // Start is called before the first frame update
+        public enum FireworkType
+        {
+            Normal,
+            Quick,
+            TamakoBomb
+        }
+
         void Awake()
         {
             instance = this;
