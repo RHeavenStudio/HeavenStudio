@@ -32,8 +32,10 @@ namespace HeavenStudio.Games.Loaders
                 },
             },
             new List<string>() { "agb", "normal" },
-            "agbspacedance", "jp",
-            new List<string>() { "en", "jp" });
+            "agbspacedance", "jp", "ver0",
+            new List<string>() { "en", "jp" },
+            new List<string>() {}
+            );
         }
     }
 }

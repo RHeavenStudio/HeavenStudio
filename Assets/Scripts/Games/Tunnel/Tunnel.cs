@@ -36,8 +36,9 @@ namespace HeavenStudio.Games.Loaders
 
             },
             new List<string>() {"ntr", "keep"},
-            "ntrtunnel", "en",
-            new List<string>() { "en", "jp", "ko" }
+            "ntrtunnel", "en", "ver0",
+            new List<string>() { "en", "jp", "ko" },
+            new List<string>() {}
             );
         }
     }

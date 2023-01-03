@@ -75,7 +75,8 @@ namespace HeavenStudio.Games.Loaders
                 },
             },
             new List<string>() { "ntr", "keep" },
-            "ntrpingpong", "en",
+            "ntrpingpong", "en", "ver0",
+            new List<string>() {},
             new List<string>() {}
             );
         }

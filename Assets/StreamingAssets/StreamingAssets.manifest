@@ -1,5 +1,5 @@
 ManifestFileVersion: 0
-CRC: 1652878569
+CRC: 3293131261
 AssetBundleManifest:
   AssetBundleInfos:
     Info_0:
@@ -53,7 +53,8 @@ AssetBundleManifest:
       Dependencies: {}
     Info_16:
       Name: ntrlifting/common
-      Dependencies: {}
+      Dependencies:
+        Dependency_0: ntrlifting/ver.ver0
     Info_17:
       Name: ntrlifting/locale.en
       Dependencies: {}
@@ -152,3 +153,14 @@ AssetBundleManifest:
     Info_48:
       Name: ctrbear/common
       Dependencies: {}
+    Info_49:
+      Name: ntrlifting/ver.ver0
+      Dependencies: {}
+    Info_50:
+      Name: ntrlifting/ver.ver2
+      Dependencies:
+        Dependency_0: ntrlifting/ver.ver0
+    Info_51:
+      Name: ntrlifting/ver.remix6
+      Dependencies:
+        Dependency_0: ntrlifting/ver.ver0

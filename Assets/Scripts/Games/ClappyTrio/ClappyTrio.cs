@@ -60,8 +60,10 @@ namespace HeavenStudio.Games.Loaders
                 },
             },
             new List<string>() { "agb", "normal" },
-            "agbclap", "en",
-            new List<string>() {});
+            "agbclap", "en", "ver0",
+            new List<string>() {},
+            new List<string>() {}
+            );
         }
     }
 }

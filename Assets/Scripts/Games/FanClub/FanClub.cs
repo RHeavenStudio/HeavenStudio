@@ -85,8 +85,9 @@ namespace HeavenStudio.Games.Loaders
                     },
                 },
                 new List<string>() {"ntr", "normal"},
-                "ntridol", "jp",
-                new List<string>() {"jp"}
+                "ntridol", "jp", "ver0",
+                new List<string>() {"jp"},
+                new List<string>() {}
             );
         }
     }

@@ -30,7 +30,8 @@ namespace HeavenStudio.Games.Loaders
                 },
             },
             new List<string>() { "ntr", "normal" },
-            "ntrfarmer", "en",
+            "ntrfarmer", "en", "ver0",
+            new List<string>() {},
             new List<string>() {}
             );
         }

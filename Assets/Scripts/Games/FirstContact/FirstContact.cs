@@ -70,7 +70,8 @@ namespace HeavenStudio.Games.Loaders
                 //}),
             },
             new List<string>() { "ctr", "repeat" },
-            "ctrinterpreter", "en",
+            "ctrinterpreter", "en", "ver0",
+            new List<string>() {},
             new List<string>() {}
             );
         }

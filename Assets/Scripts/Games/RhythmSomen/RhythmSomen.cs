@@ -32,7 +32,8 @@ namespace HeavenStudio.Games.Loaders
                 },
             },
             new List<string>() { "pco", "normal" },
-            "pcosomen", "en",
+            "pcosomen", "en", "ver0",
+            new List<string>() {},
             new List<string>() {}
             );
         }

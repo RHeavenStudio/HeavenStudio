@@ -45,7 +45,7 @@ namespace HeavenStudio.Games.Loaders
                     new GameAction("attention", "Attention...")
                     {
                         function = delegate { var e = eventCaller.currentEntity; MarchingOrders.instance.SargeAttention(e.beat); },
-                        defaultLength = 2.25f,
+                        defaultLength = 2f,
                         inactiveFunction = delegate { var e = eventCaller.currentEntity; MarchingOrders.AttentionSound(e.beat);}
                     },
                     
@@ -100,8 +100,9 @@ namespace HeavenStudio.Games.Loaders
                     }
                 },
                 new List<string>() { "agb", "normal" },
-                "agbmarcher", "jp",
-                new List<string>() { "en", "jp" }
+                "agbmarcher", "jp", "ver0",
+                new List<string>() { "en", "jp" },
+                new List<string>() {}
                 );
         }
     }
@@ -113,9 +114,11 @@ namespace HeavenStudio.Games
     public class MarchingOrders : Minigame
     {
         //code is just copied from other minigame code, i will polish them later
-        [Header("References")]
+        [Header("Sarge")]
         public Animator Sarge;
         public Animator Steam;
+
+        [Header("Cadets")]
         public Animator Cadet1;
         public Animator Cadet2;
         public Animator Cadet3;
@@ -124,9 +127,11 @@ namespace HeavenStudio.Games
         public Animator CadetHead2;
         public Animator CadetHead3;
         public Animator CadetHeadPlayer;
-        
+
+        [Header("Background")]
         public GameObject BGMain1;
         public GameObject BGMain2;
+        public SpriteRenderer Background;
         
         public GameEvent bop = new GameEvent();
         public GameEvent noBop = new GameEvent();

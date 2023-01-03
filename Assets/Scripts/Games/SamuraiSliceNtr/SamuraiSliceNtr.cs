@@ -29,8 +29,9 @@ namespace HeavenStudio.Games.Loaders
                 },
             },
             new List<string>() {"ntr", "normal"},
-            "ntrsamurai", "en",
-            new List<string>() {"en"}
+            "ntrsamurai", "en", "ver0",
+            new List<string>() {"en"},
+            new List<string>() {}
             );
         }
     }

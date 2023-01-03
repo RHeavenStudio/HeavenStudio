@@ -25,8 +25,10 @@ namespace HeavenStudio.Games.Loaders
                 },
             },
             new List<string>() { "agb", "normal" },
-            "ctrbear", "en",
-            new List<string>() {});
+            "ctrbear", "en", "ver0",
+            new List<string>() {},
+            new List<string>() {}
+            );
         }
     }
 }

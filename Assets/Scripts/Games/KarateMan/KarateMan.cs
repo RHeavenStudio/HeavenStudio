@@ -276,8 +276,9 @@ namespace HeavenStudio.Games.Loaders
                 },
             },
             new List<string>() {"agb", "ntr", "rvl", "ctr", "pco", "normal"},
-            "karate", "jp",
-            new List<string>() {"en", "jp", "ko"}
+            "karate", "jp", "ver0",
+            new List<string>() {"en", "jp", "ko"},
+            new List<string>() {}
             );
         }
     }

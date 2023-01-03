@@ -64,7 +64,8 @@ namespace HeavenStudio.Games.Loaders
                 },
             },
             new List<string>() { "rvl", "N/A" },
-            "rvlfork", "en",
+            "rvlfork", "en", "ver0",
+            new List<string>() {},
             new List<string>() {}
             );
         }
