@@ -1379,7 +1379,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   inList: 0
-  lastState: 0
   state:
     gameObject: {fileID: 0}
     early: 0
@@ -1397,8 +1396,6 @@ MonoBehaviour:
   kickTimes: 0
   player: 0
   ball: {fileID: 0}
-  rightLeg: {fileID: 0}
-  leftLeg: {fileID: 0}
 --- !u!95 &8083744449129749329
 Animator:
   serializedVersion: 3
@@ -1769,6 +1766,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   EligibleHits: []
+  scheduledInputs: []
   firstEnable: 0
   ballRef: {fileID: 4170571896107082579}
   kickers:
@@ -1778,6 +1776,7 @@ MonoBehaviour:
   - {fileID: -7443756053782179069, guid: 8a95e066b3562f64eb8ec3bcfe316752, type: 3}
   - {fileID: -3192133289119773823, guid: 8a95e066b3562f64eb8ec3bcfe316752, type: 3}
   ballDispensed: 0
+  bg: {fileID: 5950750627008429748}
 --- !u!1 &3903730068035578964
 GameObject:
   m_ObjectHideFlags: 0
@@ -3881,7 +3880,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   inList: 0
-  lastState: 0
   state:
     gameObject: {fileID: 0}
     early: 0
@@ -3899,8 +3897,6 @@ MonoBehaviour:
   kickTimes: 0
   player: 0
   ball: {fileID: 0}
-  rightLeg: {fileID: 0}
-  leftLeg: {fileID: 0}
 --- !u!95 &1038451285876923768
 Animator:
   serializedVersion: 3
