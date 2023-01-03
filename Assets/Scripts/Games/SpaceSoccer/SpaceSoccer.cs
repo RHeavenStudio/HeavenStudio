@@ -41,6 +41,27 @@ namespace HeavenStudio.Games.Loaders
                     },
                     inactiveFunction = delegate { SpaceSoccer.Voice(eventCaller.currentEntity.beat, eventCaller.currentEntity["type"]); }
                 },
+                new GameAction("set bg color", "Set Background Color")
+                {
+                    function = delegate { var e = eventCaller.currentEntity; SpaceSoccer.instance.ChangeBackgroundColor(0f, e["type"], e["color"]); },
+                    defaultLength = 0.5f,
+                    parameters = new List<Param>()
+                    {
+                        new Param("type", SpaceSoccer.BackgroundColors.Ver0, "Backgrounds", "The normal backgrounds used in the game"),
+                        new Param("color", SpaceSoccer.ver0BgColor, "Custom Color", "Custom background color"),
+                    }
+                },
+                new GameAction("fade bg color", "Fade Background Color")
+                {
+                    function = delegate { var e = eventCaller.currentEntity; SpaceSoccer.instance.ChangeBackgroundColor(e.length, e["type"], e["color"]); },
+                    defaultLength = 1f,
+                    resizable = true,
+                    parameters = new List<Param>()
+                    {
+                        new Param("type", SpaceSoccer.BackgroundColors.Ver0, "Backgrounds", "The normal backgrounds used in the game"),
+                        new Param("color", SpaceSoccer.ver1BgColor, "Background Color", "Changes the background color"),
+                    }
+                },
                 // This is still here for "backwards-compatibility" but is hidden in the editor (it does absolutely nothing however)
                 new GameAction("keep-up", "")
                 {
@@ -50,8 +71,9 @@ namespace HeavenStudio.Games.Loaders
                 },
             },
             new List<string>() {"ntr", "keep"},
-            "ntrlifting", "jp",
-            new List<string>() {"en", "jp", "ko"}
+            "ntrlifting", "jp", Minigames.Version, //"remix6",
+            new List<string>() {"en", "jp", "ko"},
+            new List<string>() {"ver0", "ver2", "remix6"}
             );
         }
     }
@@ -59,6 +81,7 @@ namespace HeavenStudio.Games.Loaders
 
 namespace HeavenStudio.Games
 {
+    using DG.Tweening;
     using Scripts_SpaceSoccer;
 
     public class SpaceSoccer : Minigame
@@ -73,6 +96,13 @@ namespace HeavenStudio.Games
             Toe,
         }
 
+        public enum BackgroundColors
+        {
+            Ver0,
+            Ver1,
+            Custom
+        }
+
         [Header("Components")]
         [SerializeField] private GameObject ballRef;
         [SerializeField] private List<Kicker> kickers;
@@ -82,8 +112,30 @@ namespace HeavenStudio.Games
         [Header("Properties")]
         [SerializeField] private bool ballDispensed; //unused
 
-        public static SpaceSoccer instance { get; private set; }
+        [Header("Backgrounds")]
+        public SpriteRenderer bg;
 
+        Tween bgColorTween;
+
+        public static SpaceSoccer instance { get; private set; }
+        private static Color _ver0BgColor;
+        public static Color ver0BgColor
+        {
+            get
+            {
+                ColorUtility.TryParseHtmlString("#FF7D27", out _ver0BgColor);
+                return _ver0BgColor;
+            }
+        }
+        private static Color _ver1BgColor;
+        public static Color ver1BgColor
+        {
+            get
+            {
+                ColorUtility.TryParseHtmlString("#010161", out _ver1BgColor);
+                return _ver1BgColor;
+            }
+        }
         private void Awake()
         {
             instance = this;
@@ -166,6 +218,36 @@ namespace HeavenStudio.Games
         {
             string[] VoiceClips = { "down", "and", "andAlt", "kick", "highkicktoe1", "highkicktoe3" };
             Jukebox.PlayOneShotGame("spaceSoccer/" + VoiceClips[type], forcePlay:true);
+        }
+
+        public void ChangeBackgroundColor(float beats, int type, Color color)
+        {
+            var seconds = Conductor.instance.secPerBeat * beats;
+            var newColor = color;
+
+            if (bgColorTween != null)
+                bgColorTween.Kill(true);
+
+            switch (type)
+            {
+                case (int) BackgroundColors.Ver0:
+                    newColor = _ver0BgColor;
+                    break;
+                case (int) BackgroundColors.Ver1:
+                    newColor = _ver1BgColor;
+                    break;
+                default:
+                    break;
+            }
+
+            if (seconds == 0)
+            {
+                bg.color = newColor;
+            }
+            else
+            {
+                bgColorTween = bg.DOColor(newColor, seconds);
+            }
         }
     }
 

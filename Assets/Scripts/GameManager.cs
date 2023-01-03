@@ -192,6 +192,7 @@ namespace HeavenStudio
                         Debug.Log("ASYNC loading assetbundle for game " + gameName);
                         StartCoroutine(inf.LoadCommonAssetBundleAsync());
                         StartCoroutine(inf.LoadLocalizedAssetBundleAsync());
+                        StartCoroutine(inf.LoadVersionAssetBundleAsync());
                     }
                     currentPreSwitch++;
                 }
@@ -212,6 +213,7 @@ namespace HeavenStudio
                             Debug.Log("ASYNC loading assetbundle for game " + gameName);
                             StartCoroutine(inf.LoadCommonAssetBundleAsync());
                             StartCoroutine(inf.LoadLocalizedAssetBundleAsync());
+                            StartCoroutine(inf.LoadVersionAssetBundleAsync());
                         }
                     }
                     currentPreEvent++;

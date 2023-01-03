@@ -518,7 +518,7 @@ namespace HeavenStudio.Editor
         private void UpdateEditorStatus(bool updateTime)
         {
             if (discordDuringTesting || !Application.isEditor)
-                DiscordRPC.DiscordRPC.UpdateActivity("リミックスを作っている", $"{remixName}", updateTime);//("In Editor", $"{remixName}", updateTime);
+                DiscordRPC.DiscordRPC.UpdateActivity("In Editor", $"{remixName}", updateTime);
         }
 
         public string GetJson()

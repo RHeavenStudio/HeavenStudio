@@ -19,7 +19,6 @@ namespace HeavenStudio
     
     public class Minigames
     {
-        public string cueLanguage;
         public class Minigame
         {
             public string name;
@@ -32,12 +31,15 @@ namespace HeavenStudio
 
             public List<string> tags;
             public string defaultLocale = "en";
+            public string defaultVersion = "ver0";
             public string wantAssetBundle = "";
             public List<string> supportedLocales;
+            public List<string> gameVersions;
 
             public bool usesAssetBundle => (wantAssetBundle != "");
             public bool hasLocales => (supportedLocales.Count > 0);
-            public bool AssetsLoaded => (((hasLocales && localeLoaded && currentLoadedLocale == defaultLocale) || (!hasLocales)) && commonLoaded);
+            public bool hasVersions => (gameVersions.Count > 0);
+            public bool AssetsLoaded => (((hasLocales && localeLoaded && currentLoadedLocale == defaultLocale) || (hasVersions && versionLoaded && currentLoadedVersion == defaultVersion) || (!hasLocales || !hasVersions)) && commonLoaded);
 
             private AssetBundle bundleCommon = null;
             private bool commonLoaded = false;
@@ -46,8 +48,12 @@ namespace HeavenStudio
             private AssetBundle bundleLocalized = null;
             private bool localeLoaded = false;
             private bool localePreloaded = false;
+            private string currentLoadedVersion = "";
+            private AssetBundle bundleVersion = null;
+            private bool versionLoaded = false;
+            private bool versionPreloaded = false;
 
-            public Minigame(string name, string displayName, string color, bool threeD, bool fxOnly, List<GameAction> actions, List<string> tags = null, string assetBundle = "", string defaultLocale = "en", List<string> supportedLocales = null)
+            public Minigame(string name, string displayName, string color, bool threeD, bool fxOnly, List<GameAction> actions, List<string> tags = null, string assetBundle = "", string defaultLocale = "en", string defaultVersion = "ver0", List<string> supportedLocales = null, List<string> gameVersions = null)
             {
                 this.name = name;
                 this.displayName = displayName;
@@ -60,6 +66,23 @@ namespace HeavenStudio
                 this.wantAssetBundle = assetBundle;
                 this.defaultLocale = defaultLocale;
                 this.supportedLocales = supportedLocales ?? new List<string>();
+                this.defaultVersion = defaultVersion;
+                this.gameVersions = gameVersions;
+            }
+
+            public AssetBundle GetVariationAssetBundle()
+            {
+                if (!hasVersions) return null;
+                if (!usesAssetBundle) return null;
+                if (bundleVersion == null || currentLoadedVersion != defaultVersion) //TEMPORARY: use the game's default locale until we add localization support
+                {
+                    if (versionLoaded) return bundleVersion;
+                    // TODO: try/catch for missing assetbundles
+                    currentLoadedVersion = defaultVersion;
+                    bundleLocalized = AssetBundle.LoadFromFile(Path.Combine(Application.streamingAssetsPath, wantAssetBundle + "/ver." + defaultVersion));
+                    versionLoaded = true;
+                }
+                return bundleVersion;
             }
 
             public AssetBundle GetLocalizedAssetBundle()
@@ -132,6 +155,29 @@ namespace HeavenStudio
                 bundleLocalized = localAssetBundle;
                 currentLoadedLocale = defaultLocale;
                 localeLoaded = true;
+            }
+
+            public IEnumerator LoadVersionAssetBundleAsync()
+            {
+                if (versionPreloaded) yield break;
+                versionPreloaded = true;
+                if (!hasVersions) yield break;
+                if (!usesAssetBundle) yield break;
+                if (versionLoaded && bundleVersion != null && currentLoadedVersion == defaultVersion) yield break;
+
+                AssetBundleCreateRequest asyncBundleRequest = AssetBundle.LoadFromFileAsync(Path.Combine(Application.streamingAssetsPath, wantAssetBundle + "/ver." + defaultVersion));
+                if (versionLoaded && bundleVersion != null && currentLoadedVersion == defaultVersion) yield break;
+                yield return asyncBundleRequest;
+
+                AssetBundle localAssetBundle = asyncBundleRequest.assetBundle;
+                if (versionLoaded && bundleVersion != null && currentLoadedVersion == defaultVersion) yield break;
+                yield return localAssetBundle;
+
+                if (localAssetBundle == null) yield break;
+
+                bundleVersion = localAssetBundle;
+                currentLoadedVersion = defaultVersion;
+                versionLoaded = true;
             }
         }
 
@@ -234,8 +280,10 @@ namespace HeavenStudio
                 
         }
 
+        public static string Version = "remix6";
         public static void Init(EventCaller eventCaller)
         {
+            Version = "remix6";
             eventCaller.minigames = new List<Minigame>()
             {
                 new Minigame("gameManager", "Game Manager", "", false, true, new List<GameAction>()
@@ -264,13 +312,6 @@ namespace HeavenStudio
                             GameManager.instance.ToggleInputs(eventCaller.currentEntity["toggle"]);
                         }
                     ),
-                    //new GameAction("cueLanguage", "Cue Language", 0.5f, false,
-                    //    new List<Param>()
-                    //    {
-                    //        new Param("type", SoundEffects.Langauges.English, "Language", "The language the cues will be in")
-                    //    },
-                    //    delegate { SoundEffects.LanguageChange(this, eventCaller.currentEntity["type"]); }
-                    //),
 
                     // These are still here for backwards-compatibility but are hidden in the editor
                     new GameAction("flash", "", 1f, true, 

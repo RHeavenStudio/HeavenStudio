@@ -99,12 +99,6 @@ namespace HeavenStudio
                 sound += "2";
             Jukebox.PlayOneShot(sound);
         }
-
-        public static void LanguageChange(Minigames minigame, int lang)
-        {
-            string[] languages = { "en", "jp", "ko" };
-            minigame.cueLanguage = languages[lang];
-        }
     }
 
 }
