@@ -33,7 +33,7 @@ namespace HeavenStudio
 
         [Header("Properties")]
         public int currentEvent, currentTempoEvent, currentVolumeEvent, currentSectionEvent,
-            currentPreEvent, currentPreSwitch;
+            currentPreEvent, currentPreSwitch, currentPreSequence;
         public float endBeat;
         public float startOffset;
         public bool playOnStart;
@@ -48,7 +48,7 @@ namespace HeavenStudio
             return (Conductor.instance.songPositionInBeats - currentSection.beat) / (nextSection.beat - currentSection.beat); 
         }}
 
-    public event Action<float> onBeatChanged;
+        public event Action<float> onBeatChanged;
         public event Action<DynamicBeatmap.ChartSection> onSectionChange;
 
         public int BeatmapEntities()
@@ -69,6 +69,7 @@ namespace HeavenStudio
         {
             currentPreEvent= 0;
             currentPreSwitch = 0;
+            currentPreSequence = 0;
  
             this.transform.localScale = new Vector3(30000000, 30000000);
             
@@ -219,6 +220,24 @@ namespace HeavenStudio
             }
         }
 
+        public void SeekAheadAndDoPreEvent(float start, float seekTime = 1f)
+        {
+            List<float> entities = Beatmap.entities.Select(c => c.beat).ToList();
+            if (currentPreSequence < Beatmap.entities.Count && currentPreSequence >= 0)
+            {
+                if (start + seekTime >= entities[currentPreSequence])
+                {
+                    float beat = Beatmap.entities[currentPreSequence].beat;
+                    var entitiesAtSameBeat = Beatmap.entities.FindAll(c => c.beat == Beatmap.entities[currentPreSequence].beat);
+                    foreach (DynamicBeatmap.DynamicEntity entity in entitiesAtSameBeat)
+                    {
+                        eventCaller.CallPreEvent(entity);
+                    }
+                    currentPreSequence++;
+                }
+            }
+        }
+
         // LateUpdate works a bit better(?) but causes some bugs (like issues with bop animations).
         private void Update()
         {
@@ -271,6 +290,8 @@ namespace HeavenStudio
             float seekTime = 8f;
             //seek ahead to preload games that have assetbundles
             SeekAheadAndPreload(Conductor.instance.songPositionInBeats, seekTime);
+
+            SeekAheadAndDoPreEvent(Conductor.instance.songPositionInBeats, 1f);
 
             if (currentEvent < Beatmap.entities.Count && currentEvent >= 0)
             {
@@ -390,6 +411,7 @@ namespace HeavenStudio
 
                 currentEvent = entities.IndexOf(Mathp.GetClosestInList(entities, beat));
                 currentPreEvent = entities.IndexOf(Mathp.GetClosestInList(entities, beat));
+                currentPreSequence = entities.IndexOf(Mathp.GetClosestInList(entities, beat));
 
                 var gameSwitchs = Beatmap.entities.FindAll(c => c.datamodel.Split(1) == "switchGame");
 

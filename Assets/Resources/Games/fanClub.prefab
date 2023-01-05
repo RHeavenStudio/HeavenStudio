@@ -22473,6 +22473,145 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c8bf5d56f80c8814489e7b35cc9421ff, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  SoundSequences:
+  - name: arisa_hai
+    sequence:
+      game: 1
+      force: 0
+      clips:
+      - clip: fanClub/arisa_hai_1_jp
+        beat: 0
+        pitch: 1
+        volume: 1
+        looping: 0
+        offset: 0
+      - clip: fanClub/arisa_hai_2_jp
+        beat: 1
+        pitch: 1
+        volume: 1
+        looping: 0
+        offset: 0
+      - clip: fanClub/arisa_hai_3_jp
+        beat: 2
+        pitch: 1
+        volume: 1
+        looping: 0
+        offset: 0
+  - name: crowd_hai
+    sequence:
+      game: 1
+      force: 0
+      clips:
+      - clip: fanClub/crowd_hai_jp
+        beat: 0
+        pitch: 1
+        volume: 1
+        looping: 0
+        offset: 0
+      - clip: fanClub/crowd_hai_jp
+        beat: 1
+        pitch: 1
+        volume: 1
+        looping: 0
+        offset: 0
+      - clip: fanClub/crowd_hai_jp
+        beat: 2
+        pitch: 1
+        volume: 1
+        looping: 0
+        offset: 0
+      - clip: fanClub/crowd_hai_jp
+        beat: 3
+        pitch: 1
+        volume: 1
+        looping: 0
+        offset: 0
+  - name: arisa_kamone
+    sequence:
+      game: 1
+      force: 0
+      clips:
+      - clip: fanClub/arisa_ka_jp
+        beat: 0
+        pitch: 1
+        volume: 1
+        looping: 0
+        offset: 0
+      - clip: fanClub/arisa_mo_jp
+        beat: 0.5
+        pitch: 1
+        volume: 1
+        looping: 0
+        offset: 0.07407407
+      - clip: fanClub/arisa_ne_jp
+        beat: 1
+        pitch: 1
+        volume: 1
+        looping: 0
+        offset: 0.07407407
+  - name: arisa_kamone_fast
+    sequence:
+      game: 1
+      force: 0
+      clips:
+      - clip: fanClub/arisa_ka_fast_jp
+        beat: 0
+        pitch: 1
+        volume: 1
+        looping: 0
+        offset: 0
+      - clip: fanClub/arisa_mo_fast_jp
+        beat: 0.25
+        pitch: 1
+        volume: 1
+        looping: 0
+        offset: 0
+      - clip: fanClub/arisa_ne_fast_jp
+        beat: 0.5
+        pitch: 1
+        volume: 1
+        looping: 0
+        offset: 0
+  - name: crowd_kamone
+    sequence:
+      game: 1
+      force: 0
+      clips:
+      - clip: fanClub/crowd_ka_jp
+        beat: 0
+        pitch: 1
+        volume: 1
+        looping: 0
+        offset: 0
+      - clip: fanClub/crowd_mo_jp
+        beat: 1.5
+        pitch: 1
+        volume: 1
+        looping: 0
+        offset: 0
+      - clip: fanClub/crowd_ne_jp
+        beat: 2
+        pitch: 1
+        volume: 1
+        looping: 0
+        offset: 0
+      - clip: fanClub/crowd_hey_jp
+        beat: 3
+        pitch: 1
+        volume: 1
+        looping: 0
+        offset: 0
+  - name: crowd_big_ready
+    sequence:
+      game: 1
+      force: 0
+      clips:
+      - clip: fanClub/crowd_big_ready
+        beat: 0
+        pitch: 1
+        volume: 1
+        looping: 0
+        offset: 0
   EligibleHits: []
   scheduledInputs: []
   firstEnable: 0
