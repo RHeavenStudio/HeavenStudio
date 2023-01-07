@@ -143,7 +143,7 @@ namespace HeavenStudio.Games.Scripts_KarateMan
             }
             if (KarateMan.instance.NoriPerformance >= 0.6f && oldNori / MaxNori < 0.6f && !playedJust)
             {
-                Jukebox.PlayOneShotGame("karateman/nori_just", beat + 0.5f);
+                Jukebox.PlayOneShotGame("karateman/nori_just", beat + KarateMan.OhYeahDelay);
                 playedJust = true;
             }
             UpdateHeartColours();

@@ -25,19 +25,21 @@ namespace HeavenStudio.Games.Loaders
                     inactiveFunction = delegate { KarateMan.ToggleBopUnloaded(eventCaller.currentEntity["toggle"]); }
                 },
                 new GameAction("hit", "Toss Object") {
-                    function = delegate { var e = eventCaller.currentEntity; KarateMan.instance.CreateItem(e.beat, e["type"], e["type2"], e["type3"], e["type4"]); }, 
+                    function = delegate { var e = eventCaller.currentEntity; KarateMan.instance.CreateItem(e.beat, e["type"], e["type2"], e["type3"], e["type4"], e["type5"], e["type6"]); }, 
                     defaultLength = 2,
                     parameters = new List<Param>()
                     {
                         new Param("type", KarateMan.HitType.Pot, "Object", "The object to fire"),
                         new Param("type2", KarateMan.KarateManFaces.Normal, "Success Expression", "The facial expression to set Joe to on hit"),
                         new Param("type3", KarateMan.JoeFaceLength.Normal, "Face Keep Length", "How long Joe will keep his face from success"),
-                        new Param("type4", KarateMan.ForceObjectSound.None, "Force Sound", "Make the object play the specific sound no matter what")
+                        new Param("type4", KarateMan.ForceObjectSound.None, "Force Sound", "Make the object play the specific sound no matter what"),
+                        new Param("type5", KarateMan.HonkiChanceType.Ignore, "Activate Honki", "Activates Serious Mode if this is on"),
+                        new Param("type6", KarateMan.HonkiSoundType.None, "Sound", "Sound that plays on Switch"),
                     }
                 },
                 new GameAction("bulb", "Toss Lightbulb")
                 {
-                    function = delegate { var e = eventCaller.currentEntity; KarateMan.instance.CreateBulbSpecial(e.beat, e["type"], e["colorA"], e["type2"], e["type3"], e["type4"]); }, 
+                    function = delegate { var e = eventCaller.currentEntity; KarateMan.instance.CreateBulbSpecial(e.beat, e["type"], e["colorA"], e["type2"], e["type3"], e["type4"], e["type5"], e["type6"]); }, 
                     defaultLength = 2,
                     parameters = new List<Param>()
                     {
@@ -45,7 +47,9 @@ namespace HeavenStudio.Games.Loaders
                         new Param("colorA", new Color(1f,1f,1f), "Custom Color", "The color to use when the bulb type is set to Custom"),
                         new Param("type2", KarateMan.KarateManFaces.Normal, "Success Expression", "The facial expression to set Joe to on hit"),
                         new Param("type3", KarateMan.JoeFaceLength.Normal, "Face Keep Length", "How long Joe will keep his face from success"),
-                        new Param("type4", KarateMan.ForceObjectSound.None, "Force Sound", "Make the object play the specific sound no matter what")
+                        new Param("type4", KarateMan.ForceObjectSound.None, "Force Sound", "Make the object play the specific sound no matter what"),
+                        new Param("type5", KarateMan.HonkiChanceType.Ignore, "Activate Honki", "Activates Serious Mode if this is on"),
+                        new Param("type6", KarateMan.HonkiSoundType.None, "Sound", "Sound that plays on Switch"),
                     },
                 },
                 new GameAction("kick", "Special: Kick")
@@ -73,17 +77,14 @@ namespace HeavenStudio.Games.Loaders
                         new Param("type3", KarateMan.SpecialSoundTypes.SpecialAndVoice, "Voice Type", "Change how the voice will play with the Combo!")
                     }
                 },
-                new GameAction("honki", "Serious Chance")
+                new GameAction("honki", "Force Serious")
                 {
-                    function = delegate { var e = eventCaller.currentEntity; KarateMan.instance.Honki(e.beat, e.length, e["type"], e["toggle"], e["toggle2"], e["type2"]); },
-                    defaultLength = 1f,
-                    resizable = true,
+                    function = delegate { var e = eventCaller.currentEntity; KarateMan.instance.ActivateHonki(e.beat, e["type"], e["type2"]); },
+                    defaultLength = 0.5f,
                     parameters = new List<Param>()
                     {
-                        new Param("type", KarateMan.HonkiChanceType.OneObject, "Serious Chance Type", "Whether all objects, one object or no object is required for Serious Mode"),
-                        new Param("toggle", false, "Deactivate Serious", "This deactivates Serious Mode"),
-                        new Param("toggle2", false, "Miss can Lose", "This makes it so if you miss too many times, Serious Mode deactivates"),
-                        new Param("type2", KarateMan.HonkiSoundType.SeriousHit, "Sound", "Sound that plays on Switch"),
+                        new Param("type", KarateMan.HonkiChanceType.Activate, "Deactivate Serious", "This deactivates Serious Mode"),
+                        new Param("type2", KarateMan.HonkiSoundType.SeriousTransition, "Sound", "Sound that plays on Switch"),
                     }
                 },
                 new GameAction("hitX", "Warnings")
@@ -120,7 +121,7 @@ namespace HeavenStudio.Games.Loaders
                 },
                 new GameAction("set gameplay modifiers", "Gameplay Modifiers")
                 {
-                    function = delegate { var e = eventCaller.currentEntity; KarateMan.instance.SetGameplayMods(e.beat, e["type"], e["type2"], e["toggle"], e["toggle2"], e["toggle3"], e["type3"], 1f); },//e["valA"]); }, 
+                    function = delegate { var e = eventCaller.currentEntity; KarateMan.instance.SetGameplayMods(e.beat, e["type"], e["type2"], e["toggle"], e["toggle2"], e["toggle3"], e["type3"]); },//e["valA"]); }, 
                     defaultLength = 0.5f,
                     parameters = new List<Param>()
                     {
@@ -130,7 +131,16 @@ namespace HeavenStudio.Games.Loaders
                         new Param("toggle2", false, "Pot Break Sound", "Should there be a breaking sound when punching an object with high flow?"),
                         new Param("toggle3", false, "High Flow Punch", "Determines if Joe punches with the right hand when having high flow"),
                         new Param("type3", KarateMan.SoundEffectTypes.Megamix3DS, "Sound Effect Ver", "The version of sounds that will play"),
-                        //new Param("valA", new EntityTypes.Float(0f, 10f, 1f), "Pot Break Delay", "Sets the pot break delay, used in Tengoku Arcade"),
+                    }
+                },
+                new GameAction("set delay", "Game Delay Modifiers")
+                {
+                    function = delegate { var e = eventCaller.currentEntity; KarateMan.instance.SetDelay(e["valA"], e["valB"]); },
+                    defaultLength = 0.5f,
+                    parameters = new List<Param>()
+                    {
+                        new Param("valA", new EntityTypes.Float(0f, 10f, 1f), "Pot Break Delay", "Sets the pot break delay, 1.5 is Tengoku Arcade delay"),
+                        new Param("valB", new EntityTypes.Float(0f, 10f, 0.5f), "Oh Yeah Delay", "Sets the pot break delay, a delay of 0 is Tengoku Arcade delay"),
                     }
                 },
                 new GameAction("set background effects", "Background Appearance")
@@ -189,25 +199,25 @@ namespace HeavenStudio.Games.Loaders
                 // These are still here for backwards-compatibility but are hidden in the editor
                 new GameAction("pot", "")
                 {
-                    function = delegate { KarateMan.instance.CreateItem(eventCaller.currentEntity.beat, 0, (int) KarateMan.HitType.Pot, 0, 0); }, 
+                    function = delegate { KarateMan.instance.CreateItem(eventCaller.currentEntity.beat, 0, (int) KarateMan.HitType.Pot, 0, 0, (int) KarateMan.HonkiChanceType.Ignore, (int) KarateMan.HonkiSoundType.None); }, 
                     defaultLength = 2, 
                     hidden = true
                 },
                 new GameAction("rock", "")
                 {
-                    function = delegate { KarateMan.instance.CreateItem(eventCaller.currentEntity.beat, 0, (int) KarateMan.HitType.Rock, 0, 0); }, 
+                    function = delegate { KarateMan.instance.CreateItem(eventCaller.currentEntity.beat, 0, (int) KarateMan.HitType.Rock, 0, 0, (int) KarateMan.HonkiChanceType.Ignore, (int) KarateMan.HonkiSoundType.None); }, 
                     defaultLength = 2, 
                     hidden = true
                 },
                 new GameAction("ball", "")
                 {
-                    function = delegate { KarateMan.instance.CreateItem(eventCaller.currentEntity.beat, 0, (int) KarateMan.HitType.Ball, 0, 0); }, 
+                    function = delegate { KarateMan.instance.CreateItem(eventCaller.currentEntity.beat, 0, (int) KarateMan.HitType.Ball, 0, 0, (int) KarateMan.HonkiChanceType.Ignore, (int) KarateMan.HonkiSoundType.None); }, 
                     defaultLength = 2, 
                     hidden = true
                 },
                 new GameAction("tacobell", "")
                 {
-                    function = delegate { KarateMan.instance.CreateItem(eventCaller.currentEntity.beat, 0, (int) KarateMan.HitType.TacoBell, 0, 0); }, 
+                    function = delegate { KarateMan.instance.CreateItem(eventCaller.currentEntity.beat, 0, (int) KarateMan.HitType.TacoBell, 0, 0, (int) KarateMan.HonkiChanceType.Ignore, (int) KarateMan.HonkiSoundType.None); }, 
                     defaultLength = 2, 
                     hidden = true
                 },
@@ -354,16 +364,16 @@ namespace HeavenStudio.Games
 
         public enum HonkiChanceType
         {
-            OneObject,
-            AllObjects,
-            IgnoreObject
+            Ignore,
+            Activate,
+            Deactivate,
         }
         
         public enum HonkiSoundType
         {
+            None,
             SeriousHit,
             SeriousTransition,
-            None
         }
 
         public enum LightBulbType
@@ -486,6 +496,7 @@ namespace HeavenStudio.Games
         public float NoriPerformance { get { if (IsNoriActive) return Nori.Nori / Nori.MaxNori; else return 1f; } }
         public float HonkiChanceLength;
         public float HonkiChanceStart;
+        public float DeactivateHonki;
 
         public Color[] LightBulbColors;
         public Color[] BackgroundColors;
@@ -574,6 +585,7 @@ namespace HeavenStudio.Games
         public static float WantBgChangeLength = 0f;
         public static float BopLength = 1f;
         public static float PotBreakDelay = 1f;
+        public static float OhYeahDelay = 0.5f;
 
         private void Awake()
         {
@@ -755,50 +767,39 @@ namespace HeavenStudio.Games
             cameraReturnLength = Mathf.Min(2f, length*0.5f);
         }
 
-        public void Honki(float beat, float length, int type, bool deactivate, bool miss, int sound)
-        {
-            GameObject mobj = GameObject.Instantiate(Item, ItemHolder);
-            KarateManPot mobjDat = mobj.GetComponent<KarateManPot>();
-            HonkiChanceStart = beat;
-            HonkiChanceLength = length;
-            mobjDat.deactivateHonki = deactivate;
-            mobjDat.honkiSound = sound;
-            
-            if (type == (int) HonkiChanceType.IgnoreObject)
-                ActivateHonki(beat, deactivate, sound);
-        }
-
-        public void ActivateHonki(float beat, bool deactivate, int sound)
+        public void ActivateHonki(float beat, int activate, int sound)
         {
             switch (sound)
             {
-                case (int)HonkiSoundType.SeriousHit:
+                case (int) HonkiSoundType.SeriousHit:
                     Jukebox.PlayOneShotGame("karateman/gogo");
                     break;
-                case (int)HonkiSoundType.SeriousTransition:
+                case (int) HonkiSoundType.SeriousTransition:
                     Jukebox.PlayOneShotGame("karateman/gogoSwitch");
                     break;
                 default:
                     break;
             }
 
-            if (!deactivate)
+            switch (activate)
             {
-                HonkiMode = true;
-                BGHonki.SetActive(true);
-                BGGradient.SetActive(false);
-                BGBlood.SetActive(false);
-                BGRadial.SetActive(false);
-                SetBgAndShadowCol(beat, 0f, (int)BackgroundType.Custom, (int)ShadowType.Custom, Color.white, Color.black, (int)BackgroundFXType.None);
-                Nori.SetNoriMode(beat, (int)KarateMan.NoriMode.None);
-                BodyColor = Color.black;
-                HighlightColor = Color.white;
+                case (int) KarateMan.HonkiChanceType.Activate:
+                    HonkiMode = true;
+                    BGHonki.SetActive(true);
+                    BGGradient.SetActive(false);
+                    BGBlood.SetActive(false);
+                    BGRadial.SetActive(false);
+                    SetBgAndShadowCol(beat, 0f, (int)BackgroundType.Custom, (int)ShadowType.Custom, Color.white, Color.black, (int)BackgroundFXType.None);
+                    Nori.SetNoriMode(beat, (int)KarateMan.NoriMode.None);
+                    BodyColor = Color.black;
+                    HighlightColor = Color.white;
+                    break;
+                case (int) KarateMan.HonkiChanceType.Deactivate:
+                    HonkiMode = false;
+                    BGHonki.SetActive(false);
+                    break;
             }
-            else
-            {
-                HonkiMode = false;
-                BGHonki.SetActive(false);
-            }
+
         }
 
         public void DoWord(float beat, int type, int voiceType, int language, bool pitch, int graphLength, int voiceDelay, bool fast)
@@ -1001,7 +1002,7 @@ namespace HeavenStudio.Games
             }
         }
 
-        public void CreateItem(float beat, int type, int expression, int length, int sound)
+        public void CreateItem(float beat, int type, int expression, int length, int sound, int honki, int honkiSound)
         {
 
             string outSound;
@@ -1013,42 +1014,42 @@ namespace HeavenStudio.Games
             switch (type)
             {
                 case (int) HitType.Pot:
-                    CreateItemInstance(beat, HitExpressionLength(length), "Item00", expression);
+                    CreateItemInstance(beat, HitExpressionLength(length), "Item00", expression, honkiMode: honki, honkiSound: honkiSound);
                     break;
                 case (int) HitType.Lightbulb:
                     if (Starpelly.Mathp.GetDecimalFromFloat(beat + 0.5f) == 0f && sound != (int) KarateMan.ForceObjectSound.Onbeat || sound == (int) KarateMan.ForceObjectSound.Offbeat)
                         outSound = "karateman/offbeatLightbulbOut" + SoundEffectsType(SoundEffectsVersion);
                     else
                         outSound = "karateman/lightbulbOut" + SoundEffectsType(SoundEffectsVersion);
-                    var mobj = CreateItemInstance(beat, HitExpressionLength(length), "Item01", expression, KarateManPot.ItemType.Bulb);
+                    var mobj = CreateItemInstance(beat, HitExpressionLength(length), "Item01", expression, KarateManPot.ItemType.Bulb, honkiMode: honki, honkiSound: honkiSound);
                     mobj.GetComponent<KarateManPot>().SetBulbColor(LightBulbColors[0]);
                     break;
                 case (int) HitType.Rock:
-                    CreateItemInstance(beat, HitExpressionLength(length), "Item02", expression, KarateManPot.ItemType.Rock);
+                    CreateItemInstance(beat, HitExpressionLength(length), "Item02", expression, KarateManPot.ItemType.Rock, honkiMode: honki, honkiSound: honkiSound);
                     break;
                 case (int) HitType.Ball:
-                    CreateItemInstance(beat, HitExpressionLength(length), "Item03", expression, KarateManPot.ItemType.Ball);
+                    CreateItemInstance(beat, HitExpressionLength(length), "Item03", expression, KarateManPot.ItemType.Ball, honkiMode: honki, honkiSound: honkiSound);
                     break;
                 case (int) HitType.CookingPot:
-                    CreateItemInstance(beat, HitExpressionLength(length), "Item06", expression, KarateManPot.ItemType.Cooking);
+                    CreateItemInstance(beat, HitExpressionLength(length), "Item06", expression, KarateManPot.ItemType.Cooking, honkiMode: honki, honkiSound: honkiSound);
                     break;
                 case (int) HitType.Alien:
-                    CreateItemInstance(beat, HitExpressionLength(length), "Item07", expression, KarateManPot.ItemType.Alien);
+                    CreateItemInstance(beat, HitExpressionLength(length), "Item07", expression, KarateManPot.ItemType.Alien, honkiMode: honki, honkiSound: honkiSound);
                     break;
                 case (int) HitType.Bomb:
-                    CreateItemInstance(beat, HitExpressionLength(length), "Item04", expression, KarateManPot.ItemType.Bomb);
+                    CreateItemInstance(beat, HitExpressionLength(length), "Item04", expression, KarateManPot.ItemType.Bomb, honkiMode: honki, honkiSound: honkiSound);
                     break;
                 case (int) HitType.TacoBell:
-                    CreateItemInstance(beat, HitExpressionLength(length), "Item99", expression, KarateManPot.ItemType.TacoBell);
+                    CreateItemInstance(beat, HitExpressionLength(length), "Item99", expression, KarateManPot.ItemType.TacoBell, honkiMode: honki, honkiSound: honkiSound);
                     break;
                 default:
-                    CreateItemInstance(beat, HitExpressionLength(length), "Item00", expression);
+                    CreateItemInstance(beat, HitExpressionLength(length), "Item00", expression, honkiMode: honki, honkiSound: honkiSound);
                     break;
             }
             Jukebox.PlayOneShotGame(outSound, forcePlay: true);
         }
 
-        public void CreateBulbSpecial(float beat, int type, Color c, int expression, int length, int sound)
+        public void CreateBulbSpecial(float beat, int type, Color c, int expression, int length, int sound, int honki, int honkiSound)
         {
             string outSound;
             if (Starpelly.Mathp.GetDecimalFromFloat(beat + 0.5f) == 0f && sound != (int) KarateMan.ForceObjectSound.Onbeat || sound == (int)KarateMan.ForceObjectSound.Offbeat)
@@ -1061,7 +1062,7 @@ namespace HeavenStudio.Games
                     outSound = "karateman/lightbulbOut_ds";
                 else
                     outSound = "karateman/lightbulbOut" + SoundEffectsType(SoundEffectsVersion);
-            var mobj = CreateItemInstance(beat, HitExpressionLength(length), "Item01", expression, KarateManPot.ItemType.Bulb);
+            var mobj = CreateItemInstance(beat, HitExpressionLength(length), "Item01", expression, KarateManPot.ItemType.Bulb, honkiMode: honki, honkiSound: honkiSound);
 
             if (type == (int) LightBulbType.Custom)
                 mobj.GetComponent<KarateManPot>().SetBulbColor(c);
@@ -1133,7 +1134,7 @@ namespace HeavenStudio.Games
             }
         }
 
-        public GameObject CreateItemInstance(float beat, float hitExpLength, string awakeAnim, int successExpression, KarateManPot.ItemType type = KarateManPot.ItemType.Pot, int comboId = -1, bool content = false)
+        public GameObject CreateItemInstance(float beat, float hitExpLength, string awakeAnim, int successExpression, KarateManPot.ItemType type = KarateManPot.ItemType.Pot, int comboId = -1, bool content = false, int honkiMode = (int) KarateMan.HonkiChanceType.Ignore, int honkiSound = (int) KarateMan.HonkiSoundType.None)
         {
             GameObject mobj = GameObject.Instantiate(Item, ItemHolder);
             KarateManPot mobjDat = mobj.GetComponent<KarateManPot>();
@@ -1144,6 +1145,8 @@ namespace HeavenStudio.Games
             mobjDat.OnHitExpression = successExpression;
             mobjDat.HitExpressionLength = hitExpLength;
             mobjDat.KickBarrelContent = content;
+            mobjDat.honkiMode = honkiMode;
+            mobjDat.honkiSound = honkiSound;
 
             mobj.SetActive(true);
             
@@ -1271,7 +1274,7 @@ namespace HeavenStudio.Games
             UpdateFilterColour(bgColour, filterColour);
         }
 
-        public void SetGameplayMods(float beat, int mode, int bg, bool combo, bool noriBreak, bool highFlow, int soundVer, float breakDelay)
+        public void SetGameplayMods(float beat, int mode, int bg, bool combo, bool noriBreak, bool highFlow, int soundVer)
         {
             NoriGO.SetActive(true);
             Nori.SetNoriMode(beat, mode);
@@ -1279,10 +1282,15 @@ namespace HeavenStudio.Games
             NoriBreakSound = noriBreak;
             HighFlowPunch = highFlow;
             SoundEffectsVersion = soundVer;
-            PotBreakDelay = breakDelay;
 
             IsComboEnable = combo;
         }
+
+        public void SetDelay(float breakDelay, float ohYeahDelay)
+        {
+            PotBreakDelay = breakDelay;
+            OhYeahDelay = ohYeahDelay;
+        }    
 
         void UpdateFilterColour(Color bgColor, Color filterColor)
         {
