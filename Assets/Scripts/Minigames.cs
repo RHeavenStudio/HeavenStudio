@@ -21,6 +21,7 @@ namespace HeavenStudio
     {
         public class Minigame
         {
+            
             public string name;
             public string displayName;
             public string color;            

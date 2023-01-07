@@ -2,11 +2,15 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+using HeavenStudio.Util;
+
 namespace HeavenStudio.Games
 {
     public class Minigame : MonoBehaviour
     {
         public static float earlyTime = 0.1f, perfectTime = 0.08f, aceEarlyTime = 0.025f, aceLateTime = 0.025f, lateTime = 0.08f, endTime = 0.1f;
+        [SerializeField] public SoundSequence.SequenceKeyValue[] SoundSequences;
+
         public List<Minigame.Eligible> EligibleHits = new List<Minigame.Eligible>();
 
         [System.Serializable]
@@ -210,6 +214,19 @@ namespace HeavenStudio.Games
                 sameTime = 1;
 
             return sameTime;
+        }
+
+        public MultiSound PlaySoundSequence(string name, float startBeat)
+        {
+            foreach (SoundSequence.SequenceKeyValue pair in SoundSequences)
+            {
+                if (pair.name == name)
+                {
+                    return pair.sequence.Play(startBeat);
+                }
+            }
+            Debug.LogWarning($"Sound sequence {name} not found in game {this.name} (did you build AssetBundles?)");
+            return null;
         }
     }
 }
