@@ -599,14 +599,18 @@ namespace HeavenStudio
             {
                 if (gameInfo.fxOnly)
                 {
-                    name = Beatmap.entities.FindAll(c => {
+                    var gameEntities = Beatmap.entities.FindAll(c => {
                             var gameName = c.datamodel.Split(0);
                             var newGameInfo = GetGameInfo(gameName);
                             if (newGameInfo == null)
                                 return false;
                             else
                                 return !newGameInfo.fxOnly;
-                        }).ToList()[0].datamodel.Split(0);
+                        }).ToList();
+                    if (gameEntities.Count != 0)
+                        name = gameEntities[0].datamodel.Split(0);
+                    else
+                        name = "noGame";
                 }
                 else
                 {
