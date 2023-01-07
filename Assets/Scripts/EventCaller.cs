@@ -89,6 +89,23 @@ namespace HeavenStudio
             }
         }
 
+        public void CallPreEvent(DynamicBeatmap.DynamicEntity entity)
+        {
+            string[] details = entity.datamodel.Split('/');
+            Minigames.Minigame game = minigames.Find(c => c.name == details[0]);
+            try
+            {
+                currentEntity = entity;
+
+                Minigames.GameAction action = game.actions.Find(c => c.actionName == details[1]);
+                action.preFunction.Invoke();
+            }
+            catch (Exception ex)
+            {
+                Debug.LogWarning("Event not found! May be spelled wrong or it is not implemented.\n" + ex);
+            }
+        }
+
         public static List<DynamicBeatmap.DynamicEntity> GetAllInGameManagerList(string gameName, string[] include)
         {
             List<DynamicBeatmap.DynamicEntity> temp1 = GameManager.instance.Beatmap.entities.FindAll(c => c.datamodel.Split('/')[0] == gameName);

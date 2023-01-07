@@ -160,7 +160,7 @@ namespace HeavenStudio.Games.Scripts_DJSchool
                 tableAnim.speed = 1;
                 tableAnim.Play("Student_Turntable_Swipe", 0, 0);
 
-                Instantiate(slamFX).SetActive(true);
+                Instantiate(slamFX, this.transform.parent).SetActive(true);
                 mixer.audioMixer.FindSnapshot("Main").TransitionTo(.01f);
             }
             else
@@ -177,7 +177,7 @@ namespace HeavenStudio.Games.Scripts_DJSchool
                 tableAnim.speed = 1;
                 tableAnim.Play("Student_Turntable_Swipe", 0, 0);
 
-                Instantiate(slamFX).SetActive(true);
+                Instantiate(slamFX, this.transform.parent).SetActive(true);
                 mixer.audioMixer.FindSnapshot("Main").TransitionTo(.01f);
             }
             

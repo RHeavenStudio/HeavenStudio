@@ -8,10 +8,10 @@ namespace HeavenStudio.Util
     public class MultiSound : MonoBehaviour
     {
         private float startBeat;
-        private int index;
         private bool game;
         private bool forcePlay;
         public List<Sound> sounds = new List<Sound>();
+        public List<Util.Sound> playingSounds = new List<Util.Sound>();
 
         public class Sound
         {
@@ -37,39 +37,35 @@ namespace HeavenStudio.Util
         public static MultiSound Play(Sound[] snds, bool game = true, bool forcePlay = false)
         {
             List<Sound> sounds = snds.ToList();
-            GameObject gameObj = new GameObject();
-            MultiSound ms = gameObj.AddComponent<MultiSound>();
+            GameObject go = new GameObject("MultiSound");
+            MultiSound ms = go.AddComponent<MultiSound>();
             ms.sounds = sounds;
             ms.startBeat = sounds[0].beat;
             ms.game = game;
             ms.forcePlay = forcePlay;
-            gameObj.name = "MultiSound";
 
-            GameManager.instance.SoundObjects.Add(gameObj);
+            for (int i = 0; i < sounds.Count; i++)
+            {
+                Util.Sound s;
+                if (game)
+                    s = Jukebox.PlayOneShotGame(sounds[i].name, sounds[i].beat - Conductor.instance.GetRestFromRealTime(sounds[i].offset), sounds[i].pitch, sounds[i].volume, sounds[i].looping, forcePlay);
+                else
+                    s = Jukebox.PlayOneShot(sounds[i].name, sounds[i].beat - Conductor.instance.GetRestFromRealTime(sounds[i].offset), sounds[i].pitch, sounds[i].volume, sounds[i].looping);
+                ms.playingSounds.Add(s);
+            }
+
+            GameManager.instance.SoundObjects.Add(go);
             return ms;
         }
 
         private void Update()
         {
-            float songPositionInBeats = Conductor.instance.songPositionInBeats;
-
-            for (int i = 0; i < sounds.Count; i++)
+            foreach (Util.Sound sound in playingSounds)
             {
-                if (songPositionInBeats >= sounds[i].beat - Conductor.instance.GetRestFromRealTime(sounds[i].offset) && index == i)
-                {
-                    if (game)
-                        Jukebox.PlayOneShotGame(sounds[i].name, sounds[i].beat - Conductor.instance.GetRestFromRealTime(sounds[i].offset), sounds[i].pitch, sounds[i].volume, sounds[i].looping, forcePlay);
-                    else
-                        Jukebox.PlayOneShot(sounds[i].name, sounds[i].beat - Conductor.instance.GetRestFromRealTime(sounds[i].offset), sounds[i].pitch, sounds[i].volume, sounds[i].looping);
-
-                    index++;
-                }
+                if (sound != null)
+                    return;
             }
-
-            if (songPositionInBeats >= (sounds[sounds.Count - 1].beat - Conductor.instance.GetRestFromRealTime(sounds[sounds.Count - 1].offset)))
-            {
-                Delete();
-            }
+            Delete();
         }
 
         public void Delete()

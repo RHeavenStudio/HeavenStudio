@@ -22,15 +22,21 @@ namespace HeavenStudio
         // Current song position, in seconds
         private double songPos; // for Conductor use only
         public float songPosition => (float) songPos;
+        public double songPositionAsDouble => songPos;
 
         // Current song position, in beats
         private double songPosBeat; // for Conductor use only
         public float songPositionInBeats => (float) songPosBeat;
+        public double songPositionInBeatsAsDouble => songPosBeat;
 
         // Current time of the song
         private double time;
 
         double lastAbsTime;
+
+        // the dspTime we started at
+        private double dspStartTime;
+        public double dspStartTimeAsDouble => dspStartTime;
 
         // an AudioSource attached to this GameObject that will play the music.
         public AudioSource musicSource;
@@ -52,6 +58,7 @@ namespace HeavenStudio
 
         // Metronome tick sound enabled
         public bool metronome = false;
+        Util.Sound metronomeSound;
 
         public float timeSinceLastTempoChange = Single.MinValue;
 
@@ -142,6 +149,7 @@ namespace HeavenStudio
                 }
             }
             lastAbsTime = Time.realtimeSinceStartupAsDouble;
+            dspStartTime = AudioSettings.dspTime;
 
             // GameManager.instance.SetCurrentEventToClosest(songPositionInBeats);
         }
@@ -189,11 +197,19 @@ namespace HeavenStudio
             {
                 if (ReportBeat(ref lastReportedBeat))
                 {
-                    Util.Jukebox.PlayOneShot("metronome");
+                    metronomeSound = Util.Jukebox.PlayOneShot("metronome", lastReportedBeat + 1f);
                 }
                 else if (songPositionInBeats < lastReportedBeat)
                 {
                     lastReportedBeat = Mathf.Round(songPositionInBeats);
+                }
+            }
+            else
+            {
+                if (metronomeSound != null)
+                {
+                    metronomeSound.Delete();
+                    metronomeSound = null;
                 }
             }
         }

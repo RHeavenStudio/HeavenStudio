@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Text.RegularExpressions;
 using UnityEngine;
 
 using Newtonsoft.Json;
@@ -344,8 +345,33 @@ namespace HeavenStudio
             System.Type type, pType;
             foreach (var e in entities)
             {
-                game = EventCaller.instance.GetMinigame(e.datamodel.Split(0));
-                action = EventCaller.instance.GetGameAction(game, e.datamodel.Split(1));
+                var gameName = e.datamodel.Split(0);
+                var actionName = e.datamodel.Split(1);
+                game = EventCaller.instance.GetMinigame(gameName);
+                if (game == null)
+                {
+                    Debug.LogWarning($"Unknown game {gameName} found in remix.json! Adding game...");
+                    game = new Minigames.Minigame(gameName, DisplayName(gameName) + " \n<color=#eb5454>[inferred from remix.json]</color>", "", false, true, new List<Minigames.GameAction>());
+                    EventCaller.instance.minigames.Add(game);
+                    Editor.Editor.instance.AddIcon(game);
+                }
+                action = EventCaller.instance.GetGameAction(game, actionName);
+                if (action == null)
+                {
+                    Debug.LogWarning($"Unknown action {gameName}/{actionName} found in remix.json! Adding action...");
+                    var parameters = new List<Minigames.Param>();
+                    foreach (var item in e.DynamicData)
+                    {
+                        var value = item.Value;
+                        if (value.GetType() == typeof(long))
+                            value = new EntityTypes.Integer(int.MinValue, int.MaxValue, (int)value);
+                        else if (value.GetType() == typeof(double))
+                            value = new EntityTypes.Float(float.NegativeInfinity, float.PositiveInfinity, (float)value);
+                        parameters.Add(new Minigames.Param(item.Key, value, item.Key, "[inferred from remix.json]"));
+                    }
+                    action = new Minigames.GameAction(actionName, DisplayName(actionName), e.length, true, parameters);
+                    game.actions.Add(action);
+                }
                 Dictionary<string, dynamic> dynamicData = new Dictionary<string, dynamic>();
                 //check each param of the action
                 if (action.parameters != null)
@@ -361,9 +387,9 @@ namespace HeavenStudio
                             {
                                 Debug.LogWarning($"Property {param.propertyName} does not exist in the entity's dynamic data! Adding...");
                                 if (type == typeof(EntityTypes.Integer))
-                                    dynamicData.Add(param.propertyName, (int)param.parameter);
+                                    dynamicData.Add(param.propertyName, ((EntityTypes.Integer)param.parameter).val);
                                 else if (type == typeof(EntityTypes.Float))
-                                    dynamicData.Add(param.propertyName, (float)param.parameter);
+                                    dynamicData.Add(param.propertyName, ((EntityTypes.Float)param.parameter).val);
                                 else if (type.IsEnum && param.propertyName != "ease")
                                     dynamicData.Add(param.propertyName, (int)param.parameter);
                                 else
@@ -407,6 +433,30 @@ namespace HeavenStudio
                     properties.Add(prop.Key, prop.Value);
                 }
             }
+        }
+
+        private string DisplayName(string name)
+        {
+            // "gameName" -> "Game Name"
+            // "action name" -> "Action Name"
+            if (!name.Contains(" "))
+                name = SplitCamelCase(name);
+            System.Globalization.TextInfo textInfo = new System.Globalization.CultureInfo("en-US", false).TextInfo;
+            return textInfo.ToTitleCase(name);
+        }
+
+        // https://stackoverflow.com/a/5796793
+        public static string SplitCamelCase(string str)
+        {
+            return Regex.Replace(
+                Regex.Replace(
+                    str,
+                    @"(\P{Ll})(\P{Ll}\p{Ll})",
+                    "$1 $2"
+                ),
+                @"(\p{Ll})(\P{Ll})",
+                "$1 $2"
+            );
         }
     }
 }
