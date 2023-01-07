@@ -44,11 +44,10 @@ namespace HeavenStudio.Games.Scripts_CatchyTune
 
             if (side)
             {
-                anim.Play("fruit bounce right", 0, 0f);
+                transform.localScale = new Vector3(-1f, 1f, 1f);
             }
-            else {
-                anim.Play("fruit bounce", 0, 0f);
-            }
+
+            anim.Play("fruit bounce", 0, 0f);
 
             soundText = "catchyTune/";
 

@@ -76,6 +76,10 @@ namespace HeavenStudio.Games
         private float stopCatchLeft = 0f;
         private float stopCatchRight = 0f;
 
+        private bool bopLeft = true;
+        private bool bopRight = true;
+        public GameEvent bop = new GameEvent();
+
         public static CatchyTune instance;
 
         private void Awake()
@@ -120,23 +124,40 @@ namespace HeavenStudio.Games
             //     alalinAnim.Play("catchOrange", 0, 0);
             // }
 
-            Conductor conductor = Conductor.instance;
-            if (conductor.isPlaying && !conductor.isPaused)
+            
+
+            Conductor cond = Conductor.instance;
+
+            
+
+            if (cond.isPlaying && !cond.isPaused)
             {
                 // print(stopCatchLeft + " " + stopCatchRight);
                 // print("current beat: " + conductor.songPositionInBeats);
-                if (stopCatchLeft > 0 && stopCatchLeft <= conductor.songPositionInBeats)
+                if (stopCatchLeft > 0 && stopCatchLeft <= cond.songPositionInBeats)
                 {
                     plalinAnim.SetTrigger("stopCatch");
                     stopCatchLeft = 0;
                 }
 
-                if (stopCatchRight > 0 && stopCatchRight <= conductor.songPositionInBeats)
+                if (stopCatchRight > 0 && stopCatchRight <= cond.songPositionInBeats)
                 {
                     alalinAnim.SetTrigger("stopCatch");
                     stopCatchRight = 0;
                 }
 
+                if (cond.ReportBeat(ref bop.lastReportedBeat, bop.startBeat % 1))
+                {
+                    if (bopLeft && stopCatchLeft == 0)
+                    {
+                        plalinAnim.Play("bop", 0, 0);
+                    }
+
+                    if (bopRight && stopCatchRight == 0)
+                    {
+                        alalinAnim.Play("bop", 0, 0);
+                    }
+                }
 
             }
 
@@ -173,15 +194,8 @@ namespace HeavenStudio.Games
 
         public void Bop(float beat, bool left, bool right)
         {
-            if (left && stopCatchLeft == 0)
-            {
-                plalinAnim.Play("bop", 0, 0);
-            }
-
-            if (right && stopCatchRight == 0)
-            {
-                alalinAnim.Play("bop", 0, 0);
-            }
+            bopLeft = left;
+            bopRight = right;
         }
 
 
