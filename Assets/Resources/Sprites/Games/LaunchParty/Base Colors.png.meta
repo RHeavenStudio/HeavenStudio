@@ -24,6 +24,7 @@ TextureImporter:
   streamingMipmaps: 0
   streamingMipmapsPriority: 0
   vTOnly: 0
+  ignoreMasterTextureLimit: 0
   grayScaleToAlpha: 0
   generateCubemap: 6
   cubemapConvolution: 0
@@ -41,7 +42,7 @@ TextureImporter:
   nPOTScale: 0
   lightmap: 0
   compressionQuality: 50
-  spriteMode: 1
+  spriteMode: 2
   spriteExtrude: 1
   spriteMeshType: 1
   alignment: 0
@@ -75,9 +76,822 @@ TextureImporter:
     overridden: 0
     androidETC2FallbackOverride: 0
     forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 3
+    buildTarget: Standalone
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 3
+    buildTarget: Server
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 3
+    buildTarget: WebGL
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
   spriteSheet:
     serializedVersion: 2
-    sprites: []
+    sprites:
+    - serializedVersion: 2
+      name: Base Colors_0
+      rect:
+        serializedVersion: 2
+        x: 67
+        y: 3421
+        width: 442
+        height: 532
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 88a319398840e124da1073a910c74ea2
+      internalID: -1853344664
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Base Colors_1
+      rect:
+        serializedVersion: 2
+        x: 621
+        y: 3380
+        width: 371
+        height: 703
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 4c60efd43fa38e843a98e5f20bdb147e
+      internalID: 1055050664
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Base Colors_2
+      rect:
+        serializedVersion: 2
+        x: 1857
+        y: 3289
+        width: 678
+        height: 746
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 4928a9fdcf939aa458f395f75f13339f
+      internalID: -815313012
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Base Colors_3
+      rect:
+        serializedVersion: 2
+        x: 2709
+        y: 3565
+        width: 945
+        height: 388
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 31a1b1775d001214bbf774bebded4221
+      internalID: 736619478
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Base Colors_4
+      rect:
+        serializedVersion: 2
+        x: 3827
+        y: 3614
+        width: 1015
+        height: 290
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 718fdad73d0eade4ebe7b80cfd6fba24
+      internalID: 1315769009
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Base Colors_5
+      rect:
+        serializedVersion: 2
+        x: 65
+        y: 2701
+        width: 424
+        height: 585
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 460bc92484b394748b5c310dd6e0124b
+      internalID: -214888343
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Base Colors_6
+      rect:
+        serializedVersion: 2
+        x: 519
+        y: 2686
+        width: 515
+        height: 689
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 88f727ff61fc4f646b6cb414798ec0b4
+      internalID: 1569820039
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Base Colors_7
+      rect:
+        serializedVersion: 2
+        x: 2716
+        y: 3147
+        width: 965
+        height: 190
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: f8762adcdc8182245bb738bbdedfdab0
+      internalID: 365291338
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Base Colors_9
+      rect:
+        serializedVersion: 2
+        x: 3846
+        y: 3231
+        width: 1026
+        height: 207
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 5b976688b5203c148b2a88faec0af9fb
+      internalID: -2017485220
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Base Colors_10
+      rect:
+        serializedVersion: 2
+        x: 1737
+        y: 2584
+        width: 813
+        height: 534
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 4688f2f8e8bd8554eb240e1c21aa97e9
+      internalID: 508744046
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Base Colors_11
+      rect:
+        serializedVersion: 2
+        x: 2714
+        y: 2838
+        width: 955
+        height: 165
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 4c718be8d78156143967e65fe0128cdd
+      internalID: 1525972384
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Base Colors_13
+      rect:
+        serializedVersion: 2
+        x: 3871
+        y: 2899
+        width: 986
+        height: 139
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: f1920f5f2b984b64581ce10581072b59
+      internalID: 1973170704
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Base Colors_14
+      rect:
+        serializedVersion: 2
+        x: 2719
+        y: 2565
+        width: 954
+        height: 112
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 26c55d263808af64fb397db3d048776f
+      internalID: 1745297759
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Base Colors_16
+      rect:
+        serializedVersion: 2
+        x: 3820
+        y: 2499
+        width: 1020
+        height: 157
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 98ed7bdda46232c45a4858c57f43d4f1
+      internalID: 751780841
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Base Colors_18
+      rect:
+        serializedVersion: 2
+        x: 94
+        y: 2293
+        width: 393
+        height: 255
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 9b4dc58526c06a04f994110afd6ab2a8
+      internalID: 2019533611
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Base Colors_22
+      rect:
+        serializedVersion: 2
+        x: 604
+        y: 2294
+        width: 342
+        height: 187
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: be506627b8627994ca2258741ce76f75
+      internalID: 1102904857
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Base Colors_24
+      rect:
+        serializedVersion: 2
+        x: 2120
+        y: 2091
+        width: 452
+        height: 246
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 6c3121433077f4044908aec505a76c5e
+      internalID: 1645343817
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Base Colors_25
+      rect:
+        serializedVersion: 2
+        x: 3691
+        y: 1447
+        width: 1144
+        height: 878
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: c566a02ace1b2f74e9798b7da58bd139
+      internalID: 2103742236
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Base Colors_26
+      rect:
+        serializedVersion: 2
+        x: 67
+        y: 1880
+        width: 420
+        height: 225
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 97f7dd2625961564ead4445a65f52ed0
+      internalID: -1390234185
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Base Colors_27
+      rect:
+        serializedVersion: 2
+        x: 592
+        y: 1856
+        width: 386
+        height: 274
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 293ad835346c94b40bea252fa0cdf834
+      internalID: -205895317
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Base Colors_28
+      rect:
+        serializedVersion: 2
+        x: 3019
+        y: 2064
+        width: 168
+        height: 220
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 29fbe763daf6aba48bff0aa01ed702bd
+      internalID: -263190874
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Base Colors_32
+      rect:
+        serializedVersion: 2
+        x: 1398
+        y: 1908
+        width: 102
+        height: 105
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 3d87ff3ceed097b4e9d2ef7b8663f2da
+      internalID: -2101927241
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Base Colors_33
+      rect:
+        serializedVersion: 2
+        x: 2444
+        y: 1805
+        width: 105
+        height: 110
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: d69ce992f6883334fa3793a2578e73dd
+      internalID: -37493896
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Base Colors_34
+      rect:
+        serializedVersion: 2
+        x: 184
+        y: 242
+        width: 464
+        height: 1357
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: d642379de39351140a151c7465ec7449
+      internalID: -1294407111
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Base Colors_35
+      rect:
+        serializedVersion: 2
+        x: 1499
+        y: 1546
+        width: 199
+        height: 174
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 9548802bd65802f47bb769bf3c189962
+      internalID: 305114032
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Base Colors_36
+      rect:
+        serializedVersion: 2
+        x: 3019
+        y: 1564
+        width: 168
+        height: 219
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 589006f081d85af4184ffd3478c3cfa6
+      internalID: 765692979
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Base Colors_48
+      rect:
+        serializedVersion: 2
+        x: 3287
+        y: 709
+        width: 591
+        height: 663
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: ffd64972296d51849b9531fdff3f5cda
+      internalID: -845031749
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Base Colors_54
+      rect:
+        serializedVersion: 2
+        x: 4034
+        y: 720
+        width: 621
+        height: 648
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 4771074be55227049baa357917c12b1b
+      internalID: -575752258
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Base Colors_58
+      rect:
+        serializedVersion: 2
+        x: 1847
+        y: 813
+        width: 459
+        height: 517
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: d1c29548bd738ea47a86c05e8efd11fc
+      internalID: 962531345
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Base Colors_60
+      rect:
+        serializedVersion: 2
+        x: 2545
+        y: 741
+        width: 535
+        height: 605
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: f5d66d21c899a0c49af8e9be1ebf8510
+      internalID: -2122631725
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Base Colors_118
+      rect:
+        serializedVersion: 2
+        x: 1012
+        y: 40
+        width: 200
+        height: 396
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: dad1f00bf6d767542b04643bfcecbb60
+      internalID: 602453603
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Base Colors_119
+      rect:
+        serializedVersion: 2
+        x: 1461
+        y: 40
+        width: 266
+        height: 396
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 761b8177c5f52ec45b819792bd759cf0
+      internalID: 110557933
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Base Colors_120
+      rect:
+        serializedVersion: 2
+        x: 1974
+        y: 40
+        width: 266
+        height: 396
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 02e753dba267fdc4cb11a3a833a8502f
+      internalID: 1946245781
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Base Colors_121
+      rect:
+        serializedVersion: 2
+        x: 2487
+        y: 40
+        width: 266
+        height: 396
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: b77c632bb94a683449a258c43aeb427f
+      internalID: 1061710819
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Base Colors_122
+      rect:
+        serializedVersion: 2
+        x: 3002
+        y: 40
+        width: 263
+        height: 396
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 38887962f2b3e224d99ee56397ffcc79
+      internalID: 871795592
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Base Colors_123
+      rect:
+        serializedVersion: 2
+        x: 3514
+        y: 40
+        width: 266
+        height: 396
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 7bb08c39c6d617149b36b6f23b214c54
+      internalID: 1540415209
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Base Colors_124
+      rect:
+        serializedVersion: 2
+        x: 4027
+        y: 40
+        width: 266
+        height: 396
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 2f554413244e2f6429956c08dba19ea9
+      internalID: 2119989775
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
     outline: []
     physicsShape: []
     bones: []
@@ -88,6 +902,133 @@ TextureImporter:
     edges: []
     weights: []
     secondaryTextures: []
+    nameFileIdTable:
+      Base Colors_68: 1988136008
+      Base Colors_18: 2019533611
+      Base Colors_88: 1335884982
+      Base Colors_53: 1055443273
+      Base Colors_21: -637609766
+      Base Colors_70: 881811217
+      Base Colors_29: -430408620
+      Base Colors_109: -1438308481
+      Base Colors_56: -1251491400
+      Base Colors_72: -1135062535
+      Base Colors_26: -1390234185
+      Base Colors_118: 602453603
+      Base Colors_91: -981352859
+      Base Colors_14: 1745297759
+      Base Colors_59: -584919296
+      Base Colors_92: -1574587486
+      Base Colors_97: 1547460007
+      Base Colors_30: -1429352392
+      Base Colors_98: -1711149368
+      Base Colors_99: 1614108877
+      Base Colors_60: -2122631725
+      Base Colors_100: -1853214275
+      Base Colors_50: -1693460757
+      Base Colors_89: -361930359
+      Base Colors_74: -443799861
+      Base Colors_11: 1525972384
+      Base Colors_120: 1946245781
+      Base Colors_19: 797394294
+      Base Colors_12: -238148145
+      Base Colors_52: 1696079641
+      Base Colors_42: 226238416
+      Base Colors_25: 2103742236
+      Base Colors_32: -2101927241
+      Base Colors_38: 1718014504
+      Base Colors_13: 1973170704
+      Base Colors_37: 1342381781
+      Base Colors_125: -1365300251
+      Base Colors_94: -1048167219
+      Base Colors_110: -1270907688
+      Base Colors_41: -1916901149
+      Base Colors_2: -815313012
+      Base Colors_75: 1169105451
+      Base Colors_82: -1425669575
+      Base Colors_15: 262420327
+      Base Colors_108: -154117501
+      Base Colors_64: -827934534
+      Base Colors_84: -1085703930
+      Base Colors_119: 110557933
+      Base Colors_65: 1616272923
+      Base Colors_111: -1830516356
+      Base Colors_20: 2087605925
+      Base Colors_43: -1364668267
+      Base Colors_23: -669365826
+      Base Colors_34: -1294407111
+      Base Colors_86: -1859124823
+      Base Colors_46: -771238642
+      Base Colors_54: -575752258
+      Base Colors_71: -1540435790
+      Base Colors_112: -538311283
+      Base Colors_44: -548713
+      Base Colors_103: 54464033
+      Base Colors_124: 2119989775
+      Base Colors_107: -1317053242
+      Base Colors_69: -657375764
+      Base Colors_76: 1905058225
+      Base Colors_83: -671744052
+      Base Colors_66: -644600170
+      Base Colors_4: 1315769009
+      Base Colors_95: 1832368455
+      Base Colors_81: -1499072631
+      Base Colors_40: 1098222936
+      Base Colors_114: 1515990480
+      Base Colors_105: 676273019
+      Base Colors_7: 365291338
+      Base Colors_49: 1163315295
+      Base Colors_116: 627563236
+      Base Colors_93: -459666107
+      Base Colors_45: 936744684
+      Base Colors_58: 962531345
+      Base Colors_90: -582990633
+      Base Colors_121: 1061710819
+      Base Colors_122: 871795592
+      Base Colors_79: 85353545
+      Base Colors_78: 1918498467
+      Base Colors_6: 1569820039
+      Base Colors_17: 1923612336
+      Base Colors_80: -485513017
+      Base Colors_51: -1467489416
+      Base Colors_35: 305114032
+      Base Colors_73: -5153543
+      Base Colors_77: -345445971
+      Base Colors_115: -1488431888
+      Base Colors_24: 1645343817
+      Base Colors_47: 259569628
+      Base Colors_3: 736619478
+      Base Colors_55: -2103397100
+      Base Colors_106: -852523612
+      Base Colors_36: 765692979
+      Base Colors_104: 1015994172
+      Base Colors_63: 1471214189
+      Base Colors_87: -506393458
+      Base Colors_27: -205895317
+      Base Colors_31: 1367529468
+      Base Colors_117: -100404494
+      Base Colors_28: -263190874
+      Base Colors_22: 1102904857
+      Base Colors_39: 1206202170
+      Base Colors_85: -27172795
+      Base Colors_62: 1520626193
+      Base Colors_101: 730746134
+      Base Colors_10: 508744046
+      Base Colors_102: -636258183
+      Base Colors_9: -2017485220
+      Base Colors_61: -1897725553
+      Base Colors_1: 1055050664
+      Base Colors_16: 751780841
+      Base Colors_113: -1682614127
+      Base Colors_57: -428216443
+      Base Colors_67: -207436715
+      Base Colors_48: -845031749
+      Base Colors_123: 1540415209
+      Base Colors_96: 1786594766
+      Base Colors_5: -214888343
+      Base Colors_8: 570844468
+      Base Colors_0: -1853344664
+      Base Colors_33: -37493896
   spritePackingTag: 
   pSDRemoveMatte: 0
   pSDShowRemoveMatteOption: 0
