@@ -106,6 +106,7 @@ namespace HeavenStudio.Games
 
         //Get the scheduled input that should happen the **Soonest**
         //Can return null if there's no scheduled inputs
+        // remark: need a check for specific button(s)
         public PlayerActionEvent GetClosestScheduledInput()
         {
             PlayerActionEvent closest = null;
@@ -132,6 +133,7 @@ namespace HeavenStudio.Games
         //Hasn't been tested yet. *Should* work.
         //Can be used to detect if the user is expected to input something now or not
         //Useful for strict call and responses games like Tambourine
+        // remark: need a check for specific button(s)
         public bool IsExpectingInputNow()
         {
             PlayerActionEvent input = GetClosestScheduledInput();
