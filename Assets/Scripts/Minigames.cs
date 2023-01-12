@@ -37,6 +37,7 @@ namespace HeavenStudio
             public bool usesAssetBundle => (wantAssetBundle != "");
             public bool hasLocales => (supportedLocales.Count > 0);
             public bool AssetsLoaded => (((hasLocales && localeLoaded && currentLoadedLocale == defaultLocale) || (!hasLocales)) && commonLoaded);
+            public bool SequencesPreloaded => soundSequences != null;
 
             private AssetBundle bundleCommon = null;
             private bool commonLoaded = false;
@@ -45,6 +46,14 @@ namespace HeavenStudio
             private AssetBundle bundleLocalized = null;
             private bool localeLoaded = false;
             private bool localePreloaded = false;
+
+            private SoundSequence.SequenceKeyValue[] soundSequences = null;
+
+            public SoundSequence.SequenceKeyValue[] LoadedSoundSequences
+            {
+                get => soundSequences;
+                set => soundSequences = value;
+            }
 
             public Minigame(string name, string displayName, string color, bool threeD, bool fxOnly, List<GameAction> actions, List<string> tags = null, string assetBundle = "", string defaultLocale = "en", List<string> supportedLocales = null)
             {
