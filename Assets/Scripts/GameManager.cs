@@ -19,7 +19,8 @@ namespace HeavenStudio
         public List<GameObject> SoundObjects = new List<GameObject>();
 
         [Header("Components")]
-        public TextAsset txt;
+        public string txt;
+        public string ext;
         public Camera GameCamera, CursorCam, OverlayCamera;
         public GameObject GameLetterbox;
         public CircleCursor CircleCursor;
@@ -83,17 +84,6 @@ namespace HeavenStudio
             GameObject fade = new GameObject();
             this.fade = fade.AddComponent<Games.Global.Flash>();
 
-            if (txt != null)
-            {
-                string json = txt.text;
-                Beatmap = JsonConvert.DeserializeObject<DynamicBeatmap>(json);
-            }
-            else
-            {
-                NewRemix();
-            }
-
-            SortEventsList();
 
             GlobalGameManager.Init();
 
@@ -106,13 +96,16 @@ namespace HeavenStudio
 
             GameObject textbox = Instantiate(Resources.Load<GameObject>("Prefabs/Common/Textbox"));
             textbox.name = "Textbox";
-
-            if (playOnStart)
+            if (txt != null && ext != null)
             {
-                Play(startBeat);
+                LoadRemix(txt, ext);
+            }
+            else
+            {
+                NewRemix();
             }
 
-            // SetCurrentGame(eventCaller.GamesHolder.transform.GetComponentsInChildren<Transform>()[1].name);
+            SortEventsList();
 
             if (Beatmap.entities.Count >= 1)
             {
@@ -122,6 +115,11 @@ namespace HeavenStudio
             else
             {
                 SetGame("noGame");
+            }
+
+            if (playOnStart)
+            {
+                Play(startBeat);
             }
         }
 
@@ -384,6 +382,11 @@ namespace HeavenStudio
             SetCurrentEventToClosest(beat);
             onBeatChanged?.Invoke(beat);
             KillAllSounds();
+
+            if (playOnStart)
+            {
+                Play(0);
+            }
         }
 
         public void KillAllSounds()
