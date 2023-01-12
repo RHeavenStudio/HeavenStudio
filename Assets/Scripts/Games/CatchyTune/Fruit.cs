@@ -20,8 +20,6 @@ namespace HeavenStudio.Games.Scripts_CatchyTune
 
         public bool smile;
 
-        public bool eligable = true;
-
         private string soundText;
 
         private Minigame.Eligible e = new Minigame.Eligible();
@@ -29,7 +27,7 @@ namespace HeavenStudio.Games.Scripts_CatchyTune
         private CatchyTune game;
 
         private float beatLength = 4f;
-        
+
         private void Awake()
         {
             game = CatchyTune.instance;
@@ -42,14 +40,12 @@ namespace HeavenStudio.Games.Scripts_CatchyTune
 
             if (isPineapple) beatLength = 8f;
 
-            anim.SetFloat("speed", GetAnimSpeed(isPineapple, tempo, playbackSpeed));
-
             if (side)
             {
                 transform.localScale = new Vector3(-1f, 1f, 1f);
             }
 
-            anim.Play("fruit bounce", 0, 0f);
+            anim.DoScaledAnimation("fruit bounce", startBeat, beatLength + (isPineapple ? 1f : 0.5f));
 
             soundText = "catchyTune/";
 
@@ -57,7 +53,8 @@ namespace HeavenStudio.Games.Scripts_CatchyTune
             {
                 soundText += "right";
             }
-            else {
+            else
+            {
                 soundText += "left";
             }
 
@@ -65,7 +62,46 @@ namespace HeavenStudio.Games.Scripts_CatchyTune
             {
                 soundText += "Pineapple";
             }
-            else {
+            else
+            {
+                soundText += "Orange";
+            }
+
+            game.ScheduleInput(startBeat, beatLength, side ? InputType.STANDARD_DOWN : InputType.DIRECTION_DOWN,
+                CatchFruit, Miss, WayOff);
+        }
+
+        // minenice: note - needs PlayerActionEvent implementation
+        private void Update()
+        {
+            Conductor cond = Conductor.instance;
+            float tempo = cond.songBpm;
+            float playbackSpeed = cond.musicSource.pitch;
+
+            anim.DoScaledAnimation("fruit bounce", startBeat, beatLength + (isPineapple ? 1f : 0.5f));
+            
+            float normalizedBeat = Conductor.instance.GetPositionFromBeat(startBeat, beatLength);
+        }
+
+        public static void PlaySound(float startBeat, bool side, bool isPineapple)
+        {
+            string soundText = "catchyTune/";
+
+            if (side)
+            {
+                soundText += "right";
+            }
+            else
+            {
+                soundText += "left";
+            }
+
+            if (isPineapple)
+            {
+                soundText += "Pineapple";
+            }
+            else
+            {
                 soundText += "Orange";
             }
 
@@ -73,7 +109,8 @@ namespace HeavenStudio.Games.Scripts_CatchyTune
             MultiSound.Sound[] sound;
 
 
-            if (isPineapple) {
+            if (isPineapple)
+            {
                 sound = new MultiSound.Sound[]
                 {
                     new MultiSound.Sound(soundText, startBeat + 2f),
@@ -91,86 +128,27 @@ namespace HeavenStudio.Games.Scripts_CatchyTune
                 };
             }
 
-            MultiSound.Play(sound);
+            MultiSound.Play(sound, forcePlay: true);
         }
 
-        private void Update()
+        private void CatchFruit(PlayerActionEvent caller, float state)
         {
-            Conductor cond = Conductor.instance;
-            float tempo = cond.songBpm;
-            float playbackSpeed = cond.musicSource.pitch;
-
-            if (cond.isPaused)
-            {
-                anim.SetFloat("speed", 0f);
-            }
-            else {
-                anim.SetFloat("speed", GetAnimSpeed(isPineapple, tempo, playbackSpeed));
-            }
-
-            
-
-            float normalizedBeat = Conductor.instance.GetPositionFromBeat(startBeat, beatLength);
-
-            if (eligable)
-            {
-                // check input timing
-                StateCheck(normalizedBeat);
-                bool pressed = (PlayerInput.Pressed() && side) || (PlayerInput.GetAnyDirectionDown() && !side);
-                if (pressed)
-                {
-                    if (state.perfect)
-                    {
-                        CatchFruit();
-                    }
-                    else if (state.notPerfect())
-                    {
-                        Miss();
-                    }
-                    else {
-                        WayOff();
-                    }
-                }
-            }
-
-            // fell off screen
-            if (normalizedBeat > 1.5f) {
-                Destroy(this.gameObject);
-            }
-        }
-
-        private float GetAnimSpeed(bool pineapple, float tempo, float playbackSpeed)
-        {
-            float speedmult = pineapple ? 0.5f : 1f;
-            return (speedmult * tempo / 60f) * 0.17f * playbackSpeed;
-        }
-
-        public override void OnAce()
-        {
-            CatchFruit();
-        }
-
-        private void CatchFruit()
-        {
-            //print("catch fruit");
+            //minenice: TODO - near misses (-1 > state > 1)
             Jukebox.PlayOneShotGame(soundText + "Catch");
-            game.catchSuccess(side, isPineapple, smile, startBeat+beatLength);
+            game.catchSuccess(side, isPineapple, smile, startBeat + beatLength);
             Destroy(this.gameObject);
         }
 
-        private void Miss()
+        private void Miss(PlayerActionEvent caller)
         {
-            //print("miss fruit");
-            eligable = false;
             game.catchMiss(side, isPineapple);
-            Jukebox.PlayOneShotGame("catchyTune/whiff");
+
+            BeatAction.New(gameObject, new List<BeatAction.Action>()
+            {
+                new BeatAction.Action(startBeat + beatLength + (isPineapple ? 1f : 0.5f), delegate { Destroy(this.gameObject); }),
+            });
         }
 
-        private void WayOff()
-        {
-            //print("way off");
-            //eligable = false;
-            Jukebox.PlayOneShotGame("catchyTune/whiff");
-        }
+        private void WayOff(PlayerActionEvent caller) {} // whiffing is handled in the main loop
     }
 }
