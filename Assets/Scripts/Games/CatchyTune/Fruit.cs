@@ -18,6 +18,8 @@ namespace HeavenStudio.Games.Scripts_CatchyTune
 
         public bool side;
 
+        public bool smile;
+
         public bool eligable = true;
 
         private string soundText;
@@ -152,7 +154,7 @@ namespace HeavenStudio.Games.Scripts_CatchyTune
         {
             //print("catch fruit");
             Jukebox.PlayOneShotGame(soundText + "Catch");
-            game.catchSuccess(side, isPineapple, startBeat+beatLength);
+            game.catchSuccess(side, isPineapple, smile, startBeat+beatLength);
             Destroy(this.gameObject);
         }
 
@@ -161,7 +163,7 @@ namespace HeavenStudio.Games.Scripts_CatchyTune
             //print("miss fruit");
             eligable = false;
             game.catchMiss(side, isPineapple);
-            Jukebox.PlayOneShotGame("catchyTune/missTest");
+            Jukebox.PlayOneShotGame("catchyTune/whiff");
         }
 
         private void WayOff()
