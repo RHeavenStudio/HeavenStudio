@@ -6,11 +6,16 @@ using UnityEngine;
 namespace HeavenStudio.Games.Loaders
 {
     using static Minigames;
-    public static class AgbDoubleDateLoader
+    public static class RvlDoubleDateLoader
     {
         public static Minigame AddGame(EventCaller eventCaller) {
-            return new Minigame("DoubleDate", "Double Date \n<color=#eb5454>[INITIALIZATION ONLY]</color>", "0058CE", false, false, new List<GameAction>()
+            return new Minigame("doubleDate", "Double Date \n<color=#eb5454>[INITIALIZATION ONLY]</color>", "0058CE", false, false, new List<GameAction>()
             {
+                new GameAction("soccerBall", "Soccer Ball")
+                {
+                    function = delegate { var e = eventCaller.currentEntity; DoubleDate.instance.ball(e.beat, e["type"]); }, 
+                    defaultLength = 2,
+                }
             });
         }
     }
@@ -19,18 +24,27 @@ namespace HeavenStudio.Games.Loaders
 namespace HeavenStudio.Games
 {
     using Scripts_DoubleDate;
+
     public class DoubleDate : Minigame
     {
-        // Start is called before the first frame update
-        void Awake()
-        {
-            
+        public static DoubleDate instance;
+
+        public enum soccerBall {
+            soccerBall,
         }
 
-        // Update is called once per frame
-        void Update()
+        [Header("Objects")]
+        public Animator soccerBallAnim;
+        
+        private void Awake()
         {
-            
+            instance = this;
+        }
+
+        public void ball(float beat, int type)
+        {
+            Jukebox.PlayOneShotGame("doubleDate/soccerBall");
         }
     }
+
 }
