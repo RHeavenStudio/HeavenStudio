@@ -22477,7 +22477,7 @@ MonoBehaviour:
   - name: arisa_hai
     sequence:
       game: 1
-      force: 0
+      force: 1
       clips:
       - clip: fanClub/arisa_hai_1_jp
         beat: 0
@@ -22485,18 +22485,21 @@ MonoBehaviour:
         volume: 1
         looping: 0
         offset: 0
+        parameters: []
       - clip: fanClub/arisa_hai_2_jp
         beat: 1
         pitch: 1
         volume: 1
         looping: 0
         offset: 0
+        parameters: []
       - clip: fanClub/arisa_hai_3_jp
         beat: 2
         pitch: 1
         volume: 1
         looping: 0
         offset: 0
+        parameters: []
   - name: crowd_hai
     sequence:
       game: 1
@@ -22508,28 +22511,32 @@ MonoBehaviour:
         volume: 1
         looping: 0
         offset: 0
+        parameters: []
       - clip: fanClub/crowd_hai_jp
         beat: 1
         pitch: 1
         volume: 1
         looping: 0
         offset: 0
+        parameters: []
       - clip: fanClub/crowd_hai_jp
         beat: 2
         pitch: 1
         volume: 1
         looping: 0
         offset: 0
+        parameters: []
       - clip: fanClub/crowd_hai_jp
         beat: 3
         pitch: 1
         volume: 1
         looping: 0
         offset: 0
+        parameters: []
   - name: arisa_kamone
     sequence:
       game: 1
-      force: 0
+      force: 1
       clips:
       - clip: fanClub/arisa_ka_jp
         beat: 0
@@ -22537,22 +22544,25 @@ MonoBehaviour:
         volume: 1
         looping: 0
         offset: 0
+        parameters: []
       - clip: fanClub/arisa_mo_jp
         beat: 0.5
         pitch: 1
         volume: 1
         looping: 0
         offset: 0.07407407
+        parameters: []
       - clip: fanClub/arisa_ne_jp
         beat: 1
         pitch: 1
         volume: 1
         looping: 0
         offset: 0.07407407
+        parameters: []
   - name: arisa_kamone_fast
     sequence:
       game: 1
-      force: 0
+      force: 1
       clips:
       - clip: fanClub/arisa_ka_fast_jp
         beat: 0
@@ -22560,18 +22570,21 @@ MonoBehaviour:
         volume: 1
         looping: 0
         offset: 0
+        parameters: []
       - clip: fanClub/arisa_mo_fast_jp
         beat: 0.25
         pitch: 1
         volume: 1
         looping: 0
         offset: 0
+        parameters: []
       - clip: fanClub/arisa_ne_fast_jp
         beat: 0.5
         pitch: 1
         volume: 1
         looping: 0
         offset: 0
+        parameters: []
   - name: crowd_kamone
     sequence:
       game: 1
@@ -22583,28 +22596,32 @@ MonoBehaviour:
         volume: 1
         looping: 0
         offset: 0
+        parameters: []
       - clip: fanClub/crowd_mo_jp
         beat: 1.5
         pitch: 1
         volume: 1
         looping: 0
         offset: 0
+        parameters: []
       - clip: fanClub/crowd_ne_jp
         beat: 2
         pitch: 1
         volume: 1
         looping: 0
         offset: 0
+        parameters: []
       - clip: fanClub/crowd_hey_jp
         beat: 3
         pitch: 1
         volume: 1
         looping: 0
         offset: 0
+        parameters: []
   - name: crowd_big_ready
     sequence:
       game: 1
-      force: 0
+      force: 1
       clips:
       - clip: fanClub/crowd_big_ready
         beat: 0
@@ -22612,6 +22629,7 @@ MonoBehaviour:
         volume: 1
         looping: 0
         offset: 0
+        parameters: []
   EligibleHits: []
   scheduledInputs: []
   firstEnable: 0
