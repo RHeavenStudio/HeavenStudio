@@ -22,13 +22,13 @@ namespace HeavenStudio.Games
     //using Scripts_WorkingDough;
     public class WorkingDough : Minigame
     {
-        // Start is called before the first frame update
+        public static WorkingDough instance;
+
         void Awake()
         {
-
+            instance = this;
         }
 
-        // Update is called once per frame
         void Update()
         {
 
