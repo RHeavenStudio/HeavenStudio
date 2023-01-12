@@ -48,6 +48,7 @@ namespace HeavenStudio.Editor
 
         private void Update()
         {
+            if (Editor.instance == null) return;
             float deltaTimelineX = timelineContent.transform.localPosition.x - timelineLastX;
 
             Camera camera = Editor.instance.EditorCamera;

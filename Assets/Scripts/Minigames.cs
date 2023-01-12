@@ -41,6 +41,7 @@ namespace HeavenStudio
             public bool hasLocales => (supportedLocales.Count > 0);
             public bool hasVersions => (gameVersions.Count > 0);
             public bool AssetsLoaded => (((hasLocales && localeLoaded && currentLoadedLocale == defaultLocale) || (hasVersions && versionLoaded && currentLoadedVersion == defaultVersion) || (!hasLocales || !hasVersions)) && commonLoaded);
+            public bool SequencesPreloaded => soundSequences != null;
 
             private AssetBundle bundleCommon = null;
             private bool commonLoaded = false;
@@ -54,7 +55,15 @@ namespace HeavenStudio
             private bool versionLoaded = false;
             private bool versionPreloaded = false;
 
-            public Minigame(string name, string displayName, string color, bool threeD, bool fxOnly, List<GameAction> actions, List<string> tags = null, string assetBundle = "", string defaultLocale = "en", string defaultVersion = "ver0", List<string> supportedLocales = null, List<string> gameVersions = null)
+            private SoundSequence.SequenceKeyValue[] soundSequences = null;
+
+            public SoundSequence.SequenceKeyValue[] LoadedSoundSequences
+            {
+                get => soundSequences;
+                set => soundSequences = value;
+            }
+
+                        public Minigame(string name, string displayName, string color, bool threeD, bool fxOnly, List<GameAction> actions, List<string> tags = null, string assetBundle = "", string defaultLocale = "en", string defaultVersion = "ver0", List<string> supportedLocales = null, List<string> gameVersions = null)
             {
                 this.name = name;
                 this.displayName = displayName;

@@ -216,16 +216,18 @@ namespace HeavenStudio.Games
             return sameTime;
         }
 
-        public MultiSound PlaySoundSequence(string name, float startBeat)
+        public static MultiSound PlaySoundSequence(string game, string name, float startBeat, params SoundSequence.SequenceParams[] args)
         {
-            foreach (SoundSequence.SequenceKeyValue pair in SoundSequences)
+            Minigames.Minigame gameInfo = GameManager.instance.GetGameInfo(game);
+            foreach (SoundSequence.SequenceKeyValue pair in gameInfo.LoadedSoundSequences)
             {
                 if (pair.name == name)
                 {
+                    // Debug.Log($"Playing sound sequence {name} at beat {startBeat}");
                     return pair.sequence.Play(startBeat);
                 }
             }
-            Debug.LogWarning($"Sound sequence {name} not found in game {this.name} (did you build AssetBundles?)");
+            Debug.LogWarning($"Sound sequence {name} not found in game {game} (did you build AssetBundles?)");
             return null;
         }
     }

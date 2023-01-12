@@ -31,6 +31,7 @@ namespace HeavenStudio.Editor
 
         private void Start()
         {
+            if (Editor.instance == null) return;
             specialLayers.GetComponent<Image>().color = theme.properties.SpecialLayersCol.Hex2RGB();
             tempoLayer.GetComponent<Image>().color = theme.properties.TempoLayerCol.Hex2RGB();
             musicLayer.GetComponent<Image>().color = theme.properties.MusicLayerCol.Hex2RGB();
