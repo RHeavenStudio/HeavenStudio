@@ -52,7 +52,7 @@ namespace HeavenStudio.Util
             {
                 playInstant = false;
                 scheduledPitch = cnd.musicSource.pitch;
-                startTime = cnd.dspStartTimeAsDouble + ((cnd.GetSongPosFromBeat(beat - cnd.startBeatAsDouble))/(double)scheduledPitch);
+                startTime = (AudioSettings.dspTime + (cnd.GetSongPosFromBeat(beat) - cnd.songPositionAsDouble)/(double)scheduledPitch);
                 audioSource.PlayScheduled(startTime);
             }
         }
