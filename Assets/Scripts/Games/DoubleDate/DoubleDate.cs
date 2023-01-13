@@ -15,6 +15,16 @@ namespace HeavenStudio.Games.Loaders
                 {
                     function = delegate { var e = eventCaller.currentEntity; DoubleDate.instance.ball(e.beat, e["type"]); }, 
                     defaultLength = 2,
+                },
+                new GameAction("basketball", "Basketball")
+                {
+                    function = delegate { var e = eventCaller.currentEntity; DoubleDate.instance.ball(e.beat, e["type"]); }, 
+                    defaultLength = 2,
+                },
+                new GameAction("football", "Football")
+                {
+                    function = delegate { var e = eventCaller.currentEntity; DoubleDate.instance.ball(e.beat, e["type"]); }, 
+                    defaultLength = 2,
                 }
             });
         }
@@ -29,16 +39,20 @@ namespace HeavenStudio.Games
     {
         public static DoubleDate instance;
 
-        public enum soccerBall {
-            soccerBall,
-        }
-
         [Header("Objects")]
         public Animator soccerBallAnim;
+        public Animator basketballAnim;
+        public Animator footballAnim;
         
         private void Awake()
         {
             instance = this;
+        }
+
+        private void HitSound(bool applause)
+        {
+            Jukebox.PlayOneShotGame("doubleDate/kick");
+            if (applause) Jukebox.PlayOneShot("applause");
         }
 
         public void ball(float beat, int type)
