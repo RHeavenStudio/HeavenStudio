@@ -17,7 +17,8 @@
 
 [Bug Report Form](https://docs.google.com/forms/d/e/1FAIpQLSfu0p2ZjrfwwEvpLgJ4Hw-AAN3jh4QNSEk0U7mjDvwiIkoRAw/viewform?usp=pp_url)
 
-![image](https://i.ibb.co/pjFgyZX/hs-github-image.png)
+![prCapture](https://user-images.githubusercontent.com/43734252/212429715-1971929f-fee1-442f-8ba2-694e1732590a.png)
+
 
 
 ## Prebuilt Binaries
