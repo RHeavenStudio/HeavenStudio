@@ -7,6 +7,8 @@ namespace HeavenStudio
 {
     [System.Flags]
     public enum InputType : int {
+        // Shouldn't be used by minigame scripts
+        ANY = -1,
 
         //General
         //-------

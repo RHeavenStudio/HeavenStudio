@@ -47,7 +47,7 @@ TextureImporter:
   maxTextureSize: 2048
   textureSettings:
     serializedVersion: 2
-    filterMode: 1
+    filterMode: 2
     aniso: 1
     mipBias: 0
     wrapU: 1
@@ -61,7 +61,7 @@ TextureImporter:
   spriteMeshType: 1
   alignment: 0
   spritePivot: {x: 0.5, y: 0.5}
-  spritePixelsToUnits: 100
+  spritePixelsToUnits: 200
   spriteBorder: {x: 0, y: 0, z: 0, w: 0}
   spriteGenerateFallbackPhysicsShape: 1
   alphaUsage: 1
@@ -109,16 +109,16 @@ TextureImporter:
       name: launcherPivot
       rect:
         serializedVersion: 2
-        x: 0
-        y: 928
-        width: 73
-        height: 69
+        x: 1340
+        y: 1325
+        width: 160
+        height: 151
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
-      tessellationDetail: 0
+      tessellationDetail: -1
       bones: []
       spriteID: a7185d60c05421b40800000000000000
       internalID: 5409462020381966714
@@ -130,16 +130,16 @@ TextureImporter:
       name: board00
       rect:
         serializedVersion: 2
-        x: 0
-        y: 116
-        width: 613
-        height: 32
+        x: 60
+        y: 168
+        width: 1106
+        height: 54
       alignment: 9
       pivot: {x: 0.225, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
-      tessellationDetail: 0
+      tessellationDetail: -1
       bones: []
       spriteID: db7180a2917b93ea0800000000000000
       internalID: -5892477318730344515
@@ -151,16 +151,16 @@ TextureImporter:
       name: board01
       rect:
         serializedVersion: 2
-        x: 0
-        y: 208
-        width: 612
-        height: 169
+        x: 69
+        y: 1189
+        width: 1088
+        height: 297
       alignment: 9
       pivot: {x: 0.225, y: 0.85}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
-      tessellationDetail: 0
+      tessellationDetail: -1
       bones: []
       spriteID: 05e3510969553a500800000000000000
       internalID: 406262496544243280
@@ -172,16 +172,16 @@ TextureImporter:
       name: board02
       rect:
         serializedVersion: 2
-        x: 0
-        y: 455
-        width: 630
-        height: 185
+        x: 53
+        y: 795
+        width: 1120
+        height: 324
       alignment: 9
       pivot: {x: 0.225, y: 0.15}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
-      tessellationDetail: 0
+      tessellationDetail: -1
       bones: []
       spriteID: a0b3e89b3544cae40800000000000000
       internalID: 5668981157338692362
@@ -193,16 +193,16 @@ TextureImporter:
       name: board03
       rect:
         serializedVersion: 2
-        x: 0
-        y: 699
-        width: 624
-        height: 181
+        x: 80
+        y: 313
+        width: 1146
+        height: 329
       alignment: 9
       pivot: {x: 0.225, y: 0.85}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
-      tessellationDetail: 0
+      tessellationDetail: -1
       bones: []
       spriteID: 35661a3a52175a700800000000000000
       internalID: 550970935895746131
