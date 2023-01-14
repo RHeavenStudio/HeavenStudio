@@ -85,6 +85,7 @@ namespace HeavenStudio.Games
         {
             if (!intervalStarted)
             {
+                bigMode = false;
                 intervalStarted = true;
                 //Open npc transporters
                 ballTransporterLeftNPC.GetComponent<Animator>().Play("BallTransporterLeftOpen", 0, 0);
@@ -100,6 +101,7 @@ namespace HeavenStudio.Games
                         if (bigMode)
                         {
                             NPCBallTransporters.GetComponent<Animator>().Play("NPCExitBigMode", 0, 0);
+                            bigMode = false;
                         }
                     }),
                     //Close npc transporters
