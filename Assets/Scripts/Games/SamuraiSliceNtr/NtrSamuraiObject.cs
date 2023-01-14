@@ -106,8 +106,19 @@ namespace HeavenStudio.Games.Scripts_NtrSamurai
             {
                 switch (flyProg)
                 {
+                    case -3:    // near miss on board launch
+                        flyPos = cond.GetPositionFromBeat(startBeat, 2f);
+                        transform.position = currentCurve.GetPoint(flyPos);
+                        transform.rotation = Quaternion.Euler(0, 0, transform.rotation.eulerAngles.z + (180f * Time.deltaTime));
+
+                        if (flyPos > 1f)
+                        {
+                            GameObject.Destroy(gameObject);
+                            return;
+                        }
+                        break;
                     case -2:    // being carried by a child
-                        flyPos = cond.GetPositionFromBeat(startBeat + 2f, 2f);
+                        flyPos = cond.GetPositionFromBeat(startBeat + 2f, 4f);
                         if (heldPos == null || flyPos > 1f)
                         {
                             GameObject.Destroy(gameObject);
@@ -130,6 +141,7 @@ namespace HeavenStudio.Games.Scripts_NtrSamurai
                                 secondHalf.heldPos = child.DebrisPosL;
                             }
                             flyProg = -2;
+                            GetComponent<SpriteRenderer>().sortingOrder = 7;
                             return;
                         }
                         break;
@@ -247,6 +259,15 @@ namespace HeavenStudio.Games.Scripts_NtrSamurai
 
         public void LaunchSuccess(PlayerActionEvent caller, float state)
         {
+            if (state <= -1f || state >= 1f)
+            {
+                startBeat = launchProg.startBeat + 2f;
+                currentCurve = SamuraiSliceNtr.instance.NgLaunchCurve;
+                flyProg = -3;
+                Jukebox.PlayOneShotGame("samuraiSliceNtr/ntrSamurai_launchImpact", pitch: 2f);
+                launchProg.Disable();
+                return;
+            }
             launchProg.Disable();
             DoLaunch();
             Jukebox.PlayOneShotGame("samuraiSliceNtr/ntrSamurai_launchImpact", pitch: UnityEngine.Random.Range(0.85f, 1.05f));
@@ -262,6 +283,15 @@ namespace HeavenStudio.Games.Scripts_NtrSamurai
 
         public void HitSuccess(PlayerActionEvent caller, float state)
         {
+            if (state <= -1f || state >= 1f)
+            {
+                startBeat = hitProg.startBeat + hitProg.timer;
+                currentCurve = SamuraiSliceNtr.instance.NgDebrisCurve;
+                flyProg = -3;
+                Jukebox.PlayOneShotGame("samuraiSliceNtr/ntrSamurai_ng");
+                hitProg.Disable();
+                return;
+            }
             flyProg = -1;
             hitProg.Disable();
             if (UnityEngine.Random.Range(0f, 1f) >= 0.5f)

@@ -142,7 +142,7 @@ TextureImporter:
   spriteMeshType: 0
   alignment: 0
   spritePivot: {x: 0.5, y: 0.5}
-  spritePixelsToUnits: 100
+  spritePixelsToUnits: 244.14062
   spriteBorder: {x: 0, y: 0, z: 0, w: 0}
   spriteGenerateFallbackPhysicsShape: 1
   alphaUsage: 1
@@ -161,7 +161,7 @@ TextureImporter:
   platformSettings:
   - serializedVersion: 3
     buildTarget: DefaultTexturePlatform
-    maxTextureSize: 2048
+    maxTextureSize: 4096
     resizeAlgorithm: 0
     textureFormat: -1
     textureCompression: 1
@@ -173,7 +173,7 @@ TextureImporter:
     forceMaximumCompressionQuality_BC6H_BC7: 0
   - serializedVersion: 3
     buildTarget: Standalone
-    maxTextureSize: 2048
+    maxTextureSize: 4096
     resizeAlgorithm: 0
     textureFormat: -1
     textureCompression: 1
@@ -190,16 +190,16 @@ TextureImporter:
       name: pillow_half_half_0
       rect:
         serializedVersion: 2
-        x: 7
-        y: 1775
-        width: 167
-        height: 267
+        x: 17.089844
+        y: 4333.496
+        width: 407.71484
+        height: 651.85547
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
-      tessellationDetail: 0
+      tessellationDetail: -1
       bones: []
       spriteID: 8a1ad02525c1ddca0800000000000000
       internalID: -5990600789443370584
@@ -211,16 +211,16 @@ TextureImporter:
       name: pillow_half_half_1
       rect:
         serializedVersion: 2
-        x: 199
-        y: 1818
-        width: 304
-        height: 216
+        x: 485.83984
+        y: 4438.4766
+        width: 742.1875
+        height: 527.34375
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
-      tessellationDetail: 0
+      tessellationDetail: -1
       bones: []
       spriteID: 525a34259f9b74030800000000000000
       internalID: 3478953717645157669
@@ -232,16 +232,16 @@ TextureImporter:
       name: pillow_half_half_2
       rect:
         serializedVersion: 2
-        x: 520
-        y: 1748
-        width: 587
-        height: 293
+        x: 1269.5312
+        y: 4267.578
+        width: 1433.1055
+        height: 715.33203
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
-      tessellationDetail: 0
+      tessellationDetail: -1
       bones: []
       spriteID: d84e23cd067b11d60800000000000000
       internalID: 7859264451377292429
@@ -253,16 +253,16 @@ TextureImporter:
       name: pillow_half_half_3
       rect:
         serializedVersion: 2
-        x: 1186
-        y: 1435
-        width: 855
-        height: 606
+        x: 2895.5078
+        y: 3503.418
+        width: 2087.4023
+        height: 1479.4922
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
-      tessellationDetail: 0
+      tessellationDetail: -1
       bones: []
       spriteID: 3966564621c3a9400800000000000000
       internalID: 331643572256597651
@@ -274,16 +274,16 @@ TextureImporter:
       name: pillow_half_half_4
       rect:
         serializedVersion: 2
-        x: 32
-        y: 1596
-        width: 812
-        height: 101
+        x: 78.125
+        y: 3896.4844
+        width: 1982.4219
+        height: 246.58203
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
-      tessellationDetail: 0
+      tessellationDetail: -1
       bones: []
       spriteID: d9c5ed09a3ef445f0800000000000000
       internalID: -773213708508832611
@@ -295,16 +295,16 @@ TextureImporter:
       name: pillow_half_half_5
       rect:
         serializedVersion: 2
-        x: 883
-        y: 1659
-        width: 46
-        height: 50
+        x: 2155.7617
+        y: 4050.293
+        width: 112.30469
+        height: 122.07031
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
-      tessellationDetail: 0
+      tessellationDetail: -1
       bones: []
       spriteID: 6700087c656964020800000000000000
       internalID: 2325711557041848438
@@ -316,16 +316,16 @@ TextureImporter:
       name: pillow_half_half_6
       rect:
         serializedVersion: 2
-        x: 1023
-        y: 1574
-        width: 70
-        height: 87
+        x: 2497.5586
+        y: 3842.7734
+        width: 170.89844
+        height: 212.40234
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
-      tessellationDetail: 0
+      tessellationDetail: -1
       bones: []
       spriteID: f5295def419a28920800000000000000
       internalID: 2991139010167280223
@@ -337,16 +337,16 @@ TextureImporter:
       name: pillow_half_half_8
       rect:
         serializedVersion: 2
-        x: 31
-        y: 1330
-        width: 286
-        height: 234
+        x: 75.68359
+        y: 3247.0703
+        width: 698.2422
+        height: 571.28906
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
-      tessellationDetail: 0
+      tessellationDetail: -1
       bones: []
       spriteID: 7184c39dfd7682700800000000000000
       internalID: 515776368453896215
@@ -358,16 +358,16 @@ TextureImporter:
       name: pillow_half_half_9
       rect:
         serializedVersion: 2
-        x: 371
-        y: 1387
-        width: 283
-        height: 128
+        x: 905.7617
+        y: 3386.2305
+        width: 690.91797
+        height: 312.5
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
-      tessellationDetail: 0
+      tessellationDetail: -1
       bones: []
       spriteID: 6cbecb771f87f8c00800000000000000
       internalID: 905075028616080326
@@ -379,16 +379,16 @@ TextureImporter:
       name: pillow_half_half_10
       rect:
         serializedVersion: 2
-        x: 736
-        y: 1326
-        width: 208
-        height: 226
+        x: 1796.875
+        y: 3237.3047
+        width: 507.8125
+        height: 551.7578
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
-      tessellationDetail: 0
+      tessellationDetail: -1
       bones: []
       spriteID: ada7c67d0589439c0800000000000000
       internalID: -3948363500318065958
@@ -400,16 +400,16 @@ TextureImporter:
       name: pillow_half_half_11
       rect:
         serializedVersion: 2
-        x: 1023
-        y: 1446
-        width: 71
-        height: 87
+        x: 2497.5586
+        y: 3530.2734
+        width: 173.33984
+        height: 212.40234
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
-      tessellationDetail: 0
+      tessellationDetail: -1
       bones: []
       spriteID: 35649072311a27e90800000000000000
       internalID: -7029378964740553133
@@ -421,16 +421,16 @@ TextureImporter:
       name: pillow_half_half_13
       rect:
         serializedVersion: 2
-        x: 1026
-        y: 1307
-        width: 68
-        height: 87
+        x: 2504.8828
+        y: 3190.918
+        width: 166.01562
+        height: 212.40234
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
-      tessellationDetail: 0
+      tessellationDetail: -1
       bones: []
       spriteID: 644c787134f38d9d0800000000000000
       internalID: -2749378015119555514
@@ -442,16 +442,16 @@ TextureImporter:
       name: pillow_half_half_14
       rect:
         serializedVersion: 2
-        x: 1151
-        y: 750
-        width: 251
-        height: 659
+        x: 2810.0586
+        y: 1831.0547
+        width: 612.79297
+        height: 1608.8867
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
-      tessellationDetail: 0
+      tessellationDetail: -1
       bones: []
       spriteID: d405f5ea7eff58620800000000000000
       internalID: 2775906115871789133
@@ -463,16 +463,16 @@ TextureImporter:
       name: pillow_half_half_15
       rect:
         serializedVersion: 2
-        x: 1467
-        y: 563
-        width: 574
-        height: 842
+        x: 3581.543
+        y: 1374.5117
+        width: 1401.3672
+        height: 2055.664
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
-      tessellationDetail: 0
+      tessellationDetail: -1
       bones: []
       spriteID: 9aabecbbacf83f280800000000000000
       internalID: -9010700328541177175
@@ -484,16 +484,16 @@ TextureImporter:
       name: pillow_half_half_16
       rect:
         serializedVersion: 2
-        x: 15
-        y: 1054
-        width: 882
-        height: 255
+        x: 36.621094
+        y: 2573.2422
+        width: 2153.3203
+        height: 622.5586
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
-      tessellationDetail: 0
+      tessellationDetail: -1
       bones: []
       spriteID: 15c7850135e94e560800000000000000
       internalID: 7342167372114459729
@@ -505,16 +505,16 @@ TextureImporter:
       name: pillow_half_half_18
       rect:
         serializedVersion: 2
-        x: 959
-        y: 1227
-        width: 36
-        height: 37
+        x: 2341.3086
+        y: 2995.6055
+        width: 87.890625
+        height: 90.33203
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
-      tessellationDetail: 0
+      tessellationDetail: -1
       bones: []
       spriteID: 3ddcec6a4bf010d90800000000000000
       internalID: -7133403066211054125
@@ -526,16 +526,16 @@ TextureImporter:
       name: pillow_half_half_19
       rect:
         serializedVersion: 2
-        x: 1039
-        y: 1223
-        width: 31
-        height: 42
+        x: 2536.621
+        y: 2985.8398
+        width: 75.68359
+        height: 102.53906
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
-      tessellationDetail: 0
+      tessellationDetail: -1
       bones: []
       spriteID: 74fc32096f1ef65c0800000000000000
       internalID: -4219905876726395065
@@ -547,16 +547,16 @@ TextureImporter:
       name: pillow_half_half_20
       rect:
         serializedVersion: 2
-        x: 957
-        y: 1143
-        width: 30
-        height: 32
+        x: 2336.4258
+        y: 2790.5273
+        width: 73.24219
+        height: 78.125
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
-      tessellationDetail: 0
+      tessellationDetail: -1
       bones: []
       spriteID: 71f626694f1829400800000000000000
       internalID: 329468610246504215
@@ -568,16 +568,16 @@ TextureImporter:
       name: pillow_half_half_21
       rect:
         serializedVersion: 2
-        x: 1038
-        y: 1144
-        width: 39
-        height: 38
+        x: 2534.1797
+        y: 2792.9688
+        width: 95.21484
+        height: 92.77344
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
-      tessellationDetail: 0
+      tessellationDetail: -1
       bones: []
       spriteID: 89dc47212066cb740800000000000000
       internalID: 5169118631400099224
@@ -589,16 +589,16 @@ TextureImporter:
       name: pillow_half_half_22
       rect:
         serializedVersion: 2
-        x: 11
-        y: 262
-        width: 674
-        height: 763
+        x: 26.855469
+        y: 639.64844
+        width: 1645.5078
+        height: 1862.793
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
-      tessellationDetail: 0
+      tessellationDetail: -1
       bones: []
       spriteID: 5e99e78381572d8f0800000000000000
       internalID: -517222260306699803
@@ -610,16 +610,16 @@ TextureImporter:
       name: pillow_half_half_23
       rect:
         serializedVersion: 2
-        x: 725
-        y: 403
-        width: 314
-        height: 579
+        x: 1770.0195
+        y: 983.8867
+        width: 766.60156
+        height: 1413.5742
       alignment: 2
       pivot: {x: 0.5, y: 1}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
-      tessellationDetail: 0
+      tessellationDetail: -1
       bones: []
       spriteID: 35e007e26f873af70800000000000000
       internalID: 9197327862757068371
@@ -631,16 +631,16 @@ TextureImporter:
       name: pillow_half_half_24
       rect:
         serializedVersion: 2
-        x: 1152
-        y: 507
-        width: 266
-        height: 185
+        x: 2812.5
+        y: 1237.793
+        width: 649.41406
+        height: 451.66016
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
-      tessellationDetail: 0
+      tessellationDetail: -1
       bones: []
       spriteID: d069ae6248ecc56f0800000000000000
       internalID: -694453175537986035
@@ -652,16 +652,16 @@ TextureImporter:
       name: pillow_half_half_25
       rect:
         serializedVersion: 2
-        x: 1137
-        y: 363
-        width: 876
-        height: 92
+        x: 2775.879
+        y: 886.23047
+        width: 2138.6719
+        height: 224.60938
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
-      tessellationDetail: 0
+      tessellationDetail: -1
       bones: []
       spriteID: e20845511f6d196c0800000000000000
       internalID: -4138290251643453394
@@ -673,16 +673,16 @@ TextureImporter:
       name: pillow_half_half_26
       rect:
         serializedVersion: 2
-        x: 8
-        y: 156
-        width: 157
-        height: 93
+        x: 19.53125
+        y: 380.85938
+        width: 383.30078
+        height: 227.05078
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
-      tessellationDetail: 0
+      tessellationDetail: -1
       bones: []
       spriteID: f01b0745549768830800000000000000
       internalID: 4073076251679568143
@@ -694,16 +694,16 @@ TextureImporter:
       name: pillow_half_half_27
       rect:
         serializedVersion: 2
-        x: 184
-        y: 163
-        width: 113
-        height: 78
+        x: 449.21875
+        y: 397.94922
+        width: 275.8789
+        height: 190.42969
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
-      tessellationDetail: 0
+      tessellationDetail: -1
       bones: []
       spriteID: 8815a01f1a8d832f0800000000000000
       internalID: -992805527789874808
@@ -715,16 +715,16 @@ TextureImporter:
       name: pillow_half_half_28
       rect:
         serializedVersion: 2
-        x: 342
-        y: 22
-        width: 84
-        height: 211
+        x: 834.96094
+        y: 53.710938
+        width: 205.07812
+        height: 515.1367
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
-      tessellationDetail: 0
+      tessellationDetail: -1
       bones: []
       spriteID: ee29c20cb03fcd7c0800000000000000
       internalID: -4045091133491211538
@@ -736,16 +736,16 @@ TextureImporter:
       name: pillow_half_half_29
       rect:
         serializedVersion: 2
-        x: 595
-        y: 6
-        width: 147
-        height: 188
+        x: 1452.6367
+        y: 14.6484375
+        width: 358.88672
+        height: 458.98438
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
-      tessellationDetail: 0
+      tessellationDetail: -1
       bones: []
       spriteID: 6841488ed5b5e7a00800000000000000
       internalID: 756142246335878278
@@ -757,16 +757,16 @@ TextureImporter:
       name: pillow_half_half_30
       rect:
         serializedVersion: 2
-        x: 758
-        y: 6
-        width: 323
-        height: 307
+        x: 1850.5859
+        y: 14.6484375
+        width: 788.5742
+        height: 749.5117
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
-      tessellationDetail: 0
+      tessellationDetail: -1
       bones: []
       spriteID: 88286c0482aab7210800000000000000
       internalID: 1331845204680278664
@@ -778,16 +778,16 @@ TextureImporter:
       name: pillow_half_half_31
       rect:
         serializedVersion: 2
-        x: 1097
-        y: 7
-        width: 944
-        height: 342
+        x: 2678.2227
+        y: 17.089844
+        width: 2304.6875
+        height: 834.96094
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
-      tessellationDetail: 0
+      tessellationDetail: -1
       bones: []
       spriteID: 0ddf9231abc78a030800000000000000
       internalID: 3506189448535211472

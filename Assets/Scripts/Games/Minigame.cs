@@ -8,7 +8,7 @@ namespace HeavenStudio.Games
 {
     public class Minigame : MonoBehaviour
     {
-        public static float earlyTime = 0.1f, perfectTime = 0.08f, aceEarlyTime = 0.025f, aceLateTime = 0.025f, lateTime = 0.08f, endTime = 0.1f;
+        public static float earlyTime = 0.07f, perfectTime = 0.04f, aceEarlyTime = 0.01f, aceLateTime = 0.01f, lateTime = 0.04f, endTime = 0.07f;
         [SerializeField] public SoundSequence.SequenceKeyValue[] SoundSequences;
 
         public List<Minigame.Eligible> EligibleHits = new List<Minigame.Eligible>();
@@ -107,7 +107,7 @@ namespace HeavenStudio.Games
         //Get the scheduled input that should happen the **Soonest**
         //Can return null if there's no scheduled inputs
         // remark: need a check for specific button(s)
-        public PlayerActionEvent GetClosestScheduledInput()
+        public PlayerActionEvent GetClosestScheduledInput(InputType input = InputType.ANY)
         {
             PlayerActionEvent closest = null;
 
@@ -115,7 +115,8 @@ namespace HeavenStudio.Games
             {
                 if(closest == null)
                 {
-                    closest = toCompare;
+                    if (input == InputType.ANY || toCompare.inputType.HasFlag(input))
+                        closest = toCompare;
                 } else
                 {
                     float t1 = closest.startBeat + closest.timer;
@@ -123,7 +124,11 @@ namespace HeavenStudio.Games
 
                     // Debug.Log("t1=" + t1 + " -- t2=" + t2);
 
-                    if (t2 < t1) closest = toCompare;
+                    if (t2 < t1)
+                    {
+                        if (input == InputType.ANY || toCompare.inputType.HasFlag(input))
+                            closest = toCompare;
+                    }
                 }
             }
 
@@ -133,10 +138,9 @@ namespace HeavenStudio.Games
         //Hasn't been tested yet. *Should* work.
         //Can be used to detect if the user is expected to input something now or not
         //Useful for strict call and responses games like Tambourine
-        // remark: need a check for specific button(s)
-        public bool IsExpectingInputNow()
+        public bool IsExpectingInputNow(InputType wantInput = InputType.ANY)
         {
-            PlayerActionEvent input = GetClosestScheduledInput();
+            PlayerActionEvent input = GetClosestScheduledInput(wantInput);
             if (input == null) return false;
             return input.IsExpectingInputNow();
         }
@@ -160,6 +164,16 @@ namespace HeavenStudio.Games
         public static float EndTime()
         {
             return 1f + ScaleTimingMargin(endTime);
+        }
+
+        public static float AceStartTime()
+        {
+            return 1f + ScaleTimingMargin(aceEarlyTime);
+        }
+
+        public static float AceEndTime()
+        {
+            return 1f + ScaleTimingMargin(aceLateTime);
         }
 
         //scales timing windows to the BPM in an ""intelligent"" manner

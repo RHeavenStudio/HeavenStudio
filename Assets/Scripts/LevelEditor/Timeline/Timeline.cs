@@ -528,7 +528,7 @@ namespace HeavenStudio.Editor.Track
         {
             if (playEnabled)
             {
-                PlayBTN.transform.GetChild(0).GetComponent<Image>().color = Color.green;
+                PlayBTN.transform.GetChild(0).GetComponent<Image>().color = Color.white;
                 PlayBTN.enabled = true;
             }
             else
@@ -540,7 +540,7 @@ namespace HeavenStudio.Editor.Track
             if (pauseEnabled)
             {
                 PauseBTN.enabled = true;
-                PauseBTN.transform.GetChild(0).GetComponent<Image>().color = Color.blue;
+                PauseBTN.transform.GetChild(0).GetComponent<Image>().color = Color.white;
             }
             else
             {   PauseBTN.transform.GetChild(0).GetComponent<Image>().color = Color.gray;
@@ -550,7 +550,7 @@ namespace HeavenStudio.Editor.Track
             if (stopEnabled)
             {
                 StopBTN.enabled = true;
-                StopBTN.transform.GetChild(0).GetComponent<Image>().color = Color.red;
+                StopBTN.transform.GetChild(0).GetComponent<Image>().color = Color.white;
             }
             else
             {

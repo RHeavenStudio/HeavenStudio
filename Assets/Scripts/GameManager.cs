@@ -60,6 +60,21 @@ namespace HeavenStudio
         public static GameManager instance { get; private set; }
         private EventCaller eventCaller;
 
+        List<int> inputOffsetSamples = new List<int>();
+        float averageInputOffset = 0;
+        public float AvgInputOffset
+        {
+            get
+            {
+                return averageInputOffset;
+            }
+            set
+            {
+                inputOffsetSamples.Add((int)value);
+                averageInputOffset = (float)inputOffsetSamples.Average();
+            }
+        }
+
         private void Awake()
         {
             // autoplay = true;
@@ -344,6 +359,8 @@ namespace HeavenStudio
         public void Play(float beat)
         {
             canInput = true;
+            inputOffsetSamples.Clear();
+            averageInputOffset = 0;
             StartCoroutine(PlayCo(beat));
             onBeatChanged?.Invoke(beat);
         }
@@ -382,6 +399,8 @@ namespace HeavenStudio
             SetCurrentEventToClosest(beat);
             onBeatChanged?.Invoke(beat);
             KillAllSounds();
+
+            Debug.Log($"Average input offset for playthrough: {averageInputOffset}ms");
 
             if (playOnStart)
             {
