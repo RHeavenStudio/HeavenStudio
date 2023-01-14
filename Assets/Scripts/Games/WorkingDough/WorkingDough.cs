@@ -35,7 +35,7 @@ namespace HeavenStudio.Games.Loaders
 
 namespace HeavenStudio.Games
 {
-    //using Scripts_WorkingDough;
+    using Scripts_WorkingDough;
     public class WorkingDough : Minigame
     {
         [Header("Components")]
@@ -90,30 +90,16 @@ namespace HeavenStudio.Games
 
         public void SpawnBall(float beat, bool isBig)
         {
-            if (isBig)
+            BeatAction.New(doughDudesNPC, new List<BeatAction.Action>()
             {
-                BeatAction.New(doughDudesNPC, new List<BeatAction.Action>()
-                {
-                    //Jump and play sound
-                    new BeatAction.Action(beat + 0.5f, delegate { doughDudesNPC.GetComponent<Animator>().Play("BigDoughJump", 0, 0); }),
-                    new BeatAction.Action(beat + 0.5f, delegate { Jukebox.PlayOneShotGame("workingDough/NPCBigBall"); }),
-                    new BeatAction.Action(beat + 0.5f, delegate { Jukebox.PlayOneShotGame("workingDough/SmallBall"); }),
-                    new BeatAction.Action(beat + 0.5f, delegate { npcImpact.SetActive(true); }),
-                    new BeatAction.Action(beat + 0.6f, delegate { npcImpact.SetActive(false); }),
-                });
-            }
-            else
-            {
-                BeatAction.New(doughDudesNPC, new List<BeatAction.Action>()
-                {
-                    //Jump and play sound
-                    new BeatAction.Action(beat + 0.5f, delegate { doughDudesNPC.GetComponent<Animator>().Play("SmallDoughJump", 0, 0); }),
-                    new BeatAction.Action(beat + 0.5f, delegate { Jukebox.PlayOneShotGame("workingDough/NPCSmallBall"); }),
-                    new BeatAction.Action(beat + 0.5f, delegate { Jukebox.PlayOneShotGame("workingDough/SmallBall"); }),
-                    new BeatAction.Action(beat + 0.5f, delegate { npcImpact.SetActive(true); }),
-                    new BeatAction.Action(beat + 0.6f, delegate { npcImpact.SetActive(false); }),
-                });
-            }
+                //Jump and play sound
+                new BeatAction.Action(beat + 0.5f, delegate { doughDudesNPC.GetComponent<Animator>().Play(isBig ? "BigDoughJump" :"SmallDoughJump", 0, 0); }),
+                new BeatAction.Action(beat + 0.5f, delegate { Jukebox.PlayOneShotGame(isBig ? "workingDough/NPCBigBall" : "workingDough/NPCSmallBall"); }),
+                new BeatAction.Action(beat + 0.5f, delegate { Jukebox.PlayOneShotGame("workingDough/SmallBall"); }),
+                new BeatAction.Action(beat + 0.5f, delegate { npcImpact.SetActive(true); }),
+                new BeatAction.Action(beat + 0.6f, delegate { npcImpact.SetActive(false); }),
+            });
+
         }
 
         void Update()

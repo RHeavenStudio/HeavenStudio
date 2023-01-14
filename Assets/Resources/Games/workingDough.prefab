@@ -1148,6 +1148,36 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
+--- !u!1 &3885336978366137036
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 6649979826100345915}
+  m_Layer: 0
+  m_Name: Curves
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &6649979826100345915
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3885336978366137036}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 8664857966238409550}
+  m_RootOrder: 8
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &4178277750703538361
 GameObject:
   m_ObjectHideFlags: 0
@@ -2168,6 +2198,7 @@ Transform:
   - {fileID: 3144963930116768411}
   - {fileID: 4612207789681334008}
   - {fileID: 2428094795195615793}
+  - {fileID: 6649979826100345915}
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -2754,14 +2785,14 @@ GameObject:
   m_CorrespondingSourceObject: {fileID: 1571991866295846512, guid: 081ed264ff8a94f4081ee6b1dbb4b144, type: 3}
   m_PrefabInstance: {fileID: 7873819805929247186}
   m_PrefabAsset: {fileID: 0}
---- !u!4 &4612207789681334008 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: 3261934242483390250, guid: 081ed264ff8a94f4081ee6b1dbb4b144, type: 3}
-  m_PrefabInstance: {fileID: 7873819805929247186}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1 &7812265005354607313 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 85516462381953795, guid: 081ed264ff8a94f4081ee6b1dbb4b144, type: 3}
+  m_PrefabInstance: {fileID: 7873819805929247186}
+  m_PrefabAsset: {fileID: 0}
+--- !u!4 &4612207789681334008 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 3261934242483390250, guid: 081ed264ff8a94f4081ee6b1dbb4b144, type: 3}
   m_PrefabInstance: {fileID: 7873819805929247186}
   m_PrefabAsset: {fileID: 0}
 --- !u!1001 &7887385672556259939
