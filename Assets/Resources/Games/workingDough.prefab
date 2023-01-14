@@ -435,7 +435,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1249675109991954412}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -0.4801, y: 0.0781, z: 0}
+  m_LocalPosition: {x: -0.4801, y: 0.0755, z: 0}
   m_LocalScale: {x: 0.11, y: 0.11, z: 1}
   m_Children: []
   m_Father: {fileID: 3839262427627558499}
@@ -845,7 +845,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2699690179793049664}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -0.5027, y: -0.1129, z: 0}
+  m_LocalPosition: {x: -0.5027, y: -0.1149, z: 0}
   m_LocalScale: {x: 0.11, y: 0.11, z: 1}
   m_Children: []
   m_Father: {fileID: 3839262427627558499}
@@ -2158,13 +2158,13 @@ Transform:
   m_GameObject: {fileID: 7843015658116131866}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalScale: {x: 0.95, y: 0.95, z: 1}
   m_Children:
   - {fileID: 6789388523738366871}
   - {fileID: 3839262427627558499}
   - {fileID: 9151496975992790811}
-  - {fileID: 1997314980016149808}
   - {fileID: 3116227703445627125}
+  - {fileID: 1997314980016149808}
   - {fileID: 3144963930116768411}
   - {fileID: 4612207789681334008}
   - {fileID: 2428094795195615793}
@@ -2187,10 +2187,14 @@ MonoBehaviour:
   EligibleHits: []
   scheduledInputs: []
   firstEnable: 0
-  bigDoughNPCAnimator: {fileID: 5145896335115619129}
-  smallDoughNPCAnimator: {fileID: 602513537443382085}
-  bigDoughPlayerAnimator: {fileID: 2799669577295845360}
-  smallDoughPlayerAnimator: {fileID: 7633327628267528076}
+  doughDudesNPC: {fileID: 1812191928769694571}
+  doughDudesPlayer: {fileID: 8689056816715732898}
+  ballTransporterRightNPC: {fileID: 4079597890152482457}
+  ballTransporterLeftNPC: {fileID: 616834573968593202}
+  ballTransporterRightPlayer: {fileID: 4037367352976057591}
+  ballTransporterLeftPlayer: {fileID: 7798029629324958489}
+  intervalStarted: 0
+  beatInterval: 4
 --- !u!1 &7961625227087982507
 GameObject:
   m_ObjectHideFlags: 0
@@ -2556,11 +2560,11 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 93931120266719610, guid: f8416695a86cf2f4ba791f8f8f919c6f, type: 3}
       propertyPath: m_Name
-      value: BallTransporterLeft (1)
+      value: BallTransporterLeftNPC
       objectReference: {fileID: 0}
     - target: {fileID: 1330032459800393080, guid: f8416695a86cf2f4ba791f8f8f919c6f, type: 3}
       propertyPath: m_RootOrder
-      value: 3
+      value: 4
       objectReference: {fileID: 0}
     - target: {fileID: 1330032459800393080, guid: f8416695a86cf2f4ba791f8f8f919c6f, type: 3}
       propertyPath: m_LocalPosition.x
@@ -2604,6 +2608,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: f8416695a86cf2f4ba791f8f8f919c6f, type: 3}
+--- !u!1 &616834573968593202 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 93931120266719610, guid: f8416695a86cf2f4ba791f8f8f919c6f, type: 3}
+  m_PrefabInstance: {fileID: 703364313440182344}
+  m_PrefabAsset: {fileID: 0}
 --- !u!4 &1997314980016149808 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 1330032459800393080, guid: f8416695a86cf2f4ba791f8f8f919c6f, type: 3}
@@ -2618,7 +2627,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 1571991866295846512, guid: 081ed264ff8a94f4081ee6b1dbb4b144, type: 3}
       propertyPath: m_Name
-      value: DoughDudes (1)
+      value: DoughDudesNPC
       objectReference: {fileID: 0}
     - target: {fileID: 3261934242483390250, guid: 081ed264ff8a94f4081ee6b1dbb4b144, type: 3}
       propertyPath: m_RootOrder
@@ -2666,19 +2675,14 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 081ed264ff8a94f4081ee6b1dbb4b144, type: 3}
---- !u!95 &602513537443382085 stripped
-Animator:
-  m_CorrespondingSourceObject: {fileID: 336198140805156446, guid: 081ed264ff8a94f4081ee6b1dbb4b144, type: 3}
-  m_PrefabInstance: {fileID: 934185431241313563}
-  m_PrefabAsset: {fileID: 0}
 --- !u!4 &2428094795195615793 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 3261934242483390250, guid: 081ed264ff8a94f4081ee6b1dbb4b144, type: 3}
   m_PrefabInstance: {fileID: 934185431241313563}
   m_PrefabAsset: {fileID: 0}
---- !u!95 &5145896335115619129 stripped
-Animator:
-  m_CorrespondingSourceObject: {fileID: 5449076002027652642, guid: 081ed264ff8a94f4081ee6b1dbb4b144, type: 3}
+--- !u!1 &1812191928769694571 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 1571991866295846512, guid: 081ed264ff8a94f4081ee6b1dbb4b144, type: 3}
   m_PrefabInstance: {fileID: 934185431241313563}
   m_PrefabAsset: {fileID: 0}
 --- !u!1001 &7873819805929247186
@@ -2690,7 +2694,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 1571991866295846512, guid: 081ed264ff8a94f4081ee6b1dbb4b144, type: 3}
       propertyPath: m_Name
-      value: DoughDudes
+      value: DoughDudesPlayer
       objectReference: {fileID: 0}
     - target: {fileID: 3261934242483390250, guid: 081ed264ff8a94f4081ee6b1dbb4b144, type: 3}
       propertyPath: m_RootOrder
@@ -2738,19 +2742,14 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 081ed264ff8a94f4081ee6b1dbb4b144, type: 3}
+--- !u!1 &8689056816715732898 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 1571991866295846512, guid: 081ed264ff8a94f4081ee6b1dbb4b144, type: 3}
+  m_PrefabInstance: {fileID: 7873819805929247186}
+  m_PrefabAsset: {fileID: 0}
 --- !u!4 &4612207789681334008 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 3261934242483390250, guid: 081ed264ff8a94f4081ee6b1dbb4b144, type: 3}
-  m_PrefabInstance: {fileID: 7873819805929247186}
-  m_PrefabAsset: {fileID: 0}
---- !u!95 &2799669577295845360 stripped
-Animator:
-  m_CorrespondingSourceObject: {fileID: 5449076002027652642, guid: 081ed264ff8a94f4081ee6b1dbb4b144, type: 3}
-  m_PrefabInstance: {fileID: 7873819805929247186}
-  m_PrefabAsset: {fileID: 0}
---- !u!95 &7633327628267528076 stripped
-Animator:
-  m_CorrespondingSourceObject: {fileID: 336198140805156446, guid: 081ed264ff8a94f4081ee6b1dbb4b144, type: 3}
   m_PrefabInstance: {fileID: 7873819805929247186}
   m_PrefabAsset: {fileID: 0}
 --- !u!1001 &7887385672556259939
@@ -2762,7 +2761,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 93931120266719610, guid: f8416695a86cf2f4ba791f8f8f919c6f, type: 3}
       propertyPath: m_Name
-      value: BallTransporterLeft
+      value: BallTransporterLeftPlayer
       objectReference: {fileID: 0}
     - target: {fileID: 1330032459800393080, guid: f8416695a86cf2f4ba791f8f8f919c6f, type: 3}
       propertyPath: m_RootOrder
@@ -2815,6 +2814,11 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 1330032459800393080, guid: f8416695a86cf2f4ba791f8f8f919c6f, type: 3}
   m_PrefabInstance: {fileID: 7887385672556259939}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &7798029629324958489 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 93931120266719610, guid: f8416695a86cf2f4ba791f8f8f919c6f, type: 3}
+  m_PrefabInstance: {fileID: 7887385672556259939}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &8739876439371148614
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -2824,11 +2828,11 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 4705658423790815665, guid: 70a0fe0884e19d64e90444b2c8ffccbb, type: 3}
       propertyPath: m_Name
-      value: BallTransporterRight
+      value: BallTransporterRightPlayer
       objectReference: {fileID: 0}
     - target: {fileID: 5941751787586211251, guid: 70a0fe0884e19d64e90444b2c8ffccbb, type: 3}
       propertyPath: m_RootOrder
-      value: 4
+      value: 3
       objectReference: {fileID: 0}
     - target: {fileID: 5941751787586211251, guid: 70a0fe0884e19d64e90444b2c8ffccbb, type: 3}
       propertyPath: m_LocalPosition.x
@@ -2877,6 +2881,11 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 5941751787586211251, guid: 70a0fe0884e19d64e90444b2c8ffccbb, type: 3}
   m_PrefabInstance: {fileID: 8739876439371148614}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &4037367352976057591 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 4705658423790815665, guid: 70a0fe0884e19d64e90444b2c8ffccbb, type: 3}
+  m_PrefabInstance: {fileID: 8739876439371148614}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &8777656193206751016
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -2886,7 +2895,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 4705658423790815665, guid: 70a0fe0884e19d64e90444b2c8ffccbb, type: 3}
       propertyPath: m_Name
-      value: BallTransporterRight (1)
+      value: BallTransporterRightNPC
       objectReference: {fileID: 0}
     - target: {fileID: 5941751787586211251, guid: 70a0fe0884e19d64e90444b2c8ffccbb, type: 3}
       propertyPath: m_RootOrder
@@ -2934,6 +2943,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 70a0fe0884e19d64e90444b2c8ffccbb, type: 3}
+--- !u!1 &4079597890152482457 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 4705658423790815665, guid: 70a0fe0884e19d64e90444b2c8ffccbb, type: 3}
+  m_PrefabInstance: {fileID: 8777656193206751016}
+  m_PrefabAsset: {fileID: 0}
 --- !u!4 &3144963930116768411 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 5941751787586211251, guid: 70a0fe0884e19d64e90444b2c8ffccbb, type: 3}
