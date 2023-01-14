@@ -49,7 +49,7 @@ namespace HeavenStudio.Games.Scripts_PajamaParty
         {
             var cond = Conductor.instance;
 
-            if (PlayerInput.Pressed() && canJump && !PajamaParty.instance.IsExpectingInputNow())
+            if (PlayerInput.Pressed() && canJump && !PajamaParty.instance.IsExpectingInputNow(InputType.STANDARD_DOWN))
             {
                 Jukebox.PlayOneShot("miss");
                 PlayerJump(cond.songPositionInBeats, true, false);
@@ -58,7 +58,7 @@ namespace HeavenStudio.Games.Scripts_PajamaParty
             {
                 StartCharge();
             }
-            if (PlayerInput.AltPressedUp() && charging && !PajamaParty.instance.IsExpectingInputNow())
+            if (PlayerInput.AltPressedUp() && charging && !PajamaParty.instance.IsExpectingInputNow(InputType.STANDARD_ALT_UP))
             {
                 Jukebox.PlayOneShot("miss");
                 EndCharge(cond.songPositionInBeats, false, false);
@@ -424,7 +424,7 @@ namespace HeavenStudio.Games.Scripts_PajamaParty
                 var cond = Conductor.instance;
                 if (canSleep)
                 {
-                    anim.DoScaledAnimationAsync("MakoSleepThrough", -1, 0);
+                    anim.DoScaledAnimationAsync("MakoSleepThrough", 1, 0);
                     caller.CanHit(false);
                     canSleep = false;
                 }

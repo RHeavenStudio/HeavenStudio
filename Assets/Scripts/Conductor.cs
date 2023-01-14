@@ -202,7 +202,7 @@ namespace HeavenStudio
             {
                 if (ReportBeat(ref lastReportedBeat))
                 {
-                    metronomeSound = Util.Jukebox.PlayOneShot("metronome", lastReportedBeat + 1f);
+                    metronomeSound = Util.Jukebox.PlayOneShot("metronome", lastReportedBeat);
                 }
                 else if (songPositionInBeats < lastReportedBeat)
                 {
@@ -268,25 +268,25 @@ namespace HeavenStudio
         public double GetSongPosFromBeat(double beat)
         {
             var chart = GameManager.instance.Beatmap;
-            SetBpm(chart.bpm);
+            float bpm = chart.bpm;
 
             double counter = 0f;
 
             float lastTempoChangeBeat = 0f;
 
-            foreach (var t in GameManager.instance.Beatmap.tempoChanges)
+            foreach (DynamicBeatmap.TempoChange t in GameManager.instance.Beatmap.tempoChanges)
             {
                 if (t.beat > beat)
                 {
                     break;
                 }
 
-                counter += (t.beat - lastTempoChangeBeat) * secPerBeat;
-                SetBpm(t.tempo);
+                counter += (t.beat - lastTempoChangeBeat) * 60/bpm;
+                bpm = t.tempo;
                 lastTempoChangeBeat = t.beat;
             }
 
-            counter += (beat - lastTempoChangeBeat) * secPerBeat;
+            counter += (beat - lastTempoChangeBeat) * 60/bpm;
 
             return counter;
         }
@@ -307,7 +307,7 @@ namespace HeavenStudio
                 double counterSeconds = -firstBeatOffset;
                 float lastBpm = GameManager.instance.Beatmap.bpm;
                 
-                foreach (var t in GameManager.instance.Beatmap.tempoChanges)
+                foreach (DynamicBeatmap.TempoChange  t in GameManager.instance.Beatmap.tempoChanges)
                 {
                     double beatToNext = t.beat - lastTempoChangeBeat;
                     double secToNext = BeatsToSecs(beatToNext, lastBpm);
