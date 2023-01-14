@@ -122,7 +122,7 @@ TextureImporter:
   platformSettings:
   - serializedVersion: 3
     buildTarget: DefaultTexturePlatform
-    maxTextureSize: 2048
+    maxTextureSize: 4096
     resizeAlgorithm: 0
     textureFormat: -1
     textureCompression: 1
@@ -134,7 +134,7 @@ TextureImporter:
     forceMaximumCompressionQuality_BC6H_BC7: 0
   - serializedVersion: 3
     buildTarget: Standalone
-    maxTextureSize: 2048
+    maxTextureSize: 4096
     resizeAlgorithm: 0
     textureFormat: -1
     textureCompression: 1
@@ -382,8 +382,8 @@ TextureImporter:
       name: child_body
       rect:
         serializedVersion: 2
-        x: 191
-        y: 902
+        x: 264
+        y: 888
         width: 96
         height: 91
       alignment: 0
@@ -487,9 +487,9 @@ TextureImporter:
       name: child_head00
       rect:
         serializedVersion: 2
-        x: 0
-        y: 897
-        width: 135
+        x: 18
+        y: 876
+        width: 133
         height: 103
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
@@ -508,9 +508,9 @@ TextureImporter:
       name: child_head01
       rect:
         serializedVersion: 2
-        x: 1
-        y: 753
-        width: 134
+        x: 15
+        y: 715
+        width: 136
         height: 103
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
@@ -529,8 +529,8 @@ TextureImporter:
       name: child_tear
       rect:
         serializedVersion: 2
-        x: 205
-        y: 784
+        x: 258
+        y: 758
         width: 22
         height: 35
       alignment: 0
