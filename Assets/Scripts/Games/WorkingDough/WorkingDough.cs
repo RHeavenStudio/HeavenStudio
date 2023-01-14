@@ -2,6 +2,7 @@ using HeavenStudio.Util;
 using System;
 using System.Collections.Generic;
 using UnityEngine;
+using NaughtyBezierCurves;
 
 namespace HeavenStudio.Games.Loaders
 {
@@ -21,12 +22,12 @@ namespace HeavenStudio.Games.Loaders
                 new GameAction("small ball", "Small Ball")
                 {
                     function = delegate { WorkingDough.instance.SpawnBall(eventCaller.currentEntity.beat, false);  },
-                    defaultLength = 1f,
+                    defaultLength = 2f,
                 },
                 new GameAction("big ball", "Big Ball")
                 {
                     function = delegate { WorkingDough.instance.SpawnBall(eventCaller.currentEntity.beat, true);  },
-                    defaultLength = 1f,
+                    defaultLength = 2f,
                 },
             });
         }
@@ -47,11 +48,20 @@ namespace HeavenStudio.Games
         [SerializeField] GameObject ballTransporterLeftPlayer; //Close and open animations
         [SerializeField] GameObject npcImpact;
         [SerializeField] GameObject playerImpact;
+        [SerializeField] GameObject smallBallNPC;
+        [SerializeField] GameObject bigBallNPC;
+        [SerializeField] Transform ballHolder;
 
         [Header("Variables")]
         public bool intervalStarted;
         //float intervalStartBeat;
         public float beatInterval = 4f;
+
+        [Header("Curves")]
+        public BezierCurve3D npcEnterUpCurve;
+        public BezierCurve3D npcEnterDownCurve;
+        public BezierCurve3D npcExitUpCurve;
+        public BezierCurve3D npcExitDownCurve;
 
         public static WorkingDough instance;
 
@@ -73,14 +83,14 @@ namespace HeavenStudio.Games
                     //End interval
                     new BeatAction.Action(beat + interval, delegate { intervalStarted = false; }),
                     //Close npc transporters
-                    new BeatAction.Action(beat + interval, delegate { ballTransporterLeftNPC.GetComponent<Animator>().Play("BallTransporterLeftClose", 0, 0); }),
-                    new BeatAction.Action(beat + interval, delegate { ballTransporterRightNPC.GetComponent<Animator>().Play("BallTransporterRightClose", 0, 0); }),
+                    new BeatAction.Action(beat + interval + 0.5f, delegate { ballTransporterLeftNPC.GetComponent<Animator>().Play("BallTransporterLeftClose", 0, 0); }),
+                    new BeatAction.Action(beat + interval + 0.5f, delegate { ballTransporterRightNPC.GetComponent<Animator>().Play("BallTransporterRightClose", 0, 0); }),
                     //Open player transporters
                     new BeatAction.Action(beat + interval, delegate { ballTransporterLeftPlayer.GetComponent<Animator>().Play("BallTransporterLeftOpen", 0, 0); }),
                     new BeatAction.Action(beat + interval, delegate { ballTransporterRightPlayer.GetComponent<Animator>().Play("BallTransporterRightOpen", 0, 0); }),
                     //Close player transporters
-                    new BeatAction.Action(beat + interval * 2, delegate { ballTransporterLeftPlayer.GetComponent<Animator>().Play("BallTransporterLeftClose", 0, 0); }),
-                    new BeatAction.Action(beat + interval * 2, delegate { ballTransporterRightPlayer.GetComponent<Animator>().Play("BallTransporterRightClose", 0, 0); }),
+                    new BeatAction.Action(beat + interval * 2 + 0.5f, delegate { ballTransporterLeftPlayer.GetComponent<Animator>().Play("BallTransporterLeftClose", 0, 0); }),
+                    new BeatAction.Action(beat + interval * 2 + 0.5f, delegate { ballTransporterRightPlayer.GetComponent<Animator>().Play("BallTransporterRightClose", 0, 0); }),
                 });
             }
 
@@ -90,14 +100,30 @@ namespace HeavenStudio.Games
 
         public void SpawnBall(float beat, bool isBig)
         {
+            if (!intervalStarted)
+            {
+                SetIntervalStart(beat, beatInterval);
+            }
+            var objectToSpawn = isBig ? bigBallNPC : smallBallNPC;
+            var spawnedBall = GameObject.Instantiate(objectToSpawn, ballHolder);
+
+            var ballComponent = spawnedBall.GetComponent<NPCDoughBall>();
+            ballComponent.startBeat = beat;
+            ballComponent.exitUpCurve = npcExitUpCurve;
+            ballComponent.enterUpCurve = npcEnterUpCurve;
+            ballComponent.exitDownCurve = npcExitDownCurve;
+            ballComponent.enterDownCurve = npcEnterDownCurve;
+
+            spawnedBall.SetActive(true);
+
             BeatAction.New(doughDudesNPC, new List<BeatAction.Action>()
             {
                 //Jump and play sound
-                new BeatAction.Action(beat + 0.5f, delegate { doughDudesNPC.GetComponent<Animator>().Play(isBig ? "BigDoughJump" :"SmallDoughJump", 0, 0); }),
-                new BeatAction.Action(beat + 0.5f, delegate { Jukebox.PlayOneShotGame(isBig ? "workingDough/NPCBigBall" : "workingDough/NPCSmallBall"); }),
-                new BeatAction.Action(beat + 0.5f, delegate { Jukebox.PlayOneShotGame("workingDough/SmallBall"); }),
-                new BeatAction.Action(beat + 0.5f, delegate { npcImpact.SetActive(true); }),
-                new BeatAction.Action(beat + 0.6f, delegate { npcImpact.SetActive(false); }),
+                new BeatAction.Action(beat + 1f, delegate { doughDudesNPC.GetComponent<Animator>().Play(isBig ? "BigDoughJump" :"SmallDoughJump", 0, 0); }),
+                new BeatAction.Action(beat + 1f, delegate { Jukebox.PlayOneShotGame(isBig ? "workingDough/NPCBigBall" : "workingDough/NPCSmallBall"); }),
+                new BeatAction.Action(beat + 1f, delegate { Jukebox.PlayOneShotGame("workingDough/SmallBall"); }),
+                new BeatAction.Action(beat + 1f, delegate { npcImpact.SetActive(true); }),
+                new BeatAction.Action(beat + 1.1f, delegate { npcImpact.SetActive(false); }),
             });
 
         }
