@@ -1,5 +1,5 @@
 ManifestFileVersion: 0
-CRC: 2360613425
+CRC: 1585008054
 AssetBundleManifest:
   AssetBundleInfos:
     Info_0:
@@ -157,6 +157,13 @@ AssetBundleManifest:
       Name: ntrlifting/ver.ver0
       Dependencies: {}
     Info_50:
-      Name: ntrlifting/ver.ver1
+      Name: ntrlifting/ver.ver2
       Dependencies:
         Dependency_0: ntrlifting/ver.ver0
+    Info_51:
+      Name: ntrlifting/ver.remix6
+      Dependencies:
+        Dependency_0: ntrlifting/ver.ver0
+    Info_52:
+      Name: agbghost/common
+      Dependencies: {}
