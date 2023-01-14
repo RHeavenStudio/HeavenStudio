@@ -99,7 +99,7 @@ namespace HeavenStudio.Games.Scripts_FanClub
             {
                 if (PlayerInput.Pressed())
                 {
-                    if (!FanClub.instance.IsExpectingInputNow())
+                    if (!FanClub.instance.IsExpectingInputNow(InputType.STANDARD_DOWN))
                     {
                         ClapStart(false);
                     }
@@ -115,7 +115,7 @@ namespace HeavenStudio.Games.Scripts_FanClub
                 }
                 if (PlayerInput.PressedUp())
                 {
-                    if (clappingStartTime != Single.MinValue && cond.songPositionInBeats > clappingStartTime + 2f && stopCharge && !FanClub.instance.IsExpectingInputNow())
+                    if (clappingStartTime != Single.MinValue && cond.songPositionInBeats > clappingStartTime + 2f && stopCharge && !FanClub.instance.IsExpectingInputNow(InputType.STANDARD_UP))
                     {
                         JumpStart(false);
                     }
