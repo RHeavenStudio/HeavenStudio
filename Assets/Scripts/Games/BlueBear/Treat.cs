@@ -25,7 +25,10 @@ namespace HeavenStudio.Games.Scripts_BlueBear
         private void Awake()
         {
             game = BlueBear.instance;
+        }
 
+        private void Start()
+        {
             flyBeats = isCake ? 3f : 2f;
             game.ScheduleInput(startBeat, flyBeats, isCake ? InputType.DIRECTION_DOWN : InputType.STANDARD_DOWN, EatJust, EatOut, EatOut);
         }
