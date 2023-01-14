@@ -51,17 +51,28 @@ namespace HeavenStudio.Games
         [SerializeField] GameObject smallBallNPC;
         [SerializeField] GameObject bigBallNPC;
         [SerializeField] Transform ballHolder;
+        [SerializeField] SpriteRenderer arrowSRLeftNPC;
+        [SerializeField] SpriteRenderer arrowSRRightNPC;
+        [SerializeField] SpriteRenderer arrowSRLeftPlayer;
+        [SerializeField] SpriteRenderer arrowSRRightPlayer;
+        [SerializeField] GameObject NPCBallTransporters;
+        [SerializeField] GameObject PlayerBallTransporters;
 
         [Header("Variables")]
         public bool intervalStarted;
         //float intervalStartBeat;
         public float beatInterval = 4f;
+        public bool bigMode;
 
         [Header("Curves")]
         public BezierCurve3D npcEnterUpCurve;
         public BezierCurve3D npcEnterDownCurve;
         public BezierCurve3D npcExitUpCurve;
         public BezierCurve3D npcExitDownCurve;
+
+        [Header("Resources")]
+        public Sprite whiteArrowSprite;
+        public Sprite redArrowSprite;
 
         public static WorkingDough instance;
 
@@ -82,12 +93,18 @@ namespace HeavenStudio.Games
                 {
                     //End interval
                     new BeatAction.Action(beat + interval, delegate { intervalStarted = false; }),
-                    //Close npc transporters
-                    new BeatAction.Action(beat + interval + 0.5f, delegate { ballTransporterLeftNPC.GetComponent<Animator>().Play("BallTransporterLeftClose", 0, 0); }),
-                    new BeatAction.Action(beat + interval + 0.5f, delegate { ballTransporterRightNPC.GetComponent<Animator>().Play("BallTransporterRightClose", 0, 0); }),
                     //Open player transporters
                     new BeatAction.Action(beat + interval, delegate { ballTransporterLeftPlayer.GetComponent<Animator>().Play("BallTransporterLeftOpen", 0, 0); }),
                     new BeatAction.Action(beat + interval, delegate { ballTransporterRightPlayer.GetComponent<Animator>().Play("BallTransporterRightOpen", 0, 0); }),
+                    new BeatAction.Action(beat + interval, delegate {
+                        if (bigMode)
+                        {
+                            NPCBallTransporters.GetComponent<Animator>().Play("NPCExitBigMode", 0, 0);
+                        }
+                    }),
+                    //Close npc transporters
+                    new BeatAction.Action(beat + interval + 0.5f, delegate { ballTransporterLeftNPC.GetComponent<Animator>().Play("BallTransporterLeftClose", 0, 0); }),
+                    new BeatAction.Action(beat + interval + 0.5f, delegate { ballTransporterRightNPC.GetComponent<Animator>().Play("BallTransporterRightClose", 0, 0); }),
                     //Close player transporters
                     new BeatAction.Action(beat + interval * 2 + 0.5f, delegate { ballTransporterLeftPlayer.GetComponent<Animator>().Play("BallTransporterLeftClose", 0, 0); }),
                     new BeatAction.Action(beat + interval * 2 + 0.5f, delegate { ballTransporterRightPlayer.GetComponent<Animator>().Play("BallTransporterRightClose", 0, 0); }),
@@ -116,14 +133,24 @@ namespace HeavenStudio.Games
 
             spawnedBall.SetActive(true);
 
+            if (isBig && !bigMode)
+            {
+                NPCBallTransporters.GetComponent<Animator>().Play("NPCGoBigMode", 0, 0);
+                bigMode = true;
+            }
+
+            arrowSRLeftNPC.sprite = redArrowSprite;
             BeatAction.New(doughDudesNPC, new List<BeatAction.Action>()
             {
                 //Jump and play sound
+                new BeatAction.Action(beat + 0.1f, delegate { arrowSRLeftNPC.sprite = whiteArrowSprite; }),
                 new BeatAction.Action(beat + 1f, delegate { doughDudesNPC.GetComponent<Animator>().Play(isBig ? "BigDoughJump" :"SmallDoughJump", 0, 0); }),
                 new BeatAction.Action(beat + 1f, delegate { Jukebox.PlayOneShotGame(isBig ? "workingDough/NPCBigBall" : "workingDough/NPCSmallBall"); }),
                 new BeatAction.Action(beat + 1f, delegate { Jukebox.PlayOneShotGame("workingDough/SmallBall"); }),
                 new BeatAction.Action(beat + 1f, delegate { npcImpact.SetActive(true); }),
                 new BeatAction.Action(beat + 1.1f, delegate { npcImpact.SetActive(false); }),
+                new BeatAction.Action(beat + 1.9f, delegate { arrowSRRightNPC.sprite = redArrowSprite; }),
+                new BeatAction.Action(beat + 2f, delegate { arrowSRRightNPC.sprite = whiteArrowSprite; }),
             });
 
         }
