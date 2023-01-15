@@ -197,12 +197,12 @@ namespace HeavenStudio.Editor
             #endregion
 
             if (CommandManager.instance.canUndo())
-                UndoBTN.transform.GetChild(0).GetComponent<Image>().color = "BD8CFF".Hex2RGB();
+                UndoBTN.transform.GetChild(0).GetComponent<Image>().color = Color.white;
             else
                 UndoBTN.transform.GetChild(0).GetComponent<Image>().color = Color.gray;
 
             if (CommandManager.instance.canRedo())
-                RedoBTN.transform.GetChild(0).GetComponent<Image>().color = "FFD800".Hex2RGB();
+                RedoBTN.transform.GetChild(0).GetComponent<Image>().color = Color.white;
             else
                 RedoBTN.transform.GetChild(0).GetComponent<Image>().color = Color.gray;
 
