@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: 74c58bf17e10182479dd968ee450f86e
+guid: bab2c0bd9904cdb46bf49674024d3da6
 TextureImporter:
   internalIDToNameTable:
   - first:
@@ -27,35 +27,38 @@ TextureImporter:
       213: -7069434044889276691
     second: stepswitcher_onbeat3
   - first:
-      213: 6678189707026698426
+      213: 6671823371719840549
     second: stepswitcher_onbeat4
   - first:
+      213: 6678189707026698426
+    second: stepswitcher_bop1
+  - first:
       213: -1578962635485543256
-    second: stepswitcher_offbeatMiss1
+    second: stepswitcher_bop2
   - first:
       213: -7689431612274100930
     second: stepswitcher_bop3
   - first:
       213: 4632143454527972695
-    second: stepswitcher_offbeatMiss1
+    second: stepswitcher_bop4
   - first:
       213: 7051025833746117958
-    second: stepswitcher_bop3
+    second: stepswitcher_offbeatMiss1
   - first:
       213: -7900508199032304796
-    second: stepswitcher_offbeatMiss1
+    second: stepswitcher_offbeatMiss2
   - first:
       213: 1380531955285550272
+    second: stepswitcher_onbeatMiss1
+  - first:
+      213: -662792740418096914
     second: stepswitcher_onbeatMiss2
   - first:
-      213: -8633958060967697536
-    second: stepswitcher_onbeat4
+      213: 5090408958517365022
+    second: lockstep_bg1
   - first:
       213: 4376752631132958919
-    second: stepswitcher_offbeatMiss1
-  - first:
-      213: 1777998545360739411
-    second: lockstep_bg
+    second: lockstep_bg2
   externalObjects: {}
   serializedVersion: 11
   mipmaps:
@@ -119,10 +122,10 @@ TextureImporter:
   platformSettings:
   - serializedVersion: 3
     buildTarget: DefaultTexturePlatform
-    maxTextureSize: 4096
+    maxTextureSize: 2048
     resizeAlgorithm: 0
     textureFormat: -1
-    textureCompression: 2
+    textureCompression: 1
     compressionQuality: 50
     crunchedCompression: 0
     allowsAlphaSplitting: 0
@@ -131,10 +134,10 @@ TextureImporter:
     forceMaximumCompressionQuality_BC6H_BC7: 0
   - serializedVersion: 3
     buildTarget: Standalone
-    maxTextureSize: 4096
+    maxTextureSize: 2048
     resizeAlgorithm: 0
     textureFormat: -1
-    textureCompression: 2
+    textureCompression: 1
     compressionQuality: 50
     crunchedCompression: 0
     allowsAlphaSplitting: 0
@@ -148,10 +151,10 @@ TextureImporter:
       name: stepswitcher
       rect:
         serializedVersion: 2
-        x: 0
-        y: 780
-        width: 380
-        height: 620
+        x: 28
+        y: 299
+        width: 96
+        height: 199
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -169,12 +172,12 @@ TextureImporter:
       name: stepswitcher_offbeat1
       rect:
         serializedVersion: 2
-        x: 382
-        y: 780
-        width: 330
-        height: 620
+        x: 170
+        y: 301
+        width: 85
+        height: 201
       alignment: 9
-      pivot: {x: 0.5, y: 0.52}
+      pivot: {x: 0.52, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
@@ -190,12 +193,12 @@ TextureImporter:
       name: stepswitcher_offbeat2
       rect:
         serializedVersion: 2
-        x: 742
-        y: 780
-        width: 380
-        height: 620
+        x: 304
+        y: 300
+        width: 103
+        height: 202
       alignment: 9
-      pivot: {x: 0.48, y: 0.52}
+      pivot: {x: 0.6, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
@@ -211,12 +214,12 @@ TextureImporter:
       name: stepswitcher_onbeat1
       rect:
         serializedVersion: 2
-        x: 1163
-        y: 780
-        width: 340
-        height: 620
+        x: 471
+        y: 301
+        width: 84
+        height: 201
       alignment: 9
-      pivot: {x: 0.5, y: 0.52}
+      pivot: {x: 0.48, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
@@ -232,12 +235,12 @@ TextureImporter:
       name: stepswitcher_onbeat2
       rect:
         serializedVersion: 2
-        x: 1504
-        y: 780
-        width: 380
-        height: 620
+        x: 590
+        y: 300
+        width: 103
+        height: 202
       alignment: 9
-      pivot: {x: 0.5, y: 0.52}
+      pivot: {x: 0.4, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
@@ -253,12 +256,12 @@ TextureImporter:
       name: stepswitcher_offbeat3
       rect:
         serializedVersion: 2
-        x: 1911
-        y: 810
-        width: 450
-        height: 590
+        x: 728
+        y: 313
+        width: 161
+        height: 193
       alignment: 9
-      pivot: {x: 0.2, y: 0.55}
+      pivot: {x: 0.4, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
@@ -274,12 +277,12 @@ TextureImporter:
       name: stepswitcher_offbeat4
       rect:
         serializedVersion: 2
-        x: 2416
-        y: 810
-        width: 450
-        height: 590
+        x: 918
+        y: 313
+        width: 161
+        height: 193
       alignment: 9
-      pivot: {x: 0.2, y: 0.55}
+      pivot: {x: 0.4, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
@@ -295,12 +298,12 @@ TextureImporter:
       name: stepswitcher_onbeat3
       rect:
         serializedVersion: 2
-        x: 2900
-        y: 810
-        width: 488
-        height: 590
+        x: 1116
+        y: 313
+        width: 161
+        height: 193
       alignment: 9
-      pivot: {x: 0.8, y: 0.55}
+      pivot: {x: 0.6, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
@@ -316,12 +319,33 @@ TextureImporter:
       name: stepswitcher_onbeat4
       rect:
         serializedVersion: 2
-        x: 3412
-        y: 810
-        width: 488
-        height: 590
+        x: 1311
+        y: 313
+        width: 160
+        height: 193
       alignment: 9
-      pivot: {x: 0.8, y: 0.55}
+      pivot: {x: 0.6, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 523928bf104179c50800000000000000
+      internalID: 6671823371719840549
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: stepswitcher_bop1
+      rect:
+        serializedVersion: 2
+        x: 26
+        y: 41
+        width: 97
+        height: 233
+      alignment: 9
+      pivot: {x: 0.5, y: 0.435}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
@@ -334,15 +358,15 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: stepswitcher_bop4
+      name: stepswitcher_bop2
       rect:
         serializedVersion: 2
-        x: 1023
-        y: 100
-        width: 300
-        height: 640
-      alignment: 0
-      pivot: {x: 0.5, y: 0.5}
+        x: 163
+        y: 42
+        width: 97
+        height: 233
+      alignment: 9
+      pivot: {x: 0.5, y: 0.435}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
@@ -355,15 +379,15 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: stepswitcher_offbeatMiss2
+      name: stepswitcher_bop3
       rect:
         serializedVersion: 2
-        x: 2087
-        y: 200
-        width: 500
-        height: 570
+        x: 281
+        y: 41
+        width: 97
+        height: 233
       alignment: 9
-      pivot: {x: 0.39, y: 0.5}
+      pivot: {x: 0.5, y: 0.435}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
@@ -376,15 +400,15 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: stepswitcher_onbeatMiss1
+      name: stepswitcher_bop4
       rect:
         serializedVersion: 2
-        x: 2689
-        y: 180
-        width: 510
-        height: 570
+        x: 399
+        y: 41
+        width: 97
+        height: 233
       alignment: 9
-      pivot: {x: 0.51, y: 0.5}
+      pivot: {x: 0.5, y: 0.435}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
@@ -397,15 +421,15 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: stepswitcher_bop3
+      name: stepswitcher_offbeatMiss1
       rect:
         serializedVersion: 2
-        x: 715
-        y: 100
-        width: 300
-        height: 640
-      alignment: 0
-      pivot: {x: 0.5, y: 0.5}
+        x: 594
+        y: 78
+        width: 190
+        height: 195
+      alignment: 9
+      pivot: {x: 0.505, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
@@ -418,15 +442,15 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: stepswitcher_offbeatMiss1
+      name: stepswitcher_offbeatMiss2
       rect:
         serializedVersion: 2
-        x: 1570
-        y: 200
-        width: 510
-        height: 570
+        x: 840
+        y: 78
+        width: 135
+        height: 188
       alignment: 9
-      pivot: {x: 0.49, y: 0.5}
+      pivot: {x: 0.3, y: 0.49999997}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
@@ -439,15 +463,15 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: stepswitcher_onbeatMiss2
+      name: stepswitcher_onbeatMiss1
       rect:
         serializedVersion: 2
-        x: 3206
-        y: 180
-        width: 500
-        height: 570
+        x: 1018
+        y: 78
+        width: 190
+        height: 195
       alignment: 9
-      pivot: {x: 0.57, y: 0.5}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
@@ -460,13 +484,34 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: stepswitcher_bop1
+      name: stepswitcher_onbeatMiss2
       rect:
         serializedVersion: 2
-        x: 40
-        y: 100
-        width: 300
-        height: 640
+        x: 1214
+        y: 78
+        width: 135
+        height: 188
+      alignment: 9
+      pivot: {x: 0.705, y: 0.49999997}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: ee0fba3a3894dc6f0800000000000000
+      internalID: -662792740418096914
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: lockstep_bg1
+      rect:
+        serializedVersion: 2
+        x: 1412
+        y: 127
+        width: 108
+        height: 107
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -474,20 +519,20 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 083666263e40e2880800000000000000
-      internalID: -8633958060967697536
+      spriteID: e19c4e54af3c4a640800000000000000
+      internalID: 5090408958517365022
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: stepswitcher_bop2
+      name: lockstep_bg2
       rect:
         serializedVersion: 2
-        x: 396
-        y: 100
-        width: 300
-        height: 640
+        x: 1553
+        y: 127
+        width: 107
+        height: 107
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -497,27 +542,6 @@ TextureImporter:
       bones: []
       spriteID: 7c0bf6834595dbc30800000000000000
       internalID: 4376752631132958919
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: lockstep_bg
-      rect:
-        serializedVersion: 2
-        x: 1375
-        y: 13
-        width: 185
-        height: 203
-      alignment: 0
-      pivot: {x: 0.5, y: 0.5}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: 35c536bb148bca810800000000000000
-      internalID: 1777998545360739411
       vertices: []
       indices: 
       edges: []
