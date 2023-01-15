@@ -12,6 +12,8 @@ namespace HeavenStudio.Games.Scripts_CropStomp
 
         private CropStomp game;
 
+        PlayerActionEvent stomp;
+
         public void Init()
         {
             game = CropStomp.instance;
@@ -21,38 +23,56 @@ namespace HeavenStudio.Games.Scripts_CropStomp
         {
             if (!game.isMarching)
                 return;
-            
-            float normalizedBeat = Conductor.instance.GetPositionFromMargin(nextStompBeat, 1f);
+            Conductor cond = Conductor.instance;
 
-            StateCheck(normalizedBeat);
-
-            if (normalizedBeat > Minigame.LateTime())
+            if (stomp == null)
             {
-                nextStompBeat += 2f;
-                ResetState();
+                if (GameManager.instance.currentGame == "cropStomp")
+                    stomp = game.ScheduleUserInput(nextStompBeat - 1f, 1f, InputType.STANDARD_DOWN, Just, Miss, Out);
+            }
+
+            if (PlayerInput.Pressed() && !game.IsExpectingInputNow(InputType.STANDARD_DOWN))
+            {
+                game.bodyAnim.Play("Crouch", 0, 0);
+            }
+        }
+
+        private void Just(PlayerActionEvent caller, float state)
+        {
+            // REMARK: does not count for performance
+            Stomp(state >= 1f || state <= -1f);
+        }
+
+        private void Miss(PlayerActionEvent caller) 
+        {
+            if (GameManager.instance.currentGame != "cropStomp") return;
+            if (!game.isMarching)
                 return;
-            }
+            // REMARK: does not count for performance
+            nextStompBeat += 2f;
+            stomp?.Disable();
+            stomp = game.ScheduleUserInput(nextStompBeat - 1f, 1f, InputType.STANDARD_DOWN, Just, Miss, Out);
+        }
 
-            if (PlayerInput.Pressed())
+        private void Out(PlayerActionEvent caller) {}
+
+        void Stomp(bool ng)
+        {
+            if (GameManager.instance.currentGame != "cropStomp") return;
+            if (!game.isMarching)
+                return;
+            if (ng)
             {
-                if (state.perfect)
-                {
-                    game.Stomp();
-                    game.bodyAnim.Play("Stomp", 0, 0);
-                    nextStompBeat += 2f;
-                    ResetState();
-                }
-                else if (state.notPerfect())
-                {
-                    game.bodyAnim.Play("Crouch", 0, 0);
-                    nextStompBeat += 2f;
-                    ResetState();
-                }
-                else
-                {
-                    game.bodyAnim.Play("Crouch", 0, 0);
-                }
+                game.bodyAnim.Play("Crouch", 0, 0);
             }
+            else
+            {
+                game.Stomp();
+                game.bodyAnim.Play("Stomp", 0, 0);
+            }
+            nextStompBeat += 2f;
+            stomp?.Disable();
+            stomp = game.ScheduleUserInput(nextStompBeat - 1f, 1f, InputType.STANDARD_DOWN, Just, Miss, Out);
         }
     }
 }

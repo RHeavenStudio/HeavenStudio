@@ -13,25 +13,27 @@ namespace HeavenStudio.Util
 
         public class Action
         {
-            public float beat { get; set; }
+            public double beat { get; set; }
             public EventCallback function { get; set; }
 
-            public Action(float beat, EventCallback function)
+            public Action(double beat, EventCallback function)
             {
                 this.beat = beat;
                 this.function = function;
             }
         }
 
-        public static void New(GameObject prefab, List<Action> actions)
+        public static BeatAction New(GameObject prefab, List<Action> actions)
         {
             BeatAction beatAction = prefab.AddComponent<BeatAction>();
             beatAction.actions = actions;
+
+            return beatAction;
         }
 
         private void Update()
         {
-            float songPositionInBeats = Conductor.instance.songPositionInBeats;
+            double songPositionInBeats = Conductor.instance.songPositionInBeatsAsDouble;
 
             for (int i = 0; i < actions.Count; i++)
             {
@@ -41,6 +43,11 @@ namespace HeavenStudio.Util
                     index++;
                 }
             }
+        }
+
+        public void Delete()
+        {
+            Destroy(this);
         }
     }
 
