@@ -17,7 +17,6 @@ namespace HeavenStudio.Games.Scripts_WorkingDough
     public class NPCDoughBall : PlayerActionObject
     {
         public float startBeat;
-        //public bool isBig;
 
         public FlyingStage currentFlyingStage = FlyingStage.EnteringUp;
 
@@ -26,13 +25,6 @@ namespace HeavenStudio.Games.Scripts_WorkingDough
         [NonSerialized] public BezierCurve3D enterDownCurve;
         [NonSerialized] public BezierCurve3D exitUpCurve;
         [NonSerialized] public BezierCurve3D exitDownCurve;
-
-        private WorkingDough game;
-
-        private void Awake()
-        {
-            game = WorkingDough.instance;
-        }
 
         private void Update()
         {

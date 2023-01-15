@@ -57,12 +57,15 @@ namespace HeavenStudio.Games
         [SerializeField] SpriteRenderer arrowSRRightPlayer;
         [SerializeField] GameObject NPCBallTransporters;
         [SerializeField] GameObject PlayerBallTransporters;
+        [SerializeField] GameObject playerEnterSmallBall;
+        [SerializeField] GameObject playerEnterBigBall;
 
         [Header("Variables")]
         public bool intervalStarted;
         float intervalStartBeat;
         public float beatInterval = 4f;
         public bool bigMode;
+        public bool bigModePlayer;
         static List<QueuedBall> queuedBalls = new List<QueuedBall>();
         struct QueuedBall
         {
@@ -81,6 +84,10 @@ namespace HeavenStudio.Games
         public BezierCurve3D npcEnterDownCurve;
         public BezierCurve3D npcExitUpCurve;
         public BezierCurve3D npcExitDownCurve;
+        public BezierCurve3D playerEnterUpCurve;
+        public BezierCurve3D playerEnterDownCurve;
+        public BezierCurve3D playerExitUpCurve;
+        public BezierCurve3D playerExitDownCurve;
 
         [Header("Resources")]
         public Sprite whiteArrowSprite;
@@ -100,8 +107,7 @@ namespace HeavenStudio.Games
                 intervalStarted = true;
                 bigMode = false;
                 //Open npc transporters
-                if (!ballTransporterLeftNPC.GetComponent<Animator>().GetCurrentAnimatorStateInfo(0).IsName("BallTransporterLeftOpened") ||
-                    ballTransporterLeftNPC.GetComponent<Animator>().GetCurrentAnimatorStateInfo(0).normalizedTime >= 1.0f)
+                if (!isPlaying(ballTransporterLeftNPC.GetComponent<Animator>(), "BallTransporterLeftOpened"))
                 {
                     ballTransporterLeftNPC.GetComponent<Animator>().Play("BallTransporterLeftOpen", 0, 0);
                     ballTransporterRightNPC.GetComponent<Animator>().Play("BallTransporterRightOpen", 0, 0);
@@ -111,22 +117,14 @@ namespace HeavenStudio.Games
                 {
                     //Open player transporters
                     new BeatAction.Action(beat + interval - 1f, delegate {
-                        if (!ballTransporterLeftPlayer.GetComponent<Animator>().GetCurrentAnimatorStateInfo(0).IsName("BallTransporterLeftOpened") ||
-                            ballTransporterLeftPlayer.GetComponent<Animator>().GetCurrentAnimatorStateInfo(0).normalizedTime >= 1.0f)
-                        {
-                            ballTransporterLeftPlayer.GetComponent<Animator>().Play("BallTransporterLeftOpen", 0, 0);
-                        }
+                         ballTransporterLeftPlayer.GetComponent<Animator>().Play("BallTransporterLeftOpen", 0, 0);
                     }),
                     new BeatAction.Action(beat + interval - 1f, delegate {
-                        if (!ballTransporterRightPlayer.GetComponent<Animator>().GetCurrentAnimatorStateInfo(0).IsName("BallTransporterRightOpened") ||
-                            ballTransporterRightPlayer.GetComponent<Animator>().GetCurrentAnimatorStateInfo(0).normalizedTime >= 1.0f)
-                        {
-                            ballTransporterRightPlayer.GetComponent<Animator>().Play("BallTransporterRightOpen", 0, 0);
-                        }
+                        ballTransporterRightPlayer.GetComponent<Animator>().Play("BallTransporterRightOpen", 0, 0);
                     }),
 
                     //End interval
-                    new BeatAction.Action(beat + interval, delegate { intervalStarted = false; }),
+                    new BeatAction.Action(beat + interval - 1, delegate { intervalStarted = false; }),
 
                     //Close npc transporters
                     new BeatAction.Action(beat + interval + 1f, delegate {
@@ -139,8 +137,15 @@ namespace HeavenStudio.Games
                     new BeatAction.Action(beat + interval + 1f, delegate { if (!intervalStarted) ballTransporterLeftNPC.GetComponent<Animator>().Play("BallTransporterLeftClose", 0, 0); }),
                     new BeatAction.Action(beat + interval + 1f, delegate { if (!intervalStarted) ballTransporterRightNPC.GetComponent<Animator>().Play("BallTransporterRightClose", 0, 0); }),
                     //Close player transporters
-                    new BeatAction.Action(beat + interval * 2 + 1f, delegate { ballTransporterLeftPlayer.GetComponent<Animator>().Play("BallTransporterLeftClose", 0, 0); }),
-                    new BeatAction.Action(beat + interval * 2 + 1f, delegate { ballTransporterRightPlayer.GetComponent<Animator>().Play("BallTransporterRightClose", 0, 0); }),
+                    new BeatAction.Action(beat + interval * 2, delegate { ballTransporterLeftPlayer.GetComponent<Animator>().Play("BallTransporterLeftClose", 0, 0); }),
+                    new BeatAction.Action(beat + interval * 2, delegate { ballTransporterRightPlayer.GetComponent<Animator>().Play("BallTransporterRightClose", 0, 0); }),
+                    new BeatAction.Action(beat + interval * 2, delegate {
+                        if (bigModePlayer)
+                        {
+                            PlayerBallTransporters.GetComponent<Animator>().Play("NPCExitBigMode", 0, 0);
+                            bigModePlayer = false;
+                        }
+                    }),
                 });
             }
 
@@ -183,6 +188,10 @@ namespace HeavenStudio.Games
                 new BeatAction.Action(beat + 1.1f, delegate { npcImpact.SetActive(false); }),
                 new BeatAction.Action(beat + 1.9f, delegate { arrowSRRightNPC.sprite = redArrowSprite; }),
                 new BeatAction.Action(beat + 2f, delegate { arrowSRRightNPC.sprite = whiteArrowSprite; }),
+            });
+            BeatAction.New(doughDudesPlayer, new List<BeatAction.Action>()
+            {
+                new BeatAction.Action(beat + beatInterval, delegate { SpawnPlayerBall(beat + beatInterval, isBig); }),
             });
 
         }
@@ -237,6 +246,32 @@ namespace HeavenStudio.Games
                     isBig = isBig,
                 });
             }
+        }
+
+        public void SpawnPlayerBall(float beat, bool isBig)
+        {
+            var objectToSpawn = isBig ? playerEnterBigBall : playerEnterSmallBall;
+            var spawnedBall = GameObject.Instantiate(objectToSpawn, ballHolder);
+
+            var ballComponent = spawnedBall.GetComponent<PlayerEnterDoughBall>();
+            ballComponent.startBeat = beat;
+            ballComponent.enterUpCurve = playerEnterUpCurve;
+            ballComponent.enterDownCurve = playerEnterDownCurve;
+
+            spawnedBall.SetActive(true);
+
+            if (isBig && !bigModePlayer)
+            {
+                PlayerBallTransporters.GetComponent<Animator>().Play("NPCGoBigMode", 0, 0);
+                bigModePlayer = true;
+            }
+
+            arrowSRLeftPlayer.sprite = redArrowSprite;
+
+            BeatAction.New(doughDudesPlayer, new List<BeatAction.Action>()
+            {
+                new BeatAction.Action(beat + 0.1f, delegate { arrowSRLeftPlayer.sprite = whiteArrowSprite; }),
+            });
         }
 
         public void PreSetIntervalStart(float beat, float interval)
@@ -310,6 +345,16 @@ namespace HeavenStudio.Games
                 }
                 queuedBalls.Clear();
             }
+        }
+
+        //Function to make life for my fingers and my and your eyes easier
+        bool isPlaying(Animator anim, string stateName)
+        {
+            if (anim.GetCurrentAnimatorStateInfo(0).IsName(stateName) &&
+                    anim.GetCurrentAnimatorStateInfo(0).normalizedTime < 1.0f)
+                return true;
+            else
+                return false;
         }
     }
 }
