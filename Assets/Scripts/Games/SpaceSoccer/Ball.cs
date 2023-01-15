@@ -27,7 +27,8 @@ namespace HeavenStudio.Games.Scripts_SpaceSoccer
         public float nextAnimBeat;
         public float highKickSwing = 0f;
         private float lastSpriteRot;
-        public bool canKick; //unused
+        public bool canKick;
+        public bool waitKickRelease;
         private bool lastKickLeft;
 
         public void Init(Kicker kicker, float dispensedBeat)
@@ -182,14 +183,6 @@ namespace HeavenStudio.Games.Scripts_SpaceSoccer
 
                         holder.transform.localPosition = dispenseCurve.GetPoint(normalizedBeatAnim);
                         spriteHolder.transform.eulerAngles = new Vector3(0, 0, Mathf.Lerp(0f, -1440f, normalizedBeatAnim));
-
-                        /*if (PlayerInput.Pressed())
-                        {
-                            if (state.perfect)
-                            {
-                                Kick();
-                            }
-                        }*/
                         break;
                     }
                 case State.Kicked:
@@ -208,22 +201,6 @@ namespace HeavenStudio.Games.Scripts_SpaceSoccer
                         }
 
                         holder.transform.localPosition = kickCurve.GetPoint(normalizedBeatAnim);
-
-                        /*if (PlayerInput.Pressed())
-                        {
-                            if (state.perfect)
-                            {
-                                if (kicker.canHighKick)
-                                {
-                                    HighKick();
-                                }
-                                else if (kicker.canKick)
-                                {
-                                    Kick();
-                                }
-                                // print(normalizedBeat);
-                            }
-                        }*/
                         break;
                     }
                 case State.HighKicked:
@@ -234,24 +211,6 @@ namespace HeavenStudio.Games.Scripts_SpaceSoccer
 
                         holder.transform.localPosition = highKickCurve.GetPoint(normalizedBeatAnim);
                         spriteHolder.transform.eulerAngles = new Vector3(0, 0, Mathf.Lerp(lastSpriteRot, lastSpriteRot + 360f, normalizedBeatAnim));
-
-                        // if (state.perfect) Debug.Break();
-
-                        /*if (PlayerInput.Pressed())
-                        {
-                            kickPrepare = true;
-                            kicker.Kick(this);
-                        }
-                        if (kickPrepare)
-                        {
-                            if (PlayerInput.PressedUp())
-                            {
-                                if (state.perfect)
-                                {
-                                    Toe();
-                                }
-                            }
-                        }*/
                         break;
                     }
                 case State.Toe:
