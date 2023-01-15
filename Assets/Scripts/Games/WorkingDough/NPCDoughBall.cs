@@ -7,19 +7,19 @@ using HeavenStudio.Util;
 
 namespace HeavenStudio.Games.Scripts_WorkingDough
 {
+    public enum FlyingStage
+    {
+        EnteringUp = 0,
+        EnteringDown = 1,
+        ExitingUp = 2,
+        ExitingDown = 3
+    }
     public class NPCDoughBall : PlayerActionObject
     {
         public float startBeat;
         //public bool isBig;
-        public enum FlyingStage
-        {
-            EnteringUp,
-            EnteringDown,
-            ExitingUp,
-            ExitingDown
-        }
 
-        FlyingStage currentFlyingStage = FlyingStage.EnteringUp;
+        public FlyingStage currentFlyingStage = FlyingStage.EnteringUp;
 
 
         [NonSerialized] public BezierCurve3D enterUpCurve;
