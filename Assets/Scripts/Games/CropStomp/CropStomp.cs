@@ -135,7 +135,7 @@ namespace HeavenStudio.Games
                 // Cue the marching proper to begin when applicable.
                 BeatAction.New(gameObject, new List<BeatAction.Action>()
                 {
-                    new BeatAction.Action(startBeat, delegate { StartMarching(startBeat); })
+                    new BeatAction.Action(startBeat - 0.25f, delegate { StartMarching(startBeat); })
                 });
 
                 inactiveStart = -1f;
@@ -213,7 +213,7 @@ namespace HeavenStudio.Games
                 PlayAnims();
                 if (currentMarchBeat % 2 != 0) //step sound
                 {
-                    Jukebox.PlayOneShotGame("cropStomp/hmm");
+                    MultiSound.Play(new MultiSound.Sound[] {new MultiSound.Sound("cropStomp/hmm", newBeat + marchOffset)});
                 }
             }
 

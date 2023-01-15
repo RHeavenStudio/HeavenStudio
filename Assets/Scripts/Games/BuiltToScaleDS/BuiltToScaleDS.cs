@@ -70,6 +70,7 @@ namespace HeavenStudio.Games
         private float currentBeltOffset;
 
         [NonSerialized] public bool shootingThisFrame;
+        [NonSerialized] public bool lastShotOut = false;
         
         public static BuiltToScaleDS instance;
 
@@ -123,10 +124,14 @@ namespace HeavenStudio.Games
         void LateUpdate()
         {
             var shooterState = shooterAnim.GetCurrentAnimatorStateInfo(0);
-            bool canShoot = !shooterState.IsName("Shoot") || shooterAnim.IsAnimationNotPlaying();
+            bool canShoot = (!shooterState.IsName("Shoot") || shooterAnim.IsAnimationNotPlaying()) && !shootingThisFrame;
 
-            if (canShoot && PlayerInput.Pressed() && !shootingThisFrame)
+            if (canShoot && lastShotOut)
+                lastShotOut = false;
+
+            if (canShoot && !lastShotOut && PlayerInput.Pressed() && !IsExpectingInputNow(InputType.STANDARD_DOWN))
             {
+                lastShotOut = true;
                 shootingThisFrame = true;
                 Shoot();
                 SpawnObject(BTSObject.FlyingRod);
