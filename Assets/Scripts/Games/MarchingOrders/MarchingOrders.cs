@@ -82,7 +82,7 @@ namespace HeavenStudio.Games.Loaders
                     new GameAction("background", "Set the Background")
                     {
                         function = delegate { var e = eventCaller.currentEntity; MarchingOrders.instance.BackgroundColorSet(e.beat, e["type"]); },
-                        defaultLength = 2f,
+                        defaultLength = 0.5f,
                         parameters = new List<Param>()
                         {
                             new Param("type", MarchingOrders.BackgroundColor.Blue, "Color", "The background color of Marching Orders"),
@@ -98,11 +98,11 @@ namespace HeavenStudio.Games.Loaders
                             new Param("toggle", false, "Female Commandress", "Makes the Commander the Rabbit Girl"),
                         }
                     }
-                },
+                }/*, this cause problems with the background
                 new List<string>() { "agb", "normal" },
-                "agbmarcher", "jp", "ver0",
+                "agbmarcher", "en", "ver0",
                 new List<string>() { "en", "jp" },
-                new List<string>() {}
+                new List<string>() {}*/
                 );
         }
     }
@@ -132,7 +132,7 @@ namespace HeavenStudio.Games
         public GameObject BGMain1;
         public GameObject BGMain2;
         public SpriteRenderer Background;
-        
+      
         public GameEvent bop = new GameEvent();
         public GameEvent noBop = new GameEvent();
         public GameEvent marching = new GameEvent();

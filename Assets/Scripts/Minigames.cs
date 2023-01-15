@@ -290,10 +290,8 @@ namespace HeavenStudio
                 
         }
 
-        public static string Version = "remix6";
         public static void Init(EventCaller eventCaller)
         {
-            Version = "remix6";
             eventCaller.minigames = new List<Minigame>()
             {
                 new Minigame("gameManager", "Game Manager", "", false, true, new List<GameAction>()

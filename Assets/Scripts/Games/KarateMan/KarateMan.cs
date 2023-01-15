@@ -95,7 +95,7 @@ namespace HeavenStudio.Games.Loaders
                     {
                         new Param("type", KarateMan.HitThree.HitThree, "Type", "The warning text to show"),
                         new Param("type2", KarateMan.HitThreeVoice.Megamix3DS, "Voice Clip", "If the voice clip plays or not"),
-                        new Param("type3", KarateMan.HitThreeGraphicLang.Japanese, "Language", "The language the graphic will show in"),
+                        new Param("type3", KarateMan.HitThreeGraphicLang.English, "Language", "The language the graphic will show in"),
                         new Param("toggle", false, "Pitch Shift", "Makes the voice shift pitch and speed like in DS"),
                         new Param("type4", KarateMan.HitThreeLength.None, "Length Override", "Overrides the standered length of the graphic appearing"),
                         new Param("type5", KarateMan.HitThreeVoiceDelay.OneBeat, "Voice Delay", "If the voice is delayed by 1 or half a beat"),
@@ -286,7 +286,7 @@ namespace HeavenStudio.Games.Loaders
                 },
             },
             new List<string>() {"agb", "ntr", "rvl", "ctr", "pco", "normal"},
-            "karate", "jp", "ver0",
+            "karate", "en", "ver0",
             new List<string>() {"en", "jp", "ko"},
             new List<string>() {}
             );

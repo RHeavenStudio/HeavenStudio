@@ -1,5 +1,5 @@
 ManifestFileVersion: 0
-CRC: 269036586
+CRC: 1769949902
 AssetBundleManifest:
   AssetBundleInfos:
     Info_0:
@@ -161,9 +161,14 @@ AssetBundleManifest:
       Dependencies:
         Dependency_0: ntrlifting/ver.ver0
     Info_51:
+      Name: ntrdj/common
+      Dependencies:
+        Dependency_0: ntrdjschool/common
+    Info_52:
+      Name: ntrlifting/ver.remix9
+      Dependencies:
+        Dependency_0: ntrlifting/ver.ver0
+    Info_53:
       Name: ntrlifting/ver.remix6
       Dependencies:
         Dependency_0: ntrlifting/ver.ver0
-    Info_52:
-      Name: agbghost/common
-      Dependencies: {}

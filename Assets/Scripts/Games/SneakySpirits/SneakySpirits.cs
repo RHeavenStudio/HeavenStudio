@@ -16,14 +16,14 @@ namespace HeavenStudio.Games.Loaders
                 {
                     defaultLength = 1f,
                     function = delegate { var e = eventCaller.currentEntity; SneakySpirits.instance.SpawnSpirit(e.beat, e["valA"]); },
-                    parameters =
+                    parameters = new List<Param>()
                     {
                         new Param("valA", new EntityTypes.Integer(1, 8, 8), "Length", "The length until you have to shoot the spirit")
                     }
                 }
             },
             new List<string>() { "agb", "aim" },
-            "agbobake", "en", "ver0",
+            "agbghost", "en", "ver0",
             new List<string>() {},
             new List<string>() {}
             );

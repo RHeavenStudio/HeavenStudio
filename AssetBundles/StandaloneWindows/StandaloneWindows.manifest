@@ -1,5 +1,5 @@
 ManifestFileVersion: 0
-CRC: 2360613425
+CRC: 4122664736
 AssetBundleManifest:
   AssetBundleInfos:
     Info_0:
@@ -148,15 +148,20 @@ AssetBundleManifest:
       Name: ctrdrumming/common
       Dependencies: {}
     Info_47:
-      Name: agbmarcher/locale.jp
-      Dependencies: {}
-    Info_48:
       Name: ctrbear/common
       Dependencies: {}
-    Info_49:
+    Info_48:
       Name: ntrlifting/ver.ver0
       Dependencies: {}
+    Info_49:
+      Name: ntrlifting/ver.ver2
+      Dependencies:
+        Dependency_0: ntrlifting/ver.ver0
     Info_50:
-      Name: ntrlifting/ver.ver1
+      Name: ntrlifting/ver.remix9
+      Dependencies:
+        Dependency_0: ntrlifting/ver.ver0
+    Info_51:
+      Name: ntrlifting/ver.remix6
       Dependencies:
         Dependency_0: ntrlifting/ver.ver0

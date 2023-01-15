@@ -80,11 +80,11 @@ namespace HeavenStudio.Games.Loaders
                         new Param("toggle", false, "Exit", "Giraffe will exit the scene"),
                     }
                 }
-            },
+            }/*, Asset Bundles cause the stars not to load properly
             new List<string>() { "agb", "normal" },
             "agbtap", "en", "ver0",
             new List<string>() {},
-            new List<string>() {}
+            new List<string>() {}*/
             );
         }
     }

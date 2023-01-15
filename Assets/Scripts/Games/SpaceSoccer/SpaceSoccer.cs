@@ -59,7 +59,7 @@ namespace HeavenStudio.Games.Loaders
                     parameters = new List<Param>()
                     {
                         new Param("type", SpaceSoccer.BackgroundColors.Ver0, "Backgrounds", "The normal backgrounds used in the game"),
-                        new Param("color", SpaceSoccer.ver1BgColor, "Background Color", "Changes the background color"),
+                        new Param("color", SpaceSoccer.ver0BgColor, "Background Color", "Changes the background color"),
                     }
                 },
                 // This is still here for "backwards-compatibility" but is hidden in the editor (it does absolutely nothing however)
@@ -71,9 +71,9 @@ namespace HeavenStudio.Games.Loaders
                 },
             },
             new List<string>() {"ntr", "keep"},
-            "ntrlifting", "jp", Minigames.Version, //"remix6",
+            "ntrlifting", "en", "ver0",
             new List<string>() {"en", "jp", "ko"},
-            new List<string>() {"ver0", "ver2", "remix6"}
+            new List<string>() {"ver0", "ver2", "remix6", "remix9"}
             );
         }
     }
