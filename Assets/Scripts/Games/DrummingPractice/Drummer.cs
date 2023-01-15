@@ -10,6 +10,7 @@ namespace HeavenStudio.Games.Scripts_DrummingPractice
 {
     public class Drummer : MonoBehaviour
     {
+        DrummingPractice game;
 
         [Header("References")]
         public Animator animator;
@@ -32,9 +33,14 @@ namespace HeavenStudio.Games.Scripts_DrummingPractice
             public List<Sprite> Sprites;
         }
 
+        void Awake()
+        {
+            game = DrummingPractice.instance;
+        }
+
         private void Update()
         {
-            if (player && PlayerInput.Pressed())
+            if (player && PlayerInput.Pressed() && !DrummingPractice.instance.IsExpectingInputNow(InputType.STANDARD_DOWN))
             {
                 Hit(false, false);
             }
@@ -107,6 +113,5 @@ namespace HeavenStudio.Games.Scripts_DrummingPractice
         {
             hitting = false;
         }
-
     }
 }

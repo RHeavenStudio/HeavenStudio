@@ -10,6 +10,7 @@ namespace HeavenStudio.Games.Scripts_ForkLifter
 {
     public class Pea : PlayerActionObject
     {
+        ForkLifter game;
         private Animator anim;
 
         public float startBeat;
@@ -18,6 +19,7 @@ namespace HeavenStudio.Games.Scripts_ForkLifter
 
         private void Awake()
         {
+            game = ForkLifter.instance;
             anim = GetComponent<Animator>();
 
             // SCHEDULING zoom sound so it lines up with when it meets the fork.
@@ -26,21 +28,14 @@ namespace HeavenStudio.Games.Scripts_ForkLifter
             var zoomStartTime = currentDspTime + (double)(cond.pitchedSecPerBeat * 2) - 0.317;
             Jukebox.PlayOneShotScheduledGame("forkLifter/zoomFast", (double)zoomStartTime);
 
-            GetComponentInChildren<SpriteRenderer>().sprite = ForkLifter.instance.peaSprites[type];
+            GetComponentInChildren<SpriteRenderer>().sprite = game.peaSprites[type];
 
             for (int i = 0; i < transform.GetChild(0).childCount; i++)
             {
                 transform.GetChild(0).GetChild(i).GetComponent<SpriteRenderer>().sprite = transform.GetChild(0).GetComponent<SpriteRenderer>().sprite;
             }
 
-            // PlayerActionInit(this.gameObject, startBeat, ForkLifter.instance.EligibleHits);
-
-            isEligible = true;
-        }
-
-        public override void OnAce()
-        {
-            this.Hit();
+            game.ScheduleInput(startBeat, 2f, InputType.STANDARD_DOWN, Just, Miss, Out);
         }
 
         public void Hit()
@@ -63,7 +58,7 @@ namespace HeavenStudio.Games.Scripts_ForkLifter
                 }
 
                 SpriteRenderer psprite = pea.AddComponent<SpriteRenderer>();
-                psprite.sprite = ForkLifter.instance.peaHitSprites[type];
+                psprite.sprite = game.peaHitSprites[type];
                 psprite.sortingOrder = 20;
                 switch (type)
                 {
@@ -128,7 +123,7 @@ namespace HeavenStudio.Games.Scripts_ForkLifter
             }
 
             SpriteRenderer psprite = pea.AddComponent<SpriteRenderer>();
-            psprite.sprite = ForkLifter.instance.peaHitSprites[type];
+            psprite.sprite = game.peaHitSprites[type];
             psprite.sortingOrder = 20;
             ForkLifterPlayer.instance.HitFXMiss(new Vector2(1.0424f, -4.032f), new Vector2(1.129612f, 1.129612f));
             ForkLifterPlayer.instance.HitFXMiss(new Vector2(0.771f, -3.016f), new Vector2(1.71701f, 1.71701f));
@@ -159,7 +154,7 @@ namespace HeavenStudio.Games.Scripts_ForkLifter
             }
 
             SpriteRenderer psprite = pea.AddComponent<SpriteRenderer>();
-            psprite.sprite = ForkLifter.instance.peaHitSprites[type];
+            psprite.sprite = game.peaHitSprites[type];
             psprite.sortingOrder = 20;
             ForkLifterPlayer.instance.HitFXMiss(new Vector2(1.0424f, -4.032f), new Vector2(1.129612f, 1.129612f));
             ForkLifterPlayer.instance.HitFXMiss(new Vector2(0.771f, -3.016f), new Vector2(1.71701f, 1.71701f));
@@ -179,34 +174,35 @@ namespace HeavenStudio.Games.Scripts_ForkLifter
             float normalizedBeatAnim = Conductor.instance.GetPositionFromBeat(startBeat, 2.45f);
             anim.Play("Flicked_Object", -1, normalizedBeatAnim);
             anim.speed = 0;
+        }
 
-            float normalizedBeat = Conductor.instance.GetPositionFromBeat(startBeat, 2f);
-
-            StateCheck(normalizedBeat);
-
-            if (PlayerInput.Pressed() && ForkLifterPlayer.instance.hitOnFrame == 0)
+        private void Just(PlayerActionEvent caller, float state)
+        {
+            if (state >= 1f)
             {
-                if (state.perfect)
-                {
-                    Hit();
-                }
-                else if (state.early)
-                {
-                    Early();
-                }
-                else if (state.late)
-                {
-                    Late();
-                }
-
-                ForkLifterPlayer.instance.hitOnFrame++;
+                Late();
+            } 
+            else if (state <= -1f) 
+            {
+                Early();
             }
-
-            if (normalizedBeat > Minigame.EndTime())
+            else
             {
-                Jukebox.PlayOneShot("audience/disappointed");
-                Destroy(this.gameObject);
+                Hit();
             }
         }
+
+        private void Miss(PlayerActionEvent caller) 
+        {
+            Jukebox.PlayOneShot("audience/disappointed");
+            BeatAction.New(game.gameObject, new List<BeatAction.Action>()
+            {
+                new BeatAction.Action(startBeat+ 2.45f, delegate { 
+                    Destroy(this.gameObject);
+                }),
+            });
+        }
+
+        private void Out(PlayerActionEvent caller) {}
     }
 }
