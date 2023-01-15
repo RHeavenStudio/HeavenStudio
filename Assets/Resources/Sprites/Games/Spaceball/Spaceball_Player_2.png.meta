@@ -1,24 +1,24 @@
 fileFormatVersion: 2
-guid: 345cdeebdf48fd6428df7c685385b267
+guid: d899376a396254141bb54991ee0182b4
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: -4949174322852393655
-    second: Spaceball_Player_2_0
+      213: -7969101441138513416
+    second: Spaceball_Player_1_0
   - first:
-      213: 3365178227022463474
-    second: Spaceball_Player_2_1
+      213: -3597924984213406025
+    second: Spaceball_Player_1_1
   - first:
-      213: -7043806042153501721
-    second: Spaceball_Player_2_2
+      213: -2754269979427108517
+    second: Spaceball_Player_1_2
   - first:
-      213: -6281578518888007599
-    second: Spaceball_Player_2_3
+      213: 1484695007764172264
+    second: Spaceball_Player_1_3
   - first:
-      213: 8401854151048007729
-    second: Spaceball_Player_2_4
+      213: -4397913084546680220
+    second: Spaceball_Player_1_4
   externalObjects: {}
-  serializedVersion: 11
+  serializedVersion: 12
   mipmaps:
     mipMapMode: 0
     enableMipMap: 0
@@ -39,6 +39,7 @@ TextureImporter:
   streamingMipmaps: 0
   streamingMipmapsPriority: 0
   vTOnly: 0
+  ignoreMasterTextureLimit: 0
   grayScaleToAlpha: 0
   generateCubemap: 6
   cubemapConvolution: 0
@@ -77,6 +78,7 @@ TextureImporter:
   textureFormatSet: 0
   ignorePngGamma: 0
   applyGammaDecoding: 0
+  cookieLightType: 1
   platformSettings:
   - serializedVersion: 3
     buildTarget: DefaultTexturePlatform
@@ -114,110 +116,122 @@ TextureImporter:
     overridden: 0
     androidETC2FallbackOverride: 0
     forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 3
+    buildTarget: Server
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 2
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
   spriteSheet:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: Spaceball_Player_2_0
+      name: Spaceball_Player_1_0
       rect:
         serializedVersion: 2
         x: 0
         y: 0
-        width: 303
-        height: 470
+        width: 606
+        height: 940
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 94d06eadc20015bb0800000000000000
-      internalID: -4949174322852393655
+      spriteID: 8f9a2ed1670186190800000000000000
+      internalID: -7969101441138513416
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Spaceball_Player_2_1
-      rect:
-        serializedVersion: 2
-        x: 303
-        y: 0
-        width: 303
-        height: 470
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: 2f18d8b94c383be20800000000000000
-      internalID: 3365178227022463474
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: Spaceball_Player_2_2
+      name: Spaceball_Player_1_1
       rect:
         serializedVersion: 2
         x: 606
         y: 0
-        width: 303
-        height: 470
+        width: 606
+        height: 940
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 7ebb0be69bf5f3e90800000000000000
-      internalID: -7043806042153501721
+      spriteID: 7bef47b1a4a911ec0800000000000000
+      internalID: -3597924984213406025
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Spaceball_Player_2_3
-      rect:
-        serializedVersion: 2
-        x: 909
-        y: 0
-        width: 303
-        height: 470
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: 158b4f84e9953d8a0800000000000000
-      internalID: -6281578518888007599
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: Spaceball_Player_2_4
+      name: Spaceball_Player_1_2
       rect:
         serializedVersion: 2
         x: 1212
         y: 0
-        width: 303
-        height: 470
+        width: 606
+        height: 940
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 1309bdfd5d1699470800000000000000
-      internalID: 8401854151048007729
+      spriteID: b5989b4eb0ed6c9d0800000000000000
+      internalID: -2754269979427108517
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Spaceball_Player_1_3
+      rect:
+        serializedVersion: 2
+        x: 1818
+        y: 0
+        width: 606
+        height: 940
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 8ed44994e32ba9410800000000000000
+      internalID: 1484695007764172264
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Spaceball_Player_1_4
+      rect:
+        serializedVersion: 2
+        x: 2424
+        y: 0
+        width: 606
+        height: 940
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 46a7d8ac95977f2c0800000000000000
+      internalID: -4397913084546680220
       vertices: []
       indices: 
       edges: []
@@ -232,6 +246,12 @@ TextureImporter:
     edges: []
     weights: []
     secondaryTextures: []
+    nameFileIdTable:
+      Spaceball_Player_1_1: -3597924984213406025
+      Spaceball_Player_1_0: -7969101441138513416
+      Spaceball_Player_1_4: -4397913084546680220
+      Spaceball_Player_1_3: 1484695007764172264
+      Spaceball_Player_1_2: -2754269979427108517
   spritePackingTag: 
   pSDRemoveMatte: 0
   pSDShowRemoveMatteOption: 0
