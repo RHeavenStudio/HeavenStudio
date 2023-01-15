@@ -26,6 +26,7 @@ namespace HeavenStudio.Games.Scripts_CropStomp
         private float pickTime = 1f;
         private int veggieState = 0;
         private bool boinked; // Player got barely when trying to pick.
+        private bool pickEligible = true;
 
         private float landBeat;
 
@@ -36,6 +37,7 @@ namespace HeavenStudio.Games.Scripts_CropStomp
         public void Init()
         {
             game = CropStomp.instance;
+            game.ScheduleInput(targetBeat - 1, 1f, InputType.STANDARD_DOWN, StompJust, StompMiss, Out);
 
             if (!isMole)
             {
@@ -68,30 +70,9 @@ namespace HeavenStudio.Games.Scripts_CropStomp
             }
 
             var cond = Conductor.instance;
-
-            float normalizedBeat = cond.GetPositionFromMargin(targetBeat, 1f);
-            StateCheck(normalizedBeat);
-            
             // In ground.
             if (veggieState == 0)
             {
-                if (normalizedBeat > Minigame.LateTime())
-                {
-                    veggieState = -1;
-                    return;
-                }
-
-                if (PlayerInput.Pressed())
-                {
-                    if (state.perfect)
-                    {
-                        StompVeggie(false);
-                    }
-                    else if (state.notPerfect())
-                    {
-                        veggieState = -1;
-                    }
-                }
             }
             // In air.
             else if (veggieState == 1)
@@ -99,48 +80,80 @@ namespace HeavenStudio.Games.Scripts_CropStomp
                 float airPosition = cond.GetPositionFromBeat(stompedBeat, landBeat - stompedBeat);
                 veggieTrans.position = curve.GetPoint(Mathf.Clamp(airPosition, 0, 1));
 
-                if (normalizedBeat > Minigame.EndTime())
+                if (PlayerInput.PressedUp() && !game.IsExpectingInputNow(InputType.STANDARD_UP))
                 {
-                    veggieState = -1;
-                    
-                    if (!isMole)
-                        Jukebox.PlayOneShotGame("cropStomp/veggieMiss");
-
-                    return;
-                }
-
-                if (PlayerInput.PressedUp())
-                {
-                    if (state.perfect)
-                    {
-                        PickVeggie(false);
-                    }
-                    else if (state.notPerfect())
-                    {
-                        veggieState = -1;
-                        boinked = true;
-
-                        curve.transform.localScale = Vector3.one; // Return curve to normal size in the case of mole curves.
-
-                        var key1 = curve.KeyPoints[0];
-                        var key1Pos = key1.Position;
-                        key1.Position = new Vector3(key1Pos.x, veggieTrans.position.y, key1Pos.z);
-
-                        var key2 = curve.KeyPoints[1];
-                        var key2Pos = key2.Position;
-                        key2.Position = new Vector3(key2Pos.x, veggieTrans.position.y + 2f, key2Pos.z);
-
-                        pickedBeat = cond.songPositionInBeats;
-
-                        Jukebox.PlayOneShot("miss");
-
-                        MissedUpdate();
-                    }
-
-                    game.bodyAnim.Play("Pick", 0, 0);
-                    game.isFlicking = true;
+                    pickEligible = false;
                 }
             }
+        }
+
+        private void StompJust(PlayerActionEvent caller, float state)
+        {
+            if (GameManager.instance.autoplay)
+            {
+                StompVeggie(true);
+                return;
+            }
+
+            if (state >= 1f)
+                veggieState = -1;
+            else if (state > -1f)
+                StompVeggie(false);
+        }
+
+        private void StompMiss(PlayerActionEvent caller) 
+        {
+            veggieState = -1;
+            caller.Disable();
+        }
+
+        private void Out(PlayerActionEvent caller) {}
+
+        private void PickJust(PlayerActionEvent caller, float state)
+        {
+            game.bodyAnim.Play("Pick", 0, 0);
+            game.isFlicking = true;
+            if (!pickEligible) return;
+            if (GameManager.instance.autoplay)
+            {
+                PickVeggie(true);
+                return;
+            }
+
+            if (state <= -1f || state >= 1f)
+            {
+                veggieState = -1;
+                boinked = true;
+
+                curve.transform.localScale = Vector3.one; // Return curve to normal size in the case of mole curves.
+
+                var key1 = curve.KeyPoints[0];
+                var key1Pos = key1.Position;
+                key1.Position = new Vector3(key1Pos.x, veggieTrans.position.y, key1Pos.z);
+
+                var key2 = curve.KeyPoints[1];
+                var key2Pos = key2.Position;
+                key2.Position = new Vector3(key2Pos.x, veggieTrans.position.y + 2f, key2Pos.z);
+
+                pickedBeat = Conductor.instance.songPositionInBeats;
+
+                Jukebox.PlayOneShot("miss");
+
+                MissedUpdate();
+            }
+            else
+            {
+                PickVeggie(false);
+            }
+        }
+
+        private void PickMiss(PlayerActionEvent caller) 
+        {
+            veggieState = -1;
+                    
+            if (!isMole)
+                Jukebox.PlayOneShotGame("cropStomp/veggieMiss");
+            caller.Disable();
         }
 
         bool moleLaughing;
@@ -205,11 +218,12 @@ namespace HeavenStudio.Games.Scripts_CropStomp
             var cond = Conductor.instance;
 
             veggieState = 1;
+            game.ScheduleInput(targetBeat, isMole ? 0.5f : 1f, InputType.STANDARD_UP, PickJust, PickMiss, Out);
             targetBeat = targetBeat + (isMole ? 0.5f : 1f);
 
             stompedBeat = cond.songPositionInBeats;
 
-            landBeat = cond.GetBeatFromPositionAndMargin(Minigame.EndTime(), targetBeat, 1f);
+            landBeat = targetBeat + (float)cond.BeatsToSecs(Minigame.EndTime()-1, cond.GetBpmAtBeat(targetBeat));
 
             if (autoTriggered)
             {
@@ -219,10 +233,9 @@ namespace HeavenStudio.Games.Scripts_CropStomp
 
             if (!isMole)
             {
-                BeatAction.New(gameObject, new List<BeatAction.Action>()
-                {
-                    new BeatAction.Action(targetBeat - 0.5f, delegate { Jukebox.PlayOneShotGame("cropStomp/veggieOh"); })
-                });
+                MultiSound.Play(
+                    new MultiSound.Sound[] { new MultiSound.Sound("cropStomp/veggieOh", targetBeat - 0.5f) }
+                );
             }
             else
             {
@@ -232,8 +245,6 @@ namespace HeavenStudio.Games.Scripts_CropStomp
             var veggieScale = veggieTrans.localScale;
             veggieTrans.localScale = new Vector3(veggieScale.x * 0.5f, veggieScale.y, veggieScale.z);
             squashTween = veggieTrans.DOScaleX(veggieScale.x, cond.pitchedSecPerBeat * 0.5f);
-
-            ResetState();
 
             Update(); // Update flying veggie state immediately.
         }
@@ -282,14 +293,6 @@ namespace HeavenStudio.Games.Scripts_CropStomp
                 squashTween.Kill(true);
 
             PickedUpdate();
-        }
-
-        public override void OnAce()
-        {
-            if (veggieState == 0)
-                StompVeggie(true);
-            else
-                PickVeggie(true);
         }
     }
 }

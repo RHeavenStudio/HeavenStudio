@@ -30,7 +30,7 @@ namespace HeavenStudio.Games.Scripts_BlueBear
         private void Start()
         {
             flyBeats = isCake ? 3f : 2f;
-            game.ScheduleInput(startBeat, flyBeats, isCake ? InputType.DIRECTION_DOWN : InputType.STANDARD_DOWN, EatJust, EatOut, EatOut);
+            game.ScheduleInput(startBeat, flyBeats, isCake ? InputType.DIRECTION_DOWN : InputType.STANDARD_DOWN, Just, Out, Out);
         }
 
         private void Update()
@@ -73,7 +73,7 @@ namespace HeavenStudio.Games.Scripts_BlueBear
             GameObject.Destroy(gameObject);
         }
 
-        private void EatJust(PlayerActionEvent caller, float state)
+        private void Just(PlayerActionEvent caller, float state)
         {
             if (state >= 1f || state <= -1f) {  //todo: proper near miss feedback
                 if (isCake)
@@ -89,7 +89,9 @@ namespace HeavenStudio.Games.Scripts_BlueBear
             EatFood();
         }
 
-        private void EatOut(PlayerActionEvent caller) {}
+        private void Miss(PlayerActionEvent caller) {}
+
+        private void Out(PlayerActionEvent caller) {}
 
         void SpawnCrumbs()
         {
