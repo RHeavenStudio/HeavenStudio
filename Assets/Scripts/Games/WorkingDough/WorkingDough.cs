@@ -15,7 +15,7 @@ namespace HeavenStudio.Games.Loaders
             {
                 new GameAction("beat intervals", "Start Interval")
                 {
-                    function = delegate { WorkingDough.instance.SetIntervalStart(eventCaller.currentEntity.beat, eventCaller.currentEntity.length);  },
+                    preFunction = delegate { var e = eventCaller.currentEntity; WorkingDough.instance.PreSetIntervalStart(e.beat, e.length);  },
                     defaultLength = 4f,
                     resizable = true
                 },
@@ -97,16 +97,33 @@ namespace HeavenStudio.Games
         {
             if (!intervalStarted)
             {
-                bigMode = false;
                 intervalStarted = true;
+                bigMode = false;
                 //Open npc transporters
-                ballTransporterLeftNPC.GetComponent<Animator>().Play("BallTransporterLeftOpen", 0, 0);
-                ballTransporterRightNPC.GetComponent<Animator>().Play("BallTransporterRightOpen", 0, 0);
+                if (!ballTransporterLeftNPC.GetComponent<Animator>().GetCurrentAnimatorStateInfo(0).IsName("BallTransporterLeftOpened") ||
+                    ballTransporterLeftNPC.GetComponent<Animator>().GetCurrentAnimatorStateInfo(0).normalizedTime >= 1.0f)
+                {
+                    ballTransporterLeftNPC.GetComponent<Animator>().Play("BallTransporterLeftOpen", 0, 0);
+                    ballTransporterRightNPC.GetComponent<Animator>().Play("BallTransporterRightOpen", 0, 0);
+                }
+
                 BeatAction.New(ballTransporterLeftNPC, new List<BeatAction.Action>()
                 {
                     //Open player transporters
-                    new BeatAction.Action(beat + interval - 1f, delegate { ballTransporterLeftPlayer.GetComponent<Animator>().Play("BallTransporterLeftOpen", 0, 0); }),
-                    new BeatAction.Action(beat + interval - 1f, delegate { ballTransporterRightPlayer.GetComponent<Animator>().Play("BallTransporterRightOpen", 0, 0); }),
+                    new BeatAction.Action(beat + interval - 1f, delegate {
+                        if (!ballTransporterLeftPlayer.GetComponent<Animator>().GetCurrentAnimatorStateInfo(0).IsName("BallTransporterLeftOpened") ||
+                            ballTransporterLeftPlayer.GetComponent<Animator>().GetCurrentAnimatorStateInfo(0).normalizedTime >= 1.0f)
+                        {
+                            ballTransporterLeftPlayer.GetComponent<Animator>().Play("BallTransporterLeftOpen", 0, 0);
+                        }
+                    }),
+                    new BeatAction.Action(beat + interval - 1f, delegate {
+                        if (!ballTransporterRightPlayer.GetComponent<Animator>().GetCurrentAnimatorStateInfo(0).IsName("BallTransporterRightOpened") ||
+                            ballTransporterRightPlayer.GetComponent<Animator>().GetCurrentAnimatorStateInfo(0).normalizedTime >= 1.0f)
+                        {
+                            ballTransporterRightPlayer.GetComponent<Animator>().Play("BallTransporterRightOpen", 0, 0);
+                        }
+                    }),
 
                     //End interval
                     new BeatAction.Action(beat + interval, delegate { intervalStarted = false; }),
@@ -119,8 +136,8 @@ namespace HeavenStudio.Games
                             bigMode = false;
                         }
                     }),
-                    new BeatAction.Action(beat + interval + 1f, delegate { ballTransporterLeftNPC.GetComponent<Animator>().Play("BallTransporterLeftClose", 0, 0); }),
-                    new BeatAction.Action(beat + interval + 1f, delegate { ballTransporterRightNPC.GetComponent<Animator>().Play("BallTransporterRightClose", 0, 0); }),
+                    new BeatAction.Action(beat + interval + 1f, delegate { if (!intervalStarted) ballTransporterLeftNPC.GetComponent<Animator>().Play("BallTransporterLeftClose", 0, 0); }),
+                    new BeatAction.Action(beat + interval + 1f, delegate { if (!intervalStarted) ballTransporterRightNPC.GetComponent<Animator>().Play("BallTransporterRightClose", 0, 0); }),
                     //Close player transporters
                     new BeatAction.Action(beat + interval * 2 + 1f, delegate { ballTransporterLeftPlayer.GetComponent<Animator>().Play("BallTransporterLeftClose", 0, 0); }),
                     new BeatAction.Action(beat + interval * 2 + 1f, delegate { ballTransporterRightPlayer.GetComponent<Animator>().Play("BallTransporterRightClose", 0, 0); }),
@@ -172,7 +189,6 @@ namespace HeavenStudio.Games
 
         public void InstantExitBall(float beat, bool isBig, float offSet)
         {
-            Debug.Log("Offset: " + offSet.ToString());
             var objectToSpawn = isBig ? bigBallNPC : smallBallNPC;
             var spawnedBall = GameObject.Instantiate(objectToSpawn, ballHolder);
 
