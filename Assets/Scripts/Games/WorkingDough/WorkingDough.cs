@@ -148,7 +148,6 @@ namespace HeavenStudio.Games
                 new BeatAction.Action(beat + 0.1f, delegate { arrowSRLeftNPC.sprite = whiteArrowSprite; }),
                 new BeatAction.Action(beat + 1f, delegate { doughDudesNPC.GetComponent<Animator>().Play(isBig ? "BigDoughJump" :"SmallDoughJump", 0, 0); }),
                 new BeatAction.Action(beat + 1f, delegate { Jukebox.PlayOneShotGame(isBig ? "workingDough/NPCBigBall" : "workingDough/NPCSmallBall"); }),
-                new BeatAction.Action(beat + 1f, delegate { Jukebox.PlayOneShotGame("workingDough/SmallBall"); }),
                 new BeatAction.Action(beat + 1f, delegate { npcImpact.SetActive(true); }),
                 new BeatAction.Action(beat + 1.1f, delegate { npcImpact.SetActive(false); }),
                 new BeatAction.Action(beat + 1.9f, delegate { arrowSRRightNPC.sprite = redArrowSprite; }),
