@@ -14,7 +14,7 @@ namespace HeavenStudio.Games.Loaders
     {
         public static Minigame AddGame(EventCaller eventCaller)
         {
-            return new Minigame("lockstep", "Lockstep \n<color=#eb5454>[WIP]</color>", "0058CE", false, false, new List<GameAction>()
+            return new Minigame("lockstep", "Lockstep \n<color=#eb5454>[INITIALIZATION ONLY]</color>", "0058CE", false, false, new List<GameAction>()
             {
                 new GameAction("bop", "Bop")
                     {
@@ -26,13 +26,7 @@ namespace HeavenStudio.Games.Loaders
                         defaultLength = 1f,
                     },
 
-                new GameAction("startStepping", "Start Stepping")
-                    {
-                        function = delegate { var e = eventCaller.currentEntity; Lockstep.instance.BeginStepping(e.beat); },
-                        defaultLength = 1f
-
-
-                    },
+                
 
                 new GameAction("hai", "Hai!")
                     {
@@ -46,10 +40,6 @@ namespace HeavenStudio.Games.Loaders
                 new GameAction("offbeatSwitch", "Switch to Offbeat")
                     {
                         function = delegate { var e = eventCaller.currentEntity; Lockstep.instance.OnbeatSwitch(e.beat); },
-                    /*    parameters = new List<Param>()
-                        {
-                        new Param("toggle", true, "'Ho ho ho ho'", "Whether or not 'Ho ho ho ho' will be said after 'Hai hai hai ha-hai!'")
-                        }, */
                         defaultLength = 8f
 
 
@@ -69,6 +59,14 @@ namespace HeavenStudio.Games.Loaders
                         defaultLength = 4f,
                         resizable = true,
                         hidden = true
+                    },
+
+                new GameAction("startStepping", "Start Stepping")
+                    {
+                        function = delegate { var e = eventCaller.currentEntity; Lockstep.instance.BeginStepping(e.beat); },
+                        defaultLength = 1f,
+                        hidden = true
+
                     },
 
                 new GameAction("test1", "onbeat march test")
@@ -126,11 +124,13 @@ namespace HeavenStudio.Games
 
             var cond = Conductor.instance;
 
-            if (Conductor.instance.ReportBeat(ref lastReportedBeat))
+            if (goStep)
             {
-                if (goStep)
+                print("stepping is on");
+                if (Conductor.instance.ReportBeat(ref lastReportedBeat))
                 {
-                    Jukebox.PlayOneShotGame("marchingOrders/step1");
+                    print("one small step for switch");
+                    Jukebox.PlayOneShotGame("Lockstep/marchOnBeat1");
                     stepswitcherP.DoScaledAnimationAsync("OnbeatMarch", 0.5f);
                     stepswitcher0.DoScaledAnimationAsync("OnbeatMarch", 0.5f);
                     stepswitcher1.DoScaledAnimationAsync("OnbeatMarch", 0.5f);
@@ -186,7 +186,10 @@ namespace HeavenStudio.Games
         public void BeginStepping(float beat)
         {
 
-            goStep = true;
+            BeatAction.New(instance.gameObject, new List<BeatAction.Action>()
+                {
+                    new BeatAction.Action(beat, delegate { goStep = true; }),
+                });
 
             print("Start Stepping");
             print(goStep);
