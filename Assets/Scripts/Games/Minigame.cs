@@ -113,6 +113,9 @@ namespace HeavenStudio.Games
 
             foreach(PlayerActionEvent toCompare in scheduledInputs)
             {
+                // ignore inputs that are for sequencing in autoplay
+                if (toCompare.autoplayOnly) continue;
+
                 if(closest == null)
                 {
                     if (input == InputType.ANY || toCompare.inputType.HasFlag(input))
