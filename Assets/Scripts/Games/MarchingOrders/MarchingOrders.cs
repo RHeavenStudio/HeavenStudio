@@ -1,15 +1,13 @@
 //notes:
-//  BEFORE NEW PROPS
-// - minenice will also use this to test out randomly named parameters so coding has to rest until the new props update [DONE]
-// - see fan club for separate prefabs (cadets) [DONE]
-// - temporarily take sounds from rhre, wait until someone records the full code, including misses, or record it myself (unlikely) [IN PROGRESS]
-//  AFTER NEW PROPS
-// - testmod marching orders using speed
+//  CURRENT STATE
+// - rework on the marching cadet code (it sucks)
 // - see space soccer, mr upbeat, tunnel for keep-the-beat codes
 // - figure how to do custom bg changes when the upscaled textures are finished (see karate man, launch party once it releases)
 // - will use a textbox without going through the visual options but i wonder how..?? (see first contact if ever textboxes are implemented in said minigame)
 //  AFTER FEATURE COMPLETION
 // - delete all notes once the minigame is considered feature-complete
+// - polish. like a lot of polish
+// - of course, assetbundles!
 
 using HeavenStudio.Util;
 using System;
@@ -144,7 +142,7 @@ namespace HeavenStudio.Games
                     marchOtherCount += 1;
                     var marchOtherAnim = (marchOtherCount % 2 != 0 ? "MarchR" : "MarchL");
 
-                    Jukebox.PlayOneShotGame("marchingOrders/step1");
+                    Jukebox.PlayOneShotGame("marchingOrders/stepOther");
                     Cadet1.DoScaledAnimationAsync(marchOtherAnim, 0.5f);
                     Cadet2.DoScaledAnimationAsync(marchOtherAnim, 0.5f);
                     Cadet3.DoScaledAnimationAsync(marchOtherAnim, 0.5f);
@@ -160,7 +158,7 @@ namespace HeavenStudio.Games
             marchPlayerCount += 1;
                     var marchPlayerAnim = (marchPlayerCount % 2 != 0 ? "MarchR" : "MarchL");
 
-                    Jukebox.PlayOneShotGame("marchingOrders/step1");
+                    Jukebox.PlayOneShotGame("marchingOrders/stepOther");
                     CadetPlayer.DoScaledAnimationAsync(marchPlayerAnim, 0.5f);
             }
         }
@@ -216,7 +214,7 @@ namespace HeavenStudio.Games
             MultiSound.Play(new MultiSound.Sound[] {
             new MultiSound.Sound("marchingOrders/halt1", beat),
             new MultiSound.Sound("marchingOrders/halt2", beat + 1f),
-            new MultiSound.Sound("marchingOrders/step1", beat + 1f),
+            new MultiSound.Sound("marchingOrders/stepOther", beat + 1f),
             }, forcePlay:true);
             
             BeatAction.New(Player, new List<BeatAction.Action>() 
@@ -244,12 +242,12 @@ namespace HeavenStudio.Games
             switch (type)
             {
                 case (int) MarchingOrders.DirectionFaceTurn.Left:
-                    //ScheduleInput(beat, turnLength + 2f, InputType.DIRECTION_RIGHT_DOWN, LeftSuccess, LeftMiss, LeftEmpty);
+                    ScheduleInput(beat, turnLength + 2f, InputType.DIRECTION_LEFT_DOWN, LeftSuccess, LeftMiss, LeftThrough);
                     MultiSound.Play(new MultiSound.Sound[] {
                     new MultiSound.Sound("marchingOrders/leftFaceTurn1", beat),
                     new MultiSound.Sound("marchingOrders/leftFaceTurn2", beat + 0.5f),
                     new MultiSound.Sound("marchingOrders/leftFaceTurn3", beat + turnLength + 1f),
-                    new MultiSound.Sound("marchingOrders/leftFaceTurn4", beat + turnLength + 2f),
+                    new MultiSound.Sound("marchingOrders/faceTurnOther", beat + turnLength + 2f),
                     }, forcePlay:true);
                     
                         BeatAction.New(Player, new List<BeatAction.Action>() 
@@ -260,11 +258,12 @@ namespace HeavenStudio.Games
                             });
                     break;
                 default:
+                    ScheduleInput(beat, turnLength + 2f, InputType.DIRECTION_RIGHT_DOWN, RightSuccess, RightMiss, RightThrough);
                     MultiSound.Play(new MultiSound.Sound[] {
                     new MultiSound.Sound("marchingOrders/rightFaceTurn1", beat),
                     new MultiSound.Sound("marchingOrders/rightFaceTurn2", beat + 0.5f),
                     new MultiSound.Sound("marchingOrders/rightFaceTurn3", beat + turnLength + 1f),
-                    new MultiSound.Sound("marchingOrders/rightFaceTurn4", beat + turnLength + 2f),
+                    new MultiSound.Sound("marchingOrders/faceTurnOther", beat + turnLength + 2f),
                     }, forcePlay:true);
                     
                         BeatAction.New(Player, new List<BeatAction.Action>() 
@@ -282,6 +281,7 @@ namespace HeavenStudio.Games
                 new BeatAction.Action(beat + turnLength + 1f,     delegate { Sarge.DoScaledAnimationAsync("Talk", 0.5f);}),
                 });
         }
+        
         
         
         public static void AttentionSound(float beat)
@@ -308,6 +308,42 @@ namespace HeavenStudio.Games
             new MultiSound.Sound("marchingOrders/halt2", beat + 1f),
             }, forcePlay:true);
         }
+        
+        
+        
+        public void LeftSuccess(PlayerActionEvent caller, float state)
+            {
+            Jukebox.PlayOneShotGame("marchingOrders/faceTurnPlayer");
+            CadetHeadPlayer.DoScaledAnimationAsync("FaceL", 0.5f);
+             }
+
+        public void LeftMiss(PlayerActionEvent caller)
+            {
+            //Jukebox.PlayOneShotGame("spaceDance/inputBad2");
+             }
+
+        public void LeftThrough(PlayerActionEvent caller)
+            {
+
+             }
+
+
+        public void RightSuccess(PlayerActionEvent caller, float state)
+            {
+            Jukebox.PlayOneShotGame("marchingOrders/faceTurnPlayer");
+            CadetHeadPlayer.DoScaledAnimationAsync("FaceR", 0.5f);
+             }
+
+        public void RightMiss(PlayerActionEvent caller)
+            {
+            //Jukebox.PlayOneShotGame("spaceDance/inputBad2");
+             }
+
+        public void RightThrough(PlayerActionEvent caller)
+            {
+
+             }
+
     }
 }
 
