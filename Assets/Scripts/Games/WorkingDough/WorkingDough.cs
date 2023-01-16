@@ -422,6 +422,9 @@ namespace HeavenStudio.Games
 
         void JustSmall(PlayerActionEvent caller, float state)
         {
+            GameObject currentBall = currentBalls[0];
+            currentBalls.Remove(currentBall);
+            GameObject.Destroy(currentBall);
             if (state >= 1f || state <= -1f)
             {
                 return;
@@ -431,6 +434,9 @@ namespace HeavenStudio.Games
 
         void JustBig(PlayerActionEvent caller, float state)
         {
+            GameObject currentBall = currentBalls[0];
+            currentBalls.Remove(currentBall);
+            GameObject.Destroy(currentBall);
             if (state >= 1f || state <= -1f)
             { 
                 return;
