@@ -1,5 +1,4 @@
 using DG.Tweening;
-using NaughtyBezierCurves;
 using HeavenStudio.Util;
 using System;
 using System.Collections.Generic;

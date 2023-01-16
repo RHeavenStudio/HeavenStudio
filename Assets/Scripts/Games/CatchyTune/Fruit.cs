@@ -17,6 +17,8 @@ namespace HeavenStudio.Games.Scripts_CatchyTune
 
         public bool side;
 
+        public float barelyStart = 0f;
+
         public bool smile;
 
         private string soundText;
@@ -73,8 +75,14 @@ namespace HeavenStudio.Games.Scripts_CatchyTune
         // minenice: note - needs PlayerActionEvent implementation
         private void Update()
         {
-            anim.DoScaledAnimation("fruit bounce", startBeat, beatLength + (isPineapple ? 4f : 2f));
-            float normalizedBeat = Conductor.instance.GetPositionFromBeat(startBeat, beatLength);
+            if (barelyStart > 0f)
+            {
+                anim.DoScaledAnimation("barely", barelyStart, isPineapple ? 2f : 1f);
+            }
+            else 
+            {
+                anim.DoScaledAnimation("fruit bounce", startBeat, beatLength + (isPineapple ? 4f : 2f));
+            }
         }
 
         public static void PlaySound(float startBeat, bool side, bool isPineapple)
@@ -127,11 +135,31 @@ namespace HeavenStudio.Games.Scripts_CatchyTune
 
         private void CatchFruit(PlayerActionEvent caller, float state)
         {
-            //minenice: TODO - near misses (-1 > state > 1)
 
-            Jukebox.PlayOneShotGame(soundText + "Catch");
-            game.catchSuccess(side, isPineapple, smile, startBeat + beatLength);
-            Destroy(this.gameObject);
+            if (state < 0f || state > 1f)
+            {
+                //near miss (barely)
+                barelyStart = Conductor.instance.songPositionInBeats;
+                
+
+                // near miss sound
+                Jukebox.PlayOneShotGame("catchyTune/barely");
+
+                // play near miss animation
+                anim.DoScaledAnimation("barely", barelyStart, isPineapple ? 2f : 1f);
+
+                BeatAction.New(gameObject, new List<BeatAction.Action>()
+                {
+                    new BeatAction.Action(barelyStart + (isPineapple ? 2f : 1f), delegate { Destroy(this.gameObject); }),
+                });
+
+            }
+            else 
+            {
+                Jukebox.PlayOneShotGame(soundText + "Catch");
+                game.catchSuccess(side, isPineapple, smile, startBeat + beatLength);
+                Destroy(this.gameObject);
+            }
         }
 
         private void Miss(PlayerActionEvent caller)
