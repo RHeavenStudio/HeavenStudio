@@ -113,6 +113,9 @@ namespace HeavenStudio.Games
 
             foreach(PlayerActionEvent toCompare in scheduledInputs)
             {
+                // ignore inputs that are for sequencing in autoplay
+                if (toCompare.autoplayOnly) continue;
+
                 if(closest == null)
                 {
                     if (input == InputType.ANY || toCompare.inputType.HasFlag(input))
@@ -245,6 +248,13 @@ namespace HeavenStudio.Games
             }
             Debug.LogWarning($"Sound sequence {name} not found in game {game} (did you build AssetBundles?)");
             return null;
+        }
+
+        private void OnDestroy() {
+            foreach (var evt in scheduledInputs)
+            {
+                evt.Disable();
+            }
         }
     }
 }

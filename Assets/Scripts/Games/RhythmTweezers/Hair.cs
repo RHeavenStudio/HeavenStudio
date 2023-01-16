@@ -21,24 +21,12 @@ namespace HeavenStudio.Games.Scripts_RhythmTweezers
             tweezers = game.Tweezers;
         }
 
+        private void Start() {
+            game.ScheduleInput(createBeat, game.tweezerBeatOffset + game.beatInterval, InputType.STANDARD_DOWN | InputType.DIRECTION_DOWN, Just, Miss, Out);
+        }
+
         private void Update()
         {
-            if (plucked) return;
-
-            float stateBeat = Conductor.instance.GetPositionFromMargin(createBeat + game.tweezerBeatOffset + game.beatInterval, 1f);
-            StateCheck(stateBeat);
-
-            if (PlayerInput.Pressed(true))
-            {
-                if (state.perfect)
-                {
-                    Ace();
-                }
-                else if (state.notPerfect())
-                {
-                    Miss();
-                }
-            }
         }
 
         public void Ace()
@@ -48,16 +36,27 @@ namespace HeavenStudio.Games.Scripts_RhythmTweezers
             plucked = true;
         }
 
-        public void Miss()
+        public void NearMiss()
         {
             tweezers.Pluck(false, this);
             tweezers.hitOnFrame++;
             plucked = true;
         }
 
-        public override void OnAce()
+        private void Just(PlayerActionEvent caller, float state)
         {
+            if (state >= 1f || state <= -1f) {
+                NearMiss();
+                return; 
+            }
             Ace();
         }
+
+        private void Miss(PlayerActionEvent caller) 
+        {
+            // this is where perfect challenge breaks
+        }
+
+        private void Out(PlayerActionEvent caller) {}
     }
 }

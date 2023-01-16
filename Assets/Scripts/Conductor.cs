@@ -265,6 +265,23 @@ namespace HeavenStudio
             return GameManager.instance.Beatmap.tempoChanges;
         }
 
+        public float GetBpmAtBeat(float beat)
+        {
+            var chart = GameManager.instance.Beatmap;
+            float bpm = chart.bpm;
+
+            foreach (DynamicBeatmap.TempoChange t in GameManager.instance.Beatmap.tempoChanges)
+            {
+                if (t.beat > beat)
+                {
+                    break;
+                }
+                bpm = t.tempo;
+            }
+
+            return bpm;
+        }
+
         public double GetSongPosFromBeat(double beat)
         {
             var chart = GameManager.instance.Beatmap;
@@ -292,11 +309,11 @@ namespace HeavenStudio
         }
 
         //thank you @wooningcharithri#7419 for the psuedo-code
-            private double BeatsToSecs(double beats, float bpm)
+            public double BeatsToSecs(double beats, float bpm)
             {
                 return beats / bpm * 60f;
             }
-            private double SecsToBeats(double s, float bpm)
+            public double SecsToBeats(double s, float bpm)
             {
                 return s / 60f * bpm;
             }
