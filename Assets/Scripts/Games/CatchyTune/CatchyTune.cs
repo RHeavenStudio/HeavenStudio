@@ -125,13 +125,13 @@ namespace HeavenStudio.Games
                 // print("current beat: " + conductor.songPositionInBeats);
                 if (stopCatchLeft > 0 && stopCatchLeft <= cond.songPositionInBeats)
                 {
-                    plalinAnim.SetTrigger("stopCatch");
+                    plalinAnim.Play("idle", 0, 0);
                     stopCatchLeft = 0;
                 }
 
                 if (stopCatchRight > 0 && stopCatchRight <= cond.songPositionInBeats)
                 {
-                    alalinAnim.SetTrigger("stopCatch");
+                    alalinAnim.Play("idle", 0, 0);
                     stopCatchRight = 0;
                 }
 
@@ -147,8 +147,8 @@ namespace HeavenStudio.Games
                 if (stopSmile > 0 && stopSmile <= cond.songPositionInBeats)
                 {
                     //print("smile stop");
-                    plalinAnim.SetTrigger("stopSmile");
-                    alalinAnim.SetTrigger("stopSmile");
+                    plalinAnim.Play("stopsmile", 1, 0);
+                    alalinAnim.Play("stopsmile", 1, 0);
                     stopSmile = 0;
                     heartMessage.SetActive(false);
                 }
@@ -157,7 +157,7 @@ namespace HeavenStudio.Games
                 {
                     if (bopLeft && stopCatchLeft == 0)
                     {
-                        plalinAnim.Play("bop", 0, 0);
+                        plalinAnim.SetTrigger("bop");
                     }
 
                     if (bopRight && stopCatchRight == 0)
@@ -265,6 +265,7 @@ namespace HeavenStudio.Games
                 startSmile = beat + 1f;
                 stopSmile = beat + 2f;
             }
+
         }
 
         public void catchMiss(bool side, bool isPineapple)
@@ -272,14 +273,35 @@ namespace HeavenStudio.Games
             // not the right sound at all but need an accurate rip
             Jukebox.PlayOneShotGame("catchyTune/fruitThrough");
 
-            // hurt animation here
+            float beat = Conductor.instance.songPositionInBeats;
+            
+            if (side)
+            {
+                alalinAnim.Play("miss", 0, 0);
+                stopCatchRight = beat + 0.7f;
+            }
+            else
+            {
+                plalinAnim.Play("miss", 0, 0);
+                stopCatchLeft = beat + 0.7f;
+            }
         }
 
         public void catchWhiff(bool side)
         {
             Jukebox.PlayOneShotGame("catchyTune/whiff");
+            float beat = Conductor.instance.songPositionInBeats;
             
-            // whiff animation here
+            if (side)
+            {
+                alalinAnim.Play("whiff", 0, 0);
+                stopCatchRight = beat + 0.5f;
+            }
+            else
+            {
+                plalinAnim.Play("whiff", 0, 0);
+                stopCatchLeft = beat + 0.5f;
+            }
         }
     }
 }

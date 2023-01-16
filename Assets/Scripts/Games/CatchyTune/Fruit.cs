@@ -2,7 +2,6 @@ using System.Collections;
 using System.Collections.Generic;
 using System;
 using UnityEngine;
-using NaughtyBezierCurves;
 
 using HeavenStudio.Util;
 
@@ -74,12 +73,7 @@ namespace HeavenStudio.Games.Scripts_CatchyTune
         // minenice: note - needs PlayerActionEvent implementation
         private void Update()
         {
-            Conductor cond = Conductor.instance;
-            float tempo = cond.songBpm;
-            float playbackSpeed = cond.musicSource.pitch;
-
-            anim.DoScaledAnimation("fruit bounce", startBeat, beatLength + (isPineapple ? 1f : 0.5f));
-            
+            anim.DoScaledAnimation("fruit bounce", startBeat, beatLength + (isPineapple ? 4f : 2f));
             float normalizedBeat = Conductor.instance.GetPositionFromBeat(startBeat, beatLength);
         }
 
@@ -134,6 +128,7 @@ namespace HeavenStudio.Games.Scripts_CatchyTune
         private void CatchFruit(PlayerActionEvent caller, float state)
         {
             //minenice: TODO - near misses (-1 > state > 1)
+
             Jukebox.PlayOneShotGame(soundText + "Catch");
             game.catchSuccess(side, isPineapple, smile, startBeat + beatLength);
             Destroy(this.gameObject);
@@ -145,7 +140,7 @@ namespace HeavenStudio.Games.Scripts_CatchyTune
 
             BeatAction.New(gameObject, new List<BeatAction.Action>()
             {
-                new BeatAction.Action(startBeat + beatLength + (isPineapple ? 1f : 0.5f), delegate { Destroy(this.gameObject); }),
+                new BeatAction.Action(startBeat + beatLength + (isPineapple ? 3f : 1.5f), delegate { Destroy(this.gameObject); }),
             });
         }
 
