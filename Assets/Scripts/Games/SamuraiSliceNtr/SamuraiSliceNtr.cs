@@ -2,6 +2,7 @@ using HeavenStudio.Util;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Rendering;
 
 using DG.Tweening;
 using NaughtyBezierCurves;
@@ -63,6 +64,7 @@ namespace HeavenStudio.Games
         public BezierCurve3D NgLaunchCurve;
         public BezierCurve3D DebrisLeftCurve;
         public BezierCurve3D DebrisRightCurve;
+        public BezierCurve3D NgDebrisCurve;
 
         //game scene
         public static SamuraiSliceNtr instance;
@@ -144,6 +146,7 @@ namespace HeavenStudio.Games
             mobjDat.Bop();
 
             mobj.SetActive(true);
+            mobj.GetComponent<SortingGroup>().sortingOrder = 7;
 
             return mobjDat;
         }

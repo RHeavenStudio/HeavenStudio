@@ -22,15 +22,25 @@ namespace HeavenStudio
         // Current song position, in seconds
         private double songPos; // for Conductor use only
         public float songPosition => (float) songPos;
+        public double songPositionAsDouble => songPos;
 
         // Current song position, in beats
         private double songPosBeat; // for Conductor use only
         public float songPositionInBeats => (float) songPosBeat;
+        public double songPositionInBeatsAsDouble => songPosBeat;
 
         // Current time of the song
         private double time;
 
         double lastAbsTime;
+
+        // the dspTime we started at
+        private double dspStartTime;
+        public double dspStartTimeAsDouble => dspStartTime;
+
+        //the beat we started at
+        private double startBeat;
+        public double startBeatAsDouble => startBeat;
 
         // an AudioSource attached to this GameObject that will play the music.
         public AudioSource musicSource;
@@ -52,6 +62,7 @@ namespace HeavenStudio
 
         // Metronome tick sound enabled
         public bool metronome = false;
+        Util.Sound metronomeSound;
 
         public float timeSinceLastTempoChange = Single.MinValue;
 
@@ -142,6 +153,8 @@ namespace HeavenStudio
                 }
             }
             lastAbsTime = Time.realtimeSinceStartupAsDouble;
+            dspStartTime = AudioSettings.dspTime;
+            startBeat = beat;
 
             // GameManager.instance.SetCurrentEventToClosest(songPositionInBeats);
         }
@@ -185,15 +198,23 @@ namespace HeavenStudio
 
         public void LateUpdate()
         {
-            if (metronome)
+            if (metronome && isPlaying)
             {
                 if (ReportBeat(ref lastReportedBeat))
                 {
-                    Util.Jukebox.PlayOneShot("metronome");
+                    metronomeSound = Util.Jukebox.PlayOneShot("metronome", lastReportedBeat);
                 }
                 else if (songPositionInBeats < lastReportedBeat)
                 {
                     lastReportedBeat = Mathf.Round(songPositionInBeats);
+                }
+            }
+            else
+            {
+                if (metronomeSound != null)
+                {
+                    metronomeSound.Delete();
+                    metronomeSound = null;
                 }
             }
         }
@@ -244,38 +265,55 @@ namespace HeavenStudio
             return GameManager.instance.Beatmap.tempoChanges;
         }
 
-        public double GetSongPosFromBeat(float beat)
+        public float GetBpmAtBeat(float beat)
         {
             var chart = GameManager.instance.Beatmap;
-            SetBpm(chart.bpm);
+            float bpm = chart.bpm;
+
+            foreach (DynamicBeatmap.TempoChange t in GameManager.instance.Beatmap.tempoChanges)
+            {
+                if (t.beat > beat)
+                {
+                    break;
+                }
+                bpm = t.tempo;
+            }
+
+            return bpm;
+        }
+
+        public double GetSongPosFromBeat(double beat)
+        {
+            var chart = GameManager.instance.Beatmap;
+            float bpm = chart.bpm;
 
             double counter = 0f;
 
             float lastTempoChangeBeat = 0f;
 
-            foreach (var t in GameManager.instance.Beatmap.tempoChanges)
+            foreach (DynamicBeatmap.TempoChange t in GameManager.instance.Beatmap.tempoChanges)
             {
                 if (t.beat > beat)
                 {
                     break;
                 }
 
-                counter += (t.beat - lastTempoChangeBeat) * secPerBeat;
-                SetBpm(t.tempo);
+                counter += (t.beat - lastTempoChangeBeat) * 60/bpm;
+                bpm = t.tempo;
                 lastTempoChangeBeat = t.beat;
             }
 
-            counter += (beat - lastTempoChangeBeat) * secPerBeat;
+            counter += (beat - lastTempoChangeBeat) * 60/bpm;
 
             return counter;
         }
 
         //thank you @wooningcharithri#7419 for the psuedo-code
-            private double BeatsToSecs(double beats, float bpm)
+            public double BeatsToSecs(double beats, float bpm)
             {
                 return beats / bpm * 60f;
             }
-            private double SecsToBeats(double s, float bpm)
+            public double SecsToBeats(double s, float bpm)
             {
                 return s / 60f * bpm;
             }
@@ -286,7 +324,7 @@ namespace HeavenStudio
                 double counterSeconds = -firstBeatOffset;
                 float lastBpm = GameManager.instance.Beatmap.bpm;
                 
-                foreach (var t in GameManager.instance.Beatmap.tempoChanges)
+                foreach (DynamicBeatmap.TempoChange  t in GameManager.instance.Beatmap.tempoChanges)
                 {
                     double beatToNext = t.beat - lastTempoChangeBeat;
                     double secToNext = BeatsToSecs(beatToNext, lastBpm);

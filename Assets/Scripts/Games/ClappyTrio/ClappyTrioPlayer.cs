@@ -8,84 +8,81 @@ namespace HeavenStudio.Games.Scripts_ClappyTrio
 {
     public class ClappyTrioPlayer : PlayerActionObject
     {
+        ClappyTrio game;
         private float lastClapBeat;
         private float lastClapLength;
-        [SerializeField] private bool clapVacant;
 
         public bool clapStarted = false;
         public bool canHit;
 
         private GameObject clapEffect;
-        new int aceTimes = 0;
 
         private void Awake()
         {
+            game = ClappyTrio.instance;
             clapEffect = transform.GetChild(4).GetChild(3).gameObject;
-        }
-
-        public override void OnAce()
-        {
-            if (aceTimes == 0)
-            {
-                Clap(true);
-                aceTimes++;
-            }
         }
 
         private void Update()
         {
-            if (clapVacant == true)
-            {
-                float normalizedBeat = (Conductor.instance.GetPositionFromBeat(lastClapBeat, lastClapLength));
-
-                StateCheck(normalizedBeat);
-
-                if (normalizedBeat > Minigame.EndTime())
-                {
-                    clapVacant = false;
-                    lastClapLength = 0;
-                    lastClapBeat = 0;
-                }
-            }
-
-            if (PlayerInput.Pressed())
+            if (PlayerInput.Pressed() && !game.IsExpectingInputNow(InputType.STANDARD_DOWN))
             {
                 Clap(false);
             }
-
         }
 
-        public void SetClapAvailability(float startBeat, float length)
+        public void QueueClap(float startBeat, float length)
         {
-            aceTimes = 0;
             lastClapBeat = startBeat;
-            clapVacant = true;
             lastClapLength = length;
 
-            ResetState();
+            game.ScheduleInput(startBeat, length, InputType.STANDARD_DOWN, Just, Miss, Out);
         }
 
-        private void Clap(bool overrideCanHit)
+        private void Just(PlayerActionEvent caller, float state)
         {
-            if (state.early || state.perfect || overrideCanHit)
+            if (!canHit) { 
+                Clap(false); 
+                return; 
+            }
+            if (state >= 1f || state <= -1f) {  //todo: proper near miss feedback
+                Clap(false); 
+                return; 
+            }
+            Clap(true);
+        }
+
+        private void Miss(PlayerActionEvent caller) {
+            game.playerHitLast = false;
+
+            if (clapStarted)
+                this.canHit = false;
+        }
+
+        private void Out(PlayerActionEvent caller) {}
+
+        private void Clap(bool just)
+        {
+            if (just)
             {
                 clapEffect.SetActive(true);
                 Jukebox.PlayOneShotGame("clappyTrio/rightClap");
 
                 if (this.canHit)
-                    ClappyTrio.instance.playerHitLast = true;
+                    game.playerHitLast = true;
             }
             else
             {
                 clapEffect.SetActive(false);
                 Jukebox.PlayOneShot("miss");
-                ClappyTrio.instance.playerHitLast = false;
+                game.playerHitLast = false;
 
                 if (clapStarted)
                     this.canHit = false;
             }
 
-            ClappyTrio.instance.SetFace(ClappyTrio.instance.Lion.Count - 1, 4);
+            clapStarted = false;
+            game.SetFace(game.Lion.Count - 1, 4);
             this.GetComponent<Animator>().Play("Clap", 0, 0);
         }
     }

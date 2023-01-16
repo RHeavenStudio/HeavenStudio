@@ -8,66 +8,70 @@ namespace HeavenStudio.Games.Scripts_DrummingPractice
 {
     public class DrummerHit : PlayerActionObject
     {
+        DrummingPractice game;
         public float startBeat;
         public bool applause = true;
-        private bool hit = false;
-        private bool hasHit = false;
 
         // Start is called before the first frame update
         void Awake()
         {
-            PlayerActionInit(gameObject, startBeat);
+            game = DrummingPractice.instance;
         }
 
-        public override void OnAce()
-        {
-            Hit(true);
+        void Start() 
+        { 
+            game.ScheduleInput(startBeat, 1f, InputType.STANDARD_DOWN, Just, Miss, Out);
+
+            BeatAction.New(game.gameObject, new List<BeatAction.Action>()
+            {
+                new BeatAction.Action(startBeat+1f, delegate { 
+                    Jukebox.PlayOneShotGame("drummingPractice/drum");
+                    game.leftDrummer.Hit(true, false);
+                    game.rightDrummer.Hit(true, false);
+                }),
+            });
         }
 
         // Update is called once per frame
-        void Update()
+        void Update() { }
+
+        private void Just(PlayerActionEvent caller, float state)
         {
-            if (Conductor.instance.GetPositionFromBeat(startBeat, 2) >= 1)
-            {
-                DrummingPractice.instance.SetFaces(0);
-                CleanUp();
+            if (state >= 1f || state <= -1f) {
+                Hit(false);
             }
-
-            if (!hit && Conductor.instance.GetPositionFromBeat(startBeat, 1) >= 1)
-            {
-                Jukebox.PlayOneShotGame("drummingPractice/drum");
-                DrummingPractice.instance.leftDrummer.Hit(true, false);
-                DrummingPractice.instance.rightDrummer.Hit(true, false);
-                hit = true;
-                if (hasHit) CleanUp();
-            }
-
-            float normalizedBeat = Conductor.instance.GetPositionFromBeat(startBeat, 1f);
-            StateCheck(normalizedBeat);
-
-            if (PlayerInput.Pressed())
-            {
-                if (state.perfect)
-                {
-                    Hit(true);
-                } else if (state.notPerfect())
-                {
-                    Hit(false);
-                }
-            }
+            Hit(true);
         }
+
+        private void Miss(PlayerActionEvent caller) 
+        {
+            game.SetFaces(2);
+            BeatAction.New(game.gameObject, new List<BeatAction.Action>()
+            {
+                new BeatAction.Action(startBeat+2f, delegate { 
+                    game.SetFaces(0);
+                })
+            });
+            CleanUp();
+        }
+
+        private void Out(PlayerActionEvent caller) {}
 
         public void Hit(bool _hit)
         {
-            if (!hasHit)
+            game.player.Hit(_hit, applause, true);
+            game.SetFaces(_hit ? 1 : 2);
+
+            if (!_hit)
             {
-                DrummingPractice.instance.player.Hit(_hit, applause, true);
-                DrummingPractice.instance.SetFaces(_hit ? 1 : 2);
-
-                hasHit = true;
-
-                if (hit) CleanUp();
+                BeatAction.New(game.gameObject, new List<BeatAction.Action>()
+                {
+                    new BeatAction.Action(startBeat+2f, delegate { 
+                        game.SetFaces(0);
+                    }),
+                });
             }
+            CleanUp();
         }
 
         public void CleanUp()

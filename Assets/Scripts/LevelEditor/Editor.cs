@@ -100,15 +100,8 @@ namespace HeavenStudio.Editor
             GameManager.instance.Init();
             Timeline.Init();
 
-            for (int i = 0; i < EventCaller.instance.minigames.Count; i++)
-            {
-                GameObject GameIcon_ = Instantiate(GridGameSelector.GetChild(0).gameObject, GridGameSelector);
-                GameIcon_.GetComponent<Image>().sprite = GameIcon(EventCaller.instance.minigames[i].name);
-                GameIcon_.GetComponent<GridGameSelectorGame>().MaskTex = GameIconMask(EventCaller.instance.minigames[i].name);
-                GameIcon_.GetComponent<GridGameSelectorGame>().UnClickIcon();
-                GameIcon_.gameObject.SetActive(true);
-                GameIcon_.name = EventCaller.instance.minigames[i].displayName;
-            }
+            foreach (var minigame in EventCaller.instance.minigames)
+                AddIcon(minigame);
 
             Tooltip.AddTooltip(NewBTN.gameObject, "New <color=#adadad>[Ctrl+N]</color>");
             Tooltip.AddTooltip(OpenBTN.gameObject, "Open <color=#adadad>[Ctrl+O]</color>");
@@ -126,6 +119,16 @@ namespace HeavenStudio.Editor
             UpdateEditorStatus(true);
 
             BuildDateDisplay.text = GlobalGameManager.buildTime;
+        }
+
+        public void AddIcon(Minigames.Minigame minigame)
+        {
+            GameObject GameIcon_ = Instantiate(GridGameSelector.GetChild(0).gameObject, GridGameSelector);
+            GameIcon_.GetComponent<Image>().sprite = GameIcon(minigame.name);
+            GameIcon_.GetComponent<GridGameSelectorGame>().MaskTex = GameIconMask(minigame.name);
+            GameIcon_.GetComponent<GridGameSelectorGame>().UnClickIcon();
+            GameIcon_.gameObject.SetActive(true);
+            GameIcon_.name = minigame.displayName;
         }
 
         public void LateUpdate()
@@ -194,12 +197,12 @@ namespace HeavenStudio.Editor
             #endregion
 
             if (CommandManager.instance.canUndo())
-                UndoBTN.transform.GetChild(0).GetComponent<Image>().color = "BD8CFF".Hex2RGB();
+                UndoBTN.transform.GetChild(0).GetComponent<Image>().color = Color.white;
             else
                 UndoBTN.transform.GetChild(0).GetComponent<Image>().color = Color.gray;
 
             if (CommandManager.instance.canRedo())
-                RedoBTN.transform.GetChild(0).GetComponent<Image>().color = "FFD800".Hex2RGB();
+                RedoBTN.transform.GetChild(0).GetComponent<Image>().color = Color.white;
             else
                 RedoBTN.transform.GetChild(0).GetComponent<Image>().color = Color.gray;
 

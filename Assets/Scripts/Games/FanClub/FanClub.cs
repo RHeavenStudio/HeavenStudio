@@ -31,7 +31,8 @@ namespace HeavenStudio.Games.Loaders
                         {
                             new Param("toggle", false, "Disable call", "Disable the idol's call")
                         },
-                        inactiveFunction = delegate { var e = eventCaller.currentEntity; FanClub.WarnHai(e.beat, e["toggle"]);}
+                        inactiveFunction = delegate { var e = eventCaller.currentEntity; FanClub.WarnHai(e.beat, e["toggle"]);},
+                        preFunction = delegate { var e = eventCaller.currentEntity; FanClub.HaiSound(e.beat, e["toggle"]); }
                     },
                     new GameAction("I suppose", "I Suppose!")
                     {
@@ -42,7 +43,8 @@ namespace HeavenStudio.Games.Loaders
                             new Param("type", FanClub.KamoneResponseType.Through, "Response type", "Type of response to use"),
                             new Param("toggle", false, "Disable call", "Disable the idol's call")
                         },
-                        inactiveFunction = delegate { var e = eventCaller.currentEntity; FanClub.WarnKamone(e.beat, e["toggle"], 0, e["type"]);}
+                        inactiveFunction = delegate { var e = eventCaller.currentEntity; FanClub.WarnKamone(e.beat, e["toggle"], 0, e["type"]);},
+                        preFunction = delegate { var e = eventCaller.currentEntity; FanClub.KamoneSound(e.beat, e["toggle"], 0, e["type"]); }
                     },
                     new GameAction("double clap", "Double Clap")
                     {
@@ -52,7 +54,8 @@ namespace HeavenStudio.Games.Loaders
                         {
                             new Param("toggle", false, "Disable call", "Disable the call")
                         },
-                        inactiveFunction = delegate { var e = eventCaller.currentEntity; FanClub.WarnBigReady(e.beat, e["toggle"]); }
+                        inactiveFunction = delegate { var e = eventCaller.currentEntity; FanClub.WarnBigReady(e.beat, e["toggle"]); },
+                        preFunction = delegate { var e = eventCaller.currentEntity; FanClub.BigReadySound(e.beat, e["toggle"]); }
                     },
                     new GameAction("play idol animation", "Idol Coreography")
                     {
@@ -182,7 +185,6 @@ namespace HeavenStudio.Games
         private void Awake()
         {
             instance = this;
-
             Spectators = new List<GameObject>();
             idolAnimator = Arisa.GetComponent<Animator>();
 
@@ -527,13 +529,6 @@ namespace HeavenStudio.Games
         const float HAIS_LENGTH = 4.5f;
         public void CallHai(float beat, bool noSound = false, int type = 0)
         {
-            if (!noSound)
-                MultiSound.Play(new MultiSound.Sound[] { 
-                    new MultiSound.Sound("fanClub/arisa_hai_1_jp", beat), 
-                    new MultiSound.Sound("fanClub/arisa_hai_2_jp", beat + 1f),
-                    new MultiSound.Sound("fanClub/arisa_hai_3_jp", beat + 2f),
-                });
-
             responseToggle = false;
             DisableBop(beat, 8f);
 
@@ -556,24 +551,20 @@ namespace HeavenStudio.Games
                 new BeatAction.Action(beat + 7f,    delegate { PlayOneClap(beat + 7f); DoIdolClaps();}),
             });
 
-            MultiSound.Play(new MultiSound.Sound[] { 
-                new MultiSound.Sound("fanClub/crowd_hai_jp", beat + 4f), 
-                new MultiSound.Sound("fanClub/crowd_hai_jp", beat + 5f),
-                new MultiSound.Sound("fanClub/crowd_hai_jp", beat + 6f),
-                new MultiSound.Sound("fanClub/crowd_hai_jp", beat + 7f),
-            });
+            PlaySoundSequence("fanClub", "crowd_hai", beat + 4f);
         }
 
         public static void WarnHai(float beat, bool noSound = false, int type = 0)
         {
             wantHais = beat;
-            if (noSound) return;
-            MultiSound.Play(new MultiSound.Sound[] { 
-                new MultiSound.Sound("fanClub/arisa_hai_1_jp", beat), 
-                new MultiSound.Sound("fanClub/arisa_hai_2_jp", beat + 1f),
-                new MultiSound.Sound("fanClub/arisa_hai_3_jp", beat + 2f),
-            }, forcePlay:true);
         }
+
+        public static void HaiSound(float beat, bool noSound = false, int type = 0)
+        {
+            if (noSound) return;
+            PlaySoundSequence("fanClub", "arisa_hai", beat);
+        }
+
 
         public void ContinueHais(float beat, int type = 0)
         {
@@ -586,28 +577,6 @@ namespace HeavenStudio.Games
             bool doJump = (responseType == (int) KamoneResponseType.Jump || responseType == (int) KamoneResponseType.JumpFast);
             bool isBig = (responseType == (int) KamoneResponseType.ThroughFast || responseType == (int) KamoneResponseType.JumpFast);
             DisableResponse(beat, 2f);
-            if (isBig)
-            {
-                if (!noSound)
-                {
-                    MultiSound.Play(new MultiSound.Sound[] { 
-                        new MultiSound.Sound("fanClub/arisa_ka_fast_jp", beat), 
-                        new MultiSound.Sound("fanClub/arisa_mo_fast_jp", beat + 0.25f),
-                        new MultiSound.Sound("fanClub/arisa_ne_fast_jp", beat + 0.5f),
-                    });
-                }
-            }
-            else
-            {
-                if (!noSound)
-                {
-                    MultiSound.Play(new MultiSound.Sound[] { 
-                        new MultiSound.Sound("fanClub/arisa_ka_jp", beat), 
-                        new MultiSound.Sound("fanClub/arisa_mo_jp", beat + 0.5f, offset: 0.07407407f),
-                        new MultiSound.Sound("fanClub/arisa_ne_jp", beat + 1f, offset: 0.07407407f),
-                    });
-                }
-            }
 
             responseToggle = true;
             DisableBop(beat, (doJump) ? 6.25f : 5.25f);
@@ -640,34 +609,25 @@ namespace HeavenStudio.Games
                 }),
             });
 
-            MultiSound.Play(new MultiSound.Sound[] { 
-                new MultiSound.Sound("fanClub/crowd_ka_jp", beat + 2f), 
-                new MultiSound.Sound("fanClub/crowd_mo_jp", beat + 3.5f),
-                new MultiSound.Sound("fanClub/crowd_ne_jp", beat + 4f),
-                new MultiSound.Sound("fanClub/crowd_hey_jp", beat + 5f),
-            });
+            PlaySoundSequence("fanClub", "crowd_kamone", beat + 2f);
         }
 
         public static void WarnKamone(float beat, bool noSound = false, int type = 0, int responseType = (int) KamoneResponseType.Through)
         {
             wantKamone = beat;
             wantKamoneType = responseType;
+        }
+
+        public static void KamoneSound(float beat, bool noSound = false, int type = 0, int responseType = (int) KamoneResponseType.Through)
+        {
             if (noSound) return;
             if (responseType == (int) KamoneResponseType.ThroughFast || responseType == (int) KamoneResponseType.JumpFast)
             {
-                MultiSound.Play(new MultiSound.Sound[] { 
-                    new MultiSound.Sound("fanClub/arisa_ka_fast_jp", beat), 
-                    new MultiSound.Sound("fanClub/arisa_mo_fast_jp", beat + 0.25f),
-                    new MultiSound.Sound("fanClub/arisa_ne_fast_jp", beat + 0.5f),
-                }, forcePlay:true);
+                PlaySoundSequence("fanClub", "arisa_kamone_fast", beat);
             }
             else
             {
-                MultiSound.Play(new MultiSound.Sound[] { 
-                    new MultiSound.Sound("fanClub/arisa_ka_jp", beat), 
-                    new MultiSound.Sound("fanClub/arisa_mo_jp", beat + 0.5f, offset: 0.07407407f),
-                    new MultiSound.Sound("fanClub/arisa_ne_jp", beat + 1f, offset: 0.07407407f),
-                }, forcePlay:true);
+                PlaySoundSequence("fanClub", "arisa_kamone", beat);
             }
         }
 
@@ -681,9 +641,6 @@ namespace HeavenStudio.Games
         {
             Prepare(beat + 1.5f);
             Prepare(beat + 2f);
-
-            if (!noSound)
-                Jukebox.PlayOneShotGame("fanClub/crowd_big_ready");
             
             DisableSpecBop(beat, 3.75f);
 
@@ -700,8 +657,12 @@ namespace HeavenStudio.Games
         public static void WarnBigReady(float beat, bool noSound = false)
         {
             wantBigReady = beat;
+        }
+
+        public static void BigReadySound(float beat, bool noSound = false)
+        {
             if (noSound) return;
-            Jukebox.PlayOneShotGame("fanClub/crowd_big_ready");
+            PlaySoundSequence("fanClub", "crowd_big_ready", beat);
         }
 
         public void ContinueBigReady(float beat)
