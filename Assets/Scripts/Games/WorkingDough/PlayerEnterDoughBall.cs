@@ -10,10 +10,12 @@ namespace HeavenStudio.Games.Scripts_WorkingDough
     public class PlayerEnterDoughBall : PlayerActionObject
     {
         public float startBeat;
-        public bool isBig;
+        public float firstBeatsToTravel = 0.5f;
+        public float secondBeatsToTravel = 0.5f;
         public bool goingDown = false;
-        [NonSerialized] public BezierCurve3D enterUpCurve;
-        [NonSerialized] public BezierCurve3D enterDownCurve;
+        public bool deletingAutomatically = true;
+        [NonSerialized] public BezierCurve3D firstCurve;
+        [NonSerialized] public BezierCurve3D secondCurve;
 
         private void Update()
         {
@@ -23,15 +25,15 @@ namespace HeavenStudio.Games.Scripts_WorkingDough
 
             if (goingDown)
             {
-                flyPos = cond.GetPositionFromBeat(startBeat + 0.5f, 0.5f);
+                flyPos = cond.GetPositionFromBeat(startBeat + firstBeatsToTravel, secondBeatsToTravel);
 
-                transform.position = enterDownCurve.GetPoint(flyPos);
-                if (flyPos > 1f) GameObject.Destroy(gameObject);
+                transform.position = secondCurve.GetPoint(flyPos);
+                if (flyPos > 1f) if (deletingAutomatically) GameObject.Destroy(gameObject);
             }
             else
             {
-                flyPos = cond.GetPositionFromBeat(startBeat, 0.5f);
-                transform.position = enterUpCurve.GetPoint(flyPos);
+                flyPos = cond.GetPositionFromBeat(startBeat, firstBeatsToTravel);
+                transform.position = firstCurve.GetPoint(flyPos);
                 if (flyPos > 1f) goingDown = true;
             }
         }
