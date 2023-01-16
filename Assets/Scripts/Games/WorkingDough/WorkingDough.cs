@@ -263,6 +263,15 @@ namespace HeavenStudio.Games
                 bigModePlayer = true;
             }
 
+            if (isBig)
+            {
+                //ScheduleInput()
+            }
+            else
+            {
+                //ScheduleInput()
+            }
+
             arrowSRLeftPlayer.sprite = redArrowSprite;
 
 
@@ -345,6 +354,45 @@ namespace HeavenStudio.Games
 
                 }
                 queuedBalls.Clear();
+            }
+        }
+
+        void MissBig(PlayerActionEvent caller)
+        {
+
+        }
+        void MissSmall(PlayerActionEvent caller)
+        {
+
+        }
+
+        void JustSmall(PlayerActionEvent caller, float state)
+        {
+            if (state >= 1f || state <= -1f)
+            {
+                return;
+            }
+            Success(false);
+        }
+
+        void JustBig(PlayerActionEvent caller, float state)
+        {
+            if (state >= 1f || state <= -1f)
+            { 
+                return;
+            }
+            Success(true);
+        }
+
+        void Success(bool isBig)
+        {
+            if (isBig)
+            {
+
+            }
+            else
+            {
+
             }
         }
 
