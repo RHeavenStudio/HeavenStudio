@@ -5497,7 +5497,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   inList: 0
-  lastState: 0
   state:
     gameObject: {fileID: 0}
     early: 0
@@ -5883,6 +5882,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   EligibleHits: []
+  scheduledInputs: []
   firstEnable: 0
   headAndBodyAnim: {fileID: 2763058238026975647}
   bagsAnim: {fileID: 5964015178334651268}
@@ -6132,7 +6132,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   inList: 0
-  lastState: 0
   state:
     gameObject: {fileID: 0}
     early: 0

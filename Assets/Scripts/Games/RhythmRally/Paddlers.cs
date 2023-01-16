@@ -27,38 +27,10 @@ namespace HeavenStudio.Games.Scripts_RhythmRally
         {
             if (!game.served || game.missed || !game.started) return;
 
-            var cond = Conductor.instance;
-
-            float stateBeat = cond.GetPositionFromMargin(game.targetBeat, 1f);
-            StateCheck(stateBeat);
-
-            if (PlayerInput.Pressed())
+            if (PlayerInput.Pressed() && !game.IsExpectingInputNow(InputType.STANDARD_DOWN))
             {
-                if (state.perfect)
-                {
-                    Ace();
-                }
-                else if (state.notPerfect())
-                {
-                    Miss();
-                    Jukebox.PlayOneShot("miss");
-                    playerAnim.Play("Swing", 0, 0);
-
-                    game.missCurve.KeyPoints[0].Position = game.ball.transform.position;
-                    game.missCurve.transform.localScale = new Vector3(state.early ? 1f : -1f, 1f, 1f);
-                    game.missBeat = cond.songPositionInBeats;
-                }
-                else
-                {
-                    // Play "whoosh" sound here
-                    playerAnim.Play("Swing", 0, 0);
-                }
-            }
-
-            if (stateBeat > Minigame.EndTime())
-            {
-                Miss();
-                game.ball.SetActive(false);
+                // Play "whoosh" sound here
+                playerAnim.Play("Swing", 0, 0);
             }
         }
 
@@ -68,36 +40,49 @@ namespace HeavenStudio.Games.Scripts_RhythmRally
 
             var hitBeat = cond.songPositionInBeats;
 
-            var bounceBeat = game.targetBeat + 1f;
+            var bounceBeat = game.serveBeat + game.targetBeat + 1f;
 
             if (game.rallySpeed == RhythmRally.RallySpeed.Slow)
             {
-                bounceBeat = game.targetBeat + 2f;
+                bounceBeat = game.serveBeat + game.targetBeat + 2f;
             }
             else if (game.rallySpeed == RhythmRally.RallySpeed.SuperFast)
             {
-                bounceBeat = game.targetBeat + 0.5f;
+                bounceBeat = game.serveBeat + game.targetBeat + 0.5f;
             }
 
             playerAnim.Play("Swing", 0, 0);
             MultiSound.Play(new MultiSound.Sound[] { new MultiSound.Sound("rhythmRally/Return", hitBeat), new MultiSound.Sound("rhythmRally/ReturnBounce", bounceBeat) });
             BounceFX(bounceBeat);
+            game.ball.SetActive(true);
         }
 
-        void Miss()
+        void NearMiss(float state)
+        {
+            MissBall();
+            Jukebox.PlayOneShot("miss");
+            playerAnim.Play("Swing", 0, 0);
+
+            game.missCurve.KeyPoints[0].Position = game.ball.transform.position;
+            game.missCurve.transform.localScale = new Vector3(-state, 1f, 1f);
+            game.missBeat = cond.songPositionInBeats;
+            game.ball.SetActive(true);
+        }
+
+        void MissBall()
         {
             game.served = false;
             game.missed = true;
 
-            var whistleBeat = game.targetBeat + 1f;
+            var whistleBeat = game.serveBeat + game.targetBeat + 1f;
 
             if (game.rallySpeed == RhythmRally.RallySpeed.Slow)
             {
-                whistleBeat = game.targetBeat + 2f;
+                whistleBeat = game.serveBeat + game.targetBeat + 2f;
             }
             else if (game.rallySpeed == RhythmRally.RallySpeed.SuperFast)
             {
-                whistleBeat = game.targetBeat + 0.5f;
+                whistleBeat = game.serveBeat + game.targetBeat + 0.5f;
             }
 
             MultiSound.Play(new MultiSound.Sound[] { new MultiSound.Sound("rhythmRally/Whistle", whistleBeat) });
@@ -117,9 +102,20 @@ namespace HeavenStudio.Games.Scripts_RhythmRally
             });
         }
 
-        public override void OnAce()
+        public void Just(PlayerActionEvent caller, float state)
         {
+            if (state >= 1f || state <= -1f) {
+                NearMiss(state);
+                return; 
+            }
             Ace();
         }
+
+        public void Miss(PlayerActionEvent caller) 
+        {
+            MissBall();
+        }
+
+        public void Out(PlayerActionEvent caller) {}
     }
 }

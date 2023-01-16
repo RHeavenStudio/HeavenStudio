@@ -68,11 +68,11 @@ namespace HeavenStudio.Games
         {
             headAndBodyAnim.SetBool("ShouldOpenMouth", foodHolder.childCount != 0);
 
-            if (PlayerInput.GetAnyDirectionDown())
+            if (PlayerInput.GetAnyDirectionDown() && !IsExpectingInputNow(InputType.DIRECTION_DOWN))
             {
                 headAndBodyAnim.Play("BiteL", 0, 0);
             }
-            else if (PlayerInput.Pressed())
+            else if (PlayerInput.Pressed() && !IsExpectingInputNow(InputType.STANDARD_DOWN))
             {
                 headAndBodyAnim.Play("BiteR", 0, 0);
             }

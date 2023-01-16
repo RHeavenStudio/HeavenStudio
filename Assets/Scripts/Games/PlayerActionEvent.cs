@@ -60,8 +60,7 @@ namespace HeavenStudio.Games
             if (noAutoplay && autoplayOnly) autoplayOnly = false;
             if (noAutoplay && triggersAutoplay){ triggersAutoplay = false; }
 
-            float normalizedBeat = Conductor.instance.GetPositionFromBeat(startBeat,timer);
-            // allows ace detection with this new system
+            float normalizedBeat = GetNormalizedTime();
             float stateProg = ((normalizedBeat - Minigame.PerfectTime()) / (Minigame.LateTime() - Minigame.PerfectTime()) - 0.5f) * 2;
             StateCheck(normalizedBeat);
 
@@ -74,6 +73,10 @@ namespace HeavenStudio.Games
                 if (state.perfect)
                 {
                     Hit(stateProg);
+                    if (normalizedBeat >= Minigame.AceStartTime() && normalizedBeat <= Minigame.AceEndTime())
+                    {
+                        // push an ace event
+                    }
                 }
                 else if (state.early && !perfectOnly)
                 {
@@ -92,8 +95,18 @@ namespace HeavenStudio.Games
 
         public bool IsExpectingInputNow()
         {
-            float normalizedBeat = Conductor.instance.GetPositionFromBeat(startBeat, timer);
+            float normalizedBeat = GetNormalizedTime();
             return normalizedBeat > Minigame.EarlyTime() && normalizedBeat < Minigame.EndTime();
+        }
+
+        float GetNormalizedTime()
+        {
+            var cond = Conductor.instance;
+            double currTime = cond.GetSongPosFromBeat(cond.songPositionInBeatsAsDouble);
+            double targetTime = cond.GetSongPosFromBeat(startBeat + timer);
+            double min = targetTime - 1f;
+            double max = targetTime + 1f;
+            return 1f + (float)(((currTime - min) / (max - min))-0.5f)*2;
         }
 
         public bool IsCorrectInput()
@@ -138,6 +151,9 @@ namespace HeavenStudio.Games
             {
                 if(canHit)
                 {
+                    float normalized = GetNormalizedTime() - 1f;
+                    int offset = Mathf.CeilToInt((float)normalized * 1000);
+                    GameManager.instance.AvgInputOffset = offset;
                     OnHit(this, state);
                     CleanUp();
                 } else

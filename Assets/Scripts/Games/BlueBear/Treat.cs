@@ -25,8 +25,12 @@ namespace HeavenStudio.Games.Scripts_BlueBear
         private void Awake()
         {
             game = BlueBear.instance;
+        }
 
+        private void Start()
+        {
             flyBeats = isCake ? 3f : 2f;
+            game.ScheduleInput(startBeat, flyBeats, isCake ? InputType.DIRECTION_DOWN : InputType.STANDARD_DOWN, Just, Out, Out);
         }
 
         private void Update()
@@ -47,46 +51,9 @@ namespace HeavenStudio.Games.Scripts_BlueBear
 
                 float rot = isCake ? rotSpeed : -rotSpeed;
                 transform.rotation = Quaternion.Euler(0, 0, transform.rotation.eulerAngles.z + (rot * Time.deltaTime));
-
-                float normalizedBeat = cond.GetPositionFromMargin(startBeat + flyBeats, 1f);
-                StateCheck(normalizedBeat);
-
-                if (PlayerInput.Pressed())
-                {
-                    if (!isCake)
-                    {
-                        if (state.perfect)
-                        {
-                            flying = false;
-
-                            Jukebox.PlayOneShotGame("blueBear/chompDonut");
-
-                            SpawnCrumbs();
-
-                            GameObject.Destroy(gameObject);
-                        }
-                    }
-                }
-                else if (PlayerInput.GetAnyDirection())
-                {
-                    if (isCake)
-                    {
-                        if (state.perfect)
-                        {
-                            flying = false;
-
-                            Jukebox.PlayOneShotGame("blueBear/chompCake");
-
-                            SpawnCrumbs();
-                            
-                            GameObject.Destroy(gameObject);
-                        }
-                    }
-                }
             }
         }
-
-        public override void OnAce()
+        void EatFood()
         {
             flying = false;
 
@@ -105,6 +72,26 @@ namespace HeavenStudio.Games.Scripts_BlueBear
 
             GameObject.Destroy(gameObject);
         }
+
+        private void Just(PlayerActionEvent caller, float state)
+        {
+            if (state >= 1f || state <= -1f) {  //todo: proper near miss feedback
+                if (isCake)
+                {
+                    game.headAndBodyAnim.Play("BiteL", 0, 0);
+                }
+                else
+                {
+                    game.headAndBodyAnim.Play("BiteR", 0, 0);
+                }
+                return; 
+            }
+            EatFood();
+        }
+
+        private void Miss(PlayerActionEvent caller) {}
+
+        private void Out(PlayerActionEvent caller) {}
 
         void SpawnCrumbs()
         {
