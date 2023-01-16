@@ -94,6 +94,7 @@ namespace HeavenStudio.Games
             var entities = GameManager.instance.Beatmap.entities;
 
             float startBeat = cond.songPositionInBeats;
+            float endBeat = Single.MaxValue;
 
             if (inactiveStart == -1f)
             {
@@ -136,6 +137,21 @@ namespace HeavenStudio.Games
                 inactiveStart = -1f;
             }
 
+            // find out when the next game switch (or remix end) happens
+            var allEnds = EventCaller.GetAllInGameManagerList("gameManager", new string[] { "switchGame", "end" });
+            allEnds.Sort((x, y) => x.beat.CompareTo(y.beat));
+
+            //get the beat of the closest end event
+            foreach (var end in allEnds)
+            {
+                if (end.datamodel.Split(2) == "cropStomp") continue;
+                if (end.beat > startBeat)
+                {
+                    endBeat = end.beat;
+                    break;
+                }
+            }
+
             // Veggie and mole events.
             var vegEvents = entities.FindAll(v => v.datamodel == "cropStomp/veggies");
             var moleEvents = entities.FindAll(m => m.datamodel == "cropStomp/mole");
@@ -154,7 +170,7 @@ namespace HeavenStudio.Games
                     for (int b = 0; b < veggiesInEvent; b++)
                     {
                         var targetVeggieBeat = vegBeat + 2f * b;
-                        if (startBeat <= targetVeggieBeat)
+                        if (startBeat <= targetVeggieBeat && targetVeggieBeat < endBeat)
                         {
                             SpawnVeggie(targetVeggieBeat, startBeat, false);
                         }
@@ -167,7 +183,7 @@ namespace HeavenStudio.Games
             {
                 var moleBeat = moleEvents[i].beat;
 
-                if (startBeat <= moleBeat)
+                if (startBeat <= moleBeat && moleBeat < endBeat)
                 {
                     SpawnVeggie(moleBeat, startBeat, true);
                 }
