@@ -35,15 +35,12 @@ namespace HeavenStudio.Games.Scripts_Spaceball
             float rot = Random.Range(0, 360);
             Sprite.gameObject.transform.eulerAngles = new Vector3(0, 0, rot);
 
-
-            // PlayerActionInit(this.gameObject, startBeat, Spaceball.instance.EligibleHits);
-
             isEligible = true;
         }
 
-        public override void OnAce()
+        private void Start() 
         {
-            this.Hit();
+            Spaceball.instance.ScheduleInput(startBeat, high ? 2f : 1f, InputType.STANDARD_DOWN, Just, Miss, Out);
         }
 
         private void Hit()
@@ -67,7 +64,7 @@ namespace HeavenStudio.Games.Scripts_Spaceball
             SpaceballPlayer.instance.Swing(this);
         }
 
-        private void Miss()
+        private void NearMiss()
         {
             Holder.transform.GetChild(0).gameObject.AddComponent<Rotate>().rotateSpeed = -55;
 
@@ -85,9 +82,10 @@ namespace HeavenStudio.Games.Scripts_Spaceball
 
         private void Update()
         {
+            var cond = Conductor.instance;
             if (hit)
             {
-                float nba = Conductor.instance.GetPositionFromBeat(hitBeat, 14);
+                float nba = cond.GetPositionFromBeat(hitBeat, 14);
                 Holder.transform.localPosition = Vector3.Lerp(hitPos, new Vector3(randomEndPosX, 0f, -600f), nba);
                 Holder.transform.eulerAngles = Vector3.Lerp(new Vector3(0, 0, hitRot), new Vector3(0, 0, -2260), nba);
             }
@@ -96,8 +94,7 @@ namespace HeavenStudio.Games.Scripts_Spaceball
                 float beatLength = 1f;
                 if (high) beatLength = 2f;
 
-                float normalizedBeatAnim = Conductor.instance.GetPositionFromBeat(startBeat, beatLength + 0.15f);
-                // print(normalizedBeatAnim + " " + Time.frameCount);
+                float normalizedBeatAnim = cond.GetPositionFromBeat(startBeat, beatLength + (float)cond.SecsToBeats(Minigame.EndTime()-1, cond.GetBpmAtBeat(startBeat + beatLength)));
 
                 if (high)
                 {
@@ -109,35 +106,25 @@ namespace HeavenStudio.Games.Scripts_Spaceball
                 }
 
                 anim.speed = 0;
-
-                float normalizedBeat = Conductor.instance.GetPositionFromBeat(startBeat, beatLength);
-
-                StateCheck(normalizedBeat);
-
-                if (PlayerInput.Pressed())
-                {
-                    if (state.perfect)
-                    {
-                        Hit();
-                    }
-                    else if (state.notPerfect())
-                    {
-                        Miss();
-                    }
-                }
-
-                // too lazy to make a proper fix for this
-                float endTime = 1.2f;
-                if (high) endTime = 1.1f;
-
-                if (normalizedBeat > endTime)
-                {
-                    Jukebox.PlayOneShotGame("spaceball/fall");
-                    Instantiate(Spaceball.instance.Dust, Spaceball.instance.Dust.transform.parent).SetActive(true);
-                    Destroy(this.gameObject);
-                }
             }
         }
-    }
 
+        private void Just(PlayerActionEvent caller, float state)
+        {
+            if (state >= 1f || state <= -1f) {
+                NearMiss();
+                return; 
+            }
+            Hit();
+        }
+
+        private void Miss(PlayerActionEvent caller) 
+        {
+            Jukebox.PlayOneShotGame("spaceball/fall");
+            Instantiate(Spaceball.instance.Dust, Spaceball.instance.Dust.transform.parent).SetActive(true);
+            Destroy(this.gameObject);
+        }
+
+        private void Out(PlayerActionEvent caller) {}
+    }
 }
