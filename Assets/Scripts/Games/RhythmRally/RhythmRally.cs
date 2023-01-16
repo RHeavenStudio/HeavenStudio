@@ -28,7 +28,8 @@ namespace HeavenStudio.Games.Loaders
                 new GameAction("toss ball", "Toss Ball")
                 {
                     function = delegate { RhythmRally.instance.Toss(eventCaller.currentEntity.beat, eventCaller.currentEntity.length, 6f, true); }, 
-                    defaultLength = 2f
+                    defaultLength = 2f, 
+                    resizable = true
                 },
                 new GameAction("rally", "Rally")
                 {
@@ -375,16 +376,16 @@ namespace HeavenStudio.Games
             switch (rallySpeed)
             {
                 case RallySpeed.Normal:
-                    targetBeat = serveBeat + 2f;
+                    targetBeat = 2f;
                     bounceBeat = serveBeat + 1f;
                     break;
                 case RallySpeed.Fast:
                 case RallySpeed.SuperFast:
-                    targetBeat = serveBeat + 1f;
+                    targetBeat = 1f;
                     bounceBeat = serveBeat + 0.5f;
                     break;
                 case RallySpeed.Slow:
-                    targetBeat = serveBeat + 4f;
+                    targetBeat = 4f;
                     bounceBeat = serveBeat + 2f;
                     break;
             }
@@ -393,13 +394,16 @@ namespace HeavenStudio.Games
             MultiSound.Play(new MultiSound.Sound[] { new MultiSound.Sound("rhythmRally/Serve", serveBeat), new MultiSound.Sound("rhythmRally/ServeBounce", bounceBeat) });
             paddlers.BounceFX(bounceBeat);
 
-            paddlers.ResetState();
+            ScheduleInput(serveBeat, targetBeat, InputType.STANDARD_DOWN, paddlers.Just, paddlers.Miss, paddlers.Out);
         }
 
         public void Toss(float beat, float length, float height, bool firstToss = false)
         {
             // Hide trail while tossing to prevent weirdness while teleporting ball.
             ballTrail.gameObject.SetActive(false);
+
+            if (firstToss)
+                height *= length/2f;
 
             tossCurve.transform.localScale = new Vector3(1f, height, 1f);
             tossBeat = beat;

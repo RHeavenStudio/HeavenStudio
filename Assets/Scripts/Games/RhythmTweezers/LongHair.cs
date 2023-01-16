@@ -21,6 +21,9 @@ namespace HeavenStudio.Games.Scripts_RhythmTweezers
 
         private Sound pullSound;
 
+        PlayerActionEvent endEvent;
+        InputType endInput;
+
         private void Awake()
         {
             game = RhythmTweezers.instance;
@@ -28,70 +31,23 @@ namespace HeavenStudio.Games.Scripts_RhythmTweezers
             tweezers = game.Tweezers;
         }
 
+        private void Start() {
+            game.ScheduleInput(createBeat, game.tweezerBeatOffset + game.beatInterval, InputType.STANDARD_DOWN | InputType.DIRECTION_DOWN, StartJust, StartMiss, Out);
+        }
+
         private void Update()
         {
-            float stateBeat;
-
-            switch (pluckState)
-            {
-                // Able to be held.
-                case 0:
-                    stateBeat = Conductor.instance.GetPositionFromMargin(createBeat + game.tweezerBeatOffset + game.beatInterval, 1f);
-                    StateCheck(stateBeat);
-
-                    if (PlayerInput.Pressed(true))
-                    {
-                        if (state.perfect)
-                        {
-                            pullSound = Jukebox.PlayOneShotGame($"rhythmTweezers/longPull{UnityEngine.Random.Range(1, 5)}");
-                            pluckState = 1;
-                            ResetState();
-                        }
-                        else if (state.notPerfect())
-                        {
-                            // I don't know what happens if you mess up here.
-                            pluckState = -1;
-                        }
-                    }
-                    break;
-                
-                // In held state. Able to be released.
-                case 1:
-                    stateBeat = Conductor.instance.GetPositionFromMargin(createBeat + game.tweezerBeatOffset + game.beatInterval + 0.5f, 1f);
-                    StateCheck(stateBeat);
-
-                    if (PlayerInput.PressedUp(true))
-                    {
-                        // It's possible to release earlier than earlyTime,
-                        // and the hair will automatically be released before lateTime,
-                        // so standard state checking isn't applied here
-                        // (though StateCheck is still used for autoplay).
-                        if (stateBeat >= Minigame.perfectTime)
-                        {
-                            Ace();
-                        }
-                        else
-                        {
-                            var normalized = Conductor.instance.GetPositionFromBeat(createBeat + game.tweezerBeatOffset + game.beatInterval, 0.5f);
-                            // Hair gets released early and returns whoops.
-                            anim.Play("LoopPullReverse", 0, normalized);
-                            tweezers.anim.Play("Idle", 0, 0);
-
-                            if (pullSound != null)
-                                pullSound.Stop();
-
-                            pluckState = -1;
-                        }
-                    }
-                    break;
-                
-                // Released or missed. Can't be held or released.
-                default:
-                    break;
-            }
-
             if (pluckState == 1)
             {
+                bool input = PlayerInput.PressedUp();
+                if (endInput == InputType.DIRECTION_UP) input = PlayerInput.GetAnyDirectionUp();
+                if (input && !game.IsExpectingInputNow(endInput))
+                {
+                    endEvent.MakeInEligible();
+                    EndEarly();
+                    return;
+                }
+
                 Vector3 tst = tweezers.tweezerSpriteTrans.position;
                 var hairDirection = new Vector3(tst.x + 0.173f, tst.y) - holder.transform.position;
                 holder.transform.rotation = Quaternion.FromToRotation(Vector3.down, hairDirection);
@@ -102,13 +58,13 @@ namespace HeavenStudio.Games.Scripts_RhythmTweezers
 
                 // Auto-release if holding at release time.
                 if (normalizedBeat >= 1f)
-                    Ace();
+                    endEvent.Hit(0f);
             }
 
             loop.transform.localScale = Vector2.one / holder.transform.localScale;
         }
 
-        public void Ace()
+        public void EndAce()
         {
             tweezers.LongPluck(true, this);
             tweezers.hitOnFrame++;
@@ -119,18 +75,52 @@ namespace HeavenStudio.Games.Scripts_RhythmTweezers
             pluckState = -1;
         }
 
-        public override void OnAce()
+        public void EndEarly()
         {
-            if (pluckState == 0)
-            {
-                pullSound = Jukebox.PlayOneShotGame($"rhythmTweezers/longPull{UnityEngine.Random.Range(1, 5)}");
-                pluckState = 1;
-                ResetState();
+            var normalized = Conductor.instance.GetPositionFromBeat(createBeat + game.tweezerBeatOffset + game.beatInterval, 0.5f);
+            anim.Play("LoopPullReverse", 0, normalized);
+            tweezers.anim.Play("Idle", 0, 0);
+
+            if (pullSound != null)
+                pullSound.Stop();
+
+            pluckState = -1;
+        }
+
+        private void StartJust(PlayerActionEvent caller, float state)
+        {
+            // don't count near misses
+            if (state >= 1f || state <= -1f) {
+                pluckState = -1;
+                return; 
             }
-            else if (pluckState == 1)
+            if (PlayerInput.GetAnyDirectionDown())
             {
-                Ace();
+                endInput = InputType.DIRECTION_UP;
             }
+            else
+            {
+                endInput = InputType.STANDARD_UP;
+            }
+            pullSound = Jukebox.PlayOneShotGame($"rhythmTweezers/longPull{UnityEngine.Random.Range(1, 5)}");
+            pluckState = 1;
+            endEvent = game.ScheduleInput(createBeat, game.tweezerBeatOffset + game.beatInterval + 0.5f, endInput, EndJust, Out, Out);
+        }
+
+        private void StartMiss(PlayerActionEvent caller) 
+        {
+            // this is where perfect challenge breaks
+        }
+
+        private void Out(PlayerActionEvent caller) {}
+
+        private void EndJust(PlayerActionEvent caller, float state)
+        {
+            if (state <= -1f) {
+                EndEarly();
+                return; 
+            }
+            EndAce();
         }
     }
 }
