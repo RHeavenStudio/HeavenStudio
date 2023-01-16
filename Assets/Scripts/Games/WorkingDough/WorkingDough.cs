@@ -254,8 +254,6 @@ namespace HeavenStudio.Games
             ballComponent.startBeat = beat;
             ballComponent.enterUpCurve = playerEnterUpCurve;
             ballComponent.enterDownCurve = playerEnterDownCurve;
-            ballComponent.exitUpCurve = playerExitUpCurve;
-            ballComponent.exitDownCurve = playerExitDownCurve;
 
             spawnedBall.SetActive(true);
 
