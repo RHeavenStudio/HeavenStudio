@@ -89,6 +89,12 @@ TextureImporter:
   - first:
       213: 7027999062844758930
     second: Small_Ball
+  - first:
+      213: 4981072731701573055
+    second: SmallBallParticle0
+  - first:
+      213: 1292577349576668988
+    second: SmallBallParticle1
   externalObjects: {}
   serializedVersion: 11
   mipmaps:
@@ -753,7 +759,7 @@ TextureImporter:
         width: 54
         height: 54
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
@@ -774,7 +780,7 @@ TextureImporter:
         width: 54
         height: 54
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
@@ -782,6 +788,48 @@ TextureImporter:
       bones: []
       spriteID: 29bd3a669e7788160800000000000000
       internalID: 7027999062844758930
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SmallBallParticle0
+      rect:
+        serializedVersion: 2
+        x: 977
+        y: 937
+        width: 46
+        height: 46
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: fb5f4753243502540800000000000000
+      internalID: 4981072731701573055
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SmallBallParticle1
+      rect:
+        serializedVersion: 2
+        x: 977
+        y: 889
+        width: 46
+        height: 46
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: c37bb36404820f110800000000000000
+      internalID: 1292577349576668988
       vertices: []
       indices: 
       edges: []
