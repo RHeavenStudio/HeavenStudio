@@ -332,7 +332,15 @@ namespace HeavenStudio.Games
 
         public void catchBarely(bool side)
         {
-            Jukebox.PlayOneShotGame("catchyTune/barely left");
+            if (side)
+            {
+                Jukebox.PlayOneShotGame("catchyTune/barely right");
+            }
+            else
+            {
+                Jukebox.PlayOneShotGame("catchyTune/barely left");
+            }
+
             whiffAnim(side);
         }
 
