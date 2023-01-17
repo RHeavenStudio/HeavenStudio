@@ -55,7 +55,12 @@ namespace HeavenStudio.Games.Loaders
                         new Param("BG", CatchyTune.Background.Long, "BG", "The background to change to")
                     },
                 }
-            });
+            },
+            new List<string>() {"ctr", "normal"},
+            "ctrcatchy",
+            "en",
+            new List<string>(){}
+            );
         }
     }
 }
