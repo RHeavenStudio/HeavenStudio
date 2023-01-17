@@ -136,14 +136,12 @@ namespace HeavenStudio.Games.Scripts_CatchyTune
         private void CatchFruit(PlayerActionEvent caller, float state)
         {
 
-            if (state < 0f || state > 1f)
+            if (state <= -1f || state >= 1f)
             {
                 //near miss (barely)
                 barelyStart = Conductor.instance.songPositionInBeats;
                 
-
-                // near miss sound
-                Jukebox.PlayOneShotGame("catchyTune/barely");
+                game.catchBarely(side);
 
                 // play near miss animation
                 anim.DoScaledAnimation("barely", barelyStart, isPineapple ? 2f : 1f);

@@ -45,6 +45,15 @@ namespace HeavenStudio.Games.Loaders
                         new Param("left" , true, "Left", "Plalin bops head"),
                         new Param("right", true, "Right", "Alalin bops head")
                     },
+                },
+                new GameAction("background", "Background")
+                {
+                    function = delegate {var e = eventCaller.currentEntity; CatchyTune.instance.changeBG(e["BG"]); },
+                    defaultLength = 0.5f,
+                    parameters = new List<Param>()
+                    {
+                        new Param("BG", CatchyTune.Background.Long, "BG", "The background to change to")
+                    },
                 }
             });
         }
@@ -64,6 +73,12 @@ namespace HeavenStudio.Games
             Both
         }
 
+        public enum Background
+        {
+            Short,
+            Long
+        }
+
 
         [Header("Animators")]
         public Animator plalinAnim; // Left d-pad
@@ -73,8 +88,10 @@ namespace HeavenStudio.Games
         public GameObject orangeBase;
         public GameObject pineappleBase;
         public Transform fruitHolder;
-
         public GameObject heartMessage;
+
+        public GameObject bg1;
+        public GameObject bg2;
 
         // when to stop playing the catch animation
         private float stopCatchLeft = 0f;
@@ -244,6 +261,20 @@ namespace HeavenStudio.Games
             bopRight = right;
         }
 
+        public void changeBG(int bg)
+        {
+            if (bg == 0)
+            {
+                bg1.SetActive(true);
+                bg2.SetActive(false);
+            }
+            else
+            {
+                bg1.SetActive(false);
+                bg2.SetActive(true);
+            }
+        }
+
         public void catchSuccess(bool side, bool isPineapple, bool smile, float beat)
         {
             string anim = isPineapple ? "catchPineapple" : "catchOrange";
@@ -273,15 +304,17 @@ namespace HeavenStudio.Games
             Jukebox.PlayOneShotGame("catchyTune/fruitThrough");
 
             float beat = Conductor.instance.songPositionInBeats;
+
+            string fruitType = isPineapple ? "Pineapple" : "Orange";
             
             if (side)
             {
-                alalinAnim.Play("miss", 0, 0);
+                alalinAnim.Play("miss" + fruitType, 0, 0);
                 stopCatchRight = beat + 0.7f;
             }
             else
             {
-                plalinAnim.Play("miss", 0, 0);
+                plalinAnim.Play("miss" + fruitType, 0, 0);
                 stopCatchLeft = beat + 0.7f;
             }
         }
@@ -289,6 +322,17 @@ namespace HeavenStudio.Games
         public void catchWhiff(bool side)
         {
             Jukebox.PlayOneShotGame("catchyTune/whiff");
+            whiffAnim(side);
+        }
+
+        public void catchBarely(bool side)
+        {
+            Jukebox.PlayOneShotGame("catchyTune/barely left");
+            whiffAnim(side);
+        }
+
+        public void whiffAnim(bool side)
+        {
             float beat = Conductor.instance.songPositionInBeats;
             
             if (side)
