@@ -1,5 +1,4 @@
 using DG.Tweening;
-using NaughtyBezierCurves;
 using HeavenStudio.Util;
 using System;
 using System.Collections.Generic;
@@ -46,8 +45,22 @@ namespace HeavenStudio.Games.Loaders
                         new Param("left" , true, "Left", "Plalin bops head"),
                         new Param("right", true, "Right", "Alalin bops head")
                     },
+                },
+                new GameAction("background", "Background")
+                {
+                    function = delegate {var e = eventCaller.currentEntity; CatchyTune.instance.changeBG(e["BG"]); },
+                    defaultLength = 0.5f,
+                    parameters = new List<Param>()
+                    {
+                        new Param("BG", CatchyTune.Background.Long, "BG", "The background to change to")
+                    },
                 }
-            });
+            },
+            new List<string>() {"ctr", "normal"},
+            "ctrcatchy",
+            "en",
+            new List<string>(){}
+            );
         }
     }
 }
@@ -65,6 +78,12 @@ namespace HeavenStudio.Games
             Both
         }
 
+        public enum Background
+        {
+            Short,
+            Long
+        }
+
 
         [Header("Animators")]
         public Animator plalinAnim; // Left d-pad
@@ -74,8 +93,10 @@ namespace HeavenStudio.Games
         public GameObject orangeBase;
         public GameObject pineappleBase;
         public Transform fruitHolder;
-
         public GameObject heartMessage;
+
+        public GameObject bg1;
+        public GameObject bg2;
 
         // when to stop playing the catch animation
         private float stopCatchLeft = 0f;
@@ -125,13 +146,13 @@ namespace HeavenStudio.Games
                 // print("current beat: " + conductor.songPositionInBeats);
                 if (stopCatchLeft > 0 && stopCatchLeft <= cond.songPositionInBeats)
                 {
-                    plalinAnim.SetTrigger("stopCatch");
+                    plalinAnim.Play("idle", 0, 0);
                     stopCatchLeft = 0;
                 }
 
                 if (stopCatchRight > 0 && stopCatchRight <= cond.songPositionInBeats)
                 {
-                    alalinAnim.SetTrigger("stopCatch");
+                    alalinAnim.Play("idle", 0, 0);
                     stopCatchRight = 0;
                 }
 
@@ -147,8 +168,8 @@ namespace HeavenStudio.Games
                 if (stopSmile > 0 && stopSmile <= cond.songPositionInBeats)
                 {
                     //print("smile stop");
-                    plalinAnim.SetTrigger("stopSmile");
-                    alalinAnim.SetTrigger("stopSmile");
+                    plalinAnim.Play("stopsmile", 1, 0);
+                    alalinAnim.Play("stopsmile", 1, 0);
                     stopSmile = 0;
                     heartMessage.SetActive(false);
                 }
@@ -157,7 +178,7 @@ namespace HeavenStudio.Games
                 {
                     if (bopLeft && stopCatchLeft == 0)
                     {
-                        plalinAnim.Play("bop", 0, 0);
+                        plalinAnim.SetTrigger("bop");
                     }
 
                     if (bopRight && stopCatchRight == 0)
@@ -245,6 +266,20 @@ namespace HeavenStudio.Games
             bopRight = right;
         }
 
+        public void changeBG(int bg)
+        {
+            if (bg == 0)
+            {
+                bg1.SetActive(true);
+                bg2.SetActive(false);
+            }
+            else
+            {
+                bg1.SetActive(false);
+                bg2.SetActive(true);
+            }
+        }
+
         public void catchSuccess(bool side, bool isPineapple, bool smile, float beat)
         {
             string anim = isPineapple ? "catchPineapple" : "catchOrange";
@@ -265,6 +300,7 @@ namespace HeavenStudio.Games
                 startSmile = beat + 1f;
                 stopSmile = beat + 2f;
             }
+
         }
 
         public void catchMiss(bool side, bool isPineapple)
@@ -272,14 +308,56 @@ namespace HeavenStudio.Games
             // not the right sound at all but need an accurate rip
             Jukebox.PlayOneShotGame("catchyTune/fruitThrough");
 
-            // hurt animation here
+            float beat = Conductor.instance.songPositionInBeats;
+
+            string fruitType = isPineapple ? "Pineapple" : "Orange";
+            
+            if (side)
+            {
+                alalinAnim.Play("miss" + fruitType, 0, 0);
+                stopCatchRight = beat + 0.7f;
+            }
+            else
+            {
+                plalinAnim.Play("miss" + fruitType, 0, 0);
+                stopCatchLeft = beat + 0.7f;
+            }
         }
 
         public void catchWhiff(bool side)
         {
             Jukebox.PlayOneShotGame("catchyTune/whiff");
+            whiffAnim(side);
+        }
+
+        public void catchBarely(bool side)
+        {
+            if (side)
+            {
+                Jukebox.PlayOneShotGame("catchyTune/barely right");
+            }
+            else
+            {
+                Jukebox.PlayOneShotGame("catchyTune/barely left");
+            }
+
+            whiffAnim(side);
+        }
+
+        public void whiffAnim(bool side)
+        {
+            float beat = Conductor.instance.songPositionInBeats;
             
-            // whiff animation here
+            if (side)
+            {
+                alalinAnim.Play("whiff", 0, 0);
+                stopCatchRight = beat + 0.5f;
+            }
+            else
+            {
+                plalinAnim.Play("whiff", 0, 0);
+                stopCatchLeft = beat + 0.5f;
+            }
         }
     }
 }
