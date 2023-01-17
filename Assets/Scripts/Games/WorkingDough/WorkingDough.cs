@@ -62,6 +62,7 @@ namespace HeavenStudio.Games
         [SerializeField] GameObject missImpact;
         [SerializeField] Transform breakParticleHolder;
         [SerializeField] GameObject breakParticleEffect;
+        [SerializeField] Animator backgroundAnimator;
 
         [Header("Variables")]
         public bool intervalStarted;
@@ -82,7 +83,7 @@ namespace HeavenStudio.Games
             public float interval;
         }
         private List<GameObject> currentBalls = new List<GameObject>();
-        public bool shouldMiss;
+        public bool shouldMiss = true;
 
         [Header("Curves")]
         public BezierCurve3D npcEnterUpCurve;
@@ -97,6 +98,8 @@ namespace HeavenStudio.Games
         public BezierCurve3D playerMissCurveSecond;
         public BezierCurve3D playerBarelyCurveFirst;
         public BezierCurve3D playerBarelyCurveSecond;
+        public BezierCurve3D playerWrongInputTooWeakFirstCurve;
+        public BezierCurve3D playerWrongInputTooWeakSecondCurve;
 
         [Header("Resources")]
         public Sprite whiteArrowSprite;
@@ -107,6 +110,11 @@ namespace HeavenStudio.Games
         void Awake()
         {
             instance = this;
+        }
+
+        void Start()
+        {
+            shouldMiss = true;
         }
 
         public void SetIntervalStart(float beat, float interval)
@@ -150,9 +158,8 @@ namespace HeavenStudio.Games
                     }),
                 });
             }
-
-            intervalStartBeat = beat;
             beatInterval = interval;
+            intervalStartBeat = beat;
         }
 
         public void SpawnBall(float beat, bool isBig)
@@ -266,15 +273,13 @@ namespace HeavenStudio.Games
             ballComponent.deletingAutomatically = false;
             currentBalls.Add(spawnedBall);
 
-            spawnedBall.SetActive(true);
-
             if (isBig && !bigModePlayer)
             {
                 PlayerBallTransporters.GetComponent<Animator>().Play("PlayerGoBigMode", 0, 0);
                 bigModePlayer = true;
             }
 
-            shouldMiss = true;
+            //shouldMiss = true;
             if (isBig)
             {
                 ScheduleInput(beat, 1, InputType.STANDARD_ALT_DOWN, JustBig, MissBig, Nothing);
@@ -286,11 +291,11 @@ namespace HeavenStudio.Games
                 ScheduleUserInput(beat, 1, InputType.STANDARD_ALT_DOWN, WrongInputSmall, Nothing, Nothing);
             }
 
-            arrowSRLeftPlayer.sprite = redArrowSprite;
-
 
             BeatAction.New(doughDudesPlayer, new List<BeatAction.Action>()
             {
+                new BeatAction.Action(beat, delegate { spawnedBall.SetActive(true); }),
+                new BeatAction.Action(beat, delegate { arrowSRLeftPlayer.sprite = redArrowSprite; }),
                 new BeatAction.Action(beat + 0.1f, delegate { arrowSRLeftPlayer.sprite = whiteArrowSprite; }),
             });
         }
@@ -379,6 +384,7 @@ namespace HeavenStudio.Games
                     {
                         new BeatAction.Action(ball.beat - (ball.beat - intervalStartBeat), delegate { if (!intervalStarted) SetIntervalStart(ball.beat, beatInterval); }),
                         new BeatAction.Action(ball.beat - (ball.beat - intervalStartBeat), delegate { InstantExitBall(ball.beat, ball.isBig, ball.beat - intervalStartBeat); }),
+                        new BeatAction.Action(ball.beat - (ball.beat - intervalStartBeat) + beatInterval, delegate { SpawnPlayerBall(ball.beat + beatInterval, ball.isBig); }),
                     });
 
                 }
@@ -396,6 +402,9 @@ namespace HeavenStudio.Games
                 currentBalls.Remove(currentBall);
                 GameObject.Destroy(currentBall);
             }
+            doughDudesPlayer.GetComponent<Animator>().Play("SmallDoughJump", 0, 0);
+            Jukebox.PlayOneShotGame("workingDough/BigBallTooWeak");
+            SpawnPlayerBallResult(beat, true, playerWrongInputTooWeakFirstCurve, playerWrongInputTooWeakSecondCurve, 0.5f, 1f);
             playerImpact.SetActive(true);
             BeatAction.New(instance.gameObject, new List<BeatAction.Action>()
             {
@@ -485,7 +494,7 @@ namespace HeavenStudio.Games
                 doughDudesPlayer.GetComponent<Animator>().Play("SmallDoughJump", 0, 0);
 
                 playerImpact.SetActive(true);
-                SpawnPlayerBallResult(beat, false, playerBarelyCurveFirst, playerBarelyCurveSecond, 1f, 1f);
+                SpawnPlayerBallResult(beat, false, playerBarelyCurveFirst, playerBarelyCurveSecond, 0.75f, 1f);
                 BeatAction.New(instance.gameObject, new List<BeatAction.Action>()
                 {
                     new BeatAction.Action(beat + 0.1f, delegate { playerImpact.SetActive(false); }),
@@ -510,7 +519,7 @@ namespace HeavenStudio.Games
                 doughDudesPlayer.GetComponent<Animator>().Play("BigDoughJump", 0, 0);
 
                 playerImpact.SetActive(true);
-                SpawnPlayerBallResult(beat, true, playerBarelyCurveFirst, playerBarelyCurveSecond, 1f, 1f);
+                SpawnPlayerBallResult(beat, true, playerBarelyCurveFirst, playerBarelyCurveSecond, 0.75f, 1f);
                 BeatAction.New(instance.gameObject, new List<BeatAction.Action>()
                 {
                     new BeatAction.Action(beat + 0.1f, delegate { playerImpact.SetActive(false); }),
@@ -526,6 +535,7 @@ namespace HeavenStudio.Games
             {
                 Jukebox.PlayOneShotGame("workingDough/rightBig");
                 doughDudesPlayer.GetComponent<Animator>().Play("BigDoughJump", 0, 0);
+                backgroundAnimator.Play("BackgroundFlash", 0, 0);
             }
             else
             {
