@@ -42,6 +42,7 @@ namespace HeavenStudio.Games
     public class Kitties : Minigame
     {
         public CtrTeppanPlayer player;
+        public Animator[] kitties;
         public GameObject[] Cats;
         public enum SpawnType
         {
@@ -74,17 +75,17 @@ namespace HeavenStudio.Games
             });
                 BeatAction.New(Cats[0], new List<BeatAction.Action>()
             {
-                    new BeatAction.Action(beat, delegate { Cats[0].transform.GetChild(0).gameObject.SetActive(true);}),
+                    new BeatAction.Action(beat, delegate { Spawn(type, 0);}),
                 });
 
             BeatAction.New(Cats[1], new List<BeatAction.Action>()
             {
-                new BeatAction.Action(beat + .75f, delegate { Cats[1].transform.GetChild(0).gameObject.SetActive(true);}),
+                new BeatAction.Action(beat + .75f, delegate { Spawn(type, 1);}),
                 });
 
             BeatAction.New(Cats[2], new List<BeatAction.Action>()
             {
-                new BeatAction.Action(beat + 1.5f, delegate { Cats[2].transform.GetChild(0).gameObject.SetActive(true);}),
+                new BeatAction.Action(beat + 1.5f, delegate { Spawn(type, 2);}),
                 new BeatAction.Action(beat + 1.5f, delegate { player.canClap = true;}),
                 });
 
@@ -99,6 +100,12 @@ namespace HeavenStudio.Games
                     new BeatAction.Action(beat, delegate { Cats[2].transform.GetChild(0).gameObject.SetActive(false);}),
                     new BeatAction.Action(beat, delegate { player.canClap = false;}),
                 });
+        }
+
+        public void Spawn(int pos, int catNum)
+        {
+            Cats[catNum].transform.GetChild(0).gameObject.SetActive(true);
+            kitties[catNum].Play("PopIn", 0, 0);
         }
     }
 }
