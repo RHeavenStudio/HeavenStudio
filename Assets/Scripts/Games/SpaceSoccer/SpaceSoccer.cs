@@ -193,6 +193,7 @@ namespace HeavenStudio.Games
                 {
                     DispenseSound(beat);
                 }
+                kicker.DispenseBall(beat);
 
                 kicker.canKick = true;
             }
