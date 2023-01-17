@@ -249,5 +249,12 @@ namespace HeavenStudio.Games
             Debug.LogWarning($"Sound sequence {name} not found in game {game} (did you build AssetBundles?)");
             return null;
         }
+
+        private void OnDestroy() {
+            foreach (var evt in scheduledInputs)
+            {
+                evt.Disable();
+            }
+        }
     }
 }

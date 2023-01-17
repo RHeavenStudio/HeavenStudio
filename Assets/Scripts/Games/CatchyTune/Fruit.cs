@@ -2,7 +2,6 @@ using System.Collections;
 using System.Collections.Generic;
 using System;
 using UnityEngine;
-using NaughtyBezierCurves;
 
 using HeavenStudio.Util;
 
@@ -17,6 +16,8 @@ namespace HeavenStudio.Games.Scripts_CatchyTune
         public Animator anim;
 
         public bool side;
+
+        public float barelyStart = 0f;
 
         public bool smile;
 
@@ -74,13 +75,14 @@ namespace HeavenStudio.Games.Scripts_CatchyTune
         // minenice: note - needs PlayerActionEvent implementation
         private void Update()
         {
-            Conductor cond = Conductor.instance;
-            float tempo = cond.songBpm;
-            float playbackSpeed = cond.musicSource.pitch;
-
-            anim.DoScaledAnimation("fruit bounce", startBeat, beatLength + (isPineapple ? 1f : 0.5f));
-            
-            float normalizedBeat = Conductor.instance.GetPositionFromBeat(startBeat, beatLength);
+            if (barelyStart > 0f)
+            {
+                anim.DoScaledAnimation("barely", barelyStart, isPineapple ? 2f : 1f);
+            }
+            else 
+            {
+                anim.DoScaledAnimation("fruit bounce", startBeat, beatLength + (isPineapple ? 4f : 2f));
+            }
         }
 
         public static void PlaySound(float startBeat, bool side, bool isPineapple)
@@ -133,10 +135,29 @@ namespace HeavenStudio.Games.Scripts_CatchyTune
 
         private void CatchFruit(PlayerActionEvent caller, float state)
         {
-            //minenice: TODO - near misses (-1 > state > 1)
-            Jukebox.PlayOneShotGame(soundText + "Catch");
-            game.catchSuccess(side, isPineapple, smile, startBeat + beatLength);
-            Destroy(this.gameObject);
+
+            if (state <= -1f || state >= 1f)
+            {
+                //near miss (barely)
+                barelyStart = Conductor.instance.songPositionInBeats;
+                
+                game.catchBarely(side);
+
+                // play near miss animation
+                anim.DoScaledAnimation("barely", barelyStart, isPineapple ? 2f : 1f);
+
+                BeatAction.New(gameObject, new List<BeatAction.Action>()
+                {
+                    new BeatAction.Action(barelyStart + (isPineapple ? 2f : 1f), delegate { Destroy(this.gameObject); }),
+                });
+
+            }
+            else 
+            {
+                Jukebox.PlayOneShotGame(soundText + "Catch");
+                game.catchSuccess(side, isPineapple, smile, startBeat + beatLength);
+                Destroy(this.gameObject);
+            }
         }
 
         private void Miss(PlayerActionEvent caller)
@@ -145,7 +166,7 @@ namespace HeavenStudio.Games.Scripts_CatchyTune
 
             BeatAction.New(gameObject, new List<BeatAction.Action>()
             {
-                new BeatAction.Action(startBeat + beatLength + (isPineapple ? 1f : 0.5f), delegate { Destroy(this.gameObject); }),
+                new BeatAction.Action(startBeat + beatLength + (isPineapple ? 3f : 1.5f), delegate { Destroy(this.gameObject); }),
             });
         }
 
