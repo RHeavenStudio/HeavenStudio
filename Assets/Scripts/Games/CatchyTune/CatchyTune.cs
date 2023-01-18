@@ -178,7 +178,7 @@ namespace HeavenStudio.Games
                 {
                     if (bopLeft && stopCatchLeft == 0)
                     {
-                        plalinAnim.SetTrigger("bop");
+                        plalinAnim.Play("bop", 0, 0);
                     }
 
                     if (bopRight && stopCatchRight == 0)
