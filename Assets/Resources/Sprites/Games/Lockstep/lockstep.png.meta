@@ -1,0 +1,564 @@
+fileFormatVersion: 2
+guid: bab2c0bd9904cdb46bf49674024d3da6
+TextureImporter:
+  internalIDToNameTable:
+  - first:
+      213: -6961290807587789438
+    second: stepswitcher
+  - first:
+      213: 9130296555604909335
+    second: stepswitcher_offbeat1
+  - first:
+      213: 5037155186664620574
+    second: stepswitcher_offbeat2
+  - first:
+      213: 9047975854256012390
+    second: stepswitcher_onbeat1
+  - first:
+      213: 4448651475430373734
+    second: stepswitcher_onbeat2
+  - first:
+      213: 1292918056351840569
+    second: stepswitcher_offbeat3
+  - first:
+      213: 3854965462330847857
+    second: stepswitcher_offbeat4
+  - first:
+      213: -7069434044889276691
+    second: stepswitcher_onbeat3
+  - first:
+      213: 6671823371719840549
+    second: stepswitcher_onbeat4
+  - first:
+      213: 6678189707026698426
+    second: stepswitcher_bop1
+  - first:
+      213: -1578962635485543256
+    second: stepswitcher_bop2
+  - first:
+      213: -7689431612274100930
+    second: stepswitcher_bop3
+  - first:
+      213: 4632143454527972695
+    second: stepswitcher_bop4
+  - first:
+      213: 7051025833746117958
+    second: stepswitcher_offbeatMiss1
+  - first:
+      213: -7900508199032304796
+    second: stepswitcher_offbeatMiss2
+  - first:
+      213: 1380531955285550272
+    second: stepswitcher_onbeatMiss1
+  - first:
+      213: -662792740418096914
+    second: stepswitcher_onbeatMiss2
+  - first:
+      213: 5090408958517365022
+    second: lockstep_bg1
+  - first:
+      213: 4376752631132958919
+    second: lockstep_bg2
+  externalObjects: {}
+  serializedVersion: 11
+  mipmaps:
+    mipMapMode: 0
+    enableMipMap: 0
+    sRGBTexture: 1
+    linearTexture: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapsPreserveCoverage: 0
+    alphaTestReferenceValue: 0.5
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+  bumpmap:
+    convertToNormalMap: 0
+    externalNormalMap: 0
+    heightScale: 0.25
+    normalMapFilter: 0
+  isReadable: 0
+  streamingMipmaps: 0
+  streamingMipmapsPriority: 0
+  vTOnly: 0
+  grayScaleToAlpha: 0
+  generateCubemap: 6
+  cubemapConvolution: 0
+  seamlessCubemap: 0
+  textureFormat: 1
+  maxTextureSize: 2048
+  textureSettings:
+    serializedVersion: 2
+    filterMode: 1
+    aniso: 1
+    mipBias: 0
+    wrapU: 1
+    wrapV: 1
+    wrapW: 1
+  nPOTScale: 0
+  lightmap: 0
+  compressionQuality: 50
+  spriteMode: 2
+  spriteExtrude: 1
+  spriteMeshType: 1
+  alignment: 0
+  spritePivot: {x: 0.5, y: 0.5}
+  spritePixelsToUnits: 100
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spriteGenerateFallbackPhysicsShape: 1
+  alphaUsage: 1
+  alphaIsTransparency: 1
+  spriteTessellationDetail: -1
+  textureType: 8
+  textureShape: 1
+  singleChannelComponent: 0
+  flipbookRows: 1
+  flipbookColumns: 1
+  maxTextureSizeSet: 0
+  compressionQualitySet: 0
+  textureFormatSet: 0
+  ignorePngGamma: 0
+  applyGammaDecoding: 0
+  platformSettings:
+  - serializedVersion: 3
+    buildTarget: DefaultTexturePlatform
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 3
+    buildTarget: Standalone
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  spriteSheet:
+    serializedVersion: 2
+    sprites:
+    - serializedVersion: 2
+      name: stepswitcher
+      rect:
+        serializedVersion: 2
+        x: 28
+        y: 299
+        width: 96
+        height: 202
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 285a98b94e6846f90800000000000000
+      internalID: -6961290807587789438
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: stepswitcher_offbeat1
+      rect:
+        serializedVersion: 2
+        x: 170
+        y: 301
+        width: 85
+        height: 202
+      alignment: 9
+      pivot: {x: 0.37, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 71d9dcac75455be70800000000000000
+      internalID: 9130296555604909335
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: stepswitcher_offbeat2
+      rect:
+        serializedVersion: 2
+        x: 304
+        y: 300
+        width: 103
+        height: 202
+      alignment: 9
+      pivot: {x: 0.37, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: e1249ab44f197e540800000000000000
+      internalID: 5037155186664620574
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: stepswitcher_onbeat1
+      rect:
+        serializedVersion: 2
+        x: 471
+        y: 301
+        width: 84
+        height: 202
+      alignment: 9
+      pivot: {x: 0.58, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 66cbd39e91ed09d70800000000000000
+      internalID: 9047975854256012390
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: stepswitcher_onbeat2
+      rect:
+        serializedVersion: 2
+        x: 590
+        y: 300
+        width: 103
+        height: 202
+      alignment: 9
+      pivot: {x: 0.58, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 6697b8a62f8ccbd30800000000000000
+      internalID: 4448651475430373734
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: stepswitcher_offbeat3
+      rect:
+        serializedVersion: 2
+        x: 728
+        y: 313
+        width: 161
+        height: 202
+      alignment: 9
+      pivot: {x: 0.2, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 9393a804f1e51f110800000000000000
+      internalID: 1292918056351840569
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: stepswitcher_offbeat4
+      rect:
+        serializedVersion: 2
+        x: 918
+        y: 313
+        width: 161
+        height: 202
+      alignment: 9
+      pivot: {x: 0.2, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 17231abd9a69f7530800000000000000
+      internalID: 3854965462330847857
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: stepswitcher_onbeat3
+      rect:
+        serializedVersion: 2
+        x: 1116
+        y: 313
+        width: 161
+        height: 202
+      alignment: 9
+      pivot: {x: 0.8, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: dee525f013354ed90800000000000000
+      internalID: -7069434044889276691
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: stepswitcher_onbeat4
+      rect:
+        serializedVersion: 2
+        x: 1311
+        y: 313
+        width: 161
+        height: 202
+      alignment: 9
+      pivot: {x: 0.8, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 523928bf104179c50800000000000000
+      internalID: 6671823371719840549
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: stepswitcher_bop1
+      rect:
+        serializedVersion: 2
+        x: 26
+        y: 41
+        width: 97
+        height: 233
+      alignment: 9
+      pivot: {x: 0.5, y: 0.435}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: ab01ffde722bdac50800000000000000
+      internalID: 6678189707026698426
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: stepswitcher_bop2
+      rect:
+        serializedVersion: 2
+        x: 163
+        y: 42
+        width: 97
+        height: 233
+      alignment: 9
+      pivot: {x: 0.5, y: 0.435}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 8a4054649d5661ae0800000000000000
+      internalID: -1578962635485543256
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: stepswitcher_bop3
+      rect:
+        serializedVersion: 2
+        x: 281
+        y: 41
+        width: 97
+        height: 233
+      alignment: 9
+      pivot: {x: 0.5, y: 0.435}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: e353eb160b6a94590800000000000000
+      internalID: -7689431612274100930
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: stepswitcher_bop4
+      rect:
+        serializedVersion: 2
+        x: 399
+        y: 41
+        width: 97
+        height: 233
+      alignment: 9
+      pivot: {x: 0.5, y: 0.435}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 7556ac30eeda84040800000000000000
+      internalID: 4632143454527972695
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: stepswitcher_offbeatMiss1
+      rect:
+        serializedVersion: 2
+        x: 594
+        y: 78
+        width: 190
+        height: 202
+      alignment: 9
+      pivot: {x: 0.505, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 6453a8a43a64ad160800000000000000
+      internalID: 7051025833746117958
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: stepswitcher_offbeatMiss2
+      rect:
+        serializedVersion: 2
+        x: 840
+        y: 78
+        width: 135
+        height: 202
+      alignment: 9
+      pivot: {x: 0.3, y: 0.49999997}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 46b4e93d6a1cb5290800000000000000
+      internalID: -7900508199032304796
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: stepswitcher_onbeatMiss1
+      rect:
+        serializedVersion: 2
+        x: 1018
+        y: 78
+        width: 190
+        height: 202
+      alignment: 9
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 0c4eedbbf72a82310800000000000000
+      internalID: 1380531955285550272
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: stepswitcher_onbeatMiss2
+      rect:
+        serializedVersion: 2
+        x: 1214
+        y: 78
+        width: 135
+        height: 202
+      alignment: 9
+      pivot: {x: 0.705, y: 0.49999997}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: ee0fba3a3894dc6f0800000000000000
+      internalID: -662792740418096914
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: lockstep_bg1
+      rect:
+        serializedVersion: 2
+        x: 1412
+        y: 127
+        width: 108
+        height: 107
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: e19c4e54af3c4a640800000000000000
+      internalID: 5090408958517365022
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: lockstep_bg2
+      rect:
+        serializedVersion: 2
+        x: 1553
+        y: 127
+        width: 107
+        height: 107
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 7c0bf6834595dbc30800000000000000
+      internalID: 4376752631132958919
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    outline: []
+    physicsShape: []
+    bones: []
+    spriteID: 5e97eb03825dee720800000000000000
+    internalID: 0
+    vertices: []
+    indices: 
+    edges: []
+    weights: []
+    secondaryTextures: []
+  spritePackingTag: 
+  pSDRemoveMatte: 0
+  pSDShowRemoveMatteOption: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
