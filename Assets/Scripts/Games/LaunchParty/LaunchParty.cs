@@ -26,8 +26,6 @@ namespace HeavenStudio.Games.Loaders
                     parameters = new List<Param>()
                     {
                         new Param("type", RocketScript.RocketType.Family, "Rocket Model", "The rocket to launch"),
-                        new Param("type2", RocketScript.ScaleNote.A, "Scale Note", "What scale note to use"),
-                        new Param("type3", RocketScript.ScaleType.Major, "Scale Type", "What type of scale to use"),
                     }
                 },
                 new GameAction("toggleStars", "Toggle Falling Stars")
@@ -64,6 +62,12 @@ namespace HeavenStudio.Games
         public GameObject Bowling;
         public ParticleSystem FallingStars;
         public GameObject StarGO;
+        
+        [Header("Animators")]
+        public Animator Rockets;
+        public Animator Crackers;
+        public Animator Bells;
+        public Animator Pins;
         
         [Header("Outcasts")]
         public PlayerActionEvent padLaunch;

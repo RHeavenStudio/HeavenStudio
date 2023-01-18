@@ -926,7 +926,6 @@ GameObject:
   m_Component:
   - component: {fileID: 1891807847294650023}
   - component: {fileID: 5180842973243674830}
-  - component: {fileID: 4942674901135808715}
   - component: {fileID: 4341489515811386774}
   m_Layer: 0
   m_Name: Rocket
@@ -961,42 +960,6 @@ SortingGroup:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
---- !u!114 &4942674901135808715
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1652656687045200320}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b3c70bf23e6b90f4d88122ea3ffbb580, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  inList: 0
-  state:
-    gameObject: {fileID: 0}
-    early: 0
-    perfect: 0
-    late: 0
-    createBeat: 0
-  eligibleHitsList: []
-  aceTimes: 0
-  isEligible: 0
-  triggersAutoplay: 1
-  awakeAnim: 
-  awakeAnim2: 
-  awakeAnim3: 
-  awakeAnim4: 
-  awakeAnim5: 
-  awakeAnim6: 
-  awakeAnim7: 
-  startBeat: 0
-  type: 0
-  Rockets: {fileID: 2767938043679923100}
-  Crackers: {fileID: 79842743730520076}
-  Bells: {fileID: 8857463492193589448}
-  Pins: {fileID: 6009377183970837478}
 --- !u!114 &4341489515811386774
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1020,6 +983,10 @@ MonoBehaviour:
   Bowling: {fileID: 2235363202239857773}
   FallingStars: {fileID: 0}
   StarGO: {fileID: 955817835227096127, guid: eac275b643d595e49923813c3c726700, type: 3}
+  Rockets: {fileID: 2767938043679923100}
+  Crackers: {fileID: 79842743730520076}
+  Bells: {fileID: 8857463492193589448}
+  Pins: {fileID: 6009377183970837478}
   padLaunch: {fileID: 0}
   SpawnRoot: {fileID: 0}
 --- !u!1 &1824290574185068691
@@ -1597,10 +1564,6 @@ MonoBehaviour:
   awakeAnim7: 
   startBeat: 0
   type: 0
-  Rockets: {fileID: 0}
-  Crackers: {fileID: 0}
-  Bells: {fileID: 0}
-  Pins: {fileID: 0}
 --- !u!1 &2868949763934778539
 GameObject:
   m_ObjectHideFlags: 0
