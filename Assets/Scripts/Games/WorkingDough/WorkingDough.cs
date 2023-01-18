@@ -29,6 +29,18 @@ namespace HeavenStudio.Games.Loaders
                     preFunction = delegate { var e = eventCaller.currentEntity; WorkingDough.instance.PreSpawnBall(e.beat, true);  },
                     defaultLength = 0.5f,
                 },
+                new GameAction("launch spaceship", "Launch Spaceship")
+                {
+                    function = delegate { var e = eventCaller.currentEntity; WorkingDough.instance.LaunchShip(e.beat, e.length);  },
+                    defaultLength = 4f,
+                    resizable = true
+                },
+                new GameAction("rise spaceship", "Rise Up Spaceship")
+                {
+                    function = delegate { var e = eventCaller.currentEntity; WorkingDough.instance.RiseUpShip(e.beat, e.length);  },
+                    defaultLength = 4f,
+                    resizable = true
+                },
             });
         }
     }
@@ -63,10 +75,17 @@ namespace HeavenStudio.Games
         [SerializeField] Transform breakParticleHolder;
         [SerializeField] GameObject breakParticleEffect;
         [SerializeField] Animator backgroundAnimator;
+        [SerializeField] Animator conveyerAnimator;
+        [SerializeField] GameObject smallBGBall;
+        [SerializeField] GameObject bigBGBall;
+        [SerializeField] Animator spaceshipAnimator;
+        [SerializeField] GameObject spaceshipLights;
 
         [Header("Variables")]
         public bool intervalStarted;
         float intervalStartBeat;
+        float risingLength = 4f;
+        float risingStartBeat;
         public float beatInterval = 4f;
         public bool bigMode;
         public bool bigModePlayer;
@@ -84,6 +103,8 @@ namespace HeavenStudio.Games
         }
         private List<GameObject> currentBalls = new List<GameObject>();
         public bool shouldMiss = true;
+        public bool spaceshipRisen = false;
+        public bool spaceshipRising = false;
 
         [Header("Curves")]
         public BezierCurve3D npcEnterUpCurve;
@@ -100,6 +121,12 @@ namespace HeavenStudio.Games
         public BezierCurve3D playerBarelyCurveSecond;
         public BezierCurve3D playerWrongInputTooWeakFirstCurve;
         public BezierCurve3D playerWrongInputTooWeakSecondCurve;
+        public BezierCurve3D firstBGCurveBig;
+        public BezierCurve3D secondBGCurveBig;
+        public BezierCurve3D thirdBGCurveBig;
+        public BezierCurve3D firstBGCurveSmall;
+        public BezierCurve3D secondBGCurveSmall;
+        public BezierCurve3D thirdBGCurveSmall;
 
         [Header("Resources")]
         public Sprite whiteArrowSprite;
@@ -115,6 +142,7 @@ namespace HeavenStudio.Games
         void Start()
         {
             shouldMiss = true;
+            conveyerAnimator.Play("ConveyerBelt", 0, 0);
         }
 
         public void SetIntervalStart(float beat, float interval)
@@ -347,6 +375,7 @@ namespace HeavenStudio.Games
         {
             Conductor cond = Conductor.instance;
             if (!cond.isPlaying || cond.isPaused) return;
+            if (spaceshipRising) spaceshipAnimator.DoScaledAnimation("RiseSpaceship", risingStartBeat, risingLength); ;
             if (queuedIntervals.Count > 0)
             {
                 foreach (var interval in queuedIntervals)
@@ -549,6 +578,62 @@ namespace HeavenStudio.Games
                 new BeatAction.Action(beat + 0.1f, delegate { playerImpact.SetActive(false); }),
                 new BeatAction.Action(beat + 0.9f, delegate { arrowSRRightPlayer.sprite = redArrowSprite; }),
                 new BeatAction.Action(beat + 1f, delegate { arrowSRRightPlayer.sprite = whiteArrowSprite; }),
+                new BeatAction.Action(beat + 2f, delegate { SpawnBGBall(beat + 2f, isBig); }),
+            });
+        }
+
+        void SpawnBGBall(float beat, bool isBig)
+        {
+            var objectToSpawn = isBig ? bigBGBall : smallBGBall;
+            var spawnedBall = GameObject.Instantiate(objectToSpawn, ballHolder);
+
+            var ballComponent = spawnedBall.GetComponent<BGBall>();
+            ballComponent.startBeat = beat;
+            ballComponent.firstCurve = isBig ? firstBGCurveBig : firstBGCurveSmall;
+            ballComponent.secondCurve = isBig ? secondBGCurveBig : secondBGCurveSmall;
+            ballComponent.thirdCurve = isBig ? thirdBGCurveBig : thirdBGCurveSmall;
+
+            spawnedBall.SetActive(true);
+            BeatAction.New(instance.gameObject, new List<BeatAction.Action>()
+            {
+                new BeatAction.Action(beat + 9f, delegate { if (!spaceshipRisen) spaceshipAnimator.Play("AbsorbBall", 0, 0); }),
+            });
+        }
+
+
+
+        public void LaunchShip(float beat, float length)
+        {
+            spaceshipRisen = true;
+            if (!spaceshipLights.activeSelf)
+            {
+                spaceshipLights.SetActive(true);
+                spaceshipLights.GetComponent<Animator>().Play("SpaceshipLights", 0, 0);
+            }
+            spaceshipAnimator.Play("SpaceshipShake", 0, 0);
+            BeatAction.New(instance.gameObject, new List<BeatAction.Action>()
+            {
+                new BeatAction.Action(beat + length, delegate { spaceshipAnimator.Play("SpaceshipLaunch", 0, 0); }),
+                new BeatAction.Action(beat + length, delegate { Jukebox.PlayOneShotGame("workingDough/LaunchRobot"); }),
+                new BeatAction.Action(beat + length, delegate { Jukebox.PlayOneShotGame("workingDough/Rocket"); }),
+            });
+        }
+
+        public void RiseUpShip(float beat, float length)
+        {
+            spaceshipRisen = true;
+            spaceshipRising = true;
+            risingLength = length;
+            risingStartBeat = beat;
+            if (!spaceshipLights.activeSelf)
+            {
+                spaceshipLights.SetActive(true);
+                spaceshipLights.GetComponent<Animator>().Play("SpaceshipLights", 0, 0);
+            }
+            spaceshipAnimator.DoScaledAnimation("RiseSpaceship", risingStartBeat, risingLength);
+            BeatAction.New(instance.gameObject, new List<BeatAction.Action>()
+            {
+                new BeatAction.Action(beat + length / 2, delegate { spaceshipRising = false; }),
             });
         }
 

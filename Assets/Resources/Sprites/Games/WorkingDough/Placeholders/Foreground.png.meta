@@ -95,6 +95,42 @@ TextureImporter:
   - first:
       213: 1292577349576668988
     second: SmallBallParticle1
+  - first:
+      213: -1061688395536187529
+    second: BGSmallBall
+  - first:
+      213: 524102790251089416
+    second: BG_BigBall
+  - first:
+      213: 8516936976144054295
+    second: MrGameAndWatchHand
+  - first:
+      213: -84507689565416287
+    second: MrGameAndWatchHeadNeutral
+  - first:
+      213: 1603961481241524821
+    second: MrGameAndWatchHeadLooking
+  - first:
+      213: 6261176759002247557
+    second: MrGameAndWatchRight
+  - first:
+      213: -6590392941039462437
+    second: MrGameAndWatchLeft
+  - first:
+      213: 7848992016631744940
+    second: MrGameAndWatchHeadBehind
+  - first:
+      213: 5259131687523586555
+    second: MrGameAndWatchClimb
+  - first:
+      213: 8631662724599282860
+    second: MrGameAndWatchTrapped
+  - first:
+      213: -5199796740822038689
+    second: ControlBoard
+  - first:
+      213: -1817904502405952194
+    second: ControlStick
   externalObjects: {}
   serializedVersion: 11
   mipmaps:
@@ -801,7 +837,7 @@ TextureImporter:
         width: 46
         height: 46
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
@@ -822,7 +858,7 @@ TextureImporter:
         width: 46
         height: 46
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
@@ -830,6 +866,258 @@ TextureImporter:
       bones: []
       spriteID: c37bb36404820f110800000000000000
       internalID: 1292577349576668988
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: BGSmallBall
+      rect:
+        serializedVersion: 2
+        x: 977
+        y: 729
+        width: 46
+        height: 46
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 77f39e187002441f0800000000000000
+      internalID: -1061688395536187529
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: BG_BigBall
+      rect:
+        serializedVersion: 2
+        x: 977
+        y: 681
+        width: 46
+        height: 46
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 80e05bef5bcf54700800000000000000
+      internalID: 524102790251089416
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: MrGameAndWatchHand
+      rect:
+        serializedVersion: 2
+        x: 1
+        y: 625
+        width: 62
+        height: 62
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 718b47d1e0d323670800000000000000
+      internalID: 8516936976144054295
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: MrGameAndWatchHeadNeutral
+      rect:
+        serializedVersion: 2
+        x: 65
+        y: 625
+        width: 62
+        height: 62
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 1a41aae34b4c3def0800000000000000
+      internalID: -84507689565416287
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: MrGameAndWatchHeadLooking
+      rect:
+        serializedVersion: 2
+        x: 129
+        y: 625
+        width: 62
+        height: 62
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 55a7fc2187a624610800000000000000
+      internalID: 1603961481241524821
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: MrGameAndWatchRight
+      rect:
+        serializedVersion: 2
+        x: 1
+        y: 561
+        width: 62
+        height: 62
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 581b244d61b24e650800000000000000
+      internalID: 6261176759002247557
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: MrGameAndWatchLeft
+      rect:
+        serializedVersion: 2
+        x: 65
+        y: 561
+        width: 62
+        height: 62
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: bd7d91b99883a84a0800000000000000
+      internalID: -6590392941039462437
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: MrGameAndWatchHeadBehind
+      rect:
+        serializedVersion: 2
+        x: 129
+        y: 561
+        width: 62
+        height: 62
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: ca9463447a83dec60800000000000000
+      internalID: 7848992016631744940
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: MrGameAndWatchClimb
+      rect:
+        serializedVersion: 2
+        x: 193
+        y: 561
+        width: 62
+        height: 70
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: bf118ddd7603cf840800000000000000
+      internalID: 5259131687523586555
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: MrGameAndWatchTrapped
+      rect:
+        serializedVersion: 2
+        x: 129
+        y: 489
+        width: 78
+        height: 70
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: cac78b8f383d9c770800000000000000
+      internalID: 8631662724599282860
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: ControlBoard
+      rect:
+        serializedVersion: 2
+        x: 305
+        y: 833
+        width: 62
+        height: 62
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: f578117f96c96d7b0800000000000000
+      internalID: -5199796740822038689
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: ControlStick
+      rect:
+        serializedVersion: 2
+        x: 369
+        y: 833
+        width: 62
+        height: 62
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: e3d828a9c7185c6e0800000000000000
+      internalID: -1817904502405952194
       vertices: []
       indices: 
       edges: []
