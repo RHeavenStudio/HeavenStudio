@@ -41,6 +41,25 @@ namespace HeavenStudio.Games.Loaders
                     defaultLength = 4f,
                     resizable = true
                 },
+                new GameAction("lift dough dudes", "Lift Dough Dudes")
+                {
+                    function = delegate { var e = eventCaller.currentEntity; WorkingDough.instance.Elevate(e.beat, e.length, e["toggle"]);  },
+                    defaultLength = 4f,
+                    parameters = new List<Param>()
+                    {
+                    new Param("toggle", false, "Go Up?", "Toggle to go Up or Down.")
+                    },
+                    resizable = true
+                },
+                new GameAction("instant lift", "Instant Lift")
+                {
+                    function = delegate { var e = eventCaller.currentEntity; WorkingDough.instance.InstantElevation(e["toggle"]);  },
+                    parameters = new List<Param>()
+                    {
+                    new Param("toggle", true, "Go Up?", "Toggle to go Up or Down.")
+                    },
+                    defaultLength = 0.5f,
+                },
             });
         }
     }
@@ -80,12 +99,15 @@ namespace HeavenStudio.Games
         [SerializeField] GameObject bigBGBall;
         [SerializeField] Animator spaceshipAnimator;
         [SerializeField] GameObject spaceshipLights;
+        [SerializeField] Animator doughDudesHolderAnim;
 
         [Header("Variables")]
         public bool intervalStarted;
         float intervalStartBeat;
         float risingLength = 4f;
         float risingStartBeat;
+        float liftingLength = 4f;
+        float liftingStartBeat;
         public float beatInterval = 4f;
         public bool bigMode;
         public bool bigModePlayer;
@@ -105,6 +127,8 @@ namespace HeavenStudio.Games
         public bool shouldMiss = true;
         public bool spaceshipRisen = false;
         public bool spaceshipRising = false;
+        bool liftingDoughDudes;
+        string liftingAnimName;
 
         [Header("Curves")]
         public BezierCurve3D npcEnterUpCurve;
@@ -143,6 +167,7 @@ namespace HeavenStudio.Games
         {
             shouldMiss = true;
             conveyerAnimator.Play("ConveyerBelt", 0, 0);
+            doughDudesHolderAnim.Play("OnGround", 0, 0);
         }
 
         public void SetIntervalStart(float beat, float interval)
@@ -375,7 +400,8 @@ namespace HeavenStudio.Games
         {
             Conductor cond = Conductor.instance;
             if (!cond.isPlaying || cond.isPaused) return;
-            if (spaceshipRising) spaceshipAnimator.DoScaledAnimation("RiseSpaceship", risingStartBeat, risingLength); ;
+            if (spaceshipRising) spaceshipAnimator.DoScaledAnimation("RiseSpaceship", risingStartBeat, risingLength);
+            if (liftingDoughDudes) doughDudesHolderAnim.DoScaledAnimation(liftingAnimName, liftingStartBeat, liftingLength);
             if (queuedIntervals.Count > 0)
             {
                 foreach (var interval in queuedIntervals)
@@ -600,7 +626,23 @@ namespace HeavenStudio.Games
             });
         }
 
+        public void InstantElevation(bool isUp)
+        {
+            doughDudesHolderAnim.Play(isUp ? "InAir" : "OnGround", 0, 0);
+        }
 
+        public void Elevate(float beat, float length, bool isUp)
+        {
+            liftingAnimName = isUp ? "LiftUp" : "LiftDown";
+            liftingStartBeat = beat;
+            liftingLength = length;
+            liftingDoughDudes = true;
+            doughDudesHolderAnim.DoScaledAnimation(liftingAnimName, liftingStartBeat, liftingLength);
+            BeatAction.New(instance.gameObject, new List<BeatAction.Action>()
+            {
+                new BeatAction.Action(beat + length - 0.1f, delegate { liftingDoughDudes = false; }),
+            });
+        } 
 
         public void LaunchShip(float beat, float length)
         {
@@ -620,7 +662,7 @@ namespace HeavenStudio.Games
         }
 
         public void RiseUpShip(float beat, float length)
-        {
+        { 
             spaceshipRisen = true;
             spaceshipRising = true;
             risingLength = length;
@@ -633,7 +675,7 @@ namespace HeavenStudio.Games
             spaceshipAnimator.DoScaledAnimation("RiseSpaceship", risingStartBeat, risingLength);
             BeatAction.New(instance.gameObject, new List<BeatAction.Action>()
             {
-                new BeatAction.Action(beat + length / 2, delegate { spaceshipRising = false; }),
+                new BeatAction.Action(beat + length - 0.1f, delegate { spaceshipRising = false; }),
             });
         }
 
