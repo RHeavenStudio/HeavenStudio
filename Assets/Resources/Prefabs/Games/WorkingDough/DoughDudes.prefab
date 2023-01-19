@@ -256,7 +256,6 @@ GameObject:
   m_Component:
   - component: {fileID: 8871343647334617765}
   - component: {fileID: 3703437605052498154}
-  - component: {fileID: 336198140805156446}
   m_Layer: 0
   m_Name: SmallDoughDude
   m_TagString: Untagged
@@ -329,25 +328,6 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
---- !u!95 &336198140805156446
-Animator:
-  serializedVersion: 3
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 410245680448306877}
-  m_Enabled: 1
-  m_Avatar: {fileID: 0}
-  m_Controller: {fileID: 9100000, guid: 97c3ccb7ef1cad64dad4638b93776f36, type: 2}
-  m_CullingMode: 0
-  m_UpdateMode: 0
-  m_ApplyRootMotion: 0
-  m_LinearVelocityBlending: 0
-  m_WarningMessage: 
-  m_HasTransformHierarchy: 1
-  m_AllowConstantClipSamplingOptimization: 1
-  m_KeepAnimatorControllerStateOnDisable: 0
 --- !u!1 &974956388596275622
 GameObject:
   m_ObjectHideFlags: 0
@@ -613,7 +593,6 @@ GameObject:
   m_Component:
   - component: {fileID: 3184713278758680592}
   - component: {fileID: 5315066626796327776}
-  - component: {fileID: 5449076002027652642}
   m_Layer: 0
   m_Name: BigDoughDude
   m_TagString: Untagged
@@ -686,25 +665,6 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
---- !u!95 &5449076002027652642
-Animator:
-  serializedVersion: 3
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2834014204585402499}
-  m_Enabled: 1
-  m_Avatar: {fileID: 0}
-  m_Controller: {fileID: 9100000, guid: f071191bbeaff9543b5d3c2f5c7a134d, type: 2}
-  m_CullingMode: 0
-  m_UpdateMode: 0
-  m_ApplyRootMotion: 0
-  m_LinearVelocityBlending: 0
-  m_WarningMessage: 
-  m_HasTransformHierarchy: 1
-  m_AllowConstantClipSamplingOptimization: 1
-  m_KeepAnimatorControllerStateOnDisable: 0
 --- !u!1 &2979116791219355638
 GameObject:
   m_ObjectHideFlags: 0
