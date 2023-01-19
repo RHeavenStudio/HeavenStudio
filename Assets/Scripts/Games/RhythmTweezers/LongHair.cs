@@ -21,6 +21,7 @@ namespace HeavenStudio.Games.Scripts_RhythmTweezers
 
         private Sound pullSound;
 
+        PlayerActionEvent pluckEvent;
         PlayerActionEvent endEvent;
         InputType endInput;
 
@@ -121,6 +122,14 @@ namespace HeavenStudio.Games.Scripts_RhythmTweezers
                 return; 
             }
             EndAce();
+        }
+
+        void OnDestroy()
+        {
+            if (pluckEvent != null)
+                pluckEvent.Disable();
+            if (endEvent != null)
+                endEvent.Disable();
         }
     }
 }

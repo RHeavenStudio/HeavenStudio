@@ -82,6 +82,7 @@ namespace HeavenStudio
                 {
                     action.inactiveFunction.Invoke();
                 }
+                Debug.Log($"Running action {action.actionName} of priority {action.priority}");
             }
             catch (Exception ex)
             {
