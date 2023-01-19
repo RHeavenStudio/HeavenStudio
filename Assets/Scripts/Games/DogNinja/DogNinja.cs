@@ -16,6 +16,16 @@ namespace HeavenStudio.Games.Loaders
                     function = delegate { var e = eventCaller.currentEntity; DogNinja.instance.item(e.beat, e["type"]); }, 
                     defaultLength = 2,
                 },
+                new GameAction("cutEverything", "Cut Everything!")
+                {
+                    function = delegate { var e = eventCaller.currentEntity; DogNinja.instance.cutEverything(e.beat, e["type"]); }, 
+                    defaultLength = 1,
+                },
+                new GameAction("hereWeGo", "Here We Go!")
+                {
+                    function = delegate { var e = eventCaller.currentEntity; DogNinja.instance.sfx(e.beat, e["type"]); }, 
+                    defaultLength = 2,
+                },
             });
         }
     }
@@ -45,7 +55,12 @@ namespace HeavenStudio.Games
 
         }
 
-        public void sprite(float beat, int type)
+        public void cutEverything(float beat, int type)
+        {
+
+        }
+
+        public void sfx(float beat, int type)
         {
 
         }
