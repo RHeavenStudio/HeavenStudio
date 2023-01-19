@@ -1,3 +1,4 @@
+using NaughtyBezierCurves;
 using HeavenStudio.Util;
 using System;
 using System.Collections.Generic;
@@ -11,19 +12,19 @@ namespace HeavenStudio.Games.Loaders
         public static Minigame AddGame(EventCaller eventCaller) {
             return new Minigame("dogNinja", "Dog Ninja \n<color=#eb5454>[INITIALIZATION ONLY]</color>", "0058CE", false, false, new List<GameAction>()
             {
-                new GameAction("item", "Throw Object")
+                new GameAction("ThrowObject", "Throw Object")
                 {
-                    function = delegate { var e = eventCaller.currentEntity; DogNinja.instance.item(e.beat, e["type"]); }, 
+                    function = delegate { DogNinja.instance.ThrowObject(eventCaller.currentEntity.beat); }, 
                     defaultLength = 2,
                 },
-                new GameAction("cutEverything", "Cut Everything!")
+                new GameAction("CutEverything", "Cut Everything!")
                 {
-                    function = delegate { var e = eventCaller.currentEntity; DogNinja.instance.cutEverything(e.beat, e["type"]); }, 
-                    defaultLength = 1,
+                    function = delegate { DogNinja.instance.CutEverything(eventCaller.currentEntity.beat); }, 
+                    defaultLength = 0.5f,
                 },
-                new GameAction("hereWeGo", "Here We Go!")
+                new GameAction("HereWeGo", "Here We Go!")
                 {
-                    function = delegate { var e = eventCaller.currentEntity; DogNinja.instance.sfx(e.beat, e["type"]); }, 
+                    function = delegate { DogNinja.instance.HWG(eventCaller.currentEntity.beat); }, 
                     defaultLength = 2,
                 },
             });
@@ -38,6 +39,19 @@ namespace HeavenStudio.Games
     public class DogNinja : Minigame
     {
         public static DogNinja instance;
+
+        public enum Object
+        {
+            Apple,
+            Bone,
+            Broc,
+            Carrot,
+            Cucumber,
+            Pan,
+            Pepper,
+            Potato,
+            Tire,
+        }
         
         private void Awake()
         {
@@ -50,17 +64,17 @@ namespace HeavenStudio.Games
             if (applause) Jukebox.PlayOneShot("applause");
         }
 
-        public void item(float beat, int type)
+        public void ThrowObject(float beat)
+        {
+            
+        }
+
+        public void CutEverything(float beat)
         {
 
         }
 
-        public void cutEverything(float beat, int type)
-        {
-
-        }
-
-        public void sfx(float beat, int type)
+        public void HWG(float beat)
         {
 
         }

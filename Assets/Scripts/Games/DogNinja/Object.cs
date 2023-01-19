@@ -1,6 +1,8 @@
 using System.Collections;
 using System.Collections.Generic;
+using System;
 using UnityEngine;
+using NaughtyBezierCurves;
 
 using HeavenStudio.Util;
 
@@ -8,16 +10,93 @@ namespace HeavenStudio.Games.Scripts_DogNinja
 {
     public class Object : PlayerActionObject
     {
-        // Start is called before the first frame update
-        void Awake()
+        const float rotSpeed = 360f;
+
+        public bool isCake;
+        public float startBeat;
+
+        bool flying = true;
+        float flyBeats;
+
+        [NonSerialized] public BezierCurve3D curve;
+
+        private DogNinja game;
+        
+        private void Awake()
         {
-            
+            game = DogNinja.instance;
         }
 
-        // Update is called once per frame
-        void Update()
+        private void Start()
         {
-            
+            //flyBeats = isCake ? 3f : 2f;
+            game.ScheduleInput(startBeat, flyBeats, InputType.DIRECTION_DOWN, Just, Out, Out);
         }
+
+        private void Update()
+        {
+            if (flying)
+            {
+                var cond = Conductor.instance;
+
+                float flyPos = cond.GetPositionFromBeat(startBeat, flyBeats);
+                //flyPos *= isCake ? 0.75f : 0.6f;
+                transform.position = curve.GetPoint(flyPos);
+
+                if (flyPos > 1f)
+                {
+                    GameObject.Destroy(gameObject);
+                    return;
+                }
+
+                float rot = isCake ? rotSpeed : -rotSpeed;
+                transform.rotation = Quaternion.Euler(0, 0, transform.rotation.eulerAngles.z + (rot * Time.deltaTime));
+            }
+        }
+        void CutObject()
+        {
+            flying = false;
+
+            //game.headAndBodyAnim.Play("BiteR", 0, 0);
+            //Jukebox.PlayOneShotGame("blueBear/chompDonut");
+
+            //SpawnCrumbs();
+
+            GameObject.Destroy(gameObject);
+        }
+
+        private void Just(PlayerActionEvent caller, float state)
+        {
+            if (state >= 1f || state <= -1f) {  //todo: proper near miss feedback
+                if (isCake)
+                {
+                    //game.headAndBodyAnim.Play("BiteL", 0, 0);
+                }
+                else
+                {
+                    //game.headAndBodyAnim.Play("BiteR", 0, 0);
+                }
+                return; 
+            }
+            CutObject();
+        }
+
+        private void Miss(PlayerActionEvent caller) {}
+
+        private void Out(PlayerActionEvent caller) {}
+
+        /* void SpawnHalves()
+        {
+            var HalvesGO = GameObject.Instantiate(game.HalvesBase, game.HalvesHolder);
+            HalvesGO.SetActive(true);
+            HalvesGO.transform.position = transform.position;
+
+            var ps = HalvesGO.GetComponent<ParticleSystem>();
+            var main = ps.main;
+            var newGradient = new ParticleSystem.MinMaxGradient();
+            newGradient.mode = ParticleSystemGradientMode.RandomColor;
+            main.startColor = newGradient;
+            ps.Play();
+        } */
     }
 }
