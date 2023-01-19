@@ -14,7 +14,7 @@ namespace HeavenStudio.Games.Loaders
             {
                 new GameAction("clap", "Cat Clap")
                 {
-                    function = delegate { Kitties.instance.Clap(eventCaller.currentEntity["toggle"], eventCaller.currentEntity["toggle"], 
+                    function = delegate { Kitties.instance.Clap(eventCaller.currentEntity["toggle"], eventCaller.currentEntity["toggle1"], 
                         eventCaller.currentEntity.beat,  eventCaller.currentEntity["type"]); },
 
                     defaultLength = 4f,
@@ -22,7 +22,7 @@ namespace HeavenStudio.Games.Loaders
                     {
                         new Param("type", Kitties.SpawnType.Straight, "Spawn", "The way in which the kitties will spawn"),
                         new Param("toggle", false, "Mice", "Replaces kitties as mice"),
-                        new Param("toggle", false, "Invert Direction", "Inverts the direction they clap in"),
+                        new Param("toggle1", false, "Invert Direction", "Inverts the direction they clap in"),
                     }
                 },
 
@@ -44,6 +44,8 @@ namespace HeavenStudio.Games
         public CtrTeppanPlayer player;
         public Animator[] kitties;
         public GameObject[] Cats;
+
+        private bool isSpawned = false;
         public enum SpawnType
         {
             Straight,
@@ -65,7 +67,7 @@ namespace HeavenStudio.Games
 
         }
 
-        public void Clap(bool isMice, bool isRightToLeft, float beat, int type = (int)SpawnType.Straight)
+        public void Clap(bool isMice, bool isInverse, float beat, int type)
         {
             player.ScheduleClap(beat);
             MultiSound.Play(new MultiSound.Sound[] {
@@ -75,17 +77,21 @@ namespace HeavenStudio.Games
             });
                 BeatAction.New(Cats[0], new List<BeatAction.Action>()
             {
-                    new BeatAction.Action(beat, delegate { Spawn(type, 0);}),
+                    new BeatAction.Action(beat, delegate { Spawn(type, 0, isMice, isInverse);}),
+                    new BeatAction.Action(beat + 2.5f, delegate { kitties[0].Play("Clap1", 0, 0);}),
+                    new BeatAction.Action(beat + 3f, delegate { kitties[0].Play("Clap2", 0, 0);}),
                 });
 
             BeatAction.New(Cats[1], new List<BeatAction.Action>()
             {
-                new BeatAction.Action(beat + .75f, delegate { Spawn(type, 1);}),
+                new BeatAction.Action(beat + .75f, delegate { Spawn(type, 1, isMice, isInverse);}),
+                new BeatAction.Action(beat + 2.5f, delegate { kitties[1].Play("Clap1", 0, 0);}),
+                new BeatAction.Action(beat + 3f, delegate { kitties[1].Play("Clap2", 0, 0);}),
                 });
 
             BeatAction.New(Cats[2], new List<BeatAction.Action>()
             {
-                new BeatAction.Action(beat + 1.5f, delegate { Spawn(type, 2);}),
+                new BeatAction.Action(beat + 1.5f, delegate { Spawn(type, 2, isMice, isInverse);}),
                 new BeatAction.Action(beat + 1.5f, delegate { player.canClap = true;}),
                 });
 
@@ -102,10 +108,48 @@ namespace HeavenStudio.Games
                 });
         }
 
-        public void Spawn(int pos, int catNum)
+        public void Spawn(int pos, int catNum, bool isMice, bool isInverse)
         {
+            
+            switch(pos)
+            {
+                case 0:
+
+                    if (!isInverse)
+                    {
+                        Cats[0].transform.position = new Vector3(-5.11f, -0.5f, 0f);
+                        Cats[1].transform.position = new Vector3(.32f, -0.5f, 0f);
+                        Cats[2].transform.position = new Vector3(5.75f, -0.5f, 0f);
+
+                        for (int x = 0; x < 3; x++)
+                        {
+                            Cats[catNum].transform.GetChild(0).gameObject.GetComponent<SpriteRenderer>().flipX = true;
+                            Cats[catNum].transform.GetChild(1).gameObject.transform.localScale = new Vector3(1f, 1f, 1f);
+                        }
+                    }
+                    else
+                    {
+                        Cats[0].transform.position = new Vector3(5.75f, -0.5f, 0f);
+                        Cats[1].transform.position = new Vector3(.32f, -0.5f, 0f);
+                        Cats[2].transform.position = new Vector3(-5.11f, -0.5f, 0f);
+
+                        for (int x = 0; x < 3; x++)
+                        {
+                            Cats[catNum].transform.GetChild(0).gameObject.GetComponent<SpriteRenderer>().flipX = false;
+                            Cats[catNum].transform.GetChild(1).gameObject.transform.localScale = new Vector3(-1f, 1f, 1f);
+                        }
+                    }
+                            break;
+                default:
+                    break;
+            }
             Cats[catNum].transform.GetChild(0).gameObject.SetActive(true);
             kitties[catNum].Play("PopIn", 0, 0);
+        }
+
+        public void SpawnPosition(int pos, int catNum, bool isInverse)
+        {
+
         }
     }
 }

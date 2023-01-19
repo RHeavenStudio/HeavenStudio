@@ -36,6 +36,7 @@ namespace HeavenStudio.Games.Scripts_Kitties
             if (PlayerInput.Pressed() && canClap && !Kitties.instance.IsExpectingInputNow(InputType.STANDARD_DOWN))
             {
                 Jukebox.PlayOneShot("miss");
+                anim.Play("ClapFail", 0, 0);
             }
         }
 
@@ -49,14 +50,20 @@ namespace HeavenStudio.Games.Scripts_Kitties
         {
             if (state >= 1f || state <= -1f)
             {  //todo: proper near miss feedback
-                Jukebox.PlayOneShotGame("kitties/clapMiss1");
+                Jukebox.PlayOneShotGame("kitties/ClapMiss1");
+                Jukebox.PlayOneShotGame("kitties/tink");
+                anim.Play("Clap1", 0, 0);
             }
             else
+            {
                 Jukebox.PlayOneShotGame("kitties/clap1");
+                anim.Play("Clap1", 0, 0);
+            }
         }
         public void ClapMissOne(PlayerActionEvent Caller)
         {
-            Jukebox.PlayOneShotGame("kitties/clapMiss1");
+            Jukebox.PlayOneShotGame("kitties/ClapMiss1");
+            anim.Play("ClapMiss", 0, 0);
         }
         public void ClapEmpty(PlayerActionEvent Caller)
         {
@@ -65,12 +72,23 @@ namespace HeavenStudio.Games.Scripts_Kitties
 
         public void ClapSuccessTwo(PlayerActionEvent Caller, float state)
         {
-            Jukebox.PlayOneShotGame("kitties/clap2");
+            if (state >= 1f || state <= -1f)
+            {  //todo: proper near miss feedback
+                Jukebox.PlayOneShotGame("kitties/ClapMiss2");
+                Jukebox.PlayOneShotGame("kitties/tink");
+                anim.Play("Clap1", 0, 0);
+            }
+            else
+            {
+                Jukebox.PlayOneShotGame("kitties/clap2");
+                anim.Play("Clap2", 0, 0);
+            }
         }
 
         public void ClapMissTwo(PlayerActionEvent Caller)
         {
-            Jukebox.PlayOneShotGame("kitties/clapMiss2");
+            Jukebox.PlayOneShotGame("kitties/ClapMiss2");
+            anim.Play("ClapMiss", 0, 0);
         }
     }
 }

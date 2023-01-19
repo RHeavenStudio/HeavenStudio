@@ -70,7 +70,7 @@ TextureImporter:
     second: kittiesSpinFail_1
   - first:
       213: -3928410681875221782
-    second: kittiesSpinFail_2
+    second: kittiesClapMiss
   - first:
       213: -9147522927102976589
     second: kittiesPopInLine
@@ -548,7 +548,7 @@ TextureImporter:
         y: 2941
         width: 455
         height: 570
-      alignment: 0
+      alignment: 9
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
@@ -674,8 +674,8 @@ TextureImporter:
         y: 2388
         width: 455
         height: 556
-      alignment: 0
-      pivot: {x: 0.5, y: 0.5}
+      alignment: 9
+      pivot: {x: 0.5, y: 0.55}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
@@ -695,8 +695,8 @@ TextureImporter:
         y: 2388
         width: 455
         height: 539
-      alignment: 0
-      pivot: {x: 0.5, y: 0.5}
+      alignment: 9
+      pivot: {x: 0.5, y: 0.55}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
@@ -716,8 +716,8 @@ TextureImporter:
         y: 2388
         width: 455
         height: 553
-      alignment: 0
-      pivot: {x: 0.5, y: 0.5}
+      alignment: 9
+      pivot: {x: 0.465, y: 0.55}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
@@ -814,7 +814,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: kittiesSpinFail_2
+      name: kittiesClapMiss
       rect:
         serializedVersion: 2
         x: 3053
