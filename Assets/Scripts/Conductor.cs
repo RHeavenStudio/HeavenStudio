@@ -38,6 +38,10 @@ namespace HeavenStudio
         private double dspStartTime;
         public double dspStartTimeAsDouble => dspStartTime;
 
+        //the beat we started at
+        private double startBeat;
+        public double startBeatAsDouble => startBeat;
+
         // an AudioSource attached to this GameObject that will play the music.
         public AudioSource musicSource;
 
@@ -150,6 +154,7 @@ namespace HeavenStudio
             }
             lastAbsTime = Time.realtimeSinceStartupAsDouble;
             dspStartTime = AudioSettings.dspTime;
+            startBeat = beat;
 
             // GameManager.instance.SetCurrentEventToClosest(songPositionInBeats);
         }
@@ -193,7 +198,7 @@ namespace HeavenStudio
 
         public void LateUpdate()
         {
-            if (metronome)
+            if (metronome && isPlaying)
             {
                 if (ReportBeat(ref lastReportedBeat))
                 {
@@ -260,7 +265,7 @@ namespace HeavenStudio
             return GameManager.instance.Beatmap.tempoChanges;
         }
 
-        public double GetSongPosFromBeat(float beat)
+        public double GetSongPosFromBeat(double beat)
         {
             var chart = GameManager.instance.Beatmap;
             SetBpm(chart.bpm);

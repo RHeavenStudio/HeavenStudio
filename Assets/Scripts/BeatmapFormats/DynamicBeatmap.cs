@@ -353,7 +353,8 @@ namespace HeavenStudio
                     Debug.LogWarning($"Unknown game {gameName} found in remix.json! Adding game...");
                     game = new Minigames.Minigame(gameName, DisplayName(gameName) + " \n<color=#eb5454>[inferred from remix.json]</color>", "", false, true, new List<Minigames.GameAction>());
                     EventCaller.instance.minigames.Add(game);
-                    Editor.Editor.instance.AddIcon(game);
+                    if (Editor.Editor.instance != null)
+                        Editor.Editor.instance.AddIcon(game);
                 }
                 action = EventCaller.instance.GetGameAction(game, actionName);
                 if (action == null)

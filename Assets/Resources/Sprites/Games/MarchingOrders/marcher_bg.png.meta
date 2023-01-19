@@ -61,7 +61,7 @@ TextureImporter:
   spriteMeshType: 1
   alignment: 0
   spritePivot: {x: 0.5, y: 0.5}
-  spritePixelsToUnits: 100
+  spritePixelsToUnits: 634.7656
   spriteBorder: {x: 0, y: 0, z: 0, w: 0}
   spriteGenerateFallbackPhysicsShape: 1
   alphaUsage: 1
@@ -80,7 +80,7 @@ TextureImporter:
   platformSettings:
   - serializedVersion: 3
     buildTarget: DefaultTexturePlatform
-    maxTextureSize: 2048
+    maxTextureSize: 4096
     resizeAlgorithm: 0
     textureFormat: -1
     textureCompression: 1
@@ -92,7 +92,7 @@ TextureImporter:
     forceMaximumCompressionQuality_BC6H_BC7: 0
   - serializedVersion: 3
     buildTarget: Standalone
-    maxTextureSize: 2048
+    maxTextureSize: 4096
     resizeAlgorithm: 0
     textureFormat: -1
     textureCompression: 1
@@ -121,16 +121,16 @@ TextureImporter:
       name: bgFloor
       rect:
         serializedVersion: 2
-        x: 176
-        y: 80
-        width: 272
-        height: 96
+        x: 1117.1875
+        y: 507.8125
+        width: 1726.5625
+        height: 609.375
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
-      tessellationDetail: 0
+      tessellationDetail: -1
       bones: []
       spriteID: e4227e11a5d223dd0800000000000000
       internalID: -2507892177621278130
@@ -142,16 +142,16 @@ TextureImporter:
       name: bgConveyor
       rect:
         serializedVersion: 2
-        x: 32
-        y: 352
-        width: 720
-        height: 112
+        x: 203.125
+        y: 2234.375
+        width: 4570.3125
+        height: 710.9375
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
-      tessellationDetail: 0
+      tessellationDetail: -1
       bones: []
       spriteID: e21c879d13432bfc0800000000000000
       internalID: -3480662173297360594
@@ -163,16 +163,16 @@ TextureImporter:
       name: bgPipes
       rect:
         serializedVersion: 2
-        x: 32
-        y: 240
-        width: 480
-        height: 80
+        x: 203.125
+        y: 1523.4375
+        width: 3046.875
+        height: 507.8125
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
-      tessellationDetail: 0
+      tessellationDetail: -1
       bones: []
       spriteID: 0bcad4c34e41c9620800000000000000
       internalID: 2782121640304946352
@@ -184,16 +184,16 @@ TextureImporter:
       name: bgWalls
       rect:
         serializedVersion: 2
-        x: 32
-        y: 496
-        width: 624
-        height: 496
+        x: 203.125
+        y: 3148.4375
+        width: 3960.9375
+        height: 3148.4375
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
-      tessellationDetail: 0
+      tessellationDetail: -1
       bones: []
       spriteID: f71a4d03012634d90800000000000000
       internalID: -7114735164637011585

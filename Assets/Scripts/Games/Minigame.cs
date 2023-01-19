@@ -106,6 +106,7 @@ namespace HeavenStudio.Games
 
         //Get the scheduled input that should happen the **Soonest**
         //Can return null if there's no scheduled inputs
+        // remark: need a check for specific button(s)
         public PlayerActionEvent GetClosestScheduledInput()
         {
             PlayerActionEvent closest = null;
@@ -132,6 +133,7 @@ namespace HeavenStudio.Games
         //Hasn't been tested yet. *Should* work.
         //Can be used to detect if the user is expected to input something now or not
         //Useful for strict call and responses games like Tambourine
+        // remark: need a check for specific button(s)
         public bool IsExpectingInputNow()
         {
             PlayerActionEvent input = GetClosestScheduledInput();
@@ -216,16 +218,18 @@ namespace HeavenStudio.Games
             return sameTime;
         }
 
-        public MultiSound PlaySoundSequence(string name, float startBeat)
+        public static MultiSound PlaySoundSequence(string game, string name, float startBeat, params SoundSequence.SequenceParams[] args)
         {
-            foreach (SoundSequence.SequenceKeyValue pair in SoundSequences)
+            Minigames.Minigame gameInfo = GameManager.instance.GetGameInfo(game);
+            foreach (SoundSequence.SequenceKeyValue pair in gameInfo.LoadedSoundSequences)
             {
                 if (pair.name == name)
                 {
+                    // Debug.Log($"Playing sound sequence {name} at beat {startBeat}");
                     return pair.sequence.Play(startBeat);
                 }
             }
-            Debug.LogWarning($"Sound sequence {name} not found in game {this.name} (did you build AssetBundles?)");
+            Debug.LogWarning($"Sound sequence {name} not found in game {game} (did you build AssetBundles?)");
             return null;
         }
     }
