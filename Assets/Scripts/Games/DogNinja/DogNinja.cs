@@ -37,7 +37,7 @@ namespace HeavenStudio.Games.Loaders
                 },
                 new GameAction("HereWeGo", "Here We Go!")
                 {
-                    function = delegate { DogNinja.instance.HWG(eventCaller.currentEntity.beat); }, 
+                    function = delegate { DogNinja.instance.HereWeGo(eventCaller.currentEntity.beat); }, 
                     defaultLength = 2,
                 },
             });
@@ -48,16 +48,15 @@ namespace HeavenStudio.Games.Loaders
 namespace HeavenStudio.Games
 {
     using Scripts_DogNinja;
-
     public class DogNinja : Minigame
     {
         [Header("Animators")]
-        public Animator Bird; // Bird flying in and out
-        // public Animator ;
+        public Animator BirdAnim; // Bird flying in and out
         
         [Header("References")]
         public GameObject ObjectBase;
         public GameObject HalvesBase;
+        public GameObject FullBird;
         public Transform ObjectHolder;
         public Transform HalvesHolder;
 
@@ -93,23 +92,27 @@ namespace HeavenStudio.Games
 
         public void ThrowObjectLeft(float beat)
         {
-            Jukebox.PlayOneShotGame("dogNinja/ThrowObject");
+            Jukebox.PlayOneShotGame("dogNinja/whiff");
         }
 
         public void ThrowObjectRight(float beat)
         {
-            Jukebox.PlayOneShotGame("dogNinja/ThrowObject");
+            Jukebox.PlayOneShotGame("dogNinja/whiff");
         }
 
         public void CutEverything(float beat)
         {
-            Bird.Play("FlyIn");
             Jukebox.PlayOneShotGame("dogNinja/bird_flap");
+            BirdAnim.Play("FlyIn", 0, 0);
         }
 
-        public void HWG(float beat)
+        public void HereWeGo(float beat)
         {
-
+            MultiSound.Play(new MultiSound.Sound[] { 
+                    new MultiSound.Sound("dogNinja/here", beat), 
+                    new MultiSound.Sound("dogNinja/we", beat + 0.5f),
+                    new MultiSound.Sound("dogNinja/go", beat + 1f),
+                }, forcePlay: true);
         }
     }
 
