@@ -52,7 +52,7 @@ namespace HeavenStudio.Games.Scripts_Kitties
             {  //todo: proper near miss feedback
                 Jukebox.PlayOneShotGame("kitties/ClapMiss1");
                 Jukebox.PlayOneShotGame("kitties/tink");
-                anim.Play("Clap1", 0, 0);
+                anim.Play("ClapMiss", 0, 0);
             }
             else
             {
@@ -76,7 +76,7 @@ namespace HeavenStudio.Games.Scripts_Kitties
             {  //todo: proper near miss feedback
                 Jukebox.PlayOneShotGame("kitties/ClapMiss2");
                 Jukebox.PlayOneShotGame("kitties/tink");
-                anim.Play("Clap1", 0, 0);
+                anim.Play("ClapMiss", 0, 0);
             }
             else
             {

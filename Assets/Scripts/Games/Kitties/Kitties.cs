@@ -140,6 +140,63 @@ namespace HeavenStudio.Games
                         }
                     }
                             break;
+
+                case 1:
+
+                    if (!isInverse)
+                    {
+                        Cats[0].transform.position = new Vector3(-6.61f, 2.5f, 6f);
+                        Cats[1].transform.position = new Vector3(.32f, 0.5f, 2f);
+                        Cats[2].transform.position = new Vector3(4.25f, -1f, -2f);
+
+                        for (int x = 0; x < 3; x++)
+                        {
+                            Cats[catNum].transform.GetChild(0).gameObject.GetComponent<SpriteRenderer>().flipX = true;
+                            Cats[catNum].transform.GetChild(1).gameObject.transform.localScale = new Vector3(1f, 1f, 1f);
+                        }
+                    }
+                    else
+                    {
+                        Cats[0].transform.position = new Vector3(6.61f, 2.5f, 6f);
+                        Cats[1].transform.position = new Vector3(.32f, 0.5f, 2f);
+                        Cats[2].transform.position = new Vector3(-4.25f, -1f, -2f);
+
+                        for (int x = 0; x < 3; x++)
+                        {
+                            Cats[catNum].transform.GetChild(0).gameObject.GetComponent<SpriteRenderer>().flipX = false;
+                            Cats[catNum].transform.GetChild(1).gameObject.transform.localScale = new Vector3(-1f, 1f, 1f);
+                        }
+                    }
+                    break;
+
+                case 2:
+
+                    if (!isInverse)
+                    {
+                        Cats[0].transform.position = new Vector3(4.25f, -1f, -2f);
+                        Cats[1].transform.position = new Vector3(.32f, 0.5f, 2f);
+                        Cats[2].transform.position = new Vector3(-6.61f, 2.5f, 6f);
+
+                        for (int x = 0; x < 3; x++)
+                        {
+                            Cats[catNum].transform.GetChild(0).gameObject.GetComponent<SpriteRenderer>().flipX = true;
+                            Cats[catNum].transform.GetChild(1).gameObject.transform.localScale = new Vector3(1f, 1f, 1f);
+                        }
+                    }
+                    else
+                    {
+                        Cats[0].transform.position = new Vector3(-4.25f, -1f, -2f);
+                        Cats[1].transform.position = new Vector3(.32f, 0.5f, 2f);
+                        Cats[2].transform.position = new Vector3(6.61f, 2.5f, 6f);
+
+                        for (int x = 0; x < 3; x++)
+                        {
+                            Cats[catNum].transform.GetChild(0).gameObject.GetComponent<SpriteRenderer>().flipX = false;
+                            Cats[catNum].transform.GetChild(1).gameObject.transform.localScale = new Vector3(-1f, 1f, 1f);
+                        }
+                    }
+                    break;
+
                 default:
                     break;
             }
