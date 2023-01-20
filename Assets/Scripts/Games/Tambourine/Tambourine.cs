@@ -37,12 +37,12 @@ namespace HeavenStudio.Games
             if (PlayerInput.Pressed() && !IsExpectingInputNow(InputType.STANDARD_DOWN))
             {
                 handsAnimator.Play("Shake", 0, 0);
-                //Jukebox.PlayOneShotGame("workingDough/PlayerSmallJump");
+                Jukebox.PlayOneShotGame($"tambourine/player/shake/{UnityEngine.Random.Range(1, 6)}");
             }
             else if (PlayerInput.AltPressed() && !IsExpectingInputNow(InputType.STANDARD_ALT_DOWN))
             {
                 handsAnimator.Play("Smack", 0, 0);
-                //Jukebox.PlayOneShotGame("workingDough/PlayerBigJump");
+                Jukebox.PlayOneShotGame($"tambourine/player/hit/{UnityEngine.Random.Range(1, 6)}");
             }
         }
     }
