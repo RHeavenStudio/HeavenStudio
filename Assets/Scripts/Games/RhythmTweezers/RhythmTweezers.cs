@@ -19,7 +19,8 @@ namespace HeavenStudio.Games.Loaders
                 {
                     function = delegate { RhythmTweezers.instance.SetIntervalStart(eventCaller.currentEntity.beat, eventCaller.currentEntity.length); }, 
                     defaultLength = 4f, 
-                    resizable = true
+                    resizable = true,
+                    priority = 1
                 },
                 new GameAction("short hair", "Short Hair")
                 {
@@ -41,7 +42,8 @@ namespace HeavenStudio.Games.Loaders
                         new Param("type", RhythmTweezers.VegetableType.Onion, "Type", "The vegetable to switch to"),
                         new Param("colorA", RhythmTweezers.defaultOnionColor, "Onion Color", "The color of the onion"),
                         new Param("colorB", RhythmTweezers.defaultPotatoColor, "Potato Color", "The color of the potato")
-                    } 
+                    },
+                    priority = 3
                 },
                 new GameAction("change vegetable", "Change Vegetable (Instant)")
                 {
@@ -57,12 +59,14 @@ namespace HeavenStudio.Games.Loaders
                 new GameAction("set tweezer delay", "Offset Tweezer")
                 {
                     function = delegate { RhythmTweezers.instance.tweezerBeatOffset = eventCaller.currentEntity.length; },
-                    resizable = true
+                    resizable = true,
+                    priority = 2
                 },
                 new GameAction("reset tweezer delay", "Reset Tweezer Offset")
                 {
                     function = delegate { RhythmTweezers.instance.tweezerBeatOffset = 0f; }, 
-                    defaultLength = 0.5f
+                    defaultLength = 0.5f,
+                    priority = 2
                 },
                 new GameAction("set background color", "Background Colour")
                 {
@@ -350,7 +354,10 @@ namespace HeavenStudio.Games
             if (transitioning)
             {
                 if (transitionTween != null)
-                    transitionTween.Kill(true);
+                {
+                    transitionTween.Complete(true);
+                    transitionTween.Kill();
+                }
             }
         }
     }

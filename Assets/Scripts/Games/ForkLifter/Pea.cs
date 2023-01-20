@@ -194,7 +194,7 @@ namespace HeavenStudio.Games.Scripts_ForkLifter
 
         private void Miss(PlayerActionEvent caller) 
         {
-            Jukebox.PlayOneShot("audience/disappointed");
+            Jukebox.PlayOneShot("forkLifter/disappointed");
             BeatAction.New(game.gameObject, new List<BeatAction.Action>()
             {
                 new BeatAction.Action(startBeat+ 2.45f, delegate { 
