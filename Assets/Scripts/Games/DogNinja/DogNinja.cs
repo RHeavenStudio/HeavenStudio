@@ -10,12 +10,25 @@ namespace HeavenStudio.Games.Loaders
     public static class NtrDogNinjaLoader
     {
         public static Minigame AddGame(EventCaller eventCaller) {
-            return new Minigame("dogNinja", "Dog Ninja \n<color=#eb5454>[INITIALIZATION ONLY]</color>", "0058CE", false, false, new List<GameAction>()
+            return new Minigame("dogNinja", "Dog Ninja \n<color=#eb5454>[INITIALIZATION ONLY]</color>", "0058CE", true, false, new List<GameAction>()
             {
-                new GameAction("ThrowObject", "Throw Object")
+                new GameAction("ThrowObjectLeft", "Throw Left Object")
                 {
-                    function = delegate { DogNinja.instance.ThrowObject(eventCaller.currentEntity.beat); }, 
+                    function = delegate { DogNinja.instance.ThrowObjectLeft(eventCaller.currentEntity.beat); }, 
                     defaultLength = 2,
+                    parameters = new List<Param>()
+                    {
+                        new Param("type", DogNinja.ObjectType.Apple, "Object", "The object to be thrown"),
+                    }
+                },
+                new GameAction("ThrowObjectRight", "Throw Right Object")
+                {
+                    function = delegate { DogNinja.instance.ThrowObjectRight(eventCaller.currentEntity.beat); }, 
+                    defaultLength = 2,
+                    parameters = new List<Param>()
+                    {
+                        new Param("type", DogNinja.ObjectType.Apple, "Object", "The object to be thrown"),
+                    }
                 },
                 new GameAction("CutEverything", "Cut Everything!")
                 {
@@ -38,13 +51,27 @@ namespace HeavenStudio.Games
 
     public class DogNinja : Minigame
     {
+        [Header("Animators")]
+        public Animator Bird; // Bird flying in and out
+        // public Animator ;
+        
+        [Header("References")]
+        public GameObject ObjectBase;
+        public GameObject HalvesBase;
+        public Transform ObjectHolder;
+        public Transform HalvesHolder;
+
+        [Header("Curves")]
+        public BezierCurve3D CurveFromLeft;
+        public BezierCurve3D CurveFromRight;
+
         public static DogNinja instance;
 
-        public enum Object
+        public enum ObjectType
         {
             Apple,
             Bone,
-            Broc,
+            Broccoli,
             Carrot,
             Cucumber,
             Pan,
@@ -64,14 +91,20 @@ namespace HeavenStudio.Games
             if (applause) Jukebox.PlayOneShot("applause");
         }
 
-        public void ThrowObject(float beat)
+        public void ThrowObjectLeft(float beat)
         {
-            
+            Jukebox.PlayOneShotGame("dogNinja/ThrowObject");
+        }
+
+        public void ThrowObjectRight(float beat)
+        {
+            Jukebox.PlayOneShotGame("dogNinja/ThrowObject");
         }
 
         public void CutEverything(float beat)
         {
-
+            Bird.Play("FlyIn");
+            Jukebox.PlayOneShotGame("dogNinja/bird_flap");
         }
 
         public void HWG(float beat)

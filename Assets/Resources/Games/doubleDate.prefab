@@ -49,7 +49,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &263501352795859555
 Transform:
   m_ObjectHideFlags: 0
@@ -994,7 +994,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &5429841820662446089
 Transform:
   m_ObjectHideFlags: 0
@@ -2195,6 +2195,7 @@ GameObject:
   - component: {fileID: 6600231393703176840}
   - component: {fileID: 7056131382952794197}
   - component: {fileID: 521902303904860772}
+  - component: {fileID: 8747501432961107636}
   m_Layer: 0
   m_Name: SoccerBall
   m_TagString: Untagged
@@ -2286,6 +2287,29 @@ Animator:
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorControllerStateOnDisable: 0
+--- !u!114 &8747501432961107636
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2368082841104603514}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 45c9779988ec710429b033a2b10fbf4f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  inList: 0
+  state:
+    gameObject: {fileID: 0}
+    early: 0
+    perfect: 0
+    late: 0
+    createBeat: 0
+  eligibleHitsList: []
+  aceTimes: 0
+  isEligible: 0
+  triggersAutoplay: 1
 --- !u!1 &2540413505079355534
 GameObject:
   m_ObjectHideFlags: 0
@@ -4099,6 +4123,7 @@ GameObject:
   - component: {fileID: 4155245244816954595}
   - component: {fileID: 3611134247889080250}
   - component: {fileID: 3116952884536146085}
+  - component: {fileID: 7549889449261433077}
   m_Layer: 0
   m_Name: Football
   m_TagString: Untagged
@@ -4190,6 +4215,29 @@ Animator:
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorControllerStateOnDisable: 0
+--- !u!114 &7549889449261433077
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4742885858310037783}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 49e24d627102c32469d296ff6c20da40, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  inList: 0
+  state:
+    gameObject: {fileID: 0}
+    early: 0
+    perfect: 0
+    late: 0
+    createBeat: 0
+  eligibleHitsList: []
+  aceTimes: 0
+  isEligible: 0
+  triggersAutoplay: 1
 --- !u!1 &4781686065129112183
 GameObject:
   m_ObjectHideFlags: 0
@@ -4926,6 +4974,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 5813499711186931250}
+  - component: {fileID: 2667486460642173329}
   m_Layer: 0
   m_Name: doubleDate
   m_TagString: Untagged
@@ -4949,6 +4998,25 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &2667486460642173329
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5813499711186931251}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9795a68080ef6ff44b64c4bdb111a0e6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  SoundSequences: []
+  EligibleHits: []
+  scheduledInputs: []
+  firstEnable: 0
+  soccerBallAnim: {fileID: 0}
+  basketballAnim: {fileID: 0}
+  footballAnim: {fileID: 0}
 --- !u!1 &5842845673002523687
 GameObject:
   m_ObjectHideFlags: 0
@@ -5924,6 +5992,7 @@ GameObject:
   - component: {fileID: 5304206187542405037}
   - component: {fileID: 5843376900900841292}
   - component: {fileID: 6433054856005445756}
+  - component: {fileID: 98534659692625934}
   m_Layer: 0
   m_Name: Basketball
   m_TagString: Untagged
@@ -6015,6 +6084,29 @@ Animator:
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorControllerStateOnDisable: 0
+--- !u!114 &98534659692625934
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7706094923694535617}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 83937a6a927e5394d810b03d99626781, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  inList: 0
+  state:
+    gameObject: {fileID: 0}
+    early: 0
+    perfect: 0
+    late: 0
+    createBeat: 0
+  eligibleHitsList: []
+  aceTimes: 0
+  isEligible: 0
+  triggersAutoplay: 1
 --- !u!1 &7804064673786096060
 GameObject:
   m_ObjectHideFlags: 0
