@@ -12,6 +12,15 @@ namespace HeavenStudio.Games.Loaders
         public static Minigame AddGame(EventCaller eventCaller) {
             return new Minigame("dogNinja", "Dog Ninja \n<color=#eb5454>[INITIALIZATION ONLY]</color>", "0058CE", true, false, new List<GameAction>()
             {
+                new GameAction("Bop", "Bop")
+                {
+                    function = delegate { DogNinja.instance.Bop(eventCaller.currentEntity.beat); }, 
+                    defaultLength = 0.5f,
+                    parameters = new List<Param>()
+                    {
+                        new Param("Toggle", true, "Bop", "Whether to bop to the beat or not"),
+                    }
+                },
                 new GameAction("ThrowObjectLeft", "Throw Left Object")
                 {
                     function = delegate { DogNinja.instance.ThrowObjectLeft(eventCaller.currentEntity.beat); }, 
@@ -52,6 +61,7 @@ namespace HeavenStudio.Games
     {
         [Header("Animators")]
         public Animator BirdAnim; // Bird flying in and out
+        public Animator DogAnim; // Bird flying in and out
         
         [Header("References")]
         public GameObject ObjectBase;
@@ -105,6 +115,11 @@ namespace HeavenStudio.Games
             */
         }
 
+        public void Bop(float beat)
+        {
+            DogAnim.Play("Bop");
+        }
+
         public void ThrowObjectLeft(float beat)
         {
             Jukebox.PlayOneShotGame("dogNinja/fruit1");
@@ -118,7 +133,7 @@ namespace HeavenStudio.Games
         public void CutEverything(float beat)
         {
             Jukebox.PlayOneShotGame("dogNinja/bird_flap");
-            BirdAnim.Play("FlyIn", 0, 0);
+            BirdAnim.Play("FlyIn");
         }
 
         public void HereWeGo(float beat)
