@@ -67,18 +67,17 @@ namespace HeavenStudio.Games
         [SerializeField] Animator handsAnimator;
         [SerializeField] Animator monkeyAnimator;
         [SerializeField] ParticleSystem flowerParticles;
-        [SerializeField] GameObject monkeyFace;
+        [SerializeField] GameObject happyFace;
+        [SerializeField] GameObject sadFace;
         [SerializeField] Animator sweatAnimator;
+        [SerializeField] Animator frogAnimator;
 
         [Header("Variables")]
         bool intervalStarted;
         float intervalStartBeat;
         float beatInterval = 4f;
         float misses;
-
-        [Header("Sprites")]
-        [SerializeField] Sprite monkeyGrimace;
-        [SerializeField] Sprite monkeySmile;
+        bool frogPresent;
 
         public enum WhoBops
         {
@@ -100,6 +99,7 @@ namespace HeavenStudio.Games
         {
             instance = this;
             sweatAnimator.Play("NoSweat", 0, 0);
+            frogAnimator.Play("FrogExited", 0, 0);
         }
 
         void Update()
@@ -116,8 +116,7 @@ namespace HeavenStudio.Games
                 SummonFrog();
                 if (!intervalStarted)
                 {
-                    monkeyFace.GetComponent<SpriteRenderer>().sprite = monkeyGrimace;
-                    monkeyFace.SetActive(true);
+                    sadFace.SetActive(true);
                 }
             }
             else if (PlayerInput.AltPressed() && !IsExpectingInputNow(InputType.STANDARD_ALT_DOWN))
@@ -128,8 +127,7 @@ namespace HeavenStudio.Games
                 SummonFrog();
                 if (!intervalStarted)
                 {
-                    monkeyFace.GetComponent<SpriteRenderer>().sprite = monkeyGrimace;
-                    monkeyFace.SetActive(true);
+                    sadFace.SetActive(true);
                 }
             }
         }
@@ -140,7 +138,8 @@ namespace HeavenStudio.Games
             beatInterval = interval;
             if (!intervalStarted)
             {
-                monkeyFace.SetActive(false);
+                DesummonFrog();
+                sadFace.SetActive(false);
                 queuedInputs.Clear();
                 misses = 0;
                 intervalStarted = true;
@@ -179,11 +178,10 @@ namespace HeavenStudio.Games
             if (queuedInputs.Count == 0) return;
             monkeyAnimator.Play("MonkeyPassTurn", 0, 0);
             Jukebox.PlayOneShotGame($"tambourine/monkey/turnPass/{UnityEngine.Random.Range(1, 6)}");
-            monkeyFace.GetComponent<SpriteRenderer>().sprite = monkeySmile;
-            monkeyFace.SetActive(true);
+            happyFace.SetActive(true);
             BeatAction.New(instance.gameObject, new List<BeatAction.Action>()
             {
-                new BeatAction.Action(beat + 0.3f, delegate { monkeyFace.SetActive(false); })
+                new BeatAction.Action(beat + 0.3f, delegate { happyFace.SetActive(false); })
             });
             foreach (var input in queuedInputs)
             {
@@ -221,6 +219,7 @@ namespace HeavenStudio.Games
 
         public void SuccessFace(float beat)
         {
+            DesummonFrog();
             if (misses > 0) return;
             flowerParticles.Play();
             Jukebox.PlayOneShotGame($"tambourine/player/turnPass/sweep");
@@ -231,11 +230,10 @@ namespace HeavenStudio.Games
                 new MultiSound.Sound("tambourine/player/turnPass/note3", beat + 0.2f),
                 new MultiSound.Sound("tambourine/player/turnPass/note3", beat + 0.3f),
             }, forcePlay: true);
-            monkeyFace.GetComponent<SpriteRenderer>().sprite = monkeySmile;
-            monkeyFace.SetActive(true);
+            happyFace.SetActive(true);
             BeatAction.New(instance.gameObject, new List<BeatAction.Action>()
             {
-                new BeatAction.Action(beat + 1, delegate { monkeyFace.SetActive(false); }),
+                new BeatAction.Action(beat + 1, delegate { happyFace.SetActive(false); }),
             });
         }
 
@@ -250,8 +248,7 @@ namespace HeavenStudio.Games
                 misses++;
                 if (!intervalStarted)
                 {
-                    monkeyFace.GetComponent<SpriteRenderer>().sprite = monkeyGrimace;
-                    monkeyFace.SetActive(true);
+                    sadFace.SetActive(true);
                 }
                 return;
             }
@@ -269,8 +266,7 @@ namespace HeavenStudio.Games
                 misses++;
                 if (!intervalStarted)
                 {
-                    monkeyFace.GetComponent<SpriteRenderer>().sprite = monkeyGrimace;
-                    monkeyFace.SetActive(true);
+                    sadFace.SetActive(true);
                 }
                 return;
             }
@@ -279,7 +275,7 @@ namespace HeavenStudio.Games
 
         public void Success(bool hit)
         {
-            monkeyFace.SetActive(false);
+            sadFace.SetActive(false);
             if (hit)
             {
                 handsAnimator.Play("Smack", 0, 0);
@@ -299,14 +295,23 @@ namespace HeavenStudio.Games
             misses++;
             if (!intervalStarted)
             {
-                monkeyFace.GetComponent<SpriteRenderer>().sprite = monkeyGrimace;
-                monkeyFace.SetActive(true);
+                sadFace.SetActive(true);
             }
         }
 
         public void SummonFrog()
         {
+            if (frogPresent) return;
             Jukebox.PlayOneShotGame("tambourine/frog");
+            frogAnimator.Play("FrogEnter", 0, 0);
+            frogPresent = true;
+        }
+
+        public void DesummonFrog()
+        {
+            if (!frogPresent) return;
+            frogAnimator.Play("FrogExit", 0, 0);
+            frogPresent = false;
         }
 
         public void Nothing(PlayerActionEvent caller) {}
