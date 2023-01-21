@@ -254,10 +254,11 @@ namespace HeavenStudio.Games
                             rotationVector.z = -135;
                             Cats[0].transform.position = new Vector3(-8.01f, 3.5f, 0f);
                             Cats[0].transform.rotation = Quaternion.Euler(rotationVector);
-                            Cats[1].transform.position = new Vector3(.32f, -3.5f, 0f);
-                            Cats[2].transform.position = new Vector3(7.61f, 4f, 0f);
+                            Cats[1].transform.position = new Vector3(7.51f, 4f, 0f);
                             rotationVector.z = 135;
-                            Cats[2].transform.rotation = Quaternion.Euler(rotationVector);
+                            Cats[1].transform.rotation = Quaternion.Euler(rotationVector);
+                            Cats[2].transform.position = new Vector3(.32f, -3.5f, 0f);
+                            
 
                             for (int x = 0; x < 3; x++)
                             {
