@@ -11,12 +11,12 @@ namespace HeavenStudio.Games.Loaders
     {
         public static Minigame AddGame(EventCaller eventCaller)
         {
-            return new Minigame("workingDough", "Working Dough \n<color=#eb5454>[WIP]</color>", "090909", false, false, new List<GameAction>()
+            return new Minigame("workingDough", "Working Dough", "090909", false, false, new List<GameAction>()
             {
                 new GameAction("beat intervals", "Start Interval")
                 {
                     preFunction = delegate { var e = eventCaller.currentEntity; WorkingDough.PreSetIntervalStart(e.beat, e.length);  },
-                    defaultLength = 4f,
+                    defaultLength = 8f,
                     resizable = true,
                     priority = 1
                 },
@@ -24,23 +24,27 @@ namespace HeavenStudio.Games.Loaders
                 {
                     preFunction = delegate { var e = eventCaller.currentEntity; WorkingDough.PreSpawnBall(e.beat, false);  },
                     defaultLength = 0.5f,
+                    priority = 2
                 },
                 new GameAction("big ball", "Big Ball")
                 {
                     preFunction = delegate { var e = eventCaller.currentEntity; WorkingDough.PreSpawnBall(e.beat, true);  },
                     defaultLength = 0.5f,
+                    priority = 2
                 },
                 new GameAction("launch spaceship", "Launch Spaceship")
                 {
                     function = delegate { var e = eventCaller.currentEntity; WorkingDough.instance.LaunchShip(e.beat, e.length);  },
                     defaultLength = 4f,
-                    resizable = true
+                    resizable = true,
+                    priority = 3
                 },
                 new GameAction("rise spaceship", "Rise Up Spaceship")
                 {
                     function = delegate { var e = eventCaller.currentEntity; WorkingDough.instance.RiseUpShip(e.beat, e.length);  },
                     defaultLength = 4f,
-                    resizable = true
+                    resizable = true,
+                    priority = 3
                 },
                 new GameAction("lift dough dudes", "Lift Dough Dudes")
                 {
@@ -50,7 +54,8 @@ namespace HeavenStudio.Games.Loaders
                     {
                     new Param("toggle", false, "Go Up?", "Toggle to go Up or Down.")
                     },
-                    resizable = true
+                    resizable = true,
+                    priority = 3
                 },
                 new GameAction("instant lift", "Instant Lift")
                 {
@@ -60,6 +65,7 @@ namespace HeavenStudio.Games.Loaders
                     new Param("toggle", true, "Go Up?", "Toggle to go Up or Down.")
                     },
                     defaultLength = 0.5f,
+                    priority = 3
                 },
                 new GameAction("mr game and watch enter or exit", "Mr. G&W Enter or Exit")
                 {
@@ -69,7 +75,8 @@ namespace HeavenStudio.Games.Loaders
                     {
                     new Param("toggle", false, "Should exit?", "Toggle to make him leave or enter.")
                     },
-                    resizable = true
+                    resizable = true,
+                    priority = 3
                 },
                 new GameAction("instant game and watch", "Instant Mr. G&W Enter or Exit")
                 {
@@ -79,6 +86,7 @@ namespace HeavenStudio.Games.Loaders
                     new Param("toggle", false, "Exit?", "Toggle to make him leave or enter.")
                     },
                     defaultLength = 0.5f,
+                    priority = 3
                 },
             });
         }
@@ -129,7 +137,7 @@ namespace HeavenStudio.Games
         float risingStartBeat;
         float liftingLength = 4f;
         float liftingStartBeat;
-        public float beatInterval = 4f;
+        public float beatInterval = 8f;
         float gandMovingLength = 4f;
         float gandMovingStartBeat;
         public bool bigMode;
@@ -153,7 +161,7 @@ namespace HeavenStudio.Games
         bool liftingDoughDudes;
         string liftingAnimName;
         bool ballTriggerSetInterval = true;
-        bool gandwHasEntered;
+        bool gandwHasEntered = true;
         bool gandwMoving;
         string gandwMovingAnimName;
 
