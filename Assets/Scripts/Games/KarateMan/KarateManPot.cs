@@ -837,7 +837,7 @@ namespace HeavenStudio.Games.Scripts_KarateMan
                     joe.SetFaceExpression((int) KarateMan.KarateManFaces.Sad);
                     BeatAction.New(joe.gameObject, new List<BeatAction.Action>()
                     {
-                        new BeatAction.Action(startBeat + 2f, delegate {
+                        new BeatAction.Action(startBeat + 1f + KarateMan.FaceChangeDelay, delegate {
                             joe.SetFaceExpression((int) KarateMan.KarateManFaces.Normal);
                         }),
                     });

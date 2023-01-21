@@ -98,7 +98,7 @@ namespace HeavenStudio.Games.Loaders
                         new Param("type3", KarateMan.HitThreeGraphicLang.English, "Language", "The language the graphic will show in"),
                         new Param("toggle", false, "Pitch Shift", "Makes the voice shift pitch and speed like in DS"),
                         new Param("type4", KarateMan.HitThreeLength.None, "Length Override", "Overrides the standered length of the graphic appearing"),
-                        new Param("type5", KarateMan.HitThreeVoiceDelay.OneBeat, "Voice Delay", "If the voice is delayed by 1 or half a beat"),
+                        new Param("type5", KarateMan.HitThreeVoiceDelay.OneBeat, "Voice Delay", "If the voice is delayed by 1 or half a beat"), // this doesn't do much lol, just Fever bias
                         new Param("toggle2", false, "Fast Voice", "Makes the voice faster")
                     },
                     inactiveFunction = delegate { var e = eventCaller.currentEntity; KarateMan.DoWordSound(e.beat, e["type"], true, false, (int) KarateMan.HitThreeGraphicLang.Japanese, e["toggle"], (int) KarateMan.HitThreeLength.None, e["type5"], e["toggle2"]); }
@@ -121,7 +121,7 @@ namespace HeavenStudio.Games.Loaders
                 },
                 new GameAction("set gameplay modifiers", "Gameplay Modifiers")
                 {
-                    function = delegate { var e = eventCaller.currentEntity; KarateMan.instance.SetGameplayMods(e.beat, e["type"], e["type2"], e["toggle"], e["toggle2"], e["toggle3"], e["type3"]); },//e["valA"]); }, 
+                    function = delegate { var e = eventCaller.currentEntity; KarateMan.instance.SetGameplayMods(e.beat, e["type"], e["type2"], e["toggle"], e["toggle2"], e["toggle3"], e["type3"]); }, 
                     defaultLength = 0.5f,
                     parameters = new List<Param>()
                     {
@@ -135,12 +135,13 @@ namespace HeavenStudio.Games.Loaders
                 },
                 new GameAction("set delay", "Game Delay Modifiers")
                 {
-                    function = delegate { var e = eventCaller.currentEntity; KarateMan.instance.SetDelay(e["valA"], e["valB"]); },
+                    function = delegate { var e = eventCaller.currentEntity; KarateMan.instance.SetDelay(e["valA"], e["valB"], e["valC"]); },
                     defaultLength = 0.5f,
                     parameters = new List<Param>()
                     {
                         new Param("valA", new EntityTypes.Float(0f, 10f, 1f), "Pot Break Delay", "Sets the pot break delay, 1.5 is Tengoku Arcade delay"),
                         new Param("valB", new EntityTypes.Float(0f, 10f, 0.5f), "Oh Yeah Delay", "Sets the pot break delay, a delay of 0 is Tengoku Arcade delay"),
+                        new Param("valC", new EntityTypes.Float(0f, 10f, 1f), "Face Change Delay", "The face change delay when you punch and object and your face changes")
                     }
                 },
                 new GameAction("set background effects", "Background Appearance")
@@ -586,6 +587,7 @@ namespace HeavenStudio.Games
         public static float BopLength = 1f;
         public static float PotBreakDelay = 1f;
         public static float OhYeahDelay = 0.5f;
+        public static float FaceChangeDelay = 1f;
 
         private void Awake()
         {
@@ -892,9 +894,10 @@ namespace HeavenStudio.Games
                     if (graphic) word = "Word02";
                     clear = beat + 4f;
                     if (doSound)
-                        MultiSound.Play(new MultiSound.Sound[] 
+                        MultiSound.Play(new MultiSound.Sound[] // for Japanese and Korean, reverse this 
                         {
-                            new MultiSound.Sound("karateman/hit", beat + hitOffset, pitch: pitch),
+                            new MultiSound.Sound("karateman/hit", beat + beatOffset, pitch: pitch, offset: numOffset),
+                            new MultiSound.Sound("karateman/two", beat + hitOffset, pitch: pitch), // doesn't exist in Japanese and Korean
                         }, forcePlay: true);
                     break;
                 case (int) HitThree.HitThree:
@@ -903,8 +906,8 @@ namespace HeavenStudio.Games
                     if (doSound)
                         MultiSound.Play(new MultiSound.Sound[] 
                         {
-                            new MultiSound.Sound("karateman/three", beat + beatOffset, pitch: pitch, offset: numOffset), 
-                            new MultiSound.Sound("karateman/hit", beat + hitOffset, pitch: pitch),
+                            new MultiSound.Sound("karateman/hit", beat + beatOffset, pitch: pitch, offset: numOffset), 
+                            new MultiSound.Sound("karateman/three", beat + hitOffset, pitch: pitch),
                         }, forcePlay: true);
                     break;
                 case (int) HitThree.HitThreeAlt:
@@ -913,8 +916,8 @@ namespace HeavenStudio.Games
                     if (doSound)
                         MultiSound.Play(new MultiSound.Sound[] 
                         {
-                            new MultiSound.Sound("karateman/threeAlt", beat + beatOffset, pitch: pitch, offset: numOffset), 
-                            new MultiSound.Sound("karateman/hitAlt", beat + hitOffset, pitch: pitch),
+                            new MultiSound.Sound("karateman/hitAlt", beat + beatOffset, pitch: pitch, offset: numOffset), 
+                            new MultiSound.Sound("karateman/threeAlt", beat + hitOffset, pitch: pitch),
                         }, forcePlay: true);
                     break;
                 case (int) HitThree.HitFour:
@@ -923,8 +926,8 @@ namespace HeavenStudio.Games
                     if (doSound)
                         MultiSound.Play(new MultiSound.Sound[] 
                         {
-                            new MultiSound.Sound("karateman/four", beat + beatOffset, pitch: pitch, offset: numOffset), 
-                            new MultiSound.Sound("karateman/hit", beat + hitOffset, pitch: pitch),
+                            new MultiSound.Sound("karateman/hit", beat + beatOffset, pitch: pitch, offset: numOffset), 
+                            new MultiSound.Sound("karateman/four", beat + hitOffset, pitch: pitch),
                         }, forcePlay: true);
                     break;
                 case (int) HitThree.Grr:
@@ -945,7 +948,8 @@ namespace HeavenStudio.Games
                     if (doSound)
                         MultiSound.Play(new MultiSound.Sound[] 
                         {
-                            new MultiSound.Sound("karateman/hit", beat + hitOffset, pitch: pitch, offset: numOffset)
+                            new MultiSound.Sound("karateman/hit", beat + beatOffset, pitch: pitch, offset: numOffset),
+                            new MultiSound.Sound("karateman/two", beat + hitOffset, pitch: pitch), // doesn't exist in Japanese and Korean
                         }, forcePlay: true);
                     break;
                 case (int) HitThree.Clear:
@@ -1286,10 +1290,11 @@ namespace HeavenStudio.Games
             IsComboEnable = combo;
         }
 
-        public void SetDelay(float breakDelay, float ohYeahDelay)
+        public void SetDelay(float breakDelay, float ohYeahDelay, float faceChangeDelay)
         {
             PotBreakDelay = breakDelay;
             OhYeahDelay = ohYeahDelay;
+            FaceChangeDelay = faceChangeDelay;
         }    
 
         void UpdateFilterColour(Color bgColor, Color filterColor)

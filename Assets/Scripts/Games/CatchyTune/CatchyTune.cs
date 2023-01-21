@@ -57,8 +57,8 @@ namespace HeavenStudio.Games.Loaders
                 }
             },
             new List<string>() {"ctr", "normal"},
-            "ctrcatchy",
-            "en",
+            "ctrcatchy", "en", "ver0",
+            new List<string>(){},
             new List<string>(){}
             );
         }
