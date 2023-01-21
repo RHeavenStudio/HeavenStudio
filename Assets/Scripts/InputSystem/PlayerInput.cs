@@ -88,7 +88,7 @@ namespace HeavenStudio
         public static InputController GetInputController(int player)
         {
             // Needed so Keyboard works on MacOS
-            #if UNITY_STANDALONE_OSX
+            #if UNITY_STANDALONE_OSX && UNITY_EDITOR_OSX
             inputDevices = new List<InputController>();
             if(inputDevices.Count < 1)
             {
@@ -120,7 +120,7 @@ namespace HeavenStudio
             
             
             // Needed so Keyboard works on MacOS
-            #if UNITY_STANDALONE_OSX
+            #if UNITY_STANDALONE_OSX && UNITY_EDITOR_OSX
             inputDevices = new List<InputController>();
             if(inputDevices.Count < 1)
             {
@@ -143,7 +143,7 @@ namespace HeavenStudio
         public static void UpdateInputControllers()
         {
             // Needed so Keyboard works on MacOS
-            #if UNITY_STANDALONE_OSX
+            #if UNITY_STANDALONE_OSX && UNITY_EDITOR_OSX
             inputDevices = new List<InputController>();
             if(inputDevices.Count < 1)
             {
