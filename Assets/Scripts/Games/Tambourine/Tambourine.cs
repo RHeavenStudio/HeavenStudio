@@ -11,7 +11,7 @@ namespace HeavenStudio.Games.Loaders
     {
         public static Minigame AddGame(EventCaller eventCaller)
         {
-            return new Minigame("tambourine", "Tambourine \n<color=#eb5454>[WIP]</color>", "812021", false, false, new List<GameAction>()
+            return new Minigame("tambourine", "Tambourine", "812021", false, false, new List<GameAction>()
             {
                 new GameAction("beat intervals", "Start Interval")
                 {
@@ -134,6 +134,8 @@ namespace HeavenStudio.Games
             instance = this;
             sweatAnimator.Play("NoSweat", 0, 0);
             frogAnimator.Play("FrogExited", 0, 0);
+            handsAnimator.Play("Idle", 0, 0);
+            monkeyAnimator.Play("MonkeyIdle", 0, 0);
         }
 
         void Update()
