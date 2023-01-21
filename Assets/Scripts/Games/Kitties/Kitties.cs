@@ -75,26 +75,75 @@ namespace HeavenStudio.Games
                 new MultiSound.Sound("kitties/nya2", beat + .75f),
                 new MultiSound.Sound("kitties/nya3", beat + 1.5f)
             });
+            if(type == 3)
+            {
                 BeatAction.New(Cats[0], new List<BeatAction.Action>()
             {
-                    new BeatAction.Action(beat, delegate { Spawn(type, 0, isMice, isInverse);}),
+                    new BeatAction.Action(beat, delegate { Spawn(type, 0, isMice, isInverse, true);}),
                     new BeatAction.Action(beat + 2.5f, delegate { kitties[0].Play("Clap1", 0, 0);}),
                     new BeatAction.Action(beat + 3f, delegate { kitties[0].Play("Clap2", 0, 0);}),
                 });
 
-            BeatAction.New(Cats[1], new List<BeatAction.Action>()
+                BeatAction.New(Cats[1], new List<BeatAction.Action>()
             {
-                new BeatAction.Action(beat + .75f, delegate { Spawn(type, 1, isMice, isInverse);}),
+                new BeatAction.Action(beat + .75f, delegate { Spawn(type, 1, isMice, isInverse, false);}),
                 new BeatAction.Action(beat + 2.5f, delegate { kitties[1].Play("Clap1", 0, 0);}),
                 new BeatAction.Action(beat + 3f, delegate { kitties[1].Play("Clap2", 0, 0);}),
                 });
 
-            BeatAction.New(Cats[2], new List<BeatAction.Action>()
+                BeatAction.New(Cats[2], new List<BeatAction.Action>()
             {
-                new BeatAction.Action(beat + 1.5f, delegate { Spawn(type, 2, isMice, isInverse);}),
+                new BeatAction.Action(beat + 1.5f, delegate { Spawn(type, 2, isMice, isInverse, false);}),
+                new BeatAction.Action(beat + 1.5f, delegate { player.canClap = true;}),
+                });
+            }
+
+            else if (!isMice)
+            {
+                BeatAction.New(Cats[0], new List<BeatAction.Action>()
+            {
+                    new BeatAction.Action(beat, delegate { Spawn(type, 0, isMice, isInverse, true);}),
+                    new BeatAction.Action(beat + 2.5f, delegate { kitties[0].Play("Clap1", 0, 0);}),
+                    new BeatAction.Action(beat + 3f, delegate { kitties[0].Play("Clap2", 0, 0);}),
+                });
+
+                BeatAction.New(Cats[1], new List<BeatAction.Action>()
+            {
+                new BeatAction.Action(beat + .75f, delegate { Spawn(type, 1, isMice, isInverse, false);}),
+                new BeatAction.Action(beat + 2.5f, delegate { kitties[1].Play("Clap1", 0, 0);}),
+                new BeatAction.Action(beat + 3f, delegate { kitties[1].Play("Clap2", 0, 0);}),
+                });
+
+                BeatAction.New(Cats[2], new List<BeatAction.Action>()
+            {
+                new BeatAction.Action(beat + 1.5f, delegate { Spawn(type, 2, isMice, isInverse, false);}),
                 new BeatAction.Action(beat + 1.5f, delegate { player.canClap = true;}),
                 });
 
+            }
+            else
+            {
+                BeatAction.New(Cats[0], new List<BeatAction.Action>()
+            {
+                    new BeatAction.Action(beat, delegate { Spawn(type, 0, isMice, isInverse, true);}),
+                    new BeatAction.Action(beat + 2.5f, delegate { kitties[0].Play("MiceClap1", 0, 0);}),
+                    new BeatAction.Action(beat + 3f, delegate { kitties[0].Play("MiceClap2", 0, 0);}),
+                });
+
+                BeatAction.New(Cats[1], new List<BeatAction.Action>()
+            {
+                new BeatAction.Action(beat + .75f, delegate { Spawn(type, 1, isMice, isInverse, false);}),
+                new BeatAction.Action(beat + 2.5f, delegate { kitties[1].Play("MiceClap1", 0, 0);}),
+                new BeatAction.Action(beat + 3f, delegate { kitties[1].Play("MiceClap2", 0, 0);}),
+                });
+
+                BeatAction.New(Cats[2], new List<BeatAction.Action>()
+            {
+                new BeatAction.Action(beat + 1.5f, delegate { Spawn(type, 2, isMice, isInverse, false);}),
+                new BeatAction.Action(beat + 1.5f, delegate { player.canClap = true;}),
+                });
+
+            }
         }
 
         public void Remove(float beat)
@@ -108,105 +157,142 @@ namespace HeavenStudio.Games
                 });
         }
 
-        public void Spawn(int pos, int catNum, bool isMice, bool isInverse)
+        public void Spawn(int pos, int catNum, bool isMice, bool isInverse, bool firstSpawn)
         {
-            
-            switch(pos)
+            if(firstSpawn)
             {
-                case 0:
+                switch (pos)
+                {
+                    case 0:
 
-                    if (!isInverse)
-                    {
-                        Cats[0].transform.position = new Vector3(-5.11f, -0.5f, 0f);
-                        Cats[1].transform.position = new Vector3(.32f, -0.5f, 0f);
-                        Cats[2].transform.position = new Vector3(5.75f, -0.5f, 0f);
-
-                        for (int x = 0; x < 3; x++)
+                        if (!isInverse)
                         {
-                            Cats[catNum].transform.GetChild(0).gameObject.GetComponent<SpriteRenderer>().flipX = true;
-                            Cats[catNum].transform.GetChild(1).gameObject.transform.localScale = new Vector3(1f, 1f, 1f);
-                        }
-                    }
-                    else
-                    {
-                        Cats[0].transform.position = new Vector3(5.75f, -0.5f, 0f);
-                        Cats[1].transform.position = new Vector3(.32f, -0.5f, 0f);
-                        Cats[2].transform.position = new Vector3(-5.11f, -0.5f, 0f);
+                            Cats[0].transform.position = new Vector3(-5.11f, -0.5f, 0f);
+                            Cats[1].transform.position = new Vector3(.32f, -0.5f, 0f);
+                            Cats[2].transform.position = new Vector3(5.75f, -0.5f, 0f);
 
-                        for (int x = 0; x < 3; x++)
+                            for (int x = 0; x < 3; x++)
+                            {
+                                Cats[x].transform.GetChild(0).gameObject.GetComponent<SpriteRenderer>().flipX = true;
+                                Cats[x].transform.GetChild(1).gameObject.transform.localScale = new Vector3(1f, 1f, 1f);
+                            }
+                        }
+                        else
                         {
-                            Cats[catNum].transform.GetChild(0).gameObject.GetComponent<SpriteRenderer>().flipX = false;
-                            Cats[catNum].transform.GetChild(1).gameObject.transform.localScale = new Vector3(-1f, 1f, 1f);
+                            Cats[0].transform.position = new Vector3(5.75f, -0.5f, 0f);
+                            Cats[1].transform.position = new Vector3(.32f, -0.5f, 0f);
+                            Cats[2].transform.position = new Vector3(-5.11f, -0.5f, 0f);
+
+                            for (int x = 0; x < 3; x++)
+                            {
+                                Cats[x].transform.GetChild(0).gameObject.GetComponent<SpriteRenderer>().flipX = false;
+                                Cats[x].transform.GetChild(1).gameObject.transform.localScale = new Vector3(-1f, 1f, 1f);
+                            }
                         }
-                    }
-                            break;
+                        break;
 
-                case 1:
+                    case 1:
 
-                    if (!isInverse)
-                    {
-                        Cats[0].transform.position = new Vector3(-6.61f, 2.5f, 6f);
-                        Cats[1].transform.position = new Vector3(.32f, 0.5f, 2f);
-                        Cats[2].transform.position = new Vector3(4.25f, -1f, -2f);
-
-                        for (int x = 0; x < 3; x++)
+                        if (!isInverse)
                         {
-                            Cats[catNum].transform.GetChild(0).gameObject.GetComponent<SpriteRenderer>().flipX = true;
-                            Cats[catNum].transform.GetChild(1).gameObject.transform.localScale = new Vector3(1f, 1f, 1f);
-                        }
-                    }
-                    else
-                    {
-                        Cats[0].transform.position = new Vector3(6.61f, 2.5f, 6f);
-                        Cats[1].transform.position = new Vector3(.32f, 0.5f, 2f);
-                        Cats[2].transform.position = new Vector3(-4.25f, -1f, -2f);
+                            Cats[0].transform.position = new Vector3(-6.61f, 2.5f, 6f);
+                            Cats[1].transform.position = new Vector3(.32f, 0.5f, 2f);
+                            Cats[2].transform.position = new Vector3(4.25f, -1f, -2f);
 
-                        for (int x = 0; x < 3; x++)
+                            for (int x = 0; x < 3; x++)
+                            {
+                                Cats[x].transform.GetChild(0).gameObject.GetComponent<SpriteRenderer>().flipX = true;
+                                Cats[x].transform.GetChild(1).gameObject.transform.localScale = new Vector3(1f, 1f, 1f);
+                            }
+                        }
+                        else
                         {
-                            Cats[catNum].transform.GetChild(0).gameObject.GetComponent<SpriteRenderer>().flipX = false;
-                            Cats[catNum].transform.GetChild(1).gameObject.transform.localScale = new Vector3(-1f, 1f, 1f);
+                            Cats[0].transform.position = new Vector3(6.61f, 2.5f, 6f);
+                            Cats[1].transform.position = new Vector3(.32f, 0.5f, 2f);
+                            Cats[2].transform.position = new Vector3(-4.25f, -1f, -2f);
+
+                            for (int x = 0; x < 3; x++)
+                            {
+                                Cats[x].transform.GetChild(0).gameObject.GetComponent<SpriteRenderer>().flipX = false;
+                                Cats[x].transform.GetChild(1).gameObject.transform.localScale = new Vector3(-1f, 1f, 1f);
+                            }
                         }
-                    }
-                    break;
+                        break;
 
-                case 2:
+                    case 2:
 
-                    if (!isInverse)
-                    {
-                        Cats[0].transform.position = new Vector3(4.25f, -1f, -2f);
-                        Cats[1].transform.position = new Vector3(.32f, 0.5f, 2f);
-                        Cats[2].transform.position = new Vector3(-6.61f, 2.5f, 6f);
-
-                        for (int x = 0; x < 3; x++)
+                        if (!isInverse)
                         {
-                            Cats[catNum].transform.GetChild(0).gameObject.GetComponent<SpriteRenderer>().flipX = true;
-                            Cats[catNum].transform.GetChild(1).gameObject.transform.localScale = new Vector3(1f, 1f, 1f);
-                        }
-                    }
-                    else
-                    {
-                        Cats[0].transform.position = new Vector3(-4.25f, -1f, -2f);
-                        Cats[1].transform.position = new Vector3(.32f, 0.5f, 2f);
-                        Cats[2].transform.position = new Vector3(6.61f, 2.5f, 6f);
+                            Cats[0].transform.position = new Vector3(4.25f, -1f, -2f);
+                            Cats[1].transform.position = new Vector3(.32f, 0.5f, 2f);
+                            Cats[2].transform.position = new Vector3(-6.61f, 2.5f, 6f);
 
-                        for (int x = 0; x < 3; x++)
+                            for (int x = 0; x < 3; x++)
+                            {
+                                Cats[x].transform.GetChild(0).gameObject.GetComponent<SpriteRenderer>().flipX = true;
+                                Cats[x].transform.GetChild(1).gameObject.transform.localScale = new Vector3(1f, 1f, 1f);
+                            }
+                        }
+                        else
                         {
-                            Cats[catNum].transform.GetChild(0).gameObject.GetComponent<SpriteRenderer>().flipX = false;
-                            Cats[catNum].transform.GetChild(1).gameObject.transform.localScale = new Vector3(-1f, 1f, 1f);
-                        }
-                    }
-                    break;
+                            Cats[0].transform.position = new Vector3(-4.25f, -1f, -2f);
+                            Cats[1].transform.position = new Vector3(.32f, 0.5f, 2f);
+                            Cats[2].transform.position = new Vector3(6.61f, 2.5f, 6f);
 
-                default:
-                    break;
+                            for (int x = 0; x < 3; x++)
+                            {
+                                Cats[x].transform.GetChild(0).gameObject.GetComponent<SpriteRenderer>().flipX = false;
+                                Cats[x].transform.GetChild(1).gameObject.transform.localScale = new Vector3(-1f, 1f, 1f);
+                            }
+                        }
+                        break;
+
+                    case 3:
+                        if (firstSpawn)
+                        {
+                            var rotationVector = Cats[0].transform.rotation.eulerAngles;
+                            rotationVector.z = -135;
+                            Cats[0].transform.position = new Vector3(-8.01f, 3.5f, 0f);
+                            Cats[0].transform.rotation = Quaternion.Euler(rotationVector);
+                            Cats[1].transform.position = new Vector3(.32f, -3.5f, 0f);
+                            Cats[2].transform.position = new Vector3(7.61f, 4f, 0f);
+                            rotationVector.z = 135;
+                            Cats[2].transform.rotation = Quaternion.Euler(rotationVector);
+
+                            for (int x = 0; x < 3; x++)
+                            {
+                                Cats[x].transform.GetChild(0).gameObject.GetComponent<SpriteRenderer>().flipX = false;
+                                Cats[x].transform.GetChild(1).gameObject.transform.localScale = new Vector3(-1f, 1f, 1f);
+                            }
+                        }
+                        break;
+
+
+                    default:
+                        break;
+                }
             }
             Cats[catNum].transform.GetChild(0).gameObject.SetActive(true);
-            kitties[catNum].Play("PopIn", 0, 0);
+            if(pos == 3)
+            {
+                kitties[catNum].Play("FacePopIn", 0, 0);
+            }
+            else if(!isMice)
+                kitties[catNum].Play("PopIn", 0, 0);
+            else if (catNum < 2)
+            {
+                kitties[catNum].Play("MicePopIn", 0, 0);
+            }
+            else
+                kitties[catNum].Play("PopIn", 0, 0);
         }
 
-        public void SpawnPosition(int pos, int catNum, bool isInverse)
+        public void SpawnTypes(int type, bool isMice, int clap)
         {
-
+            if(isMice)
+            {
+                
+            }
         }
     }
 }
