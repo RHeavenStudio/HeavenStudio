@@ -1,13 +1,12 @@
 fileFormatVersion: 2
-guid: 110fdfb459db4fc448a2ccd37e200fa4
-folderAsset: yes
+guid: 53ce567e644ef4880b1db00e550aa797
 PluginImporter:
   externalObjects: {}
   serializedVersion: 2
   iconMap: {}
   executionOrder: {}
   defineConstraints: []
-  isPreloaded: 0
+  isPreloaded: 1
   isOverridable: 0
   isExplicitlyReferenced: 0
   validateReferences: 1
@@ -17,23 +16,23 @@ PluginImporter:
     second:
       enabled: 0
       settings:
-        Exclude Android: 1
+        Exclude Android: 0
         Exclude Editor: 0
         Exclude Linux64: 1
         Exclude OSXUniversal: 0
         Exclude Win: 1
         Exclude Win64: 1
-        Exclude iOS: 1
+        Exclude iOS: 0
   - first:
       Android: Android
     second:
-      enabled: 0
+      enabled: 1
       settings:
         CPU: ARMv7
   - first:
       Any: 
     second:
-      enabled: 0
+      enabled: 1
       settings: {}
   - first:
       Editor: Editor
@@ -49,16 +48,6 @@ PluginImporter:
       enabled: 0
       settings:
         CPU: None
-  - first:
-      Standalone: OSXIntel
-    second:
-      enabled: 1
-      settings: {}
-  - first:
-      Standalone: OSXIntel64
-    second:
-      enabled: 1
-      settings: {}
   - first:
       Standalone: OSXUniversal
     second:
@@ -80,7 +69,7 @@ PluginImporter:
   - first:
       iPhone: iOS
     second:
-      enabled: 0
+      enabled: 1
       settings:
         AddToEmbeddedBinaries: false
         CPU: AnyCPU
