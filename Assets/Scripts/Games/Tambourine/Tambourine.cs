@@ -2,6 +2,7 @@ using HeavenStudio.Util;
 using System;
 using System.Collections.Generic;
 using UnityEngine;
+using DG.Tweening;
 
 namespace HeavenStudio.Games.Loaders
 {
@@ -53,6 +54,26 @@ namespace HeavenStudio.Games.Loaders
                     function = delegate {var e = eventCaller.currentEntity; Tambourine.instance.SuccessFace(e.beat); },
                     defaultLength = 1f,
                     priority = 4,
+                },
+                new GameAction("set background color", "Background Color")
+                {
+                    function = delegate {var e = eventCaller.currentEntity; Tambourine.instance.ChangeBackgroundColor(e["colorA"], 0f); },
+                    defaultLength = 0.5f,
+                    parameters = new List<Param>()
+                    {
+                        new Param("colorA", Tambourine.defaultBGColor, "Background Color", "The background color to change to.")
+                    }
+                },
+                new GameAction("fade background", "Fade Background Color")
+                {
+                    function = delegate {var e = eventCaller.currentEntity; Tambourine.instance.FadeBackgroundColor(e["colorA"], e["colorB"], e.length); },
+                    defaultLength = 4f,
+                    resizable = true,
+                    parameters = new List<Param>()
+                    {
+                        new Param("colorA", Color.white, "Start Color", "The starting color of the fade."),
+                        new Param("colorB", Tambourine.defaultBGColor, "End Color", "The ending color of the fade.")
+                    }
                 }
             });
         }
@@ -63,8 +84,19 @@ namespace HeavenStudio.Games
 {
     public class Tambourine : Minigame
     {
+        private static Color _defaultBGColor;
+        public static Color defaultBGColor
+        {
+            get
+            {
+                ColorUtility.TryParseHtmlString("#388cd0", out _defaultBGColor);
+                return _defaultBGColor;
+            }
+        }
+
         [Header("Components")]
         [SerializeField] Animator handsAnimator;
+        [SerializeField] SpriteRenderer bg;
         [SerializeField] Animator monkeyAnimator;
         [SerializeField] ParticleSystem flowerParticles;
         [SerializeField] GameObject happyFace;
@@ -78,6 +110,8 @@ namespace HeavenStudio.Games
         float beatInterval = 4f;
         float misses;
         bool frogPresent;
+
+        Tween bgColorTween;
 
         public enum WhoBops
         {
@@ -297,6 +331,29 @@ namespace HeavenStudio.Games
             {
                 sadFace.SetActive(true);
             }
+        }
+
+        public void ChangeBackgroundColor(Color color, float beats)
+        {
+            var seconds = Conductor.instance.secPerBeat * beats;
+
+            if (bgColorTween != null)
+                bgColorTween.Kill(true);
+
+            if (seconds == 0)
+            {
+                bg.color = color;
+            }
+            else
+            {
+                bgColorTween = bg.DOColor(color, seconds);
+            }
+        }
+
+        public void FadeBackgroundColor(Color start, Color end, float beats)
+        {
+            ChangeBackgroundColor(start, 0f);
+            ChangeBackgroundColor(end, beats);
         }
 
         public void SummonFrog()

@@ -6349,8 +6349,8 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: -100
-  m_Sprite: {fileID: 4182150794981042216, guid: 8471d5c767f1ecd4ab31873833b0c408, type: 3}
-  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_Sprite: {fileID: 7482667652216324306, guid: ef2fa2a75dc283e40b9d4fe1f20dc6fb, type: 3}
+  m_Color: {r: 0.21960784, g: 0.54901963, b: 0.8156863, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
@@ -6827,6 +6827,7 @@ MonoBehaviour:
   scheduledInputs: []
   firstEnable: 0
   handsAnimator: {fileID: 1599401704102748781}
+  bg: {fileID: 7196257604761375275}
   monkeyAnimator: {fileID: 241274462882064872}
   flowerParticles: {fileID: 5490304671109547141}
   happyFace: {fileID: 7823810765356384206}
