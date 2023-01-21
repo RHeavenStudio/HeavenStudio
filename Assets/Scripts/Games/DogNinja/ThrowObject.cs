@@ -10,8 +10,6 @@ namespace HeavenStudio.Games.Scripts_DogNinja
 {
     public class ThrowObject : PlayerActionObject
     {
-        const float rotSpeed = 360f;
-
         public float startBeat;
 
         bool flying = true;
@@ -46,9 +44,6 @@ namespace HeavenStudio.Games.Scripts_DogNinja
                     GameObject.Destroy(gameObject);
                     return;
                 }
-
-                float rot = -rotSpeed;
-                transform.rotation = Quaternion.Euler(0, 0, transform.rotation.eulerAngles.z + (rot * Time.deltaTime));
             }
         }
         void CutObject()

@@ -84,20 +84,35 @@ namespace HeavenStudio.Games
             instance = this;
         }
 
-        private void CutSound(bool applause)
+        private void Update()
         {
-            Jukebox.PlayOneShotGame("dogNinja/cut");
-            if (applause) Jukebox.PlayOneShot("applause");
+            /*
+            DogAnim.SetBool("ShouldOpenMouth", foodHolder.childCount != 0);
+
+            if (PlayerInput.GetAnyDirectionDown() && !IsExpectingInputNow(InputType.DIRECTION_DOWN))
+            {
+                headAndBodyAnim.Play("BiteL", 0, 0);
+            }
+            else if (PlayerInput.Pressed() && !IsExpectingInputNow(InputType.STANDARD_DOWN))
+            {
+                headAndBodyAnim.Play("BiteR", 0, 0);
+            }
+
+            if (Conductor.instance.ReportBeat(ref lastReportedBeat))
+            {
+
+            }
+            */
         }
 
         public void ThrowObjectLeft(float beat)
         {
-            Jukebox.PlayOneShotGame("dogNinja/whiff");
+            Jukebox.PlayOneShotGame("dogNinja/fruit1");
         }
 
         public void ThrowObjectRight(float beat)
         {
-            Jukebox.PlayOneShotGame("dogNinja/whiff");
+            Jukebox.PlayOneShotGame("dogNinja/fruit1");
         }
 
         public void CutEverything(float beat)
