@@ -21,7 +21,7 @@ namespace HeavenStudio.Games.Loaders
                     function = delegate { var e = eventCaller.currentEntity; Lockstep.instance.Bop(e.beat, e["toggle"]); },
                     parameters = new List<Param>()
                     {
-                    new Param("toggle", false, "Reset Pose", "Resets to idle pose.")
+                        new Param("toggle", false, "Reset Pose", "Resets to idle pose.")
                     },
                     defaultLength = 1f,
                 },
@@ -46,6 +46,16 @@ namespace HeavenStudio.Games.Loaders
                     preFunction = delegate {var e = eventCaller.currentEntity; Lockstep.Marching(e.beat, e.length);},
                     defaultLength = 4f,
                     resizable = true
+                },
+                new GameAction("set colours", "Set Background Colours")
+                {
+                    function = delegate {var e = eventCaller.currentEntity; Lockstep.instance.SetbackgroundColours(e["colorA"], e["colorB"]); },
+                    parameters = new List<Param>()
+                    {
+                        new Param("colorA", Lockstep.defaultBGColorOn, "Onbeat", "Select the color that appears for the onbeat."),
+                        new Param("colorB", Lockstep.defaultBGColorOff, "Offbeat", "Select the color that appears for the offbeat."),
+                    },
+                    defaultLength = 0.5f,
                 }
             });
 
@@ -97,6 +107,7 @@ namespace HeavenStudio.Games
             MissedOff = 1,
             MissedOn = 2
         }
+        bool offColorActive;
 
         public static Lockstep instance;
 
@@ -303,6 +314,23 @@ namespace HeavenStudio.Games
         public void ChangeBeatBackGroundColour(bool off)
         {
             if (off)
+            {
+                background.color = currentBGOffColor;
+                offColorActive = true;
+            }
+            else
+            {
+                background.color = currentBGOnColor;
+                offColorActive = false;
+            }
+        }
+
+        public void SetbackgroundColours(Color onColor, Color offColor)
+        {
+            currentBGOnColor = onColor;
+            currentBGOffColor = offColor;
+
+            if (offColorActive)
             {
                 background.color = currentBGOffColor;
             }
