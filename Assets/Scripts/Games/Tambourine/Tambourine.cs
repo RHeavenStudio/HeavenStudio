@@ -140,7 +140,10 @@ namespace HeavenStudio.Games
 
         void OnDestroy()
         {
-            if (queuedInputs.Count > 0) queuedInputs.Clear();
+            if (!Conductor.instance.isPlaying || Conductor.instance.isPaused)
+            {
+                if (queuedInputs.Count > 0) queuedInputs.Clear();
+            }
         }
 
         void Update()
