@@ -84,7 +84,7 @@ namespace HeavenStudio.Games
                 {
                     foreach (var input in queuedInputs)
                     {
-                        ScheduleInput(input - 0.5f, 0.5f, InputType.STANDARD_DOWN, Just, Miss, Nothing);
+                        ScheduleInput(cond.songPositionInBeats, input - cond.songPositionInBeats, InputType.STANDARD_DOWN, Just, Miss, Nothing);
                         BeatAction.New(instance.gameObject, new List<BeatAction.Action>()
                         {
                             new BeatAction.Action(input, delegate { EvaluateMarch(); }),
