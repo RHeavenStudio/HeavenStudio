@@ -142,7 +142,8 @@ namespace HeavenStudio.Games.Loaders
                         new Param("valA", new EntityTypes.Float(0f, 10f, 1f), "Pot Break Delay", "Sets the pot break delay, 1.5 is Tengoku Arcade delay"),
                         new Param("valB", new EntityTypes.Float(0f, 10f, 0.5f), "Oh Yeah Delay", "Sets the pot break delay, a delay of 0 is Tengoku Arcade delay"),
                         new Param("valC", new EntityTypes.Float(0f, 10f, 1f), "Face Change Delay", "The face change delay when you punch and object and your face changes")
-                    }
+                    },
+                    inactiveFunction = delegate { var e = eventCaller.currentEntity; KarateMan.instance.SetDelay(e["valA"], e["valB"], e["valC"]); }
                 },
                 new GameAction("set background effects", "Background Appearance")
                 {

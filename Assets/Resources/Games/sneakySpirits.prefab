@@ -5102,6 +5102,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 7783755712010897486}
+  - component: {fileID: 4154659286214031338}
   m_Layer: 0
   m_Name: Spirit
   m_TagString: Untagged
@@ -5123,6 +5124,31 @@ Transform:
   m_Father: {fileID: 7380707858405245991}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &4154659286214031338
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5629288301496021772}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2a9f5c770dfec4949a3bf16442deee66, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  inList: 0
+  state:
+    gameObject: {fileID: 0}
+    early: 0
+    perfect: 0
+    late: 0
+    createBeat: 0
+  eligibleHitsList: []
+  aceTimes: 0
+  isEligible: 0
+  triggersAutoplay: 1
+  startBeat: 0
+  numBeats: 0
 --- !u!1 &5877611500169024775
 GameObject:
   m_ObjectHideFlags: 0

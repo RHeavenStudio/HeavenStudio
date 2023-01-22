@@ -58,14 +58,13 @@ namespace HeavenStudio.Games
 
         public void SpawnSpirit(float beat, int length)
         {
-            CreateSpirit(beat, length);//, )
+            CreateSpirit(beat, length);
         }
 
-        public GameObject CreateSpirit(float beat, int length)//, string awakeAnim)
+        public GameObject CreateSpirit(float beat, int length)
         {
             GameObject mobj = GameObject.Instantiate(SneakySpirit, SpawnRoot);
             WahSpirits mobjDat = mobj.GetComponent<WahSpirits>();
-
             mobjDat.startBeat = beat;
             mobjDat.numBeats = length;
 

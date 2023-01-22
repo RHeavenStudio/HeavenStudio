@@ -837,7 +837,7 @@ namespace HeavenStudio.Games.Scripts_KarateMan
                     joe.SetFaceExpression((int) KarateMan.KarateManFaces.Sad);
                     BeatAction.New(joe.gameObject, new List<BeatAction.Action>()
                     {
-                        new BeatAction.Action(startBeat + 1f + KarateMan.FaceChangeDelay, delegate {
+                        new BeatAction.Action(startBeat + 2f, delegate {
                             joe.SetFaceExpression((int) KarateMan.KarateManFaces.Normal);
                         }),
                     });
@@ -868,7 +868,7 @@ namespace HeavenStudio.Games.Scripts_KarateMan
                     bool straight = joe.Punch(ItemPunchHand());
                     KarateMan.instance.ActivateHonki(startBeat, honkiMode, honkiSound);
                     transform.rotation = Quaternion.Euler(0, 0, transform.rotation.eulerAngles.z - 30f);
-                    DoHitExpression(startBeat + 2f);
+                    DoHitExpression(startBeat + 1f + KarateMan.FaceChangeDelay);
                     ItemHitEffect(straight);
                     status = FlyStatus.Hit;
                     KarateMan.instance.Nori.DoHit(startBeat);
