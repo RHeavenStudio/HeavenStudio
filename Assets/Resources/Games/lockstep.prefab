@@ -50,13 +50,12 @@ MonoBehaviour:
   EligibleHits: []
   scheduledInputs: []
   firstEnable: 0
+  currentBGOnColor: {r: 0.9411765, g: 0.2, b: 0.5529412, a: 0}
+  currentBGOffColor: {r: 0.6039216, g: 0.15294118, b: 0.3764706, a: 0}
   stepswitcherP: {fileID: 5548089329135658778}
   stepswitcher0: {fileID: 4041276273830102762}
   stepswitcher1: {fileID: 4669067225944782995}
-  Player: {fileID: 3824742015622016231}
-  goStep: 0
-  steppingLength: 0
-  steppingStartBeat: 0
+  background: {fileID: 6381378020296668381}
 --- !u!1 &3824742015622016231
 GameObject:
   m_ObjectHideFlags: 0
@@ -150,7 +149,6 @@ GameObject:
   - component: {fileID: 3697729158945954856}
   - component: {fileID: 7960956717128855430}
   - component: {fileID: 4041276273830102762}
-  - component: {fileID: 4424607252382679407}
   m_Layer: 0
   m_Name: stepswitcher0
   m_TagString: Untagged
@@ -242,29 +240,6 @@ Animator:
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorControllerStateOnDisable: 0
---- !u!114 &4424607252382679407
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5129989806025303121}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 8b073f408da6b9a49a796d5ba8777d33, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  SoundSequences: []
-  EligibleHits: []
-  scheduledInputs: []
-  firstEnable: 0
-  stepswitcherP: {fileID: 5548089329135658778}
-  stepswitcher0: {fileID: 4041276273830102762}
-  stepswitcher1: {fileID: 4669067225944782995}
-  Player: {fileID: 0}
-  goStep: 0
-  steppingLength: 0
-  steppingStartBeat: 0
 --- !u!1 &6294324842532793805
 GameObject:
   m_ObjectHideFlags: 0
@@ -358,7 +333,6 @@ GameObject:
   - component: {fileID: 6425602285868802540}
   - component: {fileID: 6864685626860880400}
   - component: {fileID: 4669067225944782995}
-  - component: {fileID: 575274515940728498}
   m_Layer: 0
   m_Name: stepswitcher1
   m_TagString: Untagged
@@ -450,29 +424,6 @@ Animator:
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorControllerStateOnDisable: 0
---- !u!114 &575274515940728498
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7760885195185502051}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 8b073f408da6b9a49a796d5ba8777d33, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  SoundSequences: []
-  EligibleHits: []
-  scheduledInputs: []
-  firstEnable: 0
-  stepswitcherP: {fileID: 5548089329135658778}
-  stepswitcher0: {fileID: 4041276273830102762}
-  stepswitcher1: {fileID: 4669067225944782995}
-  Player: {fileID: 0}
-  goStep: 0
-  steppingLength: 0
-  steppingStartBeat: 0
 --- !u!1 &8739124183978051246
 GameObject:
   m_ObjectHideFlags: 0
@@ -517,7 +468,6 @@ GameObject:
   - component: {fileID: 6282292135211262012}
   - component: {fileID: 6142058195801638840}
   - component: {fileID: 5548089329135658778}
-  - component: {fileID: 4631706076492420401}
   m_Layer: 0
   m_Name: stepswitcherP
   m_TagString: Untagged
@@ -609,26 +559,3 @@ Animator:
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorControllerStateOnDisable: 0
---- !u!114 &4631706076492420401
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 9015027120403414015}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 8b073f408da6b9a49a796d5ba8777d33, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  SoundSequences: []
-  EligibleHits: []
-  scheduledInputs: []
-  firstEnable: 0
-  stepswitcherP: {fileID: 5548089329135658778}
-  stepswitcher0: {fileID: 4041276273830102762}
-  stepswitcher1: {fileID: 4669067225944782995}
-  Player: {fileID: 9015027120403414015}
-  goStep: 0
-  steppingLength: 0
-  steppingStartBeat: 0

@@ -58,20 +58,53 @@ namespace HeavenStudio.Games
    // using Scripts_Lockstep;
     public class Lockstep : Minigame
     {
+        private static Color _defaultBGColorOn;
+        public static Color defaultBGColorOn
+        {
+            get
+            {
+                ColorUtility.TryParseHtmlString("#f0338d", out _defaultBGColorOn);
+                return _defaultBGColorOn;
+            }
+        }
+
+        private static Color _defaultBGColorOff;
+        public static Color defaultBGColorOff
+        {
+            get
+            {
+                ColorUtility.TryParseHtmlString("#9a2760", out _defaultBGColorOff);
+                return _defaultBGColorOff;
+            }
+        }
+
+        public Color currentBGOnColor;
+        public Color currentBGOffColor;
+
         [Header("Components")]
         [SerializeField] Animator stepswitcherP;
         [SerializeField] Animator stepswitcher0;
         [SerializeField] Animator stepswitcher1;
+        [SerializeField] SpriteRenderer background;
 
 
         [Header("Properties")]
         static List<float> queuedInputs = new List<float>();
+        HowMissed currentMissStage;
+        public enum HowMissed
+        {
+            NotMissed = 0,
+            MissedOff = 1,
+            MissedOn = 2
+        }
 
         public static Lockstep instance;
 
         void Awake()
         {
             instance = this;
+            currentBGOnColor = defaultBGColorOn;
+            currentBGOffColor = defaultBGColorOff;
         }
 
         public void Update()
@@ -93,6 +126,7 @@ namespace HeavenStudio.Games
                 }
                 if (PlayerInput.Pressed() && !IsExpectingInputNow(InputType.STANDARD_DOWN))
                 {
+                    currentMissStage = HowMissed.NotMissed;
                     var beatAnimCheck = Math.Round(cond.songPositionInBeats * 2);
                     var stepPlayerAnim = (beatAnimCheck % 2 != 0 ? "OffbeatMarch" : "OnbeatMarch");
                     stepswitcherP.DoScaledAnimationAsync(stepPlayerAnim, 0.5f);
@@ -164,6 +198,20 @@ namespace HeavenStudio.Games
                         new BeatAction.Action(beat + i, delegate { Lockstep.instance.EvaluateMarch(); }),
                     });
                 }
+                if (beat % 2 == 0)
+                {
+                    BeatAction.New(instance.gameObject, new List<BeatAction.Action>()
+                    {
+                        new BeatAction.Action(beat, delegate { Lockstep.instance.ChangeBeatBackGroundColour(false); })  
+                    });
+                }
+                else
+                {
+                    BeatAction.New(instance.gameObject, new List<BeatAction.Action>()
+                    {
+                        new BeatAction.Action(beat, delegate { Lockstep.instance.ChangeBeatBackGroundColour(true); })
+                    });
+                }
             }
             else
             {
@@ -192,6 +240,7 @@ namespace HeavenStudio.Games
 
         public void Just(PlayerActionEvent caller, float state)
         {
+            currentMissStage = HowMissed.NotMissed;
             if (state >= 1f || state <= -1f)
             {
                 var cond = Conductor.instance;
@@ -232,17 +281,33 @@ namespace HeavenStudio.Games
         {
             var cond = Conductor.instance;
             var beatAnimCheck = Math.Round(cond.songPositionInBeats * 2);
-            Jukebox.PlayOneShotGame("lockstep/wayOff");
-            if (beatAnimCheck % 2 != 0)
+            
+            if (beatAnimCheck % 2 != 0 && currentMissStage != HowMissed.MissedOff)
             {
                 stepswitcherP.Play("OffbeatMiss", 0, 0);
+                Jukebox.PlayOneShotGame("lockstep/wayOff");
+                currentMissStage = HowMissed.MissedOff;
+            }
+            else if (beatAnimCheck % 2 == 0 && currentMissStage != HowMissed.MissedOn)
+            {
+                stepswitcherP.Play("OnbeatMiss", 0, 0);
+                Jukebox.PlayOneShotGame("lockstep/wayOff");
+                currentMissStage = HowMissed.MissedOn;
+            }
+        }
+
+        public void ChangeBeatBackGroundColour(bool off)
+        {
+            if (off)
+            {
+                background.color = currentBGOffColor;
             }
             else
             {
-                stepswitcherP.Play("OnbeatMiss", 0, 0);
+                background.color = currentBGOnColor;
             }
         }
-        
+
         public void Nothing(PlayerActionEvent caller) {}
     }
 }
