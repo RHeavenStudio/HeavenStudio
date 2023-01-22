@@ -492,6 +492,7 @@ GameObject:
   m_Component:
   - component: {fileID: 7821851253613277009}
   - component: {fileID: 6546086356517948521}
+  - component: {fileID: 4547664343140929301}
   m_Layer: 0
   m_Name: Metronome
   m_TagString: Untagged
@@ -564,6 +565,25 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
+--- !u!95 &4547664343140929301
+Animator:
+  serializedVersion: 3
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3862020474253857803}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: cbb6e614a7bd56848ae238f52ce0dec6, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorControllerStateOnDisable: 0
 --- !u!1 &4230431238859698318
 GameObject:
   m_ObjectHideFlags: 0
@@ -690,7 +710,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   inList: 0
-  lastState: 0
   state:
     gameObject: {fileID: 0}
     early: 0
@@ -1003,9 +1022,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a258517e5332c824a8b81a03036fc2a8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  SoundSequences: []
   EligibleHits: []
+  scheduledInputs: []
   firstEnable: 0
-  metronome: {fileID: 3862020474253857803}
+  metronomeAnim: {fileID: 4547664343140929301}
   man: {fileID: 8160414645038680372}
   bt: {fileID: 5666021292044047195}
   canGo: 0

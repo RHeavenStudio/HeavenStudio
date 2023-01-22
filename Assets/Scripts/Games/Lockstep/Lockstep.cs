@@ -41,7 +41,7 @@ namespace HeavenStudio.Games.Loaders
                     preFunction = delegate { var e = eventCaller.currentEntity; Lockstep.OnbeatSwitch(e.beat); },
                     defaultLength = 2f
                 },
-                new GameAction("marching", "Marching")
+                new GameAction("marching", "Stepping")
                 {
                     preFunction = delegate {var e = eventCaller.currentEntity; Lockstep.Marching(e.beat, e.length);},
                     defaultLength = 4f,
@@ -65,7 +65,6 @@ namespace HeavenStudio.Games
 
 
         [Header("Properties")]
-        GameEvent bop = new GameEvent();
         static List<float> queuedInputs = new List<float>();
 
         public static Lockstep instance;

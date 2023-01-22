@@ -37,6 +37,12 @@ namespace HeavenStudio.Games.Loaders
                         new Param("toggle", false, "Applause")
                     }
                 },
+                new GameAction("stepping", "Stepping")
+                {
+                    preFunction = delegate {var e = eventCaller.currentEntity; MrUpbeat.Stepping(e.beat, e.length); },
+                    defaultLength = 4f,
+                    resizable = true
+                }
             });
         }
     }
@@ -49,7 +55,7 @@ namespace HeavenStudio.Games
     public class MrUpbeat : Minigame
     {
         [Header("References")]
-        public GameObject metronome;
+        public Animator metronomeAnim;
         public UpbeatMan man;
         public GameObject bt;
         private static MultiSound beeps; //only used when this game isn't active.
@@ -98,7 +104,7 @@ namespace HeavenStudio.Games
             if (canGo)
             {
                 var songPos = Conductor.instance.songPositionInBeats - beatOffset;
-                metronome.transform.eulerAngles = new Vector3(0, 0, 270 - Mathf.Cos(Mathf.PI * songPos) * 60);
+                //metronome.transform.eulerAngles = new Vector3(0, 0, 270 - Mathf.Cos(Mathf.PI * songPos) * 60);
             }
 
             if (Conductor.instance.ReportBeat(ref beat.lastReportedBeat))
@@ -174,6 +180,59 @@ namespace HeavenStudio.Games
             yield return new WaitForSeconds(Conductor.instance.secPerBeat * 0.5f - offset);
             man.Blip();
         }
+
+        public static void Stepping(float beat, float length)
+        {
+            if (GameManager.instance.currentGame == "mrUpbeat")
+            {
+                for (int i = 0; i < length + 1; i++)
+                {
+                    MrUpbeat.instance.ScheduleInput(beat - 1, 1 + i, InputType.STANDARD_DOWN, MrUpbeat.instance.Just, MrUpbeat.instance.Miss, MrUpbeat.instance.Nothing);
+                    if (i % 2 == 0)
+                    {
+                        BeatAction.New(instance.gameObject, new List<BeatAction.Action>()
+                        {
+                            new BeatAction.Action(beat + i - 0.5f, delegate { MrUpbeat.instance.metronomeAnim.DoScaledAnimationAsync("MetronomeGoLeft", 0.5f); }),
+                            new BeatAction.Action(beat + i, delegate { Jukebox.PlayOneShotGame("mrUpbeat/metronomeRight"); }),
+                        });
+                    }
+                    else
+                    {
+                        BeatAction.New(instance.gameObject, new List<BeatAction.Action>()
+                        {
+                            new BeatAction.Action(beat + i - 0.5f, delegate { MrUpbeat.instance.metronomeAnim.DoScaledAnimationAsync("MetronomeGoRight", 0.5f); }),
+                            new BeatAction.Action(beat + i, delegate { Jukebox.PlayOneShotGame("mrUpbeat/metronomeLeft"); }),
+                        });
+                    }
+
+                }
+            }
+            else
+            {
+
+            }
+        }
+
+        public void Just(PlayerActionEvent caller, float state)
+        {
+            if (state >= 1f || state <= -1f)
+            {
+                return;
+            }
+            Success();
+        }
+
+        public void Success()
+        {
+
+        }
+
+        public void Miss(PlayerActionEvent caller)
+        {
+
+        }
+
+        public void Nothing(PlayerActionEvent caller) {}
 
         public static void Beep(float beat, float length)
         {
