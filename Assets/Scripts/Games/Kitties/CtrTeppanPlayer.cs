@@ -36,34 +36,52 @@ namespace HeavenStudio.Games.Scripts_Kitties
             if (PlayerInput.Pressed() && canClap && !Kitties.instance.IsExpectingInputNow(InputType.STANDARD_DOWN))
             {
                 Jukebox.PlayOneShot("miss");
-                anim.Play("ClapFail", 0, 0);
+                if (spawnType != 3)
+                    anim.Play("ClapFail", 0, 0);
+                else
+                    anim.Play("FaceClapFail", 0, 0);
             }
         }
 
-        public void ScheduleClap(float beat)
+        public void ScheduleClap(float beat, int type)
         {
+            spawnType = type;
             Kitties.instance.ScheduleInput(beat, 2.5f, InputType.STANDARD_DOWN, ClapSuccessOne, ClapMissOne, ClapEmpty);
             Kitties.instance.ScheduleInput(beat, 3f, InputType.STANDARD_DOWN, ClapSuccessTwo, ClapMissTwo, ClapEmpty);
         }
 
         public void ClapSuccessOne(PlayerActionEvent Caller, float state)
         {
-            if (state >= 1f || state <= -1f)
-            {  //todo: proper near miss feedback
-                Jukebox.PlayOneShotGame("kitties/ClapMiss1");
-                Jukebox.PlayOneShotGame("kitties/tink");
-                anim.Play("ClapMiss", 0, 0);
+            if (spawnType != 3)
+            {
+                if (state >= 1f || state <= -1f)
+                {  //todo: proper near miss feedback
+                    Jukebox.PlayOneShotGame("kitties/ClapMiss1");
+                    Jukebox.PlayOneShotGame("kitties/tink");
+                    anim.Play("ClapMiss", 0, 0);
+                }
+                else
+                {
+                    Jukebox.PlayOneShotGame("kitties/clap1");
+                    anim.Play("Clap1", 0, 0);
+                }
             }
             else
             {
+                if (state >= 1f || state <= -1f)
+                {  //todo: proper near miss feedback
+                    Jukebox.PlayOneShotGame("kitties/ClapMiss1");
+                    Jukebox.PlayOneShotGame("kitties/tink");
+                    anim.Play("FaceClapFail", 0, 0);
+                }
+
                 Jukebox.PlayOneShotGame("kitties/clap1");
-                anim.Play("Clap1", 0, 0);
+                anim.Play("FaceClap", 0, 0);
             }
         }
         public void ClapMissOne(PlayerActionEvent Caller)
         {
             Jukebox.PlayOneShotGame("kitties/ClapMiss1");
-            anim.Play("ClapMiss", 0, 0);
         }
         public void ClapEmpty(PlayerActionEvent Caller)
         {
@@ -72,23 +90,37 @@ namespace HeavenStudio.Games.Scripts_Kitties
 
         public void ClapSuccessTwo(PlayerActionEvent Caller, float state)
         {
-            if (state >= 1f || state <= -1f)
-            {  //todo: proper near miss feedback
-                Jukebox.PlayOneShotGame("kitties/ClapMiss2");
-                Jukebox.PlayOneShotGame("kitties/tink");
-                anim.Play("ClapMiss", 0, 0);
+            if (spawnType != 3)
+            {
+                if (state >= 1f || state <= -1f)
+                {  //todo: proper near miss feedback
+                    Jukebox.PlayOneShotGame("kitties/ClapMiss2");
+                    Jukebox.PlayOneShotGame("kitties/tink");
+                    anim.Play("ClapMiss", 0, 0);
+                }
+                else
+                {
+                    Jukebox.PlayOneShotGame("kitties/clap2");
+                    anim.Play("Clap2", 0, 0);
+                }
             }
             else
             {
+                if (state >= 1f || state <= -1f)
+                {  //todo: proper near miss feedback
+                    Jukebox.PlayOneShotGame("kitties/ClapMiss2");
+                    Jukebox.PlayOneShotGame("kitties/tink");
+                    anim.Play("FaceClapFail", 0, 0);
+                }
+
                 Jukebox.PlayOneShotGame("kitties/clap2");
-                anim.Play("Clap2", 0, 0);
+                anim.Play("FaceClap", 0, 0);
             }
         }
 
         public void ClapMissTwo(PlayerActionEvent Caller)
         {
             Jukebox.PlayOneShotGame("kitties/ClapMiss2");
-            anim.Play("ClapMiss", 0, 0);
         }
     }
 }
