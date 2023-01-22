@@ -19,7 +19,8 @@ namespace HeavenStudio.Games.Loaders
                 {
                     function = delegate { WizardsWaltz.instance.SetIntervalStart(eventCaller.currentEntity.beat, eventCaller.currentEntity.length); }, 
                     defaultLength = 4f, 
-                    resizable = true
+                    resizable = true,
+                    priority = 1
                 },
                 new GameAction("plant", "Plant")
                 {

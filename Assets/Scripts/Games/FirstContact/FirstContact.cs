@@ -15,7 +15,8 @@ namespace HeavenStudio.Games.Loaders
                 {
                     function = delegate { FirstContact.instance.SetIntervalStart(eventCaller.currentEntity.beat, eventCaller.currentEntity.length);  }, 
                     defaultLength = 4f, 
-                    resizable = true
+                    resizable = true,
+                    priority = 1,
                 },
                 new GameAction("alien speak", "Alien Speak")
                 {

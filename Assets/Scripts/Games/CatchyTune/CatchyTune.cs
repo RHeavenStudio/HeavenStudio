@@ -12,7 +12,7 @@ namespace HeavenStudio.Games.Loaders
         // minigame menu items
         public static Minigame AddGame(EventCaller eventCaller)
         {
-            return new Minigame("catchyTune", "Catchy Tune \n<color=#eb5454>[WIP]</color>", "B4E6F6", false, false, new List<GameAction>()
+            return new Minigame("catchyTune", "Catchy Tune", "B4E6F6", false, false, new List<GameAction>()
             {
                 new GameAction("orange", "Orange")
                 {
@@ -178,7 +178,7 @@ namespace HeavenStudio.Games
                 {
                     if (bopLeft && stopCatchLeft == 0)
                     {
-                        plalinAnim.SetTrigger("bop");
+                        plalinAnim.Play("bop", 0, 0);
                     }
 
                     if (bopRight && stopCatchRight == 0)

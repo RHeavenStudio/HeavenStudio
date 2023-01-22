@@ -15,6 +15,8 @@ namespace HeavenStudio.Games.Scripts_RhythmTweezers
         private Tweezers tweezers;
         private bool plucked;
 
+        PlayerActionEvent pluckEvent;
+
         private void Awake()
         {
             game = RhythmTweezers.instance;
@@ -22,7 +24,7 @@ namespace HeavenStudio.Games.Scripts_RhythmTweezers
         }
 
         private void Start() {
-            game.ScheduleInput(createBeat, game.tweezerBeatOffset + game.beatInterval, InputType.STANDARD_DOWN | InputType.DIRECTION_DOWN, Just, Miss, Out);
+            pluckEvent = game.ScheduleInput(createBeat, game.tweezerBeatOffset + game.beatInterval, InputType.STANDARD_DOWN | InputType.DIRECTION_DOWN, Just, Miss, Out);
         }
 
         private void Update()
@@ -58,5 +60,11 @@ namespace HeavenStudio.Games.Scripts_RhythmTweezers
         }
 
         private void Out(PlayerActionEvent caller) {}
+
+        void OnDestroy()
+        {
+            if (pluckEvent != null)
+                pluckEvent.Disable();
+        }
     }
 }

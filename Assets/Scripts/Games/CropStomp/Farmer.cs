@@ -25,7 +25,7 @@ namespace HeavenStudio.Games.Scripts_CropStomp
                 return;
             Conductor cond = Conductor.instance;
 
-            if (stomp == null)
+            if (stomp == null && cond.isPlaying)
             {
                 if (GameManager.instance.currentGame == "cropStomp")
                     stomp = game.ScheduleUserInput(nextStompBeat - 1f, 1f, InputType.STANDARD_DOWN, Just, Miss, Out);
