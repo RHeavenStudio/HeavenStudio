@@ -140,6 +140,10 @@ namespace HeavenStudio.Games
 
         void Update()
         {
+            if (!Conductor.instance.isPlaying || Conductor.instance.isPaused)
+            {
+                if (queuedInputs.Count > 0) queuedInputs.Clear();
+            }
             if (!Conductor.instance.isPlaying && !Conductor.instance.isPaused && intervalStarted)
             {
                 intervalStarted = false;
