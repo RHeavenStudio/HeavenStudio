@@ -73,7 +73,7 @@ namespace HeavenStudio.Games
         {
             get
             {
-                ColorUtility.TryParseHtmlString("#9a2760", out _defaultBGColorOff);
+                ColorUtility.TryParseHtmlString("#BC318B", out _defaultBGColorOff);
                 return _defaultBGColorOff;
             }
         }
@@ -167,6 +167,15 @@ namespace HeavenStudio.Games
                 new MultiSound.Sound("lockstep/switch5", beat + 1f),
                 new MultiSound.Sound("lockstep/switch6", beat + 1.5f)
             }, forcePlay: true);
+
+            BeatAction.New(instance.gameObject, new List<BeatAction.Action>()
+            {
+                new BeatAction.Action(beat, delegate { if (GameManager.instance.currentGame == "lockstep") Lockstep.instance.ChangeBeatBackGroundColour(false); }),
+                new BeatAction.Action(beat + 0.5f, delegate { if (GameManager.instance.currentGame == "lockstep") Lockstep.instance.ChangeBeatBackGroundColour(true); }),
+                new BeatAction.Action(beat + 1f, delegate { if (GameManager.instance.currentGame == "lockstep") Lockstep.instance.ChangeBeatBackGroundColour(false); }),
+                new BeatAction.Action(beat + 1.5f, delegate { if (GameManager.instance.currentGame == "lockstep") Lockstep.instance.ChangeBeatBackGroundColour(true); }),
+                new BeatAction.Action(beat + 2f, delegate { if (GameManager.instance.currentGame == "lockstep") Lockstep.instance.ChangeBeatBackGroundColour(false); }),
+            });
         }
 
         public static void OffbeatSwitch(float beat)
@@ -184,6 +193,15 @@ namespace HeavenStudio.Games
                 new MultiSound.Sound("lockstep/switch4", beat + 6.5f),
                 new MultiSound.Sound("lockstep/switch4", beat + 7.5f),
             }, forcePlay: true);
+
+            BeatAction.New(instance.gameObject, new List<BeatAction.Action>()
+            {
+                new BeatAction.Action(beat, delegate { if (GameManager.instance.currentGame == "lockstep") Lockstep.instance.ChangeBeatBackGroundColour(true); }),
+                new BeatAction.Action(beat + 1f, delegate { if (GameManager.instance.currentGame == "lockstep") Lockstep.instance.ChangeBeatBackGroundColour(false); }),
+                new BeatAction.Action(beat + 2f, delegate { if (GameManager.instance.currentGame == "lockstep") Lockstep.instance.ChangeBeatBackGroundColour(true); }),
+                new BeatAction.Action(beat + 3f, delegate { if (GameManager.instance.currentGame == "lockstep") Lockstep.instance.ChangeBeatBackGroundColour(false); }),
+                new BeatAction.Action(beat + 3.5f, delegate { if (GameManager.instance.currentGame == "lockstep") Lockstep.instance.ChangeBeatBackGroundColour(true); }),
+            });
         }
 
         public static void Marching(float beat, float length)
@@ -196,20 +214,6 @@ namespace HeavenStudio.Games
                     BeatAction.New(instance.gameObject, new List<BeatAction.Action>()
                     {
                         new BeatAction.Action(beat + i, delegate { Lockstep.instance.EvaluateMarch(); }),
-                    });
-                }
-                if (beat % 2 == 0)
-                {
-                    BeatAction.New(instance.gameObject, new List<BeatAction.Action>()
-                    {
-                        new BeatAction.Action(beat, delegate { Lockstep.instance.ChangeBeatBackGroundColour(false); })  
-                    });
-                }
-                else
-                {
-                    BeatAction.New(instance.gameObject, new List<BeatAction.Action>()
-                    {
-                        new BeatAction.Action(beat, delegate { Lockstep.instance.ChangeBeatBackGroundColour(true); })
                     });
                 }
             }
