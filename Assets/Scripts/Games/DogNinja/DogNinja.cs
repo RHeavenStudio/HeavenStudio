@@ -46,8 +46,9 @@ namespace HeavenStudio.Games.Loaders
                 },
                 new GameAction("HereWeGo", "Here We Go!")
                 {
-                    function = delegate { DogNinja.instance.HereWeGo(eventCaller.currentEntity.beat); }, 
+                    function = delegate { DogNinja.instance.HereWeGo(eventCaller.currentEntity.beat); },
                     defaultLength = 2,
+                    inactiveFunction = delegate { DogNinja.instance.HereWeGo(eventCaller.currentEntity.beat); },
                 },
             });
         }
@@ -96,6 +97,11 @@ namespace HeavenStudio.Games
 
         private void Update()
         {
+            if (Input.GetKeyDown(KeyCode.S))
+            {
+                Debug.Log("BOP! PLEASE");
+                DogAnim.Play("bop");
+            }
             /*
             DogAnim.SetBool("ShouldOpenMouth", foodHolder.childCount != 0);
 
