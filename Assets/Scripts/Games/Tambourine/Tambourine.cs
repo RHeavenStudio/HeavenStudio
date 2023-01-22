@@ -138,6 +138,11 @@ namespace HeavenStudio.Games
             monkeyAnimator.Play("MonkeyIdle", 0, 0);
         }
 
+        void OnDestroy()
+        {
+            if (queuedInputs.Count > 0) queuedInputs.Clear();
+        }
+
         void Update()
         {
             if (!Conductor.instance.isPlaying || Conductor.instance.isPaused)

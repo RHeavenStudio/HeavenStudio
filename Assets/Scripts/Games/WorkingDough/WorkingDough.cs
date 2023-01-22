@@ -469,6 +469,12 @@ namespace HeavenStudio.Games
             }
         }
 
+        void OnDestroy()
+        {
+            if (queuedIntervals.Count > 0) queuedIntervals.Clear();
+            if (queuedBalls.Count > 0) queuedBalls.Clear();
+        }
+
         void Update()
         {
             Conductor cond = Conductor.instance;
@@ -477,7 +483,7 @@ namespace HeavenStudio.Games
                 if (queuedIntervals.Count > 0) queuedIntervals.Clear();
                 if (queuedBalls.Count > 0) queuedBalls.Clear();
             }
-            
+
             if (spaceshipRising) spaceshipAnimator.DoScaledAnimation("RiseSpaceship", risingStartBeat, risingLength);
             if (liftingDoughDudes) doughDudesHolderAnim.DoScaledAnimation(liftingAnimName, liftingStartBeat, liftingLength);
             if (gandwMoving) gandwAnim.DoScaledAnimation(gandwMovingAnimName, gandMovingStartBeat, gandMovingLength);
