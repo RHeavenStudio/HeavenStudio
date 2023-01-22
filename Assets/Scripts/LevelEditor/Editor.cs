@@ -75,6 +75,7 @@ namespace HeavenStudio.Editor
         public bool editingInputField = false;
         public bool inAuthorativeMenu = false;
         public bool isCursorEnabled = true;
+        public bool isDiscordEnabled = true;
 
         public bool isShortcutsEnabled { get { return (!inAuthorativeMenu) && (!editingInputField); } }
 
@@ -521,7 +522,12 @@ namespace HeavenStudio.Editor
         private void UpdateEditorStatus(bool updateTime)
         {
             if (discordDuringTesting || !Application.isEditor)
-                DiscordRPC.DiscordRPC.UpdateActivity("In Editor", $"{remixName}", updateTime);
+            {
+                if (isDiscordEnabled == true)
+                {   DiscordRPC.DiscordRPC.UpdateActivity("In Editor", $"{remixName}", updateTime);
+                    Debug.Log("Discord status updated");
+                }
+            }
         }
 
         public string GetJson()

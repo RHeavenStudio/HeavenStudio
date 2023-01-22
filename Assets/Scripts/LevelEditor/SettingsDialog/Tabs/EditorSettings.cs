@@ -8,6 +8,8 @@ namespace HeavenStudio.Editor
     {
         public Toggle cursorCheckbox;
 
+        public Toggle discordRPCCheckbox;
+
         public void OnCursorCheckboxChanged()
         {
             Editor.instance.isCursorEnabled = cursorCheckbox.isOn;
@@ -15,6 +17,12 @@ namespace HeavenStudio.Editor
             {
                 GameManager.instance.CursorCam.enabled = Editor.instance.isCursorEnabled;
             }
+        }
+
+        public void OnRPCCheckboxChanged()
+        {
+            Editor.instance.isDiscordEnabled = discordRPCCheckbox.isOn;
+            Debug.Log("Value changed");
         }
 
         public override void OnOpenTab()
