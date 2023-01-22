@@ -190,7 +190,7 @@ namespace HeavenStudio
             }
         }
 
-        public void SeekAheadAndPreload(float start, float seekTime = 8f)
+        public void SeekAheadAndPreload(double start, float seekTime = 8f)
         {
             //seek ahead to preload games that have assetbundles
             //check game switches first
@@ -217,6 +217,7 @@ namespace HeavenStudio
                 if (start + seekTime >= entities[currentPreEvent])
                 {
                     var entitiesAtSameBeat = Beatmap.entities.FindAll(c => c.beat == Beatmap.entities[currentPreEvent].beat && !EventCaller.FXOnlyGames().Contains(EventCaller.instance.GetMinigame(c.datamodel.Split('/')[0])));
+                    SortEventsByPriority(entitiesAtSameBeat);
                     foreach (DynamicBeatmap.DynamicEntity entity in entitiesAtSameBeat)
                     {
                         string gameName = entity.datamodel.Split('/')[0];
@@ -233,7 +234,7 @@ namespace HeavenStudio
             }
         }
 
-        public void SeekAheadAndDoPreEvent(float start, float seekTime = 2f)
+        public void SeekAheadAndDoPreEvent(double start, float seekTime = 2f)
         {
             List<float> entities = Beatmap.entities.Select(c => c.beat).ToList();
             if (currentPreSequence < Beatmap.entities.Count && currentPreSequence >= 0)
@@ -242,8 +243,10 @@ namespace HeavenStudio
                 {
                     float beat = Beatmap.entities[currentPreSequence].beat;
                     var entitiesAtSameBeat = Beatmap.entities.FindAll(c => c.beat == Beatmap.entities[currentPreSequence].beat);
+                    SortEventsByPriority(entitiesAtSameBeat);
                     foreach (DynamicBeatmap.DynamicEntity entity in entitiesAtSameBeat)
                     {
+                        currentPreSequence++;
                         string gameName = entity.datamodel.Split('/')[0];
                         var inf = GetGameInfo(gameName);
                         if (inf.usesAssetBundle && inf.AssetsLoaded && !inf.SequencesPreloaded) 
@@ -251,8 +254,10 @@ namespace HeavenStudio
                             Debug.Log($"Preloading game {gameName}");
                             PreloadGameSequences(gameName);
                         }
-                        eventCaller.CallPreEvent(entity);
-                        currentPreSequence++;
+                        else
+                        {
+                            eventCaller.CallPreEvent(entity);
+                        }
                     }
                 }
             }
@@ -274,7 +279,7 @@ namespace HeavenStudio
             List<float> tempoChanges = Beatmap.tempoChanges.Select(c => c.beat).ToList();
             if (currentTempoEvent < Beatmap.tempoChanges.Count && currentTempoEvent >= 0)
             {
-                if (Conductor.instance.songPositionInBeats >= tempoChanges[currentTempoEvent])
+                if (Conductor.instance.songPositionInBeatsAsDouble >= tempoChanges[currentTempoEvent])
                 {
                     Conductor.instance.SetBpm(Beatmap.tempoChanges[currentTempoEvent].tempo);
                     currentTempoEvent++;
@@ -284,7 +289,7 @@ namespace HeavenStudio
             List<float> volumeChanges = Beatmap.volumeChanges.Select(c => c.beat).ToList();
             if (currentVolumeEvent < Beatmap.volumeChanges.Count && currentVolumeEvent >= 0)
             {
-                if (Conductor.instance.songPositionInBeats >= volumeChanges[currentVolumeEvent])
+                if (Conductor.instance.songPositionInBeatsAsDouble >= volumeChanges[currentVolumeEvent])
                 {
                     Conductor.instance.SetVolume(Beatmap.volumeChanges[currentVolumeEvent].volume);
                     currentVolumeEvent++;
@@ -294,7 +299,7 @@ namespace HeavenStudio
             List<float> chartSections = Beatmap.beatmapSections.Select(c => c.beat).ToList();
             if (currentSectionEvent < Beatmap.beatmapSections.Count && currentSectionEvent >= 0)
             {
-                if (Conductor.instance.songPositionInBeats >= chartSections[currentSectionEvent])
+                if (Conductor.instance.songPositionInBeatsAsDouble >= chartSections[currentSectionEvent])
                 {
                     Debug.Log("Section " + Beatmap.beatmapSections[currentSectionEvent].sectionName + " started");
                     currentSection = Beatmap.beatmapSections[currentSectionEvent];
@@ -309,17 +314,20 @@ namespace HeavenStudio
 
             float seekTime = 8f;
             //seek ahead to preload games that have assetbundles
-            SeekAheadAndPreload(Conductor.instance.songPositionInBeats, seekTime);
+            SeekAheadAndPreload(Conductor.instance.songPositionInBeatsAsDouble, seekTime);
 
-            SeekAheadAndDoPreEvent(Conductor.instance.songPositionInBeats, 2f);
+            SeekAheadAndDoPreEvent(Conductor.instance.songPositionInBeatsAsDouble, 2f);
 
             if (currentEvent < Beatmap.entities.Count && currentEvent >= 0)
             {
-                if (Conductor.instance.songPositionInBeats >= entities[currentEvent] /*&& SongPosLessThanClipLength(Conductor.instance.songPositionInBeats)*/)
+                if (Conductor.instance.songPositionInBeatsAsDouble >= entities[currentEvent])
                 {
                     // allows for multiple events on the same beat to be executed on the same frame, so no more 1-frame delay
                     var entitiesAtSameBeat = Beatmap.entities.FindAll(c => c.beat == Beatmap.entities[currentEvent].beat && !EventCaller.FXOnlyGames().Contains(EventCaller.instance.GetMinigame(c.datamodel.Split('/')[0])));
                     var fxEntities = Beatmap.entities.FindAll(c => c.beat == Beatmap.entities[currentEvent].beat && EventCaller.FXOnlyGames().Contains(EventCaller.instance.GetMinigame(c.datamodel.Split('/')[0])));
+
+                    SortEventsByPriority(fxEntities);
+                    SortEventsByPriority(entitiesAtSameBeat);
 
                     // FX entities should ALWAYS execute before gameplay entities
                     for (int i = 0; i < fxEntities.Count; i++)
@@ -425,6 +433,19 @@ namespace HeavenStudio
             Beatmap.entities.Sort((x, y) => x.beat.CompareTo(y.beat));
             Beatmap.tempoChanges.Sort((x, y) => x.beat.CompareTo(y.beat));
             Beatmap.volumeChanges.Sort((x, y) => x.beat.CompareTo(y.beat));
+        }
+
+        void SortEventsByPriority(List<DynamicBeatmap.DynamicEntity> entities)
+        {
+            entities.Sort((x, y) => {
+                Minigames.Minigame xGame = EventCaller.instance.GetMinigame(x.datamodel.Split(0));
+                Minigames.GameAction xAction = EventCaller.instance.GetGameAction(xGame, x.datamodel.Split(1));
+                Minigames.Minigame yGame = EventCaller.instance.GetMinigame(y.datamodel.Split(0));
+                Minigames.GameAction yAction = EventCaller.instance.GetGameAction(yGame, y.datamodel.Split(1));
+
+                return yAction.priority.CompareTo(xAction.priority);
+            });
+
         }
 
         public void SetCurrentEventToClosest(float beat)

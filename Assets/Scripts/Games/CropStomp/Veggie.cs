@@ -37,7 +37,9 @@ namespace HeavenStudio.Games.Scripts_CropStomp
         public void Init()
         {
             game = CropStomp.instance;
-            game.ScheduleInput(targetBeat - 1, 1f, InputType.STANDARD_DOWN, StompJust, StompMiss, Out);
+
+            if (Conductor.instance.isPlaying)
+                game.ScheduleInput(targetBeat - 1, 1f, InputType.STANDARD_DOWN, StompJust, StompMiss, Out);
 
             if (!isMole)
             {
@@ -223,7 +225,7 @@ namespace HeavenStudio.Games.Scripts_CropStomp
 
             stompedBeat = cond.songPositionInBeats;
 
-            landBeat = targetBeat + (float)cond.BeatsToSecs(Minigame.EndTime()-1, cond.GetBpmAtBeat(targetBeat));
+            landBeat = targetBeat + (float)cond.SecsToBeats(Minigame.EndTime()-1, cond.GetBpmAtBeat(targetBeat));
 
             if (autoTriggered)
             {
