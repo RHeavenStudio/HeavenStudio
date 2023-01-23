@@ -15,6 +15,8 @@ namespace HeavenStudio.Games.Scripts_DogNinja
         bool flying = true;
         float flyBeats;
 
+        //public ObjectType type;
+
         [Header("Curves")]
         public BezierCurve3D CurveFromLeft;
         public BezierCurve3D CurveFromRight;
@@ -28,6 +30,8 @@ namespace HeavenStudio.Games.Scripts_DogNinja
 
         private void Start()
         {
+            //Jukebox.PlayOneShotGame("dogNinja/fruit1");
+
             game.ScheduleInput(startBeat, 1f, InputType.STANDARD_DOWN, Just, Out, Miss);
         }
 

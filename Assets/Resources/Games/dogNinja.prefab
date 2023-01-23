@@ -107,8 +107,9 @@ MonoBehaviour:
   isEligible: 0
   triggersAutoplay: 1
   startBeat: 0
-  CurveFromLeft: {fileID: 0}
-  CurveFromRight: {fileID: 0}
+  type: 0
+  CurveFromLeft: {fileID: 1761052573981030483}
+  CurveFromRight: {fileID: 8610298732975356966}
 --- !u!1 &127654075222335198
 GameObject:
   m_ObjectHideFlags: 0
@@ -1322,6 +1323,35 @@ MonoBehaviour:
   HalvesHolder: {fileID: 2078672318315355962}
   CurveFromLeft: {fileID: 1761052573981030483}
   CurveFromRight: {fileID: 8610298732975356966}
+  ObjectTypes:
+  - {fileID: -519733243297392110, guid: 1c59b9cd0adef0941bc4bd4bde66a759, type: 3}
+  - {fileID: -2867681730806746958, guid: 1c59b9cd0adef0941bc4bd4bde66a759, type: 3}
+  - {fileID: 564268348563544009, guid: 1c59b9cd0adef0941bc4bd4bde66a759, type: 3}
+  - {fileID: 3100075399663093546, guid: 1c59b9cd0adef0941bc4bd4bde66a759, type: 3}
+  - {fileID: -6918766368960208648, guid: 1c59b9cd0adef0941bc4bd4bde66a759, type: 3}
+  - {fileID: -2291098873595948805, guid: 1c59b9cd0adef0941bc4bd4bde66a759, type: 3}
+  - {fileID: -311876159648331314, guid: 1c59b9cd0adef0941bc4bd4bde66a759, type: 3}
+  - {fileID: 2664587425761151578, guid: 1c59b9cd0adef0941bc4bd4bde66a759, type: 3}
+  - {fileID: -5062418284542583213, guid: 1c59b9cd0adef0941bc4bd4bde66a759, type: 3}
+  ObjectHalves:
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
 --- !u!1 &3439822116337821266
 GameObject:
   m_ObjectHideFlags: 0
@@ -1338,7 +1368,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &6570085815560366024
 Transform:
   m_ObjectHideFlags: 0
@@ -1811,8 +1841,9 @@ MonoBehaviour:
   isEligible: 0
   triggersAutoplay: 1
   startBeat: 0
-  CurveFromLeft: {fileID: 0}
-  CurveFromRight: {fileID: 0}
+  type: 0
+  CurveFromLeft: {fileID: 1761052573981030483}
+  CurveFromRight: {fileID: 8610298732975356966}
 --- !u!1 &5340671340987037539
 GameObject:
   m_ObjectHideFlags: 0

@@ -77,6 +77,9 @@ namespace HeavenStudio.Games
         public BezierCurve3D CurveFromLeft;
         public BezierCurve3D CurveFromRight;
 
+        public Sprite[] ObjectTypes;
+        public Sprite[] ObjectHalves;
+
         private float lastReportedBeat = 0f;
         private bool birdOnScreen = false;
         
@@ -123,7 +126,12 @@ namespace HeavenStudio.Games
 
         public void ThrowObjectLeft(float beat, int type)
         {
-            Jukebox.PlayOneShotGame("dogNinja/fruit1");
+            GameObject fo = Instantiate(ObjectLeftBase);
+            fo.transform.parent = ObjectLeftBase.transform.parent;
+            ThrowObject ObjectType = fo.GetComponent<ThrowObject>();
+            ObjectType.startBeat = beat;
+            //ObjectType.type = type;
+            fo.SetActive(true);
         }
 
         public void ThrowObjectRight(float beat)
