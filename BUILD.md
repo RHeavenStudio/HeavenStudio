@@ -24,7 +24,7 @@ sudo brew install git
 ```
 
 #### Linux
-1. You already know what to do.
+1. Look up instructions for your distro online.
 
 
 ## Building Heaven Studio:
