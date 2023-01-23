@@ -30,8 +30,7 @@ This project is still in development, so there are currently no release builds y
 - [MacOS](https://nightly.link/megaminerjenny/HeavenStudio/workflows/main/master/StandaloneOSX-build.zip)
 #### Important Notes:
 - MacOS and Linux-based builds are not fully tested, you may [experience bugs with audio-related tasks](https://github.com/megaminerjenny/HeavenStudio/issues/72).
-- on MacOS, you need to [set the app as prebuilt binary executable by yourself](https://cdn.discordapp.com/attachments/954121092564402207/1060769484278861844/IMG_6336.jpg).
-- Linux prebuilt binaries **ARE BUGGY** (AssetBundles do not get built), please build the project yourself instead.
+- Linux and MacOS prebuilt binaries **ARE BUGGY** (AssetBundles do not get built), please build the project yourself instead.
 
 
 ## Self-Building
@@ -39,7 +38,7 @@ This project is still in development, so there are currently no release builds y
 Heaven Studio is made in [Unity 2020.3.25f1](https://unity3d.com/unity/whats-new/2020.3.25),
 and programmed with [Visual Studio Code](https://code.visualstudio.com/).
 
-Build Instructions: [BUILD.md](https://github.com/megaminerjenny/HeavenStudio/blob/buildmd/BUILD.md)
+Build Instructions: [BUILD.md](https://github.com/megaminerjenny/HeavenStudio/blob/master/BUILD.md)
 
 ## Other information
 Rhythm Heaven is the intellectual property of Nintendo. This program is NOT endorsed nor sponsored in any way by Nintendo. All used properties of Nintendo (such as names, audio, graphics, etc.) in this software are not intended to maliciously infringe trademark rights. All other trademarks and assets are property of their respective owners. This is a community project and this is available for others to use according to the GPL-3.0 license, without charge.
