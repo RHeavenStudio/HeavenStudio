@@ -29,8 +29,9 @@ This project is still in development, so there are currently no release builds y
 - [Linux](https://nightly.link/megaminerjenny/HeavenStudio/workflows/main/master/StandaloneLinux64-build.zip)
 - [MacOS](https://nightly.link/megaminerjenny/HeavenStudio/workflows/main/master/StandaloneOSX-build.zip)
 #### Important Notes:
-- MacOS and Linux-based builds are not fully tested, you may [experience bugs with audio-related tasks](https://github.com/megaminerjenny/HeavenStudio/issues/72).
-- Linux and MacOS prebuilt binaries **ARE BUGGY** (AssetBundles do not get built), please build the project yourself instead.
+- On MacOS and Linux builds you may [experience bugs with audio-related tasks](https://github.com/megaminerjenny/HeavenStudio/issues/72), but in most cases Heaven Studio works perfectly.
+- On MacOS you'll need to have Discord open in the background for now, there's a bug that causes the DiscordSDK library to crash when the rich presence is updated while Discord is not open in the background.
+- MacOS and Linux prebuilt binaries **ARE BUGGY** (AssetBundles do not get built causing some minigames as KarateMan to not render correctly), please build the project yourself instead using the instructions below.
 
 
 ## Self-Building
