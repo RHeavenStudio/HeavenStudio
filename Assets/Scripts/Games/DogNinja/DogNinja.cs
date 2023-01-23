@@ -23,7 +23,7 @@ namespace HeavenStudio.Games.Loaders
                 },
                 new GameAction("ThrowObjectLeft", "Throw Left Object")
                 {
-                    function = delegate { DogNinja.instance.ThrowObjectLeft(eventCaller.currentEntity.beat); }, 
+                    function = delegate { DogNinja.instance.ThrowObjectLeft(eventCaller.currentEntity.beat, eventCaller.currentEntity["type"]); }, 
                     defaultLength = 2,
                     parameters = new List<Param>()
                     {
@@ -62,12 +62,14 @@ namespace HeavenStudio.Games
     {
         [Header("Animators")]
         public Animator BirdAnim; // Bird flying in and out
-        public Animator DogAnim; // Bird flying in and out
+        public Animator DogAnim; // Dog misc animations
         
         [Header("References")]
-        public GameObject ObjectBase;
+        public GameObject ObjectLeftBase;
+        public GameObject ObjectRightBase;
         public GameObject HalvesBase;
         public GameObject FullBird;
+        public GameObject Dog;
         public Transform ObjectHolder;
         public Transform HalvesHolder;
 
@@ -75,6 +77,9 @@ namespace HeavenStudio.Games
         public BezierCurve3D CurveFromLeft;
         public BezierCurve3D CurveFromRight;
 
+        private float lastReportedBeat = 0f;
+        private bool birdOnScreen = false;
+        
         public static DogNinja instance;
 
         public enum ObjectType
@@ -97,26 +102,16 @@ namespace HeavenStudio.Games
 
         private void Update()
         {
-            if (Input.GetKeyDown(KeyCode.S))
-            {
-                Debug.Log("BOP! PLEASE");
-                DogAnim.Play("bop");
-            }
-            /*
-            DogAnim.SetBool("ShouldOpenMouth", foodHolder.childCount != 0);
-
-            if (PlayerInput.GetAnyDirectionDown() && !IsExpectingInputNow(InputType.DIRECTION_DOWN))
-            {
-                headAndBodyAnim.Play("BiteL", 0, 0);
-            }
-            else if (PlayerInput.Pressed() && !IsExpectingInputNow(InputType.STANDARD_DOWN))
-            {
-                headAndBodyAnim.Play("BiteR", 0, 0);
-            }
-
             if (Conductor.instance.ReportBeat(ref lastReportedBeat))
             {
-
+                DogAnim.Play("Bop", 0, 0);
+            }
+            
+            /*
+            if (Input.GetKeyDown(KeyCode.S))
+            {
+                Debug.Log("bop test -AJ");
+                DogAnim.Play("Bop");
             }
             */
         }
@@ -126,7 +121,7 @@ namespace HeavenStudio.Games
             DogAnim.Play("Bop");
         }
 
-        public void ThrowObjectLeft(float beat)
+        public void ThrowObjectLeft(float beat, int type)
         {
             Jukebox.PlayOneShotGame("dogNinja/fruit1");
         }
@@ -138,8 +133,14 @@ namespace HeavenStudio.Games
 
         public void CutEverything(float beat)
         {
-            Jukebox.PlayOneShotGame("dogNinja/bird_flap");
-            BirdAnim.Play("FlyIn");
+            if (!birdOnScreen) {
+                Jukebox.PlayOneShotGame("dogNinja/bird_flap");
+                BirdAnim.Play("FlyIn", 0, 0);
+                birdOnScreen = true;
+            } else {
+                BirdAnim.Play("FlyOut", 0, 0);
+                birdOnScreen = false;
+            }
         }
 
         public void HereWeGo(float beat)

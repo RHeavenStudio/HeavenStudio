@@ -107,6 +107,8 @@ MonoBehaviour:
   isEligible: 0
   triggersAutoplay: 1
   startBeat: 0
+  CurveFromLeft: {fileID: 0}
+  CurveFromRight: {fileID: 0}
 --- !u!1 &127654075222335198
 GameObject:
   m_ObjectHideFlags: 0
@@ -1243,7 +1245,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &1671099869309974123
 Transform:
   m_ObjectHideFlags: 0
@@ -1309,14 +1311,17 @@ MonoBehaviour:
   EligibleHits: []
   scheduledInputs: []
   firstEnable: 0
-  BirdAnim: {fileID: 0}
-  ObjectBase: {fileID: 0}
+  BirdAnim: {fileID: 4964290445827434540}
+  DogAnim: {fileID: 1770250701376598399}
+  ObjectLeftBase: {fileID: 5163996841361280296}
+  ObjectRightBase: {fileID: 119991411479083905}
   HalvesBase: {fileID: 0}
-  FullBird: {fileID: 0}
-  ObjectHolder: {fileID: 0}
-  HalvesHolder: {fileID: 0}
-  CurveFromLeft: {fileID: 0}
-  CurveFromRight: {fileID: 0}
+  FullBird: {fileID: 3439822116337821266}
+  Dog: {fileID: 7056643801436531617}
+  ObjectHolder: {fileID: 1671099869309974123}
+  HalvesHolder: {fileID: 2078672318315355962}
+  CurveFromLeft: {fileID: 1761052573981030483}
+  CurveFromRight: {fileID: 8610298732975356966}
 --- !u!1 &3439822116337821266
 GameObject:
   m_ObjectHideFlags: 0
@@ -1333,7 +1338,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &6570085815560366024
 Transform:
   m_ObjectHideFlags: 0
@@ -1806,6 +1811,8 @@ MonoBehaviour:
   isEligible: 0
   triggersAutoplay: 1
   startBeat: 0
+  CurveFromLeft: {fileID: 0}
+  CurveFromRight: {fileID: 0}
 --- !u!1 &5340671340987037539
 GameObject:
   m_ObjectHideFlags: 0
@@ -2266,7 +2273,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &824996811837558432
 Transform:
   m_ObjectHideFlags: 0
@@ -2375,7 +2382,7 @@ SpriteRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: -10
+  m_SortingOrder: 10
   m_Sprite: {fileID: 21300000, guid: 1b7d68fa62aa6fa49ac07f1dfe3aa7d8, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
@@ -2656,12 +2663,12 @@ GameObject:
   - component: {fileID: 7071035726964846845}
   - component: {fileID: 6326226947728656543}
   m_Layer: 0
-  m_Name: DogTorso (1)
+  m_Name: DogTorsoBottom
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &7071035726964846845
 Transform:
   m_ObjectHideFlags: 0

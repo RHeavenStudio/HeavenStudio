@@ -15,7 +15,9 @@ namespace HeavenStudio.Games.Scripts_DogNinja
         bool flying = true;
         float flyBeats;
 
-        [NonSerialized] public BezierCurve3D curve;
+        [Header("Curves")]
+        public BezierCurve3D CurveFromLeft;
+        public BezierCurve3D CurveFromRight;
 
         private DogNinja game;
         
@@ -26,7 +28,7 @@ namespace HeavenStudio.Games.Scripts_DogNinja
 
         private void Start()
         {
-            game.ScheduleInput(startBeat, flyBeats, InputType.STANDARD_DOWN, Just, Out, Out);
+            game.ScheduleInput(startBeat, 1f, InputType.STANDARD_DOWN, Just, Out, Miss);
         }
 
         private void Update()
@@ -37,7 +39,15 @@ namespace HeavenStudio.Games.Scripts_DogNinja
 
                 float flyPos = cond.GetPositionFromBeat(startBeat, flyBeats);
                 flyPos *=  0.6f;
-                transform.position = curve.GetPoint(flyPos);
+                /*
+                if (true)
+                {
+                    transform.position = CurveFromLeft.GetPoint(flyPos);
+                } else {
+                    transform.position = CurveFromRight.GetPoint(flyPos);
+                }
+                */
+                
 
                 if (flyPos > 1f)
                 {
@@ -51,7 +61,7 @@ namespace HeavenStudio.Games.Scripts_DogNinja
             flying = false;
 
             //game.headAndBodyAnim.Play("BiteR", 0, 0);
-            //Jukebox.PlayOneShotGame("blueBear/chompDonut");
+            Jukebox.PlayOneShotGame("dogNinja/fruit2");
 
             SpawnHalves();
 
@@ -66,7 +76,16 @@ namespace HeavenStudio.Games.Scripts_DogNinja
             CutObject();
         }
 
-        private void Miss(PlayerActionEvent caller) {}
+        private void Miss(PlayerActionEvent caller) 
+        {
+            Jukebox.PlayOneShot("dogNinja/fruit1");
+            BeatAction.New(game.gameObject, new List<BeatAction.Action>()
+            {
+                new BeatAction.Action(startBeat+ 2.45f, delegate { 
+                    Destroy(this.gameObject);
+                }),
+            });
+        }
 
         private void Out(PlayerActionEvent caller) {}
 
