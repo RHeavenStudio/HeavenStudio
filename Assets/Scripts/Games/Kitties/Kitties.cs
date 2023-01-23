@@ -207,7 +207,7 @@ namespace HeavenStudio.Games
                     new BeatAction.Action(beat + .5f, delegate { kitties[2].Play("RollStart", 0, 0); }),
                     new BeatAction.Action(beat + 1f, delegate { kitties[2].Play("RollStart", 0, 0); }),
                     new BeatAction.Action(beat + 1.5f, delegate { kitties[2].Play("RollStart", 0, 0); }),
-                    new BeatAction.Action(beat + 2.75f, delegate { kitties[2].Play("RollEnd", 0, 0); })
+                    new BeatAction.Action(beat + 2f, delegate { player.ScheduleRollFinish(beat); })
                     });
 
             //for (int x = 0; x < 3; x++)

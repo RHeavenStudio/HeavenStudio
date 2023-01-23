@@ -17,8 +17,8 @@ namespace HeavenStudio.Games.Scripts_Kitties
         private bool hasClapped = false;
         public bool canClap = false;
 
-        private bool hasSpun = false;
-        private bool canSpin = true;
+        private bool hasSpun = true;
+        private bool checkSpin = false;
 
         private bool hasFish = false;
         private bool canFish = false;
@@ -41,6 +41,12 @@ namespace HeavenStudio.Games.Scripts_Kitties
                 else
                     anim.Play("FaceClapFail", 0, 0);
             }
+
+            if (PlayerInput.AltPressed() && canClap && !Kitties.instance.IsExpectingInputNow(InputType.STANDARD_ALT_DOWN)
+                || PlayerInput.AltPressedUp() && canClap && !Kitties.instance.IsExpectingInputNow(InputType.STANDARD_ALT_UP) && hasSpun)
+            {
+                RollFail();
+            }
         }
 
         public void ScheduleClap(float beat, int type)
@@ -52,8 +58,14 @@ namespace HeavenStudio.Games.Scripts_Kitties
 
         public void ScheduleRoll(float beat)
         {
-            Kitties.instance.ScheduleInput(beat, 2f, InputType.STANDARD_ALT_DOWN, SpinSuccessOne, SpinMissOne, SpinEmpty);
-            Kitties.instance.ScheduleInput(beat, 2.75f, InputType.STANDARD_ALT_UP, SpinSuccessTwo, SpinMissTwo, SpinEmpty);
+                Kitties.instance.ScheduleInput(beat, 2f, InputType.STANDARD_ALT_DOWN, SpinSuccessOne, SpinMissOne, SpinEmpty);
+        }
+
+        public void ScheduleRollFinish(float beat)
+        {
+            Debug.Log(hasSpun);
+            if (hasSpun)
+                Kitties.instance.ScheduleInput(beat, 2.75f, InputType.STANDARD_ALT_UP, SpinSuccessTwo, SpinMissTwo, SpinEmpty);
         }
 
         public void ScheduleFish(float beat)
@@ -136,6 +148,7 @@ namespace HeavenStudio.Games.Scripts_Kitties
 
         public void SpinSuccessOne(PlayerActionEvent caller, float beat)
         {
+            hasSpun = true;
             Jukebox.PlayOneShotGame("kitties/roll5");
             anim.Play("Rolling", 0, 0);
         }
@@ -143,21 +156,36 @@ namespace HeavenStudio.Games.Scripts_Kitties
         public void SpinSuccessTwo(PlayerActionEvent caller, float beat)
         {
             Jukebox.PlayOneShotGame("kitties/roll6");
+            anim.Play("RollEnd", 0, 0);
         }
 
         public void SpinMissOne(PlayerActionEvent caller)
         {
-            Jukebox.PlayOneShotGame("kitties/roll5", -1f, 1, .3f);
+            hasSpun = false;
+            var cond = Conductor.instance;
+            Jukebox.PlayOneShotGame("kitties/roll5", -1f, 1, .1f);
+            Jukebox.PlayOneShotGame("kitties/roll6", cond.songPositionInBeats + .75f, 1, .1f);
         }
 
         public void SpinMissTwo(PlayerActionEvent caller)
         {
+            if (hasSpun)
+            {
+                RollFail();
+            }
             Jukebox.PlayOneShotGame("kitties/roll6", -1f, 1, .3f);
         }
 
         public void SpinEmpty(PlayerActionEvent caller)
         {
 
+        }
+
+        public void RollFail()
+        {
+            Jukebox.PlayOneShot("miss");
+            anim.Play("RollFail", 0, 0);
+            hasSpun = false;
         }
 
         public void FishSuccess(PlayerActionEvent caller, float beat)
