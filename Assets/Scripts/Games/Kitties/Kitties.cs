@@ -27,12 +27,23 @@ namespace HeavenStudio.Games.Loaders
                     }
                 },
 
-                new GameAction("spin", "Spin")
+                new GameAction("roll", "Roll")
                     {
-                        function = delegate { Kitties.instance.Spin(eventCaller.currentEntity.beat);  },
+                        function = delegate { Kitties.instance.Roll(eventCaller.currentEntity["toggle"], eventCaller.currentEntity.beat);  },
 
                         defaultLength = 4f,
-                    }
+
+                        parameters = new List<Param>()
+                        {
+                            new Param("toggle", false, "Keep Cats spawned", "Sets whether or not cats stay spawned after their cue"),
+                        }
+                    },
+
+                new GameAction ("fish", "Fish")
+                {
+                    function = delegate { Kitties.instance.CatchFish(eventCaller.currentEntity.beat); },
+                    defaultLength = 6f,
+                }
 
             });;
         }
@@ -46,6 +57,8 @@ namespace HeavenStudio.Games
         public CtrTeppanPlayer player;
         public Animator[] kitties;
         public GameObject[] Cats;
+
+        public GameObject Fish;
 
         public enum SpawnType
         {
@@ -158,7 +171,7 @@ namespace HeavenStudio.Games
             }
         }
 
-        public void Spin(float beat)
+        public void Roll(bool keepSpawned, float beat)
         {
             player.ScheduleRoll(beat);
             MultiSound.Play(new MultiSound.Sound[] {
@@ -209,6 +222,36 @@ namespace HeavenStudio.Games
             //        new BeatAction.Action(beat + 1.5f, delegate { kitties[x].Play("RollStart", 0, 0); }),
             //        });
             //}
+
+            if (!keepSpawned)
+            {
+                BeatAction.New(Cats[0], new List<BeatAction.Action>()
+            {
+                    new BeatAction.Action(beat + 3.5f, delegate { Cats[0].transform.GetChild(0).gameObject.SetActive(false);}),
+                    new BeatAction.Action(beat + 3.5f, delegate { Cats[1].transform.GetChild(0).gameObject.SetActive(false);}),
+                    new BeatAction.Action(beat + 3.5f, delegate { Cats[2].transform.GetChild(0).gameObject.SetActive(false);}),
+                    new BeatAction.Action(beat + 3.5f, delegate { player.canClap = false;}),
+                });
+            }
+        }
+
+        public void CatchFish(float beat)
+        {
+            player.ScheduleFish(beat);
+            MultiSound.Play(new MultiSound.Sound[] {
+                new MultiSound.Sound("kitties/fish1", beat + 2f),
+                new MultiSound.Sound("kitties/fish2", beat + 2.25f),
+                new MultiSound.Sound("kitties/fish3", beat + 2.5f),
+
+            });
+
+            BeatAction.New(Cats[0], new List<BeatAction.Action>()
+            {
+                new BeatAction.Action(beat, delegate { Fish.SetActive(true); }),             
+                new BeatAction.Action(beat, delegate { Fish.GetComponent<Animator>().Play("DangleFish", 0, 0); }),
+                });
+
+
         }
 
         public void Spawn(int pos, int catNum, bool isMice, bool isInverse, bool firstSpawn)

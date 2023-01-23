@@ -52,8 +52,13 @@ namespace HeavenStudio.Games.Scripts_Kitties
 
         public void ScheduleRoll(float beat)
         {
-            Kitties.instance.ScheduleInput(beat, 2f, InputType.STANDARD_ALT_DOWN, SpinSuccessOne, SpinMiss, SpinEmpty);
-            Kitties.instance.ScheduleInput(beat, 2.75f, InputType.STANDARD_ALT_UP, SpinSuccessTwo, SpinMiss, SpinEmpty);
+            Kitties.instance.ScheduleInput(beat, 2f, InputType.STANDARD_ALT_DOWN, SpinSuccessOne, SpinMissOne, SpinEmpty);
+            Kitties.instance.ScheduleInput(beat, 2.75f, InputType.STANDARD_ALT_UP, SpinSuccessTwo, SpinMissTwo, SpinEmpty);
+        }
+
+        public void ScheduleFish(float beat)
+        {
+            Kitties.instance.ScheduleInput(beat, 2.75f, InputType.STANDARD_DOWN, FishSuccess, FishMiss, FishEmpty);
         }
 
         public void ClapSuccessOne(PlayerActionEvent Caller, float state)
@@ -140,12 +145,32 @@ namespace HeavenStudio.Games.Scripts_Kitties
             Jukebox.PlayOneShotGame("kitties/roll6");
         }
 
-        public void SpinMiss(PlayerActionEvent caller)
+        public void SpinMissOne(PlayerActionEvent caller)
         {
-            Jukebox.PlayOneShotGame("miss");
+            Jukebox.PlayOneShotGame("kitties/roll5", -1f, 1, .3f);
+        }
+
+        public void SpinMissTwo(PlayerActionEvent caller)
+        {
+            Jukebox.PlayOneShotGame("kitties/roll6", -1f, 1, .3f);
         }
 
         public void SpinEmpty(PlayerActionEvent caller)
+        {
+
+        }
+
+        public void FishSuccess(PlayerActionEvent caller, float beat)
+        {
+            Jukebox.PlayOneShotGame("kitties/fish4");
+        }
+
+        public void FishMiss(PlayerActionEvent caller)
+        {
+            Jukebox.PlayOneShot("miss");
+        }
+
+        public void FishEmpty(PlayerActionEvent caller)
         {
 
         }
