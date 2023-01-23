@@ -1,11 +1,11 @@
 # Build instructions
 
-### Prerequisites:
+## Prerequisites:
 - git (see below to know how to install git)
 - A Unity 2020.3.xx LTS version
 - A Machine running Windows, Linux or MacOS
 
-### Installing git:
+## Installing git:
 #### Windows
 1. Grab the installer from [here](https://git-scm.com/download/win).
 2. Follow the usual installation process.
@@ -27,7 +27,7 @@ sudo brew install git
 1. You already know what to do.
 
 
-### Building Heaven Studio:
+## Building Heaven Studio:
 1. Clone the repository to your machine
 ```
 git clone https://github.com/megaminerjenny/HeavenStudio.git
