@@ -56,5 +56,5 @@ jobs:
         uses: actions/upload-artifact@v3
         with:
           name: ${{ matrix.targetPlatform }}-build
-          path: ./build/${{ matrix.targetPlatform }}.tar
+          path: ${{ matrix.targetPlatform }}.tar
 
