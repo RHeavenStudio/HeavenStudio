@@ -50,6 +50,12 @@ namespace HeavenStudio.Games.Scripts_Kitties
             Kitties.instance.ScheduleInput(beat, 3f, InputType.STANDARD_DOWN, ClapSuccessTwo, ClapMissTwo, ClapEmpty);
         }
 
+        public void ScheduleRoll(float beat)
+        {
+            Kitties.instance.ScheduleInput(beat, 2f, InputType.STANDARD_ALT_DOWN, SpinSuccessOne, SpinMiss, SpinEmpty);
+            Kitties.instance.ScheduleInput(beat, 2.75f, InputType.STANDARD_ALT_UP, SpinSuccessTwo, SpinMiss, SpinEmpty);
+        }
+
         public void ClapSuccessOne(PlayerActionEvent Caller, float state)
         {
             if (spawnType != 3)
@@ -121,6 +127,27 @@ namespace HeavenStudio.Games.Scripts_Kitties
         public void ClapMissTwo(PlayerActionEvent Caller)
         {
             Jukebox.PlayOneShotGame("kitties/ClapMiss2");
+        }
+
+        public void SpinSuccessOne(PlayerActionEvent caller, float beat)
+        {
+            Jukebox.PlayOneShotGame("kitties/roll5");
+            anim.Play("Rolling", 0, 0);
+        }
+
+        public void SpinSuccessTwo(PlayerActionEvent caller, float beat)
+        {
+            Jukebox.PlayOneShotGame("kitties/roll6");
+        }
+
+        public void SpinMiss(PlayerActionEvent caller)
+        {
+            Jukebox.PlayOneShotGame("miss");
+        }
+
+        public void SpinEmpty(PlayerActionEvent caller)
+        {
+
         }
     }
 }

@@ -14,7 +14,7 @@ namespace HeavenStudio.Games.Loaders
             {
                 new GameAction("clap", "Cat Clap")
                 {
-                    function = delegate { Kitties.instance.Clap(eventCaller.currentEntity["toggle"], eventCaller.currentEntity["toggle1"], eventCaller.currentEntity["toggle2"], 
+                    function = delegate { Kitties.instance.Clap(eventCaller.currentEntity["toggle"], eventCaller.currentEntity["toggle1"], eventCaller.currentEntity["toggle2"],
                         eventCaller.currentEntity.beat,  eventCaller.currentEntity["type"]); },
 
                     defaultLength = 4f,
@@ -26,6 +26,14 @@ namespace HeavenStudio.Games.Loaders
                         new Param("toggle2", false, "Keep Cats Spawned", "Sets whether or not cats stay spawned after their cue"),
                     }
                 },
+
+                new GameAction("spin", "Spin")
+                    {
+                        function = delegate { Kitties.instance.Spin(eventCaller.currentEntity.beat);  },
+
+                        defaultLength = 4f,
+                    }
+
             });;
         }
     }
@@ -148,6 +156,59 @@ namespace HeavenStudio.Games
                     new BeatAction.Action(beat + 3.5f, delegate { player.canClap = false;}),
                 });
             }
+        }
+
+        public void Spin(float beat)
+        {
+            player.ScheduleRoll(beat);
+            MultiSound.Play(new MultiSound.Sound[] {
+                new MultiSound.Sound("kitties/roll1", beat),
+                new MultiSound.Sound("kitties/roll2", beat + .5f),
+                new MultiSound.Sound("kitties/roll3", beat + 1f),
+                new MultiSound.Sound("kitties/roll4", beat + 1.5f)
+
+            });
+            BeatAction.New(Cats[0], new List<BeatAction.Action>()
+                {
+                    new BeatAction.Action(beat, delegate { kitties[0].Play("RollStart", 0, 0); }),
+                    new BeatAction.Action(beat + .5f, delegate { kitties[0].Play("RollStart", 0, 0); }),
+                    new BeatAction.Action(beat + 1f, delegate { kitties[0].Play("RollStart", 0, 0); }),
+                    new BeatAction.Action(beat + 1.5f, delegate { kitties[0].Play("RollStart", 0, 0); }),
+                    new BeatAction.Action(beat + 2f, delegate { kitties[0].Play("Rolling", 0, 0); }),
+                    new BeatAction.Action(beat + 2.75f, delegate { kitties[0].Play("RollEnd", 0, 0); })
+                    });
+
+            BeatAction.New(Cats[1], new List<BeatAction.Action>()
+                {
+                    new BeatAction.Action(beat, delegate { kitties[1].Play("RollStart", 0, 0); }),
+                    new BeatAction.Action(beat + .5f, delegate { kitties[1].Play("RollStart", 0, 0); }),
+                    new BeatAction.Action(beat + 1f, delegate { kitties[1].Play("RollStart", 0, 0); }),
+                    new BeatAction.Action(beat + 1.5f, delegate { kitties[1].Play("RollStart", 0, 0); }),
+                    new BeatAction.Action(beat + 2f, delegate { kitties[1].Play("Rolling", 0, 0); }),
+                    new BeatAction.Action(beat + 2.75f, delegate { kitties[1].Play("RollEnd", 0, 0); })
+                    });
+
+            BeatAction.New(Cats[2], new List<BeatAction.Action>()
+                {
+                    new BeatAction.Action(beat, delegate { kitties[2].Play("RollStart", 0, 0); }),
+                    new BeatAction.Action(beat + .5f, delegate { kitties[2].Play("RollStart", 0, 0); }),
+                    new BeatAction.Action(beat + 1f, delegate { kitties[2].Play("RollStart", 0, 0); }),
+                    new BeatAction.Action(beat + 1.5f, delegate { kitties[2].Play("RollStart", 0, 0); }),
+                    new BeatAction.Action(beat + 2.75f, delegate { kitties[2].Play("RollEnd", 0, 0); })
+                    });
+
+            //for (int x = 0; x < 3; x++)
+            //{
+            //    Debug.Log(x + " " + kitties.Length);
+
+            //    BeatAction.New(Cats[x], new List<BeatAction.Action>()
+            //    {
+            //        new BeatAction.Action(beat, delegate { kitties[x].Play("RollStart", 0, 0); }),
+            //        new BeatAction.Action(beat + .5f, delegate { kitties[x].Play("RollStart", 0, 0); }),
+            //        new BeatAction.Action(beat + 1f, delegate { kitties[x].Play("RollStart", 0, 0); }),
+            //        new BeatAction.Action(beat + 1.5f, delegate { kitties[x].Play("RollStart", 0, 0); }),
+            //        });
+            //}
         }
 
         public void Spawn(int pos, int catNum, bool isMice, bool isInverse, bool firstSpawn)
