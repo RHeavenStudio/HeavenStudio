@@ -32,11 +32,13 @@ sudo brew install git
 ```
 git clone https://github.com/megaminerjenny/HeavenStudio.git
 ```
+It should clone to the home directory on your machine by default (on Windows that's your main user's folder, on MacOS that's the folder you access by pressing Shift + Command + H in Finder)
+
 2. Open Unity 2020.3.xx LTS.
 3. Load the HeavenStudio repository you just cloned to Unity.
-4. After Unity loads, Build AssetBundles by going to Assets -> Build AssetBundles
-5. After Building AssetBundles is done, build the game itself by going to File -> Build Settings -> Build
-6. And done, you now have built the game for your current platform.
+5. After Unity loads, Build AssetBundles by going to Assets -> Build AssetBundles
+6. After Building AssetBundles is done, build the game itself by going to File -> Build Settings -> Build
+7. And done, you now have built the game for your current platform.
 
 
 ### Platform-specific notes:
