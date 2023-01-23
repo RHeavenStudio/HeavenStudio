@@ -66,6 +66,14 @@ namespace HeavenStudio.Games
             instance = this;
         }
 
+        void OnDestroy()
+        {
+            if (!Conductor.instance.isPlaying || Conductor.instance.isPaused)
+            {
+                if (queuedInputs.Count > 0) queuedInputs.Clear();
+            }
+        }
+
         public void Update()
         {
             var cond = Conductor.instance;

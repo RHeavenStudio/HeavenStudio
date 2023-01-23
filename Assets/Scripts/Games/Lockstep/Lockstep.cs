@@ -118,6 +118,14 @@ namespace HeavenStudio.Games
             currentBGOffColor = defaultBGColorOff;
         }
 
+        void OnDestroy()
+        {
+            if (!Conductor.instance.isPlaying || Conductor.instance.isPaused)
+            {
+                if (queuedInputs.Count > 0) queuedInputs.Clear();
+            }
+        }
+
         public void Update()
         {
             var cond = Conductor.instance;
@@ -140,6 +148,7 @@ namespace HeavenStudio.Games
                     currentMissStage = HowMissed.NotMissed;
                     var beatAnimCheck = Math.Round(cond.songPositionInBeats * 2);
                     var stepPlayerAnim = (beatAnimCheck % 2 != 0 ? "OffbeatMarch" : "OnbeatMarch");
+                    Jukebox.PlayOneShotGame("lockstep/miss");
                     stepswitcherP.DoScaledAnimationAsync(stepPlayerAnim, 0.5f);
                 }
             }
@@ -262,15 +271,14 @@ namespace HeavenStudio.Games
                 var beatAnimCheck = Math.Round(cond.songPositionInBeats * 2);
                 if (beatAnimCheck % 2 != 0)
                 {
-                    Jukebox.PlayOneShotGame("lockstep/miss");
+                    Jukebox.PlayOneShotGame("lockstep/tink");
                     stepswitcherP.DoScaledAnimationAsync("OffbeatMarch", 0.5f);
                 }
                 else
                 {
-                    Jukebox.PlayOneShotGame("lockstep/miss");
+                    Jukebox.PlayOneShotGame("lockstep/tink");
                     stepswitcherP.DoScaledAnimationAsync("OnbeatMarch", 0.5f);
                 }
-                Debug.Log("Barely");
                 return;
             }
             Success();
