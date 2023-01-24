@@ -25,27 +25,33 @@ namespace HeavenStudio.Games.Loaders
                     },
                     defaultLength = 1f,
                 },
-                new GameAction("hai", "Hai!")
+                new GameAction("marching", "Stepping")
                 {
-                    function = delegate { var e = eventCaller.currentEntity; Lockstep.instance.Hai(e.beat); },
-                    defaultLength = 1f,
-                    inactiveFunction = delegate { var e = eventCaller.currentEntity; Lockstep.instance.Hai(e.beat);}
+                    preFunction = delegate {var e = eventCaller.currentEntity; Lockstep.Marching(e.beat, e.length);},
+                    defaultLength = 4f,
+                    resizable = true
                 },
                 new GameAction("offbeatSwitch", "Switch to Offbeat")
                 {
                     preFunction = delegate { var e = eventCaller.currentEntity; Lockstep.OffbeatSwitch(e.beat); },
-                    defaultLength = 8f
+                    defaultLength = 3.5f
                 },
                 new GameAction("onbeatSwitch", "Switch to Onbeat")
                 {
                     preFunction = delegate { var e = eventCaller.currentEntity; Lockstep.OnbeatSwitch(e.beat); },
                     defaultLength = 2f
                 },
-                new GameAction("marching", "Stepping")
+                new GameAction("hai", "Hai!")
                 {
-                    preFunction = delegate {var e = eventCaller.currentEntity; Lockstep.Marching(e.beat, e.length);},
-                    defaultLength = 4f,
-                    resizable = true
+                    function = delegate { var e = eventCaller.currentEntity; Lockstep.instance.Hai(e.beat); },
+                    defaultLength = 1f,
+                    inactiveFunction = delegate { var e = eventCaller.currentEntity; Lockstep.instance.Hai(e.beat);}
+                },
+                new GameAction("ho", "Ho!")
+                {
+                    function = delegate { var e = eventCaller.currentEntity; Lockstep.instance.Ho(e.beat); },
+                    defaultLength = 1f,
+                    inactiveFunction = delegate { var e = eventCaller.currentEntity; Lockstep.instance.Ho(e.beat);}
                 },
                 new GameAction("set colours", "Set Background Colours")
                 {
@@ -178,6 +184,11 @@ namespace HeavenStudio.Games
             Jukebox.PlayOneShotGame("lockstep/switch1");
         }
 
+        public void Ho(float beat)
+        {
+            Jukebox.PlayOneShotGame("lockstep/switch4");
+        }
+
         public static void OnbeatSwitch(float beat)
         {
             MultiSound.Play(new MultiSound.Sound[]
@@ -207,11 +218,6 @@ namespace HeavenStudio.Games
                 new MultiSound.Sound("lockstep/switch1", beat + 2f),
                 new MultiSound.Sound("lockstep/switch2", beat + 3f),
                 new MultiSound.Sound("lockstep/switch3", beat + 3.5f),
-
-                new MultiSound.Sound("lockstep/switch4", beat + 4.5f),
-                new MultiSound.Sound("lockstep/switch4", beat + 5.5f),
-                new MultiSound.Sound("lockstep/switch4", beat + 6.5f),
-                new MultiSound.Sound("lockstep/switch4", beat + 7.5f),
             }, forcePlay: true);
 
             BeatAction.New(instance.gameObject, new List<BeatAction.Action>()
