@@ -1,4 +1,4 @@
-name: Build my project ✨
+name: Build Linux
 
 on: [push]
 
@@ -10,9 +10,7 @@ jobs:
       fail-fast: false
       matrix:
         targetPlatform:
-          - StandaloneWindows64
           - StandaloneLinux64
-          - StandaloneOSX
 
     steps:
       - name: Checkout repository
@@ -48,7 +46,7 @@ jobs:
           buildName: Heaven Studio
           buildsPath: build
           targetPlatform: ${{ matrix.targetPlatform }}
-
+          
       # Output
       - uses: actions/upload-artifact@v2
         with:

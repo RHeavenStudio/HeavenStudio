@@ -17,65 +17,46 @@ namespace HeavenStudio.Games.Loaders
             return new Minigame("lockstep", "Lockstep \n<color=#eb5454>[WIP]</color>", "0058CE", false, false, new List<GameAction>()
             {
                 new GameAction("bop", "Bop")
+                {
+                    function = delegate { var e = eventCaller.currentEntity; Lockstep.instance.Bop(e.beat, e["toggle"]); },
+                    parameters = new List<Param>()
                     {
-                        function = delegate { var e = eventCaller.currentEntity; Lockstep.instance.Bop(e.beat, e["toggle"]); },
-                        parameters = new List<Param>()
-                        {
                         new Param("toggle", false, "Reset Pose", "Resets to idle pose.")
-                        },
-                        defaultLength = 1f,
                     },
-
-                
-
+                    defaultLength = 1f,
+                },
                 new GameAction("hai", "Hai!")
-                    {
-                        function = delegate { var e = eventCaller.currentEntity; Lockstep.instance.Hai(e.beat); },
-                        defaultLength = 1f,
-                        inactiveFunction = delegate { var e = eventCaller.currentEntity; Lockstep.instance.Hai(e.beat);}
-
-
-                    },
-
+                {
+                    function = delegate { var e = eventCaller.currentEntity; Lockstep.instance.Hai(e.beat); },
+                    defaultLength = 1f,
+                    inactiveFunction = delegate { var e = eventCaller.currentEntity; Lockstep.instance.Hai(e.beat);}
+                },
                 new GameAction("offbeatSwitch", "Switch to Offbeat")
-                    {
-                        function = delegate { var e = eventCaller.currentEntity; Lockstep.instance.OnbeatSwitch(e.beat); },
-                        defaultLength = 8f
-
-
-                    },
-
+                {
+                    preFunction = delegate { var e = eventCaller.currentEntity; Lockstep.OffbeatSwitch(e.beat); },
+                    defaultLength = 8f
+                },
                 new GameAction("onbeatSwitch", "Switch to Onbeat")
+                {
+                    preFunction = delegate { var e = eventCaller.currentEntity; Lockstep.OnbeatSwitch(e.beat); },
+                    defaultLength = 2f
+                },
+                new GameAction("marching", "Stepping")
+                {
+                    preFunction = delegate {var e = eventCaller.currentEntity; Lockstep.Marching(e.beat, e.length);},
+                    defaultLength = 4f,
+                    resizable = true
+                },
+                new GameAction("set colours", "Set Background Colours")
+                {
+                    function = delegate {var e = eventCaller.currentEntity; Lockstep.instance.SetbackgroundColours(e["colorA"], e["colorB"]); },
+                    parameters = new List<Param>()
                     {
-                        function = delegate { var e = eventCaller.currentEntity; Lockstep.instance.OffbeatSwitch(e.beat); },
-                        defaultLength = 2f
-
-
+                        new Param("colorA", Lockstep.defaultBGColorOn, "Onbeat", "Select the color that appears for the onbeat."),
+                        new Param("colorB", Lockstep.defaultBGColorOff, "Offbeat", "Select the color that appears for the offbeat."),
                     },
-
-                new GameAction("marching", "Onbeat Stepping")
-                    {
-                        function = delegate { var e = eventCaller.currentEntity; Lockstep.instance.OnbeatStep(e.beat, e.length); },
-                        defaultLength = 4f,
-                        resizable = true,
-                        hidden = true
-                    },
-
-                new GameAction("startStepping", "Start Stepping")
-                    {
-                        function = delegate { var e = eventCaller.currentEntity; Lockstep.instance.BeginStepping(e.beat); },
-                        defaultLength = 1f,
-                        hidden = true
-
-                    },
-
-                new GameAction("test1", "onbeat march test")
-                    {
-                        function = delegate { var e = eventCaller.currentEntity; Lockstep.instance.OnbeatMarch(e.beat); },
-                        defaultLength = 1f,
-                        hidden = true
-                    }
-
+                    defaultLength = 0.5f,
+                }
             });
 
         }
@@ -87,78 +68,96 @@ namespace HeavenStudio.Games
    // using Scripts_Lockstep;
     public class Lockstep : Minigame
     {
+        private static Color _defaultBGColorOn;
+        public static Color defaultBGColorOn
+        {
+            get
+            {
+                ColorUtility.TryParseHtmlString("#f0338d", out _defaultBGColorOn);
+                return _defaultBGColorOn;
+            }
+        }
 
+        private static Color _defaultBGColorOff;
+        public static Color defaultBGColorOff
+        {
+            get
+            {
+                ColorUtility.TryParseHtmlString("#BC318B", out _defaultBGColorOff);
+                return _defaultBGColorOff;
+            }
+        }
 
-        //   private Animator stepswitcher;
-        
+        public Color currentBGOnColor;
+        public Color currentBGOffColor;
 
-        public Animator stepswitcherP;
-        public Animator stepswitcher0;
-        public Animator stepswitcher1;
-
-        public GameObject Player;
+        [Header("Components")]
+        [SerializeField] Animator stepswitcherP;
+        [SerializeField] Animator stepswitcher0;
+        [SerializeField] Animator stepswitcher1;
+        [SerializeField] SpriteRenderer background;
 
 
         [Header("Properties")]
-        public GameEvent bop = new GameEvent();
-        public bool goStep;
+        static List<float> queuedInputs = new List<float>();
+        HowMissed currentMissStage;
+        public enum HowMissed
+        {
+            NotMissed = 0,
+            MissedOff = 1,
+            MissedOn = 2
+        }
+        bool offColorActive;
 
-        public float steppingLength;
-        public float steppingStartBeat;
-        private float lastReportedBeat = 0f;
+        public static Lockstep instance;
 
-
-        public static Lockstep instance { get; set; }
-
-
-        // Start is called before the first frame update
         void Awake()
         {
             instance = this;
-            goStep = false;
+            currentBGOnColor = defaultBGColorOn;
+            currentBGOffColor = defaultBGColorOff;
         }
 
-        // Update is called once per frame
+        void OnDestroy()
+        {
+            if (!Conductor.instance.isPlaying || Conductor.instance.isPaused)
+            {
+                if (queuedInputs.Count > 0) queuedInputs.Clear();
+            }
+        }
+
         public void Update()
         {
-
             var cond = Conductor.instance;
-
-            if (goStep)
+            if (cond.isPlaying && !cond.isPaused)
             {
-                print("stepping is on");
-                if (Conductor.instance.ReportBeat(ref lastReportedBeat))
+                if (queuedInputs.Count > 0)
                 {
-                    print("one small step for switch");
-                    Jukebox.PlayOneShotGame("Lockstep/marchOnBeat1");
-                    stepswitcherP.DoScaledAnimationAsync("OnbeatMarch", 0.5f);
-                    stepswitcher0.DoScaledAnimationAsync("OnbeatMarch", 0.5f);
-                    stepswitcher1.DoScaledAnimationAsync("OnbeatMarch", 0.5f);
+                    foreach (var input in queuedInputs)
+                    {
+                        ScheduleInput(cond.songPositionInBeats, input - cond.songPositionInBeats, InputType.STANDARD_DOWN, Just, Miss, Nothing);
+                        BeatAction.New(instance.gameObject, new List<BeatAction.Action>()
+                        {
+                            new BeatAction.Action(input, delegate { EvaluateMarch(); }),
+                        });
+                    }
+                    queuedInputs.Clear();
                 }
-
+                if (PlayerInput.Pressed() && !IsExpectingInputNow(InputType.STANDARD_DOWN))
+                {
+                    currentMissStage = HowMissed.NotMissed;
+                    var beatAnimCheck = Math.Round(cond.songPositionInBeats * 2);
+                    var stepPlayerAnim = (beatAnimCheck % 2 != 0 ? "OffbeatMarch" : "OnbeatMarch");
+                    Jukebox.PlayOneShotGame("lockstep/miss");
+                    stepswitcherP.DoScaledAnimationAsync(stepPlayerAnim, 0.5f);
+                }
             }
-
-
-            if (PlayerInput.Pressed() && !IsExpectingInputNow())
-            {
-                //Jukebox.PlayOneShot("miss");
-
-                
-                var beatAnimCheck = Math.Round(Conductor.instance.songPositionInBeats * 2);
-                print("check: " + beatAnimCheck);
-                var stepPlayerAnim = (beatAnimCheck % 2 != 0 ? "OffbeatMarch" : "OnbeatMarch");
-
-                Jukebox.PlayOneShotGame("lockstep/miss");
-                stepswitcherP.DoScaledAnimationAsync(stepPlayerAnim, 0.5f);
-            }
-
 
         }
 
         public void Bop(float beat, bool reset)
         {
-            
-            if(reset)
+            if (reset)
             {
                 stepswitcher0.DoScaledAnimationAsync("BopReset", 0.5f);
                 stepswitcher1.DoScaledAnimationAsync("BopReset", 0.5f);
@@ -172,10 +171,6 @@ namespace HeavenStudio.Games
                 stepswitcherP.DoScaledAnimationAsync("Bop", 0.5f);
 
             }
-            
-
-
-
         }
 
         public void Hai(float beat)
@@ -183,23 +178,30 @@ namespace HeavenStudio.Games
             Jukebox.PlayOneShotGame("lockstep/switch1");
         }
 
-        public void BeginStepping(float beat)
-        {
-
-            BeatAction.New(instance.gameObject, new List<BeatAction.Action>()
-                {
-                    new BeatAction.Action(beat, delegate { goStep = true; }),
-                });
-
-            print("Start Stepping");
-            print(goStep);
-        }
-
-
-        public void OnbeatSwitch(float beat)
+        public static void OnbeatSwitch(float beat)
         {
             MultiSound.Play(new MultiSound.Sound[]
-                {
+            {
+                new MultiSound.Sound("lockstep/switch5", beat),
+                new MultiSound.Sound("lockstep/switch6", beat + 0.5f),
+                new MultiSound.Sound("lockstep/switch5", beat + 1f),
+                new MultiSound.Sound("lockstep/switch6", beat + 1.5f)
+            }, forcePlay: true);
+
+            BeatAction.New(instance.gameObject, new List<BeatAction.Action>()
+            {
+                new BeatAction.Action(beat, delegate { if (GameManager.instance.currentGame == "lockstep") Lockstep.instance.ChangeBeatBackGroundColour(false); }),
+                new BeatAction.Action(beat + 0.5f, delegate { if (GameManager.instance.currentGame == "lockstep") Lockstep.instance.ChangeBeatBackGroundColour(true); }),
+                new BeatAction.Action(beat + 1f, delegate { if (GameManager.instance.currentGame == "lockstep") Lockstep.instance.ChangeBeatBackGroundColour(false); }),
+                new BeatAction.Action(beat + 1.5f, delegate { if (GameManager.instance.currentGame == "lockstep") Lockstep.instance.ChangeBeatBackGroundColour(true); }),
+                new BeatAction.Action(beat + 2f, delegate { if (GameManager.instance.currentGame == "lockstep") Lockstep.instance.ChangeBeatBackGroundColour(false); }),
+            });
+        }
+
+        public static void OffbeatSwitch(float beat)
+        {
+            MultiSound.Play(new MultiSound.Sound[]
+            {
                 new MultiSound.Sound("lockstep/switch1", beat),
                 new MultiSound.Sound("lockstep/switch1", beat + 1f),
                 new MultiSound.Sound("lockstep/switch1", beat + 2f),
@@ -210,44 +212,142 @@ namespace HeavenStudio.Games
                 new MultiSound.Sound("lockstep/switch4", beat + 5.5f),
                 new MultiSound.Sound("lockstep/switch4", beat + 6.5f),
                 new MultiSound.Sound("lockstep/switch4", beat + 7.5f),
-                }, forcePlay: false);
+            }, forcePlay: true);
+
+            BeatAction.New(instance.gameObject, new List<BeatAction.Action>()
+            {
+                new BeatAction.Action(beat, delegate { if (GameManager.instance.currentGame == "lockstep") Lockstep.instance.ChangeBeatBackGroundColour(true); }),
+                new BeatAction.Action(beat + 1f, delegate { if (GameManager.instance.currentGame == "lockstep") Lockstep.instance.ChangeBeatBackGroundColour(false); }),
+                new BeatAction.Action(beat + 2f, delegate { if (GameManager.instance.currentGame == "lockstep") Lockstep.instance.ChangeBeatBackGroundColour(true); }),
+                new BeatAction.Action(beat + 3f, delegate { if (GameManager.instance.currentGame == "lockstep") Lockstep.instance.ChangeBeatBackGroundColour(false); }),
+                new BeatAction.Action(beat + 3.5f, delegate { if (GameManager.instance.currentGame == "lockstep") Lockstep.instance.ChangeBeatBackGroundColour(true); }),
+            });
         }
 
-        public void OffbeatSwitch(float beat)
+        public static void Marching(float beat, float length)
         {
-            var sound = new MultiSound.Sound[]
+            if (GameManager.instance.currentGame == "lockstep")
+            {
+                for (int i = 0; i < length + 1; i++)
                 {
-                    new MultiSound.Sound("lockstep/switch5", beat),
-                    new MultiSound.Sound("lockstep/switch6", beat + 0.5f),
-                    new MultiSound.Sound("lockstep/switch5", beat + 1f),
-                    new MultiSound.Sound("lockstep/switch6", beat + 1.5f)
-                };
-
-
-            MultiSound.Play(sound);
-
-
+                    Lockstep.instance.ScheduleInput(beat - 1, 1 + i, InputType.STANDARD_DOWN, Lockstep.instance.Just, Lockstep.instance.Miss, Lockstep.instance.Nothing);
+                    BeatAction.New(instance.gameObject, new List<BeatAction.Action>()
+                    {
+                        new BeatAction.Action(beat + i, delegate { Lockstep.instance.EvaluateMarch(); }),
+                    });
+                }
+            }
+            else
+            {
+                for (int i = 0; i < length + 1; i++)
+                {
+                    queuedInputs.Add(beat + i);
+                }
+            }
         }
 
-        public void OnbeatStep(float beat, float length)
+        public void EvaluateMarch()
         {
-            /*marching.length = length;
-            marching.startBeat = beat;
-            print("onbeatstep len: " + marching.length);
-            print("onbeatstep start: " + marching.startBeat);*/
+            var cond = Conductor.instance;
+            var beatAnimCheck = Math.Round(cond.songPositionInBeats * 2);
+            if (beatAnimCheck % 2 != 0)
+            {
+                stepswitcher0.DoScaledAnimationAsync("OffbeatMarch", 0.5f);
+                stepswitcher1.DoScaledAnimationAsync("OffbeatMarch", 0.5f);
+            }
+            else
+            {
+                stepswitcher0.DoScaledAnimationAsync("OnbeatMarch", 0.5f);
+                stepswitcher1.DoScaledAnimationAsync("OnbeatMarch", 0.5f);
+            }
         }
 
-        public void OnbeatMarch(float beat)
+        public void Just(PlayerActionEvent caller, float state)
         {
-
-            stepswitcher0.DoScaledAnimationAsync("OnbeatMarch", 0.5f);
-            stepswitcher1.DoScaledAnimationAsync("OnbeatMarch", 0.5f);
-            stepswitcherP.DoScaledAnimationAsync("OnbeatMarch", 0.5f);
-            Jukebox.PlayOneShotGame("lockstep/marchOnbeat1");
-
-
-
+            currentMissStage = HowMissed.NotMissed;
+            if (state >= 1f || state <= -1f)
+            {
+                var cond = Conductor.instance;
+                var beatAnimCheck = Math.Round(cond.songPositionInBeats * 2);
+                if (beatAnimCheck % 2 != 0)
+                {
+                    Jukebox.PlayOneShotGame("lockstep/tink");
+                    stepswitcherP.DoScaledAnimationAsync("OffbeatMarch", 0.5f);
+                }
+                else
+                {
+                    Jukebox.PlayOneShotGame("lockstep/tink");
+                    stepswitcherP.DoScaledAnimationAsync("OnbeatMarch", 0.5f);
+                }
+                return;
+            }
+            Success();
         }
 
+        public void Success()
+        {
+            var cond = Conductor.instance;
+            var beatAnimCheck = Math.Round(cond.songPositionInBeats * 2);
+            if (beatAnimCheck % 2 != 0)
+            {
+                Jukebox.PlayOneShotGame($"lockstep/marchOffbeat{UnityEngine.Random.Range(1, 3)}");
+                stepswitcherP.DoScaledAnimationAsync("OffbeatMarch", 0.5f);
+            }
+            else
+            {
+                Jukebox.PlayOneShotGame($"lockstep/marchOnbeat{UnityEngine.Random.Range(1, 3)}");
+                stepswitcherP.DoScaledAnimationAsync("OnbeatMarch", 0.5f);
+            }
+        }
+
+        public void Miss(PlayerActionEvent caller)
+        {
+            var cond = Conductor.instance;
+            var beatAnimCheck = Math.Round(cond.songPositionInBeats * 2);
+            
+            if (beatAnimCheck % 2 != 0 && currentMissStage != HowMissed.MissedOff)
+            {
+                stepswitcherP.Play("OffbeatMiss", 0, 0);
+                Jukebox.PlayOneShotGame("lockstep/wayOff");
+                currentMissStage = HowMissed.MissedOff;
+            }
+            else if (beatAnimCheck % 2 == 0 && currentMissStage != HowMissed.MissedOn)
+            {
+                stepswitcherP.Play("OnbeatMiss", 0, 0);
+                Jukebox.PlayOneShotGame("lockstep/wayOff");
+                currentMissStage = HowMissed.MissedOn;
+            }
+        }
+
+        public void ChangeBeatBackGroundColour(bool off)
+        {
+            if (off)
+            {
+                background.color = currentBGOffColor;
+                offColorActive = true;
+            }
+            else
+            {
+                background.color = currentBGOnColor;
+                offColorActive = false;
+            }
+        }
+
+        public void SetbackgroundColours(Color onColor, Color offColor)
+        {
+            currentBGOnColor = onColor;
+            currentBGOffColor = offColor;
+
+            if (offColorActive)
+            {
+                background.color = currentBGOffColor;
+            }
+            else
+            {
+                background.color = currentBGOnColor;
+            }
+        }
+
+        public void Nothing(PlayerActionEvent caller) {}
     }
 }
