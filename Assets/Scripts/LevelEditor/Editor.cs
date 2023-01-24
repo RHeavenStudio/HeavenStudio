@@ -33,7 +33,7 @@ namespace HeavenStudio.Editor
         public GameObject GameLetterbox;
 
         [Header("Rect")]
-        [SerializeField] private RenderTexture ScreenRenderTexture;
+        public RenderTexture ScreenRenderTexture;
         [SerializeField] private RawImage Screen;
         [SerializeField] private RectTransform GridGameSelector;
         public RectTransform eventSelectorBG;
@@ -50,6 +50,7 @@ namespace HeavenStudio.Editor
         [SerializeField] private Button UndoBTN;
         [SerializeField] private Button RedoBTN;
         [SerializeField] private Button MusicSelectBTN;
+        [SerializeField] private Button VideoExportBTN;
         [SerializeField] private Button FullScreenBTN;
         [SerializeField] private Button TempoFinderBTN;
         [SerializeField] private Button SnapDiagBTN;
@@ -91,9 +92,7 @@ namespace HeavenStudio.Editor
 
         public void Init()
         {
-            GameCamera.instance.camera.targetTexture = ScreenRenderTexture;
-            GameManager.instance.CursorCam.targetTexture = ScreenRenderTexture;
-            GameManager.instance.OverlayCamera.targetTexture = ScreenRenderTexture;
+            SetRenderTextures(ScreenRenderTexture);
             GameLetterbox = GameManager.instance.GameLetterbox;
             Screen.texture = ScreenRenderTexture;
 
@@ -109,6 +108,7 @@ namespace HeavenStudio.Editor
             Tooltip.AddTooltip(UndoBTN.gameObject, "Undo <color=#adadad>[Ctrl+Z]</color>");
             Tooltip.AddTooltip(RedoBTN.gameObject, "Redo <color=#adadad>[Ctrl+Y or Ctrl+Shift+Z]</color>");
             Tooltip.AddTooltip(MusicSelectBTN.gameObject, "Music Select");
+            Tooltip.AddTooltip(VideoExportBTN.gameObject, "Video Export\n<color=#adadad>(In Preview)</color>");
             Tooltip.AddTooltip(EditorThemeBTN.gameObject, "Editor Theme");
             Tooltip.AddTooltip(FullScreenBTN.gameObject, "Preview <color=#adadad>[Tab]</color>");
             Tooltip.AddTooltip(TempoFinderBTN.gameObject, "Tempo Finder");
@@ -119,6 +119,14 @@ namespace HeavenStudio.Editor
             UpdateEditorStatus(true);
 
             BuildDateDisplay.text = GlobalGameManager.buildTime;
+        }
+
+        public void SetRenderTextures(RenderTexture screenRenderTexture)
+        {
+            GameCamera.instance.camera.targetTexture = ScreenRenderTexture;
+            GameManager.instance.CursorCam.targetTexture = ScreenRenderTexture;
+            GameManager.instance.OverlayCamera.targetTexture = ScreenRenderTexture;
+            Screen.texture = ScreenRenderTexture;
         }
 
         public void AddIcon(Minigames.Minigame minigame)

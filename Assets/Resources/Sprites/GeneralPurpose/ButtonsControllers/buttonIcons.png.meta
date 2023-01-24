@@ -63,7 +63,7 @@ TextureImporter:
       213: 3724681018647327355
     second: ShouldersLeftOn
   externalObjects: {}
-  serializedVersion: 11
+  serializedVersion: 12
   mipmaps:
     mipMapMode: 0
     enableMipMap: 0
@@ -80,10 +80,12 @@ TextureImporter:
     externalNormalMap: 0
     heightScale: 0.25
     normalMapFilter: 0
+    flipGreenChannel: 0
   isReadable: 0
   streamingMipmaps: 0
   streamingMipmapsPriority: 0
   vTOnly: 0
+  ignoreMasterTextureLimit: 0
   grayScaleToAlpha: 0
   generateCubemap: 6
   cubemapConvolution: 0
@@ -122,6 +124,8 @@ TextureImporter:
   textureFormatSet: 0
   ignorePngGamma: 0
   applyGammaDecoding: 0
+  swizzle: 50462976
+  cookieLightType: 1
   platformSettings:
   - serializedVersion: 3
     buildTarget: DefaultTexturePlatform
@@ -137,6 +141,18 @@ TextureImporter:
     forceMaximumCompressionQuality_BC6H_BC7: 0
   - serializedVersion: 3
     buildTarget: Standalone
+    maxTextureSize: 1024
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 0
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 3
+    buildTarget: Server
     maxTextureSize: 1024
     resizeAlgorithm: 0
     textureFormat: -1
@@ -229,7 +245,7 @@ TextureImporter:
       tessellationDetail: 0
       bones: []
       spriteID: b980d338f44677b80800000000000000
-      internalID: -8397132687541991269
+      internalID: 8406874011085310447
       vertices: []
       indices: 
       edges: []
@@ -292,7 +308,7 @@ TextureImporter:
       tessellationDetail: 0
       bones: []
       spriteID: 99c5b7f905f769d80800000000000000
-      internalID: -8244262083605341031
+      internalID: -8397132687541991269
       vertices: []
       indices: 
       edges: []
@@ -580,9 +596,29 @@ TextureImporter:
     edges: []
     weights: []
     secondaryTextures: []
+    nameFileIdTable:
+      WestOn: -8397132687541991269
+      UpOn: -5863448563183388835
+      ShoulderLeftOff: -1348493139139215224
+      NorthOn: 8017398019882363653
+      ShouldersRightOn: 5518843884416884346
+      DownOn: 4213091988662033815
+      ShouldersLeftOn: 3724681018647327355
+      EastOn: 8406874011085310447
+      Pad: 6719230046462009688
+      ShouldersOn: -7444272823696498285
+      LeftOn: 6847377428827266393
+      RightOn: -4789233240444048905
+      ShoulderLeftOn: -598839719690993186
+      ShoulderRightOn: 7882489078324362733
+      Face: 3826735276939671808
+      ButtonOff: -7319796363159512643
+      ShouldersOff: -5368843543446870761
+      ShoulderRightOff: 6499095914430324874
+      SouthOn: 111238229322356548
+      ButtonOn: -6506423922138132652
   spritePackingTag: 
   pSDRemoveMatte: 0
-  pSDShowRemoveMatteOption: 0
   userData: 
   assetBundleName: 
   assetBundleVariant: 

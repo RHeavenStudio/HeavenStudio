@@ -21,12 +21,12 @@ namespace HeavenStudio
 
         // Current song position, in seconds
         private double songPos; // for Conductor use only
-        public float songPosition => (float) songPos;
+        public float songPosition { get { return (float)songPos; } set { songPos = value; } }
         public double songPositionAsDouble => songPos;
 
         // Current song position, in beats
         private double songPosBeat; // for Conductor use only
-        public float songPositionInBeats => (float) songPosBeat;
+        public float songPositionInBeats { get { return (float)songPosBeat; } set { songPosBeat = value; } }
         public double songPositionInBeatsAsDouble => songPosBeat;
 
         // Current time of the song
@@ -65,6 +65,9 @@ namespace HeavenStudio
         Util.Sound metronomeSound;
 
         public float timeSinceLastTempoChange = Single.MinValue;
+
+        // Used by VideoExport, since there are hundreds of references to Conductor.isPlaying
+        public bool ignoreConductorPlaying;
 
         private bool beat;
 
@@ -182,7 +185,7 @@ namespace HeavenStudio
 
         public void Update()
         {
-            if (isPlaying)
+            if (isPlaying && !ignoreConductorPlaying)
             {
                 double absTime = Time.realtimeSinceStartupAsDouble;
                 double dt = (absTime - lastAbsTime) * musicSource.pitch;

@@ -268,7 +268,7 @@ namespace HeavenStudio
         {
             PlayerInput.UpdateInputControllers();
 
-            if (BeatmapEntities() < 1) //bruh really you forgot to ckeck tempo changes
+            if (BeatmapEntities() < 1) // bruh really you forgot to ckeck tempo changes
                 return;
             if (!Conductor.instance.isPlaying)
                 return;
@@ -313,7 +313,7 @@ namespace HeavenStudio
             }
 
             float seekTime = 8f;
-            //seek ahead to preload games that have assetbundles
+            // seek ahead to preload games that have assetbundles
             SeekAheadAndPreload(Conductor.instance.songPositionInBeatsAsDouble, seekTime);
 
             SeekAheadAndDoPreEvent(Conductor.instance.songPositionInBeatsAsDouble, 2f);
@@ -364,16 +364,16 @@ namespace HeavenStudio
 
         #region Play Events
 
-        public void Play(float beat)
+        public void Play(float beat, bool startConductor = true)
         {
             canInput = true;
             inputOffsetSamples.Clear();
             averageInputOffset = 0;
-            StartCoroutine(PlayCo(beat));
+            StartCoroutine(PlayCo(beat, startConductor));
             onBeatChanged?.Invoke(beat);
         }
 
-        private IEnumerator PlayCo(float beat)
+        private IEnumerator PlayCo(float beat, bool startConductor = true)
         {
             yield return null;
             bool paused = Conductor.instance.isPaused;
@@ -382,7 +382,9 @@ namespace HeavenStudio
             Conductor.instance.SetVolume(Beatmap.musicVolume);
             Conductor.instance.firstBeatOffset = Beatmap.firstBeatOffset;
 
-            Conductor.instance.Play(beat);
+            if (startConductor)
+                Conductor.instance.Play(beat);
+
             if (!paused)
             {
                 SetCurrentEventToClosest(beat);

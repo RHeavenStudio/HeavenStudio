@@ -51,7 +51,7 @@ TextureImporter:
       213: 1853659262087658205
     second: Tunnel_scribble_1
   externalObjects: {}
-  serializedVersion: 11
+  serializedVersion: 12
   mipmaps:
     mipMapMode: 0
     enableMipMap: 0
@@ -68,10 +68,12 @@ TextureImporter:
     externalNormalMap: 0
     heightScale: 0.25
     normalMapFilter: 0
+    flipGreenChannel: 0
   isReadable: 0
   streamingMipmaps: 0
   streamingMipmapsPriority: 0
   vTOnly: 0
+  ignoreMasterTextureLimit: 0
   grayScaleToAlpha: 0
   generateCubemap: 6
   cubemapConvolution: 0
@@ -110,6 +112,8 @@ TextureImporter:
   textureFormatSet: 0
   ignorePngGamma: 0
   applyGammaDecoding: 0
+  swizzle: 50462976
+  cookieLightType: 1
   platformSettings:
   - serializedVersion: 3
     buildTarget: DefaultTexturePlatform
@@ -149,6 +153,18 @@ TextureImporter:
     forceMaximumCompressionQuality_BC6H_BC7: 0
   - serializedVersion: 3
     buildTarget: Android
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 3
+    buildTarget: Server
     maxTextureSize: 2048
     resizeAlgorithm: 0
     textureFormat: -1
@@ -508,9 +524,25 @@ TextureImporter:
     edges: []
     weights: []
     secondaryTextures: []
+    nameFileIdTable:
+      Tunnel_driver_eye_1: 6225767184515317341
+      Tunnel_driver_arm_front: -5940551810246903278
+      Tunnel_driver_happy: -1472107814103157282
+      Tunnel_driver_eye_3: -2135367472939861379
+      Tunnel_player_hand_front: -7076957733567873846
+      Tunnel_player_cowbell: 3929824364152350610
+      Tunnel_driver_eye_2: 4802309303705518609
+      Tunnel_scribble_1: 1853659262087658205
+      Tunnel_driver_angry: 7223666002751983023
+      Tunnel_player_hand_back: 6568891082516879021
+      Tunnel_driver_disappointed: -4039708861852059317
+      Tunnel_wheel: -5808443859968989733
+      Tunnel_driver_idle: -6705639023677779174
+      Tunnel_scribble_2: -511691372451951724
+      Tunnel_driver_arm_back: -7987745745510843009
+      Tunnel_driver_disturbed: 2439721830314071076
   spritePackingTag: 
   pSDRemoveMatte: 0
-  pSDShowRemoveMatteOption: 0
   userData: 
   assetBundleName: 
   assetBundleVariant: 

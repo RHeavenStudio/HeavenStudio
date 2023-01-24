@@ -57,7 +57,7 @@ TextureImporter:
       213: 1777998545360739411
     second: lockstep_bg
   externalObjects: {}
-  serializedVersion: 11
+  serializedVersion: 12
   mipmaps:
     mipMapMode: 0
     enableMipMap: 0
@@ -74,10 +74,12 @@ TextureImporter:
     externalNormalMap: 0
     heightScale: 0.25
     normalMapFilter: 0
+    flipGreenChannel: 0
   isReadable: 0
   streamingMipmaps: 0
   streamingMipmapsPriority: 0
   vTOnly: 0
+  ignoreMasterTextureLimit: 0
   grayScaleToAlpha: 0
   generateCubemap: 6
   cubemapConvolution: 0
@@ -116,6 +118,8 @@ TextureImporter:
   textureFormatSet: 0
   ignorePngGamma: 0
   applyGammaDecoding: 0
+  swizzle: 50462976
+  cookieLightType: 1
   platformSettings:
   - serializedVersion: 3
     buildTarget: DefaultTexturePlatform
@@ -131,6 +135,18 @@ TextureImporter:
     forceMaximumCompressionQuality_BC6H_BC7: 0
   - serializedVersion: 3
     buildTarget: Standalone
+    maxTextureSize: 4096
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 2
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 3
+    buildTarget: Server
     maxTextureSize: 4096
     resizeAlgorithm: 0
     textureFormat: -1
@@ -349,7 +365,7 @@ TextureImporter:
       tessellationDetail: 0
       bones: []
       spriteID: 8a4054649d5661ae0800000000000000
-      internalID: -1578962635485543256
+      internalID: -7603843444906200441
       vertices: []
       indices: 
       edges: []
@@ -370,7 +386,7 @@ TextureImporter:
       tessellationDetail: 0
       bones: []
       spriteID: e353eb160b6a94590800000000000000
-      internalID: -7689431612274100930
+      internalID: -3705083494900478275
       vertices: []
       indices: 
       edges: []
@@ -391,7 +407,7 @@ TextureImporter:
       tessellationDetail: 0
       bones: []
       spriteID: 7556ac30eeda84040800000000000000
-      internalID: 4632143454527972695
+      internalID: 4672785639704138982
       vertices: []
       indices: 
       edges: []
@@ -412,7 +428,7 @@ TextureImporter:
       tessellationDetail: 0
       bones: []
       spriteID: 6453a8a43a64ad160800000000000000
-      internalID: 7051025833746117958
+      internalID: -7689431612274100930
       vertices: []
       indices: 
       edges: []
@@ -433,7 +449,7 @@ TextureImporter:
       tessellationDetail: 0
       bones: []
       spriteID: 46b4e93d6a1cb5290800000000000000
-      internalID: -7900508199032304796
+      internalID: -1578962635485543256
       vertices: []
       indices: 
       edges: []
@@ -475,7 +491,7 @@ TextureImporter:
       tessellationDetail: 0
       bones: []
       spriteID: 083666263e40e2880800000000000000
-      internalID: -8633958060967697536
+      internalID: -8705528136369959139
       vertices: []
       indices: 
       edges: []
@@ -496,7 +512,7 @@ TextureImporter:
       tessellationDetail: 0
       bones: []
       spriteID: 7c0bf6834595dbc30800000000000000
-      internalID: 4376752631132958919
+      internalID: 8721321029831767130
       vertices: []
       indices: 
       edges: []
@@ -532,9 +548,27 @@ TextureImporter:
     edges: []
     weights: []
     secondaryTextures: []
+    nameFileIdTable:
+      stepswitcher_onbeat2: 4448651475430373734
+      stepswitcher_offbeat3: 1292918056351840569
+      stepswitcher_onbeat4: 6678189707026698426
+      lockstep_bg: 1777998545360739411
+      stepswitcher_bop1: -8705528136369959139
+      stepswitcher_onbeat1: 9047975854256012390
+      stepswitcher_bop2: 8721321029831767130
+      stepswitcher: -6961290807587789438
+      stepswitcher_offbeat2: 5037155186664620574
+      stepswitcher_onbeatMiss2: 1380531955285550272
+      stepswitcher_offbeatMiss1: -1578962635485543256
+      stepswitcher_bop3: -7689431612274100930
+      stepswitcher_offbeat4: 3854965462330847857
+      stepswitcher_bop4: -7603843444906200441
+      stepswitcher_onbeatMiss1: 4672785639704138982
+      stepswitcher_offbeat1: 9130296555604909335
+      stepswitcher_offbeatMiss2: -3705083494900478275
+      stepswitcher_onbeat3: -7069434044889276691
   spritePackingTag: 
   pSDRemoveMatte: 0
-  pSDShowRemoveMatteOption: 0
   userData: 
   assetBundleName: 
   assetBundleVariant: 

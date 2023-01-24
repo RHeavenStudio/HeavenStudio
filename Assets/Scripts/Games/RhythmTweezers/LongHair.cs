@@ -49,20 +49,23 @@ namespace HeavenStudio.Games.Scripts_RhythmTweezers
                     return;
                 }
 
-                Vector3 tst = tweezers.tweezerSpriteTrans.position;
-                var hairDirection = new Vector3(tst.x + 0.173f, tst.y) - holder.transform.position;
+                Vector3 tst = tweezers.tweezerSpriteTrans.GetChild(0).position; // Pull position
+                var hairDirection = tst - holder.transform.position;
                 holder.transform.rotation = Quaternion.FromToRotation(Vector3.down, hairDirection);
 
                 float normalizedBeat = Conductor.instance.GetPositionFromBeat(createBeat + game.tweezerBeatOffset + game.beatInterval, 0.5f);
                 anim.Play("LoopPull", 0, normalizedBeat);
                 tweezers.anim.Play("Tweezers_LongPluck", 0, normalizedBeat);
+                var newHairScale = new Vector3(1, Vector3.Distance(tst, holder.transform.position) * 0.5f);
+                holder.transform.localScale = newHairScale;
+                loop.transform.localScale = new Vector2(1, 1.25f) / newHairScale;
 
                 // Auto-release if holding at release time.
                 if (normalizedBeat >= 1f)
                     endEvent.Hit(0f);
             }
 
-            loop.transform.localScale = Vector2.one / holder.transform.localScale;
+            // loop.transform.localScale = Vector2.one / holder.transform.localScale;
         }
 
         public void EndAce()

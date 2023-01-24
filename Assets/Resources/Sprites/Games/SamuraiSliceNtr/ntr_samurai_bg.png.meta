@@ -63,7 +63,7 @@ TextureImporter:
       213: -6922750484375045539
     second: skyCol02
   externalObjects: {}
-  serializedVersion: 11
+  serializedVersion: 12
   mipmaps:
     mipMapMode: 0
     enableMipMap: 0
@@ -80,10 +80,12 @@ TextureImporter:
     externalNormalMap: 0
     heightScale: 0.25
     normalMapFilter: 0
+    flipGreenChannel: 0
   isReadable: 0
   streamingMipmaps: 0
   streamingMipmapsPriority: 0
   vTOnly: 0
+  ignoreMasterTextureLimit: 0
   grayScaleToAlpha: 0
   generateCubemap: 6
   cubemapConvolution: 0
@@ -122,6 +124,8 @@ TextureImporter:
   textureFormatSet: 0
   ignorePngGamma: 0
   applyGammaDecoding: 0
+  swizzle: 50462976
+  cookieLightType: 1
   platformSettings:
   - serializedVersion: 3
     buildTarget: DefaultTexturePlatform
@@ -137,6 +141,18 @@ TextureImporter:
     forceMaximumCompressionQuality_BC6H_BC7: 0
   - serializedVersion: 3
     buildTarget: Standalone
+    maxTextureSize: 4096
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 3
+    buildTarget: Server
     maxTextureSize: 4096
     resizeAlgorithm: 0
     textureFormat: -1
@@ -580,9 +596,29 @@ TextureImporter:
     edges: []
     weights: []
     secondaryTextures: []
+    nameFileIdTable:
+      leaf01: -7961978674611571604
+      leaf02: 640662885378615291
+      tree: -1059303611944620073
+      particle01: -5825381291038537540
+      skyCol00: -3054523488941900156
+      moon00: -3131000971811730462
+      wall: -6500309087461436040
+      treeBranch: 917311789028038370
+      particle04: 2390519632330745605
+      particle00_1: 2190835001878337691
+      tile: -5181417812472097833
+      particle00_2: -5088141013119983375
+      particle02: -8310146119116771886
+      moon02: -7758803115855393660
+      particle03: 2951188799808343
+      skyCol02: -6922750484375045539
+      moon01: -29157762183629966
+      particle00_0: -2320701839235687885
+      leaf00: -7515662816772666724
+      skyCol01: 7741520947546682715
   spritePackingTag: 
   pSDRemoveMatte: 0
-  pSDShowRemoveMatteOption: 0
   userData: 
   assetBundleName: ntrsamurai/common
   assetBundleVariant: 

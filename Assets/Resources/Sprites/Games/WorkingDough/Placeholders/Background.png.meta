@@ -114,7 +114,7 @@ TextureImporter:
       213: 5785239175260750690
     second: Gray_bright
   externalObjects: {}
-  serializedVersion: 11
+  serializedVersion: 12
   mipmaps:
     mipMapMode: 0
     enableMipMap: 0
@@ -131,10 +131,12 @@ TextureImporter:
     externalNormalMap: 0
     heightScale: 0.25
     normalMapFilter: 0
+    flipGreenChannel: 0
   isReadable: 0
   streamingMipmaps: 0
   streamingMipmapsPriority: 0
   vTOnly: 0
+  ignoreMasterTextureLimit: 0
   grayScaleToAlpha: 0
   generateCubemap: 6
   cubemapConvolution: 0
@@ -173,6 +175,8 @@ TextureImporter:
   textureFormatSet: 0
   ignorePngGamma: 0
   applyGammaDecoding: 0
+  swizzle: 50462976
+  cookieLightType: 1
   platformSettings:
   - serializedVersion: 3
     buildTarget: DefaultTexturePlatform
@@ -188,6 +192,18 @@ TextureImporter:
     forceMaximumCompressionQuality_BC6H_BC7: 0
   - serializedVersion: 3
     buildTarget: Standalone
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 3
+    buildTarget: Server
     maxTextureSize: 2048
     resizeAlgorithm: 0
     textureFormat: -1
@@ -988,9 +1004,46 @@ TextureImporter:
     edges: []
     weights: []
     secondaryTextures: []
+    nameFileIdTable:
+      Big_gear: -3202210406112372737
+      Truck: -1955448553306655712
+      Conveyer_0: -9078219959484023005
+      Bolt_circle: 3635372736935354343
+      Scrap_1: -6975036532566498788
+      Small_Scaffolding: 5689521111678254879
+      Big_window_bright: 4146750215183003818
+      Pipe_top: -299319040907507130
+      Ladder: 4124766128871187191
+      Worker_hand_waving: 8259849923703159093
+      Scaceshipe_eye_blue: -8175214546815243971
+      Small_gear: 5345675015610300735
+      Bolt: 7559667395802922924
+      Pipe_small: -4533083914078097330
+      Pipe_duct: -5396132258965337617
+      Gray_bright: 5785239175260750690
+      Pipe_big: 7183733443152805678
+      Cone: -7844662469168323346
+      Spaceship: 5657654767279156548
+      Scaffolding: -4821837225436941063
+      Scrap_0: 7028156775451301730
+      Floor: 7014286043975846214
+      Conveyer_3: -3958678274390686719
+      Machinery: -1184522252448690435
+      Medium_window: -3545097277708298872
+      Small_window: 1509818387281327783
+      Medium_window_bright: 8795698520555123846
+      Small_window_bright: 3315751534633444085
+      Spaceship_eye_bright: 7984505224714249162
+      Pipe_bottom: -4385901911928636727
+      Big_window: 7013917598222876018
+      Conveyer_2: -2146368423942107817
+      Fence: 3751706319272519800
+      Wall: 2669065081613744858
+      Worker_head_waving: 5816489992034856315
+      Pipe: 4730879572495800098
+      Conveyer_1: -4817409605821441833
   spritePackingTag: 
   pSDRemoveMatte: 0
-  pSDShowRemoveMatteOption: 0
   userData: 
   assetBundleName: 
   assetBundleVariant: 

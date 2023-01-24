@@ -96,7 +96,7 @@ TextureImporter:
       213: -5709889983327001567
     second: sign_grapple
   externalObjects: {}
-  serializedVersion: 11
+  serializedVersion: 12
   mipmaps:
     mipMapMode: 0
     enableMipMap: 0
@@ -113,10 +113,12 @@ TextureImporter:
     externalNormalMap: 0
     heightScale: 0.25
     normalMapFilter: 0
+    flipGreenChannel: 0
   isReadable: 0
   streamingMipmaps: 0
   streamingMipmapsPriority: 0
   vTOnly: 0
+  ignoreMasterTextureLimit: 0
   grayScaleToAlpha: 0
   generateCubemap: 6
   cubemapConvolution: 0
@@ -155,6 +157,8 @@ TextureImporter:
   textureFormatSet: 0
   ignorePngGamma: 0
   applyGammaDecoding: 0
+  swizzle: 50462976
+  cookieLightType: 1
   platformSettings:
   - serializedVersion: 3
     buildTarget: DefaultTexturePlatform
@@ -182,6 +186,18 @@ TextureImporter:
     forceMaximumCompressionQuality_BC6H_BC7: 0
   - serializedVersion: 3
     buildTarget: WebGL
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 2
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 3
+    buildTarget: Server
     maxTextureSize: 2048
     resizeAlgorithm: 0
     textureFormat: -1
@@ -856,9 +872,40 @@ TextureImporter:
     edges: []
     weights: []
     secondaryTextures: []
+    nameFileIdTable:
+      sing_border: 750180917687503391
+      star_small: 1959471778518291364
+      handright_1: -9049834619027126771
+      head_3: -7678601869563919383
+      head_5: 1205416701152040810
+      shadow: -8233742902054234554
+      head_1: -5723618315912617923
+      BG: -3488482804671198197
+      sign_middle: -8754115064420379011
+      legs_2: 7936729200490868366
+      wig: 2646150636597740373
+      sign_grapple: -5709889983327001567
+      handleft_1: 5681663196660831668
+      clapeffect_1: -7867679518333185158
+      clapeffect_2: -2365103584124447285
+      head_2: -2914173702609090789
+      tail: 5735307017529033047
+      star_medium: 6589483491849894661
+      handleft_2: -3056181920306362907
+      star_big: -1461973865608478210
+      legs_1: -2354044729926064474
+      legs_4: -3367980279426714170
+      clap_3: -4540527845152132483
+      head_4: -7561877552320588135
+      clap_2: -3507307964998350217
+      torso: 5006612820273086949
+      legs_3: 5274207419999558933
+      clapeffect_3: 478934498563711568
+      handright_2: -2416298612415578532
+      clap_1: -8980734014311415547
+      trioTiming: 7538691008291824435
   spritePackingTag: 
   pSDRemoveMatte: 0
-  pSDShowRemoveMatteOption: 0
   userData: 
   assetBundleName: 
   assetBundleVariant: 

@@ -156,7 +156,7 @@ TextureImporter:
       213: -4932753799771416749
     second: LittleChain
   externalObjects: {}
-  serializedVersion: 11
+  serializedVersion: 12
   mipmaps:
     mipMapMode: 0
     enableMipMap: 0
@@ -173,10 +173,12 @@ TextureImporter:
     externalNormalMap: 0
     heightScale: 0.25
     normalMapFilter: 0
+    flipGreenChannel: 0
   isReadable: 0
   streamingMipmaps: 0
   streamingMipmapsPriority: 0
   vTOnly: 0
+  ignoreMasterTextureLimit: 0
   grayScaleToAlpha: 0
   generateCubemap: 6
   cubemapConvolution: 0
@@ -215,6 +217,8 @@ TextureImporter:
   textureFormatSet: 0
   ignorePngGamma: 0
   applyGammaDecoding: 0
+  swizzle: 50462976
+  cookieLightType: 1
   platformSettings:
   - serializedVersion: 3
     buildTarget: DefaultTexturePlatform
@@ -230,6 +234,18 @@ TextureImporter:
     forceMaximumCompressionQuality_BC6H_BC7: 0
   - serializedVersion: 3
     buildTarget: Standalone
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 3
+    buildTarget: Server
     maxTextureSize: 2048
     resizeAlgorithm: 0
     textureFormat: -1
@@ -1324,9 +1340,60 @@ TextureImporter:
     edges: []
     weights: []
     secondaryTextures: []
+    nameFileIdTable:
+      MrGameAndWatchTrapped: 8631662724599282860
+      White_Arrow: 4320069646217575972
+      Small_Smoke_Trail: -3143951033117909963
+      SmallBallParticle1: 1292577349576668988
+      MrGameAndWatchRight: 6261176759002247557
+      Big_Smoke_Trail: -2778337046202037375
+      Big_DoughDude_0: 4109658374613083262
+      Ball_Transporter_Closed: -6723657067348311052
+      Carrier: -6231912377990891756
+      Small_Smoke: -9129463623415245896
+      AlarmInside1: -8182826635901858207
+      Big_DoughDude_1: -7074292404812662935
+      Small_Ball: 7027999062844758930
+      Big_DoughDude_2: 7942809272051354367
+      MrGameAndWatchClimb: 5259131687523586555
+      AlarmInside0: 6491217068967154305
+      EmptyAlarm: 3598736693376026775
+      Ball_Transporter_Door: 7330829005115928284
+      Small_DoughDude_Jump: 7310411455585878120
+      Ball_Transporter_HalfOpen: 6377856438995678898
+      Impact: 8361081418149950792
+      Small_DoughDude_0: 1706491919182347761
+      Ball_pipe: -98070244222629441
+      Big_DoughDude_Land: -2642379803034979867
+      AlarmRed: -643883937600677444
+      Ball_Transporter_Open: 6390041239020583844
+      Big_DoughDude_Holder: 480482239124672781
+      MrGameAndWatchHand: 8516936976144054295
+      LongChain: -3925672062423245903
+      Hollow_Arrow: 3481026814326584939
+      MrGameAndWatchHeadLooking: 1603961481241524821
+      BGSmallBall: -1061688395536187529
+      Small_DoughDude_Land: -6798677520042401747
+      Small_DoughDude_1: 6658874754272889526
+      Big_Smoke: -8752045786168136462
+      AlarmInside2: -4759968666800539541
+      MrGameAndWatchHeadBehind: 7848992016631744940
+      Big_Ball: -7404805908248315402
+      ControlStick: -1817904502405952194
+      Small_DoughDude_2: 1731439674856667002
+      Big_DoughDude_Jump: 264448028078790114
+      BG_BigBall: 524102790251089416
+      Black_Arrow: -4970752652923312434
+      LittleChain: -4932753799771416749
+      MrGameAndWatchHeadNeutral: -84507689565416287
+      Ball_Bouncer: -2586841411416800117
+      Red_Arrow: -8128542972832989050
+      Small_DoughDude_Holder: -5067405065328136402
+      MrGameAndWatchLeft: -6590392941039462437
+      SmallBallParticle0: 4981072731701573055
+      ControlBoard: -5199796740822038689
   spritePackingTag: 
   pSDRemoveMatte: 0
-  pSDShowRemoveMatteOption: 0
   userData: 
   assetBundleName: 
   assetBundleVariant: 

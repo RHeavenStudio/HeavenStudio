@@ -192,7 +192,7 @@ TextureImporter:
       213: -3642517504267728846
     second: kittiesCatchFail_0
   externalObjects: {}
-  serializedVersion: 11
+  serializedVersion: 12
   mipmaps:
     mipMapMode: 0
     enableMipMap: 0
@@ -209,10 +209,12 @@ TextureImporter:
     externalNormalMap: 0
     heightScale: 0.25
     normalMapFilter: 0
+    flipGreenChannel: 0
   isReadable: 0
   streamingMipmaps: 0
   streamingMipmapsPriority: 0
   vTOnly: 0
+  ignoreMasterTextureLimit: 0
   grayScaleToAlpha: 0
   generateCubemap: 6
   cubemapConvolution: 0
@@ -251,6 +253,8 @@ TextureImporter:
   textureFormatSet: 0
   ignorePngGamma: 0
   applyGammaDecoding: 0
+  swizzle: 50462976
+  cookieLightType: 1
   platformSettings:
   - serializedVersion: 3
     buildTarget: DefaultTexturePlatform
@@ -338,6 +342,18 @@ TextureImporter:
     forceMaximumCompressionQuality_BC6H_BC7: 0
   - serializedVersion: 3
     buildTarget: Android
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 3
+    buildTarget: Server
     maxTextureSize: 2048
     resizeAlgorithm: 0
     textureFormat: -1
@@ -1684,9 +1700,72 @@ TextureImporter:
     edges: []
     weights: []
     secondaryTextures: []
+    nameFileIdTable:
+      kittiesMousePopIn_0: -2180464609782432909
+      kittiesActionLines: -7930608780683201851
+      kittiesClapFX: 5439475645685310803
+      kittiesClap_2: 6615670241960667488
+      kittiesSeeFish_2: -5984737169221637080
+      kittiesCatchFail_0: -3642517504267728846
+      kittiesSpin_2: -6672383421258099233
+      kittiesFishSurprise: 9109945632691231925
+      kittiesCatchFish_0: -6081180138858234797
+      kittiesHeart_1: 1797786135430993361
+      kittiesHand: -7607118563815519801
+      kittiesRedFX: 13554184045283124
+      kittiesSpin_1: 2427856040127720591
+      kittiesMouseIdle_2: -4829331898434409872
+      kittiesBackground: -2023157279334382606
+      kittiesSeeFish_0: 7394798108583388539
+      kittiesStar_1: -7540619746044756223
+      kittiesCatchFish_2: -6711406373093957828
+      kittiesIdle_2: -4739823493371210473
+      kittiesClap_4: 2726140473053076307
+      kittiesCatchFail_1: -6967539486268207878
+      kittiesMouseClap_1: -421213860102571549
+      kittiesMouseClap_2: 4059413026682354504
+      kittiesFaceFail_0: -6774374335605444397
+      kittiesSpin_0: -4944525377045975221
+      kittiesPopInLine: -9147522927102976589
+      kittiesEyebrows_0: 7138334911384288879
+      kittiesCatchFish_1: -6628612134585453162
+      kittiesFishHolder: 4313510954544578308
+      kittiesFishLineDangle: 7590593529774598987
+      kittiesEyebrows_2: -6498685018660671736
+      kittiesSpinFail_2: -3928410681875221782
+      kittiesClap_1: 2450051006318353345
+      kittiesStar_0: -7937288927019184270
+      kittiesClap_3: -4825644759080002611
+      kittiesPopIn_0: -7681626486337205679
+      kittiesIdle_0: -5801956193589078948
+      kittiesMusicNote: 7147267099706369679
+      kittiesEyebrows_1: 8068771803452085853
+      kittiesFish: 8405063258882217834
+      kittiesClapFail: -3414625489340250353
+      kittiesFaceFail_1: -6507884322407430924
+      kittiesCatchFishFail: 7153805875199393418
+      kittiesFailFX_0: -890089858769695482
+      kittiesMousePopIn_1: -1265843907470931862
+      kittiesIdle_3: 2714301014034650516
+      kittiesUnused: 2961244338457994705
+      kittiesSpinFail_0: 2491961779969426482
+      kittiesSeeFish_1: -4488382681894074449
+      kittiesFace_1: -3668567670657479890
+      kittiesFailFX_1: -7540707256061033045
+      kittiesPopIn_1: -1849478282175469088
+      kittiesCatchFish: -391659831302825775
+      kittiesFishLineStraight: -6088740353780400943
+      kittiesMouseIdle_1: 7314257033710897882
+      kittiesSpinFail_1: 7449070226787453400
+      kittiesStar_2: 5030738185955279627
+      kittiesFace_0: 364125575587437950
+      kittiesMouseClap_0: -3168832477043077438
+      kittiesMouseIdle_0: -8465383514614775766
+      kittiesClap_0: -3697540348655772098
+      kittiesHeart_0: 3220635104661186870
+      kittiesIdle_1: 608308082974126268
   spritePackingTag: 
   pSDRemoveMatte: 0
-  pSDShowRemoveMatteOption: 0
   userData: 
   assetBundleName: 
   assetBundleVariant: 
