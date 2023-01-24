@@ -3,6 +3,8 @@ using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
 
+using HeavenStudio.Common;
+
 namespace HeavenStudio.Editor 
 {
     public class SettingsDialog : Dialog
@@ -19,6 +21,8 @@ namespace HeavenStudio.Editor
                 Editor.instance.canSelect = true;
                 Editor.instance.inAuthorativeMenu = false;
                 dialog.SetActive(false);
+
+                PersistentDataManager.SaveSettings();
                 tabsManager.CleanTabs();
             } else {
                 ResetAllDialogs();
