@@ -43,8 +43,9 @@ namespace HeavenStudio.Editor
             }
         }
 
-        public void GenerateTabs(TabsEntry[] tabs)
+        public List<GameObject> GenerateTabs(TabsEntry[] tabs)
         {
+            List<GameObject> tabContents = new List<GameObject>();
             bool madeFirst = false;
             foreach(var tab in tabs)
             {
@@ -61,7 +62,9 @@ namespace HeavenStudio.Editor
                     tabContent.SetActive(false);
                 }
                 button.GetComponent<TabButton>().Content = tabContent;
+                tabContents.Add(tabContent);
             }
+            return tabContents;
         }
 
         public void CleanTabs()
@@ -72,6 +75,7 @@ namespace HeavenStudio.Editor
             }
             foreach(Transform child in contentHolder)
             {
+                child.GetComponent<TabsContent>()?.OnCloseTab();
                 Destroy(child.gameObject);
             }
         }
