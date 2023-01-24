@@ -16,6 +16,7 @@ using SFB;
 using HeavenStudio.Editor;
 using HeavenStudio.Editor.Track;
 using HeavenStudio.Util;
+using HeavenStudio.StudioDance;
 
 using System.IO.Compression;
 using System.Text;
@@ -42,6 +43,7 @@ namespace HeavenStudio.Editor
         [SerializeField] private Timeline Timeline;
         [SerializeField] private TMP_Text GameEventSelectorTitle;
         [SerializeField] private TMP_Text BuildDateDisplay;
+        [SerializeField] public StudioDanceManager StudioDanceManager;
 
         [Header("Toolbar")]
         [SerializeField] private Button NewBTN;

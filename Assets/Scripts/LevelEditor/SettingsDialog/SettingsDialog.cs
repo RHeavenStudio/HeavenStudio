@@ -1,4 +1,6 @@
+using System;
 using UnityEngine;
+using UnityEngine.UI;
 using TMPro;
 
 namespace HeavenStudio.Editor 
@@ -6,6 +8,9 @@ namespace HeavenStudio.Editor
     public class SettingsDialog : Dialog
     {
         [SerializeField] private TMP_Text BuildDateDisplay;
+        [SerializeField] private TabsManager tabsManager;
+        [SerializeField] private TabsManager.TabsEntry[] tabs;
+
         private void Start() {}
 
         public void SwitchSettingsDialog()
@@ -14,11 +19,14 @@ namespace HeavenStudio.Editor
                 Editor.instance.canSelect = true;
                 Editor.instance.inAuthorativeMenu = false;
                 dialog.SetActive(false);
+                tabsManager.CleanTabs();
             } else {
                 ResetAllDialogs();
                 Editor.instance.canSelect = false;
                 Editor.instance.inAuthorativeMenu = true;
                 dialog.SetActive(true);
+
+                tabsManager.GenerateTabs(tabs);
 
                 BuildDateDisplay.text = GlobalGameManager.buildTime;
             }

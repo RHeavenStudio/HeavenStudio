@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -10,6 +11,9 @@ namespace HeavenStudio.Editor
     public class TabsManager : MonoBehaviour
     {
         [SerializeField] GameObject activeContent;
+        [SerializeField] public Transform contentHolder;
+        [SerializeField] public Transform buttonsHolder;
+        [SerializeField] private GameObject buttonPrefab;
 
         public void SetActiveContent(GameObject content)
         {
@@ -37,6 +41,46 @@ namespace HeavenStudio.Editor
             {
                 activeContent.GetComponent<TabsContent>().OnCloseTab();
             }
+        }
+
+        public void GenerateTabs(TabsEntry[] tabs)
+        {
+            bool madeFirst = false;
+            foreach(var tab in tabs)
+            {
+                var button = Instantiate(buttonPrefab, buttonsHolder);
+                button.GetComponentInChildren<TMP_Text>().text = tab.name;
+                var tabContent = Instantiate(tab.tabPrefab, contentHolder);
+                if(!madeFirst)
+                {
+                    madeFirst = true;
+                    SetActiveContent(tabContent);
+                }
+                else
+                {
+                    tabContent.SetActive(false);
+                }
+                button.GetComponent<TabButton>().Content = tabContent;
+            }
+        }
+
+        public void CleanTabs()
+        {
+            foreach(Transform child in buttonsHolder)
+            {
+                Destroy(child.gameObject);
+            }
+            foreach(Transform child in contentHolder)
+            {
+                Destroy(child.gameObject);
+            }
+        }
+
+        [Serializable]
+        public struct TabsEntry
+        {
+            public string name;
+            public GameObject tabPrefab;
         }
     }
 }
