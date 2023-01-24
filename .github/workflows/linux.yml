@@ -1,4 +1,4 @@
-name: Build my project ✨
+name: Build Linux
 
 on: [push]
 
@@ -10,9 +10,7 @@ jobs:
       fail-fast: false
       matrix:
         targetPlatform:
-          - StandaloneWindows64
           - StandaloneLinux64
-          - StandaloneOSX
 
     steps:
       - name: Checkout repository
@@ -49,12 +47,8 @@ jobs:
           buildsPath: build
           targetPlatform: ${{ matrix.targetPlatform }}
           
-      - name: Tar files
-        run: tar -cvf ${{ matrix.targetPlatform }}.tar ./build/${{ matrix.targetPlatform }}
-        
-      - name: Upload Artifact
-        uses: actions/upload-artifact@v3
+      # Output
+      - uses: actions/upload-artifact@v2
         with:
           name: ${{ matrix.targetPlatform }}-build
-          path: ${{ matrix.targetPlatform }}.tar
-
+          path: ./build/${{ matrix.targetPlatform }}/

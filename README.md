@@ -25,9 +25,9 @@
 This project is still in development, so there are currently no release builds yet. GitHub Actions creates experimental builds on each commmit, but minimal support will be provided.
 
 
-- [Windows](https://nightly.link/megaminerjenny/HeavenStudio/workflows/main/master/StandaloneWindows64-build.zip)
-- [Linux](https://nightly.link/megaminerjenny/HeavenStudio/workflows/main/master/StandaloneLinux64-build.zip)
-- [MacOS](https://nightly.link/megaminerjenny/HeavenStudio/workflows/main/master/StandaloneOSX-build.zip)
+- [Windows](https://nightly.link/megaminerjenny/HeavenStudio/workflows/windows/master/StandaloneWindows64-build.zip)
+- [Linux](https://nightly.link/megaminerjenny/HeavenStudio/workflows/linux/master/StandaloneLinux64-build.zip)
+- [MacOS](https://nightly.link/megaminerjenny/HeavenStudio/workflows/macos/master/StandaloneOSX-build.zip)
 #### Important Notes:
 - The prebuilt binaries are compressed in tar format, you may need to use 7-Zip or WinRAR on Windows to extract them.
 - On MacOS and Linux builds you may [experience bugs with audio-related tasks](https://github.com/megaminerjenny/HeavenStudio/issues/72), but in most cases Heaven Studio works perfectly.
