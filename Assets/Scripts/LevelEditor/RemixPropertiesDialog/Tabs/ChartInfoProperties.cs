@@ -26,56 +26,60 @@ namespace HeavenStudio.Editor
         [Header("Editable Properties")]
         [SerializeField] RemixPropertiesDialog.PropertyTag[] tags;
 
+        bool initialized = false;
+
         public void Init(RemixPropertiesDialog diag)
         {
             dialog = diag;
+            dialog.SetupDialog(tags, this);
+            initialized = true;
         }
 
         public void AddParam(RemixPropertiesDialog diag, string propertyName, object type, string caption, bool isReadOnly = false, string tooltip = "")
         {
-            GameObject prefab = IntegerP;
+            GameObject prefab = diag.IntegerP;
             GameObject input;
 
             var objType = type.GetType();
 
             if (objType == typeof(EntityTypes.Integer))
             {
-                prefab = IntegerP;
+                prefab = diag.IntegerP;
                 input = InitPrefab(prefab, tooltip);
                 var property = input.GetComponent<NumberChartPropertyPrefab>();
                 property.SetProperties(diag, propertyName, type, caption);
             }
             else if (objType == typeof(EntityTypes.Float))
             {
-                prefab = FloatP;
+                prefab = diag.FloatP;
                 input = InitPrefab(prefab, tooltip);
                 var property = input.GetComponent<NumberChartPropertyPrefab>();
                 property.SetProperties(diag, propertyName, type, caption);
             }
             else if (type is bool)
             {
-                prefab = BooleanP;
+                prefab = diag.BooleanP;
                 input = InitPrefab(prefab, tooltip);
                 var property = input.GetComponent<BoolChartPropertyPrefab>();
                 property.SetProperties(diag, propertyName, type, caption);
             }
             else if (objType.IsEnum)
             {
-                prefab = DropdownP;
+                prefab = diag.DropdownP;
                 input = InitPrefab(prefab, tooltip);
                 var property = input.GetComponent<EnumChartPropertyPrefab>();
                 property.SetProperties(diag, propertyName, type, caption);
             }
             else if (objType == typeof(Color))
             {
-                prefab = ColorP;
+                prefab = diag.ColorP;
                 input = InitPrefab(prefab, tooltip);
                 var property = input.GetComponent<ColorChartPropertyPrefab>();
                 property.SetProperties(diag, propertyName, type, caption);
             }
             else if (objType == typeof(string))
             {
-                prefab = StringP;
+                prefab = diag.StringP;
                 input = InitPrefab(prefab, tooltip);
                 var property = input.GetComponent<StringChartPropertyPrefab>();
                 property.SetProperties(diag, propertyName, type, caption);
@@ -89,18 +93,18 @@ namespace HeavenStudio.Editor
 
         public void AddDivider(RemixPropertiesDialog diag)
         {
-            InitPrefab(DividerP);
+            InitPrefab(diag.DividerP);
         }
 
         public void AddHeader(RemixPropertiesDialog diag, string text)
         {
-            var input = InitPrefab(HeaderP);
+            var input = InitPrefab(diag.HeaderP);
             input.GetComponent<RemixPropertyPrefab>().InitProperties(diag, "", text);
         }
 
         public void AddSubHeader(RemixPropertiesDialog diag, string text)
         {
-            var input = InitPrefab(SubHeaderP);
+            var input = InitPrefab(diag.SubHeaderP);
             input.GetComponent<RemixPropertyPrefab>().InitProperties(diag, "", text);
         }
         
@@ -119,11 +123,16 @@ namespace HeavenStudio.Editor
 
         public override void OnOpenTab()
         {
-            dialog.SetupDialog(tags, this);
+            if (dialog != null && !initialized)
+            {
+                initialized = true;
+                dialog.SetupDialog(tags, this);
+            }
         }
 
         public override void OnCloseTab()
         {
+            initialized = false;
             foreach (Transform child in propertyHolder.transform) {
                 Destroy(child.gameObject);
             }
