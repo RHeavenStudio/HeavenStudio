@@ -12,6 +12,7 @@ namespace HeavenStudio.Games.Scripts_Kitties
         [Header("Objects")]
         public GameObject Player;
         public Animator anim;
+        public Animator fish;
         private int spawnType;
 
         private bool hasClapped = false;
@@ -191,6 +192,7 @@ namespace HeavenStudio.Games.Scripts_Kitties
         public void FishSuccess(PlayerActionEvent caller, float beat)
         {
             Jukebox.PlayOneShotGame("kitties/fish4");
+            fish.Play("CaughtSuccess", 0, 0);
         }
 
         public void FishMiss(PlayerActionEvent caller)

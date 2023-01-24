@@ -249,6 +249,10 @@ namespace HeavenStudio.Games
             {
                 new BeatAction.Action(beat, delegate { Fish.SetActive(true); }),             
                 new BeatAction.Action(beat, delegate { Fish.GetComponent<Animator>().Play("DangleFish", 0, 0); }),
+                new BeatAction.Action(beat + 2f, delegate { kitties[0].Play("FishNotice", 0, 0);  }),
+                new BeatAction.Action(beat + 2.25f, delegate { kitties[1].Play("FishNotice2", 0, 0);  }),
+                new BeatAction.Action(beat + 2.5f, delegate { kitties[2].Play("FishNotice3", 0, 0);  }),
+                new BeatAction.Action(beat + 2.75f, delegate {RemoveCats(true); })
                 });
 
 
@@ -394,6 +398,18 @@ namespace HeavenStudio.Games
                 var rotationVector = Cats[0].transform.rotation.eulerAngles;
                 rotationVector.z = 0;
                 Cats[i].transform.rotation = Quaternion.Euler(rotationVector);
+            }
+        }
+
+        public void RemoveCats(bool fishing)
+        {
+            if(fishing)
+            {
+                for (int x = 0; x < 3; x++)
+                {
+                    Cats[x].SetActive(false);
+                }
+                player.canClap = false;
             }
         }
     }
