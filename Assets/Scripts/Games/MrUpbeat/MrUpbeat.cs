@@ -103,6 +103,10 @@ namespace HeavenStudio.Games
                     }
                     queuedInputs.Clear();
                 }
+                if (PlayerInput.Pressed() && !IsExpectingInputNow(InputType.STANDARD_DOWN))
+                {
+                    man.Step();
+                }
             }
         }
 
