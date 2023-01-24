@@ -28,7 +28,7 @@ namespace HeavenStudio.Games
             autoPlayEnabledOnStart = GameManager.instance.autoplay;
         }
 
-        private void CheckForAce(float normalizedBeat, bool autoPlay = false)
+        private void CheckForAce(double normalizedBeat, bool autoPlay = false)
         {
             if (aceTimes == 0)
             {
@@ -53,7 +53,7 @@ namespace HeavenStudio.Games
         }
 
         // could possibly add support for custom early, perfect, and end times if needed.
-        public void StateCheck(float normalizedBeat, bool autoPlay = false)
+        public void StateCheck(double normalizedBeat, bool autoPlay = false)
         {
             CheckForAce(normalizedBeat, autoPlay);
             if (normalizedBeat > Minigame.EarlyTime() && normalizedBeat < Minigame.PerfectTime())

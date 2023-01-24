@@ -60,6 +60,7 @@ namespace HeavenStudio
         public static GameManager instance { get; private set; }
         private EventCaller eventCaller;
 
+        // average input accuracy (msec)
         List<int> inputOffsetSamples = new List<int>();
         float averageInputOffset = 0;
         public float AvgInputOffset
@@ -72,6 +73,18 @@ namespace HeavenStudio
             {
                 inputOffsetSamples.Add((int)value);
                 averageInputOffset = (float)inputOffsetSamples.Average();
+            }
+        }
+
+        // input accuracy (%)
+        double totalInputs = 0;
+        double totalPlayerAccuracy = 0;
+        public double PlayerAccuracy
+        {
+            get
+            {
+                if (totalInputs == 0) return 0;
+                return totalPlayerAccuracy / totalInputs;
             }
         }
 
@@ -188,6 +201,11 @@ namespace HeavenStudio
             {
                 SetGame("noGame");
             }
+        }
+
+        public static void ScoreInputAccuracy(double accuracy, float weight = 1)
+        {
+            
         }
 
         public void SeekAheadAndPreload(double start, float seekTime = 8f)
