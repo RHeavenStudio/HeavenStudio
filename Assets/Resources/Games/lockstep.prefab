@@ -28,9 +28,10 @@ Transform:
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
-  - {fileID: 4904300105776718479}
-  - {fileID: 5822623106182197534}
   - {fileID: 7814980077180382399}
+  - {fileID: 4904300105776718479}
+  - {fileID: 6282292135211262012}
+  - {fileID: 5822623106182197534}
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -50,13 +51,12 @@ MonoBehaviour:
   EligibleHits: []
   scheduledInputs: []
   firstEnable: 0
+  currentBGOnColor: {r: 0.9411765, g: 0.2, b: 0.5529412, a: 0}
+  currentBGOffColor: {r: 0.6039216, g: 0.15294118, b: 0.3764706, a: 0}
   stepswitcherP: {fileID: 5548089329135658778}
   stepswitcher0: {fileID: 4041276273830102762}
   stepswitcher1: {fileID: 4669067225944782995}
-  Player: {fileID: 3824742015622016231}
-  goStep: 0
-  steppingLength: 0
-  steppingStartBeat: 0
+  background: {fileID: 6381378020296668381}
 --- !u!1 &3824742015622016231
 GameObject:
   m_ObjectHideFlags: 0
@@ -82,11 +82,11 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 3824742015622016231}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: -1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 160, y: 90, z: 1}
   m_Children: []
   m_Father: {fileID: 931641041398444854}
-  m_RootOrder: 0
+  m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!212 &6381378020296668381
 SpriteRenderer:
@@ -150,7 +150,6 @@ GameObject:
   - component: {fileID: 3697729158945954856}
   - component: {fileID: 7960956717128855430}
   - component: {fileID: 4041276273830102762}
-  - component: {fileID: 4424607252382679407}
   m_Layer: 0
   m_Name: stepswitcher0
   m_TagString: Untagged
@@ -167,7 +166,7 @@ Transform:
   m_GameObject: {fileID: 5129989806025303121}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: -2.55, y: 0.15, z: 0}
-  m_LocalScale: {x: 1.9, y: 1.9, z: 1.9}
+  m_LocalScale: {x: 1.9, y: 1.9, z: 1}
   m_Children: []
   m_Father: {fileID: 5822623106182197534}
   m_RootOrder: 0
@@ -217,7 +216,7 @@ SpriteRenderer:
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
-  m_Size: {x: 3.8, y: 6.2}
+  m_Size: {x: 100, y: 5.5}
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
   m_WasSpriteAssigned: 1
@@ -242,29 +241,6 @@ Animator:
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorControllerStateOnDisable: 0
---- !u!114 &4424607252382679407
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5129989806025303121}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 8b073f408da6b9a49a796d5ba8777d33, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  SoundSequences: []
-  EligibleHits: []
-  scheduledInputs: []
-  firstEnable: 0
-  stepswitcherP: {fileID: 5548089329135658778}
-  stepswitcher0: {fileID: 4041276273830102762}
-  stepswitcher1: {fileID: 4669067225944782995}
-  Player: {fileID: 0}
-  goStep: 0
-  steppingLength: 0
-  steppingStartBeat: 0
 --- !u!1 &6294324842532793805
 GameObject:
   m_ObjectHideFlags: 0
@@ -294,7 +270,7 @@ Transform:
   m_LocalScale: {x: 2.0085979, y: 2.0085979, z: 2.0085979}
   m_Children: []
   m_Father: {fileID: 931641041398444854}
-  m_RootOrder: 2
+  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!212 &1958629238450560839
 SpriteRenderer:
@@ -358,7 +334,6 @@ GameObject:
   - component: {fileID: 6425602285868802540}
   - component: {fileID: 6864685626860880400}
   - component: {fileID: 4669067225944782995}
-  - component: {fileID: 575274515940728498}
   m_Layer: 0
   m_Name: stepswitcher1
   m_TagString: Untagged
@@ -450,29 +425,6 @@ Animator:
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorControllerStateOnDisable: 0
---- !u!114 &575274515940728498
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7760885195185502051}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 8b073f408da6b9a49a796d5ba8777d33, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  SoundSequences: []
-  EligibleHits: []
-  scheduledInputs: []
-  firstEnable: 0
-  stepswitcherP: {fileID: 5548089329135658778}
-  stepswitcher0: {fileID: 4041276273830102762}
-  stepswitcher1: {fileID: 4669067225944782995}
-  Player: {fileID: 0}
-  goStep: 0
-  steppingLength: 0
-  steppingStartBeat: 0
 --- !u!1 &8739124183978051246
 GameObject:
   m_ObjectHideFlags: 0
@@ -502,9 +454,8 @@ Transform:
   m_Children:
   - {fileID: 3697729158945954856}
   - {fileID: 6425602285868802540}
-  - {fileID: 6282292135211262012}
   m_Father: {fileID: 931641041398444854}
-  m_RootOrder: 1
+  m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &9015027120403414015
 GameObject:
@@ -517,7 +468,6 @@ GameObject:
   - component: {fileID: 6282292135211262012}
   - component: {fileID: 6142058195801638840}
   - component: {fileID: 5548089329135658778}
-  - component: {fileID: 4631706076492420401}
   m_Layer: 0
   m_Name: stepswitcherP
   m_TagString: Untagged
@@ -536,7 +486,7 @@ Transform:
   m_LocalPosition: {x: 0, y: 0.15, z: 0}
   m_LocalScale: {x: 1.9, y: 1.9, z: 1.9}
   m_Children: []
-  m_Father: {fileID: 5822623106182197534}
+  m_Father: {fileID: 931641041398444854}
   m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!212 &6142058195801638840
@@ -609,26 +559,3 @@ Animator:
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorControllerStateOnDisable: 0
---- !u!114 &4631706076492420401
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 9015027120403414015}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 8b073f408da6b9a49a796d5ba8777d33, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  SoundSequences: []
-  EligibleHits: []
-  scheduledInputs: []
-  firstEnable: 0
-  stepswitcherP: {fileID: 5548089329135658778}
-  stepswitcher0: {fileID: 4041276273830102762}
-  stepswitcher1: {fileID: 4669067225944782995}
-  Player: {fileID: 9015027120403414015}
-  goStep: 0
-  steppingLength: 0
-  steppingStartBeat: 0
