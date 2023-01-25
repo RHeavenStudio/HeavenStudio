@@ -21,6 +21,28 @@ namespace HeavenStudio.Games
 {
     public class Ringside : Minigame
     {
+        [Header("Components")]
+        [SerializeField] Animator wrestlerAnim;
 
+        public static Ringside instance;
+
+        void Awake()
+        {
+            instance = this;
+        }
+
+        void Update()
+        {
+            var cond = Conductor.instance;
+
+            if (cond.isPlaying && !cond.isPaused)
+            {
+                if (PlayerInput.Pressed() && !IsExpectingInputNow(InputType.STANDARD_DOWN))
+                {
+                    wrestlerAnim.DoScaledAnimationAsync("Ye", 0.5f);
+                    Jukebox.PlayOneShotGame($"ringside/ye{UnityEngine.Random.Range(1, 4)}");
+                }
+            }
+        }
     }
 }
