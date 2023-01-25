@@ -46,6 +46,9 @@ namespace HeavenStudio.Editor
                 heightInputField.text = GlobalGameManager.CustomScreenHeight.ToString();
             });
 
+            widthInputField.text = GlobalGameManager.CustomScreenWidth.ToString();
+            heightInputField.text = GlobalGameManager.CustomScreenHeight.ToString();
+
             volSlider.value = GlobalGameManager.MasterVolume;
             volLabel.text = System.Math.Round(volSlider.value * 100, 2).ToString();
         }

@@ -9,7 +9,7 @@ namespace HeavenStudio.Editor
 {
     public class TabButton : MonoBehaviour
     {
-        [SerializeField] GameObject Content;
+        public GameObject Content;
 
         public void OnClick()
         {
