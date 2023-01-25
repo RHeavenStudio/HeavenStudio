@@ -28,6 +28,7 @@ namespace HeavenStudio.Games.Scripts_ClappyTrio
             if (PlayerInput.Pressed() && !game.IsExpectingInputNow(InputType.STANDARD_DOWN))
             {
                 Clap(false);
+                game.ScoreMiss();
             }
         }
 

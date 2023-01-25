@@ -156,6 +156,7 @@ namespace HeavenStudio.Games
                     var stepPlayerAnim = (beatAnimCheck % 2 != 0 ? "OffbeatMarch" : "OnbeatMarch");
                     Jukebox.PlayOneShotGame("lockstep/miss");
                     stepswitcherP.DoScaledAnimationAsync(stepPlayerAnim, 0.5f);
+                    ScoreMiss();
                 }
             }
 
