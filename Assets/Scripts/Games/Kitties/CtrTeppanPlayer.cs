@@ -191,13 +191,16 @@ namespace HeavenStudio.Games.Scripts_Kitties
 
         public void FishSuccess(PlayerActionEvent caller, float beat)
         {
+            Kitties.instance.RemoveCats(false);
             Jukebox.PlayOneShotGame("kitties/fish4");
             fish.Play("CaughtSuccess", 0, 0);
         }
 
         public void FishMiss(PlayerActionEvent caller)
         {
+            Kitties.instance.RemoveCats(false);
             Jukebox.PlayOneShot("miss");
+            fish.Play("CaughtFail", 0, 0);
         }
 
         public void FishEmpty(PlayerActionEvent caller)
