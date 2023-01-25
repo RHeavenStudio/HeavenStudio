@@ -24,13 +24,13 @@ namespace HeavenStudio.Games.Loaders
                 {
                     function = delegate {var e = eventCaller.currentEntity; Tambourine.instance.MonkeyInput(e.beat, false); },
                     defaultLength = 0.5f,
-                    priority = 1
+                    priority = 2
                 },
                 new GameAction("hit", "Hit")
                 {
                     function = delegate {var e = eventCaller.currentEntity; Tambourine.instance.MonkeyInput(e.beat, true); },
                     defaultLength = 0.5f,
-                    priority = 1
+                    priority = 2
                 },
                 new GameAction("pass turn", "Pass Turn")
                 {
@@ -162,6 +162,7 @@ namespace HeavenStudio.Games
                 Jukebox.PlayOneShotGame($"tambourine/player/shake/{UnityEngine.Random.Range(1, 6)}");
                 sweatAnimator.Play("Sweating", 0, 0);
                 SummonFrog();
+                ScoreMiss();
                 if (!intervalStarted)
                 {
                     sadFace.SetActive(true);
@@ -173,6 +174,7 @@ namespace HeavenStudio.Games
                 Jukebox.PlayOneShotGame($"tambourine/player/hit/{UnityEngine.Random.Range(1, 6)}");
                 sweatAnimator.Play("Sweating", 0, 0);
                 SummonFrog();
+                ScoreMiss();
                 if (!intervalStarted)
                 {
                     sadFace.SetActive(true);

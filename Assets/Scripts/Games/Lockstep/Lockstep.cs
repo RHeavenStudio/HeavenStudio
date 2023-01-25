@@ -1,6 +1,7 @@
 /* I do not know crap about Unity or C#
 Almost none of this code is mine, but it's all fair game when the game you're stealing from
 borrowed from other games */
+//Don't worry Raffy everyone starts somewhere - Rasmus
 
 using HeavenStudio.Util;
 using System;
@@ -156,6 +157,7 @@ namespace HeavenStudio.Games
                     var stepPlayerAnim = (beatAnimCheck % 2 != 0 ? "OffbeatMarch" : "OnbeatMarch");
                     Jukebox.PlayOneShotGame("lockstep/miss");
                     stepswitcherP.DoScaledAnimationAsync(stepPlayerAnim, 0.5f);
+                    ScoreMiss();
                 }
             }
 
@@ -274,7 +276,7 @@ namespace HeavenStudio.Games
             if (state >= 1f || state <= -1f)
             {
                 var cond = Conductor.instance;
-                var beatAnimCheck = Math.Round(cond.songPositionInBeats * 2);
+                var beatAnimCheck = Math.Round(caller.startBeat * 2);
                 if (beatAnimCheck % 2 != 0)
                 {
                     Jukebox.PlayOneShotGame("lockstep/tink");
@@ -287,13 +289,12 @@ namespace HeavenStudio.Games
                 }
                 return;
             }
-            Success();
+            Success(caller.startBeat);
         }
 
-        public void Success()
+        public void Success(float beat)
         {
-            var cond = Conductor.instance;
-            var beatAnimCheck = Math.Round(cond.songPositionInBeats * 2);
+            var beatAnimCheck = Math.Round(beat * 2);
             if (beatAnimCheck % 2 != 0)
             {
                 Jukebox.PlayOneShotGame($"lockstep/marchOffbeat{UnityEngine.Random.Range(1, 3)}");
@@ -308,8 +309,7 @@ namespace HeavenStudio.Games
 
         public void Miss(PlayerActionEvent caller)
         {
-            var cond = Conductor.instance;
-            var beatAnimCheck = Math.Round(cond.songPositionInBeats * 2);
+            var beatAnimCheck = Math.Round(caller.startBeat * 2);
             
             if (beatAnimCheck % 2 != 0 && currentMissStage != HowMissed.MissedOff)
             {
