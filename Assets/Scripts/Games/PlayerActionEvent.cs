@@ -76,10 +76,6 @@ namespace HeavenStudio.Games
                 if (state.perfect)
                 {
                     Hit(stateProg, normalizedTime);
-                    if (normalizedTime >= Minigame.AceStartTime() && normalizedTime <= Minigame.AceEndTime())
-                    {
-                        // push an ace event
-                    }
                 }
                 else if (state.early && !perfectOnly)
                 {

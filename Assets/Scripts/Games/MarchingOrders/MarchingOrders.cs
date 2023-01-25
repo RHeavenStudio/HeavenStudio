@@ -154,6 +154,7 @@ namespace HeavenStudio.Games
             Jukebox.PlayOneShot("miss");
             Sarge.DoScaledAnimationAsync("Anger", 0.5f);
             Steam.DoScaledAnimationAsync("Steam", 0.5f);
+            ScoreMiss();
             
             marchPlayerCount += 1;
                     var marchPlayerAnim = (marchPlayerCount % 2 != 0 ? "MarchR" : "MarchL");

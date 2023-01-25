@@ -251,7 +251,7 @@ namespace HeavenStudio.Games
             return null;
         }
 
-        public void ScoreMiss(double weight)
+        public void ScoreMiss(double weight = 1f)
         {
             GameManager.instance.ScoreInputAccuracy(0, true, weight);
         }

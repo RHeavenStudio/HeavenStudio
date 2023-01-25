@@ -162,6 +162,7 @@ namespace HeavenStudio.Games
                 Jukebox.PlayOneShotGame($"tambourine/player/shake/{UnityEngine.Random.Range(1, 6)}");
                 sweatAnimator.Play("Sweating", 0, 0);
                 SummonFrog();
+                ScoreMiss();
                 if (!intervalStarted)
                 {
                     sadFace.SetActive(true);
@@ -173,6 +174,7 @@ namespace HeavenStudio.Games
                 Jukebox.PlayOneShotGame($"tambourine/player/hit/{UnityEngine.Random.Range(1, 6)}");
                 sweatAnimator.Play("Sweating", 0, 0);
                 SummonFrog();
+                ScoreMiss();
                 if (!intervalStarted)
                 {
                     sadFace.SetActive(true);
