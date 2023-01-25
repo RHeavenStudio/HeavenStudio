@@ -13,9 +13,10 @@ using TMPro;
 using Starpelly;
 using SFB;
 
-using HeavenStudio.Editor;
+using HeavenStudio.Common;
 using HeavenStudio.Editor.Track;
 using HeavenStudio.Util;
+using HeavenStudio.StudioDance;
 
 using System.IO.Compression;
 using System.Text;
@@ -42,6 +43,7 @@ namespace HeavenStudio.Editor
         [SerializeField] private Timeline Timeline;
         [SerializeField] private TMP_Text GameEventSelectorTitle;
         [SerializeField] private TMP_Text BuildDateDisplay;
+        [SerializeField] public StudioDanceManager StudioDanceManager;
 
         [Header("Toolbar")]
         [SerializeField] private Button NewBTN;
@@ -75,6 +77,7 @@ namespace HeavenStudio.Editor
         public bool editingInputField = false;
         public bool inAuthorativeMenu = false;
         public bool isCursorEnabled = true;
+        public bool isDiscordEnabled = true;
 
         public bool isShortcutsEnabled { get { return (!inAuthorativeMenu) && (!editingInputField); } }
 
@@ -119,6 +122,8 @@ namespace HeavenStudio.Editor
             UpdateEditorStatus(true);
 
             BuildDateDisplay.text = GlobalGameManager.buildTime;
+            isCursorEnabled  = PersistentDataManager.gameSettings.editorCursorEnable;
+            isDiscordEnabled = PersistentDataManager.gameSettings.discordRPCEnable;
         }
 
         public void AddIcon(Minigames.Minigame minigame)
@@ -521,7 +526,12 @@ namespace HeavenStudio.Editor
         private void UpdateEditorStatus(bool updateTime)
         {
             if (discordDuringTesting || !Application.isEditor)
-                DiscordRPC.DiscordRPC.UpdateActivity("In Editor", $"{remixName}", updateTime);
+            {
+                if (isDiscordEnabled)
+                {   DiscordRPC.DiscordRPC.UpdateActivity("In Editor", $"{remixName}", updateTime);
+                    Debug.Log("Discord status updated");
+                }
+            }
         }
 
         public string GetJson()

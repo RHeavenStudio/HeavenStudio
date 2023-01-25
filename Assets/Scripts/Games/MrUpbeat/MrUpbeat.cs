@@ -58,6 +58,7 @@ namespace HeavenStudio.Games
             public float beat;
             public bool goRight;
         }
+        bool startLeft;
 
         public static MrUpbeat instance;
 
@@ -101,7 +102,19 @@ namespace HeavenStudio.Games
                             });
                         }
                     }
+                    if (queuedInputs.Count % 2 != 0)
+                    {
+                        startLeft = true;
+                    }
+                    else
+                    {
+                        startLeft = false;
+                    }
                     queuedInputs.Clear();
+                }
+                if (PlayerInput.Pressed() && !IsExpectingInputNow(InputType.STANDARD_DOWN))
+                {
+                    man.Step();
                 }
             }
         }
@@ -128,7 +141,7 @@ namespace HeavenStudio.Games
             if (GameManager.instance.currentGame == "mrUpbeat")
             {
                 float offSet = 0;
-                if (!MrUpbeat.instance.isPlaying(MrUpbeat.instance.metronomeAnim, "MetronomeIdle") && !MrUpbeat.instance.isPlaying(MrUpbeat.instance.metronomeAnim, "MetronomeGoRight"))
+                if (MrUpbeat.instance.startLeft)
                 {
                     offSet = 1;
                 }
@@ -152,6 +165,14 @@ namespace HeavenStudio.Games
                         });
                     }
 
+                }
+                if ((length + 1) % 2 != 0)
+                {
+                    MrUpbeat.instance.startLeft = true;
+                }
+                else
+                {
+                    MrUpbeat.instance.startLeft = false;
                 }
             }
             else

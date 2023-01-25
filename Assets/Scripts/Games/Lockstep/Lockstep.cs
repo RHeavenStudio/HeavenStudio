@@ -1,6 +1,7 @@
 /* I do not know crap about Unity or C#
 Almost none of this code is mine, but it's all fair game when the game you're stealing from
 borrowed from other games */
+//Don't worry Raffy everyone starts somewhere - Rasmus
 
 using HeavenStudio.Util;
 using System;
@@ -25,27 +26,33 @@ namespace HeavenStudio.Games.Loaders
                     },
                     defaultLength = 1f,
                 },
-                new GameAction("hai", "Hai!")
+                new GameAction("marching", "Stepping")
                 {
-                    function = delegate { var e = eventCaller.currentEntity; Lockstep.instance.Hai(e.beat); },
-                    defaultLength = 1f,
-                    inactiveFunction = delegate { var e = eventCaller.currentEntity; Lockstep.instance.Hai(e.beat);}
+                    preFunction = delegate {var e = eventCaller.currentEntity; Lockstep.Marching(e.beat, e.length);},
+                    defaultLength = 4f,
+                    resizable = true
                 },
                 new GameAction("offbeatSwitch", "Switch to Offbeat")
                 {
                     preFunction = delegate { var e = eventCaller.currentEntity; Lockstep.OffbeatSwitch(e.beat); },
-                    defaultLength = 8f
+                    defaultLength = 3.5f
                 },
                 new GameAction("onbeatSwitch", "Switch to Onbeat")
                 {
                     preFunction = delegate { var e = eventCaller.currentEntity; Lockstep.OnbeatSwitch(e.beat); },
                     defaultLength = 2f
                 },
-                new GameAction("marching", "Stepping")
+                new GameAction("hai", "Hai!")
                 {
-                    preFunction = delegate {var e = eventCaller.currentEntity; Lockstep.Marching(e.beat, e.length);},
-                    defaultLength = 4f,
-                    resizable = true
+                    function = delegate { var e = eventCaller.currentEntity; Lockstep.instance.Hai(e.beat); },
+                    defaultLength = 1f,
+                    inactiveFunction = delegate { var e = eventCaller.currentEntity; Lockstep.instance.Hai(e.beat);}
+                },
+                new GameAction("ho", "Ho!")
+                {
+                    function = delegate { var e = eventCaller.currentEntity; Lockstep.instance.Ho(e.beat); },
+                    defaultLength = 1f,
+                    inactiveFunction = delegate { var e = eventCaller.currentEntity; Lockstep.instance.Ho(e.beat);}
                 },
                 new GameAction("set colours", "Set Background Colours")
                 {
@@ -150,6 +157,7 @@ namespace HeavenStudio.Games
                     var stepPlayerAnim = (beatAnimCheck % 2 != 0 ? "OffbeatMarch" : "OnbeatMarch");
                     Jukebox.PlayOneShotGame("lockstep/miss");
                     stepswitcherP.DoScaledAnimationAsync(stepPlayerAnim, 0.5f);
+                    ScoreMiss();
                 }
             }
 
@@ -176,6 +184,11 @@ namespace HeavenStudio.Games
         public void Hai(float beat)
         {
             Jukebox.PlayOneShotGame("lockstep/switch1");
+        }
+
+        public void Ho(float beat)
+        {
+            Jukebox.PlayOneShotGame("lockstep/switch4");
         }
 
         public static void OnbeatSwitch(float beat)
@@ -207,11 +220,6 @@ namespace HeavenStudio.Games
                 new MultiSound.Sound("lockstep/switch1", beat + 2f),
                 new MultiSound.Sound("lockstep/switch2", beat + 3f),
                 new MultiSound.Sound("lockstep/switch3", beat + 3.5f),
-
-                new MultiSound.Sound("lockstep/switch4", beat + 4.5f),
-                new MultiSound.Sound("lockstep/switch4", beat + 5.5f),
-                new MultiSound.Sound("lockstep/switch4", beat + 6.5f),
-                new MultiSound.Sound("lockstep/switch4", beat + 7.5f),
             }, forcePlay: true);
 
             BeatAction.New(instance.gameObject, new List<BeatAction.Action>()
@@ -268,7 +276,7 @@ namespace HeavenStudio.Games
             if (state >= 1f || state <= -1f)
             {
                 var cond = Conductor.instance;
-                var beatAnimCheck = Math.Round(cond.songPositionInBeats * 2);
+                var beatAnimCheck = Math.Round(caller.startBeat * 2);
                 if (beatAnimCheck % 2 != 0)
                 {
                     Jukebox.PlayOneShotGame("lockstep/tink");
@@ -281,13 +289,12 @@ namespace HeavenStudio.Games
                 }
                 return;
             }
-            Success();
+            Success(caller.startBeat);
         }
 
-        public void Success()
+        public void Success(float beat)
         {
-            var cond = Conductor.instance;
-            var beatAnimCheck = Math.Round(cond.songPositionInBeats * 2);
+            var beatAnimCheck = Math.Round(beat * 2);
             if (beatAnimCheck % 2 != 0)
             {
                 Jukebox.PlayOneShotGame($"lockstep/marchOffbeat{UnityEngine.Random.Range(1, 3)}");
@@ -302,8 +309,7 @@ namespace HeavenStudio.Games
 
         public void Miss(PlayerActionEvent caller)
         {
-            var cond = Conductor.instance;
-            var beatAnimCheck = Math.Round(cond.songPositionInBeats * 2);
+            var beatAnimCheck = Math.Round(caller.startBeat * 2);
             
             if (beatAnimCheck % 2 != 0 && currentMissStage != HowMissed.MissedOff)
             {

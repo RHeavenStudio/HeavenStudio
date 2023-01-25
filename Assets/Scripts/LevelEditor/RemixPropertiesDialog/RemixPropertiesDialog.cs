@@ -16,7 +16,24 @@ namespace HeavenStudio.Editor
         [Header("Containers")]
         [SerializeField] ChartInfoProperties[] containers;
 
-        public DynamicBeatmap chart;
+        [Header("Tabs")]
+        [SerializeField] private TabsManager.TabsEntry[] tabs;
+
+        [Header("Property Prefabs")]
+        [SerializeField] public GameObject IntegerP;
+        [SerializeField] public GameObject FloatP;
+        [SerializeField] public GameObject BooleanP;
+        [SerializeField] public GameObject DropdownP;
+        [SerializeField] public GameObject ColorP;
+        [SerializeField] public GameObject StringP;
+
+        [Header("Layout Prefabs")]
+        [SerializeField] public GameObject DividerP;
+        [SerializeField] public GameObject HeaderP;
+        [SerializeField] public GameObject SubHeaderP;
+
+        [NonSerialized] public DynamicBeatmap chart;
+        List<GameObject> tabContents;
 
         private void Start() { }
 
@@ -24,27 +41,28 @@ namespace HeavenStudio.Editor
         {
             if (dialog.activeSelf)
             {
-                tabsManager.CloseContent();
                 Editor.instance.canSelect = true;
                 Editor.instance.inAuthorativeMenu = false;
                 dialog.SetActive(false);
+
+                tabsManager.CleanTabs();
+                tabContents = null;
             }
             else
             {
                 ResetAllDialogs();
-
-                foreach (var container in containers)
-                {
-                    container.Init(this);
-                }
-
-                tabsManager.OpenContent();
                 Editor.instance.canSelect = false;
                 Editor.instance.inAuthorativeMenu = true;
                 dialog.SetActive(true);
 
                 chart = GameManager.instance.Beatmap;
                 chart["propertiesmodified"] = true;
+
+                tabContents = tabsManager.GenerateTabs(tabs);
+                foreach (var tab in tabContents)
+                {
+                    tab.GetComponent<ChartInfoProperties>().Init(this);
+                }
             }
         }
 
