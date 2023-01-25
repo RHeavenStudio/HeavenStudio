@@ -60,6 +60,7 @@ namespace HeavenStudio
         public static GameManager instance { get; private set; }
         private EventCaller eventCaller;
 
+        // average input accuracy (msec)
         List<int> inputOffsetSamples = new List<int>();
         float averageInputOffset = 0;
         public float AvgInputOffset
@@ -72,6 +73,18 @@ namespace HeavenStudio
             {
                 inputOffsetSamples.Add((int)value);
                 averageInputOffset = (float)inputOffsetSamples.Average();
+            }
+        }
+
+        // input accuracy (%)
+        double totalInputs = 0;
+        double totalPlayerAccuracy = 0;
+        public double PlayerAccuracy
+        {
+            get
+            {
+                if (totalInputs == 0) return 0;
+                return totalPlayerAccuracy / totalInputs;
             }
         }
 
@@ -188,6 +201,14 @@ namespace HeavenStudio
             {
                 SetGame("noGame");
             }
+        }
+
+        public void ScoreInputAccuracy(double accuracy, bool late, double weight = 1)
+        {
+            totalInputs += weight;
+            totalPlayerAccuracy += accuracy * weight;
+
+            // push the hit event to the timing display
         }
 
         public void SeekAheadAndPreload(double start, float seekTime = 8f)
@@ -369,6 +390,10 @@ namespace HeavenStudio
             canInput = true;
             inputOffsetSamples.Clear();
             averageInputOffset = 0;
+
+            totalInputs = 0;
+            totalPlayerAccuracy = 0;
+
             StartCoroutine(PlayCo(beat));
             onBeatChanged?.Invoke(beat);
         }
@@ -409,6 +434,7 @@ namespace HeavenStudio
             KillAllSounds();
 
             Debug.Log($"Average input offset for playthrough: {averageInputOffset}ms");
+            Debug.Log($"Accuracy for playthrough: {(PlayerAccuracy * 100) : 0.00}");
 
             if (playOnStart)
             {

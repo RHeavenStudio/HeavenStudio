@@ -11,6 +11,7 @@ namespace HeavenStudio.Games
 
     public class PlayerActionEvent : PlayerActionObject
     {
+        public static bool EnableAutoplayCheat = false;
         public delegate void ActionEventCallback(PlayerActionEvent caller);
         public delegate void ActionEventCallbackState(PlayerActionEvent caller, float state);
 
@@ -33,6 +34,8 @@ namespace HeavenStudio.Games
         public InputType inputType; //The type of input. Check the InputType class to see a list of all of them
 
         public bool perfectOnly = false; //Indicates that the input only recognize perfect inputs.
+        
+        public bool countsForAccuracy = true; //Indicates if the input counts for the accuracy or not. If set to false, it'll not be counted in the accuracy calculation
 
         public void setHitCallback(ActionEventCallbackState OnHit)
         { 
@@ -60,31 +63,27 @@ namespace HeavenStudio.Games
             if (noAutoplay && autoplayOnly) autoplayOnly = false;
             if (noAutoplay && triggersAutoplay){ triggersAutoplay = false; }
 
-            float normalizedBeat = GetNormalizedTime();
-            float stateProg = ((normalizedBeat - Minigame.PerfectTime()) / (Minigame.LateTime() - Minigame.PerfectTime()) - 0.5f) * 2;
-            StateCheck(normalizedBeat);
+            double normalizedTime = GetNormalizedTime();
+            double stateProg = ((normalizedTime - Minigame.PerfectTime()) / (Minigame.LateTime() - Minigame.PerfectTime()) - 0.5f) * 2;
+            StateCheck(normalizedTime);
 
             //BUGFIX: ActionEvents destroyed too early
-            if (normalizedBeat > Minigame.EndTime()) Miss();
+            if (normalizedTime > Minigame.EndTime()) Miss();
 
 
             if (IsCorrectInput() && !autoplayOnly)
             {
                 if (state.perfect)
                 {
-                    Hit(stateProg);
-                    if (normalizedBeat >= Minigame.AceStartTime() && normalizedBeat <= Minigame.AceEndTime())
-                    {
-                        // push an ace event
-                    }
+                    Hit(stateProg, normalizedTime);
                 }
                 else if (state.early && !perfectOnly)
                 {
-                    Hit(-1f);
+                    Hit(-1f, normalizedTime);
                 }
                 else if (state.late && !perfectOnly) 
                 {
-                    Hit(1f);
+                    Hit(1f, normalizedTime);
                 }
                 else
                 {
@@ -95,18 +94,18 @@ namespace HeavenStudio.Games
 
         public bool IsExpectingInputNow()
         {
-            float normalizedBeat = GetNormalizedTime();
+            double normalizedBeat = GetNormalizedTime();
             return normalizedBeat > Minigame.EarlyTime() && normalizedBeat < Minigame.EndTime();
         }
 
-        float GetNormalizedTime()
+        double GetNormalizedTime()
         {
             var cond = Conductor.instance;
             double currTime = cond.GetSongPosFromBeat(cond.songPositionInBeatsAsDouble);
             double targetTime = cond.GetSongPosFromBeat(startBeat + timer);
             double min = targetTime - 1f;
             double max = targetTime + 1f;
-            return 1f + (float)(((currTime - min) / (max - min))-0.5f)*2;
+            return 1f + (((currTime - min) / (max - min))-0.5f)*2;
         }
 
         public bool IsCorrectInput()
@@ -138,30 +137,88 @@ namespace HeavenStudio.Games
         //For the Autoplay
         public override void OnAce()
         {
-            float normalizedBeat = Conductor.instance.GetPositionFromBeat(startBeat,timer);
-            // allows ace detection with this new system
-            float stateProg = ((normalizedBeat - Minigame.PerfectTime()) / (Minigame.LateTime() - Minigame.PerfectTime()) - 0.5f) * 2;
-            Hit(stateProg);
+            if (EnableAutoplayCheat)
+            {
+                Hit(0f, 1f);
+            }
+            else
+            {
+                double normalizedBeat = GetNormalizedTime();
+                double stateProg = ((normalizedBeat - Minigame.PerfectTime()) / (Minigame.LateTime() - Minigame.PerfectTime()) - 0.5f) * 2;
+                Hit(stateProg, normalizedBeat);
+            }
         }
 
         //The state parameter is either -1 -> Early, 0 -> Perfect, 1 -> Late
-        public void Hit(float state) 
+        public void Hit(double state, double time) 
         {
             if (OnHit != null && enabled)
             {
                 if(canHit)
                 {
-                    float normalized = GetNormalizedTime() - 1f;
+                    double normalized = time - 1f;
                     int offset = Mathf.CeilToInt((float)normalized * 1000);
                     GameManager.instance.AvgInputOffset = offset;
-                    OnHit(this, state);
+                    OnHit(this, (float) state);
+
                     CleanUp();
+                    if (countsForAccuracy && !(noAutoplay || autoplayOnly))
+                        GameManager.instance.ScoreInputAccuracy(TimeToAccuracy(time), time > 1.0, 1.0);
                 } else
                 {
                    Blank();
                 }
             }
-    
+        }
+
+        double TimeToAccuracy(double time)
+        {
+            if (time >= Minigame.AceStartTime() && time <= Minigame.AceEndTime())
+            {
+                // Ace
+                Debug.Log("Accuracy (Ace): " + 1.0);
+                return 1.0;
+            }
+
+            double state = 0;
+            if (time >= Minigame.PerfectTime() && time <= Minigame.LateTime())
+            {
+                // Good Hit
+                if (time > 1.0)
+                {
+                    // late half of timing window
+                    state = 1.0 - ((time - Minigame.AceEndTime()) / (Minigame.LateTime() - Minigame.AceEndTime()));
+                    state *= 1.0 - Minigame.rankHiThreshold;
+                    state += Minigame.rankHiThreshold;
+                    Debug.Log("Accuracy (Late): " + state);
+                }
+                else
+                {
+                    //early half of timing window
+                    state = ((time - Minigame.PerfectTime()) / (Minigame.AceStartTime() - Minigame.PerfectTime()));
+                    state *= 1.0 - Minigame.rankHiThreshold;
+                    state += Minigame.rankHiThreshold;
+                    Debug.Log("Accuracy (Early): " + state);
+                }
+            }
+            else
+            {
+                if (time > 1.0)
+                {
+                    // late half of timing window
+                    state = 1.0 - ((time - Minigame.LateTime()) / (Minigame.EndTime() - Minigame.LateTime()));
+                    state *= Minigame.rankOkThreshold;
+                    Debug.Log("Accuracy (Late NG): " + state);
+                }
+                else
+                {
+                    //early half of timing window
+                    state = ((time - Minigame.PerfectTime()) / (Minigame.AceStartTime() - Minigame.PerfectTime()));
+                    state *= Minigame.rankOkThreshold;
+                    Debug.Log("Accuracy (Early NG): " + state);
+                }
+            }
+            return state;
         }
 
         public void Miss()
@@ -172,6 +229,8 @@ namespace HeavenStudio.Games
             }
 
             CleanUp();
+            if (countsForAccuracy && !(noAutoplay || autoplayOnly))
+                GameManager.instance.ScoreInputAccuracy(0, true, 1.0);
         }
 
         public void Blank()

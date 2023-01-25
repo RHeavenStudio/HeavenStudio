@@ -13,8 +13,9 @@ namespace HeavenStudio.Editor
     {
         private int SecretCounter = 0;
         private bool SecretActive = false;
+        [SerializeField] private TextAsset creditsText;
+        [SerializeField] private TMP_Text creditsDisplay;
         [SerializeField] private GameObject secretObject;
-        [SerializeField] private StudioDanceManager secretContent;
 
         private void Start()
         {
@@ -40,7 +41,7 @@ namespace HeavenStudio.Editor
             Jukebox.PlayOneShot("applause");
             Debug.Log("Activating Studio Dance...");
 
-            secretContent.OpenDanceWindow();
+            Editor.instance.StudioDanceManager.OpenDanceWindow();
         }
 
         public void MakeSecretInactive()
@@ -48,11 +49,12 @@ namespace HeavenStudio.Editor
             SecretCounter = 0;
             secretObject.SetActive(false);
             SecretActive = false;
-            secretContent.CloseDanceWindow();
+            Editor.instance.StudioDanceManager.CloseDanceWindow();
         }
 
         public override void OnOpenTab()
         {
+            creditsDisplay.text = creditsText.text;
         }
 
         public override void OnCloseTab()
