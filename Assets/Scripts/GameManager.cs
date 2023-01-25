@@ -203,9 +203,10 @@ namespace HeavenStudio
             }
         }
 
-        public static void ScoreInputAccuracy(double accuracy, float weight = 1)
+        public void ScoreInputAccuracy(double accuracy, bool late, double weight = 1)
         {
-            
+            totalInputs += weight;
+            totalPlayerAccuracy += accuracy * weight;
         }
 
         public void SeekAheadAndPreload(double start, float seekTime = 8f)
@@ -387,6 +388,10 @@ namespace HeavenStudio
             canInput = true;
             inputOffsetSamples.Clear();
             averageInputOffset = 0;
+
+            totalInputs = 0;
+            totalPlayerAccuracy = 0;
+            
             StartCoroutine(PlayCo(beat));
             onBeatChanged?.Invoke(beat);
         }
@@ -427,6 +432,7 @@ namespace HeavenStudio
             KillAllSounds();
 
             Debug.Log($"Average input offset for playthrough: {averageInputOffset}ms");
+            Debug.Log($"Accuracy for playthrough: {(PlayerAccuracy * 100) : 0.00}");
 
             if (playOnStart)
             {

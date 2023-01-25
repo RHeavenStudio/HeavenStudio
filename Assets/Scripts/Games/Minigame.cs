@@ -251,6 +251,11 @@ namespace HeavenStudio.Games
             return null;
         }
 
+        public void ScoreMiss(double weight)
+        {
+            GameManager.instance.ScoreInputAccuracy(0, true, weight);
+        }
+
         private void OnDestroy() {
             foreach (var evt in scheduledInputs)
             {
