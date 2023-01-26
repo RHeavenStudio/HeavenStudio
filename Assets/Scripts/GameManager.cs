@@ -7,6 +7,7 @@ using UnityEngine;
 using Starpelly;
 using Newtonsoft.Json;
 using HeavenStudio.Games;
+using HeavenStudio.Common;
 
 namespace HeavenStudio
 {
@@ -122,8 +123,14 @@ namespace HeavenStudio
             Conductor.instance.SetVolume(Beatmap.musicVolume);
             Conductor.instance.firstBeatOffset = Beatmap.firstBeatOffset;
 
-            GameObject textbox = Instantiate(Resources.Load<GameObject>("Prefabs/Common/Textbox"));
-            textbox.name = "Textbox";
+            // note: serialize this shit in the inspector //
+                GameObject textbox = Instantiate(Resources.Load<GameObject>("Prefabs/Common/Textbox"));
+                textbox.name = "Textbox";
+
+                GameObject timingDisp = Instantiate(Resources.Load<GameObject>("Prefabs/Common/Overlays/TimingAccuracy"));
+                timingDisp.name = "TimingDisplay";
+            /////
+
             if (txt != null && ext != null)
             {
                 LoadRemix(txt, ext);
@@ -203,12 +210,13 @@ namespace HeavenStudio
             }
         }
 
-        public void ScoreInputAccuracy(double accuracy, bool late, double weight = 1)
+        public void ScoreInputAccuracy(double accuracy, bool late, double time, double weight = 1)
         {
             totalInputs += weight;
             totalPlayerAccuracy += accuracy * weight;
 
             // push the hit event to the timing display
+            TimingAccuracyDisplay.instance.MakeAccuracyVfx(time, late);
         }
 
         public void SeekAheadAndPreload(double start, float seekTime = 8f)

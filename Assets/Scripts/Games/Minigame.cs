@@ -253,7 +253,7 @@ namespace HeavenStudio.Games
 
         public void ScoreMiss(double weight = 1f)
         {
-            GameManager.instance.ScoreInputAccuracy(0, true, weight);
+            GameManager.instance.ScoreInputAccuracy(0, true, EndTime(), weight);
         }
 
         private void OnDestroy() {

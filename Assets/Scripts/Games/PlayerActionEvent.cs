@@ -163,7 +163,7 @@ namespace HeavenStudio.Games
 
                     CleanUp();
                     if (countsForAccuracy && !(noAutoplay || autoplayOnly))
-                        GameManager.instance.ScoreInputAccuracy(TimeToAccuracy(time), time > 1.0, 1.0);
+                        GameManager.instance.ScoreInputAccuracy(TimeToAccuracy(time), time > 1.0, time, 1.0);
                 } else
                 {
                    Blank();
@@ -230,7 +230,7 @@ namespace HeavenStudio.Games
 
             CleanUp();
             if (countsForAccuracy && !(noAutoplay || autoplayOnly))
-                GameManager.instance.ScoreInputAccuracy(0, true, 1.0);
+                GameManager.instance.ScoreInputAccuracy(0, true, 2.0, 1.0);
         }
 
         public void Blank()
