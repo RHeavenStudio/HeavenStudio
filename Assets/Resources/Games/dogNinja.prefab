@@ -27,7 +27,7 @@ Transform:
   m_GameObject: {fileID: 119991411479083905}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 5.94, y: 1.345, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalScale: {x: 1.175, y: 1.175, z: 1.175}
   m_Children: []
   m_Father: {fileID: 1671099869309974123}
   m_RootOrder: 0
@@ -107,8 +107,9 @@ MonoBehaviour:
   isEligible: 0
   triggersAutoplay: 1
   startBeat: 0
-  CurveFromLeft: {fileID: 1761052573981030483}
-  CurveFromRight: {fileID: 8610298732975356966}
+  type: 0
+  fromLeft: 0
+  curve: {fileID: 0}
 --- !u!1 &127654075222335198
 GameObject:
   m_ObjectHideFlags: 0
@@ -1260,7 +1261,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &1671099869309974123
 Transform:
   m_ObjectHideFlags: 0
@@ -1801,7 +1802,7 @@ Transform:
   m_GameObject: {fileID: 5163996841361280296}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: -17.06, y: 1.345, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalScale: {x: 1.175, y: 1.175, z: 1.175}
   m_Children: []
   m_Father: {fileID: 1671099869309974123}
   m_RootOrder: 1
@@ -1881,8 +1882,9 @@ MonoBehaviour:
   isEligible: 0
   triggersAutoplay: 1
   startBeat: 0
-  CurveFromLeft: {fileID: 1761052573981030483}
-  CurveFromRight: {fileID: 8610298732975356966}
+  type: 0
+  fromLeft: 0
+  curve: {fileID: 0}
 --- !u!1 &5340671340987037539
 GameObject:
   m_ObjectHideFlags: 0

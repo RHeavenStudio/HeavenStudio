@@ -32,7 +32,7 @@ namespace HeavenStudio.Games.Loaders
                 },
                 new GameAction("ThrowObjectRight", "Throw Right Object")
                 {
-                    function = delegate { DogNinja.instance.ThrowObjectRight(eventCaller.currentEntity.beat); }, 
+                    function = delegate { DogNinja.instance.ThrowObjectRight(eventCaller.currentEntity.beat, eventCaller.currentEntity["type"]); }, 
                     defaultLength = 2,
                     parameters = new List<Param>()
                     {
@@ -76,7 +76,7 @@ namespace HeavenStudio.Games
         public GameObject Dog;
         public Transform ObjectHolder;
         public Transform HalvesHolder;
-
+        
         [Header("Curves")]
         public BezierCurve3D CurveFromLeft;
         public BezierCurve3D CurveFromRight;
@@ -129,22 +129,24 @@ namespace HeavenStudio.Games
 
         public void ThrowObjectLeft(float beat, int ObjType)
         {
-            bool fromLeft = true;
-            
             Jukebox.PlayOneShotGame("dogNinja/fruit1");
             
-            //GameObject fo = Instantiate(ObjectLeftBase);
-            //ThrowObject Object = Instantiate(ObjectLeftBase).GetComponent<ThrowObject>();
-            //Object.startBeat = beat;
-
-            //ThrowObjectTEST();
+            ThrowObject Object = Instantiate(ObjectLeftBase).GetComponent<ThrowObject>();
+            Object.startBeat = beat;
+            Object.type = ObjType;
+            Object.fromLeft = true;
+            Object.curve = CurveFromLeft;
         }
 
-        public void ThrowObjectRight(float beat)
+        public void ThrowObjectRight(float beat, int ObjType)
         {
-            bool fromLeft = false;
-            
             Jukebox.PlayOneShotGame("dogNinja/fruit1");
+            
+            ThrowObject Object = Instantiate(ObjectRightBase).GetComponent<ThrowObject>();
+            Object.startBeat = beat;
+            Object.type = ObjType;
+            Object.fromLeft = false;
+            Object.curve = CurveFromRight;
         }
 
         public void CutEverything(float beat, bool sound)
