@@ -97,7 +97,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   inList: 0
   state:
-    gameObject: {fileID: 0}
+    gameObject: {fileID: 119991411479083905}
     early: 0
     perfect: 0
     late: 0
@@ -107,7 +107,6 @@ MonoBehaviour:
   isEligible: 0
   triggersAutoplay: 1
   startBeat: 0
-  type: 0
   CurveFromLeft: {fileID: 1761052573981030483}
   CurveFromRight: {fileID: 8610298732975356966}
 --- !u!1 &127654075222335198
@@ -136,7 +135,8 @@ Transform:
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
-  m_Children: []
+  m_Children:
+  - {fileID: 1048894730547048102}
   m_Father: {fileID: 99701050536977662}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -1043,8 +1043,9 @@ GameObject:
   m_PrefabAsset: {fileID: 0}
   serializedVersion: 6
   m_Component:
-  - component: {fileID: 7587101184365024327}
+  - component: {fileID: 1157211771115109073}
   - component: {fileID: 6708362883365422231}
+  - component: {fileID: 2548421167915279146}
   m_Layer: 0
   m_Name: Sign
   m_TagString: Untagged
@@ -1052,20 +1053,25 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!4 &7587101184365024327
-Transform:
+--- !u!224 &1157211771115109073
+RectTransform:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2238146999928418467}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -5.67, y: -0.123, z: 20.75}
+  m_LocalPosition: {x: 0, y: 0, z: 20.75}
   m_LocalScale: {x: 1.171, y: 1.171, z: 1.171}
   m_Children: []
   m_Father: {fileID: 6570085815560366024}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 0.5, y: 0.5}
+  m_AnchorMax: {x: 0.5, y: 0.5}
+  m_AnchoredPosition: {x: -5.67, y: -0.123}
+  m_SizeDelta: {x: 8.4, y: 3.44}
+  m_Pivot: {x: 0.5, y: 0.5}
 --- !u!212 &6708362883365422231
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -1117,6 +1123,14 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
+--- !u!222 &2548421167915279146
+CanvasRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2238146999928418467}
+  m_CullTransparentMesh: 1
 --- !u!1 &2345899427382000280
 GameObject:
   m_ObjectHideFlags: 0
@@ -1308,7 +1322,33 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b82899be2d36d2d48ad3ef1a3ce1c7de, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  SoundSequences: []
+  SoundSequences:
+  - name: hereWeGo
+    sequence:
+      game: 1
+      force: 0
+      clips:
+      - clip: here
+        beat: 0
+        pitch: 0
+        volume: 0
+        looping: 0
+        offset: 0
+        parameters: []
+      - clip: we
+        beat: 0
+        pitch: 0
+        volume: 0
+        looping: 0
+        offset: 0
+        parameters: []
+      - clip: go
+        beat: 0
+        pitch: 0
+        volume: 0
+        looping: 0
+        offset: 0
+        parameters: []
   EligibleHits: []
   scheduledInputs: []
   firstEnable: 0
@@ -1316,7 +1356,7 @@ MonoBehaviour:
   DogAnim: {fileID: 1770250701376598399}
   ObjectLeftBase: {fileID: 5163996841361280296}
   ObjectRightBase: {fileID: 119991411479083905}
-  HalvesBase: {fileID: 0}
+  HalvesBase: {fileID: 8462363345267808632}
   FullBird: {fileID: 3439822116337821266}
   Dog: {fileID: 7056643801436531617}
   ObjectHolder: {fileID: 1671099869309974123}
@@ -1368,7 +1408,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &6570085815560366024
 Transform:
   m_ObjectHideFlags: 0
@@ -1381,7 +1421,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 9090671386772390765}
-  - {fileID: 7587101184365024327}
+  - {fileID: 1157211771115109073}
   m_Father: {fileID: 99701050536977662}
   m_RootOrder: 6
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -1831,7 +1871,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   inList: 0
   state:
-    gameObject: {fileID: 0}
+    gameObject: {fileID: 5163996841361280296}
     early: 0
     perfect: 0
     late: 0
@@ -1841,7 +1881,6 @@ MonoBehaviour:
   isEligible: 0
   triggersAutoplay: 1
   startBeat: 0
-  type: 0
   CurveFromLeft: {fileID: 1761052573981030483}
   CurveFromRight: {fileID: 8610298732975356966}
 --- !u!1 &5340671340987037539
@@ -2472,6 +2511,36 @@ MonoBehaviour:
   handleType: 0
   leftHandleLocalPosition: {x: 0.7853651, y: -0.94227105, z: -0}
   rightHandleLocalPosition: {x: -0.7853651, y: 0.94227105, z: 0}
+--- !u!1 &8462363345267808632
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1048894730547048102}
+  m_Layer: 0
+  m_Name: HalvesBase
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1048894730547048102
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8462363345267808632}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 2078672318315355962}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &8475310029466910972
 GameObject:
   m_ObjectHideFlags: 0

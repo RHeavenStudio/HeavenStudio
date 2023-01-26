@@ -14,6 +14,8 @@ namespace HeavenStudio.Games.Scripts_DogNinja
 
         bool flying = true;
         float flyBeats;
+        public int ObjType;
+        bool fromLeft;
 
         //public ObjectType type;
 
@@ -26,13 +28,16 @@ namespace HeavenStudio.Games.Scripts_DogNinja
         private void Awake()
         {
             game = DogNinja.instance;
+
+            
         }
 
         private void Start()
         {
-            //Jukebox.PlayOneShotGame("dogNinja/fruit1");
+            game.ScheduleInput(startBeat, 1f, InputType.STANDARD_DOWN, Hit, Out, Miss);
 
-            game.ScheduleInput(startBeat, 1f, InputType.STANDARD_DOWN, Just, Out, Miss);
+            //debug stuff below
+            Debug.Log("it's a/an "+ObjType);
         }
 
         private void Update()
@@ -43,57 +48,58 @@ namespace HeavenStudio.Games.Scripts_DogNinja
 
                 float flyPos = cond.GetPositionFromBeat(startBeat, flyBeats);
                 flyPos *=  0.6f;
-                /*
-                if (true)
+                
+                if (fromLeft)
                 {
                     transform.position = CurveFromLeft.GetPoint(flyPos);
                 } else {
                     transform.position = CurveFromRight.GetPoint(flyPos);
                 }
-                */
                 
-
-                if (flyPos > 1f)
+                // DESTROYS GAME OBJECT! UNINTENTIONALLY!
+                /* if (flyPos > 1f)
                 {
                     GameObject.Destroy(gameObject);
                     return;
-                }
+                } */
             }
         }
+        
         void CutObject()
         {
-            flying = false;
+            //flying = false;
 
             //game.headAndBodyAnim.Play("BiteR", 0, 0);
             Jukebox.PlayOneShotGame("dogNinja/fruit2");
 
-            SpawnHalves();
+            //SpawnHalves();
 
-            GameObject.Destroy(gameObject);
+            //GameObject.Destroy(gameObject);
         }
 
-        private void Just(PlayerActionEvent caller, float state)
+        private void Hit(PlayerActionEvent caller, float state)
         {
-            if (state >= 1f || state <= -1f) {  //todo: proper near miss feedback
+            /* if (state >= 1f || state <= -1f) {  //todo: proper near miss feedback
                 //game.headAndBodyAnim.Play("BiteR", 0, 0);
-            }
+            } */
             CutObject();
         }
 
         private void Miss(PlayerActionEvent caller) 
         {
-            Jukebox.PlayOneShot("dogNinja/fruit1");
-            BeatAction.New(game.gameObject, new List<BeatAction.Action>()
+            /* BeatAction.New(game.gameObject, new List<BeatAction.Action>()
             {
                 new BeatAction.Action(startBeat+ 2.45f, delegate { 
                     Destroy(this.gameObject);
                 }),
-            });
+            }); */
         }
 
         private void Out(PlayerActionEvent caller) {}
 
-        void SpawnHalves()
+        // WILL USE FOR SPAWNING HALVES
+
+        /* void SpawnHalves()
         {
             var HalvesGO = GameObject.Instantiate(game.HalvesBase, game.HalvesHolder);
             HalvesGO.SetActive(true);
@@ -105,6 +111,6 @@ namespace HeavenStudio.Games.Scripts_DogNinja
             newGradient.mode = ParticleSystemGradientMode.RandomColor;
             main.startColor = newGradient;
             ps.Play();
-        } 
+        } */
     }
 }
