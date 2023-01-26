@@ -28,7 +28,10 @@ namespace HeavenStudio.Games.Scripts_CropStomp
             if (stomp == null && cond.isPlaying)
             {
                 if (GameManager.instance.currentGame == "cropStomp")
+                {
                     stomp = game.ScheduleUserInput(nextStompBeat - 1f, 1f, InputType.STANDARD_DOWN, Just, Miss, Out);
+                    stomp.countsForAccuracy = false;
+                }
             }
 
             if (PlayerInput.Pressed() && !game.IsExpectingInputNow(InputType.STANDARD_DOWN))
@@ -52,6 +55,7 @@ namespace HeavenStudio.Games.Scripts_CropStomp
             nextStompBeat += 2f;
             stomp?.Disable();
             stomp = game.ScheduleUserInput(nextStompBeat - 1f, 1f, InputType.STANDARD_DOWN, Just, Miss, Out);
+            stomp.countsForAccuracy = false;
         }
 
         private void Out(PlayerActionEvent caller) {}
@@ -73,6 +77,7 @@ namespace HeavenStudio.Games.Scripts_CropStomp
             nextStompBeat += 2f;
             stomp?.Disable();
             stomp = game.ScheduleUserInput(nextStompBeat - 1f, 1f, InputType.STANDARD_DOWN, Just, Miss, Out);
+            stomp.countsForAccuracy = false;
         }
     }
 }

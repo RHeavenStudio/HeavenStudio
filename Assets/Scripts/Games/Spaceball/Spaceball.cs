@@ -1,4 +1,3 @@
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -92,7 +91,7 @@ namespace HeavenStudio.Games
 
         private int currentZoomIndex;
 
-        public Sprite[] Balls;
+        public Sprite[] BallSprites;
 
         private List<DynamicBeatmap.DynamicEntity> allCameraEvents = new List<DynamicBeatmap.DynamicEntity>();
 
@@ -132,7 +131,7 @@ namespace HeavenStudio.Games
 
             allCameraEvents = tempEvents;
 
-            UpdateCameraZoom(); // can't believe this shit actually works
+            UpdateCameraZoom();
         }
 
         private void Update()
@@ -234,7 +233,7 @@ namespace HeavenStudio.Games
 
             if (type == 1)
             {
-                ball.GetComponent<SpaceballBall>().Sprite.sprite = Balls[1];
+                ball.GetComponent<SpaceballBall>().Sprite.sprite = BallSprites[1];
             }
 
             Dispenser.GetComponent<Animator>().Play("DispenserShoot", 0, 0);

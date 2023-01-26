@@ -15507,6 +15507,10 @@ PrefabInstance:
       propertyPath: m_IsActive
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 1228033412872818547, guid: 081ed264ff8a94f4081ee6b1dbb4b144, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0.2
+      objectReference: {fileID: 0}
     - target: {fileID: 1571991866295846512, guid: 081ed264ff8a94f4081ee6b1dbb4b144, type: 3}
       propertyPath: m_Name
       value: DoughDudesPlayer
@@ -15514,6 +15518,10 @@ PrefabInstance:
     - target: {fileID: 1571991866295846512, guid: 081ed264ff8a94f4081ee6b1dbb4b144, type: 3}
       propertyPath: m_IsActive
       value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 3184713278758680592, guid: 081ed264ff8a94f4081ee6b1dbb4b144, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: -0.064
       objectReference: {fileID: 0}
     - target: {fileID: 3261934242483390250, guid: 081ed264ff8a94f4081ee6b1dbb4b144, type: 3}
       propertyPath: m_RootOrder
@@ -15537,7 +15545,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3261934242483390250, guid: 081ed264ff8a94f4081ee6b1dbb4b144, type: 3}
       propertyPath: m_LocalPosition.z
-      value: 23.105392
+      value: 23.10539
       objectReference: {fileID: 0}
     - target: {fileID: 3261934242483390250, guid: 081ed264ff8a94f4081ee6b1dbb4b144, type: 3}
       propertyPath: m_LocalRotation.w
@@ -15566,6 +15574,22 @@ PrefabInstance:
     - target: {fileID: 3261934242483390250, guid: 081ed264ff8a94f4081ee6b1dbb4b144, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3603372349007630546, guid: 081ed264ff8a94f4081ee6b1dbb4b144, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0.418
+      objectReference: {fileID: 0}
+    - target: {fileID: 5243118048156217723, guid: 081ed264ff8a94f4081ee6b1dbb4b144, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0.339
+      objectReference: {fileID: 0}
+    - target: {fileID: 8871343647334617765, guid: 081ed264ff8a94f4081ee6b1dbb4b144, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0.011
+      objectReference: {fileID: 0}
+    - target: {fileID: 8871343647334617765, guid: 081ed264ff8a94f4081ee6b1dbb4b144, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: -0.009
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 081ed264ff8a94f4081ee6b1dbb4b144, type: 3}
