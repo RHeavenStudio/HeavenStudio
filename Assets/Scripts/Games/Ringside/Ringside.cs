@@ -10,7 +10,7 @@ namespace HeavenStudio.Games.Loaders
     {
         public static Minigame AddGame(EventCaller eventCaller)
         {
-            return new Minigame("ringside", "Ringside \n<color=#eb5454>[INITIALIZATION ONLY]</color>", "WUTRU3", false, false, new List<GameAction>()
+            return new Minigame("ringside", "Ringside \n<color=#eb5454>[WIP]</color>", "WUTRU3", false, false, new List<GameAction>()
             {
                 new GameAction("question", "Question")
                 {
@@ -28,7 +28,7 @@ namespace HeavenStudio.Games.Loaders
                 },
                 new GameAction("poseForTheFans", "Pose For The Fans!")
                 {
-                    function = delegate {var e = eventCaller.currentEntity; Ringside.PoseForTheFans(e.beat, e["and"]); },
+                    preFunction = delegate {var e = eventCaller.currentEntity; Ringside.PoseForTheFans(e.beat, e["and"]); },
                     parameters = new List<Param>()
                     {
                         new Param("and", false, "And", "Whether the And voice line should be said or not.")
@@ -46,12 +46,22 @@ namespace HeavenStudio.Games
     {
         [Header("Components")]
         [SerializeField] Animator wrestlerAnim;
+        [SerializeField] Animator reporterAnim;
 
         [Header("Variables")]
         public int currentQuestion = 1;
+        public static List<float> queuedPoses = new List<float>();
 
 
         public static Ringside instance;
+
+        void OnDestroy()
+        {
+            if (!Conductor.instance.isPlaying || Conductor.instance.isPaused)
+            {
+                if (queuedPoses.Count > 0) queuedPoses.Clear();
+            }
+        }
 
         void Awake()
         {
@@ -64,6 +74,15 @@ namespace HeavenStudio.Games
 
             if (cond.isPlaying && !cond.isPaused)
             {
+                if (queuedPoses.Count > 0)
+                {
+                    foreach(var p in queuedPoses)
+                    {
+                        PoseCheck(p);
+                    }
+                    wrestlerAnim.Play("PreparePoseIdle", 0, 0);
+                    queuedPoses.Clear();
+                }
                 if (PlayerInput.Pressed() && !IsExpectingInputNow(InputType.STANDARD_DOWN))
                 {
                     wrestlerAnim.Play("Ye", 0, 0);
@@ -152,7 +171,6 @@ namespace HeavenStudio.Games
                     new MultiSound.Sound("ringside/poseAnd", beat - 0.5f),
                 }, forcePlay: true);
             }
-            if (GameManager.instance.currentGame != "ringside") return;
             int poseLineRandom = UnityEngine.Random.Range(1, 3);
             MultiSound.Play(new MultiSound.Sound[]
             {
@@ -161,7 +179,23 @@ namespace HeavenStudio.Games
                 new MultiSound.Sound($"ringside/the{poseLineRandom}", beat + 0.75f),
                 new MultiSound.Sound($"ringside/fans{poseLineRandom}", beat + 1f),
             }, forcePlay: true);
-            Ringside.instance.ScheduleInput(beat, 2f, InputType.STANDARD_ALT_DOWN, Ringside.instance.JustPoseForTheFans, Ringside.instance.MissPose, Ringside.instance.Nothing);
+            if (GameManager.instance.currentGame == "ringside")
+            {
+                Ringside.instance.PoseCheck(beat);
+                BeatAction.New(instance.gameObject, new List<BeatAction.Action>()
+                {
+                    new BeatAction.Action(beat, delegate { Ringside.instance.wrestlerAnim.DoScaledAnimationAsync("PreparePose", 0.25f); }),
+                });
+            }
+            else
+            {
+                queuedPoses.Add(beat);
+            }
+        }
+
+        public void PoseCheck(float beat)
+        {
+            ScheduleInput(beat, 2f, InputType.STANDARD_ALT_DOWN, JustPoseForTheFans, MissPose, Nothing);
         }
 
         public void JustQuestion(PlayerActionEvent caller, float state)
@@ -195,6 +229,7 @@ namespace HeavenStudio.Games
         public void SuccessBigGuyFirst()
         {
             Jukebox.PlayOneShotGame($"ringside/muscles1");
+            wrestlerAnim.Play("BigGuyOne", 0, 0);
         }
 
         public void JustBigGuySecond(PlayerActionEvent caller, float state)
@@ -209,9 +244,11 @@ namespace HeavenStudio.Games
         public void SuccessBigGuySecond()
         {
             Jukebox.PlayOneShotGame($"ringside/muscles2");
+            wrestlerAnim.Play("BigGuyTwo", 0, 0);
             BeatAction.New(instance.gameObject, new List<BeatAction.Action>()
             {
                 new BeatAction.Action(Conductor.instance.songPositionInBeats + 0.5f, delegate { Jukebox.PlayOneShotGame("ringside/musclesCamera"); }),
+                new BeatAction.Action(Conductor.instance.songPositionInBeats + 1f, delegate { wrestlerAnim.Play("Idle", 0, 0); }),
             });
         }
 
@@ -226,10 +263,12 @@ namespace HeavenStudio.Games
 
         public void SuccessPoseForTheFans()
         {
+            wrestlerAnim.Play("Pose1", 0, 0);
             Jukebox.PlayOneShotGame($"ringside/yell{UnityEngine.Random.Range(1, 7)}");
             BeatAction.New(instance.gameObject, new List<BeatAction.Action>()
             {
                 new BeatAction.Action(Conductor.instance.songPositionInBeats + 1f, delegate { Jukebox.PlayOneShotGame("ringside/poseCamera"); }),
+                new BeatAction.Action(Conductor.instance.songPositionInBeats + 2f, delegate { wrestlerAnim.Play("Idle", 0, 0); }),
             });
         }
 
