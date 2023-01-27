@@ -383,8 +383,8 @@ namespace HeavenStudio
                         {
                             new Param("filter", Games.Global.Filter.FilterType.grayscale, "Filter"),
                             new Param("inten", new EntityTypes.Float(0, 100, 100), "Intensity"),
-                            new Param("fadein", new EntityTypes.Float(0, 1, 0), "Fade In"),
-                            new Param("fadeout", new EntityTypes.Float(0, 1, 0), "Fade Out")
+                            new Param("fadein", new EntityTypes.Float(0, 100, 0), "Fade In"),
+                            new Param("fadeout", new EntityTypes.Float(0, 100, 0), "Fade Out")
                         }
                     ),
                     new GameAction("move camera", "Move Camera", 1f, true, new List<Param>() 

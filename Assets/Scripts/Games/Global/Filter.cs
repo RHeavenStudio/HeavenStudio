@@ -15,7 +15,7 @@ namespace HeavenStudio.Games.Global
         private List<Texture2D> amplifyTextures = new List<Texture2D>(); // All available camera filters in texture format
 
         // Because of how HS serializes enums, we have to number these manually to make sure a level doesn't break if we add more.
-        // Backwards compatability is preserved as long as new elements are appended to the end of this enum. (!DO NOT TRY TO SORT THESE!)
+        // Backwards compatibility is preserved as long as new elements are appended to the end of this enum. (!DO NOT TRY TO SORT THESE!)
         public enum FilterType
         {
             accent = 0,
@@ -128,8 +128,8 @@ namespace HeavenStudio.Games.Global
 
                 if (filter.beat <= songPosBeat && filter.beat + filter.length >= songPosBeat)
                 {
-                    var fadeInTime = filter["fadein"];
-                    var fadeOutTime = filter["fadeout"];
+                    var fadeInTime = filter["fadein"] * 0.01f;
+                    var fadeOutTime = filter["fadeout"] * 0.01f;
 
                     var intensity = filter["inten"];
                     intensity = Mathf.Lerp(1, 0, Mathp.Normalize(intensity, 0, 100));
