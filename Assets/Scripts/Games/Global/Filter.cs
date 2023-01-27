@@ -15,6 +15,7 @@ namespace HeavenStudio.Games.Global
         private List<Texture2D> amplifyTextures = new List<Texture2D>(); // All available camera filters in texture format
 
         // Because of how HS serializes enums, we have to number these manually to make sure a level doesn't break if we add more.
+        // Backwards compatability is preserved as long as new elements are appended to the end of this enum. (!DO NOT TRY TO SORT THESE!)
         public enum FilterType
         {
             accent = 0,
