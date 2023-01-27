@@ -2,6 +2,7 @@ using HeavenStudio.Util;
 using System;
 using System.Collections.Generic;
 using UnityEngine;
+using DG.Tweening;
 
 namespace HeavenStudio.Games.Loaders
 {
@@ -57,10 +58,7 @@ namespace HeavenStudio.Games
 
         void OnDestroy()
         {
-            if (!Conductor.instance.isPlaying || Conductor.instance.isPaused)
-            {
-                if (queuedPoses.Count > 0) queuedPoses.Clear();
-            }
+            if (queuedPoses.Count > 0) queuedPoses.Clear();
         }
 
         void Awake()
@@ -74,15 +72,7 @@ namespace HeavenStudio.Games
 
             if (cond.isPlaying && !cond.isPaused)
             {
-                if (queuedPoses.Count > 0)
-                {
-                    foreach(var p in queuedPoses)
-                    {
-                        PoseCheck(p);
-                    }
-                    wrestlerAnim.Play("PreparePoseIdle", 0, 0);
-                    queuedPoses.Clear();
-                }
+
                 if (PlayerInput.Pressed() && !IsExpectingInputNow(InputType.STANDARD_DOWN))
                 {
                     wrestlerAnim.Play("Ye", 0, 0);
@@ -90,9 +80,45 @@ namespace HeavenStudio.Games
                 }
             }
         }
+        
+        void LateUpdate()
+        {
+            var cond = Conductor.instance;
+            if (cond.isPlaying && !cond.isPaused)
+            {
+                if (queuedPoses.Count > 0)
+                {
+                    foreach (var p in queuedPoses)
+                    {
+
+                        if (cond.songPositionInBeats - 0.05f > p)
+                        {
+                            BeatAction.New(instance.gameObject, new List<BeatAction.Action>()
+                            {
+                                new BeatAction.Action(p, delegate  { wrestlerAnim.Play("PreparePoseIdle", 0, 0); }),
+                            });
+                        }
+                        else
+                        {
+                            BeatAction.New(instance.gameObject, new List<BeatAction.Action>()
+                            {
+                                new BeatAction.Action(p, delegate  {wrestlerAnim.DoScaledAnimationAsync("PreparePose", 0.25f); }),
+                            });
+                        }
+                        BeatAction.New(instance.gameObject, new List<BeatAction.Action>()
+                        {
+                            new BeatAction.Action(p + 1, delegate  { PoseCheck(p); }),
+                        });
+                    }
+                    queuedPoses.Clear();
+                }
+            }
+
+        }
 
         public void Question(float beat, bool alt)
         {
+            reporterAnim.DoScaledAnimationAsync("WubbaLubbaDubbaThatTrue", 0.4f);
             if (alt)
             {
                 MultiSound.Play(new MultiSound.Sound[]
@@ -121,6 +147,7 @@ namespace HeavenStudio.Games
 
         public void ThatTrue(float beat)
         {
+            reporterAnim.DoScaledAnimationAsync("WubbaLubbaDubbaThatTrue", 0.4f);
             MultiSound.Play(new MultiSound.Sound[]
             {
                 new MultiSound.Sound($"ringside/that{currentQuestion}", beat + 0.25f),
@@ -135,10 +162,15 @@ namespace HeavenStudio.Games
             {
                 currentQuestion = 1;
             }
+            BeatAction.New(instance.gameObject, new List<BeatAction.Action>()
+            {
+                new BeatAction.Action(beat + 0.25f, delegate { reporterAnim.DoScaledAnimationAsync("ThatTrue", 0.5f); }),
+            });
         }
 
         public void BigGuy(float beat)
         {
+            reporterAnim.DoScaledAnimationAsync("Woah", 0.4f);
             float youBeat = 0.65f;
             if (currentQuestion == 3) youBeat = 0.7f;
             MultiSound.Play(new MultiSound.Sound[]
@@ -160,6 +192,10 @@ namespace HeavenStudio.Games
             {
                 currentQuestion = 1;
             }
+            BeatAction.New(instance.gameObject, new List<BeatAction.Action>()
+            {
+                new BeatAction.Action(beat + 2f, delegate { reporterAnim.Play("True", 0, 0); }),
+            });
         }
 
         public static void PoseForTheFans(float beat, bool and)
@@ -210,10 +246,13 @@ namespace HeavenStudio.Games
         public void SuccessQuestion()
         {
             wrestlerAnim.Play("Ye", 0, 0);
+            reporterAnim.Play("ExtendSmile", 0, 0);
             Jukebox.PlayOneShotGame($"ringside/ye{UnityEngine.Random.Range(1, 4)}");
             BeatAction.New(instance.gameObject, new List<BeatAction.Action>()
             {
                 new BeatAction.Action(Conductor.instance.songPositionInBeats + 0.5f, delegate { Jukebox.PlayOneShotGame("ringside/yeCamera"); }),
+                new BeatAction.Action(Conductor.instance.songPositionInBeats + 0.5f, delegate { reporterAnim.Play("SmileReporter", 0, 0); }),
+                new BeatAction.Action(Conductor.instance.songPositionInBeats + 0.9f, delegate { reporterAnim.Play("IdleReporter", 0, 0); }),
             });
         }
 
@@ -244,11 +283,14 @@ namespace HeavenStudio.Games
         public void SuccessBigGuySecond()
         {
             Jukebox.PlayOneShotGame($"ringside/muscles2");
+            reporterAnim.Play("ExtendSmile", 0, 0);
             wrestlerAnim.Play("BigGuyTwo", 0, 0);
             BeatAction.New(instance.gameObject, new List<BeatAction.Action>()
             {
                 new BeatAction.Action(Conductor.instance.songPositionInBeats + 0.5f, delegate { Jukebox.PlayOneShotGame("ringside/musclesCamera"); }),
-                new BeatAction.Action(Conductor.instance.songPositionInBeats + 1f, delegate { wrestlerAnim.Play("Idle", 0, 0); }),
+                new BeatAction.Action(Conductor.instance.songPositionInBeats + 0.5f, delegate { reporterAnim.Play("SmileReporter", 0, 0); }),
+                new BeatAction.Action(Conductor.instance.songPositionInBeats + 0.9f, delegate { reporterAnim.Play("IdleReporter", 0, 0); }),
+                new BeatAction.Action(Conductor.instance.songPositionInBeats + 0.9f, delegate { wrestlerAnim.Play("Idle", 0, 0); }),
             });
         }
 
@@ -264,11 +306,13 @@ namespace HeavenStudio.Games
         public void SuccessPoseForTheFans()
         {
             wrestlerAnim.Play("Pose1", 0, 0);
+            reporterAnim.Play("ExcitedReporter", 0, 0);
             Jukebox.PlayOneShotGame($"ringside/yell{UnityEngine.Random.Range(1, 7)}");
             BeatAction.New(instance.gameObject, new List<BeatAction.Action>()
             {
                 new BeatAction.Action(Conductor.instance.songPositionInBeats + 1f, delegate { Jukebox.PlayOneShotGame("ringside/poseCamera"); }),
-                new BeatAction.Action(Conductor.instance.songPositionInBeats + 2f, delegate { wrestlerAnim.Play("Idle", 0, 0); }),
+                new BeatAction.Action(Conductor.instance.songPositionInBeats + 1.95f, delegate { wrestlerAnim.Play("Idle", 0, 0); }),
+                new BeatAction.Action(Conductor.instance.songPositionInBeats + 1.95f, delegate { reporterAnim.Play("IdleReporter", 0, 0); }),
             });
         }
 
