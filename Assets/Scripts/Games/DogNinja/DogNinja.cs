@@ -92,15 +92,16 @@ namespace HeavenStudio.Games
 
         public enum ObjectType
         {
-            Apple,
-            Bone,
-            Broccoli,
-            Carrot,
-            Cucumber,
-            Pan,
-            Pepper,
-            Potato,
-            Tire,
+            Apple,      // 0, fruit1
+            Bone,       // 1, bone1
+            Broccoli,   // 2, fruit1
+            Carrot,     // 3, fruit1
+            Cucumber,   // 4, fruit1
+            Pan,        // 5, pan1
+            Pepper,     // 6, fruit1
+            Potato,     // 7, fruit1
+            Tire,       // 8, tire1
+            TacoBell,   // 9, pan1 -> tacobell
         }
         
         private void Awake()
@@ -129,8 +130,6 @@ namespace HeavenStudio.Games
 
         public void ThrowObjectLeft(float beat, int ObjType)
         {
-            Jukebox.PlayOneShotGame("dogNinja/fruit1");
-            
             ThrowObject Object = Instantiate(ObjectLeftBase).GetComponent<ThrowObject>();
             Object.startBeat = beat;
             Object.type = ObjType;
@@ -141,8 +140,6 @@ namespace HeavenStudio.Games
 
         public void ThrowObjectRight(float beat, int ObjType)
         {
-            Jukebox.PlayOneShotGame("dogNinja/fruit1");
-            
             ThrowObject Object = Instantiate(ObjectRightBase).GetComponent<ThrowObject>();
             Object.startBeat = beat;
             Object.type = ObjType;

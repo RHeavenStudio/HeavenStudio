@@ -14,11 +14,16 @@ namespace HeavenStudio.Games.Scripts_DogNinja
         public int type;
         public bool fromLeft;
 
+        string throwSfx;
+        string sliceSfx;
         bool flying = true;
         float flyBeats;
 
         [Header("Animators")]
         public Animator DogAnim;
+
+        [Header("References")]
+        public GameObject ObjectLeftBase;
 
         [Header("Curves")]
         public BezierCurve3D curve;
@@ -32,6 +37,33 @@ namespace HeavenStudio.Games.Scripts_DogNinja
 
         private void Start()
         {
+            switch (type) {
+                case 1:
+                    throwSfx = "dogNinja/bone1";
+                    sliceSfx = "dogNinja/bone2";
+                    break;
+                case 5:
+                    throwSfx = "dogNinja/pan1";
+                    sliceSfx = "dogNinja/pan2";
+                    break;
+                case 8:
+                    throwSfx = "dogNinja/tire1";
+                    sliceSfx = "dogNinja/tire2";
+                    break;
+                case 9:
+                    throwSfx = "dogNinja/pan1";
+                    sliceSfx = "dogNinja/tacobell_combo";
+                    break;
+                default:
+                    throwSfx = "dogNinja/fruit1";
+                    sliceSfx = "dogNinja/fruit2";
+                    break;
+            }
+
+            //diffObj.sprite("Broc");
+
+            Jukebox.PlayOneShotGame(throwSfx);
+        
             game.ScheduleInput(startBeat, 1f, InputType.STANDARD_DOWN, Hit, Out, Miss);
             
             //DogNinja.dontPlay = true;
@@ -45,7 +77,7 @@ namespace HeavenStudio.Games.Scripts_DogNinja
         void CutObject()
         {
             DogAnim.Play("Slice", 0, 0);
-            Jukebox.PlayOneShotGame("dogNinja/fruit2");
+            Jukebox.PlayOneShotGame(sliceSfx);
 
             //DogNinja.dontPlay = false;
 
