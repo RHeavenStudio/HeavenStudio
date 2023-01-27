@@ -378,6 +378,15 @@ namespace HeavenStudio
                             new Param("ease", EasingFunction.Ease.Linear, "Ease")
                         }
                     ),
+                    new GameAction("filter", "Filter", 1f, true,
+                        new List<Param>()
+                        {
+                            new Param("filter", Games.Global.Filter.FilterType.grayscale, "Filter"),
+                            new Param("inten", new EntityTypes.Float(0, 100, 100), "Intensity"),
+                            new Param("fadein", new EntityTypes.Float(0, 100, 0), "Fade In"),
+                            new Param("fadeout", new EntityTypes.Float(0, 100, 0), "Fade Out")
+                        }
+                    ),
                     new GameAction("move camera", "Move Camera", 1f, true, new List<Param>() 
                         {
                             new Param("valA", new EntityTypes.Float(-50, 50, 0), "Right / Left"),
