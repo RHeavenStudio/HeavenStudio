@@ -17,7 +17,8 @@ namespace HeavenStudio.Games.Scripts_DogNinja
         bool flying = true;
         float flyBeats;
 
-        //public ObjectType type;
+        [Header("Animators")]
+        public Animator DogAnim;
 
         [Header("Curves")]
         public BezierCurve3D curve;
@@ -33,42 +34,24 @@ namespace HeavenStudio.Games.Scripts_DogNinja
         {
             game.ScheduleInput(startBeat, 1f, InputType.STANDARD_DOWN, Hit, Out, Miss);
             
+            //DogNinja.dontPlay = true;
+
             //debug stuff below
             Debug.Log("it's a/an "+type);
         }
 
-        private void Update()
-        {
-            if (flying)
-            {
-                var cond = Conductor.instance;
-
-                float flyPos = cond.GetPositionFromBeat(startBeat, flyBeats);
-                flyPos *=  0.6f;
-                
-                /* if (fromLeft)
-                {
-                    transform.position = CurveFromLeft.GetPoint(flyPos);
-                } else {
-                    transform.position = CurveFromRight.GetPoint(flyPos);
-                } */
-                
-                // DESTROYS GAME OBJECT! UNINTENTIONALLY!
-                /* if (flyPos > 1f)
-                {
-                    GameObject.Destroy(gameObject);
-                    return;
-                } */
-            }
-        }
+        private void Update(){}
 
         void CutObject()
         {
+            DogAnim.Play("Slice", 0, 0);
             Jukebox.PlayOneShotGame("dogNinja/fruit2");
+
+            //DogNinja.dontPlay = false;
 
             //SpawnHalves();
 
-            //GameObject.Destroy(gameObject);
+            GameObject.Destroy(gameObject);
         }
 
         private void Hit(PlayerActionEvent caller, float state)
