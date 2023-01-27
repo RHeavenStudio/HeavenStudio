@@ -86,7 +86,7 @@ namespace HeavenStudio.Games
 
         private float lastReportedBeat = 0f;
         private bool birdOnScreen = false;
-        private bool preparing = false;
+        //public static bool dontPlay = false;
         
         public static DogNinja instance;
 
@@ -110,7 +110,7 @@ namespace HeavenStudio.Games
 
         private void Update()
         {
-            if (Conductor.instance.ReportBeat(ref lastReportedBeat) && !preparing)
+            if (Conductor.instance.ReportBeat(ref lastReportedBeat))
             {
                 DogAnim.Play("Bop", 0, 0);
             }
@@ -136,6 +136,7 @@ namespace HeavenStudio.Games
             Object.type = ObjType;
             Object.fromLeft = true;
             Object.curve = CurveFromLeft;
+            Object.DogAnim = DogAnim;
         }
 
         public void ThrowObjectRight(float beat, int ObjType)
@@ -147,6 +148,7 @@ namespace HeavenStudio.Games
             Object.type = ObjType;
             Object.fromLeft = false;
             Object.curve = CurveFromRight;
+            Object.DogAnim = DogAnim;
         }
 
         public void CutEverything(float beat, bool sound)
@@ -174,11 +176,18 @@ namespace HeavenStudio.Games
 
         public static void HereWeGoInactive(float beat)
         {
-            MultiSound.Sound[] HereWeGoSFX = new MultiSound.Sound[] { 
+            MultiSound.Play(new MultiSound.Sound[] { 
                     new MultiSound.Sound("dogNinja/here", beat), 
                     new MultiSound.Sound("dogNinja/we", beat + 0.5f),
                     new MultiSound.Sound("dogNinja/go", beat + 1f)
-                };
+                }, forcePlay: true);
+
+            // what could have been :cry:
+            /* MultiSound.Sound[] HereWeGoSFX = new MultiSound.Sound[] { 
+                    new MultiSound.Sound("dogNinja/here", beat), 
+                    new MultiSound.Sound("dogNinja/we", beat + 0.5f),
+                    new MultiSound.Sound("dogNinja/go", beat + 1f)
+                }; */
         }
     }
 
