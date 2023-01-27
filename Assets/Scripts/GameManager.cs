@@ -27,6 +27,7 @@ namespace HeavenStudio
         public CircleCursor CircleCursor;
         [HideInInspector] public GameObject GamesHolder;
         public Games.Global.Flash fade;
+        public Games.Global.Filter filter;
         public GameObject textbox;
 
         [Header("Games")]
@@ -110,8 +111,10 @@ namespace HeavenStudio
             sp.sortingOrder = 30000;
             gameObject.layer = LayerMask.NameToLayer("Flash");
 
-            GameObject fade = new GameObject();
+            GameObject fade = new GameObject("flash");
             this.fade = fade.AddComponent<Games.Global.Flash>();
+            GameObject filter = new GameObject("filter");
+            this.filter = filter.AddComponent<Games.Global.Filter>();
 
 
             GlobalGameManager.Init();
