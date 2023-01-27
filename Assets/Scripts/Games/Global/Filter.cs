@@ -82,7 +82,8 @@ namespace HeavenStudio.Games.Global
 
             GameManager.instance.onBeatChanged += OnBeatChanged;
 
-            GenerateFilterTypeEnum();
+            // Don't use this because of serialization, add to the "FilterType" enum above manually.
+            // GenerateFilterTypeEnum();
         }
 
         #endregion
@@ -166,7 +167,7 @@ namespace HeavenStudio.Games.Global
         }
 
         /// <summary>
-        /// Used to generate the "FilterType" enum, you probably shouldn't use this, though.
+        /// Logs C# code of the "FilterType" enum.
         /// </summary>
         private void GenerateFilterTypeEnum()
         {
