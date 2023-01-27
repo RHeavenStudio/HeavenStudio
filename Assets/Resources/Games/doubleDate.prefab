@@ -49,7 +49,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &263501352795859555
 Transform:
   m_ObjectHideFlags: 0
@@ -2212,7 +2212,7 @@ Transform:
   m_GameObject: {fileID: 2368082841104603514}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalScale: {x: 0.3723488, y: 0.3723488, z: 0.3723488}
   m_Children: []
   m_Father: {fileID: 9047458390444353300}
   m_RootOrder: 0
@@ -2278,7 +2278,7 @@ Animator:
   m_GameObject: {fileID: 2368082841104603514}
   m_Enabled: 1
   m_Avatar: {fileID: 0}
-  m_Controller: {fileID: 9100000, guid: 49b923a7b27d3f041beebcacf395ab9b, type: 2}
+  m_Controller: {fileID: 9100000, guid: 2257e436fe8ed56488a48ad01f38b830, type: 2}
   m_CullingMode: 0
   m_UpdateMode: 0
   m_ApplyRootMotion: 0
@@ -2296,12 +2296,12 @@ MonoBehaviour:
   m_GameObject: {fileID: 2368082841104603514}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 45c9779988ec710429b033a2b10fbf4f, type: 3}
+  m_Script: {fileID: 11500000, guid: e3bb1201003b013439355c9c2b694a2b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   inList: 0
   state:
-    gameObject: {fileID: 0}
+    gameObject: {fileID: 2368082841104603514}
     early: 0
     perfect: 0
     late: 0
@@ -2310,6 +2310,7 @@ MonoBehaviour:
   aceTimes: 0
   isEligible: 0
   triggersAutoplay: 1
+  startBeat: 0
 --- !u!1 &2540413505079355534
 GameObject:
   m_ObjectHideFlags: 0
@@ -4140,7 +4141,7 @@ Transform:
   m_GameObject: {fileID: 4742885858310037783}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalScale: {x: 0.3723488, y: 0.3723488, z: 0.3723488}
   m_Children: []
   m_Father: {fileID: 9047458390444353300}
   m_RootOrder: 2
@@ -4206,7 +4207,7 @@ Animator:
   m_GameObject: {fileID: 4742885858310037783}
   m_Enabled: 1
   m_Avatar: {fileID: 0}
-  m_Controller: {fileID: 9100000, guid: 49b923a7b27d3f041beebcacf395ab9b, type: 2}
+  m_Controller: {fileID: 9100000, guid: 6da731a08255dd4419649d99a3fe13d1, type: 2}
   m_CullingMode: 0
   m_UpdateMode: 0
   m_ApplyRootMotion: 0
@@ -4229,7 +4230,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   inList: 0
   state:
-    gameObject: {fileID: 0}
+    gameObject: {fileID: 4742885858310037783}
     early: 0
     perfect: 0
     late: 0
@@ -4238,6 +4239,7 @@ MonoBehaviour:
   aceTimes: 0
   isEligible: 0
   triggersAutoplay: 1
+  startBeat: 0
 --- !u!1 &4781686065129112183
 GameObject:
   m_ObjectHideFlags: 0
@@ -5014,9 +5016,15 @@ MonoBehaviour:
   EligibleHits: []
   scheduledInputs: []
   firstEnable: 0
-  soccerBallAnim: {fileID: 0}
-  basketballAnim: {fileID: 0}
-  footballAnim: {fileID: 0}
+  BoyAnim: {fileID: 2477271591364459339}
+  soccerBallAnim: {fileID: 521902303904860772}
+  basketballAnim: {fileID: 6433054856005445756}
+  footballAnim: {fileID: 3116952884536146085}
+  Boy: {fileID: 366190183088808969}
+  Girl: {fileID: 924406857522765850}
+  SoccerBall: {fileID: 2368082841104603514}
+  Basketball: {fileID: 7706094923694535617}
+  Football: {fileID: 4742885858310037783}
 --- !u!1 &5842845673002523687
 GameObject:
   m_ObjectHideFlags: 0
@@ -6009,7 +6017,7 @@ Transform:
   m_GameObject: {fileID: 7706094923694535617}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalScale: {x: 0.3723488, y: 0.3723488, z: 0.3723488}
   m_Children: []
   m_Father: {fileID: 9047458390444353300}
   m_RootOrder: 1
@@ -6075,7 +6083,7 @@ Animator:
   m_GameObject: {fileID: 7706094923694535617}
   m_Enabled: 1
   m_Avatar: {fileID: 0}
-  m_Controller: {fileID: 9100000, guid: 49b923a7b27d3f041beebcacf395ab9b, type: 2}
+  m_Controller: {fileID: 9100000, guid: 35f0f44efd9d20543b1407c6fcd6d4cd, type: 2}
   m_CullingMode: 0
   m_UpdateMode: 0
   m_ApplyRootMotion: 0
@@ -6093,12 +6101,12 @@ MonoBehaviour:
   m_GameObject: {fileID: 7706094923694535617}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 83937a6a927e5394d810b03d99626781, type: 3}
+  m_Script: {fileID: 11500000, guid: e3bb1201003b013439355c9c2b694a2b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   inList: 0
   state:
-    gameObject: {fileID: 0}
+    gameObject: {fileID: 7706094923694535617}
     early: 0
     perfect: 0
     late: 0
@@ -6107,6 +6115,7 @@ MonoBehaviour:
   aceTimes: 0
   isEligible: 0
   triggersAutoplay: 1
+  startBeat: 0
 --- !u!1 &7804064673786096060
 GameObject:
   m_ObjectHideFlags: 0

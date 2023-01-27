@@ -6,12 +6,12 @@ using HeavenStudio.Util;
 
 namespace HeavenStudio.Games.Scripts_DoubleDate
 {
-    public class Football : PlayerActionObject
+    public class Ball : PlayerActionObject
     {
         public float startBeat;
         
         private DoubleDate game;
-        
+
         void Awake()
         {
             game = DoubleDate.instance;
@@ -19,7 +19,7 @@ namespace HeavenStudio.Games.Scripts_DoubleDate
 
         private void Start()
         {
-            game.ScheduleInput(startBeat, 1.5f, InputType.STANDARD_DOWN, Hit, Out, Miss);
+            game.ScheduleInput(startBeat, 1f, InputType.STANDARD_DOWN, Hit, Out, Miss);
         }
 
         void Update()
@@ -30,7 +30,6 @@ namespace HeavenStudio.Games.Scripts_DoubleDate
         private void Hit(PlayerActionEvent caller, float state)
         {
             Jukebox.PlayOneShotGame("doubleDate/kick");
-            Jukebox.PlayOneShotGame("doubleDate/football_kick");
         }
 
         private void Out(PlayerActionEvent caller)
