@@ -130,6 +130,9 @@ namespace HeavenStudio
                 GameObject textbox = Instantiate(Resources.Load<GameObject>("Prefabs/Common/Textbox"));
                 textbox.name = "Textbox";
 
+                GameObject overlays = Instantiate(Resources.Load<GameObject>("Prefabs/Common/Overlays"));
+                overlays.name = "Overlays";
+
                 GameObject timingDisp = Instantiate(Resources.Load<GameObject>("Prefabs/Common/Overlays/TimingAccuracy"));
                 timingDisp.name = "TimingDisplay";
             /////
