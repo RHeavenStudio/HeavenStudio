@@ -43,6 +43,15 @@ namespace HeavenStudio.Games.Loaders
                     },
                     defaultLength = 4f
                 },
+                new GameAction("toggleBop", "Toggle Bop")
+                {
+                    function = delegate {var e = eventCaller.currentEntity; Ringside.instance.ToggleBop(e["bop"]); },
+                    parameters = new List<Param>()
+                    {
+                        new Param("bop", false, "Bop?", "Whether the wrestler should bop or not."),
+                    },
+                    defaultLength = 0.5f
+                },
             });
         }
     }
@@ -65,6 +74,7 @@ namespace HeavenStudio.Games
         [Header("Components")]
         [SerializeField] Animator wrestlerAnim;
         [SerializeField] Animator reporterAnim;
+        [SerializeField] Animator audienceAnim;
         [SerializeField] SpriteRenderer flashWhite;
         [SerializeField] GameObject flashObject;
         [SerializeField] GameObject poseFlash;
@@ -92,11 +102,13 @@ namespace HeavenStudio.Games
         private float currentZoomCamBeat;
         private Vector3 lastCamPos = new Vector3(0, 0, -10);
         private Vector3 currentCamPos = new Vector3(0, 0, -10);
+        private bool shouldBop = true;
 
         private int currentZoomIndex;
 
         private List<DynamicBeatmap.DynamicEntity> allCameraEvents = new List<DynamicBeatmap.DynamicEntity>();
 
+        public GameEvent bop = new GameEvent();
 
         public static Ringside instance;
 
@@ -139,12 +151,23 @@ namespace HeavenStudio.Games
 
             if (cond.isPlaying && !cond.isPaused)
             {
-
+                if (cond.ReportBeat(ref bop.lastReportedBeat, bop.startBeat % 1) && isPlaying(wrestlerAnim, "Idle") && shouldBop)
+                {
+                    if (UnityEngine.Random.Range(1, 18) == 1)
+                    {
+                        wrestlerAnim.DoScaledAnimationAsync("BopPec");
+                    }
+                    else
+                    {
+                        wrestlerAnim.DoScaledAnimationAsync("Bop");
+                    }
+                }
                 if (PlayerInput.Pressed() && !IsExpectingInputNow(InputType.STANDARD_DOWN))
                 {
-                    wrestlerAnim.Play("Ye", 0, 0);
+                    wrestlerAnim.DoScaledAnimationAsync("Ye", 0.5f);
                     Jukebox.PlayOneShotGame($"ringside/ye{UnityEngine.Random.Range(1, 4)}");
                 }
+                ReporterBlink();
             }
             if (allCameraEvents.Count > 0)
             {
@@ -212,6 +235,11 @@ namespace HeavenStudio.Games
 
         }
 
+        public void ToggleBop(bool startBopping)
+        {
+            shouldBop = startBopping;
+        }
+
         public void Question(float beat, bool alt, int questionVariant)
         {
             int currentQuestion = questionVariant;
@@ -245,7 +273,6 @@ namespace HeavenStudio.Games
 
         public void ThatTrue(float beat, int currentQuestion)
         {
-            reporterAnim.DoScaledAnimationAsync("WubbaLubbaDubbaThatTrue", 0.4f);
             MultiSound.Play(new MultiSound.Sound[]
             {
                 new MultiSound.Sound($"ringside/that{currentQuestion}", beat + 0.25f),
@@ -305,7 +332,10 @@ namespace HeavenStudio.Games
                 Ringside.instance.PoseCheck(beat);
                 BeatAction.New(instance.gameObject, new List<BeatAction.Action>()
                 {
+                    new BeatAction.Action(beat, delegate { Ringside.instance.audienceAnim.DoScaledAnimationAsync("PoseAudience", 0.25f); }),
                     new BeatAction.Action(beat, delegate { Ringside.instance.wrestlerAnim.DoScaledAnimationAsync("PreparePose", 0.25f); }),
+                    new BeatAction.Action(beat + 3.99f, delegate { Ringside.instance.wrestlerAnim.Play("Idle", 0, 0); }),
+                    new BeatAction.Action(beat + 3.99f, delegate { Ringside.instance.reporterAnim.Play("IdleReporter", 0, 0); }),
                 });
                 if (!keepZoomedOut)
                 {
@@ -396,6 +426,18 @@ namespace HeavenStudio.Games
             ChangeBGColor(end, beats);
         }
 
+        public void ReporterBlink()
+        {
+            int randomNumber = UnityEngine.Random.Range(1, 200);
+            if (randomNumber == 1)
+            {
+                if (isPlaying(reporterAnim, "IdleReporter"))
+                {
+                    reporterAnim.DoScaledAnimationAsync("BlinkReporter", 0.5f);
+                }
+            }
+        }
+
         public void JustQuestion(PlayerActionEvent caller, float state)
         {
             if (state >= 1f || state <= -1f)
@@ -407,7 +449,7 @@ namespace HeavenStudio.Games
 
         public void SuccessQuestion()
         {
-            wrestlerAnim.Play("Ye", 0, 0);
+            wrestlerAnim.DoScaledAnimationAsync("Ye", 0.5f);
             reporterAnim.Play("ExtendSmile", 0, 0);
             Jukebox.PlayOneShotGame($"ringside/ye{UnityEngine.Random.Range(1, 4)}");
             BeatAction.New(instance.gameObject, new List<BeatAction.Action>()
@@ -433,7 +475,7 @@ namespace HeavenStudio.Games
         public void SuccessBigGuyFirst()
         {
             Jukebox.PlayOneShotGame($"ringside/muscles1");
-            wrestlerAnim.Play("BigGuyOne", 0, 0);
+            wrestlerAnim.DoScaledAnimationAsync("BigGuyOne", 0.5f);
         }
 
         public void JustBigGuySecond(PlayerActionEvent caller, float state)
@@ -449,7 +491,7 @@ namespace HeavenStudio.Games
         {
             Jukebox.PlayOneShotGame($"ringside/muscles2");
             reporterAnim.Play("ExtendSmile", 0, 0);
-            wrestlerAnim.Play("BigGuyTwo", 0, 0);
+            wrestlerAnim.DoScaledAnimationAsync("BigGuyTwo", 0.5f);
             BeatAction.New(instance.gameObject, new List<BeatAction.Action>()
             {
                 new BeatAction.Action(Conductor.instance.songPositionInBeats + 0.5f, delegate { Jukebox.PlayOneShotGame("ringside/musclesCamera"); }),
@@ -486,8 +528,6 @@ namespace HeavenStudio.Games
                 new BeatAction.Action(Conductor.instance.songPositionInBeats + 1f, delegate { Jukebox.PlayOneShotGame("ringside/poseCamera"); }),
                 new BeatAction.Action(Conductor.instance.songPositionInBeats + 1f, delegate { flashParticles.Stop(); }),
                 new BeatAction.Action(Conductor.instance.songPositionInBeats + 1f, delegate { poseFlash.SetActive(true); poseFlash.GetComponent<Animator>().Play("PoseFlashing", 0, 0); }),
-                new BeatAction.Action(Conductor.instance.songPositionInBeats + 1.99f, delegate { wrestlerAnim.Play("Idle", 0, 0); }),
-                new BeatAction.Action(Conductor.instance.songPositionInBeats + 1.99f, delegate { reporterAnim.Play("IdleReporter", 0, 0); }),
                 new BeatAction.Action(Conductor.instance.songPositionInBeats + 1.99f, delegate { poseFlash.SetActive(false); }),
             });
         }
@@ -503,5 +543,14 @@ namespace HeavenStudio.Games
         }
 
         public void Nothing(PlayerActionEvent caller){}
+
+        bool isPlaying(Animator anim, string stateName)
+        {
+            if (anim.GetCurrentAnimatorStateInfo(0).IsName(stateName) &&
+                    anim.GetCurrentAnimatorStateInfo(0).normalizedTime < 1.0f)
+                return true;
+            else
+                return false;
+        }
     }
 }

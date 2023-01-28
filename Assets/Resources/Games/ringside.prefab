@@ -1313,6 +1313,7 @@ MonoBehaviour:
   firstEnable: 0
   wrestlerAnim: {fileID: 7604629278988158414}
   reporterAnim: {fileID: 7025224658307706580}
+  audienceAnim: {fileID: 236637703450929012}
   flashWhite: {fileID: 4039094733999319367}
   flashObject: {fileID: 1591355113723899396}
   poseFlash: {fileID: 2006238809547102301}
@@ -2719,7 +2720,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 4027633158746793122}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: 0, y: 0, z: -8.56}
   m_LocalScale: {x: 0.88, y: 0.88, z: 1}
   m_Children:
   - {fileID: 273977854085333158}
