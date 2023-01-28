@@ -167,7 +167,7 @@ namespace HeavenStudio.Games
                     }
                     else
                     {
-                        EasingFunction.Function func = EasingFunction.GetEasingFunction(EasingFunction.Ease.Linear);
+                        EasingFunction.Function func = EasingFunction.GetEasingFunction(EasingFunction.Ease.EaseOutQuad);
                         float newPosX = func(lastCamPos.x, currentCamPos.x, normalizedBeat);
                         float newPosY = func(lastCamPos.y, currentCamPos.y, normalizedBeat);
                         float newPosZ = func(lastCamPos.z + 10, currentCamPos.z + 10, normalizedBeat);
