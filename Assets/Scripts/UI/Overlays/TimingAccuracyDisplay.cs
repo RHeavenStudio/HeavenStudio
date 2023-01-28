@@ -15,7 +15,7 @@ namespace HeavenStudio.Common
             Just
         }
 
-        public static TimingAccuracyDisplay instance;
+        public static TimingAccuracyDisplay instance { get; private set; }
 
         [SerializeField] GameObject NG;
         [SerializeField] GameObject OK;
@@ -49,7 +49,6 @@ namespace HeavenStudio.Common
         public void SetArrowPos(double time)
         {
             float frac = (float)((time - Minigame.EarlyTime()) / (Minigame.EndTime() - Minigame.EarlyTime()));
-            Debug.Log(frac);
             targetArrowPos = (targetArrowPos + barTransform.localScale.y * (frac - 0.5f)) * 0.5f;
         }
 

@@ -266,7 +266,19 @@ namespace HeavenStudio
                                 GameManager.instance.Stop(0);
                         }
                     ),
-                    new GameAction("skill star", "Skill Star", 1f, true),
+                    new GameAction("skill star", "Skill Star", 1f, true)
+                    {
+                        //temp for testing
+                        function = delegate {
+                            var e = eventCaller.currentEntity;
+                            HeavenStudio.Common.SkillStarManager.instance.DoStarIn(e.beat, e.length); 
+                            BeatAction.New(HeavenStudio.Common.SkillStarManager.instance.gameObject, new List<BeatAction.Action>(){
+                                new BeatAction.Action(e.beat + e.length, delegate {
+                                    HeavenStudio.Common.SkillStarManager.instance.DoStarJust();
+                                })
+                            });
+                        }
+                    },
                     new GameAction("toggle inputs", "Toggle Inputs", 0.5f, true,
                         new List<Param>()
                         {

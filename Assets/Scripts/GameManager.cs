@@ -135,6 +135,9 @@ namespace HeavenStudio
 
                 GameObject timingDisp = Instantiate(Resources.Load<GameObject>("Prefabs/Common/Overlays/TimingAccuracy"));
                 timingDisp.name = "TimingDisplay";
+
+                GameObject skillStarDisp = Instantiate(Resources.Load<GameObject>("Prefabs/Common/Overlays/SkillStar"));
+                skillStarDisp.name = "SkillStar";
             /////
 
             if (txt != null && ext != null)
