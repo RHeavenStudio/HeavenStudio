@@ -20,11 +20,14 @@ namespace HeavenStudio.Common
         [SerializeField] GameObject NG;
         [SerializeField] GameObject OK;
         [SerializeField] GameObject Just;
+
+        [SerializeField] Transform arrowTransform;
         [SerializeField] Transform barTransform;
         [SerializeField] Transform barJustTransform;
         [SerializeField] Transform barOKTransform;
         [SerializeField] Transform barNGTransform;
 
+        float targetArrowPos = 0f;
 
         // Start is called before the first frame update
         void Start()
@@ -35,7 +38,19 @@ namespace HeavenStudio.Common
         // Update is called once per frame
         void Update()
         {
-            
+            arrowTransform.localPosition = Vector3.Lerp(arrowTransform.localPosition, new Vector3(0, targetArrowPos, 0), 4f * Time.deltaTime);
+        }
+
+        public void ResetArrow()
+        {
+            arrowTransform.localPosition = Vector3.zero;
+        }
+
+        public void SetArrowPos(double time)
+        {
+            float frac = (float)((time - Minigame.EarlyTime()) / (Minigame.EndTime() - Minigame.EarlyTime()));
+            Debug.Log(frac);
+            targetArrowPos = (targetArrowPos + barTransform.localScale.y * (frac - 0.5f)) * 0.5f;
         }
 
         public void MakeAccuracyVfx(double time, bool late = false)
@@ -50,6 +65,10 @@ namespace HeavenStudio.Common
             // this probably doesn't work
             float frac = 0f;
             float y = barTransform.position.y;
+
+            // no Clamp() because double
+            time = System.Math.Max(Minigame.EarlyTime(), System.Math.Min(Minigame.EndTime(), time));
+
             if (time >= Minigame.AceStartTime() && time <= Minigame.AceEndTime())
             {
                 type = Rating.Just;
@@ -105,6 +124,8 @@ namespace HeavenStudio.Common
                     it = NG;
                     break;
             }
+
+            SetArrowPos(time);
             it.transform.position = barTransform.position + new Vector3(0, barTransform.localScale.y * y, 0);
             it.GetComponent<ParticleSystem>().Play();
         }

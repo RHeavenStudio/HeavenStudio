@@ -408,6 +408,7 @@ namespace HeavenStudio
             totalInputs = 0;
             totalPlayerAccuracy = 0;
 
+            TimingAccuracyDisplay.instance.ResetArrow();
             StartCoroutine(PlayCo(beat));
             onBeatChanged?.Invoke(beat);
         }
