@@ -31,6 +31,8 @@ namespace HeavenStudio.Games.Scripts_DoubleDate
         {
             Jukebox.PlayOneShotGame("doubleDate/kick");
             Jukebox.PlayOneShotGame("doubleDate/football_kick");
+            
+            GameObject.Destroy(gameObject);
         }
 
         private void Out(PlayerActionEvent caller)

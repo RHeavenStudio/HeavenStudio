@@ -10,20 +10,21 @@ namespace HeavenStudio.Games.Loaders
     public static class NtrDogNinjaLoader
     {
         public static Minigame AddGame(EventCaller eventCaller) {
-            return new Minigame("dogNinja", "Dog Ninja \n<color=#eb5454>[INITIALIZATION ONLY]</color>", "0058CE", true, false, new List<GameAction>()
+            return new Minigame("dogNinja", "Dog Ninja \n<color=#eb5454>[WIP]</color>", "524999", true, false, new List<GameAction>()
             {
                 new GameAction("Bop", "Bop")
                 {
-                    function = delegate { DogNinja.instance.Bop(eventCaller.currentEntity.beat); }, 
+                    function = delegate { DogNinja.instance.Bop(eventCaller.currentEntity.beat, eventCaller.currentEntity["toggle"], eventCaller.currentEntity["toggle"]); }, 
                     defaultLength = 0.5f,
                     parameters = new List<Param>()
                     {
-                        new Param("Toggle", true, "Bop", "Whether to bop to the beat or not"),
+                        new Param("toggle", false, "Enable Bopping", "Whether to bop to the beat or not"),
+                        new Param("toggle", false, "Manual Bop", "Bop, regardless of beat"),
                     }
                 },
                 new GameAction("ThrowObjectLeft", "Throw Left Object")
                 {
-                    function = delegate { DogNinja.instance.ThrowObjectLeft(eventCaller.currentEntity.beat, eventCaller.currentEntity["type"]); }, 
+                    function = delegate { DogNinja.instance.ThrowObject(eventCaller.currentEntity.beat, eventCaller.currentEntity["type"], true); }, 
                     defaultLength = 2,
                     parameters = new List<Param>()
                     {
@@ -32,7 +33,7 @@ namespace HeavenStudio.Games.Loaders
                 },
                 new GameAction("ThrowObjectRight", "Throw Right Object")
                 {
-                    function = delegate { DogNinja.instance.ThrowObjectRight(eventCaller.currentEntity.beat, eventCaller.currentEntity["type"]); }, 
+                    function = delegate { DogNinja.instance.ThrowObject(eventCaller.currentEntity.beat, eventCaller.currentEntity["type"], false); }, 
                     defaultLength = 2,
                     parameters = new List<Param>()
                     {
@@ -41,11 +42,11 @@ namespace HeavenStudio.Games.Loaders
                 },
                 new GameAction("CutEverything", "Cut Everything!")
                 {
-                    function = delegate { DogNinja.instance.CutEverything(eventCaller.currentEntity.beat, eventCaller.currentEntity["Toggle"]); }, 
+                    function = delegate { DogNinja.instance.CutEverything(eventCaller.currentEntity.beat, eventCaller.currentEntity["toggle"]); }, 
                     defaultLength = 0.5f,
                     parameters = new List<Param>()
                     {
-                        new Param("Toggle", true, "Play Sound", "Whether to play the 'FlyIn' SFX or not"),
+                        new Param("toggle", true, "Play Sound", "Whether to play the 'FlyIn' SFX or not"),
                     }
                 },
                 new GameAction("HereWeGo", "Here We Go!")
@@ -65,17 +66,18 @@ namespace HeavenStudio.Games
     public class DogNinja : Minigame
     {
         [Header("Animators")]
-        public Animator BirdAnim; // Bird flying in and out
-        public Animator DogAnim; // Dog misc animations
+        public Animator BirdAnim;   // bird flying in and out
+        public Animator DogAnim;    // dog misc animations
         
         [Header("References")]
-        public GameObject ObjectLeftBase;
-        public GameObject ObjectRightBase;
-        public GameObject HalvesBase;
+        public GameObject ObjectBase;
+        public GameObject HalvesLeftBase;
+        public GameObject HalvesRightBase;
         public GameObject FullBird;
         public GameObject Dog;
         public Transform ObjectHolder;
         public Transform HalvesHolder;
+        public SpriteRenderer WhichObject;
         
         [Header("Curves")]
         public BezierCurve3D CurveFromLeft;
@@ -86,7 +88,7 @@ namespace HeavenStudio.Games
 
         private float lastReportedBeat = 0f;
         private bool birdOnScreen = false;
-        //public static bool dontPlay = false;
+        private bool bopOn = true;
         
         public static DogNinja instance;
 
@@ -111,9 +113,14 @@ namespace HeavenStudio.Games
 
         private void Update()
         {
-            if (Conductor.instance.ReportBeat(ref lastReportedBeat))
+            if (Conductor.instance.ReportBeat(ref lastReportedBeat) && bopOn)
             {
                 DogAnim.Play("Bop", 0, 0);
+            }
+
+            if (PlayerInput.Pressed())
+            {
+                DogAnim.Play("Slice", 0, 0);
             }
             
             if (Input.GetKeyDown(KeyCode.D))
@@ -123,29 +130,25 @@ namespace HeavenStudio.Games
             }
         }
 
-        public void Bop(float beat)
+        public void Bop(float beat, bool bop, bool manual)
         {
-            DogAnim.Play("Bop");
+            if (manual) { DogAnim.Play("Bop"); }
+
+            if (bop) {
+                bopOn = true;
+            } else {
+                bopOn = false;
+            }
         }
 
-        public void ThrowObjectLeft(float beat, int ObjType)
+        public void ThrowObject(float beat, int ObjType, bool fromLeft)
         {
-            ThrowObject Object = Instantiate(ObjectLeftBase).GetComponent<ThrowObject>();
+            ThrowObject Object = Instantiate(ObjectBase).GetComponent<ThrowObject>();
             Object.startBeat = beat;
             Object.type = ObjType;
-            Object.fromLeft = true;
-            Object.curve = CurveFromLeft;
-            Object.DogAnim = DogAnim;
-        }
-
-        public void ThrowObjectRight(float beat, int ObjType)
-        {
-            ThrowObject Object = Instantiate(ObjectRightBase).GetComponent<ThrowObject>();
-            Object.startBeat = beat;
-            Object.type = ObjType;
-            Object.fromLeft = false;
-            Object.curve = CurveFromRight;
-            Object.DogAnim = DogAnim;
+            Object.fromLeft = fromLeft;
+            Object.leftCurve = CurveFromLeft;
+            Object.rightCurve = CurveFromRight;
         }
 
         public void CutEverything(float beat, bool sound)
@@ -179,7 +182,7 @@ namespace HeavenStudio.Games
                     new MultiSound.Sound("dogNinja/go", beat + 1f)
                 }, forcePlay: true);
 
-            // what could have been :cry:
+            // what could have been :cry: (idk how to do this)
             /* MultiSound.Sound[] HereWeGoSFX = new MultiSound.Sound[] { 
                     new MultiSound.Sound("dogNinja/here", beat), 
                     new MultiSound.Sound("dogNinja/we", beat + 0.5f),
@@ -187,5 +190,4 @@ namespace HeavenStudio.Games
                 }; */
         }
     }
-
 }
