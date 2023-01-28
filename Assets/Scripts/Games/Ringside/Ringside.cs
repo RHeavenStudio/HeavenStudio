@@ -15,16 +15,21 @@ namespace HeavenStudio.Games.Loaders
             {
                 new GameAction("question", "Question")
                 {
-                    function = delegate {var e = eventCaller.currentEntity; Ringside.instance.Question(e.beat, e["alt"]); },
+                    function = delegate {var e = eventCaller.currentEntity; Ringside.instance.Question(e.beat, e["alt"], e["variant"]); },
                     parameters = new List<Param>()
                     {
-                        new Param("alt", false, "Alt", "Whether the alt voice line should be used or not.")
+                        new Param("alt", false, "Alt", "Whether the alt voice line should be used or not."),
+                        new Param("variant", Ringside.QuestionVariant.Random, "Variant", "Which variant of the cue do you wish to play.")
                     },
                     defaultLength = 4f
                 },
                 new GameAction("woahYouGoBigGuy", "Woah You Go Big Guy!")
                 {
-                    function = delegate {var e = eventCaller.currentEntity; Ringside.instance.BigGuy(e.beat); },
+                    function = delegate {var e = eventCaller.currentEntity; Ringside.instance.BigGuy(e.beat, e["variant"]); },
+                    parameters = new List<Param>()
+                    {
+                        new Param("variant", Ringside.QuestionVariant.Random, "Variant", "Which variant of the cue do you wish to play.")
+                    },
                     defaultLength = 4f
                 },
                 new GameAction("poseForTheFans", "Pose For The Fans!")
@@ -50,8 +55,14 @@ namespace HeavenStudio.Games
         [SerializeField] Animator reporterAnim;
 
         [Header("Variables")]
-        public int currentQuestion = 1;
         public static List<float> queuedPoses = new List<float>();
+        public enum QuestionVariant
+        {
+            First = 1,
+            Second = 2,
+            Third = 3,
+            Random = 4,
+        }
 
 
         public static Ringside instance;
@@ -116,8 +127,10 @@ namespace HeavenStudio.Games
 
         }
 
-        public void Question(float beat, bool alt)
+        public void Question(float beat, bool alt, int questionVariant)
         {
+            int currentQuestion = questionVariant;
+            if (currentQuestion == 4) currentQuestion = UnityEngine.Random.Range(1, 4);
             reporterAnim.DoScaledAnimationAsync("WubbaLubbaDubbaThatTrue", 0.4f);
             if (alt)
             {
@@ -142,10 +155,10 @@ namespace HeavenStudio.Games
                     new MultiSound.Sound($"ringside/dubba{currentQuestion}-4", beat + 1.25f),
                 }, forcePlay: true);
             }
-            ThatTrue(beat + 1.25f);
+            ThatTrue(beat + 1.25f, currentQuestion);
         }
 
-        public void ThatTrue(float beat)
+        public void ThatTrue(float beat, int currentQuestion)
         {
             reporterAnim.DoScaledAnimationAsync("WubbaLubbaDubbaThatTrue", 0.4f);
             MultiSound.Play(new MultiSound.Sound[]
@@ -154,22 +167,16 @@ namespace HeavenStudio.Games
                 new MultiSound.Sound($"ringside/true{currentQuestion}", beat + 0.75f),
             }, forcePlay: true);
             ScheduleInput(beat, 1.75f, InputType.STANDARD_DOWN, JustQuestion, Miss, Nothing);
-            if (currentQuestion < 3)
-            {
-                currentQuestion++;
-            } 
-            else
-            {
-                currentQuestion = 1;
-            }
             BeatAction.New(instance.gameObject, new List<BeatAction.Action>()
             {
                 new BeatAction.Action(beat + 0.25f, delegate { reporterAnim.DoScaledAnimationAsync("ThatTrue", 0.5f); }),
             });
         }
 
-        public void BigGuy(float beat)
+        public void BigGuy(float beat, int questionVariant)
         {
+            int currentQuestion = questionVariant;
+            if (currentQuestion == 4) currentQuestion = UnityEngine.Random.Range(1, 4);
             reporterAnim.DoScaledAnimationAsync("Woah", 0.4f);
             float youBeat = 0.65f;
             if (currentQuestion == 3) youBeat = 0.7f;
@@ -184,14 +191,6 @@ namespace HeavenStudio.Games
 
             ScheduleInput(beat, 2.5f, InputType.STANDARD_DOWN, JustBigGuyFirst, Miss, Nothing);
             ScheduleInput(beat, 3f, InputType.STANDARD_DOWN, JustBigGuySecond, Miss, Nothing);
-            if (currentQuestion < 3)
-            {
-                currentQuestion++;
-            }
-            else
-            {
-                currentQuestion = 1;
-            }
             BeatAction.New(instance.gameObject, new List<BeatAction.Action>()
             {
                 new BeatAction.Action(beat + 2f, delegate { reporterAnim.Play("True", 0, 0); }),
