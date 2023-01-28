@@ -122,11 +122,6 @@ namespace HeavenStudio.Games
             UpdateCameraZoom();
         }
 
-        public override void OnGameSwitch(float beat)
-        {
-            GameCamera.instance.camera.orthographic = false;
-        }
-
         void Awake()
         {
             instance = this;
