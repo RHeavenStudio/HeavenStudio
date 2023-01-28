@@ -190,7 +190,7 @@ AnimationClip:
         outWeight: {x: 0.33333334, y: 0.33333334, z: 0.33333334}
       - serializedVersion: 3
         time: 0.25
-        value: {x: 0, y: 0, z: 17.94}
+        value: {x: 0, y: 0, z: 19.761}
         inSlope: {x: Infinity, y: Infinity, z: Infinity}
         outSlope: {x: Infinity, y: Infinity, z: Infinity}
         tangentMode: 0
@@ -458,7 +458,7 @@ AnimationClip:
         outWeight: {x: 0.33333334, y: 0.33333334, z: 0.33333334}
       - serializedVersion: 3
         time: 0.25
-        value: {x: -0.83249986, y: 2.8962502, z: 0}
+        value: {x: -0.84, y: 2.85, z: 0}
         inSlope: {x: Infinity, y: Infinity, z: Infinity}
         outSlope: {x: Infinity, y: Infinity, z: Infinity}
         tangentMode: 0
@@ -2505,7 +2505,7 @@ AnimationClip:
         outWeight: 0.33333334
       - serializedVersion: 3
         time: 0.25
-        value: -0.83249986
+        value: -0.84
         inSlope: Infinity
         outSlope: Infinity
         tangentMode: 103
@@ -2551,7 +2551,7 @@ AnimationClip:
         outWeight: 0.33333334
       - serializedVersion: 3
         time: 0.25
-        value: 2.8962502
+        value: 2.85
         inSlope: Infinity
         outSlope: Infinity
         tangentMode: 103
@@ -2735,7 +2735,7 @@ AnimationClip:
         outWeight: 0.33333334
       - serializedVersion: 3
         time: 0.25
-        value: 17.94
+        value: 19.761
         inSlope: Infinity
         outSlope: Infinity
         tangentMode: 103
@@ -4142,7 +4142,7 @@ AnimationClip:
       m_PostInfinity: 2
       m_RotationOrder: 4
     attribute: m_LocalEulerAngles.z
-    path: Upper/Head
+    path: Upper/ShoulderFront/Arm/Hand/Wristband
     classID: 4
     script: {fileID: 0}
   - curve:
@@ -4152,7 +4152,7 @@ AnimationClip:
       m_PostInfinity: 2
       m_RotationOrder: 4
     attribute: m_LocalEulerAngles.y
-    path: Upper/Head
+    path: Upper/ShoulderFront/Arm/Hand/Wristband
     classID: 4
     script: {fileID: 0}
   - curve:
@@ -4162,7 +4162,7 @@ AnimationClip:
       m_PostInfinity: 2
       m_RotationOrder: 4
     attribute: m_LocalEulerAngles.x
-    path: Upper/Head
+    path: Upper/ShoulderFront/Arm/Hand/Wristband
     classID: 4
     script: {fileID: 0}
   - curve:
@@ -4442,7 +4442,7 @@ AnimationClip:
       m_PostInfinity: 2
       m_RotationOrder: 4
     attribute: m_LocalEulerAngles.x
-    path: Upper/ShoulderFront/Arm/Hand/Wristband
+    path: Upper/Head
     classID: 4
     script: {fileID: 0}
   - curve:
@@ -4452,7 +4452,7 @@ AnimationClip:
       m_PostInfinity: 2
       m_RotationOrder: 4
     attribute: m_LocalEulerAngles.y
-    path: Upper/ShoulderFront/Arm/Hand/Wristband
+    path: Upper/Head
     classID: 4
     script: {fileID: 0}
   - curve:
@@ -4462,7 +4462,7 @@ AnimationClip:
       m_PostInfinity: 2
       m_RotationOrder: 4
     attribute: m_LocalEulerAngles.z
-    path: Upper/ShoulderFront/Arm/Hand/Wristband
+    path: Upper/Head
     classID: 4
     script: {fileID: 0}
   m_HasGenericRootTransform: 0
