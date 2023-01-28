@@ -34,10 +34,12 @@ namespace HeavenStudio.Games.Loaders
                 },
                 new GameAction("poseForTheFans", "Pose For The Fans!")
                 {
-                    preFunction = delegate {var e = eventCaller.currentEntity; Ringside.PoseForTheFans(e.beat, e["and"]); },
+                    preFunction = delegate {var e = eventCaller.currentEntity; Ringside.PoseForTheFans(e.beat, e["and"], e["variant"], e["keepZoomedOut"]); },
                     parameters = new List<Param>()
                     {
-                        new Param("and", false, "And", "Whether the And voice line should be said or not.")
+                        new Param("and", false, "And", "Whether the And voice line should be said or not."),
+                        new Param("variant", Ringside.PoseForTheFansVariant.Random, "Variant", "Which variant of the cue do you wish to play."),
+                        new Param("keepZoomedOut", false, "Keep Zoomed Out", "Whether the camera should keep being zoomed out after the event has completed.")
                     },
                     defaultLength = 4f
                 },
@@ -53,9 +55,13 @@ namespace HeavenStudio.Games
         [Header("Components")]
         [SerializeField] Animator wrestlerAnim;
         [SerializeField] Animator reporterAnim;
+        [SerializeField] SpriteRenderer flashWhite;
+        [SerializeField] GameObject flashObject;
+        [SerializeField] GameObject poseFlash;
 
         [Header("Variables")]
         public static List<float> queuedPoses = new List<float>();
+        Tween flashTween;
         public enum QuestionVariant
         {
             First = 1,
@@ -63,6 +69,19 @@ namespace HeavenStudio.Games
             Third = 3,
             Random = 4,
         }
+        public enum PoseForTheFansVariant
+        {
+            First = 1,
+            Second = 2,
+            Random = 3
+        }
+        private float currentZoomCamBeat;
+        private Vector3 lastCamPos = new Vector3(0, 0, -10);
+        private Vector3 currentCamPos = new Vector3(0, 0, -10);
+
+        private int currentZoomIndex;
+
+        private List<DynamicBeatmap.DynamicEntity> allCameraEvents = new List<DynamicBeatmap.DynamicEntity>();
 
 
         public static Ringside instance;
@@ -72,9 +91,32 @@ namespace HeavenStudio.Games
             if (queuedPoses.Count > 0) queuedPoses.Clear();
         }
 
+        public override void OnTimeChange()
+        {
+            UpdateCameraZoom();
+        }
+
+        public override void OnGameSwitch(float beat)
+        {
+            GameCamera.instance.camera.orthographic = false;
+        }
+
         void Awake()
         {
             instance = this;
+            var camEvents = EventCaller.GetAllInGameManagerList("ringside", new string[] { "poseForTheFans" });
+            List<DynamicBeatmap.DynamicEntity> tempEvents = new List<DynamicBeatmap.DynamicEntity>();
+            for (int i = 0; i < camEvents.Count; i++)
+            {
+                if (camEvents[i].beat + camEvents[i].beat >= Conductor.instance.songPositionInBeats)
+                {
+                    tempEvents.Add(camEvents[i]);
+                }
+            }
+
+            allCameraEvents = tempEvents;
+
+            UpdateCameraZoom();
         }
 
         void Update()
@@ -88,6 +130,35 @@ namespace HeavenStudio.Games
                 {
                     wrestlerAnim.Play("Ye", 0, 0);
                     Jukebox.PlayOneShotGame($"ringside/ye{UnityEngine.Random.Range(1, 4)}");
+                }
+            }
+            if (allCameraEvents.Count > 0)
+            {
+                if (currentZoomIndex < allCameraEvents.Count && currentZoomIndex >= 0)
+                {
+                    if (Conductor.instance.songPositionInBeats >= allCameraEvents[currentZoomIndex].beat)
+                    {
+                        UpdateCameraZoom();
+                        currentZoomIndex++;
+                    }
+                }
+
+                float normalizedBeat = Conductor.instance.GetPositionFromBeat(currentZoomCamBeat, 2);
+
+                if (normalizedBeat >= 0)
+                {
+                    if (normalizedBeat > 1)
+                    {
+                        GameCamera.additionalPosition = new Vector3(currentCamPos.x, currentCamPos.y, currentCamPos.z + 10);
+                    }
+                    else
+                    {
+                        EasingFunction.Function func = EasingFunction.GetEasingFunction(EasingFunction.Ease.Linear);
+                        float newPosX = func(lastCamPos.x, currentCamPos.x, normalizedBeat);
+                        float newPosY = func(lastCamPos.y, currentCamPos.y, normalizedBeat);
+                        float newPosZ = func(lastCamPos.z + 10, currentCamPos.z + 10, normalizedBeat);
+                        GameCamera.additionalPosition = new Vector3(newPosX, newPosY, newPosZ);
+                    }
                 }
             }
         }
@@ -197,7 +268,7 @@ namespace HeavenStudio.Games
             });
         }
 
-        public static void PoseForTheFans(float beat, bool and)
+        public static void PoseForTheFans(float beat, bool and, int variant, bool keepZoomedOut)
         {
             if (and)
             {
@@ -206,13 +277,14 @@ namespace HeavenStudio.Games
                     new MultiSound.Sound("ringside/poseAnd", beat - 0.5f),
                 }, forcePlay: true);
             }
-            int poseLineRandom = UnityEngine.Random.Range(1, 3);
+            int poseLine = variant;
+            if (poseLine == 3) poseLine = UnityEngine.Random.Range(1, 3);
             MultiSound.Play(new MultiSound.Sound[]
             {
-                new MultiSound.Sound($"ringside/pose{poseLineRandom}", beat),
-                new MultiSound.Sound($"ringside/for{poseLineRandom}", beat + 0.5f),
-                new MultiSound.Sound($"ringside/the{poseLineRandom}", beat + 0.75f),
-                new MultiSound.Sound($"ringside/fans{poseLineRandom}", beat + 1f),
+                new MultiSound.Sound($"ringside/pose{poseLine}", beat),
+                new MultiSound.Sound($"ringside/for{poseLine}", beat + 0.5f),
+                new MultiSound.Sound($"ringside/the{poseLine}", beat + 0.75f),
+                new MultiSound.Sound($"ringside/fans{poseLine}", beat + 1f),
             }, forcePlay: true);
             if (GameManager.instance.currentGame == "ringside")
             {
@@ -221,6 +293,27 @@ namespace HeavenStudio.Games
                 {
                     new BeatAction.Action(beat, delegate { Ringside.instance.wrestlerAnim.DoScaledAnimationAsync("PreparePose", 0.25f); }),
                 });
+                if (!keepZoomedOut)
+                {
+                    BeatAction.New(instance.gameObject, new List<BeatAction.Action>()
+                    {
+                        new BeatAction.Action(beat + 3.99, delegate
+                        {
+                            Ringside.instance.lastCamPos = new Vector3(0, 0, -10);
+                            Ringside.instance.currentCamPos = new Vector3(0, 0, -10);
+                        })
+                    });
+                }
+                else
+                {
+                    BeatAction.New(instance.gameObject, new List<BeatAction.Action>()
+                    {
+                        new BeatAction.Action(beat + 3.99, delegate
+                        {
+                            Ringside.instance.lastCamPos = Ringside.instance.currentCamPos;
+                        })
+                    });
+                }
             }
             else
             {
@@ -228,9 +321,42 @@ namespace HeavenStudio.Games
             }
         }
 
+        private void UpdateCameraZoom()
+        {
+
+            if (currentZoomIndex < allCameraEvents.Count && currentZoomIndex >= 0)
+            {
+                currentZoomCamBeat = allCameraEvents[currentZoomIndex].beat;
+                currentCamPos = new Vector3(poseFlash.transform.position.x, poseFlash.transform.position.y, -21.5f);
+            }
+        }
+
         public void PoseCheck(float beat)
         {
             ScheduleInput(beat, 2f, InputType.STANDARD_ALT_DOWN, JustPoseForTheFans, MissPose, Nothing);
+        }
+
+        public void ChangeFlashColor(Color color, float beats)
+        {
+            var seconds = Conductor.instance.secPerBeat * beats;
+
+            if (flashTween != null)
+                flashTween.Kill(true);
+
+            if (seconds == 0)
+            {
+                flashWhite.color = color;
+            }
+            else
+            {
+                flashTween = flashWhite.DOColor(color, seconds);
+            }
+        }
+
+        public void FadeFlashColor(Color start, Color end, float beats)
+        {
+            ChangeFlashColor(start, 0f);
+            ChangeFlashColor(end, beats);
         }
 
         public void JustQuestion(PlayerActionEvent caller, float state)
@@ -250,7 +376,10 @@ namespace HeavenStudio.Games
             BeatAction.New(instance.gameObject, new List<BeatAction.Action>()
             {
                 new BeatAction.Action(Conductor.instance.songPositionInBeats + 0.5f, delegate { Jukebox.PlayOneShotGame("ringside/yeCamera"); }),
+                new BeatAction.Action(Conductor.instance.songPositionInBeats + 0.5f, delegate { FadeFlashColor(Color.white, new Color(1, 1, 1, 0), 0.5f); }),
+                new BeatAction.Action(Conductor.instance.songPositionInBeats + 0.5f, delegate { flashObject.SetActive(true); }),
                 new BeatAction.Action(Conductor.instance.songPositionInBeats + 0.5f, delegate { reporterAnim.Play("SmileReporter", 0, 0); }),
+                new BeatAction.Action(Conductor.instance.songPositionInBeats + 0.6f, delegate { flashObject.SetActive(false); }),
                 new BeatAction.Action(Conductor.instance.songPositionInBeats + 0.9f, delegate { reporterAnim.Play("IdleReporter", 0, 0); }),
             });
         }
@@ -288,6 +417,9 @@ namespace HeavenStudio.Games
             {
                 new BeatAction.Action(Conductor.instance.songPositionInBeats + 0.5f, delegate { Jukebox.PlayOneShotGame("ringside/musclesCamera"); }),
                 new BeatAction.Action(Conductor.instance.songPositionInBeats + 0.5f, delegate { reporterAnim.Play("SmileReporter", 0, 0); }),
+                new BeatAction.Action(Conductor.instance.songPositionInBeats + 0.5f, delegate { FadeFlashColor(Color.white, new Color(1, 1, 1, 0), 0.5f); }),
+                new BeatAction.Action(Conductor.instance.songPositionInBeats + 0.5f, delegate { flashObject.SetActive(true); }),
+                new BeatAction.Action(Conductor.instance.songPositionInBeats + 0.6f, delegate { flashObject.SetActive(false); }),
                 new BeatAction.Action(Conductor.instance.songPositionInBeats + 0.9f, delegate { reporterAnim.Play("IdleReporter", 0, 0); }),
                 new BeatAction.Action(Conductor.instance.songPositionInBeats + 0.9f, delegate { wrestlerAnim.Play("Idle", 0, 0); }),
             });
@@ -310,8 +442,10 @@ namespace HeavenStudio.Games
             BeatAction.New(instance.gameObject, new List<BeatAction.Action>()
             {
                 new BeatAction.Action(Conductor.instance.songPositionInBeats + 1f, delegate { Jukebox.PlayOneShotGame("ringside/poseCamera"); }),
-                new BeatAction.Action(Conductor.instance.songPositionInBeats + 1.95f, delegate { wrestlerAnim.Play("Idle", 0, 0); }),
-                new BeatAction.Action(Conductor.instance.songPositionInBeats + 1.95f, delegate { reporterAnim.Play("IdleReporter", 0, 0); }),
+                new BeatAction.Action(Conductor.instance.songPositionInBeats + 1f, delegate { poseFlash.SetActive(true); poseFlash.GetComponent<Animator>().Play("PoseFlashing", 0, 0); }),
+                new BeatAction.Action(Conductor.instance.songPositionInBeats + 1.99f, delegate { wrestlerAnim.Play("Idle", 0, 0); }),
+                new BeatAction.Action(Conductor.instance.songPositionInBeats + 1.99f, delegate { reporterAnim.Play("IdleReporter", 0, 0); }),
+                new BeatAction.Action(Conductor.instance.songPositionInBeats + 1.99f, delegate { poseFlash.SetActive(false); }),
             });
         }
 
