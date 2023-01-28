@@ -244,7 +244,7 @@ namespace HeavenStudio.Games
         {
             int currentQuestion = questionVariant;
             if (currentQuestion == 4) currentQuestion = UnityEngine.Random.Range(1, 4);
-            reporterAnim.DoScaledAnimationAsync("WubbaLubbaDubbaThatTrue", 0.5f);
+            reporterAnim.DoScaledAnimationAsync("WubbaLubbaDubbaThatTrue", 0.4f);
             if (alt)
             {
                 MultiSound.Play(new MultiSound.Sound[]
@@ -289,7 +289,7 @@ namespace HeavenStudio.Games
         {
             int currentQuestion = questionVariant;
             if (currentQuestion == 4) currentQuestion = UnityEngine.Random.Range(1, 4);
-            reporterAnim.DoScaledAnimationAsync("Woah", 0.5f);
+            reporterAnim.DoScaledAnimationAsync("Woah", 0.4f);
             float youBeat = 0.65f;
             if (currentQuestion == 3) youBeat = 0.7f;
             MultiSound.Play(new MultiSound.Sound[]
