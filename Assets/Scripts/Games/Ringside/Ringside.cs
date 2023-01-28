@@ -97,6 +97,7 @@ namespace HeavenStudio.Games
 
         private List<DynamicBeatmap.DynamicEntity> allCameraEvents = new List<DynamicBeatmap.DynamicEntity>();
 
+        public GameEvent bop = new GameEvent();
 
         public static Ringside instance;
 
@@ -139,7 +140,10 @@ namespace HeavenStudio.Games
 
             if (cond.isPlaying && !cond.isPaused)
             {
-
+                if (cond.ReportBeat(ref bop.lastReportedBeat, bop.startBeat % 1) && isPlaying(wrestlerAnim, "Idle"))
+                {
+                    wrestlerAnim.DoScaledAnimationAsync("Bop");
+                }
                 if (PlayerInput.Pressed() && !IsExpectingInputNow(InputType.STANDARD_DOWN))
                 {
                     wrestlerAnim.Play("Ye", 0, 0);
@@ -306,6 +310,8 @@ namespace HeavenStudio.Games
                 BeatAction.New(instance.gameObject, new List<BeatAction.Action>()
                 {
                     new BeatAction.Action(beat, delegate { Ringside.instance.wrestlerAnim.DoScaledAnimationAsync("PreparePose", 0.25f); }),
+                    new BeatAction.Action(beat + 3.99f, delegate { Ringside.instance.wrestlerAnim.Play("Idle", 0, 0); }),
+                    new BeatAction.Action(beat + 3.99f, delegate { Ringside.instance.reporterAnim.Play("IdleReporter", 0, 0); }),
                 });
                 if (!keepZoomedOut)
                 {
@@ -486,8 +492,6 @@ namespace HeavenStudio.Games
                 new BeatAction.Action(Conductor.instance.songPositionInBeats + 1f, delegate { Jukebox.PlayOneShotGame("ringside/poseCamera"); }),
                 new BeatAction.Action(Conductor.instance.songPositionInBeats + 1f, delegate { flashParticles.Stop(); }),
                 new BeatAction.Action(Conductor.instance.songPositionInBeats + 1f, delegate { poseFlash.SetActive(true); poseFlash.GetComponent<Animator>().Play("PoseFlashing", 0, 0); }),
-                new BeatAction.Action(Conductor.instance.songPositionInBeats + 1.99f, delegate { wrestlerAnim.Play("Idle", 0, 0); }),
-                new BeatAction.Action(Conductor.instance.songPositionInBeats + 1.99f, delegate { reporterAnim.Play("IdleReporter", 0, 0); }),
                 new BeatAction.Action(Conductor.instance.songPositionInBeats + 1.99f, delegate { poseFlash.SetActive(false); }),
             });
         }
@@ -503,5 +507,14 @@ namespace HeavenStudio.Games
         }
 
         public void Nothing(PlayerActionEvent caller){}
+
+        bool isPlaying(Animator anim, string stateName)
+        {
+            if (anim.GetCurrentAnimatorStateInfo(0).IsName(stateName) &&
+                    anim.GetCurrentAnimatorStateInfo(0).normalizedTime < 1.0f)
+                return true;
+            else
+                return false;
+        }
     }
 }
