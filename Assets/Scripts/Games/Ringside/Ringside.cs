@@ -52,16 +52,30 @@ namespace HeavenStudio.Games
 {
     public class Ringside : Minigame
     {
+        private static Color _defaultBGColorLight;
+        public static Color defaultBGColorLight
+        {
+            get
+            {
+                ColorUtility.TryParseHtmlString("#5a5a5a", out _defaultBGColorLight);
+                return _defaultBGColorLight;
+            }
+        }
+
         [Header("Components")]
         [SerializeField] Animator wrestlerAnim;
         [SerializeField] Animator reporterAnim;
         [SerializeField] SpriteRenderer flashWhite;
         [SerializeField] GameObject flashObject;
         [SerializeField] GameObject poseFlash;
+        [SerializeField] Transform wrestlerTransform;
+        [SerializeField] SpriteRenderer bg;
+        [SerializeField] ParticleSystem flashParticles;
 
         [Header("Variables")]
         public static List<float> queuedPoses = new List<float>();
         Tween flashTween;
+        Tween bgTween;
         public enum QuestionVariant
         {
             First = 1,
@@ -359,6 +373,29 @@ namespace HeavenStudio.Games
             ChangeFlashColor(end, beats);
         }
 
+        public void ChangeBGColor(Color color, float beats)
+        {
+            var seconds = Conductor.instance.secPerBeat * beats;
+
+            if (bgTween != null)
+                bgTween.Kill(true);
+
+            if (seconds == 0)
+            {
+                bg.color = color;
+            }
+            else
+            {
+                flashTween = bg.DOColor(color, seconds);
+            }
+        }
+
+        public void FadeBGColor(Color start, Color end, float beats)
+        {
+            ChangeBGColor(start, 0f);
+            ChangeBGColor(end, beats);
+        }
+
         public void JustQuestion(PlayerActionEvent caller, float state)
         {
             if (state >= 1f || state <= -1f)
@@ -436,12 +473,18 @@ namespace HeavenStudio.Games
 
         public void SuccessPoseForTheFans()
         {
+            wrestlerTransform.localScale = new Vector3(1.2f, 1.2f, 1f);
             wrestlerAnim.Play("Pose1", 0, 0);
             reporterAnim.Play("ExcitedReporter", 0, 0);
             Jukebox.PlayOneShotGame($"ringside/yell{UnityEngine.Random.Range(1, 7)}");
+            FadeFlashColor(Color.white, new Color(1, 1, 1, 0), 1f);
+            FadeBGColor(Color.black, defaultBGColorLight, 1f);
+            flashParticles.Play();
             BeatAction.New(instance.gameObject, new List<BeatAction.Action>()
             {
+                new BeatAction.Action(Conductor.instance.songPositionInBeats + 0.1f, delegate { wrestlerTransform.localScale = new Vector3(1f, 1f, 1f); }),
                 new BeatAction.Action(Conductor.instance.songPositionInBeats + 1f, delegate { Jukebox.PlayOneShotGame("ringside/poseCamera"); }),
+                new BeatAction.Action(Conductor.instance.songPositionInBeats + 1f, delegate { flashParticles.Stop(); }),
                 new BeatAction.Action(Conductor.instance.songPositionInBeats + 1f, delegate { poseFlash.SetActive(true); poseFlash.GetComponent<Animator>().Play("PoseFlashing", 0, 0); }),
                 new BeatAction.Action(Conductor.instance.songPositionInBeats + 1.99f, delegate { wrestlerAnim.Play("Idle", 0, 0); }),
                 new BeatAction.Action(Conductor.instance.songPositionInBeats + 1.99f, delegate { reporterAnim.Play("IdleReporter", 0, 0); }),
