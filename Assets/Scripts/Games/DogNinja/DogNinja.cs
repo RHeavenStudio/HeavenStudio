@@ -19,7 +19,7 @@ namespace HeavenStudio.Games.Loaders
                     parameters = new List<Param>()
                     {
                         new Param("toggle", false, "Enable Bopping", "Whether to bop to the beat or not"),
-                        new Param("toggle", false, "Manual Bop", "Bop, regardless of beat"),
+                        new Param("toggle2", false, "Manual Bop \n<color=#eb5454>[WIP]</color>", "Bop, regardless of beat"),
                     }
                 },
                 new GameAction("ThrowObjectLeft", "Throw Left Object")
@@ -94,16 +94,16 @@ namespace HeavenStudio.Games
 
         public enum ObjectType
         {
-            Apple,      // 0, fruit1
-            Bone,       // 1, bone1
-            Broccoli,   // 2, fruit1
-            Carrot,     // 3, fruit1
-            Cucumber,   // 4, fruit1
-            Pan,        // 5, pan1
-            Pepper,     // 6, fruit1
-            Potato,     // 7, fruit1
-            Tire,       // 8, tire1
-            TacoBell,   // 9, pan1 -> tacobell
+            Apple,      // 0, fruit
+            Bone,       // 1, bone
+            Broccoli,   // 2, fruit
+            Carrot,     // 3, fruit
+            Cucumber,   // 4, fruit
+            Pan,        // 5, pan
+            Pepper,     // 6, fruit
+            Potato,     // 7, fruit
+            Tire,       // 8, tire
+            TacoBell,   // 9, tacobell
         }
         
         private void Awake()
@@ -132,7 +132,7 @@ namespace HeavenStudio.Games
 
         public void Bop(float beat, bool bop, bool manual)
         {
-            if (manual) { DogAnim.Play("Bop"); }
+            //if (manual) { DogAnim.Play("Bop", 0, 0); }
 
             if (bop) {
                 bopOn = true;
@@ -143,6 +143,8 @@ namespace HeavenStudio.Games
 
         public void ThrowObject(float beat, int ObjType, bool fromLeft)
         {
+            WhichObject.sprite = ObjectTypes[ObjType];
+            
             ThrowObject Object = Instantiate(ObjectBase).GetComponent<ThrowObject>();
             Object.startBeat = beat;
             Object.type = ObjType;
@@ -154,6 +156,7 @@ namespace HeavenStudio.Games
         public void CutEverything(float beat, bool sound)
         {
             if (!birdOnScreen) {
+                FullBird.SetActive(true);
                 if (sound) { 
                     Jukebox.PlayOneShotGame("dogNinja/bird_flap"); 
                 }

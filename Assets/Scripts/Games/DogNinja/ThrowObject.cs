@@ -76,8 +76,8 @@ namespace HeavenStudio.Games.Scripts_DogNinja
                 var cond = Conductor.instance;
 
                 float flyPos = cond.GetPositionFromBeat(startBeat, flyBeats);
-                flyPos *= 0.6f;
-                transform.position = curve.GetPoint(flyPos);
+                flyPos *= 1f;
+                transform.position = leftCurve.GetPoint(flyPos);
 
                 /* if (flyPos > 1f)
                 {
@@ -109,12 +109,12 @@ namespace HeavenStudio.Games.Scripts_DogNinja
 
         private void Miss(PlayerActionEvent caller) 
         {
-            /* BeatAction.New(game.gameObject, new List<BeatAction.Action>()
+            BeatAction.New(game.gameObject, new List<BeatAction.Action>()
             {
                 new BeatAction.Action(startBeat+ 2.45f, delegate { 
                     Destroy(this.gameObject);
                 }),
-            }); */
+            });
         }
 
         private void Out(PlayerActionEvent caller) {}
