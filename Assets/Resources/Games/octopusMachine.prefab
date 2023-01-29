@@ -53,6 +53,10 @@ MonoBehaviour:
   EligibleHits: []
   scheduledInputs: []
   firstEnable: 0
+  OctopusPlayer: {fileID: 4272006829559648984}
+  Octopus: {fileID: 5491802556023606360}
+  OtherOctopus: {fileID: 8573965080282401911}
+  Player: {fileID: 8520771023357760668}
 --- !u!95 &6356803564842489644
 Animator:
   serializedVersion: 3
@@ -63,7 +67,7 @@ Animator:
   m_GameObject: {fileID: 1028535772308054576}
   m_Enabled: 1
   m_Avatar: {fileID: 0}
-  m_Controller: {fileID: 9100000, guid: 1f1f44146ec8d184abf463e4ec5a13cc, type: 2}
+  m_Controller: {fileID: 9100000, guid: 22618db291fee9c478411753db78a3ba, type: 2}
   m_CullingMode: 0
   m_UpdateMode: 0
   m_ApplyRootMotion: 0

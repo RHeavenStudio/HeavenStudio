@@ -49,12 +49,6 @@ namespace HeavenStudio.Games
         [Header("Properties")]
         public GameEvent bop = new GameEvent();
 
-         
-       
-        private float lastReportedBeat = 0f;
-
-         
-
         public static OctopusMachine instance { get; set; }
 
         // Start is called before the first frame update
@@ -64,7 +58,6 @@ namespace HeavenStudio.Games
         }
         
         public void Bop(float beat, bool reset)
-
         {
             
             
@@ -73,7 +66,6 @@ namespace HeavenStudio.Games
                 OtherOctopus.DoScaledAnimationAsync("Bop", 0.5f);
                 OctopusPlayer.DoScaledAnimationAsync("Bop", 0.5f);
             }
-
         }
     }
 }
