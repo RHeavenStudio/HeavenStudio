@@ -52,6 +52,15 @@ namespace HeavenStudio.Games.Loaders
                     },
                     defaultLength = 0.5f
                 },
+                new GameAction("toggleSweat", "Toggle Sweat")
+                {
+                    function = delegate {var e = eventCaller.currentEntity; Ringside.instance.ToggleSweat(e["sweat"]); },
+                    parameters = new List<Param>()
+                    {
+                        new Param("sweat", false, "Sweat?", "Whether the wrestler should sweat or not."),
+                    },
+                    defaultLength = 0.5f
+                },
             });
         }
     }
@@ -81,6 +90,7 @@ namespace HeavenStudio.Games
         [SerializeField] Transform wrestlerTransform;
         [SerializeField] SpriteRenderer bg;
         [SerializeField] ParticleSystem flashParticles;
+        [SerializeField] ParticleSystem sweatParticles;
 
         [Header("Variables")]
         public static List<float> queuedPoses = new List<float>();
@@ -233,6 +243,18 @@ namespace HeavenStudio.Games
         public void ToggleBop(bool startBopping)
         {
             shouldBop = startBopping;
+        }
+
+        public void ToggleSweat(bool shouldSweat)
+        {
+            if (shouldSweat)
+            {
+                sweatParticles.Play();
+            }
+            else
+            {
+                sweatParticles.Stop();
+            }
         }
 
         public void Question(float beat, bool alt, int questionVariant)
