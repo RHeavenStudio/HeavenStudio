@@ -45,11 +45,7 @@ namespace HeavenStudio
         public bool autoplay;
         public bool canInput = true;
         public DynamicBeatmap.ChartSection currentSection, nextSection;
-        public float sectionProgress { get { 
-            if (currentSection == null) return 0;
-            if (nextSection == null) return (Conductor.instance.songPositionInBeats - currentSection.beat) / (endBeat - currentSection.beat); 
-            return (Conductor.instance.songPositionInBeats - currentSection.beat) / (nextSection.beat - currentSection.beat); 
-        }}
+        public float sectionProgress { get; private set; }
 
         public event Action<float> onBeatChanged;
         public event Action<DynamicBeatmap.ChartSection> onSectionChange;
@@ -312,7 +308,6 @@ namespace HeavenStudio
             }
         }
 
-        // LateUpdate works a bit better(?) but causes some bugs (like issues with bop animations).
         private void Update()
         {
             PlayerInput.UpdateInputControllers();
@@ -321,16 +316,16 @@ namespace HeavenStudio
                 return;
             if (!Conductor.instance.isPlaying)
                 return;
+            Conductor cond = Conductor.instance;
             
-
             List<float> entities = Beatmap.entities.Select(c => c.beat).ToList();
 
             List<float> tempoChanges = Beatmap.tempoChanges.Select(c => c.beat).ToList();
             if (currentTempoEvent < Beatmap.tempoChanges.Count && currentTempoEvent >= 0)
             {
-                if (Conductor.instance.songPositionInBeatsAsDouble >= tempoChanges[currentTempoEvent])
+                if (cond.songPositionInBeatsAsDouble >= tempoChanges[currentTempoEvent])
                 {
-                    Conductor.instance.SetBpm(Beatmap.tempoChanges[currentTempoEvent].tempo);
+                    cond.SetBpm(Beatmap.tempoChanges[currentTempoEvent].tempo);
                     currentTempoEvent++;
                 }
             }
@@ -338,9 +333,9 @@ namespace HeavenStudio
             List<float> volumeChanges = Beatmap.volumeChanges.Select(c => c.beat).ToList();
             if (currentVolumeEvent < Beatmap.volumeChanges.Count && currentVolumeEvent >= 0)
             {
-                if (Conductor.instance.songPositionInBeatsAsDouble >= volumeChanges[currentVolumeEvent])
+                if (cond.songPositionInBeatsAsDouble >= volumeChanges[currentVolumeEvent])
                 {
-                    Conductor.instance.SetVolume(Beatmap.volumeChanges[currentVolumeEvent].volume);
+                    cond.SetVolume(Beatmap.volumeChanges[currentVolumeEvent].volume);
                     currentVolumeEvent++;
                 }
             }
@@ -348,7 +343,7 @@ namespace HeavenStudio
             List<float> chartSections = Beatmap.beatmapSections.Select(c => c.beat).ToList();
             if (currentSectionEvent < Beatmap.beatmapSections.Count && currentSectionEvent >= 0)
             {
-                if (Conductor.instance.songPositionInBeatsAsDouble >= chartSections[currentSectionEvent])
+                if (cond.songPositionInBeatsAsDouble >= chartSections[currentSectionEvent])
                 {
                     Debug.Log("Section " + Beatmap.beatmapSections[currentSectionEvent].sectionName + " started");
                     currentSection = Beatmap.beatmapSections[currentSectionEvent];
@@ -363,13 +358,13 @@ namespace HeavenStudio
 
             float seekTime = 8f;
             //seek ahead to preload games that have assetbundles
-            SeekAheadAndPreload(Conductor.instance.songPositionInBeatsAsDouble, seekTime);
+            SeekAheadAndPreload(cond.songPositionInBeatsAsDouble, seekTime);
 
-            SeekAheadAndDoPreEvent(Conductor.instance.songPositionInBeatsAsDouble, 2f);
+            SeekAheadAndDoPreEvent(cond.songPositionInBeatsAsDouble, 2f);
 
             if (currentEvent < Beatmap.entities.Count && currentEvent >= 0)
             {
-                if (Conductor.instance.songPositionInBeatsAsDouble >= entities[currentEvent])
+                if (cond.songPositionInBeatsAsDouble >= entities[currentEvent])
                 {
                     // allows for multiple events on the same beat to be executed on the same frame, so no more 1-frame delay
                     var entitiesAtSameBeat = Beatmap.entities.FindAll(c => c.beat == Beatmap.entities[currentEvent].beat && !EventCaller.FXOnlyGames().Contains(EventCaller.instance.GetMinigame(c.datamodel.Split('/')[0])));
@@ -400,9 +395,21 @@ namespace HeavenStudio
                         // Thank you to @shshwdr for bring this to my attention
                         currentEvent++;
                     }
-
-                    // currentEvent += gameManagerEntities.Count;
                 }
+            }
+
+            if (currentSection == null)
+            {
+                sectionProgress = 0;
+            }
+            else
+            {
+                float currectSectionStart = (float)cond.GetSongPosFromBeat(currentSection.beat);
+
+                if (nextSection == null) 
+                    sectionProgress = (cond.songPosition - currectSectionStart) / ((float)cond.GetSongPosFromBeat(endBeat) - currectSectionStart);
+                else
+                    sectionProgress = (cond.songPosition - currectSectionStart) / ((float)cond.GetSongPosFromBeat(nextSection.beat) - currectSectionStart);
             }
         }
 
