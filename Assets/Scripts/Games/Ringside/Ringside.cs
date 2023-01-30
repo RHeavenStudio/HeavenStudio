@@ -34,12 +34,13 @@ namespace HeavenStudio.Games.Loaders
                 },
                 new GameAction("poseForTheFans", "Pose For The Fans!")
                 {
-                    preFunction = delegate {var e = eventCaller.currentEntity; Ringside.PoseForTheFans(e.beat, e["and"], e["variant"], e["keepZoomedOut"]); },
+                    preFunction = delegate {var e = eventCaller.currentEntity; Ringside.PoseForTheFans(e.beat, e["and"], e["variant"], e["keepZoomedOut"], e["newspaperBeats"]); },
                     parameters = new List<Param>()
                     {
                         new Param("and", false, "And", "Whether the And voice line should be said or not."),
                         new Param("variant", Ringside.PoseForTheFansVariant.Random, "Variant", "Which variant of the cue do you wish to play."),
-                        new Param("keepZoomedOut", false, "Keep Zoomed Out", "Whether the camera should keep being zoomed out after the event has completed.")
+                        new Param("keepZoomedOut", false, "Keep Zoomed Out", "Whether the camera should keep being zoomed out after the event has completed."),
+                        new Param("newspaperBeats", new EntityTypes.Float(0, 80, 0), "Newspaper Beats", "How many beats should the newspaper stay for?")
                     },
                     defaultLength = 4f
                 },
@@ -85,15 +86,23 @@ namespace HeavenStudio.Games
         [SerializeField] Animator reporterAnim;
         [SerializeField] Animator audienceAnim;
         [SerializeField] SpriteRenderer flashWhite;
+        [SerializeField] SpriteRenderer blackVoid;
         [SerializeField] GameObject flashObject;
         [SerializeField] GameObject poseFlash;
+        [SerializeField] GameObject newspaper;
         [SerializeField] Transform wrestlerTransform;
         [SerializeField] SpriteRenderer bg;
         [SerializeField] ParticleSystem flashParticles;
         [SerializeField] ParticleSystem sweatParticles;
 
         [Header("Variables")]
-        public static List<float> queuedPoses = new List<float>();
+        public static List<QueuedPose> queuedPoses = new List<QueuedPose>();
+        public struct QueuedPose
+        {
+            public float beat;
+            public bool keepZoomedOut;
+            public float newspaperBeats;
+        }
         Tween flashTween;
         Tween bgTween;
         public enum QuestionVariant
@@ -185,7 +194,7 @@ namespace HeavenStudio.Games
                     }
                 }
 
-                float normalizedBeat = Conductor.instance.GetPositionFromBeat(currentZoomCamBeat, 2);
+                float normalizedBeat = Conductor.instance.GetPositionFromBeat(currentZoomCamBeat, 2.5f);
 
                 if (normalizedBeat >= 0)
                 {
@@ -215,24 +224,85 @@ namespace HeavenStudio.Games
                     foreach (var p in queuedPoses)
                     {
 
-                        if (cond.songPositionInBeats - 0.05f > p)
+                        if (cond.songPositionInBeats - 0.05f > p.beat)
                         {
                             BeatAction.New(instance.gameObject, new List<BeatAction.Action>()
                             {
-                                new BeatAction.Action(p, delegate  { wrestlerAnim.Play("PreparePoseIdle", 0, 0); }),
+                                new BeatAction.Action(p.beat, delegate  { wrestlerAnim.Play("PreparePoseIdle", 0, 0); }),
                             });
                         }
                         else
                         {
                             BeatAction.New(instance.gameObject, new List<BeatAction.Action>()
                             {
-                                new BeatAction.Action(p, delegate  {wrestlerAnim.DoScaledAnimationAsync("PreparePose", 0.25f); }),
+                                new BeatAction.Action(p.beat, delegate  {wrestlerAnim.DoScaledAnimationAsync("PreparePose", 0.25f); }),
                             });
                         }
                         BeatAction.New(instance.gameObject, new List<BeatAction.Action>()
                         {
-                            new BeatAction.Action(p + 1, delegate  { PoseCheck(p); }),
+                            new BeatAction.Action(p.beat, delegate {audienceAnim.DoScaledAnimationAsync("PoseAudience", 0.25f); }),
+                            new BeatAction.Action(p.beat + 1, delegate  { PoseCheck(p.beat); }),
+                            new BeatAction.Action(p.beat + 3.99f, delegate { wrestlerAnim.Play("Idle", 0, 0); }),
+                            new BeatAction.Action(p.beat + 3.99f, delegate { reporterAnim.Play("IdleReporter", 0, 0); }),
                         });
+                        if (!p.keepZoomedOut)
+                        {
+                            if (p.newspaperBeats > 0)
+                            {
+                                BeatAction.New(instance.gameObject, new List<BeatAction.Action>()
+                                {
+                                    new BeatAction.Action(p.beat + 3f, delegate
+                                    {
+                                        blackVoid.color = Color.black;
+                                        newspaper.SetActive(true);
+                                    }),
+                                    new BeatAction.Action(p.beat + 3f + p.newspaperBeats, delegate
+                                    {
+                                        blackVoid.color = new Color(1f, 1f, 1f, 0);
+                                        newspaper.SetActive(false);
+                                        lastCamPos = new Vector3(0, 0, -10);
+                                        currentCamPos = new Vector3(0, 0, -10);
+                                    })
+                                });
+                            }
+                            else
+                            {
+                                BeatAction.New(instance.gameObject, new List<BeatAction.Action>()
+                                {
+                                    new BeatAction.Action(p.beat + 3.99, delegate
+                                    {
+                                        lastCamPos = new Vector3(0, 0, -10);
+                                        currentCamPos = new Vector3(0, 0, -10);
+                                    })
+                                });
+                            }
+                        }
+                        else
+                        {
+                            BeatAction.New(instance.gameObject, new List<BeatAction.Action>()
+                            {
+                                new BeatAction.Action(p.beat + 2.5f, delegate
+                                {
+                                    lastCamPos = currentCamPos;
+                                })
+                            });
+                            if (p.newspaperBeats > 0)
+                            {
+                                BeatAction.New(instance.gameObject, new List<BeatAction.Action>()
+                                {
+                                    new BeatAction.Action(p.beat + 3f, delegate
+                                    {
+                                        blackVoid.color = Color.black;
+                                        newspaper.SetActive(true);
+                                    }),
+                                    new BeatAction.Action(p.beat + 3f + p.newspaperBeats, delegate
+                                    {
+                                        blackVoid.color = new Color(1f, 1f, 1f, 0);
+                                        newspaper.SetActive(false);
+                                    })
+                                });
+                            }
+                        }
                     }
                     queuedPoses.Clear();
                 }
@@ -326,7 +396,7 @@ namespace HeavenStudio.Games
             });
         }
 
-        public static void PoseForTheFans(float beat, bool and, int variant, bool keepZoomedOut)
+        public static void PoseForTheFans(float beat, bool and, int variant, bool keepZoomedOut, float newspaperBeats)
         {
             if (and)
             {
@@ -356,29 +426,66 @@ namespace HeavenStudio.Games
                 });
                 if (!keepZoomedOut)
                 {
-                    BeatAction.New(instance.gameObject, new List<BeatAction.Action>()
+                    if (newspaperBeats > 0)
                     {
-                        new BeatAction.Action(beat + 3.99, delegate
+                        BeatAction.New(instance.gameObject, new List<BeatAction.Action>()
                         {
-                            Ringside.instance.lastCamPos = new Vector3(0, 0, -10);
-                            Ringside.instance.currentCamPos = new Vector3(0, 0, -10);
-                        })
-                    });
+                            new BeatAction.Action(beat + 3f, delegate
+                            {
+                                Ringside.instance.blackVoid.color = Color.black;
+                                Ringside.instance.newspaper.SetActive(true);
+                            }),
+                            new BeatAction.Action(beat + 3f + newspaperBeats, delegate
+                            {
+                                Ringside.instance.blackVoid.color = new Color(1f, 1f, 1f, 0);
+                                Ringside.instance.newspaper.SetActive(false);
+                                Ringside.instance.lastCamPos = new Vector3(0, 0, -10);
+                                Ringside.instance.currentCamPos = new Vector3(0, 0, -10);
+                            })
+                        });
+                    }
+                    else
+                    {
+                        BeatAction.New(instance.gameObject, new List<BeatAction.Action>()
+                        {
+                            new BeatAction.Action(beat + 3.99, delegate
+                            {
+                                Ringside.instance.lastCamPos = new Vector3(0, 0, -10);
+                                Ringside.instance.currentCamPos = new Vector3(0, 0, -10);
+                            })
+                        });
+                    }
                 }
                 else
                 {
                     BeatAction.New(instance.gameObject, new List<BeatAction.Action>()
                     {
-                        new BeatAction.Action(beat + 3.99, delegate
+                        new BeatAction.Action(beat + 2.5f, delegate
                         {
                             Ringside.instance.lastCamPos = Ringside.instance.currentCamPos;
                         })
                     });
+                    if (newspaperBeats > 0)
+                    {
+                        BeatAction.New(instance.gameObject, new List<BeatAction.Action>()
+                        {
+                            new BeatAction.Action(beat + 3f, delegate
+                            {
+                                Ringside.instance.blackVoid.color = Color.black;
+                                Ringside.instance.newspaper.SetActive(true);
+                            }),
+                            new BeatAction.Action(beat + 3f + newspaperBeats, delegate
+                            {
+                                Ringside.instance.blackVoid.color = new Color(1f, 1f, 1f, 0);
+                                Ringside.instance.newspaper.SetActive(false);
+                            })
+                        });
+                    }
                 }
             }
             else
             {
-                queuedPoses.Add(beat);
+                queuedPoses.Add(new QueuedPose { beat = beat, keepZoomedOut = keepZoomedOut, newspaperBeats = newspaperBeats});
             }
         }
 
