@@ -71,6 +71,8 @@ namespace HeavenStudio.Games.Global
             tritanopia = 50,
             vibrance = 51,
             winter = 52,
+            blackwhite = 53,
+            blackwhite_2 = 54,
         }
 
         #region MonoBehaviour
