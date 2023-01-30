@@ -222,7 +222,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 1, g: 1, b: 1, a: 0.1254902}
+  m_Color: {r: 0, g: 0, b: 0, a: 0.1254902}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -248,6 +248,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 6146690112180794985}
+  - component: {fileID: -2021201216326107015}
   m_Layer: 5
   m_Name: CurrentSection
   m_TagString: Untagged
@@ -273,9 +274,23 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: -37.75, y: -13.500006}
-  m_SizeDelta: {x: -84.5, y: -37}
+  m_AnchoredPosition: {x: 0, y: 0}
+  m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
+--- !u!114 &-2021201216326107015
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6146690112180794986}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 52530e94ebdc2e343a3aa77a9dfd8e71, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  SectionText: {fileID: 6146690113140836413}
+  SectionProgress: {fileID: 6146690112043875439}
 --- !u!1 &6146690112272369967
 GameObject:
   m_ObjectHideFlags: 0
@@ -307,10 +322,10 @@ RectTransform:
   m_Father: {fileID: 6146690112043875424}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 0.25}
-  m_AnchorMax: {x: 1, y: 0.75}
-  m_AnchoredPosition: {x: 0, y: -0.000030517578}
-  m_SizeDelta: {x: 0, y: 9.7044}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 1, y: 1}
+  m_AnchoredPosition: {x: 0, y: 0}
+  m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1 &6146690113140836415
 GameObject:
@@ -380,7 +395,7 @@ MonoBehaviour:
   m_text: New Section
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 4810e200fa0cb24438bac52343d7674b, type: 2}
-  m_sharedMaterial: {fileID: 8580487687356851718, guid: 4810e200fa0cb24438bac52343d7674b, type: 2}
+  m_sharedMaterial: {fileID: 2100000, guid: 6d4610587e293f74ca2b71ec1cf59da3, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
@@ -404,7 +419,7 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 208.85
+  m_fontSize: 221.7
   m_fontSizeBase: 15.6
   m_fontWeight: 400
   m_enableAutoSizing: 1
@@ -440,7 +455,7 @@ MonoBehaviour:
   m_VertexBufferAutoSizeReduction: 0
   m_useMaxVisibleDescender: 1
   m_pageToDisplay: 1
-  m_margin: {x: 0, y: 0, z: 0, w: 0}
+  m_margin: {x: 1, y: 0, z: 1, w: 0}
   m_isUsingLegacyAnimationComponent: 0
   m_isVolumetricText: 0
   m_hasFontAssetChanged: 0

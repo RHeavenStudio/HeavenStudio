@@ -20724,17 +20724,6 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1005579236}
   m_CullTransparentMesh: 1
---- !u!114 &1007733146 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 6146690113140836413, guid: f54ff2803b9c18046b673dc177d752ef, type: 3}
-  m_PrefabInstance: {fileID: 6146690113074790823}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f4688fdb7df04437aeb418b961361dc5, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1 &1022970659
 GameObject:
   m_ObjectHideFlags: 0
@@ -25434,7 +25423,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: -37.75, y: -13.5}
+  m_AnchoredPosition: {x: -37.75, y: -13.499998}
   m_SizeDelta: {x: -84.5, y: -37}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &1269061094
@@ -35137,9 +35126,6 @@ MonoBehaviour:
   TimelineSongPosLineRef: {fileID: 580861938}
   TimelineEventObjRef: {fileID: 798021449}
   LayersRect: {fileID: 1671351975}
-  TimelineSectionDisplay: {fileID: 1993062349}
-  TimelineSectionText: {fileID: 1007733146}
-  TimelineSectionProgress: {fileID: 2130542024}
   FirstBeatOffset: {fileID: 215482487}
   StartingTempoSpecialAll: {fileID: 1332021417}
   StartingTempoSpecialTempo: {fileID: 1299088428}
@@ -37808,6 +37794,44 @@ RectTransform:
   m_CorrespondingSourceObject: {fileID: 6146690112180794985, guid: f54ff2803b9c18046b673dc177d752ef, type: 3}
   m_PrefabInstance: {fileID: 6146690113074790823}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &1993062351
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1993062349}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Material: {fileID: 0}
+  m_Color: {r: 1, g: 1, b: 1, a: 0.1882353}
+  m_RaycastTarget: 1
+  m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
+  m_Maskable: 1
+  m_OnCullStateChanged:
+    m_PersistentCalls:
+      m_Calls: []
+  m_Sprite: {fileID: 0}
+  m_Type: 0
+  m_PreserveAspect: 0
+  m_FillCenter: 1
+  m_FillMethod: 4
+  m_FillAmount: 1
+  m_FillClockwise: 1
+  m_FillOrigin: 0
+  m_UseSpriteMesh: 0
+  m_PixelsPerUnitMultiplier: 1
+--- !u!222 &1993062352
+CanvasRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1993062349}
+  m_CullTransparentMesh: 1
 --- !u!1 &1997273392
 GameObject:
   m_ObjectHideFlags: 0
@@ -39738,17 +39762,6 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2127964034}
   m_CullTransparentMesh: 1
---- !u!114 &2130542024 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 6146690112043875439, guid: f54ff2803b9c18046b673dc177d752ef, type: 3}
-  m_PrefabInstance: {fileID: 6146690113074790823}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 67db9e8f0e2ae9c40bc1e2b64352a6b4, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1 &2131880460
 GameObject:
   m_ObjectHideFlags: 0
@@ -40228,6 +40241,10 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 1269061093}
     m_Modifications:
+    - target: {fileID: 6146690112015129468, guid: f54ff2803b9c18046b673dc177d752ef, type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 6146690112180794985, guid: f54ff2803b9c18046b673dc177d752ef, type: 3}
       propertyPath: m_Pivot.x
       value: 0.5
@@ -40315,6 +40332,10 @@ PrefabInstance:
     - target: {fileID: 6146690112180794986, guid: f54ff2803b9c18046b673dc177d752ef, type: 3}
       propertyPath: m_Name
       value: CurrentSection
+      objectReference: {fileID: 0}
+    - target: {fileID: 6146690112180794986, guid: f54ff2803b9c18046b673dc177d752ef, type: 3}
+      propertyPath: m_IsActive
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: f54ff2803b9c18046b673dc177d752ef, type: 3}
