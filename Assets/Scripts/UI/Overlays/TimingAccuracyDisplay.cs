@@ -21,6 +21,8 @@ namespace HeavenStudio.Common
         [SerializeField] GameObject OK;
         [SerializeField] GameObject Just;
 
+        [SerializeField] Animator MetreAnim;
+
         [SerializeField] Transform arrowTransform;
         [SerializeField] Transform barTransform;
         [SerializeField] Transform barJustTransform;
@@ -43,6 +45,7 @@ namespace HeavenStudio.Common
 
         public void ResetArrow()
         {
+            targetArrowPos = 0f;
             arrowTransform.localPosition = Vector3.zero;
         }
 
@@ -50,6 +53,16 @@ namespace HeavenStudio.Common
         {
             float frac = (float)((time - Minigame.EarlyTime()) / (Minigame.EndTime() - Minigame.EarlyTime()));
             targetArrowPos = (targetArrowPos + barTransform.localScale.y * (frac - 0.5f)) * 0.5f;
+        }
+
+        public void StartStarFlash()
+        {
+            MetreAnim.Play("StarWarn", -1, 0f);
+        }
+
+        public void StopStarFlash()
+        {
+            MetreAnim.Play("NoPose", -1, 0f);
         }
 
         public void MakeAccuracyVfx(double time, bool late = false)

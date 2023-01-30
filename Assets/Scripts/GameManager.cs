@@ -89,6 +89,7 @@ namespace HeavenStudio
                 return totalPlayerAccuracy / totalInputs;
             }
         }
+        bool skillStarCollected = false;
 
         private void Awake()
         {
@@ -219,13 +220,23 @@ namespace HeavenStudio
             }
         }
 
-        public void ScoreInputAccuracy(double accuracy, bool late, double time, double weight = 1)
+        public void ScoreInputAccuracy(double accuracy, bool late, double time, double weight = 1, bool doDisplay = true)
         {
             totalInputs += weight;
             totalPlayerAccuracy += accuracy * weight;
 
+            if (accuracy <= Minigame.rankOkThreshold && weight > 0)
+                SkillStarManager.instance.KillStar();
+            
+            if (SkillStarManager.instance.IsEligible && !skillStarCollected && accuracy >= 1f)
+            {
+                if (SkillStarManager.instance.DoStarJust())
+                    skillStarCollected = true;
+            }
+
             // push the hit event to the timing display
-            TimingAccuracyDisplay.instance.MakeAccuracyVfx(time, late);
+            if (doDisplay)
+                TimingAccuracyDisplay.instance.MakeAccuracyVfx(time, late);
         }
 
         public void SeekAheadAndPreload(double start, float seekTime = 8f)
@@ -412,6 +423,9 @@ namespace HeavenStudio
             totalPlayerAccuracy = 0;
 
             TimingAccuracyDisplay.instance.ResetArrow();
+            SkillStarManager.instance.Reset();
+            skillStarCollected = false;
+
             StartCoroutine(PlayCo(beat));
             onBeatChanged?.Invoke(beat);
         }
@@ -450,6 +464,8 @@ namespace HeavenStudio
             SetCurrentEventToClosest(beat);
             onBeatChanged?.Invoke(beat);
             KillAllSounds();
+
+            SkillStarManager.instance.KillStar();
 
             Debug.Log($"Average input offset for playthrough: {averageInputOffset}ms");
             Debug.Log($"Accuracy for playthrough: {(PlayerAccuracy * 100) : 0.00}");

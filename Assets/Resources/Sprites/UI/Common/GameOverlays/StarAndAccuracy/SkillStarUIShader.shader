@@ -101,9 +101,6 @@ Shader "UI/SkillStarUIShader"
                 half4 color = tex2D(_MainTex, IN.texcoord);
                 fixed mask = tex2D(_MaskTex, IN.texcoord).a;
 
-                // color.rgb *= color.a * mask;
-                color.a *= mask;
-
                 #ifdef UNITY_UI_CLIP_RECT
                 color.a *= UnityGet2DClipping(IN.worldPosition.xy, _ClipRect);
                 #endif
@@ -111,6 +108,8 @@ Shader "UI/SkillStarUIShader"
                 #ifdef UNITY_UI_ALPHACLIP
                 clip (color.a - 0.001);
                 #endif
+
+                color.a *= mask;
  
                 return color;
             }

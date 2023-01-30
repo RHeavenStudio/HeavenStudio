@@ -176,7 +176,6 @@ namespace HeavenStudio.Games
             if (time >= Minigame.AceStartTime() && time <= Minigame.AceEndTime())
             {
                 // Ace
-                Debug.Log("Accuracy (Ace): " + 1.0);
                 return 1.0;
             }
 
@@ -190,7 +189,6 @@ namespace HeavenStudio.Games
                     state = 1.0 - ((time - Minigame.AceEndTime()) / (Minigame.LateTime() - Minigame.AceEndTime()));
                     state *= 1.0 - Minigame.rankHiThreshold;
                     state += Minigame.rankHiThreshold;
-                    Debug.Log("Accuracy (Late): " + state);
                 }
                 else
                 {
@@ -198,7 +196,6 @@ namespace HeavenStudio.Games
                     state = ((time - Minigame.PerfectTime()) / (Minigame.AceStartTime() - Minigame.PerfectTime()));
                     state *= 1.0 - Minigame.rankHiThreshold;
                     state += Minigame.rankHiThreshold;
-                    Debug.Log("Accuracy (Early): " + state);
                 }
             }
             else
@@ -208,14 +205,12 @@ namespace HeavenStudio.Games
                     // late half of timing window
                     state = 1.0 - ((time - Minigame.LateTime()) / (Minigame.EndTime() - Minigame.LateTime()));
                     state *= Minigame.rankOkThreshold;
-                    Debug.Log("Accuracy (Late NG): " + state);
                 }
                 else
                 {
                     //early half of timing window
                     state = ((time - Minigame.PerfectTime()) / (Minigame.AceStartTime() - Minigame.PerfectTime()));
                     state *= Minigame.rankOkThreshold;
-                    Debug.Log("Accuracy (Early NG): " + state);
                 }
             }
             return state;
@@ -230,7 +225,7 @@ namespace HeavenStudio.Games
 
             CleanUp();
             if (countsForAccuracy && !(noAutoplay || autoplayOnly))
-                GameManager.instance.ScoreInputAccuracy(0, true, 2.0, 1.0);
+                GameManager.instance.ScoreInputAccuracy(0, true, 2.0, 1.0, false);
         }
 
         public void Blank()

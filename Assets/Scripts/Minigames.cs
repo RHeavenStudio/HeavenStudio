@@ -272,11 +272,11 @@ namespace HeavenStudio
                         function = delegate {
                             var e = eventCaller.currentEntity;
                             HeavenStudio.Common.SkillStarManager.instance.DoStarIn(e.beat, e.length); 
-                            BeatAction.New(HeavenStudio.Common.SkillStarManager.instance.gameObject, new List<BeatAction.Action>(){
-                                new BeatAction.Action(e.beat + e.length, delegate {
-                                    HeavenStudio.Common.SkillStarManager.instance.DoStarJust();
-                                })
-                            });
+                            // BeatAction.New(HeavenStudio.Common.SkillStarManager.instance.gameObject, new List<BeatAction.Action>(){
+                            //     new BeatAction.Action(e.beat + e.length, delegate {
+                            //         HeavenStudio.Common.SkillStarManager.instance.DoStarJust();
+                            //     })
+                            // });
                         }
                     },
                     new GameAction("toggle inputs", "Toggle Inputs", 0.5f, true,

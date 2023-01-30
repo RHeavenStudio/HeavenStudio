@@ -268,9 +268,11 @@ namespace HeavenStudio
         public float GetBpmAtBeat(float beat)
         {
             var chart = GameManager.instance.Beatmap;
+            if (chart.tempoChanges.Count == 0)
+                return chart.bpm;
             float bpm = chart.bpm;
 
-            foreach (DynamicBeatmap.TempoChange t in GameManager.instance.Beatmap.tempoChanges)
+            foreach (DynamicBeatmap.TempoChange t in chart.tempoChanges)
             {
                 if (t.beat > beat)
                 {
@@ -291,7 +293,7 @@ namespace HeavenStudio
 
             float lastTempoChangeBeat = 0f;
 
-            foreach (DynamicBeatmap.TempoChange t in GameManager.instance.Beatmap.tempoChanges)
+            foreach (DynamicBeatmap.TempoChange t in chart.tempoChanges)
             {
                 if (t.beat > beat)
                 {
