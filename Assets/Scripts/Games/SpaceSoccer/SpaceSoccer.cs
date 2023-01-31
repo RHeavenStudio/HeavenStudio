@@ -151,16 +151,7 @@ namespace HeavenStudio.Games
 
                 if (kicker.ball != null) return;
 
-                GameObject ball = null;
-
-                if (kicker.player)
-                {
-                    ball = Instantiate(ballRef, transform);
-                }
-                else
-                {
-                    ball = Instantiate(ballRef, kicker.transform, false);
-                }
+                GameObject ball = Instantiate(ballRef, transform);
                 ball.SetActive(true);
                 Ball ball_ = ball.GetComponent<Ball>();
                 ball_.Init(kicker, beat);
