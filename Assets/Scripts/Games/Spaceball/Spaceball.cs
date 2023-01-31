@@ -68,8 +68,10 @@ namespace HeavenStudio.Games
     public class Spaceball : Minigame
     {
 		public enum BallType {
-            Baseball,
-            Onigiri
+            Baseball = 0,
+            Onigiri = 1,
+            Alien = 2,
+            Tacobell = 3,
         }
 		
         public enum CostumeType {
@@ -231,9 +233,20 @@ namespace HeavenStudio.Games
                 Jukebox.PlayOneShotGame("spaceball/shoot");
             }
 
-            if (type == 1)
+            ball.GetComponent<SpaceballBall>().Sprite.sprite = BallSprites[type];
+            switch(type)
             {
-                ball.GetComponent<SpaceballBall>().Sprite.sprite = BallSprites[1];
+                case (int)BallType.Baseball:
+                    break;
+                case (int)BallType.Onigiri:
+                    ball.transform.localScale = new Vector3(1.2f, 1.2f, 1);
+                    break;
+                case (int)BallType.Alien:
+                    break;
+                case (int)BallType.Tacobell:
+                    ball.transform.localScale = new Vector3(0.5f, 0.5f, 1);
+                    ball.GetComponent<SpaceballBall>().isTacobell = true;
+                    break;
             }
 
             Dispenser.GetComponent<Animator>().Play("DispenserShoot", 0, 0);
