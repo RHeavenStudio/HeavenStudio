@@ -16,7 +16,7 @@ namespace HeavenStudio.Games.Loaders
                 new GameAction("beat intervals", "Start Interval")
                 {
                     function = delegate {var e = eventCaller.currentEntity; Tambourine.instance.StartInterval(e.beat, e.length); },
-                    defaultLength = 4f,
+                    defaultLength = 8f,
                     resizable = true,
                     priority = 1
                 },
@@ -107,7 +107,7 @@ namespace HeavenStudio.Games
         [Header("Variables")]
         bool intervalStarted;
         float intervalStartBeat;
-        float beatInterval = 4f;
+        float beatInterval = 8f;
         float misses;
         bool frogPresent;
 
@@ -138,8 +138,20 @@ namespace HeavenStudio.Games
             monkeyAnimator.Play("MonkeyIdle", 0, 0);
         }
 
+        void OnDestroy()
+        {
+            if (!Conductor.instance.isPlaying || Conductor.instance.isPaused)
+            {
+                if (queuedInputs.Count > 0) queuedInputs.Clear();
+            }
+        }
+
         void Update()
         {
+            if (!Conductor.instance.isPlaying || Conductor.instance.isPaused)
+            {
+                if (queuedInputs.Count > 0) queuedInputs.Clear();
+            }
             if (!Conductor.instance.isPlaying && !Conductor.instance.isPaused && intervalStarted)
             {
                 intervalStarted = false;
@@ -150,6 +162,7 @@ namespace HeavenStudio.Games
                 Jukebox.PlayOneShotGame($"tambourine/player/shake/{UnityEngine.Random.Range(1, 6)}");
                 sweatAnimator.Play("Sweating", 0, 0);
                 SummonFrog();
+                ScoreMiss();
                 if (!intervalStarted)
                 {
                     sadFace.SetActive(true);
@@ -161,6 +174,7 @@ namespace HeavenStudio.Games
                 Jukebox.PlayOneShotGame($"tambourine/player/hit/{UnityEngine.Random.Range(1, 6)}");
                 sweatAnimator.Play("Sweating", 0, 0);
                 SummonFrog();
+                ScoreMiss();
                 if (!intervalStarted)
                 {
                     sadFace.SetActive(true);
@@ -181,7 +195,7 @@ namespace HeavenStudio.Games
                 intervalStarted = true;
                 BeatAction.New(instance.gameObject, new List<BeatAction.Action>()
                 {
-                    new BeatAction.Action(beat + beatInterval, delegate { intervalStarted = false; }),
+                    new BeatAction.Action(beat + interval, delegate { intervalStarted = false; }),
                 });
             }
         }

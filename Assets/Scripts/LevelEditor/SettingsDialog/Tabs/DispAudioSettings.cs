@@ -4,6 +4,7 @@ using UnityEngine.UI;
 
 using TMPro;
 
+using HeavenStudio.Common;
 namespace HeavenStudio.Editor 
 {
     public class DispAudioSettings : TabsContent
@@ -26,7 +27,6 @@ namespace HeavenStudio.Editor
                 dropDownData.Add(optionData);
             }
             resolutionsDropdown.AddOptions(dropDownData);
-            resolutionsDropdown.value = GlobalGameManager.ScreenSizeIndex;
 
             resolutionsDropdown.onValueChanged.AddListener(delegate 
             {
@@ -46,6 +46,11 @@ namespace HeavenStudio.Editor
                 heightInputField.text = GlobalGameManager.CustomScreenHeight.ToString();
             });
 
+            resolutionsDropdown.value = GlobalGameManager.ScreenSizeIndex;
+
+            widthInputField.text = GlobalGameManager.CustomScreenWidth.ToString();
+            heightInputField.text = GlobalGameManager.CustomScreenHeight.ToString();
+
             volSlider.value = GlobalGameManager.MasterVolume;
             volLabel.text = System.Math.Round(volSlider.value * 100, 2).ToString();
         }
@@ -64,16 +69,25 @@ namespace HeavenStudio.Editor
         {
             GlobalGameManager.ChangeMasterVolume(volSlider.value);
             volLabel.text = System.Math.Round(volSlider.value * 100, 2).ToString();
+            PersistentDataManager.gameSettings.masterVolume = volSlider.value;
         }
 
         public void OnVolLabelChanged()
         {
             volSlider.value = (float)System.Math.Round(System.Convert.ToSingle(volLabel.text) / 100f, 2);
             GlobalGameManager.ChangeMasterVolume(volSlider.value);
+            PersistentDataManager.gameSettings.masterVolume = volSlider.value;
         }
 
         public override void OnOpenTab()
         {
+            resolutionsDropdown.value = GlobalGameManager.ScreenSizeIndex;
+
+            widthInputField.text = GlobalGameManager.CustomScreenWidth.ToString();
+            heightInputField.text = GlobalGameManager.CustomScreenHeight.ToString();
+
+            volSlider.value = GlobalGameManager.MasterVolume;
+            volLabel.text = System.Math.Round(volSlider.value * 100, 2).ToString();
         }
 
         public override void OnCloseTab()

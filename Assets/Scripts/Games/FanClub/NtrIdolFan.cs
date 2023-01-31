@@ -53,24 +53,24 @@ namespace HeavenStudio.Games.Scripts_FanClub
         public void ClapJust(PlayerActionEvent caller, float state)
         {
             bool auto = GameManager.instance.autoplay;
-            ClapStart(true, false, auto ? 0.1f : 0f);
+            ClapStart(state < 1f && state > -1f, false, auto ? 0.1f : 0f);
         }
 
         public void ChargeClapJust(PlayerActionEvent caller, float state)
         {
             bool auto = GameManager.instance.autoplay;
-            ClapStart(true, true, auto ? 1f : 0f);
+            ClapStart(state < 1f && state > -1f, true, auto ? 1f : 0f);
         }
 
         public void LongClapJust(PlayerActionEvent caller, float state)
         {
             bool auto = GameManager.instance.autoplay;
-            ClapStart(true, false, auto ? 1f : 0f);
+            ClapStart(state < 1f && state > -1f, false, auto ? 1f : 0f);
         }
 
         public void JumpJust(PlayerActionEvent caller, float state)
         {
-            JumpStart(true);
+            JumpStart(state < 1f && state > -1f);
         }
 
         public void ClapThrough(PlayerActionEvent caller) {
@@ -102,6 +102,7 @@ namespace HeavenStudio.Games.Scripts_FanClub
                     if (!FanClub.instance.IsExpectingInputNow(InputType.STANDARD_DOWN))
                     {
                         ClapStart(false);
+                        FanClub.instance.ScoreMiss();
                     }
                 }
                 if (PlayerInput.Pressing())
@@ -118,6 +119,7 @@ namespace HeavenStudio.Games.Scripts_FanClub
                     if (clappingStartTime != Single.MinValue && cond.songPositionInBeats > clappingStartTime + 2f && stopCharge && !FanClub.instance.IsExpectingInputNow(InputType.STANDARD_UP))
                     {
                         JumpStart(false);
+                        FanClub.instance.ScoreMiss();
                     }
                     else
                     {

@@ -84,9 +84,9 @@ namespace HeavenStudio.Games.Scripts_NtrSamurai
 
                 launchProg = SamuraiSliceNtr.instance.ScheduleInput(startBeat, 2f, InputType.STANDARD_ALT_DOWN, LaunchSuccess, LaunchMiss, LaunchThrough);
                 //autoplay: launch anim
-                SamuraiSliceNtr.instance.ScheduleAutoplayInput(startBeat, 2f, InputType.STANDARD_ALT_DOWN, DoLaunchAutoplay, LaunchThrough, LaunchThrough);
+                SamuraiSliceNtr.instance.ScheduleAutoplayInput(startBeat, 2f, InputType.STANDARD_ALT_DOWN, DoLaunchAutoplay, LaunchThrough, LaunchThrough).countsForAccuracy = false;
                 //autoplay: unstep
-                SamuraiSliceNtr.instance.ScheduleAutoplayInput(startBeat, 1.75f, InputType.STANDARD_ALT_UP, DoUnStepAutoplay, LaunchThrough, LaunchThrough);
+                SamuraiSliceNtr.instance.ScheduleAutoplayInput(startBeat, 1.75f, InputType.STANDARD_ALT_UP, DoUnStepAutoplay, LaunchThrough, LaunchThrough).countsForAccuracy = false;
 
                 currentCurve = SamuraiSliceNtr.instance.InCurve;
                 transform.rotation = Quaternion.Euler(0, 0, transform.rotation.eulerAngles.z + (360f * startBeat));
@@ -216,9 +216,9 @@ namespace HeavenStudio.Games.Scripts_NtrSamurai
                     {
                         flyProg = 2;
                         launchProg = SamuraiSliceNtr.instance.ScheduleInput(startBeat + 2f, 2f, InputType.STANDARD_ALT_DOWN, LaunchSuccess, LaunchMiss, LaunchThrough);
-                        SamuraiSliceNtr.instance.ScheduleAutoplayInput(startBeat + 2f, 2f, InputType.STANDARD_ALT_DOWN, DoLaunchAutoplay, LaunchThrough, LaunchThrough);
+                        SamuraiSliceNtr.instance.ScheduleAutoplayInput(startBeat + 2f, 2f, InputType.STANDARD_ALT_DOWN, DoLaunchAutoplay, LaunchThrough, LaunchThrough).countsForAccuracy = false;
                         //autoplay: unstep
-                        SamuraiSliceNtr.instance.ScheduleAutoplayInput(startBeat + 2f, 1.75f, InputType.STANDARD_ALT_UP, DoUnStepAutoplay, LaunchThrough, LaunchThrough);
+                        SamuraiSliceNtr.instance.ScheduleAutoplayInput(startBeat + 2f, 1.75f, InputType.STANDARD_ALT_UP, DoUnStepAutoplay, LaunchThrough, LaunchThrough).countsForAccuracy = false;
                         currentCurve = null;
 
                         Jukebox.PlayOneShotGame("samuraiSliceNtr/holy_mackerel" + UnityEngine.Random.Range(1, 4), pitch: UnityEngine.Random.Range(0.95f, 1.05f), volume: 0.8f);
@@ -227,13 +227,13 @@ namespace HeavenStudio.Games.Scripts_NtrSamurai
                 case (int) SamuraiSliceNtr.ObjectType.Demon:
                     flyProg = 1;
                     hitProg = SamuraiSliceNtr.instance.ScheduleInput(startBeat + 2f, 4f, InputType.STANDARD_DOWN, HitSuccess, HitMiss, LaunchThrough);
-                    SamuraiSliceNtr.instance.ScheduleAutoplayInput(startBeat + 2f, 4f, InputType.STANDARD_DOWN, DoSliceAutoplay, LaunchThrough, LaunchThrough);
+                    SamuraiSliceNtr.instance.ScheduleAutoplayInput(startBeat + 2f, 4f, InputType.STANDARD_DOWN, DoSliceAutoplay, LaunchThrough, LaunchThrough).countsForAccuracy = false;
                     currentCurve = SamuraiSliceNtr.instance.LaunchHighCurve;
                     break;
                 default:
                     flyProg = 1;
                     hitProg = SamuraiSliceNtr.instance.ScheduleInput(startBeat + 2f, 2f, InputType.STANDARD_DOWN, HitSuccess, HitMiss, LaunchThrough);
-                    SamuraiSliceNtr.instance.ScheduleAutoplayInput(startBeat + 2f, 2f, InputType.STANDARD_DOWN, DoSliceAutoplay, LaunchThrough, LaunchThrough);
+                    SamuraiSliceNtr.instance.ScheduleAutoplayInput(startBeat + 2f, 2f, InputType.STANDARD_DOWN, DoSliceAutoplay, LaunchThrough, LaunchThrough).countsForAccuracy = false;
                     currentCurve = SamuraiSliceNtr.instance.LaunchCurve;
                     break;
             }

@@ -15,7 +15,8 @@ namespace HeavenStudio.Editor
             {
                 if (Editor.MouseInRectTransform(transform.GetChild(i).GetComponent<RectTransform>()))
                 {
-                    eventParameterManager.canDisable = false;
+                    if (eventParameterManager != null)
+                        eventParameterManager.canDisable = false;
                 }
             }
         }

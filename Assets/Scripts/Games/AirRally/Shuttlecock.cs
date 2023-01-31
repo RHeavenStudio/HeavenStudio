@@ -7,28 +7,27 @@ using HeavenStudio.Util;
 
 namespace HeavenStudio.Games.Scripts_AirRally
 {
-    public class Shuttlecock : PlayerActionObject
+    public class Shuttlecock : MonoBehaviour
     {
+        [SerializeField] Transform PlayerTarget;
+        [SerializeField] Transform OtherTarget;
+        [SerializeField] float TargetHeight;
+        [SerializeField] float TargetHeightLong;
+
         public float startBeat;
-        private float flyBeats;
+        public float flyBeats;
 
         public bool flyType;
         bool miss = false;
         public float flyPos;
         public bool isReturning;
-
-        [NonReorderable] public BezierCurve3D curve;
         AirRally game;
-        Vector3 nextPos;
 
         private void Awake()
         {
             game = AirRally.instance;
-            flyBeats = 1f;
-            var cond = Conductor.instance;
-            flyPos = cond.GetPositionFromBeat(startBeat, flyBeats);
-            transform.position = curve.GetPoint(flyPos);
         }
+
         void Start()
         {
 
@@ -38,84 +37,52 @@ namespace HeavenStudio.Games.Scripts_AirRally
         void Update()
         {
             var cond = Conductor.instance;
-            //flyBeats = isReturning ? 1.2f : 1.2f;
-            float flyPos = cond.GetPositionFromBeat(startBeat, flyBeats);
-            if (flyPos <= 1f)
+            
+            Vector3 lastPos = transform.position;
+            if (!GetComponent<Rigidbody2D>().simulated)
             {
-                if (!miss)
-                {
-                    flyPos *= .8f;
-                }
+                float flyPos = cond.GetPositionFromBeat(startBeat, flyBeats);
 
-                Vector3 lastPos = transform.position;
-                nextPos = curve.GetPoint(flyPos);
-                curve.KeyPoints[0].transform.position = new Vector3(game.holderPos.position.x, game.holderPos.position.y, game.wayPointZForForth);  
-                if (isReturning)
-                {
-                    curve.transform.localScale = new Vector3(-1, 1);
-                }
-                else
-                {
-                    curve.transform.localScale = new Vector3(1, 1);
-                }
+                Vector3 startPos = isReturning ? PlayerTarget.position : OtherTarget.position;
+                Vector3 endPos = isReturning ? OtherTarget.position : PlayerTarget.position;
 
-                if (flyType)
-                {
-                    Vector3 direction = (nextPos - lastPos).normalized;
-                    float rotation = Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg;
-                    this.transform.eulerAngles = new Vector3(0, 0, rotation);
-                }
-                else
-                {
+                transform.position = Vector3.LerpUnclamped(startPos, endPos, flyPos);
 
-                    if (!isReturning)
-                        transform.rotation = Quaternion.Euler(0, 0, transform.rotation.eulerAngles.z + (360f * Time.deltaTime));
-                    else
-                        transform.rotation = Quaternion.Euler(0, 0, transform.rotation.eulerAngles.z + (-360f * Time.deltaTime));
-                }
-
-                transform.position = nextPos;
+                float yMul = flyPos * 2f - 1f;
+                float yWeight = -(yMul*yMul) + 1f;
+                transform.position += Vector3.up * yWeight * (flyType ? TargetHeightLong : TargetHeight);
             }
-            //else
-            //{
-            //    transform.position = curve.GetPoint(miss ? 1f : 0.95f);
-            //}
 
-            //if (flyPos > 1f)
-            //{
-            //    if (Conductor.instance.GetPositionFromBeat(startBeat, flyBeats + 1f) >= 1f)
-            //    {
-            //        GameObject.Destroy(gameObject);
-            //        return;
-            //    }
-            //}
-            //if(flyPos > 1f)
-            //{
-            //    if(Conductor.instance.GetPositionFromBeat(startBeat, flyBeats + 1f) >= 1f)
-            //    {
-            //        if (!isReturning)
-            //        {
-            //            curve = game.MissCurve;
-            //            transform.position = curve.GetPoint(flyPos);
-            //        }
+            Vector3 direction = (transform.position - lastPos).normalized;
+            float rotation = Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg;
+            this.transform.eulerAngles = new Vector3(0, 0, rotation - 90f);
 
-            //        else
-            //        {
-            //            curve = game.MissReturnCurve;
-            //            transform.position = curve.GetPoint(flyPos);
-            //        }
-
-            //        return;
-            //    }
-            //}
-            if (game.hasMissed && flyPos > 1f)
+            if (miss && flyPos > 2f)
             {
-                if (Conductor.instance.GetPositionFromBeat(startBeat, flyBeats + 1f) >= 1f)
+                if (cond.GetPositionFromBeat(startBeat, flyBeats + 1f) >= 1f)
                 {
                     GameObject.Destroy(gameObject);
                     return;
                 }
             }
+        }
+
+        public void DoNearMiss()
+        {
+            miss = true;
+            Jukebox.PlayOneShot("miss");
+            Rigidbody2D rb = GetComponent<Rigidbody2D>();
+            rb.simulated = true;
+            rb.WakeUp();
+            rb.velocity = Vector3.zero;
+            rb.gravityScale = 10f;
+            rb.AddForce(Vector2.up * 10, ForceMode2D.Impulse);
+            rb.AddForce(Vector2.right * -10, ForceMode2D.Impulse);
+        }
+
+        public void DoThrough()
+        {
+            miss = true;
         }
     }
 }
