@@ -152,6 +152,7 @@ namespace HeavenStudio.Games.Scripts_KarateMan
                 {
                     //start a forced-fail combo sequence
                     ForceFailCombo(cond.songPositionInBeats);
+                    KarateMan.instance.ScoreMiss(2);
                 }
             }
             else if (PlayerInput.AltPressedUp())

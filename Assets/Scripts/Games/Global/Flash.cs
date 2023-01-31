@@ -43,10 +43,6 @@ namespace HeavenStudio.Games.Global
 
         public void OnBeatChanged(float beat)
         {
-            // I really need to create a class for objects that are constant like the Spaceball Camera
-            // startColor = new Color(1, 1, 1, 0);
-            // endColor = new Color(1, 1, 1, 0);
-
             allFadeEvents = EventCaller.GetAllInGameManagerList("vfx", new string[] { "flash" });
             Test(beat);
 

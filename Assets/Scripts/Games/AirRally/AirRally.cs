@@ -18,27 +18,29 @@ namespace HeavenStudio.Games.Loaders
             {
                 new GameAction("set distance", "Set Distance")
                 {
-                    function = delegate { AirRally.instance.SetDistance(e.currentEntity["type"]); }, 
+                    function = delegate { AirRally.instance.SetDistance(e.currentEntity["type"], e.currentEntity["inst"]); }, 
                     defaultLength = .5f, 
                     parameters = new List<Param>()
                     {
-                        new Param("type", AirRally.DistanceSound.close, "Type", "How far is Forthington?")
+                        new Param("type", AirRally.DistanceSound.close, "Type", "How far is Forthington?"),
+                        new Param("inst", false, "Instant", "Instantly move Forthington")
                     }
                 },
                 //new GameAction("start rally",                    delegate { AirRally.instance.StartRally(true); }, .5f, false),
                 new GameAction("rally", "Rally")
                 {
-                    function = delegate { AirRally.instance.Rally(e.currentEntity.beat, e.currentEntity["toggle"], e.currentEntity.length); }, 
+                    function = delegate { AirRally.instance.SetDistance(e.currentEntity["type"]); AirRally.instance.Rally(e.currentEntity.beat, e.currentEntity["toggle"], e.currentEntity.length); }, 
                     defaultLength = 2f, 
                     resizable = true, 
                     parameters = new List<Param>()
                     { 
                         new Param("toggle", false, "Silent", "Make Forthington Silent"),
+                        new Param("type", AirRally.DistanceSound.close, "Type", "How far is Forthington?")
                     }
                 },
                 new GameAction("ba bum bum bum", "Ba Bum Bum Bum")
                 {
-                    function = delegate { AirRally.instance.BaBumBumBum(e.currentEntity.beat, e.currentEntity["toggle"], e.currentEntity["type"]); }, 
+                    function = delegate { AirRally.instance.SetDistance(e.currentEntity["type"]); AirRally.instance.BaBumBumBum(e.currentEntity.beat, e.currentEntity["toggle"], e.currentEntity["type"]); }, 
                     defaultLength = 7f, 
                     parameters = new List<Param>()
                     { 
@@ -167,80 +169,32 @@ namespace HeavenStudio.Games
             four
         }
 
-        public void SpawnObject(float beat, int type)
+        public void ServeObject(float beat, float targetBeat, bool type)
         {
-            BezierCurve3D curve = null;
-
-            switch (type)
-            {
-                case (int)DistanceSound.close:
-                    curve = closeRallyCurve;
-                    break;
-                case (int)DistanceSound.far:
-                    curve = farRallyCurve;
-                    break;
-                case (int)DistanceSound.farther:
-                    curve = fartherRallyCurve;
-                    break;
-                case (int)DistanceSound.farthest:
-                    curve = farthestRallyCurve;
-                    break;
-            }
-
-            //curve.KeyPoints[0].transform.position = new Vector3(holderPos.position.x, holderPos.position.y, wayPointZForForth);
-
             if (!shuttleActive)
             {
                 ActiveShuttle = GameObject.Instantiate(Shuttlecock, objHolder.transform);
-                ActiveShuttle.AddComponent<Shuttlecock>();
+                ActiveShuttle.SetActive(true);
             }
             
             var shuttleScript = ActiveShuttle.GetComponent<Shuttlecock>();
             shuttleScript.flyPos = 0f;
             shuttleScript.isReturning = false;
-            shuttleScript.startBeat = (int)Conductor.instance.songPositionInBeats;
-            shuttleScript.curve = curve;
-            //float normalizedBeatAnim = Conductor.instance.GetPositionFromBeat(beat, 3f);
-
-            //ActiveShuttle.transform.position = curve.GetPoint(normalizedBeatAnim);
-            ActiveShuttle.transform.rotation = Quaternion.Euler(0, 0, 0);
-            ActiveShuttle.SetActive(true);
+            shuttleScript.startBeat = beat;
+            shuttleScript.flyBeats = targetBeat - beat;
+            shuttleScript.flyType = type;
+            
             shuttleActive = true;
-
         }
 
-        public void ReturnObject(float beat, int type)
+        public void ReturnObject(float beat, float targetBeat, bool type)
         {
-            
-            BezierCurve3D curve = null;
-            switch (type)
-            {
-                case (int)DistanceSound.close:
-                    curve = closeRallyCurve;
-                    break;
-                case (int)DistanceSound.far:
-                    curve = farRallyCurve;
-                    break;
-                case (int)DistanceSound.farther:
-                    curve = fartherRallyCurve;
-                    break;
-                case (int)DistanceSound.farthest:
-                    curve = farthestRallyCurve;
-                    break;
-            }
-
-            ActiveShuttle.transform.localPosition = curve.KeyPoints[0].transform.position;
             var shuttleScript = ActiveShuttle.GetComponent<Shuttlecock>();
             shuttleScript.flyPos = 0f;
             shuttleScript.isReturning = true;
             shuttleScript.startBeat = beat;
-            //shuttleScript.curve = closeRallyReturnCurve;
-            //float normalizedBeatAnim = Conductor.instance.GetPositionFromBeat(beat, 3f);
-
-            //ActiveShuttle.transform.position = curve.GetPoint(normalizedBeatAnim);
-            ActiveShuttle.transform.rotation = Quaternion.Euler(0, 0, 0);
-
-            
+            shuttleScript.flyBeats = targetBeat - beat;
+            shuttleScript.flyType = type;
         }
 
         //change to something more optimized
@@ -325,22 +279,35 @@ namespace HeavenStudio.Games
             }
         }
 
-        public void SetDistance(int type)
+        public void SetDistance(int type, bool instant = false)
         {
             switch (type)
             {
                 case 0:
                     e_BaBumState = DistanceSound.close;
+                    wayPointZForForth = 3.55f;
                     break;
                 case 1:
                     e_BaBumState = DistanceSound.far;
+                    wayPointZForForth = 35.16f;
                     break;
                 case 2:
                     e_BaBumState = DistanceSound.farther;
+                    wayPointZForForth = 105.16f;
                     break;
                 case 3:
                     e_BaBumState = DistanceSound.farthest;
+                    wayPointZForForth = 255.16f;
                     break;     
+            }
+            if (instant)
+            {
+                tweenForForth.Kill();
+                Forthington.gameObject.transform.position = new Vector3(Forthington.gameObject.transform.position.x, Forthington.gameObject.transform.position.y, wayPointZForForth);
+            }
+            else
+            {
+                tweenForForth = Forthington.gameObject.transform.DOMoveZ(wayPointZForForth, .15f);
             }
         }
 
@@ -365,69 +332,62 @@ namespace HeavenStudio.Games
                 {
                     //new BeatAction.Action(beat, delegate { Forthington.GetComponent<Animator>().Play("Ready");} ),
                     new BeatAction.Action(beat, delegate { Forthington.GetComponent<Animator>().Play("Hit");} ),
-                    //new BeatAction.Action(beat, delegate { SpawnObject(beat, (int)e_BaBumState); } ),
+                    new BeatAction.Action(beat, delegate { ServeObject(beat, beat + 1, false); } ),
                 });
 
+                string wooshSnd = "airRally/whooshForth_Close";
                 switch (e_BaBumState)
                 {
                     case DistanceSound.close:
-                        wayPointZForForth = 3.55f;
-                        
-                        tweenForForth = Forthington.gameObject.transform.DOMoveZ(wayPointZForForth, .15f);
+                        wooshSnd = "airRally/whooshForth_Close";
                         BeatAction.New(gameObject, new List<BeatAction.Action>()
                         {
                             new BeatAction.Action(beat, delegate { Baxter.GetComponent<Animator>().Play("CloseReady"); }),
                             new BeatAction.Action(beat, delegate { Jukebox.PlayOneShotGame("airRally/hitForth_Close"); }),
-                            new BeatAction.Action(beat, delegate { if(!silent) { Jukebox.PlayOneShotGame("airRally/nya_Close"); } }),
-                            new BeatAction.Action(beat + .25f, delegate { Jukebox.PlayOneShotGame("airRally/whooshForth_Close");}),
+                            new BeatAction.Action(beat, delegate { if(!(silent || babum)) { Jukebox.PlayOneShotGame("airRally/nya_Close"); } }),
                             new BeatAction.Action(beat + 1f, delegate { if(!babum) { Forthington.GetComponent<Animator>().Play("Ready"); } }),
                         });
                         break;
 
                     case DistanceSound.far:
-                        wayPointZForForth = 35.16f;
-
-                        tweenForForth = Forthington.gameObject.transform.DOMoveZ(wayPointZForForth, .15f);
+                        wooshSnd = "airRally/whooshForth_Far";
                         BeatAction.New(gameObject, new List<BeatAction.Action>()
                         {
                             new BeatAction.Action(beat, delegate { Baxter.GetComponent<Animator>().Play("FarReady"); }),
                             new BeatAction.Action(beat, delegate { Jukebox.PlayOneShotGame("airRally/hitForth_Far"); }),
-                            new BeatAction.Action(beat, delegate { if(!silent) { Jukebox.PlayOneShotGame("airRally/nya_Far"); } }),
-                            new BeatAction.Action(beat + .25f, delegate { Jukebox.PlayOneShotGame("airRally/whooshForth_Far");}),
+                            new BeatAction.Action(beat, delegate { if(!(silent || babum)) { Jukebox.PlayOneShotGame("airRally/nya_Far"); } }),
                             new BeatAction.Action(beat + 1f, delegate { if(!babum) { Forthington.GetComponent<Animator>().Play("Ready"); } }),
                         });
                         break;
 
                     case DistanceSound.farther:
-                        wayPointZForForth = 105.16f;
-
-                        tweenForForth = Forthington.gameObject.transform.DOMoveZ(wayPointZForForth, .15f);
+                        wooshSnd = "airRally/whooshForth_Farther";
                         BeatAction.New(gameObject, new List<BeatAction.Action>()
                         {
                             new BeatAction.Action(beat, delegate { Baxter.GetComponent<Animator>().Play("FarReady"); }),
                             new BeatAction.Action(beat, delegate { Jukebox.PlayOneShotGame("airRally/hitForth_Farther"); }),
-                            new BeatAction.Action(beat, delegate { if(!silent) { Jukebox.PlayOneShotGame("airRally/nya_Farther"); } }),
-                            new BeatAction.Action(beat + .25f, delegate { Jukebox.PlayOneShotGame("airRally/whooshForth_Farther");}),
+                            new BeatAction.Action(beat, delegate { if(!(silent || babum)) { Jukebox.PlayOneShotGame("airRally/nya_Farther"); } }),
                             new BeatAction.Action(beat + 1f, delegate { if(!babum) { Forthington.GetComponent<Animator>().Play("Ready"); } }),
                         });
                         break;
 
                     case DistanceSound.farthest:
-                        wayPointZForForth = 255.16f;
-
-                        tweenForForth = Forthington.gameObject.transform.DOMoveZ(wayPointZForForth, .15f);
+                        wooshSnd = "airRally/whooshForth_Farthest";
                         BeatAction.New(gameObject, new List<BeatAction.Action>()
                         {
                             new BeatAction.Action(beat, delegate { Baxter.GetComponent<Animator>().Play("FarReady"); }),
                             new BeatAction.Action(beat, delegate { Jukebox.PlayOneShotGame("airRally/hitForth_Farthest"); }),
-                            new BeatAction.Action(beat, delegate { if(!silent) { Jukebox.PlayOneShotGame("airRally/nya_Farthest"); } }),
-                            new BeatAction.Action(beat + .25f, delegate { Jukebox.PlayOneShotGame("airRally/whooshForth_Farthest");}),
+                            new BeatAction.Action(beat, delegate { if(!(silent || babum)) { Jukebox.PlayOneShotGame("airRally/nya_Farthest"); } }),
                             new BeatAction.Action(beat + 1f, delegate { if(!babum) { Forthington.GetComponent<Animator>().Play("Ready"); } }),
                         });
                         break;
                 }
                 //SpawnObject(beat, (int)e_BaBumState);
                 ScheduleInput(beat, 1f, InputType.STANDARD_DOWN, RallyOnHit, RallyOnMiss, RallyEmpty);
+
+                MultiSound.Play(new MultiSound.Sound[] {
+                    new MultiSound.Sound(wooshSnd, beat+.25f),
+                });
 
                 //restart rally
                 if (lengthShown == lengthHolder || lengthShown >= lengthHolder)
@@ -447,11 +407,6 @@ namespace HeavenStudio.Games
             serveBeat = 0f;
             lengthShown = 0f;
             lengthHolder = 0f;
-
-            //if (!ActiveShuttle)
-            //{
-            //    SpawnObject(beat, (int)e_BaBumState);
-            //}
 
             string[] sounds = { "", "", "", "", "", ""};
             string[] sounds2 = { "", "", "" };
@@ -523,22 +478,23 @@ namespace HeavenStudio.Games
             {
                 new BeatAction.Action(beat + 1.5f, delegate { Forthington.GetComponent<Animator>().Play("Ready"); }),
                 new BeatAction.Action(beat + 2.5f, delegate { if(babum) { Forthington.GetComponent<Animator>().Play("Hit"); } }),
+                new BeatAction.Action(beat + 2.5f, delegate { ServeObject(beat + 2.5f, beat + 4.5f, true); } ),
                 new BeatAction.Action(beat + 3.5f, delegate { Forthington.GetComponent<Animator>().Play("TalkShort"); }),
                 new BeatAction.Action(beat + 4f, delegate { if(!count) Forthington.GetComponent<Animator>().Play("TalkShort"); }),
                 new BeatAction.Action(beat + 4.5f, delegate { Forthington.GetComponent<Animator>().Play("Ready"); }),
                 new BeatAction.Action(beat + 7f, delegate { if(babum) { babum = false; } }),
             });
 
-            BeatAction.New(gameObject, new List<BeatAction.Action>() //MultiSound.Sound sounds weird
-            {
-                new BeatAction.Action(beat, delegate { Jukebox.PlayOneShotGame(sounds[0]); }),
-                new BeatAction.Action(beat + .5f, delegate { Jukebox.PlayOneShotGame(sounds[1]); }),
-                new BeatAction.Action(beat + 1.5f, delegate { Jukebox.PlayOneShotGame(sounds[2]); }),
-                new BeatAction.Action(beat + 2.5f, delegate { Jukebox.PlayOneShotGame(sounds[3]); }),
-                new BeatAction.Action(beat + 2.5f, delegate { Jukebox.PlayOneShotGame(sounds[4]); }),
-                new BeatAction.Action(beat + 3f, delegate { Jukebox.PlayOneShotGame(sounds[5]); }),
-                new BeatAction.Action(beat + 3.5f, delegate { if(e_BaBumState == DistanceSound.far) { Jukebox.PlayOneShotGame("airRally/whooshForth_Far2"); } }),
+            MultiSound.Play(new MultiSound.Sound[] {
+                new MultiSound.Sound(sounds[0], beat),
+                new MultiSound.Sound(sounds[1], beat + .5f),
+                new MultiSound.Sound(sounds[2], beat + 1.5f),
+                new MultiSound.Sound(sounds[3], beat + 2.5f),
+                new MultiSound.Sound(sounds[4], beat + 2.5f),
+                new MultiSound.Sound(sounds[5], beat + 3f),
             });
+            if(e_BaBumState == DistanceSound.far)
+                MultiSound.Play(new MultiSound.Sound[] { new MultiSound.Sound("airRally/whooshForth_Far2", beat + 3.5f) });
 
             if (count)
             {
@@ -546,59 +502,94 @@ namespace HeavenStudio.Games
                 var sound2 = new MultiSound.Sound[]
                 {
                     new MultiSound.Sound(sounds2[0], beat + 3.5f),
-                    new MultiSound.Sound(sounds2[1], beat + 4.3f),
+                    new MultiSound.Sound(sounds2[1], beat + 4.3f),  //TODO: find sound offset in seconds
                     new MultiSound.Sound(sounds2[2], beat + 5.4f)
                 };
 
                 MultiSound.Play(sound2);
             }
 
-            ScheduleInput(beat, 4.5f, InputType.STANDARD_DOWN, RallyOnHit, RallyOnMiss, RallyEmpty);
+            ScheduleInput(beat, 4.5f, InputType.STANDARD_DOWN, LongShotOnHit, RallyOnMiss, RallyEmpty);
         }
 
-        public void RallyOnHit(PlayerActionEvent caller, float beat)
+        public void RallyOnHit(PlayerActionEvent caller, float state)
         {
             Baxter.GetComponent<Animator>().Play("Hit");
-            hasMissed = false;
 
-            if (e_BaBumState == DistanceSound.close)
-            {
-                Jukebox.PlayOneShotGame("airRally/hitBaxter_Close");
-            }
-            if (e_BaBumState == DistanceSound.far)
-            {
-                Jukebox.PlayOneShotGame("airRally/hitBaxter_Far");
-            }
-            if (e_BaBumState == DistanceSound.farther)
-            {
-                Jukebox.PlayOneShotGame("airRally/hitBaxter_Farther");
-            }
-            if (e_BaBumState == DistanceSound.farthest)
-            {
-                Jukebox.PlayOneShotGame("airRally/hitBaxter_Farthest");
-            }
-           
-            if (beatHolder % 2 == 0)
-            {
-                //ReturnObject(beatHolder + 1, 0);
-                //Debug.Log("a");
+            if (state >= 1 || state <= -1)
+            { 
+                ActiveShuttle.GetComponent<Shuttlecock>().DoNearMiss();
+                hasMissed = true;
+                shuttleActive = false;
+                ActiveShuttle = null;
             }
             else
             {
-                //ReturnObject(beatHolder + 1, 0);
-                //Debug.Log("b");
+                ReturnObject(Conductor.instance.songPositionInBeats, caller.startBeat + caller.timer + 1f, false);
+                hasMissed = false;
 
+                if (e_BaBumState == DistanceSound.close)
+                {
+                    Jukebox.PlayOneShotGame("airRally/hitBaxter_Close");
+                }
+                if (e_BaBumState == DistanceSound.far)
+                {
+                    Jukebox.PlayOneShotGame("airRally/hitBaxter_Far");
+                }
+                if (e_BaBumState == DistanceSound.farther)
+                {
+                    Jukebox.PlayOneShotGame("airRally/hitBaxter_Farther");
+                }
+                if (e_BaBumState == DistanceSound.farthest)
+                {
+                    Jukebox.PlayOneShotGame("airRally/hitBaxter_Farthest");
+                }
             }
+            served = false;
+        }
 
-            //Debug.Log("BeatHolder: " + beatHolder);
+        public void LongShotOnHit(PlayerActionEvent caller, float state)
+        {
+            Baxter.GetComponent<Animator>().Play("Hit");
+
+            if (state >= 1 || state <= -1)
+            { 
+                ActiveShuttle.GetComponent<Shuttlecock>().DoThrough();
+                hasMissed = true;
+                shuttleActive = false;
+            }
+            else
+            {
+                ReturnObject(Conductor.instance.songPositionInBeats, caller.startBeat + caller.timer + 2f, true);
+                hasMissed = false;
+
+                if (e_BaBumState == DistanceSound.close)
+                {
+                    Jukebox.PlayOneShotGame("airRally/hitBaxter_Close");
+                }
+                if (e_BaBumState == DistanceSound.far)
+                {
+                    Jukebox.PlayOneShotGame("airRally/hitBaxter_Far");
+                }
+                if (e_BaBumState == DistanceSound.farther)
+                {
+                    Jukebox.PlayOneShotGame("airRally/hitBaxter_Farther");
+                }
+                if (e_BaBumState == DistanceSound.farthest)
+                {
+                    Jukebox.PlayOneShotGame("airRally/hitBaxter_Farthest");
+                }
+            }
             served = false;
         }
 
         public void RallyOnMiss(PlayerActionEvent caller)
         {
+            ActiveShuttle.GetComponent<Shuttlecock>().DoThrough();
             served = false;
             hasMissed = true;
             shuttleActive = false;
+            ActiveShuttle = null;
         }
 
         public void RallyEmpty(PlayerActionEvent caller)
