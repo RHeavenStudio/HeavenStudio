@@ -744,7 +744,6 @@ MonoBehaviour:
   high: 0
   Holder: {fileID: 6584942078379596564}
   Sprite: {fileID: 6584942078979342752}
-  refAnim: {fileID: 0}
   pitchLowCurve: {fileID: 6506079467901904364}
   pitchHighCurve: {fileID: 8317586085261478781}
 --- !u!1 &6584942079616426642
@@ -6348,7 +6347,11 @@ MonoBehaviour:
   BallsHolder: {fileID: 6584942079139059257}
   Dispenser: {fileID: 6584942078977133660}
   Dust: {fileID: 6584942080175284543}
-  BallSprites: []
+  BallSprites:
+  - {fileID: 21300000, guid: fd733e2c15cee3c45833588b6ca7dbb9, type: 3}
+  - {fileID: 21300000, guid: 4a309d486a5074d4bbe8276af96a7466, type: 3}
+  - {fileID: 3906657198060525574, guid: de9e3e71d21bccc49b0f8973960575b1, type: 3}
+  - {fileID: -6283416824598814145, guid: 868cd67f05ca7c646bae00fcc2ba7eaa, type: 3}
   alien: {fileID: 6584942079671387193}
 --- !u!1 &7320610717660946107
 GameObject:
