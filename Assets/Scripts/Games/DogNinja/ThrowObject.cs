@@ -10,13 +10,13 @@ namespace HeavenStudio.Games.Scripts_DogNinja
 {
     public class ThrowObject : PlayerActionObject
     {
-        const float rotSpeed = 360f;
         public float startBeat;
         public int type;
-        public bool fromLeft;
-        public bool needBop = true;
+        public bool leftie;
+        public string textObj;
+        public bool textTrue;
 
-        string sfxNum = "dogNinja/";
+        public string sfxNum = "dogNinja/";
         bool flying = true;
         float flyBeats;
 
@@ -27,50 +27,59 @@ namespace HeavenStudio.Games.Scripts_DogNinja
         public GameObject ObjectBase;
 
         [Header("Curves")]
-        public BezierCurve3D leftCurve;
-        public BezierCurve3D rightCurve;
+        public BezierCurve3D curve;
 
         private DogNinja game;
         
         private void Awake()
         {
             game = DogNinja.instance;
-
-            
         }
 
         private void Start()
         {
-            switch (type) {
-                case 1:
-                    sfxNum += "bone";
-                    break;
-                case 5:
-                    sfxNum += "pan";
-                    break;
-                case 8:
-                    sfxNum += "tire";
-                    break;
-                case 9:
-                    sfxNum += "tacobell";
-                    break;
-                default:
-                    sfxNum += "fruit";
-                    break;
+            if (!textTrue) {
+                switch (type) {
+                    case 1:
+                        sfxNum += "bone";
+                        break;
+                    case 5:
+                        sfxNum += "pan";
+                        break;
+                    case 8:
+                        sfxNum += "tire";
+                        break;
+                    case 9:
+                        sfxNum += "tacobell";
+                        break;
+                    default:
+                        sfxNum += "fruit";
+                        break;
+                }
             }
 
             Jukebox.PlayOneShotGame(sfxNum+"1");
         
             game.ScheduleInput(startBeat, 1f, InputType.STANDARD_DOWN, Hit, Out, Miss);
             
-            
-
             //debug stuff below
-            Debug.Log("it's a "+sfxNum);
+            Debug.Log("it's a "+sfxNum+" and a leftie? ("+leftie+")");
         }
 
         private void Update()
         {
+            var cond = Conductor.instance;
+
+            float flyPos = cond.GetPositionFromBeat(startBeat, 1);
+            flyPos *= 1f;
+            transform.position = curve.GetPoint(flyPos);
+            
+            
+            /*float flyPos = 0;
+            flyPos += 0.5f;
+
+            transform.position = curve.GetPoint(flyPos);
+            
             /* if (flying)
             {
                 var cond = Conductor.instance;
@@ -89,14 +98,12 @@ namespace HeavenStudio.Games.Scripts_DogNinja
 
         void CutObject()
         {
-            needBop = false;
             DogAnim.Play("Slice", 0, 0);
             Jukebox.PlayOneShotGame(sfxNum+"2");
 
             //SpawnHalves();
 
             GameObject.Destroy(gameObject);
-            needBop = true;
         }
 
         private void Hit(PlayerActionEvent caller, float state)
@@ -109,12 +116,9 @@ namespace HeavenStudio.Games.Scripts_DogNinja
 
         private void Miss(PlayerActionEvent caller) 
         {
-            BeatAction.New(game.gameObject, new List<BeatAction.Action>()
-            {
-                new BeatAction.Action(startBeat+ 2.45f, delegate { 
+            /* new BeatAction.Action(startBeat+ 2.45f, delegate { 
                     Destroy(this.gameObject);
-                }),
-            });
+            }); */
         }
 
         private void Out(PlayerActionEvent caller) {}

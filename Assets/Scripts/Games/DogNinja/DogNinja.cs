@@ -24,20 +24,24 @@ namespace HeavenStudio.Games.Loaders
                 },
                 new GameAction("ThrowObjectLeft", "Throw Left Object")
                 {
-                    function = delegate { DogNinja.instance.ThrowObject(eventCaller.currentEntity.beat, eventCaller.currentEntity["type"], true); }, 
+                    function = delegate { DogNinja.instance.ThrowObject(eventCaller.currentEntity.beat, eventCaller.currentEntity["toggle"], eventCaller.currentEntity["type"], eventCaller.currentEntity["text"], true); }, 
                     defaultLength = 2,
                     parameters = new List<Param>()
                     {
+                        new Param("toggle", true, "Random Fruit", "Randomize the fruit"),
                         new Param("type", DogNinja.ObjectType.Apple, "Object", "The object to be thrown"),
+                        new Param("text", "", "Alt. Objects", "An alternative object; one that doesn't exist in the main menu"),
                     }
                 },
                 new GameAction("ThrowObjectRight", "Throw Right Object")
                 {
-                    function = delegate { DogNinja.instance.ThrowObject(eventCaller.currentEntity.beat, eventCaller.currentEntity["type"], false); }, 
+                    function = delegate { DogNinja.instance.ThrowObject(eventCaller.currentEntity.beat, eventCaller.currentEntity["toggle"], eventCaller.currentEntity["type"], eventCaller.currentEntity["text"], false); }, 
                     defaultLength = 2,
                     parameters = new List<Param>()
                     {
+                        new Param("toggle", true, "Random Fruit", "Randomize the fruit"),
                         new Param("type", DogNinja.ObjectType.Apple, "Object", "The object to be thrown"),
+                        new Param("text", "", "Alt. Objects", "An alternative object; one that doesn't exist in the main menu"),
                     }
                 },
                 new GameAction("CutEverything", "Cut Everything!")
@@ -78,6 +82,8 @@ namespace HeavenStudio.Games
         public Transform ObjectHolder;
         public Transform HalvesHolder;
         public SpriteRenderer WhichObject;
+        public SpriteRenderer WhichLeftHalf;
+        public SpriteRenderer WhichRightHalf;
         
         [Header("Curves")]
         public BezierCurve3D CurveFromLeft;
@@ -85,10 +91,12 @@ namespace HeavenStudio.Games
 
         public Sprite[] ObjectTypes;
         public Sprite[] ObjectHalves;
+        public Sprite[] CustomObjects;
 
         private float lastReportedBeat = 0f;
         private bool birdOnScreen = false;
-        private bool bopOn = true;
+        private bool permaBop = true;
+        public static bool dontBop = false;
         
         public static DogNinja instance;
 
@@ -103,7 +111,13 @@ namespace HeavenStudio.Games
             Pepper,     // 6, fruit
             Potato,     // 7, fruit
             Tire,       // 8, tire
-            TacoBell,   // 9, tacobell
+            Custom,     // 9, NULL
+        }
+
+        public enum CustomObject
+        {
+            TacoBell,
+            NecoArc,
         }
         
         private void Awake()
@@ -113,14 +127,16 @@ namespace HeavenStudio.Games
 
         private void Update()
         {
-            if (Conductor.instance.ReportBeat(ref lastReportedBeat) && bopOn)
+            //Debug.Log(rnd.NextDouble());
+            
+            if (Conductor.instance.ReportBeat(ref lastReportedBeat) && DogAnim.IsAnimationNotPlaying())
             {
-                DogAnim.Play("Bop", 0, 0);
+                DogAnim.DoScaledAnimationAsync("Bop", 0.5f);
             }
 
             if (PlayerInput.Pressed())
             {
-                DogAnim.Play("Slice", 0, 0);
+                DogAnim.DoScaledAnimationAsync("Bop", 0.5f);
             }
             
             if (Input.GetKeyDown(KeyCode.D))
@@ -135,22 +151,34 @@ namespace HeavenStudio.Games
             //if (manual) { DogAnim.Play("Bop", 0, 0); }
 
             if (bop) {
-                bopOn = true;
+                dontBop = true;
             } else {
-                bopOn = false;
+                dontBop = false;
             }
         }
 
-        public void ThrowObject(float beat, int ObjType, bool fromLeft)
+        public void ThrowObject(float beat, bool isRandom, int ObjType, string textObj, bool fromLeft)
         {
+            /* if (textObj) {
+                switch (textObj)
+                {
+                    case "KarateMan":
+                    int ObjType = ; 
+                    break;
+                    default:
+                }
+            } */
+            
             WhichObject.sprite = ObjectTypes[ObjType];
             
             ThrowObject Object = Instantiate(ObjectBase).GetComponent<ThrowObject>();
             Object.startBeat = beat;
             Object.type = ObjType;
-            Object.fromLeft = fromLeft;
-            Object.leftCurve = CurveFromLeft;
-            Object.rightCurve = CurveFromRight;
+            Object.curve = fromLeft ? CurveFromLeft : CurveFromRight;
+            if (ObjType == 9) {
+                Object.sfxNum = "dogNinja/"+textObj;
+                Object.textTrue = true;
+            }
         }
 
         public void CutEverything(float beat, bool sound)
