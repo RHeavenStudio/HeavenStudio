@@ -1410,7 +1410,118 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 88781b295be0fe245b61208a9de66199, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  SoundSequences: []
+  SoundSequences:
+  - name: susume
+    sequence:
+      game: 1
+      force: 1
+      clips:
+      - clip: march1
+        beat: 0
+        pitch: 0
+        volume: 0
+        looping: 0
+        offset: 0
+        parameters: []
+      - clip: march2
+        beat: 0.25
+        pitch: 0
+        volume: 0
+        looping: 0
+        offset: 0
+        parameters: []
+      - clip: march3
+        beat: 0.5
+        pitch: 0
+        volume: 0
+        looping: 0
+        offset: 0
+        parameters: []
+  - name: zentai
+    sequence:
+      game: 1
+      force: 1
+      clips:
+      - clip: attention1
+        beat: 0
+        pitch: 0
+        volume: 0
+        looping: 0
+        offset: 0
+        parameters: []
+      - clip: attention2
+        beat: 0.5
+        pitch: 0
+        volume: 0
+        looping: 0
+        offset: 0
+        parameters: []
+  - name: migi_muke_migi
+    sequence:
+      game: 1
+      force: 1
+      clips:
+      - clip: rightFaceTurn1
+        beat: 0
+        pitch: 0
+        volume: 0
+        looping: 0
+        offset: 0
+        parameters: []
+      - clip: rightFaceTurn2
+        beat: 0.6
+        pitch: 0
+        volume: 0
+        looping: 0
+        offset: 0
+        parameters: []
+      - clip: rightFaceTurn3
+        beat: 1
+        pitch: 0
+        volume: 0
+        looping: 0
+        offset: 0
+        parameters: []
+      - clip: turnAction
+        beat: 2
+        pitch: 0
+        volume: 0
+        looping: 0
+        offset: 0
+        parameters: []
+  - name: hidari_muke_hidari
+    sequence:
+      game: 1
+      force: 1
+      clips:
+      - clip: leftFaceTurn1
+        beat: 0
+        pitch: 0
+        volume: 0
+        looping: 0
+        offset: 0
+        parameters: []
+      - clip: leftFaceTurn2
+        beat: 0.6
+        pitch: 0
+        volume: 0
+        looping: 0
+        offset: 0
+        parameters: []
+      - clip: leftFaceTurn3
+        beat: 1
+        pitch: 0
+        volume: 0
+        looping: 0
+        offset: 0
+        parameters: []
+      - clip: turnAction
+        beat: 2
+        pitch: 0
+        volume: 0
+        looping: 0
+        offset: 0
+        parameters: []
   EligibleHits: []
   scheduledInputs: []
   firstEnable: 0

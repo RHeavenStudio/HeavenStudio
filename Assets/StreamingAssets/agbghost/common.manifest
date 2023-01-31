@@ -1,9 +1,9 @@
 ManifestFileVersion: 0
-CRC: 1873177332
+CRC: 3033804552
 Hashes:
   AssetFileHash:
     serializedVersion: 2
-    Hash: 9052c798106e87f214b20f98acd5ed94
+    Hash: cc9ddac9b09ff5d8e6c6aba6343a0713
   TypeTreeHash:
     serializedVersion: 2
     Hash: a13a5847eb9c6077ad7ed49f7c278395
@@ -42,19 +42,22 @@ ClassTypes:
 SerializeReferenceClassIdentifiers: []
 Assets:
 - Assets/Resources/Sprites/Games/SneakySpirits/Epilouge.png
-- Assets/Resources/Sprites/Games/SneakySpirits/Animations/Tree.anim
+- Assets/Resources/Sprites/Games/SneakySpirits/Animations/Tree/Tree.anim
 - Assets/Resources/Sfx/games/sneakySpirits/rainLoop.ogg
 - Assets/Resources/Sfx/games/sneakySpirits/moving.ogg
+- Assets/Resources/Sprites/Games/SneakySpirits/Animations/Spirit/Spirits.controller
 - Assets/Resources/Games/sneakySpirits.prefab
 - Assets/Resources/Sprites/Games/SneakySpirits/SneakySpirits.png
-- Assets/Resources/Sprites/Games/SneakySpirits/Animations/Tree_1.controller
+- Assets/Resources/Sprites/Games/SneakySpirits/Animations/Tree/Tree_1.controller
 - Assets/Resources/Sfx/games/sneakySpirits/fading1.ogg
 - Assets/Resources/Sfx/games/sneakySpirits/now.ogg
 - Assets/Resources/Sfx/games/sneakySpirits/hit.ogg
 - Assets/Resources/Sfx/games/sneakySpirits/fading2.ogg
-- Assets/Resources/Sprites/Games/SneakySpirits/Animations/New Animation.anim
+- Assets/Resources/Sprites/Games/SneakySpirits/Animations/Tree/New Animation.anim
 - Assets/Resources/Sprites/Games/SneakySpirits/Prolouge.png
 - Assets/Resources/Sprites/Games/SneakySpirits/Title.png
 - Assets/Resources/Sfx/games/sneakySpirits/fading3.ogg
 - Assets/Resources/Sfx/games/sneakySpirits/silence.ogg
+- Assets/Resources/Sprites/Games/SneakySpirits/Animations/Spirit/Hit.anim
+- Assets/Resources/Sprites/Games/SneakySpirits/Animations/Spirit/Miss.anim
 Dependencies: []

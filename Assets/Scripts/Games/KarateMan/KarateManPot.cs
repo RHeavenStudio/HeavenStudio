@@ -56,6 +56,7 @@ namespace HeavenStudio.Games.Scripts_KarateMan
             Alien,      // path 1
             TacoBell,   // path 1
             Bomb,   // path 1
+            Barrel, // path 1
 
             KickBarrel, // path 1
             KickBomb,   // no path
@@ -133,7 +134,7 @@ namespace HeavenStudio.Games.Scripts_KarateMan
                 case ItemType.Alien:
                     alpha = ItemAlienMap[0];
                     bravo = ItemAlienMap[1];
-                    delta = KarateMan.ItemColor;
+                    delta = KarateMan.BarrelColor;
                     break;
                 case ItemType.Bomb:
                 case ItemType.KickBomb:
@@ -141,11 +142,12 @@ namespace HeavenStudio.Games.Scripts_KarateMan
                     bravo = ItemBombMap[1];
                     delta = KarateMan.ItemColor;
                     break;
+                case ItemType.Barrel:
                 case ItemType.KickBarrel:
                 case ItemType.ComboBarrel:
-                    alpha = ItemBarrelMap[0];
-                    bravo = ItemBarrelMap[1];
-                    delta = ItemBarrelMap[2];
+                    alpha = KarateMan.BarrelColor;//ItemBarrelMap[0];
+                    bravo = KarateMan.BarrelColor;//ItemBarrelMap[1];
+                    delta = KarateMan.BarrelTwoColor;//ItemBarrelMap[2];
                     break;
                 case ItemType.Cooking:
                 case ItemType.CookingLid:
@@ -635,6 +637,13 @@ namespace HeavenStudio.Games.Scripts_KarateMan
                     p.Play();
 
                     break;
+                case ItemType.Barrel:
+                    Jukebox.PlayOneShotGame("karateman/barrelBreak", forcePlay: true);
+                    p = Instantiate(HitParticles[0], HitPosition[1].position, Quaternion.Euler(0, 0, -5f), game.ItemHolder);
+                    p.Play();
+                    p = Instantiate(HitParticles[1], HitPosition[1].position, Quaternion.Euler(0, 0, UnityEngine.Random.Range(0f, 360f)), game.ItemHolder);
+                    p.Play();
+                    break;
                 case ItemType.KickBomb:
                     Jukebox.PlayOneShotGame("karateman/bombKick", forcePlay: true);
                     p = Instantiate(HitParticles[2], ItemCurves[6].GetPoint(0.5f), Quaternion.identity, game.ItemHolder);
@@ -696,6 +705,7 @@ namespace HeavenStudio.Games.Scripts_KarateMan
                 case ItemType.KickBarrel:
                     return 2;
                 case ItemType.Ball:
+                case ItemType.Barrel:
                     if ((KarateMan.instance.IsNoriActive && KarateMan.instance.NoriPerformance >= 0.6f) && KarateMan.HighFlowPunch)
                         return 4;
                     else if (KarateMan.instance.IsNoriActive && KarateMan.HighFlowPunch)

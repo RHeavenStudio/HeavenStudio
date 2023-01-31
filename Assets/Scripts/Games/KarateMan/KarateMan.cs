@@ -135,7 +135,7 @@ namespace HeavenStudio.Games.Loaders
                 },
                 new GameAction("set delay", "Game Delay Modifiers")
                 {
-                    function = delegate { var e = eventCaller.currentEntity; KarateMan.instance.SetDelay(e["valA"], e["valB"], e["valC"]); },
+                    function = delegate { var e = eventCaller.currentEntity; KarateMan.SetDelay(e["valA"], e["valB"], e["valC"]); },
                     defaultLength = 0.5f,
                     parameters = new List<Param>()
                     {
@@ -143,7 +143,7 @@ namespace HeavenStudio.Games.Loaders
                         new Param("valB", new EntityTypes.Float(0f, 10f, 0.5f), "Oh Yeah Delay", "Sets the pot break delay, a delay of 0 is Tengoku Arcade delay"),
                         new Param("valC", new EntityTypes.Float(0f, 10f, 1f), "Face Change Delay", "The face change delay when you punch and object and your face changes")
                     },
-                    inactiveFunction = delegate { var e = eventCaller.currentEntity; KarateMan.instance.SetDelay(e["valA"], e["valB"], e["valC"]); }
+                    inactiveFunction = delegate { var e = eventCaller.currentEntity; KarateMan.SetDelay(e["valA"], e["valB"], e["valC"]); }
                 },
                 new GameAction("set background effects", "Background Appearance")
                 {
@@ -167,15 +167,17 @@ namespace HeavenStudio.Games.Loaders
                 },
                 new GameAction("set object colors", "Object Colors")
                 {
-                    function = delegate { var e = eventCaller.currentEntity; KarateMan.UpdateMaterialColour(e["colorA"], e["colorB"], e["colorC"]); }, 
+                    function = delegate { var e = eventCaller.currentEntity; KarateMan.UpdateMaterialColour(e["colorA"], e["colorB"], e["colorC"], e["colorD"], e["colorE"]); }, 
                     defaultLength = 0.5f,
                     parameters = new List<Param>()
                     {
                         new Param("colorA", new Color(1,1,1,1), "Joe Body Color", "The color to use for Karate Joe's body"),
                         new Param("colorB", new Color(0.81f,0.81f,0.81f,1), "Joe Highlight Color", "The color to use for Karate Joe's highlights"),
                         new Param("colorC", new Color(1,1,1,1), "Item Color", "The color to use for the thrown items"),
+                        new Param("colorD", new Color(115, 77, 69), "Barrel Color", "The item color used for things like barrels"),
+                        new Param("colorE", new Color(115, 77, 69), "Barrel 2nd", "The 2nd color for barrels, in this case the band")
                     },
-                    inactiveFunction = delegate { var e = eventCaller.currentEntity; KarateMan.UpdateMaterialColour(e["colorA"], e["colorB"], e["colorC"]); }
+                    inactiveFunction = delegate { var e = eventCaller.currentEntity; KarateMan.UpdateMaterialColour(e["colorA"], e["colorB"], e["colorC"], e["colorD"], e["colorE"]); }
                 },
                 new GameAction("particle effects", "Particle Effects")
                 {
@@ -317,6 +319,7 @@ namespace HeavenStudio.Games
             CookingPot = 6,
             Alien = 7,
             Bomb = 8,
+            Barrel = 9,
             TacoBell = 999
         }
 
@@ -526,6 +529,8 @@ namespace HeavenStudio.Games
         public static Color BodyColor = Color.white;
         public static Color HighlightColor = Color.white;
         public static Color ItemColor = Color.white;
+        public static Color BarrelColor = new Color(115, 77, 69);
+        public static Color BarrelTwoColor = new Color(182, 79, 108);
 
         [Header("Word")]
         public Animator Word;
@@ -627,7 +632,7 @@ namespace HeavenStudio.Games
             SetBgEffectsToLast(cond.songPositionInBeats);
             SetBgAndShadowCol(WantBgChangeStart, WantBgChangeLength, bgType, (int) currentShadowType, bgColour, customShadowColour, (int)currentBgEffect);
             SetBgTexture(textureType, textureFilterType, filterColour, filterColour);
-            UpdateMaterialColour(BodyColor, HighlightColor, ItemColor);
+            UpdateMaterialColour(BodyColor, HighlightColor, ItemColor, BarrelColor, BarrelTwoColor);
             ToggleBop(WantBop, 1f);
         }
 
@@ -1044,6 +1049,10 @@ namespace HeavenStudio.Games
                 case (int) HitType.Bomb:
                     CreateItemInstance(beat, HitExpressionLength(length), "Item04", expression, KarateManPot.ItemType.Bomb, honkiMode: honki, honkiSound: honkiSound);
                     break;
+                case (int) HitType.Barrel:
+                    outSound = "karateman/barrelOutKicks";
+                    CreateItemInstance(beat, HitExpressionLength(length), "Item05", expression, KarateManPot.ItemType.Barrel, honkiMode: honki, honkiSound: honkiSound);
+                    break;
                 case (int) HitType.TacoBell:
                     CreateItemInstance(beat, HitExpressionLength(length), "Item99", expression, KarateManPot.ItemType.TacoBell, honkiMode: honki, honkiSound: honkiSound);
                     break;
@@ -1183,7 +1192,7 @@ namespace HeavenStudio.Games
                 var e = objfx[i];
                 if (e.beat > beat)
                     break;
-                UpdateMaterialColour(e["colorA"], e["colorB"], e["colorC"]);
+                UpdateMaterialColour(e["colorA"], e["colorB"], e["colorC"], e["colorD"], e["colorE"]);
             }
             SetBgAndShadowCol(WantBgChangeStart, WantBgChangeLength, bgType, (int) currentShadowType, bgColour, customShadowColour, (int)currentBgEffect);
             SetBgTexture(textureType, textureFilterType, filterColour, filterColour);
@@ -1291,7 +1300,7 @@ namespace HeavenStudio.Games
             IsComboEnable = combo;
         }
 
-        public void SetDelay(float breakDelay, float ohYeahDelay, float faceChangeDelay)
+        public static void SetDelay(float breakDelay, float ohYeahDelay, float faceChangeDelay)
         {
             PotBreakDelay = breakDelay;
             OhYeahDelay = ohYeahDelay;
@@ -1349,11 +1358,13 @@ namespace HeavenStudio.Games
             customShadowColour = colour;
         }
 
-        public static void UpdateMaterialColour(Color mainCol, Color highlightCol, Color objectCol)
+        public static void UpdateMaterialColour(Color mainCol, Color highlightCol, Color objectCol, Color barrelCol, Color barrelTwoCol)
         {
             BodyColor = mainCol;
             HighlightColor = highlightCol;
             ItemColor = objectCol;
+            BarrelColor = barrelCol;
+            BarrelTwoColor = barrelTwoCol;
         }
 
         public void SetParticleEffect(float beat, int type, float windStrength, float particleStrength)

@@ -106,7 +106,7 @@ namespace HeavenStudio.Games.Loaders
                     }
                 }, // this cause problems with the background
                 new List<string>() { "agb", "normal" },
-                "agbmarcher", "en", "ver0",
+                "agbmarcher", "jp", "ver0",
                 new List<string>() { "en", "jp" },
                 new List<string>() {}
                 );
@@ -150,7 +150,8 @@ namespace HeavenStudio.Games
         public static Color floorColor;
         public static Color wallColor;
         public static Color fillColor;
-      
+
+        [Header("Game Events")]
         public GameEvent bop = new GameEvent();
         public GameEvent noBop = new GameEvent();
         public GameEvent marching = new GameEvent();
@@ -159,11 +160,6 @@ namespace HeavenStudio.Games
         private int marchPlayerCount;
         private int turnLength;
         private int background;
-        // private bool marchSuru;
-        // private bool beatSuru;
-        private bool autoMarch;
-        private float marchTsugi;
-        private float beatTsugi;
         private float steamTime;
 
         private string fastTurn;
@@ -232,6 +228,7 @@ namespace HeavenStudio.Games
 
             Jukebox.PlayOneShotGame("marchingOrders/stepPlayer", volume: 0.25f);
             CadetPlayer.DoScaledAnimationAsync(marchPlayerCount % 2 != 0 ? "MarchR" : "MarchL", 0.5f);
+            Debug.Log($"March Your Count {marchPlayerCount}");
         }
 
         public void MarchEmpty(PlayerActionEvent caller)
@@ -256,20 +253,27 @@ namespace HeavenStudio.Games
             var cond = Conductor.instance;
             var currBeat = cond.songPositionInBeats;
 
-            if (cond.ReportBeat(ref marching.lastReportedBeat, marching.startBeat % 1))
+            if (cond.ReportBeat(ref marching.lastReportedBeat, marching.startBeat % 1, true))
             {
                 if (currBeat >= marching.startBeat && currBeat < marching.startBeat + marching.length)
                 {
-                    CadetsMarch(marchTsugi + (int) currBeat, marching.length);
+                    marchOtherCount++;
+                    Cadet1.DoScaledAnimationAsync(marchOtherCount % 2 != 0 ? "MarchR" : "MarchL", 0.5f);
+                    Cadet2.DoScaledAnimationAsync(marchOtherCount % 2 != 0 ? "MarchR" : "MarchL", 0.5f);
+                    Cadet3.DoScaledAnimationAsync(marchOtherCount % 2 != 0 ? "MarchR" : "MarchL", 0.5f);
+                    ScheduleInput((int) currBeat - 1f, 1f, InputType.STANDARD_DOWN, MarchHit, GenericMiss, MarchEmpty);
+                    Jukebox.PlayOneShotGame("marchingOrders/stepOther", volume: 0.75f);
+                    Debug.Log($"March Other Count {marchOtherCount}");
                 }
-                //else
-                //marchSuru = false;
             }
-            if (cond.ReportBeat(ref bop.lastReportedBeat, bop.startBeat % 1))
+            if (cond.ReportBeat(ref bop.lastReportedBeat, bop.startBeat % 1, true))
             {
                 if (currBeat >= bop.startBeat && currBeat < bop.startBeat + bop.length)
                 {
-                    Bop(beatTsugi + (int)currBeat, bop.length);
+                    Cadet1.DoScaledAnimationAsync("Bop", 0.5f);
+                    Cadet2.DoScaledAnimationAsync("Bop", 0.5f);
+                    Cadet3.DoScaledAnimationAsync("Bop", 0.5f);
+                    CadetPlayer.DoScaledAnimationAsync("Bop", 0.5f);
                 }
             }
             if (!IsExpectingInputNow(InputType.STANDARD_DOWN))
@@ -285,7 +289,8 @@ namespace HeavenStudio.Games
 
                     CadetPlayer.DoScaledAnimationAsync(marchPlayerAnim, 0.5f);
                 }
-            } else if (!IsExpectingInputNow(InputType.STANDARD_ALT_DOWN))
+            }
+            if (!IsExpectingInputNow(InputType.STANDARD_ALT_DOWN))
             {
                 if (PlayerInput.AltPressed())
                 {
@@ -295,7 +300,8 @@ namespace HeavenStudio.Games
 
                     CadetPlayer.DoScaledAnimationAsync("Halt", 0.5f);
                 }
-            } else if (!IsExpectingInputNow(InputType.DIRECTION_LEFT_DOWN))
+            }
+            if (!IsExpectingInputNow(InputType.DIRECTION_LEFT_DOWN))
             {
                 if (PlayerInput.Pressed(true) && PlayerInput.GetSpecificDirection(PlayerInput.LEFT))
                 {
@@ -305,7 +311,8 @@ namespace HeavenStudio.Games
 
                     CadetHeadPlayer.DoScaledAnimationAsync("FaceL", 0.5f);
                 }
-            } else if (!IsExpectingInputNow(InputType.DIRECTION_RIGHT_DOWN))
+            }
+            if (!IsExpectingInputNow(InputType.DIRECTION_RIGHT_DOWN))
             {    
                 if (PlayerInput.Pressed(true) && PlayerInput.GetSpecificDirection(PlayerInput.RIGHT))
                 {
@@ -330,50 +337,19 @@ namespace HeavenStudio.Games
                 path = null;
         }
 
-        public void Bop(float beat, float length)
-        {
-            // beatSuru = true;
-            beatTsugi += 0f;
-
-            BeatAction.New(gameObject, new List<BeatAction.Action>()
-            {
-                new BeatAction.Action(beat, delegate { Cadet1.DoScaledAnimationAsync("Bop", 0.5f); }),
-                new BeatAction.Action(beat, delegate { Cadet2.DoScaledAnimationAsync("Bop", 0.5f); }),
-                new BeatAction.Action(beat, delegate { Cadet3.DoScaledAnimationAsync("Bop", 0.5f); }),
-                new BeatAction.Action(beat, delegate { CadetPlayer.DoScaledAnimationAsync("Bop", 0.5f); }),
-            });
-        }
-
         public void BopAction(float beat, float length)
         {
             bop.length = length;
             bop.startBeat = beat;
-        }
-
-        public void CadetsMarch(float beat, float length)
-        {
-            marchOtherCount += 1;
-            marchTsugi += 0f;
-            var marchOtherAnim = (marchOtherCount % 2 != 0 ? "MarchR" : "MarchL");
-
-            BeatAction.New(gameObject, new List<BeatAction.Action>()
-            {
-                new BeatAction.Action(beat, delegate { Cadet1.DoScaledAnimationAsync(marchOtherAnim, 0.5f); }),
-                new BeatAction.Action(beat, delegate { Cadet2.DoScaledAnimationAsync(marchOtherAnim, 0.5f); }),
-                new BeatAction.Action(beat, delegate { Cadet3.DoScaledAnimationAsync(marchOtherAnim, 0.5f); }),
-                new BeatAction.Action(beat, delegate { 
-                    if (autoMarch) {CadetPlayer.DoScaledAnimationAsync(marchOtherAnim, 0.5f); 
-                        Jukebox.PlayOneShotGame("marchingOrders/stepPlayer", volume: 0.25f); }
-                    else ScheduleInput(beat - 1f, 1f, InputType.STANDARD_DOWN, MarchHit, GenericMiss, MarchEmpty);})
-            });
-            Jukebox.PlayOneShotGame("marchingOrders/stepOther", volume: 0.75f);
         }
         
         public void MarchAction(float beat, float length, bool auto)
         {
             marching.length = length;
             marching.startBeat = beat;
-            autoMarch = auto;
+
+            marchOtherCount = 0;
+            marchPlayerCount = 0;
         }
 
         public void SargeAttention(float beat)
@@ -392,26 +368,14 @@ namespace HeavenStudio.Games
             marchPlayerCount = 0;
 
             if (!noVoice)
+                Sarge.DoScaledAnimationAsync("Talk", 0.5f);
+            BeatAction.New(gameObject, new List<BeatAction.Action>()
             {
-                BeatAction.New(gameObject, new List<BeatAction.Action>()
-                {
-                new BeatAction.Action(beat,     delegate { Sarge.DoScaledAnimationAsync("Talk", 0.5f);}),
                 new BeatAction.Action(beat + 1f,     delegate { Cadet1.DoScaledAnimationAsync("MarchL", 0.5f);}),
                 new BeatAction.Action(beat + 1f,     delegate { Cadet2.DoScaledAnimationAsync("MarchL", 0.5f);}),
                 new BeatAction.Action(beat + 1f,     delegate { Cadet3.DoScaledAnimationAsync("MarchL", 0.5f);}),
                 new BeatAction.Action(beat + 1f,     delegate { CadetPlayer.DoScaledAnimationAsync("MarchL", 0.5f);}),
-                });
-            }
-            else
-            {
-                BeatAction.New(gameObject, new List<BeatAction.Action>()
-                {
-                new BeatAction.Action(beat + 1f,     delegate { Cadet1.DoScaledAnimationAsync("MarchL", 0.5f);}),
-                new BeatAction.Action(beat + 1f,     delegate { Cadet2.DoScaledAnimationAsync("MarchL", 0.5f);}),
-                new BeatAction.Action(beat + 1f,     delegate { Cadet3.DoScaledAnimationAsync("MarchL", 0.5f);}),
-                new BeatAction.Action(beat + 1f,     delegate { CadetPlayer.DoScaledAnimationAsync("MarchL", 0.5f);}),
-                });
-            }
+            });
         }
         
         public void SargeHalt(float beat)
@@ -420,12 +384,12 @@ namespace HeavenStudio.Games
 
             ScheduleInput(beat, 1f, InputType.STANDARD_ALT_DOWN, HaltHit, GenericMiss, HaltEmpty);
             BeatAction.New(gameObject, new List<BeatAction.Action>() 
-                {
+            {
                 new BeatAction.Action(beat,     delegate { Sarge.DoScaledAnimationAsync("Talk", 0.5f);}),
                 new BeatAction.Action(beat + 1f,     delegate { Cadet1.DoScaledAnimationAsync("Halt", 0.5f);}),
                 new BeatAction.Action(beat + 1f,     delegate { Cadet2.DoScaledAnimationAsync("Halt", 0.5f);}),
                 new BeatAction.Action(beat + 1f,     delegate { Cadet3.DoScaledAnimationAsync("Halt", 0.5f);}),
-                });
+            });
         }
         
         public void SargeFaceTurn(float beat, int type, int type2, bool toggle)
@@ -459,10 +423,10 @@ namespace HeavenStudio.Games
                     else
                     {
                         MultiSound.Play(new MultiSound.Sound[] {
-                        new MultiSound.Sound("marchingOrders/usagiOnna/leftFaceTurn1" + fastTurn, beat),
-                        new MultiSound.Sound("marchingOrders/usagiOnna/leftFaceTurn2" + fastTurn, beat + 0.4f),
-                        new MultiSound.Sound("marchingOrders/usagiOnna/leftFaceTurn3" + fastTurn, beat + 0.6f),
-                        new MultiSound.Sound("marchingOrders/usagiOnna/leftFaceTurn4", beat + turnLength + 1f),
+                        new MultiSound.Sound("marchingOrders/rabbitGirl/leftFaceTurn1" + fastTurn, beat),
+                        new MultiSound.Sound("marchingOrders/rabbitGirl/leftFaceTurn2" + fastTurn, beat + 0.4f),
+                        new MultiSound.Sound("marchingOrders/rabbitGirl/leftFaceTurn3" + fastTurn, beat + 0.6f),
+                        new MultiSound.Sound("marchingOrders/rabbitGirl/leftFaceTurn4", beat + turnLength + 1f),
                         new MultiSound.Sound("marchingOrders/turnAction", beat + turnLength + 2f),
                         }, forcePlay: true);
                     }
@@ -491,10 +455,10 @@ namespace HeavenStudio.Games
                     else
                     {
                         MultiSound.Play(new MultiSound.Sound[] {
-                        new MultiSound.Sound("marchingOrders/usagiOnna/rightFaceTurn1" + fastTurn, beat),
-                        new MultiSound.Sound("marchingOrders/usagiOnna/rightFaceTurn2" + fastTurn, beat + 0.4f),
-                        new MultiSound.Sound("marchingOrders/usagiOnna/rightFaceTurn3" + fastTurn, beat + 0.6f),
-                        new MultiSound.Sound("marchingOrders/usagiOnna/rightFaceTurn4", beat + turnLength + 1f),
+                        new MultiSound.Sound("marchingOrders/rabbitGirl/rightFaceTurn1" + fastTurn, beat),
+                        new MultiSound.Sound("marchingOrders/rabbitGirl/rightFaceTurn2" + fastTurn, beat + 0.4f),
+                        new MultiSound.Sound("marchingOrders/rabbitGirl/rightFaceTurn3" + fastTurn, beat + 0.6f),
+                        new MultiSound.Sound("marchingOrders/rabbitGirl/rightFaceTurn4", beat + turnLength + 1f),
                         new MultiSound.Sound("marchingOrders/turnAction", beat + turnLength + 2f),
                         }, forcePlay: true);
                     }
@@ -512,10 +476,10 @@ namespace HeavenStudio.Games
             }
             
             BeatAction.New(gameObject, new List<BeatAction.Action>() 
-                {
+            {
                 new BeatAction.Action(beat,     delegate { Sarge.DoScaledAnimationAsync("Talk", 0.5f);}),
                 new BeatAction.Action(beat + turnLength + 1f,     delegate { Sarge.DoScaledAnimationAsync("Talk", 0.5f);}),
-                });
+            });
         }
         
         public void BackgroundColorSet(float beat, int type, int colorType, Color pipes, Color floor, Color wall, Color fill)
@@ -571,17 +535,17 @@ namespace HeavenStudio.Games
                 MultiSound.Play(new MultiSound.Sound[] {
                 new MultiSound.Sound("marchingOrders/halt1", beat),
                 new MultiSound.Sound("marchingOrders/halt2", beat + 1f),
-                new MultiSound.Sound("marchingOrders/step1", beat + 1f),
+                new MultiSound.Sound("marchingOrders/stepOther", beat + 1f, volume: 0.75f),
                 }, forcePlay: true);
             }
             else
             {
                 MultiSound.Play(new MultiSound.Sound[] {
-                new MultiSound.Sound("marchingOrders/usagiOnna/halt1", beat),
-                new MultiSound.Sound("marchingOrders/usagiOnna/halt2", beat + 0.2f),
-                new MultiSound.Sound("marchingOrders/usagiOnna/halt3", beat + 0.4f),
+                new MultiSound.Sound("marchingOrders/rabbitGirl/halt1", beat),
+                new MultiSound.Sound("marchingOrders/rabbitGirl/halt2", beat + 0.2f),
+                new MultiSound.Sound("marchingOrders/rabbitGirl/halt3", beat + 0.4f),
                 new MultiSound.Sound("marchingOrders/halt2", beat + 1f),
-                new MultiSound.Sound("marchingOrders/step1", beat + 1f, volume: 0.75f),
+                new MultiSound.Sound("marchingOrders/stepOther", beat + 1f, volume: 0.75f),
                 }, forcePlay: true);
             }
         }

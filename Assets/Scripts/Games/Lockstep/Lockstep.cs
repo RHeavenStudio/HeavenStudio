@@ -56,16 +56,15 @@ namespace HeavenStudio.Games.Loaders
                 new GameAction("marching", "Onbeat Stepping")
                     {
                         function = delegate { var e = eventCaller.currentEntity; Lockstep.instance.OnbeatStep(e.beat, e.length); },
-                        defaultLength = 4f,
-                        resizable = true,
-                        hidden = true
+                        defaultLength = 0.5f,
+                        //hidden = true
                     },
 
                 new GameAction("startStepping", "Start Stepping")
                     {
                         function = delegate { var e = eventCaller.currentEntity; Lockstep.instance.BeginStepping(e.beat); },
                         defaultLength = 1f,
-                        hidden = true
+                        //hidden = true
 
                     },
 
@@ -101,6 +100,7 @@ namespace HeavenStudio.Games
 
         [Header("Properties")]
         public GameEvent bop = new GameEvent();
+        public GameEvent stepping = new GameEvent();
         public bool goStep;
 
         public float steppingLength;
@@ -115,34 +115,31 @@ namespace HeavenStudio.Games
         void Awake()
         {
             instance = this;
-            goStep = false;
         }
 
         // Update is called once per frame
-        public void Update()
+        void Update()
         {
 
             var cond = Conductor.instance;
+            var currBeat = cond.songPositionInBeats;
 
-            if (goStep)
+            if (cond.ReportBeat(ref stepping.lastReportedBeat, stepping.startBeat % 1, true))
             {
-                print("stepping is on");
-                if (Conductor.instance.ReportBeat(ref lastReportedBeat))
+                if (goStep)
                 {
-                    print("one small step for switch");
-                    Jukebox.PlayOneShotGame("Lockstep/marchOnBeat1");
-                    stepswitcherP.DoScaledAnimationAsync("OnbeatMarch", 0.5f);
-                    stepswitcher0.DoScaledAnimationAsync("OnbeatMarch", 0.5f);
-                    stepswitcher1.DoScaledAnimationAsync("OnbeatMarch", 0.5f);
+                    var beatAnimCheck = Math.Round(currBeat * 2);
+                    var stepPlayerAnim = (beatAnimCheck % 2 != 0 ? "OffbeatMarch" : "OnbeatMarch");
+                    stepswitcher0.DoScaledAnimationAsync(stepPlayerAnim, 0.5f);
+                    stepswitcher1.DoScaledAnimationAsync(stepPlayerAnim, 0.5f);
+                    ScheduleInput((int)currBeat - 1f, 1f, InputType.STANDARD_DOWN, Hit, Miss, Blank);
                 }
-
             }
 
 
             if (PlayerInput.Pressed() && !IsExpectingInputNow())
             {
-                //Jukebox.PlayOneShot("miss");
-
+                Jukebox.PlayOneShot("miss");
                 
                 var beatAnimCheck = Math.Round(Conductor.instance.songPositionInBeats * 2);
                 print("check: " + beatAnimCheck);
@@ -231,6 +228,9 @@ namespace HeavenStudio.Games
 
         public void OnbeatStep(float beat, float length)
         {
+            stepping.length = length;
+            stepping.startBeat = beat;
+            goStep = true;
             /*marching.length = length;
             marching.startBeat = beat;
             print("onbeatstep len: " + marching.length);
@@ -242,10 +242,24 @@ namespace HeavenStudio.Games
 
             stepswitcher0.DoScaledAnimationAsync("OnbeatMarch", 0.5f);
             stepswitcher1.DoScaledAnimationAsync("OnbeatMarch", 0.5f);
+
+
+
+        }
+
+        public void Hit(PlayerActionEvent caller, float beat)
+        {
             stepswitcherP.DoScaledAnimationAsync("OnbeatMarch", 0.5f);
             Jukebox.PlayOneShotGame("lockstep/marchOnbeat1");
+        }
 
+        public void Miss(PlayerActionEvent caller)
+        {
 
+        }
+
+        public void Blank(PlayerActionEvent caller)
+        {
 
         }
 

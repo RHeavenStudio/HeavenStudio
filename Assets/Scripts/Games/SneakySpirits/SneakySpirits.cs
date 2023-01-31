@@ -18,7 +18,7 @@ namespace HeavenStudio.Games.Loaders
                     function = delegate { var e = eventCaller.currentEntity; SneakySpirits.instance.SpawnSpirit(e.beat, e["valA"]); },
                     parameters = new List<Param>()
                     {
-                        new Param("valA", new EntityTypes.Integer(1, 8, 8), "Length", "The length until you have to shoot the spirit")
+                        new Param("valA", new EntityTypes.Integer(1, 8, 8), "Num of Beats", "The number of beats until you have to shoot the spirit")
                     }
                 }
             },

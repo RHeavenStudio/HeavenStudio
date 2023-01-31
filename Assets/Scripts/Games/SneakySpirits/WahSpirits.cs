@@ -47,12 +47,14 @@ namespace HeavenStudio.Games.Scripts_SneakySpirits
 
         public void SpiritNG()
         {
-
+            Animator mobjAnim = GetComponent<Animator>();
+            //mobjAnim.Play("Hit", -1, 0);
         }
 
         public void SpiritHit()
         {
-
+            Animator mobjAnim = GetComponent<Animator>();
+            mobjAnim.Play("Hit", -1, 0);
         }
 
         public void SpiritEmpty(PlayerActionEvent caller) { }
