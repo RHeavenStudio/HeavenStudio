@@ -38,14 +38,13 @@ namespace HeavenStudio.Games.Scripts_AirRally
         void Update()
         {
             var cond = Conductor.instance;
-            
+
+            Vector3 startPos = isReturning ? PlayerTarget.position : OtherTarget.position;
+            Vector3 endPos = isReturning ? OtherTarget.position : PlayerTarget.position;
             Vector3 lastPos = transform.position;
             if (!GetComponent<Rigidbody2D>().simulated)
             {
-                float flyPos = cond.GetPositionFromBeat(startBeat, flyBeats);
-
-                Vector3 startPos = isReturning ? PlayerTarget.position : OtherTarget.position;
-                Vector3 endPos = isReturning ? OtherTarget.position : PlayerTarget.position;
+                flyPos = cond.GetPositionFromBeat(startBeat, flyBeats);
 
                 transform.position = Vector3.LerpUnclamped(startPos, endPos, flyPos);
 
@@ -54,11 +53,26 @@ namespace HeavenStudio.Games.Scripts_AirRally
                 transform.position += Vector3.up * yWeight * (flyType ? TargetHeightLong : TargetHeight);
             }
 
-            Vector3 direction = (transform.position - lastPos).normalized;
-            float rotation = Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg;
-            this.transform.eulerAngles = new Vector3(0, 0, rotation - 90f);
+            // calculates next position
+            {
+                float rotation;
+                if (flyPos > 0.5)
+                {
+                    Vector3 midPos = Vector3.LerpUnclamped(startPos, endPos, 0.5f);
+                    midPos += Vector3.up * (flyType ? TargetHeightLong : TargetHeight);
+                    Vector3 direction = (transform.position - midPos).normalized;
+                    rotation = Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg;
+                }
+                else
+                {
+                    Vector3 direction = (transform.position - lastPos).normalized;
+                    rotation = Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg;
+                }
 
-            if (miss && flyPos > 2f)
+                this.transform.eulerAngles = new Vector3(0, 0, rotation - 90f);
+            }
+
+            if (miss && flyPos > 4f)
             {
                 if (cond.GetPositionFromBeat(startBeat, flyBeats + 1f) >= 1f)
                 {
