@@ -179,7 +179,8 @@ namespace HeavenStudio.Games
                 if (PlayerInput.Pressed() && !IsExpectingInputNow(InputType.STANDARD_DOWN))
                 {
                     wrestlerAnim.DoScaledAnimationAsync("Ye", 0.5f);
-                    Jukebox.PlayOneShotGame($"ringside/ye1");
+                    Jukebox.PlayOneShotGame($"ringside/confusedanswer");
+                    if (isPlaying(reporterAnim, "IdleReporter")) reporterAnim.Play("IdleLate", 0, 0);
                 }
                 ReporterBlink();
             }
@@ -566,6 +567,14 @@ namespace HeavenStudio.Games
         {
             if (state >= 1f || state <= -1f)
             {
+                wrestlerAnim.DoScaledAnimationAsync("Ye", 0.5f);
+                Jukebox.PlayOneShotGame($"ringside/cough");
+                reporterAnim.Play("ExtendMiss", 0, 0);
+                BeatAction.New(instance.gameObject, new List<BeatAction.Action>()
+                {
+                    new BeatAction.Action(Conductor.instance.songPositionInBeats + 0.5f, delegate { reporterAnim.Play("IdleMiss", 0, 0); }),
+                    new BeatAction.Action(Conductor.instance.songPositionInBeats + 0.9f, delegate { reporterAnim.Play("IdleReporter", 0, 0); }),
+                });
                 return;
             }
             SuccessQuestion();
@@ -658,7 +667,12 @@ namespace HeavenStudio.Games
 
         public void Miss(PlayerActionEvent caller)
         {
-
+            reporterAnim.Play("ExtendMiss", 0, 0);
+            BeatAction.New(instance.gameObject, new List<BeatAction.Action>()
+            {
+                new BeatAction.Action(Conductor.instance.songPositionInBeats + 0.5f, delegate { reporterAnim.Play("IdleMiss", 0, 0); }),
+                new BeatAction.Action(Conductor.instance.songPositionInBeats + 0.9f, delegate { reporterAnim.Play("IdleReporter", 0, 0); }),
+            });
         }
         
         public void MissPose(PlayerActionEvent caller)
