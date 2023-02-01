@@ -30,7 +30,7 @@ namespace HeavenStudio.Games.Scripts_AirRally
 
         void Start()
         {
-
+            transform.position = OtherTarget.position;
         }
 
         // Update is called once per frame
