@@ -70,8 +70,8 @@ namespace HeavenStudio.Games
         [SerializeField] List<FlipperFlopFlipper> flippers = new List<FlipperFlopFlipper>();
         public struct QueuedFlip
         {
-            public float startBeat;
             public float beat;
+            public float length;
             public bool roll;
             public bool uh;
             public bool thatsIt;
@@ -110,99 +110,9 @@ namespace HeavenStudio.Games
             {
                 if (queuedInputs.Count > 0)
                 {
-                    int flopCount = 1;
-                    int recounts = 0;
-                    for (int i = 0; i < queuedInputs.Count; i++)
-                    {
-                        if (queuedInputs[i].roll)
-                        {
-                            ScheduleInput(queuedInputs[i].startBeat - 1, 1 + i, InputType.STANDARD_ALT_DOWN, JustFlipperRoll, MissFlipperRoll, Nothing);
-
-                            string soundToPlay = $"flipperFlop/count/flopCount{flopCount}";
-
-                            if (recounts == 1)
-                            {
-                                soundToPlay = $"flipperFlop/count/flopCount{flopCount}B";
-                            }
-                            else if (recounts > 1)
-                            {
-                                if (flopCount < 3)
-                                {
-                                    soundToPlay = $"flipperFlop/count/flopCount{flopCount}C";
-                                }
-                                else
-                                {
-                                    soundToPlay = $"flipperFlop/count/flopCount{flopCount}B";
-                                }
-                            }
-
-                            if (queuedInputs[i].thatsIt && i + 1 == queuedInputs.Count)
-                            {
-                                int noiseToPlay = (flopCount == 4) ? 2 : flopCount;
-                                soundToPlay = $"flipperFlop/count/flopNoise{noiseToPlay}";
-                                BeatAction.New(instance.gameObject, new List<BeatAction.Action>()
-                                {
-                                    new BeatAction.Action(queuedInputs[i].startBeat + i, delegate { Jukebox.PlayOneShotGame("flipperFlop/appreciation/thatsit1"); }),
-                                    new BeatAction.Action(queuedInputs[i].startBeat + i, delegate { Jukebox.PlayOneShotGame(soundToPlay); }),
-                                    new BeatAction.Action(queuedInputs[i].startBeat + i + 0.5f, delegate { Jukebox.PlayOneShotGame("flipperFlop/appreciation/thatsit2"); }),
-                                });
-                            }
-                            else
-                            {
-                                BeatAction.New(instance.gameObject, new List<BeatAction.Action>()
-                                {
-                                    new BeatAction.Action(queuedInputs[i].startBeat + i, delegate { Jukebox.PlayOneShotGame(soundToPlay); }),
-                                });
-                            }
-
-                            if (queuedInputs[i].appreciation != (int)AppreciationType.None && !queuedInputs[i].uh && i + 1 == queuedInputs.Count)
-                            {
-                                int voiceLineAppreciation = queuedInputs[i].appreciation;
-                                BeatAction.New(instance.gameObject, new List<BeatAction.Action>()
-                                {
-                                    new BeatAction.Action(queuedInputs[i].startBeat + i + 1f, delegate { FlipperFlop.AppreciationVoiceLine(voiceLineAppreciation); }),
-                                });
-                            }
-
-
-                            if (i + 1 < queuedInputs.Count)
-                            {
-                                flopCount++;
-                            }
-                            if (flopCount > 4)
-                            {
-                                flopCount = 1;
-                                recounts++;
-                            }
-                        }
-                        else
-                        {
-                            ScheduleInput(queuedInputs[i].startBeat - 1, 1 + i, InputType.STANDARD_DOWN, JustFlip, MissFlip, Nothing);
-                        }
-                    }
-                    if (queuedInputs[0].uh && flopCount != 4)
-                    {
-                        int voiceLineAppreciation = queuedInputs[0].appreciation;
-                        for (int i = 0; i < 4 - flopCount; i++)
-                        {
-                            string voiceLine = $"flipperFlop/uh{flopCount + i}";
-                            BeatAction.New(instance.gameObject, new List<BeatAction.Action>()
-                            {
-                                new BeatAction.Action(queuedInputs[i].startBeat + queuedInputs.Count + i, delegate { Jukebox.PlayOneShotGame(voiceLine); }),
-                            });
-                        }
-                        BeatAction.New(instance.gameObject, new List<BeatAction.Action>()
-                        {
-                            new BeatAction.Action(queuedInputs[0].startBeat + queuedInputs.Count + 4 - flopCount, delegate { FlipperFlop.AppreciationVoiceLine(voiceLineAppreciation); }),
-                        });
-                    }
-                    else if (queuedInputs[0].uh && flopCount == 4)
-                    {
-                        int voiceLineAppreciation = queuedInputs[0].appreciation;
-                        BeatAction.New(instance.gameObject, new List<BeatAction.Action>()
-                        {
-                            new BeatAction.Action(queuedInputs[0].startBeat + queuedInputs.Count, delegate { FlipperFlop.AppreciationVoiceLine(voiceLineAppreciation); }),
-                        });
+                    foreach (var input in queuedInputs) 
+                    { 
+                        QueueFlips(input.beat, input.length, input.roll, input.uh, input.thatsIt, input.appreciation);
                     }
                     queuedInputs.Clear();
                 }
@@ -221,104 +131,106 @@ namespace HeavenStudio.Games
         {
             if (GameManager.instance.currentGame == "flipperFlop")
             {
-                int flopCount = 1;
-                int recounts = 0;
-                for (int i = 0; i < length; i++)
+                FlipperFlop.instance.QueueFlips(beat, length, roll, uh, thatsIt, appreciation);
+            }
+            else
+            {
+                queuedInputs.Add(new QueuedFlip { beat = beat, length = length, roll = roll, uh = uh, thatsIt = thatsIt, appreciation = appreciation });
+            }
+        }
+
+        public void QueueFlips(float beat, float length, bool roll, bool uh = false, bool thatsIt = false, int appreciation = 0)
+        {
+            int flopCount = 1;
+            int recounts = 0;
+            for (int i = 0; i < length; i++)
+            {
+                if (roll)
                 {
-                    if (roll)
+                    FlipperFlop.instance.ScheduleInput(beat - 1, 1 + i, InputType.STANDARD_ALT_DOWN, FlipperFlop.instance.JustFlipperRoll, FlipperFlop.instance.MissFlipperRoll, FlipperFlop.instance.Nothing);
+
+                    string soundToPlay = $"flipperFlop/count/flopCount{flopCount}";
+
+                    if (recounts == 1)
                     {
-                        FlipperFlop.instance.ScheduleInput(beat - 1, 1 + i, InputType.STANDARD_ALT_DOWN, FlipperFlop.instance.JustFlipperRoll, FlipperFlop.instance.MissFlipperRoll, FlipperFlop.instance.Nothing);
-
-                        string soundToPlay = $"flipperFlop/count/flopCount{flopCount}";
-
-                        if (recounts == 1)
+                        soundToPlay = $"flipperFlop/count/flopCount{flopCount}B";
+                    }
+                    else if (recounts > 1)
+                    {
+                        if (flopCount < 3)
+                        {
+                            soundToPlay = $"flipperFlop/count/flopCount{flopCount}C";
+                        }
+                        else
                         {
                             soundToPlay = $"flipperFlop/count/flopCount{flopCount}B";
                         }
-                        else if (recounts > 1)
-                        {
-                            if (flopCount < 3)
-                            {
-                                soundToPlay = $"flipperFlop/count/flopCount{flopCount}C";
-                            }
-                            else
-                            {
-                                soundToPlay = $"flipperFlop/count/flopCount{flopCount}B";
-                            }
-                        }
+                    }
 
-                        if (thatsIt && i + 1 == length)
-                        {
-                            int noiseToPlay = (flopCount == 4) ? 2 : flopCount;
-                            soundToPlay = $"flipperFlop/count/flopNoise{noiseToPlay}";
-                            BeatAction.New(instance.gameObject, new List<BeatAction.Action>()
+                    if (thatsIt && i + 1 == length)
+                    {
+                        int noiseToPlay = (flopCount == 4) ? 2 : flopCount;
+                        soundToPlay = $"flipperFlop/count/flopNoise{noiseToPlay}";
+                        BeatAction.New(instance.gameObject, new List<BeatAction.Action>()
                             {
                                 new BeatAction.Action(beat + i, delegate { Jukebox.PlayOneShotGame("flipperFlop/appreciation/thatsit1"); }),
                                 new BeatAction.Action(beat + i, delegate { Jukebox.PlayOneShotGame(soundToPlay); }),
                                 new BeatAction.Action(beat + i + 0.5f, delegate { Jukebox.PlayOneShotGame("flipperFlop/appreciation/thatsit2"); }),
                             });
-                        }
-                        else
-                        {
-                            BeatAction.New(instance.gameObject, new List<BeatAction.Action>()
-                            {
-                                new BeatAction.Action(beat + i, delegate { Jukebox.PlayOneShotGame(soundToPlay); }),
-                            });
-                        }
-
-                        if (appreciation != (int)AppreciationType.None && !uh && i + 1 == length)
-                        {
-                            BeatAction.New(instance.gameObject, new List<BeatAction.Action>()
-                            {
-                                new BeatAction.Action(beat + i + 1f, delegate { FlipperFlop.AppreciationVoiceLine(appreciation); }),
-                            });
-                        }
-
-
-                        if (i + 1 < length)
-                        {
-                            flopCount++;
-                        }
-                        if (flopCount > 4)
-                        {
-                            flopCount = 1;
-                            recounts++;
-                        }
                     }
                     else
                     {
-                        FlipperFlop.instance.ScheduleInput(beat - 1, 1 + i, InputType.STANDARD_DOWN, FlipperFlop.instance.JustFlip, FlipperFlop.instance.MissFlip, FlipperFlop.instance.Nothing);
+                        BeatAction.New(instance.gameObject, new List<BeatAction.Action>()
+                            {
+                                new BeatAction.Action(beat + i, delegate { Jukebox.PlayOneShotGame(soundToPlay); }),
+                            });
+                    }
+
+                    if (appreciation != (int)AppreciationType.None && !uh && i + 1 == length)
+                    {
+                        BeatAction.New(instance.gameObject, new List<BeatAction.Action>()
+                            {
+                                new BeatAction.Action(beat + i + 1f, delegate { FlipperFlop.AppreciationVoiceLine(appreciation); }),
+                            });
+                    }
+
+
+                    if (i + 1 < length)
+                    {
+                        flopCount++;
+                    }
+                    if (flopCount > 4)
+                    {
+                        flopCount = 1;
+                        recounts++;
                     }
                 }
-                if (uh && flopCount != 4)
+                else
                 {
-                    for (int i = 0; i < 4 - flopCount; i++)
-                    {
-                        string voiceLine = $"flipperFlop/uh{flopCount + i}";
-                        BeatAction.New(instance.gameObject, new List<BeatAction.Action>()
+                    FlipperFlop.instance.ScheduleInput(beat - 1, 1 + i, InputType.STANDARD_DOWN, FlipperFlop.instance.JustFlip, FlipperFlop.instance.MissFlip, FlipperFlop.instance.Nothing);
+                }
+            }
+            if (uh && flopCount != 4)
+            {
+                for (int i = 0; i < 4 - flopCount; i++)
+                {
+                    string voiceLine = $"flipperFlop/uh{flopCount + i}";
+                    BeatAction.New(instance.gameObject, new List<BeatAction.Action>()
                         {
                             new BeatAction.Action(beat + length + i, delegate { Jukebox.PlayOneShotGame(voiceLine); }),
                         });
-                    }
-                    BeatAction.New(instance.gameObject, new List<BeatAction.Action>()
+                }
+                BeatAction.New(instance.gameObject, new List<BeatAction.Action>()
                     {
                         new BeatAction.Action(beat + length + 4 - flopCount, delegate { FlipperFlop.AppreciationVoiceLine(appreciation); }),
                     });
-                }
-                else if (uh && flopCount == 4)
-                {
-                    BeatAction.New(instance.gameObject, new List<BeatAction.Action>()
+            }
+            else if (uh && flopCount == 4)
+            {
+                BeatAction.New(instance.gameObject, new List<BeatAction.Action>()
                     {
                         new BeatAction.Action(beat + length, delegate { FlipperFlop.AppreciationVoiceLine(appreciation); }),
                     });
-                }
-            }
-            else
-            {
-                for (int i = 0; i < length; i++)
-                {
-                    queuedInputs.Add(new QueuedFlip { startBeat = beat, roll = roll, uh = uh, thatsIt = thatsIt, appreciation = appreciation });
-                }
             }
         }
 
