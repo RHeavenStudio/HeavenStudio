@@ -136,12 +136,8 @@ namespace HeavenStudio.Games
                 if(lengthHolder != lengthShown)
                 {
                     started = true;
-                    //convert to 2 decimal places
                     var f = currentBeat;
-                    //f = Mathf.Round(f * 10.0f) * 0.1f;
                     Rally(serveBeat + (int)f, wantSilent, lengthHolder);
-                    //Debug.Log("Beat Loop: " + serveBeat + f);
-                    //Debug.Log("Serve Beat: " + serveBeat);
                 }
             }
         }
@@ -302,7 +298,7 @@ namespace HeavenStudio.Games
             }
             else
             {
-                tweenForForth = Forthington.gameObject.transform.DOMoveZ(wayPointZForForth, .15f);
+                tweenForForth = Forthington.gameObject.transform.DOMoveZ(wayPointZForForth, .15f).SetEase(Ease.InOutCubic);
             }
         }
 
