@@ -53,6 +53,7 @@ namespace HeavenStudio.Games.Scripts_PajamaParty
             {
                 Jukebox.PlayOneShot("miss");
                 PlayerJump(cond.songPositionInBeats, true, false);
+                PajamaParty.instance.ScoreMiss();
             }
             if (PlayerInput.AltPressed() && canCharge)
             {
@@ -62,6 +63,7 @@ namespace HeavenStudio.Games.Scripts_PajamaParty
             {
                 Jukebox.PlayOneShot("miss");
                 EndCharge(cond.songPositionInBeats, false, false);
+                PajamaParty.instance.ScoreMiss();
             }
 
             // mako jumping logic

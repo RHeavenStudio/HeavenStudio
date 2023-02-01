@@ -9,6 +9,7 @@ namespace HeavenStudio.Games
     public class Minigame : MonoBehaviour
     {
         public static float earlyTime = 0.07f, perfectTime = 0.04f, aceEarlyTime = 0.01f, aceLateTime = 0.01f, lateTime = 0.04f, endTime = 0.07f;
+        public static float rankHiThreshold = 0.8f, rankOkThreshold = 0.6f;
         [SerializeField] public SoundSequence.SequenceKeyValue[] SoundSequences;
 
         public List<Minigame.Eligible> EligibleHits = new List<Minigame.Eligible>();
@@ -171,7 +172,7 @@ namespace HeavenStudio.Games
 
         public static float AceStartTime()
         {
-            return 1f + ScaleTimingMargin(aceEarlyTime);
+            return 1f - ScaleTimingMargin(aceEarlyTime);
         }
 
         public static float AceEndTime()
@@ -248,6 +249,11 @@ namespace HeavenStudio.Games
             }
             Debug.LogWarning($"Sound sequence {name} not found in game {game} (did you build AssetBundles?)");
             return null;
+        }
+
+        public void ScoreMiss(double weight = 1f)
+        {
+            GameManager.instance.ScoreInputAccuracy(0, true, weight);
         }
 
         private void OnDestroy() {
