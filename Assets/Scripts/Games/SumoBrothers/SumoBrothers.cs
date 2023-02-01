@@ -12,9 +12,30 @@ namespace HeavenStudio.Games.Loaders
         {
             return new Minigame("sumoBrothers", "Sumo Brothers \n<color=#eb5454>[INITIALIZATION ONLY]</color>", "0058CE", false, false, new List<GameAction>()
             {
+                 new GameAction("bop", "Bop")
+                {
+                    function = delegate { var e = eventCaller.currentEntity; SumoBrothers.instance.Bop(e["toggle"], e["toggle1"]); },
+                    parameters = new List<Param>()
+                    {
+                        new Param("toggle", true, "Inu Bop", "Inu Sensei bops or not."),
+                        new Param("toggle1", true, "Sumo Bop", "Sumo Brothers bop or not."),
+                    },
+                    defaultLength = 1f
+                },
+
+                 new GameAction("inuCrouch", "Inu Crouch")
+                {
+                    function = delegate { var e = eventCaller.currentEntity; SumoBrothers.instance.Crouch(e["toggle"]); },
+                    parameters = new List<Param>()
+                    {
+                        new Param("toggle", true, "Crouch", "Inu Sensei crouches or not.")
+                    },
+                    defaultLength = 1f
+                },
+
                 new GameAction("endPose", "End Pose")
                 {
-                    preFunction = delegate { var e = eventCaller.currentEntity; SumoBrothers.Pose(e.beat); },
+                    function = delegate { var e = eventCaller.currentEntity; SumoBrothers.Pose(e.beat); },
                     defaultLength = 5f
                 }
 
@@ -28,9 +49,15 @@ namespace HeavenStudio.Games
     //    using Scripts_SumoBrothers;
     public class SumoBrothers : Minigame
     {
+        [Header("Components")]
+        [SerializeField] Animator inuSensei;
+
+        public static SumoBrothers instance;
+
         // Start is called before the first frame update
         void Awake()
         {
+            instance = this;
 
         }
 
@@ -38,6 +65,33 @@ namespace HeavenStudio.Games
         void Update()
         {
 
+        }
+
+        public void Bop(bool inu, bool sumo)
+        {
+            if (inu)
+            {
+                inuSensei.DoScaledAnimationAsync("InuBop", 0.5f);
+
+            }
+            if (sumo) 
+            {
+
+            }
+        }
+
+        public void Crouch(bool crouch)
+        {
+            if (crouch)
+            {
+                inuSensei.DoScaledAnimationAsync("InuCrouch", 0.5f);
+
+            }
+            else
+            {
+                inuSensei.DoScaledAnimationAsync("InuIdle", 0.5f);
+
+            }
         }
 
         public static void Pose(float beat)

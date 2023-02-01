@@ -14,6 +14,36 @@ TextureImporter:
   - first:
       213: 4054221790298107953
     second: ground
+  - first:
+      213: 1277806008517062153
+    second: inuBounce
+  - first:
+      213: -1078659944613355180
+    second: inuIdle
+  - first:
+      213: 1654900032682902085
+    second: inuEar
+  - first:
+      213: 249072357185814813
+    second: inuStinkEye
+  - first:
+      213: 5033618459941488035
+    second: inuHead
+  - first:
+      213: -1120999474862527824
+    second: inuHeadBounce
+  - first:
+      213: 7874366561150129192
+    second: inuThing
+  - first:
+      213: 7251623275569825146
+    second: inuShadow
+  - first:
+      213: -634844184711935702
+    second: inuCollar
+  - first:
+      213: -3432944208663641432
+    second: inuLolIdk
   externalObjects: {}
   serializedVersion: 11
   mipmaps:
@@ -182,6 +212,216 @@ TextureImporter:
       bones: []
       spriteID: 130fd53fc3d734830800000000000000
       internalID: 4054221790298107953
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: inuBounce
+      rect:
+        serializedVersion: 2
+        x: 970
+        y: 2
+        width: 52
+        height: 100
+      alignment: 9
+      pivot: {x: 0.5, y: 0.24}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 90ee48d6bcdabb110800000000000000
+      internalID: 1277806008517062153
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: inuIdle
+      rect:
+        serializedVersion: 2
+        x: 906
+        y: 2
+        width: 60
+        height: 68
+      alignment: 9
+      pivot: {x: 0.5, y: 0.32}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 451e0efce74d701f0800000000000000
+      internalID: -1078659944613355180
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: inuEar
+      rect:
+        serializedVersion: 2
+        x: 922
+        y: 74
+        width: 44
+        height: 28
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 542c8dacfc267f610800000000000000
+      internalID: 1654900032682902085
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: inuStinkEye
+      rect:
+        serializedVersion: 2
+        x: 842
+        y: 2
+        width: 60
+        height: 68
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: d110e6d3df1e47300800000000000000
+      internalID: 249072357185814813
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: inuHead
+      rect:
+        serializedVersion: 2
+        x: 778
+        y: 2
+        width: 60
+        height: 68
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 3a549afe1510bd540800000000000000
+      internalID: 5033618459941488035
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: inuHeadBounce
+      rect:
+        serializedVersion: 2
+        x: 722
+        y: 2
+        width: 52
+        height: 68
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 0ba6b6bbae86170f0800000000000000
+      internalID: -1120999474862527824
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: inuThing
+      rect:
+        serializedVersion: 2
+        x: 674
+        y: 2
+        width: 44
+        height: 68
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 824519ccaae574d60800000000000000
+      internalID: 7874366561150129192
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: inuShadow
+      rect:
+        serializedVersion: 2
+        x: 802
+        y: 74
+        width: 52
+        height: 28
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: a754b49c2f0f2a460800000000000000
+      internalID: 7251623275569825146
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: inuCollar
+      rect:
+        serializedVersion: 2
+        x: 858
+        y: 74
+        width: 28
+        height: 28
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: a29c58ad3949037f0800000000000000
+      internalID: -634844184711935702
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: inuLolIdk
+      rect:
+        serializedVersion: 2
+        x: 890
+        y: 74
+        width: 28
+        height: 28
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 8a28ed44e6bbb50d0800000000000000
+      internalID: -3432944208663641432
       vertices: []
       indices: 
       edges: []
