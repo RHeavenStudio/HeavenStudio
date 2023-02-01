@@ -30,11 +30,25 @@ namespace HeavenStudio.Games.Scripts_FlipperFlop
                     else
                     {
                         Jukebox.PlayOneShotGame($"flipperFlop/flip{UnityEngine.Random.Range(1, 3)}");
+
                     }
+                }
+                if (left)
+                {
+                    anim.DoScaledAnimationAsync("FlopLeft", 0.5f);
+                }
+                else
+                {
+                    anim.DoScaledAnimationAsync("FlopRight", 0.5f);
                 }
             }
             left = !left;
         } 
+
+        public void Bop()
+        {
+            anim.DoScaledAnimationAsync("FlipperBop", 0.5f);
+        }
     }
 }
 

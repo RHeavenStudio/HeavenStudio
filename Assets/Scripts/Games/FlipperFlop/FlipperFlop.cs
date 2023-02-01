@@ -40,14 +40,20 @@ namespace HeavenStudio.Games.Loaders
                 },
                 new GameAction("flipperRolling", "Flipper Rolling")
                 {
-                    preFunction = delegate {var e = eventCaller.currentEntity; FlipperFlop.Flipping(e.beat, e.length, true, e["uh"], e["thatsIt"]); },
+                    preFunction = delegate {var e = eventCaller.currentEntity; FlipperFlop.Flipping(e.beat, e.length, true, e["uh"], e["thatsIt"], e["appreciation"]); },
                     parameters = new List<Param>()
                     {
                         new Param("uh", false, "Uh", "Whether or not Captain Tuck should say Uh after the flipper roll is done."),
                         new Param("thatsIt", false, "That's it!", "Whether or not Captain Tuck should say -That's it!- on the final flipper roll."),
+                        new Param("appreciation", FlipperFlop.AppreciationType.None, "Appreciation", "Which appreciation line should Captain Tuck say?")
                     },
                     defaultLength = 4f,
                     resizable = true
+                },
+                new GameAction("bop", "Bop") 
+                {
+                    function = delegate {var e = eventCaller.currentEntity; FlipperFlop.instance.Bop(); },
+                    defaultLength = 1f
                 },
             });
         }
@@ -67,6 +73,19 @@ namespace HeavenStudio.Games
             public float startBeat;
             public float beat;
             public bool roll;
+            public bool uh;
+            public bool thatsIt;
+            public int appreciation;
+        }
+        public enum AppreciationType
+        {
+            None = 0,
+            Good = 1,
+            GoodJob = 2,
+            Nice = 3,
+            WellDone = 4,
+            Yes = 5,
+            Random = 6
         }
 
         public static FlipperFlop instance;
@@ -84,7 +103,121 @@ namespace HeavenStudio.Games
             }
         }
 
-        public static void Flipping(float beat, float length, bool roll, bool uh = false, bool thatsIt = false)
+        private void Update()
+        {
+            var cond = Conductor.instance;
+            if(cond.isPlaying && !cond.isPaused)
+            {
+                if (queuedInputs.Count > 0)
+                {
+                    int flopCount = 1;
+                    int recounts = 0;
+                    for (int i = 0; i < queuedInputs.Count; i++)
+                    {
+                        if (queuedInputs[i].roll)
+                        {
+                            ScheduleInput(queuedInputs[i].startBeat - 1, 1 + i, InputType.STANDARD_ALT_DOWN, JustFlipperRoll, MissFlipperRoll, Nothing);
+
+                            string soundToPlay = $"flipperFlop/count/flopCount{flopCount}";
+
+                            if (recounts == 1)
+                            {
+                                soundToPlay = $"flipperFlop/count/flopCount{flopCount}B";
+                            }
+                            else if (recounts > 1)
+                            {
+                                if (flopCount < 3)
+                                {
+                                    soundToPlay = $"flipperFlop/count/flopCount{flopCount}C";
+                                }
+                                else
+                                {
+                                    soundToPlay = $"flipperFlop/count/flopCount{flopCount}B";
+                                }
+                            }
+
+                            if (queuedInputs[i].thatsIt && i + 1 == queuedInputs.Count)
+                            {
+                                int noiseToPlay = (flopCount == 4) ? 2 : flopCount;
+                                soundToPlay = $"flipperFlop/count/flopNoise{noiseToPlay}";
+                                BeatAction.New(instance.gameObject, new List<BeatAction.Action>()
+                                {
+                                    new BeatAction.Action(queuedInputs[i].startBeat + i, delegate { Jukebox.PlayOneShotGame("flipperFlop/appreciation/thatsit1"); }),
+                                    new BeatAction.Action(queuedInputs[i].startBeat + i, delegate { Jukebox.PlayOneShotGame(soundToPlay); }),
+                                    new BeatAction.Action(queuedInputs[i].startBeat + i + 0.5f, delegate { Jukebox.PlayOneShotGame("flipperFlop/appreciation/thatsit2"); }),
+                                });
+                            }
+                            else
+                            {
+                                BeatAction.New(instance.gameObject, new List<BeatAction.Action>()
+                                {
+                                    new BeatAction.Action(queuedInputs[i].startBeat + i, delegate { Jukebox.PlayOneShotGame(soundToPlay); }),
+                                });
+                            }
+
+                            if (queuedInputs[i].appreciation != (int)AppreciationType.None && !queuedInputs[i].uh && i + 1 == queuedInputs.Count)
+                            {
+                                int voiceLineAppreciation = queuedInputs[i].appreciation;
+                                BeatAction.New(instance.gameObject, new List<BeatAction.Action>()
+                                {
+                                    new BeatAction.Action(queuedInputs[i].startBeat + i + 1f, delegate { FlipperFlop.AppreciationVoiceLine(voiceLineAppreciation); }),
+                                });
+                            }
+
+
+                            if (i + 1 < queuedInputs.Count)
+                            {
+                                flopCount++;
+                            }
+                            if (flopCount > 4)
+                            {
+                                flopCount = 1;
+                                recounts++;
+                            }
+                        }
+                        else
+                        {
+                            ScheduleInput(queuedInputs[i].startBeat - 1, 1 + i, InputType.STANDARD_DOWN, JustFlip, MissFlip, Nothing);
+                        }
+                    }
+                    if (queuedInputs[0].uh && flopCount != 4)
+                    {
+                        int voiceLineAppreciation = queuedInputs[0].appreciation;
+                        for (int i = 0; i < 4 - flopCount; i++)
+                        {
+                            string voiceLine = $"flipperFlop/uh{flopCount + i}";
+                            BeatAction.New(instance.gameObject, new List<BeatAction.Action>()
+                            {
+                                new BeatAction.Action(queuedInputs[i].startBeat + queuedInputs.Count + i, delegate { Jukebox.PlayOneShotGame(voiceLine); }),
+                            });
+                        }
+                        BeatAction.New(instance.gameObject, new List<BeatAction.Action>()
+                        {
+                            new BeatAction.Action(queuedInputs[0].startBeat + queuedInputs.Count + 4 - flopCount, delegate { FlipperFlop.AppreciationVoiceLine(voiceLineAppreciation); }),
+                        });
+                    }
+                    else if (queuedInputs[0].uh && flopCount == 4)
+                    {
+                        int voiceLineAppreciation = queuedInputs[0].appreciation;
+                        BeatAction.New(instance.gameObject, new List<BeatAction.Action>()
+                        {
+                            new BeatAction.Action(queuedInputs[0].startBeat + queuedInputs.Count, delegate { FlipperFlop.AppreciationVoiceLine(voiceLineAppreciation); }),
+                        });
+                    }
+                    queuedInputs.Clear();
+                }
+            }
+        }
+
+        public void Bop()
+        {
+            foreach (var flipper in flippers)
+            {
+                flipper.Bop();
+            }
+        }
+
+        public static void Flipping(float beat, float length, bool roll, bool uh = false, bool thatsIt = false, int appreciation = 0)
         {
             if (GameManager.instance.currentGame == "flipperFlop")
             {
@@ -133,6 +266,14 @@ namespace HeavenStudio.Games
                             });
                         }
 
+                        if (appreciation != (int)AppreciationType.None && !uh && i + 1 == length)
+                        {
+                            BeatAction.New(instance.gameObject, new List<BeatAction.Action>()
+                            {
+                                new BeatAction.Action(beat + i + 1f, delegate { FlipperFlop.AppreciationVoiceLine(appreciation); }),
+                            });
+                        }
+
 
                         if (i + 1 < length)
                         {
@@ -159,14 +300,52 @@ namespace HeavenStudio.Games
                             new BeatAction.Action(beat + length + i, delegate { Jukebox.PlayOneShotGame(voiceLine); }),
                         });
                     }
+                    BeatAction.New(instance.gameObject, new List<BeatAction.Action>()
+                    {
+                        new BeatAction.Action(beat + length + 4 - flopCount, delegate { FlipperFlop.AppreciationVoiceLine(appreciation); }),
+                    });
+                }
+                else if (uh && flopCount == 4)
+                {
+                    BeatAction.New(instance.gameObject, new List<BeatAction.Action>()
+                    {
+                        new BeatAction.Action(beat + length, delegate { FlipperFlop.AppreciationVoiceLine(appreciation); }),
+                    });
                 }
             }
             else
             {
                 for (int i = 0; i < length; i++)
                 {
-                    queuedInputs.Add(new QueuedFlip { startBeat = beat, beat = beat + i, roll = roll });
+                    queuedInputs.Add(new QueuedFlip { startBeat = beat, roll = roll, uh = uh, thatsIt = thatsIt, appreciation = appreciation });
                 }
+            }
+        }
+
+        public static void AppreciationVoiceLine(int appreciation)
+        {
+            if (appreciation == (int)AppreciationType.Random) appreciation = UnityEngine.Random.Range(1, 6);
+            switch (appreciation)
+            {
+                case (int)AppreciationType.None:
+                    break;
+                case (int)AppreciationType.Good:
+                    Jukebox.PlayOneShotGame("flipperFlop/appreciation/good");
+                    break;
+                case (int)AppreciationType.GoodJob:
+                    Jukebox.PlayOneShotGame("flipperFlop/appreciation/goodjob");
+                    break;
+                case (int)AppreciationType.Nice:
+                    Jukebox.PlayOneShotGame("flipperFlop/appreciation/nice");
+                    break;
+                case (int)AppreciationType.WellDone:
+                    Jukebox.PlayOneShotGame("flipperFlop/appreciation/welldone");
+                    break;
+                case (int)AppreciationType.Yes:
+                    Jukebox.PlayOneShotGame("flipperFlop/appreciation/yes");
+                    break;
+                case (int)AppreciationType.Random:
+                    break;
             }
         }
 
