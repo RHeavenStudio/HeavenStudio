@@ -111,7 +111,7 @@ namespace HeavenStudio.Games
             Pepper,     // 6, fruit
             Potato,     // 7, fruit
             Tire,       // 8, tire
-            Custom,     // 9, NULL
+            Custom,     // 9, directs to custom stuff
         }
 
         public enum CustomObject
@@ -159,25 +159,23 @@ namespace HeavenStudio.Games
 
         public void ThrowObject(float beat, bool isRandom, int ObjType, string textObj, bool fromLeft)
         {
-            /* if (textObj) {
-                switch (textObj)
-                {
-                    case "KarateMan":
-                    int ObjType = ; 
-                    break;
-                    default:
-                }
-            } */
-            
-            WhichObject.sprite = ObjectTypes[ObjType];
+            if (ObjType == 9) {
+                Enum.TryParse(textObj, out CustomObject notIntObj);
+                int CustomObj = (int) notIntObj;
+                WhichObject.sprite = CustomObjects[CustomObj];
+            } else {
+                if (isRandom) {
+                    
+                } 
+                //WhichObject.sprite = ObjectTypes[CustomObj];
+            }
             
             ThrowObject Object = Instantiate(ObjectBase).GetComponent<ThrowObject>();
             Object.startBeat = beat;
             Object.type = ObjType;
             Object.curve = fromLeft ? CurveFromLeft : CurveFromRight;
             if (ObjType == 9) {
-                Object.sfxNum = "dogNinja/"+textObj;
-                Object.textTrue = true;
+                Object.textObj = textObj;
             }
         }
 

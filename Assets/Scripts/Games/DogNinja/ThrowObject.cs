@@ -14,7 +14,6 @@ namespace HeavenStudio.Games.Scripts_DogNinja
         public int type;
         public bool leftie;
         public string textObj;
-        public bool textTrue;
 
         public string sfxNum = "dogNinja/";
         bool flying = true;
@@ -38,46 +37,33 @@ namespace HeavenStudio.Games.Scripts_DogNinja
 
         private void Start()
         {
-            if (!textTrue) {
-                switch (type) {
-                    case 1:
-                        sfxNum += "bone";
-                        break;
-                    case 5:
-                        sfxNum += "pan";
-                        break;
-                    case 8:
-                        sfxNum += "tire";
-                        break;
-                    case 9:
-                        sfxNum += "tacobell";
-                        break;
-                    default:
-                        sfxNum += "fruit";
-                        break;
-                }
+            switch (type) {
+                case 6:
+                    sfxNum += "bone";
+                    break;
+                case 7:
+                    sfxNum += "pan";
+                    break;
+                case 8:
+                    sfxNum += "tire";
+                    break;
+                case 9:
+                    sfxNum += textObj;
+                    break;
+                default:
+                    sfxNum += "fruit";
+                    break;
             }
 
             Jukebox.PlayOneShotGame(sfxNum+"1");
         
             game.ScheduleInput(startBeat, 1f, InputType.STANDARD_DOWN, Hit, Out, Miss);
-            
-            //debug stuff below
-            Debug.Log("it's a "+sfxNum+" and a leftie? ("+leftie+")");
         }
 
         private void Update()
         {
-            var cond = Conductor.instance;
-
-            float flyPos = cond.GetPositionFromBeat(startBeat, 1);
+            float flyPos = Conductor.instance.GetPositionFromBeat(startBeat, 1);
             flyPos *= 1f;
-            transform.position = curve.GetPoint(flyPos);
-            
-            
-            /*float flyPos = 0;
-            flyPos += 0.5f;
-
             transform.position = curve.GetPoint(flyPos);
             
             /* if (flying)
