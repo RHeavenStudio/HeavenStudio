@@ -40,7 +40,7 @@ namespace HeavenStudio.Games.Loaders
                 },
                 new GameAction("ba bum bum bum", "Ba Bum Bum Bum")
                 {
-                    function = delegate { AirRally.instance.SetDistance(e.currentEntity["type"]); AirRally.instance.BaBumBumBum(e.currentEntity.beat, e.currentEntity["toggle"], e.currentEntity["type"]); }, 
+                    function = delegate { AirRally.instance.BaBumBumBum(e.currentEntity.beat, e.currentEntity["toggle"], e.currentEntity["type"]); }, 
                     defaultLength = 7f, 
                     parameters = new List<Param>()
                     { 
@@ -92,13 +92,6 @@ namespace HeavenStudio.Games
 
         [Header("Waypoint")]
         public float wayPointZForForth;
-
-        [Header("Curves")]
-        public BezierCurve3D closeRallyCurve;
-        public BezierCurve3D farRallyCurve;
-        public BezierCurve3D fartherRallyCurve;
-        public BezierCurve3D farthestRallyCurve;
-        public BezierCurve3D closeRallyReturnCurve;
 
         [Header("Debug")]
         public float beatShown;
@@ -185,6 +178,8 @@ namespace HeavenStudio.Games
             shuttleScript.flyType = type;
             
             shuttleActive = true;
+
+            Forthington.GetComponent<Animator>().Play("Hit");
         }
 
         public void ReturnObject(float beat, float targetBeat, bool type)
@@ -330,8 +325,6 @@ namespace HeavenStudio.Games
 
                 BeatAction.New(gameObject, new List<BeatAction.Action>()
                 {
-                    //new BeatAction.Action(beat, delegate { Forthington.GetComponent<Animator>().Play("Ready");} ),
-                    new BeatAction.Action(beat, delegate { Forthington.GetComponent<Animator>().Play("Hit");} ),
                     new BeatAction.Action(beat, delegate { ServeObject(beat, beat + 1, false); } ),
                 });
 
@@ -476,13 +469,13 @@ namespace HeavenStudio.Games
 
             BeatAction.New(gameObject, new List<BeatAction.Action>()
             {
+                new BeatAction.Action(beat + 0.5f, delegate { SetDistance(type, false); }),
                 new BeatAction.Action(beat + 1.5f, delegate { Forthington.GetComponent<Animator>().Play("Ready"); }),
-                new BeatAction.Action(beat + 2.5f, delegate { if(babum) { Forthington.GetComponent<Animator>().Play("Hit"); } }),
                 new BeatAction.Action(beat + 2.5f, delegate { ServeObject(beat + 2.5f, beat + 4.5f, true); } ),
                 new BeatAction.Action(beat + 3.5f, delegate { Forthington.GetComponent<Animator>().Play("TalkShort"); }),
                 new BeatAction.Action(beat + 4f, delegate { if(!count) Forthington.GetComponent<Animator>().Play("TalkShort"); }),
                 new BeatAction.Action(beat + 4.5f, delegate { Forthington.GetComponent<Animator>().Play("Ready"); }),
-                new BeatAction.Action(beat + 7f, delegate { if(babum) { babum = false; } }),
+                new BeatAction.Action(beat + 5.5f, delegate { if(babum) { babum = false; } }),
             });
 
             MultiSound.Play(new MultiSound.Sound[] {
@@ -527,6 +520,7 @@ namespace HeavenStudio.Games
             {
                 ReturnObject(Conductor.instance.songPositionInBeats, caller.startBeat + caller.timer + 1f, false);
                 hasMissed = false;
+                ActiveShuttle.GetComponent<Shuttlecock>().DoHit(e_BaBumState);
 
                 if (e_BaBumState == DistanceSound.close)
                 {
@@ -562,6 +556,7 @@ namespace HeavenStudio.Games
             {
                 ReturnObject(Conductor.instance.songPositionInBeats, caller.startBeat + caller.timer + 2f, true);
                 hasMissed = false;
+                ActiveShuttle.GetComponent<Shuttlecock>().DoHit(e_BaBumState);
 
                 if (e_BaBumState == DistanceSound.close)
                 {

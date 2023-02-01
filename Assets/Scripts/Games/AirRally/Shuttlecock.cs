@@ -13,6 +13,7 @@ namespace HeavenStudio.Games.Scripts_AirRally
         [SerializeField] Transform OtherTarget;
         [SerializeField] float TargetHeight;
         [SerializeField] float TargetHeightLong;
+        [SerializeField] ParticleSystem hitEffect;
 
         public float startBeat;
         public float flyBeats;
@@ -65,6 +66,27 @@ namespace HeavenStudio.Games.Scripts_AirRally
                     return;
                 }
             }
+        }
+
+        public void DoHit(AirRally.DistanceSound distance)
+        {
+            ParticleSystem.MainModule main = hitEffect.main;
+            switch (distance)
+            {
+                case AirRally.DistanceSound.close:
+                    main.startSize = 2f;
+                    break;
+                case AirRally.DistanceSound.far:
+                    main.startSize = 3f;
+                    break;
+                case AirRally.DistanceSound.farther:
+                    main.startSize = 4f;
+                    break;
+                case AirRally.DistanceSound.farthest:
+                    main.startSize = 6f;
+                    break;
+            }
+            hitEffect.Play();
         }
 
         public void DoNearMiss()
