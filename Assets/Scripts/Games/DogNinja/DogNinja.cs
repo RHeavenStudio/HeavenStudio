@@ -192,29 +192,20 @@ namespace HeavenStudio.Games
             }
         }
 
-        public void HereWeGo(float beat)
-        {
-            MultiSound.Play(new MultiSound.Sound[] { 
+        public static MultiSound.Sound[] PlayHWG = new MultiSound.Sound[] { 
                     new MultiSound.Sound("dogNinja/here", beat), 
                     new MultiSound.Sound("dogNinja/we", beat + 0.5f),
                     new MultiSound.Sound("dogNinja/go", beat + 1f)
-                }, forcePlay: true);
+                };
+
+        public void HereWeGo(float beat)
+        {
+            MultiSound.Play(PlayHWG, forcePlay: true);
         }
 
         public static void HereWeGoInactive(float beat)
         {
-            MultiSound.Play(new MultiSound.Sound[] { 
-                    new MultiSound.Sound("dogNinja/here", beat), 
-                    new MultiSound.Sound("dogNinja/we", beat + 0.5f),
-                    new MultiSound.Sound("dogNinja/go", beat + 1f)
-                }, forcePlay: true);
-
-            // what could have been :cry: (idk how to do this)
-            /* MultiSound.Sound[] HereWeGoSFX = new MultiSound.Sound[] { 
-                    new MultiSound.Sound("dogNinja/here", beat), 
-                    new MultiSound.Sound("dogNinja/we", beat + 0.5f),
-                    new MultiSound.Sound("dogNinja/go", beat + 1f)
-                }; */
+            MultiSound.Play(PlayHWG, forcePlay: true);
         }
     }
 }

@@ -12,12 +12,9 @@ namespace HeavenStudio.Games.Scripts_DogNinja
     {
         public float startBeat;
         public int type;
-        public bool leftie;
         public string textObj;
 
         public string sfxNum = "dogNinja/";
-        bool flying = true;
-        float flyBeats;
 
         [Header("Animators")]
         public Animator DogAnim;
@@ -87,8 +84,7 @@ namespace HeavenStudio.Games.Scripts_DogNinja
             DogAnim.Play("Slice", 0, 0);
             Jukebox.PlayOneShotGame(sfxNum+"2");
 
-            // ABOUT TO BE IN USE
-            //SpawnHalves();
+            SpawnHalves();
 
             GameObject.Destroy(gameObject);
         }
