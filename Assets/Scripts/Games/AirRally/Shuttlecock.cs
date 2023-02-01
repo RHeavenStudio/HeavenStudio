@@ -93,12 +93,13 @@ namespace HeavenStudio.Games.Scripts_AirRally
         {
             miss = true;
             Jukebox.PlayOneShot("miss");
+            transform.position = PlayerTarget.position;
             Rigidbody2D rb = GetComponent<Rigidbody2D>();
             rb.simulated = true;
             rb.WakeUp();
             rb.velocity = Vector3.zero;
             rb.gravityScale = 10f;
-            rb.AddForce(Vector2.up * 10, ForceMode2D.Impulse);
+            rb.AddForce(Vector2.up * 20, ForceMode2D.Impulse);
             rb.AddForce(Vector2.right * -10, ForceMode2D.Impulse);
         }
 
