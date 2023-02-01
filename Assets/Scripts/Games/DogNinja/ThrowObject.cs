@@ -87,9 +87,18 @@ namespace HeavenStudio.Games.Scripts_DogNinja
             DogAnim.Play("Slice", 0, 0);
             Jukebox.PlayOneShotGame(sfxNum+"2");
 
+            // ABOUT TO BE IN USE
             //SpawnHalves();
 
             GameObject.Destroy(gameObject);
+        }
+
+        void SpawnHalves()
+        {
+            var HalvesGO = GameObject.Instantiate(game.HalvesLeftBase);
+            HalvesGO.transform.position = transform.position;
+
+            
         }
 
         private void Hit(PlayerActionEvent caller, float state)
@@ -102,6 +111,7 @@ namespace HeavenStudio.Games.Scripts_DogNinja
 
         private void Miss(PlayerActionEvent caller) 
         {
+            // i want this to work.
             /* new BeatAction.Action(startBeat+ 2.45f, delegate { 
                     Destroy(this.gameObject);
             }); */
@@ -109,20 +119,6 @@ namespace HeavenStudio.Games.Scripts_DogNinja
 
         private void Out(PlayerActionEvent caller) {}
 
-        // WILL USE FOR SPAWNING HALVES
-
-        /* void SpawnHalves()
-        {
-            var HalvesGO = GameObject.Instantiate(game.HalvesBase, game.HalvesHolder);
-            HalvesGO.SetActive(true);
-            HalvesGO.transform.position = transform.position;
-
-            var ps = HalvesGO.GetComponent<ParticleSystem>();
-            var main = ps.main;
-            var newGradient = new ParticleSystem.MinMaxGradient();
-            newGradient.mode = ParticleSystemGradientMode.RandomColor;
-            main.startColor = newGradient;
-            ps.Play();
-        } */
+        
     }
 }

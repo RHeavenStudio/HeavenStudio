@@ -102,16 +102,16 @@ namespace HeavenStudio.Games
 
         public enum ObjectType
         {
-            Apple,      // 0, fruit
-            Bone,       // 1, bone
-            Broccoli,   // 2, fruit
-            Carrot,     // 3, fruit
-            Cucumber,   // 4, fruit
-            Pan,        // 5, pan
-            Pepper,     // 6, fruit
-            Potato,     // 7, fruit
-            Tire,       // 8, tire
-            Custom,     // 9, directs to custom stuff
+            Apple = 0,      // fruit
+            Bone = 6,       // bone
+            Broccoli = 1,   // fruit
+            Carrot = 2,     // fruit
+            Cucumber = 3,   // fruit
+            Pan = 7,        // pan
+            Pepper = 4,     // fruit
+            Potato = 5,     // fruit
+            Tire = 8,       // tire
+            Custom = 9,     // directs to custom stuff
         }
 
         public enum CustomObject
@@ -159,24 +159,22 @@ namespace HeavenStudio.Games
 
         public void ThrowObject(float beat, bool isRandom, int ObjType, string textObj, bool fromLeft)
         {
+            int ObjSprite;
             if (ObjType == 9) {
                 Enum.TryParse(textObj, out CustomObject notIntObj);
-                int CustomObj = (int) notIntObj;
-                WhichObject.sprite = CustomObjects[CustomObj];
-            } else {
-                if (isRandom) {
-                    
-                } 
-                //WhichObject.sprite = ObjectTypes[CustomObj];
-            }
-            
+                ObjSprite = (int) notIntObj;
+            } else if (isRandom) {
+                System.Random rd = new System.Random();
+                ObjSprite = rd.Next(0, 4);
+                Debug.Log(ObjSprite);
+            } else { ObjSprite = ObjType; }
+            WhichObject.sprite = ObjectTypes[ObjSprite];
+
             ThrowObject Object = Instantiate(ObjectBase).GetComponent<ThrowObject>();
             Object.startBeat = beat;
             Object.type = ObjType;
             Object.curve = fromLeft ? CurveFromLeft : CurveFromRight;
-            if (ObjType == 9) {
-                Object.textObj = textObj;
-            }
+            Object.textObj = textObj;
         }
 
         public void CutEverything(float beat, bool sound)

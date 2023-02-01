@@ -26,7 +26,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 119991411479083905}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -5.31, y: -15.96, z: 0}
+  m_LocalPosition: {x: -69, y: -69, z: 0}
   m_LocalScale: {x: 1.175, y: 1.175, z: 1.175}
   m_Children: []
   m_Father: {fileID: 1671099869309974123}
@@ -113,7 +113,7 @@ MonoBehaviour:
   sfxNum: dogNinja/
   DogAnim: {fileID: 1770250701376598399}
   ObjectBase: {fileID: 119991411479083905}
-  curve: {fileID: 0}
+  curve: {fileID: 1761052573981030483}
 --- !u!1 &127654075222335198
 GameObject:
   m_ObjectHideFlags: 0
@@ -493,7 +493,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &4255175261387265698
 Transform:
   m_ObjectHideFlags: 0
@@ -502,7 +502,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 997672822965154321}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: -6.9, y: -6.9, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 2078672318315355962}
@@ -548,15 +548,15 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
-  m_Sprite: {fileID: 0}
+  m_Sprite: {fileID: 7382119414877200208, guid: 1c59b9cd0adef0941bc4bd4bde66a759, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
-  m_Size: {x: 1, y: 1}
+  m_Size: {x: 1.45, y: 1.9}
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
-  m_WasSpriteAssigned: 0
+  m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
 --- !u!1 &1203023033644261752
@@ -2168,7 +2168,7 @@ GameObject:
   - component: {fileID: 4235909720210170328}
   - component: {fileID: 6526046495833728111}
   m_Layer: 0
-  m_Name: LeftPoint0
+  m_Name: Point 0
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2344,7 +2344,7 @@ GameObject:
   - component: {fileID: 1428589508933777887}
   - component: {fileID: 2112368381871034223}
   m_Layer: 0
-  m_Name: LeftPoint1
+  m_Name: Point 1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2666,7 +2666,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &1048894730547048102
 Transform:
   m_ObjectHideFlags: 0
@@ -2675,7 +2675,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 8462363345267808632}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: -6.9, y: -6.9, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 2078672318315355962}
@@ -2721,15 +2721,15 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
-  m_Sprite: {fileID: 0}
+  m_Sprite: {fileID: 4461334316933101070, guid: 1c59b9cd0adef0941bc4bd4bde66a759, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
-  m_Size: {x: 1, y: 1}
+  m_Size: {x: 1.28, y: 1.56}
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
-  m_WasSpriteAssigned: 0
+  m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
 --- !u!1 &8475310029466910972
@@ -2743,7 +2743,7 @@ GameObject:
   - component: {fileID: 5438218852251716300}
   - component: {fileID: 3791573373798469674}
   m_Layer: 0
-  m_Name: LeftPoint2
+  m_Name: Point 2
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
