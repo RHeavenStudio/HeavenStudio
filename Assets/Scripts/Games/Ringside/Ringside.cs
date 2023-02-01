@@ -179,7 +179,7 @@ namespace HeavenStudio.Games
                 if (PlayerInput.Pressed() && !IsExpectingInputNow(InputType.STANDARD_DOWN))
                 {
                     wrestlerAnim.DoScaledAnimationAsync("Ye", 0.5f);
-                    Jukebox.PlayOneShotGame($"ringside/ye{UnityEngine.Random.Range(1, 4)}");
+                    Jukebox.PlayOneShotGame($"ringside/ye1");
                 }
                 ReporterBlink();
             }
