@@ -196,6 +196,7 @@ namespace HeavenStudio.Games
                     wrestlerAnim.Play($"Pose{randomPose}", 0, 0);
                     reporterAnim.Play("FlinchReporter", 0, 0);
                     Jukebox.PlayOneShotGame($"ringside/yell{UnityEngine.Random.Range(1, 7)}Raw");
+                    Jukebox.PlayOneShotGame("ringside/barely");
                     missedPose = true;
                     wrestlerTransform.localScale = new Vector3(1.1f, 1.1f, 1f);
                     BeatAction.New(instance.gameObject, new List<BeatAction.Action>()
