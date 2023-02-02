@@ -35,7 +35,7 @@ namespace HeavenStudio.Games.Loaders
 
                 new GameAction("endPose", "End Pose")
                 {
-                    function = delegate { var e = eventCaller.currentEntity; SumoBrothers.Pose(e.beat); },
+                    function = delegate { var e = eventCaller.currentEntity; SumoBrothers.instance.Pose(e.beat); },
                     defaultLength = 5f
                 }
 
@@ -94,15 +94,15 @@ namespace HeavenStudio.Games
             }
         }
 
-        public static void Pose(float beat)
+        public void Pose(float beat)
         {
             var cond = Conductor.instance;
-            var cueLength = 60 / cond.songBpm * 3;
-            var loopAmount = Math.Ceiling((cueLength - 0.208) / 0.395);
+            var cueLength = 3 * cond.secPerBeat;
+            print(cond.pitchedSecPerBeat);
+            var loopAmount = Math.Round((cueLength - 0.208) / 0.395);
             var beatsPerSecond = cond.songBpm / 60;
             var soundBeatLength = beatsPerSecond * 0.395;
             
-            print(cueLength + " and " + loopAmount);
 
             List<MultiSound.Sound> sound = new List<MultiSound.Sound>();
             sound.Add(new MultiSound.Sound("sumoBrothers/posesignalBegin", beat));
@@ -111,9 +111,17 @@ namespace HeavenStudio.Games
             {
                 sound.Add(new MultiSound.Sound("sumoBrothers/posesignalLoop", i * (float)soundBeatLength + beat - (float)soundBeatLength + ((float)beatsPerSecond * 0.208f))); 
             }
-            print(sound.ToArray());
+
             MultiSound.Play(sound.ToArray());
 
+            var tweetLength = (float)loopAmount * (float)soundBeatLength - (float)soundBeatLength + ((float)beatsPerSecond * 0.208f);
+            print(tweetLength);
+            BeatAction.New(instance.gameObject, new List<BeatAction.Action>() { 
+                new BeatAction.Action(beat, delegate { if (GameManager.instance.currentGame == "sumoBrothers") inuSensei.DoScaledAnimationAsync("InuTweet", 0.5f); }),
+                new BeatAction.Action(beat + tweetLength + 1, delegate { if (GameManager.instance.currentGame == "sumoBrothers") inuSensei.DoScaledAnimationAsync("InuIdle", 0.5f); })
+            });
+
+            
 
 
         }
