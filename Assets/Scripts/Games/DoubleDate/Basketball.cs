@@ -6,7 +6,7 @@ using HeavenStudio.Util;
 
 namespace HeavenStudio.Games.Scripts_DoubleDate
 {
-    public class Football : PlayerActionObject
+    public class Rocket : PlayerActionObject
     {
         public bool isSparkler;
 

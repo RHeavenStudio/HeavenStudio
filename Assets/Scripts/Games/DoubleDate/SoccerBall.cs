@@ -6,10 +6,8 @@ using HeavenStudio.Util;
 
 namespace HeavenStudio.Games.Scripts_DoubleDate
 {
-    public class Football : PlayerActionObject
+    public class SoccerBall : PlayerActionObject
     {
-        public bool isSparkler;
-
         // Start is called before the first frame update
         void Awake()
         {

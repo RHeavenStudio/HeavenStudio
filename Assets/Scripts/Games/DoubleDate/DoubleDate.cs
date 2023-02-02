@@ -11,19 +11,19 @@ namespace HeavenStudio.Games.Loaders
         public static Minigame AddGame(EventCaller eventCaller) {
             return new Minigame("doubleDate", "Double Date \n<color=#eb5454>[INITIALIZATION ONLY]</color>", "0058CE", false, false, new List<GameAction>()
             {
-                new GameAction("SoccerBall", "Soccer Ball")
+                new GameAction("soccerBall", "Soccer Ball")
                 {
-                    function = delegate { DoubleDate.instance.SoccerBallCue(eventCaller.currentEntity.beat); }, 
+                    function = delegate { var e = eventCaller.currentEntity; DoubleDate.instance.ball(e.beat, e["type"]); }, 
                     defaultLength = 2,
                 },
-                new GameAction("Basketball", "Basketball")
+                new GameAction("basketball", "Basketball")
                 {
-                    function = delegate { DoubleDate.instance.BasketballCue(eventCaller.currentEntity.beat); }, 
+                    function = delegate { var e = eventCaller.currentEntity; DoubleDate.instance.ball(e.beat, e["type"]); }, 
                     defaultLength = 2,
                 },
-                new GameAction("Football", "Football")
+                new GameAction("football", "Football")
                 {
-                    function = delegate { DoubleDate.instance.FootballCue(eventCaller.currentEntity.beat); }, 
+                    function = delegate { var e = eventCaller.currentEntity; DoubleDate.instance.ball(e.beat, e["type"]); }, 
                     defaultLength = 2,
                 }
             });
@@ -37,64 +37,27 @@ namespace HeavenStudio.Games
 
     public class DoubleDate : Minigame
     {
-        [Header("Animators")]
-        public Animator BoyAnim;
+        public static DoubleDate instance;
+
+        [Header("Objects")]
         public Animator soccerBallAnim;
         public Animator basketballAnim;
         public Animator footballAnim;
-
-        [Header("References")]
-        public GameObject Boy;
-        public GameObject Girl;
-        public GameObject SoccerBall;
-        public GameObject Basketball;
-        public GameObject Football;
         
-        private float lastReportedBeat = 0f;
-
-        public static DoubleDate instance;
-
         private void Awake()
         {
             instance = this;
         }
 
-        private void Update()
+        private void HitSound(bool applause)
         {
-            if (Conductor.instance.ReportBeat(ref lastReportedBeat))
-            {
-                BoyAnim.Play("Bop", 0, 0);
-            }
+            Jukebox.PlayOneShotGame("doubleDate/kick");
+            if (applause) Jukebox.PlayOneShot("applause");
         }
 
-        public void SoccerBallCue(float beat)
+        public void ball(float beat, int type)
         {
-            Jukebox.PlayOneShotGame("doubleDate/soccer_ball_bounce");
-
-            Ball Object = Instantiate(SoccerBall).GetComponent<Ball>();
-            Object.startBeat = beat;
-        }
-
-        public void BasketballCue(float beat)
-        {
-            MultiSound.Play(new MultiSound.Sound[] { 
-                    new MultiSound.Sound("doubleDate/basketball_bounce", beat), 
-                    new MultiSound.Sound("doubleDate/basketball_bounce", beat + 0.75f),
-                });
-            
-            Ball Object = Instantiate(Basketball).GetComponent<Ball>();
-            Object.startBeat = beat;
-        }
-
-        public void FootballCue(float beat)
-        {
-            MultiSound.Play(new MultiSound.Sound[] { 
-                    new MultiSound.Sound("doubleDate/football_bounce", beat), 
-                    new MultiSound.Sound("doubleDate/football_bounce", beat + 0.75f),
-                });
-
-            Football Object = Instantiate(Football).GetComponent<Football>();
-            Object.startBeat = beat;
+            Jukebox.PlayOneShotGame("doubleDate/soccerBall");
         }
     }
 
