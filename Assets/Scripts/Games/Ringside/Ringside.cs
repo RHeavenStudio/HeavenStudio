@@ -40,7 +40,8 @@ namespace HeavenStudio.Games.Loaders
                         new Param("and", false, "And", "Whether the And voice line should be said or not."),
                         new Param("variant", Ringside.PoseForTheFansVariant.Random, "Variant", "Which variant of the cue do you wish to play."),
                         new Param("keepZoomedOut", false, "Keep Zoomed Out", "Whether the camera should keep being zoomed out after the event has completed."),
-                        new Param("newspaperBeats", new EntityTypes.Float(0, 80, 0), "Newspaper Beats", "How many beats should the newspaper stay for?")
+                        new Param("newspaperBeats", new EntityTypes.Float(0, 80, 0), "Newspaper Beats", "How many beats should the newspaper stay for?"),
+                        new Param("ease", EasingFunction.Ease.EaseOutQuad, "Camera Ease", "What ease should the camera use?"),
                     },
                     defaultLength = 4f
                 },
@@ -126,9 +127,10 @@ namespace HeavenStudio.Games
         private bool shouldBop = true;
         private bool missedBigGuy;
         private bool reporterShouldHeart;
-        private bool missedPose;
+        private bool hitPose;
         private Sound kidsLaugh;
         private int currentPose;
+        private EasingFunction.Ease lastEase;
 
         private int currentZoomIndex;
 
@@ -191,13 +193,11 @@ namespace HeavenStudio.Games
                 }
                 if (PlayerInput.AltPressed() && !IsExpectingInputNow(InputType.STANDARD_ALT_DOWN))
                 {
-                    int randomPose = UnityEngine.Random.Range(1, 4);
-                    currentPose = randomPose;
+                    int randomPose = UnityEngine.Random.Range(1, 7);
                     wrestlerAnim.Play($"Pose{randomPose}", 0, 0);
                     reporterAnim.Play("FlinchReporter", 0, 0);
                     Jukebox.PlayOneShotGame($"ringside/yell{UnityEngine.Random.Range(1, 7)}Raw");
                     Jukebox.PlayOneShotGame("ringside/barely");
-                    missedPose = true;
                     wrestlerTransform.localScale = new Vector3(1.1f, 1.1f, 1f);
                     BeatAction.New(instance.gameObject, new List<BeatAction.Action>()
                     {
@@ -227,7 +227,7 @@ namespace HeavenStudio.Games
                     }
                     else
                     {
-                        EasingFunction.Function func = EasingFunction.GetEasingFunction(EasingFunction.Ease.EaseOutQuad);
+                        EasingFunction.Function func = EasingFunction.GetEasingFunction(lastEase);
                         float newPosX = func(lastCamPos.x, currentCamPos.x, normalizedBeat);
                         float newPosY = func(lastCamPos.y, currentCamPos.y, normalizedBeat);
                         float newPosZ = func(lastCamPos.z + 10, currentCamPos.z + 10, normalizedBeat);
@@ -293,9 +293,9 @@ namespace HeavenStudio.Games
                                         {
                                             newspaper.GetComponent<Animator>().Play("NewspaperEnterRight", 0, 0);
                                         }
-                                        if (missedPose)
+                                        if (hitPose)
                                         {
-                                            wrestlerNewspaperAnim.Play($"Miss{UnityEngine.Random.Range(1, 3)}Newspaper", 0, 0);
+                                            wrestlerNewspaperAnim.Play($"Miss{UnityEngine.Random.Range(1, 7)}Newspaper", 0, 0);
                                             reporterNewspaperAnim.Play("IdleReporterNewspaper", 0, 0);
                                             kidsLaugh = Jukebox.PlayOneShotGame("ringside/kidslaugh", -1, 1, 1, true);
                                         }
@@ -303,6 +303,7 @@ namespace HeavenStudio.Games
                                         {
                                             wrestlerNewspaperAnim.Play($"Pose{currentPose}Newspaper", 0, 0);
                                             reporterNewspaperAnim.Play("HeartReporterNewspaper", 0, 0);
+                                            hitPose = false;
                                         }
                                     }),
                                     new BeatAction.Action(p.beat + 3f + p.newspaperBeats, delegate
@@ -352,9 +353,9 @@ namespace HeavenStudio.Games
                                         {
                                             newspaper.GetComponent<Animator>().Play("NewspaperEnterRight", 0, 0);
                                         }
-                                        if (missedPose)
+                                        if (hitPose)
                                         {
-                                            wrestlerNewspaperAnim.Play($"Miss{UnityEngine.Random.Range(1, 3)}Newspaper", 0, 0);
+                                            wrestlerNewspaperAnim.Play($"Miss{UnityEngine.Random.Range(1, 7)}Newspaper", 0, 0);
                                             reporterNewspaperAnim.Play("IdleReporterNewspaper", 0, 0);
                                             kidsLaugh = Jukebox.PlayOneShotGame("ringside/kidslaugh", -1, 1, 1, true);
                                         }
@@ -362,6 +363,7 @@ namespace HeavenStudio.Games
                                         {
                                             wrestlerNewspaperAnim.Play($"Pose{currentPose}Newspaper", 0, 0);
                                             reporterNewspaperAnim.Play("HeartReporterNewspaper", 0, 0);
+                                            hitPose = false;
                                         }
                                     }),
                                     new BeatAction.Action(p.beat + 3f + p.newspaperBeats, delegate
@@ -520,9 +522,9 @@ namespace HeavenStudio.Games
                                 {
                                     Ringside.instance.newspaper.GetComponent<Animator>().Play("NewspaperEnterRight", 0, 0);
                                 }
-                                if (Ringside.instance.missedPose)
+                                if (!Ringside.instance.hitPose)
                                 {
-                                    Ringside.instance.wrestlerNewspaperAnim.Play($"Miss{UnityEngine.Random.Range(1, 3)}Newspaper", 0, 0);
+                                    Ringside.instance.wrestlerNewspaperAnim.Play($"Miss{UnityEngine.Random.Range(1, 7)}Newspaper", 0, 0);
                                     Ringside.instance.reporterNewspaperAnim.Play("IdleReporterNewspaper", 0, 0);
                                     Ringside.instance.kidsLaugh = Jukebox.PlayOneShotGame("ringside/kidslaugh", -1, 1, 1, true);
                                 }
@@ -530,6 +532,7 @@ namespace HeavenStudio.Games
                                 {
                                     Ringside.instance.wrestlerNewspaperAnim.Play($"Pose{Ringside.instance.currentPose}Newspaper", 0, 0);
                                     Ringside.instance.reporterNewspaperAnim.Play("HeartReporterNewspaper", 0, 0);
+                                    Ringside.instance.hitPose = false;
                                 }
                             }),
                             new BeatAction.Action(beat + 3f + newspaperBeats, delegate
@@ -579,9 +582,9 @@ namespace HeavenStudio.Games
                                 {
                                     Ringside.instance.newspaper.GetComponent<Animator>().Play("NewspaperEnterRight", 0, 0);
                                 }
-                                if (Ringside.instance.missedPose)
+                                if (!Ringside.instance.hitPose)
                                 {
-                                    Ringside.instance.wrestlerNewspaperAnim.Play($"Miss{UnityEngine.Random.Range(1, 3)}Newspaper", 0, 0);
+                                    Ringside.instance.wrestlerNewspaperAnim.Play($"Miss{UnityEngine.Random.Range(1, 7)}Newspaper", 0, 0);
                                     Ringside.instance.reporterNewspaperAnim.Play("IdleReporterNewspaper", 0, 0);
                                     Ringside.instance.kidsLaugh = Jukebox.PlayOneShotGame("ringside/kidslaugh", -1, 1, 1, true);
                                 }
@@ -589,6 +592,7 @@ namespace HeavenStudio.Games
                                 {
                                     Ringside.instance.wrestlerNewspaperAnim.Play($"Pose{Ringside.instance.currentPose}Newspaper", 0, 0);
                                     Ringside.instance.reporterNewspaperAnim.Play("HeartReporterNewspaper", 0, 0);
+                                    Ringside.instance.hitPose = false;
                                 }
                             }),
                             new BeatAction.Action(beat + 3f + newspaperBeats, delegate
@@ -614,6 +618,7 @@ namespace HeavenStudio.Games
             {
                 currentZoomCamBeat = allCameraEvents[currentZoomIndex].beat;
                 currentCamPos = new Vector3(poseFlash.transform.position.x, poseFlash.transform.position.y, -21.5f);
+                lastEase = (EasingFunction.Ease)allCameraEvents[currentZoomIndex]["ease"];
             }
         }
 
@@ -803,11 +808,9 @@ namespace HeavenStudio.Games
             if (state >= 1f || state <= -1f)
             {
                 wrestlerTransform.localScale = new Vector3(1.2f, 1.2f, 1f);
-                int randomPose = UnityEngine.Random.Range(1, 4);
-                currentPose = randomPose;
+                int randomPose = UnityEngine.Random.Range(1, 7);
                 wrestlerAnim.Play($"Pose{randomPose}", 0, 0);
                 Jukebox.PlayOneShotGame($"ringside/yell{UnityEngine.Random.Range(1, 7)}Raw");
-                missedPose = true;
                 reporterAnim.Play("IdleMiss", 0, 0);
                 Jukebox.PlayOneShotGame($"ringside/huhaudience{UnityEngine.Random.Range(0, 2)}");
                 BeatAction.New(instance.gameObject, new List<BeatAction.Action>()
@@ -821,9 +824,8 @@ namespace HeavenStudio.Games
 
         public void SuccessPoseForTheFans(PlayerActionEvent caller)
         {
-            missedPose = false;
             wrestlerTransform.localScale = new Vector3(1.2f, 1.2f, 1f);
-            int randomPose = UnityEngine.Random.Range(1, 4);
+            int randomPose = UnityEngine.Random.Range(1, 7);
             currentPose = randomPose;
             wrestlerAnim.Play($"Pose{randomPose}", 0, 0);
             if (reporterShouldHeart)
@@ -834,6 +836,7 @@ namespace HeavenStudio.Games
             {
                 reporterAnim.Play("ExcitedReporter", 0, 0);
             }
+            hitPose = true;
             Jukebox.PlayOneShotGame($"ringside/yell{UnityEngine.Random.Range(1, 7)}");
             FadeFlashColor(Color.white, new Color(1, 1, 1, 0), 1f);
             FadeBGColor(Color.black, defaultBGColorLight, 1f);
@@ -878,7 +881,6 @@ namespace HeavenStudio.Games
         
         public void MissPose(PlayerActionEvent caller)
         {
-            missedPose = true;
             reporterAnim.Play("IdleMiss", 0, 0);
             Jukebox.PlayOneShotGame($"ringside/huhaudience{UnityEngine.Random.Range(0, 2)}");
         }
