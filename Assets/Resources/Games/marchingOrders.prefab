@@ -1582,7 +1582,85 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 88781b295be0fe245b61208a9de66199, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  SoundSequences: []
+  SoundSequences:
+  - name: zentai
+    sequence:
+      game: 0
+      force: 0
+      clips:
+      - clip: attention1
+        beat: 0
+        pitch: 0
+        volume: 0
+        looping: 0
+        offset: 0
+        parameters: []
+      - clip: attention2
+        beat: 0.5
+        pitch: 0
+        volume: 0
+        looping: 0
+        offset: 0
+        parameters: []
+  - name: susume
+    sequence:
+      game: 0
+      force: 0
+      clips:
+      - clip: march1
+        beat: 0
+        pitch: 0
+        volume: 0
+        looping: 0
+        offset: 0
+        parameters: []
+      - clip: march2
+        beat: 0.25
+        pitch: 0
+        volume: 0
+        looping: 0
+        offset: 0
+        parameters: []
+      - clip: march3
+        beat: 0.5
+        pitch: 0
+        volume: 0
+        looping: 0
+        offset: 0
+        parameters: []
+      - clip: marchStart
+        beat: 1
+        pitch: 0
+        volume: 0
+        looping: 0
+        offset: 0
+        parameters: []
+  - name: tomare
+    sequence:
+      game: 0
+      force: 0
+      clips:
+      - clip: halt1
+        beat: 0
+        pitch: 0
+        volume: 0
+        looping: 0
+        offset: 0
+        parameters: []
+      - clip: halt2
+        beat: 0.5
+        pitch: 0
+        volume: 0
+        looping: 0
+        offset: 0
+        parameters: []
+      - clip: stepOther
+        beat: 1
+        pitch: 0
+        volume: 0.75
+        looping: 0
+        offset: 0
+        parameters: []
   EligibleHits: []
   scheduledInputs: []
   firstEnable: 0

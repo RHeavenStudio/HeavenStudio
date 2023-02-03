@@ -34,13 +34,9 @@ namespace HeavenStudio.Games.Loaders
 
                     new GameAction("marching", "Cadets March")
                     {
-                        function = delegate { var e = eventCaller.currentEntity; MarchingOrders.instance.MarchAction(e.beat, e.length, e["toggle"]); },
+                        function = delegate { var e = eventCaller.currentEntity; MarchingOrders.instance.MarchAction(e.beat, e.length); },
                         defaultLength = 4f,
                         resizable = true,
-                        parameters = new List<Param>
-                        {
-                            new Param("toggle", false, "Auto March", "When enabled, will march automatically like at the end of Marchers")
-                        }
                     },
 
                     new GameAction("attention", "Attention...")
@@ -70,13 +66,13 @@ namespace HeavenStudio.Games.Loaders
 
                     new GameAction("face turn", "Direction to Turn")
                     {
-                        function = delegate { var e = eventCaller.currentEntity; MarchingOrders.instance.SargeFaceTurn(e.beat, e["type"], e["type2"], e["toggle"]); },
+                        function = delegate { var e = eventCaller.currentEntity; MarchingOrders.instance.SargeFaceTurn(e.beat, e["type"], e["type2"], false); },
                         defaultLength = 4f,
                         parameters = new List<Param>()
                         {
                             new Param("type", MarchingOrders.DirectionFaceTurn.Right, "Direction", "The direction sarge wants the cadets to face"),
                             new Param("type2", MarchingOrders.FaceTurnLength.Normal, "Length", "How fast or slow the event lasts"),
-                            new Param("toggle", false, "Point", "Do the pointing animation instead of just the head turn")
+                            //new Param("toggle", false, "Point", "Do the pointing animation instead of just the head turn")
                         }
                     },
 
@@ -110,7 +106,6 @@ namespace HeavenStudio.Games
     {
         public static MarchingOrders instance;
 
-        //code is just copied from other minigame code, i will polish them later
         [Header("Sarge")]
         public Animator Sarge;
         public Animator Steam;
@@ -255,7 +250,6 @@ namespace HeavenStudio.Games
                     Cadet3.DoScaledAnimationAsync(marchOtherCount % 2 != 0 ? "MarchR" : "MarchL", 0.5f);
                     ScheduleInput((int) currBeat - 1f, 1f, InputType.STANDARD_DOWN, MarchHit, GenericMiss, MarchEmpty);
                     Jukebox.PlayOneShotGame("marchingOrders/stepOther", volume: 0.75f);
-                    Debug.Log($"March Other Count {marchOtherCount}");
                 }
             }
             if (cond.ReportBeat(ref bop.lastReportedBeat, bop.startBeat % 1, true))
@@ -268,6 +262,7 @@ namespace HeavenStudio.Games
                     CadetPlayer.DoScaledAnimationAsync("Bop", 0.5f);
                 }
             }
+
             if (!IsExpectingInputNow(InputType.STANDARD_DOWN))
             {
                 if (PlayerInput.Pressed())
@@ -315,13 +310,6 @@ namespace HeavenStudio.Games
                     CadetHeadPlayer.DoScaledAnimationAsync("FaceR", 0.5f);
                 }
             }
-            /*switch (background)
-            {
-                case (int) MarchingOrders.BackgroundColor.Yellow:
-                    break;
-                default:
-                    break;
-            }*/
         }
 
         public void BopAction(float beat, float length)
@@ -330,7 +318,7 @@ namespace HeavenStudio.Games
             bop.startBeat = beat;
         }
         
-        public void MarchAction(float beat, float length, bool auto)
+        public void MarchAction(float beat, float length)
         {
             marching.length = length;
             marching.startBeat = beat;
@@ -466,32 +454,20 @@ namespace HeavenStudio.Games
 
         public static void AttentionSound(float beat)
         {
-            MultiSound.Play(new MultiSound.Sound[] {
-            new MultiSound.Sound("marchingOrders/attention1", beat),
-            new MultiSound.Sound("marchingOrders/attention2", beat + 0.5f),
-            }, forcePlay: true);
+            PlaySoundSequence("marchingOrders", "zentai", beat);
         }
         
         public static void MarchSound(float beat, bool noVoice)
         {
             if (!noVoice)
             {
-                MultiSound.Play(new MultiSound.Sound[] {
-                    new MultiSound.Sound("marchingOrders/march1", beat),
-                    new MultiSound.Sound("marchingOrders/march2", beat + 0.25f),
-                    new MultiSound.Sound("marchingOrders/march3", beat + 0.5f),
-                    new MultiSound.Sound("marchingOrders/marchStart", beat + 1f),
-                }, forcePlay: true);
+                PlaySoundSequence("marchingOrders", "susume", beat);
             }
         }
         
         public static void HaltSound(float beat)
         {
-            MultiSound.Play(new MultiSound.Sound[] {
-            new MultiSound.Sound("marchingOrders/halt1", beat),
-            new MultiSound.Sound("marchingOrders/halt2", beat + 1f),
-            new MultiSound.Sound("marchingOrders/stepOther", beat + 1f, volume: 0.75f),
-            }, forcePlay: true);
+            PlaySoundSequence("marchingOrders", "tomare", beat);
         }
     }
 }
