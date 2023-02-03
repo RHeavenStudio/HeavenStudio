@@ -16,6 +16,7 @@ namespace HeavenStudio.Games.Scripts_Spaceball
         public float startBeat;
 
         public bool high;
+        public bool isTacobell;
 
         public Transform Holder;
         public SpriteRenderer Sprite;
@@ -89,6 +90,10 @@ namespace HeavenStudio.Games.Scripts_Spaceball
             hitPos = Holder.localPosition;
             hitRot = Holder.eulerAngles.z;
 
+            if (isTacobell)
+            {
+                Jukebox.PlayOneShotGame("spaceball/tacobell");
+            }
             Jukebox.PlayOneShotGame("spaceball/hit");
 
             // jank fix for a bug with autoplay - freeform
