@@ -204,12 +204,16 @@ namespace HeavenStudio.Games
                 }
                 if (PlayerInput.Pressed() && !IsExpectingInputNow(InputType.STANDARD_DOWN) && !shouldNotInput)
                 {
+                    Ringside.instance.ScoreMiss(0.5);
+
                     wrestlerAnim.DoScaledAnimationAsync("YeMiss", 0.25f);
                     Jukebox.PlayOneShotGame($"ringside/confusedanswer");
                     if (isPlaying(reporterAnim, "IdleReporter")) reporterAnim.Play("IdleLate", 0, 0);
                 }
                 if (PlayerInput.AltPressed() && !IsExpectingInputNow(InputType.STANDARD_ALT_DOWN) && !shouldNotInput)
                 {
+                    Ringside.instance.ScoreMiss(0.5);
+                    
                     int randomPose = UnityEngine.Random.Range(1, 7);
                     wrestlerAnim.Play($"Pose{randomPose}", 0, 0);
                     reporterAnim.Play("FlinchReporter", 0, 0);
