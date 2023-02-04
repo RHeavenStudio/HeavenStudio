@@ -158,6 +158,14 @@ namespace HeavenStudio.Games
             if (queuedPoses.Count > 0) queuedPoses.Clear();
         }
 
+        void OnGameSwitch(float beat)
+        {
+            shouldNotInput = false;
+            shouldBop = true;
+            lastCamPos = new Vector3(0, 0, -10);
+            currentCamPos = new Vector3(0, 0, -10);
+        }
+
         public override void OnTimeChange()
         {
             UpdateCameraZoom();
