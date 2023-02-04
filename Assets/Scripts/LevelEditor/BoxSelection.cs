@@ -54,7 +54,7 @@ namespace HeavenStudio.Editor
             Camera camera = Editor.instance.EditorCamera;
             Vector3 scale = Editor.instance.MainCanvas.transform.localScale;
 
-            boxVisual.transform.localScale = new Vector2(0.01f/scale.x, 1f/scale.y);
+            boxVisual.transform.localScale = new Vector2((1f / Timeline.instance.TimelineContent.localScale.x) /scale.x, 1f/scale.y);
             text.transform.localScale = scale;
 
             if (Selections.instance.eventsSelected.Count > 0 && Timeline.instance.InteractingWithEvents())

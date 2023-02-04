@@ -276,6 +276,7 @@ namespace HeavenStudio.Editor
                     changedMusic = true;
 
                     Timeline.FitToSong();
+                    Timeline.CreateWaveform();
                 }
             }
             );
@@ -485,6 +486,7 @@ namespace HeavenStudio.Editor
                 UpdateEditorStatus(false);
                 CommandManager.instance.Clear();
                 Timeline.FitToSong();
+                Timeline.CreateWaveform();
             });
         }
 
@@ -492,6 +494,7 @@ namespace HeavenStudio.Editor
 
         public void Fullscreen()
         {
+            MainCanvas.gameObject.SetActive(fullscreen);
             if (fullscreen == false)
             {
                 // EditorLetterbox.SetActive(false);
@@ -503,6 +506,7 @@ namespace HeavenStudio.Editor
                 GameManager.instance.CursorCam.enabled = false;
                 GameManager.instance.OverlayCamera.targetTexture = null;
                 fullscreen = true;
+
             }
             else
             {

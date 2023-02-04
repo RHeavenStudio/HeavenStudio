@@ -85,11 +85,10 @@ namespace HeavenStudio.Editor.Track
             var leftSide = rectTransform.localPosition.x;
             var rightSide = leftSide + rectTransform.sizeDelta.x;
 
-            var timelineLeftSide = (Timeline.instance.TimelineContent.localPosition.x / 100f) * -1;
-            var timelineRightSide = timelineLeftSide + 10.563f; // what a magic number, i'm sure I could calculate this but I'm lazy
+            var timelineLeftSide = (Timeline.instance.TimelineContent.localPosition.x / Timeline.instance.TimelineContent.localScale.x) * -1;
+            var timelineRightSide = (Timeline.instance.TimelineScroll.viewport.rect.width / Timeline.instance.TimelineContent.localScale.x) + timelineLeftSide;
 
             bool visible = (rightSide >= timelineLeftSide && leftSide <= timelineRightSide);
-
 
             if (visible != lastVisible)
             {
@@ -103,6 +102,8 @@ namespace HeavenStudio.Editor.Track
             lastVisible = visible;
 
             #endregion
+
+            if (!visible) return;
 
             SetColor(entity.track);
 
