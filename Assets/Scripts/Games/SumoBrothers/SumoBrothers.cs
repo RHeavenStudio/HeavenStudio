@@ -18,19 +18,21 @@ namespace HeavenStudio.Games.Loaders
                     parameters = new List<Param>()
                     {
                         new Param("toggle", true, "Inu Bop", "Inu Sensei bops or not."),
-                        new Param("toggle1", true, "Sumo Bop", "Sumo Brothers bop or not."),
+                        new Param("toggle1", true, "Brothers Bop", "Sumo Brothers bop or not."),
                     },
                     defaultLength = 1f
                 },
 
-                 new GameAction("inuCrouch", "Inu Crouch")
+                 new GameAction("crouch", "Crouch")
                 {
-                    function = delegate { var e = eventCaller.currentEntity; SumoBrothers.instance.Crouch(e["toggle"]); },
+                    function = delegate { var e = eventCaller.currentEntity; SumoBrothers.instance.Crouch(e.beat, e.length, e["toggle"], e["toggle1"]); },
                     parameters = new List<Param>()
                     {
-                        new Param("toggle", true, "Crouch", "Inu Sensei crouches or not.")
+                        new Param("toggle", true, "Inu Crouch", "Inu Sensei crouches or not."),
+                        new Param("toggle1", true, "Brothers Crouch", "Sumo Brothers crouche or not.")
                     },
-                    defaultLength = 1f
+                    defaultLength = 1f,
+                    resizable = true
                 },
 
                 new GameAction("endPose", "End Pose")
@@ -80,18 +82,13 @@ namespace HeavenStudio.Games
             }
         }
 
-        public void Crouch(bool crouch)
+        public void Crouch(float beat, float length, bool inu, bool sumo)
         {
-            if (crouch)
-            {
-                inuSensei.DoScaledAnimationAsync("InuCrouch", 0.5f);
+            BeatAction.New(instance.gameObject, new List<BeatAction.Action>() {
+            new BeatAction.Action(beat, delegate { if (inu) inuSensei.DoScaledAnimationAsync("InuCrouch", 0.5f); }),
+            new BeatAction.Action(beat + length, delegate { if (inu) inuSensei.DoScaledAnimationAsync("InuIdle", 0.5f); })
+            });
 
-            }
-            else
-            {
-                inuSensei.DoScaledAnimationAsync("InuIdle", 0.5f);
-
-            }
         }
 
         public void Pose(float beat)
