@@ -8,29 +8,35 @@ namespace HeavenStudio.Games.Scripts_FlipperFlop
     public class FlipperFlopFlipper : MonoBehaviour
     {
         [SerializeField] Animator anim;
+        [SerializeField] Animator faceAnim;
         public bool player;
         bool left;
         bool up;
 
-        public void Flip(bool roll, bool hit)
+        public void Flip(bool roll, bool hit, bool barely = false)
         {
             if (roll)
             {
-                if (player && hit) Jukebox.PlayOneShotGame("flipperFlop/roll" + (left ? "L" : "R"));
+                if (player && hit && !barely) Jukebox.PlayOneShotGame("flipperFlop/roll" + (left ? "L" : "R"));
+                else if (barely) Jukebox.PlayOneShotGame("flipperFlop/tink");
                 up = !up;
             }
             else
             {
                 if (player && hit)
                 {
-                    if (up)
+                    if (up && !barely)
                     {
                         Jukebox.PlayOneShotGame($"flipperFlop/flipB{UnityEngine.Random.Range(1, 3)}");
                     }
-                    else
+                    else if (!barely)
                     {
                         Jukebox.PlayOneShotGame($"flipperFlop/flip{UnityEngine.Random.Range(1, 3)}");
 
+                    }
+                    else
+                    {
+                        Jukebox.PlayOneShotGame("flipperFlop/tink");
                     }
                 }
                 if (left)

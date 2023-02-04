@@ -10,7 +10,7 @@ namespace HeavenStudio.Games.Loaders
     {
         public static Minigame AddGame(EventCaller eventCaller)
         {
-            return new Minigame("flipperFlop", "Flipper-Flop \n<color=#eb5454>[INITIALIZATION ONLY]</color>", "0058CE", false, false, new List<GameAction>()
+            return new Minigame("flipperFlop", "Flipper-Flop", "SEAL05", false, false, new List<GameAction>()
             {
                 new GameAction("attentionCompany", "Attention Company!")
                 {
@@ -66,7 +66,9 @@ namespace HeavenStudio.Games
     public class FlipperFlop : Minigame
     {
         [Header("Properties")]
+        private bool missed;
         static List<QueuedFlip> queuedInputs = new List<QueuedFlip>();
+        [SerializeField] FlipperFlopFlipper flipperPlayer;
         [SerializeField] List<FlipperFlopFlipper> flippers = new List<FlipperFlopFlipper>();
         public struct QueuedFlip
         {
@@ -125,6 +127,7 @@ namespace HeavenStudio.Games
             {
                 flipper.Bop();
             }
+            flipperPlayer.Bop();
         }
 
         public static void Flipping(float beat, float length, bool roll, bool uh = false, bool thatsIt = false, int appreciation = 0)
@@ -147,7 +150,14 @@ namespace HeavenStudio.Games
             {
                 if (roll)
                 {
-                    FlipperFlop.instance.ScheduleInput(beat - 1, 1 + i, InputType.STANDARD_ALT_DOWN, FlipperFlop.instance.JustFlipperRoll, FlipperFlop.instance.MissFlipperRoll, FlipperFlop.instance.Nothing);
+                    ScheduleInput(beat - 1, 1 + i, InputType.STANDARD_ALT_DOWN, JustFlipperRoll, MissFlipperRoll, Nothing);
+                    foreach (var flipper in flippers)
+                    {
+                        BeatAction.New(instance.gameObject, new List<BeatAction.Action>()
+                        {
+                            new BeatAction.Action(beat + i, delegate { flipper.Flip(roll, true);})
+                        });
+                    }
 
                     string soundToPlay = $"flipperFlop/count/flopCount{flopCount}";
 
@@ -172,26 +182,26 @@ namespace HeavenStudio.Games
                         int noiseToPlay = (flopCount == 4) ? 2 : flopCount;
                         soundToPlay = $"flipperFlop/count/flopNoise{noiseToPlay}";
                         BeatAction.New(instance.gameObject, new List<BeatAction.Action>()
-                            {
-                                new BeatAction.Action(beat + i, delegate { Jukebox.PlayOneShotGame("flipperFlop/appreciation/thatsit1"); }),
-                                new BeatAction.Action(beat + i, delegate { Jukebox.PlayOneShotGame(soundToPlay); }),
-                                new BeatAction.Action(beat + i + 0.5f, delegate { Jukebox.PlayOneShotGame("flipperFlop/appreciation/thatsit2"); }),
-                            });
+                        {
+                            new BeatAction.Action(beat + i, delegate { Jukebox.PlayOneShotGame("flipperFlop/appreciation/thatsit1"); }),
+                            new BeatAction.Action(beat + i, delegate { Jukebox.PlayOneShotGame(soundToPlay); }),
+                            new BeatAction.Action(beat + i + 0.5f, delegate { Jukebox.PlayOneShotGame("flipperFlop/appreciation/thatsit2"); }),
+                        });
                     }
                     else
                     {
                         BeatAction.New(instance.gameObject, new List<BeatAction.Action>()
-                            {
-                                new BeatAction.Action(beat + i, delegate { Jukebox.PlayOneShotGame(soundToPlay); }),
-                            });
+                        {
+                            new BeatAction.Action(beat + i, delegate { Jukebox.PlayOneShotGame(soundToPlay); }),
+                        });
                     }
 
-                    if (appreciation != (int)AppreciationType.None && !uh && i + 1 == length)
+                    if (appreciation != (int)AppreciationType.None && !uh && i + 1 == length && !missed)
                     {
                         BeatAction.New(instance.gameObject, new List<BeatAction.Action>()
-                            {
-                                new BeatAction.Action(beat + i + 1f, delegate { FlipperFlop.AppreciationVoiceLine(appreciation); }),
-                            });
+                        {
+                            new BeatAction.Action(beat + i + 1f, delegate { AppreciationVoiceLine(appreciation); }),
+                        });
                     }
 
 
@@ -207,7 +217,14 @@ namespace HeavenStudio.Games
                 }
                 else
                 {
-                    FlipperFlop.instance.ScheduleInput(beat - 1, 1 + i, InputType.STANDARD_DOWN, FlipperFlop.instance.JustFlip, FlipperFlop.instance.MissFlip, FlipperFlop.instance.Nothing);
+                    ScheduleInput(beat - 1, 1 + i, InputType.STANDARD_DOWN, JustFlip, MissFlip, Nothing);
+                    foreach (var flipper in flippers)
+                    {
+                        BeatAction.New(instance.gameObject, new List<BeatAction.Action>()
+                        {
+                            new BeatAction.Action(beat + i, delegate { flipper.Flip(roll, true);})
+                        });
+                    }
                 }
             }
             if (uh && flopCount != 4)
@@ -216,21 +233,21 @@ namespace HeavenStudio.Games
                 {
                     string voiceLine = $"flipperFlop/uh{flopCount + i}";
                     BeatAction.New(instance.gameObject, new List<BeatAction.Action>()
-                        {
-                            new BeatAction.Action(beat + length + i, delegate { Jukebox.PlayOneShotGame(voiceLine); }),
-                        });
+                    {
+                        new BeatAction.Action(beat + length + i, delegate { Jukebox.PlayOneShotGame(voiceLine); }),
+                    });
                 }
                 BeatAction.New(instance.gameObject, new List<BeatAction.Action>()
-                    {
-                        new BeatAction.Action(beat + length + 4 - flopCount, delegate { FlipperFlop.AppreciationVoiceLine(appreciation); }),
-                    });
+                {
+                    new BeatAction.Action(beat + length + 4 - flopCount, delegate { AppreciationVoiceLine(appreciation); }),
+                });
             }
             else if (uh && flopCount == 4)
             {
                 BeatAction.New(instance.gameObject, new List<BeatAction.Action>()
-                    {
-                        new BeatAction.Action(beat + length, delegate { FlipperFlop.AppreciationVoiceLine(appreciation); }),
-                    });
+                {
+                    new BeatAction.Action(beat + length, delegate { AppreciationVoiceLine(appreciation); }),
+                });
             }
         }
 
@@ -273,6 +290,15 @@ namespace HeavenStudio.Games
             ScheduleInput(beat, 2, InputType.STANDARD_DOWN, JustFlip, MissFlip, Nothing);
             ScheduleInput(beat, 2.5f, InputType.STANDARD_DOWN, JustFlip, MissFlip, Nothing);
             ScheduleInput(beat, 3, InputType.STANDARD_DOWN, JustFlip, MissFlip, Nothing);
+            foreach (var flipper in flippers)
+            {
+                BeatAction.New(instance.gameObject, new List<BeatAction.Action>()
+                {
+                    new BeatAction.Action(beat + 2, delegate { flipper.Flip(false, true);}),
+                    new BeatAction.Action(beat + 2.5f, delegate { flipper.Flip(false, true);}),
+                    new BeatAction.Action(beat + 3, delegate { flipper.Flip(false, true);})
+                });
+            }
         }
 
         public static void AttentionCompany(float beat)
@@ -317,6 +343,7 @@ namespace HeavenStudio.Games
         {
             if (state >= 1f || state <= -1f)
             {
+                flipperPlayer.Flip(false, true, true);
                 return;
             }
             SuccessFlip(false);
@@ -326,6 +353,7 @@ namespace HeavenStudio.Games
         {
             if (state >= 1f || state <= -1f)
             {
+                flipperPlayer.Flip(true, true, true);
                 return;
             }
             SuccessFlip(true);
@@ -333,20 +361,17 @@ namespace HeavenStudio.Games
 
         public void SuccessFlip(bool roll)
         {
-            foreach(var flipper in flippers)
-            {
-                flipper.Flip(roll, true);
-            }
+            flipperPlayer.Flip(roll, true);
         }
 
         public void MissFlip(PlayerActionEvent caller)
         {
-
+            flipperPlayer.Flip(false, false);
         }
 
         public void MissFlipperRoll(PlayerActionEvent caller)
         {
-
+            flipperPlayer.Flip(true, false);
         }
 
         public void Nothing(PlayerActionEvent caller) {}
