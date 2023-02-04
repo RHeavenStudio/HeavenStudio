@@ -103,8 +103,6 @@ namespace HeavenStudio.Editor.Track
 
             #endregion
 
-            if (!visible) return;
-
             SetColor(entity.track);
 
             if (selected)
@@ -481,6 +479,7 @@ namespace HeavenStudio.Editor.Track
         private void OnDestroy()
         {
             // better safety net than canada's healthcare system
+            // this is still hilarious
             // GameManager.instance.Beatmap.entities.Remove(GameManager.instance.Beatmap.entities.Find(c => c.eventObj = this));
         }
 

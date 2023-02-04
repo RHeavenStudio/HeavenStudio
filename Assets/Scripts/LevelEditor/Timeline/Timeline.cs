@@ -342,7 +342,7 @@ namespace HeavenStudio.Editor.Track
         private void Update()
         {
             waveform.rectTransform.anchoredPosition = new Vector2(
-                -(Conductor.instance.firstBeatOffset / (60.0f / GameManager.instance.Beatmap.bpm)), 
+                -(GameManager.instance.Beatmap.firstBeatOffset / (60.0f / GameManager.instance.Beatmap.bpm)), 
                 waveform.rectTransform.anchoredPosition.y);
 
             if (!Conductor.instance.isPlaying && !Conductor.instance.isPaused)
@@ -437,7 +437,7 @@ namespace HeavenStudio.Editor.Track
             }
 
             if (Conductor.instance.isPlaying)
-                TimelineContent.transform.localPosition = new Vector3((-Conductor.instance.songPositionInBeats * 100) + 200, TimelineContent.transform.localPosition.y);
+                TimelineContent.transform.localPosition = new Vector3((-Conductor.instance.songPositionInBeats * TimelineContent.localScale.x) + 200, TimelineContent.transform.localPosition.y);
 
             TimelineContent.transform.localPosition = new Vector3(Mathf.Clamp(TimelineContent.transform.localPosition.x, Mathf.NegativeInfinity, 0), TimelineContent.transform.localPosition.y);
 
