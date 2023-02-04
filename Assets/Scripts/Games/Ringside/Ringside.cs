@@ -63,6 +63,18 @@ namespace HeavenStudio.Games.Loaders
                     },
                     defaultLength = 0.5f
                 },
+                new GameAction("questionScaled", "Question (Stretchable)")
+                {
+                    function = delegate {var e = eventCaller.currentEntity; Ringside.instance.Question(e.beat, e["alt"], e["variant"], e.length); },
+                    preFunction = delegate {if (Ringside.instance == null) return; var e = eventCaller.currentEntity; Ringside.instance.PreQuestion(e.beat, e["variant"], e.length); },
+                    parameters = new List<Param>()
+                    {
+                        new Param("alt", false, "Alt", "Whether the alt voice line should be used or not."),
+                        new Param("variant", Ringside.QuestionVariant.Random, "Variant", "Which variant of the cue do you wish to play.")
+                    },
+                    defaultLength = 4f,
+                    resizable = true
+                },
             });
         }
     }
@@ -399,58 +411,77 @@ namespace HeavenStudio.Games
             }
         }
 
-        public void Question(float beat, bool alt, int questionVariant)
+        public void Question(float beat, bool alt, int questionVariant, float length = 4f)
         {
+            if (length <= 2f) return;
             int currentQuestion = questionVariant;
-            if (currentQuestion == 4) currentQuestion = UnityEngine.Random.Range(1, 4);
+            if (currentQuestion == (int)QuestionVariant.Random) currentQuestion = UnityEngine.Random.Range(1, 4);
             reporterAnim.DoScaledAnimationAsync("WubbaLubbaDubbaThatTrue", 0.4f);
+            List<MultiSound.Sound> qSounds = new List<MultiSound.Sound>();
             if (alt)
             {
-                MultiSound.Play(new MultiSound.Sound[]
-                {
-                    new MultiSound.Sound($"ringside/wub{currentQuestion}", beat),
-                    new MultiSound.Sound($"ringside/dubba{currentQuestion}-1", beat + 0.5f),
-                    new MultiSound.Sound($"ringside/dubba{currentQuestion}-2", beat + 0.75f),
-                    new MultiSound.Sound($"ringside/dubba{currentQuestion}-3", beat + 1f),
-                    new MultiSound.Sound($"ringside/dubba{currentQuestion}-4", beat + 1.25f),
-                }, forcePlay: true);
+                qSounds.Add(new MultiSound.Sound($"ringside/wub{currentQuestion}", beat));
             }
             else
             {
-                MultiSound.Play(new MultiSound.Sound[]
-                {
-                    new MultiSound.Sound($"ringside/wubba{currentQuestion}-1", beat),
-                    new MultiSound.Sound($"ringside/wubba{currentQuestion}-2", beat + 0.25f),
-                    new MultiSound.Sound($"ringside/dubba{currentQuestion}-1", beat + 0.5f),
-                    new MultiSound.Sound($"ringside/dubba{currentQuestion}-2", beat + 0.75f),
-                    new MultiSound.Sound($"ringside/dubba{currentQuestion}-3", beat + 1f),
-                    new MultiSound.Sound($"ringside/dubba{currentQuestion}-4", beat + 1.25f),
-                }, forcePlay: true);
+                qSounds.Add(new MultiSound.Sound($"ringside/wubba{currentQuestion}-1", beat));
+                qSounds.Add(new MultiSound.Sound($"ringside/wubba{currentQuestion}-2", beat + 0.25f));
             }
-            ThatTrue(beat + 1.25f, currentQuestion);
+            float extend = length - 3f;
+            int totalExtend = 0;
+            if (extend > 0f)
+            {
+                for (int i = 0; i < extend; i++)
+                {
+                    qSounds.Add(new MultiSound.Sound($"ringside/dubba{currentQuestion}-1", beat + i + 0.5f ));
+                    qSounds.Add(new MultiSound.Sound($"ringside/dubba{currentQuestion}-2", beat + i + 0.75f ));
+                    qSounds.Add(new MultiSound.Sound($"ringside/dubba{currentQuestion}-3", beat + i + 1f ));
+                    qSounds.Add(new MultiSound.Sound($"ringside/dubba{currentQuestion}-4", beat + i + 1.25f ));
+                    totalExtend++;
+                }
+            }
+
+            MultiSound.Play(qSounds.ToArray(), forcePlay: true);
+            ThatTrue(beat + totalExtend, currentQuestion);
+        }
+
+        public void PreQuestion(float beat, int questionVariant, float length = 4f)
+        {
+            if (GameManager.instance.currentGame != "ringside") return;
+            if (instance == null) return;
+            if (length <= 2f)
+            {
+                int currentQuestion = questionVariant;
+                if (currentQuestion == (int)QuestionVariant.Random) currentQuestion = UnityEngine.Random.Range(1, 4);
+                BeatAction.New(instance.gameObject, new List<BeatAction.Action>()
+                {
+                    new BeatAction.Action(beat - 0.5f, delegate { reporterAnim.DoScaledAnimationAsync("WubbaLubbaDubbaThatTrue", 0.4f); }),
+                });
+                ThatTrue(beat - 1, currentQuestion);
+            }
         }
 
         public void ThatTrue(float beat, int currentQuestion)
         {
             MultiSound.Play(new MultiSound.Sound[]
             {
-                new MultiSound.Sound($"ringside/that{currentQuestion}", beat + 0.25f),
-                new MultiSound.Sound($"ringside/true{currentQuestion}", beat + 0.75f),
+                new MultiSound.Sound($"ringside/that{currentQuestion}", beat + 0.5f),
+                new MultiSound.Sound($"ringside/true{currentQuestion}", beat + 1f),
             }, forcePlay: true);
-            ScheduleInput(beat, 1.75f, InputType.STANDARD_DOWN, JustQuestion, Miss, Nothing);
+            ScheduleInput(beat, 2f, InputType.STANDARD_DOWN, JustQuestion, Miss, Nothing);
             BeatAction.New(instance.gameObject, new List<BeatAction.Action>()
             {
-                new BeatAction.Action(beat + 0.25f, delegate { reporterAnim.DoScaledAnimationAsync("ThatTrue", 0.5f); }),
+                new BeatAction.Action(beat + 0.5f, delegate { reporterAnim.DoScaledAnimationAsync("ThatTrue", 0.5f); }),
             });
         }
 
         public void BigGuy(float beat, int questionVariant)
         {
             int currentQuestion = questionVariant;
-            if (currentQuestion == 4) currentQuestion = UnityEngine.Random.Range(1, 4);
+            if (currentQuestion == (int)QuestionVariant.Random) currentQuestion = UnityEngine.Random.Range(1, 4);
             reporterAnim.DoScaledAnimationAsync("Woah", 0.4f);
             float youBeat = 0.65f;
-            if (currentQuestion == 3) youBeat = 0.7f;
+            if (currentQuestion == (int)QuestionVariant.Third) youBeat = 0.7f;
             MultiSound.Play(new MultiSound.Sound[]
             {
                 new MultiSound.Sound($"ringside/woah{currentQuestion}", beat),
