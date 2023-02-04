@@ -53,6 +53,8 @@ namespace HeavenStudio.Games
     {
         [Header("Components")]
         [SerializeField] Animator inuSensei;
+        [SerializeField] Animator sumoBrotherP;
+        [SerializeField] Animator sumoBrotherG;
 
         [Header("Properties")]
         public bool goBopSumo;
@@ -86,6 +88,11 @@ namespace HeavenStudio.Games
                     inuSensei.DoScaledAnimationAsync("InuBop", 0.5f);
 
                 }
+                if (goBopSumo && allowBopSumo)
+                {
+                    sumoBrotherP.DoScaledAnimationAsync("SumoBop", 0.5f);
+                    sumoBrotherG.DoScaledAnimationAsync("SumoBop", 0.5f);
+                }
 
             }
         }
@@ -98,12 +105,28 @@ namespace HeavenStudio.Games
 
         public void Crouch(float beat, float length, bool inu, bool sumo)
         {
-            allowBopInu = false;
+            if (inu)
+            {
+                allowBopInu = false;
+            }
+            if (sumo)
+            {
+                allowBopSumo = false;
+            }
+            
+            
             BeatAction.New(instance.gameObject, new List<BeatAction.Action>() {
             new BeatAction.Action(beat, delegate { if (inu == true) inuSensei.DoScaledAnimationAsync("InuCrouch", 0.5f); }),
+            new BeatAction.Action(beat, delegate { if (sumo == true) sumoBrotherP.DoScaledAnimationAsync("SumoCrouch", 0.5f); }),
+            new BeatAction.Action(beat, delegate { if (sumo == true) sumoBrotherG.DoScaledAnimationAsync("SumoCrouch", 0.5f); }),
             new BeatAction.Action(beat + length, delegate { allowBopInu = true; }),
+            new BeatAction.Action(beat + length, delegate { allowBopSumo = true; }),
             new BeatAction.Action(beat + length, delegate { if (goBopInu == false) inuSensei.DoScaledAnimationAsync("InuIdle", 0.5f); }),
-            new BeatAction.Action(beat + length, delegate { if (goBopInu == true) inuSensei.DoScaledAnimationAsync("InuBop", 0.5f); })
+            new BeatAction.Action(beat + length, delegate { if (goBopInu == true) inuSensei.DoScaledAnimationAsync("InuBop", 0.5f); }),
+            new BeatAction.Action(beat + length, delegate { if (goBopSumo == false) sumoBrotherP.DoScaledAnimationAsync("SumoIdle", 0.5f); }),
+            new BeatAction.Action(beat + length, delegate { if (goBopSumo == false) sumoBrotherG.DoScaledAnimationAsync("SumoIdle", 0.5f); }),
+            new BeatAction.Action(beat + length, delegate { if (goBopSumo == true) sumoBrotherP.DoScaledAnimationAsync("SumoBop", 0.5f); }),
+            new BeatAction.Action(beat + length, delegate { if (goBopSumo == true) sumoBrotherG.DoScaledAnimationAsync("SumoBop", 0.5f); })
             });
 
         }
