@@ -24,23 +24,21 @@ namespace HeavenStudio.Games.Loaders
                 },
                 new GameAction("ThrowObjectLeft", "Throw Left Object")
                 {
-                    function = delegate { DogNinja.instance.ThrowObject(eventCaller.currentEntity.beat, eventCaller.currentEntity["toggle"], eventCaller.currentEntity["type"], eventCaller.currentEntity["text"], true); }, 
+                    function = delegate { DogNinja.instance.ThrowObject(eventCaller.currentEntity.beat, eventCaller.currentEntity["type"], eventCaller.currentEntity["text"], true); }, 
                     defaultLength = 2,
                     parameters = new List<Param>()
                     {
-                        new Param("toggle", true, "Random Fruit", "Randomize the fruit"),
-                        new Param("type", DogNinja.ObjectType.Apple, "Object", "The object to be thrown"),
+                        new Param("type", DogNinja.ObjectType.Random, "Object", "The object to be thrown"),
                         new Param("text", "", "Alt. Objects", "An alternative object; one that doesn't exist in the main menu"),
                     }
                 },
                 new GameAction("ThrowObjectRight", "Throw Right Object")
                 {
-                    function = delegate { DogNinja.instance.ThrowObject(eventCaller.currentEntity.beat, eventCaller.currentEntity["toggle"], eventCaller.currentEntity["type"], eventCaller.currentEntity["text"], false); }, 
+                    function = delegate { DogNinja.instance.ThrowObject(eventCaller.currentEntity.beat, eventCaller.currentEntity["type"], eventCaller.currentEntity["text"], false); }, 
                     defaultLength = 2,
                     parameters = new List<Param>()
                     {
-                        new Param("toggle", true, "Random Fruit", "Randomize the fruit"),
-                        new Param("type", DogNinja.ObjectType.Apple, "Object", "The object to be thrown"),
+                        new Param("type", DogNinja.ObjectType.Random, "Object", "The object to be thrown"),
                         new Param("text", "", "Alt. Objects", "An alternative object; one that doesn't exist in the main menu"),
                     }
                 },
@@ -95,23 +93,23 @@ namespace HeavenStudio.Games
 
         private float lastReportedBeat = 0f;
         private bool birdOnScreen = false;
-        private bool permaBop = true;
-        public static bool dontBop = false;
+        static bool dontBop = false;
         
         public static DogNinja instance;
 
         public enum ObjectType
         {
-            Apple = 0,      // fruit
-            Bone = 6,       // bone
-            Broccoli = 1,   // fruit
-            Carrot = 2,     // fruit
-            Cucumber = 3,   // fruit
-            Pan = 7,        // pan
-            Pepper = 4,     // fruit
-            Potato = 5,     // fruit
-            Tire = 8,       // tire
-            Custom = 9,     // directs to custom stuff
+            Random,     // random fruit
+            Apple,      // fruit
+            Broccoli,   // fruit
+            Carrot,     // fruit
+            Cucumber,   // fruit
+            Pepper,     // fruit
+            Potato,     // fruit
+            Bone,       // bone
+            Pan,        // pan
+            Tire,       // tire
+            Custom,     // directs to custom stuff
         }
 
         public enum CustomObject
@@ -127,49 +125,54 @@ namespace HeavenStudio.Games
 
         private void Update()
         {
-            //Debug.Log(rnd.NextDouble());
-            
-            if (Conductor.instance.ReportBeat(ref lastReportedBeat) && DogAnim.IsAnimationNotPlaying())
+            if (Conductor.instance.ReportBeat(ref lastReportedBeat) && DogAnim.IsAnimationNotPlaying() && !dontBop)
             {
                 DogAnim.DoScaledAnimationAsync("Bop", 0.5f);
-            }
+            };
 
+            
             if (PlayerInput.Pressed())
             {
-                DogAnim.DoScaledAnimationAsync("Bop", 0.5f);
-            }
-            
-            if (Input.GetKeyDown(KeyCode.D))
-            {
-                Debug.Log("teehee :)");
-                DogAnim.Play("Bop", 0, 0);
-            }
+                // yes, i checked, it's random in the game.
+                System.Random rd = new System.Random();
+                string Slice;
+                if (rd.Next(0,1) < 0.5f) {
+                    Slice = "SliceRight";
+                } else {
+                    Slice = "SliceLeft";
+                };
+
+                DogAnim.DoScaledAnimationAsync(Slice, 0.5f);
+            };
         }
 
         public void Bop(float beat, bool bop, bool manual)
         {
-            //if (manual) { DogAnim.Play("Bop", 0, 0); }
+            if (manual) { DogAnim.Play("Bop", 0, 0); };
 
             if (bop) {
-                dontBop = true;
-            } else {
                 dontBop = false;
-            }
+            } else {
+                dontBop = true;
+            };
         }
 
-        public void ThrowObject(float beat, bool isRandom, int ObjType, string textObj, bool fromLeft)
+        public void ThrowObject(float beat, int ObjType, string textObj, bool fromLeft)
         {
+            
             int ObjSprite;
-            if (ObjType == 9) {
+            if (ObjType == 10) {
+                // custom object code, uses the enum to turn the input string into integer to get the sprite
                 Enum.TryParse(textObj, out CustomObject notIntObj);
                 ObjSprite = (int) notIntObj;
-            } else if (isRandom) {
+                WhichObject.sprite = CustomObjects[ObjSprite];
+            } else if (ObjType == 0) {
+                // random object code. it makes a random number from 1-6 and sets that as the sprite
                 System.Random rd = new System.Random();
-                ObjSprite = rd.Next(0, 4);
-                Debug.Log(ObjSprite);
-            } else { ObjSprite = ObjType; }
-            WhichObject.sprite = ObjectTypes[ObjSprite];
-
+                WhichObject.sprite = ObjectTypes[rd.Next(1, 6)];
+            } else { WhichObject.sprite = ObjectTypes[ObjType]; };
+            
+            // instantiate a game object and give it its variables
             ThrowObject Object = Instantiate(ObjectBase).GetComponent<ThrowObject>();
             Object.startBeat = beat;
             Object.type = ObjType;
@@ -179,6 +182,7 @@ namespace HeavenStudio.Games
 
         public void CutEverything(float beat, bool sound)
         {
+            //plays one anim with sfx when it's not on screen, plays a different anim with no sfx when on screen. ez
             if (!birdOnScreen) {
                 FullBird.SetActive(true);
                 if (sound) { 
@@ -189,26 +193,27 @@ namespace HeavenStudio.Games
             } else {
                 BirdAnim.Play("FlyOut", 0, 0);
                 birdOnScreen = false;
-            }
+            };
         }
 
-        public static void HereWeGoSFX(float x) 
-        {
-            MultiSound.Sound[] PlayHWG = new MultiSound.Sound[] { 
-                    new MultiSound.Sound("dogNinja/here", x), 
-                    new MultiSound.Sound("dogNinja/we", x + 0.5f),
-                    new MultiSound.Sound("dogNinja/go", x + 1f)
-                };
-        }
+        //it's repeated code but the alternative saves no space
 
         public void HereWeGo(float beat)
         {
-            HereWeGoSFX(beat);
+            MultiSound.Play(new MultiSound.Sound[] { 
+                    new MultiSound.Sound("dogNinja/here", beat), 
+                    new MultiSound.Sound("dogNinja/we", beat + 0.5f),
+                    new MultiSound.Sound("dogNinja/go", beat + 1f)
+                });
         }
 
         public static void HereWeGoInactive(float beat)
         {
-            HereWeGoSFX(beat);
+            MultiSound.Play(new MultiSound.Sound[] { 
+                    new MultiSound.Sound("dogNinja/here", beat), 
+                    new MultiSound.Sound("dogNinja/we", beat + 0.5f),
+                    new MultiSound.Sound("dogNinja/go", beat + 1f)
+                });
         }
     }
 }

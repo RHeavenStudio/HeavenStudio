@@ -14,6 +14,7 @@ namespace HeavenStudio.Games.Scripts_DogNinja
         public int type;
         public string textObj;
 
+        // this condenses the sfx code so much 
         public string sfxNum = "dogNinja/";
 
         [Header("Animators")]
@@ -35,16 +36,16 @@ namespace HeavenStudio.Games.Scripts_DogNinja
         private void Start()
         {
             switch (type) {
-                case 6:
+                case 7:
                     sfxNum += "bone";
                     break;
-                case 7:
+                case 8:
                     sfxNum += "pan";
                     break;
-                case 8:
+                case 9:
                     sfxNum += "tire";
                     break;
-                case 9:
+                case 10:
                     sfxNum += textObj;
                     break;
                 default:
@@ -60,28 +61,19 @@ namespace HeavenStudio.Games.Scripts_DogNinja
         private void Update()
         {
             float flyPos = Conductor.instance.GetPositionFromBeat(startBeat, 1);
-            flyPos *= 1f;
+            // apparently the og uses exponentiality. im just gonna mimic it (?)
+            flyPos *= 0.46f;
             transform.position = curve.GetPoint(flyPos);
             
-            /* if (flying)
-            {
-                var cond = Conductor.instance;
-
-                float flyPos = cond.GetPositionFromBeat(startBeat, flyBeats);
-                flyPos *= 1f;
-                transform.position = leftCurve.GetPoint(flyPos);
-
-                /* if (flyPos > 1f)
-                {
-                    GameObject.Destroy(gameObject);
-                    return;
-                } *
-            } */
+            // destroys object when it's off-screen
+            if (flyPos > 1f) {
+                GameObject.Destroy(gameObject);
+            };
         }
 
         void CutObject()
         {
-            DogAnim.Play("Slice", 0, 0);
+            DogAnim.Play("SliceRight", 0, 0);
             Jukebox.PlayOneShotGame(sfxNum+"2");
 
             SpawnHalves();
@@ -105,16 +97,9 @@ namespace HeavenStudio.Games.Scripts_DogNinja
             CutObject();
         }
 
-        private void Miss(PlayerActionEvent caller) 
-        {
-            // i want this to work.
-            /* new BeatAction.Action(startBeat+ 2.45f, delegate { 
-                    Destroy(this.gameObject);
-            }); */
-        }
+        // miss and out are unused im pretty sure? when you miss in this game it just kinda flies by 
+        private void Miss(PlayerActionEvent caller) {}
 
         private void Out(PlayerActionEvent caller) {}
-
-        
     }
 }
