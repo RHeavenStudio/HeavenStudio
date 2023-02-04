@@ -53,24 +53,24 @@ namespace HeavenStudio.Games.Scripts_FanClub
         public void ClapJust(PlayerActionEvent caller, float state)
         {
             bool auto = GameManager.instance.autoplay;
-            ClapStart(true, false, auto ? 0.1f : 0f);
+            ClapStart(state < 1f && state > -1f, false, auto ? 0.1f : 0f);
         }
 
         public void ChargeClapJust(PlayerActionEvent caller, float state)
         {
             bool auto = GameManager.instance.autoplay;
-            ClapStart(true, true, auto ? 1f : 0f);
+            ClapStart(state < 1f && state > -1f, true, auto ? 1f : 0f);
         }
 
         public void LongClapJust(PlayerActionEvent caller, float state)
         {
             bool auto = GameManager.instance.autoplay;
-            ClapStart(true, false, auto ? 1f : 0f);
+            ClapStart(state < 1f && state > -1f, false, auto ? 1f : 0f);
         }
 
         public void JumpJust(PlayerActionEvent caller, float state)
         {
-            JumpStart(true);
+            JumpStart(state < 1f && state > -1f);
         }
 
         public void ClapThrough(PlayerActionEvent caller) {
