@@ -31,7 +31,9 @@ namespace HeavenStudio.Editor.Track
             RectTransformUtility.ScreenPointToLocalPointInRectangle(_thisTransform, Input.mousePosition, Editor.instance.EditorCamera, out relativeMousePosition);
 
             float delta = eventData.scrollDelta.y;
-            delta = Mathf.Clamp(delta, -6f, 6f);
+            delta = Mathf.Clamp(delta, -1f, 1f);
+
+            _scaleIncrement = 0.1f * _scale.x;
 
             if (delta > 0 && _scale.x < _maximumScale)
             {
@@ -47,7 +49,8 @@ namespace HeavenStudio.Editor.Track
         {
             float incre = _scaleIncrement * delta;
 
-            _scale.Set(_scale.x + incre, 1, 1);
+            var newScale = Mathf.Clamp(_scale.x + incre, _minimumScale, _maximumScale);
+            _scale.Set(newScale, 1, 1);
             _thisTransform.localScale = _scale;
             relativeMousePosition = new Vector2(relativeMousePosition.x, 0);
             _thisTransform.anchoredPosition -= (relativeMousePosition * incre);
@@ -57,7 +60,8 @@ namespace HeavenStudio.Editor.Track
         {
             float incre = _scaleIncrement * -delta;
 
-            _scale.Set(_scale.x - incre, 1, 1);
+            var newScale = _scale.x - incre;
+            _scale.Set(newScale, 1, 1);
             _thisTransform.localScale = _scale;
             relativeMousePosition = new Vector2(relativeMousePosition.x, 0);
             _thisTransform.anchoredPosition += (relativeMousePosition * incre);

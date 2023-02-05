@@ -85,10 +85,7 @@ namespace HeavenStudio.Editor.Track
             var leftSide = rectTransform.localPosition.x;
             var rightSide = leftSide + rectTransform.sizeDelta.x;
 
-            var timelineLeftSide = (Timeline.instance.TimelineContent.localPosition.x / Timeline.instance.TimelineContent.localScale.x) * -1;
-            var timelineRightSide = (Timeline.instance.TimelineScroll.viewport.rect.width / Timeline.instance.TimelineContent.localScale.x) + timelineLeftSide;
-
-            bool visible = (rightSide >= timelineLeftSide && leftSide <= timelineRightSide);
+            bool visible = (rightSide >= Timeline.instance.leftSide && leftSide <= Timeline.instance.rightSide);
 
             if (visible != lastVisible)
             {

@@ -7,6 +7,8 @@ namespace HeavenStudio.Editor.Track
     {
         private RectTransform rectTransform;
 
+        public float sizeDeltaXInternal;
+
         public float sizeDeltaX = 1.0f;
         public float multiply;
 

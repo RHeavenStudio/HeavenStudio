@@ -57,8 +57,6 @@ namespace HeavenStudio.Editor
             boxVisual.transform.localScale = new Vector2((1f / Timeline.instance.TimelineContent.localScale.x) / scale.x, 1f / scale.y);
             text.transform.localScale = scale;
 
-            Debug.Log(startPosition);
-
             if (Selections.instance.eventsSelected.Count > 0 && Timeline.instance.InteractingWithEvents())
             {
                 startPosition = Vector2.zero;

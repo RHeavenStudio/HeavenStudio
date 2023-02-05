@@ -5939,6 +5939,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0ebb4f22da63ed144917cdff47f9c93c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  sizeDeltaXInternal: 0
   sizeDeltaX: 1
   multiply: 1
 --- !u!1 &270008764
@@ -8387,6 +8388,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0ebb4f22da63ed144917cdff47f9c93c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  sizeDeltaXInternal: 0
   sizeDeltaX: 1
   multiply: 100
 --- !u!1 &382658480
@@ -14291,6 +14293,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0ebb4f22da63ed144917cdff47f9c93c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  sizeDeltaXInternal: 0
   sizeDeltaX: 1
   multiply: 100
 --- !u!1 &676318033
@@ -16819,6 +16822,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0ebb4f22da63ed144917cdff47f9c93c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  sizeDeltaXInternal: 0
   sizeDeltaX: 1
   multiply: 1
 --- !u!222 &770589362
@@ -17945,6 +17949,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0ebb4f22da63ed144917cdff47f9c93c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  sizeDeltaXInternal: 0
   sizeDeltaX: 1
   multiply: 0
 --- !u!1 &821957889
@@ -19319,7 +19324,7 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 1589389272}
   m_HandleRect: {fileID: 1589389271}
   m_Direction: 2
-  m_Value: 1
+  m_Value: 0
   m_Size: 1
   m_NumberOfSteps: 0
   m_OnValueChanged:
@@ -24093,7 +24098,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0.5}
   m_AnchorMax: {x: 1, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: 129.88574}
+  m_AnchoredPosition: {x: 0, y: 129.88583}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 1}
 --- !u!114 &1154875944
@@ -31665,6 +31670,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0ebb4f22da63ed144917cdff47f9c93c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  sizeDeltaXInternal: 0
   sizeDeltaX: 1
   multiply: 100
 --- !u!1 &1548381522
@@ -35003,6 +35009,7 @@ GameObject:
   - component: {fileID: 1783491361}
   - component: {fileID: 1783491360}
   - component: {fileID: 1783491359}
+  - component: {fileID: 1783491362}
   m_Layer: 5
   m_Name: StopBTN
   m_TagString: Untagged
@@ -35112,6 +35119,33 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1783491357}
   m_CullTransparentMesh: 1
+--- !u!114 &1783491362
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1783491357}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: de2f4352e80c5d74db0f8380c1d3220e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  onDoubleClick:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 1861169747}
+        m_TargetAssemblyTypeName: HeavenStudio.Editor.Track.Timeline, Assembly-CSharp
+        m_MethodName: PlaybackFocus
+        m_Mode: 6
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!1 &1783963079
 GameObject:
   m_ObjectHideFlags: 0
@@ -36142,9 +36176,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d6a4c5ae13e9de743befd392956aaea7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _minimumScale: 0.5
+  _minimumScale: 20
   _initialScale: {x: 1, y: 1}
-  _maximumScale: 800
+  _maximumScale: 5000
   _scaleIncrement: 12
 --- !u!1 &1856185012
 GameObject:
@@ -39718,6 +39752,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0ebb4f22da63ed144917cdff47f9c93c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  sizeDeltaXInternal: 0
   sizeDeltaX: 1
   multiply: 1
 --- !u!1 &2037884591

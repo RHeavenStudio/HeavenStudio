@@ -163,6 +163,9 @@ namespace HeavenStudio.Editor.Track
 
         public Vector3[] LayerCorners = new Vector3[4];
 
+        public float leftSide => (TimelineContent.localPosition.x / TimelineContent.localScale.x) * -1;
+        public float rightSide => (TimelineScroll.viewport.rect.width / TimelineContent.localScale.x) + leftSide;
+        
         public static Timeline instance { get; private set; }
 
         public bool userIsEditingInputField
@@ -225,7 +228,7 @@ namespace HeavenStudio.Editor.Track
             StopBTN.onClick.AddListener(delegate 
             {
                 if (Conductor.instance.isPlaying || Conductor.instance.isPaused)
-                PlayCheck(true); 
+                PlayCheck(true);
             });
 
             MetronomeBTN.onClick.AddListener(delegate 
@@ -256,11 +259,11 @@ namespace HeavenStudio.Editor.Track
 
             ZoomInBTN.onClick.AddListener(delegate
             {
-                zoomComponent.ZoomIn(1, Vector2.zero);
+                zoomComponent.ZoomIn(3, Vector2.zero);
             });
             ZoomOutBTN.onClick.AddListener(delegate
             {
-                zoomComponent.ZoomOut(-1, Vector2.zero);
+                zoomComponent.ZoomOut(-3, Vector2.zero);
             });
             ZoomResetBTN.onClick.AddListener(delegate
             {
@@ -268,7 +271,7 @@ namespace HeavenStudio.Editor.Track
             });
             WaveformBTN.onClick.AddListener(delegate
             {
-                timelineState.SetState(CurrentTimelineState.State.ChartSection);
+                WaveformToggle();
             });
 
             Tooltip.AddTooltip(SongBeat.gameObject, "Current Beat");
@@ -372,6 +375,8 @@ namespace HeavenStudio.Editor.Track
                 -(GameManager.instance.Beatmap.firstBeatOffset / (60.0f / GameManager.instance.Beatmap.bpm)), 
                 waveform.rectTransform.anchoredPosition.y);
 
+            WaveformBTN.transform.GetChild(0).GetComponent<Image>().color = (Conductor.instance.musicSource.clip != null && waveform.gameObject.activeInHierarchy) ? Color.white : Color.gray;
+
             if (!Conductor.instance.isPlaying && !Conductor.instance.isPaused)
             {
                 SongBeat.text = $"Beat {string.Format("{0:0.000}", TimelineSlider.localPosition.x)}";
@@ -429,6 +434,10 @@ namespace HeavenStudio.Editor.Track
                     timelineState.SetState(CurrentTimelineState.State.ChartSection);
                 }
 
+                if (Input.GetKeyDown(KeyCode.F))
+                {
+                    PlaybackFocus(false);
+                }
 
                 float moveSpeed = 750;
                 if (Input.GetKey(KeyCode.LeftShift)) moveSpeed *= 6;
@@ -464,7 +473,7 @@ namespace HeavenStudio.Editor.Track
             }
 
             if (Conductor.instance.isPlaying)
-                TimelineContent.transform.localPosition = new Vector3((-Conductor.instance.songPositionInBeats * TimelineContent.localScale.x) + 200, TimelineContent.transform.localPosition.y);
+                PlaybackFocus(true);
 
             TimelineContent.transform.localPosition = new Vector3(Mathf.Clamp(TimelineContent.transform.localPosition.x, Mathf.NegativeInfinity, 0), TimelineContent.transform.localPosition.y);
 
@@ -622,14 +631,20 @@ namespace HeavenStudio.Editor.Track
 
         #region Functions
 
-        public void ZoomIn()
+        public void PlaybackFocus(bool lerp)
         {
+            var lerpSpd = (lerp) ? 12f : 10000000; // im lazy
 
+            var newPos = new Vector3((-Conductor.instance.songPositionInBeats * TimelineContent.localScale.x) + 200, TimelineContent.transform.localPosition.y);
+            TimelineContent.transform.localPosition =
+                Vector3.Lerp(TimelineContent.transform.localPosition, newPos, Time.deltaTime * lerpSpd);
         }
 
-        public void ZoomOut()
+        public void WaveformToggle()
         {
+            if (Conductor.instance.musicSource.clip == null) return;
 
+            waveform.gameObject.SetActive(!waveform.gameObject.activeInHierarchy);
         }
 
         public IEnumerator DrawWaveformRealtime()
