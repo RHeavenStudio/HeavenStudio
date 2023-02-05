@@ -21,11 +21,11 @@ namespace HeavenStudio.Games.Loaders
                 new GameAction("rocket", "Launch Rocket")
                 {
                     
-                    function = delegate { var e = eventCaller.currentEntity; LaunchParty.instance.LaunchRocket(e.beat, e["type"], e["type2"], e["type3"]); },
+                    function = delegate { var e = eventCaller.currentEntity; LaunchParty.instance.LaunchRocket(e.beat, e["type"]); },
                     defaultLength = 4f,
                     parameters = new List<Param>()
                     {
-                        new Param("type", RocketScript.RocketType.Family, "Rocket Model", "The rocket to launch"),
+                        new Param("type", LaunchParty.RocketType.Family, "Rocket Model", "The rocket to launch"),
                     }
                 },
                 new GameAction("toggleStars", "Toggle Falling Stars")
@@ -50,7 +50,6 @@ namespace HeavenStudio.Games.Loaders
 
 namespace HeavenStudio.Games
 {
-    // using Scripts_LaunchParty;
     public class LaunchParty : Minigame
     {
         
@@ -58,23 +57,23 @@ namespace HeavenStudio.Games
         public GameObject PadSprites;
 
         [Header("Rockets")]
-        public GameObject Rocket;
-        public GameObject PartyCracker;
-        public GameObject Bell;
-        public GameObject Bowling;
-        public ParticleSystem FallingStars;
+        [SerializeField] GameObject Rocket;
+        [SerializeField] GameObject PartyCracker;
+        [SerializeField] GameObject Bell;
+        [SerializeField] GameObject Bowling;
+        [SerializeField] ParticleSystem FallingStars;
 
-        public ParticleSystem FallingStarsBack;
-        public GameObject StarGO;
+        [SerializeField] ParticleSystem FallingStarsBack;
+        [SerializeField] GameObject StarGO;
         
         [Header("Animators")]
-        public Animator Rockets;
-        public Animator Crackers;
-        public Animator Bells;
-        public Animator Pins;
-        
-        [Header("Outcasts")]
-        public PlayerActionEvent padLaunch;
+        [SerializeField] Animator Rockets;
+        [SerializeField] Animator Crackers;
+        [SerializeField] Animator Bells;
+        [SerializeField] Animator Pins;
+
+        [Header("Positions")]
+        public Transform SpawnRoot;
 
         public enum RocketType
         {
@@ -100,22 +99,36 @@ namespace HeavenStudio.Games
             GSharp
         }
 
-        public enum ScaleType
-        {
-            Major,
-            Minor,
-            Dorian,
-            Mixolydian,
-            Lydian,
-
-        }
-
-        
-        [Header("Positions")]
-        public Transform SpawnRoot;
         public static LaunchParty instance;
 
-        // Start is called before the first frame update
+        //Normal Rocket = (beat, beat + 1, beat + 2)
+        //Party Cracker = (beat, beat + 2/3, beat + 1, beat + 4/3, beat + 5/3)
+/*      // Bell                  new BeatAction.Action(beat, delegate { LaunchParty.instance.Bells.Play(awakeAnim, 0); }),
+                new BeatAction.Action(beat + 1f, delegate { LaunchParty.instance.Bells.Play(awakeAnim, 0, 0);}),
+                new BeatAction.Action(beat + 7/6f, delegate { LaunchParty.instance.Bells.Play(awakeAnim, 0, 0);}),
+                new BeatAction.Action(beat + 8/6f, delegate { LaunchParty.instance.Bells.Play(awakeAnim, 0, 0);}),
+                new BeatAction.Action(beat + 9/6f, delegate { LaunchParty.instance.Bells.Play(awakeAnim, 0, 0);}),
+                new BeatAction.Action(beat + 10/6f, delegate { LaunchParty.instance.Bells.Play(awakeAnim, 0, 0);}),
+                new BeatAction.Action(beat + 11/6f, delegate { LaunchParty.instance.Bells.Play(awakeAnim, 0, 0);})
+*/
+//Pin
+/*
+ *                         new MultiSound.Sound("launchParty/VT_CL",   beat, pitch1),
+                new MultiSound.Sound("launchParty/rocket_pin_prepare",   beat, 1f, 0.75f),
+                new MultiSound.Sound("launchParty/VT_CL",   beat, pitch2, 0.02f),
+                new MultiSound.Sound("launchParty/VT_CL",   beat + 1/6f, pitch3, 0.02f),
+                new MultiSound.Sound("launchParty/VT_CL",   beat + 2/6f, pitch2, 0.06f),
+                new MultiSound.Sound("launchParty/VT_CL",   beat + 3/6f, pitch3, 0.1f),
+                new MultiSound.Sound("launchParty/VT_CL",   beat + 4/6f, pitch2, 0.16f),
+                new MultiSound.Sound("launchParty/VT_CL",   beat + 5/6f, pitch3, 0.22f),
+                new MultiSound.Sound("launchParty/VT_CL",   beat + 1f, pitch2, 0.3f),
+                new MultiSound.Sound("launchParty/VT_CL",   beat + 7/6f, pitch3, 0.4f),
+                new MultiSound.Sound("launchParty/VT_CL",   beat + 8/6f, pitch2, 0.6f),
+                new MultiSound.Sound("launchParty/VT_CL",   beat + 9/6f, pitch3, 0.75f),
+                new MultiSound.Sound("launchParty/VT_CL",   beat + 10/6f, pitch2, 0.89f),
+                new MultiSound.Sound("launchParty/VT_CL",   beat + 11/6f, pitch3),
+*/
+
         void Awake()
         {
             instance = this;
@@ -125,41 +138,10 @@ namespace HeavenStudio.Games
 
         }
 
-        // Update is called once per frame
-        void Update()
-        {
-            
-        }
-        
-        public GameObject CreateRocketInstance(float beat, string awakeAnim, string awakeAnim2, string awakeAnim3, string awakeAnim4, string awakeAnim5, string awakeAnim6, string awakeAnim7, RocketScript.RocketType type)
-        {
-            
-            GameObject mobk = Instantiate(Rocket, SpawnRoot.parent);
-            RocketScript mobkDat = mobk.GetComponent<RocketScript>();
-            mobkDat.startBeat = beat;
-            mobkDat.awakeAnim = awakeAnim;
-            mobkDat.type = type;
-            mobk.SetActive(true);
-            return mobk;
+        public void LaunchRocket(float beat, int type)
+        {   
 
         }
-        
-        public void LaunchRocket(float beat, int type, int type2, int type3)
-            {   
-                switch (type)
-                {
-                    case 0:
-                        CreateRocketInstance(beat, "Rocket3", "Rocket2", "Rocket1", null, null, null, null, RocketScript.RocketType.Family);
-                        break;
-                    case 1:
-                        break;
-                    case 2:
-                        break;
-                    case 3:
-                        CreateRocketInstance(beat, "Pin1", null, null, null, null, null, null, RocketScript.RocketType.Bowling);
-                        break;
-                }                 
-            }
         public void CreateParticles(float beat, bool toggle, float starDensity, float starSpeed, float starSpeedBack)
         {
             ParticleSystem.EmissionModule emm;
@@ -167,7 +149,6 @@ namespace HeavenStudio.Games
             switch (toggle)
             {
                 case true:
-                    
                     var emmrate = FallingStars.velocityOverLifetime;
                     var emmrate2 = FallingStarsBack.velocityOverLifetime;
                     StarGO.SetActive(true);
@@ -182,7 +163,7 @@ namespace HeavenStudio.Games
                     break;
                 default:
                     FallingStars.Stop();
-                    FallingStarsBack.Stop();
+                        FallingStarsBack.Stop();
                     break;
             }
         }
@@ -191,6 +172,6 @@ namespace HeavenStudio.Games
 }
 
 
-        
+
 
 
