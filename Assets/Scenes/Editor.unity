@@ -11909,7 +11909,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 0, y: -50}
+  m_AnchoredPosition: {x: 0, y: -50.000015}
   m_SizeDelta: {x: -48, y: -148}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &572765323
@@ -19367,8 +19367,8 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 1589389272}
   m_HandleRect: {fileID: 1589389271}
   m_Direction: 2
-  m_Value: 1
-  m_Size: 1
+  m_Value: 0
+  m_Size: 0.5
   m_NumberOfSteps: 0
   m_OnValueChanged:
     m_PersistentCalls:
@@ -24141,7 +24141,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0.5}
   m_AnchorMax: {x: 1, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: 113.91141}
+  m_AnchoredPosition: {x: 0, y: 189.9225}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 1}
 --- !u!114 &1154875944
@@ -32513,7 +32513,7 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 1292844878}
   m_HandleRect: {fileID: 1292844877}
   m_Direction: 2
-  m_Value: 1
+  m_Value: 0
   m_Size: 1
   m_NumberOfSteps: 0
   m_OnValueChanged:
@@ -34537,7 +34537,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 0, y: -27.993034}
+  m_AnchoredPosition: {x: 0, y: -27.993027}
   m_SizeDelta: {x: 32, y: -55.985}
   m_Pivot: {x: 0, y: 0.5}
 --- !u!114 &1747224097
@@ -36330,9 +36330,6 @@ MonoBehaviour:
   TimelineSongPosLineRef: {fileID: 580861938}
   TimelineEventObjRef: {fileID: 798021449}
   LayersRect: {fileID: 1671351975}
-  TimelineSectionDisplay: {fileID: 1993062349}
-  TimelineSectionText: {fileID: 1007733146}
-  TimelineSectionProgress: {fileID: 2130542024}
   FirstBeatOffset: {fileID: 356905691}
   StartingTempoSpecialAll: {fileID: 1332021417}
   StartingTempoSpecialTempo: {fileID: 1299088428}
@@ -38163,6 +38160,8 @@ MonoBehaviour:
     tabPrefab: {fileID: 1084161799213900017, guid: a6621c8f4ea64664d8c9bdc8c937a8f1, type: 3}
   - name: Editor Settings
     tabPrefab: {fileID: 9208581106079180833, guid: 877921ff68a37fc49a9ad6e990d96a56, type: 3}
+  - name: Game Settings
+    tabPrefab: {fileID: 7280660605341476674, guid: 517167207bed92c46abe57a8d680d01d, type: 3}
   - name: Controllers
     tabPrefab: {fileID: 3918594455367347232, guid: e79e692a9c7cf1e4c8bd4c0888713d20, type: 3}
   - name: Credits / Legal
