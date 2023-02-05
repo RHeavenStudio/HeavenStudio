@@ -87,6 +87,8 @@ namespace HeavenStudio.Games
         public BezierCurve3D CurveFromLeft;
         public BezierCurve3D CurveFromRight;
 
+        public Transform cutEverythingText;
+
         public Sprite[] ObjectTypes;
         public Sprite[] ObjectHalves;
         public Sprite[] CustomObjects;
@@ -115,7 +117,6 @@ namespace HeavenStudio.Games
         public enum CustomObject
         {
             TacoBell,
-            NecoArc,
         }
         
         private void Awake()
@@ -127,16 +128,16 @@ namespace HeavenStudio.Games
         {
             if (Conductor.instance.ReportBeat(ref lastReportedBeat) && DogAnim.IsAnimationNotPlaying() && !dontBop)
             {
-                DogAnim.DoScaledAnimationAsync("Bop", 0.5f);
+                DogAnim.Play("Bop", 0, 0);
             };
 
             
             if (PlayerInput.Pressed())
             {
-                // yes, i checked, it's random in the game.
                 System.Random rd = new System.Random();
                 string Slice;
-                if (rd.Next(0,1) < 0.5f) {
+                int LorR = rd.Next(0,2);
+                if (LorR < 1) {
                     Slice = "SliceRight";
                 } else {
                     Slice = "SliceLeft";
@@ -159,7 +160,6 @@ namespace HeavenStudio.Games
 
         public void ThrowObject(float beat, int ObjType, string textObj, bool fromLeft)
         {
-            
             int ObjSprite;
             if (ObjType == 10) {
                 // custom object code, uses the enum to turn the input string into integer to get the sprite
@@ -177,12 +177,14 @@ namespace HeavenStudio.Games
             Object.startBeat = beat;
             Object.type = ObjType;
             Object.curve = fromLeft ? CurveFromLeft : CurveFromRight;
+            Object.fromLeft = fromLeft;
             Object.textObj = textObj;
         }
 
         public void CutEverything(float beat, bool sound)
         {
-            //plays one anim with sfx when it's not on screen, plays a different anim with no sfx when on screen. ez
+            
+            // plays one anim with sfx when it's not on screen, plays a different anim with no sfx when on screen. ez
             if (!birdOnScreen) {
                 FullBird.SetActive(true);
                 if (sound) { 
@@ -196,7 +198,7 @@ namespace HeavenStudio.Games
             };
         }
 
-        //it's repeated code but the alternative saves no space
+        // it's repeated code but the alternative saves no space
 
         public void HereWeGo(float beat)
         {
@@ -213,7 +215,7 @@ namespace HeavenStudio.Games
                     new MultiSound.Sound("dogNinja/here", beat), 
                     new MultiSound.Sound("dogNinja/we", beat + 0.5f),
                     new MultiSound.Sound("dogNinja/go", beat + 1f)
-                });
+                }, forcePlay: true);
         }
     }
 }

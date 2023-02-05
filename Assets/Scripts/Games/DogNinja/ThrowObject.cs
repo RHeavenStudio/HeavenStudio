@@ -13,6 +13,7 @@ namespace HeavenStudio.Games.Scripts_DogNinja
         public float startBeat;
         public int type;
         public string textObj;
+        public bool fromLeft;
 
         // this condenses the sfx code so much 
         public string sfxNum = "dogNinja/";
@@ -25,6 +26,8 @@ namespace HeavenStudio.Games.Scripts_DogNinja
 
         [Header("Curves")]
         public BezierCurve3D curve;
+
+        
 
         private DogNinja game;
         
@@ -62,7 +65,7 @@ namespace HeavenStudio.Games.Scripts_DogNinja
         {
             float flyPos = Conductor.instance.GetPositionFromBeat(startBeat, 1);
             // apparently the og uses exponentiality. im just gonna mimic it (?)
-            flyPos *= 0.46f;
+            flyPos *= 0.47f;
             transform.position = curve.GetPoint(flyPos);
             
             // destroys object when it's off-screen
@@ -73,7 +76,14 @@ namespace HeavenStudio.Games.Scripts_DogNinja
 
         void CutObject()
         {
-            DogAnim.Play("SliceRight", 0, 0);
+            string Slice;
+            if (fromLeft) {
+                Slice = "SliceLeft";
+            } else {
+                Slice = "SliceRight";
+            };
+
+            DogAnim.DoScaledAnimationAsync(Slice, 0.5f);
             Jukebox.PlayOneShotGame(sfxNum+"2");
 
             SpawnHalves();
