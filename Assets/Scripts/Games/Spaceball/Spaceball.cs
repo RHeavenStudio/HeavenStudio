@@ -1,4 +1,3 @@
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -69,8 +68,10 @@ namespace HeavenStudio.Games
     public class Spaceball : Minigame
     {
 		public enum BallType {
-            Baseball,
-            Onigiri
+            Baseball = 0,
+            Onigiri = 1,
+            Alien = 2,
+            Tacobell = 3,
         }
 		
         public enum CostumeType {
@@ -92,7 +93,7 @@ namespace HeavenStudio.Games
 
         private int currentZoomIndex;
 
-        public Sprite[] Balls;
+        public Sprite[] BallSprites;
 
         private List<DynamicBeatmap.DynamicEntity> allCameraEvents = new List<DynamicBeatmap.DynamicEntity>();
 
@@ -132,7 +133,7 @@ namespace HeavenStudio.Games
 
             allCameraEvents = tempEvents;
 
-            UpdateCameraZoom(); // can't believe this shit actually works
+            UpdateCameraZoom();
         }
 
         private void Update()
@@ -232,9 +233,20 @@ namespace HeavenStudio.Games
                 Jukebox.PlayOneShotGame("spaceball/shoot");
             }
 
-            if (type == 1)
+            ball.GetComponent<SpaceballBall>().Sprite.sprite = BallSprites[type];
+            switch(type)
             {
-                ball.GetComponent<SpaceballBall>().Sprite.sprite = Balls[1];
+                case (int)BallType.Baseball:
+                    break;
+                case (int)BallType.Onigiri:
+                    ball.transform.localScale = new Vector3(1.2f, 1.2f, 1);
+                    break;
+                case (int)BallType.Alien:
+                    break;
+                case (int)BallType.Tacobell:
+                    ball.transform.localScale = new Vector3(0.5f, 0.5f, 1);
+                    ball.GetComponent<SpaceballBall>().isTacobell = true;
+                    break;
             }
 
             Dispenser.GetComponent<Animator>().Play("DispenserShoot", 0, 0);

@@ -71,7 +71,15 @@ namespace HeavenStudio
             {
                 get
                 {
-                    return typeof(Entity).GetField(propertyName).GetValue(this);
+                    try
+                    {
+                        return typeof(Entity).GetField(propertyName).GetValue(this);
+                    }
+                    catch (NullReferenceException ex)
+                    {
+                        UnityEngine.Debug.LogWarning($"{propertyName} doesn't exist in this Legacy Entity. Conversion needs to create this field... Exception log: {ex}");
+                        return null;
+                    }
                 }
                 set
                 {

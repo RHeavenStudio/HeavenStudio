@@ -21,7 +21,7 @@
 * flaticon.com
 
 ## Fonts
-* Super_Tailx_50 (Logo fonts)
+* Tailx (Logo fonts)
 * Christian Robertson (Roboto)
 * Nintendo (Rodin)
 
