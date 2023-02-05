@@ -1,22 +1,15 @@
-using Starpelly;
 using UnityEngine;
 using UnityEngine.EventSystems;
+using static TMPro.SpriteAssetUtilities.TexturePacker_JsonArray;
 
 namespace HeavenStudio.Editor.Track
 {
-    /// <summary>
-    /// Zoom component which will handle the scroll wheel events and zooms in on the pointer
-    /// </summary>
     public class ZoomComponent : MonoBehaviour, IScrollHandler
     {
-
-        //Make sure these values are evenly divisible by scaleIncrement
         [SerializeField] float _minimumScale = 0.5f;
         [SerializeField] Vector2 _initialScale = Vector2.one;
         [SerializeField] float _maximumScale = 3f;
-        /////////////////////////////////////////////
         [SerializeField] float _scaleIncrement = .5f;
-        /////////////////////////////////////////////
 
         [HideInInspector] Vector3 _scale;
 
@@ -29,17 +22,6 @@ namespace HeavenStudio.Editor.Track
 
             _scale.Set(_initialScale.x, _initialScale.y, 1);
             _thisTransform.localScale = _scale;
-
-        }
-
-        private void Update()
-        {
-            // KeepScale();
-        }
-
-        private void KeepScale()
-        {
-            _thisTransform.localScale = new Vector3(Mathf.Clamp(_thisTransform.localScale.x, _minimumScale, _maximumScale), _thisTransform.localScale.y, 1);
         }
 
         public void OnScroll(PointerEventData eventData)
@@ -52,29 +34,39 @@ namespace HeavenStudio.Editor.Track
             delta = Mathf.Clamp(delta, -6f, 6f);
 
             if (delta > 0 && _scale.x < _maximumScale)
-            {   //zoom in
-                float incre = _scaleIncrement * delta;
-
-                _scale.Set(_scale.x + incre, 1, 1f);
-                _thisTransform.localScale = _scale;
-                relativeMousePosition = new Vector2(relativeMousePosition.x, 0);
-                _thisTransform.anchoredPosition -= (relativeMousePosition * incre);
+            {
+                ZoomIn(delta, relativeMousePosition);
             }
-
             else if (delta < 0 && _scale.x > _minimumScale)
-            {   //zoom out
-                float incre = _scaleIncrement * -delta;
-
-                _scale.Set(_scale.x - incre, 1, 1f);
-                _thisTransform.localScale = _scale;
-                relativeMousePosition = new Vector2(relativeMousePosition.x, 0);
-                _thisTransform.anchoredPosition += (relativeMousePosition * incre);
+            {
+                ZoomOut(delta, relativeMousePosition);
             }
+        }
 
-            // Timeline.Instance.UpdateScale(_thisTransform.localScale.x);
+        public void ZoomIn(float delta, Vector2 relativeMousePosition)
+        {
+            float incre = _scaleIncrement * delta;
 
-            // _thisTransform.localScale = new Vector3(Mathf.Clamp(_thisTransform.localScale.x, _minimumScale, Mathf.Infinity), _thisTransform.localScale.y, 1);
-            // _thisTransform.anchoredPosition = new Vector2(Mathf.Clamp(_thisTransform.anchoredPosition.x, -_thisTransform.sizeDelta.x * _thisTransform.localScale.x, 0), _thisTransform.anchoredPosition.y);
+            _scale.Set(_scale.x + incre, 1, 1);
+            _thisTransform.localScale = _scale;
+            relativeMousePosition = new Vector2(relativeMousePosition.x, 0);
+            _thisTransform.anchoredPosition -= (relativeMousePosition * incre);
+        }
+
+        public void ZoomOut(float delta, Vector2 relativeMousePosition)
+        {
+            float incre = _scaleIncrement * -delta;
+
+            _scale.Set(_scale.x - incre, 1, 1);
+            _thisTransform.localScale = _scale;
+            relativeMousePosition = new Vector2(relativeMousePosition.x, 0);
+            _thisTransform.anchoredPosition += (relativeMousePosition * incre);
+        }
+
+        public void ResetZoom()
+        {
+            _scale.Set(100, 1, 1);
+            _thisTransform.localScale = _scale;
         }
     }
 }

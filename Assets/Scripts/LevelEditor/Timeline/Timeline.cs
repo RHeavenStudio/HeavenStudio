@@ -127,6 +127,7 @@ namespace HeavenStudio.Editor.Track
         [SerializeField] private TMP_Text TimelinePlaybackBeat;
         public ScrollRect TimelineScroll;
         public RectTransform TimelineContent;
+        [SerializeField] private ZoomComponent zoomComponent;
         [SerializeField] private RectTransform TimelineSongPosLineRef;
         [SerializeField] private RectTransform TimelineEventObjRef;
         [SerializeField] private RectTransform LayersRect;
@@ -154,6 +155,10 @@ namespace HeavenStudio.Editor.Track
         public Button TempoChangeBTN;
         public Button MusicVolumeBTN;
         public Button ChartSectionBTN;
+        public Button ZoomInBTN;
+        public Button ZoomOutBTN;
+        public Button ZoomResetBTN;
+        public Button WaveformBTN;
         public Slider PlaybackSpeed;
 
         public Vector3[] LayerCorners = new Vector3[4];
@@ -249,6 +254,23 @@ namespace HeavenStudio.Editor.Track
                 timelineState.SetState(CurrentTimelineState.State.ChartSection);
             });
 
+            ZoomInBTN.onClick.AddListener(delegate
+            {
+                zoomComponent.ZoomIn(1, Vector2.zero);
+            });
+            ZoomOutBTN.onClick.AddListener(delegate
+            {
+                zoomComponent.ZoomOut(-1, Vector2.zero);
+            });
+            ZoomResetBTN.onClick.AddListener(delegate
+            {
+                zoomComponent.ResetZoom();
+            });
+            WaveformBTN.onClick.AddListener(delegate
+            {
+                timelineState.SetState(CurrentTimelineState.State.ChartSection);
+            });
+
             Tooltip.AddTooltip(SongBeat.gameObject, "Current Beat");
             Tooltip.AddTooltip(SongPos.gameObject, "Current Time");
             Tooltip.AddTooltip(CurrentTempo.gameObject, "Current Tempo (BPM)");
@@ -268,6 +290,11 @@ namespace HeavenStudio.Editor.Track
             Tooltip.AddTooltip(StartingTempoSpecialAll.gameObject, "Starting Tempo (BPM)");
             Tooltip.AddTooltip(StartingTempoSpecialTempo.gameObject, "Starting Tempo (BPM)");
             Tooltip.AddTooltip(StartingVolumeSpecialVolume.gameObject, "Starting Volume (%)");
+
+            Tooltip.AddTooltip(ZoomInBTN.gameObject, "Zoom In");
+            Tooltip.AddTooltip(ZoomOutBTN.gameObject, "Zoom Out");
+            Tooltip.AddTooltip(ZoomResetBTN.gameObject, "Zoom Reset");
+            Tooltip.AddTooltip(WaveformBTN.gameObject, "Waveform Toggle");
 
             Tooltip.AddTooltip(PlaybackSpeed.gameObject, "The preview's playback speed. Right click to reset to 1.0");
 
@@ -595,6 +622,16 @@ namespace HeavenStudio.Editor.Track
 
         #region Functions
 
+        public void ZoomIn()
+        {
+
+        }
+
+        public void ZoomOut()
+        {
+
+        }
+
         public IEnumerator DrawWaveformRealtime()
         {
             var clip = Conductor.instance.musicSource.clip;
@@ -602,7 +639,7 @@ namespace HeavenStudio.Editor.Track
             if (!clip)
                 yield break;
 
-            waveform.rectTransform.sizeDelta = new Vector2(Conductor.instance.SongLengthInBeats(), waveform.rectTransform.sizeDelta.y);
+            waveform.rectTransform.sizeDelta = new Vector2(Conductor.instance.SongLengthInBeats() + 0.15f, waveform.rectTransform.sizeDelta.y);
             waveform.color = Color.white;
 
             var num = 12000;
