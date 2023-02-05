@@ -85,11 +85,7 @@ namespace HeavenStudio.Editor.Track
             var leftSide = rectTransform.localPosition.x;
             var rightSide = leftSide + rectTransform.sizeDelta.x;
 
-            var timelineLeftSide = (Timeline.instance.TimelineContent.localPosition.x / 100f) * -1;
-            var timelineRightSide = timelineLeftSide + 10.563f; // what a magic number, i'm sure I could calculate this but I'm lazy
-
-            bool visible = (rightSide >= timelineLeftSide && leftSide <= timelineRightSide);
-
+            bool visible = (rightSide >= Timeline.instance.leftSide && leftSide <= Timeline.instance.rightSide);
 
             if (visible != lastVisible)
             {
@@ -480,6 +476,7 @@ namespace HeavenStudio.Editor.Track
         private void OnDestroy()
         {
             // better safety net than canada's healthcare system
+            // this is still hilarious
             // GameManager.instance.Beatmap.entities.Remove(GameManager.instance.Beatmap.entities.Find(c => c.eventObj = this));
         }
 

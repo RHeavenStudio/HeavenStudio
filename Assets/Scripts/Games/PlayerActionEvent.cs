@@ -161,9 +161,9 @@ namespace HeavenStudio.Games
                     GameManager.instance.AvgInputOffset = offset;
                     OnHit(this, (float) state);
 
-                    CleanUp();
-                    if (countsForAccuracy && !(noAutoplay || autoplayOnly))
+                    if (countsForAccuracy && !(noAutoplay || autoplayOnly) && isEligible)
                         GameManager.instance.ScoreInputAccuracy(TimeToAccuracy(time), time > 1.0, 1.0);
+                    CleanUp();
                 } else
                 {
                    Blank();
