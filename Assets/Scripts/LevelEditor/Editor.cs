@@ -13,9 +13,10 @@ using TMPro;
 using Starpelly;
 using SFB;
 
-using HeavenStudio.Editor;
+using HeavenStudio.Common;
 using HeavenStudio.Editor.Track;
 using HeavenStudio.Util;
+using HeavenStudio.StudioDance;
 
 using System.IO.Compression;
 using System.Text;
@@ -42,6 +43,7 @@ namespace HeavenStudio.Editor
         [SerializeField] private Timeline Timeline;
         [SerializeField] private TMP_Text GameEventSelectorTitle;
         [SerializeField] private TMP_Text BuildDateDisplay;
+        [SerializeField] public StudioDanceManager StudioDanceManager;
 
         [Header("Toolbar")]
         [SerializeField] private Button NewBTN;
@@ -75,6 +77,7 @@ namespace HeavenStudio.Editor
         public bool editingInputField = false;
         public bool inAuthorativeMenu = false;
         public bool isCursorEnabled = true;
+        public bool isDiscordEnabled = true;
 
         public bool isShortcutsEnabled { get { return (!inAuthorativeMenu) && (!editingInputField); } }
 
@@ -109,7 +112,6 @@ namespace HeavenStudio.Editor
             Tooltip.AddTooltip(UndoBTN.gameObject, "Undo <color=#adadad>[Ctrl+Z]</color>");
             Tooltip.AddTooltip(RedoBTN.gameObject, "Redo <color=#adadad>[Ctrl+Y or Ctrl+Shift+Z]</color>");
             Tooltip.AddTooltip(MusicSelectBTN.gameObject, "Music Select");
-            Tooltip.AddTooltip(EditorThemeBTN.gameObject, "Editor Theme");
             Tooltip.AddTooltip(FullScreenBTN.gameObject, "Preview <color=#adadad>[Tab]</color>");
             Tooltip.AddTooltip(TempoFinderBTN.gameObject, "Tempo Finder");
             Tooltip.AddTooltip(SnapDiagBTN.gameObject, "Snap Settings");
@@ -119,6 +121,8 @@ namespace HeavenStudio.Editor
             UpdateEditorStatus(true);
 
             BuildDateDisplay.text = GlobalGameManager.buildTime;
+            isCursorEnabled  = PersistentDataManager.gameSettings.editorCursorEnable;
+            isDiscordEnabled = PersistentDataManager.gameSettings.discordRPCEnable;
         }
 
         public void AddIcon(Minigames.Minigame minigame)
@@ -197,12 +201,12 @@ namespace HeavenStudio.Editor
             #endregion
 
             if (CommandManager.instance.canUndo())
-                UndoBTN.transform.GetChild(0).GetComponent<Image>().color = "BD8CFF".Hex2RGB();
+                UndoBTN.transform.GetChild(0).GetComponent<Image>().color = Color.white;
             else
                 UndoBTN.transform.GetChild(0).GetComponent<Image>().color = Color.gray;
 
             if (CommandManager.instance.canRedo())
-                RedoBTN.transform.GetChild(0).GetComponent<Image>().color = "FFD800".Hex2RGB();
+                RedoBTN.transform.GetChild(0).GetComponent<Image>().color = Color.white;
             else
                 RedoBTN.transform.GetChild(0).GetComponent<Image>().color = Color.gray;
 
@@ -271,6 +275,7 @@ namespace HeavenStudio.Editor
                     changedMusic = true;
 
                     Timeline.FitToSong();
+                    Timeline.CreateWaveform();
                 }
             }
             );
@@ -480,6 +485,7 @@ namespace HeavenStudio.Editor
                 UpdateEditorStatus(false);
                 CommandManager.instance.Clear();
                 Timeline.FitToSong();
+                Timeline.CreateWaveform();
             });
         }
 
@@ -487,6 +493,7 @@ namespace HeavenStudio.Editor
 
         public void Fullscreen()
         {
+            MainCanvas.gameObject.SetActive(fullscreen);
             if (fullscreen == false)
             {
                 // EditorLetterbox.SetActive(false);
@@ -498,6 +505,7 @@ namespace HeavenStudio.Editor
                 GameManager.instance.CursorCam.enabled = false;
                 GameManager.instance.OverlayCamera.targetTexture = null;
                 fullscreen = true;
+
             }
             else
             {
@@ -521,7 +529,12 @@ namespace HeavenStudio.Editor
         private void UpdateEditorStatus(bool updateTime)
         {
             if (discordDuringTesting || !Application.isEditor)
-                DiscordRPC.DiscordRPC.UpdateActivity("In Editor", $"{remixName}", updateTime);
+            {
+                if (isDiscordEnabled)
+                {   DiscordRPC.DiscordRPC.UpdateActivity("In Editor", $"{remixName}", updateTime);
+                    Debug.Log("Discord status updated");
+                }
+            }
         }
 
         public string GetJson()

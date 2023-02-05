@@ -232,6 +232,7 @@ namespace HeavenStudio.Games
             {
                 student.OnMissHoldForPlayerInput();
                 student.isHolding = true;
+                ScoreMiss();
             }
             else if(PlayerInput.PressedUp() && !IsExpectingInputNow() && student.isHolding) //Let go during hold
             {

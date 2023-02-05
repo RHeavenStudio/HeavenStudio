@@ -152,6 +152,7 @@ namespace HeavenStudio
             public bool resizable = false;
             public List<Param> parameters = null;
             public bool hidden = false;
+            public int priority = 0;
             public EventCallback inactiveFunction = delegate { };
             public EventCallback preFunction = delegate { };
 
@@ -169,7 +170,9 @@ namespace HeavenStudio
             /// <param name="inactiveFunction">What the block does when read while the game it's associated with isn't loaded.</param>
             /// <param name="prescheduleFunction">What the block does when the GameManager seeks to this cue for pre-scheduling.</param>
             /// <param name="hidden">Prevents the block from being shown in the game list. Block will still function normally if it is in the timeline.</param>
-            public GameAction(string actionName, string displayName, float defaultLength = 1, bool resizable = false, List<Param> parameters = null, EventCallback function = null, EventCallback inactiveFunction = null, EventCallback prescheduleFunction = null, bool hidden = false)
+            /// <param name="preFunction">Runs two beats before this event is reached.</param>
+            /// <param name="priority">Priority of this event. Higher priority events will be run first.</param>
+            public GameAction(string actionName, string displayName, float defaultLength = 1, bool resizable = false, List<Param> parameters = null, EventCallback function = null, EventCallback inactiveFunction = null, EventCallback prescheduleFunction = null, bool hidden = false, EventCallback preFunction = null, int priority = 0)
             {
                 this.actionName = actionName;
                 if (displayName == String.Empty) this.displayName = actionName;
@@ -182,6 +185,8 @@ namespace HeavenStudio
                 this.function = function ?? delegate { };
                 this.inactiveFunction = inactiveFunction ?? delegate { };
                 this.preFunction = prescheduleFunction ?? delegate { };
+                this.priority = priority;
+
 
                 //todo: converting to new versions of GameActions
             }
@@ -371,6 +376,15 @@ namespace HeavenStudio
                             new Param("valA", new EntityTypes.Float(0, 1, 1), "Start Opacity"),
                             new Param("valB", new EntityTypes.Float(0, 1, 0), "End Opacity"),
                             new Param("ease", EasingFunction.Ease.Linear, "Ease")
+                        }
+                    ),
+                    new GameAction("filter", "Filter", 1f, true,
+                        new List<Param>()
+                        {
+                            new Param("filter", Games.Global.Filter.FilterType.grayscale, "Filter"),
+                            new Param("inten", new EntityTypes.Float(0, 100, 100), "Intensity"),
+                            new Param("fadein", new EntityTypes.Float(0, 100, 0), "Fade In"),
+                            new Param("fadeout", new EntityTypes.Float(0, 100, 0), "Fade Out")
                         }
                     ),
                     new GameAction("move camera", "Move Camera", 1f, true, new List<Param>() 
