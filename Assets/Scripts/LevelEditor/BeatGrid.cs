@@ -90,14 +90,14 @@ namespace HeavenStudio.Editor.Track
 
                 if (count > 0) transform.GetChild(0).gameObject.SetActive(false);
             }
-            if (scrollRect.content.anchoredPosition.x != lastPosX)
+            if (rectTransform.anchoredPosition.x != lastPosX)
             {
                 UpdateGridNum();
             }
 
             lastContentScale = scrollRect.content.localScale.x;
             lastTimelineSize = scrollRect.viewport.rect.size.x;
-            lastPosX = scrollRect.content.anchoredPosition.x;
+            lastPosX = rectTransform.anchoredPosition.x;
         }
 
         private void UpdateGridNum()
