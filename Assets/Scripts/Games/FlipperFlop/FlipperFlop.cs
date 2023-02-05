@@ -144,6 +144,7 @@ namespace HeavenStudio.Games
 
         public void QueueFlips(float beat, float length, bool roll, bool uh = false, bool thatsIt = false, int appreciation = 0)
         {
+            missed = false;
             int flopCount = 1;
             int recounts = 0;
             for (int i = 0; i < length; i++)
@@ -177,6 +178,8 @@ namespace HeavenStudio.Games
                         }
                     }
 
+
+
                     if (thatsIt && i + 1 == length)
                     {
                         int noiseToPlay = (flopCount == 4) ? 2 : flopCount;
@@ -190,13 +193,19 @@ namespace HeavenStudio.Games
                     }
                     else
                     {
+                        string failingSoundToPlay = $"flipperFlop/count/flopCountFail{flopCount}";
                         BeatAction.New(instance.gameObject, new List<BeatAction.Action>()
                         {
-                            new BeatAction.Action(beat + i, delegate { Jukebox.PlayOneShotGame(soundToPlay); }),
+                            new BeatAction.Action(beat + i, delegate {
+                                string voiceLine = soundToPlay;
+                                string failVoiceLine = failingSoundToPlay;
+                                if (missed) voiceLine = failVoiceLine;
+                                Jukebox.PlayOneShotGame(voiceLine); 
+                            }),
                         });
                     }
 
-                    if (appreciation != (int)AppreciationType.None && !uh && i + 1 == length && !missed)
+                    if (appreciation != (int)AppreciationType.None && !uh && i + 1 == length)
                     {
                         BeatAction.New(instance.gameObject, new List<BeatAction.Action>()
                         {
@@ -232,9 +241,16 @@ namespace HeavenStudio.Games
                 for (int i = 0; i < 4 - flopCount; i++)
                 {
                     string voiceLine = $"flipperFlop/uh{flopCount + i}";
+                    string failVoiceLine = $"flipperFlop/uhfail{flopCount + i}";
+
                     BeatAction.New(instance.gameObject, new List<BeatAction.Action>()
                     {
-                        new BeatAction.Action(beat + length + i, delegate { Jukebox.PlayOneShotGame(voiceLine); }),
+                        new BeatAction.Action(beat + length + i, delegate {
+                            string voiceLineToPlay = voiceLine;
+                            string failVoiceLineToPlay = failVoiceLine;
+                            if (missed) voiceLineToPlay = failVoiceLineToPlay;
+                            Jukebox.PlayOneShotGame(voiceLineToPlay); 
+                        }),
                     });
                 }
                 BeatAction.New(instance.gameObject, new List<BeatAction.Action>()
@@ -253,6 +269,7 @@ namespace HeavenStudio.Games
 
         public static void AppreciationVoiceLine(int appreciation)
         {
+            if (FlipperFlop.instance.missed) return;
             if (appreciation == (int)AppreciationType.Random) appreciation = UnityEngine.Random.Range(1, 6);
             switch (appreciation)
             {
@@ -372,6 +389,7 @@ namespace HeavenStudio.Games
         public void MissFlipperRoll(PlayerActionEvent caller)
         {
             flipperPlayer.Flip(true, false);
+            missed = true;
         }
 
         public void Nothing(PlayerActionEvent caller) {}

@@ -39,11 +39,20 @@ namespace HeavenStudio.Games.Scripts_FlipperFlop
                     faceAnim.Play("FaceNormal", 0, 0);
                     canBlink = true;
                 }
-                else if (barely)
+                else if (player && barely && hit)
                 {
                     Jukebox.PlayOneShotGame("flipperFlop/tink");
                     faceAnim.Play("FaceBarely", 0, 0);
                     canBlink = false;
+                }
+                else if (player && !hit)
+                {
+                    faceAnim.Play("FaceOw");
+                    canBlink = false;
+                    BeatAction.New(this.gameObject, new List<BeatAction.Action>()
+                    {
+                        new BeatAction.Action(Conductor.instance.songPositionInBeats + 0.3f, delegate { faceAnim.Play("FaceGoofy"); }),
+                    });
                 }
 
                 up = !up;
@@ -70,6 +79,15 @@ namespace HeavenStudio.Games.Scripts_FlipperFlop
                         faceAnim.Play("FaceBarely", 0, 0);
                         canBlink = false;
                     }
+                }
+                else if (player)
+                {
+                    faceAnim.Play("FaceOw");
+                    canBlink = false;
+                    BeatAction.New(this.gameObject, new List<BeatAction.Action>()
+                    {
+                        new BeatAction.Action(Conductor.instance.songPositionInBeats + 0.3f, delegate { faceAnim.Play("FaceGoofy"); }),
+                    });
                 }
                 if (left)
                 {
