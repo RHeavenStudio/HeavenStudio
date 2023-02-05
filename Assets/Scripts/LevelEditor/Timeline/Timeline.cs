@@ -259,11 +259,11 @@ namespace HeavenStudio.Editor.Track
 
             ZoomInBTN.onClick.AddListener(delegate
             {
-                zoomComponent.ZoomIn(3, Vector2.zero);
+                zoomComponent.ZoomIn(1, Vector2.zero);
             });
             ZoomOutBTN.onClick.AddListener(delegate
             {
-                zoomComponent.ZoomOut(-3, Vector2.zero);
+                zoomComponent.ZoomOut(-1, Vector2.zero);
             });
             ZoomResetBTN.onClick.AddListener(delegate
             {
@@ -440,13 +440,13 @@ namespace HeavenStudio.Editor.Track
                 }
 
                 float moveSpeed = 750;
-                if (Input.GetKey(KeyCode.LeftShift)) moveSpeed *= 6;
-                
-                if (Input.GetKey(KeyCode.LeftArrow) || Input.GetKey(KeyCode.A))
+                if (Input.GetKey(KeyCode.LeftShift) || Input.GetKey(KeyCode.RightShift)) moveSpeed *= 6;
+
+                if (Input.GetKey(KeyCode.LeftArrow) || (!Input.GetKey(KeyCode.LeftControl) && Input.GetKey(KeyCode.A)))
                 {
                     TimelineContent.transform.localPosition += new Vector3(moveSpeed * Time.deltaTime, 0);
                 }
-                else if (Input.GetKey(KeyCode.RightArrow) || Input.GetKey(KeyCode.D))
+                else if (Input.GetKey(KeyCode.RightArrow) || (!Input.GetKey(KeyCode.LeftControl) && Input.GetKey(KeyCode.D)))
                 {
                     TimelineContent.transform.localPosition += new Vector3(-moveSpeed * Time.deltaTime, 0);
                 }
