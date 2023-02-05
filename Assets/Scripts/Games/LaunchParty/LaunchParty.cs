@@ -30,13 +30,15 @@ namespace HeavenStudio.Games.Loaders
                 },
                 new GameAction("toggleStars", "Toggle Falling Stars")
                 {
-                    function = delegate {var e = eventCaller.currentEntity; LaunchParty.instance.CreateParticles(e.beat, e["toggle"], e["valA"], e["valB"]);},
+                    function = delegate {var e = eventCaller.currentEntity; LaunchParty.instance.CreateParticles(e.beat, e["toggle"], e["valA"], e["valB"], e["valC"]);},
                     defaultLength = 0.5f,
                     parameters = new List<Param>()
                     {
                         new Param("toggle", false, "Stars Enabled", "Starfall Or No?"),
-                        new Param("valA", new EntityTypes.Float(0f, 64f, 1f), "Star Fall Speed", "How fast the stars fall to the edge of the screen"),
-                        new Param("valB", new EntityTypes.Float(1f, 16f, 1f), "Star Density", "How many stars are on the screen at once")
+                        new Param("valA", new EntityTypes.Float(0.1f, 10f, 1f), "Star Density", "How many stars are on the screen"),
+                        new Param("valB", new EntityTypes.Float(0.01f, 5f, 0.1f), "Front Star Fall Speed", "How fast the front stars fall to the edge of the screen"),
+                        new Param("valC", new EntityTypes.Float(0.01f, 5f, 0.1f), "Back Star Fall Speed", "How fast the stars fall to the edge of the screen")
+                        
                     }
                     
                 }
@@ -61,6 +63,8 @@ namespace HeavenStudio.Games
         public GameObject Bell;
         public GameObject Bowling;
         public ParticleSystem FallingStars;
+
+        public ParticleSystem FallingStarsBack;
         public GameObject StarGO;
         
         [Header("Animators")]
@@ -156,23 +160,31 @@ namespace HeavenStudio.Games
                         break;
                 }                 
             }
-        public void CreateParticles(float beat, bool toggle, float starDensity, float starSpeed)
+        public void CreateParticles(float beat, bool toggle, float starDensity, float starSpeed, float starSpeedBack)
         {
             ParticleSystem.EmissionModule emm;
+            ParticleSystem.EmissionModule emm2;
             switch (toggle)
             {
                 case true:
+                    
+                    var emmrate = FallingStars.velocityOverLifetime;
+                    var emmrate2 = FallingStarsBack.velocityOverLifetime;
                     StarGO.SetActive(true);
-                    FallingStars.Play();
+                    emmrate.speedModifier = starSpeed;
+                    emmrate2.speedModifier = starSpeedBack;
                     emm = FallingStars.emission;
+                    emm2 = FallingStarsBack.emission;
                     emm.rateOverTime = starDensity * 6f;
+                    emm2.rateOverTime = starDensity * 6f;
+                    FallingStars.Play();
+                    FallingStarsBack.Play();
                     break;
                 default:
                     FallingStars.Stop();
+                    FallingStarsBack.Stop();
                     break;
             }
-            emm = FallingStars.emission;
-            emm.rateOverTime = starDensity * 6f;
         }
     }
 
