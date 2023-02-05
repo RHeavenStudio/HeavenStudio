@@ -112,7 +112,6 @@ namespace HeavenStudio.Editor
             Tooltip.AddTooltip(UndoBTN.gameObject, "Undo <color=#adadad>[Ctrl+Z]</color>");
             Tooltip.AddTooltip(RedoBTN.gameObject, "Redo <color=#adadad>[Ctrl+Y or Ctrl+Shift+Z]</color>");
             Tooltip.AddTooltip(MusicSelectBTN.gameObject, "Music Select");
-            Tooltip.AddTooltip(EditorThemeBTN.gameObject, "Editor Theme");
             Tooltip.AddTooltip(FullScreenBTN.gameObject, "Preview <color=#adadad>[Tab]</color>");
             Tooltip.AddTooltip(TempoFinderBTN.gameObject, "Tempo Finder");
             Tooltip.AddTooltip(SnapDiagBTN.gameObject, "Snap Settings");
@@ -276,6 +275,7 @@ namespace HeavenStudio.Editor
                     changedMusic = true;
 
                     Timeline.FitToSong();
+                    Timeline.CreateWaveform();
                 }
             }
             );
@@ -485,6 +485,7 @@ namespace HeavenStudio.Editor
                 UpdateEditorStatus(false);
                 CommandManager.instance.Clear();
                 Timeline.FitToSong();
+                Timeline.CreateWaveform();
             });
         }
 
@@ -492,6 +493,7 @@ namespace HeavenStudio.Editor
 
         public void Fullscreen()
         {
+            MainCanvas.gameObject.SetActive(fullscreen);
             if (fullscreen == false)
             {
                 // EditorLetterbox.SetActive(false);
@@ -503,6 +505,7 @@ namespace HeavenStudio.Editor
                 GameManager.instance.CursorCam.enabled = false;
                 GameManager.instance.OverlayCamera.targetTexture = null;
                 fullscreen = true;
+
             }
             else
             {
