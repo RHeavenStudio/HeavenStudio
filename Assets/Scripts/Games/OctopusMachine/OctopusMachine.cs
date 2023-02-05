@@ -15,11 +15,12 @@ namespace HeavenStudio.Games.Loaders
 
                  new GameAction("bop", "Bop")
                  {
-                     function = delegate { var e = eventCaller.currentEntity; OctopusMachine.instance.Bop(e.beat, e["toggle"], e["type"]); },
+                     function = delegate { var e = eventCaller.currentEntity; OctopusMachine.instance.Bop(e.beat, e["toggle"], e["type"], e["type2"]); },
                      parameters = new List<Param>()                     
                      {
                       new Param("toggle", false, "Joyful", "Plays the animations as if you hit an input"),
                       new Param("type", false, "Upset", "Plays the animations as if you missed."),
+                      new Param("type2", false, "Shocked", "What happened?")
                      },
                      defaultLength = 1f,
                  },   
@@ -70,7 +71,7 @@ namespace HeavenStudio.Games
            }
         }
  
-        public void Bop(float beat, bool joyful, bool upset)
+        public void Bop(float beat, bool joyful, bool upset, bool shocked)
         {
            if (joyful)
            {
@@ -84,11 +85,17 @@ namespace HeavenStudio.Games
               OtherOctopus.DoScaledAnimationAsync("Angry", 0.5f);             
               OctopusPlayer.DoScaledAnimationAsync("Oops", 0.5f);
            }
-           else
+           else if (shocked)
+           {
+              Octopus.DoScaledAnimationAsync("Oops", 0.5f);
+              OtherOctopus.DoScaledAnimationAsync("Oops", 0.5f);
+              OctopusPlayer.DoScaledAnimationAsync("Oops", 0.5f);                                       
+           }
+           else 
            {
               Octopus.DoScaledAnimationAsync("Bop", 0.5f);
               OtherOctopus.DoScaledAnimationAsync("Bop", 0.5f);
-              OctopusPlayer.DoScaledAnimationAsync("Bop", 0.5f);                            
+              OctopusPlayer.DoScaledAnimationAsync("Bop", 0.5f);                                       
            }
         }
     }
