@@ -35,11 +35,11 @@ namespace HeavenStudio.Editor.Track
 
             _scaleIncrement = 0.1f * _scale.x;
 
-            if (delta > 0 && _scale.x < _maximumScale)
+            if (delta > 0)
             {
                 ZoomIn(delta, relativeMousePosition);
             }
-            else if (delta < 0 && _scale.x > _minimumScale)
+            else if (delta < 0)
             {
                 ZoomOut(delta, relativeMousePosition);
             }
@@ -47,6 +47,9 @@ namespace HeavenStudio.Editor.Track
 
         public void ZoomIn(float delta, Vector2 relativeMousePosition)
         {
+            if (!(_scale.x < _maximumScale)) return;
+            if (Timeline.instance.InteractingWithEvents() || SpecialTimeline.instance.InteractingWithEvents()) return;
+
             float incre = _scaleIncrement * delta;
 
             var newScale = Mathf.Clamp(_scale.x + incre, _minimumScale, _maximumScale);
@@ -58,6 +61,9 @@ namespace HeavenStudio.Editor.Track
 
         public void ZoomOut(float delta, Vector2 relativeMousePosition)
         {
+            if (!(_scale.x > _minimumScale)) return;
+            if (Timeline.instance.InteractingWithEvents() || SpecialTimeline.instance.InteractingWithEvents()) return;
+
             float incre = _scaleIncrement * -delta;
 
             var newScale = _scale.x - incre;
