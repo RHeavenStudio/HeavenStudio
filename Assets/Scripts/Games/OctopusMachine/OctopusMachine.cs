@@ -2,7 +2,7 @@ using HeavenStudio.Util;
 using System;
 using System.Collections.Generic;
 using UnityEngine;
-// using GhostlyGuy's balls; 
+// using GhostlyGuy's Balls;
 
 namespace HeavenStudio.Games.Loaders
 {
@@ -13,28 +13,30 @@ namespace HeavenStudio.Games.Loaders
             return new Minigame("OctopusMachine", "Octopus Machine \n<color=#eb5454>[INITIALIZATION ONLY]</color>", "FFf362B", false, false, new List<GameAction>()
             {
 
-            new GameAction("bop", "Bop")
-            {
-                function = delegate { var e = eventCaller.currentEntity; OctopusMachine.instance.Bop(e.beat, e["toggle"], e["type"]); },
-                parameters = new List<Param>()                     
-                {
-                 new Param("toggle", false, "Joyful", "Plays the animations as if you hit an input"),
-                 new Param("type", false, "Upset", "Plays the animations as if you missed."),
-                },
-                   defaultLength = 1f,
-                },
+                 new GameAction("bop", "Bop")
+                 {
+                     function = delegate { var e = eventCaller.currentEntity; OctopusMachine.instance.Bop(e.beat, e["toggle"], e["type"]); },
+                     parameters = new List<Param>()                     
+                     {
+                      new Param("toggle", false, "Joyful", "Plays the animations as if you hit an input"),
+                      new Param("type", false, "Upset", "Plays the animations as if you missed."),
+                     },
+                     defaultLength = 1f,
+                 },   
+                 new GameAction("prepare", "Prepare")
+                 {
+                     function = delegate { var e = eventCaller.currentEntity; OctopusMachine.instance.Prepare(e.beat, (e.length == 1f)); },
+                     defaultLength = 1f,                   
+                 },            
             });     
         }
     }
 }
 
-
 namespace HeavenStudio.Games
 {
     public partial class OctopusMachine : Minigame
     {
-        //   private Animator octopus;
-
         public Animator OctopusPlayer;
         public Animator Octopus;
         public Animator OtherOctopus;
@@ -43,15 +45,31 @@ namespace HeavenStudio.Games
 
         [Header("Properties")]
         public GameEvent bop = new GameEvent();
+        
+        public GameEvent prepare = new GameEvent();
 
         public static OctopusMachine instance { get; set; }
 
-        // Start is called before the first frame update
         void Awake()
         {
             instance = this;
         }
-        
+        public void Prepare(float beat, bool prepare)
+        {
+           if (prepare)
+           {
+              Octopus.DoScaledAnimationAsync("Prepare", 0.5f);
+              OtherOctopus.DoScaledAnimationAsync("Prepare", 0.5f);
+              OctopusPlayer.DoScaledAnimationAsync("Prepare", 0.5f);
+           } 
+           else 
+           {
+              Octopus.DoScaledAnimationAsync("Idle", 0.5f);
+              OtherOctopus.DoScaledAnimationAsync("Idle", 0.5f);
+              OctopusPlayer.DoScaledAnimationAsync("Idle", 0.5f);
+           }
+        }
+ 
         public void Bop(float beat, bool joyful, bool upset)
         {
            if (joyful)
@@ -62,15 +80,15 @@ namespace HeavenStudio.Games
            } 
            else if (upset)
            {
-              Octopus.DoScaledAnimationAsync("Angry", 0.5f);
-              OtherOctopus.DoScaledAnimationAsync("Angry", 0.5f);
+              Octopus.DoScaledAnimationAsync("Angry", 0.5f);              
+              OtherOctopus.DoScaledAnimationAsync("Angry", 0.5f);             
               OctopusPlayer.DoScaledAnimationAsync("Oops", 0.5f);
            }
            else
            {
               Octopus.DoScaledAnimationAsync("Bop", 0.5f);
               OtherOctopus.DoScaledAnimationAsync("Bop", 0.5f);
-              OctopusPlayer.DoScaledAnimationAsync("Bop", 0.5f);                   
+              OctopusPlayer.DoScaledAnimationAsync("Bop", 0.5f);                            
            }
         }
     }

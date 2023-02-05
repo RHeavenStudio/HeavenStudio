@@ -152,7 +152,7 @@ TextureImporter:
     maxTextureSize: 2048
     resizeAlgorithm: 0
     textureFormat: -1
-    textureCompression: 1
+    textureCompression: 2
     compressionQuality: 50
     crunchedCompression: 0
     allowsAlphaSplitting: 0
@@ -164,7 +164,7 @@ TextureImporter:
     maxTextureSize: 2048
     resizeAlgorithm: 0
     textureFormat: -1
-    textureCompression: 1
+    textureCompression: 2
     compressionQuality: 50
     crunchedCompression: 0
     allowsAlphaSplitting: 0
@@ -182,8 +182,8 @@ TextureImporter:
         y: 304
         width: 72
         height: 69
-      alignment: 9
-      pivot: {x: 0.41012663, y: 0.49999735}
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
@@ -199,7 +199,7 @@ TextureImporter:
       name: octopus bruh 1
       rect:
         serializedVersion: 2
-        x: 20
+        x: 22
         y: 1232
         width: 347
         height: 225
@@ -220,7 +220,7 @@ TextureImporter:
       name: octopus bruh 2
       rect:
         serializedVersion: 2
-        x: 447
+        x: 449
         y: 1232
         width: 347
         height: 225
@@ -241,7 +241,7 @@ TextureImporter:
       name: octopus bruh 3
       rect:
         serializedVersion: 2
-        x: 874
+        x: 876
         y: 1232
         width: 347
         height: 225
@@ -262,7 +262,7 @@ TextureImporter:
       name: octopus oops 1
       rect:
         serializedVersion: 2
-        x: 1301
+        x: 1303
         y: 1232
         width: 347
         height: 225
@@ -283,7 +283,7 @@ TextureImporter:
       name: octopus oops 2
       rect:
         serializedVersion: 2
-        x: 1728
+        x: 1730
         y: 1232
         width: 347
         height: 225
@@ -304,7 +304,7 @@ TextureImporter:
       name: octopus oops 3
       rect:
         serializedVersion: 2
-        x: 2155
+        x: 2157
         y: 1232
         width: 347
         height: 225
@@ -389,7 +389,7 @@ TextureImporter:
       rect:
         serializedVersion: 2
         x: 1303
-        y: 960
+        y: 962
         width: 347
         height: 225
       alignment: 0
@@ -451,8 +451,8 @@ TextureImporter:
       name: octopus shoot 1
       rect:
         serializedVersion: 2
-        x: 30
-        y: 686
+        x: 22
+        y: 684
         width: 450
         height: 245
       alignment: 0
@@ -493,7 +493,7 @@ TextureImporter:
       name: octopus shoot 3
       rect:
         serializedVersion: 2
-        x: 1090
+        x: 1096
         y: 688
         width: 450
         height: 245
@@ -514,7 +514,7 @@ TextureImporter:
       name: octopus shoot 4
       rect:
         serializedVersion: 2
-        x: 1616
+        x: 1632
         y: 688
         width: 450
         height: 245
@@ -535,7 +535,7 @@ TextureImporter:
       name: octopus shoot 5
       rect:
         serializedVersion: 2
-        x: 2126
+        x: 2145
         y: 688
         width: 450
         height: 245
@@ -556,12 +556,12 @@ TextureImporter:
       name: octopus prepare 1
       rect:
         serializedVersion: 2
-        x: 30
-        y: 410
+        x: 22
+        y: 416
         width: 347
-        height: 239
-      alignment: 0
-      pivot: {x: 0.5, y: 0.5}
+        height: 225
+      alignment: 9
+      pivot: {x: 0.495, y: 0.48}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
@@ -577,12 +577,12 @@ TextureImporter:
       name: octopus prepare 2
       rect:
         serializedVersion: 2
-        x: 550
-        y: 410
+        x: 555
+        y: 416
         width: 347
-        height: 239
-      alignment: 0
-      pivot: {x: 0.5, y: 0.5}
+        height: 225
+      alignment: 9
+      pivot: {x: 0.49, y: 0.46}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
@@ -598,12 +598,12 @@ TextureImporter:
       name: octopus prepare 3
       rect:
         serializedVersion: 2
-        x: 980
-        y: 410
+        x: 970
+        y: 416
         width: 347
-        height: 239
-      alignment: 0
-      pivot: {x: 0.5, y: 0.5}
+        height: 225
+      alignment: 9
+      pivot: {x: 0.53, y: 0.46}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
@@ -619,10 +619,10 @@ TextureImporter:
       name: octopus hold 1
       rect:
         serializedVersion: 2
-        x: 1432
-        y: 410
+        x: 1405
+        y: 416
         width: 347
-        height: 239
+        height: 225
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -641,11 +641,11 @@ TextureImporter:
       rect:
         serializedVersion: 2
         x: 2034
-        y: 410
+        y: 416
         width: 347
-        height: 239
-      alignment: 0
-      pivot: {x: 0.5, y: 0.5}
+        height: 225
+      alignment: 9
+      pivot: {x: 0.4, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
