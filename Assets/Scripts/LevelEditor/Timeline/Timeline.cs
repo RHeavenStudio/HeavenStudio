@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
@@ -27,6 +28,9 @@ namespace HeavenStudio.Editor.Track
         private bool movingPlayback;
         public CurrentTimelineState timelineState = new CurrentTimelineState();
         public float snapInterval = 0.25f; // 4/4
+
+        [Header("Components")]
+        [SerializeField] private RawImage waveform;
 
         public static float SnapInterval() { return instance.snapInterval; }
 
@@ -121,7 +125,9 @@ namespace HeavenStudio.Editor.Track
         [SerializeField] private RectTransform TimelineGridSelect;
         [SerializeField] private RectTransform TimelineEventGrid;
         [SerializeField] private TMP_Text TimelinePlaybackBeat;
+        public ScrollRect TimelineScroll;
         public RectTransform TimelineContent;
+        [SerializeField] private ZoomComponent zoomComponent;
         [SerializeField] private RectTransform TimelineSongPosLineRef;
         [SerializeField] private RectTransform TimelineEventObjRef;
         [SerializeField] private RectTransform LayersRect;
@@ -149,10 +155,17 @@ namespace HeavenStudio.Editor.Track
         public Button TempoChangeBTN;
         public Button MusicVolumeBTN;
         public Button ChartSectionBTN;
+        public Button ZoomInBTN;
+        public Button ZoomOutBTN;
+        public Button ZoomResetBTN;
+        public Button WaveformBTN;
         public Slider PlaybackSpeed;
 
         public Vector3[] LayerCorners = new Vector3[4];
 
+        public float leftSide => (TimelineContent.localPosition.x / TimelineContent.localScale.x) * -1;
+        public float rightSide => (TimelineScroll.viewport.rect.width / TimelineContent.localScale.x) + leftSide;
+        
         public static Timeline instance { get; private set; }
 
         public bool userIsEditingInputField
@@ -215,7 +228,7 @@ namespace HeavenStudio.Editor.Track
             StopBTN.onClick.AddListener(delegate 
             {
                 if (Conductor.instance.isPlaying || Conductor.instance.isPaused)
-                PlayCheck(true); 
+                PlayCheck(true);
             });
 
             MetronomeBTN.onClick.AddListener(delegate 
@@ -244,6 +257,23 @@ namespace HeavenStudio.Editor.Track
                 timelineState.SetState(CurrentTimelineState.State.ChartSection);
             });
 
+            ZoomInBTN.onClick.AddListener(delegate
+            {
+                zoomComponent.ZoomIn(3, Vector2.zero);
+            });
+            ZoomOutBTN.onClick.AddListener(delegate
+            {
+                zoomComponent.ZoomOut(-3, Vector2.zero);
+            });
+            ZoomResetBTN.onClick.AddListener(delegate
+            {
+                zoomComponent.ResetZoom();
+            });
+            WaveformBTN.onClick.AddListener(delegate
+            {
+                WaveformToggle();
+            });
+
             Tooltip.AddTooltip(SongBeat.gameObject, "Current Beat");
             Tooltip.AddTooltip(SongPos.gameObject, "Current Time");
             Tooltip.AddTooltip(CurrentTempo.gameObject, "Current Tempo (BPM)");
@@ -264,6 +294,11 @@ namespace HeavenStudio.Editor.Track
             Tooltip.AddTooltip(StartingTempoSpecialTempo.gameObject, "Starting Tempo (BPM)");
             Tooltip.AddTooltip(StartingVolumeSpecialVolume.gameObject, "Starting Volume (%)");
 
+            Tooltip.AddTooltip(ZoomInBTN.gameObject, "Zoom In");
+            Tooltip.AddTooltip(ZoomOutBTN.gameObject, "Zoom Out");
+            Tooltip.AddTooltip(ZoomResetBTN.gameObject, "Zoom Reset");
+            Tooltip.AddTooltip(WaveformBTN.gameObject, "Waveform Toggle");
+
             Tooltip.AddTooltip(PlaybackSpeed.gameObject, "The preview's playback speed. Right click to reset to 1.0");
 
             SetTimeButtonColors(true, false, false);
@@ -283,6 +318,13 @@ namespace HeavenStudio.Editor.Track
             else songBeats += 10;
             TimelineContent.sizeDelta = new Vector2(songBeats, currentSizeDelta.y);
             TimelineEventGrid.sizeDelta = new Vector2(songBeats, currentSizeDelta.y);
+        }
+
+        public void CreateWaveform()
+        {
+            Debug.Log("what");
+            // DrawWaveform();
+            StartCoroutine(DrawWaveformRealtime());
         }
 
         public void AutoBtnUpdate()
@@ -329,6 +371,12 @@ namespace HeavenStudio.Editor.Track
 
         private void Update()
         {
+            waveform.rectTransform.anchoredPosition = new Vector2(
+                -(GameManager.instance.Beatmap.firstBeatOffset / (60.0f / GameManager.instance.Beatmap.bpm)), 
+                waveform.rectTransform.anchoredPosition.y);
+
+            WaveformBTN.transform.GetChild(0).GetComponent<Image>().color = (Conductor.instance.musicSource.clip != null && waveform.gameObject.activeInHierarchy) ? Color.white : Color.gray;
+
             if (!Conductor.instance.isPlaying && !Conductor.instance.isPaused)
             {
                 SongBeat.text = $"Beat {string.Format("{0:0.000}", TimelineSlider.localPosition.x)}";
@@ -386,9 +434,13 @@ namespace HeavenStudio.Editor.Track
                     timelineState.SetState(CurrentTimelineState.State.ChartSection);
                 }
 
+                if (Input.GetKeyDown(KeyCode.F))
+                {
+                    PlaybackFocus(false);
+                }
 
                 float moveSpeed = 750;
-                if (Input.GetKey(KeyCode.LeftShift)) moveSpeed *= 2;
+                if (Input.GetKey(KeyCode.LeftShift)) moveSpeed *= 6;
                 
                 if (Input.GetKey(KeyCode.LeftArrow) || Input.GetKey(KeyCode.A))
                 {
@@ -421,7 +473,7 @@ namespace HeavenStudio.Editor.Track
             }
 
             if (Conductor.instance.isPlaying)
-                TimelineContent.transform.localPosition = new Vector3((-Conductor.instance.songPositionInBeats * 100) + 200, TimelineContent.transform.localPosition.y);
+                PlaybackFocus(true);
 
             TimelineContent.transform.localPosition = new Vector3(Mathf.Clamp(TimelineContent.transform.localPosition.x, Mathf.NegativeInfinity, 0), TimelineContent.transform.localPosition.y);
 
@@ -574,9 +626,116 @@ namespace HeavenStudio.Editor.Track
         {
             return (this.gameObject.activeSelf && RectTransformUtility.RectangleContainsScreenPoint(TimelineEventGrid, Input.mousePosition, Editor.instance.EditorCamera));
         }
+
         #endregion
 
         #region Functions
+
+        public void PlaybackFocus(bool lerp)
+        {
+            var lerpSpd = (lerp) ? 12f : 10000000; // im lazy
+
+            var newPos = new Vector3((-Conductor.instance.songPositionInBeats * TimelineContent.localScale.x) + 200, TimelineContent.transform.localPosition.y);
+            TimelineContent.transform.localPosition =
+                Vector3.Lerp(TimelineContent.transform.localPosition, newPos, Time.deltaTime * lerpSpd);
+        }
+
+        public void WaveformToggle()
+        {
+            if (Conductor.instance.musicSource.clip == null) return;
+
+            waveform.gameObject.SetActive(!waveform.gameObject.activeInHierarchy);
+        }
+
+        public IEnumerator DrawWaveformRealtime()
+        {
+            var clip = Conductor.instance.musicSource.clip;
+
+            if (!clip)
+                yield break;
+
+            waveform.rectTransform.sizeDelta = new Vector2(Conductor.instance.SongLengthInBeats() + 0.15f, waveform.rectTransform.sizeDelta.y);
+            waveform.color = Color.white;
+
+            var num = 12000;
+            var num2 = 1f;
+            var num3 = clip.samples * clip.channels;
+            var array = new float[num3];
+            var wave = new float[num];
+            clip.GetData(array, 0);
+            int packsize = num3 / num;
+            Debug.Log($"drawing waveform. samples:, {clip.samples}, packsize: {packsize}");
+            float num5 = 0f;
+            int num6 = 0;
+            int num7 = 0;
+            for (int i = 0; i < num3; i++)
+            {
+                wave[num6] += Mathf.Abs(array[i]);
+                num7++;
+                if (num7 > packsize)
+                {
+                    if (num5 < wave[num6])
+                    {
+                        num5 = wave[num6];
+                    }
+                    num6++;
+                    num7 = 0;
+                }
+            }
+            for (int j = 0; j < num; j++)
+            {
+                wave[j] /= num5 * num2;
+                if (wave[j] > 1f)
+                {
+                    wave[j] = 1f;
+                }
+            }
+            int height = 200;
+            Color col = Colors.Hex2RGB("727272");
+            col.a = 0.25f;
+
+            Texture2D tex = new Texture2D(wave.Length, height, TextureFormat.RGBA32, false);
+
+            FillColorAlpha(tex, new Color32(0, 0, 0, 0));
+
+            this.waveform.texture = tex;
+            int waveI = 0;
+            while (waveI < wave.Length)
+            {
+                int num8 = waveI;
+                while (num8 < waveI + 100 && waveI < wave.Length)
+                {
+                    int num9 = 0;
+                    while ((float)num9 <= wave[num8] * (float)height / 2f)
+                    {
+                        tex.SetPixel(num8, height / 2 + num9, col);
+                        tex.SetPixel(num8, height / 2 - num9, col);
+                        num9++;
+                    }
+                    num8++;
+                }
+                waveI += 100;
+                tex.Apply();
+                yield return null;
+            }
+            tex.Apply();
+            yield break;
+        }
+
+        public Texture2D FillColorAlpha(Texture2D tex2D, Color32? fillColor = null)
+        {
+            if (fillColor == null)
+            {
+                fillColor = Color.clear;
+            }
+            Color32[] fillPixels = new Color32[tex2D.width * tex2D.height];
+            for (int i = 0; i < fillPixels.Length; i++)
+            {
+                fillPixels[i] = (Color32)fillColor;
+            }
+            tex2D.SetPixels32(fillPixels);
+            return tex2D;
+        }
 
         public TimelineEventObj AddEventObject(string eventName, bool dragNDrop = false, Vector3 pos = new Vector3(), DynamicBeatmap.DynamicEntity entity = null, bool addEvent = false, string eventId = "")
         {
