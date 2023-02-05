@@ -41,6 +41,7 @@ namespace HeavenStudio.Games
     // using Scripts_RhythmSomen;
     public class RhythmSomen : Minigame
     {
+        [SerializeField] ParticleSystem splashEffect;
         public Animator SomenPlayer;
         public Animator FrontArm;
         public Animator EffectHit;
@@ -155,8 +156,17 @@ namespace HeavenStudio.Games
 
         public void CatchSuccess(PlayerActionEvent caller, float state)
         {
+            splashEffect.Play();
+            if (state >= 1f || state <= -1f)
+            {
+                Jukebox.PlayOneShotGame("rhythmSomen/somen_splash");
+                FrontArm.Play("ArmPluckNG", -1, 0);
+                EffectSweat.Play("BlobSweating", -1, 0);
+                return;
+            }
             Jukebox.PlayOneShotGame("rhythmSomen/somen_catch");
-            FrontArm.Play("ArmPluck", -1, 0);
+            Jukebox.PlayOneShotGame("rhythmSomen/somen_catch_old", volume: 0.25f);
+            FrontArm.Play("ArmPluckOK", -1, 0);
             EffectHit.Play("HitAppear", -1, 0);
         }
 

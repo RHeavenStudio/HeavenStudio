@@ -22585,6 +22585,63 @@ MonoBehaviour:
         looping: 0
         offset: 0
         parameters: []
+  - name: arisa_iina
+    sequence:
+      game: 1
+      force: 1
+      clips:
+      - clip: fanClub/arisa_ii_jp
+        beat: 0
+        pitch: 1
+        volume: 1
+        looping: 0
+        offset: 0
+        parameters: []
+      - clip: fanClub/arisa_in_jp
+        beat: 0.5
+        pitch: 1
+        volume: 1
+        looping: 0
+        offset: 0
+        parameters: []
+      - clip: fanClub/arisa_na_jp
+        beat: 1
+        pitch: 1
+        volume: 1
+        looping: 0
+        offset: 0.055
+        parameters: []
+  - name: arisa_iina_fast
+    sequence:
+      game: 1
+      force: 1
+      clips:
+      - clip: fanClub/arisa_ii_fast_jp
+        beat: 0
+        pitch: 1
+        volume: 1
+        looping: 0
+        offset: 0
+        parameters: []
+      - clip: fanClub/arisa_na_fast_jp
+        beat: 0.5
+        pitch: 1
+        volume: 1
+        looping: 0
+        offset: 0.055
+        parameters: []
+  - name: crowd_big_ready
+    sequence:
+      game: 1
+      force: 1
+      clips:
+      - clip: fanClub/crowd_big_ready
+        beat: 0
+        pitch: 1
+        volume: 1
+        looping: 0
+        offset: 0
+        parameters: []
   - name: crowd_kamone
     sequence:
       game: 1
@@ -22618,13 +22675,34 @@ MonoBehaviour:
         looping: 0
         offset: 0
         parameters: []
-  - name: crowd_big_ready
+  - name: crowd_iina
     sequence:
       game: 1
-      force: 1
+      force: 0
       clips:
-      - clip: fanClub/crowd_big_ready
+      - clip: fanClub/crowd_ii_jp
         beat: 0
+        pitch: 1
+        volume: 1
+        looping: 0
+        offset: 0
+        parameters: []
+      - clip: fanClub/crowd_in_jp
+        beat: 1.5
+        pitch: 1
+        volume: 1
+        looping: 0
+        offset: 0
+        parameters: []
+      - clip: fanClub/crowd_na_jp
+        beat: 2
+        pitch: 1
+        volume: 1
+        looping: 0
+        offset: 0.015
+        parameters: []
+      - clip: fanClub/crowd_heyAlt_jp
+        beat: 3
         pitch: 1
         volume: 1
         looping: 0

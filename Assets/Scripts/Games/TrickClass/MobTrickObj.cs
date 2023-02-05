@@ -138,6 +138,14 @@ namespace HeavenStudio.Games.Scripts_TrickClass
                     });
                 }
             }
+            else
+            {
+                Jukebox.PlayOneShotGame(GetDodgeSound());
+                DoObjMiss();
+                game.PlayerThrough();
+                caller.isEligible = false;
+                game.ScoreMiss();
+            }
         }
 
         public void DodgeMiss(PlayerActionEvent caller)
