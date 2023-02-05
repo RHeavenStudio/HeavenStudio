@@ -52,7 +52,7 @@ namespace HeavenStudio.Common
         public void SetArrowPos(double time)
         {
             float frac = (float)((time - Minigame.EarlyTime()) / (Minigame.EndTime() - Minigame.EarlyTime()));
-            targetArrowPos = (targetArrowPos + barTransform.localScale.y * (frac - 0.5f)) * 0.5f;
+            targetArrowPos = (targetArrowPos + barTransform.localScale.y * (frac - 0.5f)) * -0.5f;
         }
 
         public void StartStarFlash()
@@ -91,7 +91,7 @@ namespace HeavenStudio.Common
             {
                 if (time > 1.0)
                 {
-                    // goes "up"
+                    // goes "down"
                     if (time <= Minigame.LateTime())
                     {
                         type = Rating.OK;
@@ -107,7 +107,7 @@ namespace HeavenStudio.Common
                 }
                 else
                 {
-                    // goes "down"
+                    // goes "up"
                     if (time >= Minigame.PerfectTime())
                     {
                         type = Rating.OK;
@@ -121,7 +121,7 @@ namespace HeavenStudio.Common
                         y = ((barNGTransform.localScale.y - barOKTransform.localScale.y) * -frac) - barOKTransform.localScale.y;
                     }
                 }
-                y *= 0.5f;
+                y *= -0.5f;
             }
 
             switch (type)

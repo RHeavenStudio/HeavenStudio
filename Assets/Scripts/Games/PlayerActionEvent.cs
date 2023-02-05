@@ -163,7 +163,7 @@ namespace HeavenStudio.Games
 
                     CleanUp();
                     if (countsForAccuracy && !(noAutoplay || autoplayOnly) && isEligible)
-                        GameManager.instance.ScoreInputAccuracy(TimeToAccuracy(time), time > 1.0, 1.0);
+                        GameManager.instance.ScoreInputAccuracy(TimeToAccuracy(time), time > 1.0, time);
                 } else
                 {
                    Blank();
