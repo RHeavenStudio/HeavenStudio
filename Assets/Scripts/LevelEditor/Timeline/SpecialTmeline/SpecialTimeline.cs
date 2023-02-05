@@ -225,5 +225,10 @@ namespace HeavenStudio.Editor.Track
             //auto-open the dialog
             sectionTimelineObj.OnRightClick();
         }
+
+        public bool InteractingWithEvents()
+        {
+            return specialTimelineObjs.FindAll(c => c.hovering == true).Count > 0 || specialTimelineObjs.FindAll(c => c.moving == true).Count > 0;
+        }
     }
 }

@@ -26,6 +26,9 @@ namespace HeavenStudio.Editor
                 for (int i = 0; i < buggedSelections.Count; i++)
                 Deselect(buggedSelections[i]);
             }
+            if (Input.GetKey(KeyCode.LeftControl))
+                if (Input.GetKeyDown(KeyCode.A))
+                    SelectAll();
         }
 
         public void ClickSelect(TimelineEventObj eventToAdd)
@@ -54,6 +57,14 @@ namespace HeavenStudio.Editor
             {
                 eventsSelected.Add(eventToAdd);
             }
+        }
+
+        public void SelectAll()
+        {
+            DeselectAll();
+            var eventObjs = Timeline.instance.eventObjs;
+            for (int i = 0; i < eventObjs.Count; i++)
+                eventsSelected.Add(eventObjs[i]);
         }
 
         public void DeselectAll()
