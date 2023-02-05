@@ -14,10 +14,11 @@
       "hash": "b7c279278d1a343c6957c9f15b45173d3211f01c"
     },
     "com.unity.collab-proxy": {
-      "version": "1.15.12",
+      "version": "1.15.4",
       "depth": 0,
       "source": "registry",
       "dependencies": {
+        "com.unity.nuget.newtonsoft-json": "2.0.0",
         "com.unity.services.core": "1.0.1"
       },
       "url": "https://packages.unity.com"
@@ -39,7 +40,7 @@
       "url": "https://packages.unity.com"
     },
     "com.unity.ide.visualstudio": {
-      "version": "2.0.14",
+      "version": "2.0.12",
       "depth": 0,
       "source": "registry",
       "dependencies": {
