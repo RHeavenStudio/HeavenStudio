@@ -20,6 +20,7 @@ namespace HeavenStudio.Common
         [SerializeField] GameObject NG;
         [SerializeField] GameObject OK;
         [SerializeField] GameObject Just;
+        [SerializeField] GameObject Minimal;
 
         [SerializeField] Animator MetreAnim;
 
@@ -52,7 +53,7 @@ namespace HeavenStudio.Common
         public void SetArrowPos(double time)
         {
             float frac = (float)((time - Minigame.EarlyTime()) / (Minigame.EndTime() - Minigame.EarlyTime()));
-            targetArrowPos = (targetArrowPos + barTransform.localScale.y * -(frac - 0.5f)) * 0.5f;
+            targetArrowPos = (targetArrowPos + (barTransform.localScale.y * -(frac - 0.5f))) * 0.5f;
         }
 
         public void StartStarFlash()
@@ -124,17 +125,24 @@ namespace HeavenStudio.Common
                 y *= -0.5f;
             }
 
-            switch (type)
+            if (PersistentDataManager.gameSettings.timingDisplayMinMode)
             {
-                case Rating.OK:
-                    it = OK;
-                    break;
-                case Rating.Just:
-                    it = Just;
-                    break;
-                default:
-                    it = NG;
-                    break;
+                it = Minimal;
+            }
+            else
+            {
+                switch (type)
+                {
+                    case Rating.OK:
+                        it = OK;
+                        break;
+                    case Rating.Just:
+                        it = Just;
+                        break;
+                    default:
+                        it = NG;
+                        break;
+                }
             }
 
             SetArrowPos(time);
