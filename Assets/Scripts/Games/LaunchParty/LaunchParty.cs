@@ -15,18 +15,27 @@ namespace HeavenStudio.Games.Loaders
     {
         public static Minigame AddGame(EventCaller eventCaller) 
         {
-            
             return new Minigame("launchParty", "Launch Party \n<color=#eb5454>[WIP]</color>", "000000", false, false, new List<GameAction>()
             {
-                new GameAction("rocket", "Launch Rocket")
+                new GameAction("rocket", "Launch Family Rocket")
                 {
-                    
-                    function = delegate { var e = eventCaller.currentEntity; LaunchParty.instance.LaunchRocket(e.beat, e["type"]); },
+                    function = delegate { var e = eventCaller.currentEntity; LaunchParty.instance.LaunchRocket(e.beat); },
+                    defaultLength = 5f,
+                },
+                new GameAction("partyCracker", "Launch Party Cracker")
+                {
+                    function = delegate { var e = eventCaller.currentEntity; LaunchParty.instance.LaunchPartyCracker(e.beat); },
                     defaultLength = 4f,
-                    parameters = new List<Param>()
-                    {
-                        new Param("type", LaunchParty.RocketType.Family, "Rocket Model", "The rocket to launch"),
-                    }
+                },
+                new GameAction("bell", "Launch Bell")
+                {
+                    function = delegate { var e = eventCaller.currentEntity; LaunchParty.instance.LaunchBell(e.beat); },
+                    defaultLength = 4f,
+                },
+                new GameAction("bowlingPin", "Launch Bowling Pin")
+                {
+                    function = delegate { var e = eventCaller.currentEntity; LaunchParty.instance.LaunchBowlingPin(e.beat); },
+                    defaultLength = 4f,
                 },
                 new GameAction("toggleStars", "Toggle Falling Stars")
                 {
@@ -40,10 +49,8 @@ namespace HeavenStudio.Games.Loaders
                         new Param("valC", new EntityTypes.Float(0.01f, 5f, 0.1f), "Back Star Fall Speed", "How fast the stars fall to the edge of the screen")
                         
                     }
-                    
                 }
             });
-
         }
     }
 }
@@ -52,58 +59,24 @@ namespace HeavenStudio.Games
 {
     public class LaunchParty : Minigame
     {
-        
-        [Header("Main")]
-        public GameObject PadSprites;
-
         [Header("Rockets")]
-        [SerializeField] GameObject Rocket;
-        [SerializeField] GameObject PartyCracker;
-        [SerializeField] GameObject Bell;
-        [SerializeField] GameObject Bowling;
-        [SerializeField] ParticleSystem FallingStars;
+        [SerializeField] GameObject rocket;
+        [SerializeField] GameObject partyCracker;
+        [SerializeField] GameObject bell;
+        [SerializeField] GameObject bowlingPin;
 
-        [SerializeField] ParticleSystem FallingStarsBack;
-        [SerializeField] GameObject StarGO;
-        
-        [Header("Animators")]
-        [SerializeField] Animator Rockets;
-        [SerializeField] Animator Crackers;
-        [SerializeField] Animator Bells;
-        [SerializeField] Animator Pins;
-
-        [Header("Positions")]
-        public Transform SpawnRoot;
-
-        public enum RocketType
-        {
-            Family,
-            PartyCracker,
-            Bell,
-            Bowling,
-        }
-
-        public enum ScaleNote
-        {
-            A,
-            ASharp,
-            B,
-            C,
-            CSharp,
-            D,
-            DSharp,
-            E,
-            F,
-            FSharp,
-            G,
-            GSharp
-        }
+        [Header("Components")]
+        [SerializeField] ParticleSystem fallingStars;
+        [SerializeField] ParticleSystem fallingStarsBack;
+        [SerializeField] GameObject starGO;
+        [SerializeField] Transform launchPad;
 
         public static LaunchParty instance;
 
         //Normal Rocket = (beat, beat + 1, beat + 2)
         //Party Cracker = (beat, beat + 2/3, beat + 1, beat + 4/3, beat + 5/3)
-/*      // Bell                  new BeatAction.Action(beat, delegate { LaunchParty.instance.Bells.Play(awakeAnim, 0); }),
+/*      // Bell                  
+ *              new BeatAction.Action(beat, delegate { LaunchParty.instance.Bells.Play(awakeAnim, 0); }),
                 new BeatAction.Action(beat + 1f, delegate { LaunchParty.instance.Bells.Play(awakeAnim, 0, 0);}),
                 new BeatAction.Action(beat + 7/6f, delegate { LaunchParty.instance.Bells.Play(awakeAnim, 0, 0);}),
                 new BeatAction.Action(beat + 8/6f, delegate { LaunchParty.instance.Bells.Play(awakeAnim, 0, 0);}),
@@ -132,16 +105,28 @@ namespace HeavenStudio.Games
         void Awake()
         {
             instance = this;
-            Vector3 spawnPos = SpawnRoot.position;
-            GameObject mobj = Instantiate(PadSprites, SpawnRoot.parent);
-            mobj.SetActive(true);
-
         }
 
-        public void LaunchRocket(float beat, int type)
+        public void LaunchRocket(float beat)
         {   
 
         }
+
+        public void LaunchPartyCracker(float beat)
+        {
+
+        }
+
+        public void LaunchBell(float beat)
+        {
+
+        }
+
+        public void LaunchBowlingPin(float beat)
+        {
+
+        }
+
         public void CreateParticles(float beat, bool toggle, float starDensity, float starSpeed, float starSpeedBack)
         {
             ParticleSystem.EmissionModule emm;
@@ -149,21 +134,21 @@ namespace HeavenStudio.Games
             switch (toggle)
             {
                 case true:
-                    var emmrate = FallingStars.velocityOverLifetime;
-                    var emmrate2 = FallingStarsBack.velocityOverLifetime;
-                    StarGO.SetActive(true);
+                    var emmrate = fallingStars.velocityOverLifetime;
+                    var emmrate2 = fallingStarsBack.velocityOverLifetime;
+                    starGO.SetActive(true);
                     emmrate.speedModifier = starSpeed;
                     emmrate2.speedModifier = starSpeedBack;
-                    emm = FallingStars.emission;
-                    emm2 = FallingStarsBack.emission;
+                    emm = fallingStars.emission;
+                    emm2 = fallingStarsBack.emission;
                     emm.rateOverTime = starDensity * 6f;
                     emm2.rateOverTime = starDensity * 6f;
-                    FallingStars.Play();
-                    FallingStarsBack.Play();
+                    fallingStars.Play();
+                    fallingStarsBack.Play();
                     break;
                 default:
-                    FallingStars.Stop();
-                        FallingStarsBack.Stop();
+                    fallingStars.Stop();
+                        fallingStarsBack.Stop();
                     break;
             }
         }

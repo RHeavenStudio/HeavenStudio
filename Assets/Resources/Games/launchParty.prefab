@@ -189,11 +189,11 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 71292151208428887}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0.014035225, y: -2.3914368, z: 1.0043001}
-  m_LocalScale: {x: 5.9838767, y: 5.739158, z: 1}
+  m_LocalPosition: {x: 0.014035225, y: -2.3914368, z: 0}
+  m_LocalScale: {x: 4, y: 4, z: 1}
   m_Children: []
   m_Father: {fileID: 4812371499129916051}
-  m_RootOrder: 5
+  m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!212 &7147620143001543786
 SpriteRenderer:
@@ -1504,8 +1504,6 @@ Transform:
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
-  - {fileID: 3123923870458241866}
-  - {fileID: 4714936815865687845}
   - {fileID: 4191685051604203802}
   - {fileID: 7082842602771267736}
   - {fileID: 3519931034055335589}
@@ -1529,20 +1527,14 @@ MonoBehaviour:
   EligibleHits: []
   scheduledInputs: []
   firstEnable: 0
-  PadSprites: {fileID: 0}
-  Rocket: {fileID: 0}
-  PartyCracker: {fileID: 0}
-  Bell: {fileID: 0}
-  Bowling: {fileID: 0}
-  FallingStars: {fileID: 7808760023856068891}
-  FallingStarsBack: {fileID: 8460598887616071446}
-  StarGO: {fileID: 8021800922687581918}
-  Rockets: {fileID: 0}
-  Crackers: {fileID: 0}
-  Bells: {fileID: 0}
-  Pins: {fileID: 0}
-  padLaunch: {fileID: 0}
-  SpawnRoot: {fileID: 3123923870458241866}
+  rocket: {fileID: 0}
+  partyCracker: {fileID: 0}
+  bell: {fileID: 0}
+  bowlingPin: {fileID: 0}
+  fallingStars: {fileID: 0}
+  fallingStarsBack: {fileID: 0}
+  starGO: {fileID: 0}
+  launchPad: {fileID: 0}
 --- !u!1 &1125379078595576856
 GameObject:
   m_ObjectHideFlags: 0
@@ -9709,36 +9701,6 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
---- !u!1 &3511154340256041533
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 3123923870458241866}
-  m_Layer: 0
-  m_Name: SpawnRoot
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &3123923870458241866
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3511154340256041533}
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -0.9, y: 7.5, z: 46.7301}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_Children: []
-  m_Father: {fileID: 4812371499129916051}
-  m_RootOrder: 0
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &3601038112295622214
 GameObject:
   m_ObjectHideFlags: 0
@@ -16637,7 +16599,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4191685051604203802}
   m_Layer: 0
-  m_Name: Star
+  m_Name: Background
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -16815,8 +16777,9 @@ Transform:
   - {fileID: 7037793085902531409}
   - {fileID: 7801403899793457953}
   - {fileID: 5655623499899366445}
+  - {fileID: 4714936815865687845}
   m_Father: {fileID: 4812371499129916051}
-  m_RootOrder: 2
+  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &7500370227616706427
 GameObject:
@@ -17075,7 +17038,7 @@ GameObject:
   - component: {fileID: 7082842602771267736}
   - component: {fileID: 1207273590585358970}
   m_Layer: 0
-  m_Name: Za Warudo
+  m_Name: Planet
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -17093,7 +17056,7 @@ Transform:
   m_LocalScale: {x: 21.213743, y: 19.459309, z: 1}
   m_Children: []
   m_Father: {fileID: 4812371499129916051}
-  m_RootOrder: 3
+  m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!212 &1207273590585358970
 SpriteRenderer:
@@ -17422,7 +17385,7 @@ Transform:
   - {fileID: 8987993541957061022}
   - {fileID: 2211593294119402167}
   m_Father: {fileID: 4812371499129916051}
-  m_RootOrder: 4
+  m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &8164532824919197926
 GameObject:
@@ -23237,11 +23200,11 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 8989850195145380616}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 32.6, y: 10.4, z: 36.9}
-  m_LocalScale: {x: -29.763391, y: 35.221348, z: 1}
+  m_LocalPosition: {x: 1.5723627, y: 1.0678128, z: 7.700001}
+  m_LocalScale: {x: -1.4030241, y: 1.8099998, z: 1}
   m_Children: []
-  m_Father: {fileID: 4812371499129916051}
-  m_RootOrder: 1
+  m_Father: {fileID: 4191685051604203802}
+  m_RootOrder: 161
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!212 &5679448826666281948
 SpriteRenderer:
