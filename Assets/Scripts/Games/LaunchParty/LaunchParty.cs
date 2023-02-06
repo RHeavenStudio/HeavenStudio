@@ -20,39 +20,73 @@ namespace HeavenStudio.Games.Loaders
             {
                 new GameAction("rocket", "Launch Family Rocket")
                 {
-                    function = delegate { var e = eventCaller.currentEntity; LaunchParty.instance.LaunchRocket(e.beat, e["note1"], e["note2"], e["note3"], e["note4"]); },
+                    preFunction = delegate { var e = eventCaller.currentEntity; LaunchParty.instance.LaunchRocket(e.beat, e["offset"], e["note1"], e["note2"], e["note3"], e["note4"]); },
                     defaultLength = 4f,
                     parameters = new List<Param>()
                     {
-                        new Param("note1", new EntityTypes.Integer(-24, 24, 0), "1st Note", "The number of semitones up or down this note should be pitched"),
-                        new Param("note2", new EntityTypes.Integer(-24, 24, 0), "2nd Note", "The number of semitones up or down this note should be pitched"),
-                        new Param("note3", new EntityTypes.Integer(-24, 24, 0), "3rd Note", "The number of semitones up or down this note should be pitched"),
-                        new Param("note4", new EntityTypes.Integer(-24, 24, 0), "4th Note", "The number of semitones up or down this note should be pitched")
+                        new Param("offset", new EntityTypes.Float(-1, 2, -1), "Spawn Offset", "When should the rocket rise up?"),
+                        new Param("note1", new EntityTypes.Integer(-24, 24, 2), "1st Note", "The number of semitones up or down this note should be pitched"),
+                        new Param("note2", new EntityTypes.Integer(-24, 24, 4), "2nd Note", "The number of semitones up or down this note should be pitched"),
+                        new Param("note3", new EntityTypes.Integer(-24, 24, 5), "3rd Note", "The number of semitones up or down this note should be pitched"),
+                        new Param("note4", new EntityTypes.Integer(-24, 24, 7), "4th Note", "The number of semitones up or down this note should be pitched")
                     }
                 },
                 new GameAction("partyCracker", "Launch Party Cracker")
                 {
-                    function = delegate { var e = eventCaller.currentEntity; LaunchParty.instance.LaunchPartyCracker(e.beat, e["note1"], e["note2"], e["note3"], e["note4"], e["note5"], e["note6"]); },
+                    preFunction = delegate { var e = eventCaller.currentEntity; LaunchParty.instance.LaunchPartyCracker(e.beat, e["offset"], e["note1"], e["note2"], e["note3"], e["note4"], e["note5"], e["note6"]); },
                     defaultLength = 3f,
                     parameters = new List<Param>()
                     {
-                        new Param("note1", new EntityTypes.Integer(-24, 24, 0), "1st Note", "The number of semitones up or down this note should be pitched"),
-                        new Param("note2", new EntityTypes.Integer(-24, 24, 0), "2nd Note", "The number of semitones up or down this note should be pitched"),
-                        new Param("note3", new EntityTypes.Integer(-24, 24, 0), "3rd Note", "The number of semitones up or down this note should be pitched"),
-                        new Param("note4", new EntityTypes.Integer(-24, 24, 0), "4th Note", "The number of semitones up or down this note should be pitched"),
-                        new Param("note5", new EntityTypes.Integer(-24, 24, 0), "5th Note", "The number of semitones up or down this note should be pitched"),
-                        new Param("note6", new EntityTypes.Integer(-24, 24, 0), "6th Note", "The number of semitones up or down this note should be pitched")
+                        new Param("offset", new EntityTypes.Float(-1, 1, -1), "Spawn Offset", "When should the rocket rise up?"),
+                        new Param("note1", new EntityTypes.Integer(-24, 24, 4), "1st Note", "The number of semitones up or down this note should be pitched"),
+                        new Param("note2", new EntityTypes.Integer(-24, 24, 5), "2nd Note", "The number of semitones up or down this note should be pitched"),
+                        new Param("note3", new EntityTypes.Integer(-24, 24, 7), "3rd Note", "The number of semitones up or down this note should be pitched"),
+                        new Param("note4", new EntityTypes.Integer(-24, 24, 9), "4th Note", "The number of semitones up or down this note should be pitched"),
+                        new Param("note5", new EntityTypes.Integer(-24, 24, 11), "5th Note", "The number of semitones up or down this note should be pitched"),
+                        new Param("note6", new EntityTypes.Integer(-24, 24, 12), "6th Note", "The number of semitones up or down this note should be pitched")
                     }
                 },
                 new GameAction("bell", "Launch Bell")
                 {
-                    function = delegate { var e = eventCaller.currentEntity; LaunchParty.instance.LaunchBell(e.beat); },
+                    preFunction = delegate { var e = eventCaller.currentEntity; LaunchParty.instance.LaunchBell(e.beat, e["offset"], e["note1"], e["note2"], e["note3"], e["note4"], e["note5"], e["note6"], e["note7"], e["note8"]); },
                     defaultLength = 3f,
+                    parameters = new List<Param>()
+                    {
+                        new Param("offset", new EntityTypes.Float(-1, 1, -1), "Spawn Offset", "When should the rocket rise up?"),
+                        new Param("note1", new EntityTypes.Integer(-24, 24, 0), "1st Note", "The number of semitones up or down this note should be pitched"),
+                        new Param("note2", new EntityTypes.Integer(-24, 24, 2), "2nd Note", "The number of semitones up or down this note should be pitched"),
+                        new Param("note3", new EntityTypes.Integer(-24, 24, 4), "3rd Note", "The number of semitones up or down this note should be pitched"),
+                        new Param("note4", new EntityTypes.Integer(-24, 24, 5), "4th Note", "The number of semitones up or down this note should be pitched"),
+                        new Param("note5", new EntityTypes.Integer(-24, 24, 7), "5th Note", "The number of semitones up or down this note should be pitched"),
+                        new Param("note6", new EntityTypes.Integer(-24, 24, 9), "6th Note", "The number of semitones up or down this note should be pitched"),
+                        new Param("note7", new EntityTypes.Integer(-24, 24, 11), "7th Note", "The number of semitones up or down this note should be pitched"),
+                        new Param("note8", new EntityTypes.Integer(-24, 24, 12), "8th Note", "The number of semitones up or down this note should be pitched")
+                    }
                 },
                 new GameAction("bowlingPin", "Launch Bowling Pin")
                 {
-                    function = delegate { var e = eventCaller.currentEntity; LaunchParty.instance.LaunchBowlingPin(e.beat); },
+                    preFunction = delegate { var e = eventCaller.currentEntity; LaunchParty.instance.LaunchBowlingPin(e.beat, e["offset"], e["note1"], e["note2"], e["note3"], e["note4"], e["note5"], e["note6"], e["note7"], 
+                        e["note8"], e["note9"], e["note10"], e["note11"], e["note12"], e["note13"], e["note14"], e["note15"]); },
                     defaultLength = 3f,
+                    parameters = new List<Param>()
+                    {
+                        new Param("offset", new EntityTypes.Float(-1, 1, -1), "Spawn Offset", "When should the rocket rise up?"),
+                        new Param("note1", new EntityTypes.Integer(-24, 24, 5), "1st Note", "The number of semitones up or down this note should be pitched"),
+                        new Param("note2", new EntityTypes.Integer(-24, 24, -1), "2nd Note (Flute)", "The number of semitones up or down this note should be pitched"),
+                        new Param("note3", new EntityTypes.Integer(-24, 24, 0), "3rd Note (Flute)", "The number of semitones up or down this note should be pitched"),
+                        new Param("note4", new EntityTypes.Integer(-24, 24, -1), "4th Note (Flute)", "The number of semitones up or down this note should be pitched"),
+                        new Param("note5", new EntityTypes.Integer(-24, 24, 0), "5th Note (Flute)", "The number of semitones up or down this note should be pitched"),
+                        new Param("note6", new EntityTypes.Integer(-24, 24, -1), "6th Note (Flute)", "The number of semitones up or down this note should be pitched"),
+                        new Param("note7", new EntityTypes.Integer(-24, 24, 0), "7th Note (Flute)", "The number of semitones up or down this note should be pitched"),
+                        new Param("note8", new EntityTypes.Integer(-24, 24, -1), "8th Note (Flute)", "The number of semitones up or down this note should be pitched"),
+                        new Param("note9", new EntityTypes.Integer(-24, 24, 0), "9th Note (Flute)", "The number of semitones up or down this note should be pitched"),
+                        new Param("note10", new EntityTypes.Integer(-24, 24, -1), "10th Note (Flute)", "The number of semitones up or down this note should be pitched"),
+                        new Param("note11", new EntityTypes.Integer(-24, 24, 0), "11th Note (Flute)", "The number of semitones up or down this note should be pitched"),
+                        new Param("note12", new EntityTypes.Integer(-24, 24, -1), "12th Note (Flute)", "The number of semitones up or down this note should be pitched"),
+                        new Param("note13", new EntityTypes.Integer(-24, 24, 0), "13th Note (Flute)", "The number of semitones up or down this note should be pitched"),
+                        new Param("note14", new EntityTypes.Integer(-24, 24, 7), "14th Note (Flute)", "The number of semitones up or down this note should be pitched"),
+                        new Param("note15", new EntityTypes.Integer(-24, 24, 7), "15th Note", "The number of semitones up or down this note should be pitched")
+                    }
                 },
                 new GameAction("toggleStars", "Toggle Falling Stars")
                 {
@@ -90,42 +124,14 @@ namespace HeavenStudio.Games
 
         public static LaunchParty instance;
 
-        //Normal Rocket = (beat, beat + 1, beat + 2)
-        //Party Cracker = (beat, beat + 2/3, beat + 1, beat + 4/3, beat + 5/3)
-/*      // Bell                  
- *              new BeatAction.Action(beat, delegate { LaunchParty.instance.Bells.Play(awakeAnim, 0); }),
-                new BeatAction.Action(beat + 1f, delegate { LaunchParty.instance.Bells.Play(awakeAnim, 0, 0);}),
-                new BeatAction.Action(beat + 7/6f, delegate { LaunchParty.instance.Bells.Play(awakeAnim, 0, 0);}),
-                new BeatAction.Action(beat + 8/6f, delegate { LaunchParty.instance.Bells.Play(awakeAnim, 0, 0);}),
-                new BeatAction.Action(beat + 9/6f, delegate { LaunchParty.instance.Bells.Play(awakeAnim, 0, 0);}),
-                new BeatAction.Action(beat + 10/6f, delegate { LaunchParty.instance.Bells.Play(awakeAnim, 0, 0);}),
-                new BeatAction.Action(beat + 11/6f, delegate { LaunchParty.instance.Bells.Play(awakeAnim, 0, 0);})
-*/
-//Pin
-/*
- *                         new MultiSound.Sound("launchParty/VT_CL",   beat, pitch1),
-                new MultiSound.Sound("launchParty/rocket_pin_prepare",   beat, 1f, 0.75f),
-                new MultiSound.Sound("launchParty/VT_CL",   beat, pitch2, 0.02f),
-                new MultiSound.Sound("launchParty/VT_CL",   beat + 1/6f, pitch3, 0.02f),
-                new MultiSound.Sound("launchParty/VT_CL",   beat + 2/6f, pitch2, 0.06f),
-                new MultiSound.Sound("launchParty/VT_CL",   beat + 3/6f, pitch3, 0.1f),
-                new MultiSound.Sound("launchParty/VT_CL",   beat + 4/6f, pitch2, 0.16f),
-                new MultiSound.Sound("launchParty/VT_CL",   beat + 5/6f, pitch3, 0.22f),
-                new MultiSound.Sound("launchParty/VT_CL",   beat + 1f, pitch2, 0.3f),
-                new MultiSound.Sound("launchParty/VT_CL",   beat + 7/6f, pitch3, 0.4f),
-                new MultiSound.Sound("launchParty/VT_CL",   beat + 8/6f, pitch2, 0.6f),
-                new MultiSound.Sound("launchParty/VT_CL",   beat + 9/6f, pitch3, 0.75f),
-                new MultiSound.Sound("launchParty/VT_CL",   beat + 10/6f, pitch2, 0.89f),
-                new MultiSound.Sound("launchParty/VT_CL",   beat + 11/6f, pitch3),
-*/
-
         void Awake()
         {
             instance = this;
         }
 
-        public void LaunchRocket(float beat, int noteOne, int noteTwo, int noteThree, int noteFour)
+        public void LaunchRocket(float beat, float beatOffset, int noteOne, int noteTwo, int noteThree, int noteFour)
         {
+
             GameObject spawnedRocket = Instantiate(rocket, launchPad, false);
             var rocketScript = spawnedRocket.GetComponent<LaunchPartyRocket>();
             rocketScript.pitches.Add(Mathf.Pow(2f, (1f / 12f) * noteOne) * Conductor.instance.musicSource.pitch);
@@ -133,9 +139,14 @@ namespace HeavenStudio.Games
             rocketScript.pitches.Add(Mathf.Pow(2f, (1f / 12f) * noteThree) * Conductor.instance.musicSource.pitch);
             rocketScript.pitches.Add(Mathf.Pow(2f, (1f / 12f) * noteFour) * Conductor.instance.musicSource.pitch);
             rocketScript.InitFamilyRocket(beat);
+
+            BeatAction.New(instance.gameObject, new List<BeatAction.Action>()
+            {
+                new BeatAction.Action(beat + beatOffset, delegate { rocketScript.Rise(); })
+            });
         }
 
-        public void LaunchPartyCracker(float beat, int noteOne, int noteTwo, int noteThree, int noteFour, int noteFive, int noteSix)
+        public void LaunchPartyCracker(float beat, float beatOffset, int noteOne, int noteTwo, int noteThree, int noteFour, int noteFive, int noteSix)
         {
             GameObject spawnedRocket = Instantiate(partyCracker, launchPad, false);
             var rocketScript = spawnedRocket.GetComponent<LaunchPartyRocket>();
@@ -146,16 +157,59 @@ namespace HeavenStudio.Games
             rocketScript.pitches.Add(Mathf.Pow(2f, (1f / 12f) * noteFive) * Conductor.instance.musicSource.pitch);
             rocketScript.pitches.Add(Mathf.Pow(2f, (1f / 12f) * noteSix) * Conductor.instance.musicSource.pitch);
             rocketScript.InitPartyCracker(beat);
+
+            BeatAction.New(instance.gameObject, new List<BeatAction.Action>()
+            {
+                new BeatAction.Action(beat + beatOffset, delegate { rocketScript.Rise(); })
+            });
         }
 
-        public void LaunchBell(float beat)
+        public void LaunchBell(float beat, float beatOffset, int noteOne, int noteTwo, int noteThree, int noteFour, int noteFive, int noteSix, int noteSeven, int noteEight)
         {
+            GameObject spawnedRocket = Instantiate(bell, launchPad, false);
+            var rocketScript = spawnedRocket.GetComponent<LaunchPartyRocket>();
+            rocketScript.pitches.Add(Mathf.Pow(2f, (1f / 12f) * noteOne) * Conductor.instance.musicSource.pitch);
+            rocketScript.pitches.Add(Mathf.Pow(2f, (1f / 12f) * noteTwo) * Conductor.instance.musicSource.pitch);
+            rocketScript.pitches.Add(Mathf.Pow(2f, (1f / 12f) * noteThree) * Conductor.instance.musicSource.pitch);
+            rocketScript.pitches.Add(Mathf.Pow(2f, (1f / 12f) * noteFour) * Conductor.instance.musicSource.pitch);
+            rocketScript.pitches.Add(Mathf.Pow(2f, (1f / 12f) * noteFive) * Conductor.instance.musicSource.pitch);
+            rocketScript.pitches.Add(Mathf.Pow(2f, (1f / 12f) * noteSix) * Conductor.instance.musicSource.pitch);
+            rocketScript.pitches.Add(Mathf.Pow(2f, (1f / 12f) * noteSeven) * Conductor.instance.musicSource.pitch);
+            rocketScript.pitches.Add(Mathf.Pow(2f, (1f / 12f) * noteEight) * Conductor.instance.musicSource.pitch);
+            rocketScript.InitBell(beat);
 
+            BeatAction.New(instance.gameObject, new List<BeatAction.Action>()
+            {
+                new BeatAction.Action(beat + beatOffset, delegate { rocketScript.Rise(); })
+            });
         }
 
-        public void LaunchBowlingPin(float beat)
+        public void LaunchBowlingPin(float beat, float beatOffset, int noteOne, int noteTwo, int noteThree, int noteFour, int noteFive, int noteSix, int noteSeven, 
+            int noteEight, int noteNine, int noteTen, int noteEleven, int noteTwelve, int noteThirteen, int noteFourteen, int noteFifteen)
         {
+            GameObject spawnedRocket = Instantiate(bowlingPin, launchPad, false);
+            var rocketScript = spawnedRocket.GetComponent<LaunchPartyRocket>();
+            rocketScript.pitches.Add(Mathf.Pow(2f, (1f / 12f) * noteOne) * Conductor.instance.musicSource.pitch);
+            rocketScript.pitches.Add(Mathf.Pow(2f, (1f / 12f) * noteTwo) * Conductor.instance.musicSource.pitch);
+            rocketScript.pitches.Add(Mathf.Pow(2f, (1f / 12f) * noteThree) * Conductor.instance.musicSource.pitch);
+            rocketScript.pitches.Add(Mathf.Pow(2f, (1f / 12f) * noteFour) * Conductor.instance.musicSource.pitch);
+            rocketScript.pitches.Add(Mathf.Pow(2f, (1f / 12f) * noteFive) * Conductor.instance.musicSource.pitch);
+            rocketScript.pitches.Add(Mathf.Pow(2f, (1f / 12f) * noteSix) * Conductor.instance.musicSource.pitch);
+            rocketScript.pitches.Add(Mathf.Pow(2f, (1f / 12f) * noteSeven) * Conductor.instance.musicSource.pitch);
+            rocketScript.pitches.Add(Mathf.Pow(2f, (1f / 12f) * noteEight) * Conductor.instance.musicSource.pitch);
+            rocketScript.pitches.Add(Mathf.Pow(2f, (1f / 12f) * noteNine) * Conductor.instance.musicSource.pitch);
+            rocketScript.pitches.Add(Mathf.Pow(2f, (1f / 12f) * noteTen) * Conductor.instance.musicSource.pitch);
+            rocketScript.pitches.Add(Mathf.Pow(2f, (1f / 12f) * noteEleven) * Conductor.instance.musicSource.pitch);
+            rocketScript.pitches.Add(Mathf.Pow(2f, (1f / 12f) * noteTwelve) * Conductor.instance.musicSource.pitch);
+            rocketScript.pitches.Add(Mathf.Pow(2f, (1f / 12f) * noteThirteen) * Conductor.instance.musicSource.pitch);
+            rocketScript.pitches.Add(Mathf.Pow(2f, (1f / 12f) * noteFourteen) * Conductor.instance.musicSource.pitch);
+            rocketScript.pitches.Add(Mathf.Pow(2f, (1f / 12f) * noteFifteen) * Conductor.instance.musicSource.pitch);
+            rocketScript.InitBowlingPin(beat);
 
+            BeatAction.New(instance.gameObject, new List<BeatAction.Action>()
+            {
+                new BeatAction.Action(beat + beatOffset, delegate { rocketScript.Rise(); })
+            });
         }
 
         public void CreateParticles(float beat, bool toggle, float starDensity, float starSpeed, float starSpeedBack)
