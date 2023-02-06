@@ -10,7 +10,8 @@ namespace HeavenStudio
     {
         public static GoForAPerfect instance { get; set; }
 
-        private Animator pAnim;
+        [SerializeField] Animator texAnim;
+        [SerializeField] Animator pAnim;
 
         private bool active = false;
 
@@ -23,7 +24,6 @@ namespace HeavenStudio
 
         private void Start()
         {
-            pAnim = transform.GetChild(0).GetChild(0).GetComponent<Animator>();
             perfect = true;
         }
 
@@ -35,26 +35,29 @@ namespace HeavenStudio
 
         public void Miss()
         {
-            if (!active) return;
             perfect = false;
+            if (!active) return;
+            SetInactive();
 
             GameProfiler.instance.perfect = false;
 
-            transform.GetChild(0).GetChild(1).gameObject.SetActive(false);
-            this.GetComponent<Animator>().Play("GoForAPerfect_Miss");
+            texAnim.Play("GoForAPerfect_Miss");
             Jukebox.PlayOneShot("perfectMiss");
         }
 
         public void Enable()
         {
             SetActive();
-            transform.GetChild(0).gameObject.SetActive(true);
+            gameObject.SetActive(true);
+            pAnim.gameObject.SetActive(true);
+            texAnim.gameObject.SetActive(true);
+            texAnim.Play("GoForAPerfect_Idle");
         }
 
         public void Disable()
         {
             SetInactive();
-            transform.GetChild(0).gameObject.SetActive(false);
+            gameObject.SetActive(false);
         }
 
         public void SetActive()

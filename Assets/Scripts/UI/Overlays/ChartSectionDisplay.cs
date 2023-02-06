@@ -40,6 +40,11 @@ namespace HeavenStudio.Common
                 gameObject.SetActive(true);
                 SectionText.text = section.sectionName;
                 SectionProgress.value = GameManager.instance.sectionProgress;
+
+                if (section.startPerfect && GoForAPerfect.instance != null && GoForAPerfect.instance.perfect && !GoForAPerfect.instance.gameObject.activeSelf)
+                {
+                    GoForAPerfect.instance.Enable();
+                }
             }
         }
     }

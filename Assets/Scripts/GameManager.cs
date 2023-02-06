@@ -135,6 +135,8 @@ namespace HeavenStudio
 
                 GameObject skillStarDisp = Instantiate(Resources.Load<GameObject>("Prefabs/Common/Overlays/SkillStar"));
                 skillStarDisp.name = "SkillStar";
+
+                GoForAPerfect.instance.Disable();
             /////
 
             if (txt != null && ext != null)
@@ -433,6 +435,9 @@ namespace HeavenStudio
             SkillStarManager.instance.Reset();
             skillStarCollected = false;
 
+            GoForAPerfect.instance.perfect = true;
+            GoForAPerfect.instance.Disable();
+
             StartCoroutine(PlayCo(beat));
             onBeatChanged?.Invoke(beat);
         }
@@ -473,6 +478,7 @@ namespace HeavenStudio
             KillAllSounds();
 
             SkillStarManager.instance.KillStar();
+            GoForAPerfect.instance.Disable();
 
             Debug.Log($"Average input offset for playthrough: {averageInputOffset}ms");
             Debug.Log($"Accuracy for playthrough: {(PlayerAccuracy * 100) : 0.00}");

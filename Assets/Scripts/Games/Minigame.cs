@@ -254,6 +254,7 @@ namespace HeavenStudio.Games
         public void ScoreMiss(double weight = 1f)
         {
             GameManager.instance.ScoreInputAccuracy(0, true, EndTime(), weight, false);
+            GoForAPerfect.instance.Miss();
         }
 
         private void OnDestroy() {

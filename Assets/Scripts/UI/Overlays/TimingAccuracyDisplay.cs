@@ -52,7 +52,7 @@ namespace HeavenStudio.Common
         public void SetArrowPos(double time)
         {
             float frac = (float)((time - Minigame.EarlyTime()) / (Minigame.EndTime() - Minigame.EarlyTime()));
-            targetArrowPos = (targetArrowPos + barTransform.localScale.y * (frac - 0.5f)) * -0.5f;
+            targetArrowPos = (targetArrowPos + barTransform.localScale.y * -(frac - 0.5f)) * 0.5f;
         }
 
         public void StartStarFlash()

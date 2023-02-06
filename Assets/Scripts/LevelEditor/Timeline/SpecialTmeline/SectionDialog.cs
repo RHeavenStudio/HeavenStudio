@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 using HeavenStudio;
 using HeavenStudio.Editor;
@@ -11,6 +12,7 @@ public class SectionDialog : Dialog
 {
     SectionTimelineObj sectionObj;
     [SerializeField] TMP_InputField sectionName;
+    [SerializeField] Toggle challengeEnable;
 
     public void SwitchSectionDialog()
     {
@@ -47,5 +49,11 @@ public class SectionDialog : Dialog
         if (sectionObj == null) return;
         sectionObj.chartSection.sectionName = name;
         sectionObj.UpdateLabel();
+    }
+
+    public void SetSectionChallenge()
+    {
+        if (sectionObj == null) return;
+        sectionObj.chartSection.startPerfect = challengeEnable.isOn;
     }
 }
