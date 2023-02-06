@@ -41,7 +41,7 @@ namespace HeavenStudio.Editor
 
         public override void OnOpenTab()
         {
-            perfectChallengeToggle.isOn = PersistentDataManager.gameSettings.perfectChallengeType > 0;
+            perfectChallengeToggle.isOn = PersistentDataManager.gameSettings.perfectChallengeType != PersistentDataManager.PerfectChallengeType.Off;
             sectionMedalsToggle.isOn = PersistentDataManager.gameSettings.isMedalOn;
             timingDispMinModeToggle.isOn = PersistentDataManager.gameSettings.timingDisplayMinMode;
         }

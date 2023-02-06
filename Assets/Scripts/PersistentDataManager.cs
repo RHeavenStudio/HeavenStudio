@@ -12,9 +12,10 @@ namespace HeavenStudio.Common
     {
         public enum PerfectChallengeType
         {
-            Off,
-            Arcade,
-            On
+            Off,        // no perfect challenge
+            Arcade,     // "arcade rule"
+            Legacy,     // "legacy rule"
+            On          // "megamix rule"
         }
 
         [NonSerialized] public static GameSettings gameSettings;

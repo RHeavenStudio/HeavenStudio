@@ -41,6 +41,7 @@ namespace HeavenStudio.Common
                 SectionText.text = section.sectionName;
                 SectionProgress.value = GameManager.instance.sectionProgress;
 
+                if (PersistentDataManager.gameSettings.perfectChallengeType == PersistentDataManager.PerfectChallengeType.Off) return;
                 if (section.startPerfect && GoForAPerfect.instance != null && GoForAPerfect.instance.perfect && !GoForAPerfect.instance.gameObject.activeSelf)
                 {
                     GoForAPerfect.instance.Enable();
