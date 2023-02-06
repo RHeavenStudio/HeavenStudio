@@ -10,6 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4818675721696690636}
   - component: {fileID: 83082885661732206}
+  - component: {fileID: 4457411937091250466}
   m_Layer: 0
   m_Name: BowlingPin
   m_TagString: Untagged
@@ -43,7 +44,7 @@ Animator:
   m_GameObject: {fileID: 544090488922610547}
   m_Enabled: 1
   m_Avatar: {fileID: 0}
-  m_Controller: {fileID: 9100000, guid: 61b3fa8f6b5bbff419b697aa7e6fea59, type: 2}
+  m_Controller: {fileID: 9100000, guid: ce5830e132ca6cb438f7888293b85c85, type: 2}
   m_CullingMode: 0
   m_UpdateMode: 0
   m_ApplyRootMotion: 0
@@ -52,6 +53,32 @@ Animator:
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorControllerStateOnDisable: 0
+--- !u!114 &4457411937091250466
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 544090488922610547}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0eb761687309161459629ae7c0ac9e0c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  inList: 0
+  state:
+    gameObject: {fileID: 0}
+    early: 0
+    perfect: 0
+    late: 0
+    createBeat: 0
+  eligibleHitsList: []
+  aceTimes: 0
+  isEligible: 0
+  triggersAutoplay: 1
+  pitches: []
+  anim: {fileID: 0}
+  number: {fileID: 3380301953902003881}
 --- !u!1 &3380301953902003881
 GameObject:
   m_ObjectHideFlags: 0
@@ -62,6 +89,7 @@ GameObject:
   m_Component:
   - component: {fileID: 3465404746518708711}
   - component: {fileID: 2279678599895162172}
+  - component: {fileID: 8019603464290438824}
   m_Layer: 0
   m_Name: Number
   m_TagString: Untagged
@@ -134,6 +162,25 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
+--- !u!95 &8019603464290438824
+Animator:
+  serializedVersion: 3
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3380301953902003881}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: d988ad6c3b0cc1d4cb0b274c9ad5a676, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorControllerStateOnDisable: 0
 --- !u!1 &6846498364428926105
 GameObject:
   m_ObjectHideFlags: 0

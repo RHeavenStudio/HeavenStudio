@@ -175,7 +175,7 @@ GameObject:
   - component: {fileID: 6143638777909239727}
   - component: {fileID: 7147620143001543786}
   m_Layer: 0
-  m_Name: Launch Pad
+  m_Name: LaunchPad
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1527,14 +1527,14 @@ MonoBehaviour:
   EligibleHits: []
   scheduledInputs: []
   firstEnable: 0
-  rocket: {fileID: 0}
-  partyCracker: {fileID: 0}
-  bell: {fileID: 0}
-  bowlingPin: {fileID: 0}
-  fallingStars: {fileID: 0}
-  fallingStarsBack: {fileID: 0}
+  rocket: {fileID: 3050662868906225992, guid: fd8a998e0bfe5664bba06ce52c6518b6, type: 3}
+  partyCracker: {fileID: 5450626124697819385, guid: 7735780ce95993547977cbd8ae0a7d28, type: 3}
+  bell: {fileID: 1612612417513571592, guid: 6c4d00508da1f0844af1afed264766c8, type: 3}
+  bowlingPin: {fileID: 544090488922610547, guid: 325cd6156a2abea44a6aeda59af9751b, type: 3}
+  fallingStars: {fileID: 7808760023856068891}
+  fallingStarsBack: {fileID: 8460598887616071446}
   starGO: {fileID: 0}
-  launchPad: {fileID: 0}
+  launchPad: {fileID: 6143638777909239727}
 --- !u!1 &1125379078595576856
 GameObject:
   m_ObjectHideFlags: 0
