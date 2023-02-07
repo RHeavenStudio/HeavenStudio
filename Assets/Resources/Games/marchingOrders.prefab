@@ -1585,79 +1585,72 @@ MonoBehaviour:
   SoundSequences:
   - name: zentai
     sequence:
-      game: 0
-      force: 0
+      game: 1
+      force: 1
       clips:
-      - clip: attention1
-        beat: 0
-        pitch: 0
-        volume: 0
+      - clip: marchingOrders/attention1
+        beat: 0.75
+        pitch: 1
+        volume: 1
         looping: 0
         offset: 0
         parameters: []
-      - clip: attention2
-        beat: 0.5
-        pitch: 0
-        volume: 0
+      - clip: marchingOrders/attention2
+        beat: 1
+        pitch: 1
+        volume: 1
+        looping: 0
+        offset: 0
+        parameters: []
+      - clip: marchingOrders/attention3
+        beat: 1.5
+        pitch: 1
+        volume: 1
         looping: 0
         offset: 0
         parameters: []
   - name: susume
     sequence:
-      game: 0
-      force: 0
+      game: 1
+      force: 1
       clips:
-      - clip: march1
+      - clip: marchingOrders/march1
         beat: 0
-        pitch: 0
-        volume: 0
+        pitch: 1
+        volume: 1
         looping: 0
         offset: 0
         parameters: []
-      - clip: march2
-        beat: 0.25
-        pitch: 0
-        volume: 0
-        looping: 0
-        offset: 0
-        parameters: []
-      - clip: march3
-        beat: 0.5
-        pitch: 0
-        volume: 0
-        looping: 0
-        offset: 0
-        parameters: []
-      - clip: marchStart
+      - clip: marchingOrders/marchStart
         beat: 1
-        pitch: 0
-        volume: 0
+        pitch: 1
+        volume: 1
         looping: 0
         offset: 0
         parameters: []
   - name: tomare
     sequence:
-      game: 0
-      force: 0
+      game: 1
+      force: 1
       clips:
-      - clip: halt1
+      - clip: marchingOrders/halt1
         beat: 0
-        pitch: 0
-        volume: 0
+        pitch: 1
+        volume: 1
         looping: 0
         offset: 0
         parameters: []
-      - clip: halt2
-        beat: 0.5
-        pitch: 0
-        volume: 0
-        looping: 0
-        offset: 0
-        parameters: []
-      - clip: stepOther
+      - clip: marchingOrders/halt2
         beat: 1
-        pitch: 0
-        volume: 0.75
+        pitch: 1
+        volume: 1
+        looping: 0
+        offset: 0
+        parameters: []
+      - clip: marchingOrders/stepOther
+        beat: 1
+        pitch: 1
+        volume: 1
         looping: 0
         offset: 0
         parameters: []

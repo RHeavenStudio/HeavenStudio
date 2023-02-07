@@ -34,7 +34,10 @@ namespace HeavenStudio.Games.Loaders
 
                     new GameAction("marching", "Cadets March")
                     {
-                        function = delegate { var e = eventCaller.currentEntity; MarchingOrders.instance.MarchAction(e.beat, e.length); },
+                        preFunction = delegate { 
+                            var e = eventCaller.currentEntity; 
+                            MarchingOrders.PreMarch(e.beat, e.length); 
+                        },
                         defaultLength = 4f,
                         resizable = true,
                     },
@@ -43,7 +46,7 @@ namespace HeavenStudio.Games.Loaders
                     {
                         function = delegate { var e = eventCaller.currentEntity; MarchingOrders.instance.SargeAttention(e.beat); },
                         defaultLength = 2f,
-                        inactiveFunction = delegate { var e = eventCaller.currentEntity; MarchingOrders.AttentionSound(e.beat);}
+                        preFunction = delegate { var e = eventCaller.currentEntity; MarchingOrders.AttentionSound(e.beat);}
                     },
 
                     new GameAction("march", "March!")
@@ -54,7 +57,7 @@ namespace HeavenStudio.Games.Loaders
                         {
                             new Param("toggle", false, "Disable Voice", "Disable the Drill Sergeant's call")
                         },
-                        inactiveFunction = delegate { var e = eventCaller.currentEntity; MarchingOrders.MarchSound(e.beat, false);}
+                        inactiveFunction = delegate { var e = eventCaller.currentEntity; MarchingOrders.MarchSound(e.beat, e["toggle"]);}
                     },
 
                     new GameAction("halt", "Halt!")
@@ -146,6 +149,9 @@ namespace HeavenStudio.Games
         private float steamTime;
 
         private string fastTurn;
+
+        static float wantMarch = float.MaxValue;
+        static float wantMarchLength = 0f;
         
         public enum DirectionFaceTurn
         {
@@ -240,18 +246,12 @@ namespace HeavenStudio.Games
             var cond = Conductor.instance;
             var currBeat = cond.songPositionInBeats;
 
-            if (cond.ReportBeat(ref marching.lastReportedBeat, marching.startBeat % 1, true))
+            if (cond.songPositionInBeatsAsDouble >= wantMarch)
             {
-                if (currBeat >= marching.startBeat && currBeat < marching.startBeat + marching.length)
-                {
-                    marchOtherCount++;
-                    Cadet1.DoScaledAnimationAsync(marchOtherCount % 2 != 0 ? "MarchR" : "MarchL", 0.5f);
-                    Cadet2.DoScaledAnimationAsync(marchOtherCount % 2 != 0 ? "MarchR" : "MarchL", 0.5f);
-                    Cadet3.DoScaledAnimationAsync(marchOtherCount % 2 != 0 ? "MarchR" : "MarchL", 0.5f);
-                    ScheduleInput((int) currBeat - 1f, 1f, InputType.STANDARD_DOWN, MarchHit, GenericMiss, MarchEmpty);
-                    Jukebox.PlayOneShotGame("marchingOrders/stepOther", volume: 0.75f);
-                }
+                PrepareMarch(wantMarch, wantMarchLength, true);
+                wantMarch = float.MaxValue;
             }
+
             if (cond.ReportBeat(ref bop.lastReportedBeat, bop.startBeat % 1, true))
             {
                 if (currBeat >= bop.startBeat && currBeat < bop.startBeat + bop.length)
@@ -317,30 +317,62 @@ namespace HeavenStudio.Games
             bop.length = length;
             bop.startBeat = beat;
         }
-        
-        public void MarchAction(float beat, float length)
-        {
-            marching.length = length;
-            marching.startBeat = beat;
 
-            marchOtherCount = 0;
-            marchPlayerCount = 0;
+        public static void PreMarch(float beat, float length)
+        {
+            wantMarch = beat - 1;
+            wantMarchLength = length;
+        }
+
+        public void PrepareMarch(float beat, float length = 0, bool first = false)
+        {
+            if (GameManager.instance.currentGame != "marchingOrders")
+                return;
+            if (first)
+            {
+                marching.length = length;
+                marching.startBeat = beat + 1;
+
+                marchOtherCount = 0;
+                marchPlayerCount = 0;
+            }
+            else
+            {
+                marchOtherCount++;
+                Cadet1.DoScaledAnimationAsync(marchOtherCount % 2 != 0 ? "MarchR" : "MarchL", 0.5f);
+                Cadet2.DoScaledAnimationAsync(marchOtherCount % 2 != 0 ? "MarchR" : "MarchL", 0.5f);
+                Cadet3.DoScaledAnimationAsync(marchOtherCount % 2 != 0 ? "MarchR" : "MarchL", 0.5f);
+            }
+
+            if (beat + 1 < marching.startBeat + marching.length)
+            {
+                Debug.Log($"PrepareMarch next {beat + 1}, {marching.startBeat}, {marching.length}");
+                BeatAction.New(gameObject, new List<BeatAction.Action>() 
+                {
+                    new BeatAction.Action(beat + 1f,     delegate {
+                        PrepareMarch(beat + 1);
+                        MultiSound.Play(new MultiSound.Sound[] {
+                            new MultiSound.Sound("marchingOrders/stepOther", beat + 1),
+                        }, true);
+                    }),
+                });
+                ScheduleInput(beat, 1f, InputType.STANDARD_DOWN, MarchHit, GenericMiss, MarchEmpty);
+            }
         }
 
         public void SargeAttention(float beat)
         {
-            AttentionSound(beat);
-            
             BeatAction.New(gameObject, new List<BeatAction.Action>() 
-                {
-                new BeatAction.Action(beat + 0.25f,     delegate { Sarge.DoScaledAnimationAsync("Talk", 0.5f);}),
-                });
+            {
+               new BeatAction.Action(beat + 0.25f,     delegate { Sarge.DoScaledAnimationAsync("Talk", 0.5f);}),
+            });
         }
         
         public void SargeMarch(float beat, bool noVoice)
         {
             marchOtherCount = 0;
             marchPlayerCount = 0;
+            MarchSound(beat, noVoice);
 
             if (!noVoice)
                 Sarge.DoScaledAnimationAsync("Talk", 0.5f);
@@ -454,7 +486,7 @@ namespace HeavenStudio.Games
 
         public static void AttentionSound(float beat)
         {
-            PlaySoundSequence("marchingOrders", "zentai", beat);
+            PlaySoundSequence("marchingOrders", "zentai", beat - 1);
         }
         
         public static void MarchSound(float beat, bool noVoice)
