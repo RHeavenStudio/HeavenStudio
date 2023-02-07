@@ -243,7 +243,7 @@ namespace HeavenStudio.Games
             {
                 if (pair.name == name)
                 {
-                    // Debug.Log($"Playing sound sequence {name} at beat {startBeat}");
+                    Debug.Log($"Playing sound sequence {pair.name} at beat {startBeat}");
                     return pair.sequence.Play(startBeat);
                 }
             }
