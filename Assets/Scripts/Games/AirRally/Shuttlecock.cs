@@ -13,6 +13,7 @@ namespace HeavenStudio.Games.Scripts_AirRally
         [SerializeField] Transform OtherTarget;
         [SerializeField] float TargetHeight;
         [SerializeField] float TargetHeightLong;
+        [SerializeField] ParticleSystem hitEffect;
 
         public float startBeat;
         public float flyBeats;
@@ -30,21 +31,20 @@ namespace HeavenStudio.Games.Scripts_AirRally
 
         void Start()
         {
-
+            transform.position = OtherTarget.position;
         }
 
         // Update is called once per frame
         void Update()
         {
             var cond = Conductor.instance;
-            
+
+            Vector3 startPos = isReturning ? PlayerTarget.position : OtherTarget.position;
+            Vector3 endPos = isReturning ? OtherTarget.position : PlayerTarget.position;
             Vector3 lastPos = transform.position;
             if (!GetComponent<Rigidbody2D>().simulated)
             {
-                float flyPos = cond.GetPositionFromBeat(startBeat, flyBeats);
-
-                Vector3 startPos = isReturning ? PlayerTarget.position : OtherTarget.position;
-                Vector3 endPos = isReturning ? OtherTarget.position : PlayerTarget.position;
+                flyPos = cond.GetPositionFromBeat(startBeat, flyBeats);
 
                 transform.position = Vector3.LerpUnclamped(startPos, endPos, flyPos);
 
@@ -53,11 +53,26 @@ namespace HeavenStudio.Games.Scripts_AirRally
                 transform.position += Vector3.up * yWeight * (flyType ? TargetHeightLong : TargetHeight);
             }
 
-            Vector3 direction = (transform.position - lastPos).normalized;
-            float rotation = Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg;
-            this.transform.eulerAngles = new Vector3(0, 0, rotation - 90f);
+            // calculates next position
+            {
+                float rotation;
+                if (flyPos > 0.5)
+                {
+                    Vector3 midPos = Vector3.LerpUnclamped(startPos, endPos, 0.5f);
+                    midPos += Vector3.up * (flyType ? TargetHeightLong : TargetHeight);
+                    Vector3 direction = (transform.position - midPos).normalized;
+                    rotation = Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg;
+                }
+                else
+                {
+                    Vector3 direction = (transform.position - lastPos).normalized;
+                    rotation = Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg;
+                }
 
-            if (miss && flyPos > 2f)
+                this.transform.eulerAngles = new Vector3(0, 0, rotation - 90f);
+            }
+
+            if (miss && flyPos > 4f)
             {
                 if (cond.GetPositionFromBeat(startBeat, flyBeats + 1f) >= 1f)
                 {
@@ -67,16 +82,38 @@ namespace HeavenStudio.Games.Scripts_AirRally
             }
         }
 
+        public void DoHit(AirRally.DistanceSound distance)
+        {
+            ParticleSystem.MainModule main = hitEffect.main;
+            switch (distance)
+            {
+                case AirRally.DistanceSound.close:
+                    main.startSize = 2f;
+                    break;
+                case AirRally.DistanceSound.far:
+                    main.startSize = 3f;
+                    break;
+                case AirRally.DistanceSound.farther:
+                    main.startSize = 4f;
+                    break;
+                case AirRally.DistanceSound.farthest:
+                    main.startSize = 6f;
+                    break;
+            }
+            hitEffect.Play();
+        }
+
         public void DoNearMiss()
         {
             miss = true;
             Jukebox.PlayOneShot("miss");
+            transform.position = PlayerTarget.position;
             Rigidbody2D rb = GetComponent<Rigidbody2D>();
             rb.simulated = true;
             rb.WakeUp();
             rb.velocity = Vector3.zero;
             rb.gravityScale = 10f;
-            rb.AddForce(Vector2.up * 10, ForceMode2D.Impulse);
+            rb.AddForce(Vector2.up * 20, ForceMode2D.Impulse);
             rb.AddForce(Vector2.right * -10, ForceMode2D.Impulse);
         }
 
