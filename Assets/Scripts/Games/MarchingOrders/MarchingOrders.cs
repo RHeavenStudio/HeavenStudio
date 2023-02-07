@@ -52,7 +52,7 @@ namespace HeavenStudio.Games.Loaders
                         defaultLength = 2f,
                         parameters = new List<Param>
                         {
-                            new Param("toggle", false, "Disable Voice", "Remove the sarge from saying 'MARCH' ")
+                            new Param("toggle", false, "Disable Voice", "Disable the Drill Sergeant's call")
                         },
                         inactiveFunction = delegate { var e = eventCaller.currentEntity; MarchingOrders.MarchSound(e.beat, false);}
                     },
@@ -70,24 +70,24 @@ namespace HeavenStudio.Games.Loaders
                         defaultLength = 4f,
                         parameters = new List<Param>()
                         {
-                            new Param("type", MarchingOrders.DirectionFaceTurn.Right, "Direction", "The direction sarge wants the cadets to face"),
-                            new Param("type2", MarchingOrders.FaceTurnLength.Normal, "Length", "How fast or slow the event lasts"),
+                            new Param("type", MarchingOrders.DirectionFaceTurn.Right, "Direction", "The direction the sergeant wants the cadets to face"),
+                            new Param("type2", MarchingOrders.FaceTurnLength.Normal, "Length", "The duration of the turning event"),
                             //new Param("toggle", false, "Point", "Do the pointing animation instead of just the head turn")
                         }
                     },
 
                     /*new GameAction("background", "Set the Background") colors aren't implemented yet
                     {
-                        function = delegate { var e = eventCaller.currentEntity; MarchingOrders.instance.BackgroundColorSet(e.beat, e["type"], e["type2"], e["colorA"], e["colorB"], e["colorC"], e["colorD"]); },
+                        function = delegate { var e = eventCaller.currentEntity; MarchingOrders.instance.BackgroundColorSet(e.beat, e["type"], e["type2"], e["colorDefault"], e["colorPipe"], e["colorFloor"], e["colorFill"]); },
                         defaultLength = 0.5f,
                         parameters = new List<Param>()
                         {
-                            new Param("type", MarchingOrders.BackgroundColor.Blue, "Color", "The background color of Marching Orders"),
+                            new Param("type", MarchingOrders.BackgroundColor.Blue, "Color", "The game Background Color"),
                             new Param("type2", MarchingOrders.BackgroundType.SingleColor, "Color Type", "The way the color is applied to the background"),
-                            new Param("colorA", new Color(), "Pipes Color", "Sets pipe color, if single color is chosen everythings based of this"),
-                            new Param("colorB", new Color(), "Floor Color", "This will set the floor color, including conveyor"),
-                            new Param("colorC", new Color(), "Wall Color", "This sets the wall color, the entire wall"),
-                            new Param("colorD", new Color(), "Fill Color", "Sets fill color, which is normally grey")
+                            new Param("colorDefault", new Color(), "Wall Color", "Sets the color of the wall"),
+                            new Param("colorPipe", new Color(), "Pipes Color", "Sets the color of the pipes"),
+                            new Param("colorFloor", new Color(), "Floor Color", "Sets the color of the floor and conveyer belt"),
+                            new Param("colorFill", new Color(), "Fill Color", "Sets the fill color")
                         }
                     },*/
                 }, // this cause problems with the background
@@ -431,7 +431,7 @@ namespace HeavenStudio.Games
             });
         }
         
-        /*public void BackgroundColorSet(float beat, int type, int colorType, Color pipes, Color floor, Color wall, Color fill)
+        /*public void BackgroundColorSet(float beat, int type, int colorType, Color wall, Color pipes, Color floor, Color fill)
         {
             background = type;
             if (colorType == (int) MarchingOrders.BackgroundColor.Custom)
