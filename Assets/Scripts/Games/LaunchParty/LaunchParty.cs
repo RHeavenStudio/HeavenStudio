@@ -88,6 +88,30 @@ namespace HeavenStudio.Games.Loaders
                         new Param("note15", new EntityTypes.Integer(-24, 24, 7), "15th Note", "The number of semitones up or down this note should be pitched")
                     }
                 },
+                new GameAction("posMove", "Change Launch Pad Position")
+                {
+                    function = delegate { LaunchParty.instance.Nothing(); },
+                    defaultLength = 4f,
+                    resizable = true,
+                    parameters = new List<Param>()
+                    {
+                        new Param("xPos", new EntityTypes.Float(-40f, 40f, 0f), "X Position", "Which position on the X axis should the Launch Pad travel to?"),
+                        new Param("yPos", new EntityTypes.Float(-30f, 30f, -2.4f), "Y Position", "Which position on the Y axis should the Launch Pad travel to?"),
+                        new Param("zPos", new EntityTypes.Float(-90f, 90f, 0f), "Z Position", "Which position on the Z axis should the Launch Pad travel to?"),
+                        new Param("ease", EasingFunction.Ease.Linear, "Ease", "Which ease should the Launch Pad use?")
+                    }
+                },
+                new GameAction("rotMove", "Change Launch Pad Rotation")
+                {
+                    function = delegate { LaunchParty.instance.Nothing(); },
+                    defaultLength = 4f,
+                    resizable = true,
+                    parameters = new List<Param>()
+                    {
+                        new Param("rot", new EntityTypes.Float(-360, 360, 0), "Angle", "Which angle of rotation should the Launch Pad rotate towards?"),
+                        new Param("ease", EasingFunction.Ease.Linear, "Ease", "Which ease should the Launch Pad use?")
+                    }
+                },
                 new GameAction("toggleStars", "Toggle Falling Stars")
                 {
                     function = delegate {var e = eventCaller.currentEntity; LaunchParty.instance.CreateParticles(e.beat, e["toggle"], e["valA"], e["valB"], e["valC"]);},
@@ -122,11 +146,84 @@ namespace HeavenStudio.Games
         [SerializeField] GameObject starGO;
         [SerializeField] Transform launchPad;
 
+        [Header("Variables")]
+        private float currentRotBeat;
+        private float currentPosBeat;
+        private float currentRotLength;
+        private float currentPosLength;
+        private Vector3 lastPadPos = new Vector3(0, -2.4f, 0);
+        private Vector3 currentPadPos = new Vector3(0, -2.4f, 0);
+        private float lastPadRotation;
+        private float currentPadRotation;
+        private EasingFunction.Ease lastPosEase;
+        private EasingFunction.Ease lastRotEase;
+
+        private int currentPosIndex;
+
+        private int currentRotIndex;
+
+        private List<DynamicBeatmap.DynamicEntity> allPosEvents = new List<DynamicBeatmap.DynamicEntity>();
+
+        private List<DynamicBeatmap.DynamicEntity> allRotEvents = new List<DynamicBeatmap.DynamicEntity>();
+
         public static LaunchParty instance;
 
         void Awake()
         {
             instance = this;
+            var posEvents = EventCaller.GetAllInGameManagerList("launchParty", new string[] { "posMove" });
+            List<DynamicBeatmap.DynamicEntity> tempPosEvents = new List<DynamicBeatmap.DynamicEntity>();
+            for (int i = 0; i < posEvents.Count; i++)
+            {
+                if (posEvents[i].beat + posEvents[i].beat >= Conductor.instance.songPositionInBeats)
+                {
+                    tempPosEvents.Add(posEvents[i]);
+                }
+            }
+
+            allPosEvents = tempPosEvents;
+
+            var rotEvents = EventCaller.GetAllInGameManagerList("launchParty", new string[] { "rotMove" });
+            List<DynamicBeatmap.DynamicEntity> tempRotEvents = new List<DynamicBeatmap.DynamicEntity>();
+            for (int i = 0; i < rotEvents.Count; i++)
+            {
+                if (rotEvents[i].beat + rotEvents[i].beat >= Conductor.instance.songPositionInBeats)
+                {
+                    tempRotEvents.Add(rotEvents[i]);
+                }
+            }
+
+            allRotEvents = tempRotEvents;
+
+            UpdateLaunchPadPos();
+            UpdateLaunchPadRot();
+        }
+
+        void Update()
+        {
+
+        }
+
+        private void UpdateLaunchPadPos()
+        {
+            if (currentPosIndex < allPosEvents.Count && currentPosIndex >= 0)
+            {
+                currentPosBeat = allPosEvents[currentPosIndex].beat;
+                currentPosLength = allPosEvents[currentPosIndex].length;
+                currentPadPos = new Vector3(allPosEvents[currentPosIndex]["xPos"], allPosEvents[currentPosIndex]["yPos"], allPosEvents[currentPosIndex]["zPos"]);
+                lastPosEase = (EasingFunction.Ease)allPosEvents[currentPosIndex]["ease"];
+            }
+        }
+
+        private void UpdateLaunchPadRot()
+        {
+            if (currentRotIndex < allRotEvents.Count && currentRotIndex >= 0)
+            {
+                currentRotBeat = allRotEvents[currentRotIndex].beat;
+                currentRotLength = allRotEvents[currentRotIndex].length;
+                currentPadRotation = allRotEvents[currentRotIndex]["rot"];
+                lastRotEase = (EasingFunction.Ease)allRotEvents[currentPosIndex]["ease"];
+            }
         }
 
         public void LaunchRocket(float beat, float beatOffset, int noteOne, int noteTwo, int noteThree, int noteFour)
@@ -237,8 +334,12 @@ namespace HeavenStudio.Games
                     break;
             }
         }
-    }
 
+        public void Nothing()
+        {
+
+        }
+    }
 }
 
 
