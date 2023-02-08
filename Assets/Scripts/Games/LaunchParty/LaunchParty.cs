@@ -19,7 +19,7 @@ namespace HeavenStudio.Games.Loaders
         {
             return new Minigame("launchParty", "Launch Party \n<color=#eb5454>[WIP]</color>", "000000", false, false, new List<GameAction>()
             {
-                new GameAction("rocket", "Launch Family Rocket")
+                new GameAction("rocket", "Family Model")
                 {
                     preFunction = delegate { var e = eventCaller.currentEntity; LaunchParty.instance.LaunchRocket(e.beat, e["offset"], e["note1"], e["note2"], e["note3"], e["note4"]); },
                     defaultLength = 4f,
@@ -32,7 +32,7 @@ namespace HeavenStudio.Games.Loaders
                         new Param("note4", new EntityTypes.Integer(-24, 24, 7), "4th Note", "The number of semitones up or down this note should be pitched")
                     }
                 },
-                new GameAction("partyCracker", "Launch Party Cracker")
+                new GameAction("partyCracker", "Party-Popper")
                 {
                     preFunction = delegate { var e = eventCaller.currentEntity; LaunchParty.instance.LaunchPartyCracker(e.beat, e["offset"], e["note1"], e["note2"], e["note3"], e["note4"], e["note5"], e["note6"]); },
                     defaultLength = 3f,
@@ -47,7 +47,7 @@ namespace HeavenStudio.Games.Loaders
                         new Param("note6", new EntityTypes.Integer(-24, 24, 12), "6th Note", "The number of semitones up or down this note should be pitched")
                     }
                 },
-                new GameAction("bell", "Launch Bell")
+                new GameAction("bell", "Bell")
                 {
                     preFunction = delegate { var e = eventCaller.currentEntity; LaunchParty.instance.LaunchBell(e.beat, e["offset"], e["note1"], e["note2"], e["note3"], e["note4"], e["note5"], e["note6"], e["note7"], e["note8"]); },
                     defaultLength = 3f,
@@ -64,7 +64,7 @@ namespace HeavenStudio.Games.Loaders
                         new Param("note8", new EntityTypes.Integer(-24, 24, 12), "8th Note", "The number of semitones up or down this note should be pitched")
                     }
                 },
-                new GameAction("bowlingPin", "Launch Bowling Pin")
+                new GameAction("bowlingPin", "Bowling Pin")
                 {
                     preFunction = delegate { var e = eventCaller.currentEntity; LaunchParty.instance.LaunchBowlingPin(e.beat, e["offset"], e["note1"], e["note2"], e["note3"], e["note4"], e["note5"], e["note6"], e["note7"], 
                         e["note8"], e["note9"], e["note10"], e["note11"], e["note12"], e["note13"], e["note14"], e["note15"]); },
