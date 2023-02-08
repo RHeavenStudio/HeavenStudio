@@ -144,7 +144,6 @@ namespace HeavenStudio.Games
         [Header("Components")]
         [SerializeField] ParticleSystem fallingStars;
         [SerializeField] ParticleSystem fallingStarsBack;
-        [SerializeField] GameObject starGO;
         [SerializeField] Transform launchPad;
 
         [Header("Variables")]
@@ -393,7 +392,6 @@ namespace HeavenStudio.Games
                 case true:
                     var emmrate = fallingStars.velocityOverLifetime;
                     var emmrate2 = fallingStarsBack.velocityOverLifetime;
-                    starGO.SetActive(true);
                     emmrate.speedModifier = starSpeed;
                     emmrate2.speedModifier = starSpeedBack;
                     emm = fallingStars.emission;
