@@ -3,6 +3,7 @@ using JetBrains.Annotations;
 using Starpelly.Transformer;
 using System;
 using System.Linq;
+using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
 using UnityEngine;
@@ -201,13 +202,86 @@ namespace HeavenStudio.Games
 
         void Update()
         {
+            var cond = Conductor.instance;
+            if (allPosEvents.Count > 0)
+            {
+                if (currentPosIndex < allPosEvents.Count && currentPosIndex >= 0)
+                {
+                    if (cond.songPositionInBeats >= allPosEvents[currentPosIndex].beat)
+                    {
+                        UpdateLaunchPadPos();
+                        currentPosIndex++;
+                    }
+                }
 
+                float normalizedBeat = cond.GetPositionFromBeat(currentPosBeat, currentPosLength);
+
+                if (normalizedBeat >= 0)
+                {
+                    if (normalizedBeat > 1)
+                    {
+                        launchPad.position = currentPadPos;
+                    }
+                    else
+                    {
+                        if (currentPosLength < 0)
+                        {
+                            launchPad.position = currentPadPos;
+                        }
+                        else
+                        {
+                            EasingFunction.Function func = EasingFunction.GetEasingFunction(lastPosEase);
+
+                            float newPosX = func(lastPadPos.x, currentPadPos.x, normalizedBeat);
+                            float newPosY = func(lastPadPos.y, currentPadPos.y, normalizedBeat);
+                            float newPosZ = func(lastPadPos.z, currentPadPos.z, normalizedBeat);
+                            launchPad.position = new Vector3(newPosX, newPosY, newPosZ);
+                        }
+                    }
+                }
+            }
+            if (allRotEvents.Count > 0)
+            {
+                if (currentRotIndex < allRotEvents.Count && currentRotIndex >= 0)
+                {
+                    if (cond.songPositionInBeats >= allRotEvents[currentRotIndex].beat)
+                    {
+                        UpdateLaunchPadRot();
+                        currentRotIndex++;
+                    }
+                }
+
+                float normalizedBeat = cond.GetPositionFromBeat(currentRotBeat, currentRotLength);
+
+                if (normalizedBeat >= 0)
+                {
+                    if (normalizedBeat > 1)
+                    {
+                        launchPad.rotation = Quaternion.Euler(0, 0, currentPadRotation);
+                    }
+                    else
+                    {
+                        if (currentRotLength < 0)
+                        {
+                            launchPad.rotation = Quaternion.Euler(0, 0, currentPadRotation);
+                        }
+                        else
+                        {
+                            EasingFunction.Function func = EasingFunction.GetEasingFunction(lastRotEase);
+
+                            float newRotZ = func(lastPadRotation, currentPadRotation, normalizedBeat);
+                            launchPad.rotation = Quaternion.Euler(0, 0, newRotZ);
+                        }
+                    }
+                }
+            }
         }
 
         private void UpdateLaunchPadPos()
         {
             if (currentPosIndex < allPosEvents.Count && currentPosIndex >= 0)
             {
+                lastPadPos = launchPad.position;
                 currentPosBeat = allPosEvents[currentPosIndex].beat;
                 currentPosLength = allPosEvents[currentPosIndex].length;
                 currentPadPos = new Vector3(allPosEvents[currentPosIndex]["xPos"], allPosEvents[currentPosIndex]["yPos"], allPosEvents[currentPosIndex]["zPos"]);
@@ -219,10 +293,11 @@ namespace HeavenStudio.Games
         {
             if (currentRotIndex < allRotEvents.Count && currentRotIndex >= 0)
             {
+                lastPadRotation = launchPad.rotation.eulerAngles.z;
                 currentRotBeat = allRotEvents[currentRotIndex].beat;
                 currentRotLength = allRotEvents[currentRotIndex].length;
                 currentPadRotation = allRotEvents[currentRotIndex]["rot"];
-                lastRotEase = (EasingFunction.Ease)allRotEvents[currentPosIndex]["ease"];
+                lastRotEase = (EasingFunction.Ease)allRotEvents[currentRotIndex]["ease"];
             }
         }
 
