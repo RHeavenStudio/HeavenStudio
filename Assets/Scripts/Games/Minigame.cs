@@ -263,5 +263,9 @@ namespace HeavenStudio.Games
                 evt.Disable();
             }
         }
+
+        private void OnDrawGizmos() {
+            Gizmos.DrawFrustum(new Vector3(0, 0, -10), 60, 10, 0, 16/9f);
+        }
     }
 }
