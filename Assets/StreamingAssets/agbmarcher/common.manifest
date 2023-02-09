@@ -1,0 +1,55 @@
+ManifestFileVersion: 0
+CRC: 2977933673
+Hashes:
+  AssetFileHash:
+    serializedVersion: 2
+    Hash: 7c23fa93fdffac9e35fe4652a97c3625
+  TypeTreeHash:
+    serializedVersion: 2
+    Hash: 1aef31c9f4d1c75f6734d04d296b3bed
+HashAppended: 0
+ClassTypes:
+- Class: 1
+  Script: {instanceID: 0}
+- Class: 4
+  Script: {instanceID: 0}
+- Class: 21
+  Script: {instanceID: 0}
+- Class: 28
+  Script: {instanceID: 0}
+- Class: 48
+  Script: {instanceID: 0}
+- Class: 74
+  Script: {instanceID: 0}
+- Class: 83
+  Script: {instanceID: 0}
+- Class: 91
+  Script: {instanceID: 0}
+- Class: 95
+  Script: {instanceID: 0}
+- Class: 114
+  Script: {fileID: 11500000, guid: 88781b295be0fe245b61208a9de66199, type: 3}
+- Class: 115
+  Script: {instanceID: 0}
+- Class: 212
+  Script: {instanceID: 0}
+- Class: 213
+  Script: {instanceID: 0}
+SerializeReferenceClassIdentifiers:
+- AssemblyName: Assembly-CSharp
+  ClassName: HeavenStudio.Util.SoundSequence
+- AssemblyName: Assembly-CSharp
+  ClassName: HeavenStudio.Util.SoundSequence/SequenceClip
+- AssemblyName: Assembly-CSharp
+  ClassName: HeavenStudio.Util.SoundSequence/SequenceKeyValue
+Assets:
+- Assets/Resources/Sfx/games/marchingOrders/halt2.ogg
+- Assets/Resources/Sfx/games/marchingOrders/faceTurnPlayer.ogg
+- Assets/Resources/Sfx/games/marchingOrders/marchStart.ogg
+- Assets/Resources/Sfx/games/marchingOrders/turnAction.wav
+- Assets/Resources/Games/marchingOrders.prefab
+- Assets/Resources/Sfx/games/marchingOrders/faceTurnOther.ogg
+- Assets/Resources/Sfx/games/marchingOrders/turnActionPlayer.wav
+- Assets/Resources/Sfx/games/marchingOrders/stepOther.ogg
+- Assets/Resources/Sfx/games/marchingOrders/stepPlayer.ogg
+Dependencies: []
