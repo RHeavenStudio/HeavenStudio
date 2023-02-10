@@ -1,4 +1,5 @@
 using HeavenStudio.Util;
+using HeavenStudio.Common;
 using JetBrains.Annotations;
 using Starpelly.Transformer;
 using System;
@@ -124,6 +125,15 @@ namespace HeavenStudio.Games.Loaders
                         new Param("valB", new EntityTypes.Float(0.01f, 5f, 0.1f), "Front Star Fall Speed", "How fast the front stars fall to the edge of the screen"),
                         new Param("valC", new EntityTypes.Float(0.01f, 5f, 0.1f), "Back Star Fall Speed", "How fast the stars fall to the edge of the screen")
                     }
+                },
+                new GameAction("scrollSpeed", "Change Scroll Speed")
+                {
+                    function = delegate {var e = eventCaller.currentEntity; LaunchParty.instance.UpdateScrollSpeed(e["speed"]); },
+                    defaultLength = 0.5f,
+                    parameters = new List<Param>()
+                    {
+                        new Param("speed", new EntityTypes.Float(0, 100, 0.5f), "Scroll Speed", "How fast will the background scroll down?"),
+                    }
                 }
             });
         }
@@ -145,6 +155,7 @@ namespace HeavenStudio.Games
         [SerializeField] ParticleSystem fallingStars;
         [SerializeField] ParticleSystem fallingStarsBack;
         [SerializeField] Transform launchPad;
+        [SerializeField] Scroll scrollScript;
         public Animator launchPadSpriteAnim;
 
         [Header("Variables")]
@@ -276,6 +287,11 @@ namespace HeavenStudio.Games
                 }
             }
         }
+
+        public void UpdateScrollSpeed(float speed)
+        {
+            scrollScript.scrollSpeedY = speed * -1;
+        } 
 
         private void UpdateLaunchPadPos()
         {
