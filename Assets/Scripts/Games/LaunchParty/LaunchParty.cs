@@ -145,6 +145,7 @@ namespace HeavenStudio.Games
         [SerializeField] ParticleSystem fallingStars;
         [SerializeField] ParticleSystem fallingStarsBack;
         [SerializeField] Transform launchPad;
+        public Animator launchPadSpriteAnim;
 
         [Header("Variables")]
         private float currentRotBeat;

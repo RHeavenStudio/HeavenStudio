@@ -18,6 +18,7 @@ namespace HeavenStudio.Games.Scripts_LaunchParty
         [SerializeField] GameObject number;
         Animator numberAnim;
         private LaunchParty game;
+        private bool noInput;
 
         void Awake()
         {
@@ -30,10 +31,11 @@ namespace HeavenStudio.Games.Scripts_LaunchParty
 
         void Update()
         {
-            if (PlayerInput.Pressed() && !game.IsExpectingInputNow(InputType.STANDARD_DOWN))
+            if (PlayerInput.Pressed() && !game.IsExpectingInputNow(InputType.STANDARD_DOWN) && !noInput)
             {
                 Jukebox.PlayOneShotGame("launchParty/miss");
                 Jukebox.PlayOneShotGame("launchParty/rocket_endBad");
+                if (!isPlaying(anim, "RocketMiss")) anim.Play("RocketMiss", 0, 0);
                 game.ScoreMiss(0.5);
             }
         }
@@ -161,10 +163,12 @@ namespace HeavenStudio.Games.Scripts_LaunchParty
 
         void JustFamilyRocket(PlayerActionEvent caller, float state)
         {
+            noInput = true;
             if (state >= 1f || state <= -1f)
             {
                 Jukebox.PlayOneShotGame("launchParty/miss");
                 Jukebox.PlayOneShotGame("launchParty/rocket_endBad");
+                anim.Play("RocketMiss", 0, 0);
                 BeatAction.New(gameObject, new List<BeatAction.Action>()
                 {
                     new BeatAction.Action(caller.startBeat + caller.timer + 1f, delegate { GameObject.Destroy(gameObject); }),
@@ -176,6 +180,8 @@ namespace HeavenStudio.Games.Scripts_LaunchParty
 
         void SuccessFamilyRocket(PlayerActionEvent caller)
         {
+            game.launchPadSpriteAnim.DoScaledAnimationAsync("SizeUp", 1f);
+            anim.Play("RocketLaunch", 0, 0);
             MultiSound.Play(new MultiSound.Sound[]
             {
                 new MultiSound.Sound("launchParty/rocket_note", caller.startBeat + caller.timer, pitches[3]),
@@ -190,8 +196,10 @@ namespace HeavenStudio.Games.Scripts_LaunchParty
 
         void JustPartyCracker(PlayerActionEvent caller, float state)
         {
+            noInput = true;
             if (state >= 1f || state <= -1f)
             {
+                anim.Play("RocketMiss", 0, 0);
                 Jukebox.PlayOneShotGame("launchParty/miss");
                 Jukebox.PlayOneShotGame("launchParty/rocket_endBad");
                 BeatAction.New(gameObject, new List<BeatAction.Action>()
@@ -205,6 +213,8 @@ namespace HeavenStudio.Games.Scripts_LaunchParty
 
         void SuccessPartyCracker(PlayerActionEvent caller)
         {
+            game.launchPadSpriteAnim.DoScaledAnimationAsync("SizeUp", 1f);
+            anim.Play("RocketLaunch", 0, 0);
             MultiSound.Play(new MultiSound.Sound[]
             {
                 new MultiSound.Sound("launchParty/popper_note", caller.startBeat + caller.timer, pitches[5]),
@@ -219,8 +229,10 @@ namespace HeavenStudio.Games.Scripts_LaunchParty
 
         void JustBell(PlayerActionEvent caller, float state)
         {
+            noInput = true;
             if (state >= 1f || state <= -1f)
             {
+                anim.Play("RocketMiss", 0, 0);
                 Jukebox.PlayOneShotGame("launchParty/miss");
                 Jukebox.PlayOneShotGame("launchParty/rocket_endBad");
                 BeatAction.New(gameObject, new List<BeatAction.Action>()
@@ -234,6 +246,8 @@ namespace HeavenStudio.Games.Scripts_LaunchParty
 
         void SuccessBell(PlayerActionEvent caller)
         {
+            game.launchPadSpriteAnim.DoScaledAnimationAsync("SizeUp", 1f);
+            anim.Play("RocketLaunch", 0, 0);
             MultiSound.Play(new MultiSound.Sound[]
             {
                 new MultiSound.Sound("launchParty/bell_note", caller.startBeat + caller.timer, pitches[7]),
@@ -248,8 +262,10 @@ namespace HeavenStudio.Games.Scripts_LaunchParty
 
         void JustBowlingPin(PlayerActionEvent caller, float state)
         {
+            noInput = true;
             if (state >= 1f || state <= -1f)
             {
+                anim.Play("RocketMiss", 0, 0);
                 Jukebox.PlayOneShotGame("launchParty/miss");
                 Jukebox.PlayOneShotGame("launchParty/rocket_endBad");
                 BeatAction.New(gameObject, new List<BeatAction.Action>()
@@ -263,6 +279,8 @@ namespace HeavenStudio.Games.Scripts_LaunchParty
 
         void SuccessBowlingPin(PlayerActionEvent caller)
         {
+            game.launchPadSpriteAnim.DoScaledAnimationAsync("SizeUp", 1f);
+            anim.Play("RocketLaunch", 0, 0);
             MultiSound.Play(new MultiSound.Sound[]
             {
                 new MultiSound.Sound("launchParty/flute", caller.startBeat + caller.timer, pitches[13], 0.89f),
@@ -278,11 +296,23 @@ namespace HeavenStudio.Games.Scripts_LaunchParty
 
         void Miss(PlayerActionEvent caller)
         {
+            noInput = true;
             Jukebox.PlayOneShotGame("launchParty/miss");
+            number.SetActive(false);
+            anim.Play("RocketMiss", 0, 0);
             BeatAction.New(gameObject, new List<BeatAction.Action>()
             {
                 new BeatAction.Action(caller.startBeat + caller.timer + 1f, delegate { GameObject.Destroy(gameObject); }),
             });
+        }
+
+        bool isPlaying(Animator anim, string stateName)
+        {
+            if (anim.GetCurrentAnimatorStateInfo(0).IsName(stateName) &&
+                    anim.GetCurrentAnimatorStateInfo(0).normalizedTime < 1.0f)
+                return true;
+            else
+                return false;
         }
 
         void Nothing(PlayerActionEvent caller) {}
