@@ -98,7 +98,7 @@ namespace HeavenStudio.Games.Loaders
                     parameters = new List<Param>()
                     {
                         new Param("xPos", new EntityTypes.Float(-40f, 40f, 0f), "X Position", "Which position on the X axis should the Launch Pad travel to?"),
-                        new Param("yPos", new EntityTypes.Float(-30f, 30f, -2.4f), "Y Position", "Which position on the Y axis should the Launch Pad travel to?"),
+                        new Param("yPos", new EntityTypes.Float(-30f, 30f, 0f), "Y Position", "Which position on the Y axis should the Launch Pad travel to?"),
                         new Param("zPos", new EntityTypes.Float(-90f, 90f, 0f), "Z Position", "Which position on the Z axis should the Launch Pad travel to?"),
                         new Param("ease", EasingFunction.Ease.Linear, "Ease", "Which ease should the Launch Pad use?")
                     }
@@ -155,6 +155,7 @@ namespace HeavenStudio.Games
         [SerializeField] ParticleSystem fallingStars;
         [SerializeField] ParticleSystem fallingStarsBack;
         [SerializeField] Transform launchPad;
+        [SerializeField] Transform spawnPad;
         [SerializeField] Scroll scrollScript;
         public Animator launchPadSpriteAnim;
 
@@ -320,7 +321,7 @@ namespace HeavenStudio.Games
         public void LaunchRocket(float beat, float beatOffset, int noteOne, int noteTwo, int noteThree, int noteFour)
         {
 
-            GameObject spawnedRocket = Instantiate(rocket, launchPad, false);
+            GameObject spawnedRocket = Instantiate(rocket, spawnPad, false);
             var rocketScript = spawnedRocket.GetComponent<LaunchPartyRocket>();
             rocketScript.pitches.Add(Mathf.Pow(2f, (1f / 12f) * noteOne) * Conductor.instance.musicSource.pitch);
             rocketScript.pitches.Add(Mathf.Pow(2f, (1f / 12f) * noteTwo) * Conductor.instance.musicSource.pitch);
@@ -336,7 +337,7 @@ namespace HeavenStudio.Games
 
         public void LaunchPartyCracker(float beat, float beatOffset, int noteOne, int noteTwo, int noteThree, int noteFour, int noteFive, int noteSix)
         {
-            GameObject spawnedRocket = Instantiate(partyCracker, launchPad, false);
+            GameObject spawnedRocket = Instantiate(partyCracker, spawnPad, false);
             var rocketScript = spawnedRocket.GetComponent<LaunchPartyRocket>();
             rocketScript.pitches.Add(Mathf.Pow(2f, (1f / 12f) * noteOne) * Conductor.instance.musicSource.pitch);
             rocketScript.pitches.Add(Mathf.Pow(2f, (1f / 12f) * noteTwo) * Conductor.instance.musicSource.pitch);
@@ -354,7 +355,7 @@ namespace HeavenStudio.Games
 
         public void LaunchBell(float beat, float beatOffset, int noteOne, int noteTwo, int noteThree, int noteFour, int noteFive, int noteSix, int noteSeven, int noteEight)
         {
-            GameObject spawnedRocket = Instantiate(bell, launchPad, false);
+            GameObject spawnedRocket = Instantiate(bell, spawnPad, false);
             var rocketScript = spawnedRocket.GetComponent<LaunchPartyRocket>();
             rocketScript.pitches.Add(Mathf.Pow(2f, (1f / 12f) * noteOne) * Conductor.instance.musicSource.pitch);
             rocketScript.pitches.Add(Mathf.Pow(2f, (1f / 12f) * noteTwo) * Conductor.instance.musicSource.pitch);
@@ -375,7 +376,7 @@ namespace HeavenStudio.Games
         public void LaunchBowlingPin(float beat, float beatOffset, int noteOne, int noteTwo, int noteThree, int noteFour, int noteFive, int noteSix, int noteSeven, 
             int noteEight, int noteNine, int noteTen, int noteEleven, int noteTwelve, int noteThirteen, int noteFourteen, int noteFifteen)
         {
-            GameObject spawnedRocket = Instantiate(bowlingPin, launchPad, false);
+            GameObject spawnedRocket = Instantiate(bowlingPin, spawnPad, false);
             var rocketScript = spawnedRocket.GetComponent<LaunchPartyRocket>();
             rocketScript.pitches.Add(Mathf.Pow(2f, (1f / 12f) * noteOne) * Conductor.instance.musicSource.pitch);
             rocketScript.pitches.Add(Mathf.Pow(2f, (1f / 12f) * noteTwo) * Conductor.instance.musicSource.pitch);

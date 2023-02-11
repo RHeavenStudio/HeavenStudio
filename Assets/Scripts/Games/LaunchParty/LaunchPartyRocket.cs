@@ -35,7 +35,8 @@ namespace HeavenStudio.Games.Scripts_LaunchParty
             {
                 Jukebox.PlayOneShotGame("launchParty/miss");
                 Jukebox.PlayOneShotGame("launchParty/rocket_endBad");
-                if (!isPlaying(anim, "RocketMiss")) anim.Play("RocketMiss", 0, 0);
+                string leftOrRight = (UnityEngine.Random.Range(1, 3) == 1) ? "Left" : "Right";
+                if (!isPlaying(anim, "RocketBarelyLeft") && !isPlaying(anim, "RocketBarelyRight")) anim.Play("RocketBarely" + leftOrRight, 0, 0);
                 game.ScoreMiss(0.5);
             }
         }
@@ -168,7 +169,8 @@ namespace HeavenStudio.Games.Scripts_LaunchParty
             {
                 Jukebox.PlayOneShotGame("launchParty/miss");
                 Jukebox.PlayOneShotGame("launchParty/rocket_endBad");
-                anim.Play("RocketMiss", 0, 0);
+                string leftOrRight = (UnityEngine.Random.Range(1, 3) == 1) ? "Left" : "Right";
+                anim.Play("RocketBarely" + leftOrRight, 0, 0);
                 BeatAction.New(gameObject, new List<BeatAction.Action>()
                 {
                     new BeatAction.Action(caller.startBeat + caller.timer + 1f, delegate { GameObject.Destroy(gameObject); }),
@@ -199,7 +201,8 @@ namespace HeavenStudio.Games.Scripts_LaunchParty
             noInput = true;
             if (state >= 1f || state <= -1f)
             {
-                anim.Play("RocketMiss", 0, 0);
+                string leftOrRight = (UnityEngine.Random.Range(1, 3) == 1) ? "Left" : "Right";
+                anim.Play("RocketBarely" + leftOrRight, 0, 0);
                 Jukebox.PlayOneShotGame("launchParty/miss");
                 Jukebox.PlayOneShotGame("launchParty/rocket_endBad");
                 BeatAction.New(gameObject, new List<BeatAction.Action>()
@@ -232,7 +235,8 @@ namespace HeavenStudio.Games.Scripts_LaunchParty
             noInput = true;
             if (state >= 1f || state <= -1f)
             {
-                anim.Play("RocketMiss", 0, 0);
+                string leftOrRight = (UnityEngine.Random.Range(1, 3) == 1) ? "Left" : "Right";
+                anim.Play("RocketBarely" + leftOrRight, 0, 0);
                 Jukebox.PlayOneShotGame("launchParty/miss");
                 Jukebox.PlayOneShotGame("launchParty/rocket_endBad");
                 BeatAction.New(gameObject, new List<BeatAction.Action>()
@@ -265,7 +269,8 @@ namespace HeavenStudio.Games.Scripts_LaunchParty
             noInput = true;
             if (state >= 1f || state <= -1f)
             {
-                anim.Play("RocketMiss", 0, 0);
+                string leftOrRight = (UnityEngine.Random.Range(1, 3) == 1) ? "Left" : "Right";
+                anim.Play("RocketBarely" + leftOrRight, 0, 0);
                 Jukebox.PlayOneShotGame("launchParty/miss");
                 Jukebox.PlayOneShotGame("launchParty/rocket_endBad");
                 BeatAction.New(gameObject, new List<BeatAction.Action>()
