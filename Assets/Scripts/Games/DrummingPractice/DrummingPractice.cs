@@ -43,13 +43,13 @@ namespace HeavenStudio.Games.Loaders
                 },
                 new GameAction("move npc drummers", "NPC Drummers Enter or Exit")
                 {
-                    function = delegate {var e = eventCaller.currentEntity; DrummingPractice.instance.NPCDrummersEnterOrExit(e.beat, e.length, e["exit"], e["instant"]); },
+                    function = delegate {var e = eventCaller.currentEntity; DrummingPractice.instance.NPCDrummersEnterOrExit(e.beat, e.length, e["exit"], e["ease"]); },
                     defaultLength = 4f,
                     resizable = true,
                     parameters = new List<Param>()
                     {
                         new Param("exit", false, "Exit?", "Should the NPC drummers exit or enter?"),
-                        new Param("instant", false, "Instant", "Should the NPC drummers instantly exit or enter?"),
+                        new Param("ease", EasingFunction.Ease.Linear, "Ease", "Which ease should the movement have?")
                     }
                 },
                 new GameAction("set background color", "Set Background Color")
@@ -104,6 +104,7 @@ namespace HeavenStudio.Games
         float movingStartBeat;
         bool isMoving;
         string moveAnim;
+        EasingFunction.Ease lastEase;
 
         public GameEvent bop = new GameEvent();
         public int count = 0;
@@ -136,7 +137,13 @@ namespace HeavenStudio.Games
                 }
             }
 
-            if(isMoving && cond.isPlaying && !cond.isPaused) NPCDrummers.DoScaledAnimation(moveAnim, movingStartBeat, movingLength);
+            if (isMoving && cond.isPlaying && !cond.isPaused) 
+            {
+                float normalizedBeat = cond.GetPositionFromBeat(movingStartBeat, movingLength);
+                EasingFunction.Function func = EasingFunction.GetEasingFunction(lastEase);
+                float newPos = func(0f, 1f, normalizedBeat);
+                NPCDrummers.DoNormalizedAnimation(moveAnim, newPos);
+            }
 
             foreach (SpriteRenderer streak in streaks)
             {
@@ -145,18 +152,13 @@ namespace HeavenStudio.Games
             }
         }
 
-        public void NPCDrummersEnterOrExit(float beat, float length, bool exit, bool instant)
+        public void NPCDrummersEnterOrExit(float beat, float length, bool exit, int ease)
         {
-            if (instant)
-            {
-                NPCDrummers.Play(exit ? "NPCDrummersExited" : "NPCDrummersEntered", 0, 0);
-                return;
-            }
             movingStartBeat = beat;
             movingLength = length;
             moveAnim = exit ? "NPCDrummersExit" : "NPCDrummersEnter";
             isMoving = true;
-            NPCDrummers.DoScaledAnimation(moveAnim, movingStartBeat, movingLength);
+            lastEase = (EasingFunction.Ease)ease;
             BeatAction.New(instance.gameObject, new List<BeatAction.Action>()
             {
                 new BeatAction.Action(beat + length - 0.01f, delegate { isMoving = false; })
