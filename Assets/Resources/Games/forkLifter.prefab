@@ -162,7 +162,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   inList: 0
-  lastState: 0
   state:
     gameObject: {fileID: 0}
     early: 0
@@ -813,7 +812,6 @@ MonoBehaviour:
   currentEarlyPeasOnFork: 0
   currentPerfectPeasOnFork: 0
   currentLatePeasOnFork: 0
-  hitOnFrame: 0
   topbun: 0
   middleburger: 0
   bottombun: 0
@@ -1046,6 +1044,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b91bd072f874c8746bee1afaf6dac3b4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  SoundSequences: []
   EligibleHits: []
   scheduledInputs: []
   firstEnable: 0
