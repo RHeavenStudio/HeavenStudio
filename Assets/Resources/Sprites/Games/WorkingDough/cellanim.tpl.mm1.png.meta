@@ -1,0 +1,948 @@
+fileFormatVersion: 2
+guid: 7484f5c86d987ca45ace5fcd0b3840e4
+TextureImporter:
+  internalIDToNameTable:
+  - first:
+      213: -1681898400382901512
+    second: Floor
+  - first:
+      213: 9111804982425172805
+    second: Truck
+  - first:
+      213: -1036779611749880337
+    second: Fence
+  - first:
+      213: 6554867697913446830
+    second: Scaffolding
+  - first:
+      213: 9094941074209125493
+    second: Machinery
+  - first:
+      213: 9001423204299861090
+    second: Wall
+  - first:
+      213: 8709379519047800140
+    second: Ladder
+  - first:
+      213: -943579971135771316
+    second: PipeNeck
+  - first:
+      213: 7482452359830385417
+    second: BGPipe
+  - first:
+      213: -6123683768854101590
+    second: TrafficCone
+  - first:
+      213: 1731676971623146639
+    second: BigGear
+  - first:
+      213: -7385893473059824398
+    second: SmallGear
+  - first:
+      213: -2889071456731990739
+    second: SpaceShipEye
+  - first:
+      213: 1356347322529720189
+    second: Screw
+  - first:
+      213: -3599858083152641816
+    second: RoundScrew
+  - first:
+      213: -2164064772730743734
+    second: Spaceship
+  - first:
+      213: 6610132385312754057
+    second: SpaceshipPipeBottom
+  - first:
+      213: 1465674010776860660
+    second: SpaceShipEyeFlash
+  - first:
+      213: -9216669706537891162
+    second: SmallSpaceshipPipe
+  - first:
+      213: -1523026338420109177
+    second: SpaceshipPipeBig
+  - first:
+      213: 3494135335440701706
+    second: SpaceshipPipeTop
+  - first:
+      213: -926635024540539542
+    second: BGScaffolding
+  - first:
+      213: -1473784852125571320
+    second: BigMachinery0
+  - first:
+      213: -3163955191872535862
+    second: BigMachinery1
+  - first:
+      213: -8335356989560301908
+    second: SmallWindow
+  - first:
+      213: -681976623942534800
+    second: MediumWindow
+  - first:
+      213: 5049767731364396581
+    second: BigWindow
+  - first:
+      213: 6268156859579429675
+    second: SmallFlash
+  - first:
+      213: 2362737128963917389
+    second: MediumFlash
+  - first:
+      213: -8689022989090741800
+    second: BigFlash
+  - first:
+      213: 7301257716663513774
+    second: Conveyer0
+  - first:
+      213: -6802675963787892709
+    second: cellanim.tpl.mm1_31
+  - first:
+      213: -5976009055941440191
+    second: cellanim.tpl.mm1_32
+  - first:
+      213: 8154423759569281189
+    second: cellanim.tpl.mm1_33
+  - first:
+      213: 2304743923719419823
+    second: cellanim.tpl.mm1_34
+  externalObjects: {}
+  serializedVersion: 11
+  mipmaps:
+    mipMapMode: 0
+    enableMipMap: 0
+    sRGBTexture: 1
+    linearTexture: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapsPreserveCoverage: 0
+    alphaTestReferenceValue: 0.5
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+  bumpmap:
+    convertToNormalMap: 0
+    externalNormalMap: 0
+    heightScale: 0.25
+    normalMapFilter: 0
+  isReadable: 0
+  streamingMipmaps: 0
+  streamingMipmapsPriority: 0
+  vTOnly: 0
+  grayScaleToAlpha: 0
+  generateCubemap: 6
+  cubemapConvolution: 0
+  seamlessCubemap: 0
+  textureFormat: 1
+  maxTextureSize: 2048
+  textureSettings:
+    serializedVersion: 2
+    filterMode: 1
+    aniso: 1
+    mipBias: 0
+    wrapU: 1
+    wrapV: 1
+    wrapW: 1
+  nPOTScale: 0
+  lightmap: 0
+  compressionQuality: 50
+  spriteMode: 2
+  spriteExtrude: 1
+  spriteMeshType: 1
+  alignment: 0
+  spritePivot: {x: 0.5, y: 0.5}
+  spritePixelsToUnits: 100
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spriteGenerateFallbackPhysicsShape: 1
+  alphaUsage: 1
+  alphaIsTransparency: 1
+  spriteTessellationDetail: -1
+  textureType: 8
+  textureShape: 1
+  singleChannelComponent: 0
+  flipbookRows: 1
+  flipbookColumns: 1
+  maxTextureSizeSet: 0
+  compressionQualitySet: 0
+  textureFormatSet: 0
+  ignorePngGamma: 0
+  applyGammaDecoding: 0
+  platformSettings:
+  - serializedVersion: 3
+    buildTarget: DefaultTexturePlatform
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 3
+    buildTarget: Standalone
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  spriteSheet:
+    serializedVersion: 2
+    sprites:
+    - serializedVersion: 2
+      name: Floor
+      rect:
+        serializedVersion: 2
+        x: 27
+        y: 3901
+        width: 3447
+        height: 160
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 8f221e0e052b8a8e0800000000000000
+      internalID: -1681898400382901512
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Truck
+      rect:
+        serializedVersion: 2
+        x: 38
+        y: 3180
+        width: 554
+        height: 616
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 54b3618ea52a37e70800000000000000
+      internalID: 9111804982425172805
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Fence
+      rect:
+        serializedVersion: 2
+        x: 645
+        y: 3285
+        width: 280
+        height: 515
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: fede74baf6e9c91f0800000000000000
+      internalID: -1036779611749880337
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Scaffolding
+      rect:
+        serializedVersion: 2
+        x: 984
+        y: 3600
+        width: 490
+        height: 205
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: ea140db217197fa50800000000000000
+      internalID: 6554867697913446830
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Machinery
+      rect:
+        serializedVersion: 2
+        x: 995
+        y: 3095
+        width: 456
+        height: 437
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 574385d48b8b73e70800000000000000
+      internalID: 9094941074209125493
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Wall
+      rect:
+        serializedVersion: 2
+        x: 597
+        y: 2724
+        width: 777
+        height: 313
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 26c604576ba7bec70800000000000000
+      internalID: 9001423204299861090
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Ladder
+      rect:
+        serializedVersion: 2
+        x: 60
+        y: 2075
+        width: 182
+        height: 990
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: c4518ee378eedd870800000000000000
+      internalID: 8709379519047800140
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: PipeNeck
+      rect:
+        serializedVersion: 2
+        x: 333
+        y: 2952
+        width: 202
+        height: 149
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: c4d674bf30bb7e2f0800000000000000
+      internalID: -943579971135771316
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: BGPipe
+      rect:
+        serializedVersion: 2
+        x: 347
+        y: 2571
+        width: 178
+        height: 287
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 903397c07c207d760800000000000000
+      internalID: 7482452359830385417
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: TrafficCone
+      rect:
+        serializedVersion: 2
+        x: 337
+        y: 2130
+        width: 200
+        height: 338
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: aa140a09e0e440ba0800000000000000
+      internalID: -6123683768854101590
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: BigGear
+      rect:
+        serializedVersion: 2
+        x: 1559
+        y: 2132
+        width: 400
+        height: 403
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: f846257e707280810800000000000000
+      internalID: 1731676971623146639
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SmallGear
+      rect:
+        serializedVersion: 2
+        x: 2134
+        y: 2719
+        width: 248
+        height: 218
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 2fc9465b409008990800000000000000
+      internalID: -7385893473059824398
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SpaceShipEye
+      rect:
+        serializedVersion: 2
+        x: 611
+        y: 2240
+        width: 416
+        height: 411
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: d25f4ca21d4f7e7d0800000000000000
+      internalID: -2889071456731990739
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Screw
+      rect:
+        serializedVersion: 2
+        x: 1579
+        y: 2611
+        width: 200
+        height: 321
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: d77af6f14b6b2d210800000000000000
+      internalID: 1356347322529720189
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: RoundScrew
+      rect:
+        serializedVersion: 2
+        x: 1862
+        y: 2600
+        width: 216
+        height: 335
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 8e04edf652cba0ec0800000000000000
+      internalID: -3599858083152641816
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Spaceship
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 39
+        width: 2137
+        height: 1914
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: a44927e0e82b7f1e0800000000000000
+      internalID: -2164064772730743734
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SpaceshipPipeBottom
+      rect:
+        serializedVersion: 2
+        x: 1524
+        y: 2988
+        width: 311
+        height: 218
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 9894fd8e168ebbb50800000000000000
+      internalID: 6610132385312754057
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SpaceShipEyeFlash
+      rect:
+        serializedVersion: 2
+        x: 1080
+        y: 2228
+        width: 444
+        height: 421
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 4f770e05fbe175410800000000000000
+      internalID: 1465674010776860660
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SmallSpaceshipPipe
+      rect:
+        serializedVersion: 2
+        x: 1584
+        y: 3281
+        width: 197
+        height: 88
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 6aa84b1ebbfc71080800000000000000
+      internalID: -9216669706537891162
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SpaceshipPipeBig
+      rect:
+        serializedVersion: 2
+        x: 1573
+        y: 3482
+        width: 214
+        height: 94
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 780d7e25d9f1ddae0800000000000000
+      internalID: -1523026338420109177
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SpaceshipPipeTop
+      rect:
+        serializedVersion: 2
+        x: 1550
+        y: 3686
+        width: 269
+        height: 110
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: a09551a2399ad7030800000000000000
+      internalID: 3494135335440701706
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: BGScaffolding
+      rect:
+        serializedVersion: 2
+        x: 3216
+        y: 616
+        width: 814
+        height: 2039
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: a6563ddca5ee323f0800000000000000
+      internalID: -926635024540539542
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: BigMachinery0
+      rect:
+        serializedVersion: 2
+        x: 2166
+        y: 38
+        width: 924
+        height: 624
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 80724b54c701c8be0800000000000000
+      internalID: -1473784852125571320
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: BigMachinery1
+      rect:
+        serializedVersion: 2
+        x: 3164
+        y: 19
+        width: 783
+        height: 508
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: ac24f2f248f5714d0800000000000000
+      internalID: -3163955191872535862
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SmallWindow
+      rect:
+        serializedVersion: 2
+        x: 1883
+        y: 2993
+        width: 200
+        height: 214
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: ca650390bfcd25c80800000000000000
+      internalID: -8335356989560301908
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: MediumWindow
+      rect:
+        serializedVersion: 2
+        x: 1883
+        y: 3266
+        width: 259
+        height: 216
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 079f8c0bfd12986f0800000000000000
+      internalID: -681976623942534800
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: BigWindow
+      rect:
+        serializedVersion: 2
+        x: 1878
+        y: 3557
+        width: 266
+        height: 246
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 52e74323ff0641640800000000000000
+      internalID: 5049767731364396581
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SmallFlash
+      rect:
+        serializedVersion: 2
+        x: 2147
+        y: 2989
+        width: 189
+        height: 219
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: b23f8a32477fcf650800000000000000
+      internalID: 6268156859579429675
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: MediumFlash
+      rect:
+        serializedVersion: 2
+        x: 2233
+        y: 3262
+        width: 208
+        height: 222
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: d46458586e02ac020800000000000000
+      internalID: 2362737128963917389
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: BigFlash
+      rect:
+        serializedVersion: 2
+        x: 2224
+        y: 3562
+        width: 226
+        height: 234
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 8d12b0ab0a36a6780800000000000000
+      internalID: -8689022989090741800
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Conveyer0
+      rect:
+        serializedVersion: 2
+        x: 2788
+        y: 3572
+        width: 1291
+        height: 233
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: ea2fe47a537435560800000000000000
+      internalID: 7301257716663513774
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: cellanim.tpl.mm1_31
+      rect:
+        serializedVersion: 2
+        x: 2788
+        y: 3287
+        width: 1291
+        height: 233
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: b18a558c04a0891a0800000000000000
+      internalID: -6802675963787892709
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: cellanim.tpl.mm1_32
+      rect:
+        serializedVersion: 2
+        x: 2788
+        y: 2997
+        width: 1291
+        height: 233
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 14dc7160d63f01da0800000000000000
+      internalID: -5976009055941440191
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: cellanim.tpl.mm1_33
+      rect:
+        serializedVersion: 2
+        x: 2788
+        y: 2705
+        width: 1291
+        height: 233
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 5a0e12194355a2170800000000000000
+      internalID: 8154423759569281189
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: cellanim.tpl.mm1_34
+      rect:
+        serializedVersion: 2
+        x: 2458
+        y: 1750
+        width: 23
+        height: 1
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: fa7398733681cff10800000000000000
+      internalID: 2304743923719419823
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    outline: []
+    physicsShape: []
+    bones: []
+    spriteID: 5e97eb03825dee720800000000000000
+    internalID: 0
+    vertices: []
+    indices: 
+    edges: []
+    weights: []
+    secondaryTextures: []
+  spritePackingTag: 
+  pSDRemoveMatte: 0
+  pSDShowRemoveMatteOption: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

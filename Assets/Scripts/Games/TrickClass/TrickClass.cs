@@ -15,17 +15,21 @@ namespace HeavenStudio.Games.Loaders
         public static Minigame AddGame(EventCaller eventCaller) {
             return new Minigame("trickClass", "Trick on the Class", "C0171D", false, false, new List<GameAction>()
             {
-                new GameAction("toss", "Toss Object")
+                new GameAction("toss", "Paper Ball")
                 {
                     function = delegate
                     {
-                        TrickClass.instance.TossObject(eventCaller.currentEntity.beat, eventCaller.currentEntity["type"]);
+                        TrickClass.instance.TossObject(eventCaller.currentEntity.beat, (int)TrickClass.TrickObjType.Ball);
                     }, 
-                    defaultLength = 3,
-                    parameters = new List<Param>()
+                    defaultLength = 2,
+                },
+                new GameAction("plane", "Plane")
+                {
+                    function = delegate
                     {
-                        new Param("type", TrickClass.TrickObjType.Ball, "Object", "The object to toss")
-                    }
+                        TrickClass.instance.TossObject(eventCaller.currentEntity.beat, (int)TrickClass.TrickObjType.Plane);
+                    },
+                    defaultLength = 3,
                 },
                 new GameAction("bop", "")
                 {
@@ -101,7 +105,7 @@ namespace HeavenStudio.Games
             }
 
             // bruh
-            var tossEvents = GameManager.instance.Beatmap.entities.FindAll(en => en.datamodel == "trickClass/toss");
+            var tossEvents = GameManager.instance.Beatmap.entities.FindAll(en => en.datamodel == "trickClass/toss" || en.datamodel == "trickClass/plane");
             for (int i = 0; i < tossEvents.Count; i++)
             {
                 var e = tossEvents[i];
@@ -110,14 +114,13 @@ namespace HeavenStudio.Games
                 if (timeToEvent > 0f && timeToEvent <= 1f)
                 {
                     string anim = "WarnBall";
-                    switch (e["type"])
+                    if (e.datamodel == "trickClass/toss")
                     {
-                        case (int) TrickObjType.Plane:
-                            anim = "WarnPlane";
-                            break;
-                        default:
-                            anim = "WarnBall";
-                            break;
+                        anim = "WarnBall";
+                    }
+                    else
+                    {
+                        anim = "WarnPlane";
                     }
                     warnAnim.DoScaledAnimation(anim, e.beat - 1f, 1f);
                     break;
