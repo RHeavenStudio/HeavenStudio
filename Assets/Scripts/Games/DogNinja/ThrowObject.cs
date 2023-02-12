@@ -63,18 +63,17 @@ namespace HeavenStudio.Games.Scripts_DogNinja
 
         private void Update()
         {
-            float flyPos = Conductor.instance.GetPositionFromBeat(startBeat, 1);
-            // apparently the og uses exponentiality. im just gonna mimic it (?)
-            flyPos *= 0.47f;
+            float flyPos = Conductor.instance.GetPositionFromBeat(startBeat, 0.5f);
+            flyPos *= 0.22f;
             transform.position = curve.GetPoint(flyPos);
             
-            // destroys object when it's off-screen
+            // destroy object when it's off-screen
             if (flyPos > 1f) {
                 GameObject.Destroy(gameObject);
             };
         }
 
-        void CutObject()
+        private void Hit(PlayerActionEvent caller, float state)
         {
             string Slice;
             if (fromLeft) {
@@ -86,26 +85,11 @@ namespace HeavenStudio.Games.Scripts_DogNinja
             DogAnim.DoScaledAnimationAsync(Slice, 0.5f);
             Jukebox.PlayOneShotGame(sfxNum+"2");
 
-            SpawnHalves();
+            SpawnHalves LeftHalf = Instantiate(game.HalvesLeftBase).GetComponent<SpawnHalves>();
 
             GameObject.Destroy(gameObject);
         }
-
-        void SpawnHalves()
-        {
-            var HalvesGO = GameObject.Instantiate(game.HalvesLeftBase);
-            HalvesGO.transform.position = transform.position;
-
             
-        }
-
-        private void Hit(PlayerActionEvent caller, float state)
-        {
-            /* if (state >= 1f || state <= -1f) {  //todo: proper near miss feedback
-                //game.headAndBodyAnim.Play("BiteR", 0, 0);
-            } */
-            CutObject();
-        }
 
         // miss and out are unused im pretty sure? when you miss in this game it just kinda flies by 
         private void Miss(PlayerActionEvent caller) {}
