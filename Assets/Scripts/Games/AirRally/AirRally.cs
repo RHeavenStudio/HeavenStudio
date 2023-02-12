@@ -228,30 +228,39 @@ namespace HeavenStudio.Games
             {
                 queuedVoiceLines.Add(beat);
             }
+            float offset = 0f;
+            if (type == 2)
+            {
+                offset = 0.107f;
+            }
+            else if (type == 3)
+            {
+                offset = 0.051f;
+            }
             switch (type2)
             {
                 case (int)DistanceSound.close:
                     MultiSound.Play(new MultiSound.Sound[]
                     {
-                        new MultiSound.Sound($"airRally/countIn{type + 1}", beat),
+                        new MultiSound.Sound($"airRally/countIn{type + 1}", beat, 1, 1, false, offset),
                     }, forcePlay: true);
                     break;
                 case (int)DistanceSound.far:
                     MultiSound.Play(new MultiSound.Sound[]
                     {
-                        new MultiSound.Sound($"airRally/countIn{type + 1}Far", beat),
+                        new MultiSound.Sound($"airRally/countIn{type + 1}Far", beat, 1, 1, false, offset),
                     }, forcePlay: true);
                     break;
                 case (int)DistanceSound.farther:
                     MultiSound.Play(new MultiSound.Sound[]
                     {
-                        new MultiSound.Sound($"airRally/countIn{type + 1}Farther", beat),
+                        new MultiSound.Sound($"airRally/countIn{type + 1}Farther", beat, 1, 1, false, offset),
                     }, forcePlay: true);
                     break;
                 case (int)DistanceSound.farthest:
                     MultiSound.Play(new MultiSound.Sound[]
                     {
-                        new MultiSound.Sound($"airRally/countIn{type + 1}Farthest", beat),
+                        new MultiSound.Sound($"airRally/countIn{type + 1}Farthest", beat, 1, 1, false, offset),
                     }, forcePlay: true);
                     break;
             }
@@ -478,8 +487,8 @@ namespace HeavenStudio.Games
                 var sound2 = new MultiSound.Sound[]
                 {
                     new MultiSound.Sound(sounds2[0], beat + 3.5f),
-                    new MultiSound.Sound(sounds2[1], beat + 4.3f),  //TODO: find sound offset in seconds
-                    new MultiSound.Sound(sounds2[2], beat + 5.4f)
+                    new MultiSound.Sound(sounds2[1], beat + 4.5f, 1, 1, false, 0.107f),
+                    new MultiSound.Sound(sounds2[2], beat + 5.5f, 1, 1, false, 0.051f)
                 };
 
                 MultiSound.Play(sound2);
