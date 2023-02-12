@@ -13,12 +13,11 @@ namespace HeavenStudio.Games.Scripts_DogNinja
         public float startBeat;
 
         [Header("References")]
-        public GameObject LeftHalvesBase;
-        public GameObject RightHalvesBase;
+        public GameObject HalvesLeftBase;
+        public GameObject HalvesRightBase;
 
         [Header("Curves")]
-        public BezierCurve3D LeftHalfCurve;
-        public BezierCurve3D RightHalfCurve;
+        public BezierCurve3D HalvesCurve;
 
         private DogNinja game;
         
@@ -29,22 +28,15 @@ namespace HeavenStudio.Games.Scripts_DogNinja
 
         private void Start()
         {
-            
+            var HalvesGO = GameObject.Instantiate(game.HalvesLeftBase);
+            HalvesGO.transform.position = transform.position;
         }
 
         private void Update()
         {
-            float flyPos = Conductor.instance.GetPositionFromBeat(startBeat, 1);
+            float flyPos = Conductor.instance.GetPositionFromBeat(startBeat, 0.5f);
             flyPos *= 0.5f;
-            //transform.position = curve.GetPoint(flyPos);
-            
-        }
-
-        void MakeHalves()
-        {
-            var HalvesGO = GameObject.Instantiate(game.HalvesLeftBase);
-            HalvesGO.transform.position = transform.position;
-            
+            transform.position = HalvesCurve.GetPoint(flyPos);
             
         }
     }

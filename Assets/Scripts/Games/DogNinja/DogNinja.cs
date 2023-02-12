@@ -87,8 +87,6 @@ namespace HeavenStudio.Games
         public BezierCurve3D CurveFromLeft;
         public BezierCurve3D CurveFromRight;
 
-        public Transform cutEverythingText;
-
         public Sprite[] ObjectTypes;
         public Sprite[] ObjectHalves;
         public Sprite[] CustomObjects;
@@ -114,14 +112,24 @@ namespace HeavenStudio.Games
             Custom,     // directs to custom stuff
         }
 
+        // input these into the secret object box and boom. new object. 
         public enum CustomObject
         {
             TacoBell,
+            AirBatter,
+            Karateka,
+            IaiGiriGaiden,
+            ThumpFarm,
+            BattingShow,
+            MeatGrinder,
+            YaseiNoIkiG3M4,
         }
         
         private void Awake()
         {
             instance = this;
+
+
         }
 
         private void Update()
@@ -143,7 +151,11 @@ namespace HeavenStudio.Games
                     Slice = "SliceLeft";
                 };
 
-                DogAnim.DoScaledAnimationAsync(Slice, 0.5f);
+                DogAnim.Play(Slice, 0, 0);
+            };
+
+            if (!Conductor.instance.isPlaying) {
+
             };
         }
 
@@ -160,10 +172,10 @@ namespace HeavenStudio.Games
 
         public void ThrowObject(float beat, int ObjType, string textObj, bool fromLeft)
         {
-            int ObjSprite;
+            int ObjSprite = 0;
             if (ObjType == 10) {
                 // custom object code, uses the enum to turn the input string into integer to get the sprite
-                Enum.TryParse(textObj, out CustomObject notIntObj);
+                Enum.TryParse(textObj, true, out CustomObject notIntObj);
                 ObjSprite = (int) notIntObj;
                 WhichObject.sprite = CustomObjects[ObjSprite];
             } else if (ObjType == 0) {
@@ -171,6 +183,8 @@ namespace HeavenStudio.Games
                 System.Random rd = new System.Random();
                 WhichObject.sprite = ObjectTypes[rd.Next(1, 6)];
             } else { WhichObject.sprite = ObjectTypes[ObjType]; };
+
+            Debug.Log(ObjSprite);
             
             // instantiate a game object and give it its variables
             ThrowObject Object = Instantiate(ObjectBase).GetComponent<ThrowObject>();
