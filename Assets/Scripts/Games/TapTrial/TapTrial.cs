@@ -12,7 +12,7 @@ namespace HeavenStudio.Games.Loaders
     public static class AgbTapLoader
     {
         public static Minigame AddGame(EventCaller eventCaller) {
-            return new Minigame("tapTrial", "Tap Trial \n<color=#eb5454>[WIP]</color>", "93ffb3", false, false, new List<GameAction>()
+            return new Minigame("tapTrial", "Tap Trial", "93ffb3", false, false, new List<GameAction>()
             {
                 new GameAction("bop", "Bop")
                 {
@@ -20,7 +20,7 @@ namespace HeavenStudio.Games.Loaders
                     defaultLength = .5f,
                     parameters = new List<Param>()
                     {
-                        new Param("toggle", true, "Bop", "Whether both will bop to the beat or not")
+                        new Param("toggle", false, "Bop", "Whether both will bop to the beat or not")
                     }
                 },
                 new GameAction("tap", "Tap")
@@ -105,7 +105,7 @@ namespace HeavenStudio.Games
         [SerializeField] SpriteRenderer flash;
         [SerializeField] ScrollForTap scroll;
         [SerializeField] GameObject giraffe;
-        bool goBop, isPrep;
+        bool goBop = true, isPrep;
         float lastReportedBeat = 0f;
         bool hasJumped, isFinalJump;
         public float jumpStartTime = Single.MinValue;
@@ -129,9 +129,9 @@ namespace HeavenStudio.Games
             {
                 if (Conductor.instance.ReportBeat(ref lastReportedBeat))
                 {
-                    monkeys[0].Play("Bop", 0, 0);
-                    monkeys[1].Play("Bop", 0, 0);
-                    player.anim.Play("Bop", 0, 0);
+                    if (isPlaying(monkeys[0], "Idle")) monkeys[0].DoScaledAnimationAsync("Bop", 0.5f);
+                    if (isPlaying(monkeys[1], "Idle")) monkeys[1].DoScaledAnimationAsync("Bop", 0.5f);
+                    if (isPlaying(player.anim, "Idle")) player.anim.DoScaledAnimationAsync("Bop", 0.5f);
                 }
                 else if (Conductor.instance.songPositionInBeats < lastReportedBeat)
                 {
@@ -166,40 +166,32 @@ namespace HeavenStudio.Games
                     //Jukebox.PlayOneShotGame("fanClub/landing_impact", pitch: UnityEngine.Random.Range(0.95f, 1f), volume: 1f / 4);
                 }
                 hasJumped = false;
-            }
-
-            if (PlayerInput.Pressed() && !IsExpectingInputNow())
-            {
-                player.anim.Play("Tap", 0, 0);
-                Jukebox.PlayOneShotGame("tapTrial/tonk");
+                if (PlayerInput.Pressed() && !IsExpectingInputNow())
+                {
+                    player.anim.Play("Tap", 0, 0);
+                    Jukebox.PlayOneShotGame("tapTrial/tonk");
+                }
             }
         }
 
         public void Bop(bool isBopping)
         {
-            if (isBopping)
-            {
-                goBop = true;
-            }
-            else
-            {
-                goBop = false;
-            }
+            goBop = isBopping;
         }
 
         public void Tap(float beat)
         {
             isPrep = true;
             Jukebox.PlayOneShotGame("tapTrial/ook");
-            player.anim.Play("TapPrepare", 0, 0);
+            player.anim.DoScaledAnimationAsync("TapPrepare", 0.5f);
 
             //Monkey Tap Prepare Anim
             BeatAction.New(gameObject, new List<BeatAction.Action>()
             {
-                new BeatAction.Action(beat, delegate { monkeys[0].Play("TapPrepare"); }),
-                new BeatAction.Action(beat, delegate { monkeys[1].Play("TapPrepare"); }),
-                new BeatAction.Action(beat + 1f, delegate { monkeys[0].Play("Tap"); particleEffectMonkeys(); }),
-                new BeatAction.Action(beat + 1f, delegate { monkeys[1].Play("Tap"); }),
+                new BeatAction.Action(beat, delegate { monkeys[0].DoScaledAnimationAsync("TapPrepare", 0.5f); }),
+                new BeatAction.Action(beat, delegate { monkeys[1].DoScaledAnimationAsync("TapPrepare", 0.5f); }),
+                new BeatAction.Action(beat + 1f, delegate { monkeys[0].DoScaledAnimationAsync("Tap", 0.6f); particleEffectMonkeys(); }),
+                new BeatAction.Action(beat + 1f, delegate { monkeys[1].DoScaledAnimationAsync("Tap", 0.6f); }),
             });
             //CreateTap(beat);
             ScheduleInput(beat, 1f, InputType.STANDARD_DOWN, OnTap, OnTapMiss, OnEmpty);
@@ -219,27 +211,29 @@ namespace HeavenStudio.Games
                 new MultiSound.Sound("tapTrial/ookook",   beat + 0.5f)
             });
 
-            player.anim.Play("DoubleTapPrepare", 0, 0);
+            player.anim.DoScaledAnimationAsync("DoubleTapPrepare", 0.5f);
 
             BeatAction.New(gameObject, new List<BeatAction.Action>()
             {
-                new BeatAction.Action(beat, delegate { monkeys[0].Play("DoubleTapPrepare", 0, 0); }),
-                new BeatAction.Action(beat + .5f, delegate { monkeys[0].Play("DoubleTapPrepare_2", 0, 0); }),
-                new BeatAction.Action(beat + 1f, delegate { monkeys[0].Play("DoubleTap", 0, 0); particleEffectMonkeys(); }),
-                new BeatAction.Action(beat + 1.5f, delegate { monkeys[0].Play("DoubleTap", 0, 0); particleEffectMonkeys(); }),
+                new BeatAction.Action(beat, delegate { monkeys[0].DoScaledAnimationAsync("DoubleTapPrepare", 0.5f); }),
+                new BeatAction.Action(beat + .5f, delegate { monkeys[0].DoScaledAnimationAsync("DoubleTapPrepare_2", 0.5f); }),
+                new BeatAction.Action(beat + 1f, delegate { monkeys[0].DoScaledAnimationAsync("DoubleTap", 0.6f); particleEffectMonkeys(); }),
+                new BeatAction.Action(beat + 1.5f, delegate { monkeys[0].DoScaledAnimationAsync("DoubleTap", 0.6f); particleEffectMonkeys(); }),
+                new BeatAction.Action(beat + 1.99f, delegate {monkeys[0].Play("Idle", 0, 0); }),
             });
 
             BeatAction.New(gameObject, new List<BeatAction.Action>()
             {
-                new BeatAction.Action(beat, delegate { monkeys[1].Play("DoubleTapPrepare", 0, 0); }),
-                new BeatAction.Action(beat + .5f, delegate { monkeys[1].Play("DoubleTapPrepare_2", 0, 0); }),
-                new BeatAction.Action(beat + 1f, delegate { monkeys[1].Play("DoubleTap", 0, 0); }),
-                new BeatAction.Action(beat + 1.5f, delegate { monkeys[1].Play("DoubleTap", 0, 0); }),
+                new BeatAction.Action(beat, delegate { monkeys[1].DoScaledAnimationAsync("DoubleTapPrepare", 0.5f); }),
+                new BeatAction.Action(beat + .5f, delegate { monkeys[1].DoScaledAnimationAsync("DoubleTapPrepare_2", 0.5f); }),
+                new BeatAction.Action(beat + 1f, delegate { monkeys[1].DoScaledAnimationAsync("DoubleTap", 0.6f); }),
+                new BeatAction.Action(beat + 1.5f, delegate { monkeys[1].DoScaledAnimationAsync("DoubleTap", 0.6f); }),
+                new BeatAction.Action(beat + 1.99f, delegate {monkeys[1].Play("Idle", 0, 0); }),
             });
 
             BeatAction.New(gameObject, new List<BeatAction.Action>()
             {
-                new BeatAction.Action(beat + 4f, delegate { isPrep = false; })
+                new BeatAction.Action(beat + 1.99f, delegate { isPrep = false; })
             });
 
             ScheduleInput(beat, 1f, InputType.STANDARD_DOWN, OnDoubleTap, OnTapMiss, OnEmpty);
@@ -400,13 +394,13 @@ namespace HeavenStudio.Games
         public void OnTap(PlayerActionEvent caller, float beat)
         {
             Jukebox.PlayOneShotGame("tapTrial/tap");
-            player.anim.Play("Tap", 0, 0);
+            player.anim.DoScaledAnimationAsync("Tap", 0.6f);
             player_effects[0].GetComponent<ParticleSystem>().Play();
         }
         public void OnDoubleTap(PlayerActionEvent caller, float beat)
         {
             Jukebox.PlayOneShotGame("tapTrial/tap");
-            player.anim.Play("DoubleTap", 0, 0);
+            player.anim.DoScaledAnimationAsync("DoubleTap", 0.6f);
             player_effects[1].GetComponent<ParticleSystem>().Play();
         }
 
@@ -493,6 +487,14 @@ namespace HeavenStudio.Games
         }
         #endregion
 
+        bool isPlaying(Animator anim, string stateName)
+        {
+            if (anim.GetCurrentAnimatorStateInfo(0).IsName(stateName) &&
+                    anim.GetCurrentAnimatorStateInfo(0).normalizedTime < 1.0f)
+                return true;
+            else
+                return false;
+        }
 
         //this is the orig way for input handling
         //public void CreateTap(float beat, int type = 0)
