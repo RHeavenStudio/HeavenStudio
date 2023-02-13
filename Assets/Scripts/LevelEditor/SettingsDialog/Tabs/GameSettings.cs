@@ -8,6 +8,7 @@ namespace HeavenStudio.Editor
 {
     public class GameSettings : TabsContent
     {
+        [SerializeField] Toggle editorOverlaysToggle;
         [SerializeField] Toggle perfectChallengeToggle;
         [SerializeField] Toggle sectionMedalsToggle;
         [SerializeField] Toggle timingDispMinModeToggle;
@@ -24,6 +25,10 @@ namespace HeavenStudio.Editor
 
         }
 
+        public void OnEditorOverlaysToggleChanged()
+        {
+            PersistentDataManager.gameSettings.overlaysInEditor = editorOverlaysToggle.isOn;
+        }
         public void OnPerfectChallengeToggleChanged()
         {
             PersistentDataManager.gameSettings.perfectChallengeType = perfectChallengeToggle.isOn ? PersistentDataManager.PerfectChallengeType.On : PersistentDataManager.PerfectChallengeType.Off;
@@ -41,6 +46,7 @@ namespace HeavenStudio.Editor
 
         public override void OnOpenTab()
         {
+            editorOverlaysToggle.isOn = PersistentDataManager.gameSettings.overlaysInEditor;
             perfectChallengeToggle.isOn = PersistentDataManager.gameSettings.perfectChallengeType != PersistentDataManager.PerfectChallengeType.Off;
             sectionMedalsToggle.isOn = PersistentDataManager.gameSettings.isMedalOn;
             timingDispMinModeToggle.isOn = PersistentDataManager.gameSettings.timingDisplayMinMode;

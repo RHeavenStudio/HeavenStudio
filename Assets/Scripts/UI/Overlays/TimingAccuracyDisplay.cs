@@ -68,6 +68,7 @@ namespace HeavenStudio.Common
 
         public void MakeAccuracyVfx(double time, bool late = false)
         {
+            if (!OverlaysManager.OverlaysEnabled) return;
             GameObject it;
             Rating type = Rating.NG;
 

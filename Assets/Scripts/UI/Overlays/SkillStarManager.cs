@@ -64,6 +64,7 @@ namespace HeavenStudio.Common
 
         public void DoStarIn(float beat, float length)
         {
+            if (!OverlaysManager.OverlaysEnabled) return;
             IsEligible = true;
             state = StarState.In;
             starStart = beat;

@@ -4,7 +4,7 @@ using UnityEngine;
 
 using HeavenStudio.Util;
 
-namespace HeavenStudio
+namespace HeavenStudio.Common
 {
     public class GoForAPerfect : MonoBehaviour
     {
@@ -14,6 +14,7 @@ namespace HeavenStudio
         [SerializeField] Animator pAnim;
 
         private bool active = false;
+        private bool hiddenActive = false;
 
         public bool perfect;
 
@@ -27,9 +28,14 @@ namespace HeavenStudio
             perfect = true;
         }
 
+        private void Update() {
+            gameObject.SetActive(hiddenActive);
+        }
+
         public void Hit()
         {
             if (!active) return;
+            if (!OverlaysManager.OverlaysEnabled) return;
             pAnim.Play("PerfectIcon_Hit", 0, 0);
         }
 
@@ -38,10 +44,16 @@ namespace HeavenStudio
             perfect = false;
             if (!active) return;
             SetInactive();
+            if (!OverlaysManager.OverlaysEnabled)
+            {
+                hiddenActive = false;
+                return;
+            }
 
             GameProfiler.instance.perfect = false;
 
             texAnim.Play("GoForAPerfect_Miss");
+            pAnim.Play("PerfectIcon_Miss", -1, 0);
             Jukebox.PlayOneShot("perfectMiss");
         }
 
@@ -62,6 +74,7 @@ namespace HeavenStudio
 
         public void SetActive()
         {
+            hiddenActive = true;
             active = true;
         }
         public void SetInactive()

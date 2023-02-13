@@ -19,7 +19,7 @@ TextureImporter:
     second: PerfectIcon_4
   - first:
       213: 2642146640301145710
-    second: GoForAPerfect
+    second: PerfectAndPractice_5
   - first:
       213: -4466103494465645228
     second: PerfectIcon_5
@@ -67,7 +67,7 @@ TextureImporter:
   spriteMeshType: 0
   alignment: 0
   spritePivot: {x: 0.5, y: 0.5}
-  spritePixelsToUnits: 72
+  spritePixelsToUnits: 144
   spriteBorder: {x: 0, y: 0, z: 0, w: 0}
   spriteGenerateFallbackPhysicsShape: 1
   alphaUsage: 1
@@ -115,12 +115,12 @@ TextureImporter:
       name: PerfectIcon_0
       rect:
         serializedVersion: 2
-        x: 6
-        y: 148
-        width: 124
-        height: 134
+        x: 12
+        y: 296
+        width: 248
+        height: 268
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
@@ -136,12 +136,12 @@ TextureImporter:
       name: PerfectIcon_1
       rect:
         serializedVersion: 2
-        x: 138
-        y: 148
-        width: 124
-        height: 134
+        x: 276
+        y: 296
+        width: 248
+        height: 268
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
@@ -157,12 +157,12 @@ TextureImporter:
       name: PerfectIcon_2
       rect:
         serializedVersion: 2
-        x: 270
-        y: 148
-        width: 124
-        height: 134
+        x: 540
+        y: 296
+        width: 248
+        height: 268
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
@@ -178,12 +178,12 @@ TextureImporter:
       name: PerfectIcon_3
       rect:
         serializedVersion: 2
-        x: 402
-        y: 148
-        width: 124
-        height: 134
+        x: 804
+        y: 296
+        width: 248
+        height: 268
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
@@ -199,12 +199,12 @@ TextureImporter:
       name: PerfectIcon_4
       rect:
         serializedVersion: 2
-        x: 6
-        y: 6
-        width: 124
-        height: 134
+        x: 12
+        y: 12
+        width: 248
+        height: 268
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
@@ -212,6 +212,27 @@ TextureImporter:
       bones: []
       spriteID: 3ef5781aaa9de5280800000000000000
       internalID: -9052558874090446877
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: PerfectAndPractice_5
+      rect:
+        serializedVersion: 2
+        x: 276
+        y: 12
+        width: 248
+        height: 268
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: e6e34a3ee5acaa420800000000000000
+      internalID: 2642146640301145710
       vertices: []
       indices: 
       edges: []

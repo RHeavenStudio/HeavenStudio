@@ -6,6 +6,8 @@ using DG.Tweening;
 using HeavenStudio.Util;
 using Starpelly;
 
+using HeavenStudio.Common;
+
 namespace HeavenStudio.Games
 {
 

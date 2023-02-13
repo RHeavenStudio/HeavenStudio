@@ -88,7 +88,8 @@ namespace HeavenStudio.Common
                 bool discordRPCEnable = true,
                 PerfectChallengeType perfectChallengeType = PerfectChallengeType.On,
                 bool isMedalOn = true,
-                bool timingDisplayMinMode = false
+                bool timingDisplayMinMode = false,
+                bool overlaysInEditor = true
                 )
             {
                 this.isFullscreen = isFullscreen;
@@ -108,6 +109,7 @@ namespace HeavenStudio.Common
                 this.perfectChallengeType = perfectChallengeType;
                 this.isMedalOn = isMedalOn;
                 this.timingDisplayMinMode = timingDisplayMinMode;
+                this.overlaysInEditor = overlaysInEditor;
 
                 this.timingDisplayComponents = new List<TimingDisplayComponent>();
                 this.skillStarComponents = new List<SkillStarComponent>();
@@ -131,6 +133,7 @@ namespace HeavenStudio.Common
             public PerfectChallengeType perfectChallengeType;
             public bool isMedalOn;
             public bool timingDisplayMinMode;
+            public bool overlaysInEditor;
             public List<TimingDisplayComponent> timingDisplayComponents;
             public List<SkillStarComponent> skillStarComponents;
             public List<SectionComponent> sectionComponents;

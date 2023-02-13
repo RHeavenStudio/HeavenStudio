@@ -415,6 +415,10 @@ namespace HeavenStudio
             }
         }
 
+        private void LateUpdate() {
+            OverlaysManager.instance.TogleOverlaysVisibility(Editor.Editor.instance == null || Editor.Editor.instance.fullscreen || ((PersistentDataManager.gameSettings.overlaysInEditor) && (!Editor.Editor.instance.fullscreen)));
+        }
+
         public void ToggleInputs(bool inputs)
         {
             canInput = inputs;

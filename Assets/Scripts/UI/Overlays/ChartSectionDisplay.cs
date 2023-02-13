@@ -5,6 +5,8 @@ using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
 
+using HeavenStudio.Editor;
+
 namespace HeavenStudio.Common
 {
     public class ChartSectionDisplay : MonoBehaviour
@@ -42,6 +44,7 @@ namespace HeavenStudio.Common
                 SectionProgress.value = GameManager.instance.sectionProgress;
 
                 if (PersistentDataManager.gameSettings.perfectChallengeType == PersistentDataManager.PerfectChallengeType.Off) return;
+                if (!OverlaysManager.OverlaysEnabled) return;
                 if (section.startPerfect && GoForAPerfect.instance != null && GoForAPerfect.instance.perfect && !GoForAPerfect.instance.gameObject.activeSelf)
                 {
                     GoForAPerfect.instance.Enable();
