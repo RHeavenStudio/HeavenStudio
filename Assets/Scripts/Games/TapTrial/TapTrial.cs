@@ -72,12 +72,12 @@ namespace HeavenStudio.Games.Loaders
                 new GameAction("giraffe events", "Giraffe Animations")
                 {
 
-                    function = delegate { TapTrial.instance.giraffeEvent(eventCaller.currentEntity["toggle"], eventCaller.currentEntity["toggle"]); }, 
+                    function = delegate { TapTrial.instance.giraffeEvent(eventCaller.currentEntity["toggle"], eventCaller.currentEntity["instant"]); }, 
                     defaultLength = .5f,
                     parameters = new List<Param>()
                     {
-                        new Param("toggle", false, "Enter", "Giraffe will enter the scene"),
-                        new Param("toggle", false, "Exit", "Giraffe will exit the scene"),
+                        new Param("toggle", true, "Enter?", "Giraffe will enter the scene"),
+                        new Param("instant", false, "Instant", "Will the giraffe enter/exit instantly?")
                     }
                 }
             });
@@ -352,17 +352,19 @@ namespace HeavenStudio.Games
             });
         }
 
-        public void giraffeEvent(bool enter, bool exit)
+        public void giraffeEvent(bool enter, bool instant)
         {
+            float animTime = 0;
+            if (instant) animTime = 1;
             if (enter && !giraffeIsIn)
             {
                 giraffe.SetActive(true);
-                giraffe.GetComponent<Animator>().Play("Enter", 0, 0);
+                giraffe.GetComponent<Animator>().Play("Enter", 0, animTime);
                 giraffeIsIn = true;
             }
-            else if (exit && giraffeIsIn)
+            else if (!enter && giraffeIsIn)
             {
-                giraffe.GetComponent<Animator>().Play("Exit", 0, 0);
+                giraffe.GetComponent<Animator>().Play("Exit", 0, animTime);
                 giraffeIsIn = false;
             }
         }
