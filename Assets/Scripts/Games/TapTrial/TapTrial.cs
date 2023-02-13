@@ -61,18 +61,18 @@ namespace HeavenStudio.Games.Loaders
                 new GameAction("scroll event", "Scroll Background")
                 {
 
-                    function = delegate { TapTrial.instance.scrollEvent(eventCaller.currentEntity["toggle"], eventCaller.currentEntity["toggle"]); }, 
+                    function = delegate { TapTrial.instance.scrollEvent(eventCaller.currentEntity["toggle"], eventCaller.currentEntity["flash"]); }, 
                     defaultLength = .5f,
                     parameters = new List<Param>()
                     {
-                        new Param("toggle", false, "Scroll FX", "Will scroll"),
-                        new Param("toggle", false, "Flash FX", "Will flash to white"),
+                        new Param("toggle", true, "Scroll FX", "Will scroll"),
+                        new Param("flash", false, "Flash FX", "Will flash to white"),
                     }
                 },
                 new GameAction("giraffe events", "Giraffe Animations")
                 {
 
-                    function = delegate { TapTrial.instance.giraffeEvent(eventCaller.currentEntity["toggle"], eventCaller.currentEntity["instant"]); }, 
+                    function = delegate { TapTrial.instance.giraffeEvent(eventCaller.currentEntity["instant"]); }, 
                     defaultLength = .5f,
                     parameters = new List<Param>()
                     {
@@ -352,17 +352,17 @@ namespace HeavenStudio.Games
             });
         }
 
-        public void giraffeEvent(bool enter, bool instant)
+        public void giraffeEvent(bool instant)
         {
             float animTime = 0;
             if (instant) animTime = 1;
-            if (enter && !giraffeIsIn)
+            if (!giraffeIsIn)
             {
                 giraffe.SetActive(true);
                 giraffe.GetComponent<Animator>().Play("Enter", 0, animTime);
                 giraffeIsIn = true;
             }
-            else if (!enter && giraffeIsIn)
+            else if (giraffeIsIn)
             {
                 giraffe.GetComponent<Animator>().Play("Exit", 0, animTime);
                 giraffeIsIn = false;

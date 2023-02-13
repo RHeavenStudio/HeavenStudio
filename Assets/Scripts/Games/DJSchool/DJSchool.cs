@@ -76,7 +76,7 @@ namespace HeavenStudio.Games.Loaders
                     defaultLength = 0.5f,
                     parameters = new List<Param>()
                     {
-                        new Param("toggle", false, "Radio FX", "Toggle on and off for Radio Effects")
+                        new Param("toggle", true, "Radio FX", "Toggle on and off for Radio Effects")
                     }
                 }
             },
