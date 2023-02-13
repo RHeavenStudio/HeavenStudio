@@ -15,7 +15,7 @@ namespace HeavenStudio.Games.Loaders
         public static Minigame AddGame(EventCaller eventCaller) {
             return new Minigame("builtToScaleDS", "Built To Scale (DS)", "00BB00", true, false, new List<GameAction>()
             {
-                new GameAction("spawn blocks", "Spawn Blocks")
+                new GameAction("spawn blocks", "Widget")
                 {
                     function = delegate {var e = eventCaller.currentEntity; BuiltToScaleDS.instance.MultiplePiano(e.beat, e.length, e["silent"], e["note1"], e["note2"], e["note3"], e["note4"], e["note5"], e["note6"]); },
                     resizable = true,
@@ -30,7 +30,7 @@ namespace HeavenStudio.Games.Loaders
                         new Param("note6", new EntityTypes.Integer(-24, 24, 12), "6th note", "The number of semitones up or down this note should be pitched (This plays together with the 5th note)"),
                     }
                 },
-                new GameAction("play piano", "Play Note (Deprecated)")
+                new GameAction("play piano", "Play Note")
                 {
                     function = delegate { BuiltToScaleDS.instance.PlayPiano(eventCaller.currentEntity.beat, eventCaller.currentEntity.length, eventCaller.currentEntity["type"]); }, 
                     resizable = true, 
