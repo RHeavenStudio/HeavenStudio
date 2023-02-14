@@ -15,21 +15,6 @@ namespace HeavenStudio.Games.Loaders
         public static Minigame AddGame(EventCaller eventCaller) {
             return new Minigame("samuraiSliceNtr", "Samurai Slice (DS)", "00165D", false, false, new List<GameAction>()
             {
-                //backwards compatibility
-                new GameAction("spawn object", "Toss Object")
-                {
-                    function = delegate
-                    {
-                        SamuraiSliceNtr.instance.ObjectIn(eventCaller.currentEntity.beat, eventCaller.currentEntity["type"], (int) eventCaller.currentEntity["valA"]);
-                    },
-                    defaultLength = 8,
-                    parameters = new List<Param>()
-                    {
-                        new Param("type", SamuraiSliceNtr.ObjectType.Melon, "Object", "The object to spawn"),
-                        new Param("valA", new EntityTypes.Integer(0, 30, 1), "Money", "The amount of coins the melon spills out when sliced"),
-                    },
-                    hidden = true
-                },
                 new GameAction("melon", "Melon")
                 {
                     function = delegate
@@ -66,6 +51,21 @@ namespace HeavenStudio.Games.Loaders
                     {
                         new Param("valA", new EntityTypes.Integer(0, 30, 1), "Money", "The amount of coins the demon spills out when sliced"),
                     }
+                },
+                //backwards compatibility
+                new GameAction("spawn object", "Toss Object")
+                {
+                    function = delegate
+                    {
+                        SamuraiSliceNtr.instance.ObjectIn(eventCaller.currentEntity.beat, eventCaller.currentEntity["type"], (int) eventCaller.currentEntity["valA"]);
+                    },
+                    defaultLength = 8,
+                    parameters = new List<Param>()
+                    {
+                        new Param("type", SamuraiSliceNtr.ObjectType.Melon, "Object", "The object to spawn"),
+                        new Param("valA", new EntityTypes.Integer(0, 30, 1), "Money", "The amount of coins the melon spills out when sliced"),
+                    },
+                    hidden = true
                 },
             },
             new List<string>() {"ntr", "normal"},
