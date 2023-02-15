@@ -15,10 +15,10 @@ namespace HeavenStudio.Editor.Track
         [SerializeField] private RectTransform raycastRect;
 
         private float startPosX;
-        private bool moving = false;
-
-        public bool hovering;
         private float lastPosX;
+
+        public bool moving = false;
+        public bool hovering;
 
         private void Start()
         {

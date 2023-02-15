@@ -524,6 +524,7 @@ namespace HeavenStudio.Editor
                 GameManager.instance.OverlayCamera.rect = new Rect(0, 0, 1, 1);
                 EditorCamera.rect = new Rect(0, 0, 1, 1);
             }
+            Timeline.AutoBtnUpdate();
         }
 
         private void UpdateEditorStatus(bool updateTime)
