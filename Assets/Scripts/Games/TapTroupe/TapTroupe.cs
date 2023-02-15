@@ -10,8 +10,13 @@ namespace HeavenStudio.Games.Loaders
     {
         public static Minigame AddGame(EventCaller eventCaller)
         {
-            return new Minigame("tapTroupe", "Tap Troupe \n<color=#eb5454>[INITIALIZATION ONLY]</color>", "TAPTAP", false, false, new List<GameAction>()
+            return new Minigame("tapTroupe", "Tap Troupe \n<color=#eb5454>[WIP]</color>", "TAPTAP", false, false, new List<GameAction>()
             {
+                new GameAction("bop", "Bop")
+                {
+                    function = delegate {TapTroupe.instance.Bop(); },
+                    defaultLength = 1f
+                }
             });
         }
     }
@@ -19,13 +24,34 @@ namespace HeavenStudio.Games.Loaders
 
 namespace HeavenStudio.Games
 {
+    using Scripts_TapTroupe;
     public class TapTroupe : Minigame
     {
+        [Header("Components")]
+        [SerializeField] TapTroupeTapper playerTapper;
+        [SerializeField] TapTroupeCorner playerCorner;
+        [SerializeField] List<TapTroupeTapper> npcTappers = new List<TapTroupeTapper>();
+        [SerializeField] List<TapTroupeCorner> npcCorners = new List<TapTroupeCorner>();
+
         public static TapTroupe instance;
 
         void Awake()
         {
             instance = this;
+        }
+
+        public void Bop()
+        {
+            playerTapper.Bop();
+            playerCorner.Bop();
+            foreach (var tapper in npcTappers)
+            {
+                tapper.Bop();
+            }
+            foreach (var corner in npcCorners)
+            {
+                corner.Bop();
+            }
         }
     }
 }
