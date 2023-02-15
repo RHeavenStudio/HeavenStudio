@@ -37,6 +37,11 @@ namespace HeavenStudio.Games
 
         public static TapTroupe instance;
 
+        void OnDestroy()
+        {
+            if (queuedInputs.Count > 0) queuedInputs.Clear();
+        }
+
         void Awake()
         {
             instance = this;
