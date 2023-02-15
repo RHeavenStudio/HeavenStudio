@@ -171,7 +171,6 @@ namespace HeavenStudio
         {
             MasterVolume = value;
             AudioListener.volume = MasterVolume;
-            PersistentDataManager.gameSettings.masterVolume = MasterVolume;
         }
 
         void OnApplicationQuit()
