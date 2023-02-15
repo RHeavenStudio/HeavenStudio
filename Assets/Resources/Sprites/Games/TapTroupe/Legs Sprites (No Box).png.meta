@@ -4,58 +4,58 @@ TextureImporter:
   internalIDToNameTable:
   - first:
       213: -4641733496002515713
-    second: Legs Sprites (No Box)_0
+    second: Leg0
   - first:
       213: -9145532882579257181
-    second: Legs Sprites (No Box)_1
+    second: Foot4
   - first:
       213: 8511344029435312572
-    second: Legs Sprites (No Box)_2
+    second: Foot3
   - first:
       213: 9189720795602130707
-    second: Legs Sprites (No Box)_3
+    second: Foot2
   - first:
       213: -6923575079645211495
-    second: Legs Sprites (No Box)_4
+    second: Foot1
   - first:
       213: -3385257089546153362
-    second: Legs Sprites (No Box)_5
+    second: Foot0
   - first:
       213: 2450383141033040148
-    second: Legs Sprites (No Box)_6
+    second: SmallFootShadow
   - first:
       213: -8134523177817570407
-    second: Legs Sprites (No Box)_7
+    second: InbetweenFeetShadow
   - first:
       213: 846812011896355152
-    second: Legs Sprites (No Box)_8
+    second: FootShadow
   - first:
       213: 1783687764055413471
-    second: Legs Sprites (No Box)_9
+    second: BigImpact
   - first:
       213: -5509037925721166925
-    second: Legs Sprites (No Box)_10
+    second: Leg1
   - first:
       213: 3234351885095589307
-    second: Legs Sprites (No Box)_11
+    second: Leg2
   - first:
       213: 1985058571128900078
-    second: Legs Sprites (No Box)_12
+    second: Leg3
   - first:
       213: -3165301734577479428
-    second: Legs Sprites (No Box)_13
+    second: Stripes
   - first:
       213: -321844320929161326
-    second: Legs Sprites (No Box)_14
+    second: SmallImpact
   - first:
       213: -4241721637628489623
-    second: Legs Sprites (No Box)_15
+    second: White
   - first:
       213: 3685669366114683922
-    second: Legs Sprites (No Box)_16
+    second: Black
   - first:
       213: -3333983173375238055
-    second: Legs Sprites (No Box)_17
+    second: Foreground
   externalObjects: {}
   serializedVersion: 11
   mipmaps:
@@ -145,7 +145,7 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: Legs Sprites (No Box)_0
+      name: Leg0
       rect:
         serializedVersion: 2
         x: 0
@@ -153,7 +153,7 @@ TextureImporter:
         width: 247
         height: 1455
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
@@ -166,7 +166,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Legs Sprites (No Box)_1
+      name: Foot4
       rect:
         serializedVersion: 2
         x: 2036
@@ -174,7 +174,7 @@ TextureImporter:
         width: 239
         height: 576
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
@@ -187,7 +187,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Legs Sprites (No Box)_2
+      name: Foot3
       rect:
         serializedVersion: 2
         x: 2575
@@ -195,7 +195,7 @@ TextureImporter:
         width: 299
         height: 520
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
@@ -208,7 +208,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Legs Sprites (No Box)_3
+      name: Foot2
       rect:
         serializedVersion: 2
         x: 3198
@@ -216,7 +216,7 @@ TextureImporter:
         width: 285
         height: 404
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
@@ -229,7 +229,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Legs Sprites (No Box)_4
+      name: Foot1
       rect:
         serializedVersion: 2
         x: 3778
@@ -237,7 +237,7 @@ TextureImporter:
         width: 285
         height: 348
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
@@ -250,7 +250,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Legs Sprites (No Box)_5
+      name: Foot0
       rect:
         serializedVersion: 2
         x: 4301
@@ -258,7 +258,7 @@ TextureImporter:
         width: 367
         height: 255
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
@@ -271,7 +271,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Legs Sprites (No Box)_6
+      name: SmallFootShadow
       rect:
         serializedVersion: 2
         x: 4835
@@ -279,7 +279,7 @@ TextureImporter:
         width: 260
         height: 171
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
@@ -292,7 +292,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Legs Sprites (No Box)_7
+      name: InbetweenFeetShadow
       rect:
         serializedVersion: 2
         x: 5213
@@ -300,7 +300,7 @@ TextureImporter:
         width: 291
         height: 129
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
@@ -313,7 +313,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Legs Sprites (No Box)_8
+      name: FootShadow
       rect:
         serializedVersion: 2
         x: 4379
@@ -321,7 +321,7 @@ TextureImporter:
         width: 309
         height: 291
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
@@ -334,7 +334,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Legs Sprites (No Box)_9
+      name: BigImpact
       rect:
         serializedVersion: 2
         x: 4940
@@ -342,7 +342,7 @@ TextureImporter:
         width: 488
         height: 393
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
@@ -355,7 +355,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Legs Sprites (No Box)_10
+      name: Leg1
       rect:
         serializedVersion: 2
         x: 498
@@ -363,7 +363,7 @@ TextureImporter:
         width: 218
         height: 1449
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
@@ -376,7 +376,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Legs Sprites (No Box)_11
+      name: Leg2
       rect:
         serializedVersion: 2
         x: 967
@@ -384,7 +384,7 @@ TextureImporter:
         width: 264
         height: 1428
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
@@ -397,7 +397,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Legs Sprites (No Box)_12
+      name: Leg3
       rect:
         serializedVersion: 2
         x: 1477
@@ -405,7 +405,7 @@ TextureImporter:
         width: 218
         height: 1449
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
@@ -418,7 +418,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Legs Sprites (No Box)_13
+      name: Stripes
       rect:
         serializedVersion: 2
         x: 4549
@@ -426,7 +426,7 @@ TextureImporter:
         width: 118
         height: 337
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
@@ -439,7 +439,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Legs Sprites (No Box)_14
+      name: SmallImpact
       rect:
         serializedVersion: 2
         x: 4997
@@ -447,7 +447,7 @@ TextureImporter:
         width: 356
         height: 286
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
@@ -460,7 +460,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Legs Sprites (No Box)_15
+      name: White
       rect:
         serializedVersion: 2
         x: 5156
@@ -468,7 +468,7 @@ TextureImporter:
         width: 145
         height: 145
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
@@ -481,7 +481,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Legs Sprites (No Box)_16
+      name: Black
       rect:
         serializedVersion: 2
         x: 5377
@@ -489,7 +489,7 @@ TextureImporter:
         width: 147
         height: 151
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
@@ -502,7 +502,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Legs Sprites (No Box)_17
+      name: Foreground
       rect:
         serializedVersion: 2
         x: 3370
@@ -510,7 +510,7 @@ TextureImporter:
         width: 2154
         height: 656
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
