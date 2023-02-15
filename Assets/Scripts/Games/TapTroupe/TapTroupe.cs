@@ -32,6 +32,8 @@ namespace HeavenStudio.Games
         [SerializeField] TapTroupeCorner playerCorner;
         [SerializeField] List<TapTroupeTapper> npcTappers = new List<TapTroupeTapper>();
         [SerializeField] List<TapTroupeCorner> npcCorners = new List<TapTroupeCorner>();
+        [Header("Properties")]
+        private static List<float> queuedInputs = new List<float>();
 
         public static TapTroupe instance;
 
