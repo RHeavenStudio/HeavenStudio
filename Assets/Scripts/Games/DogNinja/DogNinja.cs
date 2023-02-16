@@ -139,29 +139,24 @@ namespace HeavenStudio.Games
                 DogAnim.Play("Bop", 0, 0);
             };
 
-            
             if (PlayerInput.Pressed())
             {
                 System.Random rd = new System.Random();
-                string Slice;
+                string slice;
                 int LorR = rd.Next(0,2);
                 if (LorR < 1) {
-                    Slice = "SliceRight";
+                    slice = "SliceRight";
                 } else {
-                    Slice = "SliceLeft";
+                    slice = "SliceLeft";
                 };
 
-                DogAnim.Play(Slice, 0, 0);
-            };
-
-            if (!Conductor.instance.isPlaying) {
-
+                DogAnim.Play(slice, 0, 0);
             };
         }
 
         public void Bop(float beat, bool bop, bool manual)
         {
-            if (manual) { DogAnim.Play("Bop", 0, 0); };
+            if (manual) DogAnim.Play("Bop", 0, 0);
 
             if (bop) {
                 dontBop = false;

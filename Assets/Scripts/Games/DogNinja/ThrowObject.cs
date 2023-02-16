@@ -71,6 +71,12 @@ namespace HeavenStudio.Games.Scripts_DogNinja
             if (flyPos > 1f) {
                 GameObject.Destroy(gameObject);
             };
+
+            // destroy object when game is stopped, but not when it's paused. 
+            // no other game has this??? am i missing something here
+            if (!Conductor.instance.isPlaying && !Conductor.instance.isPaused) {
+                GameObject.Destroy(gameObject);
+            };
         }
 
         private void Hit(PlayerActionEvent caller, float state)
