@@ -19,7 +19,7 @@ namespace HeavenStudio.Games.Loaders
                     resizable = true,
                     parameters = new List<Param>()
                     {
-                        new Param("startTap", true, "Start Tap Voice Line", "Whether or not it should say -Tap!- on the first step.")
+                        new Param("startTap", false, "Start Tap Voice Line", "Whether or not it should say -Tap!- on the first step.")
                     }
                 },
                 new GameAction("bop", "Bop")
