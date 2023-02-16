@@ -14,7 +14,7 @@ namespace HeavenStudio.Games.Loaders
             {
                 new GameAction("stepping", "Stepping")
                 {
-                    preFunction = delegate { var e = eventCaller.currentEntity; TapTroupe.Stepping(e.beat, e.length, e["startTap"]); },
+                    preFunction = delegate { var e = eventCaller.currentEntity; TapTroupe.PreStepping(e.beat, e.length, e["startTap"]); },
                     defaultLength = 4f,
                     resizable = true,
                     parameters = new List<Param>()
@@ -43,14 +43,21 @@ namespace HeavenStudio.Games
         [SerializeField] List<TapTroupeTapper> npcTappers = new List<TapTroupeTapper>();
         [SerializeField] List<TapTroupeCorner> npcCorners = new List<TapTroupeCorner>();
         [Header("Properties")]
-        private static List<float> queuedInputs = new List<float>();
+        private static List<QueuedSteps> queuedSteps = new List<QueuedSteps>();
+        public struct QueuedSteps
+        {
+            public float beat;
+            public float length;
+            public bool startTap;
+
+        }
         private int stepSound = 1;
 
         public static TapTroupe instance;
 
         void OnDestroy()
         {
-            if (queuedInputs.Count > 0) queuedInputs.Clear();
+            if (queuedSteps.Count > 0) queuedSteps.Clear();
         }
 
         void Awake()
@@ -58,40 +65,58 @@ namespace HeavenStudio.Games
             instance = this;
         }
 
-        public static void Stepping(float beat, float length, bool startTap)
+        void Update()
+        {
+            var cond = Conductor.instance;
+            if (cond.isPlaying && !cond.isPaused)
+            {
+                if (queuedSteps.Count > 0)
+                {
+                    foreach (var step in queuedSteps)
+                    {
+                        Stepping(step.beat, step.length, step.startTap);
+                    }
+                    queuedSteps.Clear();
+                }
+            }
+        }
+
+        public static void PreStepping(float beat, float length, bool startTap)
         {
             if (GameManager.instance.currentGame == "tapTroupe")
             {
-                for (int i = 0; i < length; i++)
-                {
-                    TapTroupe.instance.ScheduleInput(beat - 1, 1 + i, InputType.STANDARD_DOWN, TapTroupe.instance.JustStep, TapTroupe.instance.MissStep, TapTroupe.instance.Nothing);
-                    BeatAction.New(instance.gameObject, new List<BeatAction.Action>()
-                    {
-                        new BeatAction.Action(beat + i, delegate
-                        {
-                            TapTroupe.instance.NPCStep();
-                        })
-                    });
-                }
-                BeatAction.New(instance.gameObject, new List<BeatAction.Action>()
-                {
-                    new BeatAction.Action(beat - 1, delegate 
-                    { 
-                        TapTroupe.instance.NPCStep(false, false);
-                        TapTroupe.instance.playerTapper.Step(false, false);
-                        TapTroupe.instance.playerCorner.Bop();
-                    }),
-                    new BeatAction.Action(beat, delegate { if (startTap) Jukebox.PlayOneShotGame("tapTroupe/startTap"); })
-                });
+                TapTroupe.instance.Stepping(beat, length, startTap);
 
             }
             else
             {
-                for (int i = 0; i < length; i++)
-                {
-                    queuedInputs.Add(beat + i);
-                }
+                queuedSteps.Add(new QueuedSteps { beat = beat, length = length, startTap = startTap });
             }
+        }
+
+        public void Stepping(float beat, float length, bool startTap)
+        {
+            for (int i = 0; i < length; i++)
+            {
+                TapTroupe.instance.ScheduleInput(beat - 1, 1 + i, InputType.STANDARD_DOWN, TapTroupe.instance.JustStep, TapTroupe.instance.MissStep, TapTroupe.instance.Nothing);
+                BeatAction.New(instance.gameObject, new List<BeatAction.Action>()
+                {
+                    new BeatAction.Action(beat + i, delegate
+                    {
+                        TapTroupe.instance.NPCStep();
+                    })
+                });
+            }
+            BeatAction.New(instance.gameObject, new List<BeatAction.Action>()
+            {
+                new BeatAction.Action(beat - 1, delegate
+                {
+                    TapTroupe.instance.NPCStep(false, false);
+                    TapTroupe.instance.playerTapper.Step(false, false);
+                    TapTroupe.instance.playerCorner.Bop();
+                }),
+                new BeatAction.Action(beat, delegate { if (startTap) Jukebox.PlayOneShotGame("tapTroupe/startTap"); })
+            });
         }
 
         public void Bop()
