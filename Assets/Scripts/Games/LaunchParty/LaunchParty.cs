@@ -50,7 +50,8 @@ namespace HeavenStudio.Games.Loaders
                 },
                 new GameAction("bell", "Bell")
                 {
-                    preFunction = delegate { var e = eventCaller.currentEntity; LaunchParty.instance.LaunchBell(e.beat, e["offset"], e["note1"], e["note2"], e["note3"], e["note4"], e["note5"], e["note6"], e["note7"], e["note8"]); },
+                    preFunction = delegate { var e = eventCaller.currentEntity; LaunchParty.instance.LaunchBell(e.beat, e["offset"], e["note1"], e["note2"], e["note3"], e["note4"], e["note5"], e["note6"], e["note7"], e["note8"],
+                        e["note9"]); },
                     defaultLength = 3f,
                     parameters = new List<Param>()
                     {
@@ -62,7 +63,8 @@ namespace HeavenStudio.Games.Loaders
                         new Param("note5", new EntityTypes.Integer(-24, 24, 7), "5th Note", "The number of semitones up or down this note should be pitched"),
                         new Param("note6", new EntityTypes.Integer(-24, 24, 9), "6th Note", "The number of semitones up or down this note should be pitched"),
                         new Param("note7", new EntityTypes.Integer(-24, 24, 11), "7th Note", "The number of semitones up or down this note should be pitched"),
-                        new Param("note8", new EntityTypes.Integer(-24, 24, 12), "8th Note", "The number of semitones up or down this note should be pitched")
+                        new Param("note8", new EntityTypes.Integer(-24, 24, 12), "8th Note", "The number of semitones up or down this note should be pitched"),
+                        new Param("note9", new EntityTypes.Integer(-24, 24, 0), "9th Note (Launch)", "The number of semitones up or down this note should be pitched"),
                     }
                 },
                 new GameAction("bowlingPin", "Bowling Pin")
@@ -157,6 +159,7 @@ namespace HeavenStudio.Games
         [SerializeField] Transform launchPad;
         [SerializeField] Transform spawnPad;
         [SerializeField] Scroll scrollScript;
+        [SerializeField] Animator lensFlareAnim;
         public Animator launchPadSpriteAnim;
 
         [Header("Variables")]
@@ -184,6 +187,7 @@ namespace HeavenStudio.Games
         void Awake()
         {
             instance = this;
+            lensFlareAnim.Play("Flashing", 0, 0);
             var posEvents = EventCaller.GetAllInGameManagerList("launchParty", new string[] { "posMove" });
             List<DynamicBeatmap.DynamicEntity> tempPosEvents = new List<DynamicBeatmap.DynamicEntity>();
             for (int i = 0; i < posEvents.Count; i++)
@@ -353,7 +357,7 @@ namespace HeavenStudio.Games
             });
         }
 
-        public void LaunchBell(float beat, float beatOffset, int noteOne, int noteTwo, int noteThree, int noteFour, int noteFive, int noteSix, int noteSeven, int noteEight)
+        public void LaunchBell(float beat, float beatOffset, int noteOne, int noteTwo, int noteThree, int noteFour, int noteFive, int noteSix, int noteSeven, int noteEight, int noteNine)
         {
             GameObject spawnedRocket = Instantiate(bell, spawnPad, false);
             var rocketScript = spawnedRocket.GetComponent<LaunchPartyRocket>();
@@ -365,6 +369,7 @@ namespace HeavenStudio.Games
             rocketScript.pitches.Add(Mathf.Pow(2f, (1f / 12f) * noteSix) * Conductor.instance.musicSource.pitch);
             rocketScript.pitches.Add(Mathf.Pow(2f, (1f / 12f) * noteSeven) * Conductor.instance.musicSource.pitch);
             rocketScript.pitches.Add(Mathf.Pow(2f, (1f / 12f) * noteEight) * Conductor.instance.musicSource.pitch);
+            rocketScript.pitches.Add(Mathf.Pow(2f, (1f / 12f) * noteNine) * Conductor.instance.musicSource.pitch);
             rocketScript.InitBell(beat);
 
             BeatAction.New(instance.gameObject, new List<BeatAction.Action>()

@@ -961,6 +961,7 @@ MonoBehaviour:
   launchPad: {fileID: 1878559053619328651}
   spawnPad: {fileID: 6143638777909239727}
   scrollScript: {fileID: 3015934657586124713}
+  lensFlareAnim: {fileID: 3332192496224597064}
   launchPadSpriteAnim: {fileID: 79675169615891583}
 --- !u!1 &1125379078595576856
 GameObject:
@@ -18826,8 +18827,9 @@ GameObject:
   m_Component:
   - component: {fileID: 1623436251699450011}
   - component: {fileID: 5195062573866471298}
+  - component: {fileID: 3332192496224597064}
   m_Layer: 0
-  m_Name: Flash
+  m_Name: LensFlareLaunchParty
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -18898,6 +18900,25 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
+--- !u!95 &3332192496224597064
+Animator:
+  serializedVersion: 3
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8794130425296205501}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: 22b8530135191f54cb3dcbe11385b234, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorControllerStateOnDisable: 0
 --- !u!1 &8803410267235606589
 GameObject:
   m_ObjectHideFlags: 0

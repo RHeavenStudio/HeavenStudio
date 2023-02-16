@@ -18,7 +18,7 @@ namespace HeavenStudio.Games.Scripts_LaunchParty
         [SerializeField] GameObject number;
         Animator numberAnim;
         private LaunchParty game;
-        private bool noInput;
+        private bool noInput = true;
 
         void Awake()
         {
@@ -44,6 +44,7 @@ namespace HeavenStudio.Games.Scripts_LaunchParty
         public void Rise()
         {
             anim.DoScaledAnimationAsync("RocketRise", 0.5f);
+            noInput = false;
         }
 
         public void InitFamilyRocket(float beat)
@@ -165,8 +166,20 @@ namespace HeavenStudio.Games.Scripts_LaunchParty
         void JustFamilyRocket(PlayerActionEvent caller, float state)
         {
             noInput = true;
+            if (isPlaying(anim, "RocketBarelyLeft") || isPlaying(anim, "RocketBarelyRight")) 
+            {
+                number.SetActive(false);
+                anim.SetBool("CanRise", false);
+                BeatAction.New(gameObject, new List<BeatAction.Action>()
+                {
+                    new BeatAction.Action(caller.startBeat + caller.timer + 1f, delegate { GameObject.Destroy(gameObject); }),
+                });
+                return;
+            }
+
             if (state >= 1f || state <= -1f)
             {
+                number.SetActive(false);
                 Jukebox.PlayOneShotGame("launchParty/miss");
                 Jukebox.PlayOneShotGame("launchParty/rocket_endBad");
                 string leftOrRight = (UnityEngine.Random.Range(1, 3) == 1) ? "Left" : "Right";
@@ -199,6 +212,16 @@ namespace HeavenStudio.Games.Scripts_LaunchParty
         void JustPartyCracker(PlayerActionEvent caller, float state)
         {
             noInput = true;
+            if (isPlaying(anim, "RocketBarelyLeft") || isPlaying(anim, "RocketBarelyRight"))
+            {
+                number.SetActive(false);
+                anim.SetBool("CanRise", false);
+                BeatAction.New(gameObject, new List<BeatAction.Action>()
+                {
+                    new BeatAction.Action(caller.startBeat + caller.timer + 1f, delegate { GameObject.Destroy(gameObject); }),
+                });
+                return;
+            }
             if (state >= 1f || state <= -1f)
             {
                 string leftOrRight = (UnityEngine.Random.Range(1, 3) == 1) ? "Left" : "Right";
@@ -233,6 +256,16 @@ namespace HeavenStudio.Games.Scripts_LaunchParty
         void JustBell(PlayerActionEvent caller, float state)
         {
             noInput = true;
+            if (isPlaying(anim, "RocketBarelyLeft") || isPlaying(anim, "RocketBarelyRight"))
+            {
+                number.SetActive(false);
+                anim.SetBool("CanRise", false);
+                BeatAction.New(gameObject, new List<BeatAction.Action>()
+                {
+                    new BeatAction.Action(caller.startBeat + caller.timer + 1f, delegate { GameObject.Destroy(gameObject); }),
+                });
+                return;
+            }
             if (state >= 1f || state <= -1f)
             {
                 string leftOrRight = (UnityEngine.Random.Range(1, 3) == 1) ? "Left" : "Right";
@@ -255,7 +288,7 @@ namespace HeavenStudio.Games.Scripts_LaunchParty
             MultiSound.Play(new MultiSound.Sound[]
             {
                 new MultiSound.Sound("launchParty/bell_note", caller.startBeat + caller.timer, pitches[7]),
-                new MultiSound.Sound("launchParty/bell_blast", caller.startBeat + caller.timer),
+                new MultiSound.Sound("launchParty/bell_blast", caller.startBeat + caller.timer, pitches[8]),
             }, forcePlay: true);
             BeatAction.New(gameObject, new List<BeatAction.Action>()
             {
@@ -267,6 +300,16 @@ namespace HeavenStudio.Games.Scripts_LaunchParty
         void JustBowlingPin(PlayerActionEvent caller, float state)
         {
             noInput = true;
+            if (isPlaying(anim, "RocketBarelyLeft") || isPlaying(anim, "RocketBarelyRight"))
+            {
+                number.SetActive(false);
+                anim.SetBool("CanRise", false);
+                BeatAction.New(gameObject, new List<BeatAction.Action>()
+                {
+                    new BeatAction.Action(caller.startBeat + caller.timer + 1f, delegate { GameObject.Destroy(gameObject); }),
+                });
+                return;
+            }
             if (state >= 1f || state <= -1f)
             {
                 string leftOrRight = (UnityEngine.Random.Range(1, 3) == 1) ? "Left" : "Right";
