@@ -345,7 +345,7 @@ namespace HeavenStudio.Games
                 {
                     new BeatAction.Action(spawnBeat, delegate
                     {
-                        if (!instance.isPlaying(instance.ballTransporterLeftNPC.GetComponent<Animator>(), "BallTransporterLeftOpened") && !instance.intervalStarted && instance.ballTriggerSetInterval)
+                        if (!instance.ballTransporterLeftNPC.GetComponent<Animator>().IsPlayingAnimationName("BallTransporterLeftOpened") && !instance.intervalStarted && instance.ballTriggerSetInterval)
                         {
                             instance.ballTransporterLeftNPC.GetComponent<Animator>().Play("BallTransporterLeftOpen", 0, 0);
                             instance.ballTransporterRightNPC.GetComponent<Animator>().Play("BallTransporterRightOpen", 0, 0);
@@ -449,7 +449,7 @@ namespace HeavenStudio.Games
                 {
                     new BeatAction.Action(beat, delegate
                     {
-                        if (!instance.isPlaying(instance.ballTransporterLeftNPC.GetComponent<Animator>(), "BallTransporterLeftOpened"))
+                        if (!instance.ballTransporterLeftNPC.GetComponent<Animator>().IsPlayingAnimationName("BallTransporterLeftOpened"))
                         {
                             instance.ballTransporterLeftNPC.GetComponent<Animator>().Play("BallTransporterLeftOpen", 0, 0);
                             instance.ballTransporterRightNPC.GetComponent<Animator>().Play("BallTransporterRightOpen", 0, 0);
@@ -797,15 +797,5 @@ namespace HeavenStudio.Games
         }
 
         void Nothing (PlayerActionEvent caller) {}
-
-        //Function to make life for my fingers and my and your eyes easier
-        bool isPlaying(Animator anim, string stateName)
-        {
-            if (anim.GetCurrentAnimatorStateInfo(0).IsName(stateName) &&
-                    anim.GetCurrentAnimatorStateInfo(0).normalizedTime < 1.0f)
-                return true;
-            else
-                return false;
-        }
     }
 }

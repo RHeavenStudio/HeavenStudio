@@ -37,7 +37,7 @@ namespace HeavenStudio.Games.Scripts_LaunchParty
                 Jukebox.PlayOneShotGame("launchParty/miss");
                 Jukebox.PlayOneShotGame("launchParty/rocket_endBad");
                 string leftOrRight = (UnityEngine.Random.Range(1, 3) == 1) ? "Left" : "Right";
-                if (!isPlaying(anim, "RocketBarelyLeft") && !isPlaying(anim, "RocketBarelyRight")) anim.Play("RocketBarely" + leftOrRight, 0, 0);
+                if (!anim.IsPlayingAnimationName("RocketBarelyLeft") && !anim.IsPlayingAnimationName("RocketBarelyRight")) anim.Play("RocketBarely" + leftOrRight, 0, 0);
                 game.ScoreMiss(0.5);
             }
         }
@@ -167,7 +167,7 @@ namespace HeavenStudio.Games.Scripts_LaunchParty
         void JustFamilyRocket(PlayerActionEvent caller, float state)
         {
             noInput = true;
-            if (isPlaying(anim, "RocketBarelyLeft") || isPlaying(anim, "RocketBarelyRight")) 
+            if (anim.IsPlayingAnimationName("RocketBarelyLeft") || anim.IsPlayingAnimationName("RocketBarelyRight")) 
             {
                 number.SetActive(false);
                 anim.SetBool("CanRise", false);
@@ -213,7 +213,7 @@ namespace HeavenStudio.Games.Scripts_LaunchParty
         void JustPartyCracker(PlayerActionEvent caller, float state)
         {
             noInput = true;
-            if (isPlaying(anim, "RocketBarelyLeft") || isPlaying(anim, "RocketBarelyRight"))
+            if (anim.IsPlayingAnimationName("RocketBarelyLeft") || anim.IsPlayingAnimationName("RocketBarelyRight"))
             {
                 number.SetActive(false);
                 anim.SetBool("CanRise", false);
@@ -257,7 +257,7 @@ namespace HeavenStudio.Games.Scripts_LaunchParty
         void JustBell(PlayerActionEvent caller, float state)
         {
             noInput = true;
-            if (isPlaying(anim, "RocketBarelyLeft") || isPlaying(anim, "RocketBarelyRight"))
+            if (anim.IsPlayingAnimationName("RocketBarelyLeft") || anim.IsPlayingAnimationName("RocketBarelyRight"))
             {
                 number.SetActive(false);
                 anim.SetBool("CanRise", false);
@@ -301,7 +301,7 @@ namespace HeavenStudio.Games.Scripts_LaunchParty
         void JustBowlingPin(PlayerActionEvent caller, float state)
         {
             noInput = true;
-            if (isPlaying(anim, "RocketBarelyLeft") || isPlaying(anim, "RocketBarelyRight"))
+            if (anim.IsPlayingAnimationName("RocketBarelyLeft") || anim.IsPlayingAnimationName("RocketBarelyRight"))
             {
                 number.SetActive(false);
                 anim.SetBool("CanRise", false);
@@ -353,15 +353,6 @@ namespace HeavenStudio.Games.Scripts_LaunchParty
             {
                 new BeatAction.Action(caller.startBeat + caller.timer + 1f, delegate { GameObject.Destroy(gameObject); }),
             });
-        }
-
-        bool isPlaying(Animator anim, string stateName)
-        {
-            if (anim.GetCurrentAnimatorStateInfo(0).IsName(stateName) &&
-                    anim.GetCurrentAnimatorStateInfo(0).normalizedTime < 1.0f)
-                return true;
-            else
-                return false;
         }
 
         void Nothing(PlayerActionEvent caller) {}
