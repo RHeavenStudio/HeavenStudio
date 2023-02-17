@@ -56,6 +56,8 @@ namespace HeavenStudio.Games
         [Header("Properties")]
         private static List<QueuedSteps> queuedSteps = new List<QueuedSteps>();
         private static List<QueuedTaps> queuedTaps = new List<QueuedTaps>();
+        public static bool prepareTap;
+        private bool tapping;
         public struct QueuedSteps
         {
             public float beat;
@@ -76,6 +78,7 @@ namespace HeavenStudio.Games
         {
             if (queuedSteps.Count > 0) queuedSteps.Clear();
             if (queuedTaps.Count > 0) queuedTaps.Clear();
+            prepareTap = false;
         }
 
         void Awake()
@@ -137,6 +140,7 @@ namespace HeavenStudio.Games
             {
                 new BeatAction.Action(beat - 1, delegate
                 {
+                    if (tapping) return;
                     TapTroupe.instance.NPCStep(false, false);
                     TapTroupe.instance.playerTapper.Step(false, false);
                     TapTroupe.instance.playerCorner.Bop();
@@ -152,6 +156,11 @@ namespace HeavenStudio.Games
                 new MultiSound.Sound("tapTroupe/tapReady1", beat - 2f),
                 new MultiSound.Sound("tapTroupe/tapReady2", beat - 1f),
             }, forcePlay: true);
+            BeatAction.New(instance.gameObject, new List<BeatAction.Action>()
+            {
+                new BeatAction.Action(beat - 1.1f, delegate { prepareTap = true; }),
+                new BeatAction.Action(beat, delegate { prepareTap = false; })
+            });
             if (GameManager.instance.currentGame == "tapTroupe")
             {
                 TapTroupe.instance.Tapping(beat, length, okay);
@@ -180,22 +189,80 @@ namespace HeavenStudio.Games
                 {
                     soundToPlay = "startTap";
                     beatToSpawn = Mathf.Ceil(beat + i);
+                    BeatAction.New(instance.gameObject, new List<BeatAction.Action>()
+                    {
+                        new BeatAction.Action(beatToSpawn, delegate { NPCTap(TapTroupeTapper.TapAnim.LastTap, true, false);}),
+                        new BeatAction.Action(beatToSpawn + 0.1f, delegate { tapping = false; })
+                    });
                 }
                 else if (i + 1.5f >= actualLength)
                 {
                     soundToPlay = "tapvoice2";
+                    BeatAction.New(instance.gameObject, new List<BeatAction.Action>()
+                    {
+                        new BeatAction.Action(beatToSpawn, delegate { NPCTap(TapTroupeTapper.TapAnim.Tap, true, false); })
+                    });
                 }
                 else if (i + 2.25f >= actualLength)
                 {
                     soundToPlay = "tapvoice1";
+                    if (actualLength == 2.25f)
+                    {
+                        BeatAction.New(instance.gameObject, new List<BeatAction.Action>()
+                        {
+                            new BeatAction.Action(beatToSpawn, delegate { NPCTap(TapTroupeTapper.TapAnim.Tap); })
+                        });
+                    }
+                    else
+                    {
+                        BeatAction.New(instance.gameObject, new List<BeatAction.Action>()
+                        {
+                            new BeatAction.Action(beatToSpawn, delegate { NPCTap(TapTroupeTapper.TapAnim.Tap, true, false); })
+                        });
+                    }
                 }
-                else if (secondBam)
+                else
                 {
-                    soundToPlay = "bamvoice2";
+                    if (secondBam) soundToPlay = "bamvoice2";
+                    if (i + 3f >= actualLength)
+                    {
+                        if (actualLength == 3f)
+                        {
+                            BeatAction.New(instance.gameObject, new List<BeatAction.Action>()
+                            {
+                                new BeatAction.Action(beatToSpawn, delegate { NPCTap(TapTroupeTapper.TapAnim.Tap); })
+                            });
+                        }
+                        else
+                        {
+                            BeatAction.New(instance.gameObject, new List<BeatAction.Action>()
+                            {
+                                new BeatAction.Action(beatToSpawn, delegate { NPCTap(TapTroupeTapper.TapAnim.BamTapReady); })
+                            });
+                        }
+                    }
+                    else if (i == 0)
+                    {
+                        BeatAction.New(instance.gameObject, new List<BeatAction.Action>()
+                        {
+                            new BeatAction.Action(beatToSpawn, delegate { NPCTap(TapTroupeTapper.TapAnim.BamReady, true, false); })
+                        });
+                    }
+                    else
+                    {
+                        BeatAction.New(instance.gameObject, new List<BeatAction.Action>()
+                        {
+                            new BeatAction.Action(beatToSpawn, delegate { NPCTap(TapTroupeTapper.TapAnim.Bam); })
+                        });
+                    }
                 }
                 soundsToPlay.Add(new MultiSound.Sound($"tapTroupe/{soundToPlay}", beatToSpawn));
                 secondBam = !secondBam;
             }
+            BeatAction.New(instance.gameObject, new List<BeatAction.Action>()
+            {
+                new BeatAction.Action(beat, delegate { tapping = true; })
+            });
             MultiSound.Play(soundsToPlay.ToArray(), forcePlay: true);
         }
 
@@ -218,6 +285,18 @@ namespace HeavenStudio.Games
             foreach (var tapper in npcTappers)
             {
                 tapper.Step(hit, switchFeet);
+            }
+            foreach (var corner in npcCorners)
+            {
+                corner.Bop();
+            }
+        }
+
+        public void NPCTap(TapTroupeTapper.TapAnim animType, bool hit = true, bool switchFeet = true)
+        {
+            foreach (var tapper in npcTappers)
+            {
+                tapper.Tap(animType, hit, switchFeet);
             }
             foreach (var corner in npcCorners)
             {

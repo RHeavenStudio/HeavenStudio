@@ -10,6 +10,14 @@ namespace HeavenStudio.Games.Scripts_TapTroupe
         public Animator anim;
         [SerializeField] GameObject impactStep;
         private TapTroupe game;
+        public enum TapAnim
+        {
+            Bam,
+            Tap,
+            BamReady,
+            BamTapReady,
+            LastTap
+        }
 
         void Awake()
         {
@@ -22,12 +30,59 @@ namespace HeavenStudio.Games.Scripts_TapTroupe
             if (switchFeet) transform.localScale = new Vector3(transform.localScale.x * -1, transform.localScale.y, 1);
             if (hit)
             {
-                anim.DoScaledAnimationAsync("HitStepFeet", 0.25f);
+                if (TapTroupe.prepareTap)
+                {
+                    anim.DoScaledAnimationAsync("HitStepReadyTap", 0.25f);
+                }
+                else
+                {
+                    anim.DoScaledAnimationAsync("HitStepFeet", 0.25f);
+                }
             }
             else
             {
-                anim.DoScaledAnimationAsync("StepFeet", 0.25f);
+                if (TapTroupe.prepareTap)
+                {
+                    anim.DoScaledAnimationAsync("StepReadyTap", 0.25f);
+                }
+                else
+                {
+                    anim.DoScaledAnimationAsync("StepFeet", 0.25f);
+                }
             }
+        }
+
+        public void Tap(TapAnim animType, bool hit = true, bool switchFeet = true)
+        {
+            if (switchFeet) transform.localScale = new Vector3(transform.localScale.x * -1, transform.localScale.y, 1);
+            string animName = "";
+            if (hit) animName = "Hit";
+            switch (animType)
+            {
+                case TapAnim.Bam:
+                    animName += "BamFeet";
+                    break;
+                case TapAnim.Tap:
+                    animName += "TapFeet";
+                    break;
+                case TapAnim.BamReady:
+                    animName += "BamReadyFeet";
+                    break;
+                case TapAnim.BamTapReady:
+                    animName += "BamReadyTap";
+                    break;
+                case TapAnim.LastTap:
+                    if (hit)
+                    {
+                        animName = "LastTapFeet";
+                    }
+                    else
+                    {
+                        animName = "StepFeet";
+                    }
+                    break;
+            }
+            anim.DoScaledAnimationAsync(animName, 0.25f);
         }
 
         public void Bop()
