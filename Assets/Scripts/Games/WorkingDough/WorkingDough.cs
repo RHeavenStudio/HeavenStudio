@@ -630,6 +630,7 @@ namespace HeavenStudio.Games
 
         void JustSmall(PlayerActionEvent caller, float state)
         {
+            if (GameManager.instance.currentGame != "workingDough") return;
             float beat = caller.startBeat + caller.timer;
             if (currentBalls.Count > 0)
             {
@@ -655,6 +656,7 @@ namespace HeavenStudio.Games
 
         void JustBig(PlayerActionEvent caller, float state)
         {
+            if (GameManager.instance.currentGame != "workingDough") return;
             float beat = caller.startBeat + caller.timer;
             if (currentBalls.Count > 0)
             {
