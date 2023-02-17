@@ -31,6 +31,7 @@ namespace HeavenStudio.Games.Scripts_LaunchParty
 
         void Update()
         {
+            if (GameManager.instance.currentGame != "launchParty") Destroy(gameObject);
             if (PlayerInput.Pressed() && !game.IsExpectingInputNow(InputType.STANDARD_DOWN) && !noInput)
             {
                 Jukebox.PlayOneShotGame("launchParty/miss");
