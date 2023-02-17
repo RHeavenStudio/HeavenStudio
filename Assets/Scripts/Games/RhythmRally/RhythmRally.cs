@@ -22,7 +22,7 @@ namespace HeavenStudio.Games.Loaders
                 },
                 new GameAction("whistle", "Whistle")
                 {
-                    function = delegate { RhythmRally.instance.PlayWhistle(); },
+                    preFunction = delegate { RhythmRally.PlayWhistle(eventCaller.currentEntity.beat); },
                     defaultLength = 0.5f
                 },
                 new GameAction("toss ball", "Toss Ball")
@@ -45,13 +45,21 @@ namespace HeavenStudio.Games.Loaders
                 },
                 new GameAction("fast rally", "Fast Rally")
                 {
-                    function = delegate { RhythmRally.instance.PrepareFastRally(eventCaller.currentEntity.beat, RhythmRally.RallySpeed.Fast); }, 
-                    defaultLength = 6f
+                    function = delegate { RhythmRally.instance.PrepareFastRally(eventCaller.currentEntity.beat, RhythmRally.RallySpeed.Fast, eventCaller.currentEntity["muteAudio"]); }, 
+                    defaultLength = 6f,
+                    parameters = new List<Param>()
+                    {
+                        new Param("muteAudio", false, "Mute Cowbell", "Whether the cowbell sound should play or not.")
+                    }
                 },
                 new GameAction("superfast rally", "Superfast Rally")
                 {
-                    function = delegate { RhythmRally.instance.PrepareFastRally(eventCaller.currentEntity.beat, RhythmRally.RallySpeed.SuperFast); }, 
-                    defaultLength = 12f
+                    function = delegate { RhythmRally.instance.PrepareFastRally(eventCaller.currentEntity.beat, RhythmRally.RallySpeed.SuperFast, eventCaller.currentEntity["muteAudio"]); }, 
+                    defaultLength = 12f,
+                    parameters = new List<Param>()
+                    {
+                        new Param("muteAudio", false, "Mute Cowbell", "Whether the cowbell sound should play or not.")
+                    }
                 },
                 new GameAction("pose", "End Pose")
                 {
@@ -428,9 +436,12 @@ namespace HeavenStudio.Games
                 ball.SetActive(false);
         }
 
-        public void PlayWhistle()
+        public static void PlayWhistle(float beat)
         {
-            Jukebox.PlayOneShotGame("rhythmRally/Whistle");
+            MultiSound.Play(new MultiSound.Sound[]
+            {
+                new MultiSound.Sound("rhythmRally/Whistle", beat),
+            }, forcePlay: true);
         }
 
         public void Pose()
@@ -448,7 +459,7 @@ namespace HeavenStudio.Games
             cameraPivot.DOScale(camZoom, len).SetEase(ease);
         }
 
-        public void PrepareFastRally(float beat, RallySpeed speedChange)
+        public void PrepareFastRally(float beat, RallySpeed speedChange, bool muteAudio = false)
         {
             if (speedChange == RallySpeed.Fast)
             {
@@ -457,6 +468,7 @@ namespace HeavenStudio.Games
                     new BeatAction.Action(beat + 2f, delegate { Serve(beat + 2f, RallySpeed.Fast); })
                 });
 
+                if (muteAudio) return;
                 MultiSound.Play(new MultiSound.Sound[]
                 {
                     new MultiSound.Sound("rhythmRally/Tonk", beat),
@@ -474,6 +486,7 @@ namespace HeavenStudio.Games
                     new BeatAction.Action(beat + 10f, delegate { Serve(beat + 10f, RallySpeed.SuperFast); })
                 });
 
+                if (muteAudio) return;
                 MultiSound.Play(new MultiSound.Sound[]
                 {
                     new MultiSound.Sound("rhythmRally/Tonk", beat),

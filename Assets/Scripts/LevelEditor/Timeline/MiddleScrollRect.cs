@@ -7,6 +7,7 @@ namespace HeavenStudio.Editor.Track
     {
         public override void OnBeginDrag(PointerEventData eventData)
         {
+            if (Conductor.instance.isPlaying) return;
             if (eventData.button != PointerEventData.InputButton.Middle) return;
             eventData.button = PointerEventData.InputButton.Left;
             base.OnBeginDrag(eventData);
@@ -14,6 +15,7 @@ namespace HeavenStudio.Editor.Track
 
         public override void OnEndDrag(PointerEventData eventData)
         {
+            if (Conductor.instance.isPlaying) return;
             if (eventData.button != PointerEventData.InputButton.Middle) return;
             eventData.button = PointerEventData.InputButton.Left;
             base.OnEndDrag(eventData);
@@ -21,6 +23,7 @@ namespace HeavenStudio.Editor.Track
 
         public override void OnDrag(PointerEventData eventData)
         {
+            if (Conductor.instance.isPlaying) return;
             if (eventData.button != PointerEventData.InputButton.Middle) return;
             eventData.button = PointerEventData.InputButton.Left;
             base.OnDrag(eventData);
