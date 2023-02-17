@@ -346,10 +346,10 @@ namespace HeavenStudio.Games
                 if (currentBeat >= bop.startBeat && currentBeat < bop.startBeat + bop.length && !inPose)
                 {
                     if (!playerPrepping && (playerAnim.IsAnimationNotPlaying() || playerState.IsName("Idle") || playerState.IsName("Beat")))
-                        playerAnim.Play("Beat", 0, 0);
+                        playerAnim.DoScaledAnimationAsync("Beat", 0.5f);
 
                     if (!opponentPrepping && !opponentServing && !tossing && (opponentAnim.IsAnimationNotPlaying() || opponentState.IsName("Idle") || opponentState.IsName("Beat")))
-                        opponentAnim.Play("Beat", 0, 0);
+                        opponentAnim.DoScaledAnimationAsync("Beat", 0.5f);
                 }
             }
 
@@ -398,7 +398,7 @@ namespace HeavenStudio.Games
                     break;
             }
 
-            opponentAnim.Play("Swing", 0, 0);
+            opponentAnim.DoScaledAnimationAsync("Swing", 0.5f);
             MultiSound.Play(new MultiSound.Sound[] { new MultiSound.Sound("rhythmRally/Serve", serveBeat), new MultiSound.Sound("rhythmRally/ServeBounce", bounceBeat) });
             paddlers.BounceFX(bounceBeat);
 
