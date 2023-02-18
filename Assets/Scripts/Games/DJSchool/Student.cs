@@ -87,12 +87,11 @@ namespace HeavenStudio.Games.Scripts_DJSchool
 
             missed = false;
             shouldBeHolding = true;
-            game.SetDJYellowHead(1);
 
             Jukebox.PlayOneShotGame("djSchool/recordStop");
 
             anim.Play("Hold", 0, 0);
-            //tableAnim.Play("Student_Turntable_Hold", 0, 0);
+            tableAnim.Play("Student_Turntable_StartHold", 0, 0);
 
             if (soundFX)
             {
@@ -106,7 +105,6 @@ namespace HeavenStudio.Games.Scripts_DJSchool
             //isHolding = true;
 
             missed = true;
-            game.SetDJYellowHead(3, true);
         }
 
         public void OnMissHoldForPlayerInput()
@@ -114,12 +112,11 @@ namespace HeavenStudio.Games.Scripts_DJSchool
             isHolding = true;
 
             missed = true;
-            game.SetDJYellowHead(3, true);
 
             Jukebox.PlayOneShotGame("djSchool/recordStop");
 
             anim.Play("Hold", 0, 0);
-            //tableAnim.Play("Student_Turntable_Hold", 0, 0);
+            tableAnim.Play("Student_Turntable_StartHold", 0, 0);
         }
         #endregion
 
@@ -135,6 +132,7 @@ namespace HeavenStudio.Games.Scripts_DJSchool
             anim.Play("Unhold", 0, 0);
             missed = true;
             mixer.audioMixer.FindSnapshot("Main").TransitionTo(.01f);
+            tableAnim.Play("Student_Turntable_Idle", 0, 0);
         }
 
         #region onSwipe
@@ -188,7 +186,6 @@ namespace HeavenStudio.Games.Scripts_DJSchool
             isHolding = false;
             //swiping = false;
             missed = true;
-            game.SetDJYellowHead(3);
             mixer.audioMixer.FindSnapshot("Main").TransitionTo(.01f);
         }
 
@@ -197,7 +194,6 @@ namespace HeavenStudio.Games.Scripts_DJSchool
             isHolding = false;
 
             missed = true;
-            game.SetDJYellowHead(3);
             //swiping = false;
             mixer.audioMixer.FindSnapshot("Main").TransitionTo(.01f);
 

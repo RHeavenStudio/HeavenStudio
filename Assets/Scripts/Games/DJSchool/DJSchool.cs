@@ -44,20 +44,12 @@ namespace HeavenStudio.Games.Loaders
                 },
                 new GameAction("scratch-o hey", "Scratch-o")
                 {
-                    function = delegate { DJSchool.instance.ScratchoHey(eventCaller.currentEntity.beat, eventCaller.currentEntity["type"]);  }, 
+                    function = delegate { DJSchool.instance.ScratchoHey(eventCaller.currentEntity.beat, eventCaller.currentEntity["type"], eventCaller.currentEntity["toggle"]);  }, 
                     defaultLength = 3f,
                     parameters = new List<Param>()
                     {
                         new Param("type", DJSchool.DJVoice.Standard, "Voice", "The voice line to play"),
-                    }
-                },
-                new GameAction("scratch-o hey fast", "Scratch-o (Remix 4)")
-                {
-                    function = delegate { DJSchool.instance.ScratchoHey(eventCaller.currentEntity.beat, eventCaller.currentEntity["type"], true);  },
-                    defaultLength = 2.5f,
-                    parameters = new List<Param>()
-                    {
-                        new Param("type", DJSchool.DJVoice.Standard, "Voice", "The voice line to play"),
+                        new Param("toggle", false, "Fast Hey", "Activate Remix 4 (DS) beat")
                     }
                 },
                 new GameAction("dj voice lines", "DJ Yellow Banter")
@@ -76,7 +68,7 @@ namespace HeavenStudio.Games.Loaders
                     defaultLength = 0.5f,
                     parameters = new List<Param>()
                     {
-                        new Param("toggle", true, "Radio FX", "Toggle on and off for Radio Effects")
+                        new Param("toggle", false, "Radio FX", "Toggle on and off for Radio Effects")
                     }
                 }
             },
@@ -114,8 +106,6 @@ namespace HeavenStudio.Games
         [SerializeField] private Student student;
         [SerializeField] private GameObject djYellow;
         private Animator djYellowAnim;
-        [SerializeField] private SpriteRenderer headSprite;
-        [SerializeField] private Sprite[] headSprites;
         private float lastReportedBeat = 0f;
 
         [Header("Properties")]
@@ -124,6 +114,7 @@ namespace HeavenStudio.Games
         public bool andStop;
         public bool goBop;
         public float beatOfInstance;
+        private bool djYellowBopLeft;
 
         public static DJSchool instance { get; private set; }
 
@@ -207,26 +198,34 @@ namespace HeavenStudio.Games
                 {
                     if (student.isHolding)
                     {
-                        student.anim.Play("HoldBop", 0, 0);
+                        student.anim.DoScaledAnimationAsync("HoldBop", 0.5f);
                     }
                     else if (!student.swiping && student.anim.IsAnimationNotPlaying())
                     {
-                        student.anim.Play("IdleBop", 0, 0);
+                        student.anim.DoScaledAnimationAsync("IdleBop", 0.5f);
                     }
 
                     var yellowState = djYellowAnim.GetCurrentAnimatorStateInfo(0);
                     if (yellowState.IsName("Hey"))
                     {
-                        PostScratchoFace();
+                        //PostScratchoFace();
                     }
                     if (!andStop && !djYellowHolding)
                     {
-                        djYellowAnim.Play("IdleBop", 0, 0);
+                        if (djYellowBopLeft)
+                        {
+                            djYellowAnim.DoScaledAnimationAsync("IdleBop2", 0.5f);
+                        }
+                        else
+                        {
+                            djYellowAnim.DoScaledAnimationAsync("IdleBop", 0.5f);
+                        }
+                        djYellowBopLeft = !djYellowBopLeft;
 
                     }
                     else if (djYellowHolding)
                     {
-                        djYellowAnim.Play("HoldBop", 0, 0);
+                        djYellowAnim.DoScaledAnimationAsync("HoldBop", 0.5f);
                     }
                 }
                 
@@ -354,7 +353,7 @@ namespace HeavenStudio.Games
             ScheduleInput(beat, 1.5f, InputType.STANDARD_DOWN, student.OnHitHold, student.OnMissHold, student.OnEmpty);
         }
 
-        public void ScratchoHey(float beat, int type, bool remix4 = false)
+        public void ScratchoHey(float beat, int type, bool remix4)
         {
             string[] sounds = new string[] { };
 
@@ -431,42 +430,6 @@ namespace HeavenStudio.Games
         //    student.eligible = true;
         //    student.ResetState();
         //}
-
-        public void SetDJYellowHead(int type, bool resetAfterBeats = false)
-        {
-            headSprite.sprite = headSprites[type];
-
-            if (resetAfterBeats)
-            {
-                BeatAction.New(djYellow, new List<BeatAction.Action>()
-                {
-                    new BeatAction.Action(Mathf.Floor(Conductor.instance.songPositionInBeats) + 2f, delegate 
-                    { 
-                        var yellowState = djYellowAnim.GetCurrentAnimatorStateInfo(0);
-                        if (yellowState.IsName("Idle")
-                            || yellowState.IsName("IdleBop")
-                            || yellowState.IsName("IdleBop2")
-                            || yellowState.IsName("BreakCmon"))
-                        {
-                            SetDJYellowHead(0);
-                        }
-                    })
-                });
-            }
-        }
-
-        public void PostScratchoFace()
-        {
-            if (student.missed)
-            {
-                student.missed = false;
-                SetDJYellowHead(3, true);
-            }
-            else
-            {
-                SetDJYellowHead(2, true);
-            }
-        }
 
         public void soundFX(bool toggle)
         {
