@@ -59,13 +59,16 @@ namespace HeavenStudio.Games.Scripts_DogNinja
                 default:
                     sfxNum += "fruit";
                     break;
-            }
+            };
 
             Jukebox.PlayOneShotGame(sfxNum+"1");
         
             game.ScheduleInput(startBeat, 1f, InputType.STANDARD_DOWN, Hit, Out, Miss);
 
-            DogAnim.DoScaledAnimation("Prepare", startBeat);
+            if (DogAnim.IsAnimationNotPlaying()) {
+                DogAnim.DoScaledAnimation("Prepare", startBeat);
+                DogAnim.SetBool("preparing", true);
+            };
         }
 
         private void Update()
