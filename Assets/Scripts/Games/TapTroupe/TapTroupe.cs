@@ -11,7 +11,7 @@ namespace HeavenStudio.Games.Loaders
     {
         public static Minigame AddGame(EventCaller eventCaller)
         {
-            return new Minigame("tapTroupe", "Tap Troupe \n<color=#eb5454>[WIP]</color>", "TAPTAP", false, false, new List<GameAction>()
+            return new Minigame("tapTroupe", "Tap Troupe", "TAPTAP", false, false, new List<GameAction>()
             {
                 new GameAction("stepping", "Stepping")
                 {
@@ -25,13 +25,15 @@ namespace HeavenStudio.Games.Loaders
                 },
                 new GameAction("tapping", "Tapping")
                 {
-                    preFunction = delegate { var e = eventCaller.currentEntity; TapTroupe.PreTapping(e.beat, e.length, e["okay"], e["okayType"]); },
+                    preFunction = delegate { var e = eventCaller.currentEntity; TapTroupe.PreTapping(e.beat, e.length, e["okay"], e["okayType"], e["animType"], e["popperBeats"]); },
                     defaultLength = 3f,
                     resizable = true,
                     parameters = new List<Param>()
                     {
                         new Param("okay", true, "Okay Voice Line", "Whether or not the tappers should say -Okay!- after successfully tapping."),
-                        new Param("okayType", TapTroupe.OkayType.Random, "Okay Type", "Which version of the okay voice line should the tappers say?")
+                        new Param("okayType", TapTroupe.OkayType.Random, "Okay Type", "Which version of the okay voice line should the tappers say?"),
+                        new Param("animType", TapTroupe.OkayAnimType.Normal, "Okay Animation", "Which animations should be played when the tapper say OK?"),
+                        new Param("popperBeats", new EntityTypes.Float(0f, 80f, 2f), "Popper Beats", "How many beats until the popper will pop?")
                     }
                 },
                 new GameAction("bop", "Bop")
@@ -75,12 +77,21 @@ namespace HeavenStudio.Games
             public float length;
             public bool okay;
             public int okayType;
+            public int animType;
+            public float popperBeats;
         }
         public enum OkayType
         {
             OkayA = 0,
             OkayB = 1,
             OkayC = 2,
+            Random = 3
+        }
+        public enum OkayAnimType
+        {
+            Normal = 0,
+            Popper = 1,
+            OkSign = 2,
             Random = 3
         }
         private int stepSound = 1;
@@ -116,7 +127,7 @@ namespace HeavenStudio.Games
                 {
                     foreach (var tap in queuedTaps)
                     {
-                        Tapping(tap.beat, tap.length, tap.okay, tap.okayType);
+                        Tapping(tap.beat, tap.length, tap.okay, tap.okayType, tap.animType, tap.popperBeats);
                     }
                     queuedTaps.Clear();
                 }
@@ -162,7 +173,7 @@ namespace HeavenStudio.Games
             });
         }
 
-        public static void PreTapping(float beat, float length, bool okay, int okayType)
+        public static void PreTapping(float beat, float length, bool okay, int okayType, int animType, float popperBeats)
         {
             MultiSound.Play(new MultiSound.Sound[]
             {
@@ -176,15 +187,15 @@ namespace HeavenStudio.Games
             });
             if (GameManager.instance.currentGame == "tapTroupe")
             {
-                TapTroupe.instance.Tapping(beat, length, okay, okayType);
+                TapTroupe.instance.Tapping(beat, length, okay, okayType, animType, popperBeats);
             }
             else
             {
-                queuedTaps.Add(new QueuedTaps { beat = beat, length = length, okay = okay, okayType = okayType });
+                queuedTaps.Add(new QueuedTaps { beat = beat, length = length, okay = okay, okayType = okayType, animType = animType, popperBeats = popperBeats });
             }
         }
 
-        public void Tapping(float beat, float length, bool okay, int okayType)
+        public void Tapping(float beat, float length, bool okay, int okayType, int animType, float popperBeats)
         {
             float actualLength = length - 0.5f;
             actualLength -= actualLength % 0.75f;
@@ -306,6 +317,11 @@ namespace HeavenStudio.Games
             BeatAction.New(instance.gameObject, new List<BeatAction.Action>()
             {
                 new BeatAction.Action(beat, delegate { tapping = true; missedTaps = false; }),
+                new BeatAction.Action(finalBeatToSpawn, delegate 
+                {
+                    if (missedTaps || animType != (int)OkayAnimType.Popper) return;
+                    npcCorners[0].PartyPopper(finalBeatToSpawn + popperBeats);
+                }),
                 new BeatAction.Action(finalBeatToSpawn + 0.5f, delegate
                 {
                     if (missedTaps || !okay) return;
