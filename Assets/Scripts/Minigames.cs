@@ -445,6 +445,53 @@ namespace HeavenStudio
                         }
                     ),
                 }),
+
+                new Minigame("postProcessing", "Post Processing", "", false, true, new List<GameAction>()
+                {
+                    new GameAction("chromaticAberration", "Chromatic Aberration", 1f, true,
+                        new List<Param>()
+                        {
+                            new Param("colorA", Color.white, "Start Color"),
+                        }
+                    ),
+                    new GameAction("grain", "Grain", 1f, true,
+                        new List<Param>()
+                        {
+                            new Param("colorA", Color.white, "Start Color"),
+                        }
+                    ),
+                    new GameAction("bloom", "Bloom", 1f, true,
+                        new List<Param>()
+                        {
+                            new Param("colorA", Color.white, "Start Color"),
+                        }
+                    ),
+                    new GameAction("lensDistortion", "Lens Distortion", 1f, true,
+                        new List<Param>()
+                        {
+                            new Param("colorA", Color.white, "Start Color"),
+                        }
+                    ),
+                    new GameAction("vignette", "Vignette", 1f, true,
+                        new List<Param>()
+                        {
+                            new Param("colorA", Color.black, "Color"),
+                            new Param("inten", new EntityTypes.Float(0.0f, 10.0f, 0.5f), "Intensity"),
+                        }
+                    ),
+                    new GameAction("pixelize", "Pixelize", 1f, true,
+                        new List<Param>()
+                        {
+                            new Param("colorA", Color.white, "Start Color"),
+                        }
+                    ),
+                    new GameAction("glitch", "Glitch", 1f, true,
+                        new List<Param>()
+                        {
+                            new Param("colorA", Color.white, "Start Color"),
+                        }
+                    ),
+                }),
             };
 
             BuildLoadRunnerList();

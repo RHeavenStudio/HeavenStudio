@@ -55,6 +55,17 @@ namespace Starpelly
         }
 
         /// <summary>
+        /// Same as "Mathp.Normalize" but inverts the return value.
+        /// </summary>
+        /// <param name="val">The input value.</param>
+        /// <param name="min">The min input.</param>
+        /// <param name="max">The max input.</param>
+        public static float NormalizeInvert(float val, float min, float max)
+        {
+            return (max - val) / (max - min);
+        }
+
+        /// <summary>
         /// Converts a normalized value to a normal float.
         /// </summary>
         /// <param name="val">The normalized value.</param>
