@@ -76,9 +76,10 @@ namespace HeavenStudio.Games
         public GameObject HalvesLeftBase;
         public GameObject HalvesRightBase;
         public GameObject FullBird;
-        public GameObject Dog;
+        //public GameObject Dog;
         public Transform ObjectHolder;
-        public Transform HalvesHolder;
+        public Transform LeftHalf;
+        public Transform RightHalf;
         public SpriteRenderer WhichObject;
         public SpriteRenderer WhichLeftHalf;
         public SpriteRenderer WhichRightHalf;
@@ -94,6 +95,9 @@ namespace HeavenStudio.Games
         private float lastReportedBeat = 0f;
         private bool birdOnScreen = false;
         static bool dontBop = false;
+        
+        public float leftNumber = 0;
+        public float rightNumber = 0;
         
         public static DogNinja instance;
 
@@ -128,8 +132,6 @@ namespace HeavenStudio.Games
         private void Awake()
         {
             instance = this;
-
-
         }
 
         private void Update()
@@ -179,8 +181,12 @@ namespace HeavenStudio.Games
                 WhichObject.sprite = ObjectTypes[rd.Next(1, 6)];
             } else { WhichObject.sprite = ObjectTypes[ObjType]; };
 
-            Debug.Log(ObjSprite);
-            
+            if (fromLeft) {
+                leftNumber = Conductor.instance.songPositionInBeats;
+            } else {
+                rightNumber = Conductor.instance.songPositionInBeats;
+            }
+
             // instantiate a game object and give it its variables
             ThrowObject Object = Instantiate(ObjectBase).GetComponent<ThrowObject>();
             Object.startBeat = beat;

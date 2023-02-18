@@ -14,6 +14,10 @@ namespace HeavenStudio.Games.Scripts_DogNinja
         public int type;
         public string textObj;
         public bool fromLeft;
+        public Vector3 objPos;
+        //float leftNumber;
+        //float rightNumber;
+        
 
         // this condenses the sfx code so much 
         public string sfxNum = "dogNinja/";
@@ -59,13 +63,16 @@ namespace HeavenStudio.Games.Scripts_DogNinja
             Jukebox.PlayOneShotGame(sfxNum+"1");
         
             game.ScheduleInput(startBeat, 1f, InputType.STANDARD_DOWN, Hit, Out, Miss);
+
+            
         }
 
         private void Update()
         {
-            float flyPos = Conductor.instance.GetPositionFromBeat(startBeat, 0.5f);
-            flyPos *= 0.22f;
+            float flyPos = Conductor.instance.GetPositionFromBeat(startBeat, 1f)+1.1f;
+            flyPos *= 0.31f;
             transform.position = curve.GetPoint(flyPos);
+            objPos = curve.GetPoint(flyPos);
             
             // destroy object when it's off-screen
             if (flyPos > 1f) {
@@ -88,12 +95,23 @@ namespace HeavenStudio.Games.Scripts_DogNinja
                 Slice = "SliceRight";
             };
 
-            DogAnim.DoScaledAnimationAsync(Slice, 0.5f);
+            Debug.Log(Slice);
+
+            //if (game.leftNumber == game.rightNumber) Debug.Log(true);
+
+            DogAnim.Play(Slice, 0, 0);
             Jukebox.PlayOneShotGame(sfxNum+"2");
 
-            SpawnHalves LeftHalf = Instantiate(game.HalvesLeftBase).GetComponent<SpawnHalves>();
-
             GameObject.Destroy(gameObject);
+            
+            
+            SpawnHalves LeftHalf = Instantiate(game.HalvesLeftBase).GetComponent<SpawnHalves>();
+            LeftHalf.startBeat = startBeat;
+            LeftHalf.objPos = objPos;
+
+            SpawnHalves RightHalf = Instantiate(game.HalvesRightBase).GetComponent<SpawnHalves>();
+            RightHalf.startBeat = startBeat;
+            
         }
             
 

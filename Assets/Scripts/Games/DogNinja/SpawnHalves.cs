@@ -11,13 +11,15 @@ namespace HeavenStudio.Games.Scripts_DogNinja
     public class SpawnHalves : PlayerActionObject
     {
         public float startBeat;
+        public Vector3 objPos;
+        const float rotSpeed = 90f;
 
         [Header("References")]
-        public GameObject HalvesLeftBase;
-        public GameObject HalvesRightBase;
-
+        public SpriteRenderer WhichHalf;
+        public Transform Half;
+        
         [Header("Curves")]
-        public BezierCurve3D HalvesCurve;
+        public BezierCurve3D HalfCurve;
 
         private DogNinja game;
         
@@ -28,16 +30,22 @@ namespace HeavenStudio.Games.Scripts_DogNinja
 
         private void Start()
         {
-            var HalvesGO = GameObject.Instantiate(game.HalvesLeftBase);
-            HalvesGO.transform.position = transform.position;
+
         }
 
         private void Update()
         {
-            float flyPos = Conductor.instance.GetPositionFromBeat(startBeat, 0.5f);
-            flyPos *= 0.5f;
-            transform.position = HalvesCurve.GetPoint(flyPos);
-            
+            float flyPosHalves = Conductor.instance.GetPositionFromBeat(startBeat, 1f)+0.5f;
+            flyPosHalves *= 0.2f;
+            transform.position = HalfCurve.GetPoint(flyPosHalves);
+
+            float rot = -rotSpeed;
+            transform.rotation = Quaternion.Euler(0, 0, transform.rotation.eulerAngles.z + (rot * Time.deltaTime));
+
+            // clean-up logic
+            if (!Conductor.instance.isPlaying && !Conductor.instance.isPaused) {
+                GameObject.Destroy(gameObject);
+            };
         }
     }
 }
