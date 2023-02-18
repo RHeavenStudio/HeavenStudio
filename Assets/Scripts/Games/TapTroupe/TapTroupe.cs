@@ -159,6 +159,11 @@ namespace HeavenStudio.Games
                     foreach (var tap in queuedTaps)
                     {
                         Tapping(tap.beat, tap.length, tap.okay, tap.okayType, tap.animType, tap.popperBeats, tap.randomVoiceLine);
+                        BeatAction.New(instance.gameObject, new List<BeatAction.Action>()
+                        {
+                            new BeatAction.Action(tap.beat - 1.1f, delegate { prepareTap = true; }),
+                            new BeatAction.Action(tap.beat, delegate { prepareTap = false; })
+                        });
                     }
                     queuedTaps.Clear();
                 }
@@ -240,14 +245,14 @@ namespace HeavenStudio.Games
                 new MultiSound.Sound("tapTroupe/tapReady1", beat - 2f),
                 new MultiSound.Sound("tapTroupe/tapReady2", beat - 1f),
             }, forcePlay: true);
-            BeatAction.New(instance.gameObject, new List<BeatAction.Action>()
-            {
-                new BeatAction.Action(beat - 1.1f, delegate { prepareTap = true; }),
-                new BeatAction.Action(beat, delegate { prepareTap = false; })
-            });
             if (GameManager.instance.currentGame == "tapTroupe")
             {
                 TapTroupe.instance.Tapping(beat, length, okay, okayType, animType, popperBeats, randomVoiceLine);
+                BeatAction.New(instance.gameObject, new List<BeatAction.Action>()
+                {
+                    new BeatAction.Action(beat - 1.1f, delegate { prepareTap = true; }),
+                    new BeatAction.Action(beat, delegate { prepareTap = false; })
+                });
             }
             else
             {
