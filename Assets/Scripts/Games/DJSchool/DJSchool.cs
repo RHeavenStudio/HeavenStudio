@@ -44,12 +44,20 @@ namespace HeavenStudio.Games.Loaders
                 },
                 new GameAction("scratch-o hey", "Scratch-o")
                 {
-                    function = delegate { DJSchool.instance.ScratchoHey(eventCaller.currentEntity.beat, eventCaller.currentEntity["type"], eventCaller.currentEntity["toggle"]);  }, 
+                    function = delegate { DJSchool.instance.ScratchoHey(eventCaller.currentEntity.beat, eventCaller.currentEntity["type"]);  }, 
                     defaultLength = 3f,
                     parameters = new List<Param>()
                     {
                         new Param("type", DJSchool.DJVoice.Standard, "Voice", "The voice line to play"),
-                        new Param("toggle", false, "Fast Hey", "Activate Remix 4 (DS) beat")
+                    }
+                },
+                new GameAction("scratch-o hey fast", "Scratch-o (Remix 4)")
+                {
+                    function = delegate { DJSchool.instance.ScratchoHey(eventCaller.currentEntity.beat, eventCaller.currentEntity["type"], true);  },
+                    defaultLength = 2.5f,
+                    parameters = new List<Param>()
+                    {
+                        new Param("type", DJSchool.DJVoice.Standard, "Voice", "The voice line to play"),
                     }
                 },
                 new GameAction("dj voice lines", "DJ Yellow Banter")
@@ -68,7 +76,7 @@ namespace HeavenStudio.Games.Loaders
                     defaultLength = 0.5f,
                     parameters = new List<Param>()
                     {
-                        new Param("toggle", false, "Radio FX", "Toggle on and off for Radio Effects")
+                        new Param("toggle", true, "Radio FX", "Toggle on and off for Radio Effects")
                     }
                 }
             },
@@ -346,7 +354,7 @@ namespace HeavenStudio.Games
             ScheduleInput(beat, 1.5f, InputType.STANDARD_DOWN, student.OnHitHold, student.OnMissHold, student.OnEmpty);
         }
 
-        public void ScratchoHey(float beat, int type, bool remix4)
+        public void ScratchoHey(float beat, int type, bool remix4 = false)
         {
             string[] sounds = new string[] { };
 

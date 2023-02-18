@@ -17,7 +17,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &1939846946620489509
 Transform:
   m_ObjectHideFlags: 0
@@ -27,7 +27,7 @@ Transform:
   m_GameObject: {fileID: 5944897938568656710}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 4.49, y: 0.602, z: 0}
-  m_LocalScale: {x: 2, y: 2, z: 1}
+  m_LocalScale: {x: 0.5, y: 0.5, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 0
@@ -72,7 +72,7 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: -10
-  m_Sprite: {fileID: -1061688395536187529, guid: 7bc82af4cf328374596aff0ade3ad198, type: 3}
+  m_Sprite: {fileID: 2154399292807578748, guid: 7d485aead8578964591aaea2653dec14, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -95,6 +95,17 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 90b8363d14ba26043977a371000195e9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  inList: 0
+  state:
+    gameObject: {fileID: 0}
+    early: 0
+    perfect: 0
+    late: 0
+    createBeat: 0
+  eligibleHitsList: []
+  aceTimes: 0
+  isEligible: 0
+  triggersAutoplay: 1
   startBeat: 0
   firstBeatsToTravel: 8
   secondBeatsToTravel: 2
