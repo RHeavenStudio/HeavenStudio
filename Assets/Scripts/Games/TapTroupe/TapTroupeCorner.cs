@@ -8,9 +8,15 @@ namespace HeavenStudio.Games.Scripts_TapTroupe
     public class TapTroupeCorner : MonoBehaviour
     {
         private Animator anim;
-        [SerializeField] Animator expressionAnim;
+        public Animator expressionAnim;
         [SerializeField] Animator bodyAnim;
         [SerializeField] ParticleSystem popperEffect;
+        public enum MissFace
+        {
+            Sad = 0,
+            Spit = 1,
+            LOL = 2
+        }
 
         private TapTroupe game;
 
@@ -28,6 +34,28 @@ namespace HeavenStudio.Games.Scripts_TapTroupe
         public void Okay()
         {
             expressionAnim.DoScaledAnimationAsync("Okay", 0.25f);
+        }
+
+        public void ResetFace()
+        {
+            if (expressionAnim.IsPlayingAnimationName("Okay")) return;
+            expressionAnim.Play("NoExpression", 0, 0);
+        }
+
+        public void SetMissFace(MissFace missFace)
+        {
+            switch (missFace)
+            {
+                case MissFace.Sad:
+                    expressionAnim.Play("Sad", 0, 0);
+                    break;
+                case MissFace.Spit:
+                    expressionAnim.Play("Spit", 0, 0);
+                    break;
+                case MissFace.LOL:
+                    expressionAnim.Play("LOL", 0, 0);
+                    break;
+            }
         }
 
         public void OkaySign()

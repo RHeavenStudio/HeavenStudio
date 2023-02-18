@@ -25,7 +25,7 @@ namespace HeavenStudio.Games.Loaders
                 },
                 new GameAction("tapping", "Tapping")
                 {
-                    preFunction = delegate { var e = eventCaller.currentEntity; TapTroupe.PreTapping(e.beat, e.length, e["okay"], e["okayType"], e["animType"], e["popperBeats"]); },
+                    preFunction = delegate { var e = eventCaller.currentEntity; TapTroupe.PreTapping(e.beat, e.length, e["okay"], e["okayType"], e["animType"], e["popperBeats"], e["randomVoiceLine"]); },
                     defaultLength = 3f,
                     resizable = true,
                     parameters = new List<Param>()
@@ -33,13 +33,36 @@ namespace HeavenStudio.Games.Loaders
                         new Param("okay", true, "Okay Voice Line", "Whether or not the tappers should say -Okay!- after successfully tapping."),
                         new Param("okayType", TapTroupe.OkayType.Random, "Okay Type", "Which version of the okay voice line should the tappers say?"),
                         new Param("animType", TapTroupe.OkayAnimType.Normal, "Okay Animation", "Which animations should be played when the tapper say OK?"),
-                        new Param("popperBeats", new EntityTypes.Float(0f, 80f, 2f), "Popper Beats", "How many beats until the popper will pop?")
+                        new Param("popperBeats", new EntityTypes.Float(0f, 80f, 2f), "Popper Beats", "How many beats until the popper will pop?"),
+                        new Param("randomVoiceLine", true, "Extra Random Voice Line", "Whether there should be randomly said woos or laughs after the tappers say OK!")
                     }
                 },
                 new GameAction("bop", "Bop")
                 {
                     function = delegate {TapTroupe.instance.Bop(); },
                     defaultLength = 1f
+                },
+                new GameAction("spotlights", "Toggle Spotlights")
+                {
+                    function = delegate {var e = eventCaller.currentEntity; TapTroupe.instance.Spotlights(e["toggle"], e["player"], e["middleLeft"], e["middleRight"], e["leftMost"]); },
+                    defaultLength = 0.5f,
+                    parameters = new List<Param>()
+                    {
+                        new Param("toggle", true, "Darkness On", "Whether or not it should be dark."),
+                        new Param("player", true, "Player Spotlight", "Whether or not the player spotlight should be turned on or off."),
+                        new Param("middleLeft", false, "Middleleft Tapper Spotlight", "Whether or not the middleleft tapper spotlight should be turned on or off."),
+                        new Param("middleRight", false, "Middleright Tapper Spotlight", "Whether or not the middleright tapper spotlight should be turned on or off."),
+                        new Param("leftMost", false, "Leftmost Tapper Spotlight", "Whether or not the leftmost tapper spotlight should be turned on or off."),
+                    }
+                },
+                new GameAction("tutorialMissFace", "Toggle Tutorial Miss Face")
+                {
+                    function = delegate { var e = eventCaller.currentEntity;  TapTroupe.instance.ToggleMissFace(e["toggle"]); },
+                    defaultLength = 0.5f,
+                    parameters = new List<Param>()
+                    {
+                        new Param("toggle", true, "Use it?", "Use the faces they do when you miss in the tutorial of Tap Troupe?")
+                    }
                 }
             });
         }
@@ -56,6 +79,11 @@ namespace HeavenStudio.Games
         [SerializeField] TapTroupeCorner playerCorner;
         [SerializeField] List<TapTroupeTapper> npcTappers = new List<TapTroupeTapper>();
         [SerializeField] List<TapTroupeCorner> npcCorners = new List<TapTroupeCorner>();
+        [SerializeField] GameObject spotlightPlayer;
+        [SerializeField] GameObject spotlightMiddleLeft;
+        [SerializeField] GameObject spotlightMiddleRight;
+        [SerializeField] GameObject spotlightLeftMost;
+        [SerializeField] GameObject darkness;
         [Header("Properties")]
         private static List<QueuedSteps> queuedSteps = new List<QueuedSteps>();
         private static List<QueuedTaps> queuedTaps = new List<QueuedTaps>();
@@ -64,6 +92,8 @@ namespace HeavenStudio.Games
         private bool shouldSwitchStep;
         private bool shouldDoSecondBam;
         private bool missedTaps;
+        private bool canSpit = true;
+        private bool useTutorialMissFace;
         private TapTroupeTapper.TapAnim currentTapAnim;
         public struct QueuedSteps
         {
@@ -79,6 +109,7 @@ namespace HeavenStudio.Games
             public int okayType;
             public int animType;
             public float popperBeats;
+            public bool randomVoiceLine;
         }
         public enum OkayType
         {
@@ -127,9 +158,38 @@ namespace HeavenStudio.Games
                 {
                     foreach (var tap in queuedTaps)
                     {
-                        Tapping(tap.beat, tap.length, tap.okay, tap.okayType, tap.animType, tap.popperBeats);
+                        Tapping(tap.beat, tap.length, tap.okay, tap.okayType, tap.animType, tap.popperBeats, tap.randomVoiceLine);
                     }
                     queuedTaps.Clear();
+                }
+                if (PlayerInput.Pressed() && !IsExpectingInputNow(InputType.STANDARD_DOWN))
+                {
+                    if (canSpit && !useTutorialMissFace) Jukebox.PlayOneShotGame("tapTroupe/spit");
+                    Jukebox.PlayOneShotGame("tapTroupe/miss");
+                    TapTroupe.instance.ScoreMiss(0.5f);
+                    foreach (var corner in npcCorners)
+                    {
+                        if (useTutorialMissFace)
+                        {
+                            corner.SetMissFace(TapTroupeCorner.MissFace.LOL);
+                        }
+                        else
+                        {
+                            corner.SetMissFace(TapTroupeCorner.MissFace.Spit);
+                        }
+                    }
+                    if (tapping)
+                    {
+                        missedTaps = true;
+                        playerTapper.Tap(currentTapAnim, false, shouldSwitchStep);
+                        playerCorner.Bop();
+                    }
+                    else
+                    {
+                        playerTapper.Step(false);
+                        playerCorner.Bop();
+                    }
+                    canSpit = false;
                 }
             }
         }
@@ -173,7 +233,7 @@ namespace HeavenStudio.Games
             });
         }
 
-        public static void PreTapping(float beat, float length, bool okay, int okayType, int animType, float popperBeats)
+        public static void PreTapping(float beat, float length, bool okay, int okayType, int animType, float popperBeats, bool randomVoiceLine)
         {
             MultiSound.Play(new MultiSound.Sound[]
             {
@@ -187,15 +247,15 @@ namespace HeavenStudio.Games
             });
             if (GameManager.instance.currentGame == "tapTroupe")
             {
-                TapTroupe.instance.Tapping(beat, length, okay, okayType, animType, popperBeats);
+                TapTroupe.instance.Tapping(beat, length, okay, okayType, animType, popperBeats, randomVoiceLine);
             }
             else
             {
-                queuedTaps.Add(new QueuedTaps { beat = beat, length = length, okay = okay, okayType = okayType, animType = animType, popperBeats = popperBeats });
+                queuedTaps.Add(new QueuedTaps { beat = beat, length = length, okay = okay, okayType = okayType, animType = animType, popperBeats = popperBeats, randomVoiceLine = randomVoiceLine });
             }
         }
 
-        public void Tapping(float beat, float length, bool okay, int okayType, int animType, float popperBeats)
+        public void Tapping(float beat, float length, bool okay, int okayType, int animType, float popperBeats, bool randomVoiceLine)
         {
             float actualLength = length - 0.5f;
             actualLength -= actualLength % 0.75f;
@@ -338,6 +398,14 @@ namespace HeavenStudio.Games
                 }),
                 new BeatAction.Action(finalBeatToSpawn + 1f, delegate
                 {
+                    if (randomVoiceLine && UnityEngine.Random.Range(1, 50) == 1)
+                    {
+                        Jukebox.PlayOneShotGame("tapTroupe/woo");
+                    }
+                    else if (randomVoiceLine && UnityEngine.Random.Range(1, 50) == 1)
+                    {
+                        Jukebox.PlayOneShotGame("tapTroupe/laughter", -1, 1, 0.4f);
+                    }
                     if (missedTaps || animType != (int)OkayAnimType.OkSign) return;
                     playerCorner.OkaySign();
                     foreach (var corner in npcCorners)
@@ -363,6 +431,31 @@ namespace HeavenStudio.Games
             }
         }
 
+        public void ToggleMissFace(bool isOn)
+        {
+            useTutorialMissFace = isOn;
+        }
+
+        public void Spotlights(bool isOn, bool player, bool middleLeft, bool middleRight, bool leftMost)
+        {
+            if (isOn)
+            {
+                darkness.SetActive(true);
+                spotlightPlayer.SetActive(player);
+                spotlightMiddleLeft.SetActive(middleLeft);
+                spotlightMiddleRight.SetActive(middleRight);
+                spotlightLeftMost.SetActive(leftMost);
+            }
+            else
+            {
+                darkness.SetActive(false);
+                spotlightPlayer.SetActive(false);
+                spotlightMiddleLeft.SetActive(false);
+                spotlightMiddleRight.SetActive(false);
+                spotlightLeftMost.SetActive(false);
+            }
+        }
+        
         public void NPCStep(bool hit = true, bool switchFeet = true)
         {
             foreach (var tapper in npcTappers)
@@ -391,8 +484,29 @@ namespace HeavenStudio.Games
         {
             if (state >= 1f || state <= -1f)
             {
+                canSpit = true;
                 playerTapper.Step(false);
                 playerCorner.Bop();
+                Jukebox.PlayOneShotGame($"tapTroupe/step{stepSound}");
+                if (stepSound == 1)
+                {
+                    stepSound = 2;
+                }
+                else
+                {
+                    stepSound = 1;
+                }
+                foreach (var corner in npcCorners)
+                {
+                    if (useTutorialMissFace)
+                    {
+                        corner.SetMissFace(TapTroupeCorner.MissFace.LOL);
+                    }
+                    else
+                    {
+                        corner.SetMissFace(TapTroupeCorner.MissFace.Sad);
+                    }
+                }
                 return;
             }
             SuccessStep();
@@ -400,7 +514,9 @@ namespace HeavenStudio.Games
 
         void SuccessStep()
         {
+            canSpit = true;
             playerTapper.Step();
+
             playerCorner.Bop();
             Jukebox.PlayOneShotGame($"tapTroupe/step{stepSound}");
             if (stepSound == 1)
@@ -411,11 +527,27 @@ namespace HeavenStudio.Games
             {
                 stepSound = 1;
             }
+            foreach (var corner in npcCorners)
+            {
+                corner.ResetFace();
+            }
         }
 
         void MissStep(PlayerActionEvent caller)
         {
-
+            if (canSpit && !useTutorialMissFace) Jukebox.PlayOneShotGame("tapTroupe/spit");
+            foreach (var corner in npcCorners)
+            {
+                if (useTutorialMissFace)
+                {
+                    corner.SetMissFace(TapTroupeCorner.MissFace.LOL);
+                }
+                else
+                {
+                    corner.SetMissFace(TapTroupeCorner.MissFace.Spit);
+                }
+            }
+            canSpit = false;
         }
 
         void JustTap(PlayerActionEvent caller, float state)
@@ -423,6 +555,44 @@ namespace HeavenStudio.Games
             if (state >= 1f || state <= -1f)
             {
                 missedTaps = true;
+                canSpit = true;
+                playerTapper.Tap(currentTapAnim, false, shouldSwitchStep);
+                playerCorner.Bop();
+                switch (currentTapAnim)
+                {
+                    case TapTroupeTapper.TapAnim.LastTap:
+                        Jukebox.PlayOneShotGame("tapTroupe/tap3");
+                        break;
+                    default:
+                        if (shouldDoSecondBam)
+                        {
+                            Jukebox.PlayOneShotGame("tapTroupe/bam2");
+                        }
+                        else
+                        {
+                            Jukebox.PlayOneShotGame("tapTroupe/bam1");
+                        }
+                        break;
+                }
+                if (shouldDoSecondBam)
+                {
+                    Jukebox.PlayOneShotGame("tapTroupe/step2");
+                }
+                else
+                {
+                    Jukebox.PlayOneShotGame("tapTroupe/step1");
+                }
+                foreach (var corner in npcCorners)
+                {
+                    if (useTutorialMissFace)
+                    {
+                        corner.SetMissFace(TapTroupeCorner.MissFace.LOL);
+                    }
+                    else
+                    {
+                        corner.SetMissFace(TapTroupeCorner.MissFace.Sad);
+                    }
+                }
                 return;
             }
             SuccessTap();
@@ -430,6 +600,7 @@ namespace HeavenStudio.Games
         
         void SuccessTap()
         {
+            canSpit = true;
             playerTapper.Tap(currentTapAnim, true, shouldSwitchStep);
             playerCorner.Bop();
             switch (currentTapAnim)
@@ -456,11 +627,28 @@ namespace HeavenStudio.Games
             {
                 Jukebox.PlayOneShotGame("tapTroupe/step1");
             }
+            foreach (var corner in npcCorners)
+            {
+                corner.ResetFace();
+            }
         }
 
         void MissTap(PlayerActionEvent caller)
         {
             missedTaps = true;
+            if (canSpit && !useTutorialMissFace) Jukebox.PlayOneShotGame("tapTroupe/spit");
+            foreach (var corner in npcCorners)
+            {
+                if (useTutorialMissFace)
+                {
+                    corner.SetMissFace(TapTroupeCorner.MissFace.LOL);
+                }
+                else
+                {
+                    corner.SetMissFace(TapTroupeCorner.MissFace.Spit);
+                }
+            }
+            canSpit = false;
         }
 
         void Nothing(PlayerActionEvent caller) { }
