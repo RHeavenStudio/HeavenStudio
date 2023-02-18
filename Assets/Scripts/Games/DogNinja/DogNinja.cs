@@ -163,6 +163,7 @@ namespace HeavenStudio.Games
                 //DogAnim.DoScaledAnimation(slice, lastReportedBeat);
                 
                 DogAnim.Play(slice, 0, 0);
+                Jukebox.PlayOneShotGame("dogNinja/whiff");
             };
         }
 

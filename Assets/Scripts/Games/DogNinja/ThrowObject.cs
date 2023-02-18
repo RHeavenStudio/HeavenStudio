@@ -117,8 +117,14 @@ namespace HeavenStudio.Games.Scripts_DogNinja
             
 
         // miss and out are unused im pretty sure? when you miss in this game it just kinda flies by 
-        private void Miss(PlayerActionEvent caller) {}
+        private void Miss(PlayerActionEvent caller)
+        {
+            
+        }
 
-        private void Out(PlayerActionEvent caller) {}
+        private void Out(PlayerActionEvent caller) 
+        {
+            DogAnim.Play("Unprepare", 0, 0);
+        }
     }
 }

@@ -15,11 +15,13 @@ namespace HeavenStudio.Games.Scripts_DogNinja
         const float rotSpeed = 90f;
 
         [Header("References")]
-        public SpriteRenderer WhichHalf;
+        public SpriteRenderer HalfSprite;
         public Transform Half;
         
         [Header("Curves")]
         public BezierCurve3D HalfCurve;
+
+        public Sprite[] WhichHalf;
 
         private DogNinja game;
         
