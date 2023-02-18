@@ -1499,6 +1499,10 @@ PrefabInstance:
       propertyPath: m_Sprite
       value: 
       objectReference: {fileID: 846812011896355152, guid: 04e0d6d4bb4d17e43bcc11a96e3eb35b, type: 3}
+    - target: {fileID: 7136099434120862856, guid: 7bb6590d80f4d624987932f439222903, type: 3}
+      propertyPath: player
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 7243387244622800474, guid: 7bb6590d80f4d624987932f439222903, type: 3}
       propertyPath: m_FlipX
       value: 0
@@ -1897,6 +1901,10 @@ PrefabInstance:
       propertyPath: m_IsActive
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 7136099434120862856, guid: 7bb6590d80f4d624987932f439222903, type: 3}
+      propertyPath: soundIndex
+      value: 3
+      objectReference: {fileID: 0}
     - target: {fileID: 8222931150450068117, guid: 7bb6590d80f4d624987932f439222903, type: 3}
       propertyPath: m_RootOrder
       value: 3
@@ -2176,6 +2184,10 @@ PrefabInstance:
       propertyPath: m_IsActive
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 7136099434120862856, guid: 7bb6590d80f4d624987932f439222903, type: 3}
+      propertyPath: soundIndex
+      value: 2
+      objectReference: {fileID: 0}
     - target: {fileID: 8222931150450068117, guid: 7bb6590d80f4d624987932f439222903, type: 3}
       propertyPath: m_RootOrder
       value: 2
@@ -2251,6 +2263,10 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6420783428267679050, guid: 7bb6590d80f4d624987932f439222903, type: 3}
       propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7136099434120862856, guid: 7bb6590d80f4d624987932f439222903, type: 3}
+      propertyPath: soundIndex
       value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 8222931150450068117, guid: 7bb6590d80f4d624987932f439222903, type: 3}

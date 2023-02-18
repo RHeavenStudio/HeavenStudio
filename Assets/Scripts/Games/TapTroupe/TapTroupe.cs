@@ -579,14 +579,6 @@ namespace HeavenStudio.Games
                         }
                         break;
                 }
-                if (shouldDoSecondBam)
-                {
-                    Jukebox.PlayOneShotGame("tapTroupe/step2");
-                }
-                else
-                {
-                    Jukebox.PlayOneShotGame("tapTroupe/step1");
-                }
                 foreach (var corner in npcCorners)
                 {
                     if (useTutorialMissFace)
@@ -623,14 +615,6 @@ namespace HeavenStudio.Games
                         Jukebox.PlayOneShotGame("tapTroupe/bam1");
                     }
                     break;
-            }
-            if (shouldDoSecondBam)
-            {
-                Jukebox.PlayOneShotGame("tapTroupe/step2");
-            }
-            else
-            {
-                Jukebox.PlayOneShotGame("tapTroupe/step1");
             }
             foreach (var corner in npcCorners)
             {

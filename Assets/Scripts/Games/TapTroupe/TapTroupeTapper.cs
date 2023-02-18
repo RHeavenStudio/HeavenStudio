@@ -10,6 +10,8 @@ namespace HeavenStudio.Games.Scripts_TapTroupe
         public Animator anim;
         [SerializeField] GameObject impactStep;
         private TapTroupe game;
+        [SerializeField] bool player;
+        [SerializeField] int soundIndex;
         public enum TapAnim
         {
             Bam,
@@ -32,22 +34,22 @@ namespace HeavenStudio.Games.Scripts_TapTroupe
             {
                 if (TapTroupe.prepareTap)
                 {
-                    anim.DoScaledAnimationAsync("HitStepReadyTap", 0.25f);
+                    anim.DoScaledAnimationAsync("HitStepReadyTap", 0.5f);
                 }
                 else
                 {
-                    anim.DoScaledAnimationAsync("HitStepFeet", 0.25f);
+                    anim.DoScaledAnimationAsync("HitStepFeet", 0.5f);
                 }
             }
             else
             {
                 if (TapTroupe.prepareTap)
                 {
-                    anim.DoScaledAnimationAsync("StepReadyTap", 0.25f);
+                    anim.DoScaledAnimationAsync("StepReadyTap", 0.5f);
                 }
                 else
                 {
-                    anim.DoScaledAnimationAsync("StepFeet", 0.25f);
+                    anim.DoScaledAnimationAsync("StepFeet", 0.5f);
                 }
             }
         }
@@ -82,12 +84,13 @@ namespace HeavenStudio.Games.Scripts_TapTroupe
                     }
                     break;
             }
-            anim.DoScaledAnimationAsync(animName, 0.25f);
+            anim.DoScaledAnimationAsync(animName, 0.5f);
+            if (!player) Jukebox.PlayOneShotGame($"tapTroupe/other{soundIndex}");
         }
 
         public void Bop()
         {
-            anim.DoScaledAnimationAsync("BopFeet", 0.3f);
+            anim.DoScaledAnimationAsync("BopFeet", 0.5f);
         }
     }
 }
