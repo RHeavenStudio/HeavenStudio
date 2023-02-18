@@ -24,7 +24,7 @@ namespace HeavenStudio.Games.Loaders
                 },
                 new GameAction("ThrowObjectLeft", "Throw Left Object")
                 {
-                    function = delegate { DogNinja.instance.ThrowObject(eventCaller.currentEntity.beat, eventCaller.currentEntity["type"], eventCaller.currentEntity["text"], true); }, 
+                    function = delegate { var e = eventCaller.currentEntity; DogNinja.instance.ThrowObject(e.beat, e["type"], e["text"], true); }, 
                     defaultLength = 2,
                     parameters = new List<Param>()
                     {
@@ -34,12 +34,24 @@ namespace HeavenStudio.Games.Loaders
                 },
                 new GameAction("ThrowObjectRight", "Throw Right Object")
                 {
-                    function = delegate { DogNinja.instance.ThrowObject(eventCaller.currentEntity.beat, eventCaller.currentEntity["type"], eventCaller.currentEntity["text"], false); }, 
+                    function = delegate { var e = eventCaller.currentEntity; DogNinja.instance.ThrowObject(e.beat, e["type"], e["text"], false); }, 
                     defaultLength = 2,
                     parameters = new List<Param>()
                     {
                         new Param("type", DogNinja.ObjectType.Random, "Object", "The object to be thrown"),
                         new Param("text", "", "Alt. Objects", "An alternative object; one that doesn't exist in the main menu"),
+                    }
+                },
+                new GameAction("ThrowObjectBoth", "Throw Right & Left Object")
+                {
+                    function = delegate { var e = eventCaller.currentEntity; DogNinja.instance.ThrowBothObject(e.beat, e["type"], e["type2"], e["text"], e["text2"]); }, 
+                    defaultLength = 2,
+                    parameters = new List<Param>()
+                    {
+                        new Param("type", DogNinja.ObjectType.Random, "Left Object", "The object on the left to be thrown"),
+                        new Param("type2", DogNinja.ObjectType.Random, "Right Object", "The object on the right to be thrown"),
+                        new Param("text", "", "Left Alt. Object", "An alternative object on the left; one that doesn't exist in the main menu"),
+                        new Param("text2", "", "Right Alt. Object", "An alternative object on the right; one that doesn't exist in the main menu"),
                     }
                 },
                 new GameAction("CutEverything", "Cut Everything!")
@@ -68,15 +80,14 @@ namespace HeavenStudio.Games
     public class DogNinja : Minigame
     {
         [Header("Animators")]
-        public Animator BirdAnim;   // bird flying in and out
         public Animator DogAnim;    // dog misc animations
+        public Animator BirdAnim;   // bird flying in and out
         
         [Header("References")]
         public GameObject ObjectBase;
         public GameObject HalvesLeftBase;
         public GameObject HalvesRightBase;
         public GameObject FullBird;
-        //public GameObject Dog;
         public Transform ObjectHolder;
         public Transform LeftHalf;
         public Transform RightHalf;
@@ -95,9 +106,6 @@ namespace HeavenStudio.Games
         private float lastReportedBeat = 0f;
         private bool birdOnScreen = false;
         static bool dontBop = false;
-        
-        public float leftNumber = 0;
-        public float rightNumber = 0;
         
         public static DogNinja instance;
 
@@ -167,7 +175,8 @@ namespace HeavenStudio.Games
             };
         }
 
-        public void ThrowObject(float beat, int ObjType, string textObj, bool fromLeft)
+        // my solution for making three functions for three cues; just put the big complicated code into another function
+        public void WhichObjectMath(int ObjType, string textObj)
         {
             int ObjSprite = 0;
             if (ObjType == 10) {
@@ -180,12 +189,11 @@ namespace HeavenStudio.Games
                 System.Random rd = new System.Random();
                 WhichObject.sprite = ObjectTypes[rd.Next(1, 6)];
             } else { WhichObject.sprite = ObjectTypes[ObjType]; };
+        }
 
-            if (fromLeft) {
-                leftNumber = Conductor.instance.songPositionInBeats;
-            } else {
-                rightNumber = Conductor.instance.songPositionInBeats;
-            }
+        public void ThrowObject(float beat, int ObjType, string textObj, bool fromLeft)
+        {
+            WhichObjectMath(ObjType, textObj);
 
             // instantiate a game object and give it its variables
             ThrowObject Object = Instantiate(ObjectBase).GetComponent<ThrowObject>();
@@ -196,9 +204,33 @@ namespace HeavenStudio.Games
             Object.textObj = textObj;
         }
 
+        public void ThrowBothObject(float beat, int ObjType1, int ObjType2, string textObj1, string textObj2)
+        {
+            WhichObjectMath(ObjType1, textObj1);
+
+            // instantiate a game object on the left and give it its variables
+            ThrowObject LObject = Instantiate(ObjectBase).GetComponent<ThrowObject>();
+            LObject.startBeat = beat;
+            LObject.type = ObjType1;
+            LObject.textObj = textObj1;
+            LObject.curve = CurveFromLeft;
+            LObject.fromLeft = true;
+            LObject.fromBoth = true;
+
+            WhichObjectMath(ObjType2, textObj2);
+
+            // instantiate a game object on the left and give it its variables
+            ThrowObject RObject = Instantiate(ObjectBase).GetComponent<ThrowObject>();
+            RObject.startBeat = beat;
+            RObject.type = ObjType2;
+            RObject.textObj = textObj2;
+            RObject.curve = CurveFromRight;
+            RObject.fromLeft = false;
+            RObject.fromBoth = true;
+        }
+
         public void CutEverything(float beat, bool sound)
         {
-            
             // plays one anim with sfx when it's not on screen, plays a different anim with no sfx when on screen. ez
             if (!birdOnScreen) {
                 FullBird.SetActive(true);
@@ -213,8 +245,8 @@ namespace HeavenStudio.Games
             };
         }
 
-        // it's repeated code but the alternative saves no space
 
+        // it's repeated code but the alternative saves no space
         public void HereWeGo(float beat)
         {
             MultiSound.Play(new MultiSound.Sound[] { 

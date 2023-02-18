@@ -14,6 +14,7 @@ namespace HeavenStudio.Games.Scripts_DogNinja
         public int type;
         public string textObj;
         public bool fromLeft;
+        public bool fromBoth;
         public Vector3 objPos;
         //float leftNumber;
         //float rightNumber;
@@ -64,7 +65,7 @@ namespace HeavenStudio.Games.Scripts_DogNinja
         
             game.ScheduleInput(startBeat, 1f, InputType.STANDARD_DOWN, Hit, Out, Miss);
 
-            
+            DogAnim.DoScaledAnimation("Prepare", startBeat);
         }
 
         private void Update()
@@ -89,21 +90,18 @@ namespace HeavenStudio.Games.Scripts_DogNinja
         private void Hit(PlayerActionEvent caller, float state)
         {
             string Slice;
-            if (fromLeft) {
+            if (!fromBoth && fromLeft) {
                 Slice = "SliceLeft";
-            } else {
+            } else if (!fromBoth && !fromLeft) {
                 Slice = "SliceRight";
+            } else {
+                Slice = "SliceBoth";
             };
-
-            Debug.Log(Slice);
-
-            //if (game.leftNumber == game.rightNumber) Debug.Log(true);
 
             DogAnim.Play(Slice, 0, 0);
             Jukebox.PlayOneShotGame(sfxNum+"2");
 
             GameObject.Destroy(gameObject);
-            
             
             SpawnHalves LeftHalf = Instantiate(game.HalvesLeftBase).GetComponent<SpawnHalves>();
             LeftHalf.startBeat = startBeat;

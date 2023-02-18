@@ -35,7 +35,7 @@ namespace HeavenStudio.Games.Scripts_DogNinja
 
         private void Update()
         {
-            float flyPosHalves = Conductor.instance.GetPositionFromBeat(startBeat, 1f)+0.5f;
+            float flyPosHalves = Conductor.instance.GetPositionFromBeat(startBeat, 1f)+0.65f;
             flyPosHalves *= 0.2f;
             transform.position = HalfCurve.GetPoint(flyPosHalves);
 
@@ -43,6 +43,10 @@ namespace HeavenStudio.Games.Scripts_DogNinja
             transform.rotation = Quaternion.Euler(0, 0, transform.rotation.eulerAngles.z + (rot * Time.deltaTime));
 
             // clean-up logic
+            if (flyPosHalves > 1f) {
+                GameObject.Destroy(gameObject);
+            };
+            
             if (!Conductor.instance.isPlaying && !Conductor.instance.isPaused) {
                 GameObject.Destroy(gameObject);
             };
