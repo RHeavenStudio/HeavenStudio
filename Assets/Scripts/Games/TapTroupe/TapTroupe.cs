@@ -25,12 +25,13 @@ namespace HeavenStudio.Games.Loaders
                 },
                 new GameAction("tapping", "Tapping")
                 {
-                    preFunction = delegate { var e = eventCaller.currentEntity; TapTroupe.PreTapping(e.beat, e.length, e["okay"]); },
+                    preFunction = delegate { var e = eventCaller.currentEntity; TapTroupe.PreTapping(e.beat, e.length, e["okay"], e["okayType"]); },
                     defaultLength = 3f,
                     resizable = true,
                     parameters = new List<Param>()
                     {
-                        new Param("okay", true, "Okay Voice Line", "Whether or not the tappers should say -Okay!- after successfully tapping.")
+                        new Param("okay", true, "Okay Voice Line", "Whether or not the tappers should say -Okay!- after successfully tapping."),
+                        new Param("okayType", TapTroupe.OkayType.Random, "Okay Type", "Which version of the okay voice line should the tappers say?")
                     }
                 },
                 new GameAction("bop", "Bop")
@@ -58,6 +59,10 @@ namespace HeavenStudio.Games
         private static List<QueuedTaps> queuedTaps = new List<QueuedTaps>();
         public static bool prepareTap;
         private bool tapping;
+        private bool shouldSwitchStep;
+        private bool shouldDoSecondBam;
+        private bool missedTaps;
+        private TapTroupeTapper.TapAnim currentTapAnim;
         public struct QueuedSteps
         {
             public float beat;
@@ -69,6 +74,14 @@ namespace HeavenStudio.Games
             public float beat;
             public float length;
             public bool okay;
+            public int okayType;
+        }
+        public enum OkayType
+        {
+            OkayA = 0,
+            OkayB = 1,
+            OkayC = 2,
+            Random = 3
         }
         private int stepSound = 1;
 
@@ -103,7 +116,7 @@ namespace HeavenStudio.Games
                 {
                     foreach (var tap in queuedTaps)
                     {
-                        Tapping(tap.beat, tap.length, tap.okay);
+                        Tapping(tap.beat, tap.length, tap.okay, tap.okayType);
                     }
                     queuedTaps.Clear();
                 }
@@ -149,7 +162,7 @@ namespace HeavenStudio.Games
             });
         }
 
-        public static void PreTapping(float beat, float length, bool okay)
+        public static void PreTapping(float beat, float length, bool okay, int okayType)
         {
             MultiSound.Play(new MultiSound.Sound[]
             {
@@ -163,19 +176,20 @@ namespace HeavenStudio.Games
             });
             if (GameManager.instance.currentGame == "tapTroupe")
             {
-                TapTroupe.instance.Tapping(beat, length, okay);
+                TapTroupe.instance.Tapping(beat, length, okay, okayType);
             }
             else
             {
-                queuedTaps.Add(new QueuedTaps { beat = beat, length = length, okay = okay });
+                queuedTaps.Add(new QueuedTaps { beat = beat, length = length, okay = okay, okayType = okayType });
             }
         }
 
-        public void Tapping(float beat, float length, bool okay)
+        public void Tapping(float beat, float length, bool okay, int okayType)
         {
             float actualLength = length - 0.5f;
             actualLength -= actualLength % 0.75f;
             bool secondBam = false;
+            float finalBeatToSpawn = 0f;
             if (actualLength < 2.25f) actualLength = 2.25f;
             List<MultiSound.Sound> soundsToPlay = new List<MultiSound.Sound>
             {
@@ -189,8 +203,10 @@ namespace HeavenStudio.Games
                 {
                     soundToPlay = "startTap";
                     beatToSpawn = Mathf.Ceil(beat + i);
+                    finalBeatToSpawn = beatToSpawn;
                     BeatAction.New(instance.gameObject, new List<BeatAction.Action>()
                     {
+                        new BeatAction.Action(beatToSpawn - 0.3f, delegate { currentTapAnim = TapTroupeTapper.TapAnim.LastTap; shouldSwitchStep = false; }),
                         new BeatAction.Action(beatToSpawn, delegate { NPCTap(TapTroupeTapper.TapAnim.LastTap, true, false);}),
                         new BeatAction.Action(beatToSpawn + 0.1f, delegate { tapping = false; })
                     });
@@ -200,6 +216,7 @@ namespace HeavenStudio.Games
                     soundToPlay = "tapvoice2";
                     BeatAction.New(instance.gameObject, new List<BeatAction.Action>()
                     {
+                        new BeatAction.Action(beatToSpawn - 0.3f, delegate { currentTapAnim = TapTroupeTapper.TapAnim.Tap; shouldSwitchStep = false; }),
                         new BeatAction.Action(beatToSpawn, delegate { NPCTap(TapTroupeTapper.TapAnim.Tap, true, false); })
                     });
                 }
@@ -210,6 +227,7 @@ namespace HeavenStudio.Games
                     {
                         BeatAction.New(instance.gameObject, new List<BeatAction.Action>()
                         {
+                            new BeatAction.Action(beatToSpawn - 0.3f, delegate { currentTapAnim = TapTroupeTapper.TapAnim.Tap; shouldSwitchStep = true; }),
                             new BeatAction.Action(beatToSpawn, delegate { NPCTap(TapTroupeTapper.TapAnim.Tap); })
                         });
                     }
@@ -217,6 +235,7 @@ namespace HeavenStudio.Games
                     {
                         BeatAction.New(instance.gameObject, new List<BeatAction.Action>()
                         {
+                            new BeatAction.Action(beatToSpawn - 0.3f, delegate { currentTapAnim = TapTroupeTapper.TapAnim.Tap; shouldSwitchStep = false; }),
                             new BeatAction.Action(beatToSpawn, delegate { NPCTap(TapTroupeTapper.TapAnim.Tap, true, false); })
                         });
                     }
@@ -230,6 +249,7 @@ namespace HeavenStudio.Games
                         {
                             BeatAction.New(instance.gameObject, new List<BeatAction.Action>()
                             {
+                                new BeatAction.Action(beatToSpawn - 0.3f, delegate { currentTapAnim = TapTroupeTapper.TapAnim.Tap; shouldSwitchStep = true; }),
                                 new BeatAction.Action(beatToSpawn, delegate { NPCTap(TapTroupeTapper.TapAnim.Tap); })
                             });
                         }
@@ -237,6 +257,7 @@ namespace HeavenStudio.Games
                         {
                             BeatAction.New(instance.gameObject, new List<BeatAction.Action>()
                             {
+                                new BeatAction.Action(beatToSpawn - 0.3f, delegate { currentTapAnim = TapTroupeTapper.TapAnim.BamTapReady; shouldSwitchStep = true; }),
                                 new BeatAction.Action(beatToSpawn, delegate { NPCTap(TapTroupeTapper.TapAnim.BamTapReady); })
                             });
                         }
@@ -245,23 +266,60 @@ namespace HeavenStudio.Games
                     {
                         BeatAction.New(instance.gameObject, new List<BeatAction.Action>()
                         {
+                            new BeatAction.Action(beatToSpawn - 0.3f, delegate { currentTapAnim = TapTroupeTapper.TapAnim.BamReady; shouldSwitchStep = false; }),
                             new BeatAction.Action(beatToSpawn, delegate { NPCTap(TapTroupeTapper.TapAnim.BamReady, true, false); })
                         });
                     }
                     else
                     {
+                        
                         BeatAction.New(instance.gameObject, new List<BeatAction.Action>()
                         {
+                            new BeatAction.Action(beatToSpawn - 0.3f, delegate { currentTapAnim = TapTroupeTapper.TapAnim.Bam; shouldSwitchStep = true; }),
                             new BeatAction.Action(beatToSpawn, delegate { NPCTap(TapTroupeTapper.TapAnim.Bam); })
                         });
                     }
                 }
                 soundsToPlay.Add(new MultiSound.Sound($"tapTroupe/{soundToPlay}", beatToSpawn));
+                shouldDoSecondBam = secondBam;
                 secondBam = !secondBam;
+                ScheduleInput(beatToSpawn - 1, 1f, InputType.STANDARD_DOWN, JustTap, MissTap, Nothing);
+            }
+            int actualOkayType = okayType;
+            if (actualOkayType == (int)OkayType.Random) actualOkayType = UnityEngine.Random.Range(0, 3);
+            string okayVoiceLine = "A";
+            switch (actualOkayType)
+            {
+                case (int)OkayType.OkayA:
+                    okayVoiceLine = "A";
+                    break;
+                case (int)OkayType.OkayB:
+                    okayVoiceLine = "B";
+                    break;
+                case (int)OkayType.OkayC:
+                    okayVoiceLine = "C";
+                    break;
+                default:
+                    okayVoiceLine = "A";
+                    break;
             }
             BeatAction.New(instance.gameObject, new List<BeatAction.Action>()
             {
-                new BeatAction.Action(beat, delegate { tapping = true; })
+                new BeatAction.Action(beat, delegate { tapping = true; missedTaps = false; }),
+                new BeatAction.Action(finalBeatToSpawn + 0.5f, delegate
+                {
+                    if (missedTaps || !okay) return;
+                    playerCorner.Okay();
+                    foreach (var corner in npcCorners)
+                    {
+                        corner.Okay();
+                    }
+                    MultiSound.Play(new MultiSound.Sound[]
+                    {
+                        new MultiSound.Sound($"tapTroupe/okay{okayVoiceLine}1", finalBeatToSpawn + 0.5f),
+                        new MultiSound.Sound($"tapTroupe/okay{okayVoiceLine}2", finalBeatToSpawn + 1f),
+                    }, forcePlay: true);
+                })
             });
             MultiSound.Play(soundsToPlay.ToArray(), forcePlay: true);
         }
@@ -333,6 +391,51 @@ namespace HeavenStudio.Games
         void MissStep(PlayerActionEvent caller)
         {
 
+        }
+
+        void JustTap(PlayerActionEvent caller, float state)
+        {
+            if (state >= 1f || state <= -1f)
+            {
+                missedTaps = true;
+                return;
+            }
+            SuccessTap();
+        }
+        
+        void SuccessTap()
+        {
+            playerTapper.Tap(currentTapAnim, true, shouldSwitchStep);
+            playerCorner.Bop();
+            switch (currentTapAnim)
+            {
+                case TapTroupeTapper.TapAnim.LastTap:
+                    Jukebox.PlayOneShotGame("tapTroupe/tap3");
+                    break;
+                default:
+                    if (shouldDoSecondBam)
+                    {
+                        Jukebox.PlayOneShotGame("tapTroupe/bam2");
+                    }
+                    else
+                    {
+                        Jukebox.PlayOneShotGame("tapTroupe/bam1");
+                    }
+                    break;
+            }
+            if (shouldDoSecondBam)
+            {
+                Jukebox.PlayOneShotGame("tapTroupe/step2");
+            }
+            else
+            {
+                Jukebox.PlayOneShotGame("tapTroupe/step1");
+            }
+        }
+
+        void MissTap(PlayerActionEvent caller)
+        {
+            missedTaps = true;
         }
 
         void Nothing(PlayerActionEvent caller) { }

@@ -8,6 +8,7 @@ namespace HeavenStudio.Games.Scripts_TapTroupe
     public class TapTroupeCorner : MonoBehaviour
     {
         private Animator anim;
+        [SerializeField] Animator expressionAnim;
 
         private TapTroupe game;
 
@@ -20,6 +21,11 @@ namespace HeavenStudio.Games.Scripts_TapTroupe
         public void Bop()
         {
             anim.DoScaledAnimationAsync("Bop", 0.3f);
+        }
+
+        public void Okay()
+        {
+            expressionAnim.DoScaledAnimationAsync("Okay", 0.25f);
         }
     }
 }
