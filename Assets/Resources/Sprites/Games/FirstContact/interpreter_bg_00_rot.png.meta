@@ -4,22 +4,67 @@ TextureImporter:
   internalIDToNameTable:
   - first:
       213: -779624103097622265
-    second: bg_frame
+    second: interpreter_bg_00_rot_0
   - first:
       213: -4855276988673341050
-    second: bg_lower_frame
+    second: interpreter_bg_00_rot_1
   - first:
       213: -400095759128354054
-    second: bg_stars
+    second: interpreter_bg_00_rot_2
   - first:
       213: -1666231256180804789
-    second: bg_ground
+    second: interpreter_bg_00_rot_3
   - first:
       213: -3893369582703882860
-    second: bg_spaceship
+    second: interpreter_bg_00_rot_4
   - first:
       213: 5091081892178099893
-    second: bg_earth
+    second: interpreter_bg_00_rot_5
+  - first:
+      213: -2106386543312538375
+    second: interpreter_bg_00_rot_7
+  - first:
+      213: 4553491622995406722
+    second: interpreter_bg_00_rot_8
+  - first:
+      213: 1113690605020500551
+    second: interpreter_bg_00_rot_9
+  - first:
+      213: 9014401196872780202
+    second: interpreter_bg_00_rot_10
+  - first:
+      213: -1738157538992717083
+    second: interpreter_bg_00_rot_11
+  - first:
+      213: 2651375138150550141
+    second: interpreter_bg_00_rot_12
+  - first:
+      213: -3771316823206165003
+    second: interpreter_bg_00_rot_13
+  - first:
+      213: 212340754863497492
+    second: interpreter_bg_00_rot_14
+  - first:
+      213: -4765830952327597752
+    second: interpreter_bg_00_rot_15
+  - first:
+      213: 3314545836738998638
+    second: interpreter_bg_00_rot_16
+  - first:
+      213: 5525327751642411656
+    second: interpreter_bg_00_rot_17
+  - first:
+      213: -6436018936432617887
+    second: interpreter_bg_00_rot_18
+  - first:
+      213: -6144766738656258102
+    second: interpreter_bg_00_rot_19
+  - first:
+      213: 2686378723975985312
+    second: interpreter_bg_00_rot_20
+  - first:
+      213: 6014635127418560693
+    second: interpreter_bg_00_rot_6
   externalObjects: {}
   serializedVersion: 11
   mipmaps:
@@ -83,7 +128,7 @@ TextureImporter:
   platformSettings:
   - serializedVersion: 3
     buildTarget: DefaultTexturePlatform
-    maxTextureSize: 2048
+    maxTextureSize: 4096
     resizeAlgorithm: 0
     textureFormat: -1
     textureCompression: 1
@@ -95,7 +140,7 @@ TextureImporter:
     forceMaximumCompressionQuality_BC6H_BC7: 0
   - serializedVersion: 3
     buildTarget: Standalone
-    maxTextureSize: 2048
+    maxTextureSize: 4096
     resizeAlgorithm: 0
     textureFormat: -1
     textureCompression: 1
@@ -121,13 +166,13 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: bg_frame
+      name: interpreter_bg_00_rot_0
       rect:
         serializedVersion: 2
-        x: 1
-        y: 177
-        width: 566
-        height: 334
+        x: 0
+        y: 1935
+        width: 6863
+        height: 4396
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -142,15 +187,15 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: bg_lower_frame
+      name: interpreter_bg_00_rot_1
       rect:
         serializedVersion: 2
-        x: 1
-        y: 57
-        width: 486
-        height: 119
+        x: 7303
+        y: 5225
+        width: 2956
+        height: 964
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
@@ -163,13 +208,307 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: bg_stars
+      name: interpreter_bg_00_rot_7
       rect:
         serializedVersion: 2
-        x: 616
-        y: 377
-        width: 407
-        height: 134
+        x: 11288
+        y: 4619
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 9f47136599c94c2e0800000000000000
+      internalID: -2106386543312538375
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: interpreter_bg_00_rot_8
+      rect:
+        serializedVersion: 2
+        x: 11307
+        y: 4619
+        width: 11
+        height: 9
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 28fab547180413f30800000000000000
+      internalID: 4553491622995406722
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: interpreter_bg_00_rot_9
+      rect:
+        serializedVersion: 2
+        x: 11471
+        y: 4616
+        width: 7
+        height: 7
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 742dfe564bf947f00800000000000000
+      internalID: 1113690605020500551
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: interpreter_bg_00_rot_10
+      rect:
+        serializedVersion: 2
+        x: 11511
+        y: 4624
+        width: 14
+        height: 14
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: aa94572d026991d70800000000000000
+      internalID: 9014401196872780202
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: interpreter_bg_00_rot_11
+      rect:
+        serializedVersion: 2
+        x: 11577
+        y: 4628
+        width: 10
+        height: 10
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 5e20cac6de2d0e7e0800000000000000
+      internalID: -1738157538992717083
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: interpreter_bg_00_rot_12
+      rect:
+        serializedVersion: 2
+        x: 11693
+        y: 4620
+        width: 4
+        height: 7
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: d7a04cbf3a39bc420800000000000000
+      internalID: 2651375138150550141
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: interpreter_bg_00_rot_13
+      rect:
+        serializedVersion: 2
+        x: 11755
+        y: 4613
+        width: 4
+        height: 6
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 5f58751a45799abc0800000000000000
+      internalID: -3771316823206165003
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: interpreter_bg_00_rot_14
+      rect:
+        serializedVersion: 2
+        x: 11784
+        y: 4624
+        width: 4
+        height: 6
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 4112af0aac262f200800000000000000
+      internalID: 212340754863497492
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: interpreter_bg_00_rot_15
+      rect:
+        serializedVersion: 2
+        x: 11799
+        y: 4613
+        width: 7
+        height: 7
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 841b3f2dffd5cddb0800000000000000
+      internalID: -4765830952327597752
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: interpreter_bg_00_rot_16
+      rect:
+        serializedVersion: 2
+        x: 11883
+        y: 4594
+        width: 10
+        height: 11
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: e61f39690e1affd20800000000000000
+      internalID: 3314545836738998638
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: interpreter_bg_00_rot_17
+      rect:
+        serializedVersion: 2
+        x: 13194
+        y: 4595
+        width: 7
+        height: 7
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 882f040d058edac40800000000000000
+      internalID: 5525327751642411656
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: interpreter_bg_00_rot_18
+      rect:
+        serializedVersion: 2
+        x: 13205
+        y: 4595
+        width: 7
+        height: 6
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 1661f3670eaaea6a0800000000000000
+      internalID: -6436018936432617887
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: interpreter_bg_00_rot_19
+      rect:
+        serializedVersion: 2
+        x: 180
+        y: 0
+        width: 5514
+        height: 1538
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: ac712c2253769baa0800000000000000
+      internalID: -6144766738656258102
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: interpreter_bg_00_rot_20
+      rect:
+        serializedVersion: 2
+        x: 7150
+        y: 217
+        width: 6908
+        height: 3130
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 0a871c6673fe74520800000000000000
+      internalID: 2686378723975985312
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: interpreter_bg_00_rot_2
+      rect:
+        serializedVersion: 2
+        x: 10565
+        y: 5343
+        width: 3086
+        height: 871
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -184,13 +523,13 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: bg_ground
+      name: interpreter_bg_00_rot_3
       rect:
         serializedVersion: 2
-        x: 616
-        y: 281
-        width: 407
-        height: 94
+        x: 12532
+        y: 4506
+        width: 1342
+        height: 683
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -205,13 +544,13 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: bg_spaceship
+      name: interpreter_bg_00_rot_4
       rect:
         serializedVersion: 2
-        x: 616
-        y: 89
-        width: 175
-        height: 190
+        x: 10942
+        y: 4424
+        width: 1213
+        height: 801
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -226,13 +565,13 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: bg_earth
+      name: interpreter_bg_00_rot_5
       rect:
         serializedVersion: 2
-        x: 792
-        y: 112
-        width: 176
-        height: 167
+        x: 9270
+        y: 4459
+        width: 1201
+        height: 613
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -242,6 +581,27 @@ TextureImporter:
       bones: []
       spriteID: 5bef2b9d10827a640800000000000000
       internalID: 5091081892178099893
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: interpreter_bg_00_rot_6
+      rect:
+        serializedVersion: 2
+        x: 7562
+        y: 4412
+        width: 1343
+        height: 542
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 5b0ae5f08c6487350800000000000000
+      internalID: 6014635127418560693
       vertices: []
       indices: 
       edges: []

@@ -4,22 +4,25 @@ TextureImporter:
   internalIDToNameTable:
   - first:
       213: 4064657619119601021
-    second: bg_people
+    second: interpreter_bg_01_rot_0
   - first:
       213: -7548151139862744657
-    second: bg_missionControl
+    second: interpreter_bg_01_rot_1
   - first:
       213: -4131008104479038486
-    second: missionControl_success
+    second: interpreter_bg_01_rot_2
   - first:
       213: -6734142314251405171
-    second: missionControl_fail
+    second: interpreter_bg_01_rot_3
   - first:
       213: -6624604176210619645
-    second: missionControl_success_light
+    second: interpreter_bg_01_rot_4
   - first:
       213: 4641647459236523523
-    second: missionControl_fail_light
+    second: interpreter_bg_01_rot_5
+  - first:
+      213: 876060652138383767
+    second: interpreter_bg_01_rot_6
   externalObjects: {}
   serializedVersion: 11
   mipmaps:
@@ -83,7 +86,7 @@ TextureImporter:
   platformSettings:
   - serializedVersion: 3
     buildTarget: DefaultTexturePlatform
-    maxTextureSize: 2048
+    maxTextureSize: 4096
     resizeAlgorithm: 0
     textureFormat: -1
     textureCompression: 1
@@ -95,7 +98,7 @@ TextureImporter:
     forceMaximumCompressionQuality_BC6H_BC7: 0
   - serializedVersion: 3
     buildTarget: Standalone
-    maxTextureSize: 2048
+    maxTextureSize: 4096
     resizeAlgorithm: 0
     textureFormat: -1
     textureCompression: 1
@@ -121,15 +124,15 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: bg_people
+      name: interpreter_bg_01_rot_0
       rect:
         serializedVersion: 2
-        x: 1
-        y: 265
-        width: 526
-        height: 222
+        x: 0
+        y: 0
+        width: 6032
+        height: 2573
       alignment: 0
-      pivot: {x: 0.5, y: 0.5}
+      pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
@@ -142,13 +145,13 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: bg_missionControl
+      name: interpreter_bg_01_rot_1
       rect:
         serializedVersion: 2
-        x: 8
-        y: 768
-        width: 439
-        height: 255
+        x: 0
+        y: 2695
+        width: 6172
+        height: 2369
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -163,13 +166,13 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: missionControl_success
+      name: interpreter_bg_01_rot_2
       rect:
         serializedVersion: 2
-        x: 577
-        y: 737
-        width: 446
-        height: 286
+        x: 0
+        y: 5176
+        width: 5247
+        height: 3409
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -184,13 +187,13 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: missionControl_fail
+      name: interpreter_bg_01_rot_3
       rect:
         serializedVersion: 2
-        x: 577
-        y: 449
-        width: 446
-        height: 286
+        x: 0
+        y: 8594
+        width: 5305
+        height: 3077
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -205,13 +208,13 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: missionControl_success_light
+      name: interpreter_bg_01_rot_4
       rect:
         serializedVersion: 2
-        x: 576
-        y: 169
-        width: 448
-        height: 279
+        x: 6309
+        y: 8171
+        width: 5613
+        height: 3500
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -226,13 +229,13 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: missionControl_fail_light
+      name: interpreter_bg_01_rot_5
       rect:
         serializedVersion: 2
-        x: 0
-        y: 496
-        width: 360
-        height: 272
+        x: 6279
+        y: 4709
+        width: 5643
+        height: 3427
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -242,6 +245,27 @@ TextureImporter:
       bones: []
       spriteID: 30e236c85c17a6040800000000000000
       internalID: 4641647459236523523
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: interpreter_bg_01_rot_6
+      rect:
+        serializedVersion: 2
+        x: 6314
+        y: 1222
+        width: 5608
+        height: 3476
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 799c7648584682c00800000000000000
+      internalID: 876060652138383767
       vertices: []
       indices: 
       edges: []

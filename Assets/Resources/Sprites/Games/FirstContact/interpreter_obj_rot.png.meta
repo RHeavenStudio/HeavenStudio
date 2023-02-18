@@ -4,97 +4,145 @@ TextureImporter:
   internalIDToNameTable:
   - first:
       213: -7129985757264127023
-    second: alien_0
+    second: interpreter_obj_rot_0
   - first:
       213: -1098660646914058026
-    second: alien_2
+    second: interpreter_obj_rot_1
   - first:
       213: 5020440671439336802
     second: alien_legs
   - first:
       213: -3816495869400871340
-    second: alien_eyes
+    second: interpreter_obj_rot_3
   - first:
       213: -3035320832189583240
-    second: alien_mouth_0
+    second: interpreter_obj_rot_4
   - first:
       213: 5291259064932954232
-    second: alien_miss_arm
+    second: interpreter_obj_rot_5
   - first:
       213: 2248410819052320962
-    second: alien_eye
+    second: interpreter_obj_rot_6
   - first:
       213: -3428225047584607535
-    second: alien_right_arm
+    second: interpreter_obj_rot_7
   - first:
       213: 8011423965629086996
-    second: alien_right_arm
+    second: interpreter_obj_rot_7
   - first:
       213: 181945182648158444
-    second: alien_mouth_1
+    second: interpreter_obj_rot_9
   - first:
       213: 6396321707674816580
-    second: alien_mouth_2
+    second: interpreter_obj_rot_10
   - first:
       213: 7085123716216026556
-    second: alien_mouth_4
+    second: interpreter_obj_rot_11
   - first:
       213: 7320234554424209522
-    second: alien_mouth_5
+    second: interpreter_obj_rot_12
   - first:
       213: 3558353497143818176
-    second: translator_0
+    second: interpreter_obj_rot_13
   - first:
       213: 3260307773707153200
-    second: translator_left_arm
+    second: interpreter_obj_rot_14
   - first:
       213: 2512730673018478279
-    second: translator_right_arm
+    second: interpreter_obj_rot_15
   - first:
       213: 4451961617514375761
-    second: translator_head_0
+    second: interpreter_obj_rot_16
   - first:
       213: 7144353285981583256
-    second: translator_head_1
+    second: interpreter_obj_rot_17
   - first:
       213: 2589910623789939879
-    second: translator_bowl
+    second: interpreter_obj_rot_18
   - first:
       213: 2267608456244007061
-    second: translator_bowl_flare
+    second: interpreter_obj_rot_19
   - first:
       213: 7589526580095081771
-    second: translator_idle_smile
+    second: interpreter_obj_rot_20
   - first:
       213: 5765895279967760597
-    second: translator_mouth_0
+    second: interpreter_obj_rot_21
   - first:
       213: 1891658502486252124
     second: translator_mouth_1
   - first:
       213: 3279483109486195302
-    second: alien_Miss_brow
+    second: interpreter_obj_rot_23
   - first:
       213: 8030773482631099838
-    second: alien_Miss_mouth
+    second: interpreter_obj_rot_24
   - first:
       213: -2666813748081079827
-    second: alien_Miss_eyes_L
+    second: interpreter_obj_rot_25
   - first:
       213: 8475141113199897881
     second: alien_3
   - first:
       213: 8055506432240550593
-    second: whosh
+    second: interpreter_obj_rot_27
   - first:
       213: 4270001323932885020
-    second: alien_miss_arm
+    second: interpreter_obj_rot_5
   - first:
       213: 2537842466650522060
     second: alien_Miss_eyes_R
   - first:
       213: -5625640928128129307
-    second: translator_idle_neutral
+    second: interpreter_obj_rot_30
+  - first:
+      213: 2951713424982887096
+    second: interpreter_obj_rot_31
+  - first:
+      213: 3719348958592489398
+    second: interpreter_obj_rot_32
+  - first:
+      213: -8688205365992361807
+    second: interpreter_obj_rot_33
+  - first:
+      213: 4741390598928817894
+    second: interpreter_obj_rot_34
+  - first:
+      213: 905297708539798874
+    second: interpreter_obj_rot_35
+  - first:
+      213: 2199096205490750066
+    second: interpreter_obj_rot_36
+  - first:
+      213: 2771743294722309561
+    second: interpreter_obj_rot_37
+  - first:
+      213: -1538542766130121980
+    second: interpreter_obj_rot_44
+  - first:
+      213: 5197187148951867598
+    second: interpreter_obj_rot_46
+  - first:
+      213: -8532564232554074871
+    second: interpreter_obj_rot_47
+  - first:
+      213: -7413866172114925642
+    second: interpreter_obj_rot_48
+  - first:
+      213: -6878273839416344196
+    second: interpreter_obj_rot_52
+  - first:
+      213: 447233296692174290
+    second: interpreter_obj_rot_55
+  - first:
+      213: 7072238997976978119
+    second: interpreter_obj_rot_56
+  - first:
+      213: -7693017068180751629
+    second: interpreter_obj_rot_58
+  - first:
+      213: 2398735852874124774
+    second: interpreter_obj_rot_61
   externalObjects: {}
   serializedVersion: 11
   mipmaps:
@@ -139,7 +187,7 @@ TextureImporter:
   spriteMeshType: 1
   alignment: 0
   spritePivot: {x: 0.5, y: 0.5}
-  spritePixelsToUnits: 100
+  spritePixelsToUnits: 1000
   spriteBorder: {x: 0, y: 0, z: 0, w: 0}
   spriteGenerateFallbackPhysicsShape: 1
   alphaUsage: 1
@@ -158,7 +206,7 @@ TextureImporter:
   platformSettings:
   - serializedVersion: 3
     buildTarget: DefaultTexturePlatform
-    maxTextureSize: 2048
+    maxTextureSize: 4096
     resizeAlgorithm: 0
     textureFormat: -1
     textureCompression: 1
@@ -170,7 +218,7 @@ TextureImporter:
     forceMaximumCompressionQuality_BC6H_BC7: 0
   - serializedVersion: 3
     buildTarget: Standalone
-    maxTextureSize: 2048
+    maxTextureSize: 4096
     resizeAlgorithm: 0
     textureFormat: -1
     textureCompression: 1
@@ -196,15 +244,15 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: alien_0
+      name: interpreter_obj_rot_0
       rect:
         serializedVersion: 2
-        x: 865
-        y: 905
-        width: 158
-        height: 118
+        x: 1237
+        y: 10063
+        width: 1657
+        height: 1844
       alignment: 0
-      pivot: {x: 0.5, y: 0.5}
+      pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
@@ -217,15 +265,15 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: alien_2
+      name: interpreter_obj_rot_1
       rect:
         serializedVersion: 2
-        x: 865
-        y: 665
-        width: 158
-        height: 118
+        x: 3431
+        y: 11725
+        width: 347
+        height: 93
       alignment: 0
-      pivot: {x: 0.5, y: 0.5}
+      pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
@@ -238,36 +286,15 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: alien_legs
+      name: interpreter_obj_rot_3
       rect:
         serializedVersion: 2
-        x: 553
-        y: 754
-        width: 117
-        height: 165
+        x: 4159
+        y: 11693
+        width: 426
+        height: 209
       alignment: 0
-      pivot: {x: 0.5, y: 0.5}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: 265b015f0303ca540800000000000000
-      internalID: 5020440671439336802
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: alien_eyes
-      rect:
-        serializedVersion: 2
-        x: 401
-        y: 745
-        width: 70
-        height: 46
-      alignment: 0
-      pivot: {x: 0.5, y: 0.5}
+      pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
@@ -280,15 +307,15 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: alien_mouth_0
+      name: interpreter_obj_rot_4
       rect:
         serializedVersion: 2
-        x: 465
-        y: 793
-        width: 70
-        height: 62
+        x: 5020
+        y: 11690
+        width: 456
+        height: 114
       alignment: 0
-      pivot: {x: 0.5, y: 0.5}
+      pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
@@ -301,15 +328,15 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: alien_miss_arm
+      name: interpreter_obj_rot_5
       rect:
         serializedVersion: 2
-        x: 729
-        y: 665
-        width: 134
-        height: 118
+        x: 5892
+        y: 11106
+        width: 834
+        height: 791
       alignment: 0
-      pivot: {x: 0.5, y: 0.5}
+      pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
@@ -322,15 +349,15 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: alien_eye
+      name: interpreter_obj_rot_6
       rect:
         serializedVersion: 2
-        x: 473
-        y: 745
-        width: 46
-        height: 46
+        x: 7029
+        y: 11275
+        width: 988
+        height: 632
       alignment: 0
-      pivot: {x: 0.5, y: 0.5}
+      pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
@@ -343,15 +370,15 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: alien_right_arm
+      name: interpreter_obj_rot_7
       rect:
         serializedVersion: 2
-        x: 753
-        y: 785
-        width: 110
-        height: 78
+        x: 8505
+        y: 11260
+        width: 881
+        height: 625
       alignment: 0
-      pivot: {x: 0.5, y: 0.5}
+      pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
@@ -364,15 +391,15 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: alien_left_arm
+      name: interpreter_obj_rot_8
       rect:
         serializedVersion: 2
-        x: 753
-        y: 937
-        width: 110
-        height: 86
+        x: 9834
+        y: 10876
+        width: 1488
+        height: 1031
       alignment: 0
-      pivot: {x: 0.5, y: 0.5}
+      pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
@@ -385,15 +412,15 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: alien_mouth_1
+      name: interpreter_obj_rot_9
       rect:
         serializedVersion: 2
-        x: 465
-        y: 857
-        width: 70
-        height: 54
+        x: 3873
+        y: 10911
+        width: 712
+        height: 300
       alignment: 0
-      pivot: {x: 0.5, y: 0.5}
+      pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
@@ -406,15 +433,15 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: alien_mouth_2
+      name: interpreter_obj_rot_10
       rect:
         serializedVersion: 2
-        x: 465
-        y: 913
-        width: 70
-        height: 54
+        x: 5019
+        y: 10952
+        width: 457
+        height: 259
       alignment: 0
-      pivot: {x: 0.5, y: 0.5}
+      pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
@@ -427,15 +454,15 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: alien_mouth_4
+      name: interpreter_obj_rot_11
       rect:
         serializedVersion: 2
-        x: 465
-        y: 969
-        width: 70
-        height: 54
+        x: 3560
+        y: 10077
+        width: 261
+        height: 392
       alignment: 0
-      pivot: {x: 0.5, y: 0.5}
+      pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
@@ -448,15 +475,15 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: alien_mouth_5
+      name: interpreter_obj_rot_12
       rect:
         serializedVersion: 2
-        x: 401
-        y: 841
-        width: 62
-        height: 62
+        x: 4272
+        y: 10074
+        width: 302
+        height: 387
       alignment: 0
-      pivot: {x: 0.5, y: 0.5}
+      pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
@@ -469,15 +496,15 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: translator_0
+      name: interpreter_obj_rot_13
       rect:
         serializedVersion: 2
-        x: 849
-        y: 193
-        width: 174
-        height: 390
+        x: 5034
+        y: 10182
+        width: 416
+        height: 331
       alignment: 0
-      pivot: {x: 0.5, y: 0.5}
+      pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
@@ -490,15 +517,15 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: translator_left_arm
+      name: interpreter_obj_rot_14
       rect:
         serializedVersion: 2
-        x: 689
-        y: 433
-        width: 158
-        height: 150
+        x: 6078
+        y: 9100
+        width: 1011
+        height: 1532
       alignment: 0
-      pivot: {x: 0.5, y: 0.5}
+      pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
@@ -511,15 +538,15 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: translator_right_arm
+      name: interpreter_obj_rot_15
       rect:
         serializedVersion: 2
-        x: 753
-        y: 281
-        width: 94
-        height: 150
+        x: 8482
+        y: 10408
+        width: 916
+        height: 431
       alignment: 0
-      pivot: {x: 0.5, y: 0.5}
+      pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
@@ -532,15 +559,15 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: translator_head_0
+      name: interpreter_obj_rot_16
       rect:
         serializedVersion: 2
-        x: 481
-        y: 433
-        width: 102
-        height: 150
+        x: 9832
+        y: 9397
+        width: 1496
+        height: 1064
       alignment: 0
-      pivot: {x: 0.5, y: 0.5}
+      pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
@@ -553,15 +580,15 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: translator_head_1
+      name: interpreter_obj_rot_17
       rect:
         serializedVersion: 2
-        x: 585
-        y: 433
-        width: 102
-        height: 150
+        x: 1129
+        y: 7725
+        width: 1857
+        height: 1884
       alignment: 0
-      pivot: {x: 0.5, y: 0.5}
+      pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
@@ -574,15 +601,15 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: translator_bowl
+      name: interpreter_obj_rot_18
       rect:
         serializedVersion: 2
-        x: 665
-        y: 113
-        width: 118
-        height: 118
+        x: 3548
+        y: 9443
+        width: 268
+        height: 259
       alignment: 0
-      pivot: {x: 0.5, y: 0.5}
+      pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
@@ -595,15 +622,15 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: translator_bowl_flare
+      name: interpreter_obj_rot_19
       rect:
         serializedVersion: 2
-        x: 785
-        y: 169
-        width: 62
-        height: 62
+        x: 5048
+        y: 9499
+        width: 381
+        height: 372
       alignment: 0
-      pivot: {x: 0.5, y: 0.5}
+      pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
@@ -616,15 +643,15 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: translator_idle_smile
+      name: interpreter_obj_rot_20
       rect:
         serializedVersion: 2
-        x: 665
-        y: 393
-        width: 46
-        height: 38
+        x: 8514
+        y: 9475
+        width: 894
+        height: 503
       alignment: 0
-      pivot: {x: 0.5, y: 0.5}
+      pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
@@ -637,15 +664,15 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: translator_mouth_0
+      name: interpreter_obj_rot_21
       rect:
         serializedVersion: 2
-        x: 665
-        y: 233
-        width: 46
-        height: 46
+        x: 4247
+        y: 8939
+        width: 419
+        height: 174
       alignment: 0
-      pivot: {x: 0.5, y: 0.5}
+      pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
@@ -658,36 +685,15 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: translator_mouth_1
+      name: interpreter_obj_rot_23
       rect:
         serializedVersion: 2
-        x: 713
-        y: 233
-        width: 38
-        height: 46
+        x: 5133
+        y: 8952
+        width: 110
+        height: 153
       alignment: 0
-      pivot: {x: 0.5, y: 0.5}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: c5a5a05b265804a10800000000000000
-      internalID: 1891658502486252124
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: alien_Miss_brow
-      rect:
-        serializedVersion: 2
-        x: 393
-        y: 969
-        width: 70
-        height: 54
-      alignment: 0
-      pivot: {x: 0.5, y: 0.5}
+      pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
@@ -700,15 +706,15 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: alien_Miss_mouth
+      name: interpreter_obj_rot_24
       rect:
         serializedVersion: 2
-        x: 369
-        y: 905
-        width: 94
-        height: 62
+        x: 8229
+        y: 7964
+        width: 1180
+        height: 1058
       alignment: 0
-      pivot: {x: 0.5, y: 0.5}
+      pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
@@ -721,15 +727,15 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: alien_Miss_eyes_L
+      name: interpreter_obj_rot_25
       rect:
         serializedVersion: 2
-        x: 353
-        y: 689
-        width: 40
-        height: 54
+        x: 9925
+        y: 7970
+        width: 1403
+        height: 1058
       alignment: 0
-      pivot: {x: 0.5, y: 0.5}
+      pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
@@ -742,36 +748,15 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: alien_3
+      name: interpreter_obj_rot_27
       rect:
         serializedVersion: 2
-        x: 865
-        y: 785
-        width: 158
-        height: 118
+        x: 3648
+        y: 8257
+        width: 562
+        height: 270
       alignment: 0
-      pivot: {x: 0.5, y: 0.5}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: 91da69170ffbd9570800000000000000
-      internalID: 8475141113199897881
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: whosh
-      rect:
-        serializedVersion: 2
-        x: 817
-        y: 585
-        width: 206
-        height: 78
-      alignment: 0
-      pivot: {x: 0.5, y: 0.5}
+      pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
@@ -784,15 +769,15 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: alien_turnover_arm
+      name: interpreter_obj_rot_28
       rect:
         serializedVersion: 2
-        x: 537
-        y: 921
-        width: 102
-        height: 102
+        x: 4647
+        y: 8288
+        width: 606
+        height: 242
       alignment: 0
-      pivot: {x: 0.5, y: 0.5}
+      pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
@@ -805,34 +790,13 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: alien_Miss_eyes_R
+      name: interpreter_obj_rot_30
       rect:
         serializedVersion: 2
-        x: 393
-        y: 689
-        width: 38
-        height: 54
-      alignment: 0
-      pivot: {x: 0.5, y: 0.5}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: cc10b90074a383320800000000000000
-      internalID: 2537842466650522060
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: translator_idle_neutral
-      rect:
-        serializedVersion: 2
-        x: 617
-        y: 393
-        width: 46
-        height: 38
+        x: 5697
+        y: 8283
+        width: 1395
+        height: 340
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -842,6 +806,342 @@ TextureImporter:
       bones: []
       spriteID: 5e6260db165bde1b0800000000000000
       internalID: -5625640928128129307
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: interpreter_obj_rot_31
+      rect:
+        serializedVersion: 2
+        x: 1095
+        y: 5574
+        width: 1878
+        height: 1736
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 8ba4bde98b796f820800000000000000
+      internalID: 2951713424982887096
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: interpreter_obj_rot_32
+      rect:
+        serializedVersion: 2
+        x: 4810
+        y: 7188
+        width: 381
+        height: 119
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 6b7df900c28cd9330800000000000000
+      internalID: 3719348958592489398
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: interpreter_obj_rot_33
+      rect:
+        serializedVersion: 2
+        x: 6752
+        y: 5185
+        width: 1576
+        height: 2157
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 1b0f160704b4d6780800000000000000
+      internalID: -8688205365992361807
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: interpreter_obj_rot_34
+      rect:
+        serializedVersion: 2
+        x: 9203
+        y: 7036
+        width: 2074
+        height: 553
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 6ee5786f0adccc140800000000000000
+      internalID: 4741390598928817894
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: interpreter_obj_rot_35
+      rect:
+        serializedVersion: 2
+        x: 1098
+        y: 3513
+        width: 1893
+        height: 1674
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: a556d7d2873409c00800000000000000
+      internalID: 905297708539798874
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: interpreter_obj_rot_36
+      rect:
+        serializedVersion: 2
+        x: 3458
+        y: 4804
+        width: 1925
+        height: 1924
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 2728f2bf852c48e10800000000000000
+      internalID: 2199096205490750066
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: interpreter_obj_rot_37
+      rect:
+        serializedVersion: 2
+        x: 8738
+        y: 3801
+        width: 2602
+        height: 2831
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 9bd7e7a57d5377620800000000000000
+      internalID: 2771743294722309561
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: interpreter_obj_rot_44
+      rect:
+        serializedVersion: 2
+        x: 3575
+        y: 3941
+        width: 718
+        height: 480
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 4033119718ff5aae0800000000000000
+      internalID: -1538542766130121980
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: interpreter_obj_rot_46
+      rect:
+        serializedVersion: 2
+        x: 3769
+        y: 1464
+        width: 654
+        height: 1124
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: ec050841d2e102840800000000000000
+      internalID: 5197187148951867598
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: interpreter_obj_rot_47
+      rect:
+        serializedVersion: 2
+        x: 6525
+        y: 1353
+        width: 1111
+        height: 898
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 90d2967b90e369980800000000000000
+      internalID: -8532564232554074871
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: interpreter_obj_rot_48
+      rect:
+        serializedVersion: 2
+        x: 8543
+        y: 615
+        width: 2801
+        height: 2746
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 6b70ece2ff7ac1990800000000000000
+      internalID: -7413866172114925642
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: interpreter_obj_rot_52
+      rect:
+        serializedVersion: 2
+        x: 696
+        y: 801
+        width: 268
+        height: 119
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: c710abdb2667b80a0800000000000000
+      internalID: -6878273839416344196
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: interpreter_obj_rot_55
+      rect:
+        serializedVersion: 2
+        x: 6531
+        y: 0
+        width: 797
+        height: 996
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 2dd50155054e43600800000000000000
+      internalID: 447233296692174290
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: interpreter_obj_rot_56
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 782
+        width: 316
+        height: 156
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 7c21519f5e3a52260800000000000000
+      internalID: 7072238997976978119
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: interpreter_obj_rot_58
+      rect:
+        serializedVersion: 2
+        x: 1
+        y: 106
+        width: 291
+        height: 184
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 3fab1106cb9ec3590800000000000000
+      internalID: -7693017068180751629
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: interpreter_obj_rot_61
+      rect:
+        serializedVersion: 2
+        x: 719
+        y: 114
+        width: 211
+        height: 184
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 6ed4e849c850a4120800000000000000
+      internalID: 2398735852874124774
       vertices: []
       indices: 
       edges: []
