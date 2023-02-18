@@ -30,6 +30,11 @@ namespace HeavenStudio.Games.Scripts_TapTroupe
             expressionAnim.DoScaledAnimationAsync("Okay", 0.25f);
         }
 
+        public void OkaySign()
+        {
+            bodyAnim.DoScaledAnimationAsync("OkaySign", 0.25f);
+        }
+
         public void PartyPopper(float beat)
         {
             bodyAnim.Play("PartyPopperReady", 0, 0);

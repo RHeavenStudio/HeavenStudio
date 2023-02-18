@@ -335,6 +335,15 @@ namespace HeavenStudio.Games
                         new MultiSound.Sound($"tapTroupe/okay{okayVoiceLine}1", finalBeatToSpawn + 0.5f),
                         new MultiSound.Sound($"tapTroupe/okay{okayVoiceLine}2", finalBeatToSpawn + 1f),
                     }, forcePlay: true);
+                }),
+                new BeatAction.Action(finalBeatToSpawn + 1f, delegate
+                {
+                    if (missedTaps || animType != (int)OkayAnimType.OkSign) return;
+                    playerCorner.OkaySign();
+                    foreach (var corner in npcCorners)
+                    {
+                        corner.OkaySign();
+                    }
                 })
             });
             MultiSound.Play(soundsToPlay.ToArray(), forcePlay: true);
