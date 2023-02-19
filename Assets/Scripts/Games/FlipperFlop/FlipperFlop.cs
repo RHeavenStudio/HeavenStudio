@@ -52,8 +52,12 @@ namespace HeavenStudio.Games.Loaders
                 },
                 new GameAction("bop", "Bop") 
                 {
-                    function = delegate {var e = eventCaller.currentEntity; FlipperFlop.instance.Bop(); },
-                    defaultLength = 1f
+                    function = delegate {var e = eventCaller.currentEntity; FlipperFlop.instance.Bop(e["whoBops"]); },
+                    defaultLength = 1f,
+                    parameters = new List<Param>()
+                    {
+                        new Param("whoBops", FlipperFlop.WhoBops.Both, "Who Bops?", "Who will bop?")
+                    }
                 },
             });
         }
@@ -65,6 +69,8 @@ namespace HeavenStudio.Games
     using Scripts_FlipperFlop;
     public class FlipperFlop : Minigame
     {
+        [Header("Components")]
+        [SerializeField] Animator captainTuckAnim;
         [Header("Properties")]
         private bool missed;
         static List<QueuedFlip> queuedInputs = new List<QueuedFlip>();
@@ -88,6 +94,12 @@ namespace HeavenStudio.Games
             WellDone = 4,
             Yes = 5,
             Random = 6
+        }
+        public enum WhoBops
+        {
+            Flippers = 0,
+            CaptainTuck = 1,
+            Both = 2
         }
 
         public static FlipperFlop instance;
@@ -121,13 +133,30 @@ namespace HeavenStudio.Games
             }
         }
 
-        public void Bop()
+        public void Bop(int whoBops)
         {
-            foreach (var flipper in flippers)
+            switch (whoBops)
             {
-                flipper.Bop();
+                case (int)WhoBops.Flippers:
+                    foreach (var flipper in flippers)
+                    {
+                        flipper.Bop();
+                    }
+                    flipperPlayer.Bop();
+                    break;
+                case (int)WhoBops.CaptainTuck:
+                    captainTuckAnim.DoScaledAnimationAsync("CaptainBop", 0.5f);
+                    break;
+                case (int)WhoBops.Both:
+                    foreach (var flipper in flippers)
+                    {
+                        flipper.Bop();
+                    }
+                    flipperPlayer.Bop();
+                    captainTuckAnim.DoScaledAnimationAsync("CaptainBop", 0.5f);
+                    break;
             }
-            flipperPlayer.Bop();
+
         }
 
         public static void Flipping(float beat, float length, bool roll, bool uh = false, bool thatsIt = false, int appreciation = 0)
@@ -199,7 +228,15 @@ namespace HeavenStudio.Games
                             new BeatAction.Action(beat + i, delegate {
                                 string voiceLine = soundToPlay;
                                 string failVoiceLine = failingSoundToPlay;
-                                if (missed) voiceLine = failVoiceLine;
+                                if (missed)
+                                {
+                                    voiceLine = failVoiceLine;
+                                }
+                                else
+                                {
+                                    captainTuckAnim.DoScaledAnimationAsync("CaptainRoll", 0.5f);
+                                }
+
                                 Jukebox.PlayOneShotGame(voiceLine); 
                             }),
                         });
@@ -231,7 +268,7 @@ namespace HeavenStudio.Games
                     {
                         BeatAction.New(instance.gameObject, new List<BeatAction.Action>()
                         {
-                            new BeatAction.Action(beat + i, delegate { flipper.Flip(roll, true);})
+                            new BeatAction.Action(beat + i, delegate { flipper.Flip(roll, true); captainTuckAnim.DoScaledAnimationAsync("CaptainBop", 0.5f); })
                         });
                     }
                 }

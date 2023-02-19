@@ -3200,7 +3200,7 @@ Animator:
   m_GameObject: {fileID: 5436821662953213593}
   m_Enabled: 1
   m_Avatar: {fileID: 0}
-  m_Controller: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: f94e6b4d33d29bd4dbaa47962b5b8e74, type: 2}
   m_CullingMode: 0
   m_UpdateMode: 0
   m_ApplyRootMotion: 0
@@ -4760,6 +4760,7 @@ MonoBehaviour:
   EligibleHits: []
   scheduledInputs: []
   firstEnable: 0
+  captainTuckAnim: {fileID: 2975798990096139873}
   flipperPlayer: {fileID: 6920852969013426776}
   flippers:
   - {fileID: 8540647158547329847}
