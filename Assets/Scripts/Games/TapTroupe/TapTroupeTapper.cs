@@ -10,8 +10,7 @@ namespace HeavenStudio.Games.Scripts_TapTroupe
         public Animator anim;
         [SerializeField] GameObject impactStep;
         private TapTroupe game;
-        [SerializeField] bool player;
-        [SerializeField] int soundIndex;
+        public bool dontSwitchNextStep = false;
         public enum TapAnim
         {
             Bam,
@@ -27,9 +26,15 @@ namespace HeavenStudio.Games.Scripts_TapTroupe
             anim = GetComponent<Animator>();
         }
 
+        public void FadeOut(float pos)
+        {
+            anim.DoNormalizedAnimation("FeetFadeOut", pos * 8);
+        }
+
         public void Step(bool hit = true, bool switchFeet = true)
         {
-            if (switchFeet) transform.localScale = new Vector3(transform.localScale.x * -1, transform.localScale.y, 1);
+            if (switchFeet && !dontSwitchNextStep) transform.localScale = new Vector3(transform.localScale.x * -1, transform.localScale.y, 1);
+            if (dontSwitchNextStep) dontSwitchNextStep = false;
             if (hit)
             {
                 if (TapTroupe.prepareTap)
@@ -85,7 +90,6 @@ namespace HeavenStudio.Games.Scripts_TapTroupe
                     break;
             }
             anim.DoScaledAnimationAsync(animName, 0.5f);
-            if (!player) Jukebox.PlayOneShotGame($"tapTroupe/other{soundIndex}");
         }
 
         public void Bop()
