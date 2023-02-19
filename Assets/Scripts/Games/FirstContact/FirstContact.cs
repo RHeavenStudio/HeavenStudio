@@ -18,7 +18,7 @@ namespace HeavenStudio.Games.Loaders
                     resizable = true,
                     priority = 1,
                 },
-                new GameAction("alien speak", "Alien Speak")
+                new GameAction("alien speak", "Bob Speak")
                 {
                     function = delegate { FirstContact.instance.alienSpeak(eventCaller.currentEntity.beat, eventCaller.currentEntity["valA"], eventCaller.currentEntity["dialogue"]);  }, 
                     defaultLength = 0.5f,
@@ -283,12 +283,14 @@ namespace HeavenStudio.Games
         {
             string[] sfxStrings = { "", "" };
             string animString = "";
+            float secondSoundOffset = 0f;
 
             if (!hasMissed)
             {
                 sfxStrings[0] = "firstContact/success_1";
                 sfxStrings[1] = "firstContact/success_2";
                 animString = "alien_success";
+                secondSoundOffset = 0.1f;
             }
             else
             {
@@ -301,7 +303,7 @@ namespace HeavenStudio.Games
             var sound = new MultiSound.Sound[]
             {
                 new MultiSound.Sound(sounds[0], beat),
-                new MultiSound.Sound(sounds[1], beat + .5f)
+                new MultiSound.Sound(sounds[1], beat + .5f, 1f, 1f, false, secondSoundOffset)
             };
 
             MultiSound.Play(sound);
