@@ -27,24 +27,15 @@ namespace HeavenStudio.Games.Loaders
                     function = delegate { DogNinja.instance.Prepare(eventCaller.currentEntity.beat); }, 
                     defaultLength = 0.5f,
                 },
-                new GameAction("ThrowObjectLeft", "Throw Left Object")
+                new GameAction("ThrowObjectLeft", "Throw Object")
                 {
-                    function = delegate { var e = eventCaller.currentEntity; DogNinja.instance.ThrowObject(e.beat, e["type"], e["text"], true); }, 
+                    function = delegate { var e = eventCaller.currentEntity; DogNinja.instance.ThrowObject(e.beat, e["type"], e["text"], e["left"]); }, 
                     defaultLength = 2,
                     parameters = new List<Param>()
                     {
                         new Param("type", DogNinja.ObjectType.Random, "Object", "The object to be thrown"),
                         new Param("text", "", "Alt. Objects", "An alternative object; one that doesn't exist in the main menu"),
-                    }
-                },
-                new GameAction("ThrowObjectRight", "Throw Right Object")
-                {
-                    function = delegate { var e = eventCaller.currentEntity; DogNinja.instance.ThrowObject(e.beat, e["type"], e["text"], false); }, 
-                    defaultLength = 2,
-                    parameters = new List<Param>()
-                    {
-                        new Param("type", DogNinja.ObjectType.Random, "Object", "The object to be thrown"),
-                        new Param("text", "", "Alt. Objects", "An alternative object; one that doesn't exist in the main menu"),
+                        new Param("left", true, "Throw from left?", "Whether the object should come from the left or right")
                     }
                 },
                 new GameAction("ThrowObjectBoth", "Throw Right & Left Object")
@@ -167,7 +158,7 @@ namespace HeavenStudio.Games
 
                 //DogAnim.DoScaledAnimation(slice, lastReportedBeat);
                 
-                DogAnim.Play(slice, 0, 0);
+                DogAnim.DoScaledAnimationAsync(slice, 0.5f);
                 Jukebox.PlayOneShotGame("dogNinja/whiff");
             };
         }
@@ -176,19 +167,14 @@ namespace HeavenStudio.Games
         {
             if (Conductor.instance.ReportBeat(ref lastReportedBeat) && DogAnim.IsAnimationNotPlaying() && !dontBop)
             {
-                DogAnim.Play("Bop", 0, 0);
+                DogAnim.DoScaledAnimationAsync("Bop", 0.5f);
             };
         }
 
         public void Bop(float beat, bool bop, bool manual)
         {
-            if (manual) DogAnim.Play("Bop", 0, 0);
-
-            if (bop) {
-                dontBop = false;
-            } else {
-                dontBop = true;
-            };
+            if (manual) DogAnim.DoScaledAnimationAsync("Bop", 0.5f);
+            dontBop = !bop;
         }
 
         // my solution for making three functions for three cues; just put the big complicated code into another function
@@ -223,28 +209,8 @@ namespace HeavenStudio.Games
 
         public void ThrowBothObject(float beat, int ObjType1, int ObjType2, string textObj1, string textObj2)
         {
-            
-            WhichObjectMath(ObjType1, textObj1);
-
-            // instantiate a game object on the left and give it its variables
-            ThrowObject LObject = Instantiate(ObjectBase).GetComponent<ThrowObject>();
-            LObject.startBeat = beat;
-            LObject.type = ObjType1;
-            LObject.textObj = textObj1;
-            LObject.curve = CurveFromLeft;
-            LObject.fromLeft = true;
-            LObject.fromBoth = true;
-
-            WhichObjectMath(ObjType2, textObj2);
-
-            // instantiate a game object on the left and give it its variables
-            ThrowObject RObject = Instantiate(ObjectBase).GetComponent<ThrowObject>();
-            RObject.startBeat = beat;
-            RObject.type = ObjType2;
-            RObject.textObj = textObj2;
-            RObject.curve = CurveFromRight;
-            RObject.fromLeft = false;
-            RObject.fromBoth = true;
+            ThrowObject(beat, ObjType1, textObj1, false);
+            ThrowObject(beat, ObjType2, textObj2, true);
         }
 
         public void CutEverything(float beat, bool sound)
@@ -265,7 +231,7 @@ namespace HeavenStudio.Games
 
         public void Prepare(float beat)
         {
-            DogAnim.DoScaledAnimation("Prepare", beat);
+            DogAnim.DoScaledAnimationAsync("Prepare", 0.5f);
         }
 
         // it's repeated code but the alternative saves no space

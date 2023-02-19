@@ -33,13 +33,6 @@ namespace HeavenStudio.Games.Scripts_DogNinja
             game = DogNinja.instance;
         }
 
-        private void Start()
-        {
-            if (!lefty) {
-
-            };
-        }
-
         private void Update()
         {
             float flyPosHalves = Conductor.instance.GetPositionFromBeat(startBeat, 1f)+0.65f;
@@ -47,6 +40,7 @@ namespace HeavenStudio.Games.Scripts_DogNinja
             transform.position = HalfCurve.GetPoint(flyPosHalves);
 
             float rot = rotSpeed;
+            if (!lefty) rot *= -1;
             transform.rotation = Quaternion.Euler(0, 0, transform.rotation.eulerAngles.z + (rot * Time.deltaTime));
 
             // clean-up logic

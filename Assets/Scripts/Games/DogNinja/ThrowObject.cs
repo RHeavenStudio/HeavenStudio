@@ -90,7 +90,7 @@ namespace HeavenStudio.Games.Scripts_DogNinja
                 Slice += "Both";
             };
 
-            DogAnim.Play(Slice, 0, 0);
+            DogAnim.DoScaledAnimationAsync(Slice, 0.5f);
             if (fromLeft && fromBoth) {} else { Jukebox.PlayOneShotGame(sfxNum+"2"); }
 
             GameObject.Destroy(gameObject);
