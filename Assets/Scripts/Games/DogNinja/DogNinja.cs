@@ -29,7 +29,7 @@ namespace HeavenStudio.Games.Loaders
                 },
                 new GameAction("ThrowObjectLeft", "Throw Object")
                 {
-                    function = delegate { var e = eventCaller.currentEntity; DogNinja.instance.ThrowObject(e.beat, e["type"], e["text"], e["left"]); }, 
+                    function = delegate { var e = eventCaller.currentEntity; DogNinja.instance.ThrowObject(e.beat, e["type"], e["text"], e["left"], false); }, 
                     defaultLength = 2,
                     parameters = new List<Param>()
                     {
@@ -38,7 +38,7 @@ namespace HeavenStudio.Games.Loaders
                         new Param("left", true, "Throw from left?", "Whether the object should come from the left or right")
                     }
                 },
-                new GameAction("ThrowObjectBoth", "Throw Right & Left Object")
+                new GameAction("ThrowObjectBoth", "Throw Left & Right Object")
                 {
                     function = delegate { var e = eventCaller.currentEntity; DogNinja.instance.ThrowBothObject(e.beat, e["type"], e["type2"], e["text"], e["text2"]); }, 
                     defaultLength = 2,
@@ -102,6 +102,7 @@ namespace HeavenStudio.Games
         private float lastReportedBeat = 0f;
         private bool birdOnScreen = false;
         static bool dontBop = false;
+        public bool needPrepare = false;
         string sfxNum = "dogNinja/";
         
         public static DogNinja instance;
@@ -143,8 +144,11 @@ namespace HeavenStudio.Games
 
         private void Update()
         {
+            if (needPrepare && DogAnim.IsAnimationNotPlaying())
+            {
+                DogAnim.DoScaledAnimationAsync("Prepare", 0.5f);
+            };
             
-
             if (PlayerInput.Pressed() && !IsExpectingInputNow(InputType.STANDARD_DOWN))
             {
                 System.Random rd = new System.Random();
@@ -193,7 +197,7 @@ namespace HeavenStudio.Games
             } else { WhichObject.sprite = ObjectTypes[ObjType]; };
         }
 
-        public void ThrowObject(float beat, int ObjType, string textObj, bool fromLeft)
+        public void ThrowObject(float beat, int ObjType, string textObj, bool fromLeft, bool fromBoth)
         {
             WhichObjectMath(ObjType, textObj);
 
@@ -203,14 +207,15 @@ namespace HeavenStudio.Games
             Object.type = ObjType;
             Object.curve = fromLeft ? CurveFromLeft : CurveFromRight;
             Object.fromLeft = fromLeft;
+            Object.fromBoth = fromBoth;
             Object.textObj = textObj;
             Object.sfxNum = sfxNum;
         }
 
         public void ThrowBothObject(float beat, int ObjType1, int ObjType2, string textObj1, string textObj2)
         {
-            ThrowObject(beat, ObjType1, textObj1, false);
-            ThrowObject(beat, ObjType2, textObj2, true);
+            ThrowObject(beat, ObjType1, textObj1, false, true);
+            ThrowObject(beat, ObjType2, textObj2, true, true);
         }
 
         public void CutEverything(float beat, bool sound)

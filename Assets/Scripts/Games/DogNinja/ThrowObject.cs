@@ -21,6 +21,7 @@ namespace HeavenStudio.Games.Scripts_DogNinja
 
         [Header("Animators")]
         public Animator DogAnim;
+        public Animation Prepare;
 
         [Header("References")]
         public GameObject ObjectBase;
@@ -58,6 +59,8 @@ namespace HeavenStudio.Games.Scripts_DogNinja
             if (fromLeft && fromBoth) {} else { Jukebox.PlayOneShotGame(sfxNum+"1"); }
             
             game.ScheduleInput(startBeat, 1f, InputType.STANDARD_DOWN, Hit, Out, Miss);
+            
+            game.needPrepare = true;
         }
 
         private void Update()
@@ -114,6 +117,7 @@ namespace HeavenStudio.Games.Scripts_DogNinja
 
         private void Hit(PlayerActionEvent caller, float state)
         {
+            game.needPrepare = false;
             if (state >= 1f || state <= -1f) {
                 JustSlice();
             } else {
@@ -125,6 +129,7 @@ namespace HeavenStudio.Games.Scripts_DogNinja
         private void Miss(PlayerActionEvent caller)
         {
             DogAnim.Play("UnPrepare", 0, 0);
+            game.needPrepare = false;
         }
 
         private void Out(PlayerActionEvent caller) 
