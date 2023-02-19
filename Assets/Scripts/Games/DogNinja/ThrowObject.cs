@@ -16,12 +16,8 @@ namespace HeavenStudio.Games.Scripts_DogNinja
         public bool fromLeft;
         public bool fromBoth;
         public Vector3 objPos;
-        //float leftNumber;
-        //float rightNumber;
-        
-
-        // this condenses the sfx code so much 
         public string sfxNum = "dogNinja/";
+        
 
         [Header("Animators")]
         public Animator DogAnim;
@@ -60,15 +56,17 @@ namespace HeavenStudio.Games.Scripts_DogNinja
                     sfxNum += "fruit";
                     break;
             };
-
-            Jukebox.PlayOneShotGame(sfxNum+"1");
-        
+            
+            if (fromLeft && fromBoth) {} else { Jukebox.PlayOneShotGame(sfxNum+"1"); }
+            
             game.ScheduleInput(startBeat, 1f, InputType.STANDARD_DOWN, Hit, Out, Miss);
 
+            // too much jank so i replaced it with a block
+            /* 
             if (DogAnim.IsAnimationNotPlaying()) {
                 DogAnim.DoScaledAnimation("Prepare", startBeat);
-                DogAnim.SetBool("preparing", true);
-            };
+            }
+            */
         }
 
         private void Update()
@@ -90,41 +88,55 @@ namespace HeavenStudio.Games.Scripts_DogNinja
             };
         }
 
-        private void Hit(PlayerActionEvent caller, float state)
+        private void SuccessSlice() 
         {
-            string Slice;
+            string Slice = "Slice";
             if (!fromBoth && fromLeft) {
-                Slice = "SliceLeft";
+                Slice += "Left";
             } else if (!fromBoth && !fromLeft) {
-                Slice = "SliceRight";
+                Slice += "Right";
             } else {
-                Slice = "SliceBoth";
+                Slice += "Both";
             };
 
             DogAnim.Play(Slice, 0, 0);
-            Jukebox.PlayOneShotGame(sfxNum+"2");
+            if (fromLeft && fromBoth) {} else { Jukebox.PlayOneShotGame(sfxNum+"2"); }
 
             GameObject.Destroy(gameObject);
             
             SpawnHalves LeftHalf = Instantiate(game.HalvesLeftBase).GetComponent<SpawnHalves>();
             LeftHalf.startBeat = startBeat;
             LeftHalf.objPos = objPos;
+            LeftHalf.lefty = true;
 
             SpawnHalves RightHalf = Instantiate(game.HalvesRightBase).GetComponent<SpawnHalves>();
             RightHalf.startBeat = startBeat;
-            
+            RightHalf.lefty = false;
+        }
+
+        private void JustSlice()
+        {
+
+        }
+
+        private void Hit(PlayerActionEvent caller, float state)
+        {
+            if (state >= 1f || state <= -1f) {
+                JustSlice();
+            } else {
+                SuccessSlice();
+            }
         }
             
 
-        // miss and out are unused im pretty sure? when you miss in this game it just kinda flies by 
         private void Miss(PlayerActionEvent caller)
         {
-            
+            DogAnim.Play("UnPrepare", 0, 0);
         }
 
         private void Out(PlayerActionEvent caller) 
         {
-            DogAnim.Play("Unprepare", 0, 0);
+            
         }
     }
 }

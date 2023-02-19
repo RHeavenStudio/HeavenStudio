@@ -12,7 +12,8 @@ namespace HeavenStudio.Games.Scripts_DogNinja
     {
         public float startBeat;
         public Vector3 objPos;
-        const float rotSpeed = 90f;
+        public bool lefty;
+        const float rotSpeed = 140f;
 
         [Header("References")]
         public SpriteRenderer HalfSprite;
@@ -20,6 +21,8 @@ namespace HeavenStudio.Games.Scripts_DogNinja
         
         [Header("Curves")]
         public BezierCurve3D HalfCurve;
+        public Transform HalfCurveTrans;
+
 
         public Sprite[] WhichHalf;
 
@@ -32,7 +35,10 @@ namespace HeavenStudio.Games.Scripts_DogNinja
 
         private void Start()
         {
-
+            if (!lefty) {
+                HalfCurveTrans.position = new Vector3(-13.5f, 1.36f, 0);
+                HalfCurveTrans.localScale = new Vector3(-1, 1 , 0);
+            }
         }
 
         private void Update()
@@ -41,7 +47,7 @@ namespace HeavenStudio.Games.Scripts_DogNinja
             flyPosHalves *= 0.2f;
             transform.position = HalfCurve.GetPoint(flyPosHalves);
 
-            float rot = -rotSpeed;
+            float rot = rotSpeed;
             transform.rotation = Quaternion.Euler(0, 0, transform.rotation.eulerAngles.z + (rot * Time.deltaTime));
 
             // clean-up logic

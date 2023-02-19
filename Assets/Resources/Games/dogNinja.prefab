@@ -505,9 +505,11 @@ MonoBehaviour:
   triggersAutoplay: 1
   startBeat: 0
   objPos: {x: 0, y: 0, z: 0}
+  lefty: 0
   HalfSprite: {fileID: 7206843505938361017}
   Half: {fileID: 4255175261387265698}
   HalfCurve: {fileID: 7191847337805905266}
+  HalfCurveTrans: {fileID: 7533458038457786255}
   WhichHalf: []
 --- !u!1 &1203023033644261752
 GameObject:
@@ -1525,6 +1527,7 @@ MonoBehaviour:
   - {fileID: 8158683621920566786, guid: 4e56f90ec52abea4ea8c4c7bb6df84d5, type: 3}
   - {fileID: 2661523571443289938, guid: 4e56f90ec52abea4ea8c4c7bb6df84d5, type: 3}
   - {fileID: 2053246660185171032, guid: 4e56f90ec52abea4ea8c4c7bb6df84d5, type: 3}
+  - {fileID: -4323599147261721131, guid: 4e56f90ec52abea4ea8c4c7bb6df84d5, type: 3}
 --- !u!1 &3003950051270483240
 GameObject:
   m_ObjectHideFlags: 0
@@ -1644,7 +1647,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 3165026792835370398}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -6.847064, y: -8.186802, z: 0}
+  m_LocalPosition: {x: -6.4515524, y: -9.727802, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 273414665257742554}
@@ -1664,8 +1667,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   curve: {fileID: 7764367815067799206}
   handleType: 0
-  leftHandleLocalPosition: {x: 0.18216562, y: -2.7479277, z: -0}
-  rightHandleLocalPosition: {x: -0.18216562, y: 2.7479277, z: 0}
+  leftHandleLocalPosition: {x: 0.29123974, y: -2.7479277, z: -0}
+  rightHandleLocalPosition: {x: -0.29123974, y: 2.7479277, z: 0}
 --- !u!1 &3429172520704950774
 GameObject:
   m_ObjectHideFlags: 0
@@ -1790,7 +1793,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 3532650726890550422}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -6.68, y: -8.142168, z: 0}
+  m_LocalPosition: {x: -6.6605816, y: -8.408257, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 7533458038457786255}
@@ -3349,7 +3352,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 7408113244883778572}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -16.2, y: -8.115885, z: 0}
+  m_LocalPosition: {x: -15.719124, y: -8.448673, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 273414665257742554}
@@ -3369,8 +3372,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   curve: {fileID: 7764367815067799206}
   handleType: 0
-  leftHandleLocalPosition: {x: 0.3386879, y: 2.7274046, z: -0}
-  rightHandleLocalPosition: {x: -0.3386879, y: -2.7274046, z: 0}
+  leftHandleLocalPosition: {x: 0.26470566, y: 1.987874, z: 0}
+  rightHandleLocalPosition: {x: -0.26470566, y: -1.987874, z: -0}
 --- !u!1 &7589562377691746140
 GameObject:
   m_ObjectHideFlags: 0
@@ -3873,7 +3876,7 @@ SpriteRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 0
+  m_SortingOrder: 1
   m_Sprite: {fileID: 4461334316933101070, guid: 1c59b9cd0adef0941bc4bd4bde66a759, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
@@ -3910,9 +3913,11 @@ MonoBehaviour:
   triggersAutoplay: 1
   startBeat: 0
   objPos: {x: 0, y: 0, z: 0}
+  lefty: 0
   HalfSprite: {fileID: 8550182553065708291}
   Half: {fileID: 1048894730547048102}
   HalfCurve: {fileID: 7764367815067799206}
+  HalfCurveTrans: {fileID: 273414665257742554}
   WhichHalf: []
 --- !u!1 &8597163618617364548
 GameObject:
@@ -4209,7 +4214,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 8930087489687383867}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -9.26, y: 3.3768423, z: 0}
+  m_LocalPosition: {x: -9.863725, y: 3.376842, z: 0}
   m_LocalScale: {x: 1.1235956, y: 1.1235956, z: 0}
   m_Children: []
   m_Father: {fileID: 273414665257742554}
@@ -4229,8 +4234,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   curve: {fileID: 7764367815067799206}
   handleType: 0
-  leftHandleLocalPosition: {x: 1.5449033, y: 0.011866442, z: -0}
-  rightHandleLocalPosition: {x: -1.5449033, y: -0.011866442, z: 0}
+  leftHandleLocalPosition: {x: 2.533325, y: -0.12914927, z: 0}
+  rightHandleLocalPosition: {x: -2.533325, y: 0.12914927, z: -0}
 --- !u!1 &9014789612631171718
 GameObject:
   m_ObjectHideFlags: 0

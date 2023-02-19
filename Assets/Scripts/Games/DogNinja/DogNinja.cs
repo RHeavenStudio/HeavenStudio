@@ -22,6 +22,11 @@ namespace HeavenStudio.Games.Loaders
                         new Param("toggle2", false, "Manual Bop \n<color=#eb5454>[WIP]</color>", "Bop, regardless of beat"),
                     }
                 },
+                new GameAction("Prepare", "Prepare")
+                {
+                    function = delegate { DogNinja.instance.Prepare(eventCaller.currentEntity.beat); }, 
+                    defaultLength = 0.5f,
+                },
                 new GameAction("ThrowObjectLeft", "Throw Left Object")
                 {
                     function = delegate { var e = eventCaller.currentEntity; DogNinja.instance.ThrowObject(e.beat, e["type"], e["text"], true); }, 
@@ -106,6 +111,7 @@ namespace HeavenStudio.Games
         private float lastReportedBeat = 0f;
         private bool birdOnScreen = false;
         static bool dontBop = false;
+        string sfxNum = "dogNinja/";
         
         public static DogNinja instance;
 
@@ -135,6 +141,7 @@ namespace HeavenStudio.Games
             BattingShow,
             MeatGrinder,
             YaseiNoIkiG3M4,
+            AmongUs,
         }
         
         private void Awake()
@@ -205,10 +212,12 @@ namespace HeavenStudio.Games
             Object.curve = fromLeft ? CurveFromLeft : CurveFromRight;
             Object.fromLeft = fromLeft;
             Object.textObj = textObj;
+            Object.sfxNum = sfxNum;
         }
 
         public void ThrowBothObject(float beat, int ObjType1, int ObjType2, string textObj1, string textObj2)
         {
+            
             WhichObjectMath(ObjType1, textObj1);
 
             // instantiate a game object on the left and give it its variables
@@ -248,6 +257,10 @@ namespace HeavenStudio.Games
             };
         }
 
+        public void Prepare(float beat)
+        {
+            DogAnim.DoScaledAnimation("Prepare", beat);
+        }
 
         // it's repeated code but the alternative saves no space
         public void HereWeGo(float beat)
