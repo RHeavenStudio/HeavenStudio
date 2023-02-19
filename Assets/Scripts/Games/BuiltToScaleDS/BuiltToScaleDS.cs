@@ -15,9 +15,20 @@ namespace HeavenStudio.Games.Loaders
         public static Minigame AddGame(EventCaller eventCaller) {
             return new Minigame("builtToScaleDS", "Built To Scale (DS)", "00BB00", true, false, new List<GameAction>()
             {
-                new GameAction("spawn blocks", "Spawn Blocks")
+                new GameAction("spawn blocks", "Widget")
                 {
-                    resizable = true
+                    function = delegate {var e = eventCaller.currentEntity; BuiltToScaleDS.instance.MultiplePiano(e.beat, e.length, e["silent"], e["note1"], e["note2"], e["note3"], e["note4"], e["note5"], e["note6"]); },
+                    resizable = true,
+                    parameters = new List<Param>()
+                    {
+                        new Param("silent", false, "Mute Audio", "Whether the piano notes should be muted or not."),
+                        new Param("note1", new EntityTypes.Integer(-24, 24, 0), "1st note", "The number of semitones up or down this note should be pitched"),
+                        new Param("note2", new EntityTypes.Integer(-24, 24, 2), "2nd note", "The number of semitones up or down this note should be pitched"),
+                        new Param("note3", new EntityTypes.Integer(-24, 24, 4), "3rd note", "The number of semitones up or down this note should be pitched"),
+                        new Param("note4", new EntityTypes.Integer(-24, 24, 5), "4th note", "The number of semitones up or down this note should be pitched"),
+                        new Param("note5", new EntityTypes.Integer(-24, 24, 7), "5th note", "The number of semitones up or down this note should be pitched"),
+                        new Param("note6", new EntityTypes.Integer(-24, 24, 12), "6th note", "The number of semitones up or down this note should be pitched (This plays together with the 5th note)"),
+                    }
                 },
                 new GameAction("play piano", "Play Note")
                 {
@@ -26,7 +37,7 @@ namespace HeavenStudio.Games.Loaders
                     parameters = new List<Param>() 
                     {
                         new Param("type", new EntityTypes.Integer(-24, 24, 0), "Semitones", "The number of semitones up or down this note should be pitched")
-                    } 
+                    },
                 },
             });
         }
@@ -223,6 +234,20 @@ namespace HeavenStudio.Games
             var pianoSource = Jukebox.PlayOneShotGame("builtToScaleDS/Piano", -1, pianoPitch, 0.8f, true);
 
             pianoSource.SetLoopParams(beat + length, 0.1f);
+        }
+
+        public void MultiplePiano(float beat, float length, bool silent, int note1, int note2, int note3, int note4, int note5, int note6)
+        {
+            if (silent) return;
+            BeatAction.New(instance.gameObject, new List<BeatAction.Action>()
+            {
+                new BeatAction.Action(beat, delegate { PlayPiano(beat, length, note1); }),
+                new BeatAction.Action(beat + length, delegate { PlayPiano(beat + length, length, note2); }),
+                new BeatAction.Action(beat + length * 2, delegate { PlayPiano(beat + length * 2, length, note3); }),
+                new BeatAction.Action(beat + length * 3, delegate { PlayPiano(beat + length * 3, length, note4); }),
+                new BeatAction.Action(beat + length * 4, delegate { PlayPiano(beat + length * 4, 1f, note5); }),
+                new BeatAction.Action(beat + length * 4, delegate { PlayPiano(beat + length * 4, 1f, note6); }),
+            });
         }
     }
 }

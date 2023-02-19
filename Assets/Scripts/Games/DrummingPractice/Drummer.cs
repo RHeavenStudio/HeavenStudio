@@ -81,9 +81,9 @@ namespace HeavenStudio.Games.Scripts_DrummingPractice
             if (!hitting)
             {
                 if (count % 2 == 0)
-                    animator.Play("HitLeft", 0, 0);
+                    animator.DoScaledAnimationAsync("HitLeft", 0.6f);
                 else
-                    animator.Play("HitRight", 0, 0);
+                    animator.DoScaledAnimationAsync("HitRight", 0.6f);
                 count++;
 
                 if (player && !force)
