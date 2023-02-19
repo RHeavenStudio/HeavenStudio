@@ -13,7 +13,9 @@ namespace HeavenStudio.Games.Loaders
             {
                 new GameAction("shoot", "Pitch Ball")
                 {
-                    function = delegate { Spaceball.instance.Shoot(eventCaller.currentEntity.beat, false, eventCaller.currentEntity["type"]); }, 
+                    function = delegate { Spaceball.instance.Shoot(eventCaller.currentEntity.beat, false, eventCaller.currentEntity["type"]); },
+                    preFunction = delegate { Spaceball.instance.PrepareDispenser(); },
+                    preFunctionLength = 1,
                     defaultLength = 2, 
                     parameters = new List<Param>()
                     {
@@ -22,7 +24,9 @@ namespace HeavenStudio.Games.Loaders
                 },
 				new GameAction("shootHigh", "Pitch High Ball")
                 {
-                    function = delegate { Spaceball.instance.Shoot(eventCaller.currentEntity.beat, true, eventCaller.currentEntity["type"]); }, 
+                    function = delegate { Spaceball.instance.Shoot(eventCaller.currentEntity.beat, true, eventCaller.currentEntity["type"]); },
+                    preFunction = delegate { Spaceball.instance.PrepareDispenser(); },
+                    preFunctionLength = 1,
                     defaultLength = 3,
                     parameters = new List<Param>()
                     {
@@ -56,7 +60,7 @@ namespace HeavenStudio.Games.Loaders
                 {
                     function = delegate { Spaceball.instance.PrepareDispenser(); }, 
                 },
-            });
+            });;
         }
     }
 }
