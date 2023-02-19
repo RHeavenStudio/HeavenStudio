@@ -120,11 +120,11 @@ namespace HeavenStudio.Games
         public BezierCurve3D CurveFromRight;
 
         public Sprite[] ObjectTypes;
-        public Sprite[] ObjectHalves;
         public Sprite[] CustomObjects;
 
         private float lastReportedBeat = 0f;
         private bool birdOnScreen = false;
+        public bool usesCustomObject = false;
         static bool dontBop = false;
         public bool needPrepare = false;
         string sfxNum = "dogNinja/";
@@ -204,34 +204,39 @@ namespace HeavenStudio.Games
         }
 
         // my solution for making three functions for three cues; just put the big complicated code into another function
-        public void WhichObjectMath(int ObjType, string textObj)
+        public void WhichObjectMath(int ObjType, string textObj, int ObjSprite)
         {
-            int ObjSprite = 0;
             if (ObjType == 10) {
                 // custom object code, uses the enum to turn the input string into integer to get the sprite
                 Enum.TryParse(textObj, true, out CustomObject notIntObj);
                 ObjSprite = (int) notIntObj;
+                usesCustomObject = true;
                 WhichObject.sprite = CustomObjects[ObjSprite];
             } else if (ObjType == 0) {
                 // random object code. it makes a random number from 1-6 and sets that as the sprite
                 System.Random rd = new System.Random();
-                WhichObject.sprite = ObjectTypes[rd.Next(1, 6)];
-            } else { WhichObject.sprite = ObjectTypes[ObjType]; };
+                ObjSprite = rd.Next(1, 6);
+                WhichObject.sprite = ObjectTypes[ObjSprite];
+            } else { WhichObject.sprite = ObjectTypes[ObjSprite]; };
         }
 
         public void ThrowObject(float beat, int ObjType, string textObj, bool fromLeft, bool fromBoth)
         {
-            WhichObjectMath(ObjType, textObj);
+            int ObjSprite = ObjType;
+            WhichObjectMath(ObjType, textObj, ObjSprite);
 
             // instantiate a game object and give it its variables
             ThrowObject Object = Instantiate(ObjectBase).GetComponent<ThrowObject>();
             Object.startBeat = beat;
-            Object.type = ObjType;
             Object.curve = fromLeft ? CurveFromLeft : CurveFromRight;
             Object.fromLeft = fromLeft;
             Object.fromBoth = fromBoth;
             Object.textObj = textObj;
             Object.sfxNum = sfxNum;
+            Object.type = ObjSprite;
+            if (usesCustomObject) {
+                Object.customType = ObjSprite+10;
+            }
         }
 
         public void ThrowBothObject(float beat, int ObjType1, int ObjType2, string textObj1, string textObj2)

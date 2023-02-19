@@ -12,9 +12,10 @@ namespace HeavenStudio.Games.Scripts_DogNinja
     {
         public float startBeat;
         public int type;
+        public int customType;
         public string textObj;
         public bool fromLeft;
-        public bool fromBoth;
+        public bool fromBoth = false;
         public Vector3 objPos;
         public string sfxNum = "dogNinja/";
         
