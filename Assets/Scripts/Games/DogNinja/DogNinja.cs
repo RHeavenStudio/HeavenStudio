@@ -130,7 +130,7 @@ namespace HeavenStudio.Games
             Custom,     // directs to custom stuff
         }
 
-        // input these into the secret object box and boom. new object. 
+        // input these into the secret object box for custom objects 
         public enum CustomObject
         {
             TacoBell,
@@ -140,8 +140,9 @@ namespace HeavenStudio.Games
             ThumpFarm,
             BattingShow,
             MeatGrinder,
-            YaseiNoIkiG3M4,
-            AmongUs,
+            // remove "//" to unleash an eons long dormant hell-beast
+            //YaseiNoIkiG3M4,
+            //AmongUs,
         }
         
         private void Awake()
@@ -151,10 +152,7 @@ namespace HeavenStudio.Games
 
         private void Update()
         {
-            if (Conductor.instance.ReportBeat(ref lastReportedBeat) && DogAnim.IsAnimationNotPlaying() && !dontBop)
-            {
-                DogAnim.Play("Bop", 0, 0);
-            };
+            
 
             if (PlayerInput.Pressed() && !IsExpectingInputNow(InputType.STANDARD_DOWN))
             {
@@ -171,6 +169,14 @@ namespace HeavenStudio.Games
                 
                 DogAnim.Play(slice, 0, 0);
                 Jukebox.PlayOneShotGame("dogNinja/whiff");
+            };
+        }
+
+        private void LateUpdate() 
+        {
+            if (Conductor.instance.ReportBeat(ref lastReportedBeat) && DogAnim.IsAnimationNotPlaying() && !dontBop)
+            {
+                DogAnim.Play("Bop", 0, 0);
             };
         }
 

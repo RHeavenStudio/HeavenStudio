@@ -36,9 +36,8 @@ namespace HeavenStudio.Games.Scripts_DogNinja
         private void Start()
         {
             if (!lefty) {
-                HalfCurveTrans.position = new Vector3(-13.5f, 1.36f, 0);
-                HalfCurveTrans.localScale = new Vector3(-1, 1 , 0);
-            }
+
+            };
         }
 
         private void Update()

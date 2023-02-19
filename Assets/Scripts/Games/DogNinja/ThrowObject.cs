@@ -28,8 +28,6 @@ namespace HeavenStudio.Games.Scripts_DogNinja
         [Header("Curves")]
         public BezierCurve3D curve;
 
-        
-
         private DogNinja game;
         
         private void Awake()
@@ -60,13 +58,6 @@ namespace HeavenStudio.Games.Scripts_DogNinja
             if (fromLeft && fromBoth) {} else { Jukebox.PlayOneShotGame(sfxNum+"1"); }
             
             game.ScheduleInput(startBeat, 1f, InputType.STANDARD_DOWN, Hit, Out, Miss);
-
-            // too much jank so i replaced it with a block
-            /* 
-            if (DogAnim.IsAnimationNotPlaying()) {
-                DogAnim.DoScaledAnimation("Prepare", startBeat);
-            }
-            */
         }
 
         private void Update()
@@ -82,7 +73,7 @@ namespace HeavenStudio.Games.Scripts_DogNinja
             };
 
             // destroy object when game is stopped, but not when it's paused. 
-            // no other game has this??? am i missing something here
+            // no other game has this??? am i missing something here -AJ
             if (!Conductor.instance.isPlaying && !Conductor.instance.isPaused) {
                 GameObject.Destroy(gameObject);
             };
@@ -104,6 +95,8 @@ namespace HeavenStudio.Games.Scripts_DogNinja
 
             GameObject.Destroy(gameObject);
             
+
+            // SpawnHalves logic below, i got close but not close enough -AJ
             SpawnHalves LeftHalf = Instantiate(game.HalvesLeftBase).GetComponent<SpawnHalves>();
             LeftHalf.startBeat = startBeat;
             LeftHalf.objPos = objPos;
