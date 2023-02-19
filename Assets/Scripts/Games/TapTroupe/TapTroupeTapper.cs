@@ -61,22 +61,25 @@ namespace HeavenStudio.Games.Scripts_TapTroupe
 
         public void Tap(TapAnim animType, bool hit = true, bool switchFeet = true)
         {
-            if (switchFeet) transform.localScale = new Vector3(transform.localScale.x * -1, transform.localScale.y, 1);
             string animName = "";
             if (hit) animName = "Hit";
             switch (animType)
             {
                 case TapAnim.Bam:
                     animName += "BamFeet";
+                    if (switchFeet && !dontSwitchNextStep) transform.localScale = new Vector3(transform.localScale.x * -1, transform.localScale.y, 1);
                     break;
                 case TapAnim.Tap:
                     animName += "TapFeet";
+                    if (switchFeet) transform.localScale = new Vector3(transform.localScale.x * -1, transform.localScale.y, 1);
                     break;
                 case TapAnim.BamReady:
                     animName += "BamReadyFeet";
+                    if (switchFeet) transform.localScale = new Vector3(transform.localScale.x * -1, transform.localScale.y, 1);
                     break;
                 case TapAnim.BamTapReady:
                     animName += "BamReadyTap";
+                    if (switchFeet) transform.localScale = new Vector3(transform.localScale.x * -1, transform.localScale.y, 1);
                     break;
                 case TapAnim.LastTap:
                     if (hit)
@@ -87,6 +90,7 @@ namespace HeavenStudio.Games.Scripts_TapTroupe
                     {
                         animName = "StepFeet";
                     }
+                    if (switchFeet) transform.localScale = new Vector3(transform.localScale.x * -1, transform.localScale.y, 1);
                     break;
             }
             anim.DoScaledAnimationAsync(animName, 0.5f);

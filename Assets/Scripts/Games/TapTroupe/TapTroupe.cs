@@ -465,7 +465,8 @@ namespace HeavenStudio.Games
                         BeatAction.New(instance.gameObject, new List<BeatAction.Action>()
                         {
                             new BeatAction.Action(beatToSpawn - 0.3f, delegate { currentTapAnim = TapTroupeTapper.TapAnim.Bam; shouldSwitchStep = true; }),
-                            new BeatAction.Action(beatToSpawn, delegate { NPCTap(TapTroupeTapper.TapAnim.Bam); })
+                            new BeatAction.Action(beatToSpawn, delegate { NPCTap(TapTroupeTapper.TapAnim.Bam); }),
+                            new BeatAction.Action(beatToSpawn + 0.1f, delegate { if (playerTapper.transform.localScale.x != npcTappers[0].transform.localScale.x) playerTapper.dontSwitchNextStep = true; })
                         });
                     }
                 }
