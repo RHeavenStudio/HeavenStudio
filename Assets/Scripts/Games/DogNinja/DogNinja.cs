@@ -27,7 +27,7 @@ namespace HeavenStudio.Games.Loaders
                     function = delegate { DogNinja.instance.Prepare(eventCaller.currentEntity.beat); }, 
                     defaultLength = 0.5f,
                 },
-                new GameAction("ThrowObjectLeft", "Throw Object")
+                new GameAction("ThrowObject", "Throw Object")
                 {
                     function = delegate { var e = eventCaller.currentEntity; DogNinja.instance.ThrowObject(e.beat, e["type"], e["text"], e["left"], false); }, 
                     defaultLength = 2,
@@ -38,6 +38,30 @@ namespace HeavenStudio.Games.Loaders
                         new Param("left", true, "Throw from left?", "Whether the object should come from the left or right")
                     }
                 },
+                
+                // this is for me -AJ
+                /*
+                new GameAction("ThrowObjectLeft", "Throw Object Left")
+                {
+                    function = delegate { var e = eventCaller.currentEntity; DogNinja.instance.ThrowObject(e.beat, e["type"], e["text"], true, false); }, 
+                    defaultLength = 2,
+                    parameters = new List<Param>()
+                    {
+                        new Param("type", DogNinja.ObjectType.Random, "Object", "The object to be thrown"),
+                        new Param("text", "", "Alt. Objects", "An alternative object; one that doesn't exist in the main menu"),
+                    }
+                },
+                new GameAction("ThrowObjectRight", "Throw Object Right")
+                {
+                    function = delegate { var e = eventCaller.currentEntity; DogNinja.instance.ThrowObject(e.beat, e["type"], e["text"], false, false); }, 
+                    defaultLength = 2,
+                    parameters = new List<Param>()
+                    {
+                        new Param("type", DogNinja.ObjectType.Random, "Object", "The object to be thrown"),
+                        new Param("text", "", "Alt. Objects", "An alternative object; one that doesn't exist in the main menu"),
+                    }
+                },
+                */
                 new GameAction("ThrowObjectBoth", "Throw Left & Right Object")
                 {
                     function = delegate { var e = eventCaller.currentEntity; DogNinja.instance.ThrowBothObject(e.beat, e["type"], e["type2"], e["text"], e["text2"]); }, 
@@ -160,8 +184,6 @@ namespace HeavenStudio.Games
                     slice = "WhiffLeft";
                 };
 
-                //DogAnim.DoScaledAnimation(slice, lastReportedBeat);
-                
                 DogAnim.DoScaledAnimationAsync(slice, 0.5f);
                 Jukebox.PlayOneShotGame("dogNinja/whiff");
             };
