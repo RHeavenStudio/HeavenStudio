@@ -3115,6 +3115,7 @@ GameObject:
   m_Component:
   - component: {fileID: 5189905951440033662}
   - component: {fileID: 9053609818896639554}
+  - component: {fileID: 5770986652128577296}
   m_Layer: 0
   m_Name: Head
   m_TagString: Untagged
@@ -3189,6 +3190,25 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
+--- !u!95 &5770986652128577296
+Animator:
+  serializedVersion: 3
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5436821662953213593}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 0}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorControllerStateOnDisable: 0
 --- !u!1 &5538988030560337713
 GameObject:
   m_ObjectHideFlags: 0
@@ -5004,7 +5024,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2041676494432322068, guid: 54524007568a0834ebe82badca4700ca, type: 3}
       propertyPath: m_LocalPosition.z
-      value: 0
+      value: 106.5036
       objectReference: {fileID: 0}
     - target: {fileID: 2041676494432322068, guid: 54524007568a0834ebe82badca4700ca, type: 3}
       propertyPath: m_LocalRotation.w
@@ -5093,7 +5113,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2041676494432322068, guid: 54524007568a0834ebe82badca4700ca, type: 3}
       propertyPath: m_LocalPosition.z
-      value: 0
+      value: 106.5036
       objectReference: {fileID: 0}
     - target: {fileID: 2041676494432322068, guid: 54524007568a0834ebe82badca4700ca, type: 3}
       propertyPath: m_LocalRotation.w
@@ -5182,7 +5202,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2041676494432322068, guid: 54524007568a0834ebe82badca4700ca, type: 3}
       propertyPath: m_LocalPosition.z
-      value: 0
+      value: 106.5036
       objectReference: {fileID: 0}
     - target: {fileID: 2041676494432322068, guid: 54524007568a0834ebe82badca4700ca, type: 3}
       propertyPath: m_LocalRotation.w
@@ -5275,7 +5295,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2041676494432322068, guid: 54524007568a0834ebe82badca4700ca, type: 3}
       propertyPath: m_LocalPosition.z
-      value: 0
+      value: 106.5036
       objectReference: {fileID: 0}
     - target: {fileID: 2041676494432322068, guid: 54524007568a0834ebe82badca4700ca, type: 3}
       propertyPath: m_LocalRotation.w
