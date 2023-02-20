@@ -8,7 +8,7 @@ namespace HeavenStudio.Games.Scripts_Fireworks
 {
     public class Rocket : PlayerActionObject
     {
-        [SerializeField] ParticleSystem particleEffect;
+        public ParticleSystem particleEffect;
         public bool isSparkler;
         private Fireworks game;
 

@@ -2,6 +2,7 @@ using HeavenStudio.Util;
 using System;
 using System.Collections.Generic;
 using UnityEngine;
+using NaughtyBezierCurves;
 
 namespace HeavenStudio.Games.Loaders
 {
@@ -9,7 +10,7 @@ namespace HeavenStudio.Games.Loaders
     public static class AgbFireworkLoader
     {
         public static Minigame AddGame(EventCaller eventCaller) {
-            return new Minigame("fireworks", "Fireworks \n<color=#eb5454>[INITIALIZATION ONLY]</color>", "0058CE", false, false, new List<GameAction>()
+            return new Minigame("fireworks", "Fireworks", "0058CE", false, false, new List<GameAction>()
             {
                 new GameAction("firework", "Firework")
                 {
@@ -28,6 +29,11 @@ namespace HeavenStudio.Games.Loaders
                     {
                         new Param("whereToSpawn", Fireworks.WhereToSpawn.Middle, "Where to spawn?", "Where should the firework spawn?")
                     }
+                },
+                new GameAction("bomb", "Bomb")
+                {
+                    function = delegate {var e = eventCaller.currentEntity; Fireworks.instance.SpawnBomb(e.beat); },
+                    defaultLength = 3f,
                 }
             });
         }
@@ -49,7 +55,11 @@ namespace HeavenStudio.Games
         [SerializeField] Transform spawnLeft;
         [SerializeField] Transform spawnRight;
         [SerializeField] Transform spawnMiddle;
+        [SerializeField] Transform bombSpawn;
         [SerializeField] Rocket firework;
+        [SerializeField] FireworksBomb bomb;
+        [SerializeField] BezierCurve3D bombCurve;
+        [SerializeField] ParticleSystem particleEffect;
 
         public static Fireworks instance;
 
@@ -75,7 +85,15 @@ namespace HeavenStudio.Games
             }
             Rocket spawnedRocket = Instantiate(firework, spawnPoint, false);
             spawnedRocket.isSparkler = isSparkler;
+            spawnedRocket.particleEffect = particleEffect;
             spawnedRocket.Init(beat);
+        }
+
+        public void SpawnBomb(float beat)
+        {
+            FireworksBomb spawnedBomb = Instantiate(bomb, bombSpawn, false);
+            spawnedBomb.curve = bombCurve;
+            spawnedBomb.Init(beat);
         }
     }
 }
