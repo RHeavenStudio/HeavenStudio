@@ -33,12 +33,21 @@ namespace HeavenStudio.Games.Scripts_Fireworks
             if (exploded) return;
             float flyPos = cond.GetPositionFromBeat(startBeat, 2f);
             transform.position = curve.GetPoint(flyPos);
+            if (flyPos > 2) Destroy(gameObject);
         }
 
         void Just(PlayerActionEvent caller, float state)
         {
+            anim.DoScaledAnimationAsync("ExplodeBomb", 0.25f);
+            exploded = true;
+            BeatAction.New(game.gameObject, new List<BeatAction.Action>()
+            {
+                new BeatAction.Action(startBeat + 3f, delegate { Destroy(gameObject); })
+            });
             if (state >= 1f || state <= -1f)
             {
+                Jukebox.PlayOneShotGame("fireworks/miss");
+
                 return;
             }
             Success();
@@ -47,12 +56,7 @@ namespace HeavenStudio.Games.Scripts_Fireworks
         void Success()
         {
             Jukebox.PlayOneShotGame("fireworks/explodeBomb");
-            anim.DoScaledAnimationAsync("ExplodeBomb", 0.25f);
-            exploded = true;
-            BeatAction.New(game.gameObject, new List<BeatAction.Action>()
-            {
-                new BeatAction.Action(startBeat + 3f, delegate { Destroy(gameObject); })
-            });
+            game.FadeFlashColor(Color.white, new Color(1, 1, 1, 0), 0.5f);
         }
 
         void Out(PlayerActionEvent caller) { }

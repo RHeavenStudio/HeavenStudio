@@ -8,9 +8,12 @@ namespace HeavenStudio.Games.Scripts_Fireworks
 {
     public class Rocket : PlayerActionObject
     {
-        public ParticleSystem particleEffect;
+        [SerializeField] ParticleSystem particleEffect;
+        [SerializeField] Animator anim;
         public bool isSparkler;
         private Fireworks game;
+        public float startBeat;
+        private bool exploded;
 
         void Awake()
         {
@@ -19,20 +22,27 @@ namespace HeavenStudio.Games.Scripts_Fireworks
 
         public void Init(float beat)
         {
+            startBeat = beat;
             if (isSparkler) Jukebox.PlayOneShotGame("fireworks/sparkler");
             else Jukebox.PlayOneShotGame("fireworks/rocket");
             game.ScheduleInput(beat, isSparkler ? 1f : 3f, InputType.STANDARD_DOWN, Just, Out, Out);
+            anim.DoScaledAnimationAsync(isSparkler ? "Sparkler" : "Rocket", isSparkler ? 1f : 0.5f);
         }
 
         void Update()
         {
-            transform.position = new Vector3(transform.position.x, transform.position.y + (isSparkler ? 0.05f : 0.01f), transform.position.z);
+            var cond = Conductor.instance;
+            if (!exploded && cond.isPlaying && !cond.isPaused) transform.position = new Vector3(transform.position.x, transform.position.y + (isSparkler ? 0.05f : 0.015f), transform.position.z);
+            if (cond.GetPositionFromBeat(startBeat, isSparkler ? 1f : 3f) > 2.5f) Destroy(gameObject);
         }
 
         void Just(PlayerActionEvent caller, float state)
         {
             if (state >= 1f || state <= -1f)
             {
+                Jukebox.PlayOneShotGame("fireworks/miss");
+                particleEffect.Play();
+                anim.gameObject.SetActive(false);
                 return;
             }
             Success();
@@ -41,8 +51,8 @@ namespace HeavenStudio.Games.Scripts_Fireworks
         void Success()
         {
             Jukebox.PlayOneShotGame("fireworks/explodeRocket");
-            Instantiate(particleEffect.gameObject, transform, false);
-            Destroy(gameObject);
+            particleEffect.Play();
+            anim.gameObject.SetActive(false);
         }
 
         void Out(PlayerActionEvent caller) { }

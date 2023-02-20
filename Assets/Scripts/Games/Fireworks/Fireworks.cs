@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 using NaughtyBezierCurves;
+using DG.Tweening;
 
 namespace HeavenStudio.Games.Loaders
 {
@@ -59,7 +60,9 @@ namespace HeavenStudio.Games
         [SerializeField] Rocket firework;
         [SerializeField] FireworksBomb bomb;
         [SerializeField] BezierCurve3D bombCurve;
-        [SerializeField] ParticleSystem particleEffect;
+        [SerializeField] SpriteRenderer flashWhite;
+        [Header("Properties")]
+        Tween flashTween;
 
         public static Fireworks instance;
 
@@ -85,7 +88,6 @@ namespace HeavenStudio.Games
             }
             Rocket spawnedRocket = Instantiate(firework, spawnPoint, false);
             spawnedRocket.isSparkler = isSparkler;
-            spawnedRocket.particleEffect = particleEffect;
             spawnedRocket.Init(beat);
         }
 
@@ -94,6 +96,29 @@ namespace HeavenStudio.Games
             FireworksBomb spawnedBomb = Instantiate(bomb, bombSpawn, false);
             spawnedBomb.curve = bombCurve;
             spawnedBomb.Init(beat);
+        }
+
+        public void ChangeFlashColor(Color color, float beats)
+        {
+            var seconds = Conductor.instance.secPerBeat * beats;
+
+            if (flashTween != null)
+                flashTween.Kill(true);
+
+            if (seconds == 0)
+            {
+                flashWhite.color = color;
+            }
+            else
+            {
+                flashTween = flashWhite.DOColor(color, seconds);
+            }
+        }
+
+        public void FadeFlashColor(Color start, Color end, float beats)
+        {
+            ChangeFlashColor(start, 0f);
+            ChangeFlashColor(end, beats);
         }
     }
 }
