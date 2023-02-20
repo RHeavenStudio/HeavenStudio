@@ -54,6 +54,16 @@ namespace HeavenStudio.Games.Scripts_FlipperFlop
                         new BeatAction.Action(Conductor.instance.songPositionInBeats + 0.3f, delegate { faceAnim.Play("FaceGoofy"); }),
                     });
                 }
+                string shouldReverse = "";
+                //if (up) shouldReverse = "Reverse";
+                if (left)
+                {
+                    anim.DoScaledAnimationAsync(shouldReverse + "RollLeft", 0.5f);
+                }
+                else
+                {
+                    anim.DoScaledAnimationAsync(shouldReverse + "RollRight", 0.5f);
+                }
 
                 up = !up;
             }

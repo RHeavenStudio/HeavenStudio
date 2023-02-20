@@ -353,6 +353,11 @@ namespace HeavenStudio.Games
                     new BeatAction.Action(beat + 3, delegate { flipper.Flip(false, true);})
                 });
             }
+            BeatAction.New(instance.gameObject, new List<BeatAction.Action>()
+            {
+                new BeatAction.Action(beat + 2, delegate {captainTuckAnim.DoScaledAnimationAsync("CaptainBop", 0.5f); }),
+                new BeatAction.Action(beat + 3, delegate {captainTuckAnim.DoScaledAnimationAsync("CaptainBop", 0.5f); }),
+            });
         }
 
         public static void AttentionCompany(float beat)
