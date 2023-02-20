@@ -8,13 +8,29 @@ namespace HeavenStudio.Games.Loaders
     using static Minigames;
     public static class PcoSomenLoader
     {
-        public static Minigame AddGame(EventCaller eventCaller) {
-            return new Minigame("rhythmSomen", "Rhythm Sōmen \n<color=#eb5454>[WIP don't use]</color>", "000000", false, false, new List<GameAction>()
+        public static Minigame AddGame(EventCaller eventCaller)
+        {
+            return new Minigame("rhythmSomen", "Rhythm Sōmen", "99CC34", false, false, new List<GameAction>()
             {
-                new GameAction("crane (far)",                   delegate { RhythmSomen.instance.DoFarCrane(eventCaller.currentEntity.beat); }, 4.0f, false),
-                new GameAction("crane (close)",                   delegate { RhythmSomen.instance.DoCloseCrane(eventCaller.currentEntity.beat); }, 3.0f, false),
-                new GameAction("crane (both)",                   delegate { RhythmSomen.instance.DoBothCrane(eventCaller.currentEntity.beat); }, 4.0f, false),
-                new GameAction("offbeat bell",                   delegate { RhythmSomen.instance.DoBell(eventCaller.currentEntity.beat); }, 1.0f, false),
+                new GameAction("crane (far)", "Far Crane")
+                {
+                    function = delegate { RhythmSomen.instance.DoFarCrane(eventCaller.currentEntity.beat); },
+                    defaultLength = 4.0f,
+                },
+                new GameAction("crane (close)", "Close Crane")
+                {
+                    function = delegate { RhythmSomen.instance.DoCloseCrane(eventCaller.currentEntity.beat); },
+                    defaultLength = 3.0f,
+                },
+                new GameAction("crane (both)", "Both Cranes")
+                {
+                    function = delegate { RhythmSomen.instance.DoBothCrane(eventCaller.currentEntity.beat); },
+                    defaultLength = 4.0f,
+                },
+                new GameAction("offbeat bell", "Offbeat Warning")
+                {
+                    function = delegate { RhythmSomen.instance.DoBell(eventCaller.currentEntity.beat); },
+                },
             });
         }
     }
@@ -25,6 +41,7 @@ namespace HeavenStudio.Games
     // using Scripts_RhythmSomen;
     public class RhythmSomen : Minigame
     {
+        [SerializeField] ParticleSystem splashEffect;
         public Animator SomenPlayer;
         public Animator FrontArm;
         public Animator EffectHit;
@@ -51,14 +68,15 @@ namespace HeavenStudio.Games
             var cond = Conductor.instance;
             if (cond.ReportBeat(ref bop.lastReportedBeat, bop.startBeat % 1))
             {
-             SomenPlayer.Play("HeadBob", -1, 0);
+                SomenPlayer.Play("HeadBob", -1, 0);
             }
 
             if (PlayerInput.Pressed() && !IsExpectingInputNow())
             {
-            Jukebox.PlayOneShotGame("rhythmSomen/somen_mistake");
-            FrontArm.Play("ArmPluck", -1, 0);
-            EffectSweat.Play("BlobSweating", -1, 0);
+                Jukebox.PlayOneShotGame("rhythmSomen/somen_mistake");
+                FrontArm.Play("ArmPluck", -1, 0);
+                EffectSweat.Play("BlobSweating", -1, 0);
+                ScoreMiss();
             }
         }
 
@@ -72,7 +90,7 @@ namespace HeavenStudio.Games
             new MultiSound.Sound("rhythmSomen/somen_woosh", beat + 1.5f),
             });
 
-            BeatAction.New(Player, new List<BeatAction.Action>() 
+            BeatAction.New(Player, new List<BeatAction.Action>()
                 {
                 new BeatAction.Action(beat,     delegate { FarCrane.Play("Drop", -1, 0);}),
                 new BeatAction.Action(beat + 1.0f,     delegate { FarCrane.Play("Open", -1, 0);}),
@@ -91,7 +109,7 @@ namespace HeavenStudio.Games
             new MultiSound.Sound("rhythmSomen/somen_woosh", beat + 1.5f),
             });
 
-            BeatAction.New(Player, new List<BeatAction.Action>() 
+            BeatAction.New(Player, new List<BeatAction.Action>()
                 {
                 new BeatAction.Action(beat,     delegate { CloseCrane.Play("DropClose", -1, 0);}),
                 new BeatAction.Action(beat + 1.0f,     delegate { CloseCrane.Play("OpenClose", -1, 0);}),
@@ -100,7 +118,7 @@ namespace HeavenStudio.Games
 
         }
 
-                public void DoBothCrane(float beat)
+        public void DoBothCrane(float beat)
         {
             //Both Drop Multisound
             ScheduleInput(beat, 2f, InputType.STANDARD_DOWN, CatchSuccess, CatchMiss, CatchEmpty);
@@ -112,7 +130,7 @@ namespace HeavenStudio.Games
             new MultiSound.Sound("rhythmSomen/somen_woosh", beat + 1.5f),
             });
 
-            BeatAction.New(Player, new List<BeatAction.Action>() 
+            BeatAction.New(Player, new List<BeatAction.Action>()
                 {
                 new BeatAction.Action(beat,     delegate { CloseCrane.Play("DropClose", -1, 0);}),
                 new BeatAction.Action(beat,     delegate { FarCrane.Play("Drop", -1, 0);}),
@@ -124,33 +142,42 @@ namespace HeavenStudio.Games
 
         }
 
-            public void DoBell(float beat)
-            {
-                //Bell Sound lol
-                Jukebox.PlayOneShotGame("rhythmSomen/somen_bell");
+        public void DoBell(float beat)
+        {
+            //Bell Sound lol
+            Jukebox.PlayOneShotGame("rhythmSomen/somen_bell");
 
-                BeatAction.New(Player, new List<BeatAction.Action>() 
+            BeatAction.New(Player, new List<BeatAction.Action>()
                     {
                     new BeatAction.Action(beat,     delegate { EffectExclam.Play("ExclamAppear", -1, 0);}),
                     });
 
-             }
+        }
 
-             public void CatchSuccess(PlayerActionEvent caller, float state)
+        public void CatchSuccess(PlayerActionEvent caller, float state)
+        {
+            splashEffect.Play();
+            if (state >= 1f || state <= -1f)
             {
+                Jukebox.PlayOneShotGame("rhythmSomen/somen_splash");
+                FrontArm.Play("ArmPluckNG", -1, 0);
+                EffectSweat.Play("BlobSweating", -1, 0);
+                return;
+            }
             Jukebox.PlayOneShotGame("rhythmSomen/somen_catch");
-            FrontArm.Play("ArmPluck", -1, 0);
+            Jukebox.PlayOneShotGame("rhythmSomen/somen_catch_old", volume: 0.25f);
+            FrontArm.Play("ArmPluckOK", -1, 0);
             EffectHit.Play("HitAppear", -1, 0);
-             }
+        }
 
-             public void CatchMiss(PlayerActionEvent caller)
-            {
+        public void CatchMiss(PlayerActionEvent caller)
+        {
             EffectShock.Play("ShockAppear", -1, 0);
-             }
+        }
 
-             public void CatchEmpty(PlayerActionEvent caller)
-            {
+        public void CatchEmpty(PlayerActionEvent caller)
+        {
 
-             }
+        }
     }
 }

@@ -1,12 +1,12 @@
 ManifestFileVersion: 0
-CRC: 47493552
+CRC: 352212143
 Hashes:
   AssetFileHash:
     serializedVersion: 2
-    Hash: 277abe6be554c0a5a8b3115a4b8317aa
+    Hash: 2978480976b8ced78264de5cd6f5a044
   TypeTreeHash:
     serializedVersion: 2
-    Hash: d5bdda7523be8cdc2ec1df479dc7821d
+    Hash: 6c542f6873f7e3067be67f888d87c947
 HashAppended: 0
 ClassTypes:
 - Class: 1
@@ -50,6 +50,12 @@ ClassTypes:
 SerializeReferenceClassIdentifiers:
 - AssemblyName: Assembly-CSharp
   ClassName: HeavenStudio.Games.Minigame/Eligible
+- AssemblyName: Assembly-CSharp
+  ClassName: HeavenStudio.Util.SoundSequence
+- AssemblyName: Assembly-CSharp
+  ClassName: HeavenStudio.Util.SoundSequence/SequenceClip
+- AssemblyName: Assembly-CSharp
+  ClassName: HeavenStudio.Util.SoundSequence/SequenceKeyValue
 Assets:
 - Assets/Resources/Sprites/Games/FanClub/Animations/Arisa/Arrange/IdolBigCall1Arrange.anim
 - Assets/Resources/Sprites/Games/FanClub/Animations/Fan/Head/FanHead.controller

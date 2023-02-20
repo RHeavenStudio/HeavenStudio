@@ -30,13 +30,13 @@ AnimationClip:
       m_PreInfinity: 2
       m_PostInfinity: 2
       m_RotationOrder: 4
-    path: girl_head_0
+    path: root_body/girl_head_0
   - curve:
       serializedVersion: 2
       m_Curve:
       - serializedVersion: 3
         time: 0
-        value: {x: 0.58, y: -0.15, z: 0}
+        value: {x: 0.6, y: -0.1, z: 0}
         inSlope: {x: 0, y: 0, z: 0}
         outSlope: {x: 0, y: 0, z: 0}
         tangentMode: 0
@@ -46,13 +46,13 @@ AnimationClip:
       m_PreInfinity: 2
       m_PostInfinity: 2
       m_RotationOrder: 4
-    path: girl_arm_l
+    path: root_body/girl_arm_l
   - curve:
       serializedVersion: 2
       m_Curve:
       - serializedVersion: 3
         time: 0
-        value: {x: -0.58, y: -0.15, z: 0}
+        value: {x: -0.62, y: -0.08, z: 0}
         inSlope: {x: 0, y: 0, z: 0}
         outSlope: {x: 0, y: 0, z: 0}
         tangentMode: 0
@@ -62,7 +62,7 @@ AnimationClip:
       m_PreInfinity: 2
       m_PostInfinity: 2
       m_RotationOrder: 4
-    path: girl_arm_r
+    path: root_body/girl_arm_r
   - curve:
       serializedVersion: 2
       m_Curve:
@@ -78,7 +78,7 @@ AnimationClip:
       m_PreInfinity: 2
       m_PostInfinity: 2
       m_RotationOrder: 4
-    path: girl_torso_0
+    path: root_body/girl_torso_0
   - curve:
       serializedVersion: 2
       m_Curve:
@@ -94,7 +94,7 @@ AnimationClip:
       m_PreInfinity: 2
       m_PostInfinity: 2
       m_RotationOrder: 4
-    path: girl_head_0/girl_face
+    path: root_body/girl_head_0/girl_face
   m_ScaleCurves: []
   m_FloatCurves:
   - curve:
@@ -113,7 +113,7 @@ AnimationClip:
       m_PostInfinity: 2
       m_RotationOrder: 4
     attribute: m_FlipX
-    path: girl_arm_l
+    path: root_body/girl_arm_l
     classID: 212
     script: {fileID: 0}
   - curve:
@@ -132,7 +132,7 @@ AnimationClip:
       m_PostInfinity: 2
       m_RotationOrder: 4
     attribute: m_FlipX
-    path: girl_arm_r
+    path: root_body/girl_arm_r
     classID: 212
     script: {fileID: 0}
   - curve:
@@ -151,7 +151,7 @@ AnimationClip:
       m_PostInfinity: 2
       m_RotationOrder: 4
     attribute: m_SortingOrder
-    path: girl_arm_l
+    path: root_body/girl_arm_l
     classID: 212
     script: {fileID: 0}
   - curve:
@@ -170,7 +170,7 @@ AnimationClip:
       m_PostInfinity: 2
       m_RotationOrder: 4
     attribute: m_SortingOrder
-    path: girl_arm_r
+    path: root_body/girl_arm_r
     classID: 212
     script: {fileID: 0}
   - curve:
@@ -189,7 +189,7 @@ AnimationClip:
       m_PostInfinity: 2
       m_RotationOrder: 4
     attribute: m_FlipX
-    path: girl_leg_0
+    path: root_body/girl_leg_0
     classID: 212
     script: {fileID: 0}
   - curve:
@@ -208,7 +208,7 @@ AnimationClip:
       m_PostInfinity: 2
       m_RotationOrder: 4
     attribute: m_FlipX
-    path: girl_leg_0 (1)
+    path: root_body/girl_leg_0 (1)
     classID: 212
     script: {fileID: 0}
   m_PPtrCurves:
@@ -216,35 +216,35 @@ AnimationClip:
     - time: 0
       value: {fileID: -2272842664331572570, guid: a5b8236ec11cfcb40b4c7cd67f38c11f, type: 3}
     attribute: m_Sprite
-    path: girl_head_0/girl_face
+    path: root_body/girl_head_0/girl_face
     classID: 212
     script: {fileID: 0}
   - curve:
     - time: 0
       value: {fileID: 8743285277506368957, guid: a5b8236ec11cfcb40b4c7cd67f38c11f, type: 3}
     attribute: m_Sprite
-    path: girl_arm_l
+    path: root_body/girl_arm_l
     classID: 212
     script: {fileID: 0}
   - curve:
     - time: 0
       value: {fileID: 8743285277506368957, guid: a5b8236ec11cfcb40b4c7cd67f38c11f, type: 3}
     attribute: m_Sprite
-    path: girl_arm_r
+    path: root_body/girl_arm_r
     classID: 212
     script: {fileID: 0}
   - curve:
     - time: 0
       value: {fileID: 8685857731747134815, guid: a5b8236ec11cfcb40b4c7cd67f38c11f, type: 3}
     attribute: m_Sprite
-    path: girl_leg_0
+    path: root_body/girl_leg_0
     classID: 212
     script: {fileID: 0}
   - curve:
     - time: 0
       value: {fileID: 8685857731747134815, guid: a5b8236ec11cfcb40b4c7cd67f38c11f, type: 3}
     attribute: m_Sprite
-    path: girl_leg_0 (1)
+    path: root_body/girl_leg_0 (1)
     classID: 212
     script: {fileID: 0}
   m_SampleRate: 60
@@ -255,112 +255,112 @@ AnimationClip:
   m_ClipBindingConstant:
     genericBindings:
     - serializedVersion: 2
-      path: 596002991
+      path: 4030795737
       attribute: 555744692
       script: {fileID: 0}
       typeID: 212
       customType: 0
       isPPtrCurve: 0
     - serializedVersion: 2
-      path: 3649664460
+      path: 172896954
       attribute: 555744692
       script: {fileID: 0}
       typeID: 212
       customType: 0
       isPPtrCurve: 0
     - serializedVersion: 2
-      path: 596002991
+      path: 4030795737
       attribute: 3762991556
       script: {fileID: 0}
       typeID: 212
       customType: 26
       isPPtrCurve: 0
     - serializedVersion: 2
-      path: 3649664460
+      path: 172896954
       attribute: 3762991556
       script: {fileID: 0}
       typeID: 212
       customType: 26
       isPPtrCurve: 0
     - serializedVersion: 2
-      path: 2039642929
+      path: 2857712711
       attribute: 555744692
       script: {fileID: 0}
       typeID: 212
       customType: 0
       isPPtrCurve: 0
     - serializedVersion: 2
-      path: 1230684625
+      path: 3921307443
       attribute: 555744692
       script: {fileID: 0}
       typeID: 212
       customType: 0
       isPPtrCurve: 0
     - serializedVersion: 2
-      path: 3061558118
+      path: 2294165617
       attribute: 0
       script: {fileID: 0}
       typeID: 212
       customType: 23
       isPPtrCurve: 1
     - serializedVersion: 2
-      path: 596002991
+      path: 4030795737
       attribute: 0
       script: {fileID: 0}
       typeID: 212
       customType: 23
       isPPtrCurve: 1
     - serializedVersion: 2
-      path: 3649664460
+      path: 172896954
       attribute: 0
       script: {fileID: 0}
       typeID: 212
       customType: 23
       isPPtrCurve: 1
     - serializedVersion: 2
-      path: 2039642929
+      path: 2857712711
       attribute: 0
       script: {fileID: 0}
       typeID: 212
       customType: 23
       isPPtrCurve: 1
     - serializedVersion: 2
-      path: 1230684625
+      path: 3921307443
       attribute: 0
       script: {fileID: 0}
       typeID: 212
       customType: 23
       isPPtrCurve: 1
     - serializedVersion: 2
-      path: 3520933299
+      path: 1751662333
       attribute: 1
       script: {fileID: 0}
       typeID: 4
       customType: 0
       isPPtrCurve: 0
     - serializedVersion: 2
-      path: 596002991
+      path: 4030795737
       attribute: 1
       script: {fileID: 0}
       typeID: 4
       customType: 0
       isPPtrCurve: 0
     - serializedVersion: 2
-      path: 3649664460
+      path: 172896954
       attribute: 1
       script: {fileID: 0}
       typeID: 4
       customType: 0
       isPPtrCurve: 0
     - serializedVersion: 2
-      path: 2332501354
+      path: 450559214
       attribute: 1
       script: {fileID: 0}
       typeID: 4
       customType: 0
       isPPtrCurve: 0
     - serializedVersion: 2
-      path: 3061558118
+      path: 2294165617
       attribute: 1
       script: {fileID: 0}
       typeID: 4
@@ -409,7 +409,7 @@ AnimationClip:
       m_PostInfinity: 2
       m_RotationOrder: 4
     attribute: m_LocalPosition.x
-    path: girl_head_0
+    path: root_body/girl_head_0
     classID: 4
     script: {fileID: 0}
   - curve:
@@ -428,7 +428,7 @@ AnimationClip:
       m_PostInfinity: 2
       m_RotationOrder: 4
     attribute: m_LocalPosition.y
-    path: girl_head_0
+    path: root_body/girl_head_0
     classID: 4
     script: {fileID: 0}
   - curve:
@@ -447,7 +447,7 @@ AnimationClip:
       m_PostInfinity: 2
       m_RotationOrder: 4
     attribute: m_LocalPosition.z
-    path: girl_head_0
+    path: root_body/girl_head_0
     classID: 4
     script: {fileID: 0}
   - curve:
@@ -466,7 +466,7 @@ AnimationClip:
       m_PostInfinity: 2
       m_RotationOrder: 4
     attribute: m_FlipX
-    path: girl_arm_l
+    path: root_body/girl_arm_l
     classID: 212
     script: {fileID: 0}
   - curve:
@@ -485,7 +485,7 @@ AnimationClip:
       m_PostInfinity: 2
       m_RotationOrder: 4
     attribute: m_FlipX
-    path: girl_arm_r
+    path: root_body/girl_arm_r
     classID: 212
     script: {fileID: 0}
   - curve:
@@ -493,7 +493,7 @@ AnimationClip:
       m_Curve:
       - serializedVersion: 3
         time: 0
-        value: 0.58
+        value: 0.6
         inSlope: 0
         outSlope: 0
         tangentMode: 136
@@ -504,7 +504,7 @@ AnimationClip:
       m_PostInfinity: 2
       m_RotationOrder: 4
     attribute: m_LocalPosition.x
-    path: girl_arm_l
+    path: root_body/girl_arm_l
     classID: 4
     script: {fileID: 0}
   - curve:
@@ -512,7 +512,7 @@ AnimationClip:
       m_Curve:
       - serializedVersion: 3
         time: 0
-        value: -0.15
+        value: -0.1
         inSlope: 0
         outSlope: 0
         tangentMode: 136
@@ -523,7 +523,7 @@ AnimationClip:
       m_PostInfinity: 2
       m_RotationOrder: 4
     attribute: m_LocalPosition.y
-    path: girl_arm_l
+    path: root_body/girl_arm_l
     classID: 4
     script: {fileID: 0}
   - curve:
@@ -542,7 +542,7 @@ AnimationClip:
       m_PostInfinity: 2
       m_RotationOrder: 4
     attribute: m_LocalPosition.z
-    path: girl_arm_l
+    path: root_body/girl_arm_l
     classID: 4
     script: {fileID: 0}
   - curve:
@@ -550,7 +550,7 @@ AnimationClip:
       m_Curve:
       - serializedVersion: 3
         time: 0
-        value: -0.58
+        value: -0.62
         inSlope: 0
         outSlope: 0
         tangentMode: 136
@@ -561,7 +561,7 @@ AnimationClip:
       m_PostInfinity: 2
       m_RotationOrder: 4
     attribute: m_LocalPosition.x
-    path: girl_arm_r
+    path: root_body/girl_arm_r
     classID: 4
     script: {fileID: 0}
   - curve:
@@ -569,7 +569,7 @@ AnimationClip:
       m_Curve:
       - serializedVersion: 3
         time: 0
-        value: -0.15
+        value: -0.08
         inSlope: 0
         outSlope: 0
         tangentMode: 136
@@ -580,7 +580,7 @@ AnimationClip:
       m_PostInfinity: 2
       m_RotationOrder: 4
     attribute: m_LocalPosition.y
-    path: girl_arm_r
+    path: root_body/girl_arm_r
     classID: 4
     script: {fileID: 0}
   - curve:
@@ -599,7 +599,7 @@ AnimationClip:
       m_PostInfinity: 2
       m_RotationOrder: 4
     attribute: m_LocalPosition.z
-    path: girl_arm_r
+    path: root_body/girl_arm_r
     classID: 4
     script: {fileID: 0}
   - curve:
@@ -618,7 +618,7 @@ AnimationClip:
       m_PostInfinity: 2
       m_RotationOrder: 4
     attribute: m_LocalPosition.x
-    path: girl_torso_0
+    path: root_body/girl_torso_0
     classID: 4
     script: {fileID: 0}
   - curve:
@@ -637,7 +637,7 @@ AnimationClip:
       m_PostInfinity: 2
       m_RotationOrder: 4
     attribute: m_LocalPosition.y
-    path: girl_torso_0
+    path: root_body/girl_torso_0
     classID: 4
     script: {fileID: 0}
   - curve:
@@ -656,7 +656,7 @@ AnimationClip:
       m_PostInfinity: 2
       m_RotationOrder: 4
     attribute: m_LocalPosition.z
-    path: girl_torso_0
+    path: root_body/girl_torso_0
     classID: 4
     script: {fileID: 0}
   - curve:
@@ -675,7 +675,7 @@ AnimationClip:
       m_PostInfinity: 2
       m_RotationOrder: 4
     attribute: m_SortingOrder
-    path: girl_arm_l
+    path: root_body/girl_arm_l
     classID: 212
     script: {fileID: 0}
   - curve:
@@ -694,7 +694,7 @@ AnimationClip:
       m_PostInfinity: 2
       m_RotationOrder: 4
     attribute: m_SortingOrder
-    path: girl_arm_r
+    path: root_body/girl_arm_r
     classID: 212
     script: {fileID: 0}
   - curve:
@@ -713,7 +713,7 @@ AnimationClip:
       m_PostInfinity: 2
       m_RotationOrder: 4
     attribute: m_FlipX
-    path: girl_leg_0
+    path: root_body/girl_leg_0
     classID: 212
     script: {fileID: 0}
   - curve:
@@ -732,7 +732,7 @@ AnimationClip:
       m_PostInfinity: 2
       m_RotationOrder: 4
     attribute: m_FlipX
-    path: girl_leg_0 (1)
+    path: root_body/girl_leg_0 (1)
     classID: 212
     script: {fileID: 0}
   - curve:
@@ -751,7 +751,7 @@ AnimationClip:
       m_PostInfinity: 2
       m_RotationOrder: 4
     attribute: m_LocalPosition.x
-    path: girl_head_0/girl_face
+    path: root_body/girl_head_0/girl_face
     classID: 4
     script: {fileID: 0}
   - curve:
@@ -770,7 +770,7 @@ AnimationClip:
       m_PostInfinity: 2
       m_RotationOrder: 4
     attribute: m_LocalPosition.y
-    path: girl_head_0/girl_face
+    path: root_body/girl_head_0/girl_face
     classID: 4
     script: {fileID: 0}
   - curve:
@@ -789,7 +789,7 @@ AnimationClip:
       m_PostInfinity: 2
       m_RotationOrder: 4
     attribute: m_LocalPosition.z
-    path: girl_head_0/girl_face
+    path: root_body/girl_head_0/girl_face
     classID: 4
     script: {fileID: 0}
   m_EulerEditorCurves: []

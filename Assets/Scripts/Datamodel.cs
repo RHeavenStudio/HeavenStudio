@@ -10,5 +10,11 @@ namespace HeavenStudio
         {
             return s.Split('/')[index];
         }
+
+        public static string GetExtension(this string s)
+        {
+            string[] split = s.Split('.');
+            return split[split.Length - 1];
+        }
     }
 }

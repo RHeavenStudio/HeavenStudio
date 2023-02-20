@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -17,6 +18,17 @@ namespace HeavenStudio.InputSystem
             "Pro Controller",
             "DualShock 4",
             "DualSense"
+        };
+
+        static int[] dsPlayerColours = new[]
+        {
+            0xd41817,
+            0x04d4fa,
+            0x05ff08,
+            0xffdd01,
+            0xe906c9,
+            0xcc6020,
+            0x888888
         };
 
         //TODO: see if single joy-con mappings differ from a normal pad (they don't!)
@@ -68,6 +80,7 @@ namespace HeavenStudio.InputSystem
         int joyshockHandle;
         int type;
         int splitType;
+        int lightbarColour;
         string joyshockName;
 
         //buttons, sticks, triggers
@@ -106,6 +119,14 @@ namespace HeavenStudio.InputSystem
             //buttons
             joyBtStateLast = joyBtStateCurrent;
             joyBtStateCurrent = JslGetSimpleState(joyshockHandle);
+
+            //gyro and accelerometer
+            joyImuStateLast = joyImuStateCurrent;
+            joyImuStateCurrent = JslGetIMUState(joyshockHandle);
+
+            //touchpad
+            joyTouchStateLast = joyTouchStateCurrent;
+            joyTouchStateCurrent = JslGetTouchState(joyshockHandle);
 
             //stick direction state
             //split controllers will need to be rotated to compensate
@@ -154,7 +175,7 @@ namespace HeavenStudio.InputSystem
 
         public override InputFeatures GetFeatures()
         {
-            InputFeatures features = InputFeatures.Style_Pad | InputFeatures.Style_Baton;
+            InputFeatures features = InputFeatures.Readable_MotionSensor | InputFeatures.Extra_Rumble | InputFeatures.Style_Pad | InputFeatures.Style_Baton;
             switch (type)
             {
                 case TypeJoyConLeft:
@@ -173,7 +194,6 @@ namespace HeavenStudio.InputSystem
                     features |= InputFeatures.Readable_AnalogueTriggers | InputFeatures.Readable_Pointer | InputFeatures.Writable_PlayerLED | InputFeatures.Writable_LightBar;
                     break;
             }
-            features |= InputFeatures.Readable_MotionSensor | InputFeatures.Extra_Rumble | InputFeatures.Style_Pad | InputFeatures.Style_Baton | InputFeatures.Style_Touch;
             return features;
         }
 
@@ -360,6 +380,7 @@ namespace HeavenStudio.InputSystem
             {
                 this.playerNum = null;
                 JslSetPlayerNumber(joyshockHandle, 0);
+                JslSetLightColour(joyshockHandle, 0);
                 return;
             }
             this.playerNum = playerNum;
@@ -372,11 +393,68 @@ namespace HeavenStudio.InputSystem
                 }
             }
             JslSetPlayerNumber(joyshockHandle, ledMask);
+            lightbarColour = GetLightbarColourForPlayer((int) this.playerNum);
+            JslSetLightColour(joyshockHandle, lightbarColour);
         }
 
         public override int? GetPlayer()
         {
             return this.playerNum;
+        }
+
+        public Color GetBodyColor()
+        {
+            if (otherHalf != null)
+            {
+                // gets the colour of the right controller if is split
+                return BitwiseUtils.IntToRgb(splitType == SplitRight ? JslGetControllerColour(joyshockHandle) : JslGetControllerColour(GetOtherHalf().GetHandle()));
+            }
+            return BitwiseUtils.IntToRgb(JslGetControllerColour(joyshockHandle));
+        }
+
+        public Color GetButtonColor()
+        {
+            return BitwiseUtils.IntToRgb(JslGetControllerButtonColour(joyshockHandle));
+        }
+
+        public Color GetLeftGripColor()
+        {
+            if (otherHalf != null)
+            {
+                return BitwiseUtils.IntToRgb(splitType == SplitLeft ? JslGetControllerColour(joyshockHandle) : JslGetControllerColour(GetOtherHalf().GetHandle()));
+            }
+            return BitwiseUtils.IntToRgb(JslGetControllerLeftGripColour(joyshockHandle));
+        }
+
+        public Color GetRightGripColor()
+        {
+            if (otherHalf != null)
+            {
+                return BitwiseUtils.IntToRgb(splitType == SplitRight ? JslGetControllerColour(joyshockHandle) : JslGetControllerColour(GetOtherHalf().GetHandle()));
+            }
+            return BitwiseUtils.IntToRgb(JslGetControllerRightGripColour(joyshockHandle));
+        }
+
+        public Color GetLightbarColour()
+        {
+            return BitwiseUtils.IntToRgb(lightbarColour);
+        }
+
+        public void SetLightbarColour(Color color)
+        {
+            lightbarColour = BitwiseUtils.RgbToInt(color);
+            JslSetLightColour(joyshockHandle, lightbarColour);
+        }
+
+        public static int GetLightbarColourForPlayer(int playerNum = 0)
+        {
+            if (playerNum < 0)
+            {
+                return dsPlayerColours[dsPlayerColours.Length - 1];
+            }
+
+            playerNum = Math.Min(playerNum, dsPlayerColours.Length - 1);
+            return dsPlayerColours[playerNum];
         }
 
         public int GetHandle()

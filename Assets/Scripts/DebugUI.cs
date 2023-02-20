@@ -31,7 +31,7 @@ namespace HeavenStudio
 
         private void Start()
         {
-            CreateDebugUI(out Title); SetText(Title, "Rhythm Heaven Mania v1.0 BRAEDON DEBUG PLAYTEST");
+            CreateDebugUI(out Title); SetText(Title, $"Heaven Studio {GlobalGameManager.buildTime}");
             CreateDebugUI(out SongPosBeats);
             CreateDebugUI(out SongPos);
             CreateDebugUI(out SecPerBeat);
@@ -71,7 +71,6 @@ namespace HeavenStudio
 
                 SetText(currEvent, $"CurrentEvent: {GameManager.instance.Beatmap.entities[GameManager.instance.currentEvent - minus].datamodel}");
                 SetText(eventLength, $"Event Length: {GameManager.instance.Beatmap.entities[GameManager.instance.currentEvent - minus].length}");
-                SetText(eventType, $"Event Type: {GameManager.instance.Beatmap.entities[GameManager.instance.currentEvent - minus].type}");
             }
         }
 

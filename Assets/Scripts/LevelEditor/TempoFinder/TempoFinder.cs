@@ -4,9 +4,8 @@ using UnityEngine;
 
 namespace HeavenStudio.Editor 
 {
-    public class TempoFinder : MonoBehaviour
+    public class TempoFinder : Dialog
     {
-        [SerializeField] private GameObject tempoFinder;
         private bool pressed;
         private float timePressed;
         [SerializeField] private BPMText bpmText;
@@ -17,12 +16,13 @@ namespace HeavenStudio.Editor
         }
         public void SwitchTempoDialog()
         {
-            if(tempoFinder.activeSelf) {
-                tempoFinder.SetActive(false);
+            if(dialog.activeSelf) {
+                dialog.SetActive(false);
                 timePressed = 0;
                 bpmText.ResetText();
             } else {
-                tempoFinder.SetActive(true);
+                ResetAllDialogs();
+                dialog.SetActive(true);
             }
         }
         public void TapBPM()

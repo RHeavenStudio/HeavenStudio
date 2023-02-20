@@ -53,24 +53,24 @@ namespace HeavenStudio.Games.Scripts_FanClub
         public void ClapJust(PlayerActionEvent caller, float state)
         {
             bool auto = GameManager.instance.autoplay;
-            ClapStart(true, false, auto ? 0.25f : 0f);
+            ClapStart(state < 1f && state > -1f, false, auto ? 0.1f : 0f);
         }
 
         public void ChargeClapJust(PlayerActionEvent caller, float state)
         {
             bool auto = GameManager.instance.autoplay;
-            ClapStart(true, true, auto ? 1f : 0f);
+            ClapStart(state < 1f && state > -1f, true, auto ? 1f : 0f);
         }
 
         public void LongClapJust(PlayerActionEvent caller, float state)
         {
             bool auto = GameManager.instance.autoplay;
-            ClapStart(true, false, auto ? 1f : 0f);
+            ClapStart(state < 1f && state > -1f, false, auto ? 1f : 0f);
         }
 
         public void JumpJust(PlayerActionEvent caller, float state)
         {
-            JumpStart(true);
+            JumpStart(state < 1f && state > -1f);
         }
 
         public void ClapThrough(PlayerActionEvent caller) {
@@ -99,27 +99,31 @@ namespace HeavenStudio.Games.Scripts_FanClub
             {
                 if (PlayerInput.Pressed())
                 {
-                    if (!FanClub.instance.IsExpectingInputNow())
+                    if (!FanClub.instance.IsExpectingInputNow(InputType.STANDARD_DOWN))
                     {
                         ClapStart(false);
+                        FanClub.instance.ScoreMiss();
                     }
                 }
                 if (PlayerInput.Pressing())
                 {
                     if (clappingStartTime != Single.MinValue && cond.songPositionInBeats > clappingStartTime + 2f && !stopCharge)
                     {
+                        animator.speed = 1f;
                         animator.Play("FanClapCharge", -1, 0);
                         stopCharge = true;
                     }
                 }
                 if (PlayerInput.PressedUp())
                 {
-                    if (clappingStartTime != Single.MinValue && cond.songPositionInBeats > clappingStartTime + 2f && stopCharge && !FanClub.instance.IsExpectingInputNow())
+                    if (clappingStartTime != Single.MinValue && cond.songPositionInBeats > clappingStartTime + 2f && stopCharge && !FanClub.instance.IsExpectingInputNow(InputType.STANDARD_UP))
                     {
                         JumpStart(false);
+                        FanClub.instance.ScoreMiss();
                     }
                     else
                     {
+                        animator.speed = 1f;
                         animator.Play("FanFree", -1, 0);
                         stopBeat = false;
                         clappingStartTime = Single.MinValue;
@@ -135,6 +139,7 @@ namespace HeavenStudio.Games.Scripts_FanClub
                 float yWeight = -(yMul*yMul) + 1f;
                 motionRoot.transform.localPosition = new Vector3(0, 3f * yWeight);
                 shadow.transform.localScale = new Vector3((1f-yWeight*0.8f) * 1.4f, (1f-yWeight*0.8f) * 1.4f, 1f);
+                animator.DoScaledAnimation("FanJump", jumpStartTime);
             }
             else
             {
@@ -149,6 +154,7 @@ namespace HeavenStudio.Games.Scripts_FanClub
                         stopBeat = false;
                     }
                 }
+                animator.speed = 1f;
                 hasJumped = false;
             }
         }
@@ -164,6 +170,7 @@ namespace HeavenStudio.Games.Scripts_FanClub
             hasJumped = false;
             stopBeat = true;
             jumpStartTime = -99f;
+            animator.speed = 1f;
             animator.Play("FanClap", -1, 0);
             Jukebox.PlayOneShotGame("fanClub/play_clap");
             Jukebox.PlayOneShotGame("fanClub/crap_impact");
@@ -218,7 +225,10 @@ namespace HeavenStudio.Games.Scripts_FanClub
         public void Bop()
         {
             if (!stopBeat)
+            {
+                animator.speed = 1f;
                 animator.Play("FanBeat");
+            }
         }
 
         public void ClapParticle()

@@ -59,5 +59,13 @@ namespace HeavenStudio.Util
             var blue =  ( value >>  0  ) & 255;
             return new Color(red/255f, green/255f, blue/255f); 
         }
+
+        public static int RgbToInt(Color color)
+        {
+            var red = (int)(color.r * 255);
+            var green = (int)(color.g * 255);
+            var blue = (int)(color.b * 255);
+            return (red << 16) | (green << 8) | blue;
+        }
     }
 }

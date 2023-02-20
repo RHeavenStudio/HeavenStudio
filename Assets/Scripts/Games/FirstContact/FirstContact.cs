@@ -11,28 +11,61 @@ namespace HeavenStudio.Games.Loaders
         {
             return new Minigame("firstContact", "First Contact", "008c97", false, false, new List<GameAction>()
             {
-                new GameAction("beat intervals",                   delegate { FirstContact.instance.SetIntervalStart(eventCaller.currentEntity.beat, eventCaller.currentEntity.length);  }, 4f, true),
-                new GameAction("alien speak",                   delegate { FirstContact.instance.alienSpeak(eventCaller.currentEntity.beat, eventCaller.currentEntity.valA);  }, 0.5f, false, new List<Param>()
+                new GameAction("beat intervals", "Start Interval")
                 {
-                    new Param("valA", new EntityTypes.Float(.8f, 1.5f, 1f), "Pitch")
-                }),
-                new GameAction("alien turnover",                   delegate { FirstContact.instance.alienTurnOver(eventCaller.currentEntity.beat);  }, 0.5f, false),
-                new GameAction("alien success",                   delegate { FirstContact.instance.alienSuccess(eventCaller.currentEntity.beat);  }, 1f, false),
-                new GameAction("mission control",                   delegate { FirstContact.instance.missionControlDisplay(eventCaller.currentEntity.beat, eventCaller.currentEntity.toggle, eventCaller.currentEntity.length);  }, 1f, true, new List<Param>
+                    function = delegate { FirstContact.instance.SetIntervalStart(eventCaller.currentEntity.beat, eventCaller.currentEntity.length);  }, 
+                    defaultLength = 4f, 
+                    resizable = true,
+                    priority = 1,
+                },
+                new GameAction("alien speak", "Alien Speak")
                 {
-                    new Param("toggle", false, "Stay", "If it's the end of the remix/song")
-                }),
-                new GameAction("look at",                   delegate { FirstContact.instance.lookAtDirection(eventCaller.currentEntity.type, eventCaller.currentEntity.type);  }, .5f, false, new List<Param>()
+                    function = delegate { FirstContact.instance.alienSpeak(eventCaller.currentEntity.beat, eventCaller.currentEntity["valA"]);  }, 
+                    defaultLength = 0.5f,
+                    parameters = new List<Param>()
+                    {
+                        new Param("valA", new EntityTypes.Float(.8f, 1.5f, 1f), "Pitch")
+                    }
+                },
+                new GameAction("alien turnover", "Alien Turnover")
                 {
-                    new Param("type", FirstContact.alienLookAt.lookAtTranslator, "alien look at what", "[Alien] will look at what"),
-                    new Param("type", FirstContact.translatorLookAt.lookAtAlien, "translator look at what", "[Translator] will look at what"),
-                }),
-                new GameAction("live bar beat",                   delegate { FirstContact.instance.liveBarBeat(eventCaller.currentEntity.toggle);  }, .5f, false, new List<Param>()
+                    function = delegate { FirstContact.instance.alienTurnOver(eventCaller.currentEntity.beat);  }, 
+                    defaultLength = 0.5f,
+                },
+                new GameAction("alien success", "Confirm Response")
                 {
-                    new Param("toggle", true, "On Beat", "If the live bar animation will be on beat or not")
-                }),
+                    function = delegate { FirstContact.instance.alienSuccess(eventCaller.currentEntity.beat);  }, 
+                },
+                new GameAction("mission control", "Show Mission Control")
+                {
+                    function = delegate { var e = eventCaller.currentEntity; FirstContact.instance.missionControlDisplay(e.beat, e["toggle"], e.length);  }, 
+                    resizable = true, 
+                    parameters = new List<Param>
+                    {
+                        new Param("toggle", false, "Stay", "If it's the end of the remix/song")
+                    }
+                },
+                new GameAction("look at", "Look At")
+                {
+                    function = delegate { FirstContact.instance.lookAtDirection(eventCaller.currentEntity["type"], eventCaller.currentEntity["type"]);  }, 
+                    defaultLength = .5f,
+                    parameters = new List<Param>()
+                    {
+                        new Param("type", FirstContact.alienLookAt.lookAtTranslator, "alien look at what", "[Alien] will look at what"),
+                        new Param("type2", FirstContact.translatorLookAt.lookAtAlien, "translator look at what", "[Translator] will look at what"),
+                    }
+                },
+                new GameAction("live bar beat", "Live Bar Beat")
+                {
+                    function = delegate { FirstContact.instance.liveBarBeat(eventCaller.currentEntity["toggle"]);  }, 
+                    defaultLength = .5f,
+                    parameters = new List<Param>()
+                    {
+                        new Param("toggle", true, "On Beat", "If the live bar animation will be on beat or not")
+                    }
+                },
                 
-                //new GameAction("Version of First Contact",                   delegate { FirstContact.instance.versionOfFirstContact(eventCaller.currentEntity.type);  }, .5f, false, new List<Param>
+                //new GameAction("Version of First Contact",                   delegate { FirstContact.instance.versionOfFirstContact(eventCaller.currentEntity["type"]);  }, .5f, false, new List<Param>
                 //{
                 //    new Param("type", FirstContact.VersionOfContact.FirstContact, "Version", "Version of First Contact to play"),
                 //}),
@@ -98,7 +131,7 @@ namespace HeavenStudio.Games
             instance = this;
         }
 
-        public void SetIntervalStart(float beat, float interval = 4f)
+        public void SetIntervalStart(float beat, float interval)
         {
             if (!intervalStarted)
             {
@@ -123,7 +156,7 @@ namespace HeavenStudio.Games
                 lastReportedBeat = Mathf.Round(Conductor.instance.songPositionInBeats);
             }
 
-            if (PlayerInput.Pressed() && !IsExpectingInputNow() && !noHitOnce && !isSpeaking)
+            if (PlayerInput.Pressed() && !IsExpectingInputNow() && !noHitOnce && !isSpeaking && !missionControl.activeInHierarchy)
             {
                 Jukebox.PlayOneShotGame("firstContact/" + randomizerLines());
                 BeatAction.New(this.gameObject, new List<BeatAction.Action>()
@@ -212,15 +245,7 @@ namespace HeavenStudio.Games
 
         public void alienTurnOver(float beat)
         {
-            if (!intervalStarted)
-            {
-                SetIntervalStart(beat, beatInterval);
-            }
-            if (intervalStarted)
-            {
-                SetIntervalStart(beat, beatInterval);
-            }
-
+            SetIntervalStart(beat, beatInterval);
             Jukebox.PlayOneShotGame("firstContact/turnover");
 
             BeatAction.New(alien, new List<BeatAction.Action>()
@@ -281,6 +306,7 @@ namespace HeavenStudio.Games
 
             alienSpeakCount = 0;
             translatorSpeakCount = 0;
+            intervalStarted = false;
             isSpeaking = false;
             hasMissed = false;
             noHitOnce = false;
@@ -312,7 +338,7 @@ namespace HeavenStudio.Games
             {
                 BeatAction.New(missionControl, new List<BeatAction.Action>()
                     {
-                        new BeatAction.Action(length, delegate { missionControl.SetActive(false); }),
+                        new BeatAction.Action(beat + length, delegate { missionControl.SetActive(false); }),
                     });
             }
             else
@@ -373,4 +399,3 @@ namespace HeavenStudio.Games
         }
     }
 }
-

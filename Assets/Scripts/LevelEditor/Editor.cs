@@ -13,9 +13,10 @@ using TMPro;
 using Starpelly;
 using SFB;
 
-using HeavenStudio.Editor;
+using HeavenStudio.Common;
 using HeavenStudio.Editor.Track;
 using HeavenStudio.Util;
+using HeavenStudio.StudioDance;
 
 using System.IO.Compression;
 using System.Text;
@@ -30,7 +31,7 @@ namespace HeavenStudio.Editor
         [SerializeField] public Camera EditorCamera;
 
         // [SerializeField] public GameObject EditorLetterbox;
-        [SerializeField] public GameObject GameLetterbox;
+        public GameObject GameLetterbox;
 
         [Header("Rect")]
         [SerializeField] private RenderTexture ScreenRenderTexture;
@@ -41,6 +42,8 @@ namespace HeavenStudio.Editor
         [Header("Components")]
         [SerializeField] private Timeline Timeline;
         [SerializeField] private TMP_Text GameEventSelectorTitle;
+        [SerializeField] private TMP_Text BuildDateDisplay;
+        [SerializeField] public StudioDanceManager StudioDanceManager;
 
         [Header("Toolbar")]
         [SerializeField] private Button NewBTN;
@@ -52,9 +55,13 @@ namespace HeavenStudio.Editor
         [SerializeField] private Button FullScreenBTN;
         [SerializeField] private Button TempoFinderBTN;
         [SerializeField] private Button SnapDiagBTN;
+        [SerializeField] private Button ChartParamBTN;
 
         [SerializeField] private Button EditorThemeBTN;
         [SerializeField] private Button EditorSettingsBTN;
+
+        [Header("Dialogs")]
+        [SerializeField] private Dialog[] Dialogs;
 
         [Header("Tooltip")]
         public TMP_Text tooltipText;
@@ -68,7 +75,13 @@ namespace HeavenStudio.Editor
         public bool discordDuringTesting = false;
         public bool canSelect = true;
         public bool editingInputField = false;
+        public bool inAuthorativeMenu = false;
         public bool isCursorEnabled = true;
+        public bool isDiscordEnabled = true;
+
+        public bool isShortcutsEnabled { get { return (!inAuthorativeMenu) && (!editingInputField); } }
+
+        private byte[] MusicBytes;
 
         public static Editor instance { get; private set; }
 
@@ -84,20 +97,14 @@ namespace HeavenStudio.Editor
             GameCamera.instance.camera.targetTexture = ScreenRenderTexture;
             GameManager.instance.CursorCam.targetTexture = ScreenRenderTexture;
             GameManager.instance.OverlayCamera.targetTexture = ScreenRenderTexture;
+            GameLetterbox = GameManager.instance.GameLetterbox;
             Screen.texture = ScreenRenderTexture;
 
             GameManager.instance.Init();
             Timeline.Init();
 
-            for (int i = 0; i < EventCaller.instance.minigames.Count; i++)
-            {
-                GameObject GameIcon_ = Instantiate(GridGameSelector.GetChild(0).gameObject, GridGameSelector);
-                GameIcon_.GetComponent<Image>().sprite = GameIcon(EventCaller.instance.minigames[i].name);
-                GameIcon_.GetComponent<GridGameSelectorGame>().MaskTex = GameIconMask(EventCaller.instance.minigames[i].name);
-                GameIcon_.GetComponent<GridGameSelectorGame>().UnClickIcon();
-                GameIcon_.gameObject.SetActive(true);
-                GameIcon_.name = EventCaller.instance.minigames[i].displayName;
-            }
+            foreach (var minigame in EventCaller.instance.minigames)
+                AddIcon(minigame);
 
             Tooltip.AddTooltip(NewBTN.gameObject, "New <color=#adadad>[Ctrl+N]</color>");
             Tooltip.AddTooltip(OpenBTN.gameObject, "Open <color=#adadad>[Ctrl+O]</color>");
@@ -105,26 +112,40 @@ namespace HeavenStudio.Editor
             Tooltip.AddTooltip(UndoBTN.gameObject, "Undo <color=#adadad>[Ctrl+Z]</color>");
             Tooltip.AddTooltip(RedoBTN.gameObject, "Redo <color=#adadad>[Ctrl+Y or Ctrl+Shift+Z]</color>");
             Tooltip.AddTooltip(MusicSelectBTN.gameObject, "Music Select");
-            Tooltip.AddTooltip(EditorThemeBTN.gameObject, "Editor Theme");
             Tooltip.AddTooltip(FullScreenBTN.gameObject, "Preview <color=#adadad>[Tab]</color>");
             Tooltip.AddTooltip(TempoFinderBTN.gameObject, "Tempo Finder");
             Tooltip.AddTooltip(SnapDiagBTN.gameObject, "Snap Settings");
+            Tooltip.AddTooltip(ChartParamBTN.gameObject, "Remix Properties");
 
             Tooltip.AddTooltip(EditorSettingsBTN.gameObject, "Editor Settings <color=#adadad>[Ctrl+Shift+O]</color>");
             UpdateEditorStatus(true);
+
+            BuildDateDisplay.text = GlobalGameManager.buildTime;
+            isCursorEnabled  = PersistentDataManager.gameSettings.editorCursorEnable;
+            isDiscordEnabled = PersistentDataManager.gameSettings.discordRPCEnable;
+        }
+
+        public void AddIcon(Minigames.Minigame minigame)
+        {
+            GameObject GameIcon_ = Instantiate(GridGameSelector.GetChild(0).gameObject, GridGameSelector);
+            GameIcon_.GetComponent<Image>().sprite = GameIcon(minigame.name);
+            GameIcon_.GetComponent<GridGameSelectorGame>().MaskTex = GameIconMask(minigame.name);
+            GameIcon_.GetComponent<GridGameSelectorGame>().UnClickIcon();
+            GameIcon_.gameObject.SetActive(true);
+            GameIcon_.name = minigame.displayName;
         }
 
         public void LateUpdate()
         {
             #region Keyboard Shortcuts
-            if (!editingInputField)
+            if (isShortcutsEnabled)
             {
                 if (Input.GetKeyDown(KeyCode.Tab))
                 {
                     Fullscreen();
                 }
 
-                if (Input.GetKeyDown(KeyCode.Delete))
+                if (Input.GetKeyDown(KeyCode.Delete) || Input.GetKeyDown(KeyCode.Backspace))
                 {
                     List<TimelineEventObj> ev = new List<TimelineEventObj>();
                     for (int i = 0; i < Selections.instance.eventsSelected.Count; i++) ev.Add(Selections.instance.eventsSelected[i]);
@@ -158,7 +179,7 @@ namespace HeavenStudio.Editor
                 {
                     if (Input.GetKeyDown(KeyCode.N))
                     {
-                        LoadRemix("");
+                        NewBTN.onClick.Invoke();
                     }
                     else if (Input.GetKeyDown(KeyCode.O))
                     {
@@ -180,12 +201,12 @@ namespace HeavenStudio.Editor
             #endregion
 
             if (CommandManager.instance.canUndo())
-                UndoBTN.transform.GetChild(0).GetComponent<Image>().color = "BD8CFF".Hex2RGB();
+                UndoBTN.transform.GetChild(0).GetComponent<Image>().color = Color.white;
             else
                 UndoBTN.transform.GetChild(0).GetComponent<Image>().color = Color.gray;
 
             if (CommandManager.instance.canRedo())
-                RedoBTN.transform.GetChild(0).GetComponent<Image>().color = "FFD800".Hex2RGB();
+                RedoBTN.transform.GetChild(0).GetComponent<Image>().color = Color.white;
             else
                 RedoBTN.transform.GetChild(0).GetComponent<Image>().color = Color.gray;
 
@@ -254,6 +275,7 @@ namespace HeavenStudio.Editor
                     changedMusic = true;
 
                     Timeline.FitToSong();
+                    Timeline.CreateWaveform();
                 }
             }
             );
@@ -294,6 +316,35 @@ namespace HeavenStudio.Editor
                 }
             }
 
+            try
+            {
+                if (clip != null)
+                    MusicBytes = OggVorbis.VorbisPlugin.GetOggVorbis(clip, 1);
+                else
+                {
+                    MusicBytes = null;
+                    Debug.LogWarning("Failed to load music file! The stream is currently empty.");
+                }
+            }
+            catch (System.ArgumentNullException)
+            {
+                clip = null;
+                MusicBytes = null;
+                Debug.LogWarning("Failed to load music file! The stream is currently empty.");
+            }
+            catch (System.ArgumentOutOfRangeException)
+            {
+                clip = null;
+                MusicBytes = null;
+                Debug.LogWarning("Failed to load music file! The stream is malformed.");
+            }
+            catch (System.ArgumentException)
+            {
+                clip = null;
+                MusicBytes = null;
+                Debug.LogWarning("Failed to load music file! Only 1 or 2 channels are supported!.");
+            }
+
             return clip;
         }
 
@@ -321,7 +372,7 @@ namespace HeavenStudio.Editor
         {
             var extensions = new[]
             {
-                new ExtensionFilter("Heaven Studio Remix File", "tengoku")
+                new ExtensionFilter("Heaven Studio Remix File", "riq")
             };
             
             StandaloneFileBrowser.SaveFilePanelAsync("Save Remix As", "", "remix_level", extensions, (string path) =>
@@ -343,15 +394,12 @@ namespace HeavenStudio.Editor
                     using (var zipStream = levelFile.Open())
                         zipStream.Write(Encoding.UTF8.GetBytes(GetJson()), 0, Encoding.UTF8.GetBytes(GetJson()).Length);
 
-                    if (changedMusic || currentRemixPath != path)
+                    if (MusicBytes != null)
                     {
-                        // this gets rid of the music file for some reason, someone remind me to find a fix for this soon
+                        var musicFile = archive.CreateEntry("song.ogg", System.IO.Compression.CompressionLevel.NoCompression);
+                        using (var zipStream = musicFile.Open())
+                            zipStream.Write(MusicBytes, 0, MusicBytes.Length);
                     }
-
-                    byte[] bytes = OggVorbis.VorbisPlugin.GetOggVorbis(Conductor.instance.musicSource.clip, 1);
-                    var musicFile = archive.CreateEntry("song.ogg", System.IO.Compression.CompressionLevel.NoCompression);
-                    using (var zipStream = musicFile.Open())
-                        zipStream.Write(bytes, 0, bytes.Length);
                 }
 
                 currentRemixPath = path;
@@ -359,79 +407,85 @@ namespace HeavenStudio.Editor
             }
         }
 
-        public void LoadRemix(string json = "")
+        public void NewRemix()
         {
-            GameManager.instance.LoadRemix(json);
+            if (Timeline.instance != null)
+                Timeline.instance?.Stop(0);
+            else
+                GameManager.instance.Stop(0);
+            MusicBytes = null;
+            LoadRemix("");
+        }
+
+        public void LoadRemix(string json = "", string type = "riq")
+        {
+            GameManager.instance.LoadRemix(json, type);
             Timeline.instance.LoadRemix();
-            Timeline.instance.TempoInfo.UpdateStartingBPMText();
-            Timeline.instance.VolumeInfo.UpdateStartingVolumeText();
-            Timeline.instance.TempoInfo.UpdateOffsetText();
+            // Timeline.instance.SpecialInfo.UpdateStartingBPMText();
+            // Timeline.instance.VolumeInfo.UpdateStartingVolumeText();
+            // Timeline.instance.SpecialInfo.UpdateOffsetText();
             Timeline.FitToSong();
+
+            currentRemixPath = string.Empty;
         }
 
         public void OpenRemix()
         {
             var extensions = new[]
             {
-                new ExtensionFilter("Heaven Studio Remix File", new string[] { "tengoku", "rhmania" })
+                new ExtensionFilter("All Supported Files ", new string[] { "riq", "tengoku", "rhmania" }),
+                new ExtensionFilter("Heaven Studio Remix File ", new string[] { "riq" }),
+                new ExtensionFilter("Legacy Heaven Studio Remix ", new string[] { "tengoku", "rhmania" })
             };
 
             StandaloneFileBrowser.OpenFilePanelAsync("Open Remix", "", extensions, false, (string[] paths) =>
             {
                 var path = Path.Combine(paths);
 
-                if (path != String.Empty)
-                {
-                    loadedMusic = false;
+                if (path == string.Empty) return;
+                loadedMusic = false;
+                string extension = path.GetExtension();
 
-                    using (FileStream zipFile = File.Open(path, FileMode.Open))
+                using var zipFile = File.Open(path, FileMode.Open);
+                using var archive = new ZipArchive(zipFile, ZipArchiveMode.Read);
+
+                foreach (var entry in archive.Entries)
+                    switch (entry.Name)
                     {
-                        using (var archive = new ZipArchive(zipFile, ZipArchiveMode.Read))
+                        case "remix.json":
                         {
-                            foreach (ZipArchiveEntry entry in archive.Entries)
-                            {
-                                if (entry.Name == "remix.json")
-                                {
-                                    using (var stream = entry.Open())
-                                    {
-                                        byte[] bytes;
-                                        using (var ms = new MemoryStream())
-                                        {
-                                            stream.CopyTo(ms);
-                                            bytes = ms.ToArray();
-                                            string json = Encoding.UTF8.GetString(bytes);
-                                            LoadRemix(json);
-                                        }
-                                    }
-                                }
-                                else if (entry.Name == "song.ogg")
-                                {
-                                    using (var stream = entry.Open())
-                                    {
-                                        byte[] bytes;
-                                        using (var ms = new MemoryStream())
-                                        {
-                                            stream.CopyTo(ms);
-                                            bytes = ms.ToArray();
-                                            Conductor.instance.musicSource.clip = OggVorbis.VorbisPlugin.ToAudioClip(bytes, "music");
-                                            loadedMusic = true;
-                                            Timeline.FitToSong();
-                                        }
-                                    }
-                                }
-                            }
+                            using var stream = entry.Open();
+                            using var reader = new StreamReader(stream);
+                            LoadRemix(reader.ReadToEnd(), extension);
+
+                            break;
+                        }
+                        case "song.ogg":
+                        {
+                            using var stream = entry.Open();
+                            using var memoryStream = new MemoryStream();
+                            stream.CopyTo(memoryStream);
+                            MusicBytes = memoryStream.ToArray();
+                            Conductor.instance.musicSource.clip = OggVorbis.VorbisPlugin.ToAudioClip(MusicBytes, "music");
+                            loadedMusic = true;
+                            Timeline.FitToSong();
+
+                            break;
                         }
                     }
 
-                    if (!loadedMusic)
-                        Conductor.instance.musicSource.clip = null;
-
-                    currentRemixPath = path;
-                    remixName = Path.GetFileName(path);
-                    UpdateEditorStatus(false);
-                    CommandManager.instance.Clear();
-                    Timeline.FitToSong();
+                if (!loadedMusic)
+                {
+                    Conductor.instance.musicSource.clip = null;
+                    MusicBytes = null;
                 }
+
+                currentRemixPath = path;
+                remixName = Path.GetFileName(path);
+                UpdateEditorStatus(false);
+                CommandManager.instance.Clear();
+                Timeline.FitToSong();
+                Timeline.CreateWaveform();
             });
         }
 
@@ -439,6 +493,7 @@ namespace HeavenStudio.Editor
 
         public void Fullscreen()
         {
+            MainCanvas.gameObject.SetActive(fullscreen);
             if (fullscreen == false)
             {
                 // EditorLetterbox.SetActive(false);
@@ -450,6 +505,7 @@ namespace HeavenStudio.Editor
                 GameManager.instance.CursorCam.enabled = false;
                 GameManager.instance.OverlayCamera.targetTexture = null;
                 fullscreen = true;
+
             }
             else
             {
@@ -468,12 +524,18 @@ namespace HeavenStudio.Editor
                 GameManager.instance.OverlayCamera.rect = new Rect(0, 0, 1, 1);
                 EditorCamera.rect = new Rect(0, 0, 1, 1);
             }
+            Timeline.AutoBtnUpdate();
         }
 
         private void UpdateEditorStatus(bool updateTime)
         {
             if (discordDuringTesting || !Application.isEditor)
-            DiscordRPC.DiscordRPC.UpdateActivity("In Editor", $"{remixName}", updateTime);
+            {
+                if (isDiscordEnabled)
+                {   DiscordRPC.DiscordRPC.UpdateActivity("In Editor", $"{remixName}", updateTime);
+                    Debug.Log("Discord status updated");
+                }
+            }
         }
 
         public string GetJson()

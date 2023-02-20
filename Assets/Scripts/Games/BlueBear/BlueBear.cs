@@ -11,10 +11,18 @@ namespace HeavenStudio.Games.Loaders
     public static class CtrBearLoader
     {
         public static Minigame AddGame(EventCaller eventCaller) {
-            return new Minigame("blueBear", "Blue Bear \n<color=#eb5454>[WIP don't use]</color>", "B4E6F6", false, false, new List<GameAction>()
+            return new Minigame("blueBear", "Blue Bear", "B4E6F6", false, false, new List<GameAction>()
             {
-                new GameAction("donut",                 delegate { BlueBear.instance.SpawnTreat(eventCaller.currentEntity.beat, false); }, 3, false),
-                new GameAction("cake",                  delegate { BlueBear.instance.SpawnTreat(eventCaller.currentEntity.beat, true); }, 4, false),
+                new GameAction("donut", "Donut")
+                {
+                    function = delegate { BlueBear.instance.SpawnTreat(eventCaller.currentEntity.beat, false); }, 
+                    defaultLength = 3,
+                },
+                new GameAction("cake", "Cake")
+                {
+                    function = delegate { BlueBear.instance.SpawnTreat(eventCaller.currentEntity.beat, true); }, 
+                    defaultLength = 4,
+                },
             });
         }
     }
@@ -60,11 +68,11 @@ namespace HeavenStudio.Games
         {
             headAndBodyAnim.SetBool("ShouldOpenMouth", foodHolder.childCount != 0);
 
-            if (PlayerInput.GetAnyDirectionDown())
+            if (PlayerInput.GetAnyDirectionDown() && !IsExpectingInputNow(InputType.DIRECTION_DOWN))
             {
                 headAndBodyAnim.Play("BiteL", 0, 0);
             }
-            else if (PlayerInput.Pressed())
+            else if (PlayerInput.Pressed() && !IsExpectingInputNow(InputType.STANDARD_DOWN))
             {
                 headAndBodyAnim.Play("BiteR", 0, 0);
             }

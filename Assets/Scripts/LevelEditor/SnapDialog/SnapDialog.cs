@@ -7,9 +7,8 @@ using TMPro;
 
 namespace HeavenStudio.Editor 
 {
-    public class SnapDialog : MonoBehaviour
+    public class SnapDialog : Dialog
     {
-        [SerializeField] private GameObject snapSetter;
         [SerializeField] private TMP_Text snapText;
         private Timeline timeline;
 
@@ -22,10 +21,11 @@ namespace HeavenStudio.Editor
 
         public void SwitchSnapDialog()
         {
-            if(snapSetter.activeSelf) {
-                snapSetter.SetActive(false);
+            if(dialog.activeSelf) {
+                dialog.SetActive(false);
             } else {
-                snapSetter.SetActive(true);
+                ResetAllDialogs();
+                dialog.SetActive(true);
             }
         }
 

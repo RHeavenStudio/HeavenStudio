@@ -4,6 +4,7 @@ using HeavenStudio.Util;
 using System;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Rendering;
 
 namespace HeavenStudio.Games.Scripts_NtrSamurai
 {
@@ -27,7 +28,7 @@ namespace HeavenStudio.Games.Scripts_NtrSamurai
             if (!isMain)
             {
                 var cond = Conductor.instance;
-                float prog = Conductor.instance.GetPositionFromBeat(startBeat + 1f, 2f);
+                float prog = Conductor.instance.GetPositionFromBeat(startBeat + 1f, 4f);
                 if (prog >= 0)
                 {
                     Walk();

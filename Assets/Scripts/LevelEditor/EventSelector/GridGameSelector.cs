@@ -140,7 +140,7 @@ namespace HeavenStudio.Editor
             if (!EventCaller.FXOnlyGames().Contains(EventCaller.instance.GetMinigame(mg.name)))
             {
                 GameObject sg = Instantiate(EventRef, eventsParent);
-                sg.GetComponent<TMP_Text>().text = "switchGame";
+                sg.GetComponent<TMP_Text>().text = "Switch Game";
                 sg.SetActive(true);
                 sg.GetComponent<TMP_Text>().color = EditorTheme.theme.properties.EventSelectedCol.Hex2RGB();
             }
@@ -149,7 +149,7 @@ namespace HeavenStudio.Editor
             {
                 if (mg.actions[i].actionName == "switchGame" || mg.actions[i].hidden) continue;
                 GameObject g = Instantiate(EventRef, eventsParent);
-                g.GetComponent<TMP_Text>().text = mg.actions[i].actionName;
+                g.GetComponent<TMP_Text>().text = mg.actions[i].displayName;
                 g.SetActive(true);
             }
         }
@@ -183,10 +183,11 @@ namespace HeavenStudio.Editor
 
         public void Drag()
         {
-            if (Conductor.instance.NotStopped() || !Timeline.instance.timelineState.selected) return;
-
+            if (Conductor.instance.NotStopped() || Editor.instance.inAuthorativeMenu) return;
+            
             if (Timeline.instance.CheckIfMouseInTimeline() && dragTimes < 1)
             {
+                Timeline.instance.timelineState.SetState(Timeline.CurrentTimelineState.State.Selection);
                 dragTimes++;
 
                 TimelineEventObj eventObj;

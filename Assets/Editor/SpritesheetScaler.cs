@@ -6,7 +6,7 @@ public class SpritesheetScaler : EditorWindow
 {
 
     Object source;
-    int multiplier = 1;
+    float multiplier = 1;
     int inflateX = 0;
     int inflateY = 0;
 
@@ -28,7 +28,7 @@ public class SpritesheetScaler : EditorWindow
 
         GUILayout.BeginHorizontal();
         GUILayout.Label("Multiplier:", EditorStyles.boldLabel);
-        multiplier = EditorGUILayout.IntField(multiplier, GUILayout.Width(220));
+        multiplier = EditorGUILayout.FloatField(multiplier, GUILayout.Width(220));
         GUILayout.EndHorizontal();
 
         GUILayout.Space(5f);
@@ -68,7 +68,7 @@ public class SpritesheetScaler : EditorWindow
         bool wasReadable = ti1.isReadable;
         ti1.isReadable = true;
 
-        ti1.spritePixelsPerUnit *= multiplier;
+        ti1.spritePixelsPerUnit = (ti1.spritePixelsPerUnit * multiplier);
 
         List<SpriteMetaData> newData = new List<SpriteMetaData>();
 
@@ -102,7 +102,7 @@ public class SpritesheetScaler : EditorWindow
         AssetDatabase.ImportAsset(sourcePath, ImportAssetOptions.ForceUpdate);
     }
 
-    Rect ScaleRect(Rect source, int mult, int inflateX, int inflateY)
+    Rect ScaleRect(Rect source, float mult, int inflateX, int inflateY)
     {
         var newRect = new Rect();
         newRect.Set((source.x - inflateX) * mult, (source.y - inflateY) * mult, (source.width + inflateX*2) * mult, (source.height + inflateY*2) * mult);

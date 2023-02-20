@@ -64,31 +64,31 @@ namespace HeavenStudio.InputSystem
         public enum InputFeatures
         {
             //readable properties
-            Readable_ShellColour,
-            Readable_ButtonColour,
-            Readable_LeftGripColour,
-            Readable_RightGripColour,
-            Readable_AnalogueTriggers,
-            Readable_StringInput,
-            Readable_Pointer,
-            Readable_MotionSensor,
+            Readable_ShellColour        = 1 << 0,
+            Readable_ButtonColour       = 1 << 1,
+            Readable_LeftGripColour     = 1 << 2,
+            Readable_RightGripColour    = 1 << 3,
+            Readable_AnalogueTriggers   = 1 << 4,
+            Readable_StringInput        = 1 << 5,
+            Readable_Pointer            = 1 << 6,
+            Readable_MotionSensor       = 1 << 7,
 
             //writable properties
-            Writable_PlayerLED,
-            Writable_LightBar,
-            Writable_Chroma,
-            Writable_Speaker,
+            Writable_PlayerLED          = 1 << 8,
+            Writable_LightBar           = 1 << 9,
+            Writable_Chroma             = 1 << 10,
+            Writable_Speaker            = 1 << 11,
 
             //other / "special" properties
-            Extra_SplitControllerLeft,
-            Extra_SplitControllerRight,
-            Extra_Rumble,
-            Extra_HDRumble,
+            Extra_SplitControllerLeft   = 1 << 12,
+            Extra_SplitControllerRight  = 1 << 13,
+            Extra_Rumble                = 1 << 14,
+            Extra_HDRumble              = 1 << 15,
 
             //supported control styles
-            Style_Pad,
-            Style_Baton,
-            Style_Touch
+            Style_Pad                   = 1 << 16,
+            Style_Baton                 = 1 << 17,
+            Style_Touch                 = 1 << 18,
         };
 
         //Following enums are specific to Heaven Studio, can be removed in other applications

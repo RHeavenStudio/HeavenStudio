@@ -27,8 +27,10 @@ namespace HeavenStudio.Games.Scripts_SpaceSoccer
         public float nextAnimBeat;
         public float highKickSwing = 0f;
         private float lastSpriteRot;
-        public bool canKick; //unused
+        public bool canKick;
+        public bool waitKickRelease;
         private bool lastKickLeft;
+        public float zValue;
 
         public void Init(Kicker kicker, float dispensedBeat)
         {
@@ -36,6 +38,7 @@ namespace HeavenStudio.Games.Scripts_SpaceSoccer
             kicker.ball = this;
             kicker.dispenserBeat = dispensedBeat;
             float currentBeat = Conductor.instance.songPositionInBeats;
+            zValue = kicker.zValue;
 
             if(currentBeat - dispensedBeat < 2f) //check if ball is currently being dispensed (should only be false if starting in the middle of the remix)
             {
@@ -47,7 +50,7 @@ namespace HeavenStudio.Games.Scripts_SpaceSoccer
                 return;
             }
 
-            List<Beatmap.Entity> highKicks = GameManager.instance.Beatmap.entities.FindAll(c => c.datamodel == "spaceSoccer/high kick-toe!");
+            var highKicks = GameManager.instance.Beatmap.entities.FindAll(c => c.datamodel == "spaceSoccer/high kick-toe!");
             int numHighKicks = 0;
             //determine what state the ball was in for the previous kick.
             for(int i = 0; i < highKicks.Count; i++)
@@ -182,14 +185,6 @@ namespace HeavenStudio.Games.Scripts_SpaceSoccer
 
                         holder.transform.localPosition = dispenseCurve.GetPoint(normalizedBeatAnim);
                         spriteHolder.transform.eulerAngles = new Vector3(0, 0, Mathf.Lerp(0f, -1440f, normalizedBeatAnim));
-
-                        /*if (PlayerInput.Pressed())
-                        {
-                            if (state.perfect)
-                            {
-                                Kick();
-                            }
-                        }*/
                         break;
                     }
                 case State.Kicked:
@@ -208,22 +203,6 @@ namespace HeavenStudio.Games.Scripts_SpaceSoccer
                         }
 
                         holder.transform.localPosition = kickCurve.GetPoint(normalizedBeatAnim);
-
-                        /*if (PlayerInput.Pressed())
-                        {
-                            if (state.perfect)
-                            {
-                                if (kicker.canHighKick)
-                                {
-                                    HighKick();
-                                }
-                                else if (kicker.canKick)
-                                {
-                                    Kick();
-                                }
-                                // print(normalizedBeat);
-                            }
-                        }*/
                         break;
                     }
                 case State.HighKicked:
@@ -234,24 +213,6 @@ namespace HeavenStudio.Games.Scripts_SpaceSoccer
 
                         holder.transform.localPosition = highKickCurve.GetPoint(normalizedBeatAnim);
                         spriteHolder.transform.eulerAngles = new Vector3(0, 0, Mathf.Lerp(lastSpriteRot, lastSpriteRot + 360f, normalizedBeatAnim));
-
-                        // if (state.perfect) Debug.Break();
-
-                        /*if (PlayerInput.Pressed())
-                        {
-                            kickPrepare = true;
-                            kicker.Kick(this);
-                        }
-                        if (kickPrepare)
-                        {
-                            if (PlayerInput.PressedUp())
-                            {
-                                if (state.perfect)
-                                {
-                                    Toe();
-                                }
-                            }
-                        }*/
                         break;
                     }
                 case State.Toe:
@@ -273,7 +234,7 @@ namespace HeavenStudio.Games.Scripts_SpaceSoccer
                     }
             }
 
-            holder.transform.position = new Vector3(holder.transform.position.x, holder.transform.position.y, kicker.transform.localPosition.z);
+            holder.transform.position = new Vector3(holder.transform.position.x, holder.transform.position.y, zValue);
         }
 
         private void HitFX()

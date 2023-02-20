@@ -34,8 +34,6 @@ namespace HeavenStudio.Games.Scripts_ForkLifter
 
         private bool isEating = false;
 
-        public int hitOnFrame;
-
         // Burger shit
 
         public bool topbun, middleburger, bottombun;
@@ -50,13 +48,10 @@ namespace HeavenStudio.Games.Scripts_ForkLifter
 
         private void LateUpdate()
         {
-            if (PlayerInput.Pressed())
+            if (PlayerInput.Pressed() && !ForkLifter.instance.IsExpectingInputNow(InputType.STANDARD_DOWN))
             {
-                hitOnFrame = 0;
                 Stab(null);
             }
-
-            // print(hitOnFrame);
 
             if (ForkLifter.instance.EligibleHits.Count == 0)
             {
@@ -119,7 +114,7 @@ namespace HeavenStudio.Games.Scripts_ForkLifter
 
         public void Stab(Pea p)
         {
-            if (isEating || hitOnFrame > 0) return;
+            if (isEating) return;
 
             if (p == null)
             {

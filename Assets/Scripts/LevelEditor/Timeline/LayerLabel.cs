@@ -24,7 +24,7 @@ namespace HeavenStudio.Editor.Track
                 cam = Editor.instance.EditorCamera;
                 float layerScaleDist = cam.WorldToScreenPoint(Timeline.instance.LayerCorners[1]).y - Camera.main.WorldToScreenPoint(Timeline.instance.LayerCorners[0]).y;
                 float modScale = Timeline.GetScaleModifier();
-                rect.SetSizeWithCurrentAnchors(RectTransform.Axis.Vertical, layerScaleDist/4 * (1/modScale));
+                rect.SetSizeWithCurrentAnchors(RectTransform.Axis.Vertical, layerScaleDist/5 * (1/modScale));
             }
             catch (System.NullReferenceException)
             {

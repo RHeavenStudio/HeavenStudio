@@ -5,11 +5,15 @@ using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 using DG.Tweening;
 
+using HeavenStudio.Common;
+
 namespace HeavenStudio
 {
     public class GlobalGameManager : MonoBehaviour
     {
         public static GlobalGameManager instance { get; set; }
+
+        public static string buildTime = "00/00/0000 00:00:00";
 
         public static int loadedScene;
         public int lastLoadedScene;
@@ -46,11 +50,23 @@ namespace HeavenStudio
             loadedScene = 0;
             fadeDuration = 0;
 
-            /*GameObject ui = new GameObject();
-            ui.AddComponent<SpriteRenderer>().sprite = Resources.Load<Sprite>("tempBuildUI");
-            ui.GetComponent<SpriteRenderer>().sortingOrder = 1000;
-            ui.layer = 5;
-            ui.name = "tempBuildUI";*/
+            PersistentDataManager.LoadSettings();
+
+            ScreenSizeIndex = PersistentDataManager.gameSettings.resolutionIndex;
+            CustomScreenWidth = PersistentDataManager.gameSettings.resolutionWidth;
+            CustomScreenHeight = PersistentDataManager.gameSettings.resolutionHeight;
+
+            ChangeMasterVolume(PersistentDataManager.gameSettings.masterVolume);
+            if (PersistentDataManager.gameSettings.isFullscreen)
+            {
+                Screen.SetResolution(Display.main.systemWidth, Display.main.systemHeight, FullScreenMode.FullScreenWindow);
+                Screen.fullScreen = true;
+            }
+            else
+            {
+                Screen.fullScreen = false;
+                ChangeScreenSize();
+            }
         }
 
         public void Awake()
@@ -59,7 +75,13 @@ namespace HeavenStudio
             DontDestroyOnLoad(this.gameObject);
             instance = this;
             Starpelly.OS.ChangeWindowTitle("Heaven Studio DEMO");
+            QualitySettings.maxQueuedFrames = 1;
             PlayerInput.InitInputControllers();
+            #if UNITY_EDITOR
+                buildTime = "(EDITOR) " + System.DateTime.UtcNow.ToString("dd/MM/yyyy hh:mm:ss");
+            #else
+                buildTime = AppInfo.Date.ToString("dd/MM/yyyy hh:mm:ss");
+            #endif
         }
 
         public static GameObject CreateFade()
@@ -116,11 +138,13 @@ namespace HeavenStudio
                 // Set the resolution to the display's current resolution
                 Screen.SetResolution(Display.main.systemWidth, Display.main.systemHeight, FullScreenMode.FullScreenWindow);
                 Screen.fullScreen = true;
+                PersistentDataManager.gameSettings.isFullscreen = true;
             }
             else
             {
                 Screen.SetResolution(1280, 720, FullScreenMode.Windowed);
                 Screen.fullScreen = false;
+                PersistentDataManager.gameSettings.isFullscreen = false;
             }
         }
 
@@ -130,10 +154,16 @@ namespace HeavenStudio
             if (ScreenSizeIndex == DEFAULT_SCREEN_SIZES_STRING.Length - 1)
             {
                 Screen.SetResolution(CustomScreenWidth, CustomScreenHeight, mode);
+                PersistentDataManager.gameSettings.resolutionWidth = CustomScreenWidth;
+                PersistentDataManager.gameSettings.resolutionHeight = CustomScreenHeight;
+                PersistentDataManager.gameSettings.resolutionIndex = DEFAULT_SCREEN_SIZES_STRING.Length - 1;
             }
             else
             {
                 Screen.SetResolution(DEFAULT_SCREEN_SIZES[ScreenSizeIndex].width, DEFAULT_SCREEN_SIZES[ScreenSizeIndex].height, mode);
+                PersistentDataManager.gameSettings.resolutionWidth = DEFAULT_SCREEN_SIZES[ScreenSizeIndex].width;
+                PersistentDataManager.gameSettings.resolutionHeight = DEFAULT_SCREEN_SIZES[ScreenSizeIndex].height;
+                PersistentDataManager.gameSettings.resolutionIndex = ScreenSizeIndex;
             }
         }
 
@@ -145,6 +175,7 @@ namespace HeavenStudio
 
         void OnApplicationQuit()
         {
+            PersistentDataManager.SaveSettings();
             Debug.Log("Disconnecting JoyShocks...");
             PlayerInput.DisconnectJoyshocks();
         }

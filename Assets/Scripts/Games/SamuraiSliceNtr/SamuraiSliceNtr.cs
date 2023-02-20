@@ -2,6 +2,7 @@ using HeavenStudio.Util;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Rendering;
 
 using DG.Tweening;
 using NaughtyBezierCurves;
@@ -12,17 +13,60 @@ namespace HeavenStudio.Games.Loaders
     public static class NtrSamuraiLoader
     {
         public static Minigame AddGame(EventCaller eventCaller) {
-            return new Minigame("samuraiSliceNtr", "Samurai Slice (DS) \n<color=#eb5454>[WIP]</color>", "00165D", false, false, new List<GameAction>()
+            return new Minigame("samuraiSliceNtr", "Samurai Slice (DS)", "00165D", false, false, new List<GameAction>()
             {
-                new GameAction("spawn object",                   delegate
+                new GameAction("melon", "Melon")
                 {
-                    SamuraiSliceNtr.instance.ObjectIn(eventCaller.currentEntity.beat, eventCaller.currentEntity.type, (int) eventCaller.currentEntity.valA);
-                }, 8, false, new List<Param>()
+                    function = delegate
+                    {
+                        SamuraiSliceNtr.instance.ObjectIn(eventCaller.currentEntity.beat, (int)SamuraiSliceNtr.ObjectType.Melon, (int) eventCaller.currentEntity["valA"], eventCaller.currentEntity["2b2t"]);
+                    }, 
+                    defaultLength = 5,
+                    parameters = new List<Param>()
+                    {
+                        new Param("2b2t", false, "Melon2B2T", "Should the melon be reskinned as the 2B2T melon?"),
+                        new Param("valA", new EntityTypes.Integer(0, 30, 1), "Money", "The amount of coins the melon spills out when sliced"),
+                    }
+                },
+                new GameAction("fish", "Fish")
                 {
-                    new Param("type", SamuraiSliceNtr.ObjectType.Melon, "Object", "The object to spawn"),
-                    new Param("valA", new EntityTypes.Integer(0, 30, 1), "Money", "The amount of coins the object spills out when sliced"),
-                }),
-                //new GameAction("start bopping",                   delegate { SamuraiSliceNtr.instance.Bop(eventCaller.currentEntity.beat, eventCaller.currentEntity.length); }, 1),
+                    function = delegate
+                    {
+                        SamuraiSliceNtr.instance.ObjectIn(eventCaller.currentEntity.beat, (int)SamuraiSliceNtr.ObjectType.Fish, (int) eventCaller.currentEntity["valA"]);
+                    },
+                    defaultLength = 7,
+                    parameters = new List<Param>()
+                    {
+                        new Param("valA", new EntityTypes.Integer(0, 30, 1), "Money", "The amount of coins the fish spills out when sliced"),
+                    }
+                },
+                new GameAction("demon", "Demon")
+                {
+                    function = delegate
+                    {
+                        SamuraiSliceNtr.instance.ObjectIn(eventCaller.currentEntity.beat, (int)SamuraiSliceNtr.ObjectType.Demon, (int) eventCaller.currentEntity["valA"]);
+                    },
+                    defaultLength = 7,
+                    parameters = new List<Param>()
+                    {
+                        new Param("valA", new EntityTypes.Integer(0, 30, 1), "Money", "The amount of coins the demon spills out when sliced"),
+                    }
+                },
+                //backwards compatibility
+                new GameAction("spawn object", "Toss Object")
+                {
+                    function = delegate
+                    {
+                        SamuraiSliceNtr.instance.ObjectIn(eventCaller.currentEntity.beat, eventCaller.currentEntity["type"], (int) eventCaller.currentEntity["valA"]);
+                    },
+                    defaultLength = 8,
+                    parameters = new List<Param>()
+                    {
+                        new Param("type", SamuraiSliceNtr.ObjectType.Melon, "Object", "The object to spawn"),
+                        new Param("valA", new EntityTypes.Integer(0, 30, 1), "Money", "The amount of coins the melon spills out when sliced"),
+                    },
+                    hidden = true
+                },
             },
             new List<string>() {"ntr", "normal"},
             "ntrsamurai", "en",
@@ -41,7 +85,8 @@ namespace HeavenStudio.Games
         public enum ObjectType {
             Melon,
             Fish,
-            Demon
+            Demon,
+            Melon2B2T,
         }
 
         [Header("References")]
@@ -58,6 +103,7 @@ namespace HeavenStudio.Games
         public BezierCurve3D NgLaunchCurve;
         public BezierCurve3D DebrisLeftCurve;
         public BezierCurve3D DebrisRightCurve;
+        public BezierCurve3D NgDebrisCurve;
 
         //game scene
         public static SamuraiSliceNtr instance;
@@ -116,12 +162,12 @@ namespace HeavenStudio.Games
             bop.startBeat = beat;
         }
 
-        public void ObjectIn(float beat, int type = (int) ObjectType.Melon, int value = 1)
+        public void ObjectIn(float beat, int type = (int) ObjectType.Melon, int value = 1, bool funnyMinecraft = false)
         {
             var mobj = GameObject.Instantiate(objectPrefab, objectHolder);
             var mobjDat = mobj.GetComponent<NtrSamuraiObject>();
             mobjDat.startBeat = beat;
-            mobjDat.type = type;
+            mobjDat.type = funnyMinecraft ? (int)ObjectType.Melon2B2T : type;
             mobjDat.holdingCash = value;
 
             mobj.SetActive(true);
@@ -139,6 +185,7 @@ namespace HeavenStudio.Games
             mobjDat.Bop();
 
             mobj.SetActive(true);
+            mobj.GetComponent<SortingGroup>().sortingOrder = 7;
 
             return mobjDat;
         }

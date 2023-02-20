@@ -17,11 +17,3 @@ namespace HeavenStudio.Games.Scripts_TramAndPauline
         }
     }
 }
-    
-
-
-
-
-
-
-  

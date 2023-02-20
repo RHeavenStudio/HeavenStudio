@@ -24,7 +24,7 @@ namespace HeavenStudio.Util
         {
             float pos = Conductor.instance.GetPositionFromBeat(startTime, length) * timeScale;
             anim.Play(animName, animLayer, pos);
-            anim.speed = 0;
+            anim.speed = 1f; //not 0 so these can still play their script events
         }
 
         /// <summary>
@@ -37,7 +37,7 @@ namespace HeavenStudio.Util
         public static void DoNormalizedAnimation(this Animator anim, string animName, float pos = 0f, int animLayer = -1)
         {
             anim.Play(animName, animLayer, pos);
-            anim.speed = 0;
+            anim.speed = 1f;
         }
 
         /// <summary>

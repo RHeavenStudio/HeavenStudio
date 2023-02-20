@@ -12,18 +12,38 @@ namespace HeavenStudio.Games.Loaders
         public static Minigame AddGame(EventCaller eventCaller) {
             return new Minigame("clappyTrio", "The Clappy Trio", "29E7FF", false, false, new List<GameAction>()
             {
-                new GameAction("clap",                  delegate { ClappyTrio.instance.Clap(eventCaller.currentEntity.beat, eventCaller.currentEntity.length); }, 3, true),
-                new GameAction("bop",                   delegate { ClappyTrio.instance.Bop(eventCaller.currentEntity.beat); } ),
-                new GameAction("prepare",               delegate { ClappyTrio.instance.Prepare(eventCaller.currentEntity.toggle ? 3 : 0); }, parameters: new List<Param>()
+                new GameAction("clap", "Clap")
                 {
-                    new Param("toggle", false, "Alt", "Whether or not the alternate version should be played")
-                }),
-                new GameAction("change lion count",     delegate { ClappyTrio.instance.ChangeLionCount((int)eventCaller.currentEntity.valA); }, 0.5f, false, new List<Param>()
+                    function = delegate { ClappyTrio.instance.Clap(eventCaller.currentEntity.beat, eventCaller.currentEntity.length); }, 
+                    resizable = true
+                },
+                new GameAction("bop", "Bop")
                 {
-                    new Param("valA", new EntityTypes.Integer(1, 8, 3), "Lion Count", "The amount of lions")
-                }),
+                    function = delegate { ClappyTrio.instance.Bop(eventCaller.currentEntity.beat); } 
+                },
+                new GameAction("prepare", "Prepare Stance")
+                {
+                    function = delegate { ClappyTrio.instance.Prepare(eventCaller.currentEntity["toggle"] ? 3 : 0); }, 
+                    parameters = new List<Param>()
+                    {
+                        new Param("toggle", false, "Alt", "Whether or not the alternate version should be played")
+                    }
+                },
+                new GameAction("change lion count", "Change Lion Count")
+                {
+                    function = delegate { ClappyTrio.instance.ChangeLionCount((int)eventCaller.currentEntity["valA"]); }, 
+                    defaultLength = 0.5f,  
+                    parameters = new List<Param>()
+                    {
+                        new Param("valA", new EntityTypes.Integer(3, 8, 3), "Lion Count", "The amount of lions")
+                    }
+                },
                 // This is still here for backwards-compatibility but is hidden in the editor
-                new GameAction("prepare_alt",           delegate { ClappyTrio.instance.Prepare(3); }, hidden: true),
+                new GameAction("prepare_alt", "")
+                {
+                    function = delegate { ClappyTrio.instance.Prepare(3); }, 
+                    hidden = true
+                },
             });
         }
     }
@@ -52,14 +72,18 @@ namespace HeavenStudio.Games
 
         public static ClappyTrio instance { get; set; }
 
+        MultiSound clapSounds = null;
+        BeatAction clapAction = null;
+
         private void Awake()
         {
             instance = this;
+            clapSounds = null;
             InitLions();
         }
         public override void OnGameSwitch(float beat)
         {
-            Beatmap.Entity changeLion = GameManager.instance.Beatmap.entities.FindLast(c => c.datamodel == "clappyTrio/change lion count" && c.beat <= beat);
+            DynamicBeatmap.DynamicEntity changeLion = GameManager.instance.Beatmap.entities.FindLast(c => c.datamodel == "clappyTrio/change lion count" && c.beat <= beat);
             if(changeLion != null)
             {
                 EventCaller.instance.CallEvent(changeLion, true);
@@ -88,52 +112,16 @@ namespace HeavenStudio.Games
                     ClappyTrioPlayer = lion.AddComponent<ClappyTrioPlayer>();
             }
 
+            if (clapSounds != null)
+                clapSounds.Delete();
+
+            if (clapAction != null)
+                clapAction.Delete();
         }
 
         private void Update()
         {
-            if (isClapping)
-            {
-                float songPosBeat = Conductor.instance.songPositionInBeats;
 
-                for (int i = 0; i < Lion.Count; i++)
-                {
-                    float length = currentClappingLength * (i);
-                    float lengthplusone = (currentClappingLength * (i + 1));
-
-                    // i spent like 25 minutes trying to figure out what was wrong with this when i forgot to subtract the currentClapLength :(
-                    if (i == Lion.Count - 1)
-                    {
-                        length = 0;
-                    }
-
-                    if (songPosBeat > lastClapStart + length && songPosBeat < lastClapStart + lengthplusone && clapIndex == i)
-                    {
-                        if (i == Lion.Count - 1)
-                        {
-                            ClappyTrioPlayer.SetClapAvailability(lastClapStart + (currentClappingLength * (i - 1)), currentClappingLength);
-
-                            clapIndex = 0;
-                            isClapping = false;
-                            currentClappingLength = 0;
-                            ClappyTrioPlayer.clapStarted = false;
-                        } else
-                        {
-                            SetFace(i, 4);
-                            Lion[i].GetComponent<Animator>().Play("Clap", 0, 0);
-
-                            // lazy fix rn
-                            if (i > 0)
-                                Jukebox.PlayOneShotGame("clappyTrio/middleClap");
-                            else
-                                Jukebox.PlayOneShotGame("clappyTrio/leftClap");
-
-                            clapIndex++;
-                        }
-                        break;
-                    }
-                }
-            }
         }
 
         public void Clap(float beat, float length)
@@ -143,8 +131,21 @@ namespace HeavenStudio.Games
 
             playerHitLast = false;
             isClapping = true;
-            lastClapStart = beat;
-            currentClappingLength = length;
+            
+            // makes the other lions clap
+            List<MultiSound.Sound> sounds = new List<MultiSound.Sound>();
+            List<BeatAction.Action> actions = new List<BeatAction.Action>();
+            for (int i = 0; i < Lion.Count - 1; i++)
+            {
+                int idx = i;
+                sounds.Add(new MultiSound.Sound((i > 0) ? "clappyTrio/middleClap" : "clappyTrio/leftClap", beat + (length * i)));
+                actions.Add(new BeatAction.Action(beat + (length * i), delegate { SetFace(idx, 4); Lion[idx].GetComponent<Animator>().Play("Clap", 0, 0);}));
+            }
+            clapSounds = MultiSound.Play(sounds.ToArray());
+            clapAction = BeatAction.New(this.gameObject, actions);
+
+            // prepare player input
+            ClappyTrioPlayer.QueueClap(beat, length * (Lion.Count - 1));
         }
 
         public void Prepare(int type)

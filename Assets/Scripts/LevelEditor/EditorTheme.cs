@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.IO;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -8,6 +9,7 @@ using TMPro;
 
 using Starpelly;
 
+using HeavenStudio.Common;
 using HeavenStudio.Editor.Track;
 
 namespace HeavenStudio.Editor
@@ -19,20 +21,36 @@ namespace HeavenStudio.Editor
 
         [Header("Components")]
         [SerializeField] private Image layer;
+        [SerializeField] private Image specialLayers;
         [SerializeField] private Image tempoLayer;
         [SerializeField] private Image musicLayer;
+        [SerializeField] private Image sectionLayer;
 
         private void Awake()
         {
-            theme = JsonConvert.DeserializeObject<Theme>(ThemeTXT.text);
+            if (File.Exists(Application.persistentDataPath + "/editorTheme.json"))
+            {
+                string json = File.ReadAllText(Application.persistentDataPath + "/editorTheme.json");
+                theme = JsonConvert.DeserializeObject<Theme>(json);
+            }
+            else
+            {
+                PersistentDataManager.SaveTheme(ThemeTXT.text);
+                theme = JsonConvert.DeserializeObject<Theme>(ThemeTXT.text);
+            }
         }
 
         private void Start()
         {
+            if (Editor.instance == null) return;
+            specialLayers.GetComponent<Image>().color = theme.properties.SpecialLayersCol.Hex2RGB();
             tempoLayer.GetComponent<Image>().color = theme.properties.TempoLayerCol.Hex2RGB();
             musicLayer.GetComponent<Image>().color = theme.properties.MusicLayerCol.Hex2RGB();
+            sectionLayer.GetComponent<Image>().color = theme.properties.SectionLayerCol.Hex2RGB();
+            Tooltip.AddTooltip(specialLayers.gameObject, $"All Special Tracks");
             Tooltip.AddTooltip(tempoLayer.gameObject, $"Tempo Track");
             Tooltip.AddTooltip(musicLayer.gameObject, $"Music Volume Track");
+            Tooltip.AddTooltip(sectionLayer.gameObject, $"Remix Sections Track");
 
 
             layer.gameObject.SetActive(false);
@@ -58,6 +76,9 @@ namespace HeavenStudio.Editor
                         break;
                     case 3:
                         c = theme.properties.Layer4Col.Hex2RGB();
+                        break;
+                    case 4:
+                        c = theme.properties.Layer5Col.Hex2RGB();
                         break;
                 }
 

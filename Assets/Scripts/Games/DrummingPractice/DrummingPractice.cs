@@ -14,25 +14,55 @@ namespace HeavenStudio.Games.Loaders
         public static Minigame AddGame(EventCaller eventCaller) {
             return new Minigame("drummingPractice", "Drumming Practice", "2BCF33", false, false, new List<GameAction>()
             {
-                new GameAction("bop",                   delegate { var e = eventCaller.currentEntity; DrummingPractice.instance.SetBop(e.beat, e.length); }, 0.5f, true),
-                new GameAction("drum",                  delegate { var e = eventCaller.currentEntity; DrummingPractice.instance.Prepare(e.beat, e.toggle); }, 2f, parameters: new List<Param>()
+                new GameAction("bop", "Bop")
                 {
-                    new Param("toggle", true, "Applause", "Whether or not an applause should be played on a successful hit")
-                }),
-                new GameAction("set mii",               delegate { var e = eventCaller.currentEntity; DrummingPractice.instance.SetMiis(e.type, e.type2, e.type3, e.toggle); }, 0.5f, parameters: new List<Param>()
+                    function = delegate { var e = eventCaller.currentEntity; DrummingPractice.instance.SetBop(e.beat, e.length); }, 
+                    defaultLength = 1f, 
+                    resizable = true
+                },
+                new GameAction("drum", "Hit Drum")
                 {
-                    new Param("type", DrummingPractice.MiiType.Random, "Player Mii", "The Mii that the player will control"),
-                    new Param("type2", DrummingPractice.MiiType.Random, "Left Mii", "The Mii on the left"),
-                    new Param("type3", DrummingPractice.MiiType.Random, "Right Mii", "The Mii on the right"),
-                    new Param("toggle", false, "Set All to Player", "Sets all Miis to the Player's Mii")
-                }),
-                new GameAction("set background color",  delegate {var e = eventCaller.currentEntity; DrummingPractice.instance.SetBackgroundColor(e.colorA, e.colorB, e.colorC); }, 0.5f, false, new List<Param>()
+                    function = delegate { var e = eventCaller.currentEntity; DrummingPractice.instance.Prepare(e.beat, e["toggle"]); }, 
+                    defaultLength = 2f, 
+                    parameters = new List<Param>()
+                    {
+                        new Param("toggle", true, "Applause", "Whether or not an applause should be played on a successful hit")
+                    }
+                },
+                new GameAction("set mii", "Set Miis")
                 {
-                    new Param("colorA", new Color(43/255f, 207/255f, 51/255f), "Color A", "The top-most color of the background gradient"),
-                    new Param("colorB", new Color(1, 1, 1), "Color B", "The bottom-most color of the background gradient"),
-                    new Param("colorC", new Color(1, 247/255f, 0), "Streak Color", "The color of streaks that appear on a successful hit")
-                })
-
+                    function = delegate { var e = eventCaller.currentEntity; DrummingPractice.instance.SetMiis(e["type"], e["type2"], e["type3"], e["toggle"]); }, 
+                    defaultLength = 0.5f, 
+                    parameters = new List<Param>()
+                    {
+                        new Param("type", DrummingPractice.MiiType.Random, "Player Mii", "The Mii that the player will control"),
+                        new Param("type2", DrummingPractice.MiiType.Random, "Left Mii", "The Mii on the left"),
+                        new Param("type3", DrummingPractice.MiiType.Random, "Right Mii", "The Mii on the right"),
+                        new Param("toggle", false, "Set All to Player", "Sets all Miis to the Player's Mii")
+                    }
+                },
+                new GameAction("move npc drummers", "NPC Drummers Enter or Exit")
+                {
+                    function = delegate {var e = eventCaller.currentEntity; DrummingPractice.instance.NPCDrummersEnterOrExit(e.beat, e.length, e["exit"], e["ease"]); },
+                    defaultLength = 4f,
+                    resizable = true,
+                    parameters = new List<Param>()
+                    {
+                        new Param("exit", false, "Exit?", "Should the NPC drummers exit or enter?"),
+                        new Param("ease", EasingFunction.Ease.Linear, "Ease", "Which ease should the movement have?")
+                    }
+                },
+                new GameAction("set background color", "Set Background Color")
+                {
+                    function = delegate {var e = eventCaller.currentEntity; DrummingPractice.instance.SetBackgroundColor(e["colorA"], e["colorB"], e["colorC"]); }, 
+                    defaultLength = 0.5f,
+                    parameters = new List<Param>()
+                    {
+                        new Param("colorA", new Color(43/255f, 207/255f, 51/255f), "Color A", "The top-most color of the background gradient"),
+                        new Param("colorB", new Color(1, 1, 1), "Color B", "The bottom-most color of the background gradient"),
+                        new Param("colorC", new Color(1, 247/255f, 0), "Streak Color", "The color of streaks that appear on a successful hit")
+                    }
+                }
             });
         }
     }
@@ -67,6 +97,14 @@ namespace HeavenStudio.Games
         public Drummer leftDrummer;
         public Drummer rightDrummer;
         public GameObject hitPrefab;
+        [SerializeField] Animator NPCDrummers;
+
+        [Header("Variables")]
+        float movingLength;
+        float movingStartBeat;
+        bool isMoving;
+        string moveAnim;
+        EasingFunction.Ease lastEase;
 
         public GameEvent bop = new GameEvent();
         public int count = 0;
@@ -81,7 +119,7 @@ namespace HeavenStudio.Games
         
         public override void OnGameSwitch(float beat)
         {
-            Beatmap.Entity changeMii = GameManager.instance.Beatmap.entities.FindLast(c => c.datamodel == "drummingPractice/set mii" && c.beat <= beat);
+            var changeMii = GameManager.instance.Beatmap.entities.FindLast(c => c.datamodel == "drummingPractice/set mii" && c.beat <= beat);
             if(changeMii != null)
             {
                 EventCaller.instance.CallEvent(changeMii, true);
@@ -90,12 +128,21 @@ namespace HeavenStudio.Games
 
         private void Update()
         {
-            if (Conductor.instance.ReportBeat(ref bop.lastReportedBeat, bop.startBeat % 1))
+            var cond = Conductor.instance;
+            if (cond.ReportBeat(ref bop.lastReportedBeat, bop.startBeat % 1))
             {
-                if (Conductor.instance.songPositionInBeats >= bop.startBeat && Conductor.instance.songPositionInBeats < bop.startBeat + bop.length)
+                if (cond.songPositionInBeats >= bop.startBeat && Conductor.instance.songPositionInBeats < bop.startBeat + bop.length)
                 {
                     Bop();
                 }
+            }
+
+            if (isMoving && cond.isPlaying && !cond.isPaused) 
+            {
+                float normalizedBeat = cond.GetPositionFromBeat(movingStartBeat, movingLength);
+                EasingFunction.Function func = EasingFunction.GetEasingFunction(lastEase);
+                float newPos = func(0f, 1f, normalizedBeat);
+                NPCDrummers.DoNormalizedAnimation(moveAnim, newPos);
             }
 
             foreach (SpriteRenderer streak in streaks)
@@ -103,6 +150,19 @@ namespace HeavenStudio.Games
                 Color col = streak.color;
                 streak.color = new Color(col.r, col.g, col.b, Mathf.Lerp(col.a, 0, 3.5f * Time.deltaTime));
             }
+        }
+
+        public void NPCDrummersEnterOrExit(float beat, float length, bool exit, int ease)
+        {
+            movingStartBeat = beat;
+            movingLength = length;
+            moveAnim = exit ? "NPCDrummersExit" : "NPCDrummersEnter";
+            isMoving = true;
+            lastEase = (EasingFunction.Ease)ease;
+            BeatAction.New(instance.gameObject, new List<BeatAction.Action>()
+            {
+                new BeatAction.Action(beat + length - 0.01f, delegate { isMoving = false; })
+            });
         }
 
         public void SetBop(float beat, float length)

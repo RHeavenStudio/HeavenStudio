@@ -1,4 +1,3 @@
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -12,19 +11,51 @@ namespace HeavenStudio.Games.Loaders
         public static Minigame AddGame(EventCaller eventCaller) {
             return new Minigame("spaceball", "Spaceball", "00A518", false, false, new List<GameAction>()
             {
-                new GameAction("shoot",                 delegate { Spaceball.instance.Shoot(eventCaller.currentEntity.beat, false, eventCaller.currentEntity.type); }, 2, false),
-                new GameAction("shootHigh",             delegate { Spaceball.instance.Shoot(eventCaller.currentEntity.beat, true, eventCaller.currentEntity.type); }, 3),
-                new GameAction("costume",               delegate { Spaceball.instance.Costume(eventCaller.currentEntity.type); }, 1f, false, new List<Param>() 
+                new GameAction("shoot", "Pitch Ball")
                 {
-                    new Param("type", Spaceball.CostumeType.Standard, "Type", "The costume to change to") 
-                } ),
-                new GameAction("alien",                 delegate { Spaceball.instance.alien.Show(eventCaller.currentEntity.beat); } ),
-                new GameAction("camera",                delegate { Spaceball.instance.OverrideCurrentZoom(); }, 4, true, new List<Param>() 
+                    function = delegate { Spaceball.instance.Shoot(eventCaller.currentEntity.beat, false, eventCaller.currentEntity["type"]); }, 
+                    defaultLength = 2, 
+                    parameters = new List<Param>()
+                    {
+                        new Param("type", Spaceball.BallType.Baseball, "Type", "The type of ball/object to shoot") 
+                    } 
+                },
+				new GameAction("shootHigh", "Pitch High Ball")
                 {
-                    new Param("valA", new EntityTypes.Integer(1, 320, 10), "Zoom", "The camera's zoom level (Lower value = Zoomed in)"),
-                    new Param("ease", EasingFunction.Ease.Linear, "Ease", "The easing function to use while zooming") 
-                } ),
-                new GameAction("prepare dispenser",     delegate { Spaceball.instance.PrepareDispenser(); }, 1 ),
+                    function = delegate { Spaceball.instance.Shoot(eventCaller.currentEntity.beat, true, eventCaller.currentEntity["type"]); }, 
+                    defaultLength = 3,
+                    parameters = new List<Param>()
+                    {
+                        new Param("type", Spaceball.BallType.Baseball, "Type", "The type of ball/object to shoot") 
+                    } 
+                },
+				new GameAction("costume", "Change Batter Costume")
+                {
+                    function = delegate { Spaceball.instance.Costume(eventCaller.currentEntity["type"]); },
+                    parameters = new List<Param>() 
+                    {
+                        new Param("type", Spaceball.CostumeType.Standard, "Type", "The costume to change to") 
+                    } 
+                },
+                new GameAction("alien", "Show Alien")
+                {
+                    function = delegate { Spaceball.instance.alien.Show(eventCaller.currentEntity.beat); } 
+                },
+                new GameAction("camera", "Zoom Camera")
+                {
+                    function = delegate { Spaceball.instance.OverrideCurrentZoom(); }, 
+                    defaultLength = 4, 
+                    resizable = true, 
+                    parameters = new List<Param>() 
+                    {
+                        new Param("valA", new EntityTypes.Integer(1, 320, 10), "Zoom", "The camera's zoom level (Lower value = Zoomed in)"),
+                        new Param("ease", EasingFunction.Ease.Linear, "Ease", "The easing function to use while zooming") 
+                    } 
+                },
+                new GameAction("prepare dispenser", "Dispenser Prepare")
+                {
+                    function = delegate { Spaceball.instance.PrepareDispenser(); }, 
+                },
             });
         }
     }
@@ -36,6 +67,13 @@ namespace HeavenStudio.Games
 
     public class Spaceball : Minigame
     {
+		public enum BallType {
+            Baseball = 0,
+            Onigiri = 1,
+            Alien = 2,
+            Tacobell = 3,
+        }
+		
         public enum CostumeType {
             Standard,
             Bunny,
@@ -55,9 +93,9 @@ namespace HeavenStudio.Games
 
         private int currentZoomIndex;
 
-        public Sprite[] Balls;
+        public Sprite[] BallSprites;
 
-        private List<Beatmap.Entity> allCameraEvents = new List<Beatmap.Entity>();
+        private List<DynamicBeatmap.DynamicEntity> allCameraEvents = new List<DynamicBeatmap.DynamicEntity>();
 
         public Alien alien;
 
@@ -84,7 +122,7 @@ namespace HeavenStudio.Games
         {
             instance = this;
             var camEvents = EventCaller.GetAllInGameManagerList("spaceball", new string[] { "camera" });
-            List<Beatmap.Entity> tempEvents = new List<Beatmap.Entity>();
+            List<DynamicBeatmap.DynamicEntity> tempEvents = new List<DynamicBeatmap.DynamicEntity>();
             for (int i = 0; i < camEvents.Count; i++)
             {
                 if (camEvents[i].beat + camEvents[i].beat >= Conductor.instance.songPositionInBeats)
@@ -95,7 +133,7 @@ namespace HeavenStudio.Games
 
             allCameraEvents = tempEvents;
 
-            UpdateCameraZoom(); // can't believe this shit actually works
+            UpdateCameraZoom();
         }
 
         private void Update()
@@ -150,26 +188,26 @@ namespace HeavenStudio.Games
             if (currentZoomIndex < allCameraEvents.Count && currentZoomIndex >= 0)
             {
                 if (currentZoomIndex - 1 >= 0)
-                    lastCamDistance = allCameraEvents[currentZoomIndex - 1].valA * -1;
+                    lastCamDistance = allCameraEvents[currentZoomIndex - 1]["valA"] * -1;
                 else
                 {
                     if (currentZoomIndex == 0)
                         lastCamDistance = -10;
                     else
-                        lastCamDistance = allCameraEvents[0].valA * -1;
+                        lastCamDistance = allCameraEvents[0]["valA"] * -1;
                 }
 
                 currentZoomCamBeat = allCameraEvents[currentZoomIndex].beat;
                 currentZoomCamLength = allCameraEvents[currentZoomIndex].length;
 
-                float dist = allCameraEvents[currentZoomIndex].valA * -1;
+                float dist = allCameraEvents[currentZoomIndex]["valA"] * -1;
 
                 if (dist > 0)
                     currentZoomCamDistance = 0;
                 else
                     currentZoomCamDistance = dist;
 
-                lastEase = allCameraEvents[currentZoomIndex].ease;
+                lastEase = (EasingFunction.Ease) allCameraEvents[currentZoomIndex]["ease"];
             }
         }
 
@@ -195,9 +233,20 @@ namespace HeavenStudio.Games
                 Jukebox.PlayOneShotGame("spaceball/shoot");
             }
 
-            if (type == 1)
+            ball.GetComponent<SpaceballBall>().Sprite.sprite = BallSprites[type];
+            switch(type)
             {
-                ball.GetComponent<SpaceballBall>().Sprite.sprite = Balls[1];
+                case (int)BallType.Baseball:
+                    break;
+                case (int)BallType.Onigiri:
+                    ball.transform.localScale = new Vector3(1.2f, 1.2f, 1);
+                    break;
+                case (int)BallType.Alien:
+                    break;
+                case (int)BallType.Tacobell:
+                    ball.transform.localScale = new Vector3(0.5f, 0.5f, 1);
+                    ball.GetComponent<SpaceballBall>().isTacobell = true;
+                    break;
             }
 
             Dispenser.GetComponent<Animator>().Play("DispenserShoot", 0, 0);

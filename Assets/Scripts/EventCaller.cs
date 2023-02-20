@@ -9,16 +9,14 @@ namespace HeavenStudio
     public class EventCaller : MonoBehaviour
     {
         public Transform GamesHolder;
-        public Beatmap.Entity currentEntity = new Beatmap.Entity();
+        public DynamicBeatmap.DynamicEntity currentEntity = new DynamicBeatmap.DynamicEntity();
         public string currentSwitchGame;
 
         public delegate void EventCallback();
 
         public static EventCaller instance { get; private set; }
 
-        public List<Minigames.Minigame> minigames = new List<Minigames.Minigame>()
-        {
-        };
+        public List<Minigames.Minigame> minigames = new List<Minigames.Minigame>();
 
         public Minigames.Minigame GetMinigame(string gameName)
         {
@@ -30,11 +28,16 @@ namespace HeavenStudio
             return game.actions.Find(c => c.actionName == action);
         }
 
+        public Minigames.Param GetGameParam(Minigames.Minigame game, string action, string param)
+        {
+            return GetGameAction(game, action).parameters.Find(c => c.propertyName == param);
+        }
+
         public void Init()
         {
             instance = this;
 
-            currentEntity = new Beatmap.Entity();
+            currentEntity = new DynamicBeatmap.DynamicEntity();
 
             Minigames.Init(this);
 
@@ -60,7 +63,7 @@ namespace HeavenStudio
             
         }
 
-        public void CallEvent(Beatmap.Entity entity, bool gameActive)
+        public void CallEvent(DynamicBeatmap.DynamicEntity entity, bool gameActive)
         {
             string[] details = entity.datamodel.Split('/');
             Minigames.Minigame game = minigames.Find(c => c.name == details[0]);
@@ -86,10 +89,27 @@ namespace HeavenStudio
             }
         }
 
-        public static List<Beatmap.Entity> GetAllInGameManagerList(string gameName, string[] include)
+        public void CallPreEvent(DynamicBeatmap.DynamicEntity entity)
         {
-            List<Beatmap.Entity> temp1 = GameManager.instance.Beatmap.entities.FindAll(c => c.datamodel.Split('/')[0] == gameName);
-            List<Beatmap.Entity> temp2 = new List<Beatmap.Entity>();
+            string[] details = entity.datamodel.Split('/');
+            Minigames.Minigame game = minigames.Find(c => c.name == details[0]);
+            try
+            {
+                currentEntity = entity;
+
+                Minigames.GameAction action = game.actions.Find(c => c.actionName == details[1]);
+                action.preFunction.Invoke();
+            }
+            catch (Exception ex)
+            {
+                Debug.LogWarning("Event not found! May be spelled wrong or it is not implemented.\n" + ex);
+            }
+        }
+
+        public static List<DynamicBeatmap.DynamicEntity> GetAllInGameManagerList(string gameName, string[] include)
+        {
+            List<DynamicBeatmap.DynamicEntity> temp1 = GameManager.instance.Beatmap.entities.FindAll(c => c.datamodel.Split('/')[0] == gameName);
+            List<DynamicBeatmap.DynamicEntity> temp2 = new List<DynamicBeatmap.DynamicEntity>();
             for (int i = 0; i < temp1.Count; i++)
             {
                 if (include.Any(temp1[i].datamodel.Split('/')[1].Contains))
@@ -100,10 +120,10 @@ namespace HeavenStudio
             return temp2;
         }
 
-        public static List<Beatmap.Entity> GetAllInGameManagerListExclude(string gameName, string[] exclude)
+        public static List<DynamicBeatmap.DynamicEntity> GetAllInGameManagerListExclude(string gameName, string[] exclude)
         {
-            List<Beatmap.Entity> temp1 = GameManager.instance.Beatmap.entities.FindAll(c => c.datamodel.Split('/')[0] == gameName);
-            List<Beatmap.Entity> temp2 = new List<Beatmap.Entity>();
+            List<DynamicBeatmap.DynamicEntity> temp1 = GameManager.instance.Beatmap.entities.FindAll(c => c.datamodel.Split('/')[0] == gameName);
+            List<DynamicBeatmap.DynamicEntity> temp2 = new List<DynamicBeatmap.DynamicEntity>();
             for (int i = 0; i < temp1.Count; i++)
             {
                 if (!exclude.Any(temp1[i].datamodel.Split('/')[1].Contains))
@@ -114,18 +134,18 @@ namespace HeavenStudio
             return temp2;
         }
 
-        public static List<Beatmap.Entity> GetAllPlayerEntities(string gameName)
+        public static List<DynamicBeatmap.DynamicEntity> GetAllPlayerEntities(string gameName)
         {
             return GameManager.instance.playerEntities.FindAll(c => c.datamodel.Split('/')[0] == gameName);
         }
 
-        public static List<Beatmap.Entity> GetAllPlayerEntitiesExcept(string gameName)
+        public static List<DynamicBeatmap.DynamicEntity> GetAllPlayerEntitiesExcept(string gameName)
         {
             return GameManager.instance.playerEntities.FindAll(c => c.datamodel.Split('/')[0] != gameName);
         }
 
         // elaborate as fuck, boy
-        public static List<Beatmap.Entity> GetAllPlayerEntitiesExceptBeforeBeat(string gameName, float beat)
+        public static List<DynamicBeatmap.DynamicEntity> GetAllPlayerEntitiesExceptBeforeBeat(string gameName, float beat)
         {
             return GameManager.instance.playerEntities.FindAll(c => c.datamodel.Split('/')[0] != gameName && c.beat < beat);
         }

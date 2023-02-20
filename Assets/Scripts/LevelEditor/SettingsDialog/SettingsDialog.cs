@@ -1,25 +1,38 @@
-using System.Collections;
-using System.Collections.Generic;
+using System;
 using UnityEngine;
-using HeavenStudio.Editor.Track;
-
+using UnityEngine.UI;
 using TMPro;
+
+using HeavenStudio.Common;
 
 namespace HeavenStudio.Editor 
 {
-    public class SettingsDialog : MonoBehaviour
+    public class SettingsDialog : Dialog
     {
-        [SerializeField] private GameObject settingsMenu;
-        //this may all be moved to a different script in the future
+        [SerializeField] private TMP_Text BuildDateDisplay;
+        [SerializeField] private TabsManager tabsManager;
+        [SerializeField] private TabsManager.TabsEntry[] tabs;
 
         private void Start() {}
 
         public void SwitchSettingsDialog()
         {
-            if(settingsMenu.activeSelf) {
-                settingsMenu.SetActive(false);
+            if(dialog.activeSelf) {
+                Editor.instance.canSelect = true;
+                Editor.instance.inAuthorativeMenu = false;
+                dialog.SetActive(false);
+
+                PersistentDataManager.SaveSettings();
+                tabsManager.CleanTabs();
             } else {
-                settingsMenu.SetActive(true);
+                ResetAllDialogs();
+                Editor.instance.canSelect = false;
+                Editor.instance.inAuthorativeMenu = true;
+                dialog.SetActive(true);
+
+                tabsManager.GenerateTabs(tabs);
+
+                BuildDateDisplay.text = GlobalGameManager.buildTime;
             }
         }
 

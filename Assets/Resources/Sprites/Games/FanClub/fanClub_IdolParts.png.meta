@@ -233,6 +233,27 @@ TextureImporter:
   - first:
       213: -3891623105835644282
     second: idol_Shs_squat00
+  - first:
+      213: 7817682494542373926
+    second: fanClub_IdolParts_13
+  - first:
+      213: 8406083837722042950
+    second: fanClub_IdolParts_14
+  - first:
+      213: 6636417687825593121
+    second: idol_Clt_body_down2
+  - first:
+      213: -1062733307327837823
+    second: idol_Clt_body_down3
+  - first:
+      213: -3841009503096452941
+    second: idol_Clt_body_down4
+  - first:
+      213: -4623714488368751446
+    second: idol_Clt_body_up1
+  - first:
+      213: -4386690278540424363
+    second: idol_Clt_body_down0_half
   externalObjects: {}
   serializedVersion: 11
   mipmaps:
@@ -277,7 +298,7 @@ TextureImporter:
   spriteMeshType: 1
   alignment: 0
   spritePivot: {x: 0.5, y: 0.5}
-  spritePixelsToUnits: 100
+  spritePixelsToUnits: 300
   spriteBorder: {x: 0, y: 0, z: 0, w: 0}
   spriteGenerateFallbackPhysicsShape: 1
   alphaUsage: 1
@@ -296,7 +317,7 @@ TextureImporter:
   platformSettings:
   - serializedVersion: 3
     buildTarget: DefaultTexturePlatform
-    maxTextureSize: 2048
+    maxTextureSize: 4096
     resizeAlgorithm: 0
     textureFormat: -1
     textureCompression: 1
@@ -308,7 +329,7 @@ TextureImporter:
     forceMaximumCompressionQuality_BC6H_BC7: 0
   - serializedVersion: 3
     buildTarget: Standalone
-    maxTextureSize: 2048
+    maxTextureSize: 4096
     resizeAlgorithm: 0
     textureFormat: -1
     textureCompression: 1
@@ -325,10 +346,10 @@ TextureImporter:
       name: idol_Hed_neutral
       rect:
         serializedVersion: 2
-        x: 23
-        y: 1842
-        width: 193
-        height: 193
+        x: 69
+        y: 5526
+        width: 579
+        height: 579
       alignment: 9
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -346,10 +367,10 @@ TextureImporter:
       name: idol_Hed_halfClose
       rect:
         serializedVersion: 2
-        x: 262
-        y: 1845
-        width: 192
-        height: 192
+        x: 786
+        y: 5535
+        width: 576
+        height: 576
       alignment: 9
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -367,10 +388,10 @@ TextureImporter:
       name: idol_Hed_close
       rect:
         serializedVersion: 2
-        x: 502
-        y: 1844
-        width: 192
-        height: 193
+        x: 1506
+        y: 5532
+        width: 576
+        height: 579
       alignment: 9
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -388,10 +409,10 @@ TextureImporter:
       name: idol_Hed_startOpen
       rect:
         serializedVersion: 2
-        x: 745
-        y: 1842
-        width: 193
-        height: 193
+        x: 2235
+        y: 5526
+        width: 579
+        height: 579
       alignment: 9
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -409,10 +430,10 @@ TextureImporter:
       name: idol_Hed_fullOpen
       rect:
         serializedVersion: 2
-        x: 983
-        y: 1840
-        width: 193
-        height: 193
+        x: 2949
+        y: 5520
+        width: 579
+        height: 579
       alignment: 9
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -430,10 +451,10 @@ TextureImporter:
       name: idol_Hed_open
       rect:
         serializedVersion: 2
-        x: 1223
-        y: 1840
-        width: 193
-        height: 193
+        x: 3669
+        y: 5520
+        width: 579
+        height: 579
       alignment: 9
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -451,10 +472,10 @@ TextureImporter:
       name: idol_Hed_oh
       rect:
         serializedVersion: 2
-        x: 1463
-        y: 1842
-        width: 193
-        height: 192
+        x: 4389
+        y: 5526
+        width: 579
+        height: 576
       alignment: 9
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -472,10 +493,10 @@ TextureImporter:
       name: idol_Hed_frown
       rect:
         serializedVersion: 2
-        x: 1702
-        y: 1842
-        width: 192
-        height: 195
+        x: 5106
+        y: 5526
+        width: 576
+        height: 585
       alignment: 9
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -493,10 +514,10 @@ TextureImporter:
       name: idol_Clt_body
       rect:
         serializedVersion: 2
-        x: 31
-        y: 1674
-        width: 113
-        height: 121
+        x: 93
+        y: 5022
+        width: 339
+        height: 363
       alignment: 9
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -514,10 +535,10 @@ TextureImporter:
       name: idol_Hed_hair00
       rect:
         serializedVersion: 2
-        x: 19
-        y: 492
-        width: 201
-        height: 233
+        x: 57
+        y: 1476
+        width: 603
+        height: 699
       alignment: 9
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -535,10 +556,10 @@ TextureImporter:
       name: idol_mike00
       rect:
         serializedVersion: 2
-        x: 267
-        y: 606
-        width: 73
-        height: 99
+        x: 801
+        y: 1818
+        width: 219
+        height: 297
       alignment: 9
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -556,10 +577,10 @@ TextureImporter:
       name: idol_Hed_hair01
       rect:
         serializedVersion: 2
-        x: 19
-        y: 1498
-        width: 169
-        height: 123
+        x: 57
+        y: 4494
+        width: 507
+        height: 369
       alignment: 9
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -577,10 +598,10 @@ TextureImporter:
       name: idol_mike01
       rect:
         serializedVersion: 2
-        x: 153
-        y: 1010
-        width: 75
-        height: 91
+        x: 459
+        y: 3030
+        width: 225
+        height: 273
       alignment: 9
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -598,10 +619,10 @@ TextureImporter:
       name: idol_Shs_beat00
       rect:
         serializedVersion: 2
-        x: 17
-        y: 1270
-        width: 79
-        height: 153
+        x: 51
+        y: 3810
+        width: 237
+        height: 459
       alignment: 9
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -619,10 +640,10 @@ TextureImporter:
       name: idol_Shs_beat01
       rect:
         serializedVersion: 2
-        x: 133
-        y: 1272
-        width: 73
-        height: 151
+        x: 399
+        y: 3816
+        width: 219
+        height: 453
       alignment: 9
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -640,10 +661,10 @@ TextureImporter:
       name: idol_Shs_beat02
       rect:
         serializedVersion: 2
-        x: 237
-        y: 1272
-        width: 67
-        height: 161
+        x: 711
+        y: 3816
+        width: 201
+        height: 483
       alignment: 9
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -661,10 +682,10 @@ TextureImporter:
       name: idol_Shs_peace00
       rect:
         serializedVersion: 2
-        x: 333
-        y: 1272
-        width: 107
-        height: 155
+        x: 999
+        y: 3816
+        width: 321
+        height: 465
       alignment: 9
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -682,10 +703,10 @@ TextureImporter:
       name: idol_Shs_wink00
       rect:
         serializedVersion: 2
-        x: 775
-        y: 1272
-        width: 93
-        height: 143
+        x: 2325
+        y: 3816
+        width: 279
+        height: 429
       alignment: 9
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -703,10 +724,10 @@ TextureImporter:
       name: idol_Shs_wink01
       rect:
         serializedVersion: 2
-        x: 631
-        y: 1272
-        width: 95
-        height: 149
+        x: 1893
+        y: 3816
+        width: 285
+        height: 447
       alignment: 9
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -724,10 +745,10 @@ TextureImporter:
       name: idol_Shs_wink02
       rect:
         serializedVersion: 2
-        x: 493
-        y: 1272
-        width: 87
-        height: 153
+        x: 1479
+        y: 3816
+        width: 261
+        height: 459
       alignment: 9
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -745,10 +766,10 @@ TextureImporter:
       name: idol_Shs_squat00
       rect:
         serializedVersion: 2
-        x: 922
-        y: 1270
-        width: 86
-        height: 139
+        x: 2766
+        y: 3810
+        width: 258
+        height: 417
       alignment: 9
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -766,10 +787,10 @@ TextureImporter:
       name: idol_Shs_squat01
       rect:
         serializedVersion: 2
-        x: 1071
-        y: 1270
-        width: 79
-        height: 151
+        x: 3213
+        y: 3810
+        width: 237
+        height: 453
       alignment: 9
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -787,10 +808,10 @@ TextureImporter:
       name: idol_Shs_squat02
       rect:
         serializedVersion: 2
-        x: 1219
-        y: 1270
-        width: 75
-        height: 165
+        x: 3657
+        y: 3810
+        width: 225
+        height: 495
       alignment: 9
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -808,10 +829,10 @@ TextureImporter:
       name: idol_Clt_collar
       rect:
         serializedVersion: 2
-        x: 17
-        y: 910
-        width: 95
-        height: 45
+        x: 51
+        y: 2730
+        width: 285
+        height: 135
       alignment: 9
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -829,10 +850,10 @@ TextureImporter:
       name: idol_Hnd_00
       rect:
         serializedVersion: 2
-        x: 17
-        y: 1024
-        width: 93
-        height: 63
+        x: 51
+        y: 3072
+        width: 279
+        height: 189
       alignment: 9
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -850,10 +871,10 @@ TextureImporter:
       name: idol_Hnd_01
       rect:
         serializedVersion: 2
-        x: 275
-        y: 938
-        width: 103
-        height: 77
+        x: 825
+        y: 2814
+        width: 309
+        height: 231
       alignment: 9
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -871,10 +892,10 @@ TextureImporter:
       name: idol_Hnd_02
       rect:
         serializedVersion: 2
-        x: 427
-        y: 1008
-        width: 89
-        height: 85
+        x: 1281
+        y: 3024
+        width: 267
+        height: 255
       alignment: 9
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -892,10 +913,10 @@ TextureImporter:
       name: idol_Hnd_03
       rect:
         serializedVersion: 2
-        x: 569
-        y: 1006
-        width: 91
-        height: 87
+        x: 1707
+        y: 3018
+        width: 273
+        height: 261
       alignment: 9
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -913,10 +934,10 @@ TextureImporter:
       name: idol_Hnd_04
       rect:
         serializedVersion: 2
-        x: 709
-        y: 1004
-        width: 101
-        height: 85
+        x: 2127
+        y: 3012
+        width: 303
+        height: 255
       alignment: 9
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -934,10 +955,10 @@ TextureImporter:
       name: idol_Hnd_05
       rect:
         serializedVersion: 2
-        x: 855
-        y: 1008
-        width: 95
-        height: 79
+        x: 2565
+        y: 3024
+        width: 285
+        height: 237
       alignment: 9
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -955,10 +976,10 @@ TextureImporter:
       name: idol_Hnd_06
       rect:
         serializedVersion: 2
-        x: 1006
-        y: 1010
-        width: 85
-        height: 75
+        x: 3018
+        y: 3030
+        width: 255
+        height: 225
       alignment: 9
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -976,10 +997,10 @@ TextureImporter:
       name: idol_Hnd_07
       rect:
         serializedVersion: 2
-        x: 1151
-        y: 1016
-        width: 83
-        height: 69
+        x: 3453
+        y: 3048
+        width: 249
+        height: 207
       alignment: 9
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -997,10 +1018,10 @@ TextureImporter:
       name: idol_Shadow
       rect:
         serializedVersion: 2
-        x: 687
-        y: 1152
-        width: 193
-        height: 65
+        x: 2061
+        y: 3456
+        width: 579
+        height: 195
       alignment: 9
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -1018,10 +1039,10 @@ TextureImporter:
       name: idol_Arm_00
       rect:
         serializedVersion: 2
-        x: 19
-        y: 1152
-        width: 89
-        height: 63
+        x: 57
+        y: 3456
+        width: 267
+        height: 189
       alignment: 9
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -1039,10 +1060,10 @@ TextureImporter:
       name: idol_Arm_01
       rect:
         serializedVersion: 2
-        x: 155
-        y: 1146
-        width: 73
-        height: 75
+        x: 465
+        y: 3438
+        width: 219
+        height: 225
       alignment: 9
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -1060,10 +1081,10 @@ TextureImporter:
       name: idol_Arm_02
       rect:
         serializedVersion: 2
-        x: 275
-        y: 1070
-        width: 105
-        height: 151
+        x: 825
+        y: 3210
+        width: 315
+        height: 453
       alignment: 9
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -1081,10 +1102,10 @@ TextureImporter:
       name: idol_Arm_03
       rect:
         serializedVersion: 2
-        x: 419
-        y: 1150
-        width: 89
-        height: 67
+        x: 1257
+        y: 3450
+        width: 267
+        height: 201
       alignment: 9
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -1102,10 +1123,10 @@ TextureImporter:
       name: idol_Arm_04
       rect:
         serializedVersion: 2
-        x: 545
-        y: 1158
-        width: 101
-        height: 57
+        x: 1635
+        y: 3474
+        width: 303
+        height: 171
       alignment: 9
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -1123,10 +1144,10 @@ TextureImporter:
       name: idol_Arm_05
       rect:
         serializedVersion: 2
-        x: 907
-        y: 1162
-        width: 77
-        height: 61
+        x: 2721
+        y: 3486
+        width: 231
+        height: 183
       alignment: 9
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -1144,10 +1165,10 @@ TextureImporter:
       name: ntrIdol_handCrapEffect
       rect:
         serializedVersion: 2
-        x: 19
-        y: 792
-        width: 73
-        height: 65
+        x: 57
+        y: 2376
+        width: 219
+        height: 195
       alignment: 9
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -1165,10 +1186,10 @@ TextureImporter:
       name: fan_Face00
       rect:
         serializedVersion: 2
-        x: 255
-        y: 1634
-        width: 205
-        height: 141
+        x: 765
+        y: 4902
+        width: 615
+        height: 423
       alignment: 9
       pivot: {x: 0.5, y: 0.056737587}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -1186,10 +1207,10 @@ TextureImporter:
       name: fan_Face01
       rect:
         serializedVersion: 2
-        x: 523
-        y: 1634
-        width: 155
-        height: 141
+        x: 1569
+        y: 4902
+        width: 465
+        height: 423
       alignment: 9
       pivot: {x: 0.5, y: 0.056737587}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -1207,10 +1228,10 @@ TextureImporter:
       name: fan_Face02
       rect:
         serializedVersion: 2
-        x: 765
-        y: 1634
-        width: 155
-        height: 141
+        x: 2295
+        y: 4902
+        width: 465
+        height: 423
       alignment: 9
       pivot: {x: 0.5, y: 0.056737587}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -1228,10 +1249,10 @@ TextureImporter:
       name: impact_effect
       rect:
         serializedVersion: 2
-        x: 421
-        y: 778
-        width: 351
-        height: 173
+        x: 1263
+        y: 2334
+        width: 1053
+        height: 519
       alignment: 9
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -1249,10 +1270,10 @@ TextureImporter:
       name: fan_Body00
       rect:
         serializedVersion: 2
-        x: 1465
-        y: 1342
-        width: 187
-        height: 213
+        x: 4395
+        y: 4026
+        width: 561
+        height: 639
       alignment: 9
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -1270,10 +1291,10 @@ TextureImporter:
       name: fan_Body01
       rect:
         serializedVersion: 2
-        x: 981
-        y: 1602
-        width: 197
-        height: 199
+        x: 2943
+        y: 4806
+        width: 591
+        height: 597
       alignment: 9
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -1291,10 +1312,10 @@ TextureImporter:
       name: fan_Body02
       rect:
         serializedVersion: 2
-        x: 1219
-        y: 1600
-        width: 199
-        height: 197
+        x: 3657
+        y: 4800
+        width: 597
+        height: 591
       alignment: 9
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -1312,10 +1333,10 @@ TextureImporter:
       name: fan_Body03
       rect:
         serializedVersion: 2
-        x: 1459
-        y: 1600
-        width: 199
-        height: 195
+        x: 4377
+        y: 4800
+        width: 597
+        height: 585
       alignment: 9
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -1333,10 +1354,10 @@ TextureImporter:
       name: fan_Body04
       rect:
         serializedVersion: 2
-        x: 1699
-        y: 1600
-        width: 199
-        height: 189
+        x: 5097
+        y: 4800
+        width: 597
+        height: 567
       alignment: 9
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -1354,10 +1375,10 @@ TextureImporter:
       name: fan_Body05
       rect:
         serializedVersion: 2
-        x: 1715
-        y: 1322
-        width: 171
-        height: 231
+        x: 5145
+        y: 3966
+        width: 513
+        height: 693
       alignment: 9
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -1375,10 +1396,10 @@ TextureImporter:
       name: fan_Body06
       rect:
         serializedVersion: 2
-        x: 1737
-        y: 704
-        width: 129
-        height: 249
+        x: 5211
+        y: 2112
+        width: 387
+        height: 747
       alignment: 9
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -1396,10 +1417,10 @@ TextureImporter:
       name: fan_Body07
       rect:
         serializedVersion: 2
-        x: 1837
-        y: 488
-        width: 195
-        height: 155
+        x: 5511
+        y: 1464
+        width: 585
+        height: 465
       alignment: 9
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -1417,10 +1438,10 @@ TextureImporter:
       name: fan_Arm00
       rect:
         serializedVersion: 2
-        x: 835
-        y: 782
-        width: 107
-        height: 143
+        x: 2505
+        y: 2346
+        width: 321
+        height: 429
       alignment: 9
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -1438,10 +1459,10 @@ TextureImporter:
       name: fan_Arm01
       rect:
         serializedVersion: 2
-        x: 977
-        y: 782
-        width: 107
-        height: 149
+        x: 2931
+        y: 2346
+        width: 321
+        height: 447
       alignment: 9
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -1459,10 +1480,10 @@ TextureImporter:
       name: fan_Arm02
       rect:
         serializedVersion: 2
-        x: 1117
-        y: 780
-        width: 99
-        height: 157
+        x: 3351
+        y: 2340
+        width: 297
+        height: 471
       alignment: 9
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -1480,10 +1501,10 @@ TextureImporter:
       name: fan_Arm03
       rect:
         serializedVersion: 2
-        x: 1277
-        y: 768
-        width: 91
-        height: 189
+        x: 3831
+        y: 2304
+        width: 273
+        height: 567
       alignment: 9
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -1501,10 +1522,10 @@ TextureImporter:
       name: fan_Arm04
       rect:
         serializedVersion: 2
-        x: 1407
-        y: 768
-        width: 97
-        height: 179
+        x: 4221
+        y: 2304
+        width: 291
+        height: 537
       alignment: 9
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -1522,10 +1543,10 @@ TextureImporter:
       name: fan_Arm05
       rect:
         serializedVersion: 2
-        x: 1683
-        y: 528
-        width: 125
-        height: 119
+        x: 5049
+        y: 1584
+        width: 375
+        height: 357
       alignment: 9
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -1543,10 +1564,10 @@ TextureImporter:
       name: fan_Hand00
       rect:
         serializedVersion: 2
-        x: 1273
-        y: 994
-        width: 103
-        height: 107
+        x: 3819
+        y: 2982
+        width: 309
+        height: 321
       alignment: 9
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -1564,10 +1585,10 @@ TextureImporter:
       name: fan_Hand01
       rect:
         serializedVersion: 2
-        x: 1421
-        y: 996
-        width: 119
-        height: 107
+        x: 4263
+        y: 2988
+        width: 357
+        height: 321
       alignment: 9
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -1585,10 +1606,10 @@ TextureImporter:
       name: fan_Hand04
       rect:
         serializedVersion: 2
-        x: 1427
-        y: 1134
-        width: 103
-        height: 113
+        x: 4281
+        y: 3402
+        width: 309
+        height: 339
       alignment: 9
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -1606,10 +1627,10 @@ TextureImporter:
       name: fan_Hand05
       rect:
         serializedVersion: 2
-        x: 1573
-        y: 1140
-        width: 99
-        height: 109
+        x: 4719
+        y: 3420
+        width: 297
+        height: 327
       alignment: 9
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -1627,10 +1648,10 @@ TextureImporter:
       name: fan_Hand02
       rect:
         serializedVersion: 2
-        x: 1575
-        y: 998
-        width: 93
-        height: 101
+        x: 4725
+        y: 2994
+        width: 279
+        height: 303
       alignment: 9
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -1648,10 +1669,10 @@ TextureImporter:
       name: fan_Hand06
       rect:
         serializedVersion: 2
-        x: 1711
-        y: 1132
-        width: 115
-        height: 109
+        x: 5133
+        y: 3396
+        width: 345
+        height: 327
       alignment: 9
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -1669,10 +1690,10 @@ TextureImporter:
       name: fan_Hand03
       rect:
         serializedVersion: 2
-        x: 1709
-        y: 998
-        width: 125
-        height: 89
+        x: 5127
+        y: 2994
+        width: 375
+        height: 267
       alignment: 9
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -1690,10 +1711,10 @@ TextureImporter:
       name: idol_Clt_body_up
       rect:
         serializedVersion: 2
-        x: 372
-        y: 1488
-        width: 97
-        height: 83
+        x: 1116
+        y: 4464
+        width: 291
+        height: 249
       alignment: 9
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -1711,10 +1732,10 @@ TextureImporter:
       name: idol_Clt_body_down0
       rect:
         serializedVersion: 2
-        x: 547
-        y: 1497
-        width: 98
-        height: 69
+        x: 1641
+        y: 4491
+        width: 294
+        height: 207
       alignment: 9
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -1732,10 +1753,10 @@ TextureImporter:
       name: idol_Clt_body_down1
       rect:
         serializedVersion: 2
-        x: 716
-        y: 1508
-        width: 112
-        height: 66
+        x: 2148
+        y: 4524
+        width: 336
+        height: 198
       alignment: 9
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -1753,10 +1774,10 @@ TextureImporter:
       name: psyllium
       rect:
         serializedVersion: 2
-        x: 1951
-        y: 1810
-        width: 81
-        height: 155
+        x: 5853
+        y: 5430
+        width: 243
+        height: 465
       alignment: 9
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -1774,10 +1795,10 @@ TextureImporter:
       name: idol_mike02
       rect:
         serializedVersion: 2
-        x: 1489
-        y: 652
-        width: 91
-        height: 61
+        x: 4467
+        y: 1956
+        width: 273
+        height: 183
       alignment: 9
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -1795,10 +1816,10 @@ TextureImporter:
       name: idol_Hnd_08
       rect:
         serializedVersion: 2
-        x: 1031
-        y: 1144
-        width: 99
-        height: 77
+        x: 3093
+        y: 3432
+        width: 297
+        height: 231
       alignment: 9
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -1816,10 +1837,10 @@ TextureImporter:
       name: idol_Hnd_09
       rect:
         serializedVersion: 2
-        x: 1167
-        y: 1144
-        width: 79
-        height: 83
+        x: 3501
+        y: 3432
+        width: 237
+        height: 249
       alignment: 9
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -1837,10 +1858,10 @@ TextureImporter:
       name: idol_Hnd_10
       rect:
         serializedVersion: 2
-        x: 1285
-        y: 1144
-        width: 85
-        height: 85
+        x: 3855
+        y: 3432
+        width: 255
+        height: 255
       alignment: 9
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -1858,10 +1879,10 @@ TextureImporter:
       name: ntrIdol_heartEffect
       rect:
         serializedVersion: 2
-        x: 1553
-        y: 748
-        width: 99
-        height: 85
+        x: 4659
+        y: 2244
+        width: 297
+        height: 255
       alignment: 9
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -1879,10 +1900,10 @@ TextureImporter:
       name: idol_Arm_06
       rect:
         serializedVersion: 2
-        x: 1343
-        y: 1290
-        width: 77
-        height: 127
+        x: 4029
+        y: 3870
+        width: 231
+        height: 381
       alignment: 9
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -1900,10 +1921,10 @@ TextureImporter:
       name: idol_Arm_07
       rect:
         serializedVersion: 2
-        x: 1852
-        y: 1126
-        width: 81
-        height: 111
+        x: 5556
+        y: 3378
+        width: 243
+        height: 333
       alignment: 9
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -1921,10 +1942,10 @@ TextureImporter:
       name: idol_Arm_08
       rect:
         serializedVersion: 2
-        x: 1856
-        y: 1002
-        width: 59
-        height: 79
+        x: 5568
+        y: 3006
+        width: 177
+        height: 237
       alignment: 9
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -1934,6 +1955,153 @@ TextureImporter:
       bones: []
       spriteID: 51f102ddc50604340800000000000000
       internalID: 4845979151013781269
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: fanClub_IdolParts_13
+      rect:
+        serializedVersion: 2
+        x: 1185
+        y: 1599
+        width: 543
+        height: 588
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 624ecf51fccfd7c60800000000000000
+      internalID: 7817682494542373926
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: fanClub_IdolParts_14
+      rect:
+        serializedVersion: 2
+        x: 1821
+        y: 1611
+        width: 546
+        height: 591
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 642239b86b868a470800000000000000
+      internalID: 8406083837722042950
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: idol_Clt_body_down2
+      rect:
+        serializedVersion: 2
+        x: 2548
+        y: 4456
+        width: 358
+        height: 292
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 123b6ffc9ba491c50800000000000000
+      internalID: 6636417687825593121
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: idol_Clt_body_down3
+      rect:
+        serializedVersion: 2
+        x: 634
+        y: 4450
+        width: 361
+        height: 292
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 1898fb500b96041f0800000000000000
+      internalID: -1062733307327837823
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: idol_Clt_body_down4
+      rect:
+        serializedVersion: 2
+        x: 2896
+        y: 4408
+        width: 364
+        height: 295
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 3b8490d153ef1bac0800000000000000
+      internalID: -3841009503096452941
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: idol_Clt_body_up1
+      rect:
+        serializedVersion: 2
+        x: 3286
+        y: 4387
+        width: 277
+        height: 331
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: aac14f99b2445dfb0800000000000000
+      internalID: -4623714488368751446
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: idol_Clt_body_down0_half
+      rect:
+        serializedVersion: 2
+        x: 1608
+        y: 4456
+        width: 181
+        height: 272
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 55b40ffee685f13c0800000000000000
+      internalID: -4386690278540424363
       vertices: []
       indices: 
       edges: []

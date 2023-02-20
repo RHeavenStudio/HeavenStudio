@@ -76,9 +76,9 @@ TextureImporter:
   spriteMeshType: 1
   alignment: 0
   spritePivot: {x: 0.5, y: 0.5}
-  spritePixelsToUnits: 100
+  spritePixelsToUnits: 500
   spriteBorder: {x: 0, y: 0, z: 0, w: 0}
-  spriteGenerateFallbackPhysicsShape: 1
+  spriteGenerateFallbackPhysicsShape: 0
   alphaUsage: 1
   alphaIsTransparency: 1
   spriteTessellationDetail: -1
@@ -95,7 +95,7 @@ TextureImporter:
   platformSettings:
   - serializedVersion: 3
     buildTarget: DefaultTexturePlatform
-    maxTextureSize: 2048
+    maxTextureSize: 4096
     resizeAlgorithm: 0
     textureFormat: -1
     textureCompression: 1
@@ -107,7 +107,7 @@ TextureImporter:
     forceMaximumCompressionQuality_BC6H_BC7: 0
   - serializedVersion: 3
     buildTarget: Standalone
-    maxTextureSize: 2048
+    maxTextureSize: 4096
     resizeAlgorithm: 0
     textureFormat: -1
     textureCompression: 1
@@ -124,16 +124,16 @@ TextureImporter:
       name: ntrIdol_BG_stage
       rect:
         serializedVersion: 2
-        x: 37
-        y: 734
-        width: 627
-        height: 245
+        x: 185
+        y: 8790
+        width: 3135
+        height: 1225
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
-      tessellationDetail: 0
+      tessellationDetail: -1
       bones: []
       spriteID: 9a85ba7d656485e30800000000000000
       internalID: 4492417967101532329
@@ -145,16 +145,16 @@ TextureImporter:
       name: ntrIdol_BG_stageSteps
       rect:
         serializedVersion: 2
-        x: 23
-        y: 474
-        width: 179
-        height: 189
+        x: 115
+        y: 7490
+        width: 895
+        height: 945
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
-      tessellationDetail: 0
+      tessellationDetail: -1
       bones: []
       spriteID: 366757146833bbe90800000000000000
       internalID: -7008951743355193757
@@ -166,16 +166,16 @@ TextureImporter:
       name: ntrIdol_BG_sky
       rect:
         serializedVersion: 2
-        x: 1412
-        y: 369
-        width: 40
-        height: 623
+        x: 7060
+        y: 6965
+        width: 200
+        height: 3115
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
-      tessellationDetail: 0
+      tessellationDetail: -1
       bones: []
       spriteID: d28c0980adf711500800000000000000
       internalID: 365213619217025069
@@ -187,16 +187,16 @@ TextureImporter:
       name: ntrIdol_BG_kanaami00
       rect:
         serializedVersion: 2
-        x: 967
-        y: 570
-        width: 341
-        height: 93
+        x: 4835
+        y: 7970
+        width: 1705
+        height: 465
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
-      tessellationDetail: 0
+      tessellationDetail: -1
       bones: []
       spriteID: c720ece4a4e5ef5d0800000000000000
       internalID: -3026878226303679876
@@ -208,16 +208,16 @@ TextureImporter:
       name: ntrIdol_BG_kanaami01
       rect:
         serializedVersion: 2
-        x: 491
-        y: 600
-        width: 429
-        height: 65
+        x: 2455
+        y: 8120
+        width: 2176
+        height: 325
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
-      tessellationDetail: 0
+      tessellationDetail: -1
       bones: []
       spriteID: b968614ccb70ab0a0800000000000000
       internalID: -6865166174647843173
@@ -229,16 +229,16 @@ TextureImporter:
       name: ntrIdol_BG_lights
       rect:
         serializedVersion: 2
-        x: 247
-        y: 582
-        width: 197
-        height: 85
+        x: 1235
+        y: 8030
+        width: 985
+        height: 425
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
-      tessellationDetail: 0
+      tessellationDetail: -1
       bones: []
       spriteID: 340bcf8adc5128d80800000000000000
       internalID: -8250007594341715901
@@ -250,16 +250,16 @@ TextureImporter:
       name: ntrIdol_BG_lightRay
       rect:
         serializedVersion: 2
-        x: 241
-        y: 518
-        width: 545
-        height: 21
+        x: 1205
+        y: 7710
+        width: 2725
+        height: 105
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
-      tessellationDetail: 0
+      tessellationDetail: -1
       bones: []
       spriteID: a58e78476111a9880800000000000000
       internalID: -8603545349995894694
@@ -271,16 +271,16 @@ TextureImporter:
       name: ntrIdol_BG_spot
       rect:
         serializedVersion: 2
-        x: 239
-        y: 242
-        width: 545
-        height: 237
+        x: 1195
+        y: 6341
+        width: 2719
+        height: 1173
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
-      tessellationDetail: 0
+      tessellationDetail: -1
       bones: []
       spriteID: e6a4bb3a8b10e63b0800000000000000
       internalID: -5517470600949708178
@@ -292,16 +292,16 @@ TextureImporter:
       name: ntrIdol_BG_spotDrop
       rect:
         serializedVersion: 2
-        x: 817
-        y: 356
-        width: 237
-        height: 121
+        x: 4085
+        y: 6906
+        width: 1161
+        height: 598
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
-      tessellationDetail: 0
+      tessellationDetail: -1
       bones: []
       spriteID: 49a99cb9bc02464a0800000000000000
       internalID: -6601115094954173804
@@ -313,16 +313,16 @@ TextureImporter:
       name: ntrIdol_BG_lightsGlow
       rect:
         serializedVersion: 2
-        x: 1095
-        y: 370
-        width: 225
-        height: 103
+        x: 5475
+        y: 6970
+        width: 1125
+        height: 515
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
-      tessellationDetail: 0
+      tessellationDetail: -1
       bones: []
       spriteID: 614c993c3405ca550800000000000000
       internalID: 6173397441192772630

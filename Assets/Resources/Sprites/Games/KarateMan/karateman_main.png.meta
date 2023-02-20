@@ -227,6 +227,54 @@ TextureImporter:
   - first:
       213: -8767211005568948338
     second: karateman_alien
+  - first:
+      213: 237928650075338379
+    second: karateman_main_77
+  - first:
+      213: -3681997404604053129
+    second: karateman_num_combo_jp
+  - first:
+      213: 2032791596022008982
+    second: karateman_main_79
+  - first:
+      213: -6472041035611429736
+    second: karateman_kick_prepare_1
+  - first:
+      213: 2567461309920692425
+    second: karateman_kick_prepare_2
+  - first:
+      213: 8122102479721970976
+    second: karateman_kick2
+  - first:
+      213: 6513971964286789039
+    second: karateman_kick_
+  - first:
+      213: -1722264585180191320
+    second: karateman_rainy_0
+  - first:
+      213: 3029966505128252368
+    second: karateman_rainy_1
+  - first:
+      213: -5751451155775978979
+    second: karateman_rainy_2
+  - first:
+      213: -2448975393399883157
+    second: karateman_rainy_3
+  - first:
+      213: 8584846578326269484
+    second: karateman_fire
+  - first:
+      213: 8497358629359107968
+    second: karateman_head_8
+  - first:
+      213: -2636709571086610862
+    second: karateman_torso_2
+  - first:
+      213: 3008790161821312096
+    second: karateman_arm_1_part00
+  - first:
+      213: 7464444140288453835
+    second: karateman_arm_1_part01
   externalObjects: {}
   serializedVersion: 11
   mipmaps:
@@ -271,7 +319,7 @@ TextureImporter:
   spriteMeshType: 1
   alignment: 0
   spritePivot: {x: 0.5, y: 0.5}
-  spritePixelsToUnits: 72
+  spritePixelsToUnits: 87.840004
   spriteBorder: {x: 0, y: 0, z: 0, w: 0}
   spriteGenerateFallbackPhysicsShape: 1
   alphaUsage: 1
@@ -290,7 +338,7 @@ TextureImporter:
   platformSettings:
   - serializedVersion: 3
     buildTarget: DefaultTexturePlatform
-    maxTextureSize: 2048
+    maxTextureSize: 4096
     resizeAlgorithm: 0
     textureFormat: -1
     textureCompression: 2
@@ -302,7 +350,7 @@ TextureImporter:
     forceMaximumCompressionQuality_BC6H_BC7: 0
   - serializedVersion: 3
     buildTarget: Standalone
-    maxTextureSize: 2048
+    maxTextureSize: 4096
     resizeAlgorithm: 0
     textureFormat: -1
     textureCompression: 2
@@ -331,16 +379,16 @@ TextureImporter:
       name: karateman_head_0
       rect:
         serializedVersion: 2
-        x: 4
-        y: 3812
-        width: 280
-        height: 280
+        x: 4.88
+        y: 4650.64
+        width: 341.6
+        height: 341.6
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
-      tessellationDetail: 0
+      tessellationDetail: -1
       bones: []
       spriteID: 0295f3ee8e8259930800000000000000
       internalID: 4149267612586432800
@@ -352,16 +400,16 @@ TextureImporter:
       name: karateman_head_1
       rect:
         serializedVersion: 2
-        x: 292
-        y: 3812
-        width: 280
-        height: 280
+        x: 356.24002
+        y: 4650.64
+        width: 341.6
+        height: 341.6
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
-      tessellationDetail: 0
+      tessellationDetail: -1
       bones: []
       spriteID: 1fe6b8b85edba7a20800000000000000
       internalID: 3060967690338004721
@@ -373,16 +421,16 @@ TextureImporter:
       name: karateman_head_2
       rect:
         serializedVersion: 2
-        x: 580
-        y: 3812
-        width: 280
-        height: 280
+        x: 707.60004
+        y: 4650.64
+        width: 341.6
+        height: 341.6
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
-      tessellationDetail: 0
+      tessellationDetail: -1
       bones: []
       spriteID: 5991ed7773aa98340800000000000000
       internalID: 4866608027561499029
@@ -394,16 +442,16 @@ TextureImporter:
       name: karateman_head_3
       rect:
         serializedVersion: 2
-        x: 868
-        y: 3812
-        width: 280
-        height: 280
+        x: 1058.9601
+        y: 4650.64
+        width: 341.6
+        height: 341.6
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
-      tessellationDetail: 0
+      tessellationDetail: -1
       bones: []
       spriteID: 93a1a680a0bc489f0800000000000000
       internalID: -467025217388406215
@@ -415,16 +463,16 @@ TextureImporter:
       name: karateman_head_4
       rect:
         serializedVersion: 2
-        x: 1156
-        y: 3812
-        width: 280
-        height: 280
+        x: 1410.3201
+        y: 4650.64
+        width: 341.6
+        height: 341.6
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
-      tessellationDetail: 0
+      tessellationDetail: -1
       bones: []
       spriteID: b2322cf63b1f87720800000000000000
       internalID: 2844288917660902187
@@ -436,16 +484,16 @@ TextureImporter:
       name: karateman_head_5
       rect:
         serializedVersion: 2
-        x: 1444
-        y: 3812
-        width: 280
-        height: 280
+        x: 1761.68
+        y: 4650.64
+        width: 341.6
+        height: 341.6
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
-      tessellationDetail: 0
+      tessellationDetail: -1
       bones: []
       spriteID: fc3a1662696783db0800000000000000
       internalID: -4811965814584269873
@@ -457,16 +505,16 @@ TextureImporter:
       name: karateman_head_6
       rect:
         serializedVersion: 2
-        x: 1732
-        y: 3812
-        width: 280
-        height: 280
+        x: 2113.04
+        y: 4650.64
+        width: 341.6
+        height: 341.6
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
-      tessellationDetail: 0
+      tessellationDetail: -1
       bones: []
       spriteID: 89ca90bd29655a1d0800000000000000
       internalID: -3340168359885296488
@@ -478,16 +526,16 @@ TextureImporter:
       name: karateman_head_7
       rect:
         serializedVersion: 2
-        x: 2020
-        y: 3812
-        width: 280
-        height: 280
+        x: 2464.4001
+        y: 4650.64
+        width: 341.6
+        height: 341.6
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
-      tessellationDetail: 0
+      tessellationDetail: -1
       bones: []
       spriteID: d2886f8b95708ee20800000000000000
       internalID: 3379959602278205485
@@ -499,16 +547,16 @@ TextureImporter:
       name: karateman_arm_0
       rect:
         serializedVersion: 2
-        x: 2596
-        y: 3812
-        width: 376
-        height: 280
+        x: 3167.12
+        y: 4650.64
+        width: 458.72
+        height: 341.6
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
-      tessellationDetail: 0
+      tessellationDetail: -1
       bones: []
       spriteID: fecb2eb20179ffd00800000000000000
       internalID: 1008690937265831151
@@ -520,16 +568,16 @@ TextureImporter:
       name: karateman_arm_1
       rect:
         serializedVersion: 2
-        x: 4
-        y: 3524
-        width: 440
-        height: 280
+        x: 4.88
+        y: 4299.2803
+        width: 536.8
+        height: 341.6
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
-      tessellationDetail: 0
+      tessellationDetail: -1
       bones: []
       spriteID: 09702cc4c4df3e8a0800000000000000
       internalID: -6276894951477213296
@@ -541,16 +589,16 @@ TextureImporter:
       name: karateman_arm_2
       rect:
         serializedVersion: 2
-        x: 452
-        y: 3524
-        width: 408
-        height: 280
+        x: 551.44
+        y: 4299.2803
+        width: 497.76
+        height: 341.6
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
-      tessellationDetail: 0
+      tessellationDetail: -1
       bones: []
       spriteID: f8b6d252a52ca2e20800000000000000
       internalID: 3326684967193111439
@@ -562,16 +610,16 @@ TextureImporter:
       name: karateman_arm_3
       rect:
         serializedVersion: 2
-        x: 868
-        y: 3524
-        width: 344
-        height: 280
+        x: 1058.9601
+        y: 4299.2803
+        width: 419.68002
+        height: 341.6
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
-      tessellationDetail: 0
+      tessellationDetail: -1
       bones: []
       spriteID: 8b4b43b96a4563c70800000000000000
       internalID: 8950434383990666424
@@ -583,16 +631,16 @@ TextureImporter:
       name: karateman_arm_4
       rect:
         serializedVersion: 2
-        x: 1220
-        y: 3524
-        width: 312
-        height: 280
+        x: 1488.4
+        y: 4299.2803
+        width: 380.64
+        height: 341.6
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
-      tessellationDetail: 0
+      tessellationDetail: -1
       bones: []
       spriteID: db84092a1957673e0800000000000000
       internalID: -2056326911489980227
@@ -604,16 +652,16 @@ TextureImporter:
       name: karateman_arm_5
       rect:
         serializedVersion: 2
-        x: 1540
-        y: 3524
-        width: 312
-        height: 280
+        x: 1878.8
+        y: 4299.2803
+        width: 380.64
+        height: 341.6
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
-      tessellationDetail: 0
+      tessellationDetail: -1
       bones: []
       spriteID: 38ddad5d866615cc0800000000000000
       internalID: -3724082816408167037
@@ -625,16 +673,16 @@ TextureImporter:
       name: karateman_torso_0
       rect:
         serializedVersion: 2
-        x: 1348
-        y: 3044
-        width: 376
-        height: 472
+        x: 1644.56
+        y: 3713.6802
+        width: 458.72
+        height: 575.84
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
-      tessellationDetail: 0
+      tessellationDetail: -1
       bones: []
       spriteID: f7b8cd55e1d52c270800000000000000
       internalID: 8269274250676571007
@@ -646,16 +694,16 @@ TextureImporter:
       name: karateman_torso_1
       rect:
         serializedVersion: 2
-        x: 1732
-        y: 3044
-        width: 376
-        height: 472
+        x: 2113.04
+        y: 3713.6802
+        width: 458.72
+        height: 575.84
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
-      tessellationDetail: 0
+      tessellationDetail: -1
       bones: []
       spriteID: 758857fd010f6bd70800000000000000
       internalID: 9058691655761496151
@@ -667,16 +715,16 @@ TextureImporter:
       name: karateman_legright
       rect:
         serializedVersion: 2
-        x: 4
-        y: 3044
-        width: 280
-        height: 472
+        x: 4.88
+        y: 3713.6802
+        width: 341.6
+        height: 575.84
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
-      tessellationDetail: 0
+      tessellationDetail: -1
       bones: []
       spriteID: a0cc45a278552e3f0800000000000000
       internalID: -873041338737308662
@@ -688,16 +736,16 @@ TextureImporter:
       name: karateman_legleft
       rect:
         serializedVersion: 2
-        x: 292
-        y: 3044
-        width: 344
-        height: 472
+        x: 356.24002
+        y: 3713.6802
+        width: 419.68002
+        height: 575.84
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
-      tessellationDetail: 0
+      tessellationDetail: -1
       bones: []
       spriteID: 8d6e7830ea4d19520800000000000000
       internalID: 2707178694875014872
@@ -709,16 +757,16 @@ TextureImporter:
       name: karateman_pot
       rect:
         serializedVersion: 2
-        x: 4
-        y: 1124
-        width: 280
-        height: 280
+        x: 4.88
+        y: 1371.28
+        width: 341.6
+        height: 341.6
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
-      tessellationDetail: 0
+      tessellationDetail: -1
       bones: []
       spriteID: 60d12b482bde7bf60800000000000000
       internalID: 8050164209934277894
@@ -730,16 +778,16 @@ TextureImporter:
       name: karateman_shadow
       rect:
         serializedVersion: 2
-        x: 2116
-        y: 3044
-        width: 344
-        height: 472
+        x: 2581.52
+        y: 3713.6802
+        width: 419.68002
+        height: 575.84
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
-      tessellationDetail: 0
+      tessellationDetail: -1
       bones: []
       spriteID: b746f127f215544d0800000000000000
       internalID: -3151023100055821189
@@ -751,16 +799,16 @@ TextureImporter:
       name: karateman_object_shadow
       rect:
         serializedVersion: 2
-        x: 1156
-        y: 772
-        width: 280
-        height: 216
+        x: 1410.3201
+        y: 941.84
+        width: 341.6
+        height: 263.52002
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
-      tessellationDetail: 0
+      tessellationDetail: -1
       bones: []
       spriteID: d0de5de00ef0e3cf0800000000000000
       internalID: -270761472599659251
@@ -772,16 +820,16 @@ TextureImporter:
       name: karateman_hiteffect_0
       rect:
         serializedVersion: 2
-        x: 1444
-        y: 708
-        width: 376
-        height: 280
+        x: 1761.68
+        y: 863.76
+        width: 458.72
+        height: 341.6
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
-      tessellationDetail: 0
+      tessellationDetail: -1
       bones: []
       spriteID: 9a863013bdfea2bf0800000000000000
       internalID: -348202296468608855
@@ -793,16 +841,16 @@ TextureImporter:
       name: karateman_bulb
       rect:
         serializedVersion: 2
-        x: 4
-        y: 836
-        width: 280
-        height: 280
+        x: 4.88
+        y: 1019.92004
+        width: 341.6
+        height: 341.6
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
-      tessellationDetail: 0
+      tessellationDetail: -1
       bones: []
       spriteID: b21d4277bd9fb8b40800000000000000
       internalID: 5443719295599431979
@@ -814,16 +862,16 @@ TextureImporter:
       name: karateman_rock
       rect:
         serializedVersion: 2
-        x: 292
-        y: 836
-        width: 280
-        height: 280
+        x: 356.24002
+        y: 1019.92004
+        width: 341.6
+        height: 341.6
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
-      tessellationDetail: 0
+      tessellationDetail: -1
       bones: []
       spriteID: d8f25219d1bfbf6c0800000000000000
       internalID: -4108414130637688947
@@ -835,16 +883,16 @@ TextureImporter:
       name: karateman_altpunch_0
       rect:
         serializedVersion: 2
-        x: 4
-        y: 2500
-        width: 664
-        height: 536
+        x: 4.88
+        y: 3050
+        width: 810.08
+        height: 653.92004
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
-      tessellationDetail: 0
+      tessellationDetail: -1
       bones: []
       spriteID: a2a49bd566d275710800000000000000
       internalID: 1681862903528507946
@@ -856,16 +904,16 @@ TextureImporter:
       name: karateman_altpunch_1
       rect:
         serializedVersion: 2
-        x: 676
-        y: 2500
-        width: 536
-        height: 536
+        x: 824.72003
+        y: 3050
+        width: 653.92004
+        height: 653.92004
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
-      tessellationDetail: 0
+      tessellationDetail: -1
       bones: []
       spriteID: 4adf1105c38516970800000000000000
       internalID: 8746368967394852260
@@ -877,16 +925,16 @@ TextureImporter:
       name: karateman_altpunch_2
       rect:
         serializedVersion: 2
-        x: 1220
-        y: 2500
-        width: 472
-        height: 536
+        x: 1488.4
+        y: 3050
+        width: 575.84
+        height: 653.92004
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
-      tessellationDetail: 0
+      tessellationDetail: -1
       bones: []
       spriteID: 13cf59e8b58ebd070800000000000000
       internalID: 8132349032079424561
@@ -898,16 +946,16 @@ TextureImporter:
       name: karateman_altpunch_3
       rect:
         serializedVersion: 2
-        x: 1700
-        y: 2500
-        width: 440
-        height: 536
+        x: 2074
+        y: 3050
+        width: 536.8
+        height: 653.92004
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
-      tessellationDetail: 0
+      tessellationDetail: -1
       bones: []
       spriteID: 79ca25dc2beb0e720800000000000000
       internalID: 2873506237420579991
@@ -919,16 +967,16 @@ TextureImporter:
       name: karateman_fastfx_0
       rect:
         serializedVersion: 2
-        x: 1572
-        y: 1508
-        width: 472
-        height: 216
+        x: 1917.8401
+        y: 1839.76
+        width: 575.84
+        height: 263.52002
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
-      tessellationDetail: 0
+      tessellationDetail: -1
       bones: []
       spriteID: 7b79733c210f5c940800000000000000
       internalID: 5315918898556016567
@@ -940,16 +988,16 @@ TextureImporter:
       name: karateman_snow
       rect:
         serializedVersion: 2
-        x: 3620
-        y: 3844
-        width: 248
-        height: 248
+        x: 4418.8403
+        y: 4692.12
+        width: 297.68
+        height: 297.68
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
-      tessellationDetail: 0
+      tessellationDetail: -1
       bones: []
       spriteID: 65af8f5bb12d44920800000000000000
       internalID: 2973732670430313046
@@ -961,16 +1009,16 @@ TextureImporter:
       name: karateman_ball
       rect:
         serializedVersion: 2
-        x: 292
-        y: 1124
-        width: 280
-        height: 280
+        x: 356.24002
+        y: 1371.28
+        width: 341.6
+        height: 341.6
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
-      tessellationDetail: 0
+      tessellationDetail: -1
       bones: []
       spriteID: e4f7dcc037fc10fc0800000000000000
       internalID: -3530312539838775474
@@ -982,16 +1030,16 @@ TextureImporter:
       name: karateman_bomb
       rect:
         serializedVersion: 2
-        x: 580
-        y: 836
-        width: 280
-        height: 280
+        x: 707.60004
+        y: 1019.92004
+        width: 341.6
+        height: 341.6
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
-      tessellationDetail: 0
+      tessellationDetail: -1
       bones: []
       spriteID: fe99efe788b8ff7a0800000000000000
       internalID: -6341196331951941137
@@ -1003,16 +1051,16 @@ TextureImporter:
       name: karateman_barrel
       rect:
         serializedVersion: 2
-        x: 868
-        y: 804
-        width: 280
-        height: 376
+        x: 1058.9601
+        y: 980.88
+        width: 341.6
+        height: 458.72
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
-      tessellationDetail: 0
+      tessellationDetail: -1
       bones: []
       spriteID: 99d3320e6a5175870800000000000000
       internalID: 8671423413994339737
@@ -1024,16 +1072,16 @@ TextureImporter:
       name: karateman_kick_prepare_0
       rect:
         serializedVersion: 2
-        x: 3428
-        y: 2244
-        width: 664
-        height: 536
+        x: 4182.16
+        y: 2737.6802
+        width: 810.08
+        height: 653.92004
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
-      tessellationDetail: 0
+      tessellationDetail: -1
       bones: []
       spriteID: 142c065bf4de54830800000000000000
       internalID: 4054907966118216257
@@ -1045,16 +1093,16 @@ TextureImporter:
       name: karateman_kick_0
       rect:
         serializedVersion: 2
-        x: 4
-        y: 4
-        width: 760
-        height: 792
+        x: 4.88
+        y: 4.88
+        width: 927.2
+        height: 966.24005
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
-      tessellationDetail: 0
+      tessellationDetail: -1
       bones: []
       spriteID: 26707327ed6faecd0800000000000000
       internalID: -2527936805555730590
@@ -1066,16 +1114,16 @@ TextureImporter:
       name: karateman_kick_1
       rect:
         serializedVersion: 2
-        x: 772
-        y: 4
-        width: 440
-        height: 760
+        x: 941.84
+        y: 4.88
+        width: 536.8
+        height: 927.2
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
-      tessellationDetail: 0
+      tessellationDetail: -1
       bones: []
       spriteID: 3885cf6414da52650800000000000000
       internalID: 6207558157275519107
@@ -1087,16 +1135,16 @@ TextureImporter:
       name: karateman_kick_leg_0
       rect:
         serializedVersion: 2
-        x: 3332
-        y: 804
-        width: 472
-        height: 279
+        x: 4065.04
+        y: 980.88
+        width: 575.84
+        height: 340.38
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
-      tessellationDetail: 0
+      tessellationDetail: -1
       bones: []
       spriteID: 57199ef8ebfdefd80800000000000000
       internalID: -8214882660725976715
@@ -1108,16 +1156,16 @@ TextureImporter:
       name: karateman_kick_2
       rect:
         serializedVersion: 2
-        x: 1860
-        y: 164
-        width: 376
-        height: 440
+        x: 2269.2
+        y: 200.08
+        width: 458.72
+        height: 536.8
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
-      tessellationDetail: 0
+      tessellationDetail: -1
       bones: []
       spriteID: fec12fcefd7e48630800000000000000
       internalID: 3928519723912928495
@@ -1129,16 +1177,16 @@ TextureImporter:
       name: karateman_kick_3
       rect:
         serializedVersion: 2
-        x: 2244
-        y: 164
-        width: 440
-        height: 440
+        x: 2737.6802
+        y: 200.08
+        width: 536.8
+        height: 536.8
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
-      tessellationDetail: 0
+      tessellationDetail: -1
       bones: []
       spriteID: 70cacc28280af8570800000000000000
       internalID: 8471165906507836423
@@ -1150,16 +1198,16 @@ TextureImporter:
       name: karateman_kick_leg_1
       rect:
         serializedVersion: 2
-        x: 2948
-        y: 644
-        width: 376
-        height: 440
+        x: 3596.56
+        y: 785.68
+        width: 458.72
+        height: 536.8
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
-      tessellationDetail: 0
+      tessellationDetail: -1
       bones: []
       spriteID: 5de7dcaa167c80320800000000000000
       internalID: 2524486813432512213
@@ -1171,16 +1219,16 @@ TextureImporter:
       name: karateman_kick_leg_2
       rect:
         serializedVersion: 2
-        x: 2692
-        y: 644
-        width: 248
-        height: 472
+        x: 3284.24
+        y: 785.68
+        width: 302.56
+        height: 575.84
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
-      tessellationDetail: 0
+      tessellationDetail: -1
       bones: []
       spriteID: 564d1834f435901d0800000000000000
       internalID: -3384082045092113307
@@ -1192,16 +1240,16 @@ TextureImporter:
       name: karateman_fastfx_1
       rect:
         serializedVersion: 2
-        x: 2692
-        y: 68
-        width: 856
-        height: 568
+        x: 3284.24
+        y: 82.96
+        width: 1044.3201
+        height: 692.96
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
-      tessellationDetail: 0
+      tessellationDetail: -1
       bones: []
       spriteID: 9aab49efea7c596f0800000000000000
       internalID: -678416614439994711
@@ -1213,16 +1261,16 @@ TextureImporter:
       name: karateman_barrelfx_0
       rect:
         serializedVersion: 2
-        x: 1828
-        y: 708
-        width: 184
-        height: 280
+        x: 2230.1602
+        y: 863.76
+        width: 224.48001
+        height: 341.6
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
-      tessellationDetail: 0
+      tessellationDetail: -1
       bones: []
       spriteID: 33952e0755e2d8a50800000000000000
       internalID: 6524922379630696755
@@ -1234,16 +1282,16 @@ TextureImporter:
       name: karateman_barrelfx_1
       rect:
         serializedVersion: 2
-        x: 2020
-        y: 708
-        width: 184
-        height: 280
+        x: 2464.4001
+        y: 863.76
+        width: 224.48001
+        height: 341.6
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
-      tessellationDetail: 0
+      tessellationDetail: -1
       bones: []
       spriteID: 0156ac67d18fc0010800000000000000
       internalID: 1156572009758090512
@@ -1255,16 +1303,16 @@ TextureImporter:
       name: karateman_barrelfx_2
       rect:
         serializedVersion: 2
-        x: 2212
-        y: 708
-        width: 184
-        height: 280
+        x: 2698.6401
+        y: 863.76
+        width: 224.48001
+        height: 341.6
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
-      tessellationDetail: 0
+      tessellationDetail: -1
       bones: []
       spriteID: 31a980c3d2c400190800000000000000
       internalID: -7998309181045564909
@@ -1276,16 +1324,16 @@ TextureImporter:
       name: karateman_barrelfx_3
       rect:
         serializedVersion: 2
-        x: 2404
-        y: 804
-        width: 280
-        height: 184
+        x: 2932.8801
+        y: 980.88
+        width: 341.6
+        height: 224.48001
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
-      tessellationDetail: 0
+      tessellationDetail: -1
       bones: []
       spriteID: 9763ed0a79a384290800000000000000
       internalID: -7906004722935515527
@@ -1297,16 +1345,16 @@ TextureImporter:
       name: karateman_barrelfx_4
       rect:
         serializedVersion: 2
-        x: 2404
-        y: 612
-        width: 280
-        height: 184
+        x: 2932.8801
+        y: 746.64
+        width: 341.6
+        height: 224.48001
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
-      tessellationDetail: 0
+      tessellationDetail: -1
       bones: []
       spriteID: 23278e7162b619050800000000000000
       internalID: 5805539206011318834
@@ -1318,16 +1366,16 @@ TextureImporter:
       name: karateman_arm_6
       rect:
         serializedVersion: 2
-        x: 1858
-        y: 3524
-        width: 474
-        height: 280
+        x: 2266.76
+        y: 4299.2803
+        width: 578.28
+        height: 341.6
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
-      tessellationDetail: 0
+      tessellationDetail: -1
       bones: []
       spriteID: 910686eeed3921c10800000000000000
       internalID: 2022841768334614553
@@ -1339,16 +1387,16 @@ TextureImporter:
       name: karateman_rightleg_crouch
       rect:
         serializedVersion: 2
-        x: 644
-        y: 3044
-        width: 312
-        height: 472
+        x: 785.68
+        y: 3713.6802
+        width: 380.64
+        height: 575.84
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
-      tessellationDetail: 0
+      tessellationDetail: -1
       bones: []
       spriteID: b6288b474cca83050800000000000000
       internalID: 5780560081501848171
@@ -1360,16 +1408,16 @@ TextureImporter:
       name: karateman_leftleg_crouch
       rect:
         serializedVersion: 2
-        x: 964
-        y: 3044
-        width: 376
-        height: 472
+        x: 1176.0801
+        y: 3713.6802
+        width: 458.72
+        height: 575.84
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
-      tessellationDetail: 0
+      tessellationDetail: -1
       bones: []
       spriteID: 35a153d1e447f1040800000000000000
       internalID: 4620539621551708755
@@ -1381,16 +1429,16 @@ TextureImporter:
       name: karateman_combo_kick_0
       rect:
         serializedVersion: 2
-        x: 4
-        y: 1956
-        width: 696
-        height: 537
+        x: 4.88
+        y: 2386.32
+        width: 849.12
+        height: 655.14
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
-      tessellationDetail: 0
+      tessellationDetail: -1
       bones: []
       spriteID: 0e71e3b4a06dabc00800000000000000
       internalID: 917280813823694816
@@ -1402,16 +1450,16 @@ TextureImporter:
       name: karateman_combo_kick_1
       rect:
         serializedVersion: 2
-        x: 708
-        y: 1956
-        width: 760
-        height: 537
+        x: 863.76
+        y: 2386.32
+        width: 927.2
+        height: 655.14
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
-      tessellationDetail: 0
+      tessellationDetail: -1
       bones: []
       spriteID: f4017442c33673740800000000000000
       internalID: 5131679410369794127
@@ -1423,10 +1471,577 @@ TextureImporter:
       name: karateman_head_8
       rect:
         serializedVersion: 2
-        x: 2308
-        y: 3812
-        width: 280
-        height: 280
+        x: 2815.76
+        y: 4650.64
+        width: 341.6
+        height: 341.6
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 08fbc0807aeace570800000000000000
+      internalID: 8497358629359107968
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: karateman_fastfx_2
+      rect:
+        serializedVersion: 2
+        x: 1917.8401
+        y: 2116.7
+        width: 900.36005
+        height: 173.24
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: c0328cb96b14f1c70800000000000000
+      internalID: 8943939637534532364
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: karateman_combo_crouchpunch_0
+      rect:
+        serializedVersion: 2
+        x: 668.56
+        y: 1722.64
+        width: 575.84
+        height: 653.92004
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: a6956d18cb5445b90800000000000000
+      internalID: -7254096423852549782
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: karateman_combo_crouchpunch_1
+      rect:
+        serializedVersion: 2
+        x: 1254.16
+        y: 1722.64
+        width: 653.92004
+        height: 653.92004
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: e68aeea6c4c662f90800000000000000
+      internalID: -6978771497096664978
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: karateman_arm_7
+      rect:
+        serializedVersion: 2
+        x: 2854.8
+        y: 4299.2803
+        width: 536.8
+        height: 341.6
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 8b3dc56564df06c10800000000000000
+      internalID: 2044912709364667320
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: karateman_arm_8
+      rect:
+        serializedVersion: 2
+        x: 3401.36
+        y: 4299.2803
+        width: 497.76
+        height: 341.6
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 9e3e7e2a403450f50800000000000000
+      internalID: 6846952495678743529
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: karateman_torso_2
+      rect:
+        serializedVersion: 2
+        x: 3557.52
+        y: 3089.04
+        width: 536.8
+        height: 1200.48
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 25e828f6d96886bd0800000000000000
+      internalID: -2636709571086610862
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: karateman_fastfx_3
+      rect:
+        serializedVersion: 2
+        x: 3010.96
+        y: 3128.08
+        width: 536.8
+        height: 810.08
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 6add89c81be7f5e00800000000000000
+      internalID: 1035685740351643046
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: karateman_combo_miss_0
+      rect:
+        serializedVersion: 2
+        x: 1800.7201
+        y: 2386.32
+        width: 810.08
+        height: 653.92004
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: cde024e4811d58750800000000000000
+      internalID: 6306676755524619996
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: karateman_combo_miss_1
+      rect:
+        serializedVersion: 2
+        x: 2620.56
+        y: 2386.32
+        width: 653.92004
+        height: 653.92004
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: ac0fc0762749d21c0800000000000000
+      internalID: -4526798831361396534
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: karateman_combo_miss_2
+      rect:
+        serializedVersion: 2
+        x: 4.88
+        y: 1722.64
+        width: 653.92004
+        height: 653.92004
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 9f32dd5267dcd0610800000000000000
+      internalID: 1589152150856737785
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: karateman_arm_9
+      rect:
+        serializedVersion: 2
+        x: 3284.24
+        y: 3947.9202
+        width: 263.52002
+        height: 342.82
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 0ac28300596bd94d0800000000000000
+      internalID: -3126141815255192416
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: karateman_hand
+      rect:
+        serializedVersion: 2
+        x: 3010.96
+        y: 3947.9202
+        width: 263.52002
+        height: 341.6
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 2f66ebf37cded4970800000000000000
+      internalID: 8740903891819718386
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: karateman_tacobell
+      rect:
+        serializedVersion: 2
+        x: 4265.12
+        y: 2357.04
+        width: 341.6
+        height: 341.6
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: f32231260b1dcc8a0800000000000000
+      internalID: -6283416824598814145
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: karateman_combo_crouch_toIdle_leg
+      rect:
+        serializedVersion: 2
+        x: 3281.8
+        y: 2540.04
+        width: 489.22
+        height: 498.98
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: e4d27acb28e508a00800000000000000
+      internalID: 756708653002075470
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: karateman_cookingpot
+      rect:
+        serializedVersion: 2
+        x: 4272.44
+        y: 1788.52
+        width: 358.68002
+        height: 189.1
+      alignment: 9
+      pivot: {x: 0.48875457, y: 0.6137561}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 3413d18ec3d26a650800000000000000
+      internalID: 6243727673011286339
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: karateman_cookingpot_lid
+      rect:
+        serializedVersion: 2
+        x: 4294.4
+        y: 2137.44
+        width: 313.54
+        height: 147.62001
+      alignment: 9
+      pivot: {x: 0.4871356, y: 0.34517047}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 35ad2ba030a6ac700800000000000000
+      internalID: 561377664857987667
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: karateman_alien
+      rect:
+        serializedVersion: 2
+        x: 4243.16
+        y: 1359.0801
+        width: 336.72
+        height: 312.32
+      alignment: 9
+      pivot: {x: 0.5005042, y: 0.48580885}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: e87ea268a0c945680800000000000000
+      internalID: -8767211005568948338
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: karateman_kick_prepare_1
+      rect:
+        serializedVersion: 2
+        x: 1866.6001
+        y: 200.08
+        width: 353.80002
+        height: 536.8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 89421ace7f0be26a0800000000000000
+      internalID: -6472041035611429736
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: karateman_kick_prepare_2
+      rect:
+        serializedVersion: 2
+        x: 1512.8
+        y: 200.08
+        width: 353.80002
+        height: 536.8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 9c8c168557471a320800000000000000
+      internalID: 2567461309920692425
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: karateman_kick2
+      rect:
+        serializedVersion: 2
+        x: 941.84
+        y: 4.88
+        width: 536.8
+        height: 376.98
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 02db52d2c2187b070800000000000000
+      internalID: 8122102479721970976
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: karateman_kick_
+      rect:
+        serializedVersion: 2
+        x: 941.84
+        y: 381.86002
+        width: 536.8
+        height: 550.22003
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: fa5ea203df6466a50800000000000000
+      internalID: 6513971964286789039
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: karateman_rainy_0
+      rect:
+        serializedVersion: 2
+        x: 4765.3203
+        y: 4470.08
+        width: 176.90001
+        height: 344.04
+      alignment: 7
+      pivot: {x: 0.5, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 8a569171c794918e0800000000000000
+      internalID: -1722264585180191320
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: karateman_rainy_1
+      rect:
+        serializedVersion: 2
+        x: 4684.8003
+        y: 3962.56
+        width: 258.64
+        height: 400.16
+      alignment: 9
+      pivot: {x: 0.5, y: 0.1}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 0d35083ab7a9c0a20800000000000000
+      internalID: 3029966505128252368
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: karateman_rainy_2
+      rect:
+        serializedVersion: 2
+        x: 4614.04
+        y: 3683.1802
+        width: 353.80002
+        height: 247.66
+      alignment: 9
+      pivot: {x: 0.5, y: 0.36}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: d1286f475adbe20b0800000000000000
+      internalID: -5751451155775978979
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: karateman_rainy_3
+      rect:
+        serializedVersion: 2
+        x: 4538.4
+        y: 3414.78
+        width: 439.2
+        height: 245.22
+      alignment: 9
+      pivot: {x: 0.5, y: 0.48}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: b6a3abcdadd730ed0800000000000000
+      internalID: -2448975393399883157
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: karateman_fire
+      rect:
+        serializedVersion: 2
+        x: 4110.18
+        y: 4695.7803
+        width: 291.58002
+        height: 292.80002
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: c2e6d508a70832770800000000000000
+      internalID: 8584846578326269484
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: karateman_arm_1_part00
+      rect:
+        serializedVersion: 2
+        x: 3068
+        y: 2080
+        width: 410
+        height: 288
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -1441,118 +2056,13 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: karateman_fastfx_2
+      name: karateman_arm_1_part01
       rect:
         serializedVersion: 2
-        x: 1572
-        y: 1735
-        width: 738
-        height: 142
-      alignment: 0
-      pivot: {x: 0.5, y: 0.5}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: c0328cb96b14f1c70800000000000000
-      internalID: 8943939637534532364
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: karateman_combo_crouchpunch_0
-      rect:
-        serializedVersion: 2
-        x: 548
-        y: 1412
-        width: 472
-        height: 536
-      alignment: 0
-      pivot: {x: 0.5, y: 0.5}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: a6956d18cb5445b90800000000000000
-      internalID: -7254096423852549782
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: karateman_combo_crouchpunch_1
-      rect:
-        serializedVersion: 2
-        x: 1028
-        y: 1412
-        width: 536
-        height: 536
-      alignment: 0
-      pivot: {x: 0.5, y: 0.5}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: e68aeea6c4c662f90800000000000000
-      internalID: -6978771497096664978
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: karateman_arm_7
-      rect:
-        serializedVersion: 2
-        x: 2340
-        y: 3524
-        width: 440
-        height: 280
-      alignment: 0
-      pivot: {x: 0.5, y: 0.5}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: 8b3dc56564df06c10800000000000000
-      internalID: 2044912709364667320
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: karateman_arm_8
-      rect:
-        serializedVersion: 2
-        x: 2788
-        y: 3524
-        width: 408
-        height: 280
-      alignment: 0
-      pivot: {x: 0.5, y: 0.5}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: 9e3e7e2a403450f50800000000000000
-      internalID: 6846952495678743529
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: karateman_torso_2
-      rect:
-        serializedVersion: 2
-        x: 2916
-        y: 2532
-        width: 440
-        height: 984
+        x: 3536
+        y: 2183
+        width: 202
+        height: 165
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -1562,384 +2072,6 @@ TextureImporter:
       bones: []
       spriteID: bcca3a3b568079760800000000000000
       internalID: 7464444140288453835
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: karateman_fastfx_3
-      rect:
-        serializedVersion: 2
-        x: 2468
-        y: 2564
-        width: 440
-        height: 664
-      alignment: 0
-      pivot: {x: 0.5, y: 0.5}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: 6add89c81be7f5e00800000000000000
-      internalID: 1035685740351643046
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: karateman_combo_miss_0
-      rect:
-        serializedVersion: 2
-        x: 1476
-        y: 1956
-        width: 664
-        height: 536
-      alignment: 0
-      pivot: {x: 0.5, y: 0.5}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: cde024e4811d58750800000000000000
-      internalID: 6306676755524619996
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: karateman_combo_miss_1
-      rect:
-        serializedVersion: 2
-        x: 2148
-        y: 1956
-        width: 536
-        height: 536
-      alignment: 0
-      pivot: {x: 0.5, y: 0.5}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: ac0fc0762749d21c0800000000000000
-      internalID: -4526798831361396534
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: karateman_combo_miss_2
-      rect:
-        serializedVersion: 2
-        x: 4
-        y: 1412
-        width: 536
-        height: 536
-      alignment: 0
-      pivot: {x: 0.5, y: 0.5}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: 9f32dd5267dcd0610800000000000000
-      internalID: 1589152150856737785
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: karateman_arm_9
-      rect:
-        serializedVersion: 2
-        x: 2692
-        y: 3236
-        width: 216
-        height: 281
-      alignment: 0
-      pivot: {x: 0.5, y: 0.5}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: 0ac28300596bd94d0800000000000000
-      internalID: -3126141815255192416
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: karateman_hand
-      rect:
-        serializedVersion: 2
-        x: 2468
-        y: 3236
-        width: 216
-        height: 280
-      alignment: 0
-      pivot: {x: 0.5, y: 0.5}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: 2f66ebf37cded4970800000000000000
-      internalID: 8740903891819718386
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: karateman_num_1
-      rect:
-        serializedVersion: 2
-        x: 2052
-        y: 1348
-        width: 216
-        height: 280
-      alignment: 0
-      pivot: {x: 0.5, y: 0.5}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: 17cf765748bbea3a0800000000000000
-      internalID: -6652173421999817615
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: karateman_num_2
-      rect:
-        serializedVersion: 2
-        x: 2276
-        y: 1348
-        width: 280
-        height: 280
-      alignment: 0
-      pivot: {x: 0.5, y: 0.5}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: d55dd3018ec76f710800000000000000
-      internalID: 1726704843289908573
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: karateman_num_3
-      rect:
-        serializedVersion: 2
-        x: 2372
-        y: 1636
-        width: 248
-        height: 312
-      alignment: 0
-      pivot: {x: 0.5, y: 0.5}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: f9cb8bbef97ceda70800000000000000
-      internalID: 8853733407125453983
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: karateman_num_4
-      rect:
-        serializedVersion: 2
-        x: 2628
-        y: 1637
-        width: 280
-        height: 311
-      alignment: 0
-      pivot: {x: 0.5, y: 0.5}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: 835ae40a9411116f0800000000000000
-      internalID: -715771857855404744
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: karateman_num_mark
-      rect:
-        serializedVersion: 2
-        x: 2916
-        y: 1636
-        width: 184
-        height: 312
-      alignment: 0
-      pivot: {x: 0.5, y: 0.5}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: 60b58943bbaec0790800000000000000
-      internalID: -7562411584499721466
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: karateman_hit
-      rect:
-        serializedVersion: 2
-        x: 2180
-        y: 998
-        width: 304
-        height: 274
-      alignment: 0
-      pivot: {x: 0.5, y: 0.5}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: d5f973741d07be330800000000000000
-      internalID: 3741207959606632285
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: karateman_num_grr
-      rect:
-        serializedVersion: 2
-        x: 2498
-        y: 1124
-        width: 438
-        height: 216
-      alignment: 0
-      pivot: {x: 0.5, y: 0.5}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: 7af9b1976ca2fb260800000000000000
-      internalID: 7115452968192417703
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: karateman_tacobell
-      rect:
-        serializedVersion: 2
-        x: 3496
-        y: 1932
-        width: 280
-        height: 280
-      alignment: 0
-      pivot: {x: 0.5, y: 0.5}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: f32231260b1dcc8a0800000000000000
-      internalID: -6283416824598814145
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: karateman_combo_crouch_toIdle_leg
-      rect:
-        serializedVersion: 2
-        x: 2690
-        y: 2082
-        width: 401
-        height: 409
-      alignment: 0
-      pivot: {x: 0.5, y: 0.5}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: e4d27acb28e508a00800000000000000
-      internalID: 756708653002075470
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: karateman_cookingpot
-      rect:
-        serializedVersion: 2
-        x: 3502
-        y: 1466
-        width: 294
-        height: 155
-      alignment: 9
-      pivot: {x: 0.48875457, y: 0.6137561}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: 3413d18ec3d26a650800000000000000
-      internalID: 6243727673011286339
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: karateman_cookingpot_lid
-      rect:
-        serializedVersion: 2
-        x: 3520
-        y: 1752
-        width: 257
-        height: 121
-      alignment: 9
-      pivot: {x: 0.4871356, y: 0.34517047}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: 35ad2ba030a6ac700800000000000000
-      internalID: 561377664857987667
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: karateman_alien
-      rect:
-        serializedVersion: 2
-        x: 3478
-        y: 1114
-        width: 276
-        height: 256
-      alignment: 9
-      pivot: {x: 0.5005042, y: 0.48580885}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: e87ea268a0c945680800000000000000
-      internalID: -8767211005568948338
       vertices: []
       indices: 
       edges: []

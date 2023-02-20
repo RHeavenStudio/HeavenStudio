@@ -13,49 +13,80 @@ namespace HeavenStudio.Games.Loaders
         public static Minigame AddGame(EventCaller eventCaller) {
             return new Minigame("fanClub", "Fan Club", "FDFD00", false, false, new List<GameAction>()
                 {
-                    new GameAction("bop",                   delegate { var e = eventCaller.currentEntity; FanClub.instance.Bop(e.beat, e.length, e.type); }, 0.5f, true, parameters: new List<Param>()
+                    new GameAction("bop", "Bop")
                     {
-                        new Param("type", FanClub.IdolBopType.Both, "Bop target", "Who to make bop"),
-                    }),
-
-                    new GameAction("yeah, yeah, yeah",      delegate { var e = eventCaller.currentEntity; FanClub.instance.CallHai(e.beat, e.toggle); }, 8, false, parameters: new List<Param>()
+                        function = delegate { var e = eventCaller.currentEntity; FanClub.instance.Bop(e.beat, e.length, e["type"]); }, 
+                        defaultLength = 0.5f, 
+                        resizable = true, 
+                        parameters = new List<Param>()
+                        {
+                            new Param("type", FanClub.IdolBopType.Both, "Bop target", "Who to make bop"),
+                        }
+                    },
+                    new GameAction("yeah, yeah, yeah", "Yeah, Yeah, Yeah!")
+                    {
+                        function = delegate { var e = eventCaller.currentEntity; FanClub.instance.CallHai(e.beat, e["toggle"]); }, 
+                        defaultLength = 8,
+                        parameters = new List<Param>()
                         {
                             new Param("toggle", false, "Disable call", "Disable the idol's call")
                         },
-                        inactiveFunction: delegate { var e = eventCaller.currentEntity; FanClub.WarnHai(e.beat, e.toggle);}
-                    ),
-
-                    new GameAction("I suppose",             delegate { var e = eventCaller.currentEntity; FanClub.instance.CallKamone(e.beat, e.toggle, 0, e.type); }, 6, false, parameters: new List<Param>()
+                        inactiveFunction = delegate { var e = eventCaller.currentEntity; FanClub.WarnHai(e.beat, e["toggle"]);},
+                        preFunction = delegate { var e = eventCaller.currentEntity; FanClub.HaiSound(e.beat, e["toggle"]); }
+                    },
+                    new GameAction("I suppose", "I Suppose!")
+                    {
+                        function = delegate { var e = eventCaller.currentEntity; FanClub.instance.CallKamone(e.beat, e["toggle"], 0, e["type"], e["alt"]); }, 
+                        defaultLength = 6, 
+                        parameters = new List<Param>()
                         {
                             new Param("type", FanClub.KamoneResponseType.Through, "Response type", "Type of response to use"),
-                            new Param("toggle", false, "Disable call", "Disable the idol's call")
+                            new Param("toggle", false, "Disable call", "Disable the idol's call"),
+                            new Param("alt", false, "Alternate cue", "Use an alternate cue")
                         },
-                        inactiveFunction: delegate { var e = eventCaller.currentEntity; FanClub.WarnKamone(e.beat, e.toggle, 0, e.type);}
-                    ),
-
-                    new GameAction("double clap",           delegate { var e = eventCaller.currentEntity; FanClub.instance.CallBigReady(e.beat, e.toggle); }, 4, false, parameters: new List<Param>()
+                        inactiveFunction = delegate { var e = eventCaller.currentEntity; FanClub.WarnKamone(e.beat, e["toggle"], 0, e["type"], e["alt"]);},
+                        preFunction = delegate { var e = eventCaller.currentEntity; FanClub.KamoneSound(e.beat, e["toggle"], 0, e["type"], e["alt"]); }
+                    },
+                    new GameAction("double clap", "Double Clap")
+                    {
+                        function = delegate { var e = eventCaller.currentEntity; FanClub.instance.CallBigReady(e.beat, e["toggle"]); }, 
+                        defaultLength = 4,
+                        parameters = new List<Param>()
                         {
                             new Param("toggle", false, "Disable call", "Disable the call")
                         },
-                        inactiveFunction: delegate { var e = eventCaller.currentEntity; FanClub.WarnBigReady(e.beat, e.toggle); }
-                    ),
-
-                    new GameAction("play idol animation",   delegate { var e = eventCaller.currentEntity; FanClub.instance.PlayAnim(e.beat, e.length, e.type); }, 1, true, parameters: new List<Param>()
+                        inactiveFunction = delegate { var e = eventCaller.currentEntity; FanClub.WarnBigReady(e.beat, e["toggle"]); },
+                        preFunction = delegate { var e = eventCaller.currentEntity; FanClub.BigReadySound(e.beat, e["toggle"]); }
+                    },
+                    new GameAction("play idol animation", "Idol Coreography")
                     {
-                        new Param("type", FanClub.IdolAnimations.Bop, "Animation", "Animation to play")
-                    }),
-
-                    new GameAction("play stage animation",   delegate { var e = eventCaller.currentEntity; FanClub.instance.PlayAnimStage(e.beat, e.type); }, 1, true, parameters: new List<Param>()
+                        function = delegate { var e = eventCaller.currentEntity; FanClub.instance.PlayAnim(e.beat, e.length, e["type"]); },
+                        resizable = true, 
+                        parameters = new List<Param>()
+                        {
+                            new Param("type", FanClub.IdolAnimations.Bop, "Animation", "Animation to play")
+                        }
+                    },
+                    new GameAction("play stage animation", "Stage Coreography")
                     {
-                        new Param("type", FanClub.StageAnimations.Flash, "Animation", "Animation to play")
-                    }),
+                        function = delegate { var e = eventCaller.currentEntity; FanClub.instance.PlayAnimStage(e.beat, e["type"]); }, 
+                        resizable = true, 
+                        parameters = new List<Param>()
+                        {
+                            new Param("type", FanClub.StageAnimations.Flash, "Animation", "Animation to play")
+                        }
+                    },
+                    new GameAction("set performance type", "Coreography Type")
+                    {
 
-                    new GameAction("set performance type",   delegate { var e = eventCaller.currentEntity; FanClub.SetPerformanceType(e.type);}, 0.5f, false, parameters: new List<Param>()
+                        function = delegate { var e = eventCaller.currentEntity; FanClub.SetPerformanceType(e["type"]);},
+                        defaultLength = 0.5f,
+                        parameters = new List<Param>()
                         {
                             new Param("type", FanClub.IdolPerformanceType.Normal, "Performance Type", "Set of animations for the idol to use")
                         },
-                        inactiveFunction: delegate { var e = eventCaller.currentEntity; FanClub.SetPerformanceType(e.type); }
-                    ),
+                        inactiveFunction = delegate { var e = eventCaller.currentEntity; FanClub.SetPerformanceType(e["type"]); }
+                    },
                 },
                 new List<string>() {"ntr", "normal"},
                 "ntridol", "jp",
@@ -143,6 +174,7 @@ namespace HeavenStudio.Games
         private static float wantHais = Single.MinValue;
         private static float wantKamone = Single.MinValue;
         private static int wantKamoneType = (int) KamoneResponseType.Through;
+        private static bool wantKamoneAlt = false;
         private static float wantBigReady = Single.MinValue;
         public float idolJumpStartTime = Single.MinValue;
         private bool hasJumped = false;
@@ -151,11 +183,10 @@ namespace HeavenStudio.Games
         public static FanClub instance;
 
         const int FAN_COUNT = 12;
-        const float RADIUS = 1.3f;
+        const float RADIUS = 1.5f;
         private void Awake()
         {
             instance = this;
-
             Spectators = new List<GameObject>();
             idolAnimator = Arisa.GetComponent<Animator>();
 
@@ -236,7 +267,7 @@ namespace HeavenStudio.Games
             }
             if (wantKamone != Single.MinValue)
             {
-                ContinueKamone(wantKamone, 0, wantKamoneType);
+                ContinueKamone(wantKamone, 0, wantKamoneType, wantKamoneAlt);
                 wantKamone = Single.MinValue;
             }
             if (wantBigReady != Single.MinValue)
@@ -500,13 +531,6 @@ namespace HeavenStudio.Games
         const float HAIS_LENGTH = 4.5f;
         public void CallHai(float beat, bool noSound = false, int type = 0)
         {
-            if (!noSound)
-                MultiSound.Play(new MultiSound.Sound[] { 
-                    new MultiSound.Sound("fanClub/arisa_hai_1_jp", beat), 
-                    new MultiSound.Sound("fanClub/arisa_hai_2_jp", beat + 1f),
-                    new MultiSound.Sound("fanClub/arisa_hai_3_jp", beat + 2f),
-                });
-
             responseToggle = false;
             DisableBop(beat, 8f);
 
@@ -529,24 +553,20 @@ namespace HeavenStudio.Games
                 new BeatAction.Action(beat + 7f,    delegate { PlayOneClap(beat + 7f); DoIdolClaps();}),
             });
 
-            MultiSound.Play(new MultiSound.Sound[] { 
-                new MultiSound.Sound("fanClub/crowd_hai_jp", beat + 4f), 
-                new MultiSound.Sound("fanClub/crowd_hai_jp", beat + 5f),
-                new MultiSound.Sound("fanClub/crowd_hai_jp", beat + 6f),
-                new MultiSound.Sound("fanClub/crowd_hai_jp", beat + 7f),
-            });
+            PlaySoundSequence("fanClub", "crowd_hai", beat + 4f);
         }
 
         public static void WarnHai(float beat, bool noSound = false, int type = 0)
         {
             wantHais = beat;
-            if (noSound) return;
-            MultiSound.Play(new MultiSound.Sound[] { 
-                new MultiSound.Sound("fanClub/arisa_hai_1_jp", beat), 
-                new MultiSound.Sound("fanClub/arisa_hai_2_jp", beat + 1f),
-                new MultiSound.Sound("fanClub/arisa_hai_3_jp", beat + 2f),
-            }, forcePlay:true);
         }
+
+        public static void HaiSound(float beat, bool noSound = false, int type = 0)
+        {
+            if (noSound) return;
+            PlaySoundSequence("fanClub", "arisa_hai", beat);
+        }
+
 
         public void ContinueHais(float beat, int type = 0)
         {
@@ -554,33 +574,11 @@ namespace HeavenStudio.Games
         }
 
         const float CALL_LENGTH = 2.5f;
-        public void CallKamone(float beat, bool noSound = false, int type = 0, int responseType = (int) KamoneResponseType.Through)
+        public void CallKamone(float beat, bool noSound = false, int type = 0, int responseType = (int) KamoneResponseType.Through, bool alt = false)
         {
             bool doJump = (responseType == (int) KamoneResponseType.Jump || responseType == (int) KamoneResponseType.JumpFast);
             bool isBig = (responseType == (int) KamoneResponseType.ThroughFast || responseType == (int) KamoneResponseType.JumpFast);
             DisableResponse(beat, 2f);
-            if (isBig)
-            {
-                if (!noSound)
-                {
-                    MultiSound.Play(new MultiSound.Sound[] { 
-                        new MultiSound.Sound("fanClub/arisa_ka_fast_jp", beat), 
-                        new MultiSound.Sound("fanClub/arisa_mo_fast_jp", beat + 0.25f),
-                        new MultiSound.Sound("fanClub/arisa_ne_fast_jp", beat + 0.5f),
-                    });
-                }
-            }
-            else
-            {
-                if (!noSound)
-                {
-                    MultiSound.Play(new MultiSound.Sound[] { 
-                        new MultiSound.Sound("fanClub/arisa_ka_jp", beat), 
-                        new MultiSound.Sound("fanClub/arisa_mo_jp", beat + 0.5f, offset: 0.07407407f),
-                        new MultiSound.Sound("fanClub/arisa_ne_jp", beat + 1f, offset: 0.07407407f),
-                    });
-                }
-            }
 
             responseToggle = true;
             DisableBop(beat, (doJump) ? 6.25f : 5.25f);
@@ -613,40 +611,32 @@ namespace HeavenStudio.Games
                 }),
             });
 
-            MultiSound.Play(new MultiSound.Sound[] { 
-                new MultiSound.Sound("fanClub/crowd_ka_jp", beat + 2f), 
-                new MultiSound.Sound("fanClub/crowd_mo_jp", beat + 3.5f),
-                new MultiSound.Sound("fanClub/crowd_ne_jp", beat + 4f),
-                new MultiSound.Sound("fanClub/crowd_hey_jp", beat + 5f),
-            });
+            PlaySoundSequence("fanClub", alt ? "crowd_iina" : "crowd_kamone", beat + 2f);
         }
 
-        public static void WarnKamone(float beat, bool noSound = false, int type = 0, int responseType = (int) KamoneResponseType.Through)
+        public static void WarnKamone(float beat, bool noSound = false, int type = 0, int responseType = (int) KamoneResponseType.Through, bool alt = false)
         {
             wantKamone = beat;
             wantKamoneType = responseType;
+            wantKamoneAlt = alt;
+        }
+
+        public static void KamoneSound(float beat, bool noSound = false, int type = 0, int responseType = (int) KamoneResponseType.Through, bool alt = false)
+        {
             if (noSound) return;
             if (responseType == (int) KamoneResponseType.ThroughFast || responseType == (int) KamoneResponseType.JumpFast)
             {
-                MultiSound.Play(new MultiSound.Sound[] { 
-                    new MultiSound.Sound("fanClub/arisa_ka_fast_jp", beat), 
-                    new MultiSound.Sound("fanClub/arisa_mo_fast_jp", beat + 0.25f),
-                    new MultiSound.Sound("fanClub/arisa_ne_fast_jp", beat + 0.5f),
-                }, forcePlay:true);
+                PlaySoundSequence("fanClub", alt ? "arisa_iina_fast" : "arisa_kamone_fast", beat);
             }
             else
             {
-                MultiSound.Play(new MultiSound.Sound[] { 
-                    new MultiSound.Sound("fanClub/arisa_ka_jp", beat), 
-                    new MultiSound.Sound("fanClub/arisa_mo_jp", beat + 0.5f, offset: 0.07407407f),
-                    new MultiSound.Sound("fanClub/arisa_ne_jp", beat + 1f, offset: 0.07407407f),
-                }, forcePlay:true);
+                PlaySoundSequence("fanClub", alt ? "arisa_iina" : "arisa_kamone", beat);
             }
         }
 
-        public void ContinueKamone(float beat, int type = 0, int responseType = (int) KamoneResponseType.Through)
+        public void ContinueKamone(float beat, int type = 0, int responseType = (int) KamoneResponseType.Through, bool alt = false)
         {
-            CallKamone(beat, true, type, responseType);
+            CallKamone(beat, true, type, responseType, alt);
         }
 
         const float BIGCALL_LENGTH = 2.75f;
@@ -654,9 +644,6 @@ namespace HeavenStudio.Games
         {
             Prepare(beat + 1.5f);
             Prepare(beat + 2f);
-
-            if (!noSound)
-                Jukebox.PlayOneShotGame("fanClub/crowd_big_ready");
             
             DisableSpecBop(beat, 3.75f);
 
@@ -673,8 +660,12 @@ namespace HeavenStudio.Games
         public static void WarnBigReady(float beat, bool noSound = false)
         {
             wantBigReady = beat;
+        }
+
+        public static void BigReadySound(float beat, bool noSound = false)
+        {
             if (noSound) return;
-            Jukebox.PlayOneShotGame("fanClub/crowd_big_ready");
+            PlaySoundSequence("fanClub", "crowd_big_ready", beat);
         }
 
         public void ContinueBigReady(float beat)
@@ -732,7 +723,7 @@ namespace HeavenStudio.Games
             {
                 if (Spectators[i].GetComponent<NtrIdolFan>().IsJumping())
                     continue;
-                Spectators[i].GetComponent<Animator>().Play("FanPrepare");
+                Spectators[i].GetComponent<Animator>().Play("FanPrepare", -1, 0);
             }
         }
 
@@ -741,7 +732,7 @@ namespace HeavenStudio.Games
             BeatAction.New(this.gameObject, new List<BeatAction.Action>()
             {
                 new BeatAction.Action(beat, delegate { PlayAnimationAll("FanClap", true, true);}),
-                new BeatAction.Action(beat + 0.25f, delegate { PlayAnimationAll("FanFree", true);}),
+                new BeatAction.Action(beat + 0.1f, delegate { PlayAnimationAll("FanFree", true, true);}),
             });
         }
 
@@ -750,7 +741,7 @@ namespace HeavenStudio.Games
             BeatAction.New(this.gameObject, new List<BeatAction.Action>()
             {
                 new BeatAction.Action(beat, delegate { PlayAnimationAll("FanClap", true, true);}),
-                new BeatAction.Action(beat + 1f, delegate { PlayAnimationAll("FanFree", true);}),
+                new BeatAction.Action(beat + 1f, delegate { PlayAnimationAll("FanFree", true, true);}),
             });
         }
 

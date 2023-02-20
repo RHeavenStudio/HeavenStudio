@@ -161,12 +161,20 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0cdbd028573cd4841b9c1d04402b370f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  inList: 0
+  lastState: 0
+  state:
+    gameObject: {fileID: 0}
+    early: 0
+    perfect: 0
+    late: 0
+    createBeat: 0
+  eligibleHitsList: []
+  aceTimes: 0
+  isEligible: 0
+  triggersAutoplay: 1
   startBeat: 0
   type: 0
-  estate: 0
-  pstate: 0
-  lstate: 0
-  endstate: 0
 --- !u!1 &5813499710761815890
 GameObject:
   m_ObjectHideFlags: 0
@@ -802,8 +810,13 @@ MonoBehaviour:
   perfect: {fileID: 5813499711811786914}
   late: {fileID: 5813499711317768476}
   col: {fileID: 5813499710947595604}
-  EligibleHits: []
-  timescale: 1
+  currentEarlyPeasOnFork: 0
+  currentPerfectPeasOnFork: 0
+  currentLatePeasOnFork: 0
+  hitOnFrame: 0
+  topbun: 0
+  middleburger: 0
+  bottombun: 0
 --- !u!61 &5813499710947595604
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -1034,6 +1047,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   EligibleHits: []
+  scheduledInputs: []
   firstEnable: 0
   ForkLifterHand: {fileID: 5813499711174113249}
   handAnim: {fileID: 5813499711174113250}
@@ -2371,7 +2385,7 @@ RectTransform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 5813499712144185438}
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 0, y: 0, z: 0}
   m_Children:

@@ -1,0 +1,804 @@
+fileFormatVersion: 2
+guid: 0cb3fa79f6969744b9ef609def43f01e
+TextureImporter:
+  internalIDToNameTable:
+  - first:
+      213: -4635375099529084425
+    second: Baxter_Plane
+  - first:
+      213: -5255861844644913452
+    second: Fort_Plane
+  - first:
+      213: 4344472043301575469
+    second: Baxter_Head_0
+  - first:
+      213: -3121598031253394068
+    second: Baxter_Left_Ear
+  - first:
+      213: -5941252477911755290
+    second: Baxter_Right_Ear
+  - first:
+      213: -1263492004434113208
+    second: Baxter_Head_1
+  - first:
+      213: -4353037471647030824
+    second: Baxter_Badminton
+  - first:
+      213: 633885938559816796
+    second: Baxter_Body_0
+  - first:
+      213: 2738243036491422343
+    second: Baxter_Body_1
+  - first:
+      213: -9051050044009602643
+    second: Baxter_Hand
+  - first:
+      213: 2375257987239689621
+    second: Baxter_Arm_0
+  - first:
+      213: 9206980383275563656
+    second: Baxter_Arm_1
+  - first:
+      213: 8696565421571360250
+    second: Plane_Propeller
+  - first:
+      213: -8163542358712491115
+    second: Plane_Seat
+  - first:
+      213: 7899658061191269762
+    second: Baxter_Swing_Right_Ear
+  - first:
+      213: 2566613978992565909
+    second: Baxter_Swing_Left_Ear
+  - first:
+      213: -5045374907246990888
+    second: Swing
+  - first:
+      213: 1647849299863391727
+    second: Forth_Head_0
+  - first:
+      213: -7317061538425597736
+    second: Forth_Head_1
+  - first:
+      213: 6088533758180436150
+    second: Forthington_Badminton
+  - first:
+      213: -8553487051856794945
+    second: Shuttlecock
+  - first:
+      213: 8613830289480762074
+    second: Fort_Upper_Body
+  - first:
+      213: -5108198128618967086
+    second: Fort_Lower_Body
+  - first:
+      213: 5335707130691568895
+    second: Fort_Tail
+  - first:
+      213: 4952273721940191200
+    second: Fort_Hand
+  - first:
+      213: -4786664350759053374
+    second: Fort_Right_Arm
+  - first:
+      213: -1969074579828895637
+    second: Fort_Left_Arm
+  - first:
+      213: 8759155364766697816
+    second: AirRally_1_27
+  - first:
+      213: 4088167666801983468
+    second: AirRally_1_28
+  externalObjects: {}
+  serializedVersion: 11
+  mipmaps:
+    mipMapMode: 0
+    enableMipMap: 0
+    sRGBTexture: 1
+    linearTexture: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapsPreserveCoverage: 0
+    alphaTestReferenceValue: 0.5
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+  bumpmap:
+    convertToNormalMap: 0
+    externalNormalMap: 0
+    heightScale: 0.25
+    normalMapFilter: 0
+  isReadable: 0
+  streamingMipmaps: 0
+  streamingMipmapsPriority: 0
+  vTOnly: 0
+  grayScaleToAlpha: 0
+  generateCubemap: 6
+  cubemapConvolution: 0
+  seamlessCubemap: 0
+  textureFormat: 1
+  maxTextureSize: 2048
+  textureSettings:
+    serializedVersion: 2
+    filterMode: 1
+    aniso: 1
+    mipBias: 0
+    wrapU: 1
+    wrapV: 1
+    wrapW: 1
+  nPOTScale: 0
+  lightmap: 0
+  compressionQuality: 50
+  spriteMode: 2
+  spriteExtrude: 1
+  spriteMeshType: 1
+  alignment: 0
+  spritePivot: {x: 0.5, y: 0.5}
+  spritePixelsToUnits: 100
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spriteGenerateFallbackPhysicsShape: 1
+  alphaUsage: 1
+  alphaIsTransparency: 1
+  spriteTessellationDetail: -1
+  textureType: 8
+  textureShape: 1
+  singleChannelComponent: 0
+  flipbookRows: 1
+  flipbookColumns: 1
+  maxTextureSizeSet: 0
+  compressionQualitySet: 0
+  textureFormatSet: 0
+  ignorePngGamma: 0
+  applyGammaDecoding: 0
+  platformSettings:
+  - serializedVersion: 3
+    buildTarget: DefaultTexturePlatform
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 3
+    buildTarget: Standalone
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  spriteSheet:
+    serializedVersion: 2
+    sprites:
+    - serializedVersion: 2
+      name: Baxter_Plane
+      rect:
+        serializedVersion: 2
+        x: 6
+        y: 1446
+        width: 1268
+        height: 820
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 7f1c0eff7e6dbafb0800000000000000
+      internalID: -4635375099529084425
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Fort_Plane
+      rect:
+        serializedVersion: 2
+        x: 1286
+        y: 1446
+        width: 1268
+        height: 820
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 4de1961cf7d6f07b0800000000000000
+      internalID: -5255861844644913452
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Baxter_Head_0
+      rect:
+        serializedVersion: 2
+        x: 7
+        y: 3718
+        width: 403
+        height: 372
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: d2b1b9d2e4aaa4c30800000000000000
+      internalID: 4344472043301575469
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Baxter_Left_Ear
+      rect:
+        serializedVersion: 2
+        x: 6
+        y: 3334
+        width: 276
+        height: 372
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: c6d2597212bdda4d0800000000000000
+      internalID: -3121598031253394068
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Baxter_Right_Ear
+      rect:
+        serializedVersion: 2
+        x: 6
+        y: 2950
+        width: 276
+        height: 372
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 6e51925795e6c8da0800000000000000
+      internalID: -5941252477911755290
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Baxter_Head_1
+      rect:
+        serializedVersion: 2
+        x: 6
+        y: 2566
+        width: 404
+        height: 372
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 84d882b57bc277ee0800000000000000
+      internalID: -1263492004434113208
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Baxter_Badminton
+      rect:
+        serializedVersion: 2
+        x: 422
+        y: 2982
+        width: 340
+        height: 595
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 8d1a380ab77e693c0800000000000000
+      internalID: -4353037471647030824
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Baxter_Body_0
+      rect:
+        serializedVersion: 2
+        x: 422
+        y: 2630
+        width: 340
+        height: 340
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: c5419f317e30cc800800000000000000
+      internalID: 633885938559816796
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Baxter_Body_1
+      rect:
+        serializedVersion: 2
+        x: 422
+        y: 2278
+        width: 340
+        height: 340
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 78a12caa881300620800000000000000
+      internalID: 2738243036491422343
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Baxter_Hand
+      rect:
+        serializedVersion: 2
+        x: 774
+        y: 2854
+        width: 276
+        height: 276
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: da1268280f5346280800000000000000
+      internalID: -9051050044009602643
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Baxter_Arm_0
+      rect:
+        serializedVersion: 2
+        x: 774
+        y: 3782
+        width: 276
+        height: 308
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 59db4530e8c96f020800000000000000
+      internalID: 2375257987239689621
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Baxter_Arm_1
+      rect:
+        serializedVersion: 2
+        x: 774
+        y: 3142
+        width: 276
+        height: 308
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 88a312fb0e3c5cf70800000000000000
+      internalID: 9206980383275563656
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Plane_Propeller
+      rect:
+        serializedVersion: 2
+        x: 6
+        y: 806
+        width: 628
+        height: 628
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: af5c4beac2860b870800000000000000
+      internalID: 8696565421571360250
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Plane_Seat
+      rect:
+        serializedVersion: 2
+        x: 1286
+        y: 1158
+        width: 372
+        height: 276
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 59366102a7545be80800000000000000
+      internalID: -8163542358712491115
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Baxter_Swing_Right_Ear
+      rect:
+        serializedVersion: 2
+        x: 1062
+        y: 3398
+        width: 404
+        height: 340
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 28d4b58072931ad60800000000000000
+      internalID: 7899658061191269762
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Baxter_Swing_Left_Ear
+      rect:
+        serializedVersion: 2
+        x: 1062
+        y: 2694
+        width: 404
+        height: 340
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 59e576db0d17e9320800000000000000
+      internalID: 2566613978992565909
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Swing
+      rect:
+        serializedVersion: 2
+        x: 3110
+        y: 1798
+        width: 980
+        height: 1044
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 8d9afded04a3bf9b0800000000000000
+      internalID: -5045374907246990888
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Forth_Head_0
+      rect:
+        serializedVersion: 2
+        x: 1478
+        y: 3686
+        width: 404
+        height: 404
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: fedcbb125365ed610800000000000000
+      internalID: 1647849299863391727
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Forth_Head_1
+      rect:
+        serializedVersion: 2
+        x: 1478
+        y: 3270
+        width: 404
+        height: 404
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 8d0187a5c43947a90800000000000000
+      internalID: -7317061538425597736
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Forthington_Badminton
+      rect:
+        serializedVersion: 2
+        x: 1894
+        y: 2982
+        width: 340
+        height: 596
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 6b8a153d131de7450800000000000000
+      internalID: 6088533758180436150
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Shuttlecock
+      rect:
+        serializedVersion: 2
+        x: 2246
+        y: 3110
+        width: 276
+        height: 308
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: fba2c2b38d8eb4980800000000000000
+      internalID: -8553487051856794945
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Fort_Upper_Body
+      rect:
+        serializedVersion: 2
+        x: 1894
+        y: 2630
+        width: 340
+        height: 340
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: ad24000a2097a8770800000000000000
+      internalID: 8613830289480762074
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Fort_Lower_Body
+      rect:
+        serializedVersion: 2
+        x: 1894
+        y: 2278
+        width: 340
+        height: 340
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 2dfe95dcdd80c19b0800000000000000
+      internalID: -5108198128618967086
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Fort_Tail
+      rect:
+        serializedVersion: 2
+        x: 2534
+        y: 3750
+        width: 404
+        height: 340
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: ff4c3669d5d3c0a40800000000000000
+      internalID: 5335707130691568895
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Fort_Hand
+      rect:
+        serializedVersion: 2
+        x: 2950
+        y: 2854
+        width: 276
+        height: 276
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 0e72fba36b20ab440800000000000000
+      internalID: 4952273721940191200
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Fort_Right_Arm
+      rect:
+        serializedVersion: 2
+        x: 2950
+        y: 3782
+        width: 276
+        height: 308
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 2c71bf1422a529db0800000000000000
+      internalID: -4786664350759053374
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Fort_Left_Arm
+      rect:
+        serializedVersion: 2
+        x: 2950
+        y: 3142
+        width: 276
+        height: 276
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: b601c0d2a117ca4e0800000000000000
+      internalID: -1969074579828895637
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: AirRally_1_27
+      rect:
+        serializedVersion: 2
+        x: 743
+        y: 7
+        width: 722
+        height: 754
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 85940617565ce8970800000000000000
+      internalID: 8759155364766697816
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: AirRally_1_28
+      rect:
+        serializedVersion: 2
+        x: 3239
+        y: 3751
+        width: 338
+        height: 338
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: cef38f935d61cb830800000000000000
+      internalID: 4088167666801983468
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    outline: []
+    physicsShape: []
+    bones: []
+    spriteID: 5e97eb03825dee720800000000000000
+    internalID: 0
+    vertices: []
+    indices: 
+    edges: []
+    weights: []
+    secondaryTextures: []
+  spritePackingTag: 
+  pSDRemoveMatte: 0
+  pSDShowRemoveMatteOption: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
