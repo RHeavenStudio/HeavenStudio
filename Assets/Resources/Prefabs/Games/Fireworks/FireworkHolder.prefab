@@ -56,7 +56,9 @@ MonoBehaviour:
   aceTimes: 0
   isEligible: 0
   triggersAutoplay: 1
-  particleEffect: {fileID: 1972219048832914470}
+  particleBarelyEffect: {fileID: 1972219048832914470}
+  particleEffects: []
+  selectedParticleEffect: {fileID: 1972219048832914470}
   anim: {fileID: 7858206046593675365}
   isSparkler: 0
   startBeat: 0
@@ -215,7 +217,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8545340671978846192, guid: 2b7f3b3b11d182f48a2ef357c8e876fc, type: 3}
       propertyPath: m_Name
-      value: FireworkParticle
+      value: FireworkBarelyParticle
       objectReference: {fileID: 0}
     - target: {fileID: 8549103140033023410, guid: 2b7f3b3b11d182f48a2ef357c8e876fc, type: 3}
       propertyPath: playOnAwake

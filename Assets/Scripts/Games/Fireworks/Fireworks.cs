@@ -15,26 +15,41 @@ namespace HeavenStudio.Games.Loaders
             {
                 new GameAction("firework", "Firework")
                 {
-                    function = delegate {var e = eventCaller.currentEntity; Fireworks.instance.SpawnFirework(e.beat, false, e["whereToSpawn"]); },
+                    preFunction = delegate {var e = eventCaller.currentEntity; Fireworks.PreSpawnFirework(e.beat, false, e["whereToSpawn"], e["toggle"]); },
                     defaultLength = 4f,
                     parameters = new List<Param>()
                     {
-                        new Param("whereToSpawn", Fireworks.WhereToSpawn.Middle, "Where to spawn?", "Where should the firework spawn?")
+                        new Param("whereToSpawn", Fireworks.WhereToSpawn.Middle, "Where to spawn?", "Where should the firework spawn?"),
+                        new Param("toggle", false, "Practice Count-In", "Should the count-in from the fireworks practice play?")
                     }
                 },
                 new GameAction("sparkler", "Sparkler")
                 {
-                    function = delegate {var e = eventCaller.currentEntity; Fireworks.instance.SpawnFirework(e.beat, true, e["whereToSpawn"]); },
+                    preFunction = delegate {var e = eventCaller.currentEntity; Fireworks.PreSpawnFirework(e.beat, true, e["whereToSpawn"], e["toggle"]); },
                     defaultLength = 2f,
                     parameters = new List<Param>()
                     {
-                        new Param("whereToSpawn", Fireworks.WhereToSpawn.Middle, "Where to spawn?", "Where should the firework spawn?")
+                        new Param("whereToSpawn", Fireworks.WhereToSpawn.Middle, "Where to spawn?", "Where should the firework spawn?"),
+                        new Param("toggle", false, "Practice Count-In", "Should the count-in from the fireworks practice play?")
                     }
                 },
                 new GameAction("bomb", "Bomb")
                 {
-                    function = delegate {var e = eventCaller.currentEntity; Fireworks.instance.SpawnBomb(e.beat); },
+                    function = delegate {var e = eventCaller.currentEntity; Fireworks.instance.SpawnBomb(e.beat, e["toggle"]); },
                     defaultLength = 3f,
+                    parameters = new List<Param>()
+                    {
+                        new Param("toggle", false, "Practice Count-In", "Should the count-in from the fireworks practice play?")
+                    }
+                },
+                new GameAction("countIn", "Count-In")
+                {
+                    preFunction = delegate {var e = eventCaller.currentEntity; Fireworks.CountIn(e.beat, e["count"]); },
+                    defaultLength = 1f,
+                    parameters = new List<Param>()
+                    {
+                        new Param("count", Fireworks.CountInType.CountOne, "Count", "Which count should be said?")
+                    }
                 }
             });
         }
@@ -46,11 +61,25 @@ namespace HeavenStudio.Games
     using Scripts_Fireworks;
     public class Fireworks : Minigame
     {
+        public struct QueuedFirework
+        {
+            public float beat;
+            public bool isSparkler;
+            public int whereToSpawn;
+            public bool practice;
+        }
         public enum WhereToSpawn
         {
             Left = 0,
             Right = 1,
             Middle = 2
+        }
+        public enum CountInType
+        {
+            CountOne = 0,
+            CountTwo = 1,
+            CountThree = 2,
+            CountHey = 3
         }
         [Header("Components")]
         [SerializeField] Transform spawnLeft;
@@ -63,16 +92,121 @@ namespace HeavenStudio.Games
         [SerializeField] SpriteRenderer flashWhite;
         [Header("Properties")]
         Tween flashTween;
+        public static List<QueuedFirework> queuedFireworks = new List<QueuedFirework>();
 
         public static Fireworks instance;
+
+        void OnDestroy()
+        {
+            if (queuedFireworks.Count > 0) queuedFireworks.Clear();
+        }
 
         void Awake()
         {
             instance = this;
         }
 
-        public void SpawnFirework(float beat, bool isSparkler, int whereToSpawn)
+        void Update()
         {
+            var cond = Conductor.instance;
+
+            if (cond.isPlaying && !cond.isPaused)
+            {
+                if (queuedFireworks.Count > 0)
+                {
+                    foreach (var firework in queuedFireworks)
+                    {
+                        SpawnFirework(firework.beat, firework.isSparkler, firework.whereToSpawn, firework.practice);
+                    }
+                    queuedFireworks.Clear();
+                }
+            }
+        }
+
+        public static void CountIn(float beat, int count)
+        {
+            switch (count)
+            {
+                case (int)CountInType.CountOne:
+                    MultiSound.Play(new MultiSound.Sound[]
+                    {
+                        new MultiSound.Sound("fireworks/count1", beat)
+                    }, forcePlay: true);
+                    break;
+                case (int)CountInType.CountTwo:
+                    MultiSound.Play(new MultiSound.Sound[]
+                    {
+                        new MultiSound.Sound("fireworks/count2", beat)
+                    }, forcePlay: true);
+                    break;
+                case (int)CountInType.CountThree:
+                    MultiSound.Play(new MultiSound.Sound[]
+                    {
+                        new MultiSound.Sound("fireworks/count3", beat)
+                    }, forcePlay: true);
+                    break;
+                case (int)CountInType.CountHey:
+                    MultiSound.Play(new MultiSound.Sound[]
+                    {
+                        new MultiSound.Sound("fireworks/countHey", beat)
+                    }, forcePlay: true);
+                    break;
+            }
+        }
+
+        public static void PreSpawnFirework(float beat, bool isSparkler, int whereToSpawn, bool practice)
+        {
+            if (isSparkler)
+            {
+                MultiSound.Play(new MultiSound.Sound[]
+                {
+                    new MultiSound.Sound("fireworks/sparkler", beat, 1, 1, false, 0.223f)
+                }, forcePlay: true);
+            }
+            else
+            {
+                MultiSound.Play(new MultiSound.Sound[]
+                {
+                    new MultiSound.Sound("fireworks/rocket", beat)
+                }, forcePlay: true);
+            }
+            if (GameManager.instance.currentGame == "fireworks")
+            {
+                BeatAction.New(instance.gameObject, new List<BeatAction.Action>()
+                {
+                    new BeatAction.Action(beat, delegate
+                    {
+                        Fireworks.instance.SpawnFirework(beat, isSparkler, whereToSpawn, practice);
+                    })
+                });
+            }
+            else
+            {
+                queuedFireworks.Add(new QueuedFirework { beat = beat, isSparkler = isSparkler, whereToSpawn = whereToSpawn, practice = practice });
+            }
+
+        }
+
+        void SpawnFirework(float beat, bool isSparkler, int whereToSpawn, bool practice)
+        {
+            if (isSparkler && practice)
+            {
+                MultiSound.Play(new MultiSound.Sound[]
+                {
+                    new MultiSound.Sound("fireworks/practiceHai", beat + 1),
+                }, forcePlay: true);
+            }
+            else if (practice)
+            {
+                MultiSound.Play(new MultiSound.Sound[]
+                {
+                    new MultiSound.Sound("fireworks/practice1", beat),
+                    new MultiSound.Sound("fireworks/practice2", beat + 1),
+                    new MultiSound.Sound("fireworks/practice3", beat + 2),
+                    new MultiSound.Sound("fireworks/practiceHai", beat + 3),
+                }, forcePlay: true);
+            }
+
             Transform spawnPoint = spawnMiddle;
             switch (whereToSpawn)
             {
@@ -91,8 +225,15 @@ namespace HeavenStudio.Games
             spawnedRocket.Init(beat);
         }
 
-        public void SpawnBomb(float beat)
+        public void SpawnBomb(float beat, bool practice)
         {
+            if (practice)
+            {
+                MultiSound.Play(new MultiSound.Sound[]
+                {
+                    new MultiSound.Sound("fireworks/practiceHai", beat + 2),
+                }, forcePlay: true);
+            }
             FireworksBomb spawnedBomb = Instantiate(bomb, bombSpawn, false);
             spawnedBomb.curve = bombCurve;
             spawnedBomb.Init(beat);

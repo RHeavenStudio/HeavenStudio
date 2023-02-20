@@ -1478,8 +1478,8 @@ ParticleSystem:
         m_RotationOrder: 4
     startFrame:
       serializedVersion: 2
-      minMaxState: 0
-      scalar: 0
+      minMaxState: 3
+      scalar: 0.9999
       minScalar: 0
       maxCurve:
         serializedVersion: 2
@@ -1539,6 +1539,8 @@ ParticleSystem:
     rowMode: 1
     sprites:
     - sprite: {fileID: -6520747926329190954, guid: 106ee017e5083fb428d5c224afd8cb96, type: 3}
+    - sprite: {fileID: 5765098608399448656, guid: 106ee017e5083fb428d5c224afd8cb96, type: 3}
+    - sprite: {fileID: -4336169615699320128, guid: 106ee017e5083fb428d5c224afd8cb96, type: 3}
     flipU: 0
     flipV: 0
   VelocityModule:
