@@ -4,19 +4,19 @@ TextureImporter:
   internalIDToNameTable:
   - first:
       213: -1656166294940094332
-    second: city
+    second: city_0
   - first:
       213: -2735879413682148437
-    second: sky
+    second: city_1
   - first:
       213: 8399850596505791986
-    second: face_0
+    second: city_2
   - first:
       213: -3980211991217024205
-    second: face_1
+    second: city_3
   - first:
       213: -4113892033949338959
-    second: Stars
+    second: city_4
   externalObjects: {}
   serializedVersion: 11
   mipmaps:
@@ -80,7 +80,7 @@ TextureImporter:
   platformSettings:
   - serializedVersion: 3
     buildTarget: DefaultTexturePlatform
-    maxTextureSize: 2048
+    maxTextureSize: 4096
     resizeAlgorithm: 0
     textureFormat: -1
     textureCompression: 1
@@ -92,7 +92,7 @@ TextureImporter:
     forceMaximumCompressionQuality_BC6H_BC7: 0
   - serializedVersion: 3
     buildTarget: Standalone
-    maxTextureSize: 2048
+    maxTextureSize: 4096
     resizeAlgorithm: 0
     textureFormat: -1
     textureCompression: 1
@@ -106,13 +106,13 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: city
+      name: city_0
       rect:
         serializedVersion: 2
-        x: 0
-        y: 572
-        width: 672
-        height: 49
+        x: 3181
+        y: 1964
+        width: 179
+        height: 2004
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -127,13 +127,13 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: sky
+      name: city_1
       rect:
         serializedVersion: 2
-        x: 677
-        y: 575
-        width: 40
-        height: 438
+        x: 77
+        y: 2202
+        width: 3084
+        height: 1798
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -148,13 +148,13 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: face_0
+      name: city_2
       rect:
         serializedVersion: 2
-        x: 0
-        y: 130
-        width: 266
-        height: 376
+        x: 77
+        y: 1908
+        width: 3069
+        height: 276
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -169,13 +169,13 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: face_1
+      name: city_3
       rect:
         serializedVersion: 2
-        x: 306
-        y: 152
-        width: 394
-        height: 412
+        x: 11
+        y: 0
+        width: 1301
+        height: 1873
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -190,13 +190,13 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Stars
+      name: city_4
       rect:
         serializedVersion: 2
-        x: 0
-        y: 621
-        width: 672
-        height: 403
+        x: 1381
+        y: 19
+        width: 1907
+        height: 1856
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
