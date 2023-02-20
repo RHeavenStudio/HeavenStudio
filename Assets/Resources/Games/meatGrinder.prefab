@@ -11,13 +11,14 @@ GameObject:
   - component: {fileID: 4035877382569997717}
   - component: {fileID: 9090016194217145924}
   - component: {fileID: 409730438988014783}
+  - component: {fileID: 2525979697215420720}
   m_Layer: 0
   m_Name: DarkMeat_Thrown
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &4035877382569997717
 Transform:
   m_ObjectHideFlags: 0
@@ -26,8 +27,8 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 151360738741628551}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -3.9270098, y: 0.9729911, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalPosition: {x: -16, y: -1.9452, z: 0}
+  m_LocalScale: {x: 0.6415348, y: 0.6415348, z: 0.6415348}
   m_Children: []
   m_Father: {fileID: 2932735252070355021}
   m_RootOrder: 0
@@ -71,7 +72,7 @@ SpriteRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 5
+  m_SortingOrder: 25
   m_Sprite: {fileID: -9124615959790710355, guid: adbc5b443bdc23e469209cc4f602d17d, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
@@ -107,6 +108,25 @@ MonoBehaviour:
   isEligible: 0
   triggersAutoplay: 1
   startBeat: 0
+--- !u!95 &2525979697215420720
+Animator:
+  serializedVersion: 3
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 151360738741628551}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: a9399fbaa9737da46a5b5358c304c50d, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorControllerStateOnDisable: 0
 --- !u!1 &471691632641964123
 GameObject:
   m_ObjectHideFlags: 0
@@ -133,7 +153,7 @@ Transform:
   m_GameObject: {fileID: 471691632641964123}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 1.7109, y: 2.7067, z: 0}
-  m_LocalScale: {x: 0.630285, y: 0.40793616, z: 0.4683}
+  m_LocalScale: {x: 0.6228477, y: 0.41124046, z: 0.4683}
   m_Children: []
   m_Father: {fileID: 6301449981390668490}
   m_RootOrder: 2
@@ -1734,13 +1754,14 @@ GameObject:
   - component: {fileID: 385311195274348005}
   - component: {fileID: 548467581656067058}
   - component: {fileID: 5603620793679764252}
+  - component: {fileID: 7561841318825577919}
   m_Layer: 0
   m_Name: LightMeat_Thrown
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &385311195274348005
 Transform:
   m_ObjectHideFlags: 0
@@ -1749,8 +1770,8 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 7129185171962267203}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -3.9270098, y: 0.9729911, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalPosition: {x: -16, y: -1.9452, z: 0}
+  m_LocalScale: {x: 0.6415348, y: 0.6415348, z: 0.6415348}
   m_Children: []
   m_Father: {fileID: 2932735252070355021}
   m_RootOrder: 1
@@ -1794,8 +1815,8 @@ SpriteRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 5
-  m_Sprite: {fileID: -9124615959790710355, guid: adbc5b443bdc23e469209cc4f602d17d, type: 3}
+  m_SortingOrder: 26
+  m_Sprite: {fileID: -4224877059003839859, guid: adbc5b443bdc23e469209cc4f602d17d, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -1830,6 +1851,25 @@ MonoBehaviour:
   isEligible: 0
   triggersAutoplay: 1
   startBeat: 0
+--- !u!95 &7561841318825577919
+Animator:
+  serializedVersion: 3
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7129185171962267203}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: 73b875b543d9fba439c4b27fc6037da0, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorControllerStateOnDisable: 0
 --- !u!1 &7228436346524652036
 GameObject:
   m_ObjectHideFlags: 0
