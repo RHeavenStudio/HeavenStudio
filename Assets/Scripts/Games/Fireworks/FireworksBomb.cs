@@ -22,8 +22,7 @@ namespace HeavenStudio.Games.Scripts_Fireworks
 
         public void Init(float beat)
         {
-            Jukebox.PlayOneShotGame("fireworks/bomb");
-            game.ScheduleInput(beat, 2f, InputType.STANDARD_DOWN, Just, Out, Out);
+            game.ScheduleInput(beat, 1f, InputType.STANDARD_DOWN, Just, Out, Out);
             startBeat = beat;
         }
 
@@ -31,7 +30,7 @@ namespace HeavenStudio.Games.Scripts_Fireworks
         {
             var cond = Conductor.instance;
             if (exploded) return;
-            float flyPos = cond.GetPositionFromBeat(startBeat, 2f);
+            float flyPos = cond.GetPositionFromBeat(startBeat, 1f);
             transform.position = curve.GetPoint(flyPos);
             if (flyPos > 2) Destroy(gameObject);
         }

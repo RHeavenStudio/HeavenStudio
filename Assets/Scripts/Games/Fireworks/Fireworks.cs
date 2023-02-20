@@ -50,6 +50,15 @@ namespace HeavenStudio.Games.Loaders
                     {
                         new Param("count", Fireworks.CountInType.CountOne, "Count", "Which count should be said?")
                     }
+                },
+                new GameAction("altBG", "Background Appearance")
+                {
+                    function = delegate {var e = eventCaller.currentEntity; Fireworks.instance.ChangeBackgroundAppearance(e["toggle"]); },
+                    defaultLength = 0.5f,
+                    parameters = new List<Param>()
+                    {
+                        new Param("toggle", true, "Remix 5", "Should the background from Remix 5 tengoku appear?")
+                    }
                 }
             });
         }
@@ -90,6 +99,8 @@ namespace HeavenStudio.Games
         [SerializeField] FireworksBomb bomb;
         [SerializeField] BezierCurve3D bombCurve;
         [SerializeField] SpriteRenderer flashWhite;
+        [SerializeField] GameObject faces;
+        [SerializeField] GameObject stars;
         [Header("Properties")]
         Tween flashTween;
         public static List<QueuedFirework> queuedFireworks = new List<QueuedFirework>();
@@ -121,6 +132,12 @@ namespace HeavenStudio.Games
                     queuedFireworks.Clear();
                 }
             }
+        }
+
+        public void ChangeBackgroundAppearance(bool doIt)
+        {
+            faces.SetActive(doIt);
+            stars.SetActive(!doIt);
         }
 
         public static void CountIn(float beat, int count)
@@ -227,6 +244,7 @@ namespace HeavenStudio.Games
 
         public void SpawnBomb(float beat, bool practice)
         {
+            Jukebox.PlayOneShotGame("fireworks/bomb");
             if (practice)
             {
                 MultiSound.Play(new MultiSound.Sound[]
@@ -234,9 +252,15 @@ namespace HeavenStudio.Games
                     new MultiSound.Sound("fireworks/practiceHai", beat + 2),
                 }, forcePlay: true);
             }
-            FireworksBomb spawnedBomb = Instantiate(bomb, bombSpawn, false);
-            spawnedBomb.curve = bombCurve;
-            spawnedBomb.Init(beat);
+            BeatAction.New(instance.gameObject, new List<BeatAction.Action>()
+            {
+                new BeatAction.Action(beat + 1, delegate
+                {
+                    FireworksBomb spawnedBomb = Instantiate(bomb, bombSpawn, false);
+                    spawnedBomb.curve = bombCurve;
+                    spawnedBomb.Init(beat + 1);
+                })
+            });
         }
 
         public void ChangeFlashColor(Color color, float beats)
