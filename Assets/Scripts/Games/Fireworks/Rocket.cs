@@ -24,11 +24,12 @@ namespace HeavenStudio.Games.Scripts_Fireworks
             startY = transform.position.y;
         }
 
-        public void Init(float beat)
+        public void Init(float beat, int explosionToChoose)
         {
             startBeat = beat;
             game.ScheduleInput(beat, isSparkler ? 1f : 3f, InputType.STANDARD_DOWN, Just, Out, Out);
             anim.DoScaledAnimationAsync(isSparkler ? "Sparkler" : "Rocket", isSparkler ? 1f : 0.5f);
+            selectedParticleEffect = particleEffects[explosionToChoose];
         }
 
         void Update()

@@ -726,6 +726,22 @@ PrefabInstance:
       value: 4
       objectReference: {fileID: 0}
     - target: {fileID: 8549103140033023410, guid: 2b7f3b3b11d182f48a2ef357c8e876fc, type: 3}
+      propertyPath: ForceModule.enabled
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8549103140033023410, guid: 2b7f3b3b11d182f48a2ef357c8e876fc, type: 3}
+      propertyPath: ForceModule.x.scalar
+      value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 8549103140033023410, guid: 2b7f3b3b11d182f48a2ef357c8e876fc, type: 3}
+      propertyPath: ForceModule.y.scalar
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8549103140033023410, guid: 2b7f3b3b11d182f48a2ef357c8e876fc, type: 3}
+      propertyPath: ForceModule.z.scalar
+      value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 8549103140033023410, guid: 2b7f3b3b11d182f48a2ef357c8e876fc, type: 3}
       propertyPath: ShapeModule.arc.value
       value: 160
       objectReference: {fileID: 0}
@@ -743,11 +759,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8549103140033023410, guid: 2b7f3b3b11d182f48a2ef357c8e876fc, type: 3}
       propertyPath: ShapeModule.m_Position.x
-      value: 2
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8549103140033023410, guid: 2b7f3b3b11d182f48a2ef357c8e876fc, type: 3}
       propertyPath: ShapeModule.m_Position.y
-      value: 0.5
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8549103140033023410, guid: 2b7f3b3b11d182f48a2ef357c8e876fc, type: 3}
       propertyPath: ShapeModule.m_Rotation.x
@@ -756,6 +772,18 @@ PrefabInstance:
     - target: {fileID: 8549103140033023410, guid: 2b7f3b3b11d182f48a2ef357c8e876fc, type: 3}
       propertyPath: ShapeModule.m_Rotation.z
       value: 180
+      objectReference: {fileID: 0}
+    - target: {fileID: 8549103140033023410, guid: 2b7f3b3b11d182f48a2ef357c8e876fc, type: 3}
+      propertyPath: ForceModule.x.minMaxState
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8549103140033023410, guid: 2b7f3b3b11d182f48a2ef357c8e876fc, type: 3}
+      propertyPath: ForceModule.y.minMaxState
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8549103140033023410, guid: 2b7f3b3b11d182f48a2ef357c8e876fc, type: 3}
+      propertyPath: ForceModule.z.minMaxState
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 8549103140033023410, guid: 2b7f3b3b11d182f48a2ef357c8e876fc, type: 3}
       propertyPath: UVModule.startFrame.scalar
@@ -832,6 +860,42 @@ PrefabInstance:
     - target: {fileID: 8549103140033023410, guid: 2b7f3b3b11d182f48a2ef357c8e876fc, type: 3}
       propertyPath: EmissionModule.m_Bursts.Array.data[1].probability
       value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8549103140033023410, guid: 2b7f3b3b11d182f48a2ef357c8e876fc, type: 3}
+      propertyPath: ForceModule.x.maxCurve.m_Curve.Array.data[1].time
+      value: 0.37084362
+      objectReference: {fileID: 0}
+    - target: {fileID: 8549103140033023410, guid: 2b7f3b3b11d182f48a2ef357c8e876fc, type: 3}
+      propertyPath: ForceModule.y.maxCurve.m_Curve.Array.data[1].time
+      value: 0.39385986
+      objectReference: {fileID: 0}
+    - target: {fileID: 8549103140033023410, guid: 2b7f3b3b11d182f48a2ef357c8e876fc, type: 3}
+      propertyPath: ForceModule.z.maxCurve.m_Curve.Array.data[1].time
+      value: 0.9923401
+      objectReference: {fileID: 0}
+    - target: {fileID: 8549103140033023410, guid: 2b7f3b3b11d182f48a2ef357c8e876fc, type: 3}
+      propertyPath: ForceModule.x.maxCurve.m_Curve.Array.data[0].value
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8549103140033023410, guid: 2b7f3b3b11d182f48a2ef357c8e876fc, type: 3}
+      propertyPath: ForceModule.x.maxCurve.m_Curve.Array.data[1].value
+      value: 0.061538577
+      objectReference: {fileID: 0}
+    - target: {fileID: 8549103140033023410, guid: 2b7f3b3b11d182f48a2ef357c8e876fc, type: 3}
+      propertyPath: ForceModule.y.maxCurve.m_Curve.Array.data[0].value
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8549103140033023410, guid: 2b7f3b3b11d182f48a2ef357c8e876fc, type: 3}
+      propertyPath: ForceModule.y.maxCurve.m_Curve.Array.data[1].value
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8549103140033023410, guid: 2b7f3b3b11d182f48a2ef357c8e876fc, type: 3}
+      propertyPath: ForceModule.z.maxCurve.m_Curve.Array.data[0].value
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8549103140033023410, guid: 2b7f3b3b11d182f48a2ef357c8e876fc, type: 3}
+      propertyPath: ForceModule.z.maxCurve.m_Curve.Array.data[1].value
+      value: 0.8307686
       objectReference: {fileID: 0}
     - target: {fileID: 8549103140033023410, guid: 2b7f3b3b11d182f48a2ef357c8e876fc, type: 3}
       propertyPath: EmissionModule.m_Bursts.Array.data[1].repeatInterval
@@ -2337,11 +2401,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8549103140033023410, guid: 2b7f3b3b11d182f48a2ef357c8e876fc, type: 3}
       propertyPath: ShapeModule.m_Position.x
-      value: -2
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8549103140033023410, guid: 2b7f3b3b11d182f48a2ef357c8e876fc, type: 3}
       propertyPath: ShapeModule.m_Position.y
-      value: 0.5
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8549103140033023410, guid: 2b7f3b3b11d182f48a2ef357c8e876fc, type: 3}
       propertyPath: ShapeModule.m_Rotation.x
