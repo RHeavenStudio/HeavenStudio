@@ -16,9 +16,9 @@ namespace HeavenStudio.Games.Loaders
                     function = delegate {var e = eventCaller.currentEntity; MeatGrinder.instance.Bop(e.beat, e["bossBop"]); },
                     parameters = new List<Param>()
                     {
-                        new Param("bossBop", false, "Boss Bops?", "Who will bop."),
+                        new Param("bossBop", false, "Boss Bops?", "Does Boss bop?"),
                     },
-                    defaultLength = 1f,
+                    defaultLength = 0.5f,
                     priority = 4
                 },
                 new GameAction("Meat", "Meat")
@@ -61,6 +61,9 @@ namespace HeavenStudio.Games
         [Header("Objects")]
         public GameObject Meat;
 
+        [Header("Animators")]
+        public Animator BossAnim;
+
         [Header("Variables")]
         bool intervalStarted;
         float intervalStartBeat;
@@ -74,6 +77,14 @@ namespace HeavenStudio.Games
         private void Awake()
         {
             instance = this;
+        }
+
+        void OnDestroy()
+        {
+            if (!Conductor.instance.isPlaying || Conductor.instance.isPaused)
+            {
+                if (queuedInputs.Count > 0) queuedInputs.Clear();
+            }
         }
 
         private void Update() 
@@ -94,12 +105,10 @@ namespace HeavenStudio.Games
 
         private void LateUpdate() 
         {
-            /*
             if (Conductor.instance.ReportBeat(ref lastReportedBeat) && BossAnim.IsAnimationNotPlaying() && bossBop)
             {
                 BossAnim.DoScaledAnimationAsync("Bop", 0.5f);
             };
-            */
         }
 
         public void Bop(float beat, bool doesBop)
