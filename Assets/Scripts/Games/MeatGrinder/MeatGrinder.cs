@@ -9,21 +9,8 @@ namespace HeavenStudio.Games.Loaders
     public static class pcoMeatLoader
     {
         public static Minigame AddGame(EventCaller eventCaller) {
-            return new Minigame("meatGrinder", "Meat Grinder \n<color=#eb5454>[INITIALIZATION ONLY]</color>", "f1492e", false, false, new List<GameAction>()
+            return new Minigame("meatGrinder", "Meat Grinder \n<color=#eb5454>[WIP]</color>", "f1492e", false, false, new List<GameAction>()
             {
-                new GameAction("bop", "Bop")
-                {
-                    function = delegate {
-                        var e = eventCaller.currentEntity; 
-                        MeatGrinder.instance.Bop(e.beat, e["bossBop"]); 
-                    },
-                    parameters = new List<Param>()
-                    {
-                        new Param("bossBop", false, "Boss Bops?", "Does Boss bop?"),
-                    },
-                    defaultLength = 0.5f,
-                    priority = 4,
-                },
                 new GameAction("MeatToss", "Meat Toss")
                 {
                     function = delegate {
@@ -53,8 +40,21 @@ namespace HeavenStudio.Games.Loaders
                     priority = 1,
                     preFunction = delegate {
                         var e = eventCaller.currentEntity; 
-                        MeatGrinder.CallInterval(e.beat);
+                        MeatGrinder.CallInterval(e.beat, e.length);
                     },
+                },
+                new GameAction("bop", "Bop")
+                {
+                    function = delegate {
+                        var e = eventCaller.currentEntity; 
+                        MeatGrinder.instance.Bop(e.beat, e["bossBop"]); 
+                    },
+                    parameters = new List<Param>()
+                    {
+                        new Param("bossBop", false, "Boss Bops?", "Does Boss bop?"),
+                    },
+                    defaultLength = 0.5f,
+                    priority = 4,
                 },
             });
         }
@@ -86,7 +86,6 @@ namespace HeavenStudio.Games
         float misses;
         bool bossBop = true;
         bool wantCall = false;
-        int beatCaller = 0;
         private float lastReportedBeat = 0f;
         const string sfxName = "meatGrinder/";
 
@@ -141,12 +140,18 @@ namespace HeavenStudio.Games
             bossBop = doesBop;
         }
 
-        public static void CallInterval(float beat)
+        public static void CallInterval(float beat, float interval)
         {
+            MeatGrinder.instance.beatInterval = interval;
             //BossAnim.DoScaledAnimationAsync("BossSignal", 1f);
+            //BeatAction.New(instance.gameObject, new List<BeatAction.Action>()
+            //{
+            //    new BeatAction.Action(beat - 1, delegate { MeatGrinder.instance.wantCall = true; }),
+            //});
+
             BeatAction.New(instance.gameObject, new List<BeatAction.Action>()
             {
-                new BeatAction.Action(beat - 1, delegate { MeatGrinder.instance.wantCall = true; }),
+                new BeatAction.Action(beat - 1, delegate { instance.BossAnim.DoScaledAnimationAsync("BossSignal", 1f); }),
             });
 
             MultiSound.Play(new MultiSound.Sound[] {
@@ -155,14 +160,13 @@ namespace HeavenStudio.Games
 
             BeatAction.New(instance.gameObject, new List<BeatAction.Action>()
             {
-                new BeatAction.Action(beat + 4f, delegate { MeatGrinder.instance.PassTurn(beat); }),
+                new BeatAction.Action(beat + MeatGrinder.instance.beatInterval, delegate { MeatGrinder.instance.PassTurn(beat); }),
             });
         }
 
         public void StartInterval(float beat, float interval)
         {
             intervalStartBeat = beat;
-            beatInterval = interval;
             if (!intervalStarted)
             {
                 misses = 0;
@@ -179,7 +183,7 @@ namespace HeavenStudio.Games
             //MeatToss Object = Instantiate(MeatBase).GetComponent<MeatToss>();
             //Object.startBeat = beat;
 
-            Instantiate(MeatBase).GetComponent<MeatToss>();
+            Instantiate(MeatBase);
         }
 
         public void MeatCall(float beat) 
@@ -204,13 +208,7 @@ namespace HeavenStudio.Games
             intervalStarted = false;
             foreach (var input in queuedInputs)
             {
-                ScheduleInput(beat, 4f + input.beatAwayFromStart, InputType.STANDARD_DOWN, Hit, Miss, Nothing);
-                /*
-                BeatAction.New(instance.gameObject, new List<BeatAction.Action>()
-                {
-                    new BeatAction.Action(beat + length + input.beatAwayFromStart, delegate { Bop(beat + length + input.beatAwayFromStart, (int)WhoBops.Monkey); })
-                });
-                */
+                ScheduleInput(beat, beatInterval + input.beatAwayFromStart, InputType.STANDARD_DOWN, Hit, Miss, Nothing);
             }
             queuedInputs.Clear();
         }
@@ -218,13 +216,18 @@ namespace HeavenStudio.Games
         private void Hit(PlayerActionEvent caller, float state)
         {
             Jukebox.PlayOneShotGame(sfxName+"meatHit");
+            TackAnim.DoScaledAnimationAsync("TackHitSuccess", 0.5f);
+
+            Instantiate(MeatBase);
+            
             //GameObject.Destroy(gameObject);
         }
             
 
         private void Miss(PlayerActionEvent caller)
         {
-            TackAnim.Play("", 0, 0);
+            TackAnim.DoScaledAnimationAsync("TackMiss", 0.5f);
+            BossAnim.DoScaledAnimationAsync("BossCall", 0.5f);
         }
 
         private void Nothing(PlayerActionEvent caller) 
