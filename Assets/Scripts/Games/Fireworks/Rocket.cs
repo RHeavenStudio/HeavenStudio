@@ -41,7 +41,7 @@ namespace HeavenStudio.Games.Scripts_Fireworks
                 float newPosY = func(startY, 7f, normalizedBeat * (isSparkler ? 0.5f : 0.4f));
                 transform.position = new Vector3(transform.position.x, newPosY, transform.position.z);
             } 
-            if (normalizedBeat > 3f && !selectedParticleEffect.isPlaying) Destroy(gameObject);
+            if (normalizedBeat > 3f && selectedParticleEffect.isPlaying) Destroy(gameObject);
         }
 
         void Just(PlayerActionEvent caller, float state)
