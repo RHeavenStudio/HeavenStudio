@@ -266,7 +266,26 @@ namespace HeavenStudio.Games
 
         void Miss(PlayerActionEvent caller)
         {
-
+            Jukebox.PlayOneShotGame("sneakySpirits/ghostEscape");
+            GameObject spawnedGhost = Instantiate(ghostMissPrefab, transform);
+            spawnedGhost.SetActive(true);
+            spawnedGhost.GetComponent<Animator>().DoScaledAnimationAsync("GhostMiss", 0.5f);
+            BeatAction.New(instance.gameObject, new List<BeatAction.Action>()
+            {
+                new BeatAction.Action(caller.startBeat + caller.timer + 1f, delegate {
+                    if (GameManager.instance.currentGame == "sneakySpirits")
+                    {
+                        Jukebox.PlayOneShotGame("sneakySpirits/laugh", -1, 1.2f);
+                        spawnedGhost.GetComponent<Animator>().DoScaledAnimationAsync("GhostLaugh", 0.25f);
+                    }
+                }),
+                new BeatAction.Action(caller.startBeat + caller.timer + 2.5f, delegate {
+                    if (GameManager.instance.currentGame == "sneakySpirits")
+                    {
+                        Destroy(spawnedGhost);
+                    }
+                })
+            });
         }
 
         void Out(PlayerActionEvent caller)
