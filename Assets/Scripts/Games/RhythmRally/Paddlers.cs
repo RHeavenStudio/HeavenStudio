@@ -30,7 +30,7 @@ namespace HeavenStudio.Games.Scripts_RhythmRally
             if (PlayerInput.Pressed() && !game.IsExpectingInputNow(InputType.STANDARD_DOWN))
             {
                 // Play "whoosh" sound here
-                playerAnim.Play("Swing", 0, 0);
+                playerAnim.DoScaledAnimationAsync("Swing", 0.5f); ;
             }
         }
 
@@ -51,7 +51,7 @@ namespace HeavenStudio.Games.Scripts_RhythmRally
                 bounceBeat = game.serveBeat + game.targetBeat + 0.5f;
             }
 
-            playerAnim.Play("Swing", 0, 0);
+            playerAnim.DoScaledAnimationAsync("Swing", 0.5f); ;
             MultiSound.Play(new MultiSound.Sound[] { new MultiSound.Sound("rhythmRally/Return", hitBeat), new MultiSound.Sound("rhythmRally/ReturnBounce", bounceBeat) });
             BounceFX(bounceBeat);
             game.ball.SetActive(true);
@@ -61,7 +61,7 @@ namespace HeavenStudio.Games.Scripts_RhythmRally
         {
             MissBall();
             Jukebox.PlayOneShot("miss");
-            playerAnim.Play("Swing", 0, 0);
+            playerAnim.DoScaledAnimationAsync("Swing", 0.5f); ;
 
             game.missCurve.KeyPoints[0].Position = game.ball.transform.position;
             game.missCurve.transform.localScale = new Vector3(-state, 1f, 1f);

@@ -50,12 +50,12 @@ namespace HeavenStudio.Games.Loaders
                 },
                 new GameAction("forthington voice lines", "Forthington Voice Lines")
                 {
-                    function = delegate { AirRally.instance.ForthVoice(e.currentEntity["type"], e.currentEntity["type2"]); }, 
+                    preFunction = delegate { AirRally.ForthVoice(e.currentEntity.beat, e.currentEntity["type"], e.currentEntity["type2"]); }, 
                     parameters = new List<Param>()
                     { 
                         new Param("type", AirRally.CountSound.one, "Type", "The number Forthington will say"),
                         new Param("type2", AirRally.DistanceSound.close, "Type", "How far is Forthington?")
-                    }
+                    },
                 }
             });
         }
@@ -89,6 +89,7 @@ namespace HeavenStudio.Games
         bool babum;
         bool shuttleActive;
         public bool hasMissed;
+        public static List<float> queuedVoiceLines = new List<float>();
 
         [Header("Waypoint")]
         public float wayPointZForForth;
@@ -101,6 +102,11 @@ namespace HeavenStudio.Games
         public bool wantSilent;
         public float beatHolder;
         public Transform holderPos;
+
+        void OnDestroy()
+        {
+            if (queuedVoiceLines.Count > 0) queuedVoiceLines.Clear(); 
+        }
 
         void Start()
         {
@@ -138,6 +144,24 @@ namespace HeavenStudio.Games
                     started = true;
                     var f = currentBeat;
                     Rally(serveBeat + (int)f, wantSilent, lengthHolder);
+                }
+            }
+
+            if (cond.isPlaying && !cond.isPaused)
+            {
+                if (queuedVoiceLines.Count > 0)
+                {
+                    for (int i = 0; i < queuedVoiceLines.Count; i++)
+                    {
+                        BeatAction.New(instance.gameObject, new List<BeatAction.Action>()
+                        {
+                            new BeatAction.Action(queuedVoiceLines[i], delegate
+                            {
+                                Forthington.GetComponent<Animator>().Play("TalkShort", 0, 0);
+                            })
+                        });
+                    }
+                    queuedVoiceLines.Clear();
                 }
             }
         }
@@ -188,85 +212,57 @@ namespace HeavenStudio.Games
             shuttleScript.flyType = type;
         }
 
-        //change to something more optimized
-        public void ForthVoice(int type, int type2)
+        public static void ForthVoice(float beat, int type, int type2)
         {
-            Forthington.GetComponent<Animator>().Play("TalkShort");
-            if (type == 0)
+            if (GameManager.instance.currentGame == "airRally")
             {
-                if(type2 == 0)
+                BeatAction.New(instance.gameObject, new List<BeatAction.Action>()
                 {
-                    Jukebox.PlayOneShotGame("airRally/countIn1");
-                }
-                if(type2 == 1)
-                {
-                    Jukebox.PlayOneShotGame("airRally/countIn1Far");
-                }
-                if(type2 == 2)
-                {
-                    Jukebox.PlayOneShotGame("airRally/countIn1Farther");
-                }
-                if(type2 == 3)
-                {
-                    Jukebox.PlayOneShotGame("airRally/countIn1Farthest");
-                }
+                    new BeatAction.Action(beat, delegate 
+                    { 
+                        instance.Forthington.GetComponent<Animator>().Play("TalkShort");
+                    })
+                });
             }
-            if(type == 1)
+            else
             {
-                if(type2 == 0)
-                {
-                    Jukebox.PlayOneShotGame("airRally/countIn2");
-                }
-                if(type2 == 1)
-                {
-                    Jukebox.PlayOneShotGame("airRally/countIn2Far");
-                }
-                if(type2 == 2)
-                {
-                    Jukebox.PlayOneShotGame("airRally/countIn2Farther");
-                }
-                if(type2 == 3)
-                {
-                    Jukebox.PlayOneShotGame("airRally/countIn2Farthest");
-                }
+                queuedVoiceLines.Add(beat);
             }
-            if(type == 2)
+            float offset = 0f;
+            if (type == 2)
             {
-                if(type2 == 0)
-                {
-                    Jukebox.PlayOneShotGame("airRally/countIn3");
-                }
-                if(type2 == 1)
-                {
-                    Jukebox.PlayOneShotGame("airRally/countIn3Far");
-                }
-                if(type2 == 2)
-                {
-                    Jukebox.PlayOneShotGame("airRally/countIn3Farther");
-                }
-                if(type2 == 3)
-                {
-                    Jukebox.PlayOneShotGame("airRally/countIn3Farthest");
-                }
+                offset = 0.107f;
             }
-            if(type == 3)
+            else if (type == 3)
             {
-                if(type2 == 0)
-                {
-                    Jukebox.PlayOneShotGame("airRally/countIn4");
-                }
-                if(type2 == 1)
-                {
-                    Jukebox.PlayOneShotGame("airRally/countIn4Far");
-                }
-                if(type2 == 2)
-                {
-                    Jukebox.PlayOneShotGame("airRally/countIn4Farther");
-                }
-                if(type2 == 3)
-                {
-                    Jukebox.PlayOneShotGame("airRally/countIn4Farthest");
-                }
+                offset = 0.051f;
+            }
+            switch (type2)
+            {
+                case (int)DistanceSound.close:
+                    MultiSound.Play(new MultiSound.Sound[]
+                    {
+                        new MultiSound.Sound($"airRally/countIn{type + 1}", beat, 1, 1, false, offset),
+                    }, forcePlay: true);
+                    break;
+                case (int)DistanceSound.far:
+                    MultiSound.Play(new MultiSound.Sound[]
+                    {
+                        new MultiSound.Sound($"airRally/countIn{type + 1}Far", beat, 1, 1, false, offset),
+                    }, forcePlay: true);
+                    break;
+                case (int)DistanceSound.farther:
+                    MultiSound.Play(new MultiSound.Sound[]
+                    {
+                        new MultiSound.Sound($"airRally/countIn{type + 1}Farther", beat, 1, 1, false, offset),
+                    }, forcePlay: true);
+                    break;
+                case (int)DistanceSound.farthest:
+                    MultiSound.Play(new MultiSound.Sound[]
+                    {
+                        new MultiSound.Sound($"airRally/countIn{type + 1}Farthest", beat, 1, 1, false, offset),
+                    }, forcePlay: true);
+                    break;
             }
         }
 
@@ -491,8 +487,8 @@ namespace HeavenStudio.Games
                 var sound2 = new MultiSound.Sound[]
                 {
                     new MultiSound.Sound(sounds2[0], beat + 3.5f),
-                    new MultiSound.Sound(sounds2[1], beat + 4.3f),  //TODO: find sound offset in seconds
-                    new MultiSound.Sound(sounds2[2], beat + 5.4f)
+                    new MultiSound.Sound(sounds2[1], beat + 4.5f, 1, 1, false, 0.107f),
+                    new MultiSound.Sound(sounds2[2], beat + 5.5f, 1, 1, false, 0.051f)
                 };
 
                 MultiSound.Play(sound2);
