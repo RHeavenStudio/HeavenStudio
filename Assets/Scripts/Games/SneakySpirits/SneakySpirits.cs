@@ -127,18 +127,13 @@ namespace HeavenStudio.Games
             List<BeatAction.Action> ghostSpawns = new List<BeatAction.Action>();
             for(int i = 0; i < 7; i++)
             {
-                int index = i;
                 float spawnBeat = beat + length * i;
                 if (spawnBeat >= Conductor.instance.songPositionInBeats)
                 {
-                    ghostSpawns.Add(new BeatAction.Action(spawnBeat, delegate
-                    {
-                        SneakySpiritsGhost spawnedGhost = Instantiate(movingGhostPrefab, ghostPositions[index], false);
-                        spawnedGhost.Init(spawnBeat + length);
-                    }));
+                    SneakySpiritsGhost spawnedGhost = Instantiate(movingGhostPrefab, ghostPositions[i], false);
+                    spawnedGhost.Init(spawnBeat, length);
                 }
             }
-            BeatAction.New(instance.gameObject, ghostSpawns);
         }
 
         void Just(PlayerActionEvent caller, float state)
