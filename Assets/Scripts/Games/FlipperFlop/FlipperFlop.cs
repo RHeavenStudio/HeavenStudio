@@ -71,6 +71,7 @@ namespace HeavenStudio.Games
     {
         [Header("Components")]
         [SerializeField] Animator captainTuckAnim;
+        [SerializeField] Animator captainTuckFaceAnim;
         [Header("Properties")]
         private bool missed;
         static List<QueuedFlip> queuedInputs = new List<QueuedFlip>();
@@ -111,10 +112,7 @@ namespace HeavenStudio.Games
 
         void OnDestroy()
         {
-            if (!Conductor.instance.isPlaying || Conductor.instance.isPaused)
-            {
-                if (queuedInputs.Count > 0) queuedInputs.Clear();
-            }
+            if (queuedInputs.Count > 0) queuedInputs.Clear();
         }
 
         private void Update()
@@ -231,10 +229,13 @@ namespace HeavenStudio.Games
                                 if (missed)
                                 {
                                     voiceLine = failVoiceLine;
+                                    captainTuckAnim.DoScaledAnimationAsync("CaptainTuckMissBop", 0.5f);
+                                    captainTuckFaceAnim.DoScaledAnimationAsync("CaptainTuckMissExpression", 0.5f);
                                 }
                                 else
                                 {
                                     captainTuckAnim.DoScaledAnimationAsync("CaptainRoll", 0.5f);
+                                    captainTuckFaceAnim.DoScaledAnimationAsync("CaptainTuckRollExpression", 0.5f);
                                 }
 
                                 Jukebox.PlayOneShotGame(voiceLine); 
@@ -285,7 +286,12 @@ namespace HeavenStudio.Games
                         new BeatAction.Action(beat + length + i, delegate {
                             string voiceLineToPlay = voiceLine;
                             string failVoiceLineToPlay = failVoiceLine;
-                            if (missed) voiceLineToPlay = failVoiceLineToPlay;
+                            if (missed) 
+                            {
+                                voiceLineToPlay = failVoiceLineToPlay;
+                                captainTuckFaceAnim.DoScaledAnimationAsync("CaptainTuckMissSpeakExpression", 0.5f);
+                                captainTuckAnim.DoScaledAnimationAsync("CaptainTuckMissBop", 0.5f);
+                            } 
                             Jukebox.PlayOneShotGame(voiceLineToPlay); 
                         }),
                     });
