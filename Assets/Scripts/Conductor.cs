@@ -64,15 +64,21 @@ namespace HeavenStudio
         public bool metronome = false;
         Util.Sound metronomeSound;
 
-        public float timeSinceLastTempoChange = Single.MinValue;
-
-        private bool beat;
-
+        // pitch values
         private float timelinePitch = 1f;
         private float minigamePitch = 1f;
         public float SongPitch { get => timelinePitch * minigamePitch; }
 
-        // private AudioDspTimeKeeper timeKeeper;
+        public void SetTimelinePitch(float pitch)
+        {
+            timelinePitch = pitch;
+        }
+
+        public void SetMinigamePitch(float pitch)
+        {
+            minigamePitch = pitch;
+        }
+        
 
         void Awake()
         {
@@ -93,16 +99,6 @@ namespace HeavenStudio
 
             GameManager.instance.SetCurrentEventToClosest(beat);
             songPosBeat = beat;
-        }
-
-        public void SetTimelinePitch(float pitch)
-        {
-            timelinePitch = pitch;
-        }
-
-        public void SetMinigamePitch(float pitch)
-        {
-            minigamePitch = pitch;
         }
 
         public void Play(float beat)
