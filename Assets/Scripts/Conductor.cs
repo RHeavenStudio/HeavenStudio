@@ -72,11 +72,13 @@ namespace HeavenStudio
         public void SetTimelinePitch(float pitch)
         {
             timelinePitch = pitch;
+            musicSource.pitch = SongPitch;
         }
 
         public void SetMinigamePitch(float pitch)
         {
             minigamePitch = pitch;
+            musicSource.pitch = SongPitch;
         }
         
 
