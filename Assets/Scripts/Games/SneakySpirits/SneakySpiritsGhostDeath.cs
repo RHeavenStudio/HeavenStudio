@@ -22,7 +22,7 @@ namespace HeavenStudio.Games.Scripts_SneakySpirits
             var cond = Conductor.instance;
             if (cond.isPlaying && !cond.isPaused)
             {
-                float normalizedBeat = cond.GetPositionFromBeat(startBeat, length);
+                float normalizedBeat = Mathf.Max(cond.GetPositionFromBeat(startBeat, length), 0f);
                 anim.DoNormalizedAnimation(animToPlay, normalizedBeat);
                 if (normalizedBeat > 1)
                 {

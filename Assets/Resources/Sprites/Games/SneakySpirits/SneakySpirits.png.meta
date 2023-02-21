@@ -173,6 +173,15 @@ TextureImporter:
   - first:
       213: 3532029475866527194
     second: HouseOverlap
+  - first:
+      213: -1500490936751498959
+    second: ghostShadow0
+  - first:
+      213: -314081172815163921
+    second: ghostShadow1
+  - first:
+      213: -6152106560249733230
+    second: NyoomCutoff
   externalObjects: {}
   serializedVersion: 11
   mipmaps:
@@ -874,9 +883,9 @@ TextureImporter:
       name: Arrow_miss1
       rect:
         serializedVersion: 2
-        x: 673
+        x: 674
         y: 944
-        width: 111
+        width: 110
         height: 79
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
@@ -895,9 +904,9 @@ TextureImporter:
       name: Arrow_miss2
       rect:
         serializedVersion: 2
-        x: 673
+        x: 674
         y: 864
-        width: 111
+        width: 110
         height: 79
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
@@ -916,10 +925,10 @@ TextureImporter:
       name: Arrow_miss3
       rect:
         serializedVersion: 2
-        x: 673
+        x: 674
         y: 784
-        width: 111
-        height: 79
+        width: 110
+        height: 78
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -940,7 +949,7 @@ TextureImporter:
         x: 673
         y: 704
         width: 111
-        height: 79
+        height: 78
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -1496,6 +1505,69 @@ TextureImporter:
       bones: []
       spriteID: ad5cb35481a440130800000000000000
       internalID: 3532029475866527194
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: ghostShadow0
+      rect:
+        serializedVersion: 2
+        x: 786
+        y: 784
+        width: 78
+        height: 47
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 139db36617f2d2be0800000000000000
+      internalID: -1500490936751498959
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: ghostShadow1
+      rect:
+        serializedVersion: 2
+        x: 786
+        y: 832
+        width: 78
+        height: 47
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: fedc6bf56d824abf0800000000000000
+      internalID: -314081172815163921
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: NyoomCutoff
+      rect:
+        serializedVersion: 2
+        x: 1
+        y: 488
+        width: 214
+        height: 95
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 29fd6ffbda35f9aa0800000000000000
+      internalID: -6152106560249733230
       vertices: []
       indices: 
       edges: []

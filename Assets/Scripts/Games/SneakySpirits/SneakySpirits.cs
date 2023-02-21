@@ -13,12 +13,13 @@ namespace HeavenStudio.Games.Loaders
             {
                 new GameAction("spawnGhost", "Ghost")
                 {
-                    preFunction = delegate { var e = eventCaller.currentEntity; SneakySpirits.PreSpawnGhost(e.beat, e.length, e["volume1"], e["volume2"], e["volume3"], e["volume4"], e["volume5"], e["volume6"],
+                    preFunction = delegate { var e = eventCaller.currentEntity; SneakySpirits.PreSpawnGhost(e.beat, e.length, e["slowDown"], e["volume1"], e["volume2"], e["volume3"], e["volume4"], e["volume5"], e["volume6"],
                         e["volume7"]); },
                     defaultLength = 1f,
                     resizable = true,
                     parameters = new List<Param>()
                     {
+                        new Param("slowDown", true, "Slowdown Effect", "Should there be a slowdown effect when the ghost is hit?"),
                         new Param("volume1", new EntityTypes.Integer(0, 100, 100), "Move Volume 1", "What height and what volume should this move be at?"),
                         new Param("volume2", new EntityTypes.Integer(0, 100, 100), "Move Volume 2", "What height and what volume should this move be at?"),
                         new Param("volume3", new EntityTypes.Integer(0, 100, 100), "Move Volume 3", "What height and what volume should this move be at?"),
@@ -42,6 +43,7 @@ namespace HeavenStudio.Games
         {
             public float beat;
             public float length;
+            public bool slowDown;
             public List<int> volumes;
         }
         [Header("Components")]
@@ -49,9 +51,12 @@ namespace HeavenStudio.Games
         [SerializeField] Animator doorAnim;
         [SerializeField] SneakySpiritsGhost movingGhostPrefab;
         [SerializeField] SneakySpiritsGhostDeath deathGhostPrefab;
+        [SerializeField] GameObject arrowMissPrefab;
+        [SerializeField] GameObject ghostMissPrefab;
         [SerializeField] List<Transform> ghostPositions = new List<Transform>();
         [Header("Variables")]
         private static List<QueuedGhost> queuedGhosts = new List<QueuedGhost>();
+        private bool hasArrowLoaded;
 
         public static SneakySpirits instance;
 
@@ -76,9 +81,13 @@ namespace HeavenStudio.Games
                 {
                     foreach(var ghost in queuedGhosts)
                     {
-                        SpawnGhost(ghost.beat, ghost.length, ghost.volumes);
+                        SpawnGhost(ghost.beat, ghost.length, ghost.slowDown, ghost.volumes);
                     }
                     queuedGhosts.Clear();
+                }
+                if (PlayerInput.Pressed() && !IsExpectingInputNow(InputType.STANDARD_DOWN) && hasArrowLoaded)
+                {
+                    WhiffArrow(cond.songPositionInBeats);
                 }
             }
             else if (!cond.isPlaying)
@@ -88,7 +97,7 @@ namespace HeavenStudio.Games
             }
         }
 
-        public static void PreSpawnGhost(float beat, float length, int volume1, int volume2, int volume3, int volume4, int volume5, int volume6, int volume7)
+        public static void PreSpawnGhost(float beat, float length, bool slowDown, int volume1, int volume2, int volume3, int volume4, int volume5, int volume6, int volume7)
         {
             MultiSound.Play(new MultiSound.Sound[]
             {
@@ -102,7 +111,7 @@ namespace HeavenStudio.Games
             }, forcePlay: true);
             if (GameManager.instance.currentGame == "sneakySpirits")
             {
-                SneakySpirits.instance.SpawnGhost(beat, length, new List<int>()
+                SneakySpirits.instance.SpawnGhost(beat, length, slowDown, new List<int>()
                 {
                     volume1, volume2, volume3, volume4, volume5, volume6, volume7
                 });
@@ -116,17 +125,25 @@ namespace HeavenStudio.Games
                     volumes = new List<int>()
                     {
                         volume1, volume2, volume3, volume4, volume5, volume6, volume7
-                    }
+                    },
+                    slowDown = slowDown,
                 });
             }
         }
 
-        public void SpawnGhost(float beat, float length, List<int> volumes)
+        public void SpawnGhost(float beat, float length, bool slowDown, List<int> volumes)
         {
-            ScheduleInput(beat, length * 7, InputType.STANDARD_DOWN, Just, Out, Out);
+            if (slowDown)
+            {
+                ScheduleInput(beat, length * 7, InputType.STANDARD_DOWN, Just, Miss, Out);
+            }
+            else
+            {
+                ScheduleInput(beat, length * 7, InputType.STANDARD_DOWN, JustNoSlowDown, Miss, Out);
+            }
             BeatAction.New(instance.gameObject, new List<BeatAction.Action>()
             {
-                new BeatAction.Action(beat + length * 3, delegate { bowAnim.DoScaledAnimationAsync("BowDraw", 0.25f); })
+                new BeatAction.Action(beat + length * 3, delegate { bowAnim.DoScaledAnimationAsync("BowDraw", 0.25f); hasArrowLoaded = true; })
             });
 
             List<BeatAction.Action> ghostSpawns = new List<BeatAction.Action>();
@@ -142,16 +159,74 @@ namespace HeavenStudio.Games
             }
         }
 
-        void Just(PlayerActionEvent caller, float state)
+        void WhiffArrow(float beat)
         {
-            if (state >= 1f || state <= -1f)
+            GameObject spawnedArrow = Instantiate(arrowMissPrefab, transform);
+            spawnedArrow.SetActive(true);
+            spawnedArrow.GetComponent<Animator>().DoScaledAnimationAsync("ArrowRecoil", 0.5f);
+            bowAnim.DoScaledAnimationAsync("BowRecoil", 0.25f);
+            hasArrowLoaded = false;
+            Jukebox.PlayOneShotGame("sneakySpirits/arrowMiss", -1, 2);
+            BeatAction.New(instance.gameObject, new List<BeatAction.Action>()
             {
-                return;
-            }
-            Success(caller);
+                new BeatAction.Action(beat + 3f, delegate { 
+                    if (GameManager.instance.currentGame == "sneakySpirits") 
+                    {
+                        Destroy(spawnedArrow);
+                    } 
+                })
+            });
         }
 
-        void Success(PlayerActionEvent caller)
+        void Just(PlayerActionEvent caller, float state)
+        {
+            if (!hasArrowLoaded) return;
+            if (state >= 1f || state <= -1f)
+            {
+                Jukebox.PlayOneShotGame("sneakySpirits/ghostScared");
+                WhiffArrow(caller.startBeat + caller.timer);
+                GameObject spawnedGhost = Instantiate(ghostMissPrefab, transform);
+                spawnedGhost.SetActive(true);
+                spawnedGhost.GetComponent<Animator>().DoScaledAnimationAsync("GhostBarely", 0.5f);
+                BeatAction.New(instance.gameObject, new List<BeatAction.Action>()
+                {
+                    new BeatAction.Action(caller.startBeat + caller.timer + 2f, delegate {
+                        if (GameManager.instance.currentGame == "sneakySpirits")
+                        {
+                            Destroy(spawnedGhost);
+                        }
+                    })
+                });
+                return;
+            }
+            Success(caller, true);
+        }
+        
+        void JustNoSlowDown(PlayerActionEvent caller, float state)
+        {
+            if (!hasArrowLoaded) return;
+            if (state >= 1f || state <= -1f)
+            {
+                Jukebox.PlayOneShotGame("sneakySpirits/ghostScared");
+                WhiffArrow(caller.startBeat + caller.timer);
+                GameObject spawnedGhost = Instantiate(ghostMissPrefab, transform);
+                spawnedGhost.SetActive(true);
+                spawnedGhost.GetComponent<Animator>().DoScaledAnimationAsync("GhostBarely", 0.5f);
+                BeatAction.New(instance.gameObject, new List<BeatAction.Action>()
+                {
+                    new BeatAction.Action(caller.startBeat + caller.timer + 2f, delegate {
+                        if (GameManager.instance.currentGame == "sneakySpirits")
+                        {
+                            Destroy(spawnedGhost);
+                        }
+                    })
+                });
+                return;
+            }
+            Success(caller, false);
+        }
+
+        void Success(PlayerActionEvent caller, bool slowDown)
         {
             SneakySpiritsGhostDeath spawnedDeath = Instantiate(deathGhostPrefab, transform, false);
             int randomNumber = UnityEngine.Random.Range(0, 4);
@@ -171,18 +246,27 @@ namespace HeavenStudio.Games
                     spawnedDeath.animToPlay = "GhostDieCheek";
                     break;
             }
-
+            hasArrowLoaded = false;
             spawnedDeath.startBeat = caller.startBeat + caller.timer;
             spawnedDeath.length = 1f;
             spawnedDeath.gameObject.SetActive(true);
             Jukebox.PlayOneShotGame("sneakySpirits/hit");
             bowAnim.DoScaledAnimationAsync("BowRecoil", 0.25f);
-            Conductor.instance.SetMinigamePitch(0.25f);
+            if (slowDown) Conductor.instance.SetMinigamePitch(0.25f);
             doorAnim.DoScaledAnimationAsync("DoorOpen", 0.5f);
             BeatAction.New(instance.gameObject, new List<BeatAction.Action>()
             {
-                new BeatAction.Action(caller.startBeat + caller.timer + 1f, delegate { Conductor.instance.SetMinigamePitch(1f); doorAnim.DoScaledAnimationAsync("DoorClose", 0.5f);})
+                new BeatAction.Action(caller.startBeat + caller.timer + 1f, delegate 
+                { 
+                    if (slowDown) Conductor.instance.SetMinigamePitch(1f); 
+                    doorAnim.DoScaledAnimationAsync("DoorClose", 0.5f);
+                })
             });
+        }
+
+        void Miss(PlayerActionEvent caller)
+        {
+
         }
 
         void Out(PlayerActionEvent caller)
