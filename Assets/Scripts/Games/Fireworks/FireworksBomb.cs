@@ -9,6 +9,7 @@ namespace HeavenStudio.Games.Scripts_Fireworks
     public class FireworksBomb : PlayerActionObject
     {
         public BezierCurve3D curve;
+        public bool applause;
         private bool exploded;
         private Fireworks game;
         private float startBeat;
@@ -49,13 +50,14 @@ namespace HeavenStudio.Games.Scripts_Fireworks
 
                 return;
             }
-            Success();
+            Success(caller);
         }
 
-        void Success()
+        void Success(PlayerActionEvent caller)
         {
             Jukebox.PlayOneShotGame("fireworks/explodeBomb");
             game.FadeFlashColor(Color.white, new Color(1, 1, 1, 0), 0.5f);
+            if (applause) Jukebox.PlayOneShot("applause", caller.timer + caller.startBeat + 1f);
         }
 
         void Out(PlayerActionEvent caller) { }
