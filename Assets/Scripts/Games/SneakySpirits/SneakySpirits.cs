@@ -46,7 +46,9 @@ namespace HeavenStudio.Games
         }
         [Header("Components")]
         [SerializeField] Animator bowAnim;
+        [SerializeField] Animator doorAnim;
         [SerializeField] SneakySpiritsGhost movingGhostPrefab;
+        [SerializeField] SneakySpiritsGhostDeath deathGhostPrefab;
         [SerializeField] List<Transform> ghostPositions = new List<Transform>();
         [Header("Variables")]
         private static List<QueuedGhost> queuedGhosts = new List<QueuedGhost>();
@@ -56,11 +58,13 @@ namespace HeavenStudio.Games
         void OnDestroy()
         {
             if (queuedGhosts.Count > 0) queuedGhosts.Clear();
+            Conductor.instance.SetMinigamePitch(1f);
         }
 
         void Awake()
         {
             instance = this;
+            Conductor.instance.SetMinigamePitch(1f);
         }
 
         void Update()
@@ -80,6 +84,7 @@ namespace HeavenStudio.Games
             else if (!cond.isPlaying)
             {
                 queuedGhosts.Clear();
+                Conductor.instance.SetMinigamePitch(1f);
             }
         }
 
@@ -148,8 +153,19 @@ namespace HeavenStudio.Games
 
         void Success(PlayerActionEvent caller)
         {
+            SneakySpiritsGhostDeath spawnedDeath = Instantiate(deathGhostPrefab, transform, false);
+            spawnedDeath.animToPlay = "GhostDieNose";
+            spawnedDeath.startBeat = caller.startBeat + caller.timer;
+            spawnedDeath.length = 1f;
+            spawnedDeath.gameObject.SetActive(true);
             Jukebox.PlayOneShotGame("sneakySpirits/hit");
             bowAnim.DoScaledAnimationAsync("BowRecoil", 0.25f);
+            Conductor.instance.SetMinigamePitch(0.25f);
+            doorAnim.DoScaledAnimationAsync("DoorOpen", 0.5f);
+            BeatAction.New(instance.gameObject, new List<BeatAction.Action>()
+            {
+                new BeatAction.Action(caller.startBeat + caller.timer + 1f, delegate { Conductor.instance.SetMinigamePitch(1f); doorAnim.DoScaledAnimationAsync("DoorClose", 0.5f);})
+            });
         }
 
         void Out(PlayerActionEvent caller)

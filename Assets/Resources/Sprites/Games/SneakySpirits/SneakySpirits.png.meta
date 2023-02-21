@@ -170,6 +170,9 @@ TextureImporter:
   - first:
       213: -5952566289195896545
     second: Groundtile
+  - first:
+      213: 3532029475866527194
+    second: HouseOverlap
   externalObjects: {}
   serializedVersion: 11
   mipmaps:
@@ -1472,6 +1475,27 @@ TextureImporter:
       bones: []
       spriteID: f11738e7f7c346da0800000000000000
       internalID: -5952566289195896545
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: HouseOverlap
+      rect:
+        serializedVersion: 2
+        x: 2
+        y: 226
+        width: 239
+        height: 259
+      alignment: 9
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: ad5cb35481a440130800000000000000
+      internalID: 3532029475866527194
       vertices: []
       indices: 
       edges: []
