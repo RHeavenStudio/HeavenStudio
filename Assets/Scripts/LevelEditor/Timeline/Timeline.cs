@@ -900,11 +900,12 @@ namespace HeavenStudio.Editor.Track
             return LayersRect.rect.height / 5f;
         }
 
+        const float SpeedSnap = 0.25f;
         public void SetPlaybackSpeed(float speed)
         {
-            float spd = Mathp.Round2Nearest(speed, Timeline.SnapInterval());
+            float spd = Mathp.Round2Nearest(speed, SpeedSnap);
             PlaybackSpeed.transform.GetChild(3).GetComponent<TMP_Text>().text = $"Playback Speed: {spd}x";
-            Conductor.instance.musicSource.pitch = spd;
+            Conductor.instance.SetTimelinePitch(spd);
             PlaybackSpeed.value = spd;
         }
 
@@ -914,6 +915,7 @@ namespace HeavenStudio.Editor.Track
             {
                 PlaybackSpeed.transform.GetChild(3).GetComponent<TMP_Text>().text = $"Playback Speed: 1x";
                 PlaybackSpeed.value = 1f;
+                Conductor.instance.SetTimelinePitch(PlaybackSpeed.value);
             }
         }
 
