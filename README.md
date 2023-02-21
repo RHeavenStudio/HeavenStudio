@@ -1,7 +1,7 @@
 ## This project is still in development. There are NO public compiled releases (yet).
 # Heaven Studio
 
-(WIP) A tool to create playable Rhythm Heaven custom remixes, with many customization options.
+(WIP) why are you here????????????????
 
 <p>
   <a href="https://discord.gg/2kdZ8kFyEN">
@@ -27,20 +27,11 @@ This project is still in development, so there are currently no release builds y
 
 
 - [Windows](https://nightly.link/RHeavenStudio/HeavenStudio/workflows/windows/master/StandaloneWindows64-build.zip)
-- [Linux](https://nightly.link/RHeavenStudio/HeavenStudio/workflows/linux/master/StandaloneLinux64-build.zip)
-- [MacOS](https://nightly.link/RHeavenStudio/HeavenStudio/workflows/macos/master/StandaloneOSX-build.zip)
-#### Important Notes:
-- On MacOS and Linux builds you may [experience bugs with audio-related tasks](https://github.com/megaminerjenny/HeavenStudio/issues/72), but in most cases Heaven Studio works perfectly.
-- On MacOS you'll need to have Discord open in the background for now, there's a bug that causes the DiscordSDK library to crash when the rich presence is updated while Discord is not open in the background.
-- MacOS and Linux prebuilt binaries **ARE BUGGY** (AssetBundles do not get built causing some minigames as KarateMan to not render correctly), please build the project yourself instead using the instructions below.
+- [Linux] (Linux smells)
+- [MacOS](So does Mac)
 
 
-## Self-Building
 
-Heaven Studio is made in [Unity 2020.3.25f1](https://unity3d.com/unity/whats-new/2020.3.25),
-and programmed with [Visual Studio Code](https://code.visualstudio.com/).
-
-Build Instructions: [BUILD.md](https://github.com/megaminerjenny/HeavenStudio/blob/master/BUILD.md) (or the more maintained [documentation page](https://rheavenstudio.github.io/docs-contributing/setup/introduction))
 
 ## Other information
 Rhythm Heaven is the intellectual property of Nintendo. This program is NOT endorsed nor sponsored in any way by Nintendo. All used properties of Nintendo (such as names, audio, graphics, etc.) in this software are not intended to maliciously infringe trademark rights. All other trademarks and assets are property of their respective owners. This is a community project and this is available for others to use according to the GPL-3.0 license, without charge.
