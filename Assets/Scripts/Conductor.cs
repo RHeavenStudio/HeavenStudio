@@ -17,7 +17,7 @@ namespace HeavenStudio
         public float secPerBeat;
 
         // The number of seconds for each song beat, inversely scaled to song pitch (higer pitch = shorter time)
-        public float pitchedSecPerBeat => (secPerBeat / musicSource.pitch);
+        public float pitchedSecPerBeat => (secPerBeat / SongPitch);
 
         // Current song position, in seconds
         private double songPos; // for Conductor use only
@@ -68,6 +68,10 @@ namespace HeavenStudio
 
         private bool beat;
 
+        private float timelinePitch = 1f;
+        private float minigamePitch = 1f;
+        public float SongPitch { get => timelinePitch * minigamePitch; }
+
         // private AudioDspTimeKeeper timeKeeper;
 
         void Awake()
@@ -89,6 +93,16 @@ namespace HeavenStudio
 
             GameManager.instance.SetCurrentEventToClosest(beat);
             songPosBeat = beat;
+        }
+
+        public void SetTimelinePitch(float pitch)
+        {
+            timelinePitch = pitch;
+        }
+
+        public void SetMinigamePitch(float pitch)
+        {
+            minigamePitch = pitch;
         }
 
         public void Play(float beat)
@@ -130,7 +144,7 @@ namespace HeavenStudio
                     if (musicStartTime < 0f)
                     {
                         musicSource.time = (float) startPos;
-                        musicSource.PlayScheduled(AudioSettings.dspTime - firstBeatOffset / musicSource.pitch);
+                        musicSource.PlayScheduled(AudioSettings.dspTime - firstBeatOffset / SongPitch);
                     }
                     else
                     {
@@ -185,7 +199,7 @@ namespace HeavenStudio
             if (isPlaying)
             {
                 double absTime = Time.realtimeSinceStartupAsDouble;
-                double dt = (absTime - lastAbsTime) * musicSource.pitch;
+                double dt = (absTime - lastAbsTime) * SongPitch;
                 lastAbsTime = absTime;
 
                 time += dt;

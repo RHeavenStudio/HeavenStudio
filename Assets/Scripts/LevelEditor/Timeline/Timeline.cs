@@ -904,7 +904,7 @@ namespace HeavenStudio.Editor.Track
         {
             float spd = Mathp.Round2Nearest(speed, Timeline.SnapInterval());
             PlaybackSpeed.transform.GetChild(3).GetComponent<TMP_Text>().text = $"Playback Speed: {spd}x";
-            Conductor.instance.musicSource.pitch = spd;
+            Conductor.instance.SetTimelinePitch(spd);
             PlaybackSpeed.value = spd;
         }
 
