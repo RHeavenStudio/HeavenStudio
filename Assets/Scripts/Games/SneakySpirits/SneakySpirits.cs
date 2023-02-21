@@ -131,6 +131,7 @@ namespace HeavenStudio.Games
                 if (spawnBeat >= Conductor.instance.songPositionInBeats)
                 {
                     SneakySpiritsGhost spawnedGhost = Instantiate(movingGhostPrefab, ghostPositions[i], false);
+                    spawnedGhost.transform.position = new Vector3(spawnedGhost.transform.position.x, spawnedGhost.transform.position.y - (1 - volumes[i] * 0.01f) * 2f, spawnedGhost.transform.position.z);
                     spawnedGhost.Init(spawnBeat, length);
                 }
             }
