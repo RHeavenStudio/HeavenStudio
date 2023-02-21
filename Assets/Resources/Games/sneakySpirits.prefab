@@ -11908,7 +11908,7 @@ Transform:
   m_Children:
   - {fileID: 4558759897136001682}
   - {fileID: 648017749031410756}
-  - {fileID: 856556406312324648}
+  - {fileID: 2280729105088448509}
   - {fileID: 2597162361501040335}
   - {fileID: 4677746444365065426}
   - {fileID: 1373517824796302561}
@@ -11933,6 +11933,7 @@ MonoBehaviour:
   scheduledInputs: []
   firstEnable: 0
   bowAnim: {fileID: 2313498870028602967}
+  bowHolderAnim: {fileID: 7069819975018639362}
   doorAnim: {fileID: 4043381983643525914}
   movingGhostPrefab: {fileID: 7878687946664943186, guid: bb13c6c310e34704d84ddab2830ecc38, type: 3}
   deathGhostPrefab: {fileID: 2054775899157704041}
@@ -11980,8 +11981,8 @@ Transform:
   - {fileID: 3227027467015976390}
   - {fileID: 164653808137790640}
   - {fileID: 5281914038341815191}
-  m_Father: {fileID: 6485095134079790937}
-  m_RootOrder: 2
+  m_Father: {fileID: 2280729105088448509}
+  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!95 &2313498870028602967
 Animator:
@@ -12279,6 +12280,57 @@ Transform:
   m_Father: {fileID: 2597162361501040335}
   m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &8354432083479905936
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 2280729105088448509}
+  - component: {fileID: 7069819975018639362}
+  m_Layer: 0
+  m_Name: BowHolder
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &2280729105088448509
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8354432083479905936}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children:
+  - {fileID: 856556406312324648}
+  m_Father: {fileID: 6485095134079790937}
+  m_RootOrder: 2
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!95 &7069819975018639362
+Animator:
+  serializedVersion: 3
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8354432083479905936}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: 638a0ca941af8d648aa7d508b79f804c, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorControllerStateOnDisable: 0
 --- !u!1 &8617442976697012067
 GameObject:
   m_ObjectHideFlags: 0

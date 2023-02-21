@@ -28,7 +28,18 @@ namespace HeavenStudio.Games.Loaders
                         new Param("volume6", new EntityTypes.Integer(0, 100, 100), "Move Volume 6", "What height and what volume should this move be at?"),
                         new Param("volume7", new EntityTypes.Integer(0, 100, 100), "Move Volume 7", "What height and what volume should this move be at?"),
                     }
-                }
+                },
+                new GameAction("movebow", "Bow Enter or Exit")
+                {
+                    function = delegate {var e = eventCaller.currentEntity; SneakySpirits.instance.MoveBow(e.beat, e.length, e["exit"], e["ease"]); },
+                    defaultLength = 4f,
+                    resizable = true,
+                    parameters = new List<Param>()
+                    {
+                        new Param("exit", true, "Enter?", "Should the bow exit or enter?"),
+                        new Param("ease", EasingFunction.Ease.Linear, "Ease", "Which ease should the movement have?")
+                    }
+                },
             });
         }
     }
@@ -48,6 +59,7 @@ namespace HeavenStudio.Games
         }
         [Header("Components")]
         [SerializeField] Animator bowAnim;
+        [SerializeField] Animator bowHolderAnim;
         [SerializeField] Animator doorAnim;
         [SerializeField] SneakySpiritsGhost movingGhostPrefab;
         [SerializeField] SneakySpiritsGhostDeath deathGhostPrefab;
@@ -57,6 +69,11 @@ namespace HeavenStudio.Games
         [Header("Variables")]
         private static List<QueuedGhost> queuedGhosts = new List<QueuedGhost>();
         private bool hasArrowLoaded;
+        float movingLength;
+        float movingStartBeat;
+        bool isMoving;
+        string moveAnim;
+        EasingFunction.Ease lastEase;
 
         public static SneakySpirits instance;
 
@@ -89,12 +106,32 @@ namespace HeavenStudio.Games
                 {
                     WhiffArrow(cond.songPositionInBeats);
                 }
+                if (isMoving)
+                {
+                    float normalizedBeat = cond.GetPositionFromBeat(movingStartBeat, movingLength);
+                    EasingFunction.Function func = EasingFunction.GetEasingFunction(lastEase);
+                    float newPos = func(0f, 1f, normalizedBeat);
+                    bowHolderAnim.DoNormalizedAnimation(moveAnim, newPos);
+                    if (normalizedBeat >= 1f)
+                    {
+                        isMoving = false;
+                    }
+                }
             }
             else if (!cond.isPlaying)
             {
                 queuedGhosts.Clear();
                 Conductor.instance.SetMinigamePitch(1f);
             }
+        }
+
+        public void MoveBow(float beat, float length, bool enter, int ease)
+        {
+            movingStartBeat = beat;
+            movingLength = length;
+            moveAnim = enter ? "Enter" : "Exit";
+            isMoving = true;
+            lastEase = (EasingFunction.Ease)ease;
         }
 
         public static void PreSpawnGhost(float beat, float length, bool slowDown, int volume1, int volume2, int volume3, int volume4, int volume5, int volume6, int volume7)
@@ -153,7 +190,7 @@ namespace HeavenStudio.Games
                 if (spawnBeat >= Conductor.instance.songPositionInBeats)
                 {
                     SneakySpiritsGhost spawnedGhost = Instantiate(movingGhostPrefab, ghostPositions[i], false);
-                    spawnedGhost.transform.position = new Vector3(spawnedGhost.transform.position.x, spawnedGhost.transform.position.y - (1 - volumes[i] * 0.01f) * 2f, spawnedGhost.transform.position.z);
+                    spawnedGhost.transform.position = new Vector3(spawnedGhost.transform.position.x, spawnedGhost.transform.position.y - (1 - volumes[i] * 0.01f) * 2.5f, spawnedGhost.transform.position.z);
                     spawnedGhost.Init(spawnBeat, length);
                 }
             }
