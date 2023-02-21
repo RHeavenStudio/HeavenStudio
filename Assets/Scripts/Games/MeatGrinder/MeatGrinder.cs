@@ -73,7 +73,12 @@ namespace HeavenStudio.Games
         }
 
         [Header("Objects")]
-        public GameObject MeatBase;
+        public GameObject MeatFab;
+        public GameObject MeatHitFab;
+        public GameObject Meat;
+        
+        //public GameObject MeatBase;
+        //public GameObject MeatFall;
 
         [Header("Animators")]
         public Animator BossAnim;
@@ -82,10 +87,10 @@ namespace HeavenStudio.Games
         [Header("Variables")]
         bool intervalStarted;
         float intervalStartBeat;
-        float beatInterval = 8f;
+        float beatInterval = 4f;
         float misses;
         bool bossBop = true;
-        bool wantCall = false;
+        public bool bossAnnoyed = false;
         private float lastReportedBeat = 0f;
         const string sfxName = "meatGrinder/";
 
@@ -106,10 +111,6 @@ namespace HeavenStudio.Games
 
         private void Update() 
         {
-            if (wantCall) {
-                BossAnim.Play("BossSignal", 0, 0);
-                wantCall = false;
-            }
             if (!Conductor.instance.isPlaying || Conductor.instance.isPaused)
             {
                 if (queuedInputs.Count > 0) queuedInputs.Clear();
@@ -121,17 +122,27 @@ namespace HeavenStudio.Games
             if (PlayerInput.Pressed() && !IsExpectingInputNow(InputType.STANDARD_DOWN))
             {
                 ScoreMiss();
+                bossAnnoyed = false;
 
                 TackAnim.DoScaledAnimationAsync("TackEmptyHit", 0.5f);
                 Jukebox.PlayOneShotGame(sfxName+"whiff");
             }
+
+            if (bossAnnoyed) BossAnim.SetBool("bossAnnoyed", true);
         }
 
         private void LateUpdate() 
         {
-            if (Conductor.instance.ReportBeat(ref lastReportedBeat) && BossAnim.IsAnimationNotPlaying())
+            if (Conductor.instance.ReportBeat(ref lastReportedBeat)
+                && !BossAnim.IsPlayingAnimationName("BossCall") 
+                && !BossAnim.IsPlayingAnimationName("BossSignal")
+                && bossBop)
             {
-                BossAnim.DoScaledAnimationAsync("Bop", 0.5f);
+                if (!bossAnnoyed) {
+                    BossAnim.DoScaledAnimationAsync("Bop", 0.5f);
+                } else {
+                    BossAnim.DoScaledAnimationAsync("BossMiss", 0.5f);
+                }
             };
         }
 
@@ -143,25 +154,15 @@ namespace HeavenStudio.Games
         public static void CallInterval(float beat, float interval)
         {
             MeatGrinder.instance.beatInterval = interval;
-            //BossAnim.DoScaledAnimationAsync("BossSignal", 1f);
-            //BeatAction.New(instance.gameObject, new List<BeatAction.Action>()
-            //{
-            //    new BeatAction.Action(beat - 1, delegate { MeatGrinder.instance.wantCall = true; }),
-            //});
 
             BeatAction.New(instance.gameObject, new List<BeatAction.Action>()
             {
-                new BeatAction.Action(beat - 1, delegate { instance.BossAnim.DoScaledAnimationAsync("BossSignal", 1f); }),
+                new BeatAction.Action(beat - 1, delegate { instance.BossAnim.DoScaledAnimationAsync("BossSignal", 0.5f); }),
             });
 
             MultiSound.Play(new MultiSound.Sound[] {
                 new MultiSound.Sound(sfxName+"startSignal", beat - 1f),
             }, forcePlay: true);
-
-            BeatAction.New(instance.gameObject, new List<BeatAction.Action>()
-            {
-                new BeatAction.Action(beat + MeatGrinder.instance.beatInterval, delegate { MeatGrinder.instance.PassTurn(beat); }),
-            });
         }
 
         public void StartInterval(float beat, float interval)
@@ -172,18 +173,27 @@ namespace HeavenStudio.Games
                 misses = 0;
                 intervalStarted = true;
             }
+
+            BeatAction.New(gameObject, new List<BeatAction.Action>()
+            {
+                new BeatAction.Action(beat + interval, delegate { PassTurn(beat); }),
+            });
         }
 
         public void MeatToss(float beat)
         {
             Jukebox.PlayOneShotGame(sfxName+"toss");
             
-            ScheduleInput(beat, 1f, InputType.STANDARD_DOWN, Hit, Miss, Nothing);
+            MeatToss Meat = Instantiate(MeatFab).GetComponent<MeatToss>();
+            Meat.startBeat = beat;
+            Meat.cueLength = 1f;
 
-            //MeatToss Object = Instantiate(MeatBase).GetComponent<MeatToss>();
-            //Object.startBeat = beat;
-
-            Instantiate(MeatBase);
+            /*
+            BeatAction.New(gameObject, new List<BeatAction.Action>()
+            {
+                new BeatAction.Action(beat + 0.8f, delegate { Instantiate(MeatBase); }),
+            });
+            */
         }
 
         public void MeatCall(float beat) 
@@ -204,35 +214,20 @@ namespace HeavenStudio.Games
 
         public void PassTurn(float beat)
         {
-            if (queuedInputs.Count == 0) return;
             intervalStarted = false;
             foreach (var input in queuedInputs)
             {
-                ScheduleInput(beat, beatInterval + input.beatAwayFromStart, InputType.STANDARD_DOWN, Hit, Miss, Nothing);
+                BeatAction.New(instance.gameObject, new List<BeatAction.Action>()
+            {
+                new BeatAction.Action(beat - 1, delegate { 
+                    MeatToss Meat = Instantiate(MeatFab).GetComponent<MeatToss>();
+                    Meat.startBeat = beat;
+                    Meat.cueLength = beatInterval + input.beatAwayFromStart; 
+                }),
+            });
+                
             }
             queuedInputs.Clear();
-        }
-
-        private void Hit(PlayerActionEvent caller, float state)
-        {
-            Jukebox.PlayOneShotGame(sfxName+"meatHit");
-            TackAnim.DoScaledAnimationAsync("TackHitSuccess", 0.5f);
-
-            Instantiate(MeatBase);
-            
-            //GameObject.Destroy(gameObject);
-        }
-            
-
-        private void Miss(PlayerActionEvent caller)
-        {
-            TackAnim.DoScaledAnimationAsync("TackMiss", 0.5f);
-            BossAnim.DoScaledAnimationAsync("BossCall", 0.5f);
-        }
-
-        private void Nothing(PlayerActionEvent caller) 
-        {
-            
         }
     }
 }
