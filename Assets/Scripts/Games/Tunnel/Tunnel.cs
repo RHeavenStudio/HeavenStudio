@@ -203,7 +203,7 @@ namespace HeavenStudio.Games
                 }
                 
             }
-            MultiSound.Play(cuelist.ToArray());
+            MultiSound.Play(cuelist.ToArray(), forcePlay: true);
 
         }
 
