@@ -154,7 +154,24 @@ namespace HeavenStudio.Games
         void Success(PlayerActionEvent caller)
         {
             SneakySpiritsGhostDeath spawnedDeath = Instantiate(deathGhostPrefab, transform, false);
-            spawnedDeath.animToPlay = "GhostDieNose";
+            int randomNumber = UnityEngine.Random.Range(0, 4);
+
+            switch (randomNumber)
+            {
+                case 0:
+                    spawnedDeath.animToPlay = "GhostDieNose";
+                    break;
+                case 1:
+                    spawnedDeath.animToPlay = "GhostDieMouth";
+                    break;
+                case 2:
+                    spawnedDeath.animToPlay = "GhostDieBody";
+                    break;
+                case 3:
+                    spawnedDeath.animToPlay = "GhostDieCheek";
+                    break;
+            }
+
             spawnedDeath.startBeat = caller.startBeat + caller.timer;
             spawnedDeath.length = 1f;
             spawnedDeath.gameObject.SetActive(true);
