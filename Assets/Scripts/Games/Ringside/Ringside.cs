@@ -196,7 +196,7 @@ namespace HeavenStudio.Games
             {
                 if (cond.ReportBeat(ref bop.lastReportedBeat, bop.startBeat % 1))
                 {
-                    if (isPlaying(wrestlerAnim, "Idle") && shouldBop)
+                    if (wrestlerAnim.IsPlayingAnimationName("Idle") && shouldBop)
                     {
                         if (UnityEngine.Random.Range(1, 18) == 1)
                         {
@@ -214,7 +214,7 @@ namespace HeavenStudio.Games
 
                     wrestlerAnim.DoScaledAnimationAsync("YeMiss", 0.25f);
                     Jukebox.PlayOneShotGame($"ringside/confusedanswer");
-                    if (isPlaying(reporterAnim, "IdleReporter")) reporterAnim.Play("IdleLate", 0, 0);
+                    if (reporterAnim.IsPlayingAnimationName("IdleReporter")) reporterAnim.Play("IdleLate", 0, 0);
                 }
                 if (PlayerInput.AltPressed() && !IsExpectingInputNow(InputType.STANDARD_ALT_DOWN) && !shouldNotInput)
                 {
@@ -611,7 +611,7 @@ namespace HeavenStudio.Games
             int randomNumber = UnityEngine.Random.Range(1, 200);
             if (randomNumber == 1)
             {
-                if (isPlaying(reporterAnim, "IdleReporter"))
+                if (reporterAnim.IsPlayingAnimationName("IdleReporter"))
                 {
                     reporterAnim.DoScaledAnimationAsync("BlinkReporter", 0.5f);
                 }
@@ -821,14 +821,5 @@ namespace HeavenStudio.Games
         }
 
         public void Nothing(PlayerActionEvent caller){}
-
-        bool isPlaying(Animator anim, string stateName)
-        {
-            if (anim.GetCurrentAnimatorStateInfo(0).IsName(stateName) &&
-                    anim.GetCurrentAnimatorStateInfo(0).normalizedTime < 1.0f)
-                return true;
-            else
-                return false;
-        }
     }
 }

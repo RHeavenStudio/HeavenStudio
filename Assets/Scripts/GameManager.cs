@@ -258,15 +258,20 @@ namespace HeavenStudio
             }
         }
 
-        public void SeekAheadAndDoPreEvent(double start, float seekTime = 2f)
+        public void SeekAheadAndDoPreEvent(double start)
         {
             List<float> entities = Beatmap.entities.Select(c => c.beat).ToList();
             if (currentPreSequence < Beatmap.entities.Count && currentPreSequence >= 0)
             {
+                var seekEntity = Beatmap.entities[currentPreSequence];
+
+                float seekTime = EventCaller.instance.GetGameAction(
+                    EventCaller.instance.GetMinigame(seekEntity.datamodel.Split(0)), seekEntity.datamodel.Split(1)).preFunctionLength;
+
                 if (start + seekTime >= entities[currentPreSequence])
                 {
-                    float beat = Beatmap.entities[currentPreSequence].beat;
-                    var entitiesAtSameBeat = Beatmap.entities.FindAll(c => c.beat == Beatmap.entities[currentPreSequence].beat);
+                    float beat = seekEntity.beat;
+                    var entitiesAtSameBeat = Beatmap.entities.FindAll(c => c.beat == seekEntity.beat);
                     SortEventsByPriority(entitiesAtSameBeat);
                     foreach (DynamicBeatmap.DynamicEntity entity in entitiesAtSameBeat)
                     {
@@ -340,7 +345,7 @@ namespace HeavenStudio
             //seek ahead to preload games that have assetbundles
             SeekAheadAndPreload(Conductor.instance.songPositionInBeatsAsDouble, seekTime);
 
-            SeekAheadAndDoPreEvent(Conductor.instance.songPositionInBeatsAsDouble, 2f);
+            SeekAheadAndDoPreEvent(Conductor.instance.songPositionInBeatsAsDouble);
 
             if (currentEvent < Beatmap.entities.Count && currentEvent >= 0)
             {

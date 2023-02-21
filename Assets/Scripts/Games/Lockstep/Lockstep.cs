@@ -127,10 +127,7 @@ namespace HeavenStudio.Games
 
         void OnDestroy()
         {
-            if (!Conductor.instance.isPlaying || Conductor.instance.isPaused)
-            {
-                if (queuedInputs.Count > 0) queuedInputs.Clear();
-            }
+            if (queuedInputs.Count > 0) queuedInputs.Clear();
         }
 
         public void Update()
@@ -236,7 +233,7 @@ namespace HeavenStudio.Games
         {
             if (GameManager.instance.currentGame == "lockstep")
             {
-                for (int i = 0; i < length + 1; i++)
+                for (int i = 0; i < length; i++)
                 {
                     Lockstep.instance.ScheduleInput(beat - 1, 1 + i, InputType.STANDARD_DOWN, Lockstep.instance.Just, Lockstep.instance.Miss, Lockstep.instance.Nothing);
                     BeatAction.New(instance.gameObject, new List<BeatAction.Action>()
@@ -247,7 +244,7 @@ namespace HeavenStudio.Games
             }
             else
             {
-                for (int i = 0; i < length + 1; i++)
+                for (int i = 0; i < length; i++)
                 {
                     queuedInputs.Add(beat + i);
                 }
