@@ -3,6 +3,8 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 
+using NaughtyBezierCurves;
+
 namespace HeavenStudio.Games.Loaders
 {
     using static Minigames;
@@ -73,16 +75,18 @@ namespace HeavenStudio.Games
         }
 
         [Header("Objects")]
-        public GameObject MeatFab;
-        public GameObject MeatHitFab;
-        public GameObject Meat;
-        
-        //public GameObject MeatBase;
-        //public GameObject MeatFall;
+        public GameObject MeatBase;
+        public GameObject MeatFall;
 
         [Header("Animators")]
         public Animator BossAnim;
         public Animator TackAnim;
+
+        [Header("Curves")]
+        public BezierCurve3D MeatCurve;
+
+        [Header("Transforms")]
+        public Transform MeatTrans;
 
         [Header("Variables")]
         bool intervalStarted;
@@ -176,7 +180,7 @@ namespace HeavenStudio.Games
 
             BeatAction.New(gameObject, new List<BeatAction.Action>()
             {
-                new BeatAction.Action(beat + interval, delegate { PassTurn(beat); }),
+                new BeatAction.Action(beat + interval - 1, delegate { PassTurn(beat); }),
             });
         }
 
@@ -184,9 +188,11 @@ namespace HeavenStudio.Games
         {
             Jukebox.PlayOneShotGame(sfxName+"toss");
             
-            MeatToss Meat = Instantiate(MeatFab).GetComponent<MeatToss>();
+            MeatToss Meat = Instantiate(MeatBase).GetComponent<MeatToss>();
             Meat.startBeat = beat;
             Meat.cueLength = 1f;
+
+            Debug.Log("does this shit even work");
 
             /*
             BeatAction.New(gameObject, new List<BeatAction.Action>()
@@ -220,7 +226,7 @@ namespace HeavenStudio.Games
                 BeatAction.New(instance.gameObject, new List<BeatAction.Action>()
             {
                 new BeatAction.Action(beat - 1, delegate { 
-                    MeatToss Meat = Instantiate(MeatFab).GetComponent<MeatToss>();
+                    MeatToss Meat = Instantiate(MeatBase).GetComponent<MeatToss>();
                     Meat.startBeat = beat;
                     Meat.cueLength = beatInterval + input.beatAwayFromStart; 
                 }),
