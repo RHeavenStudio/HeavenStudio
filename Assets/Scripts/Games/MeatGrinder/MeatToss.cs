@@ -20,9 +20,6 @@ namespace HeavenStudio.Games.Scripts_MeatGrinder
         [Header("Animators")]
         private Animator anim;
 
-        [Header("GameObjects")]
-        public GameObject MeatBall;
-
         private MeatGrinder game;
 
         private void Awake()

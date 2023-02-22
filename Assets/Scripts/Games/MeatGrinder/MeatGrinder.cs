@@ -17,29 +17,19 @@ namespace HeavenStudio.Games.Loaders
                 {
                     function = delegate {
                         var e = eventCaller.currentEntity; 
-                        MeatGrinder.instance.MeatToss(e.beat, e["isRandom"], e["meatType"]); 
+                        MeatGrinder.instance.MeatToss(e.beat); 
                     },
                     defaultLength = 2f,
                     priority = 2,
-                    parameters = new List<Param>()
-                    {
-                        new Param("isRandom", true, "Random Meat", "Is the meat randomly dark or light?"),
-                        new Param("meatType", MeatGrinder.MeatType.Dark, "Meat Type", "Choose between dark or light meat"),
-                    },
                 },
                 new GameAction("MeatCall", "Meat Call")
                 {
                     function = delegate {
                         var e = eventCaller.currentEntity; 
-                        MeatGrinder.instance.MeatCall(e.beat, e["isRandom"], e["meatType"]); 
+                        MeatGrinder.instance.MeatCall(e.beat); 
                     },
                     defaultLength = 0.5f,
                     priority = 2,
-                    parameters = new List<Param>()
-                    {
-                        new Param("isRandom", true, "Random Meat", "Is the meat randomly dark or light?"),
-                        new Param("meatType", MeatGrinder.MeatType.Dark, "Meat Type", "Choose between dark or light meat"),
-                    },
                 },
                 new GameAction("StartInterval", "Start Interval")
                 {
@@ -195,7 +185,7 @@ namespace HeavenStudio.Games
             });
         }
 
-        public void MeatToss(float beat, bool MeatRandom, int MeatTypeInt)
+        public void MeatToss(float beat)
         {
             Jukebox.PlayOneShotGame(sfxName+"toss");
             
@@ -203,27 +193,11 @@ namespace HeavenStudio.Games
             Meat.startBeat = beat;
             Meat.cueLength = 1f;
             Meat.cueBased = true;
-            Debug.Log(MeatTypeInt);
-            if (MeatRandom) {
-                System.Random gen = new System.Random();
-                int prob = gen.Next(100);
-                Meat.meatType = prob < 50 ? "DarkMeat" : "LightMeat";
-            } else if (MeatTypeInt == 0) {
-                Meat.meatType = "DarkMeat";
-            } else if (MeatTypeInt == 1) {
-                Meat.meatType = "LightMeat";
-            }
-
-            Debug.Log("double test "+MeatTypeInt);
+            Meat.meatType = "DarkMeat";
         }
 
-        public void MeatCall(float beat, bool MeatRandom, int MeatTypeInt) 
+        public void MeatCall(float beat) 
         {
-            if (MeatTypeInt == 0) {
-                System.Random rd = new System.Random();
-                MeatTypeInt = rd.Next(1, 2);
-            }
-            
             BossAnim.DoScaledAnimationAsync("BossCall", 0.5f);
             Jukebox.PlayOneShotGame(sfxName+"signal");
             
@@ -232,21 +206,9 @@ namespace HeavenStudio.Games
                 StartInterval(beat, beatInterval);
             }
 
-            string meatType = "DarkMeat";
-            if (MeatRandom) {
-                System.Random gen = new System.Random();
-                int prob = gen.Next(100);
-                meatType = prob < 50 ? "DarkMeat" : "LightMeat";
-            } else if (MeatTypeInt == 0) {
-                meatType = "DarkMeat";
-            } else if (MeatTypeInt == 1) {
-                meatType = "LightMeat";
-            }
-
             queuedInputs.Add(new QueuedMeatInput()
             {
                 beatAwayFromStart = beat - intervalStartBeat,
-                queuedMeatType = meatType,
             });
         }
 
@@ -262,7 +224,7 @@ namespace HeavenStudio.Games
                         Meat.startBeat = beat;
                         Meat.cueLength = beatInterval + input.beatAwayFromStart;
                         Meat.cueBased = false;
-                        Meat.meatType = input.queuedMeatType;
+                        Meat.meatType = "LightMeat";
                     }),
                 });
                 
