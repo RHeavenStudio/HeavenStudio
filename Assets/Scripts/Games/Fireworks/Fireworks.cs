@@ -192,14 +192,14 @@ namespace HeavenStudio.Games
             {
                 MultiSound.Play(new MultiSound.Sound[]
                 {
-                    new MultiSound.Sound("fireworks/sparkler", beat, 1, 1, false, 0.223f)
+                    new MultiSound.Sound("fireworks/nuei", beat, 1, 1, false, 0.223f)
                 }, forcePlay: true);
             }
             else
             {
                 MultiSound.Play(new MultiSound.Sound[]
                 {
-                    new MultiSound.Sound("fireworks/rocket", beat)
+                    new MultiSound.Sound("fireworks/rocket_2", beat)
                 }, forcePlay: true);
             }
             if (GameManager.instance.currentGame == "fireworks")
@@ -260,7 +260,7 @@ namespace HeavenStudio.Games
 
         public void SpawnBomb(float beat, bool practice, bool applause)
         {
-            Jukebox.PlayOneShotGame("fireworks/bomb");
+            Jukebox.PlayOneShotGame("fireworks/tamaya_4");
             if (practice)
             {
                 MultiSound.Play(new MultiSound.Sound[]
