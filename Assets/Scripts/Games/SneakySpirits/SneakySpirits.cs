@@ -71,6 +71,8 @@ namespace HeavenStudio.Games
         [SerializeField] GameObject arrowMissPrefab;
         [SerializeField] GameObject ghostMissPrefab;
         [SerializeField] List<Transform> ghostPositions = new List<Transform>();
+        [SerializeField] GameObject normalRain;
+        [SerializeField] GameObject slowRain;
         [Header("Variables")]
         private static List<QueuedGhost> queuedGhosts = new List<QueuedGhost>();
         private bool hasArrowLoaded;
@@ -301,7 +303,13 @@ namespace HeavenStudio.Games
             spawnedDeath.gameObject.SetActive(true);
             Jukebox.PlayOneShotGame("sneakySpirits/hit");
             bowAnim.DoScaledAnimationAsync("BowRecoil", 0.25f);
-            if (slowDown) Conductor.instance.SetMinigamePitch(0.25f);
+            if (slowDown) 
+            {
+                slowRain.SetActive(true);
+                normalRain.SetActive(false);
+                Conductor.instance.SetMinigamePitch(0.25f);
+            }
+
             doorAnim.DoScaledAnimationAsync("DoorOpen", 0.5f);
             BeatAction.New(instance.gameObject, new List<BeatAction.Action>()
             {
@@ -309,6 +317,8 @@ namespace HeavenStudio.Games
                 { 
                     if (slowDown) Conductor.instance.SetMinigamePitch(1f); 
                     doorAnim.DoScaledAnimationAsync("DoorClose", 0.5f);
+                    slowRain.SetActive(false);
+                    normalRain.SetActive(true);
                 })
             });
         }
