@@ -17,19 +17,27 @@ namespace HeavenStudio.Games.Loaders
                 {
                     function = delegate {
                         var e = eventCaller.currentEntity; 
-                        MeatGrinder.instance.MeatToss(e.beat); 
+                        MeatGrinder.instance.MeatToss(e.beat, e["meatType"]); 
                     },
                     defaultLength = 2f,
                     priority = 2,
+                    parameters = new List<Param>()
+                    {
+                        new Param("meatType", MeatGrinder.MeatType.Random, "Meat Type", "Choose between dark, light, or random meat"),
+                    },
                 },
                 new GameAction("MeatCall", "Meat Call")
                 {
                     function = delegate {
                         var e = eventCaller.currentEntity; 
-                        MeatGrinder.instance.MeatCall(e.beat); 
+                        MeatGrinder.instance.MeatCall(e.beat, e["meatType"]); 
                     },
                     defaultLength = 0.5f,
                     priority = 2,
+                    parameters = new List<Param>()
+                    {
+                        new Param("meatType", MeatGrinder.MeatType.Random, "Meat Type", "Choose between dark, light, or random meat"),
+                    },
                 },
                 new GameAction("StartInterval", "Start Interval")
                 {
@@ -72,11 +80,11 @@ namespace HeavenStudio.Games
         struct QueuedMeatInput
         {
             public float beatAwayFromStart;
+            public int TypeOfMeat;
         }
 
         [Header("Objects")]
         public GameObject MeatBase;
-        public GameObject MeatFall;
 
         [Header("Animators")]
         public Animator BossAnim;
@@ -93,6 +101,13 @@ namespace HeavenStudio.Games
         const string sfxName = "meatGrinder/";
 
         public static MeatGrinder instance;
+
+        public enum MeatType
+        {
+            Random,
+            Dark,
+            Light,
+        }
         
         private void Awake()
         {
@@ -120,10 +135,10 @@ namespace HeavenStudio.Games
             if (PlayerInput.Pressed() && !IsExpectingInputNow(InputType.STANDARD_DOWN))
             {
                 ScoreMiss();
-                bossAnnoyed = false;
-
                 TackAnim.DoScaledAnimationAsync("TackEmptyHit", 0.5f);
+                TackAnim.SetBool("tackMeated", false);
                 Jukebox.PlayOneShotGame(sfxName+"whiff");
+                if (bossAnnoyed) BossAnim.DoScaledAnimationAsync("Bop", 0.5f);
             }
 
             if (bossAnnoyed) BossAnim.SetBool("bossAnnoyed", true);
@@ -178,25 +193,17 @@ namespace HeavenStudio.Games
             });
         }
 
-        public void MeatToss(float beat)
+        public void MeatToss(float beat, int MeatType)
         {
             Jukebox.PlayOneShotGame(sfxName+"toss");
             
             MeatToss Meat = Instantiate(MeatBase).GetComponent<MeatToss>();
             Meat.startBeat = beat;
             Meat.cueLength = 1f;
-
-            Debug.Log("does this shit even work");
-
-            /*
-            BeatAction.New(gameObject, new List<BeatAction.Action>()
-            {
-                new BeatAction.Action(beat + 0.8f, delegate { Instantiate(MeatBase); }),
-            });
-            */
+            Meat.meatType = MeatType;
         }
 
-        public void MeatCall(float beat) 
+        public void MeatCall(float beat, int MeatType) 
         {
             BossAnim.DoScaledAnimationAsync("BossCall", 0.5f);
             Jukebox.PlayOneShotGame(sfxName+"signal");
@@ -218,13 +225,14 @@ namespace HeavenStudio.Games
             foreach (var input in queuedInputs)
             {
                 BeatAction.New(instance.gameObject, new List<BeatAction.Action>()
-            {
-                new BeatAction.Action(beat - 1, delegate { 
-                    MeatToss Meat = Instantiate(MeatBase).GetComponent<MeatToss>();
-                    Meat.startBeat = beat;
-                    Meat.cueLength = beatInterval + input.beatAwayFromStart; 
-                }),
-            });
+                {
+                    new BeatAction.Action(input.beatAwayFromStart, delegate { 
+                        MeatToss Meat = Instantiate(MeatBase).GetComponent<MeatToss>();
+                        Meat.startBeat = beat;
+                        Meat.cueLength = beatInterval + input.beatAwayFromStart; 
+                        Meat.meatType = input.TypeOfMeat;
+                    }),
+                });
                 
             }
             queuedInputs.Clear();

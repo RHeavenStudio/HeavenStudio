@@ -11,12 +11,18 @@ namespace HeavenStudio.Games.Scripts_MeatGrinder
     {
         public float startBeat;
         public float cueLength;
+        public int meatType;
         const string sfxName = "meatGrinder/";
         float flyPos;
+        bool animCheck = false;
+        
 
 
         [Header("Animators")]
         private Animator anim;
+
+        [Header("GameObjects")]
+        public GameObject MeatBall;
 
         private MeatGrinder game;
 
@@ -34,7 +40,7 @@ namespace HeavenStudio.Games.Scripts_MeatGrinder
 
             BeatAction.New(gameObject, new List<BeatAction.Action>()
             {
-                new BeatAction.Action(startBeat + 0.5f, delegate { anim.DoScaledAnimationAsync("DarkMeatThrown", 0.3f); }),
+                new BeatAction.Action(startBeat + 0.58f, delegate { anim.DoScaledAnimationAsync("DarkMeatThrown", 0.32f); }),
             });
         }
 
@@ -43,12 +49,15 @@ namespace HeavenStudio.Games.Scripts_MeatGrinder
             if (!Conductor.instance.isPlaying && !Conductor.instance.isPaused) {
                 GameObject.Destroy(gameObject);
             }
+            if (anim.IsAnimationNotPlaying() && animCheck) GameObject.Destroy(gameObject);
         }
         private void Hit(PlayerActionEvent caller, float state)
         {
-            GameObject.Destroy(gameObject);
-
-            //GameObject MeatBall = Instantiate(game.MeatHitFab);
+            //GameObject.Destroy(gameObject);
+            
+            game.TackAnim.SetBool("tackMeated", false);
+            anim.DoScaledAnimationAsync("DarkMeatHit", 0.5f);
+            animCheck = true;
 
             if (state >= 1f || state <= -1f)
             {
