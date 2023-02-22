@@ -187,6 +187,11 @@ namespace HeavenStudio.Games
             BeatAction.New(gameObject, new List<BeatAction.Action>()
             {
                 new BeatAction.Action(beat + interval - 1, delegate { PassTurn(beat); }),
+                new BeatAction.Action(beat + interval, delegate { 
+                    if (Conductor.instance.ReportBeat(ref lastReportedBeat)) { 
+                        BossAnim.DoScaledAnimationAsync(bossAnnoyed ? "BossMiss" : "Bop", 0.5f); 
+                    }
+                    }),
             });
         }
 
