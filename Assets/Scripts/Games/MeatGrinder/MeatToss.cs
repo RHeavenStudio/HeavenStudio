@@ -12,6 +12,7 @@ namespace HeavenStudio.Games.Scripts_MeatGrinder
         public float startBeat;
         public float cueLength;
         const string sfxName = "meatGrinder/";
+        float flyPos;
 
 
         [Header("Animators")]
@@ -23,24 +24,22 @@ namespace HeavenStudio.Games.Scripts_MeatGrinder
         {
             game = MeatGrinder.instance;
             anim = GetComponent<Animator>();
+            
+            flyPos = Conductor.instance.GetPositionFromBeat(startBeat, 1f)+1.1f;
         }
 
         private void Start() 
         {
             game.ScheduleInput(startBeat, cueLength, InputType.STANDARD_DOWN, Hit, Miss, Nothing);
+
+            BeatAction.New(gameObject, new List<BeatAction.Action>()
+            {
+                new BeatAction.Action(startBeat + 0.5f, delegate { anim.DoScaledAnimationAsync("DarkMeatThrown", 0.3f); }),
+            });
         }
 
         private void Update()
         {
-            float flyPos = Conductor.instance.GetPositionFromBeat(startBeat, -2f);
-            flyPos *= 0.2f;
-            transform.position = MeatGrinder.instance.MeatCurve.GetPoint(flyPos);
-            
-            // destroy object when it's off-screen
-            if (flyPos > 1f) {
-                //GameObject.Destroy(gameObject);
-            };
-            
             if (!Conductor.instance.isPlaying && !Conductor.instance.isPaused) {
                 GameObject.Destroy(gameObject);
             }
@@ -58,6 +57,7 @@ namespace HeavenStudio.Games.Scripts_MeatGrinder
                 game.TackAnim.DoScaledAnimationAsync("TackHitBarely", 0.5f);
                 return;
             } else {
+                game.bossAnnoyed = false;
                 Jukebox.PlayOneShotGame(sfxName+"meatHit");
                 game.TackAnim.DoScaledAnimationAsync("TackHitSuccess", 0.5f);
             }
@@ -65,6 +65,7 @@ namespace HeavenStudio.Games.Scripts_MeatGrinder
 
         private void Miss(PlayerActionEvent caller)
         {
+            GameObject.Destroy(gameObject);
             game.bossAnnoyed = true;
             Jukebox.PlayOneShotGame(sfxName+"miss");
             game.TackAnim.DoScaledAnimationAsync("TackMissDark", 0.5f);

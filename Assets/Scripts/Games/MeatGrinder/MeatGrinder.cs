@@ -82,12 +82,6 @@ namespace HeavenStudio.Games
         public Animator BossAnim;
         public Animator TackAnim;
 
-        [Header("Curves")]
-        public BezierCurve3D MeatCurve;
-
-        [Header("Transforms")]
-        public Transform MeatTrans;
-
         [Header("Variables")]
         bool intervalStarted;
         float intervalStartBeat;
