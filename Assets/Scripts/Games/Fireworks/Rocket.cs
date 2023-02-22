@@ -15,6 +15,7 @@ namespace HeavenStudio.Games.Scripts_Fireworks
         public bool isSparkler;
         private Fireworks game;
         public float startBeat;
+        public bool applause;
         private bool exploded;
         private float startY;
 
@@ -54,14 +55,15 @@ namespace HeavenStudio.Games.Scripts_Fireworks
                 anim.gameObject.SetActive(false);
                 return;
             }
-            Success();
+            Success(caller);
         }
 
-        void Success()
+        void Success(PlayerActionEvent caller)
         {
             Jukebox.PlayOneShotGame("fireworks/explodeRocket");
             selectedParticleEffect.Play();
             anim.gameObject.SetActive(false);
+            if (applause) Jukebox.PlayOneShot("applause", caller.timer + caller.startBeat + 1f);
         }
 
         void Out(PlayerActionEvent caller) { }

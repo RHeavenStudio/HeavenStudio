@@ -29,6 +29,11 @@ namespace HeavenStudio.Games.Loaders
                         new Param("volume7", new EntityTypes.Integer(0, 100, 100), "Move Volume 7", "What height and what volume should this move be at?"),
                     }
                 },
+                new GameAction("forceReload", "Bow Force Reload")
+                {
+                    function = delegate { SneakySpirits.instance.ForceReload(); },
+                    defaultLength = 1f,
+                },
                 new GameAction("movebow", "Bow Enter or Exit")
                 {
                     function = delegate {var e = eventCaller.currentEntity; SneakySpirits.instance.MoveBow(e.beat, e.length, e["exit"], e["ease"]); },
@@ -125,6 +130,13 @@ namespace HeavenStudio.Games
             }
         }
 
+        public void ForceReload()
+        {
+            if (hasArrowLoaded) return;
+            bowAnim.DoScaledAnimationAsync("BowDraw", 0.25f); 
+            hasArrowLoaded = true;
+        }
+
         public void MoveBow(float beat, float length, bool enter, int ease)
         {
             movingStartBeat = beat;
@@ -180,7 +192,7 @@ namespace HeavenStudio.Games
             }
             BeatAction.New(instance.gameObject, new List<BeatAction.Action>()
             {
-                new BeatAction.Action(beat + length * 3, delegate { bowAnim.DoScaledAnimationAsync("BowDraw", 0.25f); hasArrowLoaded = true; })
+                new BeatAction.Action(beat + length * 3, delegate { ForceReload(); })
             });
 
             List<BeatAction.Action> ghostSpawns = new List<BeatAction.Action>();
