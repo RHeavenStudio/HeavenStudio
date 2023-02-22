@@ -55,7 +55,7 @@ namespace HeavenStudio.Games.Scripts_Fireworks
 
         void Success(PlayerActionEvent caller)
         {
-            Jukebox.PlayOneShotGame("fireworks/explodeBomb");
+            Jukebox.PlayOneShotGame("fireworks/taikoExplode");
             game.FadeFlashColor(Color.white, new Color(1, 1, 1, 0), 0.5f);
             if (applause) Jukebox.PlayOneShot("applause", caller.timer + caller.startBeat + 1f);
         }
