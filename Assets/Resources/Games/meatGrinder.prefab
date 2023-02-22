@@ -109,7 +109,8 @@ MonoBehaviour:
   triggersAutoplay: 1
   startBeat: 0
   cueLength: 0
-  meatType: 0
+  isDark: 0
+  cueBased: 0
   MeatBall: {fileID: 0}
 --- !u!95 &2525979697215420720
 Animator:
@@ -808,7 +809,6 @@ MonoBehaviour:
   scheduledInputs: []
   firstEnable: 0
   MeatBase: {fileID: 151360738741628551}
-  MeatFall: {fileID: 0}
   BossAnim: {fileID: 8611037719571569512}
   TackAnim: {fileID: 8591333713642157499}
   bossAnnoyed: 0

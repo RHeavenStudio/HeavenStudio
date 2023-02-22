@@ -11,9 +11,8 @@ namespace HeavenStudio.Games.Scripts_MeatGrinder
     {
         public float startBeat;
         public float cueLength;
-        public int meatType;
-        const string sfxName = "meatGrinder/";
-        float flyPos;
+        public bool cueBased;
+        public string meatType;
         bool animCheck = false;
         
 
@@ -30,8 +29,6 @@ namespace HeavenStudio.Games.Scripts_MeatGrinder
         {
             game = MeatGrinder.instance;
             anim = GetComponent<Animator>();
-            
-            flyPos = Conductor.instance.GetPositionFromBeat(startBeat, 1f)+1.1f;
         }
 
         private void Start() 
@@ -40,7 +37,7 @@ namespace HeavenStudio.Games.Scripts_MeatGrinder
 
             BeatAction.New(gameObject, new List<BeatAction.Action>()
             {
-                new BeatAction.Action(startBeat + 0.58f, delegate { anim.DoScaledAnimationAsync("DarkMeatThrown", 0.32f); }),
+                new BeatAction.Action(cueBased ? startBeat + 0.66f : cueLength + startBeat - 1 + 0.66f, delegate { anim.DoScaledAnimationAsync(meatType+"Thrown", 0.32f); }),
             });
         }
 
@@ -51,34 +48,34 @@ namespace HeavenStudio.Games.Scripts_MeatGrinder
             }
             if (anim.IsAnimationNotPlaying() && animCheck) GameObject.Destroy(gameObject);
         }
+        
+        private void InputActions(bool annoyBoss, string whichSfx, string whichAnim)
+        {
+            game.bossAnnoyed = annoyBoss;
+            Jukebox.PlayOneShotGame("meatGrinder/"+whichSfx);
+            game.TackAnim.DoScaledAnimationAsync(whichAnim, 0.5f);
+        } 
+
         private void Hit(PlayerActionEvent caller, float state)
         {
-            //GameObject.Destroy(gameObject);
-            
             game.TackAnim.SetBool("tackMeated", false);
-            anim.DoScaledAnimationAsync("DarkMeatHit", 0.5f);
+            anim.DoScaledAnimationAsync(meatType+"Hit", 0.5f);
             animCheck = true;
 
             if (state >= 1f || state <= -1f)
             {
-                game.bossAnnoyed = true;
-                Jukebox.PlayOneShotGame(sfxName+"tink");
-                game.TackAnim.DoScaledAnimationAsync("TackHitBarely", 0.5f);
-                return;
+                InputActions(true, "tink", "TackHitBarely");
             } else {
-                game.bossAnnoyed = false;
-                Jukebox.PlayOneShotGame(sfxName+"meatHit");
-                game.TackAnim.DoScaledAnimationAsync("TackHitSuccess", 0.5f);
+                InputActions(false, "meatHit", "TackHitSuccess");
             }
         }
 
         private void Miss(PlayerActionEvent caller)
         {
             GameObject.Destroy(gameObject);
-            game.bossAnnoyed = true;
-            Jukebox.PlayOneShotGame(sfxName+"miss");
-            game.TackAnim.DoScaledAnimationAsync("TackMissDark", 0.5f);
+            InputActions(true, "miss", "TackMiss"+meatType);
             game.BossAnim.DoScaledAnimationAsync("BossMiss", 0.5f);
+            game.TackAnim.SetBool("tackMeated", true);
         }
 
         private void Nothing(PlayerActionEvent caller) 
