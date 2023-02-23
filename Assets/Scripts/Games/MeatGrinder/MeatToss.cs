@@ -40,6 +40,10 @@ namespace HeavenStudio.Games.Scripts_MeatGrinder
 
         private void Update()
         {
+            if (GameManager.instance.currentGame != "meatGrinder") {
+                GameObject.Destroy(gameObject);
+            }
+
             if (!Conductor.instance.isPlaying && !Conductor.instance.isPaused) {
                 GameObject.Destroy(gameObject);
             }

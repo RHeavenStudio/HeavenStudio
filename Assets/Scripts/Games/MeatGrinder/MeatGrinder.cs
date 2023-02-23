@@ -42,7 +42,7 @@ namespace HeavenStudio.Games.Loaders
                     priority = 1,
                     preFunction = delegate {
                         var e = eventCaller.currentEntity; 
-                        MeatGrinder.CallInterval(e.beat, e.length);
+                        MeatGrinder.PreInterval(e.beat, e.length);
                     },
                 },
                 new GameAction("bop", "Bop")
@@ -72,7 +72,6 @@ namespace HeavenStudio.Games
         struct QueuedMeatInput
         {
             public float beatAwayFromStart;
-            public string queuedMeatType;
         }
 
         [Header("Objects")]
@@ -151,7 +150,7 @@ namespace HeavenStudio.Games
             bossBop = doesBop;
         }
 
-        public static void CallInterval(float beat, float interval)
+        public static void PreInterval(float beat, float interval)
         {
             MeatGrinder.instance.beatInterval = interval;
 
@@ -211,6 +210,24 @@ namespace HeavenStudio.Games
                 beatAwayFromStart = beat - intervalStartBeat,
             });
         }
+
+        // planned -AJ
+        /*
+        public void MeatCallInactive(float beat) 
+        {
+            Jukebox.PlayOneShotGame(sfxName+"signal");
+            
+            if (!intervalStarted)
+            {
+                StartInterval(beat, beatInterval);
+            }
+
+            queuedInputs.Add(new QueuedMeatInput()
+            {
+                beatAwayFromStart = beat - intervalStartBeat,
+            });
+        }
+        */
 
         public void PassTurn(float beat)
         {
