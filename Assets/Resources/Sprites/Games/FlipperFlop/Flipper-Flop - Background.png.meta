@@ -32,6 +32,9 @@ TextureImporter:
   - first:
       213: 7325182087094832176
     second: Horizon
+  - first:
+      213: 4068820304472881608
+    second: Gradientend
   externalObjects: {}
   serializedVersion: 11
   mipmaps:
@@ -166,10 +169,10 @@ TextureImporter:
       name: Gradient
       rect:
         serializedVersion: 2
-        x: 50
+        x: 52
         y: 358
-        width: 153
-        height: 1315
+        width: 149
+        height: 1126
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -326,6 +329,27 @@ TextureImporter:
       bones: []
       spriteID: 03c87583c4648a560800000000000000
       internalID: 7325182087094832176
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Gradientend
+      rect:
+        serializedVersion: 2
+        x: 62
+        y: 361
+        width: 133
+        height: 42
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 8c9b007628a577830800000000000000
+      internalID: 4068820304472881608
       vertices: []
       indices: 
       edges: []
