@@ -76,6 +76,7 @@ namespace HeavenStudio.Games
         [Header("Properties")]
         private bool missed;
         bool isMoving;
+        bool moveLeft;
         static List<QueuedFlip> queuedInputs = new List<QueuedFlip>();
         [SerializeField] FlipperFlopFlipper flipperPlayer;
         [SerializeField] List<FlipperFlopFlipper> flippers = new List<FlipperFlopFlipper>();
@@ -141,14 +142,14 @@ namespace HeavenStudio.Games
                 {
                     if (!isMoving) 
                     {
-                        currentXPos = flippersMovement.position.x + (flippers[0].left ? -1.5f : 1.5f); 
+                        currentXPos = flippersMovement.position.x + (moveLeft ? -1.5f : 1.5f); 
                         isMoving = true; 
-                        currentCameraXPos = GameCamera.additionalPosition.x + (flippers[0].left ? -1.5f : 1.5f);
+                        currentCameraXPos = GameCamera.additionalPosition.x + (moveLeft ? -1.5f : 1.5f);
                     } 
                     if (cond.songPositionInBeats >= queuedMovements[0])
                     {
                         float normalizedBeat = cond.GetPositionFromBeat(queuedMovements[0], 0.5f);
-                        float normalizedCamBeat = cond.GetPositionFromBeat(queuedMovements[0], 0.99f);
+                        float normalizedCamBeat = cond.GetPositionFromBeat(queuedMovements[0], 1f);
                         if (normalizedCamBeat > 1f)
                         {
                             queuedMovements.RemoveAt(0);
@@ -220,8 +221,12 @@ namespace HeavenStudio.Games
             {
                 if (roll)
                 {
-                    queuedMovements.Add(beat + i);
                     ScheduleInput(beat - 1, 1 + i, InputType.STANDARD_ALT_DOWN, JustFlipperRoll, MissFlipperRoll, Nothing);
+                    queuedMovements.Add(beat + i);
+                    BeatAction.New(instance.gameObject, new List<BeatAction.Action>()
+                    {
+                        new BeatAction.Action(beat + i - 0.5f, delegate { moveLeft = flippers[0].left;})
+                    });
                     foreach (var flipper in flippers)
                     {
                         BeatAction.New(instance.gameObject, new List<BeatAction.Action>()

@@ -15,10 +15,12 @@ namespace HeavenStudio.Games.Scripts_FlipperFlop
         public bool left;
         bool up;
         bool canBlink = true;
+        private FlipperFlop game;
 
         private void Awake()
         {
             faceAnim.Play("FaceNormal", 0, 0);
+            game = FlipperFlop.instance;
         }
 
         private void Update()
