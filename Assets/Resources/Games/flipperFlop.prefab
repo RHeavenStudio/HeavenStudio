@@ -1319,7 +1319,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2047907407575200474}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -0.34646857, y: -0.5254178, z: -106.50359}
+  m_LocalPosition: {x: -0.3, y: -0.5254178, z: -106.50359}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 6426991117366313349}
@@ -5011,6 +5011,7 @@ MonoBehaviour:
   firstEnable: 0
   captainTuckAnim: {fileID: 2975798990096139873}
   captainTuckFaceAnim: {fileID: 5770986652128577296}
+  flippersMovement: {fileID: 6644341696341790948}
   flipperPlayer: {fileID: 6920852969013426776}
   flippers:
   - {fileID: 8540647158547329847}

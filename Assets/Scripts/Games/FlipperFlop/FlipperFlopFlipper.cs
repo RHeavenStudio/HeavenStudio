@@ -12,7 +12,7 @@ namespace HeavenStudio.Games.Scripts_FlipperFlop
         [SerializeField] GameObject leftImpact;
         [SerializeField] GameObject rightImpact;
         public bool player;
-        bool left;
+        public bool left;
         bool up;
         bool canBlink = true;
 
@@ -54,16 +54,6 @@ namespace HeavenStudio.Games.Scripts_FlipperFlop
                         new BeatAction.Action(Conductor.instance.songPositionInBeats + 0.3f, delegate { faceAnim.Play("FaceGoofy"); }),
                     });
                 }
-                string shouldReverse = "";
-                //if (up) shouldReverse = "Reverse";
-                if (left)
-                {
-                    anim.DoScaledAnimationAsync(shouldReverse + "RollLeft", 0.5f);
-                }
-                else
-                {
-                    anim.DoScaledAnimationAsync(shouldReverse + "RollRight", 0.5f);
-                }
 
                 up = !up;
             }
@@ -99,17 +89,13 @@ namespace HeavenStudio.Games.Scripts_FlipperFlop
                         new BeatAction.Action(Conductor.instance.songPositionInBeats + 0.3f, delegate { faceAnim.Play("FaceGoofy"); }),
                     });
                 }
-                string shouldReverse = "";
-                if (up) shouldReverse = "Reverse";
-                if (left)
-                {
-                    anim.DoScaledAnimationAsync(shouldReverse + "FlopLeft", 0.5f);
-                }
-                else
-                {
-                    anim.DoScaledAnimationAsync(shouldReverse + "FlopRight", 0.5f);
-                }
             }
+            string shouldReverse = up ? "Reverse" : "";
+            if (roll) shouldReverse = !up ? "Reverse" : "";
+            string leftOrRight = left ? "Left" : "Right";
+            string rollOrFlop = roll ? "Roll" : "Flop";
+
+            anim.DoScaledAnimationAsync(shouldReverse + rollOrFlop + leftOrRight, 0.5f);
             left = !left;
         } 
 

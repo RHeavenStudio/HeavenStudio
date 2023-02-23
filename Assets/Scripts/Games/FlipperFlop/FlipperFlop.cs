@@ -72,11 +72,18 @@ namespace HeavenStudio.Games
         [Header("Components")]
         [SerializeField] Animator captainTuckAnim;
         [SerializeField] Animator captainTuckFaceAnim;
+        [SerializeField] Transform flippersMovement;
         [Header("Properties")]
         private bool missed;
+        bool isMoving;
         static List<QueuedFlip> queuedInputs = new List<QueuedFlip>();
         [SerializeField] FlipperFlopFlipper flipperPlayer;
         [SerializeField] List<FlipperFlopFlipper> flippers = new List<FlipperFlopFlipper>();
+        List<float> queuedMovements = new List<float>();
+        float lastXPos;
+        float currentXPos;
+        float lastCameraXPos;
+        float currentCameraXPos;
         public struct QueuedFlip
         {
             public float beat;
@@ -108,6 +115,8 @@ namespace HeavenStudio.Games
         void Awake()
         {
             instance = this;
+            lastXPos = flippersMovement.position.x;
+            currentXPos = lastXPos;
         }
 
         void OnDestroy()
@@ -127,6 +136,39 @@ namespace HeavenStudio.Games
                         QueueFlips(input.beat, input.length, input.roll, input.uh, input.thatsIt, input.appreciation);
                     }
                     queuedInputs.Clear();
+                }
+                if (queuedMovements.Count > 0)
+                {
+                    if (!isMoving) 
+                    {
+                        currentXPos = flippersMovement.position.x + (flippers[0].left ? -1.5f : 1.5f); 
+                        isMoving = true; 
+                        currentCameraXPos = GameCamera.additionalPosition.x + (flippers[0].left ? -1.5f : 1.5f);
+                    } 
+                    if (cond.songPositionInBeats >= queuedMovements[0])
+                    {
+                        float normalizedBeat = cond.GetPositionFromBeat(queuedMovements[0], 0.5f);
+                        float normalizedCamBeat = cond.GetPositionFromBeat(queuedMovements[0], 0.99f);
+                        if (normalizedCamBeat > 1f)
+                        {
+                            queuedMovements.RemoveAt(0);
+                            isMoving = false;
+                            lastXPos = currentXPos;
+                            lastCameraXPos = currentCameraXPos;
+                        }
+                        else
+                        {
+                            EasingFunction.Function funcCam = EasingFunction.GetEasingFunction(EasingFunction.Ease.EaseInOutQuad);
+                            float newCameraPosX = funcCam(lastCameraXPos, currentCameraXPos, normalizedCamBeat);
+                            GameCamera.additionalPosition = new Vector3(newCameraPosX, 0, 0);
+                        }
+                        if (1f >= normalizedBeat)
+                        {
+                            EasingFunction.Function func = EasingFunction.GetEasingFunction(EasingFunction.Ease.EaseOutQuad);
+                            float newPosX = func(lastXPos, currentXPos, normalizedBeat);
+                            flippersMovement.position = new Vector3(newPosX, flippersMovement.position.y, flippersMovement.position.z);
+                        }
+                    }
                 }
             }
         }
@@ -178,6 +220,7 @@ namespace HeavenStudio.Games
             {
                 if (roll)
                 {
+                    queuedMovements.Add(beat + i);
                     ScheduleInput(beat - 1, 1 + i, InputType.STANDARD_ALT_DOWN, JustFlipperRoll, MissFlipperRoll, Nothing);
                     foreach (var flipper in flippers)
                     {
