@@ -85,7 +85,6 @@ namespace HeavenStudio.Games
         bool intervalStarted;
         float intervalStartBeat;
         float beatInterval = 4f;
-        float misses;
         bool bossBop = true;
         public bool bossAnnoyed = false;
         private float lastReportedBeat = 0f;
@@ -169,18 +168,12 @@ namespace HeavenStudio.Games
             intervalStartBeat = beat;
             if (!intervalStarted)
             {
-                misses = 0;
                 intervalStarted = true;
             }
 
             BeatAction.New(gameObject, new List<BeatAction.Action>()
             {
                 new BeatAction.Action(beat + interval - 1, delegate { PassTurn(beat); }),
-                new BeatAction.Action(beat + interval, delegate { 
-                    if (Conductor.instance.ReportBeat(ref lastReportedBeat)) { 
-                        BossAnim.DoScaledAnimationAsync(bossAnnoyed ? "BossMiss" : "Bop", 0.5f); 
-                    }
-                    }),
             });
         }
 
@@ -210,24 +203,6 @@ namespace HeavenStudio.Games
                 beatAwayFromStart = beat - intervalStartBeat,
             });
         }
-
-        // planned -AJ
-        /*
-        public void MeatCallInactive(float beat) 
-        {
-            Jukebox.PlayOneShotGame(sfxName+"signal");
-            
-            if (!intervalStarted)
-            {
-                StartInterval(beat, beatInterval);
-            }
-
-            queuedInputs.Add(new QueuedMeatInput()
-            {
-                beatAwayFromStart = beat - intervalStartBeat,
-            });
-        }
-        */
 
         public void PassTurn(float beat)
         {
