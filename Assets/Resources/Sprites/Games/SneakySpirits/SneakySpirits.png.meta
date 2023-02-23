@@ -172,16 +172,10 @@ TextureImporter:
     second: Groundtile
   - first:
       213: 3532029475866527194
-    second: HouseOverlap
+    second: SneakySpirits_34
   - first:
       213: -1500490936751498959
-    second: ghostShadow0
-  - first:
-      213: -314081172815163921
-    second: ghostShadow1
-  - first:
-      213: -6152106560249733230
-    second: NyoomCutoff
+    second: SneakySpirits_35
   externalObjects: {}
   serializedVersion: 11
   mipmaps:
@@ -226,7 +220,7 @@ TextureImporter:
   spriteMeshType: 1
   alignment: 0
   spritePivot: {x: 0.5, y: 0.5}
-  spritePixelsToUnits: 100
+  spritePixelsToUnits: 400
   spriteBorder: {x: 0, y: 0, z: 0, w: 0}
   spriteGenerateFallbackPhysicsShape: 1
   alphaUsage: 1
@@ -245,7 +239,7 @@ TextureImporter:
   platformSettings:
   - serializedVersion: 3
     buildTarget: DefaultTexturePlatform
-    maxTextureSize: 2048
+    maxTextureSize: 4096
     resizeAlgorithm: 0
     textureFormat: -1
     textureCompression: 1
@@ -257,7 +251,7 @@ TextureImporter:
     forceMaximumCompressionQuality_BC6H_BC7: 0
   - serializedVersion: 3
     buildTarget: Standalone
-    maxTextureSize: 2048
+    maxTextureSize: 4096
     resizeAlgorithm: 0
     textureFormat: -1
     textureCompression: 1
@@ -274,10 +268,10 @@ TextureImporter:
       name: House
       rect:
         serializedVersion: 2
-        x: 1
-        y: 224
-        width: 847
-        height: 263
+        x: 13
+        y: 863
+        width: 3318
+        height: 1042
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -295,10 +289,10 @@ TextureImporter:
       name: Wall
       rect:
         serializedVersion: 2
-        x: 1
-        y: 1
-        width: 847
-        height: 222
+        x: 11
+        y: 22
+        width: 3325
+        height: 820
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -316,10 +310,10 @@ TextureImporter:
       name: Ghost_move
       rect:
         serializedVersion: 2
-        x: 1
-        y: 664
-        width: 71
-        height: 191
+        x: 50
+        y: 2621
+        width: 208
+        height: 709
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -337,10 +331,10 @@ TextureImporter:
       name: Ghost_laugh
       rect:
         serializedVersion: 2
-        x: 73
-        y: 760
-        width: 71
-        height: 95
+        x: 332
+        y: 3013
+        width: 197
+        height: 289
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -358,10 +352,10 @@ TextureImporter:
       name: Ghost_miss
       rect:
         serializedVersion: 2
-        x: 369
-        y: 760
-        width: 87
-        height: 95
+        x: 1493
+        y: 3002
+        width: 252
+        height: 292
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -379,10 +373,10 @@ TextureImporter:
       name: Ghost_nyoom_practice
       rect:
         serializedVersion: 2
-        x: 1
-        y: 584
-        width: 207
-        height: 79
+        x: 83
+        y: 2311
+        width: 670
+        height: 256
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -400,10 +394,10 @@ TextureImporter:
       name: Ghost_trail
       rect:
         serializedVersion: 2
-        x: 329
-        y: 584
-        width: 119
-        height: 79
+        x: 1360
+        y: 2353
+        width: 343
+        height: 193
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -421,10 +415,10 @@ TextureImporter:
       name: Ghost_trail_hit
       rect:
         serializedVersion: 2
-        x: 209
-        y: 584
-        width: 119
-        height: 79
+        x: 896
+        y: 2332
+        width: 343
+        height: 217
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -442,10 +436,10 @@ TextureImporter:
       name: Ghost_nyoom
       rect:
         serializedVersion: 2
-        x: 1
-        y: 488
-        width: 295
-        height: 95
+        x: 96
+        y: 1953
+        width: 1014
+        height: 272
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -463,10 +457,10 @@ TextureImporter:
       name: Arrow_hit
       rect:
         serializedVersion: 2
-        x: 297
-        y: 488
-        width: 103
-        height: 95
+        x: 1217
+        y: 1939
+        width: 316
+        height: 310
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -484,10 +478,10 @@ TextureImporter:
       name: Ghost_hit_mouth
       rect:
         serializedVersion: 2
-        x: 145
-        y: 760
-        width: 103
-        height: 95
+        x: 606
+        y: 3039
+        width: 338
+        height: 237
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -505,10 +499,10 @@ TextureImporter:
       name: Ghost_hit_body
       rect:
         serializedVersion: 2
-        x: 73
-        y: 664
-        width: 167
-        height: 95
+        x: 325
+        y: 2667
+        width: 567
+        height: 228
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -526,10 +520,10 @@ TextureImporter:
       name: Ghost_hit_nose
       rect:
         serializedVersion: 2
-        x: 241
-        y: 664
-        width: 127
-        height: 95
+        x: 1010
+        y: 2649
+        width: 383
+        height: 275
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -547,10 +541,10 @@ TextureImporter:
       name: Ghost_hit_cheek
       rect:
         serializedVersion: 2
-        x: 249
-        y: 760
-        width: 119
-        height: 95
+        x: 1010
+        y: 3021
+        width: 402
+        height: 266
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -568,10 +562,10 @@ TextureImporter:
       name: Bow_draw_3
       rect:
         serializedVersion: 2
-        x: 1
-        y: 856
-        width: 159
-        height: 167
+        x: 52
+        y: 3411
+        width: 539
+        height: 527
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -589,10 +583,10 @@ TextureImporter:
       name: Tree_1
       rect:
         serializedVersion: 2
-        x: 849
-        y: 320
-        width: 127
-        height: 143
+        x: 3378
+        y: 1309
+        width: 390
+        height: 467
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -610,10 +604,10 @@ TextureImporter:
       name: Tree_2
       rect:
         serializedVersion: 2
-        x: 849
-        y: 176
-        width: 127
-        height: 143
+        x: 3375
+        y: 741
+        width: 393
+        height: 469
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -631,10 +625,10 @@ TextureImporter:
       name: Bow_draw_1
       rect:
         serializedVersion: 2
-        x: 210
-        y: 856
-        width: 78
-        height: 167
+        x: 849
+        y: 3390
+        width: 304
+        height: 565
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -652,10 +646,10 @@ TextureImporter:
       name: Bow_neutral
       rect:
         serializedVersion: 2
-        x: 161
-        y: 856
-        width: 47
-        height: 167
+        x: 672
+        y: 3356
+        width: 135
+        height: 620
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -673,10 +667,10 @@ TextureImporter:
       name: Bowstring
       rect:
         serializedVersion: 2
-        x: 481
-        y: 688
-        width: 31
-        height: 167
+        x: 1924
+        y: 2737
+        width: 54
+        height: 547
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -694,10 +688,10 @@ TextureImporter:
       name: Bowstring_wobble1
       rect:
         serializedVersion: 2
-        x: 450
-        y: 857
-        width: 29
-        height: 165
+        x: 1789
+        y: 3399
+        width: 76
+        height: 541
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -715,10 +709,10 @@ TextureImporter:
       name: Bowstring_wobble2
       rect:
         serializedVersion: 2
-        x: 482
-        y: 857
-        width: 29
-        height: 165
+        x: 1892
+        y: 3398
+        width: 82
+        height: 540
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -736,12 +730,12 @@ TextureImporter:
       name: Bow_draw_2
       rect:
         serializedVersion: 2
-        x: 290
-        y: 856
-        width: 110
-        height: 167
-      alignment: 0
-      pivot: {x: 0.5, y: 0.5}
+        x: 1180
+        y: 3379
+        width: 348
+        height: 557
+      alignment: 9
+      pivot: {x: 0.4901607, y: 0.4385261}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
@@ -757,10 +751,10 @@ TextureImporter:
       name: Bow_draw_button
       rect:
         serializedVersion: 2
-        x: 785
-        y: 720
-        width: 95
-        height: 63
+        x: 3108
+        y: 2846
+        width: 298
+        height: 190
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -778,10 +772,10 @@ TextureImporter:
       name: Door_closed
       rect:
         serializedVersion: 2
-        x: 546
-        y: 520
-        width: 118
-        height: 183
+        x: 2187
+        y: 2088
+        width: 379
+        height: 633
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -799,10 +793,10 @@ TextureImporter:
       name: Door_open1
       rect:
         serializedVersion: 2
-        x: 665
-        y: 520
-        width: 119
-        height: 183
+        x: 2741
+        y: 2210
+        width: 284
+        height: 512
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -820,10 +814,10 @@ TextureImporter:
       name: Door_open2
       rect:
         serializedVersion: 2
-        x: 785
-        y: 520
-        width: 119
-        height: 183
+        x: 3277
+        y: 2203
+        width: 210
+        height: 507
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -841,10 +835,10 @@ TextureImporter:
       name: Door_open3
       rect:
         serializedVersion: 2
-        x: 905
-        y: 520
-        width: 119
-        height: 183
+        x: 3799
+        y: 2207
+        width: 157
+        height: 494
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -862,10 +856,10 @@ TextureImporter:
       name: Arrow
       rect:
         serializedVersion: 2
-        x: 513
-        y: 928
-        width: 159
-        height: 95
+        x: 2035
+        y: 3658
+        width: 576
+        height: 328
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -883,10 +877,10 @@ TextureImporter:
       name: Arrow_miss1
       rect:
         serializedVersion: 2
-        x: 674
-        y: 944
-        width: 110
-        height: 79
+        x: 2661
+        y: 3807
+        width: 365
+        height: 172
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -904,10 +898,10 @@ TextureImporter:
       name: Arrow_miss2
       rect:
         serializedVersion: 2
-        x: 674
-        y: 864
-        width: 110
-        height: 79
+        x: 2160
+        y: 2889
+        width: 456
+        height: 279
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -925,10 +919,10 @@ TextureImporter:
       name: Arrow_miss3
       rect:
         serializedVersion: 2
-        x: 674
-        y: 784
-        width: 110
-        height: 78
+        x: 2687
+        y: 3075
+        width: 336
+        height: 259
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -946,10 +940,10 @@ TextureImporter:
       name: Arrow_miss_woosh
       rect:
         serializedVersion: 2
-        x: 673
-        y: 704
-        width: 111
-        height: 78
+        x: 2678
+        y: 2822
+        width: 356
+        height: 206
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -967,10 +961,10 @@ TextureImporter:
       name: Arrow_hit_long
       rect:
         serializedVersion: 2
-        x: 513
-        y: 832
-        width: 159
-        height: 95
+        x: 2053
+        y: 3277
+        width: 551
+        height: 335
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -988,10 +982,10 @@ TextureImporter:
       name: Arrow_hit_shrot
       rect:
         serializedVersion: 2
-        x: 513
-        y: 736
-        width: 159
-        height: 95
+        x: 2666
+        y: 3395
+        width: 378
+        height: 287
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -1009,10 +1003,10 @@ TextureImporter:
       name: Ghost_tongue1
       rect:
         serializedVersion: 2
-        x: 897
-        y: 896
-        width: 63
-        height: 63
+        x: 3592
+        y: 3570
+        width: 92
+        height: 109
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -1030,10 +1024,10 @@ TextureImporter:
       name: Ghost_tongue4
       rect:
         serializedVersion: 2
-        x: 961
-        y: 896
-        width: 63
-        height: 63
+        x: 3831
+        y: 3570
+        width: 113
+        height: 107
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -1051,10 +1045,10 @@ TextureImporter:
       name: Ghost_tongue2
       rect:
         serializedVersion: 2
-        x: 961
-        y: 960
-        width: 63
-        height: 63
+        x: 3833
+        y: 3805
+        width: 107
+        height: 103
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -1072,10 +1066,10 @@ TextureImporter:
       name: Ghost_tongue3
       rect:
         serializedVersion: 2
-        x: 897
-        y: 960
-        width: 63
-        height: 63
+        x: 3559
+        y: 3830
+        width: 160
+        height: 84
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -1093,10 +1087,10 @@ TextureImporter:
       name: Raindrop
       rect:
         serializedVersion: 2
-        x: 913
-        y: 784
-        width: 47
-        height: 111
+        x: 3611
+        y: 3113
+        width: 106
+        height: 336
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -1114,10 +1108,10 @@ TextureImporter:
       name: Rainplop1
       rect:
         serializedVersion: 2
-        x: 962
-        y: 865
-        width: 61
-        height: 29
+        x: 3847
+        y: 3415
+        width: 84
+        height: 45
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -1135,10 +1129,10 @@ TextureImporter:
       name: Rainplop2
       rect:
         serializedVersion: 2
-        x: 962
-        y: 833
-        width: 61
-        height: 29
+        x: 3844
+        y: 3289
+        width: 90
+        height: 46
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -1156,10 +1150,10 @@ TextureImporter:
       name: Rainplop3
       rect:
         serializedVersion: 2
-        x: 962
-        y: 801
-        width: 61
-        height: 29
+        x: 3830
+        y: 3163
+        width: 117
+        height: 46
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -1177,12 +1171,12 @@ TextureImporter:
       name: Ghost_hand1
       rect:
         serializedVersion: 2
-        x: 369
-        y: 712
-        width: 47
-        height: 47
-      alignment: 0
-      pivot: {x: 0.5, y: 0.5}
+        x: 1501
+        y: 2825
+        width: 91
+        height: 91
+      alignment: 9
+      pivot: {x: 0.5277983, y: 0.5138952}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
@@ -1198,10 +1192,10 @@ TextureImporter:
       name: Ghost_hand2
       rect:
         serializedVersion: 2
-        x: 369
-        y: 664
-        width: 47
-        height: 47
+        x: 1494
+        y: 2648
+        width: 93
+        height: 80
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -1219,10 +1213,10 @@ TextureImporter:
       name: Ghost_hand3
       rect:
         serializedVersion: 2
-        x: 417
-        y: 712
-        width: 47
-        height: 47
+        x: 1688
+        y: 2841
+        width: 89
+        height: 70
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -1240,10 +1234,10 @@ TextureImporter:
       name: Ghost_hand4
       rect:
         serializedVersion: 2
-        x: 417
-        y: 664
-        width: 47
-        height: 47
+        x: 1685
+        y: 2646
+        width: 92
+        height: 80
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -1261,10 +1255,10 @@ TextureImporter:
       name: Wall_shadow
       rect:
         serializedVersion: 2
-        x: 401
-        y: 488
-        width: 143
-        height: 95
+        x: 1662
+        y: 1970
+        width: 389
+        height: 238
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -1282,10 +1276,10 @@ TextureImporter:
       name: Ghost_laugh_shadow
       rect:
         serializedVersion: 2
-        x: 786
-        y: 880
-        width: 78
-        height: 47
+        x: 3130
+        y: 3451
+        width: 206
+        height: 127
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -1303,10 +1297,10 @@ TextureImporter:
       name: Bow_neutral_shadow
       rect:
         serializedVersion: 2
-        x: 786
-        y: 928
-        width: 78
-        height: 47
+        x: 3123
+        y: 3674
+        width: 159
+        height: 77
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -1324,10 +1318,10 @@ TextureImporter:
       name: Rain_slowmo1
       rect:
         serializedVersion: 2
-        x: 881
-        y: 720
-        width: 31
-        height: 63
+        x: 3495
+        y: 2899
+        width: 44
+        height: 106
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -1345,10 +1339,10 @@ TextureImporter:
       name: Rain_slowmo2
       rect:
         serializedVersion: 2
-        x: 913
-        y: 720
-        width: 31
-        height: 63
+        x: 3611
+        y: 2893
+        width: 55
+        height: 100
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -1366,10 +1360,10 @@ TextureImporter:
       name: Rain_slowmo3
       rect:
         serializedVersion: 2
-        x: 945
-        y: 720
-        width: 31
-        height: 63
+        x: 3736
+        y: 2880
+        width: 51
+        height: 99
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -1387,10 +1381,10 @@ TextureImporter:
       name: Rain_slowmo4
       rect:
         serializedVersion: 2
-        x: 977
-        y: 720
-        width: 31
-        height: 63
+        x: 3857
+        y: 2867
+        width: 56
+        height: 105
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -1408,10 +1402,10 @@ TextureImporter:
       name: Arrow_shadow
       rect:
         serializedVersion: 2
-        x: 786
-        y: 976
-        width: 110
-        height: 47
+        x: 3111
+        y: 3852
+        width: 377
+        height: 116
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -1429,10 +1423,10 @@ TextureImporter:
       name: Pink_Pointer
       rect:
         serializedVersion: 2
-        x: 865
-        y: 784
-        width: 47
-        height: 111
+        x: 3435
+        y: 3117
+        width: 97
+        height: 333
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -1450,10 +1444,10 @@ TextureImporter:
       name: Bow_wobble
       rect:
         serializedVersion: 2
-        x: 401
-        y: 856
-        width: 47
-        height: 167
+        x: 1592
+        y: 3379
+        width: 153
+        height: 592
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -1471,10 +1465,10 @@ TextureImporter:
       name: Groundtile
       rect:
         serializedVersion: 2
-        x: 850
-        y: 465
-        width: 21
-        height: 21
+        x: 3284
+        y: 1861
+        width: 43
+        height: 42
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -1489,15 +1483,15 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: HouseOverlap
+      name: SneakySpirits_34
       rect:
         serializedVersion: 2
-        x: 2
-        y: 226
-        width: 239
-        height: 259
-      alignment: 9
-      pivot: {x: 0.5, y: 0.5}
+        x: 3093
+        y: 3325
+        width: 231
+        height: 67
+      alignment: 0
+      pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
@@ -1510,15 +1504,15 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: ghostShadow0
+      name: SneakySpirits_35
       rect:
         serializedVersion: 2
-        x: 786
-        y: 784
-        width: 78
-        height: 47
+        x: 3128
+        y: 3124
+        width: 234
+        height: 82
       alignment: 0
-      pivot: {x: 0.5, y: 0.5}
+      pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
@@ -1526,48 +1520,6 @@ TextureImporter:
       bones: []
       spriteID: 139db36617f2d2be0800000000000000
       internalID: -1500490936751498959
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: ghostShadow1
-      rect:
-        serializedVersion: 2
-        x: 786
-        y: 832
-        width: 78
-        height: 47
-      alignment: 0
-      pivot: {x: 0.5, y: 0.5}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: fedc6bf56d824abf0800000000000000
-      internalID: -314081172815163921
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: NyoomCutoff
-      rect:
-        serializedVersion: 2
-        x: 1
-        y: 488
-        width: 214
-        height: 95
-      alignment: 0
-      pivot: {x: 0.5, y: 0.5}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: 29fd6ffbda35f9aa0800000000000000
-      internalID: -6152106560249733230
       vertices: []
       indices: 
       edges: []

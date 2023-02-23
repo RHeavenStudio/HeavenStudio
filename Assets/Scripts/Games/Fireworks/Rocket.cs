@@ -60,7 +60,7 @@ namespace HeavenStudio.Games.Scripts_Fireworks
 
         void Success(PlayerActionEvent caller)
         {
-            Jukebox.PlayOneShotGame("fireworks/explodeRocket");
+            Jukebox.PlayOneShotGame("fireworks/explode_5");
             selectedParticleEffect.Play();
             anim.gameObject.SetActive(false);
             if (applause) Jukebox.PlayOneShot("applause", caller.timer + caller.startBeat + 1f);
