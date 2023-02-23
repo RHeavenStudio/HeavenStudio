@@ -1140,7 +1140,7 @@ ParticleSystem:
         m_PostInfinity: 2
         m_RotationOrder: 4
     randomizeRotationDirection: 0
-    maxNumParticles: 100
+    maxNumParticles: 40
     size3D: 0
     rotation3D: 0
     gravityModifier:
@@ -16975,6 +16975,8 @@ MonoBehaviour:
   - {fileID: 5346254735527655265}
   - {fileID: 4295673444852022141}
   - {fileID: 9019885175047260189}
+  normalRain: {fileID: 2010818742874192372}
+  slowRain: {fileID: 7630866677535136957}
 --- !u!1 &7556994794361785014
 GameObject:
   m_ObjectHideFlags: 0
@@ -17073,7 +17075,7 @@ ParticleSystem:
   m_GameObject: {fileID: 7630866677535136957}
   serializedVersion: 7
   lengthInSec: 5
-  simulationSpeed: 0.002
+  simulationSpeed: 0.008
   stopAction: 0
   cullingMode: 0
   ringBufferMode: 0
