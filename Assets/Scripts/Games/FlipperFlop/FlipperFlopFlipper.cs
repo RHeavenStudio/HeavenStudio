@@ -31,7 +31,12 @@ namespace HeavenStudio.Games.Scripts_FlipperFlop
             }
         }
 
-        public void Flip(bool roll, bool hit, bool barely = false)
+        public void PrepareFlip()
+        {
+            anim.DoScaledAnimationAsync("PrepareFlop", 0.5f);
+        }
+
+        public void Flip(bool roll, bool hit, bool barely = false, bool dontSwitch = false)
         {
             if (roll)
             {
@@ -86,19 +91,27 @@ namespace HeavenStudio.Games.Scripts_FlipperFlop
                 {
                     faceAnim.Play("FaceOw");
                     canBlink = false;
+                    string shouldReverse = up ? "Reverse" : "";
+                    string leftOrRight = left ? "Left" : "Right";
+
+                    anim.DoScaledAnimationAsync(shouldReverse + "MissFlop" + leftOrRight, 0.5f);
                     BeatAction.New(this.gameObject, new List<BeatAction.Action>()
                     {
                         new BeatAction.Action(Conductor.instance.songPositionInBeats + 0.3f, delegate { faceAnim.Play("FaceGoofy"); }),
                     });
                 }
             }
-            string shouldReverse = up ? "Reverse" : "";
-            if (roll) shouldReverse = !up ? "Reverse" : "";
-            string leftOrRight = left ? "Left" : "Right";
-            string rollOrFlop = roll ? "Roll" : "Flop";
+            if (hit || barely || roll)
+            {
+                string shouldReverse = up ? "Reverse" : "";
+                if (roll) shouldReverse = !up ? "Reverse" : "";
+                string leftOrRight = left ? "Left" : "Right";
+                string rollOrFlop = roll ? "Roll" : "Flop";
 
-            anim.DoScaledAnimationAsync(shouldReverse + rollOrFlop + leftOrRight, 0.5f);
-            left = !left;
+                anim.DoScaledAnimationAsync(shouldReverse + rollOrFlop + leftOrRight, 0.5f);
+            }
+
+            if (!dontSwitch) left = !left;
         } 
 
         public void Bop()
