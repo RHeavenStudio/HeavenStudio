@@ -586,6 +586,8 @@ AnimationClip:
       value: {fileID: 7772160620199938533, guid: b68ebf5786a92d04684fa60c0d21baca, type: 3}
     - time: 0.2
       value: {fileID: 7772160620199938533, guid: b68ebf5786a92d04684fa60c0d21baca, type: 3}
+    - time: 0.26666668
+      value: {fileID: 7772160620199938533, guid: b68ebf5786a92d04684fa60c0d21baca, type: 3}
     - time: 0.46666667
       value: {fileID: -3479970656187807609, guid: b68ebf5786a92d04684fa60c0d21baca, type: 3}
     - time: 0.5
@@ -654,6 +656,7 @@ AnimationClip:
     - {fileID: -6057205866295797077, guid: b68ebf5786a92d04684fa60c0d21baca, type: 3}
     - {fileID: -3479970656187807609, guid: b68ebf5786a92d04684fa60c0d21baca, type: 3}
     - {fileID: -3479970656187807609, guid: b68ebf5786a92d04684fa60c0d21baca, type: 3}
+    - {fileID: 7772160620199938533, guid: b68ebf5786a92d04684fa60c0d21baca, type: 3}
     - {fileID: 7772160620199938533, guid: b68ebf5786a92d04684fa60c0d21baca, type: 3}
     - {fileID: 7772160620199938533, guid: b68ebf5786a92d04684fa60c0d21baca, type: 3}
     - {fileID: 7772160620199938533, guid: b68ebf5786a92d04684fa60c0d21baca, type: 3}
@@ -2407,7 +2410,7 @@ AnimationClip:
       m_PostInfinity: 2
       m_RotationOrder: 4
     attribute: m_LocalEulerAngles.z
-    path: 
+    path: LeftFlipper
     classID: 4
     script: {fileID: 0}
   - curve:
@@ -2417,7 +2420,7 @@ AnimationClip:
       m_PostInfinity: 2
       m_RotationOrder: 4
     attribute: m_LocalEulerAngles.y
-    path: 
+    path: LeftFlipper
     classID: 4
     script: {fileID: 0}
   - curve:
@@ -2427,7 +2430,7 @@ AnimationClip:
       m_PostInfinity: 2
       m_RotationOrder: 4
     attribute: m_LocalEulerAngles.x
-    path: 
+    path: LeftFlipper
     classID: 4
     script: {fileID: 0}
   - curve:
@@ -2437,7 +2440,7 @@ AnimationClip:
       m_PostInfinity: 2
       m_RotationOrder: 4
     attribute: m_LocalEulerAngles.z
-    path: LeftFlipper
+    path: 
     classID: 4
     script: {fileID: 0}
   - curve:
@@ -2447,7 +2450,7 @@ AnimationClip:
       m_PostInfinity: 2
       m_RotationOrder: 4
     attribute: m_LocalEulerAngles.y
-    path: LeftFlipper
+    path: 
     classID: 4
     script: {fileID: 0}
   - curve:
@@ -2457,7 +2460,7 @@ AnimationClip:
       m_PostInfinity: 2
       m_RotationOrder: 4
     attribute: m_LocalEulerAngles.x
-    path: LeftFlipper
+    path: 
     classID: 4
     script: {fileID: 0}
   - curve:
