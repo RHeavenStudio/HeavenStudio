@@ -406,7 +406,7 @@ namespace HeavenStudio.Games
                 case (int) MarchingOrders.FaceTurnLength.Fast:
                     turnLength = 0;
                     fastTurn = "fast";
-                    fastTurnBeats = 0.48f;
+                    fastTurnBeats = 0.5f;
                     break;
                 default:
                     turnLength = 1;
