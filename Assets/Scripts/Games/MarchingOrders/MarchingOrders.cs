@@ -148,8 +148,6 @@ namespace HeavenStudio.Games
         private int background;
         private float steamTime;
 
-        private string fastTurn;
-
         static float wantMarch = float.MaxValue;
         static float wantMarchLength = 0f;
         
@@ -401,6 +399,7 @@ namespace HeavenStudio.Games
         
         public void SargeFaceTurn(float beat, int type, int type2, bool toggle)
         {
+            string fastTurn = "";
             switch (type2)
             {
                 case (int) MarchingOrders.FaceTurnLength.Fast:
