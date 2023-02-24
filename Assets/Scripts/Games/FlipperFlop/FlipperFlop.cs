@@ -60,6 +60,16 @@ namespace HeavenStudio.Games.Loaders
                         new Param("whoBops", FlipperFlop.WhoBops.Both, "Who Bops?", "Who will bop?")
                     }
                 },
+                new GameAction("walk", "Captain Tuck Walk")
+                {
+                    function = delegate { var e = eventCaller.currentEntity; FlipperFlop.instance.CaptainWalk(e.beat, e.length, e["ease"]); },
+                    defaultLength = 4f,
+                    resizable = true,
+                    parameters = new List<Param>()
+                    {
+                        new Param("ease", EasingFunction.Ease.Linear, "Ease", "Which ease should the animation be played at?")
+                    }
+                }
             });
         }
     }
@@ -83,10 +93,15 @@ namespace HeavenStudio.Games
         [SerializeField] List<FlipperFlopFlipper> flippers = new List<FlipperFlopFlipper>();
         List<float> queuedMovements = new List<float>();
         static List<float> queuedAttentions = new List<float>();
+        static List<float> queuedFlipperRollVoiceLines = new List<float>();
         float lastXPos;
         float currentXPos;
         float lastCameraXPos;
         float currentCameraXPos;
+        bool isWalking;
+        EasingFunction.Ease lastEase;
+        float walkStartBeat;
+        float walkLength;
         CaptainTuckBopType currentCaptainBop;
         public struct QueuedFlip
         {
@@ -134,6 +149,7 @@ namespace HeavenStudio.Games
         {
             if (queuedInputs.Count > 0) queuedInputs.Clear();
             if (queuedAttentions.Count > 0) queuedAttentions.Clear();
+            if (queuedFlipperRollVoiceLines.Count > 0) queuedFlipperRollVoiceLines.Clear();
         }
 
         private void Update()
@@ -141,6 +157,17 @@ namespace HeavenStudio.Games
             var cond = Conductor.instance;
             if(cond.isPlaying && !cond.isPaused)
             {
+                if (isWalking)
+                {
+                    float normalizedBeat = cond.GetPositionFromBeat(walkStartBeat, walkLength);
+                    EasingFunction.Function func = EasingFunction.GetEasingFunction(lastEase);
+                    float animPos = func(0f, 1f, normalizedBeat);
+                    captainTuckAnim.DoNormalizedAnimation("CaptainTuckWalkIntro", animPos);
+                    if (normalizedBeat > 1f)
+                    {
+                        isWalking = false;
+                    }
+                }
                 if (queuedInputs.Count > 0)
                 {
                     foreach (var input in queuedInputs) 
@@ -148,6 +175,14 @@ namespace HeavenStudio.Games
                         QueueFlips(input.beat, input.length, input.roll, input.uh, input.thatsIt, input.appreciation, input.heart);
                     }
                     queuedInputs.Clear();
+                }
+                if (queuedFlipperRollVoiceLines.Count > 0)
+                {
+                    foreach (var voiceLine in queuedFlipperRollVoiceLines)
+                    {
+                        FlipperRollVoiceLineAnimation(voiceLine);
+                    }
+                    queuedFlipperRollVoiceLines.Clear();
                 }
                 if (queuedAttentions.Count > 0)
                 {
@@ -195,6 +230,7 @@ namespace HeavenStudio.Games
             {
                 queuedInputs.Clear();
                 queuedAttentions.Clear();
+                queuedFlipperRollVoiceLines.Clear();
             }
         }
 
@@ -241,6 +277,14 @@ namespace HeavenStudio.Games
                     captainTuckAnim.DoScaledAnimationAsync("CaptainSucessBop", 0.5f);
                     break;
             }
+        }
+
+        public void CaptainWalk(float beat, float length, int ease)
+        {
+            isWalking = true;
+            lastEase = (EasingFunction.Ease)ease;
+            walkStartBeat = beat;
+            walkLength = length;
         }
 
         public static void Flipping(float beat, float length, bool roll, bool uh = false, bool thatsIt = false, int appreciation = 0, bool heart = false)
@@ -694,6 +738,43 @@ namespace HeavenStudio.Games
                     new MultiSound.Sound($"flipperFlop/count/flipperRollCountC", beat + 1f),
                 }, forcePlay: true);
             }
+
+            if (GameManager.instance.currentGame == "flipperFlop")
+            {
+                instance.FlipperRollVoiceLineAnimation(beat);
+            }
+            else
+            {
+                queuedFlipperRollVoiceLines.Add(beat);
+            }
+        }
+
+        public void FlipperRollVoiceLineAnimation(float beat)
+        {
+            List<BeatAction.Action> speaks = new List<BeatAction.Action>()
+            {
+                new BeatAction.Action(beat, delegate { captainTuckFaceAnim.DoScaledAnimationAsync("CaptainTuckSpeakExpression", 0.5f); }),
+                new BeatAction.Action(beat + 0.5f, delegate { captainTuckFaceAnim.DoScaledAnimationAsync("CaptainTuckSpeakExpression", 0.5f); }),
+                new BeatAction.Action(beat + 0.75f, delegate { captainTuckFaceAnim.DoScaledAnimationAsync("CaptainTuckSpeakExpression", 0.5f); }),
+                new BeatAction.Action(beat + 1f, delegate { captainTuckFaceAnim.DoScaledAnimationAsync("CaptainTuckSpeakExpression", 0.5f); }),
+            };
+
+            List<BeatAction.Action> speaksToRemove = new List<BeatAction.Action>();
+
+            foreach (var speak in speaks)
+            {
+                if (Conductor.instance.songPositionInBeats > speak.beat) speaksToRemove.Add(speak);
+            }
+
+            if (speaksToRemove.Count > 0)
+            {
+                foreach (var speak in speaksToRemove)
+                {
+                    speaks.Remove(speak);
+                }
+            }
+
+            BeatAction.New(instance.gameObject, speaks);
         }
 
         public void JustFlip(PlayerActionEvent caller, float state)
