@@ -99,7 +99,6 @@ namespace HeavenStudio.Games
         float lastCameraXPos;
         float currentCameraXPos;
         bool isWalking;
-        bool flipperRolling;
         EasingFunction.Ease lastEase;
         float walkStartBeat;
         float walkLength;
@@ -304,11 +303,6 @@ namespace HeavenStudio.Games
         {
             int flopCount = 1;
             int recounts = 0;
-            BeatAction.New(instance.gameObject, new List<BeatAction.Action>()
-            {
-                new BeatAction.Action(beat, delegate { flipperRolling = true; }),
-                new BeatAction.Action(beat + length, delegate { flipperRolling = false; })
-            });
             for (int i = 0; i < length; i++)
             {
                 if (roll)
@@ -396,7 +390,7 @@ namespace HeavenStudio.Games
                             new BeatAction.Action(beat + i + 1f, delegate
                             {
                                 AppreciationVoiceLine(beat + i, appreciation, heart);
-                                if (!missed)
+                                if (!missed && appreciation != (int)AppreciationType.None)
                                 {
                                     currentCaptainBop = CaptainTuckBopType.Success;
                                 }
@@ -414,11 +408,8 @@ namespace HeavenStudio.Games
                             }),
                             new BeatAction.Action(beat + i + 3.1f, delegate
                             {
-                                if (!flipperRolling)
-                                {
-                                    currentCaptainBop = CaptainTuckBopType.Normal;
-                                    captainTuckFaceAnim.Play("CaptainTuckNeutralExpression", 0, 0);
-                                }
+                                currentCaptainBop = CaptainTuckBopType.Normal;
+                                captainTuckFaceAnim.Play("CaptainTuckNeutralExpression", 0, 0);
                             }),
                         });
                     }
@@ -468,8 +459,15 @@ namespace HeavenStudio.Games
                             if (missed) 
                             {
                                 voiceLineToPlay = failVoiceLineToPlay;
+                                currentCaptainBop = CaptainTuckBopType.Miss;
                                 captainTuckFaceAnim.DoScaledAnimationAsync("CaptainTuckMissSpeakExpression", 0.5f);
                             }
+                            else
+                            {
+                                currentCaptainBop = CaptainTuckBopType.Roll;
+                                captainTuckFaceAnim.DoScaledAnimationAsync("CaptainTuckRollExpression", 0.5f);
+                            }
+
                             CaptainTuckBop();
                             Jukebox.PlayOneShotGame(voiceLineToPlay); 
                         }),
@@ -479,8 +477,8 @@ namespace HeavenStudio.Games
                 {
                     new BeatAction.Action(beat + length + 4 - flopCount, delegate 
                     { 
-                        AppreciationVoiceLine(beat + length + 4 - flopCount, appreciation, heart); 
-                        if (!missed)
+                        AppreciationVoiceLine(beat + length + 4 - flopCount, appreciation, heart);
+                        if (!missed && appreciation != (int)AppreciationType.None)
                         {
                             currentCaptainBop = CaptainTuckBopType.Success;
                         }
@@ -498,11 +496,8 @@ namespace HeavenStudio.Games
                     }),
                     new BeatAction.Action(beat + length + 4 - flopCount + 2.1f, delegate
                     {
-                        if (!flipperRolling)
-                        {
-                            currentCaptainBop = CaptainTuckBopType.Normal;
-                            captainTuckFaceAnim.Play("CaptainTuckNeutralExpression", 0, 0);
-                        }
+                        currentCaptainBop = CaptainTuckBopType.Normal;
+                        captainTuckFaceAnim.Play("CaptainTuckNeutralExpression", 0, 0);
                     }),
                 });
             }
@@ -513,7 +508,7 @@ namespace HeavenStudio.Games
                     new BeatAction.Action(beat + length, delegate
                     {
                         AppreciationVoiceLine(beat + length, appreciation, heart);
-                        if (!missed)
+                        if (!missed && appreciation != (int)AppreciationType.None)
                         {
                             currentCaptainBop = CaptainTuckBopType.Success;
                         }
@@ -531,11 +526,8 @@ namespace HeavenStudio.Games
                     }),
                     new BeatAction.Action(beat + length + 2.1f, delegate
                     {
-                        if (!flipperRolling) 
-                        {
-                            currentCaptainBop = CaptainTuckBopType.Normal;
-                            captainTuckFaceAnim.Play("CaptainTuckNeutralExpression", 0, 0);
-                        } 
+                        currentCaptainBop = CaptainTuckBopType.Normal;
+                        captainTuckFaceAnim.Play("CaptainTuckNeutralExpression", 0, 0);
                     }),
                 });
             }
