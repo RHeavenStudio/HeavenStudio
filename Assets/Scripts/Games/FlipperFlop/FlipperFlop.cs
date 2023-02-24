@@ -99,6 +99,7 @@ namespace HeavenStudio.Games
         float lastCameraXPos;
         float currentCameraXPos;
         bool isWalking;
+        bool flipperRolling;
         EasingFunction.Ease lastEase;
         float walkStartBeat;
         float walkLength;
@@ -303,6 +304,11 @@ namespace HeavenStudio.Games
         {
             int flopCount = 1;
             int recounts = 0;
+            BeatAction.New(instance.gameObject, new List<BeatAction.Action>()
+            {
+                new BeatAction.Action(beat, delegate { flipperRolling = true; }),
+                new BeatAction.Action(beat + length, delegate { flipperRolling = false; })
+            });
             for (int i = 0; i < length; i++)
             {
                 if (roll)
@@ -402,13 +408,17 @@ namespace HeavenStudio.Games
                                 CaptainTuckBop();
                                 missed = false;
                             }),
-                            new BeatAction.Action(beat + i + 1.1f, delegate
-                            {
-                                currentCaptainBop = CaptainTuckBopType.Normal;
-                            }),
                             new BeatAction.Action(beat + i + 2f, delegate
                             {
-                                captainTuckFaceAnim.Play("CaptainTuckNeutralExpression", 0, 0); missed = false;
+                                missed = false;
+                            }),
+                            new BeatAction.Action(beat + i + 3.1f, delegate
+                            {
+                                if (!flipperRolling)
+                                {
+                                    currentCaptainBop = CaptainTuckBopType.Normal;
+                                    captainTuckFaceAnim.Play("CaptainTuckNeutralExpression", 0, 0);
+                                }
                             }),
                         });
                     }
@@ -459,8 +469,8 @@ namespace HeavenStudio.Games
                             {
                                 voiceLineToPlay = failVoiceLineToPlay;
                                 captainTuckFaceAnim.DoScaledAnimationAsync("CaptainTuckMissSpeakExpression", 0.5f);
-                                CaptainTuckBop();
-                            } 
+                            }
+                            CaptainTuckBop();
                             Jukebox.PlayOneShotGame(voiceLineToPlay); 
                         }),
                     });
@@ -482,13 +492,17 @@ namespace HeavenStudio.Games
                         CaptainTuckBop();
                         missed = false; 
                     }),
-                    new BeatAction.Action(beat + length + 4 - flopCount + 0.1f, delegate
-                    {
-                        currentCaptainBop = CaptainTuckBopType.Normal;
-                    }),
                     new BeatAction.Action(beat + length + 4 - flopCount + 1f, delegate
                     {
-                        captainTuckFaceAnim.Play("CaptainTuckNeutralExpression", 0, 0); missed = false;
+                        missed = false;
+                    }),
+                    new BeatAction.Action(beat + length + 4 - flopCount + 2.1f, delegate
+                    {
+                        if (!flipperRolling)
+                        {
+                            currentCaptainBop = CaptainTuckBopType.Normal;
+                            captainTuckFaceAnim.Play("CaptainTuckNeutralExpression", 0, 0);
+                        }
                     }),
                 });
             }
@@ -511,13 +525,17 @@ namespace HeavenStudio.Games
                         CaptainTuckBop();
                         missed = false;
                     }),
-                    new BeatAction.Action(beat + length + 0.1f, delegate
-                    {
-                        currentCaptainBop = CaptainTuckBopType.Normal;
-                    }),
                     new BeatAction.Action(beat + length + 1f, delegate
                     {
-                        captainTuckFaceAnim.Play("CaptainTuckNeutralExpression", 0, 0); missed = false;
+                        missed = false;
+                    }),
+                    new BeatAction.Action(beat + length + 2.1f, delegate
+                    {
+                        if (!flipperRolling) 
+                        {
+                            currentCaptainBop = CaptainTuckBopType.Normal;
+                            captainTuckFaceAnim.Play("CaptainTuckNeutralExpression", 0, 0);
+                        } 
                     }),
                 });
             }

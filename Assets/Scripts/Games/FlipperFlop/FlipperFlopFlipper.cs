@@ -108,7 +108,7 @@ namespace HeavenStudio.Games.Scripts_FlipperFlop
                 string leftOrRight = left ? "Left" : "Right";
                 string rollOrFlop = roll ? "Roll" : "Flop";
 
-                anim.DoScaledAnimationAsync(shouldReverse + rollOrFlop + leftOrRight, 0.5f);
+                anim.DoScaledAnimationAsync(shouldReverse + rollOrFlop + leftOrRight, roll ? 0.75f : 0.5f);
             }
 
             if (!dontSwitch) left = !left;
