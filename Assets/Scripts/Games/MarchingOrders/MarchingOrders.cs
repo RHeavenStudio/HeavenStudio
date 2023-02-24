@@ -400,18 +400,15 @@ namespace HeavenStudio.Games
         public void SargeFaceTurn(float beat, int type, int type2, bool toggle)
         {
             string fastTurn = "";
-            float fastTurnBeats = 0.6f;
             switch (type2)
             {
                 case (int) MarchingOrders.FaceTurnLength.Fast:
                     turnLength = 0;
                     fastTurn = "fast";
-                    fastTurnBeats = 0.5f;
                     break;
                 default:
                     turnLength = 1;
                     fastTurn = "";
-                    fastTurnBeats = 0.6f;
                     break;
             }
             
@@ -422,7 +419,7 @@ namespace HeavenStudio.Games
                     ScheduleInput(beat, turnLength + 2f, InputType.DIRECTION_LEFT_DOWN, LeftSuccess, GenericMiss, LeftEmpty);
                     MultiSound.Play(new MultiSound.Sound[] {
                     new MultiSound.Sound("marchingOrders/leftFaceTurn1" + fastTurn, beat),
-                    new MultiSound.Sound("marchingOrders/leftFaceTurn2" + fastTurn, beat + fastTurnBeats),
+                    new MultiSound.Sound("marchingOrders/leftFaceTurn2" + fastTurn, beat + 0.5f),
                     new MultiSound.Sound("marchingOrders/leftFaceTurn3", beat + turnLength + 1f),
                     new MultiSound.Sound("marchingOrders/turnAction", beat + turnLength + 2f),
                     }, forcePlay: true);
@@ -441,7 +438,7 @@ namespace HeavenStudio.Games
                     ScheduleInput(beat, turnLength + 2f, InputType.DIRECTION_RIGHT_DOWN, RightSuccess, GenericMiss, RightEmpty);
                     MultiSound.Play(new MultiSound.Sound[] {
                     new MultiSound.Sound("marchingOrders/rightFaceTurn1" + fastTurn, beat),
-                    new MultiSound.Sound("marchingOrders/rightFaceTurn2" + fastTurn, beat + fastTurnBeats),
+                    new MultiSound.Sound("marchingOrders/rightFaceTurn2" + fastTurn, beat + 0.5f),
                     new MultiSound.Sound("marchingOrders/rightFaceTurn3", beat + turnLength + 1f),
                     new MultiSound.Sound("marchingOrders/turnAction", beat + turnLength + 2f),
                     }, forcePlay: true);
