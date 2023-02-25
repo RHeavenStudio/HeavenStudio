@@ -21,6 +21,8 @@ namespace HeavenStudio.Games.Scripts_CatchyTune
 
         public bool smile;
 
+        public float endSmile;
+
         private string soundText;
 
         private Minigame.Eligible e = new Minigame.Eligible();
@@ -155,7 +157,7 @@ namespace HeavenStudio.Games.Scripts_CatchyTune
             else 
             {
                 Jukebox.PlayOneShotGame(soundText + "Catch");
-                game.catchSuccess(side, isPineapple, smile, startBeat + beatLength);
+                game.catchSuccess(side, isPineapple, smile, startBeat + beatLength, endSmile);
                 Destroy(this.gameObject);
             }
         }
