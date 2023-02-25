@@ -9,6 +9,16 @@ namespace HeavenStudio.Util
             float compare = anim.GetCurrentAnimatorStateInfo(0).speed;
             return anim.GetCurrentAnimatorStateInfo(0).normalizedTime >= compare && !anim.IsInTransition(0);
         }
+        /// <summary>
+        /// Returns true if animName is currently playing on animator
+        /// </summary>
+        /// <param name="anim">Animator to check</param>
+        /// <param name="animName">name of animation to look out for</param>
+        public static bool IsPlayingAnimationName(this Animator anim, string animName) 
+        {
+            float compare = anim.GetCurrentAnimatorStateInfo(0).speed;
+            return anim.GetCurrentAnimatorStateInfo(0).IsName(animName) && anim.GetCurrentAnimatorStateInfo(0).normalizedTime < compare;
+        }
 
         /// <summary>
         /// Sets animator's progress on an animation based on current song beat between startTime and length

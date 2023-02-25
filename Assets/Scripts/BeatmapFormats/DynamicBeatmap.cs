@@ -250,6 +250,11 @@ namespace HeavenStudio
                 {
                     foreach (var param in action.parameters)
                     {
+                        if (e[param.propertyName] == null)
+                        {
+                            dynamicData.Add(param.propertyName, param.parameter);
+                            continue;
+                        }
                         type = param.parameter.GetType();
                         pType = e[param.propertyName].GetType();
                         // Debug.Log($"adding parameter {param.propertyName} of type {type}");

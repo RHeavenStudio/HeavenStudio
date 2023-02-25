@@ -3,120 +3,6 @@ guid: 6f0edffbbde1ba54bbf3fe9df0691f14
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: -7013559041654529253
-    second: spacedancers_0
-  - first:
-      213: -3686988442382613506
-    second: spacedancers_1
-  - first:
-      213: 5720739258315605671
-    second: spacedancers_2
-  - first:
-      213: -4705660350017119854
-    second: spacedancers_3
-  - first:
-      213: 704049006080426638
-    second: spacedancers_4
-  - first:
-      213: 3616381671403642658
-    second: spacedancers_5
-  - first:
-      213: 5770299284042456991
-    second: spacedancers_6
-  - first:
-      213: 737823461603251672
-    second: spacedancers_7
-  - first:
-      213: 7336755120104452472
-    second: spacedancers_8
-  - first:
-      213: 7718128534782652821
-    second: spacedancers_9
-  - first:
-      213: -5473138154975321071
-    second: spacedancers_10
-  - first:
-      213: -1631193365071257152
-    second: spacedancers_11
-  - first:
-      213: -3554304675655589782
-    second: spacedancers_12
-  - first:
-      213: 5512882398595163457
-    second: spacedancers_13
-  - first:
-      213: -9008074219356086105
-    second: spacedancers_14
-  - first:
-      213: -132814672917424561
-    second: spacedancers_15
-  - first:
-      213: -2267574647685078260
-    second: spacedancers_16
-  - first:
-      213: -1170980802656746651
-    second: spacedancers_17
-  - first:
-      213: 7480040581836878736
-    second: spacedancers_18
-  - first:
-      213: -8662471255803891930
-    second: spacedancers_19
-  - first:
-      213: 728846241156586977
-    second: spacedancers_20
-  - first:
-      213: -2455435551289113217
-    second: spacedancers_21
-  - first:
-      213: -5747116483996973479
-    second: spacedancers_22
-  - first:
-      213: 288915095080353517
-    second: spacedancers_23
-  - first:
-      213: -7897006802089848539
-    second: spacedancers_24
-  - first:
-      213: 4913844738546413509
-    second: spacedancers_25
-  - first:
-      213: -2123305696401537300
-    second: spacedancers_26
-  - first:
-      213: -2309478943783400133
-    second: spacedancers_27
-  - first:
-      213: -6803621436571726843
-    second: spacedancers_28
-  - first:
-      213: -4549948100305167275
-    second: spacedancers_29
-  - first:
-      213: -8990541409363382826
-    second: spacedancers_30
-  - first:
-      213: -4326909914983326128
-    second: spacedancers_31
-  - first:
-      213: -895755893995985407
-    second: spacedancers_32
-  - first:
-      213: -3275525107389337312
-    second: spacedancers_33
-  - first:
-      213: 4534892689996083785
-    second: spacedancers_34
-  - first:
-      213: 5201593674994217652
-    second: spacedancers_35
-  - first:
-      213: 4443300836869624101
-    second: spacedancers_36
-  - first:
-      213: -567465394941247715
-    second: spacedancers_37
-  - first:
       213: 3339736656405604686
     second: spacedancers_38
   - first:
@@ -187,7 +73,7 @@ TextureImporter:
   spriteMeshType: 1
   alignment: 0
   spritePivot: {x: 0.5, y: 0.5}
-  spritePixelsToUnits: 100
+  spritePixelsToUnits: 153.6
   spriteBorder: {x: 0, y: 0, z: 0, w: 0}
   spriteGenerateFallbackPhysicsShape: 1
   alphaUsage: 1
@@ -206,10 +92,10 @@ TextureImporter:
   platformSettings:
   - serializedVersion: 3
     buildTarget: DefaultTexturePlatform
-    maxTextureSize: 2048
+    maxTextureSize: 8192
     resizeAlgorithm: 0
     textureFormat: -1
-    textureCompression: 1
+    textureCompression: 0
     compressionQuality: 50
     crunchedCompression: 0
     allowsAlphaSplitting: 0
@@ -218,10 +104,10 @@ TextureImporter:
     forceMaximumCompressionQuality_BC6H_BC7: 0
   - serializedVersion: 3
     buildTarget: Standalone
-    maxTextureSize: 2048
+    maxTextureSize: 8192
     resizeAlgorithm: 0
     textureFormat: -1
-    textureCompression: 1
+    textureCompression: 0
     compressionQuality: 50
     crunchedCompression: 0
     allowsAlphaSplitting: 0
@@ -235,10 +121,10 @@ TextureImporter:
       name: spacedancers_0
       rect:
         serializedVersion: 2
-        x: 26
-        y: 3403
-        width: 215
-        height: 524
+        x: 38
+        y: 5222
+        width: 332
+        height: 806
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -256,10 +142,10 @@ TextureImporter:
       name: spacedancers_1
       rect:
         serializedVersion: 2
-        x: 306
-        y: 3403
-        width: 214
-        height: 530
+        x: 467
+        y: 5222
+        width: 332
+        height: 821
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -277,10 +163,10 @@ TextureImporter:
       name: spacedancers_2
       rect:
         serializedVersion: 2
-        x: 558
-        y: 3403
-        width: 214
-        height: 537
+        x: 854
+        y: 5222
+        width: 332
+        height: 836
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -298,10 +184,10 @@ TextureImporter:
       name: spacedancers_3
       rect:
         serializedVersion: 2
-        x: 837
-        y: 3404
-        width: 221
-        height: 536
+        x: 1286
+        y: 5219
+        width: 347
+        height: 827
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -319,10 +205,10 @@ TextureImporter:
       name: spacedancers_4
       rect:
         serializedVersion: 2
-        x: 1118
-        y: 3403
-        width: 223
-        height: 524
+        x: 1718
+        y: 5219
+        width: 353
+        height: 815
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -340,10 +226,10 @@ TextureImporter:
       name: spacedancers_5
       rect:
         serializedVersion: 2
-        x: 1399
-        y: 3403
-        width: 241
-        height: 512
+        x: 2150
+        y: 5219
+        width: 365
+        height: 797
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -361,10 +247,10 @@ TextureImporter:
       name: spacedancers_6
       rect:
         serializedVersion: 2
-        x: 1683
-        y: 3403
-        width: 248
-        height: 510
+        x: 2582
+        y: 5219
+        width: 395
+        height: 794
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -382,10 +268,10 @@ TextureImporter:
       name: spacedancers_7
       rect:
         serializedVersion: 2
-        x: 1997
-        y: 3403
-        width: 356
-        height: 498
+        x: 3062
+        y: 5219
+        width: 551
+        height: 770
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -403,10 +289,10 @@ TextureImporter:
       name: spacedancers_8
       rect:
         serializedVersion: 2
-        x: 2401
-        y: 3403
-        width: 369
-        height: 485
+        x: 3686
+        y: 5220
+        width: 572
+        height: 754
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -424,10 +310,10 @@ TextureImporter:
       name: spacedancers_9
       rect:
         serializedVersion: 2
-        x: 2837
-        y: 3403
-        width: 369
-        height: 467
+        x: 4358
+        y: 5222
+        width: 575
+        height: 731
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -445,10 +331,10 @@ TextureImporter:
       name: spacedancers_10
       rect:
         serializedVersion: 2
-        x: 22
-        y: 2810
-        width: 403
-        height: 502
+        x: 38
+        y: 4310
+        width: 617
+        height: 779
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -466,10 +352,10 @@ TextureImporter:
       name: spacedancers_11
       rect:
         serializedVersion: 2
-        x: 493
-        y: 2810
-        width: 402
-        height: 502
+        x: 758
+        y: 4307
+        width: 629
+        height: 782
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -487,10 +373,10 @@ TextureImporter:
       name: spacedancers_12
       rect:
         serializedVersion: 2
-        x: 931
-        y: 2810
-        width: 359
-        height: 509
+        x: 1427
+        y: 4310
+        width: 557
+        height: 788
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -508,10 +394,10 @@ TextureImporter:
       name: spacedancers_13
       rect:
         serializedVersion: 2
-        x: 1337
-        y: 2810
-        width: 330
-        height: 515
+        x: 2051
+        y: 4310
+        width: 515
+        height: 800
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -529,10 +415,10 @@ TextureImporter:
       name: spacedancers_14
       rect:
         serializedVersion: 2
-        x: 1708
-        y: 2810
-        width: 299
-        height: 523
+        x: 2627
+        y: 4310
+        width: 461
+        height: 809
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -550,10 +436,10 @@ TextureImporter:
       name: spacedancers_15
       rect:
         serializedVersion: 2
-        x: 2050
-        y: 2810
-        width: 248
-        height: 535
+        x: 3155
+        y: 4310
+        width: 380
+        height: 824
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -571,10 +457,10 @@ TextureImporter:
       name: spacedancers_16
       rect:
         serializedVersion: 2
-        x: 2331
-        y: 2810
-        width: 248
-        height: 539
+        x: 3587
+        y: 4310
+        width: 380
+        height: 833
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -592,10 +478,10 @@ TextureImporter:
       name: spacedancers_17
       rect:
         serializedVersion: 2
-        x: 24
-        y: 2183
-        width: 399
-        height: 392
+        x: 38
+        y: 3350
+        width: 620
+        height: 608
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -613,10 +499,10 @@ TextureImporter:
       name: spacedancers_18
       rect:
         serializedVersion: 2
-        x: 460
-        y: 2183
-        width: 410
-        height: 419
+        x: 704
+        y: 3350
+        width: 635
+        height: 647
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -634,10 +520,10 @@ TextureImporter:
       name: spacedancers_19
       rect:
         serializedVersion: 2
-        x: 931
-        y: 2183
-        width: 363
-        height: 500
+        x: 1430
+        y: 3350
+        width: 557
+        height: 767
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -655,10 +541,10 @@ TextureImporter:
       name: spacedancers_20
       rect:
         serializedVersion: 2
-        x: 1339
-        y: 2183
-        width: 322
-        height: 531
+        x: 2054
+        y: 3350
+        width: 497
+        height: 818
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -676,10 +562,10 @@ TextureImporter:
       name: spacedancers_21
       rect:
         serializedVersion: 2
-        x: 1712
-        y: 2183
-        width: 275
-        height: 535
+        x: 2630
+        y: 3347
+        width: 422
+        height: 827
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -697,10 +583,10 @@ TextureImporter:
       name: spacedancers_22
       rect:
         serializedVersion: 2
-        x: 2026
-        y: 2183
-        width: 215
-        height: 545
+        x: 3107
+        y: 3350
+        width: 344
+        height: 839
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -718,10 +604,10 @@ TextureImporter:
       name: spacedancers_23
       rect:
         serializedVersion: 2
-        x: 2308
-        y: 2183
-        width: 214
-        height: 545
+        x: 3539
+        y: 3350
+        width: 344
+        height: 836
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -739,10 +625,10 @@ TextureImporter:
       name: spacedancers_24
       rect:
         serializedVersion: 2
-        x: 2214
-        y: 1560
-        width: 215
-        height: 539
+        x: 3399
+        y: 2394
+        width: 328
+        height: 827
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -760,10 +646,10 @@ TextureImporter:
       name: spacedancers_25
       rect:
         serializedVersion: 2
-        x: 2524
-        y: 1560
-        width: 252
-        height: 539
+        x: 3880
+        y: 2389
+        width: 385
+        height: 833
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -781,10 +667,10 @@ TextureImporter:
       name: spacedancers_26
       rect:
         serializedVersion: 2
-        x: 2837
-        y: 1560
-        width: 213
-        height: 533
+        x: 4361
+        y: 2390
+        width: 330
+        height: 822
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -802,10 +688,10 @@ TextureImporter:
       name: spacedancers_27
       rect:
         serializedVersion: 2
-        x: 3089
-        y: 1560
-        width: 208
-        height: 527
+        x: 4744
+        y: 2388
+        width: 319
+        height: 815
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -823,10 +709,10 @@ TextureImporter:
       name: spacedancers_28
       rect:
         serializedVersion: 2
-        x: 3337
-        y: 1560
-        width: 199
-        height: 521
+        x: 5128
+        y: 2391
+        width: 309
+        height: 801
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -844,10 +730,10 @@ TextureImporter:
       name: spacedancers_29
       rect:
         serializedVersion: 2
-        x: 1372
-        y: 841
-        width: 168
-        height: 551
+        x: 38
+        y: 1286
+        width: 332
+        height: 806
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -865,10 +751,10 @@ TextureImporter:
       name: spacedancers_30
       rect:
         serializedVersion: 2
-        x: 1620
-        y: 841
-        width: 166
-        height: 568
+        x: 470
+        y: 1286
+        width: 341
+        height: 818
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -886,10 +772,10 @@ TextureImporter:
       name: spacedancers_31
       rect:
         serializedVersion: 2
-        x: 1839
-        y: 841
-        width: 168
-        height: 590
+        x: 902
+        y: 1286
+        width: 329
+        height: 971
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -907,10 +793,10 @@ TextureImporter:
       name: spacedancers_32
       rect:
         serializedVersion: 2
-        x: 2060
-        y: 841
-        width: 167
-        height: 607
+        x: 1334
+        y: 1286
+        width: 329
+        height: 971
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -928,10 +814,10 @@ TextureImporter:
       name: spacedancers_33
       rect:
         serializedVersion: 2
-        x: 2278
-        y: 839
-        width: 168
-        height: 623
+        x: 2096
+        y: 1286
+        width: 272
+        height: 854
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -949,10 +835,10 @@ TextureImporter:
       name: spacedancers_34
       rect:
         serializedVersion: 2
-        x: 26
-        y: 841
-        width: 215
-        height: 525
+        x: 2483
+        y: 1286
+        width: 269
+        height: 884
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -970,10 +856,10 @@ TextureImporter:
       name: spacedancers_35
       rect:
         serializedVersion: 2
-        x: 306
-        y: 841
-        width: 224
-        height: 525
+        x: 2816
+        y: 1289
+        width: 272
+        height: 908
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -991,10 +877,10 @@ TextureImporter:
       name: spacedancers_36
       rect:
         serializedVersion: 2
-        x: 587
-        y: 841
-        width: 213
-        height: 627
+        x: 3156
+        y: 1289
+        width: 271
+        height: 938
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -1012,10 +898,10 @@ TextureImporter:
       name: spacedancers_37
       rect:
         serializedVersion: 2
-        x: 868
-        y: 841
-        width: 215
-        height: 633
+        x: 3491
+        y: 1289
+        width: 272
+        height: 962
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -1033,10 +919,10 @@ TextureImporter:
       name: spacedancers_38
       rect:
         serializedVersion: 2
-        x: 21
-        y: 247
-        width: 273
-        height: 535
+        x: 38
+        y: 374
+        width: 413
+        height: 830
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -1054,10 +940,10 @@ TextureImporter:
       name: spacedancers_39
       rect:
         serializedVersion: 2
-        x: 335
-        y: 245
-        width: 254
-        height: 531
+        x: 521
+        y: 371
+        width: 389
+        height: 824
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -1075,10 +961,10 @@ TextureImporter:
       name: spacedancers_40
       rect:
         serializedVersion: 2
-        x: 647
-        y: 247
-        width: 235
-        height: 529
+        x: 1001
+        y: 371
+        width: 353
+        height: 821
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -1096,10 +982,10 @@ TextureImporter:
       name: spacedancers_41
       rect:
         serializedVersion: 2
-        x: 962
-        y: 245
-        width: 301
-        height: 529
+        x: 1475
+        y: 371
+        width: 470
+        height: 818
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -1117,10 +1003,10 @@ TextureImporter:
       name: spacedancers_42
       rect:
         serializedVersion: 2
-        x: 1304
-        y: 245
-        width: 318
-        height: 529
+        x: 2006
+        y: 371
+        width: 490
+        height: 818
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -1138,10 +1024,10 @@ TextureImporter:
       name: spacedancers_43
       rect:
         serializedVersion: 2
-        x: 1679
-        y: 247
-        width: 291
-        height: 531
+        x: 2579
+        y: 371
+        width: 446
+        height: 821
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -1159,10 +1045,10 @@ TextureImporter:
       name: spacedancers_44
       rect:
         serializedVersion: 2
-        x: 2024
-        y: 247
-        width: 317
-        height: 529
+        x: 3110
+        y: 371
+        width: 488
+        height: 821
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -1180,10 +1066,10 @@ TextureImporter:
       name: spacedancers_45
       rect:
         serializedVersion: 2
-        x: 2366
-        y: 247
-        width: 352
-        height: 522
+        x: 3638
+        y: 371
+        width: 539
+        height: 812
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -1201,10 +1087,10 @@ TextureImporter:
       name: spacedancers_46
       rect:
         serializedVersion: 2
-        x: 2774
-        y: 245
-        width: 383
-        height: 522
+        x: 4262
+        y: 371
+        width: 587
+        height: 812
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}

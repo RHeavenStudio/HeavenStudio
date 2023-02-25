@@ -31,6 +31,15 @@ namespace HeavenStudio.Games.Loaders
                 {
                     function = delegate { RhythmSomen.instance.DoBell(eventCaller.currentEntity.beat); },
                 },
+                new GameAction("bop", "Bop") 
+                {
+                    function = delegate { var e = eventCaller.currentEntity; RhythmSomen.instance.ToggleBop(e["toggle"]); },
+                    defaultLength = 0.5f,
+                    parameters = new List<Param>()
+                    {
+                        new Param("toggle", false, "Bop?", "Should the somen man bop or not?")
+                    }
+                }
             });
         }
     }
@@ -41,6 +50,7 @@ namespace HeavenStudio.Games
     // using Scripts_RhythmSomen;
     public class RhythmSomen : Minigame
     {
+        [SerializeField] ParticleSystem splashEffect;
         public Animator SomenPlayer;
         public Animator FrontArm;
         public Animator EffectHit;
@@ -50,6 +60,7 @@ namespace HeavenStudio.Games
         public Animator CloseCrane;
         public Animator FarCrane;
         public GameObject Player;
+        private bool shouldBop = true;
 
         public GameEvent bop = new GameEvent();
 
@@ -65,7 +76,7 @@ namespace HeavenStudio.Games
         void Update()
         {
             var cond = Conductor.instance;
-            if (cond.ReportBeat(ref bop.lastReportedBeat, bop.startBeat % 1))
+            if (cond.ReportBeat(ref bop.lastReportedBeat, bop.startBeat % 1) && shouldBop)
             {
                 SomenPlayer.Play("HeadBob", -1, 0);
             }
@@ -77,6 +88,11 @@ namespace HeavenStudio.Games
                 EffectSweat.Play("BlobSweating", -1, 0);
                 ScoreMiss();
             }
+        }
+
+        public void ToggleBop(bool bopOrNah)
+        {
+            shouldBop = bopOrNah;
         }
 
         public void DoFarCrane(float beat)
@@ -155,8 +171,17 @@ namespace HeavenStudio.Games
 
         public void CatchSuccess(PlayerActionEvent caller, float state)
         {
+            splashEffect.Play();
+            if (state >= 1f || state <= -1f)
+            {
+                Jukebox.PlayOneShotGame("rhythmSomen/somen_splash");
+                FrontArm.Play("ArmPluckNG", -1, 0);
+                EffectSweat.Play("BlobSweating", -1, 0);
+                return;
+            }
             Jukebox.PlayOneShotGame("rhythmSomen/somen_catch");
-            FrontArm.Play("ArmPluck", -1, 0);
+            Jukebox.PlayOneShotGame("rhythmSomen/somen_catch_old", volume: 0.25f);
+            FrontArm.Play("ArmPluckOK", -1, 0);
             EffectHit.Play("HitAppear", -1, 0);
         }
 

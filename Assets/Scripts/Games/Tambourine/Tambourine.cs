@@ -190,13 +190,9 @@ namespace HeavenStudio.Games
             {
                 DesummonFrog();
                 sadFace.SetActive(false);
-                queuedInputs.Clear();
+                //queuedInputs.Clear();
                 misses = 0;
                 intervalStarted = true;
-                BeatAction.New(instance.gameObject, new List<BeatAction.Action>()
-                {
-                    new BeatAction.Action(beat + interval, delegate { intervalStarted = false; }),
-                });
             }
         }
 
@@ -229,6 +225,7 @@ namespace HeavenStudio.Games
             monkeyAnimator.Play("MonkeyPassTurn", 0, 0);
             Jukebox.PlayOneShotGame($"tambourine/monkey/turnPass/{UnityEngine.Random.Range(1, 6)}");
             happyFace.SetActive(true);
+            intervalStarted = false;
             BeatAction.New(instance.gameObject, new List<BeatAction.Action>()
             {
                 new BeatAction.Action(beat + 0.3f, delegate { happyFace.SetActive(false); })
@@ -248,6 +245,7 @@ namespace HeavenStudio.Games
                     new BeatAction.Action(beat + length + input.beatAwayFromStart, delegate { Bop(beat + length + input.beatAwayFromStart, (int)WhoBops.Monkey); })
                 });
             }
+            queuedInputs.Clear();
         }
 
         public void Bop(float beat, int whoBops)

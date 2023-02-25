@@ -263,12 +263,9 @@ namespace HeavenStudio.Games
 
         public void CatchFish(float beat)
         {
-            if (!player.canClap)
-                return;
-            if (isInverted)
-                Fish.transform.localScale = new Vector3(-1f, 1f, 1f);
-            else
-                Fish.transform.localScale = new Vector3(1f, 1f, 1f);
+            //if (!player.canClap)
+            //    return;
+            
             player.ScheduleFish(beat);
             MultiSound.Play(new MultiSound.Sound[] {
                 new MultiSound.Sound("kitties/fish1", beat + 2f),
@@ -279,6 +276,10 @@ namespace HeavenStudio.Games
 
             BeatAction.New(Cats[0], new List<BeatAction.Action>()
             {
+                new BeatAction.Action(beat, delegate { if (isInverted)
+                    Fish.transform.localScale = new Vector3(-1f, 1f, 1f);
+                    else
+                        Fish.transform.localScale = new Vector3(1f, 1f, 1f); }),
                 new BeatAction.Action(beat, delegate { Fish.SetActive(true); }),             
                 new BeatAction.Action(beat, delegate { Fish.GetComponent<Animator>().DoScaledAnimationAsync("FishDangle", 0.5f); }),
                 new BeatAction.Action(beat + 2f, delegate { kitties[0].Play("FishNotice", 0, 0);  }),
