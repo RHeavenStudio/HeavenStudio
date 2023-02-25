@@ -1,0 +1,732 @@
+fileFormatVersion: 2
+guid: d186aab8c580bd44fa7434802a85cdb1
+TextureImporter:
+  internalIDToNameTable:
+  - first:
+      213: -4211407730287721114
+    second: FrogHop_0
+  - first:
+      213: -4239254219936232912
+    second: FrogHop_1
+  - first:
+      213: 8335008023165584092
+    second: FrogHop_2
+  - first:
+      213: -4829557618538579572
+    second: FrogHop_3
+  - first:
+      213: 2520680268022167676
+    second: FrogHop_4
+  - first:
+      213: 649303297304339652
+    second: FrogHop_5
+  - first:
+      213: -8553784912726764815
+    second: FrogHop_6
+  - first:
+      213: -2790952071894441616
+    second: FrogHop_7
+  - first:
+      213: -3387632057508806643
+    second: FrogHop_8
+  - first:
+      213: 4507843493581919778
+    second: FrogHop_9
+  - first:
+      213: 6151025750160842231
+    second: FrogHop_10
+  - first:
+      213: 5497037360974845674
+    second: FrogHop_11
+  - first:
+      213: -8061936532346996930
+    second: FrogHop_12
+  - first:
+      213: 6851017749581126100
+    second: FrogHop_13
+  - first:
+      213: -4482704138497830002
+    second: FrogHop_14
+  - first:
+      213: 5585120977470013184
+    second: FrogHop_15
+  - first:
+      213: -4296941575358693565
+    second: FrogHop_16
+  - first:
+      213: 3003287036497518616
+    second: FrogHop_17
+  - first:
+      213: 7871878123192582504
+    second: FrogHop_18
+  - first:
+      213: 7901116208592213710
+    second: FrogHop_19
+  - first:
+      213: -5754477487634052278
+    second: FrogHop_20
+  - first:
+      213: -2254917058199236393
+    second: FrogHop_21
+  - first:
+      213: -1660662308941131726
+    second: FrogHop_22
+  - first:
+      213: -7495696994965940244
+    second: FrogHop_23
+  - first:
+      213: 3560071788434653640
+    second: FrogHop_24
+  - first:
+      213: 1688624712991652421
+    second: FrogHop_25
+  externalObjects: {}
+  serializedVersion: 11
+  mipmaps:
+    mipMapMode: 0
+    enableMipMap: 0
+    sRGBTexture: 1
+    linearTexture: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapsPreserveCoverage: 0
+    alphaTestReferenceValue: 0.5
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+  bumpmap:
+    convertToNormalMap: 0
+    externalNormalMap: 0
+    heightScale: 0.25
+    normalMapFilter: 0
+  isReadable: 0
+  streamingMipmaps: 0
+  streamingMipmapsPriority: 0
+  vTOnly: 0
+  grayScaleToAlpha: 0
+  generateCubemap: 6
+  cubemapConvolution: 0
+  seamlessCubemap: 0
+  textureFormat: 1
+  maxTextureSize: 2048
+  textureSettings:
+    serializedVersion: 2
+    filterMode: 1
+    aniso: 1
+    mipBias: 0
+    wrapU: 1
+    wrapV: 1
+    wrapW: 1
+  nPOTScale: 0
+  lightmap: 0
+  compressionQuality: 50
+  spriteMode: 2
+  spriteExtrude: 1
+  spriteMeshType: 1
+  alignment: 0
+  spritePivot: {x: 0.5, y: 0.5}
+  spritePixelsToUnits: 100
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spriteGenerateFallbackPhysicsShape: 1
+  alphaUsage: 1
+  alphaIsTransparency: 1
+  spriteTessellationDetail: -1
+  textureType: 8
+  textureShape: 1
+  singleChannelComponent: 0
+  flipbookRows: 1
+  flipbookColumns: 1
+  maxTextureSizeSet: 0
+  compressionQualitySet: 0
+  textureFormatSet: 0
+  ignorePngGamma: 0
+  applyGammaDecoding: 0
+  platformSettings:
+  - serializedVersion: 3
+    buildTarget: DefaultTexturePlatform
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 3
+    buildTarget: Standalone
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  spriteSheet:
+    serializedVersion: 2
+    sprites:
+    - serializedVersion: 2
+      name: FrogHop_0
+      rect:
+        serializedVersion: 2
+        x: 6
+        y: 199
+        width: 67
+        height: 90
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 665cdd77bf21e85c0800000000000000
+      internalID: -4211407730287721114
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: FrogHop_1
+      rect:
+        serializedVersion: 2
+        x: 78
+        y: 199
+        width: 67
+        height: 90
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 03a002c5fb42b25c0800000000000000
+      internalID: -4239254219936232912
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: FrogHop_2
+      rect:
+        serializedVersion: 2
+        x: 150
+        y: 199
+        width: 67
+        height: 90
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: cd2c0d4e2a5eba370800000000000000
+      internalID: 8335008023165584092
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: FrogHop_3
+      rect:
+        serializedVersion: 2
+        x: 222
+        y: 199
+        width: 67
+        height: 90
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: c89f9bc1fe6f9fcb0800000000000000
+      internalID: -4829557618538579572
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: FrogHop_4
+      rect:
+        serializedVersion: 2
+        x: 294
+        y: 199
+        width: 67
+        height: 90
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: c783ccf39514bf220800000000000000
+      internalID: 2520680268022167676
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: FrogHop_5
+      rect:
+        serializedVersion: 2
+        x: 366
+        y: 199
+        width: 67
+        height: 90
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 4c4a053a8e9c20900800000000000000
+      internalID: 649303297304339652
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: FrogHop_6
+      rect:
+        serializedVersion: 2
+        x: 438
+        y: 199
+        width: 67
+        height: 90
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 1f253d711f9da4980800000000000000
+      internalID: -8553784912726764815
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: FrogHop_7
+      rect:
+        serializedVersion: 2
+        x: 510
+        y: 199
+        width: 67
+        height: 90
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 0716791b0eb8449d0800000000000000
+      internalID: -2790952071894441616
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: FrogHop_8
+      rect:
+        serializedVersion: 2
+        x: 583
+        y: 199
+        width: 66
+        height: 90
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: d0046769796bcf0d0800000000000000
+      internalID: -3387632057508806643
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: FrogHop_9
+      rect:
+        serializedVersion: 2
+        x: 654
+        y: 199
+        width: 67
+        height: 90
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 226910a16c31f8e30800000000000000
+      internalID: 4507843493581919778
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: FrogHop_10
+      rect:
+        serializedVersion: 2
+        x: 6
+        y: 107
+        width: 67
+        height: 90
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 7fd1e9a8455dc5550800000000000000
+      internalID: 6151025750160842231
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: FrogHop_11
+      rect:
+        serializedVersion: 2
+        x: 78
+        y: 107
+        width: 67
+        height: 90
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: ae6d4f1fa56694c40800000000000000
+      internalID: 5497037360974845674
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: FrogHop_12
+      rect:
+        serializedVersion: 2
+        x: 150
+        y: 107
+        width: 67
+        height: 90
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: e3776b3107f3e1090800000000000000
+      internalID: -8061936532346996930
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: FrogHop_13
+      rect:
+        serializedVersion: 2
+        x: 222
+        y: 107
+        width: 67
+        height: 90
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 4d9dda15854b31f50800000000000000
+      internalID: 6851017749581126100
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: FrogHop_14
+      rect:
+        serializedVersion: 2
+        x: 294
+        y: 107
+        width: 67
+        height: 90
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: e83d9af165c3ac1c0800000000000000
+      internalID: -4482704138497830002
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: FrogHop_15
+      rect:
+        serializedVersion: 2
+        x: 366
+        y: 107
+        width: 67
+        height: 90
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 00fbea110f5528d40800000000000000
+      internalID: 5585120977470013184
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: FrogHop_16
+      rect:
+        serializedVersion: 2
+        x: 438
+        y: 107
+        width: 67
+        height: 90
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 34f332447623e54c0800000000000000
+      internalID: -4296941575358693565
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: FrogHop_17
+      rect:
+        serializedVersion: 2
+        x: 510
+        y: 107
+        width: 67
+        height: 90
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 81068f8c5a1dda920800000000000000
+      internalID: 3003287036497518616
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: FrogHop_18
+      rect:
+        serializedVersion: 2
+        x: 6
+        y: 15
+        width: 67
+        height: 90
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 861001032778e3d60800000000000000
+      internalID: 7871878123192582504
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: FrogHop_19
+      rect:
+        serializedVersion: 2
+        x: 78
+        y: 15
+        width: 67
+        height: 90
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: ec6583e645766ad60800000000000000
+      internalID: 7901116208592213710
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: FrogHop_20
+      rect:
+        serializedVersion: 2
+        x: 150
+        y: 15
+        width: 67
+        height: 90
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: a4b0799a63df320b0800000000000000
+      internalID: -5754477487634052278
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: FrogHop_21
+      rect:
+        serializedVersion: 2
+        x: 222
+        y: 15
+        width: 67
+        height: 90
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 7d0d014f1ece4b0e0800000000000000
+      internalID: -2254917058199236393
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: FrogHop_22
+      rect:
+        serializedVersion: 2
+        x: 294
+        y: 15
+        width: 67
+        height: 90
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 2301fa7bd6424f8e0800000000000000
+      internalID: -1660662308941131726
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: FrogHop_23
+      rect:
+        serializedVersion: 2
+        x: 366
+        y: 15
+        width: 67
+        height: 90
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: ce797170c4fe9f790800000000000000
+      internalID: -7495696994965940244
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: FrogHop_24
+      rect:
+        serializedVersion: 2
+        x: 438
+        y: 15
+        width: 67
+        height: 90
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 8c18984fd6ae76130800000000000000
+      internalID: 3560071788434653640
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: FrogHop_25
+      rect:
+        serializedVersion: 2
+        x: 510
+        y: 15
+        width: 67
+        height: 90
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 54a30d0da333f6710800000000000000
+      internalID: 1688624712991652421
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    outline: []
+    physicsShape: []
+    bones: []
+    spriteID: 5e97eb03825dee720800000000000000
+    internalID: 0
+    vertices: []
+    indices: 
+    edges: []
+    weights: []
+    secondaryTextures: []
+  spritePackingTag: 
+  pSDRemoveMatte: 0
+  pSDShowRemoveMatteOption: 0
+  userData: 
+  assetBundleName: rvlbooks/common
+  assetBundleVariant: 
