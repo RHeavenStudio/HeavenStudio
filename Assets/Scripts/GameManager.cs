@@ -223,8 +223,10 @@ namespace HeavenStudio
             totalInputs += weight;
             totalPlayerAccuracy += accuracy * weight;
 
-            if (accuracy <= Minigame.rankOkThreshold && weight > 0)
+            if (accuracy < Minigame.rankOkThreshold && weight > 0)
+            {
                 SkillStarManager.instance.KillStar();
+            }
             
             if (SkillStarManager.instance.IsEligible && !skillStarCollected && accuracy >= 1f)
             {
@@ -447,6 +449,8 @@ namespace HeavenStudio
             GoForAPerfect.instance.perfect = true;
             GoForAPerfect.instance.Disable();
 
+            SectionMedalsManager.instance.Reset();
+
             StartCoroutine(PlayCo(beat));
             onBeatChanged?.Invoke(beat);
         }
@@ -486,9 +490,11 @@ namespace HeavenStudio
             onBeatChanged?.Invoke(beat);
             KillAllSounds();
 
+            // I feel like I should standardize the names
             SkillStarManager.instance.KillStar();
             TimingAccuracyDisplay.instance.StopStarFlash();
             GoForAPerfect.instance.Disable();
+            SectionMedalsManager.instance.OnRemixEnd();
 
             Debug.Log($"Average input offset for playthrough: {averageInputOffset}ms");
             Debug.Log($"Accuracy for playthrough: {(PlayerAccuracy * 100) : 0.00}");

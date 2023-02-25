@@ -256,7 +256,11 @@ namespace HeavenStudio.Games
         public void ScoreMiss(double weight = 1f)
         {
             GameManager.instance.ScoreInputAccuracy(0, true, EndTime(), weight, false);
-            GoForAPerfect.instance.Miss();
+            if (weight > 0)
+            {
+                GoForAPerfect.instance.Miss();
+                SectionMedalsManager.instance.MakeIneligible();
+            }
         }
 
         private void OnDestroy() {

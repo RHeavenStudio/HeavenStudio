@@ -215,7 +215,7 @@ GameObject:
   - component: {fileID: 2528903504101830252}
   - component: {fileID: 6361625390262629985}
   m_Layer: 13
-  m_Name: MedalBase
+  m_Name: MedalOkBase
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -228,12 +228,12 @@ RectTransform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 815928162734998211}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 8005738470016498928}
-  m_RootOrder: 0
+  m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
@@ -691,6 +691,81 @@ MonoBehaviour:
   texAnim: {fileID: 5570790924927272080}
   pAnim: {fileID: 2288202266469369426}
   perfect: 0
+--- !u!1 &6413969106445693540
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 7627095805088907669}
+  - component: {fileID: 5478913299598920745}
+  - component: {fileID: 4588644668585075850}
+  m_Layer: 13
+  m_Name: MedalMissBase
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 0
+--- !u!224 &7627095805088907669
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6413969106445693540}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 8005738470016498928}
+  m_RootOrder: 2
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 0, y: 1}
+  m_AnchorMax: {x: 0, y: 1}
+  m_AnchoredPosition: {x: 0.25, y: -0.9999962}
+  m_SizeDelta: {x: 0.5, y: 0.5}
+  m_Pivot: {x: 0.5, y: 0.5}
+--- !u!222 &5478913299598920745
+CanvasRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6413969106445693540}
+  m_CullTransparentMesh: 1
+--- !u!114 &4588644668585075850
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6413969106445693540}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Material: {fileID: 0}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_RaycastTarget: 1
+  m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
+  m_Maskable: 1
+  m_OnCullStateChanged:
+    m_PersistentCalls:
+      m_Calls: []
+  m_Sprite: {fileID: -248247452180867130, guid: 4a68c02ce89a95548b84a6a1d9811a21, type: 3}
+  m_Type: 0
+  m_PreserveAspect: 1
+  m_FillCenter: 1
+  m_FillMethod: 4
+  m_FillAmount: 1
+  m_FillClockwise: 1
+  m_FillOrigin: 0
+  m_UseSpriteMesh: 0
+  m_PixelsPerUnitMultiplier: 1
 --- !u!1 &6467610316926476649
 GameObject:
   m_ObjectHideFlags: 0
@@ -736,6 +811,75 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 6467610316926476649}
   m_CullTransparentMesh: 1
+--- !u!1 &6594361361356985236
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 2646321557166752840}
+  - component: {fileID: 4332654002072595455}
+  - component: {fileID: 6961596841795557230}
+  m_Layer: 13
+  m_Name: MedalGrid
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!224 &2646321557166752840
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6594361361356985236}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 8005738470016498928}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 1, y: 1}
+  m_AnchoredPosition: {x: 0, y: 0}
+  m_SizeDelta: {x: 0, y: 0}
+  m_Pivot: {x: 0.5, y: 0.5}
+--- !u!222 &4332654002072595455
+CanvasRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6594361361356985236}
+  m_CullTransparentMesh: 1
+--- !u!114 &6961596841795557230
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6594361361356985236}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8a8695521f0d02e499659fee002a26c2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Padding:
+    m_Left: 0
+    m_Right: 0
+    m_Top: 0
+    m_Bottom: 0
+  m_ChildAlignment: 6
+  m_StartCorner: 0
+  m_StartAxis: 0
+  m_CellSize: {x: 0.5, y: 0.5}
+  m_Spacing: {x: -0.22, y: -0.3}
+  m_Constraint: 1
+  m_ConstraintCount: 10
 --- !u!1 &7412041259849967663
 GameObject:
   m_ObjectHideFlags: 0
@@ -918,7 +1062,6 @@ GameObject:
   m_Component:
   - component: {fileID: 8005738470016498928}
   - component: {fileID: 1910360741499422143}
-  - component: {fileID: 2452690345451629430}
   - component: {fileID: 1805804659364623952}
   m_Layer: 13
   m_Name: MedalsHolder
@@ -938,7 +1081,9 @@ RectTransform:
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
+  - {fileID: 2646321557166752840}
   - {fileID: 3823159822418003363}
+  - {fileID: 7627095805088907669}
   m_Father: {fileID: 6636585092206539610}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -955,30 +1100,6 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 7863913741911826895}
   m_CullTransparentMesh: 1
---- !u!114 &2452690345451629430
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7863913741911826895}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 8a8695521f0d02e499659fee002a26c2, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_Padding:
-    m_Left: 0
-    m_Right: 0
-    m_Top: 0
-    m_Bottom: 0
-  m_ChildAlignment: 6
-  m_StartCorner: 0
-  m_StartAxis: 0
-  m_CellSize: {x: 0.5, y: 0.5}
-  m_Spacing: {x: -0.22, y: -0.3}
-  m_Constraint: 1
-  m_ConstraintCount: 10
 --- !u!114 &1805804659364623952
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -991,6 +1112,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 93e2705ea532cf24d8c161d8762aeccc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  MedalsHolder: {fileID: 6594361361356985236}
+  MedalOkPrefab: {fileID: 815928162734998211}
+  MedalMissPrefab: {fileID: 6413969106445693540}
 --- !u!1 &8448201144381854646
 GameObject:
   m_ObjectHideFlags: 0
@@ -1367,14 +1491,14 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: f54ff2803b9c18046b673dc177d752ef, type: 3}
---- !u!224 &8667017389980478215 stripped
-RectTransform:
-  m_CorrespondingSourceObject: {fileID: 6146690112180794985, guid: f54ff2803b9c18046b673dc177d752ef, type: 3}
-  m_PrefabInstance: {fileID: 3245406972695698798}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1 &8667017389980478212 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 6146690112180794986, guid: f54ff2803b9c18046b673dc177d752ef, type: 3}
+  m_PrefabInstance: {fileID: 3245406972695698798}
+  m_PrefabAsset: {fileID: 0}
+--- !u!224 &8667017389980478215 stripped
+RectTransform:
+  m_CorrespondingSourceObject: {fileID: 6146690112180794985, guid: f54ff2803b9c18046b673dc177d752ef, type: 3}
   m_PrefabInstance: {fileID: 3245406972695698798}
   m_PrefabAsset: {fileID: 0}
 --- !u!222 &8717972934511250428

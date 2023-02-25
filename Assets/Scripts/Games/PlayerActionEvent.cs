@@ -64,6 +64,7 @@ namespace HeavenStudio.Games
 
             if (noAutoplay && autoplayOnly) autoplayOnly = false;
             if (noAutoplay && triggersAutoplay){ triggersAutoplay = false; }
+            if (!enabled) return;
 
             double normalizedTime = GetNormalizedTime();
             double stateProg = ((normalizedTime - Minigame.PerfectTime()) / (Minigame.LateTime() - Minigame.PerfectTime()) - 0.5f) * 2;
@@ -170,6 +171,7 @@ namespace HeavenStudio.Games
                         if (state >= 1f || state <= -1f)
                         {
                             GoForAPerfect.instance.Miss();
+                            SectionMedalsManager.instance.MakeIneligible();
                         }
                         else
                         {
@@ -240,6 +242,7 @@ namespace HeavenStudio.Games
             {
                 GameManager.instance.ScoreInputAccuracy(0, true, 2.0, 1.0, false);
                 GoForAPerfect.instance.Miss();
+                SectionMedalsManager.instance.MakeIneligible();
             }
         }
 

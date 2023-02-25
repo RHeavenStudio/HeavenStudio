@@ -17,7 +17,6 @@ namespace HeavenStudio.Common
         // Start is called before the first frame update
         void Start()
         {
-            Debug.Log(GameManager.instance);
             GameManager.instance.onSectionChange += OnSectionChange;
             GameManager.instance.onBeatChanged += OnBeatChanged;
             gameObject.SetActive(GameManager.instance.currentSection != null);
