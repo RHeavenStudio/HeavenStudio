@@ -129,9 +129,9 @@ namespace HeavenStudio.Games
             {
                 if (Conductor.instance.ReportBeat(ref lastReportedBeat))
                 {
-                    if (isPlaying(monkeys[0], "Idle")) monkeys[0].DoScaledAnimationAsync("Bop", 0.5f);
-                    if (isPlaying(monkeys[1], "Idle")) monkeys[1].DoScaledAnimationAsync("Bop", 0.5f);
-                    if (isPlaying(player.anim, "Idle")) player.anim.DoScaledAnimationAsync("Bop", 0.5f);
+                    if (monkeys[0].IsPlayingAnimationName("Idle")) monkeys[0].DoScaledAnimationAsync("Bop", 0.5f);
+                    if (monkeys[1].IsPlayingAnimationName("Idle")) monkeys[1].DoScaledAnimationAsync("Bop", 0.5f);
+                    if (player.anim.IsPlayingAnimationName("Idle")) player.anim.DoScaledAnimationAsync("Bop", 0.5f);
                 }
                 else if (Conductor.instance.songPositionInBeats < lastReportedBeat)
                 {
@@ -488,15 +488,6 @@ namespace HeavenStudio.Games
             }
         }
         #endregion
-
-        bool isPlaying(Animator anim, string stateName)
-        {
-            if (anim.GetCurrentAnimatorStateInfo(0).IsName(stateName) &&
-                    anim.GetCurrentAnimatorStateInfo(0).normalizedTime < 1.0f)
-                return true;
-            else
-                return false;
-        }
 
         //this is the orig way for input handling
         //public void CreateTap(float beat, int type = 0)

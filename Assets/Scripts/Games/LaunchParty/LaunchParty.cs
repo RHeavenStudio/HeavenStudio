@@ -22,7 +22,7 @@ namespace HeavenStudio.Games.Loaders
             {
                 new GameAction("rocket", "Family Model")
                 {
-                    preFunction = delegate { var e = eventCaller.currentEntity; LaunchParty.instance.LaunchRocket(e.beat, e["offset"], e["note1"], e["note2"], e["note3"], e["note4"]); },
+                    preFunction = delegate { var e = eventCaller.currentEntity; LaunchParty.LaunchRocket(e.beat, e["offset"], e["note1"], e["note2"], e["note3"], e["note4"]); },
                     defaultLength = 4f,
                     parameters = new List<Param>()
                     {
@@ -35,7 +35,7 @@ namespace HeavenStudio.Games.Loaders
                 },
                 new GameAction("partyCracker", "Party-Popper")
                 {
-                    preFunction = delegate { var e = eventCaller.currentEntity; LaunchParty.instance.LaunchPartyCracker(e.beat, e["offset"], e["note1"], e["note2"], e["note3"], e["note4"], e["note5"], e["note6"]); },
+                    preFunction = delegate { var e = eventCaller.currentEntity; LaunchParty.LaunchPartyCracker(e.beat, e["offset"], e["note1"], e["note2"], e["note3"], e["note4"], e["note5"], e["note6"]); },
                     defaultLength = 3f,
                     parameters = new List<Param>()
                     {
@@ -50,7 +50,7 @@ namespace HeavenStudio.Games.Loaders
                 },
                 new GameAction("bell", "Bell")
                 {
-                    preFunction = delegate { var e = eventCaller.currentEntity; LaunchParty.instance.LaunchBell(e.beat, e["offset"], e["note1"], e["note2"], e["note3"], e["note4"], e["note5"], e["note6"], e["note7"], e["note8"],
+                    preFunction = delegate { var e = eventCaller.currentEntity; LaunchParty.LaunchBell(e.beat, e["offset"], e["note1"], e["note2"], e["note3"], e["note4"], e["note5"], e["note6"], e["note7"], e["note8"],
                         e["note9"]); },
                     defaultLength = 3f,
                     parameters = new List<Param>()
@@ -69,7 +69,7 @@ namespace HeavenStudio.Games.Loaders
                 },
                 new GameAction("bowlingPin", "Bowling Pin")
                 {
-                    preFunction = delegate { var e = eventCaller.currentEntity; LaunchParty.instance.LaunchBowlingPin(e.beat, e["offset"], e["note1"], e["note2"], e["note3"], e["note4"], e["note5"], e["note6"], e["note7"], 
+                    preFunction = delegate { var e = eventCaller.currentEntity; LaunchParty.LaunchBowlingPin(e.beat, e["offset"], e["note1"], e["note2"], e["note3"], e["note4"], e["note5"], e["note6"], e["note7"], 
                         e["note8"], e["note9"], e["note10"], e["note11"], e["note12"], e["note13"], e["note14"], e["note15"]); },
                     defaultLength = 3f,
                     parameters = new List<Param>()
@@ -94,7 +94,6 @@ namespace HeavenStudio.Games.Loaders
                 },
                 new GameAction("posMove", "Change Launch Pad Position")
                 {
-                    function = delegate { LaunchParty.instance.Nothing(); },
                     defaultLength = 4f,
                     resizable = true,
                     parameters = new List<Param>()
@@ -107,7 +106,6 @@ namespace HeavenStudio.Games.Loaders
                 },
                 new GameAction("rotMove", "Change Launch Pad Rotation")
                 {
-                    function = delegate { LaunchParty.instance.Nothing(); },
                     defaultLength = 4f,
                     resizable = true,
                     parameters = new List<Param>()
@@ -173,6 +171,21 @@ namespace HeavenStudio.Games
         private float currentPadRotation;
         private EasingFunction.Ease lastPosEase;
         private EasingFunction.Ease lastRotEase;
+        public enum RocketType
+        {
+            Family = 0,
+            Cracker = 1,
+            Bell = 2,
+            BowlingPin = 3
+        }
+        public struct QueuedRocket
+        {
+            public RocketType type;
+            public float beat;
+            public float offSet;
+            public List<float> notes; 
+        }
+        private static List<QueuedRocket> queuedRockets = new List<QueuedRocket>();
 
         private int currentPosIndex;
 
@@ -183,6 +196,11 @@ namespace HeavenStudio.Games
         private List<DynamicBeatmap.DynamicEntity> allRotEvents = new List<DynamicBeatmap.DynamicEntity>();
 
         public static LaunchParty instance;
+
+        void OnDestroy()
+        {
+            if (queuedRockets.Count > 0) queuedRockets.Clear();
+        } 
 
         void Awake()
         {
@@ -219,6 +237,17 @@ namespace HeavenStudio.Games
         void Update()
         {
             var cond = Conductor.instance;
+            if (cond.isPlaying && !cond.isPaused)
+            {
+                if (queuedRockets.Count > 0)
+                {
+                    foreach (var rocket in queuedRockets)
+                    {
+                        SpawnRocket(rocket.beat, rocket.offSet, rocket.type, rocket.notes);
+                    }
+                    queuedRockets.Clear();
+                }
+            }
             if (allPosEvents.Count > 0)
             {
                 if (currentPosIndex < allPosEvents.Count && currentPosIndex >= 0)
@@ -322,88 +351,141 @@ namespace HeavenStudio.Games
             }
         }
 
-        public void LaunchRocket(float beat, float beatOffset, int noteOne, int noteTwo, int noteThree, int noteFour)
+        public void SpawnRocket(float beat, float beatOffset, RocketType type, List<float> notes)
         {
-
-            GameObject spawnedRocket = Instantiate(rocket, spawnPad, false);
+            GameObject rocketToSpawn = rocket;
+            switch (type)
+            {
+                case RocketType.Family:
+                    rocketToSpawn = rocket;
+                    break;
+                case RocketType.Cracker:
+                    rocketToSpawn = partyCracker;
+                    break;
+                case RocketType.Bell:
+                    rocketToSpawn = bell;
+                    break;
+                case RocketType.BowlingPin:
+                    rocketToSpawn = bowlingPin;
+                    break;
+            }
+            GameObject spawnedRocket = Instantiate(rocketToSpawn, spawnPad, false);
             var rocketScript = spawnedRocket.GetComponent<LaunchPartyRocket>();
-            rocketScript.pitches.Add(Mathf.Pow(2f, (1f / 12f) * noteOne) * Conductor.instance.musicSource.pitch);
-            rocketScript.pitches.Add(Mathf.Pow(2f, (1f / 12f) * noteTwo) * Conductor.instance.musicSource.pitch);
-            rocketScript.pitches.Add(Mathf.Pow(2f, (1f / 12f) * noteThree) * Conductor.instance.musicSource.pitch);
-            rocketScript.pitches.Add(Mathf.Pow(2f, (1f / 12f) * noteFour) * Conductor.instance.musicSource.pitch);
-            rocketScript.InitFamilyRocket(beat);
-
+            rocketScript.pitches.AddRange(notes);
+            switch (type)
+            {
+                case RocketType.Family:
+                    rocketScript.InitFamilyRocket(beat);
+                    break;
+                case RocketType.Cracker:
+                    rocketScript.InitPartyCracker(beat);
+                    break;
+                case RocketType.Bell:
+                    rocketScript.InitBell(beat);
+                    break;
+                case RocketType.BowlingPin:
+                    rocketScript.InitBowlingPin(beat);
+                    break;
+            }
             BeatAction.New(instance.gameObject, new List<BeatAction.Action>()
             {
                 new BeatAction.Action(beat + beatOffset, delegate { rocketScript.Rise(); })
             });
         }
 
-        public void LaunchPartyCracker(float beat, float beatOffset, int noteOne, int noteTwo, int noteThree, int noteFour, int noteFive, int noteSix)
+        public static void LaunchRocket(float beat, float beatOffset, int noteOne, int noteTwo, int noteThree, int noteFour)
         {
-            GameObject spawnedRocket = Instantiate(partyCracker, spawnPad, false);
-            var rocketScript = spawnedRocket.GetComponent<LaunchPartyRocket>();
-            rocketScript.pitches.Add(Mathf.Pow(2f, (1f / 12f) * noteOne) * Conductor.instance.musicSource.pitch);
-            rocketScript.pitches.Add(Mathf.Pow(2f, (1f / 12f) * noteTwo) * Conductor.instance.musicSource.pitch);
-            rocketScript.pitches.Add(Mathf.Pow(2f, (1f / 12f) * noteThree) * Conductor.instance.musicSource.pitch);
-            rocketScript.pitches.Add(Mathf.Pow(2f, (1f / 12f) * noteFour) * Conductor.instance.musicSource.pitch);
-            rocketScript.pitches.Add(Mathf.Pow(2f, (1f / 12f) * noteFive) * Conductor.instance.musicSource.pitch);
-            rocketScript.pitches.Add(Mathf.Pow(2f, (1f / 12f) * noteSix) * Conductor.instance.musicSource.pitch);
-            rocketScript.InitPartyCracker(beat);
-
-            BeatAction.New(instance.gameObject, new List<BeatAction.Action>()
+            List<float> pitches = new List<float>()
             {
-                new BeatAction.Action(beat + beatOffset, delegate { rocketScript.Rise(); })
-            });
+                Mathf.Pow(2f, (1f / 12f) * noteOne) * Conductor.instance.musicSource.pitch,
+                Mathf.Pow(2f, (1f / 12f) * noteTwo) * Conductor.instance.musicSource.pitch,
+                Mathf.Pow(2f, (1f / 12f) * noteThree) * Conductor.instance.musicSource.pitch,
+                Mathf.Pow(2f, (1f / 12f) * noteFour) * Conductor.instance.musicSource.pitch
+            };
+            if (GameManager.instance.currentGame == "launchParty")
+            {
+                LaunchParty.instance.SpawnRocket(beat, beatOffset, RocketType.Family, pitches);
+            }
+            else
+            {
+                queuedRockets.Add(new QueuedRocket { beat = beat, offSet = beatOffset, notes = pitches, type = RocketType.Family});
+            }
         }
 
-        public void LaunchBell(float beat, float beatOffset, int noteOne, int noteTwo, int noteThree, int noteFour, int noteFive, int noteSix, int noteSeven, int noteEight, int noteNine)
+        public static void LaunchPartyCracker(float beat, float beatOffset, int noteOne, int noteTwo, int noteThree, int noteFour, int noteFive, int noteSix)
         {
-            GameObject spawnedRocket = Instantiate(bell, spawnPad, false);
-            var rocketScript = spawnedRocket.GetComponent<LaunchPartyRocket>();
-            rocketScript.pitches.Add(Mathf.Pow(2f, (1f / 12f) * noteOne) * Conductor.instance.musicSource.pitch);
-            rocketScript.pitches.Add(Mathf.Pow(2f, (1f / 12f) * noteTwo) * Conductor.instance.musicSource.pitch);
-            rocketScript.pitches.Add(Mathf.Pow(2f, (1f / 12f) * noteThree) * Conductor.instance.musicSource.pitch);
-            rocketScript.pitches.Add(Mathf.Pow(2f, (1f / 12f) * noteFour) * Conductor.instance.musicSource.pitch);
-            rocketScript.pitches.Add(Mathf.Pow(2f, (1f / 12f) * noteFive) * Conductor.instance.musicSource.pitch);
-            rocketScript.pitches.Add(Mathf.Pow(2f, (1f / 12f) * noteSix) * Conductor.instance.musicSource.pitch);
-            rocketScript.pitches.Add(Mathf.Pow(2f, (1f / 12f) * noteSeven) * Conductor.instance.musicSource.pitch);
-            rocketScript.pitches.Add(Mathf.Pow(2f, (1f / 12f) * noteEight) * Conductor.instance.musicSource.pitch);
-            rocketScript.pitches.Add(Mathf.Pow(2f, (1f / 12f) * noteNine) * Conductor.instance.musicSource.pitch);
-            rocketScript.InitBell(beat);
-
-            BeatAction.New(instance.gameObject, new List<BeatAction.Action>()
+            List<float> pitches = new List<float>()
             {
-                new BeatAction.Action(beat + beatOffset, delegate { rocketScript.Rise(); })
-            });
+                Mathf.Pow(2f, (1f / 12f) * noteOne) * Conductor.instance.musicSource.pitch,
+                Mathf.Pow(2f, (1f / 12f) * noteTwo) * Conductor.instance.musicSource.pitch,
+                Mathf.Pow(2f, (1f / 12f) * noteThree) * Conductor.instance.musicSource.pitch,
+                Mathf.Pow(2f, (1f / 12f) * noteFour) * Conductor.instance.musicSource.pitch,
+                Mathf.Pow(2f, (1f / 12f) * noteFive) * Conductor.instance.musicSource.pitch,
+                Mathf.Pow(2f, (1f / 12f) * noteSix) * Conductor.instance.musicSource.pitch,
+            };
+            if (GameManager.instance.currentGame == "launchParty")
+            {
+                LaunchParty.instance.SpawnRocket(beat, beatOffset, RocketType.Cracker, pitches);
+            }
+            else
+            {
+                queuedRockets.Add(new QueuedRocket { beat = beat, offSet = beatOffset, notes = pitches, type = RocketType.Cracker });
+            }
         }
 
-        public void LaunchBowlingPin(float beat, float beatOffset, int noteOne, int noteTwo, int noteThree, int noteFour, int noteFive, int noteSix, int noteSeven, 
+        public static void LaunchBell(float beat, float beatOffset, int noteOne, int noteTwo, int noteThree, int noteFour, int noteFive, int noteSix, int noteSeven, int noteEight, int noteNine)
+        {
+            List<float> pitches = new List<float>()
+            {
+                Mathf.Pow(2f, (1f / 12f) * noteOne) * Conductor.instance.musicSource.pitch,
+                Mathf.Pow(2f, (1f / 12f) * noteTwo) * Conductor.instance.musicSource.pitch,
+                Mathf.Pow(2f, (1f / 12f) * noteThree) * Conductor.instance.musicSource.pitch,
+                Mathf.Pow(2f, (1f / 12f) * noteFour) * Conductor.instance.musicSource.pitch,
+                Mathf.Pow(2f, (1f / 12f) * noteFive) * Conductor.instance.musicSource.pitch,
+                Mathf.Pow(2f, (1f / 12f) * noteSix) * Conductor.instance.musicSource.pitch,
+                Mathf.Pow(2f, (1f / 12f) * noteSeven) * Conductor.instance.musicSource.pitch,
+                Mathf.Pow(2f, (1f / 12f) * noteEight) * Conductor.instance.musicSource.pitch,
+                Mathf.Pow(2f, (1f / 12f) * noteNine) * Conductor.instance.musicSource.pitch,
+            };
+            if (GameManager.instance.currentGame == "launchParty")
+            {
+                LaunchParty.instance.SpawnRocket(beat, beatOffset, RocketType.Bell, pitches);
+            }
+            else
+            {
+                queuedRockets.Add(new QueuedRocket { beat = beat, offSet = beatOffset, notes = pitches, type = RocketType.Bell });
+            }
+        }
+
+        public static void LaunchBowlingPin(float beat, float beatOffset, int noteOne, int noteTwo, int noteThree, int noteFour, int noteFive, int noteSix, int noteSeven, 
             int noteEight, int noteNine, int noteTen, int noteEleven, int noteTwelve, int noteThirteen, int noteFourteen, int noteFifteen)
         {
-            GameObject spawnedRocket = Instantiate(bowlingPin, spawnPad, false);
-            var rocketScript = spawnedRocket.GetComponent<LaunchPartyRocket>();
-            rocketScript.pitches.Add(Mathf.Pow(2f, (1f / 12f) * noteOne) * Conductor.instance.musicSource.pitch);
-            rocketScript.pitches.Add(Mathf.Pow(2f, (1f / 12f) * noteTwo) * Conductor.instance.musicSource.pitch);
-            rocketScript.pitches.Add(Mathf.Pow(2f, (1f / 12f) * noteThree) * Conductor.instance.musicSource.pitch);
-            rocketScript.pitches.Add(Mathf.Pow(2f, (1f / 12f) * noteFour) * Conductor.instance.musicSource.pitch);
-            rocketScript.pitches.Add(Mathf.Pow(2f, (1f / 12f) * noteFive) * Conductor.instance.musicSource.pitch);
-            rocketScript.pitches.Add(Mathf.Pow(2f, (1f / 12f) * noteSix) * Conductor.instance.musicSource.pitch);
-            rocketScript.pitches.Add(Mathf.Pow(2f, (1f / 12f) * noteSeven) * Conductor.instance.musicSource.pitch);
-            rocketScript.pitches.Add(Mathf.Pow(2f, (1f / 12f) * noteEight) * Conductor.instance.musicSource.pitch);
-            rocketScript.pitches.Add(Mathf.Pow(2f, (1f / 12f) * noteNine) * Conductor.instance.musicSource.pitch);
-            rocketScript.pitches.Add(Mathf.Pow(2f, (1f / 12f) * noteTen) * Conductor.instance.musicSource.pitch);
-            rocketScript.pitches.Add(Mathf.Pow(2f, (1f / 12f) * noteEleven) * Conductor.instance.musicSource.pitch);
-            rocketScript.pitches.Add(Mathf.Pow(2f, (1f / 12f) * noteTwelve) * Conductor.instance.musicSource.pitch);
-            rocketScript.pitches.Add(Mathf.Pow(2f, (1f / 12f) * noteThirteen) * Conductor.instance.musicSource.pitch);
-            rocketScript.pitches.Add(Mathf.Pow(2f, (1f / 12f) * noteFourteen) * Conductor.instance.musicSource.pitch);
-            rocketScript.pitches.Add(Mathf.Pow(2f, (1f / 12f) * noteFifteen) * Conductor.instance.musicSource.pitch);
-            rocketScript.InitBowlingPin(beat);
-
-            BeatAction.New(instance.gameObject, new List<BeatAction.Action>()
+            List<float> pitches = new List<float>()
             {
-                new BeatAction.Action(beat + beatOffset, delegate { rocketScript.Rise(); })
-            });
+                Mathf.Pow(2f, (1f / 12f) * noteOne) * Conductor.instance.musicSource.pitch,
+                Mathf.Pow(2f, (1f / 12f) * noteTwo) * Conductor.instance.musicSource.pitch,
+                Mathf.Pow(2f, (1f / 12f) * noteThree) * Conductor.instance.musicSource.pitch,
+                Mathf.Pow(2f, (1f / 12f) * noteFour) * Conductor.instance.musicSource.pitch,
+                Mathf.Pow(2f, (1f / 12f) * noteFive) * Conductor.instance.musicSource.pitch,
+                Mathf.Pow(2f, (1f / 12f) * noteSix) * Conductor.instance.musicSource.pitch,
+                Mathf.Pow(2f, (1f / 12f) * noteSeven) * Conductor.instance.musicSource.pitch,
+                Mathf.Pow(2f, (1f / 12f) * noteEight) * Conductor.instance.musicSource.pitch,
+                Mathf.Pow(2f, (1f / 12f) * noteNine) * Conductor.instance.musicSource.pitch,
+                Mathf.Pow(2f, (1f / 12f) * noteTen) * Conductor.instance.musicSource.pitch,
+                Mathf.Pow(2f, (1f / 12f) * noteEleven) * Conductor.instance.musicSource.pitch,
+                Mathf.Pow(2f, (1f / 12f) * noteTwelve) * Conductor.instance.musicSource.pitch,
+                Mathf.Pow(2f, (1f / 12f) * noteThirteen) * Conductor.instance.musicSource.pitch,
+                Mathf.Pow(2f, (1f / 12f) * noteFourteen) * Conductor.instance.musicSource.pitch,
+                Mathf.Pow(2f, (1f / 12f) * noteFifteen) * Conductor.instance.musicSource.pitch,
+            };
+            if (GameManager.instance.currentGame == "launchParty")
+            {
+                LaunchParty.instance.SpawnRocket(beat, beatOffset, RocketType.BowlingPin, pitches);
+            }
+            else
+            {
+                queuedRockets.Add(new QueuedRocket { beat = beat, offSet = beatOffset, notes = pitches, type = RocketType.BowlingPin });
+            }
         }
 
         public void CreateParticles(float beat, bool toggle, float starDensity, float starSpeed, float starSpeedBack)
@@ -429,11 +511,6 @@ namespace HeavenStudio.Games
                         fallingStarsBack.Stop();
                     break;
             }
-        }
-
-        public void Nothing()
-        {
-
         }
     }
 }

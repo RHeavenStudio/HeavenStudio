@@ -1,4 +1,6 @@
+using System;
 using System.Collections.Generic;
+
 using UnityEngine;
 
 using HeavenStudio.Util;
@@ -7,19 +9,20 @@ namespace HeavenStudio.Games.Scripts_Spaceball
 {
     public class SpaceballPlayer : MonoBehaviour
     {
-        private Animator anim;
-
-        private int currentHitInList = 0;
-
-        public int costume;
+        private Animator _anim;
+        private int _currentCostume;
 
         public SpriteRenderer PlayerSprite;
-        public List<SpriteSheet> PlayerSpriteSheets = new List<SpriteSheet>();
+        public SpriteRenderer Hat;
 
-        [System.Serializable]
-        public class SpriteSheet
+        public HatSprite HatSprites1 = new HatSprite();
+        public HatSprite HatSprites2 = new HatSprite();
+
+        [Serializable]
+        public struct HatSprite
         {
-            public List<Sprite> sprites;
+            public List<Vector2> Offsets;
+            public List<Sprite> Sprites;
         }
 
         public static SpaceballPlayer instance { get; set; }
@@ -27,24 +30,22 @@ namespace HeavenStudio.Games.Scripts_Spaceball
         private void Awake()
         {
             instance = this;
-            anim = GetComponent<Animator>();
+            _anim = GetComponent<Animator>();
         }
 
         private void Update()
         {
-            if (Spaceball.instance.EligibleHits.Count == 0)
-                currentHitInList = 0;
-
             if (PlayerInput.Pressed())
             {
                 Swing(null);
             }
         }
 
-        public void SetCostume(int costume)
+        public void SetCostume(Material mat, int costumeIndex)
         {
-            this.costume = costume;
-            anim.Play("Idle", 0, 0);
+            PlayerSprite.material = mat;
+            _currentCostume = costumeIndex;
+            _anim.Play("Idle", 0, 0);
         }
 
         public void Swing(SpaceballBall b)
@@ -57,12 +58,32 @@ namespace HeavenStudio.Games.Scripts_Spaceball
             {
 
             }
-            anim.Play("Swing", 0, 0);
+            _anim.Play("Swing", 0, 0);
         }
 
-        public void SetSprite(int id)
+        public void SetHatFrame(int frame)
         {
-            PlayerSprite.sprite = PlayerSpriteSheets[costume].sprites[id];
+            // Unity can't serialize lists inside lists in this version, so that's annoying.
+            var sprites = new HatSprite();
+            switch (_currentCostume)
+            {
+                case 0:
+                    return;
+                case 1:
+                    sprites = HatSprites1;
+                    break;
+                case 2:
+                    sprites = HatSprites2;
+                    break;
+            }
+            if (sprites.Sprites.Count - 1 < frame)
+                frame = 0;
+            Hat.sprite = sprites.Sprites[frame];
+
+            var offset = Vector2.zero;
+            if (sprites.Offsets.Count - 1 >= frame)
+                offset = sprites.Offsets[frame];
+            Hat.transform.localPosition = offset;
         }
     }
 }
