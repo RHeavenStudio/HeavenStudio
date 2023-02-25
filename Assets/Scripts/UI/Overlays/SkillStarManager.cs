@@ -95,7 +95,7 @@ namespace HeavenStudio.Common
 
         public void KillStar()
         {
-            if (state == StarState.In && cond.songPositionInBeatsAsDouble >= starStart + starLength*0.5f)
+            if (state == StarState.In && cond.songPositionInBeatsAsDouble >= starStart + starLength*0.5f || !cond.isPlaying)
             {
                 IsEligible = false;
                 state = StarState.Out;

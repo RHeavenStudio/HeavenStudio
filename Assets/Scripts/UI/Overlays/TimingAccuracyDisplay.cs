@@ -48,6 +48,7 @@ namespace HeavenStudio.Common
         {
             targetArrowPos = 0f;
             arrowTransform.localPosition = Vector3.zero;
+            StopStarFlash();
         }
 
         public void SetArrowPos(double time)

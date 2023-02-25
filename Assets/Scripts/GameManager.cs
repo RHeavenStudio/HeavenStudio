@@ -487,6 +487,7 @@ namespace HeavenStudio
             KillAllSounds();
 
             SkillStarManager.instance.KillStar();
+            TimingAccuracyDisplay.instance.StopStarFlash();
             GoForAPerfect.instance.Disable();
 
             Debug.Log($"Average input offset for playthrough: {averageInputOffset}ms");
