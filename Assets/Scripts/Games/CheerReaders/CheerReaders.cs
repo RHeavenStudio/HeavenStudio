@@ -34,6 +34,25 @@ namespace HeavenStudio.Games.Loaders
                     {
                         new Param("solo", false, "Solo", "Should only the player say the voice line?")
                     }
+                },
+                new GameAction("letsGoReadABunchaBooks", "Let's Go Read A Buncha Books!")
+                {
+                    function = delegate {var e = eventCaller.currentEntity; CheerReaders.instance.LetsGoReadABunchaBooks(e.beat, e["solo"]); },
+                    defaultLength = 3f,
+                    parameters = new List<Param>()
+                    {
+                        new Param("solo", false, "Solo", "Should only the player say the voice line?")
+                    }
+                },
+                new GameAction("rahRahSisBoomBaBoom", "Rah Rah Sis Boom Ba Boom!")
+                {
+                    function = delegate {var e = eventCaller.currentEntity; CheerReaders.instance.RahRahSisBoomBaBoom(e.beat, e["solo"], e["consecutive"]); },
+                    defaultLength = 4f,
+                    parameters = new List<Param>()
+                    {
+                        new Param("solo", false, "Solo", "Should only the player say the voice line?"),
+                        new Param("consecutive", false, "Consecutive", "Is this cue using the alternate consecutive version?")
+                    }
                 }
             });
         }
@@ -169,15 +188,129 @@ namespace HeavenStudio.Games
             {
                 new MultiSound.Sound("cheerReaders/letsGoRead", beat),
                 new MultiSound.Sound("cheerReaders/Solo/LetsGoRead/bunchaBooksS1", beat + 0.25f),
+                new MultiSound.Sound("cheerReaders/Solo/LetsGoRead/bunchaBooksS2", beat + 0.5f),
+                new MultiSound.Sound("cheerReaders/Solo/LetsGoRead/bunchaBooksS3", beat + 0.75f),
+                new MultiSound.Sound("cheerReaders/Solo/LetsGoRead/bunchaBooksS4", beat + 1f),
+                new MultiSound.Sound("cheerReaders/Solo/LetsGoRead/bunchaBooksS5", beat + 1.25f),
+                new MultiSound.Sound("cheerReaders/Solo/LetsGoRead/bunchaBooksS6", beat + 1.5f),
+                new MultiSound.Sound("cheerReaders/Solo/LetsGoRead/bunchaBooksS7", beat + 1.75f),
+                new MultiSound.Sound("cheerReaders/Solo/LetsGoRead/bunchaBooksS8", beat + 2f),
+                new MultiSound.Sound("cheerReaders/Solo/LetsGoRead/bunchaBooksS9", beat + 2.5f),
+                new MultiSound.Sound("cheerReaders/bookDiagonal", beat + 0.75f),
+                new MultiSound.Sound("cheerReaders/bookDiagonal", beat + 1f),
+                new MultiSound.Sound("cheerReaders/bookDiagonal", beat + 1.25f),
+                new MultiSound.Sound("cheerReaders/bookDiagonal", beat + 1.5f),
+                new MultiSound.Sound("cheerReaders/bookDiagonal", beat + 1.75f),
             };
             if (!solo)
             {
                 soundsToPlay.AddRange(new List<MultiSound.Sound>()
                 {
-
+                    new MultiSound.Sound("cheerReaders/Girls/LetsGoRead/bunchaBooksgirls1", beat + 0.25f),
+                    new MultiSound.Sound("cheerReaders/Girls/LetsGoRead/bunchaBooksgirls2", beat + 0.5f),
+                    new MultiSound.Sound("cheerReaders/Girls/LetsGoRead/bunchaBooksgirls3", beat + 0.75f),
+                    new MultiSound.Sound("cheerReaders/Girls/LetsGoRead/bunchaBooksgirls4", beat + 1f),
+                    new MultiSound.Sound("cheerReaders/Girls/LetsGoRead/bunchaBooksgirls5", beat + 1.25f),
+                    new MultiSound.Sound("cheerReaders/Girls/LetsGoRead/bunchaBooksgirls6", beat + 1.5f),
+                    new MultiSound.Sound("cheerReaders/Girls/LetsGoRead/bunchaBooksgirls7", beat + 1.75f),
+                    new MultiSound.Sound("cheerReaders/Girls/LetsGoRead/bunchaBooksgirls8", beat + 2f),
+                    new MultiSound.Sound("cheerReaders/Girls/LetsGoRead/bunchaBooksgirls9", beat + 2.5f),
                 });
             }
             MultiSound.Play(soundsToPlay.ToArray(), forcePlay: true);
+            BeatAction.New(instance.gameObject, new List<BeatAction.Action>()
+            {
+                new BeatAction.Action(beat + 0.75f, delegate
+                {
+                    firstRow[0].FlipBook();
+                }),
+                new BeatAction.Action(beat + 1f, delegate
+                {
+                    firstRow[1].FlipBook();
+                    secondRow[0].FlipBook();
+                }),
+                new BeatAction.Action(beat + 1.25f, delegate
+                {
+                    firstRow[2].FlipBook();
+                    secondRow[1].FlipBook();
+                    thirdRow[0].FlipBook();
+                }),
+                new BeatAction.Action(beat + 1.5f, delegate
+                {
+                    firstRow[3].FlipBook();
+                    secondRow[2].FlipBook();
+                    thirdRow[1].FlipBook();
+                }),
+                new BeatAction.Action(beat + 1.75f, delegate
+                {
+                    secondRow[3].FlipBook();
+                    thirdRow[2].FlipBook();
+                }),
+            });
+        }
+
+        public void RahRahSisBoomBaBoom(float beat, bool solo, bool consecutive)
+        {
+            ScheduleInput(beat, 2.5f, InputType.STANDARD_DOWN, JustFlipBoom, MissFlip, Nothing);
+            List<MultiSound.Sound> soundsToPlay = new List<MultiSound.Sound>()
+            {
+                new MultiSound.Sound("cheerReaders/Solo/RRSBBB/rahRahSisBoomBaBoomS1", beat),
+                new MultiSound.Sound("cheerReaders/Solo/RRSBBB/rahRahSisBoomBaBoomS2", beat + 0.5f),
+                new MultiSound.Sound("cheerReaders/Solo/RRSBBB/rahRahSisBoomBaBoomS3", beat + 1f, 1, 1, false, 0.081f),
+                new MultiSound.Sound("cheerReaders/Solo/RRSBBB/rahRahSisBoomBaBoomS4", beat + 1.5f),
+                new MultiSound.Sound("cheerReaders/Solo/RRSBBB/rahRahSisBoomBaBoomS5", beat + 2f),
+                new MultiSound.Sound("cheerReaders/Solo/RRSBBB/rahRahSisBoomBaBoomS6", beat + 2.5f),
+                new MultiSound.Sound("cheerReaders/bookDiagonal", beat + 0.5f),
+                new MultiSound.Sound("cheerReaders/bookDiagonal", beat + 1f),
+                new MultiSound.Sound("cheerReaders/bookDiagonal", beat + 1.5f),
+                new MultiSound.Sound("cheerReaders/bookDiagonal", beat + 2f),
+            };
+            if (!solo)
+            {
+                soundsToPlay.AddRange(new List<MultiSound.Sound>()
+                {
+                    new MultiSound.Sound("cheerReaders/Girls/RRSBBB/rahRahSisBoomBaBoomgirls1", beat),
+                    new MultiSound.Sound("cheerReaders/Girls/RRSBBB/rahRahSisBoomBaBoomgirls2", beat + 0.5f),
+                    new MultiSound.Sound("cheerReaders/Girls/RRSBBB/rahRahSisBoomBaBoomgirls3", beat + 1f, 1, 1, false, 0.116f),
+                    new MultiSound.Sound("cheerReaders/Girls/RRSBBB/rahRahSisBoomBaBoomgirls4", beat + 1.5f),
+                    new MultiSound.Sound("cheerReaders/Girls/RRSBBB/rahRahSisBoomBaBoomgirls5", beat + 2f),
+                    new MultiSound.Sound("cheerReaders/Girls/RRSBBB/rahRahSisBoomBaBoomgirls6", beat + 2.5f),
+                });
+            }
+            if (!consecutive)
+            {
+                soundsToPlay.Add(new MultiSound.Sound("cheerReaders/bookDiagonal", beat));
+            }
+            MultiSound.Play(soundsToPlay.ToArray(), forcePlay: true);
+            BeatAction.New(instance.gameObject, new List<BeatAction.Action>()
+            {
+                new BeatAction.Action(beat, delegate
+                {
+                    firstRow[0].FlipBook();
+                }),
+                new BeatAction.Action(beat + 0.5f, delegate
+                {
+                    firstRow[1].FlipBook();
+                    secondRow[0].FlipBook();
+                }),
+                new BeatAction.Action(beat + 1f, delegate
+                {
+                    firstRow[2].FlipBook();
+                    secondRow[1].FlipBook();
+                    thirdRow[0].FlipBook();
+                }),
+                new BeatAction.Action(beat + 1.5f, delegate
+                {
+                    firstRow[3].FlipBook();
+                    secondRow[2].FlipBook();
+                    thirdRow[1].FlipBook();
+                }),
+                new BeatAction.Action(beat + 2f, delegate
+                {
+                    secondRow[3].FlipBook();
+                    thirdRow[2].FlipBook();
+                }),
+            });
         }
 
         void JustFlip(PlayerActionEvent caller, float state)
@@ -191,10 +324,28 @@ namespace HeavenStudio.Games
             SuccessFlip();
         }
 
-        void SuccessFlip()
+        void JustFlipBoom(PlayerActionEvent caller, float state)
+        {
+            if (state >= 1f || state <= -1f)
+            {
+                Jukebox.PlayOneShotGame("cheerReaders/doingong");
+                player.FlipBook(); //Need near miss anims
+                return;
+            }
+            SuccessFlip(true);
+        }
+
+        void SuccessFlip(bool boom = false)
         {
             player.FlipBook();
-            Jukebox.PlayOneShotGame("cheerReaders/bookPlayer");
+            if (boom)
+            {
+                Jukebox.PlayOneShotGame("cheerReaders/bookBoom");
+            }
+            else
+            {
+                Jukebox.PlayOneShotGame("cheerReaders/bookPlayer");
+            }
         }
 
         void MissFlip(PlayerActionEvent caller)
