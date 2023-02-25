@@ -1,28 +1,25 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using HeavenStudio.Util;
 
-public class RvlCharacter : MonoBehaviour
+namespace HeavenStudio.Games.Scripts_CheerReaders
 {
-    [Header("Objects")]
-    public GameObject BaseModel;
-    public Animator BaseAnim;
-
-    public int row;
-    public int col;
-
-    private bool firstCue = true;
-    private bool bookFront = false;
-
-    // Start is called before the first frame update
-    void Awake()
+    public class RvlCharacter : MonoBehaviour
     {
-        BaseAnim = BaseModel.GetComponent<Animator>();
-    }
+        public Animator BaseAnim;
+        bool bookIsWhite = true;
 
-    // Update is called once per frame
-    void Update()
-    {
-        
+        void Awake()
+        {
+            BaseAnim = GetComponent<Animator>();
+        }
+
+        public void FlipBook()
+        {
+            BaseAnim.DoScaledAnimationAsync(bookIsWhite ? "WhitetoBlack" : "BlacktoWhite", 0.5f);
+            bookIsWhite = !bookIsWhite;
+        }
     }
 }
+
