@@ -163,7 +163,7 @@ namespace HeavenStudio.Games
                     EasingFunction.Function func = EasingFunction.GetEasingFunction(lastEase);
                     float animPos = func(0f, 1f, normalizedBeat);
                     captainTuckAnim.DoNormalizedAnimation("CaptainTuckWalkIntro", animPos);
-                    if (normalizedBeat > 1f)
+                    if (normalizedBeat >= 1f)
                     {
                         isWalking = false;
                     }
