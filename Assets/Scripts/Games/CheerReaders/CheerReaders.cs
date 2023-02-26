@@ -102,6 +102,23 @@ namespace HeavenStudio.Games
             Girls = 1,
             Both = 2
         }
+        public enum PosterType
+        {
+            CropStomp = 0,
+            DJSchool = 1,
+            FillbotsEmpty = 2,
+            FillbotsFull = 3,
+            FrogHop = 4,
+            Lockstep = 5,
+            MoaiDooWop = 6,
+            PlayYan = 7,
+            Remix5Girl = 8,
+            RhythmRally = 9,
+            RhythmTweezers = 10,
+            SpaceGramps = 11,
+            TapTrial = 12,
+            TapTrial2 = 13
+        }
         [Header("Components")]
         //Doing this because unity doesn't expose multidimensional/jagged arrays in the inspector - Rasmus
         [SerializeField] List<RvlCharacter> firstRow = new List<RvlCharacter>();
