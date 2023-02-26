@@ -20,7 +20,7 @@ namespace HeavenStudio.Games.Loaders
             {
                 new GameAction("oneTwoThree", "One Two Three!")
                 {
-                    function = delegate {var e = eventCaller.currentEntity; CheerReaders.instance.OneTwoThree(e.beat, e["solo"]); },
+                    function = delegate {var e = eventCaller.currentEntity; CheerReaders.instance.OneTwoThree(e.beat, e["solo"]); CheerReaders.instance.SetIsDoingCue(e.beat, e.length);},
                     defaultLength = 3f,
                     parameters = new List<Param>()
                     {
@@ -29,7 +29,7 @@ namespace HeavenStudio.Games.Loaders
                 },
                 new GameAction("itsUpToYou", "It's Up To You!")
                 {
-                    function = delegate {var e = eventCaller.currentEntity; CheerReaders.instance.ItsUpToYou(e.beat, e["solo"]); },
+                    function = delegate {var e = eventCaller.currentEntity; CheerReaders.instance.ItsUpToYou(e.beat, e["solo"]); CheerReaders.instance.SetIsDoingCue(e.beat, e.length);},
                     defaultLength = 3f,
                     parameters = new List<Param>()
                     {
@@ -38,7 +38,7 @@ namespace HeavenStudio.Games.Loaders
                 },
                 new GameAction("letsGoReadABunchaBooks", "Let's Go Read A Buncha Books!")
                 {
-                    function = delegate {var e = eventCaller.currentEntity; CheerReaders.instance.LetsGoReadABunchaBooks(e.beat, e["solo"]); },
+                    function = delegate {var e = eventCaller.currentEntity; CheerReaders.instance.LetsGoReadABunchaBooks(e.beat, e["solo"]); CheerReaders.instance.SetIsDoingCue(e.beat, e.length);},
                     defaultLength = 3f,
                     parameters = new List<Param>()
                     {
@@ -47,7 +47,7 @@ namespace HeavenStudio.Games.Loaders
                 },
                 new GameAction("rahRahSisBoomBaBoom", "Rah Rah Sis Boom Ba Boom!")
                 {
-                    function = delegate {var e = eventCaller.currentEntity; CheerReaders.instance.RahRahSisBoomBaBoom(e.beat, e["solo"], e["consecutive"]); },
+                    function = delegate {var e = eventCaller.currentEntity; CheerReaders.instance.RahRahSisBoomBaBoom(e.beat, e["solo"], e["consecutive"]); CheerReaders.instance.SetIsDoingCue(e.beat, e.length);},
                     defaultLength = 4f,
                     parameters = new List<Param>()
                     {
@@ -57,7 +57,7 @@ namespace HeavenStudio.Games.Loaders
                 },
                 new GameAction("okItsOn", "OK It's On!")
                 {
-                    function = delegate {var e = eventCaller.currentEntity; CheerReaders.instance.OkItsOn(e.beat, e["solo"], e["toggle"]); },
+                    function = delegate {var e = eventCaller.currentEntity; CheerReaders.instance.OkItsOn(e.beat, e["solo"], e["toggle"]); CheerReaders.instance.SetIsDoingCue(e.beat, e.length);},
                     defaultLength = 4f,
                     parameters = new List<Param>()
                     {
@@ -67,7 +67,7 @@ namespace HeavenStudio.Games.Loaders
                 },
                 new GameAction("okItsOnStretch", "OK It's On! (Stretchable)")
                 {
-                    function = delegate {var e = eventCaller.currentEntity; CheerReaders.instance.OkItsOnStretchable(e.beat, e.length, e["solo"], e["toggle"]); },
+                    function = delegate {var e = eventCaller.currentEntity; CheerReaders.instance.OkItsOnStretchable(e.beat, e.length, e["solo"], e["toggle"]); CheerReaders.instance.SetIsDoingCue(e.beat, e.length); },
                     defaultLength = 4f,
                     resizable = true,
                     parameters = new List<Param>()
@@ -114,6 +114,8 @@ namespace HeavenStudio.Games
         [Header("Variables")]
         bool shouldBop = true;
         bool canBop = true;
+        bool doingCue;
+        public bool shouldBeBlack = false;
         public GameEvent bop = new GameEvent();
 
         void OnDestroy()
@@ -153,7 +155,7 @@ namespace HeavenStudio.Games
             {
                 if (PlayerInput.Pressed() && !IsExpectingInputNow(InputType.STANDARD_DOWN))
                 {
-                    player.FlipBook();
+                    player.FlipBook(false);
                     Jukebox.PlayOneShotGame("cheerReaders/miss");
                     ScoreMiss(1f);
                 }
@@ -181,6 +183,16 @@ namespace HeavenStudio.Games
         public void BopToggle(bool startBop)
         {
             shouldBop = startBop;
+        }
+
+        public void SetIsDoingCue(float beat, float length)
+        {
+            doingCue = true;
+            shouldBeBlack = !shouldBeBlack;
+            BeatAction.New(instance.gameObject, new List<BeatAction.Action>()
+            {
+                new BeatAction.Action(beat + length, delegate { doingCue = false; })
+            });
         }
 
         public void OneTwoThree(float beat, int whoSpeaks)
@@ -306,7 +318,7 @@ namespace HeavenStudio.Games
                 }),
                 new BeatAction.Action(beat + 2.99f, delegate
                 {
-                    canBop = true;
+                    if (!doingCue) canBop = true;
                 })
             });
         }
@@ -388,7 +400,7 @@ namespace HeavenStudio.Games
                 }),
                 new BeatAction.Action(beat + 2.99f, delegate
                 {
-                    canBop = true;
+                    if (!doingCue) canBop = true;
                 })
             });
         }
@@ -491,7 +503,7 @@ namespace HeavenStudio.Games
                 }),
                 new BeatAction.Action(beat + 2.99f, delegate
                 {
-                    canBop = true;
+                    if (!doingCue) canBop = true;
                 })
             });
         }
@@ -584,7 +596,7 @@ namespace HeavenStudio.Games
                 }),
                 new BeatAction.Action(beat + 2.99f, delegate
                 {
-                    canBop = true;
+                    if (!doingCue) canBop = true;
                 })
             });
         }

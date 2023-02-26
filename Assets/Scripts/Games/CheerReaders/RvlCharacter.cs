@@ -10,13 +10,34 @@ namespace HeavenStudio.Games.Scripts_CheerReaders
         Animator BaseAnim;
         [SerializeField] Animator faceAnim;
         public bool bookIsWhite = true;
-        public bool shouldReposition;
         bool bookIsOpen;
         bool noBop;
+        CheerReaders game;
+        [SerializeField] SpriteRenderer bookLeft;
+        [SerializeField] SpriteRenderer bookRight;
+        [SerializeField] List<Sprite> bookLeftSprites = new List<Sprite>();
+        [SerializeField] List<Sprite> bookRightSprites = new List<Sprite>();
+        [SerializeField] List<Sprite> bookLeftMissSprites = new List<Sprite>();
+        [SerializeField] List<Sprite> bookRightMissSprites = new List<Sprite>();
 
         void Awake()
         {
             BaseAnim = GetComponent<Animator>();
+            game = CheerReaders.instance;
+        }
+
+        public void SetBookSprites(int whichSprite, bool hit)
+        {
+            if (hit)
+            {
+                bookLeft.sprite = bookLeftSprites[whichSprite];
+                bookRight.sprite = bookRightSprites[whichSprite];
+            }
+            else
+            {
+                bookLeft.sprite = bookLeftMissSprites[whichSprite];
+                bookRight.sprite = bookRightMissSprites[whichSprite];
+            }
         }
 
         public void OneTwoThree(int count)
@@ -57,9 +78,9 @@ namespace HeavenStudio.Games.Scripts_CheerReaders
             noBop = true;
         }
 
-        public void FlipBook()
+        public void FlipBook(bool hit = true)
         {
-            if (shouldReposition) 
+            if (bookIsWhite != game.shouldBeBlack && hit) 
             {
                 RepositionBook(); 
                 return;
@@ -72,8 +93,7 @@ namespace HeavenStudio.Games.Scripts_CheerReaders
 
         public void RepositionBook()
         {
-            BaseAnim.DoScaledAnimationAsync(bookIsWhite ? "RepositiontoBlack" : "RepositiontoWhite", 0.5f);
-            shouldReposition = false;
+            BaseAnim.DoScaledAnimationAsync(bookIsWhite ? "RepositionToWhite" : "RepositionToBlack", 0.5f);
             bookIsOpen = true;
             noBop = false;
         }
