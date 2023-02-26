@@ -46,7 +46,7 @@ namespace HeavenStudio.Common
                 if (!OverlaysManager.OverlaysEnabled) return;
                 if (section.startPerfect && GoForAPerfect.instance != null && GoForAPerfect.instance.perfect && !GoForAPerfect.instance.gameObject.activeSelf)
                 {
-                    GoForAPerfect.instance.Enable();
+                    GoForAPerfect.instance.Enable(section.beat);
                 }
             }
         }

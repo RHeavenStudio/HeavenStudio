@@ -18,6 +18,12 @@ namespace HeavenStudio.Common
 
         public bool perfect;
 
+        Conductor cond;
+        float lastReportedBeat = 0f;
+        float currentBeat = 0f;
+        long currentBlink = 0;
+
+
         private void Awake()
         {
             instance = this;
@@ -26,10 +32,39 @@ namespace HeavenStudio.Common
         private void Start()
         {
             perfect = true;
+            cond = Conductor.instance;
         }
 
         private void Update() {
             gameObject.SetActive(hiddenActive);
+            if (!active) return;
+            if (!OverlaysManager.OverlaysEnabled) return;
+            if (cond == null || !cond.isPlaying) return;
+
+            if (cond.ReportBeat(ref lastReportedBeat))
+            {
+                currentBeat = lastReportedBeat;
+                if (currentBlink != 0)
+                {
+                    currentBlink++;
+                    if (currentBlink % 2 == 0)
+                    {
+                        texAnim.Play("GoForAPerfect_Blink", -1, 0);
+                    }
+                    else
+                    {
+                        texAnim.Play("GoForAPerfect_Blink2", -1, 0);
+                    }
+                }
+                else
+                {
+                    currentBlink++;
+                }
+            }
+            else if (cond.songPositionInBeats < lastReportedBeat)
+            {
+                lastReportedBeat = Mathf.Round(cond.songPositionInBeats);
+            }
         }
 
         public void Hit()
@@ -57,13 +92,15 @@ namespace HeavenStudio.Common
             Jukebox.PlayOneShot("perfectMiss");
         }
 
-        public void Enable()
+        public void Enable(double startBeat)
         {
             SetActive();
             gameObject.SetActive(true);
             pAnim.gameObject.SetActive(true);
             texAnim.gameObject.SetActive(true);
             texAnim.Play("GoForAPerfect_Idle");
+
+            currentBlink = 0;
         }
 
         public void Disable()
