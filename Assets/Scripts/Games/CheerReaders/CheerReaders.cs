@@ -76,6 +76,11 @@ namespace HeavenStudio.Games.Loaders
                         new Param("toggle", true, "Whistle", "Should the whistle sound play?")
                     }
                 },
+                new GameAction("yay", "Yay")
+                {
+                    function = delegate {CheerReaders.instance.Yay(); },
+                    defaultLength = 0.5f
+                },
                 new GameAction("bop", "Bop")
                 {
                     function = delegate {var e = eventCaller.currentEntity; CheerReaders.instance.BopToggle(e["toggle"]); },
@@ -84,6 +89,11 @@ namespace HeavenStudio.Games.Loaders
                     {
                         new Param("toggle", false, "Should bop?", "Should the nerds bop?")
                     }
+                },
+                new GameAction("resetPose", "Reset Pose")
+                {
+                    function = delegate {CheerReaders.instance.ResetPose(); },
+                    defaultLength = 0.5f
                 }
             });
         }
@@ -132,12 +142,23 @@ namespace HeavenStudio.Games
         bool shouldBop = true;
         bool canBop = true;
         bool doingCue;
+        bool shouldYay;
+        bool shouldDoSuccessZoom;
         public bool shouldBeBlack = false;
         public GameEvent bop = new GameEvent();
+        int currentZoomIndex;
+        float currentZoomCamBeat;
+        float currentZoomCamLength;
+        private List<DynamicBeatmap.DynamicEntity> allCameraEvents = new List<DynamicBeatmap.DynamicEntity>();
 
         void OnDestroy()
         {
             Jukebox.KillLoop(SpinningLoop, 0.5f);
+        }
+
+        public override void OnTimeChange()
+        {
+            UpdateCameraZoom();
         }
 
         void Awake()
@@ -146,6 +167,20 @@ namespace HeavenStudio.Games
             allGirls.AddRange(firstRow);
             allGirls.AddRange(secondRow);
             allGirls.AddRange(thirdRow);
+            var camEvents = EventCaller.GetAllInGameManagerList("cheerReaders", new string[] { "okItsOn" });
+            camEvents.AddRange(EventCaller.GetAllInGameManagerList("cheerReaders", new string[] { "okItsOnStretch" }));
+            List<DynamicBeatmap.DynamicEntity> tempEvents = new List<DynamicBeatmap.DynamicEntity>();
+            for (int i = 0; i < camEvents.Count; i++)
+            {
+                if (camEvents[i].beat + camEvents[i].beat >= Conductor.instance.songPositionInBeats)
+                {
+                    tempEvents.Add(camEvents[i]);
+                }
+            }
+
+            allCameraEvents = tempEvents;
+
+            UpdateCameraZoom();
         }
 
         void Update()
@@ -170,6 +205,60 @@ namespace HeavenStudio.Games
 
             if (cond.isPlaying && !cond.isPaused)
             {
+                if (allCameraEvents.Count > 0)
+                {
+                    if (currentZoomIndex < allCameraEvents.Count && currentZoomIndex >= 0)
+                    {
+                        if (Conductor.instance.songPositionInBeats >= allCameraEvents[currentZoomIndex].beat)
+                        {
+                            UpdateCameraZoom();
+                            currentZoomIndex++;
+                        }
+                    }
+
+                    float normalizedZoomOutBeat = cond.GetPositionFromBeat(currentZoomCamBeat + 2 * (currentZoomCamLength * 0.25f), 1 * (currentZoomCamLength * 0.25f));
+                    float normalizedZoomInBeat = cond.GetPositionFromBeat(currentZoomCamBeat + 3 * (currentZoomCamLength * 0.25f), 0.1f);
+                    float normalizedZoomOutAgainBeat = cond.GetPositionFromBeat(currentZoomCamBeat + 3 * (currentZoomCamLength * 0.25f) + 0.1f, 1.1f);
+                    if (normalizedZoomOutAgainBeat >= 0)
+                    {
+                        if (normalizedZoomOutAgainBeat > 1)
+                        {
+                            GameCamera.additionalPosition = new Vector3(0, 0, 0);
+                        }
+                        else
+                        {
+                            EasingFunction.Function func = EasingFunction.GetEasingFunction(EasingFunction.Ease.EaseInOutQuint);
+                            float newZoom = func(shouldDoSuccessZoom ? 4f : 1.5f, 0, normalizedZoomOutAgainBeat);
+                            GameCamera.additionalPosition = new Vector3(0, 0, newZoom);
+                        }
+                    }
+                    else if (normalizedZoomInBeat >= 0)
+                    {
+                        if (normalizedZoomInBeat > 1)
+                        {
+                            GameCamera.additionalPosition = new Vector3(0, 0, shouldDoSuccessZoom ? 4f : 1.5f);
+                        }
+                        else
+                        {
+                            EasingFunction.Function func = EasingFunction.GetEasingFunction(EasingFunction.Ease.EaseOutQuint);
+                            float newZoom = func(-1, shouldDoSuccessZoom ? 4f : 1.5f, normalizedZoomInBeat);
+                            GameCamera.additionalPosition = new Vector3(0, 0, newZoom);
+                        }
+                    }
+                    else if (normalizedZoomOutBeat >= 0)
+                    {
+                        if (normalizedZoomOutBeat > 1)
+                        {
+                            GameCamera.additionalPosition = new Vector3(0, 0, -1);
+                        }
+                        else
+                        {
+                            EasingFunction.Function func = EasingFunction.GetEasingFunction(EasingFunction.Ease.EaseOutQuint);
+                            float newZoom = func(0f, 1f, normalizedZoomOutBeat);
+                            GameCamera.additionalPosition = new Vector3(0, 0, newZoom * -1);
+                        }
+                    }
+                }
                 if (PlayerInput.Pressed() && !IsExpectingInputNow(InputType.STANDARD_DOWN))
                 {
                     player.FlipBook(false);
@@ -197,6 +286,30 @@ namespace HeavenStudio.Games
             }
         }
 
+        public void ResetPose()
+        {
+            canBop = true;
+            player.ResetPose();
+            foreach (var nerd in allGirls)
+            {
+                nerd.ResetPose();
+            }
+        }
+
+        void UpdateCameraZoom()
+        {
+            if (currentZoomIndex < allCameraEvents.Count && currentZoomIndex >= 0)
+            {
+                currentZoomCamBeat = allCameraEvents[currentZoomIndex].beat;
+                currentZoomCamLength = allCameraEvents[currentZoomIndex].length;
+            }
+        }
+
+        public void Yay()
+        {
+            if (shouldYay) Jukebox.PlayOneShotGame("cheerReaders/All/yay");
+        }
+
         public void BopToggle(bool startBop)
         {
             shouldBop = startBop;
@@ -204,6 +317,7 @@ namespace HeavenStudio.Games
 
         public void SetIsDoingCue(float beat, float length)
         {
+            if (!doingCue) shouldYay = false;
             doingCue = true;
             shouldBeBlack = !shouldBeBlack;
             BeatAction.New(instance.gameObject, new List<BeatAction.Action>()
@@ -819,6 +933,7 @@ namespace HeavenStudio.Games
         void SuccessFlip(bool boom = false)
         {
             player.FlipBook();
+            shouldYay = true;
             if (boom)
             {
                 Jukebox.PlayOneShotGame("cheerReaders/bookBoom");
@@ -854,6 +969,7 @@ namespace HeavenStudio.Games
             {
                 Jukebox.PlayOneShotGame("cheerReaders/doingoing");
                 player.StopSpinBook();
+                shouldDoSuccessZoom = false;
                 return;
             }
             SuccessReleaseSpin();
@@ -863,12 +979,15 @@ namespace HeavenStudio.Games
         {
             Jukebox.PlayOneShotGame("cheerReaders/bookOpen");
             player.StopSpinBook();
+            shouldYay = true;
+            shouldDoSuccessZoom = true;
         }
 
         void MissFlip(PlayerActionEvent caller)
         {
             Jukebox.PlayOneShotGame("cheerReaders/doingoing");
             player.Miss();
+            shouldDoSuccessZoom = false;
         }
 
         void Nothing(PlayerActionEvent caller) {}

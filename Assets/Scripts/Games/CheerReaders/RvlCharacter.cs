@@ -26,6 +26,11 @@ namespace HeavenStudio.Games.Scripts_CheerReaders
             game = CheerReaders.instance;
         }
 
+        public void ResetPose()
+        {
+            BaseAnim.Play(bookIsWhite ? "WhiteIdle" : "BlackIdle", 0, 0);
+        }
+
         public void SetBookSprites(int whichSprite, bool hit)
         {
             if (hit)
