@@ -25499,6 +25499,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 491513351223359344}
+  - component: {fileID: 7501823212255904476}
   m_Layer: 0
   m_Name: theDazzles
   m_TagString: Untagged
@@ -25530,6 +25531,22 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &7501823212255904476
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7622932775149601233}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 723019728cb65014b9e6de67c0952be5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  SoundSequences: []
+  EligibleHits: []
+  scheduledInputs: []
+  firstEnable: 0
 --- !u!1 &7824644310365485781
 GameObject:
   m_ObjectHideFlags: 0
