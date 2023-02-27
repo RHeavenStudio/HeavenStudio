@@ -25,7 +25,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 71292151208428887}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0.6536391, y: -2.3077297, z: 0}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 5.5, y: 5.5, z: 1}
   m_Children:
   - {fileID: 6814980013608003628}
@@ -959,6 +959,7 @@ MonoBehaviour:
   fallingStars: {fileID: 7808760023856068891}
   fallingStarsBack: {fileID: 8460598887616071446}
   launchPad: {fileID: 1878559053619328651}
+  launchPadRotatable: {fileID: 6814980013608003628}
   spawnPad: {fileID: 6143638777909239727}
   scrollScript: {fileID: 3015934657586124713}
   lensFlareAnim: {fileID: 3332192496224597064}
