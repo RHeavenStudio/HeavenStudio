@@ -20,7 +20,7 @@ namespace HeavenStudio.Games.Scripts_SneakySpirits
         {
             BeatAction.New(game.gameObject, new List<BeatAction.Action>()
             {
-                new BeatAction.Action(spawnBeat - 0.2f, delegate { anim.DoScaledAnimationAsync("Move", 1f); }),
+                new BeatAction.Action(spawnBeat + 0.001f, delegate { anim.DoScaledAnimationAsync("Move", 1f); }),
                 new BeatAction.Action(spawnBeat + length - 0.5f, delegate { anim.DoScaledAnimationAsync("MoveDown", 1f); }),
                 new BeatAction.Action(spawnBeat + length, delegate { Destroy(gameObject); }),
             });
