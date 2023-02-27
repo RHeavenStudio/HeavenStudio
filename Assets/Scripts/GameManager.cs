@@ -393,7 +393,7 @@ namespace HeavenStudio
 
         #region Play Events
 
-        public void Play(float beat)
+        public void Play(float beat, bool ignoreConductor = false)
         {
             canInput = true;
             inputOffsetSamples.Clear();
