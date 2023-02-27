@@ -194,14 +194,14 @@ namespace HeavenStudio.Games
                 }
                 if (queuedMovements.Count > 0)
                 {
-                    if (!isMoving) 
-                    {
-                        currentXPos = flippersMovement.position.x + (moveLeft ? -2f : 2f); 
-                        isMoving = true; 
-                        currentCameraXPos = GameCamera.additionalPosition.x + (moveLeft ? -2f : 2f);
-                    } 
                     if (cond.songPositionInBeats >= queuedMovements[0])
                     {
+                        if (!isMoving)
+                        {
+                            currentXPos = flippersMovement.position.x + (moveLeft ? -2f : 2f);
+                            isMoving = true;
+                            currentCameraXPos = GameCamera.additionalPosition.x + (moveLeft ? -2f : 2f);
+                        }
                         float normalizedBeat = cond.GetPositionFromBeat(queuedMovements[0], 0.5f);
                         float normalizedCamBeat = cond.GetPositionFromBeat(queuedMovements[0], 1f);
                         if (normalizedCamBeat > 1f)
@@ -231,6 +231,18 @@ namespace HeavenStudio.Games
                 queuedInputs.Clear();
                 queuedAttentions.Clear();
                 queuedFlipperRollVoiceLines.Clear();
+            }
+        }
+
+        public void BumpIntoOtherSeal(bool toTheLeft)
+        {
+            if (toTheLeft)
+            {
+                flippers[1].Impact(true);
+            }
+            else
+            {
+                flippers[2].Impact(false);
             }
         }
 

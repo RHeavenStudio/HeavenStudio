@@ -31,6 +31,24 @@ namespace HeavenStudio.Games.Scripts_FlipperFlop
             }
         }
 
+        public void Impact(bool enableRight)
+        {
+            if (enableRight)
+            {
+                rightImpact.SetActive(true);
+            }
+            else
+            {
+                leftImpact.SetActive(true);
+            }
+            faceAnim.Play("FaceAngry", 0, 0);
+            BeatAction.New(game.gameObject, new List<BeatAction.Action>()
+            {
+                new BeatAction.Action(Conductor.instance.songPositionInBeats + 0.1f, delegate { leftImpact.SetActive(false); rightImpact.SetActive(false); }),
+                new BeatAction.Action(Conductor.instance.songPositionInBeats + 0.3f, delegate { faceAnim.Play("FaceAnnoyed", 0, 0); })
+            });
+        }
+
         public void PrepareFlip()
         {
             anim.DoScaledAnimationAsync("PrepareFlop", 0.5f);
@@ -56,6 +74,9 @@ namespace HeavenStudio.Games.Scripts_FlipperFlop
                 {
                     faceAnim.Play("FaceOw");
                     canBlink = false;
+                    Jukebox.PlayOneShotGame("flipperFlop/failgroan", -1, 1, 0.5f);
+                    Jukebox.PlayOneShotGame("flipperFlop/punch", -1, 1, 0.5f);
+                    game.BumpIntoOtherSeal(!left);
                     BeatAction.New(this.gameObject, new List<BeatAction.Action>()
                     {
                         new BeatAction.Action(Conductor.instance.songPositionInBeats + 0.3f, delegate { faceAnim.Play("FaceGoofy"); }),
@@ -94,7 +115,10 @@ namespace HeavenStudio.Games.Scripts_FlipperFlop
                     string shouldReverse = up ? "Reverse" : "";
                     string leftOrRight = left ? "Left" : "Right";
 
+                    Jukebox.PlayOneShotGame("flipperFlop/failgroan", -1, 1, 0.5f);
+                    Jukebox.PlayOneShotGame("flipperFlop/punch", -1, 1, 0.5f);
                     anim.DoScaledAnimationAsync(shouldReverse + "MissFlop" + leftOrRight, 0.5f);
+                    game.BumpIntoOtherSeal(!left);
                     BeatAction.New(this.gameObject, new List<BeatAction.Action>()
                     {
                         new BeatAction.Action(Conductor.instance.songPositionInBeats + 0.3f, delegate { faceAnim.Play("FaceGoofy"); }),
