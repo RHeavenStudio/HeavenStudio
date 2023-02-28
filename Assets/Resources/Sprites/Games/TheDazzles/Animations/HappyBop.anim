@@ -592,13 +592,6 @@ AnimationClip:
     path: ArmRight
     classID: 212
     script: {fileID: 0}
-  - curve:
-    - time: 0
-      value: {fileID: 4260515008245462210, guid: d7a4faf5e7602d44cb54b57cf0237290, type: 3}
-    attribute: m_Sprite
-    path: Head
-    classID: 212
-    script: {fileID: 0}
   m_SampleRate: 24
   m_WrapMode: 0
   m_Bounds:
@@ -718,13 +711,6 @@ AnimationClip:
       typeID: 212
       customType: 23
       isPPtrCurve: 1
-    - serializedVersion: 2
-      path: 130111906
-      attribute: 0
-      script: {fileID: 0}
-      typeID: 212
-      customType: 23
-      isPPtrCurve: 1
     pptrCurveMapping:
     - {fileID: -8815873813762696123, guid: d7a4faf5e7602d44cb54b57cf0237290, type: 3}
     - {fileID: 6156410397465604385, guid: d7a4faf5e7602d44cb54b57cf0237290, type: 3}
@@ -739,7 +725,6 @@ AnimationClip:
     - {fileID: 6832633775020328721, guid: d7a4faf5e7602d44cb54b57cf0237290, type: 3}
     - {fileID: 6832633775020328721, guid: d7a4faf5e7602d44cb54b57cf0237290, type: 3}
     - {fileID: 6832633775020328721, guid: d7a4faf5e7602d44cb54b57cf0237290, type: 3}
-    - {fileID: 4260515008245462210, guid: d7a4faf5e7602d44cb54b57cf0237290, type: 3}
   m_AnimationClipSettings:
     serializedVersion: 2
     m_AdditiveReferencePoseClip: {fileID: 0}
@@ -2112,4 +2097,11 @@ AnimationClip:
     script: {fileID: 0}
   m_HasGenericRootTransform: 0
   m_HasMotionFloatCurves: 0
-  m_Events: []
+  m_Events:
+  - time: 0
+    functionName: PickHead
+    data: 
+    objectReferenceParameter: {fileID: 0}
+    floatParameter: 0
+    intParameter: 1
+    messageOptions: 0

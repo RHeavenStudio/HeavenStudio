@@ -1181,17 +1181,6 @@ AnimationClip:
     script: {fileID: 0}
   - curve:
     - time: 0
-      value: {fileID: -5798462074873823464, guid: d7a4faf5e7602d44cb54b57cf0237290, type: 3}
-    - time: 0.083333336
-      value: {fileID: -5188037987215269136, guid: d7a4faf5e7602d44cb54b57cf0237290, type: 3}
-    - time: 0.125
-      value: {fileID: -5188037987215269136, guid: d7a4faf5e7602d44cb54b57cf0237290, type: 3}
-    attribute: m_Sprite
-    path: Head
-    classID: 212
-    script: {fileID: 0}
-  - curve:
-    - time: 0
       value: {fileID: 6672315877297559942, guid: d7a4faf5e7602d44cb54b57cf0237290, type: 3}
     - time: 0.083333336
       value: {fileID: 6156410397465604385, guid: d7a4faf5e7602d44cb54b57cf0237290, type: 3}
@@ -1500,13 +1489,6 @@ AnimationClip:
       customType: 23
       isPPtrCurve: 1
     - serializedVersion: 2
-      path: 130111906
-      attribute: 0
-      script: {fileID: 0}
-      typeID: 212
-      customType: 23
-      isPPtrCurve: 1
-    - serializedVersion: 2
       path: 1682372966
       attribute: 0
       script: {fileID: 0}
@@ -1527,9 +1509,6 @@ AnimationClip:
     - {fileID: -5816006122098473180, guid: d7a4faf5e7602d44cb54b57cf0237290, type: 3}
     - {fileID: -1785370005790583495, guid: d7a4faf5e7602d44cb54b57cf0237290, type: 3}
     - {fileID: -1785370005790583495, guid: d7a4faf5e7602d44cb54b57cf0237290, type: 3}
-    - {fileID: -5798462074873823464, guid: d7a4faf5e7602d44cb54b57cf0237290, type: 3}
-    - {fileID: -5188037987215269136, guid: d7a4faf5e7602d44cb54b57cf0237290, type: 3}
-    - {fileID: -5188037987215269136, guid: d7a4faf5e7602d44cb54b57cf0237290, type: 3}
     - {fileID: 6672315877297559942, guid: d7a4faf5e7602d44cb54b57cf0237290, type: 3}
     - {fileID: 6156410397465604385, guid: d7a4faf5e7602d44cb54b57cf0237290, type: 3}
     - {fileID: -8815873813762696123, guid: d7a4faf5e7602d44cb54b57cf0237290, type: 3}
@@ -3399,4 +3378,18 @@ AnimationClip:
     script: {fileID: 0}
   m_HasGenericRootTransform: 0
   m_HasMotionFloatCurves: 0
-  m_Events: []
+  m_Events:
+  - time: 0
+    functionName: PickHead
+    data: 
+    objectReferenceParameter: {fileID: 0}
+    floatParameter: 0
+    intParameter: 4
+    messageOptions: 0
+  - time: 0.083333336
+    functionName: PickHead
+    data: 
+    objectReferenceParameter: {fileID: 0}
+    floatParameter: 0
+    intParameter: 0
+    messageOptions: 0

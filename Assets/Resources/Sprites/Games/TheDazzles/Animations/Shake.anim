@@ -1562,19 +1562,6 @@ AnimationClip:
     script: {fileID: 0}
   - curve:
     - time: 0
-      value: {fileID: -257369064684966836, guid: d7a4faf5e7602d44cb54b57cf0237290, type: 3}
-    - time: 0.033333335
-      value: {fileID: -257369064684966836, guid: d7a4faf5e7602d44cb54b57cf0237290, type: 3}
-    - time: 0.06666667
-      value: {fileID: -257369064684966836, guid: d7a4faf5e7602d44cb54b57cf0237290, type: 3}
-    - time: 0.1
-      value: {fileID: -257369064684966836, guid: d7a4faf5e7602d44cb54b57cf0237290, type: 3}
-    attribute: m_Sprite
-    path: Head
-    classID: 212
-    script: {fileID: 0}
-  - curve:
-    - time: 0
       value: {fileID: -1132493203067468045, guid: d7a4faf5e7602d44cb54b57cf0237290, type: 3}
     - time: 0.033333335
       value: {fileID: -1132493203067468045, guid: d7a4faf5e7602d44cb54b57cf0237290, type: 3}
@@ -1761,13 +1748,6 @@ AnimationClip:
       isPPtrCurve: 1
     - serializedVersion: 2
       path: 4238437777
-      attribute: 0
-      script: {fileID: 0}
-      typeID: 212
-      customType: 23
-      isPPtrCurve: 1
-    - serializedVersion: 2
-      path: 130111906
       attribute: 0
       script: {fileID: 0}
       typeID: 212
@@ -2034,10 +2014,6 @@ AnimationClip:
     - {fileID: 3825562564307780118, guid: d7a4faf5e7602d44cb54b57cf0237290, type: 3}
     - {fileID: 3825562564307780118, guid: d7a4faf5e7602d44cb54b57cf0237290, type: 3}
     - {fileID: 3825562564307780118, guid: d7a4faf5e7602d44cb54b57cf0237290, type: 3}
-    - {fileID: -257369064684966836, guid: d7a4faf5e7602d44cb54b57cf0237290, type: 3}
-    - {fileID: -257369064684966836, guid: d7a4faf5e7602d44cb54b57cf0237290, type: 3}
-    - {fileID: -257369064684966836, guid: d7a4faf5e7602d44cb54b57cf0237290, type: 3}
-    - {fileID: -257369064684966836, guid: d7a4faf5e7602d44cb54b57cf0237290, type: 3}
     - {fileID: -1132493203067468045, guid: d7a4faf5e7602d44cb54b57cf0237290, type: 3}
     - {fileID: -1132493203067468045, guid: d7a4faf5e7602d44cb54b57cf0237290, type: 3}
     - {fileID: -1132493203067468045, guid: d7a4faf5e7602d44cb54b57cf0237290, type: 3}
@@ -4915,4 +4891,11 @@ AnimationClip:
     script: {fileID: 0}
   m_HasGenericRootTransform: 0
   m_HasMotionFloatCurves: 0
-  m_Events: []
+  m_Events:
+  - time: 0
+    functionName: PickHead
+    data: 
+    objectReferenceParameter: {fileID: 0}
+    floatParameter: 0
+    intParameter: 3
+    messageOptions: 0

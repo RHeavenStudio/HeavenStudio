@@ -7,12 +7,21 @@ namespace HeavenStudio.Games.Scripts_TheDazzles
 {
     public class TheDazzlesGirl : MonoBehaviour
     {
+        [SerializeField] List<Sprite> headSpriteEmotions = new List<Sprite>();
         public enum Emotion
         {
             Neutral = 0,
             Happy = 1,
             Angry = 2,
             Ouch = 3
+        }
+        public enum Expression
+        {
+            Neutral = 0,
+            Happy = 1,
+            Angry = 2,
+            Ouch = 3,
+            OpenMouth = 4
         }
         public bool canBop = true;
         bool holding = false;
@@ -21,7 +30,6 @@ namespace HeavenStudio.Games.Scripts_TheDazzles
         Animator anim;
         [SerializeField] Animator holdEffectAnim;
         [SerializeField] SpriteRenderer headSprite;
-        [SerializeField] SpriteRenderer mouthSprite;
         [SerializeField] GameObject blackFlash;
         TheDazzles game;
 
@@ -29,6 +37,11 @@ namespace HeavenStudio.Games.Scripts_TheDazzles
         {
             anim = GetComponent<Animator>();
             game = TheDazzles.instance;
+        }
+
+        public void PickHead(Expression expression)
+        {
+            headSprite.sprite = headSpriteEmotions[(int)expression];
         }
 
         public void Prepare(bool hit = true)
@@ -50,9 +63,16 @@ namespace HeavenStudio.Games.Scripts_TheDazzles
 
         public void Pose(bool hit = true)
         {
-            anim.DoScaledAnimationAsync("Pose", 0.5f);
+            if (hit)
+            {
+                anim.DoScaledAnimationAsync("Pose", 0.5f);
+            }
+            else
+            {
+                anim.DoScaledAnimationAsync("MissPose", 0.5f);
+                currentEmotion = Emotion.Ouch;
+            }
             holdEffectAnim.Play("HoldNothing", 0, 0);
-            if (hit) currentEmotion = Emotion.Happy;
             holding = false;
             preparingPose = false;
             blackFlash.SetActive(false);
@@ -69,6 +89,12 @@ namespace HeavenStudio.Games.Scripts_TheDazzles
             if (!holding) return;
             anim.DoScaledAnimationAsync("Hold", 0.5f);
             preparingPose = true;
+        }
+
+        public void Ouch()
+        {
+            anim.DoScaledAnimationAsync("Ouch", 0.5f);
+            currentEmotion = Emotion.Ouch;
         }
 
         public void UnPrepare()
@@ -100,6 +126,9 @@ namespace HeavenStudio.Games.Scripts_TheDazzles
                     anim.DoScaledAnimationAsync("HappyBop", 0.4f);
                     break;
                 case Emotion.Angry:
+                    break;
+                case Emotion.Ouch:
+                    anim.DoScaledAnimationAsync("OuchBop", 0.4f);
                     break;
             }
         }

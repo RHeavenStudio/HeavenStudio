@@ -238,10 +238,16 @@ namespace HeavenStudio.Games
                 if (PlayerInput.Pressed() && !IsExpectingInputNow(InputType.STANDARD_DOWN))
                 {
                     player.Prepare(false);
+                    Jukebox.PlayOneShotGame("theDazzles/miss");
                 }
                 if (PlayerInput.PressedUp() && !IsExpectingInputNow(InputType.STANDARD_UP))
                 {
-                    player.UnPrepare();
+                    player.Pose(false);
+                    Jukebox.PlayOneShotGame("theDazzles/miss");
+                    foreach (var girl in npcGirls)
+                    {
+                        girl.Ouch();
+                    }
                 }
             }
             else if (!cond.isPlaying && !cond.isPaused)
@@ -278,8 +284,8 @@ namespace HeavenStudio.Games
                 case (int)CountInType.DS:
                     soundsToPlay.AddRange(new List<MultiSound.Sound>()
                     {
-                        new MultiSound.Sound("theDazzles/holdDS3", beat, 1, 1, false, 0.212f),
-                        new MultiSound.Sound("theDazzles/holdDS2", beat + 1f * actualLength, 1, 1, false, 0.242f),
+                        new MultiSound.Sound("theDazzles/holdDS3", beat, 1, 0.75f, false, 0.212f),
+                        new MultiSound.Sound("theDazzles/holdDS2", beat + 1f * actualLength, 1, 0.75f, false, 0.242f),
                     });
                     break;
                 case (int)CountInType.Megamix:
@@ -292,8 +298,8 @@ namespace HeavenStudio.Games
                 default:
                     soundsToPlay.AddRange(new List<MultiSound.Sound>()
                     {
-                        new MultiSound.Sound("theDazzles/holdDS3", beat, 1, 1, false, 0.212f),
-                        new MultiSound.Sound("theDazzles/holdDS2", beat + 1f * actualLength, 1, 1, false, 0.242f),
+                        new MultiSound.Sound("theDazzles/holdDS3", beat, 1, 0.75f, false, 0.212f),
+                        new MultiSound.Sound("theDazzles/holdDS2", beat + 1f * actualLength, 1, 0.75f, false, 0.242f),
                     });
                     break;
             }
@@ -455,7 +461,7 @@ namespace HeavenStudio.Games
             Jukebox.PlayOneShotGame("theDazzles/posePlayer");
             if (state >= 1f || state <= -1f)
             {
-                player.Pose(false);
+                player.Pose();
                 return;
             }
             SuccessPose(false);
@@ -467,7 +473,7 @@ namespace HeavenStudio.Games
             Jukebox.PlayOneShotGame("theDazzles/posePlayer");
             if (state >= 1f || state <= -1f)
             {
-                player.Pose(false);
+                player.Pose();
                 return;
             }
             SuccessPose(true);
@@ -477,6 +483,11 @@ namespace HeavenStudio.Games
         {
             player.Pose();
             Jukebox.PlayOneShotGame("theDazzles/applause");
+            foreach (var girl in npcGirls)
+            {
+                girl.currentEmotion = TheDazzlesGirl.Emotion.Happy;
+            }
+            player.currentEmotion = TheDazzlesGirl.Emotion.Happy;
             if (stars) 
             {
                 starsEffect.Play();

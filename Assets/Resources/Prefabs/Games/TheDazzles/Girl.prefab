@@ -631,11 +631,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8e97101758b7d7d4eb39eb1c20b81896, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  headSpriteEmotions:
+  - {fileID: -5188037987215269136, guid: d7a4faf5e7602d44cb54b57cf0237290, type: 3}
+  - {fileID: 4260515008245462210, guid: d7a4faf5e7602d44cb54b57cf0237290, type: 3}
+  - {fileID: 0}
+  - {fileID: -5798462074873823464, guid: d7a4faf5e7602d44cb54b57cf0237290, type: 3}
+  - {fileID: -257369064684966836, guid: d7a4faf5e7602d44cb54b57cf0237290, type: 3}
   canBop: 1
   currentEmotion: 0
   holdEffectAnim: {fileID: 5921634616820494687}
   headSprite: {fileID: 3252389296035035734}
-  mouthSprite: {fileID: 3365038656897785152}
   blackFlash: {fileID: 6420980031434469660}
 --- !u!95 &7783616805209079565
 Animator:

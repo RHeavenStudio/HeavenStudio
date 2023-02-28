@@ -40564,6 +40564,7 @@ MonoBehaviour:
   EligibleHits: []
   scheduledInputs: []
   firstEnable: 0
+  shouldBop: 0
   npcGirls:
   - {fileID: 962492760851015032}
   - {fileID: 2957882268029249500}
@@ -51093,6 +51094,26 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 491513351223359344}
     m_Modifications:
+    - target: {fileID: -1335358252629674747, guid: 176d57f0d4cc86646bfa3a51ef39c0ea, type: 3}
+      propertyPath: headSpriteEmotions.Array.data[0]
+      value: 
+      objectReference: {fileID: -8931381526695804944, guid: d7a4faf5e7602d44cb54b57cf0237290, type: 3}
+    - target: {fileID: -1335358252629674747, guid: 176d57f0d4cc86646bfa3a51ef39c0ea, type: 3}
+      propertyPath: headSpriteEmotions.Array.data[1]
+      value: 
+      objectReference: {fileID: -2902620479736932538, guid: d7a4faf5e7602d44cb54b57cf0237290, type: 3}
+    - target: {fileID: -1335358252629674747, guid: 176d57f0d4cc86646bfa3a51ef39c0ea, type: 3}
+      propertyPath: headSpriteEmotions.Array.data[2]
+      value: 
+      objectReference: {fileID: -7503419997022202591, guid: d7a4faf5e7602d44cb54b57cf0237290, type: 3}
+    - target: {fileID: -1335358252629674747, guid: 176d57f0d4cc86646bfa3a51ef39c0ea, type: 3}
+      propertyPath: headSpriteEmotions.Array.data[3]
+      value: 
+      objectReference: {fileID: 8981489920928282793, guid: d7a4faf5e7602d44cb54b57cf0237290, type: 3}
+    - target: {fileID: -1335358252629674747, guid: 176d57f0d4cc86646bfa3a51ef39c0ea, type: 3}
+      propertyPath: headSpriteEmotions.Array.data[4]
+      value: 
+      objectReference: {fileID: 5178512772571485124, guid: d7a4faf5e7602d44cb54b57cf0237290, type: 3}
     - target: {fileID: 1450090094292646342, guid: 176d57f0d4cc86646bfa3a51ef39c0ea, type: 3}
       propertyPath: m_RootOrder
       value: 5
@@ -51149,6 +51170,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 3252389296035035734, guid: 176d57f0d4cc86646bfa3a51ef39c0ea, type: 3}
+      propertyPath: m_Sprite
+      value: 
+      objectReference: {fileID: -8931381526695804944, guid: d7a4faf5e7602d44cb54b57cf0237290, type: 3}
     - target: {fileID: 4613201709344401100, guid: 176d57f0d4cc86646bfa3a51ef39c0ea, type: 3}
       propertyPath: m_Name
       value: Npc (1)
@@ -51178,6 +51203,26 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 491513351223359344}
     m_Modifications:
+    - target: {fileID: -1335358252629674747, guid: 176d57f0d4cc86646bfa3a51ef39c0ea, type: 3}
+      propertyPath: headSpriteEmotions.Array.data[0]
+      value: 
+      objectReference: {fileID: -1722443810625710865, guid: d7a4faf5e7602d44cb54b57cf0237290, type: 3}
+    - target: {fileID: -1335358252629674747, guid: 176d57f0d4cc86646bfa3a51ef39c0ea, type: 3}
+      propertyPath: headSpriteEmotions.Array.data[1]
+      value: 
+      objectReference: {fileID: 4466208522555285156, guid: d7a4faf5e7602d44cb54b57cf0237290, type: 3}
+    - target: {fileID: -1335358252629674747, guid: 176d57f0d4cc86646bfa3a51ef39c0ea, type: 3}
+      propertyPath: headSpriteEmotions.Array.data[2]
+      value: 
+      objectReference: {fileID: -183975403031797813, guid: d7a4faf5e7602d44cb54b57cf0237290, type: 3}
+    - target: {fileID: -1335358252629674747, guid: 176d57f0d4cc86646bfa3a51ef39c0ea, type: 3}
+      propertyPath: headSpriteEmotions.Array.data[3]
+      value: 
+      objectReference: {fileID: 2138594817786749300, guid: d7a4faf5e7602d44cb54b57cf0237290, type: 3}
+    - target: {fileID: -1335358252629674747, guid: 176d57f0d4cc86646bfa3a51ef39c0ea, type: 3}
+      propertyPath: headSpriteEmotions.Array.data[4]
+      value: 
+      objectReference: {fileID: 5351801658719297008, guid: d7a4faf5e7602d44cb54b57cf0237290, type: 3}
     - target: {fileID: 1450090094292646342, guid: 176d57f0d4cc86646bfa3a51ef39c0ea, type: 3}
       propertyPath: m_RootOrder
       value: 7
@@ -51234,6 +51279,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 3252389296035035734, guid: 176d57f0d4cc86646bfa3a51ef39c0ea, type: 3}
+      propertyPath: m_Sprite
+      value: 
+      objectReference: {fileID: -1722443810625710865, guid: d7a4faf5e7602d44cb54b57cf0237290, type: 3}
     - target: {fileID: 4613201709344401100, guid: 176d57f0d4cc86646bfa3a51ef39c0ea, type: 3}
       propertyPath: m_Name
       value: Npc (3)
@@ -51263,6 +51312,26 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 491513351223359344}
     m_Modifications:
+    - target: {fileID: -1335358252629674747, guid: 176d57f0d4cc86646bfa3a51ef39c0ea, type: 3}
+      propertyPath: headSpriteEmotions.Array.data[0]
+      value: 
+      objectReference: {fileID: 6831464696223950560, guid: d7a4faf5e7602d44cb54b57cf0237290, type: 3}
+    - target: {fileID: -1335358252629674747, guid: 176d57f0d4cc86646bfa3a51ef39c0ea, type: 3}
+      propertyPath: headSpriteEmotions.Array.data[1]
+      value: 
+      objectReference: {fileID: 5665046338477434936, guid: d7a4faf5e7602d44cb54b57cf0237290, type: 3}
+    - target: {fileID: -1335358252629674747, guid: 176d57f0d4cc86646bfa3a51ef39c0ea, type: 3}
+      propertyPath: headSpriteEmotions.Array.data[2]
+      value: 
+      objectReference: {fileID: 914672387374890533, guid: d7a4faf5e7602d44cb54b57cf0237290, type: 3}
+    - target: {fileID: -1335358252629674747, guid: 176d57f0d4cc86646bfa3a51ef39c0ea, type: 3}
+      propertyPath: headSpriteEmotions.Array.data[3]
+      value: 
+      objectReference: {fileID: 5983024521261742117, guid: d7a4faf5e7602d44cb54b57cf0237290, type: 3}
+    - target: {fileID: -1335358252629674747, guid: 176d57f0d4cc86646bfa3a51ef39c0ea, type: 3}
+      propertyPath: headSpriteEmotions.Array.data[4]
+      value: 
+      objectReference: {fileID: 1020954906698687321, guid: d7a4faf5e7602d44cb54b57cf0237290, type: 3}
     - target: {fileID: 1450090094292646342, guid: 176d57f0d4cc86646bfa3a51ef39c0ea, type: 3}
       propertyPath: m_RootOrder
       value: 4
@@ -51319,6 +51388,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 3252389296035035734, guid: 176d57f0d4cc86646bfa3a51ef39c0ea, type: 3}
+      propertyPath: m_Sprite
+      value: 
+      objectReference: {fileID: 6831464696223950560, guid: d7a4faf5e7602d44cb54b57cf0237290, type: 3}
     - target: {fileID: 4613201709344401100, guid: 176d57f0d4cc86646bfa3a51ef39c0ea, type: 3}
       propertyPath: m_Name
       value: Npc
@@ -51348,6 +51421,26 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 491513351223359344}
     m_Modifications:
+    - target: {fileID: -1335358252629674747, guid: 176d57f0d4cc86646bfa3a51ef39c0ea, type: 3}
+      propertyPath: headSpriteEmotions.Array.data[0]
+      value: 
+      objectReference: {fileID: -8120253423486328295, guid: d7a4faf5e7602d44cb54b57cf0237290, type: 3}
+    - target: {fileID: -1335358252629674747, guid: 176d57f0d4cc86646bfa3a51ef39c0ea, type: 3}
+      propertyPath: headSpriteEmotions.Array.data[1]
+      value: 
+      objectReference: {fileID: 6471752341608542584, guid: d7a4faf5e7602d44cb54b57cf0237290, type: 3}
+    - target: {fileID: -1335358252629674747, guid: 176d57f0d4cc86646bfa3a51ef39c0ea, type: 3}
+      propertyPath: headSpriteEmotions.Array.data[2]
+      value: 
+      objectReference: {fileID: 2226381707764217181, guid: d7a4faf5e7602d44cb54b57cf0237290, type: 3}
+    - target: {fileID: -1335358252629674747, guid: 176d57f0d4cc86646bfa3a51ef39c0ea, type: 3}
+      propertyPath: headSpriteEmotions.Array.data[3]
+      value: 
+      objectReference: {fileID: 5230035099336897732, guid: d7a4faf5e7602d44cb54b57cf0237290, type: 3}
+    - target: {fileID: -1335358252629674747, guid: 176d57f0d4cc86646bfa3a51ef39c0ea, type: 3}
+      propertyPath: headSpriteEmotions.Array.data[4]
+      value: 
+      objectReference: {fileID: 2062994449804166558, guid: d7a4faf5e7602d44cb54b57cf0237290, type: 3}
     - target: {fileID: 1450090094292646342, guid: 176d57f0d4cc86646bfa3a51ef39c0ea, type: 3}
       propertyPath: m_RootOrder
       value: 6
@@ -51404,6 +51497,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 3252389296035035734, guid: 176d57f0d4cc86646bfa3a51ef39c0ea, type: 3}
+      propertyPath: m_Sprite
+      value: 
+      objectReference: {fileID: -8120253423486328295, guid: d7a4faf5e7602d44cb54b57cf0237290, type: 3}
     - target: {fileID: 4613201709344401100, guid: 176d57f0d4cc86646bfa3a51ef39c0ea, type: 3}
       propertyPath: m_Name
       value: Npc (2)
@@ -51433,6 +51530,14 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 491513351223359344}
     m_Modifications:
+    - target: {fileID: -1335358252629674747, guid: 176d57f0d4cc86646bfa3a51ef39c0ea, type: 3}
+      propertyPath: headSpriteEmotions.Array.data[3]
+      value: 
+      objectReference: {fileID: -257369064684966836, guid: d7a4faf5e7602d44cb54b57cf0237290, type: 3}
+    - target: {fileID: -1335358252629674747, guid: 176d57f0d4cc86646bfa3a51ef39c0ea, type: 3}
+      propertyPath: headSpriteEmotions.Array.data[4]
+      value: 
+      objectReference: {fileID: -5798462074873823464, guid: d7a4faf5e7602d44cb54b57cf0237290, type: 3}
     - target: {fileID: 175176441697219034, guid: 176d57f0d4cc86646bfa3a51ef39c0ea, type: 3}
       propertyPath: m_LocalPosition.y
       value: -0.11
@@ -51870,6 +51975,26 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 491513351223359344}
     m_Modifications:
+    - target: {fileID: -1335358252629674747, guid: 176d57f0d4cc86646bfa3a51ef39c0ea, type: 3}
+      propertyPath: headSpriteEmotions.Array.data[0]
+      value: 
+      objectReference: {fileID: 3910019496441056473, guid: d7a4faf5e7602d44cb54b57cf0237290, type: 3}
+    - target: {fileID: -1335358252629674747, guid: 176d57f0d4cc86646bfa3a51ef39c0ea, type: 3}
+      propertyPath: headSpriteEmotions.Array.data[1]
+      value: 
+      objectReference: {fileID: 5279605795355757446, guid: d7a4faf5e7602d44cb54b57cf0237290, type: 3}
+    - target: {fileID: -1335358252629674747, guid: 176d57f0d4cc86646bfa3a51ef39c0ea, type: 3}
+      propertyPath: headSpriteEmotions.Array.data[2]
+      value: 
+      objectReference: {fileID: 8565462418483418682, guid: d7a4faf5e7602d44cb54b57cf0237290, type: 3}
+    - target: {fileID: -1335358252629674747, guid: 176d57f0d4cc86646bfa3a51ef39c0ea, type: 3}
+      propertyPath: headSpriteEmotions.Array.data[3]
+      value: 
+      objectReference: {fileID: -2216719346459552067, guid: d7a4faf5e7602d44cb54b57cf0237290, type: 3}
+    - target: {fileID: -1335358252629674747, guid: 176d57f0d4cc86646bfa3a51ef39c0ea, type: 3}
+      propertyPath: headSpriteEmotions.Array.data[4]
+      value: 
+      objectReference: {fileID: 7514202609625381624, guid: d7a4faf5e7602d44cb54b57cf0237290, type: 3}
     - target: {fileID: 1450090094292646342, guid: 176d57f0d4cc86646bfa3a51ef39c0ea, type: 3}
       propertyPath: m_RootOrder
       value: 8
@@ -51926,6 +52051,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 3252389296035035734, guid: 176d57f0d4cc86646bfa3a51ef39c0ea, type: 3}
+      propertyPath: m_Sprite
+      value: 
+      objectReference: {fileID: 3910019496441056473, guid: d7a4faf5e7602d44cb54b57cf0237290, type: 3}
     - target: {fileID: 4613201709344401100, guid: 176d57f0d4cc86646bfa3a51ef39c0ea, type: 3}
       propertyPath: m_Name
       value: Npc (4)
