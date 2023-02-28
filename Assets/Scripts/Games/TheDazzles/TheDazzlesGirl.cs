@@ -11,7 +11,8 @@ namespace HeavenStudio.Games.Scripts_TheDazzles
         {
             Neutral = 0,
             Happy = 1,
-            Angry = 2
+            Angry = 2,
+            Ouch = 3
         }
         public bool canBop = true;
         bool holding = false;
@@ -21,6 +22,7 @@ namespace HeavenStudio.Games.Scripts_TheDazzles
         [SerializeField] Animator holdEffectAnim;
         [SerializeField] SpriteRenderer headSprite;
         [SerializeField] SpriteRenderer mouthSprite;
+        [SerializeField] GameObject blackFlash;
         TheDazzles game;
 
         void Awake()
@@ -32,6 +34,7 @@ namespace HeavenStudio.Games.Scripts_TheDazzles
         public void Prepare(bool hit = true)
         {
             holdEffectAnim.DoScaledAnimationAsync("HoldBox", 0.25f);
+            blackFlash.SetActive(true);
             holding = true;
             if (preparingPose) return;
             anim.Play("Prepare", 0, 0);
@@ -52,6 +55,7 @@ namespace HeavenStudio.Games.Scripts_TheDazzles
             if (hit) currentEmotion = Emotion.Happy;
             holding = false;
             preparingPose = false;
+            blackFlash.SetActive(false);
         }
 
         public void EndPose()
@@ -62,6 +66,7 @@ namespace HeavenStudio.Games.Scripts_TheDazzles
 
         public void Hold()
         {
+            if (!holding) return;
             anim.DoScaledAnimationAsync("Hold", 0.5f);
             preparingPose = true;
         }
@@ -70,9 +75,17 @@ namespace HeavenStudio.Games.Scripts_TheDazzles
         {
             game.ScoreMiss(1f);
             canBop = true;
-            anim.Play("Idle", 0, 0);
+            if (preparingPose)
+            {
+                anim.DoScaledAnimationAsync("StopHold", 0.5f);
+            }
+            else
+            {
+                anim.DoScaledAnimationAsync("EndPrepare", 0.5f);
+            }
             holding = false;
             preparingPose = false;
+            blackFlash.SetActive(false);
         }
 
         public void Bop()
