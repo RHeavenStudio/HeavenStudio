@@ -14,6 +14,8 @@ namespace HeavenStudio.Games.Scripts_TheDazzles
             Angry = 2
         }
         public bool canBop = true;
+        bool holding = false;
+        bool preparingPose = false;
         public Emotion currentEmotion;
         Animator anim;
         [SerializeField] Animator holdEffectAnim;
@@ -29,8 +31,10 @@ namespace HeavenStudio.Games.Scripts_TheDazzles
 
         public void Prepare(bool hit = true)
         {
-            anim.Play("Prepare", 0, 0);
             holdEffectAnim.DoScaledAnimationAsync("HoldBox", 0.25f);
+            holding = true;
+            if (preparingPose) return;
+            anim.Play("Prepare", 0, 0);
         }
 
         public void StartReleaseBox(float beat)
@@ -46,16 +50,20 @@ namespace HeavenStudio.Games.Scripts_TheDazzles
             anim.DoScaledAnimationAsync("Pose", 0.5f);
             holdEffectAnim.Play("HoldNothing", 0, 0);
             if (hit) currentEmotion = Emotion.Happy;
+            holding = false;
+            preparingPose = false;
         }
 
         public void EndPose()
         {
+            if (holding) return;
             anim.DoScaledAnimationAsync("EndPose", 0.5f);
         }
 
         public void Hold()
         {
             anim.DoScaledAnimationAsync("Hold", 0.5f);
+            preparingPose = true;
         }
 
         public void UnPrepare()
@@ -63,11 +71,13 @@ namespace HeavenStudio.Games.Scripts_TheDazzles
             game.ScoreMiss(1f);
             canBop = true;
             anim.Play("Idle", 0, 0);
+            holding = false;
+            preparingPose = false;
         }
 
         public void Bop()
         {
-            if (!canBop) return;
+            if (!canBop || holding) return;
             switch (currentEmotion)
             {
                 case Emotion.Neutral:
