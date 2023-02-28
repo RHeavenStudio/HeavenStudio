@@ -4,22 +4,22 @@ TextureImporter:
   internalIDToNameTable:
   - first:
       213: -1722443810625710865
-    second: dazzles_0
+    second: MiddleUpNeutral
   - first:
       213: -8120253423486328295
-    second: dazzles_1
+    second: RightUpNeutral
   - first:
       213: -8931381526695804944
-    second: dazzles_2
+    second: BottomLeftNeutral
   - first:
       213: 6831464696223950560
-    second: dazzles_3
+    second: BottomMiddleNeutral
   - first:
       213: 3910019496441056473
-    second: dazzles_4
+    second: LeftUpNeutral
   - first:
       213: -5188037987215269136
-    second: dazzles_5
+    second: PlayerNeutral
   - first:
       213: -7394400634622837298
     second: dazzles_6
@@ -55,22 +55,22 @@ TextureImporter:
     second: dazzles_16
   - first:
       213: 5351801658719297008
-    second: dazzles_17
+    second: MiddleUpOpenMouth
   - first:
       213: 2062994449804166558
-    second: dazzles_18
+    second: RightUpOpenMouth
   - first:
       213: 5178512772571485124
-    second: dazzles_19
+    second: BottomLeftOpenMouth
   - first:
       213: 1020954906698687321
-    second: dazzles_20
+    second: BottomMiddleOpenMouth
   - first:
       213: 7514202609625381624
-    second: dazzles_21
+    second: LeftUpOpenMouth
   - first:
       213: -5798462074873823464
-    second: dazzles_22
+    second: PlayerOpenMouth
   - first:
       213: -4117331405992641172
     second: dazzles_23
@@ -85,22 +85,22 @@ TextureImporter:
     second: dazzles_26
   - first:
       213: 2138594817786749300
-    second: dazzles_27
+    second: MiddleUpOw
   - first:
       213: 5230035099336897732
-    second: dazzles_28
+    second: RightUpOw
   - first:
       213: 8981489920928282793
-    second: dazzles_29
+    second: BottomLeftOw
   - first:
       213: 5983024521261742117
-    second: dazzles_30
+    second: BottomMiddleOw
   - first:
       213: -2216719346459552067
-    second: dazzles_31
+    second: LeftUpOw
   - first:
       213: -257369064684966836
-    second: dazzles_32
+    second: PlayerOw
   - first:
       213: 3714133561509516059
     second: dazzles_33
@@ -124,19 +124,19 @@ TextureImporter:
     second: dazzles_39
   - first:
       213: -183975403031797813
-    second: dazzles_40
+    second: MiddleUpAngry
   - first:
       213: 2226381707764217181
-    second: dazzles_41
+    second: RightUpAngry
   - first:
       213: -7503419997022202591
-    second: dazzles_42
+    second: BottomLeftAngry
   - first:
       213: 914672387374890533
-    second: dazzles_43
+    second: BottomMiddleAngry
   - first:
       213: 8565462418483418682
-    second: dazzles_44
+    second: LeftUpAngry
   - first:
       213: -2548780357388522811
     second: dazzles_45
@@ -148,22 +148,22 @@ TextureImporter:
     second: dazzles_47
   - first:
       213: 4466208522555285156
-    second: dazzles_48
+    second: MiddleUpHappy
   - first:
       213: 6471752341608542584
-    second: dazzles_49
+    second: RightUpHappy
   - first:
       213: -2902620479736932538
-    second: dazzles_50
+    second: BottomLeftHappy
   - first:
       213: 5665046338477434936
-    second: dazzles_51
+    second: BottomMiddleHappy
   - first:
       213: 5279605795355757446
-    second: dazzles_52
+    second: LeftUpHappy
   - first:
       213: 4260515008245462210
-    second: dazzles_53
+    second: PlayerHappy
   - first:
       213: 2585483485642278020
     second: dazzles_54
@@ -301,7 +301,7 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: dazzles_0
+      name: MiddleUpNeutral
       rect:
         serializedVersion: 2
         x: 126
@@ -309,7 +309,7 @@ TextureImporter:
         width: 322
         height: 427
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
@@ -322,7 +322,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: dazzles_1
+      name: RightUpNeutral
       rect:
         serializedVersion: 2
         x: 581
@@ -330,7 +330,7 @@ TextureImporter:
         width: 320
         height: 332
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
@@ -343,7 +343,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: dazzles_2
+      name: BottomLeftNeutral
       rect:
         serializedVersion: 2
         x: 1013
@@ -351,7 +351,7 @@ TextureImporter:
         width: 297
         height: 433
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
@@ -364,7 +364,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: dazzles_3
+      name: BottomMiddleNeutral
       rect:
         serializedVersion: 2
         x: 1435
@@ -372,7 +372,7 @@ TextureImporter:
         width: 312
         height: 443
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
@@ -385,7 +385,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: dazzles_4
+      name: LeftUpNeutral
       rect:
         serializedVersion: 2
         x: 1858
@@ -393,7 +393,7 @@ TextureImporter:
         width: 315
         height: 365
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
@@ -406,7 +406,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: dazzles_5
+      name: PlayerNeutral
       rect:
         serializedVersion: 2
         x: 2280
@@ -414,7 +414,7 @@ TextureImporter:
         width: 324
         height: 311
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
@@ -435,7 +435,7 @@ TextureImporter:
         width: 229
         height: 214
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
@@ -456,7 +456,7 @@ TextureImporter:
         width: 127
         height: 125
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
@@ -477,7 +477,7 @@ TextureImporter:
         width: 42
         height: 58
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
@@ -498,7 +498,7 @@ TextureImporter:
         width: 223
         height: 201
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
@@ -519,7 +519,7 @@ TextureImporter:
         width: 61
         height: 37
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
@@ -540,7 +540,7 @@ TextureImporter:
         width: 72
         height: 47
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
@@ -561,7 +561,7 @@ TextureImporter:
         width: 55
         height: 48
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
@@ -582,7 +582,7 @@ TextureImporter:
         width: 86
         height: 248
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
@@ -603,7 +603,7 @@ TextureImporter:
         width: 88
         height: 254
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
@@ -624,7 +624,7 @@ TextureImporter:
         width: 86
         height: 258
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
@@ -645,7 +645,7 @@ TextureImporter:
         width: 74
         height: 268
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
@@ -658,7 +658,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: dazzles_17
+      name: MiddleUpOpenMouth
       rect:
         serializedVersion: 2
         x: 126
@@ -666,7 +666,7 @@ TextureImporter:
         width: 322
         height: 428
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
@@ -679,7 +679,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: dazzles_18
+      name: RightUpOpenMouth
       rect:
         serializedVersion: 2
         x: 581
@@ -687,7 +687,7 @@ TextureImporter:
         width: 320
         height: 332
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
@@ -700,7 +700,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: dazzles_19
+      name: BottomLeftOpenMouth
       rect:
         serializedVersion: 2
         x: 1013
@@ -708,7 +708,7 @@ TextureImporter:
         width: 297
         height: 434
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
@@ -721,7 +721,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: dazzles_20
+      name: BottomMiddleOpenMouth
       rect:
         serializedVersion: 2
         x: 1435
@@ -729,7 +729,7 @@ TextureImporter:
         width: 312
         height: 444
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
@@ -742,7 +742,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: dazzles_21
+      name: LeftUpOpenMouth
       rect:
         serializedVersion: 2
         x: 1858
@@ -750,7 +750,7 @@ TextureImporter:
         width: 315
         height: 368
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
@@ -763,7 +763,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: dazzles_22
+      name: PlayerOpenMouth
       rect:
         serializedVersion: 2
         x: 2280
@@ -771,7 +771,7 @@ TextureImporter:
         width: 324
         height: 312
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
@@ -792,7 +792,7 @@ TextureImporter:
         width: 264
         height: 100
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
@@ -813,7 +813,7 @@ TextureImporter:
         width: 134
         height: 221
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
@@ -834,7 +834,7 @@ TextureImporter:
         width: 240
         height: 252
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
@@ -855,7 +855,7 @@ TextureImporter:
         width: 215
         height: 219
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
@@ -868,7 +868,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: dazzles_27
+      name: MiddleUpOw
       rect:
         serializedVersion: 2
         x: 126
@@ -876,7 +876,7 @@ TextureImporter:
         width: 322
         height: 428
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
@@ -889,7 +889,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: dazzles_28
+      name: RightUpOw
       rect:
         serializedVersion: 2
         x: 581
@@ -897,7 +897,7 @@ TextureImporter:
         width: 320
         height: 331
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
@@ -910,7 +910,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: dazzles_29
+      name: BottomLeftOw
       rect:
         serializedVersion: 2
         x: 1013
@@ -918,7 +918,7 @@ TextureImporter:
         width: 297
         height: 434
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
@@ -931,7 +931,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: dazzles_30
+      name: BottomMiddleOw
       rect:
         serializedVersion: 2
         x: 1435
@@ -939,7 +939,7 @@ TextureImporter:
         width: 312
         height: 444
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
@@ -952,15 +952,15 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: dazzles_31
+      name: LeftUpOw
       rect:
         serializedVersion: 2
-        x: 1858
+        x: 1861
         y: 2437
         width: 315
         height: 367
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
@@ -973,7 +973,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: dazzles_32
+      name: PlayerOw
       rect:
         serializedVersion: 2
         x: 2280
@@ -981,7 +981,7 @@ TextureImporter:
         width: 324
         height: 310
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
@@ -1002,7 +1002,7 @@ TextureImporter:
         width: 233
         height: 252
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
@@ -1023,7 +1023,7 @@ TextureImporter:
         width: 189
         height: 246
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
@@ -1044,7 +1044,7 @@ TextureImporter:
         width: 131
         height: 240
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
@@ -1065,7 +1065,7 @@ TextureImporter:
         width: 98
         height: 176
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
@@ -1086,7 +1086,7 @@ TextureImporter:
         width: 92
         height: 106
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
@@ -1107,7 +1107,7 @@ TextureImporter:
         width: 55
         height: 127
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
@@ -1128,7 +1128,7 @@ TextureImporter:
         width: 223
         height: 250
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
@@ -1141,7 +1141,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: dazzles_40
+      name: MiddleUpAngry
       rect:
         serializedVersion: 2
         x: 126
@@ -1149,7 +1149,7 @@ TextureImporter:
         width: 322
         height: 430
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
@@ -1162,7 +1162,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: dazzles_41
+      name: RightUpAngry
       rect:
         serializedVersion: 2
         x: 577
@@ -1170,7 +1170,7 @@ TextureImporter:
         width: 320
         height: 331
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
@@ -1183,7 +1183,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: dazzles_42
+      name: BottomLeftAngry
       rect:
         serializedVersion: 2
         x: 1009
@@ -1191,7 +1191,7 @@ TextureImporter:
         width: 297
         height: 434
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
@@ -1204,7 +1204,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: dazzles_43
+      name: BottomMiddleAngry
       rect:
         serializedVersion: 2
         x: 1435
@@ -1212,7 +1212,7 @@ TextureImporter:
         width: 312
         height: 444
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
@@ -1225,7 +1225,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: dazzles_44
+      name: LeftUpAngry
       rect:
         serializedVersion: 2
         x: 1862
@@ -1233,7 +1233,7 @@ TextureImporter:
         width: 315
         height: 367
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
@@ -1254,7 +1254,7 @@ TextureImporter:
         width: 258
         height: 147
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
@@ -1275,7 +1275,7 @@ TextureImporter:
         width: 299
         height: 164
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
@@ -1296,7 +1296,7 @@ TextureImporter:
         width: 195
         height: 142
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
@@ -1309,7 +1309,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: dazzles_48
+      name: MiddleUpHappy
       rect:
         serializedVersion: 2
         x: 126
@@ -1317,7 +1317,7 @@ TextureImporter:
         width: 322
         height: 428
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
@@ -1330,7 +1330,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: dazzles_49
+      name: RightUpHappy
       rect:
         serializedVersion: 2
         x: 581
@@ -1338,7 +1338,7 @@ TextureImporter:
         width: 320
         height: 330
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
@@ -1351,7 +1351,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: dazzles_50
+      name: BottomLeftHappy
       rect:
         serializedVersion: 2
         x: 1013
@@ -1359,7 +1359,7 @@ TextureImporter:
         width: 297
         height: 434
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
@@ -1372,7 +1372,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: dazzles_51
+      name: BottomMiddleHappy
       rect:
         serializedVersion: 2
         x: 1435
@@ -1380,7 +1380,7 @@ TextureImporter:
         width: 312
         height: 443
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
@@ -1393,7 +1393,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: dazzles_52
+      name: LeftUpHappy
       rect:
         serializedVersion: 2
         x: 1858
@@ -1401,7 +1401,7 @@ TextureImporter:
         width: 315
         height: 365
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
@@ -1414,7 +1414,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: dazzles_53
+      name: PlayerHappy
       rect:
         serializedVersion: 2
         x: 2280
@@ -1422,7 +1422,7 @@ TextureImporter:
         width: 324
         height: 312
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
@@ -1443,7 +1443,7 @@ TextureImporter:
         width: 207
         height: 134
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
@@ -1464,7 +1464,7 @@ TextureImporter:
         width: 248
         height: 192
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
@@ -1485,7 +1485,7 @@ TextureImporter:
         width: 217
         height: 229
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
@@ -1506,7 +1506,7 @@ TextureImporter:
         width: 234
         height: 172
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
@@ -1527,7 +1527,7 @@ TextureImporter:
         width: 246
         height: 198
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
@@ -1548,7 +1548,7 @@ TextureImporter:
         width: 299
         height: 168
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
@@ -1569,7 +1569,7 @@ TextureImporter:
         width: 100
         height: 684
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
@@ -1590,7 +1590,7 @@ TextureImporter:
         width: 240
         height: 146
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
@@ -1611,7 +1611,7 @@ TextureImporter:
         width: 217
         height: 157
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
@@ -1632,7 +1632,7 @@ TextureImporter:
         width: 112
         height: 219
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
@@ -1653,7 +1653,7 @@ TextureImporter:
         width: 88
         height: 203
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
@@ -1674,7 +1674,7 @@ TextureImporter:
         width: 675
         height: 678
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
@@ -1695,7 +1695,7 @@ TextureImporter:
         width: 127
         height: 127
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
@@ -1716,7 +1716,7 @@ TextureImporter:
         width: 131
         height: 131
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
@@ -1737,7 +1737,7 @@ TextureImporter:
         width: 139
         height: 139
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
@@ -1758,7 +1758,7 @@ TextureImporter:
         width: 676
         height: 98
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
