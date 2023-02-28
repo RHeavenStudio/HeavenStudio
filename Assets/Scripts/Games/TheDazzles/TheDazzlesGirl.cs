@@ -55,6 +55,7 @@ namespace HeavenStudio.Games.Scripts_TheDazzles
 
         public void StartReleaseBox(float beat)
         {
+            if (!holding) return;
             BeatAction.New(game.gameObject, new List<BeatAction.Action>()
             {
                 new BeatAction.Action(beat - 1f, delegate { holdEffectAnim.DoScaledAnimationAsync("ReleaseBox", 0.25f); })
