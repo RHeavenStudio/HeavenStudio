@@ -16,14 +16,22 @@ namespace HeavenStudio.Games.Loaders
             {
                 new GameAction("crouch", "Crouch")
                 {
-                    function = delegate { TheDazzles.instance.CrouchStretchable(eventCaller.currentEntity.beat, eventCaller.currentEntity.length);  },
+                    preFunction = delegate { var e = eventCaller.currentEntity; TheDazzles.PreCrouch(e.beat, e.length, e["countIn"]);  },
                     defaultLength = 3f,
+                    parameters = new List<Param>()
+                    {
+                        new Param("countIn", TheDazzles.CountInType.DS, "Count In Type", "Should the count-In be from megamix, DS or random?")
+                    }
                 },
                 new GameAction("crouchStretch", "Crouch (Stretchable)")
                 {
-                    function = delegate { TheDazzles.instance.CrouchStretchable(eventCaller.currentEntity.beat, eventCaller.currentEntity.length); },
+                    function = delegate { var e = eventCaller.currentEntity; TheDazzles.instance.CrouchStretchable(e.beat, e.length, e["countIn"]); },
                     defaultLength = 3f,
-                    resizable = true
+                    resizable = true,
+                    parameters = new List<Param>()
+                    {
+                        new Param("countIn", TheDazzles.CountInType.DS, "Count In Type", "Should the count-In be from megamix, DS or random?")
+                    }
                 },
                 new GameAction("poseThree", "Pose Horizontal")
                 {
@@ -157,6 +165,18 @@ namespace HeavenStudio.Games
             public float playerBeat;
             public bool stars;
         }
+        public struct QueuedCrouch
+        {
+            public float beat;
+            public float length;
+            public int countInType;
+        }
+        public enum CountInType
+        {
+            DS = 0,
+            Megamix = 1,
+            Random = 2
+        }
         public static TheDazzles instance;
 
         [Header("Variables")]
@@ -164,6 +184,7 @@ namespace HeavenStudio.Games
         public bool shouldBop = false;
         public GameEvent bop = new GameEvent();
         static List<QueuedPose> queuedPoses = new List<QueuedPose>();
+        static List<QueuedCrouch> queuedCrouches = new List<QueuedCrouch>();
         [Header("Components")]
         [SerializeField] List<TheDazzlesGirl> npcGirls = new List<TheDazzlesGirl>();
         [SerializeField] TheDazzlesGirl player;
@@ -173,6 +194,7 @@ namespace HeavenStudio.Games
         void OnDestroy()
         {
             if (queuedPoses.Count > 0) queuedPoses.Clear();
+            if (queuedCrouches.Count > 0) queuedCrouches.Clear();
         }
 
         void Awake()
@@ -205,6 +227,14 @@ namespace HeavenStudio.Games
                     }
                     queuedPoses.Clear();
                 }
+                if (queuedCrouches.Count > 0)
+                {
+                    foreach (var crouch in queuedCrouches)
+                    {
+                        CrouchStretchable(crouch.beat, crouch.length, crouch.countInType);
+                    }
+                    queuedCrouches.Clear();
+                }
                 if (PlayerInput.Pressed() && !IsExpectingInputNow(InputType.STANDARD_DOWN))
                 {
                     player.Prepare(false);
@@ -217,19 +247,57 @@ namespace HeavenStudio.Games
             else if (!cond.isPlaying && !cond.isPaused)
             {
                 if (queuedPoses.Count > 0) queuedPoses.Clear();
+                if (queuedCrouches.Count > 0) queuedCrouches.Clear();
             }
         }
 
-        public void CrouchStretchable(float beat, float length)
+        public static void PreCrouch(float beat, float length, int countInType)
+        {
+            if (GameManager.instance.currentGame == "theDazzles")
+            {
+                instance.CrouchStretchable(beat, length, countInType);
+            }
+            else
+            {
+                queuedCrouches.Add(new QueuedCrouch { beat = beat, length = length, countInType = countInType });
+            }
+        }
+
+        public void CrouchStretchable(float beat, float length, int countInType)
         {
             float actualLength = length / 3;
             ScheduleInput(beat, 2f * actualLength, InputType.STANDARD_DOWN, JustCrouch, MissCrouch, Nothing);
-            MultiSound.Play(new MultiSound.Sound[]
+            int realCountInType = countInType;
+            if (countInType == (int)CountInType.Random) realCountInType = UnityEngine.Random.Range(0, 2);
+            List<MultiSound.Sound> soundsToPlay = new List<MultiSound.Sound>()
             {
-                new MultiSound.Sound("theDazzles/hold3", beat),
-                new MultiSound.Sound("theDazzles/hold2", beat + 1f * actualLength),
-                new MultiSound.Sound("theDazzles/hold1", beat + 2f * actualLength),
-            }, forcePlay: true);
+                new MultiSound.Sound("theDazzles/hold1", beat + 2f * actualLength, 1, 1, false, 0.019f),
+            };
+            switch (realCountInType)
+            {
+                case (int)CountInType.DS:
+                    soundsToPlay.AddRange(new List<MultiSound.Sound>()
+                    {
+                        new MultiSound.Sound("theDazzles/holdDS3", beat, 1, 1, false, 0.212f),
+                        new MultiSound.Sound("theDazzles/holdDS2", beat + 1f * actualLength, 1, 1, false, 0.242f),
+                    });
+                    break;
+                case (int)CountInType.Megamix:
+                    soundsToPlay.AddRange(new List<MultiSound.Sound>()
+                    {
+                        new MultiSound.Sound("theDazzles/hold3", beat, 1, 1, false, 0.267f),
+                        new MultiSound.Sound("theDazzles/hold2", beat + 1f * actualLength, 1, 1, false, 0.266f),
+                    });
+                    break;
+                default:
+                    soundsToPlay.AddRange(new List<MultiSound.Sound>()
+                    {
+                        new MultiSound.Sound("theDazzles/holdDS3", beat, 1, 1, false, 0.212f),
+                        new MultiSound.Sound("theDazzles/holdDS2", beat + 1f * actualLength, 1, 1, false, 0.242f),
+                    });
+                    break;
+            }
+            MultiSound.Play(soundsToPlay.ToArray(), forcePlay: true);
 
             BeatAction.New(instance.gameObject, new List<BeatAction.Action>()
             {
@@ -302,7 +370,7 @@ namespace HeavenStudio.Games
             List<MultiSound.Sound> soundsToPlay = new List<MultiSound.Sound>();
             foreach (var sound in soundBeats)
             {
-                soundsToPlay.Add(new MultiSound.Sound("theDazzles/posePartner", beat + sound));
+                soundsToPlay.Add(new MultiSound.Sound("theDazzles/pose", beat + sound));
             }
             MultiSound.Play(soundsToPlay.ToArray(), forcePlay: true);
             List<PosesToPerform> posesToPerform = new List<PosesToPerform>()
@@ -383,6 +451,8 @@ namespace HeavenStudio.Games
 
         void JustPose(PlayerActionEvent caller, float state)
         {
+            Jukebox.PlayOneShotGame("theDazzles/pose");
+            Jukebox.PlayOneShotGame("theDazzles/posePlayer");
             if (state >= 1f || state <= -1f)
             {
                 player.Pose(false);
@@ -393,6 +463,8 @@ namespace HeavenStudio.Games
 
         void JustPoseStars(PlayerActionEvent caller, float state)
         {
+            Jukebox.PlayOneShotGame("theDazzles/pose");
+            Jukebox.PlayOneShotGame("theDazzles/posePlayer");
             if (state >= 1f || state <= -1f)
             {
                 player.Pose(false);
@@ -404,8 +476,12 @@ namespace HeavenStudio.Games
         void SuccessPose(bool stars)
         {
             player.Pose();
-            Jukebox.PlayOneShotGame("theDazzles/posePlayer" + (stars ? "Stars" : ""));
-            if (stars) starsEffect.Play();
+            Jukebox.PlayOneShotGame("theDazzles/applause");
+            if (stars) 
+            {
+                starsEffect.Play();
+                Jukebox.PlayOneShotGame($"theDazzles/stars{UnityEngine.Random.Range(1, 6)}");
+            } 
             else poseEffect.Play();
         }
 
