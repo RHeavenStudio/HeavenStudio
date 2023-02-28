@@ -7,13 +7,14 @@ namespace HeavenStudio.Games.Scripts_TheDazzles
 {
     public class TheDazzlesGirl : MonoBehaviour
     {
-        enum Emotion
+        public enum Emotion
         {
             Neutral = 0,
             Happy = 1,
             Angry = 2
         }
-        Emotion currentEmotion;
+        public bool canBop = true;
+        public Emotion currentEmotion;
         Animator anim;
         [SerializeField] Animator holdEffectAnim;
         [SerializeField] SpriteRenderer headSprite;
@@ -44,6 +45,7 @@ namespace HeavenStudio.Games.Scripts_TheDazzles
         {
             anim.DoScaledAnimationAsync("Pose", 0.5f);
             holdEffectAnim.Play("HoldNothing", 0, 0);
+            if (hit) currentEmotion = Emotion.Happy;
         }
 
         public void EndPose()
@@ -59,18 +61,20 @@ namespace HeavenStudio.Games.Scripts_TheDazzles
         public void UnPrepare()
         {
             game.ScoreMiss(1f);
-            anim.Play("Prepare", 0, 0);
+            canBop = true;
+            anim.Play("Idle", 0, 0);
         }
 
         public void Bop()
         {
+            if (!canBop) return;
             switch (currentEmotion)
             {
                 case Emotion.Neutral:
-                    anim.DoScaledAnimationAsync("IdleBop", 0.5f);
+                    anim.DoScaledAnimationAsync("IdleBop", 0.4f);
                     break;
                 case Emotion.Happy:
-                    anim.DoScaledAnimationAsync("HappyBop", 0.5f);
+                    anim.DoScaledAnimationAsync("HappyBop", 0.4f);
                     break;
                 case Emotion.Angry:
                     break;

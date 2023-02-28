@@ -16,7 +16,7 @@ namespace HeavenStudio.Games.Loaders
             {
                 new GameAction("crouch", "Crouch")
                 {
-                    function = delegate { TheDazzles.instance.Crouch(eventCaller.currentEntity.beat); },
+                    function = delegate { TheDazzles.instance.CrouchStretchable(eventCaller.currentEntity.beat, eventCaller.currentEntity.length);  },
                     defaultLength = 3f,
                 },
                 new GameAction("crouchStretch", "Crouch (Stretchable)")
@@ -68,6 +68,15 @@ namespace HeavenStudio.Games.Loaders
                     parameters = new List<Param>()
                     {
                         new Param("toggle", true, "Stars", "Should stars appear when successfully posing?")
+                    }
+                },
+                new GameAction("bop", "Bop")
+                {
+                    function = delegate { TheDazzles.instance.shouldBop = eventCaller.currentEntity["toggle"]; },
+                    defaultLength = 0.5f,
+                    parameters = new List<Param>()
+                    {
+                        new Param("toggle", true, "Should bop?", "Should the dazzles bop?")
                     }
                 },
                 new GameAction("customPose", "Custom Pose")
@@ -151,6 +160,9 @@ namespace HeavenStudio.Games
         public static TheDazzles instance;
 
         [Header("Variables")]
+        bool canBop = true;
+        public bool shouldBop = false;
+        public GameEvent bop = new GameEvent();
         static List<QueuedPose> queuedPoses = new List<QueuedPose>();
         [Header("Components")]
         [SerializeField] List<TheDazzlesGirl> npcGirls = new List<TheDazzlesGirl>();
@@ -174,6 +186,17 @@ namespace HeavenStudio.Games
 
             if (cond.isPlaying && !cond.isPaused)
             {
+                if (cond.ReportBeat(ref bop.lastReportedBeat, bop.startBeat % 1))
+                {
+                    if (shouldBop)
+                    {
+                        foreach (var girl in npcGirls)
+                        {
+                            girl.Bop();
+                        }
+                        player.Bop();
+                    }
+                }
                 if (queuedPoses.Count > 0)
                 {
                     foreach (var pose in queuedPoses)
@@ -197,35 +220,6 @@ namespace HeavenStudio.Games
             }
         }
 
-        public void Crouch(float beat)
-        {
-            ScheduleInput(beat, 2f, InputType.STANDARD_DOWN, JustCrouch, MissCrouch, Nothing);
-            MultiSound.Play(new MultiSound.Sound[]
-            {
-                new MultiSound.Sound("theDazzles/hold3", beat),
-                new MultiSound.Sound("theDazzles/hold2", beat + 1f),
-                new MultiSound.Sound("theDazzles/hold1", beat + 2f),
-            }, forcePlay: true);
-
-            BeatAction.New(instance.gameObject, new List<BeatAction.Action>()
-            {
-                new BeatAction.Action(beat, delegate
-                {
-                    npcGirls[1].Prepare();
-                    npcGirls[4].Prepare();
-                }),
-                new BeatAction.Action(beat + 1f, delegate
-                {
-                    npcGirls[0].Prepare();
-                    npcGirls[3].Prepare();
-                }),
-                new BeatAction.Action(beat + 2f, delegate
-                {
-                    npcGirls[2].Prepare();
-                }),
-            });
-        }
-
         public void CrouchStretchable(float beat, float length)
         {
             float actualLength = length / 3;
@@ -241,16 +235,21 @@ namespace HeavenStudio.Games
             {
                 new BeatAction.Action(beat, delegate
                 {
+                    npcGirls[1].canBop = false;
+                    npcGirls[4].canBop = false;
                     npcGirls[1].Prepare();
                     npcGirls[4].Prepare();
                 }),
                 new BeatAction.Action(beat + 1f * actualLength, delegate
                 {
+                    npcGirls[0].canBop = false;
+                    npcGirls[3].canBop = false;
                     npcGirls[0].Prepare();
                     npcGirls[3].Prepare();
                 }),
                 new BeatAction.Action(beat + 2f * actualLength, delegate
                 {
+                    npcGirls[2].canBop = false;
                     npcGirls[2].Prepare();
                 }),
             });
@@ -326,8 +325,10 @@ namespace HeavenStudio.Games
                 {
                     foreach (var girl in npcGirls)
                     {
+                        girl.canBop = false;
                         girl.Hold();
                     }
+                    player.canBop = false;
                     player.Hold();
                 }),
 
@@ -348,11 +349,20 @@ namespace HeavenStudio.Games
                 }
                 player.EndPose();
             }));
+            posesToDo.Add(new BeatAction.Action(beat + length + 0.5f, delegate
+            {
+                foreach (var girl in npcGirls)
+                {
+                    girl.canBop = true;
+                }
+                player.canBop = true;
+            }));
             BeatAction.New(instance.gameObject, posesToDo);
         }
 
         void JustCrouch(PlayerActionEvent caller, float state)
         {
+            player.canBop = false;
             if (state >= 1f || state <= -1f)
             {
                 return;
