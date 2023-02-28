@@ -81,8 +81,8 @@ namespace HeavenStudio.Editor.VideoExport
         #region MonoBehaviour
         private void Start()
         {
-            Tooltip.AddTooltip(exportAudio.transform.parent.parent.gameObject, "<color=red>Not Implemented</color>\n¯\\_(:/)_/¯");
-            Tooltip.AddTooltip(fpsInput.transform.parent.parent.gameObject, "Above 60 not recommended");
+            Tooltip.AddTooltip(exportAudio.transform.parent.gameObject, "<color=red>Not Implemented</color>");
+            Tooltip.AddTooltip(fpsInput.transform.parent.gameObject, "Above 60 not recommended");
 
             var exportFormatNames = Enum.GetNames(typeof(ExportFormat));
             formatDropdown.ClearOptions();
