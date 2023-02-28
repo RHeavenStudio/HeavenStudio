@@ -126,6 +126,8 @@ namespace HeavenStudio.Games.Scripts_TheDazzles
                     anim.DoScaledAnimationAsync("HappyBop", 0.4f);
                     break;
                 case Emotion.Angry:
+                    PickHead(Expression.Angry);
+                    anim.DoScaledAnimationAsync("IdleBop", 0.4f);
                     break;
                 case Emotion.Ouch:
                     anim.DoScaledAnimationAsync("OuchBop", 0.4f);

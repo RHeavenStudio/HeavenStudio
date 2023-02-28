@@ -272,7 +272,7 @@ namespace HeavenStudio.Games
         public void CrouchStretchable(float beat, float length, int countInType)
         {
             float actualLength = length / 3;
-            ScheduleInput(beat, 2f * actualLength, InputType.STANDARD_DOWN, JustCrouch, MissCrouch, Nothing);
+            ScheduleInput(beat, 2f * actualLength, InputType.STANDARD_DOWN, JustCrouch, Nothing, Nothing);
             int realCountInType = countInType;
             if (countInType == (int)CountInType.Random) realCountInType = UnityEngine.Random.Range(0, 2);
             List<MultiSound.Sound> soundsToPlay = new List<MultiSound.Sound>()
@@ -450,11 +450,6 @@ namespace HeavenStudio.Games
             Jukebox.PlayOneShotGame("theDazzles/crouch");
         }
 
-        void MissCrouch(PlayerActionEvent caller)
-        {
-
-        }
-
         void JustPose(PlayerActionEvent caller, float state)
         {
             Jukebox.PlayOneShotGame("theDazzles/pose");
@@ -498,7 +493,10 @@ namespace HeavenStudio.Games
 
         void MissPose(PlayerActionEvent caller)
         {
-
+            foreach (var girl in npcGirls)
+            {
+                girl.currentEmotion = TheDazzlesGirl.Emotion.Angry;
+            }
         }
 
         void Nothing(PlayerActionEvent caller) { }
