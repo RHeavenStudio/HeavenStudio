@@ -177,20 +177,17 @@ namespace HeavenStudio.Games
                     {
                         Jukebox.PlayOneShotGame("spaceDance/inputBad");
                         DancerP.DoScaledAnimationAsync("PunchDo", 0.5f);
-                        Gramps.DoScaledAnimationAsync("GrampsOhFuck", 0.5f);
                         // Look at this later, sound effect has some weird clipping on it sometimes?? popping. like. fucking popopop idk why its doing that its fine theres no sample weirdness ughh
                     }
                     if (PlayerInput.GetSpecificDirectionDown(1) && !IsExpectingInputNow(InputType.DIRECTION_RIGHT_DOWN))
                     {
                         DancerP.DoScaledAnimationAsync("TurnRightDo", 0.5f);
                         Jukebox.PlayOneShotGame("spaceDance/inputBad");
-                        Gramps.DoScaledAnimationAsync("GrampsOhFuck", 0.5f);
                     }
                     if (PlayerInput.GetSpecificDirectionDown(2) && !IsExpectingInputNow(InputType.DIRECTION_DOWN_DOWN))
                     {
                         DancerP.DoScaledAnimationAsync("SitDownDo", 0.5f);
                         Jukebox.PlayOneShotGame("spaceDance/inputBad");
-                        Gramps.DoScaledAnimationAsync("GrampsOhFuck", 0.5f);
                     }
                 }
             }
@@ -221,23 +218,23 @@ namespace HeavenStudio.Games
                     soundsToPlay.AddRange(new List<MultiSound.Sound>()
                     {
                         new MultiSound.Sound("spaceDance/dancerTurn", beat),
-                        new MultiSound.Sound("spaceDance/dancerRight", beat + 1.0f),
+                        new MultiSound.Sound("spaceDance/dancerRight", beat + 1.0f, 1, 1, false, 0.007f),
                     });
                     break;
                 case (int)WhoSpeaks.Gramps:
                     soundsToPlay.AddRange(new List<MultiSound.Sound>()
                     {
                         new MultiSound.Sound("spaceDance/otherTurn", beat),
-                        new MultiSound.Sound("spaceDance/otherRight", beat + 1.0f),
+                        new MultiSound.Sound("spaceDance/otherRight", beat + 1.0f, 1, 1, false, 0.007f),
                     });
                     break;
                 case (int)WhoSpeaks.Both:
                     soundsToPlay.AddRange(new List<MultiSound.Sound>()
                     {
                         new MultiSound.Sound("spaceDance/dancerTurn", beat),
-                        new MultiSound.Sound("spaceDance/dancerRight", beat + 1.0f),
+                        new MultiSound.Sound("spaceDance/dancerRight", beat + 1.0f, 1, 1, false, 0.007f),
                         new MultiSound.Sound("spaceDance/otherTurn", beat),
-                        new MultiSound.Sound("spaceDance/otherRight", beat + 1.0f),
+                        new MultiSound.Sound("spaceDance/otherRight", beat + 1.0f, 1, 1, false, 0.007f),
                     });
                     break;
             }
@@ -281,28 +278,28 @@ namespace HeavenStudio.Games
                 case (int)WhoSpeaks.Dancers:
                     soundsToPlay.AddRange(new List<MultiSound.Sound>()
                     {
-                        new MultiSound.Sound("spaceDance/dancerLets", beat),
-                        new MultiSound.Sound("spaceDance/dancerSit", beat + 0.5f),
-                        new MultiSound.Sound("spaceDance/dancerDown", beat + 1f),
+                        new MultiSound.Sound("spaceDance/dancerLets", beat, 1, 1, false, 0.07f),
+                        new MultiSound.Sound("spaceDance/dancerSit", beat + 0.5f, 1, 1, false, 0.02f),
+                        new MultiSound.Sound("spaceDance/dancerDown", beat + 1f, 1, 1, false, 0.006f),
                     });
                     break;
                 case (int)WhoSpeaks.Gramps:
                     soundsToPlay.AddRange(new List<MultiSound.Sound>()
                     {
-                        new MultiSound.Sound("spaceDance/otherLets", beat),
-                        new MultiSound.Sound("spaceDance/otherSit", beat + 0.5f, 1, 1, false, 0.084f),
-                        new MultiSound.Sound("spaceDance/otherDown", beat + 1f),
+                        new MultiSound.Sound("spaceDance/otherLets", beat, 1, 1, false, 0.024f),
+                        new MultiSound.Sound("spaceDance/otherSit", beat + 0.5f, 1, 1, false, 0.04f),
+                        new MultiSound.Sound("spaceDance/otherDown", beat + 1f, 1, 1, false, 0.01f),
                     });
                     break;
                 case (int)WhoSpeaks.Both:
                     soundsToPlay.AddRange(new List<MultiSound.Sound>()
                     {
-                        new MultiSound.Sound("spaceDance/dancerLets", beat),
-                        new MultiSound.Sound("spaceDance/dancerSit", beat + 0.5f),
-                        new MultiSound.Sound("spaceDance/dancerDown", beat + 1f),
-                        new MultiSound.Sound("spaceDance/otherLets", beat),
-                        new MultiSound.Sound("spaceDance/otherSit", beat + 0.5f, 1, 1, false, 0.084f),
-                        new MultiSound.Sound("spaceDance/otherDown", beat + 1f),
+                        new MultiSound.Sound("spaceDance/dancerLets", beat, 1, 1, false, 0.07f),
+                        new MultiSound.Sound("spaceDance/dancerSit", beat + 0.5f, 1, 1, false, 0.02f),
+                        new MultiSound.Sound("spaceDance/dancerDown", beat + 1f, 1, 1, false, 0.006f),
+                        new MultiSound.Sound("spaceDance/otherLets", beat, 1, 1, false, 0.024f),
+                        new MultiSound.Sound("spaceDance/otherSit", beat + 0.5f, 1, 1, false, 0.04f),
+                        new MultiSound.Sound("spaceDance/otherDown", beat + 1f, 1, 1, false, 0.01f),
                     });
                     break;
             }
