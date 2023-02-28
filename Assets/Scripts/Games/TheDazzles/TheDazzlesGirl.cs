@@ -36,6 +36,16 @@ namespace HeavenStudio.Games.Scripts_TheDazzles
             anim.DoScaledAnimationAsync("Pose", 0.5f);
         }
 
+        public void EndPose()
+        {
+            anim.DoScaledAnimationAsync("EndPose", 0.5f);
+        }
+
+        public void Hold()
+        {
+            anim.DoScaledAnimationAsync("Hold", 0.5f);
+        }
+
         public void UnPrepare()
         {
             game.ScoreMiss(1f);
