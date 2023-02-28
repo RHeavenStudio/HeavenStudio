@@ -19,30 +19,56 @@ namespace HeavenStudio.Games.Loaders
                     function = delegate { TheDazzles.instance.Crouch(eventCaller.currentEntity.beat); },
                     defaultLength = 3f,
                 },
+                new GameAction("crouchStretch", "Crouch (Stretchable)")
+                {
+                    function = delegate { TheDazzles.instance.CrouchStretchable(eventCaller.currentEntity.beat, eventCaller.currentEntity.length); },
+                    defaultLength = 3f,
+                    resizable = true
+                },
                 new GameAction("poseThree", "Pose Horizontal")
                 {
-                    preFunction = delegate { var e = eventCaller.currentEntity; TheDazzles.PrePose(e.beat, e.length, 0f, 1f, 2f, 0f, 1f, 2f, false); },
-                    defaultLength = 3f
+                    preFunction = delegate { var e = eventCaller.currentEntity; TheDazzles.PrePose(e.beat, e.length, 0f, 1f, 2f, 0f, 1f, 2f, e["toggle"]); },
+                    defaultLength = 3f,
+                    parameters = new List<Param>()
+                    {
+                        new Param("toggle", false, "Stars", "Should stars appear when successfully posing?")
+                    }
                 },
                 new GameAction("poseTwo", "Pose Vertical")
                 {
-                    preFunction = delegate { var e = eventCaller.currentEntity; TheDazzles.PrePose(e.beat, e.length, 0f, 0f, 0f, 2f, 2f, 2f, true); },
-                    defaultLength = 4f
+                    preFunction = delegate { var e = eventCaller.currentEntity; TheDazzles.PrePose(e.beat, e.length, 0f, 0f, 0f, 2f, 2f, 2f, e["toggle"]); },
+                    defaultLength = 4f,
+                    parameters = new List<Param>()
+                    {
+                        new Param("toggle", true, "Stars", "Should stars appear when successfully posing?")
+                    }
                 },
                 new GameAction("poseSixDiagonal", "Pose Diagonal")
                 {
-                    preFunction = delegate { var e = eventCaller.currentEntity; TheDazzles.PrePose(e.beat, e.length, 0f, 2.75f, 1.5f, 2f, 0.75f, 3.5f, false); },
-                    defaultLength = 4.5f
+                    preFunction = delegate { var e = eventCaller.currentEntity; TheDazzles.PrePose(e.beat, e.length, 0f, 2.75f, 1.5f, 2f, 0.75f, 3.5f, e["toggle"]); },
+                    defaultLength = 4.5f,
+                    parameters = new List<Param>()
+                    {
+                        new Param("toggle", false, "Stars", "Should stars appear when successfully posing?")
+                    }
                 },
                 new GameAction("poseSixColumns", "Pose Rows")
                 {
-                    preFunction = delegate { var e = eventCaller.currentEntity; TheDazzles.PrePose(e.beat, e.length, 0f, 0.5f, 1f, 2f, 2.5f, 3f, false); },
-                    defaultLength = 4f
+                    preFunction = delegate { var e = eventCaller.currentEntity; TheDazzles.PrePose(e.beat, e.length, 0f, 0.5f, 1f, 2f, 2.5f, 3f, e["toggle"]); },
+                    defaultLength = 4f,
+                    parameters = new List<Param>()
+                    {
+                        new Param("toggle", false, "Stars", "Should stars appear when successfully posing?")
+                    }
                 },
                 new GameAction("poseSix", "Pose Six")
                 {
-                    preFunction = delegate { var e = eventCaller.currentEntity; TheDazzles.PrePose(e.beat, e.length, 0f, 0.5f, 1f, 1.5f, 2f, 2.5f, true); },
-                    defaultLength = 4.5f
+                    preFunction = delegate { var e = eventCaller.currentEntity; TheDazzles.PrePose(e.beat, e.length, 0f, 0.5f, 1f, 1.5f, 2f, 2.5f, e["toggle"]); },
+                    defaultLength = 4.5f,
+                    parameters = new List<Param>()
+                    {
+                        new Param("toggle", true, "Stars", "Should stars appear when successfully posing?")
+                    }
                 },
                 new GameAction("customPose", "Custom Pose")
                 {
@@ -200,6 +226,36 @@ namespace HeavenStudio.Games
             });
         }
 
+        public void CrouchStretchable(float beat, float length)
+        {
+            float actualLength = length / 3;
+            ScheduleInput(beat, 2f * actualLength, InputType.STANDARD_DOWN, JustCrouch, MissCrouch, Nothing);
+            MultiSound.Play(new MultiSound.Sound[]
+            {
+                new MultiSound.Sound("theDazzles/hold3", beat),
+                new MultiSound.Sound("theDazzles/hold2", beat + 1f * actualLength),
+                new MultiSound.Sound("theDazzles/hold1", beat + 2f * actualLength),
+            }, forcePlay: true);
+
+            BeatAction.New(instance.gameObject, new List<BeatAction.Action>()
+            {
+                new BeatAction.Action(beat, delegate
+                {
+                    npcGirls[1].Prepare();
+                    npcGirls[4].Prepare();
+                }),
+                new BeatAction.Action(beat + 1f * actualLength, delegate
+                {
+                    npcGirls[0].Prepare();
+                    npcGirls[3].Prepare();
+                }),
+                new BeatAction.Action(beat + 2f * actualLength, delegate
+                {
+                    npcGirls[2].Prepare();
+                }),
+            });
+        }
+
         public static void PrePose(float beat, float length, float upLeftBeat, float upMiddleBeat, float upRightBeat, float downLeftBeat, float downMiddleBeat, float playerBeat, bool stars)
         {
             if (GameManager.instance.currentGame == "theDazzles")
@@ -338,9 +394,9 @@ namespace HeavenStudio.Games
         void SuccessPose(bool stars)
         {
             player.Pose();
-            poseEffect.Play();
             Jukebox.PlayOneShotGame("theDazzles/posePlayer" + (stars ? "Stars" : ""));
             if (stars) starsEffect.Play();
+            else poseEffect.Play();
         }
 
         void MissPose(PlayerActionEvent caller)
