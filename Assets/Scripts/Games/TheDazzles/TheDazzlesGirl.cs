@@ -29,11 +29,21 @@ namespace HeavenStudio.Games.Scripts_TheDazzles
         public void Prepare(bool hit = true)
         {
             anim.Play("Prepare", 0, 0);
+            holdEffectAnim.DoScaledAnimationAsync("HoldBox", 0.25f);
+        }
+
+        public void StartReleaseBox(float beat)
+        {
+            BeatAction.New(game.gameObject, new List<BeatAction.Action>()
+            {
+                new BeatAction.Action(beat - 1f, delegate { holdEffectAnim.DoScaledAnimationAsync("ReleaseBox", 0.25f); })
+            });
         }
 
         public void Pose(bool hit = true)
         {
             anim.DoScaledAnimationAsync("Pose", 0.5f);
+            holdEffectAnim.Play("HoldNothing", 0, 0);
         }
 
         public void EndPose()

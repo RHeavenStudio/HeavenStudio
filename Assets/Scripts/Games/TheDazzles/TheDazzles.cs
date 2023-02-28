@@ -259,6 +259,11 @@ namespace HeavenStudio.Games
                 new PosesToPerform { beat = downMiddleBeat, girlIndex = 0},
             };
             posesToPerform.Sort();
+            foreach(var pose in posesToPerform)
+            {
+                npcGirls[pose.girlIndex].StartReleaseBox(beat + pose.beat);
+            }
+            player.StartReleaseBox(beat + playerBeat);
             List<BeatAction.Action> posesToDo = new List<BeatAction.Action>()
             {
                 new BeatAction.Action(beat - 1f, delegate
