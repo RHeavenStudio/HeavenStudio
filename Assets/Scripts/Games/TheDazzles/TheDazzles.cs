@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Linq;
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 using HeavenStudio.Util;
@@ -22,6 +23,42 @@ namespace HeavenStudio.Games.Loaders
                 {
                     preFunction = delegate { var e = eventCaller.currentEntity; TheDazzles.PrePose(e.beat, e.length, 0f, 1f, 2f, 0f, 1f, 2f, false); },
                     defaultLength = 3f
+                },
+                new GameAction("poseTwo", "Pose Vertical")
+                {
+                    preFunction = delegate { var e = eventCaller.currentEntity; TheDazzles.PrePose(e.beat, e.length, 0f, 0f, 0f, 2f, 2f, 2f, true); },
+                    defaultLength = 4f
+                },
+                new GameAction("poseSixDiagonal", "Pose Diagonal")
+                {
+                    preFunction = delegate { var e = eventCaller.currentEntity; TheDazzles.PrePose(e.beat, e.length, 0f, 2.75f, 1.5f, 2f, 0.75f, 3.5f, false); },
+                    defaultLength = 4.5f
+                },
+                new GameAction("poseSixColumns", "Pose Rows")
+                {
+                    preFunction = delegate { var e = eventCaller.currentEntity; TheDazzles.PrePose(e.beat, e.length, 0f, 0.5f, 1f, 2f, 2.5f, 3f, false); },
+                    defaultLength = 4f
+                },
+                new GameAction("poseSix", "Pose Six")
+                {
+                    preFunction = delegate { var e = eventCaller.currentEntity; TheDazzles.PrePose(e.beat, e.length, 0f, 0.5f, 1f, 1.5f, 2f, 2.5f, true); },
+                    defaultLength = 4.5f
+                },
+                new GameAction("customPose", "Custom Pose")
+                {
+                    preFunction = delegate { var e = eventCaller.currentEntity; TheDazzles.PrePose(e.beat, e.length, e["upLeft"], e["upMiddle"], e["upRight"], e["downLeft"], e["downMiddle"], e["player"], e["toggle"]); },
+                    defaultLength = 3f,
+                    resizable = true,
+                    parameters = new List<Param>()
+                    {
+                        new Param("upLeft", new EntityTypes.Float(0, 30f, 0f), "Up Left Girl Pose Beat", "How many beats after the event has started will this girl pose?"),
+                        new Param("upMiddle", new EntityTypes.Float(0, 30f, 1f), "Up Middle Girl Pose Beat", "How many beats after the event has started will this girl pose?"),
+                        new Param("upRight", new EntityTypes.Float(0, 30f, 2f), "Up Right Girl Pose Beat", "How many beats after the event has started will this girl pose?"),
+                        new Param("downLeft", new EntityTypes.Float(0, 30f, 0f), "Down Left Girl Pose Beat", "How many beats after the event has started will this girl pose?"),
+                        new Param("downMiddle", new EntityTypes.Float(0, 30f, 1f), "Down Middle Girl Pose Beat", "How many beats after the event has started will this girl pose?"),
+                        new Param("player", new EntityTypes.Float(0, 30f, 2f), "Player Pose Beat", "How many beats after the event has started should the player pose?"),
+                        new Param("toggle", false, "Stars", "Should stars appear when successfully posing?")
+                    }
                 }
             });
         }
@@ -32,6 +69,47 @@ namespace HeavenStudio.Games
     using Scripts_TheDazzles;
     public class TheDazzles : Minigame
     {
+        public struct PosesToPerform : IComparable<PosesToPerform>
+        {
+            public int CompareTo(PosesToPerform other)
+            {
+                if (other == null) return 1;
+
+                return beat.CompareTo(other.beat);
+            }
+
+            public static bool operator > (PosesToPerform operand1, PosesToPerform operand2)
+            {
+                return operand1.CompareTo(operand2) > 0;
+            }
+
+            public static bool operator <(PosesToPerform operand1, PosesToPerform operand2)
+            {
+                return operand1.CompareTo(operand2) < 0;
+            }
+
+            public static bool operator >=(PosesToPerform operand1, PosesToPerform operand2)
+            {
+                return operand1.CompareTo(operand2) >= 0;
+            }
+
+            public static bool operator <=(PosesToPerform operand1, PosesToPerform operand2)
+            {
+                return operand1.CompareTo(operand2) <= 0;
+            }
+
+            public static bool operator ==(PosesToPerform operand1, PosesToPerform operand2)
+            {
+                return operand1.CompareTo(operand2) == 0;
+            }
+
+            public static bool operator !=(PosesToPerform operand1, PosesToPerform operand2)
+            {
+                return operand1.CompareTo(operand2) != 0;
+            }
+            public int girlIndex;
+            public float beat;
+        }
         public struct QueuedPose
         {
             public float beat;
@@ -153,8 +231,6 @@ namespace HeavenStudio.Games
                 downLeftBeat,
                 downMiddleBeat,
             };
-            List<float> poseBeats = soundBeats;
-            poseBeats.Sort();
             List<float> soundsToRemove = new List<float>();
             foreach (var sound in soundBeats)
             {
@@ -174,7 +250,16 @@ namespace HeavenStudio.Games
                 soundsToPlay.Add(new MultiSound.Sound("theDazzles/posePartner", beat + sound));
             }
             MultiSound.Play(soundsToPlay.ToArray(), forcePlay: true);
-            BeatAction.New(instance.gameObject, new List<BeatAction.Action>()
+            List<PosesToPerform> posesToPerform = new List<PosesToPerform>()
+            {
+                new PosesToPerform { beat = upLeftBeat, girlIndex = 4},
+                new PosesToPerform { beat = upMiddleBeat, girlIndex = 3},
+                new PosesToPerform { beat = upRightBeat, girlIndex = 2},
+                new PosesToPerform { beat = downLeftBeat, girlIndex = 1},
+                new PosesToPerform { beat = downMiddleBeat, girlIndex = 0},
+            };
+            posesToPerform.Sort();
+            List<BeatAction.Action> posesToDo = new List<BeatAction.Action>()
             {
                 new BeatAction.Action(beat - 1f, delegate
                 {
@@ -184,75 +269,25 @@ namespace HeavenStudio.Games
                     }
                     player.Hold();
                 }),
-                new BeatAction.Action(beat + downMiddleBeat, delegate
-                {
-                    npcGirls[0].Pose();
-                }),
-                new BeatAction.Action(beat + downLeftBeat, delegate
-                {
-                    npcGirls[1].Pose();
-                }),
-                new BeatAction.Action(beat + upRightBeat, delegate
-                {
-                    npcGirls[2].Pose();
-                }),
-                new BeatAction.Action(beat + upMiddleBeat, delegate
-                {
-                    npcGirls[3].Pose();
-                }),
-                new BeatAction.Action(beat + upLeftBeat, delegate
-                {
-                    npcGirls[4].Pose();
-                }),
-                new BeatAction.Action(beat + length, delegate
-                {
-                    foreach (var girl in npcGirls)
-                    {
-                        girl.EndPose();
-                    }
-                    player.EndPose();
-                })
-            });
-        }
 
-        public void PoseTwo(float beat)
-        {
-            ScheduleInput(beat, 2f, InputType.STANDARD_UP, JustPoseStars, MissPose, Nothing);
-            MultiSound.Play(new MultiSound.Sound[]
+            };
+            for (int i = 0; i < posesToPerform.Count; i++)
             {
-                new MultiSound.Sound("theDazzles/posePartner", beat),
-            }, forcePlay: true);
-
-            BeatAction.New(instance.gameObject, new List<BeatAction.Action>()
+                int index = posesToPerform[i].girlIndex;
+                posesToDo.Add(new BeatAction.Action(beat + posesToPerform[i].beat, delegate
+                {
+                    npcGirls[index].Pose();
+                }));
+            }
+            posesToDo.Add(new BeatAction.Action(beat + length, delegate
             {
-                new BeatAction.Action(beat - 1f, delegate
+                foreach (var girl in npcGirls)
                 {
-                    foreach (var girl in npcGirls)
-                    {
-                        girl.Hold();
-                    }
-                    player.Hold();
-                }),
-                new BeatAction.Action(beat, delegate
-                {
-                    npcGirls[2].Pose();
-                    npcGirls[3].Pose();
-                    npcGirls[4].Pose();
-                }),
-                new BeatAction.Action(beat + 2f, delegate
-                {
-                    npcGirls[0].Pose();
-                    npcGirls[1].Pose();
-                }),
-                new BeatAction.Action(beat + 4f, delegate
-                {
-                    foreach (var girl in npcGirls)
-                    {
-                        girl.EndPose();
-                    }
-                    player.EndPose();
-                })
-            });
+                    girl.EndPose();
+                }
+                player.EndPose();
+            }));
+            BeatAction.New(instance.gameObject, posesToDo);
         }
 
         void JustCrouch(PlayerActionEvent caller, float state)
@@ -277,13 +312,6 @@ namespace HeavenStudio.Games
 
         void JustPose(PlayerActionEvent caller, float state)
         {
-            BeatAction.New(instance.gameObject, new List<BeatAction.Action>()
-            {
-                new BeatAction.Action(caller.timer + caller.startBeat + 1f, delegate
-                {
-                    player.EndPose();
-                })
-            });
             if (state >= 1f || state <= -1f)
             {
                 player.Pose(false);
@@ -294,13 +322,6 @@ namespace HeavenStudio.Games
 
         void JustPoseStars(PlayerActionEvent caller, float state)
         {
-            BeatAction.New(instance.gameObject, new List<BeatAction.Action>()
-            {
-                new BeatAction.Action(caller.timer + caller.startBeat + 1f, delegate
-                {
-                    player.EndPose();
-                })
-            });
             if (state >= 1f || state <= -1f)
             {
                 player.Pose(false);
