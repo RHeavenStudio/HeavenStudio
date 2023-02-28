@@ -51666,6 +51666,10 @@ PrefabInstance:
       propertyPath: m_Color.r
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 2118867689829179029, guid: 176d57f0d4cc86646bfa3a51ef39c0ea, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 2185270590987141631, guid: 176d57f0d4cc86646bfa3a51ef39c0ea, type: 3}
       propertyPath: m_Color.b
       value: 1
@@ -51764,7 +51768,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3365038656897785152, guid: 176d57f0d4cc86646bfa3a51ef39c0ea, type: 3}
       propertyPath: m_SortingOrder
-      value: 6
+      value: 7
       objectReference: {fileID: 0}
     - target: {fileID: 3957022972975976527, guid: 176d57f0d4cc86646bfa3a51ef39c0ea, type: 3}
       propertyPath: m_IsActive
@@ -51812,7 +51816,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5860178504139163501, guid: 176d57f0d4cc86646bfa3a51ef39c0ea, type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 5921634616820494687, guid: 176d57f0d4cc86646bfa3a51ef39c0ea, type: 3}
       propertyPath: m_Controller
