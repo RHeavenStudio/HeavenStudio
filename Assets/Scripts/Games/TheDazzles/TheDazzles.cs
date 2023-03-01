@@ -78,15 +78,6 @@ namespace HeavenStudio.Games.Loaders
                         new Param("toggle", true, "Stars", "Should stars appear when successfully posing?")
                     }
                 },
-                new GameAction("bop", "Bop")
-                {
-                    function = delegate { TheDazzles.instance.shouldBop = eventCaller.currentEntity["toggle"]; },
-                    defaultLength = 0.5f,
-                    parameters = new List<Param>()
-                    {
-                        new Param("toggle", true, "Should bop?", "Should the dazzles bop?")
-                    }
-                },
                 new GameAction("customPose", "Custom Pose")
                 {
                     preFunction = delegate { var e = eventCaller.currentEntity; TheDazzles.PrePose(e.beat, e.length, e["upLeft"], e["upMiddle"], e["upRight"], e["downLeft"], e["downMiddle"], e["player"], e["toggle"]); },
@@ -102,7 +93,22 @@ namespace HeavenStudio.Games.Loaders
                         new Param("player", new EntityTypes.Float(0, 30f, 2f), "Player Pose Beat", "How many beats after the event has started should the player pose?"),
                         new Param("toggle", false, "Stars", "Should stars appear when successfully posing?")
                     }
-                }
+                },
+                new GameAction("forceHold", "Force Hold")
+                {
+                    function = delegate { TheDazzles.instance.ForceHold(); },
+                    defaultLength = 0.5f
+                },
+                new GameAction("bop", "Bop")
+                {
+                    function = delegate { TheDazzles.instance.shouldBop = eventCaller.currentEntity["toggle"]; },
+                    defaultLength = 0.5f,
+                    parameters = new List<Param>()
+                    {
+                        new Param("toggle", true, "Should bop?", "Should the dazzles bop?")
+                    }
+                },
+
             });
         }
     }
@@ -182,6 +188,7 @@ namespace HeavenStudio.Games
         [Header("Variables")]
         bool canBop = true;
         bool doingPoses = false;
+        bool shouldHold = false;
         public bool shouldBop = false;
         public GameEvent bop = new GameEvent();
         static List<QueuedPose> queuedPoses = new List<QueuedPose>();
@@ -256,6 +263,24 @@ namespace HeavenStudio.Games
                     {
                         player.UnPrepare();
                     }
+                    shouldHold = false;
+                }
+                else if (!PlayerInput.Pressing() && !IsExpectingInputNow(InputType.STANDARD_UP) && shouldHold && !GameManager.instance.autoplay)
+                {
+                    if (doingPoses)
+                    {
+                        player.Pose(false);
+                        Jukebox.PlayOneShotGame("theDazzles/miss");
+                        foreach (var girl in npcGirls)
+                        {
+                            girl.Ouch();
+                        }
+                    }
+                    else
+                    {
+                        player.UnPrepare();
+                    }
+                    shouldHold = false;
                 }
             }
             else if (!cond.isPlaying && !cond.isPaused)
@@ -265,22 +290,19 @@ namespace HeavenStudio.Games
             }
         }
 
-        public static void PreCrouch(float beat, float length, int countInType)
+        public void ForceHold()
         {
-            if (GameManager.instance.currentGame == "theDazzles")
+            shouldHold = true;
+            foreach (var girl in npcGirls)
             {
-                instance.CrouchStretchable(beat, length, countInType);
+                girl.Prepare();
             }
-            else
-            {
-                queuedCrouches.Add(new QueuedCrouch { beat = beat, length = length, countInType = countInType });
-            }
+            player.Prepare();
         }
 
-        public void CrouchStretchable(float beat, float length, int countInType)
+        public static void PreCrouch(float beat, float length, int countInType)
         {
             float actualLength = length / 3;
-            ScheduleInput(beat, 2f * actualLength, InputType.STANDARD_DOWN, JustCrouch, Nothing, Nothing);
             int realCountInType = countInType;
             if (countInType == (int)CountInType.Random) realCountInType = UnityEngine.Random.Range(0, 2);
             List<MultiSound.Sound> soundsToPlay = new List<MultiSound.Sound>()
@@ -312,6 +334,20 @@ namespace HeavenStudio.Games
                     break;
             }
             MultiSound.Play(soundsToPlay.ToArray(), forcePlay: true);
+            if (GameManager.instance.currentGame == "theDazzles")
+            {
+                instance.CrouchStretchable(beat, length, countInType);
+            }
+            else
+            {
+                queuedCrouches.Add(new QueuedCrouch { beat = beat, length = length, countInType = countInType });
+            }
+        }
+
+        public void CrouchStretchable(float beat, float length, int countInType)
+        {
+            float actualLength = length / 3;
+            ScheduleInput(beat, 2f * actualLength, InputType.STANDARD_DOWN, JustCrouch, Nothing, Nothing);
 
             BeatAction.New(instance.gameObject, new List<BeatAction.Action>()
             {
@@ -467,6 +503,7 @@ namespace HeavenStudio.Games
 
         void JustPose(PlayerActionEvent caller, float state)
         {
+            shouldHold = false;
             Jukebox.PlayOneShotGame("theDazzles/pose");
             Jukebox.PlayOneShotGame("theDazzles/posePlayer");
             if (state >= 1f || state <= -1f)
@@ -479,6 +516,7 @@ namespace HeavenStudio.Games
 
         void JustPoseStars(PlayerActionEvent caller, float state)
         {
+            shouldHold = false;
             Jukebox.PlayOneShotGame("theDazzles/pose");
             Jukebox.PlayOneShotGame("theDazzles/posePlayer");
             if (state >= 1f || state <= -1f)
