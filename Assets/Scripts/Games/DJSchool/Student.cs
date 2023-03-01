@@ -90,8 +90,8 @@ namespace HeavenStudio.Games.Scripts_DJSchool
 
             Jukebox.PlayOneShotGame("djSchool/recordStop");
 
-            anim.Play("Hold", 0, 0);
-            tableAnim.Play("Student_Turntable_StartHold", 0, 0);
+            anim.DoScaledAnimationAsync("Hold", 0.5f);
+            tableAnim.DoScaledAnimationAsync("Student_Turntable_StartHold", 0.5f);
 
             if (soundFX)
             {
@@ -115,7 +115,7 @@ namespace HeavenStudio.Games.Scripts_DJSchool
 
             Jukebox.PlayOneShotGame("djSchool/recordStop");
 
-            anim.Play("Hold", 0, 0);
+            anim.DoScaledAnimationAsync("Hold", 0.5f);
             tableAnim.Play("Student_Turntable_StartHold", 0, 0);
         }
         #endregion
@@ -129,7 +129,7 @@ namespace HeavenStudio.Games.Scripts_DJSchool
         {
             isHolding = false;
 
-            anim.Play("Unhold", 0, 0);
+            anim.DoScaledAnimationAsync("Unhold", 0.5f);
             missed = true;
             mixer.audioMixer.FindSnapshot("Main").TransitionTo(.01f);
             tableAnim.Play("Student_Turntable_Idle", 0, 0);
@@ -156,7 +156,7 @@ namespace HeavenStudio.Games.Scripts_DJSchool
                 //anim.Play("Swipe", 0, 0);
 
                 tableAnim.speed = 1;
-                tableAnim.Play("Student_Turntable_Swipe", 0, 0);
+                tableAnim.DoScaledAnimationAsync("Student_Turntable_Swipe", 0,5f);
 
                 Instantiate(slamFX, this.transform.parent).SetActive(true);
                 mixer.audioMixer.FindSnapshot("Main").TransitionTo(.01f);
@@ -173,7 +173,7 @@ namespace HeavenStudio.Games.Scripts_DJSchool
                 //anim.Play("Swipe", 0, 0);
 
                 tableAnim.speed = 1;
-                tableAnim.Play("Student_Turntable_Swipe", 0, 0);
+                tableAnim.DoScaledAnimationAsync("Student_Turntable_Swipe", 0, 5f);
 
                 Instantiate(slamFX, this.transform.parent).SetActive(true);
                 mixer.audioMixer.FindSnapshot("Main").TransitionTo(.01f);

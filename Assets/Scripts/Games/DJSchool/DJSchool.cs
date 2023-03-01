@@ -102,6 +102,12 @@ namespace HeavenStudio.Games
             Yay
         }   
 
+        public enum DJYellowExpressions
+        {
+            Neutral = 0,
+
+        }
+
         [Header("Components")]
         [SerializeField] private Student student;
         [SerializeField] private GameObject djYellow;
@@ -115,6 +121,8 @@ namespace HeavenStudio.Games
         public bool goBop;
         public float beatOfInstance;
         private bool djYellowBopLeft;
+        [SerializeField] List<Sprite> djYellowHeadSprites = new List<Sprite>();
+        [SerializeField] SpriteRenderer djYellowHeadSrpite;
 
         public static DJSchool instance { get; private set; }
 
