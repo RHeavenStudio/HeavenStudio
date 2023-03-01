@@ -49,9 +49,12 @@ namespace HeavenStudio.Games.Scripts_TheDazzles
 
         public void Prepare(bool hit = true)
         {
-            holdEffectAnim.DoScaledAnimationAsync("HoldBox", 0.25f);
-            blackFlash.SetActive(true);
-            lightingAnim.Play("Dark", 0, 0);
+            if (hit)
+            {
+                holdEffectAnim.DoScaledAnimationAsync("HoldBox", 0.25f);
+                blackFlash.SetActive(true);
+                lightingAnim.Play("Dark", 0, 0);
+            }
             holding = true;
             hasOuched = false;
             if (preparingPose)

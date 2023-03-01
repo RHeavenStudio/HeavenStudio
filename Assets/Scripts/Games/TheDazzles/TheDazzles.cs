@@ -247,6 +247,10 @@ namespace HeavenStudio.Games
                 {
                     player.Prepare(false);
                     Jukebox.PlayOneShotGame("theDazzles/miss");
+                    foreach (var girl in npcGirls)
+                    {
+                        if (girl.currentEmotion != TheDazzlesGirl.Emotion.Ouch) girl.currentEmotion = TheDazzlesGirl.Emotion.Angry;
+                    }
                 }
                 if (PlayerInput.PressedUp() && !IsExpectingInputNow(InputType.STANDARD_UP))
                 {
@@ -463,9 +467,12 @@ namespace HeavenStudio.Games
                     npcGirls[index].Pose();
                 }));
             }
-            posesToDo.Add(new BeatAction.Action(beat + length, delegate
+            posesToDo.Add(new BeatAction.Action(beat + playerBeat, delegate
             {
                 doingPoses = false;
+            }));
+            posesToDo.Add(new BeatAction.Action(beat + length, delegate
+            {
                 foreach (var girl in npcGirls)
                 {
                     girl.EndPose();
