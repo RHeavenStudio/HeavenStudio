@@ -26,6 +26,7 @@ namespace HeavenStudio.Games.Scripts_TheDazzles
         public bool canBop = true;
         bool holding = false;
         bool preparingPose = false;
+        public bool hasOuched;
         public Emotion currentEmotion;
         Animator anim;
         [SerializeField] Animator holdEffectAnim;
@@ -49,16 +50,20 @@ namespace HeavenStudio.Games.Scripts_TheDazzles
             holdEffectAnim.DoScaledAnimationAsync("HoldBox", 0.25f);
             blackFlash.SetActive(true);
             holding = true;
-            if (preparingPose) return;
+            hasOuched = false;
+            if (preparingPose)
+            {
+                Hold();
+                return;
+            }
             anim.Play("Prepare", 0, 0);
         }
 
         public void StartReleaseBox(float beat)
         {
-            if (!holding) return;
             BeatAction.New(game.gameObject, new List<BeatAction.Action>()
             {
-                new BeatAction.Action(beat - 1f, delegate { holdEffectAnim.DoScaledAnimationAsync("ReleaseBox", 0.25f); })
+                new BeatAction.Action(beat - 1f, delegate {if (holding) holdEffectAnim.DoScaledAnimationAsync("ReleaseBox", 0.25f);})
             });
         }
 
@@ -67,11 +72,13 @@ namespace HeavenStudio.Games.Scripts_TheDazzles
             if (hit)
             {
                 anim.DoScaledAnimationAsync("Pose", 0.5f);
+                hasOuched = false;
             }
             else
             {
                 anim.DoScaledAnimationAsync("MissPose", 0.5f);
                 currentEmotion = Emotion.Ouch;
+                hasOuched = true;
             }
             holdEffectAnim.Play("HoldNothing", 0, 0);
             holding = false;
@@ -81,26 +88,28 @@ namespace HeavenStudio.Games.Scripts_TheDazzles
 
         public void EndPose()
         {
-            if (holding) return;
+            if (holding || hasOuched) return;
             anim.DoScaledAnimationAsync("EndPose", 0.5f);
         }
 
         public void Hold()
         {
+            preparingPose = true;
             if (!holding) return;
             anim.DoScaledAnimationAsync("Hold", 0.5f);
-            preparingPose = true;
         }
 
         public void Ouch()
         {
             anim.DoScaledAnimationAsync("Ouch", 0.5f);
             currentEmotion = Emotion.Ouch;
+            hasOuched = true;
         }
 
         public void UnPrepare()
         {
             game.ScoreMiss(1f);
+            holdEffectAnim.Play("HoldNothing", 0, 0);
             canBop = true;
             if (preparingPose)
             {
@@ -112,6 +121,7 @@ namespace HeavenStudio.Games.Scripts_TheDazzles
             }
             holding = false;
             preparingPose = false;
+            hasOuched = true;
             blackFlash.SetActive(false);
         }
 

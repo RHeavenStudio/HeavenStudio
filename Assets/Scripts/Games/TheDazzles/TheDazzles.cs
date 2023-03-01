@@ -25,7 +25,7 @@ namespace HeavenStudio.Games.Loaders
                 },
                 new GameAction("crouchStretch", "Crouch (Stretchable)")
                 {
-                    function = delegate { var e = eventCaller.currentEntity; TheDazzles.instance.CrouchStretchable(e.beat, e.length, e["countIn"]); },
+                    preFunction = delegate { var e = eventCaller.currentEntity; TheDazzles.PreCrouch(e.beat, e.length, e["countIn"]); },
                     defaultLength = 3f,
                     resizable = true,
                     parameters = new List<Param>()
@@ -436,7 +436,7 @@ namespace HeavenStudio.Games
                 }
                 player.EndPose();
             }));
-            posesToDo.Add(new BeatAction.Action(beat + length + 0.5f, delegate
+            posesToDo.Add(new BeatAction.Action(beat + length + 0.1f, delegate
             {
                 foreach (var girl in npcGirls)
                 {
@@ -452,6 +452,8 @@ namespace HeavenStudio.Games
             player.canBop = false;
             if (state >= 1f || state <= -1f)
             {
+                player.Prepare();
+                Jukebox.PlayOneShotGame("theDazzles/crouch");
                 return;
             }
             SuccessCrouch();
@@ -508,8 +510,9 @@ namespace HeavenStudio.Games
         {
             foreach (var girl in npcGirls)
             {
-                girl.currentEmotion = TheDazzlesGirl.Emotion.Angry;
+                if (girl.currentEmotion != TheDazzlesGirl.Emotion.Ouch) girl.currentEmotion = TheDazzlesGirl.Emotion.Angry;
             }
+            player.hasOuched = true;
         }
 
         void Nothing(PlayerActionEvent caller) { }
