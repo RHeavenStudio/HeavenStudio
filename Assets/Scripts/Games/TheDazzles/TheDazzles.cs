@@ -181,7 +181,8 @@ namespace HeavenStudio.Games
         {
             DS = 0,
             Megamix = 1,
-            Random = 2
+            None = 2,
+            Random = 3,
         }
         public static TheDazzles instance;
 
@@ -308,10 +309,12 @@ namespace HeavenStudio.Games
         {
             float actualLength = length / 3;
             int realCountInType = countInType;
-            if (countInType == (int)CountInType.Random) realCountInType = UnityEngine.Random.Range(0, 2);
+            if (countInType == (int)CountInType.Random) realCountInType = UnityEngine.Random.Range(0, 3);
             List<MultiSound.Sound> soundsToPlay = new List<MultiSound.Sound>()
             {
-                new MultiSound.Sound("theDazzles/hold1", beat + 2f * actualLength, 1, 1, false, 0.019f),
+                new MultiSound.Sound("theDazzles/crouch", beat + 2f * actualLength),
+                new MultiSound.Sound("theDazzles/crouch", beat),
+                new MultiSound.Sound("theDazzles/crouch", beat + 1f * actualLength),
             };
             switch (realCountInType)
             {
@@ -320,6 +323,7 @@ namespace HeavenStudio.Games
                     {
                         new MultiSound.Sound("theDazzles/holdDS3", beat, 1, 0.75f, false, 0.212f),
                         new MultiSound.Sound("theDazzles/holdDS2", beat + 1f * actualLength, 1, 0.75f, false, 0.242f),
+                        new MultiSound.Sound("theDazzles/hold1", beat + 2f * actualLength, 1, 1, false, 0.019f),
                     });
                     break;
                 case (int)CountInType.Megamix:
@@ -327,14 +331,10 @@ namespace HeavenStudio.Games
                     {
                         new MultiSound.Sound("theDazzles/hold3", beat, 1, 1, false, 0.267f),
                         new MultiSound.Sound("theDazzles/hold2", beat + 1f * actualLength, 1, 1, false, 0.266f),
+                        new MultiSound.Sound("theDazzles/hold1", beat + 2f * actualLength, 1, 1, false, 0.019f),
                     });
                     break;
                 default:
-                    soundsToPlay.AddRange(new List<MultiSound.Sound>()
-                    {
-                        new MultiSound.Sound("theDazzles/holdDS3", beat, 1, 0.75f, false, 0.212f),
-                        new MultiSound.Sound("theDazzles/holdDS2", beat + 1f * actualLength, 1, 0.75f, false, 0.242f),
-                    });
                     break;
             }
             MultiSound.Play(soundsToPlay.ToArray(), forcePlay: true);
@@ -496,7 +496,6 @@ namespace HeavenStudio.Games
             if (state >= 1f || state <= -1f)
             {
                 player.Prepare();
-                Jukebox.PlayOneShotGame("theDazzles/crouch");
                 return;
             }
             SuccessCrouch();
@@ -505,7 +504,6 @@ namespace HeavenStudio.Games
         void SuccessCrouch()
         {
             player.Prepare();
-            Jukebox.PlayOneShotGame("theDazzles/crouch");
         }
 
         void JustPose(PlayerActionEvent caller, float state)
