@@ -181,6 +181,7 @@ namespace HeavenStudio.Games
 
         [Header("Variables")]
         bool canBop = true;
+        bool doingPoses = false;
         public bool shouldBop = false;
         public GameEvent bop = new GameEvent();
         static List<QueuedPose> queuedPoses = new List<QueuedPose>();
@@ -242,11 +243,18 @@ namespace HeavenStudio.Games
                 }
                 if (PlayerInput.PressedUp() && !IsExpectingInputNow(InputType.STANDARD_UP))
                 {
-                    player.Pose(false);
-                    Jukebox.PlayOneShotGame("theDazzles/miss");
-                    foreach (var girl in npcGirls)
+                    if (doingPoses)
                     {
-                        girl.Ouch();
+                        player.Pose(false);
+                        Jukebox.PlayOneShotGame("theDazzles/miss");
+                        foreach (var girl in npcGirls)
+                        {
+                            girl.Ouch();
+                        }
+                    }
+                    else
+                    {
+                        player.UnPrepare();
                     }
                 }
             }
@@ -405,6 +413,10 @@ namespace HeavenStudio.Games
                     player.canBop = false;
                     player.Hold();
                 }),
+                new BeatAction.Action(beat, delegate
+                {
+                    doingPoses = true;
+                }),
 
             };
             for (int i = 0; i < posesToPerform.Count; i++)
@@ -417,6 +429,7 @@ namespace HeavenStudio.Games
             }
             posesToDo.Add(new BeatAction.Action(beat + length, delegate
             {
+                doingPoses = false;
                 foreach (var girl in npcGirls)
                 {
                     girl.EndPose();
