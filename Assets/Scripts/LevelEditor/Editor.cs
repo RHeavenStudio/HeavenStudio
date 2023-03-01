@@ -49,6 +49,7 @@ namespace HeavenStudio.Editor
         [SerializeField] private Button NewBTN;
         [SerializeField] private Button OpenBTN;
         [SerializeField] private Button SaveBTN;
+        [SerializeField] private Button ExportBTN;
         [SerializeField] private Button UndoBTN;
         [SerializeField] private Button RedoBTN;
         [SerializeField] private Button MusicSelectBTN;
@@ -109,6 +110,7 @@ namespace HeavenStudio.Editor
             Tooltip.AddTooltip(NewBTN.gameObject, "New <color=#adadad>[Ctrl+N]</color>");
             Tooltip.AddTooltip(OpenBTN.gameObject, "Open <color=#adadad>[Ctrl+O]</color>");
             Tooltip.AddTooltip(SaveBTN.gameObject, "Save Project <color=#adadad>[Ctrl+S]</color>\nSave Project As <color=#adadad>[Ctrl+Alt+S]</color>");
+            Tooltip.AddTooltip(ExportBTN.gameObject, "Export Video");
             Tooltip.AddTooltip(UndoBTN.gameObject, "Undo <color=#adadad>[Ctrl+Z]</color>");
             Tooltip.AddTooltip(RedoBTN.gameObject, "Redo <color=#adadad>[Ctrl+Y or Ctrl+Shift+Z]</color>");
             Tooltip.AddTooltip(MusicSelectBTN.gameObject, "Music Select");

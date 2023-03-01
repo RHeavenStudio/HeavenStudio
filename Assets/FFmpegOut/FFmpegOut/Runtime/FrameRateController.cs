@@ -9,7 +9,7 @@ namespace FFmpegOut
     [AddComponentMenu("FFmpegOut/Frame Rate Controller")]
     public sealed class FrameRateController : MonoBehaviour
     {
-        [SerializeField] float _frameRate = 60;
+        [SerializeField] public float _frameRate = 60;
         [SerializeField] bool _offlineMode = true;
 
         int _originalFrameRate;

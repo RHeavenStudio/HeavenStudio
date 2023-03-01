@@ -72,6 +72,7 @@ namespace HeavenStudio.Editor.VideoExport
 
         private float startExportTime => exportRangeSlider.LowValue;
         private float endExportTime => exportRangeSlider.HighValue;
+        private float startExportTimeInBeats = 0f;
         private DynamicBeatmap.DynamicEntity endEvent;
 
         private bool isExporting;
@@ -132,10 +133,17 @@ namespace HeavenStudio.Editor.VideoExport
                 extensionFilter
             };
 
-            StandaloneFileBrowser.SaveFilePanelAsync("Export Video As", "", "rhexport", extensions, (string path) =>
+            StandaloneFileBrowser.SaveFilePanelAsync("Export Video As", "", "hsexport", extensions, (string path) =>
             {
                 if (path != string.Empty)
                 {
+                    startExportTimeInBeats = (float)Conductor.instance.GetBeatFromSongPos(startExportTimeInBeats);
+
+                    // BIG CAMERA BUG DISCOVERY by zeo
+                    // something when adding the CameraCapture attribute changes
+                    // the rendertexture of the default Camera attribute, resulting in
+                    // fullscreening when exporting. Gotta fix that!
+                    // Date: 2/28/23 10:15:52 PM
                     gameCameraCapture = GameCamera.instance.gameObject.AddComponent<CameraCapture>();
                     gameCameraCapture.outputDir = path;
                     gameCameraCapture.preset = ExportFormatToPreset(format);
@@ -145,8 +153,9 @@ namespace HeavenStudio.Editor.VideoExport
                     gameCameraCapture.OnCreateTexture += delegate { exportPreview.texture = GameCamera.instance.camera.activeTexture; };
 
                     frameRateController = GameCamera.instance.gameObject.AddComponent<FrameRateController>();
+                    frameRateController._frameRate = fps;
 
-                    GameManager.instance.Play(startExportTime, false);
+                    GameManager.instance.Play(startExportTimeInBeats, false);
                     isExporting = true;
                     GameManager.instance.SortEventsList();
                     Conductor.instance.isPlaying = true;
