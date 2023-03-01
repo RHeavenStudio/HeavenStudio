@@ -105,7 +105,7 @@ namespace HeavenStudio.Games.Loaders
                     defaultLength = 0.5f,
                     parameters = new List<Param>()
                     {
-                        new Param("toggle", true, "Should bop?", "Should the dazzles bop?")
+                        new Param("toggle", false, "Should bop?", "Should the dazzles bop?")
                     }
                 },
 
@@ -189,7 +189,7 @@ namespace HeavenStudio.Games
         bool canBop = true;
         bool doingPoses = false;
         bool shouldHold = false;
-        public bool shouldBop = false;
+        public bool shouldBop = true;
         public GameEvent bop = new GameEvent();
         static List<QueuedPose> queuedPoses = new List<QueuedPose>();
         static List<QueuedCrouch> queuedCrouches = new List<QueuedCrouch>();
