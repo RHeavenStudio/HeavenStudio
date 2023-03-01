@@ -13,12 +13,6 @@ namespace HeavenStudio.Games.Scripts_CheerReaders
         bool bookIsOpen;
         bool noBop;
         CheerReaders game;
-        [SerializeField] SpriteRenderer bookLeft;
-        [SerializeField] SpriteRenderer bookRight;
-        [SerializeField] List<Sprite> bookLeftSprites = new List<Sprite>();
-        [SerializeField] List<Sprite> bookRightSprites = new List<Sprite>();
-        [SerializeField] List<Sprite> bookLeftMissSprites = new List<Sprite>();
-        [SerializeField] List<Sprite> bookRightMissSprites = new List<Sprite>();
 
         void Awake()
         {
@@ -29,20 +23,6 @@ namespace HeavenStudio.Games.Scripts_CheerReaders
         public void ResetPose()
         {
             BaseAnim.Play(bookIsWhite ? "WhiteIdle" : "BlackIdle", 0, 0);
-        }
-
-        public void SetBookSprites(int whichSprite, bool hit)
-        {
-            if (hit)
-            {
-                bookLeft.sprite = bookLeftSprites[whichSprite];
-                bookRight.sprite = bookRightSprites[whichSprite];
-            }
-            else
-            {
-                bookLeft.sprite = bookLeftMissSprites[whichSprite];
-                bookRight.sprite = bookRightMissSprites[whichSprite];
-            }
         }
 
         public void OneTwoThree(int count)
