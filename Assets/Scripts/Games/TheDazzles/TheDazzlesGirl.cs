@@ -29,9 +29,11 @@ namespace HeavenStudio.Games.Scripts_TheDazzles
         public bool hasOuched;
         public Emotion currentEmotion;
         Animator anim;
+        [SerializeField] Animator lightingAnim;
         [SerializeField] Animator holdEffectAnim;
         [SerializeField] SpriteRenderer headSprite;
         [SerializeField] GameObject blackFlash;
+        [SerializeField] List<SpriteRenderer> bodyParts = new List<SpriteRenderer>();
         TheDazzles game;
 
         void Awake()
@@ -49,6 +51,7 @@ namespace HeavenStudio.Games.Scripts_TheDazzles
         {
             holdEffectAnim.DoScaledAnimationAsync("HoldBox", 0.25f);
             blackFlash.SetActive(true);
+            lightingAnim.Play("Dark", 0, 0);
             holding = true;
             hasOuched = false;
             if (preparingPose)
@@ -72,11 +75,13 @@ namespace HeavenStudio.Games.Scripts_TheDazzles
             if (hit)
             {
                 anim.DoScaledAnimationAsync("Pose", 0.5f);
+                lightingAnim.DoScaledAnimationAsync("PoseFlash", 0.5f);
                 hasOuched = false;
             }
             else
             {
                 anim.DoScaledAnimationAsync("MissPose", 0.5f);
+                lightingAnim.DoScaledAnimationAsync("MissFlash", 0.5f);
                 currentEmotion = Emotion.Ouch;
                 hasOuched = true;
             }
@@ -123,6 +128,7 @@ namespace HeavenStudio.Games.Scripts_TheDazzles
             preparingPose = false;
             hasOuched = true;
             blackFlash.SetActive(false);
+            lightingAnim.Play("Lit", 0, 0);
         }
 
         public void Bop()

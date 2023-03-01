@@ -720,10 +720,12 @@ MonoBehaviour:
   - {fileID: -5798462074873823464, guid: d7a4faf5e7602d44cb54b57cf0237290, type: 3}
   - {fileID: -257369064684966836, guid: d7a4faf5e7602d44cb54b57cf0237290, type: 3}
   canBop: 1
+  hasOuched: 0
   currentEmotion: 0
   holdEffectAnim: {fileID: 5921634616820494687}
   headSprite: {fileID: 3252389296035035734}
   blackFlash: {fileID: 6420980031434469660}
+  bodyParts: []
 --- !u!95 &7783616805209079565
 Animator:
   serializedVersion: 3
@@ -948,7 +950,7 @@ SpriteRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 14
+  m_SortingOrder: -5
   m_Sprite: {fileID: 843743396000654887, guid: d7a4faf5e7602d44cb54b57cf0237290, type: 3}
   m_Color: {r: 0, g: 0, b: 0, a: 0.74509805}
   m_FlipX: 0
