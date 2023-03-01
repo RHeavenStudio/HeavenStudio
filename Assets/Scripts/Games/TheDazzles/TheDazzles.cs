@@ -181,8 +181,7 @@ namespace HeavenStudio.Games
         {
             DS = 0,
             Megamix = 1,
-            None = 2,
-            Random = 3,
+            Random = 2,
         }
         public static TheDazzles instance;
 
@@ -190,6 +189,7 @@ namespace HeavenStudio.Games
         bool canBop = true;
         bool doingPoses = false;
         bool shouldHold = false;
+        float crouchEndBeat;
         public bool shouldBop = true;
         public GameEvent bop = new GameEvent();
         static List<QueuedPose> queuedPoses = new List<QueuedPose>();
@@ -309,13 +309,8 @@ namespace HeavenStudio.Games
         {
             float actualLength = length / 3;
             int realCountInType = countInType;
-            if (countInType == (int)CountInType.Random) realCountInType = UnityEngine.Random.Range(0, 3);
-            List<MultiSound.Sound> soundsToPlay = new List<MultiSound.Sound>()
-            {
-                new MultiSound.Sound("theDazzles/crouch", beat + 2f * actualLength),
-                new MultiSound.Sound("theDazzles/crouch", beat),
-                new MultiSound.Sound("theDazzles/crouch", beat + 1f * actualLength),
-            };
+            if (countInType == (int)CountInType.Random) realCountInType = UnityEngine.Random.Range(0, 2);
+            List<MultiSound.Sound> soundsToPlay = new List<MultiSound.Sound>();
             switch (realCountInType)
             {
                 case (int)CountInType.DS:
@@ -351,6 +346,7 @@ namespace HeavenStudio.Games
         public void CrouchStretchable(float beat, float length, int countInType)
         {
             float actualLength = length / 3;
+            crouchEndBeat = beat + length;
             ScheduleInput(beat, 2f * actualLength, InputType.STANDARD_DOWN, JustCrouch, Nothing, Nothing);
 
             BeatAction.New(instance.gameObject, new List<BeatAction.Action>()
@@ -400,6 +396,15 @@ namespace HeavenStudio.Games
             {
                 ScheduleInput(beat, playerBeat, InputType.STANDARD_UP, JustPose, MissPose, Nothing);
             }
+            float crouchBeat = beat - 1f;
+            if (crouchBeat < crouchEndBeat) 
+            { 
+                crouchBeat = crouchEndBeat - 1f;
+            }
+            MultiSound.Play(new MultiSound.Sound[]
+            {
+                new MultiSound.Sound("theDazzles/crouch", crouchBeat),
+            }, forcePlay: true);
             List<float> soundBeats = new List<float>()
             {
                 upLeftBeat,
