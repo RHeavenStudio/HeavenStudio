@@ -102,12 +102,6 @@ namespace HeavenStudio.Games
             Yay
         }   
 
-        public enum DJYellowExpressions
-        {
-            Neutral = 0,
-
-        }
-
         [Header("Components")]
         [SerializeField] private Student student;
         [SerializeField] private GameObject djYellow;
