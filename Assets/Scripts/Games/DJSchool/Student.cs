@@ -80,6 +80,22 @@ namespace HeavenStudio.Games.Scripts_DJSchool
         //}
         #endregion
 
+        public void ForceHold()
+        {
+            isHolding = true;
+
+            missed = false;
+            shouldBeHolding = true;
+
+            anim.Play("Hold", -1, 1);
+            tableAnim.DoScaledAnimationAsync("Student_Turntable_Hold", 0.5f);
+
+            if (soundFX)
+            {
+                mixer.audioMixer.FindSnapshot("DJSchool_Hold").TransitionTo(.01f);
+            }
+        }
+
         #region onHold
         public void OnHitHold(PlayerActionEvent caller, float beat)
         {
@@ -140,6 +156,7 @@ namespace HeavenStudio.Games.Scripts_DJSchool
         #region onSwipe
         public void OnHitSwipe(PlayerActionEvent caller, float beat)
         {
+            game.shouldBeHolding = false;
             if (!missed)
             {
                 isHolding = false;

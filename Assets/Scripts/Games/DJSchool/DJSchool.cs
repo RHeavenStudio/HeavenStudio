@@ -70,6 +70,11 @@ namespace HeavenStudio.Games.Loaders
                     {
                         new Param("toggle", false, "Radio FX", "Toggle on and off for Radio Effects")
                     }
+                },
+                new GameAction("forceHold", "Force Hold")
+                {
+                    function = delegate {DJSchool.instance.ForceHold(); },
+                    defaultLength = 0.5f
                 }
             },
             new List<string>() {"ntr", "normal"},
@@ -116,6 +121,7 @@ namespace HeavenStudio.Games
         public bool goBop;
         public float beatOfInstance;
         private bool djYellowBopLeft;
+        public bool shouldBeHolding = false;
 
         public static DJSchool instance { get; private set; }
 
@@ -246,6 +252,12 @@ namespace HeavenStudio.Games
             else if(PlayerInput.PressedUp() && !IsExpectingInputNow() && student.isHolding) //Let go during hold
             {
                 student.UnHold();
+                shouldBeHolding = false;
+            }
+            else if (!GameManager.instance.autoplay && shouldBeHolding && !PlayerInput.Pressing() && !IsExpectingInputNow(InputType.STANDARD_UP))
+            {
+                student.UnHold();
+                shouldBeHolding = false;
             }
             //else if(PlayerInput.PressedUp() && !IsExpectingInputNow() && !student.isHolding)
             //{
@@ -258,6 +270,15 @@ namespace HeavenStudio.Games
         //    bop.startBeat = beat;
         //    bop.length = length;
         //}
+
+        public void ForceHold()
+        {
+            student.ForceHold();
+            djYellow.GetComponent<Animator>().Play("Hold", -1, 1);
+            djYellowScript.ChangeHeadSprite(DJYellow.DJExpression.Focused);
+            djYellowHolding = true;
+            shouldBeHolding = true;
+        }
 
         public void Bop(bool isBopping)
         {
@@ -308,11 +329,11 @@ namespace HeavenStudio.Games
 
             BeatAction.New(djYellow, new List<BeatAction.Action>()
             {
-                new BeatAction.Action(beat, delegate { djYellow.GetComponent<Animator>().Play("BreakCmon", 0, 0); }),
-                new BeatAction.Action(beat + 1f, delegate { djYellow.GetComponent<Animator>().Play("BreakCmon", 0, 0); }),
+                new BeatAction.Action(beat, delegate { djYellow.GetComponent<Animator>().DoScaledAnimationAsync("BreakCmon", 0.5f); }),
+                new BeatAction.Action(beat + 1f, delegate { djYellow.GetComponent<Animator>().DoScaledAnimationAsync("BreakCmon", 0.5f); }),
                 new BeatAction.Action(beat + 2f, delegate 
                 { 
-                    djYellow.GetComponent<Animator>().Play("Hold", 0, 0); 
+                    djYellow.GetComponent<Animator>().DoScaledAnimationAsync("Hold", 0.5f); 
                     djYellowHolding = true;
                 }),
             });
@@ -343,7 +364,7 @@ namespace HeavenStudio.Games
 
             BeatAction.New(djYellow, new List<BeatAction.Action>()
             {
-                new BeatAction.Action(beat + 0.5f, delegate { djYellow.GetComponent<Animator>().Play("BreakCmon", 0, 0); }),
+                new BeatAction.Action(beat + 0.5f, delegate { djYellow.GetComponent<Animator>().DoScaledAnimationAsync("BreakCmon", 0.5f); }),
                 new BeatAction.Action(beat + 1.5f, delegate
                 {
                     djYellow.GetComponent<Animator>().Play("Hold", 0, 0);
@@ -401,12 +422,12 @@ namespace HeavenStudio.Games
 
             BeatAction.New(djYellow, new List<BeatAction.Action>()
             {
-                new BeatAction.Action(beat, delegate { djYellow.GetComponent<Animator>().Play("Scratcho", 0, 0); }),
-                new BeatAction.Action(beat + .5f, delegate { djYellow.GetComponent<Animator>().Play("Scratcho2", 0, 0); }),
-                new BeatAction.Action(beat + 1f, delegate { djYellow.GetComponent<Animator>().Play("Scratcho", 0, 0); }),
+                new BeatAction.Action(beat, delegate { djYellow.GetComponent<Animator>().DoScaledAnimationAsync("Scratcho", 0.5f); }),
+                new BeatAction.Action(beat + .5f, delegate { djYellow.GetComponent<Animator>().DoScaledAnimationAsync("Scratcho2", 0.5f); }),
+                new BeatAction.Action(beat + 1f, delegate { djYellow.GetComponent<Animator>().DoScaledAnimationAsync("Scratcho", 0.5f); }),
                 new BeatAction.Action(beat + beatOffset2, delegate
                 {
-                    djYellow.GetComponent<Animator>().Play("Hey", 0, 0);
+                    djYellow.GetComponent<Animator>().DoScaledAnimationAsync("Hey", 0.5f);
                     djYellowHolding = false;
                 }),
             });
