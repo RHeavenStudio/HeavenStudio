@@ -46,6 +46,7 @@ namespace HeavenStudio.Games.Scripts_CheerReaders
         public void Yay()
         {
             faceAnim.DoScaledAnimationAsync("FaceYay", 0.5f);
+            BaseAnim.DoScaledAnimationAsync(bookIsWhite ? "WhiteYay" : "BlackYay", 0.5f);
         }
 
         public void ResetPose()
