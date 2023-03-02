@@ -135,6 +135,11 @@ namespace HeavenStudio.Games
         [SerializeField] List<RvlCharacter> secondRow = new List<RvlCharacter>();
         [SerializeField] List<RvlCharacter> thirdRow = new List<RvlCharacter>();
         List<RvlCharacter> allGirls = new List<RvlCharacter>();
+        [SerializeField] List<GameObject> topMasks = new List<GameObject>();
+        [SerializeField] List<GameObject> middleMasks = new List<GameObject>();
+        [SerializeField] List<GameObject> bottomMasks = new List<GameObject>();
+        [SerializeField] GameObject playerMask;
+        [SerializeField] GameObject missPoster;
 
         [SerializeField] RvlCharacter player;
         Sound SpinningLoop;
@@ -264,6 +269,7 @@ namespace HeavenStudio.Games
                 if (PlayerInput.Pressed() && !IsExpectingInputNow(InputType.STANDARD_DOWN))
                 {
                     player.FlipBook(false);
+                    playerMask.SetActive(false);
                     Jukebox.PlayOneShotGame("cheerReaders/miss");
                     ScoreMiss(1f);
                 }
@@ -271,6 +277,7 @@ namespace HeavenStudio.Games
                 {
                     Jukebox.PlayOneShotGame("cheerReaders/doingoing");
                     player.StartSpinBook();
+                    playerMask.SetActive(false);
                     SpinningLoop = Jukebox.PlayOneShotGame("cheerReaders/bookSpinLoop", -1, 1, 1, true);
                     ScoreMiss(1f);
                 }
@@ -280,6 +287,8 @@ namespace HeavenStudio.Games
                     player.StopSpinBook();
                     Jukebox.KillLoop(SpinningLoop, 0f);
                     ScoreMiss(1f);
+                    playerMask.SetActive(true);
+                    missPoster.SetActive(true);
                 }
                 float normalizedBeat = cond.GetPositionFromBeat(cueBeat, cueLength);
                 if (normalizedBeat >= 0)
@@ -308,6 +317,19 @@ namespace HeavenStudio.Games
             {
                 nerd.ResetPose();
             }
+            foreach (var mask in topMasks)
+            {
+                mask.SetActive(false);
+            }
+            foreach (var mask in middleMasks)
+            {
+                mask.SetActive(false);
+            }
+            foreach (var mask in bottomMasks)
+            {
+                mask.SetActive(false);
+            }
+            playerMask.SetActive(false);
         }
 
         void UpdateCameraZoom()
@@ -391,6 +413,10 @@ namespace HeavenStudio.Games
                     {
                         nerd.FlipBook();
                     }
+                    foreach (var mask in topMasks)
+                    {
+                        mask.SetActive(false);
+                    }
                     switch (whoSpeaks)
                     {
                         case (int)WhoSpeaks.Solo:
@@ -417,6 +443,10 @@ namespace HeavenStudio.Games
                     {
                         nerd.FlipBook();
                     }
+                    foreach (var mask in middleMasks)
+                    {
+                        mask.SetActive(false);
+                    }
                     switch (whoSpeaks)
                     {
                         case (int)WhoSpeaks.Solo:
@@ -442,6 +472,10 @@ namespace HeavenStudio.Games
                     foreach (var nerd in thirdRow)
                     {
                         nerd.FlipBook();
+                    }
+                    foreach (var mask in bottomMasks)
+                    {
+                        mask.SetActive(false);
                     }
                     switch (whoSpeaks)
                     {
@@ -527,6 +561,9 @@ namespace HeavenStudio.Games
                     firstRow[0].FlipBook();
                     secondRow[0].FlipBook();
                     thirdRow[0].FlipBook();
+                    topMasks[0].SetActive(false);
+                    middleMasks[0].SetActive(false);
+                    bottomMasks[0].SetActive(false);
                     switch (whoSpeaks)
                     {
                         case (int)WhoSpeaks.Solo:
@@ -552,6 +589,9 @@ namespace HeavenStudio.Games
                     firstRow[1].FlipBook();
                     secondRow[1].FlipBook();
                     thirdRow[1].FlipBook();
+                    topMasks[1].SetActive(false);
+                    middleMasks[1].SetActive(false);
+                    bottomMasks[1].SetActive(false);
                     switch (whoSpeaks)
                     {
                         case (int)WhoSpeaks.Solo:
@@ -577,6 +617,9 @@ namespace HeavenStudio.Games
                     firstRow[2].FlipBook();
                     secondRow[2].FlipBook();
                     thirdRow[2].FlipBook();
+                    topMasks[2].SetActive(false);
+                    middleMasks[2].SetActive(false);
+                    bottomMasks[2].SetActive(false);
                     switch (whoSpeaks)
                     {
                         case (int)WhoSpeaks.Solo:
@@ -601,6 +644,8 @@ namespace HeavenStudio.Games
                 {
                     firstRow[3].FlipBook();
                     secondRow[3].FlipBook();
+                    topMasks[3].SetActive(false);
+                    middleMasks[3].SetActive(false);
                     switch (whoSpeaks)
                     {
                         case (int)WhoSpeaks.Solo:
@@ -701,28 +746,39 @@ namespace HeavenStudio.Games
                 new BeatAction.Action(beat + 0.75f, delegate
                 {
                     firstRow[0].FlipBook();
+                    topMasks[0].SetActive(false);
                 }),
                 new BeatAction.Action(beat + 1f, delegate
                 {
                     firstRow[1].FlipBook();
                     secondRow[0].FlipBook();
+                    topMasks[1].SetActive(false);
+                    middleMasks[0].SetActive(false);
                 }),
                 new BeatAction.Action(beat + 1.25f, delegate
                 {
                     firstRow[2].FlipBook();
                     secondRow[1].FlipBook();
                     thirdRow[0].FlipBook();
+                    topMasks[2].SetActive(false);
+                    middleMasks[1].SetActive(false);
+                    bottomMasks[0].SetActive(false);
                 }),
                 new BeatAction.Action(beat + 1.5f, delegate
                 {
                     firstRow[3].FlipBook();
                     secondRow[2].FlipBook();
                     thirdRow[1].FlipBook();
+                    topMasks[3].SetActive(false);
+                    middleMasks[2].SetActive(false);
+                    bottomMasks[1].SetActive(false);
                 }),
                 new BeatAction.Action(beat + 1.75f, delegate
                 {
                     secondRow[3].FlipBook();
                     thirdRow[2].FlipBook();
+                    middleMasks[3].SetActive(false);
+                    bottomMasks[2].SetActive(false);
                 }),
                 new BeatAction.Action(beat + 2.99f, delegate
                 {
@@ -794,28 +850,39 @@ namespace HeavenStudio.Games
                 new BeatAction.Action(beat, delegate
                 {
                     firstRow[0].FlipBook();
+                    topMasks[0].SetActive(false);
                 }),
                 new BeatAction.Action(beat + 0.5f, delegate
                 {
                     firstRow[1].FlipBook();
                     secondRow[0].FlipBook();
+                    topMasks[1].SetActive(false);
+                    middleMasks[0].SetActive(false);
                 }),
                 new BeatAction.Action(beat + 1f, delegate
                 {
                     firstRow[2].FlipBook();
                     secondRow[1].FlipBook();
                     thirdRow[0].FlipBook();
+                    topMasks[2].SetActive(false);
+                    middleMasks[1].SetActive(false);
+                    bottomMasks[0].SetActive(false);
                 }),
                 new BeatAction.Action(beat + 1.5f, delegate
                 {
                     firstRow[3].FlipBook();
                     secondRow[2].FlipBook();
                     thirdRow[1].FlipBook();
+                    topMasks[3].SetActive(false);
+                    middleMasks[2].SetActive(false);
+                    bottomMasks[1].SetActive(false);
                 }),
                 new BeatAction.Action(beat + 2f, delegate
                 {
                     secondRow[3].FlipBook();
                     thirdRow[2].FlipBook();
+                    middleMasks[3].SetActive(false);
+                    bottomMasks[2].SetActive(false);
                 }),
                 new BeatAction.Action(beat + 2.99f, delegate
                 {
@@ -893,6 +960,18 @@ namespace HeavenStudio.Games
                     {
                         nerd.StartSpinBook();
                     }
+                    foreach (var mask in topMasks)
+                    {
+                        mask.SetActive(false);
+                    }
+                    foreach (var mask in middleMasks)
+                    {
+                        mask.SetActive(false);
+                    }
+                    foreach (var mask in bottomMasks)
+                    {
+                        mask.SetActive(false);
+                    }
                 }),
                 new BeatAction.Action(beat + 3, delegate
                 {
@@ -907,6 +986,18 @@ namespace HeavenStudio.Games
                     foreach (var nerd in thirdRow)
                     {
                         nerd.StopSpinBook();
+                    }
+                    foreach (var mask in topMasks)
+                    {
+                        mask.SetActive(true);
+                    }
+                    foreach (var mask in middleMasks)
+                    {
+                        mask.SetActive(true);
+                    }
+                    foreach (var mask in bottomMasks)
+                    {
+                        mask.SetActive(true);
                     }
                 }),
             });
@@ -981,6 +1072,18 @@ namespace HeavenStudio.Games
                     {
                         nerd.StartSpinBook();
                     }
+                    foreach (var mask in topMasks)
+                    {
+                        mask.SetActive(false);
+                    }
+                    foreach (var mask in middleMasks)
+                    {
+                        mask.SetActive(false);
+                    }
+                    foreach (var mask in bottomMasks)
+                    {
+                        mask.SetActive(false);
+                    }
                 }),
                 new BeatAction.Action(beat + 3f * actualLength, delegate
                 {
@@ -996,12 +1099,25 @@ namespace HeavenStudio.Games
                     {
                         nerd.StopSpinBook();
                     }
+                    foreach (var mask in topMasks)
+                    {
+                        mask.SetActive(true);
+                    }
+                    foreach (var mask in middleMasks)
+                    {
+                        mask.SetActive(true);
+                    }
+                    foreach (var mask in bottomMasks)
+                    {
+                        mask.SetActive(true);
+                    }
                 })
             });
         }
 
         void JustFlip(PlayerActionEvent caller, float state)
         {
+            playerMask.SetActive(false);
             if (state >= 1f || state <= -1f)
             {
                 Jukebox.PlayOneShotGame("cheerReaders/doingoing");
@@ -1013,6 +1129,7 @@ namespace HeavenStudio.Games
 
         void JustFlipBoom(PlayerActionEvent caller, float state)
         {
+            playerMask.SetActive(false);
             if (state >= 1f || state <= -1f)
             {
                 Jukebox.PlayOneShotGame("cheerReaders/doingoing");
@@ -1038,6 +1155,7 @@ namespace HeavenStudio.Games
 
         void JustHoldSpin(PlayerActionEvent caller, float state)
         {
+            playerMask.SetActive(false);
             if (state >= 1f || state <= -1f)
             {
                 Jukebox.PlayOneShotGame("cheerReaders/doingoing");
@@ -1056,12 +1174,14 @@ namespace HeavenStudio.Games
 
         void JustReleaseSpin(PlayerActionEvent caller, float state)
         {
+            playerMask.SetActive(true);
             Jukebox.KillLoop(SpinningLoop, 0f);
             if (state >= 1f || state <= -1f)
             {
                 Jukebox.PlayOneShotGame("cheerReaders/doingoing");
                 player.StopSpinBook();
                 shouldDoSuccessZoom = false;
+                missPoster.SetActive(true);
                 return;
             }
             SuccessReleaseSpin();
@@ -1073,10 +1193,12 @@ namespace HeavenStudio.Games
             player.StopSpinBook();
             shouldYay = true;
             shouldDoSuccessZoom = true;
+            missPoster.SetActive(false);
         }
 
         void MissFlip(PlayerActionEvent caller)
         {
+            playerMask.SetActive(false);
             Jukebox.PlayOneShotGame("cheerReaders/doingoing");
             player.Miss();
             shouldDoSuccessZoom = false;
