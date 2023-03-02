@@ -511,23 +511,99 @@ namespace HeavenStudio.Games
                     firstRow[0].FlipBook();
                     secondRow[0].FlipBook();
                     thirdRow[0].FlipBook();
+                    switch (whoSpeaks)
+                    {
+                        case (int)WhoSpeaks.Solo:
+                            player.ItsUpToYou(1);
+                            break;
+                        case (int)WhoSpeaks.Girls:
+                            foreach (var nerd in allGirls)
+                            {
+                                nerd.ItsUpToYou(1);
+                            }
+                            break;
+                        case (int)WhoSpeaks.Both:
+                            player.ItsUpToYou(1);
+                            foreach (var nerd in allGirls)
+                            {
+                                nerd.ItsUpToYou(1);
+                            }
+                            break;
+                    }
                 }),
                 new BeatAction.Action(beat + 0.75f, delegate
                 {
                     firstRow[1].FlipBook();
                     secondRow[1].FlipBook();
                     thirdRow[1].FlipBook();
+                    switch (whoSpeaks)
+                    {
+                        case (int)WhoSpeaks.Solo:
+                            player.ItsUpToYou(2);
+                            break;
+                        case (int)WhoSpeaks.Girls:
+                            foreach (var nerd in allGirls)
+                            {
+                                nerd.ItsUpToYou(2);
+                            }
+                            break;
+                        case (int)WhoSpeaks.Both:
+                            player.ItsUpToYou(2);
+                            foreach (var nerd in allGirls)
+                            {
+                                nerd.ItsUpToYou(2);
+                            }
+                            break;
+                    }
                 }),
                 new BeatAction.Action(beat + 1.5f, delegate
                 {
                     firstRow[2].FlipBook();
                     secondRow[2].FlipBook();
                     thirdRow[2].FlipBook();
+                    switch (whoSpeaks)
+                    {
+                        case (int)WhoSpeaks.Solo:
+                            player.ItsUpToYou(3);
+                            break;
+                        case (int)WhoSpeaks.Girls:
+                            foreach (var nerd in allGirls)
+                            {
+                                nerd.ItsUpToYou(3);
+                            }
+                            break;
+                        case (int)WhoSpeaks.Both:
+                            player.ItsUpToYou(3);
+                            foreach (var nerd in allGirls)
+                            {
+                                nerd.ItsUpToYou(3);
+                            }
+                            break;
+                    }
                 }),
                 new BeatAction.Action(beat + 2f, delegate
                 {
                     firstRow[3].FlipBook();
                     secondRow[3].FlipBook();
+                    switch (whoSpeaks)
+                    {
+                        case (int)WhoSpeaks.Solo:
+                            player.ItsUpToYou(4);
+                            break;
+                        case (int)WhoSpeaks.Girls:
+                            foreach (var nerd in allGirls)
+                            {
+                                nerd.ItsUpToYou(4);
+                            }
+                            break;
+                        case (int)WhoSpeaks.Both:
+                            player.ItsUpToYou(4);
+                            foreach (var nerd in allGirls)
+                            {
+                                nerd.ItsUpToYou(4);
+                            }
+                            break;
+                    }
                 }),
                 new BeatAction.Action(beat + 2.99f, delegate
                 {

@@ -9,6 +9,8 @@ namespace HeavenStudio.Games.Scripts_CheerReaders
     {
         Animator BaseAnim;
         [SerializeField] Animator faceAnim;
+        [SerializeField] GameObject blushLeft;
+        [SerializeField] GameObject blushRight;
         public bool bookIsWhite = true;
         bool bookIsOpen;
         bool noBop;
@@ -23,6 +25,28 @@ namespace HeavenStudio.Games.Scripts_CheerReaders
         public void ResetPose()
         {
             BaseAnim.Play(bookIsWhite ? "WhiteIdle" : "BlackIdle", 0, 0);
+        }
+
+        public void ItsUpToYou(int count)
+        {
+            switch (count)
+            {
+                case 1:
+                    faceAnim.DoScaledAnimationAsync("FaceIts", 0.5f);
+                    break;
+                case 2:
+                    faceAnim.DoScaledAnimationAsync("FaceUp", 0.5f);
+                    break;
+                case 3:
+                    faceAnim.DoScaledAnimationAsync("FaceTo", 0.5f);
+                    break;
+                case 4:
+                    faceAnim.DoScaledAnimationAsync("FaceYou", 0.5f);
+                    break;
+                default:
+                    faceAnim.DoScaledAnimationAsync("FaceIts", 0.5f);
+                    break;
+            }
         }
 
         public void OneTwoThree(int count)
@@ -59,12 +83,17 @@ namespace HeavenStudio.Games.Scripts_CheerReaders
 
         public void Miss()
         {
+            faceAnim.Play("FaceBlush", 0, 0);
+            blushLeft.SetActive(true);
+            blushRight.SetActive(true);
             BaseAnim.Play(bookIsWhite ? "MissWhite" : "MissBlack", 0, 0);
             noBop = true;
         }
 
         public void FlipBook(bool hit = true)
         {
+            blushLeft.SetActive(false);
+            blushRight.SetActive(false);
             if (bookIsWhite != game.shouldBeBlack && hit) 
             {
                 RepositionBook(); 
