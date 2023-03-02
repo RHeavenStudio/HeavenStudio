@@ -12,7 +12,7 @@ namespace HeavenStudio.Games.Scripts_DogNinja
     {
         public float startBeat;
         public int type;
-        public int customType;
+        public int spriteInt;
         public string textObj;
         public bool fromLeft;
         public bool fromBoth = false;
@@ -22,13 +22,11 @@ namespace HeavenStudio.Games.Scripts_DogNinja
 
         [Header("Animators")]
         public Animator DogAnim;
-        public Animation Prepare;
 
         [Header("References")]
-        public GameObject ObjectBase;
-
-        [Header("Curves")]
         public BezierCurve3D curve;
+        public Sprite[] objectLeftHalves;
+        public Sprite[] objectRightHalves;
 
         private DogNinja game;
         
@@ -59,9 +57,9 @@ namespace HeavenStudio.Games.Scripts_DogNinja
             
             if (fromLeft && fromBoth) {} else { Jukebox.PlayOneShotGame(sfxNum+"1"); }
             
-            game.ScheduleInput(startBeat, 1f, InputType.STANDARD_DOWN, Hit, Out, Miss);
+            game.ScheduleInput(startBeat, 1f, InputType.STANDARD_DOWN, Hit, Miss, Out);
             
-            game.needPrepare = true;
+            game.DogAnim.SetBool("needPrepare", true);
         }
 
         private void Update()
@@ -97,10 +95,13 @@ namespace HeavenStudio.Games.Scripts_DogNinja
             DogAnim.DoScaledAnimationAsync(Slice, 0.5f);
             if (fromLeft && fromBoth) {} else { Jukebox.PlayOneShotGame(sfxNum+"2"); }
 
-            GameObject.Destroy(gameObject);
+            Debug.Log(spriteInt);
             
+            game.WhichLeftHalf.sprite = objectLeftHalves[spriteInt-1];
+            game.WhichRightHalf.sprite = objectRightHalves[spriteInt-1];
 
-            // SpawnHalves logic below, i got close but not close enough -AJ
+            Debug.Log(objectLeftHalves[spriteInt-1]);
+
             SpawnHalves LeftHalf = Instantiate(game.HalvesLeftBase).GetComponent<SpawnHalves>();
             LeftHalf.startBeat = startBeat;
             LeftHalf.objPos = objPos;
@@ -109,6 +110,8 @@ namespace HeavenStudio.Games.Scripts_DogNinja
             SpawnHalves RightHalf = Instantiate(game.HalvesRightBase).GetComponent<SpawnHalves>();
             RightHalf.startBeat = startBeat;
             RightHalf.lefty = false;
+
+            GameObject.Destroy(gameObject);
         }
 
         private void JustSlice()
@@ -118,24 +121,23 @@ namespace HeavenStudio.Games.Scripts_DogNinja
 
         private void Hit(PlayerActionEvent caller, float state)
         {
-            game.needPrepare = false;
+            game.DogAnim.SetBool("needPrepare", false);
             if (state >= 1f || state <= -1f) {
                 JustSlice();
             } else {
                 SuccessSlice();
             }
         }
-            
 
         private void Miss(PlayerActionEvent caller)
         {
             DogAnim.Play("UnPrepare", 0, 0);
-            game.needPrepare = false;
+            game.DogAnim.SetBool("needPrepare", false);
         }
 
         private void Out(PlayerActionEvent caller) 
         {
-            
+            game.DogAnim.SetBool("needPrepare", false);
         }
     }
 }

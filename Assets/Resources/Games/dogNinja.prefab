@@ -108,15 +108,48 @@ MonoBehaviour:
   triggersAutoplay: 1
   startBeat: 0
   type: 0
+  spriteInt: 0
   textObj: TacoBell
   fromLeft: 0
   fromBoth: 0
   objPos: {x: 0, y: 0, z: 0}
   sfxNum: dogNinja/
   DogAnim: {fileID: 1770250701376598399}
-  Prepare: {fileID: 0}
-  ObjectBase: {fileID: 119991411479083905}
   curve: {fileID: 0}
+  objectLeftHalves:
+  - {fileID: -5050977528292827191, guid: 1c59b9cd0adef0941bc4bd4bde66a759, type: 3}
+  - {fileID: -6734710479057769413, guid: 1c59b9cd0adef0941bc4bd4bde66a759, type: 3}
+  - {fileID: -4224965088989368079, guid: 1c59b9cd0adef0941bc4bd4bde66a759, type: 3}
+  - {fileID: 2700999618970503842, guid: 1c59b9cd0adef0941bc4bd4bde66a759, type: 3}
+  - {fileID: 2837375447866911087, guid: 1c59b9cd0adef0941bc4bd4bde66a759, type: 3}
+  - {fileID: 7885473240981275884, guid: 1c59b9cd0adef0941bc4bd4bde66a759, type: 3}
+  - {fileID: 6441252700597445463, guid: 1c59b9cd0adef0941bc4bd4bde66a759, type: 3}
+  - {fileID: 8476709041252288888, guid: 1c59b9cd0adef0941bc4bd4bde66a759, type: 3}
+  - {fileID: -6223893393952614859, guid: 1c59b9cd0adef0941bc4bd4bde66a759, type: 3}
+  - {fileID: -3347077256180618593, guid: 4e56f90ec52abea4ea8c4c7bb6df84d5, type: 3}
+  - {fileID: -4519072383536912777, guid: 4e56f90ec52abea4ea8c4c7bb6df84d5, type: 3}
+  - {fileID: -3132885281078556448, guid: 4e56f90ec52abea4ea8c4c7bb6df84d5, type: 3}
+  - {fileID: -7944245295668935948, guid: 4e56f90ec52abea4ea8c4c7bb6df84d5, type: 3}
+  - {fileID: 8606704304367512636, guid: 4e56f90ec52abea4ea8c4c7bb6df84d5, type: 3}
+  - {fileID: -5925680740112638021, guid: 4e56f90ec52abea4ea8c4c7bb6df84d5, type: 3}
+  - {fileID: 110770723945580571, guid: 4e56f90ec52abea4ea8c4c7bb6df84d5, type: 3}
+  objectRightHalves:
+  - {fileID: -1966485124414453226, guid: 1c59b9cd0adef0941bc4bd4bde66a759, type: 3}
+  - {fileID: -5461002889550892160, guid: 1c59b9cd0adef0941bc4bd4bde66a759, type: 3}
+  - {fileID: -9153267674622985528, guid: 1c59b9cd0adef0941bc4bd4bde66a759, type: 3}
+  - {fileID: -3469113974801478940, guid: 1c59b9cd0adef0941bc4bd4bde66a759, type: 3}
+  - {fileID: -1857677153745663653, guid: 1c59b9cd0adef0941bc4bd4bde66a759, type: 3}
+  - {fileID: 6463813537545185478, guid: 1c59b9cd0adef0941bc4bd4bde66a759, type: 3}
+  - {fileID: -2960375969769432221, guid: 1c59b9cd0adef0941bc4bd4bde66a759, type: 3}
+  - {fileID: -5759490930458033094, guid: 1c59b9cd0adef0941bc4bd4bde66a759, type: 3}
+  - {fileID: -874507558836862450, guid: 1c59b9cd0adef0941bc4bd4bde66a759, type: 3}
+  - {fileID: -4417643877713306750, guid: 4e56f90ec52abea4ea8c4c7bb6df84d5, type: 3}
+  - {fileID: 6361375371497706966, guid: 4e56f90ec52abea4ea8c4c7bb6df84d5, type: 3}
+  - {fileID: 1971698216606203520, guid: 4e56f90ec52abea4ea8c4c7bb6df84d5, type: 3}
+  - {fileID: -1058871720487976607, guid: 4e56f90ec52abea4ea8c4c7bb6df84d5, type: 3}
+  - {fileID: 8659010476580760093, guid: 4e56f90ec52abea4ea8c4c7bb6df84d5, type: 3}
+  - {fileID: -5567381644477528568, guid: 4e56f90ec52abea4ea8c4c7bb6df84d5, type: 3}
+  - {fileID: 4129141875657070858, guid: 4e56f90ec52abea4ea8c4c7bb6df84d5, type: 3}
 --- !u!1 &127654075222335198
 GameObject:
   m_ObjectHideFlags: 0
@@ -1526,6 +1559,7 @@ MonoBehaviour:
   - {fileID: 2661523571443289938, guid: 4e56f90ec52abea4ea8c4c7bb6df84d5, type: 3}
   - {fileID: 2053246660185171032, guid: 4e56f90ec52abea4ea8c4c7bb6df84d5, type: 3}
   - {fileID: -4323599147261721131, guid: 4e56f90ec52abea4ea8c4c7bb6df84d5, type: 3}
+  usesCustomObject: 0
   needPrepare: 0
 --- !u!1 &3003950051270483240
 GameObject:
@@ -2039,7 +2073,7 @@ MonoBehaviour:
   curveColor: {r: 0, g: 1, b: 0, a: 1}
   startPointColor: {r: 1, g: 0, b: 0, a: 1}
   endPointColor: {r: 0, g: 0, b: 1, a: 1}
-  sampling: 25
+  sampling: 50
   keyPoints:
   - {fileID: 2933729466758510194}
   - {fileID: 4589763695761777545}
@@ -2176,7 +2210,7 @@ MonoBehaviour:
   curveColor: {r: 0, g: 1, b: 0, a: 1}
   startPointColor: {r: 1, g: 0, b: 0, a: 1}
   endPointColor: {r: 0, g: 0, b: 1, a: 1}
-  sampling: 25
+  sampling: 50
   keyPoints:
   - {fileID: 3720315606078593935}
   - {fileID: 6040921256733375763}

@@ -40,7 +40,6 @@ namespace HeavenStudio.Games.Loaders
                 },
                 
                 // this is for me -AJ
-                /*
                 new GameAction("ThrowObjectLeft", "Throw Object Left")
                 {
                     function = delegate { var e = eventCaller.currentEntity; DogNinja.instance.ThrowObject(e.beat, e["type"], e["text"], true, false); }, 
@@ -61,7 +60,7 @@ namespace HeavenStudio.Games.Loaders
                         new Param("text", "", "Alt. Objects", "An alternative object; one that doesn't exist in the main menu"),
                     }
                 },
-                */
+                
                 new GameAction("ThrowObjectBoth", "Throw Left & Right Object")
                 {
                     function = delegate { var e = eventCaller.currentEntity; DogNinja.instance.ThrowBothObject(e.beat, e["type"], e["type2"], e["text"], e["text2"]); }, 
@@ -157,8 +156,8 @@ namespace HeavenStudio.Games
             BattingShow,
             MeatGrinder,
             // remove "//" to unleash an eons long dormant hell-beast
-            //YaseiNoIkiG3M4,
-            //AmongUs,
+            YaseiNoIkiG3M4,
+            AmongUs,
         }
         
         private void Awake()
@@ -168,7 +167,7 @@ namespace HeavenStudio.Games
 
         private void Update()
         {
-            if (needPrepare && DogAnim.IsAnimationNotPlaying())
+            if (DogAnim.GetBool("needPrepare") && DogAnim.IsAnimationNotPlaying())
             {
                 DogAnim.DoScaledAnimationAsync("Prepare", 0.5f);
             };
@@ -186,6 +185,7 @@ namespace HeavenStudio.Games
 
                 DogAnim.DoScaledAnimationAsync(slice, 0.5f);
                 Jukebox.PlayOneShotGame("dogNinja/whiff");
+                DogAnim.SetBool("needPrepare", false);
             };
         }
 
@@ -203,9 +203,9 @@ namespace HeavenStudio.Games
             dontBop = !bop;
         }
 
-        // my solution for making three functions for three cues; just put the big complicated code into another function
-        public void WhichObjectMath(int ObjType, string textObj, int ObjSprite)
+        public void ThrowObject(float beat, int ObjType, string textObj, bool fromLeft, bool fromBoth)
         {
+            int ObjSprite = ObjType;
             if (ObjType == 10) {
                 // custom object code, uses the enum to turn the input string into integer to get the sprite
                 Enum.TryParse(textObj, true, out CustomObject notIntObj);
@@ -218,12 +218,6 @@ namespace HeavenStudio.Games
                 ObjSprite = rd.Next(1, 6);
                 WhichObject.sprite = ObjectTypes[ObjSprite];
             } else { WhichObject.sprite = ObjectTypes[ObjSprite]; };
-        }
-
-        public void ThrowObject(float beat, int ObjType, string textObj, bool fromLeft, bool fromBoth)
-        {
-            int ObjSprite = ObjType;
-            WhichObjectMath(ObjType, textObj, ObjSprite);
 
             // instantiate a game object and give it its variables
             ThrowObject Object = Instantiate(ObjectBase).GetComponent<ThrowObject>();
@@ -233,10 +227,8 @@ namespace HeavenStudio.Games
             Object.fromBoth = fromBoth;
             Object.textObj = textObj;
             Object.sfxNum = sfxNum;
-            Object.type = ObjSprite;
-            if (usesCustomObject) {
-                Object.customType = ObjSprite+10;
-            }
+            Object.type = ObjType;
+            Object.spriteInt = (ObjType == 10 ? ObjSprite + 10 : ObjSprite);
         }
 
         public void ThrowBothObject(float beat, int ObjType1, int ObjType2, string textObj1, string textObj2)
