@@ -3353,6 +3353,7 @@ MonoBehaviour:
   - {fileID: 9051889527169370130}
   - {fileID: 1186845107379197286}
   player: {fileID: 3791466669577041241}
+  doingCue: 0
   shouldBeBlack: 0
 --- !u!1 &5797638583144875765
 GameObject:
@@ -5127,6 +5128,10 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3164545553814128535, guid: 537a3388e1d42af4ca47d4d79e575480, type: 3}
       propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 3265768012714670974, guid: 537a3388e1d42af4ca47d4d79e575480, type: 3}
+      propertyPath: player
       value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 3265799097403367996, guid: 537a3388e1d42af4ca47d4d79e575480, type: 3}

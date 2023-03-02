@@ -14,6 +14,7 @@ namespace HeavenStudio.Games.Scripts_CheerReaders
         public bool bookIsWhite = true;
         bool bookIsOpen;
         bool noBop;
+        public bool player;
         float currentBlushBeat;
         bool missed;
         CheerReaders game;
@@ -113,7 +114,7 @@ namespace HeavenStudio.Games.Scripts_CheerReaders
 
         public void FlipBook(bool hit = true)
         {
-            if (bookIsWhite != game.shouldBeBlack && hit) 
+            if (bookIsWhite != game.shouldBeBlack && hit && player) 
             {
                 RepositionBook(); 
                 return;

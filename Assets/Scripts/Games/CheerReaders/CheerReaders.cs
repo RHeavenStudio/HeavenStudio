@@ -57,7 +57,7 @@ namespace HeavenStudio.Games.Loaders
                 },
                 new GameAction("okItsOn", "OK It's On!")
                 {
-                    function = delegate {var e = eventCaller.currentEntity; CheerReaders.instance.OkItsOn(e.beat, e["solo"], e["toggle"]); CheerReaders.instance.SetIsDoingCue(e.beat, e.length);},
+                    function = delegate {var e = eventCaller.currentEntity; CheerReaders.instance.OkItsOn(e.beat, e["solo"], e["toggle"]); CheerReaders.instance.SetIsDoingCue(e.beat, e.length, false);},
                     defaultLength = 4f,
                     parameters = new List<Param>()
                     {
@@ -67,7 +67,7 @@ namespace HeavenStudio.Games.Loaders
                 },
                 new GameAction("okItsOnStretch", "OK It's On! (Stretchable)")
                 {
-                    function = delegate {var e = eventCaller.currentEntity; CheerReaders.instance.OkItsOnStretchable(e.beat, e.length, e["solo"], e["toggle"]); CheerReaders.instance.SetIsDoingCue(e.beat, e.length); },
+                    function = delegate {var e = eventCaller.currentEntity; CheerReaders.instance.OkItsOnStretchable(e.beat, e.length, e["solo"], e["toggle"]); CheerReaders.instance.SetIsDoingCue(e.beat, e.length, false); },
                     defaultLength = 4f,
                     resizable = true,
                     parameters = new List<Param>()
@@ -329,13 +329,17 @@ namespace HeavenStudio.Games
             shouldBop = startBop;
         }
 
-        public void SetIsDoingCue(float beat, float length)
+        public void SetIsDoingCue(float beat, float length, bool shouldSwitchColor = true)
         {
             if (!doingCue) shouldYay = false;
             doingCue = true;
             cueBeat = beat;
             cueLength = length;
-            shouldBeBlack = !shouldBeBlack;
+            if (!shouldSwitchColor) return;
+            BeatAction.New(instance.gameObject, new List<BeatAction.Action>()
+            {
+                new BeatAction.Action(beat + length * 0.5f, delegate { shouldBeBlack = !shouldBeBlack; })
+            });
         }
 
         public void OneTwoThree(float beat, int whoSpeaks)
