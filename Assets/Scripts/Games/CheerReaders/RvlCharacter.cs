@@ -15,6 +15,7 @@ namespace HeavenStudio.Games.Scripts_CheerReaders
         bool bookIsOpen;
         bool noBop;
         float currentBlushBeat;
+        bool missed;
         CheerReaders game;
 
         void Awake()
@@ -33,6 +34,10 @@ namespace HeavenStudio.Games.Scripts_CheerReaders
                 {
                     blushLeft.SetActive(false);
                     blushRight.SetActive(false);
+                }
+                if (!game.doingCue && missed)
+                {
+                    faceAnim.Play("FaceBlush", 0, 0);
                 }
             }
         }
@@ -99,11 +104,11 @@ namespace HeavenStudio.Games.Scripts_CheerReaders
         public void Miss()
         {
             currentBlushBeat = Conductor.instance.songPositionInBeats;
-            faceAnim.Play("FaceBlush", 0, 0);
             blushLeft.SetActive(true);
             blushRight.SetActive(true);
             BaseAnim.Play(bookIsWhite ? "MissWhite" : "MissBlack", 0, 0);
             noBop = true;
+            missed = true;
         }
 
         public void FlipBook(bool hit = true)
@@ -117,6 +122,7 @@ namespace HeavenStudio.Games.Scripts_CheerReaders
             bookIsWhite = !bookIsWhite;
             bookIsOpen = true;
             noBop = false;
+            missed = !hit;
         }
 
         public void RepositionBook()

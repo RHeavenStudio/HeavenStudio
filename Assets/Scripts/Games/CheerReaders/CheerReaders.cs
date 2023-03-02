@@ -141,7 +141,9 @@ namespace HeavenStudio.Games
         [Header("Variables")]
         bool shouldBop = true;
         bool canBop = true;
-        bool doingCue;
+        public bool doingCue;
+        float cueLength;
+        float cueBeat;
         bool shouldYay;
         bool shouldDoSuccessZoom;
         public bool shouldBeBlack = false;
@@ -279,6 +281,18 @@ namespace HeavenStudio.Games
                     Jukebox.KillLoop(SpinningLoop, 0f);
                     ScoreMiss(1f);
                 }
+                float normalizedBeat = cond.GetPositionFromBeat(cueBeat, cueLength);
+                if (normalizedBeat >= 0)
+                {
+                    if (normalizedBeat > 1f)
+                    {
+                        doingCue = false;
+                    }
+                    else
+                    {
+                        doingCue = true;
+                    }
+                }
             }
             else if (!cond.isPlaying)
             {
@@ -319,11 +333,9 @@ namespace HeavenStudio.Games
         {
             if (!doingCue) shouldYay = false;
             doingCue = true;
+            cueBeat = beat;
+            cueLength = length;
             shouldBeBlack = !shouldBeBlack;
-            BeatAction.New(instance.gameObject, new List<BeatAction.Action>()
-            {
-                new BeatAction.Action(beat + length, delegate { doingCue = false; })
-            });
         }
 
         public void OneTwoThree(float beat, int whoSpeaks)
