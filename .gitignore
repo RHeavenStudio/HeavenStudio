@@ -72,18 +72,15 @@ crashlytics-build.properties
 /[Aa]ssets/[Ss]treamingAssets/aa/*
 
 # Visual Studio Code
-/.vscode/
+.vscode/*
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/extensions.json
+!.vscode/*.code-snippets
 
 # Rider
 .idea/
-Assets/Scripts/AppInfo.cs
-Assets/TextMesh Pro/Resources/Fonts & Materials/LiberationSans SDF - Fallback.asset
-ProjectSettings/ProjectSettings.asset
-Assets/TextMesh Pro/Resources/Fonts & Materials/LiberationSans SDF - Fallback.asset
-ProjectSettings/ProjectSettings.asset
-Assets/Resources/Fonts/rodin/FOT-Rodin Pro M SDF Dynamic.asset
-ProjectSettings/ProjectSettings.asset
-Assets/TextMesh Pro/Resources/Fonts & Materials/LiberationSans SDF - Fallback.asset
-Assets/Scripts/AppInfo.cs
-Assets/Resources/DOTweenSettings.asset
-Assets/Resources/Fonts/rodin/FOT-Rodin Pro M SDF Dynamic.asset
+
+# macOS
+.DS_Store

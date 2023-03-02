@@ -6,6 +6,7 @@ using HeavenStudio.Util;
 namespace HeavenStudio.Games.Loaders
 {
     using static Minigames;
+
     public static class AgbBatterLoader
     {
         public static Minigame AddGame(EventCaller eventCaller) {
@@ -98,8 +99,9 @@ namespace HeavenStudio.Games
         private int currentZoomIndex;
 
         public Sprite[] BallSprites;
+        public Material[] CostumeColors;
 
-        private List<DynamicBeatmap.DynamicEntity> allCameraEvents = new List<DynamicBeatmap.DynamicEntity>();
+        private List<DynamicBeatmap.DynamicEntity> _allCameraEvents = new List<DynamicBeatmap.DynamicEntity>();
 
         public Alien alien;
 
@@ -135,18 +137,18 @@ namespace HeavenStudio.Games
                 }
             }
 
-            allCameraEvents = tempEvents;
+            _allCameraEvents = tempEvents;
 
             UpdateCameraZoom();
         }
 
         private void Update()
         {
-            if (allCameraEvents.Count > 0)
+            if (_allCameraEvents.Count > 0)
             {
-                if (currentZoomIndex < allCameraEvents.Count && currentZoomIndex >= 0)
+                if (currentZoomIndex < _allCameraEvents.Count && currentZoomIndex >= 0)
                 {
-                    if (Conductor.instance.songPositionInBeats >= allCameraEvents[currentZoomIndex].beat)
+                    if (Conductor.instance.songPositionInBeats >= _allCameraEvents[currentZoomIndex].beat)
                     {
                         UpdateCameraZoom();
                         currentZoomIndex++;
@@ -186,32 +188,32 @@ namespace HeavenStudio.Games
 
         private void UpdateCameraZoom()
         {
-            if (allCameraEvents.Count == 0)
+            if (_allCameraEvents.Count == 0)
                 currentZoomCamDistance = -10;
 
-            if (currentZoomIndex < allCameraEvents.Count && currentZoomIndex >= 0)
+            if (currentZoomIndex < _allCameraEvents.Count && currentZoomIndex >= 0)
             {
                 if (currentZoomIndex - 1 >= 0)
-                    lastCamDistance = allCameraEvents[currentZoomIndex - 1]["valA"] * -1;
+                    lastCamDistance = _allCameraEvents[currentZoomIndex - 1]["valA"] * -1;
                 else
                 {
                     if (currentZoomIndex == 0)
                         lastCamDistance = -10;
                     else
-                        lastCamDistance = allCameraEvents[0]["valA"] * -1;
+                        lastCamDistance = _allCameraEvents[0]["valA"] * -1;
                 }
 
-                currentZoomCamBeat = allCameraEvents[currentZoomIndex].beat;
-                currentZoomCamLength = allCameraEvents[currentZoomIndex].length;
+                currentZoomCamBeat = _allCameraEvents[currentZoomIndex].beat;
+                currentZoomCamLength = _allCameraEvents[currentZoomIndex].length;
 
-                float dist = allCameraEvents[currentZoomIndex]["valA"] * -1;
+                float dist = _allCameraEvents[currentZoomIndex]["valA"] * -1;
 
                 if (dist > 0)
                     currentZoomCamDistance = 0;
                 else
                     currentZoomCamDistance = dist;
 
-                lastEase = (EasingFunction.Ease) allCameraEvents[currentZoomIndex]["ease"];
+                lastEase = (EasingFunction.Ease) _allCameraEvents[currentZoomIndex]["ease"];
             }
         }
 
@@ -248,7 +250,7 @@ namespace HeavenStudio.Games
                 case (int)BallType.Alien:
                     break;
                 case (int)BallType.Tacobell:
-                    ball.transform.localScale = new Vector3(0.5f, 0.5f, 1);
+                    ball.transform.localScale = new Vector3(2f, 2f, 1);
                     ball.GetComponent<SpaceballBall>().isTacobell = true;
                     break;
             }
@@ -263,7 +265,7 @@ namespace HeavenStudio.Games
 
         public void Costume(int type)
         {
-            SpaceballPlayer.instance.SetCostume(type);
+            SpaceballPlayer.instance.SetCostume(CostumeColors[type], type);
         }
     }
 }

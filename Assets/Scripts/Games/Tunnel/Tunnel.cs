@@ -14,31 +14,20 @@ namespace HeavenStudio.Games.Loaders
         {
             return new Minigame("tunnel", "Tunnel \n<color=#eb5454>[WIP]</color>", "B4E6F6", false, false, new List<GameAction>()
             {
-
-
                 new GameAction("cowbell", "Cowbell")
                 {
-                    function = delegate { Tunnel.instance.StartCowbell(eventCaller.currentEntity.beat, eventCaller.currentEntity["toggle"], eventCaller.currentEntity.length); },
-                    defaultLength = 1f,
+                    preFunction = delegate { Tunnel.PreStartCowbell(eventCaller.currentEntity.beat, eventCaller.currentEntity.length); },
+                    defaultLength = 4f,
                     resizable = true,
-                    parameters = new List<Param>()
-                    {
-                        new Param("toggle", false, "Driver can stop", "Lets the driver stop if the player makes too many mistakes"),
-                    }
 
                 },
                 new GameAction("countin", "Count In")
                 {
-                    function = delegate { Tunnel.instance.CountIn(eventCaller.currentEntity.beat,  eventCaller.currentEntity.length); }, 
-                    defaultLength = 3f, 
+                    preFunction = delegate { Tunnel.CountIn(eventCaller.currentEntity.beat, eventCaller.currentEntity.length); }, 
+                    defaultLength = 4f, 
                     resizable = true,
                 }
-
-            }
-            //new List<string>() {"ntr", "aim"},
-            //"ntrcoin", "en",
-            //new List<string>() {}
-            );
+            });
         }
     }
 }
@@ -47,10 +36,7 @@ namespace HeavenStudio.Games
 {
     public class Tunnel : Minigame
     {
-
         public static Tunnel instance { get; set; }
-
-        
 
         [Header("Backgrounds")]
         public SpriteRenderer fg;
@@ -80,12 +66,22 @@ namespace HeavenStudio.Games
         public float handStart;
         public float handProgress;
         public bool started;
+        public struct QueuedCowbell
+        {
+            public float beat;
+            public float length;
+        }
+        static List<QueuedCowbell> queuedInputs = new List<QueuedCowbell>();
 
         private void Awake()
         {
             instance = this;
         }
 
+        void OnDestroy()
+        {
+            if (queuedInputs.Count > 0) queuedInputs.Clear();
+        }
 
         private void Start()
         {
@@ -97,34 +93,30 @@ namespace HeavenStudio.Games
         {
 
             var cond = Conductor.instance;
-            if (cond.ReportBeat(ref cowbell.lastReportedBeat, cowbell.startBeat % 1))
+            //update hand position
+            handProgress = Math.Min(Conductor.instance.songPositionInBeats - handStart, 1);
+
+
+            frontHand.transform.position = handCurve.GetPoint(EasingFunction.EaseOutQuad(0, 1, handProgress));
+            if (!cond.isPlaying || cond.isPaused)
             {
-                if (cond.songPositionInBeats >= cowbell.startBeat && cond.songPositionInBeats < cowbell.startBeat + cowbell.length)
-                {
-                    ScheduleInput(cond.songPositionInBeats, 1, InputType.STANDARD_DOWN, CowbellSuccess, CowbellMiss, CowbellEmpty);
-                }
+                return;
             }
-
-
             if (PlayerInput.Pressed() && !IsExpectingInputNow())
             {
                 HitCowbell();
                 //print("unexpected input");
                 driverAnimator.Play("Angry1", -1, 0);
             }
+            if (queuedInputs.Count > 0)
+            {
+                foreach (var input in queuedInputs)
+                {
+                    StartCowbell(input.beat, input.length);
+                }
+                queuedInputs.Clear();
+            }
 
-
-            //update hand position
-            handProgress = Math.Min(Conductor.instance.songPositionInBeats - handStart, 1);
-
-
-            frontHand.transform.position = handCurve.GetPoint(EasingFunction.EaseOutQuad(0, 1, handProgress));
-
-        }
-
-        private void LateUpdate()
-        {
-            //nothing
         }
 
 
@@ -137,27 +129,32 @@ namespace HeavenStudio.Games
             cowbellAnimator.Play("Shake",-1,0);
         }
 
-        public void StartCowbell(float beat, bool driverStops, float length)
+        public static void PreStartCowbell(float beat, float length)
+        {
+            if (GameManager.instance.currentGame == "tunnel")
+            {
+                instance.StartCowbell(beat, length);
+            }
+            else
+            {
+                queuedInputs.Add(new QueuedCowbell { beat = beat, length = length });
+            }
+        }
+
+        public void StartCowbell(float beat, float length)
         {
             started = true;
-
-            cowbell.length = length;
-            cowbell.startBeat = beat;
-
-
-            //for (int i = 1; i <= length; i++)
-            //{
-            //ScheduleInput(beat, i, InputType.STANDARD_DOWN, CowbellSuccess, CowbellMiss, CowbellEmpty);
-            //}
-
-            
+            for(int i = 0; i < length; i++)
+            {
+                ScheduleInput(beat, i, InputType.STANDARD_DOWN, CowbellSuccess, CowbellMiss, CowbellEmpty);
+            }
         }
 
         public void CowbellSuccess(PlayerActionEvent caller, float state)
         {
             HitCowbell();
             //print(state);
-            if(Math.Abs(state) >= 0.5)
+            if(Math.Abs(state) >= 1f)
             {
                 driverAnimator.Play("Disturbed", -1, 0);
 
@@ -184,13 +181,13 @@ namespace HeavenStudio.Games
 
 
         
-        public void CountIn(float beat, float length)
+        public static void CountIn(float beat, float length)
         {
 
             List<MultiSound.Sound> cuelist = new List<MultiSound.Sound>();
             
 
-            for (int i = 0; i <= length; i++)
+            for (int i = 0; i < length; i++)
             {
                 if(i % 2 == 0)
                 {
@@ -206,7 +203,7 @@ namespace HeavenStudio.Games
                 }
                 
             }
-            MultiSound.Play(cuelist.ToArray());
+            MultiSound.Play(cuelist.ToArray(), forcePlay: true);
 
         }
 

@@ -59,7 +59,7 @@ namespace HeavenStudio.Games.Scripts_Spaceball
         {
             if (hit)
             {
-                float nba = Conductor.instance.GetPositionFromBeat(hitBeat, 14);
+                float nba = Conductor.instance.GetPositionFromBeat(hitBeat, 10);
                 Holder.localPosition = Vector3.Lerp(hitPos, new Vector3(randomEndPosX, 0f, -600f), nba);
                 Holder.eulerAngles = Vector3.Lerp(new Vector3(0, 0, hitRot), new Vector3(0, 0, -2260), nba);
             }
@@ -102,7 +102,7 @@ namespace HeavenStudio.Games.Scripts_Spaceball
                 Jukebox.PlayOneShotGame("spaceball/swing");
             }
 
-            randomEndPosX = Random.Range(40f, 55f);
+            randomEndPosX = Random.Range(4f, 16f);
 
             SpaceballPlayer.instance.Swing(this);
         }
