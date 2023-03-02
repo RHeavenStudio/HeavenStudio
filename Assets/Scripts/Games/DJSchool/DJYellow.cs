@@ -2,17 +2,27 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class DJYellow : MonoBehaviour
+namespace HeavenStudio.Games.Scripts_DJSchool
 {
-    // Start is called before the first frame update
-    void Start()
+    public class DJYellow : MonoBehaviour
     {
-        
-    }
+        public enum DJExpression
+        {
+            NeutralLeft = 0,
+            NeutralRight = 1,
+            CrossEyed = 2,
+            Happy = 3,
+            Focused = 4,
+            UpFirst = 5,
+            UpSecond = 6,
+        }
+        [SerializeField] List<Sprite> djYellowHeadSprites = new List<Sprite>();
+        [SerializeField] SpriteRenderer djYellowHeadSrpite;
 
-    // Update is called once per frame
-    void Update()
-    {
-        
+        public void ChangeHeadSprite(DJExpression expression)
+        {
+            djYellowHeadSrpite.sprite = djYellowHeadSprites[(int)expression];
+        }
     }
 }
+

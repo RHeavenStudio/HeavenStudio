@@ -117,6 +117,7 @@ namespace HeavenStudio.Games.Scripts_DJSchool
 
             anim.DoScaledAnimationAsync("Hold", 0.5f);
             tableAnim.Play("Student_Turntable_StartHold", 0, 0);
+            if (game.djYellowHolding) game.djYellowScript.ChangeHeadSprite(DJYellow.DJExpression.CrossEyed);
         }
         #endregion
 
@@ -133,6 +134,7 @@ namespace HeavenStudio.Games.Scripts_DJSchool
             missed = true;
             mixer.audioMixer.FindSnapshot("Main").TransitionTo(.01f);
             tableAnim.Play("Student_Turntable_Idle", 0, 0);
+            if (game.djYellowHolding) game.djYellowScript.ChangeHeadSprite(DJYellow.DJExpression.CrossEyed);
         }
 
         #region onSwipe

@@ -107,16 +107,15 @@ namespace HeavenStudio.Games
         [SerializeField] private GameObject djYellow;
         private Animator djYellowAnim;
         private float lastReportedBeat = 0f;
+        public DJYellow djYellowScript;
 
         [Header("Properties")]
         public GameEvent bop = new GameEvent();
-        private bool djYellowHolding;
+        public bool djYellowHolding;
         public bool andStop;
         public bool goBop;
         public float beatOfInstance;
         private bool djYellowBopLeft;
-        [SerializeField] List<Sprite> djYellowHeadSprites = new List<Sprite>();
-        [SerializeField] SpriteRenderer djYellowHeadSrpite;
 
         public static DJSchool instance { get; private set; }
 
@@ -124,6 +123,7 @@ namespace HeavenStudio.Games
         {
             instance = this;
             djYellowAnim = djYellow.GetComponent<Animator>();
+            djYellowScript = djYellow.GetComponent<DJYellow>();
             student.Init();
             goBop = true;
         }

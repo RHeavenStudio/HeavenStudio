@@ -1158,6 +1158,7 @@ GameObject:
   m_Component:
   - component: {fileID: 9200174622253846101}
   - component: {fileID: 9200174622253846100}
+  - component: {fileID: 1858649782518014752}
   m_Layer: 0
   m_Name: DJ Yellow
   m_TagString: Untagged
@@ -1207,6 +1208,27 @@ Animator:
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorControllerStateOnDisable: 0
+--- !u!114 &1858649782518014752
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9200174622253846102}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 48745753d68e10f4da42836193bcb5d9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  djYellowHeadSprites:
+  - {fileID: 3030495990102112210, guid: f2d230e6db7d69846996476f169cf643, type: 3}
+  - {fileID: 1937021102288220911, guid: f2d230e6db7d69846996476f169cf643, type: 3}
+  - {fileID: -6747834269034518560, guid: f2d230e6db7d69846996476f169cf643, type: 3}
+  - {fileID: 8290546898660420384, guid: f2d230e6db7d69846996476f169cf643, type: 3}
+  - {fileID: -3051697614590913775, guid: f2d230e6db7d69846996476f169cf643, type: 3}
+  - {fileID: 2538339475596086665, guid: f2d230e6db7d69846996476f169cf643, type: 3}
+  - {fileID: -7628408153488696044, guid: f2d230e6db7d69846996476f169cf643, type: 3}
+  djYellowHeadSrpite: {fileID: 7458467574167296016}
 --- !u!1 &9200174622447092558
 GameObject:
   m_ObjectHideFlags: 0
@@ -1550,8 +1572,6 @@ MonoBehaviour:
   andStop: 0
   goBop: 0
   beatOfInstance: 0
-  djYellowHeadSprites: []
-  djYellowHeadSrpite: {fileID: 7458467574167296016}
 --- !u!1 &9200174623468853050
 GameObject:
   m_ObjectHideFlags: 0
