@@ -343,7 +343,13 @@ namespace HeavenStudio.Games
 
         public void Yay()
         {
-            if (shouldYay) Jukebox.PlayOneShotGame("cheerReaders/All/yay");
+            if (!shouldYay) return;
+            foreach (var nerd in allGirls)
+            {
+                nerd.Yay();
+            }
+            player.Yay();
+            Jukebox.PlayOneShotGame("cheerReaders/All/yay");
         }
 
         public void BopToggle(bool startBop)
