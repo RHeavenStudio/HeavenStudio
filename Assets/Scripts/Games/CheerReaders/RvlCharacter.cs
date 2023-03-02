@@ -14,12 +14,27 @@ namespace HeavenStudio.Games.Scripts_CheerReaders
         public bool bookIsWhite = true;
         bool bookIsOpen;
         bool noBop;
+        float currentBlushBeat;
         CheerReaders game;
 
         void Awake()
         {
             BaseAnim = GetComponent<Animator>();
             game = CheerReaders.instance;
+        }
+
+        void Update()
+        {
+            var cond = Conductor.instance;
+            if (cond.isPlaying && !cond.isPaused)
+            {
+                float normalizedBeat = cond.GetPositionFromBeat(currentBlushBeat, 3f);
+                if (normalizedBeat > 1f)
+                {
+                    blushLeft.SetActive(false);
+                    blushRight.SetActive(false);
+                }
+            }
         }
 
         public void ResetPose()
@@ -83,6 +98,7 @@ namespace HeavenStudio.Games.Scripts_CheerReaders
 
         public void Miss()
         {
+            currentBlushBeat = Conductor.instance.songPositionInBeats;
             faceAnim.Play("FaceBlush", 0, 0);
             blushLeft.SetActive(true);
             blushRight.SetActive(true);
@@ -92,8 +108,6 @@ namespace HeavenStudio.Games.Scripts_CheerReaders
 
         public void FlipBook(bool hit = true)
         {
-            blushLeft.SetActive(false);
-            blushRight.SetActive(false);
             if (bookIsWhite != game.shouldBeBlack && hit) 
             {
                 RepositionBook(); 
