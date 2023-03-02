@@ -104,12 +104,9 @@ namespace HeavenStudio.Games.Scripts_DogNinja
 
             SpawnHalves LeftHalf = Instantiate(game.HalvesLeftBase).GetComponent<SpawnHalves>();
             LeftHalf.startBeat = startBeat;
-            LeftHalf.objPos = objPos;
-            LeftHalf.lefty = true;
 
             SpawnHalves RightHalf = Instantiate(game.HalvesRightBase).GetComponent<SpawnHalves>();
             RightHalf.startBeat = startBeat;
-            RightHalf.lefty = false;
 
             GameObject.Destroy(gameObject);
         }

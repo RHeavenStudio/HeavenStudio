@@ -60,7 +60,7 @@ namespace HeavenStudio.Games.Loaders
                         new Param("text", "", "Alt. Objects", "An alternative object; one that doesn't exist in the main menu"),
                     }
                 },
-                
+
                 new GameAction("ThrowObjectBoth", "Throw Left & Right Object")
                 {
                     function = delegate { var e = eventCaller.currentEntity; DogNinja.instance.ThrowBothObject(e.beat, e["type"], e["type2"], e["text"], e["text2"]); }, 
@@ -255,7 +255,8 @@ namespace HeavenStudio.Games
 
         public void Prepare(float beat)
         {
-            DogAnim.DoScaledAnimationAsync("Prepare", 0.5f);
+            if (!DogAnim.GetBool("needPrepare")) DogAnim.DoScaledAnimationAsync("Prepare", 0.5f);
+            DogAnim.SetBool("needPrepare", true);
         }
 
         // it's repeated code but the alternative saves no space
