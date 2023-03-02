@@ -1297,7 +1297,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 3855914289283968222}
-  - component: {fileID: 8618707460793176460}
   - component: {fileID: 3265768012714670974}
   - component: {fileID: 5983651954046691100}
   m_Layer: 0
@@ -1332,17 +1331,6 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!210 &8618707460793176460
-SortingGroup:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4468147037474797865}
-  m_Enabled: 1
-  m_SortingLayerID: 0
-  m_SortingLayer: 0
-  m_SortingOrder: 15
 --- !u!114 &3265768012714670974
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1359,6 +1347,7 @@ MonoBehaviour:
   blushLeft: {fileID: 733720908658780599}
   blushRight: {fileID: 4061127535986806111}
   bookIsWhite: 1
+  player: 0
 --- !u!95 &5983651954046691100
 Animator:
   serializedVersion: 3
