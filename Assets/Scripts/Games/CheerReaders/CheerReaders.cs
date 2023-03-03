@@ -270,6 +270,7 @@ namespace HeavenStudio.Games
                 {
                     player.FlipBook(false);
                     playerMask.SetActive(false);
+                    missPoster.SetActive(false);
                     Jukebox.PlayOneShotGame("cheerReaders/miss");
                     ScoreMiss(1f);
                 }
@@ -278,6 +279,7 @@ namespace HeavenStudio.Games
                     Jukebox.PlayOneShotGame("cheerReaders/doingoing");
                     player.StartSpinBook();
                     playerMask.SetActive(false);
+                    missPoster.SetActive(false);
                     SpinningLoop = Jukebox.PlayOneShotGame("cheerReaders/bookSpinLoop", -1, 1, 1, true);
                     ScoreMiss(1f);
                 }
@@ -349,6 +351,20 @@ namespace HeavenStudio.Games
                 nerd.Yay();
             }
             player.Yay();
+            playerMask.SetActive(false);
+            missPoster.SetActive(false);
+            foreach (var mask in topMasks)
+            {
+                mask.SetActive(false);
+            }
+            foreach (var mask in middleMasks)
+            {
+                mask.SetActive(false);
+            }
+            foreach (var mask in bottomMasks)
+            {
+                mask.SetActive(false);
+            }
             Jukebox.PlayOneShotGame("cheerReaders/All/yay");
         }
 
@@ -1124,6 +1140,7 @@ namespace HeavenStudio.Games
         void JustFlip(PlayerActionEvent caller, float state)
         {
             playerMask.SetActive(false);
+            missPoster.SetActive(false);
             if (state >= 1f || state <= -1f)
             {
                 Jukebox.PlayOneShotGame("cheerReaders/doingoing");
@@ -1136,6 +1153,7 @@ namespace HeavenStudio.Games
         void JustFlipBoom(PlayerActionEvent caller, float state)
         {
             playerMask.SetActive(false);
+            missPoster.SetActive(false);
             if (state >= 1f || state <= -1f)
             {
                 Jukebox.PlayOneShotGame("cheerReaders/doingoing");
@@ -1162,6 +1180,7 @@ namespace HeavenStudio.Games
         void JustHoldSpin(PlayerActionEvent caller, float state)
         {
             playerMask.SetActive(false);
+            missPoster.SetActive(false);
             if (state >= 1f || state <= -1f)
             {
                 Jukebox.PlayOneShotGame("cheerReaders/doingoing");
@@ -1205,6 +1224,7 @@ namespace HeavenStudio.Games
         void MissFlip(PlayerActionEvent caller)
         {
             playerMask.SetActive(false);
+            missPoster.SetActive(false);
             Jukebox.PlayOneShotGame("cheerReaders/doingoing");
             player.Miss();
             shouldDoSuccessZoom = false;
