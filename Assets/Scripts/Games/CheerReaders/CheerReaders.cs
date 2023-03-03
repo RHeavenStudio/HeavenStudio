@@ -57,7 +57,7 @@ namespace HeavenStudio.Games.Loaders
                 },
                 new GameAction("okItsOn", "OK It's On!")
                 {
-                    function = delegate {var e = eventCaller.currentEntity; CheerReaders.instance.OkItsOn(e.beat, e["solo"], e["toggle"]); CheerReaders.instance.SetIsDoingCue(e.beat, e.length, false);},
+                    function = delegate {var e = eventCaller.currentEntity; CheerReaders.instance.OkItsOnStretchable(e.beat, e.length, e["solo"], e["toggle"]); CheerReaders.instance.SetIsDoingCue(e.beat, e.length, false);},
                     defaultLength = 4f,
                     parameters = new List<Param>()
                     {
@@ -765,6 +765,28 @@ namespace HeavenStudio.Games
             MultiSound.Play(soundsToPlay.ToArray(), forcePlay: true);
             BeatAction.New(instance.gameObject, new List<BeatAction.Action>()
             {
+                new BeatAction.Action(beat, delegate
+                {
+                    switch (whoSpeaks)
+                    {
+                        case (int)WhoSpeaks.Solo:
+                            player.ItsUpToYou(1);
+                            break;
+                        case (int)WhoSpeaks.Girls:
+                            foreach (var nerd in allGirls)
+                            {
+                                nerd.ItsUpToYou(1);
+                            }
+                            break;
+                        case (int)WhoSpeaks.Both:
+                            player.ItsUpToYou(1);
+                            foreach (var nerd in allGirls)
+                            {
+                                nerd.ItsUpToYou(1);
+                            }
+                            break;
+                    }
+                }),
                 new BeatAction.Action(beat + 0.75f, delegate
                 {
                     firstRow[0].FlipBook();
@@ -776,6 +798,26 @@ namespace HeavenStudio.Games
                     secondRow[0].FlipBook();
                     topMasks[1].SetActive(false);
                     middleMasks[0].SetActive(false);
+                    switch (whoSpeaks)
+                    {
+                        case (int)WhoSpeaks.Solo:
+                            player.ItsUpToYou(1);
+                            break;
+                        case (int)WhoSpeaks.Girls:
+                            foreach (var nerd in allGirls)
+                            {
+                                nerd.ItsUpToYou(1);
+                            }
+                            break;
+                        case (int)WhoSpeaks.Both:
+                            player.ItsUpToYou(1);
+                            foreach (var nerd in allGirls)
+                            {
+                                nerd.ItsUpToYou(1);
+                            }
+                            break;
+                    }
+
                 }),
                 new BeatAction.Action(beat + 1.25f, delegate
                 {
@@ -794,6 +836,25 @@ namespace HeavenStudio.Games
                     topMasks[3].SetActive(false);
                     middleMasks[2].SetActive(false);
                     bottomMasks[1].SetActive(false);
+                    switch (whoSpeaks)
+                    {
+                        case (int)WhoSpeaks.Solo:
+                            player.ItsUpToYou(3);
+                            break;
+                        case (int)WhoSpeaks.Girls:
+                            foreach (var nerd in allGirls)
+                            {
+                                nerd.ItsUpToYou(3);
+                            }
+                            break;
+                        case (int)WhoSpeaks.Both:
+                            player.ItsUpToYou(3);
+                            foreach (var nerd in allGirls)
+                            {
+                                nerd.ItsUpToYou(3);
+                            }
+                            break;
+                    }
                 }),
                 new BeatAction.Action(beat + 1.75f, delegate
                 {
@@ -801,6 +862,28 @@ namespace HeavenStudio.Games
                     thirdRow[2].FlipBook();
                     middleMasks[3].SetActive(false);
                     bottomMasks[2].SetActive(false);
+                }),
+                new BeatAction.Action(beat + 2f, delegate
+                {
+                    switch (whoSpeaks)
+                    {
+                        case (int)WhoSpeaks.Solo:
+                            player.ItsUpToYou(3);
+                            break;
+                        case (int)WhoSpeaks.Girls:
+                            foreach (var nerd in allGirls)
+                            {
+                                nerd.ItsUpToYou(3);
+                            }
+                            break;
+                        case (int)WhoSpeaks.Both:
+                            player.ItsUpToYou(3);
+                            foreach (var nerd in allGirls)
+                            {
+                                nerd.ItsUpToYou(3);
+                            }
+                            break;
+                    }
                 }),
                 new BeatAction.Action(beat + 2.99f, delegate
                 {
@@ -873,6 +956,25 @@ namespace HeavenStudio.Games
                 {
                     firstRow[0].FlipBook();
                     topMasks[0].SetActive(false);
+                    switch (whoSpeaks)
+                    {
+                        case (int)WhoSpeaks.Solo:
+                            player.ItsUpToYou(1);
+                            break;
+                        case (int)WhoSpeaks.Girls:
+                            foreach (var nerd in allGirls)
+                            {
+                                nerd.ItsUpToYou(1);
+                            }
+                            break;
+                        case (int)WhoSpeaks.Both:
+                            player.ItsUpToYou(1);
+                            foreach (var nerd in allGirls)
+                            {
+                                nerd.ItsUpToYou(1);
+                            }
+                            break;
+                    }
                 }),
                 new BeatAction.Action(beat + 0.5f, delegate
                 {
@@ -880,6 +982,25 @@ namespace HeavenStudio.Games
                     secondRow[0].FlipBook();
                     topMasks[1].SetActive(false);
                     middleMasks[0].SetActive(false);
+                    switch (whoSpeaks)
+                    {
+                        case (int)WhoSpeaks.Solo:
+                            player.ItsUpToYou(3);
+                            break;
+                        case (int)WhoSpeaks.Girls:
+                            foreach (var nerd in allGirls)
+                            {
+                                nerd.ItsUpToYou(3);
+                            }
+                            break;
+                        case (int)WhoSpeaks.Both:
+                            player.ItsUpToYou(3);
+                            foreach (var nerd in allGirls)
+                            {
+                                nerd.ItsUpToYou(3);
+                            }
+                            break;
+                    }
                 }),
                 new BeatAction.Action(beat + 1f, delegate
                 {
@@ -889,6 +1010,25 @@ namespace HeavenStudio.Games
                     topMasks[2].SetActive(false);
                     middleMasks[1].SetActive(false);
                     bottomMasks[0].SetActive(false);
+                    switch (whoSpeaks)
+                    {
+                        case (int)WhoSpeaks.Solo:
+                            player.ItsUpToYou(1);
+                            break;
+                        case (int)WhoSpeaks.Girls:
+                            foreach (var nerd in allGirls)
+                            {
+                                nerd.ItsUpToYou(1);
+                            }
+                            break;
+                        case (int)WhoSpeaks.Both:
+                            player.ItsUpToYou(1);
+                            foreach (var nerd in allGirls)
+                            {
+                                nerd.ItsUpToYou(1);
+                            }
+                            break;
+                    }
                 }),
                 new BeatAction.Action(beat + 1.5f, delegate
                 {
@@ -898,6 +1038,25 @@ namespace HeavenStudio.Games
                     topMasks[3].SetActive(false);
                     middleMasks[2].SetActive(false);
                     bottomMasks[1].SetActive(false);
+                    switch (whoSpeaks)
+                    {
+                        case (int)WhoSpeaks.Solo:
+                            player.OneTwoThree(2);
+                            break;
+                        case (int)WhoSpeaks.Girls:
+                            foreach (var nerd in allGirls)
+                            {
+                                nerd.OneTwoThree(2);
+                            }
+                            break;
+                        case (int)WhoSpeaks.Both:
+                            player.OneTwoThree(2);
+                            foreach (var nerd in allGirls)
+                            {
+                                nerd.OneTwoThree(2);
+                            }
+                            break;
+                    }
                 }),
                 new BeatAction.Action(beat + 2f, delegate
                 {
@@ -905,6 +1064,25 @@ namespace HeavenStudio.Games
                     thirdRow[2].FlipBook();
                     middleMasks[3].SetActive(false);
                     bottomMasks[2].SetActive(false);
+                    switch (whoSpeaks)
+                    {
+                        case (int)WhoSpeaks.Solo:
+                            player.ItsUpToYou(3);
+                            break;
+                        case (int)WhoSpeaks.Girls:
+                            foreach (var nerd in allGirls)
+                            {
+                                nerd.ItsUpToYou(3);
+                            }
+                            break;
+                        case (int)WhoSpeaks.Both:
+                            player.ItsUpToYou(3);
+                            foreach (var nerd in allGirls)
+                            {
+                                nerd.ItsUpToYou(3);
+                            }
+                            break;
+                    }
                 }),
                 new BeatAction.Action(beat + 2.99f, delegate
                 {
@@ -913,120 +1091,9 @@ namespace HeavenStudio.Games
             });
         }
 
-        public void OkItsOn(float beat, int whoSpeaks, bool whistle)
-        {
-            canBop = false;
-            ScheduleInput(beat, 2, InputType.STANDARD_ALT_DOWN, JustHoldSpin, MissFlip, Nothing);
-            ScheduleInput(beat, 3, InputType.STANDARD_ALT_UP, JustReleaseSpin, MissFlip, Nothing);
-            List<MultiSound.Sound> soundsToPlay = new List<MultiSound.Sound>();
-            if (whistle)
-            {
-                soundsToPlay.AddRange(new List<MultiSound.Sound>()
-                {
-                    new MultiSound.Sound("cheerReaders/whistle1", beat),
-                    new MultiSound.Sound("cheerReaders/whistle2", beat + 1),
-                });
-            }
-            switch (whoSpeaks)
-            {
-                case (int)WhoSpeaks.Solo:
-                    soundsToPlay.AddRange(new List<MultiSound.Sound>()
-                    {
-                        new MultiSound.Sound("cheerReaders/Solo/OKItsOn/okItsOnS1", beat),
-                        new MultiSound.Sound("cheerReaders/Solo/OKItsOn/okItsOnS2", beat + 1f),
-                        new MultiSound.Sound("cheerReaders/Solo/OKItsOn/okItsOnS3", beat + 2f),
-                        new MultiSound.Sound("cheerReaders/Solo/OKItsOn/okItsOnS4", beat + 2.75f),
-                        new MultiSound.Sound("cheerReaders/Solo/OKItsOn/okItsOnS5", beat + 3),
-                    });
-                    break;
-                case (int)WhoSpeaks.Girls:
-                    soundsToPlay.AddRange(new List<MultiSound.Sound>()
-                    {
-                        new MultiSound.Sound("cheerReaders/Girls/OKItsOn/okItsOngirls1", beat),
-                        new MultiSound.Sound("cheerReaders/Girls/OKItsOn/okItsOngirls2", beat + 1f),
-                        new MultiSound.Sound("cheerReaders/Girls/OKItsOn/okItsOngirls3", beat + 2f),
-                        new MultiSound.Sound("cheerReaders/Girls/OKItsOn/okItsOngirls4", beat + 2.75f),
-                        new MultiSound.Sound("cheerReaders/Girls/OKItsOn/okItsOngirls5", beat + 3),
-                    });
-                    break;
-                case (int)WhoSpeaks.Both:
-                    soundsToPlay.AddRange(new List<MultiSound.Sound>()
-                    {
-                        new MultiSound.Sound("cheerReaders/Solo/OKItsOn/okItsOnS1", beat),
-                        new MultiSound.Sound("cheerReaders/Solo/OKItsOn/okItsOnS2", beat + 1f),
-                        new MultiSound.Sound("cheerReaders/Solo/OKItsOn/okItsOnS3", beat + 2f),
-                        new MultiSound.Sound("cheerReaders/Solo/OKItsOn/okItsOnS4", beat + 2.75f),
-                        new MultiSound.Sound("cheerReaders/Solo/OKItsOn/okItsOnS5", beat + 3),
-                        new MultiSound.Sound("cheerReaders/Girls/OKItsOn/okItsOngirls1", beat),
-                        new MultiSound.Sound("cheerReaders/Girls/OKItsOn/okItsOngirls2", beat + 1f),
-                        new MultiSound.Sound("cheerReaders/Girls/OKItsOn/okItsOngirls3", beat + 2f),
-                        new MultiSound.Sound("cheerReaders/Girls/OKItsOn/okItsOngirls4", beat + 2.75f),
-                        new MultiSound.Sound("cheerReaders/Girls/OKItsOn/okItsOngirls5", beat + 3),
-                    });
-                    break;
-            }
-            MultiSound.Play(soundsToPlay.ToArray(), forcePlay: true);
-            BeatAction.New(instance.gameObject, new List<BeatAction.Action>()
-            {
-                new BeatAction.Action(beat + 2, delegate
-                {
-                    foreach (var nerd in firstRow)
-                    {
-                        nerd.StartSpinBook();
-                    }
-                    foreach (var nerd in secondRow)
-                    {
-                        nerd.StartSpinBook();
-                    }
-                    foreach (var nerd in thirdRow)
-                    {
-                        nerd.StartSpinBook();
-                    }
-                    foreach (var mask in topMasks)
-                    {
-                        mask.SetActive(false);
-                    }
-                    foreach (var mask in middleMasks)
-                    {
-                        mask.SetActive(false);
-                    }
-                    foreach (var mask in bottomMasks)
-                    {
-                        mask.SetActive(false);
-                    }
-                }),
-                new BeatAction.Action(beat + 3, delegate
-                {
-                    foreach (var nerd in firstRow)
-                    {
-                        nerd.StopSpinBook();
-                    }
-                    foreach (var nerd in secondRow)
-                    {
-                        nerd.StopSpinBook();
-                    }
-                    foreach (var nerd in thirdRow)
-                    {
-                        nerd.StopSpinBook();
-                    }
-                    foreach (var mask in topMasks)
-                    {
-                        mask.SetActive(true);
-                    }
-                    foreach (var mask in middleMasks)
-                    {
-                        mask.SetActive(true);
-                    }
-                    foreach (var mask in bottomMasks)
-                    {
-                        mask.SetActive(true);
-                    }
-                }),
-            });
-        }
-
         public void OkItsOnStretchable(float beat, float length, int whoSpeaks, bool whistle)
         {
+            canBop = false;
             float actualLength = length * 0.25f;
             ScheduleInput(beat, 2 * actualLength, InputType.STANDARD_ALT_DOWN, JustHoldSpin, MissFlip, Nothing);
             ScheduleInput(beat, 3 * actualLength, InputType.STANDARD_ALT_UP, JustReleaseSpin, MissFlip, Nothing);
@@ -1080,6 +1147,50 @@ namespace HeavenStudio.Games
             MultiSound.Play(soundsToPlay.ToArray(), forcePlay: true);
             BeatAction.New(instance.gameObject, new List<BeatAction.Action>()
             {
+                new BeatAction.Action(beat, delegate
+                {
+                    switch (whoSpeaks)
+                    {
+                        case (int)WhoSpeaks.Solo:
+                            player.ItsUpToYou(3);
+                            break;
+                        case (int)WhoSpeaks.Girls:
+                            foreach (var nerd in allGirls)
+                            {
+                                nerd.ItsUpToYou(3);
+                            }
+                            break;
+                        case (int)WhoSpeaks.Both:
+                            player.ItsUpToYou(3);
+                            foreach (var nerd in allGirls)
+                            {
+                                nerd.ItsUpToYou(3);
+                            }
+                            break;
+                    }
+                }),
+                new BeatAction.Action(beat + 1f * actualLength, delegate
+                {
+                    switch (whoSpeaks)
+                    {
+                        case (int)WhoSpeaks.Solo:
+                            player.ItsUpToYou(1);
+                            break;
+                        case (int)WhoSpeaks.Girls:
+                            foreach (var nerd in allGirls)
+                            {
+                                nerd.ItsUpToYou(1);
+                            }
+                            break;
+                        case (int)WhoSpeaks.Both:
+                            player.ItsUpToYou(1);
+                            foreach (var nerd in allGirls)
+                            {
+                                nerd.ItsUpToYou(1);
+                            }
+                            break;
+                    }
+                }),
                 new BeatAction.Action(beat + 2f * actualLength, delegate
                 {
                     foreach (var nerd in firstRow)
@@ -1105,6 +1216,25 @@ namespace HeavenStudio.Games
                     foreach (var mask in bottomMasks)
                     {
                         mask.SetActive(false);
+                    }
+                    switch (whoSpeaks)
+                    {
+                        case (int)WhoSpeaks.Solo:
+                            player.ItsUpToYou(3);
+                            break;
+                        case (int)WhoSpeaks.Girls:
+                            foreach (var nerd in allGirls)
+                            {
+                                nerd.ItsUpToYou(3);
+                            }
+                            break;
+                        case (int)WhoSpeaks.Both:
+                            player.ItsUpToYou(3);
+                            foreach (var nerd in allGirls)
+                            {
+                                nerd.ItsUpToYou(3);
+                            }
+                            break;
                     }
                 }),
                 new BeatAction.Action(beat + 3f * actualLength, delegate
@@ -1132,6 +1262,25 @@ namespace HeavenStudio.Games
                     foreach (var mask in bottomMasks)
                     {
                         mask.SetActive(true);
+                    }
+                    switch (whoSpeaks)
+                    {
+                        case (int)WhoSpeaks.Solo:
+                            player.ItsUpToYou(3);
+                            break;
+                        case (int)WhoSpeaks.Girls:
+                            foreach (var nerd in allGirls)
+                            {
+                                nerd.ItsUpToYou(3);
+                            }
+                            break;
+                        case (int)WhoSpeaks.Both:
+                            player.ItsUpToYou(3);
+                            foreach (var nerd in allGirls)
+                            {
+                                nerd.ItsUpToYou(3);
+                            }
+                            break;
                     }
                 })
             });
