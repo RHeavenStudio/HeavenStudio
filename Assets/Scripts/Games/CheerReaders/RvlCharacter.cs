@@ -54,6 +54,11 @@ namespace HeavenStudio.Games.Scripts_CheerReaders
             BaseAnim.Play(bookIsWhite ? "WhiteIdle" : "BlackIdle", 0, 0);
         }
 
+        public void Boom()
+        {
+            faceAnim.DoScaledAnimationAsync("FaceBoom", 0.5f);
+        }
+
         public void ItsUpToYou(int count)
         {
             switch (count)

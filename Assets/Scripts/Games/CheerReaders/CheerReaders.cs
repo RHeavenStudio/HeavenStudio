@@ -1084,6 +1084,28 @@ namespace HeavenStudio.Games
                             break;
                     }
                 }),
+                new BeatAction.Action(beat + 2.5f, delegate
+                {
+                    switch (whoSpeaks)
+                    {
+                        case (int)WhoSpeaks.Solo:
+                            player.Boom();
+                            break;
+                        case (int)WhoSpeaks.Girls:
+                            foreach (var nerd in allGirls)
+                            {
+                                nerd.Boom();
+                            }
+                            break;
+                        case (int)WhoSpeaks.Both:
+                            player.Boom();
+                            foreach (var nerd in allGirls)
+                            {
+                                nerd.Boom();
+                            }
+                            break;
+                    }
+                }),
                 new BeatAction.Action(beat + 2.99f, delegate
                 {
                     if (!doingCue) canBop = true;
