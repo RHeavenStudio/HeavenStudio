@@ -1,85 +1,19 @@
 fileFormatVersion: 2
-guid: 4209ee2e22c02dc419f48d849ffe8be0
+guid: b50663c6e109f7942a7861b1d0302055
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: 4307733290887608266
+      213: 3837860492258783868
     second: TopPart
   - first:
-      213: 6388578861018139340
-    second: CropStomp_1
+      213: -7011400680687933746
+    second: MiddlePart
   - first:
-      213: 4600136064945777591
-    second: CropStomp_2
+      213: 5143629014398117052
+    second: BottomPart
   - first:
-      213: 4547237239536750645
-    second: CropStomp_3
-  - first:
-      213: -2668574724357160402
-    second: CropStomp_4
-  - first:
-      213: -1797682887254603273
-    second: CropStomp_5
-  - first:
-      213: 4158285996217961407
-    second: CropStomp_6
-  - first:
-      213: 6889467647841672361
-    second: CropStomp_7
-  - first:
-      213: -8459882890631039834
-    second: CropStomp_8
-  - first:
-      213: -6656627469148900503
-    second: CropStomp_9
-  - first:
-      213: -5043923624539948737
-    second: CropStomp_10
-  - first:
-      213: 3062639827444529830
-    second: CropStomp_11
-  - first:
-      213: -869057520978124778
-    second: CropStomp_12
-  - first:
-      213: -1397076819097940353
-    second: CropStomp_13
-  - first:
-      213: 5981729681738562701
-    second: CropStomp_14
-  - first:
-      213: 4833936860406805109
-    second: CropStomp_15
-  - first:
-      213: 3485726050779419613
-    second: CropStomp_16
-  - first:
-      213: -3750124786695316739
-    second: CropStomp_17
-  - first:
-      213: -742345311839634979
-    second: CropStomp_18
-  - first:
-      213: 3313581762434126315
-    second: CropStomp_19
-  - first:
-      213: -8347001522670887792
-    second: CropStomp_20
-  - first:
-      213: -8105010505879503071
-    second: CropStomp_21
-  - first:
-      213: 1728470609512203381
-    second: CropStomp_22
-  - first:
-      213: 5635519876405599983
-    second: CropStomp_23
-  - first:
-      213: -241274258321649073
-    second: CropStomp_24
-  - first:
-      213: -6630843921606555917
-    second: CropStomp_25
+      213: -5607818201876827567
+    second: Miss
   externalObjects: {}
   serializedVersion: 11
   mipmaps:
@@ -172,10 +106,10 @@ TextureImporter:
       name: TopPart
       rect:
         serializedVersion: 2
-        x: 2
-        y: 200
-        width: 577
-        height: 90
+        x: 3
+        y: 396
+        width: 1159
+        height: 195
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -183,20 +117,20 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: ac7fa7eca9428cb30800000000000000
-      internalID: 4307733290887608266
+      spriteID: c72379aa8c1d24530800000000000000
+      internalID: 3837860492258783868
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: CropStomp_1
+      name: MiddlePart
       rect:
         serializedVersion: 2
-        x: 0
-        y: 109
-        width: 589
-        height: 89
+        x: 3
+        y: 216
+        width: 1159
+        height: 179
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -204,20 +138,20 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: cca4e8e30aac8a850800000000000000
-      internalID: 6388578861018139340
+      spriteID: ec6e9a99a3082be90800000000000000
+      internalID: -7011400680687933746
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: CropStomp_2
+      name: BottomPart
       rect:
         serializedVersion: 2
-        x: 0
-        y: 12
-        width: 601
-        height: 94
+        x: 4
+        y: 27
+        width: 1158
+        height: 189
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -225,8 +159,29 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 7bb6e85e067f6df30800000000000000
-      internalID: 4600136064945777591
+      spriteID: cb4a7932657d16740800000000000000
+      internalID: 5143629014398117052
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Miss
+      rect:
+        serializedVersion: 2
+        x: 1160
+        y: 373
+        width: 296
+        height: 219
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 15279209e070d22b0800000000000000
+      internalID: -5607818201876827567
       vertices: []
       indices: 
       edges: []
@@ -245,5 +200,5 @@ TextureImporter:
   pSDRemoveMatte: 0
   pSDShowRemoveMatteOption: 0
   userData: 
-  assetBundleName: rvlbooks/common
+  assetBundleName: 
   assetBundleVariant: 

@@ -57,23 +57,25 @@ namespace HeavenStudio.Games.Loaders
                 },
                 new GameAction("okItsOn", "OK It's On!")
                 {
-                    function = delegate {var e = eventCaller.currentEntity; CheerReaders.instance.OkItsOnStretchable(e.beat, e.length, e["solo"], e["toggle"]); CheerReaders.instance.SetIsDoingCue(e.beat, e.length, false);},
+                    function = delegate {var e = eventCaller.currentEntity; CheerReaders.instance.OkItsOnStretchable(e.beat, e.length, e["solo"], e["toggle"], e["poster"]); CheerReaders.instance.SetIsDoingCue(e.beat, e.length, false);},
                     defaultLength = 4f,
                     parameters = new List<Param>()
                     {
                         new Param("solo", CheerReaders.WhoSpeaks.Both, "Who Speaks", "Who should say the voice line?"),
-                        new Param("toggle", true, "Whistle", "Should the whistle sound play?")
+                        new Param("toggle", true, "Whistle", "Should the whistle sound play?"),
+                        new Param("poster", CheerReaders.PosterToChoose.Random, "Poster", "Which image should the cheer readers display?")
                     }
                 },
                 new GameAction("okItsOnStretch", "OK It's On! (Stretchable)")
                 {
-                    function = delegate {var e = eventCaller.currentEntity; CheerReaders.instance.OkItsOnStretchable(e.beat, e.length, e["solo"], e["toggle"]); CheerReaders.instance.SetIsDoingCue(e.beat, e.length, false); },
+                    function = delegate {var e = eventCaller.currentEntity; CheerReaders.instance.OkItsOnStretchable(e.beat, e.length, e["solo"], e["toggle"], e["poster"]); CheerReaders.instance.SetIsDoingCue(e.beat, e.length, false); },
                     defaultLength = 4f,
                     resizable = true,
                     parameters = new List<Param>()
                     {
                         new Param("solo", CheerReaders.WhoSpeaks.Both, "Who Speaks", "Who should say the voice line?"),
-                        new Param("toggle", true, "Whistle", "Should the whistle sound play?")
+                        new Param("toggle", true, "Whistle", "Should the whistle sound play?"),
+                        new Param("poster", CheerReaders.PosterToChoose.Random, "Poster", "Which image should the cheer readers display?")
                     }
                 },
                 new GameAction("yay", "Yay")
@@ -112,22 +114,20 @@ namespace HeavenStudio.Games
             Girls = 1,
             Both = 2
         }
-        public enum PosterType
+        public enum PosterToChoose
         {
-            CropStomp = 0,
-            DJSchool = 1,
-            FillbotsEmpty = 2,
-            FillbotsFull = 3,
-            FrogHop = 4,
-            Lockstep = 5,
-            MoaiDooWop = 6,
-            PlayYan = 7,
-            Remix5Girl = 8,
-            RhythmRally = 9,
-            RhythmTweezers = 10,
-            SpaceGramps = 11,
-            TapTrial = 12,
-            TapTrial2 = 13
+            DJSchool = 0,
+            Lockstep = 1,
+            RhythmTweezers = 2,
+            Random = 14
+        }
+        [System.Serializable]
+        public struct PosterImages
+        {
+            public Sprite topPart;
+            public Sprite middlePart;
+            public Sprite bottomPart;
+            public Sprite miss;
         }
         [Header("Components")]
         //Doing this because unity doesn't expose multidimensional/jagged arrays in the inspector - Rasmus
@@ -140,10 +140,14 @@ namespace HeavenStudio.Games
         [SerializeField] List<GameObject> bottomMasks = new List<GameObject>();
         [SerializeField] GameObject playerMask;
         [SerializeField] GameObject missPoster;
+        [SerializeField] SpriteRenderer topPoster;
+        [SerializeField] SpriteRenderer middlePoster;
+        [SerializeField] SpriteRenderer bottomPoster;
 
         [SerializeField] RvlCharacter player;
         Sound SpinningLoop;
         [Header("Variables")]
+        [SerializeField] List<PosterImages> posters = new List<PosterImages>();
         bool shouldBop = true;
         bool canBop = true;
         public bool doingCue;
@@ -309,6 +313,15 @@ namespace HeavenStudio.Games
             {
                 Jukebox.KillLoop(SpinningLoop, 0.5f);
             }
+        }
+
+        void SetPosterImage(int posterToChoose)
+        {
+            if (posterToChoose >= posters.Count || posterToChoose < 0) posterToChoose = UnityEngine.Random.Range(0, 3);
+            topPoster.sprite = posters[posterToChoose].topPart;
+            middlePoster.sprite = posters[posterToChoose].middlePart;
+            bottomPoster.sprite = posters[posterToChoose].bottomPart;
+            missPoster.GetComponent<SpriteRenderer>().sprite = posters[posterToChoose].miss;
         }
 
         public void ResetPose()
@@ -1113,7 +1126,7 @@ namespace HeavenStudio.Games
             });
         }
 
-        public void OkItsOnStretchable(float beat, float length, int whoSpeaks, bool whistle)
+        public void OkItsOnStretchable(float beat, float length, int whoSpeaks, bool whistle, int posterToChoose)
         {
             canBop = false;
             float actualLength = length * 0.25f;
@@ -1261,6 +1274,7 @@ namespace HeavenStudio.Games
                 }),
                 new BeatAction.Action(beat + 3f * actualLength, delegate
                 {
+                    SetPosterImage(posterToChoose);
                     foreach (var nerd in firstRow)
                     {
                         nerd.StopSpinBook();
