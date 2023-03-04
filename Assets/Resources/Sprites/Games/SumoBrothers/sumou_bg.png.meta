@@ -34,7 +34,7 @@ TextureImporter:
     second: inuHeadBounce
   - first:
       213: 7874366561150129192
-    second: inuThing
+    second: inuFan
   - first:
       213: 7251623275569825146
     second: inuShadow
@@ -107,11 +107,11 @@ TextureImporter:
   platformSettings:
   - serializedVersion: 3
     buildTarget: DefaultTexturePlatform
-    maxTextureSize: 2048
-    resizeAlgorithm: 0
+    maxTextureSize: 4096
+    resizeAlgorithm: 1
     textureFormat: -1
-    textureCompression: 1
-    compressionQuality: 50
+    textureCompression: 2
+    compressionQuality: 0
     crunchedCompression: 0
     allowsAlphaSplitting: 0
     overridden: 0
@@ -119,11 +119,11 @@ TextureImporter:
     forceMaximumCompressionQuality_BC6H_BC7: 0
   - serializedVersion: 3
     buildTarget: Standalone
-    maxTextureSize: 2048
-    resizeAlgorithm: 0
+    maxTextureSize: 4096
+    resizeAlgorithm: 1
     textureFormat: -1
-    textureCompression: 1
-    compressionQuality: 50
+    textureCompression: 2
+    compressionQuality: 0
     crunchedCompression: 0
     allowsAlphaSplitting: 0
     overridden: 0
@@ -136,10 +136,10 @@ TextureImporter:
       name: background
       rect:
         serializedVersion: 2
-        x: 98
-        y: 1858
-        width: 84
-        height: 670
+        x: 88
+        y: 80
+        width: 128
+        height: 1060
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -157,10 +157,10 @@ TextureImporter:
       name: backgroundGlow
       rect:
         serializedVersion: 2
-        x: 259
-        y: 1859
-        width: 82
-        height: 420
+        x: 342
+        y: 80
+        width: 128
+        height: 653
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -178,10 +178,10 @@ TextureImporter:
       name: inuSenseiPlatform
       rect:
         serializedVersion: 2
-        x: 1581
-        y: 2215
-        width: 160
-        height: 279
+        x: 670
+        y: 700
+        width: 500
+        height: 500
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -199,10 +199,10 @@ TextureImporter:
       name: ground
       rect:
         serializedVersion: 2
-        x: 1800
-        y: 2183
-        width: 749
-        height: 341
+        x: 770
+        y: 81
+        width: 1187
+        height: 539
       alignment: 5
       pivot: {x: 1, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -220,10 +220,10 @@ TextureImporter:
       name: inuBounce
       rect:
         serializedVersion: 2
-        x: 2444
-        y: 4
-        width: 104
-        height: 200
+        x: 1838
+        y: 1246
+        width: 201
+        height: 400
       alignment: 9
       pivot: {x: 0.5, y: 0.24}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -241,12 +241,12 @@ TextureImporter:
       name: inuIdle
       rect:
         serializedVersion: 2
-        x: 2285
-        y: 4
-        width: 120
-        height: 136
-      alignment: 9
-      pivot: {x: 0.5, y: 0.32}
+        x: 1599
+        y: 1246
+        width: 200
+        height: 200
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
@@ -262,10 +262,10 @@ TextureImporter:
       name: inuEar
       rect:
         serializedVersion: 2
-        x: 2323
-        y: 148
-        width: 88
-        height: 56
+        x: 1680
+        y: 1504
+        width: 100
+        height: 100
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -283,10 +283,10 @@ TextureImporter:
       name: inuStinkEye
       rect:
         serializedVersion: 2
-        x: 2123
-        y: 4
-        width: 120
-        height: 136
+        x: 1342
+        y: 1246
+        width: 201
+        height: 200
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -304,10 +304,10 @@ TextureImporter:
       name: inuHead
       rect:
         serializedVersion: 2
-        x: 1962
-        y: 4
-        width: 120
-        height: 136
+        x: 1086
+        y: 1246
+        width: 201
+        height: 200
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -325,10 +325,10 @@ TextureImporter:
       name: inuHeadBounce
       rect:
         serializedVersion: 2
-        x: 1820
-        y: 4
-        width: 104
-        height: 136
+        x: 846
+        y: 1246
+        width: 201
+        height: 200
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -343,13 +343,13 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: inuThing
+      name: inuFan
       rect:
         serializedVersion: 2
-        x: 1696
-        y: 0
-        width: 88
-        height: 140
+        x: 639
+        y: 1246
+        width: 200
+        height: 200
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -367,10 +367,10 @@ TextureImporter:
       name: inuShadow
       rect:
         serializedVersion: 2
-        x: 2020
-        y: 148
-        width: 104
-        height: 56
+        x: 1168
+        y: 1455
+        width: 200
+        height: 200
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -388,10 +388,10 @@ TextureImporter:
       name: inuCollar
       rect:
         serializedVersion: 2
-        x: 2155
-        y: 175
-        width: 56
-        height: 28
+        x: 1393
+        y: 1504
+        width: 100
+        height: 100
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -409,10 +409,10 @@ TextureImporter:
       name: inuMouth
       rect:
         serializedVersion: 2
-        x: 2236
-        y: 148
-        width: 56
-        height: 56
+        x: 1521
+        y: 1504
+        width: 100
+        height: 100
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
