@@ -57,25 +57,27 @@ namespace HeavenStudio.Games.Loaders
                 },
                 new GameAction("okItsOn", "OK It's On!")
                 {
-                    function = delegate {var e = eventCaller.currentEntity; CheerReaders.instance.OkItsOnStretchable(e.beat, e.length, e["solo"], e["toggle"], e["poster"]); CheerReaders.instance.SetIsDoingCue(e.beat, e.length, false);},
+                    function = delegate {var e = eventCaller.currentEntity; CheerReaders.instance.OkItsOnStretchable(e.beat, e.length, e["solo"], e["toggle"], e["poster"], e["happy"]); CheerReaders.instance.SetIsDoingCue(e.beat, e.length, false);},
                     defaultLength = 4f,
                     parameters = new List<Param>()
                     {
                         new Param("solo", CheerReaders.WhoSpeaks.Both, "Who Speaks", "Who should say the voice line?"),
                         new Param("toggle", true, "Whistle", "Should the whistle sound play?"),
-                        new Param("poster", CheerReaders.PosterToChoose.Random, "Poster", "Which image should the cheer readers display?")
+                        new Param("poster", CheerReaders.PosterToChoose.Random, "Poster", "Which image should the cheer readers display?"),
+                        new Param("happy", true, "Do Happy Face?", "Will the cheer readers do a happy smile 2 beats after showing off their books?")
                     }
                 },
                 new GameAction("okItsOnStretch", "OK It's On! (Stretchable)")
                 {
-                    function = delegate {var e = eventCaller.currentEntity; CheerReaders.instance.OkItsOnStretchable(e.beat, e.length, e["solo"], e["toggle"], e["poster"]); CheerReaders.instance.SetIsDoingCue(e.beat, e.length, false); },
+                    function = delegate {var e = eventCaller.currentEntity; CheerReaders.instance.OkItsOnStretchable(e.beat, e.length, e["solo"], e["toggle"], e["poster"], e["happy"]); CheerReaders.instance.SetIsDoingCue(e.beat, e.length, false); },
                     defaultLength = 4f,
                     resizable = true,
                     parameters = new List<Param>()
                     {
                         new Param("solo", CheerReaders.WhoSpeaks.Both, "Who Speaks", "Who should say the voice line?"),
                         new Param("toggle", true, "Whistle", "Should the whistle sound play?"),
-                        new Param("poster", CheerReaders.PosterToChoose.Random, "Poster", "Which image should the cheer readers display?")
+                        new Param("poster", CheerReaders.PosterToChoose.Random, "Poster", "Which image should the cheer readers display?"),
+                        new Param("happy", true, "Do Happy Face?", "Will the cheer readers do a happy smile 2 beats after showing off their books?")
                     }
                 },
                 new GameAction("yay", "Yay")
@@ -1126,7 +1128,7 @@ namespace HeavenStudio.Games
             });
         }
 
-        public void OkItsOnStretchable(float beat, float length, int whoSpeaks, bool whistle, int posterToChoose)
+        public void OkItsOnStretchable(float beat, float length, int whoSpeaks, bool whistle, int posterToChoose, bool shouldHappyFace)
         {
             canBop = false;
             float actualLength = length * 0.25f;
@@ -1318,6 +1320,15 @@ namespace HeavenStudio.Games
                             }
                             break;
                     }
+                }),
+                new BeatAction.Action(beat + 3f * actualLength + 2f, delegate
+                {
+                    if (!shouldHappyFace) return;
+                    foreach (var girl in allGirls)
+                    {
+                        girl.HappyFace();
+                    }
+                    player.HappyFace();
                 })
             });
         }

@@ -17,6 +17,7 @@ namespace HeavenStudio.Games.Scripts_CheerReaders
         public bool player;
         float currentBlushBeat;
         bool missed;
+        bool doingHappyFace;
         CheerReaders game;
 
         void Awake()
@@ -40,7 +41,19 @@ namespace HeavenStudio.Games.Scripts_CheerReaders
                 {
                     faceAnim.Play("FaceBlush", 0, 0);
                 }
+                if (game.doingCue && doingHappyFace)
+                {
+                    if (faceAnim.IsAnimationNotPlaying()) faceAnim.Play("FaceIdle", 0, 0);
+                    doingHappyFace = false;
+                }
             }
+        }
+
+        public void HappyFace()
+        {
+            if (game.doingCue) return;
+            faceAnim.Play(player ? "FaceItsOnHappy" : "FaceItsOnNPC", 0, 0);
+            doingHappyFace = true;
         }
 
         public void Yay()
@@ -56,7 +69,7 @@ namespace HeavenStudio.Games.Scripts_CheerReaders
 
         public void Boom()
         {
-            faceAnim.DoScaledAnimationAsync("FaceBoom", 0.5f);
+            faceAnim.DoScaledAnimationAsync(player ? "FaceBoom" : "FaceBoomNPC", 0.5f);
         }
 
         public void ItsUpToYou(int count)
