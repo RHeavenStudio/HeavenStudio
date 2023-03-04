@@ -17,7 +17,7 @@ namespace HeavenStudio.Games.Scripts_CheerReaders
         public bool player;
         float currentBlushBeat;
         bool missed;
-        bool doingHappyFace;
+        [SerializeField] bool shouldLookDown;
         CheerReaders game;
 
         void Awake()
@@ -41,19 +41,13 @@ namespace HeavenStudio.Games.Scripts_CheerReaders
                 {
                     faceAnim.Play("FaceBlush", 0, 0);
                 }
-                if (game.doingCue && doingHappyFace)
-                {
-                    if (faceAnim.IsAnimationNotPlaying()) faceAnim.Play("FaceIdle", 0, 0);
-                    doingHappyFace = false;
-                }
             }
         }
 
-        public void HappyFace()
+        public void HappyFace(bool forceIt = false)
         {
-            if (game.doingCue) return;
+            if (game.doingCue && !forceIt) return;
             faceAnim.Play(player ? "FaceItsOnHappy" : "FaceItsOnNPC", 0, 0);
-            doingHappyFace = true;
         }
 
         public void Yay()
@@ -62,9 +56,15 @@ namespace HeavenStudio.Games.Scripts_CheerReaders
             BaseAnim.DoScaledAnimationAsync(bookIsWhite ? "WhiteYay" : "BlackYay", 0.5f);
         }
 
+        public void ResetFace()
+        {
+            if (faceAnim.IsAnimationNotPlaying()) faceAnim.Play("FaceIdle", 0, 0);
+        }
+
         public void ResetPose()
         {
             BaseAnim.Play(bookIsWhite ? "WhiteIdle" : "BlackIdle", 0, 0);
+            ResetFace();
         }
 
         public void Boom()
@@ -134,6 +134,11 @@ namespace HeavenStudio.Games.Scripts_CheerReaders
             BaseAnim.Play(bookIsWhite ? "MissWhite" : "MissBlack", 0, 0);
             noBop = true;
             missed = true;
+        }
+
+        public void Stare()
+        {
+            faceAnim.Play(shouldLookDown ? "FaceNPCLook2" : "FaceNPCLook1", 0, 0);
         }
 
         public void FlipBook(bool hit = true)

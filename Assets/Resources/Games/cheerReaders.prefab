@@ -7686,6 +7686,10 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 5363942837548802802}
     m_Modifications:
+    - target: {fileID: 2720341442018480004, guid: 88d05a9dbea4a664ebe7b7fba3370294, type: 3}
+      propertyPath: shouldLookDown
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 3931856442031590867, guid: 88d05a9dbea4a664ebe7b7fba3370294, type: 3}
       propertyPath: m_Name
       value: pepSquad8
@@ -9437,6 +9441,10 @@ PrefabInstance:
     - target: {fileID: 7779412043217106175, guid: 640ec853df44a4844ab650b31620336c, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8297500924376949599, guid: 640ec853df44a4844ab650b31620336c, type: 3}
+      propertyPath: shouldLookDown
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 640ec853df44a4844ab650b31620336c, type: 3}

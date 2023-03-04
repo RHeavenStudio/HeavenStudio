@@ -391,6 +391,11 @@ namespace HeavenStudio.Games
         public void SetIsDoingCue(float beat, float length, bool shouldSwitchColor = true)
         {
             if (!doingCue) shouldYay = false;
+            foreach (var girl in allGirls)
+            {
+                girl.ResetFace();
+            }
+            player.ResetFace();
             doingCue = true;
             cueBeat = beat;
             cueLength = length;
@@ -1305,11 +1310,22 @@ namespace HeavenStudio.Games
                     {
                         case (int)WhoSpeaks.Solo:
                             player.ItsUpToYou(3);
+                            if (shouldHappyFace)
+                            {
+                                foreach (var girl in allGirls)
+                                {
+                                    girl.HappyFace(true);
+                                }
+                            }
                             break;
                         case (int)WhoSpeaks.Girls:
                             foreach (var nerd in allGirls)
                             {
                                 nerd.ItsUpToYou(3);
+                            }
+                            if (shouldHappyFace)
+                            {
+                                player.HappyFace(true);
                             }
                             break;
                         case (int)WhoSpeaks.Both:
@@ -1424,6 +1440,10 @@ namespace HeavenStudio.Games
             Jukebox.PlayOneShotGame("cheerReaders/doingoing");
             player.Miss();
             shouldDoSuccessZoom = false;
+            foreach (var girl in allGirls)
+            {
+                girl.Stare();
+            }
         }
 
         void Nothing(PlayerActionEvent caller) {}
