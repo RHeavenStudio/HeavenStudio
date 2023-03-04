@@ -3,6 +3,7 @@ using HeavenStudio.Util;
 using System;
 using System.Collections.Generic;
 using UnityEngine;
+using TMPro;
 
 namespace HeavenStudio.Games.Loaders
 {
@@ -75,11 +76,12 @@ namespace HeavenStudio.Games.Loaders
                 },
                 new GameAction("CutEverything", "Cut Everything!")
                 {
-                    function = delegate { DogNinja.instance.CutEverything(eventCaller.currentEntity.beat, eventCaller.currentEntity["toggle"]); }, 
+                    function = delegate { var e = eventCaller.currentEntity; DogNinja.instance.CutEverything(e.beat, e["toggle"], e["text"]); }, 
                     defaultLength = 0.5f,
                     parameters = new List<Param>()
                     {
                         new Param("toggle", true, "Play Sound", "Whether to play the 'FlyIn' SFX or not"),
+                        new Param("text", "Cut everything!", "Custom Text", "What text should the sign display?")
                     }
                 },
                 new GameAction("HereWeGo", "Here We Go!")
@@ -113,6 +115,8 @@ namespace HeavenStudio.Games
         public SpriteRenderer WhichObject;
         public SpriteRenderer WhichLeftHalf;
         public SpriteRenderer WhichRightHalf;
+        [SerializeField] Canvas cutEverythingCanvas;
+        [SerializeField] TMP_Text cutEverythingText;
         
         [Header("Curves")]
         public BezierCurve3D CurveFromLeft;
@@ -163,6 +167,7 @@ namespace HeavenStudio.Games
         private void Awake()
         {
             instance = this;
+            cutEverythingCanvas.worldCamera = GameCamera.instance.camera;
         }
 
         private void Update()
@@ -203,6 +208,11 @@ namespace HeavenStudio.Games
             dontBop = !bop;
         }
 
+        public void SetCustomText(string text)
+        {
+            cutEverythingText.text = text;
+        }
+
         public void ThrowObject(float beat, int ObjType, string textObj, bool fromLeft, bool fromBoth)
         {
             int ObjSprite = ObjType;
@@ -237,7 +247,7 @@ namespace HeavenStudio.Games
             ThrowObject(beat, ObjType2, textObj2, true, true);
         }
 
-        public void CutEverything(float beat, bool sound)
+        public void CutEverything(float beat, bool sound, string customText)
         {
             // plays one anim with sfx when it's not on screen, plays a different anim with no sfx when on screen. ez
             if (!birdOnScreen) {
@@ -247,6 +257,7 @@ namespace HeavenStudio.Games
                 }
                 BirdAnim.Play("FlyIn", 0, 0);
                 birdOnScreen = true;
+                SetCustomText(customText);
             } else {
                 BirdAnim.Play("FlyOut", 0, 0);
                 birdOnScreen = false;
