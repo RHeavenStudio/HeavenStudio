@@ -11,10 +11,15 @@ namespace HeavenStudio.Games.Scripts_DogNinja
     public class SpawnHalves : PlayerActionObject
     {
         public float startBeat;
+        public Vector3 objPos;
         public bool lefty;
+        const float rotSpeed = 140f;
 
         [Header("References")]
-        public Animator anim;
+        [SerializeField] BezierCurve3D fallLeftCurve;
+        [SerializeField] BezierCurve3D fallRightCurve;
+        BezierCurve3D curve;
+        [SerializeField] Transform halvesParent;
 
         private DogNinja game;
         
@@ -25,29 +30,28 @@ namespace HeavenStudio.Games.Scripts_DogNinja
 
         private void Start() 
         {
-            if (lefty) {
-                anim.DoScaledAnimationAsync("FallLeft", 0.5f);
-            } else {
-                anim.DoScaledAnimationAsync("FallRight", 0.5f);
-            }
+            curve = lefty ? fallRightCurve : fallLeftCurve;
         }
 
         private void Update()
         {
-            /*
+            float modifer = 0.2f;
             float flyPosHalves = Conductor.instance.GetPositionFromBeat(startBeat, 1f)+0.65f;
-            flyPosHalves *= 0.2f;
-            transform.position = HalfCurve.GetPoint(flyPosHalves);
+            modifer *= 0.05f;
+            flyPosHalves *= modifer;
+            transform.position = curve.GetPoint(flyPosHalves);
 
+            /*
             float rot = rotSpeed;
             if (!lefty) rot *= -1;
             transform.rotation = Quaternion.Euler(0, 0, transform.rotation.eulerAngles.z + (rot * Time.deltaTime));
+            */
 
             // clean-up logic
+            
             if (flyPosHalves > 1f) {
                 GameObject.Destroy(gameObject);
             };
-            */
             
             if (!Conductor.instance.isPlaying && !Conductor.instance.isPaused) {
                 GameObject.Destroy(gameObject);
