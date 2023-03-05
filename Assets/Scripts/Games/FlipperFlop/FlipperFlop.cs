@@ -85,6 +85,7 @@ namespace HeavenStudio.Games
         [SerializeField] Animator captainTuckFaceAnim;
         [SerializeField] Transform flippersMovement;
         [Header("Properties")]
+        [SerializeField] float rollDistance = 1.5f;
         private bool missed;
         bool isMoving;
         bool moveLeft;
@@ -198,9 +199,9 @@ namespace HeavenStudio.Games
                     {
                         if (!isMoving)
                         {
-                            currentXPos = flippersMovement.position.x + (moveLeft ? -2f : 2f);
+                            currentXPos = flippersMovement.position.x + (moveLeft ? -rollDistance : rollDistance);
                             isMoving = true;
-                            currentCameraXPos = GameCamera.additionalPosition.x + (moveLeft ? -2f : 2f);
+                            currentCameraXPos = GameCamera.additionalPosition.x + (moveLeft ? -rollDistance : rollDistance);
                         }
                         float normalizedBeat = cond.GetPositionFromBeat(queuedMovements[0], 0.5f);
                         float normalizedCamBeat = cond.GetPositionFromBeat(queuedMovements[0], 1f);
