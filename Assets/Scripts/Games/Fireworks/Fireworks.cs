@@ -15,25 +15,27 @@ namespace HeavenStudio.Games.Loaders
             {
                 new GameAction("firework", "Firework")
                 {
-                    preFunction = delegate {var e = eventCaller.currentEntity; Fireworks.PreSpawnFirework(e.beat, false, e["whereToSpawn"], e["toggle"], e["explosionType"], e["applause"]); },
+                    preFunction = delegate {var e = eventCaller.currentEntity; Fireworks.PreSpawnFirework(e.beat, false, e["whereToSpawn"], e["toggle"], e["explosionType"], e["applause"], e["offSet"]); },
                     defaultLength = 4f,
                     parameters = new List<Param>()
                     {
                         new Param("whereToSpawn", Fireworks.WhereToSpawn.Middle, "Where to spawn?", "Where should the firework spawn?"),
                         new Param("explosionType", Fireworks.ExplosionType.MixedCircular, "Explosion Pattern", "What pattern should the firework explode with?"),
                         new Param("applause", false, "Applause", "Should an applause play after successfully hitting this cue?"),
+                        new Param("offSet", new EntityTypes.Float(0, 4, 0), "Vertical Offset", "What vertical Offset should the rocket have?"),
                         new Param("toggle", false, "Practice Count-In", "Should the count-in from the fireworks practice play?")
                     }
                 },
                 new GameAction("sparkler", "Sparkler")
                 {
-                    preFunction = delegate {var e = eventCaller.currentEntity; Fireworks.PreSpawnFirework(e.beat, true, e["whereToSpawn"], e["toggle"], e["explosionType"], e["applause"]); },
+                    preFunction = delegate {var e = eventCaller.currentEntity; Fireworks.PreSpawnFirework(e.beat, true, e["whereToSpawn"], e["toggle"], e["explosionType"], e["applause"], e["offSet"]); },
                     defaultLength = 2f,
                     parameters = new List<Param>()
                     {
                         new Param("whereToSpawn", Fireworks.WhereToSpawn.Middle, "Where to spawn?", "Where should the firework spawn?"),
                         new Param("explosionType", Fireworks.ExplosionType.MixedCircular, "Explosion Pattern", "What pattern should the firework explode with?"),
                         new Param("applause", false, "Applause", "Should an applause play after successfully hitting this cue?"),
+                        new Param("offSet", new EntityTypes.Float(0, 4, 0), "Vertical Offset", "What vertical Offset should the rocket have?"),
                         new Param("toggle", false, "Practice Count-In", "Should the count-in from the fireworks practice play?")
                     }
                 },
@@ -91,6 +93,7 @@ namespace HeavenStudio.Games
             public bool practice;
             public int explosionType;
             public bool applause;
+            public float verticalOffset;
         }
         public enum WhereToSpawn
         {
@@ -142,7 +145,7 @@ namespace HeavenStudio.Games
                 {
                     foreach (var firework in queuedFireworks)
                     {
-                        SpawnFirework(firework.beat, firework.isSparkler, firework.whereToSpawn, firework.practice, firework.explosionType, firework.applause);
+                        SpawnFirework(firework.beat, firework.isSparkler, firework.whereToSpawn, firework.practice, firework.explosionType, firework.applause, firework.verticalOffset);
                     }
                     queuedFireworks.Clear();
                 }
@@ -186,7 +189,7 @@ namespace HeavenStudio.Games
             }
         }
 
-        public static void PreSpawnFirework(float beat, bool isSparkler, int whereToSpawn, bool practice, int explosionType, bool applause)
+        public static void PreSpawnFirework(float beat, bool isSparkler, int whereToSpawn, bool practice, int explosionType, bool applause, float verticalOffset)
         {
             if (isSparkler)
             {
@@ -208,18 +211,18 @@ namespace HeavenStudio.Games
                 {
                     new BeatAction.Action(beat, delegate
                     {
-                        Fireworks.instance.SpawnFirework(beat, isSparkler, whereToSpawn, practice, explosionType, applause);
+                        Fireworks.instance.SpawnFirework(beat, isSparkler, whereToSpawn, practice, explosionType, applause, verticalOffset);
                     })
                 });
             }
             else
             {
-                queuedFireworks.Add(new QueuedFirework { beat = beat, isSparkler = isSparkler, whereToSpawn = whereToSpawn, practice = practice, explosionType = explosionType, applause = applause });
+                queuedFireworks.Add(new QueuedFirework { beat = beat, isSparkler = isSparkler, whereToSpawn = whereToSpawn, practice = practice, explosionType = explosionType, applause = applause, verticalOffset = verticalOffset });
             }
 
         }
 
-        void SpawnFirework(float beat, bool isSparkler, int whereToSpawn, bool practice, int explosionType, bool applause)
+        void SpawnFirework(float beat, bool isSparkler, int whereToSpawn, bool practice, int explosionType, bool applause, float verticalOffset)
         {
             if (isSparkler && practice)
             {
@@ -254,6 +257,7 @@ namespace HeavenStudio.Games
             }
             Rocket spawnedRocket = Instantiate(firework, spawnPoint, false);
             spawnedRocket.isSparkler = isSparkler;
+            spawnedRocket.offSet = verticalOffset;
             spawnedRocket.applause = applause;
             spawnedRocket.Init(beat, explosionType);
         }
