@@ -106,12 +106,7 @@ namespace HeavenStudio.Games
         
         [Header("References")]
         public GameObject ObjectBase;
-        public GameObject HalvesLeftBase;
-        public GameObject HalvesRightBase;
         public GameObject FullBird;
-        public Transform ObjectHolder;
-        public Transform LeftHalf;
-        public Transform RightHalf;
         public SpriteRenderer WhichObject;
         public SpriteRenderer WhichLeftHalf;
         public SpriteRenderer WhichRightHalf;
@@ -130,7 +125,7 @@ namespace HeavenStudio.Games
         public bool usesCustomObject = false;
         static bool dontBop = false;
         public bool needPrepare = false;
-        string sfxNum = "dogNinja/";
+        private const string sfxNum = "dogNinja/";
         
         public static DogNinja instance;
 
@@ -160,8 +155,8 @@ namespace HeavenStudio.Games
             BattingShow,
             MeatGrinder,
             // remove "//" to unleash an eons long dormant hell-beast
-            YaseiNoIkiG3M4,
-            AmongUs,
+            //YaseiNoIkiG3M4,
+            //AmongUs,
         }
         
         private void Awake()
@@ -236,7 +231,6 @@ namespace HeavenStudio.Games
             Object.fromLeft = fromLeft;
             Object.fromBoth = fromBoth;
             Object.textObj = textObj;
-            Object.sfxNum = sfxNum;
             Object.type = ObjType;
             Object.spriteInt = (ObjType == 10 ? ObjSprite + 10 : ObjSprite);
         }
@@ -253,7 +247,7 @@ namespace HeavenStudio.Games
             if (!birdOnScreen) {
                 FullBird.SetActive(true);
                 if (sound) { 
-                    Jukebox.PlayOneShotGame("dogNinja/bird_flap"); 
+                    Jukebox.PlayOneShotGame(sfxNum+"bird_flap"); 
                 }
                 BirdAnim.Play("FlyIn", 0, 0);
                 birdOnScreen = true;
@@ -273,20 +267,16 @@ namespace HeavenStudio.Games
         // it's repeated code but the alternative saves no space
         public void HereWeGo(float beat)
         {
-            MultiSound.Play(new MultiSound.Sound[] { 
-                    new MultiSound.Sound("dogNinja/here", beat), 
-                    new MultiSound.Sound("dogNinja/we", beat + 0.5f),
-                    new MultiSound.Sound("dogNinja/go", beat + 1f)
-                });
+            MultiSound.Play(new MultiSound.Sound[] {
+                    new MultiSound.Sound(sfxNum+"here", beat), 
+                    new MultiSound.Sound(sfxNum+"we", beat + 0.5f),
+                    new MultiSound.Sound(sfxNum+"go", beat + 1f)
+                }, forcePlay: true);
         }
 
         public static void HereWeGoInactive(float beat)
         {
-            MultiSound.Play(new MultiSound.Sound[] { 
-                    new MultiSound.Sound("dogNinja/here", beat), 
-                    new MultiSound.Sound("dogNinja/we", beat + 0.5f),
-                    new MultiSound.Sound("dogNinja/go", beat + 1f)
-                }, forcePlay: true);
+            DogNinja.instance.HereWeGo(beat);
         }
     }
 }

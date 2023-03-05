@@ -16,15 +16,21 @@ namespace HeavenStudio.Games.Scripts_DogNinja
         public string textObj;
         public bool fromLeft;
         public bool fromBoth = false;
-        public Vector3 objPos;
-        public string sfxNum = "dogNinja/";
+        private Vector3 objPos;
+        private bool isActive = true;
+        private float barelyTime;
+        string sfxNum = "dogNinja/";
         
-
         [Header("Animators")]
-        public Animator DogAnim;
+        Animator DogAnim;
 
         [Header("References")]
         public BezierCurve3D curve;
+        [SerializeField] BezierCurve3D barelyCurve;
+        [SerializeField] BezierCurve3D BarelyLeftCurve;
+        [SerializeField] BezierCurve3D BarelyRightCurve;
+        [SerializeField] GameObject HalvesLeftBase;
+        [SerializeField] GameObject HalvesRightBase;
         public Sprite[] objectLeftHalves;
         public Sprite[] objectRightHalves;
 
@@ -33,6 +39,8 @@ namespace HeavenStudio.Games.Scripts_DogNinja
         private void Awake()
         {
             game = DogNinja.instance;
+            DogAnim = game.DogAnim;
+            barelyCurve = fromLeft ? BarelyLeftCurve : BarelyRightCurve;
         }
 
         private void Start()
@@ -59,15 +67,24 @@ namespace HeavenStudio.Games.Scripts_DogNinja
             
             game.ScheduleInput(startBeat, 1f, InputType.STANDARD_DOWN, Hit, Miss, Out);
             
-            game.DogAnim.SetBool("needPrepare", true);
+            DogAnim.SetBool("needPrepare", true);
         }
 
         private void Update()
         {
             float flyPos = Conductor.instance.GetPositionFromBeat(startBeat, 1f)+1.1f;
-            flyPos *= 0.31f;
-            transform.position = curve.GetPoint(flyPos);
-            objPos = curve.GetPoint(flyPos);
+            if (isActive) {
+                flyPos *= 0.31f;
+                transform.position = curve.GetPoint(flyPos);
+                objPos = curve.GetPoint(flyPos);
+            } else {
+                Debug.Log("brake point before big");
+                float flyPosBarely = Conductor.instance.GetPositionFromBeat(barelyTime, 1f);
+                flyPos *= 0.31f;
+                transform.position = barelyCurve.GetPoint(flyPosBarely);
+                Debug.Log("brake point after big");
+            }
+            
             
             // destroy object when it's off-screen
             if (flyPos > 1f) {
@@ -95,27 +112,45 @@ namespace HeavenStudio.Games.Scripts_DogNinja
             DogAnim.DoScaledAnimationAsync(Slice, 0.5f);
             if (fromLeft && fromBoth) {} else { Jukebox.PlayOneShotGame(sfxNum+"2"); }
 
-            Debug.Log(spriteInt);
-            
             game.WhichLeftHalf.sprite = objectLeftHalves[spriteInt-1];
             game.WhichRightHalf.sprite = objectRightHalves[spriteInt-1];
 
-            Debug.Log(objectLeftHalves[spriteInt-1]);
-
-            SpawnHalves LeftHalf = Instantiate(game.HalvesLeftBase).GetComponent<SpawnHalves>();
+            SpawnHalves LeftHalf = Instantiate(HalvesLeftBase).GetComponent<SpawnHalves>();
             LeftHalf.startBeat = startBeat;
             LeftHalf.lefty = fromLeft;
+            LeftHalf.objPos = objPos;
 
-            SpawnHalves RightHalf = Instantiate(game.HalvesRightBase).GetComponent<SpawnHalves>();
+            SpawnHalves RightHalf = Instantiate(HalvesRightBase).GetComponent<SpawnHalves>();
             RightHalf.startBeat = startBeat;
             RightHalf.lefty = fromLeft;
+            RightHalf.objPos = objPos;
 
             GameObject.Destroy(gameObject);
         }
 
         private void JustSlice()
         {
+            Debug.Log("brake point before small");
+            isActive = false;
+            barelyTime = Conductor.instance.songBpm;
 
+            Debug.Log("brake point middle 1 small");
+
+            string Barely = "Barely";
+            if (!fromBoth && fromLeft) {
+                Barely += "Left";
+            } else if (!fromBoth && !fromLeft) {
+                Barely += "Right";
+            } else {
+                Barely += "Both";
+            };
+
+            Debug.Log("brake point middle 2 small");
+
+            DogAnim.DoScaledAnimationAsync(Barely, 0.5f);
+            Jukebox.PlayOneShotGame(sfxNum+"barely");
+            
+            Debug.Log("brake point end small");
         }
 
         private void Hit(PlayerActionEvent caller, float state)
@@ -130,13 +165,13 @@ namespace HeavenStudio.Games.Scripts_DogNinja
 
         private void Miss(PlayerActionEvent caller)
         {
-            DogAnim.Play("UnPrepare", 0, 0);
-            game.DogAnim.SetBool("needPrepare", false);
+            if (!DogAnim.GetBool("needPrepare")) DogAnim.DoScaledAnimationAsync("UnPrepare", 0.5f);
+            DogAnim.SetBool("needPrepare", false);
         }
 
         private void Out(PlayerActionEvent caller) 
         {
-            game.DogAnim.SetBool("needPrepare", false);
+            DogAnim.SetBool("needPrepare", false);
         }
     }
 }

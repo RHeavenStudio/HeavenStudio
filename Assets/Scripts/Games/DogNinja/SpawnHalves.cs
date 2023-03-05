@@ -13,7 +13,10 @@ namespace HeavenStudio.Games.Scripts_DogNinja
         public float startBeat;
         public Vector3 objPos;
         public bool lefty;
-        const float rotSpeed = 140f;
+        float modifier;
+        float songPos;
+        
+        [SerializeField] float rotSpeed = 140f;
 
         [Header("References")]
         [SerializeField] BezierCurve3D fallLeftCurve;
@@ -26,26 +29,25 @@ namespace HeavenStudio.Games.Scripts_DogNinja
         private void Awake()
         {
             game = DogNinja.instance;
+            modifier = Conductor.instance.songBpm / 100;
+            songPos = Conductor.instance.songPositionInBeats;
         }
 
         private void Start() 
         {
             curve = lefty ? fallRightCurve : fallLeftCurve;
+            halvesParent.position = objPos;
         }
 
         private void Update()
         {
-            float modifer = 0.2f;
-            float flyPosHalves = Conductor.instance.GetPositionFromBeat(startBeat, 1f)+0.65f;
-            modifer *= 0.05f;
-            flyPosHalves *= modifer;
+            float flyPosHalves = Conductor.instance.GetPositionFromBeat(songPos, 1f)+1.4f;
+            flyPosHalves *= 0.2f;
             transform.position = curve.GetPoint(flyPosHalves);
 
-            /*
             float rot = rotSpeed;
-            if (!lefty) rot *= -1;
+            if (lefty) rot *= -1 * modifier;
             transform.rotation = Quaternion.Euler(0, 0, transform.rotation.eulerAngles.z + (rot * Time.deltaTime));
-            */
 
             // clean-up logic
             
