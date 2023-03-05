@@ -95,6 +95,8 @@ namespace HeavenStudio.Games
         [SerializeField] Animator captainTuckAnim;
         [SerializeField] Animator captainTuckFaceAnim;
         [SerializeField] Transform flippersMovement;
+        [SerializeField] ParticleSystem leftSnow;
+        [SerializeField] ParticleSystem rightSnow;
         [Header("Properties")]
         [SerializeField] float rollDistance = 1.5f;
         private bool missed;
@@ -224,6 +226,14 @@ namespace HeavenStudio.Games
                             currentXPos = flippersMovement.position.x + (moveLeft ? -rollDistance : rollDistance);
                             isMoving = true;
                             currentCameraXPos = GameCamera.additionalPosition.x + (moveLeft ? -rollDistance : rollDistance);
+                            if (moveLeft)
+                            {
+                                rightSnow.Play();
+                            }
+                            else
+                            {
+                                leftSnow.Play();
+                            }
                         }
                         float normalizedBeat = cond.GetPositionFromBeat(queuedMovements[0], 0.5f);
                         float normalizedCamBeat = cond.GetPositionFromBeat(queuedMovements[0], 1f);
