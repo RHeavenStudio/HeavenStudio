@@ -48,7 +48,7 @@ namespace HeavenStudio.Games.Loaders
                     preFunction = delegate {var e = eventCaller.currentEntity; FlipperFlop.Flipping(e.beat, e.length, true, e["uh"], e["thatsIt"], e["appreciation"], e["heart"], e["barber"]); },
                     parameters = new List<Param>()
                     {
-                        new Param("uh", false, "Uh", "Whether or not Captain Tuck should say Uh after the flipper roll is done."),
+                        new Param("uh", new EntityTypes.Integer(0, 3, 0), "Uh Count", "How many Uhs should Captain Tuck say after the flippers roll?"),
                         new Param("thatsIt", false, "That's it!", "Whether or not Captain Tuck should say -That's it!- on the final flipper roll."),
                         new Param("appreciation", FlipperFlop.AppreciationType.None, "Appreciation", "Which appreciation line should Captain Tuck say?"),
                         new Param("heart", false, "Hearts", "Should Captain Tuck blush and make hearts appear when he expresses his appreciation?"),
@@ -121,7 +121,7 @@ namespace HeavenStudio.Games
             public float beat;
             public float length;
             public bool roll;
-            public bool uh;
+            public int uh;
             public bool thatsIt;
             public int appreciation;
             public bool heart;
@@ -329,7 +329,7 @@ namespace HeavenStudio.Games
             walkLength = length;
         }
 
-        public static void Flipping(float beat, float length, bool roll, bool uh = false, bool thatsIt = false, int appreciation = 0, bool heart = false, bool thatsItBarberShop = false)
+        public static void Flipping(float beat, float length, bool roll, int uh = 0, bool thatsIt = false, int appreciation = 0, bool heart = false, bool thatsItBarberShop = false)
         {
             if (GameManager.instance.currentGame == "flipperFlop")
             {
@@ -341,7 +341,7 @@ namespace HeavenStudio.Games
             }
         }
 
-        public void QueueFlips(float beat, float length, bool roll, bool uh = false, bool thatsIt = false, int appreciation = 0, bool heart = false, bool thatsItBarberShop = false)
+        public void QueueFlips(float beat, float length, bool roll, int uh = 0, bool thatsIt = false, int appreciation = 0, bool heart = false, bool thatsItBarberShop = false)
         {
             int flopCount = 1;
             int recounts = 0;
@@ -446,7 +446,7 @@ namespace HeavenStudio.Games
                         });
                     }
 
-                    if (appreciation != (int)AppreciationType.None && !uh && i + 1 == length)
+                    if (appreciation != (int)AppreciationType.None && uh == 0 && i + 1 == length)
                     {
                         BeatAction.New(instance.gameObject, new List<BeatAction.Action>()
                         {
@@ -476,7 +476,7 @@ namespace HeavenStudio.Games
                             }),
                         });
                     }
-                    if (appreciation == (int)AppreciationType.None && !uh && i + 1 == length)
+                    if (appreciation == (int)AppreciationType.None && uh == 0 && i + 1 == length)
                     {
                         BeatAction.New(instance.gameObject, new List<BeatAction.Action>()
                         {
@@ -507,17 +507,11 @@ namespace HeavenStudio.Games
                     }
                 }
             }
-            if (uh && flopCount != 4)
+            if (uh > 0 && flopCount != 4)
             {
-                int uhLength = 4 - flopCount;
-                if (length > 4 && length % 4 != 0)
+                for (int i = 0; i < uh; i++)
                 {
-                    uhLength = (int)(length - (length - length % 4));
-                }
-                for (int i = 0; i < uhLength; i++)
-                {
-                    int voiceLineIndex = flopCount + i;
-                    if (flopCount + i > 3) voiceLineIndex = 1;
+                    int voiceLineIndex = i + 1;
                     string voiceLine = $"flipperFlop/uh{voiceLineIndex}";
                     string failVoiceLine = $"flipperFlop/uhfail{voiceLineIndex}";
 
@@ -545,9 +539,9 @@ namespace HeavenStudio.Games
                 }
                 BeatAction.New(instance.gameObject, new List<BeatAction.Action>()
                 {
-                    new BeatAction.Action(beat + length + uhLength, delegate 
+                    new BeatAction.Action(beat + length + uh, delegate 
                     { 
-                        AppreciationVoiceLine(beat + length + uhLength, appreciation, heart);
+                        AppreciationVoiceLine(beat + length + uh, appreciation, heart);
                         if (!missed && appreciation != (int)AppreciationType.None)
                         {
                             currentCaptainBop = CaptainTuckBopType.Success;
@@ -560,18 +554,18 @@ namespace HeavenStudio.Games
                         CaptainTuckBop();
                         missed = false; 
                     }),
-                    new BeatAction.Action(beat + length + uhLength + 1f, delegate
+                    new BeatAction.Action(beat + length + uh + 1f, delegate
                     {
                         missed = false;
                     }),
-                    new BeatAction.Action(beat + length + 4 - flopCount + 2.1f, delegate
+                    new BeatAction.Action(beat + length + uh + 2.1f, delegate
                     {
                         currentCaptainBop = CaptainTuckBopType.Normal;
                         captainTuckFaceAnim.Play("CaptainTuckNeutralExpression", 0, 0);
                     }),
                 });
             }
-            else if (uh && flopCount == 4)
+            else if (uh > 0 && flopCount == 4)
             {
                 BeatAction.New(instance.gameObject, new List<BeatAction.Action>()
                 {
