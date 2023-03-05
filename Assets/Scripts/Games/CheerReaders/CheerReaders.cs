@@ -145,6 +145,8 @@ namespace HeavenStudio.Games
         [SerializeField] SpriteRenderer topPoster;
         [SerializeField] SpriteRenderer middlePoster;
         [SerializeField] SpriteRenderer bottomPoster;
+        [SerializeField] ParticleSystem whiteYayParticle;
+        [SerializeField] ParticleSystem blackYayParticle;
 
         [SerializeField] RvlCharacter player;
         Sound SpinningLoop;
@@ -371,6 +373,14 @@ namespace HeavenStudio.Games
         public void Yay()
         {
             if (!shouldYay) return;
+            if (shouldBeBlack)
+            {
+                blackYayParticle.Play();
+            }
+            else
+            {
+                whiteYayParticle.Play();
+            }
             foreach (var nerd in allGirls)
             {
                 nerd.Yay();
