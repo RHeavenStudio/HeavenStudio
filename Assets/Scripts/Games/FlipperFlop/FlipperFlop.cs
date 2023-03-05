@@ -385,12 +385,8 @@ namespace HeavenStudio.Games
 
                     if (thatsIt && i + 1 == length)
                     {
-                        int previousFlopCount = flopCount - 1;
-                        if (previousFlopCount < 0) previousFlopCount = 4;
                         int noiseToPlay = (flopCount == 4) ? 2 : flopCount;
-                        int noiseToPlayBefore = (previousFlopCount == 4) ? 2 : previousFlopCount;
                         soundToPlay = $"flipperFlop/count/flopNoise{noiseToPlay}";
-                        string soundToPlayBefore = $"flipperFlop/count/flopNoise{noiseToPlayBefore}";
                         if (thatsItBarberShop)
                         {
                             BeatAction.New(instance.gameObject, new List<BeatAction.Action>()
@@ -409,13 +405,6 @@ namespace HeavenStudio.Games
                         {
                             BeatAction.New(instance.gameObject, new List<BeatAction.Action>()
                             {
-                                new BeatAction.Action(beat + i - 1f, delegate
-                                {
-                                    Jukebox.PlayOneShotGame("flipperFlop/count/flipperRollCountNow");
-                                    Jukebox.PlayOneShotGame(soundToPlayBefore);
-                                    captainTuckAnim.DoScaledAnimationAsync("CaptainBop", 0.5f);
-                                    captainTuckFaceAnim.DoScaledAnimationAsync("CaptainTuckSpeakExpression", 0.5f);
-                                }),
                                 new BeatAction.Action(beat + i - 0.5f, delegate
                                 {
                                     Jukebox.PlayOneShotGame("flipperFlop/appreciation/thatsit1");
@@ -431,7 +420,7 @@ namespace HeavenStudio.Games
                             });
                         }
                     }
-                    else if (thatsItBarberShop || !(thatsIt && i + 2 == length))
+                    else
                     {
                         string failingSoundToPlay = $"flipperFlop/count/flopCountFail{flopCount}";
                         BeatAction.New(instance.gameObject, new List<BeatAction.Action>()
@@ -520,10 +509,17 @@ namespace HeavenStudio.Games
             }
             if (uh && flopCount != 4)
             {
-                for (int i = 0; i < 4 - flopCount; i++)
+                int uhLength = 4 - flopCount;
+                if (length > 4 && length % 4 != 0)
                 {
-                    string voiceLine = $"flipperFlop/uh{flopCount + i}";
-                    string failVoiceLine = $"flipperFlop/uhfail{flopCount + i}";
+                    uhLength = (int)(length - (length - length % 4));
+                }
+                for (int i = 0; i < uhLength; i++)
+                {
+                    int voiceLineIndex = flopCount + i;
+                    if (flopCount + i > 3) voiceLineIndex = 1;
+                    string voiceLine = $"flipperFlop/uh{voiceLineIndex}";
+                    string failVoiceLine = $"flipperFlop/uhfail{voiceLineIndex}";
 
                     BeatAction.New(instance.gameObject, new List<BeatAction.Action>()
                     {
@@ -549,9 +545,9 @@ namespace HeavenStudio.Games
                 }
                 BeatAction.New(instance.gameObject, new List<BeatAction.Action>()
                 {
-                    new BeatAction.Action(beat + length + 4 - flopCount, delegate 
+                    new BeatAction.Action(beat + length + uhLength, delegate 
                     { 
-                        AppreciationVoiceLine(beat + length + 4 - flopCount, appreciation, heart);
+                        AppreciationVoiceLine(beat + length + uhLength, appreciation, heart);
                         if (!missed && appreciation != (int)AppreciationType.None)
                         {
                             currentCaptainBop = CaptainTuckBopType.Success;
@@ -564,7 +560,7 @@ namespace HeavenStudio.Games
                         CaptainTuckBop();
                         missed = false; 
                     }),
-                    new BeatAction.Action(beat + length + 4 - flopCount + 1f, delegate
+                    new BeatAction.Action(beat + length + uhLength + 1f, delegate
                     {
                         missed = false;
                     }),
