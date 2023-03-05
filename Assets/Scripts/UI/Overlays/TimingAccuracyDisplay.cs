@@ -20,7 +20,9 @@ namespace HeavenStudio.Common
         [SerializeField] GameObject NG;
         [SerializeField] GameObject OK;
         [SerializeField] GameObject Just;
-        [SerializeField] GameObject Minimal;
+        [SerializeField] GameObject MinimalJust;
+        [SerializeField] GameObject MinimalOK;
+        [SerializeField] GameObject MinimalNG;
 
         [SerializeField] Animator MetreAnim;
 
@@ -81,6 +83,8 @@ namespace HeavenStudio.Common
             float frac = 0f;
             float y = barTransform.position.y;
 
+            // SetArrowPos(time);
+
             // no Clamp() because double
             time = System.Math.Max(Minigame.EarlyTime(), System.Math.Min(Minigame.EndTime(), time));
 
@@ -127,9 +131,22 @@ namespace HeavenStudio.Common
                 y *= -0.5f;
             }
 
+            targetArrowPos = (targetArrowPos + y) * 0.5f;
+
             if (PersistentDataManager.gameSettings.timingDisplayMinMode)
             {
-                it = Minimal;
+                switch (type)
+                {
+                    case Rating.OK:
+                        it = MinimalOK;
+                        break;
+                    case Rating.Just:
+                        it = MinimalJust;
+                        break;
+                    default:
+                        it = MinimalNG;
+                        break;
+                }
             }
             else
             {
@@ -147,7 +164,6 @@ namespace HeavenStudio.Common
                 }
             }
 
-            SetArrowPos(time);
             it.transform.position = barTransform.position + new Vector3(0, barTransform.localScale.y * y, 0);
             it.GetComponent<ParticleSystem>().Play();
         }
