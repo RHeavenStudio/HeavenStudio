@@ -168,8 +168,8 @@ namespace HeavenStudio.Common
             [Serializable]
             public struct OverlayOption
             {
+                public bool enable;
                 public Vector2 position;
-                public Vector2 anchor;
                 public float scale;
                 public float rotation;
             }
