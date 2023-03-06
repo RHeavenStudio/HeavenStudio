@@ -150,7 +150,7 @@ namespace HeavenStudio.Games.Scripts_DogNinja
             Debug.Log("brake point middle 2 small");
 
             DogAnim.DoScaledAnimationAsync(Barely, 0.5f);
-            Jukebox.PlayOneShotGame(sfxNum+"barely");
+            Jukebox.PlayOneShotGame("dogNinja/barely");
             
             Debug.Log("brake point end small");
         }

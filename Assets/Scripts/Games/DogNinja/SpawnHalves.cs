@@ -42,7 +42,7 @@ namespace HeavenStudio.Games.Scripts_DogNinja
 
         private void Update()
         {
-            float flyPosHalves = Conductor.instance.GetPositionFromBeat(songPos, 1f)+1.35f;
+            float flyPosHalves = Conductor.instance.GetPositionFromBeat(songPos, 1f)+1.3f;
             flyPosHalves *= 0.2f;
             transform.position = curve.GetPoint(flyPosHalves)+posModifier;
 
