@@ -33,7 +33,7 @@ namespace HeavenStudio.Games.Loaders
                 },
                 new GameAction("toggleBubble", "Toggle Speech Bubble")
                 {
-                    function = delegate { TrickClass.BubbleToggle(); },
+                    function = delegate { TrickClass.instance.BubbleToggle(); },
                     defaultLength = 1,
                 },
                 new GameAction("bop", "")
