@@ -31,12 +31,17 @@ namespace HeavenStudio.Games.Loaders
                     },
                     defaultLength = 3,
                 },
+                new GameAction("toggleBubble", "Toggle Speech Bubble")
+                {
+                    function = delegate { TrickClass.BubbleToggle(); },
+                    defaultLength = 1,
+                },
                 new GameAction("bop", "")
                 {
                     function = delegate { var e = eventCaller.currentEntity; TrickClass.instance.Bop(e.beat, e.length); },
                     resizable = true, 
                     hidden = true
-                },
+                }
             });
         }
     }
@@ -86,6 +91,7 @@ namespace HeavenStudio.Games
         public float playerCanDodge = Single.MinValue;
         float playerBopStart = Single.MinValue;
         float girlBopStart = Single.MinValue;
+        bool showBubble = true;
 
 
         void OnDestroy()
@@ -154,13 +160,20 @@ namespace HeavenStudio.Games
             bop.length = length;
         }
 
-        public static void PreTossObject(float beat, int type)
+        public void BubbleToggle()
+        {
+            instance.showBubble = !instance.showBubble;
+        }
+        
+                public static void PreTossObject(float beat, int type)
         {
             if (GameManager.instance.currentGame == "trickClass")
             {
                 BeatAction.New(instance.gameObject, new List<BeatAction.Action>()
                 {
                     new BeatAction.Action(beat - 1, delegate 
+                {
+                    if (instance.showBubble == true)
                     {
                         switch (type)
                         {
@@ -171,7 +184,8 @@ namespace HeavenStudio.Games
                                 instance.warnAnim.Play("WarnPlane", 0, 0);
                                 break;
                         }
-                    }),
+                    }
+                }),
                     new BeatAction.Action(beat, delegate 
                     {
                         instance.warnAnim.Play("NoPose", 0, 0);
