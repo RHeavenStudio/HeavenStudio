@@ -12,11 +12,12 @@ namespace HeavenStudio.Games.Scripts_DogNinja
     {
         public float startBeat;
         public Vector3 objPos;
+        private Vector3 posModifier;
         public bool lefty;
-        float modifier;
+        float bpmModifier;
         float songPos;
         
-        [SerializeField] float rotSpeed = 140f;
+        [SerializeField] float rotSpeed;
 
         [Header("References")]
         [SerializeField] BezierCurve3D fallLeftCurve;
@@ -29,33 +30,33 @@ namespace HeavenStudio.Games.Scripts_DogNinja
         private void Awake()
         {
             game = DogNinja.instance;
-            modifier = Conductor.instance.songBpm / 100;
+            bpmModifier = Conductor.instance.songBpm / 100;
             songPos = Conductor.instance.songPositionInBeats;
+            posModifier = (objPos/3);
         }
 
         private void Start() 
         {
             curve = lefty ? fallRightCurve : fallLeftCurve;
-            halvesParent.position = objPos;
         }
 
         private void Update()
         {
-            float flyPosHalves = Conductor.instance.GetPositionFromBeat(songPos, 1f)+1.4f;
+            float flyPosHalves = Conductor.instance.GetPositionFromBeat(songPos, 1f)+1.35f;
             flyPosHalves *= 0.2f;
-            transform.position = curve.GetPoint(flyPosHalves);
+            transform.position = curve.GetPoint(flyPosHalves)+posModifier;
 
             float rot = rotSpeed;
-            if (lefty) rot *= -1 * modifier;
+            rot *= lefty ? bpmModifier : -1 * bpmModifier;
             transform.rotation = Quaternion.Euler(0, 0, transform.rotation.eulerAngles.z + (rot * Time.deltaTime));
 
             // clean-up logic
-            
             if (flyPosHalves > 1f) {
                 GameObject.Destroy(gameObject);
             };
             
-            if (!Conductor.instance.isPlaying && !Conductor.instance.isPaused) {
+            if ((!Conductor.instance.isPlaying && !Conductor.instance.isPaused) 
+                || GameManager.instance.currentGame != "dogNinja") {
                 GameObject.Destroy(gameObject);
             };
         }

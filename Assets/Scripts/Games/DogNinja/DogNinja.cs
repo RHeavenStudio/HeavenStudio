@@ -28,6 +28,7 @@ namespace HeavenStudio.Games.Loaders
                     function = delegate { DogNinja.instance.Prepare(eventCaller.currentEntity.beat); }, 
                     defaultLength = 0.5f,
                 },
+                /*
                 new GameAction("ThrowObject", "Throw Object")
                 {
                     function = delegate { var e = eventCaller.currentEntity; DogNinja.instance.ThrowObject(e.beat, e["type"], e["text"], e["left"], false); }, 
@@ -39,8 +40,7 @@ namespace HeavenStudio.Games.Loaders
                         new Param("left", true, "Throw from left?", "Whether the object should come from the left or right")
                     }
                 },
-                
-                // this is for me -AJ
+                */
                 new GameAction("ThrowObjectLeft", "Throw Object Left")
                 {
                     function = delegate { var e = eventCaller.currentEntity; DogNinja.instance.ThrowObject(e.beat, e["type"], e["text"], true, false); }, 
@@ -61,7 +61,6 @@ namespace HeavenStudio.Games.Loaders
                         new Param("text", "", "Alt. Objects", "An alternative object; one that doesn't exist in the main menu"),
                     }
                 },
-
                 new GameAction("ThrowObjectBoth", "Throw Left & Right Object")
                 {
                     function = delegate { var e = eventCaller.currentEntity; DogNinja.instance.ThrowBothObject(e.beat, e["type"], e["type2"], e["text"], e["text2"]); }, 
@@ -105,20 +104,21 @@ namespace HeavenStudio.Games
         public Animator BirdAnim;   // bird flying in and out
         
         [Header("References")]
-        public GameObject ObjectBase;
-        public GameObject FullBird;
-        public SpriteRenderer WhichObject;
+        [SerializeField] GameObject ObjectBase;
+        [SerializeField] GameObject FullBird;
+        [SerializeField] SpriteRenderer WhichObject;
+        [SerializeField] Transform ObjectHolder;
         public SpriteRenderer WhichLeftHalf;
         public SpriteRenderer WhichRightHalf;
         [SerializeField] Canvas cutEverythingCanvas;
         [SerializeField] TMP_Text cutEverythingText;
         
         [Header("Curves")]
-        public BezierCurve3D CurveFromLeft;
-        public BezierCurve3D CurveFromRight;
+        [SerializeField] BezierCurve3D CurveFromLeft;
+        [SerializeField] BezierCurve3D CurveFromRight;
 
-        public Sprite[] ObjectTypes;
-        public Sprite[] CustomObjects;
+        [SerializeField] Sprite[] ObjectTypes;
+        [SerializeField] Sprite[] CustomObjects;
 
         private float lastReportedBeat = 0f;
         private bool birdOnScreen = false;
@@ -225,7 +225,7 @@ namespace HeavenStudio.Games
             } else { WhichObject.sprite = ObjectTypes[ObjSprite]; };
 
             // instantiate a game object and give it its variables
-            ThrowObject Object = Instantiate(ObjectBase).GetComponent<ThrowObject>();
+            ThrowObject Object = Instantiate(ObjectBase, ObjectHolder).GetComponent<ThrowObject>();
             Object.startBeat = beat;
             Object.curve = fromLeft ? CurveFromLeft : CurveFromRight;
             Object.fromLeft = fromLeft;
@@ -264,7 +264,6 @@ namespace HeavenStudio.Games
             DogAnim.SetBool("needPrepare", true);
         }
 
-        // it's repeated code but the alternative saves no space
         public void HereWeGo(float beat)
         {
             MultiSound.Play(new MultiSound.Sound[] {

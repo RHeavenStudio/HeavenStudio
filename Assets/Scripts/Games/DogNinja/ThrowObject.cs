@@ -31,6 +31,7 @@ namespace HeavenStudio.Games.Scripts_DogNinja
         [SerializeField] BezierCurve3D BarelyRightCurve;
         [SerializeField] GameObject HalvesLeftBase;
         [SerializeField] GameObject HalvesRightBase;
+        [SerializeField] Transform ObjectParent;
         public Sprite[] objectLeftHalves;
         public Sprite[] objectRightHalves;
 
@@ -73,27 +74,28 @@ namespace HeavenStudio.Games.Scripts_DogNinja
         private void Update()
         {
             float flyPos = Conductor.instance.GetPositionFromBeat(startBeat, 1f)+1.1f;
+            float flyPosBarely = Conductor.instance.GetPositionFromBeat(barelyTime, 1f)+1.1f;
             if (isActive) {
                 flyPos *= 0.31f;
                 transform.position = curve.GetPoint(flyPos);
                 objPos = curve.GetPoint(flyPos);
             } else {
-                Debug.Log("brake point before big");
-                float flyPosBarely = Conductor.instance.GetPositionFromBeat(barelyTime, 1f);
-                flyPos *= 0.31f;
-                transform.position = barelyCurve.GetPoint(flyPosBarely);
-                Debug.Log("brake point after big");
+                flyPosBarely *= 0.3f;
+                transform.position = barelyCurve.GetPoint(flyPosBarely) + (objPos/3);
+                float rot = fromLeft ? 200f : -200f;
+                transform.rotation = Quaternion.Euler(0, 0, transform.rotation.eulerAngles.z + (rot * Time.deltaTime));
             }
             
             
             // destroy object when it's off-screen
+            /*
             if (flyPos > 1f) {
                 GameObject.Destroy(gameObject);
             };
+            */
 
-            // destroy object when game is stopped, but not when it's paused. 
-            // no other game has this??? am i missing something here -AJ
-            if (!Conductor.instance.isPlaying && !Conductor.instance.isPaused) {
+            if ((!Conductor.instance.isPlaying && !Conductor.instance.isPaused) 
+                || GameManager.instance.currentGame != "dogNinja") {
                 GameObject.Destroy(gameObject);
             };
         }
@@ -132,7 +134,7 @@ namespace HeavenStudio.Games.Scripts_DogNinja
         {
             Debug.Log("brake point before small");
             isActive = false;
-            barelyTime = Conductor.instance.songBpm;
+            barelyTime = Conductor.instance.songPositionInBeats;
 
             Debug.Log("brake point middle 1 small");
 
@@ -165,7 +167,8 @@ namespace HeavenStudio.Games.Scripts_DogNinja
 
         private void Miss(PlayerActionEvent caller)
         {
-            if (!DogAnim.GetBool("needPrepare")) DogAnim.DoScaledAnimationAsync("UnPrepare", 0.5f);
+            if (!DogAnim.GetBool("needPrepare")) ;
+            DogAnim.DoScaledAnimationAsync("UnPrepare", 0.5f);
             DogAnim.SetBool("needPrepare", false);
         }
 
