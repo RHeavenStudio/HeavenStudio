@@ -25,7 +25,7 @@ namespace HeavenStudio.Common
         public void TogleOverlaysVisibility(bool visible)
         {
             OverlaysEnabled = visible;
-            gameObject.SetActive(visible);
+            StaticCamera.instance.ToggleOverlayView(visible);
         }
     }
 }

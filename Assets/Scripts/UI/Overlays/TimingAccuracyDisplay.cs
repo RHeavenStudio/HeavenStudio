@@ -51,12 +51,13 @@ namespace HeavenStudio.Common
             targetArrowPos = 0f;
             arrowTransform.localPosition = Vector3.zero;
             StopStarFlash();
-        }
 
-        public void SetArrowPos(double time)
-        {
-            float frac = (float)((time - Minigame.EarlyTime()) / (Minigame.EndTime() - Minigame.EarlyTime()));
-            targetArrowPos = (targetArrowPos + (barTransform.localScale.y * -(frac - 0.5f))) * 0.5f;
+            NG.GetComponent<ParticleSystem>().Stop();
+            OK.GetComponent<ParticleSystem>().Stop();
+            Just.GetComponent<ParticleSystem>().Stop();
+            MinimalNG.GetComponent<ParticleSystem>().Stop();
+            MinimalOK.GetComponent<ParticleSystem>().Stop();
+            MinimalJust.GetComponent<ParticleSystem>().Stop();
         }
 
         public void StartStarFlash()

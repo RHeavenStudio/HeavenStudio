@@ -22,7 +22,6 @@ namespace HeavenStudio
 
         private List<DynamicBeatmap.DynamicEntity> positionEvents = new List<DynamicBeatmap.DynamicEntity>();
         private List<DynamicBeatmap.DynamicEntity> rotationEvents = new List<DynamicBeatmap.DynamicEntity>();
-        private List<DynamicBeatmap.DynamicEntity> scaleEvents = new List<DynamicBeatmap.DynamicEntity>();
         private List<DynamicBeatmap.DynamicEntity> shakeEvents = new List<DynamicBeatmap.DynamicEntity>();
 
         /**
@@ -30,25 +29,20 @@ namespace HeavenStudio
         **/
         public static Vector3 defaultPosition = new Vector3(0, 0, -10);
         public static Vector3 defaultRotEluer = new Vector3(0, 0, 0);
-        public static Vector3 defaultScale = new Vector3(16, 9, 1);
         public static Vector3 defaultShake = new Vector3(0, 0, 0);
 
         /**
             camera's current transformation
-            TODO: stretching (the scale param) not working, will need help with this cause I don't understand Unity's camera
         **/
         private static Vector3 position;
         private static Vector3 rotEluer;
-        private static Vector3 scale;
         private static Vector3 shakeResult;
 
         /**
             camera's last transformation
-            TODO: stretching (the scaleLast param) not working, will need help with this cause I don't understand Unity's camera
         **/
         private static Vector3 positionLast;
         private static Vector3 rotEluerLast;
-        private static Vector3 scaleLast;
         private static Vector3 shakeLast;
 
         /** 
@@ -79,7 +73,6 @@ namespace HeavenStudio
             
             positionLast = defaultPosition;
             rotEluerLast = defaultRotEluer;
-            scaleLast = defaultScale;
         }
 
         public void OnBeatChanged(float beat)
@@ -89,7 +82,6 @@ namespace HeavenStudio
 
             positionLast = defaultPosition;
             rotEluerLast = defaultRotEluer;
-            scaleLast = defaultScale;
 
             // this entire thing is a mess redo it later
             //pos
@@ -105,10 +97,6 @@ namespace HeavenStudio
 
             shakeEvents = EventCaller.GetAllInGameManagerList("vfx", new string[] { "screen shake" });
 
-
-            //scale (TODO)
-            // scaleEvents = EventCaller.GetAllInGameManagerList("vfx", new string[] { "scale camera" });
-
             UpdateCameraTranslate();
             UpdateCameraRotate();
             SetShakeIntensity();
@@ -123,7 +111,6 @@ namespace HeavenStudio
             Camera cam = GetCamera();
             cam.transform.localPosition = position + additionalPosition + shakeResult;
             cam.transform.eulerAngles = rotEluer + additionalRotEluer;
-            cam.transform.localScale = Vector3.Scale(scale, additionalScale);
         }
 
         private void UpdateCameraTranslate()
@@ -244,7 +231,6 @@ namespace HeavenStudio
         {
             position = defaultPosition;
             rotEluer = defaultRotEluer;
-            scale = defaultScale;
             shakeResult = defaultShake;
         }
 
@@ -252,7 +238,6 @@ namespace HeavenStudio
         {
             additionalPosition = new Vector3(0, 0, 0);
             additionalRotEluer = new Vector3(0, 0, 0);
-            additionalScale = new Vector3(1, 1, 1);
         }
 
         public static Camera GetCamera()

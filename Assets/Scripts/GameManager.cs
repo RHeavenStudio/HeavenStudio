@@ -22,7 +22,7 @@ namespace HeavenStudio
         [Header("Components")]
         public string txt;
         public string ext;
-        public Camera GameCamera, CursorCam, OverlayCamera;
+        public Camera GameCamera, CursorCam, OverlayCamera, StaticCamera;
         public GameObject GameLetterbox;
         public CircleCursor CircleCursor;
         [HideInInspector] public GameObject GamesHolder;
@@ -138,6 +138,7 @@ namespace HeavenStudio
 
                 GoForAPerfect.instance.Disable();
             /////
+            
 
             if (txt != null && ext != null)
             {

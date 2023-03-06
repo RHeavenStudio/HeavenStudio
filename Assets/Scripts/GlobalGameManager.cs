@@ -34,6 +34,9 @@ namespace HeavenStudio
 
         public static float MasterVolume = 0.8f;
 
+        public static RenderTexture GameRenderTexture;
+        public static RenderTexture OverlayRenderTexture;
+
         public enum Scenes : int
         {
             SplashScreen = 0,
@@ -167,6 +170,15 @@ namespace HeavenStudio
             }
         }
 
+        public static void ResetGameRenderTexture()
+        {
+            GameRenderTexture.width = Screen.width;
+            GameRenderTexture.height = Screen.height;
+
+            OverlayRenderTexture.width = Screen.width;
+            OverlayRenderTexture.height = Screen.height;
+        }
+
         public static void ChangeMasterVolume(float value)
         {
             MasterVolume = value;
@@ -175,7 +187,6 @@ namespace HeavenStudio
 
         void OnApplicationQuit()
         {
-            PersistentDataManager.SaveSettings();
             Debug.Log("Disconnecting JoyShocks...");
             PlayerInput.DisconnectJoyshocks();
         }

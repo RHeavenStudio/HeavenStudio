@@ -31,6 +31,7 @@ public class SectionDialog : Dialog
     {
         this.sectionObj = sectionObj;
         sectionName.text = sectionObj.chartSection.sectionName;
+        challengeEnable.isOn = sectionObj.chartSection.startPerfect;
     }
 
     public void DeleteSection()

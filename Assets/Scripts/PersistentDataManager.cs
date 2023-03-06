@@ -24,10 +24,12 @@ namespace HeavenStudio.Common
         {
             gameSettings = new GameSettings(
                 false,
-                0,
-                GlobalGameManager.DEFAULT_SCREEN_SIZES[0].width,
-                GlobalGameManager.DEFAULT_SCREEN_SIZES[0].height,
+                1,
+                GlobalGameManager.DEFAULT_SCREEN_SIZES[1].width,
+                GlobalGameManager.DEFAULT_SCREEN_SIZES[1].height,
                 0.8f,
+                256,
+                44100,
                 true,
                 true,
                 PerfectChallengeType.On,
@@ -84,6 +86,8 @@ namespace HeavenStudio.Common
                 int resolutionWidth = 1280,
                 int resolutionHeight = 720,
                 float masterVolume = 0.8f,
+                int dspSize = 256,
+                int sampleRate = 44100,
                 bool editorCursorEnable = true,
                 bool discordRPCEnable = true,
                 PerfectChallengeType perfectChallengeType = PerfectChallengeType.On,
@@ -99,6 +103,8 @@ namespace HeavenStudio.Common
                 this.resolutionHeight = resolutionHeight;
 
                 this.masterVolume = masterVolume;
+                this.dspSize = dspSize;
+                this.sampleRate = sampleRate;
 
                 this.editorCursorEnable = editorCursorEnable;
                 if (Application.platform == RuntimePlatform.OSXPlayer || Application.platform == RuntimePlatform.OSXEditor)
@@ -124,6 +130,8 @@ namespace HeavenStudio.Common
             public int resolutionHeight;
 
             public float masterVolume;
+            public int dspSize;
+            public int sampleRate;
 
             // Editor Settings
             public bool editorCursorEnable;
@@ -154,7 +162,6 @@ namespace HeavenStudio.Common
             [Serializable]
             public struct SectionComponent
             {
-                public float length;
                 public OverlayOption overlayOption;
             }
 

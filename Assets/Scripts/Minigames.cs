@@ -419,6 +419,28 @@ namespace HeavenStudio
                             new Param("axis", GameCamera.CameraAxis.All, "Axis", "The axis to move the camera on" )
                         } 
                     ),
+                    new GameAction("pan view", "Pan Viewport", 1f, true, new List<Param>() 
+                        {
+                            new Param("valA", new EntityTypes.Float(-50, 50, 0), "Right / Left", "Next position on the X axis"),
+                            new Param("valB", new EntityTypes.Float(-50, 50, 0), "Up / Down", "Next position on the Y axis"),
+                            new Param("ease", EasingFunction.Ease.Linear, "Ease Type"),
+                            new Param("axis", StaticCamera.ViewAxis.All, "Axis", "The axis to pan the viewport in" )
+                        }
+                    ),
+                    new GameAction("rotate view", "Rotate Viewport", 1f, true, new List<Param>() 
+                        {
+                            new Param("valA", new EntityTypes.Float(-360, 360, 0), "Rotation", "Next viewport rotation"),
+                            new Param("ease", EasingFunction.Ease.Linear, "Ease Type"),
+                        }
+                    ),
+                    new GameAction("scale view", "Scale Viewport", 1f, true, new List<Param>() 
+                        {
+                            new Param("valA", new EntityTypes.Float(0, 50, 1), "Width", "Next viewport width"),
+                            new Param("valB", new EntityTypes.Float(0, 50, 1), "Height", "Next viewport height"),
+                            new Param("ease", EasingFunction.Ease.Linear, "Ease Type"),
+                            new Param("axis", StaticCamera.ViewAxis.All, "Axis", "The axis to scale the viewport in" )
+                        }
+                    ),
 
                     new GameAction("screen shake", "Screen Shake", 1f, true,
                         new List<Param>()

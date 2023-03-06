@@ -58,11 +58,13 @@ namespace HeavenStudio.Editor
         public void WindowFullScreen()
         {
             GlobalGameManager.WindowFullScreen();
+            GlobalGameManager.ResetGameRenderTexture();
         }
 
         public void WindowConfirmSize()
         {
             GlobalGameManager.ChangeScreenSize();
+            GlobalGameManager.ResetGameRenderTexture();
         }
 
         public void OnVolSliderChanged()
