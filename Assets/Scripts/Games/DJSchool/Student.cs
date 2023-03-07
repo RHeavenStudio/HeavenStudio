@@ -119,7 +119,12 @@ namespace HeavenStudio.Games.Scripts_DJSchool
         public void OnMissHold(PlayerActionEvent caller)
         {
             //isHolding = true;
-
+            if (!game.djYellowScript.HeadSpriteCheck(DJYellow.DJExpression.UpFirst) && !game.djYellowScript.HeadSpriteCheck(DJYellow.DJExpression.UpSecond))
+            {
+                game.djYellowScript.ChangeHeadSprite(DJYellow.DJExpression.CrossEyed);
+                if (game.djYellowHolding) game.djYellowScript.Reverse();
+                else game.djYellowScript.Reverse(true);
+            }
             missed = true;
         }
 
@@ -133,7 +138,12 @@ namespace HeavenStudio.Games.Scripts_DJSchool
 
             anim.DoScaledAnimationAsync("Hold", 0.5f);
             tableAnim.DoScaledAnimationAsync("Student_Turntable_StartHold", 0.5f);
-            if (game.djYellowHolding) game.djYellowScript.ChangeHeadSprite(DJYellow.DJExpression.CrossEyed);
+            if (!game.djYellowScript.HeadSpriteCheck(DJYellow.DJExpression.UpFirst) && !game.djYellowScript.HeadSpriteCheck(DJYellow.DJExpression.UpSecond))
+            {
+                game.djYellowScript.ChangeHeadSprite(DJYellow.DJExpression.CrossEyed);
+                if (game.djYellowHolding) game.djYellowScript.Reverse();
+                else game.djYellowScript.Reverse(true);
+            }
         }
         #endregion
 
@@ -150,13 +160,19 @@ namespace HeavenStudio.Games.Scripts_DJSchool
             missed = true;
             mixer.audioMixer.FindSnapshot("Main").TransitionTo(.01f);
             tableAnim.DoScaledAnimationAsync("Student_Turntable_Idle", 0.5f);
-            if (game.djYellowHolding) game.djYellowScript.ChangeHeadSprite(DJYellow.DJExpression.CrossEyed);
+            if (!game.djYellowScript.HeadSpriteCheck(DJYellow.DJExpression.UpFirst) && !game.djYellowScript.HeadSpriteCheck(DJYellow.DJExpression.UpSecond))
+            {
+                game.djYellowScript.ChangeHeadSprite(DJYellow.DJExpression.CrossEyed);
+                if (game.djYellowHolding) game.djYellowScript.Reverse();
+                else game.djYellowScript.Reverse(true);
+            }
         }
 
         #region onSwipe
         public void OnHitSwipe(PlayerActionEvent caller, float beat)
         {
             game.shouldBeHolding = false;
+            if (beat >= 1f || beat <= -1f) missed = true;
             if (!missed)
             {
                 isHolding = false;
@@ -173,6 +189,9 @@ namespace HeavenStudio.Games.Scripts_DJSchool
                     new BeatAction.Action(beat + 4f, delegate { swiping = false; }),
                 });
                 //anim.Play("Swipe", 0, 0);
+                game.djYellowScript.ChangeHeadSprite(DJYellow.DJExpression.UpSecond);
+                game.djYellowScript.Reverse();
+                game.smileBeat = caller.timer + caller.startBeat + 1f;
 
                 tableAnim.speed = 1;
                 tableAnim.DoScaledAnimationAsync("Student_Turntable_Swipe", 0.5f);
@@ -182,7 +201,7 @@ namespace HeavenStudio.Games.Scripts_DJSchool
             }
             else
             {
-                OnMissSwipeForPlayerInput();
+                OnMissSwipeForPlayerInput(caller.timer + caller.startBeat + 1f);
                 Jukebox.PlayOneShotGame("djSchool/recordSwipe");
                 BeatAction.New(gameObject, new List<BeatAction.Action>()
                 {
@@ -190,7 +209,6 @@ namespace HeavenStudio.Games.Scripts_DJSchool
                     new BeatAction.Action(beat + 4f, delegate { swiping = false; }),
                 });
                 //anim.Play("Swipe", 0, 0);
-
                 tableAnim.speed = 1;
                 tableAnim.DoScaledAnimationAsync("Student_Turntable_Swipe", 0.5f);
 
@@ -206,9 +224,21 @@ namespace HeavenStudio.Games.Scripts_DJSchool
             //swiping = false;
             missed = true;
             mixer.audioMixer.FindSnapshot("Main").TransitionTo(.01f);
+            BeatAction.New(game.gameObject, new List<BeatAction.Action>()
+            {
+                new BeatAction.Action(caller.timer + caller.startBeat + 1f, delegate
+                {
+                    if (game.goBop)
+                    {
+                        game.djYellowScript.ChangeHeadSprite(DJYellow.DJExpression.CrossEyed);
+                        if (game.djYellowHolding) game.djYellowScript.Reverse();
+                        else game.djYellowScript.Reverse(true);
+                    }
+                })
+            });
         }
 
-        public void OnMissSwipeForPlayerInput()
+        public void OnMissSwipeForPlayerInput(float beat)
         {
             isHolding = false;
 
@@ -216,6 +246,18 @@ namespace HeavenStudio.Games.Scripts_DJSchool
             //swiping = false;
             mixer.audioMixer.FindSnapshot("Main").TransitionTo(.01f);
 
+            BeatAction.New(game.gameObject, new List<BeatAction.Action>()
+            {
+                new BeatAction.Action(beat, delegate
+                {
+                    if (game.goBop)
+                    {
+                        game.djYellowScript.ChangeHeadSprite(DJYellow.DJExpression.CrossEyed);
+                        if (game.djYellowHolding) game.djYellowScript.Reverse();
+                        else game.djYellowScript.Reverse(true);
+                    }
+                })
+            });
         }
 
         #endregion

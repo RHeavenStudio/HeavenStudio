@@ -122,6 +122,7 @@ namespace HeavenStudio.Games
         public float beatOfInstance;
         private bool djYellowBopLeft;
         public bool shouldBeHolding = false;
+        public float smileBeat = -10f;
 
         public static DJSchool instance { get; private set; }
 
@@ -220,6 +221,10 @@ namespace HeavenStudio.Games
                     }
                     if (!andStop && !djYellowHolding)
                     {
+                        float normalizedSmileBeat = Conductor.instance.GetPositionFromBeat(smileBeat, 3f);
+                        if (normalizedSmileBeat >= 0 && normalizedSmileBeat <= 1f) djYellowScript.ChangeHeadSprite(DJYellow.DJExpression.Happy);
+                        else if (!djYellowScript.HeadSpriteCheck(DJYellow.DJExpression.CrossEyed)) djYellowScript.ChangeHeadSprite(DJYellow.DJExpression.NeutralLeft);
+                        djYellowScript.Reverse((normalizedSmileBeat >= 0 && normalizedSmileBeat <= 1f) || djYellowScript.HeadSpriteCheck(DJYellow.DJExpression.CrossEyed));
                         if (djYellowBopLeft)
                         {
                             djYellowAnim.DoScaledAnimationAsync("IdleBop2", 0.5f);
@@ -329,7 +334,20 @@ namespace HeavenStudio.Games
 
             BeatAction.New(djYellow, new List<BeatAction.Action>()
             {
-                new BeatAction.Action(beat, delegate { djYellow.GetComponent<Animator>().DoScaledAnimationAsync("BreakCmon", 0.5f); }),
+                new BeatAction.Action(beat, delegate 
+                { 
+                    djYellow.GetComponent<Animator>().DoScaledAnimationAsync("BreakCmon", 0.5f);
+                    float normalizedSmileBeat = Conductor.instance.GetPositionFromBeat(smileBeat, 3f);
+                    if (normalizedSmileBeat >= 0 && normalizedSmileBeat <= 1f)
+                    {
+                        djYellowScript.ChangeHeadSprite(DJYellow.DJExpression.Happy);
+                    }
+                    else if (!djYellowScript.HeadSpriteCheck(DJYellow.DJExpression.CrossEyed))
+                    {
+                        djYellowScript.ChangeHeadSprite(DJYellow.DJExpression.NeutralRight);
+                    }
+                    djYellowScript.Reverse();
+                }),
                 new BeatAction.Action(beat + 1f, delegate { djYellow.GetComponent<Animator>().DoScaledAnimationAsync("BreakCmon", 0.5f); }),
                 new BeatAction.Action(beat + 2f, delegate 
                 { 
@@ -364,7 +382,20 @@ namespace HeavenStudio.Games
 
             BeatAction.New(djYellow, new List<BeatAction.Action>()
             {
-                new BeatAction.Action(beat + 0.5f, delegate { djYellow.GetComponent<Animator>().DoScaledAnimationAsync("BreakCmon", 0.5f); }),
+                new BeatAction.Action(beat + 0.5f, delegate 
+                {
+                    djYellow.GetComponent<Animator>().DoScaledAnimationAsync("BreakCmon", 0.5f);
+                    float normalizedSmileBeat = Conductor.instance.GetPositionFromBeat(smileBeat, 3f);
+                    if (normalizedSmileBeat >= 0 && normalizedSmileBeat <= 1f)
+                    {
+                        djYellowScript.ChangeHeadSprite(DJYellow.DJExpression.Happy);
+                    }
+                    else if (!djYellowScript.HeadSpriteCheck(DJYellow.DJExpression.CrossEyed))
+                    {
+                        djYellowScript.ChangeHeadSprite(DJYellow.DJExpression.NeutralRight);
+                    }
+                    djYellowScript.Reverse();
+                }),
                 new BeatAction.Action(beat + 1.5f, delegate
                 {
                     djYellow.GetComponent<Animator>().Play("Hold", 0, 0);
