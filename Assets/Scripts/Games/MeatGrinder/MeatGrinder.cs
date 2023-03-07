@@ -49,13 +49,14 @@ namespace HeavenStudio.Games.Loaders
                 {
                     function = delegate {
                         var e = eventCaller.currentEntity; 
-                        MeatGrinder.instance.Bop(e.beat, e["bossBop"]); 
+                        MeatGrinder.instance.Bop(e.beat, e.length, e["bop"], e["bossBop"]); 
                     },
                     parameters = new List<Param>()
                     {
-                        new Param("bossBop", false, "Boss Bops?", "Does Boss bop?"),
+                        new Param("bop", true, "Boss Bops?", "Does Boss bop?"),
+                        new Param("bossBop", false, "Boss Bops? (Auto)", "Does Boss Auto bop?"),
                     },
-                    defaultLength = 0.5f,
+                    resizable = true,
                     priority = 4,
                 },
             });
@@ -144,9 +145,25 @@ namespace HeavenStudio.Games
             };
         }
 
-        public void Bop(float beat, bool doesBop)
+        public void Bop(float beat, float length, bool doesBop, bool autoBop)
         {
-            bossBop = doesBop;
+            bossBop = autoBop;
+            if (doesBop)
+            {
+                for (int i = 0; i < length; i++)
+                {
+                    BeatAction.New(instance.gameObject, new List<BeatAction.Action>()
+                    {
+                        new BeatAction.Action(beat + i, delegate
+                        {
+                            if (!BossAnim.IsPlayingAnimationName("BossCall") && !BossAnim.IsPlayingAnimationName("BossSignal"))
+                            {
+                                BossAnim.DoScaledAnimationAsync(bossAnnoyed ? "BossMiss" : "Bop", 0.5f);
+                            };
+                        })
+                    });
+                }
+            }
         }
 
         public static void PreInterval(float beat, float interval)

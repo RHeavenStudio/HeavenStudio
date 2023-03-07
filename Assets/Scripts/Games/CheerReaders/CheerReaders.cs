@@ -45,7 +45,7 @@ namespace HeavenStudio.Games.Loaders
                         new Param("solo", CheerReaders.WhoSpeaks.Both, "Who Speaks", "Who should say the voice line?")
                     }
                 },
-                new GameAction("rahRahSisBoomBaBoom", "Rah Rah Sis Boom Ba Boom!")
+                new GameAction("rahRahSisBoomBaBoom", "Rah-Rah Sis Boom Bah-Boom!")
                 {
                     function = delegate {var e = eventCaller.currentEntity; CheerReaders.instance.RahRahSisBoomBaBoom(e.beat, e["solo"], e["consecutive"]); CheerReaders.instance.SetIsDoingCue(e.beat, e.length);},
                     defaultLength = 4f,
@@ -82,16 +82,21 @@ namespace HeavenStudio.Games.Loaders
                 },
                 new GameAction("yay", "Yay")
                 {
-                    function = delegate {CheerReaders.instance.Yay(); },
-                    defaultLength = 0.5f
-                },
-                new GameAction("bop", "Bop")
-                {
-                    function = delegate {var e = eventCaller.currentEntity; CheerReaders.instance.BopToggle(e["toggle"]); },
+                    function = delegate {CheerReaders.instance.Yay(eventCaller.currentEntity["solo"]); },
                     defaultLength = 0.5f,
                     parameters = new List<Param>()
                     {
-                        new Param("toggle", false, "Should bop?", "Should the nerds bop?")
+                        new Param("solo", CheerReaders.WhoSpeaks.Both, "Who Speaks", "Who should say the voice line?"),
+                    }
+                },
+                new GameAction("bop", "Bop")
+                {
+                    function = delegate {var e = eventCaller.currentEntity; CheerReaders.instance.BopToggle(e.beat, e.length, e["toggle"], e["toggle2"]); },
+                    resizable = true,
+                    parameters = new List<Param>()
+                    {
+                        new Param("toggle", true, "Should bop?", "Should the nerds bop?"),
+                        new Param("toggle2", false, "Should auto bop?", "Should the nerds auto bop?")
                     }
                 },
                 new GameAction("resetPose", "Reset Pose")
@@ -214,21 +219,9 @@ namespace HeavenStudio.Games
         void Update()
         {
             var cond = Conductor.instance;
-            if (cond.ReportBeat(ref bop.lastReportedBeat, bop.startBeat % 1) && shouldBop && canBop)
+            if (cond.ReportBeat(ref bop.lastReportedBeat, bop.startBeat % 1) && shouldBop)
             {
-                foreach (var nerd in firstRow)
-                {
-                    nerd.Bop();
-                }
-                foreach (var nerd in secondRow)
-                {
-                    nerd.Bop();
-                }
-                foreach (var nerd in thirdRow)
-                {
-                    nerd.Bop();
-                }
-                player.Bop();
+                BopSingle();
             }
 
             if (cond.isPlaying && !cond.isPaused)
@@ -370,7 +363,7 @@ namespace HeavenStudio.Games
             }
         }
 
-        public void Yay()
+        public void Yay(int whoSpeaks)
         {
             if (!shouldYay) return;
             if (shouldBeBlack)
@@ -381,11 +374,6 @@ namespace HeavenStudio.Games
             {
                 whiteYayParticle.Play();
             }
-            foreach (var nerd in allGirls)
-            {
-                nerd.Yay();
-            }
-            player.Yay();
             playerMask.SetActive(false);
             missPoster.SetActive(false);
             foreach (var mask in topMasks)
@@ -400,12 +388,71 @@ namespace HeavenStudio.Games
             {
                 mask.SetActive(false);
             }
-            Jukebox.PlayOneShotGame("cheerReaders/All/yay");
+            switch (whoSpeaks)
+            {
+                case (int)WhoSpeaks.Solo:
+                    Jukebox.PlayOneShotGame("cheerReaders/Solo/yayS");
+                    player.Yay(true);
+                    foreach (var nerd in allGirls)
+                    {
+                        nerd.Yay(true);
+                    }
+                    break;
+                case (int)WhoSpeaks.Girls:
+                    Jukebox.PlayOneShotGame("cheerReaders/Girls/yayGirls");
+                    foreach (var nerd in allGirls)
+                    {
+                        nerd.Yay(true);
+                    }
+                    player.Yay(false);
+                    break;
+                default:
+                    Jukebox.PlayOneShotGame("cheerReaders/All/yay");
+                    foreach (var nerd in allGirls)
+                    {
+                        nerd.Yay(true);
+                    }
+                    player.Yay(true);
+                    break;
+            }
         }
 
-        public void BopToggle(bool startBop)
+        public void BopToggle(float beat, float length, bool startBop, bool bopAuto)
         {
-            shouldBop = startBop;
+            shouldBop = bopAuto;
+            if (startBop)
+            {
+                for (int i = 0; i < length; i++)
+                {
+                    BeatAction.New(instance.gameObject, new List<BeatAction.Action>()
+                    {
+                        new BeatAction.Action(beat + i, delegate
+                        {
+                            BopSingle();
+                        })
+                    });
+                }
+            }
+        }
+
+        void BopSingle()
+        {
+            if (canBop)
+            {
+                foreach (var nerd in firstRow)
+                {
+                    nerd.Bop();
+                }
+                foreach (var nerd in secondRow)
+                {
+                    nerd.Bop();
+                }
+                foreach (var nerd in thirdRow)
+                {
+                    nerd.Bop();
+                }
+                player.Bop();
+            }
         }
 
         public void SetIsDoingCue(float beat, float length, bool shouldSwitchColor = true)
@@ -418,7 +465,7 @@ namespace HeavenStudio.Games
             player.ResetFace();
             doingCue = true;
             cueBeat = beat;
-            cueLength = length;
+            cueLength = length - 1f;
             if (!shouldSwitchColor) return;
             BeatAction.New(instance.gameObject, new List<BeatAction.Action>()
             {
@@ -547,7 +594,7 @@ namespace HeavenStudio.Games
                             break;
                     }
                 }),
-                new BeatAction.Action(beat + 2.99f, delegate
+                new BeatAction.Action(beat + 2.5f, delegate
                 {
                     if (!doingCue) canBop = true;
                 })
@@ -705,7 +752,7 @@ namespace HeavenStudio.Games
                             break;
                     }
                 }),
-                new BeatAction.Action(beat + 2.99f, delegate
+                new BeatAction.Action(beat + 2.5f, delegate
                 {
                     if (!doingCue) canBop = true;
                 })
@@ -891,7 +938,7 @@ namespace HeavenStudio.Games
                             break;
                     }
                 }),
-                new BeatAction.Action(beat + 2.99f, delegate
+                new BeatAction.Action(beat + 2.5f, delegate
                 {
                     if (!doingCue) canBop = true;
                 })
@@ -1101,7 +1148,7 @@ namespace HeavenStudio.Games
                             break;
                     }
                 }),
-                new BeatAction.Action(beat + 2.99f, delegate
+                new BeatAction.Action(beat + 3.5f, delegate
                 {
                     if (!doingCue) canBop = true;
                 })

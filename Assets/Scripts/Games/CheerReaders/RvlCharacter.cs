@@ -52,9 +52,9 @@ namespace HeavenStudio.Games.Scripts_CheerReaders
             faceAnim.Play(player ? "FaceItsOnHappy" : "FaceItsOnNPC", 0, 0);
         }
 
-        public void Yay()
+        public void Yay(bool speak)
         {
-            faceAnim.DoScaledAnimationAsync("FaceYay", 0.5f);
+            if (speak) faceAnim.DoScaledAnimationAsync("FaceYay", 0.5f);
             BaseAnim.DoScaledAnimationAsync(bookIsWhite ? "WhiteYay" : "BlackYay", 0.5f);
         }
 
