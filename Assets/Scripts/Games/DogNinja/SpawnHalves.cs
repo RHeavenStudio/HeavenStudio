@@ -32,7 +32,6 @@ namespace HeavenStudio.Games.Scripts_DogNinja
             game = DogNinja.instance;
             bpmModifier = Conductor.instance.songBpm / 100;
             songPos = Conductor.instance.songPositionInBeats;
-            posModifier = (objPos/3);
         }
 
         private void Start() 
@@ -42,9 +41,9 @@ namespace HeavenStudio.Games.Scripts_DogNinja
 
         private void Update()
         {
-            float flyPosHalves = Conductor.instance.GetPositionFromBeat(songPos, 1f)+1.3f;
-            flyPosHalves *= 0.2f;
-            transform.position = curve.GetPoint(flyPosHalves)+posModifier;
+            float flyPosHalves = Conductor.instance.GetPositionFromBeat(songPos, 1f)+1f;
+            flyPosHalves *= 0.25f;
+            transform.position = curve.GetPoint(flyPosHalves)+objPos;
 
             float rot = rotSpeed;
             rot *= lefty ? bpmModifier : -1 * bpmModifier;

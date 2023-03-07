@@ -41,11 +41,12 @@ namespace HeavenStudio.Games.Scripts_DogNinja
         {
             game = DogNinja.instance;
             DogAnim = game.DogAnim;
-            barelyCurve = fromLeft ? BarelyLeftCurve : BarelyRightCurve;
         }
 
         private void Start()
         {
+            barelyCurve = fromLeft ? BarelyRightCurve : BarelyLeftCurve;
+            
             switch (type) {
                 case 7:
                     sfxNum += "bone";
@@ -74,25 +75,24 @@ namespace HeavenStudio.Games.Scripts_DogNinja
         private void Update()
         {
             float flyPos = Conductor.instance.GetPositionFromBeat(startBeat, 1f)+1.1f;
-            float flyPosBarely = Conductor.instance.GetPositionFromBeat(barelyTime, 1f)+1.1f;
+            float flyPosBarely = Conductor.instance.GetPositionFromBeat(barelyTime, 1f)+1f;
             if (isActive) {
                 flyPos *= 0.31f;
                 transform.position = curve.GetPoint(flyPos);
                 objPos = curve.GetPoint(flyPos);
+                // destroy object when it's off-screen
+                if (flyPos > 1f) {
+                    GameObject.Destroy(gameObject);
+                };
             } else {
                 flyPosBarely *= 0.3f;
                 transform.position = barelyCurve.GetPoint(flyPosBarely) + (objPos/3);
                 float rot = fromLeft ? 200f : -200f;
                 transform.rotation = Quaternion.Euler(0, 0, transform.rotation.eulerAngles.z + (rot * Time.deltaTime));
+                if (flyPosBarely > 1f) {
+                    GameObject.Destroy(gameObject);
+                };
             }
-            
-            
-            // destroy object when it's off-screen
-            /*
-            if (flyPos > 1f) {
-                GameObject.Destroy(gameObject);
-            };
-            */
 
             if ((!Conductor.instance.isPlaying && !Conductor.instance.isPaused) 
                 || GameManager.instance.currentGame != "dogNinja") {

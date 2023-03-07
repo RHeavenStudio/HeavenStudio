@@ -11,16 +11,15 @@ namespace HeavenStudio.Games.Loaders
     public static class NtrDogNinjaLoader
     {
         public static Minigame AddGame(EventCaller eventCaller) {
-            return new Minigame("dogNinja", "Dog Ninja \n<color=#eb5454>[WIP]</color>", "524999", true, false, new List<GameAction>()
+            return new Minigame("dogNinja", "Dog Ninja", "524999", true, false, new List<GameAction>()
             {
                 new GameAction("Bop", "Bop")
                 {
-                    function = delegate { DogNinja.instance.Bop(eventCaller.currentEntity.beat, eventCaller.currentEntity["toggle"], eventCaller.currentEntity["toggle"]); }, 
+                    function = delegate { DogNinja.instance.Bop(eventCaller.currentEntity.beat, eventCaller.currentEntity["toggle"]); }, 
                     defaultLength = 0.5f,
                     parameters = new List<Param>()
                     {
                         new Param("toggle", false, "Enable Bopping", "Whether to bop to the beat or not"),
-                        new Param("toggle2", false, "Manual Bop \n<color=#eb5454>[WIP]</color>", "Bop, regardless of beat"),
                     }
                 },
                 new GameAction("Prepare", "Prepare")
@@ -61,7 +60,7 @@ namespace HeavenStudio.Games.Loaders
                         new Param("text", "", "Alt. Objects", "An alternative object; one that doesn't exist in the main menu"),
                     }
                 },
-                new GameAction("ThrowObjectBoth", "Throw Left & Right Object")
+                new GameAction("ThrowObjectBoth", "Throw Object Left & Right")
                 {
                     function = delegate { var e = eventCaller.currentEntity; DogNinja.instance.ThrowBothObject(e.beat, e["type"], e["type2"], e["text"], e["text2"]); }, 
                     defaultLength = 2,
@@ -170,6 +169,7 @@ namespace HeavenStudio.Games
             if (DogAnim.GetBool("needPrepare") && DogAnim.IsAnimationNotPlaying())
             {
                 DogAnim.DoScaledAnimationAsync("Prepare", 0.5f);
+                DogAnim.SetBool("needPrepare", true);
             };
             
             if (PlayerInput.Pressed() && !IsExpectingInputNow(InputType.STANDARD_DOWN))
@@ -197,9 +197,8 @@ namespace HeavenStudio.Games
             };
         }
 
-        public void Bop(float beat, bool bop, bool manual)
+        public void Bop(float beat, bool bop)
         {
-            if (manual) DogAnim.DoScaledAnimationAsync("Bop", 0.5f);
             dontBop = !bop;
         }
 
