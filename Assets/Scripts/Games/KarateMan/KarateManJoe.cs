@@ -96,9 +96,7 @@ namespace HeavenStudio.Games.Scripts_KarateMan
 
             if (cond.ReportBeat(ref bop.lastReportedBeat, bop.startBeat % 1, false) && cond.songPositionInBeats > bop.startBeat && cond.songPositionInBeats < bop.startBeat + bop.length && cond.songPositionInBeats >= unPrepareTime && !inCombo)
             {
-                anim.speed = 1f;
-                anim.Play("Beat", -1, 0);
-                lastChargeTime = Single.MinValue;
+                Bop();
             }
 
             if (inCombo && shouldComboId == -2)
@@ -180,6 +178,13 @@ namespace HeavenStudio.Games.Scripts_KarateMan
                 }
             }
 
+        }
+
+        public void Bop()
+        {
+            anim.speed = 1f;
+            anim.Play("Beat", -1, 0);
+            lastChargeTime = Single.MinValue;
         }
 
         public bool Punch(int forceHand = 0)

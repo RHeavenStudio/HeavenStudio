@@ -564,13 +564,13 @@ namespace HeavenStudio.Games
         public static void WarnAndStop(float beat, bool ooh)
         {
             var sound = new MultiSound.Sound[]
-               {
-                    new MultiSound.Sound("djSchool/andStop1",   beat),
-                    new MultiSound.Sound("djSchool/andStop2",   beat + .5f, offset: 0.1200f),
-                    new MultiSound.Sound("", beat + 1.5f)
-               };
+            {
+                new MultiSound.Sound("djSchool/andStop1", beat),
+                new MultiSound.Sound("djSchool/andStop2", beat + .5f, offset: 0.1200f),
+                new MultiSound.Sound("", beat + 1.5f)
+            };
 
-            if (ooh)
+            if (ooh) 
                 sound[2] = new MultiSound.Sound("djSchool/oohAlt", beat + 1.5f);
 
 
