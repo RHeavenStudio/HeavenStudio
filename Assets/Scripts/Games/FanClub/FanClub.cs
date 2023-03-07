@@ -15,9 +15,8 @@ namespace HeavenStudio.Games.Loaders
                 {
                     new GameAction("bop", "Bop")
                     {
-                        function = delegate { var e = eventCaller.currentEntity; FanClub.instance.Bop(e.beat, e.length, e["type"]); }, 
+                        function = delegate { var e = eventCaller.currentEntity; FanClub.instance.Bop(e["type"]); }, 
                         defaultLength = 0.5f, 
-                        resizable = true, 
                         parameters = new List<Param>()
                         {
                             new Param("type", FanClub.IdolBopType.Both, "Bop target", "Who to make bop"),
@@ -178,6 +177,8 @@ namespace HeavenStudio.Games
         private static float wantBigReady = Single.MinValue;
         public float idolJumpStartTime = Single.MinValue;
         private bool hasJumped = false;
+        private bool goBopIdol = true;
+        private bool goBopSpec = true;
 
         //game scene
         public static FanClub instance;
@@ -282,7 +283,7 @@ namespace HeavenStudio.Games
             var cond = Conductor.instance;
             if (cond.ReportBeat(ref bop.lastReportedBeat, bop.startBeat % 1))
             {
-                if (cond.songPositionInBeats >= bop.startBeat && cond.songPositionInBeats < bop.startBeat + bop.length)
+                if (goBopIdol)
                 {
                     if (!(cond.songPositionInBeats >= noBop.startBeat && cond.songPositionInBeats < noBop.startBeat + noBop.length))
                         idolAnimator.Play("IdolBeat" + GetPerformanceSuffix(), 0, 0);
@@ -291,7 +292,7 @@ namespace HeavenStudio.Games
 
             if (cond.ReportBeat(ref specBop.lastReportedBeat, specBop.startBeat % 1))
             {
-                if (cond.songPositionInBeats >= specBop.startBeat && cond.songPositionInBeats < specBop.startBeat + specBop.length)
+                if (goBopSpec)
                 {
                     if (!(cond.songPositionInBeats >= noSpecBop.startBeat && cond.songPositionInBeats < noSpecBop.startBeat + noSpecBop.length))
                         BopAll();
@@ -324,22 +325,20 @@ namespace HeavenStudio.Games
             }
         }
 
-        public void Bop(float beat, float length, int target = (int) IdolBopType.Both)
+        public void Bop(int target = (int) IdolBopType.Both)
         {
             if (target == (int) IdolBopType.Both || target == (int) IdolBopType.Idol)
             {
-                bop.length = length;
-                bop.startBeat = beat;
+                goBopIdol = !goBopIdol;
             }
 
             if (target == (int) IdolBopType.Both || target == (int) IdolBopType.Spectators)
-                SpecBop(beat, length);
+                SpecBop();
         }
 
-        public void SpecBop(float beat, float length)
+        public void SpecBop()
         {
-            specBop.length = length;
-            specBop.startBeat = beat;
+            goBopSpec = !goBopSpec;
         }
 
         private void DisableBop(float beat, float length)
