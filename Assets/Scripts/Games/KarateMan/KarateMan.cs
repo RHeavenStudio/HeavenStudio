@@ -1036,7 +1036,10 @@ namespace HeavenStudio.Games
 
         public void ToggleBop(float beat, float length, bool toggle, bool autoBop)
         {
-            Joe.shouldBop = autoBop;
+            if (autoBop)
+                Joe.bop.length = Single.MaxValue;
+            else
+                Joe.bop.length = 0;
             if (toggle)
             {
                 for (int i = 0; i < length; i++)

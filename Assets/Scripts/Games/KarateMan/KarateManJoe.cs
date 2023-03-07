@@ -13,7 +13,6 @@ namespace HeavenStudio.Games.Scripts_KarateMan
         public Animator anim;
         public Animator FaceAnim;
         public GameEvent bop = new GameEvent();
-        public bool shouldBop = true;
         public SpriteRenderer[] Shadows;
 
         public Color BombGlowTint;
@@ -95,7 +94,7 @@ namespace HeavenStudio.Games.Scripts_KarateMan
                 anim.Play("Beat", -1, 0);
             }
 
-            if (cond.ReportBeat(ref bop.lastReportedBeat, bop.startBeat % 1, false) && shouldBop && cond.songPositionInBeats >= unPrepareTime && !inCombo)
+            if (cond.ReportBeat(ref bop.lastReportedBeat, bop.startBeat % 1, false) && cond.songPositionInBeats > bop.startBeat && cond.songPositionInBeats < bop.startBeat + bop.length && cond.songPositionInBeats >= unPrepareTime && !inCombo)
             {
                 Bop();
             }
