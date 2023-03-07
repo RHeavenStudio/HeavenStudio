@@ -185,6 +185,10 @@ namespace HeavenStudio.Games
                         isWalking = false;
                     }
                 }
+                if ((PlayerInput.Pressed() && !IsExpectingInputNow(InputType.STANDARD_DOWN)) || (PlayerInput.AltPressed() && !IsExpectingInputNow(InputType.STANDARD_ALT_DOWN)))
+                {
+                    flipperPlayer.Flip(false, false, false, true);
+                }
                 if (queuedInputs.Count > 0)
                 {
                     foreach (var input in queuedInputs) 

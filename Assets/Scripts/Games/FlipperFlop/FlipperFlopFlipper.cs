@@ -74,8 +74,7 @@ namespace HeavenStudio.Games.Scripts_FlipperFlop
                 {
                     faceAnim.Play("FaceOw");
                     canBlink = false;
-                    Jukebox.PlayOneShotGame("flipperFlop/failgroan", -1, 1, 0.5f);
-                    Jukebox.PlayOneShotGame("flipperFlop/punch", -1, 1, 0.5f);
+                    Jukebox.PlayOneShotGame("flipperFlop/failgroan");
                     game.BumpIntoOtherSeal(!left);
                     BeatAction.New(this.gameObject, new List<BeatAction.Action>()
                     {
