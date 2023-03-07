@@ -14,11 +14,12 @@ namespace HeavenStudio.Games.Loaders
             {
                 new GameAction("bop", "Bop")
                 {
-                    function = delegate { DJSchool.instance.Bop(eventCaller.currentEntity["toggle"]);  }, 
-                    defaultLength = 0.5f,
+                    function = delegate { var e = eventCaller.currentEntity; DJSchool.instance.Bop(e.beat, e.length, e["toggle2"], e["toggle"]);  }, 
+                    resizable = true,
                     parameters = new List<Param>()
                     {
-                        new Param("toggle", true, "Bop", "Whether both will bop to the beat or not")
+                        new Param("toggle2", true, "Bop", "Whether both will bop to the beat or not"),
+                        new Param("toggle", false, "Bop (Auto)", "Whether both will auto bop to the beat or not")
                     }
                 },
                 new GameAction("and stop ooh", "And Stop!")
@@ -285,15 +286,55 @@ namespace HeavenStudio.Games
             shouldBeHolding = true;
         }
 
-        public void Bop(bool isBopping)
+        public void Bop(float beat, float length, bool isBopping, bool autoBop)
         {
+            goBop = autoBop;
             if (isBopping)
             {
-                goBop = true;
-            }
-            else
-            {
-                goBop = false;
+                for (int i = 0; i < length; i++)
+                {
+                    BeatAction.New(instance.gameObject, new List<BeatAction.Action>()
+                    {
+                        new BeatAction.Action(beat + i, delegate
+                        {
+                            if (student.isHolding)
+                            {
+                                student.anim.DoScaledAnimationAsync("HoldBop", 0.5f);
+                            }
+                            else if (!student.swiping && student.anim.IsAnimationNotPlaying())
+                            {
+                                student.anim.DoScaledAnimationAsync("IdleBop", 0.5f);
+                            }
+
+                            var yellowState = djYellowAnim.GetCurrentAnimatorStateInfo(0);
+                            if (yellowState.IsName("Hey"))
+                            {
+                                //PostScratchoFace();
+                            }
+                            if (!andStop && !djYellowHolding)
+                            {
+                                float normalizedSmileBeat = Conductor.instance.GetPositionFromBeat(smileBeat, 3f);
+                                if (normalizedSmileBeat >= 0 && normalizedSmileBeat <= 1f) djYellowScript.ChangeHeadSprite(DJYellow.DJExpression.Happy);
+                                else if (!djYellowScript.HeadSpriteCheck(DJYellow.DJExpression.CrossEyed)) djYellowScript.ChangeHeadSprite(DJYellow.DJExpression.NeutralLeft);
+                                djYellowScript.Reverse((normalizedSmileBeat >= 0 && normalizedSmileBeat <= 1f) || djYellowScript.HeadSpriteCheck(DJYellow.DJExpression.CrossEyed));
+                                if (djYellowBopLeft)
+                                {
+                                    djYellowAnim.DoScaledAnimationAsync("IdleBop2", 0.5f);
+                                }
+                                else
+                                {
+                                    djYellowAnim.DoScaledAnimationAsync("IdleBop", 0.5f);
+                                }
+                                djYellowBopLeft = !djYellowBopLeft;
+
+                            }
+                            else if (djYellowHolding)
+                            {
+                                djYellowAnim.DoScaledAnimationAsync("HoldBop", 0.5f);
+                            }
+                        })
+                    });
+                }
             }
         }
 
@@ -348,7 +389,20 @@ namespace HeavenStudio.Games
                     }
                     djYellowScript.Reverse();
                 }),
-                new BeatAction.Action(beat + 1f, delegate { djYellow.GetComponent<Animator>().DoScaledAnimationAsync("BreakCmon", 0.5f); }),
+                new BeatAction.Action(beat + 1f, delegate 
+                { 
+                    djYellow.GetComponent<Animator>().DoScaledAnimationAsync("BreakCmon", 0.5f);
+                    float normalizedSmileBeat = Conductor.instance.GetPositionFromBeat(smileBeat, 3f);
+                    if (normalizedSmileBeat >= 0 && normalizedSmileBeat <= 1f)
+                    {
+                        djYellowScript.ChangeHeadSprite(DJYellow.DJExpression.Happy);
+                    }
+                    else if (!djYellowScript.HeadSpriteCheck(DJYellow.DJExpression.CrossEyed))
+                    {
+                        djYellowScript.ChangeHeadSprite(DJYellow.DJExpression.NeutralRight);
+                    }
+                    djYellowScript.Reverse();
+                }),
                 new BeatAction.Action(beat + 2f, delegate 
                 { 
                     djYellow.GetComponent<Animator>().DoScaledAnimationAsync("Hold", 0.5f); 
