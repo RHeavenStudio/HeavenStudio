@@ -33,11 +33,12 @@ namespace HeavenStudio.Games.Loaders
                 },
                 new GameAction("bop", "Bop") 
                 {
-                    function = delegate { var e = eventCaller.currentEntity; RhythmSomen.instance.ToggleBop(e["toggle"]); },
-                    defaultLength = 0.5f,
+                    function = delegate { var e = eventCaller.currentEntity; RhythmSomen.instance.ToggleBop(e.beat, e.length, e["toggle2"], e["toggle"]); },
+                    resizable = true,
                     parameters = new List<Param>()
                     {
-                        new Param("toggle", false, "Bop?", "Should the somen man bop or not?")
+                        new Param("toggle2", true, "Bop", "Should the somen man bop?"),
+                        new Param("toggle", false, "Bop (Auto)", "Should the somen man bop automatically?")
                     }
                 }
             });
@@ -90,9 +91,22 @@ namespace HeavenStudio.Games
             }
         }
 
-        public void ToggleBop(bool bopOrNah)
+        public void ToggleBop(float beat, float length, bool bopOrNah, bool autoBop)
         {
-            shouldBop = bopOrNah;
+            shouldBop = autoBop;
+            if (bopOrNah)
+            {
+                for (int i = 0; i < length; i++)
+                {
+                    BeatAction.New(instance.gameObject, new List<BeatAction.Action>()
+                    {
+                        new BeatAction.Action(beat + i, delegate
+                        {
+                            SomenPlayer.Play("HeadBob", -1, 0);
+                        })
+                    });
+                }
+            }
         }
 
         public void DoFarCrane(float beat)
