@@ -15,11 +15,12 @@ namespace HeavenStudio.Games.Loaders
             {
                 new GameAction("bop", "Bop")
                 {
-                    function = delegate { KarateMan.instance.ToggleBop(eventCaller.currentEntity["toggle"]); },
-                    defaultLength = 0.5f,
+                    function = delegate { var e = eventCaller.currentEntity; KarateMan.instance.ToggleBop(e.beat, e.length, e["toggle2"], e["toggle"]); },
+                    resizable = true,
                     parameters = new List<Param>()
                     {
-                        new Param("toggle", true, "Bop", "Whether to bop to the beat or not")
+                        new Param("toggle2", true, "Bop", "Whether to bop to the beat or not"),
+                        new Param("toggle", false, "Bop (Auto)", "Whether to auto bop to the beat or not")
                     },
                     inactiveFunction = delegate { KarateMan.ToggleBopUnloaded(eventCaller.currentEntity["toggle"]); }
                 },
@@ -476,7 +477,7 @@ namespace HeavenStudio.Games
             SetBgAndShadowCol(WantBgChangeStart, WantBgChangeLength, bgType, (int) currentShadowType, bgColour, customShadowColour, (int)currentBgEffect);
             SetBgTexture(textureType, textureFilterType, filterColour, filterColour);
             UpdateMaterialColour(BodyColor, HighlightColor, ItemColor);
-            ToggleBop(WantBop);
+            ToggleBop(0, 0, false, WantBop);
         }
 
         private void Update()
@@ -1033,12 +1034,22 @@ namespace HeavenStudio.Games
             Wind.windMain = windStrength;
         }
 
-        public void ToggleBop(bool toggle)
+        public void ToggleBop(float beat, float length, bool toggle, bool autoBop)
         {
+            Joe.shouldBop = autoBop;
             if (toggle)
-                Joe.bop.length = Single.MaxValue;
-            else
-                Joe.bop.length = 0;
+            {
+                for (int i = 0; i < length; i++)
+                {
+                    BeatAction.New(instance.gameObject, new List<BeatAction.Action>()
+                    {
+                        new BeatAction.Action(beat + i, delegate
+                        {
+                            Joe.Bop();
+                        })
+                    });
+                }
+            }
         }
 
         public static void ToggleBopUnloaded(bool toggle)
