@@ -15,11 +15,12 @@ namespace HeavenStudio.Games.Loaders
                 {
                     new GameAction("bop", "Bop")
                     {
-                        function = delegate { var e = eventCaller.currentEntity; FanClub.instance.Bop(e["type"]); }, 
-                        defaultLength = 0.5f, 
+                        function = delegate { var e = eventCaller.currentEntity; FanClub.instance.Bop(e.beat, e.length, e["type"], e["type2"]); }, 
+                        resizable = true,
                         parameters = new List<Param>()
                         {
                             new Param("type", FanClub.IdolBopType.Both, "Bop target", "Who to make bop"),
+                            new Param("type2", FanClub.IdolBopType.None, "Bop target (Auto)", "Who to make auto bop"),
                         }
                     },
                     new GameAction("yeah, yeah, yeah", "Yeah, Yeah, Yeah!")
@@ -104,7 +105,8 @@ namespace HeavenStudio.Games
         public enum IdolBopType {
             Both,
             Idol,
-            Spectators
+            Spectators,
+            None
         }
         public enum IdolAnimations {
             Bop,
@@ -325,20 +327,36 @@ namespace HeavenStudio.Games
             }
         }
 
-        public void Bop(int target = (int) IdolBopType.Both)
+        public void Bop(float beat, float length, int target = (int) IdolBopType.Both, int targetAuto = (int)IdolBopType.Both)
         {
-            if (target == (int) IdolBopType.Both || target == (int) IdolBopType.Idol)
+            goBopIdol = targetAuto == (int)IdolBopType.Both || targetAuto == (int)IdolBopType.Idol;
+            goBopSpec = targetAuto == (int)IdolBopType.Both || targetAuto == (int)IdolBopType.Spectators;
+            for (int i = 0; i < length; i++)
             {
-                goBopIdol = !goBopIdol;
+                BeatAction.New(instance.gameObject, new List<BeatAction.Action>()
+                {
+                    new BeatAction.Action(beat + i, delegate { BopSingle(target); })
+                });
             }
-
-            if (target == (int) IdolBopType.Both || target == (int) IdolBopType.Spectators)
-                SpecBop();
         }
 
-        public void SpecBop()
+        void BopSingle(int target)
         {
-            goBopSpec = !goBopSpec;
+            switch (target)
+            {
+                case (int)IdolBopType.Idol:
+                    idolAnimator.Play("IdolBeat" + GetPerformanceSuffix(), 0, 0);
+                    break;
+                case (int)IdolBopType.Spectators:
+                    BopAll();
+                    break;
+                case (int)IdolBopType.Both:
+                    idolAnimator.Play("IdolBeat" + GetPerformanceSuffix(), 0, 0);
+                    BopAll();
+                    break;
+                default:
+                    break;
+            }
         }
 
         private void DisableBop(float beat, float length)

@@ -16,8 +16,13 @@ namespace HeavenStudio.Games.Loaders
             {
                 new GameAction("bop", "Bop")
                 {
-                    function = delegate { RhythmRally.instance.Bop(); }, 
-                    defaultLength = 0.5f, 
+                    function = delegate {var e = eventCaller.currentEntity; RhythmRally.instance.Bop(e.beat, e.length, e["bop"], e["bopAuto"]); },
+                    resizable = true,
+                    parameters = new List<Param>()
+                    {
+                        new Param("bop", true, "Bop", "Will the paddlers bop?"),
+                        new Param("bopAuto", false, "Bop (Auto)", "Will the paddlers auto bop?")
+                    }
                 },
                 new GameAction("whistle", "Whistle")
                 {
@@ -26,25 +31,25 @@ namespace HeavenStudio.Games.Loaders
                 },
                 new GameAction("toss ball", "Toss Ball")
                 {
-                    function = delegate { RhythmRally.instance.Toss(eventCaller.currentEntity.beat, eventCaller.currentEntity.length, 6f, true); }, 
-                    defaultLength = 2f, 
+                    function = delegate { RhythmRally.instance.Toss(eventCaller.currentEntity.beat, eventCaller.currentEntity.length, 6f, true); },
+                    defaultLength = 2f,
                     resizable = true
                 },
                 new GameAction("rally", "Rally")
                 {
-                    function = delegate { RhythmRally.instance.Serve(eventCaller.currentEntity.beat, RhythmRally.RallySpeed.Normal); }, 
-                    defaultLength = 4f, 
+                    function = delegate { RhythmRally.instance.Serve(eventCaller.currentEntity.beat, RhythmRally.RallySpeed.Normal); },
+                    defaultLength = 4f,
                     resizable = true
                 },
                 new GameAction("slow rally", "Slow Rally")
                 {
-                    function = delegate { RhythmRally.instance.Serve(eventCaller.currentEntity.beat, RhythmRally.RallySpeed.Slow); }, 
-                    defaultLength = 8f, 
+                    function = delegate { RhythmRally.instance.Serve(eventCaller.currentEntity.beat, RhythmRally.RallySpeed.Slow); },
+                    defaultLength = 8f,
                     resizable = true
                 },
                 new GameAction("fast rally", "Fast Rally")
                 {
-                    function = delegate { RhythmRally.instance.PrepareFastRally(eventCaller.currentEntity.beat, RhythmRally.RallySpeed.Fast, eventCaller.currentEntity["muteAudio"]); }, 
+                    function = delegate { RhythmRally.instance.PrepareFastRally(eventCaller.currentEntity.beat, RhythmRally.RallySpeed.Fast, eventCaller.currentEntity["muteAudio"]); },
                     defaultLength = 6f,
                     parameters = new List<Param>()
                     {
@@ -53,7 +58,7 @@ namespace HeavenStudio.Games.Loaders
                 },
                 new GameAction("superfast rally", "Superfast Rally")
                 {
-                    function = delegate { RhythmRally.instance.PrepareFastRally(eventCaller.currentEntity.beat, RhythmRally.RallySpeed.SuperFast, eventCaller.currentEntity["muteAudio"]); }, 
+                    function = delegate { RhythmRally.instance.PrepareFastRally(eventCaller.currentEntity.beat, RhythmRally.RallySpeed.SuperFast, eventCaller.currentEntity["muteAudio"]); },
                     defaultLength = 12f,
                     parameters = new List<Param>()
                     {
@@ -74,7 +79,7 @@ namespace HeavenStudio.Games.Loaders
                 },
                 new GameAction("pose", "End Pose")
                 {
-                    function = delegate { RhythmRally.instance.Pose(); }, 
+                    function = delegate { RhythmRally.instance.Pose(); },
                     defaultLength = 0.5f
                 },
                 new GameAction("camera", "Camera Controls")
@@ -83,15 +88,15 @@ namespace HeavenStudio.Games.Loaders
                         var e = eventCaller.currentEntity;
                         var rotation = new Vector3(0, e["valA"], 0);
                         RhythmRally.instance.ChangeCameraAngle(rotation, e["valB"], e.length, (Ease)e["type"], (RotateMode)e["type2"]);
-                    }, 
-                    defaultLength = 4, 
-                    resizable = true, 
+                    },
+                    defaultLength = 4,
+                    resizable = true,
                     parameters = new List<Param>() {
                         new Param("valA", new EntityTypes.Integer(-360, 360, 0), "Angle", "The rotation of the camera around the center of the table"),
                         new Param("valB", new EntityTypes.Float(0.5f, 4f, 1), "Zoom", "The camera's level of zoom (Lower value = Zoomed in)"),
                         new Param("type", Ease.Linear, "Ease", "The easing function to use"),
                         new Param("type2", RotateMode.Fast, "Rotation Mode", "The rotation mode to use")
-                    } 
+                    }
                 },
             });
         }
@@ -357,20 +362,43 @@ namespace HeavenStudio.Games
             {
                 if (goBop && !inPose)
                 {
-                    if (!playerPrepping && (playerAnim.IsAnimationNotPlaying() || playerState.IsName("Idle") || playerState.IsName("Beat")))
-                        playerAnim.DoScaledAnimationAsync("Beat", 0.5f);
-
-                    if (!opponentPrepping && !opponentServing && !tossing && (opponentAnim.IsAnimationNotPlaying() || opponentState.IsName("Idle") || opponentState.IsName("Beat")))
-                        opponentAnim.DoScaledAnimationAsync("Beat", 0.5f);
+                    BopSingle();
                 }
             }
 
             opponentServing = false;
         }
 
-        public void Bop()
+        public void Bop(float beat, float length, bool bop, bool bopAuto)
         {
-            goBop = !goBop;
+            goBop = bopAuto;
+            if (bop)
+            {
+                for (int i = 0; i < length; i++)
+                {
+                    BeatAction.New(instance.gameObject, new List<BeatAction.Action>()
+                    {
+                        new BeatAction.Action(beat + i, delegate
+                        {
+                            BopSingle();
+                        })
+                    });
+                }
+            }
+        }
+
+        void BopSingle()
+        {
+            var playerState = playerAnim.GetCurrentAnimatorStateInfo(0);
+            var opponentState = opponentAnim.GetCurrentAnimatorStateInfo(0);
+
+            bool playerPrepping = false; // Player using prep animation?
+            bool opponentPrepping = false; // Opponent using prep animation?
+            if (!playerPrepping && (playerAnim.IsAnimationNotPlaying() || playerState.IsName("Idle") || playerState.IsName("Beat")))
+                playerAnim.DoScaledAnimationAsync("Beat", 0.5f);
+
+            if (!opponentPrepping && !opponentServing && !tossing && (opponentAnim.IsAnimationNotPlaying() || opponentState.IsName("Idle") || opponentState.IsName("Beat")))
+                opponentAnim.DoScaledAnimationAsync("Beat", 0.5f);
         }
 
         public void Serve(float beat, RallySpeed speed)
