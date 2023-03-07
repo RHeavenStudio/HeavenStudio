@@ -91,11 +91,12 @@ namespace HeavenStudio.Games.Loaders
                 },
                 new GameAction("bop", "Bop")
                 {
-                    function = delegate {var e = eventCaller.currentEntity; CheerReaders.instance.BopToggle(e["toggle"]); },
-                    defaultLength = 0.5f,
+                    function = delegate {var e = eventCaller.currentEntity; CheerReaders.instance.BopToggle(e.beat, e.length, e["toggle"], e["toggle2"]); },
+                    resizable = true,
                     parameters = new List<Param>()
                     {
-                        new Param("toggle", false, "Should bop?", "Should the nerds bop?")
+                        new Param("toggle", true, "Should bop?", "Should the nerds bop?"),
+                        new Param("toggle2", false, "Should auto bop?", "Should the nerds auto bop?")
                     }
                 },
                 new GameAction("resetPose", "Reset Pose")
@@ -218,21 +219,9 @@ namespace HeavenStudio.Games
         void Update()
         {
             var cond = Conductor.instance;
-            if (cond.ReportBeat(ref bop.lastReportedBeat, bop.startBeat % 1) && shouldBop && canBop)
+            if (cond.ReportBeat(ref bop.lastReportedBeat, bop.startBeat % 1) && shouldBop)
             {
-                foreach (var nerd in firstRow)
-                {
-                    nerd.Bop();
-                }
-                foreach (var nerd in secondRow)
-                {
-                    nerd.Bop();
-                }
-                foreach (var nerd in thirdRow)
-                {
-                    nerd.Bop();
-                }
-                player.Bop();
+                BopSingle();
             }
 
             if (cond.isPlaying && !cond.isPaused)
@@ -428,9 +417,42 @@ namespace HeavenStudio.Games
             }
         }
 
-        public void BopToggle(bool startBop)
+        public void BopToggle(float beat, float length, bool startBop, bool bopAuto)
         {
-            shouldBop = startBop;
+            shouldBop = bopAuto;
+            if (startBop)
+            {
+                for (int i = 0; i < length; i++)
+                {
+                    BeatAction.New(instance.gameObject, new List<BeatAction.Action>()
+                    {
+                        new BeatAction.Action(beat + i, delegate
+                        {
+                            BopSingle();
+                        })
+                    });
+                }
+            }
+        }
+
+        void BopSingle()
+        {
+            if (canBop)
+            {
+                foreach (var nerd in firstRow)
+                {
+                    nerd.Bop();
+                }
+                foreach (var nerd in secondRow)
+                {
+                    nerd.Bop();
+                }
+                foreach (var nerd in thirdRow)
+                {
+                    nerd.Bop();
+                }
+                player.Bop();
+            }
         }
 
         public void SetIsDoingCue(float beat, float length, bool shouldSwitchColor = true)
@@ -443,7 +465,7 @@ namespace HeavenStudio.Games
             player.ResetFace();
             doingCue = true;
             cueBeat = beat;
-            cueLength = length;
+            cueLength = length - 1f;
             if (!shouldSwitchColor) return;
             BeatAction.New(instance.gameObject, new List<BeatAction.Action>()
             {
@@ -572,7 +594,7 @@ namespace HeavenStudio.Games
                             break;
                     }
                 }),
-                new BeatAction.Action(beat + 2.99f, delegate
+                new BeatAction.Action(beat + 2.5f, delegate
                 {
                     if (!doingCue) canBop = true;
                 })
@@ -730,7 +752,7 @@ namespace HeavenStudio.Games
                             break;
                     }
                 }),
-                new BeatAction.Action(beat + 2.99f, delegate
+                new BeatAction.Action(beat + 2.5f, delegate
                 {
                     if (!doingCue) canBop = true;
                 })
@@ -916,7 +938,7 @@ namespace HeavenStudio.Games
                             break;
                     }
                 }),
-                new BeatAction.Action(beat + 2.99f, delegate
+                new BeatAction.Action(beat + 2.5f, delegate
                 {
                     if (!doingCue) canBop = true;
                 })
@@ -1126,7 +1148,7 @@ namespace HeavenStudio.Games
                             break;
                     }
                 }),
-                new BeatAction.Action(beat + 2.99f, delegate
+                new BeatAction.Action(beat + 3.5f, delegate
                 {
                     if (!doingCue) canBop = true;
                 })
