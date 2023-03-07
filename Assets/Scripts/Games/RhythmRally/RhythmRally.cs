@@ -16,9 +16,8 @@ namespace HeavenStudio.Games.Loaders
             {
                 new GameAction("bop", "Bop")
                 {
-                    function = delegate { RhythmRally.instance.Bop(eventCaller.currentEntity.beat, eventCaller.currentEntity.length); }, 
+                    function = delegate { RhythmRally.instance.Bop(); }, 
                     defaultLength = 0.5f, 
-                    resizable = true
                 },
                 new GameAction("whistle", "Whistle")
                 {
@@ -60,6 +59,18 @@ namespace HeavenStudio.Games.Loaders
                     {
                         new Param("muteAudio", false, "Mute Cowbell", "Whether the cowbell sound should play or not.")
                     }
+                },
+                new GameAction("tonktinktonk", "Tonk-Tink-Tonk (Stretchable)")
+                {
+                    preFunction = delegate {var e = eventCaller.currentEntity; RhythmRally.TonkTinkTonkStretchable(e.beat, e.length); },
+                    defaultLength = 4f,
+                    resizable = true
+                },
+                new GameAction("superfast stretchable", "Superfast Rally (Stretchable)")
+                {
+                    function = delegate { var e = eventCaller.currentEntity; RhythmRally.instance.SuperFastRallyStretchable(e.beat, e.length); },
+                    defaultLength = 8f,
+                    resizable = true
                 },
                 new GameAction("pose", "End Pose")
                 {
@@ -131,6 +142,7 @@ namespace HeavenStudio.Games
         public Paddlers paddlers;
 
         public GameEvent bop = new GameEvent();
+        private bool goBop = true;
         
         public static RhythmRally instance;
 
@@ -343,7 +355,7 @@ namespace HeavenStudio.Games
             // Paddler bop animation.
             if (cond.ReportBeat(ref bop.lastReportedBeat, bop.startBeat % 1))
             {
-                if (currentBeat >= bop.startBeat && currentBeat < bop.startBeat + bop.length && !inPose)
+                if (goBop && !inPose)
                 {
                     if (!playerPrepping && (playerAnim.IsAnimationNotPlaying() || playerState.IsName("Idle") || playerState.IsName("Beat")))
                         playerAnim.DoScaledAnimationAsync("Beat", 0.5f);
@@ -356,10 +368,9 @@ namespace HeavenStudio.Games
             opponentServing = false;
         }
 
-        public void Bop(float beat, float length)
+        public void Bop()
         {
-            bop.length = length;
-            bop.startBeat = beat;
+            goBop = !goBop;
         }
 
         public void Serve(float beat, RallySpeed speed)
@@ -469,36 +480,39 @@ namespace HeavenStudio.Games
                 });
 
                 if (muteAudio) return;
-                MultiSound.Play(new MultiSound.Sound[]
-                {
-                    new MultiSound.Sound("rhythmRally/Tonk", beat),
-                    new MultiSound.Sound("rhythmRally/Tink", beat + 0.5f),
-                    new MultiSound.Sound("rhythmRally/Tonk", beat + 1f)
-                });
+                TonkTinkTonkStretchable(beat, 1.5f);
             }
             else if (speedChange == RallySpeed.SuperFast)
             {
-                BeatAction.New(gameObject, new List<BeatAction.Action>()
-                {
-                    new BeatAction.Action(beat + 4f, delegate { Serve(beat + 4f, RallySpeed.SuperFast); }),
-                    new BeatAction.Action(beat + 6f, delegate { Serve(beat + 6f, RallySpeed.SuperFast); }),
-                    new BeatAction.Action(beat + 8f, delegate { Serve(beat + 8f, RallySpeed.SuperFast); }),
-                    new BeatAction.Action(beat + 10f, delegate { Serve(beat + 10f, RallySpeed.SuperFast); })
-                });
+                SuperFastRallyStretchable(beat + 4f, 8f);
 
                 if (muteAudio) return;
-                MultiSound.Play(new MultiSound.Sound[]
-                {
-                    new MultiSound.Sound("rhythmRally/Tonk", beat),
-                    new MultiSound.Sound("rhythmRally/Tink", beat + 0.5f),
-                    new MultiSound.Sound("rhythmRally/Tonk", beat + 1f),
-                    new MultiSound.Sound("rhythmRally/Tink", beat + 1.5f),
-                    new MultiSound.Sound("rhythmRally/Tonk", beat + 2f),
-                    new MultiSound.Sound("rhythmRally/Tink", beat + 2.5f),
-                    new MultiSound.Sound("rhythmRally/Tonk", beat + 3f),
-                    new MultiSound.Sound("rhythmRally/Tink", beat + 3.5f)
-                });
+                TonkTinkTonkStretchable(beat, 4f);
             }
+        }
+
+        public static void TonkTinkTonkStretchable(float beat, float length)
+        {
+            List<MultiSound.Sound> soundsToPlay = new List<MultiSound.Sound>();
+            bool tink = false;
+            for (float i = 0; i < length; i += 0.5f) 
+            {
+                soundsToPlay.Add(new MultiSound.Sound(tink ? "rhythmRally/Tink" : "rhythmRally/Tonk", beat + i));
+                tink = !tink;
+            }
+            MultiSound.Play(soundsToPlay.ToArray(), forcePlay: true);
+        }
+
+        public void SuperFastRallyStretchable(float beat, float length)
+        {
+            List<BeatAction.Action> servesToPerform = new List<BeatAction.Action>();
+
+            for (int i = 0; i < length; i += 2)
+            {
+                float beatToSpawn = beat + i;
+                servesToPerform.Add( new BeatAction.Action(beatToSpawn, delegate { Serve(beatToSpawn, RallySpeed.SuperFast); }) );
+            }
+            BeatAction.New(gameObject, servesToPerform);
         }
     }
 }

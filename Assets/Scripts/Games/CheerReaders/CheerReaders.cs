@@ -45,7 +45,7 @@ namespace HeavenStudio.Games.Loaders
                         new Param("solo", CheerReaders.WhoSpeaks.Both, "Who Speaks", "Who should say the voice line?")
                     }
                 },
-                new GameAction("rahRahSisBoomBaBoom", "Rah Rah Sis Boom Ba Boom!")
+                new GameAction("rahRahSisBoomBaBoom", "Rah-Rah Sis Boom Bah-Boom!")
                 {
                     function = delegate {var e = eventCaller.currentEntity; CheerReaders.instance.RahRahSisBoomBaBoom(e.beat, e["solo"], e["consecutive"]); CheerReaders.instance.SetIsDoingCue(e.beat, e.length);},
                     defaultLength = 4f,
@@ -82,8 +82,12 @@ namespace HeavenStudio.Games.Loaders
                 },
                 new GameAction("yay", "Yay")
                 {
-                    function = delegate {CheerReaders.instance.Yay(); },
-                    defaultLength = 0.5f
+                    function = delegate {CheerReaders.instance.Yay(eventCaller.currentEntity["solo"]); },
+                    defaultLength = 0.5f,
+                    parameters = new List<Param>()
+                    {
+                        new Param("solo", CheerReaders.WhoSpeaks.Both, "Who Speaks", "Who should say the voice line?"),
+                    }
                 },
                 new GameAction("bop", "Bop")
                 {
@@ -370,7 +374,7 @@ namespace HeavenStudio.Games
             }
         }
 
-        public void Yay()
+        public void Yay(int whoSpeaks)
         {
             if (!shouldYay) return;
             if (shouldBeBlack)
@@ -381,11 +385,6 @@ namespace HeavenStudio.Games
             {
                 whiteYayParticle.Play();
             }
-            foreach (var nerd in allGirls)
-            {
-                nerd.Yay();
-            }
-            player.Yay();
             playerMask.SetActive(false);
             missPoster.SetActive(false);
             foreach (var mask in topMasks)
@@ -400,7 +399,33 @@ namespace HeavenStudio.Games
             {
                 mask.SetActive(false);
             }
-            Jukebox.PlayOneShotGame("cheerReaders/All/yay");
+            switch (whoSpeaks)
+            {
+                case (int)WhoSpeaks.Solo:
+                    Jukebox.PlayOneShotGame("cheerReaders/Solo/yayS");
+                    player.Yay(true);
+                    foreach (var nerd in allGirls)
+                    {
+                        nerd.Yay(true);
+                    }
+                    break;
+                case (int)WhoSpeaks.Girls:
+                    Jukebox.PlayOneShotGame("cheerReaders/Girls/yayGirls");
+                    foreach (var nerd in allGirls)
+                    {
+                        nerd.Yay(true);
+                    }
+                    player.Yay(false);
+                    break;
+                default:
+                    Jukebox.PlayOneShotGame("cheerReaders/All/yay");
+                    foreach (var nerd in allGirls)
+                    {
+                        nerd.Yay(true);
+                    }
+                    player.Yay(true);
+                    break;
+            }
         }
 
         public void BopToggle(bool startBop)
