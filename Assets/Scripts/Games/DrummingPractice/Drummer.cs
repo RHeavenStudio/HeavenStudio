@@ -24,6 +24,8 @@ namespace HeavenStudio.Games.Scripts_DrummingPractice
 
         private bool hitting = false;
 
+        private float canBopBeat = -2f;
+
         // in the future: use the MiiStudio API to render any mii from a nintendo account / MNMS / Mii Studio code?
         // figure out how to call the API from unity?
         // used expressions: "normal", "smile", "sorrow"
@@ -53,12 +55,13 @@ namespace HeavenStudio.Games.Scripts_DrummingPractice
 
         public void Bop()
         {
-            if (animator.IsAnimationNotPlaying())
+            if (Conductor.instance.GetPositionFromBeat(canBopBeat, 2f) > 1f)
                 animator.Play("Bop", 0, 0);
         }
 
-        public void Prepare(int type)
+        public void Prepare(float beat, int type)
         {
+            canBopBeat = beat;
             count = type;
             if (count % 2 == 0)
                 animator.Play("PrepareLeft", 0, 0);

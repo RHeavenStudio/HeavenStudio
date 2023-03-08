@@ -294,7 +294,7 @@ namespace HeavenStudio.Games
             }
             else
             {
-                tweenForForth = Forthington.gameObject.transform.DOMoveZ(wayPointZForForth, .15f).SetEase(Ease.InOutCubic);
+                tweenForForth = Forthington.gameObject.transform.DOMoveZ(wayPointZForForth, .7f).SetEase(Ease.OutQuad);
             }
         }
 
