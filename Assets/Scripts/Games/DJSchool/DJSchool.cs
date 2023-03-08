@@ -225,7 +225,7 @@ namespace HeavenStudio.Games
                         float normalizedSmileBeat = Conductor.instance.GetPositionFromBeat(smileBeat, 3f);
                         if (normalizedSmileBeat >= 0 && normalizedSmileBeat <= 1f) djYellowScript.ChangeHeadSprite(DJYellow.DJExpression.Happy);
                         else if (!djYellowScript.HeadSpriteCheck(DJYellow.DJExpression.CrossEyed)) djYellowScript.ChangeHeadSprite(DJYellow.DJExpression.NeutralLeft);
-                        djYellowScript.Reverse((normalizedSmileBeat >= 0 && normalizedSmileBeat <= 1f) || djYellowScript.HeadSpriteCheck(DJYellow.DJExpression.CrossEyed));
+                        djYellowScript.Reverse(djYellowScript.HeadSpriteCheck(DJYellow.DJExpression.CrossEyed));
                         if (djYellowBopLeft)
                         {
                             djYellowAnim.DoScaledAnimationAsync("IdleBop2", 0.5f);
@@ -407,9 +407,10 @@ namespace HeavenStudio.Games
                 { 
                     djYellow.GetComponent<Animator>().DoScaledAnimationAsync("Hold", 0.5f); 
                     djYellowHolding = true;
+                    djYellowScript.Reverse();
                 }),
             });
-
+            andStop = true;
             ScheduleInput(beat, 2f, InputType.STANDARD_DOWN, student.OnHitHold, student.OnMissHold, student.OnEmpty);
         }
 
@@ -454,6 +455,7 @@ namespace HeavenStudio.Games
                 {
                     djYellow.GetComponent<Animator>().Play("Hold", 0, 0);
                     djYellowHolding = true;
+                    djYellowScript.Reverse();
                 }),
             });
             andStop = true;

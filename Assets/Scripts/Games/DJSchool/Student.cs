@@ -122,7 +122,7 @@ namespace HeavenStudio.Games.Scripts_DJSchool
             if (!game.djYellowScript.HeadSpriteCheck(DJYellow.DJExpression.UpFirst) && !game.djYellowScript.HeadSpriteCheck(DJYellow.DJExpression.UpSecond))
             {
                 game.djYellowScript.ChangeHeadSprite(DJYellow.DJExpression.CrossEyed);
-                if (game.djYellowHolding) game.djYellowScript.Reverse();
+                if (game.djYellowHolding || game.andStop) game.djYellowScript.Reverse();
                 else game.djYellowScript.Reverse(true);
             }
             missed = true;
@@ -141,7 +141,7 @@ namespace HeavenStudio.Games.Scripts_DJSchool
             if (!game.djYellowScript.HeadSpriteCheck(DJYellow.DJExpression.UpFirst) && !game.djYellowScript.HeadSpriteCheck(DJYellow.DJExpression.UpSecond))
             {
                 game.djYellowScript.ChangeHeadSprite(DJYellow.DJExpression.CrossEyed);
-                if (game.djYellowHolding) game.djYellowScript.Reverse();
+                if (game.djYellowHolding || game.andStop) game.djYellowScript.Reverse();
                 else game.djYellowScript.Reverse(true);
             }
         }
@@ -163,7 +163,7 @@ namespace HeavenStudio.Games.Scripts_DJSchool
             if (!game.djYellowScript.HeadSpriteCheck(DJYellow.DJExpression.UpFirst) && !game.djYellowScript.HeadSpriteCheck(DJYellow.DJExpression.UpSecond))
             {
                 game.djYellowScript.ChangeHeadSprite(DJYellow.DJExpression.CrossEyed);
-                if (game.djYellowHolding) game.djYellowScript.Reverse();
+                if (game.djYellowHolding || game.andStop) game.djYellowScript.Reverse();
                 else game.djYellowScript.Reverse(true);
             }
         }
