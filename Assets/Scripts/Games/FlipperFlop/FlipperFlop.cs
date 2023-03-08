@@ -784,12 +784,12 @@ namespace HeavenStudio.Games
                 MultiSound.Play(new MultiSound.Sound[]
                 {
                     new MultiSound.Sound("flipperFlop/attention/attention1", beat - 0.25f),
-                    new MultiSound.Sound("flipperFlop/attention/attention2", beat),
-                    new MultiSound.Sound("flipperFlop/attention/attention3", beat + 0.5f),
-                    new MultiSound.Sound("flipperFlop/attention/attention4", beat + 2f),
+                    new MultiSound.Sound("flipperFlop/attention/attention2", beat, 1, 1, false, 0.025f),
+                    new MultiSound.Sound("flipperFlop/attention/attention3", beat + 0.5f, 1, 1, false, 0.055f),
+                    new MultiSound.Sound("flipperFlop/attention/attention4", beat + 2f, 1, 1, false, 0.06f),
                     new MultiSound.Sound("flipperFlop/attention/attention5", beat + 2.25f),
                     new MultiSound.Sound("flipperFlop/attention/attention6", beat + 2.5f),
-                    new MultiSound.Sound("flipperFlop/attention/attention7", beat + (remix5 ? 2f : 3f)),
+                    new MultiSound.Sound("flipperFlop/attention/attention7", beat + (remix5 ? 2f : 3f), 1, 1, false, 0.025f),
                 }, forcePlay: true);
             }
             if (GameManager.instance.currentGame == "flipperFlop")
@@ -887,23 +887,113 @@ namespace HeavenStudio.Games
             {
                 MultiSound.Play(new MultiSound.Sound[]
                 {
-                    new MultiSound.Sound($"flipperFlop/count/flipperRollCountNow", beat),
-                    new MultiSound.Sound($"flipperFlop/count/flipperRollCountA", beat + 0.5f),
-                    new MultiSound.Sound($"flipperFlop/count/flipperRollCountB", beat + 0.75f),
-                    new MultiSound.Sound($"flipperFlop/count/flipperRollCountC", beat + 1f),
+                    new MultiSound.Sound($"flipperFlop/count/flipperRollCountNow", beat, 1, 1, false, 0.037f),
+                    new MultiSound.Sound($"flipperFlop/count/flipperRollCountA", beat + 0.5f, 1, 1, false, 0.05f),
+                    new MultiSound.Sound($"flipperFlop/count/flipperRollCountB", beat + 0.75f, 1, 1, false, 0.015f),
+                    new MultiSound.Sound($"flipperFlop/count/flipperRollCountC", beat + 1f, 1, 1, false, 0.015f),
                 }, forcePlay: true);
             }
-            else
+            else if (amount == 1)
             {
                 MultiSound.Play(new MultiSound.Sound[]
                 {
-                    new MultiSound.Sound($"flipperFlop/count/flipperRollCount{amount}", beat),
-                    new MultiSound.Sound($"flipperFlop/count/flipperRollCountA", beat + 0.5f),
-                    new MultiSound.Sound($"flipperFlop/count/flipperRollCountB", beat + 0.75f),
-                    new MultiSound.Sound($"flipperFlop/count/flipperRollCountC", beat + 1f),
+                    new MultiSound.Sound($"flipperFlop/count/flipperRollCount1", beat, 1, 1, false, 0.003f),
+                    new MultiSound.Sound($"flipperFlop/count/flipperRollCountA", beat + 0.5f, 1, 1, false, 0.05f),
+                    new MultiSound.Sound($"flipperFlop/count/flipperRollCountB", beat + 0.75f, 1, 1, false, 0.015f),
+                    new MultiSound.Sound($"flipperFlop/count/flipperRollCountC", beat + 1f, 1, 1, false, 0.015f),
                 }, forcePlay: true);
             }
-
+            else if (amount == 2)
+            {
+                MultiSound.Play(new MultiSound.Sound[]
+                {
+                    new MultiSound.Sound($"flipperFlop/count/flipperRollCount2", beat, 1, 1, false, 0.02f),
+                    new MultiSound.Sound($"flipperFlop/count/flipperRollCountA", beat + 0.5f, 1, 1, false, 0.05f),
+                    new MultiSound.Sound($"flipperFlop/count/flipperRollCountB", beat + 0.75f, 1, 1, false, 0.015f),
+                    new MultiSound.Sound($"flipperFlop/count/flipperRollCountS", beat + 1f, 1, 1, false, 0.015f),
+                }, forcePlay: true);
+            }
+            else if (amount == 3)
+            {
+                MultiSound.Play(new MultiSound.Sound[]
+                {
+                    new MultiSound.Sound($"flipperFlop/count/flipperRollCount3", beat, 1, 1, false, 0.02f),
+                    new MultiSound.Sound($"flipperFlop/count/flipperRollCountA", beat + 0.5f, 1, 1, false, 0.05f),
+                    new MultiSound.Sound($"flipperFlop/count/flipperRollCountB", beat + 0.75f, 1, 1, false, 0.015f),
+                    new MultiSound.Sound($"flipperFlop/count/flipperRollCountS", beat + 1f, 1, 1, false, 0.015f),
+                }, forcePlay: true);
+            }
+            else if (amount == 4)
+            {
+                MultiSound.Play(new MultiSound.Sound[]
+                {
+                    new MultiSound.Sound($"flipperFlop/count/flipperRollCount4", beat, 1, 1, false, 0.035f),
+                    new MultiSound.Sound($"flipperFlop/count/flipperRollCountA", beat + 0.5f, 1, 1, false, 0.05f),
+                    new MultiSound.Sound($"flipperFlop/count/flipperRollCountB", beat + 0.75f, 1, 1, false, 0.015f),
+                    new MultiSound.Sound($"flipperFlop/count/flipperRollCountS", beat + 1f, 1, 1, false, 0.015f),
+                }, forcePlay: true);
+            }
+            else if (amount == 5)
+            {
+                MultiSound.Play(new MultiSound.Sound[]
+                {
+                    new MultiSound.Sound($"flipperFlop/count/flipperRollCount5", beat, 1, 1, false, 0.05f),
+                    new MultiSound.Sound($"flipperFlop/count/flipperRollCountA", beat + 0.5f, 1, 1, false, 0.05f),
+                    new MultiSound.Sound($"flipperFlop/count/flipperRollCountB", beat + 0.75f, 1, 1, false, 0.015f),
+                    new MultiSound.Sound($"flipperFlop/count/flipperRollCountS", beat + 1f, 1, 1, false, 0.015f),
+                }, forcePlay: true);
+            }
+            else if (amount == 6)
+            {
+                MultiSound.Play(new MultiSound.Sound[]
+                {
+                    new MultiSound.Sound($"flipperFlop/count/flipperRollCount6", beat, 1, 1, false, 0.06f),
+                    new MultiSound.Sound($"flipperFlop/count/flipperRollCountA", beat + 0.5f, 1, 1, false, 0.05f),
+                    new MultiSound.Sound($"flipperFlop/count/flipperRollCountB", beat + 0.75f, 1, 1, false, 0.015f),
+                    new MultiSound.Sound($"flipperFlop/count/flipperRollCountS", beat + 1f, 1, 1, false, 0.015f),
+                }, forcePlay: true);
+            }
+            else if (amount == 7)
+            {
+                MultiSound.Play(new MultiSound.Sound[]
+                {
+                    new MultiSound.Sound($"flipperFlop/count/flipperRollCount7", beat, 1, 1, false, 0.03f),
+                    new MultiSound.Sound($"flipperFlop/count/flipperRollCount7B", beat + 0.25f, 1, 1, false, 0.05f),
+                    new MultiSound.Sound($"flipperFlop/count/flipperRollCountA", beat + 0.5f, 1, 1, false, 0.05f),
+                    new MultiSound.Sound($"flipperFlop/count/flipperRollCountB", beat + 0.75f, 1, 1, false, 0.015f),
+                    new MultiSound.Sound($"flipperFlop/count/flipperRollCountS", beat + 1f, 1, 1, false, 0.015f),
+                }, forcePlay: true);
+            }
+            else if (amount == 8)
+            {
+                MultiSound.Play(new MultiSound.Sound[]
+                {
+                    new MultiSound.Sound($"flipperFlop/count/flipperRollCount8", beat, 1, 1, false, 0.008f),
+                    new MultiSound.Sound($"flipperFlop/count/flipperRollCountA", beat + 0.5f, 1, 1, false, 0.05f),
+                    new MultiSound.Sound($"flipperFlop/count/flipperRollCountB", beat + 0.75f, 1, 1, false, 0.015f),
+                    new MultiSound.Sound($"flipperFlop/count/flipperRollCountS", beat + 1f, 1, 1, false, 0.015f),
+                }, forcePlay: true);
+            }
+            else if (amount == 9)
+            {
+                MultiSound.Play(new MultiSound.Sound[]
+                {
+                    new MultiSound.Sound($"flipperFlop/count/flipperRollCount9", beat, 1, 1, false, 0.02f),
+                    new MultiSound.Sound($"flipperFlop/count/flipperRollCountA", beat + 0.5f, 1, 1, false, 0.05f),
+                    new MultiSound.Sound($"flipperFlop/count/flipperRollCountB", beat + 0.75f, 1, 1, false, 0.015f),
+                    new MultiSound.Sound($"flipperFlop/count/flipperRollCountS", beat + 1f, 1, 1, false, 0.015f),
+                }, forcePlay: true);
+            }
+            else if (amount == 10)
+            {
+                MultiSound.Play(new MultiSound.Sound[]
+                {
+                    new MultiSound.Sound($"flipperFlop/count/flipperRollCount10", beat, 1, 1, false, 0.01f),
+                    new MultiSound.Sound($"flipperFlop/count/flipperRollCountA", beat + 0.5f, 1, 1, false, 0.05f),
+                    new MultiSound.Sound($"flipperFlop/count/flipperRollCountB", beat + 0.75f, 1, 1, false, 0.015f),
+                    new MultiSound.Sound($"flipperFlop/count/flipperRollCountS", beat + 1f, 1, 1, false, 0.015f),
+                }, forcePlay: true);
+            }
             if (GameManager.instance.currentGame == "flipperFlop")
             {
                 instance.FlipperRollVoiceLineAnimation(beat);
