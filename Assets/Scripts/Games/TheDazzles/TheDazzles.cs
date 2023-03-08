@@ -101,11 +101,12 @@ namespace HeavenStudio.Games.Loaders
                 },
                 new GameAction("bop", "Bop")
                 {
-                    function = delegate { TheDazzles.instance.shouldBop = eventCaller.currentEntity["toggle"]; },
-                    defaultLength = 0.5f,
+                    function = delegate { var e = eventCaller.currentEntity; TheDazzles.instance.Bop(e.beat, e.length, e["toggle2"], e["toggle"]); },
+                    resizable = true,
                     parameters = new List<Param>()
                     {
-                        new Param("toggle", false, "Should bop?", "Should the dazzles bop?")
+                        new Param("toggle2", true, "Should bop?", "Should the dazzles bop?"),
+                        new Param("toggle", false, "Should auto bop?", "Should the dazzles auto bop?")
                     }
                 },
 
@@ -292,6 +293,28 @@ namespace HeavenStudio.Games
             {
                 if (queuedPoses.Count > 0) queuedPoses.Clear();
                 if (queuedCrouches.Count > 0) queuedCrouches.Clear();
+            }
+        }
+
+        public void Bop(float beat, float length, bool goBop, bool autoBop)
+        {
+            shouldBop = autoBop;
+            if (goBop)
+            {
+                for (int i = 0; i < length; i++)
+                {
+                    BeatAction.New(instance.gameObject, new List<BeatAction.Action>()
+                    {
+                        new BeatAction.Action(beat + i, delegate
+                        {
+                            foreach (var girl in npcGirls)
+                            {
+                                girl.Bop();
+                            }
+                            player.Bop();
+                        })
+                    });
+                }
             }
         }
 

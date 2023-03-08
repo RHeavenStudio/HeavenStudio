@@ -19,7 +19,13 @@ namespace HeavenStudio.Games.Loaders
                 },
                 new GameAction("bop", "Bop")
                 {
-                    function = delegate { ClappyTrio.instance.Bop(eventCaller.currentEntity.beat); } 
+                    function = delegate { var e = eventCaller.currentEntity; ClappyTrio.instance.BopToggle(e.beat, e.length, e["bop"], e["autoBop"]); },
+                    resizable = true,
+                    parameters = new List<Param>()
+                    {
+                        new Param("bop", true, "Bop", "Should the lions bop?"),
+                        new Param("autoBop", false, "Bop (Auto)", "Should the lions auto bop?")
+                    }
                 },
                 new GameAction("prepare", "Prepare Stance")
                 {
@@ -69,6 +75,9 @@ namespace HeavenStudio.Games
         private ClappyTrioPlayer ClappyTrioPlayer;
 
         public bool playerHitLast = false;
+        bool shouldBop;
+
+        public GameEvent bop = new GameEvent();
 
         public static ClappyTrio instance { get; set; }
 
@@ -87,6 +96,15 @@ namespace HeavenStudio.Games
             if(changeLion != null)
             {
                 EventCaller.instance.CallEvent(changeLion, true);
+            }
+        }
+
+        void Update()
+        {
+            var cond = Conductor.instance;
+            if (cond.ReportBeat(ref bop.lastReportedBeat, bop.startBeat % 1))
+            {
+                if (shouldBop) Bop(cond.songPositionInBeats);
             }
         }
 
@@ -117,11 +135,6 @@ namespace HeavenStudio.Games
 
             if (clapAction != null)
                 clapAction.Delete();
-        }
-
-        private void Update()
-        {
-
         }
 
         public void Clap(float beat, float length)
@@ -156,6 +169,22 @@ namespace HeavenStudio.Games
             }
             PlayAnimationAll("Prepare");
             Jukebox.PlayOneShotGame("clappyTrio/ready");
+        }
+
+        public void BopToggle(float beat, float length, bool startBop, bool autoBop)
+        {
+            shouldBop = autoBop;
+            if (startBop)
+            {
+                for (int i = 0; i < length; i++)
+                {
+                    float spawnBeat = beat + i;
+                    BeatAction.New(instance.gameObject, new List<BeatAction.Action>()
+                    {
+                        new BeatAction.Action(spawnBeat, delegate { Bop(spawnBeat); })
+                    });
+                }
+            }
         }
 
         public void Bop(float beat)
