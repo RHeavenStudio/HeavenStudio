@@ -14,13 +14,21 @@ namespace HeavenStudio.Games.Loaders
             {
                 new GameAction("attentionCompany", "Attention Company!")
                 {
-                    preFunction = delegate {var e = eventCaller.currentEntity; FlipperFlop.AttentionCompany(e.beat); },
+                    preFunction = delegate {var e = eventCaller.currentEntity; FlipperFlop.AttentionCompany(e.beat, e["toggle"]); },
                     defaultLength = 4f,
+                    parameters = new List<Param>()
+                    {
+                        new Param("toggle", false, "Mute VoiceLine", "Mute Captain Tuck's voiceline?")
+                    }
                 },
                 new GameAction("attentionCompanyAlt", "Attention Company! (Remix 5)")
                 {
-                    preFunction = delegate {var e = eventCaller.currentEntity; FlipperFlop.AttentionCompany(e.beat, true); },
+                    preFunction = delegate {var e = eventCaller.currentEntity; FlipperFlop.AttentionCompany(e.beat, e["toggle"], true); },
                     defaultLength = 3f,
+                    parameters = new List<Param>()
+                    {
+                        new Param("toggle", false, "Mute VoiceLine", "Mute Captain Tuck's voiceline?")
+                    }
                 },
                 new GameAction("flipping", "Flipping")
                 {
@@ -59,11 +67,12 @@ namespace HeavenStudio.Games.Loaders
                 },
                 new GameAction("bop", "Bop") 
                 {
-                    function = delegate {var e = eventCaller.currentEntity; FlipperFlop.instance.Bop(e["whoBops"]); },
-                    defaultLength = 1f,
+                    function = delegate {var e = eventCaller.currentEntity; FlipperFlop.instance.Bop(e.beat, e.length, e["whoBops"], e["whoBopsAuto"]); },
+                    resizable = true,
                     parameters = new List<Param>()
                     {
-                        new Param("whoBops", FlipperFlop.WhoBops.Both, "Who Bops?", "Who will bop?")
+                        new Param("whoBops", FlipperFlop.WhoBops.Both, "Who Bops?", "Who will bop?"),
+                        new Param("whoBopsAuto", FlipperFlop.WhoBops.None, "Who Bops? (Auto)", "Who will auto bop?"),
                     }
                 },
                 new GameAction("walk", "Captain Tuck Walk")
@@ -106,14 +115,16 @@ namespace HeavenStudio.Games
         [SerializeField] FlipperFlopFlipper flipperPlayer;
         [SerializeField] List<FlipperFlopFlipper> flippers = new List<FlipperFlopFlipper>();
         List<float> queuedMovements = new List<float>();
-        static List<float> queuedAttentions = new List<float>();
-        static List<float> queuedAltAttentions = new List<float>();
+        static List<QueuedAttention> queuedAttentions = new List<QueuedAttention>();
         static List<float> queuedFlipperRollVoiceLines = new List<float>();
         float lastXPos;
         float currentXPos;
         float lastCameraXPos;
         float currentCameraXPos;
         bool isWalking;
+        public GameEvent bop = new GameEvent();
+        bool goBopFlip;
+        bool goBopTuck;
         EasingFunction.Ease lastEase;
         float walkStartBeat;
         float walkLength;
@@ -129,6 +140,12 @@ namespace HeavenStudio.Games
             public bool heart;
             public bool thatsItBarberShop;
         }
+        public struct QueuedAttention
+        {
+            public float beat;
+            public bool mute;
+            public bool remix5;
+        }
         public enum AppreciationType
         {
             None = 0,
@@ -143,7 +160,8 @@ namespace HeavenStudio.Games
         {
             Flippers = 0,
             CaptainTuck = 1,
-            Both = 2
+            Both = 2,
+            None = 3
         }
         public enum CaptainTuckBopType
         {
@@ -165,7 +183,6 @@ namespace HeavenStudio.Games
         {
             if (queuedInputs.Count > 0) queuedInputs.Clear();
             if (queuedAttentions.Count > 0) queuedAttentions.Clear();
-            if (queuedAltAttentions.Count > 0) queuedAltAttentions.Clear();
             if (queuedFlipperRollVoiceLines.Count > 0) queuedFlipperRollVoiceLines.Clear();
         }
 
@@ -174,6 +191,11 @@ namespace HeavenStudio.Games
             var cond = Conductor.instance;
             if(cond.isPlaying && !cond.isPaused)
             {
+                if (cond.ReportBeat(ref bop.lastReportedBeat, bop.startBeat % 1))
+                {
+                    if (goBopFlip) SingleBop((int)WhoBops.Flippers);
+                    if (goBopTuck) SingleBop((int)WhoBops.CaptainTuck);
+                }
                 if (isWalking)
                 {
                     float normalizedBeat = cond.GetPositionFromBeat(walkStartBeat, walkLength);
@@ -209,17 +231,9 @@ namespace HeavenStudio.Games
                 {
                     foreach (var attention in queuedAttentions)
                     {
-                        AttentionCompanyAnimation(attention, false);
+                        AttentionCompanyAnimation(attention.beat, attention.mute, attention.remix5);
                     }
                     queuedAttentions.Clear();
-                }
-                if (queuedAltAttentions.Count > 0)
-                {
-                    foreach (var attention in queuedAltAttentions)
-                    {
-                        AttentionCompanyAnimation(attention, true);
-                    }
-                    queuedAltAttentions.Clear();
                 }
                 if (queuedMovements.Count > 0)
                 {
@@ -268,7 +282,6 @@ namespace HeavenStudio.Games
                 queuedInputs.Clear();
                 queuedAttentions.Clear();
                 queuedFlipperRollVoiceLines.Clear();
-                queuedAltAttentions.Clear();
             }
         }
 
@@ -289,7 +302,23 @@ namespace HeavenStudio.Games
             }
         }
 
-        public void Bop(int whoBops)
+        public void Bop(float beat, float length, int whoBops, int whoBopsAuto)
+        {
+            goBopFlip = whoBopsAuto == (int)WhoBops.Flippers || whoBopsAuto == (int)WhoBops.Both;
+            goBopTuck = whoBopsAuto == (int)WhoBops.CaptainTuck || whoBopsAuto == (int)WhoBops.Both;
+            for (int i = 0; i < length; i++)
+            {
+                BeatAction.New(instance.gameObject, new List<BeatAction.Action>()
+                {
+                    new BeatAction.Action(beat + i, delegate
+                    {
+                        SingleBop(whoBops);
+                    })
+                });
+            }
+        }
+
+        void SingleBop(int whoBops)
         {
             switch (whoBops)
             {
@@ -310,6 +339,8 @@ namespace HeavenStudio.Games
                     }
                     flipperPlayer.Bop();
                     CaptainTuckBop();
+                    break;
+                default:
                     break;
             }
         }
@@ -739,36 +770,39 @@ namespace HeavenStudio.Games
             });
         }
 
-        public static void AttentionCompany(float beat, bool remix5 = false)
+        public static void AttentionCompany(float beat, bool mute, bool remix5 = false)
         {
-            MultiSound.Play(new MultiSound.Sound[]
+            if (mute)
             {
-                new MultiSound.Sound("flipperFlop/attention/attention1", beat - 0.25f),
-                new MultiSound.Sound("flipperFlop/attention/attention2", beat),
-                new MultiSound.Sound("flipperFlop/attention/attention3", beat + 0.5f),
-                new MultiSound.Sound("flipperFlop/attention/attention4", beat + 2f),
-                new MultiSound.Sound("flipperFlop/attention/attention5", beat + 2.25f),
-                new MultiSound.Sound("flipperFlop/attention/attention6", beat + 2.5f),
-                new MultiSound.Sound("flipperFlop/attention/attention7", beat + (remix5 ? 2f : 3f)),
-            }, forcePlay: true);
-            if (GameManager.instance.currentGame == "flipperFlop")
-            {
-                instance.AttentionCompanyAnimation(beat, remix5);
+                MultiSound.Play(new MultiSound.Sound[]
+                {
+                    new MultiSound.Sound("flipperFlop/attention/attention7", beat + (remix5 ? 2f : 3f)),
+                }, forcePlay: true);
             }
             else
             {
-                if (remix5)
+                MultiSound.Play(new MultiSound.Sound[]
                 {
-                    queuedAltAttentions.Add(beat);
-                }
-                else
-                {
-                    queuedAttentions.Add(beat);
-                }
+                    new MultiSound.Sound("flipperFlop/attention/attention1", beat - 0.25f),
+                    new MultiSound.Sound("flipperFlop/attention/attention2", beat),
+                    new MultiSound.Sound("flipperFlop/attention/attention3", beat + 0.5f),
+                    new MultiSound.Sound("flipperFlop/attention/attention4", beat + 2f),
+                    new MultiSound.Sound("flipperFlop/attention/attention5", beat + 2.25f),
+                    new MultiSound.Sound("flipperFlop/attention/attention6", beat + 2.5f),
+                    new MultiSound.Sound("flipperFlop/attention/attention7", beat + (remix5 ? 2f : 3f)),
+                }, forcePlay: true);
+            }
+            if (GameManager.instance.currentGame == "flipperFlop")
+            {
+                instance.AttentionCompanyAnimation(beat, mute, remix5);
+            }
+            else
+            {
+                queuedAttentions.Add(new QueuedAttention { beat = beat, mute = mute, remix5 = remix5 });
             }
         }
 
-        public void AttentionCompanyAnimation(float beat, bool remix5)
+        public void AttentionCompanyAnimation(float beat, bool mute, bool remix5)
         {
             List<BeatAction.Action> speaks = new List<BeatAction.Action>()
             {
@@ -799,6 +833,32 @@ namespace HeavenStudio.Games
                     flipperPlayer.PrepareFlip();
                 }),
             };
+            if (mute)
+            {
+                speaks = new List<BeatAction.Action>()
+                {
+                    new BeatAction.Action(beat + 2f, delegate
+                    {
+                        if (remix5)
+                        {
+                            foreach (var flipper in flippers)
+                            {
+                                flipper.PrepareFlip();
+                            }
+                            flipperPlayer.PrepareFlip();
+                        }
+                    }),
+                    new BeatAction.Action(beat + 3f, delegate
+                    {
+                        if (remix5) return;
+                        foreach (var flipper in flippers)
+                        {
+                            flipper.PrepareFlip();
+                        }
+                        flipperPlayer.PrepareFlip();
+                    }),
+                };
+            }
 
             List<BeatAction.Action> speaksToRemove = new List<BeatAction.Action>();
 
