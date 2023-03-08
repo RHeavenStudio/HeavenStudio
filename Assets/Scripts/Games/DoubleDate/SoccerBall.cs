@@ -24,6 +24,7 @@ namespace HeavenStudio.Games.Scripts_DoubleDate
         {
             if (state >= 1f || state <= -1f)
             {
+                Destroy(gameObject); //Remove this when doing the ball movement
                 return;
             }
             Hit();
@@ -37,7 +38,8 @@ namespace HeavenStudio.Games.Scripts_DoubleDate
 
         void Miss(PlayerActionEvent caller)
         {
-
+            Jukebox.PlayOneShotGame("doubleDate/weasel_hide");
+            Destroy(gameObject); //Remove this when doing the ball movement
         }
 
         void Empty(PlayerActionEvent caller) { }
