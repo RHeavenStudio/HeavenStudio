@@ -45,11 +45,12 @@ namespace HeavenStudio.Games.Loaders
                 },
                 new GameAction("scratch-o hey", "Scratch-o")
                 {
-                    function = delegate { DJSchool.instance.ScratchoHey(eventCaller.currentEntity.beat, eventCaller.currentEntity["type"], eventCaller.currentEntity["toggle"]);  }, 
+                    function = delegate { DJSchool.instance.ScratchoHey(eventCaller.currentEntity.beat, eventCaller.currentEntity["type"], eventCaller.currentEntity["toggle"], eventCaller.currentEntity["toggle2"]);  }, 
                     defaultLength = 3f,
                     parameters = new List<Param>()
                     {
                         new Param("type", DJSchool.DJVoice.Standard, "Voice", "The voice line to play"),
+                        new Param("toggle2", true, "Cheering", "Should cheering play when successfully hitting this cue?"),
                         new Param("toggle", false, "Fast Hey", "Activate Remix 4 (DS) beat")
                     }
                 },
@@ -463,7 +464,7 @@ namespace HeavenStudio.Games
             ScheduleInput(beat, 1.5f, InputType.STANDARD_DOWN, student.OnHitHold, student.OnMissHold, student.OnEmpty);
         }
 
-        public void ScratchoHey(float beat, int type, bool remix4)
+        public void ScratchoHey(float beat, int type, bool remix4, bool cheer)
         {
             string[] sounds = new string[] { };
 
@@ -522,7 +523,14 @@ namespace HeavenStudio.Games
 
             beatOfInstance = beat;
 
-            ScheduleInput(beat, timing, InputType.STANDARD_UP, student.OnHitSwipe, student.OnMissSwipe, student.OnEmpty);
+            if (cheer)
+            {
+                ScheduleInput(beat, timing, InputType.STANDARD_UP, student.OnHitSwipeCheer, student.OnMissSwipe, student.OnEmpty);
+            }
+            else
+            {
+                ScheduleInput(beat, timing, InputType.STANDARD_UP, student.OnHitSwipe, student.OnMissSwipe, student.OnEmpty);
+            }
             andStop = false;
 
 
