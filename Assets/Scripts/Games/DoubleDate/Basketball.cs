@@ -6,20 +6,40 @@ using HeavenStudio.Util;
 
 namespace HeavenStudio.Games.Scripts_DoubleDate
 {
-    public class Rocket : PlayerActionObject
+    public class BasketBall : PlayerActionObject
     {
-        public bool isSparkler;
+        private DoubleDate game;
 
-        // Start is called before the first frame update
         void Awake()
         {
-            
+            game = DoubleDate.instance;
         }
 
-        // Update is called once per frame
-        void Update()
+        public void Init(float beat)
         {
-            
+            game.ScheduleInput(beat, 1f, InputType.STANDARD_DOWN, Just, Miss, Empty);
         }
+
+        void Just(PlayerActionEvent caller, float state)
+        {
+            if (state >= 1f || state <= -1f)
+            {
+                return;
+            }
+            Hit();
+        }
+
+        void Hit()
+        {
+            Jukebox.PlayOneShotGame("doubleDate/kick");
+            Destroy(gameObject); //Remove this when doing the ball movement
+        }
+
+        void Miss(PlayerActionEvent caller)
+        {
+
+        }
+
+        void Empty(PlayerActionEvent caller) { }
     }
 }

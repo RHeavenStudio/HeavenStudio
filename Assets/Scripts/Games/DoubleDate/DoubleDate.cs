@@ -11,21 +11,21 @@ namespace HeavenStudio.Games.Loaders
         public static Minigame AddGame(EventCaller eventCaller) {
             return new Minigame("doubleDate", "Double Date \n<color=#eb5454>[INITIALIZATION ONLY]</color>", "0058CE", false, false, new List<GameAction>()
             {
-                new GameAction("soccerBall", "Soccer Ball")
+                new GameAction("soccer", "Soccer Ball")
                 {
-                    function = delegate { var e = eventCaller.currentEntity; DoubleDate.instance.ball(e.beat, e["type"]); }, 
-                    defaultLength = 2,
+                    function = delegate { var e = eventCaller.currentEntity; DoubleDate.instance.SpawnSoccerBall(e.beat); },
+                    defaultLength = 2f,
                 },
-                new GameAction("basketball", "Basketball")
+                new GameAction("basket", "Basket Ball")
                 {
-                    function = delegate { var e = eventCaller.currentEntity; DoubleDate.instance.ball(e.beat, e["type"]); }, 
-                    defaultLength = 2,
+                    function = delegate { var e = eventCaller.currentEntity; DoubleDate.instance.SpawnBasketBall(e.beat); },
+                    defaultLength = 2f,
                 },
                 new GameAction("football", "Football")
                 {
-                    function = delegate { var e = eventCaller.currentEntity; DoubleDate.instance.ball(e.beat, e["type"]); }, 
-                    defaultLength = 2,
-                }
+                    function = delegate { var e = eventCaller.currentEntity; DoubleDate.instance.SpawnFootBall(e.beat); },
+                    defaultLength = 2.5f,
+                },
             });
         }
     }
@@ -37,27 +37,52 @@ namespace HeavenStudio.Games
 
     public class DoubleDate : Minigame
     {
+        [Header("Prefabs")]
+        [SerializeField] SoccerBall soccer;
+        [SerializeField] BasketBall basket;
+        [SerializeField] Football football;
         public static DoubleDate instance;
-
-        [Header("Objects")]
-        public Animator soccerBallAnim;
-        public Animator basketballAnim;
-        public Animator footballAnim;
         
         private void Awake()
         {
             instance = this;
         }
 
-        private void HitSound(bool applause)
+        void Update()
         {
-            Jukebox.PlayOneShotGame("doubleDate/kick");
-            if (applause) Jukebox.PlayOneShot("applause");
+            if (PlayerInput.Pressed() && !IsExpectingInputNow(InputType.STANDARD_DOWN))
+            {
+                Jukebox.PlayOneShotGame("doubleDate/kick_whiff");
+            }
         }
 
-        public void ball(float beat, int type)
+        public void SpawnSoccerBall(float beat)
         {
-            Jukebox.PlayOneShotGame("doubleDate/soccerBall");
+            SoccerBall spawnedBall = Instantiate(soccer, instance.transform);
+            spawnedBall.Init(beat);
+            Jukebox.PlayOneShotGame("doubleDate/soccerBounce", beat);
+        }
+
+        public void SpawnBasketBall(float beat)
+        {
+            BasketBall spawnedBall = Instantiate(basket, instance.transform);
+            spawnedBall.Init(beat);
+            MultiSound.Play(new MultiSound.Sound[]
+            {
+                new MultiSound.Sound("doubleDate/basketballBounce", beat),
+                new MultiSound.Sound("doubleDate/basketballBounce", beat + 0.75f),
+            });
+        }
+
+        public void SpawnFootBall(float beat)
+        {
+            Football spawnedBall = Instantiate(football, instance.transform);
+            spawnedBall.Init(beat);
+            MultiSound.Play(new MultiSound.Sound[]
+            {
+                new MultiSound.Sound("doubleDate/footballBounce", beat),
+                new MultiSound.Sound("doubleDate/footballBounce", beat + 0.75f),
+            });
         }
     }
 
