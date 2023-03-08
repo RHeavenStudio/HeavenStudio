@@ -10,8 +10,7 @@ namespace HeavenStudio.Games.Scripts_TapTroupe
         public Animator anim;
         [SerializeField] GameObject impactStep;
         private TapTroupe game;
-        [SerializeField] bool player;
-        [SerializeField] int soundIndex;
+        public bool dontSwitchNextStep = false;
         public enum TapAnim
         {
             Bam,
@@ -27,9 +26,15 @@ namespace HeavenStudio.Games.Scripts_TapTroupe
             anim = GetComponent<Animator>();
         }
 
+        public void FadeOut(float pos)
+        {
+            anim.DoNormalizedAnimation("FeetFadeOut", pos * 8);
+        }
+
         public void Step(bool hit = true, bool switchFeet = true)
         {
-            if (switchFeet) transform.localScale = new Vector3(transform.localScale.x * -1, transform.localScale.y, 1);
+            if (switchFeet && !dontSwitchNextStep) transform.localScale = new Vector3(transform.localScale.x * -1, transform.localScale.y, 1);
+            if (dontSwitchNextStep) dontSwitchNextStep = false;
             if (hit)
             {
                 if (TapTroupe.prepareTap)
@@ -56,22 +61,25 @@ namespace HeavenStudio.Games.Scripts_TapTroupe
 
         public void Tap(TapAnim animType, bool hit = true, bool switchFeet = true)
         {
-            if (switchFeet) transform.localScale = new Vector3(transform.localScale.x * -1, transform.localScale.y, 1);
             string animName = "";
             if (hit) animName = "Hit";
             switch (animType)
             {
                 case TapAnim.Bam:
                     animName += "BamFeet";
+                    if (switchFeet && !dontSwitchNextStep) transform.localScale = new Vector3(transform.localScale.x * -1, transform.localScale.y, 1);
                     break;
                 case TapAnim.Tap:
                     animName += "TapFeet";
+                    if (switchFeet) transform.localScale = new Vector3(transform.localScale.x * -1, transform.localScale.y, 1);
                     break;
                 case TapAnim.BamReady:
                     animName += "BamReadyFeet";
+                    if (switchFeet) transform.localScale = new Vector3(transform.localScale.x * -1, transform.localScale.y, 1);
                     break;
                 case TapAnim.BamTapReady:
                     animName += "BamReadyTap";
+                    if (switchFeet) transform.localScale = new Vector3(transform.localScale.x * -1, transform.localScale.y, 1);
                     break;
                 case TapAnim.LastTap:
                     if (hit)
@@ -82,10 +90,10 @@ namespace HeavenStudio.Games.Scripts_TapTroupe
                     {
                         animName = "StepFeet";
                     }
+                    if (switchFeet) transform.localScale = new Vector3(transform.localScale.x * -1, transform.localScale.y, 1);
                     break;
             }
             anim.DoScaledAnimationAsync(animName, 0.5f);
-            if (!player) Jukebox.PlayOneShotGame($"tapTroupe/other{soundIndex}");
         }
 
         public void Bop()

@@ -148,8 +148,6 @@ namespace HeavenStudio.Games
         private int background;
         private float steamTime;
 
-        private string fastTurn;
-
         static float wantMarch = float.MaxValue;
         static float wantMarchLength = 0f;
         
@@ -401,6 +399,7 @@ namespace HeavenStudio.Games
         
         public void SargeFaceTurn(float beat, int type, int type2, bool toggle)
         {
+            string fastTurn = "";
             switch (type2)
             {
                 case (int) MarchingOrders.FaceTurnLength.Fast:
@@ -420,7 +419,7 @@ namespace HeavenStudio.Games
                     ScheduleInput(beat, turnLength + 2f, InputType.DIRECTION_LEFT_DOWN, LeftSuccess, GenericMiss, LeftEmpty);
                     MultiSound.Play(new MultiSound.Sound[] {
                     new MultiSound.Sound("marchingOrders/leftFaceTurn1" + fastTurn, beat),
-                    new MultiSound.Sound("marchingOrders/leftFaceTurn2" + fastTurn, beat + 0.6f),
+                    new MultiSound.Sound("marchingOrders/leftFaceTurn2" + fastTurn, beat + 0.5f),
                     new MultiSound.Sound("marchingOrders/leftFaceTurn3", beat + turnLength + 1f),
                     new MultiSound.Sound("marchingOrders/turnAction", beat + turnLength + 2f),
                     }, forcePlay: true);
@@ -439,7 +438,7 @@ namespace HeavenStudio.Games
                     ScheduleInput(beat, turnLength + 2f, InputType.DIRECTION_RIGHT_DOWN, RightSuccess, GenericMiss, RightEmpty);
                     MultiSound.Play(new MultiSound.Sound[] {
                     new MultiSound.Sound("marchingOrders/rightFaceTurn1" + fastTurn, beat),
-                    new MultiSound.Sound("marchingOrders/rightFaceTurn2" + fastTurn, beat + 0.6f),
+                    new MultiSound.Sound("marchingOrders/rightFaceTurn2" + fastTurn, beat + 0.5f),
                     new MultiSound.Sound("marchingOrders/rightFaceTurn3", beat + turnLength + 1f),
                     new MultiSound.Sound("marchingOrders/turnAction", beat + turnLength + 2f),
                     }, forcePlay: true);

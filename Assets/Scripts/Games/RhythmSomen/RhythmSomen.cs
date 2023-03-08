@@ -31,6 +31,15 @@ namespace HeavenStudio.Games.Loaders
                 {
                     function = delegate { RhythmSomen.instance.DoBell(eventCaller.currentEntity.beat); },
                 },
+                new GameAction("bop", "Bop") 
+                {
+                    function = delegate { var e = eventCaller.currentEntity; RhythmSomen.instance.ToggleBop(e["toggle"]); },
+                    defaultLength = 0.5f,
+                    parameters = new List<Param>()
+                    {
+                        new Param("toggle", false, "Bop?", "Should the somen man bop or not?")
+                    }
+                }
             });
         }
     }
@@ -51,6 +60,7 @@ namespace HeavenStudio.Games
         public Animator CloseCrane;
         public Animator FarCrane;
         public GameObject Player;
+        private bool shouldBop = true;
 
         public GameEvent bop = new GameEvent();
 
@@ -66,7 +76,7 @@ namespace HeavenStudio.Games
         void Update()
         {
             var cond = Conductor.instance;
-            if (cond.ReportBeat(ref bop.lastReportedBeat, bop.startBeat % 1))
+            if (cond.ReportBeat(ref bop.lastReportedBeat, bop.startBeat % 1) && shouldBop)
             {
                 SomenPlayer.Play("HeadBob", -1, 0);
             }
@@ -78,6 +88,11 @@ namespace HeavenStudio.Games
                 EffectSweat.Play("BlobSweating", -1, 0);
                 ScoreMiss();
             }
+        }
+
+        public void ToggleBop(bool bopOrNah)
+        {
+            shouldBop = bopOrNah;
         }
 
         public void DoFarCrane(float beat)
