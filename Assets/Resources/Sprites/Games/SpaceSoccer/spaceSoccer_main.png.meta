@@ -22,13 +22,13 @@ TextureImporter:
     second: kicker_head_2
   - first:
       213: -4756013695868691969
-    second: kicker_head_3
+    second: kicker_mouth
   - first:
       213: 1450434439674949499
-    second: kicker_head_4
+    second: kicker_mouth2
   - first:
       213: 1896558474977417076
-    second: kicker_head_5
+    second: kicker_mouth3
   - first:
       213: 4316165930547777794
     second: kicker_torso_0
@@ -176,6 +176,15 @@ TextureImporter:
   - first:
       213: -3737410657519639041
     second: ball
+  - first:
+      213: -8848951864138226942
+    second: kicker_mouth4
+  - first:
+      213: 2465181961129679454
+    second: flames1
+  - first:
+      213: -2727000552151671136
+    second: flames2
   externalObjects: {}
   serializedVersion: 11
   mipmaps:
@@ -206,7 +215,7 @@ TextureImporter:
   maxTextureSize: 2048
   textureSettings:
     serializedVersion: 2
-    filterMode: 0
+    filterMode: 1
     aniso: 1
     mipBias: 0
     wrapU: 1
@@ -220,7 +229,7 @@ TextureImporter:
   spriteMeshType: 1
   alignment: 0
   spritePivot: {x: 0.5, y: 0.5}
-  spritePixelsToUnits: 92
+  spritePixelsToUnits: 184
   spriteBorder: {x: 0, y: 0, z: 0, w: 0}
   spriteGenerateFallbackPhysicsShape: 1
   alphaUsage: 1
@@ -239,10 +248,10 @@ TextureImporter:
   platformSettings:
   - serializedVersion: 3
     buildTarget: DefaultTexturePlatform
-    maxTextureSize: 2048
+    maxTextureSize: 4096
     resizeAlgorithm: 0
     textureFormat: -1
-    textureCompression: 2
+    textureCompression: 1
     compressionQuality: 50
     crunchedCompression: 0
     allowsAlphaSplitting: 0
@@ -251,10 +260,10 @@ TextureImporter:
     forceMaximumCompressionQuality_BC6H_BC7: 0
   - serializedVersion: 3
     buildTarget: Standalone
-    maxTextureSize: 2048
+    maxTextureSize: 4096
     resizeAlgorithm: 0
     textureFormat: -1
-    textureCompression: 2
+    textureCompression: 1
     compressionQuality: 50
     crunchedCompression: 0
     allowsAlphaSplitting: 0
@@ -280,16 +289,16 @@ TextureImporter:
       name: platform_0
       rect:
         serializedVersion: 2
-        x: 230
-        y: 73
-        width: 298
-        height: 489
+        x: 460
+        y: 146
+        width: 596
+        height: 978
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
-      tessellationDetail: 0
+      tessellationDetail: -1
       bones: []
       spriteID: 6418b9fe008c13bd0800000000000000
       internalID: -2652118799199010490
@@ -301,16 +310,16 @@ TextureImporter:
       name: kicker_head_0
       rect:
         serializedVersion: 2
-        x: 4
-        y: 1780
-        width: 264
-        height: 264
+        x: 8
+        y: 3560
+        width: 528
+        height: 528
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
-      tessellationDetail: 0
+      tessellationDetail: -1
       bones: []
       spriteID: 6da84362c7359fbb0800000000000000
       internalID: -4901794926734046506
@@ -322,16 +331,16 @@ TextureImporter:
       name: kicker_head_1
       rect:
         serializedVersion: 2
-        x: 272
-        y: 1780
-        width: 264
-        height: 264
+        x: 544
+        y: 3560
+        width: 528
+        height: 528
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
-      tessellationDetail: 0
+      tessellationDetail: -1
       bones: []
       spriteID: 06db36eb986731dd0800000000000000
       internalID: -2516537432793170592
@@ -343,16 +352,16 @@ TextureImporter:
       name: kicker_head_2
       rect:
         serializedVersion: 2
-        x: 540
-        y: 1780
-        width: 264
-        height: 264
+        x: 1080
+        y: 3561
+        width: 525
+        height: 527
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
-      tessellationDetail: 0
+      tessellationDetail: -1
       bones: []
       spriteID: 11f4eaf161317c3c0800000000000000
       internalID: -4339478730206458095
@@ -361,19 +370,19 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: kicker_head_3
+      name: kicker_mouth
       rect:
         serializedVersion: 2
-        x: 808
-        y: 1780
-        width: 264
-        height: 264
+        x: 1605
+        y: 3647
+        width: 100
+        height: 51
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
-      tessellationDetail: 0
+      tessellationDetail: -1
       bones: []
       spriteID: ff99ad6fdbe3ffdb0800000000000000
       internalID: -4756013695868691969
@@ -382,19 +391,19 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: kicker_head_4
+      name: kicker_mouth2
       rect:
         serializedVersion: 2
-        x: 1076
-        y: 1780
-        width: 264
-        height: 264
+        x: 1776
+        y: 3646
+        width: 94
+        height: 67
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
-      tessellationDetail: 0
+      tessellationDetail: -1
       bones: []
       spriteID: b7f61da207af02410800000000000000
       internalID: 1450434439674949499
@@ -403,19 +412,19 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: kicker_head_5
+      name: kicker_mouth3
       rect:
         serializedVersion: 2
-        x: 1344
-        y: 1780
-        width: 264
-        height: 264
+        x: 1947
+        y: 3650
+        width: 91
+        height: 63
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
-      tessellationDetail: 0
+      tessellationDetail: -1
       bones: []
       spriteID: 47719c472ede15a10800000000000000
       internalID: 1896558474977417076
@@ -427,16 +436,16 @@ TextureImporter:
       name: kicker_torso_0
       rect:
         serializedVersion: 2
-        x: 4
-        y: 1508
-        width: 200
-        height: 268
+        x: 8
+        y: 3016
+        width: 400
+        height: 536
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
-      tessellationDetail: 0
+      tessellationDetail: -1
       bones: []
       spriteID: 20191f9bb0a16eb30800000000000000
       internalID: 4316165930547777794
@@ -448,16 +457,16 @@ TextureImporter:
       name: kicker_torso_1
       rect:
         serializedVersion: 2
-        x: 208
-        y: 1508
-        width: 219
-        height: 268
+        x: 416
+        y: 3016
+        width: 438
+        height: 536
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
-      tessellationDetail: 0
+      tessellationDetail: -1
       bones: []
       spriteID: 2b83b92ef7fd12cc0800000000000000
       internalID: -3737460475385136974
@@ -469,16 +478,16 @@ TextureImporter:
       name: kicker_torso_2
       rect:
         serializedVersion: 2
-        x: 431
-        y: 1508
-        width: 186
-        height: 268
+        x: 862
+        y: 3016
+        width: 372
+        height: 536
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
-      tessellationDetail: 0
+      tessellationDetail: -1
       bones: []
       spriteID: 0e36a6efd40437820800000000000000
       internalID: 2914744087563887584
@@ -490,16 +499,16 @@ TextureImporter:
       name: kicker_torso_3
       rect:
         serializedVersion: 2
-        x: 621
-        y: 1508
-        width: 183
-        height: 268
+        x: 1242
+        y: 3016
+        width: 366
+        height: 536
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
-      tessellationDetail: 0
+      tessellationDetail: -1
       bones: []
       spriteID: fd36d63651d6f07d0800000000000000
       internalID: -2950019292274531361
@@ -511,16 +520,16 @@ TextureImporter:
       name: kicker_torso_4
       rect:
         serializedVersion: 2
-        x: 808
-        y: 1508
-        width: 199
-        height: 268
+        x: 1616
+        y: 3016
+        width: 398
+        height: 536
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
-      tessellationDetail: 0
+      tessellationDetail: -1
       bones: []
       spriteID: 3a5313192cdfb7210800000000000000
       internalID: 1331937126919517603
@@ -532,16 +541,16 @@ TextureImporter:
       name: kicker_torso_5
       rect:
         serializedVersion: 2
-        x: 1011
-        y: 1508
-        width: 193
-        height: 268
+        x: 2022
+        y: 3016
+        width: 386
+        height: 536
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
-      tessellationDetail: 0
+      tessellationDetail: -1
       bones: []
       spriteID: a369c73a14fdba520800000000000000
       internalID: 2714508673429575226
@@ -553,16 +562,16 @@ TextureImporter:
       name: kicker_torso_6
       rect:
         serializedVersion: 2
-        x: 1208
-        y: 1508
-        width: 179
-        height: 268
+        x: 2416
+        y: 3016
+        width: 358
+        height: 536
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
-      tessellationDetail: 0
+      tessellationDetail: -1
       bones: []
       spriteID: de6ec7caef75d8760800000000000000
       internalID: 7461716908949956333
@@ -574,16 +583,16 @@ TextureImporter:
       name: kicker_torso_7
       rect:
         serializedVersion: 2
-        x: 1391
-        y: 1508
-        width: 186
-        height: 268
+        x: 2782
+        y: 3016
+        width: 372
+        height: 536
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
-      tessellationDetail: 0
+      tessellationDetail: -1
       bones: []
       spriteID: 938ed6d1b92ed2e20800000000000000
       internalID: 3327564855538214969
@@ -595,16 +604,16 @@ TextureImporter:
       name: kicker_torso_8
       rect:
         serializedVersion: 2
-        x: 1581
-        y: 1508
-        width: 169
-        height: 268
+        x: 3162
+        y: 3016
+        width: 338
+        height: 536
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
-      tessellationDetail: 0
+      tessellationDetail: -1
       bones: []
       spriteID: 8f594e7c5d626dc40800000000000000
       internalID: 5536655491522139640
@@ -616,16 +625,16 @@ TextureImporter:
       name: kicker_torso_9
       rect:
         serializedVersion: 2
-        x: 1754
-        y: 1508
-        width: 205
-        height: 268
+        x: 3508
+        y: 3016
+        width: 410
+        height: 536
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
-      tessellationDetail: 0
+      tessellationDetail: -1
       bones: []
       spriteID: 532fbfc1a567d3670800000000000000
       internalID: 8520096199460254261
@@ -637,16 +646,16 @@ TextureImporter:
       name: kicker_lowertorso_0
       rect:
         serializedVersion: 2
-        x: 4
-        y: 1352
-        width: 200
-        height: 152
+        x: 8
+        y: 2704
+        width: 400
+        height: 304
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
-      tessellationDetail: 0
+      tessellationDetail: -1
       bones: []
       spriteID: ff1b0eae7cc5028e0800000000000000
       internalID: -1720273043946688001
@@ -658,16 +667,16 @@ TextureImporter:
       name: kicker_lowertorso_1
       rect:
         serializedVersion: 2
-        x: 208
-        y: 1352
-        width: 219
-        height: 152
+        x: 416
+        y: 2704
+        width: 438
+        height: 304
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
-      tessellationDetail: 0
+      tessellationDetail: -1
       bones: []
       spriteID: 4c5c6a5b254461630800000000000000
       internalID: 3897377649561355716
@@ -679,16 +688,16 @@ TextureImporter:
       name: kicker_lowertorso_2
       rect:
         serializedVersion: 2
-        x: 431
-        y: 1352
-        width: 186
-        height: 152
+        x: 862
+        y: 2704
+        width: 372
+        height: 304
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
-      tessellationDetail: 0
+      tessellationDetail: -1
       bones: []
       spriteID: f6861335641b2c6e0800000000000000
       internalID: -1818696383902685073
@@ -700,16 +709,16 @@ TextureImporter:
       name: kicker_lowertorso_3
       rect:
         serializedVersion: 2
-        x: 621
-        y: 1352
-        width: 183
-        height: 152
+        x: 1242
+        y: 2704
+        width: 366
+        height: 304
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
-      tessellationDetail: 0
+      tessellationDetail: -1
       bones: []
       spriteID: 3022914e6bd695430800000000000000
       internalID: 3772166795177828867
@@ -721,16 +730,16 @@ TextureImporter:
       name: kicker_lowertorso_4
       rect:
         serializedVersion: 2
-        x: 808
-        y: 1352
-        width: 199
-        height: 152
+        x: 1616
+        y: 2704
+        width: 398
+        height: 304
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
-      tessellationDetail: 0
+      tessellationDetail: -1
       bones: []
       spriteID: 2d2e43e44af14a120800000000000000
       internalID: 2424097289979355858
@@ -742,16 +751,16 @@ TextureImporter:
       name: kicker_lowertorso_5
       rect:
         serializedVersion: 2
-        x: 1011
-        y: 1352
-        width: 193
-        height: 152
+        x: 2022
+        y: 2704
+        width: 386
+        height: 304
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
-      tessellationDetail: 0
+      tessellationDetail: -1
       bones: []
       spriteID: 8181422b61dc56780800000000000000
       internalID: -8690314408579819496
@@ -763,16 +772,16 @@ TextureImporter:
       name: kicker_lowertorso_6
       rect:
         serializedVersion: 2
-        x: 1208
-        y: 1352
-        width: 179
-        height: 152
+        x: 2416
+        y: 2704
+        width: 358
+        height: 304
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
-      tessellationDetail: 0
+      tessellationDetail: -1
       bones: []
       spriteID: 1c271f9d182093a50800000000000000
       internalID: 6501230293816537793
@@ -784,16 +793,16 @@ TextureImporter:
       name: kicker_leg_0
       rect:
         serializedVersion: 2
-        x: 4
-        y: 830
-        width: 158
-        height: 266
+        x: 8
+        y: 1660
+        width: 316
+        height: 532
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
-      tessellationDetail: 0
+      tessellationDetail: -1
       bones: []
       spriteID: 0b029999454c97420800000000000000
       internalID: 2628347725180641456
@@ -805,16 +814,16 @@ TextureImporter:
       name: kicker_leg_1
       rect:
         serializedVersion: 2
-        x: 166
-        y: 830
-        width: 158
-        height: 266
+        x: 332
+        y: 1660
+        width: 316
+        height: 532
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
-      tessellationDetail: 0
+      tessellationDetail: -1
       bones: []
       spriteID: c3187b9d3018e6000800000000000000
       internalID: 31104100975739196
@@ -826,16 +835,16 @@ TextureImporter:
       name: kicker_leg_2
       rect:
         serializedVersion: 2
-        x: 328
-        y: 830
-        width: 180
-        height: 266
+        x: 656
+        y: 1660
+        width: 360
+        height: 532
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
-      tessellationDetail: 0
+      tessellationDetail: -1
       bones: []
       spriteID: 090e5384fd5390600800000000000000
       internalID: 434938072123433104
@@ -847,16 +856,16 @@ TextureImporter:
       name: kicker_leg_3
       rect:
         serializedVersion: 2
-        x: 512
-        y: 830
-        width: 152
-        height: 266
+        x: 1024
+        y: 1660
+        width: 304
+        height: 532
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
-      tessellationDetail: 0
+      tessellationDetail: -1
       bones: []
       spriteID: c1ce673a2901b1c30800000000000000
       internalID: 4331073688640613404
@@ -868,16 +877,16 @@ TextureImporter:
       name: kicker_leg_4
       rect:
         serializedVersion: 2
-        x: 668
-        y: 830
-        width: 143
-        height: 266
+        x: 1336
+        y: 1660
+        width: 286
+        height: 532
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
-      tessellationDetail: 0
+      tessellationDetail: -1
       bones: []
       spriteID: f9728f6361cf7e700800000000000000
       internalID: 569701050227369887
@@ -889,16 +898,16 @@ TextureImporter:
       name: kicker_leg_5
       rect:
         serializedVersion: 2
-        x: 815
-        y: 830
-        width: 127
-        height: 266
+        x: 1630
+        y: 1660
+        width: 254
+        height: 532
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
-      tessellationDetail: 0
+      tessellationDetail: -1
       bones: []
       spriteID: ea786490e89f0fda0800000000000000
       internalID: -5912951922301171794
@@ -910,16 +919,16 @@ TextureImporter:
       name: kicker_leg_6
       rect:
         serializedVersion: 2
-        x: 946
-        y: 830
-        width: 158
-        height: 266
+        x: 1892
+        y: 1660
+        width: 316
+        height: 532
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
-      tessellationDetail: 0
+      tessellationDetail: -1
       bones: []
       spriteID: 8110db21c9edcf100800000000000000
       internalID: 143234050079654168
@@ -931,16 +940,16 @@ TextureImporter:
       name: kicker_leg_7
       rect:
         serializedVersion: 2
-        x: 1108
-        y: 830
-        width: 155
-        height: 266
+        x: 2216
+        y: 1660
+        width: 310
+        height: 532
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
-      tessellationDetail: 0
+      tessellationDetail: -1
       bones: []
       spriteID: b201f84830d6ef620800000000000000
       internalID: 2809803079402065963
@@ -952,16 +961,16 @@ TextureImporter:
       name: kicker_leg_8
       rect:
         serializedVersion: 2
-        x: 1267
-        y: 830
-        width: 170
-        height: 266
+        x: 2534
+        y: 1660
+        width: 340
+        height: 532
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
-      tessellationDetail: 0
+      tessellationDetail: -1
       bones: []
       spriteID: acd18bd08e107d920800000000000000
       internalID: 3014880571722046922
@@ -973,16 +982,16 @@ TextureImporter:
       name: kicker_leg_9
       rect:
         serializedVersion: 2
-        x: 4
-        y: 690
-        width: 354
-        height: 136
+        x: 8
+        y: 1380
+        width: 708
+        height: 272
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
-      tessellationDetail: 0
+      tessellationDetail: -1
       bones: []
       spriteID: e88f49e04f55683e0800000000000000
       internalID: -2051858073515657074
@@ -994,16 +1003,16 @@ TextureImporter:
       name: kicker_leg_10
       rect:
         serializedVersion: 2
-        x: 362
-        y: 690
-        width: 354
-        height: 136
+        x: 724
+        y: 1380
+        width: 708
+        height: 272
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
-      tessellationDetail: 0
+      tessellationDetail: -1
       bones: []
       spriteID: 7bbfe3d9e971ad380800000000000000
       internalID: -8945811739807646793
@@ -1015,16 +1024,16 @@ TextureImporter:
       name: kicker_leg_11
       rect:
         serializedVersion: 2
-        x: 720
-        y: 602
-        width: 318
-        height: 224
+        x: 1440
+        y: 1204
+        width: 636
+        height: 448
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
-      tessellationDetail: 0
+      tessellationDetail: -1
       bones: []
       spriteID: 18aa55950c1a24e10800000000000000
       internalID: 2180483017105320577
@@ -1036,16 +1045,16 @@ TextureImporter:
       name: kicker_leg_12
       rect:
         serializedVersion: 2
-        x: 1042
-        y: 577
-        width: 221
-        height: 249
+        x: 2084
+        y: 1154
+        width: 442
+        height: 498
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
-      tessellationDetail: 0
+      tessellationDetail: -1
       bones: []
       spriteID: fea444325966e2590800000000000000
       internalID: -7697101922401760529
@@ -1057,16 +1066,16 @@ TextureImporter:
       name: kicker_leg_13
       rect:
         serializedVersion: 2
-        x: 1267
-        y: 577
-        width: 170
-        height: 249
+        x: 2534
+        y: 1154
+        width: 340
+        height: 498
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
-      tessellationDetail: 0
+      tessellationDetail: -1
       bones: []
       spriteID: 78d405dc44e1d8000800000000000000
       internalID: 39721252567403911
@@ -1078,16 +1087,16 @@ TextureImporter:
       name: kicker_leg_14
       rect:
         serializedVersion: 2
-        x: 1441
-        y: 577
-        width: 199
-        height: 249
+        x: 2882
+        y: 1154
+        width: 398
+        height: 498
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
-      tessellationDetail: 0
+      tessellationDetail: -1
       bones: []
       spriteID: 86462b7e8b7591710800000000000000
       internalID: 1664457988962935912
@@ -1099,16 +1108,16 @@ TextureImporter:
       name: kicker_leg_15
       rect:
         serializedVersion: 2
-        x: 1644
-        y: 577
-        width: 209
-        height: 249
+        x: 3288
+        y: 1154
+        width: 418
+        height: 498
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
-      tessellationDetail: 0
+      tessellationDetail: -1
       bones: []
       spriteID: cb4dfbb87eaa609d0800000000000000
       internalID: -2808369406160153412
@@ -1120,16 +1129,16 @@ TextureImporter:
       name: kicker_arm_0
       rect:
         serializedVersion: 2
-        x: 4
-        y: 1100
-        width: 200
-        height: 248
+        x: 8
+        y: 2200
+        width: 400
+        height: 496
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
-      tessellationDetail: 0
+      tessellationDetail: -1
       bones: []
       spriteID: 286258c04f57d3570800000000000000
       internalID: 8448038167059441282
@@ -1141,16 +1150,16 @@ TextureImporter:
       name: kicker_arm_1
       rect:
         serializedVersion: 2
-        x: 208
-        y: 1100
-        width: 258
-        height: 248
+        x: 416
+        y: 2200
+        width: 516
+        height: 496
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
-      tessellationDetail: 0
+      tessellationDetail: -1
       bones: []
       spriteID: b2272688d5ad962f0800000000000000
       internalID: -979011348721405397
@@ -1162,16 +1171,16 @@ TextureImporter:
       name: kicker_arm_2
       rect:
         serializedVersion: 2
-        x: 470
-        y: 1100
-        width: 198
-        height: 248
+        x: 940
+        y: 2200
+        width: 396
+        height: 496
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
-      tessellationDetail: 0
+      tessellationDetail: -1
       bones: []
       spriteID: 0e98cda1869e92c20800000000000000
       internalID: 3182331245050497504
@@ -1183,16 +1192,16 @@ TextureImporter:
       name: kicker_arm_3
       rect:
         serializedVersion: 2
-        x: 672
-        y: 1100
-        width: 210
-        height: 248
+        x: 1344
+        y: 2200
+        width: 420
+        height: 496
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
-      tessellationDetail: 0
+      tessellationDetail: -1
       bones: []
       spriteID: e7dfe4d67dfd62310800000000000000
       internalID: 1380036452180491646
@@ -1204,16 +1213,16 @@ TextureImporter:
       name: kicker_arm_4
       rect:
         serializedVersion: 2
-        x: 886
-        y: 1100
-        width: 182
-        height: 248
+        x: 1772
+        y: 2200
+        width: 364
+        height: 496
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
-      tessellationDetail: 0
+      tessellationDetail: -1
       bones: []
       spriteID: bb0eb62f8e07aa810800000000000000
       internalID: 1777357148752961723
@@ -1225,16 +1234,16 @@ TextureImporter:
       name: kicker_arm_5
       rect:
         serializedVersion: 2
-        x: 1072
-        y: 1100
-        width: 222
-        height: 248
+        x: 2144
+        y: 2200
+        width: 444
+        height: 496
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
-      tessellationDetail: 0
+      tessellationDetail: -1
       bones: []
       spriteID: aacf6a3a6a5bd7580800000000000000
       internalID: -8827699967261475670
@@ -1246,16 +1255,16 @@ TextureImporter:
       name: kicker_arm_6
       rect:
         serializedVersion: 2
-        x: 1298
-        y: 1100
-        width: 194
-        height: 248
+        x: 2596
+        y: 2200
+        width: 388
+        height: 496
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
-      tessellationDetail: 0
+      tessellationDetail: -1
       bones: []
       spriteID: 055d64b92b7fcc3e0800000000000000
       internalID: -2031976985369586352
@@ -1267,16 +1276,16 @@ TextureImporter:
       name: kicker_arm_7
       rect:
         serializedVersion: 2
-        x: 1496
-        y: 1100
-        width: 181
-        height: 248
+        x: 2992
+        y: 2200
+        width: 362
+        height: 496
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
-      tessellationDetail: 0
+      tessellationDetail: -1
       bones: []
       spriteID: 37d795d6651566090800000000000000
       internalID: -8041650652979823245
@@ -1288,16 +1297,16 @@ TextureImporter:
       name: kicker_arm_8
       rect:
         serializedVersion: 2
-        x: 1681
-        y: 1100
-        width: 208
-        height: 248
+        x: 3362
+        y: 2200
+        width: 416
+        height: 496
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
-      tessellationDetail: 0
+      tessellationDetail: -1
       bones: []
       spriteID: 005a0e6d63a425410800000000000000
       internalID: 1464314428242568448
@@ -1309,16 +1318,16 @@ TextureImporter:
       name: kicker_arm_9
       rect:
         serializedVersion: 2
-        x: 4
-        y: 296
-        width: 128
-        height: 266
+        x: 8
+        y: 592
+        width: 256
+        height: 532
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
-      tessellationDetail: 0
+      tessellationDetail: -1
       bones: []
       spriteID: ae341320cb5c42040800000000000000
       internalID: 4622036528870278122
@@ -1330,16 +1339,16 @@ TextureImporter:
       name: kicker_arm_10
       rect:
         serializedVersion: 2
-        x: 136
-        y: 296
-        width: 90
-        height: 266
+        x: 272
+        y: 592
+        width: 180
+        height: 532
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
-      tessellationDetail: 0
+      tessellationDetail: -1
       bones: []
       spriteID: 2f57587877cdc9c90800000000000000
       internalID: -7161606901493041678
@@ -1351,16 +1360,16 @@ TextureImporter:
       name: kicker_hand_0
       rect:
         serializedVersion: 2
-        x: 4
-        y: 566
-        width: 128
-        height: 120
+        x: 8
+        y: 1132
+        width: 256
+        height: 240
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
-      tessellationDetail: 0
+      tessellationDetail: -1
       bones: []
       spriteID: 63408bc017b22c980800000000000000
       internalID: -8520199780486872010
@@ -1372,16 +1381,16 @@ TextureImporter:
       name: kicker_hand_1
       rect:
         serializedVersion: 2
-        x: 136
-        y: 566
-        width: 128
-        height: 120
+        x: 272
+        y: 1132
+        width: 256
+        height: 240
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
-      tessellationDetail: 0
+      tessellationDetail: -1
       bones: []
       spriteID: f74aac056a1a465f0800000000000000
       internalID: -764308301054040961
@@ -1393,16 +1402,16 @@ TextureImporter:
       name: kicker_hand_2
       rect:
         serializedVersion: 2
-        x: 268
-        y: 566
-        width: 128
-        height: 120
+        x: 536
+        y: 1132
+        width: 256
+        height: 240
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
-      tessellationDetail: 0
+      tessellationDetail: -1
       bones: []
       spriteID: 47e021244cc03cd20800000000000000
       internalID: 3297493389226937972
@@ -1414,16 +1423,16 @@ TextureImporter:
       name: kicker_hand_3
       rect:
         serializedVersion: 2
-        x: 400
-        y: 566
-        width: 128
-        height: 120
+        x: 800
+        y: 1132
+        width: 256
+        height: 240
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
-      tessellationDetail: 0
+      tessellationDetail: -1
       bones: []
       spriteID: 971cb30d26f432d40800000000000000
       internalID: 5558373650924290425
@@ -1435,16 +1444,16 @@ TextureImporter:
       name: ball
       rect:
         serializedVersion: 2
-        x: 555
-        y: 399
-        width: 132
-        height: 132
+        x: 1110
+        y: 798
+        width: 264
+        height: 264
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
-      tessellationDetail: 0
+      tessellationDetail: -1
       bones: []
       spriteID: ff568c20fcc022cc0800000000000000
       internalID: -3737410657519639041
@@ -1456,16 +1465,16 @@ TextureImporter:
       name: kick_fx
       rect:
         serializedVersion: 2
-        x: 532
-        y: 566
-        width: 184
-        height: 120
+        x: 1064
+        y: 1132
+        width: 368
+        height: 240
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
-      tessellationDetail: 0
+      tessellationDetail: -1
       bones: []
       spriteID: 1a59a396484621ca0800000000000000
       internalID: -6047660829741247071
@@ -1477,10 +1486,52 @@ TextureImporter:
       name: toe_fx
       rect:
         serializedVersion: 2
-        x: 720
-        y: 334
-        width: 241
-        height: 264
+        x: 1440
+        y: 668
+        width: 482
+        height: 528
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: e464135c69d37e8e0800000000000000
+      internalID: -1664293819527379378
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: kicker_mouth4
+      rect:
+        serializedVersion: 2
+        x: 2116
+        y: 3646
+        width: 92
+        height: 71
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 203a28fc925323580800000000000000
+      internalID: -8848951864138226942
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: flames1
+      rect:
+        serializedVersion: 2
+        x: 1150
+        y: 401
+        width: 453
+        height: 212
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -1488,8 +1539,29 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: e464135c69d37e8e0800000000000000
-      internalID: -1664293819527379378
+      spriteID: e5ad5dbbee5163220800000000000000
+      internalID: 2465181961129679454
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: flames2
+      rect:
+        serializedVersion: 2
+        x: 1153
+        y: 112
+        width: 486
+        height: 218
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 0ae94b2327fb72ad0800000000000000
+      internalID: -2727000552151671136
       vertices: []
       indices: 
       edges: []
