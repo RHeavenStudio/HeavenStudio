@@ -149,6 +149,18 @@ TextureImporter:
   - first:
       213: 3862573926363885855
     second: mole_2
+  - first:
+      213: 5009270014282713242
+    second: plants3
+  - first:
+      213: -7079069230305148602
+    second: plants2
+  - first:
+      213: -1525181524606744260
+    second: plants1
+  - first:
+      213: -7183640684589243713
+    second: strap
   externalObjects: {}
   serializedVersion: 11
   mipmaps:
@@ -212,7 +224,7 @@ TextureImporter:
   platformSettings:
   - serializedVersion: 3
     buildTarget: DefaultTexturePlatform
-    maxTextureSize: 2048
+    maxTextureSize: 4096
     resizeAlgorithm: 0
     textureFormat: -1
     textureCompression: 1
@@ -224,7 +236,7 @@ TextureImporter:
     forceMaximumCompressionQuality_BC6H_BC7: 0
   - serializedVersion: 3
     buildTarget: Standalone
-    maxTextureSize: 2048
+    maxTextureSize: 4096
     resizeAlgorithm: 0
     textureFormat: -1
     textureCompression: 1
@@ -451,12 +463,12 @@ TextureImporter:
       name: veggie_0
       rect:
         serializedVersion: 2
-        x: 2184
+        x: 2183
         y: 1488
         width: 294
         height: 408
-      alignment: 0
-      pivot: {x: 0.5, y: 0.5}
+      alignment: 9
+      pivot: {x: 0.5173265, y: 0.5104044}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
@@ -472,12 +484,12 @@ TextureImporter:
       name: veggie_1
       rect:
         serializedVersion: 2
-        x: 2502
-        y: 1488
+        x: 2503
+        y: 1489
         width: 288
         height: 408
       alignment: 9
-      pivot: {x: 0.5, y: 0.5441176}
+      pivot: {x: 0.5173265, y: 0.5104044}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
@@ -498,7 +510,7 @@ TextureImporter:
         width: 294
         height: 408
       alignment: 9
-      pivot: {x: 0.5, y: 0.4852941}
+      pivot: {x: 0.5173265, y: 0.5104044}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
@@ -514,12 +526,12 @@ TextureImporter:
       name: mole_0
       rect:
         serializedVersion: 2
-        x: 3129
+        x: 3130
         y: 1488
         width: 288
         height: 288
-      alignment: 0
-      pivot: {x: 0.5, y: 0.5}
+      alignment: 9
+      pivot: {x: 0.41324192, y: 0.4967872}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
@@ -536,11 +548,11 @@ TextureImporter:
       rect:
         serializedVersion: 2
         x: 3444
-        y: 1488
+        y: 1487
         width: 288
         height: 288
-      alignment: 0
-      pivot: {x: 0.5, y: 0.5}
+      alignment: 9
+      pivot: {x: 0.4164547, y: 0.4967872}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
@@ -1262,6 +1274,90 @@ TextureImporter:
       bones: []
       spriteID: 7e9276db7773db5e0800000000000000
       internalID: -1892295281007449625
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: plants3
+      rect:
+        serializedVersion: 2
+        x: 3734
+        y: 2253
+        width: 333
+        height: 243
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: a984659a980848540800000000000000
+      internalID: 5009270014282713242
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: plants2
+      rect:
+        serializedVersion: 2
+        x: 3734
+        y: 2020
+        width: 334
+        height: 222
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 6418343aa0812cd90800000000000000
+      internalID: -7079069230305148602
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: plants1
+      rect:
+        serializedVersion: 2
+        x: 3733
+        y: 1812
+        width: 338
+        height: 198
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: c3983dfeb7775dae0800000000000000
+      internalID: -1525181524606744260
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: strap
+      rect:
+        serializedVersion: 2
+        x: 3898
+        y: 2807
+        width: 78
+        height: 277
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: fb2a301abd49e4c90800000000000000
+      internalID: -7183640684589243713
       vertices: []
       indices: 
       edges: []
