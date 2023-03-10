@@ -18,16 +18,55 @@ namespace HeavenStudio.Games.Scripts_Fireworks
         public bool applause;
         private bool exploded;
         private float startY;
+        public float offSet;
+        [SerializeField] List<ParticleSystem> mixedCircularPS = new List<ParticleSystem>();
+        [SerializeField] Sprite GreenOne;
+        [SerializeField] Sprite GreenTwo;
+        [SerializeField] Sprite BlueOne;
+        [SerializeField] Sprite BlueTwo;
+        [SerializeField] Sprite RedOne;
+        [SerializeField] Sprite RedTwo;
 
         void Awake()
         {
             game = Fireworks.instance;
-            startY = transform.position.y;
+            List<string> colors = new List<string>()
+            {
+                "Green",
+                "Red",
+                "Blue"
+            };
+            for (int i = 0; i < mixedCircularPS.Count; i++)
+            {
+                var ts = mixedCircularPS[i].textureSheetAnimation;
+                var pickedColor = colors[UnityEngine.Random.Range(0, colors.Count)];
+                switch (pickedColor)
+                {
+                    case "Green":
+                        ts.AddSprite(GreenOne);
+                        ts.AddSprite(GreenTwo);
+                        break;
+                    case "Red":
+                        ts.AddSprite(RedOne);
+                        ts.AddSprite(RedTwo);
+                        break;
+                    case "Blue":
+                        ts.AddSprite(BlueOne);
+                        ts.AddSprite(BlueTwo);
+                        break;
+                    default:
+                        ts.AddSprite(GreenOne);
+                        ts.AddSprite(GreenTwo);
+                        break;
+                }
+                colors.Remove(pickedColor);
+            }
         }
 
         public void Init(float beat, int explosionToChoose)
         {
             startBeat = beat;
+            startY = transform.position.y - offSet;
             game.ScheduleInput(beat, isSparkler ? 1f : 3f, InputType.STANDARD_DOWN, Just, Out, Out);
             anim.DoScaledAnimationAsync(isSparkler ? "Sparkler" : "Rocket", isSparkler ? 1f : 0.5f);
             selectedParticleEffect = particleEffects[explosionToChoose];
@@ -40,7 +79,7 @@ namespace HeavenStudio.Games.Scripts_Fireworks
             if (!exploded && cond.isPlaying && !cond.isPaused) 
             {
                 EasingFunction.Function func = EasingFunction.GetEasingFunction(EasingFunction.Ease.Linear);
-                float newPosY = func(startY, 7f, normalizedBeat * (isSparkler ? 0.5f : 0.4f));
+                float newPosY = func(startY, 7f - offSet, normalizedBeat * (isSparkler ? 0.5f : 0.4f));
                 transform.position = new Vector3(transform.position.x, newPosY, transform.position.z);
             } 
             if (normalizedBeat > 3f && !selectedParticleEffect.isPlaying) Destroy(gameObject);

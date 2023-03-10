@@ -39,9 +39,13 @@ namespace HeavenStudio.Games.Loaders
                 },
                 new GameAction("bop", "Bop")
                 {
-                    function = delegate {TapTroupe.instance.Bop(); },
-                    defaultLength = 1f,
-
+                    function = delegate {var e = eventCaller.currentEntity; TapTroupe.instance.Bop(e.beat, e.length, e["bop"], e["bopAuto"]); },
+                    resizable = true,
+                    parameters = new List<Param>()
+                    {
+                        new Param("bop", true, "Bop", "Should the tappers bop?"),
+                        new Param("bopAuto", false, "Bop (Auto)", "Should the tappers auto bop?")
+                    }
                 },
                 new GameAction("spotlights", "Toggle Spotlights")
                 {
@@ -114,8 +118,10 @@ namespace HeavenStudio.Games
         private bool shouldDoSecondBam;
         private bool missedTaps;
         private bool canSpit = true;
+        private bool goBop;
         private bool useTutorialMissFace;
         private TapTroupeTapper.TapAnim currentTapAnim;
+        public GameEvent bop = new GameEvent();
         public struct QueuedSteps
         {
             public float beat;
@@ -186,6 +192,10 @@ namespace HeavenStudio.Games
             var cond = Conductor.instance;
             if (cond.isPlaying && !cond.isPaused)
             {
+                if (cond.ReportBeat(ref bop.lastReportedBeat, bop.startBeat % 1) && goBop)
+                {
+                    BopSingle();
+                }
                 if (queuedSteps.Count > 0)
                 {
                     foreach (var step in queuedSteps)
@@ -563,7 +573,25 @@ namespace HeavenStudio.Games
             MultiSound.Play(soundsToPlay.ToArray(), forcePlay: true);
         }
 
-        public void Bop()
+        public void Bop(float beat, float length, bool shouldBop, bool autoBop)
+        {
+            goBop = autoBop;
+            if (shouldBop)
+            {
+                for (int i = 0; i < length; i++)
+                {
+                    BeatAction.New(instance.gameObject, new List<BeatAction.Action>()
+                    {
+                        new BeatAction.Action(beat + i, delegate
+                        {
+                            BopSingle();
+                        })
+                    });
+                }
+            }
+        }
+
+        public void BopSingle()
         {
             playerTapper.Bop();
             playerCorner.Bop();

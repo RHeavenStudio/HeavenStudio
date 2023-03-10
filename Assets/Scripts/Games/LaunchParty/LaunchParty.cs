@@ -18,7 +18,7 @@ namespace HeavenStudio.Games.Loaders
     {
         public static Minigame AddGame(EventCaller eventCaller) 
         {
-            return new Minigame("launchParty", "Launch Party \n<color=#eb5454>[WIP]</color>", "000000", false, false, new List<GameAction>()
+            return new Minigame("launchParty", "Launch Party", "000000", false, false, new List<GameAction>()
             {
                 new GameAction("rocket", "Family Model")
                 {
@@ -155,6 +155,7 @@ namespace HeavenStudio.Games
         [SerializeField] ParticleSystem fallingStars;
         [SerializeField] ParticleSystem fallingStarsBack;
         [SerializeField] Transform launchPad;
+        [SerializeField] Transform launchPadRotatable;
         [SerializeField] Transform spawnPad;
         [SerializeField] Scroll scrollScript;
         [SerializeField] Animator lensFlareAnim;
@@ -302,20 +303,20 @@ namespace HeavenStudio.Games
                 {
                     if (normalizedBeat > 1)
                     {
-                        launchPad.rotation = Quaternion.Euler(0, 0, currentPadRotation);
+                        launchPadRotatable.rotation = Quaternion.Euler(0, 0, currentPadRotation);
                     }
                     else
                     {
                         if (currentRotLength < 0)
                         {
-                            launchPad.rotation = Quaternion.Euler(0, 0, currentPadRotation);
+                            launchPadRotatable.rotation = Quaternion.Euler(0, 0, currentPadRotation);
                         }
                         else
                         {
                             EasingFunction.Function func = EasingFunction.GetEasingFunction(lastRotEase);
 
                             float newRotZ = func(lastPadRotation, currentPadRotation, normalizedBeat);
-                            launchPad.rotation = Quaternion.Euler(0, 0, newRotZ);
+                            launchPadRotatable.rotation = Quaternion.Euler(0, 0, newRotZ);
                         }
                     }
                 }
@@ -343,7 +344,7 @@ namespace HeavenStudio.Games
         {
             if (currentRotIndex < allRotEvents.Count && currentRotIndex >= 0)
             {
-                lastPadRotation = launchPad.rotation.eulerAngles.z;
+                lastPadRotation = launchPadRotatable.rotation.eulerAngles.z;
                 currentRotBeat = allRotEvents[currentRotIndex].beat;
                 currentRotLength = allRotEvents[currentRotIndex].length;
                 currentPadRotation = allRotEvents[currentRotIndex]["rot"];

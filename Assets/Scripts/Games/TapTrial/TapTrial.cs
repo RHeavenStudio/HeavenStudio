@@ -16,11 +16,12 @@ namespace HeavenStudio.Games.Loaders
             {
                 new GameAction("bop", "Bop")
                 {
-                    function = delegate { TapTrial.instance.Bop(eventCaller.currentEntity["toggle"]); }, 
-                    defaultLength = .5f,
+                    function = delegate { var e = eventCaller.currentEntity; TapTrial.instance.Bop(e.beat, e.length, e["toggle"], e["toggle2"]); }, 
+                    resizable = true,
                     parameters = new List<Param>()
                     {
-                        new Param("toggle", false, "Bop", "Whether both will bop to the beat or not")
+                        new Param("toggle", true, "Bop", "Whether both will bop to the beat or not"),
+                        new Param("toggle2", false, "Bop (Auto)", "Whether both will bop automatically to the beat or not")
                     }
                 },
                 new GameAction("tap", "Tap")
@@ -106,7 +107,6 @@ namespace HeavenStudio.Games
         [SerializeField] ScrollForTap scroll;
         [SerializeField] GameObject giraffe;
         bool goBop = true, isPrep;
-        float lastReportedBeat = 0f;
         bool hasJumped, isFinalJump;
         public float jumpStartTime = Single.MinValue;
         float jumpPos;
@@ -115,6 +115,8 @@ namespace HeavenStudio.Games
         public bool crIsRunning;
         [SerializeField] GameObject bg;
         bool giraffeIsIn;
+
+        public GameEvent bop = new GameEvent();
 
         public static TapTrial instance { get; set; }
 
@@ -125,18 +127,9 @@ namespace HeavenStudio.Games
 
         private void Update()
         {
-            if (goBop && !isPrep)
+            if (Conductor.instance.ReportBeat(ref bop.lastReportedBeat, bop.startBeat % 1))
             {
-                if (Conductor.instance.ReportBeat(ref lastReportedBeat))
-                {
-                    if (monkeys[0].IsPlayingAnimationName("Idle")) monkeys[0].DoScaledAnimationAsync("Bop", 0.5f);
-                    if (monkeys[1].IsPlayingAnimationName("Idle")) monkeys[1].DoScaledAnimationAsync("Bop", 0.5f);
-                    if (player.anim.IsPlayingAnimationName("Idle")) player.anim.DoScaledAnimationAsync("Bop", 0.5f);
-                }
-                else if (Conductor.instance.songPositionInBeats < lastReportedBeat)
-                {
-                    lastReportedBeat = Mathf.Round(Conductor.instance.songPositionInBeats);
-                }
+                if (goBop) SingleBop();
             }
 
             jumpPos = Conductor.instance.GetPositionFromBeat(jumpStartTime, 1f);
@@ -174,9 +167,29 @@ namespace HeavenStudio.Games
             }
         }
 
-        public void Bop(bool isBopping)
+        void SingleBop()
         {
-            goBop = isBopping;
+            if (!isPrep)
+            {
+                if (monkeys[0].GetCurrentAnimatorStateInfo(0).IsName("Idle")) monkeys[0].DoScaledAnimationAsync("Bop", 0.5f);
+                if (monkeys[1].GetCurrentAnimatorStateInfo(0).IsName("Idle")) monkeys[1].DoScaledAnimationAsync("Bop", 0.5f);
+                if (player.anim.GetCurrentAnimatorStateInfo(0).IsName("Idle")) player.anim.DoScaledAnimationAsync("Bop", 0.5f);
+            }
+        }
+
+        public void Bop(float beat, float length, bool isBopping, bool autoBop)
+        {
+            goBop = autoBop;
+            if (isBopping)
+            {
+                for (int i = 0; i < length; i++)
+                {
+                    BeatAction.New(instance.gameObject, new List<BeatAction.Action>()
+                    {
+                        new BeatAction.Action(beat + i, delegate { SingleBop(); })
+                    });
+                }
+            }
         }
 
         public void Tap(float beat)

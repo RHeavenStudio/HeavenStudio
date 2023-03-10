@@ -73,6 +73,8 @@ namespace HeavenStudio.Games
         [SerializeField] List<Transform> ghostPositions = new List<Transform>();
         [SerializeField] GameObject normalRain;
         [SerializeField] GameObject slowRain;
+        [SerializeField] GameObject normalTree;
+        [SerializeField] GameObject slowTree;
         [Header("Variables")]
         private static List<QueuedGhost> queuedGhosts = new List<QueuedGhost>();
         private bool hasArrowLoaded;
@@ -307,6 +309,8 @@ namespace HeavenStudio.Games
             {
                 slowRain.SetActive(true);
                 normalRain.SetActive(false);
+                slowTree.SetActive(true);
+                normalTree.SetActive(false);
                 Conductor.instance.SetMinigamePitch(0.25f);
             }
 
@@ -319,6 +323,8 @@ namespace HeavenStudio.Games
                     doorAnim.DoScaledAnimationAsync("DoorClose", 0.5f);
                     slowRain.SetActive(false);
                     normalRain.SetActive(true);
+                    slowTree.SetActive(false);
+                    normalTree.SetActive(true);
                 })
             });
         }
