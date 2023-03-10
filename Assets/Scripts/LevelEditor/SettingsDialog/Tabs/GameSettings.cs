@@ -163,5 +163,74 @@ namespace HeavenStudio.Editor
             currentElementIdx = (currentElementIdx - 1 + lytElements.Count) % lytElements.Count;
             UpdateLayoutSettings();
         }
+
+        public void OnElementToggled()
+        {
+            var element = lytElements[currentElementIdx];
+            element.enable = ElementToggle.isOn;
+        }
+
+        public void OnXPosInputChanged()
+        {
+            var element = lytElements[currentElementIdx];
+            XPosSlider.value = float.Parse(XPosInput.text);
+            element.position.x = XPosSlider.value;
+        }
+
+        public void OnXPosSliderChanged()
+        {
+            var element = lytElements[currentElementIdx];
+            XPosInput.text = XPosSlider.value.ToString();
+            element.position.x = XPosSlider.value;
+        }
+
+        public void OnYPosInputChanged()
+        {
+            var element = lytElements[currentElementIdx];
+            YPosSlider.value = float.Parse(YPosInput.text);
+            element.position.y = YPosSlider.value;
+        }
+
+        public void OnYPosSliderChanged()
+        {
+            var element = lytElements[currentElementIdx];
+            YPosInput.text = YPosSlider.value.ToString();
+            element.position.y = YPosSlider.value;
+        }
+
+        public void OnRotationInputChanged()
+        {
+            var element = lytElements[currentElementIdx];
+            RotationSlider.value = float.Parse(RotationInput.text);
+            element.rotation = RotationSlider.value;
+        }
+
+        public void OnRotationSliderChanged()
+        {
+            var element = lytElements[currentElementIdx];
+            RotationInput.text = RotationSlider.value.ToString();
+            element.rotation = RotationSlider.value;
+        }
+
+        public void OnScaleInputChanged()
+        {
+            var element = lytElements[currentElementIdx];
+            ScaleSlider.value = float.Parse(ScaleInput.text);
+            element.scale = ScaleSlider.value;
+        }
+
+        public void OnScaleSliderChanged()
+        {
+            var element = lytElements[currentElementIdx];
+            ScaleInput.text = ScaleSlider.value.ToString();
+            element.scale = ScaleSlider.value;
+        }
+
+        public void OnTimingDispTypeDropdownChanged()
+        {
+            var element = lytElements[currentElementIdx] as OverlaysManager.TimingDisplayComponent;
+            if (element == null) return;
+            element.tdType = (OverlaysManager.TimingDisplayComponent.TimingDisplayType)TimingDispTypeDropdown.value;
+        }
     }
 }
