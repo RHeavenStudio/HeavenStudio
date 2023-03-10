@@ -42,6 +42,8 @@ namespace HeavenStudio.Editor
         List<OverlaysManager.OverlayOption> lytElements = new List<OverlaysManager.OverlayOption>();
         static int currentElementIdx = 0;
 
+        const string fFormat = "0.000";
+
         // Start is called before the first frame update
         void Start()
         {
@@ -123,13 +125,13 @@ namespace HeavenStudio.Editor
         {
             var element = lytElements[currentElementIdx];
             ElementToggle.isOn = element.enable;
-            XPosInput.text = element.position.x.ToString();
-            YPosInput.text = element.position.y.ToString();
+            XPosInput.text = element.position.x.ToString(fFormat);
+            YPosInput.text = element.position.y.ToString(fFormat);
             XPosSlider.value = element.position.x;
             YPosSlider.value = element.position.y;
-            RotationInput.text = element.rotation.ToString();
+            RotationInput.text = element.rotation.ToString(fFormat);
             RotationSlider.value = element.rotation;
-            ScaleInput.text = element.scale.ToString();
+            ScaleInput.text = element.scale.ToString(fFormat);
             ScaleSlider.value = element.scale;
 
             if (element is OverlaysManager.TimingDisplayComponent)
@@ -168,6 +170,7 @@ namespace HeavenStudio.Editor
         {
             var element = lytElements[currentElementIdx];
             element.enable = ElementToggle.isOn;
+            element.PositionElement();
         }
 
         public void OnXPosInputChanged()
@@ -175,13 +178,15 @@ namespace HeavenStudio.Editor
             var element = lytElements[currentElementIdx];
             XPosSlider.value = float.Parse(XPosInput.text);
             element.position.x = XPosSlider.value;
+            element.PositionElement();
         }
 
         public void OnXPosSliderChanged()
         {
             var element = lytElements[currentElementIdx];
-            XPosInput.text = XPosSlider.value.ToString();
+            XPosInput.text = XPosSlider.value.ToString(fFormat);
             element.position.x = XPosSlider.value;
+            element.PositionElement();
         }
 
         public void OnYPosInputChanged()
@@ -189,13 +194,15 @@ namespace HeavenStudio.Editor
             var element = lytElements[currentElementIdx];
             YPosSlider.value = float.Parse(YPosInput.text);
             element.position.y = YPosSlider.value;
+            element.PositionElement();
         }
 
         public void OnYPosSliderChanged()
         {
             var element = lytElements[currentElementIdx];
-            YPosInput.text = YPosSlider.value.ToString();
+            YPosInput.text = YPosSlider.value.ToString(fFormat);
             element.position.y = YPosSlider.value;
+            element.PositionElement();
         }
 
         public void OnRotationInputChanged()
@@ -203,13 +210,15 @@ namespace HeavenStudio.Editor
             var element = lytElements[currentElementIdx];
             RotationSlider.value = float.Parse(RotationInput.text);
             element.rotation = RotationSlider.value;
+            element.PositionElement();
         }
 
         public void OnRotationSliderChanged()
         {
             var element = lytElements[currentElementIdx];
-            RotationInput.text = RotationSlider.value.ToString();
+            RotationInput.text = RotationSlider.value.ToString(fFormat);
             element.rotation = RotationSlider.value;
+            element.PositionElement();
         }
 
         public void OnScaleInputChanged()
@@ -217,13 +226,15 @@ namespace HeavenStudio.Editor
             var element = lytElements[currentElementIdx];
             ScaleSlider.value = float.Parse(ScaleInput.text);
             element.scale = ScaleSlider.value;
+            element.PositionElement();
         }
 
         public void OnScaleSliderChanged()
         {
             var element = lytElements[currentElementIdx];
-            ScaleInput.text = ScaleSlider.value.ToString();
+            ScaleInput.text = ScaleSlider.value.ToString(fFormat);
             element.scale = ScaleSlider.value;
+            element.PositionElement();
         }
 
         public void OnTimingDispTypeDropdownChanged()
@@ -231,6 +242,7 @@ namespace HeavenStudio.Editor
             var element = lytElements[currentElementIdx] as OverlaysManager.TimingDisplayComponent;
             if (element == null) return;
             element.tdType = (OverlaysManager.TimingDisplayComponent.TimingDisplayType)TimingDispTypeDropdown.value;
+            element.PositionElement();
         }
     }
 }

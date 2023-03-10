@@ -55,29 +55,19 @@ namespace HeavenStudio.Common
 
             foreach (var c in lytElements)
             {
-                Debug.Log(c.enable);
-                if (c.enable)
-                {
-                    GameObject go = null;
-                    if (c is TimingDisplayComponent) { 
-                        Debug.Log("TimingDisplayComponent");
-                        go = Instantiate(TimingDisplayPrefab, ComponentHolder); 
-                    }
-                    else if (c is SkillStarComponent) { 
-                        Debug.Log("SkillStarComponent");
-                        go = Instantiate(SkillStarPrefab, ComponentHolder); 
-                    }
-                    else if (c is SectionComponent) { 
-                        Debug.Log("SectionComponent");
-                        go = Instantiate(ChartSectionPrefab, ComponentHolder); 
-                    }
-
-                    Debug.Log(go);
-                    if (go != null)
-                    {
-                        c.PositionElement(go);
-                    }
+                if (c is TimingDisplayComponent) { 
+                    Debug.Log("TimingDisplayComponent");
+                    c.CreateElement(TimingDisplayPrefab, ComponentHolder); 
                 }
+                else if (c is SkillStarComponent) { 
+                    Debug.Log("SkillStarComponent");
+                    c.CreateElement(SkillStarPrefab, ComponentHolder); 
+                }
+                else if (c is SectionComponent) { 
+                    Debug.Log("SectionComponent");
+                    c.CreateElement(ChartSectionPrefab, ComponentHolder); 
+                }
+                c.PositionElement();
             }
         }
 
@@ -91,6 +81,7 @@ namespace HeavenStudio.Common
                 Single,
             }
 
+            [NonSerialized] GameObject go2;
             [SerializeField] public TimingDisplayType tdType;
 
             public TimingDisplayComponent(TimingDisplayType type, bool enable, Vector2 position, float scale, float rotation)
@@ -102,14 +93,19 @@ namespace HeavenStudio.Common
                 this.rotation = rotation;
             }
 
-            public override void PositionElement(GameObject go)
+            public override void CreateElement(GameObject prefab, Transform holder)
+            {
+                go = Instantiate(prefab, holder);
+                go2 = Instantiate(prefab, holder);
+            }
+
+            public override void PositionElement()
             {
                 if (go != null)
                 {
                     switch (tdType)
                     {
                         case TimingDisplayType.Dual:
-                            GameObject go2 = Instantiate(go, go.transform.parent);
                             go.transform.localPosition = position * new Vector2(WIDTH_SPAN, HEIGHT_SPAN) * new Vector2(-1, 1);
                             go.transform.localScale = Vector3.one * scale;
                             go.transform.localRotation = Quaternion.Euler(0, 0, -rotation);
@@ -118,14 +114,14 @@ namespace HeavenStudio.Common
                             go2.transform.localScale = Vector3.one * scale;
                             go2.transform.localRotation = Quaternion.Euler(0, 0, rotation);
 
-                            go.SetActive(true);
-                            go2.SetActive(true);
+                            go.SetActive(enable);
+                            go2.SetActive(enable);
                             break;
                         case TimingDisplayType.Single:
                             go.transform.localPosition = position * new Vector2(WIDTH_SPAN, HEIGHT_SPAN);
                             go.transform.localScale = Vector3.one * scale;
                             go.transform.localRotation = Quaternion.Euler(0, 0, rotation);
-                            go.SetActive(true);
+                            go.SetActive(enable);
                             break;
                     }
                 }
@@ -153,14 +149,14 @@ namespace HeavenStudio.Common
                 this.rotation = rotation;
             }
 
-            public override void PositionElement(GameObject go)
+            public override void PositionElement()
             {
                 if (go != null)
                 {
                     go.transform.localPosition = position * new Vector2(WIDTH_SPAN, HEIGHT_SPAN);
                     go.transform.localScale = Vector3.one * scale;
                     go.transform.localRotation = Quaternion.Euler(0, 0, rotation);
-                    go.SetActive(true);
+                    go.SetActive(enable);
                 }
             }
 
@@ -181,14 +177,14 @@ namespace HeavenStudio.Common
                 this.rotation = rotation;
             }
 
-            public override void PositionElement(GameObject go)
+            public override void PositionElement()
             {
                 if (go != null)
                 {
                     go.transform.localPosition = position * new Vector2(WIDTH_SPAN, HEIGHT_SPAN);
                     go.transform.localScale = Vector3.one * scale;
                     go.transform.localRotation = Quaternion.Euler(0, 0, rotation);
-                    go.SetActive(true);
+                    go.SetActive(enable);
                 }
             }
 
@@ -202,6 +198,7 @@ namespace HeavenStudio.Common
         public abstract class OverlayOption
         {
             static long uuidCounter = 0;
+            [NonSerialized] protected GameObject go;
             [NonSerialized] public long uuid = GenerateUUID();
             [SerializeField] public bool enable;
             [SerializeField] public Vector2 position;
@@ -213,7 +210,12 @@ namespace HeavenStudio.Common
                 return uuidCounter++;
             }
 
-            public abstract void PositionElement(GameObject go);
+            public virtual void CreateElement(GameObject prefab, Transform holder)
+            {
+                go = Instantiate(prefab, holder);
+            }
+
+            public abstract void PositionElement();
         }
     }
 }
