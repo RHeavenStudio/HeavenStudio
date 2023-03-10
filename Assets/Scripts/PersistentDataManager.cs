@@ -43,6 +43,19 @@ namespace HeavenStudio.Common
             else
                 gameSettings.discordRPCEnable = true;
             
+            gameSettings.timingDisplayComponents = new List<OverlaysManager.TimingDisplayComponent>()
+            {
+                OverlaysManager.TimingDisplayComponent.CreateDefaultDual()
+            };
+            gameSettings.skillStarComponents = new List<OverlaysManager.SkillStarComponent>()
+            {
+                OverlaysManager.SkillStarComponent.CreateDefault()
+            };
+            gameSettings.sectionComponents = new List<OverlaysManager.SectionComponent>()
+            {
+                OverlaysManager.SectionComponent.CreateDefault()
+            };
+            
             SaveSettings();
         }
 
@@ -117,9 +130,18 @@ namespace HeavenStudio.Common
                 this.timingDisplayMinMode = timingDisplayMinMode;
                 this.overlaysInEditor = overlaysInEditor;
 
-                this.timingDisplayComponents = new List<TimingDisplayComponent>();
-                this.skillStarComponents = new List<SkillStarComponent>();
-                this.sectionComponents = new List<SectionComponent>();
+                this.timingDisplayComponents = new List<OverlaysManager.TimingDisplayComponent>()
+                {
+                    OverlaysManager.TimingDisplayComponent.CreateDefaultDual()
+                };
+                this.skillStarComponents = new List<OverlaysManager.SkillStarComponent>()
+                {
+                    OverlaysManager.SkillStarComponent.CreateDefault()
+                };
+                this.sectionComponents = new List<OverlaysManager.SectionComponent>()
+                {
+                    OverlaysManager.SectionComponent.CreateDefault()
+                };
             }
 
             // Display / Audio Settings
@@ -142,37 +164,9 @@ namespace HeavenStudio.Common
             public bool isMedalOn;
             public bool timingDisplayMinMode;
             public bool overlaysInEditor;
-            public List<TimingDisplayComponent> timingDisplayComponents;
-            public List<SkillStarComponent> skillStarComponents;
-            public List<SectionComponent> sectionComponents;
-
-            [Serializable]
-            public struct TimingDisplayComponent
-            {
-                public bool isDual;
-                public OverlayOption overlayOption;
-            }
-
-            [Serializable]
-            public struct SkillStarComponent
-            {
-                public OverlayOption overlayOption;
-            }
-
-            [Serializable]
-            public struct SectionComponent
-            {
-                public OverlayOption overlayOption;
-            }
-
-            [Serializable]
-            public struct OverlayOption
-            {
-                public bool enable;
-                public Vector2 position;
-                public float scale;
-                public float rotation;
-            }
+            public List<OverlaysManager.TimingDisplayComponent> timingDisplayComponents;
+            public List<OverlaysManager.SkillStarComponent> skillStarComponents;
+            public List<OverlaysManager.SectionComponent> sectionComponents;
         }
     }
 }

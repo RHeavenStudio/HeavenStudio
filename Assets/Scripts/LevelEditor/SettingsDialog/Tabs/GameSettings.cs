@@ -1,3 +1,7 @@
+using System;
+using System.Collections.Generic;
+using System.IO;
+
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
@@ -12,6 +16,25 @@ namespace HeavenStudio.Editor
         [SerializeField] Toggle perfectChallengeToggle;
         [SerializeField] Toggle sectionMedalsToggle;
         [SerializeField] Toggle timingDispMinModeToggle;
+
+        [Header("Layout Settings - General")]
+        [SerializeField] Toggle ElementToggle;
+
+        [SerializeField] TMP_InputField XPosInput;
+        [SerializeField] TMP_InputField YPosInput;
+        [SerializeField] Slider XPosSlider;
+        [SerializeField] Slider YPosSlider;
+
+        [SerializeField] TMP_InputField RotationInput;
+        [SerializeField] Slider RotationSlider;
+
+        [SerializeField] TMP_InputField ScaleInput;
+        [SerializeField] Slider ScaleSlider;
+
+        [Header("Layout Settings - Timing Display")]
+        [SerializeField] TMP_Dropdown TimingDispTypeDropdown;
+
+        List<OverlaysManager.OverlayOption> lytElements = new List<OverlaysManager.OverlayOption>();
 
         // Start is called before the first frame update
         void Start()
@@ -50,6 +73,11 @@ namespace HeavenStudio.Editor
             perfectChallengeToggle.isOn = PersistentDataManager.gameSettings.perfectChallengeType != PersistentDataManager.PerfectChallengeType.Off;
             sectionMedalsToggle.isOn = PersistentDataManager.gameSettings.isMedalOn;
             timingDispMinModeToggle.isOn = PersistentDataManager.gameSettings.timingDisplayMinMode;
+
+            lytElements = new List<OverlaysManager.OverlayOption>();
+            foreach (var c in PersistentDataManager.gameSettings.timingDisplayComponents) { lytElements.Add(c); }
+            foreach (var c in PersistentDataManager.gameSettings.skillStarComponents) { lytElements.Add(c); }
+            foreach (var c in PersistentDataManager.gameSettings.sectionComponents) { lytElements.Add(c); }
         }
 
         public override void OnCloseTab()
