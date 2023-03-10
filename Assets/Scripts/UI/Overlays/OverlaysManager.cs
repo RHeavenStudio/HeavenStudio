@@ -201,10 +201,17 @@ namespace HeavenStudio.Common
         [Serializable]
         public abstract class OverlayOption
         {
+            static long uuidCounter = 0;
+            [NonSerialized] public long uuid = GenerateUUID();
             [SerializeField] public bool enable;
             [SerializeField] public Vector2 position;
             [SerializeField] public float scale;
             [SerializeField] public float rotation;
+
+            static long GenerateUUID()
+            {
+                return uuidCounter++;
+            }
 
             public abstract void PositionElement(GameObject go);
         }
