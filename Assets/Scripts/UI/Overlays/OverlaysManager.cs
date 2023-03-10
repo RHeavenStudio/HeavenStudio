@@ -138,7 +138,7 @@ namespace HeavenStudio.Common
 
             public static TimingDisplayComponent CreateDefaultSingle()
             {
-                return new TimingDisplayComponent(TimingDisplayType.Single, true, new Vector2(0, -0.84f), 1f, 90f);
+                return new TimingDisplayComponent(TimingDisplayType.Single, true, new Vector2(0, -0.8f), 1f, 90f);
             }
         }
 
