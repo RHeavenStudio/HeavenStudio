@@ -45,14 +45,15 @@ namespace HeavenStudio.Games.Loaders
                     },
                     defaultLength = 4f
                 },
-                new GameAction("toggleBop", "Toggle Bop")
+                new GameAction("toggleBop", "Bop")
                 {
-                    function = delegate {var e = eventCaller.currentEntity; Ringside.instance.ToggleBop(e["bop"]); },
+                    function = delegate {var e = eventCaller.currentEntity; Ringside.instance.ToggleBop(e.beat, e.length, e["bop2"], e["bop"]); },
                     parameters = new List<Param>()
                     {
-                        new Param("bop", false, "Bop?", "Whether the wrestler should bop or not."),
+                        new Param("bop2", true, "Bop?", "Whether the wrestler should bop or not."),
+                        new Param("bop", false, "Bop? (Auto)", "Whether the wrestler should bop automatically or not."),
                     },
-                    defaultLength = 0.5f
+                    resizable = true,
                 },
                 new GameAction("toggleSweat", "Toggle Sweat")
                 {
@@ -181,9 +182,6 @@ namespace HeavenStudio.Games
             allCameraEvents = tempEvents;
 
             UpdateCameraZoom();
-
-            wrestlerAnim.Play("Idle", 0, 0);
-            reporterAnim.Play("IdleReporter", 0, 0);
             shouldNotInput = false;
             shouldBop = true;
         }
@@ -196,7 +194,7 @@ namespace HeavenStudio.Games
             {
                 if (cond.ReportBeat(ref bop.lastReportedBeat, bop.startBeat % 1))
                 {
-                    if (wrestlerAnim.IsPlayingAnimationName("Idle") && shouldBop)
+                    if ((wrestlerAnim.IsPlayingAnimationName("Idle") || wrestlerAnim.IsPlayingAnimationName("BopPec") || wrestlerAnim.IsPlayingAnimationName("Bop")) && shouldBop)
                     {
                         if (UnityEngine.Random.Range(1, 18) == 1)
                         {
@@ -286,9 +284,32 @@ namespace HeavenStudio.Games
 
         }
 
-        public void ToggleBop(bool startBopping)
+        public void ToggleBop(float beat, float length, bool startBopping, bool autoBop)
         {
-            shouldBop = startBopping;
+            shouldBop = autoBop;
+            if (startBopping)
+            {
+                for (int i = 0; i < length; i++)
+                {
+                    BeatAction.New(instance.gameObject, new List<BeatAction.Action>()
+                    {
+                        new BeatAction.Action(beat + i, delegate
+                        {
+                            if ((wrestlerAnim.IsPlayingAnimationName("Idle") || wrestlerAnim.IsPlayingAnimationName("BopPec") || wrestlerAnim.IsPlayingAnimationName("Bop")))
+                            {
+                                if (UnityEngine.Random.Range(1, 18) == 1)
+                                {
+                                    wrestlerAnim.DoScaledAnimationAsync("BopPec");
+                                }
+                                else
+                                {
+                                    wrestlerAnim.DoScaledAnimationAsync("Bop");
+                                }
+                            }
+                        })
+                    });
+                }
+            }
         }
 
         public void ToggleSweat(bool shouldSweat)

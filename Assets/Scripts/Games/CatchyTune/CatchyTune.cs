@@ -40,12 +40,12 @@ namespace HeavenStudio.Games.Loaders
 
                 new GameAction("bop", "Bop")
                 {
-                    function = delegate {var e = eventCaller.currentEntity; CatchyTune.instance.Bop(e.beat, e["left"], e["right"]); },
-                    defaultLength = 1f,
+                    function = delegate {var e = eventCaller.currentEntity; CatchyTune.instance.Bop(e.beat, e.length, e["bop"], e["bopAuto"]); },
+                    resizable = true,
                     parameters = new List<Param>()
                     {
-                        new Param("left" , true, "Left", "Plalin bops head"),
-                        new Param("right", true, "Right", "Alalin bops head")
+                        new Param("bop", CatchyTune.WhoBops.Both, "Bop", "Should Plalin and Alalin bop?"),
+                        new Param("bopAuto", CatchyTune.WhoBops.None, "Bop", "Should Plalin and Alalin auto bop?"),
                     },
                 },
                 new GameAction("background", "Background")
@@ -78,6 +78,14 @@ namespace HeavenStudio.Games
             Left,
             Right,
             Both
+        }
+
+        public enum WhoBops
+        {
+            Alalin,
+            Plalin,
+            Both,
+            None
         }
 
         public enum Background
@@ -265,10 +273,51 @@ namespace HeavenStudio.Games
             newFruit.SetActive(true);
         }
 
-        public void Bop(float beat, bool left, bool right)
+        public void Bop(float beat, float length, int whoBops, int whoBopsAuto)
         {
-            bopLeft = left;
-            bopRight = right;
+            bopLeft = whoBopsAuto == (int)WhoBops.Plalin || whoBopsAuto == (int)WhoBops.Both;
+            bopRight = whoBopsAuto == (int)WhoBops.Alalin || whoBopsAuto == (int)WhoBops.Both;
+            for (int i = 0; i < length; i++)
+            {
+                BeatAction.New(instance.gameObject, new List<BeatAction.Action>()
+                {
+                    new BeatAction.Action(beat + i, delegate
+                    {
+                        BopSingle(whoBops);
+                    })
+                });
+            }
+        }
+
+        void BopSingle(int whoBops)
+        {
+            switch (whoBops)
+            {
+                case (int)WhoBops.Plalin:
+                    if (stopCatchLeft == 0)
+                    {
+                        plalinAnim.Play("bop", 0, 0);
+                    }
+                    break;
+                case (int)WhoBops.Alalin:
+                    if (stopCatchRight == 0)
+                    {
+                        alalinAnim.Play("bop", 0, 0);
+                    }
+                    break;
+                case (int)WhoBops.Both:
+                    if (stopCatchRight == 0)
+                    {
+                        alalinAnim.Play("bop", 0, 0);
+                    }
+                    if (stopCatchLeft == 0)
+                    {
+                        plalinAnim.Play("bop", 0, 0);
+                    }
+                    break;
+                default:
+                    break;
+            }
         }
 
         public void changeBG(int bg)
