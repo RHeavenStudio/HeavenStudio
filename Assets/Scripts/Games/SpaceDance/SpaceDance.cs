@@ -82,6 +82,16 @@ namespace HeavenStudio.Games.Loaders
                         new Param("toggle", true, "Should bop?", "Should the dancers bop?"),
                         new Param("gramps", false, "Gramps Bop", "Should Space Gramps bop with the dancers?")
                     }
+                },
+                new GameAction("grampsAnims", "Space Gramps Animations")
+                {
+                    function = delegate {var e = eventCaller.currentEntity; SpaceDance.instance.GrampsAnimations(e.beat, e["type"], e["toggle"]); },
+                    defaultLength = 0.5f,
+                    parameters = new List<Param>()
+                    {
+                        new Param("toggle", true, "Looping", "Should the animation loop?"),
+                        new Param("type", SpaceDance.GrampsAnimationType.Talk, "Which animation?", "Which animation should space gramps do?")
+                    }
                 }
             });
         }
@@ -108,6 +118,12 @@ namespace HeavenStudio.Games
             Gramps = 1,
             Both = 2
         }
+        public enum GrampsAnimationType
+        {
+            Stand = 0,
+            Talk = 1,
+            Sniff = 2
+        }
         Tween bgColorTween;
         [SerializeField] SpriteRenderer bg;
         [SerializeField] Animator shootingStarAnim;
@@ -126,6 +142,8 @@ namespace HeavenStudio.Games
         float shootingStarStartBeat;
         EasingFunction.Ease lastEase;
         bool isShootingStar;
+        bool grampsLoopingAnim;
+        bool grampsSniffing;
 
         public GameEvent bop = new GameEvent();
 
@@ -177,23 +195,142 @@ namespace HeavenStudio.Games
                     {
                         Jukebox.PlayOneShotGame("spaceDance/inputBad");
                         DancerP.DoScaledAnimationAsync("PunchDo", 0.5f);
-                        Gramps.DoScaledAnimationAsync("GrampsOhFuck", 0.5f);
                         // Look at this later, sound effect has some weird clipping on it sometimes?? popping. like. fucking popopop idk why its doing that its fine theres no sample weirdness ughh
                     }
                     if (PlayerInput.GetSpecificDirectionDown(1) && !IsExpectingInputNow(InputType.DIRECTION_RIGHT_DOWN))
                     {
                         DancerP.DoScaledAnimationAsync("TurnRightDo", 0.5f);
                         Jukebox.PlayOneShotGame("spaceDance/inputBad");
-                        Gramps.DoScaledAnimationAsync("GrampsOhFuck", 0.5f);
                     }
                     if (PlayerInput.GetSpecificDirectionDown(2) && !IsExpectingInputNow(InputType.DIRECTION_DOWN_DOWN))
                     {
                         DancerP.DoScaledAnimationAsync("SitDownDo", 0.5f);
                         Jukebox.PlayOneShotGame("spaceDance/inputBad");
-                        Gramps.DoScaledAnimationAsync("GrampsOhFuck", 0.5f);
                     }
                 }
             }
+        }
+
+        public void GrampsAnimations(float beat, int type, bool looping)
+        {
+            switch (type)
+            {
+                case (int)GrampsAnimationType.Stand:
+                    Gramps.Play("GrampsStand", 0, 0);
+                    grampsLoopingAnim = false;
+                    grampsSniffing = false;
+                    break;
+                case (int)GrampsAnimationType.Talk:
+                    if (looping)
+                    {
+                        grampsLoopingAnim = true;
+                        grampsSniffing = false;
+                        GrampsTalkLoop(beat);
+                    }
+                    else
+                    {
+                        grampsLoopingAnim = false;
+                        grampsSniffing = false;
+                        Gramps.DoScaledAnimationAsync("GrampsTalk", 0.5f);
+                    }
+                    break;
+                case (int)GrampsAnimationType.Sniff:
+                    if (looping)
+                    {
+                        grampsLoopingAnim = true;
+                        grampsSniffing = true;
+                        GrampsSniffLoop(beat);
+                    }
+                    else
+                    {
+                        grampsLoopingAnim = false;
+                        grampsSniffing = false;
+                        Gramps.DoScaledAnimationAsync("GrampsSniff", 0.5f);
+                    }
+                    break;
+            }
+        }
+
+        void GrampsSniffLoop(float beat)
+        {
+            if (!grampsLoopingAnim || !grampsSniffing) return;
+            spaceGrampsShouldBop = false;
+            BeatAction.New(instance.gameObject, new List<BeatAction.Action>()
+            {
+                new BeatAction.Action(beat, delegate
+                {
+                    if (grampsSniffing && grampsLoopingAnim)
+                    {
+                        Gramps.DoScaledAnimationAsync("GrampsSniff", 0.5f);
+                    }
+                }),
+                new BeatAction.Action(beat + 3, delegate
+                {
+                    if (grampsSniffing && grampsLoopingAnim)
+                    {
+                        Gramps.DoScaledAnimationAsync("GrampsSniff", 0.5f);
+                    }
+                }),
+                new BeatAction.Action(beat + 3.5f, delegate
+                {
+                    if (grampsSniffing && grampsLoopingAnim)
+                    {
+                        Gramps.DoScaledAnimationAsync("GrampsSniff", 0.5f);
+                    }
+                }),
+                new BeatAction.Action(beat + 5.5f, delegate
+                {
+                    GrampsSniffLoop(beat + 5.5f);
+                }),
+            });
+        }
+
+        void GrampsTalkLoop(float beat)
+        {
+            if (!grampsLoopingAnim || grampsSniffing) return;
+            spaceGrampsShouldBop = false;
+            BeatAction.New(instance.gameObject, new List<BeatAction.Action>()
+            {
+                new BeatAction.Action(beat + 0.66666f , delegate
+                {
+                    if (!grampsSniffing && grampsLoopingAnim)
+                    {
+                        Gramps.DoScaledAnimationAsync("GrampsTalk", 0.5f);
+                    }
+                }),
+                new BeatAction.Action(beat + 1.33333f, delegate
+                {
+                    if (!grampsSniffing && grampsLoopingAnim)
+                    {
+                        Gramps.DoScaledAnimationAsync("GrampsTalk", 0.5f);
+                    }
+                }),
+                new BeatAction.Action(beat + 2f, delegate
+                {
+                    if (!grampsSniffing && grampsLoopingAnim)
+                    {
+                        Gramps.DoScaledAnimationAsync("GrampsTalk", 0.5f);
+                    }
+                }),
+                new BeatAction.Action(beat + 3f, delegate
+                {
+                    if (!grampsSniffing && grampsLoopingAnim)
+                    {
+                        Gramps.DoScaledAnimationAsync("GrampsTalk", 0.5f);
+                    }
+                }),
+                new BeatAction.Action(beat + 3.5f, delegate
+                {
+                    if (!grampsSniffing && grampsLoopingAnim)
+                    {
+                        Gramps.DoScaledAnimationAsync("GrampsTalk", 0.5f);
+                    }
+                }),
+                new BeatAction.Action(beat + 4f, delegate
+                {
+                    GrampsTalkLoop(beat + 4f);
+                }),
+            });
         }
 
         public void UpdateShootingStar(float beat, float length, int ease)
@@ -221,23 +358,23 @@ namespace HeavenStudio.Games
                     soundsToPlay.AddRange(new List<MultiSound.Sound>()
                     {
                         new MultiSound.Sound("spaceDance/dancerTurn", beat),
-                        new MultiSound.Sound("spaceDance/dancerRight", beat + 1.0f),
+                        new MultiSound.Sound("spaceDance/dancerRight", beat + 1.0f, 1, 1, false, 0.007f),
                     });
                     break;
                 case (int)WhoSpeaks.Gramps:
                     soundsToPlay.AddRange(new List<MultiSound.Sound>()
                     {
                         new MultiSound.Sound("spaceDance/otherTurn", beat),
-                        new MultiSound.Sound("spaceDance/otherRight", beat + 1.0f),
+                        new MultiSound.Sound("spaceDance/otherRight", beat + 1.0f, 1, 1, false, 0.007f),
                     });
                     break;
                 case (int)WhoSpeaks.Both:
                     soundsToPlay.AddRange(new List<MultiSound.Sound>()
                     {
                         new MultiSound.Sound("spaceDance/dancerTurn", beat),
-                        new MultiSound.Sound("spaceDance/dancerRight", beat + 1.0f),
+                        new MultiSound.Sound("spaceDance/dancerRight", beat + 1.0f, 1, 1, false, 0.007f),
                         new MultiSound.Sound("spaceDance/otherTurn", beat),
-                        new MultiSound.Sound("spaceDance/otherRight", beat + 1.0f),
+                        new MultiSound.Sound("spaceDance/otherRight", beat + 1.0f, 1, 1, false, 0.007f),
                     });
                     break;
             }
@@ -281,28 +418,28 @@ namespace HeavenStudio.Games
                 case (int)WhoSpeaks.Dancers:
                     soundsToPlay.AddRange(new List<MultiSound.Sound>()
                     {
-                        new MultiSound.Sound("spaceDance/dancerLets", beat),
-                        new MultiSound.Sound("spaceDance/dancerSit", beat + 0.5f),
-                        new MultiSound.Sound("spaceDance/dancerDown", beat + 1f),
+                        new MultiSound.Sound("spaceDance/dancerLets", beat, 1, 1, false, 0.07f),
+                        new MultiSound.Sound("spaceDance/dancerSit", beat + 0.5f, 1, 1, false, 0.02f),
+                        new MultiSound.Sound("spaceDance/dancerDown", beat + 1f, 1, 1, false, 0.006f),
                     });
                     break;
                 case (int)WhoSpeaks.Gramps:
                     soundsToPlay.AddRange(new List<MultiSound.Sound>()
                     {
-                        new MultiSound.Sound("spaceDance/otherLets", beat),
-                        new MultiSound.Sound("spaceDance/otherSit", beat + 0.5f, 1, 1, false, 0.084f),
-                        new MultiSound.Sound("spaceDance/otherDown", beat + 1f),
+                        new MultiSound.Sound("spaceDance/otherLets", beat, 1, 1, false, 0.024f),
+                        new MultiSound.Sound("spaceDance/otherSit", beat + 0.5f, 1, 1, false, 0.04f),
+                        new MultiSound.Sound("spaceDance/otherDown", beat + 1f, 1, 1, false, 0.01f),
                     });
                     break;
                 case (int)WhoSpeaks.Both:
                     soundsToPlay.AddRange(new List<MultiSound.Sound>()
                     {
-                        new MultiSound.Sound("spaceDance/dancerLets", beat),
-                        new MultiSound.Sound("spaceDance/dancerSit", beat + 0.5f),
-                        new MultiSound.Sound("spaceDance/dancerDown", beat + 1f),
-                        new MultiSound.Sound("spaceDance/otherLets", beat),
-                        new MultiSound.Sound("spaceDance/otherSit", beat + 0.5f, 1, 1, false, 0.084f),
-                        new MultiSound.Sound("spaceDance/otherDown", beat + 1f),
+                        new MultiSound.Sound("spaceDance/dancerLets", beat, 1, 1, false, 0.07f),
+                        new MultiSound.Sound("spaceDance/dancerSit", beat + 0.5f, 1, 1, false, 0.02f),
+                        new MultiSound.Sound("spaceDance/dancerDown", beat + 1f, 1, 1, false, 0.006f),
+                        new MultiSound.Sound("spaceDance/otherLets", beat, 1, 1, false, 0.024f),
+                        new MultiSound.Sound("spaceDance/otherSit", beat + 0.5f, 1, 1, false, 0.04f),
+                        new MultiSound.Sound("spaceDance/otherDown", beat + 1f, 1, 1, false, 0.01f),
                     });
                     break;
             }
