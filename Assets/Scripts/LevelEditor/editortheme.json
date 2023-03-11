@@ -1,7 +1,6 @@
 // COLORS BASED ON https://coolors.co/ef476f-ffd166-06d6a0-118ab2-073b4c
 
 {
-
 	"name": "Heaven Studio Default Editor Theme",
 
 	"properties": {
@@ -11,11 +10,14 @@
 		"SectionLayerCol": "ed9b2f",
 		//A7F085
 
-		"Layer1Col": "ef476f",
-		"Layer2Col": "f5813d",
-		"Layer3Col": "ffd166",
-		"Layer4Col": "06d6a0",
-		"Layer5Col": "118ab2",
+		"LayerColors": [
+			"ef476f",
+			"f5813d",
+			"ffd166",
+			"06d6a0",
+			"118ab2",
+			"9356cc"
+		],
 
 		"EventSelectedCol": "61e5ff",
 		"EventNormalCol": "FFFFFF",

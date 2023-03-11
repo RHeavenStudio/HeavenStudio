@@ -6,109 +6,121 @@ using UnityEngine.UI.Extensions;
 
 using Starpelly;
 using TMPro;
+using Kino;
 
 namespace HeavenStudio.Editor.Track
 {
     public class PostProcessingTimeline : MonoBehaviour
     {
-        private RectTransform _rectTransform;
+        public static PostProcessingTimeline Instance { get; private set; }
+
+        [SerializeField] private RectTransform _timelineRect;
 
         [SerializeField] private RectTransform _ppObject;
         [SerializeField] private UILineRenderer _lines;
 
-        public PostProcessVolume volume;
-        public Vignette vignette;
-        public Bloom bloom;
-        public ChromaticAberration chromaticAberration;
+        private List<NodeEventObj> _ppObjects = new List<NodeEventObj>();
 
-        private List<RectTransform> _ppObjects = new List<RectTransform>();
+        private int lastLayer;
 
-        public UnityEngine.Gradient keyGradient;
+        private float maxBeat = 320.0f;
+
+        private void Awake()
+        {
+            Instance = this;
+        }
 
         private void Start()
         {
-            _rectTransform = GetComponent<RectTransform>();
-
             _ppObject.gameObject.SetActive(false);
-
-            volume = GameCamera.GetCamera().GetComponent<PostProcessVolume>();
-
-            volume.profile.TryGetSettings(out vignette);
-            volume.profile.TryGetSettings(out bloom);
-            volume.profile.TryGetSettings(out chromaticAberration);
-
-            keyGradient = new UnityEngine.Gradient();
-            var colorKeys = new List<GradientColorKey>();
-
-            colorKeys.Add(new GradientColorKey(EditorTheme.theme.properties.Layer1Col.Hex2RGB(), 0.0f));
-            colorKeys.Add(new GradientColorKey(EditorTheme.theme.properties.Layer2Col.Hex2RGB(), 0.25f));
-            colorKeys.Add(new GradientColorKey(EditorTheme.theme.properties.Layer3Col.Hex2RGB(), 0.5f));
-            colorKeys.Add(new GradientColorKey(EditorTheme.theme.properties.Layer4Col.Hex2RGB(), 0.75f));
-            colorKeys.Add(new GradientColorKey(EditorTheme.theme.properties.Layer5Col.Hex2RGB(), 1.0f));
-
-            keyGradient.colorKeys = colorKeys.ToArray();
         }
 
-        private void CreateKeyframe(float beat, float y)
+        private void CreateNode(float beat, float intensity, bool create, Nodes.Node node, Nodes.NodeType type = Nodes.NodeType.Chromatic_Aberration)
         {
-            var obj = Instantiate(_ppObject, _ppObject.parent);
-            obj.gameObject.SetActive(true);
-            obj.anchoredPosition = new Vector2(beat, y);
-            _ppObjects.Add(obj);
+            var obj = Instantiate(_ppObject, _ppObject.parent).GetComponent<NodeEventObj>();
+            obj.rectTransform.gameObject.SetActive(true);
+            obj.rectTransform.anchoredPosition = new Vector2(beat, Mathf.Lerp(-250f, 0.0f, intensity / 100.0f));
 
-            _ppObjects.Sort((x, y) => x.anchoredPosition.x.CompareTo(y.anchoredPosition.x));
+            if (create)
+            {
+                var nodes = GameManager.instance.Beatmap.nodes;
+
+                node = new Nodes.Node(type, beat, intensity);
+                nodes.Add(node);
+                nodes.Sort((x, y) => x.Beat.CompareTo(y.Beat));
+            }
+
+            obj.nodeEntity = node;
+            _ppObjects.Add(obj);
+            _ppObjects.Sort((x, y) => x.nodeEntity.Beat.CompareTo((y.nodeEntity.Beat)));
+        }
+
+        private void CreateAllNodes(Nodes.NodeType type)
+        {
+            var newNodes = GameManager.instance.Beatmap.nodes.FindAll(c => c.Type == type);
+            for (int i = 0; i < newNodes.Count; i++)
+            {
+                CreateNode(newNodes[i].Beat, newNodes[i].Intensity, false, newNodes[i]);
+            }
+        }
+
+        private void DestroyAllNodes()
+        {
+            for (int i = 0; i < _ppObjects.Count; i++)
+            {
+                Destroy(_ppObjects[i].gameObject);
+            }
+            _ppObjects.Clear();
         }
 
         private void Update()
         {
+            if (lastLayer != Editor.instance.currentNodeLayer)
+            {
+                DestroyAllNodes();
+                CreateAllNodes((Nodes.NodeType)Editor.instance.currentNodeLayer);
+            }
+            lastLayer = Editor.instance.currentNodeLayer;
+
             Vector2 mousePos;
-            RectTransformUtility.ScreenPointToLocalPointInRectangle(_rectTransform, Input.mousePosition, Editor.instance.EditorCamera, out mousePos);
+            RectTransformUtility.ScreenPointToLocalPointInRectangle(_timelineRect, Input.mousePosition, Editor.instance.EditorCamera, out mousePos);
             if (Input.GetMouseButtonDown(0) && Timeline.instance.CheckIfMouseInTimeline())
             {
-                CreateKeyframe(Mathp.Round2Nearest(mousePos.x, Timeline.SnapInterval()), mousePos.y);
+                CreateNode(
+                    Mathp.Round2Nearest(mousePos.x, Timeline.SnapInterval()), 
+                    Mathp.NormalizeInvert(Mathf.Abs(mousePos.y), 0, _timelineRect.rect.height) * 100.0f,
+                    true, null, (Nodes.NodeType)Editor.instance.currentNodeLayer);
             }
 
             _lines.Points = new Vector2[_ppObjects.Count + 2];
 
             var multScale = Timeline.instance.TimelineContent.localScale.x;
 
-            var nextKeyframeBeat = 0.0f;
-            var nextKeyframeIntensity = 0.0f;
-
-            var intensity = 0.0f;
-            var keyframeBeat = 0.0f;
-
             _lines.Points[0].x = 0;
-            _lines.Points[0].y = -_rectTransform.rect.height;
+            _lines.Points[0].y = -_timelineRect.rect.height;
 
-            _lines.Points[_lines.Points.Length - 1].x = 100 * multScale;
-            _lines.Points[_lines.Points.Length - 1].y = -_rectTransform.rect.height;
+            _lines.Points[_lines.Points.Length - 1].x = maxBeat * multScale;
+            _lines.Points[_lines.Points.Length - 1].y = -_timelineRect.rect.height;
+
+
+            for (int i = 0; i < _ppObjects.Count; i++)
+            {
+                _ppObjects[i].UpdateNode(EditorTheme.LayersGradient, _timelineRect);
+            }
 
             for (int i = 1; i < _lines.Points.Length - 1; i++)
             {
-                var ia = i - 1;
-                var keyframe = _ppObjects[ia];
-                var keyframeX = keyframe.anchoredPosition.x;
-                var keyframeY = keyframe.anchoredPosition.y;
+                var keyframe = _ppObjects[i - 1];
 
-                _lines.Points[i].x = keyframeX * multScale;
-                _lines.Points[i].y = keyframeY;
-
-                var normalized = Mathp.Normalize(keyframeY, -_rectTransform.rect.height, 0);
-                keyframe.GetChild(0).GetChild(0).GetComponent<Image>().color = keyGradient.Evaluate(Mathp.NormalizeInvert(keyframeY, -_rectTransform.rect.height, 0));
-                keyframe.GetChild(0).GetChild(1).GetComponent<TMP_Text>().text = ((int)(normalized * 100f)).ToString();
-
-                if (Conductor.instance.songPositionInBeats >= keyframeX)
-                {
-                    var nextKeyframe = (i < _ppObjects.Count) ? _ppObjects[i] : keyframe;
-                    nextKeyframeBeat = nextKeyframe.anchoredPosition.x;
-                    nextKeyframeIntensity = Mathp.Normalize(nextKeyframe.anchoredPosition.y, -220, 0);
-
-                    intensity = normalized;
-                    keyframeBeat = keyframeX;
-                }
+                _lines.Points[i].x = keyframe.nodeEntity.Beat * multScale;
+                _lines.Points[i].y = keyframe.rectTransform.anchoredPosition.y;
             }
-            chromaticAberration.intensity.value = Mathf.Lerp(intensity, nextKeyframeIntensity, Conductor.instance.GetPositionFromBeat(keyframeBeat, nextKeyframeBeat - keyframeBeat)) * 50f;
+
+            // chromaticAberration.intensity.value = inten * 50.0f;
+            // vignette.intensity.value = inten * 0.30f;
+            // bloom.intensity.value = inten * 20f;
+            // digitalGlitch.intensity = inten;
+            // analogGlitch.scanLineJitter = inten * 1.35f;
         }
     }
 }

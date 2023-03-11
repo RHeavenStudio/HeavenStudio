@@ -436,25 +436,7 @@ namespace HeavenStudio.Editor.Track
 
         public void SetColor(int type)
         {
-            Color c = Color.white;
-            switch (type)
-            {
-                case 0:
-                    c = EditorTheme.theme.properties.Layer1Col.Hex2RGB();
-                    break;
-                case 1:
-                    c = EditorTheme.theme.properties.Layer2Col.Hex2RGB();
-                    break;
-                case 2:
-                    c = EditorTheme.theme.properties.Layer3Col.Hex2RGB();
-                    break;
-                case 3:
-                    c = EditorTheme.theme.properties.Layer4Col.Hex2RGB();
-                    break;
-                case 4:
-                    c = EditorTheme.theme.properties.Layer5Col.Hex2RGB();
-                    break;
-            }
+            Color c = EditorTheme.theme.properties.LayerColors[type].Hex2RGB();
 
             // c = new Color(c.r, c.g, c.b, 0.85f);
             transform.GetChild(0).GetComponent<Image>().color = c;

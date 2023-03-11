@@ -61,6 +61,7 @@ namespace HeavenStudio
             GameObject GameManager = new GameObject();
             GameManager.name = "GameManager";
             GameManager gameManager = GameManager.AddComponent<GameManager>();
+            GameManager.AddComponent<NodeManager>();
             gameManager.playOnStart = playOnStart;
 
             gameManager.GamesHolder = Games;

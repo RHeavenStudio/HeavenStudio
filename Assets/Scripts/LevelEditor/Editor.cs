@@ -45,6 +45,9 @@ namespace HeavenStudio.Editor
         [SerializeField] private TMP_Text BuildDateDisplay;
         [SerializeField] public StudioDanceManager StudioDanceManager;
 
+        [SerializeField] public Button TLBlocksButton;
+        [SerializeField] public Button TLNodesButton;
+
         [Header("Toolbar")]
         [SerializeField] private Button NewBTN;
         [SerializeField] private Button OpenBTN;
@@ -78,6 +81,7 @@ namespace HeavenStudio.Editor
         public bool inAuthorativeMenu = false;
         public bool isCursorEnabled = true;
         public bool isDiscordEnabled = true;
+        public int currentNodeLayer = 0;
 
         public bool isShortcutsEnabled { get { return (!inAuthorativeMenu) && (!editingInputField); } }
 
@@ -118,11 +122,15 @@ namespace HeavenStudio.Editor
             Tooltip.AddTooltip(ChartParamBTN.gameObject, "Remix Properties");
 
             Tooltip.AddTooltip(EditorSettingsBTN.gameObject, "Editor Settings <color=#adadad>[Ctrl+Shift+O]</color>");
-            UpdateEditorStatus(true);
+
+            Tooltip.AddTooltip(TLBlocksButton.gameObject, "Blocks");
+            Tooltip.AddTooltip(TLNodesButton.gameObject, "Nodes");
 
             BuildDateDisplay.text = GlobalGameManager.buildTime;
             isCursorEnabled  = PersistentDataManager.gameSettings.editorCursorEnable;
             isDiscordEnabled = PersistentDataManager.gameSettings.discordRPCEnable;
+
+            UpdateEditorStatus(true);
         }
 
         public void AddIcon(Minigames.Minigame minigame)
@@ -566,6 +574,11 @@ namespace HeavenStudio.Editor
                     c.enabled = !c.enabled;
                 }
             }
+        }
+
+        public void SwitchNodeLayer(int index)
+        {
+            currentNodeLayer = index;
         }
     }
 }

@@ -34,6 +34,8 @@ namespace HeavenStudio
 
         public static float MasterVolume = 0.8f;
 
+        public static int NodeTypesLength = 0;
+
         public enum Scenes : int
         {
             SplashScreen = 0,
@@ -67,6 +69,8 @@ namespace HeavenStudio
                 Screen.fullScreen = false;
                 ChangeScreenSize();
             }
+
+            NodeTypesLength = System.Enum.GetNames(typeof(Nodes.NodeType)).Length;
         }
 
         public void Awake()

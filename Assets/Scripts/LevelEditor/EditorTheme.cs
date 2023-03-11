@@ -11,6 +11,7 @@ using Starpelly;
 
 using HeavenStudio.Common;
 using HeavenStudio.Editor.Track;
+using System;
 
 namespace HeavenStudio.Editor
 {
@@ -21,13 +22,17 @@ namespace HeavenStudio.Editor
 
         [Header("Components")]
         [SerializeField] private Image layer;
+        [SerializeField] private Image nodeLayer;
         [SerializeField] private Image specialLayers;
         [SerializeField] private Image tempoLayer;
         [SerializeField] private Image musicLayer;
         [SerializeField] private Image sectionLayer;
 
+        public static Gradient LayersGradient;
+
         private void Awake()
         {
+            Debug.Log(Application.persistentDataPath);
             if (File.Exists(Application.persistentDataPath + "/editorTheme.json"))
             {
                 string json = File.ReadAllText(Application.persistentDataPath + "/editorTheme.json");
@@ -52,6 +57,14 @@ namespace HeavenStudio.Editor
             Tooltip.AddTooltip(musicLayer.gameObject, $"Music Volume Track");
             Tooltip.AddTooltip(sectionLayer.gameObject, $"Remix Sections Track");
 
+            LayersGradient = new UnityEngine.Gradient();
+            var colorKeys = new List<GradientColorKey>();
+
+            for (int i = 0; i < EditorTheme.theme.properties.LayerColors.Count; i++)
+                colorKeys.Add(new GradientColorKey(EditorTheme.theme.properties.LayerColors[i].Hex2RGB(),
+                    i / (float)EditorTheme.theme.properties.LayerColors.Count));
+
+            LayersGradient.colorKeys = colorKeys.ToArray();
 
             layer.gameObject.SetActive(false);
 
@@ -61,31 +74,61 @@ namespace HeavenStudio.Editor
                 layer.SetActive(true);
                 layer.transform.GetChild(0).GetComponent<TMP_Text>().text = $"Track {i + 1}";
 
-                Color c = Color.white;
-
-                switch (i)
-                {
-                    case 0:
-                        c = theme.properties.Layer1Col.Hex2RGB();
-                        break;
-                    case 1:
-                        c = theme.properties.Layer2Col.Hex2RGB();
-                        break;
-                    case 2:
-                        c = theme.properties.Layer3Col.Hex2RGB();
-                        break;
-                    case 3:
-                        c = theme.properties.Layer4Col.Hex2RGB();
-                        break;
-                    case 4:
-                        c = theme.properties.Layer5Col.Hex2RGB();
-                        break;
-                }
+                Color c = theme.properties.LayerColors[i].Hex2RGB();
 
                 layer.GetComponent<Image>().color = c;
                 Tooltip.AddTooltip(layer, $"Track {i + 1}");
             }
+
+            var nodesNames = Enum.GetNames(typeof(Nodes.NodeType));
+            for (int i = 0; i < nodesNames.Length; i++)
+            {
+                CreateNodeLayer(nodesNames[i].Replace("_", " "), i);
+            }
+
             Destroy(layer);
+        }
+
+        private void Update()
+        {
+            for (int i = 1; i < nodeLayer.transform.parent.childCount; i++)
+            {
+                var ai = i - 1;
+                var button = nodeLayer.transform.parent.GetChild(i).GetComponent<Button>();
+                if (ai == Editor.instance.currentNodeLayer)
+                {
+                    var bc = button.colors;
+                    var c = LayersGradient.Evaluate(ai / (float)nodeLayer.transform.parent.childCount);
+                    bc.normalColor = c;
+                    bc.disabledColor = c;
+                    button.colors = bc;
+
+                    button.interactable = false;
+                }
+                else
+                {
+                    var bc = button.colors;
+                    bc.normalColor = "171717".Hex2RGB();
+                    button.colors = bc;
+
+                    button.interactable = true;
+                }
+            }
+        }
+
+        private void CreateNodeLayer(string name, int index)
+        {
+            GameObject layer = Instantiate(nodeLayer.gameObject, nodeLayer.transform.parent);
+            layer.SetActive(true);
+            layer.transform.GetChild(0).GetComponent<TMP_Text>().text = name;
+
+            layer.GetComponent<Button>().onClick.AddListener(
+                delegate 
+                { 
+                    Editor.instance.SwitchNodeLayer(index); 
+                });
+
+            Tooltip.AddTooltip(layer, name);
         }
     }
 

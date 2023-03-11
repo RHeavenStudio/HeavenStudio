@@ -8,6 +8,8 @@ using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 
 using HeavenStudio.Util;
+using HeavenStudio.Nodes;
+using System.Runtime.Serialization;
 
 namespace HeavenStudio
 {
@@ -75,6 +77,7 @@ namespace HeavenStudio
         public List<TempoChange> tempoChanges = new List<TempoChange>();
         public List<VolumeChange> volumeChanges = new List<VolumeChange>();
         public List<ChartSection> beatmapSections = new List<ChartSection>();
+        public List<Node> nodes = new List<Node>();
         public float firstBeatOffset;
 
         [Serializable]
@@ -196,6 +199,7 @@ namespace HeavenStudio
                 return this.MemberwiseClone();
             }
         }
+
 
         public dynamic this[string propertyName]
         {
