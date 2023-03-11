@@ -3,12 +3,13 @@ using System.Collections.Generic;
 using UnityEngine;
 
 using HeavenStudio.Util;
+using HeavenStudio.Common;
 
 namespace HeavenStudio.Games
 {
     public class Minigame : MonoBehaviour
     {
-        public static float earlyTime = 0.07f, perfectTime = 0.04f, aceEarlyTime = 0.01f, aceLateTime = 0.01f, lateTime = 0.04f, endTime = 0.07f;
+        public static double earlyTime = 0.07f, perfectTime = 0.04f, aceEarlyTime = 0.01f, aceLateTime = 0.01f, lateTime = 0.04f, endTime = 0.07f;
         public static float rankHiThreshold = 0.8f, rankOkThreshold = 0.6f;
         [SerializeField] public SoundSequence.SequenceKeyValue[] SoundSequences;
 
@@ -150,37 +151,38 @@ namespace HeavenStudio.Games
         }
 
         // now should fix the fast bpm problem
-        public static float EarlyTime()
+        public static double EarlyTime()
         {
-            return 1f - ScaleTimingMargin(earlyTime);
+            return 1f - earlyTime;
         }
 
-        public static float PerfectTime()
+        public static double PerfectTime()
         {
-            return 1f - ScaleTimingMargin(perfectTime);
+            return 1f - perfectTime;
         }
 
-        public static float LateTime()
+        public static double LateTime()
         {
-            return 1f + ScaleTimingMargin(lateTime);
+            return 1f + lateTime;
         }
 
-        public static float EndTime()
+        public static double EndTime()
         {
-            return 1f + ScaleTimingMargin(endTime);
+            return 1f + endTime;
         }
 
-        public static float AceStartTime()
+        public static double AceStartTime()
         {
-            return 1f - ScaleTimingMargin(aceEarlyTime);
+            return 1f - aceEarlyTime;
         }
 
-        public static float AceEndTime()
+        public static double AceEndTime()
         {
-            return 1f + ScaleTimingMargin(aceLateTime);
+            return 1f + aceLateTime;
         }
 
-        //scales timing windows to the BPM in an ""intelligent"" manner
+        // DEPRECATED: scales timing windows to the BPM in an ""intelligent"" manner
+        // only left for historical reasons
         static float ScaleTimingMargin(float f)
         {
             float bpm = Conductor.instance.songBpm * Conductor.instance.musicSource.pitch;
@@ -253,7 +255,12 @@ namespace HeavenStudio.Games
 
         public void ScoreMiss(double weight = 1f)
         {
-            GameManager.instance.ScoreInputAccuracy(0, true, weight);
+            GameManager.instance.ScoreInputAccuracy(0, true, EndTime(), weight, false);
+            if (weight > 0)
+            {
+                GoForAPerfect.instance.Miss();
+                SectionMedalsManager.instance.MakeIneligible();
+            }
         }
 
         private void OnDestroy() {
@@ -261,6 +268,11 @@ namespace HeavenStudio.Games
             {
                 evt.Disable();
             }
+        }
+
+        private void OnDrawGizmos() {
+            Gizmos.color = Color.magenta;
+            Gizmos.DrawWireCube(Vector3.zero, new Vector3(17.77695f, 10, 0));
         }
     }
 }
