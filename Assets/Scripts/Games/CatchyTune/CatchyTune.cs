@@ -20,9 +20,10 @@ namespace HeavenStudio.Games.Loaders
                     parameters = new List<Param>()
                     {
                         new Param("side", CatchyTune.Side.Left, "Side", "The side the orange falls down"),
-                        new Param("smile", false, "Smile", "If the characters smile with the heart message after catching")
+                        new Param("smile", false, "Smile", "If the characters smile with the heart message after catching"),
+                        new Param("endSmile", new EntityTypes.Float(2, 100), "End Smile Beat", "How many beats after the catch should the smile end?")
                     },
-                    preFunction = delegate {var e = eventCaller.currentEntity; CatchyTune.PreDropFruit(e.beat, e["side"], e["smile"], false); },
+                    preFunction = delegate {var e = eventCaller.currentEntity; CatchyTune.PreDropFruit(e.beat, e["side"], e["smile"], false, e["endSmile"]); },
                 },
 
                 new GameAction("pineapple", "Pineapple")
@@ -31,19 +32,20 @@ namespace HeavenStudio.Games.Loaders
                     parameters = new List<Param>()
                     {
                         new Param("side", CatchyTune.Side.Left, "Side", "The side the pineapple falls down"),
-                        new Param("smile", false, "Smile", "If the characters smile with the heart message after catching")
+                        new Param("smile", false, "Smile", "If the characters smile with the heart message after catching"),
+                        new Param("endSmile", new EntityTypes.Float(2, 100), "End Smile Beat", "How many beats after the catch should the smile end?")
                     },
-                    preFunction = delegate {var e = eventCaller.currentEntity; CatchyTune.PreDropFruit(e.beat, e["side"], e["smile"], true); },
+                    preFunction = delegate {var e = eventCaller.currentEntity; CatchyTune.PreDropFruit(e.beat, e["side"], e["smile"], true, e["endSmile"]); },
                 },
 
                 new GameAction("bop", "Bop")
                 {
-                    function = delegate {var e = eventCaller.currentEntity; CatchyTune.instance.Bop(e.beat, e["left"], e["right"]); },
-                    defaultLength = 1f,
+                    function = delegate {var e = eventCaller.currentEntity; CatchyTune.instance.Bop(e.beat, e.length, e["bop"], e["bopAuto"]); },
+                    resizable = true,
                     parameters = new List<Param>()
                     {
-                        new Param("left" , true, "Left", "Plalin bops head"),
-                        new Param("right", true, "Right", "Alalin bops head")
+                        new Param("bop", CatchyTune.WhoBops.Both, "Bop", "Should Plalin and Alalin bop?"),
+                        new Param("bopAuto", CatchyTune.WhoBops.None, "Bop", "Should Plalin and Alalin auto bop?"),
                     },
                 },
                 new GameAction("background", "Background")
@@ -76,6 +78,14 @@ namespace HeavenStudio.Games
             Left,
             Right,
             Both
+        }
+
+        public enum WhoBops
+        {
+            Alalin,
+            Plalin,
+            Both,
+            None
         }
 
         public enum Background
@@ -117,6 +127,7 @@ namespace HeavenStudio.Games
             public int side;
             public bool smile;
             public bool isPineapple;
+            public float endSmile;
         }
 
         private void Awake()
@@ -137,7 +148,7 @@ namespace HeavenStudio.Games
                 {
                     foreach (var fruit in queuedFruits)
                     {
-                        DropFruit(fruit.beat, fruit.side, fruit.smile, fruit.isPineapple);
+                        DropFruit(fruit.beat, fruit.side, fruit.smile, fruit.isPineapple, fruit.endSmile);
                     }
                     queuedFruits.Clear();
                 }
@@ -201,23 +212,23 @@ namespace HeavenStudio.Games
             }
         }
 
-        public void DropFruit(float beat, int side, bool smile, bool isPineapple)
+        public void DropFruit(float beat, int side, bool smile, bool isPineapple, float endSmile)
         {
             var objectToSpawn = isPineapple ? pineappleBase : orangeBase;
 
             if (side == (int)Side.Left || side == (int)Side.Both)
             {
-                DropFruitSingle(beat, false, smile, objectToSpawn);
+                DropFruitSingle(beat, false, smile, objectToSpawn, endSmile);
             }
 
             if (side == (int)Side.Right || side == (int)Side.Both)
             {
-                DropFruitSingle(beat, true, smile, objectToSpawn);
+                DropFruitSingle(beat, true, smile, objectToSpawn, endSmile);
             }
         }
 
         //minenice: experiment to test preFunction
-        public static void PreDropFruit(float beat, int side, bool smile, bool isPineapple)
+        public static void PreDropFruit(float beat, int side, bool smile, bool isPineapple, float endSmile)
         {
             float spawnBeat = beat - 1f;
             beat = beat - (isPineapple ? 2f : 1f);
@@ -225,7 +236,7 @@ namespace HeavenStudio.Games
             {
                 BeatAction.New(instance.gameObject, new List<BeatAction.Action>()
                 {
-                    new BeatAction.Action(spawnBeat, delegate { if (instance != null) instance.DropFruit(beat, side, smile, isPineapple); }),
+                    new BeatAction.Action(spawnBeat, delegate { if (instance != null) instance.DropFruit(beat, side, smile, isPineapple, endSmile); }),
                 });
             }
             else
@@ -235,7 +246,8 @@ namespace HeavenStudio.Games
                     beat = beat,
                     side = side,
                     smile = smile,
-                    isPineapple = isPineapple
+                    isPineapple = isPineapple,
+                    endSmile = endSmile
                 });
             }
 
@@ -249,7 +261,7 @@ namespace HeavenStudio.Games
             }
         }
 
-        public void DropFruitSingle(float beat, bool side, bool smile, GameObject objectToSpawn)
+        public void DropFruitSingle(float beat, bool side, bool smile, GameObject objectToSpawn, float endSmile)
         {
 
             var newFruit = GameObject.Instantiate(objectToSpawn, fruitHolder);
@@ -257,13 +269,55 @@ namespace HeavenStudio.Games
             fruitComp.startBeat = beat;
             fruitComp.side = side;
             fruitComp.smile = smile;
+            fruitComp.endSmile = endSmile;
             newFruit.SetActive(true);
         }
 
-        public void Bop(float beat, bool left, bool right)
+        public void Bop(float beat, float length, int whoBops, int whoBopsAuto)
         {
-            bopLeft = left;
-            bopRight = right;
+            bopLeft = whoBopsAuto == (int)WhoBops.Plalin || whoBopsAuto == (int)WhoBops.Both;
+            bopRight = whoBopsAuto == (int)WhoBops.Alalin || whoBopsAuto == (int)WhoBops.Both;
+            for (int i = 0; i < length; i++)
+            {
+                BeatAction.New(instance.gameObject, new List<BeatAction.Action>()
+                {
+                    new BeatAction.Action(beat + i, delegate
+                    {
+                        BopSingle(whoBops);
+                    })
+                });
+            }
+        }
+
+        void BopSingle(int whoBops)
+        {
+            switch (whoBops)
+            {
+                case (int)WhoBops.Plalin:
+                    if (stopCatchLeft == 0)
+                    {
+                        plalinAnim.Play("bop", 0, 0);
+                    }
+                    break;
+                case (int)WhoBops.Alalin:
+                    if (stopCatchRight == 0)
+                    {
+                        alalinAnim.Play("bop", 0, 0);
+                    }
+                    break;
+                case (int)WhoBops.Both:
+                    if (stopCatchRight == 0)
+                    {
+                        alalinAnim.Play("bop", 0, 0);
+                    }
+                    if (stopCatchLeft == 0)
+                    {
+                        plalinAnim.Play("bop", 0, 0);
+                    }
+                    break;
+                default:
+                    break;
+            }
         }
 
         public void changeBG(int bg)
@@ -280,7 +334,7 @@ namespace HeavenStudio.Games
             }
         }
 
-        public void catchSuccess(bool side, bool isPineapple, bool smile, float beat)
+        public void catchSuccess(bool side, bool isPineapple, bool smile, float beat, float endSmile)
         {
             string anim = isPineapple ? "catchPineapple" : "catchOrange";
 
@@ -298,7 +352,7 @@ namespace HeavenStudio.Games
             if (smile)
             {
                 startSmile = beat + 1f;
-                stopSmile = beat + 2f;
+                stopSmile = beat + endSmile;
             }
 
         }

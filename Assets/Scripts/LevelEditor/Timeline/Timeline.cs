@@ -132,10 +132,6 @@ namespace HeavenStudio.Editor.Track
         [SerializeField] private RectTransform TimelineEventObjRef;
         [SerializeField] private RectTransform LayersRect;
 
-        [SerializeField] private GameObject TimelineSectionDisplay;
-        [SerializeField] private TMP_Text TimelineSectionText;
-        [SerializeField] private Slider TimelineSectionProgress;
-
         [Header("Timeline Inputs")]
         public TMP_InputField FirstBeatOffset;
         public TMP_InputField StartingTempoSpecialAll;
@@ -307,7 +303,6 @@ namespace HeavenStudio.Editor.Track
             timelineState.SetState(CurrentTimelineState.State.Selection);
 
             AutoBtnUpdate();
-            GameManager.instance.onSectionChange += OnSectionChange;
         }
 
         public void FitToSong()
@@ -387,7 +382,6 @@ namespace HeavenStudio.Editor.Track
                 SongBeat.text = $"Beat {string.Format("{0:0.000}", Conductor.instance.songPositionInBeats)}";
                 SongPos.text = FormatTime(Conductor.instance.songPosition);
             }
-            TimelineSectionProgress.value = GameManager.instance.sectionProgress;
 
             SliderControl();
 
@@ -991,21 +985,6 @@ namespace HeavenStudio.Editor.Track
             GameManager.instance.Beatmap.musicVolume = newVol;
 
             UpdateStartingVolText();
-        }
-
-        public void OnSectionChange(DynamicBeatmap.ChartSection section)
-        {
-            if (section == null)
-            {
-                TimelineSectionDisplay.SetActive(false);
-            }
-            else
-            {
-                if (!TimelineSectionDisplay.activeSelf)
-                    TimelineSectionDisplay.SetActive(true);
-                TimelineSectionText.text = section.sectionName;
-                TimelineSectionProgress.value = GameManager.instance.sectionProgress;
-            }
         }
 
         #endregion

@@ -27,9 +27,14 @@ namespace HeavenStudio.Games.Loaders
                 {
                     new GameAction("bop", "Bop")
                     {
-                        function = delegate { var e = eventCaller.currentEntity; MarchingOrders.instance.BopAction(e.beat, e.length); },
+                        function = delegate { var e = eventCaller.currentEntity; MarchingOrders.instance.BopAction(e.beat, e.length, e["bop"], e["autoBop"]); },
                         defaultLength = 1f,
-                        resizable = true
+                        resizable = true,
+                        parameters = new List<Param>()
+                        {
+                            new Param("bop", true, "Bop", "Should the cadets bop?"),
+                            new Param("autoBop", false, "Bop (Auto)", "Should the cadets auto bop?")
+                        }
                     },
 
                     new GameAction("marching", "Cadets March")
@@ -138,6 +143,7 @@ namespace HeavenStudio.Games
         public static Color fillColor;
 
         [Header("Game Events")]
+        bool goBop;
         public GameEvent bop = new GameEvent();
         public GameEvent noBop = new GameEvent();
         public GameEvent marching = new GameEvent();
@@ -147,8 +153,6 @@ namespace HeavenStudio.Games
         private int turnLength;
         private int background;
         private float steamTime;
-
-        private string fastTurn;
 
         static float wantMarch = float.MaxValue;
         static float wantMarchLength = 0f;
@@ -254,7 +258,7 @@ namespace HeavenStudio.Games
 
             if (cond.ReportBeat(ref bop.lastReportedBeat, bop.startBeat % 1, true))
             {
-                if (currBeat >= bop.startBeat && currBeat < bop.startBeat + bop.length)
+                if (goBop)
                 {
                     Cadet1.DoScaledAnimationAsync("Bop", 0.5f);
                     Cadet2.DoScaledAnimationAsync("Bop", 0.5f);
@@ -312,10 +316,25 @@ namespace HeavenStudio.Games
             }
         }
 
-        public void BopAction(float beat, float length)
+        public void BopAction(float beat, float length, bool shouldBop, bool autoBop)
         {
-            bop.length = length;
-            bop.startBeat = beat;
+            goBop = autoBop;
+            if (shouldBop)
+            {
+                for (int i = 0; i < length; i++)
+                {
+                    BeatAction.New(instance.gameObject, new List<BeatAction.Action>()
+                    {
+                        new BeatAction.Action(beat + i, delegate
+                        {
+                            Cadet1.DoScaledAnimationAsync("Bop", 0.5f);
+                            Cadet2.DoScaledAnimationAsync("Bop", 0.5f);
+                            Cadet3.DoScaledAnimationAsync("Bop", 0.5f);
+                            CadetPlayer.DoScaledAnimationAsync("Bop", 0.5f);
+                        })
+                    });
+                }
+            }
         }
 
         public static void PreMarch(float beat, float length)
@@ -401,6 +420,7 @@ namespace HeavenStudio.Games
         
         public void SargeFaceTurn(float beat, int type, int type2, bool toggle)
         {
+            string fastTurn = "";
             switch (type2)
             {
                 case (int) MarchingOrders.FaceTurnLength.Fast:
@@ -420,7 +440,7 @@ namespace HeavenStudio.Games
                     ScheduleInput(beat, turnLength + 2f, InputType.DIRECTION_LEFT_DOWN, LeftSuccess, GenericMiss, LeftEmpty);
                     MultiSound.Play(new MultiSound.Sound[] {
                     new MultiSound.Sound("marchingOrders/leftFaceTurn1" + fastTurn, beat),
-                    new MultiSound.Sound("marchingOrders/leftFaceTurn2" + fastTurn, beat + 0.6f),
+                    new MultiSound.Sound("marchingOrders/leftFaceTurn2" + fastTurn, beat + 0.5f),
                     new MultiSound.Sound("marchingOrders/leftFaceTurn3", beat + turnLength + 1f),
                     new MultiSound.Sound("marchingOrders/turnAction", beat + turnLength + 2f),
                     }, forcePlay: true);
@@ -439,7 +459,7 @@ namespace HeavenStudio.Games
                     ScheduleInput(beat, turnLength + 2f, InputType.DIRECTION_RIGHT_DOWN, RightSuccess, GenericMiss, RightEmpty);
                     MultiSound.Play(new MultiSound.Sound[] {
                     new MultiSound.Sound("marchingOrders/rightFaceTurn1" + fastTurn, beat),
-                    new MultiSound.Sound("marchingOrders/rightFaceTurn2" + fastTurn, beat + 0.6f),
+                    new MultiSound.Sound("marchingOrders/rightFaceTurn2" + fastTurn, beat + 0.5f),
                     new MultiSound.Sound("marchingOrders/rightFaceTurn3", beat + turnLength + 1f),
                     new MultiSound.Sound("marchingOrders/turnAction", beat + turnLength + 2f),
                     }, forcePlay: true);

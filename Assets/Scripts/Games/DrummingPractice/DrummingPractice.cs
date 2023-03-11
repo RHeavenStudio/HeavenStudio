@@ -16,9 +16,13 @@ namespace HeavenStudio.Games.Loaders
             {
                 new GameAction("bop", "Bop")
                 {
-                    function = delegate { var e = eventCaller.currentEntity; DrummingPractice.instance.SetBop(e.beat, e.length); }, 
-                    defaultLength = 1f, 
-                    resizable = true
+                    function = delegate { var e = eventCaller.currentEntity; DrummingPractice.instance.SetBop(e.beat, e.length, e["bop"], e["autoBop"]); }, 
+                    resizable = true,
+                    parameters = new List<Param>()
+                    {
+                        new Param("bop", true, "Bop", "Should the drummers bop?"),
+                        new Param("autoBop", true, "Bop (Auto)", "Should the drummers auto bop?")
+                    }
                 },
                 new GameAction("drum", "Hit Drum")
                 {
@@ -105,6 +109,7 @@ namespace HeavenStudio.Games
         bool isMoving;
         string moveAnim;
         EasingFunction.Ease lastEase;
+        bool goBop = true;
 
         public GameEvent bop = new GameEvent();
         public int count = 0;
@@ -131,7 +136,7 @@ namespace HeavenStudio.Games
             var cond = Conductor.instance;
             if (cond.ReportBeat(ref bop.lastReportedBeat, bop.startBeat % 1))
             {
-                if (cond.songPositionInBeats >= bop.startBeat && Conductor.instance.songPositionInBeats < bop.startBeat + bop.length)
+                if (goBop)
                 {
                     Bop();
                 }
@@ -140,9 +145,12 @@ namespace HeavenStudio.Games
             if (isMoving && cond.isPlaying && !cond.isPaused) 
             {
                 float normalizedBeat = cond.GetPositionFromBeat(movingStartBeat, movingLength);
-                EasingFunction.Function func = EasingFunction.GetEasingFunction(lastEase);
-                float newPos = func(0f, 1f, normalizedBeat);
-                NPCDrummers.DoNormalizedAnimation(moveAnim, newPos);
+                if (normalizedBeat >= 0 && normalizedBeat <= 1f)
+                {
+                    EasingFunction.Function func = EasingFunction.GetEasingFunction(lastEase);
+                    float newPos = func(0f, 1f, normalizedBeat);
+                    NPCDrummers.DoNormalizedAnimation(moveAnim, newPos);
+                }
             }
 
             foreach (SpriteRenderer streak in streaks)
@@ -165,10 +173,19 @@ namespace HeavenStudio.Games
             });
         }
 
-        public void SetBop(float beat, float length)
+        public void SetBop(float beat, float length, bool shouldBop, bool autoBop)
         {
-            bop.startBeat = beat;
-            bop.length = length;
+            goBop = autoBop;
+            if (shouldBop)
+            {
+                for (int i = 0; i < length; i++)
+                {
+                    BeatAction.New(instance.gameObject, new List<BeatAction.Action>()
+                    {
+                        new BeatAction.Action(beat + i, delegate { Bop(); })
+                    });
+                }
+            }
         }
 
         public void Bop()
@@ -181,9 +198,9 @@ namespace HeavenStudio.Games
         public void Prepare(float beat, bool applause)
         {
             int type = count % 2;
-            player.Prepare(type);
-            leftDrummer.Prepare(type);
-            rightDrummer.Prepare(type);
+            player.Prepare(beat, type);
+            leftDrummer.Prepare(beat, type);
+            rightDrummer.Prepare(beat, type);
             count++;
 
             SetFaces(0);

@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+using HeavenStudio.Editor;
 using HeavenStudio.Editor.Track;
 
 namespace HeavenStudio.Games
@@ -15,7 +16,7 @@ namespace HeavenStudio.Games
 
         //the variables below seem to be mostly unused (they are never used in any meaningful way)
         public int aceTimes; //always set to 0 no matter what (also, the one time it's used doesn't seem to make sense)
-        public bool isEligible; //value never used for anything
+        public bool isEligible = true;
         private bool autoPlayEnabledOnStart; //value never used for anything
 
         public bool triggersAutoplay = true;
@@ -147,7 +148,7 @@ namespace HeavenStudio.Games
 
         private void AceVisuals()
         {
-            if (Timeline.instance != null)
+            if (Timeline.instance != null && Editor.Editor.instance != null && !Editor.Editor.instance.fullscreen)
             {
                 Timeline.instance.AutoplayBTN.GetComponent<Animator>().Play("Ace", 0, 0);
             }
