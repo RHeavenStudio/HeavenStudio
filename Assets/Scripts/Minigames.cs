@@ -268,7 +268,19 @@ namespace HeavenStudio
                                 GameManager.instance.Stop(0);
                         }
                     ),
-                    new GameAction("skill star", "Skill Star", 1f, true),
+                    new GameAction("skill star", "Skill Star", 1f, true)
+                    {
+                        //temp for testing
+                        function = delegate {
+                            var e = eventCaller.currentEntity;
+                            HeavenStudio.Common.SkillStarManager.instance.DoStarIn(e.beat, e.length); 
+                            // BeatAction.New(HeavenStudio.Common.SkillStarManager.instance.gameObject, new List<BeatAction.Action>(){
+                            //     new BeatAction.Action(e.beat + e.length, delegate {
+                            //         HeavenStudio.Common.SkillStarManager.instance.DoStarJust();
+                            //     })
+                            // });
+                        }
+                    },
                     new GameAction("toggle inputs", "Toggle Inputs", 0.5f, true,
                         new List<Param>()
                         {
@@ -391,19 +403,43 @@ namespace HeavenStudio
                     ),
                     new GameAction("move camera", "Move Camera", 1f, true, new List<Param>() 
                         {
-                            new Param("valA", new EntityTypes.Float(-50, 50, 0), "Right / Left"),
-                            new Param("valB", new EntityTypes.Float(-50, 50, 0), "Up / Down"),
-                            new Param("valC", new EntityTypes.Float(-0, 250, 10), "In / Out"),
-                            new Param("ease", EasingFunction.Ease.Linear, "Ease Type")
+                            new Param("valA", new EntityTypes.Float(-50, 50, 0), "Right / Left", "Next position on the X axis"),
+                            new Param("valB", new EntityTypes.Float(-50, 50, 0), "Up / Down", "Next position on the Y axis"),
+                            new Param("valC", new EntityTypes.Float(-0, 250, 10), "In / Out", "Next position on the Z axis"),
+                            new Param("ease", EasingFunction.Ease.Linear, "Ease Type"),
+                            new Param("axis", GameCamera.CameraAxis.All, "Axis", "The axis to move the camera on" )
                         }
                     ),
                     new GameAction("rotate camera", "Rotate Camera", 1f, true, new List<Param>() 
                         {
-                            new Param("valA", new EntityTypes.Integer(-360, 360, 0), "Pitch"),
-                            new Param("valB", new EntityTypes.Integer(-360, 360, 0), "Yaw"),
-                            new Param("valC", new EntityTypes.Integer(-360, 360, 0), "Roll"),
-                            new Param("ease", EasingFunction.Ease.Linear, "Ease Type")
+                            new Param("valA", new EntityTypes.Integer(-360, 360, 0), "Pitch", "Next rotation on the X axis"),
+                            new Param("valB", new EntityTypes.Integer(-360, 360, 0), "Yaw", "Next rotation on the Y axis"),
+                            new Param("valC", new EntityTypes.Integer(-360, 360, 0), "Roll", "Next rotation on the Z axis"),
+                            new Param("ease", EasingFunction.Ease.Linear, "Ease Type"),
+                            new Param("axis", GameCamera.CameraAxis.All, "Axis", "The axis to move the camera on" )
                         } 
+                    ),
+                    new GameAction("pan view", "Pan Viewport", 1f, true, new List<Param>() 
+                        {
+                            new Param("valA", new EntityTypes.Float(-50, 50, 0), "Right / Left", "Next position on the X axis"),
+                            new Param("valB", new EntityTypes.Float(-50, 50, 0), "Up / Down", "Next position on the Y axis"),
+                            new Param("ease", EasingFunction.Ease.Linear, "Ease Type"),
+                            new Param("axis", StaticCamera.ViewAxis.All, "Axis", "The axis to pan the viewport in" )
+                        }
+                    ),
+                    new GameAction("rotate view", "Rotate Viewport", 1f, true, new List<Param>() 
+                        {
+                            new Param("valA", new EntityTypes.Float(-360, 360, 0), "Rotation", "Next viewport rotation"),
+                            new Param("ease", EasingFunction.Ease.Linear, "Ease Type"),
+                        }
+                    ),
+                    new GameAction("scale view", "Scale Viewport", 1f, true, new List<Param>() 
+                        {
+                            new Param("valA", new EntityTypes.Float(0, 50, 1), "Width", "Next viewport width"),
+                            new Param("valB", new EntityTypes.Float(0, 50, 1), "Height", "Next viewport height"),
+                            new Param("ease", EasingFunction.Ease.Linear, "Ease Type"),
+                            new Param("axis", StaticCamera.ViewAxis.All, "Axis", "The axis to scale the viewport in" )
+                        }
                     ),
 
                     new GameAction("screen shake", "Screen Shake", 1f, true,
