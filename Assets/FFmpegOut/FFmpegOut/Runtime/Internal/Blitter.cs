@@ -11,16 +11,17 @@ namespace FFmpegOut
         #region Factory method
 
         static System.Type[] _initialComponents =
-            { typeof(Camera), typeof(Blitter) };
+            // { typeof(Camera), typeof(Blitter) };
+            { typeof(Blitter) };
 
         public static GameObject CreateInstance(Camera source)
         {
             var go = new GameObject("Blitter", _initialComponents);
             // go.hideFlags = HideFlags.HideInHierarchy;
 
-            var camera = go.GetComponent<Camera>();
-            camera.cullingMask = 1 << UILayer;
-            camera.targetDisplay = source.targetDisplay;
+            // var camera = go.GetComponent<Camera>();
+            // camera.cullingMask = 1 << UILayer;
+            // camera.targetDisplay = source.targetDisplay;
 
             var blitter = go.GetComponent<Blitter>();
             blitter._sourceTexture = source.targetTexture;
@@ -35,9 +36,9 @@ namespace FFmpegOut
         // Assuming that the 5th layer is "UI". #badcode
         const int UILayer = 5;
 
-        Texture _sourceTexture;
-        Mesh _mesh;
-        Material _material;
+        [SerializeField] Texture _sourceTexture;
+        [SerializeField] Mesh _mesh;
+        [SerializeField] Material _material;
 
         void PreCull(Camera camera)
         {
