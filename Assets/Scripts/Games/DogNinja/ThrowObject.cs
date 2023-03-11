@@ -86,7 +86,7 @@ namespace HeavenStudio.Games.Scripts_DogNinja
                 };
             } else {
                 flyPosBarely *= 0.3f;
-                transform.position = barelyCurve.GetPoint(flyPosBarely) + (objPos/3);
+                transform.position = barelyCurve.GetPoint(flyPosBarely) + (objPos);
                 float rot = fromLeft ? 200f : -200f;
                 transform.rotation = Quaternion.Euler(0, 0, transform.rotation.eulerAngles.z + (rot * Time.deltaTime));
                 if (flyPosBarely > 1f) {
