@@ -41,8 +41,8 @@ namespace HeavenStudio.Games.Scripts_DogNinja
 
         private void Update()
         {
-            float flyPosHalves = Conductor.instance.GetPositionFromBeat(songPos, 1f)+1f;
-            flyPosHalves *= 0.25f;
+            float flyPosHalves = (Conductor.instance.GetPositionFromBeat(songPos, 3f)*(Conductor.instance.GetPositionFromBeat(songPos, 3f)))+Conductor.instance.GetPositionFromBeat(songPos, 1f);
+            flyPosHalves = (flyPosHalves*0.2f)+0.34f;
             transform.position = curve.GetPoint(flyPosHalves)+objPos;
 
             float rot = rotSpeed;
