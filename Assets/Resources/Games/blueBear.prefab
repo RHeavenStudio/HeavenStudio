@@ -5388,7 +5388,6 @@ Transform:
   m_LocalScale: {x: 4, y: 4, z: 1}
   m_Children:
   - {fileID: 636453562855450601}
-  - {fileID: 6960831429059082753}
   m_Father: {fileID: 5813499711186931250}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -5603,6 +5602,37 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
+--- !u!1 &2444592453218377031
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 3191206815662587777}
+  m_Layer: 0
+  m_Name: BagHolder2
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &3191206815662587777
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2444592453218377031}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children:
+  - {fileID: 6960831429059082753}
+  m_Father: {fileID: 636453562855450601}
+  m_RootOrder: 5
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &2582889856211223572
 GameObject:
   m_ObjectHideFlags: 0
@@ -6395,8 +6425,8 @@ Transform:
   m_Children:
   - {fileID: 2288025294002058218}
   - {fileID: 1308885078639903341}
-  m_Father: {fileID: 1910769386877084603}
-  m_RootOrder: 1
+  m_Father: {fileID: 3191206815662587777}
+  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!95 &5964015178334651268
 Animator:
@@ -6555,6 +6585,7 @@ Transform:
   - {fileID: 7120340470791402976}
   - {fileID: 9016473374310118631}
   - {fileID: 781313462756807661}
+  - {fileID: 3191206815662587777}
   m_Father: {fileID: 1910769386877084603}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
