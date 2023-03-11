@@ -193,11 +193,22 @@ namespace HeavenStudio
 
         public static void ResetGameRenderTexture()
         {
-            GameRenderTexture.width = Screen.width;
-            GameRenderTexture.height = Screen.height;
+            // keep 16:9 aspect ratio
+            int width = Screen.width;
+            int height = Screen.height;
+            if (width / 16f > height / 9f)
+            {
+                width = (int)(height / 9f * 16f);
+            }
+            else
+            {
+                height = (int)(width / 16f * 9f);
+            }
+            GameRenderTexture.width = width;
+            GameRenderTexture.height = height;
 
-            OverlayRenderTexture.width = Screen.width;
-            OverlayRenderTexture.height = Screen.height;
+            OverlayRenderTexture.width = width;
+            OverlayRenderTexture.height = height;
         }
 
         public static void ChangeMasterVolume(float value)

@@ -23,7 +23,6 @@ namespace HeavenStudio
         public string txt;
         public string ext;
         public Camera GameCamera, CursorCam, OverlayCamera, StaticCamera;
-        public GameObject GameLetterbox;
         public CircleCursor CircleCursor;
         [HideInInspector] public GameObject GamesHolder;
         public Games.Global.Flash fade;
