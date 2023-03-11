@@ -78,7 +78,7 @@ namespace HeavenStudio.Games
             if (PlayerInput.Pressed() && !IsExpectingInputNow(InputType.STANDARD_DOWN))
             {
                 Jukebox.PlayOneShotGame("doubleDate/kick_whiff");
-                Kick();
+                Kick(true, true);
             }
         }
 
@@ -106,7 +106,7 @@ namespace HeavenStudio.Games
         {
             if (canBop)
             {
-                boyAnim.DoScaledAnimationAsync("IdleBop", 0.5f);
+                boyAnim.DoScaledAnimationAsync("IdleBop", 1f);
             }
         }
 
@@ -114,7 +114,7 @@ namespace HeavenStudio.Games
         {
             if (hit)
             {
-                boyAnim.DoScaledAnimationAsync("Kick", 0.5f);
+                boyAnim.DoScaledAnimationAsync("Kick", 1f);
                 if (!forceNoLeaves)
                 {
                     BeatAction.New(instance.gameObject, new List<BeatAction.Action>()
@@ -129,7 +129,7 @@ namespace HeavenStudio.Games
             }
             else
             {
-                boyAnim.DoScaledAnimationAsync("Barely", 0.5f);
+                boyAnim.DoScaledAnimationAsync("Barely", 1f);
             }
         }
 
