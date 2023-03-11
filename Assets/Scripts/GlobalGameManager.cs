@@ -71,6 +71,11 @@ namespace HeavenStudio
             CustomScreenHeight = PersistentDataManager.gameSettings.resolutionHeight;
 
             ChangeMasterVolume(PersistentDataManager.gameSettings.masterVolume);
+            
+            if (PersistentDataManager.gameSettings.dspSize == 0)
+                PersistentDataManager.gameSettings.dspSize = 256;
+            if (PersistentDataManager.gameSettings.sampleRate == 0)
+                PersistentDataManager.gameSettings.sampleRate = 44100;
             currentDspSize = PersistentDataManager.gameSettings.dspSize;
             currentSampleRate = PersistentDataManager.gameSettings.sampleRate;
 

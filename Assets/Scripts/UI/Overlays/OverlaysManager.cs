@@ -44,6 +44,28 @@ namespace HeavenStudio.Common
 
         public void RefreshOverlaysLayout()
         {
+            if (PersistentDataManager.gameSettings.timingDisplayComponents == null || PersistentDataManager.gameSettings.timingDisplayComponents.Count == 0)
+            {
+                PersistentDataManager.gameSettings.timingDisplayComponents = new List<TimingDisplayComponent>()
+                {
+                    TimingDisplayComponent.CreateDefaultDual()
+                };
+            }
+            if (PersistentDataManager.gameSettings.skillStarComponents == null || PersistentDataManager.gameSettings.skillStarComponents.Count == 0)
+            {
+                PersistentDataManager.gameSettings.skillStarComponents = new List<SkillStarComponent>()
+                {
+                    SkillStarComponent.CreateDefault()
+                };
+            }
+            if (PersistentDataManager.gameSettings.sectionComponents == null || PersistentDataManager.gameSettings.sectionComponents.Count == 0)
+            {
+                PersistentDataManager.gameSettings.sectionComponents = new List<SectionComponent>()
+                {
+                    SectionComponent.CreateDefault()
+                };
+            }
+
             List<OverlaysManager.OverlayOption> lytElements = new List<OverlaysManager.OverlayOption>();
             foreach (var c in PersistentDataManager.gameSettings.timingDisplayComponents) { lytElements.Add(c); }
             foreach (var c in PersistentDataManager.gameSettings.skillStarComponents) { lytElements.Add(c); }
