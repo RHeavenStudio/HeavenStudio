@@ -49,7 +49,7 @@ namespace HeavenStudio.Games
     {
         [Header("Prefabs")]
         [SerializeField] SoccerBall soccer;
-        [SerializeField] BasketBall basket;
+        [SerializeField] Basketball basket;
         [SerializeField] Football football;
         [SerializeField] GameObject leaves;
         [Header("Components")]
@@ -142,7 +142,7 @@ namespace HeavenStudio.Games
 
         public void SpawnBasketBall(float beat)
         {
-            BasketBall spawnedBall = Instantiate(basket, instance.transform);
+            Basketball spawnedBall = Instantiate(basket, instance.transform);
             spawnedBall.Init(beat);
             MultiSound.Play(new MultiSound.Sound[]
             {

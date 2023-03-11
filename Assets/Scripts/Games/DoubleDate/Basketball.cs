@@ -6,7 +6,7 @@ using HeavenStudio.Util;
 
 namespace HeavenStudio.Games.Scripts_DoubleDate
 {
-    public class BasketBall : PlayerActionObject
+    public class Basketball : PlayerActionObject
     {
         private DoubleDate game;
 
