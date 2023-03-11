@@ -35,6 +35,18 @@ namespace HeavenStudio.Games.Loaders
                     resizable = true
                 },
 
+                 new GameAction("stompSignal", "Stomp Signal")
+                {
+                    function = delegate { var e = eventCaller.currentEntity; SumoBrothers.instance.StompSignal(e.beat); },
+                    defaultLength = 4f
+                },
+
+                 new GameAction("slapSignal", "Slap Signal")
+                {
+                    function = delegate { var e = eventCaller.currentEntity; SumoBrothers.instance.SlapSignal(e.beat); },
+                    defaultLength = 4f
+                },
+
                 new GameAction("endPose", "End Pose")
                 {
                     function = delegate { var e = eventCaller.currentEntity; SumoBrothers.instance.EndPose(e.beat); },
@@ -144,6 +156,30 @@ namespace HeavenStudio.Games
         {
             goBopInu = inu;
             goBopSumo = sumo;
+        }
+
+        public void StompSignal(float beat)
+        {
+            BeatAction.New(instance.gameObject, new List<BeatAction.Action>() {
+                new BeatAction.Action(beat, delegate { inuSensei.DoScaledAnimationAsync("InuBounce", 0.5f); }),
+                new BeatAction.Action(beat, delegate { Jukebox.PlayOneShotGame("sumoBrothers/stompsignal"); }),
+                new BeatAction.Action(beat + 2, delegate { inuSensei.DoScaledAnimationAsync("InuBounce", 0.5f); }),
+                new BeatAction.Action(beat + 2, delegate { Jukebox.PlayOneShotGame("sumoBrothers/stompsignal"); })
+            });
+        }
+
+        public void SlapSignal(float beat)
+        {
+            BeatAction.New(instance.gameObject, new List<BeatAction.Action>() {
+                new BeatAction.Action(beat, delegate { inuSensei.DoScaledAnimationAsync("InuBounce", 0.5f); }),
+                new BeatAction.Action(beat, delegate { Jukebox.PlayOneShotGame("sumoBrothers/slapsignal"); }),
+                new BeatAction.Action(beat + 1, delegate { inuSensei.DoScaledAnimationAsync("InuBounce", 0.5f); }),
+                new BeatAction.Action(beat + 1, delegate { Jukebox.PlayOneShotGame("sumoBrothers/slapsignal"); }),
+                new BeatAction.Action(beat + 2, delegate { inuSensei.DoScaledAnimationAsync("InuBounce", 0.5f); }),
+                new BeatAction.Action(beat + 2, delegate { Jukebox.PlayOneShotGame("sumoBrothers/slapsignal"); }),
+                new BeatAction.Action(beat + 3, delegate { inuSensei.DoScaledAnimationAsync("InuBounce", 0.5f); }),
+                new BeatAction.Action(beat + 3, delegate { Jukebox.PlayOneShotGame("sumoBrothers/slapsignal"); })
+            });
         }
 
         public void Crouch(float beat, float length, bool inu, bool sumo)
