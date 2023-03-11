@@ -33,6 +33,17 @@ namespace HeavenStudio
         public static int ScreenSizeIndex = 0;
 
         public static float MasterVolume = 0.8f;
+        public static int currentDspSize = 256;
+        public static int currentSampleRate = 44100;
+        public static readonly int[] DSP_BUFFER_SIZES =
+        {
+            32, 64, 128, 256, 340, 480, 512, 1024, 2048, 4096, 8192
+        };
+
+        public static readonly int[] SAMPLE_RATES =
+        {
+            11025, 22050, 44100, 48000, 88200, 96000,
+        };
 
         public static RenderTexture GameRenderTexture;
         public static RenderTexture OverlayRenderTexture;
@@ -60,6 +71,11 @@ namespace HeavenStudio
             CustomScreenHeight = PersistentDataManager.gameSettings.resolutionHeight;
 
             ChangeMasterVolume(PersistentDataManager.gameSettings.masterVolume);
+            currentDspSize = PersistentDataManager.gameSettings.dspSize;
+            currentSampleRate = PersistentDataManager.gameSettings.sampleRate;
+
+            ChangeAudioSettings(currentDspSize, currentSampleRate);
+
             if (PersistentDataManager.gameSettings.isFullscreen)
             {
                 Screen.SetResolution(Display.main.systemWidth, Display.main.systemHeight, FullScreenMode.FullScreenWindow);
@@ -183,6 +199,22 @@ namespace HeavenStudio
         {
             MasterVolume = value;
             AudioListener.volume = MasterVolume;
+        }
+
+        public static void ChangeAudioSettings(int dspSize, int sampleRate)
+        {
+            // don't reset audio if no changes are done
+            AudioConfiguration config = AudioSettings.GetConfiguration();
+            if (dspSize == config.dspBufferSize && sampleRate == config.sampleRate) return;
+            currentDspSize = dspSize;
+            currentSampleRate = sampleRate;
+
+            config.dspBufferSize = currentDspSize;
+            config.sampleRate = currentSampleRate;
+            AudioSettings.Reset(config);
+
+            PersistentDataManager.gameSettings.dspSize = currentDspSize;
+            PersistentDataManager.gameSettings.sampleRate = currentSampleRate;
         }
 
         void OnApplicationQuit()

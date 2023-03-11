@@ -54,12 +54,14 @@ namespace HeavenStudio.Common
 
         public void DoStarPreview()
         {
+            if (starAnim == null) return;
             starAnim.Play("StarJust", -1, 0.5f);
             starAnim.speed = 0f;
         }
 
         public void ResetStarPreview()
         {
+            if (starAnim == null) return;
             starAnim.Play("NoPose", -1, 0f);
             starAnim.speed = 1f;
         }
