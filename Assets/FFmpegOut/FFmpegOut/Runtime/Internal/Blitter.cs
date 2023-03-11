@@ -16,7 +16,7 @@ namespace FFmpegOut
         public static GameObject CreateInstance(Camera source)
         {
             var go = new GameObject("Blitter", _initialComponents);
-            go.hideFlags = HideFlags.HideInHierarchy;
+            // go.hideFlags = HideFlags.HideInHierarchy;
 
             var camera = go.GetComponent<Camera>();
             camera.cullingMask = 1 << UILayer;

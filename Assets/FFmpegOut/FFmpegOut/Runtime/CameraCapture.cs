@@ -47,7 +47,7 @@ namespace FFmpegOut
             set { _frameRate = value; }
         }
 
-        // public RenderTexture tempRT;
+        public RenderTexture tempRT;
 
         #endregion
 
@@ -109,13 +109,13 @@ namespace FFmpegOut
                 _session = null;
             }
 
-            // if (tempRT != null)
-            // {
-            //     // Dispose the frame texture.
-            //     GetComponent<Camera>().targetTexture = null;
-            //     Destroy(tempRT);
-            //     tempRT = null;
-            // }
+            if (tempRT != null)
+            {
+                // Dispose the frame texture.
+                GetComponent<Camera>().targetTexture = null;
+                Destroy(tempRT);
+                tempRT = null;
+            }
 
             if (_blitter != null)
             {
@@ -145,9 +145,9 @@ namespace FFmpegOut
                 // Give a newly created temporary render texture to the camera
                 // if it's set to render to a screen. Also create a blitter
                 // object to keep frames presented on the screen.
-                // tempRT = new RenderTexture(_width, _height, 24, GetTargetFormat(camera));
-                // tempRT.antiAliasing = GetAntiAliasingLevel(camera);
-                // camera.targetTexture = tempRT;
+                tempRT = new RenderTexture(_width, _height, 24, GetTargetFormat(camera));
+                tempRT.antiAliasing = GetAntiAliasingLevel(camera);
+                camera.targetTexture = tempRT;
                 _blitter = Blitter.CreateInstance(camera);
 
                 OnCreateTexture?.Invoke();

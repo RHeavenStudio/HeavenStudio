@@ -144,6 +144,8 @@ namespace HeavenStudio.Editor.VideoExport
                     // the rendertexture of the default Camera attribute, resulting in
                     // fullscreening when exporting. Gotta fix that!
                     // Date: 2/28/23 10:15:52 PM
+
+                    //I WAS WRONG ITS THE BLITTER
                     gameCameraCapture = GameCamera.instance.gameObject.AddComponent<CameraCapture>();
                     gameCameraCapture.outputDir = path;
                     gameCameraCapture.preset = ExportFormatToPreset(format);
