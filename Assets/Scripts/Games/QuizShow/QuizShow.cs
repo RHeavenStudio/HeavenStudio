@@ -61,6 +61,8 @@ namespace HeavenStudio.Games
         [Header("Properties")]
         bool intervalStarted;
         float intervalStartBeat;
+        float playerIntervalStartBeat;
+        float playerBeatInterval;
         float beatInterval = 8f;
         static List<float> dpadInputs = new List<float>();
         static List<float> aButtonInputs = new List<float>();
@@ -87,13 +89,17 @@ namespace HeavenStudio.Games
             var cond = Conductor.instance;
             if (cond.isPlaying && !cond.isPaused)
             {
-                if (PlayerInput.Pressed())
+                float normalizedBeat = cond.GetPositionFromBeat(playerIntervalStartBeat, playerBeatInterval);
+                if (normalizedBeat >= 0 && normalizedBeat <= 1)
                 {
-                    ContesteePressButton(false);
-                }
-                if (PlayerInput.GetAnyDirectionDown())
-                {
-                    ContesteePressButton(true);
+                    if (PlayerInput.Pressed())
+                    {
+                        ContesteePressButton(false);
+                    }
+                    if (PlayerInput.GetAnyDirectionDown())
+                    {
+                        ContesteePressButton(true);
+                    }
                 }
             }
         }
@@ -130,6 +136,8 @@ namespace HeavenStudio.Games
             if (dpadInputs.Count == 0 && aButtonInputs.Count == 0) return;
             intervalStarted = false;
             countToMatch = dpadInputs.Count + aButtonInputs.Count;
+            playerBeatInterval = beatInterval;
+            playerIntervalStartBeat = beat + length;
             Jukebox.PlayOneShotGame("quizShow/timerStart");
             BeatAction.New(instance.gameObject, new List<BeatAction.Action>()
             {
@@ -173,12 +181,14 @@ namespace HeavenStudio.Games
         {
             if (pressCount == countToMatch)
             {
+                GameProfiler.instance.IncreaseScore();
                 Jukebox.PlayOneShotGame("quizShow/correct");
                 if (audience) Jukebox.PlayOneShotGame("quizShow/audienceCheer");
                 if (jingle) Jukebox.PlayOneShotGame("quizShow/correctJingle");
             }
             else
             {
+                ScoreMiss();
                 Jukebox.PlayOneShotGame("quizShow/incorrect");
                 if (audience) Jukebox.PlayOneShotGame("quizShow/audienceSad");
                 if (jingle) Jukebox.PlayOneShotGame("quizShow/incorrectJingle");
