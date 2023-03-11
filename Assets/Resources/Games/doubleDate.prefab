@@ -8273,6 +8273,9 @@ MonoBehaviour:
   football: {fileID: 4232263214643942734, guid: 8945cdc8b29cf4640b7f7d1c678be884, type: 3}
   leaves: {fileID: 2513615444823805207}
   boyAnim: {fileID: 2477271591364459339}
+  girlAnim: {fileID: 4811085403076814860}
+  weasels: {fileID: 1744652231623238581}
+  treeAnim: {fileID: 2725162487030184716}
 --- !u!1 &5842845673002523687
 GameObject:
   m_ObjectHideFlags: 0
@@ -9446,6 +9449,7 @@ GameObject:
   m_Component:
   - component: {fileID: 3114857684828203505}
   - component: {fileID: 3164766200703393851}
+  - component: {fileID: 1744652231623238581}
   m_Layer: 0
   m_Name: Weasels
   m_TagString: Untagged
@@ -9488,6 +9492,18 @@ Animator:
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorControllerStateOnDisable: 0
+--- !u!114 &1744652231623238581
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8545659304174490157}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cb76c83ad1aee9d46838f098e7a18b66, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &8721947513890447605
 GameObject:
   m_ObjectHideFlags: 0

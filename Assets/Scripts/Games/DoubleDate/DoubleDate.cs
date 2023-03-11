@@ -17,8 +17,8 @@ namespace HeavenStudio.Games.Loaders
                     resizable = true,
                     parameters = new List<Param>()
                     {
-                        new Param("bop", true, "Bop", "Should the boy bop?"),
-                        new Param("autoBop", false, "Bop (Auto)", "Should the boy auto bop?")
+                        new Param("bop", true, "Bop", "Should the two couples bop?"),
+                        new Param("autoBop", false, "Bop (Auto)", "Should the two couples auto bop?")
                     }
                 },
                 new GameAction("soccer", "Soccer Ball")
@@ -54,6 +54,9 @@ namespace HeavenStudio.Games
         [SerializeField] GameObject leaves;
         [Header("Components")]
         [SerializeField] Animator boyAnim;
+        [SerializeField] Animator girlAnim;
+        [SerializeField] DoubleDateWeasels weasels;
+        [SerializeField] Animator treeAnim;
         [Header("Variables")]
         bool shouldBop = true;
         bool canBop = true;
@@ -78,7 +81,7 @@ namespace HeavenStudio.Games
             if (PlayerInput.Pressed() && !IsExpectingInputNow(InputType.STANDARD_DOWN))
             {
                 Jukebox.PlayOneShotGame("doubleDate/kick_whiff");
-                Kick(true, true);
+                Kick(true, true, false);
             }
         }
 
@@ -108,13 +111,16 @@ namespace HeavenStudio.Games
             {
                 boyAnim.DoScaledAnimationAsync("IdleBop", 1f);
             }
+            girlAnim.DoScaledAnimationAsync("GirlBop", 1f);
+            weasels.Bop();
         }
 
-        public void Kick(bool hit = true, bool forceNoLeaves = false)
+        public void Kick(bool hit = true, bool forceNoLeaves = false, bool weaselsHappy = true)
         {
             if (hit)
             {
                 boyAnim.DoScaledAnimationAsync("Kick", 1f);
+                if (weaselsHappy) weasels.Happy();
                 if (!forceNoLeaves)
                 {
                     BeatAction.New(instance.gameObject, new List<BeatAction.Action>()
@@ -123,6 +129,7 @@ namespace HeavenStudio.Games
                         {
                             GameObject spawnedLeaves = Instantiate(leaves, transform);
                             spawnedLeaves.SetActive(true);
+                            treeAnim.DoScaledAnimationAsync("TreeRustle", 1f);
                         })
                     });
                 }
