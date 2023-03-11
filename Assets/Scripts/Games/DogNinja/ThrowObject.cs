@@ -48,31 +48,7 @@ namespace HeavenStudio.Games.Scripts_DogNinja
         {
             barelyCurve = fromLeft ? BarelyRightCurve : BarelyLeftCurve;
             
-            /*
-            switch (type) {
-                case 7:
-                    sfxNum += "bone";
-                    break;
-                case 8:
-                    sfxNum += "pan";
-                    break;
-                case 9:
-                    sfxNum += "tire";
-                    break;
-                case var _ when (type < 10):
-                    sfxNum += textObj;
-                    break;
-                default:
-                    sfxNum += "fruit";
-                    break;
-            }
-            */
-
-            if (type < 7) {
-                sfxNum += "fruit";
-            } else {
-                sfxNum += textObj;
-            }
+            sfxNum += type < 7 ? "fruit" : textObj;
             
             if (direction == 2 && fromLeft) {} else { Jukebox.PlayOneShotGame(sfxNum+"1"); }
             
@@ -116,7 +92,7 @@ namespace HeavenStudio.Games.Scripts_DogNinja
                 Slice += "Left";
             } else if (direction == 1) {
                 Slice += "Right";
-            } else if (direction == 2) {
+            } else {
                 Slice += "Both";
             }
 
@@ -149,7 +125,7 @@ namespace HeavenStudio.Games.Scripts_DogNinja
                 Barely += "Left";
             } else if (direction == 1) {
                 Barely += "Right";
-            } else if (direction == 2) {
+            } else {
                 Barely += "Both";
             }
 
