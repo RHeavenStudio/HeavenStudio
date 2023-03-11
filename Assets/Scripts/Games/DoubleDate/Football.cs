@@ -24,6 +24,8 @@ namespace HeavenStudio.Games.Scripts_DoubleDate
         {
             if (state >= 1f || state <= -1f)
             {
+                Jukebox.PlayOneShot("miss");
+                game.Kick(false);
                 Destroy(gameObject); //Remove this when doing the ball movement
                 return;
             }
@@ -32,6 +34,7 @@ namespace HeavenStudio.Games.Scripts_DoubleDate
 
         void Hit()
         {
+            game.Kick(true, true);
             Jukebox.PlayOneShotGame("doubleDate/footballKick");
             Destroy(gameObject); //Remove this when doing the ball movement
         }

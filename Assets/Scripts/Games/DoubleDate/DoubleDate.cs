@@ -9,8 +9,18 @@ namespace HeavenStudio.Games.Loaders
     public static class RvlDoubleDateLoader
     {
         public static Minigame AddGame(EventCaller eventCaller) {
-            return new Minigame("doubleDate", "Double Date \n<color=#eb5454>[INITIALIZATION ONLY]</color>", "0058CE", false, false, new List<GameAction>()
+            return new Minigame("doubleDate", "Double Date", "0058CE", false, false, new List<GameAction>()
             {
+                new GameAction("bop", "Bop")
+                {
+                    function = delegate { var e = eventCaller.currentEntity; DoubleDate.instance.Bop(e.beat, e.length, e["bop"], e["autoBop"]); },
+                    resizable = true,
+                    parameters = new List<Param>()
+                    {
+                        new Param("bop", true, "Bop", "Should the boy bop?"),
+                        new Param("autoBop", false, "Bop (Auto)", "Should the boy auto bop?")
+                    }
+                },
                 new GameAction("soccer", "Soccer Ball")
                 {
                     function = delegate { var e = eventCaller.currentEntity; DoubleDate.instance.SpawnSoccerBall(e.beat); },
@@ -41,6 +51,13 @@ namespace HeavenStudio.Games
         [SerializeField] SoccerBall soccer;
         [SerializeField] BasketBall basket;
         [SerializeField] Football football;
+        [SerializeField] GameObject leaves;
+        [Header("Components")]
+        [SerializeField] Animator boyAnim;
+        [Header("Variables")]
+        bool shouldBop = true;
+        bool canBop = true;
+        GameEvent bop = new GameEvent();
         public static DoubleDate instance;
         
         private void Awake()
@@ -50,9 +67,69 @@ namespace HeavenStudio.Games
 
         void Update()
         {
+            var cond = Conductor.instance;
+            if (cond.isPlaying && !cond.isPaused)
+            {
+                if (cond.ReportBeat(ref bop.lastReportedBeat, bop.startBeat % 1) && shouldBop)
+                {
+                    SingleBop();
+                }
+            }
             if (PlayerInput.Pressed() && !IsExpectingInputNow(InputType.STANDARD_DOWN))
             {
                 Jukebox.PlayOneShotGame("doubleDate/kick_whiff");
+                Kick();
+            }
+        }
+
+        public void ToggleBop(bool go)
+        {
+            canBop = go;
+        }
+
+        public void Bop(float beat, float length, bool goBop, bool autoBop)
+        {
+            shouldBop = autoBop;
+            if (goBop)
+            {
+                for (int i = 0; i < length; i++)
+                {
+                    BeatAction.New(instance.gameObject, new List<BeatAction.Action>()
+                    {
+                        new BeatAction.Action(beat + i, delegate { SingleBop(); })
+                    });
+                }
+            }
+        }
+
+        void SingleBop()
+        {
+            if (canBop)
+            {
+                boyAnim.DoScaledAnimationAsync("IdleBop", 0.5f);
+            }
+        }
+
+        public void Kick(bool hit = true, bool forceNoLeaves = false)
+        {
+            if (hit)
+            {
+                boyAnim.DoScaledAnimationAsync("Kick", 0.5f);
+                if (!forceNoLeaves)
+                {
+                    BeatAction.New(instance.gameObject, new List<BeatAction.Action>()
+                    {
+                        new BeatAction.Action(Conductor.instance.songPositionInBeats + 1f, delegate
+                        {
+                            GameObject spawnedLeaves = Instantiate(leaves, transform);
+                            spawnedLeaves.SetActive(true);
+                        })
+                    });
+                }
+            }
+            else
+            {
+                boyAnim.DoScaledAnimationAsync("Barely", 0.5f);
             }
         }
 
