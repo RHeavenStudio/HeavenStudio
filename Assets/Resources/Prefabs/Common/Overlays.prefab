@@ -1196,6 +1196,7 @@ GameObject:
   m_Component:
   - component: {fileID: 6129521937249550700}
   - component: {fileID: 2713143048055864910}
+  - component: {fileID: 8808867532180312475}
   m_Layer: 13
   m_Name: SectionDisp
   m_TagString: Untagged
@@ -1231,6 +1232,36 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 6467610316926476649}
   m_CullTransparentMesh: 1
+--- !u!114 &8808867532180312475
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6467610316926476649}
+  m_Enabled: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Material: {fileID: 0}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_RaycastTarget: 1
+  m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
+  m_Maskable: 1
+  m_OnCullStateChanged:
+    m_PersistentCalls:
+      m_Calls: []
+  m_Sprite: {fileID: 0}
+  m_Type: 0
+  m_PreserveAspect: 0
+  m_FillCenter: 1
+  m_FillMethod: 4
+  m_FillAmount: 1
+  m_FillClockwise: 1
+  m_FillOrigin: 0
+  m_UseSpriteMesh: 0
+  m_PixelsPerUnitMultiplier: 1
 --- !u!1 &6594361361356985236
 GameObject:
   m_ObjectHideFlags: 0
@@ -1721,6 +1752,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1962292012641239265}
   - component: {fileID: 886220064596408474}
+  - component: {fileID: 6287284495131880448}
   m_Layer: 13
   m_Name: SectionDisp
   m_TagString: Untagged
@@ -1756,6 +1788,36 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 8882233469224570362}
   m_CullTransparentMesh: 1
+--- !u!114 &6287284495131880448
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8882233469224570362}
+  m_Enabled: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Material: {fileID: 0}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_RaycastTarget: 1
+  m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
+  m_Maskable: 1
+  m_OnCullStateChanged:
+    m_PersistentCalls:
+      m_Calls: []
+  m_Sprite: {fileID: 0}
+  m_Type: 0
+  m_PreserveAspect: 0
+  m_FillCenter: 1
+  m_FillMethod: 4
+  m_FillAmount: 1
+  m_FillClockwise: 1
+  m_FillOrigin: 0
+  m_UseSpriteMesh: 0
+  m_PixelsPerUnitMultiplier: 1
 --- !u!1 &9009764764795676800
 GameObject:
   m_ObjectHideFlags: 0
@@ -1967,14 +2029,14 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: f54ff2803b9c18046b673dc177d752ef, type: 3}
---- !u!1 &8667017389980478212 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 6146690112180794986, guid: f54ff2803b9c18046b673dc177d752ef, type: 3}
-  m_PrefabInstance: {fileID: 3245406972695698798}
-  m_PrefabAsset: {fileID: 0}
 --- !u!224 &8667017389980478215 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 6146690112180794985, guid: f54ff2803b9c18046b673dc177d752ef, type: 3}
+  m_PrefabInstance: {fileID: 3245406972695698798}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1 &8667017389980478212 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 6146690112180794986, guid: f54ff2803b9c18046b673dc177d752ef, type: 3}
   m_PrefabInstance: {fileID: 3245406972695698798}
   m_PrefabAsset: {fileID: 0}
 --- !u!222 &8717972934511250428
@@ -2144,14 +2206,14 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: f54ff2803b9c18046b673dc177d752ef, type: 3}
---- !u!224 &8707332222860229795 stripped
-RectTransform:
-  m_CorrespondingSourceObject: {fileID: 6146690112180794985, guid: f54ff2803b9c18046b673dc177d752ef, type: 3}
-  m_PrefabInstance: {fileID: 3286438687156751050}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1 &8707332222860229792 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 6146690112180794986, guid: f54ff2803b9c18046b673dc177d752ef, type: 3}
+  m_PrefabInstance: {fileID: 3286438687156751050}
+  m_PrefabAsset: {fileID: 0}
+--- !u!224 &8707332222860229795 stripped
+RectTransform:
+  m_CorrespondingSourceObject: {fileID: 6146690112180794985, guid: f54ff2803b9c18046b673dc177d752ef, type: 3}
   m_PrefabInstance: {fileID: 3286438687156751050}
   m_PrefabAsset: {fileID: 0}
 --- !u!222 &5754973321134772972

@@ -115,15 +115,25 @@ namespace HeavenStudio.Editor
             foreach (var c in PersistentDataManager.gameSettings.sectionComponents) { lytElements.Add(c); }
 
             UpdateLayoutSettings();
+            SkillStarManager.instance.DoStarPreview();
         }
 
         public override void OnCloseTab()
         {
+            foreach (var e in lytElements)
+            {
+                e.DisablePreview();
+            }
+            lytElements.Clear();
+            SkillStarManager.instance.ResetStarPreview();
+            GameManager.instance.currentSection = null;
         }
 
         void UpdateLayoutSettings()
         {
             var element = lytElements[currentElementIdx];
+            element.EnablePreview();
+
             ElementToggle.isOn = element.enable;
             XPosInput.text = element.position.x.ToString(fFormat);
             YPosInput.text = element.position.y.ToString(fFormat);
@@ -242,7 +252,22 @@ namespace HeavenStudio.Editor
             var element = lytElements[currentElementIdx] as OverlaysManager.TimingDisplayComponent;
             if (element == null) return;
             element.tdType = (OverlaysManager.TimingDisplayComponent.TimingDisplayType)TimingDispTypeDropdown.value;
+            bool elHide = element.enable;
+            switch (element.tdType)
+            {
+                case OverlaysManager.TimingDisplayComponent.TimingDisplayType.Dual:
+                    element.position = new Vector2(-0.84f, 0);
+                    element.rotation = 0f;
+                    break;
+                default:
+                    element.position = new Vector2(0, -0.8f);
+                    element.rotation = 90f;
+                    break;
+            }
+            element.scale = 1f;
+            element.enable = elHide;
             element.PositionElement();
+            UpdateLayoutSettings();
         }
     }
 }

@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using UnityEngine;
+using UnityEngine.UI;
 
 
 namespace HeavenStudio.Common
@@ -122,10 +123,14 @@ namespace HeavenStudio.Common
                             go.transform.localScale = Vector3.one * scale;
                             go.transform.localRotation = Quaternion.Euler(0, 0, rotation);
                             go.SetActive(enable);
+                            go2.SetActive(false);
                             break;
                     }
                 }
             } 
+
+            public override void EnablePreview() {}
+            public override void DisablePreview() {}
 
             public static TimingDisplayComponent CreateDefaultDual()
             {
@@ -157,8 +162,13 @@ namespace HeavenStudio.Common
                     go.transform.localScale = Vector3.one * scale;
                     go.transform.localRotation = Quaternion.Euler(0, 0, rotation);
                     go.SetActive(enable);
+
+                    SkillStarManager.instance?.DoStarPreview();
                 }
             }
+
+            public override void EnablePreview() {}
+            public override void DisablePreview() {}
 
             public static SkillStarComponent CreateDefault()
             {
@@ -188,10 +198,27 @@ namespace HeavenStudio.Common
                 }
             }
 
+            public override void EnablePreview()
+            {
+                if (go != null)
+                {
+                    go.GetComponent<Image>().enabled = true;
+                }
+            }
+
+            public override void DisablePreview()
+            {
+                if (go != null)
+                {
+                    go.GetComponent<Image>().enabled = false;
+                }
+            }
+
             public static SectionComponent CreateDefault()
             {
                 return new SectionComponent(true, new Vector2(0.7f, 0.765f), 1f, 0f);
             }
+
         }
 
         [Serializable]
@@ -216,6 +243,8 @@ namespace HeavenStudio.Common
             }
 
             public abstract void PositionElement();
+            public abstract void EnablePreview();
+            public abstract void DisablePreview();
         }
     }
 }

@@ -52,12 +52,25 @@ namespace HeavenStudio.Common
             }
         }
 
+        public void DoStarPreview()
+        {
+            starAnim.Play("StarJust", -1, 0.5f);
+            starAnim.speed = 0f;
+        }
+
+        public void ResetStarPreview()
+        {
+            starAnim.Play("NoPose", -1, 0f);
+            starAnim.speed = 1f;
+        }
+
         public void Reset()
         {
             IsEligible = false;
             cond = Conductor.instance;
             state = StarState.None;
             starAnim.Play("NoPose", -1, 0f);
+            starAnim.speed = 1f;
             starStart = float.MaxValue;
             starLength = float.MaxValue;
         }
