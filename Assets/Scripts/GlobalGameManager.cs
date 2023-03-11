@@ -37,12 +37,12 @@ namespace HeavenStudio
         public static int currentSampleRate = 44100;
         public static readonly int[] DSP_BUFFER_SIZES =
         {
-            32, 64, 128, 256, 340, 480, 512, 1024, 2048, 4096, 8192
+            128, 256, 340, 480, 512, 1024
         };
 
         public static readonly int[] SAMPLE_RATES =
         {
-            11025, 22050, 44100, 48000, 88200, 96000,
+            22050, 44100, 48000, 88200, 96000,
         };
 
         public static RenderTexture GameRenderTexture;

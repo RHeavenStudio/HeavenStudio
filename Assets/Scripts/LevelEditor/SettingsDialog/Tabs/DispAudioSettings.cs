@@ -56,8 +56,6 @@ namespace HeavenStudio.Editor
 
             volSlider.value = GlobalGameManager.MasterVolume;
             volLabel.text = System.Math.Round(volSlider.value * 100, 2).ToString();
-            dspSizeDropdown.AddOptions(GlobalGameManager.DSP_BUFFER_SIZES.Select(x => x.ToString()).ToList());
-            sampleRateDropdown.AddOptions(GlobalGameManager.SAMPLE_RATES.Select(x => x.ToString()).ToList());
 
             dspSizeDropdown.onValueChanged.AddListener(delegate 
             {
@@ -107,7 +105,11 @@ namespace HeavenStudio.Editor
 
             volSlider.value = GlobalGameManager.MasterVolume;
             volLabel.text = System.Math.Round(volSlider.value * 100, 2).ToString();
-            
+
+            dspSizeDropdown.ClearOptions();
+            sampleRateDropdown.ClearOptions();
+            dspSizeDropdown.AddOptions(GlobalGameManager.DSP_BUFFER_SIZES.Select(x => x.ToString()).ToList());
+            sampleRateDropdown.AddOptions(GlobalGameManager.SAMPLE_RATES.Select(x => x.ToString()).ToList());
             dspSizeDropdown.value = GlobalGameManager.DSP_BUFFER_SIZES.ToList().IndexOf(GlobalGameManager.currentDspSize);
             sampleRateDropdown.value = GlobalGameManager.SAMPLE_RATES.ToList().IndexOf(GlobalGameManager.currentSampleRate);
         }
