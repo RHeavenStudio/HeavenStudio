@@ -98,9 +98,8 @@ namespace HeavenStudio.Editor
 
         public void Init()
         {
-            GameCamera.instance.camera.targetTexture = ScreenRenderTexture;
+            GameManager.instance.StaticCamera.targetTexture = ScreenRenderTexture;
             GameManager.instance.CursorCam.targetTexture = ScreenRenderTexture;
-            GameManager.instance.OverlayCamera.targetTexture = ScreenRenderTexture;
             GameLetterbox = GameManager.instance.GameLetterbox;
             Screen.texture = ScreenRenderTexture;
 
@@ -509,9 +508,8 @@ namespace HeavenStudio.Editor
 
                 MainCanvas.enabled = false;
                 EditorCamera.enabled = false;
-                GameCamera.instance.camera.targetTexture = null;
+                GameManager.instance.StaticCamera.targetTexture = null;
                 GameManager.instance.CursorCam.enabled = false;
-                GameManager.instance.OverlayCamera.targetTexture = null;
                 fullscreen = true;
 
             }
@@ -522,9 +520,8 @@ namespace HeavenStudio.Editor
 
                 MainCanvas.enabled = true;
                 EditorCamera.enabled = true;
-                GameCamera.instance.camera.targetTexture = ScreenRenderTexture;
+                GameManager.instance.StaticCamera.targetTexture = ScreenRenderTexture;
                 GameManager.instance.CursorCam.enabled = true && isCursorEnabled;
-                GameManager.instance.OverlayCamera.targetTexture = ScreenRenderTexture;
                 fullscreen = false;
 
                 GameCamera.instance.camera.rect = new Rect(0, 0, 1, 1);
