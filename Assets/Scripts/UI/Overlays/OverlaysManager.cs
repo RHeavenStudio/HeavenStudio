@@ -23,6 +23,8 @@ namespace HeavenStudio.Common
         [Header("Components")]
         [SerializeField] Transform ComponentHolder;
 
+        List<OverlaysManager.OverlayOption> lytElements = new List<OverlaysManager.OverlayOption>();
+
         // Start is called before the first frame update
         void Start()
         {
@@ -39,7 +41,7 @@ namespace HeavenStudio.Common
         public void TogleOverlaysVisibility(bool visible)
         {
             OverlaysEnabled = visible;
-            StaticCamera.instance.ToggleOverlayView(visible);
+            RepositionElements();
         }
 
         public void RefreshOverlaysLayout()
@@ -66,7 +68,7 @@ namespace HeavenStudio.Common
                 };
             }
 
-            List<OverlaysManager.OverlayOption> lytElements = new List<OverlaysManager.OverlayOption>();
+            lytElements = new List<OverlaysManager.OverlayOption>();
             foreach (var c in PersistentDataManager.gameSettings.timingDisplayComponents) { lytElements.Add(c); }
             foreach (var c in PersistentDataManager.gameSettings.skillStarComponents) { lytElements.Add(c); }
             foreach (var c in PersistentDataManager.gameSettings.sectionComponents) { lytElements.Add(c); }
@@ -94,6 +96,17 @@ namespace HeavenStudio.Common
             }
         }
 
+        void RepositionElements()
+        {
+            lytElements = new List<OverlaysManager.OverlayOption>();
+            foreach (var c in PersistentDataManager.gameSettings.timingDisplayComponents) { lytElements.Add(c); }
+            foreach (var c in PersistentDataManager.gameSettings.skillStarComponents) { lytElements.Add(c); }
+            foreach (var c in PersistentDataManager.gameSettings.sectionComponents) { lytElements.Add(c); }
+            foreach (var c in lytElements)
+            {
+                c.PositionElement();
+            }
+        }
         
         [Serializable]
         public class TimingDisplayComponent : OverlayOption
@@ -118,8 +131,8 @@ namespace HeavenStudio.Common
 
             public override void CreateElement(GameObject prefab, Transform holder)
             {
-                go = Instantiate(prefab, holder);
-                go2 = Instantiate(prefab, holder);
+                if (go == null) go = Instantiate(prefab, holder);
+                if (go2 == null) go2 = Instantiate(prefab, holder);
             }
 
             public override void PositionElement()
@@ -137,14 +150,14 @@ namespace HeavenStudio.Common
                             go2.transform.localScale = Vector3.one * scale;
                             go2.transform.localRotation = Quaternion.Euler(0, 0, rotation);
 
-                            go.SetActive(enable);
-                            go2.SetActive(enable);
+                            go.SetActive(enable && OverlaysManager.OverlaysEnabled);
+                            go2.SetActive(enable && OverlaysManager.OverlaysEnabled);
                             break;
                         case TimingDisplayType.Single:
                             go.transform.localPosition = position * new Vector2(WIDTH_SPAN, HEIGHT_SPAN);
                             go.transform.localScale = Vector3.one * scale;
                             go.transform.localRotation = Quaternion.Euler(0, 0, rotation);
-                            go.SetActive(enable);
+                            go.SetActive(enable && OverlaysManager.OverlaysEnabled);
                             go2.SetActive(false);
                             break;
                     }
@@ -183,14 +196,12 @@ namespace HeavenStudio.Common
                     go.transform.localPosition = position * new Vector2(WIDTH_SPAN, HEIGHT_SPAN);
                     go.transform.localScale = Vector3.one * scale;
                     go.transform.localRotation = Quaternion.Euler(0, 0, rotation);
-                    go.SetActive(enable);
-
-                    SkillStarManager.instance?.DoStarPreview();
+                    go.SetActive(enable && OverlaysManager.OverlaysEnabled);
                 }
             }
 
-            public override void EnablePreview() {}
-            public override void DisablePreview() {}
+            public override void EnablePreview() { SkillStarManager.instance?.DoStarPreview(); }
+            public override void DisablePreview() { SkillStarManager.instance.ResetStarPreview(); }
 
             public static SkillStarComponent CreateDefault()
             {
@@ -216,7 +227,7 @@ namespace HeavenStudio.Common
                     go.transform.localPosition = position * new Vector2(WIDTH_SPAN, HEIGHT_SPAN);
                     go.transform.localScale = Vector3.one * scale;
                     go.transform.localRotation = Quaternion.Euler(0, 0, rotation);
-                    go.SetActive(enable);
+                    go.SetActive(enable && OverlaysManager.OverlaysEnabled);
                 }
             }
 
@@ -261,7 +272,8 @@ namespace HeavenStudio.Common
 
             public virtual void CreateElement(GameObject prefab, Transform holder)
             {
-                go = Instantiate(prefab, holder);
+                if (go == null)
+                    go = Instantiate(prefab, holder);
             }
 
             public abstract void PositionElement();

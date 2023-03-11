@@ -13,6 +13,7 @@ namespace HeavenStudio.Editor
 {
     public class GameSettings : TabsContent
     {
+        public static bool InPreview;
         [SerializeField] Toggle editorOverlaysToggle;
         [SerializeField] Toggle perfectChallengeToggle;
         [SerializeField] Toggle sectionMedalsToggle;
@@ -110,12 +111,12 @@ namespace HeavenStudio.Editor
             }
 
             lytElements = new List<OverlaysManager.OverlayOption>();
-            foreach (var c in PersistentDataManager.gameSettings.timingDisplayComponents) { lytElements.Add(c); }
-            foreach (var c in PersistentDataManager.gameSettings.skillStarComponents) { lytElements.Add(c); }
-            foreach (var c in PersistentDataManager.gameSettings.sectionComponents) { lytElements.Add(c); }
+            foreach (var c in PersistentDataManager.gameSettings.timingDisplayComponents) { lytElements.Add(c); c.EnablePreview();}
+            foreach (var c in PersistentDataManager.gameSettings.skillStarComponents) { lytElements.Add(c); c.EnablePreview();}
+            foreach (var c in PersistentDataManager.gameSettings.sectionComponents) { lytElements.Add(c); c.EnablePreview();}
 
             UpdateLayoutSettings();
-            SkillStarManager.instance.DoStarPreview();
+            InPreview = true;
         }
 
         public override void OnCloseTab()
@@ -125,8 +126,7 @@ namespace HeavenStudio.Editor
                 e.DisablePreview();
             }
             lytElements.Clear();
-            SkillStarManager.instance.ResetStarPreview();
-            GameManager.instance.currentSection = null;
+            InPreview = false;
         }
 
         void UpdateLayoutSettings()
