@@ -142,12 +142,12 @@ namespace FFmpegOut
             // Lazy initialization
             if (_session == null)
             {
-                // Give a newly created temporary render texture to the camera
-                // if it's set to render to a screen. Also create a blitter
-                // object to keep frames presented on the screen.
-                tempRT = new RenderTexture(_width, _height, 24, GetTargetFormat(camera));
-                tempRT.antiAliasing = GetAntiAliasingLevel(camera);
-                camera.targetTexture = tempRT;
+                // // Give a newly created temporary render texture to the camera
+                // // if it's set to render to a screen. Also create a blitter
+                // // object to keep frames presented on the screen.
+                // tempRT = new RenderTexture(_width, _height, 24, GetTargetFormat(camera));
+                // tempRT.antiAliasing = GetAntiAliasingLevel(camera);
+                // camera.targetTexture = tempRT;
                 _blitter = Blitter.CreateInstance(camera);
 
                 OnCreateTexture?.Invoke();
