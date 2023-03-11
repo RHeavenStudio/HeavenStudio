@@ -33,7 +33,7 @@ namespace HeavenStudio
         public static int ScreenSizeIndex = 0;
 
         public static float MasterVolume = 0.8f;
-        public static int currentDspSize = 256;
+        public static int currentDspSize = 512;
         public static int currentSampleRate = 44100;
         public static readonly int[] DSP_BUFFER_SIZES =
         {
@@ -73,7 +73,7 @@ namespace HeavenStudio
             ChangeMasterVolume(PersistentDataManager.gameSettings.masterVolume);
             
             if (PersistentDataManager.gameSettings.dspSize == 0)
-                PersistentDataManager.gameSettings.dspSize = 256;
+                PersistentDataManager.gameSettings.dspSize = 512;
             if (PersistentDataManager.gameSettings.sampleRate == 0)
                 PersistentDataManager.gameSettings.sampleRate = 44100;
             currentDspSize = PersistentDataManager.gameSettings.dspSize;
@@ -204,6 +204,7 @@ namespace HeavenStudio
             {
                 height = (int)(width / 16f * 9f);
             }
+
             GameRenderTexture.width = width;
             GameRenderTexture.height = height;
 
