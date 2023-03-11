@@ -5935,6 +5935,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1786192994432166401}
+  - component: {fileID: 1672690672723614704}
   m_Layer: 0
   m_Name: BackgroundScene
   m_TagString: Untagged
@@ -5961,6 +5962,25 @@ Transform:
   m_Father: {fileID: 5813499711186931250}
   m_RootOrder: 6
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!95 &1672690672723614704
+Animator:
+  serializedVersion: 3
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3272805707290525802}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: 8a3ea2f465588854b983d31ca890337a, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorControllerStateOnDisable: 0
 --- !u!1 &3386726751787149544
 GameObject:
   m_ObjectHideFlags: 0
@@ -6872,6 +6892,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 5813499711658895220}
+  - component: {fileID: 6092762685894244170}
   m_Layer: 0
   m_Name: ThoughtBubble
   m_TagString: Untagged
@@ -6898,6 +6919,25 @@ Transform:
   m_Father: {fileID: 5813499711186931250}
   m_RootOrder: 5
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!95 &6092762685894244170
+Animator:
+  serializedVersion: 3
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5813499711658895222}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 0}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorControllerStateOnDisable: 0
 --- !u!1 &5934916489524689261
 GameObject:
   m_ObjectHideFlags: 0

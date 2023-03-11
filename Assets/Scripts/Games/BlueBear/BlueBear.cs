@@ -23,6 +23,16 @@ namespace HeavenStudio.Games.Loaders
                     function = delegate { BlueBear.instance.SpawnTreat(eventCaller.currentEntity.beat, true); }, 
                     defaultLength = 4,
                 },
+                new GameAction("setEmotion", "Set Emotion")
+                {
+                    function = delegate { var e = eventCaller.currentEntity; BlueBear.instance.SetEmotion(e.beat, e.length, e["type"]); },
+                    defaultLength = 4,
+                    resizable = true,
+                    parameters = new List<Param>()
+                    {
+                        new Param("type", BlueBear.EmotionType.ClosedEyes, "Type", "Which emotion should the blue bear use?")
+                    }
+                }
             });
         }
     }
@@ -33,6 +43,13 @@ namespace HeavenStudio.Games
     using Scripts_BlueBear;
     public class BlueBear : Minigame
     {
+        public enum EmotionType
+        {
+            Neutral,
+            ClosedEyes,
+            LookUp,
+            Smile
+        }
         [Header("Animators")]
         public Animator headAndBodyAnim; // Head and body
         public Animator bagsAnim; // Both bags sprite
@@ -46,6 +63,11 @@ namespace HeavenStudio.Games
         public Transform foodHolder;
         public Transform crumbsHolder;
         public GameObject individualBagHolder;
+
+        [Header("Variables")]
+        float emotionStartBeat;
+        float emotionLength;
+        string emotionAnimName;
 
         [Header("Curves")]
         public BezierCurve3D donutCurve;
@@ -76,6 +98,17 @@ namespace HeavenStudio.Games
             {
                 headAndBodyAnim.Play("BiteR", 0, 0);
             }
+
+            var cond = Conductor.instance;
+
+            if (cond.isPlaying && !cond.isPaused)
+            {
+                float normalizedBeat = cond.GetPositionFromBeat(emotionStartBeat, emotionLength);
+                if (normalizedBeat >= 0 && normalizedBeat <= 1f)
+                {
+                    headAndBodyAnim.DoNormalizedAnimation(emotionAnimName, normalizedBeat);
+                }
+            }
         }
 
         private void LateUpdate()
@@ -93,6 +126,31 @@ namespace HeavenStudio.Games
                     squashing = false;
                     bagsAnim.Play("Idle", 0, 0);
                 }
+            }
+        }
+
+        public void SetEmotion(float beat, float length, int emotion)
+        {
+            switch (emotion)
+            {
+                case (int)EmotionType.Neutral:
+                    headAndBodyAnim.Play("Idle", 0, 0);
+                    break;
+                case (int)EmotionType.ClosedEyes:
+                    headAndBodyAnim.Play("EyesClosed", 0, 0);
+                    break;
+                case (int)EmotionType.LookUp:
+                    emotionStartBeat = beat;
+                    emotionLength = length;
+                    emotionAnimName = "OpenEyes";
+                    break;
+                case (int)EmotionType.Smile:
+                    emotionStartBeat = beat;
+                    emotionLength = length;
+                    emotionAnimName = "Smile";
+                    break;
+                default:
+                    break;
             }
         }
 
