@@ -40,6 +40,7 @@ namespace HeavenStudio.Games.Scripts_GleeClub
             singing = false;
             anim.Play("CloseMouth", 0, 0);
             Jukebox.KillLoop(currentSound, 0f);
+            Jukebox.PlayOneShotGame("gleeClub/StopWail");
         }
     }
 }
