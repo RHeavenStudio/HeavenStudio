@@ -34,6 +34,11 @@ namespace HeavenStudio.Games.Loaders
                 {
                     function = delegate { var e = eventCaller.currentEntity; GleeClub.instance.PassTurn(e.beat, e.length); },
                     resizable = true
+                },
+                new GameAction("baton", "Baton")
+                {
+                    function = delegate { var e = eventCaller.currentEntity; GleeClub.instance.Baton(e.beat); },
+                    defaultLength = 2f
                 }
             });
         }
@@ -50,12 +55,16 @@ namespace HeavenStudio.Games
             public float startBeat;
             public float length;
             public int semiTones;
+            public int semiTonesPlayer;
             public bool closeMouth;
         }
+        [Header("Prefabs")]
+        [SerializeField] GleeClubSingInput singInputPrefab;
         [Header("Components")]
+        [SerializeField] Animator condAnim;
         [SerializeField] ChorusKid leftChorusKid;
         [SerializeField] ChorusKid middleChorusKid;
-        [SerializeField] ChorusKid playerChorusKid;
+        public ChorusKid playerChorusKid;
         [Header("Variables")]
         static List<QueuedSinging> queuedSingings = new List<QueuedSinging>();
         bool intervalStarted;
@@ -124,7 +133,8 @@ namespace HeavenStudio.Games
                 startBeat = beat - intervalStartBeat,
                 length = length,
                 semiTones = semiTones1,
-                closeMouth = closeMouth
+                closeMouth = closeMouth,
+                semiTonesPlayer = semiTonesPlayer,
             });
         }
 
@@ -134,6 +144,10 @@ namespace HeavenStudio.Games
             intervalStarted = false;
             foreach (var sing in queuedSingings)
             {
+                float playerPitch = Mathf.Pow(2f, (1f / 12f) * sing.semiTonesPlayer) * Conductor.instance.musicSource.pitch;
+                GleeClubSingInput spawnedInput = Instantiate(singInputPrefab, transform);
+                spawnedInput.pitch = playerPitch;
+                spawnedInput.Init(beat + length + sing.startBeat + beatInterval, sing.length, sing.closeMouth);
                 float pitch = Mathf.Pow(2f, (1f / 12f) * sing.semiTones) * Conductor.instance.musicSource.pitch;
                 BeatAction.New(instance.gameObject, new List<BeatAction.Action>()
                 {
@@ -150,6 +164,45 @@ namespace HeavenStudio.Games
             }
             queuedSingings.Clear();
         }
+
+        public void Baton(float beat)
+        {
+            ScheduleInput(beat, 1, InputType.STANDARD_DOWN, JustBaton, MissBaton, Out);
+            MultiSound.Play(new MultiSound.Sound[]
+            {
+                new MultiSound.Sound("gleeClub/BatonUp", beat),
+                new MultiSound.Sound("gleeClub/BatonDown", beat + 1),
+            });
+            BeatAction.New(instance.gameObject, new List<BeatAction.Action>()
+            {
+                new BeatAction.Action(beat, delegate
+                {
+                    condAnim.DoScaledAnimationAsync("ConductorBatonUp", 0.5f);
+                }),
+                new BeatAction.Action(beat + 1, delegate
+                {
+                    condAnim.DoScaledAnimationAsync("ConductorBatonDown", 0.5f);
+                    leftChorusKid.StopSinging();
+                    middleChorusKid.StopSinging();
+                }),
+                new BeatAction.Action(beat + 2, delegate
+                {
+                    condAnim.DoUnscaledAnimation("ConductorIdle", 0, -1);
+                }),
+            });
+        }
+
+        void JustBaton(PlayerActionEvent caller, float state)
+        {
+            playerChorusKid.StopSinging();
+        }
+
+        void MissBaton(PlayerActionEvent caller)
+        {
+
+        }
+
+        void Out(PlayerActionEvent caller) { }
     }
 }
 

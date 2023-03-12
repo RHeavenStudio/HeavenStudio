@@ -12,7 +12,7 @@ namespace HeavenStudio.Games.Scripts_GleeClub
         
         public float currentPitch = 1f;
 
-        bool singing;
+        public bool singing;
 
         private GleeClub game;
 
@@ -37,6 +37,7 @@ namespace HeavenStudio.Games.Scripts_GleeClub
 
         public void StopSinging()
         {
+            if (!singing) return;
             singing = false;
             anim.Play("CloseMouth", 0, 0);
             Jukebox.KillLoop(currentSound, 0f);
