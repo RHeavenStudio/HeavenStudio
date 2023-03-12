@@ -36,14 +36,6 @@ namespace HeavenStudio.Editor
         {
             cursorCheckbox.isOn = PersistentDataManager.gameSettings.editorCursorEnable;
             discordRPCCheckbox.isOn = PersistentDataManager.gameSettings.discordRPCEnable;
-
-            Editor.instance.isCursorEnabled = cursorCheckbox.isOn;
-            if (Editor.instance != null && !Editor.instance.fullscreen)
-            {
-                GameManager.instance.CursorCam.enabled = Editor.instance.isCursorEnabled;
-            }
-
-            Editor.instance.isDiscordEnabled = discordRPCCheckbox.isOn;
         }
 
         public override void OnCloseTab()

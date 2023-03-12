@@ -118,6 +118,7 @@ namespace HeavenStudio.Editor
             BuildDateDisplay.text = GlobalGameManager.buildTime;
             isCursorEnabled  = PersistentDataManager.gameSettings.editorCursorEnable;
             isDiscordEnabled = PersistentDataManager.gameSettings.discordRPCEnable;
+            GameManager.instance.CursorCam.enabled = isCursorEnabled;
         }
 
         public void AddIcon(Minigames.Minigame minigame)
