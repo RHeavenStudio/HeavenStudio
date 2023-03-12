@@ -92,6 +92,24 @@ TextureImporter:
   - first:
       213: -4439084542125446343
     second: MissIdle1
+  - first:
+      213: -478208254676933719
+    second: Crouch
+  - first:
+      213: 3772122826411846613
+    second: MegaYell0
+  - first:
+      213: 6832020984448324246
+    second: MegaYell1
+  - first:
+      213: -4378024112835011280
+    second: MegaYellIdle0
+  - first:
+      213: 9161786761424276365
+    second: MegaYellIdle1
+  - first:
+      213: 5081155804645796742
+    second: MegaYellIdle2
   externalObjects: {}
   serializedVersion: 11
   mipmaps:
@@ -777,7 +795,7 @@ TextureImporter:
         width: 255
         height: 410
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
@@ -798,7 +816,7 @@ TextureImporter:
         width: 255
         height: 410
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
@@ -806,6 +824,132 @@ TextureImporter:
       bones: []
       spriteID: 93b6fa2d0243562c0800000000000000
       internalID: -4439084542125446343
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Crouch
+      rect:
+        serializedVersion: 2
+        x: 1102
+        y: 1950
+        width: 255
+        height: 410
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 9a3625340201d59f0800000000000000
+      internalID: -478208254676933719
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: MegaYell0
+      rect:
+        serializedVersion: 2
+        x: 757
+        y: 3062
+        width: 255
+        height: 410
+      alignment: 9
+      pivot: {x: 0.52523386, y: 0.49476764}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 5dbab6d99b5495430800000000000000
+      internalID: 3772122826411846613
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: MegaYell1
+      rect:
+        serializedVersion: 2
+        x: 1103
+        y: 3062
+        width: 255
+        height: 410
+      alignment: 9
+      pivot: {x: 0.5218999, y: 0.46497774}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 6929e0443e630de50800000000000000
+      internalID: 6832020984448324246
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: MegaYellIdle0
+      rect:
+        serializedVersion: 2
+        x: 44
+        y: 1436
+        width: 255
+        height: 430
+      alignment: 9
+      pivot: {x: 0.53295517, y: 0.43974125}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 03ddf50e3422e33c0800000000000000
+      internalID: -4378024112835011280
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: MegaYellIdle1
+      rect:
+        serializedVersion: 2
+        x: 401
+        y: 1427
+        width: 260
+        height: 457
+      alignment: 9
+      pivot: {x: 0.5538685, y: 0.44330087}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: d8b029ea484352f70800000000000000
+      internalID: 9161786761424276365
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: MegaYellIdle2
+      rect:
+        serializedVersion: 2
+        x: 746
+        y: 1412
+        width: 285
+        height: 473
+      alignment: 9
+      pivot: {x: 0.5196572, y: 0.46298584}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 68ba3508844e38640800000000000000
+      internalID: 5081155804645796742
       vertices: []
       indices: 
       edges: []
