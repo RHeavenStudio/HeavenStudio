@@ -27,10 +27,10 @@ namespace HeavenStudio.Games.Scripts_MunchyMonk
 
         private void Start() 
         {
-            if (type == 1f || type <= 3f) {
+            if (type == 1f || type >= 3f) {
                 game.ScheduleInput(startBeat, 1f, InputType.STANDARD_DOWN, Hit, Miss, Early);
             } else {
-                game.ScheduleInput(startBeat, type == 2 ? 1.5f : 2f, InputType.STANDARD_DOWN, Hit, Miss, Early);
+                game.ScheduleInput(startBeat, type == 2f ? 1.5f : 2f, InputType.STANDARD_DOWN, Hit, Miss, Early);
             }
         }
 
@@ -44,17 +44,16 @@ namespace HeavenStudio.Games.Scripts_MunchyMonk
         private void Hit(PlayerActionEvent caller, float state)
         {
             game.MonkArmsAnim.DoScaledAnimationAsync("WristSlap", 0.4f);
+            Jukebox.PlayOneShotGame(sfxName+"slap");
             
             if (state >= 1f || state <= -1f) 
             {
                 game.DumplingsAnim.DoScaledAnimationAsync("Barely", 0.5f);
+                Jukebox.PlayOneShotGame(sfxName+"barely");
             } else {
                 game.MonkAnim.DoScaledAnimationAsync("Eat", 0.4f);
                 game.needBlush = true;
-                MultiSound.Play(new MultiSound.Sound[] { 
-                    new MultiSound.Sound(sfxName+"gulp_hit", startBeat), 
-                    new MultiSound.Sound(sfxName+"slap", startBeat), 
-                });
+                Jukebox.PlayOneShotGame(sfxName+"gulp");
                 GameObject.Destroy(gameObject);
             }
         }
@@ -70,7 +69,7 @@ namespace HeavenStudio.Games.Scripts_MunchyMonk
             game.DumplingsAnim.DoScaledAnimationAsync("HitMiss", 0.5f);
             MultiSound.Play(new MultiSound.Sound[] {
                 new MultiSound.Sound(sfxName+"slap", game.lastReportedBeat),
-                new MultiSound.Sound(sfxName+"slap_overlay", game.lastReportedBeat),
+                new MultiSound.Sound(sfxName+"miss", game.lastReportedBeat),
             });
         }
     }

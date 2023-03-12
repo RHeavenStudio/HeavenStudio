@@ -9,7 +9,7 @@ namespace HeavenStudio.Games.Loaders
     public static class ntrMunchyMonkLoader
     {
         public static Minigame AddGame(EventCaller eventCaller) {
-            return new Minigame("munchyMonk", "Munchy Monk", "a9f6ff", false, false, new List<GameAction>()
+            return new Minigame("munchyMonk", "Munchy Monk", "b9fffc", false, false, new List<GameAction>()
             {
                 new GameAction("One", "One")
                 {
@@ -20,19 +20,15 @@ namespace HeavenStudio.Games.Loaders
                     defaultLength = 2f,
                     parameters = new List<Param>()
                     {
-                        new Param("oneColor", new Color(1,1,1,1), "Color", "Change the color of the dumpling")
+                        new Param("oneColor", new Color(1, 1, 1, 1), "Color", "Change the color of the dumpling")
                     },
                 },
                 new GameAction("TwoTwo", "Two Two")
                 {
-                    function = delegate {
-                        var e = eventCaller.currentEntity; 
-                        MunchyMonk.instance.TwoTwoCue(e.beat); 
-                    },
                     defaultLength = 2f,
                     parameters = new List<Param>()
                     {
-                        new Param("twoColor", new Color(1,1,1,1), "Color", "Change the color of the dumplings")
+                        new Param("twoColor", new Color(1, 0.51f, 0.45f, 1), "Color", "Change the color of the dumplings")
                     },
                     preFunction = delegate {
                         var e = eventCaller.currentEntity; 
@@ -45,10 +41,10 @@ namespace HeavenStudio.Games.Loaders
                         var e = eventCaller.currentEntity; 
                         MunchyMonk.instance.ThreeGoCue(e.beat, e["threeColor"]); 
                     },
-                    defaultLength = 3.5f,
+                    defaultLength = 4f,
                     parameters = new List<Param>()
                     {
-                        new Param("threeColor", new Color(1,1,1,1), "Color", "Change the color of the dumplings")
+                        new Param("threeColor", new Color(0.34f, 0.77f, 0.36f, 1), "Color", "Change the color of the dumplings")
                     },
                 },
                 new GameAction("Bop", "Bop")
@@ -74,6 +70,22 @@ namespace HeavenStudio.Games.Loaders
                     defaultLength = 0.5f,
                 },
                 */
+
+                // hidden in the editor cuz drama and also yuck
+                new GameAction("OneStretchable", "One (Stretchable)")
+                {
+                    function = delegate {
+                        var e = eventCaller.currentEntity;
+                        MunchyMonk.instance.OneGoCueStretchable(e.beat, e["oneColor"], e.length);
+                    },
+                    defaultLength = 4f,
+                    resizable = true,
+                    hidden = true,
+                    parameters = new List<Param>()
+                    {
+                        new Param("oneColor", new Color(1, 1, 1, 1), "Color", "Change the color of the dumpling")
+                    },
+                },
             });
         }
     }
@@ -86,7 +98,12 @@ namespace HeavenStudio.Games
     {
         [Header("Objects")]
         [SerializeField] GameObject DumplingObj;
+        [SerializeField] GameObject TwoDumplingObj1;
+        [SerializeField] GameObject TwoDumplingObj2;
         [SerializeField] SpriteRenderer DumplingSprite;
+        [SerializeField] SpriteRenderer TwoDumplingSprite1;
+        [SerializeField] SpriteRenderer TwoDumplingSprite2;
+        [SerializeField] Transform MonkHand;
 
         [Header("Animators")]
         [SerializeField] Animator OneGiverAnim;
@@ -120,10 +137,7 @@ namespace HeavenStudio.Games
             if (PlayerInput.Pressed() && !IsExpectingInputNow(InputType.STANDARD_DOWN))
             {
                 MonkArmsAnim.DoScaledAnimationAsync("WristSlap", 0.5f);
-                MultiSound.Play(new MultiSound.Sound[] {
-                    new MultiSound.Sound(sfxName+"slap", lastReportedBeat),
-                    new MultiSound.Sound(sfxName+"slap_overlay", lastReportedBeat),
-                });
+                Jukebox.PlayOneShotGame(sfxName+"slap");
             }
 
             if (!Conductor.instance.isPlaying && !Conductor.instance.isPaused) {
@@ -147,13 +161,24 @@ namespace HeavenStudio.Games
             monkBop = doesBop;
         }
 
+        public void OneGoCueStretchable(float beat, Color oneColor, float length)
+        {
+            // does it every beat not every other beat. kinda useless lol
+            for (int i = 0; i < length; i++) {
+                BeatAction.New(instance.gameObject, new List<BeatAction.Action>()
+                {
+                    new BeatAction.Action(beat + i, delegate { OneGoCue(beat, oneColor); }),
+                });
+            }
+        }
+
         public void OneGoCue(float beat, Color oneColor)
         {
             DumplingSprite.color = oneColor;
             
             MultiSound.Play(new MultiSound.Sound[] {
-                    new MultiSound.Sound(sfxName+"one", beat),
-                    new MultiSound.Sound(sfxName+"one_go", beat + 1f),
+                    new MultiSound.Sound(sfxName+"one_1", beat),
+                    new MultiSound.Sound(sfxName+"one_2", beat + 1f),
             });
 
             BeatAction.New(gameObject, new List<BeatAction.Action>() {
@@ -167,13 +192,14 @@ namespace HeavenStudio.Games
 
         public void PreTwoTwoCue(float beat, Color twoColor)
         {
-            DumplingSprite.color = twoColor;
+            TwoDumplingSprite1.color = twoColor;
+            TwoDumplingSprite2.color = twoColor;
             
             MultiSound.Play(new MultiSound.Sound[] { 
                 new MultiSound.Sound(sfxName+"two_1", beat - 0.5f),
                 new MultiSound.Sound(sfxName+"two_2", beat), 
-                new MultiSound.Sound(sfxName+"two_go_1", beat + 1f),
-                new MultiSound.Sound(sfxName+"two_go_1", beat + 1.5f),
+                new MultiSound.Sound(sfxName+"two_3", beat + 1f),
+                new MultiSound.Sound(sfxName+"two_4", beat + 1.5f),
             });
 
             BeatAction.New(gameObject, new List<BeatAction.Action>() {
@@ -183,19 +209,14 @@ namespace HeavenStudio.Games
 
             BeatAction.New(gameObject, new List<BeatAction.Action>() {
                 new BeatAction.Action(beat-0.5f, delegate { 
-                    Dumpling DumplingClone1 = Instantiate(DumplingObj).GetComponent<Dumpling>(); 
+                    Dumpling DumplingClone1 = Instantiate(TwoDumplingObj1, MonkHand).GetComponent<Dumpling>(); 
                     DumplingClone1.startBeat = beat-0.5f;
-                    DumplingClone1.type = 2; }),
+                    DumplingClone1.type = 2f; }),
                 new BeatAction.Action(beat-0.5f, delegate { 
-                    Dumpling DumplingClone2 = Instantiate(DumplingObj).GetComponent<Dumpling>(); 
+                    Dumpling DumplingClone2 = Instantiate(TwoDumplingObj2, MonkHand).GetComponent<Dumpling>(); 
                     DumplingClone2.startBeat = beat-0.5f; 
                     DumplingClone2.type = 2.5f; }),
             });
-        }
-
-        public void TwoTwoCue(float beat)
-        {
-            
         }
 
         public void ThreeGoCue(float beat, Color threeColor)
@@ -203,25 +224,33 @@ namespace HeavenStudio.Games
             DumplingSprite.color = threeColor;
             
             MultiSound.Play(new MultiSound.Sound[] {
-                    new MultiSound.Sound(sfxName+"three", beat),
-                    new MultiSound.Sound(sfxName+"three_go_1", beat + 1f),
-                    new MultiSound.Sound(sfxName+"three_go_2", beat + 2f),
-                    new MultiSound.Sound(sfxName+"three_go_3", beat + 3f),
+                    new MultiSound.Sound(sfxName+"three_1", beat),
+                    new MultiSound.Sound(sfxName+"three_2", beat + 1f),
+                    new MultiSound.Sound(sfxName+"three_3", beat + 2f),
+                    new MultiSound.Sound(sfxName+"three_4", beat + 3f),
                 });
             BeatAction.New(instance.gameObject, new List<BeatAction.Action>() {
-                new BeatAction.Action(beat     , delegate { Dumpling DumplingClone1 = Instantiate(DumplingObj).GetComponent<Dumpling>(); DumplingClone1.startBeat = beat; }),
-                new BeatAction.Action(beat     , delegate { ThreeGiverAnim.DoScaledAnimationAsync("GiveIn", 0.5f); }),
-                new BeatAction.Action(beat+0.5f, delegate { ThreeGiverAnim.DoScaledAnimationAsync("GiveOut", 0.5f); }),
-                new BeatAction.Action(beat  +1f, delegate { Dumpling DumplingClone2 = Instantiate(DumplingObj).GetComponent<Dumpling>(); DumplingClone2.startBeat = beat+1; }),
-                new BeatAction.Action(beat  +1f, delegate { ThreeGiverAnim.DoScaledAnimationAsync("GiveIn", 0.5f); }),
-                new BeatAction.Action(beat+1.5f, delegate { ThreeGiverAnim.DoScaledAnimationAsync("GiveOut", 0.5f); }),
-                new BeatAction.Action(beat  +2f, delegate { Dumpling DumplingClone3 = Instantiate(DumplingObj).GetComponent<Dumpling>(); DumplingClone3.startBeat = beat+2; }),
-                new BeatAction.Action(beat  +2f, delegate { ThreeGiverAnim.DoScaledAnimationAsync("GiveIn", 0.5f); }),
-                new BeatAction.Action(beat+2.5f, delegate { ThreeGiverAnim.DoScaledAnimationAsync("GiveOut", 0.5f); }),
-            });
-            BeatAction.New(gameObject, new List<BeatAction.Action>() {
-                
-                
+                // first dumpling
+                new BeatAction.Action(beat     , delegate { 
+                    Dumpling DumplingClone1 = Instantiate(DumplingObj).GetComponent<Dumpling>(); 
+                    DumplingClone1.startBeat = beat;
+                    ThreeGiverAnim.DoScaledAnimationAsync("GiveIn", 0.5f); }),
+                new BeatAction.Action(beat+0.5f, delegate { 
+                    ThreeGiverAnim.DoScaledAnimationAsync("GiveOut", 0.5f); }),
+                // second dumpling
+                new BeatAction.Action(beat  +1f, delegate { 
+                    Dumpling DumplingClone2 = Instantiate(DumplingObj).GetComponent<Dumpling>(); 
+                    DumplingClone2.startBeat = beat+1;
+                    ThreeGiverAnim.DoScaledAnimationAsync("GiveIn", 0.5f); }),
+                new BeatAction.Action(beat+1.5f, delegate { 
+                    ThreeGiverAnim.DoScaledAnimationAsync("GiveOut", 0.5f); }),
+                // third dumpling
+                new BeatAction.Action(beat  +2f, delegate { 
+                    Dumpling DumplingClone3 = Instantiate(DumplingObj).GetComponent<Dumpling>(); 
+                    DumplingClone3.startBeat = beat+2;
+                ThreeGiverAnim.DoScaledAnimationAsync("GiveIn", 0.5f); }),
+                new BeatAction.Action(beat+2.5f, delegate { 
+                    ThreeGiverAnim.DoScaledAnimationAsync("GiveOut", 0.5f); }),
             });
         }
     }
