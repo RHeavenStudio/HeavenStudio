@@ -11,13 +11,11 @@ namespace HeavenStudio.Games.Scripts_MunchyMonk
     {
         public float startBeat;
         public float type;
-        public string dumplingString;
         const string sfxName = "munchyMonk/";
         
         [Header("References")]
         [SerializeField] Animator anim;
         [SerializeField] bool needSnap;
-        [SerializeField] float threeDelay;
 
         private MunchyMonk game;
 
@@ -29,11 +27,10 @@ namespace HeavenStudio.Games.Scripts_MunchyMonk
 
         private void Start() 
         {
-            if (type == 2f) {
-                if (dumplingString == "two_2") game.ScheduleInput(startBeat, 1.5f, InputType.STANDARD_DOWN, Hit, Miss, Early);
-                if (dumplingString == "two_1") game.ScheduleInput(startBeat, 2f, InputType.STANDARD_DOWN, Hit, Miss, Early);
-            } else {
+            if (type == 1f || type <= 3f) {
                 game.ScheduleInput(startBeat, 1f, InputType.STANDARD_DOWN, Hit, Miss, Early);
+            } else {
+                game.ScheduleInput(startBeat, type == 2 ? 1.5f : 2f, InputType.STANDARD_DOWN, Hit, Miss, Early);
             }
         }
 
