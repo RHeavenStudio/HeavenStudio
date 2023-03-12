@@ -26,6 +26,11 @@ namespace HeavenStudio.Games.Scripts_GleeClub
             Jukebox.KillLoop(currentSound, 0f);
         }
 
+        public void MissPose()
+        {
+            if (!singing) anim.Play("MissIdle", 0, 0);
+        }
+
         public void StartSinging()
         {
             if (singing) return;

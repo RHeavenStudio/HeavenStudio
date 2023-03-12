@@ -42,11 +42,13 @@ namespace HeavenStudio.Games.Scripts_GleeClub
 
         public void MissClose(PlayerActionEvent caller)
         {
+            game.missed = true;
             CleanUp();
         }
 
         public void Miss(PlayerActionEvent caller)
         {
+            game.missed = true;
             if (!shouldClose) CleanUp();
         }
 

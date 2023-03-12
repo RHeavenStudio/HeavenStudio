@@ -61,6 +61,7 @@ namespace HeavenStudio.Games
         [Header("Prefabs")]
         [SerializeField] GleeClubSingInput singInputPrefab;
         [Header("Components")]
+        [SerializeField] Animator heartAnim;
         [SerializeField] Animator condAnim;
         [SerializeField] ChorusKid leftChorusKid;
         [SerializeField] ChorusKid middleChorusKid;
@@ -70,6 +71,7 @@ namespace HeavenStudio.Games
         bool intervalStarted;
         float intervalStartBeat;
         float beatInterval = 4f;
+        public bool missed;
         public static GleeClub instance;
 
         void Awake()
@@ -142,6 +144,8 @@ namespace HeavenStudio.Games
         {
             if (queuedSingings.Count == 0) return;
             intervalStarted = false;
+            missed = false;
+            ShowHeart(beat + length + beatInterval * 2 + 1);
             foreach (var sing in queuedSingings)
             {
                 float playerPitch = Mathf.Pow(2f, (1f / 12f) * sing.semiTonesPlayer) * Conductor.instance.musicSource.pitch;
@@ -167,6 +171,7 @@ namespace HeavenStudio.Games
 
         public void Baton(float beat)
         {
+            missed = false;
             ScheduleInput(beat, 1, InputType.STANDARD_DOWN, JustBaton, MissBaton, Out);
             MultiSound.Play(new MultiSound.Sound[]
             {
@@ -195,14 +200,37 @@ namespace HeavenStudio.Games
         void JustBaton(PlayerActionEvent caller, float state)
         {
             playerChorusKid.StopSinging();
+            ShowHeart(caller.timer + caller.startBeat + 1f);
         }
 
         void MissBaton(PlayerActionEvent caller)
         {
-
+            missed = true;
         }
 
         void Out(PlayerActionEvent caller) { }
+
+        public void ShowHeart(float beat)
+        {
+
+            BeatAction.New(instance.gameObject, new List<BeatAction.Action>()
+            {
+                new BeatAction.Action(beat, delegate
+                {
+                    if (missed)
+                    {
+                        leftChorusKid.MissPose();
+                        middleChorusKid.MissPose();
+                        return;
+                    }
+                    heartAnim.Play("HeartIdle", 0, 0);
+                }),
+                new BeatAction.Action(beat + 2, delegate
+                {
+                    heartAnim.Play("HeartNothing", 0, 0);
+                })
+            });
+        }
     }
 }
 
