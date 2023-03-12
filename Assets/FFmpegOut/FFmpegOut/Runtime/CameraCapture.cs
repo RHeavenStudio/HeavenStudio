@@ -19,6 +19,13 @@ namespace FFmpegOut
 
         public string outputDir;
 
+        [SerializeField] bool _recordAudio = false;
+
+        public bool recordAudio {
+            get { return _recordAudio; }
+            set { _recordAudio = value; }
+        }
+
         [SerializeField] int _width = 1920;
 
         public int width {
@@ -125,6 +132,12 @@ namespace FFmpegOut
             }
         }
 
+        void OnAudioFilterRead(float[] buffer, int channels) {
+            if (_session == null || !_session.recordAudio) return;
+            _session.PushAudioBuffer(buffer, channels);
+        }
+
+
         IEnumerator Start()
         {
             // Sync with FFmpeg pipe thread at the end of every frame.
@@ -157,7 +170,7 @@ namespace FFmpegOut
                     outputDir,
                     camera.targetTexture.width,
                     camera.targetTexture.height,
-                    _frameRate, preset
+                    _frameRate, preset, recordAudio
                 );
 
                 _startTime = Time.time;

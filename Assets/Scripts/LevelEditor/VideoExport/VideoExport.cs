@@ -53,7 +53,7 @@ namespace HeavenStudio.Editor.VideoExport
         [SerializeField] private GameObject renderProgressHolder;
 
         [Header("Properties")]
-        [SerializeField] Toggle exportAudio;
+        [SerializeField] Toggle exportAudioToggle;
         [SerializeField] TMP_Dropdown formatDropdown;
         [SerializeField] TMP_InputField widthInput;
         [SerializeField] TMP_InputField heightInput;
@@ -65,6 +65,7 @@ namespace HeavenStudio.Editor.VideoExport
         private CameraCapture gameCameraCapture;
         private FrameRateController frameRateController;
 
+        private bool exportAudio => exportAudioToggle.isOn;
         private int format => formatDropdown.value;
         private int width => int.Parse(widthInput.text);
         private int height => int.Parse(heightInput.text);
@@ -82,13 +83,14 @@ namespace HeavenStudio.Editor.VideoExport
         #region MonoBehaviour
         private void Start()
         {
-            Tooltip.AddTooltip(exportAudio.transform.parent.gameObject, "<color=red>Not Implemented</color>");
+            // Tooltip.AddTooltip(exportAudioToggle.transform.parent.gameObject, "<color=red>Not Implemented</color>");
             Tooltip.AddTooltip(fpsInput.transform.parent.gameObject, "Above 60 not recommended");
 
             var exportFormatNames = Enum.GetNames(typeof(ExportFormat));
             formatDropdown.ClearOptions();
             formatDropdown.AddOptions(exportFormatNames.ToList());
             formatDropdown.value = 0;
+            exportAudioToggle.isOn = true;
         }
 
         public void Open(DynamicBeatmap.DynamicEntity endEvent)
@@ -152,11 +154,13 @@ namespace HeavenStudio.Editor.VideoExport
                     gameCameraCapture.width = width;
                     gameCameraCapture.height = height;
                     gameCameraCapture.frameRate = fps;
+                    gameCameraCapture.recordAudio = exportAudio;
                     gameCameraCapture.OnCreateTexture += delegate { exportPreview.texture = GameCamera.instance.camera.activeTexture; };
 
                     frameRateController = GameCamera.instance.gameObject.AddComponent<FrameRateController>();
                     frameRateController._frameRate = fps;
 
+                    GameManager.instance.autoplay = true;
                     GameManager.instance.Play(startExportTimeInBeats, false);
                     isExporting = true;
                     GameManager.instance.SortEventsList();
