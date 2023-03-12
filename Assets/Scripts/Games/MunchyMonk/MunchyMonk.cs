@@ -17,7 +17,7 @@ namespace HeavenStudio.Games.Loaders
                         var e = eventCaller.currentEntity;
                         MunchyMonk.instance.OneGoCue(e.beat, e["oneColor"]);
                     },
-                    defaultLength = 1.5f,
+                    defaultLength = 2f,
                     parameters = new List<Param>()
                     {
                         new Param("oneColor", new Color(1,1,1,1), "Color", "Change the color of the dumpling")
