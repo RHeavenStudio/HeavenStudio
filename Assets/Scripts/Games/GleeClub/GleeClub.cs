@@ -10,7 +10,7 @@ namespace HeavenStudio.Games.Loaders
     {
         public static Minigame AddGame(EventCaller eventCaller)
         {
-            return new Minigame("gleeClub", "Glee Club", "FFFFFF", false, false, new List<GameAction>()
+            return new Minigame("gleeClub", "Glee Club", "cfcecf", false, false, new List<GameAction>()
             {
                 new GameAction("intervalStart", "Start Interval")
                 {
@@ -39,6 +39,17 @@ namespace HeavenStudio.Games.Loaders
                 {
                     function = delegate { var e = eventCaller.currentEntity; GleeClub.instance.Baton(e.beat); },
                     defaultLength = 2f
+                },
+                new GameAction("togetherNow", "Together Now!")
+                {
+                    function = delegate { var e = eventCaller.currentEntity; GleeClub.instance.TogetherNow(e.beat, e["semiTones"], e["semiTones1"], e["semiTonesPlayer"]); },
+                    defaultLength = 3f,
+                    parameters = new List<Param>()
+                    {
+                        new Param("semiTones", new EntityTypes.Integer(-24, 24, 0), "Semitones", "The number of semitones up or down this note should be pitched"),
+                        new Param("semiTones1", new EntityTypes.Integer(-24, 24, 0), "Semitones (Next)", "The number of semitones up or down this note should be pitched"),
+                        new Param("semiTonesPlayer", new EntityTypes.Integer(-24, 24, 0), "Semitones (Player)", "The number of semitones up or down this note should be pitched"),
+                    }
                 }
             });
         }
@@ -73,6 +84,7 @@ namespace HeavenStudio.Games
         float beatInterval = 4f;
         public bool missed;
         public static GleeClub instance;
+        float currentYellPitch = 1f;
 
         void Awake()
         {
@@ -100,15 +112,72 @@ namespace HeavenStudio.Games
             if (PlayerInput.Pressed() && !IsExpectingInputNow(InputType.STANDARD_DOWN))
             {
                 playerChorusKid.StopSinging();
+                leftChorusKid.MissPose();
+                middleChorusKid.MissPose();
             }
             if (PlayerInput.PressedUp() && !IsExpectingInputNow(InputType.STANDARD_UP))
             {
                 playerChorusKid.StartSinging();
+                leftChorusKid.MissPose();
+                middleChorusKid.MissPose();
             }
             if (!Conductor.instance.isPlaying || Conductor.instance.isPaused)
             {
                 if (queuedSingings.Count > 0) queuedSingings.Clear();
             }
+        }
+
+        public void TogetherNow(float beat, int semiTones, int semiTones1, int semiTonesPlayer)
+        {
+            ScheduleInput(beat, 1.25f, InputType.STANDARD_UP, JustTogetherNow, Out, Out);
+            ScheduleInput(beat, 1.75f, InputType.STANDARD_DOWN, JustTogetherNowClose, MissBaton, Out);
+            float pitch = Mathf.Pow(2f, (1f / 12f) * semiTones) * Conductor.instance.musicSource.pitch;
+            float pitch1 = Mathf.Pow(2f, (1f / 12f) * semiTones1) * Conductor.instance.musicSource.pitch;
+            currentYellPitch = Mathf.Pow(2f, (1f / 12f) * semiTonesPlayer) * Conductor.instance.musicSource.pitch;
+            MultiSound.Play(new MultiSound.Sound[]
+            {
+                new MultiSound.Sound("gleeClub/togetherEN-01", beat + 0.25f),
+                new MultiSound.Sound("gleeClub/togetherEN-02", beat + 0.5f),
+                new MultiSound.Sound("gleeClub/togetherEN-03", beat + 0.75f),
+                new MultiSound.Sound("gleeClub/togetherEN-04", beat + 1f),
+            });
+
+            BeatAction.New(instance.gameObject, new List<BeatAction.Action>()
+            {
+                new BeatAction.Action(beat + 0.75f, delegate
+                {
+                    leftChorusKid.StartCrouch();
+                    middleChorusKid.StartCrouch();
+                    playerChorusKid.StartCrouch();
+                }),
+                new BeatAction.Action(beat + 1.25f, delegate
+                {
+                    leftChorusKid.currentPitch = pitch;
+                    middleChorusKid.currentPitch = pitch1;
+                    leftChorusKid.StartYell();
+                    middleChorusKid.StartYell();
+                }),
+                new BeatAction.Action(beat + 1.75f, delegate
+                {
+                    leftChorusKid.StopSinging(true);
+                    middleChorusKid.StopSinging(true);
+                }),
+                new BeatAction.Action(beat + 3f, delegate
+                {
+                    ShowHeart(beat + 3f);
+                })
+            });
+        }
+
+        void JustTogetherNow(PlayerActionEvent caller, float state)
+        {
+            playerChorusKid.currentPitch = currentYellPitch;
+            playerChorusKid.StartYell();
+        }
+
+        void JustTogetherNowClose(PlayerActionEvent caller, float state)
+        {
+            playerChorusKid.StopSinging(true);
         }
 
         public void StartInterval(float beat, float length)
