@@ -2914,6 +2914,37 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
+--- !u!1 &5330488048195279595
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1856044063768226938}
+  m_Layer: 0
+  m_Name: BrowHolder
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 0
+--- !u!4 &1856044063768226938
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5330488048195279595}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children:
+  - {fileID: 705948717492519649}
+  m_Father: {fileID: 2671407606567406260}
+  m_RootOrder: 7
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &5516703322854754306
 GameObject:
   m_ObjectHideFlags: 0
@@ -3065,6 +3096,7 @@ Transform:
   - {fileID: 5634438699355064781}
   - {fileID: 2413677811540700344}
   - {fileID: 6610891455418019493}
+  - {fileID: 1856044063768226938}
   - {fileID: 2712405704287867106}
   m_Father: {fileID: 5426835785453495421}
   m_RootOrder: 0
@@ -3136,7 +3168,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &705948717492519649
 Transform:
   m_ObjectHideFlags: 0
@@ -3145,11 +3177,11 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 5584816661429645807}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -2.08, y: 1.45, z: 0}
-  m_LocalScale: {x: 0.84502184, y: 0.8345894, z: 0.8345894}
+  m_LocalPosition: {x: -2.08, y: 1.4500003, z: 0}
+  m_LocalScale: {x: 0.8450219, y: 0.8345894, z: 0.8345894}
   m_Children: []
-  m_Father: {fileID: 2712405704287867106}
-  m_RootOrder: 1
+  m_Father: {fileID: 1856044063768226938}
+  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!212 &38081829694205902
 SpriteRenderer:
@@ -4246,7 +4278,7 @@ GameObject:
   m_Component:
   - component: {fileID: 2712405704287867106}
   m_Layer: 0
-  m_Name: HairHolders
+  m_Name: StacheHolder
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -4264,9 +4296,8 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 1280084572664218517}
-  - {fileID: 705948717492519649}
   m_Father: {fileID: 2671407606567406260}
-  m_RootOrder: 7
+  m_RootOrder: 8
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &6867122418596973856
 GameObject:
