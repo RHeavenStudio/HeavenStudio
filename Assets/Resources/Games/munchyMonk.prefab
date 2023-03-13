@@ -160,8 +160,8 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 516631314887172409}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -0.68, y: 2.99, z: 0}
-  m_LocalScale: {x: 1.1316813, y: 1.1316813, z: 1.1312155}
+  m_LocalPosition: {x: -2.542, y: -2.377, z: 0}
+  m_LocalScale: {x: 0.605, y: 0.605, z: 0.605}
   m_Children: []
   m_Father: {fileID: 5249558317707287682}
   m_RootOrder: 0
@@ -241,7 +241,7 @@ MonoBehaviour:
   isEligible: 1
   triggersAutoplay: 1
   startBeat: 0
-  type: 1
+  type: 2
   anim: {fileID: 0}
   needSnap: 0
 --- !u!1 &541415947006689009
@@ -2344,6 +2344,7 @@ Transform:
   - {fileID: 2554173831134354060}
   - {fileID: 525326701495472490}
   - {fileID: 4780003096125758277}
+  - {fileID: 5249558317707287682}
   - {fileID: 168333956154290365}
   m_Father: {fileID: 0}
   m_RootOrder: 0
@@ -2370,7 +2371,6 @@ MonoBehaviour:
   DumplingSprite: {fileID: 1906072608615175757}
   TwoDumplingSprite1: {fileID: 1436961393026862888}
   TwoDumplingSprite2: {fileID: 4620030739486174870}
-  MonkHand: {fileID: 3017711330013249651}
   OneGiverAnim: {fileID: 6809288357990963551}
   TwoGiverAnim: {fileID: 7701772336829383192}
   ThreeGiverAnim: {fileID: 6495224626437450886}
@@ -2409,7 +2409,7 @@ Transform:
   m_Children:
   - {fileID: 838801096863034419}
   m_Father: {fileID: 6163636881912119569}
-  m_RootOrder: 6
+  m_RootOrder: 7
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &4976901385788903237
 GameObject:
@@ -2440,8 +2440,8 @@ Transform:
   m_Children:
   - {fileID: 863794931176398015}
   - {fileID: 3103403358463220564}
-  m_Father: {fileID: 3017711330013249651}
-  m_RootOrder: 0
+  m_Father: {fileID: 6163636881912119569}
+  m_RootOrder: 6
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &5004137005389582764
 GameObject:
@@ -3910,6 +3910,7 @@ GameObject:
   - component: {fileID: 3103403358463220564}
   - component: {fileID: 4620030739486174870}
   - component: {fileID: 7044940957782864366}
+  - component: {fileID: 411253409439128524}
   m_Layer: 0
   m_Name: TwoDumpling2
   m_TagString: Untagged
@@ -3925,8 +3926,8 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 6750155312411716946}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -0.74, y: 1.42, z: 0}
-  m_LocalScale: {x: 1.5928708, y: 0.90279293, z: 1.0932956}
+  m_LocalPosition: {x: -2.5676, y: -3.3, z: 0}
+  m_LocalScale: {x: 0.87799025, y: 0.5146093, z: 0.589}
   m_Children: []
   m_Father: {fileID: 5249558317707287682}
   m_RootOrder: 1
@@ -4006,9 +4007,28 @@ MonoBehaviour:
   isEligible: 1
   triggersAutoplay: 1
   startBeat: 0
-  type: 1
+  type: 2.5
   anim: {fileID: 0}
   needSnap: 0
+--- !u!95 &411253409439128524
+Animator:
+  serializedVersion: 3
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6750155312411716946}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: 3b20582ac7fc19743b4474de0432f7de, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorControllerStateOnDisable: 0
 --- !u!1 &6761161352435120153
 GameObject:
   m_ObjectHideFlags: 0
@@ -4727,8 +4747,7 @@ Transform:
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: -4.841001, y: -5.4, z: 0}
   m_LocalScale: {x: 0.594, y: 0.594, z: 0.594}
-  m_Children:
-  - {fileID: 5249558317707287682}
+  m_Children: []
   m_Father: {fileID: 1415265751269166897}
   m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}

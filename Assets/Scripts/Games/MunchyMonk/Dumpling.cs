@@ -27,8 +27,10 @@ namespace HeavenStudio.Games.Scripts_MunchyMonk
 
         private void Start() 
         {
-            if (type == 1f || type >= 3f) {
+            if (type == 1f || type == 3f) {
                 game.ScheduleInput(startBeat, 1f, InputType.STANDARD_DOWN, Hit, Miss, Early);
+            } else if (type >= 3.5f) {
+                game.ScheduleInput(startBeat, 0.75f, InputType.STANDARD_DOWN, Hit, Miss, Early);
             } else {
                 game.ScheduleInput(startBeat, type == 2f ? 1.5f : 2f, InputType.STANDARD_DOWN, Hit, Miss, Early);
             }

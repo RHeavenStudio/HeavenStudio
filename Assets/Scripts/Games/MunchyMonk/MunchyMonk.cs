@@ -103,7 +103,6 @@ namespace HeavenStudio.Games
         [SerializeField] SpriteRenderer DumplingSprite;
         [SerializeField] SpriteRenderer TwoDumplingSprite1;
         [SerializeField] SpriteRenderer TwoDumplingSprite2;
-        [SerializeField] Transform MonkHand;
 
         [Header("Animators")]
         [SerializeField] Animator OneGiverAnim;
@@ -130,7 +129,7 @@ namespace HeavenStudio.Games
         private void Update() 
         {
             if (needBlush && !MonkAnim.IsPlayingAnimationName("Eat")) {
-                MonkAnim.DoScaledAnimationAsync("Blush", 0.5f);
+                MonkAnim.DoScaledAnimationAsync("Blush", 1f);
                 needBlush = false;
             }
             
@@ -209,11 +208,11 @@ namespace HeavenStudio.Games
 
             BeatAction.New(gameObject, new List<BeatAction.Action>() {
                 new BeatAction.Action(beat-0.5f, delegate { 
-                    Dumpling DumplingClone1 = Instantiate(TwoDumplingObj1, MonkHand).GetComponent<Dumpling>(); 
+                    Dumpling DumplingClone1 = Instantiate(TwoDumplingObj1).GetComponent<Dumpling>(); 
                     DumplingClone1.startBeat = beat-0.5f;
                     DumplingClone1.type = 2f; }),
                 new BeatAction.Action(beat-0.5f, delegate { 
-                    Dumpling DumplingClone2 = Instantiate(TwoDumplingObj2, MonkHand).GetComponent<Dumpling>(); 
+                    Dumpling DumplingClone2 = Instantiate(TwoDumplingObj2).GetComponent<Dumpling>(); 
                     DumplingClone2.startBeat = beat-0.5f; 
                     DumplingClone2.type = 2.5f; }),
             });
@@ -231,25 +230,28 @@ namespace HeavenStudio.Games
                 });
             BeatAction.New(instance.gameObject, new List<BeatAction.Action>() {
                 // first dumpling
-                new BeatAction.Action(beat     , delegate { 
+                new BeatAction.Action(beat, delegate { 
                     Dumpling DumplingClone1 = Instantiate(DumplingObj).GetComponent<Dumpling>(); 
                     DumplingClone1.startBeat = beat;
+                    DumplingClone1.type = 3f;
                     ThreeGiverAnim.DoScaledAnimationAsync("GiveIn", 0.5f); }),
                 new BeatAction.Action(beat+0.5f, delegate { 
                     ThreeGiverAnim.DoScaledAnimationAsync("GiveOut", 0.5f); }),
                 // second dumpling
-                new BeatAction.Action(beat  +1f, delegate { 
+                new BeatAction.Action(beat+1.25f, delegate { 
                     Dumpling DumplingClone2 = Instantiate(DumplingObj).GetComponent<Dumpling>(); 
-                    DumplingClone2.startBeat = beat+1;
+                    DumplingClone2.startBeat = beat+1.25f;
+                    DumplingClone2.type = 3.5f;
                     ThreeGiverAnim.DoScaledAnimationAsync("GiveIn", 0.5f); }),
-                new BeatAction.Action(beat+1.5f, delegate { 
+                new BeatAction.Action(beat+1.75f, delegate { 
                     ThreeGiverAnim.DoScaledAnimationAsync("GiveOut", 0.5f); }),
                 // third dumpling
-                new BeatAction.Action(beat  +2f, delegate { 
+                new BeatAction.Action(beat+2.25f, delegate { 
                     Dumpling DumplingClone3 = Instantiate(DumplingObj).GetComponent<Dumpling>(); 
-                    DumplingClone3.startBeat = beat+2;
+                    DumplingClone3.startBeat = beat+2.25f;
+                    DumplingClone3.type = 4f;
                 ThreeGiverAnim.DoScaledAnimationAsync("GiveIn", 0.5f); }),
-                new BeatAction.Action(beat+2.5f, delegate { 
+                new BeatAction.Action(beat+2.75f, delegate { 
                     ThreeGiverAnim.DoScaledAnimationAsync("GiveOut", 0.5f); }),
             });
         }
