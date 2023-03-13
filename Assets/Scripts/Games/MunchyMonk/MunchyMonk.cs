@@ -103,6 +103,7 @@ namespace HeavenStudio.Games
         [SerializeField] SpriteRenderer DumplingSprite;
         [SerializeField] SpriteRenderer TwoDumplingSprite1;
         [SerializeField] SpriteRenderer TwoDumplingSprite2;
+        [SerializeField] SpriteRenderer DumplingSmear;
 
         [Header("Animators")]
         [SerializeField] Animator OneGiverAnim;
@@ -162,7 +163,7 @@ namespace HeavenStudio.Games
 
         public void OneGoCueStretchable(float beat, Color oneColor, float length)
         {
-            // does it every beat not every other beat. kinda useless lol
+            // does it every beat not every other beat. kinda useless for now lol
             for (int i = 0; i < length; i++) {
                 BeatAction.New(instance.gameObject, new List<BeatAction.Action>()
                 {
@@ -174,6 +175,7 @@ namespace HeavenStudio.Games
         public void OneGoCue(float beat, Color oneColor)
         {
             DumplingSprite.color = oneColor;
+            DumplingSmear.color = oneColor;
             
             MultiSound.Play(new MultiSound.Sound[] {
                     new MultiSound.Sound(sfxName+"one_1", beat),
@@ -193,6 +195,7 @@ namespace HeavenStudio.Games
         {
             TwoDumplingSprite1.color = twoColor;
             TwoDumplingSprite2.color = twoColor;
+            DumplingSmear.color = twoColor;
             
             MultiSound.Play(new MultiSound.Sound[] { 
                 new MultiSound.Sound(sfxName+"two_1", beat - 0.5f),
@@ -221,6 +224,7 @@ namespace HeavenStudio.Games
         public void ThreeGoCue(float beat, Color threeColor)
         {
             DumplingSprite.color = threeColor;
+            DumplingSmear.color = threeColor;
             
             MultiSound.Play(new MultiSound.Sound[] {
                     new MultiSound.Sound(sfxName+"three_1", beat),
@@ -234,6 +238,7 @@ namespace HeavenStudio.Games
                     Dumpling DumplingClone1 = Instantiate(DumplingObj).GetComponent<Dumpling>(); 
                     DumplingClone1.startBeat = beat;
                     DumplingClone1.type = 3f;
+
                     ThreeGiverAnim.DoScaledAnimationAsync("GiveIn", 0.5f); }),
                 new BeatAction.Action(beat+0.5f, delegate { 
                     ThreeGiverAnim.DoScaledAnimationAsync("GiveOut", 0.5f); }),
@@ -242,6 +247,7 @@ namespace HeavenStudio.Games
                     Dumpling DumplingClone2 = Instantiate(DumplingObj).GetComponent<Dumpling>(); 
                     DumplingClone2.startBeat = beat+1.25f;
                     DumplingClone2.type = 3.5f;
+                    
                     ThreeGiverAnim.DoScaledAnimationAsync("GiveIn", 0.5f); }),
                 new BeatAction.Action(beat+1.75f, delegate { 
                     ThreeGiverAnim.DoScaledAnimationAsync("GiveOut", 0.5f); }),
@@ -250,7 +256,8 @@ namespace HeavenStudio.Games
                     Dumpling DumplingClone3 = Instantiate(DumplingObj).GetComponent<Dumpling>(); 
                     DumplingClone3.startBeat = beat+2.25f;
                     DumplingClone3.type = 4f;
-                ThreeGiverAnim.DoScaledAnimationAsync("GiveIn", 0.5f); }),
+
+                    ThreeGiverAnim.DoScaledAnimationAsync("GiveIn", 0.5f); }),
                 new BeatAction.Action(beat+2.75f, delegate { 
                     ThreeGiverAnim.DoScaledAnimationAsync("GiveOut", 0.5f); }),
             });

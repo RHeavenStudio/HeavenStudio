@@ -145,6 +145,7 @@ GameObject:
   - component: {fileID: 863794931176398015}
   - component: {fileID: 1436961393026862888}
   - component: {fileID: 7406148916657929712}
+  - component: {fileID: 2274865543072549879}
   m_Layer: 0
   m_Name: TwoDumpling1
   m_TagString: Untagged
@@ -244,6 +245,25 @@ MonoBehaviour:
   type: 2
   anim: {fileID: 0}
   needSnap: 0
+--- !u!95 &2274865543072549879
+Animator:
+  serializedVersion: 3
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 516631314887172409}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: 3b20582ac7fc19743b4474de0432f7de, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorControllerStateOnDisable: 0
 --- !u!1 &541415947006689009
 GameObject:
   m_ObjectHideFlags: 0
@@ -2371,6 +2391,7 @@ MonoBehaviour:
   DumplingSprite: {fileID: 1906072608615175757}
   TwoDumplingSprite1: {fileID: 1436961393026862888}
   TwoDumplingSprite2: {fileID: 4620030739486174870}
+  DumplingSmear: {fileID: 4496255832183162831}
   OneGiverAnim: {fileID: 6809288357990963551}
   TwoGiverAnim: {fileID: 7701772336829383192}
   ThreeGiverAnim: {fileID: 6495224626437450886}
@@ -3406,6 +3427,7 @@ GameObject:
   - component: {fileID: 838801096863034419}
   - component: {fileID: 1906072608615175757}
   - component: {fileID: 5825862585537634178}
+  - component: {fileID: 281185408784258692}
   m_Layer: 0
   m_Name: Dumpling
   m_TagString: Untagged
@@ -3505,6 +3527,25 @@ MonoBehaviour:
   type: 1
   anim: {fileID: 0}
   needSnap: 0
+--- !u!95 &281185408784258692
+Animator:
+  serializedVersion: 3
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6215383920913072889}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: 3b20582ac7fc19743b4474de0432f7de, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorControllerStateOnDisable: 0
 --- !u!1 &6249838359853358595
 GameObject:
   m_ObjectHideFlags: 0
