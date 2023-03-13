@@ -409,6 +409,7 @@ MonoBehaviour:
   leftChorusKid: {fileID: 5850056866252176438}
   middleChorusKid: {fileID: 6280489476005920518}
   playerChorusKid: {fileID: 8374445442400559761}
+  missed: 0
 --- !u!1 &8223581022722080203
 GameObject:
   m_ObjectHideFlags: 0
@@ -695,6 +696,14 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 5896873077492364724}
     m_Modifications:
+    - target: {fileID: 1975515348857617425, guid: 949f49b4c3465d24ca9e2c6cd2049df1, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1975515348857617425, guid: 949f49b4c3465d24ca9e2c6cd2049df1, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 6520707076169482375, guid: 949f49b4c3465d24ca9e2c6cd2049df1, type: 3}
       propertyPath: m_RootOrder
       value: 1

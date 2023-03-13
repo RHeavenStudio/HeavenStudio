@@ -129,40 +129,40 @@ namespace HeavenStudio.Games
 
         public void TogetherNow(float beat, int semiTones, int semiTones1, int semiTonesPlayer)
         {
-            ScheduleInput(beat, 1.25f, InputType.STANDARD_UP, JustTogetherNow, Out, Out);
-            ScheduleInput(beat, 1.75f, InputType.STANDARD_DOWN, JustTogetherNowClose, MissBaton, Out);
+            ScheduleInput(beat, 2.5f, InputType.STANDARD_UP, JustTogetherNow, Out, Out);
+            ScheduleInput(beat, 3.5f, InputType.STANDARD_DOWN, JustTogetherNowClose, MissBaton, Out);
             float pitch = Mathf.Pow(2f, (1f / 12f) * semiTones) * Conductor.instance.musicSource.pitch;
             float pitch1 = Mathf.Pow(2f, (1f / 12f) * semiTones1) * Conductor.instance.musicSource.pitch;
             currentYellPitch = Mathf.Pow(2f, (1f / 12f) * semiTonesPlayer) * Conductor.instance.musicSource.pitch;
             MultiSound.Play(new MultiSound.Sound[]
             {
-                new MultiSound.Sound("gleeClub/togetherEN-01", beat + 0.25f),
-                new MultiSound.Sound("gleeClub/togetherEN-02", beat + 0.5f),
-                new MultiSound.Sound("gleeClub/togetherEN-03", beat + 0.75f),
-                new MultiSound.Sound("gleeClub/togetherEN-04", beat + 1f),
+                new MultiSound.Sound("gleeClub/togetherEN-01", beat + 0.5f),
+                new MultiSound.Sound("gleeClub/togetherEN-02", beat + 1f),
+                new MultiSound.Sound("gleeClub/togetherEN-03", beat + 1.5f),
+                new MultiSound.Sound("gleeClub/togetherEN-04", beat + 2f, 1, 1, false, 0.02f),
             });
 
             BeatAction.New(instance.gameObject, new List<BeatAction.Action>()
             {
-                new BeatAction.Action(beat + 0.75f, delegate
+                new BeatAction.Action(beat + 1.5f, delegate
                 {
                     leftChorusKid.StartCrouch();
                     middleChorusKid.StartCrouch();
                     playerChorusKid.StartCrouch();
                 }),
-                new BeatAction.Action(beat + 1.25f, delegate
+                new BeatAction.Action(beat + 2.5f, delegate
                 {
                     leftChorusKid.currentPitch = pitch;
                     middleChorusKid.currentPitch = pitch1;
                     leftChorusKid.StartYell();
                     middleChorusKid.StartYell();
                 }),
-                new BeatAction.Action(beat + 1.75f, delegate
+                new BeatAction.Action(beat + 3.5f, delegate
                 {
                     leftChorusKid.StopSinging(true);
                     middleChorusKid.StopSinging(true);
                 }),
-                new BeatAction.Action(beat + 3f, delegate
+                new BeatAction.Action(beat + 6f, delegate
                 {
                     ShowHeart(beat + 3f);
                 })
