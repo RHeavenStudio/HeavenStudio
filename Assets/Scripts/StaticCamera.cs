@@ -5,6 +5,7 @@ using UnityEngine.UI;
 
 using HeavenStudio.Util;
 using HeavenStudio.Common;
+using HeavenStudio.Editor;
 
 namespace HeavenStudio
 {
@@ -210,6 +211,7 @@ namespace HeavenStudio
         public void SetAmbientGlowColour(Color colour)
         {
             ambientBg.color = colour;
+            GameSettings.UpdatePreviewAmbient(colour);
         }
 
         public void ToggleLetterboxBg(bool toggle)
