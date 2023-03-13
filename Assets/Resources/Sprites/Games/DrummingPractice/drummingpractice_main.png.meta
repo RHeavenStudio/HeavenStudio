@@ -36,7 +36,7 @@ TextureImporter:
       213: 3314254522519463261
     second: drummingpractice_drumstick_smear_fx
   externalObjects: {}
-  serializedVersion: 11
+  serializedVersion: 12
   mipmaps:
     mipMapMode: 0
     enableMipMap: 0
@@ -57,6 +57,7 @@ TextureImporter:
   streamingMipmaps: 0
   streamingMipmapsPriority: 0
   vTOnly: 0
+  ignoreMasterTextureLimit: 0
   grayScaleToAlpha: 0
   generateCubemap: 6
   cubemapConvolution: 0
@@ -95,6 +96,7 @@ TextureImporter:
   textureFormatSet: 0
   ignorePngGamma: 0
   applyGammaDecoding: 0
+  cookieLightType: 1
   platformSettings:
   - serializedVersion: 3
     buildTarget: DefaultTexturePlatform
@@ -110,6 +112,18 @@ TextureImporter:
     forceMaximumCompressionQuality_BC6H_BC7: 0
   - serializedVersion: 3
     buildTarget: Standalone
+    maxTextureSize: 1024
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 0
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 3
+    buildTarget: Server
     maxTextureSize: 1024
     resizeAlgorithm: 0
     textureFormat: -1
@@ -364,6 +378,18 @@ TextureImporter:
     edges: []
     weights: []
     secondaryTextures: []
+    nameFileIdTable:
+      drummingpractice_bg: -276475413463648427
+      drummingpractice_body: -1656235835945938557
+      drummingpractice_drum: -2829450546865424194
+      drummingpractice_drumstick: -6295135488227773171
+      drummingpractice_drumstick_hit_0: -8903169060627248968
+      drummingpractice_drumstick_hit_1: -6608792201826754030
+      drummingpractice_drumstick_hit_2: -8276059885000252234
+      drummingpractice_drumstick_smear_fx: 3314254522519463261
+      drummingpractice_hand: 7405500112752647956
+      drummingpractice_hit_fx: 6658088017698073322
+      drummingpractice_screen_fx: -901597280928035108
   spritePackingTag: 
   pSDRemoveMatte: 0
   pSDShowRemoveMatteOption: 0

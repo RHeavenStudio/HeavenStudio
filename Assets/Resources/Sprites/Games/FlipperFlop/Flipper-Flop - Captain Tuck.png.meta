@@ -126,7 +126,7 @@ TextureImporter:
       213: 8203847856292772069
     second: SmallStep3
   externalObjects: {}
-  serializedVersion: 11
+  serializedVersion: 12
   mipmaps:
     mipMapMode: 0
     enableMipMap: 0
@@ -147,6 +147,7 @@ TextureImporter:
   streamingMipmaps: 0
   streamingMipmapsPriority: 0
   vTOnly: 0
+  ignoreMasterTextureLimit: 0
   grayScaleToAlpha: 0
   generateCubemap: 6
   cubemapConvolution: 0
@@ -185,6 +186,7 @@ TextureImporter:
   textureFormatSet: 0
   ignorePngGamma: 0
   applyGammaDecoding: 0
+  cookieLightType: 1
   platformSettings:
   - serializedVersion: 3
     buildTarget: DefaultTexturePlatform
@@ -200,6 +202,18 @@ TextureImporter:
     forceMaximumCompressionQuality_BC6H_BC7: 0
   - serializedVersion: 3
     buildTarget: Standalone
+    maxTextureSize: 4096
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 3
+    buildTarget: Server
     maxTextureSize: 4096
     resizeAlgorithm: 0
     textureFormat: -1
@@ -1084,6 +1098,48 @@ TextureImporter:
     edges: []
     weights: []
     secondaryTextures: []
+    nameFileIdTable:
+      ArmFrontStraight: 204853587978850860
+      ArmFrontUp: -1884056629477248573
+      ArmSide: 7097393635869678286
+      ArmsideDark: -354588409689316489
+      BodyFront: -5364398321066679867
+      BodySide: 7202394126770993174
+      CrossedArms: -6941689823694843686
+      Face: -6777057058828279079
+      FaceBlush: 981907569562474093
+      FaceCold: 3220841298208046550
+      GloveSide: 6689249670208198571
+      GloveSideDark: -774648850226267066
+      GloveUp0: 5351490370635618970
+      GloveUp1: 5544411725398991508
+      HandPuff: 4889115991417800101
+      Head: -7183953927675447315
+      HeadCold: -8994532223024223496
+      HeadDown0: -7899531118514012459
+      HeadDown1: -5366440731522241564
+      Heart: -7182234388077166552
+      LegFront0: 5222196818673958461
+      LegFront1: 5040743749983080431
+      LegFront2: -5979647737961072999
+      Mouth0: 3701795381031379807
+      Mouth1: 2861661601777712448
+      MouthCold: 6907457437363752345
+      SmallStep0: 6983099850983049541
+      SmallStep1: 783498616834500181
+      SmallStep2: 2108175032526015922
+      SmallStep3: 8203847856292772069
+      Waist: 6614837588910133110
+      WalkCycleBack0: 95146650345632325
+      WalkCycleBack1: -2730058575681382030
+      WalkCycleBack2: 1296978425162268448
+      WalkCycleBack3: -3094863922126676576
+      WalkCycleBack4: -18734607175759791
+      WalkCycleFront0: -5232346015449562975
+      WalkCycleFront1: 709572576030047288
+      WalkCycleFront2: 6233755798348575437
+      WalkCycleFront3: -6043664571448266422
+      WalkCycleFront4: 6059730042616909519
   spritePackingTag: 
   pSDRemoveMatte: 0
   pSDShowRemoveMatteOption: 0

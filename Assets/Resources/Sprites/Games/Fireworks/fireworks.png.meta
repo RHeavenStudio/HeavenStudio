@@ -78,7 +78,7 @@ TextureImporter:
       213: -8170976923249244319
     second: rocket_11
   externalObjects: {}
-  serializedVersion: 11
+  serializedVersion: 12
   mipmaps:
     mipMapMode: 0
     enableMipMap: 0
@@ -99,6 +99,7 @@ TextureImporter:
   streamingMipmaps: 0
   streamingMipmapsPriority: 0
   vTOnly: 0
+  ignoreMasterTextureLimit: 0
   grayScaleToAlpha: 0
   generateCubemap: 6
   cubemapConvolution: 0
@@ -137,6 +138,7 @@ TextureImporter:
   textureFormatSet: 0
   ignorePngGamma: 0
   applyGammaDecoding: 0
+  cookieLightType: 1
   platformSettings:
   - serializedVersion: 3
     buildTarget: DefaultTexturePlatform
@@ -152,6 +154,18 @@ TextureImporter:
     forceMaximumCompressionQuality_BC6H_BC7: 0
   - serializedVersion: 3
     buildTarget: Standalone
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 3
+    buildTarget: Server
     maxTextureSize: 2048
     resizeAlgorithm: 0
     textureFormat: -1
@@ -700,6 +714,32 @@ TextureImporter:
     edges: []
     weights: []
     secondaryTextures: []
+    nameFileIdTable:
+      bomb: 8321705126144521246
+      explosion_0: 716307583850843487
+      explosion_1: -2930459412978812549
+      explosion_2: -7951060998399535959
+      explosion_3: 6521631765723925360
+      explosion_4: -3930173783671174140
+      explosion_5: 4630040311661182356
+      rocket_0: 7842781948511557773
+      rocket_1: 6037761226001781006
+      rocket_10: 5065031555112333670
+      rocket_11: -8170976923249244319
+      rocket_2: 3888510566103532948
+      rocket_3: 4292363580294208139
+      rocket_4: 6702903800565331089
+      rocket_5: -5369517344622401917
+      rocket_6: -4409691995765390698
+      rocket_7: 921238620973614362
+      rocket_8: -1575901686286819377
+      rocket_9: 8275400006417117212
+      sparkBlue_0: -6520747926329190954
+      sparkBlue_1: 6428321784998494127
+      sparkGreen_0: 5765098608399448656
+      sparkGreen_1: 4752919973026276924
+      sparkRed_0: -4336169615699320128
+      sparkRed_1: -590329476313837788
   spritePackingTag: 
   pSDRemoveMatte: 0
   pSDShowRemoveMatteOption: 0

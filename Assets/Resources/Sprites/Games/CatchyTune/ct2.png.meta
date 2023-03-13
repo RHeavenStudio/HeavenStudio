@@ -36,7 +36,7 @@ TextureImporter:
       213: 4178246383348122917
     second: Catchy_Tune_-_Long_Version_Background_10
   externalObjects: {}
-  serializedVersion: 11
+  serializedVersion: 12
   mipmaps:
     mipMapMode: 0
     enableMipMap: 0
@@ -57,6 +57,7 @@ TextureImporter:
   streamingMipmaps: 0
   streamingMipmapsPriority: 0
   vTOnly: 0
+  ignoreMasterTextureLimit: 0
   grayScaleToAlpha: 0
   generateCubemap: 6
   cubemapConvolution: 0
@@ -95,6 +96,7 @@ TextureImporter:
   textureFormatSet: 0
   ignorePngGamma: 0
   applyGammaDecoding: 0
+  cookieLightType: 1
   platformSettings:
   - serializedVersion: 3
     buildTarget: DefaultTexturePlatform
@@ -122,6 +124,18 @@ TextureImporter:
     forceMaximumCompressionQuality_BC6H_BC7: 0
   - serializedVersion: 3
     buildTarget: Windows Store Apps
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 3
+    buildTarget: Server
     maxTextureSize: 2048
     resizeAlgorithm: 0
     textureFormat: -1
@@ -376,6 +390,18 @@ TextureImporter:
     edges: []
     weights: []
     secondaryTextures: []
+    nameFileIdTable:
+      Catchy_Tune_-_Long_Version_Background_0: -9151727563585071519
+      Catchy_Tune_-_Long_Version_Background_1: -4598661117349034189
+      Catchy_Tune_-_Long_Version_Background_10: 4178246383348122917
+      Catchy_Tune_-_Long_Version_Background_2: -1400693648978308771
+      Catchy_Tune_-_Long_Version_Background_3: 1328589479685058378
+      Catchy_Tune_-_Long_Version_Background_4: -2277967235406450769
+      Catchy_Tune_-_Long_Version_Background_5: 8576715053357151637
+      Catchy_Tune_-_Long_Version_Background_6: -7779194270142412740
+      Catchy_Tune_-_Long_Version_Background_7: 2500700759019497347
+      Catchy_Tune_-_Long_Version_Background_8: 1158101460820949222
+      Catchy_Tune_-_Long_Version_Background_9: -5937962728300550954
   spritePackingTag: 
   pSDRemoveMatte: 0
   pSDShowRemoveMatteOption: 0

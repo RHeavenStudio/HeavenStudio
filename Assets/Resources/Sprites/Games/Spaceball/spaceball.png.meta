@@ -99,7 +99,7 @@ TextureImporter:
       213: -7272816444732457736
     second: spaceball_dust_2
   externalObjects: {}
-  serializedVersion: 11
+  serializedVersion: 12
   mipmaps:
     mipMapMode: 0
     enableMipMap: 0
@@ -120,6 +120,7 @@ TextureImporter:
   streamingMipmaps: 0
   streamingMipmapsPriority: 0
   vTOnly: 0
+  ignoreMasterTextureLimit: 0
   grayScaleToAlpha: 0
   generateCubemap: 6
   cubemapConvolution: 0
@@ -158,6 +159,7 @@ TextureImporter:
   textureFormatSet: 0
   ignorePngGamma: 0
   applyGammaDecoding: 0
+  cookieLightType: 1
   platformSettings:
   - serializedVersion: 3
     buildTarget: DefaultTexturePlatform
@@ -197,6 +199,18 @@ TextureImporter:
     forceMaximumCompressionQuality_BC6H_BC7: 0
   - serializedVersion: 3
     buildTarget: Android
+    maxTextureSize: 16384
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 2
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 3
+    buildTarget: Server
     maxTextureSize: 16384
     resizeAlgorithm: 0
     textureFormat: -1
@@ -892,6 +906,39 @@ TextureImporter:
     edges: []
     weights: []
     secondaryTextures: []
+    nameFileIdTable:
+      spaceball_ball: -175097603425659850
+      spaceball_bat_0: -8479600161552753819
+      spaceball_bat_1: -2080650336355627570
+      spaceball_bat_2: -5608564330752630371
+      spaceball_bat_3: 6226250747564612612
+      spaceball_bat_4: 8739397152223860111
+      spaceball_dispenser_0: 6292435073569608095
+      spaceball_dispenser_1: 4913882390121116835
+      spaceball_dispenser_2: 2349070731958004587
+      spaceball_dust_0: -3567037823152174269
+      spaceball_dust_1: 4834708277548974446
+      spaceball_dust_2: -7272816444732457736
+      spaceball_hat_0_0: -1272144661639092336
+      spaceball_hat_1_0: 2348240810369355412
+      spaceball_hat_1_1: -1211911830992126873
+      spaceball_hat_1_2: 2516152612454132311
+      spaceball_hat_1_3: -7492609339150351360
+      spaceball_hat_1_4: -8354058639768066091
+      spaceball_hole: -6138865101806054624
+      spaceball_player_0: -206634095615567380
+      spaceball_player_1: -8623064975844402121
+      spaceball_player_2: 3908147867928790210
+      spaceball_player_3: -6120672494446369452
+      spaceball_player_4: 8669753283846710712
+      spaceball_player_shadow: -7699065485287968201
+      spaceball_riceball: 5277071337593026307
+      spaceball_room: -2475544383789121174
+      spaceball_umpire_0: 701021631787949281
+      spaceball_umpire_1: -9144178236442636997
+      spaceball_umpire_2: 8282977822036284979
+      spaceball_umpire_3: -3010808105455458640
+      spaceball_umpire_shadow: -7849886322701886137
   spritePackingTag: 
   pSDRemoveMatte: 0
   pSDShowRemoveMatteOption: 0

@@ -60,7 +60,7 @@ TextureImporter:
       213: 4376752631132958919
     second: lockstep_bg2
   externalObjects: {}
-  serializedVersion: 11
+  serializedVersion: 12
   mipmaps:
     mipMapMode: 0
     enableMipMap: 0
@@ -81,6 +81,7 @@ TextureImporter:
   streamingMipmaps: 0
   streamingMipmapsPriority: 0
   vTOnly: 0
+  ignoreMasterTextureLimit: 0
   grayScaleToAlpha: 0
   generateCubemap: 6
   cubemapConvolution: 0
@@ -119,6 +120,7 @@ TextureImporter:
   textureFormatSet: 0
   ignorePngGamma: 0
   applyGammaDecoding: 0
+  cookieLightType: 1
   platformSettings:
   - serializedVersion: 3
     buildTarget: DefaultTexturePlatform
@@ -134,6 +136,18 @@ TextureImporter:
     forceMaximumCompressionQuality_BC6H_BC7: 0
   - serializedVersion: 3
     buildTarget: Standalone
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 3
+    buildTarget: Server
     maxTextureSize: 2048
     resizeAlgorithm: 0
     textureFormat: -1
@@ -556,6 +570,26 @@ TextureImporter:
     edges: []
     weights: []
     secondaryTextures: []
+    nameFileIdTable:
+      lockstep_bg1: 5090408958517365022
+      lockstep_bg2: 4376752631132958919
+      stepswitcher: -6961290807587789438
+      stepswitcher_bop1: 6678189707026698426
+      stepswitcher_bop2: -1578962635485543256
+      stepswitcher_bop3: -7689431612274100930
+      stepswitcher_bop4: 4632143454527972695
+      stepswitcher_offbeat1: 9130296555604909335
+      stepswitcher_offbeat2: 5037155186664620574
+      stepswitcher_offbeat3: 1292918056351840569
+      stepswitcher_offbeat4: 3854965462330847857
+      stepswitcher_offbeatMiss1: 7051025833746117958
+      stepswitcher_offbeatMiss2: -7900508199032304796
+      stepswitcher_onbeat1: 9047975854256012390
+      stepswitcher_onbeat2: 4448651475430373734
+      stepswitcher_onbeat3: -7069434044889276691
+      stepswitcher_onbeat4: 6671823371719840549
+      stepswitcher_onbeatMiss1: 1380531955285550272
+      stepswitcher_onbeatMiss2: -662792740418096914
   spritePackingTag: 
   pSDRemoveMatte: 0
   pSDShowRemoveMatteOption: 0

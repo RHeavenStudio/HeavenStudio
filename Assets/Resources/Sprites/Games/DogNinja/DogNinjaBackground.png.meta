@@ -60,7 +60,7 @@ TextureImporter:
       213: -1101110688934891138
     second: 4
   externalObjects: {}
-  serializedVersion: 11
+  serializedVersion: 12
   mipmaps:
     mipMapMode: 0
     enableMipMap: 0
@@ -81,6 +81,7 @@ TextureImporter:
   streamingMipmaps: 0
   streamingMipmapsPriority: 0
   vTOnly: 0
+  ignoreMasterTextureLimit: 0
   grayScaleToAlpha: 0
   generateCubemap: 6
   cubemapConvolution: 0
@@ -119,6 +120,7 @@ TextureImporter:
   textureFormatSet: 0
   ignorePngGamma: 0
   applyGammaDecoding: 0
+  cookieLightType: 1
   platformSettings:
   - serializedVersion: 3
     buildTarget: DefaultTexturePlatform
@@ -147,6 +149,18 @@ TextureImporter:
   - serializedVersion: 3
     buildTarget: WebGL
     maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 3
+    buildTarget: Server
+    maxTextureSize: 4096
     resizeAlgorithm: 0
     textureFormat: -1
     textureCompression: 1
@@ -547,6 +561,25 @@ TextureImporter:
     edges: []
     weights: []
     secondaryTextures: []
+    nameFileIdTable:
+      0: -8311545614704615405
+      1: 835629161287399268
+      2: 3855510308496841503
+      3: -8173982611866532936
+      4: -1101110688934891138
+      5: 7980338032007570069
+      6: -5212533184844521677
+      7: -4299533267265689552
+      8: 7115494312052747417
+      9: 2359319097056024618
+      DogNinjaBackground_0: 7349651895747566427
+      Ledge_Left: -7567829866506320893
+      Ledge_Right: -1016285062031190712
+      Mountains: 5505678769135608673
+      Sky: -9220056470471798509
+      Tree_Left: -4388551628504022871
+      Tree_Right: -4345597197767406995
+      Water: 6279726785370437129
   spritePackingTag: 
   pSDRemoveMatte: 0
   pSDShowRemoveMatteOption: 0

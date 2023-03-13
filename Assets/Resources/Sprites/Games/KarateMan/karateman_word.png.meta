@@ -48,7 +48,7 @@ TextureImporter:
       213: -1278344009149830369
     second: karateman_word_4
   externalObjects: {}
-  serializedVersion: 11
+  serializedVersion: 12
   mipmaps:
     mipMapMode: 0
     enableMipMap: 0
@@ -69,6 +69,7 @@ TextureImporter:
   streamingMipmaps: 0
   streamingMipmapsPriority: 0
   vTOnly: 0
+  ignoreMasterTextureLimit: 0
   grayScaleToAlpha: 0
   generateCubemap: 6
   cubemapConvolution: 0
@@ -107,6 +108,7 @@ TextureImporter:
   textureFormatSet: 0
   ignorePngGamma: 0
   applyGammaDecoding: 0
+  cookieLightType: 1
   platformSettings:
   - serializedVersion: 3
     buildTarget: DefaultTexturePlatform
@@ -122,6 +124,18 @@ TextureImporter:
     forceMaximumCompressionQuality_BC6H_BC7: 0
   - serializedVersion: 3
     buildTarget: Standalone
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 3
+    buildTarget: Server
     maxTextureSize: 2048
     resizeAlgorithm: 0
     textureFormat: -1
@@ -376,6 +390,18 @@ TextureImporter:
     edges: []
     weights: []
     secondaryTextures: []
+    nameFileIdTable:
+      karateman_word_1: -5610626859485252548
+      karateman_word_2: 1214470814246859168
+      karateman_word_3: 3512758288782026156
+      karateman_word_4: -1278344009149830369
+      karateman_word_combo_en: -8701253081129557890
+      karateman_word_combo_jp: -5691116234797290135
+      karateman_word_exclaim: 7844610654334982216
+      karateman_word_hit_en: -1955128575254565707
+      karateman_word_hit_jp: 1955894343282959379
+      karateman_word_mu_en: -2089169352201841507
+      karateman_word_mu_jp: -4287181604435601069
   spritePackingTag: 
   pSDRemoveMatte: 0
   pSDShowRemoveMatteOption: 0

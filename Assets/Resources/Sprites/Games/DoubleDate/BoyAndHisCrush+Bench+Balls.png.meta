@@ -222,7 +222,7 @@ TextureImporter:
       213: -2918772098595741296
     second: Blush
   externalObjects: {}
-  serializedVersion: 11
+  serializedVersion: 12
   mipmaps:
     mipMapMode: 0
     enableMipMap: 0
@@ -243,6 +243,7 @@ TextureImporter:
   streamingMipmaps: 0
   streamingMipmapsPriority: 0
   vTOnly: 0
+  ignoreMasterTextureLimit: 0
   grayScaleToAlpha: 0
   generateCubemap: 6
   cubemapConvolution: 0
@@ -281,6 +282,7 @@ TextureImporter:
   textureFormatSet: 0
   ignorePngGamma: 0
   applyGammaDecoding: 0
+  cookieLightType: 1
   platformSettings:
   - serializedVersion: 3
     buildTarget: DefaultTexturePlatform
@@ -308,6 +310,18 @@ TextureImporter:
     forceMaximumCompressionQuality_BC6H_BC7: 0
   - serializedVersion: 3
     buildTarget: WebGL
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 3
+    buildTarget: Server
     maxTextureSize: 2048
     resizeAlgorithm: 0
     textureFormat: -1
@@ -1297,6 +1311,53 @@ TextureImporter:
     edges: []
     weights: []
     secondaryTextures: []
+    nameFileIdTable:
+      BallKickedSmear: -211130372488052714
+      Basketball: 7324629738962208973
+      BenchMiddle: 6212143370924638896
+      BenchSide: 3693469644334830003
+      Blush: -2918772098595741296
+      BoyAndHisCrush+Bench+Balls_17: -2343875992305876922
+      BoyArmPart_1: 7259872687316112998
+      BoyArmPart_2: -3318604304518881134
+      BoyFoot_Idle: 2526050782855271487
+      BoyFoot_Kick: 1141890412633404602
+      BoyHand: -8312244037638970306
+      BoyHead_1: -8293433933623156774
+      BoyHead_2: -2100904393794786246
+      BoyHead_3: 6456455858410716499
+      BoyHead_4: -2840672107548929859
+      BoyHead_5: 8578688054225257654
+      BoyLeg_Idle: -4909942001576174329
+      BoyLeg_Kick: -675513262750291833
+      BoyLeg_KickSmear: 2374956975248004687
+      BoyTorso1: 6175521510322495321
+      BoyTorso_2_Idle: -9108590561143986504
+      BoyTorso_2_Kick: -6984553897052628653
+      Football: 6259620745644044815
+      GirlArm_Gasp1: -6178560381740109464
+      GirlArm_Gasp2: 2724317327552423791
+      GirlArm_Left: 6925711398062837626
+      GirlArm_Right: -5864814741472113378
+      GirlBow: 2157049352870945248
+      GirlFace_1: 3576297008121680023
+      GirlFace_2: -169116463404243184
+      GirlFace_3: 3646579127679176268
+      GirlFace_4: -8527508725924828967
+      GirlFace_5: 5261063624843128614
+      GirlFace_6: -705930022876609859
+      GirlFace_7: 109707033444322221
+      GirlHair_Back: 7928355998557709530
+      GirlHair_Front: -8024149408284419883
+      GirlHand_Gasp: -7612636366278233104
+      GirlHand_Left: -5106208165657418773
+      GirlHand_Right: -1957019992399257672
+      GirlHead_1: 3500232760903216412
+      GirlHead_2: 8155073570205038467
+      GirlLegs: -6955180284848978261
+      GirlTorso: -9036201169864073075
+      SOMETHING: -3802729537510043871
+      SoccerBall: 5973770109749508124
   spritePackingTag: 
   pSDRemoveMatte: 0
   pSDShowRemoveMatteOption: 0

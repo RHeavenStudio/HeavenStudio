@@ -57,7 +57,7 @@ TextureImporter:
       213: -3333983173375238055
     second: Foreground
   externalObjects: {}
-  serializedVersion: 11
+  serializedVersion: 12
   mipmaps:
     mipMapMode: 0
     enableMipMap: 0
@@ -78,6 +78,7 @@ TextureImporter:
   streamingMipmaps: 0
   streamingMipmapsPriority: 0
   vTOnly: 0
+  ignoreMasterTextureLimit: 0
   grayScaleToAlpha: 0
   generateCubemap: 6
   cubemapConvolution: 0
@@ -116,6 +117,7 @@ TextureImporter:
   textureFormatSet: 0
   ignorePngGamma: 0
   applyGammaDecoding: 0
+  cookieLightType: 1
   platformSettings:
   - serializedVersion: 3
     buildTarget: DefaultTexturePlatform
@@ -131,6 +133,18 @@ TextureImporter:
     forceMaximumCompressionQuality_BC6H_BC7: 0
   - serializedVersion: 3
     buildTarget: Standalone
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 3
+    buildTarget: Server
     maxTextureSize: 2048
     resizeAlgorithm: 0
     textureFormat: -1
@@ -532,6 +546,25 @@ TextureImporter:
     edges: []
     weights: []
     secondaryTextures: []
+    nameFileIdTable:
+      BigImpact: 1783687764055413471
+      Black: 3685669366114683922
+      Foot0: -3385257089546153362
+      Foot1: -6923575079645211495
+      Foot2: 9189720795602130707
+      Foot3: 8511344029435312572
+      Foot4: -9145532882579257181
+      FootShadow: 846812011896355152
+      Foreground: -3333983173375238055
+      InbetweenFeetShadow: -8134523177817570407
+      Leg0: -4641733496002515713
+      Leg1: -5509037925721166925
+      Leg2: 3234351885095589307
+      Leg3: 1985058571128900078
+      SmallFootShadow: 2450383141033040148
+      SmallImpact: -321844320929161326
+      Stripes: -3165301734577479428
+      White: -4241721637628489623
   spritePackingTag: 
   pSDRemoveMatte: 0
   pSDShowRemoveMatteOption: 0

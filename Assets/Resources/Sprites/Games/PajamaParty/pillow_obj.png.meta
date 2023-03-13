@@ -270,7 +270,7 @@ TextureImporter:
       213: 406386697140638615
     second: pillow_obj_88
   externalObjects: {}
-  serializedVersion: 11
+  serializedVersion: 12
   mipmaps:
     mipMapMode: 0
     enableMipMap: 0
@@ -291,6 +291,7 @@ TextureImporter:
   streamingMipmaps: 0
   streamingMipmapsPriority: 0
   vTOnly: 0
+  ignoreMasterTextureLimit: 0
   grayScaleToAlpha: 0
   generateCubemap: 6
   cubemapConvolution: 0
@@ -329,6 +330,7 @@ TextureImporter:
   textureFormatSet: 0
   ignorePngGamma: 0
   applyGammaDecoding: 0
+  cookieLightType: 1
   platformSettings:
   - serializedVersion: 3
     buildTarget: DefaultTexturePlatform
@@ -344,6 +346,18 @@ TextureImporter:
     forceMaximumCompressionQuality_BC6H_BC7: 0
   - serializedVersion: 3
     buildTarget: Standalone
+    maxTextureSize: 4096
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 3
+    buildTarget: Server
     maxTextureSize: 4096
     resizeAlgorithm: 0
     textureFormat: -1
@@ -2236,6 +2250,96 @@ TextureImporter:
     edges: []
     weights: []
     secondaryTextures: []
+    nameFileIdTable:
+      pillow_obj_0: 5434631232189755276
+      pillow_obj_1: 8148159563688161889
+      pillow_obj_10: 1730110289530001632
+      pillow_obj_11: 7207535011840485076
+      pillow_obj_12: -1992039854126301497
+      pillow_obj_13: -8121782935712855212
+      pillow_obj_14: 580605862897091231
+      pillow_obj_15: -7280687137912493519
+      pillow_obj_16: 8412779870784429871
+      pillow_obj_17: 5055781805519733753
+      pillow_obj_18: -4171041164671933466
+      pillow_obj_19: -1538530902438674393
+      pillow_obj_2: 855221606927645023
+      pillow_obj_20: 6164299464999679830
+      pillow_obj_21: 1979256635260820133
+      pillow_obj_22: 7041798028381545528
+      pillow_obj_23: 4187320005743349743
+      pillow_obj_24: -2734030122380971250
+      pillow_obj_25: 3033587694249821955
+      pillow_obj_26: -5344557433884879572
+      pillow_obj_27: -5785868775182518963
+      pillow_obj_28: -1830786071810445885
+      pillow_obj_29: 1888340226126953645
+      pillow_obj_3: 5890105251189486784
+      pillow_obj_30: -5381092290501251178
+      pillow_obj_31: -4911312721956848840
+      pillow_obj_32: 2719837978944294308
+      pillow_obj_33: 8122489151515267515
+      pillow_obj_34: 4694540902116053644
+      pillow_obj_35: -6087800071768717987
+      pillow_obj_36: 3450137324477342878
+      pillow_obj_37: 7208704315608554314
+      pillow_obj_38: -1216428271571906693
+      pillow_obj_39: -7371323573753515964
+      pillow_obj_4: 5400298507313361975
+      pillow_obj_40: 59571444584264388
+      pillow_obj_41: -3564086704763307724
+      pillow_obj_42: 2838667559800362014
+      pillow_obj_43: -4591840273565229045
+      pillow_obj_44: -6452424249974444275
+      pillow_obj_45: 3186158989124583658
+      pillow_obj_46: -9170520321158880642
+      pillow_obj_47: -3715761062835813253
+      pillow_obj_48: 998587541409529582
+      pillow_obj_49: 8711180508515918685
+      pillow_obj_5: 7340660744443318659
+      pillow_obj_50: -3287710483642603236
+      pillow_obj_51: 2060061342405296407
+      pillow_obj_52: 5386559382272897478
+      pillow_obj_53: -1962235398544012858
+      pillow_obj_54: 5991530326170684653
+      pillow_obj_55: 5745386475710373914
+      pillow_obj_56: -3991725234084709776
+      pillow_obj_57: 3503005038174501447
+      pillow_obj_58: 4602516910675644990
+      pillow_obj_59: -2857748699252422409
+      pillow_obj_6: -5132926618584418186
+      pillow_obj_60: -3549630787545198284
+      pillow_obj_61: -6820764564250650631
+      pillow_obj_62: -5655068300501553594
+      pillow_obj_63: 7979651795958945213
+      pillow_obj_64: -4642780025770231273
+      pillow_obj_65: 800185268390134627
+      pillow_obj_66: 5412048016436018736
+      pillow_obj_67: 8254295322851944301
+      pillow_obj_68: -6461955915928065724
+      pillow_obj_69: 5617395799205513412
+      pillow_obj_7: 7851487222493881542
+      pillow_obj_70: 7415402508438333597
+      pillow_obj_71: 914082432521062771
+      pillow_obj_72: -9185421532643117166
+      pillow_obj_73: 6821368097876122600
+      pillow_obj_74: 1766318556327879947
+      pillow_obj_75: -1822500885626475538
+      pillow_obj_76: -6583463784047337566
+      pillow_obj_77: 2470915716706839050
+      pillow_obj_78: -5694073438114752228
+      pillow_obj_79: -6630025578229294563
+      pillow_obj_8: -3873011513017696366
+      pillow_obj_80: -8829037718448610288
+      pillow_obj_81: -2850016765094643665
+      pillow_obj_82: 8140563478415476392
+      pillow_obj_83: 4696867848897590752
+      pillow_obj_84: -3809071231913649798
+      pillow_obj_85: -8267217606664336495
+      pillow_obj_86: -8470679032301708527
+      pillow_obj_87: 4817879202867825591
+      pillow_obj_88: 406386697140638615
+      pillow_obj_9: 3847588306704180918
   spritePackingTag: 
   pSDRemoveMatte: 0
   pSDShowRemoveMatteOption: 0
