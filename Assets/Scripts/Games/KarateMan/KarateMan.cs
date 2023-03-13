@@ -11,7 +11,7 @@ namespace HeavenStudio.Games.Loaders
     public static class RvlNewKarateLoader
     {
         public static Minigame AddGame(EventCaller eventCaller) {
-            return new Minigame("karateman", "Karate Man", "70A8D8", false, false, new List<GameAction>()
+            return new Minigame("karateman", "Karate Man", "fbca3e", false, false, new List<GameAction>()
             {
                 new GameAction("bop", "Bop")
                 {

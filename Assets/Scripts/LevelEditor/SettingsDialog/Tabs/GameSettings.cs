@@ -14,10 +14,19 @@ namespace HeavenStudio.Editor
     public class GameSettings : TabsContent
     {
         public static bool InPreview;
+        static Color ambiColour;
+        static bool needUpdateAmbi;
         [SerializeField] Toggle editorOverlaysToggle;
         [SerializeField] Toggle perfectChallengeToggle;
         [SerializeField] Toggle sectionMedalsToggle;
         [SerializeField] Toggle timingDispMinModeToggle;
+        [SerializeField] Toggle letterboxBgEnable;
+        [SerializeField] Toggle letterboxFxEnable;
+
+        [SerializeField] Image LytEditBg;
+        [SerializeField] Image LytEditBgAmbi;
+        [SerializeField] GameObject LytEditBgAmbiGO;
+
 
         [Header("Layout Settings - Header")]
         [SerializeField] TMP_Text ElementNameText;
@@ -45,6 +54,14 @@ namespace HeavenStudio.Editor
 
         const string fFormat = "0.000";
 
+        bool initLyt = false;
+
+        public static void UpdatePreviewAmbient(Color col)
+        {
+            ambiColour = col;
+            needUpdateAmbi = true;
+        }
+
         // Start is called before the first frame update
         void Start()
         {
@@ -54,7 +71,11 @@ namespace HeavenStudio.Editor
         // Update is called once per frame
         void Update()
         {
-
+            if (InPreview && needUpdateAmbi)
+            {
+                LytEditBgAmbi.color = ambiColour;
+                needUpdateAmbi = false;
+            }
         }
 
         void CreateDefaultLayout()
@@ -93,6 +114,20 @@ namespace HeavenStudio.Editor
             PersistentDataManager.gameSettings.timingDisplayMinMode = timingDispMinModeToggle.isOn;
         }
 
+        public void OnLetterboxBgToggleChanged()
+        {
+            PersistentDataManager.gameSettings.letterboxBgEnable = letterboxBgEnable.isOn;
+            StaticCamera.instance.ToggleLetterboxBg(PersistentDataManager.gameSettings.letterboxBgEnable);
+            LytEditBg.color = PersistentDataManager.gameSettings.letterboxBgEnable ? Color.white : Color.black;
+        }
+
+        public void OnLetterboxFxToggleChanged()
+        {
+            PersistentDataManager.gameSettings.letterboxFxEnable = letterboxFxEnable.isOn;
+            StaticCamera.instance.ToggleLetterboxGlow(PersistentDataManager.gameSettings.letterboxFxEnable);
+            LytEditBgAmbiGO.SetActive(PersistentDataManager.gameSettings.letterboxFxEnable);
+        }
+
         public override void OnOpenTab()
         {
             TimingDispTypeDropdown.ClearOptions();
@@ -102,6 +137,8 @@ namespace HeavenStudio.Editor
             perfectChallengeToggle.isOn = PersistentDataManager.gameSettings.perfectChallengeType != PersistentDataManager.PerfectChallengeType.Off;
             sectionMedalsToggle.isOn = PersistentDataManager.gameSettings.isMedalOn;
             timingDispMinModeToggle.isOn = PersistentDataManager.gameSettings.timingDisplayMinMode;
+            letterboxBgEnable.isOn = PersistentDataManager.gameSettings.letterboxBgEnable;
+            letterboxFxEnable.isOn = PersistentDataManager.gameSettings.letterboxFxEnable;
 
             if (PersistentDataManager.gameSettings.timingDisplayComponents.Count == 0 &&
                 PersistentDataManager.gameSettings.skillStarComponents.Count == 0 &&
@@ -117,6 +154,7 @@ namespace HeavenStudio.Editor
 
             UpdateLayoutSettings();
             InPreview = true;
+            initLyt = true;
         }
 
         public override void OnCloseTab()
@@ -127,6 +165,7 @@ namespace HeavenStudio.Editor
             }
             lytElements.Clear();
             InPreview = false;
+            initLyt = false;
         }
 
         void UpdateLayoutSettings()
@@ -178,6 +217,7 @@ namespace HeavenStudio.Editor
 
         public void OnElementToggled()
         {
+            if (!initLyt) return;
             var element = lytElements[currentElementIdx];
             element.enable = ElementToggle.isOn;
             element.PositionElement();
@@ -185,6 +225,7 @@ namespace HeavenStudio.Editor
 
         public void OnXPosInputChanged()
         {
+            if (!initLyt) return;
             var element = lytElements[currentElementIdx];
             XPosSlider.value = float.Parse(XPosInput.text);
             element.position.x = XPosSlider.value;
@@ -193,6 +234,7 @@ namespace HeavenStudio.Editor
 
         public void OnXPosSliderChanged()
         {
+            if (!initLyt) return;
             var element = lytElements[currentElementIdx];
             XPosInput.text = XPosSlider.value.ToString(fFormat);
             element.position.x = XPosSlider.value;
@@ -201,6 +243,7 @@ namespace HeavenStudio.Editor
 
         public void OnYPosInputChanged()
         {
+            if (!initLyt) return;
             var element = lytElements[currentElementIdx];
             YPosSlider.value = float.Parse(YPosInput.text);
             element.position.y = YPosSlider.value;
@@ -209,6 +252,7 @@ namespace HeavenStudio.Editor
 
         public void OnYPosSliderChanged()
         {
+            if (!initLyt) return;
             var element = lytElements[currentElementIdx];
             YPosInput.text = YPosSlider.value.ToString(fFormat);
             element.position.y = YPosSlider.value;
@@ -217,6 +261,7 @@ namespace HeavenStudio.Editor
 
         public void OnRotationInputChanged()
         {
+            if (!initLyt) return;
             var element = lytElements[currentElementIdx];
             RotationSlider.value = float.Parse(RotationInput.text);
             element.rotation = RotationSlider.value;
@@ -225,6 +270,7 @@ namespace HeavenStudio.Editor
 
         public void OnRotationSliderChanged()
         {
+            if (!initLyt) return;
             var element = lytElements[currentElementIdx];
             RotationInput.text = RotationSlider.value.ToString(fFormat);
             element.rotation = RotationSlider.value;
@@ -233,6 +279,7 @@ namespace HeavenStudio.Editor
 
         public void OnScaleInputChanged()
         {
+            if (!initLyt) return;
             var element = lytElements[currentElementIdx];
             ScaleSlider.value = float.Parse(ScaleInput.text);
             element.scale = ScaleSlider.value;
@@ -241,6 +288,7 @@ namespace HeavenStudio.Editor
 
         public void OnScaleSliderChanged()
         {
+            if (!initLyt) return;
             var element = lytElements[currentElementIdx];
             ScaleInput.text = ScaleSlider.value.ToString(fFormat);
             element.scale = ScaleSlider.value;
@@ -249,6 +297,7 @@ namespace HeavenStudio.Editor
 
         public void OnTimingDispTypeDropdownChanged()
         {
+            if (!initLyt) return;
             var element = lytElements[currentElementIdx] as OverlaysManager.TimingDisplayComponent;
             if (element == null) return;
             element.tdType = (OverlaysManager.TimingDisplayComponent.TimingDisplayType)TimingDispTypeDropdown.value;
