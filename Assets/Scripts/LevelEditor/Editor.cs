@@ -100,7 +100,7 @@ namespace HeavenStudio.Editor
         {
             GameManager.instance.StaticCamera.targetTexture = ScreenRenderTexture;
             GameManager.instance.CursorCam.targetTexture = ScreenRenderTexture;
-            GameLetterbox = GameManager.instance.GameLetterbox;
+            // GameLetterbox = GameManager.instance.GameLetterbox;
             Screen.texture = ScreenRenderTexture;
 
             GameManager.instance.Init();
