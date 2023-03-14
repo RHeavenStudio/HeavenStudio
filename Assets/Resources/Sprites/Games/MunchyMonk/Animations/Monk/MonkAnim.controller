@@ -23,16 +23,16 @@ AnimatorStateMachine:
     m_Position: {x: 480, y: 110, z: 0}
   - serializedVersion: 1
     m_State: {fileID: 5400196930069624585}
-    m_Position: {x: 260, y: 200, z: 0}
+    m_Position: {x: 260, y: 170, z: 0}
   - serializedVersion: 1
     m_State: {fileID: -4082665810207580094}
-    m_Position: {x: 370, y: 260, z: 0}
+    m_Position: {x: 260, y: 230, z: 0}
   - serializedVersion: 1
     m_State: {fileID: 7179678224453409903}
-    m_Position: {x: 480, y: 200, z: 0}
+    m_Position: {x: 480, y: 170, z: 0}
   - serializedVersion: 1
     m_State: {fileID: -3412218965898540995}
-    m_Position: {x: 515, y: 265, z: 0}
+    m_Position: {x: 480, y: 230, z: 0}
   m_ChildStateMachines: []
   m_AnyStateTransitions: []
   m_EntryTransitions: []
@@ -125,13 +125,7 @@ AnimatorController:
   m_PrefabAsset: {fileID: 0}
   m_Name: MonkAnim
   serializedVersion: 5
-  m_AnimatorParameters:
-  - m_Name: blushInt
-    m_Type: 3
-    m_DefaultFloat: 0
-    m_DefaultInt: 0
-    m_DefaultBool: 0
-    m_Controller: {fileID: 9100000}
+  m_AnimatorParameters: []
   m_AnimatorLayers:
   - serializedVersion: 5
     m_Name: Base Layer
