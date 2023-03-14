@@ -15,7 +15,7 @@ namespace HeavenStudio.Games.Loaders
                 new GameAction("intervalStart", "Start Interval")
                 {
                     function = delegate {var e = eventCaller.currentEntity; GleeClub.instance.StartInterval(e.beat, e.length); },
-                    defaultLength = 4f,
+                    defaultLength = 1f,
                     resizable = true
                 },
                 new GameAction("sing", "Sing")
@@ -33,7 +33,8 @@ namespace HeavenStudio.Games.Loaders
                 new GameAction("passTurn", "Pass Turn")
                 {
                     function = delegate { var e = eventCaller.currentEntity; GleeClub.instance.PassTurn(e.beat, e.length); },
-                    resizable = true
+                    resizable = true,
+                    defaultLength = 0.5f
                 },
                 new GameAction("baton", "Baton")
                 {
@@ -258,7 +259,7 @@ namespace HeavenStudio.Games
             float pitch = Mathf.Pow(2f, (1f / 12f) * semiTones) * Conductor.instance.musicSource.pitch;
             if (!intervalStarted)
             {
-                StartInterval(beat, beatInterval);
+                StartInterval(beat, length);
             }
             BeatAction.New(instance.gameObject, new List<BeatAction.Action>()
             {
