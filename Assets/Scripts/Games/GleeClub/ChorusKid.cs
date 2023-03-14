@@ -48,9 +48,9 @@ namespace HeavenStudio.Games.Scripts_GleeClub
             currentSound = Jukebox.PlayOneShotGame("gleeClub/LoudWailLoop", -1, currentPitch, 1f, true);
         }
 
-        public void StartSinging()
+        public void StartSinging(bool forced = false)
         {
-            if (singing) return;
+            if (singing && !forced) return;
             singing = true;
             anim.SetBool("Mega", false);
             anim.Play("OpenMouth", 0, 0);

@@ -9,6 +9,7 @@ namespace HeavenStudio.Games.Scripts_GleeClub
     {
         public float pitch = 1f;
         bool shouldClose = true;
+        bool shouldOpen = true;
 
         private GleeClub game;
 
@@ -17,11 +18,12 @@ namespace HeavenStudio.Games.Scripts_GleeClub
             game = GleeClub.instance;
         }
 
-        public void Init(float beat, float length, bool close)
+        public void Init(float beat, float length, int close)
         {
-            shouldClose = close;
-            game.ScheduleInput(beat - 1, 1, InputType.STANDARD_UP, Just, Miss, Out);
-            if (close) game.ScheduleInput(beat, length, InputType.STANDARD_DOWN, JustClose, MissClose, Out);
+            shouldClose = close != (int)GleeClub.MouthOpenClose.OnlyOpen;
+            shouldOpen = close != (int)GleeClub.MouthOpenClose.OnlyClose;
+            if (shouldOpen) game.ScheduleInput(beat - 1, 1, InputType.STANDARD_UP, Just, Miss, Out);
+            if (shouldClose) game.ScheduleInput(beat, length, InputType.STANDARD_DOWN, JustClose, MissClose, Out);
         }
 
         public void Just(PlayerActionEvent caller, float state)
