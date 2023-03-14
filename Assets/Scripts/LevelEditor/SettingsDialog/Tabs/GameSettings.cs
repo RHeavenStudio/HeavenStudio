@@ -18,6 +18,8 @@ namespace HeavenStudio.Editor
         [SerializeField] Toggle perfectChallengeToggle;
         [SerializeField] Toggle sectionMedalsToggle;
         [SerializeField] Toggle timingDispMinModeToggle;
+        [SerializeField] Toggle letterboxBgEnable;
+        [SerializeField] Toggle letterboxFxEnable;
 
         [Header("Layout Settings - Header")]
         [SerializeField] TMP_Text ElementNameText;
@@ -93,6 +95,18 @@ namespace HeavenStudio.Editor
             PersistentDataManager.gameSettings.timingDisplayMinMode = timingDispMinModeToggle.isOn;
         }
 
+        public void OnLetterboxBgToggleChanged()
+        {
+            PersistentDataManager.gameSettings.letterboxBgEnable = letterboxBgEnable.isOn;
+            StaticCamera.instance.ToggleLetterboxBg(PersistentDataManager.gameSettings.letterboxBgEnable);
+        }
+
+        public void OnLetterboxFxToggleChanged()
+        {
+            PersistentDataManager.gameSettings.letterboxFxEnable = letterboxFxEnable.isOn;
+            StaticCamera.instance.ToggleLetterboxGlow(PersistentDataManager.gameSettings.letterboxFxEnable);
+        }
+
         public override void OnOpenTab()
         {
             TimingDispTypeDropdown.ClearOptions();
@@ -102,6 +116,8 @@ namespace HeavenStudio.Editor
             perfectChallengeToggle.isOn = PersistentDataManager.gameSettings.perfectChallengeType != PersistentDataManager.PerfectChallengeType.Off;
             sectionMedalsToggle.isOn = PersistentDataManager.gameSettings.isMedalOn;
             timingDispMinModeToggle.isOn = PersistentDataManager.gameSettings.timingDisplayMinMode;
+            letterboxBgEnable.isOn = PersistentDataManager.gameSettings.letterboxBgEnable;
+            letterboxFxEnable.isOn = PersistentDataManager.gameSettings.letterboxFxEnable;
 
             if (PersistentDataManager.gameSettings.timingDisplayComponents.Count == 0 &&
                 PersistentDataManager.gameSettings.skillStarComponents.Count == 0 &&

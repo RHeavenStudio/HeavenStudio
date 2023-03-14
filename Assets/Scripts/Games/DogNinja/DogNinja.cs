@@ -27,49 +27,15 @@ namespace HeavenStudio.Games.Loaders
                     function = delegate { DogNinja.instance.Prepare(eventCaller.currentEntity.beat); }, 
                     defaultLength = 0.5f,
                 },
-                /*
                 new GameAction("ThrowObject", "Throw Object")
                 {
-                    function = delegate { var e = eventCaller.currentEntity; DogNinja.instance.ThrowObject(e.beat, e["type"], e["text"], e["left"], false); }, 
+                    function = delegate { var e = eventCaller.currentEntity; DogNinja.instance.ThrowObject(e.beat, e["direction"], e["typeL"], e["typeR"]); }, 
                     defaultLength = 2,
                     parameters = new List<Param>()
                     {
-                        new Param("type", DogNinja.ObjectType.Random, "Object", "The object to be thrown"),
-                        new Param("text", "", "Alt. Objects", "An alternative object; one that doesn't exist in the main menu"),
-                        new Param("left", true, "Throw from left?", "Whether the object should come from the left or right")
-                    }
-                },
-                */
-                new GameAction("ThrowObjectLeft", "Throw Object Left")
-                {
-                    function = delegate { var e = eventCaller.currentEntity; DogNinja.instance.ThrowObject(e.beat, e["type"], e["text"], true, false); }, 
-                    defaultLength = 2,
-                    parameters = new List<Param>()
-                    {
-                        new Param("type", DogNinja.ObjectType.Random, "Object", "The object to be thrown"),
-                        new Param("text", "", "Alt. Objects", "An alternative object; one that doesn't exist in the main menu"),
-                    }
-                },
-                new GameAction("ThrowObjectRight", "Throw Object Right")
-                {
-                    function = delegate { var e = eventCaller.currentEntity; DogNinja.instance.ThrowObject(e.beat, e["type"], e["text"], false, false); }, 
-                    defaultLength = 2,
-                    parameters = new List<Param>()
-                    {
-                        new Param("type", DogNinja.ObjectType.Random, "Object", "The object to be thrown"),
-                        new Param("text", "", "Alt. Objects", "An alternative object; one that doesn't exist in the main menu"),
-                    }
-                },
-                new GameAction("ThrowObjectBoth", "Throw Object Left & Right")
-                {
-                    function = delegate { var e = eventCaller.currentEntity; DogNinja.instance.ThrowBothObject(e.beat, e["type"], e["type2"], e["text"], e["text2"]); }, 
-                    defaultLength = 2,
-                    parameters = new List<Param>()
-                    {
-                        new Param("type", DogNinja.ObjectType.Random, "Left Object", "The object on the left to be thrown"),
-                        new Param("type2", DogNinja.ObjectType.Random, "Right Object", "The object on the right to be thrown"),
-                        new Param("text", "", "Left Alt. Object", "An alternative object on the left; one that doesn't exist in the main menu"),
-                        new Param("text2", "", "Right Alt. Object", "An alternative object on the right; one that doesn't exist in the main menu"),
+                        new Param("direction", DogNinja.ObjectDirection.Left, "Which Side", "Whether the object should come from the left, right, or both sides"),
+                        new Param("typeL", DogNinja.ObjectType.Random, "Left \nObject", "The object to be thrown from the left"),
+                        new Param("typeR", DogNinja.ObjectType.Random, "Right Object", "The object to be thrown from the right"),
                     }
                 },
                 new GameAction("CutEverything", "Cut Everything!")
@@ -87,6 +53,39 @@ namespace HeavenStudio.Games.Loaders
                     function = delegate { DogNinja.instance.HereWeGo(eventCaller.currentEntity.beat); },
                     defaultLength = 2,
                     inactiveFunction = delegate { DogNinja.HereWeGoInactive(eventCaller.currentEntity.beat); },
+                },
+
+                // these are still here for backwards-compatibility but are hidden in the editor
+                new GameAction("ThrowObjectLeft", "Throw Object Left")
+                {
+                    function = delegate { var e = eventCaller.currentEntity; DogNinja.instance.ThrowObject(e.beat, 0, e["type"], 0); }, 
+                    defaultLength = 2,
+                    hidden = true,
+                    parameters = new List<Param>()
+                    {
+                        new Param("type", DogNinja.ObjectType.Random, "Object", "The object to be thrown"),
+                    }
+                },
+                new GameAction("ThrowObjectRight", "Throw Object Right")
+                {
+                    function = delegate { var e = eventCaller.currentEntity; DogNinja.instance.ThrowObject(e.beat, 1, 0, e["type"]); }, 
+                    defaultLength = 2,
+                    hidden = true,
+                    parameters = new List<Param>()
+                    {
+                        new Param("type", DogNinja.ObjectType.Random, "Object", "The object to be thrown"),
+                    }
+                },
+                new GameAction("ThrowObjectBoth", "Throw Object Both")
+                {
+                    function = delegate { var e = eventCaller.currentEntity; DogNinja.instance.ThrowBothObject(e.beat, e["typeL"], e["typeR"]); }, 
+                    defaultLength = 2,
+                    hidden = true,
+                    parameters = new List<Param>()
+                    {
+                        new Param("typeL", DogNinja.ObjectType.Random, "Left Object", "The object on the left to be thrown"),
+                        new Param("typeR", DogNinja.ObjectType.Random, "Right Object", "The object on the right to be thrown"),
+                    }
                 },
             });
         }
@@ -117,7 +116,6 @@ namespace HeavenStudio.Games
         [SerializeField] BezierCurve3D CurveFromRight;
 
         [SerializeField] Sprite[] ObjectTypes;
-        [SerializeField] Sprite[] CustomObjects;
 
         private float lastReportedBeat = 0f;
         private bool birdOnScreen = false;
@@ -127,6 +125,13 @@ namespace HeavenStudio.Games
         private const string sfxNum = "dogNinja/";
         
         public static DogNinja instance;
+
+        public enum ObjectDirection
+        {
+            Left,
+            Right,
+            Both,
+        }
 
         public enum ObjectType
         {
@@ -140,10 +145,19 @@ namespace HeavenStudio.Games
             Bone,       // bone
             Pan,        // pan
             Tire,       // tire
-            Custom,     // directs to custom stuff
+            // custom objects that aren't in the og game
+            AirBatter,
+            Karateka,
+            IaiGiriGaiden,
+            ThumpFarm,
+            BattingShow,
+            MeatGrinder,
+            Idol,
+            TacoBell,
+            //YaseiNoIkiG3M4,
         }
 
-        // input these into the secret object box for custom objects 
+        /*
         public enum CustomObject
         {
             TacoBell,
@@ -157,11 +171,11 @@ namespace HeavenStudio.Games
             //YaseiNoIkiG3M4,
             //AmongUs,
         }
+        */
         
         private void Awake()
         {
             instance = this;
-            cutEverythingCanvas.worldCamera = GameCamera.instance.camera;
         }
 
         private void Update()
@@ -170,7 +184,7 @@ namespace HeavenStudio.Games
             {
                 DogAnim.DoScaledAnimationAsync("Prepare", 0.5f);
                 DogAnim.SetBool("needPrepare", true);
-            };
+            }
             
             if (PlayerInput.Pressed() && !IsExpectingInputNow(InputType.STANDARD_DOWN))
             {
@@ -181,12 +195,12 @@ namespace HeavenStudio.Games
                     slice = "WhiffRight";
                 } else {
                     slice = "WhiffLeft";
-                };
+                }
 
                 DogAnim.DoScaledAnimationAsync(slice, 0.5f);
                 Jukebox.PlayOneShotGame("dogNinja/whiff");
                 DogAnim.SetBool("needPrepare", false);
-            };
+            }
         }
 
         private void LateUpdate() 
@@ -194,7 +208,7 @@ namespace HeavenStudio.Games
             if (Conductor.instance.ReportBeat(ref lastReportedBeat) && DogAnim.IsAnimationNotPlaying() && !dontBop)
             {
                 DogAnim.DoScaledAnimationAsync("Bop", 0.5f);
-            };
+            }
         }
 
         public void Bop(float beat, bool bop)
@@ -202,42 +216,49 @@ namespace HeavenStudio.Games
             dontBop = !bop;
         }
 
-        public void SetCustomText(string text)
+        public void ThrowObject(float beat, int direction, int typeL, int typeR)
         {
-            cutEverythingText.text = text;
-        }
-
-        public void ThrowObject(float beat, int ObjType, string textObj, bool fromLeft, bool fromBoth)
-        {
-            int ObjSprite = ObjType;
-            if (ObjType == 10) {
-                // custom object code, uses the enum to turn the input string into integer to get the sprite
-                Enum.TryParse(textObj, true, out CustomObject notIntObj);
-                ObjSprite = (int) notIntObj;
-                usesCustomObject = true;
-                WhichObject.sprite = CustomObjects[ObjSprite];
-            } else if (ObjType == 0) {
+            int ObjSprite = 1;
+            if ((typeL == 0 && direction == 0) 
+            ||  (typeR == 0 && direction == 1) 
+            ||  ((typeL == 0 || typeR == 0) && direction == 2)) {
                 // random object code. it makes a random number from 1-6 and sets that as the sprite
                 System.Random rd = new System.Random();
                 ObjSprite = rd.Next(1, 6);
                 WhichObject.sprite = ObjectTypes[ObjSprite];
-            } else { WhichObject.sprite = ObjectTypes[ObjSprite]; };
+                typeL = ObjSprite;
+                typeR = ObjSprite;
+            }
 
             // instantiate a game object and give it its variables
-            ThrowObject Object = Instantiate(ObjectBase, ObjectHolder).GetComponent<ThrowObject>();
-            Object.startBeat = beat;
-            Object.curve = fromLeft ? CurveFromLeft : CurveFromRight;
-            Object.fromLeft = fromLeft;
-            Object.fromBoth = fromBoth;
-            Object.textObj = textObj;
-            Object.type = ObjType;
-            Object.spriteInt = (ObjType == 10 ? ObjSprite + 10 : ObjSprite);
+            if (direction == 0 || direction == 2) {
+                WhichObject.sprite = ObjectTypes[typeL];
+                ThrowObject ObjectL = Instantiate(ObjectBase, ObjectHolder).GetComponent<ThrowObject>();
+                ObjectL.startBeat = beat;
+                ObjectL.curve = CurveFromLeft;
+                ObjectL.fromLeft = true;
+                ObjectL.direction = direction;
+                ObjectL.type = typeL;
+                ObjectL.textObj = Enum.GetName(typeof(ObjectType), typeL);
+            }
+
+            if (direction == 1 || direction == 2) {
+                WhichObject.sprite = ObjectTypes[typeR];
+                ThrowObject ObjectR = Instantiate(ObjectBase, ObjectHolder).GetComponent<ThrowObject>();
+                ObjectR.startBeat = beat;
+                ObjectR.curve = CurveFromRight;
+                ObjectR.fromLeft = false;
+                ObjectR.direction = direction;
+                ObjectR.type = typeR;
+                ObjectR.textObj = Enum.GetName(typeof(ObjectType), typeR);
+            }
         }
 
-        public void ThrowBothObject(float beat, int ObjType1, int ObjType2, string textObj1, string textObj2)
+        // only here for backwards compatibility
+        public void ThrowBothObject(float beat, int ObjType1, int ObjType2)
         {
-            ThrowObject(beat, ObjType1, textObj1, false, true);
-            ThrowObject(beat, ObjType2, textObj2, true, true);
+            ThrowObject(beat, 0, ObjType1, 0);
+            ThrowObject(beat, 1, 0, ObjType2);
         }
 
         public void CutEverything(float beat, bool sound, string customText)
@@ -250,11 +271,11 @@ namespace HeavenStudio.Games
                 }
                 BirdAnim.Play("FlyIn", 0, 0);
                 birdOnScreen = true;
-                SetCustomText(customText);
+                cutEverythingText.text = customText;
             } else {
                 BirdAnim.Play("FlyOut", 0, 0);
                 birdOnScreen = false;
-            };
+            }
         }
 
         public void Prepare(float beat)

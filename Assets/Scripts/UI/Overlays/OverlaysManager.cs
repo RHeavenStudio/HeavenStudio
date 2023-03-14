@@ -81,15 +81,12 @@ namespace HeavenStudio.Common
             foreach (var c in lytElements)
             {
                 if (c is TimingDisplayComponent) { 
-                    Debug.Log("TimingDisplayComponent");
                     c.CreateElement(TimingDisplayPrefab, ComponentHolder); 
                 }
                 else if (c is SkillStarComponent) { 
-                    Debug.Log("SkillStarComponent");
                     c.CreateElement(SkillStarPrefab, ComponentHolder); 
                 }
                 else if (c is SectionComponent) { 
-                    Debug.Log("SectionComponent");
                     c.CreateElement(ChartSectionPrefab, ComponentHolder); 
                 }
                 c.PositionElement();
