@@ -12,6 +12,8 @@ namespace HeavenStudio.Games.Scripts_GleeClub
         
         public float currentPitch = 1f;
 
+        public float gameSwitchFadeOutTime = 0f;
+
         public bool singing;
 
         private GleeClub game;
@@ -23,7 +25,7 @@ namespace HeavenStudio.Games.Scripts_GleeClub
 
         void OnDestroy()
         {
-            Jukebox.KillLoop(currentSound, 0f);
+            Jukebox.KillLoop(currentSound, gameSwitchFadeOutTime);
         }
 
         public void MissPose()

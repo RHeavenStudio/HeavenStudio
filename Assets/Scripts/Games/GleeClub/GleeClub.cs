@@ -61,6 +61,17 @@ namespace HeavenStudio.Games.Loaders
                         new Param("semiTones1", new EntityTypes.Integer(-24, 24, 0), "Semitones (Next)", "The number of semitones up or down this note should be pitched"),
                         new Param("semiTonesPlayer", new EntityTypes.Integer(-24, 24, 0), "Semitones (Player)", "The number of semitones up or down this note should be pitched"),
                     }
+                },
+                new GameAction("fadeOutTime", "Set Sing Game-Switch Fade Out Time")
+                {
+                    function = delegate { var e = eventCaller.currentEntity; GleeClub.instance.SetGameSwitchFadeOutTime(e["fade"], e["fade1"], e["fadeP"]); },
+                    defaultLength = 0.5f,
+                    parameters = new List<Param>()
+                    {
+                        new Param("fade", new EntityTypes.Float(0, 20f, 0f), "Left Chorus Kid", "For how much time in seconds should this chorus kid's singing fade out?"),
+                        new Param("fade1", new EntityTypes.Float(0, 20f, 0f), "Middle Chorus Kid", "For how much time in seconds should this chorus kid's singing fade out?"),
+                        new Param("fadeP", new EntityTypes.Float(0, 20f, 0f), "Player Chorus Kid", "For how much time in seconds should this chorus kid's singing fade out?"),
+                    }
                 }
             });
         }
@@ -114,6 +125,8 @@ namespace HeavenStudio.Games
             if (!PlayerInput.Pressing() && Conductor.instance.isPlaying && !GameManager.instance.autoplay)
             {
                 playerChorusKid.StartSinging();
+                leftChorusKid.MissPose();
+                middleChorusKid.MissPose();
             }
         }
 
@@ -133,12 +146,14 @@ namespace HeavenStudio.Games
                 playerChorusKid.StopSinging();
                 leftChorusKid.MissPose();
                 middleChorusKid.MissPose();
+                ScoreMiss();
             }
             if (PlayerInput.PressedUp() && !IsExpectingInputNow(InputType.STANDARD_UP))
             {
                 playerChorusKid.StartSinging();
                 leftChorusKid.MissPose();
                 middleChorusKid.MissPose();
+                ScoreMiss();
             }
             if (Conductor.instance.isPlaying && !Conductor.instance.isPaused)
             {
@@ -157,6 +172,13 @@ namespace HeavenStudio.Games
                 if (queuedSingings.Count > 0) queuedSingings.Clear();
                 if (queuedBatons.Count > 0) queuedBatons.Clear();
             }
+        }
+
+        public void SetGameSwitchFadeOutTime(float fadeOut, float fadeOut1, float fadeOutPlayer)
+        {
+            leftChorusKid.gameSwitchFadeOutTime = fadeOut;
+            middleChorusKid.gameSwitchFadeOutTime = fadeOut1;
+            playerChorusKid.gameSwitchFadeOutTime = fadeOutPlayer;
         }
 
         public void ForceSing(int semiTones, int semiTones1, int semiTonesPlayer)
