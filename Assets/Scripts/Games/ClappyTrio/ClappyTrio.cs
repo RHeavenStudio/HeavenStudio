@@ -10,7 +10,7 @@ namespace HeavenStudio.Games.Loaders
     public static class AgbClapLoader
     {
         public static Minigame AddGame(EventCaller eventCaller) {
-            return new Minigame("clappyTrio", "The Clappy Trio", "deffff", false, false, new List<GameAction>()
+            return new Minigame("clappyTrio", "Trio Timer", "deffff", false, false, new List<GameAction>()
             {
                 new GameAction("clap", "Clap")
                 {

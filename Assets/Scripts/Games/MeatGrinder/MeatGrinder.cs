@@ -11,7 +11,7 @@ namespace HeavenStudio.Games.Loaders
     public static class pcoMeatLoader
     {
         public static Minigame AddGame(EventCaller eventCaller) {
-            return new Minigame("meatGrinder", "Meat Grinder", "501d18", false, false, new List<GameAction>()
+            return new Minigame("meatGrinder", "Nice to Meat You", "501d18", false, false, new List<GameAction>()
             {
                 new GameAction("MeatToss", "Meat Toss")
                 {

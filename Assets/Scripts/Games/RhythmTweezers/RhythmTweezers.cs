@@ -13,7 +13,7 @@ namespace HeavenStudio.Games.Loaders
     public static class AgbHairLoader
     {
         public static Minigame AddGame(EventCaller eventCaller) {
-            return new Minigame("rhythmTweezers", "Rhythm Tweezers", "a14fa1", false, false, new List<GameAction>()
+            return new Minigame("rhythmTweezers", "Pull Hairs", "a14fa1", false, false, new List<GameAction>()
             {
                 new GameAction("start interval", "Start Interval")
                 {
