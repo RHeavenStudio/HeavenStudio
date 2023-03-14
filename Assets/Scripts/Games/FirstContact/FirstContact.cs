@@ -18,7 +18,7 @@ namespace HeavenStudio.Games.Loaders
                     function = delegate { var e = eventCaller.currentEntity; FirstContact.instance.SetIntervalStart(e.beat, e.length, e["dialogue"]);  }, 
                     parameters = new List<Param>()
                     {
-                        new Param("dialogue", "", "Mistranslation Dialogue", "The line to use when messing up the translation")
+                        new Param("dialogue", "Yo, hairless apes!", "Mistranslation Dialogue", "The line to use when messing up the translation")
                     },
                     defaultLength = 4f, 
                     resizable = true,
@@ -92,6 +92,8 @@ namespace HeavenStudio.Games
         const string MID_MSG_MISS = "<color=\"red\"> ..? </color>";
         const string MSG_ALIEN = "<sprite name=\"AlienIcn\">";
         const string MSG_MAN = "<sprite name=\"ManIcn\">";
+        // I should add a DonkTroll sprite 🫰🫰🫰🫰🫰
+
         public static FirstContact instance { get; private set; }
 
         [Header("Properties")]
