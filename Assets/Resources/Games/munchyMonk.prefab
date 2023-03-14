@@ -2340,6 +2340,7 @@ GameObject:
   m_Component:
   - component: {fileID: 3441632085760416725}
   - component: {fileID: 4496255832183162831}
+  - component: {fileID: 5342086749115587097}
   m_Layer: 0
   m_Name: Smear2
   m_TagString: Untagged
@@ -2412,6 +2413,25 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
+--- !u!95 &5342086749115587097
+Animator:
+  serializedVersion: 3
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4577846014379795925}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: ec988bcfb1c6d3349947d75ab118fd5a, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorControllerStateOnDisable: 0
 --- !u!1 &4699008434711184625
 GameObject:
   m_ObjectHideFlags: 0
@@ -2479,7 +2499,9 @@ MonoBehaviour:
   ThreeGiverAnim: {fileID: 6495224626437450886}
   MonkAnim: {fileID: 1267849249056320680}
   MonkArmsAnim: {fileID: 8155799568250144337}
-  DumplingsAnim: {fileID: 0}
+  DumplingAnim: {fileID: 281185408784258692}
+  Dumpling2Anim: {fileID: 0}
+  SmearAnim: {fileID: 5342086749115587097}
   lastReportedBeat: 0
   monkBop: 1
   needBlush: 0
@@ -2842,6 +2864,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1280084572664218517}
   - component: {fileID: 6251178941257073503}
+  - component: {fileID: 172082494198118750}
   m_Layer: 0
   m_Name: Mustache
   m_TagString: Untagged
@@ -2914,6 +2937,25 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
+--- !u!95 &172082494198118750
+Animator:
+  serializedVersion: 3
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5326742123325797300}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: 036a2794eac150f499a773de6a3619ca, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorControllerStateOnDisable: 0
 --- !u!1 &5330488048195279595
 GameObject:
   m_ObjectHideFlags: 0
@@ -3162,6 +3204,7 @@ GameObject:
   m_Component:
   - component: {fileID: 705948717492519649}
   - component: {fileID: 38081829694205902}
+  - component: {fileID: 3292085202543521318}
   m_Layer: 0
   m_Name: Eyebrow
   m_TagString: Untagged
@@ -3234,6 +3277,25 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
+--- !u!95 &3292085202543521318
+Animator:
+  serializedVersion: 3
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5584816661429645807}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: 5dc9691fd24dcd44d89d682639533d9c, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorControllerStateOnDisable: 0
 --- !u!1 &5655808078371000402
 GameObject:
   m_ObjectHideFlags: 0

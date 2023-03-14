@@ -30,9 +30,10 @@ namespace HeavenStudio.Games.Loaders
                     {
                         new Param("twoColor", new Color(1, 0.51f, 0.45f, 1), "Color", "Change the color of the dumplings")
                     },
+                    preFunctionLength = 0.5f,
                     preFunction = delegate {
                         var e = eventCaller.currentEntity; 
-                        MunchyMonk.instance.PreTwoTwoCue(e.beat, e["twoColor"]); 
+                        MunchyMonk.PreTwoTwoCue(e.beat, e["twoColor"]); 
                     },
                 },
                 new GameAction("Three", "Three")
@@ -96,6 +97,13 @@ namespace HeavenStudio.Games
     using Scripts_MunchyMonk;
     public class MunchyMonk : Minigame
     {
+        static List<QueuedTwoTwo> queuedTwoTwos = new List<QueuedTwoTwo>();
+        struct QueuedTwoTwo
+        {
+            public float beat;
+            public Color color;
+        }
+        
         [Header("Objects")]
         [SerializeField] GameObject DumplingObj;
         [SerializeField] GameObject TwoDumplingObj1;
@@ -111,7 +119,9 @@ namespace HeavenStudio.Games
         [SerializeField] Animator ThreeGiverAnim;
         public Animator MonkAnim;
         public Animator MonkArmsAnim;
-        public Animator DumplingsAnim;
+        public Animator DumplingAnim;
+        public Animator Dumpling2Anim;
+        public Animator SmearAnim;
 
         [Header("Variables")]
         public float lastReportedBeat = 0f;
@@ -150,6 +160,7 @@ namespace HeavenStudio.Games
             if (Conductor.instance.ReportBeat(ref lastReportedBeat) 
                 && !MonkAnim.IsPlayingAnimationName("Eat")
                 && !MonkAnim.IsPlayingAnimationName("Blush")
+                && !MonkAnim.IsPlayingAnimationName("Miss")
                 && monkBop)
             {
                 MonkAnim.DoScaledAnimationAsync("Bop", 0.5f);
@@ -191,12 +202,15 @@ namespace HeavenStudio.Games
             DumplingClone.startBeat = beat;
         }
 
-        public void PreTwoTwoCue(float beat, Color twoColor)
+        public static void PreTwoTwoCue(float beat, Color twoColor)
         {
-            TwoDumplingSprite1.color = twoColor;
-            TwoDumplingSprite2.color = twoColor;
-            DumplingSmear.color = twoColor;
-            
+            if (GameManager.instance.currentGame == "munchyMonk") {
+                MunchyMonk.instance.TwoTwoCue(beat, twoColor);
+            }
+        }
+
+        public void TwoTwoCue(float beat, Color twoColor)
+        {
             MultiSound.Play(new MultiSound.Sound[] { 
                 new MultiSound.Sound(sfxName+"two_1", beat - 0.5f),
                 new MultiSound.Sound(sfxName+"two_2", beat), 
@@ -205,19 +219,23 @@ namespace HeavenStudio.Games
             });
 
             BeatAction.New(gameObject, new List<BeatAction.Action>() {
-                new BeatAction.Action(beat-0.5f, delegate { TwoGiverAnim.DoScaledAnimationAsync("GiveIn", 0.5f); }),
-                new BeatAction.Action(beat     , delegate { TwoGiverAnim.DoScaledAnimationAsync("GiveOut", 0.5f); }),
-            });
-
-            BeatAction.New(gameObject, new List<BeatAction.Action>() {
                 new BeatAction.Action(beat-0.5f, delegate { 
+                    TwoDumplingSprite1.color = twoColor;
+                    TwoDumplingSprite2.color = twoColor;
+                    DumplingSmear.color = twoColor;
+                    
+                    // first dumpling
                     Dumpling DumplingClone1 = Instantiate(TwoDumplingObj1).GetComponent<Dumpling>(); 
                     DumplingClone1.startBeat = beat-0.5f;
-                    DumplingClone1.type = 2f; }),
-                new BeatAction.Action(beat-0.5f, delegate { 
+                    DumplingClone1.type = 2f;
+                    // second dumpling
                     Dumpling DumplingClone2 = Instantiate(TwoDumplingObj2).GetComponent<Dumpling>(); 
                     DumplingClone2.startBeat = beat-0.5f; 
-                    DumplingClone2.type = 2.5f; }),
+                    DumplingClone2.type = 2.5f;
+
+                    TwoGiverAnim.DoScaledAnimationAsync("GiveIn", 0.5f); }),
+                new BeatAction.Action(beat, delegate { 
+                    TwoGiverAnim.DoScaledAnimationAsync("GiveOut", 0.5f); }),
             });
         }
 
