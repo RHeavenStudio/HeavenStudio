@@ -8,6 +8,8 @@ namespace HeavenStudio.Games.Scripts_GleeClub
     public class ChorusKid : MonoBehaviour
     {
         [SerializeField] Animator anim;
+        [SerializeField] SpriteRenderer sr;
+        [SerializeField] bool player;
         Sound currentSound;
         
         public float currentPitch = 1f;
@@ -15,6 +17,8 @@ namespace HeavenStudio.Games.Scripts_GleeClub
         public float gameSwitchFadeOutTime = 0f;
 
         public bool singing;
+
+        bool disappeared = false;
 
         private GleeClub game;
 
@@ -28,20 +32,42 @@ namespace HeavenStudio.Games.Scripts_GleeClub
             Jukebox.KillLoop(currentSound, gameSwitchFadeOutTime);
         }
 
+        public void TogglePresence(bool disappear)
+        {
+            if (disappear)
+            {
+                sr.color = new Color(1, 1, 1, 0);
+                StopSinging(false, false);
+                anim.Play("Idle", 0, 0);
+                disappeared = disappear;
+            }
+            else
+            {
+                disappeared = disappear;
+                sr.color = new Color(1, 1, 1, 1);
+                if (player && !PlayerInput.Pressing() && !GameManager.instance.autoplay) 
+                {
+                    StartSinging();
+                    game.leftChorusKid.MissPose();
+                    game.middleChorusKid.MissPose();
+                } 
+            }
+        }
+
         public void MissPose()
         {
-            if (!singing && anim.IsPlayingAnimationName("Idle") && !anim.IsPlayingAnimationName("MissIdle")) anim.Play("MissIdle", 0, 0);
+            if (!singing && anim.GetCurrentAnimatorStateInfo(0).IsName("Idle") && !anim.IsPlayingAnimationName("MissIdle")) anim.Play("MissIdle", 0, 0);
         }
 
         public void StartCrouch()
         {
-            if (singing) return;
+            if (singing || disappeared) return;
             anim.Play("CrouchStart", 0, 0);
         }
 
         public void StartYell()
         {
-            if (singing) return;
+            if (singing || disappeared) return;
             singing = true;
             anim.SetBool("Mega", true);
             anim.Play("OpenMouth", 0, 0);
@@ -52,7 +78,7 @@ namespace HeavenStudio.Games.Scripts_GleeClub
 
         public void StartSinging(bool forced = false)
         {
-            if (singing && !forced) return;
+            if ((singing && !forced) || disappeared) return;
             singing = true;
             anim.SetBool("Mega", false);
             anim.Play("OpenMouth", 0, 0);
@@ -60,13 +86,13 @@ namespace HeavenStudio.Games.Scripts_GleeClub
             currentSound = Jukebox.PlayOneShotGame("gleeClub/WailLoop", -1, currentPitch, 1f, true);
         }
 
-        public void StopSinging(bool mega = false)
+        public void StopSinging(bool mega = false, bool playSound = true)
         {
-            if (!singing) return;
+            if (!singing || disappeared) return;
             singing = false;
             anim.Play(mega ? "MegaCloseMouth" : "CloseMouth", 0, 0);
             Jukebox.KillLoop(currentSound, 0f);
-            Jukebox.PlayOneShotGame("gleeClub/StopWail");
+            if (playSound) Jukebox.PlayOneShotGame("gleeClub/StopWail");
         }
     }
 }

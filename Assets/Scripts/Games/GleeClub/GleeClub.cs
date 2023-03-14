@@ -35,12 +35,6 @@ namespace HeavenStudio.Games.Loaders
                         new Param("semiTonesMiddle2", new EntityTypes.Integer(-24, 24, 0), "Semitones (Repeat Middle)", "The number of semitones up or down this note should be pitched"),
                     }
                 },
-                new GameAction("passTurn", "Pass Turn")
-                {
-                    function = delegate { var e = eventCaller.currentEntity; GleeClub.instance.PassTurn(e.beat, e.length); },
-                    resizable = true,
-                    defaultLength = 0.5f
-                },
                 new GameAction("baton", "Baton")
                 {
                     preFunction = delegate { var e = eventCaller.currentEntity; GleeClub.PreBaton(e.beat); },
@@ -69,6 +63,17 @@ namespace HeavenStudio.Games.Loaders
                         new Param("semiTonesPlayer", new EntityTypes.Integer(-24, 24, 0), "Semitones (Player)", "The number of semitones up or down this note should be pitched"),
                     }
                 },
+                new GameAction("presence", "Toggle Chorus Kids Presence")
+                {
+                    function = delegate { var e = eventCaller.currentEntity; GleeClub.instance.ToggleKidsPresence(!e["left"], !e["middle"], !e["player"]); },
+                    defaultLength = 0.5f,
+                    parameters = new List<Param>()
+                    {
+                        new Param("left", false, "Left Kid Present", "Should this chorus kid be present?"),
+                        new Param("middle", false, "Middle Kid Present", "Should this chorus kid be present?"),
+                        new Param("player", false, "Player Kid Present", "Should this chorus kid be present?"),
+                    }
+                },
                 new GameAction("fadeOutTime", "Set Sing Game-Switch Fade Out Time")
                 {
                     function = delegate { var e = eventCaller.currentEntity; GleeClub.instance.SetGameSwitchFadeOutTime(e["fade"], e["fade1"], e["fadeP"]); },
@@ -79,7 +84,14 @@ namespace HeavenStudio.Games.Loaders
                         new Param("fade1", new EntityTypes.Float(0, 20f, 0f), "Middle Chorus Kid", "For how much time in seconds should this chorus kid's singing fade out?"),
                         new Param("fadeP", new EntityTypes.Float(0, 20f, 0f), "Player Chorus Kid", "For how much time in seconds should this chorus kid's singing fade out?"),
                     }
-                }
+                },
+                new GameAction("passTurn", "Pass Turn")
+                {
+                    function = delegate { var e = eventCaller.currentEntity; GleeClub.instance.PassTurn(e.beat, e.length); },
+                    resizable = true,
+                    defaultLength = 0.5f,
+                    hidden = true
+                },
             });
         }
     }
@@ -113,8 +125,8 @@ namespace HeavenStudio.Games
         [Header("Components")]
         [SerializeField] Animator heartAnim;
         [SerializeField] Animator condAnim;
-        [SerializeField] ChorusKid leftChorusKid;
-        [SerializeField] ChorusKid middleChorusKid;
+        public ChorusKid leftChorusKid;
+        public ChorusKid middleChorusKid;
         public ChorusKid playerChorusKid;
         [Header("Variables")]
         static List<QueuedSinging> queuedSingings = new List<QueuedSinging>();
@@ -176,6 +188,11 @@ namespace HeavenStudio.Games
                     }
                     queuedBatons.Clear();
                 }
+                float normalizedBeat = Conductor.instance.GetPositionFromBeat(intervalStartBeat, beatInterval);
+                if (normalizedBeat >= 1f && intervalStarted)
+                {
+                    PassTurn(intervalStartBeat + beatInterval, 0f);
+                }
             }
 
             if (!Conductor.instance.isPlaying || Conductor.instance.isPaused)
@@ -183,6 +200,13 @@ namespace HeavenStudio.Games
                 if (queuedSingings.Count > 0) queuedSingings.Clear();
                 if (queuedBatons.Count > 0) queuedBatons.Clear();
             }
+        }
+
+        public void ToggleKidsPresence(bool left, bool middle, bool player)
+        {
+            leftChorusKid.TogglePresence(left);
+            middleChorusKid.TogglePresence(middle);
+            playerChorusKid.TogglePresence(player);
         }
 
         public void SetGameSwitchFadeOutTime(float fadeOut, float fadeOut1, float fadeOutPlayer)
