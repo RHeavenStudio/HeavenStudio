@@ -20,14 +20,19 @@ namespace HeavenStudio.Games.Loaders
                 },
                 new GameAction("sing", "Sing")
                 {
-                    function = delegate { var e = eventCaller.currentEntity; GleeClub.instance.Sing(e.beat, e.length, e["semiTones"], e["semiTones1"], e["semiTonesPlayer"], e["close"]); },
+                    function = delegate { var e = eventCaller.currentEntity; GleeClub.instance.Sing(e.beat, e.length, e["semiTones"], e["semiTones1"], e["semiTonesPlayer"], 
+                        e["close"], e["repeat"], e["semiTonesLeft2"], e["semiTonesLeft3"], e["semiTonesMiddle2"]); },
                     resizable = true,
                     parameters = new List<Param>()
                     {
                         new Param("semiTones", new EntityTypes.Integer(-24, 24, 0), "Semitones", "The number of semitones up or down this note should be pitched"),
                         new Param("semiTones1", new EntityTypes.Integer(-24, 24, 0), "Semitones (Next)", "The number of semitones up or down this note should be pitched"),
                         new Param("semiTonesPlayer", new EntityTypes.Integer(-24, 24, 0), "Semitones (Player)", "The number of semitones up or down this note should be pitched"),
-                        new Param("close", GleeClub.MouthOpenClose.Both, "Close/Open Mouth", "Should the chorus kids close/open their mouth?")
+                        new Param("close", GleeClub.MouthOpenClose.Both, "Close/Open Mouth", "Should the chorus kids close/open their mouth?"),
+                        new Param("repeat", false, "Repeating", "Should the left and middle chorus kid repeat this singing cue?"),
+                        new Param("semiTonesLeft2", new EntityTypes.Integer(-24, 24, 0), "Semitones (Repeat Left First)", "The number of semitones up or down this note should be pitched"),
+                        new Param("semiTonesLeft3", new EntityTypes.Integer(-24, 24, 0), "Semitones (Repeat Left Last)", "The number of semitones up or down this note should be pitched"),
+                        new Param("semiTonesMiddle2", new EntityTypes.Integer(-24, 24, 0), "Semitones (Repeat Middle)", "The number of semitones up or down this note should be pitched"),
                     }
                 },
                 new GameAction("passTurn", "Pass Turn")
@@ -98,6 +103,10 @@ namespace HeavenStudio.Games
             public int semiTones;
             public int semiTonesPlayer;
             public int closeMouth;
+            public bool repeating;
+            public int semiTonesLeft2;
+            public int semiTonesLeft3;
+            public int semiTonesMiddle2;
         }
         [Header("Prefabs")]
         [SerializeField] GleeClubSingInput singInputPrefab;
@@ -254,7 +263,7 @@ namespace HeavenStudio.Games
             intervalStarted = true;
         }
 
-        public void Sing(float beat, float length, int semiTones, int semiTones1, int semiTonesPlayer, int closeMouth)
+        public void Sing(float beat, float length, int semiTones, int semiTones1, int semiTonesPlayer, int closeMouth, bool repeating, int semiTonesLeft2, int semiTonesLeft3, int semiTonesMiddle2)
         {
             float pitch = Mathf.Pow(2f, (1f / 12f) * semiTones) * Conductor.instance.musicSource.pitch;
             if (!intervalStarted)
@@ -273,6 +282,10 @@ namespace HeavenStudio.Games
                 semiTones = semiTones1,
                 closeMouth = closeMouth,
                 semiTonesPlayer = semiTonesPlayer,
+                repeating = repeating,
+                semiTonesLeft2 = semiTonesLeft2,
+                semiTonesLeft3 = semiTonesLeft3,
+                semiTonesMiddle2 = semiTonesMiddle2
             });
         }
 
@@ -289,16 +302,49 @@ namespace HeavenStudio.Games
                 spawnedInput.pitch = playerPitch;
                 spawnedInput.Init(beat + length + sing.startBeat + beatInterval, sing.length, sing.closeMouth);
                 float pitch = Mathf.Pow(2f, (1f / 12f) * sing.semiTones) * Conductor.instance.musicSource.pitch;
+                float pitchLeft2 = Mathf.Pow(2f, (1f / 12f) * sing.semiTonesLeft2) * Conductor.instance.musicSource.pitch;
+                float pitchLeft3 = Mathf.Pow(2f, (1f / 12f) * sing.semiTonesLeft3) * Conductor.instance.musicSource.pitch;
+                float pitchMiddle2 = Mathf.Pow(2f, (1f / 12f) * sing.semiTonesMiddle2) * Conductor.instance.musicSource.pitch;
                 BeatAction.New(instance.gameObject, new List<BeatAction.Action>()
                 {
                     new BeatAction.Action(beat + length + sing.startBeat, delegate
                     {
-                        middleChorusKid.currentPitch = pitch;
-                        if (sing.closeMouth != (int)MouthOpenClose.OnlyClose) middleChorusKid.StartSinging();
+                        if (sing.closeMouth != (int)MouthOpenClose.OnlyClose) 
+                        {
+                            middleChorusKid.currentPitch = pitch;
+                            middleChorusKid.StartSinging();
+                            if (sing.repeating)
+                            {
+                                leftChorusKid.currentPitch = pitchLeft2;
+                                leftChorusKid.StartSinging();
+                            }
+                        } 
                     }),
                     new BeatAction.Action(beat + length + sing.startBeat + sing.length, delegate
                     {
-                        if (sing.closeMouth != (int)MouthOpenClose.OnlyOpen) middleChorusKid.StopSinging();
+                        if (sing.closeMouth != (int)MouthOpenClose.OnlyOpen) 
+                        {
+                            middleChorusKid.StopSinging();
+                            if (sing.repeating) leftChorusKid.StopSinging();
+                        } 
+                    }),
+                    new BeatAction.Action(beat + length + sing.startBeat + beatInterval, delegate
+                    {
+                        if (sing.closeMouth != (int)MouthOpenClose.OnlyClose && sing.repeating)
+                        {
+                            middleChorusKid.currentPitch = pitchMiddle2;
+                            leftChorusKid.currentPitch = pitchLeft3;
+                            middleChorusKid.StartSinging();
+                            leftChorusKid.StartSinging();
+                        }
+                    }),
+                    new BeatAction.Action(beat + length + sing.startBeat + sing.length + beatInterval, delegate
+                    {
+                        if (sing.closeMouth != (int)MouthOpenClose.OnlyOpen && sing.repeating)
+                        {
+                            middleChorusKid.StopSinging();
+                            leftChorusKid.StopSinging();
+                        }
                     }),
                 });
             }
