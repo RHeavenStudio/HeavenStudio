@@ -42,13 +42,14 @@ namespace HeavenStudio.Games.Loaders
                 },
                 new GameAction("togetherNow", "Together Now!")
                 {
-                    function = delegate { var e = eventCaller.currentEntity; GleeClub.instance.TogetherNow(e.beat, e["semiTones"], e["semiTones1"], e["semiTonesPlayer"]); },
+                    function = delegate { var e = eventCaller.currentEntity; GleeClub.instance.TogetherNow(e.beat, e["semiTones"], e["semiTones1"], e["semiTonesPlayer"], e["pitch"]); },
                     defaultLength = 4f,
                     parameters = new List<Param>()
                     {
                         new Param("semiTones", new EntityTypes.Integer(-24, 24, 0), "Semitones", "The number of semitones up or down this note should be pitched"),
                         new Param("semiTones1", new EntityTypes.Integer(-24, 24, 0), "Semitones (Next)", "The number of semitones up or down this note should be pitched"),
                         new Param("semiTonesPlayer", new EntityTypes.Integer(-24, 24, 0), "Semitones (Player)", "The number of semitones up or down this note should be pitched"),
+                        new Param("pitch", new EntityTypes.Float(0f, 5f, 1f), "Conductor Voice Pitch", "Which pitch should the conductor's voice be at? (1 is normal pitch)")
                     }
                 },
                 new GameAction("forceSing", "Force Sing")
@@ -192,7 +193,7 @@ namespace HeavenStudio.Games
             else missed = true;
         }
 
-        public void TogetherNow(float beat, int semiTones, int semiTones1, int semiTonesPlayer)
+        public void TogetherNow(float beat, int semiTones, int semiTones1, int semiTonesPlayer, float conductorPitch)
         {
             ScheduleInput(beat, 2.5f, InputType.STANDARD_UP, JustTogetherNow, Out, Out);
             ScheduleInput(beat, 3.5f, InputType.STANDARD_DOWN, JustTogetherNowClose, MissBaton, Out);
@@ -201,10 +202,10 @@ namespace HeavenStudio.Games
             currentYellPitch = Mathf.Pow(2f, (1f / 12f) * semiTonesPlayer) * Conductor.instance.musicSource.pitch;
             MultiSound.Play(new MultiSound.Sound[]
             {
-                new MultiSound.Sound("gleeClub/togetherEN-01", beat + 0.5f),
-                new MultiSound.Sound("gleeClub/togetherEN-02", beat + 1f),
-                new MultiSound.Sound("gleeClub/togetherEN-03", beat + 1.5f),
-                new MultiSound.Sound("gleeClub/togetherEN-04", beat + 2f, 1, 1, false, 0.02f),
+                new MultiSound.Sound("gleeClub/togetherEN-01", beat + 0.5f, conductorPitch),
+                new MultiSound.Sound("gleeClub/togetherEN-02", beat + 1f, conductorPitch),
+                new MultiSound.Sound("gleeClub/togetherEN-03", beat + 1.5f, conductorPitch),
+                new MultiSound.Sound("gleeClub/togetherEN-04", beat + 2f, conductorPitch, 1, false, 0.02f),
             });
 
             BeatAction.New(instance.gameObject, new List<BeatAction.Action>()
