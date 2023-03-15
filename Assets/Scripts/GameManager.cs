@@ -23,7 +23,6 @@ namespace HeavenStudio
         public string txt;
         public string ext;
         public Camera GameCamera, CursorCam, OverlayCamera, StaticCamera;
-        public GameObject GameLetterbox;
         public CircleCursor CircleCursor;
         [HideInInspector] public GameObject GamesHolder;
         public Games.Global.Flash fade;
@@ -743,9 +742,16 @@ namespace HeavenStudio
         public void SetCurrentGame(string game)
         {
             currentGame = game;
-            if (GetGameInfo(currentGame) != null) CircleCursor.InnerCircle.GetComponent<SpriteRenderer>().color = Colors.Hex2RGB(GetGameInfo(currentGame).color);
+            if (GetGameInfo(currentGame) != null)
+            {
+                CircleCursor.InnerCircle.GetComponent<SpriteRenderer>().color = Colors.Hex2RGB(GetGameInfo(currentGame).color);
+                HeavenStudio.StaticCamera.instance.SetAmbientGlowColour(Colors.Hex2RGB(GetGameInfo(currentGame).color));
+            }
             else
+            {
                 CircleCursor.InnerCircle.GetComponent<SpriteRenderer>().color = Color.white;
+                HeavenStudio.StaticCamera.instance.SetAmbientGlowColour(Color.black);
+            }
         }
 
         private bool SongPosLessThanClipLength(float t)
