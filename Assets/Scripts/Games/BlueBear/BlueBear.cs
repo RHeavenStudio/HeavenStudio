@@ -26,8 +26,7 @@ namespace HeavenStudio.Games.Loaders
                 new GameAction("setEmotion", "Set Emotion")
                 {
                     function = delegate { var e = eventCaller.currentEntity; BlueBear.instance.SetEmotion(e.beat, e.length, e["type"]); },
-                    defaultLength = 4,
-                    resizable = true,
+                    defaultLength = 0.5f,
                     parameters = new List<Param>()
                     {
                         new Param("type", BlueBear.EmotionType.ClosedEyes, "Type", "Which emotion should the blue bear use?")
@@ -109,7 +108,7 @@ namespace HeavenStudio.Games
                 float normalizedBeat = cond.GetPositionFromBeat(emotionStartBeat, emotionLength);
                 if (normalizedBeat >= 0 && normalizedBeat <= 1f)
                 {
-                    headAndBodyAnim.DoNormalizedAnimation(emotionAnimName, normalizedBeat);
+                    //headAndBodyAnim.DoNormalizedAnimation(emotionAnimName, normalizedBeat);
                 }
             }
         }
@@ -168,18 +167,21 @@ namespace HeavenStudio.Games
                     emotionStartBeat = beat;
                     emotionLength = length;
                     emotionAnimName = "OpenEyes";
+                    headAndBodyAnim.Play(emotionAnimName, 0, 0);
                     crying = false;
                     break;
                 case (int)EmotionType.Smile:
                     emotionStartBeat = beat;
                     emotionLength = length;
                     emotionAnimName = "Smile";
+                    headAndBodyAnim.Play(emotionAnimName, 0, 0);
                     crying = false;
                     break;
                 case (int)EmotionType.Sad:
                     emotionStartBeat = beat;
                     emotionLength = length;
                     emotionAnimName = "Sad";
+                    headAndBodyAnim.Play(emotionAnimName, 0, 0);
                     crying = true;
                     break;
                 case (int)EmotionType.Sigh:
