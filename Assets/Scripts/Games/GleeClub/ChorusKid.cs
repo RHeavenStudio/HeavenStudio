@@ -1,0 +1,100 @@
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+using HeavenStudio.Util;
+
+namespace HeavenStudio.Games.Scripts_GleeClub
+{
+    public class ChorusKid : MonoBehaviour
+    {
+        [SerializeField] Animator anim;
+        [SerializeField] SpriteRenderer sr;
+        [SerializeField] bool player;
+        Sound currentSound;
+        
+        public float currentPitch = 1f;
+
+        public float gameSwitchFadeOutTime = 0f;
+
+        public bool singing;
+
+        bool disappeared = false;
+
+        private GleeClub game;
+
+        void Awake()
+        {
+            game = GleeClub.instance;
+        }
+
+        void OnDestroy()
+        {
+            Jukebox.KillLoop(currentSound, gameSwitchFadeOutTime);
+        }
+
+        public void TogglePresence(bool disappear)
+        {
+            if (disappear)
+            {
+                sr.color = new Color(1, 1, 1, 0);
+                StopSinging(false, false);
+                anim.Play("Idle", 0, 0);
+                disappeared = disappear;
+            }
+            else
+            {
+                disappeared = disappear;
+                sr.color = new Color(1, 1, 1, 1);
+                if (player && !PlayerInput.Pressing() && !GameManager.instance.autoplay) 
+                {
+                    StartSinging();
+                    game.leftChorusKid.MissPose();
+                    game.middleChorusKid.MissPose();
+                } 
+            }
+        }
+
+        public void MissPose()
+        {
+            if (!singing && anim.GetCurrentAnimatorStateInfo(0).IsName("Idle") && !anim.IsPlayingAnimationName("MissIdle")) anim.Play("MissIdle", 0, 0);
+        }
+
+        public void StartCrouch()
+        {
+            if (singing || disappeared) return;
+            anim.Play("CrouchStart", 0, 0);
+        }
+
+        public void StartYell()
+        {
+            if (singing || disappeared) return;
+            singing = true;
+            anim.SetBool("Mega", true);
+            anim.Play("OpenMouth", 0, 0);
+            Jukebox.KillLoop(currentSound, 0f);
+            Jukebox.PlayOneShotGame("gleeClub/LoudWailStart");
+            currentSound = Jukebox.PlayOneShotGame("gleeClub/LoudWailLoop", -1, currentPitch, 1f, true);
+        }
+
+        public void StartSinging(bool forced = false)
+        {
+            if ((singing && !forced) || disappeared) return;
+            singing = true;
+            anim.SetBool("Mega", false);
+            anim.Play("OpenMouth", 0, 0);
+            Jukebox.KillLoop(currentSound, 0f);
+            currentSound = Jukebox.PlayOneShotGame("gleeClub/WailLoop", -1, currentPitch, 1f, true);
+        }
+
+        public void StopSinging(bool mega = false, bool playSound = true)
+        {
+            if (!singing || disappeared) return;
+            singing = false;
+            anim.Play(mega ? "MegaCloseMouth" : "CloseMouth", 0, 0);
+            Jukebox.KillLoop(currentSound, 0f);
+            if (playSound) Jukebox.PlayOneShotGame("gleeClub/StopWail");
+        }
+    }
+}
+
+
