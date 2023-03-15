@@ -13,7 +13,7 @@ namespace HeavenStudio.Games
 
     public class PlayerActionEvent : PlayerActionObject
     {
-        public static bool EnableAutoplayCheat = false;
+        public static bool EnableAutoplayCheat = true;
         public delegate void ActionEventCallback(PlayerActionEvent caller);
         public delegate void ActionEventCallbackState(PlayerActionEvent caller, float state);
 

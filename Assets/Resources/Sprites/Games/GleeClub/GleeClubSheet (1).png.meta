@@ -1,0 +1,972 @@
+fileFormatVersion: 2
+guid: 909e2b476c181ce418f35af7044aae9b
+TextureImporter:
+  internalIDToNameTable:
+  - first:
+      213: 1804354818921194779
+    second: Idle0
+  - first:
+      213: 1149175680143362930
+    second: Idle1
+  - first:
+      213: 4912382029293061881
+    second: Background
+  - first:
+      213: -7650123141664848349
+    second: Idle2
+  - first:
+      213: -7657040098874784008
+    second: Idle3
+  - first:
+      213: -606051187412453923
+    second: ConductorIdle0
+  - first:
+      213: -2513617399205022492
+    second: ConductorIdle1
+  - first:
+      213: -2625565398584720352
+    second: Yell0
+  - first:
+      213: 6205012161784758749
+    second: Yell1
+  - first:
+      213: 4932676927187949938
+    second: Yell2
+  - first:
+      213: -3920288618408658744
+    second: YellIdle0
+  - first:
+      213: -8417903713118509711
+    second: YellIdle1
+  - first:
+      213: 8023972051296468534
+    second: YellIdle2
+  - first:
+      213: -1132373375764831042
+    second: GleeClubSheet (1)_13
+  - first:
+      213: 6308243910551098927
+    second: GleeClubSheet (1)_14
+  - first:
+      213: 1663196409717956038
+    second: GleeClubSheet (1)_15
+  - first:
+      213: -2298594324209679486
+    second: GleeClubSheet (1)_16
+  - first:
+      213: -2834071402454214111
+    second: GleeClubSheet (1)_17
+  - first:
+      213: 4739470401179920852
+    second: GleeClubSheet (1)_18
+  - first:
+      213: -9195703153900872297
+    second: GleeClubSheet (1)_19
+  - first:
+      213: -7599853634890082234
+    second: GleeClubSheet (1)_20
+  - first:
+      213: 6066818219673297731
+    second: GleeClubSheet (1)_21
+  - first:
+      213: -5581727177896333551
+    second: WhiteHeart0
+  - first:
+      213: 6384691848902729770
+    second: WhiteHeart1
+  - first:
+      213: 6696363431491934996
+    second: WhiteHeart2
+  - first:
+      213: -2276629977324457433
+    second: WhiteHeart3
+  - first:
+      213: -7694814617567284244
+    second: PinkHeart0
+  - first:
+      213: 2710674865056468780
+    second: PinkHeart1
+  - first:
+      213: 8814694472927883107
+    second: MissIdle0
+  - first:
+      213: -4439084542125446343
+    second: MissIdle1
+  - first:
+      213: -478208254676933719
+    second: Crouch
+  - first:
+      213: 3772122826411846613
+    second: MegaYell0
+  - first:
+      213: 6832020984448324246
+    second: MegaYell1
+  - first:
+      213: -4378024112835011280
+    second: MegaYellIdle0
+  - first:
+      213: 9161786761424276365
+    second: MegaYellIdle1
+  - first:
+      213: 5081155804645796742
+    second: MegaYellIdle2
+  externalObjects: {}
+  serializedVersion: 11
+  mipmaps:
+    mipMapMode: 0
+    enableMipMap: 0
+    sRGBTexture: 1
+    linearTexture: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapsPreserveCoverage: 0
+    alphaTestReferenceValue: 0.5
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+  bumpmap:
+    convertToNormalMap: 0
+    externalNormalMap: 0
+    heightScale: 0.25
+    normalMapFilter: 0
+  isReadable: 0
+  streamingMipmaps: 0
+  streamingMipmapsPriority: 0
+  vTOnly: 0
+  grayScaleToAlpha: 0
+  generateCubemap: 6
+  cubemapConvolution: 0
+  seamlessCubemap: 0
+  textureFormat: 1
+  maxTextureSize: 2048
+  textureSettings:
+    serializedVersion: 2
+    filterMode: 1
+    aniso: 1
+    mipBias: 0
+    wrapU: 1
+    wrapV: 1
+    wrapW: 1
+  nPOTScale: 0
+  lightmap: 0
+  compressionQuality: 50
+  spriteMode: 2
+  spriteExtrude: 1
+  spriteMeshType: 1
+  alignment: 0
+  spritePivot: {x: 0.5, y: 0.5}
+  spritePixelsToUnits: 100
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spriteGenerateFallbackPhysicsShape: 1
+  alphaUsage: 1
+  alphaIsTransparency: 1
+  spriteTessellationDetail: -1
+  textureType: 8
+  textureShape: 1
+  singleChannelComponent: 0
+  flipbookRows: 1
+  flipbookColumns: 1
+  maxTextureSizeSet: 0
+  compressionQualitySet: 0
+  textureFormatSet: 0
+  ignorePngGamma: 0
+  applyGammaDecoding: 0
+  platformSettings:
+  - serializedVersion: 3
+    buildTarget: DefaultTexturePlatform
+    maxTextureSize: 4096
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 3
+    buildTarget: Standalone
+    maxTextureSize: 4096
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  spriteSheet:
+    serializedVersion: 2
+    sprites:
+    - serializedVersion: 2
+      name: Idle0
+      rect:
+        serializedVersion: 2
+        x: 37
+        y: 3578
+        width: 255
+        height: 410
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: b15ef8ed52b5a0910800000000000000
+      internalID: 1804354818921194779
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Idle1
+      rect:
+        serializedVersion: 2
+        x: 395
+        y: 3578
+        width: 255
+        height: 410
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 27b86774131b2ff00800000000000000
+      internalID: 1149175680143362930
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Background
+      rect:
+        serializedVersion: 2
+        x: 2079
+        y: 38
+        width: 1991
+        height: 623
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 9f68601cd694c2440800000000000000
+      internalID: 4912382029293061881
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Idle2
+      rect:
+        serializedVersion: 2
+        x: 1100
+        y: 1401
+        width: 255
+        height: 410
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 3264215e88d45d590800000000000000
+      internalID: -7650123141664848349
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Idle3
+      rect:
+        serializedVersion: 2
+        x: 1452
+        y: 1401
+        width: 255
+        height: 410
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 8f685ab499abcb590800000000000000
+      internalID: -7657040098874784008
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: ConductorIdle0
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 2479
+        width: 350
+        height: 473
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: dd5b392f7afd697f0800000000000000
+      internalID: -606051187412453923
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: ConductorIdle1
+      rect:
+        serializedVersion: 2
+        x: 350
+        y: 2479
+        width: 350
+        height: 473
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 4e4b42b0b46dd1dd0800000000000000
+      internalID: -2513617399205022492
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Yell0
+      rect:
+        serializedVersion: 2
+        x: 1094
+        y: 2481
+        width: 255
+        height: 410
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 0240dca4e2e109bd0800000000000000
+      internalID: -2625565398584720352
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Yell1
+      rect:
+        serializedVersion: 2
+        x: 38
+        y: 3043
+        width: 255
+        height: 410
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: dd1c8228fa1ac1650800000000000000
+      internalID: 6205012161784758749
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Yell2
+      rect:
+        serializedVersion: 2
+        x: 404
+        y: 3043
+        width: 255
+        height: 410
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 2799dc4e783647440800000000000000
+      internalID: 4932676927187949938
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: YellIdle0
+      rect:
+        serializedVersion: 2
+        x: 47
+        y: 1950
+        width: 255
+        height: 410
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 8c8bebaa5465899c0800000000000000
+      internalID: -3920288618408658744
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: YellIdle1
+      rect:
+        serializedVersion: 2
+        x: 406
+        y: 1950
+        width: 255
+        height: 410
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 17521224c299d2b80800000000000000
+      internalID: -8417903713118509711
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: YellIdle2
+      rect:
+        serializedVersion: 2
+        x: 753
+        y: 1950
+        width: 255
+        height: 410
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 63e303d5110ea5f60800000000000000
+      internalID: 8023972051296468534
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: GleeClubSheet (1)_13
+      rect:
+        serializedVersion: 2
+        x: 2630
+        y: 1353
+        width: 571
+        height: 496
+      alignment: 9
+      pivot: {x: 0.287566, y: 0.4789835}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: eb46d601a600940f0800000000000000
+      internalID: -1132373375764831042
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: GleeClubSheet (1)_14
+      rect:
+        serializedVersion: 2
+        x: 2227
+        y: 1364
+        width: 355
+        height: 470
+      alignment: 9
+      pivot: {x: 0.4354444, y: 0.50000024}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: f265be40a626b8750800000000000000
+      internalID: 6308243910551098927
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: GleeClubSheet (1)_15
+      rect:
+        serializedVersion: 2
+        x: 1797
+        y: 1359
+        width: 368
+        height: 481
+      alignment: 9
+      pivot: {x: 0.44161722, y: 0.5089335}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 6cd91f8925cd41710800000000000000
+      internalID: 1663196409717956038
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: GleeClubSheet (1)_16
+      rect:
+        serializedVersion: 2
+        x: 3345
+        y: 1338
+        width: 347
+        height: 494
+      alignment: 9
+      pivot: {x: 0.5181445, y: 0.5223035}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 283c0cef3a0c910e0800000000000000
+      internalID: -2298594324209679486
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: GleeClubSheet (1)_17
+      rect:
+        serializedVersion: 2
+        x: 1804
+        y: 2501
+        width: 238
+        height: 442
+      alignment: 9
+      pivot: {x: 0.4702805, y: 0.48666397}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 12a9f94331b5ba8d0800000000000000
+      internalID: -2834071402454214111
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: GleeClubSheet (1)_18
+      rect:
+        serializedVersion: 2
+        x: 2143
+        y: 2495
+        width: 307
+        height: 481
+      alignment: 9
+      pivot: {x: 0.47396842, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 4d9aec5183bf5c140800000000000000
+      internalID: 4739470401179920852
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: GleeClubSheet (1)_19
+      rect:
+        serializedVersion: 2
+        x: 2510
+        y: 2493
+        width: 280
+        height: 476
+      alignment: 9
+      pivot: {x: 0.4716797, y: 0.5102519}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 79d9cc3d3bc426080800000000000000
+      internalID: -9195703153900872297
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: GleeClubSheet (1)_20
+      rect:
+        serializedVersion: 2
+        x: 2858
+        y: 2512
+        width: 426
+        height: 437
+      alignment: 9
+      pivot: {x: 0.31242263, y: 0.46061626}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 6485a638265e78690800000000000000
+      internalID: -7599853634890082234
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: GleeClubSheet (1)_21
+      rect:
+        serializedVersion: 2
+        x: 3328
+        y: 2499
+        width: 448
+        height: 448
+      alignment: 9
+      pivot: {x: 0.3056014, y: 0.4786159}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 343ae74070ba13450800000000000000
+      internalID: 6066818219673297731
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: WhiteHeart0
+      rect:
+        serializedVersion: 2
+        x: 1852
+        y: 2213
+        width: 164
+        height: 133
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 11f685874b8b982b0800000000000000
+      internalID: -5581727177896333551
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: WhiteHeart1
+      rect:
+        serializedVersion: 2
+        x: 2212
+        y: 2214
+        width: 144
+        height: 132
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: a20ed26b86bfa9850800000000000000
+      internalID: 6384691848902729770
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: WhiteHeart2
+      rect:
+        serializedVersion: 2
+        x: 2553
+        y: 2226
+        width: 172
+        height: 130
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 41b1ef4ef034eec50800000000000000
+      internalID: 6696363431491934996
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: WhiteHeart3
+      rect:
+        serializedVersion: 2
+        x: 2903
+        y: 2235
+        width: 163
+        height: 115
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 722f1940919c760e0800000000000000
+      internalID: -2276629977324457433
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: PinkHeart0
+      rect:
+        serializedVersion: 2
+        x: 1810
+        y: 1944
+        width: 125
+        height: 102
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: ce33b6bcfd6863590800000000000000
+      internalID: -7694814617567284244
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: PinkHeart1
+      rect:
+        serializedVersion: 2
+        x: 2020
+        y: 1945
+        width: 148
+        height: 116
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: c2f45419d604e9520800000000000000
+      internalID: 2710674865056468780
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: MissIdle0
+      rect:
+        serializedVersion: 2
+        x: 743
+        y: 856
+        width: 255
+        height: 410
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 36f277ebbe5145a70800000000000000
+      internalID: 8814694472927883107
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: MissIdle1
+      rect:
+        serializedVersion: 2
+        x: 1094
+        y: 856
+        width: 255
+        height: 410
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 93b6fa2d0243562c0800000000000000
+      internalID: -4439084542125446343
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Crouch
+      rect:
+        serializedVersion: 2
+        x: 1102
+        y: 1950
+        width: 255
+        height: 410
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 9a3625340201d59f0800000000000000
+      internalID: -478208254676933719
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: MegaYell0
+      rect:
+        serializedVersion: 2
+        x: 757
+        y: 3062
+        width: 255
+        height: 410
+      alignment: 9
+      pivot: {x: 0.52523386, y: 0.49476764}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 5dbab6d99b5495430800000000000000
+      internalID: 3772122826411846613
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: MegaYell1
+      rect:
+        serializedVersion: 2
+        x: 1103
+        y: 3062
+        width: 255
+        height: 410
+      alignment: 9
+      pivot: {x: 0.5218999, y: 0.46497774}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 6929e0443e630de50800000000000000
+      internalID: 6832020984448324246
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: MegaYellIdle0
+      rect:
+        serializedVersion: 2
+        x: 44
+        y: 1436
+        width: 255
+        height: 430
+      alignment: 9
+      pivot: {x: 0.53295517, y: 0.43974125}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 03ddf50e3422e33c0800000000000000
+      internalID: -4378024112835011280
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: MegaYellIdle1
+      rect:
+        serializedVersion: 2
+        x: 401
+        y: 1427
+        width: 260
+        height: 457
+      alignment: 9
+      pivot: {x: 0.5538685, y: 0.44330087}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: d8b029ea484352f70800000000000000
+      internalID: 9161786761424276365
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: MegaYellIdle2
+      rect:
+        serializedVersion: 2
+        x: 746
+        y: 1412
+        width: 285
+        height: 473
+      alignment: 9
+      pivot: {x: 0.5196572, y: 0.46298584}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 68ba3508844e38640800000000000000
+      internalID: 5081155804645796742
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    outline: []
+    physicsShape: []
+    bones: []
+    spriteID: 5e97eb03825dee720800000000000000
+    internalID: 0
+    vertices: []
+    indices: 
+    edges: []
+    weights: []
+    secondaryTextures: []
+  spritePackingTag: 
+  pSDRemoveMatte: 0
+  pSDShowRemoveMatteOption: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

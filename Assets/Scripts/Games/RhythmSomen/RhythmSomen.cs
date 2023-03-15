@@ -10,7 +10,7 @@ namespace HeavenStudio.Games.Loaders
     {
         public static Minigame AddGame(EventCaller eventCaller)
         {
-            return new Minigame("rhythmSomen", "Rhythm Sōmen", "99CC34", false, false, new List<GameAction>()
+            return new Minigame("rhythmSomen", "Rhythm Sōmen", "7ab96e", false, false, new List<GameAction>()
             {
                 new GameAction("crane (far)", "Far Crane")
                 {

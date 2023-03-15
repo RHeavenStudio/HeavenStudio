@@ -12,10 +12,11 @@ namespace HeavenStudio.Games.Scripts_DogNinja
     {
         public float startBeat;
         public int type;
-        public int spriteInt;
         public string textObj;
         public bool fromLeft;
-        public bool fromBoth = false;
+        public bool fromRight;
+        public int direction;
+        
         private Vector3 objPos;
         private bool isActive = true;
         private float barelyTime;
@@ -47,25 +48,9 @@ namespace HeavenStudio.Games.Scripts_DogNinja
         {
             barelyCurve = fromLeft ? BarelyRightCurve : BarelyLeftCurve;
             
-            switch (type) {
-                case 7:
-                    sfxNum += "bone";
-                    break;
-                case 8:
-                    sfxNum += "pan";
-                    break;
-                case 9:
-                    sfxNum += "tire";
-                    break;
-                case 10:
-                    sfxNum += textObj;
-                    break;
-                default:
-                    sfxNum += "fruit";
-                    break;
-            };
+            sfxNum += type < 7 ? "fruit" : textObj;
             
-            if (fromLeft && fromBoth) {} else { Jukebox.PlayOneShotGame(sfxNum+"1"); }
+            if (direction == 2 && fromLeft) {} else { Jukebox.PlayOneShotGame(sfxNum+"1"); }
             
             game.ScheduleInput(startBeat, 1f, InputType.STANDARD_DOWN, Hit, Miss, Out);
             
@@ -83,39 +68,39 @@ namespace HeavenStudio.Games.Scripts_DogNinja
                 // destroy object when it's off-screen
                 if (flyPos > 1f) {
                     GameObject.Destroy(gameObject);
-                };
+                }
             } else {
                 flyPosBarely *= 0.3f;
-                transform.position = barelyCurve.GetPoint(flyPosBarely) + (objPos/3);
+                transform.position = barelyCurve.GetPoint(flyPosBarely) + objPos;
                 float rot = fromLeft ? 200f : -200f;
                 transform.rotation = Quaternion.Euler(0, 0, transform.rotation.eulerAngles.z + (rot * Time.deltaTime));
                 if (flyPosBarely > 1f) {
                     GameObject.Destroy(gameObject);
-                };
+                }
             }
 
             if ((!Conductor.instance.isPlaying && !Conductor.instance.isPaused) 
                 || GameManager.instance.currentGame != "dogNinja") {
                 GameObject.Destroy(gameObject);
-            };
+            }
         }
 
         private void SuccessSlice() 
         {
             string Slice = "Slice";
-            if (!fromBoth && fromLeft) {
+            if (direction == 0) {
                 Slice += "Left";
-            } else if (!fromBoth && !fromLeft) {
+            } else if (direction == 1) {
                 Slice += "Right";
             } else {
                 Slice += "Both";
-            };
+            }
 
             DogAnim.DoScaledAnimationAsync(Slice, 0.5f);
-            if (fromLeft && fromBoth) {} else { Jukebox.PlayOneShotGame(sfxNum+"2"); }
+            if (!(direction == 2 && fromLeft)) Jukebox.PlayOneShotGame(sfxNum+"2");
 
-            game.WhichLeftHalf.sprite = objectLeftHalves[spriteInt-1];
-            game.WhichRightHalf.sprite = objectRightHalves[spriteInt-1];
+            game.WhichLeftHalf.sprite = objectLeftHalves[type-1];
+            game.WhichRightHalf.sprite = objectRightHalves[type-1];
 
             SpawnHalves LeftHalf = Instantiate(HalvesLeftBase).GetComponent<SpawnHalves>();
             LeftHalf.startBeat = startBeat;
@@ -132,27 +117,20 @@ namespace HeavenStudio.Games.Scripts_DogNinja
 
         private void JustSlice()
         {
-            Debug.Log("brake point before small");
             isActive = false;
             barelyTime = Conductor.instance.songPositionInBeats;
 
-            Debug.Log("brake point middle 1 small");
-
             string Barely = "Barely";
-            if (!fromBoth && fromLeft) {
+            if (direction == 0) {
                 Barely += "Left";
-            } else if (!fromBoth && !fromLeft) {
+            } else if (direction == 1) {
                 Barely += "Right";
             } else {
                 Barely += "Both";
-            };
-
-            Debug.Log("brake point middle 2 small");
+            }
 
             DogAnim.DoScaledAnimationAsync(Barely, 0.5f);
             Jukebox.PlayOneShotGame("dogNinja/barely");
-            
-            Debug.Log("brake point end small");
         }
 
         private void Hit(PlayerActionEvent caller, float state)
