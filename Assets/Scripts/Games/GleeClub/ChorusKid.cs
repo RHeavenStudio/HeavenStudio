@@ -18,7 +18,7 @@ namespace HeavenStudio.Games.Scripts_GleeClub
 
         public bool singing;
 
-        bool disappeared = false;
+        public bool disappeared = false;
 
         private GleeClub game;
 
@@ -29,7 +29,7 @@ namespace HeavenStudio.Games.Scripts_GleeClub
 
         void OnDestroy()
         {
-            Jukebox.KillLoop(currentSound, gameSwitchFadeOutTime);
+            if (currentSound != null) Jukebox.KillLoop(currentSound, gameSwitchFadeOutTime);
         }
 
         public void TogglePresence(bool disappear)
@@ -71,7 +71,7 @@ namespace HeavenStudio.Games.Scripts_GleeClub
             singing = true;
             anim.SetBool("Mega", true);
             anim.Play("OpenMouth", 0, 0);
-            Jukebox.KillLoop(currentSound, 0f);
+            if (currentSound != null) Jukebox.KillLoop(currentSound, 0f);
             Jukebox.PlayOneShotGame("gleeClub/LoudWailStart");
             currentSound = Jukebox.PlayOneShotGame("gleeClub/LoudWailLoop", -1, currentPitch, 1f, true);
         }
@@ -82,7 +82,7 @@ namespace HeavenStudio.Games.Scripts_GleeClub
             singing = true;
             anim.SetBool("Mega", false);
             anim.Play("OpenMouth", 0, 0);
-            Jukebox.KillLoop(currentSound, 0f);
+            if (currentSound != null) Jukebox.KillLoop(currentSound, 0f);
             currentSound = Jukebox.PlayOneShotGame("gleeClub/WailLoop", -1, currentPitch, 1f, true);
         }
 
@@ -91,7 +91,7 @@ namespace HeavenStudio.Games.Scripts_GleeClub
             if (!singing || disappeared) return;
             singing = false;
             anim.Play(mega ? "MegaCloseMouth" : "CloseMouth", 0, 0);
-            Jukebox.KillLoop(currentSound, 0f);
+            if (currentSound != null) Jukebox.KillLoop(currentSound, 0f);
             if (playSound) Jukebox.PlayOneShotGame("gleeClub/StopWail");
         }
     }
