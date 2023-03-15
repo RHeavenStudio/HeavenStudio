@@ -48,7 +48,9 @@ namespace HeavenStudio.Games
             Neutral,
             ClosedEyes,
             LookUp,
-            Smile
+            Smile,
+            Sad,
+            Sigh
         }
         [Header("Animators")]
         public Animator headAndBodyAnim; // Head and body
@@ -68,6 +70,7 @@ namespace HeavenStudio.Games
         float emotionStartBeat;
         float emotionLength;
         string emotionAnimName;
+        bool crying;
 
         [Header("Curves")]
         public BezierCurve3D donutCurve;
@@ -92,11 +95,11 @@ namespace HeavenStudio.Games
 
             if (PlayerInput.GetAnyDirectionDown() && !IsExpectingInputNow(InputType.DIRECTION_DOWN))
             {
-                headAndBodyAnim.Play("BiteL", 0, 0);
+                Bite(true);
             }
             else if (PlayerInput.Pressed() && !IsExpectingInputNow(InputType.STANDARD_DOWN))
             {
-                headAndBodyAnim.Play("BiteR", 0, 0);
+                Bite(false);
             }
 
             var cond = Conductor.instance;
@@ -108,6 +111,18 @@ namespace HeavenStudio.Games
                 {
                     headAndBodyAnim.DoNormalizedAnimation(emotionAnimName, normalizedBeat);
                 }
+            }
+        }
+
+        public void Bite(bool left)
+        {
+            if (crying)
+            {
+                headAndBodyAnim.Play(left ? "CryBiteL" : "CryBiteR", 0, 0);
+            }
+            else
+            {
+                headAndBodyAnim.Play(left ? "BiteL" : "BiteR", 0, 0);
             }
         }
 
@@ -134,20 +149,42 @@ namespace HeavenStudio.Games
             switch (emotion)
             {
                 case (int)EmotionType.Neutral:
-                    headAndBodyAnim.Play("Idle", 0, 0);
+                    if (emotionAnimName == "Smile")
+                    {
+                        headAndBodyAnim.Play("StopSmile", 0, 0);
+                        emotionAnimName = "";
+                    }
+                    else
+                    {
+                        headAndBodyAnim.Play("Idle", 0, 0);
+                    }
+                    crying = false;
                     break;
                 case (int)EmotionType.ClosedEyes:
                     headAndBodyAnim.Play("EyesClosed", 0, 0);
+                    crying = false;
                     break;
                 case (int)EmotionType.LookUp:
                     emotionStartBeat = beat;
                     emotionLength = length;
                     emotionAnimName = "OpenEyes";
+                    crying = false;
                     break;
                 case (int)EmotionType.Smile:
                     emotionStartBeat = beat;
                     emotionLength = length;
                     emotionAnimName = "Smile";
+                    crying = false;
+                    break;
+                case (int)EmotionType.Sad:
+                    emotionStartBeat = beat;
+                    emotionLength = length;
+                    emotionAnimName = "Sad";
+                    crying = true;
+                    break;
+                case (int)EmotionType.Sigh:
+                    headAndBodyAnim.Play("Sigh", 0, 0);
+                    crying = false;
                     break;
                 default:
                     break;
