@@ -24,9 +24,9 @@ namespace HeavenStudio.Games.Loaders
                     resizable = true,
                     parameters = new List<Param>()
                     {
-                        new Param("semiTones", new EntityTypes.Integer(-24, 24, 0), "Semitones", "The number of semitones up or down this note should be pitched"),
-                        new Param("semiTones1", new EntityTypes.Integer(-24, 24, 0), "Semitones (Next)", "The number of semitones up or down this note should be pitched"),
-                        new Param("semiTonesPlayer", new EntityTypes.Integer(-24, 24, 0), "Semitones (Player)", "The number of semitones up or down this note should be pitched"),
+                        new Param("semiTones", new EntityTypes.Integer(-24, 24, -5), "Semitones", "The number of semitones up or down this note should be pitched"),
+                        new Param("semiTones1", new EntityTypes.Integer(-24, 24, -1), "Semitones (Next)", "The number of semitones up or down this note should be pitched"),
+                        new Param("semiTonesPlayer", new EntityTypes.Integer(-24, 24, 2), "Semitones (Player)", "The number of semitones up or down this note should be pitched"),
                         new Param("close", GleeClub.MouthOpenClose.Both, "Close/Open Mouth", "Should the chorus kids close/open their mouth?"),
                         new Param("repeat", false, "Repeating", "Should the left and middle chorus kid repeat this singing cue?"),
                         new Param("semiTonesLeft2", new EntityTypes.Integer(-24, 24, 0), "Semitones (Repeat Left First)", "The number of semitones up or down this note should be pitched"),
@@ -45,9 +45,9 @@ namespace HeavenStudio.Games.Loaders
                     defaultLength = 4f,
                     parameters = new List<Param>()
                     {
-                        new Param("semiTones", new EntityTypes.Integer(-24, 24, 0), "Semitones", "The number of semitones up or down this note should be pitched"),
-                        new Param("semiTones1", new EntityTypes.Integer(-24, 24, 0), "Semitones (Next)", "The number of semitones up or down this note should be pitched"),
-                        new Param("semiTonesPlayer", new EntityTypes.Integer(-24, 24, 0), "Semitones (Player)", "The number of semitones up or down this note should be pitched"),
+                        new Param("semiTones", new EntityTypes.Integer(-24, 24, -1), "Semitones", "The number of semitones up or down this note should be pitched"),
+                        new Param("semiTones1", new EntityTypes.Integer(-24, 24, 4), "Semitones (Next)", "The number of semitones up or down this note should be pitched"),
+                        new Param("semiTonesPlayer", new EntityTypes.Integer(-24, 24, 10), "Semitones (Player)", "The number of semitones up or down this note should be pitched"),
                         new Param("pitch", new EntityTypes.Float(0f, 5f, 1f), "Conductor Voice Pitch", "Which pitch should the conductor's voice be at? (1 is normal pitch)")
                     }
                 },
