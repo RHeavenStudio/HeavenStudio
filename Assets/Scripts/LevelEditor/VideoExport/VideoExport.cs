@@ -161,7 +161,11 @@ namespace HeavenStudio.Editor.VideoExport
                     frameRateController._frameRate = fps;
 
                     GameManager.instance.autoplay = true;
-                    GameManager.instance.Play(startExportTimeInBeats, false);
+                    GameManager.instance.Play(startExportTime, false);
+
+                    // Timeline.TimelineSongPosLine = Instantiate(Timeline.TimelineSongPosLineRef, Timeline.TimelineSongPosLineRef.parent).GetComponent<RectTransform>();
+                    // Timeline.TimelineSongPosLine.gameObject.SetActive(true);
+                    
                     isExporting = true;
                     GameManager.instance.SortEventsList();
                     Conductor.instance.isPlaying = true;
