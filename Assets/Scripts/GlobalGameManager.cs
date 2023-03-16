@@ -33,6 +33,20 @@ namespace HeavenStudio
         public static int ScreenSizeIndex = 0;
 
         public static float MasterVolume = 0.8f;
+        public static int currentDspSize = 512;
+        public static int currentSampleRate = 44100;
+        public static readonly int[] DSP_BUFFER_SIZES =
+        {
+            128, 256, 340, 480, 512, 1024
+        };
+
+        public static readonly int[] SAMPLE_RATES =
+        {
+            22050, 44100, 48000, 88200, 96000,
+        };
+
+        public static RenderTexture GameRenderTexture;
+        public static RenderTexture OverlayRenderTexture;
 
         public enum Scenes : int
         {
@@ -57,6 +71,16 @@ namespace HeavenStudio
             CustomScreenHeight = PersistentDataManager.gameSettings.resolutionHeight;
 
             ChangeMasterVolume(PersistentDataManager.gameSettings.masterVolume);
+            
+            if (PersistentDataManager.gameSettings.dspSize == 0)
+                PersistentDataManager.gameSettings.dspSize = 512;
+            if (PersistentDataManager.gameSettings.sampleRate == 0)
+                PersistentDataManager.gameSettings.sampleRate = 44100;
+            currentDspSize = PersistentDataManager.gameSettings.dspSize;
+            currentSampleRate = PersistentDataManager.gameSettings.sampleRate;
+
+            ChangeAudioSettings(currentDspSize, currentSampleRate);
+
             if (PersistentDataManager.gameSettings.isFullscreen)
             {
                 Screen.SetResolution(Display.main.systemWidth, Display.main.systemHeight, FullScreenMode.FullScreenWindow);
@@ -167,15 +191,51 @@ namespace HeavenStudio
             }
         }
 
+        public static void ResetGameRenderTexture()
+        {
+            // keep 16:9 aspect ratio
+            int width = Screen.width;
+            int height = Screen.height;
+            if (width / 16f > height / 9f)
+            {
+                width = (int)(height / 9f * 16f);
+            }
+            else
+            {
+                height = (int)(width / 16f * 9f);
+            }
+
+            GameRenderTexture.width = width;
+            GameRenderTexture.height = height;
+
+            OverlayRenderTexture.width = (int)(width * 1.5f);
+            OverlayRenderTexture.height = (int)(height * 1.5f);
+        }
+
         public static void ChangeMasterVolume(float value)
         {
             MasterVolume = value;
             AudioListener.volume = MasterVolume;
         }
 
+        public static void ChangeAudioSettings(int dspSize, int sampleRate)
+        {
+            // don't reset audio if no changes are done
+            AudioConfiguration config = AudioSettings.GetConfiguration();
+            if (dspSize == config.dspBufferSize && sampleRate == config.sampleRate) return;
+            currentDspSize = dspSize;
+            currentSampleRate = sampleRate;
+
+            config.dspBufferSize = currentDspSize;
+            config.sampleRate = currentSampleRate;
+            AudioSettings.Reset(config);
+
+            PersistentDataManager.gameSettings.dspSize = currentDspSize;
+            PersistentDataManager.gameSettings.sampleRate = currentSampleRate;
+        }
+
         void OnApplicationQuit()
         {
-            PersistentDataManager.SaveSettings();
             Debug.Log("Disconnecting JoyShocks...");
             PlayerInput.DisconnectJoyshocks();
         }

@@ -23,7 +23,7 @@ namespace HeavenStudio.Games.Loaders
     public static class AgbMarcherLoader
     {
         public static Minigame AddGame(EventCaller eventCaller) {
-            return new Minigame("marchingOrders", "Marching Orders \n<color=#eb5454>[WIP]</color>", "00A43B", false, false, new List<GameAction>()
+            return new Minigame("marchingOrders", "Marching Orders", "ffb108", false, false, new List<GameAction>()
                 {
                     new GameAction("bop", "Bop")
                     {
