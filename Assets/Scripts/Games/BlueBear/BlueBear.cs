@@ -31,6 +31,11 @@ namespace HeavenStudio.Games.Loaders
                     {
                         new Param("type", BlueBear.EmotionType.ClosedEyes, "Type", "Which emotion should the blue bear use?")
                     }
+                },
+                new GameAction("wind", "Wind")
+                {
+                    function = delegate { BlueBear.instance.Wind(); },
+                    defaultLength = 0.5f
                 }
             });
         }
@@ -49,6 +54,7 @@ namespace HeavenStudio.Games
             LookUp,
             Smile,
             Sad,
+            InstaSad,
             Sigh
         }
         [Header("Animators")]
@@ -56,6 +62,7 @@ namespace HeavenStudio.Games
         public Animator bagsAnim; // Both bags sprite
         public Animator donutBagAnim; // Individual donut bag
         public Animator cakeBagAnim; // Individual cake bag
+        [SerializeField] Animator windAnim;
 
         [Header("References")]
         public GameObject donutBase;
@@ -111,6 +118,11 @@ namespace HeavenStudio.Games
                     //headAndBodyAnim.DoNormalizedAnimation(emotionAnimName, normalizedBeat);
                 }
             }
+        }
+
+        public void Wind()
+        {
+            windAnim.Play("Wind", 0, 0);
         }
 
         public void Bite(bool left)
@@ -182,6 +194,10 @@ namespace HeavenStudio.Games
                     emotionLength = length;
                     emotionAnimName = "Sad";
                     headAndBodyAnim.Play(emotionAnimName, 0, 0);
+                    crying = true;
+                    break;
+                case (int)EmotionType.InstaSad:
+                    headAndBodyAnim.Play("CryIdle", 0, 0);
                     crying = true;
                     break;
                 case (int)EmotionType.Sigh:
