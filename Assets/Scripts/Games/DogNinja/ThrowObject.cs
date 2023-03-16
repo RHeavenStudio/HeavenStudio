@@ -52,7 +52,7 @@ namespace HeavenStudio.Games.Scripts_DogNinja
             
             if (direction == 2 && fromLeft) {} else { Jukebox.PlayOneShotGame(sfxNum+"1"); }
             
-            game.ScheduleInput(startBeat, 1f, InputType.STANDARD_DOWN, Hit, Miss, Out);
+            game.ScheduleInput(startBeat, 1f, InputType.STANDARD_DOWN | InputType.DIRECTION_DOWN, Hit, Miss, Out);
             
             DogAnim.SetBool("needPrepare", true);
         }
