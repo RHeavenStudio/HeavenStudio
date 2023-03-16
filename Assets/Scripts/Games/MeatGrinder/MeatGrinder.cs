@@ -124,7 +124,7 @@ namespace HeavenStudio.Games
                 intervalStarted = false;
             }
 
-            if (PlayerInput.Pressed(true) && !IsExpectingInputNow(InputType.STANDARD_DOWN)) {
+            if (PlayerInput.Pressed() && !IsExpectingInputNow(InputType.STANDARD_DOWN)) {
                 ScoreMiss();
                 TackAnim.DoScaledAnimationAsync("TackEmptyHit", 0.5f);
                 TackAnim.SetBool("tackMeated", false);

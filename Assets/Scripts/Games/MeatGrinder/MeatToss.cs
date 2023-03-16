@@ -30,7 +30,7 @@ namespace HeavenStudio.Games.Scripts_MeatGrinder
 
         private void Start() 
         {
-            game.ScheduleInput(startBeat, cueLength, InputType.STANDARD_DOWN | InputType.DIRECTION_DOWN, Hit, Miss, Nothing);
+            game.ScheduleInput(startBeat, cueLength, InputType.STANDARD_DOWN, Hit, Miss, Nothing);
 
             BeatAction.New(gameObject, new List<BeatAction.Action>()
             {
