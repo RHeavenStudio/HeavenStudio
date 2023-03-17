@@ -14,22 +14,22 @@ namespace HeavenStudio.Games.Loaders
             {
                  new GameAction("bop", "Bop")
                 {
-                    function = delegate { var e = eventCaller.currentEntity; SumoBrothers.instance.Bop(e["inu"], e["sumo"]); },
+                    function = delegate { var e = eventCaller.currentEntity; SumoBrothers.instance.Bop(e["inuT"], e["sumoT"]); },
                     parameters = new List<Param>()
                     {
-                        new Param("inu", true, "Inu Bop", "Whether Inu Sensei bops or not."),
-                        new Param("sumo", true, "Brothers Bop", "Whether the Sumo Brothers bop or not."),
+                        new Param("inuT", true, "Inu Sensei", "Whether Inu Sensei bops or not."),
+                        new Param("sumoT", true, "Sumo Brothers", "Whether the Sumo Brothers bop or not."),
                     },
                     defaultLength = 0.5f
                 },
 
                  new GameAction("crouch", "Crouch")
                 {
-                    function = delegate { var e = eventCaller.currentEntity; SumoBrothers.instance.Crouch(e.beat, e.length, e["inu"], e["sumo"]); },
+                    function = delegate { var e = eventCaller.currentEntity; SumoBrothers.instance.Crouch(e.beat, e.length, e["inuT"], e["sumoT"]); },
                     parameters = new List<Param>()
                     {
-                        new Param("inu", true, "Inu Crouch", "Whether Inu Sensei crouches or not."),
-                        new Param("sumo", true, "Brothers Crouch", "Whether the Sumo Brothers crouch or not.")
+                        new Param("inuT", true, "Inu Sensei", "Whether Inu Sensei crouches or not."),
+                        new Param("sumoT", true, "Sumo Brothers", "Whether the Sumo Brothers crouch or not."),
                     },
                     defaultLength = 1f,
                     resizable = true
@@ -129,19 +129,43 @@ namespace HeavenStudio.Games
         // Update is called once per frame
         void Update()
         {
+            // This is cond
             var cond = Conductor.instance;
 
+            // Run once every beat
             if (cond.ReportBeat(ref lastReportedBeat))
             {
-                if (goBopInu && allowBopInu)
+                // Bop Code - Inu Sensei
+                if (allowBopInu)
                 {
-                    inuSensei.DoScaledAnimationAsync("InuBop", 0.5f);
+                    if (goBopInu)
+                    {
+                        // Bop
+                        inuSensei.DoScaledAnimationAsync("InuBop", 0.5f);
+                    }
+                    else
+                    {
+                        // Reset to Idle if Bop is off
+                        inuSensei.DoScaledAnimationAsync("InuIdle", 0.5f);
+                    }
 
                 }
-                if (goBopSumo && allowBopSumo)
+                // Bop Code - Sumo Brothers
+                if (allowBopSumo)
                 {
-                    sumoBrotherP.DoScaledAnimationAsync("SumoBop", 0.5f);
-                    sumoBrotherG.DoScaledAnimationAsync("SumoBop", 0.5f);
+                    if(goBopSumo)
+                    {
+                        // Bop
+                        sumoBrotherP.DoScaledAnimationAsync("SumoBop", 0.5f);
+                        sumoBrotherG.DoScaledAnimationAsync("SumoBop", 0.5f);
+                    }
+                    else
+                    {
+                        // Reset to Idle if Bop is off
+                        sumoBrotherP.DoScaledAnimationAsync("SumoIdle", 0.5f);
+                        sumoBrotherG.DoScaledAnimationAsync("SumoIdle", 0.5f);
+                    }
+                    
                 }
 
             }
@@ -193,19 +217,15 @@ namespace HeavenStudio.Games
                 allowBopSumo = false;
             }
             
-            
             BeatAction.New(instance.gameObject, new List<BeatAction.Action>() {
             new BeatAction.Action(beat, delegate { if (inu == true) inuSensei.DoScaledAnimationAsync("InuCrouch", 0.5f); }),
             new BeatAction.Action(beat, delegate { if (sumo == true) sumoBrotherP.DoScaledAnimationAsync("SumoCrouch", 0.5f); }),
             new BeatAction.Action(beat, delegate { if (sumo == true) sumoBrotherG.DoScaledAnimationAsync("SumoCrouch", 0.5f); }),
-            new BeatAction.Action(beat + length, delegate { allowBopInu = true; }),
-            new BeatAction.Action(beat + length, delegate { allowBopSumo = true; }),
-            new BeatAction.Action(beat + length, delegate { if (goBopInu == false) inuSensei.DoScaledAnimationAsync("InuIdle", 0.5f); }),
-            new BeatAction.Action(beat + length, delegate { if (goBopInu == true) inuSensei.DoScaledAnimationAsync("InuBop", 0.5f); }),
-            new BeatAction.Action(beat + length, delegate { if (goBopSumo == false) sumoBrotherP.DoScaledAnimationAsync("SumoIdle", 0.5f); }),
-            new BeatAction.Action(beat + length, delegate { if (goBopSumo == false) sumoBrotherG.DoScaledAnimationAsync("SumoIdle", 0.5f); }),
+            new BeatAction.Action(beat + length - 0.001, delegate { allowBopInu = true; }),
+            new BeatAction.Action(beat + length - 0.001, delegate { allowBopSumo = true; }),
             new BeatAction.Action(beat + length, delegate { if (goBopSumo == true) sumoBrotherP.DoScaledAnimationAsync("SumoBop", 0.5f); }),
-            new BeatAction.Action(beat + length, delegate { if (goBopSumo == true) sumoBrotherG.DoScaledAnimationAsync("SumoBop", 0.5f); })
+            new BeatAction.Action(beat + length, delegate { if (goBopSumo == true) sumoBrotherG.DoScaledAnimationAsync("SumoBop", 0.5f); }),
+            new BeatAction.Action(beat + length, delegate { if (goBopInu == true) inuSensei.DoScaledAnimationAsync("InuBop", 0.5f); })
             });
 
         }
@@ -213,8 +233,8 @@ namespace HeavenStudio.Games
         public void EndPose(float beat)
         {
             var cond = Conductor.instance;
-            #region Tweet
-                var loopAmount = Math.Round((3 * cond.secPerBeat - 0.208) / 0.395);
+            #region Old Goofy as Hell Tweet Code
+            /*    var loopAmount = Math.Round((3 * cond.secPerBeat - 0.208) / 0.395);
                 var beatsPerSecond = cond.songBpm / 60;
                 var soundBeatLength = beatsPerSecond * 0.395;
 
@@ -229,20 +249,20 @@ namespace HeavenStudio.Games
                 MultiSound.Play(sound.ToArray());
 
                 var tweetLength = (float)loopAmount * (float)soundBeatLength - (float)soundBeatLength + ((float)beatsPerSecond * 0.208f);
-                print(tweetLength);
-                
+                print(tweetLength);*/
+
             #endregion
 
             //SumoBrothers.instance.EndPoseCheck(beat);
 
-            
+            var tweet = Jukebox.PlayOneShotGame("sumoBrothers/posesignal", -1, 1f, 1f, true);
+            tweet.SetLoopParams(beat + 3, 0.05f);
 
             allowBopInu = false;
             inuSensei.DoScaledAnimationAsync("InuTweet", 0.5f);
 
             BeatAction.New(instance.gameObject, new List<BeatAction.Action>() {
                 new BeatAction.Action(beat + 3, delegate { allowBopInu = true; }),
-                new BeatAction.Action(beat + 3, delegate { if (goBopInu == false) inuSensei.DoScaledAnimationAsync("InuIdle", 0.5f); }),
                 new BeatAction.Action(beat + 3, delegate { if (goBopInu == true) inuSensei.DoScaledAnimationAsync("InuBop", 0.5f); })
             });
 
