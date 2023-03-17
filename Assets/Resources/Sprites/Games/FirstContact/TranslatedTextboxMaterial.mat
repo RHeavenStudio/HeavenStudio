@@ -7,9 +7,9 @@ Material:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: TranslatedTextboxDetailSDF
+  m_Name: TranslatedTextboxMaterial
   m_Shader: {fileID: 4800000, guid: 777678d31f953e04e8f15812003b9c27, type: 3}
-  m_ShaderKeywords: 
+  m_ShaderKeywords: UNITY_UI_ALPHACLIP
   m_LightmapFlags: 4
   m_EnableInstancingVariants: 0
   m_DoubleSidedGI: 0
@@ -67,10 +67,10 @@ Material:
     - _Metallic: 0
     - _Mode: 0
     - _OcclusionStrength: 1
-    - _OutSmoothness: 0
-    - _OutThickness: 0
+    - _OutSmoothness: 0.0025
+    - _OutThickness: 0.54
     - _Parallax: 0.02
-    - _Smoothness: 0
+    - _Smoothness: 0.0025
     - _SmoothnessTextureChannel: 0
     - _SpecularHighlights: 1
     - _SrcBlend: 1
@@ -79,12 +79,12 @@ Material:
     - _StencilOp: 0
     - _StencilReadMask: 255
     - _StencilWriteMask: 255
-    - _Thickness: 0.5
+    - _Thickness: 0.53
     - _UVSec: 0
-    - _UseUIAlphaClip: 0
+    - _UseUIAlphaClip: 1
     - _ZWrite: 1
     m_Colors:
     - _Color: {r: 1, g: 1, b: 1, a: 1}
     - _EmissionColor: {r: 0, g: 0, b: 0, a: 1}
-    - _OutColor: {r: 1, g: 1, b: 1, a: 1}
+    - _OutColor: {r: 0.07528239, g: 0, b: 0.3529412, a: 1}
   m_BuildTextureStacks: []

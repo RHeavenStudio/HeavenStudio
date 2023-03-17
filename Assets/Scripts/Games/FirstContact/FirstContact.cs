@@ -18,7 +18,7 @@ namespace HeavenStudio.Games.Loaders
                     function = delegate { var e = eventCaller.currentEntity; FirstContact.instance.SetIntervalStart(e.beat, e.length, e["dialogue"]);  }, 
                     parameters = new List<Param>()
                     {
-                        new Param("dialogue", "Yo, hairless apes!", "Mistranslation Dialogue", "The line to use when messing up the translation")
+                        new Param("dialogue", "REPLACE THIS", "Mistranslation Dialogue", "The line to use when messing up the translation")
                     },
                     defaultLength = 4f, 
                     resizable = true,
@@ -125,7 +125,7 @@ namespace HeavenStudio.Games
         bool onBeat;
         float liveBarBeatOffset;
 
-        string onOutDialogue = "I come form Mars!";
+        string onOutDialogue = "YOU SUCK AT CHARTING";
         string callDiagBuffer = "";
         string respDiagBuffer = "";
         List<string> callDiagList = new List<string>();
@@ -380,6 +380,7 @@ namespace HeavenStudio.Games
         void UpdateTranslateTextbox()
         {
             Debug.Log(respDiagBuffer);
+            translateText.text = respDiagBuffer;
         }
 
         public void missionControlDisplay(float beat, bool stay, float length)
@@ -445,6 +446,7 @@ namespace HeavenStudio.Games
             {
                 respDiagBuffer += callDiagList[callDiagIndex];
                 callDiagIndex++;
+                translateTextbox.SetActive(true);
                 UpdateTranslateTextbox();
             }
         }
