@@ -323,6 +323,7 @@ MonoBehaviour:
   aceTimes: 0
   isEligible: 1
   triggersAutoplay: 1
+  otherAnim: {fileID: 0}
   startBeat: 0
   type: 2
   anim: {fileID: 2274865543072549879}
@@ -2447,7 +2448,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &3441632085760416725
 Transform:
   m_ObjectHideFlags: 0
@@ -2457,10 +2458,10 @@ Transform:
   m_GameObject: {fileID: 4577846014379795925}
   m_LocalRotation: {x: -0, y: -0, z: -0.32880497, w: 0.94439787}
   m_LocalPosition: {x: 1.9558412, y: 0.056414396, z: 0}
-  m_LocalScale: {x: 0.7137429, y: 0.7137429, z: 0.71374285}
+  m_LocalScale: {x: 0.713743, y: 0.713743, z: 0.71374285}
   m_Children: []
-  m_Father: {fileID: 168333956154290365}
-  m_RootOrder: 1
+  m_Father: {fileID: 6163636881912119569}
+  m_RootOrder: 6
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: -38.393}
 --- !u!212 &4496255832183162831
 SpriteRenderer:
@@ -2503,7 +2504,7 @@ SpriteRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 15
   m_Sprite: {fileID: 1605976402678978084, guid: de37f25efaa713347b9cfe924e2e3680, type: 3}
-  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_Color: {r: 1, g: 1, b: 1, a: 0}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
@@ -2566,6 +2567,7 @@ Transform:
   - {fileID: 2554173831134354060}
   - {fileID: 525326701495472490}
   - {fileID: 4780003096125758277}
+  - {fileID: 3441632085760416725}
   - {fileID: 5249558317707287682}
   - {fileID: 168333956154290365}
   m_Father: {fileID: 0}
@@ -2642,9 +2644,8 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 838801096863034419}
-  - {fileID: 3441632085760416725}
   m_Father: {fileID: 6163636881912119569}
-  m_RootOrder: 7
+  m_RootOrder: 8
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &4976901385788903237
 GameObject:
@@ -2678,7 +2679,7 @@ Transform:
   - {fileID: 2340444065591003763}
   - {fileID: 950625167985768828}
   m_Father: {fileID: 6163636881912119569}
-  m_RootOrder: 6
+  m_RootOrder: 7
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &5004137005389582764
 GameObject:
@@ -3998,6 +3999,7 @@ MonoBehaviour:
   aceTimes: 0
   isEligible: 1
   triggersAutoplay: 1
+  otherAnim: {fileID: 0}
   startBeat: 0
   type: 1
   anim: {fileID: 281185408784258692}
@@ -4603,6 +4605,7 @@ MonoBehaviour:
   aceTimes: 0
   isEligible: 1
   triggersAutoplay: 1
+  otherAnim: {fileID: 0}
   startBeat: 0
   type: 2.5
   anim: {fileID: 411253409439128524}
