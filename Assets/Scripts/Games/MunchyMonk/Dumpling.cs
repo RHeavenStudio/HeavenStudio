@@ -49,7 +49,7 @@ namespace HeavenStudio.Games.Scripts_MunchyMonk
             
             if (state >= 1f || state <= -1f) 
             {
-                game.MonkAnim.DoScaledAnimationAsync("Miss", 0.4f);
+                game.MonkAnim.DoScaledAnimationAsync("Barely", 0.4f);
                 anim.DoScaledAnimationAsync("HitHead", 0.5f);
                 Jukebox.PlayOneShotGame(sfxName+"barely");
             } else {
@@ -64,15 +64,15 @@ namespace HeavenStudio.Games.Scripts_MunchyMonk
 
         private void Miss(PlayerActionEvent caller)
         {
-            game.DumplingAnim.DoScaledAnimationAsync("FallOff", 0.5f);
+            anim.DoScaledAnimationAsync("FallOff", 0.5f);
         }
 
         private void Early(PlayerActionEvent caller) 
         {
             if (!(type <= 2f || type >= 2.5f)) {
                 game.MonkArmsAnim.DoScaledAnimationAsync("WristSlap", 0.5f);
-                game.MonkAnim.DoScaledAnimationAsync("Sad", 0.5f);
-                game.DumplingAnim.DoScaledAnimationAsync("HitMiss", 0.5f);
+                game.MonkAnim.DoScaledAnimationAsync("Miss", 0.5f);
+                anim.DoScaledAnimationAsync("HitMiss", 0.5f);
                 MultiSound.Play(new MultiSound.Sound[] {
                     new MultiSound.Sound(sfxName+"slap", game.lastReportedBeat),
                     new MultiSound.Sound(sfxName+"miss", game.lastReportedBeat),

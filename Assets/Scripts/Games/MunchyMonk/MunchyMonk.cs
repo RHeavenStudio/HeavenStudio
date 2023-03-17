@@ -150,6 +150,8 @@ namespace HeavenStudio.Games
         
         [Header("Objects")]
         [SerializeField] GameObject Baby;
+        [SerializeField] GameObject BrowHolder;
+        [SerializeField] GameObject StacheHolder;
         [SerializeField] GameObject DumplingObj;
         [SerializeField] GameObject TwoDumplingObj1;
         [SerializeField] GameObject TwoDumplingObj2;
@@ -157,11 +159,15 @@ namespace HeavenStudio.Games
         [SerializeField] SpriteRenderer TwoDumplingSprite1;
         [SerializeField] SpriteRenderer TwoDumplingSprite2;
         [SerializeField] SpriteRenderer DumplingSmear;
+        [SerializeField] SpriteRenderer TwoDumplingSmear1;
+        [SerializeField] SpriteRenderer TwoDumplingSmear2;
 
         [Header("Animators")]
         [SerializeField] Animator OneGiverAnim;
         [SerializeField] Animator TwoGiverAnim;
         [SerializeField] Animator ThreeGiverAnim;
+        [SerializeField] Animator BrowAnim;
+        [SerializeField] Animator StacheAnim;
         public Animator MonkAnim;
         public Animator MonkArmsAnim;
         public Animator DumplingAnim;
@@ -232,6 +238,7 @@ namespace HeavenStudio.Games
                 && !MonkAnim.IsPlayingAnimationName("Eat")
                 && !MonkAnim.IsPlayingAnimationName("Blush")
                 && !MonkAnim.IsPlayingAnimationName("Miss")
+                && !MonkAnim.IsPlayingAnimationName("Sad")
                 && !MonkAnim.IsPlayingAnimationName("Stare")
                 && monkBop
                 && !isStaring)
@@ -300,7 +307,8 @@ namespace HeavenStudio.Games
                 new BeatAction.Action(beat-0.5f, delegate { 
                     TwoDumplingSprite1.color = twoColor;
                     TwoDumplingSprite2.color = twoColor;
-                    DumplingSmear.color = twoColor;
+                    TwoDumplingSmear1.color = twoColor;
+                    TwoDumplingSmear2.color = twoColor;
                     
                     // first dumpling
                     Dumpling DumplingClone1 = Instantiate(TwoDumplingObj1).GetComponent<Dumpling>(); 
