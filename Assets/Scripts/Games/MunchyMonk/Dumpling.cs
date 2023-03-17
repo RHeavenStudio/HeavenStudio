@@ -9,6 +9,7 @@ namespace HeavenStudio.Games.Scripts_MunchyMonk
 {
     public class Dumpling : PlayerActionObject
     {
+        public Animator otherAnim;
         public float startBeat;
         public float type;
         const string sfxName = "munchyMonk/";
@@ -54,7 +55,7 @@ namespace HeavenStudio.Games.Scripts_MunchyMonk
                 Jukebox.PlayOneShotGame(sfxName+"barely");
             } else {
                 game.MonkAnim.DoScaledAnimationAsync("Eat", 0.4f);
-                anim.DoScaledAnimationAsync("FollowHand", 0.5f);
+                if (type == 2) otherAnim.DoScaledAnimationAsync("FollowHand", 0.5f);
                 game.SmearAnim.DoScaledAnimationAsync("SmearAppear", 0.5f);
                 game.needBlush = true;
                 Jukebox.PlayOneShotGame(sfxName+"gulp");

@@ -318,6 +318,7 @@ namespace HeavenStudio.Games
                     Dumpling DumplingClone2 = Instantiate(TwoDumplingObj2).GetComponent<Dumpling>(); 
                     DumplingClone2.startBeat = beat-0.5f; 
                     DumplingClone2.type = 2.5f;
+                    DumplingClone1.otherAnim = DumplingClone2.gameObject.GetComponent<Animator>();
 
                     TwoGiverAnim.DoScaledAnimationAsync("GiveIn", 0.5f); }),
                 new BeatAction.Action(beat, delegate { 
