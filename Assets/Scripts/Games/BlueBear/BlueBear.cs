@@ -36,6 +36,17 @@ namespace HeavenStudio.Games.Loaders
                 {
                     function = delegate { BlueBear.instance.Wind(); },
                     defaultLength = 0.5f
+                },
+                new GameAction("crumb", "Set Crumb Threshold")
+                {
+                    function = delegate { var e = eventCaller.currentEntity; BlueBear.instance.SetCrumbThreshold(e["right"], e["left"], e["reset"]); },
+                    defaultLength = 0.5f,
+                    parameters = new List<Param>()
+                    {
+                        new Param("right", new EntityTypes.Integer(0, 500, 15), "Right Crumb", "How many treats should the bear eat before the right crumb can appear on his face?"),
+                        new Param("left", new EntityTypes.Integer(0, 500, 30), "Left Crumb", "How many treats should the bear eat before the left crumb can appear on his face?"),
+                        new Param("reset", false, "Reset Treats Eaten", "Should the numbers of treats eaten be reset?")
+                    }
                 }
             });
         }
@@ -65,6 +76,8 @@ namespace HeavenStudio.Games
         [SerializeField] Animator windAnim;
 
         [Header("References")]
+        [SerializeField] GameObject leftCrumb;
+        [SerializeField] GameObject rightCrumb;
         public GameObject donutBase;
         public GameObject cakeBase;
         public GameObject crumbsBase;
@@ -73,6 +86,9 @@ namespace HeavenStudio.Games
         public GameObject individualBagHolder;
 
         [Header("Variables")]
+        static int rightCrumbAppearThreshold = 15;
+        static int leftCrumbAppearThreshold = 30;
+        static int eatenTreats = 0;
         float emotionStartBeat;
         float emotionLength;
         string emotionAnimName;
@@ -90,9 +106,18 @@ namespace HeavenStudio.Games
 
         public static BlueBear instance;
 
+        void OnDestroy()
+        {
+            if (Conductor.instance.isPlaying || Conductor.instance.isPaused) return;
+            rightCrumbAppearThreshold = 15;
+            leftCrumbAppearThreshold = 30;
+            eatenTreats = 0;
+        }
+
         private void Awake()
         {
             instance = this;
+            if (Conductor.instance.isPlaying || Conductor.instance.isPaused) EatTreat(true);
         }
 
         private void Update()
@@ -134,6 +159,34 @@ namespace HeavenStudio.Games
             else
             {
                 headAndBodyAnim.Play(left ? "BiteL" : "BiteR", 0, 0);
+            }
+        }
+
+        public void SetCrumbThreshold(int rightThreshold, int leftThreshold, bool reset)
+        {
+            rightCrumbAppearThreshold = rightThreshold;
+            leftCrumbAppearThreshold = leftThreshold;
+            if (reset) eatenTreats = 0;
+        }
+
+        public void EatTreat(bool onlyCheck = false)
+        {
+            if (!onlyCheck) eatenTreats++;
+            if (eatenTreats >= leftCrumbAppearThreshold)
+            {
+                leftCrumb.SetActive(true);
+            }
+            else
+            {
+                leftCrumb.SetActive(false);
+            }
+            if (eatenTreats >= rightCrumbAppearThreshold)
+            {
+                rightCrumb.SetActive(true);
+            }
+            else
+            {
+                rightCrumb.SetActive(false);
             }
         }
 

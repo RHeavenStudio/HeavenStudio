@@ -67,6 +67,7 @@ namespace HeavenStudio.Games.Scripts_BlueBear
             }
 
             game.Bite(isCake);
+            game.EatTreat();
 
             SpawnCrumbs();
 
