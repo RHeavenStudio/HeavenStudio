@@ -15,18 +15,18 @@ namespace HeavenStudio.Games.Loaders
             {
                 new GameAction("beat intervals", "Start Interval")
                 {
-                    function = delegate { var e = eventCaller.currentEntity; FirstContact.instance.SetIntervalStart(e.beat, e.length, e["dialogue"]);  }, 
+                    function = delegate { var e = eventCaller.currentEntity; FirstContact.instance.SetIntervalStart(e.beat, e.length, e["dialogue"]);  },
                     parameters = new List<Param>()
                     {
                         new Param("dialogue", "REPLACE THIS", "Mistranslation Dialogue", "The line to use when messing up the translation")
                     },
-                    defaultLength = 4f, 
+                    defaultLength = 4f,
                     resizable = true,
                     priority = 1,
                 },
                 new GameAction("alien speak", "Bob Speak")
                 {
-                    function = delegate { var e = eventCaller.currentEntity; FirstContact.instance.AlienSpeak(e.beat, e["valA"], e["dialogue"], e["spaceNum"]);  }, 
+                    function = delegate { var e = eventCaller.currentEntity; FirstContact.instance.AlienSpeak(e.beat, e["valA"], e["dialogue"], e["spaceNum"]);  },
                     defaultLength = 0.5f,
                     parameters = new List<Param>()
                     {
@@ -37,18 +37,18 @@ namespace HeavenStudio.Games.Loaders
                 },
                 new GameAction("alien turnover", "Pass Turn")
                 {
-                    function = delegate { FirstContact.instance.AlienTurnOver(eventCaller.currentEntity.beat, eventCaller.currentEntity.length);  }, 
+                    function = delegate { FirstContact.instance.AlienTurnOver(eventCaller.currentEntity.beat, eventCaller.currentEntity.length);  },
                     defaultLength = 0.5f,
                     resizable = true
                 },
                 new GameAction("alien success", "Success")
                 {
-                    function = delegate { FirstContact.instance.AlienSuccess(eventCaller.currentEntity.beat);  }, 
+                    function = delegate { FirstContact.instance.AlienSuccess(eventCaller.currentEntity.beat);  },
                 },
                 new GameAction("mission control", "Show Mission Control")
                 {
-                    function = delegate { var e = eventCaller.currentEntity; FirstContact.instance.MissionControlDisplay(e.beat, e["toggle"], e.length);  }, 
-                    resizable = true, 
+                    function = delegate { var e = eventCaller.currentEntity; FirstContact.instance.MissionControlDisplay(e.beat, e["toggle"], e.length);  },
+                    resizable = true,
                     parameters = new List<Param>
                     {
                         new Param("toggle", false, "Stay", "If it's the end of the remix/song")
@@ -56,7 +56,7 @@ namespace HeavenStudio.Games.Loaders
                 },
                 new GameAction("look at", "Look At")
                 {
-                    function = delegate { FirstContact.instance.LookAtDirection(eventCaller.currentEntity["type"], eventCaller.currentEntity["type"]);  }, 
+                    function = delegate { FirstContact.instance.LookAtDirection(eventCaller.currentEntity["type"], eventCaller.currentEntity["type"]);  },
                     defaultLength = .5f,
                     parameters = new List<Param>()
                     {
@@ -66,7 +66,7 @@ namespace HeavenStudio.Games.Loaders
                 },
                 new GameAction("live bar beat", "Live Bar Beat")
                 {
-                    function = delegate { FirstContact.instance.LiveBarBeat(eventCaller.currentEntity["toggle"]);  }, 
+                    function = delegate { FirstContact.instance.LiveBarBeat(eventCaller.currentEntity["toggle"]);  },
                     defaultLength = .5f,
                     parameters = new List<Param>()
                     {
@@ -211,14 +211,14 @@ namespace HeavenStudio.Games
             }
             if (Conductor.instance.ReportBeat(ref lastReportedBeat, offset: liveBarBeatOffset))
             {
-                liveBar.GetComponent<Animator>().Play("liveBar", 0, 0);          
+                liveBar.GetComponent<Animator>().Play("liveBar", 0, 0);
             }
-            else if(Conductor.instance.songPositionInBeats < lastReportedBeat)
+            else if (Conductor.instance.songPositionInBeats < lastReportedBeat)
             {
                 lastReportedBeat = Mathf.Round(Conductor.instance.songPositionInBeats);
             }
 
-            if (PlayerInput.Pressed(true) && !IsExpectingInputNow(InputType.STANDARD_DOWN|InputType.DIRECTION_DOWN))
+            if (PlayerInput.Pressed(true) && !IsExpectingInputNow(InputType.STANDARD_DOWN | InputType.DIRECTION_DOWN))
             {
                 translator.GetComponent<Animator>().Play("translator_speak", 0, 0);
                 if (isSpeaking)
@@ -273,7 +273,7 @@ namespace HeavenStudio.Games
                     translator.GetComponent<Animator>().Play("translator_idle", 0, 0);
                     break;
             }
-  
+
         }
 
         public void AlienSpeak(float beat, float pitch, string dialogue, int spaceNum)
@@ -288,7 +288,7 @@ namespace HeavenStudio.Games
             callDiagList.Add(dialogue);
 
             alienTextbox.SetActive(true);
-            for (int i = 0; i < spaceNum*2; i++)
+            for (int i = 0; i < spaceNum * 2; i++)
             {
                 callDiagBuffer += " ";
             }
@@ -305,14 +305,14 @@ namespace HeavenStudio.Games
 
             isSpeaking = true;
             intervalStarted = false;
-            alien.GetComponent<Animator>().Play("alien_idle", 0, 0); 
+            alien.GetComponent<Animator>().Play("alien_idle", 0, 0);
             if (!isSpeaking)
             {
                 translator.GetComponent<Animator>().Play("translator_idle", 0, 0);
             }
             foreach (var input in queuedInputs)
             {
-                ScheduleInput(beat, length + input.beatAwayFromStart, InputType.STANDARD_DOWN|InputType.DIRECTION_DOWN, AlienTapping, AlienOnMiss, AlienEmpty);
+                ScheduleInput(beat, length + input.beatAwayFromStart, InputType.STANDARD_DOWN | InputType.DIRECTION_DOWN, AlienTapping, AlienOnMiss, AlienEmpty);
             }
             queuedInputs.Clear();
         }
@@ -423,7 +423,8 @@ namespace HeavenStudio.Games
 
         public void AlienTapping(PlayerActionEvent caller, float state) //OnHit
         {
-            if (hasMissed && callDiagIndex == 0) { 
+            if (hasMissed && callDiagIndex == 0)
+            {
                 caller.isEligible = false;
                 ScoreMiss();
                 return;
@@ -431,7 +432,9 @@ namespace HeavenStudio.Games
 
             if (noHitOnce)
             {
+                caller.isEligible = false;
                 FailContact();
+                return;
             }
 
             if (state >= 1f || state <= -1f)
@@ -474,10 +477,7 @@ namespace HeavenStudio.Games
             alien.GetComponent<Animator>().Play("alien_noHit", 0, 0);
         }
 
-        public void AlienEmpty(PlayerActionEvent caller) //OnEmpty
-        {
-            //empty
-        }
+        public void AlienEmpty(PlayerActionEvent caller) { } //OnEmpty
 
         public int RandomizerLines()
         {
