@@ -208,8 +208,8 @@ namespace HeavenStudio
             GameRenderTexture.width = width;
             GameRenderTexture.height = height;
 
-            OverlayRenderTexture.width = width;
-            OverlayRenderTexture.height = height;
+            OverlayRenderTexture.width = (int)(width * 1.5f);
+            OverlayRenderTexture.height = (int)(height * 1.5f);
         }
 
         public static void ChangeMasterVolume(float value)
