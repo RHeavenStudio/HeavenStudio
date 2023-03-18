@@ -37,17 +37,17 @@ namespace HeavenStudio.Games.Loaders
                 },
                 new GameAction("alien turnover", "Pass Turn")
                 {
-                    function = delegate { FirstContact.instance.alienTurnOver(eventCaller.currentEntity.beat, eventCaller.currentEntity.length);  }, 
+                    function = delegate { FirstContact.instance.AlienTurnOver(eventCaller.currentEntity.beat, eventCaller.currentEntity.length);  }, 
                     defaultLength = 0.5f,
                     resizable = true
                 },
                 new GameAction("alien success", "Success")
                 {
-                    function = delegate { FirstContact.instance.alienSuccess(eventCaller.currentEntity.beat);  }, 
+                    function = delegate { FirstContact.instance.AlienSuccess(eventCaller.currentEntity.beat);  }, 
                 },
                 new GameAction("mission control", "Show Mission Control")
                 {
-                    function = delegate { var e = eventCaller.currentEntity; FirstContact.instance.missionControlDisplay(e.beat, e["toggle"], e.length);  }, 
+                    function = delegate { var e = eventCaller.currentEntity; FirstContact.instance.MissionControlDisplay(e.beat, e["toggle"], e.length);  }, 
                     resizable = true, 
                     parameters = new List<Param>
                     {
@@ -56,7 +56,7 @@ namespace HeavenStudio.Games.Loaders
                 },
                 new GameAction("look at", "Look At")
                 {
-                    function = delegate { FirstContact.instance.lookAtDirection(eventCaller.currentEntity["type"], eventCaller.currentEntity["type"]);  }, 
+                    function = delegate { FirstContact.instance.LookAtDirection(eventCaller.currentEntity["type"], eventCaller.currentEntity["type"]);  }, 
                     defaultLength = .5f,
                     parameters = new List<Param>()
                     {
@@ -66,18 +66,13 @@ namespace HeavenStudio.Games.Loaders
                 },
                 new GameAction("live bar beat", "Live Bar Beat")
                 {
-                    function = delegate { FirstContact.instance.liveBarBeat(eventCaller.currentEntity["toggle"]);  }, 
+                    function = delegate { FirstContact.instance.LiveBarBeat(eventCaller.currentEntity["toggle"]);  }, 
                     defaultLength = .5f,
                     parameters = new List<Param>()
                     {
                         new Param("toggle", true, "On Beat", "If the live bar animation will be on beat or not")
                     }
-                },
-                
-                //new GameAction("Version of First Contact",                   delegate { FirstContact.instance.versionOfFirstContact(eventCaller.currentEntity["type"]);  }, .5f, false, new List<Param>
-                //{
-                //    new Param("type", FirstContact.VersionOfContact.FirstContact, "Version", "Version of First Contact to play"),
-                //}),
+                }
             });
         }
     }
@@ -223,17 +218,18 @@ namespace HeavenStudio.Games
                 lastReportedBeat = Mathf.Round(Conductor.instance.songPositionInBeats);
             }
 
-            if (PlayerInput.Pressed() && !IsExpectingInputNow() && !noHitOnce && !isSpeaking && !missionControl.activeInHierarchy)
+            if (PlayerInput.Pressed(true) && !IsExpectingInputNow(InputType.STANDARD_DOWN|InputType.DIRECTION_DOWN))
             {
-                Jukebox.PlayOneShotGame("firstContact/" + randomizerLines());
-                BeatAction.New(this.gameObject, new List<BeatAction.Action>()
+                translator.GetComponent<Animator>().Play("translator_speak", 0, 0);
+                if (isSpeaking)
                 {
-                    new BeatAction.Action(.5f, delegate { translator.GetComponent<Animator>().Play("translator_speak", 0, 0);}),
-                });
-            }
-            if ((PlayerInput.Pressed(true) && !IsExpectingInputNow(InputType.STANDARD_DOWN|InputType.DIRECTION_DOWN) && isSpeaking))
-            {
-                hasMissed = true;
+                    FailContact();
+                }
+                else if (!noHitOnce && !missionControl.activeInHierarchy)
+                {
+                    Jukebox.PlayOneShotGame("firstContact/" + RandomizerLines());
+
+                }
             }
         }
 
@@ -242,7 +238,7 @@ namespace HeavenStudio.Games
         //    version = type;
         //}
 
-        public void liveBarBeat(bool onBeat)
+        public void LiveBarBeat(bool onBeat)
         {
             if (onBeat)
             {
@@ -254,7 +250,7 @@ namespace HeavenStudio.Games
             }
         }
 
-        public void lookAtDirection(int alienLookAt, int translatorLookAt)
+        public void LookAtDirection(int alienLookAt, int translatorLookAt)
         {
             Debug.Log(alienLookAt);
             Debug.Log(translatorLookAt);
@@ -287,7 +283,7 @@ namespace HeavenStudio.Games
                 beatAwayFromStart = beat - intervalStartBeat,
                 dialogue = dialogue
             });
-            Jukebox.PlayOneShotGame("firstContact/Bob" + randomizerLines().ToString(), beat, pitch);
+            Jukebox.PlayOneShotGame("firstContact/Bob" + RandomizerLines().ToString(), beat, pitch);
             alien.GetComponent<Animator>().DoScaledAnimationAsync("alien_talk", 0.5f);
             callDiagList.Add(dialogue);
 
@@ -300,7 +296,7 @@ namespace HeavenStudio.Games
             UpdateAlienTextbox();
         }
 
-        public void alienTurnOver(float beat, float length)
+        public void AlienTurnOver(float beat, float length)
         {
             if (queuedInputs.Count == 0) return;
             Jukebox.PlayOneShotGame("firstContact/turnover");
@@ -309,30 +305,25 @@ namespace HeavenStudio.Games
 
             isSpeaking = true;
             intervalStarted = false;
-            BeatAction.New(alien, new List<BeatAction.Action>()
+            alien.GetComponent<Animator>().Play("alien_idle", 0, 0); 
+            if (!isSpeaking)
             {
-                new BeatAction.Action(beat + .5f, delegate { 
-                    alien.GetComponent<Animator>().Play("alien_idle", 0, 0); 
-                    if (!isSpeaking)
-                    {
-                        translator.GetComponent<Animator>().Play("translator_idle", 0, 0);
-                    }
-                }),
-            });
+                translator.GetComponent<Animator>().Play("translator_idle", 0, 0);
+            }
             foreach (var input in queuedInputs)
             {
-                ScheduleInput(beat, length + input.beatAwayFromStart, InputType.STANDARD_DOWN|InputType.DIRECTION_DOWN, alienTapping, alienOnMiss, AlienEmpty);
+                ScheduleInput(beat, length + input.beatAwayFromStart, InputType.STANDARD_DOWN|InputType.DIRECTION_DOWN, AlienTapping, AlienOnMiss, AlienEmpty);
             }
             queuedInputs.Clear();
         }
 
-        public void alienSuccess(float beat)
+        public void AlienSuccess(float beat)
         {
             string[] sfxStrings = { "", "" };
             string animString = "";
             float secondSoundOffset = 0f;
 
-            if (!hasMissed)
+            if (!(hasMissed || noHitOnce))
             {
                 sfxStrings[0] = "firstContact/success_1";
                 sfxStrings[1] = "firstContact/success_2";
@@ -357,14 +348,11 @@ namespace HeavenStudio.Games
 
             BeatAction.New(alien, new List<BeatAction.Action>()
             {
-                new BeatAction.Action(beat, delegate { alien.GetComponent<Animator>().Play(animString, 0, 0); }),
-                new BeatAction.Action(beat + .5f, delegate { alien.GetComponent<Animator>().Play(animString, 0, 0); })
+                new BeatAction.Action(beat, delegate { alien.GetComponent<Animator>().Play(animString, 0, 0); translator.GetComponent<Animator>().Play("translator_idle", 0, 0); }),
+                new BeatAction.Action(beat + .5f, delegate { alien.GetComponent<Animator>().Play(animString, 0, 0); }),
+                new BeatAction.Action(beat + 1, delegate { alienTextbox.SetActive(false); translateTextbox.SetActive(false); })
             });
 
-            BeatAction.New(translator.gameObject, new List<BeatAction.Action>()
-            {
-                new BeatAction.Action(beat, delegate { translator.GetComponent<Animator>().Play("translator_idle", 0, 0); }),
-            });
             intervalStarted = false;
             isSpeaking = false;
             hasMissed = false;
@@ -383,9 +371,11 @@ namespace HeavenStudio.Games
             translateText.text = respDiagBuffer;
         }
 
-        public void missionControlDisplay(float beat, bool stay, float length)
+        public void MissionControlDisplay(float beat, bool stay, float length)
         {
             missionControl.SetActive(true);
+            alienTextbox.SetActive(false);
+            translateTextbox.SetActive(false);
             string textToPut = "";
 
             if (alienSpeakCount == translatorSpeakCount)
@@ -397,13 +387,9 @@ namespace HeavenStudio.Games
                 textToPut = "missionControl_fail";
             }
 
-            BeatAction.New(missionControl, new List<BeatAction.Action>()
-            {
-                new BeatAction.Action(length, delegate { missionControl.GetComponentInParent<Animator>().Play(textToPut, 0, 0); }),
-                new BeatAction.Action(length, delegate { alien.GetComponentInParent<Animator>().Play("alien_idle", 0, 0); }),
-                new BeatAction.Action(length, delegate { translator.GetComponent<Animator>().Play("translator_idle", 0, 0); }),
-
-            });
+            missionControl.GetComponentInParent<Animator>().Play(textToPut, 0, 0);
+            alien.GetComponentInParent<Animator>().Play("alien_idle", 0, 0);
+            translator.GetComponent<Animator>().Play("translator_idle", 0, 0);
 
             if (!stay)
             {
@@ -422,25 +408,44 @@ namespace HeavenStudio.Games
             isSpeaking = false;
         }
 
-        public void alienTapping(PlayerActionEvent caller, float state) //OnHit
+        void FailContact()
         {
+            Jukebox.PlayOneShotGame("firstContact/failContact");
+            if (!hasMissed && callDiagIndex == 0)
+            {
+                translateTextbox.SetActive(true);
+                respDiagBuffer = onOutDialogue;
+                UpdateTranslateTextbox();
+                ScoreMiss();
+            }
+            hasMissed = true;
+        }
+
+        public void AlienTapping(PlayerActionEvent caller, float state) //OnHit
+        {
+            if (hasMissed && callDiagIndex == 0) { 
+                caller.isEligible = false;
+                ScoreMiss();
+                return;
+            };
+
+            if (noHitOnce)
+            {
+                FailContact();
+            }
+
             if (state >= 1f || state <= -1f)
             {
+                if (callDiagIndex == 0) return;
                 Jukebox.PlayOneShotGame("firstContact/slightlyFail");
-                BeatAction.New(this.gameObject, new List<BeatAction.Action>()
-                {
-                    new BeatAction.Action(.5f, delegate { translator.GetComponent<Animator>().Play("translator_eh", 0, 0);}),
-                });
+                translator.GetComponent<Animator>().Play("translator_eh", 0, 0);
                 hasMissed = true;
                 respDiagBuffer += MID_MSG_MISS;
                 UpdateTranslateTextbox();
                 return;
             }
 
-            BeatAction.New(this.gameObject, new List<BeatAction.Action>()
-            {
-                new BeatAction.Action(.5f, delegate { translator.GetComponent<Animator>().Play("translator_speak", 0, 0);}),
-            });
+            translator.GetComponent<Animator>().Play("translator_speak", 0, 0);
             Jukebox.PlayOneShotGame("firstContact/alien");
             if (!hasMissed)
             {
@@ -451,7 +456,7 @@ namespace HeavenStudio.Games
             }
         }
 
-        public void alienOnMiss(PlayerActionEvent caller) //OnMiss
+        public void AlienOnMiss(PlayerActionEvent caller) //OnMiss
         {
             if (!noHitOnce)
             {
@@ -459,11 +464,14 @@ namespace HeavenStudio.Games
                 noHitOnce = true;
             }
 
-            BeatAction.New(alien, new List<BeatAction.Action>()
+            if (callDiagIndex > 0 && !hasMissed)
             {
-                new BeatAction.Action(.5f, delegate { alien.GetComponent<Animator>().Play("alien_noHit", 0, 0); }),
-            });
-            hasMissed = true;
+                respDiagBuffer += MID_MSG_MISS;
+                UpdateTranslateTextbox();
+                hasMissed = true;
+            }
+
+            alien.GetComponent<Animator>().Play("alien_noHit", 0, 0);
         }
 
         public void AlienEmpty(PlayerActionEvent caller) //OnEmpty
@@ -471,7 +479,7 @@ namespace HeavenStudio.Games
             //empty
         }
 
-        public int randomizerLines()
+        public int RandomizerLines()
         {
             return Random.Range(1, 11);
         }

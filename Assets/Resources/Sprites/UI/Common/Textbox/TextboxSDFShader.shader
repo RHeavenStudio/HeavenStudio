@@ -108,6 +108,7 @@ Shader "UI/TextboxSDFShader"
             {
                 fixed a = tex2D(_MainTex, IN.texcoord).x;
                 fixed o = smoothstep(_OutThickness - _OutSmoothness, _OutThickness + _OutSmoothness, a);
+                half postAlpha = IN.color.a;
                 half4 color = _TextureSampleAdd + IN.color;
                 color.a = smoothstep(1.0 - _Thickness - _Smoothness, 1.0 - _Thickness + _Smoothness, a);
                 color.rgb = lerp(_OutColor.rgb, color.rgb, o);
@@ -119,6 +120,8 @@ Shader "UI/TextboxSDFShader"
                 #ifdef UNITY_UI_ALPHACLIP
                 clip (color.a - 0.001);
                 #endif
+
+                color.a *= postAlpha;
  
                 return color;
             }
