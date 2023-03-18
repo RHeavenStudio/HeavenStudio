@@ -30,9 +30,6 @@ namespace HeavenStudio.Editor
         [SerializeField] public Canvas MainCanvas;
         [SerializeField] public Camera EditorCamera;
 
-        // [SerializeField] public GameObject EditorLetterbox;
-        public GameObject GameLetterbox;
-
         [Header("Rect")]
         [SerializeField] private RenderTexture ScreenRenderTexture;
         [SerializeField] private RawImage Screen;
@@ -94,10 +91,8 @@ namespace HeavenStudio.Editor
 
         public void Init()
         {
-            GameCamera.instance.camera.targetTexture = ScreenRenderTexture;
+            GameManager.instance.StaticCamera.targetTexture = ScreenRenderTexture;
             GameManager.instance.CursorCam.targetTexture = ScreenRenderTexture;
-            GameManager.instance.OverlayCamera.targetTexture = ScreenRenderTexture;
-            GameLetterbox = GameManager.instance.GameLetterbox;
             Screen.texture = ScreenRenderTexture;
 
             GameManager.instance.Init();
@@ -123,6 +118,7 @@ namespace HeavenStudio.Editor
             BuildDateDisplay.text = GlobalGameManager.buildTime;
             isCursorEnabled  = PersistentDataManager.gameSettings.editorCursorEnable;
             isDiscordEnabled = PersistentDataManager.gameSettings.discordRPCEnable;
+            GameManager.instance.CursorCam.enabled = isCursorEnabled;
         }
 
         public void AddIcon(Minigames.Minigame minigame)
@@ -496,27 +492,19 @@ namespace HeavenStudio.Editor
             MainCanvas.gameObject.SetActive(fullscreen);
             if (fullscreen == false)
             {
-                // EditorLetterbox.SetActive(false);
-                GameLetterbox.SetActive(true);
-
                 MainCanvas.enabled = false;
                 EditorCamera.enabled = false;
-                GameCamera.instance.camera.targetTexture = null;
+                GameManager.instance.StaticCamera.targetTexture = null;
                 GameManager.instance.CursorCam.enabled = false;
-                GameManager.instance.OverlayCamera.targetTexture = null;
                 fullscreen = true;
 
             }
             else
             {
-                // EditorLetterbox.SetActive(true);
-                GameLetterbox.SetActive(false);
-
                 MainCanvas.enabled = true;
                 EditorCamera.enabled = true;
-                GameCamera.instance.camera.targetTexture = ScreenRenderTexture;
+                GameManager.instance.StaticCamera.targetTexture = ScreenRenderTexture;
                 GameManager.instance.CursorCam.enabled = true && isCursorEnabled;
-                GameManager.instance.OverlayCamera.targetTexture = ScreenRenderTexture;
                 fullscreen = false;
 
                 GameCamera.instance.camera.rect = new Rect(0, 0, 1, 1);

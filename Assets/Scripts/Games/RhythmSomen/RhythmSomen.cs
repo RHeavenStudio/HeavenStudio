@@ -10,7 +10,7 @@ namespace HeavenStudio.Games.Loaders
     {
         public static Minigame AddGame(EventCaller eventCaller)
         {
-            return new Minigame("rhythmSomen", "Rhythm Sōmen", "99CC34", false, false, new List<GameAction>()
+            return new Minigame("rhythmSomen", "Rhythm Sōmen", "7ab96e", false, false, new List<GameAction>()
             {
                 new GameAction("crane (far)", "Far Crane")
                 {
@@ -31,6 +31,16 @@ namespace HeavenStudio.Games.Loaders
                 {
                     function = delegate { RhythmSomen.instance.DoBell(eventCaller.currentEntity.beat); },
                 },
+                new GameAction("bop", "Bop") 
+                {
+                    function = delegate { var e = eventCaller.currentEntity; RhythmSomen.instance.ToggleBop(e.beat, e.length, e["toggle2"], e["toggle"]); },
+                    resizable = true,
+                    parameters = new List<Param>()
+                    {
+                        new Param("toggle2", true, "Bop", "Should the somen man bop?"),
+                        new Param("toggle", false, "Bop (Auto)", "Should the somen man bop automatically?")
+                    }
+                }
             });
         }
     }
@@ -51,6 +61,7 @@ namespace HeavenStudio.Games
         public Animator CloseCrane;
         public Animator FarCrane;
         public GameObject Player;
+        private bool shouldBop = true;
 
         public GameEvent bop = new GameEvent();
 
@@ -66,7 +77,7 @@ namespace HeavenStudio.Games
         void Update()
         {
             var cond = Conductor.instance;
-            if (cond.ReportBeat(ref bop.lastReportedBeat, bop.startBeat % 1))
+            if (cond.ReportBeat(ref bop.lastReportedBeat, bop.startBeat % 1) && shouldBop)
             {
                 SomenPlayer.Play("HeadBob", -1, 0);
             }
@@ -77,6 +88,24 @@ namespace HeavenStudio.Games
                 FrontArm.Play("ArmPluck", -1, 0);
                 EffectSweat.Play("BlobSweating", -1, 0);
                 ScoreMiss();
+            }
+        }
+
+        public void ToggleBop(float beat, float length, bool bopOrNah, bool autoBop)
+        {
+            shouldBop = autoBop;
+            if (bopOrNah)
+            {
+                for (int i = 0; i < length; i++)
+                {
+                    BeatAction.New(instance.gameObject, new List<BeatAction.Action>()
+                    {
+                        new BeatAction.Action(beat + i, delegate
+                        {
+                            SomenPlayer.Play("HeadBob", -1, 0);
+                        })
+                    });
+                }
             }
         }
 

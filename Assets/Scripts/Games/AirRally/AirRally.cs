@@ -14,7 +14,7 @@ namespace HeavenStudio.Games.Loaders
     {
         public static Minigame AddGame(EventCaller e)
         {
-            return new Minigame("airRally", "Air Rally", "008c97", false, false, new List<GameAction>()
+            return new Minigame("airRally", "Air Rally", "b5ffff", false, false, new List<GameAction>()
             {
                 new GameAction("set distance", "Set Distance")
                 {
@@ -294,7 +294,7 @@ namespace HeavenStudio.Games
             }
             else
             {
-                tweenForForth = Forthington.gameObject.transform.DOMoveZ(wayPointZForForth, .15f).SetEase(Ease.InOutCubic);
+                tweenForForth = Forthington.gameObject.transform.DOMoveZ(wayPointZForForth, .7f).SetEase(Ease.OutQuad);
             }
         }
 

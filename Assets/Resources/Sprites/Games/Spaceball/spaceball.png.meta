@@ -1,0 +1,900 @@
+fileFormatVersion: 2
+guid: 9e3ca5a05349f104d929e2a3ac05c163
+TextureImporter:
+  internalIDToNameTable:
+  - first:
+      213: -206634095615567380
+    second: spaceball_player_0
+  - first:
+      213: -8623064975844402121
+    second: spaceball_player_1
+  - first:
+      213: 3908147867928790210
+    second: spaceball_player_2
+  - first:
+      213: -6120672494446369452
+    second: spaceball_player_3
+  - first:
+      213: 8669753283846710712
+    second: spaceball_player_4
+  - first:
+      213: 6292435073569608095
+    second: spaceball_dispenser_0
+  - first:
+      213: 4913882390121116835
+    second: spaceball_dispenser_1
+  - first:
+      213: 2349070731958004587
+    second: spaceball_dispenser_2
+  - first:
+      213: -175097603425659850
+    second: spaceball_ball
+  - first:
+      213: 5277071337593026307
+    second: spaceball_riceball
+  - first:
+      213: -2475544383789121174
+    second: spaceball_room
+  - first:
+      213: -6138865101806054624
+    second: spaceball_hole
+  - first:
+      213: -7699065485287968201
+    second: spaceball_player_shadow
+  - first:
+      213: -8479600161552753819
+    second: spaceball_bat_0
+  - first:
+      213: -2080650336355627570
+    second: spaceball_bat_1
+  - first:
+      213: -5608564330752630371
+    second: spaceball_bat_2
+  - first:
+      213: 6226250747564612612
+    second: spaceball_bat_3
+  - first:
+      213: 8739397152223860111
+    second: spaceball_bat_4
+  - first:
+      213: 701021631787949281
+    second: spaceball_umpire_0
+  - first:
+      213: -9144178236442636997
+    second: spaceball_umpire_1
+  - first:
+      213: 8282977822036284979
+    second: spaceball_umpire_2
+  - first:
+      213: -3010808105455458640
+    second: spaceball_umpire_3
+  - first:
+      213: -1272144661639092336
+    second: spaceball_hat_0_0
+  - first:
+      213: 2348240810369355412
+    second: spaceball_hat_1_0
+  - first:
+      213: -1211911830992126873
+    second: spaceball_hat_1_1
+  - first:
+      213: 2516152612454132311
+    second: spaceball_hat_1_2
+  - first:
+      213: -7492609339150351360
+    second: spaceball_hat_1_3
+  - first:
+      213: -8354058639768066091
+    second: spaceball_hat_1_4
+  - first:
+      213: -7849886322701886137
+    second: spaceball_umpire_shadow
+  - first:
+      213: -3567037823152174269
+    second: spaceball_dust_0
+  - first:
+      213: 4834708277548974446
+    second: spaceball_dust_1
+  - first:
+      213: -7272816444732457736
+    second: spaceball_dust_2
+  externalObjects: {}
+  serializedVersion: 11
+  mipmaps:
+    mipMapMode: 0
+    enableMipMap: 0
+    sRGBTexture: 1
+    linearTexture: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapsPreserveCoverage: 0
+    alphaTestReferenceValue: 0.5
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+  bumpmap:
+    convertToNormalMap: 0
+    externalNormalMap: 0
+    heightScale: 0.25
+    normalMapFilter: 0
+  isReadable: 0
+  streamingMipmaps: 0
+  streamingMipmapsPriority: 0
+  vTOnly: 0
+  grayScaleToAlpha: 0
+  generateCubemap: 6
+  cubemapConvolution: 0
+  seamlessCubemap: 0
+  textureFormat: 1
+  maxTextureSize: 2048
+  textureSettings:
+    serializedVersion: 2
+    filterMode: 1
+    aniso: 1
+    mipBias: 0
+    wrapU: 1
+    wrapV: 1
+    wrapW: 1
+  nPOTScale: 0
+  lightmap: 0
+  compressionQuality: 50
+  spriteMode: 2
+  spriteExtrude: 1
+  spriteMeshType: 1
+  alignment: 0
+  spritePivot: {x: 0.5, y: 0.5}
+  spritePixelsToUnits: 100
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spriteGenerateFallbackPhysicsShape: 1
+  alphaUsage: 1
+  alphaIsTransparency: 1
+  spriteTessellationDetail: -1
+  textureType: 8
+  textureShape: 1
+  singleChannelComponent: 0
+  flipbookRows: 1
+  flipbookColumns: 1
+  maxTextureSizeSet: 0
+  compressionQualitySet: 0
+  textureFormatSet: 0
+  ignorePngGamma: 0
+  applyGammaDecoding: 0
+  platformSettings:
+  - serializedVersion: 3
+    buildTarget: DefaultTexturePlatform
+    maxTextureSize: 16384
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 2
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 3
+    buildTarget: Standalone
+    maxTextureSize: 16384
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 2
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 3
+    buildTarget: WebGL
+    maxTextureSize: 16384
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 2
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 3
+    buildTarget: Android
+    maxTextureSize: 16384
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 2
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  spriteSheet:
+    serializedVersion: 2
+    sprites:
+    - serializedVersion: 2
+      name: spaceball_player_0
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 7419
+        width: 1470
+        height: 1746
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: ce999548263e12df0800000000000000
+      internalID: -206634095615567380
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: spaceball_player_1
+      rect:
+        serializedVersion: 2
+        x: 1470
+        y: 7417
+        width: 1470
+        height: 1748
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 73c9ea76718b45880800000000000000
+      internalID: -8623064975844402121
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: spaceball_player_2
+      rect:
+        serializedVersion: 2
+        x: 2940
+        y: 7417
+        width: 1470
+        height: 1748
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 2c4889597c78c3630800000000000000
+      internalID: 3908147867928790210
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: spaceball_player_3
+      rect:
+        serializedVersion: 2
+        x: 4410
+        y: 7417
+        width: 1470
+        height: 1748
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 45525068bc00f0ba0800000000000000
+      internalID: -6120672494446369452
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: spaceball_player_4
+      rect:
+        serializedVersion: 2
+        x: 5880
+        y: 7417
+        width: 1658
+        height: 1748
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 8b5a5f56da6215870800000000000000
+      internalID: 8669753283846710712
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: spaceball_dispenser_0
+      rect:
+        serializedVersion: 2
+        x: 3407
+        y: 5720
+        width: 409
+        height: 484
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: f9153545c58335750800000000000000
+      internalID: 6292435073569608095
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: spaceball_dispenser_1
+      rect:
+        serializedVersion: 2
+        x: 4022
+        y: 5721
+        width: 440
+        height: 366
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 3a4773bbffd913440800000000000000
+      internalID: 4913882390121116835
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: spaceball_dispenser_2
+      rect:
+        serializedVersion: 2
+        x: 4631
+        y: 5720
+        width: 478
+        height: 484
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: b6baf928263999020800000000000000
+      internalID: 2349070731958004587
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: spaceball_ball
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 5708
+        width: 534
+        height: 534
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 6349aca48ade19df0800000000000000
+      internalID: -175097603425659850
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: spaceball_riceball
+      rect:
+        serializedVersion: 2
+        x: 685
+        y: 5708
+        width: 534
+        height: 534
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 307b0a32c6ceb3940800000000000000
+      internalID: 5277071337593026307
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: spaceball_room
+      rect:
+        serializedVersion: 2
+        x: 1287
+        y: 0
+        width: 5330
+        height: 5300
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: a61498abf7915add0800000000000000
+      internalID: -2475544383789121174
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: spaceball_hole
+      rect:
+        serializedVersion: 2
+        x: 5339
+        y: 5802
+        width: 981
+        height: 319
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 023deca07be5ecaa0800000000000000
+      internalID: -6138865101806054624
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: spaceball_player_shadow
+      rect:
+        serializedVersion: 2
+        x: 6565
+        y: 5812
+        width: 292
+        height: 305
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 732b0f68bbc672590800000000000000
+      internalID: -7699065485287968201
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: spaceball_bat_0
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 9165
+        width: 1470
+        height: 1077
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 56b9d457498625a80800000000000000
+      internalID: -8479600161552753819
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: spaceball_bat_1
+      rect:
+        serializedVersion: 2
+        x: 1470
+        y: 9165
+        width: 1459
+        height: 1077
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: ecdc9b7fa8b0023e0800000000000000
+      internalID: -2080650336355627570
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: spaceball_bat_2
+      rect:
+        serializedVersion: 2
+        x: 2929
+        y: 9165
+        width: 1647
+        height: 1077
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: d912095e4706a22b0800000000000000
+      internalID: -5608564330752630371
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: spaceball_bat_3
+      rect:
+        serializedVersion: 2
+        x: 4576
+        y: 9165
+        width: 1393
+        height: 1077
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 40c591b1116186650800000000000000
+      internalID: 6226250747564612612
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: spaceball_bat_4
+      rect:
+        serializedVersion: 2
+        x: 5969
+        y: 9165
+        width: 1569
+        height: 1077
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: f851d591863984970800000000000000
+      internalID: 8739397152223860111
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: spaceball_umpire_0
+      rect:
+        serializedVersion: 2
+        x: 4200
+        y: 6477
+        width: 730
+        height: 624
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 1ecd59eb5778ab900800000000000000
+      internalID: 701021631787949281
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: spaceball_umpire_1
+      rect:
+        serializedVersion: 2
+        x: 5029
+        y: 6477
+        width: 730
+        height: 624
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: b3d8af5875a591180800000000000000
+      internalID: -9144178236442636997
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: spaceball_umpire_2
+      rect:
+        serializedVersion: 2
+        x: 5858
+        y: 6477
+        width: 730
+        height: 624
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 33659eca17c03f270800000000000000
+      internalID: 8282977822036284979
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: spaceball_umpire_3
+      rect:
+        serializedVersion: 2
+        x: 6691
+        y: 6478
+        width: 730
+        height: 624
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 0b6e573eaf57736d0800000000000000
+      internalID: -3010808105455458640
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: spaceball_hat_0_0
+      rect:
+        serializedVersion: 2
+        x: 259
+        y: 6408
+        width: 373
+        height: 779
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 097a71c9b2f685ee0800000000000000
+      internalID: -1272144661639092336
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: spaceball_hat_1_0
+      rect:
+        serializedVersion: 2
+        x: 863
+        y: 6561
+        width: 473
+        height: 474
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 49e04255390a69020800000000000000
+      internalID: 2348240810369355412
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: spaceball_hat_1_1
+      rect:
+        serializedVersion: 2
+        x: 1510
+        y: 6561
+        width: 473
+        height: 474
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 76cfe965c9c6e2fe0800000000000000
+      internalID: -1211911830992126873
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: spaceball_hat_1_2
+      rect:
+        serializedVersion: 2
+        x: 2167
+        y: 6561
+        width: 473
+        height: 474
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 75aeff9487b2be220800000000000000
+      internalID: 2516152612454132311
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: spaceball_hat_1_3
+      rect:
+        serializedVersion: 2
+        x: 2802
+        y: 6561
+        width: 473
+        height: 474
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 0044b2be087e40890800000000000000
+      internalID: -7492609339150351360
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: spaceball_hat_1_4
+      rect:
+        serializedVersion: 2
+        x: 3432
+        y: 6561
+        width: 473
+        height: 474
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 5d767d7cdeb601c80800000000000000
+      internalID: -8354058639768066091
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: spaceball_umpire_shadow
+      rect:
+        serializedVersion: 2
+        x: 7080
+        y: 5897
+        width: 458
+        height: 183
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 74d1820eaf99f0390800000000000000
+      internalID: -7849886322701886137
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: spaceball_dust_0
+      rect:
+        serializedVersion: 2
+        x: 2026
+        y: 5768
+        width: 308
+        height: 345
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 34bc1a2bff55f7ec0800000000000000
+      internalID: -3567037823152174269
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: spaceball_dust_1
+      rect:
+        serializedVersion: 2
+        x: 2493
+        y: 5772
+        width: 308
+        height: 345
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: e6182f32095581340800000000000000
+      internalID: 4834708277548974446
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: spaceball_dust_2
+      rect:
+        serializedVersion: 2
+        x: 2946
+        y: 5772
+        width: 308
+        height: 345
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 8fc3a1ff9f3c11b90800000000000000
+      internalID: -7272816444732457736
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    outline: []
+    physicsShape: []
+    bones: []
+    spriteID: 5e97eb03825dee720800000000000000
+    internalID: 0
+    vertices: []
+    indices: 
+    edges: []
+    weights: []
+    secondaryTextures: []
+  spritePackingTag: 
+  pSDRemoveMatte: 0
+  pSDShowRemoveMatteOption: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
