@@ -113,6 +113,7 @@ namespace HeavenStudio.Games
         [SerializeField] TMP_Text translateFailText;
 
         [Header("Variables")]
+        int currentVoicelineIndex = -1;
         public bool intervalStarted;
         float intervalStartBeat;
         public float beatInterval = 4f;
@@ -288,7 +289,11 @@ namespace HeavenStudio.Games
                 beatAwayFromStart = beat - intervalStartBeat,
                 dialogue = dialogue
             });
-            Jukebox.PlayOneShotGame("firstContact/Bob" + UnityEngine.Random.Range(1, 11), beat, Jukebox.GetPitchFromCents(UnityEngine.Random.Range(-200, -100), false));
+            int voiceline = UnityEngine.Random.Range(1, 11);
+            if (voiceline == currentVoicelineIndex) voiceline++;
+            if (voiceline > 10) voiceline = 1;
+            currentVoicelineIndex = voiceline;
+            Jukebox.PlayOneShotGame("firstContact/Bob" + voiceline, beat, Jukebox.GetPitchFromCents(UnityEngine.Random.Range(-200, -100), false));
             alien.GetComponent<Animator>().DoScaledAnimationAsync("alien_talk", 0.5f);
             if (UnityEngine.Random.Range(0, 5) == 0) translator.GetComponent<Animator>().DoScaledAnimationAsync("translator_lookAtAlien_nod", 0.5f);
             callDiagList.Add(dialogue);
