@@ -1,3 +1,4 @@
+using System.Text;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
@@ -370,6 +371,19 @@ namespace HeavenStudio.Games
 
         void UpdateTranslateTextbox()
         {
+            if (callDiagIndex == 0 && !hasMissed && !noHitOnce)
+            {
+                // shift the textbox to centre the message
+                StringBuilder sb = new StringBuilder();
+                foreach (string s in callDiagList)
+                {
+                    sb.Append(s);
+                }
+                string fullMsg = sb.ToString();
+                Vector2 size = translateText.GetPreferredValues(fullMsg, 10.95f, 2);
+                Debug.Log($"size: {size}");
+                translateText.rectTransform.anchoredPosition = new Vector2(Mathf.Max((10.95f/2f) + (-size.x / 2 - 0.25f), -0.25f), Mathf.Max((2.11f / 2f) + (-size.y / 2) + 0.2f, 0.2f));
+            }
             translateText.text = respDiagBuffer;
             translateFailText.text = respDiagBuffer;
         }
@@ -464,12 +478,17 @@ namespace HeavenStudio.Games
 
             translator.GetComponent<Animator>().Play("translator_speak", 0, 0);
             Jukebox.PlayOneShotGame("firstContact/alien");
-            if (!hasMissed)
+            if (hasMissed)
+            {
+                caller.isEligible = false;
+                return;
+            }
+            else
             {
                 respDiagBuffer += callDiagList[callDiagIndex];
-                callDiagIndex++;
                 translateTextbox.SetActive(true);
                 UpdateTranslateTextbox();
+                callDiagIndex++;
             }
         }
 
