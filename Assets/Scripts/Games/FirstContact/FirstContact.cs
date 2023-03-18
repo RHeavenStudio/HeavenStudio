@@ -335,12 +335,21 @@ namespace HeavenStudio.Games
                 sound = new List<MultiSound.Sound>()
                 {
                     new MultiSound.Sound("firstContact/successCrowd", beat),
+                    new MultiSound.Sound("firstContact/nod", beat),
+                    new MultiSound.Sound("firstContact/nod", beat + 0.5f),
+                    new MultiSound.Sound("firstContact/successExtra" + UnityEngine.Random.Range(1, 3), beat + 0.5f, Jukebox.GetPitchFromCents(UnityEngine.Random.Range(-50, 50), false)),
                     new MultiSound.Sound("firstContact/whistle", beat + UnityEngine.Random.Range(0.5f, 1.5f), Jukebox.GetPitchFromCents(UnityEngine.Random.Range(-50, 100), false), UnityEngine.Random.Range(0.4f, 1f)),
                 };
                 animString = "alien_success";
             }
             else
             {
+                sound = new List<MultiSound.Sound>()
+                {
+                    new MultiSound.Sound("firstContact/fail", beat),
+                    new MultiSound.Sound("firstContact/shakeHead", beat),
+                    new MultiSound.Sound("firstContact/shakeHead", beat + 0.5f),
+                };
                 animString = "alien_fail";
             }
 
@@ -428,6 +437,7 @@ namespace HeavenStudio.Games
         void FailContact()
         {
             Jukebox.PlayOneShotGame("firstContact/failContact");
+            translator.GetComponent<Animator>().DoScaledAnimationAsync("translator_speak", 0.5f);
             if (!hasMissed && callDiagIndex == 0)
             {
                 translateFailTextbox.SetActive(true);
@@ -474,7 +484,7 @@ namespace HeavenStudio.Games
                 return;
             }
 
-            translator.GetComponent<Animator>().Play("translator_speak", 0, 0);
+            translator.GetComponent<Animator>().DoScaledAnimationAsync("translator_speak", 0.5f);
             Jukebox.PlayOneShotGame("firstContact/ALIEN_PLAYER_A", -1, Jukebox.GetPitchFromSemiTones(UnityEngine.Random.Range(-3, 3), false));
             Jukebox.PlayOneShotGame("firstContact/ALIEN_PLAYER_B");
             if (hasMissed)
