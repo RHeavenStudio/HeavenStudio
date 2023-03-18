@@ -290,6 +290,7 @@ namespace HeavenStudio.Games
             });
             Jukebox.PlayOneShotGame("firstContact/Bob" + UnityEngine.Random.Range(1, 11), beat, Jukebox.GetPitchFromCents(UnityEngine.Random.Range(-200, -100), false));
             alien.GetComponent<Animator>().DoScaledAnimationAsync("alien_talk", 0.5f);
+            if (UnityEngine.Random.Range(0, 5) == 0) translator.GetComponent<Animator>().DoScaledAnimationAsync("translator_lookAtAlien_nod", 0.5f);
             callDiagList.Add(dialogue);
 
             alienTextbox.SetActive(true);
@@ -358,7 +359,7 @@ namespace HeavenStudio.Games
 
             BeatAction.New(alien, new List<BeatAction.Action>()
             {
-                new BeatAction.Action(beat, delegate { alien.GetComponent<Animator>().Play(animString, 0, 0); translator.GetComponent<Animator>().Play("translator_idle", 0, 0); }),
+                new BeatAction.Action(beat, delegate { alien.GetComponent<Animator>().Play(animString, 0, 0); }),
                 new BeatAction.Action(beat + .5f, delegate { alien.GetComponent<Animator>().Play(animString, 0, 0); }),
                 new BeatAction.Action(beat + 1, delegate { alienTextbox.SetActive(false); translateTextbox.SetActive(false); translateFailTextbox.SetActive(false); })
             });
@@ -404,7 +405,7 @@ namespace HeavenStudio.Games
 
             string textToPut = "";
 
-            if (alienSpeakCount == translatorSpeakCount)
+            if (!(hasMissed || noHitOnce))
             {
                 textToPut = "missionControl_success";
             }
