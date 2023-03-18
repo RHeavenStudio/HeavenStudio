@@ -10,7 +10,7 @@ namespace HeavenStudio.Games.Loaders
     public static class NtrDjLoader
     {
         public static Minigame AddGame(EventCaller eventCaller) {
-            return new Minigame("djSchool", "DJ School", "008c97", false, false, new List<GameAction>()
+            return new Minigame("djSchool", "DJ School", "3fd0ff", false, false, new List<GameAction>()
             {
                 new GameAction("bop", "Bop")
                 {

@@ -9,7 +9,7 @@ namespace HeavenStudio.Games.Loaders
     {
         public static Minigame AddGame(EventCaller eventCaller)
         {
-            return new Minigame("firstContact", "First Contact", "008c97", false, false, new List<GameAction>()
+            return new Minigame("firstContact", "First Contact", "1f3833", false, false, new List<GameAction>()
             {
                 new GameAction("beat intervals", "Start Interval")
                 {

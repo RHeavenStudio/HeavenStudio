@@ -13,7 +13,7 @@ namespace HeavenStudio.Games.Loaders
     public static class MobTrickLoader
     {
         public static Minigame AddGame(EventCaller eventCaller) {
-            return new Minigame("trickClass", "Trick on the Class", "C0171D", false, false, new List<GameAction>()
+            return new Minigame("trickClass", "Trick on the Class", "ecede4", false, false, new List<GameAction>()
             {
                 new GameAction("toss", "Paper Ball")
                 {

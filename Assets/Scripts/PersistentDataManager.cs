@@ -28,13 +28,15 @@ namespace HeavenStudio.Common
                 GlobalGameManager.DEFAULT_SCREEN_SIZES[1].width,
                 GlobalGameManager.DEFAULT_SCREEN_SIZES[1].height,
                 0.8f,
-                256,
+                512,
                 44100,
                 true,
                 true,
                 PerfectChallengeType.On,
                 true,
-                false
+                false,
+                true,
+                true
             );
 
             // disable if platform is mac
@@ -99,14 +101,16 @@ namespace HeavenStudio.Common
                 int resolutionWidth = 1280,
                 int resolutionHeight = 720,
                 float masterVolume = 0.8f,
-                int dspSize = 256,
+                int dspSize = 512,
                 int sampleRate = 44100,
                 bool editorCursorEnable = true,
                 bool discordRPCEnable = true,
                 PerfectChallengeType perfectChallengeType = PerfectChallengeType.On,
                 bool isMedalOn = true,
                 bool timingDisplayMinMode = false,
-                bool overlaysInEditor = true
+                bool overlaysInEditor = true,
+                bool letterboxBgEnable = true,
+                bool letterboxFxEnable = true
                 )
             {
                 this.isFullscreen = isFullscreen;
@@ -129,6 +133,8 @@ namespace HeavenStudio.Common
                 this.isMedalOn = isMedalOn;
                 this.timingDisplayMinMode = timingDisplayMinMode;
                 this.overlaysInEditor = overlaysInEditor;
+                this.letterboxBgEnable = true;
+                this.letterboxFxEnable = true;
 
                 this.timingDisplayComponents = new List<OverlaysManager.TimingDisplayComponent>()
                 {
@@ -164,6 +170,8 @@ namespace HeavenStudio.Common
             public bool isMedalOn;
             public bool timingDisplayMinMode;
             public bool overlaysInEditor;
+            public bool letterboxBgEnable;
+            public bool letterboxFxEnable;
             public List<OverlaysManager.TimingDisplayComponent> timingDisplayComponents;
             public List<OverlaysManager.SkillStarComponent> skillStarComponents;
             public List<OverlaysManager.SectionComponent> sectionComponents;
