@@ -76,19 +76,16 @@ namespace HeavenStudio.Games.Loaders
                     },
                     defaultLength = 0.5f,
                 },
-                new GameAction("Stare", "Stare")
+                new GameAction("MonkAnimation", "Monk Animations")
                 {
                     function = delegate {
                         var e = eventCaller.currentEntity; 
-                        MunchyMonk.instance.Stare(e.beat); 
+                        MunchyMonk.instance.PlayMonkAnim(e.beat, e["whichAnim"]); 
                     },
-                },
-                new GameAction("Blush", "Blush")
-                {
-                    function = delegate {
-                        var e = eventCaller.currentEntity; 
-                        MunchyMonk.instance.Blush(e.beat); 
-                    },
+                    parameters = new List<Param>()
+                    {
+                        new Param("whichAnim", MunchyMonk.WhichMonkAnim.Stare, "Which Animation", "Which animation will the Monk play?"),
+                    }
                 },
                 // note: make the bg not scroll by default
                 /*
@@ -107,7 +104,7 @@ namespace HeavenStudio.Games.Loaders
                 {
                     function = delegate {
                         var e = eventCaller.currentEntity;
-                        MunchyMonk.instance.OneGoCueStretchable(e.beat, e["oneColor"], e.length);
+                        //MunchyMonk.instance.OneGoCueStretchable(e.beat, e["oneColor"], e.length);
                     },
                     defaultLength = 4f,
                     resizable = true,
@@ -146,6 +143,12 @@ namespace HeavenStudio.Games
         {
             public float beat;
             public Color color;
+        }
+
+        public enum WhichMonkAnim
+        {
+            Stare,
+            Blush,
         }
         
         [Header("Objects")]
@@ -250,17 +253,6 @@ namespace HeavenStudio.Games
         public void Bop(float beat, bool doesBop)
         {
             monkBop = doesBop;
-        }
-
-        public void OneGoCueStretchable(float beat, Color oneColor, float length)
-        {
-            // does it every beat not every other beat. kinda useless for now lol
-            for (int i = 0; i < length; i++) {
-                BeatAction.New(instance.gameObject, new List<BeatAction.Action>()
-                {
-                    new BeatAction.Action(beat + i, delegate { OneGoCue(beat, oneColor); }),
-                });
-            }
         }
 
         public static void PreOneGoCue(float beat, Color oneColor)
@@ -375,16 +367,33 @@ namespace HeavenStudio.Games
             });
         }
 
-        public void Stare(float beat)
+        public void PlayMonkAnim(float beat, int whichAnim)
         {
-            MonkAnim.DoScaledAnimationAsync("Stare", 0.5f);
-            isStaring = true;
-        }
-
-        public void Blush(float beat)
-        {
-            MonkAnim.DoScaledAnimationAsync("Blush", 0.5f);
-            needBlush = false;
+            switch (whichAnim)
+            {
+                case 0:
+                MonkAnim.DoScaledAnimationAsync("Stare", 0.5f);
+                isStaring = true;
+                break;
+                case 1:
+                MonkAnim.DoScaledAnimationAsync("Blush", 0.5f);
+                isStaring = true;
+                break;
+                case 2:
+                MonkAnim.DoScaledAnimationAsync("Stare", 0.5f);
+                isStaring = true;
+                break;
+            }
+            
+            if (whichAnim == 0) {
+                MonkAnim.DoScaledAnimationAsync("Stare", 0.5f);
+                isStaring = true;
+            } else if (whichAnim == 1) {
+                MonkAnim.DoScaledAnimationAsync("Blush", 0.5f);
+                needBlush = false;
+            } else if (whichAnim == 2) {
+                MonkAnim.DoScaledAnimationAsync("Bop", 0.5f);
+            }
         }
 
         public void Modifiers(float beat, int inputsTilGrow, bool forceGrow, bool disableBaby)

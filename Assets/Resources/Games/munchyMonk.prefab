@@ -1135,7 +1135,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &950625167985768828
 Transform:
   m_ObjectHideFlags: 0
@@ -1147,8 +1147,8 @@ Transform:
   m_LocalPosition: {x: 1.9558412, y: 0.056414396, z: 0}
   m_LocalScale: {x: 0.713743, y: 0.713743, z: 0.71374285}
   m_Children: []
-  m_Father: {fileID: 5249558317707287682}
-  m_RootOrder: 3
+  m_Father: {fileID: 6927789378567616062}
+  m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: -38.393}
 --- !u!212 &3384858249588073603
 SpriteRenderer:
@@ -2044,6 +2044,38 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
+--- !u!1 &3423986502417897344
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1320956615209280668}
+  m_Layer: 0
+  m_Name: DumplingStuff
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1320956615209280668
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3423986502417897344}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children:
+  - {fileID: 168333956154290365}
+  - {fileID: 3441632085760416725}
+  m_Father: {fileID: 6163636881912119569}
+  m_RootOrder: 7
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &3426236198383799774
 GameObject:
   m_ObjectHideFlags: 0
@@ -2460,8 +2492,8 @@ Transform:
   m_LocalPosition: {x: 1.9558412, y: 0.056414396, z: 0}
   m_LocalScale: {x: 0.713743, y: 0.713743, z: 0.71374285}
   m_Children: []
-  m_Father: {fileID: 6163636881912119569}
-  m_RootOrder: 6
+  m_Father: {fileID: 1320956615209280668}
+  m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: -38.393}
 --- !u!212 &4496255832183162831
 SpriteRenderer:
@@ -2567,9 +2599,8 @@ Transform:
   - {fileID: 2554173831134354060}
   - {fileID: 525326701495472490}
   - {fileID: 4780003096125758277}
-  - {fileID: 3441632085760416725}
-  - {fileID: 5249558317707287682}
-  - {fileID: 168333956154290365}
+  - {fileID: 6927789378567616062}
+  - {fileID: 1320956615209280668}
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -2644,8 +2675,8 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 838801096863034419}
-  m_Father: {fileID: 6163636881912119569}
-  m_RootOrder: 8
+  m_Father: {fileID: 1320956615209280668}
+  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &4976901385788903237
 GameObject:
@@ -2676,10 +2707,8 @@ Transform:
   m_Children:
   - {fileID: 863794931176398015}
   - {fileID: 3103403358463220564}
-  - {fileID: 2340444065591003763}
-  - {fileID: 950625167985768828}
-  m_Father: {fileID: 6163636881912119569}
-  m_RootOrder: 7
+  m_Father: {fileID: 6927789378567616062}
+  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &5004137005389582764
 GameObject:
@@ -3509,7 +3538,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &2340444065591003763
 Transform:
   m_ObjectHideFlags: 0
@@ -3521,8 +3550,8 @@ Transform:
   m_LocalPosition: {x: 1.9558412, y: 0.056414396, z: 0}
   m_LocalScale: {x: 0.713743, y: 0.713743, z: 0.71374285}
   m_Children: []
-  m_Father: {fileID: 5249558317707287682}
-  m_RootOrder: 2
+  m_Father: {fileID: 6927789378567616062}
+  m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: -38.393}
 --- !u!212 &2848898630376574492
 SpriteRenderer:
@@ -5103,6 +5132,39 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
+--- !u!1 &7867429024149035442
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 6927789378567616062}
+  m_Layer: 0
+  m_Name: TwoDumplingStuff
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &6927789378567616062
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7867429024149035442}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children:
+  - {fileID: 5249558317707287682}
+  - {fileID: 2340444065591003763}
+  - {fileID: 950625167985768828}
+  m_Father: {fileID: 6163636881912119569}
+  m_RootOrder: 6
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &8219492712356600011
 GameObject:
   m_ObjectHideFlags: 0

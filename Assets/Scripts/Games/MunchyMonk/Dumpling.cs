@@ -13,6 +13,7 @@ namespace HeavenStudio.Games.Scripts_MunchyMonk
         public float startBeat;
         public float type;
         const string sfxName = "munchyMonk/";
+        private bool canDestroy;
         
         [Header("References")]
         [SerializeField] Animator anim;
@@ -40,23 +41,26 @@ namespace HeavenStudio.Games.Scripts_MunchyMonk
             if ((!Conductor.instance.isPlaying && !Conductor.instance.isPaused) || GameManager.instance.currentGame != "munchyMonk") {
                 GameObject.Destroy(gameObject);
             }
+
+            if (canDestroy && anim.IsAnimationNotPlaying()) GameObject.Destroy(gameObject);
         }
 
         private void Hit(PlayerActionEvent caller, float state)
         {
-            game.MonkArmsAnim.DoScaledAnimationAsync("WristSlap", 0.4f);
+            game.MonkArmsAnim.DoScaledAnimationAsync("WristSlap", 0.5f);
             Jukebox.PlayOneShotGame(sfxName+"slap");
             game.isStaring = false;
             
             if (state >= 1f || state <= -1f) 
             {
-                game.MonkAnim.DoScaledAnimationAsync("Barely", 0.4f);
+                game.MonkAnim.DoScaledAnimationAsync("Barely", 0.5f);
                 anim.DoScaledAnimationAsync("HitHead", 0.5f);
                 Jukebox.PlayOneShotGame(sfxName+"barely");
+                canDestroy = true;
             } else {
                 game.MonkAnim.DoScaledAnimationAsync("Eat", 0.4f);
                 if (type == 2) otherAnim.DoScaledAnimationAsync("FollowHand", 0.5f);
-                game.SmearAnim.DoScaledAnimationAsync("SmearAppear", 0.5f);
+                game.SmearAnim.Play("SmearAppear", 0, 0);
                 game.needBlush = true;
                 Jukebox.PlayOneShotGame(sfxName+"gulp");
                 GameObject.Destroy(gameObject);
@@ -66,6 +70,7 @@ namespace HeavenStudio.Games.Scripts_MunchyMonk
         private void Miss(PlayerActionEvent caller)
         {
             anim.DoScaledAnimationAsync("FallOff", 0.5f);
+            canDestroy = true;
         }
 
         private void Early(PlayerActionEvent caller) 
