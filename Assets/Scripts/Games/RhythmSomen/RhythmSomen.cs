@@ -33,7 +33,7 @@ namespace HeavenStudio.Games.Loaders
                 },
                 new GameAction("slurp", "Slurp")
                 {
-                    function = delegate { RhythmSomen.instance.Slurp(); }
+                    function = delegate { RhythmSomen.instance.Slurp(eventCaller.currentEntity.beat); }
                 },
                 new GameAction("bop", "Bop") 
                 {
@@ -68,6 +68,7 @@ namespace HeavenStudio.Games
         public GameObject Player;
         private bool shouldBop = true;
         private bool missed;
+        private bool hasSlurped;
 
         public GameEvent bop = new GameEvent();
 
@@ -93,17 +94,30 @@ namespace HeavenStudio.Games
                 Jukebox.PlayOneShotGame("rhythmSomen/somen_mistake");
                 FrontArm.Play("ArmPluck", -1, 0);
                 backArm.Play("BackArmNothing", 0, 0);
+                hasSlurped = false;
                 EffectSweat.Play("BlobSweating", -1, 0);
                 ScoreMiss();
             }
         }
 
-        public void Slurp()
+        public void Slurp(float beat)
         {
             if (!missed)
             {
                 backArm.Play("BackArmLift", 0, 0);
                 FrontArm.DoScaledAnimationAsync("ArmSlurp", 0.5f);
+                hasSlurped = true;
+                BeatAction.New(instance.gameObject, new List<BeatAction.Action>()
+                {
+                    new BeatAction.Action(beat + 1f, delegate
+                    {
+                        if (hasSlurped)
+                        {
+                            backArm.Play("BackArmNothing", 0, 0);
+                            FrontArm.Play("ArmNothing", 0, 0);
+                        }
+                    })
+                });
             }
         }
 
@@ -202,6 +216,7 @@ namespace HeavenStudio.Games
         public void CatchSuccess(PlayerActionEvent caller, float state)
         {
             backArm.Play("BackArmNothing", 0, 0);
+            hasSlurped = false;
             splashEffect.Play();
             if (state >= 1f || state <= -1f)
             {
