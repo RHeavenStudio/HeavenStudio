@@ -149,6 +149,7 @@ namespace HeavenStudio.Games
         {
             Stare,
             Blush,
+            Bop,
         }
         
         [Header("Objects")]
