@@ -11,7 +11,7 @@ namespace HeavenStudio.Games.Loaders
     {
         public static Minigame AddGame(EventCaller eventCaller)
         {
-            return new Minigame("ringside", "Ringside \n<color=#eb5454>[WIP]</color>", "WUTRU3", false, false, new List<GameAction>()
+            return new Minigame("ringside", "Ringside", "6bdfe7", false, false, new List<GameAction>()
             {
                 new GameAction("question", "Question")
                 {
@@ -45,14 +45,15 @@ namespace HeavenStudio.Games.Loaders
                     },
                     defaultLength = 4f
                 },
-                new GameAction("toggleBop", "Toggle Bop")
+                new GameAction("toggleBop", "Bop")
                 {
-                    function = delegate {var e = eventCaller.currentEntity; Ringside.instance.ToggleBop(e["bop"]); },
+                    function = delegate {var e = eventCaller.currentEntity; Ringside.instance.ToggleBop(e.beat, e.length, e["bop2"], e["bop"]); },
                     parameters = new List<Param>()
                     {
-                        new Param("bop", false, "Bop?", "Whether the wrestler should bop or not."),
+                        new Param("bop2", true, "Bop?", "Whether the wrestler should bop or not."),
+                        new Param("bop", false, "Bop? (Auto)", "Whether the wrestler should bop automatically or not."),
                     },
-                    defaultLength = 0.5f
+                    resizable = true,
                 },
                 new GameAction("toggleSweat", "Toggle Sweat")
                 {
@@ -140,6 +141,8 @@ namespace HeavenStudio.Games
         private bool missedBigGuy;
         private bool reporterShouldHeart;
         private bool hitPose;
+        private bool shouldNotInput;
+        private bool keepZoomOut;
         private Sound kidsLaugh;
         private int currentPose;
         private EasingFunction.Ease lastEase;
@@ -155,6 +158,7 @@ namespace HeavenStudio.Games
         void OnDestroy()
         {
             if (queuedPoses.Count > 0) queuedPoses.Clear();
+            Jukebox.KillLoop(kidsLaugh, 2f);
         }
 
         public override void OnTimeChange()
@@ -178,6 +182,8 @@ namespace HeavenStudio.Games
             allCameraEvents = tempEvents;
 
             UpdateCameraZoom();
+            shouldNotInput = false;
+            shouldBop = true;
         }
 
         void Update()
@@ -186,25 +192,32 @@ namespace HeavenStudio.Games
 
             if (cond.isPlaying && !cond.isPaused)
             {
-                if (cond.ReportBeat(ref bop.lastReportedBeat, bop.startBeat % 1) && isPlaying(wrestlerAnim, "Idle") && shouldBop)
+                if (cond.ReportBeat(ref bop.lastReportedBeat, bop.startBeat % 1))
                 {
-                    if (UnityEngine.Random.Range(1, 18) == 1)
+                    if ((wrestlerAnim.IsPlayingAnimationName("Idle") || wrestlerAnim.IsPlayingAnimationName("BopPec") || wrestlerAnim.IsPlayingAnimationName("Bop")) && shouldBop)
                     {
-                        wrestlerAnim.DoScaledAnimationAsync("BopPec");
-                    }
-                    else
-                    {
-                        wrestlerAnim.DoScaledAnimationAsync("Bop");
+                        if (UnityEngine.Random.Range(1, 18) == 1)
+                        {
+                            wrestlerAnim.DoScaledAnimationAsync("BopPec");
+                        }
+                        else
+                        {
+                            wrestlerAnim.DoScaledAnimationAsync("Bop");
+                        }
                     }
                 }
-                if (PlayerInput.Pressed() && !IsExpectingInputNow(InputType.STANDARD_DOWN))
+                if (PlayerInput.Pressed() && !IsExpectingInputNow(InputType.STANDARD_DOWN) && !shouldNotInput)
                 {
+                    Ringside.instance.ScoreMiss(0.5);
+
                     wrestlerAnim.DoScaledAnimationAsync("YeMiss", 0.25f);
                     Jukebox.PlayOneShotGame($"ringside/confusedanswer");
-                    if (isPlaying(reporterAnim, "IdleReporter")) reporterAnim.Play("IdleLate", 0, 0);
+                    if (reporterAnim.IsPlayingAnimationName("IdleReporter")) reporterAnim.Play("IdleLate", 0, 0);
                 }
-                if (PlayerInput.AltPressed() && !IsExpectingInputNow(InputType.STANDARD_ALT_DOWN))
+                if (PlayerInput.AltPressed() && !IsExpectingInputNow(InputType.STANDARD_ALT_DOWN) && !shouldNotInput)
                 {
+                    Ringside.instance.ScoreMiss(0.5);
+                    
                     int randomPose = UnityEngine.Random.Range(1, 7);
                     wrestlerAnim.Play($"Pose{randomPose}", 0, 0);
                     reporterAnim.Play("FlinchReporter", 0, 0);
@@ -230,10 +243,15 @@ namespace HeavenStudio.Games
                 }
 
                 float normalizedBeat = Conductor.instance.GetPositionFromBeat(currentZoomCamBeat, 2.5f);
+                float normalizedShouldStopBeat = Conductor.instance.GetPositionFromBeat(currentZoomCamBeat, 3.99f);
 
                 if (normalizedBeat >= 0)
                 {
-                    if (normalizedBeat > 1)
+                    if (normalizedShouldStopBeat > 1 && !keepZoomOut)
+                    {
+                        GameCamera.additionalPosition = new Vector3(0, 0, 0);
+                    }
+                    else if (normalizedBeat > 1)
                     {
                         GameCamera.additionalPosition = new Vector3(currentCamPos.x, currentCamPos.y, currentCamPos.z + 10);
                     }
@@ -258,135 +276,7 @@ namespace HeavenStudio.Games
                 {
                     foreach (var p in queuedPoses)
                     {
-                        if (p.newspaperBeats > 0)
-                        {
-                            reporterShouldHeart = true;
-                        }
-                        else
-                        {
-                            reporterShouldHeart = false;
-                        }
-                        if (cond.songPositionInBeats - 0.05f > p.beat)
-                        {
-                            BeatAction.New(instance.gameObject, new List<BeatAction.Action>()
-                            {
-                                new BeatAction.Action(p.beat, delegate  { wrestlerAnim.Play("PreparePoseIdle", 0, 0); }),
-                            });
-                        }
-                        else
-                        {
-                            BeatAction.New(instance.gameObject, new List<BeatAction.Action>()
-                            {
-                                new BeatAction.Action(p.beat, delegate  {wrestlerAnim.DoScaledAnimationAsync("PreparePose", 0.25f); }),
-                            });
-                        }
-                        BeatAction.New(instance.gameObject, new List<BeatAction.Action>()
-                        {
-                            new BeatAction.Action(p.beat, delegate {audienceAnim.DoScaledAnimationAsync("PoseAudience", 0.25f); }),
-                            new BeatAction.Action(p.beat + 1, delegate  { PoseCheck(p.beat); }),
-                            new BeatAction.Action(p.beat + 3.99f, delegate { wrestlerAnim.Play("Idle", 0, 0); }),
-                            new BeatAction.Action(p.beat + 3.99f, delegate { reporterAnim.Play("IdleReporter", 0, 0); }),
-                        });
-                        if (!p.keepZoomedOut)
-                        {
-                            if (p.newspaperBeats > 0)
-                            {
-                                BeatAction.New(instance.gameObject, new List<BeatAction.Action>()
-                                {
-                                    new BeatAction.Action(p.beat + 3f, delegate
-                                    {
-                                        blackVoid.color = Color.black;
-                                        newspaper.SetActive(true);
-                                        if (UnityEngine.Random.Range(1, 3) == 1)
-                                        {
-                                            newspaper.GetComponent<Animator>().Play("NewspaperEnter", 0, 0);
-                                        }
-                                        else
-                                        {
-                                            newspaper.GetComponent<Animator>().Play("NewspaperEnterRight", 0, 0);
-                                        }
-                                        if (hitPose)
-                                        {
-                                            wrestlerNewspaperAnim.Play($"Miss{UnityEngine.Random.Range(1, 7)}Newspaper", 0, 0);
-                                            reporterNewspaperAnim.Play("IdleReporterNewspaper", 0, 0);
-                                            kidsLaugh = Jukebox.PlayOneShotGame("ringside/kidslaugh", -1, 1, 1, true);
-                                        }
-                                        else
-                                        {
-                                            wrestlerNewspaperAnim.Play($"Pose{currentPose}Newspaper", 0, 0);
-                                            reporterNewspaperAnim.Play("HeartReporterNewspaper", 0, 0);
-                                            hitPose = false;
-                                        }
-                                    }),
-                                    new BeatAction.Action(p.beat + 3f + p.newspaperBeats, delegate
-                                    {
-                                        blackVoid.color = new Color(1f, 1f, 1f, 0);
-                                        newspaper.SetActive(false);
-                                        lastCamPos = new Vector3(0, 0, -10);
-                                        currentCamPos = new Vector3(0, 0, -10);
-                                        Jukebox.KillLoop(kidsLaugh, 0.25f);
-                                    })
-                                });
-                            }
-                            else
-                            {
-                                BeatAction.New(instance.gameObject, new List<BeatAction.Action>()
-                                {
-                                    new BeatAction.Action(p.beat + 3.99, delegate
-                                    {
-                                        lastCamPos = new Vector3(0, 0, -10);
-                                        currentCamPos = new Vector3(0, 0, -10);
-                                    })
-                                });
-                            }
-                        }
-                        else
-                        {
-                            BeatAction.New(instance.gameObject, new List<BeatAction.Action>()
-                            {
-                                new BeatAction.Action(p.beat + 2.5f, delegate
-                                {
-                                    lastCamPos = currentCamPos;
-                                })
-                            });
-                            if (p.newspaperBeats > 0)
-                            {
-                                BeatAction.New(instance.gameObject, new List<BeatAction.Action>()
-                                {
-                                    new BeatAction.Action(p.beat + 3f, delegate
-                                    {
-                                        blackVoid.color = Color.black;
-                                        newspaper.SetActive(true);
-                                        if (UnityEngine.Random.Range(1, 3) == 1)
-                                        {
-                                            newspaper.GetComponent<Animator>().Play("NewspaperEnter", 0, 0);
-                                        }
-                                        else
-                                        {
-                                            newspaper.GetComponent<Animator>().Play("NewspaperEnterRight", 0, 0);
-                                        }
-                                        if (hitPose)
-                                        {
-                                            wrestlerNewspaperAnim.Play($"Miss{UnityEngine.Random.Range(1, 7)}Newspaper", 0, 0);
-                                            reporterNewspaperAnim.Play("IdleReporterNewspaper", 0, 0);
-                                            kidsLaugh = Jukebox.PlayOneShotGame("ringside/kidslaugh", -1, 1, 1, true);
-                                        }
-                                        else
-                                        {
-                                            wrestlerNewspaperAnim.Play($"Pose{currentPose}Newspaper", 0, 0);
-                                            reporterNewspaperAnim.Play("HeartReporterNewspaper", 0, 0);
-                                            hitPose = false;
-                                        }
-                                    }),
-                                    new BeatAction.Action(p.beat + 3f + p.newspaperBeats, delegate
-                                    {
-                                        blackVoid.color = new Color(1f, 1f, 1f, 0);
-                                        newspaper.SetActive(false);
-                                        Jukebox.KillLoop(kidsLaugh, 0.25f);
-                                    })
-                                });
-                            }
-                        }
+                        QueuePose(p.beat, p.keepZoomedOut, p.newspaperBeats);
                     }
                     queuedPoses.Clear();
                 }
@@ -394,9 +284,32 @@ namespace HeavenStudio.Games
 
         }
 
-        public void ToggleBop(bool startBopping)
+        public void ToggleBop(float beat, float length, bool startBopping, bool autoBop)
         {
-            shouldBop = startBopping;
+            shouldBop = autoBop;
+            if (startBopping)
+            {
+                for (int i = 0; i < length; i++)
+                {
+                    BeatAction.New(instance.gameObject, new List<BeatAction.Action>()
+                    {
+                        new BeatAction.Action(beat + i, delegate
+                        {
+                            if ((wrestlerAnim.IsPlayingAnimationName("Idle") || wrestlerAnim.IsPlayingAnimationName("BopPec") || wrestlerAnim.IsPlayingAnimationName("Bop")))
+                            {
+                                if (UnityEngine.Random.Range(1, 18) == 1)
+                                {
+                                    wrestlerAnim.DoScaledAnimationAsync("BopPec");
+                                }
+                                else
+                                {
+                                    wrestlerAnim.DoScaledAnimationAsync("Bop");
+                                }
+                            }
+                        })
+                    });
+                }
+            }
         }
 
         public void ToggleSweat(bool shouldSweat)
@@ -479,7 +392,7 @@ namespace HeavenStudio.Games
         {
             int currentQuestion = questionVariant;
             if (currentQuestion == (int)QuestionVariant.Random) currentQuestion = UnityEngine.Random.Range(1, 4);
-            reporterAnim.DoScaledAnimationAsync("Woah", 0.4f);
+            reporterAnim.DoScaledAnimationAsync("Woah", 0.5f);
             float youBeat = 0.65f;
             if (currentQuestion == (int)QuestionVariant.Third) youBeat = 0.7f;
             MultiSound.Play(new MultiSound.Sound[]
@@ -519,122 +432,7 @@ namespace HeavenStudio.Games
             }, forcePlay: true);
             if (GameManager.instance.currentGame == "ringside")
             {
-                if (newspaperBeats > 0)
-                {
-                    Ringside.instance.reporterShouldHeart = true;
-                }
-                else
-                {
-                    Ringside.instance.reporterShouldHeart = false;
-                }
-                Ringside.instance.PoseCheck(beat);
-                BeatAction.New(instance.gameObject, new List<BeatAction.Action>()
-                {
-                    new BeatAction.Action(beat, delegate { Ringside.instance.audienceAnim.DoScaledAnimationAsync("PoseAudience", 0.25f); }),
-                    new BeatAction.Action(beat, delegate { Ringside.instance.wrestlerAnim.DoScaledAnimationAsync("PreparePose", 0.25f); }),
-                    new BeatAction.Action(beat + 3.99f, delegate { Ringside.instance.wrestlerAnim.Play("Idle", 0, 0); }),
-                    new BeatAction.Action(beat + 3.99f, delegate { Ringside.instance.reporterAnim.Play("IdleReporter", 0, 0); }),
-                });
-                if (!keepZoomedOut)
-                {
-                    if (newspaperBeats > 0)
-                    {
-                        BeatAction.New(instance.gameObject, new List<BeatAction.Action>()
-                        {
-                            new BeatAction.Action(beat + 3f, delegate
-                            {
-                                Ringside.instance.blackVoid.color = Color.black;
-                                Ringside.instance.newspaper.SetActive(true);
-                                if (UnityEngine.Random.Range(1, 3) == 1)
-                                {
-                                    Ringside.instance.newspaper.GetComponent<Animator>().Play("NewspaperEnter", 0, 0);
-                                }
-                                else
-                                {
-                                    Ringside.instance.newspaper.GetComponent<Animator>().Play("NewspaperEnterRight", 0, 0);
-                                }
-                                if (!Ringside.instance.hitPose)
-                                {
-                                    Ringside.instance.wrestlerNewspaperAnim.Play($"Miss{UnityEngine.Random.Range(1, 7)}Newspaper", 0, 0);
-                                    Ringside.instance.reporterNewspaperAnim.Play("IdleReporterNewspaper", 0, 0);
-                                    Ringside.instance.kidsLaugh = Jukebox.PlayOneShotGame("ringside/kidslaugh", -1, 1, 1, true);
-                                }
-                                else
-                                {
-                                    Ringside.instance.wrestlerNewspaperAnim.Play($"Pose{Ringside.instance.currentPose}Newspaper", 0, 0);
-                                    Ringside.instance.reporterNewspaperAnim.Play("HeartReporterNewspaper", 0, 0);
-                                    Ringside.instance.hitPose = false;
-                                }
-                            }),
-                            new BeatAction.Action(beat + 3f + newspaperBeats, delegate
-                            {
-                                Jukebox.KillLoop(Ringside.instance.kidsLaugh, 0.25f);
-                                Ringside.instance.blackVoid.color = new Color(1f, 1f, 1f, 0);
-                                Ringside.instance.newspaper.SetActive(false);
-                                Ringside.instance.lastCamPos = new Vector3(0, 0, -10);
-                                Ringside.instance.currentCamPos = new Vector3(0, 0, -10);
-                            })
-                        });
-                    }
-                    else
-                    {
-                        BeatAction.New(instance.gameObject, new List<BeatAction.Action>()
-                        {
-                            new BeatAction.Action(beat + 3.99, delegate
-                            {
-                                Ringside.instance.lastCamPos = new Vector3(0, 0, -10);
-                                Ringside.instance.currentCamPos = new Vector3(0, 0, -10);
-                            })
-                        });
-                    }
-                }
-                else
-                {
-                    BeatAction.New(instance.gameObject, new List<BeatAction.Action>()
-                    {
-                        new BeatAction.Action(beat + 2.5f, delegate
-                        {
-                            Ringside.instance.lastCamPos = Ringside.instance.currentCamPos;
-                        })
-                    });
-                    if (newspaperBeats > 0)
-                    {
-                        BeatAction.New(instance.gameObject, new List<BeatAction.Action>()
-                        {
-                            new BeatAction.Action(beat + 3f, delegate
-                            {
-                                Ringside.instance.blackVoid.color = Color.black;
-                                Ringside.instance.newspaper.SetActive(true);
-                                if (UnityEngine.Random.Range(1, 3) == 1)
-                                {
-                                    Ringside.instance.newspaper.GetComponent<Animator>().Play("NewspaperEnter", 0, 0);
-                                }
-                                else
-                                {
-                                    Ringside.instance.newspaper.GetComponent<Animator>().Play("NewspaperEnterRight", 0, 0);
-                                }
-                                if (!Ringside.instance.hitPose)
-                                {
-                                    Ringside.instance.wrestlerNewspaperAnim.Play($"Miss{UnityEngine.Random.Range(1, 7)}Newspaper", 0, 0);
-                                    Ringside.instance.reporterNewspaperAnim.Play("IdleReporterNewspaper", 0, 0);
-                                    Ringside.instance.kidsLaugh = Jukebox.PlayOneShotGame("ringside/kidslaugh", -1, 1, 1, true);
-                                }
-                                else
-                                {
-                                    Ringside.instance.wrestlerNewspaperAnim.Play($"Pose{Ringside.instance.currentPose}Newspaper", 0, 0);
-                                    Ringside.instance.reporterNewspaperAnim.Play("HeartReporterNewspaper", 0, 0);
-                                    Ringside.instance.hitPose = false;
-                                }
-                            }),
-                            new BeatAction.Action(beat + 3f + newspaperBeats, delegate
-                            {
-                                Ringside.instance.blackVoid.color = new Color(1f, 1f, 1f, 0);
-                                Ringside.instance.newspaper.SetActive(false);
-                                Jukebox.KillLoop(Ringside.instance.kidsLaugh, 0.25f);
-                            })
-                        });
-                    }
-                }
+                Ringside.instance.QueuePose(beat, keepZoomedOut, newspaperBeats);
             }
             else
             {
@@ -642,9 +440,134 @@ namespace HeavenStudio.Games
             }
         }
 
+        public void QueuePose(float beat, bool keepZoomedOut, float newspaperBeats)
+        {
+            if (newspaperBeats > 0)
+            {
+                reporterShouldHeart = true;
+            }
+            else
+            {
+                reporterShouldHeart = false;
+            }
+            BeatAction.New(instance.gameObject, new List<BeatAction.Action>()
+            {
+                new BeatAction.Action(beat, delegate {audienceAnim.DoScaledAnimationAsync("PoseAudience", 0.25f); }),
+                new BeatAction.Action(beat, delegate  {wrestlerAnim.DoScaledAnimationAsync("PreparePose", 0.25f); }),
+                new BeatAction.Action(beat, delegate {shouldBop = false; }),
+                new BeatAction.Action(beat + 1, delegate  { PoseCheck(beat); }),
+                new BeatAction.Action(beat + 3.99f, delegate { wrestlerAnim.Play("Idle", 0, 0); }),
+                new BeatAction.Action(beat + 3.99f, delegate { reporterAnim.Play("IdleReporter", 0, 0); }),
+                new BeatAction.Action(beat + 3.99f, delegate { shouldNotInput = false; }),
+                new BeatAction.Action(beat + 3.99f, delegate { shouldBop = true; }),
+            });
+            if (!keepZoomedOut)
+            {
+                if (newspaperBeats > 0)
+                {
+                    BeatAction.New(instance.gameObject, new List<BeatAction.Action>()
+                    {
+                        new BeatAction.Action(beat + 3f, delegate
+                        {
+                            keepZoomOut = true;
+                            blackVoid.color = Color.black;
+                            newspaper.SetActive(true);
+                            if (UnityEngine.Random.Range(1, 3) == 1)
+                            {
+                                newspaper.GetComponent<Animator>().Play("NewspaperEnter", 0, 0);
+                            }
+                            else
+                            {
+                                newspaper.GetComponent<Animator>().Play("NewspaperEnterRight", 0, 0);
+                            }
+                            if (!hitPose)
+                            {
+                                wrestlerNewspaperAnim.Play($"Miss{UnityEngine.Random.Range(1, 7)}Newspaper", 0, 0);
+                                reporterNewspaperAnim.Play("IdleReporterNewspaper", 0, 0);
+                                kidsLaugh = Jukebox.PlayOneShotGame("ringside/kidslaugh", -1, 1, 1, true);
+                            }
+                            else
+                            {
+                                wrestlerNewspaperAnim.Play($"Pose{currentPose}Newspaper", 0, 0);
+                                reporterNewspaperAnim.Play("HeartReporterNewspaper", 0, 0);
+                                hitPose = true;
+                            }
+                        }),
+                        new BeatAction.Action(beat + 3f + newspaperBeats, delegate
+                        {
+                            blackVoid.color = new Color(1f, 1f, 1f, 0);
+                            newspaper.SetActive(false);
+                            lastCamPos = new Vector3(0, 0, -10);
+                            Jukebox.KillLoop(kidsLaugh, 0.25f);
+                            keepZoomOut = false;
+                        })
+                    });
+                }
+                else
+                {
+                    BeatAction.New(instance.gameObject, new List<BeatAction.Action>()
+                    {
+                        new BeatAction.Action(beat + 3.99f, delegate
+                        {
+                            lastCamPos = new Vector3(0, 0, -10);
+                            keepZoomOut = false;
+                        }),
+                    });
+
+                }
+            }
+            else
+            {
+                BeatAction.New(instance.gameObject, new List<BeatAction.Action>()
+                {
+                    new BeatAction.Action(beat + 2.5f, delegate
+                    {
+                        lastCamPos = currentCamPos;
+                        keepZoomOut = true;
+                    })
+                });
+                if (newspaperBeats > 0)
+                {
+                    BeatAction.New(instance.gameObject, new List<BeatAction.Action>()
+                    {
+                        new BeatAction.Action(beat + 3f, delegate
+                        {
+                            blackVoid.color = Color.black;
+                            newspaper.SetActive(true);
+                            if (UnityEngine.Random.Range(1, 3) == 1)
+                            {
+                                newspaper.GetComponent<Animator>().Play("NewspaperEnter", 0, 0);
+                            }
+                            else
+                            {
+                                newspaper.GetComponent<Animator>().Play("NewspaperEnterRight", 0, 0);
+                            }
+                            if (!hitPose)
+                            {
+                                wrestlerNewspaperAnim.Play($"Miss{UnityEngine.Random.Range(1, 7)}Newspaper", 0, 0);
+                                reporterNewspaperAnim.Play("IdleReporterNewspaper", 0, 0);
+                                kidsLaugh = Jukebox.PlayOneShotGame("ringside/kidslaugh", -1, 1, 1, true);
+                            }
+                            else
+                            {
+                                wrestlerNewspaperAnim.Play($"Pose{currentPose}Newspaper", 0, 0);
+                                reporterNewspaperAnim.Play("HeartReporterNewspaper", 0, 0);
+                                hitPose = true;
+                            }
+                        }),
+                        new BeatAction.Action(beat + 3f + newspaperBeats, delegate
+                        {
+                            blackVoid.color = new Color(1f, 1f, 1f, 0);
+                            newspaper.SetActive(false);
+                            Jukebox.KillLoop(kidsLaugh, 0.25f);
+                        })
+                    });
+                }
+            }
+        }
+
         private void UpdateCameraZoom()
         {
-
             if (currentZoomIndex < allCameraEvents.Count && currentZoomIndex >= 0)
             {
                 currentZoomCamBeat = allCameraEvents[currentZoomIndex].beat;
@@ -709,7 +632,7 @@ namespace HeavenStudio.Games
             int randomNumber = UnityEngine.Random.Range(1, 200);
             if (randomNumber == 1)
             {
-                if (isPlaying(reporterAnim, "IdleReporter"))
+                if (reporterAnim.IsPlayingAnimationName("IdleReporter"))
                 {
                     reporterAnim.DoScaledAnimationAsync("BlinkReporter", 0.5f);
                 }
@@ -836,6 +759,7 @@ namespace HeavenStudio.Games
 
         public void JustPoseForTheFans(PlayerActionEvent caller, float state)
         {
+            shouldNotInput = true;
             if (state >= 1f || state <= -1f)
             {
                 wrestlerTransform.localScale = new Vector3(1.2f, 1.2f, 1f);
@@ -912,19 +836,11 @@ namespace HeavenStudio.Games
         
         public void MissPose(PlayerActionEvent caller)
         {
+            shouldNotInput = true;
             reporterAnim.Play("IdleMiss", 0, 0);
             Jukebox.PlayOneShotGame($"ringside/huhaudience{UnityEngine.Random.Range(0, 2)}");
         }
 
         public void Nothing(PlayerActionEvent caller){}
-
-        bool isPlaying(Animator anim, string stateName)
-        {
-            if (anim.GetCurrentAnimatorStateInfo(0).IsName(stateName) &&
-                    anim.GetCurrentAnimatorStateInfo(0).normalizedTime < 1.0f)
-                return true;
-            else
-                return false;
-        }
     }
 }

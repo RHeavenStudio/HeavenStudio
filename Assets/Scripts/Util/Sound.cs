@@ -51,7 +51,7 @@ namespace HeavenStudio.Util
             else
             {
                 playInstant = false;
-                scheduledPitch = cnd.musicSource.pitch;
+                scheduledPitch = cnd.SongPitch;
                 startTime = (AudioSettings.dspTime + (cnd.GetSongPosFromBeat(beat) - cnd.songPositionAsDouble)/(double)scheduledPitch);
                 audioSource.PlayScheduled(startTime);
             }
@@ -79,9 +79,9 @@ namespace HeavenStudio.Util
                     }
                     else
                     {
-                        if (!played && scheduledPitch != cnd.musicSource.pitch)
+                        if (!played && scheduledPitch != cnd.SongPitch)
                         {
-                            scheduledPitch = cnd.musicSource.pitch;
+                            scheduledPitch = cnd.SongPitch;
                             startTime = (AudioSettings.dspTime + (cnd.GetSongPosFromBeat(beat) - cnd.songPositionAsDouble)/(double)scheduledPitch);
                             audioSource.SetScheduledStartTime(startTime);
                         }

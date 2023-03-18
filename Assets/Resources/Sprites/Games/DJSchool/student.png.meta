@@ -4,40 +4,82 @@ TextureImporter:
   internalIDToNameTable:
   - first:
       213: -474008126291752816
-    second: student_0
+    second: studentuparm
   - first:
       213: 6775225630280950889
-    second: student_1
+    second: studentsmear
   - first:
       213: -3590603051934361286
-    second: student_2
+    second: studenthand1
   - first:
       213: -7280605794216780270
-    second: student_3
+    second: studenthand2
   - first:
       213: -1108324220791026482
-    second: student_4
+    second: studenthand3
   - first:
       213: -84044037535237813
-    second: student_5
+    second: studenthand4
   - first:
       213: 7890052151456789346
-    second: student_6
+    second: studenthand6
   - first:
       213: -5664848765385770971
-    second: student_7
+    second: studenttorsonormal
   - first:
       213: -8624972230825856309
-    second: student_8
+    second: studentarm1
   - first:
       213: 5817979385575274063
-    second: student_9
+    second: studentarm2
   - first:
       213: -2717095282070868293
-    second: student_10
+    second: studentarm3
   - first:
       213: -6154985277085878723
-    second: student_11
+    second: studentarm4
+  - first:
+      213: 9014742649730537116
+    second: studentarm5
+  - first:
+      213: -3886670566983941884
+    second: studenttorsodown
+  - first:
+      213: 3478071388951929821
+    second: student_14
+  - first:
+      213: -6004627469902265168
+    second: student_15
+  - first:
+      213: 126077772249191685
+    second: studenttorsolow
+  - first:
+      213: -4958015517820710088
+    second: studentheadnormal
+  - first:
+      213: 3728041805212797900
+    second: studentheaddown
+  - first:
+      213: -4696609225389388944
+    second: studentheadup
+  - first:
+      213: -8092904091588049767
+    second: knobdown
+  - first:
+      213: 9146586695812635449
+    second: knobright
+  - first:
+      213: 396345106042561685
+    second: knobleft
+  - first:
+      213: -113045151481706511
+    second: studentdownarm
+  - first:
+      213: 127797331518137050
+    second: studentdownarm2
+  - first:
+      213: -6393836053840967818
+    second: studenthandturned
   externalObjects: {}
   serializedVersion: 11
   mipmaps:
@@ -139,15 +181,15 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: student_0
+      name: studentuparm
       rect:
         serializedVersion: 2
-        x: 4
-        y: 1594
-        width: 794
-        height: 787
+        x: 177
+        y: 1688
+        width: 488
+        height: 508
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
@@ -160,15 +202,15 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: student_1
+      name: studentsmear
       rect:
         serializedVersion: 2
-        x: 806
-        y: 1594
-        width: 794
-        height: 787
+        x: 930
+        y: 1545
+        width: 621
+        height: 714
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
@@ -181,15 +223,15 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: student_2
+      name: studenthand1
       rect:
         serializedVersion: 2
-        x: 1608
-        y: 1594
-        width: 794
-        height: 787
+        x: 1877
+        y: 2023
+        width: 229
+        height: 168
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
@@ -202,15 +244,15 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: student_3
+      name: studenthand2
       rect:
         serializedVersion: 2
-        x: 2410
-        y: 1594
-        width: 794
-        height: 787
+        x: 2244
+        y: 2004
+        width: 213
+        height: 192
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
@@ -223,15 +265,15 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: student_4
+      name: studenthand3
       rect:
         serializedVersion: 2
-        x: 3212
-        y: 1594
-        width: 794
-        height: 787
+        x: 2617
+        y: 2008
+        width: 214
+        height: 149
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
@@ -244,15 +286,15 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: student_5
+      name: studenthand4
       rect:
         serializedVersion: 2
-        x: 4
-        y: 799
-        width: 794
-        height: 787
+        x: 3012
+        y: 1994
+        width: 188
+        height: 172
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
@@ -265,15 +307,15 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: student_6
+      name: studenthand6
       rect:
         serializedVersion: 2
-        x: 806
-        y: 799
-        width: 794
-        height: 787
+        x: 3375
+        y: 1993
+        width: 193
+        height: 195
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
@@ -286,15 +328,15 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: student_7
+      name: studenttorsonormal
       rect:
         serializedVersion: 2
-        x: 1608
-        y: 799
-        width: 794
-        height: 787
+        x: 315
+        y: 1087
+        width: 227
+        height: 380
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
@@ -307,15 +349,15 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: student_8
+      name: studentarm1
       rect:
         serializedVersion: 2
-        x: 2410
-        y: 799
-        width: 794
-        height: 787
+        x: 1830
+        y: 1349
+        width: 212
+        height: 266
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
@@ -328,15 +370,15 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: student_9
+      name: studentarm2
       rect:
         serializedVersion: 2
-        x: 3212
-        y: 799
-        width: 794
-        height: 787
+        x: 2244
+        y: 1365
+        width: 169
+        height: 238
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
@@ -349,15 +391,15 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: student_10
+      name: studentarm3
       rect:
         serializedVersion: 2
-        x: 4
-        y: 4
-        width: 794
-        height: 787
+        x: 2640
+        y: 1332
+        width: 263
+        height: 383
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
@@ -370,15 +412,15 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: student_11
+      name: studentarm4
       rect:
         serializedVersion: 2
-        x: 806
-        y: 4
-        width: 794
-        height: 787
+        x: 3149
+        y: 1332
+        width: 213
+        height: 465
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
@@ -386,6 +428,300 @@ TextureImporter:
       bones: []
       spriteID: d3679814089159aa0800000000000000
       internalID: -6154985277085878723
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: studentarm5
+      rect:
+        serializedVersion: 2
+        x: 3568
+        y: 1395
+        width: 223
+        height: 187
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: c9690c28dacca1d70800000000000000
+      internalID: 9014742649730537116
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: studenttorsodown
+      rect:
+        serializedVersion: 2
+        x: 782
+        y: 1076
+        width: 219
+        height: 273
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 401c4f736b5cf0ac0800000000000000
+      internalID: -3886670566983941884
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: student_14
+      rect:
+        serializedVersion: 2
+        x: 1495
+        y: 1325
+        width: 23
+        height: 22
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: dd3ede92087944030800000000000000
+      internalID: 3478071388951929821
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: student_15
+      rect:
+        serializedVersion: 2
+        x: 1545
+        y: 1327
+        width: 6
+        height: 6
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 0b44ce741274baca0800000000000000
+      internalID: -6004627469902265168
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: studenttorsolow
+      rect:
+        serializedVersion: 2
+        x: 1244
+        y: 1080
+        width: 262
+        height: 188
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 5055cfcd01befb100800000000000000
+      internalID: 126077772249191685
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: studentheadnormal
+      rect:
+        serializedVersion: 2
+        x: 1852
+        y: 811
+        width: 302
+        height: 284
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 8331c6db727913bb0800000000000000
+      internalID: -4958015517820710088
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: studentheaddown
+      rect:
+        serializedVersion: 2
+        x: 2293
+        y: 807
+        width: 302
+        height: 284
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: ccbc383154aacb330800000000000000
+      internalID: 3728041805212797900
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: studentheadup
+      rect:
+        serializedVersion: 2
+        x: 2740
+        y: 807
+        width: 302
+        height: 284
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 07bc7df0bca42deb0800000000000000
+      internalID: -4696609225389388944
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: knobdown
+      rect:
+        serializedVersion: 2
+        x: 3255
+        y: 813
+        width: 113
+        height: 150
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 994c6935b9a30bf80800000000000000
+      internalID: -8092904091588049767
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: knobright
+      rect:
+        serializedVersion: 2
+        x: 3507
+        y: 813
+        width: 114
+        height: 168
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 93bd93f93243fee70800000000000000
+      internalID: 9146586695812635449
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: knobleft
+      rect:
+        serializedVersion: 2
+        x: 3760
+        y: 806
+        width: 113
+        height: 150
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 594a12626c9108500800000000000000
+      internalID: 396345106042561685
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: studentdownarm
+      rect:
+        serializedVersion: 2
+        x: 540
+        y: 543
+        width: 324
+        height: 245
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 4, y: 4, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 1f74a5e98026e6ef0800000000000000
+      internalID: -113045151481706511
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: studentdownarm2
+      rect:
+        serializedVersion: 2
+        x: 1106
+        y: 569
+        width: 309
+        height: 213
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: ad2a164fef606c100800000000000000
+      internalID: 127797331518137050
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: studenthandturned
+      rect:
+        serializedVersion: 2
+        x: 1615
+        y: 406
+        width: 222
+        height: 160
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 67749ba2cf78447a0800000000000000
+      internalID: -6393836053840967818
       vertices: []
       indices: 
       edges: []

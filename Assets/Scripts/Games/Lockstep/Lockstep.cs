@@ -15,16 +15,17 @@ namespace HeavenStudio.Games.Loaders
     {
         public static Minigame AddGame(EventCaller eventCaller)
         {
-            return new Minigame("lockstep", "Lockstep \n<color=#eb5454>[WIP]</color>", "0058CE", false, false, new List<GameAction>()
+            return new Minigame("lockstep", "Lockstep \n<color=#eb5454>[WIP]</color>", "f0338d", false, false, new List<GameAction>()
             {
                 new GameAction("bop", "Bop")
                 {
-                    function = delegate { var e = eventCaller.currentEntity; Lockstep.instance.Bop(e.beat, e["toggle"]); },
+                    function = delegate { var e = eventCaller.currentEntity; Lockstep.instance.Bop(e.beat, e.length, e["toggle"], e["toggle2"]); },
+                    resizable = true,
                     parameters = new List<Param>()
                     {
-                        new Param("toggle", false, "Reset Pose", "Resets to idle pose.")
+                        new Param("toggle", true, "Bop", "Should the stepswitchers bop?"),
+                        new Param("toggle2", false, "Bop (Auto)", "Should the stepswitchers auto bop?"),
                     },
-                    defaultLength = 1f,
                 },
                 new GameAction("marching", "Stepping")
                 {
@@ -115,6 +116,8 @@ namespace HeavenStudio.Games
             MissedOn = 2
         }
         bool offColorActive;
+        bool goBop;
+        public GameEvent bop = new GameEvent();
 
         public static Lockstep instance;
 
@@ -127,10 +130,7 @@ namespace HeavenStudio.Games
 
         void OnDestroy()
         {
-            if (!Conductor.instance.isPlaying || Conductor.instance.isPaused)
-            {
-                if (queuedInputs.Count > 0) queuedInputs.Clear();
-            }
+            if (queuedInputs.Count > 0) queuedInputs.Clear();
         }
 
         public void Update()
@@ -138,6 +138,15 @@ namespace HeavenStudio.Games
             var cond = Conductor.instance;
             if (cond.isPlaying && !cond.isPaused)
             {
+                if (cond.ReportBeat(ref bop.lastReportedBeat, bop.startBeat % 1))
+                {
+                    if (goBop)
+                    {
+                        stepswitcher0.DoScaledAnimationAsync("Bop", 0.5f);
+                        stepswitcher1.DoScaledAnimationAsync("Bop", 0.5f);
+                        stepswitcherP.DoScaledAnimationAsync("Bop", 0.5f);
+                    }
+                }
                 if (queuedInputs.Count > 0)
                 {
                     foreach (var input in queuedInputs)
@@ -163,21 +172,23 @@ namespace HeavenStudio.Games
 
         }
 
-        public void Bop(float beat, bool reset)
+        public void Bop(float beat, float length, bool shouldBop, bool autoBop)
         {
-            if (reset)
+            goBop = autoBop;
+            if (shouldBop)
             {
-                stepswitcher0.DoScaledAnimationAsync("BopReset", 0.5f);
-                stepswitcher1.DoScaledAnimationAsync("BopReset", 0.5f);
-                stepswitcherP.DoScaledAnimationAsync("BopReset", 0.5f);
-
-            }
-            else
-            {
-                stepswitcher0.DoScaledAnimationAsync("Bop", 0.5f);
-                stepswitcher1.DoScaledAnimationAsync("Bop", 0.5f);
-                stepswitcherP.DoScaledAnimationAsync("Bop", 0.5f);
-
+                for (int i = 0; i < length; i++)
+                {
+                    BeatAction.New(instance.gameObject, new List<BeatAction.Action>()
+                    {
+                        new BeatAction.Action(beat + i, delegate
+                        {
+                            stepswitcher0.DoScaledAnimationAsync("Bop", 0.5f);
+                            stepswitcher1.DoScaledAnimationAsync("Bop", 0.5f);
+                            stepswitcherP.DoScaledAnimationAsync("Bop", 0.5f);
+                        })
+                    });
+                }
             }
         }
 
@@ -236,7 +247,7 @@ namespace HeavenStudio.Games
         {
             if (GameManager.instance.currentGame == "lockstep")
             {
-                for (int i = 0; i < length + 1; i++)
+                for (int i = 0; i < length; i++)
                 {
                     Lockstep.instance.ScheduleInput(beat - 1, 1 + i, InputType.STANDARD_DOWN, Lockstep.instance.Just, Lockstep.instance.Miss, Lockstep.instance.Nothing);
                     BeatAction.New(instance.gameObject, new List<BeatAction.Action>()
@@ -247,7 +258,7 @@ namespace HeavenStudio.Games
             }
             else
             {
-                for (int i = 0; i < length + 1; i++)
+                for (int i = 0; i < length; i++)
                 {
                     queuedInputs.Add(beat + i);
                 }

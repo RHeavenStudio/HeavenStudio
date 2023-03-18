@@ -72,12 +72,15 @@ crashlytics-build.properties
 /[Aa]ssets/[Ss]treamingAssets/aa/*
 
 # Visual Studio Code
-/.vscode/
+.vscode/*
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/extensions.json
+!.vscode/*.code-snippets
 
 # Rider
 .idea/
-*.PNG
-Assets/Resources/Sprites/Games/SumoBrothers/inu1.PNG.meta
-Assets/Resources/Sprites/Games/SumoBrothers/inu2.PNG.meta
-Assets/Resources/Sprites/Games/SumoBrothers/inu3.PNG.meta
-Assets/Resources/Sprites/Games/SumoBrothers/inu4.PNG.meta
+
+# macOS
+.DS_Store

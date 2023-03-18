@@ -54,7 +54,7 @@ namespace HeavenStudio.Editor
             Camera camera = Editor.instance.EditorCamera;
             Vector3 scale = Editor.instance.MainCanvas.transform.localScale;
 
-            boxVisual.transform.localScale = new Vector2(0.01f/scale.x, 1f/scale.y);
+            boxVisual.transform.localScale = new Vector2((1f / Timeline.instance.TimelineContent.localScale.x) / scale.x, 1f / scale.y);
             text.transform.localScale = scale;
 
             if (Selections.instance.eventsSelected.Count > 0 && Timeline.instance.InteractingWithEvents())
@@ -78,7 +78,6 @@ namespace HeavenStudio.Editor
                 sizeText.text = $"{string.Format("{0:0.000}", beatLen)}";
             else
                 sizeText.text = string.Empty;
-
 
             // click
             if (Input.GetMouseButtonDown(0))
@@ -178,8 +177,6 @@ namespace HeavenStudio.Editor
         public Vector3 MousePosition()
         {
             var mousePos = Editor.instance.EditorCamera.ScreenToWorldPoint(Input.mousePosition);
-            // var mousePos = new Vector2();
-            // RectTransformUtility.ScreenPointToLocalPointInRectangle(timelineContent, Input.mousePosition, Editor.instance.EditorCamera, out mousePos);
             return new Vector3(mousePos.x, mousePos.y, 0);
         }
 
