@@ -175,6 +175,10 @@ namespace HeavenStudio.Games
             respDiagBuffer = "";
             callDiagList.Clear();
             callDiagIndex = 0;
+
+            alienTextbox.SetActive(false);
+            translateTextbox.SetActive(false);
+            translateFailTextbox.SetActive(false);
         }
 
         public void SetIntervalStart(float beat, float interval, string outDialogue)
@@ -380,8 +384,9 @@ namespace HeavenStudio.Games
                     sb.Append(s);
                 }
                 string fullMsg = sb.ToString();
+
+                // many hardcoded values there'll be a better way to do this
                 Vector2 size = translateText.GetPreferredValues(fullMsg, 10.95f, 2);
-                Debug.Log($"size: {size}");
                 translateText.rectTransform.anchoredPosition = new Vector2(Mathf.Max((10.95f/2f) + (-size.x / 2 - 0.25f), -0.25f), Mathf.Max((2.11f / 2f) + (-size.y / 2) + 0.2f, 0.2f));
             }
             translateText.text = respDiagBuffer;
