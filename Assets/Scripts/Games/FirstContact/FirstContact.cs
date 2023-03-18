@@ -431,9 +431,12 @@ namespace HeavenStudio.Games
         {
             Jukebox.PlayOneShotGame("firstContact/slightlyFail");
             translator.GetComponent<Animator>().Play("translator_eh", 0, 0);
+            if (!hasMissed)
+            {
+                respDiagBuffer += MID_MSG_MISS;
+                UpdateTranslateTextbox();
+            }
             hasMissed = true;
-            respDiagBuffer += MID_MSG_MISS;
-            UpdateTranslateTextbox();
         }
 
         public void AlienTapping(PlayerActionEvent caller, float state) //OnHit
