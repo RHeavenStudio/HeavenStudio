@@ -294,6 +294,7 @@ namespace HeavenStudio.Games
             if (voiceline > 10) voiceline = 1;
             currentVoicelineIndex = voiceline;
             Jukebox.PlayOneShotGame("firstContact/Bob" + voiceline, beat, Jukebox.GetPitchFromCents(UnityEngine.Random.Range(-200, -100), false));
+            Jukebox.PlayOneShotGame("firstContact/BobB");
             alien.GetComponent<Animator>().DoScaledAnimationAsync("alien_talk", 0.5f);
             if (UnityEngine.Random.Range(0, 5) == 0) translator.GetComponent<Animator>().DoScaledAnimationAsync("translator_lookAtAlien_nod", 0.5f);
             callDiagList.Add(dialogue);
