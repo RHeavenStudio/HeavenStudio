@@ -11,19 +11,17 @@ namespace HeavenStudio.Games.Loaders
         public static Minigame AddGame(EventCaller eventCaller) {
             return new Minigame("munchyMonk", "Munchy Monk", "b9fffc", false, false, new List<GameAction>()
             {
-                new GameAction("Modifiers", "Modifiers")
+                new GameAction("Bop", "Bop")
                 {
                     function = delegate {
                         var e = eventCaller.currentEntity; 
-                        MunchyMonk.instance.Modifiers(e.beat, e["inputsTil"], e["forceGrow"], e["disableBaby"]); 
+                        MunchyMonk.instance.Bop(e.beat, e["monkBop"]); 
                     },
-                    defaultLength = 0.5f,
                     parameters = new List<Param>()
                     {
-                        new Param("inputsTil", new EntityTypes.Integer(0, 50, 10), "How Many 'til Growth?", "How many dumplings are needed to grow the stache?"),
-                        new Param("forceGrow", false, "Next Will Grow?", "Will the next input increment stache growth?"),
-                        new Param("disableBaby", false, "Disable Baby?", "Make baby active or not"),
+                        new Param("monkBop", false, "Bop", "Does the Monk bop?"),
                     },
+                    defaultLength = 0.5f,
                 },
                 new GameAction("One", "One")
                 {
@@ -64,17 +62,19 @@ namespace HeavenStudio.Games.Loaders
                         MunchyMonk.PreThreeGoCue(e.beat, e["threeColor"]); 
                     }
                 },
-                new GameAction("Bop", "Bop")
+                new GameAction("Modifiers", "Modifiers")
                 {
                     function = delegate {
                         var e = eventCaller.currentEntity; 
-                        MunchyMonk.instance.Bop(e.beat, e["monkBop"]); 
-                    },
-                    parameters = new List<Param>()
-                    {
-                        new Param("monkBop", false, "Bop", "Does the Monk bop?"),
+                        MunchyMonk.instance.Modifiers(e.beat, e["inputsTil"], e["forceGrow"], e["disableBaby"]); 
                     },
                     defaultLength = 0.5f,
+                    parameters = new List<Param>()
+                    {
+                        new Param("inputsTil", new EntityTypes.Integer(0, 50, 10), "How Many 'til Growth?", "How many dumplings are needed to grow the stache?"),
+                        new Param("forceGrow", false, "Next Will Grow?", "Will the next input increment stache growth?"),
+                        new Param("disableBaby", false, "Disable Baby?", "Make baby active or not"),
+                    },
                 },
                 new GameAction("MonkAnimation", "Monk Animations")
                 {
@@ -182,11 +182,13 @@ namespace HeavenStudio.Games
         [Header("Variables")]
         public float lastReportedBeat = 0f;
         public bool monkBop = true;
-        public bool needBlush = false;
-        public bool isStaring = false;
-        private int inputsTilGrow;
-        private bool forceGrow;
+        public bool needBlush;
+        public bool isStaring;
+        public bool firstTwoMissed;
+        public bool forceGrow;
+        public int growLevel = 0;
         private bool disableBaby;
+        private int inputsTilGrow;
         float scrollModifier = 0f;
         const string sfxName = "munchyMonk/";
 
@@ -200,15 +202,7 @@ namespace HeavenStudio.Games
 
         private void Update() 
         {
-            if (needBlush 
-                && !MonkAnim.IsPlayingAnimationName("Eat")
-                && !MonkAnim.IsPlayingAnimationName("Stare")
-                && !isStaring) 
-            {
-                MonkAnim.DoScaledAnimationAsync("Blush", 0.5f);
-                needBlush = false;
-            }
-            
+            // input stuff
             if (PlayerInput.Pressed() && !IsExpectingInputNow(InputType.STANDARD_DOWN))
             {
                 MonkArmsAnim.DoScaledAnimationAsync("WristSlap", 0.5f);
@@ -216,10 +210,28 @@ namespace HeavenStudio.Games
                 isStaring = false;
             }
 
+            // blushes when done eating but not when staring
+            if (needBlush 
+                && !MonkAnim.IsPlayingAnimationName("Eat")
+                && !MonkAnim.IsPlayingAnimationName("Stare")
+                && !MonkAnim.IsPlayingAnimationName("Barely")
+                && !MonkAnim.IsPlayingAnimationName("Miss")
+                && !isStaring) 
+            {
+                MonkAnim.DoScaledAnimationAsync("Blush", 0.5f);
+                needBlush = false;
+            }
+
+            // sets hair stuff active when it needs to be
+            if (growLevel == 4) BrowHolder.SetActive(true);
+            if (growLevel > 0) StacheHolder.SetActive(true);
+
+            // resets the monk when game is paused
             if (!Conductor.instance.isPlaying && !Conductor.instance.isPaused) {
                 MonkAnim.DoScaledAnimationAsync("Idle", 0.5f);
             }
 
+            // cue queuing stuff
             if (queuedOnes.Count > 0) {
                 foreach (var dumpling in queuedOnes) { OneGoCue(dumpling.beat, dumpling.color); }
                 queuedOnes.Clear();
@@ -238,17 +250,15 @@ namespace HeavenStudio.Games
 
         private void LateUpdate() 
         {
-            if (Conductor.instance.ReportBeat(ref lastReportedBeat) 
-                && !MonkAnim.IsPlayingAnimationName("Eat")
-                && !MonkAnim.IsPlayingAnimationName("Blush")
-                && !MonkAnim.IsPlayingAnimationName("Miss")
-                && !MonkAnim.IsPlayingAnimationName("Sad")
-                && !MonkAnim.IsPlayingAnimationName("Stare")
-                && monkBop
-                && !isStaring)
-            {
-                MonkAnim.DoScaledAnimationAsync("Bop", 0.5f);
-            };
+            if (Conductor.instance.ReportBeat(ref lastReportedBeat)) {
+                if ((MonkAnim.IsAnimationNotPlaying() || MonkAnim.IsPlayingAnimationName("Bop") || MonkAnim.IsPlayingAnimationName("Idle"))
+                    && monkBop
+                    && !isStaring){
+                    MonkAnim.DoScaledAnimationAsync("Bop", 0.5f);
+                }
+                if (BrowAnim.IsPlayingAnimationName("Bop") && growLevel == 4) BrowAnim.DoScaledAnimationAsync("Bop", 0.5f);
+                if (StacheAnim.IsPlayingAnimationName("Bop"+growLevel)) StacheAnim.DoScaledAnimationAsync("Bop"+growLevel, 0.5f);
+            }
         }
 
         public void Bop(float beat, bool doesBop)
@@ -269,7 +279,7 @@ namespace HeavenStudio.Games
 
         public void OneGoCue(float beat, Color oneColor)
         {
-            DumplingSprite.color = oneColor;
+            DumplingSprite.color =
             DumplingSmear.color = oneColor;
 
             BeatAction.New(gameObject, new List<BeatAction.Action>() {
@@ -298,10 +308,11 @@ namespace HeavenStudio.Games
         {
             BeatAction.New(gameObject, new List<BeatAction.Action>() {
                 new BeatAction.Action(beat-0.5f, delegate { 
-                    TwoDumplingSprite1.color = twoColor;
+                    // lol
+                    TwoDumplingSmear1.color =
+                    TwoDumplingSmear2.color =
+                    TwoDumplingSprite1.color =
                     TwoDumplingSprite2.color = twoColor;
-                    TwoDumplingSmear1.color = twoColor;
-                    TwoDumplingSmear2.color = twoColor;
                     
                     // first dumpling
                     Dumpling DumplingClone1 = Instantiate(TwoDumplingObj1).GetComponent<Dumpling>(); 
@@ -334,7 +345,7 @@ namespace HeavenStudio.Games
 
         public void ThreeGoCue(float beat, Color threeColor)
         {
-            DumplingSprite.color = threeColor;
+            DumplingSprite.color =
             DumplingSmear.color = threeColor;
             
             BeatAction.New(instance.gameObject, new List<BeatAction.Action>() {
@@ -378,22 +389,11 @@ namespace HeavenStudio.Games
                 break;
                 case 1:
                 MonkAnim.DoScaledAnimationAsync("Blush", 0.5f);
-                isStaring = true;
+                needBlush = false;
                 break;
                 case 2:
-                MonkAnim.DoScaledAnimationAsync("Stare", 0.5f);
-                isStaring = true;
-                break;
-            }
-            
-            if (whichAnim == 0) {
-                MonkAnim.DoScaledAnimationAsync("Stare", 0.5f);
-                isStaring = true;
-            } else if (whichAnim == 1) {
-                MonkAnim.DoScaledAnimationAsync("Blush", 0.5f);
-                needBlush = false;
-            } else if (whichAnim == 2) {
                 MonkAnim.DoScaledAnimationAsync("Bop", 0.5f);
+                break;
             }
         }
 

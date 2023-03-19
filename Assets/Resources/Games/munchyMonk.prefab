@@ -326,6 +326,7 @@ MonoBehaviour:
   otherAnim: {fileID: 0}
   startBeat: 0
   type: 2
+  smearAnim: {fileID: 2870895561011074134}
   anim: {fileID: 2274865543072549879}
 --- !u!95 &2274865543072549879
 Animator:
@@ -2647,6 +2648,9 @@ MonoBehaviour:
   monkBop: 1
   needBlush: 0
   isStaring: 0
+  firstTwoMissed: 0
+  forceGrow: 0
+  growLevel: 0
 --- !u!1 &4728247956964418924
 GameObject:
   m_ObjectHideFlags: 0
@@ -4031,6 +4035,7 @@ MonoBehaviour:
   otherAnim: {fileID: 0}
   startBeat: 0
   type: 1
+  smearAnim: {fileID: 5342086749115587097}
   anim: {fileID: 281185408784258692}
 --- !u!95 &281185408784258692
 Animator:
@@ -4142,6 +4147,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 831714461830505250}
+  - component: {fileID: 3449052525920353599}
   m_Layer: 0
   m_Name: MonkHolder
   m_TagString: Untagged
@@ -4165,6 +4171,25 @@ Transform:
   m_Father: {fileID: 6163636881912119569}
   m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!95 &3449052525920353599
+Animator:
+  serializedVersion: 3
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6291367272636632625}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 0}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorControllerStateOnDisable: 0
 --- !u!1 &6310419962479901278
 GameObject:
   m_ObjectHideFlags: 0
@@ -4637,6 +4662,7 @@ MonoBehaviour:
   otherAnim: {fileID: 0}
   startBeat: 0
   type: 2.5
+  smearAnim: {fileID: 7704824011753984293}
   anim: {fileID: 411253409439128524}
 --- !u!95 &411253409439128524
 Animator:
