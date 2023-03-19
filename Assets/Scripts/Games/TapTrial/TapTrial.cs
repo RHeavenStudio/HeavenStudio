@@ -317,7 +317,7 @@ namespace HeavenStudio.Games
                 new BeatAction.Action(beat, delegate {jumpStartTime = Conductor.instance.songPositionInBeats;}),
                 new BeatAction.Action(beat, delegate {monkeys[0].Play("JumpTap", 0, 0); }),
                 new BeatAction.Action(beat, delegate {monkeys[1].Play("JumpTap", 0, 0); }),
-                new BeatAction.Action(beat + 1f, delegate { particleEffectMonkeys(); }),
+                new BeatAction.Action(beat + 1f, delegate { particleEffectMonkeys(); monkeys[0].Play("Jumpactualtap", 0, 0); monkeys[1].Play("Jumpactualtap", 0, 0); }),
                 new BeatAction.Action(beat + 1f, delegate { particleEffectMonkeys_2(); }),
             });
 
