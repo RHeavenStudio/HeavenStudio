@@ -486,6 +486,7 @@ namespace HeavenStudio.Games
             if (state >= 1f || state <= -1f)
             {
                 Jukebox.PlayOneShotGame("firstContact/ALIEN_PLAYER_A", -1, Jukebox.GetPitchFromSemiTones(UnityEngine.Random.Range(-3, 3), false));
+                translator.GetComponent<Animator>().DoScaledAnimationAsync("translator_speak", 0.5f);
                 if (callDiagIndex == 0) return;
                 TrailingContact();
                 return;
