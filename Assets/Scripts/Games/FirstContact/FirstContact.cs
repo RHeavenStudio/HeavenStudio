@@ -38,7 +38,6 @@ namespace HeavenStudio.Games.Loaders
                 new GameAction("alien turnover", "Pass Turn")
                 {
                     function = delegate { FirstContact.instance.AlienTurnOver(eventCaller.currentEntity.beat, eventCaller.currentEntity.length);  },
-                    defaultLength = 0.5f,
                     resizable = true
                 },
                 new GameAction("alien success", "Success")
