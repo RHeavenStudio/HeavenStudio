@@ -78,7 +78,7 @@ namespace HeavenStudio.Games.Loaders
                 },
                 new GameAction("ThrowObjectBoth", "Throw Object Both")
                 {
-                    function = delegate { var e = eventCaller.currentEntity; DogNinja.instance.ThrowBothObject(e.beat, e["typeL"], e["typeR"]); }, 
+                    function = delegate { var e = eventCaller.currentEntity; DogNinja.instance.ThrowObject(e.beat, 2, e["typeL"], e["typeR"]); }, 
                     defaultLength = 2,
                     hidden = true,
                     parameters = new List<Param>()
@@ -186,7 +186,7 @@ namespace HeavenStudio.Games
                 DogAnim.SetBool("needPrepare", true);
             }
             
-            if (PlayerInput.Pressed() && !IsExpectingInputNow(InputType.STANDARD_DOWN))
+            if (PlayerInput.Pressed(true) && !IsExpectingInputNow(InputType.STANDARD_DOWN))
             {
                 System.Random rd = new System.Random();
                 string slice;
@@ -224,7 +224,7 @@ namespace HeavenStudio.Games
             ||  ((typeL == 0 || typeR == 0) && direction == 2)) {
                 // random object code. it makes a random number from 1-6 and sets that as the sprite
                 System.Random rd = new System.Random();
-                ObjSprite = rd.Next(1, 6);
+                ObjSprite = rd.Next(1, 7);
                 WhichObject.sprite = ObjectTypes[ObjSprite];
                 typeL = ObjSprite;
                 typeR = ObjSprite;
@@ -257,8 +257,8 @@ namespace HeavenStudio.Games
         // only here for backwards compatibility
         public void ThrowBothObject(float beat, int ObjType1, int ObjType2)
         {
-            ThrowObject(beat, 0, ObjType1, 0);
-            ThrowObject(beat, 1, 0, ObjType2);
+            ThrowObject(beat, 2, ObjType1, ObjType2);
+            //ThrowObject(beat, 1, 0, ObjType2);
         }
 
         public void CutEverything(float beat, bool sound, string customText)
