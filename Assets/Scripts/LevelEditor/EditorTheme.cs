@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.IO;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -8,6 +9,7 @@ using TMPro;
 
 using Starpelly;
 
+using HeavenStudio.Common;
 using HeavenStudio.Editor.Track;
 
 namespace HeavenStudio.Editor
@@ -26,11 +28,21 @@ namespace HeavenStudio.Editor
 
         private void Awake()
         {
-            theme = JsonConvert.DeserializeObject<Theme>(ThemeTXT.text);
+            if (File.Exists(Application.persistentDataPath + "/editorTheme.json"))
+            {
+                string json = File.ReadAllText(Application.persistentDataPath + "/editorTheme.json");
+                theme = JsonConvert.DeserializeObject<Theme>(json);
+            }
+            else
+            {
+                PersistentDataManager.SaveTheme(ThemeTXT.text);
+                theme = JsonConvert.DeserializeObject<Theme>(ThemeTXT.text);
+            }
         }
 
         private void Start()
         {
+            if (Editor.instance == null) return;
             specialLayers.GetComponent<Image>().color = theme.properties.SpecialLayersCol.Hex2RGB();
             tempoLayer.GetComponent<Image>().color = theme.properties.TempoLayerCol.Hex2RGB();
             musicLayer.GetComponent<Image>().color = theme.properties.MusicLayerCol.Hex2RGB();

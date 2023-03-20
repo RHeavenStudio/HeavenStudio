@@ -24,6 +24,10 @@ namespace HeavenStudio.Games.Scripts_WizardsWaltz
             animator.Play("Appear", 0, 0);
         }
 
+        private void Start() {
+            game.ScheduleInput(createBeat, game.beatInterval, InputType.STANDARD_DOWN | InputType.DIRECTION_DOWN, Just, Miss, Out);
+        }
+
         private void Update()
         {
             if (!passed && Conductor.instance.songPositionInBeats > createBeat + game.beatInterval)
@@ -31,23 +35,6 @@ namespace HeavenStudio.Games.Scripts_WizardsWaltz
                 StartCoroutine(FadeOut());
                 passed = true;
             }
-
-            if (hit) return;
-
-            float stateBeat = Conductor.instance.GetPositionFromMargin(createBeat + game.beatInterval, 1f);
-            StateCheck(stateBeat);
-
-            if (PlayerInput.Pressed(true))
-            {
-                if (state.perfect)
-                {
-                    Ace();
-                } else if (state.notPerfect())
-                {
-                    Miss();
-                }
-            }
-
         }
 
         public void Bloom()
@@ -81,16 +68,27 @@ namespace HeavenStudio.Games.Scripts_WizardsWaltz
             hit = true;
         }
 
-        public void Miss()
+        public void NearMiss()
         {
             game.wizard.Magic(this, false);
             hit = true;
         }
 
-        public override void OnAce()
+        private void Just(PlayerActionEvent caller, float state)
         {
+            if (state >= 1f || state <= -1f) {
+                NearMiss();
+                return; 
+            }
             Ace();
         }
+
+        private void Miss(PlayerActionEvent caller) 
+        {
+            // this is where perfect challenge breaks
+        }
+
+        private void Out(PlayerActionEvent caller) {}
 
         public IEnumerator FadeOut()
         {

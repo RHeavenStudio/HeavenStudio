@@ -20,6 +20,7 @@ namespace HeavenStudio
     {
         public class Minigame
         {
+            
             public string name;
             public string displayName;
             public string color;
@@ -36,6 +37,7 @@ namespace HeavenStudio
             public bool usesAssetBundle => (wantAssetBundle != "");
             public bool hasLocales => (supportedLocales.Count > 0);
             public bool AssetsLoaded => (((hasLocales && localeLoaded && currentLoadedLocale == defaultLocale) || (!hasLocales)) && commonLoaded);
+            public bool SequencesPreloaded => soundSequences != null;
 
             private AssetBundle bundleCommon = null;
             private bool commonLoaded = false;
@@ -44,6 +46,14 @@ namespace HeavenStudio
             private AssetBundle bundleLocalized = null;
             private bool localeLoaded = false;
             private bool localePreloaded = false;
+
+            private SoundSequence.SequenceKeyValue[] soundSequences = null;
+
+            public SoundSequence.SequenceKeyValue[] LoadedSoundSequences
+            {
+                get => soundSequences;
+                set => soundSequences = value;
+            }
 
             public Minigame(string name, string displayName, string color, bool threeD, bool fxOnly, List<GameAction> actions, List<string> tags = null, string assetBundle = "", string defaultLocale = "en", List<string> supportedLocales = null)
             {
@@ -142,8 +152,10 @@ namespace HeavenStudio
             public bool resizable = false;
             public List<Param> parameters = null;
             public bool hidden = false;
+            public int priority = 0;
             public EventCallback inactiveFunction = delegate { };
             public EventCallback preFunction = delegate { };
+            public float preFunctionLength = 2.0f;
 
             /// <summary>
             /// <para>Creates a block that can be used in the editor. The block's function and attributes are defined in the parentheses.</para>
@@ -159,7 +171,9 @@ namespace HeavenStudio
             /// <param name="inactiveFunction">What the block does when read while the game it's associated with isn't loaded.</param>
             /// <param name="prescheduleFunction">What the block does when the GameManager seeks to this cue for pre-scheduling.</param>
             /// <param name="hidden">Prevents the block from being shown in the game list. Block will still function normally if it is in the timeline.</param>
-            public GameAction(string actionName, string displayName, float defaultLength = 1, bool resizable = false, List<Param> parameters = null, EventCallback function = null, EventCallback inactiveFunction = null, EventCallback prescheduleFunction = null, bool hidden = false)
+            /// <param name="preFunction">Runs two beats before this event is reached.</param>
+            /// <param name="priority">Priority of this event. Higher priority events will be run first.</param>
+            public GameAction(string actionName, string displayName, float defaultLength = 1, bool resizable = false, List<Param> parameters = null, EventCallback function = null, EventCallback inactiveFunction = null, EventCallback prescheduleFunction = null, bool hidden = false, EventCallback preFunction = null, int priority = 0, float preFunctionLength = 2.0f)
             {
                 this.actionName = actionName;
                 if (displayName == String.Empty) this.displayName = actionName;
@@ -172,6 +186,9 @@ namespace HeavenStudio
                 this.function = function ?? delegate { };
                 this.inactiveFunction = inactiveFunction ?? delegate { };
                 this.preFunction = prescheduleFunction ?? delegate { };
+                this.priority = priority;
+                this.preFunctionLength = preFunctionLength;
+
 
                 //todo: converting to new versions of GameActions
             }
@@ -251,7 +268,19 @@ namespace HeavenStudio
                                 GameManager.instance.Stop(0);
                         }
                     ),
-                    new GameAction("skill star", "Skill Star", 1f, true),
+                    new GameAction("skill star", "Skill Star", 1f, true)
+                    {
+                        //temp for testing
+                        function = delegate {
+                            var e = eventCaller.currentEntity;
+                            HeavenStudio.Common.SkillStarManager.instance.DoStarIn(e.beat, e.length); 
+                            // BeatAction.New(HeavenStudio.Common.SkillStarManager.instance.gameObject, new List<BeatAction.Action>(){
+                            //     new BeatAction.Action(e.beat + e.length, delegate {
+                            //         HeavenStudio.Common.SkillStarManager.instance.DoStarJust();
+                            //     })
+                            // });
+                        }
+                    },
                     new GameAction("toggle inputs", "Toggle Inputs", 0.5f, true,
                         new List<Param>()
                         {
@@ -363,21 +392,54 @@ namespace HeavenStudio
                             new Param("ease", EasingFunction.Ease.Linear, "Ease")
                         }
                     ),
+                    new GameAction("filter", "Filter", 1f, true,
+                        new List<Param>()
+                        {
+                            new Param("filter", Games.Global.Filter.FilterType.grayscale, "Filter"),
+                            new Param("inten", new EntityTypes.Float(0, 100, 100), "Intensity"),
+                            new Param("fadein", new EntityTypes.Float(0, 100, 0), "Fade In"),
+                            new Param("fadeout", new EntityTypes.Float(0, 100, 0), "Fade Out")
+                        }
+                    ),
                     new GameAction("move camera", "Move Camera", 1f, true, new List<Param>() 
                         {
-                            new Param("valA", new EntityTypes.Float(-50, 50, 0), "Right / Left"),
-                            new Param("valB", new EntityTypes.Float(-50, 50, 0), "Up / Down"),
-                            new Param("valC", new EntityTypes.Float(-0, 250, 10), "In / Out"),
-                            new Param("ease", EasingFunction.Ease.Linear, "Ease Type")
+                            new Param("valA", new EntityTypes.Float(-50, 50, 0), "Right / Left", "Next position on the X axis"),
+                            new Param("valB", new EntityTypes.Float(-50, 50, 0), "Up / Down", "Next position on the Y axis"),
+                            new Param("valC", new EntityTypes.Float(-0, 250, 10), "In / Out", "Next position on the Z axis"),
+                            new Param("ease", EasingFunction.Ease.Linear, "Ease Type"),
+                            new Param("axis", GameCamera.CameraAxis.All, "Axis", "The axis to move the camera on" )
                         }
                     ),
                     new GameAction("rotate camera", "Rotate Camera", 1f, true, new List<Param>() 
                         {
-                            new Param("valA", new EntityTypes.Integer(-360, 360, 0), "Pitch"),
-                            new Param("valB", new EntityTypes.Integer(-360, 360, 0), "Yaw"),
-                            new Param("valC", new EntityTypes.Integer(-360, 360, 0), "Roll"),
-                            new Param("ease", EasingFunction.Ease.Linear, "Ease Type")
+                            new Param("valA", new EntityTypes.Integer(-360, 360, 0), "Pitch", "Next rotation on the X axis"),
+                            new Param("valB", new EntityTypes.Integer(-360, 360, 0), "Yaw", "Next rotation on the Y axis"),
+                            new Param("valC", new EntityTypes.Integer(-360, 360, 0), "Roll", "Next rotation on the Z axis"),
+                            new Param("ease", EasingFunction.Ease.Linear, "Ease Type"),
+                            new Param("axis", GameCamera.CameraAxis.All, "Axis", "The axis to move the camera on" )
                         } 
+                    ),
+                    new GameAction("pan view", "Pan Viewport", 1f, true, new List<Param>() 
+                        {
+                            new Param("valA", new EntityTypes.Float(-50, 50, 0), "Right / Left", "Next position on the X axis"),
+                            new Param("valB", new EntityTypes.Float(-50, 50, 0), "Up / Down", "Next position on the Y axis"),
+                            new Param("ease", EasingFunction.Ease.Linear, "Ease Type"),
+                            new Param("axis", StaticCamera.ViewAxis.All, "Axis", "The axis to pan the viewport in" )
+                        }
+                    ),
+                    new GameAction("rotate view", "Rotate Viewport", 1f, true, new List<Param>() 
+                        {
+                            new Param("valA", new EntityTypes.Float(-360, 360, 0), "Rotation", "Next viewport rotation"),
+                            new Param("ease", EasingFunction.Ease.Linear, "Ease Type"),
+                        }
+                    ),
+                    new GameAction("scale view", "Scale Viewport", 1f, true, new List<Param>() 
+                        {
+                            new Param("valA", new EntityTypes.Float(0, 50, 1), "Width", "Next viewport width"),
+                            new Param("valB", new EntityTypes.Float(0, 50, 1), "Height", "Next viewport height"),
+                            new Param("ease", EasingFunction.Ease.Linear, "Ease Type"),
+                            new Param("axis", StaticCamera.ViewAxis.All, "Axis", "The axis to scale the viewport in" )
+                        }
                     ),
 
                     new GameAction("screen shake", "Screen Shake", 1f, true,

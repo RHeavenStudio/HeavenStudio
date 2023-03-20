@@ -313,7 +313,7 @@ TextureImporter:
   spriteMeshType: 0
   alignment: 0
   spritePivot: {x: 0.5, y: 0.5}
-  spritePixelsToUnits: 100
+  spritePixelsToUnits: 244.14062
   spriteBorder: {x: 0, y: 0, z: 0, w: 0}
   spriteGenerateFallbackPhysicsShape: 0
   alphaUsage: 1
@@ -332,7 +332,7 @@ TextureImporter:
   platformSettings:
   - serializedVersion: 3
     buildTarget: DefaultTexturePlatform
-    maxTextureSize: 2048
+    maxTextureSize: 4096
     resizeAlgorithm: 0
     textureFormat: -1
     textureCompression: 1
@@ -344,7 +344,7 @@ TextureImporter:
     forceMaximumCompressionQuality_BC6H_BC7: 0
   - serializedVersion: 3
     buildTarget: Standalone
-    maxTextureSize: 2048
+    maxTextureSize: 4096
     resizeAlgorithm: 0
     textureFormat: -1
     textureCompression: 1
@@ -361,10 +361,10 @@ TextureImporter:
       name: pillow_obj_0
       rect:
         serializedVersion: 2
-        x: 125
-        y: 1916
-        width: 148
-        height: 117
+        x: 305.17578
+        y: 4677.7344
+        width: 361.32812
+        height: 285.64453
       alignment: 9
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -382,10 +382,10 @@ TextureImporter:
       name: pillow_obj_1
       rect:
         serializedVersion: 2
-        x: 298
-        y: 1961
-        width: 139
-        height: 78
+        x: 727.53906
+        y: 4787.5977
+        width: 339.35547
+        height: 190.42969
       alignment: 9
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -403,10 +403,10 @@ TextureImporter:
       name: pillow_obj_2
       rect:
         serializedVersion: 2
-        x: 467
-        y: 1871
-        width: 138
-        height: 154
+        x: 1140.1367
+        y: 4567.871
+        width: 336.91406
+        height: 375.97656
       alignment: 9
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -424,10 +424,10 @@ TextureImporter:
       name: pillow_obj_3
       rect:
         serializedVersion: 2
-        x: 23
-        y: 1683
-        width: 132
-        height: 186
+        x: 56.152344
+        y: 4108.8867
+        width: 322.26562
+        height: 454.10156
       alignment: 9
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -445,10 +445,10 @@ TextureImporter:
       name: pillow_obj_4
       rect:
         serializedVersion: 2
-        x: 194
-        y: 1778
-        width: 108
-        height: 92
+        x: 473.6328
+        y: 4340.8203
+        width: 263.67188
+        height: 224.60938
       alignment: 9
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -466,10 +466,10 @@ TextureImporter:
       name: pillow_obj_5
       rect:
         serializedVersion: 2
-        x: 342
-        y: 1771
-        width: 83
-        height: 99
+        x: 834.96094
+        y: 4323.7305
+        width: 202.63672
+        height: 241.69922
       alignment: 9
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -487,10 +487,10 @@ TextureImporter:
       name: pillow_obj_6
       rect:
         serializedVersion: 2
-        x: 194
-        y: 1575
-        width: 139
-        height: 164
+        x: 473.6328
+        y: 3845.2148
+        width: 339.35547
+        height: 400.39062
       alignment: 9
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -508,10 +508,10 @@ TextureImporter:
       name: pillow_obj_7
       rect:
         serializedVersion: 2
-        x: 470
-        y: 1681
-        width: 179
-        height: 160
+        x: 1147.4609
+        y: 4104.004
+        width: 437.01172
+        height: 390.625
       alignment: 9
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -529,10 +529,10 @@ TextureImporter:
       name: pillow_obj_8
       rect:
         serializedVersion: 2
-        x: 470
-        y: 1529
-        width: 200
-        height: 120
+        x: 1147.4609
+        y: 3732.9102
+        width: 488.28125
+        height: 292.96875
       alignment: 9
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -550,10 +550,10 @@ TextureImporter:
       name: pillow_obj_9
       rect:
         serializedVersion: 2
-        x: 470
-        y: 1413
-        width: 67
-        height: 64
+        x: 1147.4609
+        y: 3449.707
+        width: 163.57422
+        height: 156.25
       alignment: 9
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -571,10 +571,10 @@ TextureImporter:
       name: pillow_obj_10
       rect:
         serializedVersion: 2
-        x: 592
-        y: 1419
-        width: 49
-        height: 59
+        x: 1445.3125
+        y: 3464.3555
+        width: 119.62891
+        height: 144.04297
       alignment: 9
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -592,10 +592,10 @@ TextureImporter:
       name: pillow_obj_11
       rect:
         serializedVersion: 2
-        x: 692
-        y: 1415
-        width: 85
-        height: 67
+        x: 1689.4531
+        y: 3454.5898
+        width: 207.51953
+        height: 163.57422
       alignment: 9
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -613,10 +613,10 @@ TextureImporter:
       name: pillow_obj_12
       rect:
         serializedVersion: 2
-        x: 822
-        y: 1402
-        width: 63
-        height: 92
+        x: 2006.8359
+        y: 3422.8516
+        width: 153.8086
+        height: 224.60938
       alignment: 9
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -634,10 +634,10 @@ TextureImporter:
       name: pillow_obj_13
       rect:
         serializedVersion: 2
-        x: 941
-        y: 1411
-        width: 56
-        height: 74
+        x: 2297.3633
+        y: 3444.8242
+        width: 136.71875
+        height: 180.66406
       alignment: 9
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -655,10 +655,10 @@ TextureImporter:
       name: pillow_obj_14
       rect:
         serializedVersion: 2
-        x: 1048
-        y: 1415
-        width: 89
-        height: 169
+        x: 2558.5938
+        y: 3454.5898
+        width: 217.28516
+        height: 412.59766
       alignment: 9
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -676,10 +676,10 @@ TextureImporter:
       name: pillow_obj_15
       rect:
         serializedVersion: 2
-        x: 707
-        y: 1570
-        width: 88
-        height: 156
+        x: 1726.0742
+        y: 3833.0078
+        width: 214.84375
+        height: 380.85938
       alignment: 9
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -697,10 +697,10 @@ TextureImporter:
       name: pillow_obj_16
       rect:
         serializedVersion: 2
-        x: 840
-        y: 1631
-        width: 274
-        height: 86
+        x: 2050.7812
+        y: 3981.9336
+        width: 668.9453
+        height: 209.96094
       alignment: 9
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -718,10 +718,10 @@ TextureImporter:
       name: pillow_obj_17
       rect:
         serializedVersion: 2
-        x: 1157
-        y: 1615
-        width: 216
-        height: 113
+        x: 2824.707
+        y: 3942.871
+        width: 527.34375
+        height: 275.8789
       alignment: 9
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -739,10 +739,10 @@ TextureImporter:
       name: pillow_obj_18
       rect:
         serializedVersion: 2
-        x: 1407
-        y: 1515
-        width: 162
-        height: 214
+        x: 3435.0586
+        y: 3698.7305
+        width: 395.5078
+        height: 522.46094
       alignment: 9
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -760,13 +760,13 @@ TextureImporter:
       name: pillow_obj_19
       rect:
         serializedVersion: 2
-        x: 706
-        y: 1774
-        width: 107
-        height: 235
+        x: 1724
+        y: 4325
+        width: 261
+        height: 580
       alignment: 2
       pivot: {x: 0.5, y: 1}
-      border: {x: 0, y: 0, z: 0, w: 170}
+      border: {x: 0, y: 0, z: 0, w: 415}
       outline: []
       physicsShape: []
       tessellationDetail: -1
@@ -781,13 +781,13 @@ TextureImporter:
       name: pillow_obj_20
       rect:
         serializedVersion: 2
-        x: 884
-        y: 1774
-        width: 106
-        height: 227
+        x: 2158
+        y: 4325
+        width: 259
+        height: 560
       alignment: 2
       pivot: {x: 0.5, y: 1}
-      border: {x: 0, y: 0, z: 0, w: 162}
+      border: {x: 0, y: 0, z: 0, w: 396}
       outline: []
       physicsShape: []
       tessellationDetail: -1
@@ -802,13 +802,13 @@ TextureImporter:
       name: pillow_obj_21
       rect:
         serializedVersion: 2
-        x: 1058
-        y: 1774
-        width: 107
-        height: 235
+        x: 2583
+        y: 4325
+        width: 261
+        height: 580
       alignment: 2
       pivot: {x: 0.5, y: 1}
-      border: {x: 0, y: 0, z: 0, w: 170}
+      border: {x: 0, y: 0, z: 0, w: 415}
       outline: []
       physicsShape: []
       tessellationDetail: -1
@@ -823,10 +823,10 @@ TextureImporter:
       name: pillow_obj_22
       rect:
         serializedVersion: 2
-        x: 1220
-        y: 1884
-        width: 137
-        height: 139
+        x: 2978.5156
+        y: 4599.6094
+        width: 334.47266
+        height: 339.35547
       alignment: 9
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -844,10 +844,10 @@ TextureImporter:
       name: pillow_obj_23
       rect:
         serializedVersion: 2
-        x: 1395
-        y: 1883
-        width: 136
-        height: 136
+        x: 3405.7617
+        y: 4597.168
+        width: 332.03125
+        height: 332.03125
       alignment: 9
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -865,10 +865,10 @@ TextureImporter:
       name: pillow_obj_24
       rect:
         serializedVersion: 2
-        x: 1633
-        y: 1923
-        width: 136
-        height: 76
+        x: 3986.8164
+        y: 4694.824
+        width: 332.03125
+        height: 185.54688
       alignment: 9
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -886,10 +886,10 @@ TextureImporter:
       name: pillow_obj_25
       rect:
         serializedVersion: 2
-        x: 1627
-        y: 1817
-        width: 127
-        height: 66
+        x: 3972.168
+        y: 4436.035
+        width: 310.0586
+        height: 161.13281
       alignment: 9
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -907,10 +907,10 @@ TextureImporter:
       name: pillow_obj_26
       rect:
         serializedVersion: 2
-        x: 1813
-        y: 1923
-        width: 156
-        height: 78
+        x: 4426.2695
+        y: 4694.824
+        width: 380.85938
+        height: 190.42969
       alignment: 9
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -928,10 +928,10 @@ TextureImporter:
       name: pillow_obj_27
       rect:
         serializedVersion: 2
-        x: 1815
-        y: 1785
-        width: 158
-        height: 71
+        x: 4431.1523
+        y: 4357.91
+        width: 385.7422
+        height: 173.33984
       alignment: 9
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -949,10 +949,10 @@ TextureImporter:
       name: pillow_obj_28
       rect:
         serializedVersion: 2
-        x: 1821
-        y: 1669
-        width: 150
-        height: 70
+        x: 4445.801
+        y: 4074.707
+        width: 366.21094
+        height: 170.89844
       alignment: 9
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -970,10 +970,10 @@ TextureImporter:
       name: pillow_obj_29
       rect:
         serializedVersion: 2
-        x: 1740
-        y: 1514
-        width: 94
-        height: 80
+        x: 4248.047
+        y: 3696.289
+        width: 229.49219
+        height: 195.3125
       alignment: 9
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -991,10 +991,10 @@ TextureImporter:
       name: pillow_obj_30
       rect:
         serializedVersion: 2
-        x: 1891
-        y: 1494
-        width: 138
-        height: 154
+        x: 4616.699
+        y: 3647.461
+        width: 336.91406
+        height: 375.97656
       alignment: 9
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -1012,10 +1012,10 @@ TextureImporter:
       name: pillow_obj_31
       rect:
         serializedVersion: 2
-        x: 1874
-        y: 1307
-        width: 60
-        height: 54
+        x: 4575.1953
+        y: 3190.918
+        width: 146.48438
+        height: 131.83594
       alignment: 9
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -1033,10 +1033,10 @@ TextureImporter:
       name: pillow_obj_32
       rect:
         serializedVersion: 2
-        x: 1703
-        y: 1199
-        width: 138
-        height: 171
+        x: 4157.715
+        y: 2927.246
+        width: 336.91406
+        height: 417.48047
       alignment: 9
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -1054,10 +1054,10 @@ TextureImporter:
       name: pillow_obj_33
       rect:
         serializedVersion: 2
-        x: 1891
-        y: 1104
-        width: 138
-        height: 153
+        x: 4616.699
+        y: 2695.3125
+        width: 336.91406
+        height: 373.53516
       alignment: 9
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -1075,10 +1075,10 @@ TextureImporter:
       name: pillow_obj_34
       rect:
         serializedVersion: 2
-        x: 1703
-        y: 991
-        width: 138
-        height: 171
+        x: 4157.715
+        y: 2419.4336
+        width: 336.91406
+        height: 417.48047
       alignment: 9
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -1096,10 +1096,10 @@ TextureImporter:
       name: pillow_obj_35
       rect:
         serializedVersion: 2
-        x: 1702
-        y: 783
-        width: 136
-        height: 170
+        x: 4155.2734
+        y: 1911.6211
+        width: 332.03125
+        height: 415.03906
       alignment: 9
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -1117,10 +1117,10 @@ TextureImporter:
       name: pillow_obj_36
       rect:
         serializedVersion: 2
-        x: 1873
-        y: 747
-        width: 148
-        height: 325
+        x: 4572.754
+        y: 1823.7305
+        width: 361.32812
+        height: 793.45703
       alignment: 9
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -1138,10 +1138,10 @@ TextureImporter:
       name: pillow_obj_37
       rect:
         serializedVersion: 2
-        x: 1873
-        y: 379
-        width: 149
-        height: 325
+        x: 4572.754
+        y: 925.29297
+        width: 363.76953
+        height: 793.45703
       alignment: 9
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -1159,13 +1159,13 @@ TextureImporter:
       name: pillow_obj_38
       rect:
         serializedVersion: 2
-        x: 1731
-        y: 607
-        width: 75
-        height: 127
+        x: 4226.074
+        y: 1481.9336
+        width: 183.10547
+        height: 310.0586
       alignment: 2
       pivot: {x: 0.5, y: 1}
-      border: {x: 0, y: 0, z: 0, w: 80}
+      border: {x: 0, y: 0, z: 0, w: 195.3125}
       outline: []
       physicsShape: []
       tessellationDetail: -1
@@ -1180,10 +1180,10 @@ TextureImporter:
       name: pillow_obj_39
       rect:
         serializedVersion: 2
-        x: 1726
-        y: 498
-        width: 89
-        height: 59
+        x: 4213.867
+        y: 1215.8203
+        width: 217.28516
+        height: 144.04297
       alignment: 9
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -1201,10 +1201,10 @@ TextureImporter:
       name: pillow_obj_40
       rect:
         serializedVersion: 2
-        x: 1695
-        y: 367
-        width: 146
-        height: 87
+        x: 4138.1836
+        y: 895.9961
+        width: 356.4453
+        height: 212.40234
       alignment: 9
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -1222,10 +1222,10 @@ TextureImporter:
       name: pillow_obj_41
       rect:
         serializedVersion: 2
-        x: 1530
-        y: 639
-        width: 135
-        height: 166
+        x: 3735.3516
+        y: 1560.0586
+        width: 329.58984
+        height: 405.27344
       alignment: 9
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -1243,10 +1243,10 @@ TextureImporter:
       name: pillow_obj_42
       rect:
         serializedVersion: 2
-        x: 1407
-        y: 639
-        width: 82
-        height: 63
+        x: 3435.0586
+        y: 1560.0586
+        width: 200.19531
+        height: 153.8086
       alignment: 9
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -1264,10 +1264,10 @@ TextureImporter:
       name: pillow_obj_43
       rect:
         serializedVersion: 2
-        x: 1390
-        y: 431
-        width: 163
-        height: 178
+        x: 3393.5547
+        y: 1052.2461
+        width: 397.94922
+        height: 434.5703
       alignment: 9
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -1285,10 +1285,10 @@ TextureImporter:
       name: pillow_obj_44
       rect:
         serializedVersion: 2
-        x: 1583
-        y: 367
-        width: 82
-        height: 239
+        x: 3864.746
+        y: 895.9961
+        width: 200.19531
+        height: 583.4961
       alignment: 9
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -1306,10 +1306,10 @@ TextureImporter:
       name: pillow_obj_45
       rect:
         serializedVersion: 2
-        x: 1171
-        y: 1223
-        width: 126
-        height: 155
+        x: 2858.8867
+        y: 2985.8398
+        width: 307.6172
+        height: 378.41797
       alignment: 9
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -1327,10 +1327,10 @@ TextureImporter:
       name: pillow_obj_46
       rect:
         serializedVersion: 2
-        x: 1171
-        y: 1039
-        width: 142
-        height: 146
+        x: 2858.8867
+        y: 2536.621
+        width: 346.6797
+        height: 356.4453
       alignment: 9
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -1348,10 +1348,10 @@ TextureImporter:
       name: pillow_obj_47
       rect:
         serializedVersion: 2
-        x: 1363
-        y: 1099
-        width: 138
-        height: 276
+        x: 3327.6367
+        y: 2683.1055
+        width: 336.91406
+        height: 673.8281
       alignment: 9
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -1369,10 +1369,10 @@ TextureImporter:
       name: pillow_obj_48
       rect:
         serializedVersion: 2
-        x: 1361
-        y: 942
-        width: 156
-        height: 115
+        x: 3322.754
+        y: 2299.8047
+        width: 380.85938
+        height: 280.76172
       alignment: 9
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -1390,10 +1390,10 @@ TextureImporter:
       name: pillow_obj_49
       rect:
         serializedVersion: 2
-        x: 784
-        y: 1051
-        width: 150
-        height: 325
+        x: 1914.0625
+        y: 2565.918
+        width: 366.21094
+        height: 793.45703
       alignment: 9
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -1411,10 +1411,10 @@ TextureImporter:
       name: pillow_obj_50
       rect:
         serializedVersion: 2
-        x: 976
-        y: 1051
-        width: 150
-        height: 325
+        x: 2382.8125
+        y: 2565.918
+        width: 366.21094
+        height: 793.45703
       alignment: 9
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -1432,10 +1432,10 @@ TextureImporter:
       name: pillow_obj_51
       rect:
         serializedVersion: 2
-        x: 960
-        y: 848
-        width: 115
-        height: 152
+        x: 2343.75
+        y: 2070.3125
+        width: 280.76172
+        height: 371.09375
       alignment: 9
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -1453,10 +1453,10 @@ TextureImporter:
       name: pillow_obj_52
       rect:
         serializedVersion: 2
-        x: 789
-        y: 934
-        width: 69
-        height: 69
+        x: 1926.2695
+        y: 2280.2734
+        width: 168.45703
+        height: 168.45703
       alignment: 9
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -1474,10 +1474,10 @@ TextureImporter:
       name: pillow_obj_53
       rect:
         serializedVersion: 2
-        x: 788
-        y: 739
-        width: 129
-        height: 123
+        x: 1923.8281
+        y: 1804.1992
+        width: 314.9414
+        height: 300.29297
       alignment: 9
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -1495,10 +1495,10 @@ TextureImporter:
       name: pillow_obj_54
       rect:
         serializedVersion: 2
-        x: 19
-        y: 1191
-        width: 339
-        height: 184
+        x: 46.38672
+        y: 2907.7148
+        width: 827.6367
+        height: 449.21875
       alignment: 9
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -1516,10 +1516,10 @@ TextureImporter:
       name: pillow_obj_55
       rect:
         serializedVersion: 2
-        x: 19
-        y: 965
-        width: 339
-        height: 186
+        x: 46.38672
+        y: 2355.957
+        width: 827.6367
+        height: 454.10156
       alignment: 9
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -1537,10 +1537,10 @@ TextureImporter:
       name: pillow_obj_56
       rect:
         serializedVersion: 2
-        x: 19
-        y: 739
-        width: 339
-        height: 188
+        x: 46.38672
+        y: 1804.1992
+        width: 827.6367
+        height: 458.98438
       alignment: 9
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -1558,10 +1558,10 @@ TextureImporter:
       name: pillow_obj_57
       rect:
         serializedVersion: 2
-        x: 18
-        y: 511
-        width: 340
-        height: 194
+        x: 43.945312
+        y: 1247.5586
+        width: 830.0781
+        height: 473.6328
       alignment: 9
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -1579,10 +1579,10 @@ TextureImporter:
       name: pillow_obj_58
       rect:
         serializedVersion: 2
-        x: 18
-        y: 286
-        width: 339
-        height: 195
+        x: 43.945312
+        y: 698.2422
+        width: 827.6367
+        height: 476.07422
       alignment: 9
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -1600,10 +1600,10 @@ TextureImporter:
       name: pillow_obj_59
       rect:
         serializedVersion: 2
-        x: 402
-        y: 1182
-        width: 343
-        height: 195
+        x: 981.4453
+        y: 2885.7422
+        width: 837.40234
+        height: 476.07422
       alignment: 9
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -1621,10 +1621,10 @@ TextureImporter:
       name: pillow_obj_60
       rect:
         serializedVersion: 2
-        x: 402
-        y: 957
-        width: 343
-        height: 195
+        x: 981.4453
+        y: 2336.4258
+        width: 837.40234
+        height: 476.07422
       alignment: 9
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -1642,10 +1642,10 @@ TextureImporter:
       name: pillow_obj_61
       rect:
         serializedVersion: 2
-        x: 403
-        y: 734
-        width: 342
-        height: 194
+        x: 983.8867
+        y: 1791.9922
+        width: 834.96094
+        height: 473.6328
       alignment: 9
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -1663,10 +1663,10 @@ TextureImporter:
       name: pillow_obj_62
       rect:
         serializedVersion: 2
-        x: 401
-        y: 532
-        width: 417
-        height: 169
+        x: 979.0039
+        y: 1298.8281
+        width: 1018.0664
+        height: 412.59766
       alignment: 9
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -1684,10 +1684,10 @@ TextureImporter:
       name: pillow_obj_63
       rect:
         serializedVersion: 2
-        x: 400
-        y: 318
-        width: 418
-        height: 145
+        x: 976.5625
+        y: 776.3672
+        width: 1020.5078
+        height: 354.0039
       alignment: 9
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -1705,10 +1705,10 @@ TextureImporter:
       name: pillow_obj_64
       rect:
         serializedVersion: 2
-        x: 865
-        y: 510
-        width: 341
-        height: 194
+        x: 2111.8164
+        y: 1245.1172
+        width: 832.51953
+        height: 473.6328
       alignment: 9
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -1726,10 +1726,10 @@ TextureImporter:
       name: pillow_obj_65
       rect:
         serializedVersion: 2
-        x: 1428
-        y: 18
-        width: 87
-        height: 379
+        x: 3486.3281
+        y: 43.945312
+        width: 212.40234
+        height: 925.29297
       alignment: 9
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -1747,10 +1747,10 @@ TextureImporter:
       name: pillow_obj_66
       rect:
         serializedVersion: 2
-        x: 22
-        y: 118
-        width: 180
-        height: 138
+        x: 53.710938
+        y: 288.08594
+        width: 439.45312
+        height: 336.91406
       alignment: 9
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -1768,10 +1768,10 @@ TextureImporter:
       name: pillow_obj_67
       rect:
         serializedVersion: 2
-        x: 245
-        y: 110
-        width: 180
-        height: 146
+        x: 598.14453
+        y: 268.5547
+        width: 439.45312
+        height: 356.4453
       alignment: 9
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -1789,10 +1789,10 @@ TextureImporter:
       name: pillow_obj_68
       rect:
         serializedVersion: 2
-        x: 468
-        y: 115
-        width: 181
-        height: 132
+        x: 1142.5781
+        y: 280.76172
+        width: 441.89453
+        height: 322.26562
       alignment: 9
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -1810,10 +1810,10 @@ TextureImporter:
       name: pillow_obj_69
       rect:
         serializedVersion: 2
-        x: 694
-        y: 98
-        width: 167
-        height: 155
+        x: 1694.3359
+        y: 239.25781
+        width: 407.71484
+        height: 378.41797
       alignment: 9
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -1831,10 +1831,10 @@ TextureImporter:
       name: pillow_obj_70
       rect:
         serializedVersion: 2
-        x: 735
-        y: 14
-        width: 51
-        height: 51
+        x: 1794.4336
+        y: 34.179688
+        width: 124.51172
+        height: 124.51172
       alignment: 9
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -1852,10 +1852,10 @@ TextureImporter:
       name: pillow_obj_71
       rect:
         serializedVersion: 2
-        x: 815
-        y: 14
-        width: 50
-        height: 50
+        x: 1989.7461
+        y: 34.179688
+        width: 122.07031
+        height: 122.07031
       alignment: 9
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -1873,10 +1873,10 @@ TextureImporter:
       name: pillow_obj_72
       rect:
         serializedVersion: 2
-        x: 899
-        y: 15
-        width: 153
-        height: 79
+        x: 2194.8242
+        y: 36.621094
+        width: 373.53516
+        height: 192.8711
       alignment: 9
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -1894,10 +1894,10 @@ TextureImporter:
       name: pillow_obj_73
       rect:
         serializedVersion: 2
-        x: 1091
-        y: 18
-        width: 185
-        height: 79
+        x: 2663.5742
+        y: 43.945312
+        width: 451.66016
+        height: 192.8711
       alignment: 9
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -1915,10 +1915,10 @@ TextureImporter:
       name: pillow_obj_74
       rect:
         serializedVersion: 2
-        x: 1317
-        y: 19
-        width: 69
-        height: 71
+        x: 3215.332
+        y: 46.38672
+        width: 168.45703
+        height: 173.33984
       alignment: 9
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -1936,10 +1936,10 @@ TextureImporter:
       name: pillow_obj_75
       rect:
         serializedVersion: 2
-        x: 1286
-        y: 131
-        width: 71
-        height: 97
+        x: 3139.6484
+        y: 319.82422
+        width: 173.33984
+        height: 236.8164
       alignment: 9
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -1957,10 +1957,10 @@ TextureImporter:
       name: pillow_obj_76
       rect:
         serializedVersion: 2
-        x: 1174
-        y: 131
-        width: 67
-        height: 71
+        x: 2866.211
+        y: 319.82422
+        width: 163.57422
+        height: 173.33984
       alignment: 9
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -1978,10 +1978,10 @@ TextureImporter:
       name: pillow_obj_77
       rect:
         serializedVersion: 2
-        x: 1074
-        y: 130
-        width: 60
-        height: 60
+        x: 2622.0703
+        y: 317.3828
+        width: 146.48438
+        height: 146.48438
       alignment: 9
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -1999,10 +1999,10 @@ TextureImporter:
       name: pillow_obj_78
       rect:
         serializedVersion: 2
-        x: 902
-        y: 127
-        width: 132
-        height: 127
+        x: 2202.1484
+        y: 310.0586
+        width: 322.26562
+        height: 310.0586
       alignment: 9
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -2020,10 +2020,10 @@ TextureImporter:
       name: pillow_obj_79
       rect:
         serializedVersion: 2
-        x: 1558
-        y: 18
-        width: 180
-        height: 140
+        x: 3803.711
+        y: 43.945312
+        width: 439.45312
+        height: 341.79688
       alignment: 9
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -2041,10 +2041,10 @@ TextureImporter:
       name: pillow_obj_80
       rect:
         serializedVersion: 2
-        x: 1782
-        y: 23
-        width: 180
-        height: 135
+        x: 4350.586
+        y: 56.152344
+        width: 439.45312
+        height: 329.58984
       alignment: 9
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -2062,10 +2062,10 @@ TextureImporter:
       name: pillow_obj_81
       rect:
         serializedVersion: 2
-        x: 1839
-        y: 209
-        width: 126
-        height: 96
+        x: 4489.746
+        y: 510.2539
+        width: 307.6172
+        height: 234.375
       alignment: 9
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -2083,10 +2083,10 @@ TextureImporter:
       name: pillow_obj_82
       rect:
         serializedVersion: 2
-        x: 1694
-        y: 207
-        width: 116
-        height: 111
+        x: 4135.742
+        y: 505.3711
+        width: 283.20312
+        height: 270.9961
       alignment: 9
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -2104,10 +2104,10 @@ TextureImporter:
       name: pillow_obj_83
       rect:
         serializedVersion: 2
-        x: 1554
-        y: 194
-        width: 106
-        height: 133
+        x: 3793.9453
+        y: 473.6328
+        width: 258.78906
+        height: 324.70703
       alignment: 9
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -2125,10 +2125,10 @@ TextureImporter:
       name: pillow_obj_84
       rect:
         serializedVersion: 2
-        x: 1267
-        y: 273
-        width: 91
-        height: 133
+        x: 3093.2617
+        y: 666.5039
+        width: 222.16797
+        height: 324.70703
       alignment: 9
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -2146,10 +2146,10 @@ TextureImporter:
       name: pillow_obj_85
       rect:
         serializedVersion: 2
-        x: 1127
-        y: 287
-        width: 114
-        height: 127
+        x: 2751.4648
+        y: 700.6836
+        width: 278.3203
+        height: 310.0586
       alignment: 9
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -2167,10 +2167,10 @@ TextureImporter:
       name: pillow_obj_86
       rect:
         serializedVersion: 2
-        x: 996
-        y: 287
-        width: 121
-        height: 125
+        x: 2431.6406
+        y: 700.6836
+        width: 295.41016
+        height: 305.17578
       alignment: 9
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -2188,10 +2188,10 @@ TextureImporter:
       name: pillow_obj_87
       rect:
         serializedVersion: 2
-        x: 855
-        y: 287
-        width: 128
-        height: 125
+        x: 2087.4023
+        y: 700.6836
+        width: 312.5
+        height: 305.17578
       alignment: 9
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -2209,10 +2209,10 @@ TextureImporter:
       name: pillow_obj_88
       rect:
         serializedVersion: 2
-        x: 1251
-        y: 454
-        width: 71
-        height: 104
+        x: 3054.1992
+        y: 1108.3984
+        width: 173.33984
+        height: 253.90625
       alignment: 9
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
