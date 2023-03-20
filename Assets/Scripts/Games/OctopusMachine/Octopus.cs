@@ -14,6 +14,7 @@ namespace HeavenStudio.Games.Scripts_OctopusMachine
         public bool singing;
         public bool disappeared = false;
         public bool shouldMegaClose;
+        private float lastReportedBeat = 0f;
 
         private OctopusMachine game;
         public static Octopus instance;
@@ -21,6 +22,28 @@ namespace HeavenStudio.Games.Scripts_OctopusMachine
         void Awake()
         {
             game = OctopusMachine.instance;
+        }
+
+        void Update()
+        {
+            
+        }
+
+        void LateUpdate()
+        {
+            if (Conductor.instance.ReportBeat(ref lastReportedBeat)/* && !game.isPreparing && game.bopOn*/)
+            {
+                //if (anim.IsAnimationNotPlaying() || anim.IsPlayingAnimationName("Idle"))
+                if (game.isHappy) {
+                    anim.DoScaledAnimation("Happy", 0.5f);
+                } else if (game.isAngry) {
+                    anim.DoScaledAnimation("Angry", 0.5f);
+                } else if (game.isShocked) {
+                    anim.DoScaledAnimation("Oops", 0.5f);
+                } else {
+                    anim.DoScaledAnimation("Bop", 0.5f);
+                }
+            }
         }
 
         void OnDestroy()
