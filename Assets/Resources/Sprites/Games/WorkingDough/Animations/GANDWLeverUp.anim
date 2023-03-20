@@ -116,7 +116,7 @@ AnimationClip:
       m_Curve:
       - serializedVersion: 3
         time: 0
-        value: {x: -5.37, y: 0.018, z: 0}
+        value: {x: -5.472, y: 0.113, z: 0}
         inSlope: {x: 0, y: 0, z: 0}
         outSlope: {x: 0, y: 0, z: 0}
         tangentMode: 0
@@ -170,14 +170,14 @@ AnimationClip:
   m_PPtrCurves:
   - curve:
     - time: 0
-      value: {fileID: 6261176759002247557, guid: 7bc82af4cf328374596aff0ade3ad198, type: 3}
+      value: {fileID: -5710538962964672730, guid: 7d485aead8578964591aaea2653dec14, type: 3}
     attribute: m_Sprite
     path: MrGameAndWatchBody
     classID: 212
     script: {fileID: 0}
   - curve:
     - time: 0
-      value: {fileID: 1603961481241524821, guid: 7bc82af4cf328374596aff0ade3ad198, type: 3}
+      value: {fileID: 5905987259866088781, guid: 7d485aead8578964591aaea2653dec14, type: 3}
     attribute: m_Sprite
     path: MrGameAndWatchHead
     classID: 212
@@ -267,8 +267,8 @@ AnimationClip:
       customType: 4
       isPPtrCurve: 0
     pptrCurveMapping:
-    - {fileID: 6261176759002247557, guid: 7bc82af4cf328374596aff0ade3ad198, type: 3}
-    - {fileID: 1603961481241524821, guid: 7bc82af4cf328374596aff0ade3ad198, type: 3}
+    - {fileID: -5710538962964672730, guid: 7d485aead8578964591aaea2653dec14, type: 3}
+    - {fileID: 5905987259866088781, guid: 7d485aead8578964591aaea2653dec14, type: 3}
   m_AnimationClipSettings:
     serializedVersion: 2
     m_AdditiveReferencePoseClip: {fileID: 0}
@@ -675,7 +675,7 @@ AnimationClip:
       m_Curve:
       - serializedVersion: 3
         time: 0
-        value: -5.37
+        value: -5.472
         inSlope: 0
         outSlope: 0
         tangentMode: 136
@@ -694,7 +694,7 @@ AnimationClip:
       m_Curve:
       - serializedVersion: 3
         time: 0
-        value: 0.018
+        value: 0.113
         inSlope: 0
         outSlope: 0
         tangentMode: 136

@@ -11,7 +11,7 @@ namespace HeavenStudio.Games.Loaders
     {
         public static Minigame AddGame(EventCaller eventCaller)
         {
-            return new Minigame("tambourine", "Tambourine", "812021", false, false, new List<GameAction>()
+            return new Minigame("tambourine", "Tambourine", "388cd0", false, false, new List<GameAction>()
             {
                 new GameAction("beat intervals", "Start Interval")
                 {
@@ -24,13 +24,13 @@ namespace HeavenStudio.Games.Loaders
                 {
                     function = delegate {var e = eventCaller.currentEntity; Tambourine.instance.MonkeyInput(e.beat, false); },
                     defaultLength = 0.5f,
-                    priority = 1
+                    priority = 2
                 },
                 new GameAction("hit", "Hit")
                 {
                     function = delegate {var e = eventCaller.currentEntity; Tambourine.instance.MonkeyInput(e.beat, true); },
                     defaultLength = 0.5f,
-                    priority = 1
+                    priority = 2
                 },
                 new GameAction("pass turn", "Pass Turn")
                 {
@@ -41,12 +41,13 @@ namespace HeavenStudio.Games.Loaders
                 },
                 new GameAction("bop", "Bop")
                 {
-                    function = delegate {var e = eventCaller.currentEntity; Tambourine.instance.Bop(e.beat, e["whoBops"]); },
+                    function = delegate {var e = eventCaller.currentEntity; Tambourine.instance.Bop(e.beat, e.length, e["whoBops"], e["whoBopsAuto"]); },
                     parameters = new List<Param>()
                     {
                         new Param("whoBops", Tambourine.WhoBops.Both, "Who Bops", "Who will bop."),
+                        new Param("whoBopsAuto", Tambourine.WhoBops.None, "Who Bops (Auto)", "Who will auto bop."),
                     },
-                    defaultLength = 1f,
+                    resizable = true,
                     priority = 4
                 },
                 new GameAction("success", "Success")
@@ -110,14 +111,18 @@ namespace HeavenStudio.Games
         float beatInterval = 8f;
         float misses;
         bool frogPresent;
+        bool monkeyGoBop;
+        bool handsGoBop;
 
         Tween bgColorTween;
+        public GameEvent bop = new GameEvent();
 
         public enum WhoBops
         {
             Monkey,
             Player,
-            Both
+            Both,
+            None
         }
 
         static List<QueuedTambourineInput> queuedInputs = new List<QueuedTambourineInput>();
@@ -138,8 +143,31 @@ namespace HeavenStudio.Games
             monkeyAnimator.Play("MonkeyIdle", 0, 0);
         }
 
+        void OnDestroy()
+        {
+            if (!Conductor.instance.isPlaying || Conductor.instance.isPaused)
+            {
+                if (queuedInputs.Count > 0) queuedInputs.Clear();
+            }
+        }
+
         void Update()
         {
+            if (Conductor.instance.ReportBeat(ref bop.lastReportedBeat, bop.startBeat % 1))
+            {
+                if (monkeyGoBop)
+                {
+                    monkeyAnimator.Play("MonkeyBop", 0, 0);
+                }
+                if (handsGoBop)
+                {
+                    handsAnimator.Play("Bop", 0, 0);
+                }
+            }
+            if (!Conductor.instance.isPlaying || Conductor.instance.isPaused)
+            {
+                if (queuedInputs.Count > 0) queuedInputs.Clear();
+            }
             if (!Conductor.instance.isPlaying && !Conductor.instance.isPaused && intervalStarted)
             {
                 intervalStarted = false;
@@ -150,6 +178,7 @@ namespace HeavenStudio.Games
                 Jukebox.PlayOneShotGame($"tambourine/player/shake/{UnityEngine.Random.Range(1, 6)}");
                 sweatAnimator.Play("Sweating", 0, 0);
                 SummonFrog();
+                ScoreMiss();
                 if (!intervalStarted)
                 {
                     sadFace.SetActive(true);
@@ -161,6 +190,7 @@ namespace HeavenStudio.Games
                 Jukebox.PlayOneShotGame($"tambourine/player/hit/{UnityEngine.Random.Range(1, 6)}");
                 sweatAnimator.Play("Sweating", 0, 0);
                 SummonFrog();
+                ScoreMiss();
                 if (!intervalStarted)
                 {
                     sadFace.SetActive(true);
@@ -176,13 +206,9 @@ namespace HeavenStudio.Games
             {
                 DesummonFrog();
                 sadFace.SetActive(false);
-                queuedInputs.Clear();
+                //queuedInputs.Clear();
                 misses = 0;
                 intervalStarted = true;
-                BeatAction.New(instance.gameObject, new List<BeatAction.Action>()
-                {
-                    new BeatAction.Action(beat + interval, delegate { intervalStarted = false; }),
-                });
             }
         }
 
@@ -215,6 +241,7 @@ namespace HeavenStudio.Games
             monkeyAnimator.Play("MonkeyPassTurn", 0, 0);
             Jukebox.PlayOneShotGame($"tambourine/monkey/turnPass/{UnityEngine.Random.Range(1, 6)}");
             happyFace.SetActive(true);
+            intervalStarted = false;
             BeatAction.New(instance.gameObject, new List<BeatAction.Action>()
             {
                 new BeatAction.Action(beat + 0.3f, delegate { happyFace.SetActive(false); })
@@ -231,26 +258,41 @@ namespace HeavenStudio.Games
                 }
                 BeatAction.New(instance.gameObject, new List<BeatAction.Action>()
                 {
-                    new BeatAction.Action(beat + length + input.beatAwayFromStart, delegate { Bop(beat + length + input.beatAwayFromStart, (int)WhoBops.Monkey); })
+                    new BeatAction.Action(beat + length + input.beatAwayFromStart, delegate { Bop(beat + length + input.beatAwayFromStart, 1, (int)WhoBops.Monkey, (int)WhoBops.None); })
                 });
             }
+            queuedInputs.Clear();
         }
 
-        public void Bop(float beat, int whoBops)
+        public void Bop(float beat, float length, int whoBops, int whoBopsAuto)
         {
-            switch (whoBops)
+            monkeyGoBop = whoBopsAuto == (int)WhoBops.Monkey || whoBopsAuto == (int)WhoBops.Both;
+            handsGoBop = whoBopsAuto == (int)WhoBops.Player || whoBopsAuto == (int)WhoBops.Both;
+            for (int i = 0; i < length; i++)
             {
-                case (int) WhoBops.Monkey:
-                    monkeyAnimator.Play("MonkeyBop", 0, 0);
-                    break;
-                case (int) WhoBops.Player:
-                    handsAnimator.Play("Bop", 0, 0);
-                    break;
-                case (int) WhoBops.Both:
-                    monkeyAnimator.Play("MonkeyBop", 0, 0);
-                    handsAnimator.Play("Bop", 0, 0);
-                    break;
+                BeatAction.New(instance.gameObject, new List<BeatAction.Action>()
+                {
+                    new BeatAction.Action(beat + i, delegate
+                    {
+                        switch (whoBops)
+                        {
+                            case (int) WhoBops.Monkey:
+                                monkeyAnimator.Play("MonkeyBop", 0, 0);
+                                break;
+                            case (int) WhoBops.Player:
+                                handsAnimator.Play("Bop", 0, 0);
+                                break;
+                            case (int) WhoBops.Both:
+                                monkeyAnimator.Play("MonkeyBop", 0, 0);
+                                handsAnimator.Play("Bop", 0, 0);
+                                break;
+                            default: 
+                                break;
+                        }
+                    })
+                });
             }
+
         }
 
         public void SuccessFace(float beat)

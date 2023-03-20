@@ -13,9 +13,10 @@ using TMPro;
 using Starpelly;
 using SFB;
 
-using HeavenStudio.Editor;
+using HeavenStudio.Common;
 using HeavenStudio.Editor.Track;
 using HeavenStudio.Util;
+using HeavenStudio.StudioDance;
 
 using System.IO.Compression;
 using System.Text;
@@ -29,9 +30,6 @@ namespace HeavenStudio.Editor
         [SerializeField] public Canvas MainCanvas;
         [SerializeField] public Camera EditorCamera;
 
-        // [SerializeField] public GameObject EditorLetterbox;
-        public GameObject GameLetterbox;
-
         [Header("Rect")]
         [SerializeField] private RenderTexture ScreenRenderTexture;
         [SerializeField] private RawImage Screen;
@@ -42,6 +40,7 @@ namespace HeavenStudio.Editor
         [SerializeField] private Timeline Timeline;
         [SerializeField] private TMP_Text GameEventSelectorTitle;
         [SerializeField] private TMP_Text BuildDateDisplay;
+        [SerializeField] public StudioDanceManager StudioDanceManager;
 
         [Header("Toolbar")]
         [SerializeField] private Button NewBTN;
@@ -92,10 +91,8 @@ namespace HeavenStudio.Editor
 
         public void Init()
         {
-            GameCamera.instance.camera.targetTexture = ScreenRenderTexture;
+            GameManager.instance.StaticCamera.targetTexture = ScreenRenderTexture;
             GameManager.instance.CursorCam.targetTexture = ScreenRenderTexture;
-            GameManager.instance.OverlayCamera.targetTexture = ScreenRenderTexture;
-            GameLetterbox = GameManager.instance.GameLetterbox;
             Screen.texture = ScreenRenderTexture;
 
             GameManager.instance.Init();
@@ -110,7 +107,6 @@ namespace HeavenStudio.Editor
             Tooltip.AddTooltip(UndoBTN.gameObject, "Undo <color=#adadad>[Ctrl+Z]</color>");
             Tooltip.AddTooltip(RedoBTN.gameObject, "Redo <color=#adadad>[Ctrl+Y or Ctrl+Shift+Z]</color>");
             Tooltip.AddTooltip(MusicSelectBTN.gameObject, "Music Select");
-            Tooltip.AddTooltip(EditorThemeBTN.gameObject, "Editor Theme");
             Tooltip.AddTooltip(FullScreenBTN.gameObject, "Preview <color=#adadad>[Tab]</color>");
             Tooltip.AddTooltip(TempoFinderBTN.gameObject, "Tempo Finder");
             Tooltip.AddTooltip(SnapDiagBTN.gameObject, "Snap Settings");
@@ -120,6 +116,9 @@ namespace HeavenStudio.Editor
             UpdateEditorStatus(true);
 
             BuildDateDisplay.text = GlobalGameManager.buildTime;
+            isCursorEnabled  = PersistentDataManager.gameSettings.editorCursorEnable;
+            isDiscordEnabled = PersistentDataManager.gameSettings.discordRPCEnable;
+            GameManager.instance.CursorCam.enabled = isCursorEnabled;
         }
 
         public void AddIcon(Minigames.Minigame minigame)
@@ -272,6 +271,7 @@ namespace HeavenStudio.Editor
                     changedMusic = true;
 
                     Timeline.FitToSong();
+                    Timeline.CreateWaveform();
                 }
             }
             );
@@ -481,6 +481,7 @@ namespace HeavenStudio.Editor
                 UpdateEditorStatus(false);
                 CommandManager.instance.Clear();
                 Timeline.FitToSong();
+                Timeline.CreateWaveform();
             });
         }
 
@@ -488,28 +489,22 @@ namespace HeavenStudio.Editor
 
         public void Fullscreen()
         {
+            MainCanvas.gameObject.SetActive(fullscreen);
             if (fullscreen == false)
             {
-                // EditorLetterbox.SetActive(false);
-                GameLetterbox.SetActive(true);
-
                 MainCanvas.enabled = false;
                 EditorCamera.enabled = false;
-                GameCamera.instance.camera.targetTexture = null;
+                GameManager.instance.StaticCamera.targetTexture = null;
                 GameManager.instance.CursorCam.enabled = false;
-                GameManager.instance.OverlayCamera.targetTexture = null;
                 fullscreen = true;
+
             }
             else
             {
-                // EditorLetterbox.SetActive(true);
-                GameLetterbox.SetActive(false);
-
                 MainCanvas.enabled = true;
                 EditorCamera.enabled = true;
-                GameCamera.instance.camera.targetTexture = ScreenRenderTexture;
+                GameManager.instance.StaticCamera.targetTexture = ScreenRenderTexture;
                 GameManager.instance.CursorCam.enabled = true && isCursorEnabled;
-                GameManager.instance.OverlayCamera.targetTexture = ScreenRenderTexture;
                 fullscreen = false;
 
                 GameCamera.instance.camera.rect = new Rect(0, 0, 1, 1);
@@ -517,13 +512,14 @@ namespace HeavenStudio.Editor
                 GameManager.instance.OverlayCamera.rect = new Rect(0, 0, 1, 1);
                 EditorCamera.rect = new Rect(0, 0, 1, 1);
             }
+            Timeline.AutoBtnUpdate();
         }
 
         private void UpdateEditorStatus(bool updateTime)
         {
             if (discordDuringTesting || !Application.isEditor)
             {
-                if (isDiscordEnabled == true)
+                if (isDiscordEnabled)
                 {   DiscordRPC.DiscordRPC.UpdateActivity("In Editor", $"{remixName}", updateTime);
                     Debug.Log("Discord status updated");
                 }

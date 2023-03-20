@@ -11,40 +11,43 @@ namespace HeavenStudio.Games.Loaders
     {
         public static Minigame AddGame(EventCaller eventCaller)
         {
-            return new Minigame("workingDough", "Working Dough", "090909", false, false, new List<GameAction>()
+            return new Minigame("workingDough", "Working Dough", "000000", false, false, new List<GameAction>()
             {
                 new GameAction("beat intervals", "Start Interval")
                 {
+                    function = delegate { var e = eventCaller.currentEntity; WorkingDough.instance.SetIntervalStart(e.beat, e.length);  },
                     preFunction = delegate { var e = eventCaller.currentEntity; WorkingDough.PreSetIntervalStart(e.beat, e.length);  },
                     defaultLength = 8f,
                     resizable = true,
-                    priority = 1
+                    priority = 2
                 },
                 new GameAction("small ball", "Small Ball")
                 {
+                    function = delegate { var e = eventCaller.currentEntity; WorkingDough.instance.OnSpawnBall(e.beat, false);  },
                     preFunction = delegate { var e = eventCaller.currentEntity; WorkingDough.PreSpawnBall(e.beat, false);  },
                     defaultLength = 0.5f,
-                    priority = 2
+                    priority = 1
                 },
                 new GameAction("big ball", "Big Ball")
                 {
+                    function = delegate { var e = eventCaller.currentEntity; WorkingDough.instance.OnSpawnBall(e.beat, true);  },
                     preFunction = delegate { var e = eventCaller.currentEntity; WorkingDough.PreSpawnBall(e.beat, true);  },
                     defaultLength = 0.5f,
-                    priority = 2
+                    priority = 1
                 },
                 new GameAction("launch spaceship", "Launch Spaceship")
                 {
                     function = delegate { var e = eventCaller.currentEntity; WorkingDough.instance.LaunchShip(e.beat, e.length);  },
                     defaultLength = 4f,
                     resizable = true,
-                    priority = 3
+                    priority = 0
                 },
                 new GameAction("rise spaceship", "Rise Up Spaceship")
                 {
                     function = delegate { var e = eventCaller.currentEntity; WorkingDough.instance.RiseUpShip(e.beat, e.length);  },
                     defaultLength = 4f,
                     resizable = true,
-                    priority = 3
+                    priority = 0
                 },
                 new GameAction("lift dough dudes", "Lift Dough Dudes")
                 {
@@ -55,7 +58,7 @@ namespace HeavenStudio.Games.Loaders
                     new Param("toggle", false, "Go Up?", "Toggle to go Up or Down.")
                     },
                     resizable = true,
-                    priority = 3
+                    priority = 0
                 },
                 new GameAction("instant lift", "Instant Lift")
                 {
@@ -65,7 +68,7 @@ namespace HeavenStudio.Games.Loaders
                     new Param("toggle", true, "Go Up?", "Toggle to go Up or Down.")
                     },
                     defaultLength = 0.5f,
-                    priority = 3
+                    priority = 0
                 },
                 new GameAction("mr game and watch enter or exit", "Mr. G&W Enter or Exit")
                 {
@@ -76,7 +79,7 @@ namespace HeavenStudio.Games.Loaders
                     new Param("toggle", false, "Should exit?", "Toggle to make him leave or enter.")
                     },
                     resizable = true,
-                    priority = 3
+                    priority = 0
                 },
                 new GameAction("instant game and watch", "Instant Mr. G&W Enter or Exit")
                 {
@@ -86,7 +89,7 @@ namespace HeavenStudio.Games.Loaders
                     new Param("toggle", false, "Exit?", "Toggle to make him leave or enter.")
                     },
                     defaultLength = 0.5f,
-                    priority = 3
+                    priority = 0
                 },
             });
         }
@@ -137,7 +140,7 @@ namespace HeavenStudio.Games
         float risingStartBeat;
         float liftingLength = 4f;
         float liftingStartBeat;
-        public float beatInterval = 8f;
+        public static float beatInterval = 8f;
         float gandMovingLength = 4f;
         float gandMovingStartBeat;
         public bool bigMode;
@@ -211,6 +214,7 @@ namespace HeavenStudio.Games
             Debug.Log("Start Interval");
             if (!intervalStarted)
             {
+                instance.ballTriggerSetInterval = false;
                 intervalStarted = true;
                 bigMode = false;
                 BeatAction.New(ballTransporterLeftNPC, new List<BeatAction.Action>()
@@ -278,13 +282,16 @@ namespace HeavenStudio.Games
                 bigMode = true;
             }
 
+            MultiSound.Play(new MultiSound.Sound[] {
+                new MultiSound.Sound(isBig ? "workingDough/NPCBigBall" : "workingDough/NPCSmallBall", beat + 1f),
+            });
+
             arrowSRLeftNPC.sprite = redArrowSprite;
             BeatAction.New(doughDudesNPC, new List<BeatAction.Action>()
             {
                 //Jump and play sound
                 new BeatAction.Action(beat + 0.1f, delegate { arrowSRLeftNPC.sprite = whiteArrowSprite; }),
                 new BeatAction.Action(beat + 1f, delegate { doughDudesNPC.GetComponent<Animator>().Play(isBig ? "BigDoughJump" :"SmallDoughJump", 0, 0); }),
-                new BeatAction.Action(beat + 1f, delegate { Jukebox.PlayOneShotGame(isBig ? "workingDough/NPCBigBall" : "workingDough/NPCSmallBall"); }),
                 new BeatAction.Action(beat + 1f, delegate { npcImpact.SetActive(true); }),
                 new BeatAction.Action(beat + 1.1f, delegate { npcImpact.SetActive(false); }),
                 new BeatAction.Action(beat + 1.9f, delegate { arrowSRRightNPC.sprite = redArrowSprite; }),
@@ -309,12 +316,18 @@ namespace HeavenStudio.Games
             {
                 bigMode = true;
             }
+
+            if (beat >= Conductor.instance.songPositionInBeatsAsDouble)
+            {
+                MultiSound.Play(new MultiSound.Sound[] {
+                    new MultiSound.Sound(isBig ? "workingDough/NPCBigBall" : "workingDough/NPCSmallBall", beat),
+                });
+            }
             
             BeatAction.New(doughDudesNPC, new List<BeatAction.Action>()
             {
                 new BeatAction.Action(beat - offSet, delegate { spawnedBall.SetActive(true); }),
                 new BeatAction.Action(beat, delegate { doughDudesNPC.GetComponent<Animator>().Play(isBig ? "BigDoughJump" : "SmallDoughJump", 0, 0); } ),
-                new BeatAction.Action(beat, delegate { Jukebox.PlayOneShotGame(isBig ? "workingDough/NPCBigBall" : "workingDough/NPCSmallBall"); } ),
                 new BeatAction.Action(beat, delegate { npcImpact.SetActive(true); } ),
                 new BeatAction.Action(beat + 0.1f, delegate { npcImpact.SetActive(false); }),
                 new BeatAction.Action(beat + 0.9f, delegate { arrowSRRightNPC.sprite = redArrowSprite; }),
@@ -332,7 +345,7 @@ namespace HeavenStudio.Games
                 {
                     new BeatAction.Action(spawnBeat, delegate
                     {
-                        if (!instance.isPlaying(instance.ballTransporterLeftNPC.GetComponent<Animator>(), "BallTransporterLeftOpened") && !instance.intervalStarted && instance.ballTriggerSetInterval)
+                        if (!instance.ballTransporterLeftNPC.GetComponent<Animator>().IsPlayingAnimationName("BallTransporterLeftOpened") && !instance.intervalStarted && instance.ballTriggerSetInterval)
                         {
                             instance.ballTransporterLeftNPC.GetComponent<Animator>().Play("BallTransporterLeftOpen", 0, 0);
                             instance.ballTransporterRightNPC.GetComponent<Animator>().Play("BallTransporterRightOpen", 0, 0);
@@ -340,7 +353,7 @@ namespace HeavenStudio.Games
                         }
                     }),
                     new BeatAction.Action(spawnBeat, delegate { if (instance != null) instance.SpawnBall(beat, isBig); }),
-                    new BeatAction.Action(spawnBeat + instance.beatInterval, delegate { instance.SpawnPlayerBall(beat + instance.beatInterval, isBig); }),
+                    // new BeatAction.Action(spawnBeat + instance.beatInterval, delegate { instance.SpawnPlayerBall(beat + instance.beatInterval, isBig); }),
                 });
             }
             else
@@ -351,6 +364,24 @@ namespace HeavenStudio.Games
                     isBig = isBig,
                 });
             }
+        }
+
+        public void OnSpawnBall(float beat, bool isBig)
+        {
+            beat -= 1f;
+            BeatAction.New(instance.gameObject, new List<BeatAction.Action>()
+            {
+                new BeatAction.Action(beat + beatInterval, delegate { instance.SpawnPlayerBall(beat + beatInterval, isBig); }),
+            });
+        }
+
+        public void OnSpawnBallInactive(float beat, bool isBig)
+        {
+            queuedBalls.Add(new QueuedBall()
+            {
+                beat = beat + 1f,
+                isBig = isBig,
+            });
         }
 
         public void SpawnPlayerBall(float beat, bool isBig)
@@ -412,20 +443,20 @@ namespace HeavenStudio.Games
             beat -= 1f;
             if (GameManager.instance.currentGame == "workingDough")
             {
-                instance.ballTriggerSetInterval = false;
-                instance.beatInterval = interval;
+                // instance.ballTriggerSetInterval = false;
+                // beatInterval = interval;
                 BeatAction.New(instance.gameObject, new List<BeatAction.Action>()
                 {
                     new BeatAction.Action(beat, delegate
                     {
-                        if (!instance.isPlaying(instance.ballTransporterLeftNPC.GetComponent<Animator>(), "BallTransporterLeftOpened"))
+                        if (!instance.ballTransporterLeftNPC.GetComponent<Animator>().IsPlayingAnimationName("BallTransporterLeftOpened"))
                         {
                             instance.ballTransporterLeftNPC.GetComponent<Animator>().Play("BallTransporterLeftOpen", 0, 0);
                             instance.ballTransporterRightNPC.GetComponent<Animator>().Play("BallTransporterRightOpen", 0, 0);
                             if (instance.gandwHasEntered) instance.gandwAnim.Play("GANDWLeverUp", 0, 0);
                         }
                     }),
-                    new BeatAction.Action(beat + 1, delegate { if (instance != null) instance.SetIntervalStart(beat + 1, interval); }),
+                    // new BeatAction.Action(beat + 1, delegate { if (instance != null) instance.SetIntervalStart(beat + 1, interval); }),
                 });
             }
             else
@@ -438,10 +469,21 @@ namespace HeavenStudio.Games
             }
         }
 
+        void OnDestroy()
+        {
+            if (queuedIntervals.Count > 0) queuedIntervals.Clear();
+            if (queuedBalls.Count > 0) queuedBalls.Clear();
+        }
+
         void Update()
         {
             Conductor cond = Conductor.instance;
-            if (!cond.isPlaying || cond.isPaused) return;
+            if (!cond.isPlaying || cond.isPaused)
+            {
+                if (queuedIntervals.Count > 0) queuedIntervals.Clear();
+                if (queuedBalls.Count > 0) queuedBalls.Clear();
+            }
+
             if (spaceshipRising) spaceshipAnimator.DoScaledAnimation("RiseSpaceship", risingStartBeat, risingLength);
             if (liftingDoughDudes) doughDudesHolderAnim.DoScaledAnimation(liftingAnimName, liftingStartBeat, liftingLength);
             if (gandwMoving) gandwAnim.DoScaledAnimation(gandwMovingAnimName, gandMovingStartBeat, gandMovingLength);
@@ -588,6 +630,7 @@ namespace HeavenStudio.Games
 
         void JustSmall(PlayerActionEvent caller, float state)
         {
+            if (GameManager.instance.currentGame != "workingDough") return;
             float beat = caller.startBeat + caller.timer;
             if (currentBalls.Count > 0)
             {
@@ -613,6 +656,7 @@ namespace HeavenStudio.Games
 
         void JustBig(PlayerActionEvent caller, float state)
         {
+            if (GameManager.instance.currentGame != "workingDough") return;
             float beat = caller.startBeat + caller.timer;
             if (currentBalls.Count > 0)
             {
@@ -753,15 +797,5 @@ namespace HeavenStudio.Games
         }
 
         void Nothing (PlayerActionEvent caller) {}
-
-        //Function to make life for my fingers and my and your eyes easier
-        bool isPlaying(Animator anim, string stateName)
-        {
-            if (anim.GetCurrentAnimatorStateInfo(0).IsName(stateName) &&
-                    anim.GetCurrentAnimatorStateInfo(0).normalizedTime < 1.0f)
-                return true;
-            else
-                return false;
-        }
     }
 }

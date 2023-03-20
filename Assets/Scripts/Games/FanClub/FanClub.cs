@@ -11,16 +11,16 @@ namespace HeavenStudio.Games.Loaders
     public static class NtrIdolLoader
     {
         public static Minigame AddGame(EventCaller eventCaller) {
-            return new Minigame("fanClub", "Fan Club", "FDFD00", false, false, new List<GameAction>()
+            return new Minigame("fanClub", "Fan Club", "ff78ff", false, false, new List<GameAction>()
                 {
                     new GameAction("bop", "Bop")
                     {
-                        function = delegate { var e = eventCaller.currentEntity; FanClub.instance.Bop(e.beat, e.length, e["type"]); }, 
-                        defaultLength = 0.5f, 
-                        resizable = true, 
+                        function = delegate { var e = eventCaller.currentEntity; FanClub.instance.Bop(e.beat, e.length, e["type"], e["type2"]); }, 
+                        resizable = true,
                         parameters = new List<Param>()
                         {
                             new Param("type", FanClub.IdolBopType.Both, "Bop target", "Who to make bop"),
+                            new Param("type2", FanClub.IdolBopType.None, "Bop target (Auto)", "Who to make auto bop"),
                         }
                     },
                     new GameAction("yeah, yeah, yeah", "Yeah, Yeah, Yeah!")
@@ -36,15 +36,16 @@ namespace HeavenStudio.Games.Loaders
                     },
                     new GameAction("I suppose", "I Suppose!")
                     {
-                        function = delegate { var e = eventCaller.currentEntity; FanClub.instance.CallKamone(e.beat, e["toggle"], 0, e["type"]); }, 
+                        function = delegate { var e = eventCaller.currentEntity; FanClub.instance.CallKamone(e.beat, e["toggle"], 0, e["type"], e["alt"]); }, 
                         defaultLength = 6, 
                         parameters = new List<Param>()
                         {
                             new Param("type", FanClub.KamoneResponseType.Through, "Response type", "Type of response to use"),
-                            new Param("toggle", false, "Disable call", "Disable the idol's call")
+                            new Param("toggle", false, "Disable call", "Disable the idol's call"),
+                            new Param("alt", false, "Alternate cue", "Use an alternate cue")
                         },
-                        inactiveFunction = delegate { var e = eventCaller.currentEntity; FanClub.WarnKamone(e.beat, e["toggle"], 0, e["type"]);},
-                        preFunction = delegate { var e = eventCaller.currentEntity; FanClub.KamoneSound(e.beat, e["toggle"], 0, e["type"]); }
+                        inactiveFunction = delegate { var e = eventCaller.currentEntity; FanClub.WarnKamone(e.beat, e["toggle"], 0, e["type"], e["alt"]);},
+                        preFunction = delegate { var e = eventCaller.currentEntity; FanClub.KamoneSound(e.beat, e["toggle"], 0, e["type"], e["alt"]); }
                     },
                     new GameAction("double clap", "Double Clap")
                     {
@@ -104,7 +105,8 @@ namespace HeavenStudio.Games
         public enum IdolBopType {
             Both,
             Idol,
-            Spectators
+            Spectators,
+            None
         }
         public enum IdolAnimations {
             Bop,
@@ -173,9 +175,12 @@ namespace HeavenStudio.Games
         private static float wantHais = Single.MinValue;
         private static float wantKamone = Single.MinValue;
         private static int wantKamoneType = (int) KamoneResponseType.Through;
+        private static bool wantKamoneAlt = false;
         private static float wantBigReady = Single.MinValue;
         public float idolJumpStartTime = Single.MinValue;
         private bool hasJumped = false;
+        private bool goBopIdol = true;
+        private bool goBopSpec = true;
 
         //game scene
         public static FanClub instance;
@@ -265,7 +270,7 @@ namespace HeavenStudio.Games
             }
             if (wantKamone != Single.MinValue)
             {
-                ContinueKamone(wantKamone, 0, wantKamoneType);
+                ContinueKamone(wantKamone, 0, wantKamoneType, wantKamoneAlt);
                 wantKamone = Single.MinValue;
             }
             if (wantBigReady != Single.MinValue)
@@ -280,7 +285,7 @@ namespace HeavenStudio.Games
             var cond = Conductor.instance;
             if (cond.ReportBeat(ref bop.lastReportedBeat, bop.startBeat % 1))
             {
-                if (cond.songPositionInBeats >= bop.startBeat && cond.songPositionInBeats < bop.startBeat + bop.length)
+                if (goBopIdol)
                 {
                     if (!(cond.songPositionInBeats >= noBop.startBeat && cond.songPositionInBeats < noBop.startBeat + noBop.length))
                         idolAnimator.Play("IdolBeat" + GetPerformanceSuffix(), 0, 0);
@@ -289,7 +294,7 @@ namespace HeavenStudio.Games
 
             if (cond.ReportBeat(ref specBop.lastReportedBeat, specBop.startBeat % 1))
             {
-                if (cond.songPositionInBeats >= specBop.startBeat && cond.songPositionInBeats < specBop.startBeat + specBop.length)
+                if (goBopSpec)
                 {
                     if (!(cond.songPositionInBeats >= noSpecBop.startBeat && cond.songPositionInBeats < noSpecBop.startBeat + noSpecBop.length))
                         BopAll();
@@ -322,22 +327,36 @@ namespace HeavenStudio.Games
             }
         }
 
-        public void Bop(float beat, float length, int target = (int) IdolBopType.Both)
+        public void Bop(float beat, float length, int target = (int) IdolBopType.Both, int targetAuto = (int)IdolBopType.Both)
         {
-            if (target == (int) IdolBopType.Both || target == (int) IdolBopType.Idol)
+            goBopIdol = targetAuto == (int)IdolBopType.Both || targetAuto == (int)IdolBopType.Idol;
+            goBopSpec = targetAuto == (int)IdolBopType.Both || targetAuto == (int)IdolBopType.Spectators;
+            for (int i = 0; i < length; i++)
             {
-                bop.length = length;
-                bop.startBeat = beat;
+                BeatAction.New(instance.gameObject, new List<BeatAction.Action>()
+                {
+                    new BeatAction.Action(beat + i, delegate { BopSingle(target); })
+                });
             }
-
-            if (target == (int) IdolBopType.Both || target == (int) IdolBopType.Spectators)
-                SpecBop(beat, length);
         }
 
-        public void SpecBop(float beat, float length)
+        void BopSingle(int target)
         {
-            specBop.length = length;
-            specBop.startBeat = beat;
+            switch (target)
+            {
+                case (int)IdolBopType.Idol:
+                    idolAnimator.Play("IdolBeat" + GetPerformanceSuffix(), 0, 0);
+                    break;
+                case (int)IdolBopType.Spectators:
+                    BopAll();
+                    break;
+                case (int)IdolBopType.Both:
+                    idolAnimator.Play("IdolBeat" + GetPerformanceSuffix(), 0, 0);
+                    BopAll();
+                    break;
+                default:
+                    break;
+            }
         }
 
         private void DisableBop(float beat, float length)
@@ -572,7 +591,7 @@ namespace HeavenStudio.Games
         }
 
         const float CALL_LENGTH = 2.5f;
-        public void CallKamone(float beat, bool noSound = false, int type = 0, int responseType = (int) KamoneResponseType.Through)
+        public void CallKamone(float beat, bool noSound = false, int type = 0, int responseType = (int) KamoneResponseType.Through, bool alt = false)
         {
             bool doJump = (responseType == (int) KamoneResponseType.Jump || responseType == (int) KamoneResponseType.JumpFast);
             bool isBig = (responseType == (int) KamoneResponseType.ThroughFast || responseType == (int) KamoneResponseType.JumpFast);
@@ -609,31 +628,32 @@ namespace HeavenStudio.Games
                 }),
             });
 
-            PlaySoundSequence("fanClub", "crowd_kamone", beat + 2f);
+            PlaySoundSequence("fanClub", alt ? "crowd_iina" : "crowd_kamone", beat + 2f);
         }
 
-        public static void WarnKamone(float beat, bool noSound = false, int type = 0, int responseType = (int) KamoneResponseType.Through)
+        public static void WarnKamone(float beat, bool noSound = false, int type = 0, int responseType = (int) KamoneResponseType.Through, bool alt = false)
         {
             wantKamone = beat;
             wantKamoneType = responseType;
+            wantKamoneAlt = alt;
         }
 
-        public static void KamoneSound(float beat, bool noSound = false, int type = 0, int responseType = (int) KamoneResponseType.Through)
+        public static void KamoneSound(float beat, bool noSound = false, int type = 0, int responseType = (int) KamoneResponseType.Through, bool alt = false)
         {
             if (noSound) return;
             if (responseType == (int) KamoneResponseType.ThroughFast || responseType == (int) KamoneResponseType.JumpFast)
             {
-                PlaySoundSequence("fanClub", "arisa_kamone_fast", beat);
+                PlaySoundSequence("fanClub", alt ? "arisa_iina_fast" : "arisa_kamone_fast", beat);
             }
             else
             {
-                PlaySoundSequence("fanClub", "arisa_kamone", beat);
+                PlaySoundSequence("fanClub", alt ? "arisa_iina" : "arisa_kamone", beat);
             }
         }
 
-        public void ContinueKamone(float beat, int type = 0, int responseType = (int) KamoneResponseType.Through)
+        public void ContinueKamone(float beat, int type = 0, int responseType = (int) KamoneResponseType.Through, bool alt = false)
         {
-            CallKamone(beat, true, type, responseType);
+            CallKamone(beat, true, type, responseType, alt);
         }
 
         const float BIGCALL_LENGTH = 2.75f;

@@ -12,13 +12,17 @@ namespace HeavenStudio.Games.Loaders
     public static class CtrDrummingLoader
     {
         public static Minigame AddGame(EventCaller eventCaller) {
-            return new Minigame("drummingPractice", "Drumming Practice", "2BCF33", false, false, new List<GameAction>()
+            return new Minigame("drummingPractice", "Drumming Practice", "36d23e", false, false, new List<GameAction>()
             {
                 new GameAction("bop", "Bop")
                 {
-                    function = delegate { var e = eventCaller.currentEntity; DrummingPractice.instance.SetBop(e.beat, e.length); }, 
-                    defaultLength = 0.5f, 
-                    resizable = true
+                    function = delegate { var e = eventCaller.currentEntity; DrummingPractice.instance.SetBop(e.beat, e.length, e["bop"], e["autoBop"]); }, 
+                    resizable = true,
+                    parameters = new List<Param>()
+                    {
+                        new Param("bop", true, "Bop", "Should the drummers bop?"),
+                        new Param("autoBop", true, "Bop (Auto)", "Should the drummers auto bop?")
+                    }
                 },
                 new GameAction("drum", "Hit Drum")
                 {
@@ -39,6 +43,17 @@ namespace HeavenStudio.Games.Loaders
                         new Param("type2", DrummingPractice.MiiType.Random, "Left Mii", "The Mii on the left"),
                         new Param("type3", DrummingPractice.MiiType.Random, "Right Mii", "The Mii on the right"),
                         new Param("toggle", false, "Set All to Player", "Sets all Miis to the Player's Mii")
+                    }
+                },
+                new GameAction("move npc drummers", "NPC Drummers Enter or Exit")
+                {
+                    function = delegate {var e = eventCaller.currentEntity; DrummingPractice.instance.NPCDrummersEnterOrExit(e.beat, e.length, e["exit"], e["ease"]); },
+                    defaultLength = 4f,
+                    resizable = true,
+                    parameters = new List<Param>()
+                    {
+                        new Param("exit", false, "Exit?", "Should the NPC drummers exit or enter?"),
+                        new Param("ease", EasingFunction.Ease.Linear, "Ease", "Which ease should the movement have?")
                     }
                 },
                 new GameAction("set background color", "Set Background Color")
@@ -86,6 +101,15 @@ namespace HeavenStudio.Games
         public Drummer leftDrummer;
         public Drummer rightDrummer;
         public GameObject hitPrefab;
+        [SerializeField] Animator NPCDrummers;
+
+        [Header("Variables")]
+        float movingLength;
+        float movingStartBeat;
+        bool isMoving;
+        string moveAnim;
+        EasingFunction.Ease lastEase;
+        bool goBop = true;
 
         public GameEvent bop = new GameEvent();
         public int count = 0;
@@ -109,11 +133,23 @@ namespace HeavenStudio.Games
 
         private void Update()
         {
-            if (Conductor.instance.ReportBeat(ref bop.lastReportedBeat, bop.startBeat % 1))
+            var cond = Conductor.instance;
+            if (cond.ReportBeat(ref bop.lastReportedBeat, bop.startBeat % 1))
             {
-                if (Conductor.instance.songPositionInBeats >= bop.startBeat && Conductor.instance.songPositionInBeats < bop.startBeat + bop.length)
+                if (goBop)
                 {
                     Bop();
+                }
+            }
+
+            if (isMoving && cond.isPlaying && !cond.isPaused) 
+            {
+                float normalizedBeat = cond.GetPositionFromBeat(movingStartBeat, movingLength);
+                if (normalizedBeat >= 0 && normalizedBeat <= 1f)
+                {
+                    EasingFunction.Function func = EasingFunction.GetEasingFunction(lastEase);
+                    float newPos = func(0f, 1f, normalizedBeat);
+                    NPCDrummers.DoNormalizedAnimation(moveAnim, newPos);
                 }
             }
 
@@ -124,10 +160,32 @@ namespace HeavenStudio.Games
             }
         }
 
-        public void SetBop(float beat, float length)
+        public void NPCDrummersEnterOrExit(float beat, float length, bool exit, int ease)
         {
-            bop.startBeat = beat;
-            bop.length = length;
+            movingStartBeat = beat;
+            movingLength = length;
+            moveAnim = exit ? "NPCDrummersExit" : "NPCDrummersEnter";
+            isMoving = true;
+            lastEase = (EasingFunction.Ease)ease;
+            BeatAction.New(instance.gameObject, new List<BeatAction.Action>()
+            {
+                new BeatAction.Action(beat + length - 0.01f, delegate { isMoving = false; })
+            });
+        }
+
+        public void SetBop(float beat, float length, bool shouldBop, bool autoBop)
+        {
+            goBop = autoBop;
+            if (shouldBop)
+            {
+                for (int i = 0; i < length; i++)
+                {
+                    BeatAction.New(instance.gameObject, new List<BeatAction.Action>()
+                    {
+                        new BeatAction.Action(beat + i, delegate { Bop(); })
+                    });
+                }
+            }
         }
 
         public void Bop()
@@ -140,9 +198,9 @@ namespace HeavenStudio.Games
         public void Prepare(float beat, bool applause)
         {
             int type = count % 2;
-            player.Prepare(type);
-            leftDrummer.Prepare(type);
-            rightDrummer.Prepare(type);
+            player.Prepare(beat, type);
+            leftDrummer.Prepare(beat, type);
+            rightDrummer.Prepare(beat, type);
             count++;
 
             SetFaces(0);

@@ -18,6 +18,7 @@ namespace HeavenStudio.Games.Scripts_SpaceSoccer
         public float dispenserBeat; //unused
         public int kickTimes = 0;
         public bool player;
+        public float zValue;
 
         [Header("Components")]
         private Animator anim;
@@ -38,6 +39,12 @@ namespace HeavenStudio.Games.Scripts_SpaceSoccer
             {
                 nextHit = game.ScheduleInput(beat, ball.GetAnimLength(Ball.State.Dispensing), InputType.STANDARD_DOWN, KickJust, Miss, Out);
             }
+            else
+            {
+                BeatAction.New(this.gameObject, new List<BeatAction.Action>(){
+                    new BeatAction.Action(beat + ball.GetAnimLength(Ball.State.Dispensing), delegate { KickCheck(true, false, beat + ball.GetAnimLength(Ball.State.Dispensing)); }),
+                });
+            }
         }
 
         public void Kick(bool hit, bool highKick = false)
@@ -45,7 +52,9 @@ namespace HeavenStudio.Games.Scripts_SpaceSoccer
             aceTimes = 0;
 
             if (player)
+            {
                 Jukebox.PlayOneShotGame("spaceSoccer/kick");
+            }
 
             if (highKick)
             {
@@ -200,20 +209,45 @@ namespace HeavenStudio.Games.Scripts_SpaceSoccer
             }
         }
 
-        private void KickCheck(bool hit, bool overrideState = false)
+        private void KickCheck(bool hit,  bool overrideState = false, float beat = 0f)
         {
             if (canHighKick)
             {
                 HighKick(hit);
+                if (!player)
+                {
+                    BeatAction.New(this.gameObject, new List<BeatAction.Action>()
+                    {
+                        new BeatAction.Action(beat + ball.GetAnimLength(Ball.State.Kicked), delegate { Kick(true, true); }),
+                        new BeatAction.Action(beat + ball.GetAnimLength(Ball.State.Toe), delegate { Toe(true); }),
+                        new BeatAction.Action(beat + ball.GetAnimLength(Ball.State.Toe) + 1.5f, delegate { KickCheck(true, false, beat + ball.GetAnimLength(Ball.State.Toe) + 1.5f); }),
+                    });
+                }
             }
             else if (canKick)
             {
                 Kick(hit);
+                if (!player)
+                {
+                    BeatAction.New(this.gameObject, new List<BeatAction.Action>()
+                    {
+                        new BeatAction.Action(beat + ball.GetAnimLength(Ball.State.Kicked), delegate { KickCheck(true, false, beat + ball.GetAnimLength(Ball.State.Kicked)); }),
+                    });
+                }
             }
             else if (!canKick && !canHighKick && overrideState)
             {
                 Kick(hit);
+                if (!player)
+                {
+                    BeatAction.New(this.gameObject, new List<BeatAction.Action>()
+                    {
+                        new BeatAction.Action(beat + ball.GetAnimLength(Ball.State.Kicked), delegate { KickCheck(true, false, beat + ball.GetAnimLength(Ball.State.Kicked)); }),
+                    });
+                }
             }
+
+
         }
 
         void MissBall(float targetBeat)

@@ -13,25 +13,33 @@ namespace HeavenStudio.Games.Loaders
     public static class MobTrickLoader
     {
         public static Minigame AddGame(EventCaller eventCaller) {
-            return new Minigame("trickClass", "Trick on the Class", "C0171D", false, false, new List<GameAction>()
+            return new Minigame("trickClass", "Trick on the Class", "ecede4", false, false, new List<GameAction>()
             {
-                new GameAction("toss", "Toss Object")
+                new GameAction("toss", "Paper Ball")
                 {
-                    function = delegate
+                    preFunction = delegate
                     {
-                        TrickClass.instance.TossObject(eventCaller.currentEntity.beat, eventCaller.currentEntity["type"]);
+                        TrickClass.PreTossObject(eventCaller.currentEntity.beat, (int)TrickClass.TrickObjType.Ball);
                     }, 
+                    defaultLength = 2,
+                },
+                new GameAction("plane", "Plane")
+                {
+                    preFunction = delegate
+                    {
+                        TrickClass.PreTossObject(eventCaller.currentEntity.beat, (int)TrickClass.TrickObjType.Plane);
+                    },
                     defaultLength = 3,
+                },
+                new GameAction("bop", "Bop")
+                {
+                    function = delegate { var e = eventCaller.currentEntity; TrickClass.instance.Bop(e.beat, e.length, e["bop"], e["autoBop"]); },
+                    resizable = true, 
                     parameters = new List<Param>()
                     {
-                        new Param("type", TrickClass.TrickObjType.Ball, "Object", "The object to toss")
+                        new Param("bop", true, "Bop", "Should the girl and boy bop?"),
+                        new Param("autoBop", false, "Bop (Auto)", "Should the girl and boy auto bop?")
                     }
-                },
-                new GameAction("bop", "")
-                {
-                    function = delegate { var e = eventCaller.currentEntity; TrickClass.instance.Bop(e.beat, e.length); },
-                    resizable = true, 
-                    hidden = true
                 },
             });
         }
@@ -51,6 +59,12 @@ namespace HeavenStudio.Games
             Ball,
             Plane,
         }
+        public struct QueuedObject
+        {
+            public float beat;
+            public int type;
+        }
+        public static List<QueuedObject> queuedInputs = new List<QueuedObject>();
 
         [Header("Objects")]
         public Animator playerAnim;
@@ -72,10 +86,18 @@ namespace HeavenStudio.Games
 
         public static TrickClass instance;
         public GameEvent bop = new GameEvent();
+        bool goBop = true;
 
         public float playerCanDodge = Single.MinValue;
         float playerBopStart = Single.MinValue;
         float girlBopStart = Single.MinValue;
+        bool showBubble = true;
+
+
+        void OnDestroy()
+        {
+            if (queuedInputs.Count > 0) queuedInputs.Clear();
+        }
 
         private void Awake()
         {
@@ -85,7 +107,7 @@ namespace HeavenStudio.Games
         private void Update()
         {
             var cond = Conductor.instance;
-            if (cond.ReportBeat(ref bop.lastReportedBeat, bop.startBeat % 1))
+            if (cond.ReportBeat(ref bop.lastReportedBeat, bop.startBeat % 1) && goBop)
             {
                 if (cond.songPositionInBeats > playerBopStart)
                     playerAnim.DoScaledAnimationAsync("Bop");
@@ -94,41 +116,108 @@ namespace HeavenStudio.Games
                     girlAnim.DoScaledAnimationAsync("Bop");
             }
 
+            if (cond.isPlaying && !cond.isPaused)
+            {
+                if (queuedInputs.Count > 0)
+                {
+                    foreach (var input in queuedInputs)
+                    {
+                        BeatAction.New(instance.gameObject, new List<BeatAction.Action>()
+                        {
+                            new BeatAction.Action(input.beat - 1f, delegate
+                            {
+                                switch (input.type)
+                                {
+                                    case (int)TrickClass.TrickObjType.Ball:
+                                        warnAnim.Play("WarnBall", 0, 0);
+                                        break;
+                                    case (int)TrickClass.TrickObjType.Plane:
+                                        warnAnim.Play("WarnPlane", 0, 0);
+                                        break;
+                                }
+                            }),
+                            new BeatAction.Action(input.beat, delegate 
+                            {
+                                warnAnim.Play("NoPose", 0, 0);
+                                TossObject(input.beat, input.type); 
+                            })
+                        });
+                    }
+                    queuedInputs.Clear();  
+                }
+            }
+
             if (PlayerInput.Pressed() && !IsExpectingInputNow() && (playerCanDodge <= Conductor.instance.songPositionInBeats))
             {
                 PlayerDodge(true);
                 playerCanDodge = Conductor.instance.songPositionInBeats + 0.6f;
             }
+        }
 
-            // bruh
-            var tossEvents = GameManager.instance.Beatmap.entities.FindAll(en => en.datamodel == "trickClass/toss");
-            for (int i = 0; i < tossEvents.Count; i++)
+        public void Bop(float beat, float length, bool shouldBop, bool autoBop)
+        {
+            var cond = Conductor.instance;
+            goBop = autoBop;
+            if (shouldBop)
             {
-                var e = tossEvents[i];
-                float timeToEvent = e.beat - cond.songPositionInBeats;
-                warnAnim.Play("NoPose", -1, 0);
-                if (timeToEvent > 0f && timeToEvent <= 1f)
+                for (int i = 0; i < length; i++)
                 {
-                    string anim = "WarnBall";
-                    switch (e["type"])
+                    BeatAction.New(instance.gameObject, new List<BeatAction.Action>()
                     {
-                        case (int) TrickObjType.Plane:
-                            anim = "WarnPlane";
-                            break;
-                        default:
-                            anim = "WarnBall";
-                            break;
-                    }
-                    warnAnim.DoScaledAnimation(anim, e.beat - 1f, 1f);
-                    break;
+                        new BeatAction.Action(beat + i, delegate
+                        {
+                            if (cond.songPositionInBeats > playerBopStart)
+                                playerAnim.DoScaledAnimationAsync("Bop");
+
+                            if (cond.songPositionInBeats > girlBopStart)
+                                girlAnim.DoScaledAnimationAsync("Bop");
+                        })
+                    });
                 }
             }
         }
 
-        public void Bop(float beat, float length)
+        public void BubbleToggle()
         {
-            bop.startBeat = beat;
-            bop.length = length;
+            instance.showBubble = !instance.showBubble;
+        }
+        
+                public static void PreTossObject(float beat, int type)
+        {
+            if (GameManager.instance.currentGame == "trickClass")
+            {
+                BeatAction.New(instance.gameObject, new List<BeatAction.Action>()
+                {
+                    new BeatAction.Action(beat - 1, delegate 
+                {
+                    if (instance.showBubble == true)
+                    {
+                        switch (type)
+                        {
+                            case (int)TrickClass.TrickObjType.Ball:
+                                instance.warnAnim.Play("WarnBall", 0, 0);
+                                break;
+                            case (int)TrickClass.TrickObjType.Plane:
+                                instance.warnAnim.Play("WarnPlane", 0, 0);
+                                break;
+                        }
+                    }
+                }),
+                    new BeatAction.Action(beat, delegate 
+                    {
+                        instance.warnAnim.Play("NoPose", 0, 0);
+                        instance.TossObject(beat, type); 
+                    })
+                });
+            }
+            else
+            {
+                queuedInputs.Add(new QueuedObject
+                {
+                    beat = beat,
+                    type = type,
+                });
+            }
         }
 
         public void TossObject(float beat, int type)
