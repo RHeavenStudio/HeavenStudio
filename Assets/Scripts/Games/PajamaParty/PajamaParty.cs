@@ -12,7 +12,7 @@ namespace HeavenStudio.Games.Loaders
     public static class CtrPillowLoader
     {
         public static Minigame AddGame(EventCaller eventCaller) {
-            return new Minigame("pajamaParty", "Pajama Party", "965076", false, false, new List<GameAction>()
+            return new Minigame("pajamaParty", "Pajama Party", "fc9ac3", false, false, new List<GameAction>()
                 {
                     // both same timing
                     new GameAction("jump (side to middle)", "Side to Middle Jumps")
@@ -37,7 +37,7 @@ namespace HeavenStudio.Games.Loaders
                             new Param("type", PajamaParty.SleepType.Normal, "Sleep Type", "Type of sleep action to use"),
                             new Param("toggle", false, "Alt. Animation", "Use an alternate animation for Mako")
                         }, 
-                        inactiveFunction = delegate {var e = eventCaller.currentEntity; PajamaParty.WarnSleepSequence(e.beat, e["toggle"]);}
+                        inactiveFunction = delegate {var e = eventCaller.currentEntity; PajamaParty.WarnSleepSequence(e.beat, e["toggle"], e["type"]);}
                     },
                     new GameAction("throw", "Throw Pillows")
                     {
@@ -280,7 +280,7 @@ namespace HeavenStudio.Games
                 });
         }
 
-        public static void WarnSleepSequence(float beat, bool alt = false)
+        public static void WarnSleepSequence(float beat, bool alt = false, int action = (int) PajamaParty.SleepType.Normal)
         {
             MultiSound.Play(new MultiSound.Sound[] { 
                 new MultiSound.Sound("pajamaParty/siesta1", beat), 
@@ -291,6 +291,7 @@ namespace HeavenStudio.Games
             }, forcePlay: true);
             WantSleepSequence = beat;
             WantSleepType = alt;
+            WantSleepAction = action;
         }
 
         public void DoBedImpact()

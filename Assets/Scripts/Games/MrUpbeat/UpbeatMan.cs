@@ -23,14 +23,6 @@ namespace HeavenStudio.Games.Scripts_MrUpbeat
 
         public GameEvent blip = new GameEvent();
 
-        private void Update()
-        {
-            if (PlayerInput.Pressed())
-            {
-                Step();
-            }
-        }
-
         public void Idle()
         {
             stepTimes = 0;

@@ -10,6 +10,7 @@ namespace HeavenStudio.Games.Scripts_DrummingPractice
 {
     public class Drummer : MonoBehaviour
     {
+        DrummingPractice game;
 
         [Header("References")]
         public Animator animator;
@@ -23,6 +24,8 @@ namespace HeavenStudio.Games.Scripts_DrummingPractice
 
         private bool hitting = false;
 
+        private float canBopBeat = -2f;
+
         // in the future: use the MiiStudio API to render any mii from a nintendo account / MNMS / Mii Studio code?
         // figure out how to call the API from unity?
         // used expressions: "normal", "smile", "sorrow"
@@ -32,9 +35,14 @@ namespace HeavenStudio.Games.Scripts_DrummingPractice
             public List<Sprite> Sprites;
         }
 
+        void Awake()
+        {
+            game = DrummingPractice.instance;
+        }
+
         private void Update()
         {
-            if (player && PlayerInput.Pressed())
+            if (player && PlayerInput.Pressed() && !DrummingPractice.instance.IsExpectingInputNow(InputType.STANDARD_DOWN))
             {
                 Hit(false, false);
             }
@@ -47,12 +55,13 @@ namespace HeavenStudio.Games.Scripts_DrummingPractice
 
         public void Bop()
         {
-            if (animator.IsAnimationNotPlaying())
+            if (Conductor.instance.GetPositionFromBeat(canBopBeat, 2f) > 1f)
                 animator.Play("Bop", 0, 0);
         }
 
-        public void Prepare(int type)
+        public void Prepare(float beat, int type)
         {
+            canBopBeat = beat;
             count = type;
             if (count % 2 == 0)
                 animator.Play("PrepareLeft", 0, 0);
@@ -75,9 +84,9 @@ namespace HeavenStudio.Games.Scripts_DrummingPractice
             if (!hitting)
             {
                 if (count % 2 == 0)
-                    animator.Play("HitLeft", 0, 0);
+                    animator.DoScaledAnimationAsync("HitLeft", 0.6f);
                 else
-                    animator.Play("HitRight", 0, 0);
+                    animator.DoScaledAnimationAsync("HitRight", 0.6f);
                 count++;
 
                 if (player && !force)
@@ -107,6 +116,5 @@ namespace HeavenStudio.Games.Scripts_DrummingPractice
         {
             hitting = false;
         }
-
     }
 }

@@ -151,8 +151,6 @@ namespace HeavenStudio.Util
             return null;
         }
 
-        //TODO: playing sounds from assetbundles
-
         public static void KillLoop(Sound source, float fadeTime)
         {
             // Safeguard against previously-destroyed sounds.

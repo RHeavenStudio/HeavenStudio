@@ -11,7 +11,7 @@ namespace HeavenStudio.Games.Loaders
     public static class CtrBearLoader
     {
         public static Minigame AddGame(EventCaller eventCaller) {
-            return new Minigame("blueBear", "Blue Bear", "B4E6F6", false, false, new List<GameAction>()
+            return new Minigame("blueBear", "Blue Bear", "b4e6f6", false, false, new List<GameAction>()
             {
                 new GameAction("donut", "Donut")
                 {
@@ -68,11 +68,11 @@ namespace HeavenStudio.Games
         {
             headAndBodyAnim.SetBool("ShouldOpenMouth", foodHolder.childCount != 0);
 
-            if (PlayerInput.GetAnyDirectionDown())
+            if (PlayerInput.GetAnyDirectionDown() && !IsExpectingInputNow(InputType.DIRECTION_DOWN))
             {
                 headAndBodyAnim.Play("BiteL", 0, 0);
             }
-            else if (PlayerInput.Pressed())
+            else if (PlayerInput.Pressed() && !IsExpectingInputNow(InputType.STANDARD_DOWN))
             {
                 headAndBodyAnim.Play("BiteR", 0, 0);
             }

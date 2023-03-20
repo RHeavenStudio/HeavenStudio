@@ -17,22 +17,30 @@
 
 [Bug Report Form](https://docs.google.com/forms/d/e/1FAIpQLSfu0p2ZjrfwwEvpLgJ4Hw-AAN3jh4QNSEk0U7mjDvwiIkoRAw/viewform?usp=pp_url)
 
-![image](https://i.ibb.co/pjFgyZX/hs-github-image.png)
+[Documentation](https://rheavenstudio.github.io/)
+
+![prCapture](https://user-images.githubusercontent.com/43734252/212429715-1971929f-fee1-442f-8ba2-694e1732590a.png)
 
 
 ## Prebuilt Binaries
 This project is still in development, so there are currently no release builds yet. GitHub Actions creates experimental builds on each commmit, but minimal support will be provided.
 
-- [Windows](https://nightly.link/megaminerjenny/HeavenStudio/workflows/main/master/StandaloneWindows64-build.zip)
-- [Linux](https://nightly.link/megaminerjenny/HeavenStudio/workflows/main/master/StandaloneLinux64-build.zip)
-- [MacOS](https://nightly.link/megaminerjenny/HeavenStudio/workflows/main/master/StandaloneOSX-build.zip)
+
+- [Windows](https://nightly.link/RHeavenStudio/HeavenStudio/workflows/windows/master/StandaloneWindows64-build.zip)
+- [Linux](https://nightly.link/RHeavenStudio/HeavenStudio/workflows/linux/master/StandaloneLinux64-build.zip)
+- [MacOS](https://nightly.link/RHeavenStudio/HeavenStudio/workflows/macos/master/StandaloneOSX-build.zip)
+#### Important Notes:
+- On MacOS and Linux builds you may [experience bugs with audio-related tasks](https://github.com/megaminerjenny/HeavenStudio/issues/72), but in most cases Heaven Studio works perfectly.
+- On MacOS you'll need to have Discord open in the background for now, there's a bug that causes the DiscordSDK library to crash when the rich presence is updated while Discord is not open in the background.
+- MacOS and Linux prebuilt binaries **ARE BUGGY** (AssetBundles do not get built causing some minigames as KarateMan to not render correctly), please build the project yourself instead using the instructions below.
+
 
 ## Self-Building
-#### Note: Mac-OS and Linux-based builds are not fully tested, you may [experience bugs with audio-related tasks](https://github.com/megaminerjenny/HeavenStudio/issues/72).
+
 Heaven Studio is made in [Unity 2020.3.25f1](https://unity3d.com/unity/whats-new/2020.3.25),
 and programmed with [Visual Studio Code](https://code.visualstudio.com/).
 
-Building tutorial: coming soon
+Build Instructions: [BUILD.md](https://github.com/megaminerjenny/HeavenStudio/blob/master/BUILD.md) (or the more maintained [documentation page](https://rheavenstudio.github.io/docs-contributing/setup/introduction))
 
 ## Other information
 Rhythm Heaven is the intellectual property of Nintendo. This program is NOT endorsed nor sponsored in any way by Nintendo. All used properties of Nintendo (such as names, audio, graphics, etc.) in this software are not intended to maliciously infringe trademark rights. All other trademarks and assets are property of their respective owners. This is a community project and this is available for others to use according to the GPL-3.0 license, without charge.

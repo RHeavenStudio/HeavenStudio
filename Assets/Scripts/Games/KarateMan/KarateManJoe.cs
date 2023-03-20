@@ -96,9 +96,7 @@ namespace HeavenStudio.Games.Scripts_KarateMan
 
             if (cond.ReportBeat(ref bop.lastReportedBeat, bop.startBeat % 1, false) && cond.songPositionInBeats > bop.startBeat && cond.songPositionInBeats < bop.startBeat + bop.length && cond.songPositionInBeats >= unPrepareTime && !inCombo)
             {
-                anim.speed = 1f;
-                anim.Play("Beat", -1, 0);
-                lastChargeTime = Single.MinValue;
+                Bop();
             }
 
             if (inCombo && shouldComboId == -2)
@@ -139,7 +137,7 @@ namespace HeavenStudio.Games.Scripts_KarateMan
 
             if (PlayerInput.Pressed(true) && !inSpecial)
             {
-                if (!KarateMan.instance.IsExpectingInputNow())
+                if (!KarateMan.instance.IsExpectingInputNow(InputType.STANDARD_DOWN | InputType.DIRECTION_DOWN))
                 {
                     Punch(1);
                     Jukebox.PlayOneShotGame("karateman/swingNoHit", forcePlay: true);
@@ -148,15 +146,16 @@ namespace HeavenStudio.Games.Scripts_KarateMan
             
             if (PlayerInput.AltPressed() && KarateMan.IsComboEnable && !inSpecial)
             {
-                if (!KarateMan.instance.IsExpectingInputNow())
+                if (!KarateMan.instance.IsExpectingInputNow(InputType.STANDARD_ALT_DOWN))
                 {
                     //start a forced-fail combo sequence
                     ForceFailCombo(cond.songPositionInBeats);
+                    KarateMan.instance.ScoreMiss(2);
                 }
             }
             else if (PlayerInput.AltPressedUp())
             {
-                if (!KarateMan.instance.IsExpectingInputNow())
+                if (!KarateMan.instance.IsExpectingInputNow(InputType.STANDARD_ALT_UP))
                 {
                     if (inComboId != -1 && !lockedInCombo)
                     {
@@ -172,13 +171,20 @@ namespace HeavenStudio.Games.Scripts_KarateMan
                     //stopped holding, don't charge
                     wantKick = false;
                 }
-                else if (inKick && cond.GetPositionFromBeat(lastChargeTime, 2.75f) <= 0.5f && !KarateMan.instance.IsExpectingInputNow())
+                else if (inKick && cond.GetPositionFromBeat(lastChargeTime, 2.75f) <= 0.5f && !KarateMan.instance.IsExpectingInputNow(InputType.STANDARD_UP | InputType.DIRECTION_UP))
                 {
                     Kick(cond.songPositionInBeats);
                     Jukebox.PlayOneShotGame("karateman/swingKick", forcePlay: true);
                 }
             }
 
+        }
+
+        public void Bop()
+        {
+            anim.speed = 1f;
+            anim.Play("Beat", -1, 0);
+            lastChargeTime = Single.MinValue;
         }
 
         public bool Punch(int forceHand = 0)

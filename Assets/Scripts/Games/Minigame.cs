@@ -2,11 +2,17 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+using HeavenStudio.Util;
+using HeavenStudio.Common;
+
 namespace HeavenStudio.Games
 {
     public class Minigame : MonoBehaviour
     {
-        public static float earlyTime = 0.1f, perfectTime = 0.08f, aceEarlyTime = 0.025f, aceLateTime = 0.025f, lateTime = 0.08f, endTime = 0.1f;
+        public static double earlyTime = 0.07f, perfectTime = 0.04f, aceEarlyTime = 0.01f, aceLateTime = 0.01f, lateTime = 0.04f, endTime = 0.07f;
+        public static float rankHiThreshold = 0.8f, rankOkThreshold = 0.6f;
+        [SerializeField] public SoundSequence.SequenceKeyValue[] SoundSequences;
+
         public List<Minigame.Eligible> EligibleHits = new List<Minigame.Eligible>();
 
         [System.Serializable]
@@ -102,15 +108,20 @@ namespace HeavenStudio.Games
 
         //Get the scheduled input that should happen the **Soonest**
         //Can return null if there's no scheduled inputs
-        public PlayerActionEvent GetClosestScheduledInput()
+        // remark: need a check for specific button(s)
+        public PlayerActionEvent GetClosestScheduledInput(InputType input = InputType.ANY)
         {
             PlayerActionEvent closest = null;
 
             foreach(PlayerActionEvent toCompare in scheduledInputs)
             {
+                // ignore inputs that are for sequencing in autoplay
+                if (toCompare.autoplayOnly) continue;
+
                 if(closest == null)
                 {
-                    closest = toCompare;
+                    if (input == InputType.ANY || toCompare.inputType.HasFlag(input))
+                        closest = toCompare;
                 } else
                 {
                     float t1 = closest.startBeat + closest.timer;
@@ -118,7 +129,11 @@ namespace HeavenStudio.Games
 
                     // Debug.Log("t1=" + t1 + " -- t2=" + t2);
 
-                    if (t2 < t1) closest = toCompare;
+                    if (t2 < t1)
+                    {
+                        if (input == InputType.ANY || toCompare.inputType.HasFlag(input))
+                            closest = toCompare;
+                    }
                 }
             }
 
@@ -128,35 +143,46 @@ namespace HeavenStudio.Games
         //Hasn't been tested yet. *Should* work.
         //Can be used to detect if the user is expected to input something now or not
         //Useful for strict call and responses games like Tambourine
-        public bool IsExpectingInputNow()
+        public bool IsExpectingInputNow(InputType wantInput = InputType.ANY)
         {
-            PlayerActionEvent input = GetClosestScheduledInput();
+            PlayerActionEvent input = GetClosestScheduledInput(wantInput);
             if (input == null) return false;
             return input.IsExpectingInputNow();
         }
 
         // now should fix the fast bpm problem
-        public static float EarlyTime()
+        public static double EarlyTime()
         {
-            return 1f - ScaleTimingMargin(earlyTime);
+            return 1f - earlyTime;
         }
 
-        public static float PerfectTime()
+        public static double PerfectTime()
         {
-            return 1f - ScaleTimingMargin(perfectTime);
+            return 1f - perfectTime;
         }
 
-        public static float LateTime()
+        public static double LateTime()
         {
-            return 1f + ScaleTimingMargin(lateTime);
+            return 1f + lateTime;
         }
 
-        public static float EndTime()
+        public static double EndTime()
         {
-            return 1f + ScaleTimingMargin(endTime);
+            return 1f + endTime;
         }
 
-        //scales timing windows to the BPM in an ""intelligent"" manner
+        public static double AceStartTime()
+        {
+            return 1f - aceEarlyTime;
+        }
+
+        public static double AceEndTime()
+        {
+            return 1f + aceLateTime;
+        }
+
+        // DEPRECATED: scales timing windows to the BPM in an ""intelligent"" manner
+        // only left for historical reasons
         static float ScaleTimingMargin(float f)
         {
             float bpm = Conductor.instance.songBpm * Conductor.instance.musicSource.pitch;
@@ -210,6 +236,43 @@ namespace HeavenStudio.Games
                 sameTime = 1;
 
             return sameTime;
+        }
+
+        public static MultiSound PlaySoundSequence(string game, string name, float startBeat, params SoundSequence.SequenceParams[] args)
+        {
+            Minigames.Minigame gameInfo = GameManager.instance.GetGameInfo(game);
+            foreach (SoundSequence.SequenceKeyValue pair in gameInfo.LoadedSoundSequences)
+            {
+                if (pair.name == name)
+                {
+                    Debug.Log($"Playing sound sequence {pair.name} at beat {startBeat}");
+                    return pair.sequence.Play(startBeat);
+                }
+            }
+            Debug.LogWarning($"Sound sequence {name} not found in game {game} (did you build AssetBundles?)");
+            return null;
+        }
+
+        public void ScoreMiss(double weight = 1f)
+        {
+            GameManager.instance.ScoreInputAccuracy(0, true, EndTime(), weight, false);
+            if (weight > 0)
+            {
+                GoForAPerfect.instance.Miss();
+                SectionMedalsManager.instance.MakeIneligible();
+            }
+        }
+
+        private void OnDestroy() {
+            foreach (var evt in scheduledInputs)
+            {
+                evt.Disable();
+            }
+        }
+
+        private void OnDrawGizmos() {
+            Gizmos.color = Color.magenta;
+            Gizmos.DrawWireCube(Vector3.zero, new Vector3(17.77695f, 10, 0));
         }
     }
 }
