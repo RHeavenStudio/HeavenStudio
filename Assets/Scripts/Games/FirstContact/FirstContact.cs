@@ -182,6 +182,7 @@ namespace HeavenStudio.Games
 
         public void SetIntervalStart(float beat, float interval, string outDialogue)
         {
+            translator.GetComponent<Animator>().Play("translator_lookAtAlien", 0, 0);
             if (!intervalStarted)
             {
                 //alienSpeakCount = 0;
