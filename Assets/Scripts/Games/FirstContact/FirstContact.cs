@@ -23,7 +23,7 @@ namespace HeavenStudio.Games.Loaders
                     },
                     defaultLength = 4f,
                     resizable = true,
-                    priority = 1,
+                    priority = 2,
                 },
                 new GameAction("alien speak", "Bob Speak")
                 {
@@ -33,7 +33,8 @@ namespace HeavenStudio.Games.Loaders
                     {
                         new Param("spaceNum", new EntityTypes.Integer(0, 12, 0), "Amount of spaces", "Spaces to add before the untranslated icon"),
                         new Param("dialogue", "", "Dialogue", "What should this sound translate to?")
-                    }
+                    },
+                    priority = 1
                 },
                 new GameAction("alien turnover", "Pass Turn")
                 {
