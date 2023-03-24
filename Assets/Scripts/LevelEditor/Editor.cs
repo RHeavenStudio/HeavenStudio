@@ -382,7 +382,7 @@ namespace HeavenStudio.Editor
 
         private void SaveRemixFile(string path)
         {
-            using (FileStream zipFile = File.Open(path, FileMode.OpenOrCreate))
+            using (FileStream zipFile = File.Open(path, FileMode.Create))
             {
                 using (var archive = new ZipArchive(zipFile, ZipArchiveMode.Update))
                 {
@@ -390,14 +390,12 @@ namespace HeavenStudio.Editor
                     using (var zipStream = levelFile.Open())
                         zipStream.Write(Encoding.UTF8.GetBytes(GetJson()), 0, Encoding.UTF8.GetBytes(GetJson()).Length);
 
-                    if ((MusicBytes != null) && (changedMusic == true))
+                    if (MusicBytes != null)
                     {
-                        Debug.Log("Saving music...");
                         var musicFile = archive.CreateEntry("song.ogg", System.IO.Compression.CompressionLevel.NoCompression);
                         using (var zipStream = musicFile.Open())
                             zipStream.Write(MusicBytes, 0, MusicBytes.Length);
                     }
-                    
                 }
 
                 currentRemixPath = path;
