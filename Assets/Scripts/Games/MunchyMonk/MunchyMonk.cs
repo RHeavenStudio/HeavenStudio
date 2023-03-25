@@ -23,6 +23,18 @@ namespace HeavenStudio.Games.Loaders
                     },
                     defaultLength = 0.5f,
                 },
+                new GameAction("MonkMove", "Monk Move")
+                {
+                    function = delegate {
+                        var e = eventCaller.currentEntity; 
+                        MunchyMonk.instance.MonkMove(e.beat, e.length, e["instant"], e["whichSide"]); 
+                    },
+                    resizable = true,
+                    parameters = new List<Param>()
+                    {
+                        new Param("instant", false, "", "Instantly move to the middle or to the right"),
+                    }
+                },
                 new GameAction("One", "One")
                 {
                     defaultLength = 2f,
@@ -46,7 +58,7 @@ namespace HeavenStudio.Games.Loaders
                     preFunctionLength = 0.5f,
                     preFunction = delegate {
                         var e = eventCaller.currentEntity; 
-                        MunchyMonk.PreTwoTwoCue(e.beat, e["twoColor"]); 
+                        MunchyMonk.PreTwoTwoCue(e.beat, e["twoColor"]);
                     },
                 },
                 new GameAction("Three", "Three")
@@ -88,31 +100,17 @@ namespace HeavenStudio.Games.Loaders
                     }
                 },
                 // note: make the bg not scroll by default
-                /*
                 new GameAction("ScrollBackground", "Scroll Background")
                 {
                     function = delegate {
                         var e = eventCaller.currentEntity; 
-                        MunchyMonk.instance.ScrollBG(e.beat, true); 
+                        MunchyMonk.instance.ScrollBG(e.beat, e["instant"]); 
                     },
                     defaultLength = 0.5f,
-                },
-                */
-
-                // hidden in the editor cuz drama and also yuck
-                new GameAction("OneStretchable", "One (Stretchable)")
-                {
-                    function = delegate {
-                        var e = eventCaller.currentEntity;
-                        //MunchyMonk.instance.OneGoCueStretchable(e.beat, e["oneColor"], e.length);
-                    },
-                    defaultLength = 4f,
-                    resizable = true,
-                    hidden = true,
                     parameters = new List<Param>()
                     {
-                        new Param("oneColor", new Color(1, 1, 1, 1), "Color", "Change the color of the dumpling")
-                    },
+                        new Param("instant", false, "Instant?", "Will the scrolling happen immediately?"),
+                    }
                 },
             });
         }
@@ -165,6 +163,7 @@ namespace HeavenStudio.Games
         [SerializeField] SpriteRenderer DumplingSmear;
         [SerializeField] SpriteRenderer TwoDumplingSmear1;
         [SerializeField] SpriteRenderer TwoDumplingSmear2;
+        [SerializeField] Transform MMParent;
 
         [Header("Animators")]
         [SerializeField] Animator OneGiverAnim;
@@ -231,6 +230,12 @@ namespace HeavenStudio.Games
                 MonkAnim.DoScaledAnimationAsync("Idle", 0.5f);
             }
 
+            // scrolling stuff
+            //if (needScroll) {
+            //    Tile += new Vector2(2 * Time.deltaTime, 0);
+            //    NormalizedX += 0.5f * Time.deltaTime;
+            //}
+
             // cue queuing stuff
             if (queuedOnes.Count > 0) {
                 foreach (var dumpling in queuedOnes) { OneGoCue(dumpling.beat, dumpling.color); }
@@ -287,7 +292,7 @@ namespace HeavenStudio.Games
                 new BeatAction.Action(beat+0.5f, delegate { OneGiverAnim.DoScaledAnimationAsync("GiveOut", 0.5f); }),
             });
             
-            Dumpling DumplingClone = Instantiate(DumplingObj).GetComponent<Dumpling>();
+            Dumpling DumplingClone = Instantiate(DumplingObj, MMParent).GetComponent<Dumpling>();
             DumplingClone.startBeat = beat;
         }
 
@@ -315,11 +320,11 @@ namespace HeavenStudio.Games
                     TwoDumplingSprite2.color = twoColor;
                     
                     // first dumpling
-                    Dumpling DumplingClone1 = Instantiate(TwoDumplingObj1).GetComponent<Dumpling>(); 
+                    Dumpling DumplingClone1 = Instantiate(TwoDumplingObj1, MMParent).GetComponent<Dumpling>(); 
                     DumplingClone1.startBeat = beat-0.5f;
                     DumplingClone1.type = 2f;
                     // second dumpling
-                    Dumpling DumplingClone2 = Instantiate(TwoDumplingObj2).GetComponent<Dumpling>(); 
+                    Dumpling DumplingClone2 = Instantiate(TwoDumplingObj2, MMParent).GetComponent<Dumpling>(); 
                     DumplingClone2.startBeat = beat-0.5f; 
                     DumplingClone2.type = 2.5f;
                     DumplingClone1.otherAnim = DumplingClone2.gameObject.GetComponent<Animator>();
@@ -351,7 +356,7 @@ namespace HeavenStudio.Games
             BeatAction.New(instance.gameObject, new List<BeatAction.Action>() {
                 // first dumpling
                 new BeatAction.Action(beat, delegate { 
-                    Dumpling DumplingClone1 = Instantiate(DumplingObj).GetComponent<Dumpling>(); 
+                    Dumpling DumplingClone1 = Instantiate(DumplingObj, MMParent).GetComponent<Dumpling>(); 
                     DumplingClone1.startBeat = beat;
                     DumplingClone1.type = 3f;
 
@@ -360,7 +365,7 @@ namespace HeavenStudio.Games
                     ThreeGiverAnim.DoScaledAnimationAsync("GiveOut", 0.5f); }),
                 // second dumpling
                 new BeatAction.Action(beat+1.25f, delegate { 
-                    Dumpling DumplingClone2 = Instantiate(DumplingObj).GetComponent<Dumpling>(); 
+                    Dumpling DumplingClone2 = Instantiate(DumplingObj, MMParent).GetComponent<Dumpling>(); 
                     DumplingClone2.startBeat = beat+1.25f;
                     DumplingClone2.type = 3.5f;
                     
@@ -369,7 +374,7 @@ namespace HeavenStudio.Games
                     ThreeGiverAnim.DoScaledAnimationAsync("GiveOut", 0.5f); }),
                 // third dumpling
                 new BeatAction.Action(beat+2.25f, delegate { 
-                    Dumpling DumplingClone3 = Instantiate(DumplingObj).GetComponent<Dumpling>(); 
+                    Dumpling DumplingClone3 = Instantiate(DumplingObj, MMParent).GetComponent<Dumpling>(); 
                     DumplingClone3.startBeat = beat+2.25f;
                     DumplingClone3.type = 4f;
 
@@ -397,6 +402,19 @@ namespace HeavenStudio.Games
             }
         }
 
+        public void MonkMove(float beat, float length, bool isInstant, int whichSide)
+        {
+            if (isInstant) {
+                
+            } else {
+                if (whichSide == 0) {
+                    
+                } else {
+
+                }
+            }
+        }
+
         public void Modifiers(float beat, int inputsTilGrow, bool forceGrow, bool disableBaby)
         {
             instance.inputsTilGrow = inputsTilGrow;
@@ -404,6 +422,11 @@ namespace HeavenStudio.Games
             instance.disableBaby = disableBaby;
 
             if (disableBaby) Baby.SetActive(false);
+        }
+
+        public void ScrollBG(float beat, bool isInstant)
+        {
+
         }
     }
 }
