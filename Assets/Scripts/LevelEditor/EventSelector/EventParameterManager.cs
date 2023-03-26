@@ -88,7 +88,7 @@ namespace HeavenStudio.Editor
                 this.entity = entity;
 
                 string col = TrackToThemeColour(entity.track);
-                Editor.instance.SetGameEventTitle($"Properties for <color=#{col}>{action.displayName}</color> on beat {entity.beat}");
+                Editor.instance.SetGameEventTitle($"Properties for <color=#{col}>{action.displayName}</color> on Beat {entity.beat}");
 
                 DestroyParams();
 
