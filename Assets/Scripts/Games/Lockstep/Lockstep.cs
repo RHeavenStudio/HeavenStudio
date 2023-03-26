@@ -175,6 +175,10 @@ namespace HeavenStudio.Games
         }
 
         void Start() {
+            stepperMaterial.SetColor("_ColorAlpha", stepperOut);
+            stepperMaterial.SetColor("_ColorBravo", stepperDark);
+            stepperMaterial.SetColor("_ColorDelta", stepperLight);
+
             masterSprite = masterStepperSprite.sprite;
             stepswitcherLeft.gameObject.SetActive(lessSteppers);
             stepswitcherRight.gameObject.SetActive(lessSteppers);
