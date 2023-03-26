@@ -78,7 +78,7 @@ namespace HeavenStudio.Editor
                 eventSelector.SetActive(false);
                 this.entity = entity;
 
-                Editor.instance.SetGameEventTitle($"Properties for {entity.datamodel}");
+                Editor.instance.SetGameEventTitle($"Properties for <color=#{EditorTheme.theme.properties.EventSelectedCol}>{action.displayName}</color> at beat {entity.beat}");
 
                 DestroyParams();
 
