@@ -56,12 +56,12 @@ namespace HeavenStudio.Games.Loaders
                 },
                 new GameAction("look at", "Look At")
                 {
-                    function = delegate { FirstContact.instance.LookAtDirection(eventCaller.currentEntity["type"], eventCaller.currentEntity["type"]);  },
+                    function = delegate { FirstContact.instance.LookAtDirection(eventCaller.currentEntity["type"], eventCaller.currentEntity["type2"]);  },
                     defaultLength = .5f,
                     parameters = new List<Param>()
                     {
-                        new Param("type", FirstContact.alienLookAt.lookAtTranslator, "alien look at what", "[Alien] will look at what"),
-                        new Param("type2", FirstContact.translatorLookAt.lookAtAlien, "translator look at what", "[Translator] will look at what"),
+                        new Param("type", FirstContact.alienLookAt.lookAtAlien, "Bob look at what", "[Bob] will look at what"),
+                        new Param("type2", FirstContact.translatorLookAt.lookAtBob, "Alien look at what", "[Alien] will look at what"),
                     }
                 },
                 new GameAction("live bar beat", "Live Bar Beat")
@@ -146,13 +146,13 @@ namespace HeavenStudio.Games
 
         public enum alienLookAt
         {
-            lookAtTranslator,
+            lookAtAlien,
             idle
         }
 
         public enum translatorLookAt
         {
-            lookAtAlien,
+            lookAtBob,
             idle
         }
 
@@ -294,7 +294,7 @@ namespace HeavenStudio.Games
             if (voiceline == currentVoicelineIndex) voiceline++;
             if (voiceline > 10) voiceline = 1;
             currentVoicelineIndex = voiceline;
-            Jukebox.PlayOneShotGame("firstContact/Bob" + voiceline, beat, Jukebox.GetPitchFromCents(UnityEngine.Random.Range(-200, -100), false));
+            Jukebox.PlayOneShotGame("firstContact/Bob" + voiceline, beat, Jukebox.GetPitchFromCents(UnityEngine.Random.Range(-100, 0), false));
             Jukebox.PlayOneShotGame("firstContact/BobB");
             alien.GetComponent<Animator>().DoScaledAnimationAsync("alien_talk", 0.5f);
             if (UnityEngine.Random.Range(0, 5) == 0) translator.GetComponent<Animator>().DoScaledAnimationAsync("translator_lookAtAlien_nod", 0.5f);
