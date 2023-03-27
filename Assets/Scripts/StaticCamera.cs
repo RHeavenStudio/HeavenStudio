@@ -4,6 +4,8 @@ using UnityEngine;
 using UnityEngine.UI;
 
 using HeavenStudio.Util;
+using HeavenStudio.Common;
+using HeavenStudio.Editor;
 
 namespace HeavenStudio
 {
@@ -11,6 +13,11 @@ namespace HeavenStudio
     {
         [SerializeField] RectTransform canvas;
         [SerializeField] GameObject overlayView;
+
+        [SerializeField] Image ambientBg;
+        [SerializeField] GameObject ambientBgGO;
+        [SerializeField] GameObject letterboxBgGO;
+
         public static StaticCamera instance { get; private set; }
         public new Camera camera;
 
@@ -56,6 +63,9 @@ namespace HeavenStudio
             panLast = defaultPan;
             scaleLast = defaultScale;
             rotationLast = defaultRotation;
+
+            ToggleLetterboxBg(PersistentDataManager.gameSettings.letterboxBgEnable);
+            ToggleLetterboxGlow(PersistentDataManager.gameSettings.letterboxFxEnable);
         }
 
         public void OnBeatChanged(float beat)
@@ -196,6 +206,22 @@ namespace HeavenStudio
         public void ToggleOverlayView(bool toggle)
         {
             overlayView.SetActive(toggle);
+        }
+
+        public void SetAmbientGlowColour(Color colour)
+        {
+            ambientBg.color = colour;
+            GameSettings.UpdatePreviewAmbient(colour);
+        }
+
+        public void ToggleLetterboxBg(bool toggle)
+        {
+            letterboxBgGO.SetActive(toggle);
+        }
+
+        public void ToggleLetterboxGlow(bool toggle)
+        {
+            ambientBgGO.SetActive(toggle);
         }
     }
 }

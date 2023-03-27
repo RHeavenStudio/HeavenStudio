@@ -74,7 +74,6 @@ namespace HeavenStudio
             gameManager.CursorCam = CursorCamera.GetComponent<Camera>();
             gameManager.OverlayCamera = OverlayCamera.GetComponent<Camera>();
             gameManager.StaticCamera = StaticCamera.GetComponent<Camera>();
-            gameManager.GameLetterbox = GameLetterbox;
 
             GameObject Profiler = Instantiate(Resources.Load<GameObject>("Prefabs/GameProfiler"));
             Profiler.name = "GameProfiler";

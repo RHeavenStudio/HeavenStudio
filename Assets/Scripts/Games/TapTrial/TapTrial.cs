@@ -12,7 +12,7 @@ namespace HeavenStudio.Games.Loaders
     public static class AgbTapLoader
     {
         public static Minigame AddGame(EventCaller eventCaller) {
-            return new Minigame("tapTrial", "Tap Trial", "93ffb3", false, false, new List<GameAction>()
+            return new Minigame("tapTrial", "Tap Trial", "94ffb5", false, false, new List<GameAction>()
             {
                 new GameAction("bop", "Bop")
                 {
@@ -211,7 +211,7 @@ namespace HeavenStudio.Games
 
             BeatAction.New(gameObject, new List<BeatAction.Action>()
             {
-                new BeatAction.Action(beat + 2f, delegate { isPrep = false; })
+                new BeatAction.Action(beat + 1.5f, delegate { isPrep = false; })
             });
         }
 
@@ -246,7 +246,7 @@ namespace HeavenStudio.Games
 
             BeatAction.New(gameObject, new List<BeatAction.Action>()
             {
-                new BeatAction.Action(beat + 1.99f, delegate { isPrep = false; })
+                new BeatAction.Action(beat + 1.5f, delegate { isPrep = false; })
             });
 
             ScheduleInput(beat, 1f, InputType.STANDARD_DOWN, OnDoubleTap, OnTapMiss, OnEmpty);
@@ -317,7 +317,7 @@ namespace HeavenStudio.Games
                 new BeatAction.Action(beat, delegate {jumpStartTime = Conductor.instance.songPositionInBeats;}),
                 new BeatAction.Action(beat, delegate {monkeys[0].Play("JumpTap", 0, 0); }),
                 new BeatAction.Action(beat, delegate {monkeys[1].Play("JumpTap", 0, 0); }),
-                new BeatAction.Action(beat + 1f, delegate { particleEffectMonkeys(); }),
+                new BeatAction.Action(beat + 1f, delegate { particleEffectMonkeys(); monkeys[0].Play("Jumpactualtap", 0, 0); monkeys[1].Play("Jumpactualtap", 0, 0); }),
                 new BeatAction.Action(beat + 1f, delegate { particleEffectMonkeys_2(); }),
             });
 

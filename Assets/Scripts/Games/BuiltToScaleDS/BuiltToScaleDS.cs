@@ -13,7 +13,7 @@ namespace HeavenStudio.Games.Loaders
     public static class NtrFlickLoader
     {
         public static Minigame AddGame(EventCaller eventCaller) {
-            return new Minigame("builtToScaleDS", "Built To Scale (DS)", "00BB00", true, false, new List<GameAction>()
+            return new Minigame("builtToScaleDS", "Built To Scale (DS)", "1ad21a", true, false, new List<GameAction>()
             {
                 new GameAction("spawn blocks", "Widget")
                 {
@@ -230,7 +230,7 @@ namespace HeavenStudio.Games
 
         public void PlayPiano(float beat, float length, int semiTones)
         {
-            var pianoPitch = Mathf.Pow(2f, (1f / 12f) * semiTones) *Conductor.instance.musicSource.pitch;
+            var pianoPitch = Jukebox.GetPitchFromSemiTones(semiTones, true);
             var pianoSource = Jukebox.PlayOneShotGame("builtToScaleDS/Piano", -1, pianoPitch, 0.8f, true);
 
             pianoSource.SetLoopParams(beat + length, 0.1f);

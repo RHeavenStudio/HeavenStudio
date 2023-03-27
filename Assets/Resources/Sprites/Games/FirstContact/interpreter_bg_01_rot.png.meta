@@ -4,22 +4,25 @@ TextureImporter:
   internalIDToNameTable:
   - first:
       213: 4064657619119601021
-    second: bg_people
+    second: interpreter_bg_01_rot_0
   - first:
       213: -7548151139862744657
-    second: bg_missionControl
+    second: interpreter_bg_01_rot_1
   - first:
       213: -4131008104479038486
-    second: missionControl_success
+    second: interpreter_bg_01_rot_2
   - first:
       213: -6734142314251405171
-    second: missionControl_fail
+    second: interpreter_bg_01_rot_3
   - first:
       213: -6624604176210619645
-    second: missionControl_success_light
+    second: interpreter_bg_01_rot_4
   - first:
       213: 4641647459236523523
-    second: missionControl_fail_light
+    second: interpreter_bg_01_rot_5
+  - first:
+      213: 876060652138383767
+    second: interpreter_bg_01_rot_6
   externalObjects: {}
   serializedVersion: 11
   mipmaps:
@@ -64,7 +67,7 @@ TextureImporter:
   spriteMeshType: 1
   alignment: 0
   spritePivot: {x: 0.5, y: 0.5}
-  spritePixelsToUnits: 100
+  spritePixelsToUnits: 33.333336
   spriteBorder: {x: 0, y: 0, z: 0, w: 0}
   spriteGenerateFallbackPhysicsShape: 1
   alphaUsage: 1
@@ -83,7 +86,7 @@ TextureImporter:
   platformSettings:
   - serializedVersion: 3
     buildTarget: DefaultTexturePlatform
-    maxTextureSize: 2048
+    maxTextureSize: 4096
     resizeAlgorithm: 0
     textureFormat: -1
     textureCompression: 1
@@ -95,7 +98,7 @@ TextureImporter:
     forceMaximumCompressionQuality_BC6H_BC7: 0
   - serializedVersion: 3
     buildTarget: Standalone
-    maxTextureSize: 2048
+    maxTextureSize: 4096
     resizeAlgorithm: 0
     textureFormat: -1
     textureCompression: 1
@@ -121,19 +124,19 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: bg_people
+      name: interpreter_bg_01_rot_0
       rect:
         serializedVersion: 2
-        x: 1
-        y: 265
-        width: 526
-        height: 222
-      alignment: 0
-      pivot: {x: 0.5, y: 0.5}
+        x: 0
+        y: 0
+        width: 2057.3335
+        height: 789.6667
+      alignment: 9
+      pivot: {x: 0.4988401, y: 0.5000001}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
-      tessellationDetail: 0
+      tessellationDetail: -1
       bones: []
       spriteID: d757531b190986830800000000000000
       internalID: 4064657619119601021
@@ -142,19 +145,19 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: bg_missionControl
+      name: interpreter_bg_01_rot_1
       rect:
         serializedVersion: 2
-        x: 8
-        y: 768
-        width: 439
-        height: 255
-      alignment: 0
-      pivot: {x: 0, y: 0}
+        x: 0
+        y: 898.3334
+        width: 2057.3335
+        height: 789.6667
+      alignment: 9
+      pivot: {x: 0.4988401, y: 0.5000001}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
-      tessellationDetail: 0
+      tessellationDetail: -1
       bones: []
       spriteID: fa17585b7849f3790800000000000000
       internalID: -7548151139862744657
@@ -163,19 +166,19 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: missionControl_success
+      name: interpreter_bg_01_rot_2
       rect:
         serializedVersion: 2
-        x: 577
-        y: 737
-        width: 446
-        height: 286
+        x: 0
+        y: 1725.3334
+        width: 1749
+        height: 1136.3334
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
-      tessellationDetail: 0
+      tessellationDetail: -1
       bones: []
       spriteID: ae364481406bba6c0800000000000000
       internalID: -4131008104479038486
@@ -184,19 +187,19 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: missionControl_fail
+      name: interpreter_bg_01_rot_3
       rect:
         serializedVersion: 2
-        x: 577
-        y: 449
-        width: 446
-        height: 286
+        x: 0
+        y: 2864.6667
+        width: 1768.3334
+        height: 1025.6667
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
-      tessellationDetail: 0
+      tessellationDetail: -1
       bones: []
       spriteID: d883e148e358b82a0800000000000000
       internalID: -6734142314251405171
@@ -205,19 +208,19 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: missionControl_success_light
+      name: interpreter_bg_01_rot_4
       rect:
         serializedVersion: 2
-        x: 576
-        y: 169
-        width: 448
-        height: 279
+        x: 2103
+        y: 2723.6667
+        width: 1871
+        height: 1166.6667
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
-      tessellationDetail: 0
+      tessellationDetail: -1
       bones: []
       spriteID: 3039563b99da014a0800000000000000
       internalID: -6624604176210619645
@@ -226,22 +229,43 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: missionControl_fail_light
+      name: interpreter_bg_01_rot_5
       rect:
         serializedVersion: 2
-        x: 0
-        y: 496
-        width: 360
-        height: 272
+        x: 2093
+        y: 1569.6667
+        width: 1881
+        height: 1142.3334
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
-      tessellationDetail: 0
+      tessellationDetail: -1
       bones: []
       spriteID: 30e236c85c17a6040800000000000000
       internalID: 4641647459236523523
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: interpreter_bg_01_rot_6
+      rect:
+        serializedVersion: 2
+        x: 2104.6667
+        y: 407.33334
+        width: 1869.3334
+        height: 1158.6667
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 799c7648584682c00800000000000000
+      internalID: 876060652138383767
       vertices: []
       indices: 
       edges: []
