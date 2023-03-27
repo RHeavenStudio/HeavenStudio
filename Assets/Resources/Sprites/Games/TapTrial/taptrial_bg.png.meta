@@ -52,7 +52,7 @@ TextureImporter:
   spriteMeshType: 0
   alignment: 0
   spritePivot: {x: 0.5, y: 0.5}
-  spritePixelsToUnits: 100
+  spritePixelsToUnits: 400
   spriteBorder: {x: 0, y: 0, z: 0, w: 0}
   spriteGenerateFallbackPhysicsShape: 1
   alphaUsage: 1
@@ -71,7 +71,7 @@ TextureImporter:
   platformSettings:
   - serializedVersion: 3
     buildTarget: DefaultTexturePlatform
-    maxTextureSize: 2048
+    maxTextureSize: 4096
     resizeAlgorithm: 0
     textureFormat: -1
     textureCompression: 2
@@ -83,7 +83,7 @@ TextureImporter:
     forceMaximumCompressionQuality_BC6H_BC7: 0
   - serializedVersion: 3
     buildTarget: Standalone
-    maxTextureSize: 2048
+    maxTextureSize: 4096
     resizeAlgorithm: 0
     textureFormat: -1
     textureCompression: 2
@@ -112,16 +112,16 @@ TextureImporter:
       name: taptrial_stage
       rect:
         serializedVersion: 2
-        x: 2
-        y: 746
-        width: 668
-        height: 276
+        x: 8
+        y: 2984
+        width: 2672
+        height: 1104
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
-      tessellationDetail: 0
+      tessellationDetail: -1
       bones: []
       spriteID: ecb1dc66c80181dc0800000000000000
       internalID: -3668163701287085106
@@ -133,16 +133,16 @@ TextureImporter:
       name: taptrial_bg_0
       rect:
         serializedVersion: 2
-        x: 681
-        y: 856
-        width: 158
-        height: 159
+        x: 2724
+        y: 3424
+        width: 632
+        height: 636
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
-      tessellationDetail: 0
+      tessellationDetail: -1
       bones: []
       spriteID: 6b7105a18d20a1070800000000000000
       internalID: 8077772008820053942
