@@ -15,11 +15,12 @@ namespace HeavenStudio.Games.Loaders
                 {
                     function = delegate {
                         var e = eventCaller.currentEntity; 
-                        MunchyMonk.instance.Bop(e.beat, e["monkBop"]); 
+                        MunchyMonk.instance.Bop(e.beat, e["bop"], e["autoBop"]); 
                     },
                     parameters = new List<Param>()
                     {
-                        new Param("monkBop", false, "Bop", "Does the Monk bop?"),
+                        new Param("bop", true, "Monk Bops?", "Does the monk bop?"),
+                        new Param("autoBop", false, "Monk Bops? (Auto)", "Does the monk auto bop?"),
                     },
                     defaultLength = 0.5f,
                 },
@@ -32,7 +33,8 @@ namespace HeavenStudio.Games.Loaders
                     resizable = true,
                     parameters = new List<Param>()
                     {
-                        new Param("instant", false, "", "Instantly move to the middle or to the right"),
+                        new Param("instant", false, "Instant?", "Instantly move to the middle or to the right"),
+                        new Param("whichSide", MunchyMonk.WhichSide.Right, "Starting Side", "Start on the right or the left"),
                     }
                 },
                 new GameAction("One", "One")
@@ -78,13 +80,14 @@ namespace HeavenStudio.Games.Loaders
                 {
                     function = delegate {
                         var e = eventCaller.currentEntity; 
-                        MunchyMonk.instance.Modifiers(e.beat, e["inputsTil"], e["forceGrow"], e["disableBaby"]); 
+                        MunchyMonk.instance.Modifiers(e.beat, e["inputsTil"], e["resetLevel"], e["setLevel"], e["disableBaby"]); 
                     },
                     defaultLength = 0.5f,
                     parameters = new List<Param>()
                     {
                         new Param("inputsTil", new EntityTypes.Integer(0, 50, 10), "How Many 'til Growth?", "How many dumplings are needed to grow the stache?"),
-                        new Param("forceGrow", false, "Next Will Grow?", "Will the next input increment stache growth?"),
+                        new Param("resetLevel", false, "Remove Hair", "Instantly remove all hair"),
+                        new Param("setLevel", new EntityTypes.Integer(0, 4, 0), "Set Growth Level", "Instantly grow hair"),
                         new Param("disableBaby", false, "Disable Baby?", "Make baby active or not"),
                     },
                 },
@@ -122,22 +125,10 @@ namespace HeavenStudio.Games
     using Scripts_MunchyMonk;
     public class MunchyMonk : Minigame
     {
-        static List<QueuedOne> queuedOnes = new List<QueuedOne>();
-        struct QueuedOne
-        {
-            public float beat;
-            public Color color;
-        }
-        
-        static List<QueuedTwoTwo> queuedTwoTwos = new List<QueuedTwoTwo>();
-        struct QueuedTwoTwo
-        {
-            public float beat;
-            public Color color;
-        }
-
-        static List<QueuedThree> queuedThrees = new List<QueuedThree>();
-        struct QueuedThree
+        static List<QueuedDumpling> queuedOnes = new List<QueuedDumpling>();
+        static List<QueuedDumpling> queuedTwoTwos = new List<QueuedDumpling>();
+        static List<QueuedDumpling> queuedThrees = new List<QueuedDumpling>();
+        struct QueuedDumpling
         {
             public float beat;
             public Color color;
@@ -147,7 +138,12 @@ namespace HeavenStudio.Games
         {
             Stare,
             Blush,
-            Bop,
+        }
+
+        public enum WhichSide
+        {
+            Right,
+            Left,
         }
         
         [Header("Objects")]
@@ -171,23 +167,22 @@ namespace HeavenStudio.Games
         [SerializeField] Animator ThreeGiverAnim;
         [SerializeField] Animator BrowAnim;
         [SerializeField] Animator StacheAnim;
+        [SerializeField] Animator MonkHolderAnim;
         public Animator MonkAnim;
         public Animator MonkArmsAnim;
-        public Animator DumplingAnim;
-        public Animator TwoDumpling1Anim;
-        public Animator TwoDumpling2Anim;
-        public Animator SmearAnim;
 
         [Header("Variables")]
         public float lastReportedBeat = 0f;
-        public bool monkBop = true;
         public bool needBlush;
         public bool isStaring;
-        public bool firstTwoMissed;
         public bool forceGrow;
         public int growLevel = 0;
+        public int howManyGulps;
+        public int inputsTilGrow = 10;
+        public bool twoTwoBuffer;
+        public bool firstTwoMissed;
+        private bool monkBop = true;
         private bool disableBaby;
-        private int inputsTilGrow;
         float scrollModifier = 0f;
         const string sfxName = "munchyMonk/";
 
@@ -196,7 +191,7 @@ namespace HeavenStudio.Games
         private void Awake()
         {
             instance = this;
-            if (disableBaby) Baby.SetActive(false);
+            Baby.SetActive(!disableBaby);
         }
 
         private void Update() 
@@ -222,15 +217,23 @@ namespace HeavenStudio.Games
             }
 
             // sets hair stuff active when it needs to be
-            if (growLevel == 4) BrowHolder.SetActive(true);
-            if (growLevel > 0) StacheHolder.SetActive(true);
+            if (growLevel == 4) BeatAction.New(gameObject, new List<BeatAction.Action>() {
+                new BeatAction.Action(lastReportedBeat + 0.5f, delegate { 
+                    BrowHolder.SetActive(true); 
+                    BrowAnim.Play("Idle", 0, 0); }),
+            });
+            if (growLevel > 0) BeatAction.New(gameObject, new List<BeatAction.Action>() {
+                new BeatAction.Action(lastReportedBeat + 0.5f, delegate { 
+                    StacheHolder.SetActive(true); 
+                    BrowAnim.Play("Idle"+growLevel, 0, 0); }),
+            });
 
             // resets the monk when game is paused
             if (!Conductor.instance.isPlaying && !Conductor.instance.isPaused) {
                 MonkAnim.DoScaledAnimationAsync("Idle", 0.5f);
             }
 
-            // scrolling stuff
+            // scrolling stuff (?)
             //if (needScroll) {
             //    Tile += new Vector2(2 * Time.deltaTime, 0);
             //    NormalizedX += 0.5f * Time.deltaTime;
@@ -257,18 +260,25 @@ namespace HeavenStudio.Games
         {
             if (Conductor.instance.ReportBeat(ref lastReportedBeat)) {
                 if ((MonkAnim.IsAnimationNotPlaying() || MonkAnim.IsPlayingAnimationName("Bop") || MonkAnim.IsPlayingAnimationName("Idle"))
-                    && monkBop
-                    && !isStaring){
+                && monkBop
+                && !isStaring) 
+                {
                     MonkAnim.DoScaledAnimationAsync("Bop", 0.5f);
                 }
-                if (BrowAnim.IsPlayingAnimationName("Bop") && growLevel == 4) BrowAnim.DoScaledAnimationAsync("Bop", 0.5f);
-                if (StacheAnim.IsPlayingAnimationName("Bop"+growLevel)) StacheAnim.DoScaledAnimationAsync("Bop"+growLevel, 0.5f);
+                if (growLevel == 4) BrowAnim.DoScaledAnimationAsync("Bop", 0.5f);
+                StacheAnim.DoScaledAnimationAsync("Bop"+growLevel, 0.5f);
             }
         }
 
-        public void Bop(float beat, bool doesBop)
+        public void Bop(float beat, bool bop, bool autoBop)
         {
-            monkBop = doesBop;
+            monkBop = autoBop;
+            if (bop) {
+                needBlush = false;
+                MonkAnim.DoScaledAnimationAsync("Bop", 0.5f);
+                if (growLevel == 4) BrowAnim.DoScaledAnimationAsync("Bop", 0.5f);
+                StacheAnim.DoScaledAnimationAsync("Bop"+growLevel, 0.5f);
+            }
         }
 
         public static void PreOneGoCue(float beat, Color oneColor)
@@ -278,7 +288,7 @@ namespace HeavenStudio.Games
                     new MultiSound.Sound(sfxName+"one_2", beat + 1f),
             }, forcePlay: true);
 
-            queuedOnes.Add(new QueuedOne() 
+            queuedOnes.Add(new QueuedDumpling() 
                 { beat = beat, color = oneColor, });
         }
 
@@ -305,7 +315,7 @@ namespace HeavenStudio.Games
                 new MultiSound.Sound(sfxName+"two_4", beat + 1.5f),
             }, forcePlay: true);
             
-            queuedTwoTwos.Add(new QueuedTwoTwo() 
+            queuedTwoTwos.Add(new QueuedDumpling() 
                 { beat = beat, color = twoColor, });
         }
 
@@ -344,7 +354,7 @@ namespace HeavenStudio.Games
                     new MultiSound.Sound(sfxName+"three_4", beat + 3f),
                 }, forcePlay: true);
             
-            queuedThrees.Add(new QueuedThree() 
+            queuedThrees.Add(new QueuedDumpling() 
                 { beat = beat, color = threeColor, });
         }
 
@@ -404,24 +414,23 @@ namespace HeavenStudio.Games
 
         public void MonkMove(float beat, float length, bool isInstant, int whichSide)
         {
-            if (isInstant) {
-                
-            } else {
-                if (whichSide == 0) {
-                    
-                } else {
+            string whichAnim = isInstant ? "Idle" : "Go";
+            whichAnim += (whichSide == 0 ? "Left" : "Right");
 
-                }
-            }
+            MonkHolderAnim.DoScaledAnimationAsync(whichAnim, !isInstant ? length : 0.5f);
         }
 
-        public void Modifiers(float beat, int inputsTilGrow, bool forceGrow, bool disableBaby)
+        public void Modifiers(float beat, int inputsTilGrow, bool resetLevel, int setLevel, bool disableBaby)
         {
             instance.inputsTilGrow = inputsTilGrow;
-            instance.forceGrow = forceGrow;
             instance.disableBaby = disableBaby;
 
-            if (disableBaby) Baby.SetActive(false);
+            if (setLevel != 0) {
+                growLevel = setLevel;
+            }
+            if (resetLevel) growLevel = 0;
+
+            Baby.SetActive(!disableBaby);
         }
 
         public void ScrollBG(float beat, bool isInstant)

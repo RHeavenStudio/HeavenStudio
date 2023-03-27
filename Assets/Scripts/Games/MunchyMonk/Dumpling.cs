@@ -12,8 +12,10 @@ namespace HeavenStudio.Games.Scripts_MunchyMonk
         public Animator otherAnim;
         public float startBeat;
         public float type;
+        
         const string sfxName = "munchyMonk/";
         private bool canDestroy;
+        bool delayEarly;
         
         [Header("References")]
         [SerializeField] Animator smearAnim;
@@ -24,14 +26,19 @@ namespace HeavenStudio.Games.Scripts_MunchyMonk
         private void Awake()
         {
             game = MunchyMonk.instance;
-            game.firstTwoMissed = false;
+            
+            delayEarly = game.twoTwoBuffer;
+            
+            if (game.twoTwoBuffer) BeatAction.New(gameObject, new List<BeatAction.Action>() {
+                new BeatAction.Action(startBeat+0.2f, delegate { delayEarly = false; }),
+            });
         }
 
         private void Start() 
         {
             if (type == 1f || type == 3f) {
                 game.ScheduleInput(startBeat, 1f, InputType.STANDARD_DOWN, Hit, Miss, Early);
-            } else if (type >= 3.5f) {
+            } else if (type > 3f) {
                 game.ScheduleInput(startBeat, 0.75f, InputType.STANDARD_DOWN, Hit, Miss, Early);
             } else {
                 game.ScheduleInput(startBeat, type == 2f ? 1.5f : 2f, InputType.STANDARD_DOWN, Hit, Miss, Early);
@@ -60,13 +67,21 @@ namespace HeavenStudio.Games.Scripts_MunchyMonk
                     anim.DoScaledAnimationAsync("HitHead", 0.5f);
                     Jukebox.PlayOneShotGame(sfxName+"barely");
                     canDestroy = true;
+                    game.needBlush = false;
                 } else {
                     game.MonkAnim.DoScaledAnimationAsync("Eat", 0.4f);
                     if (type == 2) otherAnim.DoScaledAnimationAsync("FollowHand", 0.5f);
                     smearAnim.Play("SmearAppear", 0, 0);
                     game.needBlush = true;
                     Jukebox.PlayOneShotGame(sfxName+"gulp");
-                    if (game.forceGrow) game.growLevel += 1;
+                    if (game.forceGrow) game.growLevel++;
+                    game.howManyGulps++;
+                    for (int i = 1; i <= 4; i++) 
+                    {
+                        if (game.howManyGulps == game.inputsTilGrow*i) {
+                            game.growLevel = i;
+                        }
+                    }
                     GameObject.Destroy(gameObject);
                 }
             }
@@ -82,7 +97,7 @@ namespace HeavenStudio.Games.Scripts_MunchyMonk
 
         private void Early(PlayerActionEvent caller) 
         { 
-            if (!(type == 2.5f) || game.firstTwoMissed) {
+            if (type != 2.5f || game.firstTwoMissed && !delayEarly) {
                 game.MonkArmsAnim.DoScaledAnimationAsync("WristSlap", 0.5f);
                 game.MonkAnim.DoScaledAnimationAsync("Miss", 0.5f);
                 smearAnim.Play("SmearAppear", 0, 0);
@@ -93,7 +108,6 @@ namespace HeavenStudio.Games.Scripts_MunchyMonk
                 });
                 canDestroy = true;
                 game.needBlush = false;
-                game.firstTwoMissed = true;
             }
         }
     }
