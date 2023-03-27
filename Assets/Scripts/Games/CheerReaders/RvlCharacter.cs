@@ -172,7 +172,7 @@ namespace HeavenStudio.Games.Scripts_CheerReaders
             canOpenBook = true;
             BaseAnim.DoScaledAnimationAsync(bookIsWhite ? "SpinfromWhite" : "SpinfromBlack", 0.5f);
             bookIsOpen = true;
-            noBop = false;
+            noBop = true;
         }
 
         public void StopSpinBook()
@@ -181,7 +181,7 @@ namespace HeavenStudio.Games.Scripts_CheerReaders
             posterBook.SetActive(true);
             BaseAnim.DoScaledAnimationAsync("OpenBook", 0.5f);
             bookIsOpen = true;
-            noBop = false;
+            noBop = true;
         }
     }
 }

@@ -117,7 +117,7 @@ TextureImporter:
       213: 7840551089617349417
     second: noPeek_2
   externalObjects: {}
-  serializedVersion: 11
+  serializedVersion: 12
   mipmaps:
     mipMapMode: 0
     enableMipMap: 0
@@ -138,6 +138,7 @@ TextureImporter:
   streamingMipmaps: 0
   streamingMipmapsPriority: 0
   vTOnly: 0
+  ignoreMasterTextureLimit: 0
   grayScaleToAlpha: 0
   generateCubemap: 6
   cubemapConvolution: 0
@@ -176,6 +177,7 @@ TextureImporter:
   textureFormatSet: 0
   ignorePngGamma: 0
   applyGammaDecoding: 0
+  cookieLightType: 1
   platformSettings:
   - serializedVersion: 3
     buildTarget: DefaultTexturePlatform
@@ -203,6 +205,18 @@ TextureImporter:
     forceMaximumCompressionQuality_BC6H_BC7: 0
   - serializedVersion: 3
     buildTarget: WebGL
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 3
+    buildTarget: Server
     maxTextureSize: 2048
     resizeAlgorithm: 0
     textureFormat: -1
@@ -1024,6 +1038,45 @@ TextureImporter:
     edges: []
     weights: []
     secondaryTextures: []
+    nameFileIdTable:
+      hair_0: -2419696912005567714
+      hair_1: 1401937738139682868
+      hair_2: 1805905626023431962
+      hair_3: -4253719726650700378
+      hair_4: 3562159510210354730
+      hair_5: -6758644850924707424
+      hair_unknown: -5169196722311800184
+      loop_0: 942323314217520520
+      loop_1: -1399815886517917591
+      loop_10: -3222625713962711138
+      loop_11: 6395449411100875954
+      loop_12: 5050934656096793441
+      loop_13: -4206057584696313279
+      loop_14: -2395772208746219394
+      loop_15: -2622185658899519874
+      loop_2: -5403727316971640240
+      loop_3: 5445009945567827846
+      loop_4: 584057860369880946
+      loop_5: 947480396733668151
+      loop_6: 178135363591916699
+      loop_7: -2242827868839044489
+      loop_8: -3526909994744005181
+      loop_9: -3794404700403252500
+      noPeek_0: -6168475699144272206
+      noPeek_1: 5276483324951909424
+      noPeek_2: 7840551089617349417
+      pluck_0: 7399396556213270179
+      pluck_1: 6186826444485647492
+      pluck_2: -1462778146776615061
+      pluckedMissed_0: -2343768176336248091
+      plucked_0: 6274628719636584708
+      plucked_1: 4651495577248990967
+      stubbleMissed_0: -5563353166721772783
+      stubble_0: 1364059582963903009
+      tweezers_0: 8479415764655094244
+      tweezers_1: -3344235887057668064
+      tweezers_2: -5355649897007194340
+      zoom_0: 949200655566714557
   spritePackingTag: 
   pSDRemoveMatte: 0
   pSDShowRemoveMatteOption: 0

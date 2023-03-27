@@ -29,10 +29,7 @@ namespace HeavenStudio.Games.Scripts_FirstContact
             //}
         }
 
-  
-
-
-        public void successTranslation(bool ace)
+        public void SuccessTranslation(bool ace)
         {
             if (ace)
             {
@@ -40,7 +37,7 @@ namespace HeavenStudio.Games.Scripts_FirstContact
                 //{
                 //    Jukebox.PlayOneShotGame("firstContact/citrusRemix/1_r");
                 //}
-                Jukebox.PlayOneShotGame("firstContact/" + randomizerLines());
+                Jukebox.PlayOneShotGame("firstContact/" + RandomizerLines());
             }
             else
             {
@@ -53,7 +50,7 @@ namespace HeavenStudio.Games.Scripts_FirstContact
             });
         }
 
-        public void ehTranslation()
+        public void EhTranslation()
         {
             Jukebox.PlayOneShotGame("firstContact/slightlyFail");
             BeatAction.New(this.gameObject, new List<BeatAction.Action>()
@@ -62,9 +59,9 @@ namespace HeavenStudio.Games.Scripts_FirstContact
             });
         }
 
-        public int randomizerLines()
+        public int RandomizerLines()
         {
-            return Random.Range(1, 11);     
+            return Random.Range(1, 11);
         }
     }
 }

@@ -159,6 +159,30 @@ namespace HeavenStudio.Util
 
             source.KillLoop(fadeTime);
         }
+
+        public static float GetPitchFromSemiTones(int semiTones, bool pitchToMusic)
+        {
+            if (pitchToMusic)
+            {
+                return Mathf.Pow(2f, (1f / 12f) * semiTones) * Conductor.instance.musicSource.pitch;
+            }
+            else
+            {
+                return Mathf.Pow(2f, (1f / 12f) * semiTones);
+            }
+        }
+
+        public static float GetPitchFromCents(int cents, bool pitchToMusic)
+        {
+            if (pitchToMusic)
+            {
+                return Mathf.Pow(2f, (1f / 12f) * (cents / 100)) * Conductor.instance.musicSource.pitch;
+            }
+            else
+            {
+                return Mathf.Pow(2f, (1f / 12f) * (cents / 100));
+            }
+        }
     }
 
 }

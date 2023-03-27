@@ -108,7 +108,7 @@ TextureImporter:
       213: 2304743923719419823
     second: cellanim.tpl.mm1_34
   externalObjects: {}
-  serializedVersion: 11
+  serializedVersion: 12
   mipmaps:
     mipMapMode: 0
     enableMipMap: 0
@@ -129,6 +129,7 @@ TextureImporter:
   streamingMipmaps: 0
   streamingMipmapsPriority: 0
   vTOnly: 0
+  ignoreMasterTextureLimit: 0
   grayScaleToAlpha: 0
   generateCubemap: 6
   cubemapConvolution: 0
@@ -167,6 +168,7 @@ TextureImporter:
   textureFormatSet: 0
   ignorePngGamma: 0
   applyGammaDecoding: 0
+  cookieLightType: 1
   platformSettings:
   - serializedVersion: 3
     buildTarget: DefaultTexturePlatform
@@ -182,6 +184,18 @@ TextureImporter:
     forceMaximumCompressionQuality_BC6H_BC7: 0
   - serializedVersion: 3
     buildTarget: Standalone
+    maxTextureSize: 4096
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 3
+    buildTarget: Server
     maxTextureSize: 4096
     resizeAlgorithm: 0
     textureFormat: -1
@@ -940,6 +954,42 @@ TextureImporter:
     edges: []
     weights: []
     secondaryTextures: []
+    nameFileIdTable:
+      BGPipe: 7482452359830385417
+      BGScaffolding: -926635024540539542
+      BigFlash: -8689022989090741800
+      BigGear: 1731676971623146639
+      BigMachinery0: -1473784852125571320
+      BigMachinery1: -3163955191872535862
+      BigWindow: 5049767731364396581
+      Conveyer0: 7301257716663513774
+      Fence: -1036779611749880337
+      Floor: -1681898400382901512
+      Ladder: 8709379519047800140
+      Machinery: 9094941074209125493
+      MediumFlash: 2362737128963917389
+      MediumWindow: -681976623942534800
+      PipeNeck: -943579971135771316
+      RoundScrew: -3599858083152641816
+      Scaffolding: 6554867697913446830
+      Screw: 1356347322529720189
+      SmallFlash: 6268156859579429675
+      SmallGear: -7385893473059824398
+      SmallSpaceshipPipe: -9216669706537891162
+      SmallWindow: -8335356989560301908
+      SpaceShipEye: -2889071456731990739
+      SpaceShipEyeFlash: 1465674010776860660
+      Spaceship: -2164064772730743734
+      SpaceshipPipeBig: -1523026338420109177
+      SpaceshipPipeBottom: 6610132385312754057
+      SpaceshipPipeTop: 3494135335440701706
+      TrafficCone: -6123683768854101590
+      Truck: 9111804982425172805
+      Wall: 9001423204299861090
+      cellanim.tpl.mm1_31: -6802675963787892709
+      cellanim.tpl.mm1_32: -5976009055941440191
+      cellanim.tpl.mm1_33: 8154423759569281189
+      cellanim.tpl.mm1_34: 2304743923719419823
   spritePackingTag: 
   pSDRemoveMatte: 0
   pSDShowRemoveMatteOption: 0

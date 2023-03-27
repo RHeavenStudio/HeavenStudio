@@ -99,7 +99,7 @@ TextureImporter:
       213: 3506189448535211472
     second: pillow_half_half_31
   externalObjects: {}
-  serializedVersion: 11
+  serializedVersion: 12
   mipmaps:
     mipMapMode: 0
     enableMipMap: 0
@@ -120,6 +120,7 @@ TextureImporter:
   streamingMipmaps: 0
   streamingMipmapsPriority: 0
   vTOnly: 0
+  ignoreMasterTextureLimit: 0
   grayScaleToAlpha: 0
   generateCubemap: 6
   cubemapConvolution: 0
@@ -158,6 +159,7 @@ TextureImporter:
   textureFormatSet: 0
   ignorePngGamma: 0
   applyGammaDecoding: 0
+  cookieLightType: 1
   platformSettings:
   - serializedVersion: 3
     buildTarget: DefaultTexturePlatform
@@ -173,6 +175,18 @@ TextureImporter:
     forceMaximumCompressionQuality_BC6H_BC7: 0
   - serializedVersion: 3
     buildTarget: Standalone
+    maxTextureSize: 4096
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 3
+    buildTarget: Server
     maxTextureSize: 4096
     resizeAlgorithm: 0
     textureFormat: -1
@@ -805,6 +819,36 @@ TextureImporter:
     edges: []
     weights: []
     secondaryTextures: []
+    nameFileIdTable:
+      pillow_half_half_0: -5990600789443370584
+      pillow_half_half_1: 3478953717645157669
+      pillow_half_half_10: -3948363500318065958
+      pillow_half_half_11: -7029378964740553133
+      pillow_half_half_13: -2749378015119555514
+      pillow_half_half_14: 2775906115871789133
+      pillow_half_half_15: -9010700328541177175
+      pillow_half_half_16: 7342167372114459729
+      pillow_half_half_18: -7133403066211054125
+      pillow_half_half_19: -4219905876726395065
+      pillow_half_half_2: 7859264451377292429
+      pillow_half_half_20: 329468610246504215
+      pillow_half_half_21: 5169118631400099224
+      pillow_half_half_22: -517222260306699803
+      pillow_half_half_23: 9197327862757068371
+      pillow_half_half_24: -694453175537986035
+      pillow_half_half_25: -4138290251643453394
+      pillow_half_half_26: 4073076251679568143
+      pillow_half_half_27: -992805527789874808
+      pillow_half_half_28: -4045091133491211538
+      pillow_half_half_29: 756142246335878278
+      pillow_half_half_3: 331643572256597651
+      pillow_half_half_30: 1331845204680278664
+      pillow_half_half_31: 3506189448535211472
+      pillow_half_half_4: -773213708508832611
+      pillow_half_half_5: 2325711557041848438
+      pillow_half_half_6: 2991139010167280223
+      pillow_half_half_8: 515776368453896215
+      pillow_half_half_9: 905075028616080326
   spritePackingTag: 
   pSDRemoveMatte: 0
   pSDShowRemoveMatteOption: 0

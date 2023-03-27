@@ -282,7 +282,7 @@ TextureImporter:
       213: 722736164280726959
     second: face_breathe_3
   externalObjects: {}
-  serializedVersion: 11
+  serializedVersion: 12
   mipmaps:
     mipMapMode: 0
     enableMipMap: 0
@@ -303,6 +303,7 @@ TextureImporter:
   streamingMipmaps: 0
   streamingMipmapsPriority: 0
   vTOnly: 0
+  ignoreMasterTextureLimit: 0
   grayScaleToAlpha: 0
   generateCubemap: 6
   cubemapConvolution: 0
@@ -341,6 +342,7 @@ TextureImporter:
   textureFormatSet: 0
   ignorePngGamma: 0
   applyGammaDecoding: 0
+  cookieLightType: 1
   platformSettings:
   - serializedVersion: 3
     buildTarget: DefaultTexturePlatform
@@ -356,6 +358,18 @@ TextureImporter:
     forceMaximumCompressionQuality_BC6H_BC7: 0
   - serializedVersion: 3
     buildTarget: Standalone
+    maxTextureSize: 4096
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 3
+    buildTarget: Server
     maxTextureSize: 4096
     resizeAlgorithm: 0
     textureFormat: -1
@@ -2248,6 +2262,96 @@ TextureImporter:
     edges: []
     weights: []
     secondaryTextures: []
+    nameFileIdTable:
+      bags_idle_0: 7935234321397735378
+      bags_idle_1: -3001681976893849735
+      body_eat_0: 5910607557738960350
+      body_eat_1: -2680567283804148421
+      body_idle_0: -6929352194190826025
+      body_idle_1: -5272210261321560058
+      body_idle_2: -4971957976712654573
+      cake: 3643155045827430959
+      cakeBag_idle: 1168296128566557295
+      cakeBag_squash_0: -2859803398730630560
+      cakeBag_squash_1: -4555232125690135383
+      cakeCrumb_0: 3212375420658124009
+      cakeCrumb_1: -5275317392194986713
+      cakeCrumb_2: 5616072645783603163
+      cryingEyes_0: 7610003009071085954
+      cryingEyes_1: 5312205739626458499
+      cryingEyes_2: -6456146426721527087
+      donut: 1398777696372993481
+      donutBag_idle: -2409015282837317474
+      donutBag_squash_0: 226727663485625787
+      donutBag_squash_1: 5532583097931853015
+      donutCrumb_0: -1439802273646433837
+      donutCrumb_1: 8079794530741991599
+      donutCrumb_2: -735699474515426002
+      face_agape: 8602782223665849759
+      face_breathe_0: 4191867238573153197
+      face_breathe_1: 7634907659984456415
+      face_breathe_2: 5694100028177086896
+      face_breathe_3: 722736164280726959
+      face_cry_0: -1853478413666530484
+      face_cry_1: -279766603764819332
+      face_cry_2: 3098420964008608819
+      face_cry_start: 4882903964378449440
+      face_down_0: 3140530027008034745
+      face_down_1: -5283635575431005449
+      face_down_2: -2523788147367013408
+      face_idle_0: -6616705012483052128
+      face_idle_1: -2893272201370579163
+      face_idle_2: 3229745093122481892
+      face_open_0: -4672645930576840813
+      face_open_1: 1358992337433302959
+      face_open_2: 7528242461416680960
+      face_sigh: -3776823088776180833
+      face_smile_0: -7884860067130880051
+      face_smile_1: 2718912176544912933
+      face_smile_2: -8181540087928235975
+      face_smile_start: -3366294840710335178
+      head_down_0: -990130264674966525
+      head_down_1: 8875788670732251143
+      head_down_2: -4268875080564874393
+      head_eat_0: -5497920933056538782
+      head_eat_1: 3690334013328164605
+      head_guide: 817663634214097942
+      head_idle_0: -4284576497444438019
+      head_idle_1: 4693836351189835842
+      head_idle_2: -3652738059706515719
+      head_lowered_A_0: -8069184701185556891
+      head_lowered_A_1: 6549150979540072994
+      head_lowered_A_2: 8247008279266272425
+      head_lowered_B_0: 2901771531764852020
+      head_lowered_B_1: -3849036896188649151
+      head_lowered_B_2: 7875902933223150615
+      head_up_0: 3962418017532597325
+      head_up_1: 5084912212372861364
+      head_up_2: -4510943112030000838
+      head_up_start: -7863595102779574332
+      legs_0: -5486372003890969138
+      legs_1: -6755901645142815425
+      legs_2: 3223480979365912239
+      miscCrumb_0: 7871551823910982100
+      miscCrumb_1: -2134803537227113857
+      miscCrumb_2: -8852617904403500277
+      sigh: 2734218647396184947
+      tear_0: 4780287620268858678
+      tear_1: -5441719038875179715
+      tear_2: -605446595197673687
+      tear_3: 6806743330668479091
+      tear_4: 7731674343078622842
+      tear_5: 2303814630559127000
+      wind_0: 6946420631876546468
+      wind_1: -1228817922464324763
+      wind_2: 5736502293637523389
+      wind_3: -7752794608389112884
+      wind_4: -7766596497955584007
+      wind_5: -2216710665269444239
+      wind_6: -1977968114964736485
+      wind_7: -618490415002648250
+      wind_8: 5417979284111823625
+      wind_9: 4019398722650833767
   spritePackingTag: 
   pSDRemoveMatte: 0
   pSDShowRemoveMatteOption: 0

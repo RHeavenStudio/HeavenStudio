@@ -67,6 +67,15 @@ namespace HeavenStudio.Editor
             AddParams(entity);
         }
 
+        static string TrackToThemeColour(int track) => track switch
+        {
+            1 => EditorTheme.theme.properties.Layer2Col,
+            2 => EditorTheme.theme.properties.Layer3Col,
+            3 => EditorTheme.theme.properties.Layer4Col,
+            4 => EditorTheme.theme.properties.Layer5Col,
+            _ => EditorTheme.theme.properties.Layer1Col
+        };
+
         private void AddParams(DynamicBeatmap.DynamicEntity entity)
         {
             var minigame = EventCaller.instance.GetMinigame(entity.datamodel.Split(0));
@@ -78,7 +87,8 @@ namespace HeavenStudio.Editor
                 eventSelector.SetActive(false);
                 this.entity = entity;
 
-                Editor.instance.SetGameEventTitle($"Properties for {entity.datamodel}");
+                string col = TrackToThemeColour(entity.track);
+                Editor.instance.SetGameEventTitle($"Properties for <color=#{col}>{action.displayName}</color> on Beat {entity.beat}");
 
                 DestroyParams();
 

@@ -15,7 +15,7 @@ TextureImporter:
       213: -2528918449702486434
     second: DjThumbsUp
   externalObjects: {}
-  serializedVersion: 11
+  serializedVersion: 12
   mipmaps:
     mipMapMode: 0
     enableMipMap: 0
@@ -36,6 +36,7 @@ TextureImporter:
   streamingMipmaps: 0
   streamingMipmapsPriority: 0
   vTOnly: 0
+  ignoreMasterTextureLimit: 0
   grayScaleToAlpha: 0
   generateCubemap: 6
   cubemapConvolution: 0
@@ -74,6 +75,7 @@ TextureImporter:
   textureFormatSet: 0
   ignorePngGamma: 0
   applyGammaDecoding: 0
+  cookieLightType: 1
   platformSettings:
   - serializedVersion: 3
     buildTarget: DefaultTexturePlatform
@@ -89,6 +91,18 @@ TextureImporter:
     forceMaximumCompressionQuality_BC6H_BC7: 0
   - serializedVersion: 3
     buildTarget: Standalone
+    maxTextureSize: 1024
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 3
+    buildTarget: Server
     maxTextureSize: 1024
     resizeAlgorithm: 0
     textureFormat: -1
@@ -118,7 +132,7 @@ TextureImporter:
       tessellationDetail: 0
       bones: []
       spriteID: 763dae69b74d0fc40800000000000000
-      internalID: 5544164768571118439
+      internalID: -8499381173796814039
       vertices: []
       indices: 
       edges: []
@@ -139,7 +153,7 @@ TextureImporter:
       tessellationDetail: 0
       bones: []
       spriteID: 5b4a69592141681a0800000000000000
-      internalID: -6807731716672281419
+      internalID: 8520508767416187551
       vertices: []
       indices: 
       edges: []
@@ -160,7 +174,7 @@ TextureImporter:
       tessellationDetail: 0
       bones: []
       spriteID: 5e38ff1b6378bc310800000000000000
-      internalID: 1426382375977190373
+      internalID: -4264556394388760843
       vertices: []
       indices: 
       edges: []
@@ -181,7 +195,7 @@ TextureImporter:
       tessellationDetail: 0
       bones: []
       spriteID: db81b9f9d3564f410800000000000000
-      internalID: 1509943090421110973
+      internalID: -8666286934846544496
       vertices: []
       indices: 
       edges: []
@@ -280,6 +294,15 @@ TextureImporter:
     edges: []
     weights: []
     secondaryTextures: []
+    nameFileIdTable:
+      CosmicDisgust: -8499381173796814039
+      DjThumbsUp: -2528918449702486434
+      LockstepNerd: -8666286934846544496
+      MakoSurprise: -4264556394388760843
+      MoaiCool: 825579231639803812
+      MonkeySad: 5944629093363706705
+      SpacemanPensive: 696307254153927553
+      TrollAlien: 8520508767416187551
   spritePackingTag: 
   pSDRemoveMatte: 0
   pSDShowRemoveMatteOption: 0
