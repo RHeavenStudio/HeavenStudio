@@ -58,6 +58,22 @@ namespace HeavenStudio.Games.Loaders
                     },
                     defaultLength = 0.5f,
                 },
+                new GameAction("GameplayModifiers", "Gameplay Modifiers")
+                {
+                    function = delegate { 
+                        var e = eventCaller.currentEntity; 
+                        OctopusMachine.instance.GameplayModifiers(e.beat, e["color"], e["octoColor"], e["oct1"], e["oct2"], e["oct3"]);
+                    },
+                    parameters = new List<Param>()                     
+                    {
+                        new Param("color", new Color(1f, 0.84f, 0), "Background Color", "Set the background color"),
+                        new Param("octoColor", new Color(1f, 0.145f, 0.5f), "Octopodes Color", "Set the octopode's color"),
+                        new Param("oct1", true, "Show Octopus 1?", "Keep bopping using the selected bop"),
+                        new Param("oct2", true, "Show Octopus 2?", "Keep bopping using the selected bop"),
+                        new Param("oct3", true, "Show Octopus 3?", "Keep bopping using the selected bop"),
+                    },
+                    defaultLength = 0.5f,
+                },
             });
         }
     }
@@ -68,17 +84,20 @@ namespace HeavenStudio.Games
     using Scripts_OctopusMachine;
     public partial class OctopusMachine : Minigame
     {
-        [Header("Animators")]
-        public GameObject Octopus1;
-        public GameObject Octopus2;
-        public GameObject Octopus3;
+        [Header("Sprite Renderers")]
+        [SerializeField] SpriteRenderer Background;
+        
+        [Header("Octopodes")]
+        public Octopus Octopus1;
+        public Octopus Octopus2;
+        public Octopus Octopus3;
 
         public bool isHappy;
         public bool isAngry;
         public bool isShocked;
         public bool isPreparing;
         public bool bopOn = true;
-        private float lastReportedBeat = 0f;
+        public float lastReportedBeat = 0f;
 
         public static OctopusMachine instance;
 
@@ -98,6 +117,11 @@ namespace HeavenStudio.Games
         private void LateUpdate() 
         {
             
+        }
+
+        private void AllFunction()
+        {
+            //Octopus1;
         }
 
         public void Prepare(float beat)
@@ -131,7 +155,16 @@ namespace HeavenStudio.Games
 
         public void PlayAnimation(float beat, bool keepBopping, int whichBop)
         {
-            Octopus.instance.PlayAnimation(beat, keepBopping, whichBop);
+            
+        }
+
+        public void GameplayModifiers(float beat, Color bgColor, Color octoColor, bool oct1, bool oct2, bool oct3)
+        {
+            Background.color = bgColor;
+            
+            Octopus1.GameplayModifiers(oct1, octoColor);
+            Octopus2.GameplayModifiers(oct2, octoColor);
+            Octopus3.GameplayModifiers(oct3, octoColor);
         }
     }
 }

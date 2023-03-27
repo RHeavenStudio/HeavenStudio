@@ -10,11 +10,6 @@ namespace HeavenStudio.Games.Scripts_OctopusMachine
         [SerializeField] Animator anim;
         [SerializeField] SpriteRenderer sr;
         [SerializeField] bool player;
-        
-        public bool singing;
-        public bool disappeared = false;
-        public bool shouldMegaClose;
-        private float lastReportedBeat = 0f;
 
         private OctopusMachine game;
         public static Octopus instance;
@@ -31,7 +26,7 @@ namespace HeavenStudio.Games.Scripts_OctopusMachine
 
         void LateUpdate()
         {
-            if (Conductor.instance.ReportBeat(ref lastReportedBeat)/* && !game.isPreparing && game.bopOn*/)
+            if (Conductor.instance.ReportBeat(ref game.lastReportedBeat)/* && !game.isPreparing && game.bopOn*/)
             {
                 //if (anim.IsAnimationNotPlaying() || anim.IsPlayingAnimationName("Idle"))
                 if (game.isHappy) {
@@ -53,26 +48,7 @@ namespace HeavenStudio.Games.Scripts_OctopusMachine
 
         public void TogglePresence(bool disappear)
         {
-            /*
-            if (disappear)
-            {
-                sr.color = new Color(1, 1, 1, 0);
-                StopSinging(false, false);
-                anim.Play("Idle", 0, 0);
-                disappeared = disappear;
-            }
-            else
-            {
-                disappeared = disappear;
-                sr.color = new Color(1, 1, 1, 1);
-                if (player && !PlayerInput.Pressing() && !GameManager.instance.autoplay) 
-                {
-                    StartSinging();
-                    game.leftChorusKid.MissPose();
-                    game.middleChorusKid.MissPose();
-                } 
-            }
-            */
+            gameObject.SetActive(false);
         }
 
         public void MissPose()
@@ -171,6 +147,12 @@ namespace HeavenStudio.Games.Scripts_OctopusMachine
                 game.isAngry =   whichBop == 2 ? keepBopping : !keepBopping;
                 game.isShocked = whichBop == 3 ? keepBopping : !keepBopping;
             }
+        }
+
+        public void GameplayModifiers(bool isActive, Color octoColor)
+        {
+            gameObject.SetActive(isActive);
+            sr.color = octoColor;
         }
     }
 }
