@@ -87,7 +87,7 @@ TextureImporter:
       213: -6208428328633203412
     second: arm10
   externalObjects: {}
-  serializedVersion: 11
+  serializedVersion: 12
   mipmaps:
     mipMapMode: 0
     enableMipMap: 0
@@ -108,6 +108,7 @@ TextureImporter:
   streamingMipmaps: 0
   streamingMipmapsPriority: 0
   vTOnly: 0
+  ignoreMasterTextureLimit: 0
   grayScaleToAlpha: 0
   generateCubemap: 6
   cubemapConvolution: 0
@@ -146,6 +147,7 @@ TextureImporter:
   textureFormatSet: 0
   ignorePngGamma: 0
   applyGammaDecoding: 0
+  cookieLightType: 1
   platformSettings:
   - serializedVersion: 3
     buildTarget: DefaultTexturePlatform
@@ -161,6 +163,18 @@ TextureImporter:
     forceMaximumCompressionQuality_BC6H_BC7: 0
   - serializedVersion: 3
     buildTarget: Standalone
+    maxTextureSize: 4096
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 0
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 3
+    buildTarget: Server
     maxTextureSize: 4096
     resizeAlgorithm: 0
     textureFormat: -1
@@ -772,6 +786,29 @@ TextureImporter:
     edges: []
     weights: []
     secondaryTextures: []
+    nameFileIdTable:
+      arm1: 4895197125390526642
+      arm2: -5396492728941557028
+      arm3: 4061297426139077928
+      arm4: 6971618357792909585
+      arm5: 4759820726130029815
+      bamboobody: 578083077825452681
+      bambooleg: -6046825488712637221
+      body: 958463492824073032
+      bowlarm: 1702376433206352560
+      chopstick: 3088347335010208334
+      cranebody: -6891565754864323063
+      cranehand: -983027893514587309
+      exclam: -6915359813905337741
+      head: -9180469564940661545
+      hit: 7738743442453362919
+      noodle: -7781076405264088541
+      noodlediag: -674946438095847156
+      shock: -3836040944532565682
+      sweat: 3476064484651541662
+      water1: -6073419700956770398
+      water2: 5127276088981787802
+      woosh: -5721719725702941495
   spritePackingTag: 
   pSDRemoveMatte: 0
   pSDShowRemoveMatteOption: 0

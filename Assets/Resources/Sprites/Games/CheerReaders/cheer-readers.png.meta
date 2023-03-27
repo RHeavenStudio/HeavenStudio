@@ -609,7 +609,7 @@ TextureImporter:
       213: -2574116057089265296
     second: npcFace
   externalObjects: {}
-  serializedVersion: 11
+  serializedVersion: 12
   mipmaps:
     mipMapMode: 0
     enableMipMap: 0
@@ -630,6 +630,7 @@ TextureImporter:
   streamingMipmaps: 0
   streamingMipmapsPriority: 0
   vTOnly: 0
+  ignoreMasterTextureLimit: 0
   grayScaleToAlpha: 0
   generateCubemap: 6
   cubemapConvolution: 0
@@ -668,6 +669,7 @@ TextureImporter:
   textureFormatSet: 0
   ignorePngGamma: 0
   applyGammaDecoding: 0
+  cookieLightType: 1
   platformSettings:
   - serializedVersion: 3
     buildTarget: DefaultTexturePlatform
@@ -683,6 +685,18 @@ TextureImporter:
     forceMaximumCompressionQuality_BC6H_BC7: 0
   - serializedVersion: 3
     buildTarget: Standalone
+    maxTextureSize: 4096
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 3
+    buildTarget: Server
     maxTextureSize: 4096
     resizeAlgorithm: 0
     textureFormat: -1
@@ -3205,6 +3219,126 @@ TextureImporter:
     edges: []
     weights: []
     secondaryTextures: []
+    nameFileIdTable:
+      BigGoofyAhhEyes: -7673831694589030049
+      cheer-readers_0: 5664718857244326553
+      cheer-readers_10: 6466272497041642828
+      cheer-readers_104: 6146734331619782691
+      cheer-readers_105: -217589331969828474
+      cheer-readers_11: 1587382282584553322
+      cheer-readers_116: -178867542479048458
+      cheer-readers_117: 8465143210684959325
+      cheer-readers_118: -1129194385826749984
+      cheer-readers_119: -5329975812318359223
+      cheer-readers_12: 9023233816192627823
+      cheer-readers_129: -1894354305092975657
+      cheer-readers_13: 1400469331785967565
+      cheer-readers_130: 438574754569296498
+      cheer-readers_131: 4340861660915537486
+      cheer-readers_132: -1485612747986824076
+      cheer-readers_133: 622282686458135584
+      cheer-readers_134: -5711205102100660125
+      cheer-readers_135: 6595217881717120817
+      cheer-readers_136: 2677275786907215083
+      cheer-readers_137: -7122041067368919386
+      cheer-readers_138: 6138909472680624933
+      cheer-readers_139: -5671513390632051769
+      cheer-readers_14: 5646896698258859236
+      cheer-readers_140: -5400841416025928330
+      cheer-readers_141: 3485930761940881580
+      cheer-readers_142: 7368536349855748014
+      cheer-readers_143: 6672199066844809320
+      cheer-readers_144: 1860491579883808679
+      cheer-readers_145: -3393616243084179450
+      cheer-readers_146: 7744356203408485867
+      cheer-readers_147: -8627125912034305402
+      cheer-readers_148: 7196552193750886076
+      cheer-readers_149: -9026080448085602132
+      cheer-readers_15: -8737567067133550069
+      cheer-readers_150: -1887240150535088565
+      cheer-readers_151: 8527720906083966760
+      cheer-readers_152: 5355993931481883817
+      cheer-readers_153: -725435268189238408
+      cheer-readers_154: 2357979401823218148
+      cheer-readers_155: 5560505545088118291
+      cheer-readers_156: 6536458245372075488
+      cheer-readers_157: -5052122849752904769
+      cheer-readers_158: -805203203280840840
+      cheer-readers_159: -2587268817283063533
+      cheer-readers_16: -878927638917945599
+      cheer-readers_160: -1638980542571628673
+      cheer-readers_161: 4107833875509807711
+      cheer-readers_162: 2275492283542325262
+      cheer-readers_163: -7340421573957607724
+      cheer-readers_164: 4870642582390892777
+      cheer-readers_165: -5821627700015128076
+      cheer-readers_166: -6951183911215004091
+      cheer-readers_167: 2129227666415345740
+      cheer-readers_168: 5307609672283693023
+      cheer-readers_169: -3351175702392363792
+      cheer-readers_17: 6095482874357518653
+      cheer-readers_170: 6615418374824545712
+      cheer-readers_171: 7381539850699478876
+      cheer-readers_172: 6793948576732459115
+      cheer-readers_173: 1651047579050591808
+      cheer-readers_174: 840866296545127707
+      cheer-readers_175: 2464827563489554995
+      cheer-readers_176: -3897861092385691698
+      cheer-readers_177: 2889518242848410557
+      cheer-readers_178: -1529118266215566874
+      cheer-readers_179: 1946926269140170104
+      cheer-readers_18: 4132494765115010730
+      cheer-readers_180: 1139284068046350429
+      cheer-readers_181: -8193323502094492737
+      cheer-readers_182: 2781626477670730303
+      cheer-readers_183: 7935712846837170828
+      cheer-readers_184: 640969529672565965
+      cheer-readers_185: -6294506656073391423
+      cheer-readers_186: -4671829961079090864
+      cheer-readers_187: -3427224493959835449
+      cheer-readers_188: -3719754172582328037
+      cheer-readers_189: -6499817665786829762
+      cheer-readers_19: -6769750040136956674
+      cheer-readers_190: 7557853326030736682
+      cheer-readers_191: 6919042594620093679
+      cheer-readers_192: -4707101605076452884
+      cheer-readers_193: 1042550936800676831
+      cheer-readers_194: -8213305817640890680
+      cheer-readers_195: -6819253445980162794
+      cheer-readers_196: -6141104968991528469
+      cheer-readers_197: 1701204105077028232
+      cheer-readers_198: -3938662184026992889
+      cheer-readers_199: -2798518153828950722
+      cheer-readers_2: -7744303563255297993
+      cheer-readers_20: 7102343085418091870
+      cheer-readers_200: 2767919096910506007
+      cheer-readers_21: -1881332549182201062
+      cheer-readers_22: -2851766612098421955
+      cheer-readers_23: -1993204973455665596
+      cheer-readers_24: -1472619846976571618
+      cheer-readers_25: 4450897551167700809
+      cheer-readers_26: 552178472432447742
+      cheer-readers_27: -4017459494466761847
+      cheer-readers_28: 5686157147254441534
+      cheer-readers_29: -8434276479536598236
+      cheer-readers_3: 1675634680518985293
+      cheer-readers_30: -7458684091252050004
+      cheer-readers_31: -5172663639967986211
+      cheer-readers_32: -2659203016936074854
+      cheer-readers_4: -6245825983485071391
+      cheer-readers_46: 5383791766325330503
+      cheer-readers_47: 5189126126919105751
+      cheer-readers_48: 2734132935022558319
+      cheer-readers_5: -2313662870353695135
+      cheer-readers_6: -1609572303642303960
+      cheer-readers_7: -7391912298171570924
+      cheer-readers_8: -414642827243828403
+      cheer-readers_84: 5497043088030181253
+      cheer-readers_85: -6499183163413813722
+      cheer-readers_86: -3429780706886188889
+      cheer-readers_87: -4269756524833903169
+      cheer-readers_9: -6672788326233990540
+      npcFace: -2574116057089265296
   spritePackingTag: 
   pSDRemoveMatte: 0
   pSDShowRemoveMatteOption: 0

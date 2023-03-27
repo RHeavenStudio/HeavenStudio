@@ -255,7 +255,7 @@ TextureImporter:
       213: -4386690278540424363
     second: idol_Clt_body_down0_half
   externalObjects: {}
-  serializedVersion: 11
+  serializedVersion: 12
   mipmaps:
     mipMapMode: 0
     enableMipMap: 0
@@ -276,6 +276,7 @@ TextureImporter:
   streamingMipmaps: 0
   streamingMipmapsPriority: 0
   vTOnly: 0
+  ignoreMasterTextureLimit: 0
   grayScaleToAlpha: 0
   generateCubemap: 6
   cubemapConvolution: 0
@@ -314,6 +315,7 @@ TextureImporter:
   textureFormatSet: 0
   ignorePngGamma: 0
   applyGammaDecoding: 0
+  cookieLightType: 1
   platformSettings:
   - serializedVersion: 3
     buildTarget: DefaultTexturePlatform
@@ -329,6 +331,18 @@ TextureImporter:
     forceMaximumCompressionQuality_BC6H_BC7: 0
   - serializedVersion: 3
     buildTarget: Standalone
+    maxTextureSize: 4096
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 3
+    buildTarget: Server
     maxTextureSize: 4096
     resizeAlgorithm: 0
     textureFormat: -1
@@ -2116,6 +2130,91 @@ TextureImporter:
     edges: []
     weights: []
     secondaryTextures: []
+    nameFileIdTable:
+      fanClub_IdolParts_13: 7817682494542373926
+      fanClub_IdolParts_14: 8406083837722042950
+      fan_Arm00: -2989691326247451308
+      fan_Arm01: 3790893458473894746
+      fan_Arm02: 7295770420721055256
+      fan_Arm03: -7942644017914661281
+      fan_Arm04: -3806372859529553674
+      fan_Arm05: -639103645387118855
+      fan_Body00: 2101177586073812764
+      fan_Body01: 5379039286275767540
+      fan_Body02: 1026033717333140948
+      fan_Body03: 2689881232273310843
+      fan_Body04: 1743681427122389508
+      fan_Body05: -198993962868910611
+      fan_Body06: 1143994186590036386
+      fan_Body07: 8838217020243086070
+      fan_Face00: -1732965317767057221
+      fan_Face01: 5346145209676457094
+      fan_Face02: -2380161411252257728
+      fan_Hand00: -6190388442968695389
+      fan_Hand01: 3272263371775538141
+      fan_Hand02: -408067975929544184
+      fan_Hand03: -928842840566755790
+      fan_Hand04: 8030186601130789190
+      fan_Hand05: -6887208281833320651
+      fan_Hand06: 5964782772993326593
+      idol_Arm_00: 7516679348042953344
+      idol_Arm_01: 4485894184933120970
+      idol_Arm_02: -8502107373801254046
+      idol_Arm_03: -3727349108590289553
+      idol_Arm_04: -2998041914788538250
+      idol_Arm_05: 1701402326919841253
+      idol_Arm_06: -4684268937190979842
+      idol_Arm_07: 4268582668646798735
+      idol_Arm_08: 4845979151013781269
+      idol_Clt_body: -8678995155560733606
+      idol_Clt_body_down0: -1683005477360016522
+      idol_Clt_body_down0_half: -4386690278540424363
+      idol_Clt_body_down1: -6684664956765449452
+      idol_Clt_body_down2: 6636417687825593121
+      idol_Clt_body_down3: -1062733307327837823
+      idol_Clt_body_down4: -3841009503096452941
+      idol_Clt_body_up: -1633484853686196032
+      idol_Clt_body_up1: -4623714488368751446
+      idol_Clt_collar: 8334290127345330533
+      idol_Hed_close: -3154070123560626495
+      idol_Hed_frown: 4698751359723091083
+      idol_Hed_fullOpen: 4763604459074226989
+      idol_Hed_hair00: -989471627981227243
+      idol_Hed_hair01: -2161494786766541539
+      idol_Hed_halfClose: -2162676425073278126
+      idol_Hed_neutral: 5079826356707723058
+      idol_Hed_oh: -5555508115992296399
+      idol_Hed_open: -4822148881525915573
+      idol_Hed_startOpen: -7118178122172713354
+      idol_Hnd_00: 8932514460299386422
+      idol_Hnd_01: -8671314134912825154
+      idol_Hnd_02: 4846501274897350582
+      idol_Hnd_03: 5688886673735952880
+      idol_Hnd_04: -4043190664451062399
+      idol_Hnd_05: 7590600594947619636
+      idol_Hnd_06: -989878179865158792
+      idol_Hnd_07: -2172476432286208557
+      idol_Hnd_08: -7664577289212602306
+      idol_Hnd_09: -3960305690750155392
+      idol_Hnd_10: -546228402893326850
+      idol_Shadow: -8813925957938695401
+      idol_Shs_beat00: -3805976302117807119
+      idol_Shs_beat01: 4127508232476086834
+      idol_Shs_beat02: 3350420420849732999
+      idol_Shs_peace00: 6316182542933813096
+      idol_Shs_squat00: -3891623105835644282
+      idol_Shs_squat01: 8352302213957161954
+      idol_Shs_squat02: -5171665167739991516
+      idol_Shs_wink00: 8620145076672222142
+      idol_Shs_wink01: -6230933788977649903
+      idol_Shs_wink02: 8222091356637492441
+      idol_mike00: -5925316431864076564
+      idol_mike01: 4325334240670822826
+      idol_mike02: 7431816273384491690
+      impact_effect: -3783166971557802879
+      ntrIdol_handCrapEffect: 8885945063169615741
+      ntrIdol_heartEffect: -170988832995438424
+      psyllium: -4046640891417002374
   spritePackingTag: 
   pSDRemoveMatte: 0
   pSDShowRemoveMatteOption: 0

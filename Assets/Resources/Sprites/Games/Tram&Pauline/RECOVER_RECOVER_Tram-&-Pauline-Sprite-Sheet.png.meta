@@ -165,7 +165,7 @@ TextureImporter:
       213: -7528870984464910306
     second: RECOVER_RECOVER_Tram-&-Pauline-Sprite-Sheet_66
   externalObjects: {}
-  serializedVersion: 11
+  serializedVersion: 12
   mipmaps:
     mipMapMode: 0
     enableMipMap: 0
@@ -186,6 +186,7 @@ TextureImporter:
   streamingMipmaps: 0
   streamingMipmapsPriority: 0
   vTOnly: 0
+  ignoreMasterTextureLimit: 0
   grayScaleToAlpha: 0
   generateCubemap: 6
   cubemapConvolution: 0
@@ -224,6 +225,7 @@ TextureImporter:
   textureFormatSet: 0
   ignorePngGamma: 0
   applyGammaDecoding: 0
+  cookieLightType: 1
   platformSettings:
   - serializedVersion: 3
     buildTarget: DefaultTexturePlatform
@@ -311,6 +313,18 @@ TextureImporter:
     forceMaximumCompressionQuality_BC6H_BC7: 0
   - serializedVersion: 3
     buildTarget: Android
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 2
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 3
+    buildTarget: Server
     maxTextureSize: 2048
     resizeAlgorithm: 0
     textureFormat: -1
@@ -1741,6 +1755,74 @@ TextureImporter:
     edges: []
     weights: []
     secondaryTextures: []
+    nameFileIdTable:
+      RECOVER_RECOVER_Tram-&-Pauline-Sprite-Sheet_0: -8612167718959245741
+      RECOVER_RECOVER_Tram-&-Pauline-Sprite-Sheet_1: 7390356721182759612
+      RECOVER_RECOVER_Tram-&-Pauline-Sprite-Sheet_10: 3053360830152635461
+      RECOVER_RECOVER_Tram-&-Pauline-Sprite-Sheet_11: -1123903551261632959
+      RECOVER_RECOVER_Tram-&-Pauline-Sprite-Sheet_12: 1211642113173458978
+      RECOVER_RECOVER_Tram-&-Pauline-Sprite-Sheet_13: 2624865916151102120
+      RECOVER_RECOVER_Tram-&-Pauline-Sprite-Sheet_14: -889945887597319464
+      RECOVER_RECOVER_Tram-&-Pauline-Sprite-Sheet_15: 2776664541481290941
+      RECOVER_RECOVER_Tram-&-Pauline-Sprite-Sheet_16: -5210155266675903753
+      RECOVER_RECOVER_Tram-&-Pauline-Sprite-Sheet_17: 2240283011897804189
+      RECOVER_RECOVER_Tram-&-Pauline-Sprite-Sheet_18: -8317373173921436008
+      RECOVER_RECOVER_Tram-&-Pauline-Sprite-Sheet_19: -5602460221485551057
+      RECOVER_RECOVER_Tram-&-Pauline-Sprite-Sheet_2: 4585644463669789579
+      RECOVER_RECOVER_Tram-&-Pauline-Sprite-Sheet_20: -1874652708825713391
+      RECOVER_RECOVER_Tram-&-Pauline-Sprite-Sheet_21: 1079197239194082870
+      RECOVER_RECOVER_Tram-&-Pauline-Sprite-Sheet_22: 6059845270702633424
+      RECOVER_RECOVER_Tram-&-Pauline-Sprite-Sheet_23: 7020806010245425195
+      RECOVER_RECOVER_Tram-&-Pauline-Sprite-Sheet_24: 6548741760706516382
+      RECOVER_RECOVER_Tram-&-Pauline-Sprite-Sheet_25: 9188932013516558714
+      RECOVER_RECOVER_Tram-&-Pauline-Sprite-Sheet_26: 1725962831943526329
+      RECOVER_RECOVER_Tram-&-Pauline-Sprite-Sheet_27: -4131436481152181931
+      RECOVER_RECOVER_Tram-&-Pauline-Sprite-Sheet_28: -5167699861639881057
+      RECOVER_RECOVER_Tram-&-Pauline-Sprite-Sheet_29: 7993616602135746560
+      RECOVER_RECOVER_Tram-&-Pauline-Sprite-Sheet_3: -2656649667344404000
+      RECOVER_RECOVER_Tram-&-Pauline-Sprite-Sheet_30: 8028106073919095265
+      RECOVER_RECOVER_Tram-&-Pauline-Sprite-Sheet_31: 875355808499236359
+      RECOVER_RECOVER_Tram-&-Pauline-Sprite-Sheet_32: 4480362655551042098
+      RECOVER_RECOVER_Tram-&-Pauline-Sprite-Sheet_33: -192423855842473422
+      RECOVER_RECOVER_Tram-&-Pauline-Sprite-Sheet_34: -1717786220254428127
+      RECOVER_RECOVER_Tram-&-Pauline-Sprite-Sheet_35: -5882226184456026284
+      RECOVER_RECOVER_Tram-&-Pauline-Sprite-Sheet_36: 1934585290281282127
+      RECOVER_RECOVER_Tram-&-Pauline-Sprite-Sheet_37: -6870337041934223237
+      RECOVER_RECOVER_Tram-&-Pauline-Sprite-Sheet_38: -7344913641820728211
+      RECOVER_RECOVER_Tram-&-Pauline-Sprite-Sheet_39: -8077215503540938382
+      RECOVER_RECOVER_Tram-&-Pauline-Sprite-Sheet_4: 3694782256493479798
+      RECOVER_RECOVER_Tram-&-Pauline-Sprite-Sheet_40: -4156248209809663934
+      RECOVER_RECOVER_Tram-&-Pauline-Sprite-Sheet_41: 845867448192972462
+      RECOVER_RECOVER_Tram-&-Pauline-Sprite-Sheet_42: 2458837037843320987
+      RECOVER_RECOVER_Tram-&-Pauline-Sprite-Sheet_43: -4027459009816365101
+      RECOVER_RECOVER_Tram-&-Pauline-Sprite-Sheet_44: 8259253693665317325
+      RECOVER_RECOVER_Tram-&-Pauline-Sprite-Sheet_45: -837594594620566895
+      RECOVER_RECOVER_Tram-&-Pauline-Sprite-Sheet_46: 3154060122771060097
+      RECOVER_RECOVER_Tram-&-Pauline-Sprite-Sheet_47: -8136780880954951387
+      RECOVER_RECOVER_Tram-&-Pauline-Sprite-Sheet_48: 4891825639681428434
+      RECOVER_RECOVER_Tram-&-Pauline-Sprite-Sheet_49: -8203379519868694442
+      RECOVER_RECOVER_Tram-&-Pauline-Sprite-Sheet_5: -490691205786905204
+      RECOVER_RECOVER_Tram-&-Pauline-Sprite-Sheet_50: 3478326701539588074
+      RECOVER_RECOVER_Tram-&-Pauline-Sprite-Sheet_51: 5389183505165400281
+      RECOVER_RECOVER_Tram-&-Pauline-Sprite-Sheet_52: -8806874789526445207
+      RECOVER_RECOVER_Tram-&-Pauline-Sprite-Sheet_53: -3440904866826519934
+      RECOVER_RECOVER_Tram-&-Pauline-Sprite-Sheet_54: -2161684279422157295
+      RECOVER_RECOVER_Tram-&-Pauline-Sprite-Sheet_55: 2144298046100878563
+      RECOVER_RECOVER_Tram-&-Pauline-Sprite-Sheet_56: -3609842410432852244
+      RECOVER_RECOVER_Tram-&-Pauline-Sprite-Sheet_57: 6243803522036150668
+      RECOVER_RECOVER_Tram-&-Pauline-Sprite-Sheet_58: -1824667180616975039
+      RECOVER_RECOVER_Tram-&-Pauline-Sprite-Sheet_59: 8758645069575236022
+      RECOVER_RECOVER_Tram-&-Pauline-Sprite-Sheet_6: 982170280257405871
+      RECOVER_RECOVER_Tram-&-Pauline-Sprite-Sheet_60: 6729444907988845907
+      RECOVER_RECOVER_Tram-&-Pauline-Sprite-Sheet_61: -2988658902597987427
+      RECOVER_RECOVER_Tram-&-Pauline-Sprite-Sheet_62: -1790312464830033258
+      RECOVER_RECOVER_Tram-&-Pauline-Sprite-Sheet_63: 6329084790740872780
+      RECOVER_RECOVER_Tram-&-Pauline-Sprite-Sheet_64: 278215062063210767
+      RECOVER_RECOVER_Tram-&-Pauline-Sprite-Sheet_65: -8866708759753017930
+      RECOVER_RECOVER_Tram-&-Pauline-Sprite-Sheet_66: -7528870984464910306
+      RECOVER_RECOVER_Tram-&-Pauline-Sprite-Sheet_7: -1103487863999260978
+      RECOVER_RECOVER_Tram-&-Pauline-Sprite-Sheet_8: 5008395906669588822
+      RECOVER_RECOVER_Tram-&-Pauline-Sprite-Sheet_9: -6154374969515144245
   spritePackingTag: 
   pSDRemoveMatte: 0
   pSDShowRemoveMatteOption: 0

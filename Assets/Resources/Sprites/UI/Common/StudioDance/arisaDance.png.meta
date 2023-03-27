@@ -165,7 +165,7 @@ TextureImporter:
       213: -1473077032702836631
     second: arisaDance_53
   externalObjects: {}
-  serializedVersion: 11
+  serializedVersion: 12
   mipmaps:
     mipMapMode: 0
     enableMipMap: 0
@@ -186,6 +186,7 @@ TextureImporter:
   streamingMipmaps: 0
   streamingMipmapsPriority: 0
   vTOnly: 0
+  ignoreMasterTextureLimit: 0
   grayScaleToAlpha: 0
   generateCubemap: 6
   cubemapConvolution: 0
@@ -224,6 +225,7 @@ TextureImporter:
   textureFormatSet: 0
   ignorePngGamma: 0
   applyGammaDecoding: 0
+  cookieLightType: 1
   platformSettings:
   - serializedVersion: 3
     buildTarget: DefaultTexturePlatform
@@ -239,6 +241,18 @@ TextureImporter:
     forceMaximumCompressionQuality_BC6H_BC7: 0
   - serializedVersion: 3
     buildTarget: Standalone
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 3
+    buildTarget: Server
     maxTextureSize: 2048
     resizeAlgorithm: 0
     textureFormat: -1
@@ -1396,6 +1410,61 @@ TextureImporter:
     edges: []
     weights: []
     secondaryTextures: []
+    nameFileIdTable:
+      arisaDance_0: 8686924115327304628
+      arisaDance_1: -225954005119175787
+      arisaDance_10: -635505316817552075
+      arisaDance_11: 5041036292188744126
+      arisaDance_12: 9193305862276799287
+      arisaDance_13: 2848929583589385298
+      arisaDance_14: -5874273883993482965
+      arisaDance_15: -9219228821748572251
+      arisaDance_16: -234540089786356513
+      arisaDance_17: -8127046501590327800
+      arisaDance_18: 6131161393459907541
+      arisaDance_19: 4865658001664968470
+      arisaDance_2: -6347591300831238768
+      arisaDance_20: 1988858013649406103
+      arisaDance_21: 6653196610736110185
+      arisaDance_22: 925825240639634137
+      arisaDance_23: -3743832224795059416
+      arisaDance_24: 7461581762867900859
+      arisaDance_25: -6100571296275456381
+      arisaDance_26: -6009752245735603874
+      arisaDance_27: -625885131761467319
+      arisaDance_28: 2542471627361508638
+      arisaDance_29: -3117549193853998923
+      arisaDance_3: -6270421215850929785
+      arisaDance_30: 8767584867400926579
+      arisaDance_31: -4627171026053986207
+      arisaDance_32: 169125579355608902
+      arisaDance_33: -4069819626392588860
+      arisaDance_34: 5625888744598067569
+      arisaDance_35: 3584309296749407719
+      arisaDance_36: -1869205447439930541
+      arisaDance_37: -8738908976814226096
+      arisaDance_38: 9090138327996896252
+      arisaDance_39: -620931433970292443
+      arisaDance_4: 3882487003558339588
+      arisaDance_40: -7587769397266771080
+      arisaDance_41: 9193904260571455485
+      arisaDance_42: -3655483404829547181
+      arisaDance_43: 1352366383550998170
+      arisaDance_44: -623179498792872450
+      arisaDance_45: -610364873148747199
+      arisaDance_46: 3394906985574847917
+      arisaDance_47: 1386555114373231700
+      arisaDance_48: -21903956486704516
+      arisaDance_49: 5850673630285665839
+      arisaDance_5: 5779691927641761196
+      arisaDance_50: -7448459852879131668
+      arisaDance_52: 1086597860007614453
+      arisaDance_53: -1473077032702836631
+      arisaDance_6: -2123323560116538457
+      arisaDance_7: -6875045102065924210
+      arisaDance_8: -3961772400568861303
+      arisaDance_9: -7433495594216998301
+      icon: 6703875778577109625
   spritePackingTag: 
   pSDRemoveMatte: 0
   pSDShowRemoveMatteOption: 0

@@ -213,7 +213,7 @@ TextureImporter:
       213: -2983441478548882320
     second: dazzles_69
   externalObjects: {}
-  serializedVersion: 11
+  serializedVersion: 12
   mipmaps:
     mipMapMode: 0
     enableMipMap: 0
@@ -234,6 +234,7 @@ TextureImporter:
   streamingMipmaps: 0
   streamingMipmapsPriority: 0
   vTOnly: 0
+  ignoreMasterTextureLimit: 0
   grayScaleToAlpha: 0
   generateCubemap: 6
   cubemapConvolution: 0
@@ -272,6 +273,7 @@ TextureImporter:
   textureFormatSet: 0
   ignorePngGamma: 0
   applyGammaDecoding: 0
+  cookieLightType: 1
   platformSettings:
   - serializedVersion: 3
     buildTarget: DefaultTexturePlatform
@@ -287,6 +289,18 @@ TextureImporter:
     forceMaximumCompressionQuality_BC6H_BC7: 0
   - serializedVersion: 3
     buildTarget: Standalone
+    maxTextureSize: 4096
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 3
+    buildTarget: Server
     maxTextureSize: 4096
     resizeAlgorithm: 0
     textureFormat: -1
@@ -1780,6 +1794,77 @@ TextureImporter:
     edges: []
     weights: []
     secondaryTextures: []
+    nameFileIdTable:
+      BottomLeftAngry: -7503419997022202591
+      BottomLeftHappy: -2902620479736932538
+      BottomLeftNeutral: -8931381526695804944
+      BottomLeftOpenMouth: 5178512772571485124
+      BottomLeftOw: 8981489920928282793
+      BottomMiddleAngry: 914672387374890533
+      BottomMiddleHappy: 5665046338477434936
+      BottomMiddleNeutral: 6831464696223950560
+      BottomMiddleOpenMouth: 1020954906698687321
+      BottomMiddleOw: 5983024521261742117
+      LeftUpAngry: 8565462418483418682
+      LeftUpHappy: 5279605795355757446
+      LeftUpNeutral: 3910019496441056473
+      LeftUpOpenMouth: 7514202609625381624
+      LeftUpOw: -2216719346459552067
+      MiddleUpAngry: -183975403031797813
+      MiddleUpHappy: 4466208522555285156
+      MiddleUpNeutral: -1722443810625710865
+      MiddleUpOpenMouth: 5351801658719297008
+      MiddleUpOw: 2138594817786749300
+      PlayerHappy: 4260515008245462210
+      PlayerNeutral: -5188037987215269136
+      PlayerOpenMouth: -5798462074873823464
+      PlayerOw: -257369064684966836
+      RightUpAngry: 2226381707764217181
+      RightUpHappy: 6471752341608542584
+      RightUpNeutral: -8120253423486328295
+      RightUpOpenMouth: 2062994449804166558
+      RightUpOw: 5230035099336897732
+      dazzles_10: -1132493203067468045
+      dazzles_11: 2361515305481736934
+      dazzles_12: -7446671504322280685
+      dazzles_13: -8815873813762696123
+      dazzles_14: 6156410397465604385
+      dazzles_15: 6672315877297559942
+      dazzles_16: -8404480327992203723
+      dazzles_23: -4117331405992641172
+      dazzles_24: -1785370005790583495
+      dazzles_25: 2436729523954720673
+      dazzles_26: 8744849110026034114
+      dazzles_33: 3714133561509516059
+      dazzles_34: -8663650280869876606
+      dazzles_35: -5816006122098473180
+      dazzles_36: 6832633775020328721
+      dazzles_37: 3825562564307780118
+      dazzles_38: 858083781539547746
+      dazzles_39: 2552829595058294104
+      dazzles_45: -2548780357388522811
+      dazzles_46: 8395587529786976225
+      dazzles_47: 2466086004987579437
+      dazzles_54: 2585483485642278020
+      dazzles_55: 1973573407686581279
+      dazzles_56: -4218633836442838108
+      dazzles_57: 8333369558573613732
+      dazzles_58: -1421315066226173023
+      dazzles_59: -2758156275870380772
+      dazzles_6: -7394400634622837298
+      dazzles_60: 4409063942637614365
+      dazzles_61: 4479687593512613936
+      dazzles_62: 1677616243755470728
+      dazzles_63: -6162466459869206928
+      dazzles_64: -9067727901606519591
+      dazzles_65: -5132864375615310877
+      dazzles_66: 843743396000654887
+      dazzles_67: -3660227555199252797
+      dazzles_68: -677432793370979863
+      dazzles_69: -2983441478548882320
+      dazzles_7: 2142632441010890309
+      dazzles_8: 9027349761504532083
+      dazzles_9: 5917014224501411329
   spritePackingTag: 
   pSDRemoveMatte: 0
   pSDShowRemoveMatteOption: 0

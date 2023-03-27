@@ -159,7 +159,7 @@ TextureImporter:
       213: 4633704460932284753
     second: BigDough4
   externalObjects: {}
-  serializedVersion: 11
+  serializedVersion: 12
   mipmaps:
     mipMapMode: 0
     enableMipMap: 0
@@ -180,6 +180,7 @@ TextureImporter:
   streamingMipmaps: 0
   streamingMipmapsPriority: 0
   vTOnly: 0
+  ignoreMasterTextureLimit: 0
   grayScaleToAlpha: 0
   generateCubemap: 6
   cubemapConvolution: 0
@@ -218,6 +219,7 @@ TextureImporter:
   textureFormatSet: 0
   ignorePngGamma: 0
   applyGammaDecoding: 0
+  cookieLightType: 1
   platformSettings:
   - serializedVersion: 3
     buildTarget: DefaultTexturePlatform
@@ -233,6 +235,18 @@ TextureImporter:
     forceMaximumCompressionQuality_BC6H_BC7: 0
   - serializedVersion: 3
     buildTarget: Standalone
+    maxTextureSize: 4096
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 3
+    buildTarget: Server
     maxTextureSize: 4096
     resizeAlgorithm: 0
     textureFormat: -1
@@ -1348,6 +1362,59 @@ TextureImporter:
     edges: []
     weights: []
     secondaryTextures: []
+    nameFileIdTable:
+      AlarmInside0: 601234997507204254
+      AlarmInside1: -1484144347756914244
+      AlarmInside2: 2489257066712303409
+      BGBigBall: 29886373072322306
+      BGSmallBall: 2154399292807578748
+      BallBreak0: -7508239377271931085
+      Ballbreak1: -6925329248968951385
+      BigBall: 1737852806740685942
+      BigBallOpen0: 3215382301488812128
+      BigBallOpen1: -3984582494440941460
+      BigChain: -6408767018129736850
+      BigDough0: -6051447644368879059
+      BigDough1: 8299091404543056132
+      BigDough2: -32806069753681351
+      BigDough3: 2483442457371451832
+      BigDough4: 4633704460932284753
+      BigDoughHolder: -3716021915878778104
+      BigDust: 2391455440987522080
+      BigSmokeTrail: 3489183218685066380
+      BlackArrow: -5207019974641957347
+      ControlBoard: -5378347164070734801
+      EmptyAlarm: 5571622626227122878
+      EmptyArrow: 3828760742058790489
+      GANDSideHead: 5905987259866088781
+      GANDWBehindHead: -2762676339579808850
+      GANDWClimb: 3493738522019632576
+      GANDWDeadEyes: 8746380375844961890
+      GANDWHand: 4164872158714569898
+      GANDWPanic: -3765899449427408438
+      GANDWWalkLeft: 4972435683565434067
+      GANDWWalkRight: -5710538962964672730
+      Impact: 5644278374791251201
+      JoyStick: 7579362661219785990
+      Pipe: 6581056716960955044
+      PipeDoor: 4389732826822138133
+      Platform: 4090251571723630355
+      RedAlarm: 6709757867240733753
+      RedArrow: -2624536345262285176
+      SmallBall: 6471703845215261619
+      SmallChain: -4370441542776650703
+      SmallDoor: -1790738887531996354
+      SmallDough0: -9176628821260719751
+      SmallDough1: -2525058875541379860
+      SmallDough2: -6316174405412898575
+      SmallDough3: 777889373237785151
+      SmallDough4: 6383375916868619579
+      SmallDoughHolder: 8467354610658101614
+      SmallDust: -1672101902244898834
+      SmallSmokeTrail: -2777081609519615934
+      Star: 614133456300312657
+      TransportPlatform: -8955007499663892435
+      WhiteArrow: 2459486580065207237
   spritePackingTag: 
   pSDRemoveMatte: 0
   pSDShowRemoveMatteOption: 0

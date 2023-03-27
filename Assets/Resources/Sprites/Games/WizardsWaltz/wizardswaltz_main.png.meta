@@ -162,7 +162,7 @@ TextureImporter:
       213: -2406188369649778213
     second: wizardswaltz_wand_fx_1
   externalObjects: {}
-  serializedVersion: 11
+  serializedVersion: 12
   mipmaps:
     mipMapMode: 0
     enableMipMap: 0
@@ -183,6 +183,7 @@ TextureImporter:
   streamingMipmaps: 0
   streamingMipmapsPriority: 0
   vTOnly: 0
+  ignoreMasterTextureLimit: 0
   grayScaleToAlpha: 0
   generateCubemap: 6
   cubemapConvolution: 0
@@ -221,6 +222,7 @@ TextureImporter:
   textureFormatSet: 0
   ignorePngGamma: 0
   applyGammaDecoding: 0
+  cookieLightType: 1
   platformSettings:
   - serializedVersion: 3
     buildTarget: DefaultTexturePlatform
@@ -236,6 +238,18 @@ TextureImporter:
     forceMaximumCompressionQuality_BC6H_BC7: 0
   - serializedVersion: 3
     buildTarget: Standalone
+    maxTextureSize: 1024
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 0
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 3
+    buildTarget: Server
     maxTextureSize: 1024
     resizeAlgorithm: 0
     textureFormat: -1
@@ -1372,6 +1386,60 @@ TextureImporter:
     edges: []
     weights: []
     secondaryTextures: []
+    nameFileIdTable:
+      wizardswaltz_chew_0: 4636117524539756526
+      wizardswaltz_chew_1: -5472345213390817180
+      wizardswaltz_evil_flower_0: -364512971116804208
+      wizardswaltz_evil_flower_1: 3704906013091560217
+      wizardswaltz_evil_flower_2: 2615604564187904341
+      wizardswaltz_flower_0: 4424706533675870473
+      wizardswaltz_flower_1: 4409530632218293027
+      wizardswaltz_flower_2: 7280046038182557274
+      wizardswaltz_flower_grow_0: -6194013596605697057
+      wizardswaltz_flower_grow_1: 3142048427395896837
+      wizardswaltz_flower_grow_2: -7118984775159605532
+      wizardswaltz_flower_grow_3: -4540014695617444453
+      wizardswaltz_flower_grow_4: -2010975486192916732
+      wizardswaltz_flower_grow_5: -6209033008860534819
+      wizardswaltz_girl_0: 6626715444242248344
+      wizardswaltz_girl_1: 3255871077347632709
+      wizardswaltz_girl_2: -5456092200958371718
+      wizardswaltz_girl_bop_0: -5319955813400714423
+      wizardswaltz_girl_bop_1: 5772900555431232981
+      wizardswaltz_girl_happy_0: 5008211631437172949
+      wizardswaltz_girl_happy_1: 3575822998323175305
+      wizardswaltz_girl_happy_2: -5443044849284068091
+      wizardswaltz_girl_sad_0: -7695811203869559049
+      wizardswaltz_girl_sad_1: 4064990237623416981
+      wizardswaltz_girl_sad_2: 819641782229730920
+      wizardswaltz_miss_0: 2768467047179132677
+      wizardswaltz_miss_1: 5426991987252364490
+      wizardswaltz_miss_2: 666750511962025834
+      wizardswaltz_miss_3: 1392867603839226096
+      wizardswaltz_miss_4: -7031960681128103596
+      wizardswaltz_miss_5: 6550520003927709678
+      wizardswaltz_plant_0: 8764532528569279819
+      wizardswaltz_plant_1: -8900571466064961714
+      wizardswaltz_plant_2: -1906513165463875469
+      wizardswaltz_plant_grow_0: -4854311998328955154
+      wizardswaltz_plant_grow_1: 8066796853834154409
+      wizardswaltz_plant_grow_2: 7729953531453421503
+      wizardswaltz_shadow: -4983146447318673554
+      wizardswaltz_small_flower_0: 8880887496617416097
+      wizardswaltz_small_flower_1: -9206242486865119274
+      wizardswaltz_small_flower_2: -1724727701389049137
+      wizardswaltz_sparkle_fx_0: 8593872140096344179
+      wizardswaltz_sparkle_fx_1: -4394865311163506109
+      wizardswaltz_sparkle_fx_2: -6165325623540167759
+      wizardswaltz_sparkle_fx_3: 3955841814209212924
+      wizardswaltz_wand_fx_0: -4802072682935432007
+      wizardswaltz_wand_fx_1: -2406188369649778213
+      wizardswaltz_wizard_0: -3279310061726753367
+      wizardswaltz_wizard_1: -642391819221963816
+      wizardswaltz_wizard_2: 3627136268286775080
+      wizardswaltz_wizard_turn_0: -7368868625357890572
+      wizardswaltz_wizard_turn_1: -4304133006063306856
+      wizardswaltz_wizard_turn_2: 2853135921585969209
   spritePackingTag: 
   pSDRemoveMatte: 0
   pSDShowRemoveMatteOption: 0

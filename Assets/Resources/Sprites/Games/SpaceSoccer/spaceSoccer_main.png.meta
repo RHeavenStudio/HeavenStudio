@@ -186,7 +186,7 @@ TextureImporter:
       213: -2727000552151671136
     second: flames2
   externalObjects: {}
-  serializedVersion: 11
+  serializedVersion: 12
   mipmaps:
     mipMapMode: 0
     enableMipMap: 0
@@ -207,6 +207,7 @@ TextureImporter:
   streamingMipmaps: 0
   streamingMipmapsPriority: 0
   vTOnly: 0
+  ignoreMasterTextureLimit: 0
   grayScaleToAlpha: 0
   generateCubemap: 6
   cubemapConvolution: 0
@@ -245,6 +246,7 @@ TextureImporter:
   textureFormatSet: 0
   ignorePngGamma: 0
   applyGammaDecoding: 0
+  cookieLightType: 1
   platformSettings:
   - serializedVersion: 3
     buildTarget: DefaultTexturePlatform
@@ -272,6 +274,18 @@ TextureImporter:
     forceMaximumCompressionQuality_BC6H_BC7: 0
   - serializedVersion: 3
     buildTarget: WebGL
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 2
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 3
+    buildTarget: Server
     maxTextureSize: 2048
     resizeAlgorithm: 0
     textureFormat: -1
@@ -1576,6 +1590,65 @@ TextureImporter:
     edges: []
     weights: []
     secondaryTextures: []
+    nameFileIdTable:
+      ball: -3737410657519639041
+      kick_fx: -6047660829741247071
+      kicker_arm_0: 8448038167059441282
+      kicker_arm_1: -979011348721405397
+      kicker_arm_10: -7161606901493041678
+      kicker_arm_2: 3182331245050497504
+      kicker_arm_3: 1380036452180491646
+      kicker_arm_4: 1777357148752961723
+      kicker_arm_5: -8827699967261475670
+      kicker_arm_6: -2031976985369586352
+      kicker_arm_7: -8041650652979823245
+      kicker_arm_8: 1464314428242568448
+      kicker_arm_9: 4622036528870278122
+      kicker_hand_0: -8520199780486872010
+      kicker_hand_1: -764308301054040961
+      kicker_hand_2: 3297493389226937972
+      kicker_hand_3: 5558373650924290425
+      kicker_head_0: -4901794926734046506
+      kicker_head_1: -2516537432793170592
+      kicker_head_2: -4339478730206458095
+      kicker_head_3: -4756013695868691969
+      kicker_head_4: 1450434439674949499
+      kicker_head_5: 1896558474977417076
+      kicker_leg_0: 2628347725180641456
+      kicker_leg_1: 31104100975739196
+      kicker_leg_10: -8945811739807646793
+      kicker_leg_11: 2180483017105320577
+      kicker_leg_12: -7697101922401760529
+      kicker_leg_13: 39721252567403911
+      kicker_leg_14: 1664457988962935912
+      kicker_leg_15: -2808369406160153412
+      kicker_leg_2: 434938072123433104
+      kicker_leg_3: 4331073688640613404
+      kicker_leg_4: 569701050227369887
+      kicker_leg_5: -5912951922301171794
+      kicker_leg_6: 143234050079654168
+      kicker_leg_7: 2809803079402065963
+      kicker_leg_8: 3014880571722046922
+      kicker_leg_9: -2051858073515657074
+      kicker_lowertorso_0: -1720273043946688001
+      kicker_lowertorso_1: 3897377649561355716
+      kicker_lowertorso_2: -1818696383902685073
+      kicker_lowertorso_3: 3772166795177828867
+      kicker_lowertorso_4: 2424097289979355858
+      kicker_lowertorso_5: -8690314408579819496
+      kicker_lowertorso_6: 6501230293816537793
+      kicker_torso_0: 4316165930547777794
+      kicker_torso_1: -3737460475385136974
+      kicker_torso_2: 2914744087563887584
+      kicker_torso_3: -2950019292274531361
+      kicker_torso_4: 1331937126919517603
+      kicker_torso_5: 2714508673429575226
+      kicker_torso_6: 7461716908949956333
+      kicker_torso_7: 3327564855538214969
+      kicker_torso_8: 5536655491522139640
+      kicker_torso_9: 8520096199460254261
+      platform_0: -2652118799199010490
+      toe_fx: -1664293819527379378
   spritePackingTag: 
   pSDRemoveMatte: 0
   pSDShowRemoveMatteOption: 0

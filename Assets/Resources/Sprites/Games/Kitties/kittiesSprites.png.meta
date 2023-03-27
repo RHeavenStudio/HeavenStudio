@@ -195,7 +195,7 @@ TextureImporter:
       213: -8704930900230542521
     second: kittiesCatchFail_2
   externalObjects: {}
-  serializedVersion: 11
+  serializedVersion: 12
   mipmaps:
     mipMapMode: 0
     enableMipMap: 0
@@ -216,6 +216,7 @@ TextureImporter:
   streamingMipmaps: 0
   streamingMipmapsPriority: 0
   vTOnly: 0
+  ignoreMasterTextureLimit: 0
   grayScaleToAlpha: 0
   generateCubemap: 6
   cubemapConvolution: 0
@@ -254,6 +255,7 @@ TextureImporter:
   textureFormatSet: 0
   ignorePngGamma: 0
   applyGammaDecoding: 0
+  cookieLightType: 1
   platformSettings:
   - serializedVersion: 3
     buildTarget: DefaultTexturePlatform
@@ -341,6 +343,18 @@ TextureImporter:
     forceMaximumCompressionQuality_BC6H_BC7: 0
   - serializedVersion: 3
     buildTarget: Android
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 3
+    buildTarget: Server
     maxTextureSize: 2048
     resizeAlgorithm: 0
     textureFormat: -1
@@ -1708,6 +1722,71 @@ TextureImporter:
     edges: []
     weights: []
     secondaryTextures: []
+    nameFileIdTable:
+      kittiesActionLines: -7930608780683201851
+      kittiesBackground: -2023157279334382606
+      kittiesCatchFail_0: -3642517504267728846
+      kittiesCatchFail_1: -6967539486268207878
+      kittiesCatchFail_2: -8704930900230542521
+      kittiesCatchFish: -391659831302825775
+      kittiesCatchFishFail: 7153805875199393418
+      kittiesCatchFish_0: -6081180138858234797
+      kittiesCatchFish_1: -6628612134585453162
+      kittiesCatchFish_2: -6711406373093957828
+      kittiesClapFX: 5439475645685310803
+      kittiesClapFail: -3414625489340250353
+      kittiesClapMiss: -3928410681875221782
+      kittiesClap_0: -3697540348655772098
+      kittiesClap_1: 2450051006318353345
+      kittiesClap_2: 6615670241960667488
+      kittiesClap_3: -4825644759080002611
+      kittiesClap_4: 2726140473053076307
+      kittiesEyebrows_0: 7138334911384288879
+      kittiesEyebrows_1: 8068771803452085853
+      kittiesEyebrows_2: -6498685018660671736
+      kittiesFaceFail_0: -6774374335605444397
+      kittiesFaceFail_1: -6507884322407430924
+      kittiesFace_0: 364125575587437950
+      kittiesFace_1: -3668567670657479890
+      kittiesFailFX_0: -890089858769695482
+      kittiesFailFX_1: -7540707256061033045
+      kittiesFish: 8405063258882217834
+      kittiesFishHolder: 4313510954544578308
+      kittiesFishLineDangle: 7590593529774598987
+      kittiesFishLineStraight: -6088740353780400943
+      kittiesFishSurprise: 9109945632691231925
+      kittiesHand: -7607118563815519801
+      kittiesHeart_0: 3220635104661186870
+      kittiesHeart_1: 1797786135430993361
+      kittiesIdle_0: -5801956193589078948
+      kittiesIdle_1: 608308082974126268
+      kittiesIdle_2: -4739823493371210473
+      kittiesMouseClap_0: -3168832477043077438
+      kittiesMouseClap_1: -421213860102571549
+      kittiesMouseClap_2: 4059413026682354504
+      kittiesMouseIdle_0: -8465383514614775766
+      kittiesMouseIdle_1: 7314257033710897882
+      kittiesMouseIdle_2: -4829331898434409872
+      kittiesMousePopIn_0: -2180464609782432909
+      kittiesMousePopIn_1: -1265843907470931862
+      kittiesMusicNote: 7147267099706369679
+      kittiesPopInLine: -9147522927102976589
+      kittiesPopIn_0: -7681626486337205679
+      kittiesPopIn_1: -1849478282175469088
+      kittiesPopIn_2: 2714301014034650516
+      kittiesRedFX: 13554184045283124
+      kittiesSeeFish_0: 7394798108583388539
+      kittiesSeeFish_1: -4488382681894074449
+      kittiesSeeFish_2: -5984737169221637080
+      kittiesSpinFail_0: 2491961779969426482
+      kittiesSpinFail_1: 7449070226787453400
+      kittiesSpin_0: -4944525377045975221
+      kittiesSpin_1: 2427856040127720591
+      kittiesSpin_2: -6672383421258099233
+      kittiesStar_0: -7937288927019184270
+      kittiesStar_1: -7540619746044756223
+      kittiesStar_2: 5030738185955279627
+      kittiesUnused: 2961244338457994705
   spritePackingTag: 
   pSDRemoveMatte: 0
   pSDShowRemoveMatteOption: 0

@@ -93,7 +93,7 @@ TextureImporter:
       213: -4344129421229034228
     second: turntable_29
   externalObjects: {}
-  serializedVersion: 11
+  serializedVersion: 12
   mipmaps:
     mipMapMode: 0
     enableMipMap: 0
@@ -114,6 +114,7 @@ TextureImporter:
   streamingMipmaps: 0
   streamingMipmapsPriority: 0
   vTOnly: 0
+  ignoreMasterTextureLimit: 0
   grayScaleToAlpha: 0
   generateCubemap: 6
   cubemapConvolution: 0
@@ -152,6 +153,7 @@ TextureImporter:
   textureFormatSet: 0
   ignorePngGamma: 0
   applyGammaDecoding: 0
+  cookieLightType: 1
   platformSettings:
   - serializedVersion: 3
     buildTarget: DefaultTexturePlatform
@@ -179,6 +181,18 @@ TextureImporter:
     forceMaximumCompressionQuality_BC6H_BC7: 0
   - serializedVersion: 3
     buildTarget: WebGL
+    maxTextureSize: 4096
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 3
+    buildTarget: Server
     maxTextureSize: 4096
     resizeAlgorithm: 0
     textureFormat: -1
@@ -832,6 +846,37 @@ TextureImporter:
     edges: []
     weights: []
     secondaryTextures: []
+    nameFileIdTable:
+      turntable_0: 836921579124155561
+      turntable_1: -6808396579860639100
+      turntable_10: -6326371371039055405
+      turntable_11: 8107383951289109478
+      turntable_12: 2073874090203155938
+      turntable_13: -6215106890456281241
+      turntable_14: 5391697474062777944
+      turntable_15: 3844131486646104688
+      turntable_16: 4577315598492740499
+      turntable_17: 3398781665254508244
+      turntable_18: 8861929893788052115
+      turntable_19: 5480753857023637297
+      turntable_2: -6413161211560599989
+      turntable_20: -111991616913557848
+      turntable_21: -5649012936579283357
+      turntable_22: 1387359541457189034
+      turntable_23: -8035272399532425031
+      turntable_24: -4183363791474413510
+      turntable_25: 7394418914465896338
+      turntable_26: 6071031392370762513
+      turntable_27: -5793147531550599984
+      turntable_28: -3121960486102967214
+      turntable_29: -4344129421229034228
+      turntable_3: -647411209407345727
+      turntable_4: 7096670032117368111
+      turntable_5: 6926160837623600213
+      turntable_6: -7440528176705837575
+      turntable_7: 7091854079307194003
+      turntable_8: 6419061626408863453
+      turntable_9: -60426646923268813
   spritePackingTag: 
   pSDRemoveMatte: 0
   pSDShowRemoveMatteOption: 0

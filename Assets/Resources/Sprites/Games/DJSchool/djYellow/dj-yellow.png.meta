@@ -108,7 +108,7 @@ TextureImporter:
       213: -5009745147781788879
     second: dj-yellow_34
   externalObjects: {}
-  serializedVersion: 11
+  serializedVersion: 12
   mipmaps:
     mipMapMode: 0
     enableMipMap: 0
@@ -129,6 +129,7 @@ TextureImporter:
   streamingMipmaps: 0
   streamingMipmapsPriority: 0
   vTOnly: 0
+  ignoreMasterTextureLimit: 0
   grayScaleToAlpha: 0
   generateCubemap: 6
   cubemapConvolution: 0
@@ -167,6 +168,7 @@ TextureImporter:
   textureFormatSet: 0
   ignorePngGamma: 0
   applyGammaDecoding: 0
+  cookieLightType: 1
   platformSettings:
   - serializedVersion: 3
     buildTarget: DefaultTexturePlatform
@@ -182,6 +184,18 @@ TextureImporter:
     forceMaximumCompressionQuality_BC6H_BC7: 0
   - serializedVersion: 3
     buildTarget: Standalone
+    maxTextureSize: 4096
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 3
+    buildTarget: Server
     maxTextureSize: 4096
     resizeAlgorithm: 0
     textureFormat: -1
@@ -940,6 +954,42 @@ TextureImporter:
     edges: []
     weights: []
     secondaryTextures: []
+    nameFileIdTable:
+      dj-yellow_26: -8570329221059099538
+      dj-yellow_27: 8654578744138346749
+      dj-yellow_28: 2465420833770755321
+      dj-yellow_29: 8039103745274580548
+      dj-yellow_30: -8026803288861269228
+      dj-yellow_31: -8672839455276249817
+      dj-yellow_32: -3272145679824710704
+      dj-yellow_33: -6966081241676280054
+      dj-yellow_34: -5009745147781788879
+      dj-yellow_arm1: -4198473089484636301
+      dj-yellow_arm2: 3038270405779989027
+      dj-yellow_arm3: -3787193522568159331
+      dj-yellow_arm4: -171724926298452653
+      dj-yellow_arm5: 5602415486989228617
+      dj-yellow_arm6: -5055293497671434370
+      dj-yellow_arm7: -2300774832731005075
+      dj-yellow_arm8: -3122802242247270309
+      dj-yellow_hand1: -3615316455624598042
+      dj-yellow_hand2: -347027817860703258
+      dj-yellow_hand3: -1167059734121980359
+      dj-yellow_hand4: 2312030073888799657
+      dj-yellow_hand5: -2242156628803461814
+      dj-yellow_hand6: -908896364334437391
+      dj-yellow_hand7: -1858133749642087248
+      dj-yellow_hand8: 2732839462012001941
+      dj-yellow_head1: 3030495990102112210
+      dj-yellow_head2: 1937021102288220911
+      dj-yellow_head3: -6747834269034518560
+      dj-yellow_head4: 8290546898660420384
+      dj-yellow_head5: -3051697614590913775
+      dj-yellow_head6: 2538339475596086665
+      dj-yellow_head7: -7628408153488696044
+      dj-yellow_smear1: -6519761008301433928
+      dj-yellow_smear2: 469025087575334183
+      dj-yellow_smear3: 6629098211234131026
   spritePackingTag: 
   pSDRemoveMatte: 0
   pSDShowRemoveMatteOption: 0

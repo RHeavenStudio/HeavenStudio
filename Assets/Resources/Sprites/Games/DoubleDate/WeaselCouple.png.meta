@@ -177,7 +177,7 @@ TextureImporter:
       213: -6157728667336692262
     second: Bushes_3
   externalObjects: {}
-  serializedVersion: 11
+  serializedVersion: 12
   mipmaps:
     mipMapMode: 0
     enableMipMap: 0
@@ -198,6 +198,7 @@ TextureImporter:
   streamingMipmaps: 0
   streamingMipmapsPriority: 0
   vTOnly: 0
+  ignoreMasterTextureLimit: 0
   grayScaleToAlpha: 0
   generateCubemap: 6
   cubemapConvolution: 0
@@ -236,6 +237,7 @@ TextureImporter:
   textureFormatSet: 0
   ignorePngGamma: 0
   applyGammaDecoding: 0
+  cookieLightType: 1
   platformSettings:
   - serializedVersion: 3
     buildTarget: DefaultTexturePlatform
@@ -263,6 +265,18 @@ TextureImporter:
     forceMaximumCompressionQuality_BC6H_BC7: 0
   - serializedVersion: 3
     buildTarget: WebGL
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 3
+    buildTarget: Server
     maxTextureSize: 2048
     resizeAlgorithm: 0
     textureFormat: -1
@@ -1462,6 +1476,63 @@ TextureImporter:
     edges: []
     weights: []
     secondaryTextures: []
+    nameFileIdTable:
+      Bushes_1: -4050567827319205494
+      Bushes_2: 4858890974833334050
+      Bushes_3: -6157728667336692262
+      Clovers: -5114584000073561016
+      FenceFull: 9105652162013505666
+      FenceStick_1: -2604977911785007912
+      FenceStick_2: 284923364819118041
+      FenceStick_3: 6569378423049897126
+      Grass: 7713589236293131146
+      HMMM: 7714773984793150275
+      HitEffec: 2448800722548909396
+      ShockedEffect: 3399282160423779860
+      WeaselBoyArm_1: 6655737507989606925
+      WeaselBoyArm_2: 2874035843923304411
+      WeaselBoyBody_Jump: -1965883576313993769
+      WeaselBoyGasp_1: 9088971590159129927
+      WeaselBoyGasp_2: 2777615794850527174
+      WeaselBoyHead_1: 7165995454884316633
+      WeaselBoyHead_Hit: 1960126278990576106
+      WeaselBoyHide: -6564902532012454612
+      WeaselBoyLeft_Idle: -8241388437142500833
+      WeaselBoy_AfterHide: 8634007748805221625
+      WeaselBoy_BeforeCheer_1: -6581723383981529979
+      WeaselBoy_BeforeCheer_2: 8225075907727176907
+      WeaselBoy_BeforeHide: -6483274808908565359
+      WeaselBoy_DuringHide: -5276490238418526207
+      WeaselBoy_GotHitSmear: 8855410881179377121
+      WeaselCouple_11: 3889961115745166435
+      WeaselCouple_12: 3746744577902606371
+      WeaselCouple_13: 4620532362425468418
+      WeaselCouple_14: 1826184591955669736
+      WeaselCouple_18: 5244911145952591336
+      WeaselCouple_19: -2886052291205970805
+      WeaselCouple_2: -625937766328687398
+      WeaselCouple_20: 4922768808531751739
+      WeaselCouple_21: -2264917631332731859
+      WeaselCouple_22: -9064509578037547687
+      WeaselCouple_27: -9123429452530140821
+      WeaselCouple_28: 1815326190178895583
+      WeaselCouple_29: 4153948391916441872
+      WeaselCouple_3: -1739491212928487358
+      WeaselCouple_30: -3504924166290794830
+      WeaselCouple_34: -2763087703732007259
+      WeaselCouple_35: 771917235929885896
+      WeaselCouple_4: 2757103295305593198
+      WeaselCouple_40: 3482734291710511211
+      WeaselCouple_5: 6477935481145640787
+      WeaselCouple_50: -7404744529479045521
+      WeaselCouple_53: 7380919767974047772
+      WeaselGirlArm_1: 5502330638407193070
+      WeaselGirlArm_2: -1326939666954245602
+      WeaselGirlBody_Jump: -8524640873707151706
+      WeaselGirlGasp_Arms: -974981507880179688
+      WeaselGirlHead_Gasp: -5678189339245839824
+      WeaselGirl_Hide: 1257449010316542270
+      WeaselHeadLeft_Happy: 378010952370625033
   spritePackingTag: 
   pSDRemoveMatte: 0
   pSDShowRemoveMatteOption: 0

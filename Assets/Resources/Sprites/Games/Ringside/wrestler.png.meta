@@ -147,7 +147,7 @@ TextureImporter:
       213: -7431652073920682302
     second: ArmStraight
   externalObjects: {}
-  serializedVersion: 11
+  serializedVersion: 12
   mipmaps:
     mipMapMode: 0
     enableMipMap: 0
@@ -168,6 +168,7 @@ TextureImporter:
   streamingMipmaps: 0
   streamingMipmapsPriority: 0
   vTOnly: 0
+  ignoreMasterTextureLimit: 0
   grayScaleToAlpha: 0
   generateCubemap: 6
   cubemapConvolution: 0
@@ -206,6 +207,7 @@ TextureImporter:
   textureFormatSet: 0
   ignorePngGamma: 0
   applyGammaDecoding: 0
+  cookieLightType: 1
   platformSettings:
   - serializedVersion: 3
     buildTarget: DefaultTexturePlatform
@@ -221,6 +223,18 @@ TextureImporter:
     forceMaximumCompressionQuality_BC6H_BC7: 0
   - serializedVersion: 3
     buildTarget: Standalone
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 3
+    buildTarget: Server
     maxTextureSize: 2048
     resizeAlgorithm: 0
     textureFormat: -1
@@ -1252,6 +1266,55 @@ TextureImporter:
     edges: []
     weights: []
     secondaryTextures: []
+    nameFileIdTable:
+      Ab: -6876814657233417777
+      Arm: -1551318629208926437
+      ArmLower: 6204203943156420642
+      ArmPunch: -3205929584956933310
+      ArmStraight: -7431652073920682302
+      ArmUpper: -416092158434349979
+      BodySide: 1533361983425203030
+      Boot0: -7627513650508448617
+      Boot1: 6917483663144532391
+      Boot2: 3218484471029615419
+      CircleImpact: 5146306275964340913
+      ClosedHand: 5791271250762656204
+      EyeClosed: -7980770219026319317
+      EyeFront: -3070888254686786236
+      EyeOpen: -3762522328516488655
+      EyeSide: 8998491211174080414
+      FistSide: -2654843472272095416
+      FlexBack: 5889436724117390381
+      FlexFront: 3504057904477758878
+      Foot: 7375464677112220269
+      HandFlimsyBack: -4766467273473896961
+      HandFlimsyFront: -8227401120194849279
+      Head: -7093714324425763129
+      HeadDown: -579518059173370723
+      HeadSide: -6818526036038562312
+      Impact: 6506631466791588904
+      LegBent: 5228530100435069068
+      LegNormalPose: 9218468815356790591
+      LegStraight: 6477515783731781604
+      MegaFlex: 1037443931236221626
+      MouthClosed: 6339410969701164384
+      MouthOh: 7474251228679128649
+      MouthSide: -3338760067747555587
+      MouthSpeak: 8808150773559010212
+      MouthYell: 3900619744917091137
+      NormalPose: -4666989511818969971
+      One: -4110115183335944327
+      RedBand: 5016630265558930059
+      Shadow: 2086269718837116252
+      Smile: -9131760341651632779
+      Sparkle: 4763501274434145520
+      Sweat: -8063132850506309363
+      Swoosh: -7497803121477058266
+      UpArmFrontPose: -6514653618745356776
+      Waist: 3323689850987993424
+      X: -8409514235926435870
+      wrestler_20: 570061106902198852
+      wrestler_21: 4914642824165203575
   spritePackingTag: 
   pSDRemoveMatte: 0
   pSDShowRemoveMatteOption: 0

@@ -93,7 +93,7 @@ TextureImporter:
       213: 2241621085505891202
     second: flowerYellow_2
   externalObjects: {}
-  serializedVersion: 11
+  serializedVersion: 12
   mipmaps:
     mipMapMode: 0
     enableMipMap: 0
@@ -114,6 +114,7 @@ TextureImporter:
   streamingMipmaps: 0
   streamingMipmapsPriority: 0
   vTOnly: 0
+  ignoreMasterTextureLimit: 0
   grayScaleToAlpha: 0
   generateCubemap: 6
   cubemapConvolution: 0
@@ -152,6 +153,7 @@ TextureImporter:
   textureFormatSet: 0
   ignorePngGamma: 0
   applyGammaDecoding: 0
+  cookieLightType: 1
   platformSettings:
   - serializedVersion: 3
     buildTarget: DefaultTexturePlatform
@@ -168,6 +170,18 @@ TextureImporter:
   - serializedVersion: 3
     buildTarget: Standalone
     maxTextureSize: 4096
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 3
+    buildTarget: Server
+    maxTextureSize: 2048
     resizeAlgorithm: 0
     textureFormat: -1
     textureCompression: 1
@@ -820,6 +834,37 @@ TextureImporter:
     edges: []
     weights: []
     secondaryTextures: []
+    nameFileIdTable:
+      breakup_0: 5768824089713594088
+      breakup_1: 4926946401552112880
+      breakup_2: 5985396924984988805
+      bubble_0: 3416978139180985820
+      bubble_1: -2879895987422244226
+      bubble_2: 2753030963034921719
+      bubble_3: -2953469658432337608
+      cloud_0: -6494333674291891185
+      cloud_1: -5829749407679341059
+      donuts_0: -823421899617514248
+      donuts_1: -8584672651519398975
+      donuts_2: -207235475771802202
+      flashback_0: -2108287193192392123
+      flashback_1: 8573059910350240599
+      flashback_2: 2696792977050154303
+      flashback_3: 1781146796981568741
+      flowerRed_0: 2139489923679150209
+      flowerRed_1: 935793069888721621
+      flowerRed_2: 9045956515465550765
+      flowerYellow_0: 7583471745194571663
+      flowerYellow_1: 4009627736883156082
+      flowerYellow_2: 2241621085505891202
+      grass_0: -340167111199009526
+      grass_1: 2617979483714298681
+      grass_2: -8964051472798795163
+      heart_0: 3280955175608745582
+      heart_1: 5976689506463430472
+      them_0: -7831378752593838111
+      them_1: 1579730275419256973
+      them_2: -1101898872513590036
   spritePackingTag: 
   pSDRemoveMatte: 0
   pSDShowRemoveMatteOption: 0
