@@ -72,7 +72,7 @@ TextureImporter:
       213: 6269275694401010891
     second: quiz_bg_22
   externalObjects: {}
-  serializedVersion: 11
+  serializedVersion: 12
   mipmaps:
     mipMapMode: 0
     enableMipMap: 0
@@ -93,6 +93,7 @@ TextureImporter:
   streamingMipmaps: 0
   streamingMipmapsPriority: 0
   vTOnly: 0
+  ignoreMasterTextureLimit: 0
   grayScaleToAlpha: 0
   generateCubemap: 6
   cubemapConvolution: 0
@@ -131,6 +132,7 @@ TextureImporter:
   textureFormatSet: 0
   ignorePngGamma: 0
   applyGammaDecoding: 0
+  cookieLightType: 1
   platformSettings:
   - serializedVersion: 3
     buildTarget: DefaultTexturePlatform
@@ -146,6 +148,18 @@ TextureImporter:
     forceMaximumCompressionQuality_BC6H_BC7: 0
   - serializedVersion: 3
     buildTarget: Standalone
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 3
+    buildTarget: Server
     maxTextureSize: 2048
     resizeAlgorithm: 0
     textureFormat: -1
@@ -652,6 +666,30 @@ TextureImporter:
     edges: []
     weights: []
     secondaryTextures: []
+    nameFileIdTable:
+      quiz_bg_11: 4088266719150984585
+      quiz_bg_21: 4526311674662871538
+      CounterWhite: -8310604756243391644
+      quiz_bg_4: -3661203858035756491
+      quiz_bg_13: -1362677580723959898
+      quiz_bg_10: 8838241400868369504
+      quiz_bg_2: -5738550809420919104
+      quiz_bg_19: 2866488030864799912
+      CounterGrey: 142992833033980004
+      quiz_bg_7: 4364858961400279215
+      quiz_bg_14: -8080672174023962638
+      quiz_bg_3: -9164045003661231046
+      quiz_bg_15: -3064159863941831059
+      quiz_bg_1: -3885310975442120170
+      Floor: -8579981937547737367
+      Audience: -1419331334444956053
+      quiz_bg_0: 3672603136544092297
+      quiz_bg_6: -2028727925915202137
+      quiz_bg_17: 2553960718588885102
+      quiz_bg_20: 3444059506436664327
+      quiz_bg_22: 6269275694401010891
+      quiz_bg_16: 4210223945538082172
+      quiz_bg_18: -7159118536853606549
   spritePackingTag: 
   pSDRemoveMatte: 0
   pSDShowRemoveMatteOption: 0
