@@ -11,7 +11,7 @@ namespace HeavenStudio.Games.Loaders
     public static class NtrCropLoader
     {
         public static Minigame AddGame(EventCaller eventCaller) {
-            return new Minigame("cropStomp", "Crop Stomp", "c0f0b8", false, false, new List<GameAction>()
+            return new Minigame("cropStomp", "Field Picker", "c0f0b8", false, false, new List<GameAction>()
             {
                 new GameAction("start marching", "Start Marching")
                 {

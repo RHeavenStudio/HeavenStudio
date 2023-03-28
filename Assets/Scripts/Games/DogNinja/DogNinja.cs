@@ -11,7 +11,7 @@ namespace HeavenStudio.Games.Loaders
     public static class NtrDogNinjaLoader
     {
         public static Minigame AddGame(EventCaller eventCaller) {
-            return new Minigame("dogNinja", "Dog Ninja", "554899", true, false, new List<GameAction>()
+            return new Minigame("dogNinja", "Dog Food", "554899", true, false, new List<GameAction>()
             {
                 new GameAction("Bop", "Bop")
                 {

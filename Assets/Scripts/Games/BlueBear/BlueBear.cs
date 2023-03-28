@@ -11,7 +11,7 @@ namespace HeavenStudio.Games.Loaders
     public static class CtrBearLoader
     {
         public static Minigame AddGame(EventCaller eventCaller) {
-            return new Minigame("blueBear", "Blue Bear", "b4e6f6", false, false, new List<GameAction>()
+            return new Minigame("blueBear", "Dessert Bakery", "b4e6f6", false, false, new List<GameAction>()
             {
                 new GameAction("donut", "Donut")
                 {
