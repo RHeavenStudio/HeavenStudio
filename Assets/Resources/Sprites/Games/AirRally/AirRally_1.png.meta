@@ -90,7 +90,7 @@ TextureImporter:
       213: 4088167666801983468
     second: AirRally_1_28
   externalObjects: {}
-  serializedVersion: 11
+  serializedVersion: 12
   mipmaps:
     mipMapMode: 0
     enableMipMap: 0
@@ -111,6 +111,7 @@ TextureImporter:
   streamingMipmaps: 0
   streamingMipmapsPriority: 0
   vTOnly: 0
+  ignoreMasterTextureLimit: 0
   grayScaleToAlpha: 0
   generateCubemap: 6
   cubemapConvolution: 0
@@ -149,6 +150,7 @@ TextureImporter:
   textureFormatSet: 0
   ignorePngGamma: 0
   applyGammaDecoding: 0
+  cookieLightType: 1
   platformSettings:
   - serializedVersion: 3
     buildTarget: DefaultTexturePlatform
@@ -164,6 +166,18 @@ TextureImporter:
     forceMaximumCompressionQuality_BC6H_BC7: 0
   - serializedVersion: 3
     buildTarget: Standalone
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 3
+    buildTarget: Server
     maxTextureSize: 2048
     resizeAlgorithm: 0
     textureFormat: -1
@@ -796,6 +810,36 @@ TextureImporter:
     edges: []
     weights: []
     secondaryTextures: []
+    nameFileIdTable:
+      AirRally_1_27: 8759155364766697816
+      AirRally_1_28: 4088167666801983468
+      Baxter_Arm_0: 2375257987239689621
+      Baxter_Arm_1: 9206980383275563656
+      Baxter_Badminton: -4353037471647030824
+      Baxter_Body_0: 633885938559816796
+      Baxter_Body_1: 2738243036491422343
+      Baxter_Hand: -9051050044009602643
+      Baxter_Head_0: 4344472043301575469
+      Baxter_Head_1: -1263492004434113208
+      Baxter_Left_Ear: -3121598031253394068
+      Baxter_Plane: -4635375099529084425
+      Baxter_Right_Ear: -5941252477911755290
+      Baxter_Swing_Left_Ear: 2566613978992565909
+      Baxter_Swing_Right_Ear: 7899658061191269762
+      Fort_Hand: 4952273721940191200
+      Fort_Left_Arm: -1969074579828895637
+      Fort_Lower_Body: -5108198128618967086
+      Fort_Plane: -5255861844644913452
+      Fort_Right_Arm: -4786664350759053374
+      Fort_Tail: 5335707130691568895
+      Fort_Upper_Body: 8613830289480762074
+      Forth_Head_0: 1647849299863391727
+      Forth_Head_1: -7317061538425597736
+      Forthington_Badminton: 6088533758180436150
+      Plane_Propeller: 8696565421571360250
+      Plane_Seat: -8163542358712491115
+      Shuttlecock: -8553487051856794945
+      Swing: -5045374907246990888
   spritePackingTag: 
   pSDRemoveMatte: 0
   pSDShowRemoveMatteOption: 0

@@ -184,7 +184,7 @@ namespace HeavenStudio.Games
             public RocketType type;
             public float beat;
             public float offSet;
-            public List<float> notes; 
+            public List<int> notes; 
         }
         private static List<QueuedRocket> queuedRockets = new List<QueuedRocket>();
 
@@ -352,7 +352,7 @@ namespace HeavenStudio.Games
             }
         }
 
-        public void SpawnRocket(float beat, float beatOffset, RocketType type, List<float> notes)
+        public void SpawnRocket(float beat, float beatOffset, RocketType type, List<int> notes)
         {
             GameObject rocketToSpawn = rocket;
             switch (type)
@@ -372,7 +372,12 @@ namespace HeavenStudio.Games
             }
             GameObject spawnedRocket = Instantiate(rocketToSpawn, spawnPad, false);
             var rocketScript = spawnedRocket.GetComponent<LaunchPartyRocket>();
-            rocketScript.pitches.AddRange(notes);
+            List<float> pitchedNotes = new List<float>();
+            foreach (var note in notes)
+            {
+                pitchedNotes.Add(Jukebox.GetPitchFromSemiTones(note, true));
+            }
+            rocketScript.pitches.AddRange(pitchedNotes);
             switch (type)
             {
                 case RocketType.Family:
@@ -396,12 +401,12 @@ namespace HeavenStudio.Games
 
         public static void LaunchRocket(float beat, float beatOffset, int noteOne, int noteTwo, int noteThree, int noteFour)
         {
-            List<float> pitches = new List<float>()
+            List<int> pitches = new List<int>()
             {
-                Mathf.Pow(2f, (1f / 12f) * noteOne) * Conductor.instance.musicSource.pitch,
-                Mathf.Pow(2f, (1f / 12f) * noteTwo) * Conductor.instance.musicSource.pitch,
-                Mathf.Pow(2f, (1f / 12f) * noteThree) * Conductor.instance.musicSource.pitch,
-                Mathf.Pow(2f, (1f / 12f) * noteFour) * Conductor.instance.musicSource.pitch
+                noteOne,
+                noteTwo,
+                noteThree,
+                noteFour
             };
             if (GameManager.instance.currentGame == "launchParty")
             {
@@ -415,14 +420,14 @@ namespace HeavenStudio.Games
 
         public static void LaunchPartyCracker(float beat, float beatOffset, int noteOne, int noteTwo, int noteThree, int noteFour, int noteFive, int noteSix)
         {
-            List<float> pitches = new List<float>()
+            List<int> pitches = new List<int>()
             {
-                Mathf.Pow(2f, (1f / 12f) * noteOne) * Conductor.instance.musicSource.pitch,
-                Mathf.Pow(2f, (1f / 12f) * noteTwo) * Conductor.instance.musicSource.pitch,
-                Mathf.Pow(2f, (1f / 12f) * noteThree) * Conductor.instance.musicSource.pitch,
-                Mathf.Pow(2f, (1f / 12f) * noteFour) * Conductor.instance.musicSource.pitch,
-                Mathf.Pow(2f, (1f / 12f) * noteFive) * Conductor.instance.musicSource.pitch,
-                Mathf.Pow(2f, (1f / 12f) * noteSix) * Conductor.instance.musicSource.pitch,
+                noteOne,
+                noteTwo,
+                noteThree,
+                noteFour,
+                noteFive,
+                noteSix,
             };
             if (GameManager.instance.currentGame == "launchParty")
             {
@@ -436,17 +441,17 @@ namespace HeavenStudio.Games
 
         public static void LaunchBell(float beat, float beatOffset, int noteOne, int noteTwo, int noteThree, int noteFour, int noteFive, int noteSix, int noteSeven, int noteEight, int noteNine)
         {
-            List<float> pitches = new List<float>()
+            List<int> pitches = new List<int>()
             {
-                Mathf.Pow(2f, (1f / 12f) * noteOne) * Conductor.instance.musicSource.pitch,
-                Mathf.Pow(2f, (1f / 12f) * noteTwo) * Conductor.instance.musicSource.pitch,
-                Mathf.Pow(2f, (1f / 12f) * noteThree) * Conductor.instance.musicSource.pitch,
-                Mathf.Pow(2f, (1f / 12f) * noteFour) * Conductor.instance.musicSource.pitch,
-                Mathf.Pow(2f, (1f / 12f) * noteFive) * Conductor.instance.musicSource.pitch,
-                Mathf.Pow(2f, (1f / 12f) * noteSix) * Conductor.instance.musicSource.pitch,
-                Mathf.Pow(2f, (1f / 12f) * noteSeven) * Conductor.instance.musicSource.pitch,
-                Mathf.Pow(2f, (1f / 12f) * noteEight) * Conductor.instance.musicSource.pitch,
-                Mathf.Pow(2f, (1f / 12f) * noteNine) * Conductor.instance.musicSource.pitch,
+                noteOne,
+                noteTwo,
+                noteThree,
+                noteFour,
+                noteFive,
+                noteSix,
+                noteSeven,
+                noteEight,
+                noteNine
             };
             if (GameManager.instance.currentGame == "launchParty")
             {
@@ -461,23 +466,23 @@ namespace HeavenStudio.Games
         public static void LaunchBowlingPin(float beat, float beatOffset, int noteOne, int noteTwo, int noteThree, int noteFour, int noteFive, int noteSix, int noteSeven, 
             int noteEight, int noteNine, int noteTen, int noteEleven, int noteTwelve, int noteThirteen, int noteFourteen, int noteFifteen)
         {
-            List<float> pitches = new List<float>()
+            List<int> pitches = new List<int>()
             {
-                Mathf.Pow(2f, (1f / 12f) * noteOne) * Conductor.instance.musicSource.pitch,
-                Mathf.Pow(2f, (1f / 12f) * noteTwo) * Conductor.instance.musicSource.pitch,
-                Mathf.Pow(2f, (1f / 12f) * noteThree) * Conductor.instance.musicSource.pitch,
-                Mathf.Pow(2f, (1f / 12f) * noteFour) * Conductor.instance.musicSource.pitch,
-                Mathf.Pow(2f, (1f / 12f) * noteFive) * Conductor.instance.musicSource.pitch,
-                Mathf.Pow(2f, (1f / 12f) * noteSix) * Conductor.instance.musicSource.pitch,
-                Mathf.Pow(2f, (1f / 12f) * noteSeven) * Conductor.instance.musicSource.pitch,
-                Mathf.Pow(2f, (1f / 12f) * noteEight) * Conductor.instance.musicSource.pitch,
-                Mathf.Pow(2f, (1f / 12f) * noteNine) * Conductor.instance.musicSource.pitch,
-                Mathf.Pow(2f, (1f / 12f) * noteTen) * Conductor.instance.musicSource.pitch,
-                Mathf.Pow(2f, (1f / 12f) * noteEleven) * Conductor.instance.musicSource.pitch,
-                Mathf.Pow(2f, (1f / 12f) * noteTwelve) * Conductor.instance.musicSource.pitch,
-                Mathf.Pow(2f, (1f / 12f) * noteThirteen) * Conductor.instance.musicSource.pitch,
-                Mathf.Pow(2f, (1f / 12f) * noteFourteen) * Conductor.instance.musicSource.pitch,
-                Mathf.Pow(2f, (1f / 12f) * noteFifteen) * Conductor.instance.musicSource.pitch,
+                noteOne,
+                noteTwo,
+                noteThree,
+                noteFour,
+                noteFive,
+                noteSix,
+                noteSeven,
+                noteEight,
+                noteNine,
+                noteTen,
+                noteEleven,
+                noteTwelve,
+                noteThirteen,
+                noteFourteen,
+                noteFifteen
             };
             if (GameManager.instance.currentGame == "launchParty")
             {

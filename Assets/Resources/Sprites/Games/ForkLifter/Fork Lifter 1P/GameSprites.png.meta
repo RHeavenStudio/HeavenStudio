@@ -117,7 +117,7 @@ TextureImporter:
       213: 1073976457119097100
     second: bottombun
   externalObjects: {}
-  serializedVersion: 11
+  serializedVersion: 12
   mipmaps:
     mipMapMode: 0
     enableMipMap: 0
@@ -138,6 +138,7 @@ TextureImporter:
   streamingMipmaps: 0
   streamingMipmapsPriority: 0
   vTOnly: 0
+  ignoreMasterTextureLimit: 0
   grayScaleToAlpha: 0
   generateCubemap: 6
   cubemapConvolution: 0
@@ -176,6 +177,7 @@ TextureImporter:
   textureFormatSet: 0
   ignorePngGamma: 0
   applyGammaDecoding: 0
+  cookieLightType: 1
   platformSettings:
   - serializedVersion: 3
     buildTarget: DefaultTexturePlatform
@@ -191,6 +193,18 @@ TextureImporter:
     forceMaximumCompressionQuality_BC6H_BC7: 0
   - serializedVersion: 3
     buildTarget: Standalone
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 2
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 3
+    buildTarget: Server
     maxTextureSize: 2048
     resizeAlgorithm: 0
     textureFormat: -1
@@ -949,6 +963,42 @@ TextureImporter:
     edges: []
     weights: []
     secondaryTextures: []
+    nameFileIdTable:
+      SOME01_128091f1_6_0: 2141766918868183491
+      SOME01_128091f1_6_1: -1551193322445566068
+      SOME01_128091f1_6_10: 1057220829580524793
+      SOME01_128091f1_6_11: -3456084564025576355
+      SOME01_128091f1_6_12: -4922902375269903740
+      SOME01_128091f1_6_14: 1634257345192484070
+      SOME01_128091f1_6_16: 6204039403497146965
+      SOME01_128091f1_6_2: 2048218864066013902
+      SOME01_128091f1_6_3: 298420786506747927
+      bg: -6514858866932591139
+      bottombun: 1073976457119097100
+      bottombun_hit: 3881147297741112666
+      burger: 2723470325857134067
+      burger_hit: -6660307755345083297
+      eat_fingers: -3488482804671198197
+      fast_1: -5181922346592599507
+      fast_2: -3573965569579584950
+      fast_green1: -5878435943444112389
+      fast_green2: -1034245189476724474
+      fork: 4202974837387897383
+      fork_swipe_1: -7294697356220309840
+      fork_swipe_2: 7602230395459695148
+      forkstab_effect: -2535895568687023267
+      hand_shadow1: 7562980635367501552
+      hand_shadow2: -1164378328580708214
+      hitfx_1: 8176908352783466543
+      hitfx_2: -2809503619127399702
+      pea_1: 5792877419163235472
+      pea_2: 5655859219183449053
+      shadow: -4362852279230612367
+      thumb_1: 8729287508403444602
+      thumb_2: -4214774725070190255
+      thumb_3: -1669373453243010765
+      topbun: 6815597139681551923
+      topbun_hit: -6775943870119716595
   spritePackingTag: 
   pSDRemoveMatte: 0
   pSDShowRemoveMatteOption: 0

@@ -25,48 +25,45 @@ public class WhiteLines : MonoBehaviour
 
     void FixedUpdate()
     {
-        if(transform.position.y > endAt && !isRandomLineMiddle)
+        if (transform.position.y > endAt && !isRandomLineMiddle)
         {
             transform.position += new Vector3(0, -speed * 1f, 0);
         }
-        else if(transform.position.y <= endAt && !isRandomLineMiddle)
+        else if (transform.position.y <= endAt && !isRandomLineMiddle)
         {
             speed = Random.Range(0.005f, 0.009f);
             transform.position = new Vector3(0, startAt, 0);
             rngEarlyGone = Random.Range(0, 5);
         }
 
-        if(rngEarlyGone > 0 && !isRandomLineMiddle)
+        if (rngEarlyGone > 0 && !isRandomLineMiddle)
         {
             line.color += new Color(1f, 1f, 1f, -0.01f);
-            if(line.color.a <= 0)
+            if (line.color.a <= 0)
             {
                 rngEarlyGone = Random.Range(0, 5);
                 line.color = new Color(1f, 1f, 1f, .10f);
-                transform.position = new Vector3(0, startAt, 0);    
+                transform.position = new Vector3(0, startAt, 0);
             }
         }
 
-
-
-
         if (isRandomLineMiddle)
-        { 
-            if(rngMiddleLine > 1 && !checkAnother)
+        {
+            if (rngMiddleLine > 1 && !checkAnother)
             {
                 rngMiddleLine = Random.Range(0, 101);
             }
-            if(rngMiddleLine <= 1)
+            if (rngMiddleLine <= 1)
             {
                 line.color += new Color(1f, 1f, 1f, 0.01f);
                 checkAnother = true;
 
-                if(!checkOnce && line.color.a > .5f)
+                if (!checkOnce && line.color.a > .5f)
                 {
                     checkOnce = true;
                 }
             }
-            if(checkOnce)
+            if (checkOnce)
             {
                 line.color -= new Color(1f, 1f, 1f, 0.02f);
                 if (line.color.a <= 0)
@@ -79,8 +76,6 @@ public class WhiteLines : MonoBehaviour
                 }
 
             }
-
-            
         }
     }
 }

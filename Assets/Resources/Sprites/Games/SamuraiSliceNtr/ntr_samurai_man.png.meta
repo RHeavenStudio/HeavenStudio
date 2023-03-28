@@ -81,7 +81,7 @@ TextureImporter:
       213: 4203110707174598171
     second: legR02
   externalObjects: {}
-  serializedVersion: 11
+  serializedVersion: 12
   mipmaps:
     mipMapMode: 0
     enableMipMap: 0
@@ -102,6 +102,7 @@ TextureImporter:
   streamingMipmaps: 0
   streamingMipmapsPriority: 0
   vTOnly: 0
+  ignoreMasterTextureLimit: 0
   grayScaleToAlpha: 0
   generateCubemap: 6
   cubemapConvolution: 0
@@ -140,6 +141,7 @@ TextureImporter:
   textureFormatSet: 0
   ignorePngGamma: 0
   applyGammaDecoding: 0
+  cookieLightType: 1
   platformSettings:
   - serializedVersion: 3
     buildTarget: DefaultTexturePlatform
@@ -155,6 +157,18 @@ TextureImporter:
     forceMaximumCompressionQuality_BC6H_BC7: 0
   - serializedVersion: 3
     buildTarget: Standalone
+    maxTextureSize: 4096
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 3
+    buildTarget: Server
     maxTextureSize: 4096
     resizeAlgorithm: 0
     textureFormat: -1
@@ -724,6 +738,33 @@ TextureImporter:
     edges: []
     weights: []
     secondaryTextures: []
+    nameFileIdTable:
+      attatch: 4315082444756380391
+      body00: 7876450030425276707
+      body01: 4674383656073466641
+      body02: 2366410309368327754
+      body03: 5111187991834143412
+      exclaim00: -1459281473651009296
+      exclaim01: 1214510092626719603
+      footL00: -8760539292603031409
+      footL01: -5346671011282655348
+      footL02: 4796686841083077613
+      footR00: 1939433890115483926
+      footR01: 5938808631989135127
+      footR02: 6963670113069220729
+      hand00: -7634170911283947549
+      hand01: 8768581474467244971
+      head00: 3101475147953013313
+      head01: -4037482768338530970
+      head02: 1806032512102656364
+      legL: 3367228091235139663
+      legR00: -3639455375750288449
+      legR01: 3380028907421925979
+      legR02: 4203110707174598171
+      seathe: -7225527931138405763
+      sword00: -8680088724399586124
+      sword01: 5714880432927896263
+      sword02: -3985528753034488826
   spritePackingTag: 
   pSDRemoveMatte: 0
   pSDShowRemoveMatteOption: 0

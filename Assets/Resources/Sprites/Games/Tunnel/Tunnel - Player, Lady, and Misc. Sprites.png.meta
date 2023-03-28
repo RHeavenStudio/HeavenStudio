@@ -258,7 +258,7 @@ TextureImporter:
       213: 1786775889330756549
     second: Tunnel - Player, Lady, and Misc. Sprites_84
   externalObjects: {}
-  serializedVersion: 11
+  serializedVersion: 12
   mipmaps:
     mipMapMode: 0
     enableMipMap: 0
@@ -279,6 +279,7 @@ TextureImporter:
   streamingMipmaps: 0
   streamingMipmapsPriority: 0
   vTOnly: 0
+  ignoreMasterTextureLimit: 0
   grayScaleToAlpha: 0
   generateCubemap: 6
   cubemapConvolution: 0
@@ -317,6 +318,7 @@ TextureImporter:
   textureFormatSet: 0
   ignorePngGamma: 0
   applyGammaDecoding: 0
+  cookieLightType: 1
   platformSettings:
   - serializedVersion: 3
     buildTarget: DefaultTexturePlatform
@@ -332,6 +334,18 @@ TextureImporter:
     forceMaximumCompressionQuality_BC6H_BC7: 0
   - serializedVersion: 3
     buildTarget: Standalone
+    maxTextureSize: 4096
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 3
+    buildTarget: Server
     maxTextureSize: 4096
     resizeAlgorithm: 0
     textureFormat: -1
@@ -2140,6 +2154,92 @@ TextureImporter:
     edges: []
     weights: []
     secondaryTextures: []
+    nameFileIdTable:
+      Tunnel - Player, Lady, and Misc. Sprites_0: -6285102618788096409
+      Tunnel - Player, Lady, and Misc. Sprites_1: 3198456862325976448
+      Tunnel - Player, Lady, and Misc. Sprites_10: -3663419068810867381
+      Tunnel - Player, Lady, and Misc. Sprites_11: 751567755569311271
+      Tunnel - Player, Lady, and Misc. Sprites_12: -1826466314033325064
+      Tunnel - Player, Lady, and Misc. Sprites_13: 1167994035953740586
+      Tunnel - Player, Lady, and Misc. Sprites_14: 6091281479851791544
+      Tunnel - Player, Lady, and Misc. Sprites_15: -5770866353534374639
+      Tunnel - Player, Lady, and Misc. Sprites_16: 1290058486896978214
+      Tunnel - Player, Lady, and Misc. Sprites_17: -90727511567754832
+      Tunnel - Player, Lady, and Misc. Sprites_18: 2842100207818535440
+      Tunnel - Player, Lady, and Misc. Sprites_19: -2681638189316360003
+      Tunnel - Player, Lady, and Misc. Sprites_2: -6350960088017088141
+      Tunnel - Player, Lady, and Misc. Sprites_20: 7746542184647942666
+      Tunnel - Player, Lady, and Misc. Sprites_21: -2634089508218305668
+      Tunnel - Player, Lady, and Misc. Sprites_22: -2944149340074942809
+      Tunnel - Player, Lady, and Misc. Sprites_23: -11725400155437504
+      Tunnel - Player, Lady, and Misc. Sprites_24: -7585834188521021925
+      Tunnel - Player, Lady, and Misc. Sprites_25: 5885770017934933680
+      Tunnel - Player, Lady, and Misc. Sprites_26: 7703342084004012885
+      Tunnel - Player, Lady, and Misc. Sprites_27: -439346845066540851
+      Tunnel - Player, Lady, and Misc. Sprites_28: -1969719629747747631
+      Tunnel - Player, Lady, and Misc. Sprites_29: -491190485872903152
+      Tunnel - Player, Lady, and Misc. Sprites_3: 9186857210726432828
+      Tunnel - Player, Lady, and Misc. Sprites_30: 8447465906022944914
+      Tunnel - Player, Lady, and Misc. Sprites_31: -204546869496390991
+      Tunnel - Player, Lady, and Misc. Sprites_32: 7853107806797851758
+      Tunnel - Player, Lady, and Misc. Sprites_33: 8661959607070655654
+      Tunnel - Player, Lady, and Misc. Sprites_34: 6931088114231892129
+      Tunnel - Player, Lady, and Misc. Sprites_35: 2155441596095598136
+      Tunnel - Player, Lady, and Misc. Sprites_36: -1253146327951154561
+      Tunnel - Player, Lady, and Misc. Sprites_37: -324290735701183576
+      Tunnel - Player, Lady, and Misc. Sprites_38: -7135309485005916911
+      Tunnel - Player, Lady, and Misc. Sprites_39: -5261655789556919401
+      Tunnel - Player, Lady, and Misc. Sprites_4: 4879368291467372238
+      Tunnel - Player, Lady, and Misc. Sprites_40: 3516717878630450026
+      Tunnel - Player, Lady, and Misc. Sprites_41: 737216977170042964
+      Tunnel - Player, Lady, and Misc. Sprites_42: -7912060729374603515
+      Tunnel - Player, Lady, and Misc. Sprites_43: -5472029110476657177
+      Tunnel - Player, Lady, and Misc. Sprites_44: -639345598113870020
+      Tunnel - Player, Lady, and Misc. Sprites_45: -2456025017746164736
+      Tunnel - Player, Lady, and Misc. Sprites_46: 6688777602525428909
+      Tunnel - Player, Lady, and Misc. Sprites_47: 7614184674824432610
+      Tunnel - Player, Lady, and Misc. Sprites_48: -8534064796575476322
+      Tunnel - Player, Lady, and Misc. Sprites_49: -4083683268065926424
+      Tunnel - Player, Lady, and Misc. Sprites_5: -7527621502009028550
+      Tunnel - Player, Lady, and Misc. Sprites_50: -1836262288235590315
+      Tunnel - Player, Lady, and Misc. Sprites_51: 5342848793907993553
+      Tunnel - Player, Lady, and Misc. Sprites_52: 1350960413725862291
+      Tunnel - Player, Lady, and Misc. Sprites_53: -1101135820364876669
+      Tunnel - Player, Lady, and Misc. Sprites_54: -3462466681626109633
+      Tunnel - Player, Lady, and Misc. Sprites_55: -4145834110081693510
+      Tunnel - Player, Lady, and Misc. Sprites_56: -5817025149596875048
+      Tunnel - Player, Lady, and Misc. Sprites_57: 4957605338483890147
+      Tunnel - Player, Lady, and Misc. Sprites_58: -1682469012886275584
+      Tunnel - Player, Lady, and Misc. Sprites_59: -1598010921971657824
+      Tunnel - Player, Lady, and Misc. Sprites_6: -605980209271072512
+      Tunnel - Player, Lady, and Misc. Sprites_60: -7333517587502555060
+      Tunnel - Player, Lady, and Misc. Sprites_61: -3634719507980228630
+      Tunnel - Player, Lady, and Misc. Sprites_62: 1808610125955472811
+      Tunnel - Player, Lady, and Misc. Sprites_63: -6277607477187168958
+      Tunnel - Player, Lady, and Misc. Sprites_64: -2506325996400418915
+      Tunnel - Player, Lady, and Misc. Sprites_65: -5904190509675388685
+      Tunnel - Player, Lady, and Misc. Sprites_66: -4426248410514407148
+      Tunnel - Player, Lady, and Misc. Sprites_67: 5053334847273784572
+      Tunnel - Player, Lady, and Misc. Sprites_68: 9146241485932316877
+      Tunnel - Player, Lady, and Misc. Sprites_69: -2702792302115882121
+      Tunnel - Player, Lady, and Misc. Sprites_7: 2909006044638912496
+      Tunnel - Player, Lady, and Misc. Sprites_70: -5984007391151219376
+      Tunnel - Player, Lady, and Misc. Sprites_71: -6012788546487696085
+      Tunnel - Player, Lady, and Misc. Sprites_72: 5366872845925026326
+      Tunnel - Player, Lady, and Misc. Sprites_73: -7506541435843108902
+      Tunnel - Player, Lady, and Misc. Sprites_74: 129766684134176459
+      Tunnel - Player, Lady, and Misc. Sprites_75: 1490160631515443585
+      Tunnel - Player, Lady, and Misc. Sprites_76: 4223726832307696090
+      Tunnel - Player, Lady, and Misc. Sprites_77: 2522745858589403878
+      Tunnel - Player, Lady, and Misc. Sprites_78: 7641839109600732563
+      Tunnel - Player, Lady, and Misc. Sprites_79: 5144252858387330891
+      Tunnel - Player, Lady, and Misc. Sprites_8: -2386315536238672480
+      Tunnel - Player, Lady, and Misc. Sprites_80: 7646060354228820774
+      Tunnel - Player, Lady, and Misc. Sprites_81: -8499596478357009584
+      Tunnel - Player, Lady, and Misc. Sprites_82: -6952522149633774183
+      Tunnel - Player, Lady, and Misc. Sprites_83: 3387409594564519421
+      Tunnel - Player, Lady, and Misc. Sprites_84: 1786775889330756549
+      Tunnel - Player, Lady, and Misc. Sprites_9: 5228555352925977540
   spritePackingTag: 
   pSDRemoveMatte: 0
   pSDShowRemoveMatteOption: 0

@@ -59,14 +59,15 @@ namespace HeavenStudio.Games.Scripts_BlueBear
 
             if (isCake)
             {
-                game.headAndBodyAnim.Play("BiteL", 0, 0);
                 Jukebox.PlayOneShotGame("blueBear/chompCake");
             }
             else
             {
-                game.headAndBodyAnim.Play("BiteR", 0, 0);
                 Jukebox.PlayOneShotGame("blueBear/chompDonut");
             }
+
+            game.Bite(isCake);
+            game.EatTreat();
 
             SpawnCrumbs();
 

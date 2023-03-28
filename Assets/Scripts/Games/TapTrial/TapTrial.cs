@@ -211,7 +211,7 @@ namespace HeavenStudio.Games
 
             BeatAction.New(gameObject, new List<BeatAction.Action>()
             {
-                new BeatAction.Action(beat + 2f, delegate { isPrep = false; })
+                new BeatAction.Action(beat + 1.5f, delegate { isPrep = false; })
             });
         }
 
@@ -246,7 +246,7 @@ namespace HeavenStudio.Games
 
             BeatAction.New(gameObject, new List<BeatAction.Action>()
             {
-                new BeatAction.Action(beat + 1.99f, delegate { isPrep = false; })
+                new BeatAction.Action(beat + 1.5f, delegate { isPrep = false; })
             });
 
             ScheduleInput(beat, 1f, InputType.STANDARD_DOWN, OnDoubleTap, OnTapMiss, OnEmpty);
