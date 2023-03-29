@@ -15,6 +15,7 @@ namespace HeavenStudio.Games.Scripts_MunchyMonk
         
         const string sfxName = "munchyMonk/";
         private bool canDestroy;
+        private int missCounter;
         bool delayEarly;
         
         [Header("References")]
@@ -28,6 +29,7 @@ namespace HeavenStudio.Games.Scripts_MunchyMonk
             game = MunchyMonk.instance;
             
             delayEarly = game.twoTwoBuffer;
+            missCounter = (type == 2.5f ? 2 : 1);
             
             if (game.twoTwoBuffer) BeatAction.New(gameObject, new List<BeatAction.Action>() {
                 new BeatAction.Action(startBeat+0.2f, delegate { delayEarly = false; }),
@@ -56,7 +58,7 @@ namespace HeavenStudio.Games.Scripts_MunchyMonk
 
         private void Hit(PlayerActionEvent caller, float state)
         {
-            if (!canDestroy) {
+            if (!canDestroy && missCounter !<= 0) {
                 game.MonkArmsAnim.DoScaledAnimationAsync("WristSlap", 0.5f);
                 Jukebox.PlayOneShotGame(sfxName+"slap");
                 game.isStaring = false;
@@ -97,7 +99,8 @@ namespace HeavenStudio.Games.Scripts_MunchyMonk
 
         private void Early(PlayerActionEvent caller) 
         { 
-            if (type != 2.5f || game.firstTwoMissed && !delayEarly) {
+            Debug.Log(missCounter);
+            if (!delayEarly && missCounter == 1) {
                 game.MonkArmsAnim.DoScaledAnimationAsync("WristSlap", 0.5f);
                 game.MonkAnim.DoScaledAnimationAsync("Miss", 0.5f);
                 smearAnim.Play("SmearAppear", 0, 0);
@@ -108,6 +111,7 @@ namespace HeavenStudio.Games.Scripts_MunchyMonk
                 });
                 canDestroy = true;
                 game.needBlush = false;
+                missCounter--;
             }
         }
     }

@@ -266,7 +266,7 @@ namespace HeavenStudio.Games
                     MonkAnim.DoScaledAnimationAsync("Bop", 0.5f);
                 }
                 if (growLevel == 4) BrowAnim.DoScaledAnimationAsync("Bop", 0.5f);
-                StacheAnim.DoScaledAnimationAsync("Bop"+growLevel, 0.5f);
+                if (growLevel > 0) StacheAnim.DoScaledAnimationAsync("Bop"+growLevel, 0.5f);
             }
         }
 
@@ -298,12 +298,17 @@ namespace HeavenStudio.Games
             DumplingSmear.color = oneColor;
 
             BeatAction.New(gameObject, new List<BeatAction.Action>() {
-                new BeatAction.Action(beat     , delegate { OneGiverAnim.DoScaledAnimationAsync("GiveIn", 0.5f); }),
-                new BeatAction.Action(beat+0.5f, delegate { OneGiverAnim.DoScaledAnimationAsync("GiveOut", 0.5f); }),
+                new BeatAction.Action(beat     , delegate { 
+                    OneGiverAnim.DoScaledAnimationAsync("GiveIn", 0.5f);
+                    // dumpling
+                    Dumpling DumplingClone = Instantiate(DumplingObj, MMParent).GetComponent<Dumpling>();
+                    DumplingClone.startBeat = beat; }),
+
+                new BeatAction.Action(beat+0.5f, delegate { 
+                    OneGiverAnim.DoScaledAnimationAsync("GiveOut", 0.5f); }),
             });
             
-            Dumpling DumplingClone = Instantiate(DumplingObj, MMParent).GetComponent<Dumpling>();
-            DumplingClone.startBeat = beat;
+            
         }
 
         public static void PreTwoTwoCue(float beat, Color twoColor)
@@ -364,52 +369,63 @@ namespace HeavenStudio.Games
             DumplingSmear.color = threeColor;
             
             BeatAction.New(instance.gameObject, new List<BeatAction.Action>() {
-                // first dumpling
                 new BeatAction.Action(beat, delegate { 
+                    // first in
+                    ThreeGiverAnim.DoScaledAnimationAsync("GiveIn", 0.5f); 
+                    // first dumpling
                     Dumpling DumplingClone1 = Instantiate(DumplingObj, MMParent).GetComponent<Dumpling>(); 
                     DumplingClone1.startBeat = beat;
-                    DumplingClone1.type = 3f;
+                    DumplingClone1.type = 3f; }),
 
-                    ThreeGiverAnim.DoScaledAnimationAsync("GiveIn", 0.5f); }),
                 new BeatAction.Action(beat+0.5f, delegate { 
+                    // first out
                     ThreeGiverAnim.DoScaledAnimationAsync("GiveOut", 0.5f); }),
-                // second dumpling
+
                 new BeatAction.Action(beat+1.25f, delegate { 
+                    // second in
+                    ThreeGiverAnim.DoScaledAnimationAsync("GiveIn", 0.5f); 
+                    // second dumpling
                     Dumpling DumplingClone2 = Instantiate(DumplingObj, MMParent).GetComponent<Dumpling>(); 
                     DumplingClone2.startBeat = beat+1.25f;
-                    DumplingClone2.type = 3.5f;
-                    
-                    ThreeGiverAnim.DoScaledAnimationAsync("GiveIn", 0.5f); }),
+                    DumplingClone2.type = 3.5f; }),
+
                 new BeatAction.Action(beat+1.75f, delegate { 
+                    // second out
                     ThreeGiverAnim.DoScaledAnimationAsync("GiveOut", 0.5f); }),
-                // third dumpling
+
                 new BeatAction.Action(beat+2.25f, delegate { 
+                    // third in
+                    ThreeGiverAnim.DoScaledAnimationAsync("GiveIn", 0.5f);
+                    // third dumpling
                     Dumpling DumplingClone3 = Instantiate(DumplingObj, MMParent).GetComponent<Dumpling>(); 
                     DumplingClone3.startBeat = beat+2.25f;
-                    DumplingClone3.type = 4f;
+                    DumplingClone3.type = 4f; }),
 
-                    ThreeGiverAnim.DoScaledAnimationAsync("GiveIn", 0.5f); }),
-                new BeatAction.Action(beat+2.75f, delegate { 
+                new BeatAction.Action(beat+2.75f, delegate {
+                    // third out
                     ThreeGiverAnim.DoScaledAnimationAsync("GiveOut", 0.5f); }),
             });
         }
 
         public void PlayMonkAnim(float beat, int whichAnim)
         {
+            string anim = "";
             switch (whichAnim)
             {
                 case 0:
-                MonkAnim.DoScaledAnimationAsync("Stare", 0.5f);
+                anim = "Stare";
                 isStaring = true;
                 break;
                 case 1:
-                MonkAnim.DoScaledAnimationAsync("Blush", 0.5f);
+                anim = "Blush";
                 needBlush = false;
                 break;
                 case 2:
-                MonkAnim.DoScaledAnimationAsync("Bop", 0.5f);
+                anim = "Bop";
                 break;
             }
+
+            MonkAnim.DoScaledAnimationAsync(anim, 0.5f);
         }
 
         public void MonkMove(float beat, float length, bool isInstant, int whichSide)

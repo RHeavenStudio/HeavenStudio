@@ -19,6 +19,9 @@ namespace HeavenStudio.Common
         public float NormalizedX = 0.0f;
         public float NormalizedY = 0.0f;
         public Vector2 Normalized { get { return new Vector2(NormalizedX, NormalizedY); } set { NormalizedX = value.x; NormalizedY = value.y; } }
+        public bool AutoScroll;
+        public float AutoScrollX;
+        public float AutoScrollY;
 
         public float TileX = 1.0f;
         public float TileY = 1.0f;
@@ -44,6 +47,12 @@ namespace HeavenStudio.Common
         {
             _renderer.material.mainTextureScale = Tile;
             _renderer.material.mainTextureOffset = new Vector2(NormalizedX, -NormalizedY) * Tile;
+
+            if (AutoScroll) {
+                float songPos = Conductor.instance.songPositionInBeats;
+                NormalizedX = songPos*AutoScrollX;
+                NormalizedY = songPos*AutoScrollY;
+            }
         }
 
         #endregion
@@ -53,7 +62,7 @@ namespace HeavenStudio.Common
         private Texture2D CropTexture(Texture2D original, Rect rect)
         {
             var colors = original.GetPixels((int)rect.x, (int)rect.y, (int)rect.width, (int)rect.height);
-            var newTex = new Texture2D((int)rect.width - (int)rect.x, (int)rect.height - (int)rect.y);
+            var newTex = new Texture2D((int)rect.width, (int)rect.height);
 
             newTex.SetPixels(colors);
             newTex.Apply();
