@@ -26,8 +26,11 @@ namespace HeavenStudio.Editor
         [SerializeField] private Image musicLayer;
         [SerializeField] private Image sectionLayer;
 
+        public static Gradient LayersGradient;
+
         private void Awake()
         {
+            /*
             if (File.Exists(Application.persistentDataPath + "/editorTheme.json"))
             {
                 string json = File.ReadAllText(Application.persistentDataPath + "/editorTheme.json");
@@ -38,6 +41,10 @@ namespace HeavenStudio.Editor
                 PersistentDataManager.SaveTheme(ThemeTXT.text);
                 theme = JsonConvert.DeserializeObject<Theme>(ThemeTXT.text);
             }
+            */
+
+            PersistentDataManager.SaveTheme(ThemeTXT.text);
+            theme = JsonConvert.DeserializeObject<Theme>(ThemeTXT.text);
         }
 
         private void Start()
@@ -52,6 +59,14 @@ namespace HeavenStudio.Editor
             Tooltip.AddTooltip(musicLayer.gameObject, $"Music Volume Track");
             Tooltip.AddTooltip(sectionLayer.gameObject, $"Remix Sections Track");
 
+            LayersGradient = new UnityEngine.Gradient();
+            var colorKeys = new List<GradientColorKey>();
+
+            for (int i = 0; i < EditorTheme.theme.properties.LayerColors.Count; i++)
+                colorKeys.Add(new GradientColorKey(EditorTheme.theme.properties.LayerColors[i].Hex2RGB(),
+                    i / (float)EditorTheme.theme.properties.LayerColors.Count));
+
+            LayersGradient.colorKeys = colorKeys.ToArray();
 
             layer.gameObject.SetActive(false);
 
@@ -61,31 +76,23 @@ namespace HeavenStudio.Editor
                 layer.SetActive(true);
                 layer.transform.GetChild(0).GetComponent<TMP_Text>().text = $"Track {i + 1}";
 
-                Color c = Color.white;
-
-                switch (i)
-                {
-                    case 0:
-                        c = theme.properties.Layer1Col.Hex2RGB();
-                        break;
-                    case 1:
-                        c = theme.properties.Layer2Col.Hex2RGB();
-                        break;
-                    case 2:
-                        c = theme.properties.Layer3Col.Hex2RGB();
-                        break;
-                    case 3:
-                        c = theme.properties.Layer4Col.Hex2RGB();
-                        break;
-                    case 4:
-                        c = theme.properties.Layer5Col.Hex2RGB();
-                        break;
-                }
+                Color c = TrackToThemeColour(i);
 
                 layer.GetComponent<Image>().color = c;
                 Tooltip.AddTooltip(layer, $"Track {i + 1}");
             }
             Destroy(layer);
+        }
+
+
+        public static string TrackToThemeColourStr(int track)
+        {
+            return TrackToThemeColour(track).Color2Hex();
+        }
+
+        public static Color TrackToThemeColour(int track)
+        {
+            return LayersGradient.Evaluate((float)track / Timeline.instance.LayerCount);
         }
     }
 

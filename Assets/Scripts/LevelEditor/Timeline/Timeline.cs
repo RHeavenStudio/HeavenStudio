@@ -891,14 +891,14 @@ namespace HeavenStudio.Editor.Track
 
         public float LayerHeight()
         {
-            return LayersRect.rect.height / 5f;
+            return LayersRect.rect.height / (float)LayerCount;
         }
 
         const float SpeedSnap = 0.25f;
         public void SetPlaybackSpeed(float speed)
         {
             float spd = Mathp.Round2Nearest(speed, SpeedSnap);
-            PlaybackSpeed.transform.GetChild(3).GetComponent<TMP_Text>().text = $"Playback Speed: {spd}x";
+            PlaybackSpeed.transform.GetChild(0).GetComponent<TMP_Text>().text = $"Playback Speed: {spd}x";
             Conductor.instance.SetTimelinePitch(spd);
             PlaybackSpeed.value = spd;
         }

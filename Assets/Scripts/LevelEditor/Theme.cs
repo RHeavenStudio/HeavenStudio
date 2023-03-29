@@ -1,5 +1,5 @@
 using System;
-using UnityEngine;
+using System.Collections.Generic;
 
 namespace HeavenStudio.Editor
 {
@@ -17,11 +17,7 @@ namespace HeavenStudio.Editor
             public string MusicLayerCol;
             public string SectionLayerCol;
 
-            public string Layer1Col;
-            public string Layer2Col;
-            public string Layer3Col;
-            public string Layer4Col;
-            public string Layer5Col;
+            public List<string> LayerColors = new();
 
             public string EventSelectedCol;
             public string EventNormalCol;

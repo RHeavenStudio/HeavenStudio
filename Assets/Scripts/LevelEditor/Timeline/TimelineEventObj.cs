@@ -436,25 +436,7 @@ namespace HeavenStudio.Editor.Track
 
         public void SetColor(int type)
         {
-            Color c = Color.white;
-            switch (type)
-            {
-                case 0:
-                    c = EditorTheme.theme.properties.Layer1Col.Hex2RGB();
-                    break;
-                case 1:
-                    c = EditorTheme.theme.properties.Layer2Col.Hex2RGB();
-                    break;
-                case 2:
-                    c = EditorTheme.theme.properties.Layer3Col.Hex2RGB();
-                    break;
-                case 3:
-                    c = EditorTheme.theme.properties.Layer4Col.Hex2RGB();
-                    break;
-                case 4:
-                    c = EditorTheme.theme.properties.Layer5Col.Hex2RGB();
-                    break;
-            }
+            Color c = EditorTheme.TrackToThemeColour(type);
 
             // c = new Color(c.r, c.g, c.b, 0.85f);
             transform.GetChild(0).GetComponent<Image>().color = c;
@@ -477,6 +459,7 @@ namespace HeavenStudio.Editor.Track
         {
             // better safety net than canada's healthcare system
             // this is still hilarious
+            // every pull i will add to this comment chain
             // GameManager.instance.Beatmap.entities.Remove(GameManager.instance.Beatmap.entities.Find(c => c.eventObj = this));
         }
 
