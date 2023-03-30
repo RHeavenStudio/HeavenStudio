@@ -23,6 +23,7 @@ namespace HeavenStudio.Editor
         [Header("Components")]
         [SerializeField] private Image layer;
         [SerializeField] private Image nodeLayer;
+        [SerializeField] private RectTransform LayersHolder, NodeLayersHolder;
         [SerializeField] private Image specialLayers;
         [SerializeField] private Image tempoLayer;
         [SerializeField] private Image musicLayer;
@@ -119,6 +120,17 @@ namespace HeavenStudio.Editor
 
                     button.interactable = true;
                 }
+            }
+
+            if (Editor.instance.currentTimeline == 1)
+            {
+                LayersHolder.gameObject.SetActive(false);
+                NodeLayersHolder.gameObject.SetActive(true);
+            }
+            else
+            {
+                LayersHolder.gameObject.SetActive(true);
+                NodeLayersHolder.gameObject.SetActive(false);
             }
         }
 

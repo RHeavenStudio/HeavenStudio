@@ -14,24 +14,32 @@ namespace HeavenStudio.Editor.Track
         public Node nodeEntity;
 
         private RectTransform rectTransform;
+        private Graphic icon;
+        private TMP_Text text;
 
-        private void Start()
+        public void OnCreate()
         {
             rectTransform = GetComponent<RectTransform>();
+            icon = GetComponentInChildren<Graphic>();
+            text = GetComponentInChildren<TMP_Text>();
         }
 
-        public void UpdateNode(Gradient keyGradient, RectTransform _timelineRect)
+        public void UpdateNode(Color color, Vector2 position)
         {
-            rectTransform.anchoredPosition = new Vector2(
-                nodeEntity.Beat,
-                Mathf.Lerp(-_timelineRect.rect.height, 0.0f, nodeEntity.Intensity / 100.0f)
-                );
+            nodeEntity.Intensity = Mathf.RoundToInt(nodeEntity.Intensity);
+            /*if (nodeEntity.Type == NodeType.Pixelize)
+                nodeEntity.Intensity = Mathp.Round2Nearest(nodeEntity.Intensity, )*/
 
-            var keyframeY = rectTransform.anchoredPosition.y;
+            rectTransform.anchoredPosition = position;
 
-            var normalized = Mathp.Normalize(keyframeY, -_timelineRect.rect.height, 0);
-            transform.GetChild(0).GetChild(0).GetComponent<Image>().color = keyGradient.Evaluate(0);
-            transform.GetChild(0).GetChild(1).GetComponent<TMP_Text>().text = (nodeEntity.Intensity).ToString();
+            color.a = 1;
+            icon.color = color;
+            text.text = nodeEntity.Intensity.ToString();
+
+
+            // var normalized = Mathp.Normalize(keyframeY, -_timelineRect.rect.height, 0);
+            // transform.GetChild(0).GetChild(0).GetComponent<Image>().color = keyGradient.Evaluate(0);
+            // transform.GetChild(0).GetChild(1).GetComponent<TMP_Text>().text = (nodeEntity.Intensity).ToString();
         }
 
         public void OnPointerClick(PointerEventData eventData)

@@ -20,6 +20,7 @@ using HeavenStudio.StudioDance;
 
 using System.IO.Compression;
 using System.Text;
+using System.Reflection;
 
 namespace HeavenStudio.Editor
 {
@@ -41,6 +42,7 @@ namespace HeavenStudio.Editor
         [SerializeField] private TMP_Text GameEventSelectorTitle;
         [SerializeField] private TMP_Text BuildDateDisplay;
         [SerializeField] public StudioDanceManager StudioDanceManager;
+        [SerializeField] public List<RectTransform> TimelineRects = new();
 
         [Header("Toolbar")]
         [SerializeField] private Button NewBTN;
@@ -56,6 +58,9 @@ namespace HeavenStudio.Editor
 
         [SerializeField] private Button EditorThemeBTN;
         [SerializeField] private Button EditorSettingsBTN;
+
+        [SerializeField] public Button BlocksTimelineBTN;
+        [SerializeField] public Button NodesTimelineBTN;
 
         [Header("Dialogs")]
         [SerializeField] private Dialog[] Dialogs;
@@ -76,6 +81,9 @@ namespace HeavenStudio.Editor
         public bool isCursorEnabled = true;
         public bool isDiscordEnabled = true;
         public int currentNodeLayer = 0;
+
+        public int currentTimeline;
+        private int lastTimeline;
 
         public bool isShortcutsEnabled { get { return (!inAuthorativeMenu) && (!editingInputField); } }
 
@@ -112,6 +120,9 @@ namespace HeavenStudio.Editor
             Tooltip.AddTooltip(TempoFinderBTN.gameObject, "Tempo Finder");
             Tooltip.AddTooltip(SnapDiagBTN.gameObject, "Snap Settings");
             Tooltip.AddTooltip(ChartParamBTN.gameObject, "Remix Properties");
+
+            Tooltip.AddTooltip(BlocksTimelineBTN.gameObject, "Blocks Timeline");
+            Tooltip.AddTooltip(NodesTimelineBTN.gameObject, "Nodes Timeline");
 
             Tooltip.AddTooltip(EditorSettingsBTN.gameObject, "Editor Settings <color=#adadad>[Ctrl+Shift+O]</color>");
             UpdateEditorStatus(true);
@@ -230,6 +241,14 @@ namespace HeavenStudio.Editor
                     }
                 }
             }
+
+            if (currentTimeline != lastTimeline)
+            {
+                for (int i = 0; i < TimelineRects.Count; i++)
+                    TimelineRects[i].gameObject.SetActive(false);
+                TimelineRects[currentTimeline].gameObject.SetActive(true);
+            }
+            lastTimeline = currentTimeline;
         }
 
         public static Sprite GameIcon(string name)
@@ -555,6 +574,11 @@ namespace HeavenStudio.Editor
                     c.enabled = !c.enabled;
                 }
             }
+        }
+
+        public void SwitchTimeline(int index)
+        {
+            currentTimeline = index;
         }
     }
 }

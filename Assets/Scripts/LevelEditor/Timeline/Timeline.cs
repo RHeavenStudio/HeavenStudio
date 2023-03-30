@@ -914,9 +914,7 @@ namespace HeavenStudio.Editor.Track
         {
             if (Input.GetMouseButton(1))
             {
-                PlaybackSpeed.transform.GetChild(3).GetComponent<TMP_Text>().text = $"Playback Speed: 1x";
-                PlaybackSpeed.value = 1f;
-                Conductor.instance.SetTimelinePitch(PlaybackSpeed.value);
+                SetPlaybackSpeed(1f);
             }
         }
 
