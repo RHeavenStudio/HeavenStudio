@@ -141,6 +141,9 @@ namespace HeavenStudio.Games.Scripts_OctopusMachine
                 case 3:
                 anim.DoScaledAnimation("Oops", 0.5f);
                 break;
+                default:
+                anim.DoScaledAnimation("Prepare", 0.5f);
+                break;
             }
             if (keepBopping) {
                 game.isHappy =   whichBop == 1 ? keepBopping : !keepBopping;
@@ -153,6 +156,16 @@ namespace HeavenStudio.Games.Scripts_OctopusMachine
         {
             gameObject.SetActive(isActive);
             sr.color = octoColor;
+        }
+
+        public void MoveOctopodes(float x)
+        {
+            gameObject.
+        }
+
+        public bool IsActive()
+        {
+            return gameObject.activeInHierarchy();
         }
     }
 }
