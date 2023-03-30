@@ -374,7 +374,7 @@ namespace HeavenStudio
 
         public float SongLengthInBeats()
         {
-            if (!musicSource.clip) return 0;
+            if (!musicSource.clip) return 100f;
             return (float) GetBeatFromSongPos(musicSource.clip.length);
         }
 

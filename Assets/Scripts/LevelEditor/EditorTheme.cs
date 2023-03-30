@@ -11,6 +11,7 @@ using Starpelly;
 
 using HeavenStudio.Common;
 using HeavenStudio.Editor.Track;
+using System;
 
 namespace HeavenStudio.Editor
 {
@@ -21,6 +22,7 @@ namespace HeavenStudio.Editor
 
         [Header("Components")]
         [SerializeField] private Image layer;
+        [SerializeField] private Image nodeLayer;
         [SerializeField] private Image specialLayers;
         [SerializeField] private Image tempoLayer;
         [SerializeField] private Image musicLayer;
@@ -69,6 +71,7 @@ namespace HeavenStudio.Editor
             LayersGradient.colorKeys = colorKeys.ToArray();
 
             layer.gameObject.SetActive(false);
+            nodeLayer.gameObject.SetActive(false);
 
             for (int i = 0; i < Timeline.instance.LayerCount; i++)
             {
@@ -81,7 +84,58 @@ namespace HeavenStudio.Editor
                 layer.GetComponent<Image>().color = c;
                 Tooltip.AddTooltip(layer, $"Track {i + 1}");
             }
+
+            var nodeNames = Enum.GetNames(typeof(NodeType));
+            for (int i = 0; i < nodeNames.Length; i++)
+            {
+                CreateNodeLayer(nodeNames[i].Replace("_", " "), i);
+            }
+
             Destroy(layer);
+        }
+
+
+        private void Update()
+        {
+            for (int i = 1; i < nodeLayer.transform.parent.childCount; i++)
+            {
+                var ai = i - 1;
+                var button = nodeLayer.transform.parent.GetChild(i).GetComponent<Button>();
+                if (ai == Editor.instance.currentNodeLayer)
+                {
+                    var bc = button.colors;
+                    var c = LayersGradient.Evaluate(ai / (float)nodeLayer.transform.parent.childCount);
+                    bc.normalColor = c;
+                    bc.disabledColor = c;
+                    button.colors = bc;
+
+                    button.interactable = false;
+                }
+                else
+                {
+                    var bc = button.colors;
+                    bc.normalColor = "171717".Hex2RGB();
+                    button.colors = bc;
+
+                    button.interactable = true;
+                }
+            }
+        }
+
+        private void CreateNodeLayer(string name, int index)
+        {
+            GameObject nodeLayer = Instantiate(this.nodeLayer.gameObject, this.nodeLayer.transform.parent);
+            nodeLayer.SetActive(true);
+            nodeLayer.transform.GetChild(0).GetComponent<TMP_Text>().text = name;
+
+
+            nodeLayer.GetComponent<Button>().onClick.AddListener(
+                delegate
+                {
+                    Editor.instance.currentNodeLayer = index;
+                });
+
+            Tooltip.AddTooltip(nodeLayer, name);
         }
 
 

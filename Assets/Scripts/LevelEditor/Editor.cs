@@ -75,6 +75,7 @@ namespace HeavenStudio.Editor
         public bool inAuthorativeMenu = false;
         public bool isCursorEnabled = true;
         public bool isDiscordEnabled = true;
+        public int currentNodeLayer = 0;
 
         public bool isShortcutsEnabled { get { return (!inAuthorativeMenu) && (!editingInputField); } }
 

@@ -71,10 +71,17 @@ namespace HeavenStudio
                 {"resultrepeat_ng", "Next time, follow the example better."},   // "Try Again" message for call-and-response games (two-liner)
         };
 
-        public List<DynamicEntity> entities = new List<DynamicEntity>();
-        public List<TempoChange> tempoChanges = new List<TempoChange>();
-        public List<VolumeChange> volumeChanges = new List<VolumeChange>();
-        public List<ChartSection> beatmapSections = new List<ChartSection>();
+        public List<DynamicEntity> entities = new();
+        public List<TempoChange> tempoChanges = new();
+        public List<VolumeChange> volumeChanges = new();
+        public List<ChartSection> beatmapSections = new();
+        public List<Node> nodes = new();
+
+        public List<Node> GetNodesFromType(NodeType type)
+        {
+            return nodes.FindAll(c => c.Type == type);
+        }
+
         public float firstBeatOffset;
 
         [Serializable]

@@ -6,11 +6,19 @@ using UnityEngine.UI;
 using HeavenStudio.Util;
 using HeavenStudio.Common;
 using HeavenStudio.Editor;
+using Starpelly;
+using Starpelly.Textures;
 
 namespace HeavenStudio
 {
     public class StaticCamera : MonoBehaviour
     {
+        public AmbientTexture ambientTexture;
+
+        private float ambientTime;
+        private float nextAmbientGet;
+        public Color ambientColor;
+
         [SerializeField] RectTransform canvas;
         [SerializeField] GameObject overlayView;
 
@@ -95,6 +103,29 @@ namespace HeavenStudio
             canvas.localPosition = pan;
             canvas.eulerAngles = new Vector3(0, 0, rotation);
             canvas.localScale = scale;
+
+            // Testing out dynamic ambience
+            /*
+            ambientTime += Time.deltaTime;
+            if (ambientTime > nextAmbientGet)
+            {
+                // ambient tex is small enough to where we can do this pretty cheap
+                var amb = ambientTexture.ambientTex;
+                RenderTexture.active = amb;
+                var tex = new Texture2D(amb.width, amb.height);
+                tex.ReadPixels(new Rect(0, 0, tex.width, tex.height), 0, 0);
+                RenderTexture.active = null;
+
+
+                var avg = (tex.GetPixel(0, 0) + tex.GetPixel(1, 0)) / 2;
+                ambientColor = avg;
+
+                nextAmbientGet += 0.45f;
+            }
+
+
+            SetAmbientGlowColour(Color.Lerp(ambientBg.color, ambientColor, Time.deltaTime * 5f));
+            */
         }
 
         private void UpdatePan()

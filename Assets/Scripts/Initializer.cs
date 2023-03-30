@@ -56,7 +56,6 @@ namespace HeavenStudio
             GameObject StaticCamera = Cameras.transform.GetChild(3).gameObject;
             GameObject GameLetterbox = Cameras.transform.GetChild(4).gameObject;
 
-
             GameObject Cursor = Instantiate(Resources.Load<GameObject>("Prefabs/Cursor"));
             Cursor.name = "Cursor";
 

@@ -1,21 +1,20 @@
 using UnityEngine;
+using UnityEngine.Experimental.Rendering;
 
 namespace Starpelly.Textures
 {
-    public static class Draw
+    public static class TexturesExtension
     {
-        public static void DrawLine(this Texture2D tex, Vector2 p1, Vector2 p2, Color col)
+        public static Texture2D RenderTextureTo2DTexture(RenderTexture rt)
         {
-            Vector2 t = p1;
-            float frac = 1 / Mathf.Sqrt(Mathf.Pow(p2.x - p1.x, 2) + Mathf.Pow(p2.y - p1.y, 2));
-            float ctr = 0;
+            var texture = new Texture2D(rt.width, rt.height, rt.graphicsFormat, 0, TextureCreationFlags.None);
+            RenderTexture.active = rt;
+            texture.ReadPixels(new Rect(0, 0, rt.width, rt.height), 0, 0);
+            texture.Apply();
 
-            while ((int)t.x != (int)p2.x || (int)t.y != (int)p2.y)
-            {
-                t = Vector2.Lerp(p1, p2, ctr);
-                ctr += frac;
-                tex.SetPixel((int)t.x, (int)t.y, col);
-            }
+            RenderTexture.active = null;
+
+            return texture;
         }
     }
 }

@@ -68,6 +68,7 @@ namespace HeavenStudio.Games.Scripts_Spaceball
             switch (_currentCostume)
             {
                 case 0:
+                    Hat.sprite = null;
                     return;
                 case 1:
                     sprites = HatSprites1;
@@ -76,6 +77,7 @@ namespace HeavenStudio.Games.Scripts_Spaceball
                     sprites = HatSprites2;
                     break;
             }
+            if (sprites.Sprites.Count == 0) return;
             if (sprites.Sprites.Count - 1 < frame)
                 frame = 0;
             Hat.sprite = sprites.Sprites[frame];

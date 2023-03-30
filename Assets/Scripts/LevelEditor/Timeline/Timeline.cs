@@ -29,6 +29,10 @@ namespace HeavenStudio.Editor.Track
         public CurrentTimelineState timelineState = new CurrentTimelineState();
         public float snapInterval = 0.25f; // 4/4
 
+        [Header("Meta")]
+        public Vector2 MousePosition;
+        public float MouseTime;
+
         [Header("Components")]
         [SerializeField] private RawImage waveform;
 
@@ -371,6 +375,9 @@ namespace HeavenStudio.Editor.Track
                 waveform.rectTransform.anchoredPosition.y);
 
             WaveformBTN.transform.GetChild(0).GetComponent<Image>().color = (Conductor.instance.musicSource.clip != null && waveform.gameObject.activeInHierarchy) ? Color.white : Color.gray;
+
+            RectTransformUtility.ScreenPointToLocalPointInRectangle(TimelineContent, Input.mousePosition, Editor.instance.EditorCamera, out MousePosition);
+            MouseTime = MousePosition.x;
 
             if (!Conductor.instance.isPlaying && !Conductor.instance.isPaused)
             {

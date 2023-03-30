@@ -112,6 +112,8 @@ namespace HeavenStudio
             GameObject filter = new GameObject("filter");
             this.filter = filter.AddComponent<Games.Global.Filter>();
 
+            gameObject.AddComponent<NodeManager>();
+
 
             GlobalGameManager.Init();
 
@@ -522,6 +524,7 @@ namespace HeavenStudio
             Beatmap.entities.Sort((x, y) => x.beat.CompareTo(y.beat));
             Beatmap.tempoChanges.Sort((x, y) => x.beat.CompareTo(y.beat));
             Beatmap.volumeChanges.Sort((x, y) => x.beat.CompareTo(y.beat));
+            Beatmap.nodes.Sort((x, y) => x.Beat.CompareTo(y.Beat));
         }
 
         void SortEventsByPriority(List<DynamicBeatmap.DynamicEntity> entities)
