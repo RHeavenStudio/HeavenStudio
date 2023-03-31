@@ -53,7 +53,7 @@ namespace HeavenStudio.Common
         private Texture2D CropTexture(Texture2D original, Rect rect)
         {
             var colors = original.GetPixels((int)rect.x, (int)rect.y, (int)rect.width, (int)rect.height);
-            var newTex = new Texture2D((int)rect.width - (int)rect.x, (int)rect.height - (int)rect.y);
+            var newTex = new Texture2D((int)rect.width, (int)rect.height);
 
             newTex.SetPixels(colors);
             newTex.Apply();
