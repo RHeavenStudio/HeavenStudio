@@ -49,6 +49,15 @@ namespace HeavenStudio.Games.Loaders
                         new Param("toggle", false, "Should Exit?", "Whether the kickers should be exited or entered.")
                     },
                 },
+                new GameAction("scroll", "Scrolling Background") 
+                {
+                    function = delegate { var e = eventCaller.currentEntity; SpaceSoccer.instance.UdpateScrollSpeed(e.beat, e["x"], e["y"]); },
+                    defaultLength = 0.5f,
+                    parameters = new List<Param>() {
+                        new Param("x", new EntityTypes.Float(-100f, 100f, 22f), "Horizontal", "How many beats will it take before the background has looped once horizontally?"),
+                        new Param("y", new EntityTypes.Float(-100f, 100f, 6f), "Vertical", "How many beats will it take before the background has looped once vertically?"),
+                    }
+                },
                 // This is still here for "backwards-compatibility" but is hidden in the editor (it does absolutely nothing however)
                 new GameAction("keep-up", "")
                 {
@@ -64,15 +73,15 @@ namespace HeavenStudio.Games.Loaders
 namespace HeavenStudio.Games
 {
     using Scripts_SpaceSoccer;
+    using HeavenStudio.Common;
 
     public class SpaceSoccer : Minigame
     {
         [Header("Components")]
         [SerializeField] private GameObject ballRef;
         [SerializeField] private List<Kicker> kickers;
-        [SerializeField] private GameObject Background;
-        [SerializeField] private Sprite[] backgroundSprite;
         [SerializeField] private Animator npcKickersAnim;
+        [SerializeField] private SuperScroll backgroundSprite;
 
         [Header("Properties")]
         [SerializeField] private bool ballDispensed; //unused
@@ -80,6 +89,11 @@ namespace HeavenStudio.Games
         float npcMoveStartBeat;
         bool npcMoving;
         string npcMoveAnimName;
+        float scrollBeat;
+        float scrollLengthX = 22f;
+        float scrollLengthY = 6f;
+        float scrollNormalizedOfssetX;
+        float scrollNormalizedOfssetY;
 
         public static SpaceSoccer instance { get; private set; }
 
@@ -87,23 +101,16 @@ namespace HeavenStudio.Games
         {
             instance = this;
             npcKickersAnim.Play("NPCKickersExited", 0, 0);
-            /*for (int x = 0; x < Random.Range(9, 12); x++)
-            {
-                for (int y = 0; y < Random.Range(6, 9); y++)
-                {
-                    GameObject test = new GameObject("test");
-                    test.transform.parent = Background.transform;
-                    test.AddComponent<SpriteRenderer>().sprite = backgroundSprite[Random.Range(0, 2)];
-                    test.GetComponent<SpriteRenderer>().sortingOrder = -50;
-                    test.transform.localPosition = new Vector3(Random.Range(-15f, 15f), Random.Range(-15f, 15f));
-                    test.transform.localScale = new Vector3(0.52f, 0.52f);
-                }
-            }*/
         }
 
         private void Update()
         {
+            var cond = Conductor.instance;
             if (npcMoving) npcKickersAnim.DoScaledAnimation(npcMoveAnimName, npcMoveStartBeat, npcMoveLength);
+            float normalizedX = cond.GetPositionFromBeat(scrollBeat, scrollLengthX);
+            float normalizedY = cond.GetPositionFromBeat(scrollBeat, scrollLengthY);
+            backgroundSprite.NormalizedX = -normalizedX + scrollNormalizedOfssetX; 
+            backgroundSprite.NormalizedY = -normalizedY + scrollNormalizedOfssetY; 
         }
 
         public override void OnGameSwitch(float beat)
@@ -121,6 +128,16 @@ namespace HeavenStudio.Games
                 Dispense(entity.beat, false);
                 break;
             }
+        }
+
+        public void UdpateScrollSpeed(float beat, float scrollSpeedX, float scrollSpeedY) 
+        {
+            var cond = Conductor.instance;
+            scrollNormalizedOfssetX = cond.GetPositionFromBeat(scrollBeat, scrollLengthX);
+            scrollNormalizedOfssetY = cond.GetPositionFromBeat(scrollBeat, scrollLengthY);
+            scrollBeat = beat;
+            scrollLengthX = scrollSpeedX;
+            scrollLengthY = scrollSpeedY;
         }
 
         public void NPCKickersEnterOrExit(float beat, float length, bool shouldExit)

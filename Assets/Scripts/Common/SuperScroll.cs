@@ -7,6 +7,9 @@ namespace HeavenStudio.Common
         #region Private
 
         [SerializeField]
+        private Material _shaderMaterial;
+
+        [SerializeField]
         private Renderer _renderer;
 
         [SerializeField]
