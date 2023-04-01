@@ -224,6 +224,18 @@ namespace HeavenStudio.Games
                 contesteeRightArmAnim.DoScaledAnimationAsync("RightArmHit", 0.5f);
             }
             pressCount++;
+            switch (pressCount) 
+            {
+                case 100:
+                    Jukebox.PlayOneShotGame("quizShow/contestantExplode");
+                    break;
+                case 120:
+                    Jukebox.PlayOneShotGame("quizShow/hostExplode");
+                    break;
+                case 150:
+                    Jukebox.PlayOneShotGame("quizShow/signExplode");
+                    break;
+            }
         }
 
         public void RevealAnswer(float beat, float length)
