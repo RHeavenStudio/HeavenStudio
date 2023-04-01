@@ -9,7 +9,7 @@ namespace HeavenStudio.Games.Loaders
     public static class RvlDoubleDateLoader
     {
         public static Minigame AddGame(EventCaller eventCaller) {
-            return new Minigame("doubleDate", "Double Date", "ef854a", false, false, new List<GameAction>()
+            return new Minigame("doubleDate", "Romantic Dates", "ef854a", false, false, new List<GameAction>()
             {
                 new GameAction("bop", "Bop")
                 {

@@ -368,7 +368,7 @@ namespace HeavenStudio.Editor
         {
             var extensions = new[]
             {
-                new ExtensionFilter("Heaven Studio Remix File", "riq")
+                new ExtensionFilter("RYthm cinema Studio Remix File", "riq")
             };
             
             StandaloneFileBrowser.SaveFilePanelAsync("Save Remix As", "", "remix_level", extensions, (string path) =>
@@ -430,8 +430,8 @@ namespace HeavenStudio.Editor
             var extensions = new[]
             {
                 new ExtensionFilter("All Supported Files ", new string[] { "riq", "tengoku", "rhmania" }),
-                new ExtensionFilter("Heaven Studio Remix File ", new string[] { "riq" }),
-                new ExtensionFilter("Legacy Heaven Studio Remix ", new string[] { "tengoku", "rhmania" })
+                new ExtensionFilter("RYthm cinema Studio Remix File ", new string[] { "riq" }),
+                new ExtensionFilter("Legacy RYthm cinema Studio Remix ", new string[] { "tengoku", "rhmania" })
             };
 
             StandaloneFileBrowser.OpenFilePanelAsync("Open Remix", "", extensions, false, (string[] paths) =>

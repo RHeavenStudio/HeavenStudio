@@ -10,7 +10,7 @@ namespace HeavenStudio.Games.Loaders
     {
         public static Minigame AddGame(EventCaller eventCaller)
         {
-            return new Minigame("flipperFlop", "Flipper-Flop", "ffc3fc", false, false, new List<GameAction>()
+            return new Minigame("flipperFlop", "Command Cat", "ffc3fc", false, false, new List<GameAction>()
             {
                 new GameAction("attentionCompany", "Attention Company!")
                 {

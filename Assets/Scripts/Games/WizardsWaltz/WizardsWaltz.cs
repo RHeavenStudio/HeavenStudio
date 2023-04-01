@@ -13,7 +13,7 @@ namespace HeavenStudio.Games.Loaders
     public static class AgbWaltzLoader
     {
         public static Minigame AddGame(EventCaller eventCaller) {
-            return new Minigame("wizardsWaltz", "Wizard's Waltz \n<color=#adadad>(Mahou Tsukai)</color>", "ffef9c", false, false, new List<GameAction>()
+            return new Minigame("wizardsWaltz", "Crying Child", "ffef9c", false, false, new List<GameAction>()
             {
                 new GameAction("start interval", "Start Interval")
                 {
