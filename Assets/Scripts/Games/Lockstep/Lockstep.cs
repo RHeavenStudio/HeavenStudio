@@ -55,13 +55,16 @@ namespace HeavenStudio.Games.Loaders
                     defaultLength = 1f,
                     inactiveFunction = delegate { var e = eventCaller.currentEntity; Lockstep.instance.Ho(e.beat);}
                 },
-                new GameAction("set colours", "Set Background Colours")
+                new GameAction("set colours", "Set Colours")
                 {
-                    function = delegate {var e = eventCaller.currentEntity; Lockstep.instance.SetbackgroundColours(e["colorA"], e["colorB"]); },
+                    function = delegate {var e = eventCaller.currentEntity; Lockstep.instance.SetBackgroundColours(e["colorA"], e["colorB"], e["objColA"], e["objColB"], e["objColC"]); },
                     parameters = new List<Param>()
                     {
-                        new Param("colorA", Lockstep.defaultBGColorOn, "Onbeat", "Select the color that appears for the onbeat."),
-                        new Param("colorB", Lockstep.defaultBGColorOff, "Offbeat", "Select the color that appears for the offbeat."),
+                        new Param("colorA", Lockstep.defaultBGColorOn, "Background Onbeat", "Select the color that appears for the onbeat."),
+                        new Param("colorB", Lockstep.defaultBGColorOff, "Background Offbeat", "Select the color that appears for the offbeat."),
+                        new Param("objColA", Lockstep.stepperOut, "Stepper Outline", "Select the color used for the outline of the stepswitchers."),
+                        new Param("objColB", Lockstep.stepperDark, "Stepper Dark", "Select the color that appears for the dark side of the stepwitchers."),
+                        new Param("objColC", Lockstep.stepperLight, "Stepper Light", "Select the color that appears for the light side of the stepwitchers."),
                     },
                     defaultLength = 0.5f,
                 }
@@ -96,19 +99,62 @@ namespace HeavenStudio.Games
             }
         }
 
+        private static Color _stepperDark;
+        public static Color stepperDark
+        {
+            get
+            {
+                ColorUtility.TryParseHtmlString("#737373", out _stepperDark);
+                return _stepperDark;
+            }
+        }
+
+        private static Color _stepperLight;
+        public static Color stepperLight
+        {
+            get
+            {
+                ColorUtility.TryParseHtmlString("#FFFFFF", out _stepperLight);
+                return _stepperLight;
+            }
+        }
+
+        private static Color _stepperOut;
+        public static Color stepperOut
+        {
+            get
+            {
+                ColorUtility.TryParseHtmlString("#9A2760", out _stepperOut);
+                return _stepperOut;
+            }
+        }
+
         public Color currentBGOnColor;
         public Color currentBGOffColor;
 
         [Header("Components")]
-        [SerializeField] Animator stepswitcherP;
-        [SerializeField] Animator stepswitcher0;
-        [SerializeField] Animator stepswitcher1;
-        [SerializeField] SpriteRenderer background;
+        [SerializeField] Animator stepswitcherPlayer;
+        [SerializeField] Animator stepswitcherLeft;
+        [SerializeField] Animator stepswitcherRight;
 
+        // master stepper dictates what sprite the slave steppers use
+        [SerializeField] Animator masterStepperAnim;
+        [SerializeField] SpriteRenderer masterStepperSprite;
+
+        // slave steppers copy the sprite of the master stepper
+        [SerializeField] SpriteRenderer[] slaveSteppers;
+
+        // rendertextures update when the slave steppers change sprites
+        [SerializeField] CustomRenderTexture[] renderTextures;
+
+        [SerializeField] SpriteRenderer background;
+        [SerializeField] Material stepperMaterial;
 
         [Header("Properties")]
         static List<float> queuedInputs = new List<float>();
+        Sprite masterSprite;
         HowMissed currentMissStage;
+        bool lessSteppers = false;
         public enum HowMissed
         {
             NotMissed = 0,
@@ -128,9 +174,44 @@ namespace HeavenStudio.Games
             currentBGOffColor = defaultBGColorOff;
         }
 
+        void Start() {
+            stepperMaterial.SetColor("_ColorAlpha", stepperOut);
+            stepperMaterial.SetColor("_ColorBravo", stepperDark);
+            stepperMaterial.SetColor("_ColorDelta", stepperLight);
+
+            masterSprite = masterStepperSprite.sprite;
+            stepswitcherLeft.gameObject.SetActive(lessSteppers);
+            stepswitcherRight.gameObject.SetActive(lessSteppers);
+            masterStepperAnim.gameObject.SetActive(!lessSteppers);
+
+            UpdateAndRenderSlaves();
+        }
+
         void OnDestroy()
         {
             if (queuedInputs.Count > 0) queuedInputs.Clear();
+        }
+
+        void UpdateAndRenderSlaves()
+        {
+            foreach (var stepper in slaveSteppers)
+            {
+                stepper.sprite = masterSprite;
+            }
+        }
+
+        void PlayStepperAnim(string animName, bool player, float timescale = 1f, float startpos = 0f, int layer = -1)
+        {
+            if (player) stepswitcherPlayer.DoScaledAnimationAsync(animName, timescale, startpos, layer);
+            if (lessSteppers)
+            {
+                stepswitcherLeft.DoScaledAnimationAsync(animName, timescale, startpos, layer);
+                stepswitcherRight.DoScaledAnimationAsync(animName, timescale, startpos, layer);
+            }
+            else
+            {
+                masterStepperAnim.DoScaledAnimationAsync(animName, timescale, startpos, layer);
+            }
         }
 
         public void Update()
@@ -142,9 +223,7 @@ namespace HeavenStudio.Games
                 {
                     if (goBop)
                     {
-                        stepswitcher0.DoScaledAnimationAsync("Bop", 0.5f);
-                        stepswitcher1.DoScaledAnimationAsync("Bop", 0.5f);
-                        stepswitcherP.DoScaledAnimationAsync("Bop", 0.5f);
+                        PlayStepperAnim("Bop", true, 0.5f);
                     }
                 }
                 if (queuedInputs.Count > 0)
@@ -162,14 +241,24 @@ namespace HeavenStudio.Games
                 if (PlayerInput.Pressed() && !IsExpectingInputNow(InputType.STANDARD_DOWN))
                 {
                     currentMissStage = HowMissed.NotMissed;
-                    var beatAnimCheck = Math.Round(cond.songPositionInBeats * 2);
-                    var stepPlayerAnim = (beatAnimCheck % 2 != 0 ? "OffbeatMarch" : "OnbeatMarch");
+                    double beatAnimCheck = cond.songPositionInBeatsAsDouble - 0.25;
+                    if (beatAnimCheck % 1.0 >= 0.5)
+                    {
+                        stepswitcherPlayer.DoScaledAnimationAsync("OnbeatMarch", 0.5f);
+                    }
+                    else
+                    {
+                        stepswitcherPlayer.DoScaledAnimationAsync("OffbeatMarch", 0.5f);
+                    }
                     Jukebox.PlayOneShotGame("lockstep/miss");
-                    stepswitcherP.DoScaledAnimationAsync(stepPlayerAnim, 0.5f);
                     ScoreMiss();
                 }
             }
-
+            if (masterSprite != masterStepperSprite.sprite)
+            {
+                masterSprite = masterStepperSprite.sprite;
+                UpdateAndRenderSlaves();
+            }
         }
 
         public void Bop(float beat, float length, bool shouldBop, bool autoBop)
@@ -183,9 +272,7 @@ namespace HeavenStudio.Games
                     {
                         new BeatAction.Action(beat + i, delegate
                         {
-                            stepswitcher0.DoScaledAnimationAsync("Bop", 0.5f);
-                            stepswitcher1.DoScaledAnimationAsync("Bop", 0.5f);
-                            stepswitcherP.DoScaledAnimationAsync("Bop", 0.5f);
+                            PlayStepperAnim("Bop", true, 0.5f);
                         })
                     });
                 }
@@ -247,14 +334,13 @@ namespace HeavenStudio.Games
         {
             if (GameManager.instance.currentGame == "lockstep")
             {
+                List<BeatAction.Action> actions = new List<BeatAction.Action>();
                 for (int i = 0; i < length; i++)
                 {
                     Lockstep.instance.ScheduleInput(beat - 1, 1 + i, InputType.STANDARD_DOWN, Lockstep.instance.Just, Lockstep.instance.Miss, Lockstep.instance.Nothing);
-                    BeatAction.New(instance.gameObject, new List<BeatAction.Action>()
-                    {
-                        new BeatAction.Action(beat + i, delegate { Lockstep.instance.EvaluateMarch(); }),
-                    });
+                    actions.Add(new BeatAction.Action(beat + i, delegate { Lockstep.instance.EvaluateMarch(); }));
                 }
+                BeatAction.New(instance.gameObject, actions);
             }
             else
             {
@@ -271,50 +357,48 @@ namespace HeavenStudio.Games
             var beatAnimCheck = Math.Round(cond.songPositionInBeats * 2);
             if (beatAnimCheck % 2 != 0)
             {
-                stepswitcher0.DoScaledAnimationAsync("OffbeatMarch", 0.5f);
-                stepswitcher1.DoScaledAnimationAsync("OffbeatMarch", 0.5f);
+                PlayStepperAnim("OffbeatMarch", false, 0.5f);
             }
             else
             {
-                stepswitcher0.DoScaledAnimationAsync("OnbeatMarch", 0.5f);
-                stepswitcher1.DoScaledAnimationAsync("OnbeatMarch", 0.5f);
+                PlayStepperAnim("OnbeatMarch", false, 0.5f);
             }
         }
 
         public void Just(PlayerActionEvent caller, float state)
         {
             currentMissStage = HowMissed.NotMissed;
+            var cond = Conductor.instance;
             if (state >= 1f || state <= -1f)
             {
-                var cond = Conductor.instance;
-                var beatAnimCheck = Math.Round(caller.startBeat * 2);
-                if (beatAnimCheck % 2 != 0)
+                double beatAnimCheck = cond.songPositionInBeatsAsDouble - 0.25;
+                if (beatAnimCheck % 1.0 >= 0.5)
                 {
                     Jukebox.PlayOneShotGame("lockstep/tink");
-                    stepswitcherP.DoScaledAnimationAsync("OffbeatMarch", 0.5f);
+                    stepswitcherPlayer.DoScaledAnimationAsync("OnbeatMarch", 0.5f);
                 }
                 else
                 {
                     Jukebox.PlayOneShotGame("lockstep/tink");
-                    stepswitcherP.DoScaledAnimationAsync("OnbeatMarch", 0.5f);
+                    stepswitcherPlayer.DoScaledAnimationAsync("OffbeatMarch", 0.5f);
                 }
                 return;
             }
-            Success(caller.startBeat);
+            Success(cond.songPositionInBeatsAsDouble);
         }
 
-        public void Success(float beat)
+        public void Success(double beat)
         {
-            var beatAnimCheck = Math.Round(beat * 2);
-            if (beatAnimCheck % 2 != 0)
+            double beatAnimCheck = beat - 0.25;
+            if (beatAnimCheck % 1.0 >= 0.5)
             {
-                Jukebox.PlayOneShotGame($"lockstep/marchOffbeat{UnityEngine.Random.Range(1, 3)}");
-                stepswitcherP.DoScaledAnimationAsync("OffbeatMarch", 0.5f);
+                Jukebox.PlayOneShotGame($"lockstep/marchOnbeat{UnityEngine.Random.Range(1, 3)}");
+                stepswitcherPlayer.DoScaledAnimationAsync("OnbeatMarch", 0.5f);
             }
             else
             {
-                Jukebox.PlayOneShotGame($"lockstep/marchOnbeat{UnityEngine.Random.Range(1, 3)}");
-                stepswitcherP.DoScaledAnimationAsync("OnbeatMarch", 0.5f);
+                Jukebox.PlayOneShotGame($"lockstep/marchOffbeat{UnityEngine.Random.Range(1, 3)}");
+                stepswitcherPlayer.DoScaledAnimationAsync("OffbeatMarch", 0.5f);
             }
         }
 
@@ -324,13 +408,13 @@ namespace HeavenStudio.Games
             
             if (beatAnimCheck % 2 != 0 && currentMissStage != HowMissed.MissedOff)
             {
-                stepswitcherP.Play("OffbeatMiss", 0, 0);
+                stepswitcherPlayer.Play("OffbeatMiss", 0, 0);
                 Jukebox.PlayOneShotGame("lockstep/wayOff");
                 currentMissStage = HowMissed.MissedOff;
             }
             else if (beatAnimCheck % 2 == 0 && currentMissStage != HowMissed.MissedOn)
             {
-                stepswitcherP.Play("OnbeatMiss", 0, 0);
+                stepswitcherPlayer.Play("OnbeatMiss", 0, 0);
                 Jukebox.PlayOneShotGame("lockstep/wayOff");
                 currentMissStage = HowMissed.MissedOn;
             }
@@ -350,7 +434,7 @@ namespace HeavenStudio.Games
             }
         }
 
-        public void SetbackgroundColours(Color onColor, Color offColor)
+        public void SetBackgroundColours(Color onColor, Color offColor, Color outlineColor, Color darkColor, Color lightColor)
         {
             currentBGOnColor = onColor;
             currentBGOffColor = offColor;
@@ -363,6 +447,10 @@ namespace HeavenStudio.Games
             {
                 background.color = currentBGOnColor;
             }
+
+            stepperMaterial.SetColor("_ColorAlpha", outlineColor);
+            stepperMaterial.SetColor("_ColorBravo", darkColor);
+            stepperMaterial.SetColor("_ColorDelta", lightColor);
         }
 
         public void Nothing(PlayerActionEvent caller) {}
