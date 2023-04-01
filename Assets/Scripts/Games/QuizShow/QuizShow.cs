@@ -77,6 +77,7 @@ namespace HeavenStudio.Games
         [SerializeField] Animator contesteeRightArmAnim;
         [SerializeField] Animator contesteeHead;
         [SerializeField] Transform timerTransform;
+        [SerializeField] GameObject stopWatch;
         [Header("Properties")]
         bool intervalStarted;
         float intervalStartBeat;
@@ -161,6 +162,7 @@ namespace HeavenStudio.Games
             if (queuedInputs.Count == 0) return;
             contesteeLeftArmAnim.DoScaledAnimationAsync("LeftPrepare", 0.5f);
             contesteeRightArmAnim.DoScaledAnimationAsync("RIghtPrepare", 0.5f);
+            stopWatch.SetActive(true);
             intervalStarted = false;
             countToMatch = queuedInputs.Count;
             playerBeatInterval = beatInterval;
@@ -173,6 +175,7 @@ namespace HeavenStudio.Games
                     Jukebox.PlayOneShotGame("quizShow/timerStop"); 
                     contesteeLeftArmAnim.DoScaledAnimationAsync("LeftRest", 0.5f);
                     contesteeRightArmAnim.DoScaledAnimationAsync("RightRest", 0.5f);
+                    stopWatch.SetActive(false);
                 }   
             ),
                 new BeatAction.Action(beat + length + beatInterval + 0.5f, delegate { Jukebox.PlayOneShotGame("quizShow/timeUp"); })

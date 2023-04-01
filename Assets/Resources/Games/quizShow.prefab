@@ -1665,6 +1665,7 @@ MonoBehaviour:
   contesteeRightArmAnim: {fileID: 8583771169857499308}
   contesteeHead: {fileID: 3800801865589503712}
   timerTransform: {fileID: 2908387998248567546}
+  stopWatch: {fileID: 6447998919017828740}
 --- !u!1 &2509860249771644863
 GameObject:
   m_ObjectHideFlags: 0
@@ -3172,7 +3173,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &8035163085009309331
 Transform:
   m_ObjectHideFlags: 0
