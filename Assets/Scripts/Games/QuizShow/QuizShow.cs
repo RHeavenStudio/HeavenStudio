@@ -137,7 +137,8 @@ namespace HeavenStudio.Games
         public void PassTurn(float beat, float length)
         {
             if (dpadInputs.Count == 0 && aButtonInputs.Count == 0) return;
-            
+            contesteeLeftArmAnim.DoScaledAnimationAsync("LeftPrepare", 0.5f);
+            contesteeRightArmAnim.DoScaledAnimationAsync("RIghtPrepare", 0.5f);
             intervalStarted = false;
             countToMatch = dpadInputs.Count + aButtonInputs.Count;
             playerBeatInterval = beatInterval;
@@ -148,6 +149,8 @@ namespace HeavenStudio.Games
                 new BeatAction.Action(beat + length + beatInterval, delegate 
                 { 
                     Jukebox.PlayOneShotGame("quizShow/timerStop"); 
+                    contesteeLeftArmAnim.DoScaledAnimationAsync("LeftRest", 0.5f);
+                    contesteeRightArmAnim.DoScaledAnimationAsync("RightRest", 0.5f);
                 }   
             ),
                 new BeatAction.Action(beat + length + beatInterval + 0.5f, delegate { Jukebox.PlayOneShotGame("quizShow/timeUp"); })
