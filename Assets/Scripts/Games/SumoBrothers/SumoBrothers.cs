@@ -253,7 +253,7 @@ namespace HeavenStudio.Games
 
             #endregion
 
-            //SumoBrothers.instance.EndPoseCheck(beat);
+            SumoBrothers.instance.EndPoseCheck(beat);
 
             var tweet = Jukebox.PlayOneShotGame("sumoBrothers/posesignal", -1, 1f, 1f, true);
             tweet.SetLoopParams(beat + 3, 0.05f);
@@ -268,28 +268,29 @@ namespace HeavenStudio.Games
 
         }
 
-        void EndPoseCheck(float beat)
+        public void EndPoseCheck(float beat)
         {
 
-            //ScheduleInput(beat, 5f, InputType.STANDARD_ALT_DOWN, SuccessEndPose, MissEndPose, Nothing);
+            
+           //ScheduleInput(beat, 5f, InputType.STANDARD_ALT_DOWN, SuccessEndPose, MissEndPose, Nothing);
 
         }
 
-        void SuccessEndPose(PlayerActionEvent caller)
-        {
-
-
-
-        }
-
-        void MissEndPose(PlayerActionEvent caller)
+        public void SuccessEndPose(PlayerActionEvent caller)
         {
 
 
 
         }
 
-        void Nothing(PlayerActionEvent caller) { }
+        public void MissEndPose(PlayerActionEvent caller)
+        {
+
+
+
+        }
+
+        public void Nothing(PlayerActionEvent caller) { }
 
     }
 }
