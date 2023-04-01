@@ -76,6 +76,7 @@ namespace HeavenStudio.Games
         [SerializeField] Animator contesteeLeftArmAnim;
         [SerializeField] Animator contesteeRightArmAnim;
         [SerializeField] Animator contesteeHead;
+        [SerializeField] Transform timerTransform;
         [Header("Properties")]
         bool intervalStarted;
         float intervalStartBeat;
@@ -114,6 +115,7 @@ namespace HeavenStudio.Games
                 float normalizedBeat = cond.GetPositionFromBeat(playerIntervalStartBeat, playerBeatInterval);
                 if (normalizedBeat >= 0 && normalizedBeat <= 1)
                 {
+                    timerTransform.rotation = Quaternion.Euler(0, 0, normalizedBeat * -360);
                     if (PlayerInput.Pressed())
                     {
                         ContesteePressButton(false);

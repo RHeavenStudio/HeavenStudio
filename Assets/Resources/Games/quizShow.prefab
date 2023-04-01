@@ -1664,6 +1664,7 @@ MonoBehaviour:
   contesteeLeftArmAnim: {fileID: 7854324538831661217}
   contesteeRightArmAnim: {fileID: 8583771169857499308}
   contesteeHead: {fileID: 3800801865589503712}
+  timerTransform: {fileID: 2908387998248567546}
 --- !u!1 &2509860249771644863
 GameObject:
   m_ObjectHideFlags: 0
@@ -1804,7 +1805,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 3607689922014810278}
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: -0.001, y: 0.002, z: 0}
   m_LocalScale: {x: 0.90201366, y: 0.90201366, z: 0.90201366}
   m_ConstrainProportionsScale: 0
