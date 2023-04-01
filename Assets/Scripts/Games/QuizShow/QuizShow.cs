@@ -48,6 +48,14 @@ namespace HeavenStudio.Games.Loaders
                         new Param("audience", true, "Audience", "Should the audience make a sound?"),
                         new Param("jingle", false, "Jingle", "Should the quiz show jingle play?")
                     }
+                },
+                new GameAction("changeStage", "Change Expression Stage") 
+                {
+                    function = delegate {QuizShow.instance.ChangeStage(eventCaller.currentEntity["value"]);},
+                    parameters = new List<Param>() 
+                    {
+                        new Param("value", QuizShow.HeadStage.Stage1, "Stage", "What's the current stage of the expressions?")
+                    }
                 }
             });
         }
@@ -58,17 +66,29 @@ namespace HeavenStudio.Games
 {
     public class QuizShow : Minigame
     {
+        public enum HeadStage
+        {
+            Stage1 = 1,
+            Stage2 = 2,
+            Stage3 = 3
+        }
         [Header("Components")]
         [SerializeField] Animator contesteeLeftArmAnim;
         [SerializeField] Animator contesteeRightArmAnim;
+        [SerializeField] Animator contesteeHead;
         [Header("Properties")]
         bool intervalStarted;
         float intervalStartBeat;
         float playerIntervalStartBeat;
         float playerBeatInterval;
         float beatInterval = 8f;
-        static List<float> dpadInputs = new List<float>();
-        static List<float> aButtonInputs = new List<float>();
+        int currentStage;
+        struct QueuedInput 
+        {
+            public float beat;
+            public bool dpad;
+        }
+        static List<QueuedInput> queuedInputs = new List<QueuedInput>();
         float pressCount;
         float countToMatch;
         public static QuizShow instance;
@@ -77,8 +97,7 @@ namespace HeavenStudio.Games
         {
             if (!Conductor.instance.isPlaying || Conductor.instance.isPaused)
             {
-                if (dpadInputs.Count > 0) dpadInputs.Clear();
-                if (aButtonInputs.Count > 0) aButtonInputs.Clear();
+                if (queuedInputs.Count > 0) queuedInputs.Clear();
             }
         }
 
@@ -106,6 +125,11 @@ namespace HeavenStudio.Games
                 }
             }
         }
+        
+        public void ChangeStage(int stage) 
+        {
+            currentStage = stage;
+        }
 
         public void HostPressButton(float beat, bool dpad)
         {
@@ -113,21 +137,17 @@ namespace HeavenStudio.Games
             {
                 StartInterval(beat, beatInterval);
             }
-            if (dpad)
+            Jukebox.PlayOneShotGame( dpad ? "quizShow/hostDPad" : "quizShow/hostA");
+            queuedInputs.Add(new QueuedInput 
             {
-                dpadInputs.Add(beat - intervalStartBeat);
-                
-                Jukebox.PlayOneShotGame("quizShow/hostDPad");
-            }
-            else
-            {
-                aButtonInputs.Add(beat - intervalStartBeat);
-                Jukebox.PlayOneShotGame("quizShow/hostA");
-            }
+                beat = beat - intervalStartBeat,
+                dpad = dpad,
+            });
         }
 
         public void StartInterval(float beat, float interval)
         {
+            contesteeHead.Play("ContesteeHeadIdle", 0, 0);
             pressCount = 0;
             intervalStartBeat = beat;
             beatInterval = interval;
@@ -136,11 +156,11 @@ namespace HeavenStudio.Games
 
         public void PassTurn(float beat, float length)
         {
-            if (dpadInputs.Count == 0 && aButtonInputs.Count == 0) return;
+            if (queuedInputs.Count == 0) return;
             contesteeLeftArmAnim.DoScaledAnimationAsync("LeftPrepare", 0.5f);
             contesteeRightArmAnim.DoScaledAnimationAsync("RIghtPrepare", 0.5f);
             intervalStarted = false;
-            countToMatch = dpadInputs.Count + aButtonInputs.Count;
+            countToMatch = queuedInputs.Count;
             playerBeatInterval = beatInterval;
             playerIntervalStartBeat = beat + length;
             Jukebox.PlayOneShotGame("quizShow/timerStart");
@@ -155,20 +175,30 @@ namespace HeavenStudio.Games
             ),
                 new BeatAction.Action(beat + length + beatInterval + 0.5f, delegate { Jukebox.PlayOneShotGame("quizShow/timeUp"); })
             });
-            foreach (var dpad in dpadInputs)
+            foreach (var input in queuedInputs) 
             {
-                ScheduleAutoplayInput(beat, length + dpad, InputType.DIRECTION_DOWN, AutoplayDPad, Nothing, Nothing);
+                if (input.dpad) 
+                {
+                    ScheduleAutoplayInput(beat, length + input.beat, InputType.DIRECTION_DOWN, AutoplayDPad, Nothing, Nothing);
+                }
+                else 
+                {
+                    ScheduleAutoplayInput(beat, length + input.beat, InputType.STANDARD_DOWN, AutoplayAButton, Nothing, Nothing);
+                }
             }
-            foreach (var aButton in aButtonInputs)
-            {
-                ScheduleAutoplayInput(beat, length + aButton, InputType.STANDARD_DOWN, AutoplayAButton, Nothing, Nothing);
-            }
-            dpadInputs.Clear();
-            aButtonInputs.Clear();
+            queuedInputs.Clear();
         }
 
         void ContesteePressButton(bool dpad)
         {
+            if (currentStage == 0) 
+            {
+                contesteeHead.Play("ContesteeHeadIdle", -1, 0);
+            }
+            else 
+            {
+                contesteeHead.DoScaledAnimationAsync("ContesteeHeadStage" + currentStage.ToString(), 0.5f);
+            }
             if (dpad)
             {
                 Jukebox.PlayOneShotGame("quizShow/contestantDPad");
@@ -196,6 +226,7 @@ namespace HeavenStudio.Games
             {
                 GameProfiler.instance.IncreaseScore();
                 Jukebox.PlayOneShotGame("quizShow/correct");
+                contesteeHead.Play("ContesteeSmile", -1, 0);
                 if (audience) Jukebox.PlayOneShotGame("quizShow/audienceCheer");
                 if (jingle) Jukebox.PlayOneShotGame("quizShow/correctJingle");
             }
@@ -203,6 +234,7 @@ namespace HeavenStudio.Games
             {
                 ScoreMiss();
                 Jukebox.PlayOneShotGame("quizShow/incorrect");
+                contesteeHead.Play("ContesteeSad", -1, 0);
                 if (audience) Jukebox.PlayOneShotGame("quizShow/audienceSad");
                 if (jingle) Jukebox.PlayOneShotGame("quizShow/incorrectJingle");
             }
