@@ -13,7 +13,7 @@ namespace HeavenStudio.Games.Loaders
     public static class AgbUpbeatLoader
     {
         public static Minigame AddGame(EventCaller eventCaller) {
-            return new Minigame("mrUpbeat", "Mr. Upbeat", "ffffff", false, false, new List<GameAction>()
+            return new Minigame("mrUpbeat", "Afoot", "ffffff", false, false, new List<GameAction>()
             {
                 new GameAction("stepping", "Start Stepping")
                 {

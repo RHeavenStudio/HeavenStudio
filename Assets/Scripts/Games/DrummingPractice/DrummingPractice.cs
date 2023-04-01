@@ -12,7 +12,7 @@ namespace HeavenStudio.Games.Loaders
     public static class CtrDrummingLoader
     {
         public static Minigame AddGame(EventCaller eventCaller) {
-            return new Minigame("drummingPractice", "Drumming Practice", "36d23e", false, false, new List<GameAction>()
+            return new Minigame("drummingPractice", "Band Finale", "36d23e", false, false, new List<GameAction>()
             {
                 new GameAction("bop", "Bop")
                 {

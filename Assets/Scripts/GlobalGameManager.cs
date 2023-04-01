@@ -98,7 +98,7 @@ namespace HeavenStudio
             Init();
             DontDestroyOnLoad(this.gameObject);
             instance = this;
-            Starpelly.OS.ChangeWindowTitle("Heaven Studio DEMO");
+            Starpelly.OS.ChangeWindowTitle("RYthm cinema Studio");
             QualitySettings.maxQueuedFrames = 1;
             PlayerInput.InitInputControllers();
             #if UNITY_EDITOR

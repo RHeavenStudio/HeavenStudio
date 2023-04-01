@@ -12,7 +12,7 @@ namespace HeavenStudio.Games.Loaders
     public static class CtrPillowLoader
     {
         public static Minigame AddGame(EventCaller eventCaller) {
-            return new Minigame("pajamaParty", "Pajama Party", "fc9ac3", false, false, new List<GameAction>()
+            return new Minigame("pajamaParty", "Somnophiliac Girl", "fc9ac3", false, false, new List<GameAction>()
                 {
                     // both same timing
                     new GameAction("jump (side to middle)", "Side to Middle Jumps")
