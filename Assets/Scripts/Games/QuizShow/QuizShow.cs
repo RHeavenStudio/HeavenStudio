@@ -59,7 +59,8 @@ namespace HeavenStudio.Games
     public class QuizShow : Minigame
     {
         [Header("Components")]
-        [SerializeField] Animator contesteeAnim;
+        [SerializeField] Animator contesteeLeftArmAnim;
+        [SerializeField] Animator contesteeRightArmAnim;
         [Header("Properties")]
         bool intervalStarted;
         float intervalStartBeat;
@@ -136,7 +137,7 @@ namespace HeavenStudio.Games
         public void PassTurn(float beat, float length)
         {
             if (dpadInputs.Count == 0 && aButtonInputs.Count == 0) return;
-            contesteeAnim.DoScaledAnimationAsync("ContesteePrepare", 0.5f);
+            
             intervalStarted = false;
             countToMatch = dpadInputs.Count + aButtonInputs.Count;
             playerBeatInterval = beatInterval;
@@ -144,7 +145,11 @@ namespace HeavenStudio.Games
             Jukebox.PlayOneShotGame("quizShow/timerStart");
             BeatAction.New(instance.gameObject, new List<BeatAction.Action>()
             {
-                new BeatAction.Action(beat + length + beatInterval, delegate { Jukebox.PlayOneShotGame("quizShow/timerStop"); contesteeAnim.DoScaledAnimationAsync("ContesteeRest", 0.5f);}),
+                new BeatAction.Action(beat + length + beatInterval, delegate 
+                { 
+                    Jukebox.PlayOneShotGame("quizShow/timerStop"); 
+                }   
+            ),
                 new BeatAction.Action(beat + length + beatInterval + 0.5f, delegate { Jukebox.PlayOneShotGame("quizShow/timeUp"); })
             });
             foreach (var dpad in dpadInputs)
@@ -164,12 +169,12 @@ namespace HeavenStudio.Games
             if (dpad)
             {
                 Jukebox.PlayOneShotGame("quizShow/contestantDPad");
-                contesteeAnim.DoScaledAnimationAsync("ContesteeDPad", 0.5f);
+                contesteeLeftArmAnim.DoScaledAnimationAsync("LeftArmPress", 0.5f);
             }
             else
             {
                 Jukebox.PlayOneShotGame("quizShow/contestantA");
-                contesteeAnim.DoScaledAnimationAsync("ContesteeA", 0.5f);
+                contesteeRightArmAnim.DoScaledAnimationAsync("RightArmHit", 0.5f);
             }
             pressCount++;
         }
