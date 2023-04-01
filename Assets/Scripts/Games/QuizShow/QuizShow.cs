@@ -52,6 +52,7 @@ namespace HeavenStudio.Games.Loaders
                 new GameAction("changeStage", "Change Expression Stage") 
                 {
                     function = delegate {QuizShow.instance.ChangeStage(eventCaller.currentEntity["value"]);},
+                    defaultLength = 0.5f,
                     parameters = new List<Param>() 
                     {
                         new Param("value", QuizShow.HeadStage.Stage1, "Stage", "What's the current stage of the expressions?")
@@ -139,6 +140,14 @@ namespace HeavenStudio.Games
             if (!intervalStarted)
             {
                 StartInterval(beat, beatInterval);
+            }
+            if (currentStage == 0) 
+            {
+                contesteeHead.Play("ContesteeHeadIdle", -1, 0);
+            }
+            else 
+            {
+                contesteeHead.DoScaledAnimationAsync("ContesteeHeadStage" + currentStage.ToString(), 0.5f);
             }
             Jukebox.PlayOneShotGame( dpad ? "quizShow/hostDPad" : "quizShow/hostA");
             queuedInputs.Add(new QueuedInput 
