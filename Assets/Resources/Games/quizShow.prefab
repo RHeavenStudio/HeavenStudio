@@ -1575,7 +1575,8 @@ MonoBehaviour:
   EligibleHits: []
   scheduledInputs: []
   firstEnable: 0
-  contesteeAnim: {fileID: 7769048272099366977}
+  contesteeLeftArmAnim: {fileID: 7854324538831661217}
+  contesteeRightArmAnim: {fileID: 8583771169857499308}
 --- !u!1 &2509860249771644863
 GameObject:
   m_ObjectHideFlags: 0
@@ -1785,6 +1786,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 8225487404640725788}
+  - component: {fileID: 8208699196746866835}
   m_Layer: 0
   m_Name: LeftArm
   m_TagString: Untagged
@@ -1809,6 +1811,27 @@ Transform:
   m_Father: {fileID: 5068496854343157036}
   m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!95 &8208699196746866835
+Animator:
+  serializedVersion: 5
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3638821992817235265}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: ade2546c1a0180e478530d10f8aa15e7, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorStateOnDisable: 0
+  m_WriteDefaultValuesOnDisable: 0
 --- !u!1 &4016391727385232918
 GameObject:
   m_ObjectHideFlags: 0
@@ -3089,6 +3112,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 7221935209627571158}
+  - component: {fileID: 5080451692557386999}
   m_Layer: 0
   m_Name: RightArm
   m_TagString: Untagged
@@ -3113,6 +3137,27 @@ Transform:
   m_Father: {fileID: 5068496854343157036}
   m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!95 &5080451692557386999
+Animator:
+  serializedVersion: 5
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7008924396978868894}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: 72d6a6b4dfa96b243aea0c34463226c3, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorStateOnDisable: 0
+  m_WriteDefaultValuesOnDisable: 0
 --- !u!1 &7078335649329350439
 GameObject:
   m_ObjectHideFlags: 0
@@ -4245,7 +4290,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 5068496854343157036}
-  - component: {fileID: 711043902520902883}
   m_Layer: 0
   m_Name: QuizHost
   m_TagString: Untagged
@@ -4273,24 +4317,3 @@ Transform:
   m_Father: {fileID: 2914604841386194871}
   m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!95 &711043902520902883
-Animator:
-  serializedVersion: 5
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 9184609955024798575}
-  m_Enabled: 1
-  m_Avatar: {fileID: 0}
-  m_Controller: {fileID: 9100000, guid: c846820cdebdee546932f44940279d56, type: 2}
-  m_CullingMode: 0
-  m_UpdateMode: 0
-  m_ApplyRootMotion: 0
-  m_LinearVelocityBlending: 0
-  m_StabilizeFeet: 0
-  m_WarningMessage: 
-  m_HasTransformHierarchy: 1
-  m_AllowConstantClipSamplingOptimization: 1
-  m_KeepAnimatorStateOnDisable: 0
-  m_WriteDefaultValuesOnDisable: 0
