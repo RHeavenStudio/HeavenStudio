@@ -709,18 +709,13 @@ namespace HeavenStudio
             {
                 if (gameInfo.fxOnly)
                 {
-                    var gameEntities = Beatmap.entities.FindAll(c => {
-                            var gameName = c.datamodel.Split(0);
-                            var newGameInfo = GetGameInfo(gameName);
-                            if (newGameInfo == null)
-                                return false;
-                            else
-                                return !newGameInfo.fxOnly;
-                        }).ToList();
-                    if (gameEntities.Count != 0)
-                        name = gameEntities[0].datamodel.Split(0);
-                    else
-                        name = "noGame";
+                    var gameInfos = Beatmap.entities
+                        .Select(x => x.datamodel.Split(0))
+                        .Select(x => GetGameInfo(x))
+                        .Where(x => x != null)
+                        .Where(x => !x.fxOnly)
+                        .Select(x => x.LoadableName);
+                    name = gameInfos.FirstOrDefault() ?? "noGame";
                 }
                 else
                 {
@@ -729,6 +724,7 @@ namespace HeavenStudio
                         //game is packed in an assetbundle, load from that instead
                         return gameInfo.GetCommonAssetBundle().LoadAsset<GameObject>(name);
                     }
+                    name = gameInfo.LoadableName;
                 }
             }
             return Resources.Load<GameObject>($"Games/{name}");
