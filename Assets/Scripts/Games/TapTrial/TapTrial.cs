@@ -12,7 +12,7 @@ namespace HeavenStudio.Games.Loaders
     public static class AgbTapLoader
     {
         public static Minigame AddGame(EventCaller eventCaller) {
-            return new Minigame("tapTrial", "Moneky Dance", "94ffb5", false, false, new List<GameAction>()
+            return new Minigame("tapTrial", "Tap Trial", "94ffb5", false, false, new List<GameAction>()
             {
                 new GameAction("bop", "Bop")
                 {

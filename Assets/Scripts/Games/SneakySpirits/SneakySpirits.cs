@@ -9,7 +9,7 @@ namespace HeavenStudio.Games.Loaders
     public static class AgbGhostLoader
     {
         public static Minigame AddGame(EventCaller eventCaller) {
-            return new Minigame("sneakySpirits", "Troublesome Guys", "5a5a9c", false, false, new List<GameAction>()
+            return new Minigame("sneakySpirits", "Sneaky Spirits", "5a5a9c", false, false, new List<GameAction>()
             {
                 new GameAction("spawnGhost", "Ghost")
                 {

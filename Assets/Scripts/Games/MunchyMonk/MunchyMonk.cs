@@ -9,7 +9,7 @@ namespace HeavenStudio.Games.Loaders
     public static class ntrMunchyMonkLoader
     {
         public static Minigame AddGame(EventCaller eventCaller) {
-            return new Minigame("munchyMonk", "ZEUS", "b9fffc", false, false, new List<GameAction>()
+            return new Minigame("munchyMonk", "Munchy Monk", "b9fffc", false, false, new List<GameAction>()
             {
                 new GameAction("Bop", "Bop")
                 {

@@ -12,7 +12,7 @@ namespace HeavenStudio.Games.Loaders
     public static class NtrPingpongLoader
     {
         public static Minigame AddGame(EventCaller eventCaller) {
-            return new Minigame("rhythmRally", "Pong Game", "ffffff", true, false, new List<GameAction>()
+            return new Minigame("rhythmRally", "Rhythm Rally", "ffffff", true, false, new List<GameAction>()
             {
                 new GameAction("bop", "Bop")
                 {

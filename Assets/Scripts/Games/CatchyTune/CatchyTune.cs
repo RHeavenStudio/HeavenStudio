@@ -12,7 +12,7 @@ namespace HeavenStudio.Games.Loaders
         // minigame menu items
         public static Minigame AddGame(EventCaller eventCaller)
         {
-            return new Minigame("catchyTune", "Rythm Ladder", "f2f2f2", false, false, new List<GameAction>()
+            return new Minigame("catchyTune", "Catchy Tune", "f2f2f2", false, false, new List<GameAction>()
             {
                 new GameAction("orange", "Orange")
                 {

@@ -1,7 +1,7 @@
-## This work is still in progress. No public collections (yet).
-# RYthm cinema Studio
+## This project is still in development. There are NO public compiled releases (yet).
+# Heaven Studio
 
-(VIP) Rhythm Paradise Custom Remix Maker offers many editing options.
+(WIP) A tool to create playable Rhythm Heaven custom remixes, with many customization options.
 
 <p>
   <a href="https://discord.gg/2kdZ8kFyEN">
@@ -11,36 +11,36 @@
 
 [![License: GPL v3](https://img.shields.io/badge/License-GPLv3-blue.svg)](https://www.gnu.org/licenses/gpl-3.0)
 
-[Increase your productivity.](https://docs.google.com/spreadsheets/d/1NXxIeL4nsdjChrxAZTPpk20QOKEdQWGbXIhT4TclB6k/edit?usp=sharing)
+[Progress Spreadsheet](https://docs.google.com/spreadsheets/d/1NXxIeL4nsdjChrxAZTPpk20QOKEdQWGbXIhT4TclB6k/edit?usp=sharing)
 
-[It can be seen on YouTube](https://www.youtube.com/channel/UCAb3R-5qyXWOEj8B4vibhxQ)
+[YouTube Channel](https://www.youtube.com/channel/UCAb3R-5qyXWOEj8B4vibhxQ)
 
-[criminal behavior](https://docs.google.com/forms/d/e/1FAIpQLSfu0p2ZjrfwwEvpLgJ4Hw-AAN3jh4QNSEk0U7mjDvwiIkoRAw/viewform?usp=pp_url)
+[Bug Report Form](https://docs.google.com/forms/d/e/1FAIpQLSfu0p2ZjrfwwEvpLgJ4Hw-AAN3jh4QNSEk0U7mjDvwiIkoRAw/viewform?usp=pp_url)
 
-[registry](https://rheavenstudio.github.io/)
+[Documentation](https://rheavenstudio.github.io/)
 
 ![prCapture](https://user-images.githubusercontent.com/43734252/212429715-1971929f-fee1-442f-8ba2-694e1732590a.png)
 
 
-## I sent it again
-Currently, there is not much construction work in the project. GitHub controls everything, but it doesn't allow it.
+## Prebuilt Binaries
+This project is still in development, so there are currently no release builds yet. GitHub Actions creates experimental builds on each commmit, but minimal support will be provided.
 
 
-- [Window:](https://nightly.link/RHeavenStudio/HeavenStudio/workflows/windows/master/StandaloneWindows64-build.zip)
-- [Linux:](https://nightly.link/RHeavenStudio/HeavenStudio/workflows/linux/master/StandaloneLinux64-build.zip)
-- [Apple software](https://nightly.link/RHeavenStudio/HeavenStudio/workflows/macos/master/StandaloneOSX-build.zip)
-#### The real problem is:
-- It's hard on [MacOS and Linux](https://github.com/megaminerjenny/HeavenStudio/issues/72), but RYthm cinema Studio is great.
-- On macOS, Discord can open in the background, but the DiscordSDK does not open in the background and Discord crashes.
-- Use the instructions below for MacOS and Linux binaries (**except Satimo** and other small games).
+- [Windows](https://nightly.link/RHeavenStudio/HeavenStudio/workflows/windows/master/StandaloneWindows64-build.zip)
+- [Linux](https://nightly.link/RHeavenStudio/HeavenStudio/workflows/linux/master/StandaloneLinux64-build.zip)
+- [MacOS](https://nightly.link/RHeavenStudio/HeavenStudio/workflows/macos/master/StandaloneOSX-build.zip)
+#### Important Notes:
+- On MacOS and Linux builds you may [experience bugs with audio-related tasks](https://github.com/megaminerjenny/HeavenStudio/issues/72), but in most cases Heaven Studio works perfectly.
+- On MacOS you'll need to have Discord open in the background for now, there's a bug that causes the DiscordSDK library to crash when the rich presence is updated while Discord is not open in the background.
+- MacOS and Linux prebuilt binaries **ARE BUGGY** (AssetBundles do not get built causing some minigames as KarateMan to not render correctly), please build the project yourself instead using the instructions below.
 
 
 ## Self-Building
 
-RYthm cinema Studio is based on [Unity 2020.3.21](https://unity.com/releases/editor/whats-new/2021.3.21),
-and [Visual Code](https://code.visualstudio.com/).
+Heaven Studio is made in [Unity 2020.3.21](https://unity.com/releases/editor/whats-new/2021.3.21),
+and programmed with [Visual Studio Code](https://code.visualstudio.com/).
 
-How: [BUILD.md](https://github.com/megaminerjenny/HeavenStudio/blob/master/BUILD.md) (or saved [pages](https://rheavenstudio.github.io/docs-contributing/setup/introduction))
+Build Instructions: [BUILD.md](https://github.com/megaminerjenny/HeavenStudio/blob/master/BUILD.md) (or the more maintained [documentation page](https://rheavenstudio.github.io/docs-contributing/setup/introduction))
 
-## : information
-Rhythm Heaven is the home of Nintendo experts. These services are not supported by Nintendo. The content used in this application (words, sounds, images, etc.) does not belong to Nintendo. Products and other content belong to their respective owners. This is a public domain service available to others under the GPL 3.0 license
+## Other information
+Rhythm Heaven is the intellectual property of Nintendo. This program is NOT endorsed nor sponsored in any way by Nintendo. All used properties of Nintendo (such as names, audio, graphics, etc.) in this software are not intended to maliciously infringe trademark rights. All other trademarks and assets are property of their respective owners. This is a community project and this is available for others to use according to the GPL-3.0 license, without charge.

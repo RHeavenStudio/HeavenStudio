@@ -11,7 +11,7 @@ namespace HeavenStudio.Games.Loaders
     public static class NtrIdolLoader
     {
         public static Minigame AddGame(EventCaller eventCaller) {
-            return new Minigame("fanClub", "Street Dancer", "ff78ff", false, false, new List<GameAction>()
+            return new Minigame("fanClub", "Fan Club", "ff78ff", false, false, new List<GameAction>()
                 {
                     new GameAction("bop", "Bop")
                     {

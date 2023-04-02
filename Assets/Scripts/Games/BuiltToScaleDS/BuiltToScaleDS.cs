@@ -13,7 +13,7 @@ namespace HeavenStudio.Games.Loaders
     public static class NtrFlickLoader
     {
         public static Minigame AddGame(EventCaller eventCaller) {
-            return new Minigame("builtToScaleDS", "Insertion", "1ad21a", true, false, new List<GameAction>()
+            return new Minigame("builtToScaleDS", "Built To Scale (DS)", "1ad21a", true, false, new List<GameAction>()
             {
                 new GameAction("spawn blocks", "Widget")
                 {

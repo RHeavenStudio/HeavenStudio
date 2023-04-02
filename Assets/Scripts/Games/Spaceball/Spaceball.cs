@@ -10,7 +10,7 @@ namespace HeavenStudio.Games.Loaders
     public static class AgbBatterLoader
     {
         public static Minigame AddGame(EventCaller eventCaller) {
-            return new Minigame("spaceball", "Space Baseball", "000073", false, false, new List<GameAction>()
+            return new Minigame("spaceball", "Spaceball", "000073", false, false, new List<GameAction>()
             {
                 new GameAction("shoot", "Pitch Ball")
                 {
