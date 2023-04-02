@@ -86,8 +86,11 @@ namespace HeavenStudio.Games
         [SerializeField] GameObject stopWatch;
         [SerializeField] SpriteRenderer firstDigitSr;
         [SerializeField] SpriteRenderer secondDigitSr;
+        [SerializeField] SpriteRenderer hostFirstDigitSr;
+        [SerializeField] SpriteRenderer hostSecondDigitSr;
         [Header("Properties")]
         [SerializeField] List<Sprite> contestantNumberSprites = new List<Sprite>();
+        [SerializeField] List<Sprite> hostNumberSprites = new List<Sprite>();
         bool intervalStarted;
         float intervalStartBeat;
         float playerIntervalStartBeat;
@@ -102,7 +105,7 @@ namespace HeavenStudio.Games
         }
         static List<QueuedInput> queuedInputs = new List<QueuedInput>();
         int pressCount;
-        float countToMatch;
+        int countToMatch;
         public static QuizShow instance;
 
         void OnDestroy()
@@ -172,6 +175,8 @@ namespace HeavenStudio.Games
             pressCount = 0;
             firstDigitSr.sprite = contestantNumberSprites[0];
             secondDigitSr.sprite = contestantNumberSprites[0];
+            hostFirstDigitSr.sprite = hostNumberSprites[10];
+            hostSecondDigitSr.sprite = hostNumberSprites[10];
             intervalStartBeat = beat;
             beatInterval = interval;
             intervalStarted = true;
@@ -263,7 +268,12 @@ namespace HeavenStudio.Games
         {
             BeatAction.New(instance.gameObject, new List<BeatAction.Action>()
             {
-                new BeatAction.Action(beat + length, delegate { Jukebox.PlayOneShotGame("quizShow/answerReveal");})
+                new BeatAction.Action(beat + length, delegate 
+                { 
+                    Jukebox.PlayOneShotGame("quizShow/answerReveal");
+                    hostFirstDigitSr.sprite = hostNumberSprites[GetSpecificDigit(countToMatch, 1)];
+                    hostSecondDigitSr.sprite = hostNumberSprites[GetSpecificDigit(countToMatch, 2)];
+                })
             });
         }
 
