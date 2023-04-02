@@ -245,7 +245,7 @@ namespace HeavenStudio.Games
             {
                 countToMatch = queuedInputs.Count;
             }
-            int hundredLoops = Mathf.FloorToInt(countToMatch % 100);
+            int hundredLoops = Mathf.FloorToInt(countToMatch / 100);
             countToMatch -= hundredLoops * 100;
             doingConsectiveIntervals = consecutive;
             playerBeatInterval = beatInterval;
