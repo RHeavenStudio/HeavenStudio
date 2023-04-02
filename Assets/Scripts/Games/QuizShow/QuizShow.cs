@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using HeavenStudio.Util;
+using System.Diagnostics.CodeAnalysis;
 
 namespace HeavenStudio.Games.Loaders
 {
@@ -33,7 +34,7 @@ namespace HeavenStudio.Games.Loaders
                     function = delegate {var e = eventCaller.currentEntity; QuizShow.instance.PassTurn(e.beat, e.length, e["sound"], e["con"]); },
                     defaultLength = 1f,
                     resizable = true,
-                    parameters = new List<Param>() 
+                    parameters = new List<Param>()
                     {
                         new Param("sound", true, "Play Time-Up Sound?", "Should the Time-Up sound play at the end of the interval?"),
                         new Param("con", false, "Consecutive", "Disables everything that happens at the end of the interval if ticked on."),
@@ -54,13 +55,22 @@ namespace HeavenStudio.Games.Loaders
                         new Param("jingle", false, "Jingle", "Should the quiz show jingle play?")
                     }
                 },
-                new GameAction("changeStage", "Change Expression Stage") 
+                new GameAction("changeStage", "Change Expression Stage")
                 {
                     function = delegate {QuizShow.instance.ChangeStage(eventCaller.currentEntity["value"]);},
                     defaultLength = 0.5f,
-                    parameters = new List<Param>() 
+                    parameters = new List<Param>()
                     {
                         new Param("value", QuizShow.HeadStage.Stage1, "Stage", "What's the current stage of the expressions?")
+                    }
+                },
+                new GameAction("countMod", "Count Modifier")
+                {
+                    function = delegate { QuizShow.instance.CountModifier(eventCaller.currentEntity["value"]); },
+                    defaultLength = 0.5f,
+                    parameters = new List<Param>()
+                    {
+                        new Param("value", true, "Should Reset Count?", "Will the contestant's counter reset to 0 each time it hits 100 instead of exploding?")
                     }
                 }
             });
@@ -97,6 +107,7 @@ namespace HeavenStudio.Games
         [SerializeField] List<Sprite> contestantNumberSprites = new List<Sprite>();
         [SerializeField] List<Sprite> hostNumberSprites = new List<Sprite>();
         bool intervalStarted;
+        bool shouldResetCount;
         bool doingConsectiveIntervals;
         float intervalStartBeat;
         float playerIntervalStartBeat;
@@ -146,6 +157,11 @@ namespace HeavenStudio.Games
                     }
                 }
             }
+        }
+
+        public void CountModifier(bool shouldReset)
+        {
+            shouldResetCount = shouldReset;
         }
         
         public void ChangeStage(int stage) 
@@ -290,20 +306,27 @@ namespace HeavenStudio.Games
                 contesteeRightArmAnim.DoScaledAnimationAsync("RightArmHit", 0.5f);
             }
             pressCount++;
-            switch (pressCount) 
+            if (shouldResetCount && pressCount > 99) pressCount = 0;
+            switch (pressCount)
             {
+                case int x when x < 100:
+                    firstDigitSr.sprite = contestantNumberSprites[GetSpecificDigit(pressCount, 1)];
+                    secondDigitSr.sprite = contestantNumberSprites[GetSpecificDigit(pressCount, 2)];
+                    break;
                 case 100:
                     Jukebox.PlayOneShotGame("quizShow/contestantExplode");
+                    firstDigitSr.color = new Color(1, 1, 1, 0);
+                    secondDigitSr.color = new Color(1, 1, 1, 0);
                     break;
                 case 120:
                     Jukebox.PlayOneShotGame("quizShow/hostExplode");
+                    hostFirstDigitSr.color = new Color(1, 1, 1, 0);
+                    hostSecondDigitSr.color = new Color(1, 1, 1, 0);
                     break;
                 case 150:
                     Jukebox.PlayOneShotGame("quizShow/signExplode");
                     break;
             }
-            firstDigitSr.sprite = contestantNumberSprites[GetSpecificDigit(pressCount, 1)];
-            secondDigitSr.sprite = contestantNumberSprites[GetSpecificDigit(pressCount, 2)];
         }
 
         public void RevealAnswer(float beat, float length)
