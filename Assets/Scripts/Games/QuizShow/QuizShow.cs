@@ -84,7 +84,10 @@ namespace HeavenStudio.Games
         [SerializeField] Animator contesteeHead;
         [SerializeField] Transform timerTransform;
         [SerializeField] GameObject stopWatch;
+        [SerializeField] SpriteRenderer firstDigitSr;
+        [SerializeField] SpriteRenderer secondDigitSr;
         [Header("Properties")]
+        [SerializeField] List<Sprite> contestantNumberSprites = new List<Sprite>();
         bool intervalStarted;
         float intervalStartBeat;
         float playerIntervalStartBeat;
@@ -98,7 +101,7 @@ namespace HeavenStudio.Games
             public bool dpad;
         }
         static List<QueuedInput> queuedInputs = new List<QueuedInput>();
-        float pressCount;
+        int pressCount;
         float countToMatch;
         public static QuizShow instance;
 
@@ -167,6 +170,8 @@ namespace HeavenStudio.Games
         {
             contesteeHead.Play("ContesteeHeadIdle", 0, 0);
             pressCount = 0;
+            firstDigitSr.sprite = contestantNumberSprites[0];
+            secondDigitSr.sprite = contestantNumberSprites[0];
             intervalStartBeat = beat;
             beatInterval = interval;
             intervalStarted = true;
@@ -250,6 +255,8 @@ namespace HeavenStudio.Games
                     Jukebox.PlayOneShotGame("quizShow/signExplode");
                     break;
             }
+            firstDigitSr.sprite = contestantNumberSprites[GetSpecificDigit(pressCount, 1)];
+            secondDigitSr.sprite = contestantNumberSprites[GetSpecificDigit(pressCount, 2)];
         }
 
         public void RevealAnswer(float beat, float length)
@@ -291,6 +298,11 @@ namespace HeavenStudio.Games
         }
 
         void Nothing(PlayerActionEvent caller) { }
+
+        int GetSpecificDigit(int num, int nth)
+        {
+            return (num / (int)Mathf.Pow(10, nth - 1)) % 10;
+        }
     }
 }
 

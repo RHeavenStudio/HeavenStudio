@@ -1059,7 +1059,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: quiz_parts_26
+      name: ZeroCon
       rect:
         serializedVersion: 2
         x: 6
@@ -1080,7 +1080,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: quiz_parts_27
+      name: OneCon
       rect:
         serializedVersion: 2
         x: 117
@@ -1101,7 +1101,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: quiz_parts_28
+      name: TwoCon
       rect:
         serializedVersion: 2
         x: 229
@@ -1122,7 +1122,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: quiz_parts_29
+      name: ThreeCon
       rect:
         serializedVersion: 2
         x: 342
@@ -1143,7 +1143,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: quiz_parts_30
+      name: FourCon
       rect:
         serializedVersion: 2
         x: 453
@@ -1164,7 +1164,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: quiz_parts_31
+      name: FiveCon
       rect:
         serializedVersion: 2
         x: 5
@@ -1185,7 +1185,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: quiz_parts_32
+      name: SixCon
       rect:
         serializedVersion: 2
         x: 117
@@ -1206,7 +1206,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: quiz_parts_33
+      name: SevenCon
       rect:
         serializedVersion: 2
         x: 229
@@ -1227,11 +1227,11 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: quiz_parts_34
+      name: EightCon
       rect:
         serializedVersion: 2
         x: 341
-        y: 453
+        y: 454
         width: 102
         height: 151
       alignment: 0
@@ -1248,7 +1248,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: quiz_parts_35
+      name: NineCon
       rect:
         serializedVersion: 2
         x: 453
@@ -1269,7 +1269,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: quiz_parts_36
+      name: ZeroHost
       rect:
         serializedVersion: 2
         x: 468
@@ -1290,7 +1290,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: quiz_parts_37
+      name: OneHost
       rect:
         serializedVersion: 2
         x: 579
@@ -1311,7 +1311,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: quiz_parts_38
+      name: TwoHost
       rect:
         serializedVersion: 2
         x: 690
@@ -1332,7 +1332,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: quiz_parts_39
+      name: ThreeHost
       rect:
         serializedVersion: 2
         x: 802
@@ -1353,7 +1353,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: quiz_parts_40
+      name: FourHost
       rect:
         serializedVersion: 2
         x: 914
@@ -1374,7 +1374,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: quiz_parts_41
+      name: FiveHost
       rect:
         serializedVersion: 2
         x: 466
@@ -1395,7 +1395,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: quiz_parts_42
+      name: SixHost
       rect:
         serializedVersion: 2
         x: 578
@@ -1416,7 +1416,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: quiz_parts_43
+      name: SevenHost
       rect:
         serializedVersion: 2
         x: 691
@@ -1437,7 +1437,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: quiz_parts_44
+      name: EightHost
       rect:
         serializedVersion: 2
         x: 803
@@ -1458,7 +1458,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: quiz_parts_45
+      name: NineHost
       rect:
         serializedVersion: 2
         x: 915
@@ -1479,7 +1479,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: quiz_parts_46
+      name: QuestionCon
       rect:
         serializedVersion: 2
         x: 565
@@ -1500,7 +1500,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: quiz_parts_47
+      name: QuestionHost
       rect:
         serializedVersion: 2
         x: 565
@@ -2300,10 +2300,32 @@ TextureImporter:
       DPAD0: -474485390170358514
       DPAD1: 8466334812419657628
       DPAD2: -8857745971218785515
+      EightCon: -2004162876
+      EightHost: 114598243
+      FiveCon: -1006646533
+      FiveHost: -919538975
+      FourCon: -2092458599
+      FourHost: -1019672411
       HostBody: -6601520898044709631
       HostFaceNeutral: -2360217439366554597
       HostLeftHand: 37760930943052639
       HostRightHand: 3650567430847218855
+      NineCon: 773300657
+      NineHost: 1357950792
+      OneCon: -228645182
+      OneHost: 1602445164
+      QuestionCon: 164595280
+      QuestionHost: 262866113
+      SevenCon: -1760540587
+      SevenHost: -544453542
+      SixCon: 614542109
+      SixHost: 174965508
+      ThreeCon: 1528411210
+      ThreeHost: -1559240356
+      TwoCon: 2008587898
+      TwoHost: 1729732769
+      ZeroCon: -1593039429
+      ZeroHost: 610054025
       quiz_parts_0: 871493373
       quiz_parts_1: -1755269908
       quiz_parts_10: 126539440
@@ -2323,30 +2345,8 @@ TextureImporter:
       quiz_parts_23: 1956146893
       quiz_parts_24: 1225676320
       quiz_parts_25: -1203259459
-      quiz_parts_26: -1593039429
-      quiz_parts_27: -228645182
-      quiz_parts_28: 2008587898
-      quiz_parts_29: 1528411210
       quiz_parts_3: -1183059844
-      quiz_parts_30: -2092458599
-      quiz_parts_31: -1006646533
-      quiz_parts_32: 614542109
-      quiz_parts_33: -1760540587
-      quiz_parts_34: -2004162876
-      quiz_parts_35: 773300657
-      quiz_parts_36: 610054025
-      quiz_parts_37: 1602445164
-      quiz_parts_38: 1729732769
-      quiz_parts_39: -1559240356
       quiz_parts_4: 914493644
-      quiz_parts_40: -1019672411
-      quiz_parts_41: -919538975
-      quiz_parts_42: 174965508
-      quiz_parts_43: -544453542
-      quiz_parts_44: 114598243
-      quiz_parts_45: 1357950792
-      quiz_parts_46: 164595280
-      quiz_parts_47: 262866113
       quiz_parts_48: 1337513640
       quiz_parts_49: 1881461271
       quiz_parts_5: 530667856
