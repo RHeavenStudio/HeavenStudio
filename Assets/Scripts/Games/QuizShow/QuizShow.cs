@@ -30,9 +30,14 @@ namespace HeavenStudio.Games.Loaders
                 },
                 new GameAction("passTurn", "Pass Turn")
                 {
-                    function = delegate {var e = eventCaller.currentEntity; QuizShow.instance.PassTurn(e.beat, e.length); },
+                    function = delegate {var e = eventCaller.currentEntity; QuizShow.instance.PassTurn(e.beat, e.length, e["sound"], e["con"]); },
                     defaultLength = 1f,
-                    resizable = true
+                    resizable = true,
+                    parameters = new List<Param>() 
+                    {
+                        new Param("sound", true, "Play Time-Up Sound?", "Should the Time-Up sound play at the end of the interval?"),
+                        new Param("con", false, "Consecutive", "Disables everything that happens at the end of the interval if ticked on."),
+                    }
                 },
                 new GameAction("revealAnswer", "Reveal Answer")
                 {
@@ -86,6 +91,7 @@ namespace HeavenStudio.Games
         float playerBeatInterval;
         float beatInterval = 8f;
         int currentStage;
+        bool shouldPrepareArms = true;
         struct QueuedInput 
         {
             public float beat;
@@ -166,11 +172,15 @@ namespace HeavenStudio.Games
             intervalStarted = true;
         }
 
-        public void PassTurn(float beat, float length)
+        public void PassTurn(float beat, float length, bool timeUpSound, bool consecutive)
         {
             if (queuedInputs.Count == 0) return;
-            contesteeLeftArmAnim.DoScaledAnimationAsync("LeftPrepare", 0.5f);
-            contesteeRightArmAnim.DoScaledAnimationAsync("RIghtPrepare", 0.5f);
+            if (shouldPrepareArms) 
+            {
+                contesteeLeftArmAnim.DoScaledAnimationAsync("LeftPrepare", 0.5f);
+                contesteeRightArmAnim.DoScaledAnimationAsync("RIghtPrepare", 0.5f);
+            }
+            shouldPrepareArms = false;
             stopWatch.SetActive(true);
             intervalStarted = false;
             countToMatch = queuedInputs.Count;
@@ -181,13 +191,17 @@ namespace HeavenStudio.Games
             {
                 new BeatAction.Action(beat + length + beatInterval, delegate 
                 { 
-                    Jukebox.PlayOneShotGame("quizShow/timerStop"); 
-                    contesteeLeftArmAnim.DoScaledAnimationAsync("LeftRest", 0.5f);
-                    contesteeRightArmAnim.DoScaledAnimationAsync("RightRest", 0.5f);
-                    stopWatch.SetActive(false);
+                    if (!consecutive) 
+                    {
+                        Jukebox.PlayOneShotGame("quizShow/timerStop"); 
+                        contesteeLeftArmAnim.DoScaledAnimationAsync("LeftRest", 0.5f);
+                        contesteeRightArmAnim.DoScaledAnimationAsync("RightRest", 0.5f);
+                        shouldPrepareArms = true;
+                        stopWatch.SetActive(false);
+                    }
                 }   
             ),
-                new BeatAction.Action(beat + length + beatInterval + 0.5f, delegate { Jukebox.PlayOneShotGame("quizShow/timeUp"); })
+                new BeatAction.Action(beat + length + beatInterval + 0.5f, delegate { if (timeUpSound && !consecutive) Jukebox.PlayOneShotGame("quizShow/timeUp"); })
             });
             foreach (var input in queuedInputs) 
             {
