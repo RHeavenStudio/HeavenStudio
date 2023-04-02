@@ -76,12 +76,16 @@ namespace HeavenStudio.Games
         {
             Stage1 = 1,
             Stage2 = 2,
-            Stage3 = 3
+            Stage3 = 3,
+            Stage4 = 4,
         }
         [Header("Components")]
         [SerializeField] Animator contesteeLeftArmAnim;
         [SerializeField] Animator contesteeRightArmAnim;
         [SerializeField] Animator contesteeHead;
+        [SerializeField] Animator hostLeftArmAnim;
+        [SerializeField] Animator hostRightArmAnim;
+        [SerializeField] Animator hostHead;
         [SerializeField] Transform timerTransform;
         [SerializeField] GameObject stopWatch;
         [SerializeField] SpriteRenderer firstDigitSr;
@@ -92,6 +96,7 @@ namespace HeavenStudio.Games
         [SerializeField] List<Sprite> contestantNumberSprites = new List<Sprite>();
         [SerializeField] List<Sprite> hostNumberSprites = new List<Sprite>();
         bool intervalStarted;
+        bool doingConsectiveIntervals;
         float intervalStartBeat;
         float playerIntervalStartBeat;
         float playerBeatInterval;
@@ -156,12 +161,26 @@ namespace HeavenStudio.Games
             if (currentStage == 0) 
             {
                 contesteeHead.Play("ContesteeHeadIdle", -1, 0);
+                hostHead.Play("HostIdleHead", -1, 0);
             }
             else 
             {
-                contesteeHead.DoScaledAnimationAsync("ContesteeHeadStage" + currentStage.ToString(), 0.5f);
+                if (currentStage != 4) contesteeHead.DoScaledAnimationAsync("ContesteeHeadStage" + currentStage.ToString(), 0.5f);
+                else
+                {
+                    contesteeHead.DoScaledAnimationAsync("ContesteeHeadStage3", 0.5f);
+                }
+                hostHead.DoScaledAnimationAsync("HostStage" + currentStage.ToString(), 0.5f);
             }
             Jukebox.PlayOneShotGame( dpad ? "quizShow/hostDPad" : "quizShow/hostA");
+            if (dpad)
+            {
+                hostRightArmAnim.DoScaledAnimationAsync("HostRightHit", 0.5f);
+            }
+            else
+            {
+                hostLeftArmAnim.DoScaledAnimationAsync("HostLeftHit", 0.5f);
+            }
             queuedInputs.Add(new QueuedInput 
             {
                 beat = beat - intervalStartBeat,
@@ -172,7 +191,13 @@ namespace HeavenStudio.Games
         public void StartInterval(float beat, float interval)
         {
             contesteeHead.Play("ContesteeHeadIdle", 0, 0);
-            pressCount = 0;
+            if (shouldPrepareArms)
+            {
+                hostLeftArmAnim.DoScaledAnimationAsync("HostLeftPrepare", 0.5f);
+                hostRightArmAnim.DoScaledAnimationAsync("HostPrepare", 0.5f);
+            }
+
+            if (!doingConsectiveIntervals) pressCount = 0;
             firstDigitSr.sprite = contestantNumberSprites[0];
             secondDigitSr.sprite = contestantNumberSprites[0];
             hostFirstDigitSr.sprite = hostNumberSprites[10];
@@ -190,10 +215,23 @@ namespace HeavenStudio.Games
                 contesteeLeftArmAnim.DoScaledAnimationAsync("LeftPrepare", 0.5f);
                 contesteeRightArmAnim.DoScaledAnimationAsync("RIghtPrepare", 0.5f);
             }
+            if (!consecutive)
+            {
+                hostLeftArmAnim.DoScaledAnimationAsync("HostLeftRest", 0.5f);
+                hostRightArmAnim.DoScaledAnimationAsync("HostRightRest", 0.5f);
+            }
             shouldPrepareArms = false;
             stopWatch.SetActive(true);
             intervalStarted = false;
-            countToMatch = queuedInputs.Count;
+            if (doingConsectiveIntervals)
+            {
+                countToMatch += queuedInputs.Count;
+            }
+            else
+            {
+                countToMatch = queuedInputs.Count;
+            }
+            doingConsectiveIntervals = consecutive;
             playerBeatInterval = beatInterval;
             playerIntervalStartBeat = beat + length;
             Jukebox.PlayOneShotGame("quizShow/timerStart");
@@ -235,7 +273,11 @@ namespace HeavenStudio.Games
             }
             else 
             {
-                contesteeHead.DoScaledAnimationAsync("ContesteeHeadStage" + currentStage.ToString(), 0.5f);
+                if (currentStage != 4) contesteeHead.DoScaledAnimationAsync("ContesteeHeadStage" + currentStage.ToString(), 0.5f);
+                else
+                {
+                    contesteeHead.DoScaledAnimationAsync("ContesteeHeadStage3", 0.5f);
+                }
             }
             if (dpad)
             {
@@ -284,6 +326,7 @@ namespace HeavenStudio.Games
                 GameProfiler.instance.IncreaseScore();
                 Jukebox.PlayOneShotGame("quizShow/correct");
                 contesteeHead.Play("ContesteeSmile", -1, 0);
+                hostHead.Play("HostSmile", -1, 0);
                 if (audience) Jukebox.PlayOneShotGame("quizShow/audienceCheer");
                 if (jingle) Jukebox.PlayOneShotGame("quizShow/correctJingle");
             }
@@ -292,6 +335,7 @@ namespace HeavenStudio.Games
                 ScoreMiss();
                 Jukebox.PlayOneShotGame("quizShow/incorrect");
                 contesteeHead.Play("ContesteeSad", -1, 0);
+                hostHead.Play("HostSad", -1, 0);
                 if (audience) Jukebox.PlayOneShotGame("quizShow/audienceSad");
                 if (jingle) Jukebox.PlayOneShotGame("quizShow/incorrectJingle");
             }
