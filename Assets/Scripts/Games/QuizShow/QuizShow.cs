@@ -88,6 +88,7 @@ namespace HeavenStudio.Games
         [SerializeField] Animator hostHead;
         [SerializeField] Transform timerTransform;
         [SerializeField] GameObject stopWatch;
+        [SerializeField] GameObject blackOut;
         [SerializeField] SpriteRenderer firstDigitSr;
         [SerializeField] SpriteRenderer secondDigitSr;
         [SerializeField] SpriteRenderer hostFirstDigitSr;
@@ -165,11 +166,6 @@ namespace HeavenStudio.Games
             }
             else 
             {
-                if (currentStage != 4) contesteeHead.DoScaledAnimationAsync("ContesteeHeadStage" + currentStage.ToString(), 0.5f);
-                else
-                {
-                    contesteeHead.DoScaledAnimationAsync("ContesteeHeadStage3", 0.5f);
-                }
                 hostHead.DoScaledAnimationAsync("HostStage" + currentStage.ToString(), 0.5f);
             }
             Jukebox.PlayOneShotGame( dpad ? "quizShow/hostDPad" : "quizShow/hostA");
@@ -190,18 +186,20 @@ namespace HeavenStudio.Games
 
         public void StartInterval(float beat, float interval)
         {
-            contesteeHead.Play("ContesteeHeadIdle", 0, 0);
-            if (shouldPrepareArms)
+            if (!intervalStarted)
             {
-                hostLeftArmAnim.DoScaledAnimationAsync("HostLeftPrepare", 0.5f);
-                hostRightArmAnim.DoScaledAnimationAsync("HostPrepare", 0.5f);
+                if (shouldPrepareArms)
+                {
+                    hostLeftArmAnim.DoScaledAnimationAsync("HostLeftPrepare", 0.5f);
+                    hostRightArmAnim.DoScaledAnimationAsync("HostPrepare", 0.5f);
+                    contesteeHead.Play("ContesteeHeadIdle", 0, 0);
+                }
+                if (!doingConsectiveIntervals) pressCount = 0;
+                firstDigitSr.sprite = contestantNumberSprites[0];
+                secondDigitSr.sprite = contestantNumberSprites[0];
+                hostFirstDigitSr.sprite = hostNumberSprites[10];
+                hostSecondDigitSr.sprite = hostNumberSprites[10];
             }
-
-            if (!doingConsectiveIntervals) pressCount = 0;
-            firstDigitSr.sprite = contestantNumberSprites[0];
-            secondDigitSr.sprite = contestantNumberSprites[0];
-            hostFirstDigitSr.sprite = hostNumberSprites[10];
-            hostSecondDigitSr.sprite = hostNumberSprites[10];
             intervalStartBeat = beat;
             beatInterval = interval;
             intervalStarted = true;
@@ -231,6 +229,8 @@ namespace HeavenStudio.Games
             {
                 countToMatch = queuedInputs.Count;
             }
+            int hundredLoops = Mathf.FloorToInt(countToMatch % 100);
+            countToMatch -= hundredLoops * 100;
             doingConsectiveIntervals = consecutive;
             playerBeatInterval = beatInterval;
             playerIntervalStartBeat = beat + length;
@@ -308,6 +308,7 @@ namespace HeavenStudio.Games
 
         public void RevealAnswer(float beat, float length)
         {
+            blackOut.SetActive(true);
             BeatAction.New(instance.gameObject, new List<BeatAction.Action>()
             {
                 new BeatAction.Action(beat + length, delegate 
@@ -315,6 +316,7 @@ namespace HeavenStudio.Games
                     Jukebox.PlayOneShotGame("quizShow/answerReveal");
                     hostFirstDigitSr.sprite = hostNumberSprites[GetSpecificDigit(countToMatch, 1)];
                     hostSecondDigitSr.sprite = hostNumberSprites[GetSpecificDigit(countToMatch, 2)];
+                    blackOut.SetActive(false);
                 })
             });
         }
