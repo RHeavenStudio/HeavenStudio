@@ -7,6 +7,9 @@ namespace HeavenStudio.Util
 {
     public class Jukebox
     {
+        static GameObject oneShotAudioSourceObject;
+        static AudioSource oneShotAudioSource;
+
         public enum AudioType
         {
             OGG,
@@ -23,6 +26,14 @@ namespace HeavenStudio.Util
                 GameObject Jukebox = new GameObject("Jukebox");
                 Jukebox.AddComponent<AudioSource>();
                 Jukebox.tag = "Jukebox";
+
+                
+            }
+            if (oneShotAudioSourceObject == null)
+            {
+                oneShotAudioSourceObject = new GameObject("OneShot Audio Source");
+                oneShotAudioSource = oneShotAudioSourceObject.AddComponent<AudioSource>();
+                UnityEngine.Object.DontDestroyOnLoad(oneShotAudioSourceObject);
             }
         }
 
@@ -42,13 +53,6 @@ namespace HeavenStudio.Util
 
         public static Sound PlayOneShot(string name, float beat = -1, float pitch = 1f, float volume = 1f, bool looping = false, string game = null)
         {
-            GameObject oneShot = new GameObject("oneShot");
-
-            AudioSource audioSource = oneShot.AddComponent<AudioSource>();
-            //audioSource.outputAudioMixerGroup = Settings.GetSFXMixer();
-            audioSource.playOnAwake = false;
-
-            Sound snd = oneShot.AddComponent<Sound>();
             AudioClip clip = null;
             if (game != null)
             {
@@ -72,16 +76,39 @@ namespace HeavenStudio.Util
                 clip = Resources.Load<AudioClip>($"Sfx/{name}");
             }
 
-            snd.clip = clip;
-            snd.beat = beat;
-            snd.pitch = pitch;
-            snd.volume = volume;
-            snd.looping = looping;
-            // snd.pitch = (clip.length / Conductor.instance.secPerBeat);
+            if (looping || beat != -1 || pitch != 1f)
+            {
+                GameObject oneShot = new GameObject("oneShot");
 
-            GameManager.instance.SoundObjects.Add(oneShot);
+                AudioSource audioSource = oneShot.AddComponent<AudioSource>();
+                //audioSource.outputAudioMixerGroup = Settings.GetSFXMixer();
+                audioSource.playOnAwake = false;
 
-            return snd;
+                Sound snd = oneShot.AddComponent<Sound>();
+
+                snd.clip = clip;
+                snd.beat = beat;
+                snd.pitch = pitch;
+                snd.volume = volume;
+                snd.looping = looping;
+                // snd.pitch = (clip.length / Conductor.instance.secPerBeat);
+
+                GameManager.instance.SoundObjects.Add(oneShot);
+
+                return snd;
+            }
+            else
+            {
+                if (oneShotAudioSourceObject == null)
+                {
+                    oneShotAudioSourceObject = new GameObject("OneShot Audio Source");
+                    oneShotAudioSource = oneShotAudioSourceObject.AddComponent<AudioSource>();
+                    UnityEngine.Object.DontDestroyOnLoad(oneShotAudioSourceObject);
+                }
+                
+                oneShotAudioSource.PlayOneShot(clip, volume);
+                return null;
+            }
         }
 
         public static Sound PlayOneShotScheduled(string name, double targetTime, float pitch = 1f, float volume = 1f, bool looping = false, string game = null)
