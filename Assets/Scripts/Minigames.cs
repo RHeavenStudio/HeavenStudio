@@ -33,11 +33,13 @@ namespace HeavenStudio
             public string defaultLocale = "en";
             public string wantAssetBundle = "";
             public List<string> supportedLocales;
+            public bool inferred;
 
             public bool usesAssetBundle => (wantAssetBundle != "");
             public bool hasLocales => (supportedLocales.Count > 0);
             public bool AssetsLoaded => (((hasLocales && localeLoaded && currentLoadedLocale == defaultLocale) || (!hasLocales)) && commonLoaded);
             public bool SequencesPreloaded => soundSequences != null;
+            public string LoadableName => inferred ? "noGame" : name;
 
             private AssetBundle bundleCommon = null;
             private bool commonLoaded = false;
@@ -55,7 +57,7 @@ namespace HeavenStudio
                 set => soundSequences = value;
             }
 
-            public Minigame(string name, string displayName, string color, bool threeD, bool fxOnly, List<GameAction> actions, List<string> tags = null, string assetBundle = "", string defaultLocale = "en", List<string> supportedLocales = null)
+            public Minigame(string name, string displayName, string color, bool threeD, bool fxOnly, List<GameAction> actions, List<string> tags = null, string assetBundle = "", string defaultLocale = "en", List<string> supportedLocales = null, bool inferred = false)
             {
                 this.name = name;
                 this.displayName = displayName;
@@ -68,6 +70,7 @@ namespace HeavenStudio
                 this.wantAssetBundle = assetBundle;
                 this.defaultLocale = defaultLocale;
                 this.supportedLocales = supportedLocales ?? new List<string>();
+                this.inferred = inferred;
             }
 
             public AssetBundle GetLocalizedAssetBundle()
