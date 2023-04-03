@@ -511,6 +511,7 @@ namespace HeavenStudio
                 Destroy(SoundObjects[i].gameObject);
             
             SoundObjects.Clear();
+            Util.Jukebox.KillOneShots();
         }
 
         #endregion

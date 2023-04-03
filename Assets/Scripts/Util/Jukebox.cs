@@ -51,6 +51,14 @@ namespace HeavenStudio.Util
             FindJukebox().GetComponent<AudioSource>().volume = volume;
         }
 
+        public static void KillOneShots()
+        {
+            if (oneShotAudioSource != null)
+            {
+                oneShotAudioSource.Stop();
+            }
+        }
+
         public static Sound PlayOneShot(string name, float beat = -1, float pitch = 1f, float volume = 1f, bool looping = false, string game = null)
         {
             AudioClip clip = null;
@@ -105,7 +113,7 @@ namespace HeavenStudio.Util
                     oneShotAudioSource = oneShotAudioSourceObject.AddComponent<AudioSource>();
                     UnityEngine.Object.DontDestroyOnLoad(oneShotAudioSourceObject);
                 }
-                
+
                 oneShotAudioSource.PlayOneShot(clip, volume);
                 return null;
             }
