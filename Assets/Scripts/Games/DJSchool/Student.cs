@@ -12,6 +12,7 @@ namespace HeavenStudio.Games.Scripts_DJSchool
     public class Student : PlayerActionObject
     {
         public Animator anim;
+        public static bool soundFX;
 
         [Header("Properties")]
         public float holdBeat;
@@ -21,7 +22,6 @@ namespace HeavenStudio.Games.Scripts_DJSchool
         public bool eligible;
         public bool missed;
         public bool swiping;
-        public bool soundFX;
         bool canBoo = true;
 
         [Header("Components")]
