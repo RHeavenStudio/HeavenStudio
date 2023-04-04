@@ -9,42 +9,32 @@ namespace HeavenStudio.Games.Scripts_MunchyMonk
 {
     public class Dumpling : PlayerActionObject
     {
-        public Animator otherAnim;
+        public Color dumplingColor;
         public float startBeat;
-        public float type;
+        public int dumplingID;
         
         const string sfxName = "munchyMonk/";
-        private bool canDestroy;
-        private int missCounter;
-        bool delayEarly;
+        public bool canDestroy;
+        private bool needSquish = true;
+        private bool canSquish;
         
         [Header("References")]
         [SerializeField] Animator smearAnim;
+        [SerializeField] SpriteRenderer smearSr;
         [SerializeField] Animator anim;
+        [SerializeField] SpriteRenderer sr;
 
         private MunchyMonk game;
 
         private void Awake()
         {
             game = MunchyMonk.instance;
-            
-            delayEarly = game.twoTwoBuffer;
-            missCounter = (type == 2.5f ? 2 : 1);
-            
-            if (game.twoTwoBuffer) BeatAction.New(gameObject, new List<BeatAction.Action>() {
-                new BeatAction.Action(startBeat+0.2f, delegate { delayEarly = false; }),
-            });
         }
 
         private void Start() 
         {
-            if (type == 1f || type == 3f) {
-                game.ScheduleInput(startBeat, 1f, InputType.STANDARD_DOWN, Hit, Miss, Early);
-            } else if (type > 3f) {
-                game.ScheduleInput(startBeat, 0.75f, InputType.STANDARD_DOWN, Hit, Miss, Early);
-            } else {
-                game.ScheduleInput(startBeat, type == 2f ? 1.5f : 2f, InputType.STANDARD_DOWN, Hit, Miss, Early);
-            }
+            sr.color = dumplingColor;
+            if (game.dumplings.Count > 1) anim.Play("IdleOnTop", 0, 0);
         }
 
         private void Update()
@@ -53,43 +43,49 @@ namespace HeavenStudio.Games.Scripts_MunchyMonk
                 GameObject.Destroy(gameObject);
             }
 
+            if (game.dumplings.Count == 1) {
+                canSquish = true;
+            }
+
+            if (game.dumplings.Count > 1 && needSquish && canSquish) anim.DoScaledAnimationAsync("Squish", 0.5f);
+            if (anim.IsPlayingAnimationName("Squish")) needSquish = false;
+
             if (canDestroy && anim.IsAnimationNotPlaying()) GameObject.Destroy(gameObject);
         }
 
-        private void Hit(PlayerActionEvent caller, float state)
+        public void HitFunction(float state)
         {
-            if (!canDestroy && missCounter !<= 0) {
-                game.MonkArmsAnim.DoScaledAnimationAsync("WristSlap", 0.5f);
-                Jukebox.PlayOneShotGame(sfxName+"slap");
-                game.isStaring = false;
-                
-                if (state >= 1f || state <= -1f) 
+            smearSr.color = dumplingColor;
+            game.MonkArmsAnim.DoScaledAnimationAsync("WristSlap", 0.5f);
+            Jukebox.PlayOneShotGame(sfxName+"slap");
+            game.isStaring = false;
+            
+            if (state >= 1f || state <= -1f)
+            {
+                game.MonkAnim.DoScaledAnimationAsync("Barely", 0.5f);
+                anim.DoScaledAnimationAsync("HitHead", 0.5f);
+                Jukebox.PlayOneShotGame(sfxName+"barely");
+                canDestroy = true;
+                game.needBlush = false;
+            } else {
+                game.MonkAnim.DoScaledAnimationAsync("Eat", 0.4f);
+                if (!needSquish) anim.DoScaledAnimationAsync("FollowHand", 0.5f);
+                smearAnim.Play("SmearAppear", 0, 0);
+                game.needBlush = true;
+                Jukebox.PlayOneShotGame(sfxName+"gulp");
+                if (game.forceGrow) game.growLevel++;
+                game.howManyGulps++;
+                for (int i = 1; i <= 4; i++)
                 {
-                    game.MonkAnim.DoScaledAnimationAsync("Barely", 0.5f);
-                    anim.DoScaledAnimationAsync("HitHead", 0.5f);
-                    Jukebox.PlayOneShotGame(sfxName+"barely");
-                    canDestroy = true;
-                    game.needBlush = false;
-                } else {
-                    game.MonkAnim.DoScaledAnimationAsync("Eat", 0.4f);
-                    if (type == 2) otherAnim.DoScaledAnimationAsync("FollowHand", 0.5f);
-                    smearAnim.Play("SmearAppear", 0, 0);
-                    game.needBlush = true;
-                    Jukebox.PlayOneShotGame(sfxName+"gulp");
-                    if (game.forceGrow) game.growLevel++;
-                    game.howManyGulps++;
-                    for (int i = 1; i <= 4; i++) 
-                    {
-                        if (game.howManyGulps == game.inputsTilGrow*i) {
-                            game.growLevel = i;
-                        }
+                    if (game.howManyGulps == game.inputsTilGrow*i) {
+                        game.growLevel = i;
                     }
-                    GameObject.Destroy(gameObject);
                 }
+                GameObject.Destroy(gameObject);
             }
         }
 
-        private void Miss(PlayerActionEvent caller)
+        public void MissFunction()
         {
             if (!canDestroy) {
                 anim.DoScaledAnimationAsync("FallOff", 0.5f);
@@ -97,22 +93,18 @@ namespace HeavenStudio.Games.Scripts_MunchyMonk
             }
         }
 
-        private void Early(PlayerActionEvent caller) 
-        { 
-            Debug.Log(missCounter);
-            if (!delayEarly && missCounter == 1) {
-                game.MonkArmsAnim.DoScaledAnimationAsync("WristSlap", 0.5f);
-                game.MonkAnim.DoScaledAnimationAsync("Miss", 0.5f);
-                smearAnim.Play("SmearAppear", 0, 0);
-                anim.DoScaledAnimationAsync("HitHead", 0.5f);
-                MultiSound.Play(new MultiSound.Sound[] {
-                    new MultiSound.Sound(sfxName+"slap", game.lastReportedBeat),
-                    new MultiSound.Sound(sfxName+"miss", game.lastReportedBeat),
-                });
-                canDestroy = true;
-                game.needBlush = false;
-                missCounter--;
-            }
+        public void EarlyFunction()
+        {
+            game.MonkArmsAnim.DoScaledAnimationAsync("WristSlap", 0.5f);
+            game.MonkAnim.DoScaledAnimationAsync("Miss", 0.5f);
+            smearAnim.Play("SmearAppear", 0, 0);
+            anim.DoScaledAnimationAsync("HitHead", 0.5f);
+            MultiSound.Play(new MultiSound.Sound[] {
+                new MultiSound.Sound(sfxName+"slap", game.lastReportedBeat),
+                new MultiSound.Sound(sfxName+"miss", game.lastReportedBeat),
+            });
+            canDestroy = true;
+            game.needBlush = false;
         }
     }
 }
