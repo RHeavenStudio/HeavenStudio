@@ -32,7 +32,7 @@ namespace HeavenStudio.Games.Loaders
                 },
                 new GameAction("npc kickers enter or exit", "NPC Kickers Enter or Exit")
                 {
-                    function = delegate { var e = eventCaller.currentEntity; SpaceSoccer.instance.NPCKickersEnterOrExit(e.beat, e.length, e["toggle"]); },
+                    function = delegate { var e = eventCaller.currentEntity; },
                     defaultLength = 4f,
                     parameters = new List<Param>()
                     {
@@ -40,18 +40,9 @@ namespace HeavenStudio.Games.Loaders
                     },
                     resizable = true
                 },
-                new GameAction("npc kickers instant enter or exit", "NPC Kickers Instant Enter or Exit")
-                {
-                    function = delegate { var e = eventCaller.currentEntity; SpaceSoccer.instance.InstantNPCKickersEnterOrExit(e["toggle"]); },
-                    defaultLength = 0.5f,
-                    parameters = new List<Param>()
-                    {
-                        new Param("toggle", false, "Should Exit?", "Whether the kickers should be exited or entered.")
-                    },
-                },
                 new GameAction("scroll", "Scrolling Background") 
                 {
-                    function = delegate { var e = eventCaller.currentEntity; SpaceSoccer.instance.UdpateScrollSpeed(e.beat, e["x"], e["y"]); },
+                    function = delegate { var e = eventCaller.currentEntity; SpaceSoccer.instance.UpdateScrollSpeed(e.beat, e["x"], e["y"]); },
                     defaultLength = 0.5f,
                     parameters = new List<Param>() {
                         new Param("x", new EntityTypes.Float(-100f, 100f, 22f), "Horizontal", "How many beats will it take before the background has looped once horizontally?"),
@@ -65,6 +56,16 @@ namespace HeavenStudio.Games.Loaders
                     resizable = true,
                     hidden = true
                 },
+                new GameAction("npc kickers instant enter or exit", "NPC Kickers Instant Enter or Exit")
+                {
+                    function = delegate { var e = eventCaller.currentEntity; },
+                    defaultLength = 0.5f,
+                    parameters = new List<Param>()
+                    {
+                        new Param("toggle", false, "Should Exit?", "Whether the kickers should be exited or entered.")
+                    },
+                    hidden = true
+                },
             });
         }
     }
@@ -74,43 +75,38 @@ namespace HeavenStudio.Games
 {
     using Scripts_SpaceSoccer;
     using HeavenStudio.Common;
+    using UnityEngine.Rendering;
 
     public class SpaceSoccer : Minigame
     {
         [Header("Components")]
+        [SerializeField] private GameObject kickerPrefab;
         [SerializeField] private GameObject ballRef;
         [SerializeField] private List<Kicker> kickers;
-        [SerializeField] private Animator npcKickersAnim;
         [SerializeField] private SuperScroll backgroundSprite;
 
         [Header("Properties")]
         [SerializeField] private bool ballDispensed; //unused
-        float npcMoveLength = 4f;
-        float npcMoveStartBeat;
-        bool npcMoving;
-        string npcMoveAnimName;
-        float scrollBeat;
+        float scrollBeatX;
+        float scrollBeatY;
         float scrollLengthX = 22f;
         float scrollLengthY = 6f;
-        float scrollNormalizedOfssetX;
-        float scrollNormalizedOfssetY;
 
         public static SpaceSoccer instance { get; private set; }
 
         private void Awake()
         {
             instance = this;
-            npcKickersAnim.Play("NPCKickersExited", 0, 0);
+            UpdateSpaceKickers(5);
         }
 
         private void Update()
         {
             var cond = Conductor.instance;
-            if (npcMoving) npcKickersAnim.DoScaledAnimation(npcMoveAnimName, npcMoveStartBeat, npcMoveLength);
-            float normalizedX = cond.GetPositionFromBeat(scrollBeat, scrollLengthX);
-            float normalizedY = cond.GetPositionFromBeat(scrollBeat, scrollLengthY);
-            backgroundSprite.NormalizedX = -normalizedX + scrollNormalizedOfssetX; 
-            backgroundSprite.NormalizedY = -normalizedY + scrollNormalizedOfssetY; 
+            float normalizedX = cond.GetPositionFromBeat(scrollBeatX, scrollLengthX);
+            float normalizedY = cond.GetPositionFromBeat(scrollBeatY, scrollLengthY);
+            backgroundSprite.NormalizedX = -normalizedX;
+            backgroundSprite.NormalizedY = -normalizedY;
         }
 
         public override void OnGameSwitch(float beat)
@@ -130,32 +126,43 @@ namespace HeavenStudio.Games
             }
         }
 
-        public void UdpateScrollSpeed(float beat, float scrollSpeedX, float scrollSpeedY) 
+        public void UpdateScrollSpeed(float beat, float scrollSpeedX, float scrollSpeedY) 
         {
             var cond = Conductor.instance;
-            scrollNormalizedOfssetX = cond.GetPositionFromBeat(scrollBeat, scrollLengthX);
-            scrollNormalizedOfssetY = cond.GetPositionFromBeat(scrollBeat, scrollLengthY);
-            scrollBeat = beat;
             scrollLengthX = scrollSpeedX;
             scrollLengthY = scrollSpeedY;
         }
 
-        public void NPCKickersEnterOrExit(float beat, float length, bool shouldExit)
+        public void UpdateSpaceKickers(int amount, float xDistance = 1.75f, float yDistance = 0.25f, float zDistance = 0.75f)
         {
-            npcMoving = true;
-            npcMoveLength = length;
-            npcMoveStartBeat = beat;
-            npcMoveAnimName = shouldExit ? "NPCKickersExit" : "NPCKickersEnter";
-            npcKickersAnim.DoScaledAnimation(npcMoveAnimName, npcMoveStartBeat, npcMoveLength);
-            BeatAction.New(instance.gameObject, new List<BeatAction.Action>()
+            foreach (var kicker in kickers)
             {
-                new BeatAction.Action(beat + length - 0.1f, delegate { npcMoving = false; }),
-            });
-        }
+                if (!kicker.player) 
+                {
+                    Destroy(kicker.transform.parent.gameObject);
+                } 
+            }
+            List<Kicker> kickersToPut = new List<Kicker>();
+            kickersToPut.Add(kickers[0]);
+            for (int i = 1; i < amount; i++)
+            {
+                Transform kickerHolder = Instantiate(kickerPrefab, transform).transform;
+                kickerHolder.transform.position = new Vector3(kickerHolder.transform.position.x - xDistance * i, kickerHolder.transform.position.y - yDistance * i, kickerHolder.transform.position.z + zDistance * i);
+                Kicker spawnedKicker = kickerHolder.GetChild(0).GetComponent<Kicker>();
+                spawnedKicker.zValue = kickerHolder.transform.position.z;
+                if (0 > zDistance)
+                {
+                    spawnedKicker.GetComponent<SortingGroup>().sortingOrder = i;
+                }
+                else
+                {
+                    spawnedKicker.GetComponent<SortingGroup>().sortingOrder = -i;
+                }
 
-        public void InstantNPCKickersEnterOrExit(bool shouldExit)
-        {
-            npcKickersAnim.Play(shouldExit ? "NPCKickersExited" : "NPCKickersPresent", 0, 0);
+                kickersToPut.Add(spawnedKicker);
+                kickerHolder.gameObject.SetActive(true);
+            }
+            kickers = kickersToPut;
         }
 
         public void Dispense(float beat, bool playSound = true)
