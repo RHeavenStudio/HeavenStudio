@@ -56,7 +56,7 @@ namespace HeavenStudio.Games.Loaders
                 },
                 new GameAction("dj voice lines", "DJ Yellow Banter")
                 {
-                    function = delegate { DJSchool.instance.voiceLines(eventCaller.currentEntity.beat, eventCaller.currentEntity["type"]);  }, 
+                    function = delegate { DJSchool.instance.VoiceLines(eventCaller.currentEntity.beat, eventCaller.currentEntity["type"]);  }, 
                     defaultLength = 2f,
                     inactiveFunction = delegate { DJSchool.WarnDJVoiceLines(eventCaller.currentEntity.beat, eventCaller.currentEntity["type"]);  },
                     parameters = new List<Param>()
@@ -66,11 +66,11 @@ namespace HeavenStudio.Games.Loaders
                 },
                 new GameAction("sound FX", "Scratchy Music")
                 {
-                    function = delegate { DJSchool.instance.soundFX(eventCaller.currentEntity["toggle"]); }, 
+                    function = delegate { DJSchool.SoundFX(eventCaller.currentEntity["toggle"]); }, 
                     defaultLength = 0.5f,
                     parameters = new List<Param>()
                     {
-                        new Param("toggle", false, "Radio FX", "Toggle on and off for Radio Effects")
+                        new Param("toggle", true, "Radio FX", "Toggle on and off for Radio Effects")
                     }
                 },
                 new GameAction("forceHold", "Force Hold")
@@ -156,7 +156,7 @@ namespace HeavenStudio.Games
             }
             else if(wantDJVoiceLines != Single.MinValue)
             {
-                voiceLines(wantDJVoiceLines, 0);
+                VoiceLines(wantDJVoiceLines, 0);
                 wantDJVoiceLines = Single.MinValue;
             }
         }
@@ -549,11 +549,11 @@ namespace HeavenStudio.Games
         //    student.ResetState();
         //}
 
-        public void soundFX(bool toggle)
+        public static void SoundFX(bool toggle)
         {
-            student.soundFX = toggle;
+            Student.soundFX = toggle;
         }
-        public void voiceLines(float beat, int type)
+        public void VoiceLines(float beat, int type)
         {
             string[] sounds;
             var sound = new MultiSound.Sound[] { };

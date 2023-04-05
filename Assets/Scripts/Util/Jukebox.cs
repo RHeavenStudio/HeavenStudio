@@ -7,6 +7,9 @@ namespace HeavenStudio.Util
 {
     public class Jukebox
     {
+        static GameObject oneShotAudioSourceObject;
+        static AudioSource oneShotAudioSource;
+
         public enum AudioType
         {
             OGG,
@@ -14,7 +17,7 @@ namespace HeavenStudio.Util
         }
 
         /// <summary>
-        /// This is me just idiot-proofing.
+        /// Ensures that the jukebox and one-shot audio source exist.
         /// </summary>
         public static void BasicCheck()
         {
@@ -23,6 +26,14 @@ namespace HeavenStudio.Util
                 GameObject Jukebox = new GameObject("Jukebox");
                 Jukebox.AddComponent<AudioSource>();
                 Jukebox.tag = "Jukebox";
+
+                
+            }
+            if (oneShotAudioSourceObject == null)
+            {
+                oneShotAudioSourceObject = new GameObject("OneShot Audio Source");
+                oneShotAudioSource = oneShotAudioSourceObject.AddComponent<AudioSource>();
+                UnityEngine.Object.DontDestroyOnLoad(oneShotAudioSourceObject);
             }
         }
 
@@ -34,21 +45,22 @@ namespace HeavenStudio.Util
                 return null;
         }
 
-        public static void SetVolume(float volume)
+        /// <summary>
+        ///    Stops all currently playing sounds.
+        /// </summary>
+        public static void KillOneShots()
         {
-            BasicCheck();
-            FindJukebox().GetComponent<AudioSource>().volume = volume;
+            if (oneShotAudioSource != null)
+            {
+                oneShotAudioSource.Stop();
+            }
         }
 
-        public static Sound PlayOneShot(string name, float beat = -1, float pitch = 1f, float volume = 1f, bool looping = false, string game = null)
+        /// <summary>
+        ///    Gets the length of an audio clip
+        /// </summary>
+        public static double GetClipLength(string name, float pitch = 1f, string game = null)
         {
-            GameObject oneShot = new GameObject("oneShot");
-
-            AudioSource audioSource = oneShot.AddComponent<AudioSource>();
-            //audioSource.outputAudioMixerGroup = Settings.GetSFXMixer();
-            audioSource.playOnAwake = false;
-
-            Sound snd = oneShot.AddComponent<Sound>();
             AudioClip clip = null;
             if (game != null)
             {
@@ -72,18 +84,98 @@ namespace HeavenStudio.Util
                 clip = Resources.Load<AudioClip>($"Sfx/{name}");
             }
 
-            snd.clip = clip;
-            snd.beat = beat;
-            snd.pitch = pitch;
-            snd.volume = volume;
-            snd.looping = looping;
-            // snd.pitch = (clip.length / Conductor.instance.secPerBeat);
-
-            GameManager.instance.SoundObjects.Add(oneShot);
-
-            return snd;
+            if (clip == null)
+            {
+                Debug.LogError($"Could not load clip {name}");
+                return double.NaN;
+            }
+            return clip.length / pitch;
         }
 
+        /// <summary>
+        ///    Gets the length of an audio clip
+        ///    Audio clip is fetched from minigame resources
+        /// </summary>
+        public static double GetClipLengthGame(string name, float pitch = 1f)
+        {
+            string gameName = name.Split('/')[0];
+            var inf = GameManager.instance.GetGameInfo(gameName);
+            if (inf != null)
+            {
+                return GetClipLength($"games/{name}", pitch, inf.usesAssetBundle ? gameName : null);
+            }
+
+            return double.NaN;
+        }
+
+        /// <summary>
+        ///    Fires a one-shot sound.
+        ///    Unpitched, non-scheduled, non-looping sounds are played using a global One-Shot audio source that doesn't create a Sound object.
+        ///    Looped sounds return their created Sound object so they can be canceled after creation.
+        /// </summary>
+        public static Sound PlayOneShot(string name, float beat = -1, float pitch = 1f, float volume = 1f, bool looping = false, string game = null)
+        {
+            AudioClip clip = null;
+            if (game != null)
+            {
+                string soundName = name.Split('/')[2];
+                var inf = GameManager.instance.GetGameInfo(game);
+                //first try the game's common assetbundle
+                // Debug.Log("Jukebox loading sound " + soundName + " from common");
+                clip = inf.GetCommonAssetBundle()?.LoadAsset<AudioClip>(soundName);
+                //then the localized one
+                if (clip == null)
+                {
+                    // Debug.Log("Jukebox loading sound " + soundName + " from locale");
+                    clip = inf.GetLocalizedAssetBundle()?.LoadAsset<AudioClip>(soundName);
+                }
+            }
+
+            //can't load from assetbundle, load from resources
+            if (clip == null)
+            {
+                // Debug.Log("Jukebox loading sound " + name + " from resources");
+                clip = Resources.Load<AudioClip>($"Sfx/{name}");
+            }
+
+            if (looping || beat != -1 || pitch != 1f)
+            {
+                GameObject oneShot = new GameObject("oneShot");
+
+                AudioSource audioSource = oneShot.AddComponent<AudioSource>();
+                //audioSource.outputAudioMixerGroup = Settings.GetSFXMixer();
+                audioSource.playOnAwake = false;
+
+                Sound snd = oneShot.AddComponent<Sound>();
+
+                snd.clip = clip;
+                snd.beat = beat;
+                snd.pitch = pitch;
+                snd.volume = volume;
+                snd.looping = looping;
+                // snd.pitch = (clip.length / Conductor.instance.secPerBeat);
+
+                GameManager.instance.SoundObjects.Add(oneShot);
+
+                return snd;
+            }
+            else
+            {
+                if (oneShotAudioSourceObject == null)
+                {
+                    oneShotAudioSourceObject = new GameObject("OneShot Audio Source");
+                    oneShotAudioSource = oneShotAudioSourceObject.AddComponent<AudioSource>();
+                    UnityEngine.Object.DontDestroyOnLoad(oneShotAudioSourceObject);
+                }
+
+                oneShotAudioSource.PlayOneShot(clip, volume);
+                return null;
+            }
+        }
+
+        /// <summary>
+        ///    Schedules a sound to be played at a specific time in seconds.
+        /// </summary>
         public static Sound PlayOneShotScheduled(string name, double targetTime, float pitch = 1f, float volume = 1f, bool looping = false, string game = null)
         {
             GameObject oneShot = new GameObject("oneShotScheduled");
@@ -127,6 +219,11 @@ namespace HeavenStudio.Util
             return snd;
         }
 
+        /// <summary>
+        ///    Fires a one-shot sound located in minigame resources.
+        ///    Unpitched, non-scheduled, non-looping sounds are played using a global One-Shot audio source that doesn't create a Sound object.
+        ///    Looped sounds return their created Sound object so they can be canceled after creation.
+        /// </summary>
         public static Sound PlayOneShotGame(string name, float beat = -1, float pitch = 1f, float volume = 1f, bool looping = false, bool forcePlay = false)
         {
             string gameName = name.Split('/')[0];
@@ -139,6 +236,10 @@ namespace HeavenStudio.Util
             return null;
         }
 
+        /// <summary>
+        ///    Schedules a sound to be played at a specific time in seconds.
+        ///    Audio clip is fetched from minigame resources
+        /// </summary>
         public static Sound PlayOneShotScheduledGame(string name, double targetTime, float pitch = 1f, float volume = 1f, bool looping = false, bool forcePlay = false)
         {
             string gameName = name.Split('/')[0];
@@ -151,6 +252,9 @@ namespace HeavenStudio.Util
             return null;
         }
 
+        /// <summary>
+        /// Stops a looping Sound
+        /// </summary>
         public static void KillLoop(Sound source, float fadeTime)
         {
             // Safeguard against previously-destroyed sounds.
@@ -160,6 +264,9 @@ namespace HeavenStudio.Util
             source.KillLoop(fadeTime);
         }
 
+        /// <summary>
+        /// Gets a pitch multiplier from semitones.
+        /// </summary>
         public static float GetPitchFromSemiTones(int semiTones, bool pitchToMusic)
         {
             if (pitchToMusic)
@@ -172,6 +279,9 @@ namespace HeavenStudio.Util
             }
         }
 
+        /// <summary>
+        /// Gets a pitch multiplier from cents.
+        /// </summary>
         public static float GetPitchFromCents(int cents, bool pitchToMusic)
         {
             if (pitchToMusic)
