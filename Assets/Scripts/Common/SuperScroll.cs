@@ -6,8 +6,7 @@ namespace HeavenStudio.Common
     {
         #region Private
 
-        [SerializeField]
-        private Material _shaderMaterial;
+        [SerializeField] private Material _shader;
 
         [SerializeField]
         private Renderer _renderer;
@@ -35,7 +34,7 @@ namespace HeavenStudio.Common
 
         private void Start()
         {
-            _renderer.material = new Material(Shader.Find("Unlit/Transparent"));
+            _renderer.material = _shader;
 
             var spriteRect = _sprite.rect;
             var tex = CropTexture(_sprite.texture, new Rect(spriteRect.x, spriteRect.y, spriteRect.width, spriteRect .height));

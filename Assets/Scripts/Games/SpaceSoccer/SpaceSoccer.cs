@@ -42,13 +42,15 @@ namespace HeavenStudio.Games.Loaders
                 },
                 new GameAction("changeBG", "Change Background Color")
                 {
-                    function = delegate {var e = eventCaller.currentEntity; SpaceSoccer.instance.FadeBackgroundColor(e["start"], e["end"], e.length, e["toggle"]); },
+                    function = delegate {var e = eventCaller.currentEntity; SpaceSoccer.instance.FadeBackgroundColor(e["start"], e["end"], e["startDots"], e["endDots"], e.length, e["toggle"]); },
                     defaultLength = 1f,
                     resizable = true,
                     parameters = new List<Param>()
                     {
                         new Param("start", SpaceSoccer.defaultBGColor, "Start Color", "The start color for the fade or the color that will be switched to if -instant- is ticked on."),
                         new Param("end", SpaceSoccer.defaultBGColor, "End Color", "The end color for the fade."),
+                        new Param("startDots", Color.white, "Start Color (Dots)", "The start color for the fade or the color that will be switched to if -instant- is ticked on."),
+                        new Param("endDots", Color.white, "End Color (Dots)", "The end color for the fade."),
                         new Param("toggle", false, "Instant", "Should the background instantly change color?")
                     }
                 },
@@ -57,8 +59,8 @@ namespace HeavenStudio.Games.Loaders
                     function = delegate { var e = eventCaller.currentEntity; SpaceSoccer.instance.UpdateScrollSpeed(e.beat, e["x"], e["y"]); },
                     defaultLength = 0.5f,
                     parameters = new List<Param>() {
-                        new Param("x", new EntityTypes.Float(-100f, 100f, 22f), "Horizontal", "How many beats will it take before the background has looped once horizontally?"),
-                        new Param("y", new EntityTypes.Float(-100f, 100f, 6f), "Vertical", "How many beats will it take before the background has looped once vertically?"),
+                        new Param("x", new EntityTypes.Float(-100f, 100f, 22f), "Horizontal", "Horizontal Speed Multiplier."),
+                        new Param("y", new EntityTypes.Float(-100f, 100f, 6f), "Vertical", "Vertical Speed Multiplier."),
                     }
                 },
                 // This is still here for "backwards-compatibility" but is hidden in the editor (it does absolutely nothing however)
@@ -109,11 +111,10 @@ namespace HeavenStudio.Games
 
         [Header("Properties")]
         [SerializeField] private bool ballDispensed; //unused
-        float scrollBeatX;
-        float scrollBeatY;
         float scrollLengthX = 22f;
         float scrollLengthY = 6f;
         Tween bgColorTween;
+        Tween dotColorTween;
 
         public static SpaceSoccer instance { get; private set; }
 
@@ -126,8 +127,8 @@ namespace HeavenStudio.Games
         private void Update()
         {
             var cond = Conductor.instance;
-            float normalizedX = cond.GetPositionFromBeat(scrollBeatX, scrollLengthX);
-            float normalizedY = cond.GetPositionFromBeat(scrollBeatY, scrollLengthY);
+            float normalizedX = cond.GetPositionFromBeat(0, scrollLengthX);
+            float normalizedY = cond.GetPositionFromBeat(0, scrollLengthY);
             backgroundSprite.NormalizedX = -normalizedX;
             backgroundSprite.NormalizedY = -normalizedY;
         }
@@ -228,27 +229,31 @@ namespace HeavenStudio.Games
                 }, forcePlay:true);
         }
 
-        public void ChangeBackgroundColor(Color color, float beats)
+        public void ChangeBackgroundColor(Color color, Color dotColor, float beats)
         {
             var seconds = Conductor.instance.secPerBeat * beats;
 
             if (bgColorTween != null)
                 bgColorTween.Kill(true);
+            if (dotColorTween != null)
+                dotColorTween.Kill(true);
 
             if (seconds == 0)
             {
                 bg.color = color;
+                backgroundSprite.Material.SetColor("_Color", dotColor);
             }
             else
             {
                 bgColorTween = bg.DOColor(color, seconds);
+                dotColorTween = backgroundSprite.Material.DOColor(dotColor, seconds);
             }
         }
 
-        public void FadeBackgroundColor(Color start, Color end, float beats, bool instant)
+        public void FadeBackgroundColor(Color start, Color end, Color startDot, Color endDot, float beats, bool instant)
         {
-            ChangeBackgroundColor(start, 0f);
-            if (!instant) ChangeBackgroundColor(end, beats);
+            ChangeBackgroundColor(start, startDot, 0f);
+            if (!instant) ChangeBackgroundColor(end, endDot, beats);
         }
     }
 
