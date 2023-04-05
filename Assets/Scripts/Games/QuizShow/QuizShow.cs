@@ -339,13 +339,13 @@ namespace HeavenStudio.Games
                     Jukebox.PlayOneShotGame("quizShow/answerReveal");
                     hostFirstDigitSr.sprite = hostNumberSprites[GetSpecificDigit(countToMatch, 1)];
                     hostSecondDigitSr.sprite = hostNumberSprites[GetSpecificDigit(countToMatch, 2)];
-                    blackOut.SetActive(false);
                 })
             });
         }
 
         public void AnswerReaction(bool audience, bool jingle)
         {
+            blackOut.SetActive(false);
             if (pressCount == countToMatch)
             {
                 GameProfiler.instance.IncreaseScore();
