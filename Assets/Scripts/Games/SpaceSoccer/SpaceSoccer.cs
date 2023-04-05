@@ -1,7 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-
+using DG.Tweening;
 using HeavenStudio.Util;
 
 namespace HeavenStudio.Games.Loaders
@@ -39,6 +39,18 @@ namespace HeavenStudio.Games.Loaders
                         new Param("toggle", false, "Should Exit?", "Whether the kickers should exit or enter.")
                     },
                     resizable = true
+                },
+                new GameAction("changeBG", "Change Background Color")
+                {
+                    function = delegate {var e = eventCaller.currentEntity; SpaceSoccer.instance.FadeBackgroundColor(e["start"], e["end"], e.length, e["toggle"]); },
+                    defaultLength = 1f,
+                    resizable = true,
+                    parameters = new List<Param>()
+                    {
+                        new Param("start", SpaceSoccer.defaultBGColor, "Start Color", "The start color for the fade or the color that will be switched to if -instant- is ticked on."),
+                        new Param("end", SpaceSoccer.defaultBGColor, "End Color", "The end color for the fade."),
+                        new Param("toggle", false, "Instant", "Should the background instantly change color?")
+                    }
                 },
                 new GameAction("scroll", "Scrolling Background") 
                 {
@@ -79,11 +91,21 @@ namespace HeavenStudio.Games
 
     public class SpaceSoccer : Minigame
     {
+        private static Color _defaultBGColor;
+        public static Color defaultBGColor
+        {
+            get
+            {
+                ColorUtility.TryParseHtmlString("#FF7D27", out _defaultBGColor);
+                return _defaultBGColor;
+            }
+        }
         [Header("Components")]
         [SerializeField] private GameObject kickerPrefab;
         [SerializeField] private GameObject ballRef;
         [SerializeField] private List<Kicker> kickers;
         [SerializeField] private SuperScroll backgroundSprite;
+        [SerializeField] private SpriteRenderer bg;
 
         [Header("Properties")]
         [SerializeField] private bool ballDispensed; //unused
@@ -91,6 +113,7 @@ namespace HeavenStudio.Games
         float scrollBeatY;
         float scrollLengthX = 22f;
         float scrollLengthY = 6f;
+        Tween bgColorTween;
 
         public static SpaceSoccer instance { get; private set; }
 
@@ -203,6 +226,29 @@ namespace HeavenStudio.Games
                 new MultiSound.Sound("spaceSoccer/dispenseTumble6", beat + 1.5f),
                 new MultiSound.Sound("spaceSoccer/dispenseTumble6B",beat + 1.75f),
                 }, forcePlay:true);
+        }
+
+        public void ChangeBackgroundColor(Color color, float beats)
+        {
+            var seconds = Conductor.instance.secPerBeat * beats;
+
+            if (bgColorTween != null)
+                bgColorTween.Kill(true);
+
+            if (seconds == 0)
+            {
+                bg.color = color;
+            }
+            else
+            {
+                bgColorTween = bg.DOColor(color, seconds);
+            }
+        }
+
+        public void FadeBackgroundColor(Color start, Color end, float beats, bool instant)
+        {
+            ChangeBackgroundColor(start, 0f);
+            if (!instant) ChangeBackgroundColor(end, beats);
         }
     }
 
