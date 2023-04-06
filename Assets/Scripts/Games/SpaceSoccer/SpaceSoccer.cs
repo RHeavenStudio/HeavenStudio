@@ -173,6 +173,9 @@ namespace HeavenStudio.Games
                 Transform kickerHolder = Instantiate(kickerPrefab, transform).transform;
                 kickerHolder.transform.position = new Vector3(kickerHolder.transform.position.x - xDistance * i, kickerHolder.transform.position.y - yDistance * i, kickerHolder.transform.position.z + zDistance * i);
                 Kicker spawnedKicker = kickerHolder.GetChild(0).GetComponent<Kicker>();
+                CircularMotion circularMotion = spawnedKicker.GetComponent<CircularMotion>();
+                circularMotion.width = 0.85f - Mathf.Pow(amount * 1.5f, -1f);
+                circularMotion.height = 0.5f - Mathf.Pow(amount * 1.5f, -1f);
                 spawnedKicker.zValue = kickerHolder.transform.position.z;
                 if (0 > zDistance)
                 {

@@ -8,9 +8,9 @@ namespace HeavenStudio.Common
     {
         [SerializeField] float timeCounter = 0;
         [SerializeField] Transform rootPos;
-        [SerializeField] float speed;
-        [SerializeField] float width;
-        [SerializeField] float height;
+        public float speed;
+        public float width;
+        public float height;
 
         private void Start()
         {
