@@ -259,8 +259,12 @@ namespace HeavenStudio
                 new Minigame("gameManager", "Game Manager", "", false, true, new List<GameAction>()
                 {
                     new GameAction("switchGame", "Switch Game", 0.5f, false, 
-                        function: delegate { GameManager.instance.SwitchGame(eventCaller.currentSwitchGame, eventCaller.currentEntity.beat); }, 
-                        inactiveFunction: delegate { GameManager.instance.SwitchGame(eventCaller.currentSwitchGame, eventCaller.currentEntity.beat); }
+                        function: delegate { var e = eventCaller.currentEntity; GameManager.instance.SwitchGame(eventCaller.currentSwitchGame, eventCaller.currentEntity.beat, e["toggle"]); }, 
+                        parameters: new List<Param>()
+                            {
+                            new Param("toggle", true, "Black Flash", "Enable or disable the black screen for this Game Switch")
+                            },
+                        inactiveFunction: delegate { var e = eventCaller.currentEntity; GameManager.instance.SwitchGame(eventCaller.currentSwitchGame, eventCaller.currentEntity.beat, e["toggle"]); }
                     ),
                     new GameAction("end", "End Remix",
                         function: delegate { 

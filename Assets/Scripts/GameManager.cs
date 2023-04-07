@@ -657,19 +657,22 @@ namespace HeavenStudio
 
         #endregion
 
-        public void SwitchGame(string game, float beat)
+        public void SwitchGame(string game, float beat, bool flash)
         {
             if (game != currentGame)
             {
                 if (currentGameSwitchIE != null)
                     StopCoroutine(currentGameSwitchIE);
-                currentGameSwitchIE = StartCoroutine(SwitchGameIE(game, beat));
+                currentGameSwitchIE = StartCoroutine(SwitchGameIE(game, beat, flash));
             }
         }
 
-        IEnumerator SwitchGameIE(string game, float beat)
+        IEnumerator SwitchGameIE(string game, float beat, bool flash)
         {
-            this.GetComponent<SpriteRenderer>().enabled = true;
+            if(flash == true)
+            {
+                this.GetComponent<SpriteRenderer>().enabled = true;
+            }
 
             SetGame(game);
 
