@@ -72,6 +72,15 @@ namespace HeavenStudio.Games.Loaders
                     {
                         new Param("value", true, "Should Reset Count?", "Will the contestant's counter reset to 0 each time it hits 100 instead of exploding?")
                     }
+                },
+                new GameAction("forceExplode", "Force Explode")
+                {
+                    function = delegate { QuizShow.instance.ForceExplode(eventCaller.currentEntity["value"]); },
+                    defaultLength = 0.5f,
+                    parameters = new List<Param>()
+                    {
+                        new Param("value", QuizShow.ShouldExplode.Contestant, "What To Explode", "What will explode?")
+                    }
                 }
             });
         }
@@ -88,6 +97,12 @@ namespace HeavenStudio.Games
             Stage2 = 2,
             Stage3 = 3,
             Stage4 = 4,
+        }
+        public enum ShouldExplode
+        {
+            Contestant = 0,
+            Host = 1,
+            Sign = 2
         }
         [Header("Components")]
         [SerializeField] Animator contesteeLeftArmAnim;
@@ -115,6 +130,9 @@ namespace HeavenStudio.Games
         float beatInterval = 8f;
         int currentStage;
         bool shouldPrepareArms = true;
+        bool contExploded;
+        bool hostExploded;
+        bool signExploded;
         struct QueuedInput 
         {
             public float beat;
@@ -314,17 +332,49 @@ namespace HeavenStudio.Games
                     secondDigitSr.sprite = contestantNumberSprites[GetSpecificDigit(pressCount, 2)];
                     break;
                 case 100:
+                    if (contExploded) return;
                     Jukebox.PlayOneShotGame("quizShow/contestantExplode");
                     firstDigitSr.color = new Color(1, 1, 1, 0);
                     secondDigitSr.color = new Color(1, 1, 1, 0);
+                    contExploded = true;
                     break;
                 case 120:
+                    if (hostExploded) return;
                     Jukebox.PlayOneShotGame("quizShow/hostExplode");
                     hostFirstDigitSr.color = new Color(1, 1, 1, 0);
                     hostSecondDigitSr.color = new Color(1, 1, 1, 0);
+                    hostExploded = true;
                     break;
                 case 150:
+                    if (signExploded) return;
                     Jukebox.PlayOneShotGame("quizShow/signExplode");
+                    signExploded = true;
+                    break;
+            }
+        }
+
+        public void ForceExplode(int whoToExplode)
+        {
+            switch (whoToExplode)
+            {
+                case (int)ShouldExplode.Contestant:
+                    if (contExploded) return;
+                    Jukebox.PlayOneShotGame("quizShow/contestantExplode");
+                    firstDigitSr.color = new Color(1, 1, 1, 0);
+                    secondDigitSr.color = new Color(1, 1, 1, 0);
+                    contExploded = true;
+                    break;
+                case (int)ShouldExplode.Host:
+                    if (hostExploded) return;
+                    Jukebox.PlayOneShotGame("quizShow/hostExplode");
+                    hostFirstDigitSr.color = new Color(1, 1, 1, 0);
+                    hostSecondDigitSr.color = new Color(1, 1, 1, 0);
+                    hostExploded = true;
+                    break;
+                case (int)ShouldExplode.Sign:
+                    if (signExploded) return;
+                    Jukebox.PlayOneShotGame("quizShow/signExplode");
+                    signExploded = true;
                     break;
             }
         }
