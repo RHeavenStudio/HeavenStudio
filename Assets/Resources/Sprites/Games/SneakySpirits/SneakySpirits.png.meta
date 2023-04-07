@@ -177,7 +177,7 @@ TextureImporter:
       213: -1500490936751498959
     second: SneakySpirits_35
   externalObjects: {}
-  serializedVersion: 11
+  serializedVersion: 12
   mipmaps:
     mipMapMode: 0
     enableMipMap: 0
@@ -198,6 +198,7 @@ TextureImporter:
   streamingMipmaps: 0
   streamingMipmapsPriority: 0
   vTOnly: 0
+  ignoreMasterTextureLimit: 0
   grayScaleToAlpha: 0
   generateCubemap: 6
   cubemapConvolution: 0
@@ -236,6 +237,7 @@ TextureImporter:
   textureFormatSet: 0
   ignorePngGamma: 0
   applyGammaDecoding: 0
+  cookieLightType: 1
   platformSettings:
   - serializedVersion: 3
     buildTarget: DefaultTexturePlatform
@@ -251,6 +253,18 @@ TextureImporter:
     forceMaximumCompressionQuality_BC6H_BC7: 0
   - serializedVersion: 3
     buildTarget: Standalone
+    maxTextureSize: 4096
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 3
+    buildTarget: Server
     maxTextureSize: 4096
     resizeAlgorithm: 0
     textureFormat: -1
@@ -280,7 +294,7 @@ TextureImporter:
       tessellationDetail: 0
       bones: []
       spriteID: 82a8218fa20b173e0800000000000000
-      internalID: -2057669856134526424
+      internalID: 334154914554335797
       vertices: []
       indices: 
       edges: []
@@ -301,7 +315,7 @@ TextureImporter:
       tessellationDetail: 0
       bones: []
       spriteID: 2b393c0545b94d780800000000000000
-      internalID: -8659125397092068430
+      internalID: 7973861647424831005
       vertices: []
       indices: 
       edges: []
@@ -1534,6 +1548,67 @@ TextureImporter:
     edges: []
     weights: []
     secondaryTextures: []
+    nameFileIdTable:
+      Arrow: 2542515952861811034
+      Arrow_hit: 5826627669149424475
+      Arrow_hit_long: 5309156677016724985
+      Arrow_hit_shrot: -7083907438554959478
+      Arrow_miss1: -3852238419125825741
+      Arrow_miss2: -571513802062072002
+      Arrow_miss3: -3611631756299808156
+      Arrow_miss_woosh: 2834674338500037522
+      Arrow_shadow: 6686680969291465237
+      Bow_draw_1: 2240838590595565166
+      Bow_draw_2: -2913013252666147196
+      Bow_draw_3: 3938193249027762288
+      Bow_draw_button: -2030388055127388068
+      Bow_neutral: 115422616885090563
+      Bow_neutral_shadow: -7158335460754883480
+      Bow_wobble: 3109260674246340377
+      Bowstring: -3032643149302055834
+      Bowstring_wobble1: 7724371161832123803
+      Bowstring_wobble2: 6425167896086874939
+      Door_closed: -4642526416399738743
+      Door_open1: -2470297854164989709
+      Door_open2: 611351164400051302
+      Door_open3: -9157380814478793938
+      Ghost_hand1: -5218819458044424319
+      Ghost_hand2: 3872876754767287274
+      Ghost_hand3: -1075146005225842575
+      Ghost_hand4: -3110013511850240289
+      Ghost_hit_body: -1529350073703957787
+      Ghost_hit_cheek: -4107653774352989185
+      Ghost_hit_mouth: 1096987552447777393
+      Ghost_hit_nose: 3210789869527988959
+      Ghost_laugh: -6883420044936970101
+      Ghost_laugh_shadow: 4785960280392365017
+      Ghost_miss: -1165265441522152503
+      Ghost_move: -1371893956176398563
+      Ghost_nyoom: 7695124264162445715
+      Ghost_nyoom_practice: -7334877908235105186
+      Ghost_tongue1: -80712703326534942
+      Ghost_tongue2: -3991633217771315883
+      Ghost_tongue3: -4685918795485429689
+      Ghost_tongue4: 5825486066814984645
+      Ghost_trail: 2858505646625851338
+      Ghost_trail_hit: -5225986661060083600
+      Groundtile: -5952566289195896545
+      House: 334154914554335797
+      Pink_Pointer: -8550883722070020168
+      Rain_slowmo1: 1263001355373353799
+      Rain_slowmo2: 1666615524558278079
+      Rain_slowmo3: 1003759829136311759
+      Rain_slowmo4: -2551695156705067877
+      Raindrop: 7963107716543602504
+      Rainplop1: -2720762102709562429
+      Rainplop2: -1084838193010598843
+      Rainplop3: -7627162147644310082
+      SneakySpirits_34: 3532029475866527194
+      SneakySpirits_35: -1500490936751498959
+      Tree_1: -497912792735699408
+      Tree_2: 1748789042723271327
+      Wall: 7973861647424831005
+      Wall_shadow: -8800645836929319471
   spritePackingTag: 
   pSDRemoveMatte: 0
   pSDShowRemoveMatteOption: 0

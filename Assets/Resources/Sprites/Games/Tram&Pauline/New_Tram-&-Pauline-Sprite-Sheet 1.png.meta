@@ -417,7 +417,7 @@ TextureImporter:
       213: 7354717590712282536
     second: Spike
   externalObjects: {}
-  serializedVersion: 11
+  serializedVersion: 12
   mipmaps:
     mipMapMode: 0
     enableMipMap: 0
@@ -438,6 +438,7 @@ TextureImporter:
   streamingMipmaps: 0
   streamingMipmapsPriority: 0
   vTOnly: 0
+  ignoreMasterTextureLimit: 0
   grayScaleToAlpha: 0
   generateCubemap: 6
   cubemapConvolution: 0
@@ -476,6 +477,7 @@ TextureImporter:
   textureFormatSet: 0
   ignorePngGamma: 0
   applyGammaDecoding: 0
+  cookieLightType: 1
   platformSettings:
   - serializedVersion: 3
     buildTarget: DefaultTexturePlatform
@@ -563,6 +565,18 @@ TextureImporter:
     forceMaximumCompressionQuality_BC6H_BC7: 0
   - serializedVersion: 3
     buildTarget: Android
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 2
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 3
+    buildTarget: Server
     maxTextureSize: 2048
     resizeAlgorithm: 0
     textureFormat: -1
@@ -1873,7 +1887,7 @@ TextureImporter:
       tessellationDetail: 0
       bones: []
       spriteID: a47844df8478203c0800000000000000
-      internalID: -4394801538803660982
+      internalID: -660802986194691780
       vertices: []
       indices: 
       edges: []
@@ -3484,6 +3498,145 @@ TextureImporter:
     edges: []
     weights: []
     secondaryTextures: []
+    nameFileIdTable:
+      Ball: 551163896124160420
+      Base: 491576489582845163
+      Bump: -3380768313811452027
+      Circle: -8405985808874205138
+      Club: -5397752010312796269
+      Dot: 2054454736260383177
+      Left Arm 1: 1489334142673897081
+      Left Arm 2: -5520536476210953245
+      Left Arm 3: -4310177376840285970
+      Left Arm 4: -1860615392278867883
+      Left Arm 5: 661939472710559756
+      Mat 1: 510341067376010557
+      Mat 2: 7197344894348084594
+      Mat 3: -8116466818803473397
+      Mat 4: 7732404335960011771
+      Mat 5: -3092476531174676864
+      Mat 6: 4736813113595806102
+      Mini: -6636201880177649290
+      Pauline Body 1: 83067570683882446
+      Pauline Body 2: 9199837015522360231
+      Pauline Body 3: 1548405872212567551
+      Pauline Body 4: 5497111982611508208
+      Pauline Fox Ball: 7800474554677060396
+      Pauline Fox Body 1: -6817484923475005941
+      Pauline Fox Body 2: -8318275093849713719
+      Pauline Fox Body 3: -4070666957561419294
+      Pauline Fox Body 4: -3780008084407481395
+      Pauline Fox Head 1: 3741325666951092984
+      Pauline Fox Head 2: -1941462691980022298
+      Pauline Fox Left Arm: 6088994974624614748
+      Pauline Fox Left Arm 1: 3153329407425875490
+      Pauline Fox Left Arm 2: -7224420683921090055
+      Pauline Fox Left Arm 3: -7592414763364332962
+      Pauline Fox Left Arm 5: -660802986194691780
+      Pauline Fox Left Arm 6: 5747799897434777497
+      Pauline Fox Left Arm 7: 5460375325568898553
+      Pauline Fox Left Leg 1: -7694825151572021337
+      Pauline Fox Left Leg 2: -4883290566624927542
+      Pauline Fox Left Leg 3: 6305128029791706083
+      Pauline Fox Left Leg 4: -8398109835933220403
+      Pauline Fox Left Leg 5: 3710484230052574714
+      Pauline Fox Left Leg 6: -1450475796567141342
+      Pauline Fox RIght Arm  6: 1392071873169683060
+      Pauline Fox RIght Arm 1: -4790120917635794560
+      Pauline Fox RIght Arm 2: -98984322076666967
+      Pauline Fox RIght Arm 5: 7096993655311675181
+      Pauline Fox RIght Arm 7: 8618830327313541147
+      Pauline Fox RIght Leg 1: 7234581869299540510
+      Pauline Fox RIght Leg 2: -107169505044628749
+      Pauline Fox RIght Leg 3: 8716836455005676356
+      Pauline Fox RIght Leg 4: 1237445525976969269
+      Pauline Fox RIght Leg 5: 8628441827698684483
+      Pauline Fox RIght Leg 6: 6919801187950828589
+      Pauline Fox Right Arm 3: -7995195569926034432
+      Pauline Fox Right Arm 4: -5958608905253227758
+      Pauline Fox Tail 1: -8218611098396479231
+      Pauline Fox Tail 2: 7837244203076955571
+      Pauline Fox Tail 3: -588793283837182013
+      Pauline Fox Tail 4: -2664792569976257478
+      Pauline Head 1: -90330449025653187
+      Pauline Head 2: -6619111604203616994
+      Pauline Left Leg 1: -3446644812727389836
+      Pauline Left Leg 2: 2103203798157167133
+      Pauline Left Leg 3: -4619765005846745666
+      Pauline Left Leg 4: -1117920257083097361
+      Pauline Left Leg 5: -1084941456901760960
+      Pauline Right Leg 1: 3818128032736520119
+      Pauline Right Leg 2: 2975070461481550765
+      Pauline Right Leg 3: -2284278053170462041
+      Pauline Right Leg 4: 6469078453365820534
+      Pauline Right Leg 5: -1467390813462291026
+      Puff: -2883031358373666772
+      Right Arm 1: -2657911998537996818
+      Right Arm 2: -7506025985514046018
+      Right Arm 3: 4192719387136396869
+      Right Arm 4: -7963352357712441502
+      Right Arm 5: -7936103769407116860
+      Side: 6566787653605708780
+      Spike: 7354717590712282536
+      Stake: -6893798290881906485
+      Star: -6152013473790515051
+      Tram Body: 9213833406693172322
+      Tram Body 1: 2227265523108594168
+      Tram Body 2: 4182406098767829127
+      Tram Body 4: 9195161798299143099
+      Tram Fox Ball: -7262459423518060976
+      Tram Fox Body 1: -7294577977018577988
+      Tram Fox Body 2: 8504186642511026948
+      Tram Fox Body 3: -1010848898610352558
+      Tram Fox Body 4: 1066602503323425107
+      Tram Fox Head 1: -2377980016388780800
+      Tram Fox Head 2: -3347220576201696437
+      Tram Fox Left Arm 1: 5216724700222848767
+      Tram Fox Left Arm 2: -515260261197247711
+      Tram Fox Left Arm 3: -508884414829303937
+      Tram Fox Left Arm 4: -8652112285824464228
+      Tram Fox Left Arm 5: -165083780082760208
+      Tram Fox Left Arm 6: -7282035622854587166
+      Tram Fox Left Arm 7: -885606475610327818
+      Tram Fox Left Leg 1: 4127227408121714689
+      Tram Fox Left Leg 2: 891143575962215054
+      Tram Fox Left Leg 3: 2111370569476702728
+      Tram Fox Left Leg 4: 3419270992324234904
+      Tram Fox Left Leg 5: 1570968821939712920
+      Tram Fox Left Leg 6: 5896356567421239997
+      Tram Fox Right Arm: 6227937779170375899
+      Tram Fox Right Arm 1: -7093900841423753057
+      Tram Fox Right Arm 2: -2849917128797321904
+      Tram Fox Right Arm 3: 6352010049460909187
+      Tram Fox Right Arm 4: -5708116966746346756
+      Tram Fox Right Arm 6: 8454055408032663225
+      Tram Fox Right Arm 7: -1778464705512417015
+      Tram Fox Right Leg 1: 1014148887567295790
+      Tram Fox Right Leg 2: 7854007222731970551
+      Tram Fox Right Leg 3: 4997660062710356148
+      Tram Fox Right Leg 4: -6719994438681861538
+      Tram Fox Right Leg 5: 3566348419187152465
+      Tram Fox Right Leg 6: 3772089859364389804
+      Tram Fox Tail 1: -4717599285242051477
+      Tram Fox Tail 2: 402321921611264901
+      Tram Fox Tail 3: -5631799823153186374
+      Tram Fox Tail 4: 3977804587838284076
+      Tram Head 1: -606560647704466283
+      Tram Head 2: 8105909392499396445
+      Tram Left Leg 1: -2877288932112159769
+      Tram Left Leg 2: -2978378663633627274
+      Tram Left Leg 3: 6733669140426298806
+      Tram Left Leg 4: 5862202297871680492
+      Tram Left Leg 5: -6279119587641467371
+      Tram Left Leg 6: 6442375179766271205
+      Tram Left Leg 7: -4826343170931575552
+      Tram Right Leg 1: 6308479810108167395
+      Tram Right Leg 2: 5476312205961967431
+      Tram Right Leg 3: -173958348507863128
+      Tram Right Leg 4: -6225012106776394886
+      Tram Right Leg 5: -5523796580695589851
+      Tram Right Leg 6: 8975703429214814681
+      Tram Right Leg 7: 46978092735669525
   spritePackingTag: 
   pSDRemoveMatte: 0
   pSDShowRemoveMatteOption: 0

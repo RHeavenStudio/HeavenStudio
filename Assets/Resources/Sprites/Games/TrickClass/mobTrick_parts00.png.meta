@@ -60,7 +60,7 @@ TextureImporter:
       213: 7171732435601072149
     second: mobTrick_parts01_18
   externalObjects: {}
-  serializedVersion: 11
+  serializedVersion: 12
   mipmaps:
     mipMapMode: 0
     enableMipMap: 0
@@ -81,6 +81,7 @@ TextureImporter:
   streamingMipmaps: 0
   streamingMipmapsPriority: 0
   vTOnly: 0
+  ignoreMasterTextureLimit: 0
   grayScaleToAlpha: 0
   generateCubemap: 6
   cubemapConvolution: 0
@@ -119,6 +120,7 @@ TextureImporter:
   textureFormatSet: 0
   ignorePngGamma: 0
   applyGammaDecoding: 0
+  cookieLightType: 1
   platformSettings:
   - serializedVersion: 3
     buildTarget: DefaultTexturePlatform
@@ -134,6 +136,18 @@ TextureImporter:
     forceMaximumCompressionQuality_BC6H_BC7: 0
   - serializedVersion: 3
     buildTarget: Standalone
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 3
+    buildTarget: Server
     maxTextureSize: 2048
     resizeAlgorithm: 0
     textureFormat: -1
@@ -556,6 +570,26 @@ TextureImporter:
     edges: []
     weights: []
     secondaryTextures: []
+    nameFileIdTable:
+      mobTrick_parts01_0: 259028287349437060
+      mobTrick_parts01_1: 8714564320682160463
+      mobTrick_parts01_10: -7881720681378153811
+      mobTrick_parts01_11: -8562420866526137701
+      mobTrick_parts01_12: -2784368421485211769
+      mobTrick_parts01_13: 2685592027599138397
+      mobTrick_parts01_14: -222037496610564813
+      mobTrick_parts01_15: 1136722714597198076
+      mobTrick_parts01_16: -91470071303476930
+      mobTrick_parts01_17: -6102311414589244448
+      mobTrick_parts01_18: 7171732435601072149
+      mobTrick_parts01_2: 2274011879247696229
+      mobTrick_parts01_3: 333524933372927641
+      mobTrick_parts01_4: -1572299056304829026
+      mobTrick_parts01_5: 6975551133593416859
+      mobTrick_parts01_6: -4454273697595807397
+      mobTrick_parts01_7: 2346517677788077603
+      mobTrick_parts01_8: 8639856634145216128
+      mobTrick_parts01_9: 186556094700482302
   spritePackingTag: 
   pSDRemoveMatte: 0
   pSDShowRemoveMatteOption: 0

@@ -30,7 +30,7 @@ TextureImporter:
       213: -9122983955251981438
     second: spacedancers_46
   externalObjects: {}
-  serializedVersion: 11
+  serializedVersion: 12
   mipmaps:
     mipMapMode: 0
     enableMipMap: 0
@@ -51,6 +51,7 @@ TextureImporter:
   streamingMipmaps: 0
   streamingMipmapsPriority: 0
   vTOnly: 0
+  ignoreMasterTextureLimit: 0
   grayScaleToAlpha: 0
   generateCubemap: 6
   cubemapConvolution: 0
@@ -89,6 +90,7 @@ TextureImporter:
   textureFormatSet: 0
   ignorePngGamma: 0
   applyGammaDecoding: 0
+  cookieLightType: 1
   platformSettings:
   - serializedVersion: 3
     buildTarget: DefaultTexturePlatform
@@ -104,6 +106,18 @@ TextureImporter:
     forceMaximumCompressionQuality_BC6H_BC7: 0
   - serializedVersion: 3
     buildTarget: Standalone
+    maxTextureSize: 8192
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 0
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 3
+    buildTarget: Server
     maxTextureSize: 8192
     resizeAlgorithm: 0
     textureFormat: -1
@@ -1114,6 +1128,54 @@ TextureImporter:
     edges: []
     weights: []
     secondaryTextures: []
+    nameFileIdTable:
+      spacedancers_0: -7013559041654529253
+      spacedancers_1: -3686988442382613506
+      spacedancers_10: -5473138154975321071
+      spacedancers_11: -1631193365071257152
+      spacedancers_12: -3554304675655589782
+      spacedancers_13: 5512882398595163457
+      spacedancers_14: -9008074219356086105
+      spacedancers_15: -132814672917424561
+      spacedancers_16: -2267574647685078260
+      spacedancers_17: -1170980802656746651
+      spacedancers_18: 7480040581836878736
+      spacedancers_19: -8662471255803891930
+      spacedancers_2: 5720739258315605671
+      spacedancers_20: 728846241156586977
+      spacedancers_21: -2455435551289113217
+      spacedancers_22: -5747116483996973479
+      spacedancers_23: 288915095080353517
+      spacedancers_24: -7897006802089848539
+      spacedancers_25: 4913844738546413509
+      spacedancers_26: -2123305696401537300
+      spacedancers_27: -2309478943783400133
+      spacedancers_28: -6803621436571726843
+      spacedancers_29: -4549948100305167275
+      spacedancers_3: -4705660350017119854
+      spacedancers_30: -8990541409363382826
+      spacedancers_31: -4326909914983326128
+      spacedancers_32: -895755893995985407
+      spacedancers_33: -3275525107389337312
+      spacedancers_34: 4534892689996083785
+      spacedancers_35: 5201593674994217652
+      spacedancers_36: 4443300836869624101
+      spacedancers_37: -567465394941247715
+      spacedancers_38: 3339736656405604686
+      spacedancers_39: -5108366975731648677
+      spacedancers_4: 704049006080426638
+      spacedancers_40: -1536495947645218070
+      spacedancers_41: -1599133647669456103
+      spacedancers_42: 2932098075385667521
+      spacedancers_43: -4195349967662162836
+      spacedancers_44: -2376132490828947684
+      spacedancers_45: 8162784456787876517
+      spacedancers_46: -9122983955251981438
+      spacedancers_5: 3616381671403642658
+      spacedancers_6: 5770299284042456991
+      spacedancers_7: 737823461603251672
+      spacedancers_8: 7336755120104452472
+      spacedancers_9: 7718128534782652821
   spritePackingTag: 
   pSDRemoveMatte: 0
   pSDShowRemoveMatteOption: 0

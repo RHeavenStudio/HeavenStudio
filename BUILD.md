@@ -1,8 +1,10 @@
 # Build instructions
 
+### PLEASE FOLLOW [THE DOCUMENTATION](https://rheavenstudio.github.io/docs-contributing/setup/introduction) INSTEAD, THE BUILD.MD IS HEAVILY UNMAINTAINED.
+
 ## Prerequisites:
 - git (see below to know how to install git)
-- A Unity 2020.3.xx LTS version
+- A Unity 2021.3.21 LTS version
 - A Machine running Windows, Linux or MacOS
 
 ## Installing git:
@@ -32,7 +34,7 @@ sudo brew install git
 3. Choose a Personal license.
 4. From the menu on left, go to "Installs".
 5. Press "Install Editor".
-6. Install the 2020.3.xx "Long Time Support (LTS)" version. 
+6. Install the 2021.3.21 "Long Time Support (LTS)" version. 
 
 ## Building Heaven Studio:
 1. Clone the repository to your machine

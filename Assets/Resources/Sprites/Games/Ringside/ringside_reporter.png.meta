@@ -153,7 +153,7 @@ TextureImporter:
       213: -1881887955945446858
     second: Reporter5
   externalObjects: {}
-  serializedVersion: 11
+  serializedVersion: 12
   mipmaps:
     mipMapMode: 0
     enableMipMap: 0
@@ -174,6 +174,7 @@ TextureImporter:
   streamingMipmaps: 0
   streamingMipmapsPriority: 0
   vTOnly: 0
+  ignoreMasterTextureLimit: 0
   grayScaleToAlpha: 0
   generateCubemap: 6
   cubemapConvolution: 0
@@ -212,6 +213,7 @@ TextureImporter:
   textureFormatSet: 0
   ignorePngGamma: 0
   applyGammaDecoding: 0
+  cookieLightType: 1
   platformSettings:
   - serializedVersion: 3
     buildTarget: DefaultTexturePlatform
@@ -227,6 +229,18 @@ TextureImporter:
     forceMaximumCompressionQuality_BC6H_BC7: 0
   - serializedVersion: 3
     buildTarget: Standalone
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 3
+    buildTarget: Server
     maxTextureSize: 2048
     resizeAlgorithm: 0
     textureFormat: -1
@@ -1300,6 +1314,57 @@ TextureImporter:
     edges: []
     weights: []
     secondaryTextures: []
+    nameFileIdTable:
+      ArmFullBent: 3207227162145745967
+      ArmHalfBent: 7743390729555298450
+      ArmStraight: -8003159232162401627
+      BigEyes: 3996910692431020048
+      BigEyesAndMouth: -7091222137842549917
+      Body: -6589557854270578333
+      Boot0: -5960027845508218308
+      Boot1: 3017519253072323741
+      Boot2: 1274415319243117200
+      EyesClosed: 4317771272364188065
+      EyesContent: 2268504965593904729
+      EyesHalfClosed: 4755862143965699575
+      EyesHappy: 754190187415959164
+      EyesNormal: -4786888087359930055
+      FaceBruh: -5401741236356698781
+      FaceWhat: 8854936150142220577
+      Flash: -4854251472506247677
+      Flower: -1006052016982345207
+      HandClosed: -2823110392554217317
+      HeadBlank: -6036404067566639707
+      HeadNormal: 6866060370633798006
+      Heart: 3308023554267677584
+      HoldingInMicrophone: 8511195967017722968
+      HoldingMicrophone: -7281021278568574372
+      HoldingOutMicrophone: -5747766041381409436
+      Joint: 801306557337303448
+      Leg: 2783236553344596651
+      MouthClosed: 6169388029618647362
+      MouthFullOpen: 1277674859418893668
+      MouthFullerOpen: -394869552789025096
+      MouthFullestOpen: 4040675199201267668
+      MouthHalfClosed: 7271444727114707125
+      MouthHalfOpen: 3088907837216143486
+      MouthNose: 8001701733945986028
+      MouthOpen: -3361194783536276143
+      MouthTongue: -5429575257828174689
+      Nose: 4844973927018498058
+      OpenHand: -1527858426554962932
+      Ponytail: 3938743877180064267
+      Reporter0: -6904142280075460571
+      Reporter1: 7423044025178572875
+      Reporter2: -2397428386600961336
+      Reporter3: 5404321869551151208
+      Reporter4: 6697742941386414108
+      Reporter5: -1881887955945446858
+      Shadow: -495427787588613341
+      Shoulder: -8484598679776714911
+      Skirt: 1814421444318805746
+      Wristband0: 6986337828416801553
+      Wristband1: 3815302020052559766
   spritePackingTag: 
   pSDRemoveMatte: 0
   pSDShowRemoveMatteOption: 0

@@ -99,7 +99,7 @@ TextureImporter:
       213: -634522493809421916
     second: octopus_new_20
   externalObjects: {}
-  serializedVersion: 11
+  serializedVersion: 12
   mipmaps:
     mipMapMode: 0
     enableMipMap: 0
@@ -120,6 +120,7 @@ TextureImporter:
   streamingMipmaps: 0
   streamingMipmapsPriority: 0
   vTOnly: 0
+  ignoreMasterTextureLimit: 0
   grayScaleToAlpha: 0
   generateCubemap: 6
   cubemapConvolution: 0
@@ -158,6 +159,7 @@ TextureImporter:
   textureFormatSet: 0
   ignorePngGamma: 0
   applyGammaDecoding: 0
+  cookieLightType: 1
   platformSettings:
   - serializedVersion: 3
     buildTarget: DefaultTexturePlatform
@@ -185,6 +187,18 @@ TextureImporter:
     forceMaximumCompressionQuality_BC6H_BC7: 0
   - serializedVersion: 3
     buildTarget: WebGL
+    maxTextureSize: 4096
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 3
+    buildTarget: Server
     maxTextureSize: 4096
     resizeAlgorithm: 0
     textureFormat: -1
@@ -880,6 +894,39 @@ TextureImporter:
     edges: []
     weights: []
     secondaryTextures: []
+    nameFileIdTable:
+      octopus_new_0: 6484805976142626504
+      octopus_new_1: -7590649705792927296
+      octopus_new_10: 5387965291768291672
+      octopus_new_11: 1400866051509837668
+      octopus_new_12: -5453001721506779543
+      octopus_new_13: 5214049928158748339
+      octopus_new_14: -4434667060161058036
+      octopus_new_15: -8522750621395985316
+      octopus_new_16: -4286945125639848121
+      octopus_new_17: 2024425674820266183
+      octopus_new_18: -2835593823232120200
+      octopus_new_19: 2620945948486645385
+      octopus_new_2: -5408582982195024656
+      octopus_new_20: -634522493809421916
+      octopus_new_21: -7377900052134258537
+      octopus_new_22: -7941814531324670443
+      octopus_new_23: -3655369069785966444
+      octopus_new_24: -4942737682409663336
+      octopus_new_25: 17781469430810569
+      octopus_new_28: -3895695398044149640
+      octopus_new_29: -8964901790771318119
+      octopus_new_3: -6463164415427031492
+      octopus_new_30: 3063851722884211329
+      octopus_new_31: -4477222435649150000
+      octopus_new_4: -1956152465025529483
+      octopus_new_41: 651156731416410663
+      octopus_new_42: 2971776216789315956
+      octopus_new_5: 4910547985351245612
+      octopus_new_6: -3533175707743416375
+      octopus_new_7: -1492891164089619171
+      octopus_new_8: 424930747680053859
+      octopus_new_9: 3195601450880121081
   spritePackingTag: 
   pSDRemoveMatte: 0
   pSDShowRemoveMatteOption: 0

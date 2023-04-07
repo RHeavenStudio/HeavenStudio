@@ -87,7 +87,7 @@ TextureImporter:
       213: 8134288934159834827
     second: release
   externalObjects: {}
-  serializedVersion: 11
+  serializedVersion: 12
   mipmaps:
     mipMapMode: 0
     enableMipMap: 0
@@ -108,6 +108,7 @@ TextureImporter:
   streamingMipmaps: 0
   streamingMipmapsPriority: 0
   vTOnly: 0
+  ignoreMasterTextureLimit: 0
   grayScaleToAlpha: 0
   generateCubemap: 6
   cubemapConvolution: 0
@@ -146,6 +147,7 @@ TextureImporter:
   textureFormatSet: 0
   ignorePngGamma: 0
   applyGammaDecoding: 0
+  cookieLightType: 1
   platformSettings:
   - serializedVersion: 3
     buildTarget: DefaultTexturePlatform
@@ -173,6 +175,18 @@ TextureImporter:
     forceMaximumCompressionQuality_BC6H_BC7: 0
   - serializedVersion: 3
     buildTarget: Windows Store Apps
+    maxTextureSize: 4096
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 2
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 3
+    buildTarget: Server
     maxTextureSize: 4096
     resizeAlgorithm: 0
     textureFormat: -1
@@ -784,6 +798,35 @@ TextureImporter:
     edges: []
     weights: []
     secondaryTextures: []
+    nameFileIdTable:
+      good: -7594013473885943522
+      octopus bop 1: -3482316335579857248
+      octopus bop 2: -248415419706055424
+      octopus bop 3: 826734031537189730
+      octopus bruh 1: 3163395358573969893
+      octopus bruh 2: -5393904256684418717
+      octopus bruh 3: -5181877506223443383
+      octopus hold 1: -2466497599744486453
+      octopus hold 2: 8055721891750256500
+      octopus oops 1: 1795026253520550705
+      octopus oops 2: -3042169255768814910
+      octopus oops 3: 4710754661084121898
+      octopus prepare 1: 6718567404563424701
+      octopus prepare 2: 8395824990023203277
+      octopus prepare 3: -5014958022765248117
+      octopus shoot 1: 8401536851600582493
+      octopus shoot 2: 3180740460076729970
+      octopus shoot 3: 2638712922875281437
+      octopus shoot 4: -8838246917678120016
+      octopus shoot 5: 7779004071698775437
+      octopus yay 1: -3953433122411276415
+      octopus yay 2: -3758822760625922581
+      octopus yay 3: 5993656015828772236
+      release: 8134288934159834827
+      tap: 5391241477382850195
+      the yellow: -6349360636359246829
+      wrong: 2473370534550848637
+      you: -8798550046082055051
   spritePackingTag: 
   pSDRemoveMatte: 0
   pSDShowRemoveMatteOption: 0

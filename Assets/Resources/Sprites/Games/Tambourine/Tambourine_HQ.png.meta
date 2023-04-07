@@ -147,7 +147,7 @@ TextureImporter:
       213: -4015247146543077209
     second: BTSmallShakerBottom
   externalObjects: {}
-  serializedVersion: 11
+  serializedVersion: 12
   mipmaps:
     mipMapMode: 0
     enableMipMap: 0
@@ -168,6 +168,7 @@ TextureImporter:
   streamingMipmaps: 0
   streamingMipmapsPriority: 0
   vTOnly: 0
+  ignoreMasterTextureLimit: 0
   grayScaleToAlpha: 0
   generateCubemap: 6
   cubemapConvolution: 0
@@ -206,6 +207,7 @@ TextureImporter:
   textureFormatSet: 0
   ignorePngGamma: 0
   applyGammaDecoding: 0
+  cookieLightType: 1
   platformSettings:
   - serializedVersion: 3
     buildTarget: DefaultTexturePlatform
@@ -221,6 +223,18 @@ TextureImporter:
     forceMaximumCompressionQuality_BC6H_BC7: 0
   - serializedVersion: 3
     buildTarget: Standalone
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 3
+    buildTarget: Server
     maxTextureSize: 2048
     resizeAlgorithm: 0
     textureFormat: -1
@@ -1252,6 +1266,55 @@ TextureImporter:
     edges: []
     weights: []
     secondaryTextures: []
+    nameFileIdTable:
+      Arm: -4638570384829088313
+      BTBigShakerMiddle: 3034572495159552166
+      BTBigShakerTop0: 3480517929882291227
+      BTBigShakerTop1: -2190215458474782380
+      BTMediumShakerBottom: 3885998992259862471
+      BTMediumShakerTop: -5957331364436450178
+      BTSmallShakerBottom: -4015247146543077209
+      BTSmallShakerTop0: 8133564972096036948
+      BTSmallShakerTop1: -1033454907907782998
+      BTSmallShakerTop2: 912419369651351126
+      Background: 4182150794981042216
+      BigPinkFlower: 7798185383413473445
+      BigTambourine: 7506044537736297914
+      BigTambourineDrum: 6518995786973048239
+      BlueFlower: 3052578082452883184
+      HoldingHand: 5417643786446666188
+      MonkeyArm: -6275238671377081634
+      MonkeyBody: -104694240495783213
+      MonkeyFaceFail: 7224489272389505764
+      MonkeyFaceHappy: -8325636423666768275
+      MonkeyFootLittleStretch: -4113302492812007733
+      MonkeyFootPrepareStep: -7014704785943503725
+      MonkeyFootStill0: 4718761383160506411
+      MonkeyFootStill1: -4202088854390576282
+      MonkeyFootStill2: 1419909545160514183
+      MonkeyFootStretch: -1024764167171106222
+      MonkeyHand: 2502745115230060179
+      MonkeyHeadDown: -7320664946889455250
+      MonkeyHeadUp: -6649238503967836282
+      OpenHand: -7562809112440227390
+      STBigShakerBottom: 8993804972594985821
+      STBigShakerMiddle: -4848196104314709200
+      STBigShakerTop0: 7145706469022559727
+      STBigShakerTop1: -8047478136493404693
+      STMediumShakerMiddle: -839465637243587057
+      STMediumShakerTop: 2724110430512444061
+      STSmallShakerTop0: 8706789017209748210
+      STSmallShakerTop1: 1364614762961984179
+      STSmallShakerTop2: -8349454504616625115
+      Shadow: -2379904220617016578
+      Smack: 4007602121327794633
+      SmallPinkFlower: 6564655152035803150
+      SmallTambourine: -7496781745971149954
+      SmallTambourineDrum: -233173217233156346
+      Sparkle: -5058456926923959376
+      Sweat: 7104877062850814506
+      WhiteStar: 7440762139054663482
+      YellowStar: 3135512120997041788
   spritePackingTag: 
   pSDRemoveMatte: 0
   pSDShowRemoveMatteOption: 0

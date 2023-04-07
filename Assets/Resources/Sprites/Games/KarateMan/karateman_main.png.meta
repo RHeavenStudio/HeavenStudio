@@ -276,7 +276,7 @@ TextureImporter:
       213: 7464444140288453835
     second: karateman_arm_1_part01
   externalObjects: {}
-  serializedVersion: 11
+  serializedVersion: 12
   mipmaps:
     mipMapMode: 0
     enableMipMap: 0
@@ -297,6 +297,7 @@ TextureImporter:
   streamingMipmaps: 0
   streamingMipmapsPriority: 0
   vTOnly: 0
+  ignoreMasterTextureLimit: 0
   grayScaleToAlpha: 0
   generateCubemap: 6
   cubemapConvolution: 0
@@ -335,6 +336,7 @@ TextureImporter:
   textureFormatSet: 0
   ignorePngGamma: 0
   applyGammaDecoding: 0
+  cookieLightType: 1
   platformSettings:
   - serializedVersion: 3
     buildTarget: DefaultTexturePlatform
@@ -363,6 +365,18 @@ TextureImporter:
   - serializedVersion: 3
     buildTarget: WebGL
     maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 2
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 3
+    buildTarget: Server
+    maxTextureSize: 4096
     resizeAlgorithm: 0
     textureFormat: -1
     textureCompression: 2
@@ -2086,6 +2100,88 @@ TextureImporter:
     edges: []
     weights: []
     secondaryTextures: []
+    nameFileIdTable:
+      karateman_alien: -8767211005568948338
+      karateman_altpunch_0: 1681862903528507946
+      karateman_altpunch_1: 8746368967394852260
+      karateman_altpunch_2: 8132349032079424561
+      karateman_altpunch_3: 2873506237420579991
+      karateman_arm_0: 1008690937265831151
+      karateman_arm_1: -6276894951477213296
+      karateman_arm_1_part00: 3008790161821312096
+      karateman_arm_1_part01: 7464444140288453835
+      karateman_arm_2: 3326684967193111439
+      karateman_arm_3: 8950434383990666424
+      karateman_arm_4: -2056326911489980227
+      karateman_arm_5: -3724082816408167037
+      karateman_arm_6: 2022841768334614553
+      karateman_arm_7: 2044912709364667320
+      karateman_arm_8: 6846952495678743529
+      karateman_arm_9: -3126141815255192416
+      karateman_ball: -3530312539838775474
+      karateman_barrel: 8671423413994339737
+      karateman_barrelfx_0: 6524922379630696755
+      karateman_barrelfx_1: 1156572009758090512
+      karateman_barrelfx_2: -7998309181045564909
+      karateman_barrelfx_3: -7906004722935515527
+      karateman_barrelfx_4: 5805539206011318834
+      karateman_bomb: -6341196331951941137
+      karateman_bulb: 5443719295599431979
+      karateman_combo_crouch_toIdle_leg: 756708653002075470
+      karateman_combo_crouchpunch_0: -7254096423852549782
+      karateman_combo_crouchpunch_1: -6978771497096664978
+      karateman_combo_kick_0: 917280813823694816
+      karateman_combo_kick_1: 5131679410369794127
+      karateman_combo_miss_0: 6306676755524619996
+      karateman_combo_miss_1: -4526798831361396534
+      karateman_combo_miss_2: 1589152150856737785
+      karateman_cookingpot: 6243727673011286339
+      karateman_cookingpot_lid: 561377664857987667
+      karateman_fastfx_0: 5315918898556016567
+      karateman_fastfx_1: -678416614439994711
+      karateman_fastfx_2: 8943939637534532364
+      karateman_fastfx_3: 1035685740351643046
+      karateman_fire: 8584846578326269484
+      karateman_hand: 8740903891819718386
+      karateman_head_0: 4149267612586432800
+      karateman_head_1: 3060967690338004721
+      karateman_head_2: 4866608027561499029
+      karateman_head_3: -467025217388406215
+      karateman_head_4: 2844288917660902187
+      karateman_head_5: -4811965814584269873
+      karateman_head_6: -3340168359885296488
+      karateman_head_7: 3379959602278205485
+      karateman_head_8: 8497358629359107968
+      karateman_hiteffect_0: -348202296468608855
+      karateman_kick2: 8122102479721970976
+      karateman_kick_: 6513971964286789039
+      karateman_kick_0: -2527936805555730590
+      karateman_kick_1: 6207558157275519107
+      karateman_kick_2: 3928519723912928495
+      karateman_kick_3: 8471165906507836423
+      karateman_kick_leg_0: -8214882660725976715
+      karateman_kick_leg_1: 2524486813432512213
+      karateman_kick_leg_2: -3384082045092113307
+      karateman_kick_prepare_0: 4054907966118216257
+      karateman_kick_prepare_1: -6472041035611429736
+      karateman_kick_prepare_2: 2567461309920692425
+      karateman_leftleg_crouch: 4620539621551708755
+      karateman_legleft: 2707178694875014872
+      karateman_legright: -873041338737308662
+      karateman_object_shadow: -270761472599659251
+      karateman_pot: 8050164209934277894
+      karateman_rainy_0: -1722264585180191320
+      karateman_rainy_1: 3029966505128252368
+      karateman_rainy_2: -5751451155775978979
+      karateman_rainy_3: -2448975393399883157
+      karateman_rightleg_crouch: 5780560081501848171
+      karateman_rock: -4108414130637688947
+      karateman_shadow: -3151023100055821189
+      karateman_snow: 2973732670430313046
+      karateman_tacobell: -6283416824598814145
+      karateman_torso_0: 8269274250676571007
+      karateman_torso_1: 9058691655761496151
+      karateman_torso_2: -2636709571086610862
   spritePackingTag: 
   pSDRemoveMatte: 0
   pSDShowRemoveMatteOption: 0

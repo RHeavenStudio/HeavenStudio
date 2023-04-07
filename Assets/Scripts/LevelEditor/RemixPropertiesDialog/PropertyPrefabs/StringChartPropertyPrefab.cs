@@ -28,7 +28,7 @@ namespace HeavenStudio.Editor
                 _ =>
                     Editor.instance.editingInputField = true
             );
-            inputFieldString.onEndEdit.AddListener(
+            inputFieldString.onValueChanged.AddListener(
                 _ =>
                 {;
                     parameterManager.chart[propertyName] = inputFieldString.text;

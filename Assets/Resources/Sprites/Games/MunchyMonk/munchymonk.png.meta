@@ -219,7 +219,7 @@ TextureImporter:
       213: -545335013845175510
     second: munchymonk_71
   externalObjects: {}
-  serializedVersion: 11
+  serializedVersion: 12
   mipmaps:
     mipMapMode: 0
     enableMipMap: 0
@@ -240,6 +240,7 @@ TextureImporter:
   streamingMipmaps: 0
   streamingMipmapsPriority: 0
   vTOnly: 0
+  ignoreMasterTextureLimit: 0
   grayScaleToAlpha: 0
   generateCubemap: 6
   cubemapConvolution: 0
@@ -278,6 +279,7 @@ TextureImporter:
   textureFormatSet: 0
   ignorePngGamma: 0
   applyGammaDecoding: 0
+  cookieLightType: 1
   platformSettings:
   - serializedVersion: 3
     buildTarget: DefaultTexturePlatform
@@ -293,6 +295,18 @@ TextureImporter:
     forceMaximumCompressionQuality_BC6H_BC7: 0
   - serializedVersion: 3
     buildTarget: Standalone
+    maxTextureSize: 4096
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 3
+    buildTarget: Server
     maxTextureSize: 4096
     resizeAlgorithm: 0
     textureFormat: -1
@@ -1786,6 +1800,77 @@ TextureImporter:
     edges: []
     weights: []
     secondaryTextures: []
+    nameFileIdTable:
+      munchymonk_0: 4729902717272003802
+      munchymonk_1: -8560562273732883090
+      munchymonk_10: -1441660721830477300
+      munchymonk_11: 8640846828575382696
+      munchymonk_12: 3634350262681814463
+      munchymonk_13: -1421327939087735319
+      munchymonk_14: 3825228313935230952
+      munchymonk_15: -2466063839011795318
+      munchymonk_16: -6264046929643617538
+      munchymonk_17: 8946524613864947859
+      munchymonk_18: 2720931383774515318
+      munchymonk_19: -6038894927061569683
+      munchymonk_2: -4578811343220653167
+      munchymonk_20: 7784944344224955730
+      munchymonk_21: 2096894050778430725
+      munchymonk_22: -8344672138057900007
+      munchymonk_23: -8318707732888006960
+      munchymonk_24: 5227626678107779548
+      munchymonk_25: 1942295068727866544
+      munchymonk_26: 4945779879423484503
+      munchymonk_27: -5862641300611582602
+      munchymonk_28: 8996454607634584045
+      munchymonk_29: 8573497729491185820
+      munchymonk_3: 6395880424518939546
+      munchymonk_30: -5311863495562065040
+      munchymonk_31: -5838665192725735556
+      munchymonk_32: 5569922012023850821
+      munchymonk_33: -8254151228079209624
+      munchymonk_34: -4701522111409369297
+      munchymonk_35: -5378987817219677441
+      munchymonk_36: 683511740668452599
+      munchymonk_37: -5412363002043104757
+      munchymonk_38: -2379493398470532050
+      munchymonk_39: 766367955516918864
+      munchymonk_4: -4789730731143893645
+      munchymonk_40: 4821304094088801921
+      munchymonk_41: -6238404549004883328
+      munchymonk_42: 9192824955486879800
+      munchymonk_43: -935777264321587516
+      munchymonk_44: -4567597783422742960
+      munchymonk_45: 6780217180063249097
+      munchymonk_46: 4414059890079411652
+      munchymonk_47: -2434628416656219332
+      munchymonk_48: -8312228016207837643
+      munchymonk_49: 4972491252150458244
+      munchymonk_5: -3127631648944981523
+      munchymonk_50: 3618119950039578974
+      munchymonk_51: -6050273488799331327
+      munchymonk_52: 4078123855150933827
+      munchymonk_53: -4897778990156059488
+      munchymonk_54: -8149624513672859451
+      munchymonk_55: 4929070116806303725
+      munchymonk_56: 1030990730640347943
+      munchymonk_57: 2646597796126187957
+      munchymonk_58: 4814217994961053678
+      munchymonk_59: -8439069488565854616
+      munchymonk_6: 3453118830745408511
+      munchymonk_60: 7953426270202603213
+      munchymonk_61: -1431757794917541995
+      munchymonk_62: -6682347140601531886
+      munchymonk_65: -7446309801755540680
+      munchymonk_66: 1229315381013837462
+      munchymonk_67: 8076489721182815601
+      munchymonk_68: -3430361647714159248
+      munchymonk_69: 1605976402678978084
+      munchymonk_7: 3328913364589298666
+      munchymonk_70: 5745174989593773125
+      munchymonk_71: -545335013845175510
+      munchymonk_8: 973171913498445425
+      munchymonk_9: 4005797515126575946
   spritePackingTag: 
   pSDRemoveMatte: 0
   pSDShowRemoveMatteOption: 0

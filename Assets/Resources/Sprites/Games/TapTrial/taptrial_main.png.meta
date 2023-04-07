@@ -189,7 +189,7 @@ TextureImporter:
       213: -7678268188519191230
     second: giraffe_nose_hole
   externalObjects: {}
-  serializedVersion: 11
+  serializedVersion: 12
   mipmaps:
     mipMapMode: 0
     enableMipMap: 0
@@ -210,6 +210,7 @@ TextureImporter:
   streamingMipmaps: 0
   streamingMipmapsPriority: 0
   vTOnly: 0
+  ignoreMasterTextureLimit: 0
   grayScaleToAlpha: 0
   generateCubemap: 6
   cubemapConvolution: 0
@@ -248,6 +249,7 @@ TextureImporter:
   textureFormatSet: 0
   ignorePngGamma: 0
   applyGammaDecoding: 0
+  cookieLightType: 1
   platformSettings:
   - serializedVersion: 3
     buildTarget: DefaultTexturePlatform
@@ -276,6 +278,18 @@ TextureImporter:
   - serializedVersion: 3
     buildTarget: WebGL
     maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 2
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 3
+    buildTarget: Server
+    maxTextureSize: 4096
     resizeAlgorithm: 0
     textureFormat: -1
     textureCompression: 2
@@ -1600,6 +1614,69 @@ TextureImporter:
     edges: []
     weights: []
     secondaryTextures: []
+    nameFileIdTable:
+      giraffe_ear_0: 2673595073394071362
+      giraffe_ear_1: 1365234958522788991
+      giraffe_eye: -2756581494069011840
+      giraffe_eyebrow: -4689371290967043766
+      giraffe_head: -76560576393484515
+      giraffe_neck: 480321655647508535
+      giraffe_nose_edge: 5866540065722323795
+      giraffe_nose_hole: -7678268188519191230
+      girl_arm_0: -8666509902388274777
+      girl_arm_1: 2951653537623049413
+      girl_arm_10: -3650276750832914163
+      girl_arm_11: 8092767877853774024
+      girl_arm_2: -2708396751216964109
+      girl_arm_3: -4529232977001554219
+      girl_arm_4: -6047886221388014914
+      girl_arm_5: 8743285277506368957
+      girl_arm_6: 1180165718332617063
+      girl_arm_7: -7079403982412870190
+      girl_arm_8: -5224467793449126390
+      girl_arm_9: 5578942933365667330
+      girl_face_0: -1682560553822806952
+      girl_face_1: -2272842664331572570
+      girl_face_2: 1376729854166124750
+      girl_face_3: -936478626814612082
+      girl_hair: 6134836123194111233
+      girl_head_0: -7835416212366037082
+      girl_head_1: 346241052916257404
+      girl_leg_0: 1090177971791568880
+      girl_leg_1: -7867131878843523510
+      girl_leg_2: 8685857731747134815
+      girl_leg_3: 2568926833969660165
+      girl_leg_4: 2690457177157338859
+      girl_leg_5: 7568949411154871539
+      girl_leg_6: 6143954810424981235
+      girl_leg_7: 5525707023339051687
+      girl_makeup: -4829944558835729872
+      girl_torso_0: -7553564719194951027
+      girl_torso_1: -259018671547105353
+      girl_torso_2: 8505941515104538071
+      monkey_arm_0: -1232421390090306195
+      monkey_arm_1: -2731842770720931295
+      monkey_body_0: -5214005222798379099
+      monkey_body_1: -4088209123984782939
+      monkey_body_10: 3528962113398227717
+      monkey_body_11: 4770336908289556863
+      monkey_body_2: -5870761649555236454
+      monkey_body_3: 3939009573689020027
+      monkey_body_4: -8691080650097558834
+      monkey_body_5: -7735096915012262978
+      monkey_body_6: 7591580469224320949
+      monkey_body_7: 143400338953310854
+      monkey_body_8: 5334730605745517155
+      monkey_body_9: 5813487705178362990
+      monkey_hand: -895265214290180355
+      monkey_head_0: 5680402139066900878
+      monkey_head_1: -5078247233643769899
+      monkey_head_2: 5301960433350598139
+      monkey_head_3: -1984785994430372763
+      monkey_mouth_0: -8243865474680975249
+      monkey_mouth_1: 5275794459429879604
+      tap_effect: -465010420825850716
+      tap_effect_star: 7599070281986493235
   spritePackingTag: 
   pSDRemoveMatte: 0
   pSDShowRemoveMatteOption: 0

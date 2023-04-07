@@ -150,7 +150,7 @@ TextureImporter:
       213: 4270001323932885020
     second: interpreter_obj_rot_28
   externalObjects: {}
-  serializedVersion: 11
+  serializedVersion: 12
   mipmaps:
     mipMapMode: 0
     enableMipMap: 0
@@ -171,6 +171,7 @@ TextureImporter:
   streamingMipmaps: 0
   streamingMipmapsPriority: 0
   vTOnly: 0
+  ignoreMasterTextureLimit: 0
   grayScaleToAlpha: 0
   generateCubemap: 6
   cubemapConvolution: 0
@@ -209,6 +210,7 @@ TextureImporter:
   textureFormatSet: 0
   ignorePngGamma: 0
   applyGammaDecoding: 0
+  cookieLightType: 1
   platformSettings:
   - serializedVersion: 3
     buildTarget: DefaultTexturePlatform
@@ -236,6 +238,18 @@ TextureImporter:
     forceMaximumCompressionQuality_BC6H_BC7: 0
   - serializedVersion: 3
     buildTarget: Android
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 3
+    buildTarget: Server
     maxTextureSize: 2048
     resizeAlgorithm: 0
     textureFormat: -1
@@ -412,7 +426,7 @@ TextureImporter:
       tessellationDetail: -1
       bones: []
       spriteID: 41d7f5086ab4e2f60800000000000000
-      internalID: 8011423965629086996
+      internalID: 8977387651402933149
       vertices: []
       indices: 
       edges: []
@@ -790,7 +804,7 @@ TextureImporter:
       tessellationDetail: -1
       bones: []
       spriteID: c10a777a497124b30800000000000000
-      internalID: 4270001323932885020
+      internalID: -1972846587572288716
       vertices: []
       indices: 
       edges: []
@@ -1162,6 +1176,38 @@ TextureImporter:
     edges: []
     weights: []
     secondaryTextures: []
+    nameFileIdTable:
+      alien_0: -7129985757264127023
+      alien_2: -1098660646914058026
+      alien_3: 8475141113199897881
+      alien_Miss_brow: 3279483109486195302
+      alien_Miss_eyes_L: -2666813748081079827
+      alien_Miss_eyes_R: 2537842466650522060
+      alien_Miss_mouth: 8030773482631099838
+      alien_eye: 2248410819052320962
+      alien_eyes: -3816495869400871340
+      alien_left_arm: 8977387651402933149
+      alien_legs: 5020440671439336802
+      alien_miss_arm: 5291259064932954232
+      alien_mouth_0: -3035320832189583240
+      alien_mouth_1: 181945182648158444
+      alien_mouth_2: 6396321707674816580
+      alien_mouth_4: 7085123716216026556
+      alien_mouth_5: 7320234554424209522
+      alien_right_arm: -3428225047584607535
+      alien_turnover_arm: -1972846587572288716
+      translator_0: 3558353497143818176
+      translator_bowl: 2589910623789939879
+      translator_bowl_flare: 2267608456244007061
+      translator_head_0: 4451961617514375761
+      translator_head_1: 7144353285981583256
+      translator_idle_neutral: -5625640928128129307
+      translator_idle_smile: 7589526580095081771
+      translator_left_arm: 3260307773707153200
+      translator_mouth_0: 5765895279967760597
+      translator_mouth_1: 1891658502486252124
+      translator_right_arm: 2512730673018478279
+      whosh: 8055506432240550593
   spritePackingTag: 
   pSDRemoveMatte: 0
   pSDShowRemoveMatteOption: 0

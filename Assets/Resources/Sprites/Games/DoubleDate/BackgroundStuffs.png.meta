@@ -93,7 +93,7 @@ TextureImporter:
       213: 471275613544938806
     second: TreeShadow_1
   externalObjects: {}
-  serializedVersion: 11
+  serializedVersion: 12
   mipmaps:
     mipMapMode: 0
     enableMipMap: 0
@@ -114,6 +114,7 @@ TextureImporter:
   streamingMipmaps: 0
   streamingMipmapsPriority: 0
   vTOnly: 0
+  ignoreMasterTextureLimit: 0
   grayScaleToAlpha: 0
   generateCubemap: 6
   cubemapConvolution: 0
@@ -152,6 +153,7 @@ TextureImporter:
   textureFormatSet: 0
   ignorePngGamma: 0
   applyGammaDecoding: 0
+  cookieLightType: 1
   platformSettings:
   - serializedVersion: 3
     buildTarget: DefaultTexturePlatform
@@ -179,6 +181,18 @@ TextureImporter:
     forceMaximumCompressionQuality_BC6H_BC7: 0
   - serializedVersion: 3
     buildTarget: WebGL
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 3
+    buildTarget: Server
     maxTextureSize: 2048
     resizeAlgorithm: 0
     textureFormat: -1
@@ -832,6 +846,37 @@ TextureImporter:
     edges: []
     weights: []
     secondaryTextures: []
+    nameFileIdTable:
+      BackgroundStuffs_26: -8917727120351276589
+      BenchShadow: -7658259778974664015
+      BottomSection: -2183487432715666897
+      CloudBig: -5389290914630838298
+      CloudSmall: -2993642936079139595
+      GradientBackground: -3642036459305862908
+      GradientIntro: 8188186736342864057
+      Leaf: 3234666907076744828
+      OrangeColor: -7537086625454320379
+      School: 8035776228164042473
+      TreeShadow_1: 471275613544938806
+      TreeShadow_2: 6897222020553889196
+      TreeShadow_3: 3394962189828883030
+      WhitButterfly_1: -418361036620737776
+      WhitButterfly_2: 6969603088398452302
+      WhitButterfly_3: 5416217770464474296
+      WhitButterfly_5: 3567166853366906182
+      WhitButterfly_6: -3885387492849114584
+      WhitButterfly_7: 8955798168525251696
+      WhitButterfly_8: 1067640931402255031
+      WhitButterfly_9: -1686646077985068754
+      YelButterfly_1: -3822715106614595124
+      YelButterfly_2: 4445103687248729998
+      YelButterfly_3: -3834191621005131079
+      YelButterfly_4: 8670339520048406662
+      YelButterfly_5: 3800982770954899463
+      YelButterfly_6: 8740589133797757656
+      YelButterfly_7: -1348292724443166489
+      YelButterfly_8: 2723614535909326082
+      YelButterfly_9: -4896779724645461058
   spritePackingTag: 
   pSDRemoveMatte: 0
   pSDShowRemoveMatteOption: 0

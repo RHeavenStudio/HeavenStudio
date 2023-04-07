@@ -69,7 +69,7 @@ TextureImporter:
       213: -2018968827443427868
     second: sprites_21
   externalObjects: {}
-  serializedVersion: 11
+  serializedVersion: 12
   mipmaps:
     mipMapMode: 0
     enableMipMap: 0
@@ -90,6 +90,7 @@ TextureImporter:
   streamingMipmaps: 0
   streamingMipmapsPriority: 0
   vTOnly: 0
+  ignoreMasterTextureLimit: 0
   grayScaleToAlpha: 0
   generateCubemap: 6
   cubemapConvolution: 0
@@ -128,6 +129,7 @@ TextureImporter:
   textureFormatSet: 0
   ignorePngGamma: 0
   applyGammaDecoding: 0
+  cookieLightType: 1
   platformSettings:
   - serializedVersion: 3
     buildTarget: DefaultTexturePlatform
@@ -143,6 +145,18 @@ TextureImporter:
     forceMaximumCompressionQuality_BC6H_BC7: 0
   - serializedVersion: 3
     buildTarget: Standalone
+    maxTextureSize: 4096
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 3
+    buildTarget: Server
     maxTextureSize: 4096
     resizeAlgorithm: 0
     textureFormat: -1
@@ -628,6 +642,29 @@ TextureImporter:
     edges: []
     weights: []
     secondaryTextures: []
+    nameFileIdTable:
+      sprites_0: 6128299156075563123
+      sprites_1: 3386662938922423588
+      sprites_10: -2950032572879587788
+      sprites_11: -7263262467203474343
+      sprites_12: 7010617245534139418
+      sprites_13: -7039003182478323700
+      sprites_14: -5559150632450785296
+      sprites_15: -8987557684774062561
+      sprites_16: -6751597515445260605
+      sprites_17: 5182299067807867188
+      sprites_18: -2408033011751398356
+      sprites_19: -5717795354444781658
+      sprites_2: -6110656803992641779
+      sprites_20: -1722539767903399326
+      sprites_21: -2018968827443427868
+      sprites_3: 8553092956536608252
+      sprites_4: 6708733205153277002
+      sprites_5: 6813553822765877458
+      sprites_6: -5082647686934749709
+      sprites_7: -2423230811885516303
+      sprites_8: 1211998406744890917
+      sprites_9: 6155212226941906339
   spritePackingTag: 
   pSDRemoveMatte: 0
   pSDShowRemoveMatteOption: 0

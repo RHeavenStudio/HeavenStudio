@@ -144,7 +144,7 @@ TextureImporter:
       213: -201528830989409913
     second: cadetHeadRight2
   externalObjects: {}
-  serializedVersion: 11
+  serializedVersion: 12
   mipmaps:
     mipMapMode: 0
     enableMipMap: 0
@@ -165,6 +165,7 @@ TextureImporter:
   streamingMipmaps: 0
   streamingMipmapsPriority: 0
   vTOnly: 0
+  ignoreMasterTextureLimit: 0
   grayScaleToAlpha: 0
   generateCubemap: 6
   cubemapConvolution: 0
@@ -203,6 +204,7 @@ TextureImporter:
   textureFormatSet: 0
   ignorePngGamma: 0
   applyGammaDecoding: 0
+  cookieLightType: 1
   platformSettings:
   - serializedVersion: 3
     buildTarget: DefaultTexturePlatform
@@ -230,6 +232,18 @@ TextureImporter:
     forceMaximumCompressionQuality_BC6H_BC7: 0
   - serializedVersion: 3
     buildTarget: WebGL
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 3
+    buildTarget: Server
     maxTextureSize: 2048
     resizeAlgorithm: 0
     textureFormat: -1
@@ -1240,6 +1254,54 @@ TextureImporter:
     edges: []
     weights: []
     secondaryTextures: []
+    nameFileIdTable:
+      cadetArmClapA: -8979018074309343930
+      cadetArmClapB: -599878782667346867
+      cadetArmNormal: 6271359101650170431
+      cadetArmPointA0: -5533882306098175575
+      cadetArmPointA2: 5722241864647877534
+      cadetArmPointA3: -5983741773006233269
+      cadetArmPointB: -1986584162498000961
+      cadetArmPointC: -5389153093073315046
+      cadetArmRaiseUpA0: -291518656075743311
+      cadetArmRaiseUpB: -5761476485571466652
+      cadetArmRaiseUpC: 4255857739320035051
+      cadetArrmRaiseUpA1: 1865138272167363049
+      cadetHeadLeft0: -1266579149246020159
+      cadetHeadLeft1: -7282669741714801574
+      cadetHeadLeft2: -1931712940183382111
+      cadetHeadNormal: -611560658681698378
+      cadetHeadRight0: -2974783653944607700
+      cadetHeadRight1: 4383423138116605583
+      cadetHeadRight2: -201528830989409913
+      cadetLegBeat0: 4263930677525550148
+      cadetLegBeat1: 2172702904053088867
+      cadetLegBeat2: 2168451732842096726
+      cadetLegBeat3: -1301704698906724469
+      cadetLegNormal: 1876675414622521761
+      cadetLegRaiseUp0: 5879422089753843293
+      cadetLegRaiseUp1: 7542399567275105427
+      cadetLegRaiseUp2: 6725708096483345472
+      cadetLegRaiseUp3: -3927532108159482784
+      cadetLegRaiseUp4: -8491639640061945931
+      cadetNeck: -7998149598989480986
+      legPointA: 6529457781092394117
+      legPointB: 2962665779883943930
+      sargeBody: 1858988956656276017
+      sargeHeadAngry: 8520552564985074897
+      sargeHeadIrritate: 5111450833538845265
+      sargeHeadNormal: 1304300742628370139
+      sargeHeadTalk: -6800957712821089183
+      shadow: -4219793607557460049
+      steam0: 3985574290512269123
+      steam1: -7450664065186068322
+      steam2: -6100978567398645689
+      steam3: -1273389638560768366
+      steam4: -6046280397901565423
+      steam5: -5150969206053543869
+      torsoNormal: 9063607464200046497
+      torsoPoint: -854871192670245052
+      torsoRaiseUp: 3603139382469830057
   spritePackingTag: 
   pSDRemoveMatte: 0
   pSDShowRemoveMatteOption: 0

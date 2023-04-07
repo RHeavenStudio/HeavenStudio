@@ -147,7 +147,7 @@ TextureImporter:
       213: -3474480765621482206
     second: spacegramps_47
   externalObjects: {}
-  serializedVersion: 11
+  serializedVersion: 12
   mipmaps:
     mipMapMode: 0
     enableMipMap: 0
@@ -168,6 +168,7 @@ TextureImporter:
   streamingMipmaps: 0
   streamingMipmapsPriority: 0
   vTOnly: 0
+  ignoreMasterTextureLimit: 0
   grayScaleToAlpha: 0
   generateCubemap: 6
   cubemapConvolution: 0
@@ -206,6 +207,7 @@ TextureImporter:
   textureFormatSet: 0
   ignorePngGamma: 0
   applyGammaDecoding: 0
+  cookieLightType: 1
   platformSettings:
   - serializedVersion: 3
     buildTarget: DefaultTexturePlatform
@@ -221,6 +223,18 @@ TextureImporter:
     forceMaximumCompressionQuality_BC6H_BC7: 0
   - serializedVersion: 3
     buildTarget: Standalone
+    maxTextureSize: 8192
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 0
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 3
+    buildTarget: Server
     maxTextureSize: 8192
     resizeAlgorithm: 0
     textureFormat: -1
@@ -1252,6 +1266,55 @@ TextureImporter:
     edges: []
     weights: []
     secondaryTextures: []
+    nameFileIdTable:
+      spacegramps_0: 525108090011995669
+      spacegramps_1: 4388841935670901045
+      spacegramps_10: 3919185233673696631
+      spacegramps_11: 2635949309798051055
+      spacegramps_12: -314391804136723668
+      spacegramps_13: 8053369120001483623
+      spacegramps_14: 202624707901264483
+      spacegramps_15: 5006271520803848518
+      spacegramps_16: 2136865505333728436
+      spacegramps_17: -6490422011060090823
+      spacegramps_18: -893389265649381766
+      spacegramps_19: -4634575419401444730
+      spacegramps_2: 2452353995179746314
+      spacegramps_20: -7921287318502908024
+      spacegramps_21: -4225095597382256079
+      spacegramps_22: 6600989149930266752
+      spacegramps_23: 2903038126903611177
+      spacegramps_24: -3530066863795357316
+      spacegramps_25: 3263394184023371208
+      spacegramps_26: -296956806467566194
+      spacegramps_27: -634076525659673900
+      spacegramps_28: 2832979455323152866
+      spacegramps_29: -566157342920898258
+      spacegramps_3: 6091186081733272511
+      spacegramps_30: 8974366718358970063
+      spacegramps_31: -8358951180759158878
+      spacegramps_32: 1051085966561652700
+      spacegramps_33: 3533450744755380308
+      spacegramps_34: -4468149627965454583
+      spacegramps_35: 1229488880753908326
+      spacegramps_36: -8531111984256748091
+      spacegramps_37: 5383648890981843266
+      spacegramps_38: 4487749757475609660
+      spacegramps_39: 4126582637997988561
+      spacegramps_4: -3197477632711573357
+      spacegramps_40: 1114493384389453619
+      spacegramps_41: -7149347546007959777
+      spacegramps_42: -7516623424052900316
+      spacegramps_43: -2710652240499161525
+      spacegramps_44: 6454563526114734131
+      spacegramps_45: -975926032766324863
+      spacegramps_46: -3755696110559658519
+      spacegramps_47: -3474480765621482206
+      spacegramps_5: -6342293659487224043
+      spacegramps_6: 6382771647265320423
+      spacegramps_7: -4494653126681764083
+      spacegramps_8: 2373331923517256003
+      spacegramps_9: -5348857787582216128
   spritePackingTag: 
   pSDRemoveMatte: 0
   pSDShowRemoveMatteOption: 0

@@ -81,7 +81,7 @@ TextureImporter:
       213: -6393836053840967818
     second: studenthandturned
   externalObjects: {}
-  serializedVersion: 11
+  serializedVersion: 12
   mipmaps:
     mipMapMode: 0
     enableMipMap: 0
@@ -102,6 +102,7 @@ TextureImporter:
   streamingMipmaps: 0
   streamingMipmapsPriority: 0
   vTOnly: 0
+  ignoreMasterTextureLimit: 0
   grayScaleToAlpha: 0
   generateCubemap: 6
   cubemapConvolution: 0
@@ -140,6 +141,7 @@ TextureImporter:
   textureFormatSet: 0
   ignorePngGamma: 0
   applyGammaDecoding: 0
+  cookieLightType: 1
   platformSettings:
   - serializedVersion: 3
     buildTarget: DefaultTexturePlatform
@@ -167,6 +169,18 @@ TextureImporter:
     forceMaximumCompressionQuality_BC6H_BC7: 0
   - serializedVersion: 3
     buildTarget: WebGL
+    maxTextureSize: 4096
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 3
+    buildTarget: Server
     maxTextureSize: 4096
     resizeAlgorithm: 0
     textureFormat: -1
@@ -736,6 +750,33 @@ TextureImporter:
     edges: []
     weights: []
     secondaryTextures: []
+    nameFileIdTable:
+      knobdown: -8092904091588049767
+      knobleft: 396345106042561685
+      knobright: 9146586695812635449
+      student_14: 3478071388951929821
+      student_15: -6004627469902265168
+      studentarm1: -8624972230825856309
+      studentarm2: 5817979385575274063
+      studentarm3: -2717095282070868293
+      studentarm4: -6154985277085878723
+      studentarm5: 9014742649730537116
+      studentdownarm: -113045151481706511
+      studentdownarm2: 127797331518137050
+      studenthand1: -3590603051934361286
+      studenthand2: -7280605794216780270
+      studenthand3: -1108324220791026482
+      studenthand4: -84044037535237813
+      studenthand6: 7890052151456789346
+      studenthandturned: -6393836053840967818
+      studentheaddown: 3728041805212797900
+      studentheadnormal: -4958015517820710088
+      studentheadup: -4696609225389388944
+      studentsmear: 6775225630280950889
+      studenttorsodown: -3886670566983941884
+      studenttorsolow: 126077772249191685
+      studenttorsonormal: -5664848765385770971
+      studentuparm: -474008126291752816
   spritePackingTag: 
   pSDRemoveMatte: 0
   pSDShowRemoveMatteOption: 0

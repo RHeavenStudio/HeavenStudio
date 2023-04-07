@@ -120,7 +120,7 @@ TextureImporter:
       213: 7434857099519838704
     second: WhiteLine
   externalObjects: {}
-  serializedVersion: 11
+  serializedVersion: 12
   mipmaps:
     mipMapMode: 0
     enableMipMap: 0
@@ -141,6 +141,7 @@ TextureImporter:
   streamingMipmaps: 0
   streamingMipmapsPriority: 0
   vTOnly: 0
+  ignoreMasterTextureLimit: 0
   grayScaleToAlpha: 0
   generateCubemap: 6
   cubemapConvolution: 0
@@ -179,6 +180,7 @@ TextureImporter:
   textureFormatSet: 0
   ignorePngGamma: 0
   applyGammaDecoding: 0
+  cookieLightType: 1
   platformSettings:
   - serializedVersion: 3
     buildTarget: DefaultTexturePlatform
@@ -194,6 +196,18 @@ TextureImporter:
     forceMaximumCompressionQuality_BC6H_BC7: 0
   - serializedVersion: 3
     buildTarget: Standalone
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 3
+    buildTarget: Server
     maxTextureSize: 2048
     resizeAlgorithm: 0
     textureFormat: -1
@@ -1036,6 +1050,46 @@ TextureImporter:
     edges: []
     weights: []
     secondaryTextures: []
+    nameFileIdTable:
+      Blue: 1062269810732555972
+      BlueLine: -9042170184064539081
+      Body: -3560064968627218467
+      BodyWithArm: -4927946823433664293
+      BowTie: 3828587110549504312
+      Circle: -5156793050639147693
+      ClosedHand: 5131767080117870207
+      Green: 8647338324503476925
+      GreenLine: -5227375104380722487
+      GreenStar: -8181666410504954602
+      Happy: 6110253017641452992
+      Hold: -1762085704228125515
+      Impact: 4407728521909085744
+      LOL: -5941161254981692672
+      LeftArm0: -9026163962924897797
+      LeftArm1: -4273869372216412706
+      LeftArm2: -7042769613541943922
+      Line: 5226593634641200439
+      Neutral: 147607938180305327
+      OkHand: 4700340230035605756
+      Okay: -6592633296647391623
+      OpenHand: 7900643908323380991
+      PartyPopper: 4955306556500271638
+      Pink: -1059424943838716558
+      PinkLine: 3792442525062466833
+      Red: 816175741428972422
+      RedLine: -6496916516615256959
+      RedStar: 1172231600249791410
+      RightArm: 7610000092950350382
+      SonicWaves: -3549055555932706852
+      Spit: -6278200987685570407
+      Ugh: -2828566827714411145
+      Unused: 8640930121710291624
+      WavyLine: 639579161685108914
+      White: 7484638988400074012
+      WhiteLin: -4850809862675842122
+      WhiteLine: 7434857099519838704
+      WhiteStar: -6953182587044513800
+      YellowStar: -7766779695147229891
   spritePackingTag: 
   pSDRemoveMatte: 0
   pSDShowRemoveMatteOption: 0
