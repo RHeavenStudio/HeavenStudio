@@ -226,6 +226,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4663308307769764739}
+  - component: {fileID: 4407928154025069004}
   m_Layer: 0
   m_Name: Holder
   m_TagString: Untagged
@@ -257,6 +258,27 @@ Transform:
   m_Father: {fileID: 2966367777699113700}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!95 &4407928154025069004
+Animator:
+  serializedVersion: 5
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1183102151170636198}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: 02a8d7c380af5474ca2f7758bc484ace, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorStateOnDisable: 0
+  m_WriteDefaultValuesOnDisable: 0
 --- !u!1 &1346366305652568855
 GameObject:
   m_ObjectHideFlags: 0
@@ -1201,6 +1223,7 @@ MonoBehaviour:
   player: 0
   zValue: 0
   ball: {fileID: 0}
+  enterExitAnim: {fileID: 4407928154025069004}
 --- !u!95 &2873739330524721184
 Animator:
   serializedVersion: 5
@@ -1507,6 +1530,7 @@ MonoBehaviour:
   player: 1
   zValue: 0
   ball: {fileID: 0}
+  enterExitAnim: {fileID: 4619565792654871070}
 --- !u!95 &8083744449129749329
 Animator:
   serializedVersion: 5
@@ -2258,6 +2282,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 7679098324972434340}
+  - component: {fileID: 4619565792654871070}
   m_Layer: 0
   m_Name: Holder
   m_TagString: Untagged
@@ -2289,6 +2314,27 @@ Transform:
   m_Father: {fileID: 482351987616570803}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!95 &4619565792654871070
+Animator:
+  serializedVersion: 5
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4832865564766322567}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: 02a8d7c380af5474ca2f7758bc484ace, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorStateOnDisable: 0
+  m_WriteDefaultValuesOnDisable: 0
 --- !u!1 &5041886038678738707
 GameObject:
   m_ObjectHideFlags: 0

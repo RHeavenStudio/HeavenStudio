@@ -32,11 +32,16 @@ namespace HeavenStudio.Games.Loaders
                 },
                 new GameAction("npc kickers enter or exit", "NPC Kickers Enter or Exit")
                 {
-                    function = delegate { var e = eventCaller.currentEntity; },
+                    function = delegate { var e = eventCaller.currentEntity; SpaceSoccer.instance.NPCKickersEnterOrExit(e.beat, e.length, e["choice"], e["ease"], e["amount"], e["x"], e["y"], e["z"]); },
                     defaultLength = 4f,
                     parameters = new List<Param>()
                     {
-                        new Param("toggle", false, "Should Exit?", "Whether the kickers should exit or enter.")
+                        new Param("choice", SpaceSoccer.AnimationToPlay.Enter, "Enter Or Exit", "Whether the kickers should exit or enter."),
+                        new Param("ease", EasingFunction.Ease.Linear, "Ease", "The Ease of the entering or exiting."),
+                        new Param("amount", new EntityTypes.Integer(2, 30, 5), "Amount", "Amount of Space Kickers."),
+                        new Param("x", new EntityTypes.Float(-30, 30, 1.75f), "X Distance", "How much distance should there be between the space kickers on the x axis?"),
+                        new Param("y", new EntityTypes.Float(-30, 30, 0.25f), "Y Distance", "How much distance should there be between the space kickers on the y axis?"),
+                        new Param("z", new EntityTypes.Float(-30, 30, 0.75f), "Z Distance", "How much distance should there be between the space kickers on the z axis?"),
                     },
                     resizable = true
                 },
@@ -72,7 +77,20 @@ namespace HeavenStudio.Games.Loaders
                 },
                 new GameAction("npc kickers instant enter or exit", "NPC Kickers Instant Enter or Exit")
                 {
-                    function = delegate { var e = eventCaller.currentEntity; },
+                    function = delegate 
+                    { 
+                        var e = eventCaller.currentEntity;
+                        int choice;
+                        if (e["toggle"])
+                        {
+                            choice = (int)SpaceSoccer.AnimationToPlay.Exit;
+                        }
+                        else
+                        {
+                            choice = (int)SpaceSoccer.AnimationToPlay.Enter;
+                        }
+                        SpaceSoccer.instance.NPCKickersEnterOrExit(e.beat, e.length, choice, (int)EasingFunction.Ease.Instant, 5, 1.75f, 0.25f, 0.75f);
+                    },
                     defaultLength = 0.5f,
                     parameters = new List<Param>()
                     {
@@ -93,6 +111,11 @@ namespace HeavenStudio.Games
 
     public class SpaceSoccer : Minigame
     {
+        public enum AnimationToPlay
+        {
+            Enter = 0,
+            Exit = 1
+        }
         private static Color _defaultBGColor;
         public static Color defaultBGColor
         {
@@ -110,7 +133,7 @@ namespace HeavenStudio.Games
         [SerializeField] private SpriteRenderer bg;
 
         [Header("Properties")]
-        [SerializeField] private bool ballDispensed; //unused
+        public bool ballDispensed; //unused
         float scrollLengthX = 22f;
         float scrollLengthY = 6f;
         Tween bgColorTween;
@@ -121,7 +144,6 @@ namespace HeavenStudio.Games
         private void Awake()
         {
             instance = this;
-            UpdateSpaceKickers(5);
         }
 
         private void Update()
@@ -131,6 +153,26 @@ namespace HeavenStudio.Games
             float normalizedY = cond.GetPositionFromBeat(0, scrollLengthY);
             backgroundSprite.NormalizedX = -normalizedX;
             backgroundSprite.NormalizedY = -normalizedY;
+        }
+
+        public void NPCKickersEnterOrExit(float beat, float length, int animToPut, int easeToPut, int amount, float xDistance, float yDistance, float zDistance)
+        {
+            UpdateSpaceKickers(amount, xDistance, yDistance, zDistance);
+            string animName = "Enter";
+            switch (animToPut)
+            {
+                case (int)AnimationToPlay.Enter:
+                    animName = "Enter";
+                    break;
+                case (int)AnimationToPlay.Exit:
+                    animName = "Exit";
+                    break;
+            }
+            foreach (var kicker in kickers)
+            {
+                if (kicker.player) continue;
+                kicker.SetAnimParams(beat, length, animName, easeToPut);
+            }
         }
 
         public override void OnGameSwitch(float beat)
@@ -159,37 +201,50 @@ namespace HeavenStudio.Games
 
         public void UpdateSpaceKickers(int amount, float xDistance = 1.75f, float yDistance = 0.25f, float zDistance = 0.75f)
         {
-            foreach (var kicker in kickers)
+            if (amount == kickers.Count)
             {
-                if (!kicker.player) 
+                for (int i = 1; i < amount; i++)
                 {
-                    Destroy(kicker.transform.parent.gameObject);
-                } 
+                    kickers[i].transform.parent.position = new Vector3(3.384f - xDistance * i, -yDistance * i, zDistance * i);
+                }
             }
-            List<Kicker> kickersToPut = new List<Kicker>();
-            kickersToPut.Add(kickers[0]);
-            for (int i = 1; i < amount; i++)
+            else
             {
-                Transform kickerHolder = Instantiate(kickerPrefab, transform).transform;
-                kickerHolder.transform.position = new Vector3(kickerHolder.transform.position.x - xDistance * i, kickerHolder.transform.position.y - yDistance * i, kickerHolder.transform.position.z + zDistance * i);
-                Kicker spawnedKicker = kickerHolder.GetChild(0).GetComponent<Kicker>();
-                CircularMotion circularMotion = spawnedKicker.GetComponent<CircularMotion>();
-                circularMotion.width = 0.85f - Mathf.Pow(amount * 1.5f, -1f);
-                circularMotion.height = 0.5f - Mathf.Pow(amount * 1.5f, -1f);
-                spawnedKicker.zValue = kickerHolder.transform.position.z;
-                if (0 > zDistance)
+                foreach (var kicker in kickers)
                 {
-                    spawnedKicker.GetComponent<SortingGroup>().sortingOrder = i;
+                    if (!kicker.player)
+                    {
+                        Destroy(kicker.transform.parent.gameObject);
+                    }
                 }
-                else
+                List<Kicker> kickersToPut = new List<Kicker>
                 {
-                    spawnedKicker.GetComponent<SortingGroup>().sortingOrder = -i;
-                }
+                    kickers[0]
+                };
+                for (int i = 1; i < amount; i++)
+                {
+                    Transform kickerHolder = Instantiate(kickerPrefab, transform).transform;
+                    kickerHolder.transform.position = new Vector3(kickerHolder.transform.position.x - xDistance * i, kickerHolder.transform.position.y - yDistance * i, kickerHolder.transform.position.z + zDistance * i);
+                    Kicker spawnedKicker = kickerHolder.GetChild(0).GetComponent<Kicker>();
+                    CircularMotion circularMotion = spawnedKicker.GetComponent<CircularMotion>();
+                    circularMotion.width = 0.85f - Mathf.Pow(amount * 1.5f, -1f);
+                    circularMotion.height = 0.5f - Mathf.Pow(amount * 1.5f, -1f);
+                    circularMotion.timeOffset = kickers[0].GetComponent<CircularMotion>().timeCounter;
+                    spawnedKicker.zValue = kickerHolder.transform.position.z;
+                    if (0 > zDistance)
+                    {
+                        spawnedKicker.GetComponent<SortingGroup>().sortingOrder = i;
+                    }
+                    else
+                    {
+                        spawnedKicker.GetComponent<SortingGroup>().sortingOrder = -i;
+                    }
 
-                kickersToPut.Add(spawnedKicker);
-                kickerHolder.gameObject.SetActive(true);
+                    kickersToPut.Add(spawnedKicker);
+                    kickerHolder.gameObject.SetActive(true);
+                }
+                kickers = kickersToPut;
             }
-            kickers = kickersToPut;
         }
 
         public void Dispense(float beat, bool playSound = true)

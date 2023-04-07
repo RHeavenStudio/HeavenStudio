@@ -19,10 +19,15 @@ namespace HeavenStudio.Games.Scripts_SpaceSoccer
         public int kickTimes = 0;
         public bool player;
         public float zValue;
+        private string animName = "Enter";
+        private float animLength;
+        private float animStartBeat;
+        private EasingFunction.Ease ease;
 
         [Header("Components")]
         private Animator anim;
         public Ball ball;
+        [SerializeField] private Animator enterExitAnim;
 
         PlayerActionEvent nextHit;
         PlayerActionEvent nextAutoKick;
@@ -31,6 +36,17 @@ namespace HeavenStudio.Games.Scripts_SpaceSoccer
         {
             game = SpaceSoccer.instance;
             anim = GetComponent<Animator>();
+        }
+
+        public void SetAnimParams(float beat, float length, string anim, int easeToPut)
+        {
+            animStartBeat = beat;
+            animLength = length;
+            animName = anim;
+            ease = (EasingFunction.Ease)easeToPut;
+            EasingFunction.Function func = EasingFunction.GetEasingFunction(ease);
+            float newAnimPos = func(0, 1, 0);
+            enterExitAnim.DoNormalizedAnimation(animName, newAnimPos);
         }
 
         public void DispenseBall(float beat)
@@ -152,6 +168,13 @@ namespace HeavenStudio.Games.Scripts_SpaceSoccer
 
         private void Update()
         {
+            float normalizedBeat = Conductor.instance.GetPositionFromBeat(animStartBeat, animLength);
+            if (normalizedBeat >= 0 && normalizedBeat <= 1)
+            {
+                EasingFunction.Function func = EasingFunction.GetEasingFunction(ease);
+                float newAnimPos = func(0, 1, normalizedBeat);
+                enterExitAnim.DoNormalizedAnimation(animName, newAnimPos);
+            }
             if (kickTimes % 2 == 0)
             {
                 kickLeft = false;
