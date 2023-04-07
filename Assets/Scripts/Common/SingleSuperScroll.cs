@@ -2,15 +2,12 @@ using UnityEngine;
 
 namespace HeavenStudio.Common
 {
-    public class SuperScroll : MonoBehaviour
+    public class SingleSuperScroll : MonoBehaviour
     {
         #region Private
 
-        [SerializeField]
-        private Renderer _renderer;
-
-        [SerializeField]
-        private Sprite _sprite;
+        [SerializeField] Renderer _renderer;
+        [SerializeField] Sprite _sprite;
 
         #endregion
 
@@ -39,14 +36,19 @@ namespace HeavenStudio.Common
 
             var spriteRect = _sprite.rect;
             var tex = CropTexture(_sprite.texture, new Rect(spriteRect.x, spriteRect.y, spriteRect.width, spriteRect.height));
-            tex.wrapMode = TextureWrapMode.Repeat;
+            tex.wrapMode = TextureWrapMode.Clamp;
             Material.mainTexture = tex;
+            Debug.Log(_renderer.bounds);
         }
 
         public void LateUpdate()
         {
             _renderer.material.mainTextureScale = Tile;
             _renderer.material.mainTextureOffset = new Vector2(NormalizedX, -NormalizedY) * Tile;
+
+            if (_renderer.material.mainTextureOffset.x >= 0) {
+
+            }
 
             if (AutoScroll) {
                 float songPos = Conductor.instance.songPositionInBeats/100;

@@ -11,12 +11,9 @@ namespace HeavenStudio.Games.Scripts_MunchyMonk
     {
         public Color dumplingColor;
         public float startBeat;
-        public int dumplingID;
         
         const string sfxName = "munchyMonk/";
         public bool canDestroy;
-        private bool needSquish = true;
-        private bool canSquish;
         
         [Header("References")]
         [SerializeField] Animator smearAnim;
@@ -34,7 +31,10 @@ namespace HeavenStudio.Games.Scripts_MunchyMonk
         private void Start() 
         {
             sr.color = dumplingColor;
-            if (game.dumplings.Count > 1) anim.Play("IdleOnTop", 0, 0);
+            if (game.dumplings.Count > 1) {
+                anim.Play("IdleOnTop", 0, 0);
+                game.dumplings[0].dumpling.anim.DoScaledAnimationAsync("Squish", 0.5f);
+            }
         }
 
         private void Update()
@@ -42,13 +42,6 @@ namespace HeavenStudio.Games.Scripts_MunchyMonk
             if ((!Conductor.instance.isPlaying && !Conductor.instance.isPaused) || GameManager.instance.currentGame != "munchyMonk") {
                 GameObject.Destroy(gameObject);
             }
-
-            if (game.dumplings.Count == 1) {
-                canSquish = true;
-            }
-
-            if (game.dumplings.Count > 1 && needSquish && canSquish) anim.DoScaledAnimationAsync("Squish", 0.5f);
-            if (anim.IsPlayingAnimationName("Squish")) needSquish = false;
 
             if (canDestroy && anim.IsAnimationNotPlaying()) GameObject.Destroy(gameObject);
         }
@@ -69,7 +62,7 @@ namespace HeavenStudio.Games.Scripts_MunchyMonk
                 game.needBlush = false;
             } else {
                 game.MonkAnim.DoScaledAnimationAsync("Eat", 0.4f);
-                if (!needSquish) anim.DoScaledAnimationAsync("FollowHand", 0.5f);
+                game.dumplings[0].dumpling.anim.DoScaledAnimationAsync("FollowHand", 0.5f);
                 smearAnim.Play("SmearAppear", 0, 0);
                 game.needBlush = true;
                 Jukebox.PlayOneShotGame(sfxName+"gulp");
@@ -100,8 +93,8 @@ namespace HeavenStudio.Games.Scripts_MunchyMonk
             smearAnim.Play("SmearAppear", 0, 0);
             anim.DoScaledAnimationAsync("HitHead", 0.5f);
             MultiSound.Play(new MultiSound.Sound[] {
-                new MultiSound.Sound(sfxName+"slap", game.lastReportedBeat),
-                new MultiSound.Sound(sfxName+"miss", game.lastReportedBeat),
+                new MultiSound.Sound(sfxName+"slap", Conductor.instance.songPositionInBeats),
+                new MultiSound.Sound(sfxName+"miss", Conductor.instance.songPositionInBeats),
             });
             canDestroy = true;
             game.needBlush = false;
