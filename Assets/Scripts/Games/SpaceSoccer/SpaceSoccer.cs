@@ -199,51 +199,47 @@ namespace HeavenStudio.Games
             scrollLengthY = scrollSpeedY;
         }
 
+        public void UpdateKickersPositions(float beat, float length, int ease, float xDistance, float yDistance, float zDistance)
+        {
+            for (int i = 1; i < kickers.Count; i++)
+            {
+                kickers[i].transform.parent.position = new Vector3(3.384f - xDistance * i, -yDistance * i, zDistance * i);
+            }
+        }
+
         public void UpdateSpaceKickers(int amount, float xDistance = 1.75f, float yDistance = 0.25f, float zDistance = 0.75f)
         {
-            if (amount == kickers.Count)
+            for (int i = 1; i < kickers.Count; i++)
             {
-                for (int i = 1; i < amount; i++)
+                if (i + 1 >= amount)
                 {
-                    kickers[i].transform.parent.position = new Vector3(3.384f - xDistance * i, -yDistance * i, zDistance * i);
+                    Kicker kickerToDestroy = kickers[i];
+                    kickers.Remove(kickerToDestroy);
+                    Destroy(kickerToDestroy.transform.parent.gameObject);
                 }
             }
-            else
+            UpdateKickersPositions(0, 0, (int)EasingFunction.Ease.Instant, xDistance, yDistance, zDistance);
+            for (int i = kickers.Count; i < amount; i++)
             {
-                foreach (var kicker in kickers)
+                Transform kickerHolder = Instantiate(kickerPrefab, transform).transform;
+                kickerHolder.transform.position = new Vector3(kickerHolder.transform.position.x - xDistance * i, kickerHolder.transform.position.y - yDistance * i, kickerHolder.transform.position.z + zDistance * i);
+                Kicker spawnedKicker = kickerHolder.GetChild(0).GetComponent<Kicker>();
+                CircularMotion circularMotion = spawnedKicker.GetComponent<CircularMotion>();
+                circularMotion.width = 0.85f - Mathf.Pow(amount * 1.5f, -1f);
+                circularMotion.height = 0.5f - Mathf.Pow(amount * 1.5f, -1f);
+                circularMotion.timeOffset = kickers[0].GetComponent<CircularMotion>().timeCounter;
+                spawnedKicker.zValue = kickerHolder.transform.position.z;
+                if (0 > zDistance)
                 {
-                    if (!kicker.player)
-                    {
-                        Destroy(kicker.transform.parent.gameObject);
-                    }
+                    spawnedKicker.GetComponent<SortingGroup>().sortingOrder = i;
                 }
-                List<Kicker> kickersToPut = new List<Kicker>
+                else
                 {
-                    kickers[0]
-                };
-                for (int i = 1; i < amount; i++)
-                {
-                    Transform kickerHolder = Instantiate(kickerPrefab, transform).transform;
-                    kickerHolder.transform.position = new Vector3(kickerHolder.transform.position.x - xDistance * i, kickerHolder.transform.position.y - yDistance * i, kickerHolder.transform.position.z + zDistance * i);
-                    Kicker spawnedKicker = kickerHolder.GetChild(0).GetComponent<Kicker>();
-                    CircularMotion circularMotion = spawnedKicker.GetComponent<CircularMotion>();
-                    circularMotion.width = 0.85f - Mathf.Pow(amount * 1.5f, -1f);
-                    circularMotion.height = 0.5f - Mathf.Pow(amount * 1.5f, -1f);
-                    circularMotion.timeOffset = kickers[0].GetComponent<CircularMotion>().timeCounter;
-                    spawnedKicker.zValue = kickerHolder.transform.position.z;
-                    if (0 > zDistance)
-                    {
-                        spawnedKicker.GetComponent<SortingGroup>().sortingOrder = i;
-                    }
-                    else
-                    {
-                        spawnedKicker.GetComponent<SortingGroup>().sortingOrder = -i;
-                    }
+                    spawnedKicker.GetComponent<SortingGroup>().sortingOrder = -i;
+                }
 
-                    kickersToPut.Add(spawnedKicker);
-                    kickerHolder.gameObject.SetActive(true);
-                }
-                kickers = kickersToPut;
+                kickers.Add(spawnedKicker);
+                kickerHolder.gameObject.SetActive(true);
             }
         }
 
