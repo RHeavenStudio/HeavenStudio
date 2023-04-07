@@ -118,9 +118,12 @@ namespace HeavenStudio.Games
         [SerializeField] SpriteRenderer secondDigitSr;
         [SerializeField] SpriteRenderer hostFirstDigitSr;
         [SerializeField] SpriteRenderer hostSecondDigitSr;
+        [SerializeField] SpriteRenderer contCounter;
+        [SerializeField] SpriteRenderer hostCounter;
         [Header("Properties")]
         [SerializeField] List<Sprite> contestantNumberSprites = new List<Sprite>();
         [SerializeField] List<Sprite> hostNumberSprites = new List<Sprite>();
+        [SerializeField] Sprite explodedCounter;
         bool intervalStarted;
         bool shouldResetCount;
         bool doingConsectiveIntervals;
@@ -332,23 +335,13 @@ namespace HeavenStudio.Games
                     secondDigitSr.sprite = contestantNumberSprites[GetSpecificDigit(pressCount, 2)];
                     break;
                 case 100:
-                    if (contExploded) return;
-                    Jukebox.PlayOneShotGame("quizShow/contestantExplode");
-                    firstDigitSr.color = new Color(1, 1, 1, 0);
-                    secondDigitSr.color = new Color(1, 1, 1, 0);
-                    contExploded = true;
+                    ForceExplode((int)ShouldExplode.Contestant);
                     break;
                 case 120:
-                    if (hostExploded) return;
-                    Jukebox.PlayOneShotGame("quizShow/hostExplode");
-                    hostFirstDigitSr.color = new Color(1, 1, 1, 0);
-                    hostSecondDigitSr.color = new Color(1, 1, 1, 0);
-                    hostExploded = true;
+                    ForceExplode((int)ShouldExplode.Host);
                     break;
                 case 150:
-                    if (signExploded) return;
-                    Jukebox.PlayOneShotGame("quizShow/signExplode");
-                    signExploded = true;
+                    ForceExplode((int)ShouldExplode.Sign);
                     break;
             }
         }
@@ -362,6 +355,7 @@ namespace HeavenStudio.Games
                     Jukebox.PlayOneShotGame("quizShow/contestantExplode");
                     firstDigitSr.color = new Color(1, 1, 1, 0);
                     secondDigitSr.color = new Color(1, 1, 1, 0);
+                    contCounter.sprite = explodedCounter;
                     contExploded = true;
                     break;
                 case (int)ShouldExplode.Host:
@@ -369,6 +363,7 @@ namespace HeavenStudio.Games
                     Jukebox.PlayOneShotGame("quizShow/hostExplode");
                     hostFirstDigitSr.color = new Color(1, 1, 1, 0);
                     hostSecondDigitSr.color = new Color(1, 1, 1, 0);
+                    hostCounter.sprite = explodedCounter;
                     hostExploded = true;
                     break;
                 case (int)ShouldExplode.Sign:
