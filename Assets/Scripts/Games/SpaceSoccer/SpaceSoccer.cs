@@ -135,6 +135,8 @@ namespace HeavenStudio.Games
         [Header("Properties")]
         public bool ballDispensed;
         float lastDispensedBeat;
+        float scrollOffsetX;
+        float scrollOffsetY;
         float scrollLengthX = 22f;
         float scrollLengthY = 6f;
         Tween bgColorTween;
@@ -152,8 +154,8 @@ namespace HeavenStudio.Games
             var cond = Conductor.instance;
             float normalizedX = cond.GetPositionFromBeat(0, scrollLengthX);
             float normalizedY = cond.GetPositionFromBeat(0, scrollLengthY);
-            backgroundSprite.NormalizedX = -normalizedX;
-            backgroundSprite.NormalizedY = -normalizedY;
+            backgroundSprite.NormalizedX = scrollOffsetX - normalizedX;
+            backgroundSprite.NormalizedY = scrollOffsetY - normalizedY;
         }
 
         public void NPCKickersEnterOrExit(float beat, float length, int animToPut, int easeToPut, int amount, float xDistance, float yDistance, float zDistance)
@@ -196,6 +198,8 @@ namespace HeavenStudio.Games
         public void UpdateScrollSpeed(float beat, float scrollSpeedX, float scrollSpeedY) 
         {
             var cond = Conductor.instance;
+            scrollOffsetX = cond.GetPositionFromBeat(0, scrollLengthX);
+            scrollOffsetY = cond.GetPositionFromBeat(0, scrollLengthY);
             scrollLengthX = scrollSpeedX;
             scrollLengthY = scrollSpeedY;
         }
