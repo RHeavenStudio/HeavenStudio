@@ -338,6 +338,7 @@ namespace HeavenStudio.Games.Scripts_SpaceSoccer
                 nextHit.Disable();
             if (nextAutoKick != null)
                 nextAutoKick.Disable();
+            if (ball != null) Destroy(ball.gameObject);
         }
     }
 }

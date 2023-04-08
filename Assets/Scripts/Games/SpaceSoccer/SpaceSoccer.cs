@@ -133,7 +133,8 @@ namespace HeavenStudio.Games
         [SerializeField] private SpriteRenderer bg;
 
         [Header("Properties")]
-        public bool ballDispensed; //unused
+        public bool ballDispensed;
+        float lastDispensedBeat;
         float scrollLengthX = 22f;
         float scrollLengthY = 6f;
         Tween bgColorTween;
@@ -209,9 +210,9 @@ namespace HeavenStudio.Games
 
         public void UpdateSpaceKickers(int amount, float xDistance = 1.75f, float yDistance = 0.25f, float zDistance = 0.75f)
         {
-            for (int i = 1; i < kickers.Count; i++)
+            for (int i = kickers.Count - 1; i > 0; i--)
             {
-                if (i + 1 >= amount)
+                if (i >= amount)
                 {
                     Kicker kickerToDestroy = kickers[i];
                     kickers.Remove(kickerToDestroy);
@@ -241,17 +242,19 @@ namespace HeavenStudio.Games
                 kickers.Add(spawnedKicker);
                 kickerHolder.gameObject.SetActive(true);
             }
+            if (ballDispensed) Dispense(lastDispensedBeat, false, true);
         }
 
-        public void Dispense(float beat, bool playSound = true)
+        public void Dispense(float beat, bool playSound = true, bool ignorePlayer = false)
         {
+            if (!ballDispensed) lastDispensedBeat = beat;
             ballDispensed = true;
             for (int i = 0; i < kickers.Count; i++)
             {
                 Kicker kicker = kickers[i];
                 if (i == 0) kicker.player = true;
 
-                if (kicker.ball != null) return;
+                if (kicker.ball != null || (ignorePlayer && i == 0)) continue;
 
                 GameObject ball = Instantiate(ballRef, transform);
                 ball.SetActive(true);
