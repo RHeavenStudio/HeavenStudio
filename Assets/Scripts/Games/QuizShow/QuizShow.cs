@@ -121,6 +121,9 @@ namespace HeavenStudio.Games
         [SerializeField] SpriteRenderer hostSecondDigitSr;
         [SerializeField] SpriteRenderer contCounter;
         [SerializeField] SpriteRenderer hostCounter;
+        [SerializeField] ParticleSystem contExplosion;
+        [SerializeField] ParticleSystem hostExplosion;
+        [SerializeField] ParticleSystem signExplosion;
         [Header("Properties")]
         [SerializeField] List<Sprite> contestantNumberSprites = new List<Sprite>();
         [SerializeField] List<Sprite> hostNumberSprites = new List<Sprite>();
@@ -358,6 +361,7 @@ namespace HeavenStudio.Games
                     secondDigitSr.color = new Color(1, 1, 1, 0);
                     contCounter.sprite = explodedCounter;
                     contExploded = true;
+                    contExplosion.Play();
                     break;
                 case (int)ShouldExplode.Host:
                     if (hostExploded) return;
@@ -366,11 +370,13 @@ namespace HeavenStudio.Games
                     hostSecondDigitSr.color = new Color(1, 1, 1, 0);
                     hostCounter.sprite = explodedCounter;
                     hostExploded = true;
+                    hostExplosion.Play();
                     break;
                 case (int)ShouldExplode.Sign:
                     if (signExploded) return;
                     Jukebox.PlayOneShotGame("quizShow/signExplode");
                     signExploded = true;
+                    signExplosion.Play();
                     break;
             }
         }
