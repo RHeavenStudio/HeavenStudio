@@ -469,6 +469,7 @@ namespace HeavenStudio.Games
 
         public void AnswerReaction(bool audience, bool jingle)
         {
+            //In the future make this a prefunction that makes skill stars compatible
             blackOut.SetActive(false);
             if (pressCount == countToMatch)
             {
