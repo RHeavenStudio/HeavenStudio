@@ -228,7 +228,7 @@ namespace HeavenStudio.Games
             List<BeatAction.Action> buttonEvents = new List<BeatAction.Action>();
             for (int i = 0; i < pressAmount; i++)
             {
-                float spawnBeat = beat + i;
+                float spawnBeat = beat + i * length;
                 buttonEvents.Add(new BeatAction.Action(spawnBeat, delegate { HostPressButton(spawnBeat, UnityEngine.Random.Range(0, 2) == 1); }));
             }
             BeatAction.New(instance.gameObject, buttonEvents);
