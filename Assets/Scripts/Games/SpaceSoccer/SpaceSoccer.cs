@@ -135,6 +135,7 @@ namespace HeavenStudio.Games
         [Header("Properties")]
         public bool ballDispensed;
         float lastDispensedBeat;
+        float scrollBeat;
         float scrollOffsetX;
         float scrollOffsetY;
         float scrollLengthX = 22f;
@@ -152,10 +153,10 @@ namespace HeavenStudio.Games
         private void Update()
         {
             var cond = Conductor.instance;
-            float normalizedX = cond.GetPositionFromBeat(0, scrollLengthX);
-            float normalizedY = cond.GetPositionFromBeat(0, scrollLengthY);
-            backgroundSprite.NormalizedX = scrollOffsetX - normalizedX;
-            backgroundSprite.NormalizedY = scrollOffsetY - normalizedY;
+            float normalizedX = cond.GetPositionFromBeat(scrollBeat, scrollLengthX);
+            float normalizedY = cond.GetPositionFromBeat(scrollBeat, scrollLengthY);
+            backgroundSprite.NormalizedX = -scrollOffsetX - normalizedX;
+            backgroundSprite.NormalizedY = -scrollOffsetY - normalizedY;
         }
 
         public void NPCKickersEnterOrExit(float beat, float length, int animToPut, int easeToPut, int amount, float xDistance, float yDistance, float zDistance)
@@ -198,10 +199,11 @@ namespace HeavenStudio.Games
         public void UpdateScrollSpeed(float beat, float scrollSpeedX, float scrollSpeedY) 
         {
             var cond = Conductor.instance;
-            scrollOffsetX = cond.GetPositionFromBeat(0, scrollLengthX);
-            scrollOffsetY = cond.GetPositionFromBeat(0, scrollLengthY);
+            scrollOffsetX = cond.GetPositionFromBeat(scrollBeat, scrollLengthX);
+            scrollOffsetY = cond.GetPositionFromBeat(scrollBeat, scrollLengthY);
             scrollLengthX = scrollSpeedX;
             scrollLengthY = scrollSpeedY;
+            scrollBeat = beat;
         }
 
         public void UpdateKickersPositions(float beat, float length, int ease, float xDistance, float yDistance, float zDistance)
