@@ -127,6 +127,7 @@ namespace HeavenStudio.Games
         [SerializeField] Animator hostLeftArmAnim;
         [SerializeField] Animator hostRightArmAnim;
         [SerializeField] Animator hostHead;
+        [SerializeField] Animator signAnim;
         [SerializeField] Transform timerTransform;
         [SerializeField] GameObject stopWatch;
         [SerializeField] GameObject blackOut;
@@ -227,7 +228,8 @@ namespace HeavenStudio.Games
             List<BeatAction.Action> buttonEvents = new List<BeatAction.Action>();
             for (int i = 0; i < pressAmount; i++)
             {
-                buttonEvents.Add(new BeatAction.Action(beat + i, delegate { HostPressButton(beat, UnityEngine.Random.Range(0, 2) == 1); }));
+                float spawnBeat = beat + i;
+                buttonEvents.Add(new BeatAction.Action(spawnBeat, delegate { HostPressButton(spawnBeat, UnityEngine.Random.Range(0, 2) == 1); }));
             }
             BeatAction.New(instance.gameObject, buttonEvents);
         }
@@ -446,6 +448,7 @@ namespace HeavenStudio.Games
                     Jukebox.PlayOneShotGame("quizShow/signExplode");
                     signExploded = true;
                     signExplosion.Play();
+                    signAnim.Play("Exploded", 0, 0);
                     break;
             }
         }
