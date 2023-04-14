@@ -356,7 +356,7 @@ namespace HeavenStudio
                 if (game == null)
                 {
                     Debug.LogWarning($"Unknown game {gameName} found in remix.json! Adding game...");
-                    game = new Minigames.Minigame(gameName, DisplayName(gameName) + " \n<color=#eb5454>[inferred from remix.json]</color>", "", false, true, new List<Minigames.GameAction>());
+                    game = new Minigames.Minigame(gameName, DisplayName(gameName) + " \n<color=#eb5454>[inferred from remix.json]</color>", "", false, false, new List<Minigames.GameAction>(), inferred: true);
                     EventCaller.instance.minigames.Add(game);
                     if (Editor.Editor.instance != null)
                         Editor.Editor.instance.AddIcon(game);

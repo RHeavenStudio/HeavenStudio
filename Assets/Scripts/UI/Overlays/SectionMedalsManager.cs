@@ -51,7 +51,7 @@ namespace HeavenStudio.Common
         public void OnSectionChange(DynamicBeatmap.ChartSection section)
         {
             if (section == null) return;
-            Debug.Log(PersistentDataManager.gameSettings.isMedalOn);
+            if (!PersistentDataManager.gameSettings.isMedalOn) return;
             if (PersistentDataManager.gameSettings.isMedalOn && !isMedalsStarted)
             {
                 isMedalsStarted = true;
@@ -67,6 +67,7 @@ namespace HeavenStudio.Common
 
         public void OnRemixEnd()
         {
+            if (!PersistentDataManager.gameSettings.isMedalOn) return;
             if (PersistentDataManager.gameSettings.isMedalOn && isMedalsStarted)
             {
                 GameObject medal = Instantiate(isMedalsEligible ? MedalOkPrefab : MedalMissPrefab, MedalsHolder.transform);

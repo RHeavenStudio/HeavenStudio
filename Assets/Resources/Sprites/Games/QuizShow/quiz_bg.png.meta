@@ -1,0 +1,698 @@
+fileFormatVersion: 2
+guid: 84b490a958650e24984a5ace08f58588
+TextureImporter:
+  internalIDToNameTable:
+  - first:
+      213: 3672603136544092297
+    second: quiz_bg_0
+  - first:
+      213: -3885310975442120170
+    second: quiz_bg_1
+  - first:
+      213: -5738550809420919104
+    second: quiz_bg_2
+  - first:
+      213: -9164045003661231046
+    second: quiz_bg_3
+  - first:
+      213: -3661203858035756491
+    second: quiz_bg_4
+  - first:
+      213: 142992833033980004
+    second: CounterGrey
+  - first:
+      213: -2028727925915202137
+    second: quiz_bg_6
+  - first:
+      213: 4364858961400279215
+    second: quiz_bg_7
+  - first:
+      213: -8579981937547737367
+    second: Floor
+  - first:
+      213: -1419331334444956053
+    second: Audience
+  - first:
+      213: 8838241400868369504
+    second: quiz_bg_10
+  - first:
+      213: 4088266719150984585
+    second: quiz_bg_11
+  - first:
+      213: -8310604756243391644
+    second: CounterWhite
+  - first:
+      213: -1362677580723959898
+    second: quiz_bg_13
+  - first:
+      213: -8080672174023962638
+    second: quiz_bg_14
+  - first:
+      213: -3064159863941831059
+    second: quiz_bg_15
+  - first:
+      213: 4210223945538082172
+    second: quiz_bg_16
+  - first:
+      213: 2553960718588885102
+    second: quiz_bg_17
+  - first:
+      213: -7159118536853606549
+    second: quiz_bg_18
+  - first:
+      213: 2866488030864799912
+    second: quiz_bg_19
+  - first:
+      213: 3444059506436664327
+    second: quiz_bg_20
+  - first:
+      213: 4526311674662871538
+    second: quiz_bg_21
+  - first:
+      213: 6269275694401010891
+    second: quiz_bg_22
+  externalObjects: {}
+  serializedVersion: 12
+  mipmaps:
+    mipMapMode: 0
+    enableMipMap: 0
+    sRGBTexture: 1
+    linearTexture: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapsPreserveCoverage: 0
+    alphaTestReferenceValue: 0.5
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+  bumpmap:
+    convertToNormalMap: 0
+    externalNormalMap: 0
+    heightScale: 0.25
+    normalMapFilter: 0
+  isReadable: 0
+  streamingMipmaps: 0
+  streamingMipmapsPriority: 0
+  vTOnly: 0
+  ignoreMasterTextureLimit: 0
+  grayScaleToAlpha: 0
+  generateCubemap: 6
+  cubemapConvolution: 0
+  seamlessCubemap: 0
+  textureFormat: 1
+  maxTextureSize: 2048
+  textureSettings:
+    serializedVersion: 2
+    filterMode: 1
+    aniso: 1
+    mipBias: 0
+    wrapU: 1
+    wrapV: 1
+    wrapW: 1
+  nPOTScale: 0
+  lightmap: 0
+  compressionQuality: 50
+  spriteMode: 2
+  spriteExtrude: 1
+  spriteMeshType: 1
+  alignment: 0
+  spritePivot: {x: 0.5, y: 0.5}
+  spritePixelsToUnits: 300.16568
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spriteGenerateFallbackPhysicsShape: 1
+  alphaUsage: 1
+  alphaIsTransparency: 1
+  spriteTessellationDetail: -1
+  textureType: 8
+  textureShape: 1
+  singleChannelComponent: 0
+  flipbookRows: 1
+  flipbookColumns: 1
+  maxTextureSizeSet: 0
+  compressionQualitySet: 0
+  textureFormatSet: 0
+  ignorePngGamma: 0
+  applyGammaDecoding: 0
+  cookieLightType: 1
+  platformSettings:
+  - serializedVersion: 3
+    buildTarget: DefaultTexturePlatform
+    maxTextureSize: 4096
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 3
+    buildTarget: Standalone
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 3
+    buildTarget: Server
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  spriteSheet:
+    serializedVersion: 2
+    sprites:
+    - serializedVersion: 2
+      name: quiz_bg_0
+      rect:
+        serializedVersion: 2
+        x: 63.034786
+        y: 2554.4102
+        width: 786.4342
+        height: 504.2783
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 98032ba2815b7f230800000000000000
+      internalID: 3672603136544092297
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: quiz_bg_1
+      rect:
+        serializedVersion: 2
+        x: 927.5119
+        y: 2554.4102
+        width: 786.4342
+        height: 504.2783
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 61298dac04a941ac0800000000000000
+      internalID: -3885310975442120170
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: quiz_bg_2
+      rect:
+        serializedVersion: 2
+        x: 1822.0054
+        y: 2086.1516
+        width: 948.5235
+        height: 942.52026
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 0ce8fe661729c50b0800000000000000
+      internalID: -5738550809420919104
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: quiz_bg_3
+      rect:
+        serializedVersion: 2
+        x: 2831
+        y: 2835
+        width: 187
+        height: 191
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: a3c34135f95c2d080800000000000000
+      internalID: -9164045003661231046
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: quiz_bg_4
+      rect:
+        serializedVersion: 2
+        x: 3174
+        y: 2485
+        width: 815
+        height: 562
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 5323d7f2d7ac03dc0800000000000000
+      internalID: -3661203858035756491
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: CounterGrey
+      rect:
+        serializedVersion: 2
+        x: 4097
+        y: 2448
+        width: 732
+        height: 564
+      alignment: 9
+      pivot: {x: 0.50070643, y: 0.4902322}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 468ca6a59330cf100800000000000000
+      internalID: 142992833033980004
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: quiz_bg_6
+      rect:
+        serializedVersion: 2
+        x: 63.034786
+        y: 2026.1183
+        width: 786.4342
+        height: 504.2783
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 7adc8e533b288d3e0800000000000000
+      internalID: -2028727925915202137
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: quiz_bg_7
+      rect:
+        serializedVersion: 2
+        x: 927.5119
+        y: 2026.1183
+        width: 786.4342
+        height: 504.2783
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: fa0b1f07918139c30800000000000000
+      internalID: 4364858961400279215
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Floor
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 1551.8566
+        width: 3256.7976
+        height: 420.23193
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 9e60331f2e7cde880800000000000000
+      internalID: -8579981937547737367
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Audience
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 456.25186
+        width: 1437.7937
+        height: 1047.5784
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: b66c3d7dba58d4ce0800000000000000
+      internalID: -1419331334444956053
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: quiz_bg_10
+      rect:
+        serializedVersion: 2
+        x: 1450
+        y: 812
+        width: 1123
+        height: 668
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 064f8e12abdb7aa70800000000000000
+      internalID: 8838241400868369504
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: quiz_bg_11
+      rect:
+        serializedVersion: 2
+        x: 2704.4932
+        y: 993.5484
+        width: 672.3713
+        height: 324.17902
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 98dcb06abe07cb830800000000000000
+      internalID: 4088266719150984585
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: CounterWhite
+      rect:
+        serializedVersion: 2
+        x: 1449.8005
+        y: 51.028168
+        width: 732.4044
+        height: 564.31146
+      alignment: 9
+      pivot: {x: 0.49999976, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 46bd073710dcaac80800000000000000
+      internalID: -8310604756243391644
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: quiz_bg_13
+      rect:
+        serializedVersion: 2
+        x: 2218
+        y: 46
+        width: 206
+        height: 425
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 6a74f89c5fbc61de0800000000000000
+      internalID: -1362677580723959898
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: quiz_bg_14
+      rect:
+        serializedVersion: 2
+        x: 2825
+        y: 43
+        width: 218
+        height: 434
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 2ff0be0987fabdf80800000000000000
+      internalID: -8080672174023962638
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: quiz_bg_15
+      rect:
+        serializedVersion: 2
+        x: 3137
+        y: 171
+        width: 258
+        height: 288
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: d66ecbe96dae975d0800000000000000
+      internalID: -3064159863941831059
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: quiz_bg_16
+      rect:
+        serializedVersion: 2
+        x: 3490
+        y: 366
+        width: 95
+        height: 95
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: c7514aa2f58bd6a30800000000000000
+      internalID: 4210223945538082172
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: quiz_bg_17
+      rect:
+        serializedVersion: 2
+        x: 3659
+        y: 285
+        width: 177
+        height: 202
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: e68bac9fdbd717320800000000000000
+      internalID: 2553960718588885102
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: quiz_bg_18
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 0
+        width: 339.18726
+        height: 243.13423
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: b6f2de11f93b5ac90800000000000000
+      internalID: -7159118536853606549
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: quiz_bg_19
+      rect:
+        serializedVersion: 2
+        x: 399.22037
+        y: 9.004971
+        width: 264.14578
+        height: 228.12593
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 8a8fa904dafc7c720800000000000000
+      internalID: 2866488030864799912
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: quiz_bg_20
+      rect:
+        serializedVersion: 2
+        x: 3495
+        y: 177
+        width: 87
+        height: 85
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 70ce67aafd1cbcf20800000000000000
+      internalID: 3444059506436664327
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: quiz_bg_21
+      rect:
+        serializedVersion: 2
+        x: 3659
+        y: 63
+        width: 180
+        height: 175
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 2f1ebf69c70b0de30800000000000000
+      internalID: 4526311674662871538
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: quiz_bg_22
+      rect:
+        serializedVersion: 2
+        x: 711.39264
+        y: 15.0082855
+        width: 186.10274
+        height: 156.0862
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: bcc33cb2701f00750800000000000000
+      internalID: 6269275694401010891
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    outline: []
+    physicsShape: []
+    bones: []
+    spriteID: 5e97eb03825dee720800000000000000
+    internalID: 0
+    vertices: []
+    indices: 
+    edges: []
+    weights: []
+    secondaryTextures: []
+    nameFileIdTable:
+      Audience: -1419331334444956053
+      CounterGrey: 142992833033980004
+      CounterWhite: -8310604756243391644
+      Floor: -8579981937547737367
+      quiz_bg_0: 3672603136544092297
+      quiz_bg_1: -3885310975442120170
+      quiz_bg_10: 8838241400868369504
+      quiz_bg_11: 4088266719150984585
+      quiz_bg_13: -1362677580723959898
+      quiz_bg_14: -8080672174023962638
+      quiz_bg_15: -3064159863941831059
+      quiz_bg_16: 4210223945538082172
+      quiz_bg_17: 2553960718588885102
+      quiz_bg_18: -7159118536853606549
+      quiz_bg_19: 2866488030864799912
+      quiz_bg_2: -5738550809420919104
+      quiz_bg_20: 3444059506436664327
+      quiz_bg_21: 4526311674662871538
+      quiz_bg_22: 6269275694401010891
+      quiz_bg_3: -9164045003661231046
+      quiz_bg_4: -3661203858035756491
+      quiz_bg_6: -2028727925915202137
+      quiz_bg_7: 4364858961400279215
+  spritePackingTag: 
+  pSDRemoveMatte: 0
+  pSDShowRemoveMatteOption: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
