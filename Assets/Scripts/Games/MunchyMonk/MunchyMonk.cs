@@ -1,4 +1,5 @@
 using HeavenStudio.Util;
+using HeavenStudio.Common;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -29,13 +30,13 @@ namespace HeavenStudio.Games.Loaders
                 {
                     function = delegate {
                         var e = eventCaller.currentEntity; 
-                        MunchyMonk.instance.MonkMove(e.beat, e.length, e["instant"], e["whichSide"]); 
+                        MunchyMonk.instance.MonkMove(e.beat, e.length, e["goToSide"], e["ease"]); 
                     },
                     resizable = true,
                     parameters = new List<Param>()
                     {
-                        new Param("instant", false, "Instant?", "Instantly move to the middle or to the right"),
-                        new Param("whichSide", MunchyMonk.WhichSide.Right, "Starting Side", "Start on the right or the left"),
+                        new Param("goToSide", MunchyMonk.WhichSide.Right, "Go to Which Side?", "Which side the Monk will move to"),
+                        new Param("ease", EasingFunction.Ease.Linear, "Ease", "Which ease should the movement have?"),
                     },
                 },
                 new GameAction("One", "One")
@@ -113,11 +114,12 @@ namespace HeavenStudio.Games.Loaders
                 {
                     function = delegate {
                         var e = eventCaller.currentEntity; 
-                        MunchyMonk.instance.ScrollBG(e.beat, e["instant"]); 
+                        MunchyMonk.instance.ScrollBG(e.beat, e["scrollSpeed"], e["instant"]); 
                     },
                     defaultLength = 0.5f,
                     parameters = new List<Param>()
                     {
+                        new Param("scrollSpeed", new EntityTypes.Float(0, 10, 50), "Instant?", "Will the scrolling happen immediately?"),
                         new Param("instant", false, "Instant?", "Will the scrolling happen immediately?"),
                     }
                 },
@@ -166,7 +168,6 @@ namespace HeavenStudio.Games
         [SerializeField] GameObject BrowHolder;
         [SerializeField] GameObject StacheHolder;
         [SerializeField] GameObject DumplingObj;
-        [SerializeField] Transform MonkHolderTrans;
         [SerializeField] Transform MMParent;
 
         [Header("Animators")]
@@ -179,20 +180,40 @@ namespace HeavenStudio.Games
         public Animator MonkAnim;
         public Animator MonkArmsAnim;
 
+        /*
+        [Header("Scrolling Objects")]
+        [SerializeField] SingleSuperScroll Mountains;
+        [SerializeField] SingleSuperScroll LargeHills1;
+        [SerializeField] SingleSuperScroll LargeHills2;
+        [SerializeField] SingleSuperScroll MediumHills;
+        [SerializeField] SingleSuperScroll SmallCloud;
+        [SerializeField] SingleSuperScroll MediumCloud;
+        [SerializeField] SingleSuperScroll LargeCloud;
+        [SerializeField] SingleSuperScroll DesertHill1;
+        [SerializeField] SingleSuperScroll DesertHill2;
+        [SerializeField] SingleSuperScroll DesertHill3;
+        [SerializeField] SingleSuperScroll Water;
+        */
+
         [Header("Variables")]
         public float lastReportedBeat = 0f;
         public bool needBlush;
         public bool isStaring;
-        public bool forceGrow;
         public int growLevel = 0;
         public int howManyGulps;
         public int inputsTilGrow = 10;
-        private int growLevelBuffer;
-        private bool monkBop = true;
-        private bool noBlush;
-        private bool disableBaby;
+        bool monkBop = true;
+        bool noBlush;
+        bool disableBaby;
+        bool scrollRampUp;
+        float scrollRampNum;
+        bool isMoving;
+        float movingStartBeat;
+        float movingLength;
+        string moveAnim;
+        EasingFunction.Ease lastEase;
         private Dumpling currentDumpling;
-        float scrollModifier = 0f;
+        SingleSuperScroll[] scrollObjects;
         const string sfxName = "munchyMonk/";
 
         public static MunchyMonk instance;
@@ -201,6 +222,12 @@ namespace HeavenStudio.Games
         {
             instance = this;
             Baby.SetActive(!disableBaby);
+        }
+
+        private void Start() 
+        {
+            //if (Conductor.instance.)
+            scrollObjects = FindObjectsByType<SingleSuperScroll>(FindObjectsSortMode.None);
         }
 
         private void Update() 
@@ -231,28 +258,40 @@ namespace HeavenStudio.Games
             }
 
             // sets hair stuff active when it needs to be
-            if (growLevel == 4) BeatAction.New(gameObject, new List<BeatAction.Action>() {
-                new BeatAction.Action(Conductor.instance.songPositionInBeats + 0.5f, delegate { 
+            if (growLevel > 0) {
+                StacheHolder.SetActive(true); 
+                StacheAnim.Play("Idle"+growLevel, 0, 0);
+                if (growLevel == 4) {
                     BrowHolder.SetActive(true); 
-                    BrowAnim.Play("Idle", 0, 0); }),
-            });
-            if (growLevel > 0 && growLevelBuffer != growLevel) BeatAction.New(gameObject, new List<BeatAction.Action>() {
-                new BeatAction.Action(Conductor.instance.songPositionInBeats + 0.5f, delegate { 
-                    StacheHolder.SetActive(true); 
-                    BrowAnim.Play("Idle"+growLevel, 0, 0); }),
-            });
-            growLevelBuffer = growLevel;
+                    BrowAnim.Play("Idle", 0, 0); 
+                }
+            };
 
             // resets the monk when game is paused
-            if (!Conductor.instance.isPlaying && !Conductor.instance.isPaused) {
+            if (!Conductor.instance.NotStopped()) {
                 MonkAnim.DoScaledAnimationAsync("Idle", 0.5f);
             }
 
-            // temporary scrolling stuff (?)
-            //if (needScroll) {
-            //    Tile += new Vector2(2 * Time.deltaTime, 0);
-            //    NormalizedX += 0.5f * Time.deltaTime;
-            //}
+            if (isMoving)
+            {
+                float normalizedBeat = Conductor.instance.GetPositionFromBeat(movingStartBeat, movingLength);
+                EasingFunction.Function func = EasingFunction.GetEasingFunction(lastEase);
+                float newPos = func(0f, 1f, normalizedBeat);
+                MonkHolderAnim.DoNormalizedAnimation(moveAnim, newPos);
+                if (normalizedBeat >= 1f)
+                {
+                    isMoving = false;
+                }
+            }
+
+            if (scrollRampUp)
+            {
+                scrollRampNum *= (float)1.1*Time.deltaTime;
+                foreach (var obj in scrollObjects)
+                {
+                    obj.AutoScrollX = scrollRampNum;
+                }
+            }
 
             // cue queuing stuff
             if (queuedOnes.Count > 0) {
@@ -456,30 +495,30 @@ namespace HeavenStudio.Games
                     // first out
                     ThreeGiverAnim.DoScaledAnimationAsync("GiveOut", 0.5f); }),
 
-                new BeatAction.Action(beat+1.25f, delegate { 
+                new BeatAction.Action(beat+1.3f, delegate { 
                     // second in
                     ThreeGiverAnim.DoScaledAnimationAsync("GiveIn", 0.5f); 
                     // second dumpling
                     Dumpling DumplingClone2 = Instantiate(DumplingObj, MMParent).GetComponent<Dumpling>(); 
                     DumplingClone2.dumplingColor = secondColor;
-                    DumplingClone2.startBeat = beat+1.25f;
+                    DumplingClone2.startBeat = beat+1.3f;
                     dumplings.Add(new Dumplings() 
-                        { dumpling = DumplingClone2, dumplingListBeat = beat+1.25f, });
+                        { dumpling = DumplingClone2, dumplingListBeat = beat+1.3f, });
                     ScheduleInput(beat, 2f, InputType.STANDARD_DOWN, Hit, Miss, Early); }),
 
                 new BeatAction.Action(beat+1.75f, delegate { 
                     // second out
                     ThreeGiverAnim.DoScaledAnimationAsync("GiveOut", 0.5f); }),
 
-                new BeatAction.Action(beat+2.25f, delegate { 
+                new BeatAction.Action(beat+2.3f, delegate { 
                     // third in
                     ThreeGiverAnim.DoScaledAnimationAsync("GiveIn", 0.5f);
                     // third dumpling
                     Dumpling DumplingClone3 = Instantiate(DumplingObj, MMParent).GetComponent<Dumpling>(); 
                     DumplingClone3.dumplingColor = thirdColor;
-                    DumplingClone3.startBeat = beat+2.25f;
+                    DumplingClone3.startBeat = beat+2.3f;
                     dumplings.Add(new Dumplings() 
-                        { dumpling = DumplingClone3, dumplingListBeat = beat+2.25f, });
+                        { dumpling = DumplingClone3, dumplingListBeat = beat+2.3f, });
                     ScheduleInput(beat, 3f, InputType.STANDARD_DOWN, Hit, Miss, Early); }),
 
                 new BeatAction.Action(beat+2.75f, delegate {
@@ -511,31 +550,38 @@ namespace HeavenStudio.Games
             MunchyMonk.instance.MonkAnim.DoScaledAnimationAsync(anim, 0.5f);
         }
 
-        public void MonkMove(float beat, float length, bool isInstant, int whichSide)
+        public void MonkMove(float beat, float length, int goToSide, int ease)
         {
-            string whichAnim = isInstant ? "Idle" : "Go";
-            whichAnim += (whichSide == 0 ? "Left" : "Right");
-
-            //MonkHolderAnim.DoScaledAnimationAsync(whichAnim, !isInstant ? length : 0.5f);
+            movingStartBeat = beat;
+            movingLength = length;
+            moveAnim = (goToSide == 0 ? "GoRight" : "GoLeft");
+            isMoving = true;
+            lastEase = (EasingFunction.Ease)ease;
         }
 
         public void Modifiers(float beat, int inputsTilGrow, bool resetLevel, int setLevel, bool disableBaby, bool shouldBlush)
         {
+            if (instance.inputsTilGrow != inputsTilGrow) howManyGulps = inputsTilGrow * growLevel;
+            if (setLevel != 0) growLevel = setLevel;
+            if (resetLevel) growLevel = 0;
+
             instance.noBlush = !shouldBlush;
             instance.inputsTilGrow = inputsTilGrow;
             instance.disableBaby = disableBaby;
 
-            if (setLevel != 0) {
-                growLevel = setLevel;
-            }
-            if (resetLevel) growLevel = 0;
-
             Baby.SetActive(!disableBaby);
         }
 
-        public void ScrollBG(float beat, bool isInstant)
+        public void ScrollBG(float beat, float scrollSpeed, bool isInstant)
         {
-
+            if (isInstant) {
+                foreach (var obj in scrollObjects)
+                {
+                    obj.AutoScrollX = scrollSpeed;
+                }
+            } else {
+                scrollRampUp = true;
+            }
         }
     }
 }

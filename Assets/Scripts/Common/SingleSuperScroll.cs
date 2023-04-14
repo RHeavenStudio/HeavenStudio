@@ -1,4 +1,5 @@
 using UnityEngine;
+using System;
 
 namespace HeavenStudio.Common
 {
@@ -8,6 +9,7 @@ namespace HeavenStudio.Common
 
         [SerializeField] Renderer _renderer;
         [SerializeField] Sprite _sprite;
+        private float songSpeed = Conductor.instance.songBpm/100;
 
         #endregion
 
@@ -38,22 +40,29 @@ namespace HeavenStudio.Common
             var tex = CropTexture(_sprite.texture, new Rect(spriteRect.x, spriteRect.y, spriteRect.width, spriteRect.height));
             tex.wrapMode = TextureWrapMode.Clamp;
             Material.mainTexture = tex;
-            Debug.Log(_renderer.bounds);
         }
 
         public void LateUpdate()
         {
             _renderer.material.mainTextureScale = Tile;
             _renderer.material.mainTextureOffset = new Vector2(NormalizedX, -NormalizedY) * Tile;
+            
+            //Debug.Log(NormalizedX*10+" is being compared to "+_renderer.transform.localScale.x/2);
+            Debug.Log(_sprite.bounds.extents);
 
-            if (_renderer.material.mainTextureOffset.x >= 0) {
-
+            if (NormalizedX*5*TileX >= _renderer.transform.localScale.x/2) {
+                NormalizedX = -1;
             }
 
-            if (AutoScroll) {
-                float songPos = Conductor.instance.songPositionInBeats/100;
-                NormalizedX = songPos*AutoScrollX;
-                NormalizedY = songPos*AutoScrollY;
+            
+            //if (NormalizedX*5*TileX >= _sprite.bounds) {
+            //    NormalizedX = -1;
+            //}
+
+            if (AutoScroll && Conductor.instance.NotStopped()) {
+                float modifier = Time.deltaTime*songSpeed;
+                NormalizedX += modifier*AutoScrollX/TileX;
+                NormalizedY += modifier*AutoScrollY/TileY;
             }
         }
 

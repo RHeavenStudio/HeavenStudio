@@ -66,7 +66,6 @@ namespace HeavenStudio.Games.Scripts_MunchyMonk
                 smearAnim.Play("SmearAppear", 0, 0);
                 game.needBlush = true;
                 Jukebox.PlayOneShotGame(sfxName+"gulp");
-                if (game.forceGrow) game.growLevel++;
                 game.howManyGulps++;
                 for (int i = 1; i <= 4; i++)
                 {
