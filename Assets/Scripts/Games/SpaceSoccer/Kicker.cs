@@ -15,6 +15,7 @@ namespace HeavenStudio.Games.Scripts_SpaceSoccer
         public bool canHighKick;
         private bool kickPrepare = false;
         public bool kickLeft;
+        bool kickLeftWhiff;
         public float dispenserBeat; //unused
         public int kickTimes = 0;
         public bool player;
@@ -72,28 +73,58 @@ namespace HeavenStudio.Games.Scripts_SpaceSoccer
                 Jukebox.PlayOneShotGame("spaceSoccer/kick");
             }
 
-            if (highKick)
+            if (hit)
             {
-                if (kickLeft)
+                if (highKick)
                 {
-                    anim.Play("HighKickLeft_0", 0, 0);
+                    if (kickLeft)
+                    {
+                        anim.DoScaledAnimationAsync("HighKickLeft_0", 0.5f);
+                    }
+                    else
+                    {
+                        anim.DoScaledAnimationAsync("HighKickRight_0", 0.5f);
+                    }
                 }
                 else
                 {
-                    anim.Play("HighKickRight_0", 0, 0);
+                    if (kickLeft)
+                    {
+                        anim.DoScaledAnimationAsync("KickLeft", 0.5f);
+                    }
+                    else
+                    {
+                        anim.DoScaledAnimationAsync("KickRight", 0.5f);
+                    }
                 }
             }
             else
             {
-                if (kickLeft)
+                if (highKick)
                 {
-                    anim.Play("KickLeft", 0, 0);
+                    if (kickLeftWhiff)
+                    {
+                        anim.DoScaledAnimationAsync("HighKickLeft_0", 0.5f);
+                    }
+                    else
+                    {
+                        anim.DoScaledAnimationAsync("HighKickRight_0", 0.5f);
+                    }
                 }
                 else
                 {
-                    anim.Play("KickRight", 0, 0);
+                    if (kickLeftWhiff)
+                    {
+                        anim.DoScaledAnimationAsync("KickLeft", 0.5f);
+                    }
+                    else
+                    {
+                        anim.DoScaledAnimationAsync("KickRight", 0.5f);
+                    }
                 }
+                kickLeftWhiff = !kickLeftWhiff;
             }
+
 
             if (ball == null) return;
 
@@ -112,15 +143,30 @@ namespace HeavenStudio.Games.Scripts_SpaceSoccer
         public void HighKick(bool hit)
         {
             kickTimes++;
-
-            if (kickLeft)
+            if (hit)
             {
-                anim.Play("HighKickLeft_0", 0, 0);
+                if (kickLeft)
+                {
+                    anim.DoScaledAnimationAsync("HighKickLeft_0", 0.5f);
+                }
+                else
+                {
+                    anim.DoScaledAnimationAsync("HighKickRight_0", 0.5f);
+                }
             }
             else
             {
-                anim.Play("HighKickRight_0", 0, 0);
+                if (kickLeftWhiff)
+                {
+                    anim.DoScaledAnimationAsync("HighKickLeft_0", 0.5f);
+                }
+                else
+                {
+                    anim.DoScaledAnimationAsync("HighKickRight_0", 0.5f);
+                }
+                kickLeftWhiff = !kickLeftWhiff;
             }
+
 
             if (hit && ball)
             {
@@ -140,11 +186,11 @@ namespace HeavenStudio.Games.Scripts_SpaceSoccer
         {
             if (kickLeft)
             {
-                anim.Play("ToeLeft", 0, 0);
+                anim.DoScaledAnimationAsync("ToeLeft", 0.5f);
             }
             else
             {
-                anim.Play("ToeRight", 0, 0);
+                anim.DoScaledAnimationAsync("ToeRight", 0.5f);
             }
 
             if (player)
