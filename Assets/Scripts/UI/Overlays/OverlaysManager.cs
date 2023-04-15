@@ -35,7 +35,6 @@ namespace HeavenStudio.Common
         // Start is called before the first frame update
         public void Start()
         {
-            SectionMedalsManager.Start();
             RefreshOverlaysLayout();
             instance = this;
         }
