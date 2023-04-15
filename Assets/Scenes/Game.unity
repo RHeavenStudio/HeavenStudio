@@ -148,8 +148,9 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1157422643}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -0.90149826, y: -1.1718194, z: 149.15268}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 0
@@ -166,8 +167,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f86858990a87c764892672104bdaef1f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  level: {fileID: 4900000, guid: fafaeee85f4121643a0699a4de97da53, type: 3}
+  gameRenderTexture: {fileID: 8400000, guid: da1c23fc8a9167c438d0d771189a6157, type: 2}
+  overlayRenderTexture: {fileID: 8400000, guid: 0fa7c9cc30624a1419ef8f30b8d9758b, type: 2}
+  editorGO: {fileID: 0}
+  debug_cmdFile: C:\Users\minenice\Documents\HeavenStudio_Prod\remixes\BRANDNEW_HOMETOWN.riq
+  level: {fileID: 0}
   music: {fileID: 8300000, guid: a0589cdba27fb254e90da17b4804c2fe, type: 3}
-  debugUI: 1
+  canvas: {fileID: 0}
+  debugUI: 0
   playOnStart: 1
-  editor: 0
+  fromCmd: 0

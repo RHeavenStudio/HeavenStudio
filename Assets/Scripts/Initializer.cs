@@ -16,36 +16,54 @@ namespace HeavenStudio
         [SerializeField] RenderTexture gameRenderTexture;
         [SerializeField] RenderTexture overlayRenderTexture;
 
+        [SerializeField] HeavenStudio.Editor.Editor editorGO;
+        [SerializeField] String debug_cmdFile;
+
         public TextAsset level;
         public AudioClip music;
         public GameObject canvas;
         public bool debugUI;
 
         public bool playOnStart = false;
-        public bool editor = false;
+        public bool fromCmd = false;
 
         string json = "";
         string ext = "";
 
         private void Start()
         {
-            string[] args = System.Environment.GetCommandLineArgs();
             string input = "";
-            for (int i = 1; i < args.Length; i++) {
-                // first arg is always this executable
-                Debug.Log(args[i]);
-                if (args[i].IndexOfAny(Path.GetInvalidPathChars()) == -1)
+            if (debug_cmdFile != string.Empty)
+            {
+                if (debug_cmdFile.IndexOfAny(Path.GetInvalidPathChars()) == -1)
                 {
-                    if (File.Exists(args[i]))
+                    if (File.Exists(debug_cmdFile))
                     {
-                        input = args[i];
-                        editor = false;
+                        input = debug_cmdFile;
+                        fromCmd = true;
                         playOnStart = true;
                     }
                 }
-                else if (args[i] == "-debug")
-                {
-                    debugUI = true;
+            }
+            else
+            {
+                string[] args = System.Environment.GetCommandLineArgs();
+                for (int i = 1; i < args.Length; i++) {
+                    // first arg is always this executable
+                    Debug.Log(args[i]);
+                    if (args[i].IndexOfAny(Path.GetInvalidPathChars()) == -1)
+                    {
+                        if (File.Exists(args[i]))
+                        {
+                            input = args[i];
+                            fromCmd = true;
+                            playOnStart = true;
+                        }
+                    }
+                    else if (args[i] == "-debug")
+                    {
+                        debugUI = true;
+                    }
                 }
             }
 
@@ -96,22 +114,17 @@ namespace HeavenStudio
             GlobalGameManager.OverlayRenderTexture = overlayRenderTexture;
             GlobalGameManager.ResetGameRenderTexture();
 
-            if (editor)
+            if (editorGO == null)
             {
-                this.GetComponent<HeavenStudio.Editor.Editor>().Init();
-            }
-            else
-            {
-                this.GetComponent<HeavenStudio.Editor.Editor>().enabled = false;
-                this.GetComponent<HeavenStudio.Editor.EditorTheme>().enabled = false;
-                this.GetComponent<HeavenStudio.Editor.BoxSelection>().enabled = false;
-                canvas.SetActive(false);
-
                 OpenCmdRemix(input);
                 Debug.Log(json);
                 gameManager.txt = json;
                 gameManager.ext = ext;
                 gameManager.Init();
+            }
+            else
+            {
+                this.GetComponent<HeavenStudio.Editor.Editor>().Init();
             }
         }
 

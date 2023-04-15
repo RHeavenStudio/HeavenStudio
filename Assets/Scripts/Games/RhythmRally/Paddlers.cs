@@ -8,7 +8,7 @@ using HeavenStudio.Util;
 
 namespace HeavenStudio.Games.Scripts_RhythmRally
 {
-    public class Paddlers : PlayerActionObject
+    public class Paddlers : MonoBehaviour
     {
         private RhythmRally game;
         private Animator playerAnim;

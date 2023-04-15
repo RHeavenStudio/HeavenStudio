@@ -156,7 +156,6 @@ namespace HeavenStudio
 
         public static void WindowFullScreen()
         {
-            Debug.Log("WindowFullScreen");
             if (!Screen.fullScreen)
             {
                 // Set the resolution to the display's current resolution

@@ -35,7 +35,7 @@ namespace HeavenStudio.Common
         float targetArrowPos = 0f;
 
         // Start is called before the first frame update
-        void Start()
+        public void Start()
         {
             instance = this;
         }

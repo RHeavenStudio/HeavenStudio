@@ -20,11 +20,11 @@ namespace HeavenStudio.Common
         bool isMedalsEligible = true;
 
         // Start is called before the first frame update
-        void Start()
+        public void Start()
         {
-            instance = this;
             cond = Conductor.instance;
             GameManager.instance.onSectionChange += OnSectionChange;
+            instance = this;
         }
 
         // Update is called once per frame
@@ -42,7 +42,7 @@ namespace HeavenStudio.Common
         {
             isMedalsStarted = false;
             isMedalsEligible = true;
-            foreach (Transform child in MedalsHolder.transform)
+            foreach (Transform child in MedalsHolder?.transform)
             {
                 Destroy(child.gameObject);
             }

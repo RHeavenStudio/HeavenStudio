@@ -27,7 +27,6 @@ namespace HeavenStudio
         [HideInInspector] public GameObject GamesHolder;
         public Games.Global.Flash fade;
         public Games.Global.Filter filter;
-        public GameObject textbox;
 
         [Header("Games")]
         public string currentGame;
@@ -123,19 +122,19 @@ namespace HeavenStudio
             Conductor.instance.firstBeatOffset = Beatmap.firstBeatOffset;
 
             // note: serialize this shit in the inspector //
-                GameObject textbox = Instantiate(Resources.Load<GameObject>("Prefabs/Common/Textbox"));
-                textbox.name = "Textbox";
+            GameObject textbox = Instantiate(Resources.Load<GameObject>("Prefabs/Common/Textbox"));
+            textbox.name = "Textbox";
 
-                GameObject overlays = Instantiate(Resources.Load<GameObject>("Prefabs/Common/Overlays"));
-                overlays.name = "Overlays";
+            GameObject timingDisp = Instantiate(Resources.Load<GameObject>("Prefabs/Common/Overlays/TimingAccuracy"));
+            timingDisp.name = "TimingDisplay";
 
-                GameObject timingDisp = Instantiate(Resources.Load<GameObject>("Prefabs/Common/Overlays/TimingAccuracy"));
-                timingDisp.name = "TimingDisplay";
+            GameObject skillStarDisp = Instantiate(Resources.Load<GameObject>("Prefabs/Common/Overlays/SkillStar"));
+            skillStarDisp.name = "SkillStar";
 
-                GameObject skillStarDisp = Instantiate(Resources.Load<GameObject>("Prefabs/Common/Overlays/SkillStar"));
-                skillStarDisp.name = "SkillStar";
+            GameObject overlays = Instantiate(Resources.Load<GameObject>("Prefabs/Common/Overlays"));
+            overlays.name = "Overlays";
 
-                GoForAPerfect.instance.Disable();
+            GoForAPerfect.instance.Disable();
             /////
             
 
@@ -162,7 +161,7 @@ namespace HeavenStudio
 
             if (playOnStart)
             {
-                Play(startBeat);
+                StartCoroutine(WaitReadyAndPlayCo(startBeat));
             }
         }
 
@@ -204,7 +203,10 @@ namespace HeavenStudio
             Conductor.instance.SetBpm(Beatmap.bpm);
             Conductor.instance.SetVolume(Beatmap.musicVolume);
             Conductor.instance.firstBeatOffset = Beatmap.firstBeatOffset;
-            Stop(0);
+            if (!playOnStart)
+            {
+                Stop(0);
+            }
             SetCurrentEventToClosest(0);
 
             if (Beatmap.entities.Count >= 1)
@@ -435,6 +437,7 @@ namespace HeavenStudio
 
         public void Play(float beat)
         {
+            Debug.Log("Playing at " + beat);
             canInput = true;
             inputOffsetSamples.Clear();
             averageInputOffset = 0;
@@ -503,6 +506,20 @@ namespace HeavenStudio
             {
                 Play(0);
             }
+        }
+
+        private IEnumerator WaitReadyAndPlayCo(float beat)
+        {
+            // wait for overlays to be ready
+            yield return new WaitUntil(() => OverlaysManager.OverlaysReady);
+            //TODO: wait for first game to be loaded
+
+            SkillStarManager.instance.KillStar();
+            TimingAccuracyDisplay.instance.StopStarFlash();
+            GoForAPerfect.instance.Disable();
+            SectionMedalsManager.instance?.OnRemixEnd();
+
+            Play(beat);
         }
 
         public void KillAllSounds()

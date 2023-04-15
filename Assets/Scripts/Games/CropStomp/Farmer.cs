@@ -6,7 +6,7 @@ using HeavenStudio.Util;
 
 namespace HeavenStudio.Games.Scripts_CropStomp
 {
-    public class Farmer : PlayerActionObject
+    public class Farmer : MonoBehaviour
     {
         public float nextStompBeat;
 

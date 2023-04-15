@@ -6,7 +6,7 @@ using HeavenStudio.Util;
 
 namespace HeavenStudio.Games.Scripts_RhythmTweezers
 {
-    public class LongHair : PlayerActionObject
+    public class LongHair : MonoBehaviour
     {
         public float createBeat;
         public GameObject hairSprite;

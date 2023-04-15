@@ -6,7 +6,7 @@ using HeavenStudio.Util;
 
 namespace HeavenStudio.Games.Scripts_ClappyTrio
 {
-    public class ClappyTrioPlayer : PlayerActionObject
+    public class ClappyTrioPlayer : MonoBehaviour
     {
         ClappyTrio game;
         private float lastClapBeat;

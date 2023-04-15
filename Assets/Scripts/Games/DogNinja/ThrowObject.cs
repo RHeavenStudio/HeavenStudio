@@ -8,7 +8,7 @@ using HeavenStudio.Util;
 
 namespace HeavenStudio.Games.Scripts_DogNinja
 {
-    public class ThrowObject : PlayerActionObject
+    public class ThrowObject : MonoBehaviour
     {
         public float startBeat;
         public int type;

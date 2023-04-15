@@ -19,17 +19,25 @@ namespace HeavenStudio.Common
         [SerializeField] GameObject TimingDisplayPrefab;
         [SerializeField] GameObject SkillStarPrefab;
         [SerializeField] GameObject ChartSectionPrefab;
+        [SerializeField] SectionMedalsManager SectionMedalsManager;
 
         [Header("Components")]
         [SerializeField] Transform ComponentHolder;
 
         List<OverlaysManager.OverlayOption> lytElements = new List<OverlaysManager.OverlayOption>();
 
+        public static bool OverlaysReady {get { return instance != null && 
+                                                TimingAccuracyDisplay.instance != null &&  
+                                                SkillStarManager.instance != null && 
+                                                SectionMedalsManager.instance != null &&
+                                                HeavenStudio.Games.Global.Textbox.instance != null;}}
+
         // Start is called before the first frame update
-        void Start()
+        public void Start()
         {
-            instance = this;
+            SectionMedalsManager.Start();
             RefreshOverlaysLayout();
+            instance = this;
         }
 
         // Update is called once per frame
@@ -82,12 +90,15 @@ namespace HeavenStudio.Common
             {
                 if (c is TimingDisplayComponent) { 
                     c.CreateElement(TimingDisplayPrefab, ComponentHolder); 
+                    Debug.Log("Create TimingDisplayComponent");
                 }
                 else if (c is SkillStarComponent) { 
                     c.CreateElement(SkillStarPrefab, ComponentHolder); 
+                    Debug.Log("Create SkillStarComponent");
                 }
                 else if (c is SectionComponent) { 
                     c.CreateElement(ChartSectionPrefab, ComponentHolder); 
+                    Debug.Log("Create SectionComponent");
                 }
                 c.PositionElement();
             }

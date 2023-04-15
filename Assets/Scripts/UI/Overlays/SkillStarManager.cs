@@ -29,10 +29,10 @@ namespace HeavenStudio.Common
         Conductor cond;
 
         // Start is called before the first frame update
-        void Start()
+        public void Start()
         {
-            instance = this;
             cond = Conductor.instance;
+            instance = this;
         }
 
         // Update is called once per frame

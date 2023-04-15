@@ -5,7 +5,7 @@ using System;
 
 namespace HeavenStudio.Games.Scripts_WizardsWaltz
 {
-    public class Plant : PlayerActionObject
+    public class Plant : MonoBehaviour
     {
         public Animator animator;
         public SpriteRenderer spriteRenderer;
