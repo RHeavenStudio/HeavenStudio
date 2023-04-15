@@ -38,7 +38,7 @@ namespace HeavenStudio.Games.Scripts_SpaceSoccer
             kicker.ball = this;
             kicker.dispenserBeat = dispensedBeat;
             float currentBeat = Conductor.instance.songPositionInBeats;
-            holder.transform.localPosition = kicker.transform.GetChild(0).position;
+            //holder.transform.localPosition = kicker.transform.GetChild(0).position;
 
             if(currentBeat - dispensedBeat < 2f) //check if ball is currently being dispensed (should only be false if starting in the middle of the remix)
             {

@@ -166,15 +166,12 @@ namespace HeavenStudio.Games.Scripts_SpaceSoccer
                 kickLeftWhiff = !kickLeftWhiff;
             }
 
-            if (player)
+            if (player) Jukebox.PlayOneShotGame("spaceSoccer/highkicktoe1");
+            if (hit && ball)
             {
-                Jukebox.PlayOneShotGame("spaceSoccer/highkicktoe1");
-                if (hit && ball)
-                {
-                    ball.HighKick();
+                ball.HighKick();
 
-                    Jukebox.PlayOneShotGame("spaceSoccer/highkicktoe1_hit");
-                }
+                if (player) Jukebox.PlayOneShotGame("spaceSoccer/highkicktoe1_hit");
             }
 
         }
