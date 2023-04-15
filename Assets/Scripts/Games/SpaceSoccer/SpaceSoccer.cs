@@ -32,7 +32,7 @@ namespace HeavenStudio.Games.Loaders
                 },
                 new GameAction("npc kickers enter or exit", "NPC Kickers Enter or Exit")
                 {
-                    function = delegate { var e = eventCaller.currentEntity; SpaceSoccer.instance.NPCKickersEnterOrExit(e.beat, e.length, e["choice"], e["ease"], e["amount"], e["x"], e["y"], e["z"]); },
+                    function = delegate { var e = eventCaller.currentEntity; SpaceSoccer.instance.NPCKickersEnterOrExit(e.beat, e.length, e["choice"], e["ease"], e["amount"], e["x"], e["y"], e["z"], e["override"]); },
                     defaultLength = 4f,
                     parameters = new List<Param>()
                     {
@@ -42,8 +42,22 @@ namespace HeavenStudio.Games.Loaders
                         new Param("x", new EntityTypes.Float(-30, 30, 1.75f), "X Distance", "How much distance should there be between the space kickers on the x axis?"),
                         new Param("y", new EntityTypes.Float(-30, 30, 0.25f), "Y Distance", "How much distance should there be between the space kickers on the y axis?"),
                         new Param("z", new EntityTypes.Float(-30, 30, 0.75f), "Z Distance", "How much distance should there be between the space kickers on the z axis?"),
+                        new Param("override", true, "Override Easing", "Should this block override the easing of the space kickers' positions?")
                     },
                     resizable = true
+                },
+                new GameAction("easePos", "Ease NPC Space Kicker Distances")
+                {
+                    function = delegate {var e = eventCaller.currentEntity; SpaceSoccer.instance.EaseSpaceKickersPositions(e.beat, e.length, e["ease"], e["x"], e["y"], e["z"]); },
+                    defaultLength = 4f,
+                    resizable = true,
+                    parameters = new List<Param>()
+                    {
+                        new Param("x", new EntityTypes.Float(-30, 30, 1.75f), "X Distance", "How much distance should there be between the space kickers on the x axis?"),
+                        new Param("y", new EntityTypes.Float(-30, 30, 0.25f), "Y Distance", "How much distance should there be between the space kickers on the y axis?"),
+                        new Param("z", new EntityTypes.Float(-30, 30, 0.75f), "Z Distance", "How much distance should there be between the space kickers on the z axis?"),
+                        new Param("ease", EasingFunction.Ease.Linear, "Ease", "The Ease of the space kickers moving."),
+                    }
                 },
                 new GameAction("changeBG", "Change Background Color")
                 {
@@ -89,7 +103,7 @@ namespace HeavenStudio.Games.Loaders
                         {
                             choice = (int)SpaceSoccer.AnimationToPlay.Enter;
                         }
-                        SpaceSoccer.instance.NPCKickersEnterOrExit(e.beat, e.length, choice, (int)EasingFunction.Ease.Instant, 5, 1.75f, 0.25f, 0.75f);
+                        SpaceSoccer.instance.NPCKickersEnterOrExit(e.beat, e.length, choice, (int)EasingFunction.Ease.Instant, 5, 1.75f, 0.25f, 0.75f, true);
                     },
                     defaultLength = 0.5f,
                     parameters = new List<Param>()
@@ -142,6 +156,13 @@ namespace HeavenStudio.Games
         float scrollLengthY = 6f;
         Tween bgColorTween;
         Tween dotColorTween;
+        #region Space Kicker Position Easing
+        float easeBeat;
+        float easeLength;
+        EasingFunction.Ease lastEase;
+        Vector3 lastPos = new Vector3();
+        Vector3 currentPos = new Vector3();
+        #endregion
 
         public static SpaceSoccer instance { get; private set; }
 
@@ -157,11 +178,21 @@ namespace HeavenStudio.Games
             float normalizedY = cond.GetPositionFromBeat(scrollBeat, scrollLengthY);
             backgroundSprite.NormalizedX = -scrollOffsetX - normalizedX;
             backgroundSprite.NormalizedY = -scrollOffsetY - normalizedY;
+
+            float normalizedEaseBeat = cond.GetPositionFromBeat(easeBeat, easeLength);
+            if (normalizedEaseBeat <= 1 && normalizedEaseBeat > 0)
+            {
+                EasingFunction.Function func = EasingFunction.GetEasingFunction(lastEase);
+                float newPosX = func(lastPos.x, currentPos.x, normalizedEaseBeat);
+                float newPosY = func(lastPos.y, currentPos.y, normalizedEaseBeat);
+                float newPosZ = func(lastPos.z, currentPos.z, normalizedEaseBeat);
+                UpdateKickersPositions(newPosX, newPosY, newPosZ);
+            }
         }
 
-        public void NPCKickersEnterOrExit(float beat, float length, int animToPut, int easeToPut, int amount, float xDistance, float yDistance, float zDistance)
+        public void NPCKickersEnterOrExit(float beat, float length, int animToPut, int easeToPut, int amount, float xDistance, float yDistance, float zDistance, bool overrideEasing)
         {
-            UpdateSpaceKickers(amount, xDistance, yDistance, zDistance);
+            UpdateSpaceKickers(amount, xDistance, yDistance, zDistance, overrideEasing);
             string animName = "Enter";
             switch (animToPut)
             {
@@ -206,7 +237,16 @@ namespace HeavenStudio.Games
             scrollBeat = beat;
         }
 
-        public void UpdateKickersPositions(float beat, float length, int ease, float xDistance, float yDistance, float zDistance)
+        public void EaseSpaceKickersPositions(float beat, float length, int ease, float xDistance, float yDistance, float zDistance)
+        {
+            easeBeat = beat;
+            easeLength = length;
+            lastEase = (EasingFunction.Ease)ease;
+            lastPos = currentPos;
+            currentPos = new Vector3(xDistance, yDistance, zDistance);
+        }
+
+        public void UpdateKickersPositions(float xDistance, float yDistance, float zDistance)
         {
             for (int i = 1; i < kickers.Count; i++)
             {
@@ -214,7 +254,7 @@ namespace HeavenStudio.Games
             }
         }
 
-        public void UpdateSpaceKickers(int amount, float xDistance = 1.75f, float yDistance = 0.25f, float zDistance = 0.75f)
+        public void UpdateSpaceKickers(int amount, float xDistance = 1.75f, float yDistance = 0.25f, float zDistance = 0.75f, bool overrideEasing = true)
         {
             for (int i = kickers.Count - 1; i > 0; i--)
             {
@@ -225,7 +265,12 @@ namespace HeavenStudio.Games
                     Destroy(kickerToDestroy.transform.parent.gameObject);
                 }
             }
-            UpdateKickersPositions(0, 0, (int)EasingFunction.Ease.Instant, xDistance, yDistance, zDistance);
+            if (overrideEasing) 
+            {
+                UpdateKickersPositions(xDistance, yDistance, zDistance);
+                currentPos = new Vector3(xDistance, yDistance, zDistance);
+            }
+
             for (int i = kickers.Count; i < amount; i++)
             {
                 Transform kickerHolder = Instantiate(kickerPrefab, transform).transform;
@@ -235,7 +280,6 @@ namespace HeavenStudio.Games
                 circularMotion.width = 0.85f - Mathf.Pow(amount * 1.5f, -1f);
                 circularMotion.height = 0.5f - Mathf.Pow(amount * 1.5f, -1f);
                 circularMotion.timeOffset = kickers[0].GetComponent<CircularMotion>().timeCounter;
-                spawnedKicker.zValue = kickerHolder.transform.position.z;
                 if (0 > zDistance)
                 {
                     spawnedKicker.GetComponent<SortingGroup>().sortingOrder = i;

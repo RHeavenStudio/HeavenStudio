@@ -31,7 +31,6 @@ namespace HeavenStudio.Games.Scripts_SpaceSoccer
         public bool canKick;
         public bool waitKickRelease;
         private bool lastKickLeft;
-        public float zValue;
 
         public void Init(Kicker kicker, float dispensedBeat)
         {
@@ -39,7 +38,6 @@ namespace HeavenStudio.Games.Scripts_SpaceSoccer
             kicker.ball = this;
             kicker.dispenserBeat = dispensedBeat;
             float currentBeat = Conductor.instance.songPositionInBeats;
-            zValue = kicker.zValue;
             holder.transform.localPosition = kicker.transform.GetChild(0).position;
 
             if(currentBeat - dispensedBeat < 2f) //check if ball is currently being dispensed (should only be false if starting in the middle of the remix)
@@ -115,7 +113,7 @@ namespace HeavenStudio.Games.Scripts_SpaceSoccer
         public void Kick(bool player)
         {
             if (player)
-            Jukebox.PlayOneShotGame("spaceSoccer/ballHit");
+            Jukebox.PlayOneShotGame("spaceSoccer/ballHit", -1, Jukebox.GetPitchFromCents(UnityEngine.Random.Range(-38, 39), false));
 
             lastSpriteRot = spriteHolder.transform.eulerAngles.z;
 
@@ -236,7 +234,7 @@ namespace HeavenStudio.Games.Scripts_SpaceSoccer
                     }
             }
 
-            holder.transform.position = new Vector3(holder.transform.position.x, holder.transform.position.y, zValue);
+            holder.transform.position = new Vector3(holder.transform.position.x, holder.transform.position.y, kicker.transform.parent.position.z);
         }
 
         private void HitFX()

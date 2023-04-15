@@ -19,7 +19,6 @@ namespace HeavenStudio.Games.Scripts_SpaceSoccer
         public float dispenserBeat; //unused
         public int kickTimes = 0;
         public bool player;
-        public float zValue;
         private string animName = "Enter";
         private float animLength;
         private float animStartBeat;
@@ -167,19 +166,17 @@ namespace HeavenStudio.Games.Scripts_SpaceSoccer
                 kickLeftWhiff = !kickLeftWhiff;
             }
 
-
-            if (hit && ball)
+            if (player)
             {
-                ball.HighKick();
+                Jukebox.PlayOneShotGame("spaceSoccer/highkicktoe1");
+                if (hit && ball)
+                {
+                    ball.HighKick();
 
-                if (player)
-                Jukebox.PlayOneShotGame("spaceSoccer/highkicktoe1_hit");
+                    Jukebox.PlayOneShotGame("spaceSoccer/highkicktoe1_hit");
+                }
             }
-            else
-            {
-                if (player)
-                    Jukebox.PlayOneShotGame("spaceSoccer/highkicktoe1");
-            }
+
         }
 
         public void Toe(bool hit)
@@ -195,13 +192,10 @@ namespace HeavenStudio.Games.Scripts_SpaceSoccer
 
             if (player)
             {
+                Jukebox.PlayOneShotGame("spaceSoccer/highkicktoe3");
                 if (hit && ball)
                 {
                     Jukebox.PlayOneShotGame("spaceSoccer/highkicktoe3_hit");
-                }
-                else
-                {
-                    Jukebox.PlayOneShotGame("spaceSoccer/highkicktoe3");
                 }
             }
 
@@ -324,7 +318,8 @@ namespace HeavenStudio.Games.Scripts_SpaceSoccer
             var cond = Conductor.instance;
             ball = null;
             // queue the miss sound
-            MultiSound.Play(new MultiSound.Sound[] { new MultiSound.Sound("spaceSoccer/missNeutral", targetBeat + (float)cond.SecsToBeats(Minigame.EndTime()-1, cond.GetBpmAtBeat(targetBeat))) });
+            MultiSound.Play(new MultiSound.Sound[] { new MultiSound.Sound("spaceSoccer/missNeutral", targetBeat + (float)cond.SecsToBeats(Minigame.EndTime()-1, 
+                cond.GetBpmAtBeat(targetBeat)), Jukebox.GetPitchFromCents(UnityEngine.Random.Range(-75, 75), false)) });
         }
 
         private void KickJust(PlayerActionEvent caller, float state)
