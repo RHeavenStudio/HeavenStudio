@@ -15,9 +15,13 @@ namespace HeavenStudio.Games.Loaders
             {
                 new GameAction("intervalStart", "Start Interval")
                 {
-                    preFunction = delegate {var e = eventCaller.currentEntity; QuizShow.PreStartInterval(e.beat, e.length); },
+                    function = delegate {var e = eventCaller.currentEntity; QuizShow.instance.StartInterval(e.beat, e.length); },
                     defaultLength = 8f,
                     resizable = true
+                },
+                new GameAction("prepare", "Prepare Host Hands")
+                {
+                    function = delegate { QuizShow.instance.HostPrepareHands(); }
                 },
                 new GameAction("dPad", "DPad Press")
                 {
@@ -31,23 +35,26 @@ namespace HeavenStudio.Games.Loaders
                 },
                 new GameAction("randomPresses", "Random Presses")
                 {
-                    function = delegate { var e = eventCaller.currentEntity; QuizShow.instance.RandomPress(e.beat, e.length, e["min"], e["max"]); },
+                    function = delegate { var e = eventCaller.currentEntity; QuizShow.instance.RandomPress(e.beat, e.length, e["min"], e["max"], e["random"]); },
                     parameters = new List<Param>()
                     {
                         new Param("min", new EntityTypes.Integer(0, 666, 0), "Minimum", "The minimum number of presses this block will do."),
                         new Param("max", new EntityTypes.Integer(0, 666, 1), "Maximum", "The maximum number of presses this block will do."),
+                        new Param("random", QuizShow.WhichButtonRandom.Random, "Which Buttons", "Which buttons will be pressed randomly?")
                     },
                     resizable = true
                 },
                 new GameAction("passTurn", "Pass Turn")
                 {
-                    function = delegate {var e = eventCaller.currentEntity; QuizShow.instance.PassTurn(e.beat, e.length, e["sound"], e["con"]); },
+                    function = delegate {var e = eventCaller.currentEntity; QuizShow.instance.PassTurn(e.beat, e.length, e["sound"], e["con"], e["visual"], e["audio"]); },
                     defaultLength = 1f,
                     resizable = true,
                     parameters = new List<Param>()
                     {
                         new Param("sound", true, "Play Time-Up Sound?", "Should the Time-Up sound play at the end of the interval?"),
                         new Param("con", false, "Consecutive", "Disables everything that happens at the end of the interval if ticked on."),
+                        new Param("visual", true, "Stopwatch (Visual)", "Should the stopwatch visually appear?"),
+                        new Param("audio", true, "Stopwatch (Audio)", "Should the sounds of the stopwatch play?")
                     }
                 },
                 new GameAction("revealAnswer", "Reveal Answer")
@@ -58,11 +65,12 @@ namespace HeavenStudio.Games.Loaders
                 },
                 new GameAction("answerReaction", "Answer Reaction")
                 {
-                    function = delegate { var e = eventCaller.currentEntity; QuizShow.instance.AnswerReaction(e["audience"], e["jingle"]); },
+                    function = delegate { var e = eventCaller.currentEntity; QuizShow.instance.AnswerReaction(e["audience"], e["jingle"], e["reveal"]); },
                     parameters = new List<Param>()
                     {
                         new Param("audience", true, "Audience", "Should the audience make a sound?"),
-                        new Param("jingle", false, "Jingle", "Should the quiz show jingle play?")
+                        new Param("jingle", false, "Jingle", "Should the quiz show jingle play?"),
+                        new Param("reveal", false, "Reveal Answer (Instant)", "Should the answer be revealed when this block starts?")
                     }
                 },
                 new GameAction("changeStage", "Change Expression Stage")
@@ -109,16 +117,19 @@ namespace HeavenStudio.Games
             Stage3 = 3,
             Stage4 = 4,
         }
+        public enum WhichButtonRandom
+        {
+            Random = 0,
+            DpadOnly = 1,
+            AOnly = 2,
+            AlternatingDpad = 3,
+            AlternatingA = 4
+        }
         public enum ShouldExplode
         {
             Contestant = 0,
             Host = 1,
             Sign = 2
-        }
-        public struct QueuedInterval
-        {
-            public float beat;
-            public float interval;
         }
         [Header("Components")]
         [SerializeField] Animator contesteeLeftArmAnim;
@@ -144,7 +155,6 @@ namespace HeavenStudio.Games
         [SerializeField] List<Sprite> contestantNumberSprites = new List<Sprite>();
         [SerializeField] List<Sprite> hostNumberSprites = new List<Sprite>();
         [SerializeField] Sprite explodedCounter;
-        static List<QueuedInterval> queuedIntervals = new List<QueuedInterval>();
         bool intervalStarted;
         bool shouldResetCount;
         bool doingConsectiveIntervals;
@@ -173,7 +183,6 @@ namespace HeavenStudio.Games
             {
                 if (queuedInputs.Count > 0) queuedInputs.Clear();
             }
-            if (queuedIntervals.Count > 0) queuedIntervals.Clear();
         }
 
         void Awake()
@@ -199,14 +208,6 @@ namespace HeavenStudio.Games
                         ContesteePressButton(true);
                     }
                 }
-                if (queuedIntervals.Count > 0)
-                {
-                    foreach (var interval in queuedIntervals)
-                    {
-                        StartInterval(interval.beat, interval.interval);
-                    }
-                    queuedIntervals.Clear();
-                }
             }
         }
 
@@ -220,7 +221,7 @@ namespace HeavenStudio.Games
             currentStage = stage;
         }
 
-        public void RandomPress(float beat, float length, int min, int max)
+        public void RandomPress(float beat, float length, int min, int max, int whichButtons)
         {
             if (min > max) return;
             int pressAmount = UnityEngine.Random.Range(min, max + 1);
@@ -228,8 +229,26 @@ namespace HeavenStudio.Games
             List<BeatAction.Action> buttonEvents = new List<BeatAction.Action>();
             for (int i = 0; i < pressAmount; i++)
             {
+                bool dpad = UnityEngine.Random.Range(0, 2) == 1;
+                switch (whichButtons)
+                {
+                    case (int)WhichButtonRandom.Random:
+                        break;
+                    case (int)WhichButtonRandom.DpadOnly:
+                        dpad = true;
+                        break;
+                    case (int)WhichButtonRandom.AOnly:
+                        dpad = false; 
+                        break;
+                    case (int)WhichButtonRandom.AlternatingDpad:
+                        dpad = i % 2 == 0;
+                        break;
+                    case (int)WhichButtonRandom.AlternatingA:
+                        dpad = i % 2 != 0;
+                        break;
+                }
                 float spawnBeat = beat + i * length;
-                buttonEvents.Add(new BeatAction.Action(spawnBeat, delegate { HostPressButton(spawnBeat, UnityEngine.Random.Range(0, 2) == 1); }));
+                buttonEvents.Add(new BeatAction.Action(spawnBeat, delegate { HostPressButton(spawnBeat, dpad); }));
             }
             BeatAction.New(instance.gameObject, buttonEvents);
         }
@@ -265,35 +284,10 @@ namespace HeavenStudio.Games
             });
         }
 
-        public static void PreStartInterval(float beat, float interval)
+        public void HostPrepareHands()
         {
-            if (GameManager.instance.currentGame == "quizShow")
-            {
-                BeatAction.New(instance.gameObject, new List<BeatAction.Action>()
-                {
-                    new BeatAction.Action(beat - 1, delegate
-                    {
-                        if (instance.shouldPrepareArms)
-                        {
-                            instance.hostLeftArmAnim.DoScaledAnimationAsync("HostLeftPrepare", 0.5f);
-                            instance.hostRightArmAnim.DoScaledAnimationAsync("HostPrepare", 0.5f);
-                        }
-                    }),
-                    new BeatAction.Action(beat, delegate
-                    {
-                        instance.StartInterval(beat, interval);
-                    }),
-
-                });
-            }
-            else
-            {
-                queuedIntervals.Add(new QueuedInterval
-                {
-                    beat = beat,
-                    interval = interval
-                });
-            }
+            instance.hostLeftArmAnim.DoScaledAnimationAsync("HostLeftPrepare", 0.5f);
+            instance.hostRightArmAnim.DoScaledAnimationAsync("HostPrepare", 0.5f);
         }
 
         public void StartInterval(float beat, float interval)
@@ -317,7 +311,7 @@ namespace HeavenStudio.Games
             intervalStarted = true;
         }
 
-        public void PassTurn(float beat, float length, bool timeUpSound, bool consecutive)
+        public void PassTurn(float beat, float length, bool timeUpSound, bool consecutive, bool visualClock, bool audioClock)
         {
             if (queuedInputs.Count == 0) return;
             if (shouldPrepareArms) 
@@ -331,7 +325,7 @@ namespace HeavenStudio.Games
                 hostRightArmAnim.DoScaledAnimationAsync("HostRightRest", 0.5f);
             }
             shouldPrepareArms = false;
-            stopWatch.SetActive(true);
+            if (visualClock) stopWatch.SetActive(true);
             intervalStarted = false;
             if (doingConsectiveIntervals)
             {
@@ -346,14 +340,20 @@ namespace HeavenStudio.Games
             doingConsectiveIntervals = consecutive;
             playerBeatInterval = beatInterval;
             playerIntervalStartBeat = beat + length;
-            Jukebox.PlayOneShotGame("quizShow/timerStart");
+            float timeUpBeat = 0f;
+            if (audioClock) 
+            {
+                Jukebox.PlayOneShotGame("quizShow/timerStart");
+                timeUpBeat = 0.5f;
+            } 
+            
             BeatAction.New(instance.gameObject, new List<BeatAction.Action>()
             {
                 new BeatAction.Action(beat + length + beatInterval, delegate 
                 { 
                     if (!consecutive) 
                     {
-                        Jukebox.PlayOneShotGame("quizShow/timerStop"); 
+                        if (audioClock) Jukebox.PlayOneShotGame("quizShow/timerStop"); 
                         contesteeLeftArmAnim.DoScaledAnimationAsync("LeftRest", 0.5f);
                         contesteeRightArmAnim.DoScaledAnimationAsync("RightRest", 0.5f);
                         shouldPrepareArms = true;
@@ -361,7 +361,7 @@ namespace HeavenStudio.Games
                     }
                 }   
             ),
-                new BeatAction.Action(beat + length + beatInterval + 0.5f, delegate { if (timeUpSound && !consecutive) Jukebox.PlayOneShotGame("quizShow/timeUp"); })
+                new BeatAction.Action(beat + length + beatInterval + timeUpBeat, delegate { if (timeUpSound && !consecutive) Jukebox.PlayOneShotGame("quizShow/timeUp"); })
             });
             foreach (var input in queuedInputs) 
             {
@@ -467,10 +467,16 @@ namespace HeavenStudio.Games
             });
         }
 
-        public void AnswerReaction(bool audience, bool jingle)
+        public void AnswerReaction(bool audience, bool jingle, bool revealAnswer)
         {
             //In the future make this a prefunction that makes skill stars compatible
             blackOut.SetActive(false);
+            if (revealAnswer)
+            {
+                Jukebox.PlayOneShotGame("quizShow/answerReveal");
+                hostFirstDigitSr.sprite = hostNumberSprites[GetSpecificDigit(countToMatch, 1)];
+                hostSecondDigitSr.sprite = hostNumberSprites[GetSpecificDigit(countToMatch, 2)];
+            }
             if (pressCount == countToMatch)
             {
                 GameProfiler.instance.IncreaseScore();
