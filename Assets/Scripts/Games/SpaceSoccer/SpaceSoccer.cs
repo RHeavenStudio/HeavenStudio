@@ -76,10 +76,11 @@ namespace HeavenStudio.Games.Loaders
                 new GameAction("scroll", "Scrolling Background") 
                 {
                     function = delegate { var e = eventCaller.currentEntity; SpaceSoccer.instance.UpdateScrollSpeed(e.beat, e["x"], e["y"]); },
-                    defaultLength = 0.5f,
+                    resizable = true,
+                    defaultLength = 1f,
                     parameters = new List<Param>() {
-                        new Param("x", new EntityTypes.Float(-100f, 100f, 22f), "Horizontal", "Horizontal Speed Multiplier."),
-                        new Param("y", new EntityTypes.Float(-100f, 100f, 6f), "Vertical", "Vertical Speed Multiplier."),
+                        new Param("x", new EntityTypes.Float(-100f, 100f, 22f), "Horizontal", "How many beats before the background has looped horizontally?"),
+                        new Param("y", new EntityTypes.Float(-100f, 100f, 6f), "Vertical", "How many beats before the background has looped vertically?"),
                     }
                 },
                 // This is still here for "backwards-compatibility" but is hidden in the editor (it does absolutely nothing however)
@@ -152,8 +153,8 @@ namespace HeavenStudio.Games
         float scrollBeat;
         float scrollOffsetX;
         float scrollOffsetY;
-        float scrollLengthX = 22f;
-        float scrollLengthY = 6f;
+        float currentScrollLengthX = 22f;
+        float currentScrollLengthY = 6f;
         Tween bgColorTween;
         Tween dotColorTween;
         #region Space Kicker Position Easing
@@ -174,8 +175,8 @@ namespace HeavenStudio.Games
         private void Update()
         {
             var cond = Conductor.instance;
-            float normalizedX = cond.GetPositionFromBeat(scrollBeat, scrollLengthX);
-            float normalizedY = cond.GetPositionFromBeat(scrollBeat, scrollLengthY);
+            float normalizedX = cond.GetPositionFromBeat(scrollBeat, currentScrollLengthX);
+            float normalizedY = cond.GetPositionFromBeat(scrollBeat, currentScrollLengthY);
             backgroundSprite.NormalizedX = -scrollOffsetX - normalizedX;
             backgroundSprite.NormalizedY = -scrollOffsetY - normalizedY;
 
@@ -230,10 +231,10 @@ namespace HeavenStudio.Games
         public void UpdateScrollSpeed(float beat, float scrollSpeedX, float scrollSpeedY) 
         {
             var cond = Conductor.instance;
-            scrollOffsetX = cond.GetPositionFromBeat(scrollBeat, scrollLengthX);
-            scrollOffsetY = cond.GetPositionFromBeat(scrollBeat, scrollLengthY);
-            scrollLengthX = scrollSpeedX;
-            scrollLengthY = scrollSpeedY;
+            scrollOffsetX = cond.GetPositionFromBeat(scrollBeat, currentScrollLengthX);
+            scrollOffsetY = cond.GetPositionFromBeat(scrollBeat, currentScrollLengthY);
+            currentScrollLengthX = scrollSpeedX;
+            currentScrollLengthY = scrollSpeedY;
             scrollBeat = beat;
         }
 
