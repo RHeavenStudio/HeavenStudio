@@ -96,9 +96,11 @@ namespace HeavenStudio.Games
                 {
                     if (currentJumpIndex < allJumpEvents.Count && currentJumpIndex >= 0)
                     {
-                        if (currentJumpIndex == 0 || allJumpEvents[currentJumpIndex].beat > allJumpEvents[currentJumpIndex - 1].length + ((allJumpEvents[currentJumpIndex].datamodel == "seeSaw/longShort" || allJumpEvents[currentJumpIndex].datamodel == "seeSaw/shortShort") ? 1 : 2))
+                        if (currentJumpIndex == 0 || allJumpEvents[currentJumpIndex].beat > allJumpEvents[currentJumpIndex - 1].length + ((allJumpEvents[currentJumpIndex].datamodel == "seeSaw/longShort" 
+                            || allJumpEvents[currentJumpIndex].datamodel == "seeSaw/shortShort") ? 1 : 2))
                         {
-                            if (cond.songPositionInBeats >= allJumpEvents[currentJumpIndex].beat - ((allJumpEvents[currentJumpIndex].datamodel == "seeSaw/shortLong" || allJumpEvents[currentJumpIndex].datamodel == "seeSaw/shortShort") ? 1 : 2))
+                            if (cond.songPositionInBeats >= allJumpEvents[currentJumpIndex].beat - ((allJumpEvents[currentJumpIndex].datamodel == "seeSaw/shortLong" 
+                                || allJumpEvents[currentJumpIndex].datamodel == "seeSaw/shortShort") ? 1 : 2))
                             {
                                 if (canPrepare && cond.songPositionInBeats < allJumpEvents[currentJumpIndex].beat)
                                 {
@@ -119,7 +121,11 @@ namespace HeavenStudio.Games
             {
                 if (currentJumpIndex < allJumpEvents.Count && currentJumpIndex > 0)
                 {
-                    if (allJumpEvents[currentJumpIndex - 1].beat + allJumpEvents[currentJumpIndex - 1].length != beat && !canPrepare && !canStartJump) return;
+                    if (allJumpEvents[currentJumpIndex - 1].beat + allJumpEvents[currentJumpIndex - 1].length != beat && !canPrepare && !canStartJump)
+                    {
+                        currentJumpIndex++;
+                        return;
+                    }
                 }
             }
             canStartJump = false;
@@ -170,7 +176,11 @@ namespace HeavenStudio.Games
             {
                 if (currentJumpIndex < allJumpEvents.Count && currentJumpIndex > 0)
                 {
-                    if (allJumpEvents[currentJumpIndex - 1].beat + allJumpEvents[currentJumpIndex - 1].length != beat && !canPrepare && !canStartJump) return;
+                    if (allJumpEvents[currentJumpIndex - 1].beat + allJumpEvents[currentJumpIndex - 1].length != beat && !canPrepare && !canStartJump)
+                    {
+                        currentJumpIndex++;
+                        return;
+                    }
                 }
             }
             canStartJump = false;
@@ -220,7 +230,11 @@ namespace HeavenStudio.Games
             {
                 if (currentJumpIndex < allJumpEvents.Count && currentJumpIndex > 0)
                 {
-                    if (allJumpEvents[currentJumpIndex - 1].beat + allJumpEvents[currentJumpIndex - 1].length != beat && !canPrepare && !canStartJump) return;
+                    if (allJumpEvents[currentJumpIndex - 1].beat + allJumpEvents[currentJumpIndex - 1].length != beat && !canPrepare && !canStartJump)
+                    {
+                        currentJumpIndex++;
+                        return;
+                    }
                 }
             }
             canStartJump = false;
