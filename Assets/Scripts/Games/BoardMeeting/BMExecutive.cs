@@ -61,6 +61,7 @@ namespace HeavenStudio.Games.Scripts_BoardMeeting
 
         public void Smile()
         {
+            if (spinning) return;
             anim.Play("SmileIdle");
             smiling = true;
         }

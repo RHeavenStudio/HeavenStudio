@@ -36,6 +36,16 @@ namespace HeavenStudio.Games.Loaders
                     function = delegate { var e = eventCaller.currentEntity; BoardMeeting.instance.AssistantStop(e.beat); },
                     defaultLength = 3f
                 },
+                new GameAction("bop", "Bop")
+                {
+                    function = delegate { var e = eventCaller.currentEntity; BoardMeeting.instance.Bop(e.beat, e.length, e["bop"], e["auto"]); },
+                    resizable = true,
+                    parameters = new List<Param>()
+                    {
+                        new Param("bop", true, "Bop", "Should the executives and assistant bop?"),
+                        new Param("auto", false, "Bop (Auto)", "Should the executives and assistant auto bop?")
+                    }
+                },
                 new GameAction("changeCount", "Change Executives")
                 {
                     function = delegate { BoardMeeting.instance.ChangeExecutiveCount(eventCaller.currentEntity["amount"]); },
@@ -65,6 +75,10 @@ namespace HeavenStudio.Games
         [Header("Properties")]
         [SerializeField] int executiveCount = 4;
         [SerializeField] List<BMExecutive> executives = new List<BMExecutive>();
+        public bool shouldBop = true;
+        bool assistantCanBop = true;
+        bool executivesCanBop = true;
+        public GameEvent bop = new GameEvent();
 
         public static BoardMeeting instance;
 
@@ -74,8 +88,50 @@ namespace HeavenStudio.Games
             InitExecutives();
         }
 
+        private void Update()
+        {
+            var cond = Conductor.instance;
+
+            if (cond.isPlaying && !cond.isPaused)
+            {
+                if (cond.ReportBeat(ref bop.lastReportedBeat, bop.startBeat % 1) && shouldBop)
+                {
+                    SingleBop();
+                }
+            }
+        }
+
+        void SingleBop()
+        {
+            if (assistantCanBop) assistantAnim.DoScaledAnimationAsync("Bop", 0.5f);
+            if (!executivesCanBop) return;
+            foreach (var executive in executives)
+            {
+                executive.Bop();
+            }
+        }
+
+        public void Bop(float beat, float length, bool goBop, bool autoBop)
+        {
+            shouldBop = autoBop;
+            if (goBop)
+            {
+                for (int i = 0; i < length; i++)
+                {
+                    BeatAction.New(instance.gameObject, new List<BeatAction.Action>()
+                    {
+                        new BeatAction.Action(beat + i, delegate
+                        {
+                            SingleBop();
+                        })
+                    });
+                }
+            }
+        }
+
         public void AssistantStop(float beat)
         {
+            assistantCanBop = false;
             BeatAction.New(instance.gameObject, new List<BeatAction.Action>()
             {
                 new BeatAction.Action(beat, delegate { assistantAnim.DoScaledAnimationAsync("One", 0.5f); }),
@@ -88,12 +144,14 @@ namespace HeavenStudio.Games
                         executive.Stop();
                     }
                 }),
+                new BeatAction.Action(beat + 2.5f, delegate { assistantCanBop = true; })
             });
             ScheduleInput(beat, 2f, InputType.STANDARD_DOWN, JustAssistant, Miss, Empty);
         }
 
         public void Stop(float beat, float length)
         {
+            executivesCanBop = false;
             List<BeatAction.Action> stops = new List<BeatAction.Action>();
             for (int i = 0; i < executiveCount; i++)
             {
@@ -101,6 +159,7 @@ namespace HeavenStudio.Games
                 int index = i;
                 stops.Add(new BeatAction.Action(beat + length * i, delegate { executives[index].Stop(); }));
             }
+            stops.Add(new BeatAction.Action(beat + length * executiveCount + 0.5f, delegate { executivesCanBop = true; }));
             BeatAction.New(instance.gameObject, stops);
             ScheduleInput(beat, length * (executiveCount - 1), InputType.STANDARD_DOWN, Just, Miss, Empty);
         }
@@ -162,6 +221,16 @@ namespace HeavenStudio.Games
                 return;
             }
             executives[executiveCount - 1].Stop();
+            BeatAction.New(instance.gameObject, new List<BeatAction.Action>()
+            {
+                new BeatAction.Action(caller.timer + caller.startBeat + 1f, delegate
+                {
+                    foreach (var executive in executives)
+                    {
+                        executive.Smile();
+                    }
+                })
+            });
         }
 
         void JustAssistant(PlayerActionEvent caller, float state)
@@ -172,6 +241,16 @@ namespace HeavenStudio.Games
             }
             executives[executiveCount - 1].Stop();
             assistantAnim.DoScaledAnimationAsync("Stop", 0.5f);
+            BeatAction.New(instance.gameObject, new List<BeatAction.Action>()
+            {
+                new BeatAction.Action(caller.timer + caller.startBeat + 1f, delegate
+                {
+                    foreach (var executive in executives)
+                    {
+                        executive.Smile();
+                    }
+                })
+            });
         }
 
         void Miss(PlayerActionEvent caller)
