@@ -31,6 +31,11 @@ namespace HeavenStudio.Games.Loaders
                     function = delegate { var e = eventCaller.currentEntity; BoardMeeting.instance.Stop(e.beat, e.length); },
                     resizable = true
                 },
+                new GameAction("assStop", "Assistant Stop")
+                {
+                    function = delegate { var e = eventCaller.currentEntity; BoardMeeting.instance.AssistantStop(e.beat); },
+                    defaultLength = 3f
+                },
                 new GameAction("changeCount", "Change Executives")
                 {
                     function = delegate { BoardMeeting.instance.ChangeExecutiveCount(eventCaller.currentEntity["amount"]); },
@@ -55,6 +60,7 @@ namespace HeavenStudio.Games
         [Header("Components")]
         [SerializeField] Transform farLeft;
         [SerializeField] Transform farRight;
+        [SerializeField] Animator assistantAnim;
 
         [Header("Properties")]
         [SerializeField] int executiveCount = 4;
@@ -66,6 +72,24 @@ namespace HeavenStudio.Games
         {
             instance = this;
             InitExecutives();
+        }
+
+        public void AssistantStop(float beat)
+        {
+            BeatAction.New(instance.gameObject, new List<BeatAction.Action>()
+            {
+                new BeatAction.Action(beat, delegate { assistantAnim.DoScaledAnimationAsync("One", 0.5f); }),
+                new BeatAction.Action(beat + 1, delegate { assistantAnim.DoScaledAnimationAsync("Three", 0.5f); }),
+                new BeatAction.Action(beat + 2, delegate 
+                { 
+                    foreach (var executive in executives)
+                    {
+                        if (executive.player) continue;
+                        executive.Stop();
+                    }
+                }),
+            });
+            ScheduleInput(beat, 2f, InputType.STANDARD_DOWN, JustAssistant, Miss, Empty);
         }
 
         public void Stop(float beat, float length)
@@ -138,6 +162,16 @@ namespace HeavenStudio.Games
                 return;
             }
             executives[executiveCount - 1].Stop();
+        }
+
+        void JustAssistant(PlayerActionEvent caller, float state)
+        {
+            if (state >= 1f || state <= -1f)
+            {
+                return;
+            }
+            executives[executiveCount - 1].Stop();
+            assistantAnim.DoScaledAnimationAsync("Stop", 0.5f);
         }
 
         void Miss(PlayerActionEvent caller)

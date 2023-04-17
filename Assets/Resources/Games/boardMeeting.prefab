@@ -1234,6 +1234,7 @@ MonoBehaviour:
   firstEnable: 0
   farLeft: {fileID: 7518443851165344965}
   farRight: {fileID: 6713782291520362818}
+  assistantAnim: {fileID: 1521746322850907348}
   executiveCount: 4
   executives:
   - {fileID: 6299728505360095184}
@@ -2104,6 +2105,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1d92a169b894684429df3bc113698228, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  game: {fileID: 0}
   player: 0
 --- !u!1 &6859472559290284151
 GameObject:
