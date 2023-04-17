@@ -8,6 +8,12 @@ namespace HeavenStudio.Games.Scripts_BoardMeeting
     public class BMExecutive : MonoBehaviour
     {
         public bool player;
+        Animator anim;
+
+        private void Awake()
+        {
+            anim = GetComponent<Animator>();
+        }
     }
 }
 
