@@ -13,6 +13,24 @@ namespace HeavenStudio.Games.Loaders
         {
             return new Minigame("boardMeeting", "Board Meeting", "FFFFFF", false, false, new List<GameAction>()
             {
+                new GameAction("prepare", "Prepare")
+                {
+                    function = delegate { BoardMeeting.instance.Prepare(); }
+                },
+                new GameAction("spin", "Spin")
+                {
+                    function = delegate {var e = eventCaller.currentEntity; BoardMeeting.instance.Spin(e["start"], e["end"]); },
+                    parameters = new List<Param>()
+                    {
+                        new Param("start", new EntityTypes.Integer(1, 40, 1), "Starting Pig", "Which pig from the far left (1) or far right (4) should be the first to spin?"),
+                        new Param("end", new EntityTypes.Integer(1, 40, 4), "Ending Pig", "Which pig from the far left (1) or far right (4) should be the last to spin?")
+                    }
+                },
+                new GameAction("stop", "Stop")
+                {
+                    function = delegate { var e = eventCaller.currentEntity; BoardMeeting.instance.Stop(e.beat, e.length); },
+                    resizable = true
+                },
                 new GameAction("changeCount", "Change Executives")
                 {
                     function = delegate { BoardMeeting.instance.ChangeExecutiveCount(eventCaller.currentEntity["amount"]); },
@@ -50,6 +68,36 @@ namespace HeavenStudio.Games
             InitExecutives();
         }
 
+        public void Stop(float beat, float length)
+        {
+            List<BeatAction.Action> stops = new List<BeatAction.Action>();
+            for (int i = 0; i < executiveCount; i++)
+            {
+                if (executives[i].player) break;
+                int index = i;
+                stops.Add(new BeatAction.Action(beat + length * i, delegate { executives[index].Stop(); }));
+            }
+            BeatAction.New(instance.gameObject, stops);
+            ScheduleInput(beat, length * (executiveCount - 1), InputType.STANDARD_DOWN, Just, Miss, Empty);
+        }
+
+        public void Prepare()
+        {
+            foreach (var executive in executives)
+            {
+                executive.Prepare();
+            }
+        }
+
+        public void Spin(int start, int end)
+        {
+            if (start > executiveCount || end > executiveCount) return;
+            for (int i = start - 1; i < end; i++)
+            {
+                executives[i].Spin();
+            }
+        }
+
         public void InitExecutives()
         {
             float startPos = farLeft.position.x;
@@ -82,6 +130,22 @@ namespace HeavenStudio.Games
             executiveCount = count;
             InitExecutives();
         }
+
+        void Just(PlayerActionEvent caller, float state)
+        {
+            if (state >= 1f || state <= -1f)
+            {
+                return;
+            }
+            executives[executiveCount - 1].Stop();
+        }
+
+        void Miss(PlayerActionEvent caller)
+        {
+
+        }
+
+        void Empty(PlayerActionEvent caller) { }
     }
 }
 
