@@ -81,6 +81,7 @@ namespace HeavenStudio.Games
         bool executivesCanBop = true;
         public GameEvent bop = new GameEvent();
         Sound chairLoopSound = null;
+        int missCounter = 0;
 
         public static BoardMeeting instance;
 
@@ -100,12 +101,25 @@ namespace HeavenStudio.Games
                 {
                     SingleBop();
                 }
+                if(PlayerInput.Pressed() && !IsExpectingInputNow(InputType.STANDARD_DOWN))
+                {
+                    if (executives[executiveCount - 1].spinning)
+                    {
+                        executives[executiveCount - 1].Stop(false);
+                        Jukebox.PlayOneShotGame("boardMeeting/miss");
+                    }
+                }
             }
         }
 
         void SingleBop()
         {
-            if (assistantCanBop) assistantAnim.DoScaledAnimationAsync("Bop", 0.5f);
+            if (assistantCanBop) 
+            {
+                if (missCounter > 0) assistantAnim.DoScaledAnimationAsync("MissBop", 0.5f);
+                else assistantAnim.DoScaledAnimationAsync("Bop", 0.5f);
+            }
+            if (missCounter > 0) missCounter--;
             if (!executivesCanBop) return;
             foreach (var executive in executives)
             {
@@ -154,10 +168,18 @@ namespace HeavenStudio.Games
                         if (executive.player) continue;
                         executive.Stop();
                     }
+                    if (!executives[executiveCount - 1].spinning)
+                    {
+                        if (chairLoopSound != null)
+                        {
+                            chairLoopSound.KillLoop(0);
+                            chairLoopSound = null;
+                        }
+                    }
                 }),
                 new BeatAction.Action(beat + 2.5f, delegate { assistantCanBop = true; })
             });
-            ScheduleInput(beat, 2f, InputType.STANDARD_DOWN, JustAssistant, Miss, Empty);
+            ScheduleInput(beat, 2f, InputType.STANDARD_DOWN, JustAssistant, MissAssistant, Empty);
         }
 
         public void Stop(float beat, float length)
@@ -183,6 +205,15 @@ namespace HeavenStudio.Games
                     else if (index == ex - 2)
                     {
                         Jukebox.PlayOneShotGame("boardMeeting/stopC");
+                    }
+
+                    if (index == executiveCount - 2 && !executives[executiveCount - 1].spinning)
+                    {
+                        if (chairLoopSound != null)
+                        {
+                            chairLoopSound.KillLoop(0);
+                            chairLoopSound = null;
+                        }
                     }
                     executives[index].Stop(); 
                 }));
@@ -268,6 +299,8 @@ namespace HeavenStudio.Games
             }
             if (state >= 1f || state <= -1f)
             {
+                Jukebox.PlayOneShotGame("boardMeeting/missThrough");
+                executives[executiveCount - 1].Stop(false);
                 return;
             }
             Jukebox.PlayOneShotGame("boardMeeting/stopPlayer");
@@ -293,6 +326,8 @@ namespace HeavenStudio.Games
             }
             if (state >= 1f || state <= -1f)
             {
+                Jukebox.PlayOneShotGame("boardMeeting/missThrough");
+                executives[executiveCount - 1].Stop(false);
                 return;
             }
             executives[executiveCount - 1].Stop();
@@ -312,11 +347,32 @@ namespace HeavenStudio.Games
 
         void Miss(PlayerActionEvent caller)
         {
-            if (chairLoopSound != null)
+            if (executives[executiveCount - 1].spinning)
             {
-                chairLoopSound.KillLoop(0);
-                chairLoopSound = null;
+                executives[executiveCount - 1].Stop(false);
+                Jukebox.PlayOneShotGame("boardMeeting/missThrough");
+                if (chairLoopSound != null)
+                {
+                    chairLoopSound.KillLoop(0);
+                    chairLoopSound = null;
+                }
             }
+        }
+
+        void MissAssistant(PlayerActionEvent caller)
+        {
+            if (executives[executiveCount - 1].spinning)
+            {
+                executives[executiveCount - 1].Stop(false);
+                Jukebox.PlayOneShotGame("boardMeeting/missThrough");
+                if (chairLoopSound != null)
+                {
+                    chairLoopSound.KillLoop(0);
+                    chairLoopSound = null;
+                }
+            }
+            assistantAnim.Play("MissIdle");
+            missCounter = 2;
         }
 
         void Empty(PlayerActionEvent caller) { }

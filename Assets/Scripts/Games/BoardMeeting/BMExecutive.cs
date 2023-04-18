@@ -11,8 +11,8 @@ namespace HeavenStudio.Games.Scripts_BoardMeeting
         public bool player;
         Animator anim;
         bool canBop = true;
-        bool smiling;
-        bool spinning;
+        int smileCounter = 0;
+        public bool spinning;
         Sound rollLoop = null;
 
         private void Awake()
@@ -53,11 +53,11 @@ namespace HeavenStudio.Games.Scripts_BoardMeeting
             rollLoop = Jukebox.PlayOneShotGame("boardMeeting/roll" + soundToPlay, Conductor.instance.songPositionInBeats + 0.5f - Conductor.instance.GetRestFromRealTime(offset), 1, 1, true);
         }
 
-        public void Stop()
+        public void Stop(bool hit = true)
         {
             if (!spinning) return;
             spinning = false;
-            anim.DoScaledAnimationAsync("Stop", 0.5f);
+            anim.DoScaledAnimationAsync(hit ? "Stop" : "Miss", 0.5f);
             if (rollLoop != null)
             {
                 rollLoop.KillLoop(0);
@@ -73,9 +73,10 @@ namespace HeavenStudio.Games.Scripts_BoardMeeting
         public void Bop()
         {
             if (!canBop || spinning) return;
-            if (smiling)
+            if (smileCounter > 0)
             {
                 anim.DoScaledAnimationAsync("SmileBop", 0.5f);
+                smileCounter--;
             }
             else
             {
@@ -88,7 +89,7 @@ namespace HeavenStudio.Games.Scripts_BoardMeeting
         {
             if (spinning) return;
             anim.Play("SmileIdle");
-            smiling = true;
+            smileCounter = 2;
         }
     }
 }
