@@ -1,0 +1,2396 @@
+fileFormatVersion: 2
+guid: 17b3f016f33f9a74b8a0b382914f126a
+TextureImporter:
+  internalIDToNameTable:
+  - first:
+      213: -474485390170358514
+    second: DPAD0
+  - first:
+      213: 8466334812419657628
+    second: DPAD1
+  - first:
+      213: -8857745971218785515
+    second: DPAD2
+  - first:
+      213: -346456883278367711
+    second: AButton0
+  - first:
+      213: 5822591538618435546
+    second: AButton1
+  - first:
+      213: -2035785101675059746
+    second: AButton2
+  - first:
+      213: -6601520898044709631
+    second: HostBody
+  - first:
+      213: -9103315030412742790
+    second: ContesteeBody
+  - first:
+      213: -2360217439366554597
+    second: HostFaceNeutral
+  - first:
+      213: 7766475940177994414
+    second: ContesteeFaceNeutral
+  - first:
+      213: -3652273559974015573
+    second: ContesteeRightHand
+  - first:
+      213: -8168596184250870035
+    second: ContesteeLeftHand
+  - first:
+      213: 3650567430847218855
+    second: HostRightHand
+  - first:
+      213: 37760930943052639
+    second: HostLeftHand
+  - first:
+      213: -4525707875217434959
+    second: BowTie
+  - first:
+      213: -837000406188907753
+    second: ArmLayDown
+  - first:
+      213: -3495863286263785323
+    second: ArmLayDownNoShoulder
+  externalObjects: {}
+  serializedVersion: 12
+  mipmaps:
+    mipMapMode: 0
+    enableMipMap: 0
+    sRGBTexture: 1
+    linearTexture: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapsPreserveCoverage: 0
+    alphaTestReferenceValue: 0.5
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+  bumpmap:
+    convertToNormalMap: 0
+    externalNormalMap: 0
+    heightScale: 0.25
+    normalMapFilter: 0
+  isReadable: 0
+  streamingMipmaps: 0
+  streamingMipmapsPriority: 0
+  vTOnly: 0
+  ignoreMasterTextureLimit: 0
+  grayScaleToAlpha: 0
+  generateCubemap: 6
+  cubemapConvolution: 0
+  seamlessCubemap: 0
+  textureFormat: 1
+  maxTextureSize: 2048
+  textureSettings:
+    serializedVersion: 2
+    filterMode: 1
+    aniso: 1
+    mipBias: 0
+    wrapU: 1
+    wrapV: 1
+    wrapW: 1
+  nPOTScale: 0
+  lightmap: 0
+  compressionQuality: 50
+  spriteMode: 2
+  spriteExtrude: 1
+  spriteMeshType: 1
+  alignment: 0
+  spritePivot: {x: 0.5, y: 0.5}
+  spritePixelsToUnits: 200
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spriteGenerateFallbackPhysicsShape: 1
+  alphaUsage: 1
+  alphaIsTransparency: 1
+  spriteTessellationDetail: -1
+  textureType: 8
+  textureShape: 1
+  singleChannelComponent: 0
+  flipbookRows: 1
+  flipbookColumns: 1
+  maxTextureSizeSet: 0
+  compressionQualitySet: 0
+  textureFormatSet: 0
+  ignorePngGamma: 0
+  applyGammaDecoding: 0
+  cookieLightType: 1
+  platformSettings:
+  - serializedVersion: 3
+    buildTarget: DefaultTexturePlatform
+    maxTextureSize: 4096
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 3
+    buildTarget: Standalone
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 3
+    buildTarget: Server
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  spriteSheet:
+    serializedVersion: 2
+    sprites:
+    - serializedVersion: 2
+      name: DPAD0
+      rect:
+        serializedVersion: 2
+        x: 520
+        y: 424
+        width: 238
+        height: 174
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: e0d78c33d0a4a69f0800000000000000
+      internalID: -474485390170358514
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: DPAD1
+      rect:
+        serializedVersion: 2
+        x: 262
+        y: 424
+        width: 242
+        height: 178
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: c9f0cc3c7a67e7570800000000000000
+      internalID: 8466334812419657628
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: DPAD2
+      rect:
+        serializedVersion: 2
+        x: 6
+        y: 424
+        width: 244
+        height: 178
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 51b5bd238f6f21580800000000000000
+      internalID: -8857745971218785515
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: AButton0
+      rect:
+        serializedVersion: 2
+        x: 6
+        y: 230
+        width: 244
+        height: 180
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 124343edc43213bf0800000000000000
+      internalID: -346456883278367711
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: AButton1
+      rect:
+        serializedVersion: 2
+        x: 262
+        y: 230
+        width: 244
+        height: 180
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: ad70c8ba7200ec050800000000000000
+      internalID: 5822591538618435546
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: AButton2
+      rect:
+        serializedVersion: 2
+        x: 520
+        y: 232
+        width: 242
+        height: 176
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: ed520af6c307fb3e0800000000000000
+      internalID: -2035785101675059746
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: HostBody
+      rect:
+        serializedVersion: 2
+        x: 6
+        y: 2054
+        width: 272
+        height: 340
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 1053ab638bfa264a0800000000000000
+      internalID: -6601520898044709631
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: ContesteeBody
+      rect:
+        serializedVersion: 2
+        x: 296
+        y: 2056
+        width: 208
+        height: 336
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: a7f26c516378aa180800000000000000
+      internalID: -9103315030412742790
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: HostFaceNeutral
+      rect:
+        serializedVersion: 2
+        x: 786
+        y: 3492
+        width: 218
+        height: 256
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: b1cdfdd6eb2de3fd0800000000000000
+      internalID: -2360217439366554597
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: ContesteeFaceNeutral
+      rect:
+        serializedVersion: 2
+        x: 32
+        y: 3830
+        width: 188
+        height: 216
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: ea26de218b018cb60800000000000000
+      internalID: 7766475940177994414
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: ContesteeRightHand
+      rect:
+        serializedVersion: 2
+        x: 1750
+        y: 2934
+        width: 126
+        height: 104
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: bad823b3c84805dc0800000000000000
+      internalID: -3652273559974015573
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: ContesteeLeftHand
+      rect:
+        serializedVersion: 2
+        x: 1738
+        y: 3388
+        width: 134
+        height: 98
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: de69d1cac0153ae80800000000000000
+      internalID: -8168596184250870035
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: HostRightHand
+      rect:
+        serializedVersion: 2
+        x: 1762
+        y: 1822
+        width: 96
+        height: 86
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 7a44240acbb69a230800000000000000
+      internalID: 3650567430847218855
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: HostLeftHand
+      rect:
+        serializedVersion: 2
+        x: 1738
+        y: 2276
+        width: 146
+        height: 90
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: f5baf3bdd57268000800000000000000
+      internalID: 37760930943052639
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: BowTie
+      rect:
+        serializedVersion: 2
+        x: 716
+        y: 2882
+        width: 116
+        height: 66
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 1b61a7c6aa47131c0800000000000000
+      internalID: -4525707875217434959
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: ArmLayDown
+      rect:
+        serializedVersion: 2
+        x: 24
+        y: 2426
+        width: 184
+        height: 166
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 713a040b0906264f0800000000000000
+      internalID: -837000406188907753
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: ArmLayDownNoShoulder
+      rect:
+        serializedVersion: 2
+        x: 34
+        y: 2676
+        width: 162
+        height: 120
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 598daeeecd23c7fc0800000000000000
+      internalID: -3495863286263785323
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: quiz_parts_0
+      rect:
+        serializedVersion: 2
+        x: 282
+        y: 3816
+        width: 198
+        height: 236
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: dfee1f33000000000800000000000000
+      internalID: 871493373
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: quiz_parts_1
+      rect:
+        serializedVersion: 2
+        x: 542
+        y: 3822
+        width: 190
+        height: 236
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: ce4b0679ffffffff0800000000000000
+      internalID: -1755269908
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: quiz_parts_2
+      rect:
+        serializedVersion: 2
+        x: 802
+        y: 3828
+        width: 186
+        height: 226
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 98931921000000000800000000000000
+      internalID: 311507337
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: quiz_parts_3
+      rect:
+        serializedVersion: 2
+        x: 1050
+        y: 3828
+        width: 196
+        height: 224
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: c70fb79bffffffff0800000000000000
+      internalID: -1183059844
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: quiz_parts_4
+      rect:
+        serializedVersion: 2
+        x: 1312
+        y: 3828
+        width: 186
+        height: 224
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: cc012863000000000800000000000000
+      internalID: 914493644
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: quiz_parts_5
+      rect:
+        serializedVersion: 2
+        x: 1566
+        y: 3828
+        width: 188
+        height: 228
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 05951af1000000000800000000000000
+      internalID: 530667856
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: quiz_parts_6
+      rect:
+        serializedVersion: 2
+        x: 532
+        y: 3492
+        width: 214
+        height: 258
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: c229df21000000000800000000000000
+      internalID: 318607916
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: quiz_parts_7
+      rect:
+        serializedVersion: 2
+        x: 272
+        y: 3496
+        width: 218
+        height: 252
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: fc4fc5d2000000000800000000000000
+      internalID: 761066703
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: quiz_parts_8
+      rect:
+        serializedVersion: 2
+        x: 16
+        y: 3500
+        width: 218
+        height: 244
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: df775ec0000000000800000000000000
+      internalID: 216365053
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: quiz_parts_9
+      rect:
+        serializedVersion: 2
+        x: 12
+        y: 3088
+        width: 292
+        height: 356
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 2da01495000000000800000000000000
+      internalID: 1497434834
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: quiz_parts_10
+      rect:
+        serializedVersion: 2
+        x: 332
+        y: 3086
+        width: 328
+        height: 358
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 0b6da870000000000800000000000000
+      internalID: 126539440
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: quiz_parts_11
+      rect:
+        serializedVersion: 2
+        x: 686
+        y: 2988
+        width: 326
+        height: 456
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: be007545000000000800000000000000
+      internalID: 1414988011
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: quiz_parts_12
+      rect:
+        serializedVersion: 2
+        x: 30
+        y: 2880
+        width: 146
+        height: 162
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: d4d57b01000000000800000000000000
+      internalID: 280452429
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: quiz_parts_13
+      rect:
+        serializedVersion: 2
+        x: 260
+        y: 2870
+        width: 154
+        height: 188
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: befdc0c6000000000800000000000000
+      internalID: 1812783083
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: quiz_parts_14
+      rect:
+        serializedVersion: 2
+        x: 484
+        y: 2876
+        width: 154
+        height: 178
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: d42d9b7bffffffff0800000000000000
+      internalID: -1212558771
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: quiz_parts_15
+      rect:
+        serializedVersion: 2
+        x: 252
+        y: 2668
+        width: 172
+        height: 132
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 8962562dffffffff0800000000000000
+      internalID: -765122920
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: quiz_parts_16
+      rect:
+        serializedVersion: 2
+        x: 468
+        y: 2664
+        width: 178
+        height: 138
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 652366e1000000000800000000000000
+      internalID: 510014038
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: quiz_parts_17
+      rect:
+        serializedVersion: 2
+        x: 702
+        y: 2674
+        width: 162
+        height: 130
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: b1a978a5000000000800000000000000
+      internalID: 1518836251
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: quiz_parts_18
+      rect:
+        serializedVersion: 2
+        x: 252
+        y: 2426
+        width: 160
+        height: 172
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 7b2ad80cffffffff0800000000000000
+      internalID: -1064459593
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: quiz_parts_19
+      rect:
+        serializedVersion: 2
+        x: 488
+        y: 2444
+        width: 148
+        height: 142
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: a268069bffffffff0800000000000000
+      internalID: -1184856534
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: quiz_parts_20
+      rect:
+        serializedVersion: 2
+        x: 708
+        y: 2440
+        width: 150
+        height: 150
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 4e89b604000000000800000000000000
+      internalID: 1080793316
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: quiz_parts_21
+      rect:
+        serializedVersion: 2
+        x: 906
+        y: 2668
+        width: 108
+        height: 170
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 6e14339cffffffff0800000000000000
+      internalID: -919387674
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: quiz_parts_22
+      rect:
+        serializedVersion: 2
+        x: 874
+        y: 2858
+        width: 108
+        height: 110
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 6e06b48cffffffff0800000000000000
+      internalID: -934584090
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: quiz_parts_23
+      rect:
+        serializedVersion: 2
+        x: 908
+        y: 2510
+        width: 106
+        height: 136
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: dce68947000000000800000000000000
+      internalID: 1956146893
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: quiz_parts_24
+      rect:
+        serializedVersion: 2
+        x: 906
+        y: 2378
+        width: 108
+        height: 110
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 0265e094000000000800000000000000
+      internalID: 1225676320
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: quiz_parts_25
+      rect:
+        serializedVersion: 2
+        x: 520
+        y: 2058
+        width: 334
+        height: 334
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: db7b748bffffffff0800000000000000
+      internalID: -1203259459
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: ZeroCon
+      rect:
+        serializedVersion: 2
+        x: 12
+        y: 1228
+        width: 200
+        height: 298
+      alignment: 9
+      pivot: {x: 0.4976975, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: bb52c01affffffff0800000000000000
+      internalID: -1593039429
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: OneCon
+      rect:
+        serializedVersion: 2
+        x: 234
+        y: 1226
+        width: 204
+        height: 300
+      alignment: 9
+      pivot: {x: 0.4976975, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 2c62f52fffffffff0800000000000000
+      internalID: -228645182
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: TwoCon
+      rect:
+        serializedVersion: 2
+        x: 458
+        y: 1226
+        width: 206
+        height: 300
+      alignment: 9
+      pivot: {x: 0.4976975, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: a7e98b77000000000800000000000000
+      internalID: 2008587898
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: ThreeCon
+      rect:
+        serializedVersion: 2
+        x: 684
+        y: 1226
+        width: 202
+        height: 300
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: a44b91b5000000000800000000000000
+      internalID: 1528411210
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: FourCon
+      rect:
+        serializedVersion: 2
+        x: 906
+        y: 1226
+        width: 204
+        height: 300
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 99d97438ffffffff0800000000000000
+      internalID: -2092458599
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: FiveCon
+      rect:
+        serializedVersion: 2
+        x: 10
+        y: 906
+        width: 202
+        height: 302
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: bfacff3cffffffff0800000000000000
+      internalID: -1006646533
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SixCon
+      rect:
+        serializedVersion: 2
+        x: 234
+        y: 906
+        width: 206
+        height: 302
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: d1b21a42000000000800000000000000
+      internalID: 614542109
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SevenCon
+      rect:
+        serializedVersion: 2
+        x: 458
+        y: 908
+        width: 204
+        height: 300
+      alignment: 9
+      pivot: {x: 0.4976975, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 55840179ffffffff0800000000000000
+      internalID: -1760540587
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: EightCon
+      rect:
+        serializedVersion: 2
+        x: 682
+        y: 908
+        width: 204
+        height: 302
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 4c6ea888ffffffff0800000000000000
+      internalID: -2004162876
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: NineCon
+      rect:
+        serializedVersion: 2
+        x: 906
+        y: 906
+        width: 204
+        height: 300
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 1b1a71e2000000000800000000000000
+      internalID: 773300657
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: ZeroHost
+      rect:
+        serializedVersion: 2
+        x: 936
+        y: 592
+        width: 204
+        height: 296
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 98fac542000000000800000000000000
+      internalID: 610054025
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: OneHost
+      rect:
+        serializedVersion: 2
+        x: 1158
+        y: 590
+        width: 206
+        height: 300
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: c6f538f5000000000800000000000000
+      internalID: 1602445164
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: TwoHost
+      rect:
+        serializedVersion: 2
+        x: 1380
+        y: 590
+        width: 208
+        height: 300
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 1a0a9176000000000800000000000000
+      internalID: 1729732769
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: ThreeHost
+      rect:
+        serializedVersion: 2
+        x: 1604
+        y: 590
+        width: 208
+        height: 300
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: c51ef03affffffff0800000000000000
+      internalID: -1559240356
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: FourHost
+      rect:
+        serializedVersion: 2
+        x: 1828
+        y: 590
+        width: 208
+        height: 298
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 5a80933cffffffff0800000000000000
+      internalID: -1019672411
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: FiveHost
+      rect:
+        serializedVersion: 2
+        x: 932
+        y: 268
+        width: 208
+        height: 304
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 1e2f039cffffffff0800000000000000
+      internalID: -919538975
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SixHost
+      rect:
+        serializedVersion: 2
+        x: 1156
+        y: 270
+        width: 206
+        height: 302
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 403cd6a0000000000800000000000000
+      internalID: 174965508
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SevenHost
+      rect:
+        serializedVersion: 2
+        x: 1382
+        y: 270
+        width: 204
+        height: 302
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: a5c4c8fdffffffff0800000000000000
+      internalID: -544453542
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: EightHost
+      rect:
+        serializedVersion: 2
+        x: 1606
+        y: 270
+        width: 204
+        height: 302
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 361a4d60000000000800000000000000
+      internalID: 114598243
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: NineHost
+      rect:
+        serializedVersion: 2
+        x: 1830
+        y: 270
+        width: 206
+        height: 302
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 84fa0f05000000000800000000000000
+      internalID: 1357950792
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: QuestionCon
+      rect:
+        serializedVersion: 2
+        x: 1130
+        y: 1226
+        width: 204
+        height: 300
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 0568fc90000000000800000000000000
+      internalID: 164595280
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: QuestionHost
+      rect:
+        serializedVersion: 2
+        x: 1130
+        y: 918
+        width: 204
+        height: 288
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 1c40baf0000000000800000000000000
+      internalID: 262866113
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: quiz_parts_48
+      rect:
+        serializedVersion: 2
+        x: 1352
+        y: 1274
+        width: 146
+        height: 254
+      alignment: 9
+      pivot: {x: 0.4938204, y: 0.6012237}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 8a6d8bf4000000000800000000000000
+      internalID: 1337513640
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: quiz_parts_49
+      rect:
+        serializedVersion: 2
+        x: 1514
+        y: 1226
+        width: 302
+        height: 302
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 712d4207000000000800000000000000
+      internalID: 1881461271
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: quiz_parts_50
+      rect:
+        serializedVersion: 2
+        x: 1044
+        y: 1550
+        width: 190
+        height: 196
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 2b8cfb5cffffffff0800000000000000
+      internalID: -977286990
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: quiz_parts_51
+      rect:
+        serializedVersion: 2
+        x: 1260
+        y: 1548
+        width: 200
+        height: 200
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: bed9ca22000000000800000000000000
+      internalID: 581737963
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: quiz_parts_52
+      rect:
+        serializedVersion: 2
+        x: 1484
+        y: 1546
+        width: 200
+        height: 204
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: c1b7e0f8ffffffff0800000000000000
+      internalID: -1894876388
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: quiz_parts_53
+      rect:
+        serializedVersion: 2
+        x: 1036
+        y: 1772
+        width: 202
+        height: 202
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: f50ce85dffffffff0800000000000000
+      internalID: -712064929
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: quiz_parts_54
+      rect:
+        serializedVersion: 2
+        x: 1258
+        y: 1770
+        width: 204
+        height: 204
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 8ad5c2d7000000000800000000000000
+      internalID: 2100059560
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: quiz_parts_55
+      rect:
+        serializedVersion: 2
+        x: 1482
+        y: 1774
+        width: 204
+        height: 200
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 471fb478ffffffff0800000000000000
+      internalID: -2025066124
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: quiz_parts_56
+      rect:
+        serializedVersion: 2
+        x: 1034
+        y: 1996
+        width: 204
+        height: 202
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 1ec2561cffffffff0800000000000000
+      internalID: -1050333983
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: quiz_parts_57
+      rect:
+        serializedVersion: 2
+        x: 1260
+        y: 1996
+        width: 200
+        height: 200
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: ef09327bffffffff0800000000000000
+      internalID: -1222405890
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: quiz_parts_58
+      rect:
+        serializedVersion: 2
+        x: 1484
+        y: 1996
+        width: 202
+        height: 202
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 82337bf4000000000800000000000000
+      internalID: 1337406248
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: quiz_parts_59
+      rect:
+        serializedVersion: 2
+        x: 1708
+        y: 1996
+        width: 202
+        height: 200
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 505e2a1dffffffff0800000000000000
+      internalID: -777853691
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: quiz_parts_60
+      rect:
+        serializedVersion: 2
+        x: 1036
+        y: 2220
+        width: 202
+        height: 204
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 516a6545000000000800000000000000
+      internalID: 1414964757
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: quiz_parts_61
+      rect:
+        serializedVersion: 2
+        x: 1258
+        y: 2218
+        width: 204
+        height: 206
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: b25f6873000000000800000000000000
+      internalID: 931591467
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: quiz_parts_62
+      rect:
+        serializedVersion: 2
+        x: 1484
+        y: 2218
+        width: 202
+        height: 202
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: f5129bc2000000000800000000000000
+      internalID: 750330207
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: quiz_parts_63
+      rect:
+        serializedVersion: 2
+        x: 1036
+        y: 2442
+        width: 202
+        height: 206
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: ec1a9426000000000800000000000000
+      internalID: 1648992718
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: quiz_parts_64
+      rect:
+        serializedVersion: 2
+        x: 1256
+        y: 2442
+        width: 206
+        height: 206
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 7c9d3c5effffffff0800000000000000
+      internalID: -440149561
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: quiz_parts_65
+      rect:
+        serializedVersion: 2
+        x: 1482
+        y: 2444
+        width: 204
+        height: 204
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: b4f30f79ffffffff0800000000000000
+      internalID: -1745862837
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: quiz_parts_66
+      rect:
+        serializedVersion: 2
+        x: 1706
+        y: 2442
+        width: 204
+        height: 206
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 1910719effffffff0800000000000000
+      internalID: -384368239
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: quiz_parts_67
+      rect:
+        serializedVersion: 2
+        x: 1036
+        y: 2666
+        width: 202
+        height: 204
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 80638612000000000800000000000000
+      internalID: 560477704
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: quiz_parts_68
+      rect:
+        serializedVersion: 2
+        x: 1258
+        y: 2668
+        width: 200
+        height: 204
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: dac1d60fffffffff0800000000000000
+      internalID: -261284691
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: quiz_parts_69
+      rect:
+        serializedVersion: 2
+        x: 1484
+        y: 2668
+        width: 202
+        height: 202
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 276d503fffffffff0800000000000000
+      internalID: -217721230
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: quiz_parts_70
+      rect:
+        serializedVersion: 2
+        x: 1036
+        y: 2892
+        width: 200
+        height: 200
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: fe6d9220000000000800000000000000
+      internalID: 36296431
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: quiz_parts_71
+      rect:
+        serializedVersion: 2
+        x: 1258
+        y: 2892
+        width: 202
+        height: 204
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 8cb11956000000000800000000000000
+      internalID: 1704008648
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: quiz_parts_72
+      rect:
+        serializedVersion: 2
+        x: 1482
+        y: 2890
+        width: 204
+        height: 202
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 239bb29effffffff0800000000000000
+      internalID: -383010510
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: quiz_parts_73
+      rect:
+        serializedVersion: 2
+        x: 1036
+        y: 3114
+        width: 204
+        height: 206
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: a67a2d61000000000800000000000000
+      internalID: 382904170
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: quiz_parts_74
+      rect:
+        serializedVersion: 2
+        x: 1258
+        y: 3112
+        width: 206
+        height: 206
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 36b1940dffffffff0800000000000000
+      internalID: -800515229
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: quiz_parts_75
+      rect:
+        serializedVersion: 2
+        x: 1482
+        y: 3114
+        width: 206
+        height: 206
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 6ce6c7acffffffff0800000000000000
+      internalID: -897814842
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: quiz_parts_76
+      rect:
+        serializedVersion: 2
+        x: 1706
+        y: 3112
+        width: 206
+        height: 208
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 1ba81ffcffffffff0800000000000000
+      internalID: -806253903
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: quiz_parts_77
+      rect:
+        serializedVersion: 2
+        x: 1036
+        y: 3338
+        width: 202
+        height: 206
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: e8c528b2000000000800000000000000
+      internalID: 729963662
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: quiz_parts_78
+      rect:
+        serializedVersion: 2
+        x: 1258
+        y: 3338
+        width: 204
+        height: 206
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: fc76318affffffff0800000000000000
+      internalID: -1475123249
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: quiz_parts_79
+      rect:
+        serializedVersion: 2
+        x: 1480
+        y: 3338
+        width: 208
+        height: 206
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 903c9a4effffffff0800000000000000
+      internalID: -458636535
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: quiz_parts_80
+      rect:
+        serializedVersion: 2
+        x: 1706
+        y: 3562
+        width: 204
+        height: 204
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 293305aeffffffff0800000000000000
+      internalID: -363842670
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: quiz_parts_81
+      rect:
+        serializedVersion: 2
+        x: 1484
+        y: 3564
+        width: 200
+        height: 200
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 61f6fc10000000000800000000000000
+      internalID: 30371606
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: quiz_parts_82
+      rect:
+        serializedVersion: 2
+        x: 1256
+        y: 3562
+        width: 206
+        height: 206
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 69b6e9dcffffffff0800000000000000
+      internalID: -845255786
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: quiz_parts_83
+      rect:
+        serializedVersion: 2
+        x: 1034
+        y: 3562
+        width: 204
+        height: 204
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 1cff95d4000000000800000000000000
+      internalID: 1297743809
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    outline: []
+    physicsShape: []
+    bones: []
+    spriteID: 5e97eb03825dee720800000000000000
+    internalID: 0
+    vertices: []
+    indices: 
+    edges: []
+    weights: []
+    secondaryTextures: []
+    nameFileIdTable:
+      AButton0: -346456883278367711
+      AButton1: 5822591538618435546
+      AButton2: -2035785101675059746
+      ArmLayDown: -837000406188907753
+      ArmLayDownNoShoulder: -3495863286263785323
+      BowTie: -4525707875217434959
+      ContesteeBody: -9103315030412742790
+      ContesteeFaceNeutral: 7766475940177994414
+      ContesteeLeftHand: -8168596184250870035
+      ContesteeRightHand: -3652273559974015573
+      DPAD0: -474485390170358514
+      DPAD1: 8466334812419657628
+      DPAD2: -8857745971218785515
+      EightCon: -2004162876
+      EightHost: 114598243
+      FiveCon: -1006646533
+      FiveHost: -919538975
+      FourCon: -2092458599
+      FourHost: -1019672411
+      HostBody: -6601520898044709631
+      HostFaceNeutral: -2360217439366554597
+      HostLeftHand: 37760930943052639
+      HostRightHand: 3650567430847218855
+      NineCon: 773300657
+      NineHost: 1357950792
+      OneCon: -228645182
+      OneHost: 1602445164
+      QuestionCon: 164595280
+      QuestionHost: 262866113
+      SevenCon: -1760540587
+      SevenHost: -544453542
+      SixCon: 614542109
+      SixHost: 174965508
+      ThreeCon: 1528411210
+      ThreeHost: -1559240356
+      TwoCon: 2008587898
+      TwoHost: 1729732769
+      ZeroCon: -1593039429
+      ZeroHost: 610054025
+      quiz_parts_0: 871493373
+      quiz_parts_1: -1755269908
+      quiz_parts_10: 126539440
+      quiz_parts_11: 1414988011
+      quiz_parts_12: 280452429
+      quiz_parts_13: 1812783083
+      quiz_parts_14: -1212558771
+      quiz_parts_15: -765122920
+      quiz_parts_16: 510014038
+      quiz_parts_17: 1518836251
+      quiz_parts_18: -1064459593
+      quiz_parts_19: -1184856534
+      quiz_parts_2: 311507337
+      quiz_parts_20: 1080793316
+      quiz_parts_21: -919387674
+      quiz_parts_22: -934584090
+      quiz_parts_23: 1956146893
+      quiz_parts_24: 1225676320
+      quiz_parts_25: -1203259459
+      quiz_parts_3: -1183059844
+      quiz_parts_4: 914493644
+      quiz_parts_48: 1337513640
+      quiz_parts_49: 1881461271
+      quiz_parts_5: 530667856
+      quiz_parts_50: -977286990
+      quiz_parts_51: 581737963
+      quiz_parts_52: -1894876388
+      quiz_parts_53: -712064929
+      quiz_parts_54: 2100059560
+      quiz_parts_55: -2025066124
+      quiz_parts_56: -1050333983
+      quiz_parts_57: -1222405890
+      quiz_parts_58: 1337406248
+      quiz_parts_59: -777853691
+      quiz_parts_6: 318607916
+      quiz_parts_60: 1414964757
+      quiz_parts_61: 931591467
+      quiz_parts_62: 750330207
+      quiz_parts_63: 1648992718
+      quiz_parts_64: -440149561
+      quiz_parts_65: -1745862837
+      quiz_parts_66: -384368239
+      quiz_parts_67: 560477704
+      quiz_parts_68: -261284691
+      quiz_parts_69: -217721230
+      quiz_parts_7: 761066703
+      quiz_parts_70: 36296431
+      quiz_parts_71: 1704008648
+      quiz_parts_72: -383010510
+      quiz_parts_73: 382904170
+      quiz_parts_74: -800515229
+      quiz_parts_75: -897814842
+      quiz_parts_76: -806253903
+      quiz_parts_77: 729963662
+      quiz_parts_78: -1475123249
+      quiz_parts_79: -458636535
+      quiz_parts_8: 216365053
+      quiz_parts_80: -363842670
+      quiz_parts_81: 30371606
+      quiz_parts_82: -845255786
+      quiz_parts_83: 1297743809
+      quiz_parts_9: 1497434834
+  spritePackingTag: 
+  pSDRemoveMatte: 0
+  pSDShowRemoveMatteOption: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

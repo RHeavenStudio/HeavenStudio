@@ -104,6 +104,10 @@ namespace HeavenStudio.Editor
 
                 active = true;
             }
+            else
+            {
+                active = false;
+            }
         }
 
         private void AddParam(string propertyName, object type, string caption, string tooltip = "")

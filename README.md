@@ -37,7 +37,7 @@ This project is still in development, so there are currently no release builds y
 
 ## Self-Building
 
-Heaven Studio is made in [Unity 2020.3.21](https://unity.com/releases/editor/whats-new/2021.3.21),
+Heaven Studio is made in [Unity 2021.3.21](https://unity.com/releases/editor/whats-new/2021.3.21),
 and programmed with [Visual Studio Code](https://code.visualstudio.com/).
 
 Build Instructions: [BUILD.md](https://github.com/megaminerjenny/HeavenStudio/blob/master/BUILD.md) (or the more maintained [documentation page](https://rheavenstudio.github.io/docs-contributing/setup/introduction))

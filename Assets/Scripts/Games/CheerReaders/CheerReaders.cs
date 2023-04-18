@@ -1401,7 +1401,8 @@ namespace HeavenStudio.Games
         void SuccessHoldSpin()
         {
             player.StartSpinBook();
-            SpinningLoop = Jukebox.PlayOneShotScheduledGame("cheerReaders/bookSpinLoop", Jukebox.PlayOneShotGame("cheerReaders/bookSpin").clip.length, 1, 1, true);
+            Jukebox.PlayOneShotGame("cheerReaders/bookSpin");
+            SpinningLoop = Jukebox.PlayOneShotScheduledGame("cheerReaders/bookSpinLoop", Jukebox.GetClipLengthGame("cheerReaders/bookSpin"), 1, 1, true);
         }
 
         void JustReleaseSpin(PlayerActionEvent caller, float state)

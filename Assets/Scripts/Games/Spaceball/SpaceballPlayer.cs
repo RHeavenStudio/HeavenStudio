@@ -68,6 +68,7 @@ namespace HeavenStudio.Games.Scripts_Spaceball
             switch (_currentCostume)
             {
                 case 0:
+                    Hat.sprite = null;
                     return;
                 case 1:
                     sprites = HatSprites1;
