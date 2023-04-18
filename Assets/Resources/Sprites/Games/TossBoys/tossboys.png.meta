@@ -994,8 +994,8 @@ TextureImporter:
         y: 865
         width: 341
         height: 313
-      alignment: 0
-      pivot: {x: 0, y: 0}
+      alignment: 9
+      pivot: {x: 0.50552434, y: 0.5381183}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
@@ -1016,7 +1016,7 @@ TextureImporter:
         width: 342
         height: 316
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
@@ -1037,7 +1037,7 @@ TextureImporter:
         width: 341
         height: 319
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
@@ -1058,7 +1058,7 @@ TextureImporter:
         width: 362
         height: 326
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
@@ -1079,7 +1079,7 @@ TextureImporter:
         width: 369
         height: 329
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
@@ -1095,12 +1095,12 @@ TextureImporter:
       name: tossboys_47
       rect:
         serializedVersion: 2
-        x: 3555
-        y: 349
-        width: 375
-        height: 350
+        x: 2255
+        y: 550
+        width: 327
+        height: 301
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
@@ -1108,6 +1108,132 @@ TextureImporter:
       bones: []
       spriteID: 58efcadc613e7ba4cbad635193db236a
       internalID: -1679750958
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: tossboys_48
+      rect:
+        serializedVersion: 2
+        x: 1613
+        y: 84
+        width: 578
+        height: 380
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: b73d78dba56c5214c90ca60e8505af30
+      internalID: 546621249
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: tossboys_49
+      rect:
+        serializedVersion: 2
+        x: 2214
+        y: 86
+        width: 353
+        height: 401
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 8c7bc87cf9b9ef24cb6cbb2602ecf230
+      internalID: -982537813
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: tossboys_50
+      rect:
+        serializedVersion: 2
+        x: 2579
+        y: 83
+        width: 374
+        height: 457
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 7501e825e17b42146820d65402263132
+      internalID: -1370064725
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: tossboys_51
+      rect:
+        serializedVersion: 2
+        x: 2965
+        y: 93
+        width: 237
+        height: 459
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: f1755264818bc8148a1008674fc91f0b
+      internalID: -61859057
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: tossboys_52
+      rect:
+        serializedVersion: 2
+        x: 3238
+        y: 66
+        width: 266
+        height: 495
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 54ab825ed624aeb4d9d56257eee3a65b
+      internalID: 566634755
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: tossboys_53
+      rect:
+        serializedVersion: 2
+        x: 3523
+        y: 79
+        width: 276
+        height: 487
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 65098ffb8cf401a45849c48f75ec9f1c
+      internalID: 185381256
       vertices: []
       indices: 
       edges: []
@@ -1166,7 +1292,13 @@ TextureImporter:
       tossboys_45: -335425865
       tossboys_46: -760183664
       tossboys_47: -1679750958
+      tossboys_48: 546621249
+      tossboys_49: -982537813
       tossboys_5: -1596118825
+      tossboys_50: -1370064725
+      tossboys_51: -61859057
+      tossboys_52: 566634755
+      tossboys_53: 185381256
       tossboys_6: -1327662853
       tossboys_7: -752237208
       tossboys_8: -1148030701
