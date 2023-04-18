@@ -17,19 +17,27 @@ namespace HeavenStudio.Games.Loaders
                 {
                     function = delegate { BoardMeeting.instance.Prepare(); }
                 },
-                new GameAction("spin", "Spin")
+                new GameAction("spinEqui", "Spin")
+                {
+                    function = delegate {var e = eventCaller.currentEntity; BoardMeeting.instance.SpinEqui(e.beat, e.length); },
+                    resizable = true,
+                    priority = 2
+                },
+                new GameAction("spin", "Spin (Range)")
                 {
                     function = delegate {var e = eventCaller.currentEntity; BoardMeeting.instance.Spin(e["start"], e["end"]); },
                     parameters = new List<Param>()
                     {
                         new Param("start", new EntityTypes.Integer(1, 6, 1), "Starting Pig", "Which pig from the far left (1) or far right (4) should be the first to spin?"),
                         new Param("end", new EntityTypes.Integer(1, 6, 4), "Ending Pig", "Which pig from the far left (1) or far right (4) should be the last to spin?")
-                    }
+                    },
+                    priority = 2
                 },
                 new GameAction("stop", "Stop")
                 {
                     function = delegate { var e = eventCaller.currentEntity; BoardMeeting.instance.Stop(e.beat, e.length); },
-                    resizable = true
+                    resizable = true,
+                    priority = 1
                 },
                 new GameAction("assStop", "Assistant Stop")
                 {
@@ -230,6 +238,36 @@ namespace HeavenStudio.Games
             {
                 executive.Prepare();
             }
+        }
+
+        public void SpinEqui(float beat, float length)
+        {
+            if (chairLoopSound == null) chairLoopSound = Jukebox.PlayOneShotGame("boardMeeting/chairLoop", -1, 1, 1, true);
+            List<BeatAction.Action> rolls = new List<BeatAction.Action>();
+            for (int i = 0; i < executiveCount; i++)
+            {
+                int index = i;
+                rolls.Add(new BeatAction.Action(beat + length * i, delegate
+                {
+                    int ex = executiveCount;
+                    string soundToPlay = "A";
+                    if (executiveCount < 4) ex = 4;
+                    if (index == ex - 3)
+                    {
+                        soundToPlay = "B";
+                    }
+                    else if (index == ex - 2)
+                    {
+                        soundToPlay = "C";
+                    }
+                    else if (index == ex - 1)
+                    {
+                        soundToPlay = "Player";
+                    }
+                    executives[index].Spin(soundToPlay);
+                }));
+            }
+            BeatAction.New(instance.gameObject, rolls);
         }
 
         public void Spin(int start, int end)
