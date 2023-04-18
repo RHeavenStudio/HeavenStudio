@@ -26,6 +26,8 @@ namespace HeavenStudio.Games.Scripts_DoubleDate
             {
                 Vector3 pos = GetPathPositionFromBeat(path, Mathf.Max(beat, pathStartBeat), pathStartBeat);
                 transform.position = pos;
+                float rot = GetPathValue("rot");
+                transform.rotation = Quaternion.Euler(0f, 0f, transform.rotation.eulerAngles.z - (rot * Time.deltaTime * (1f/conductor.pitchedSecPerBeat)));
             }
         }
 

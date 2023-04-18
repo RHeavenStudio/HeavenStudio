@@ -27,13 +27,15 @@ namespace HeavenStudio.Games.Scripts_DoubleDate
             {
                 Vector3 pos = GetPathPositionFromBeat(path, Mathf.Max(beat, pathStartBeat), pathStartBeat);
                 transform.position = pos;
+                float rot = GetPathValue("rot");
+                transform.rotation = Quaternion.Euler(0f, 0f, transform.rotation.eulerAngles.z - (rot * Time.deltaTime * (1f/conductor.pitchedSecPerBeat)));
             }
         }
 
         public void Init(float beat)
         {
             game.ScheduleInput(beat, 1.5f, InputType.STANDARD_DOWN, Just, Miss, Empty);
-            path = game.GetPath("FootBallIn");
+            path = game.GetPath("FootBallIn");  // there's a second path for footballs that don't hit the weasels, use that if the weasels have been hit recently
             UpdateLastRealPos();
             pathStartBeat = beat - 1f;
 
@@ -65,13 +67,13 @@ namespace HeavenStudio.Games.Scripts_DoubleDate
             Hit();
             BeatAction.New(gameObject, new List<BeatAction.Action>()
             {
-                new BeatAction.Action(conductor.songPositionInBeats + 2f, delegate
+                new BeatAction.Action(conductor.songPositionInBeats + 1f, delegate
                 {
                     GetComponent<SpriteRenderer>().sortingOrder = -5;
                     transform.localScale *= 0.25f;
                     path = game.GetPath("FootBallFall");
                     UpdateLastRealPos();
-                    pathStartBeat = conductor.songPositionInBeats + 2f;
+                    pathStartBeat = conductor.songPositionInBeats + 1f;
                 }),
                 new BeatAction.Action(conductor.songPositionInBeats + 12f, delegate
                 {

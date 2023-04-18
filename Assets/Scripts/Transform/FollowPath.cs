@@ -9,16 +9,16 @@ namespace HeavenStudio
     {
         [SerializeField] Vector3 offset;
         protected Vector3 lastRealPos;
+        protected PathPos currentPathPos;
 
         [Serializable]
         public struct PathPos
         {
             [SerializeField] public Transform pos;
             [SerializeField] public float height;
-            [SerializeField] public float rotSpeed;
             [SerializeField] public float duration;
-            [SerializeField] public bool destroy;
             [SerializeField] public bool useLastRealPos;
+            [SerializeField] public PathValue[] values;
         }
 
         [Serializable]
@@ -29,9 +29,30 @@ namespace HeavenStudio
             [SerializeField] public PathPos[] positions;
         }
 
+        [Serializable]
+        public struct PathValue
+        {
+            [SerializeField] public string key;
+            [SerializeField] public float value;
+        }
+
         protected virtual void UpdateLastRealPos()
         {
             lastRealPos = transform.position;
+        }
+
+        protected virtual float GetPathValue(string key)
+        {
+            if (currentPathPos.values == null)
+                return 0f;
+            foreach (PathValue value in currentPathPos.values)
+            {
+                if (value.key == key)
+                {
+                    return value.value;
+                }
+            }
+            return 0f;
         }
 
         protected virtual Vector3 GetPathPositionFromBeat(Path path, float currentTime, float startTime = 0f)
@@ -55,6 +76,7 @@ namespace HeavenStudio
                 else
                     break;
             }
+            currentPathPos = currentPos;
             if (currentPos.pos == null || nextPos.pos == null)
                 return transform.position;
             
