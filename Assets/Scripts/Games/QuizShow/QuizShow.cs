@@ -35,12 +35,13 @@ namespace HeavenStudio.Games.Loaders
                 },
                 new GameAction("randomPresses", "Random Presses")
                 {
-                    function = delegate { var e = eventCaller.currentEntity; QuizShow.instance.RandomPress(e.beat, e.length, e["min"], e["max"], e["random"]); },
+                    function = delegate { var e = eventCaller.currentEntity; QuizShow.instance.RandomPress(e.beat, e.length, e["min"], e["max"], e["random"], e["con"]); },
                     parameters = new List<Param>()
                     {
                         new Param("min", new EntityTypes.Integer(0, 666, 0), "Minimum", "The minimum number of presses this block will do."),
                         new Param("max", new EntityTypes.Integer(0, 666, 1), "Maximum", "The maximum number of presses this block will do."),
-                        new Param("random", QuizShow.WhichButtonRandom.Random, "Which Buttons", "Which buttons will be pressed randomly?")
+                        new Param("random", QuizShow.WhichButtonRandom.Random, "Which Buttons", "Which buttons will be pressed randomly?"),
+                        new Param("con", true, "Consecutive Presses", "Will the presses be consecutive? As in if the first press doesn't trigger, the ones proceeding will not either.")
                     },
                     resizable = true
                 },
@@ -221,35 +222,68 @@ namespace HeavenStudio.Games
             currentStage = stage;
         }
 
-        public void RandomPress(float beat, float length, int min, int max, int whichButtons)
+        public void RandomPress(float beat, float length, int min, int max, int whichButtons, bool consecutive)
         {
             if (min > max) return;
             int pressAmount = UnityEngine.Random.Range(min, max + 1);
             if (pressAmount < 1) return;
             List<BeatAction.Action> buttonEvents = new List<BeatAction.Action>();
-            for (int i = 0; i < pressAmount; i++)
+            if (consecutive)
             {
-                bool dpad = UnityEngine.Random.Range(0, 2) == 1;
-                switch (whichButtons)
+                for (int i = 0; i < pressAmount; i++)
                 {
-                    case (int)WhichButtonRandom.Random:
-                        break;
-                    case (int)WhichButtonRandom.DpadOnly:
-                        dpad = true;
-                        break;
-                    case (int)WhichButtonRandom.AOnly:
-                        dpad = false; 
-                        break;
-                    case (int)WhichButtonRandom.AlternatingDpad:
-                        dpad = i % 2 == 0;
-                        break;
-                    case (int)WhichButtonRandom.AlternatingA:
-                        dpad = i % 2 != 0;
-                        break;
+                    bool dpad = UnityEngine.Random.Range(0, 2) == 1;
+                    switch (whichButtons)
+                    {
+                        case (int)WhichButtonRandom.Random:
+                            break;
+                        case (int)WhichButtonRandom.DpadOnly:
+                            dpad = true;
+                            break;
+                        case (int)WhichButtonRandom.AOnly:
+                            dpad = false;
+                            break;
+                        case (int)WhichButtonRandom.AlternatingDpad:
+                            dpad = i % 2 == 0;
+                            break;
+                        case (int)WhichButtonRandom.AlternatingA:
+                            dpad = i % 2 != 0;
+                            break;
+                    }
+                    float spawnBeat = beat + i * length;
+                    buttonEvents.Add(new BeatAction.Action(spawnBeat, delegate { HostPressButton(spawnBeat, dpad); }));
                 }
-                float spawnBeat = beat + i * length;
-                buttonEvents.Add(new BeatAction.Action(spawnBeat, delegate { HostPressButton(spawnBeat, dpad); }));
             }
+            else
+            {
+                for (int i = 0; i < max; i++)
+                {
+                    if (pressAmount == 0) break;
+                    if (UnityEngine.Random.Range(0, 2) == 1 && Mathf.Abs(i - max) != pressAmount) continue;
+                    bool dpad = UnityEngine.Random.Range(0, 2) == 1;
+                    switch (whichButtons)
+                    {
+                        case (int)WhichButtonRandom.Random:
+                            break;
+                        case (int)WhichButtonRandom.DpadOnly:
+                            dpad = true;
+                            break;
+                        case (int)WhichButtonRandom.AOnly:
+                            dpad = false;
+                            break;
+                        case (int)WhichButtonRandom.AlternatingDpad:
+                            dpad = i % 2 == 0;
+                            break;
+                        case (int)WhichButtonRandom.AlternatingA:
+                            dpad = i % 2 != 0;
+                            break;
+                    }
+                    float spawnBeat = beat + i * length;
+                    buttonEvents.Add(new BeatAction.Action(spawnBeat, delegate { HostPressButton(spawnBeat, dpad); }));
+                    pressAmount--;
+                }
+            }
+
             BeatAction.New(instance.gameObject, buttonEvents);
         }
 
