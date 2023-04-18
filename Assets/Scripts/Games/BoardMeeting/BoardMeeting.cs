@@ -22,8 +22,8 @@ namespace HeavenStudio.Games.Loaders
                     function = delegate {var e = eventCaller.currentEntity; BoardMeeting.instance.Spin(e["start"], e["end"]); },
                     parameters = new List<Param>()
                     {
-                        new Param("start", new EntityTypes.Integer(1, 40, 1), "Starting Pig", "Which pig from the far left (1) or far right (4) should be the first to spin?"),
-                        new Param("end", new EntityTypes.Integer(1, 40, 4), "Ending Pig", "Which pig from the far left (1) or far right (4) should be the last to spin?")
+                        new Param("start", new EntityTypes.Integer(1, 6, 1), "Starting Pig", "Which pig from the far left (1) or far right (4) should be the first to spin?"),
+                        new Param("end", new EntityTypes.Integer(1, 6, 4), "Ending Pig", "Which pig from the far left (1) or far right (4) should be the last to spin?")
                     }
                 },
                 new GameAction("stop", "Stop")
@@ -52,7 +52,7 @@ namespace HeavenStudio.Games.Loaders
                     defaultLength = 0.5f,
                     parameters = new List<Param>()
                     {
-                        new Param("amount", new EntityTypes.Integer(3, 40, 4), "Amount", "How many executives will there be?")
+                        new Param("amount", new EntityTypes.Integer(3, 6, 4), "Amount", "How many executives will there be?")
                     }
                 }
             });
@@ -63,6 +63,7 @@ namespace HeavenStudio.Games.Loaders
 namespace HeavenStudio.Games
 {
     using Scripts_BoardMeeting;
+    using System;
     using UnityEngine.Rendering;
 
     public class BoardMeeting : Minigame
@@ -79,6 +80,7 @@ namespace HeavenStudio.Games
         bool assistantCanBop = true;
         bool executivesCanBop = true;
         public GameEvent bop = new GameEvent();
+        Sound chairLoopSound = null;
 
         public static BoardMeeting instance;
 
@@ -132,6 +134,15 @@ namespace HeavenStudio.Games
         public void AssistantStop(float beat)
         {
             assistantCanBop = false;
+            string twoSound = "boardMeeting/two";
+            if (beat % 1 != 0) twoSound = "boardMeeting/twoUra";
+            MultiSound.Play(new MultiSound.Sound[]
+            {
+                new MultiSound.Sound("boardMeeting/one", beat),
+                new MultiSound.Sound(twoSound, beat + 0.75f),
+                new MultiSound.Sound("boardMeeting/three", beat + 1),
+                new MultiSound.Sound("boardMeeting/stopAll", beat + 2)
+            });
             BeatAction.New(instance.gameObject, new List<BeatAction.Action>()
             {
                 new BeatAction.Action(beat, delegate { assistantAnim.DoScaledAnimationAsync("One", 0.5f); }),
@@ -157,7 +168,24 @@ namespace HeavenStudio.Games
             {
                 if (executives[i].player) break;
                 int index = i;
-                stops.Add(new BeatAction.Action(beat + length * i, delegate { executives[index].Stop(); }));
+                stops.Add(new BeatAction.Action(beat + length * i, delegate 
+                {
+                    int ex = executiveCount;
+                    if (executiveCount < 4) ex = 4;
+                    if (index < ex - 3)
+                    {
+                        Jukebox.PlayOneShotGame("boardMeeting/stopA");
+                    }
+                    else if (index == ex - 3) 
+                    {
+                        Jukebox.PlayOneShotGame("boardMeeting/stopB");
+                    }
+                    else if (index == ex - 2)
+                    {
+                        Jukebox.PlayOneShotGame("boardMeeting/stopC");
+                    }
+                    executives[index].Stop(); 
+                }));
             }
             stops.Add(new BeatAction.Action(beat + length * executiveCount + 0.5f, delegate { executivesCanBop = true; }));
             BeatAction.New(instance.gameObject, stops);
@@ -166,6 +194,7 @@ namespace HeavenStudio.Games
 
         public void Prepare()
         {
+            Jukebox.PlayOneShotGame("boardMeeting/prepare");
             foreach (var executive in executives)
             {
                 executive.Prepare();
@@ -177,8 +206,24 @@ namespace HeavenStudio.Games
             if (start > executiveCount || end > executiveCount) return;
             for (int i = start - 1; i < end; i++)
             {
-                executives[i].Spin();
+                int ex = executiveCount;
+                string soundToPlay = "A";
+                if (executiveCount < 4) ex = 4;
+                if (i == ex - 3)
+                {
+                    soundToPlay = "B";
+                }
+                else if (i == ex - 2)
+                {
+                    soundToPlay = "C";
+                }
+                else if (i == ex - 1)
+                {
+                    soundToPlay = "Player";
+                }
+                executives[i].Spin(soundToPlay);
             }
+            if (chairLoopSound == null) chairLoopSound = Jukebox.PlayOneShotGame("boardMeeting/chairLoop", -1, 1, 1, true);
         }
 
         public void InitExecutives()
@@ -216,10 +261,16 @@ namespace HeavenStudio.Games
 
         void Just(PlayerActionEvent caller, float state)
         {
+            if (chairLoopSound != null)
+            {
+                chairLoopSound.KillLoop(0);
+                chairLoopSound = null;
+            }
             if (state >= 1f || state <= -1f)
             {
                 return;
             }
+            Jukebox.PlayOneShotGame("boardMeeting/stopPlayer");
             executives[executiveCount - 1].Stop();
             BeatAction.New(instance.gameObject, new List<BeatAction.Action>()
             {
@@ -235,12 +286,18 @@ namespace HeavenStudio.Games
 
         void JustAssistant(PlayerActionEvent caller, float state)
         {
+            if (chairLoopSound != null)
+            {
+                chairLoopSound.KillLoop(0);
+                chairLoopSound = null;
+            }
             if (state >= 1f || state <= -1f)
             {
                 return;
             }
             executives[executiveCount - 1].Stop();
             assistantAnim.DoScaledAnimationAsync("Stop", 0.5f);
+            Jukebox.PlayOneShotGame("boardMeeting/stopAllPlayer");
             BeatAction.New(instance.gameObject, new List<BeatAction.Action>()
             {
                 new BeatAction.Action(caller.timer + caller.startBeat + 1f, delegate
@@ -255,7 +312,11 @@ namespace HeavenStudio.Games
 
         void Miss(PlayerActionEvent caller)
         {
-
+            if (chairLoopSound != null)
+            {
+                chairLoopSound.KillLoop(0);
+                chairLoopSound = null;
+            }
         }
 
         void Empty(PlayerActionEvent caller) { }
