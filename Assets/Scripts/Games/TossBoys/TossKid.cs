@@ -33,6 +33,26 @@ namespace HeavenStudio.Games.Scripts_TossBoys
             }
         }
 
+        public void PopBall()
+        {
+            DoAnimationScaledAsync("Slap", 0.5f);
+        }
+
+        public void PopBallPrepare()
+        {
+            DoAnimationScaledAsync("PrepareHand", 0.5f);
+        }
+
+        public void Miss()
+        {
+            DoAnimationScaledAsync("Miss", 0.5f);
+        }
+
+        public void Barely()
+        {
+            DoAnimationScaledAsync("Barely", 0.5f);
+        }
+
         public void ShowArrow(float startBeat, float length)
         {
             BeatAction.New(game.gameObject, new List<BeatAction.Action>(){

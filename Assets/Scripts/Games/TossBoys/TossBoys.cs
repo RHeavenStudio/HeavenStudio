@@ -28,6 +28,8 @@ namespace HeavenStudio.Games.Loaders
 namespace HeavenStudio.Games
 {
     using Scripts_TossBoys;
+    using UnityEngine.UI.Extensions;
+
     public class TossBoys : Minigame
     {
         public enum KidChoice
@@ -90,8 +92,32 @@ namespace HeavenStudio.Games
             Jukebox.PlayOneShotGame("tossBoys/ballStart");
             hatchAnim.Play("HatchOpen");
             currentBall = Instantiate(ballPrefab, transform);
+            ScheduleInput(beat, 2f, GetInputTypeBasedOnCurrentReceiver(), JustHitBall, Miss, Empty);
         }
 
+        #region Inputs
+        void JustHitBall(PlayerActionEvent caller, float state)
+        {
+            if (state >= 1f || state <= -1f)
+            {
+                GetCurrentReceiver().Barely();
+                return;
+            }
+            GetCurrentReceiver().HitBall();
+            lastReceiver = currentReceiver;
+        }
+
+        void Miss(PlayerActionEvent caller)
+        {
+            GetCurrentReceiver().Miss();
+            Destroy(currentBall.gameObject);
+            currentBall = null;
+        }
+
+        void Empty(PlayerActionEvent caller) { }
+        #endregion
+
+        #region HelperFunctions
         public TossKid GetCurrentReceiver()
         {
             switch (currentReceiver)
@@ -111,6 +137,22 @@ namespace HeavenStudio.Games
         {
             currentReceiver = (WhichTossKid)who;
         }
+
+        InputType GetInputTypeBasedOnCurrentReceiver()
+        {
+            switch (currentReceiver)
+            {
+                case WhichTossKid.Akachan:
+                    return InputType.STANDARD_DOWN;
+                case WhichTossKid.Aokun:
+                    return InputType.STANDARD_ALT_DOWN;
+                case WhichTossKid.Kiiyan:
+                    return InputType.DIRECTION_DOWN;
+                default:
+                    return InputType.ANY;
+            }
+        }
+        #endregion
     }
 }
 
