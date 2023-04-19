@@ -28,7 +28,15 @@ namespace HeavenStudio.Games.Loaders
                     {
                         new Param("who", TossBoys.KidChoice.Akachan, "Receiver", "Who will receive the ball?")
                     }
-                }
+                },
+                new GameAction("dual", "Dual Toss")
+                {
+                    defaultLength = 1f,
+                    parameters = new List<Param>()
+                    {
+                        new Param("who", TossBoys.KidChoice.Akachan, "Receiver", "Who will receive the ball?")
+                    }
+                },
             });
         }
     }
