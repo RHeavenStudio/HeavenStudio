@@ -1226,7 +1226,7 @@ TextureImporter:
         width: 276
         height: 487
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
@@ -1234,6 +1234,27 @@ TextureImporter:
       bones: []
       spriteID: 65098ffb8cf401a45849c48f75ec9f1c
       internalID: 185381256
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: tossboys_54
+      rect:
+        serializedVersion: 2
+        x: 2758
+        y: 617
+        width: 312
+        height: 208
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 047981a1b028e3e48ad6805dec40da9d
+      internalID: 484654069
       vertices: []
       indices: 
       edges: []
@@ -1299,6 +1320,7 @@ TextureImporter:
       tossboys_51: -61859057
       tossboys_52: 566634755
       tossboys_53: 185381256
+      tossboys_54: 484654069
       tossboys_6: -1327662853
       tossboys_7: -752237208
       tossboys_8: -1148030701
