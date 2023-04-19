@@ -7268,6 +7268,50 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
+--- !u!1 &2625640798565580542
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 6208734025018225679}
+  - component: {fileID: 7204509232832701884}
+  m_Layer: 0
+  m_Name: Ball
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 0
+--- !u!4 &6208734025018225679
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2625640798565580542}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 9055139298877869241}
+  m_RootOrder: 11
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &7204509232832701884
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2625640798565580542}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e9c2f7ae54a21a949b3e42dc59789af4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &2776558183996788987
 GameObject:
   m_ObjectHideFlags: 0
@@ -13826,6 +13870,7 @@ GameObject:
   m_Component:
   - component: {fileID: 8352836139802448287}
   - component: {fileID: 5826202189420813431}
+  - component: {fileID: 3172869274482128315}
   m_Layer: 0
   m_Name: Aokun
   m_TagString: Untagged
@@ -13882,6 +13927,21 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
+--- !u!114 &3172869274482128315
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5631150804675027463}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ffe92c9901716e943a9f7f280cc8e06b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _hitEffect: {fileID: 5416868790144495356}
+  arrow: {fileID: 3464172311716545372}
+  prefix: Ao
 --- !u!1 &5671523013863813744
 GameObject:
   m_ObjectHideFlags: 0
@@ -14731,6 +14791,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 9055139298877869241}
+  - component: {fileID: 3091784445647419228}
   m_Layer: 0
   m_Name: tossBoys
   m_TagString: Untagged
@@ -14761,9 +14822,31 @@ Transform:
   - {fileID: 5181841356339069284}
   - {fileID: 6120863846849199797}
   - {fileID: 2827017081607642699}
+  - {fileID: 6208734025018225679}
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &3091784445647419228
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6489872757308104074}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a8f7b009cd48c7d4b828068b4a009f5a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  SoundSequences: []
+  EligibleHits: []
+  scheduledInputs: []
+  firstEnable: 0
+  akachan: {fileID: 4341145930503725492}
+  aokun: {fileID: 3172869274482128315}
+  kiiyan: {fileID: 3575827161638089347}
+  hatchAnim: {fileID: 4468647107167548756}
+  ballPrefab: {fileID: 7204509232832701884}
 --- !u!1 &6818650093539870978
 GameObject:
   m_ObjectHideFlags: 0
@@ -15530,6 +15613,7 @@ GameObject:
   m_Component:
   - component: {fileID: 7913610396879558136}
   - component: {fileID: 4226623435566590367}
+  - component: {fileID: 3575827161638089347}
   m_Layer: 0
   m_Name: Kiiyan
   m_TagString: Untagged
@@ -15586,6 +15670,21 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
+--- !u!114 &3575827161638089347
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8123506004362176293}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ffe92c9901716e943a9f7f280cc8e06b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _hitEffect: {fileID: 4507786578552946144}
+  arrow: {fileID: 1319712500181776876}
+  prefix: Kii
 --- !u!1 &8355375709769013348
 GameObject:
   m_ObjectHideFlags: 0
@@ -15596,6 +15695,7 @@ GameObject:
   m_Component:
   - component: {fileID: 2972099870687061265}
   - component: {fileID: 6368635862018016092}
+  - component: {fileID: 4341145930503725492}
   m_Layer: 0
   m_Name: Akachan
   m_TagString: Untagged
@@ -15652,6 +15752,21 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
+--- !u!114 &4341145930503725492
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8355375709769013348}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ffe92c9901716e943a9f7f280cc8e06b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _hitEffect: {fileID: 625769363983148854}
+  arrow: {fileID: 6997181209462239844}
+  prefix: Aka
 --- !u!1 &8517634802187922431
 GameObject:
   m_ObjectHideFlags: 0
