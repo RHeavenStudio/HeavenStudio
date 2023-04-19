@@ -12,6 +12,7 @@ namespace HeavenStudio.Games.Scripts_TossBoys
         Animator anim;
         [SerializeField] string prefix;
         TossBoys game;
+        public bool crouch;
 
         private void Awake()
         {
@@ -19,18 +20,25 @@ namespace HeavenStudio.Games.Scripts_TossBoys
             game = TossBoys.instance;
         }
 
-        public void HitBall(bool hit = true)
+        public void HitBall(bool hit = true, bool uncrouch = false)
         {
+            if (uncrouch) crouch = false;
             if (hit)
             {
                 ParticleSystem spawnedEffect = Instantiate(_hitEffect, transform);
                 spawnedEffect.Play();
-                DoAnimationScaledAsync("Hit", 0.5f);
+                DoAnimationScaledAsync(crouch ? "CrouchHit" : "Hit", 0.5f);
             }
             else
             {
                 DoAnimationScaledAsync("Whiff", 0.5f);
             }
+        }
+
+        public void Crouch()
+        {
+            DoAnimationScaledAsync("Crouch", 0.5f);
+            crouch = true;
         }
 
         public void PopBall()
@@ -48,8 +56,9 @@ namespace HeavenStudio.Games.Scripts_TossBoys
             DoAnimationScaledAsync("Miss", 0.5f);
         }
 
-        public void Barely()
+        public void Barely(bool uncrouch = false)
         {
+            if (uncrouch) crouch = false;
             DoAnimationScaledAsync("Barely", 0.5f);
         }
 

@@ -66,6 +66,9 @@ namespace HeavenStudio.Games
         [SerializeField] TossKid kiiyan;
         [SerializeField] Animator hatchAnim;
         [SerializeField] TossBoysBall ballPrefab;
+        [SerializeField] GameObject specialAka;
+        [SerializeField] GameObject specialAo;
+        [SerializeField] GameObject specialKii;
 
         [Header("Properties")]
         WhichTossKid lastReceiver = WhichTossKid.None;
@@ -183,6 +186,13 @@ namespace HeavenStudio.Games
                 new MultiSound.Sound("tossBoys/" + last + current + 1, beat),
                 new MultiSound.Sound("tossBoys/" + last + current + 2, beat + secondBeat),
             };
+            if (passBallDict.ContainsKey(beat + 2) && passBallDict[beat + 2].datamodel == "tossBoys/dual")
+            {
+                BeatAction.New(instance.gameObject, new List<BeatAction.Action>()
+                {
+                    new BeatAction.Action(beat + 1, delegate { DoSpecialBasedOnReceiver(beat + 1); })
+                });
+            }
             if (secondBeat == 0.5f) soundsToPlay.Add(new MultiSound.Sound("tossBoys/" + last + current + 3, beat + 1));
             MultiSound.Play(soundsToPlay.ToArray());
             ScheduleInput(beat, 2f, GetInputTypeBasedOnCurrentReceiver(), JustHitBall, Miss, Empty);
@@ -210,7 +220,8 @@ namespace HeavenStudio.Games
             };
             if (secondBeat == 0.25f) soundsToPlay.Add(new MultiSound.Sound("tossBoys/" + last + current + "Low" + 3, beat + 0.5f));
             MultiSound.Play(soundsToPlay.ToArray());
-            ScheduleInput(beat, 1f, GetInputTypeBasedOnCurrentReceiver(), JustHitBall, Miss, Empty);
+            bool stopSpecial = passBallDict.ContainsKey(beat + 1) && passBallDict[beat + 1].datamodel != "tossBoys/dual";
+            ScheduleInput(beat, 1f, GetInputTypeBasedOnCurrentReceiver(), stopSpecial ? JustHitBallUnSpecial : JustHitBall, stopSpecial ? MissUnSpecial : Miss, Empty);
         }
 
         #region Inputs
@@ -231,9 +242,40 @@ namespace HeavenStudio.Games
             DeterminePass(caller.timer + caller.startBeat);
         }
 
+        void JustHitBallUnSpecial(PlayerActionEvent caller, float state)
+        {
+            specialAo.SetActive(false);
+            specialAka.SetActive(false);
+            specialKii.SetActive(false);
+            if (passBallDict.ContainsKey(caller.startBeat + caller.timer) && (WhichTossKid)passBallDict[caller.startBeat + caller.timer]["who"] == currentReceiver)
+            {
+                Miss(null);
+                return;
+            }
+            if (state >= 1f || state <= -1f)
+            {
+                GetCurrentReceiver().Barely(true);
+                DeterminePass(caller.timer + caller.startBeat);
+                return;
+            }
+            GetCurrentReceiver().HitBall(true, true);
+            DeterminePass(caller.timer + caller.startBeat);
+        }
+
         void Miss(PlayerActionEvent caller)
         {
             GetCurrentReceiver().Miss();
+            Destroy(currentBall.gameObject);
+            currentBall = null;
+        }
+
+        void MissUnSpecial(PlayerActionEvent caller)
+        {
+            GetCurrentReceiver().Miss();
+            GetCurrentReceiver().crouch = false;
+            specialAo.SetActive(false);
+            specialAka.SetActive(false);
+            specialKii.SetActive(false);
             Destroy(currentBall.gameObject);
             currentBall = null;
         }
@@ -242,6 +284,34 @@ namespace HeavenStudio.Games
         #endregion
 
         #region HelperFunctions
+
+        void DoSpecialBasedOnReceiver(float beat)
+        {
+            GetCurrentReceiver().Crouch();
+            GetSpecialBasedOnReceiver().SetActive(true);
+            switch (currentReceiver)
+            {
+                case WhichTossKid.Akachan:
+                    MultiSound.Play(new MultiSound.Sound[]
+                    {
+                        new MultiSound.Sound("tossBoys/redSpecial1", beat),
+                        new MultiSound.Sound("tossBoys/redSpecial2", beat + 0.25f),
+                    });
+                    break;
+                case WhichTossKid.Aokun:
+                    MultiSound.Play(new MultiSound.Sound[]
+                    {
+                        new MultiSound.Sound("tossBoys/blueSpecial1", beat),
+                        new MultiSound.Sound("tossBoys/blueSpecial2", beat + 0.25f),
+                    });
+                    break;
+                case WhichTossKid.Kiiyan:
+                    Jukebox.PlayOneShotGame("tossBoys/yellowSpecial", beat);
+                    break;
+                default:
+                    break;
+            }
+        }
         public TossKid GetCurrentReceiver()
         {
             switch (currentReceiver)
@@ -289,6 +359,21 @@ namespace HeavenStudio.Games
                     return InputType.DIRECTION_DOWN;
                 default:
                     return InputType.ANY;
+            }
+        }
+
+        GameObject GetSpecialBasedOnReceiver()
+        {
+            switch (currentReceiver)
+            {
+                case WhichTossKid.Akachan:
+                    return specialAka;
+                case WhichTossKid.Aokun:
+                    return specialAo;
+                case WhichTossKid.Kiiyan:
+                    return specialKii;
+                default:
+                    return null;
             }
         }
         #endregion
