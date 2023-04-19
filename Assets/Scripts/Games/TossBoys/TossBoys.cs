@@ -47,6 +47,11 @@ namespace HeavenStudio.Games
 
     public class TossBoys : Minigame
     {
+        enum PassType
+        {
+            Normal = 0,
+            Dual = 1
+        }
         public enum KidChoice
         {
             Akachan = 0,
@@ -68,10 +73,12 @@ namespace HeavenStudio.Games
         [SerializeField] TossBoysBall ballPrefab;
 
         [Header("Properties")]
+        PassType currentPassType = PassType.Normal;
         WhichTossKid lastReceiver = WhichTossKid.None;
         WhichTossKid currentReceiver = WhichTossKid.None;
         public TossBoysBall currentBall = null;
         Dictionary<float, WhichTossKid> passBallDict = new Dictionary<float, WhichTossKid>();
+        Dictionary<float, WhichTossKid> dualTossDict = new Dictionary<float, WhichTossKid>();
         public static TossBoys instance;
 
         private void Awake()
@@ -114,6 +121,7 @@ namespace HeavenStudio.Games
         void SetPassBallEvents()
         {
             passBallDict.Clear();
+            dualTossDict.Clear();
             var passBallEvents = EventCaller.GetAllInGameManagerList("tossBoys", new string[] { "pass" });
             for (int i = 0;  i < passBallEvents.Count; i++)
             {
@@ -121,6 +129,15 @@ namespace HeavenStudio.Games
                 {
                     if (passBallDict.ContainsKey(passBallEvents[i].beat)) continue;
                     passBallDict.Add(passBallEvents[i].beat, (WhichTossKid)passBallEvents[i]["who"]);
+                }
+            }
+            var dualTossEvents = EventCaller.GetAllInGameManagerList("tossBoys", new string[] { "dual" });
+            for (int i = 0; i < dualTossEvents.Count; i++)
+            {
+                if (dualTossEvents[i].beat >= Conductor.instance.songPositionInBeats)
+                {
+                    if (passBallDict.ContainsKey(dualTossEvents[i].beat) || dualTossDict.ContainsKey(dualTossEvents[i].beat)) continue;
+                    dualTossDict.Add(dualTossEvents[i].beat, (WhichTossKid)dualTossEvents[i]["who"]);
                 }
             }
         }
@@ -132,12 +149,28 @@ namespace HeavenStudio.Games
             if (passBallDict.TryGetValue(beat, out var receiver))
             {
                 currentReceiver = receiver;
+                currentPassType = PassType.Normal;
+            }
+            else if (dualTossDict.TryGetValue(beat, out var dualReceiver))
+            {
+                currentReceiver = dualReceiver;
+                currentPassType = PassType.Dual;
             }
             else
             {
                 currentReceiver = tempLastReceiver;
             }
-            PassBall(beat);
+            switch (currentPassType)
+            {
+                case PassType.Normal:
+                    PassBall(beat);
+                    break;
+                case PassType.Dual:
+                    DualToss(beat);
+                    break;
+                default:
+                    break;
+            }
         }
 
         void PassBall(float beat)
@@ -156,7 +189,6 @@ namespace HeavenStudio.Games
                     secondBeat = 1f;
                     break;
             }
-            Debug.Log("SecondBeat: " + secondBeat + "\n1st: " + last + current + 1 + "\n2nd: " + last + current + 2 + "\n3rd: " + last + current + 3);
             List<MultiSound.Sound> soundsToPlay = new List<MultiSound.Sound>()
             {
                 new MultiSound.Sound("tossBoys/" + last + current + 1, beat),
@@ -165,6 +197,31 @@ namespace HeavenStudio.Games
             if (secondBeat == 0.5f) soundsToPlay.Add(new MultiSound.Sound("tossBoys/" + last + current + 3, beat + 1));
             MultiSound.Play(soundsToPlay.ToArray());
             ScheduleInput(beat, 2f, GetInputTypeBasedOnCurrentReceiver(), JustHitBall, Miss, Empty);
+        }
+
+        void DualToss(float beat)
+        {
+            string last = GetColorBasedOnTossKid(lastReceiver, false);
+            string current = GetColorBasedOnTossKid(currentReceiver, true);
+            float secondBeat = 0.5f;
+            switch (last + current)
+            {
+                case "blueRed":
+                case "yellowRed":
+                    secondBeat = 0.25f;
+                    break;
+                default:
+                    secondBeat = 0.5f;
+                    break;
+            }
+            List<MultiSound.Sound> soundsToPlay = new List<MultiSound.Sound>()
+            {
+                new MultiSound.Sound("tossBoys/" + last + current + "Low" + 1, beat),
+                new MultiSound.Sound("tossBoys/" + last + current + "Low" + 2, beat + secondBeat),
+            };
+            if (secondBeat == 0.25f) soundsToPlay.Add(new MultiSound.Sound("tossBoys/" + last + current + "Low" + 3, beat + 0.5f));
+            MultiSound.Play(soundsToPlay.ToArray());
+            ScheduleInput(beat, 1f, GetInputTypeBasedOnCurrentReceiver(), JustHitBall, Miss, Empty);
         }
 
         #region Inputs
