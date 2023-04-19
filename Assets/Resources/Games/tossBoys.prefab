@@ -44,7 +44,7 @@ ParticleSystem:
   serializedVersion: 8
   lengthInSec: 0.05
   simulationSpeed: 2.5
-  stopAction: 0
+  stopAction: 2
   cullingMode: 0
   ringBufferMode: 0
   ringBufferLoopRange: {x: 0, y: 1}
@@ -7356,7 +7356,7 @@ ParticleSystem:
   serializedVersion: 8
   lengthInSec: 0.05
   simulationSpeed: 2.5
-  stopAction: 0
+  stopAction: 2
   cullingMode: 0
   ringBufferMode: 0
   ringBufferLoopRange: {x: 0, y: 1}
@@ -14847,6 +14847,7 @@ MonoBehaviour:
   kiiyan: {fileID: 3575827161638089347}
   hatchAnim: {fileID: 4468647107167548756}
   ballPrefab: {fileID: 7204509232832701884}
+  currentBall: {fileID: 0}
 --- !u!1 &6818650093539870978
 GameObject:
   m_ObjectHideFlags: 0
@@ -15979,7 +15980,7 @@ ParticleSystem:
   serializedVersion: 8
   lengthInSec: 0.05
   simulationSpeed: 2.5
-  stopAction: 0
+  stopAction: 2
   cullingMode: 0
   ringBufferMode: 0
   ringBufferLoopRange: {x: 0, y: 1}
