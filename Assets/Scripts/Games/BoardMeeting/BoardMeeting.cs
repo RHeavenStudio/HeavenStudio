@@ -161,7 +161,7 @@ namespace HeavenStudio.Games
             MultiSound.Play(new MultiSound.Sound[]
             {
                 new MultiSound.Sound("boardMeeting/one", beat),
-                new MultiSound.Sound(twoSound, beat + 0.75f),
+                new MultiSound.Sound(twoSound, beat + 0.5f),
                 new MultiSound.Sound("boardMeeting/three", beat + 1),
                 new MultiSound.Sound("boardMeeting/stopAll", beat + 2)
             });
