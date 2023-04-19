@@ -18,11 +18,11 @@ namespace HeavenStudio.Games.Scripts_TossBoys
         {
             anim = GetComponent<Animator>();
             game = TossBoys.instance;
+            DoAnimationScaledAsync("Idle", 20f);
         }
 
-        public void HitBall(bool hit = true, bool uncrouch = false)
+        public void HitBall(bool hit = true)
         {
-            if (uncrouch) crouch = false;
             if (hit)
             {
                 ParticleSystem spawnedEffect = Instantiate(_hitEffect, transform);
@@ -33,6 +33,12 @@ namespace HeavenStudio.Games.Scripts_TossBoys
             {
                 DoAnimationScaledAsync("Whiff", 0.5f);
             }
+        }
+
+        public void Bop()
+        {
+            if (!anim.IsAnimationNotPlaying() || crouch) return;
+            DoAnimationScaledAsync("Bop", 0.5f);
         }
 
         public void Crouch()
@@ -56,9 +62,8 @@ namespace HeavenStudio.Games.Scripts_TossBoys
             DoAnimationScaledAsync("Miss", 0.5f);
         }
 
-        public void Barely(bool uncrouch = false)
+        public void Barely()
         {
-            if (uncrouch) crouch = false;
             DoAnimationScaledAsync("Barely", 0.5f);
         }
 

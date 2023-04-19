@@ -37,6 +37,16 @@ namespace HeavenStudio.Games.Loaders
                         new Param("who", TossBoys.KidChoice.Akachan, "Receiver", "Who will receive the ball?")
                     }
                 },
+                new GameAction("bop", "Bop")
+                {
+                    function = delegate { var e = eventCaller.currentEntity; TossBoys.instance.Bop(e.beat, e.length, e["auto"], e["bop"]); },
+                    resizable = true,
+                    parameters = new List<Param>()
+                    {
+                        new Param("bop", true, "Bop", "Should the toss boys bop to the beat?"),
+                        new Param("auto", false, "Bop (Auto)", "Should the toss boys auto bop to the beat?")
+                    }
+                }
             });
         }
     }
@@ -44,6 +54,7 @@ namespace HeavenStudio.Games.Loaders
 namespace HeavenStudio.Games
 {
     using Scripts_TossBoys;
+    using System.Windows.Forms;
 
     public class TossBoys : Minigame
     {
@@ -69,6 +80,7 @@ namespace HeavenStudio.Games
         [SerializeField] GameObject specialAka;
         [SerializeField] GameObject specialAo;
         [SerializeField] GameObject specialKii;
+        [SerializeField] TossKid currentSpecialKid;
 
         [Header("Properties")]
         WhichTossKid lastReceiver = WhichTossKid.None;
@@ -77,6 +89,8 @@ namespace HeavenStudio.Games
         Dictionary<float, DynamicBeatmap.DynamicEntity> passBallDict = new Dictionary<float, DynamicBeatmap.DynamicEntity>();
         string currentPassType;
         public static TossBoys instance;
+        bool shouldBop = true;
+        public GameEvent bop = new GameEvent();
 
         private void Awake()
         {
@@ -88,6 +102,13 @@ namespace HeavenStudio.Games
             var cond = Conductor.instance;
             if (cond.isPlaying && !cond.isPaused)
             {
+                if (cond.ReportBeat(ref bop.lastReportedBeat, bop.startBeat % 1))
+                {
+                    if (shouldBop)
+                    {
+                        SingleBop();
+                    }
+                }
                 if (PlayerInput.Pressed() && !IsExpectingInputNow(InputType.STANDARD_DOWN))
                 {
                     akachan.HitBall(false);
@@ -102,6 +123,29 @@ namespace HeavenStudio.Games
                 }
             }
         }
+
+        #region Bop 
+        void SingleBop()
+        {
+            akachan.Bop();
+            aokun.Bop();
+            kiiyan.Bop();
+        }
+
+        public void Bop(float beat, float length, bool auto, bool goBop)
+        {
+            shouldBop = auto;
+            if (goBop)
+            {
+                List<BeatAction.Action> bops = new List<BeatAction.Action>();
+                for (int i = 0; i < length; i++)
+                {
+                    bops.Add(new BeatAction.Action(beat + i, delegate { SingleBop(); }));
+                }
+                BeatAction.New(instance.gameObject, bops);
+            }
+        }
+        #endregion
 
         public void Dispense(float beat, int who)
         {
@@ -247,6 +291,8 @@ namespace HeavenStudio.Games
             specialAo.SetActive(false);
             specialAka.SetActive(false);
             specialKii.SetActive(false);
+            currentSpecialKid.crouch = false;
+            currentSpecialKid = null;
             if (passBallDict.ContainsKey(caller.startBeat + caller.timer) && (WhichTossKid)passBallDict[caller.startBeat + caller.timer]["who"] == currentReceiver)
             {
                 Miss(null);
@@ -254,11 +300,11 @@ namespace HeavenStudio.Games
             }
             if (state >= 1f || state <= -1f)
             {
-                GetCurrentReceiver().Barely(true);
+                GetCurrentReceiver().Barely();
                 DeterminePass(caller.timer + caller.startBeat);
                 return;
             }
-            GetCurrentReceiver().HitBall(true, true);
+            GetCurrentReceiver().HitBall();
             DeterminePass(caller.timer + caller.startBeat);
         }
 
@@ -287,6 +333,7 @@ namespace HeavenStudio.Games
 
         void DoSpecialBasedOnReceiver(float beat)
         {
+            currentSpecialKid = GetCurrentReceiver();
             GetCurrentReceiver().Crouch();
             GetSpecialBasedOnReceiver().SetActive(true);
             switch (currentReceiver)
