@@ -43,11 +43,11 @@ namespace HeavenStudio.Games.Scripts_BoardMeeting
             {
                 case "A":
                 case "B":
-                    offset = 10.41666666f;
+                    offset = 0.01041666666f;
                     break;
                 case "C":
                 case "Player":
-                    offset = 20.83333333f;
+                    offset = 0.02083333333f;
                     break;
                 default:
                     offset = 0;
