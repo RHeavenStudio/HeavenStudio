@@ -13,6 +13,7 @@ namespace HeavenStudio.Games.Scripts_TossBoys
         [SerializeField] string prefix;
         TossBoys game;
         public bool crouch;
+        bool preparing;
 
         private void Awake()
         {
@@ -37,7 +38,7 @@ namespace HeavenStudio.Games.Scripts_TossBoys
 
         public void Bop()
         {
-            if (!anim.IsAnimationNotPlaying() || crouch) return;
+            if (!anim.IsAnimationNotPlaying() || crouch || preparing) return;
             DoAnimationScaledAsync("Bop", 0.5f);
         }
 
@@ -50,11 +51,14 @@ namespace HeavenStudio.Games.Scripts_TossBoys
         public void PopBall()
         {
             DoAnimationScaledAsync("Slap", 0.5f);
+            preparing = false;
         }
 
         public void PopBallPrepare()
         {
+            if (preparing) return;
             DoAnimationScaledAsync("PrepareHand", 0.5f);
+            preparing = true;
         }
 
         public void Miss()
