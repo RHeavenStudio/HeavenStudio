@@ -241,12 +241,17 @@ namespace HeavenStudio.Games
             string last = GetColorBasedOnTossKid(lastReceiver, false);
             string current = GetColorBasedOnTossKid(currentReceiver, true);
             float secondBeat = 1f;
+            float secondOffset = 0;
+            float thirdOffset = 0;
             switch (last + current)
             {
                 case "blueRed":
                 case "yellowRed":
+                    secondBeat = 0.5f;
+                    break;
                 case "redYellow":
                     secondBeat = 0.5f;
+                    thirdOffset = 0.060f;
                     break;
                 default:
                     secondBeat = 1f;
@@ -255,7 +260,7 @@ namespace HeavenStudio.Games
             List<MultiSound.Sound> soundsToPlay = new List<MultiSound.Sound>()
             {
                 new MultiSound.Sound("tossBoys/" + last + current + 1, beat),
-                new MultiSound.Sound("tossBoys/" + last + current + 2, beat + secondBeat),
+                new MultiSound.Sound("tossBoys/" + last + current + 2, beat + secondBeat, 1, 1, false, secondOffset),
             };
             if (passBallDict.ContainsKey(beat + 2) && passBallDict[beat + 2].datamodel != "tossBoys/pass" && passBallDict[beat + 2].datamodel != "tossBoys/pop")
             {
@@ -264,7 +269,7 @@ namespace HeavenStudio.Games
                     new BeatAction.Action(beat + 1, delegate { DoSpecialBasedOnReceiver(beat + 1); })
                 });
             }
-            if (secondBeat == 0.5f) soundsToPlay.Add(new MultiSound.Sound("tossBoys/" + last + current + 3, beat + 1));
+            if (secondBeat == 0.5f) soundsToPlay.Add(new MultiSound.Sound("tossBoys/" + last + current + 3, beat + 1, 1, 1, false, thirdOffset));
             MultiSound.Play(soundsToPlay.ToArray());
             ScheduleInput(beat, 2f, GetInputTypeBasedOnCurrentReceiver(), JustHitBall, Miss, Empty);
         }
@@ -274,11 +279,19 @@ namespace HeavenStudio.Games
             string last = GetColorBasedOnTossKid(lastReceiver, false);
             string current = GetColorBasedOnTossKid(currentReceiver, true);
             float secondBeat = 0.5f;
+            float secondOffset = 0;
+            float thirdOffset = 0;
             switch (last + current)
             {
                 case "blueRed":
+                    secondBeat = 0.25f;
+                    thirdOffset = 0.020f;
+                    break;
                 case "yellowRed":
                     secondBeat = 0.25f;
+                    break;
+                case "redYellow":
+                    secondOffset = 0.060f;
                     break;
                 default:
                     secondBeat = 0.5f;
@@ -287,9 +300,9 @@ namespace HeavenStudio.Games
             List<MultiSound.Sound> soundsToPlay = new List<MultiSound.Sound>()
             {
                 new MultiSound.Sound("tossBoys/" + last + current + "Low" + 1, beat),
-                new MultiSound.Sound("tossBoys/" + last + current + "Low" + 2, beat + secondBeat),
+                new MultiSound.Sound("tossBoys/" + last + current + "Low" + 2, beat + secondBeat, 1, 1, false, secondOffset),
             };
-            if (secondBeat == 0.25f) soundsToPlay.Add(new MultiSound.Sound("tossBoys/" + last + current + "Low" + 3, beat + 0.5f));
+            if (secondBeat == 0.25f) soundsToPlay.Add(new MultiSound.Sound("tossBoys/" + last + current + "Low" + 3, beat + 0.5f, 1, 1, false, thirdOffset));
             MultiSound.Play(soundsToPlay.ToArray());
             bool stopSpecial = passBallDict.ContainsKey(beat + 1) && passBallDict[beat + 1].datamodel != "tossBoys/dual";
             ScheduleInput(beat, 1f, GetInputTypeBasedOnCurrentReceiver(), stopSpecial ? JustHitBallUnSpecial : JustHitBall, stopSpecial ? MissUnSpecial : Miss, Empty);
