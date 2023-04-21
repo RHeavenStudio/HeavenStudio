@@ -167,41 +167,42 @@ namespace HeavenStudio.Games
             SetPassBallEvents();
             SetReceiver(who);
             GetCurrentReceiver().ShowArrow(beat, length - 1);
-            Jukebox.PlayOneShotGame("tossBoys/ballStart");
+            Jukebox.PlayOneShotGame("tossBoys/ballStart" + GetColorBasedOnTossKid(currentReceiver, true));
             hatchAnim.Play("HatchOpen", 0, 0);
             currentBall = Instantiate(ballPrefab, transform);
 
             if (call)
             {
+                float callBeat = beat;
                 switch (who)
                 {
                     case (int)WhichTossKid.Akachan:
                         MultiSound.Play(new MultiSound.Sound[]
                         {
-                        new MultiSound.Sound("tossBoys/blueRedHigh1", beat),
-                        new MultiSound.Sound("tossBoys/yellowRedHigh1", beat),
-                        new MultiSound.Sound("tossBoys/blueRedHigh2", beat + 0.25f),
-                        new MultiSound.Sound("tossBoys/yellowRedHigh2", beat + 0.25f),
-                        new MultiSound.Sound("tossBoys/blueRedHigh3", beat + 0.5f),
-                        new MultiSound.Sound("tossBoys/yellowRedHigh3", beat + 0.5f),
+                        new MultiSound.Sound("tossBoys/blueRedHigh1", callBeat),
+                        new MultiSound.Sound("tossBoys/yellowRedHigh1", callBeat),
+                        new MultiSound.Sound("tossBoys/blueRedHigh2", callBeat + 0.25f),
+                        new MultiSound.Sound("tossBoys/yellowRedHigh2", callBeat + 0.25f),
+                        new MultiSound.Sound("tossBoys/blueRedHigh3", callBeat + 0.5f),
+                        new MultiSound.Sound("tossBoys/yellowRedHigh3", callBeat + 0.5f),
                         });
                         break;
                     case (int)WhichTossKid.Aokun:
                         MultiSound.Play(new MultiSound.Sound[]
                         {
-                        new MultiSound.Sound("tossBoys/redBlueHigh1", beat),
-                        new MultiSound.Sound("tossBoys/yellowBlueHigh1", beat),
-                        new MultiSound.Sound("tossBoys/redBlueHigh2", beat + 0.5f),
-                        new MultiSound.Sound("tossBoys/yellowBlueHigh2", beat + 0.5f),
+                        new MultiSound.Sound("tossBoys/redBlueHigh1", callBeat),
+                        new MultiSound.Sound("tossBoys/yellowBlueHigh1", callBeat),
+                        new MultiSound.Sound("tossBoys/redBlueHigh2", callBeat + 0.5f),
+                        new MultiSound.Sound("tossBoys/yellowBlueHigh2", callBeat + 0.5f),
                         });
                         break;
                     case (int)WhichTossKid.Kiiyan:
                         MultiSound.Play(new MultiSound.Sound[]
                         {
-                        new MultiSound.Sound("tossBoys/redYellowHigh1", beat),
-                        new MultiSound.Sound("tossBoys/blueYellowHigh1", beat),
-                        new MultiSound.Sound("tossBoys/redYellowHigh2", beat + 0.5f),
-                        new MultiSound.Sound("tossBoys/blueYellowHigh2", beat + 0.5f),
+                        new MultiSound.Sound("tossBoys/redYellowHigh1", callBeat),
+                        new MultiSound.Sound("tossBoys/blueYellowHigh1", callBeat),
+                        new MultiSound.Sound("tossBoys/redYellowHigh2", callBeat + 0.5f),
+                        new MultiSound.Sound("tossBoys/blueYellowHigh2", callBeat + 0.5f),
                         });
                         break;
                     default:
