@@ -16,12 +16,13 @@ namespace HeavenStudio.Games.Loaders
                 {
                     function = delegate { 
                         var e = eventCaller.currentEntity; 
-                        OctopusMachine.instance.Bop(e.beat, e["disableBop"], e[""], e["whichBop"]); 
+                        OctopusMachine.instance.Bop(e.beat, e.length, e["whichBop"], e["bop"], e["autoBop"]); 
                     },
                     parameters = new List<Param>()                     
                     {
-                        new Param("bop", false, "Which Bop?", "Plays a sepcific bop type"),
-                        new Param("whichBop", OctopusMachine.Bops.Bop, "Which Bop?", "Plays a sepcific bop type"),
+                        new Param("whichBop", OctopusMachine.Bops.Bop, "Which Bop?", "Plays a specific bop type"),
+                        new Param("bop", true, "Single Bop", "Plays one bop"),
+                        new Param("autoBop", false, "Keep Bopping?", "Keeps playing the specified bop type"),
                     },
                     defaultLength = 0.5f,
                 },
@@ -29,40 +30,64 @@ namespace HeavenStudio.Games.Loaders
                 {
                     function = delegate { 
                         var e = eventCaller.currentEntity; 
-                        OctopusMachine.instance.StartInterval(e.beat); 
+                        OctopusMachine.instance.StartInterval(e.beat, e.length); 
                     },
                     defaultLength = 1f,
+                    resizable = true,
                 },
-                new GameAction("Expand", "Expand")
+                new GameAction("Squeeze", "Squeeze")
+                {
+                    function = delegate {
+                        var e = eventCaller.currentEntity;
+                        OctopusMachine.instance.Squeeze(e.beat, e.length);
+                    },
+                    resizable = true,
+                    parameters = new List<Param>()                     
+                    {
+                        new Param("shouldPrep", true, "Prepare?", "Plays a prepare animation before the cue."),
+                        new Param("prepBeats", new EntityTypes.Float(0, 5, 1), "Prepare Beats", "How many beats before the cue does the octopus prepare?"),
+                    },
+                    preFunctionLength = 1f,
+                    preFunction = delegate {
+                        var e = eventCaller.currentEntity;
+                        if (e["shouldPrep"]) {
+                        float offset = e.beat - e["prepBeats"];
+                        BeatAction.New(OctopusMachine.instance.gameObject, new List<BeatAction.Action>() {
+                            new BeatAction.Action(offset, delegate {
+                                OctopusMachine.instance.PlayAnimation(e.beat, 4, true);
+                            })
+                        }); };
+                    },
+                },
+                new GameAction("Release", "Release")
                 {
                     function = delegate { 
                         var e = eventCaller.currentEntity; 
-                        OctopusMachine.instance.Expand(e.beat); 
+                        OctopusMachine.instance.Release(e.beat); 
+                    },
+                    resizable = true,
+                },
+                new GameAction("Pop", "Pop")
+                {
+                    function = delegate { 
+                        var e = eventCaller.currentEntity; 
+                        OctopusMachine.instance.Pop(e.beat); 
+                    },
+                    resizable = true,
+                },
+                new GameAction("ForceClose", "Force Close")
+                {
+                    function = delegate { 
+                        var e = eventCaller.currentEntity; 
+                        OctopusMachine.instance.ForceClose(e.beat); 
                     },
                     defaultLength = 1f,
-                    preFunction = delegate {
-                        var e = eventCaller.currentEntity;
-                        OctopusMachine.instance.Prepare(e.beat);
-                    },
                 },
                 new GameAction("Prepare", "Prepare")
                 {
                     function = delegate { 
                         var e = eventCaller.currentEntity;
-                        OctopusMachine.instance.Prepare(e.beat);
-                    },
-                    defaultLength = 0.5f,
-                },
-                new GameAction("OctopusAnimation", "Octopus Animation")
-                {
-                    function = delegate { 
-                        var e = eventCaller.currentEntity; 
-                        OctopusMachine.instance.PlayAnimation(e.beat, e["keepWhich"], e["whichBop"]);
-                    },
-                    parameters = new List<Param>()                     
-                    {
-                        new Param("keepWhich", true, "Bop Like This?", "Keep bopping using the selected bop"),
-                        new Param("whichBop", OctopusMachine.Bops.Bop, "Which Bop?", "Plays a specific bop type"),
+                        OctopusMachine.instance.PlayAnimation(e.beat, 4, true);
                     },
                     defaultLength = 0.5f,
                 },
@@ -86,13 +111,16 @@ namespace HeavenStudio.Games.Loaders
                 {
                     function = delegate { 
                         var e = eventCaller.currentEntity; 
-                        OctopusMachine.instance.MoveOctopodes(e.beat, e["oct1x"], e["oct2x"], e["oct3x"]);
+                        OctopusMachine.instance.MoveOctopodes(e.beat, e["oct1x"], e["oct2x"], e["oct3x"], e["oct1y"], e["oct2y"], e["oct3y"]);
                     },
                     parameters = new List<Param>()                     
                     {
-                        new Param("oct1x", new EntityTypes.Float(-10, 10), "X Octopus 1", "Change Octopus 1's X"),
-                        new Param("oct2x", new EntityTypes.Float(-10, 10), "X Octopus 2", "Change Octopus 2's X"),
-                        new Param("oct3x", new EntityTypes.Float(-10, 10), "X Octopus 3", "Change Octopus 3's X"),
+                        new Param("oct1x", new EntityTypes.Float(-10, 10, -4.5f), "X Octopus 1", "Change Octopus 1's X"),
+                        new Param("oct1y", new EntityTypes.Float(-10, 10, 2.5f), "Y Octopus 1", "Change Octopus 1's Y"),
+                        new Param("oct2x", new EntityTypes.Float(-10, 10, -0.5f), "X Octopus 2", "Change Octopus 2's X"),
+                        new Param("oct2y", new EntityTypes.Float(-10, 10, 0f), "Y Octopus 1", "Change Octopus 2's Y"),
+                        new Param("oct3x", new EntityTypes.Float(-10, 10, 3.5f), "X Octopus 3", "Change Octopus 3's X"),
+                        new Param("oct3y", new EntityTypes.Float(-10, 10, -2.5f), "Y Octopus 1", "Change Octopus 3's Y"),
                     },
                     defaultLength = 0.5f,
                 },
@@ -118,15 +146,16 @@ namespace HeavenStudio.Games
         bool intervalStarted;
         float intervalStartBeat;
         float beatInterval = 4f;
-        public bool isHappy;
-        public bool isAngry;
-        public bool isShocked;
-        public bool isPreparing;
+        public bool hasHit;
+        public bool hasMissed;
         public bool bopOn = true;
         public float lastReportedBeat = 0f;
+        Octopus[] octopodes;
 
-        static List<QueuedHolding> QueuedHoldings = new List<QueuedHolding>();
-        public struct QueuedHolding
+        static List<QueuedInputs> queuedSqueezes = new List<QueuedInputs>();
+        static List<QueuedInputs> queuedReleases = new List<QueuedInputs>();
+        static List<QueuedInputs> queuedPops = new List<QueuedInputs>();
+        public struct QueuedInputs
         {
             public float startBeat;
             public float length;
@@ -139,9 +168,8 @@ namespace HeavenStudio.Games
         public enum Bops
         {
             Bop,
-            Joyful,
-            Upset,
-            Shocked,
+            Happy,
+            Angry,
         }
 
         void Awake()
@@ -160,30 +188,19 @@ namespace HeavenStudio.Games
             allIntervalEvents = tempEvents;
         }
 
+        private void Start() 
+        {
+            octopodes = FindObjectsByType<Octopus>(FindObjectsSortMode.None);
+            Debug.Log(octopodes[0]);
+            Debug.Log(octopodes[1]);
+            Debug.Log(octopodes[2]);
+        }
+
         private void Update()
         {
-            if (!Octopus1.IsActive())
-            {
-                if (PlayerInput.Pressed() && !IsExpectingInputNow(InputType.STANDARD_DOWN))
-                {
-                    
-                }
-                if (PlayerInput.PressedUp() && !IsExpectingInputNow(InputType.STANDARD_UP))
-                {
-                    
-                }
-            }
-
+            /*
             if (Conductor.instance.isPlaying && !Conductor.instance.isPaused)
             {
-                if (queuedBatons.Count > 0)
-                {
-                    foreach (var baton in queuedBatons)
-                    {
-                        Baton(baton);
-                    }
-                    queuedBatons.Clear();
-                }
                 float normalizedBeat = Conductor.instance.GetPositionFromBeat(intervalStartBeat, beatInterval);
                 if (normalizedBeat >= 1f && intervalStarted)
                 {
@@ -201,29 +218,61 @@ namespace HeavenStudio.Games
                     }
                 }
             }
+            */
         }
 
-        private void LateUpdate() 
+        void OnDestroy()
         {
-            
+            if (!Conductor.instance.isPlaying || Conductor.instance.isPaused)
+            {
+                if (queuedSqueezes.Count > 0) queuedSqueezes.Clear();
+                if (queuedReleases.Count > 0) queuedReleases.Clear();
+                if (queuedPops.Count > 0) queuedPops.Clear();
+            }
         }
 
-        public void Prepare(float beat)
+        public void PlayAnimation(float beat, int whichBop, bool prepare = false)
         {
-            Octopus1.GameplayModifiers(oct1, octoColor);
-            Octopus2.GameplayModifiers(oct2, octoColor);
-            Octopus3.GameplayModifiers(oct3, octoColor);
-            isPreparing = true;
+            Octopus1.PlayAnimation(whichBop);
+            Octopus2.PlayAnimation(whichBop);
+            Octopus3.PlayAnimation(whichBop);
         }
 
-        public void Expand(float beat)
+        public void Squeeze(float beat, float length)
         {
-            Debug.Log("expand event rn");
+            if (!intervalStarted)
+            {
+                StartInterval(beat, length);
+            }
+            Octopus1.Squeeze();
+            queuedSqueezes.Add(new QueuedInputs
+            {
+                startBeat = beat - intervalStartBeat,
+                length = length,
+            });
         }
 
-        public void Bop(float beat, float length, bool doesBop, bool autoBop)
+        public void Release(float beat)
+        {
+            Debug.Log("release");
+        }
+
+        public void Pop(float beat)
+        {
+            Debug.Log("pop");
+        }
+
+        public void Bop(float beat, float length, int whichBop, bool doesBop, bool autoBop)
         {
             bopOn = autoBop;
+            if (autoBop) {
+                hasHit = whichBop == 1 ? true : false;
+                hasMissed = whichBop == 2 ? true : false;
+            }
+            foreach (var item in octopodes) {
+                item.Bop(autoBop);
+            }
+            /*
             if (doesBop)
             {
                 for (int i = 0; i < length; i++)
@@ -237,11 +286,7 @@ namespace HeavenStudio.Games
                     });
                 }
             }
-        }
-
-        public void PlayAnimation(float beat, bool keepBopping, int whichBop)
-        {
-            
+            */
         }
 
         public void GameplayModifiers(float beat, Color bgColor, Color octoColor, bool oct1, bool oct2, bool oct3)
@@ -253,194 +298,65 @@ namespace HeavenStudio.Games
             Octopus3.GameplayModifiers(oct3, octoColor);
         }
 
-        public void MoveOctopodes(float beat, float oct1x, float oct2x, float oct3x)
+        public void MoveOctopodes(float beat, float oct1x, float oct2x, float oct3x, float oct1y, float oct2y, float oct3y)
         {
-            Octopus1.MoveOctopodes(oct1x);
-            Octopus2.MoveOctopodes(oct2x);
-            Octopus3.MoveOctopodes(oct3x);
+            Octopus1.MoveOctopodes(oct1x, oct1y);
+            Octopus2.MoveOctopodes(oct2x, oct2y);
+            Octopus3.MoveOctopodes(oct3x, oct3y);
         }
 
+        public void ForceClose(float beat)
+        {
+            
+        }
 
         
-
-        int startIntervalIndex;
-
-        void OnDestroy()
-        {
-            if (!Conductor.instance.isPlaying || Conductor.instance.isPaused)
-            {
-                if (queuedSingings.Count > 0) queuedSingings.Clear();
-                if (queuedBatons.Count > 0) queuedBatons.Clear();
-            }
-        }
-
-        public void SetGameSwitchFadeOutTime(float fadeOut, float fadeOut1, float fadeOutPlayer)
-        {
-            leftChorusKid.gameSwitchFadeOutTime = fadeOut;
-            middleChorusKid.gameSwitchFadeOutTime = fadeOut1;
-            playerChorusKid.gameSwitchFadeOutTime = fadeOutPlayer;
-        }
-
-        public void ForceSing(int semiTones, int semiTones1, int semiTonesPlayer)
-        {
-            leftChorusKid.currentPitch = Jukebox.GetPitchFromSemiTones(semiTones, true);
-            middleChorusKid.currentPitch = Jukebox.GetPitchFromSemiTones(semiTones1, true);
-            playerChorusKid.currentPitch = Jukebox.GetPitchFromSemiTones(semiTonesPlayer, true);
-            leftChorusKid.StartSinging(true);
-            middleChorusKid.StartSinging(true);
-            if (!PlayerInput.Pressing() || GameManager.instance.autoplay) playerChorusKid.StartSinging(true);
-            else missed = true;
-        }
-
-        public void TogetherNow(float beat, int semiTones, int semiTones1, int semiTonesPlayer, float conductorPitch)
-        {
-            if (!playerChorusKid.disappeared) ScheduleInput(beat, 2.5f, InputType.STANDARD_UP, JustTogetherNow, Out, Out);
-            if (!playerChorusKid.disappeared) ScheduleInput(beat, 3.5f, InputType.STANDARD_DOWN, JustTogetherNowClose, MissBaton, Out);
-            float pitch = Jukebox.GetPitchFromSemiTones(semiTones, true);
-            float pitch1 = Jukebox.GetPitchFromSemiTones(semiTones1, true);
-            currentYellPitch = Jukebox.GetPitchFromSemiTones(semiTonesPlayer, true);
-            MultiSound.Play(new MultiSound.Sound[]
-            {
-                new MultiSound.Sound("gleeClub/togetherEN-01", beat + 0.5f, conductorPitch),
-                new MultiSound.Sound("gleeClub/togetherEN-02", beat + 1f, conductorPitch),
-                new MultiSound.Sound("gleeClub/togetherEN-03", beat + 1.5f, conductorPitch),
-                new MultiSound.Sound("gleeClub/togetherEN-04", beat + 2f, conductorPitch, 1, false, 0.02f),
-            });
-
-            BeatAction.New(instance.gameObject, new List<BeatAction.Action>()
-            {
-                new BeatAction.Action(beat + 1.5f, delegate
-                {
-                    leftChorusKid.StartCrouch();
-                    middleChorusKid.StartCrouch();
-                    playerChorusKid.StartCrouch();
-                }),
-                new BeatAction.Action(beat + 2.5f, delegate
-                {
-                    leftChorusKid.currentPitch = pitch;
-                    middleChorusKid.currentPitch = pitch1;
-                    leftChorusKid.StartYell();
-                    middleChorusKid.StartYell();
-                }),
-                new BeatAction.Action(beat + 3.5f, delegate
-                {
-                    leftChorusKid.StopSinging(true);
-                    middleChorusKid.StopSinging(true);
-                }),
-                new BeatAction.Action(beat + 6f, delegate
-                {
-                    if (!playerChorusKid.disappeared) ShowHeart(beat + 6f);
-                })
-            });
-        }
-
-        void JustTogetherNow(PlayerActionEvent caller, float state)
-        {
-            playerChorusKid.currentPitch = currentYellPitch;
-            playerChorusKid.StartYell();
-        }
-
-        void JustTogetherNowClose(PlayerActionEvent caller, float state)
-        {
-            playerChorusKid.StopSinging(true);
-        }
-
         public void StartInterval(float beat, float length)
         {
             intervalStartBeat = beat;
             beatInterval = length;
             intervalStarted = true;
-        }
-
-        public void Sing(float beat, float length, int semiTones, int semiTones1, int semiTonesPlayer, int closeMouth, bool repeating, int semiTonesLeft2, int semiTonesLeft3, int semiTonesMiddle2)
-        {
-            float pitch = Jukebox.GetPitchFromSemiTones(semiTones, true);
-            if (!intervalStarted)
-            {
-                StartInterval(beat, length);
-            }
             BeatAction.New(instance.gameObject, new List<BeatAction.Action>()
             {
-                new BeatAction.Action(beat, delegate { if (closeMouth != (int)MouthOpenClose.OnlyClose) leftChorusKid.currentPitch = pitch; leftChorusKid.StartSinging(); }),
-                new BeatAction.Action(beat + length, delegate { if (closeMouth != (int)MouthOpenClose.OnlyOpen) leftChorusKid.StopSinging(); }),
-            });
-            queuedSingings.Add(new QueuedSinging
-            {
-                startBeat = beat - intervalStartBeat,
-                length = length,
-                semiTones = semiTones1,
-                closeMouth = closeMouth,
-                semiTonesPlayer = semiTonesPlayer,
-                repeating = repeating,
-                semiTonesLeft2 = semiTonesLeft2,
-                semiTonesLeft3 = semiTonesLeft3,
-                semiTonesMiddle2 = semiTonesMiddle2
+                new BeatAction.Action(beat + length + beatInterval, delegate
+                {
+                    PassTurn(beat + length);
+                }),
             });
         }
 
-        public void PassTurn(float beat, float length)
+        public void PassTurn(float beat)
         {
-            if (queuedSingings.Count == 0) return;
+            if (queuedSqueezes.Count == 0) return;
             intervalStarted = false;
-            missed = false;
-            if (!playerChorusKid.disappeared) ShowHeart(beat + length + beatInterval * 2 + 1);
-            foreach (var sing in queuedSingings)
+            hasMissed = false;
+            foreach (var item in queuedSqueezes)
             {
-                float playerPitch = Jukebox.GetPitchFromSemiTones(sing.semiTonesPlayer, true);
-                if (!playerChorusKid.disappeared)
-                {
-                    GleeClubSingInput spawnedInput = Instantiate(singInputPrefab, transform);
-                    spawnedInput.pitch = playerPitch;
-                    spawnedInput.Init(beat + length + sing.startBeat + beatInterval, sing.length, sing.closeMouth);
-                }
-                float pitch = Jukebox.GetPitchFromSemiTones(sing.semiTones, true);
-                float pitchLeft2 = Jukebox.GetPitchFromSemiTones(sing.semiTonesLeft2, true);
-                float pitchLeft3 = Jukebox.GetPitchFromSemiTones(sing.semiTonesLeft3, true);
-                float pitchMiddle2 = Jukebox.GetPitchFromSemiTones(sing.semiTonesMiddle2, true);
                 BeatAction.New(instance.gameObject, new List<BeatAction.Action>()
                 {
-                    new BeatAction.Action(beat + length + sing.startBeat, delegate
+                    new BeatAction.Action(beat, delegate
                     {
-                        if (sing.closeMouth != (int)MouthOpenClose.OnlyClose) 
-                        {
-                            middleChorusKid.currentPitch = pitch;
-                            middleChorusKid.StartSinging();
-                            if (sing.repeating)
-                            {
-                                leftChorusKid.currentPitch = pitchLeft2;
-                                leftChorusKid.StartSinging();
-                            }
-                        } 
-                    }),
-                    new BeatAction.Action(beat + length + sing.startBeat + sing.length, delegate
-                    {
-                        if (sing.closeMouth != (int)MouthOpenClose.OnlyOpen) 
-                        {
-                            middleChorusKid.StopSinging();
-                            if (sing.repeating) leftChorusKid.StopSinging();
-                        } 
-                    }),
-                    new BeatAction.Action(beat + length + sing.startBeat + beatInterval, delegate
-                    {
-                        if (sing.closeMouth != (int)MouthOpenClose.OnlyClose && sing.repeating)
-                        {
-                            middleChorusKid.currentPitch = pitchMiddle2;
-                            leftChorusKid.currentPitch = pitchLeft3;
-                            middleChorusKid.StartSinging();
-                            leftChorusKid.StartSinging();
-                        }
-                    }),
-                    new BeatAction.Action(beat + length + sing.startBeat + sing.length + beatInterval, delegate
-                    {
-                        if (sing.closeMouth != (int)MouthOpenClose.OnlyOpen && sing.repeating)
-                        {
-                            middleChorusKid.StopSinging();
-                            leftChorusKid.StopSinging();
-                        }
+                        Octopus2.Squeeze();
+                        ScheduleInput(beat, beatInterval, InputType.STANDARD_DOWN, Hit, Miss, Out);
                     }),
                 });
             }
-            queuedSingings.Clear();
+            queuedSqueezes.Clear();
+        }
+        
+        private void Hit(PlayerActionEvent caller, float state)
+        {
+            Octopus3.Squeeze();
+        }
+
+        private void Miss(PlayerActionEvent caller)
+        {
+            
+        }
+
+        private void Out(PlayerActionEvent caller) 
+        {
+
         }
     }
 }
