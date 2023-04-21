@@ -27,7 +27,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 89380040047877798}
   m_LocalRotation: {x: -0.7071068, y: -0, z: -0, w: 0.7071068}
-  m_LocalPosition: {x: 0, y: 1.974, z: 0}
+  m_LocalPosition: {x: 0, y: 2.05, z: -0}
   m_LocalScale: {x: 0.6674856, y: 0.6674856, z: 0.6674856}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -808,7 +808,7 @@ ParticleSystem:
     arc:
       value: 180
       mode: 3
-      spread: 0
+      spread: 0.2
       speed:
         serializedVersion: 2
         minMaxState: 0
@@ -978,7 +978,7 @@ ParticleSystem:
       countCurve:
         serializedVersion: 2
         minMaxState: 0
-        scalar: 5
+        scalar: 3
         minScalar: 30
         maxCurve:
           serializedVersion: 2
@@ -7339,7 +7339,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2776558183996788987}
   m_LocalRotation: {x: -0.7071068, y: -0, z: -0, w: 0.7071068}
-  m_LocalPosition: {x: 0, y: 2.28, z: 0}
+  m_LocalPosition: {x: 0, y: 2.41, z: -0}
   m_LocalScale: {x: 0.6674856, y: 0.6674856, z: 0.6674856}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -8120,7 +8120,7 @@ ParticleSystem:
     arc:
       value: 180
       mode: 3
-      spread: 0
+      spread: 0.2
       speed:
         serializedVersion: 2
         minMaxState: 0
@@ -8290,7 +8290,7 @@ ParticleSystem:
       countCurve:
         serializedVersion: 2
         minMaxState: 0
-        scalar: 5
+        scalar: 3
         minScalar: 30
         maxCurve:
           serializedVersion: 2
@@ -13942,6 +13942,7 @@ MonoBehaviour:
   _hitEffect: {fileID: 5416868790144495356}
   arrow: {fileID: 3464172311716545372}
   prefix: Ao
+  crouch: 0
 --- !u!1 &5671523013863813744
 GameObject:
   m_ObjectHideFlags: 0
@@ -14850,6 +14851,7 @@ MonoBehaviour:
   specialAka: {fileID: 8517634802187922431}
   specialAo: {fileID: 1558938506013839449}
   specialKii: {fileID: 8747124398442550064}
+  currentSpecialKid: {fileID: 0}
   currentBall: {fileID: 0}
 --- !u!1 &6818650093539870978
 GameObject:
@@ -15689,6 +15691,7 @@ MonoBehaviour:
   _hitEffect: {fileID: 4507786578552946144}
   arrow: {fileID: 1319712500181776876}
   prefix: Kii
+  crouch: 0
 --- !u!1 &8355375709769013348
 GameObject:
   m_ObjectHideFlags: 0
@@ -15715,7 +15718,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 8355375709769013348}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 4.7300005, y: -0.25899988, z: 0}
+  m_LocalPosition: {x: 4.7300005, y: -0.2589999, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -15771,6 +15774,7 @@ MonoBehaviour:
   _hitEffect: {fileID: 625769363983148854}
   arrow: {fileID: 6997181209462239844}
   prefix: Aka
+  crouch: 0
 --- !u!1 &8517634802187922431
 GameObject:
   m_ObjectHideFlags: 0
@@ -15966,7 +15970,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 8720252177652487267}
   m_LocalRotation: {x: -0.7071068, y: -0, z: -0, w: 0.7071068}
-  m_LocalPosition: {x: 0, y: 2.12, z: 0}
+  m_LocalPosition: {x: 0, y: 2.26, z: -0}
   m_LocalScale: {x: 0.6674856, y: 0.6674856, z: 0.6674856}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -16747,7 +16751,7 @@ ParticleSystem:
     arc:
       value: 180
       mode: 3
-      spread: 0
+      spread: 0.2
       speed:
         serializedVersion: 2
         minMaxState: 0
@@ -16917,7 +16921,7 @@ ParticleSystem:
       countCurve:
         serializedVersion: 2
         minMaxState: 0
-        scalar: 5
+        scalar: 3
         minScalar: 30
         maxCurve:
           serializedVersion: 2
