@@ -14,11 +14,12 @@ namespace HeavenStudio.Games.Loaders
             {
                 new GameAction("dispense", "Dispense")
                 {
-                    function = delegate { var e = eventCaller.currentEntity; TossBoys.instance.Dispense(e.beat, e["who"]); },
+                    function = delegate { var e = eventCaller.currentEntity; TossBoys.instance.Dispense(e.beat, e.length, e["who"]); },
                     defaultLength = 2f,
+                    resizable = true,
                     parameters = new List<Param>()
                     {
-                        new Param("who", TossBoys.KidChoice.Aokun, "Receiver", "Who will receive the ball?")
+                        new Param("who", TossBoys.KidChoice.Akachan, "Receiver", "Who will receive the ball?")
                     }
                 },
                 new GameAction("pass", "Normal Toss")
@@ -26,7 +27,7 @@ namespace HeavenStudio.Games.Loaders
                     defaultLength = 2f,
                     parameters = new List<Param>()
                     {
-                        new Param("who", TossBoys.KidChoice.Akachan, "Receiver", "Who will receive the ball?")
+                        new Param("who", TossBoys.KidChoice.Aokun, "Receiver", "Who will receive the ball?")
                     }
                 },
                 new GameAction("dual", "Dual Toss")
@@ -47,7 +48,6 @@ namespace HeavenStudio.Games.Loaders
                 },
                 new GameAction("pop", "Pop Ball")
                 {
-                    preFunction = delegate { TossBoys.PrePop(eventCaller.currentEntity.beat); },
                     defaultLength = 2f,
                 },
                 new GameAction("bop", "Bop")
@@ -104,16 +104,10 @@ namespace HeavenStudio.Games
         public static TossBoys instance;
         bool shouldBop = true;
         public GameEvent bop = new GameEvent();
-        static List<float> queuedPops = new List<float>();
 
         private void Awake()
         {
             instance = this;
-        }
-
-        private void OnDestroy()
-        {
-            if (queuedPops.Count > 0) queuedPops.Clear();
         }
 
         private void Update()
@@ -121,14 +115,6 @@ namespace HeavenStudio.Games
             var cond = Conductor.instance;
             if (cond.isPlaying && !cond.isPaused)
             {
-                if (queuedPops.Count > 0)
-                {
-                    foreach (var pop in queuedPops)
-                    {
-                        Pop(pop);
-                    }
-                    queuedPops.Clear();
-                }
                 if (cond.ReportBeat(ref bop.lastReportedBeat, bop.startBeat % 1))
                 {
                     if (shouldBop)
@@ -174,24 +160,24 @@ namespace HeavenStudio.Games
         }
         #endregion
 
-        public void Dispense(float beat, int who)
+        public void Dispense(float beat, float length, int who)
         {
             if (currentBall != null) return;
             SetPassBallEvents();
             SetReceiver(who);
-            GetCurrentReceiver().ShowArrow(beat, 1f);
+            GetCurrentReceiver().ShowArrow(beat, length - 1);
             Jukebox.PlayOneShotGame("tossBoys/ballStart");
-            hatchAnim.Play("HatchOpen");
+            hatchAnim.Play("HatchOpen", 0, 0);
             currentBall = Instantiate(ballPrefab, transform);
 
-            if (passBallDict.ContainsKey(beat + 2))
+            if (passBallDict.ContainsKey(beat + length))
             {
-                ScheduleInput(beat, 2f, GetInputTypeBasedOnCurrentReceiver(), JustHitBall, Miss, Empty);
-                if (passBallDict[beat + 2].datamodel == "tossBoys/dual")
+                ScheduleInput(beat, length, GetInputTypeBasedOnCurrentReceiver(), JustHitBall, Miss, Empty);
+                if (passBallDict[beat + length].datamodel == "tossBoys/dual")
                 {
                     BeatAction.New(instance.gameObject, new List<BeatAction.Action>()
                     {
-                        new BeatAction.Action(beat + 1, delegate { DoSpecialBasedOnReceiver(beat + 1); })
+                        new BeatAction.Action(beat + length - 1, delegate { DoSpecialBasedOnReceiver(beat + length - 1); })
                     });
                 }
             }
@@ -199,7 +185,7 @@ namespace HeavenStudio.Games
             {
                 BeatAction.New(instance.gameObject, new List<BeatAction.Action>()
                 {
-                    new BeatAction.Action(beat + 2f, delegate { Miss(null); })
+                    new BeatAction.Action(beat + length, delegate { Miss(null); })
                 });
             }
         }
@@ -237,6 +223,7 @@ namespace HeavenStudio.Games
                 */
                 currentReceiver = tempLastReceiver;
             }
+            float eventLength = 2f;
             switch (currentPassType)
             {
                 case "tossBoys/pass":
@@ -244,12 +231,21 @@ namespace HeavenStudio.Games
                     break;
                 case "tossBoys/dual":
                     DualToss(beat);
+                    eventLength = 1f;
                     break;
                 case "tossBoys/high":
                     HighToss(beat);
+                    eventLength = 3f;
                     break;
                 default:
                     break;
+            }
+            if (passBallDict.ContainsKey(beat + eventLength) && passBallDict[beat + eventLength].datamodel == "tossBoys/pop")
+            {
+                BeatAction.New(instance.gameObject, new List<BeatAction.Action>()
+                {
+                    new BeatAction.Action(beat + eventLength - 1, delegate { GetCurrentReceiver().PopBallPrepare(); })
+                });
             }
         }
 
@@ -357,29 +353,6 @@ namespace HeavenStudio.Games
             if (secondBeat == 0.25f) soundsToPlay.Add(new MultiSound.Sound("tossBoys/" + last + current + "High" + 3, beat + 0.5f, 1, 1, false, thirdOffset));
             MultiSound.Play(soundsToPlay.ToArray());
             ScheduleInput(beat, 3f, GetInputTypeBasedOnCurrentReceiver(), JustHitBall, Miss, Empty);
-        }
-
-        public static void PrePop(float beat)
-        {
-            if (GameManager.instance.currentGame == "tossBoys")
-            {
-                instance.Pop(beat);
-            }
-            else
-            {
-                queuedPops.Add(beat);
-            }
-        }
-
-        void Pop(float beat)
-        {
-            BeatAction.New(instance.gameObject, new List<BeatAction.Action>()
-            {
-                new BeatAction.Action(beat - 0.5f, delegate
-                {
-                    if (currentBall != null) GetCurrentReceiver().PopBallPrepare();
-                })
-            });
         }
 
         #region Inputs
@@ -505,7 +478,7 @@ namespace HeavenStudio.Games
                     {
                         new MultiSound.Sound("tossBoys/redSpecial1", beat),
                         new MultiSound.Sound("tossBoys/redSpecial2", beat + 0.25f),
-                        new MultiSound.Sound("tossBoys/redSpecialCharge", beat + 0.25f),
+                        new MultiSound.Sound("tossBoys/redSpecialCharge", beat + 0.25f, 1, 1, false, 0.085f),
                     });
                     break;
                 case WhichTossKid.Aokun:
