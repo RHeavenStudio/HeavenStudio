@@ -14,12 +14,13 @@ namespace HeavenStudio.Games.Loaders
             {
                 new GameAction("dispense", "Dispense")
                 {
-                    function = delegate { var e = eventCaller.currentEntity; TossBoys.instance.Dispense(e.beat, e.length, e["who"]); },
+                    function = delegate { var e = eventCaller.currentEntity; TossBoys.instance.Dispense(e.beat, e.length, e["who"], e["call"]); },
                     defaultLength = 2f,
                     resizable = true,
                     parameters = new List<Param>()
                     {
-                        new Param("who", TossBoys.KidChoice.Akachan, "Receiver", "Who will receive the ball?")
+                        new Param("who", TossBoys.KidChoice.Akachan, "Receiver", "Who will receive the ball?"),
+                        new Param("call", false, "Name Call", "Should the other kids than the receiver call their name?")
                     }
                 },
                 new GameAction("pass", "Normal Toss")
@@ -160,7 +161,7 @@ namespace HeavenStudio.Games
         }
         #endregion
 
-        public void Dispense(float beat, float length, int who)
+        public void Dispense(float beat, float length, int who, bool call)
         {
             if (currentBall != null) return;
             SetPassBallEvents();
@@ -170,6 +171,45 @@ namespace HeavenStudio.Games
             hatchAnim.Play("HatchOpen", 0, 0);
             currentBall = Instantiate(ballPrefab, transform);
 
+            if (call)
+            {
+                switch (who)
+                {
+                    case (int)WhichTossKid.Akachan:
+                        MultiSound.Play(new MultiSound.Sound[]
+                        {
+                        new MultiSound.Sound("tossBoys/blueRedHigh1", beat),
+                        new MultiSound.Sound("tossBoys/yellowRedHigh1", beat),
+                        new MultiSound.Sound("tossBoys/blueRedHigh2", beat + 0.25f),
+                        new MultiSound.Sound("tossBoys/yellowRedHigh2", beat + 0.25f),
+                        new MultiSound.Sound("tossBoys/blueRedHigh3", beat + 0.5f),
+                        new MultiSound.Sound("tossBoys/yellowRedHigh3", beat + 0.5f),
+                        });
+                        break;
+                    case (int)WhichTossKid.Aokun:
+                        MultiSound.Play(new MultiSound.Sound[]
+                        {
+                        new MultiSound.Sound("tossBoys/redBlueHigh1", beat),
+                        new MultiSound.Sound("tossBoys/yellowBlueHigh1", beat),
+                        new MultiSound.Sound("tossBoys/redBlueHigh2", beat + 0.5f),
+                        new MultiSound.Sound("tossBoys/yellowBlueHigh2", beat + 0.5f),
+                        });
+                        break;
+                    case (int)WhichTossKid.Kiiyan:
+                        MultiSound.Play(new MultiSound.Sound[]
+                        {
+                        new MultiSound.Sound("tossBoys/redYellowHigh1", beat),
+                        new MultiSound.Sound("tossBoys/blueYellowHigh1", beat),
+                        new MultiSound.Sound("tossBoys/redYellowHigh2", beat + 0.5f),
+                        new MultiSound.Sound("tossBoys/blueYellowHigh2", beat + 0.5f),
+                        });
+                        break;
+                    default:
+                        break;
+                }
+            }
+
+
             if (passBallDict.ContainsKey(beat + length))
             {
                 ScheduleInput(beat, length, GetInputTypeBasedOnCurrentReceiver(), JustHitBall, Miss, Empty);
@@ -178,6 +218,13 @@ namespace HeavenStudio.Games
                     BeatAction.New(instance.gameObject, new List<BeatAction.Action>()
                     {
                         new BeatAction.Action(beat + length - 1, delegate { DoSpecialBasedOnReceiver(beat + length - 1); })
+                    });
+                }
+                else if (passBallDict[beat + length].datamodel == "tossBoys/pop")
+                {
+                    BeatAction.New(instance.gameObject, new List<BeatAction.Action>()
+                    {
+                        new BeatAction.Action(beat + length - 1, delegate { GetCurrentReceiver().PopBallPrepare(); })
                     });
                 }
             }
