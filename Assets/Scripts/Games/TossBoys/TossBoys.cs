@@ -378,7 +378,7 @@ namespace HeavenStudio.Games
                 new MultiSound.Sound("tossBoys/" + last + current + "Low" + 1, beat),
                 new MultiSound.Sound("tossBoys/" + last + current + "Low" + 2, beat + secondBeat, 1, 1, false, secondOffset),
             };
-            if (passBallDict.ContainsKey(beat + 1) && passBallDict[beat + 1].datamodel == "tossBoys/lightning" || passBallDict[beat + 1].datamodel == "tossBoys/blur")
+            if (passBallDict.ContainsKey(beat + 1) && (passBallDict[beat + 1].datamodel == "tossBoys/lightning" || passBallDict[beat + 1].datamodel == "tossBoys/blur"))
             {
                 BeatAction.New(instance.gameObject, new List<BeatAction.Action>()
                 {
