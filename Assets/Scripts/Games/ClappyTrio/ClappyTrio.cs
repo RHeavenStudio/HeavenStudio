@@ -35,6 +35,15 @@ namespace HeavenStudio.Games.Loaders
                         new Param("toggle", false, "Alt", "Whether or not the alternate version should be played")
                     }
                 },
+                new GameAction("sign", "Sign Enter")
+                {
+                    function = delegate { var e = eventCaller.currentEntity;  ClappyTrio.instance.Sign(e.beat, e.length, e["ease"]); },
+                    parameters = new List<Param>()
+                    {
+                        new Param("ease", EasingFunction.Ease.Linear, "Ease", "Which ease should the sign move with?"),
+                    },
+                    resizable = true
+                },
                 new GameAction("change lion count", "Change Lion Count")
                 {
                     function = delegate { ClappyTrio.instance.ChangeLionCount((int)eventCaller.currentEntity["valA"]); }, 
@@ -80,6 +89,11 @@ namespace HeavenStudio.Games
 
         public GameEvent bop = new GameEvent();
 
+        [SerializeField] Animator signAnim;
+        float signStartBeat;
+        float signLength;
+        EasingFunction.Ease lastEase;
+
         public static ClappyTrio instance { get; set; }
 
         MultiSound clapSounds = null;
@@ -107,6 +121,24 @@ namespace HeavenStudio.Games
             {
                 if (shouldBop) Bop(cond.songPositionInBeats);
             }
+            if (cond.isPlaying && !cond.isPaused)
+            {
+                float normalizedBeat = cond.GetPositionFromBeat(signStartBeat, signLength);
+
+                if (normalizedBeat > 0 && normalizedBeat <= 1)
+                {
+                    EasingFunction.Function func = EasingFunction.GetEasingFunction(lastEase);
+                    float newPos = func(0, 1, normalizedBeat);
+                    signAnim.DoNormalizedAnimation("Enter", newPos);
+                }
+            }
+        }
+
+        public void Sign(float beat, float length, int ease)
+        {
+            signStartBeat = beat;
+            signLength = length;
+            lastEase = (EasingFunction.Ease)ease;
         }
 
         private void InitLions()

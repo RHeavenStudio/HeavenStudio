@@ -26,7 +26,11 @@ namespace HeavenStudio.Games.Loaders
                 },
                 new GameAction("mole", "Mole")
                 {
-                    defaultLength = 2f
+                    defaultLength = 2f,
+                    parameters = new List<Param>()
+                    {
+                        new Param("mute", false, "Mute", "Should the mole laugh sound be muted?")
+                    }
                 },
             });
         }
@@ -203,6 +207,7 @@ namespace HeavenStudio.Games
             for (int i = 0; i < moleEvents.Count; i++)
             {
                 var moleEvent = moleEvents[i];
+                if (moleEvent["mute"]) continue;
                 var timeToEvent = moleEvent.beat - cond.songPositionInBeats;
                 if (timeToEvent <= 4f && timeToEvent > 2f && !cuedMoleSounds.Contains(moleEvent))
                 {
