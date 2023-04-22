@@ -75,6 +75,7 @@ namespace HeavenStudio.Games
         private ClappyTrioPlayer ClappyTrioPlayer;
 
         public bool playerHitLast = false;
+        public bool missed;
         bool shouldBop;
 
         public GameEvent bop = new GameEvent();
@@ -195,7 +196,8 @@ namespace HeavenStudio.Games
                 {
                     SetFace(i, 1);
                 }
-            } else
+            } 
+            else if (missed)
             {
                 var a = EventCaller.GetAllInGameManagerList("clappyTrio", new string[] { "clap" });
                 var b = a.FindAll(c => c.beat < beat);
