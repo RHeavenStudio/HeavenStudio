@@ -24,16 +24,19 @@ namespace HeavenStudio.Games.Loaders
                 new GameAction("soccer", "Soccer Ball")
                 {
                     preFunction = delegate { var e = eventCaller.currentEntity; DoubleDate.QueueSoccerBall(e.beat); },
+                    preFunctionLength = 1f,
                     defaultLength = 2f,
                 },
                 new GameAction("basket", "Basket Ball")
                 {
                     preFunction = delegate { var e = eventCaller.currentEntity; DoubleDate.QueueBasketBall(e.beat); },
+                    preFunctionLength = 1f,
                     defaultLength = 2f,
                 },
                 new GameAction("football", "Football")
                 {
                     preFunction = delegate { var e = eventCaller.currentEntity; DoubleDate.QueueFootBall(e.beat); },
+                    preFunctionLength = 1f,
                     defaultLength = 2.5f,
                 },
             });
@@ -104,6 +107,10 @@ namespace HeavenStudio.Games
 
         public override void OnPlay(float beat)
         {
+            queuedBalls.Clear();
+        }
+
+        private void OnDestroy() {
             queuedBalls.Clear();
         }
 
@@ -224,7 +231,7 @@ namespace HeavenStudio.Games
 
         public static void QueueSoccerBall(float beat)
         {
-            if (instance == null)
+            if (GameManager.instance.currentGame != "doubleDate")
             {
                 queuedBalls.Add(new QueuedBall()
                 {
@@ -241,7 +248,7 @@ namespace HeavenStudio.Games
 
         public static void QueueBasketBall(float beat)
         {
-            if (instance == null)
+            if (GameManager.instance.currentGame != "doubleDate")
             {
                 queuedBalls.Add(new QueuedBall()
                 {
@@ -257,12 +264,12 @@ namespace HeavenStudio.Games
             {
                 new MultiSound.Sound("doubleDate/basketballBounce", beat),
                 new MultiSound.Sound("doubleDate/basketballBounce", beat + 0.75f),
-            });
+            }, forcePlay: true);
         }
 
         public static void QueueFootBall(float beat)
         {
-            if (instance == null)
+            if (GameManager.instance.currentGame != "doubleDate")
             {
                 queuedBalls.Add(new QueuedBall()
                 {
@@ -278,7 +285,7 @@ namespace HeavenStudio.Games
             {
                 new MultiSound.Sound("doubleDate/footballBounce", beat),
                 new MultiSound.Sound("doubleDate/footballBounce", beat + 0.75f),
-            });
+            }, forcePlay: true);
         }
 
         public void SpawnSoccerBall(float beat)
