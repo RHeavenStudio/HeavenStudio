@@ -6,12 +6,13 @@ using HeavenStudio.Util;
 
 namespace HeavenStudio.Games.Scripts_DoubleDate
 {
-    public class Basketball : FollowPath
+    public class Basketball : SuperCurveObject
     {
         private DoubleDate game;
-        private FollowPath.Path path;
+        private SuperCurveObject.Path path;
         private float pathStartBeat = float.MinValue;
         private Conductor conductor;
+        private GameObject shadow;
 
         void Awake()
         {
@@ -22,13 +23,16 @@ namespace HeavenStudio.Games.Scripts_DoubleDate
         void Update()
         {
             float beat = conductor.songPositionInBeats;
+            float height = 0f;
             if (pathStartBeat > float.MinValue)
             {
-                Vector3 pos = GetPathPositionFromBeat(path, Mathf.Max(beat, pathStartBeat), pathStartBeat);
+                Vector3 pos = GetPathPositionFromBeat(path, Mathf.Max(beat, pathStartBeat), out height, pathStartBeat);
                 transform.position = pos;
                 float rot = GetPathValue("rot");
                 transform.rotation = Quaternion.Euler(0f, 0f, transform.rotation.eulerAngles.z - (rot * Time.deltaTime * (1f/conductor.pitchedSecPerBeat)));
             }
+            shadow.transform.position = new Vector3(transform.position.x, Mathf.Min(transform.position.y - height, game.floorHeight), transform.position.z);
+            shadow.transform.localScale = Vector3.one * Mathf.Clamp(((transform.position.y) - game.shadowDepthScaleMin) / (game.shadowDepthScaleMax - game.shadowDepthScaleMin), 0f, 1f);
         }
 
         public void Init(float beat)
@@ -42,6 +46,9 @@ namespace HeavenStudio.Games.Scripts_DoubleDate
             transform.position = pos;
 
             gameObject.SetActive(true);
+            shadow = game.MakeDropShadow();
+            shadow.transform.position = new Vector3(transform.position.x, Mathf.Min(game.floorHeight, transform.position.y - offset.y), transform.position.z);
+            shadow.SetActive(true);
         }
 
         void Just(PlayerActionEvent caller, float state)
@@ -53,14 +60,14 @@ namespace HeavenStudio.Games.Scripts_DoubleDate
                     Destroy(gameObject);
                 }),
             });
+            UpdateLastRealPos();
+            pathStartBeat = conductor.songPositionInBeats;
             if (state >= 1f || state <= -1f)
             {
-                UpdateLastRealPos();
-                pathStartBeat = conductor.songPositionInBeats;
                 path = game.GetPath("BasketBallNg" + (state > 0 ? "Late" : "Early"));
                 Jukebox.PlayOneShot("miss");
                 game.Kick(false);
-                GetComponent<SpriteRenderer>().sortingOrder = 5;
+                GetComponent<SpriteRenderer>().sortingOrder = 8;
                 return;
             }
             Hit();
@@ -81,5 +88,12 @@ namespace HeavenStudio.Games.Scripts_DoubleDate
         }
 
         void Empty(PlayerActionEvent caller) { }
+
+        private void OnDestroy() {
+            if (shadow != null)
+            {
+                Destroy(shadow);
+            }
+        }
     }
 }

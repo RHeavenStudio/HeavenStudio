@@ -10,6 +10,7 @@ namespace HeavenStudio.Games.Scripts_DoubleDate
         bool canBop = true;
         Animator anim;
         private DoubleDate game;
+        bool notHit = true;
 
         void Awake()
         {
@@ -19,7 +20,7 @@ namespace HeavenStudio.Games.Scripts_DoubleDate
 
         public void Bop()
         {
-            if (canBop)
+            if (canBop && notHit)
             {
                 anim.DoScaledAnimationAsync("WeaselsBop", 1f);
             }
@@ -27,7 +28,24 @@ namespace HeavenStudio.Games.Scripts_DoubleDate
 
         public void Happy()
         {
-            anim.DoScaledAnimationAsync("WeaselsHappy", 1f);
+            anim.DoScaledAnimationAsync("WeaselsHappy", 0.5f);
+        }
+
+        public void Hit(float beat)
+        {
+            notHit = false;
+            anim.DoScaledAnimationAsync("WeaselsHit", 0.5f);
+            BeatAction.New(gameObject, new List<BeatAction.Action>()
+            {
+                new BeatAction.Action(beat + 4f, delegate
+                {
+                    anim.DoScaledAnimationAsync("WeaselsAppearUpset", 1f);
+                }),
+                new BeatAction.Action(beat + 4.5f, delegate
+                {
+                    notHit = true;
+                }),
+            });
         }
 
         public void ToggleBop()

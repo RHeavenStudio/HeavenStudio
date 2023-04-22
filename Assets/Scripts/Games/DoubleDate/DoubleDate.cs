@@ -51,6 +51,7 @@ namespace HeavenStudio.Games
         [SerializeField] GameObject soccer;
         [SerializeField] GameObject basket;
         [SerializeField] GameObject football;
+        [SerializeField] GameObject dropShadow;
         [SerializeField] ParticleSystem leaves;
 
         [Header("Components")]
@@ -58,14 +59,18 @@ namespace HeavenStudio.Games
         [SerializeField] Animator girlAnim;
         [SerializeField] DoubleDateWeasels weasels;
         [SerializeField] Animator treeAnim;
-        [SerializeField] FollowPath.Path[] ballBouncePaths;
+        [SerializeField] SuperCurveObject.Path[] ballBouncePaths;
 
         [Header("Variables")]
+        [SerializeField] public float floorHeight;
+        [SerializeField] public float shadowDepthScaleMin;
+        [SerializeField] public float shadowDepthScaleMax;
         bool shouldBop = true;
         bool canBop = true;
         GameEvent bop = new GameEvent();
         public static DoubleDate instance;
         public static List<QueuedBall> queuedBalls = new List<QueuedBall>();
+        [NonSerialized] public float lastHitWeasel = float.MinValue;
 
         public enum BallType
         {
@@ -81,44 +86,14 @@ namespace HeavenStudio.Games
         }
 
         // Editor gizmo to draw trajectories
-        const float TRAJECTORY_STEP = 0.1f;
         new void OnDrawGizmos()
         {
             base.OnDrawGizmos();
-            foreach (FollowPath.Path path in ballBouncePaths)
+            foreach (SuperCurveObject.Path path in ballBouncePaths)
             {
                 if (path.preview)
                 {
-                    if (path.positions.Length > 1)
-                    {
-                        for (int i = 0; i < path.positions.Length - 1; i++)
-                        {
-                            FollowPath.PathPos pos = path.positions[i];
-                            FollowPath.PathPos nextPos = path.positions[i + 1];
-                            if (pos.pos == null || nextPos.pos == null)
-                                return;
-                            Vector3 startPos = pos.pos.position;
-                            Vector3 endPos = nextPos.pos.position;
-                            // draw a curve between the two points using the path height
-                            List<Vector3> points = new List<Vector3>();
-                            for (float t = 0; t < 1; t += TRAJECTORY_STEP)
-                            {
-                                float yMul = t * 2f - 1f;
-                                float yWeight = -(yMul*yMul) + 1f;
-                                Vector3 p = Vector3.LerpUnclamped(startPos, endPos, t);
-                                p.y += yWeight * pos.height;
-                                points.Add(p);
-                            }
-                            points.Add(endPos);
-                            for (int j = 0; j < points.Count - 1; j++)
-                            {
-                                Gizmos.color = Color.blue;
-                                Gizmos.DrawLine(points[j], points[j + 1]);
-                            }
-                            Gizmos.DrawSphere(startPos, 0.1f);
-                            Gizmos.DrawSphere(endPos, 0.1f);
-                        }
-                    }
+                    soccer.GetComponent<SoccerBall>().DrawEditorGizmo(path);
                 }
             }
         }
@@ -210,7 +185,7 @@ namespace HeavenStudio.Games
         {
             if (hit)
             {
-                boyAnim.DoScaledAnimationAsync("Kick", 1f);
+                boyAnim.DoScaledAnimationAsync("Kick", 0.5f);
                 if (weaselsHappy) weasels.Happy();
                 if (!forceNoLeaves)
                 {
@@ -226,7 +201,7 @@ namespace HeavenStudio.Games
             }
             else
             {
-                boyAnim.DoScaledAnimationAsync("Barely", 1f);
+                boyAnim.DoScaledAnimationAsync("Barely", 0.5f);
             }
         }
 
@@ -307,16 +282,32 @@ namespace HeavenStudio.Games
             spawnedBall.Init(beat);
         }
 
-        public FollowPath.Path GetPath(string name)
+        public void HitWeasels(float beat)
         {
-            foreach (FollowPath.Path path in ballBouncePaths)
+            lastHitWeasel = Conductor.instance.songPositionInBeats;
+            BeatAction.New(gameObject, new List<BeatAction.Action>()
+            {
+                new BeatAction.Action(beat - (0.25f/3f), delegate { weasels.Hit(beat); }),
+            });
+        }
+
+        public SuperCurveObject.Path GetPath(string name)
+        {
+            foreach (SuperCurveObject.Path path in ballBouncePaths)
             {
                 if (path.name == name)
                 {
+                    Debug.Log("Found path " + name);
                     return path;
                 }
             }
-            return default(FollowPath.Path);
+            return default(SuperCurveObject.Path);
+        }
+
+        public GameObject MakeDropShadow()
+        {
+            GameObject shadow = Instantiate(dropShadow, transform);
+            return shadow;
         }
     }
 }

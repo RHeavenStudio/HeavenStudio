@@ -6,13 +6,14 @@ using HeavenStudio.Util;
 
 namespace HeavenStudio.Games.Scripts_DoubleDate
 {
-    public class Football : FollowPath
+    public class Football : SuperCurveObject
     {
         private DoubleDate game;
         
-        private FollowPath.Path path;
+        private SuperCurveObject.Path path;
         private float pathStartBeat = float.MinValue;
         private Conductor conductor;
+        private GameObject shadow;
 
         void Awake()
         {
@@ -23,19 +24,22 @@ namespace HeavenStudio.Games.Scripts_DoubleDate
         void Update()
         {
             float beat = conductor.songPositionInBeats;
+            float height = 0f;
             if (pathStartBeat > float.MinValue)
             {
-                Vector3 pos = GetPathPositionFromBeat(path, Mathf.Max(beat, pathStartBeat), pathStartBeat);
+                Vector3 pos = GetPathPositionFromBeat(path, Mathf.Max(beat, pathStartBeat), out height, pathStartBeat);
                 transform.position = pos;
                 float rot = GetPathValue("rot");
                 transform.rotation = Quaternion.Euler(0f, 0f, transform.rotation.eulerAngles.z - (rot * Time.deltaTime * (1f/conductor.pitchedSecPerBeat)));
             }
+            shadow.transform.position = new Vector3(transform.position.x, Mathf.Min(transform.position.y - height, game.floorHeight), transform.position.z);
+            shadow.transform.localScale = Vector3.one * Mathf.Clamp(((transform.position.y) - game.shadowDepthScaleMin) / (game.shadowDepthScaleMax - game.shadowDepthScaleMin), 0f, 1f);
         }
 
         public void Init(float beat)
         {
             game.ScheduleInput(beat, 1.5f, InputType.STANDARD_DOWN, Just, Miss, Empty);
-            path = game.GetPath("FootBallIn");  // there's a second path for footballs that don't hit the weasels, use that if the weasels have been hit recently
+            path = game.GetPath("FootBallInNoHit");  // there's a second path for footballs that hit the weasels, use that if the weasels haven't been hit recently
             UpdateLastRealPos();
             pathStartBeat = beat - 1f;
 
@@ -43,6 +47,9 @@ namespace HeavenStudio.Games.Scripts_DoubleDate
             transform.position = pos;
 
             gameObject.SetActive(true);
+            shadow = game.MakeDropShadow();
+            shadow.transform.position = new Vector3(transform.position.x, Mathf.Min(game.floorHeight, transform.position.y - offset.y), transform.position.z);
+            shadow.SetActive(true);
         }
 
         void Just(PlayerActionEvent caller, float state)
@@ -54,7 +61,7 @@ namespace HeavenStudio.Games.Scripts_DoubleDate
                 path = game.GetPath("FootBallNg" + (state > 0 ? "Late" : "Early"));
                 Jukebox.PlayOneShot("miss");
                 game.Kick(false);
-                GetComponent<SpriteRenderer>().sortingOrder = 5;
+                GetComponent<SpriteRenderer>().sortingOrder = 8;
                 BeatAction.New(gameObject, new List<BeatAction.Action>()
                 {
                     new BeatAction.Action(conductor.songPositionInBeats + 4f, delegate
@@ -93,8 +100,18 @@ namespace HeavenStudio.Games.Scripts_DoubleDate
 
         void Miss(PlayerActionEvent caller)
         {
-            Jukebox.PlayOneShotGame("doubleDate/weasel_hit");
-            Jukebox.PlayOneShotGame("doubleDate/weasel_scream");
+            if (conductor.songPositionInBeats > game.lastHitWeasel + 5f)
+            {
+                path = game.GetPath("FootBallIn");
+                float impact = GetPointTimeByTag(path, "impact");
+                if (impact > 0)
+                {
+                    GetComponent<SpriteRenderer>().sortingOrder = 8;
+                    Jukebox.PlayOneShotGame("doubleDate/weasel_hit", pathStartBeat + impact);
+                    Jukebox.PlayOneShotGame("doubleDate/weasel_scream", pathStartBeat + impact);
+                    game.HitWeasels(pathStartBeat + impact);
+                }
+            }
 
             BeatAction.New(gameObject, new List<BeatAction.Action>()
             {
@@ -106,5 +123,12 @@ namespace HeavenStudio.Games.Scripts_DoubleDate
         }
 
         void Empty(PlayerActionEvent caller) { }
+
+        private void OnDestroy() {
+            if (shadow != null)
+            {
+                Destroy(shadow);
+            }
+        }
     }
 }
