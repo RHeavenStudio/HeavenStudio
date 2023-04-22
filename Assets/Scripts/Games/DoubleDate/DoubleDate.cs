@@ -59,12 +59,16 @@ namespace HeavenStudio.Games
         [SerializeField] Animator girlAnim;
         [SerializeField] DoubleDateWeasels weasels;
         [SerializeField] Animator treeAnim;
-        [SerializeField] SuperCurveObject.Path[] ballBouncePaths;
+        [SerializeField] GameObject clouds;
 
         [Header("Variables")]
+        [SerializeField] public float cloudSpeed;
+        [SerializeField] public float cloudDistance;
         [SerializeField] public float floorHeight;
         [SerializeField] public float shadowDepthScaleMin;
         [SerializeField] public float shadowDepthScaleMax;
+        [SerializeField] SuperCurveObject.Path[] ballBouncePaths;
+        float lastGirlGacha = float.MinValue;
         bool shouldBop = true;
         bool canBop = true;
         GameEvent bop = new GameEvent();
@@ -108,6 +112,10 @@ namespace HeavenStudio.Games
             instance = this;
         }
 
+        private void Start() {
+            clouds.transform.position = Vector3.left * ((Time.realtimeSinceStartup * cloudSpeed) % cloudDistance);
+        }
+
         void Update()
         {
             var cond = Conductor.instance;
@@ -149,6 +157,7 @@ namespace HeavenStudio.Games
                 Jukebox.PlayOneShotGame("doubleDate/kick_whiff");
                 Kick(true, true, false);
             }
+            clouds.transform.position = Vector3.left * ((Time.realtimeSinceStartup * cloudSpeed) % cloudDistance);
         }
 
         public void ToggleBop(bool go)
@@ -177,16 +186,23 @@ namespace HeavenStudio.Games
             {
                 boyAnim.DoScaledAnimationAsync("IdleBop", 1f);
             }
-            girlAnim.DoScaledAnimationAsync("GirlBop", 1f);
+            if (Conductor.instance.songPositionInBeats > lastGirlGacha)
+                girlAnim.DoScaledAnimationAsync("GirlBop", 1f);
             weasels.Bop();
         }
 
-        public void Kick(bool hit = true, bool forceNoLeaves = false, bool weaselsHappy = true)
+        public void Kick(bool hit = true, bool forceNoLeaves = false, bool weaselsHappy = true, bool jump = false)
         {
             if (hit)
             {
                 boyAnim.DoScaledAnimationAsync("Kick", 0.5f);
-                if (weaselsHappy) weasels.Happy();
+                if (jump)
+                {
+                    weasels.Jump();
+                    lastGirlGacha = Conductor.instance.songPositionInBeats + 0.5f;
+                    girlAnim.DoScaledAnimationAsync("GirlLookUp", 0.5f);
+                }
+                else if (weaselsHappy) weasels.Happy();
                 if (!forceNoLeaves)
                 {
                     BeatAction.New(instance.gameObject, new List<BeatAction.Action>()
@@ -202,6 +218,7 @@ namespace HeavenStudio.Games
             else
             {
                 boyAnim.DoScaledAnimationAsync("Barely", 0.5f);
+                weasels.Surprise();
             }
         }
 
@@ -282,13 +299,26 @@ namespace HeavenStudio.Games
             spawnedBall.Init(beat);
         }
 
-        public void HitWeasels(float beat)
+        public void MissKick(float beat, bool hit = false)
         {
-            lastHitWeasel = Conductor.instance.songPositionInBeats;
-            BeatAction.New(gameObject, new List<BeatAction.Action>()
+            lastGirlGacha = Conductor.instance.songPositionInBeats + 1.5f;
+            girlAnim.DoScaledAnimationAsync("GirlSad", 0.5f);
+            if (hit)
             {
-                new BeatAction.Action(beat - (0.25f/3f), delegate { weasels.Hit(beat); }),
-            });
+                lastHitWeasel = Conductor.instance.songPositionInBeats;
+                BeatAction.New(gameObject, new List<BeatAction.Action>()
+                {
+                    new BeatAction.Action(beat - (0.25f/3f), delegate { weasels.Hit(beat); }),
+                });
+            }
+            else
+            {
+                lastHitWeasel = Conductor.instance.songPositionInBeats;
+                BeatAction.New(gameObject, new List<BeatAction.Action>()
+                {
+                    new BeatAction.Action(beat + 0.25, delegate { weasels.Hide(beat + 0.25f); }),
+                });
+            }
         }
 
         public SuperCurveObject.Path GetPath(string name)

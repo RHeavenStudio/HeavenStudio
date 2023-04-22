@@ -95,13 +95,13 @@ namespace HeavenStudio.Games.Scripts_DoubleDate
             UpdateLastRealPos();
             pathStartBeat = conductor.songPositionInBeats;
             path = game.GetPath("FootBallJust");
-            game.Kick(true, true);
+            game.Kick(true, true, jump: true);
             Jukebox.PlayOneShotGame("doubleDate/footballKick");
         }
 
         void Miss(PlayerActionEvent caller)
         {
-            if (conductor.songPositionInBeats > game.lastHitWeasel + 5f)
+            if (conductor.songPositionInBeats > game.lastHitWeasel + 2.25f)
             {
                 path = game.GetPath("FootBallIn");
                 float impact = GetPointTimeByTag(path, "impact");
@@ -110,7 +110,7 @@ namespace HeavenStudio.Games.Scripts_DoubleDate
                     GetComponent<SpriteRenderer>().sortingOrder = 8;
                     Jukebox.PlayOneShotGame("doubleDate/weasel_hit", pathStartBeat + impact);
                     Jukebox.PlayOneShotGame("doubleDate/weasel_scream", pathStartBeat + impact);
-                    game.HitWeasels(pathStartBeat + impact);
+                    game.MissKick(pathStartBeat + impact, true);
                 }
             }
 

@@ -85,6 +85,7 @@ namespace HeavenStudio.Games.Scripts_DoubleDate
         void Miss(PlayerActionEvent caller)
         {
             Jukebox.PlayOneShotGame("doubleDate/weasel_hide");
+            game.MissKick(pathStartBeat + 2.25f);
         }
 
         void Empty(PlayerActionEvent caller) { }
