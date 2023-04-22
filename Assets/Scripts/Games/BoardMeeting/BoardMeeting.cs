@@ -85,6 +85,7 @@ namespace HeavenStudio.Games
         [SerializeField] int executiveCount = 4;
         [SerializeField] List<BMExecutive> executives = new List<BMExecutive>();
         public BMExecutive firstSpinner;
+        [SerializeField] float shakeIntensity = 0.5f;
         public bool shouldBop = true;
         bool assistantCanBop = true;
         bool executivesCanBop = true;
@@ -382,7 +383,7 @@ namespace HeavenStudio.Games
             if (shakeTween != null)
                 shakeTween.Kill(true);
 
-            DOTween.Punch(() => GameCamera.additionalPosition, x => GameCamera.additionalPosition = x, new Vector3(0.5f, 0, 0),
+            DOTween.Punch(() => GameCamera.additionalPosition, x => GameCamera.additionalPosition = x, new Vector3(shakeIntensity, 0, 0),
                 Conductor.instance.pitchedSecPerBeat * 0.5f, 18, 1f);
             executives[executiveCount - 1].Stop();
             assistantAnim.DoScaledAnimationAsync("Stop", 0.5f);
