@@ -1,7 +1,9 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Rendering;
 using HeavenStudio.Util;
+using DG.Tweening;
 
 namespace HeavenStudio.Games.Loaders
 {
@@ -11,7 +13,7 @@ namespace HeavenStudio.Games.Loaders
     {
         public static Minigame AddGame(EventCaller eventCaller)
         {
-            return new Minigame("boardMeeting", "Board Meeting", "FFFFFF", false, false, new List<GameAction>()
+            return new Minigame("boardMeeting", "Board Meeting", "d37912", false, false, new List<GameAction>()
             {
                 new GameAction("prepare", "Prepare")
                 {
@@ -71,8 +73,6 @@ namespace HeavenStudio.Games.Loaders
 namespace HeavenStudio.Games
 {
     using Scripts_BoardMeeting;
-    using System;
-    using UnityEngine.Rendering;
 
     public class BoardMeeting : Minigame
     {
@@ -91,6 +91,7 @@ namespace HeavenStudio.Games
         public GameEvent bop = new GameEvent();
         Sound chairLoopSound = null;
         int missCounter = 0;
+        private Tween shakeTween;
 
         public static BoardMeeting instance;
 
@@ -378,6 +379,11 @@ namespace HeavenStudio.Games
                 executives[executiveCount - 1].Stop(false);
                 return;
             }
+            if (shakeTween != null)
+                shakeTween.Kill(true);
+
+            DOTween.Punch(() => GameCamera.additionalPosition, x => GameCamera.additionalPosition = x, new Vector3(0.5f, 0, 0),
+                Conductor.instance.pitchedSecPerBeat * 0.5f, 18, 1f);
             executives[executiveCount - 1].Stop();
             assistantAnim.DoScaledAnimationAsync("Stop", 0.5f);
             Jukebox.PlayOneShotGame("boardMeeting/stopAllPlayer");
