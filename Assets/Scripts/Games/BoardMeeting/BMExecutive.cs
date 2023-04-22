@@ -9,7 +9,7 @@ namespace HeavenStudio.Games.Scripts_BoardMeeting
     {
         public BoardMeeting game;
         public bool player;
-        Animator anim;
+        public Animator anim;
         bool canBop = true;
         int smileCounter = 0;
         public bool spinning;
@@ -35,7 +35,8 @@ namespace HeavenStudio.Games.Scripts_BoardMeeting
             if (spinning) return;
             spinning = true;
             preparing = false;
-            anim.DoScaledAnimationAsync("Spin", 0.5f);
+            if (this == game.firstSpinner) anim.DoUnscaledAnimation("Spin");
+            else anim.DoUnscaledAnimation("Spin", game.firstSpinner.anim.GetCurrentAnimatorStateInfo(0).normalizedTime);
             canBop = false;
             Jukebox.PlayOneShotGame("boardMeeting/rollPrepare" + soundToPlay);
             float offset = 0;
@@ -60,7 +61,7 @@ namespace HeavenStudio.Games.Scripts_BoardMeeting
         {
             if (!spinning) return;
             spinning = false;
-            anim.DoScaledAnimationAsync(hit ? "Stop" : "Miss", 0.5f);
+            anim.DoScaledAnimationAsync(hit ? "Stop" : "Miss", hit ? 0.5f : 0.25f);
             if (rollLoop != null)
             {
                 rollLoop.KillLoop(0);

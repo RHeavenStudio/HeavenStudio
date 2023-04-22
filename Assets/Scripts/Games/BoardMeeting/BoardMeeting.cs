@@ -84,6 +84,7 @@ namespace HeavenStudio.Games
         [Header("Properties")]
         [SerializeField] int executiveCount = 4;
         [SerializeField] List<BMExecutive> executives = new List<BMExecutive>();
+        public BMExecutive firstSpinner;
         public bool shouldBop = true;
         bool assistantCanBop = true;
         bool executivesCanBop = true;
@@ -115,6 +116,7 @@ namespace HeavenStudio.Games
                     {
                         executives[executiveCount - 1].Stop(false);
                         Jukebox.PlayOneShotGame("boardMeeting/miss");
+                        Jukebox.PlayOneShot("miss");
                     }
                 }
             }
@@ -243,6 +245,7 @@ namespace HeavenStudio.Games
         public void SpinEqui(float beat, float length)
         {
             if (chairLoopSound == null) chairLoopSound = Jukebox.PlayOneShotGame("boardMeeting/chairLoop", -1, 1, 1, true);
+            firstSpinner = executives[0];
             List<BeatAction.Action> rolls = new List<BeatAction.Action>();
             for (int i = 0; i < executiveCount; i++)
             {
@@ -268,11 +271,17 @@ namespace HeavenStudio.Games
                 }));
             }
             BeatAction.New(instance.gameObject, rolls);
+
         }
 
         public void Spin(int start, int end)
         {
             if (start > executiveCount || end > executiveCount) return;
+            if (chairLoopSound == null)
+            {
+                chairLoopSound = Jukebox.PlayOneShotGame("boardMeeting/chairLoop", -1, 1, 1, true);
+                firstSpinner = executives[start - 1];
+            }
             for (int i = start - 1; i < end; i++)
             {
                 int ex = executiveCount;
@@ -292,7 +301,6 @@ namespace HeavenStudio.Games
                 }
                 executives[i].Spin(soundToPlay);
             }
-            if (chairLoopSound == null) chairLoopSound = Jukebox.PlayOneShotGame("boardMeeting/chairLoop", -1, 1, 1, true);
         }
 
         public void InitExecutives()
@@ -338,6 +346,7 @@ namespace HeavenStudio.Games
             if (state >= 1f || state <= -1f)
             {
                 Jukebox.PlayOneShotGame("boardMeeting/missThrough");
+                Jukebox.PlayOneShot("miss");
                 executives[executiveCount - 1].Stop(false);
                 return;
             }
@@ -365,6 +374,7 @@ namespace HeavenStudio.Games
             if (state >= 1f || state <= -1f)
             {
                 Jukebox.PlayOneShotGame("boardMeeting/missThrough");
+                Jukebox.PlayOneShot("miss");
                 executives[executiveCount - 1].Stop(false);
                 return;
             }
@@ -389,6 +399,7 @@ namespace HeavenStudio.Games
             {
                 executives[executiveCount - 1].Stop(false);
                 Jukebox.PlayOneShotGame("boardMeeting/missThrough");
+                Jukebox.PlayOneShot("miss");
                 if (chairLoopSound != null)
                 {
                     chairLoopSound.KillLoop(0);
@@ -403,13 +414,14 @@ namespace HeavenStudio.Games
             {
                 executives[executiveCount - 1].Stop(false);
                 Jukebox.PlayOneShotGame("boardMeeting/missThrough");
+                Jukebox.PlayOneShot("miss");
                 if (chairLoopSound != null)
                 {
                     chairLoopSound.KillLoop(0);
                     chairLoopSound = null;
                 }
             }
-            assistantAnim.Play("MissIdle");
+            assistantAnim.Play("MissIdle", 0, 0);
             missCounter = 2;
         }
 
