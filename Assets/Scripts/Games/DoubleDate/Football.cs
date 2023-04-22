@@ -76,6 +76,7 @@ namespace HeavenStudio.Games.Scripts_DoubleDate
             {
                 new BeatAction.Action(conductor.songPositionInBeats + 1f, delegate
                 {
+                    shadow.SetActive(false);
                     GetComponent<SpriteRenderer>().sortingOrder = -5;
                     transform.localScale *= 0.25f;
                     path = game.GetPath("FootBallFall");
