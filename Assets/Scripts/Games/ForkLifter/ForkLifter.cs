@@ -111,6 +111,7 @@ namespace HeavenStudio.Games
         {
             Jukebox.PlayOneShotGame("forkLifter/flick");
             handAnim.Play("Hand_Flick", 0, 0);
+            ForkLifterHand.currentFlickIndex++;
             GameObject fo = Instantiate(flickedObject);
             fo.transform.parent = flickedObject.transform.parent;
             Pea pea = fo.GetComponent<Pea>();
