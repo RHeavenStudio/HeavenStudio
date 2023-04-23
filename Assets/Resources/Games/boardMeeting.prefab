@@ -1238,6 +1238,7 @@ MonoBehaviour:
   executiveCount: 4
   executives:
   - {fileID: 6299728505360095184}
+  firstSpinner: {fileID: 0}
   shouldBop: 1
 --- !u!1 &4694930924533062141
 GameObject:
@@ -2108,6 +2109,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   game: {fileID: 0}
   player: 0
+  anim: {fileID: 0}
   spinning: 0
 --- !u!1 &6859472559290284151
 GameObject:
