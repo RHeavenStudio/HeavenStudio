@@ -105,8 +105,14 @@ namespace HeavenStudio.Games
         public SpriteRenderer peaPreview;
         [SerializeField] SpriteRenderer bg;
         [SerializeField] SpriteRenderer bgGradient;
+        [SerializeField] SpriteRenderer viewerCircle;
+        [SerializeField] SpriteRenderer playerShadow;
+        [SerializeField] SpriteRenderer handShadow;
         Tween bgColorTween;
         Tween bgGradientColorTween;
+        Tween viewerCircleColorTween;
+        Tween playerShadowColorTween;
+        Tween handShadowColorTween;
 
         public Sprite[] peaSprites;
         public Sprite[] peaHitSprites;
@@ -143,16 +149,26 @@ namespace HeavenStudio.Games
                 bgColorTween.Kill(true);
             if (bgGradientColorTween != null)
                 bgGradientColorTween.Kill(true);
+            if (viewerCircleColorTween != null)
+                viewerCircleColorTween.Kill(true);
+            if (playerShadowColorTween != null) playerShadowColorTween.Kill(true);
+            if (handShadowColorTween != null) handShadowColorTween.Kill(true);
 
             if (seconds == 0)
             {
                 bg.color = color;
                 bgGradient.color = color;
+                viewerCircle.color = color;
+                playerShadow.color = color;
+                handShadow.color = color;
             }
             else
             {
                 bgColorTween = bg.DOColor(color, seconds);
                 bgGradientColorTween = bgGradient.DOColor(color, seconds);
+                handShadowColorTween = handShadow.DOColor(color, seconds);
+                playerShadowColorTween = playerShadow.DOColor(color, seconds);
+                viewerCircleColorTween = viewerCircle.DOColor(color, seconds);
             }
         }
 
