@@ -98,16 +98,17 @@ namespace HeavenStudio
             Init();
             DontDestroyOnLoad(this.gameObject);
             instance = this;
-            Starpelly.OS.ChangeWindowTitle("Heaven Studio DEMO");
+            Starpelly.OS.ChangeWindowTitle("Heaven Studio DEMO " + Application.buildGUID.Substring(0, 8));
             QualitySettings.maxQueuedFrames = 1;
             PlayerInput.InitInputControllers();
             #if UNITY_EDITOR
                 buildTime = "(EDITOR) " + System.DateTime.UtcNow.ToString("dd/MM/yyyy hh:mm:ss");
             #else
-                buildTime = AppInfo.Date.ToString("dd/MM/yyyy hh:mm:ss");
+                buildTime = Application.buildGUID.Substring(0, 8) + " " + AppInfo.Date.ToString("dd/MM/yyyy hh:mm:ss");
             #endif
         }
 
+        // todo: make this part of the camera prefab instead of generated in code
         public static GameObject CreateFade()
         {
             GameObject fade = new GameObject();
