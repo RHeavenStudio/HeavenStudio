@@ -270,7 +270,7 @@ namespace HeavenStudio.Games
             }
         }
 
-        private void OnDrawGizmos() {
+        protected void OnDrawGizmos() {
             Gizmos.color = Color.magenta;
             Gizmos.DrawWireCube(Vector3.zero, new Vector3(17.77695f, 10, 0));
         }
