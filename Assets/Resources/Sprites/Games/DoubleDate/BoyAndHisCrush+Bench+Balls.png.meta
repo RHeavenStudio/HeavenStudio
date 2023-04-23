@@ -266,7 +266,7 @@ TextureImporter:
   spriteMeshType: 1
   alignment: 0
   spritePivot: {x: 0.5, y: 0.5}
-  spritePixelsToUnits: 100
+  spritePixelsToUnits: 81.92
   spriteBorder: {x: 0, y: 0, z: 0, w: 0}
   spriteGenerateFallbackPhysicsShape: 1
   alphaUsage: 1
@@ -339,16 +339,16 @@ TextureImporter:
       name: BoyHead_1
       rect:
         serializedVersion: 2
-        x: 123
-        y: 4437
-        width: 393
-        height: 432
+        x: 100.7616
+        y: 3634.7903
+        width: 321.9456
+        height: 353.89438
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
-      tessellationDetail: 0
+      tessellationDetail: -1
       bones: []
       spriteID: adf983227cdc7ec80800000000000000
       internalID: -8293433933623156774
@@ -360,16 +360,16 @@ TextureImporter:
       name: BoyTorso1
       rect:
         serializedVersion: 2
-        x: 732
-        y: 4259
-        width: 414
-        height: 617
+        x: 599.65436
+        y: 3488.9727
+        width: 339.1488
+        height: 505.44638
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
-      tessellationDetail: 0
+      tessellationDetail: -1
       bones: []
       spriteID: 95f5e85281cd3b550800000000000000
       internalID: 6175521510322495321
@@ -381,16 +381,16 @@ TextureImporter:
       name: BoyTorso_2_Idle
       rect:
         serializedVersion: 2
-        x: 1359
-        y: 4699
-        width: 417
-        height: 185
+        x: 1113.2927
+        y: 3849.4207
+        width: 341.60638
+        height: 151.552
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
-      tessellationDetail: 0
+      tessellationDetail: -1
       bones: []
       spriteID: 8b6698ed429c79180800000000000000
       internalID: -9108590561143986504
@@ -402,16 +402,16 @@ TextureImporter:
       name: GirlTorso
       rect:
         serializedVersion: 2
-        x: 2069
-        y: 4440
-        width: 230
-        height: 439
+        x: 1694.9248
+        y: 3637.2478
+        width: 188.416
+        height: 359.62878
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
-      tessellationDetail: 0
+      tessellationDetail: -1
       bones: []
       spriteID: d80684f69e6f89280800000000000000
       internalID: -9036201169864073075
@@ -423,16 +423,16 @@ TextureImporter:
       name: BoyTorso_2_Kick
       rect:
         serializedVersion: 2
-        x: 1366
-        y: 4259
-        width: 398
-        height: 207
+        x: 1119.0272
+        y: 3488.9727
+        width: 326.0416
+        height: 169.5744
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
-      tessellationDetail: 0
+      tessellationDetail: -1
       bones: []
       spriteID: 3599b938c31e11f90800000000000000
       internalID: -6984553897052628653
@@ -444,16 +444,16 @@ TextureImporter:
       name: BoyHead_2
       rect:
         serializedVersion: 2
-        x: 111
-        y: 3771
-        width: 396
-        height: 434
+        x: 90.9312
+        y: 3089.2031
+        width: 324.4032
+        height: 355.53278
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
-      tessellationDetail: 0
+      tessellationDetail: -1
       bones: []
       spriteID: a3cedccb59618d2e0800000000000000
       internalID: -2100904393794786246
@@ -465,16 +465,16 @@ TextureImporter:
       name: BoyArmPart_1
       rect:
         serializedVersion: 2
-        x: 746
-        y: 3680
-        width: 105
-        height: 227
+        x: 611.12317
+        y: 3014.656
+        width: 86.016
+        height: 185.95839
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
-      tessellationDetail: 0
+      tessellationDetail: -1
       bones: []
       spriteID: 6669902aebf30c460800000000000000
       internalID: 7259872687316112998
@@ -486,16 +486,16 @@ TextureImporter:
       name: BoyArmPart_2
       rect:
         serializedVersion: 2
-        x: 1097
-        y: 3600
-        width: 140
-        height: 303
+        x: 898.66235
+        y: 2949.1199
+        width: 114.687996
+        height: 248.21759
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
-      tessellationDetail: 0
+      tessellationDetail: -1
       bones: []
       spriteID: 290e11fb7f2f1f1d0800000000000000
       internalID: -3318604304518881134
@@ -507,16 +507,16 @@ TextureImporter:
       name: BoyLeg_Idle
       rect:
         serializedVersion: 2
-        x: 1490
-        y: 3507
-        width: 291
-        height: 501
+        x: 1220.6079
+        y: 2872.9343
+        width: 238.38719
+        height: 410.4192
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
-      tessellationDetail: 0
+      tessellationDetail: -1
       bones: []
       spriteID: 70d184873c16cdbb0800000000000000
       internalID: -4909942001576174329
@@ -528,16 +528,16 @@ TextureImporter:
       name: GirlArm_Right
       rect:
         serializedVersion: 2
-        x: 2067
-        y: 3602
-        width: 200
-        height: 601
+        x: 1693.2864
+        y: 2950.7583
+        width: 163.84
+        height: 492.33917
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
-      tessellationDetail: 0
+      tessellationDetail: -1
       bones: []
       spriteID: e1d8415d01efb9ea0800000000000000
       internalID: -5864814741472113378
@@ -549,16 +549,16 @@ TextureImporter:
       name: GirlArm_Left
       rect:
         serializedVersion: 2
-        x: 2577
-        y: 3656
-        width: 166
-        height: 483
+        x: 2111.0784
+        y: 2994.995
+        width: 135.9872
+        height: 395.67358
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
-      tessellationDetail: 0
+      tessellationDetail: -1
       bones: []
       spriteID: a7fc86292d11d1060800000000000000
       internalID: 6925711398062837626
@@ -570,16 +570,16 @@ TextureImporter:
       name: BallKickedSmear
       rect:
         serializedVersion: 2
-        x: 4259
-        y: 2682
-        width: 361
-        height: 1340
+        x: 3488.9727
+        y: 2197.0942
+        width: 295.7312
+        height: 1097.728
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
-      tessellationDetail: 0
+      tessellationDetail: -1
       bones: []
       spriteID: 610cd8a7b0ae11df0800000000000000
       internalID: -211130372488052714
@@ -591,16 +591,16 @@ TextureImporter:
       name: BenchMiddle
       rect:
         serializedVersion: 2
-        x: 4762
-        y: 3409
-        width: 164
-        height: 645
+        x: 3901.0303
+        y: 2792.6528
+        width: 134.3488
+        height: 528.384
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
-      tessellationDetail: 0
+      tessellationDetail: -1
       bones: []
       spriteID: 0b2c2c58b77f53650800000000000000
       internalID: 6212143370924638896
@@ -612,16 +612,16 @@ TextureImporter:
       name: BoyHead_3
       rect:
         serializedVersion: 2
-        x: 111
-        y: 3121
-        width: 391
-        height: 423
+        x: 90.9312
+        y: 2556.7231
+        width: 320.3072
+        height: 346.5216
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
-      tessellationDetail: 0
+      tessellationDetail: -1
       bones: []
       spriteID: 35d7f8c3560f99950800000000000000
       internalID: 6456455858410716499
@@ -633,16 +633,16 @@ TextureImporter:
       name: BoyFoot_Idle
       rect:
         serializedVersion: 2
-        x: 743
-        y: 3031
-        width: 279
-        height: 247
+        x: 608.6656
+        y: 2482.995
+        width: 228.5568
+        height: 202.34239
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
-      tessellationDetail: 0
+      tessellationDetail: -1
       bones: []
       spriteID: f349facadc55e0320800000000000000
       internalID: 2526050782855271487
@@ -654,16 +654,16 @@ TextureImporter:
       name: GirlHand_Right
       rect:
         serializedVersion: 2
-        x: 2057
-        y: 3236
-        width: 215
-        height: 139
+        x: 1685.0944
+        y: 2650.9312
+        width: 176.12799
+        height: 113.8688
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
-      tessellationDetail: 0
+      tessellationDetail: -1
       bones: []
       spriteID: 8bf54b68fa447d4e0800000000000000
       internalID: -1957019992399257672
@@ -675,16 +675,16 @@ TextureImporter:
       name: GirlHand_Left
       rect:
         serializedVersion: 2
-        x: 2562
-        y: 3236
-        width: 237
-        height: 139
+        x: 2098.7903
+        y: 2650.9312
+        width: 194.15039
+        height: 113.8688
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
-      tessellationDetail: 0
+      tessellationDetail: -1
       bones: []
       spriteID: be36ac82aba1329b0800000000000000
       internalID: -5106208165657418773
@@ -696,16 +696,16 @@ TextureImporter:
       name: BoyAndHisCrush+Bench+Balls_17
       rect:
         serializedVersion: 2
-        x: 4762
-        y: 3221
-        width: 164
-        height: 59
+        x: 3901.0303
+        y: 2638.643
+        width: 134.3488
+        height: 48.332798
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
-      tessellationDetail: 0
+      tessellationDetail: -1
       bones: []
       spriteID: 640ca011431e87fd0800000000000000
       internalID: -2343875992305876922
@@ -717,16 +717,16 @@ TextureImporter:
       name: BoyHead_4
       rect:
         serializedVersion: 2
-        x: 109
-        y: 2460
-        width: 395
-        height: 415
+        x: 89.2928
+        y: 2015.2319
+        width: 323.58398
+        height: 339.968
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
-      tessellationDetail: 0
+      tessellationDetail: -1
       bones: []
       spriteID: db09f2ac4c7e398d0800000000000000
       internalID: -2840672107548929859
@@ -738,16 +738,16 @@ TextureImporter:
       name: BoyLeg_Kick
       rect:
         serializedVersion: 2
-        x: 1295
-        y: 2489
-        width: 496
-        height: 708
+        x: 1060.864
+        y: 2038.9888
+        width: 406.32318
+        height: 579.9936
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
-      tessellationDetail: 0
+      tessellationDetail: -1
       bones: []
       spriteID: 78824bc344810a6f0800000000000000
       internalID: -675513262750291833
@@ -759,16 +759,16 @@ TextureImporter:
       name: GirlBow
       rect:
         serializedVersion: 2
-        x: 4757
-        y: 2872
-        width: 183
-        height: 183
+        x: 3896.9343
+        y: 2352.7424
+        width: 149.91359
+        height: 149.91359
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
-      tessellationDetail: 0
+      tessellationDetail: -1
       bones: []
       spriteID: 0e1ebd835f06fed10800000000000000
       internalID: 2157049352870945248
@@ -780,16 +780,16 @@ TextureImporter:
       name: BoyFoot_Kick
       rect:
         serializedVersion: 2
-        x: 790
-        y: 2406
-        width: 215
-        height: 366
+        x: 647.16797
+        y: 1970.9951
+        width: 176.12799
+        height: 299.82718
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
-      tessellationDetail: 0
+      tessellationDetail: -1
       bones: []
       spriteID: ab43071c74fc8df00800000000000000
       internalID: 1141890412633404602
@@ -801,16 +801,16 @@ TextureImporter:
       name: GirlArm_Gasp1
       rect:
         serializedVersion: 2
-        x: 4789
-        y: 2357
-        width: 158
-        height: 381
+        x: 3923.1487
+        y: 1930.8544
+        width: 129.4336
+        height: 312.1152
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
-      tessellationDetail: 0
+      tessellationDetail: -1
       bones: []
       spriteID: 86134177118514aa0800000000000000
       internalID: -6178560381740109464
@@ -822,16 +822,16 @@ TextureImporter:
       name: BoyHead_5
       rect:
         serializedVersion: 2
-        x: 101
-        y: 1788
-        width: 393
-        height: 422
+        x: 82.7392
+        y: 1464.7296
+        width: 321.9456
+        height: 345.7024
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
-      tessellationDetail: 0
+      tessellationDetail: -1
       bones: []
       spriteID: 6b4cbfe555f9d0770800000000000000
       internalID: 8578688054225257654
@@ -843,16 +843,16 @@ TextureImporter:
       name: GirlFace_1
       rect:
         serializedVersion: 2
-        x: 1406
-        y: 1969
-        width: 192
-        height: 181
+        x: 1151.7952
+        y: 1613.0048
+        width: 157.28639
+        height: 148.27519
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
-      tessellationDetail: 0
+      tessellationDetail: -1
       bones: []
       spriteID: 790926c4e2f81a130800000000000000
       internalID: 3576297008121680023
@@ -864,16 +864,16 @@ TextureImporter:
       name: BoyLeg_KickSmear
       rect:
         serializedVersion: 2
-        x: 4261
-        y: 1537
-        width: 320
-        height: 825
+        x: 3490.611
+        y: 1259.1104
+        width: 262.14398
+        height: 675.83997
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
-      tessellationDetail: 0
+      tessellationDetail: -1
       bones: []
       spriteID: f465e7239ca85f020800000000000000
       internalID: 2374956975248004687
@@ -885,16 +885,16 @@ TextureImporter:
       name: GirlArm_Gasp2
       rect:
         serializedVersion: 2
-        x: 4782
-        y: 1935
-        width: 114
-        height: 295
+        x: 3917.4143
+        y: 1585.152
+        width: 93.388794
+        height: 241.664
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
-      tessellationDetail: 0
+      tessellationDetail: -1
       bones: []
       spriteID: f672434ec28bec520800000000000000
       internalID: 2724317327552423791
@@ -906,16 +906,16 @@ TextureImporter:
       name: BoyHand
       rect:
         serializedVersion: 2
-        x: 973
-        y: 1981
-        width: 205
-        height: 132
+        x: 797.0816
+        y: 1622.8352
+        width: 167.93599
+        height: 108.1344
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
-      tessellationDetail: 0
+      tessellationDetail: -1
       bones: []
       spriteID: e34ab22861af4ac80800000000000000
       internalID: -8312244037638970306
@@ -927,16 +927,16 @@ TextureImporter:
       name: GirlFace_2
       rect:
         serializedVersion: 2
-        x: 1000
-        y: 1561
-        width: 171
-        height: 176
+        x: 819.19995
+        y: 1278.7711
+        width: 140.08319
+        height: 144.1792
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
-      tessellationDetail: 0
+      tessellationDetail: -1
       bones: []
       spriteID: 017ae19f87d27adf0800000000000000
       internalID: -169116463404243184
@@ -948,16 +948,16 @@ TextureImporter:
       name: GirlFace_3
       rect:
         serializedVersion: 2
-        x: 1407
-        y: 1498
-        width: 203
-        height: 224
+        x: 1152.6144
+        y: 1227.1616
+        width: 166.29759
+        height: 183.5008
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
-      tessellationDetail: 0
+      tessellationDetail: -1
       bones: []
       spriteID: c4ecbae65604b9230800000000000000
       internalID: 3646579127679176268
@@ -969,16 +969,16 @@ TextureImporter:
       name: GirlHair_Back
       rect:
         serializedVersion: 2
-        x: 3055
-        y: 1483
-        width: 386
-        height: 464
+        x: 2502.656
+        y: 1214.8735
+        width: 316.21118
+        height: 380.1088
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
-      tessellationDetail: 0
+      tessellationDetail: -1
       bones: []
       spriteID: ad4aed246cd270e60800000000000000
       internalID: 7928355998557709530
@@ -990,16 +990,16 @@ TextureImporter:
       name: GirlHair_Front
       rect:
         serializedVersion: 2
-        x: 3680
-        y: 1576
-        width: 298
-        height: 373
+        x: 3014.656
+        y: 1291.0592
+        width: 244.1216
+        height: 305.56158
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
-      tessellationDetail: 0
+      tessellationDetail: -1
       bones: []
       spriteID: 5d8db8e70ae74a090800000000000000
       internalID: -8024149408284419883
@@ -1011,16 +1011,16 @@ TextureImporter:
       name: GirlHand_Gasp
       rect:
         serializedVersion: 2
-        x: 4755
-        y: 1549
-        width: 166
-        height: 251
+        x: 3895.296
+        y: 1268.9408
+        width: 135.9872
+        height: 205.6192
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
-      tessellationDetail: 0
+      tessellationDetail: -1
       bones: []
       spriteID: 0f3f3cfee8b7a5690800000000000000
       internalID: -7612636366278233104
@@ -1032,16 +1032,16 @@ TextureImporter:
       name: GirlFace_4
       rect:
         serializedVersion: 2
-        x: 1840
-        y: 1195
-        width: 190
-        height: 234
+        x: 1507.328
+        y: 978.944
+        width: 155.648
+        height: 191.6928
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
-      tessellationDetail: 0
+      tessellationDetail: -1
       bones: []
       spriteID: 9d8e4349ef338a980800000000000000
       internalID: -8527508725924828967
@@ -1053,16 +1053,16 @@ TextureImporter:
       name: SOMETHING
       rect:
         serializedVersion: 2
-        x: 4750
-        y: 1056
-        width: 188
-        height: 344
+        x: 3891.2
+        y: 865.0752
+        width: 154.0096
+        height: 281.80478
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
-      tessellationDetail: 0
+      tessellationDetail: -1
       bones: []
       spriteID: 12f04d322adf93bc0800000000000000
       internalID: -3802729537510043871
@@ -1074,16 +1074,16 @@ TextureImporter:
       name: GirlLegs
       rect:
         serializedVersion: 2
-        x: 975
-        y: 314
-        width: 635
-        height: 959
+        x: 798.72
+        y: 257.2288
+        width: 520.192
+        height: 785.6128
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
-      tessellationDetail: 0
+      tessellationDetail: -1
       bones: []
       spriteID: ba6c6cc816c3a7f90800000000000000
       internalID: -6955180284848978261
@@ -1095,16 +1095,16 @@ TextureImporter:
       name: GirlHead_1
       rect:
         serializedVersion: 2
-        x: 3051
-        y: 861
-        width: 301
-        height: 385
+        x: 2499.3792
+        y: 705.3312
+        width: 246.5792
+        height: 315.392
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
-      tessellationDetail: 0
+      tessellationDetail: -1
       bones: []
       spriteID: c1d22d8a623539030800000000000000
       internalID: 3500232760903216412
@@ -1116,16 +1116,16 @@ TextureImporter:
       name: Basketball
       rect:
         serializedVersion: 2
-        x: 3636
-        y: 895
-        width: 345
-        height: 346
+        x: 2978.611
+        y: 733.18396
+        width: 282.624
+        height: 283.4432
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
-      tessellationDetail: 0
+      tessellationDetail: -1
       bones: []
       spriteID: dc8ca16a0ff46a560800000000000000
       internalID: 7324629738962208973
@@ -1137,16 +1137,16 @@ TextureImporter:
       name: SoccerBall
       rect:
         serializedVersion: 2
-        x: 4222
-        y: 895
-        width: 352
-        height: 351
+        x: 3458.6624
+        y: 733.18396
+        width: 288.3584
+        height: 287.53918
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
-      tessellationDetail: 0
+      tessellationDetail: -1
       bones: []
       spriteID: c183771b34817e250800000000000000
       internalID: 5973770109749508124
@@ -1158,16 +1158,16 @@ TextureImporter:
       name: BenchSide
       rect:
         serializedVersion: 2
-        x: 121
-        y: 84
-        width: 625
-        height: 1004
+        x: 99.1232
+        y: 68.8128
+        width: 512
+        height: 822.4768
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
-      tessellationDetail: 0
+      tessellationDetail: -1
       bones: []
       spriteID: 3b1144b9217d14330800000000000000
       internalID: 3693469644334830003
@@ -1179,16 +1179,16 @@ TextureImporter:
       name: GirlFace_5
       rect:
         serializedVersion: 2
-        x: 1862
-        y: 814
-        width: 205
-        height: 186
+        x: 1525.3503
+        y: 666.8288
+        width: 167.93599
+        height: 152.3712
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
-      tessellationDetail: 0
+      tessellationDetail: -1
       bones: []
       spriteID: 62fe0831e7d030940800000000000000
       internalID: 5261063624843128614
@@ -1200,16 +1200,16 @@ TextureImporter:
       name: GirlFace_7
       rect:
         serializedVersion: 2
-        x: 1849
-        y: 126
-        width: 205
-        height: 185
+        x: 1514.7008
+        y: 103.2192
+        width: 167.93599
+        height: 151.552
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
-      tessellationDetail: 0
+      tessellationDetail: -1
       bones: []
       spriteID: dab8fc537f1c58100800000000000000
       internalID: 109707033444322221
@@ -1221,16 +1221,16 @@ TextureImporter:
       name: GirlFace_6
       rect:
         serializedVersion: 2
-        x: 1844
-        y: 482
-        width: 203
-        height: 186
+        x: 1510.6047
+        y: 394.8544
+        width: 166.29759
+        height: 152.3712
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
-      tessellationDetail: 0
+      tessellationDetail: -1
       bones: []
       spriteID: db2082662680436f0800000000000000
       internalID: -705930022876609859
@@ -1242,16 +1242,16 @@ TextureImporter:
       name: Football
       rect:
         serializedVersion: 2
-        x: 3065
-        y: 133
-        width: 300
-        height: 471
+        x: 2510.848
+        y: 108.9536
+        width: 245.76
+        height: 385.8432
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
-      tessellationDetail: 0
+      tessellationDetail: -1
       bones: []
       spriteID: f0277cc37e3aed650800000000000000
       internalID: 6259620745644044815
@@ -1263,16 +1263,16 @@ TextureImporter:
       name: GirlHead_2
       rect:
         serializedVersion: 2
-        x: 2482
-        y: 111
-        width: 315
-        height: 398
+        x: 2033.2544
+        y: 90.9312
+        width: 258.048
+        height: 326.0416
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
-      tessellationDetail: 0
+      tessellationDetail: -1
       bones: []
       spriteID: 3877f356434ac2170800000000000000
       internalID: 8155073570205038467
@@ -1284,16 +1284,16 @@ TextureImporter:
       name: Blush
       rect:
         serializedVersion: 2
-        x: 941
-        y: 72
-        width: 68
-        height: 41
+        x: 770.8672
+        y: 58.9824
+        width: 55.705597
+        height: 33.5872
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
-      tessellationDetail: 0
+      tessellationDetail: -1
       bones: []
       spriteID: 09121ea9d307e77d0800000000000000
       internalID: -2918772098595741296

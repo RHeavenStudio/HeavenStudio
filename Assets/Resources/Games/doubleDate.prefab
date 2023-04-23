@@ -1316,7 +1316,7 @@ SpriteRenderer:
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
-  m_Size: {x: 50, y: 12.05}
+  m_Size: {x: 7.88, y: 7.5899997}
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
   m_WasSpriteAssigned: 1
@@ -2079,8 +2079,8 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2513615444823805207}
-  m_LocalRotation: {x: 0.6268332, y: -0.06906847, z: 0.034018904, w: 0.7753402}
-  m_LocalPosition: {x: -7.87, y: 7.47, z: 0}
+  m_LocalRotation: {x: 0.63460916, y: -0.03162006, z: 0.050889082, w: 0.77050745}
+  m_LocalPosition: {x: -7.97, y: 6.61, z: -0.06}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -2088,7 +2088,7 @@ Transform:
   - {fileID: 579205791544737256}
   m_Father: {fileID: 5813499711186931250}
   m_RootOrder: 0
-  m_LocalEulerAnglesHint: {x: 77.612, y: -17.484, z: -9.075}
+  m_LocalEulerAnglesHint: {x: 78.861, y: 4.71, z: 11.431}
 --- !u!198 &6430778861273766216
 ParticleSystem:
   m_ObjectHideFlags: 0
@@ -2717,7 +2717,7 @@ ParticleSystem:
   ShapeModule:
     serializedVersion: 6
     enabled: 1
-    type: 5
+    type: 15
     angle: 25
     length: 5
     boxThickness: {x: 0, y: 0, z: 0}
@@ -2725,7 +2725,7 @@ ParticleSystem:
     donutRadius: 0.2
     m_Position: {x: 0, y: 0, z: 0}
     m_Rotation: {x: 0, y: 0, z: 0}
-    m_Scale: {x: 1.5, y: 2, z: 1}
+    m_Scale: {x: 1, y: 2, z: 2}
     placementMode: 0
     m_MeshMaterialIndex: 0
     m_MeshNormalOffset: 0
@@ -6876,7 +6876,7 @@ ParticleSystemRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 10308, guid: 0000000000000000f000000000000000, type: 0}
+  - {fileID: 2100000, guid: fc4d078e5116cc74bad3552a6fc3e25d, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -12317,7 +12317,7 @@ ParticleSystemRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 10308, guid: 0000000000000000f000000000000000, type: 0}
+  - {fileID: 2100000, guid: fc4d078e5116cc74bad3552a6fc3e25d, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -12629,7 +12629,7 @@ Transform:
   m_GameObject: {fileID: 3659022280560192093}
   m_LocalRotation: {x: 0, y: 0, z: 0.7071068, w: 0.7071068}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 0.3729168, y: 0.3729168, z: 0.3729168}
+  m_LocalScale: {x: 0.3201789, y: 0.3201789, z: 0.3201789}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 1322106536363950966}
@@ -12677,7 +12677,7 @@ SpriteRenderer:
   m_SortingLayer: 0
   m_SortingOrder: -1
   m_Sprite: {fileID: -3802729537510043871, guid: 5332bfcb0761a2845b4373f67fdcd5dc, type: 3}
-  m_Color: {r: 1, g: 1, b: 1, a: 0.5019608}
+  m_Color: {r: 1, g: 1, b: 1, a: 0.4392157}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
@@ -13702,7 +13702,7 @@ SpriteRenderer:
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
-  m_Size: {x: 4.02, y: 3.47}
+  m_Size: {x: 2, y: 3.3700001}
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
   m_WasSpriteAssigned: 1
@@ -14504,7 +14504,7 @@ MonoBehaviour:
     anchor: {fileID: 0}
     positions:
     - tag: 
-      pos: {x: -3, y: -0.36, z: 0}
+      pos: {x: -2.976, y: -0.24, z: 0}
       target: {fileID: 0}
       height: 1.2
       duration: 0.5
@@ -15638,7 +15638,7 @@ SpriteRenderer:
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
-  m_Size: {x: 4.02, y: 3.47}
+  m_Size: {x: 1.98, y: 3.3700001}
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
   m_WasSpriteAssigned: 1
@@ -16573,14 +16573,14 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 8024604072498613767}
-  m_LocalRotation: {x: -0.7558935, y: 0.048031323, z: 0.014699161, w: 0.6527649}
+  m_LocalRotation: {x: -0.78022975, y: 0.12646855, z: -0.06419085, w: 0.6092018}
   m_LocalPosition: {x: 0.12, y: -2.88, z: 9.3}
   m_LocalScale: {x: 0.75251, y: 1.1757969, z: 0.33801246}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 7551690541341092005}
   m_RootOrder: 0
-  m_LocalEulerAnglesHint: {x: -98.791, y: -15.3619995, z: 20.460999}
+  m_LocalEulerAnglesHint: {x: -110.869, y: -45.539978, z: 50.673004}
 --- !u!1 &8084702277577077568
 GameObject:
   m_ObjectHideFlags: 0
