@@ -48,6 +48,17 @@ namespace HeavenStudio.Games.Loaders
                     },
                     resizable = true
                 },
+                new GameAction("colorGrad", "Gradient Color")
+                {
+                    function = delegate { var e = eventCaller.currentEntity; ForkLifter.instance.FadeGradientColor(e["start"], e["end"], e.length, e["instant"]); },
+                    parameters = new List<Param>()
+                    {
+                        new Param("start", Color.white, "Start Color", "The color to start fading from."),
+                        new Param("end", Color.white, "End Color", "The color to end the fade."),
+                        new Param("instant", false, "Instant", "If checked, the gradient color will instantly change to the start color.")
+                    },
+                    resizable = true
+                },
                 // These are still here for backwards-compatibility but are hidden in the editor
                 new GameAction("pea", "")
                 {
@@ -147,27 +158,20 @@ namespace HeavenStudio.Games
 
             if (bgColorTween != null)
                 bgColorTween.Kill(true);
-            if (bgGradientColorTween != null)
-                bgGradientColorTween.Kill(true);
             if (viewerCircleColorTween != null)
                 viewerCircleColorTween.Kill(true);
-            if (playerShadowColorTween != null) playerShadowColorTween.Kill(true);
             if (handShadowColorTween != null) handShadowColorTween.Kill(true);
 
             if (seconds == 0)
             {
                 bg.color = color;
-                bgGradient.color = color;
                 viewerCircle.color = color;
-                playerShadow.color = color;
                 handShadow.color = color;
             }
             else
             {
                 bgColorTween = bg.DOColor(color, seconds);
-                bgGradientColorTween = bgGradient.DOColor(color, seconds);
                 handShadowColorTween = handShadow.DOColor(color, seconds);
-                playerShadowColorTween = playerShadow.DOColor(color, seconds);
                 viewerCircleColorTween = viewerCircle.DOColor(color, seconds);
             }
         }
@@ -176,6 +180,32 @@ namespace HeavenStudio.Games
         {
             ChangeBackgroundColor(start, 0f);
             if (!instant) ChangeBackgroundColor(end, beats);
+        }
+
+        public void ChangeGradientColor(Color color, float beats)
+        {
+            var seconds = Conductor.instance.secPerBeat * beats;
+
+            if (bgGradientColorTween != null)
+                bgGradientColorTween.Kill(true);
+            if (playerShadowColorTween != null) playerShadowColorTween.Kill(true);
+
+            if (seconds == 0)
+            {
+                bgGradient.color = color;
+                playerShadow.color = color;
+            }
+            else
+            {
+                bgGradientColorTween = bgGradient.DOColor(color, seconds);
+                playerShadowColorTween = playerShadow.DOColor(color, seconds);
+            }
+        }
+
+        public void FadeGradientColor(Color start, Color end, float beats, bool instant)
+        {
+            ChangeGradientColor(start, 0f);
+            if (!instant) ChangeGradientColor(end, beats);
         }
     }
 
