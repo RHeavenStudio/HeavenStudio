@@ -1818,7 +1818,7 @@ MonoBehaviour:
       pos: {x: 1.5724581, y: -1.3358305, z: 0}
       target: {fileID: 0}
       height: 4.1
-      duration: 1.5
+      duration: 1.4
       useLastRealPos: 0
       values: []
     - tag: 
@@ -2244,26 +2244,6 @@ MonoBehaviour:
   highKickSwing: 0
   canKick: 0
   waitKickRelease: 0
-  kickPath:
-    name: Kick
-    preview: 0
-    anchor: {fileID: 0}
-    positions: []
-  dispensePath:
-    name: 
-    preview: 0
-    anchor: {fileID: 0}
-    positions: []
-  highKickPath:
-    name: 
-    preview: 0
-    anchor: {fileID: 0}
-    positions: []
-  toePath:
-    name: 
-    preview: 0
-    anchor: {fileID: 0}
-    positions: []
 --- !u!1 &4365805729759623217
 GameObject:
   m_ObjectHideFlags: 0

@@ -35,7 +35,7 @@ namespace HeavenStudio.Games.Scripts_SpaceSoccer
         private SuperCurveObject.Path dispensePath;
         private SuperCurveObject.Path highKickPath;
         private SuperCurveObject.Path toePath;
-        private float currentKickPathScale = 1;
+        //private float currentKickPathScale = 1;
 
         public void Init(Kicker kicker, float dispensedBeat)
         {
@@ -130,18 +130,18 @@ namespace HeavenStudio.Games.Scripts_SpaceSoccer
 
             lastKickLeft = kicker.kickLeft;
 
-            if (kicker.kickLeft)
+            /*if (kicker.kickLeft)
             {
-                //kickCurve.transform.localScale = new Vector3(-1, 1);
+                kickCurve.transform.localScale = new Vector3(-1, 1);
                 currentKickPathScale = -1;
             }
             else
             {
-                //kickCurve.transform.localScale = new Vector3(1, 1);
+                kickCurve.transform.localScale = new Vector3(1, 1);
                 currentKickPathScale = 1;
-            }
+            }*/
             //kickCurve.KeyPoints[0].transform.position = holder.transform.position;
-            kickPath.positions[0].pos = holder.transform.position;
+            //kickPath.positions[0].pos = holder.transform.position;
 
             HitFX();
         }
@@ -200,8 +200,8 @@ namespace HeavenStudio.Games.Scripts_SpaceSoccer
                         //dispenseCurve.KeyPoints[0].transform.position = new Vector3(kicker.transform.GetChild(0).position.x - 6f, kicker.transform.GetChild(0).position.y - 6f);
                         //dispenseCurve.KeyPoints[1].transform.position = new Vector3(kicker.transform.GetChild(0).position.x - 1f, kicker.transform.GetChild(0).position.y - 6f);
 
-                        dispensePath.positions[0].pos = new Vector3(kicker.transform.GetChild(0).position.x - 6f, kicker.transform.GetChild(0).position.y - 6f);
-                        dispensePath.positions[1].pos = new Vector3(kicker.transform.GetChild(0).position.x - 1f, kicker.transform.GetChild(0).position.y - 6f);
+                        dispensePath.positions[0].pos = new Vector3(kicker.transform.GetChild(0).position.x - 6f, kicker.transform.GetChild(0).position.y - 6f, kicker.transform.GetChild(0).position.z);
+                        dispensePath.positions[1].pos = new Vector3(kicker.transform.GetChild(0).position.x - 1f, kicker.transform.GetChild(0).position.y - 6f, kicker.transform.GetChild(0).position.z);
 
                         //holder.transform.localPosition = dispenseCurve.GetPoint(normalizedBeatAnim);
                         holder.transform.localPosition = GetPathPositionFromBeat(dispensePath, Mathf.Max(beat, startBeat), out float height, startBeat);
@@ -215,13 +215,15 @@ namespace HeavenStudio.Games.Scripts_SpaceSoccer
                         if (!lastKickLeft)
                         {
                             //kickCurve.KeyPoints[1].transform.position = new Vector3(kicker.transform.GetChild(0).position.x + 0.5f, kicker.transform.GetChild(0).position.y - 6f);
-                            kickPath.positions[1].pos = new Vector3((kicker.transform.GetChild(0).position.x + 0.5f) * currentKickPathScale, kicker.transform.GetChild(0).position.y - 6f);
+                            kickPath.positions[1].pos = new Vector3(kicker.transform.GetChild(0).position.x + 0.5f, kicker.transform.GetChild(0).position.y - 6f, kicker.transform.GetChild(0).position.z);
+                            kickPath.positions[0].pos = new Vector3(kicker.transform.GetChild(0).position.x - 2f, kicker.transform.GetChild(0).position.y - 0.5f, kicker.transform.GetChild(0).position.z);
                             spriteHolder.transform.eulerAngles = new Vector3(0, 0, Mathf.Lerp(lastSpriteRot, lastSpriteRot - 360f, normalizedBeatAnim));
                         }
                         else
                         {
                             //kickCurve.KeyPoints[1].transform.position = new Vector3(kicker.transform.GetChild(0).position.x - 2.5f, kicker.transform.GetChild(0).position.y - 6f);
-                            kickPath.positions[1].pos = new Vector3((kicker.transform.GetChild(0).position.x - 2.5f) * currentKickPathScale, kicker.transform.GetChild(0).position.y - 6f);
+                            kickPath.positions[1].pos = new Vector3(kicker.transform.GetChild(0).position.x - 2f, kicker.transform.GetChild(0).position.y - 6f, kicker.transform.GetChild(0).position.z);
+                            kickPath.positions[0].pos = new Vector3(kicker.transform.GetChild(0).position.x + 0.5f, kicker.transform.GetChild(0).position.y - 0.5f, kicker.transform.GetChild(0).position.z);
                             spriteHolder.transform.eulerAngles = new Vector3(0, 0, Mathf.Lerp(lastSpriteRot, lastSpriteRot + 360f, normalizedBeatAnim));
                         }
 
@@ -235,7 +237,7 @@ namespace HeavenStudio.Games.Scripts_SpaceSoccer
                         highKickPath.positions[0].duration = GetAnimLength(State.HighKicked) + 0.3f;
 
                         //highKickCurve.KeyPoints[1].transform.position = new Vector3(kicker.transform.GetChild(0).position.x - 3.5f, kicker.transform.GetChild(0).position.y - 6f);
-                        highKickPath.positions[1].pos = new Vector3(kicker.transform.GetChild(0).position.x - 3.5f, kicker.transform.GetChild(0).position.y - 6f);
+                        highKickPath.positions[1].pos = new Vector3(kicker.transform.GetChild(0).position.x - 3.5f, kicker.transform.GetChild(0).position.y - 6f, kicker.transform.GetChild(0).position.z);
 
                         //holder.transform.localPosition = highKickCurve.GetPoint(normalizedBeatAnim);
                         holder.transform.localPosition = GetPathPositionFromBeat(highKickPath, Mathf.Max(beat, startBeat), out float height, startBeat);
@@ -250,12 +252,12 @@ namespace HeavenStudio.Games.Scripts_SpaceSoccer
                         if (!lastKickLeft)
                         {
                             //toeCurve.KeyPoints[1].transform.position = new Vector3(kicker.transform.GetChild(0).position.x + 0.5f, kicker.transform.GetChild(0).position.y - 6f);
-                            toePath.positions[1].pos = new Vector3(kicker.transform.GetChild(0).position.x + 0.5f, kicker.transform.GetChild(0).position.y - 6f);
+                            toePath.positions[1].pos = new Vector3(kicker.transform.GetChild(0).position.x + 0.5f, kicker.transform.GetChild(0).position.y - 6f, kicker.transform.GetChild(0).position.z);
                         }
                         else
                         {
                             //toeCurve.KeyPoints[1].transform.position = new Vector3(kicker.transform.GetChild(0).position.x - 1.0f, kicker.transform.GetChild(0).position.y - 6f);
-                            toePath.positions[1].pos = new Vector3(kicker.transform.GetChild(0).position.x - 1.0f, kicker.transform.GetChild(0).position.y - 6f);
+                            toePath.positions[1].pos = new Vector3(kicker.transform.GetChild(0).position.x - 1.0f, kicker.transform.GetChild(0).position.y - 6f, kicker.transform.GetChild(0).position.z);
                         }
 
                         //holder.transform.localPosition = toeCurve.GetPoint(normalizedBeatAnim);
@@ -264,8 +266,6 @@ namespace HeavenStudio.Games.Scripts_SpaceSoccer
                         break;
                     }
             }
-
-            holder.transform.position = new Vector3(holder.transform.position.x, holder.transform.position.y, kicker.transform.parent.position.z);
         }
 
         private void HitFX()
