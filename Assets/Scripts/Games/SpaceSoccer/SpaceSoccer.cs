@@ -334,7 +334,7 @@ namespace HeavenStudio.Games
 
                 if (kicker.ball != null || (ignorePlayer && i == 0)) continue;
 
-                GameObject ball = Instantiate(ballRef, transform);
+                GameObject ball = Instantiate(ballRef, kicker.transform.GetChild(0));
                 ball.SetActive(true);
                 Ball ball_ = ball.GetComponent<Ball>();
                 ball_.Init(kicker, beat);
