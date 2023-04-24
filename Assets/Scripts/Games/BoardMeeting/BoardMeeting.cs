@@ -279,10 +279,12 @@ namespace HeavenStudio.Games
         public void Spin(int start, int end)
         {
             if (start > executiveCount || end > executiveCount) return;
+            bool forceStart = false;
             if (chairLoopSound == null)
             {
                 chairLoopSound = Jukebox.PlayOneShotGame("boardMeeting/chairLoop", -1, 1, 1, true);
                 firstSpinner = executives[start - 1];
+                forceStart = true;
             }
             for (int i = start - 1; i < end; i++)
             {
@@ -301,7 +303,7 @@ namespace HeavenStudio.Games
                 {
                     soundToPlay = "Player";
                 }
-                executives[i].Spin(soundToPlay);
+                executives[i].Spin(soundToPlay, forceStart);
             }
         }
 
