@@ -10,6 +10,8 @@ namespace HeavenStudio.Games.Scripts_DoubleDate
         bool canBop = true;
         Animator anim;
         private DoubleDate game;
+        bool notHit = true;
+        float lastGacha = float.MinValue;
 
         void Awake()
         {
@@ -19,15 +21,70 @@ namespace HeavenStudio.Games.Scripts_DoubleDate
 
         public void Bop()
         {
-            if (canBop)
+            if (canBop && notHit && Conductor.instance.songPositionInBeats > lastGacha)
             {
-                anim.DoScaledAnimationAsync("WeaselsBop", 1f);
+                anim.DoScaledAnimationAsync("WeaselsBop", 0.5f);
             }
         }
 
         public void Happy()
         {
-            anim.DoScaledAnimationAsync("WeaselsHappy", 1f);
+            if (notHit && Conductor.instance.songPositionInBeats > lastGacha)
+                anim.DoScaledAnimationAsync("WeaselsHappy", 0.5f);
+        }
+
+        public void Jump()
+        {
+            if (notHit && Conductor.instance.songPositionInBeats > lastGacha)
+            {
+                lastGacha = Conductor.instance.songPositionInBeats + 1f;
+                anim.DoScaledAnimationAsync("WeaselsJump", 0.5f);
+            }
+        }
+
+        public void Hide(float beat)
+        {
+            if (notHit)
+            {
+                notHit = false;
+                anim.DoScaledAnimationAsync("WeaselsHide", 0.5f);
+                BeatAction.New(gameObject, new List<BeatAction.Action>()
+                {
+                    new BeatAction.Action(beat + 1.45f, delegate
+                    {
+                        lastGacha = Conductor.instance.songPositionInBeats + 0.5f;
+                        anim.DoScaledAnimationAsync("WeaselsAppearUpset", 0.5f);
+                        notHit = true;
+                    }),
+                });
+            }
+        }
+
+        public void Surprise()
+        {
+            if (notHit && Conductor.instance.songPositionInBeats > lastGacha)
+            {
+                lastGacha = Conductor.instance.songPositionInBeats + 0.5f;
+                anim.DoScaledAnimationAsync("WeaselsSurprised", 0.5f);
+            }
+        }
+
+        public void Hit(float beat)
+        {
+            if (notHit)
+            {
+                notHit = false;
+                anim.DoScaledAnimationAsync("WeaselsHit", 0.5f);
+                BeatAction.New(gameObject, new List<BeatAction.Action>()
+                {
+                    new BeatAction.Action(beat + 2f, delegate
+                    {
+                        lastGacha = Conductor.instance.songPositionInBeats + 0.5f;
+                        anim.DoScaledAnimationAsync("WeaselsAppearUpset", 1f);
+                        notHit = true;
+                    }),
+                });
+            }
         }
 
         public void ToggleBop()

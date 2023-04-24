@@ -112,9 +112,9 @@ namespace HeavenStudio.Games
         public enum RallySpeed { Slow, Normal, Fast, SuperFast }
 
         [Header("Camera")]
-        public Transform renderQuadTrans;
-        public Transform cameraPivot;
-
+        [SerializeField] Transform cameraPivot;
+        [SerializeField] Transform cameraPos;
+        [SerializeField] float cameraFOV;
 
         [Header("Ball and curve info")]
         public GameObject ball;
@@ -155,12 +155,6 @@ namespace HeavenStudio.Games
         {
             instance = this;
             paddlers.Init();
-            renderQuadTrans.gameObject.SetActive(true);
-
-            var cam = GameCamera.instance.camera;
-            var camHeight = 2f * cam.orthographicSize;
-            var camWidth = camHeight * cam.aspect;
-            renderQuadTrans.localScale = new Vector3(camWidth, camHeight, 1f);
 
             playerAnim.Play("Idle", 0, 0);
             opponentAnim.Play("Idle", 0, 0);
@@ -179,9 +173,6 @@ namespace HeavenStudio.Games
 
             var playerState = playerAnim.GetCurrentAnimatorStateInfo(0);
             var opponentState = opponentAnim.GetCurrentAnimatorStateInfo(0);
-
-            bool playerPrepping = false; // Player using prep animation?
-            bool opponentPrepping = false; // Opponent using prep animation?
 
             if (started)
             {
@@ -319,13 +310,11 @@ namespace HeavenStudio.Games
                 {
                     if (served)
                     {
-                        playerPrepping = true;
                         if ((playerState.IsName("Swing") && playerAnim.IsAnimationNotPlaying()) || (!playerState.IsName("Swing") && !playerState.IsName("Ready1")))
                             playerAnim.Play("Ready1");
                     }
                     else if (!opponentServing)
                     {
-                        opponentPrepping = true;
                         if ((opponentState.IsName("Swing") && opponentAnim.IsAnimationNotPlaying()) || (!opponentState.IsName("Swing") && !opponentState.IsName("Ready1")))
                         {
                             opponentAnim.Play("Ready1");
@@ -367,6 +356,11 @@ namespace HeavenStudio.Games
             }
 
             opponentServing = false;
+
+            //update camera
+            GameCamera.additionalPosition = cameraPos.position + (Quaternion.Euler(cameraPos.rotation.eulerAngles) * Vector3.forward * 10f);
+            GameCamera.additionalRotEluer = cameraPos.rotation.eulerAngles;
+            GameCamera.additionalFoV = cameraFOV;
         }
 
         public void Bop(float beat, float length, bool bop, bool bopAuto)

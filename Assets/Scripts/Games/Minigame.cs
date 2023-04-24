@@ -9,7 +9,7 @@ namespace HeavenStudio.Games
 {
     public class Minigame : MonoBehaviour
     {
-        public static double earlyTime = 0.07f, perfectTime = 0.04f, aceEarlyTime = 0.01f, aceLateTime = 0.01f, lateTime = 0.04f, endTime = 0.07f;
+        public static double earlyTime = 0.075f, perfectTime = 0.06f, aceEarlyTime = 0.01f, aceLateTime = 0.01f, lateTime = 0.06f, endTime = 0.075f;
         public static float rankHiThreshold = 0.8f, rankOkThreshold = 0.6f;
         [SerializeField] public SoundSequence.SequenceKeyValue[] SoundSequences;
 
@@ -270,7 +270,7 @@ namespace HeavenStudio.Games
             }
         }
 
-        private void OnDrawGizmos() {
+        protected void OnDrawGizmos() {
             Gizmos.color = Color.magenta;
             Gizmos.DrawWireCube(Vector3.zero, new Vector3(17.77695f, 10, 0));
         }
