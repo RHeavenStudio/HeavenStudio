@@ -56,6 +56,7 @@ namespace HeavenStudio.Games.Scripts_ClappyTrio
         private void Miss(PlayerActionEvent caller) {
             game.playerHitLast = false;
             game.missed = true;
+            game.emoCounter = 2;
 
             if (clapStarted)
                 this.canHit = false;
@@ -65,6 +66,7 @@ namespace HeavenStudio.Games.Scripts_ClappyTrio
 
         private void Clap(bool just)
         {
+            game.emoCounter = 2;
             if (just)
             {
                 clapEffect.SetActive(true);
