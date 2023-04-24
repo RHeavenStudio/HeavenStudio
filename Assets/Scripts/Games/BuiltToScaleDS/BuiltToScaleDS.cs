@@ -53,12 +53,11 @@ namespace HeavenStudio.Games
         public enum BTSObject { HitPieces, MissPieces, FlyingRod }
 
         [Header("Camera")]
-        public Transform renderQuadTrans;
-        public Transform camPivot;
-        public Camera camComp;
+        [SerializeField] Transform camPos;
+        [SerializeField] float cameraFoV;
 
         [Header("References")]
-        public SkinnedMeshRenderer environmentRenderer;
+        [SerializeField] SkinnedMeshRenderer environmentRenderer;
         public GameObject flyingRodBase;
         public GameObject movingBlocksBase;
         public GameObject hitPartsBase;
@@ -69,7 +68,7 @@ namespace HeavenStudio.Games
         public Animator elevatorAnim;
 
         [Header("Properties")]
-        public float beltSpeed = 1f;
+        [SerializeField] float beltSpeed = 1f;
 
         private Material beltMaterial;
         private Material[] environmentMaterials;
@@ -87,16 +86,15 @@ namespace HeavenStudio.Games
             environmentMaterials = environmentRenderer.materials;
             beltMaterial = Instantiate(environmentMaterials[8]);
             environmentMaterials[8] = beltMaterial;
-            renderQuadTrans.gameObject.SetActive(true);
-
-            var cam = GameCamera.instance.camera;
-            var camHeight = 2f * cam.orthographicSize;
-            var camWidth = camHeight * cam.aspect;
-            renderQuadTrans.localScale = new Vector3(camWidth, camHeight, 1f);
-
-            camComp.depthTextureMode = camComp.depthTextureMode | DepthTextureMode.Depth;
 
             elevatorAnim.Play("MakeRod", 0, 1f);
+        }
+
+        private void Start()
+        {
+            GameCamera.additionalPosition = camPos.position + (Quaternion.Euler(camPos.eulerAngles) * Vector3.forward * 10f);
+            GameCamera.additionalRotEluer = camPos.eulerAngles;
+            GameCamera.additionalFoV = cameraFoV;
         }
 
         List<DynamicBeatmap.DynamicEntity> spawnedBlockEvents = new List<DynamicBeatmap.DynamicEntity>();

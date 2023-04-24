@@ -11,7 +11,7 @@ namespace HeavenStudio.Games.Loaders
     {
         public static Minigame AddGame(EventCaller eventCaller)
         {
-            return new Minigame("quizShow", "Quiz Show", "0058CE", false, false, new List<GameAction>()
+            return new Minigame("quizShow", "Quiz Show", "c96efa", false, false, new List<GameAction>()
             {
                 new GameAction("intervalStart", "Start Interval")
                 {
