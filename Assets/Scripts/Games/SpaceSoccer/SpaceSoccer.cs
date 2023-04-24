@@ -123,6 +123,8 @@ namespace HeavenStudio.Games
     using Scripts_SpaceSoccer;
     using HeavenStudio.Common;
     using UnityEngine.Rendering;
+    using HeavenStudio.Games.Scripts_DoubleDate;
+    using System.Net.Sockets;
 
     public class SpaceSoccer : Minigame
     {
@@ -148,6 +150,7 @@ namespace HeavenStudio.Games
         [SerializeField] private SpriteRenderer bg;
 
         [Header("Properties")]
+        [SerializeField] SuperCurveObject.Path[] ballPaths;
         public bool ballDispensed;
         float lastDispensedBeat;
         float scrollBeat;
@@ -170,6 +173,18 @@ namespace HeavenStudio.Games
         private void Awake()
         {
             instance = this;
+        }
+
+        new void OnDrawGizmos()
+        {
+            base.OnDrawGizmos();
+            foreach (SuperCurveObject.Path path in ballPaths)
+            {
+                if (path.preview)
+                {
+                    ballRef.GetComponent<Ball>().DrawEditorGizmo(path);
+                }
+            }
         }
 
         private void Update()

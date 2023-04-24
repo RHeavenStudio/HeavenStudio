@@ -84,6 +84,37 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
+--- !u!1 &389962579880249363
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 4543151586327496104}
+  m_Layer: 0
+  m_Name: Point 1
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &4543151586327496104
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 389962579880249363}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -0.297, y: 2.627, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 9105438976322812219}
+  m_RootOrder: 1
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &422879747917861779
 GameObject:
   m_ObjectHideFlags: 0
@@ -1221,7 +1252,6 @@ MonoBehaviour:
   dispenserBeat: 0
   kickTimes: 0
   player: 0
-  zValue: 0
   ball: {fileID: 0}
   enterExitAnim: {fileID: 4407928154025069004}
 --- !u!95 &2873739330524721184
@@ -1268,6 +1298,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cd6b3558bb367914eb7c7991d6c93205, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  timeOffset: 0
   timeCounter: 0
   rootPos: {fileID: 32085857618286105}
   speed: 1
@@ -1379,6 +1410,39 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
+--- !u!1 &3007147061504581539
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 9105438976322812219}
+  m_Layer: 0
+  m_Name: KickCurve
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &9105438976322812219
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3007147061504581539}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 2.34, y: -2.1, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children:
+  - {fileID: 3256235664949204840}
+  - {fileID: 4543151586327496104}
+  m_Father: {fileID: 4614248717272911302}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &3016412061519764734
 GameObject:
   m_ObjectHideFlags: 0
@@ -1528,7 +1592,6 @@ MonoBehaviour:
   dispenserBeat: 0
   kickTimes: 0
   player: 1
-  zValue: 0
   ball: {fileID: 0}
   enterExitAnim: {fileID: 4619565792654871070}
 --- !u!95 &8083744449129749329
@@ -1575,6 +1638,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cd6b3558bb367914eb7c7991d6c93205, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  timeOffset: 0
   timeCounter: 0
   rootPos: {fileID: 1133941631262721853}
   speed: 1
@@ -1784,6 +1848,7 @@ Transform:
   - {fileID: 3997811236443330485}
   - {fileID: 45563227638450708}
   - {fileID: 32085857618286105}
+  - {fileID: 4614248717272911302}
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -1809,6 +1874,32 @@ MonoBehaviour:
   - {fileID: 2934863208182244691}
   backgroundSprite: {fileID: 8657058913285632170}
   bg: {fileID: 7463739741518075090}
+  ballPaths:
+  - name: KickCurve
+    preview: 1
+    anchor: {fileID: 0}
+    positions:
+    - tag: 
+      pos: {x: 0, y: 0, z: 0}
+      target: {fileID: 3256235664949204840}
+      height: 0
+      duration: 0
+      useLastRealPos: 0
+      values: []
+    - tag: 
+      pos: {x: 0, y: 0, z: 0}
+      target: {fileID: 4543151586327496104}
+      height: 0
+      duration: 0
+      useLastRealPos: 0
+      values: []
+    - tag: 
+      pos: {x: 0, y: 0, z: 0}
+      target: {fileID: 399794634660151948}
+      height: 0
+      duration: 0
+      useLastRealPos: 0
+      values: []
   ballDispensed: 0
 --- !u!1 &3602948768485065441
 GameObject:
@@ -2160,6 +2251,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6b323a3095c4c2e4db991ebafc1384cc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  offset: {x: 0, y: 0, z: 0}
   kicker: {fileID: 2934863208182244691}
   holder: {fileID: 7976131226454805035}
   spriteHolder: {fileID: 6132156590540490080}
@@ -2174,7 +2266,37 @@ MonoBehaviour:
   highKickSwing: 0
   canKick: 0
   waitKickRelease: 0
-  zValue: 0
+--- !u!1 &4322373423726476738
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 3256235664949204840}
+  m_Layer: 0
+  m_Name: Point 0
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &3256235664949204840
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4322373423726476738}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -0.7675419, y: 0.7641696, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 9105438976322812219}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &4365805729759623217
 GameObject:
   m_ObjectHideFlags: 0
@@ -3063,6 +3185,38 @@ MonoBehaviour:
   - {fileID: 2039331194922578974}
   - {fileID: 3650667165709929962}
   normalizedTime: 0.5
+--- !u!1 &6945745830549361317
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 4614248717272911302}
+  m_Layer: 0
+  m_Name: Curves
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &4614248717272911302
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6945745830549361317}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children:
+  - {fileID: 9105438976322812219}
+  m_Father: {fileID: 3584310800769874311}
+  m_RootOrder: 6
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &7204248277449664948
 GameObject:
   m_ObjectHideFlags: 0

@@ -8,7 +8,7 @@ using UnityEngine.UIElements;
 
 namespace HeavenStudio.Games.Scripts_SpaceSoccer
 {
-    public class Ball : MonoBehaviour
+    public class Ball : SuperCurveObject
     {
         public enum State { None, Dispensing, Kicked, HighKicked, Toe };
         [Header("Components")]
