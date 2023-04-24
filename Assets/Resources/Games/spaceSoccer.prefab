@@ -84,37 +84,6 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
---- !u!1 &389962579880249363
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 4543151586327496104}
-  m_Layer: 0
-  m_Name: Point 1
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &4543151586327496104
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 389962579880249363}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -0.297, y: 2.627, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 9105438976322812219}
-  m_RootOrder: 1
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &422879747917861779
 GameObject:
   m_ObjectHideFlags: 0
@@ -1410,39 +1379,6 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
---- !u!1 &3007147061504581539
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 9105438976322812219}
-  m_Layer: 0
-  m_Name: KickCurve
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &9105438976322812219
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3007147061504581539}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 2.34, y: -2.1, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children:
-  - {fileID: 3256235664949204840}
-  - {fileID: 4543151586327496104}
-  m_Father: {fileID: 4614248717272911302}
-  m_RootOrder: 0
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &3016412061519764734
 GameObject:
   m_ObjectHideFlags: 0
@@ -1775,7 +1711,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &3207667626390582044
 Transform:
   m_ObjectHideFlags: 0
@@ -1848,7 +1784,6 @@ Transform:
   - {fileID: 3997811236443330485}
   - {fileID: 45563227638450708}
   - {fileID: 32085857618286105}
-  - {fileID: 4614248717272911302}
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -1875,27 +1810,74 @@ MonoBehaviour:
   backgroundSprite: {fileID: 8657058913285632170}
   bg: {fileID: 7463739741518075090}
   ballPaths:
-  - name: KickCurve
+  - name: Kick
     preview: 1
     anchor: {fileID: 0}
     positions:
     - tag: 
-      pos: {x: 0, y: 0, z: 0}
-      target: {fileID: 3256235664949204840}
+      pos: {x: 1.5724581, y: -1.3358305, z: 0}
+      target: {fileID: 0}
+      height: 4.1
+      duration: 1.5
+      useLastRealPos: 0
+      values: []
+    - tag: 
+      pos: {x: 3.77, y: -6.480046, z: 0}
+      target: {fileID: 0}
       height: 0
       duration: 0
       useLastRealPos: 0
       values: []
+  - name: Dispense
+    preview: 1
+    anchor: {fileID: 0}
+    positions:
     - tag: 
-      pos: {x: 0, y: 0, z: 0}
-      target: {fileID: 4543151586327496104}
+      pos: {x: -3.900663, y: -6.300388, z: 0}
+      target: {fileID: 0}
+      height: 10
+      duration: 2.35
+      useLastRealPos: 0
+      values: []
+    - tag: 
+      pos: {x: 2.5349154, y: -6.116786, z: 0}
+      target: {fileID: 0}
       height: 0
       duration: 0
       useLastRealPos: 0
       values: []
+  - name: HighKick
+    preview: 1
+    anchor: {fileID: 0}
+    positions:
     - tag: 
-      pos: {x: 0, y: 0, z: 0}
-      target: {fileID: 399794634660151948}
+      pos: {x: 2.544168, y: -1.382243, z: 0}
+      target: {fileID: 0}
+      height: 5.7
+      duration: 2.3
+      useLastRealPos: 0
+      values: []
+    - tag: 
+      pos: {x: -0.44, y: -5.756623, z: 0}
+      target: {fileID: 0}
+      height: 0
+      duration: 0
+      useLastRealPos: 0
+      values: []
+  - name: Toe
+    preview: 1
+    anchor: {fileID: 0}
+    positions:
+    - tag: 
+      pos: {x: -1.615356, y: -1.698554, z: 0}
+      target: {fileID: 0}
+      height: 7.5
+      duration: 1.35
+      useLastRealPos: 0
+      values: []
+    - tag: 
+      pos: {x: 2.61, y: -6.08, z: 0}
+      target: {fileID: 0}
       height: 0
       duration: 0
       useLastRealPos: 0
@@ -2256,47 +2238,32 @@ MonoBehaviour:
   holder: {fileID: 7976131226454805035}
   spriteHolder: {fileID: 6132156590540490080}
   kickFX: {fileID: 4365805729759623217}
-  dispenseCurve: {fileID: 5209060163867140866}
-  kickCurve: {fileID: 1507665286932590801}
-  highKickCurve: {fileID: 5471456891558289981}
-  toeCurve: {fileID: 8336007186072323660}
   startBeat: 0
   state: 0
   nextAnimBeat: 0
   highKickSwing: 0
   canKick: 0
   waitKickRelease: 0
---- !u!1 &4322373423726476738
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 3256235664949204840}
-  m_Layer: 0
-  m_Name: Point 0
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &3256235664949204840
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4322373423726476738}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -0.7675419, y: 0.7641696, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 9105438976322812219}
-  m_RootOrder: 0
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  kickPath:
+    name: Kick
+    preview: 0
+    anchor: {fileID: 0}
+    positions: []
+  dispensePath:
+    name: 
+    preview: 0
+    anchor: {fileID: 0}
+    positions: []
+  highKickPath:
+    name: 
+    preview: 0
+    anchor: {fileID: 0}
+    positions: []
+  toePath:
+    name: 
+    preview: 0
+    anchor: {fileID: 0}
+    positions: []
 --- !u!1 &4365805729759623217
 GameObject:
   m_ObjectHideFlags: 0
@@ -3147,7 +3114,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &1240551230645966165
 Transform:
   m_ObjectHideFlags: 0
@@ -3185,38 +3152,6 @@ MonoBehaviour:
   - {fileID: 2039331194922578974}
   - {fileID: 3650667165709929962}
   normalizedTime: 0.5
---- !u!1 &6945745830549361317
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 4614248717272911302}
-  m_Layer: 0
-  m_Name: Curves
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &4614248717272911302
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6945745830549361317}
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children:
-  - {fileID: 9105438976322812219}
-  m_Father: {fileID: 3584310800769874311}
-  m_RootOrder: 6
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &7204248277449664948
 GameObject:
   m_ObjectHideFlags: 0
