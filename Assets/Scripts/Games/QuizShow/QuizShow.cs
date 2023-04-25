@@ -55,7 +55,7 @@ namespace HeavenStudio.Games.Loaders
                         new Param("sound", true, "Play Time-Up Sound?", "Should the Time-Up sound play at the end of the interval?"),
                         new Param("con", false, "Consecutive", "Disables everything that happens at the end of the interval if ticked on."),
                         new Param("visual", true, "Stopwatch (Visual)", "Should the stopwatch visually appear?"),
-                        new Param("audio", true, "Stopwatch (Audio)", "Should the sounds of the stopwatch play?")
+                        new Param("audio", QuizShow.ClockAudio.Both, "Stopwatch (Audio)", "Should the sounds of the stopwatch play?")
                     }
                 },
                 new GameAction("revealAnswer", "Reveal Answer")
@@ -110,6 +110,13 @@ namespace HeavenStudio.Games
 {
     public class QuizShow : Minigame
     {
+        public enum ClockAudio
+        {
+            Both,
+            Start,
+            End,
+            Neither
+        }
         public enum HeadStage
         {
             Stage0 = 0,
@@ -345,7 +352,7 @@ namespace HeavenStudio.Games
             intervalStarted = true;
         }
 
-        public void PassTurn(float beat, float length, bool timeUpSound, bool consecutive, bool visualClock, bool audioClock)
+        public void PassTurn(float beat, float length, bool timeUpSound, bool consecutive, bool visualClock, int audioClock)
         {
             if (queuedInputs.Count == 0) return;
             if (shouldPrepareArms) 
@@ -375,11 +382,12 @@ namespace HeavenStudio.Games
             playerBeatInterval = beatInterval;
             playerIntervalStartBeat = beat + length;
             float timeUpBeat = 0f;
-            if (audioClock) 
+            if (audioClock == (int)ClockAudio.Both || audioClock == (int)ClockAudio.Start) 
             {
                 Jukebox.PlayOneShotGame("quizShow/timerStart");
                 timeUpBeat = 0.5f;
-            } 
+            }
+            if (audioClock == (int)ClockAudio.End) timeUpBeat = 0.5f;
             
             BeatAction.New(instance.gameObject, new List<BeatAction.Action>()
             {
@@ -387,7 +395,7 @@ namespace HeavenStudio.Games
                 { 
                     if (!consecutive) 
                     {
-                        if (audioClock) Jukebox.PlayOneShotGame("quizShow/timerStop"); 
+                        if (audioClock == (int)ClockAudio.Both || audioClock == (int)ClockAudio.End) Jukebox.PlayOneShotGame("quizShow/timerStop"); 
                         contesteeLeftArmAnim.DoScaledAnimationAsync("LeftRest", 0.5f);
                         contesteeRightArmAnim.DoScaledAnimationAsync("RightRest", 0.5f);
                         shouldPrepareArms = true;
