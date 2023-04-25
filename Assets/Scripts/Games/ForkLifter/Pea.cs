@@ -52,9 +52,13 @@ namespace HeavenStudio.Games.Scripts_ForkLifter
 
                 pea.transform.localPosition = Vector3.zero;
 
+                float peaOffset = 0;
+
+                if (ForkLifterPlayer.instance.currentPerfectPeasOnFork == 3) peaOffset = -0.15724f;
+
                 for (int i = 0; i < ForkLifterPlayer.instance.perfect.transform.childCount; i++)
                 {
-                    ForkLifterPlayer.instance.perfect.transform.GetChild(i).transform.localPosition = new Vector3(0, (-1.67f - (0.15724f * i)) + 0.15724f * ForkLifterPlayer.instance.currentPerfectPeasOnFork);
+                    ForkLifterPlayer.instance.perfect.transform.GetChild(i).transform.localPosition = new Vector3(0, (-1.67f - (0.15724f * i)) + 0.15724f * ForkLifterPlayer.instance.currentPerfectPeasOnFork + peaOffset);
                 }
 
                 SpriteRenderer psprite = pea.AddComponent<SpriteRenderer>();

@@ -334,7 +334,6 @@ namespace HeavenStudio.Games
             {
                 if (path.name == name)
                 {
-                    Debug.Log("Found path " + name);
                     return path;
                 }
             }

@@ -1,0 +1,100 @@
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+using HeavenStudio.Util;
+
+namespace HeavenStudio.Games.Scripts_BoardMeeting
+{
+    public class BMExecutive : MonoBehaviour
+    {
+        public BoardMeeting game;
+        public bool player;
+        public Animator anim;
+        bool canBop = true;
+        int smileCounter = 0;
+        public bool spinning;
+        bool preparing;
+        Sound rollLoop = null;
+
+        private void Awake()
+        {
+            anim = GetComponent<Animator>();
+            game = BoardMeeting.instance;
+        }
+
+        public void Prepare()
+        {
+            if (spinning) return;
+            preparing = true;
+            anim.DoScaledAnimationAsync("Prepare", 0.5f);
+            canBop = false;
+        }
+
+        public void Spin(string soundToPlay = "A")
+        {
+            if (spinning) return;
+            spinning = true;
+            preparing = false;
+            if (this == game.firstSpinner) anim.DoUnscaledAnimation("Spin");
+            else anim.DoUnscaledAnimation("Spin", game.firstSpinner.anim.GetCurrentAnimatorStateInfo(0).normalizedTime);
+            canBop = false;
+            Jukebox.PlayOneShotGame("boardMeeting/rollPrepare" + soundToPlay);
+            float offset = 0;
+            switch (soundToPlay)
+            {
+                case "A":
+                case "B":
+                    offset = 0.01041666666f;
+                    break;
+                case "C":
+                case "Player":
+                    offset = 0.02083333333f;
+                    break;
+                default:
+                    offset = 0;
+                    break;
+            }
+            rollLoop = Jukebox.PlayOneShotGame("boardMeeting/roll" + soundToPlay, Conductor.instance.songPositionInBeats + 0.5f - Conductor.instance.GetRestFromRealTime(offset), 1, 1, true);
+        }
+
+        public void Stop(bool hit = true)
+        {
+            if (!spinning) return;
+            spinning = false;
+            anim.DoScaledAnimationAsync(hit ? "Stop" : "Miss", hit ? 0.5f : 0.25f);
+            if (rollLoop != null)
+            {
+                rollLoop.KillLoop(0);
+                rollLoop = null;
+            }
+
+            BeatAction.New(game.gameObject, new List<BeatAction.Action>()
+            {
+                new BeatAction.Action(Conductor.instance.songPositionInBeats + 1.5f, delegate { canBop = true; })
+            });
+        }
+
+        public void Bop()
+        {
+            if (!canBop || spinning || !anim.IsAnimationNotPlaying() || preparing) return;
+            if (smileCounter > 0)
+            {
+                anim.DoScaledAnimationAsync("SmileBop", 0.5f);
+                smileCounter--;
+            }
+            else
+            {
+                anim.DoScaledAnimationAsync("Bop", 0.5f);
+            }
+
+        }
+
+        public void Smile()
+        {
+            if (spinning) return;
+            if (!preparing) anim.Play("SmileIdle");
+            smileCounter = 2;
+        }
+    }
+}
+

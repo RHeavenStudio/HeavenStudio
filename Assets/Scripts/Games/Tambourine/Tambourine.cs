@@ -56,6 +56,19 @@ namespace HeavenStudio.Games.Loaders
                     defaultLength = 1f,
                     priority = 4,
                 },
+                new GameAction("fade background", "Background Color")
+                {
+                    function = delegate {var e = eventCaller.currentEntity; Tambourine.instance.FadeBackgroundColor(e["colorA"], e["colorB"], e.length, e["instant"]); },
+                    defaultLength = 4f,
+                    resizable = true,
+                    parameters = new List<Param>()
+                    {
+                        new Param("colorA", Color.white, "Start Color", "The starting color of the fade."),
+                        new Param("colorB", Tambourine.defaultBGColor, "End Color", "The ending color of the fade."),
+                        new Param("instant", false, "Instant", "Instantly set the color of the background to the start color?")
+                    }
+                },
+                //backwards-compatibility
                 new GameAction("set background color", "Background Color")
                 {
                     function = delegate {var e = eventCaller.currentEntity; Tambourine.instance.ChangeBackgroundColor(e["colorA"], 0f); },
@@ -63,19 +76,9 @@ namespace HeavenStudio.Games.Loaders
                     parameters = new List<Param>()
                     {
                         new Param("colorA", Tambourine.defaultBGColor, "Background Color", "The background color to change to.")
-                    }
+                    },
+                    hidden = true
                 },
-                new GameAction("fade background", "Fade Background Color")
-                {
-                    function = delegate {var e = eventCaller.currentEntity; Tambourine.instance.FadeBackgroundColor(e["colorA"], e["colorB"], e.length); },
-                    defaultLength = 4f,
-                    resizable = true,
-                    parameters = new List<Param>()
-                    {
-                        new Param("colorA", Color.white, "Start Color", "The starting color of the fade."),
-                        new Param("colorB", Tambourine.defaultBGColor, "End Color", "The ending color of the fade.")
-                    }
-                }
             });
         }
     }
@@ -394,10 +397,10 @@ namespace HeavenStudio.Games
             }
         }
 
-        public void FadeBackgroundColor(Color start, Color end, float beats)
+        public void FadeBackgroundColor(Color start, Color end, float beats, bool instant)
         {
             ChangeBackgroundColor(start, 0f);
-            ChangeBackgroundColor(end, beats);
+            if (!instant) ChangeBackgroundColor(end, beats);
         }
 
         public void SummonFrog()

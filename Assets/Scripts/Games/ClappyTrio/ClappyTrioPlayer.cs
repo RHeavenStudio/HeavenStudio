@@ -55,6 +55,7 @@ namespace HeavenStudio.Games.Scripts_ClappyTrio
 
         private void Miss(PlayerActionEvent caller) {
             game.playerHitLast = false;
+            game.missed = true;
 
             if (clapStarted)
                 this.canHit = false;
@@ -77,6 +78,7 @@ namespace HeavenStudio.Games.Scripts_ClappyTrio
                 clapEffect.SetActive(false);
                 Jukebox.PlayOneShot("miss");
                 game.playerHitLast = false;
+                game.missed = true;
 
                 if (clapStarted)
                     this.canHit = false;
