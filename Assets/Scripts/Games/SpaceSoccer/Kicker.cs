@@ -59,9 +59,22 @@ namespace HeavenStudio.Games.Scripts_SpaceSoccer
             {
                 float beatToKick = beat + ball.GetAnimLength(Ball.State.Dispensing);
                 if (beatToKick < Conductor.instance.songPositionInBeats) beatToKick = ball.nextAnimBeat;
-                BeatAction.New(this.gameObject, new List<BeatAction.Action>(){
-                    new BeatAction.Action(beatToKick, delegate { KickCheck(true, false, beatToKick); }),
-                });
+                if (ball.state == Ball.State.HighKicked)
+                {
+                    BeatAction.New(this.gameObject, new List<BeatAction.Action>()
+                    {
+                        new BeatAction.Action(beatToKick - 0.5f, delegate { Kick(true, true); }),
+                        new BeatAction.Action(beatToKick, delegate { Toe(true); }),
+                        new BeatAction.Action(beatToKick + ball.GetAnimLength(Ball.State.Toe), delegate { KickCheck(true, false, beatToKick + ball.GetAnimLength(Ball.State.Toe)); }),
+                    });
+                }
+                else
+                {
+                    BeatAction.New(this.gameObject, new List<BeatAction.Action>()
+                    {
+                        new BeatAction.Action(beatToKick, delegate { KickCheck(true, false, beatToKick); }),
+                    });
+                }
             }
         }
 
