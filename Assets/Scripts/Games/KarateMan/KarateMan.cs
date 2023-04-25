@@ -25,12 +25,13 @@ namespace HeavenStudio.Games.Loaders
                     inactiveFunction = delegate { KarateMan.ToggleBopUnloaded(eventCaller.currentEntity["toggle"]); }
                 },
                 new GameAction("hit", "Toss Object") {
-                    function = delegate { var e = eventCaller.currentEntity; KarateMan.instance.CreateItem(e.beat, e["type"], e["type2"]); }, 
+                    function = delegate { var e = eventCaller.currentEntity; KarateMan.instance.CreateItem(e.beat, e["type"], e["type2"], e["mute"]); }, 
                     defaultLength = 2,
                     parameters = new List<Param>()
                     {
                         new Param("type", KarateMan.HitType.Pot, "Object", "The object to fire"),
-                        new Param("type2", KarateMan.KarateManFaces.Normal, "Success Expression", "The facial expression to set Joe to on hit")
+                        new Param("type2", KarateMan.KarateManFaces.Normal, "Success Expression", "The facial expression to set Joe to on hit"),
+                        new Param("mute", false, "Mute", "Should the throwing sound be muted?")
                     }
                 },
                 new GameAction("bulb", "Toss Lightbulb")
@@ -695,7 +696,7 @@ namespace HeavenStudio.Games
             return word;
         }
 
-        public void CreateItem(float beat, int type, int expression)
+        public void CreateItem(float beat, int type, int expression, bool muteSound = false)
         {
 
             string outSound;
@@ -739,7 +740,7 @@ namespace HeavenStudio.Games
                     CreateItemInstance(beat, "Item00", expression);
                     break;
             }
-            Jukebox.PlayOneShotGame(outSound, forcePlay: true);
+            if (!muteSound) Jukebox.PlayOneShotGame(outSound, forcePlay: true);
         }
 
         public void CreateBulbSpecial(float beat, int type, Color c, int expression)
