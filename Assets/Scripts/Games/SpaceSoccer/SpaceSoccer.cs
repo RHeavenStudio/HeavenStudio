@@ -32,10 +32,11 @@ namespace HeavenStudio.Games.Loaders
                 },
                 new GameAction("npc kickers enter or exit", "NPC Kickers Enter or Exit")
                 {
-                    function = delegate { var e = eventCaller.currentEntity; SpaceSoccer.instance.NPCKickersEnterOrExit(e.beat, e.length, e["choice"], e["ease"], e["amount"], e["x"], e["y"], e["z"], e["override"]); },
+                    function = delegate { var e = eventCaller.currentEntity; SpaceSoccer.instance.NPCKickersEnterOrExit(e.beat, e.length, e["choice"], e["ease"], e["amount"], e["x"], e["y"], e["z"], e["override"], e["preset"]); },
                     defaultLength = 4f,
                     parameters = new List<Param>()
                     {
+                        new Param("preset", SpaceSoccer.EnterExitPresets.FiveKickers, "Preset", "Which preset should be used?"),
                         new Param("choice", SpaceSoccer.AnimationToPlay.Enter, "Enter Or Exit", "Whether the kickers should exit or enter."),
                         new Param("ease", EasingFunction.Ease.Linear, "Ease", "The Ease of the entering or exiting."),
                         new Param("amount", new EntityTypes.Integer(2, 30, 5), "Amount", "Amount of Space Kickers."),
@@ -119,7 +120,7 @@ namespace HeavenStudio.Games.Loaders
                         {
                             choice = (int)SpaceSoccer.AnimationToPlay.Enter;
                         }
-                        SpaceSoccer.instance.NPCKickersEnterOrExit(e.beat, e.length, choice, (int)EasingFunction.Ease.Instant, 5, 1.75f, 0.25f, 0.75f, true);
+                        SpaceSoccer.instance.NPCKickersEnterOrExit(e.beat, e.length, choice, (int)EasingFunction.Ease.Instant, 5, 1.75f, 0.25f, 0.75f, true, (int)SpaceSoccer.EnterExitPresets.Custom);
                     },
                     defaultLength = 0.5f,
                     parameters = new List<Param>()
@@ -143,6 +144,12 @@ namespace HeavenStudio.Games
 
     public class SpaceSoccer : Minigame
     {
+        public enum EnterExitPresets
+        {
+            FiveKickers,
+            DuoKickers,
+            Custom
+        }
         public enum PlayerPresets
         {
             LaunchStart = 0,
@@ -248,9 +255,21 @@ namespace HeavenStudio.Games
             }
         }
 
-        public void NPCKickersEnterOrExit(float beat, float length, int animToPut, int easeToPut, int amount, float xDistance, float yDistance, float zDistance, bool overrideEasing)
+        public void NPCKickersEnterOrExit(float beat, float length, int animToPut, int easeToPut, int amount, float xDistance, float yDistance, float zDistance, bool overrideEasing, int preset)
         {
-            UpdateSpaceKickers(amount, xDistance, yDistance, zDistance, overrideEasing);
+            switch (preset)
+            {
+                case (int)EnterExitPresets.Custom:
+                    UpdateSpaceKickers(amount, xDistance, yDistance, zDistance, overrideEasing);
+                    break;
+                case (int)EnterExitPresets.DuoKickers:
+                    UpdateSpaceKickers(2, 7, -6, 10, overrideEasing);
+                    break;
+                case (int)EnterExitPresets.FiveKickers:
+                    UpdateSpaceKickers(5, 2, -0.5f, 1.25f, overrideEasing);
+                    break;
+            }
+
             string animName = "Enter";
             switch (animToPut)
             {

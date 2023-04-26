@@ -119,6 +119,7 @@ namespace HeavenStudio.Games
                         executives[executiveCount - 1].Stop(false);
                         Jukebox.PlayOneShotGame("boardMeeting/miss");
                         Jukebox.PlayOneShot("miss");
+                        ScoreMiss();
                     }
                 }
             }
