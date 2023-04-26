@@ -13,29 +13,43 @@ namespace HeavenStudio.Games.Scripts_ForkLifter
 
         public Sprite[] fastSprites;
 
+        private List<DynamicBeatmap.DynamicEntity> allFlickEntities = new List<DynamicBeatmap.DynamicEntity>();
+
+        public int currentFlickIndex;
+
+        private void Awake()
+        {
+            var flickEntities = EventCaller.GetAllInGameManagerList("forkLifter", new string[] { "flick" });
+            List<DynamicBeatmap.DynamicEntity> tempEvents = new List<DynamicBeatmap.DynamicEntity>();
+            for (int i = 0; i < flickEntities.Count; i++)
+            {
+                if (flickEntities[i].beat >= Conductor.instance.songPositionInBeats)
+                {
+                    tempEvents.Add(flickEntities[i]);
+                }
+            }
+            allFlickEntities = tempEvents;
+        }
+
         public void CheckNextFlick()
         {
-            // var allPlayerActions = EventCaller.GetAllInGameManagerList("forkLifter", new string[] { "gulp", "sigh", "prepare" });
-            // var allPlayerActions = EventCaller.GetAllPlayerEntities("forkLifter");
-            // int currentPlayerEvent = GameManager.instance.currentEvent - EventCaller.GetAllPlayerEntitiesExceptBeforeBeat("forkLifter", Conductor.instance.songPositionInBeats).Count;
-
-           /* if (currentPlayerEvent < allPlayerActions.Count)
+            if (allFlickEntities.Count > 0 && currentFlickIndex >= 0 && currentFlickIndex < allFlickEntities.Count)
             {
-                switch (allPlayerActions[currentPlayerEvent].datamodel.Split('/')[1])
+                switch (allFlickEntities[currentFlickIndex]["type"])
                 {
-                    case "pea":
+                    case (int)ForkLifter.FlickType.Pea:
                         ForkLifter.instance.peaPreview.sprite = ForkLifter.instance.peaSprites[0];
                         fastSprite.sprite = fastSprites[0];
                         break;
-                    case "topbun":
+                    case (int)ForkLifter.FlickType.TopBun:
                         ForkLifter.instance.peaPreview.sprite = ForkLifter.instance.peaSprites[1];
                         fastSprite.sprite = fastSprites[0];
                         break;
-                    case "burger":
+                    case (int)ForkLifter.FlickType.Burger:
                         ForkLifter.instance.peaPreview.sprite = ForkLifter.instance.peaSprites[2];
                         fastSprite.sprite = fastSprites[1];
                         break;
-                    case "bottombun":
+                    case (int)ForkLifter.FlickType.BottomBun:
                         ForkLifter.instance.peaPreview.sprite = ForkLifter.instance.peaSprites[3];
                         fastSprite.sprite = fastSprites[0];
                         break;
@@ -44,9 +58,7 @@ namespace HeavenStudio.Games.Scripts_ForkLifter
             else
             {
                 ForkLifter.instance.peaPreview.sprite = null;
-            }*/
-
-            // will fix later
+            }
         }
 
         public void Prepare()

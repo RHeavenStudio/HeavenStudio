@@ -48,9 +48,9 @@ namespace HeavenStudio.Util
             {
                 Util.Sound s;
                 if (game)
-                    s = Jukebox.PlayOneShotGame(sounds[i].name, sounds[i].beat - Conductor.instance.GetRestFromRealTime(sounds[i].offset), sounds[i].pitch, sounds[i].volume, sounds[i].looping, forcePlay);
+                    s = Jukebox.PlayOneShotGame(sounds[i].name, sounds[i].beat, sounds[i].pitch, sounds[i].volume, sounds[i].looping, forcePlay, sounds[i].offset);
                 else
-                    s = Jukebox.PlayOneShot(sounds[i].name, sounds[i].beat - Conductor.instance.GetRestFromRealTime(sounds[i].offset), sounds[i].pitch, sounds[i].volume, sounds[i].looping);
+                    s = Jukebox.PlayOneShot(sounds[i].name, sounds[i].beat, sounds[i].pitch, sounds[i].volume, sounds[i].looping, null, sounds[i].offset);
                 ms.playingSounds.Add(s);
             }
 
