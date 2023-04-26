@@ -17,7 +17,8 @@ namespace HeavenStudio.Games.Scripts_SeeSaw
         public enum JumpState
         {
             None,
-            StartJump
+            StartJump,
+            OutOut
         }
         [SerializeField] bool see;
         Animator anim;
@@ -46,13 +47,18 @@ namespace HeavenStudio.Games.Scripts_SeeSaw
             {
                 switch (currentState)
                 {
-                    case JumpState.None:
+                    default:
                         return;
                     case JumpState.StartJump:
                         currentPath = game.GetPath("SeeStartJump");
                         transform.position = GetPathPositionFromBeat(currentPath, Mathf.Max(startBeat, currentBeat), out float height, startBeat);
                         if (height < heightLastFrame) anim.Play("Jump_OutOut_Fall", 0, 0);
                         heightLastFrame = height;
+                        break;
+                    case JumpState.OutOut:
+                        currentPath = game.GetPath(see ? "SeeJumpOutOut" : "SawJumpOutOut");
+                        transform.position = GetPathPositionFromBeat(currentPath, Mathf.Max(startBeat, currentBeat), startBeat);
+                        if (currentBeat > startBeat + 1) anim.Play("Jump_OutOut_Fall", 0, 0);
                         break;
                 }
             }
@@ -91,6 +97,7 @@ namespace HeavenStudio.Games.Scripts_SeeSaw
             heightLastFrame = 0;
             switch (currentState)
             {
+                case JumpState.OutOut:
                 case JumpState.StartJump:
                     anim.DoScaledAnimationAsync("Jump_OutOut_Start", 0.5f);
                     break;
