@@ -23,6 +23,7 @@ namespace HeavenStudio.Games.Scripts_SpaceSoccer
         private float animLength;
         private float animStartBeat;
         private EasingFunction.Ease ease;
+        bool stopBall;
 
         [Header("Components")]
         private Animator anim;
@@ -80,6 +81,7 @@ namespace HeavenStudio.Games.Scripts_SpaceSoccer
 
         public void Kick(bool hit, bool highKick = false)
         {
+            if (stopBall) return;
             aceTimes = 0;
 
             if (player)
@@ -156,6 +158,7 @@ namespace HeavenStudio.Games.Scripts_SpaceSoccer
 
         public void HighKick(bool hit)
         {
+            if (stopBall) return;
             kickTimes++;
             if (hit)
             {
@@ -193,6 +196,7 @@ namespace HeavenStudio.Games.Scripts_SpaceSoccer
 
         public void Toe(bool hit)
         {
+            if (stopBall) return;
             if (kickLeft)
             {
                 anim.DoScaledAnimationAsync("ToeLeft", 0.5f);
@@ -261,6 +265,7 @@ namespace HeavenStudio.Games.Scripts_SpaceSoccer
 
             if (player)
             {
+                if (stopBall) return;
                 if (PlayerInput.Pressed() && !game.IsExpectingInputNow(InputType.STANDARD_DOWN))
                 {
                     if (ball == null)
@@ -286,6 +291,7 @@ namespace HeavenStudio.Games.Scripts_SpaceSoccer
 
         private void KickCheck(bool hit,  bool overrideState = false, float beat = 0f)
         {
+            if (stopBall) return;
             if (canHighKick)
             {
                 HighKick(hit);
@@ -325,8 +331,16 @@ namespace HeavenStudio.Games.Scripts_SpaceSoccer
 
         }
 
+        public void StopBall(bool stop)
+        {
+            stopBall = stop;
+            if (ball != null && stop) Destroy(ball.gameObject);
+        }
+
         void MissBall(float targetBeat)
         {
+            if (stopBall) return;
+
             var cond = Conductor.instance;
             ball = null;
             // queue the miss sound
@@ -336,6 +350,7 @@ namespace HeavenStudio.Games.Scripts_SpaceSoccer
 
         private void KickJust(PlayerActionEvent caller, float state)
         {
+            if (stopBall) return;
             if (ball == null || state >= 1f || state <= -1f) {  //todo: proper near miss feedback
                 KickCheck(false, true);
                 MissBall(caller.startBeat + caller.timer);
@@ -359,6 +374,7 @@ namespace HeavenStudio.Games.Scripts_SpaceSoccer
 
         private void Miss(PlayerActionEvent caller) 
         {
+            if (stopBall) return;
             if (ball != null)
                 MissBall(caller.startBeat + caller.timer);
             
@@ -367,6 +383,8 @@ namespace HeavenStudio.Games.Scripts_SpaceSoccer
 
         private void ToeJust(PlayerActionEvent caller, float state)
         {
+            if (stopBall) return;
+
             if (ball == null || (!ball.canKick) || state >= 1f || state <= -1f) {  //todo: proper near miss feedback
                 Toe(false);
                 MissBall(caller.startBeat + caller.timer);
@@ -379,6 +397,8 @@ namespace HeavenStudio.Games.Scripts_SpaceSoccer
 
         private void ToePrepareJust(PlayerActionEvent caller, float state)
         {
+            if (stopBall) return;
+
             //autoplay only
             Kick(true, true);
         }

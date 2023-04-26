@@ -99,6 +99,14 @@ namespace HeavenStudio.Games.Loaders
                         new Param("y", new EntityTypes.Float(-100f, 100f, 6f), "Vertical", "How many beats before the background has looped vertically?"),
                     }
                 },
+                new GameAction("stopBall", "Stop Ball")
+                {
+                    function = delegate { SpaceSoccer.instance.StopBall(eventCaller.currentEntity["toggle"]); },
+                    parameters = new List<Param>()
+                    {
+                        new Param("toggle", true, "Stop ball?", "Should the ball be stopped? If ticked off the kickers will regain their ability to use the ball.")
+                    }
+                },
                 // This is still here for "backwards-compatibility" but is hidden in the editor (it does absolutely nothing however)
                 new GameAction("keep-up", "")
                 {
@@ -252,6 +260,14 @@ namespace HeavenStudio.Games
                 float newPosY = func(lastPosP.y, currentPosP.y, normalizedPBeat);
                 float newPosZ = func(lastPosP.z, currentPosP.z, normalizedPBeat);
                 kickers[0].transform.parent.position = new Vector3(3.384f - newPosX, newPosY, newPosZ);
+            }
+        }
+
+        public void StopBall(bool stop)
+        {
+            foreach (var kicker in kickers)
+            {
+                kicker.StopBall(stop);
             }
         }
 
