@@ -56,10 +56,13 @@ namespace HeavenStudio.Games.Loaders
 
 namespace HeavenStudio.Games
 {
+    using Scripts_SeeSaw;
     public class SeeSaw : Minigame
     {
         [Header("Components")]
         [SerializeField] Animator seeSawAnim;
+        [SerializeField] SeeSawGuy see;
+        [SerializeField] SeeSawGuy saw;
 
         [Header("Properties")]
         bool canPrepare = true;

@@ -504,6 +504,38 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
+--- !u!1 &733853476455256030
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 8358101486431240047}
+  m_Layer: 0
+  m_Name: Curves
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &8358101486431240047
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 733853476455256030}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: -1.9458706, y: 0.52214634, z: -0.10411281}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children:
+  - {fileID: 655774950026617740}
+  m_Father: {fileID: 3633341235378833335}
+  m_RootOrder: 4
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &808713880637306799
 GameObject:
   m_ObjectHideFlags: 0
@@ -2922,6 +2954,37 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
+--- !u!1 &5113097503085621212
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 655774950026617740}
+  m_Layer: 0
+  m_Name: SeeStartJump
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &655774950026617740
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5113097503085621212}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 8358101486431240047}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &5145747147757238781
 GameObject:
   m_ObjectHideFlags: 0
@@ -3963,6 +4026,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 2549008253857903964}
+  - component: {fileID: 803512772772987110}
   m_Layer: 0
   m_Name: SawHolder
   m_TagString: Untagged
@@ -3986,6 +4050,20 @@ Transform:
   m_Father: {fileID: 473263972156862217}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &803512772772987110
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6239234705391747464}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 58363b7d7cc85c049acdb5201a99b934, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  offset: {x: 0, y: 0, z: 0}
+  see: 0
 --- !u!1 &6398968561459874746
 GameObject:
   m_ObjectHideFlags: 0
@@ -4589,7 +4667,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 7533436247508771447}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0.9804402, y: -2.6294072, z: -0.04923508}
+  m_LocalPosition: {x: 0.9804402, y: -2.6294072, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -4808,6 +4886,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 7564484288749137424}
+  - component: {fileID: 7807565663565079643}
   m_Layer: 0
   m_Name: SeeHolder
   m_TagString: Untagged
@@ -4831,6 +4910,20 @@ Transform:
   m_Father: {fileID: 473263972156862217}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &7807565663565079643
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7726620807770891083}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 58363b7d7cc85c049acdb5201a99b934, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  offset: {x: 0, y: 0, z: 0}
+  see: 1
 --- !u!1 &7773063793799314151
 GameObject:
   m_ObjectHideFlags: 0
@@ -4864,6 +4957,7 @@ Transform:
   - {fileID: 7411713793856201450}
   - {fileID: 473263972156862217}
   - {fileID: 8462602350738547360}
+  - {fileID: 8358101486431240047}
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -4884,6 +4978,8 @@ MonoBehaviour:
   scheduledInputs: []
   firstEnable: 0
   seeSawAnim: {fileID: 8076492646190865917}
+  see: {fileID: 7807565663565079643}
+  saw: {fileID: 803512772772987110}
 --- !u!1 &8090883795202408775
 GameObject:
   m_ObjectHideFlags: 0
