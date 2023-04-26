@@ -88,6 +88,7 @@ namespace HeavenStudio.Games.Scripts_SeeSaw
         {
             currentState = state;
             startBeat = beat;
+            heightLastFrame = 0;
             switch (currentState)
             {
                 case JumpState.StartJump:
