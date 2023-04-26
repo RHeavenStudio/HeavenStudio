@@ -56,6 +56,7 @@ namespace HeavenStudio.Games.Loaders
 
 namespace HeavenStudio.Games
 {
+    using HeavenStudio.Games.Scripts_SpaceSoccer;
     using Scripts_SeeSaw;
     public class SeeSaw : Minigame
     {
@@ -67,6 +68,7 @@ namespace HeavenStudio.Games
         [Header("Properties")]
         bool canPrepare = true;
         bool canStartJump;
+        [SerializeField] SuperCurveObject.Path[] jumpPaths;
 
         private int currentJumpIndex;
 
@@ -86,8 +88,19 @@ namespace HeavenStudio.Games
                     tempEvents.Add(jumpEvents[i]);
                 }
             }
-
             allJumpEvents = tempEvents;
+        }
+
+        new void OnDrawGizmos()
+        {
+            base.OnDrawGizmos();
+            foreach (SuperCurveObject.Path path in jumpPaths)
+            {
+                if (path.preview)
+                {
+                    see.DrawEditorGizmo(path);
+                }
+            }
         }
 
         private void Update()
@@ -107,7 +120,12 @@ namespace HeavenStudio.Games
                             {
                                 if (canPrepare && cond.songPositionInBeats < allJumpEvents[currentJumpIndex].beat)
                                 {
-                                    Jukebox.PlayOneShotGame("seeSaw/prepareHigh", allJumpEvents[currentJumpIndex].beat - ((allJumpEvents[currentJumpIndex].datamodel == "seeSaw/shortLong" || allJumpEvents[currentJumpIndex].datamodel == "seeSaw/shortShort") ? 1 : 2));
+                                    float beatToJump = allJumpEvents[currentJumpIndex].beat - ((allJumpEvents[currentJumpIndex].datamodel == "seeSaw/shortLong" || allJumpEvents[currentJumpIndex].datamodel == "seeSaw/shortShort") ? 1 : 2);
+                                    Jukebox.PlayOneShotGame("seeSaw/prepareHigh", beatToJump);
+                                    BeatAction.New(instance.gameObject, new List<BeatAction.Action>()
+                                    {
+                                        new BeatAction.Action(beatToJump, delegate { see.SetState(SeeSawGuy.JumpState.StartJump, beatToJump); })
+                                    });
                                     canPrepare = false;
                                 }
                             }
@@ -136,6 +154,7 @@ namespace HeavenStudio.Games
             seeSawAnim.DoScaledAnimationAsync("Good", 0.5f);
             if (high)
             {
+                see.Land(true, SeeSawGuy.LandType.Big);
                 MultiSound.Play(new MultiSound.Sound[]
                 {
                     new MultiSound.Sound("seeSaw/otherHighJump", beat),
@@ -146,6 +165,7 @@ namespace HeavenStudio.Games
             }
             else
             {
+                see.Land(true, SeeSawGuy.LandType.Normal);
                 MultiSound.Play(new MultiSound.Sound[]
                 {
                     new MultiSound.Sound("seeSaw/otherLongJump", beat),
@@ -191,6 +211,7 @@ namespace HeavenStudio.Games
             seeSawAnim.DoScaledAnimationAsync("Good", 0.5f);
             if (high)
             {
+                see.Land(true, SeeSawGuy.LandType.Big);
                 MultiSound.Play(new MultiSound.Sound[]
                 {
                     new MultiSound.Sound("seeSaw/otherHighJump", beat),
@@ -201,6 +222,7 @@ namespace HeavenStudio.Games
             }
             else
             {
+                see.Land(true, SeeSawGuy.LandType.Normal);
                 MultiSound.Play(new MultiSound.Sound[]
                 {
                     new MultiSound.Sound("seeSaw/otherLongJump", beat),
@@ -245,6 +267,7 @@ namespace HeavenStudio.Games
             seeSawAnim.DoScaledAnimationAsync("Good", 0.5f);
             if (high)
             {
+                see.Land(false, SeeSawGuy.LandType.Big);
                 MultiSound.Play(new MultiSound.Sound[]
                 {
                     new MultiSound.Sound("seeSaw/otherHighJump", beat),
@@ -255,6 +278,7 @@ namespace HeavenStudio.Games
             }
             else
             {
+                see.Land(false, SeeSawGuy.LandType.Normal);
                 MultiSound.Play(new MultiSound.Sound[]
                 {
                     new MultiSound.Sound("seeSaw/otherShortJump", beat),
@@ -299,6 +323,7 @@ namespace HeavenStudio.Games
             seeSawAnim.DoScaledAnimationAsync("Good", 0.5f);
             if (high)
             {
+                see.Land(false, SeeSawGuy.LandType.Big);
                 MultiSound.Play(new MultiSound.Sound[]
                 {
                     new MultiSound.Sound("seeSaw/otherHighJump", beat),
@@ -309,6 +334,7 @@ namespace HeavenStudio.Games
             }
             else
             {
+                see.Land(false, SeeSawGuy.LandType.Normal);
                 MultiSound.Play(new MultiSound.Sound[]
                 {
                     new MultiSound.Sound("seeSaw/otherShortJump", beat),
@@ -335,6 +361,18 @@ namespace HeavenStudio.Games
             }
         }
 
+        public SuperCurveObject.Path GetPath(string name)
+        {
+            foreach (SuperCurveObject.Path path in jumpPaths)
+            {
+                if (path.name == name)
+                {
+                    return path;
+                }
+            }
+            return default(SuperCurveObject.Path);
+        }
+
         public void JustLong(PlayerActionEvent caller, float state)
         {
             seeSawAnim.transform.localScale = new Vector3(1, 1, 1);
@@ -342,9 +380,11 @@ namespace HeavenStudio.Games
             {
                 seeSawAnim.DoScaledAnimationAsync("Bad", 0.5f);
                 Jukebox.PlayOneShotGame("seeSaw/ow");
+                saw.Land(true, SeeSawGuy.LandType.Barely);
                 return;
             }
             seeSawAnim.DoScaledAnimationAsync("Good", 0.5f);
+            saw.Land(true, SeeSawGuy.LandType.Normal);
             if (currentJumpIndex >= 0 && currentJumpIndex != allJumpEvents.Count 
                 && allJumpEvents[currentJumpIndex].beat == allJumpEvents[currentJumpIndex - 1].beat + allJumpEvents[currentJumpIndex - 1].length 
                 && allJumpEvents[currentJumpIndex]["high"])
@@ -367,10 +407,12 @@ namespace HeavenStudio.Games
             {
                 seeSawAnim.DoScaledAnimationAsync("Bad", 0.5f);
                 Jukebox.PlayOneShotGame("seeSaw/ow");
+                saw.Land(true, SeeSawGuy.LandType.Barely);
                 return;
             }
             seeSawAnim.DoScaledAnimationAsync("Good", 0.5f);
             Jukebox.PlayOneShotGame("seeSaw/explosionBlack");
+            saw.Land(true, SeeSawGuy.LandType.Big);
             if (currentJumpIndex >= 0 && currentJumpIndex != allJumpEvents.Count
                 && allJumpEvents[currentJumpIndex].beat == allJumpEvents[currentJumpIndex - 1].beat + allJumpEvents[currentJumpIndex - 1].length
                 && allJumpEvents[currentJumpIndex]["high"])
@@ -391,6 +433,7 @@ namespace HeavenStudio.Games
             seeSawAnim.transform.localScale = new Vector3(1, 1, 1);
             seeSawAnim.DoScaledAnimationAsync("Bad", 0.5f);
             Jukebox.PlayOneShotGame("seeSaw/miss");
+            saw.Land(true, SeeSawGuy.LandType.Miss);
         }
 
         public void JustShort(PlayerActionEvent caller, float state)
@@ -400,9 +443,11 @@ namespace HeavenStudio.Games
             {
                 seeSawAnim.DoScaledAnimationAsync("Bad", 0.5f);
                 Jukebox.PlayOneShotGame("seeSaw/ow");
+                saw.Land(false, SeeSawGuy.LandType.Barely);
                 return;
             }
             seeSawAnim.DoScaledAnimationAsync("Good", 0.5f);
+            saw.Land(false, SeeSawGuy.LandType.Normal);
             if (currentJumpIndex >= 0 && currentJumpIndex != allJumpEvents.Count
                 && allJumpEvents[currentJumpIndex].beat == allJumpEvents[currentJumpIndex - 1].beat + allJumpEvents[currentJumpIndex - 1].length
                 && allJumpEvents[currentJumpIndex]["high"])
@@ -425,10 +470,12 @@ namespace HeavenStudio.Games
             {
                 seeSawAnim.DoScaledAnimationAsync("Bad", 0.5f);
                 Jukebox.PlayOneShotGame("seeSaw/ow");
+                saw.Land(false, SeeSawGuy.LandType.Barely);
                 return;
             }
             seeSawAnim.DoScaledAnimationAsync("Good", 0.5f);
             Jukebox.PlayOneShotGame("seeSaw/explosionWhite");
+            saw.Land(false, SeeSawGuy.LandType.Big);
             if (currentJumpIndex >= 0 && currentJumpIndex != allJumpEvents.Count
                 && allJumpEvents[currentJumpIndex].beat == allJumpEvents[currentJumpIndex - 1].beat + allJumpEvents[currentJumpIndex - 1].length
                 && allJumpEvents[currentJumpIndex]["high"])
@@ -449,6 +496,7 @@ namespace HeavenStudio.Games
             seeSawAnim.transform.localScale = new Vector3(1, 1, 1);
             seeSawAnim.DoScaledAnimationAsync("Bad", 0.5f);
             Jukebox.PlayOneShotGame("seeSaw/miss");
+            saw.Land(false, SeeSawGuy.LandType.Miss);
         }
 
         public void Empty(PlayerActionEvent caller) { }
