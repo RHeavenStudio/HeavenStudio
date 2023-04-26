@@ -387,7 +387,7 @@ namespace HeavenStudio.Games
             else if (currentJumpIndex >= 0
                 && (allJumpEvents[currentJumpIndex - 1].datamodel == "seeSaw/longShort" || allJumpEvents[currentJumpIndex - 1].datamodel == "seeSaw/shortShort"))
             {
-                
+                see.SetState(SeeSawGuy.JumpState.InIn, beat);
             }
         }
 
@@ -401,7 +401,7 @@ namespace HeavenStudio.Games
             else if (currentJumpIndex >= 0
                 && (allJumpEvents[currentJumpIndex - 1].datamodel == "seeSaw/shortLong" || allJumpEvents[currentJumpIndex - 1].datamodel == "seeSaw/shortShort"))
             {
-
+                saw.SetState(SeeSawGuy.JumpState.InIn, beat);
             }
         }
 
