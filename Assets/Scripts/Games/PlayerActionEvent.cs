@@ -32,6 +32,8 @@ namespace HeavenStudio.Games
         public bool canHit  = true; //Indicates if you can still hit the cue or not. If set to false, it'll guarantee a miss
         public bool enabled = true; //Indicates if the PlayerActionEvent is enabled. If set to false, it'll not trigger any events and destroy itself AFTER it's not relevant anymore
         public bool triggersAutoplay = true;
+        bool lockedByEvent = false;
+        bool markForDeletion = false;
 
         public bool autoplayOnly = false; //Indicates if the input event only triggers when it's autoplay. If set to true, NO Miss or Blank events will be triggered when you're not autoplaying.
 
@@ -103,12 +105,15 @@ namespace HeavenStudio.Games
             //BUGFIX: ActionEvents destroyed too early
             if (normalizedTime > Minigame.EndTime()) Miss();
 
-            if (!CheckEventLock())
+            if (lockedByEvent)
             {
-                Debug.Log($"Another event is closer to song position than this one @ {this.startBeat + this.timer}, skipping...");
                 return;
             }
-
+            if (!CheckEventLock())
+            {
+                return;
+            }
+            
             if (!autoplayOnly && IsCorrectInput())
             {
                 if (IsExpectingInputNow())
@@ -123,9 +128,18 @@ namespace HeavenStudio.Games
             }
         }
 
+        public void LateUpdate() {
+            if (markForDeletion) {
+                Destroy(this.gameObject);
+            }
+            foreach (PlayerActionEvent evt in allEvents)
+            {
+                evt.lockedByEvent = false;
+            }
+        }
+
         private bool CheckEventLock()
         {
-            Debug.Log($"{Conductor.instance.songPositionInBeatsAsDouble} Checking event lock for input at {this.startBeat + this.timer}");
             foreach(PlayerActionEvent toCompare in allEvents)
             {
                 if (toCompare == this) continue;
@@ -139,8 +153,10 @@ namespace HeavenStudio.Games
 
                 // compare distance between current time and the events
                 // events that happen at the exact same time with the exact same inputs will return true
-                Debug.Log($"Potential overlapping timing windows found: {t1} vs {t2}, distances {Math.Abs(t1 - songPos)} and {Math.Abs(t2 - songPos)}");
-                if (Math.Abs(t1 - songPos) > Math.Abs(t2 - songPos)) return false;
+                if (Math.Abs(t1 - songPos) > Math.Abs(t2 - songPos)) 
+                    return false;
+                else if (t1 != t2)  // if they are the same time, we don't want to lock the event
+                    toCompare.lockedByEvent = true;
             }
             return true;
         }
@@ -303,7 +319,7 @@ namespace HeavenStudio.Games
         {
             allEvents.Remove(this);
             OnDestroy(this);
-            Destroy(this.gameObject);
+            markForDeletion = true;
         }
     }
 }

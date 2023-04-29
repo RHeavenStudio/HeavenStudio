@@ -267,7 +267,6 @@ namespace HeavenStudio.Games
             foreach (var evt in scheduledInputs)
             {
                 evt.Disable();
-                evt.CleanUp();
             }
         }
 
