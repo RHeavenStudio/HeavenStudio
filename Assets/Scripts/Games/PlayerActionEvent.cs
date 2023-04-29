@@ -11,7 +11,7 @@ using HeavenStudio.Common;
 namespace HeavenStudio.Games
 {
 
-    public class PlayerActionEvent : PlayerActionObject
+    public class PlayerActionEvent : MonoBehaviour
     {
         public static bool EnableAutoplayCheat = true;
         public delegate void ActionEventCallback(PlayerActionEvent caller);
@@ -26,8 +26,10 @@ namespace HeavenStudio.Games
         public float startBeat;
         public float timer;
 
+        public bool isEligible = true;
         public bool canHit  = true; //Indicates if you can still hit the cue or not. If set to false, it'll guarantee a miss
         public bool enabled = true; //Indicates if the PlayerActionEvent is enabled. If set to false, it'll not trigger any events and destroy itself AFTER it's not relevant anymore
+        public bool triggersAutoplay = true;
 
         public bool autoplayOnly = false; //Indicates if the input event only triggers when it's autoplay. If set to true, NO Miss or Blank events will be triggered when you're not autoplaying.
 
@@ -57,7 +59,6 @@ namespace HeavenStudio.Games
             this.canHit = canHit;
         }
 
-
         public void Update()
         {
             if(!Conductor.instance.NotStopped()){CleanUp();} // If the song is stopped entirely in the editor, destroy itself as we don't want duplicates
@@ -67,31 +68,42 @@ namespace HeavenStudio.Games
             if (!enabled) return;
 
             double normalizedTime = GetNormalizedTime();
-            double stateProg = ((normalizedTime - Minigame.PerfectTime()) / (Minigame.LateTime() - Minigame.PerfectTime()) - 0.5f) * 2;
-            StateCheck(normalizedTime);
+            AutoplayInput(normalizedTime);
 
             //BUGFIX: ActionEvents destroyed too early
             if (normalizedTime > Minigame.EndTime()) Miss();
 
-
             if (IsCorrectInput() && !autoplayOnly)
             {
-                if (state.perfect)
+                if (IsExpectingInputNow())
                 {
+                    double stateProg = ((normalizedTime - Minigame.PerfectTime()) / (Minigame.LateTime() - Minigame.PerfectTime()) - 0.5f) * 2;
                     Hit(stateProg, normalizedTime);
-                }
-                else if (state.early && !perfectOnly)
-                {
-                    Hit(-1f, normalizedTime);
-                }
-                else if (state.late && !perfectOnly) 
-                {
-                    Hit(1f, normalizedTime);
                 }
                 else
                 {
                     Blank();
                 }
+            }
+        }
+
+        private void AutoplayInput(double normalizedTime, bool autoPlay = false)
+        {
+            if (triggersAutoplay && (GameManager.instance.autoplay || autoPlay) && GameManager.instance.canInput && normalizedTime >= 1f - (Time.deltaTime*0.5f))
+            {
+                AutoplayEvent();
+                if (!autoPlay)
+                    TimelineAutoplay();
+            }
+        }
+
+        // TODO: move this to timeline code instead
+        private void TimelineAutoplay()
+        {
+            if (Editor.Editor.instance == null) return;
+            if (Editor.Track.Timeline.instance != null && !Editor.Editor.instance.fullscreen)
+            {
+                Editor.Track.Timeline.instance.AutoplayBTN.GetComponent<Animator>().Play("Ace", 0, 0);
             }
         }
 
@@ -104,7 +116,7 @@ namespace HeavenStudio.Games
         double GetNormalizedTime()
         {
             var cond = Conductor.instance;
-            double currTime = cond.GetSongPosFromBeat(cond.songPositionInBeatsAsDouble);
+            double currTime = cond.songPositionAsDouble;
             double targetTime = cond.GetSongPosFromBeat(startBeat + timer);
             double min = targetTime - 1f;
             double max = targetTime + 1f;
@@ -136,9 +148,8 @@ namespace HeavenStudio.Games
                    );
         }
 
-
         //For the Autoplay
-        public override void OnAce()
+        public void AutoplayEvent()
         {
             if (EnableAutoplayCheat)
             {
@@ -162,6 +173,7 @@ namespace HeavenStudio.Games
                     double normalized = time - 1f;
                     int offset = Mathf.CeilToInt((float)normalized * 1000);
                     GameManager.instance.AvgInputOffset = offset;
+                    state = System.Math.Max(-1.0, System.Math.Min(1.0, state));
                     OnHit(this, (float) state);
 
                     CleanUp();
