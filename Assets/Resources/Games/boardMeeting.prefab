@@ -1239,6 +1239,7 @@ MonoBehaviour:
   executives:
   - {fileID: 6299728505360095184}
   firstSpinner: {fileID: 0}
+  shakeIntensity: 0.5
   shouldBop: 1
 --- !u!1 &4694930924533062141
 GameObject:
@@ -2731,7 +2732,7 @@ SpriteRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 10754, guid: 0000000000000000f000000000000000, type: 0}
+  - {fileID: 2100000, guid: b0a1d7d7f9ff2cd429ca4a190e43f870, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0

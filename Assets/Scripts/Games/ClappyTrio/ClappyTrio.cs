@@ -19,12 +19,13 @@ namespace HeavenStudio.Games.Loaders
                 },
                 new GameAction("bop", "Bop")
                 {
-                    function = delegate { var e = eventCaller.currentEntity; ClappyTrio.instance.BopToggle(e.beat, e.length, e["bop"], e["autoBop"]); },
+                    function = delegate { var e = eventCaller.currentEntity; ClappyTrio.instance.BopToggle(e.beat, e.length, e["bop"], e["autoBop"], e["emo"]); },
                     resizable = true,
                     parameters = new List<Param>()
                     {
                         new Param("bop", true, "Bop", "Should the lions bop?"),
-                        new Param("autoBop", false, "Bop (Auto)", "Should the lions auto bop?")
+                        new Param("autoBop", false, "Bop (Auto)", "Should the lions auto bop?"),
+                        new Param("emo", false, "Disable Emotion", "Should the lions just show the neutral face while bopping?")
                     }
                 },
                 new GameAction("prepare", "Prepare Stance")
@@ -37,10 +38,11 @@ namespace HeavenStudio.Games.Loaders
                 },
                 new GameAction("sign", "Sign Enter")
                 {
-                    function = delegate { var e = eventCaller.currentEntity;  ClappyTrio.instance.Sign(e.beat, e.length, e["ease"]); },
+                    function = delegate { var e = eventCaller.currentEntity;  ClappyTrio.instance.Sign(e.beat, e.length, e["ease"], e["down"]); },
                     parameters = new List<Param>()
                     {
                         new Param("ease", EasingFunction.Ease.Linear, "Ease", "Which ease should the sign move with?"),
+                        new Param("down", true, "Down", "Should the sign go down?")
                     },
                     resizable = true
                 },
@@ -86,6 +88,8 @@ namespace HeavenStudio.Games
         public bool playerHitLast = false;
         public bool missed;
         bool shouldBop;
+        bool doEmotion = true;
+        public int emoCounter;
 
         public GameEvent bop = new GameEvent();
 
@@ -93,6 +97,7 @@ namespace HeavenStudio.Games
         float signStartBeat;
         float signLength;
         EasingFunction.Ease lastEase;
+        bool signGoDown;
 
         public static ClappyTrio instance { get; set; }
 
@@ -129,16 +134,18 @@ namespace HeavenStudio.Games
                 {
                     EasingFunction.Function func = EasingFunction.GetEasingFunction(lastEase);
                     float newPos = func(0, 1, normalizedBeat);
-                    signAnim.DoNormalizedAnimation("Enter", newPos);
+                    signAnim.DoNormalizedAnimation(signGoDown ? "Enter" : "Exit", newPos);
                 }
             }
         }
 
-        public void Sign(float beat, float length, int ease)
+        public void Sign(float beat, float length, int ease, bool down)
         {
+            Jukebox.PlayOneShotGame("clappyTrio/sign");
             signStartBeat = beat;
             signLength = length;
             lastEase = (EasingFunction.Ease)ease;
+            signGoDown = down;
         }
 
         private void InitLions()
@@ -204,13 +211,15 @@ namespace HeavenStudio.Games
             Jukebox.PlayOneShotGame("clappyTrio/ready");
         }
 
-        public void BopToggle(float beat, float length, bool startBop, bool autoBop)
+        public void BopToggle(float beat, float length, bool startBop, bool autoBop, bool emo)
         {
+            doEmotion = !emo;
             shouldBop = autoBop;
             if (startBop)
             {
                 for (int i = 0; i < length; i++)
                 {
+                    if (i == 0 && startBop && autoBop) continue;
                     float spawnBeat = beat + i;
                     BeatAction.New(instance.gameObject, new List<BeatAction.Action>()
                     {
@@ -222,32 +231,45 @@ namespace HeavenStudio.Games
 
         public void Bop(float beat)
         {
-            if (playerHitLast)
+            if (doEmotion && emoCounter > 0)
             {
-                for (int i = 0; i < Lion.Count; i++)
-                {
-                    SetFace(i, 1);
-                }
-            } 
-            else if (missed)
-            {
-                var a = EventCaller.GetAllInGameManagerList("clappyTrio", new string[] { "clap" });
-                var b = a.FindAll(c => c.beat < beat);
-
-                if (b.Count > 0)
+                if (playerHitLast)
                 {
                     for (int i = 0; i < Lion.Count; i++)
                     {
-                        if (i == Lion.Count - 1)
+                        SetFace(i, 1);
+                    }
+                }
+                else if (missed)
+                {
+                    var a = EventCaller.GetAllInGameManagerList("clappyTrio", new string[] { "clap" });
+                    var b = a.FindAll(c => c.beat < beat);
+
+                    if (b.Count > 0)
+                    {
+                        for (int i = 0; i < Lion.Count; i++)
                         {
-                            SetFace(i, 0);
-                        } else
-                        {
-                            SetFace(i, 2);
+                            if (i == Lion.Count - 1)
+                            {
+                                SetFace(i, 0);
+                            }
+                            else
+                            {
+                                SetFace(i, 2);
+                            }
                         }
                     }
                 }
+                emoCounter--;
             }
+            else
+            {
+                for (int i = 0; i < Lion.Count; i++)
+                {
+                    SetFace(i, 0);
+                }
+            }
+
             PlayAnimationAll("Bop");
         }
 
