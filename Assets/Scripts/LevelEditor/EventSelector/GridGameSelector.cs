@@ -134,7 +134,7 @@ namespace HeavenStudio.Editor
             currentEventIndex = 0;
             UpdateIndex(0, false);
 
-            Editor.instance.SetGameEventTitle($"Select game event for {gameName.Replace("\n", "")}");
+            Editor.instance?.SetGameEventTitle($"Select game event for {gameName.Replace("\n", "")}");
         }
 
         private void AddEvents()
