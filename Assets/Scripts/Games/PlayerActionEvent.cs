@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -13,6 +14,7 @@ namespace HeavenStudio.Games
 
     public class PlayerActionEvent : MonoBehaviour
     {
+        static List<PlayerActionEvent> allEvents = new List<PlayerActionEvent>();
         public static bool EnableAutoplayCheat = true;
         public delegate void ActionEventCallback(PlayerActionEvent caller);
         public delegate void ActionEventCallbackState(PlayerActionEvent caller, float state);
@@ -54,9 +56,33 @@ namespace HeavenStudio.Games
         public void Enable()  { enabled = true; }
         public void Disable() { enabled = false; }
 
+        public bool IsCorrectInput() =>
+            //General inputs, both down and up
+            (PlayerInput.Pressed() && inputType.HasFlag(InputType.STANDARD_DOWN)) ||
+            (PlayerInput.AltPressed() && inputType.HasFlag(InputType.STANDARD_ALT_DOWN)) ||
+            (PlayerInput.GetAnyDirectionDown() && inputType.HasFlag(InputType.DIRECTION_DOWN)) ||
+            (PlayerInput.PressedUp() && inputType.HasFlag(InputType.STANDARD_UP)) ||
+            (PlayerInput.AltPressedUp() && inputType.HasFlag(InputType.STANDARD_ALT_UP)) ||
+            (PlayerInput.GetAnyDirectionUp() && inputType.HasFlag(InputType.DIRECTION_UP)) ||
+            //Specific directional inputs
+            (PlayerInput.GetSpecificDirectionDown(PlayerInput.DOWN) && inputType.HasFlag(InputType.DIRECTION_DOWN_DOWN)) ||
+            (PlayerInput.GetSpecificDirectionDown(PlayerInput.UP) && inputType.HasFlag(InputType.DIRECTION_UP_DOWN)) ||
+            (PlayerInput.GetSpecificDirectionDown(PlayerInput.LEFT) && inputType.HasFlag(InputType.DIRECTION_LEFT_DOWN)) ||
+            (PlayerInput.GetSpecificDirectionDown(PlayerInput.RIGHT) && inputType.HasFlag(InputType.DIRECTION_RIGHT_DOWN)) ||
+
+            (PlayerInput.GetSpecificDirectionUp(PlayerInput.DOWN) && inputType.HasFlag(InputType.DIRECTION_DOWN_UP)) ||
+            (PlayerInput.GetSpecificDirectionUp(PlayerInput.UP) && inputType.HasFlag(InputType.DIRECTION_UP_UP)) ||
+            (PlayerInput.GetSpecificDirectionUp(PlayerInput.LEFT) && inputType.HasFlag(InputType.DIRECTION_LEFT_UP)) ||
+            (PlayerInput.GetSpecificDirectionUp(PlayerInput.RIGHT) && inputType.HasFlag(InputType.DIRECTION_RIGHT_UP));
+
         public void CanHit(bool canHit)
         {
             this.canHit = canHit;
+        }
+
+        public void Start()
+        {
+            allEvents.Add(this);
         }
 
         public void Update()
@@ -68,12 +94,22 @@ namespace HeavenStudio.Games
             if (!enabled) return;
 
             double normalizedTime = GetNormalizedTime();
-            AutoplayInput(normalizedTime);
+            if (GameManager.instance.autoplay)
+            {
+                AutoplayInput(normalizedTime);
+                return;
+            }
 
             //BUGFIX: ActionEvents destroyed too early
             if (normalizedTime > Minigame.EndTime()) Miss();
 
-            if (IsCorrectInput() && !autoplayOnly)
+            if (!CheckEventLock())
+            {
+                Debug.Log($"Another event is closer to song position than this one @ {this.startBeat + this.timer}, skipping...");
+                return;
+            }
+
+            if (!autoplayOnly && IsCorrectInput())
             {
                 if (IsExpectingInputNow())
                 {
@@ -85,6 +121,28 @@ namespace HeavenStudio.Games
                     Blank();
                 }
             }
+        }
+
+        private bool CheckEventLock()
+        {
+            Debug.Log($"{Conductor.instance.songPositionInBeatsAsDouble} Checking event lock for input at {this.startBeat + this.timer}");
+            foreach(PlayerActionEvent toCompare in allEvents)
+            {
+                if (toCompare == this) continue;
+                if (toCompare.autoplayOnly) continue;
+                if ((toCompare.inputType & this.inputType) == 0) continue;
+                if (!toCompare.IsExpectingInputNow()) continue;
+
+                double t1 = this.startBeat + this.timer;
+                double t2 = toCompare.startBeat + toCompare.timer;
+                double songPos = Conductor.instance.songPositionInBeatsAsDouble;
+
+                // compare distance between current time and the events
+                // events that happen at the exact same time with the exact same inputs will return true
+                Debug.Log($"Potential overlapping timing windows found: {t1} vs {t2}, distances {Math.Abs(t1 - songPos)} and {Math.Abs(t2 - songPos)}");
+                if (Math.Abs(t1 - songPos) > Math.Abs(t2 - songPos)) return false;
+            }
+            return true;
         }
 
         private void AutoplayInput(double normalizedTime, bool autoPlay = false)
@@ -121,31 +179,6 @@ namespace HeavenStudio.Games
             double min = targetTime - 1f;
             double max = targetTime + 1f;
             return 1f + (((currTime - min) / (max - min))-0.5f)*2;
-        }
-
-        public bool IsCorrectInput()
-        {
-            // This one is a mouthful but it's an evil good to detect the correct input
-            // Forgive me for those input type names
-            return (
-                        //General inputs, both down and up
-                        (PlayerInput.Pressed()              && inputType.HasFlag(InputType.STANDARD_DOWN))        ||
-                        (PlayerInput.AltPressed()           && inputType.HasFlag(InputType.STANDARD_ALT_DOWN))    ||
-                        (PlayerInput.GetAnyDirectionDown()  && inputType.HasFlag(InputType.DIRECTION_DOWN))       ||
-                        (PlayerInput.PressedUp()            && inputType.HasFlag(InputType.STANDARD_UP))          ||
-                        (PlayerInput.AltPressedUp()         && inputType.HasFlag(InputType.STANDARD_ALT_UP))      ||
-                        (PlayerInput.GetAnyDirectionUp()    && inputType.HasFlag(InputType.DIRECTION_UP))         ||
-                        //Specific directional inputs
-                        (PlayerInput.GetSpecificDirectionDown(PlayerInput.DOWN)     && inputType.HasFlag(InputType.DIRECTION_DOWN_DOWN))  ||
-                        (PlayerInput.GetSpecificDirectionDown(PlayerInput.UP)       && inputType.HasFlag(InputType.DIRECTION_UP_DOWN))    ||
-                        (PlayerInput.GetSpecificDirectionDown(PlayerInput.LEFT)     && inputType.HasFlag(InputType.DIRECTION_LEFT_DOWN))  ||
-                        (PlayerInput.GetSpecificDirectionDown(PlayerInput.RIGHT)    && inputType.HasFlag(InputType.DIRECTION_RIGHT_DOWN)) ||
-
-                        (PlayerInput.GetSpecificDirectionUp(PlayerInput.DOWN)       && inputType.HasFlag(InputType.DIRECTION_DOWN_UP))    ||
-                        (PlayerInput.GetSpecificDirectionUp(PlayerInput.UP)         && inputType.HasFlag(InputType.DIRECTION_UP_UP))      ||
-                        (PlayerInput.GetSpecificDirectionUp(PlayerInput.LEFT)       && inputType.HasFlag(InputType.DIRECTION_LEFT_UP))    ||
-                        (PlayerInput.GetSpecificDirectionUp(PlayerInput.RIGHT)      && inputType.HasFlag(InputType.DIRECTION_RIGHT_UP))
-                   );
         }
 
         //For the Autoplay
@@ -268,9 +301,9 @@ namespace HeavenStudio.Games
 
         public void CleanUp()
         {
+            allEvents.Remove(this);
             OnDestroy(this);
             Destroy(this.gameObject);
         }
-
     }
 }
