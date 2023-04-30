@@ -186,10 +186,10 @@ namespace HeavenStudio.Games
 
                 if (currentJumpIndex >= allJumpEvents.Count || allJumpEvents[currentJumpIndex].beat != beat + 4)
                 {
-                    Jukebox.PlayOneShotGame("seeSaw/otherLand", beat + 6);
+                    Jukebox.PlayOneShotGame("seeSaw/otherLand", beat + 4);
                     BeatAction.New(instance.gameObject, new List<BeatAction.Action>()
                     {
-                        new BeatAction.Action(beat + 6, delegate { canPrepare = true; canStartJump = true; })
+                        new BeatAction.Action(beat + 4, delegate { see.Land(SeeSawGuy.LandType.Normal); canPrepare = true; canStartJump = true; })
                     });
                 }
             } 
@@ -246,7 +246,7 @@ namespace HeavenStudio.Games
                     Jukebox.PlayOneShotGame("seeSaw/otherLand", beat + 4);
                     BeatAction.New(instance.gameObject, new List<BeatAction.Action>()
                     {
-                        new BeatAction.Action(beat + 4, delegate { canPrepare = true; canStartJump = true; })
+                        new BeatAction.Action(beat + 4, delegate { see.Land(SeeSawGuy.LandType.Normal); canPrepare = true; canStartJump = true; })
                     });
                 }
             }
@@ -300,10 +300,10 @@ namespace HeavenStudio.Games
 
                 if (currentJumpIndex >= allJumpEvents.Count || allJumpEvents[currentJumpIndex].beat != beat + 3)
                 {
-                    Jukebox.PlayOneShotGame("seeSaw/otherLand", beat + 5);
+                    Jukebox.PlayOneShotGame("seeSaw/otherLand", beat + 2);
                     BeatAction.New(instance.gameObject, new List<BeatAction.Action>()
                     {
-                        new BeatAction.Action(beat + 5, delegate { canPrepare = true; canStartJump = true; })
+                        new BeatAction.Action(beat + 2, delegate { see.Land(SeeSawGuy.LandType.Normal); canPrepare = true; canStartJump = true; })
                     });
                 }
             }
@@ -357,10 +357,10 @@ namespace HeavenStudio.Games
 
                 if (currentJumpIndex >= allJumpEvents.Count || allJumpEvents[currentJumpIndex].beat != beat + 2)
                 {
-                    Jukebox.PlayOneShotGame("seeSaw/otherLand", beat + 3);
+                    Jukebox.PlayOneShotGame("seeSaw/otherLand", beat + 2);
                     BeatAction.New(instance.gameObject, new List<BeatAction.Action>()
                     {
-                        new BeatAction.Action(beat + 3, delegate { canPrepare = true; canStartJump = true; })
+                        new BeatAction.Action(beat + 2, delegate { see.Land(SeeSawGuy.LandType.Normal); canPrepare = true; canStartJump = true; })
                     });
                 }
             }
@@ -396,7 +396,14 @@ namespace HeavenStudio.Games
                 }
                 else
                 {
-
+                    if (allJumpEvents[currentJumpIndex - 1].datamodel is "seeSaw/longLong")
+                    {
+                        see.SetState(SeeSawGuy.JumpState.EndJumpOut, beat);
+                    }
+                    else
+                    {
+                        see.SetState(SeeSawGuy.JumpState.EndJumpIn, beat);
+                    }
                 }
 
             }
@@ -416,7 +423,14 @@ namespace HeavenStudio.Games
                 }
                 else
                 {
-
+                    if (allJumpEvents[currentJumpIndex - 1].datamodel is "seeSaw/longShort")
+                    {
+                        see.SetState(SeeSawGuy.JumpState.EndJumpOut, beat);
+                    }
+                    else
+                    {
+                        see.SetState(SeeSawGuy.JumpState.EndJumpIn, beat);
+                    }
                 }
             }
         }

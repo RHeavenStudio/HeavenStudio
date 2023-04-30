@@ -22,7 +22,9 @@ namespace HeavenStudio.Games.Scripts_SeeSaw
             OutOut,
             InIn,
             InOut,
-            OutIn
+            OutIn,
+            EndJumpOut,
+            EndJumpIn
         }
         [SerializeField] bool see;
         Animator anim;
@@ -79,12 +81,28 @@ namespace HeavenStudio.Games.Scripts_SeeSaw
                     case JumpState.InOut:
                         currentPath = game.GetPath(see ? "SeeJumpInOut" : "SawJumpInOut");
                         transform.position = GetPathPositionFromBeat(currentPath, Mathf.Max(startBeat, currentBeat), startBeat);
-                        if (currentBeat >= startBeat + 0.5f) anim.Play("Jump_InOut_Tuck", 0, 0);
+                        if (currentBeat >= startBeat + 0.5f) 
+                        {
+                            anim.Play("Jump_InOut_Tuck", 0, 0);
+                            transform.rotation = Quaternion.Euler(0, 0, (see ? 1 : -1) * Mathf.Lerp(0, 360, cond.GetPositionFromBeat(startBeat + 0.5f, 0.75f)));
+                        } 
                         break;
                     case JumpState.OutIn:
                         currentPath = game.GetPath(see ? "SeeJumpOutIn" : "SawJumpOutIn");
                         transform.position = GetPathPositionFromBeat(currentPath, Mathf.Max(startBeat, currentBeat), startBeat);
-                        if (currentBeat >= startBeat + 1f) anim.Play("Jump_OutIn_Tuck", 0, 0);
+                        if (currentBeat >= startBeat + 1f) 
+                        {
+                            anim.Play("Jump_OutIn_Tuck", 0, 0);
+                            transform.rotation = Quaternion.Euler(0, 0, (see ? -1 : 1) * Mathf.Lerp(0, 360, cond.GetPositionFromBeat(startBeat + 1f, 1f)));
+                        }
+                        break;
+                    case JumpState.EndJumpOut:
+                        currentPath = game.GetPath("SeeEndJumpOut");
+                        transform.position = GetPathPositionFromBeat(currentPath, Mathf.Max(startBeat, currentBeat), startBeat);
+                        break;
+                    case JumpState.EndJumpIn:
+                        currentPath = game.GetPath("SeeEndJumpIn");
+                        transform.position = GetPathPositionFromBeat(currentPath, Mathf.Max(startBeat, currentBeat), startBeat);
                         break;
                 }
             }
@@ -92,6 +110,7 @@ namespace HeavenStudio.Games.Scripts_SeeSaw
 
         public void Land(LandType landType)
         {
+            transform.rotation = Quaternion.Euler(0, 0, 0);
             bool landedOut = false;
             switch (currentState)
             {
@@ -102,6 +121,12 @@ namespace HeavenStudio.Games.Scripts_SeeSaw
                 case JumpState.StartJump:
                     landedOut = true;
                     break;
+                case JumpState.EndJumpOut:
+                case JumpState.EndJumpIn:
+                    anim.Play("NeutralSee", 0, 0);
+                    transform.position = groundTrans.position;
+                    SetState(JumpState.None, 0);
+                    return;
             }
             string landOut = landedOut ? "Out" : "In";
             string typeOfLanding = "";
@@ -136,13 +161,17 @@ namespace HeavenStudio.Games.Scripts_SeeSaw
             {
                 case JumpState.OutOut:
                 case JumpState.StartJump:
-                case JumpState.OutIn:
                     anim.DoScaledAnimationAsync("Jump_OutOut_Start", 0.5f);
                     break;
                 case JumpState.InIn:
                 case JumpState.InOut:
                 case JumpState.StartJumpIn:
                     anim.DoScaledAnimationAsync("Jump_InIn_Start", 0.5f);
+                    break;
+                case JumpState.OutIn:
+                case JumpState.EndJumpOut:
+                case JumpState.EndJumpIn:
+                    anim.DoScaledAnimationAsync("Jump_OutIn_Start", 0.5f);
                     break;
                 default:
                     break;
