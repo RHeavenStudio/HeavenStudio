@@ -252,10 +252,11 @@ namespace HeavenStudio.Games
 
                 if (currentJumpIndex >= allJumpEvents.Count || allJumpEvents[currentJumpIndex].beat != beat + 3)
                 {
-                    Jukebox.PlayOneShotGame("seeSaw/otherLand", beat + 4);
+                    float beatLength = see.ShouldEndJumpOut() ? 4 : 3;
+                    Jukebox.PlayOneShotGame("seeSaw/otherLand", beat + beatLength);
                     BeatAction.New(instance.gameObject, new List<BeatAction.Action>()
                     {
-                        new BeatAction.Action(beat + 4, delegate { see.Land(SeeSawGuy.LandType.Normal); canPrepare = true; canStartJump = true; })
+                        new BeatAction.Action(beat + beatLength, delegate { see.Land(SeeSawGuy.LandType.Normal); canPrepare = true; canStartJump = true; })
                     });
                 }
             }
@@ -309,10 +310,11 @@ namespace HeavenStudio.Games
 
                 if (currentJumpIndex >= allJumpEvents.Count || allJumpEvents[currentJumpIndex].beat != beat + 3)
                 {
-                    Jukebox.PlayOneShotGame("seeSaw/otherLand", beat + 2);
+                    float beatLength = see.ShouldEndJumpOut() ? 3 : 2;
+                    Jukebox.PlayOneShotGame("seeSaw/otherLand", beat + beatLength);
                     BeatAction.New(instance.gameObject, new List<BeatAction.Action>()
                     {
-                        new BeatAction.Action(beat + 2, delegate { see.Land(SeeSawGuy.LandType.Normal); canPrepare = true; canStartJump = true; })
+                        new BeatAction.Action(beat + beatLength, delegate { see.Land(SeeSawGuy.LandType.Normal); canPrepare = true; canStartJump = true; })
                     });
                 }
             }
@@ -405,7 +407,7 @@ namespace HeavenStudio.Games
                 }
                 else
                 {
-                    if (allJumpEvents[currentJumpIndex - 1].datamodel is "seeSaw/longLong")
+                    if (see.ShouldEndJumpOut())
                     {
                         see.SetState(SeeSawGuy.JumpState.EndJumpOut, beat);
                     }
@@ -432,7 +434,7 @@ namespace HeavenStudio.Games
                 }
                 else
                 {
-                    if (allJumpEvents[currentJumpIndex - 1].datamodel is "seeSaw/longShort")
+                    if (see.ShouldEndJumpOut())
                     {
                         see.SetState(SeeSawGuy.JumpState.EndJumpOut, beat);
                     }

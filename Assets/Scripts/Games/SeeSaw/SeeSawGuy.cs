@@ -28,6 +28,7 @@ namespace HeavenStudio.Games.Scripts_SeeSaw
         }
         [SerializeField] bool see;
         public Animator anim;
+        JumpState lastState;
         JumpState currentState;
         Path currentPath;
         SeeSaw game;
@@ -150,10 +151,22 @@ namespace HeavenStudio.Games.Scripts_SeeSaw
             SetState(JumpState.None, 0);
         }
 
-
+        public bool ShouldEndJumpOut()
+        {
+            switch (lastState)
+            {
+                default:
+                    return false;
+                case JumpState.InOut:
+                case JumpState.OutOut:
+                case JumpState.StartJump:
+                    return true;
+            }
+        }
 
         public void SetState(JumpState state, float beat)
         {
+            lastState = currentState;
             currentState = state;
             startBeat = beat;
             heightLastFrame = 0;
