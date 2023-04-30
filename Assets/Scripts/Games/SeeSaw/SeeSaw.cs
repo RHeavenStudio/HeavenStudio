@@ -392,7 +392,7 @@ namespace HeavenStudio.Games
             return default(SuperCurveObject.Path);
         }
 
-        void DetermineSeeJump(float beat, bool miss = false)
+        void DetermineSeeJump(float beat, bool miss = false, bool high = false, float height = 0)
         {
             if (currentJumpIndex >= 0
                 && (allJumpEvents[currentJumpIndex - 1].datamodel == "seeSaw/longLong" || allJumpEvents[currentJumpIndex - 1].datamodel == "seeSaw/shortLong"))
@@ -401,11 +401,11 @@ namespace HeavenStudio.Games
                 {
                     if (allJumpEvents[currentJumpIndex].datamodel is "seeSaw/longLong" or "seeSaw/shortLong")
                     {
-                        see.SetState(SeeSawGuy.JumpState.OutOut, beat, miss);
+                        see.SetState(high ? SeeSawGuy.JumpState.HighOutOut : SeeSawGuy.JumpState.OutOut, beat, miss, height);
                     }
                     else if (allJumpEvents[currentJumpIndex].datamodel is "seeSaw/longShort" or "seeSaw/shortShort")
                     {
-                        see.SetState(SeeSawGuy.JumpState.OutIn, beat, miss);
+                        see.SetState(high ? SeeSawGuy.JumpState.HighOutIn : SeeSawGuy.JumpState.OutIn, beat, miss, height);
                     }
                 }
                 else
@@ -428,11 +428,11 @@ namespace HeavenStudio.Games
                 {
                     if (allJumpEvents[currentJumpIndex].datamodel is "seeSaw/longLong" or "seeSaw/shortLong")
                     {
-                        see.SetState(SeeSawGuy.JumpState.InOut, beat, miss);
+                        see.SetState(high ? SeeSawGuy.JumpState.HighInOut : SeeSawGuy.JumpState.InOut, beat, miss, height);
                     }
                     else if (allJumpEvents[currentJumpIndex].datamodel is "seeSaw/longShort" or "seeSaw/shortShort")
                     {
-                        see.SetState(SeeSawGuy.JumpState.InIn, beat, miss);
+                        see.SetState(high ? SeeSawGuy.JumpState.HighInIn : SeeSawGuy.JumpState.InIn, beat, miss, height);
                     }
                 }
                 else
@@ -534,10 +534,10 @@ namespace HeavenStudio.Games
                 seeSawAnim.DoScaledAnimationAsync("Bad", 0.5f);
                 Jukebox.PlayOneShotGame("seeSaw/ow");
                 saw.Land(SeeSawGuy.LandType.Barely, true);
-                DetermineSeeJump(caller.timer + caller.startBeat, true);
+                DetermineSeeJump(caller.timer + caller.startBeat, true, true, allJumpEvents[currentJumpIndex - 1]["height"]);
                 return;
             }
-            DetermineSeeJump(caller.timer + caller.startBeat);
+            DetermineSeeJump(caller.timer + caller.startBeat, false, true, allJumpEvents[currentJumpIndex - 1]["height"]);
             seeSawAnim.DoScaledAnimationAsync("Good", 0.5f);
             Jukebox.PlayOneShotGame("seeSaw/explosionBlack");
             saw.Land(SeeSawGuy.LandType.Big, true);
@@ -562,7 +562,7 @@ namespace HeavenStudio.Games
             seeSawAnim.DoScaledAnimationAsync("Bad", 0.5f);
             Jukebox.PlayOneShotGame("seeSaw/miss");
             saw.Land(SeeSawGuy.LandType.Miss, true);
-            DetermineSeeJump(caller.timer + caller.startBeat, true);
+            DetermineSeeJump(caller.timer + caller.startBeat, true, allJumpEvents[currentJumpIndex - 1]["high"], allJumpEvents[currentJumpIndex - 1]["height"]);
         }
 
         public void JustShort(PlayerActionEvent caller, float state)
@@ -602,10 +602,10 @@ namespace HeavenStudio.Games
                 seeSawAnim.DoScaledAnimationAsync("Bad", 0.5f);
                 Jukebox.PlayOneShotGame("seeSaw/ow");
                 saw.Land(SeeSawGuy.LandType.Barely, false);
-                DetermineSeeJump(caller.timer + caller.startBeat, true);
+                DetermineSeeJump(caller.timer + caller.startBeat, true, true, allJumpEvents[currentJumpIndex - 1]["height"]);
                 return;
             }
-            DetermineSeeJump(caller.timer + caller.startBeat);
+            DetermineSeeJump(caller.timer + caller.startBeat, false, true, allJumpEvents[currentJumpIndex - 1]["height"]);
             seeSawAnim.DoScaledAnimationAsync("Good", 0.5f);
             Jukebox.PlayOneShotGame("seeSaw/explosionWhite");
             saw.Land(SeeSawGuy.LandType.Big, false);
@@ -630,7 +630,7 @@ namespace HeavenStudio.Games
             seeSawAnim.DoScaledAnimationAsync("Bad", 0.5f);
             Jukebox.PlayOneShotGame("seeSaw/miss");
             saw.Land(SeeSawGuy.LandType.Miss, false);
-            DetermineSeeJump(caller.timer + caller.startBeat, true);
+            DetermineSeeJump(caller.timer + caller.startBeat, true, allJumpEvents[currentJumpIndex - 1]["high"], allJumpEvents[currentJumpIndex - 1]["height"]);
         }
 
         public void Empty(PlayerActionEvent caller) { }
