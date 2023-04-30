@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using HeavenStudio.Util;
+using System.Resources;
 
 namespace HeavenStudio.Games.Scripts_SeeSaw
 {
@@ -164,7 +165,7 @@ namespace HeavenStudio.Games.Scripts_SeeSaw
             }
         }
 
-        public void SetState(JumpState state, float beat)
+        public void SetState(JumpState state, float beat, bool miss = false)
         {
             lastState = currentState;
             currentState = state;
@@ -174,17 +175,17 @@ namespace HeavenStudio.Games.Scripts_SeeSaw
             {
                 case JumpState.OutOut:
                 case JumpState.StartJump:
-                    anim.DoScaledAnimationAsync("Jump_OutOut_Start", 0.5f);
+                    anim.DoScaledAnimationAsync(miss ? "BadOut_SeeReact" : "Jump_OutOut_Start", 0.5f);
                     break;
                 case JumpState.InIn:
                 case JumpState.InOut:
                 case JumpState.StartJumpIn:
-                    anim.DoScaledAnimationAsync("Jump_InIn_Start", 0.5f);
+                    anim.DoScaledAnimationAsync(miss ? "BadIn_SeeReact" : "Jump_InIn_Start", 0.5f);
                     break;
                 case JumpState.OutIn:
                 case JumpState.EndJumpOut:
                 case JumpState.EndJumpIn:
-                    anim.DoScaledAnimationAsync("Jump_OutIn_Start", 0.5f);
+                    anim.DoScaledAnimationAsync(miss ? "BadOut_SeeReact" : "Jump_OutIn_Start", 0.5f);
                     break;
                 default:
                     break;
