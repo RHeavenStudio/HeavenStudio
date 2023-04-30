@@ -4321,6 +4321,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   offset: {x: 0, y: 0, z: 0}
   see: 0
+  anim: {fileID: 0}
   landOutTrans: {fileID: 2459174272852480971}
   landInTrans: {fileID: 100253302601816244}
   groundTrans: {fileID: 0}
@@ -5309,6 +5310,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   offset: {x: 0, y: 0, z: 0}
   see: 1
+  anim: {fileID: 0}
   landOutTrans: {fileID: 306947710665962224}
   landInTrans: {fileID: 6011569602460589798}
   groundTrans: {fileID: 1721751377086680254}
@@ -5581,6 +5583,168 @@ MonoBehaviour:
     - tag: 
       pos: {x: 0, y: 0, z: 0}
       target: {fileID: 1721751377086680254}
+      height: 0
+      duration: 0
+      useLastRealPos: 0
+      values: []
+  - name: SeeHighOutOut
+    preview: 1
+    anchor: {fileID: 0}
+    positions:
+    - tag: 
+      pos: {x: 0, y: 0, z: 0}
+      target: {fileID: 5814580628084509739}
+      height: 12
+      duration: 2
+      useLastRealPos: 0
+      values: []
+    - tag: 
+      pos: {x: 0, y: 0, z: 0}
+      target: {fileID: 306947710665962224}
+      height: 0
+      duration: 0
+      useLastRealPos: 0
+      values: []
+  - name: SawHighOutOut
+    preview: 1
+    anchor: {fileID: 0}
+    positions:
+    - tag: 
+      pos: {x: 0, y: 0, z: 0}
+      target: {fileID: 828498844899226993}
+      height: 12
+      duration: 2
+      useLastRealPos: 0
+      values: []
+    - tag: 
+      pos: {x: 0, y: 0, z: 0}
+      target: {fileID: 2459174272852480971}
+      height: 0
+      duration: 0
+      useLastRealPos: 0
+      values: []
+  - name: SeeHighOutIn
+    preview: 1
+    anchor: {fileID: 0}
+    positions:
+    - tag: 
+      pos: {x: 0, y: 0, z: 0}
+      target: {fileID: 5814580628084509739}
+      height: 12
+      duration: 2
+      useLastRealPos: 0
+      values: []
+    - tag: 
+      pos: {x: 0, y: 0, z: 0}
+      target: {fileID: 6011569602460589798}
+      height: 0
+      duration: 0
+      useLastRealPos: 0
+      values: []
+  - name: SawHighOutIn
+    preview: 1
+    anchor: {fileID: 0}
+    positions:
+    - tag: 
+      pos: {x: 0, y: 0, z: 0}
+      target: {fileID: 828498844899226993}
+      height: 12
+      duration: 2
+      useLastRealPos: 0
+      values: []
+    - tag: 
+      pos: {x: 0, y: 0, z: 0}
+      target: {fileID: 100253302601816244}
+      height: 0
+      duration: 0
+      useLastRealPos: 0
+      values: []
+  - name: SeeHighInIn
+    preview: 1
+    anchor: {fileID: 0}
+    positions:
+    - tag: 
+      pos: {x: 0, y: 0, z: 0}
+      target: {fileID: 2516103606488046797}
+      height: 9
+      duration: 1
+      useLastRealPos: 0
+      values: []
+    - tag: 
+      pos: {x: 0, y: 0, z: 0}
+      target: {fileID: 6011569602460589798}
+      height: 0
+      duration: 0
+      useLastRealPos: 0
+      values: []
+  - name: SawHighInIn
+    preview: 1
+    anchor: {fileID: 0}
+    positions:
+    - tag: 
+      pos: {x: 0, y: 0, z: 0}
+      target: {fileID: 3587989175723205474}
+      height: 9
+      duration: 1
+      useLastRealPos: 0
+      values: []
+    - tag: 
+      pos: {x: 0, y: 0, z: 0}
+      target: {fileID: 100253302601816244}
+      height: 0
+      duration: 0
+      useLastRealPos: 0
+      values: []
+  - name: SeeHighInOut
+    preview: 1
+    anchor: {fileID: 0}
+    positions:
+    - tag: 
+      pos: {x: 0, y: 0, z: 0}
+      target: {fileID: 2516103606488046797}
+      height: 9
+      duration: 1
+      useLastRealPos: 0
+      values: []
+    - tag: 
+      pos: {x: 0, y: 0, z: 0}
+      target: {fileID: 306947710665962224}
+      height: 0
+      duration: 0
+      useLastRealPos: 0
+      values: []
+  - name: SawHighInOut
+    preview: 1
+    anchor: {fileID: 0}
+    positions:
+    - tag: 
+      pos: {x: 0, y: 0, z: 0}
+      target: {fileID: 3587989175723205474}
+      height: 9
+      duration: 1
+      useLastRealPos: 0
+      values: []
+    - tag: 
+      pos: {x: 0, y: 0, z: 0}
+      target: {fileID: 2459174272852480971}
+      height: 0
+      duration: 0
+      useLastRealPos: 0
+      values: []
+  - name: Camera
+    preview: 1
+    anchor: {fileID: 0}
+    positions:
+    - tag: 
+      pos: {x: 0, y: 0, z: 0}
+      target: {fileID: 0}
+      height: 12
+      duration: 1
+      useLastRealPos: 0
+      values: []
+    - tag: 
+      pos: {x: 0, y: 0, z: 0}
+      target: {fileID: 0}
       height: 0
       duration: 0
       useLastRealPos: 0
