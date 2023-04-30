@@ -27,14 +27,14 @@ namespace HeavenStudio.Games.Scripts_SeeSaw
             EndJumpIn
         }
         [SerializeField] bool see;
-        Animator anim;
+        public Animator anim;
         JumpState currentState;
         Path currentPath;
         SeeSaw game;
         float startBeat;
         float heightLastFrame;
         [SerializeField] Transform landOutTrans;
-        [SerializeField] Transform landInTrans;
+        public Transform landInTrans;
         [SerializeField] Transform groundTrans;
 
         private void Awake()

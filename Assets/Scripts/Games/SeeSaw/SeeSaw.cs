@@ -91,6 +91,15 @@ namespace HeavenStudio.Games
             allJumpEvents = tempEvents;
         }
 
+        private void Start()
+        {
+            if (allJumpEvents.Count > 0 && allJumpEvents[0].datamodel is "seeSaw/shortLong" or "seeSaw/shortShort")
+            {
+                saw.anim.Play("GetUp_In", 0, 1);
+                saw.transform.position = saw.landInTrans.position;
+            }
+        }
+
         new void OnDrawGizmos()
         {
             base.OnDrawGizmos();
@@ -441,7 +450,7 @@ namespace HeavenStudio.Games
             {
                 if (allJumpEvents[currentJumpIndex - 1].datamodel is "seeSaw/longShort" or "seeSaw/longLong")
                 {
-                    if (NextJumpEventIsOnBeat())
+                    if (currentJumpIndex < allJumpEvents.Count)
                     {
                         if (allJumpEvents[currentJumpIndex].datamodel is "seeSaw/longShort" or "seeSaw/longLong")
                         {
@@ -459,7 +468,7 @@ namespace HeavenStudio.Games
                 }
                 else
                 {
-                    if (NextJumpEventIsOnBeat())
+                    if (currentJumpIndex < allJumpEvents.Count)
                     {
                         if (allJumpEvents[currentJumpIndex].datamodel is "seeSaw/longShort" or "seeSaw/longLong")
                         {
