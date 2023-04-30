@@ -18,8 +18,11 @@ namespace HeavenStudio.Games.Scripts_SeeSaw
         {
             None,
             StartJump,
+            StartJumpIn,
             OutOut,
-            InIn
+            InIn,
+            InOut,
+            OutIn
         }
         [SerializeField] bool see;
         Animator anim;
@@ -30,6 +33,7 @@ namespace HeavenStudio.Games.Scripts_SeeSaw
         float heightLastFrame;
         [SerializeField] Transform landOutTrans;
         [SerializeField] Transform landInTrans;
+        [SerializeField] Transform groundTrans;
 
         private void Awake()
         {
@@ -56,22 +60,49 @@ namespace HeavenStudio.Games.Scripts_SeeSaw
                         if (height < heightLastFrame) anim.Play("Jump_OutOut_Fall", 0, 0);
                         heightLastFrame = height;
                         break;
+                    case JumpState.StartJumpIn:
+                        currentPath = game.GetPath("SeeStartJumpIn");
+                        transform.position = GetPathPositionFromBeat(currentPath, Mathf.Max(startBeat, currentBeat), out float heightIn, startBeat);
+                        if (heightIn < heightLastFrame) anim.Play("Jump_InIn_Fall", 0, 0);
+                        heightLastFrame = heightIn;
+                        break;
                     case JumpState.OutOut:
                         currentPath = game.GetPath(see ? "SeeJumpOutOut" : "SawJumpOutOut");
                         transform.position = GetPathPositionFromBeat(currentPath, Mathf.Max(startBeat, currentBeat), startBeat);
-                        if (currentBeat > startBeat + 1) anim.Play("Jump_OutOut_Fall", 0, 0);
+                        if (currentBeat >= startBeat + 1) anim.Play("Jump_OutOut_Fall", 0, 0);
                         break;
                     case JumpState.InIn:
                         currentPath = game.GetPath(see ? "SeeJumpInIn" : "SawJumpInIn");
                         transform.position = GetPathPositionFromBeat(currentPath, Mathf.Max(startBeat, currentBeat), startBeat);
-                        if (currentBeat > startBeat + 0.5f) anim.Play("Jump_InIn_Fall", 0, 0);
+                        if (currentBeat >= startBeat + 0.5f) anim.Play("Jump_InIn_Fall", 0, 0);
+                        break;
+                    case JumpState.InOut:
+                        currentPath = game.GetPath(see ? "SeeJumpInOut" : "SawJumpInOut");
+                        transform.position = GetPathPositionFromBeat(currentPath, Mathf.Max(startBeat, currentBeat), startBeat);
+                        if (currentBeat >= startBeat + 0.5f) anim.Play("Jump_InOut_Tuck", 0, 0);
+                        break;
+                    case JumpState.OutIn:
+                        currentPath = game.GetPath(see ? "SeeJumpOutIn" : "SawJumpOutIn");
+                        transform.position = GetPathPositionFromBeat(currentPath, Mathf.Max(startBeat, currentBeat), startBeat);
+                        if (currentBeat >= startBeat + 1f) anim.Play("Jump_OutIn_Tuck", 0, 0);
                         break;
                 }
             }
         }
 
-        public void Land(bool landedOut, LandType landType)
+        public void Land(LandType landType)
         {
+            bool landedOut = false;
+            switch (currentState)
+            {
+                default:
+                    break;
+                case JumpState.InOut:
+                case JumpState.OutOut:
+                case JumpState.StartJump:
+                    landedOut = true;
+                    break;
+            }
             string landOut = landedOut ? "Out" : "In";
             string typeOfLanding = "";
             switch (landType)
@@ -105,9 +136,12 @@ namespace HeavenStudio.Games.Scripts_SeeSaw
             {
                 case JumpState.OutOut:
                 case JumpState.StartJump:
+                case JumpState.OutIn:
                     anim.DoScaledAnimationAsync("Jump_OutOut_Start", 0.5f);
                     break;
                 case JumpState.InIn:
+                case JumpState.InOut:
+                case JumpState.StartJumpIn:
                     anim.DoScaledAnimationAsync("Jump_InIn_Start", 0.5f);
                     break;
                 default:

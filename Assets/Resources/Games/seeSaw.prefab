@@ -559,7 +559,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 669646458348794250}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -4.01, y: -0.78, z: 0}
+  m_LocalPosition: {x: -4.01, y: -0.816, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -4323,6 +4323,7 @@ MonoBehaviour:
   see: 0
   landOutTrans: {fileID: 2459174272852480971}
   landInTrans: {fileID: 100253302601816244}
+  groundTrans: {fileID: 0}
 --- !u!1 &6398968561459874746
 GameObject:
   m_ObjectHideFlags: 0
@@ -5310,6 +5311,7 @@ MonoBehaviour:
   see: 1
   landOutTrans: {fileID: 306947710665962224}
   landInTrans: {fileID: 6011569602460589798}
+  groundTrans: {fileID: 1721751377086680254}
 --- !u!1 &7773063793799314151
 GameObject:
   m_ObjectHideFlags: 0
@@ -5448,6 +5450,96 @@ MonoBehaviour:
       target: {fileID: 3587989175723205474}
       height: 5
       duration: 1.25
+      useLastRealPos: 0
+      values: []
+    - tag: 
+      pos: {x: 0, y: 0, z: 0}
+      target: {fileID: 100253302601816244}
+      height: 0
+      duration: 0
+      useLastRealPos: 0
+      values: []
+  - name: SeeJumpInOut
+    preview: 1
+    anchor: {fileID: 0}
+    positions:
+    - tag: 
+      pos: {x: 0, y: 0, z: 0}
+      target: {fileID: 6011569602460589798}
+      height: 5.5
+      duration: 1.25
+      useLastRealPos: 0
+      values: []
+    - tag: 
+      pos: {x: 0, y: 0, z: 0}
+      target: {fileID: 306947710665962224}
+      height: 0
+      duration: 0
+      useLastRealPos: 0
+      values: []
+  - name: SawJumpInOut
+    preview: 1
+    anchor: {fileID: 0}
+    positions:
+    - tag: 
+      pos: {x: 0, y: 0, z: 0}
+      target: {fileID: 100253302601816244}
+      height: 5.5
+      duration: 1.25
+      useLastRealPos: 0
+      values: []
+    - tag: 
+      pos: {x: 0, y: 0, z: 0}
+      target: {fileID: 2459174272852480971}
+      height: 0
+      duration: 0
+      useLastRealPos: 0
+      values: []
+  - name: SeeStartJumpIn
+    preview: 1
+    anchor: {fileID: 0}
+    positions:
+    - tag: 
+      pos: {x: 0, y: 0, z: 0}
+      target: {fileID: 1721751377086680254}
+      height: 4
+      duration: 1.25
+      useLastRealPos: 0
+      values: []
+    - tag: 
+      pos: {x: 0, y: 0, z: 0}
+      target: {fileID: 6011569602460589798}
+      height: 0
+      duration: 0
+      useLastRealPos: 0
+      values: []
+  - name: SeeJumpOutIn
+    preview: 1
+    anchor: {fileID: 0}
+    positions:
+    - tag: 
+      pos: {x: 0, y: 0, z: 0}
+      target: {fileID: 306947710665962224}
+      height: 8
+      duration: 2.25
+      useLastRealPos: 0
+      values: []
+    - tag: 
+      pos: {x: 0, y: 0, z: 0}
+      target: {fileID: 6011569602460589798}
+      height: 0
+      duration: 0
+      useLastRealPos: 0
+      values: []
+  - name: SawJumpOutIn
+    preview: 1
+    anchor: {fileID: 0}
+    positions:
+    - tag: 
+      pos: {x: 0, y: 0, z: 0}
+      target: {fileID: 2459174272852480971}
+      height: 8
+      duration: 2.25
       useLastRealPos: 0
       values: []
     - tag: 
