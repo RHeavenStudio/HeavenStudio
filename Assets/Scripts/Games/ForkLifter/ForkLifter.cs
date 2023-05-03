@@ -37,6 +37,28 @@ namespace HeavenStudio.Games.Loaders
 
                     function = delegate { Jukebox.PlayOneShot("games/forkLifter/sigh"); }
                 },
+                new GameAction("color", "Background Color")
+                {
+                    function = delegate { var e = eventCaller.currentEntity; ForkLifter.instance.FadeBackgroundColor(e["start"], e["end"], e.length, e["instant"]); },
+                    parameters = new List<Param>()
+                    {
+                        new Param("start", Color.white, "Start Color", "The color to start fading from."),
+                        new Param("end", Color.white, "End Color", "The color to end the fade."),
+                        new Param("instant", false, "Instant", "If checked, the background color will instantly change to the start color.")
+                    },
+                    resizable = true
+                },
+                new GameAction("colorGrad", "Gradient Color")
+                {
+                    function = delegate { var e = eventCaller.currentEntity; ForkLifter.instance.FadeGradientColor(e["start"], e["end"], e.length, e["instant"]); },
+                    parameters = new List<Param>()
+                    {
+                        new Param("start", Color.white, "Start Color", "The color to start fading from."),
+                        new Param("end", Color.white, "End Color", "The color to end the fade."),
+                        new Param("instant", false, "Instant", "If checked, the gradient color will instantly change to the start color.")
+                    },
+                    resizable = true
+                },
                 // These are still here for backwards-compatibility but are hidden in the editor
                 new GameAction("pea", "")
                 {
@@ -92,6 +114,16 @@ namespace HeavenStudio.Games
         public Animator handAnim;
         public GameObject flickedObject;
         public SpriteRenderer peaPreview;
+        [SerializeField] SpriteRenderer bg;
+        [SerializeField] SpriteRenderer bgGradient;
+        [SerializeField] SpriteRenderer viewerCircle;
+        [SerializeField] SpriteRenderer playerShadow;
+        [SerializeField] SpriteRenderer handShadow;
+        Tween bgColorTween;
+        Tween bgGradientColorTween;
+        Tween viewerCircleColorTween;
+        Tween playerShadowColorTween;
+        Tween handShadowColorTween;
 
         public Sprite[] peaSprites;
         public Sprite[] peaHitSprites;
@@ -111,12 +143,69 @@ namespace HeavenStudio.Games
         {
             Jukebox.PlayOneShotGame("forkLifter/flick");
             handAnim.Play("Hand_Flick", 0, 0);
+            ForkLifterHand.currentFlickIndex++;
             GameObject fo = Instantiate(flickedObject);
             fo.transform.parent = flickedObject.transform.parent;
             Pea pea = fo.GetComponent<Pea>();
             pea.startBeat = beat;
             pea.type = type;
             fo.SetActive(true);
+        }
+
+        public void ChangeBackgroundColor(Color color, float beats)
+        {
+            var seconds = Conductor.instance.secPerBeat * beats;
+
+            if (bgColorTween != null)
+                bgColorTween.Kill(true);
+            if (viewerCircleColorTween != null)
+                viewerCircleColorTween.Kill(true);
+            if (handShadowColorTween != null) handShadowColorTween.Kill(true);
+
+            if (seconds == 0)
+            {
+                bg.color = color;
+                viewerCircle.color = color;
+                handShadow.color = color;
+            }
+            else
+            {
+                bgColorTween = bg.DOColor(color, seconds);
+                handShadowColorTween = handShadow.DOColor(color, seconds);
+                viewerCircleColorTween = viewerCircle.DOColor(color, seconds);
+            }
+        }
+
+        public void FadeBackgroundColor(Color start, Color end, float beats, bool instant)
+        {
+            ChangeBackgroundColor(start, 0f);
+            if (!instant) ChangeBackgroundColor(end, beats);
+        }
+
+        public void ChangeGradientColor(Color color, float beats)
+        {
+            var seconds = Conductor.instance.secPerBeat * beats;
+
+            if (bgGradientColorTween != null)
+                bgGradientColorTween.Kill(true);
+            if (playerShadowColorTween != null) playerShadowColorTween.Kill(true);
+
+            if (seconds == 0)
+            {
+                bgGradient.color = color;
+                playerShadow.color = color;
+            }
+            else
+            {
+                bgGradientColorTween = bgGradient.DOColor(color, seconds);
+                playerShadowColorTween = playerShadow.DOColor(color, seconds);
+            }
+        }
+
+        public void FadeGradientColor(Color start, Color end, float beats, bool instant)
+        {
+            ChangeGradientColor(start, 0f);
+            if (!instant) ChangeGradientColor(end, beats);
         }
     }
 

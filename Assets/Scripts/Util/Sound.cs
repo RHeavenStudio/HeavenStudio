@@ -26,6 +26,7 @@ namespace HeavenStudio.Util
         private double startTime;
 
         public float beat;
+        public float offset;
         public float scheduledPitch = 1f;
 
         bool playInstant = false;
@@ -52,7 +53,7 @@ namespace HeavenStudio.Util
             {
                 playInstant = false;
                 scheduledPitch = cnd.SongPitch;
-                startTime = (AudioSettings.dspTime + (cnd.GetSongPosFromBeat(beat) - cnd.songPositionAsDouble)/(double)scheduledPitch);
+                startTime = (AudioSettings.dspTime + (cnd.GetSongPosFromBeat(beat) - cnd.songPositionAsDouble)/(double)scheduledPitch) - offset;
                 audioSource.PlayScheduled(startTime);
             }
         }
