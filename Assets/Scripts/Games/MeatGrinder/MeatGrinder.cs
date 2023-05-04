@@ -33,21 +33,16 @@ namespace HeavenStudio.Games.Loaders
                     preFunctionLength = 1f,
                     preFunction = delegate {
                         var e = eventCaller.currentEntity; 
-                        MeatGrinder.PreMeatCall(e.beat);
+                        //MeatGrinder.PreInterval(e.beat, MeatGrinder.instance.beatInterval);
                     },
                 },
                 new GameAction("StartInterval", "Start Interval")
                 {
-                    function = delegate {
-                        var e = eventCaller.currentEntity; 
-                        MeatGrinder.instance.StartInterval(e.beat, e.length); 
-                    },
                     defaultLength = 4f,
                     resizable = true,
                     priority = 1,
-                    preFunctionLength = 2f,
                     preFunction = delegate {
-                        var e = eventCaller.currentEntity; 
+                        var e = eventCaller.currentEntity;
                         MeatGrinder.PreInterval(e.beat, e.length);
                     },
                 },
@@ -76,6 +71,13 @@ namespace HeavenStudio.Games
     public class MeatGrinder : Minigame
     {
         static List<float> queuedInputs = new List<float>();
+        static List<QueuedInterval> queuedIntervals = new List<QueuedInterval>();
+        struct QueuedInterval
+        {
+            public float beat;
+            public float length;
+        }
+        static List<float> queuedPassTurns = new List<float>();
 
         [Header("Objects")]
         public GameObject MeatBase;
@@ -87,9 +89,8 @@ namespace HeavenStudio.Games
         [Header("Variables")]
         bool intervalStarted;
         float intervalStartBeat;
-        float beatInterval = 4f;
         bool bossBop = true;
-        bool dontCall = false;
+        public float beatInterval = 4f;
         public bool bossAnnoyed = false;
         private float lastReportedBeat = 0f;
         const string sfxName = "meatGrinder/";
@@ -132,6 +133,16 @@ namespace HeavenStudio.Games
                 if (bossAnnoyed) BossAnim.DoScaledAnimationAsync("Bop", 0.5f);
             }
 
+            if (queuedIntervals.Count > 0) {
+                foreach (var interval in queuedIntervals) { StartInterval(interval.beat, interval.length); }
+                queuedIntervals.Clear();
+            }
+
+            if (queuedPassTurns.Count > 0) {
+                foreach (var beat in queuedPassTurns) { PassTurn(beat); }
+                queuedPassTurns.Clear();
+            }
+
             if (bossAnnoyed) BossAnim.SetBool("bossAnnoyed", true);
         }
 
@@ -167,48 +178,37 @@ namespace HeavenStudio.Games
             }
         }
 
-        public static void PreInterval(float beat, float interval)
+        public static void PreInterval(float beat, float length)
         {
-            if (!MeatGrinder.instance.intervalStarted && !MeatGrinder.instance.dontCall) {
-                MultiSound.Play(new MultiSound.Sound[] { new MultiSound.Sound(sfxName+"startSignal", beat - 1f), }, forcePlay: true);
+            //if (queuedIntervals.Count > 0 || MeatGrinder.instance.intervalStarted) return;
+            
+            MultiSound.Play(new MultiSound.Sound[] {
+                new MultiSound.Sound(sfxName+"startSignal", beat - 1),
+            }, forcePlay: true);
 
-                BeatAction.New(instance.gameObject, new List<BeatAction.Action>() {
-                    new BeatAction.Action(beat - 1, delegate { instance.BossAnim.DoScaledAnimationAsync("BossSignal", 0.5f); }), });
-            }
+            MeatGrinder.queuedIntervals.Add(new QueuedInterval() 
+                { beat = beat, length = length, });
 
-            MeatGrinder.instance.dontCall = true;
-            MeatGrinder.instance.beatInterval = interval;
+            MeatGrinder.instance.beatInterval = length;
+
+            queuedPassTurns.Add(beat + MeatGrinder.instance.beatInterval);
         }
 
-        public void StartInterval(float beat, float interval)
+        public void StartInterval(float beat, float length)
         {
             intervalStartBeat = beat;
-            if (!intervalStarted) { intervalStarted = true; }
-
-            BeatAction.New(gameObject, new List<BeatAction.Action>()
-            {
-                new BeatAction.Action(beat + interval - 1, delegate { PassTurn(beat); }),
-            });
+            intervalStarted = true;
         }
         
         public void MeatToss(float beat)
         {
             Jukebox.PlayOneShotGame(sfxName+"toss");
             
-            MeatToss Meat = Instantiate(MeatBase).GetComponent<MeatToss>();
+            MeatToss Meat = Instantiate(MeatBase, gameObject.transform).GetComponent<MeatToss>();
             Meat.startBeat = beat;
             Meat.cueLength = 1f;
             Meat.cueBased = true;
             Meat.meatType = "DarkMeat";
-        }
-
-        public static void PreMeatCall(float beat)
-        {
-            if (!MeatGrinder.instance.dontCall) {
-                BeatAction.New(instance.gameObject, new List<BeatAction.Action>() {
-                    new BeatAction.Action(beat - 1, delegate { MeatGrinder.PreInterval(beat, instance.beatInterval); }),
-                });
-            }
         }
 
         public void MeatCall(float beat) 
@@ -226,14 +226,13 @@ namespace HeavenStudio.Games
 
         public void PassTurn(float beat)
         {
-            dontCall = false;
             intervalStarted = false;
             foreach (var input in queuedInputs)
             {
                 BeatAction.New(instance.gameObject, new List<BeatAction.Action>()
                 {
                     new BeatAction.Action(input + beat, delegate { 
-                        MeatToss Meat = Instantiate(MeatBase).GetComponent<MeatToss>();
+                        MeatToss Meat = Instantiate(MeatBase, gameObject.transform).GetComponent<MeatToss>();
                         Meat.startBeat = beat;
                         Meat.cueLength = beatInterval + input;
                         Meat.cueBased = false;

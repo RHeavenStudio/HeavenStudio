@@ -13,9 +13,7 @@ namespace HeavenStudio.Games.Scripts_MeatGrinder
         public float cueLength;
         public bool cueBased;
         public string meatType;
-        bool animCheck = false;
-        
-
+        bool animCheck;
 
         [Header("Animators")]
         private Animator anim;
@@ -30,7 +28,7 @@ namespace HeavenStudio.Games.Scripts_MeatGrinder
 
         private void Start() 
         {
-            game.ScheduleInput(startBeat, cueLength, InputType.STANDARD_DOWN, Hit, Miss, Nothing);
+            game.ScheduleInput(startBeat, cueLength, InputType.STANDARD_DOWN | InputType.DIRECTION_DOWN, Hit, Miss, Nothing);
 
             BeatAction.New(gameObject, new List<BeatAction.Action>()
             {
@@ -79,9 +77,6 @@ namespace HeavenStudio.Games.Scripts_MeatGrinder
             game.TackAnim.SetBool("tackMeated", true);
         }
 
-        private void Nothing(PlayerActionEvent caller) 
-        {
-            
-        }
+        private void Nothing(PlayerActionEvent caller) { }
     }
 }

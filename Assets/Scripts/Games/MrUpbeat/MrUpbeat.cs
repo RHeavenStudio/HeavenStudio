@@ -25,7 +25,8 @@ namespace HeavenStudio.Games.Loaders
                 {
                     function = delegate {var e = eventCaller.currentEntity; MrUpbeat.instance.Blipping(e.beat, e.length); },
                     defaultLength = 4f,
-                    resizable = true
+                    resizable = true,
+                    inactiveFunction = delegate {var e = eventCaller.currentEntity; MrUpbeat.InactiveBlipping(e.beat, e.length); },
                 },
                 new GameAction("ding!", "Ding!")
                 {
@@ -133,6 +134,21 @@ namespace HeavenStudio.Games
                 {
                     new BeatAction.Action(beat + i, delegate { man.Blip(); }),
                 });
+            }
+        }
+
+        public static void InactiveBlipping(float beat, float length)
+        {
+            for (int i = 0; i < length + 1; i++) 
+            {
+                if (GameManager.instance.currentGame != "mrUpbeat") {
+                    MultiSound.Play(new MultiSound.Sound[] {
+                        new MultiSound.Sound("mrUpbeat/blip", beat + i),
+                    }, forcePlay: true);
+                } else {
+                    MrUpbeat.instance.Blipping(beat, length);
+                    return;
+                }
             }
         }
 
