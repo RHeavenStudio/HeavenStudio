@@ -139,7 +139,7 @@ namespace HeavenStudio
             /////
             
 
-            if (txt != null && ext != null)
+            if (txt != null && ext != null && txt.Length != 0 && ext.Length != 0)
             {
                 LoadRemix(txt, ext);
             }
