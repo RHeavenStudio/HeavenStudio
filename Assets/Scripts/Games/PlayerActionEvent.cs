@@ -132,6 +132,7 @@ namespace HeavenStudio.Games
 
         public void LateUpdate() {
             if (markForDeletion) {
+                CleanUp();
                 Destroy(this.gameObject);
             }
             foreach (PlayerActionEvent evt in allEvents)
@@ -319,6 +320,7 @@ namespace HeavenStudio.Games
 
         public void CleanUp()
         {
+            if (markForDeletion) return;
             allEvents.Remove(this);
             OnDestroy(this);
             markForDeletion = true;

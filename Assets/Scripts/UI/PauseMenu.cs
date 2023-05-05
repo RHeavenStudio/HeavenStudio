@@ -18,6 +18,9 @@ namespace HeavenStudio.Common
             Quit
         }
 
+        // TODO
+        // MAKE OPTIONS ACCEPT MOUSE INPUT
+
         [SerializeField] float patternSpeed = 1f;
         [SerializeField] SettingsDialog settingsDialog;
         [SerializeField] Animator animator;
