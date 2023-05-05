@@ -98,20 +98,21 @@ namespace HeavenStudio
             currentPreSwitch = 0;
             currentPreSequence = 0;
  
-            this.transform.localScale = new Vector3(30000000, 30000000);
             
-            SpriteRenderer sp = this.gameObject.AddComponent<SpriteRenderer>();
-            sp.enabled = false;
-            sp.color = Color.black;
-            sp.sprite = Resources.Load<Sprite>("Sprites/GeneralPurpose/Square");
-            sp.sortingOrder = 30000;
-            gameObject.layer = LayerMask.NameToLayer("Flash");
+            // NOTE: put this in the camera stuff instead of creating a quad in world space
+                this.transform.localScale = new Vector3(30000000, 30000000);
+                SpriteRenderer sp = this.gameObject.AddComponent<SpriteRenderer>();
+                sp.enabled = false;
+                sp.color = Color.black;
+                sp.sprite = Resources.Load<Sprite>("Sprites/GeneralPurpose/Square");
+                sp.sortingOrder = 30000;
+                gameObject.layer = LayerMask.NameToLayer("Flash");
 
-            GameObject fade = new GameObject("flash");
-            this.fade = fade.AddComponent<Games.Global.Flash>();
-            GameObject filter = new GameObject("filter");
-            this.filter = filter.AddComponent<Games.Global.Filter>();
-
+                GameObject fade = new GameObject("flash");
+                this.fade = fade.AddComponent<Games.Global.Flash>();
+                GameObject filter = new GameObject("filter");
+                this.filter = filter.AddComponent<Games.Global.Filter>();
+            //
 
             GlobalGameManager.Init();
 
