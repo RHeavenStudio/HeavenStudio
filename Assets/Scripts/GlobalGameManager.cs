@@ -15,6 +15,8 @@ namespace HeavenStudio
 
         public static string buildTime = "00/00/0000 00:00:00";
 
+        public static bool discordDuringTesting = false;
+
         public static int loadedScene;
         public int lastLoadedScene;
         public static float fadeDuration;
@@ -233,6 +235,18 @@ namespace HeavenStudio
 
             PersistentDataManager.gameSettings.dspSize = currentDspSize;
             PersistentDataManager.gameSettings.sampleRate = currentSampleRate;
+        }
+
+        public static void UpdateDiscordStatus(string details, bool editor = false, bool updateTime = false)
+        {
+            if (discordDuringTesting || !Application.isEditor)
+            {
+                if (PersistentDataManager.gameSettings.discordRPCEnable)
+                {   
+                    DiscordRPC.DiscordRPC.UpdateActivity(editor ? "In Editor " : "Playing ", details, updateTime);
+                    Debug.Log("Discord status updated");
+                }
+            }
         }
 
         void OnApplicationQuit()

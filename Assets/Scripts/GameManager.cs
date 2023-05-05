@@ -437,22 +437,26 @@ namespace HeavenStudio
 
         public void Play(float beat, float delay = 0f)
         {
+            bool paused = Conductor.instance.isPaused;
             Debug.Log("Playing at " + beat);
             canInput = true;
-            inputOffsetSamples.Clear();
-            averageInputOffset = 0;
+            if (!paused)
+            {
+                inputOffsetSamples.Clear();
+                averageInputOffset = 0;
 
-            totalInputs = 0;
-            totalPlayerAccuracy = 0;
+                totalInputs = 0;
+                totalPlayerAccuracy = 0;
 
-            TimingAccuracyDisplay.instance.ResetArrow();
-            SkillStarManager.instance.Reset();
-            skillStarCollected = false;
+                TimingAccuracyDisplay.instance.ResetArrow();
+                SkillStarManager.instance.Reset();
+                skillStarCollected = false;
 
-            GoForAPerfect.instance.perfect = true;
-            GoForAPerfect.instance.Disable();
+                GoForAPerfect.instance.perfect = true;
+                GoForAPerfect.instance.Disable();
 
-            SectionMedalsManager.instance.Reset();
+                SectionMedalsManager.instance.Reset();
+            }
 
             StartCoroutine(PlayCo(beat, delay));
             onBeatChanged?.Invoke(beat);
@@ -463,17 +467,19 @@ namespace HeavenStudio
             yield return new WaitForSeconds(delay);
             bool paused = Conductor.instance.isPaused;
 
-            Conductor.instance.SetBpm(Beatmap.bpm);
-            Conductor.instance.SetVolume(Beatmap.musicVolume);
-            Conductor.instance.firstBeatOffset = Beatmap.firstBeatOffset;
-
             Conductor.instance.Play(beat);
-            if (!paused)
+            if (paused)
             {
-                SetCurrentEventToClosest(beat);
+                Util.Jukebox.UnpauseOneShots();
             }
-
-            KillAllSounds();
+            else 
+            {
+                Conductor.instance.SetBpm(Beatmap.bpm);
+                Conductor.instance.SetVolume(Beatmap.musicVolume);
+                Conductor.instance.firstBeatOffset = Beatmap.firstBeatOffset;
+                SetCurrentEventToClosest(beat);
+                KillAllSounds();
+            }
 
             Minigame miniGame = currentGameO.GetComponent<Minigame>();
             if (miniGame != null)
@@ -483,7 +489,8 @@ namespace HeavenStudio
         public void Pause()
         {
             Conductor.instance.Pause();
-            KillAllSounds();
+            Util.Jukebox.PauseOneShots();
+            canInput = false;
         }
 
         public void Stop(float beat, bool restart = false, float restartDelay = 0f)
@@ -516,14 +523,17 @@ namespace HeavenStudio
         {
             // wait for overlays to be ready
             yield return new WaitUntil(() => OverlaysManager.OverlaysReady);
-            //TODO: wait for first game to be loaded
+            // wait for first game to be loaded
+            yield return new WaitUntil(() => Beatmap != null && Beatmap.entities.Count > 0);
 
             SkillStarManager.instance.KillStar();
             TimingAccuracyDisplay.instance.StopStarFlash();
             GoForAPerfect.instance.Disable();
             SectionMedalsManager.instance?.OnRemixEnd();
 
-            Play(beat);
+            GlobalGameManager.UpdateDiscordStatus(Beatmap["remixtitle"], false, true);
+
+            Play(beat, 0.5f);
         }
 
         public void KillAllSounds()
