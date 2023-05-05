@@ -220,6 +220,14 @@ namespace HeavenStudio.Games
 
         }
 
+        public virtual void OnStop(float beat)
+        {
+            foreach (var evt in scheduledInputs)
+            {
+                evt.Disable();
+            }
+        }
+
         public int MultipleEventsAtOnce()
         {
             int sameTime = 0;

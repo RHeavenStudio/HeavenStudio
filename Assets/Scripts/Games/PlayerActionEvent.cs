@@ -57,6 +57,7 @@ namespace HeavenStudio.Games
 
         public void Enable()  { enabled = true; }
         public void Disable() { enabled = false; }
+        public void QueueDeletion() { markForDeletion = true; }
 
         public bool IsCorrectInput() =>
             //General inputs, both down and up
@@ -89,10 +90,11 @@ namespace HeavenStudio.Games
 
         public void Update()
         {
-            if(!Conductor.instance.NotStopped()){CleanUp();} // If the song is stopped entirely in the editor, destroy itself as we don't want duplicates
+            if (markForDeletion) CleanUp();
+            if(!Conductor.instance.NotStopped()) CleanUp(); // If the song is stopped entirely in the editor, destroy itself as we don't want duplicates
 
             if (noAutoplay && autoplayOnly) autoplayOnly = false;
-            if (noAutoplay && triggersAutoplay){ triggersAutoplay = false; }
+            if (noAutoplay && triggersAutoplay) triggersAutoplay = false;
             if (!enabled) return;
 
             double normalizedTime = GetNormalizedTime();

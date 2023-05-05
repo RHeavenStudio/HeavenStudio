@@ -11,8 +11,8 @@ namespace HeavenStudio.Editor
 {
     public class CreditsLegalSettings : TabsContent
     {
-        private int SecretCounter = 0;
-        private bool SecretActive = false;
+        private static int SecretCounter = 0;
+        private static bool SecretActive = false;
         [SerializeField] private TextAsset creditsText;
         [SerializeField] private TMP_Text creditsDisplay;
         [SerializeField] private GameObject secretObject;
@@ -41,7 +41,14 @@ namespace HeavenStudio.Editor
             Jukebox.PlayOneShot("applause");
             Debug.Log("Activating Studio Dance...");
 
-            Editor.instance.StudioDanceManager.OpenDanceWindow();
+            if (Editor.instance == null)
+            {
+
+            }
+            else
+            {
+                Editor.instance.StudioDanceManager.OpenDanceWindow();
+            }
         }
 
         public void MakeSecretInactive()
@@ -49,7 +56,15 @@ namespace HeavenStudio.Editor
             SecretCounter = 0;
             secretObject.SetActive(false);
             SecretActive = false;
-            Editor.instance.StudioDanceManager.CloseDanceWindow();
+
+            if (Editor.instance == null)
+            {
+
+            }
+            else
+            {
+                Editor.instance.StudioDanceManager.CloseDanceWindow();
+            }
         }
 
         public override void OnOpenTab()

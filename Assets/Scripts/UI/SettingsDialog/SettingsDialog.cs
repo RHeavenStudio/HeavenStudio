@@ -3,9 +3,9 @@ using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
 
-using HeavenStudio.Common;
+using HeavenStudio.Editor;
 
-namespace HeavenStudio.Editor 
+namespace HeavenStudio.Common 
 {
     public class SettingsDialog : Dialog
     {
@@ -18,21 +18,25 @@ namespace HeavenStudio.Editor
         public void SwitchSettingsDialog()
         {
             if(dialog.activeSelf) {
-                Editor.instance.canSelect = true;
-                Editor.instance.inAuthorativeMenu = false;
                 dialog.SetActive(false);
 
                 PersistentDataManager.SaveSettings();
                 tabsManager.CleanTabs();
+
+                if (Editor.Editor.instance == null) return;
+                Editor.Editor.instance.canSelect = true;
+                Editor.Editor.instance.inAuthorativeMenu = false;
             } else {
                 ResetAllDialogs();
-                Editor.instance.canSelect = false;
-                Editor.instance.inAuthorativeMenu = true;
                 dialog.SetActive(true);
 
                 tabsManager.GenerateTabs(tabs);
 
                 BuildDateDisplay.text = GlobalGameManager.buildTime;
+                
+                if (Editor.Editor.instance == null) return;
+                Editor.Editor.instance.canSelect = false;
+                Editor.Editor.instance.inAuthorativeMenu = true;
             }
         }
 

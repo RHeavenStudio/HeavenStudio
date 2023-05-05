@@ -435,7 +435,7 @@ namespace HeavenStudio
 
         #region Play Events
 
-        public void Play(float beat)
+        public void Play(float beat, float delay = 0f)
         {
             Debug.Log("Playing at " + beat);
             canInput = true;
@@ -454,13 +454,13 @@ namespace HeavenStudio
 
             SectionMedalsManager.instance.Reset();
 
-            StartCoroutine(PlayCo(beat));
+            StartCoroutine(PlayCo(beat, delay));
             onBeatChanged?.Invoke(beat);
         }
 
-        private IEnumerator PlayCo(float beat)
+        private IEnumerator PlayCo(float beat, float delay = 0f)
         {
-            yield return null;
+            yield return new WaitForSeconds(delay);
             bool paused = Conductor.instance.isPaused;
 
             Conductor.instance.SetBpm(Beatmap.bpm);
@@ -486,8 +486,12 @@ namespace HeavenStudio
             KillAllSounds();
         }
 
-        public void Stop(float beat)
+        public void Stop(float beat, bool restart = false, float restartDelay = 0f)
         {
+            Minigame miniGame = currentGameO.GetComponent<Minigame>();
+            if (miniGame != null)
+                miniGame.OnStop(beat);
+
             Conductor.instance.Stop(beat);
             SetCurrentEventToClosest(beat);
             onBeatChanged?.Invoke(beat);
@@ -502,9 +506,9 @@ namespace HeavenStudio
             Debug.Log($"Average input offset for playthrough: {averageInputOffset}ms");
             Debug.Log($"Accuracy for playthrough: {(PlayerAccuracy * 100) : 0.00}");
 
-            if (playOnStart)
+            if (playOnStart || restart)
             {
-                Play(0);
+                Play(0, restartDelay);
             }
         }
 
