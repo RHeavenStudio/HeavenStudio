@@ -19,9 +19,16 @@ namespace HeavenStudio
         [SerializeField] HeavenStudio.Editor.Editor editorGO;
         [SerializeField] String debug_cmdFile;
 
-        public TextAsset level;
-        public AudioClip music;
-        public GameObject canvas;
+        [SerializeField] GameManager gameManager;
+
+        [SerializeField] GameObject MainCamera;
+        [SerializeField] GameObject CursorCamera;
+        [SerializeField] GameObject OverlayCamera;
+        [SerializeField] GameObject StaticCamera;
+        [SerializeField] GameObject Cursor;
+        
+        [SerializeField] GameObject Profiler;
+
         public bool debugUI;
 
         public bool playOnStart = false;
@@ -67,23 +74,9 @@ namespace HeavenStudio
                 }
             }
 
-            GameObject Cameras = Instantiate(Resources.Load<GameObject>("Prefabs/Cameras")); Cameras.name = "Cameras";
-            GameObject MainCamera = Cameras.transform.GetChild(0).gameObject;
-            GameObject CursorCamera = Cameras.transform.GetChild(1).gameObject;
-            GameObject OverlayCamera = Cameras.transform.GetChild(2).gameObject;
-            GameObject StaticCamera = Cameras.transform.GetChild(3).gameObject;
-            GameObject GameLetterbox = Cameras.transform.GetChild(4).gameObject;
-
-
-            GameObject Cursor = Instantiate(Resources.Load<GameObject>("Prefabs/Cursor"));
-            Cursor.name = "Cursor";
-
             GameObject Games = new GameObject();
             Games.name = "Games";
 
-            GameObject GameManager = new GameObject();
-            GameManager.name = "GameManager";
-            GameManager gameManager = GameManager.AddComponent<GameManager>();
             gameManager.playOnStart = playOnStart;
 
             gameManager.GamesHolder = Games;
@@ -93,9 +86,7 @@ namespace HeavenStudio
             gameManager.OverlayCamera = OverlayCamera.GetComponent<Camera>();
             gameManager.StaticCamera = StaticCamera.GetComponent<Camera>();
 
-            GameObject Profiler = Instantiate(Resources.Load<GameObject>("Prefabs/GameProfiler"));
-            Profiler.name = "GameProfiler";
-            if (!debugUI)
+            if (!debugUI && Profiler != null)
             {
                 Profiler.GetComponent<DebugUI>().enabled = false;
                 Profiler.transform.GetChild(0).gameObject.SetActive(false);
@@ -104,7 +95,6 @@ namespace HeavenStudio
             GameObject Conductor = new GameObject();
             Conductor.name = "Conductor";
             AudioSource source = Conductor.AddComponent<AudioSource>();
-            source.clip = music;
             Conductor.AddComponent<Conductor>();
             Conductor.GetComponent<Conductor>().musicSource = source;
             source.outputAudioMixerGroup = Settings.GetMusicMixer();
@@ -124,7 +114,7 @@ namespace HeavenStudio
             }
             else
             {
-                this.GetComponent<HeavenStudio.Editor.Editor>().Init();
+                editorGO.Init();
             }
         }
 

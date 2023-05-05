@@ -2,7 +2,7 @@ using System;
 
 public static class AppInfo {
     public const string Version = "0.0.969";
-    public static readonly DateTime Date = new DateTime(2023, 04, 23, 17, 57, 04, 196, DateTimeKind.Utc);
+    public static readonly DateTime Date = new DateTime(2023, 05, 05, 14, 32, 33, 813, DateTimeKind.Utc);
 }
 
 

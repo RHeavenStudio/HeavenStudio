@@ -14,35 +14,36 @@ namespace HeavenStudio
     public class GameManager : MonoBehaviour
     {
         [Header("Lists")]
-        public DynamicBeatmap Beatmap = new DynamicBeatmap();
-        [HideInInspector] public List<DynamicBeatmap.DynamicEntity> playerEntities = new List<DynamicBeatmap.DynamicEntity>();
+        [NonSerialized] public DynamicBeatmap Beatmap = new DynamicBeatmap();
+        [NonSerialized] public List<DynamicBeatmap.DynamicEntity> playerEntities = new List<DynamicBeatmap.DynamicEntity>();
         private List<GameObject> preloadedGames = new List<GameObject>();
-        public List<GameObject> SoundObjects = new List<GameObject>();
+        [NonSerialized] public List<GameObject> SoundObjects = new List<GameObject>();
 
         [Header("Components")]
-        public string txt;
-        public string ext;
-        public Camera GameCamera, CursorCam, OverlayCamera, StaticCamera;
-        public CircleCursor CircleCursor;
-        [HideInInspector] public GameObject GamesHolder;
-        public Games.Global.Flash fade;
-        public Games.Global.Filter filter;
+        [NonSerialized] public Camera GameCamera, CursorCam, OverlayCamera, StaticCamera;
+        [NonSerialized] public CircleCursor CircleCursor;
+        [NonSerialized] public GameObject GamesHolder;
+        [NonSerialized] public Games.Global.Flash fade;
+        [NonSerialized] public Games.Global.Filter filter;
 
         [Header("Games")]
-        public string currentGame;
+        [NonSerialized] public string currentGame;
         Coroutine currentGameSwitchIE;
 
         [Header("Properties")]
-        public int currentEvent, currentTempoEvent, currentVolumeEvent, currentSectionEvent,
+        [NonSerialized] public string txt = null;
+        [NonSerialized] public string ext = null;
+
+        [NonSerialized] public int currentEvent, currentTempoEvent, currentVolumeEvent, currentSectionEvent,
             currentPreEvent, currentPreSwitch, currentPreSequence;
-        public float endBeat;
-        public float startOffset;
-        public bool playOnStart;
-        public float startBeat;
+        [NonSerialized] public float endBeat;
+        [NonSerialized] public float startOffset;
+        [NonSerialized] public bool playOnStart;
+        [NonSerialized] public float startBeat;
         [NonSerialized] public GameObject currentGameO;
-        public bool autoplay;
-        public bool canInput = true;
-        public DynamicBeatmap.ChartSection currentSection, nextSection;
+        [NonSerialized] public bool autoplay;
+        [NonSerialized] public bool canInput = true;
+        [NonSerialized] public DynamicBeatmap.ChartSection currentSection, nextSection;
         public float sectionProgress { get; private set; }
 
         public event Action<float> onBeatChanged;
