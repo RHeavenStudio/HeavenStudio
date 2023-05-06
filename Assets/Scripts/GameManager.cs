@@ -96,7 +96,7 @@ namespace HeavenStudio
             currentPreEvent= 0;
             currentPreSwitch = 0;
             currentPreSequence = 0;
-            
+
             GameObject filter = new GameObject("filter");
             this.filter = filter.AddComponent<Games.Global.Filter>();
 
@@ -690,7 +690,7 @@ namespace HeavenStudio
         {
             if(flash == true)
             {
-                this.GetComponent<SpriteRenderer>().enabled = true;
+                HeavenStudio.StaticCamera.instance.ToggleCanvasVisibility(false);
             }
 
             SetGame(game);
@@ -699,9 +699,10 @@ namespace HeavenStudio
             if (miniGame != null)
                 miniGame.OnGameSwitch(beat);
 
+            //TODO: wait time in beats instead of seconds
             yield return new WaitForSeconds(0.1f);
 
-            this.GetComponent<SpriteRenderer>().enabled = false;
+            HeavenStudio.StaticCamera.instance.ToggleCanvasVisibility(true);
         }
 
         private void SetGame(string game)
