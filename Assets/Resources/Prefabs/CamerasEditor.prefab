@@ -254,13 +254,14 @@ GameObject:
   - component: {fileID: 475574926636511193}
   - component: {fileID: 5094208749762835248}
   - component: {fileID: 4820152107260776423}
+  - component: {fileID: 2918203088156884685}
   m_Layer: 31
   m_Name: GameFlash
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &475574926636511193
 RectTransform:
   m_ObjectHideFlags: 0
@@ -319,6 +320,19 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
+--- !u!114 &2918203088156884685
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2478945398383251488}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 16a839834af94a042a3feb7a4762bafd, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  currentCol: {r: 0, g: 0, b: 0, a: 0}
 --- !u!1 &2482900817612876218
 GameObject:
   m_ObjectHideFlags: 0

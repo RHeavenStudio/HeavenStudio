@@ -1,4 +1,4 @@
-namespace HeavenStudio
+namespace HeavenStudio.Util
 {
     public class GameEvent
     {

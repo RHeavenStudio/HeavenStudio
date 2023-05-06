@@ -4,7 +4,7 @@ using UnityEngine;
 
 using HeavenStudio.Util;
 
-namespace HeavenStudio
+namespace HeavenStudio.Games
 {
     public class SoundEffects : MonoBehaviour
     {

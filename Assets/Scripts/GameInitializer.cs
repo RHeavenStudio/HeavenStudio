@@ -11,7 +11,7 @@ using UnityEngine.Audio;
 
 namespace HeavenStudio
 {
-    public class Initializer : MonoBehaviour
+    public class GameInitializer : MonoBehaviour
     {
         [SerializeField] RenderTexture gameRenderTexture;
         [SerializeField] RenderTexture overlayRenderTexture;
