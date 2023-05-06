@@ -201,7 +201,6 @@ namespace HeavenStudio.Games
             allGirls.AddRange(secondRow);
             allGirls.AddRange(thirdRow);
             var camEvents = EventCaller.GetAllInGameManagerList("cheerReaders", new string[] { "okItsOn" });
-            camEvents.AddRange(EventCaller.GetAllInGameManagerList("cheerReaders", new string[] { "okItsOnStretch" }));
             List<DynamicBeatmap.DynamicEntity> tempEvents = new List<DynamicBeatmap.DynamicEntity>();
             for (int i = 0; i < camEvents.Count; i++)
             {
