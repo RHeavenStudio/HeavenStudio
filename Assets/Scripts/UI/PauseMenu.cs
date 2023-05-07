@@ -37,6 +37,7 @@ namespace HeavenStudio.Common
         private static bool isPaused = false;
         private double pauseBeat;
         private bool canPick = false;
+        private bool isQuitting = false;
         private int optionSelected = 0;
 
         void Pause()
@@ -66,7 +67,6 @@ namespace HeavenStudio.Common
                 Jukebox.PlayOneShot("ui/PauseOut");
             }
             
-
             isPaused = false;
             canPick = false;
         }
@@ -74,11 +74,14 @@ namespace HeavenStudio.Common
         // Start is called before the first frame update
         void Start()
         {
+            isPaused = false;
+            isQuitting = false;
         }
 
         // Update is called once per frame
         void Update()
         {
+            if (isQuitting) return;
             if (PlayerInput.GetInputController(1).GetButtonDown((int) InputController.ButtonsPad.PadPause))
             {
                 if (isPaused)
@@ -169,12 +172,16 @@ namespace HeavenStudio.Common
         void OnRestart()
         {
             UnPause(true);
-            GameManager.instance.Stop(0, true, 0.5f);
+            GlobalGameManager.ForceFade(0, 1f, 0.5f);
+            GameManager.instance.Stop(0, true, 1.5f);
+            Jukebox.PlayOneShot("ui/UIEnter");
         }
 
         void OnQuit()
         {
-
+            isQuitting = true;
+            Jukebox.PlayOneShot("ui/PauseQuit");
+            GlobalGameManager.LoadScene("Editor", 0, 0.1f);
         }
 
         void OnSettings()

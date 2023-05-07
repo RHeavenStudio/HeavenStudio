@@ -70,6 +70,7 @@ namespace HeavenStudio.Common
             }
             else
             {
+                GlobalGameManager.IsFirstBoot = true;
                 CreateDefaultSettings();
             }
         }

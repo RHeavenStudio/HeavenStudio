@@ -100,8 +100,6 @@ namespace HeavenStudio
             GameObject filter = new GameObject("filter");
             this.filter = filter.AddComponent<Games.Global.Filter>();
 
-            GlobalGameManager.Init();
-
             eventCaller = this.gameObject.AddComponent<EventCaller>();
             eventCaller.GamesHolder = GamesHolder.transform;
             eventCaller.Init();
@@ -309,8 +307,6 @@ namespace HeavenStudio
 
         private void Update()
         {
-            PlayerInput.UpdateInputControllers();
-
             if (BeatmapEntities() < 1) //bruh really you forgot to ckeck tempo changes
                 return;
             if (!Conductor.instance.isPlaying)
@@ -521,7 +517,7 @@ namespace HeavenStudio
 
             GlobalGameManager.UpdateDiscordStatus(Beatmap["remixtitle"], false, true);
 
-            Play(beat, 0.5f);
+            Play(beat, 1f);
         }
 
         public void KillAllSounds()

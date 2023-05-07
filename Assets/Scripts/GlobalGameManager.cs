@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System.IO;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -12,20 +13,20 @@ namespace HeavenStudio
     public class GlobalGameManager : MonoBehaviour
     {
         public static GlobalGameManager instance { get; set; }
+        [SerializeField] Image fadeImage;
 
         public static string buildTime = "00/00/0000 00:00:00";
 
         public static bool discordDuringTesting = false;
 
-        public static int loadedScene;
-        public int lastLoadedScene;
-        public static float fadeDuration;
-
-        public GameObject loadScenePrefab;
-        public GameObject hourGlass;
+        static string loadedScene;
+        static string lastLoadedScene;
+        static AsyncOperation asyncLoad;
 
         public static string levelLocation;
         public static bool officialLevel;
+
+        public static bool IsFirstBoot = false;
 
         public static int CustomScreenWidth = 1280;
         public static int CustomScreenHeight = 720;
@@ -58,13 +59,12 @@ namespace HeavenStudio
             Game = 3
         }
 
-        [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
+        [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.BeforeSceneLoad)]
         public static void Init()
         {
             BasicCheck();
 
-            loadedScene = 0;
-            fadeDuration = 0;
+            loadedScene = SceneManager.GetActiveScene().name;
 
             PersistentDataManager.LoadSettings();
 
@@ -93,13 +93,6 @@ namespace HeavenStudio
                 Screen.fullScreen = false;
                 ChangeScreenSize();
             }
-        }
-
-        public void Awake()
-        {
-            Init();
-            DontDestroyOnLoad(this.gameObject);
-            instance = this;
             QualitySettings.maxQueuedFrames = 1;
             PlayerInput.InitInputControllers();
             #if UNITY_EDITOR
@@ -108,54 +101,91 @@ namespace HeavenStudio
             #else
                 Starpelly.OS.ChangeWindowTitle("Heaven Studio (INDEV) " + Application.buildGUID.Substring(0, 8));
                 buildTime = Application.buildGUID.Substring(0, 8) + " " + AppInfo.Date.ToString("dd/MM/yyyy hh:mm:ss");
-            #endif
+            #endif          
         }
 
-        // todo: make this part of the camera prefab instead of generated in code
-        public static GameObject CreateFade()
+        public void Awake()
         {
-            GameObject fade = new GameObject();
-            DontDestroyOnLoad(fade);
-            fade.transform.localScale = new Vector3(4000, 4000);
-            SpriteRenderer sr = fade.AddComponent<SpriteRenderer>();
-            sr.sprite = Resources.Load<Sprite>("Sprites/GeneralPurpose/Square");
-            sr.sortingOrder = 20000;
-            fade.layer = 5;
-            return fade;
+            DontDestroyOnLoad(this.gameObject);
+            instance = this;
+            fadeImage.gameObject.SetActive(false);
         }
 
+        private void Update() 
+        {
+            PlayerInput.UpdateInputControllers();
+        }
+
+        IEnumerator LoadSceneAsync(string scene, float fadeOut)
+        {
+            //TODO: create flow mem loading icon
+            asyncLoad = SceneManager.LoadSceneAsync(scene);
+            while (!asyncLoad.isDone)
+            {
+                yield return null;
+            }
+
+            //TODO: fade out flow mem loading icon
+            instance.fadeImage.DOKill();
+            instance.fadeImage.DOFade(0, fadeOut).OnComplete(() =>
+            {
+                instance.fadeImage.gameObject.SetActive(false);
+            });
+        }
+
+        IEnumerator ForceFadeAsync(float hold, float fadeOut)
+        {
+            yield return new WaitForSeconds(hold);
+            instance.fadeImage.DOKill();
+            instance.fadeImage.DOFade(0, fadeOut).OnComplete(() =>
+            {
+                instance.fadeImage.gameObject.SetActive(false);
+            });
+        }
 
         public static void BasicCheck()
         {
             if (FindGGM() == null)
             {
-                GameObject GlobalGameManager = new GameObject("GlobalGameManager");
-                GlobalGameManager.name = "GlobalGameManager";
-                GlobalGameManager.AddComponent<GlobalGameManager>();
+                // load the global game manager prefab
+                GameObject ggm = Instantiate(Resources.Load("Prefabs/GlobalGameManager") as GameObject);
+                DontDestroyOnLoad(ggm);
             }
         }
 
         public static GameObject FindGGM()
         {
-            if (GameObject.Find("GlobalGameManager") != null)
-                return GameObject.Find("GlobalGameManager");
+            if (instance != null)
+                return instance.gameObject;
             else
                 return null;
         }
 
-        public static void LoadScene(int sceneIndex, float duration = 0.35f)
+        public static void LoadScene(string scene, float fadeIn = 0.35f, float fadeOut = 0.35f)
         {
-            print("bruh");
-            BasicCheck();
-            loadedScene = sceneIndex;
-            fadeDuration = duration;
+            if (scene == loadedScene)
+                return;
+            lastLoadedScene = loadedScene;
+            loadedScene = scene;
 
-            // DOTween.Clear(true);
-            // SceneManager.LoadScene(sceneIndex);
+            instance.fadeImage.DOKill();
+            instance.fadeImage.gameObject.SetActive(true);
+            instance.fadeImage.color = new Color(0, 0, 0, 0);
+            instance.fadeImage.DOFade(1, fadeIn).OnComplete(() =>
+            {
+                instance.StartCoroutine(instance.LoadSceneAsync(scene, fadeOut));
+            });
+        }
 
-            GameObject fade = CreateFade();
-            fade.GetComponent<SpriteRenderer>().color = new Color(0, 0, 0, 0);
-            fade.GetComponent<SpriteRenderer>().DOColor(Color.black, fadeDuration).OnComplete(() => { SceneManager.LoadScene(loadedScene); fade.GetComponent<SpriteRenderer>().DOColor(new Color(0, 0, 0, 0), fadeDuration).OnComplete(() => { Destroy(fade); }); });
+        public static void ForceFade(float fadeIn, float hold, float fadeOut)
+        {
+            instance.fadeImage.DOKill();
+            instance.fadeImage.gameObject.SetActive(true);
+            instance.fadeImage.color = new Color(0, 0, 0, 0);
+            instance.fadeImage.DOFade(1, fadeIn).OnComplete(() =>
+            {
+                instance.StartCoroutine(instance.ForceFadeAsync(hold, fadeOut));
+            });
         }
 
         public static void WindowFullScreen()

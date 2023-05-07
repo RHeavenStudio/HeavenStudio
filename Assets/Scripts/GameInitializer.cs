@@ -52,26 +52,18 @@ namespace HeavenStudio
                     }
                 }
             }
-            else
+            else if (OpeningManager.OnOpenFile is not null or "")
             {
-                string[] args = System.Environment.GetCommandLineArgs();
-                for (int i = 1; i < args.Length; i++) {
-                    // first arg is always this executable
-                    Debug.Log(args[i]);
-                    if (args[i].IndexOfAny(Path.GetInvalidPathChars()) == -1)
+                if (editorGO == null && OpeningManager.OnOpenFile.IndexOfAny(Path.GetInvalidPathChars()) == -1)
+                {
+                    if (File.Exists(OpeningManager.OnOpenFile))
                     {
-                        if (File.Exists(args[i]))
-                        {
-                            input = args[i];
-                            fromCmd = true;
-                            playOnStart = true;
-                        }
-                    }
-                    else if (args[i] == "-debug")
-                    {
-                        debugUI = true;
+                        input = OpeningManager.OnOpenFile;
+                        fromCmd = true;
+                        playOnStart = true;
                     }
                 }
+                OpeningManager.OnOpenFile = null;
             }
 
             GameObject Games = new GameObject();
