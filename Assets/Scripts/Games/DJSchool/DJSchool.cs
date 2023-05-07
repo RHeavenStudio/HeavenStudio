@@ -56,9 +56,9 @@ namespace HeavenStudio.Games.Loaders
                 },
                 new GameAction("dj voice lines", "DJ Yellow Banter")
                 {
-                    function = delegate { DJSchool.instance.VoiceLines(eventCaller.currentEntity.beat, eventCaller.currentEntity["type"]);  }, 
+                    function = delegate { DJSchool.VoiceLines(eventCaller.currentEntity.beat, eventCaller.currentEntity["type"]);  }, 
                     defaultLength = 2f,
-                    inactiveFunction = delegate { DJSchool.WarnDJVoiceLines(eventCaller.currentEntity.beat, eventCaller.currentEntity["type"]);  },
+                    inactiveFunction = delegate { DJSchool.VoiceLines(eventCaller.currentEntity.beat, eventCaller.currentEntity["type"]);  },
                     parameters = new List<Param>()
                     {
                         new Param("type", DJSchool.DJVoiceLines.CheckItOut, "Voice Lines", "The voice line to play"),
@@ -539,7 +539,7 @@ namespace HeavenStudio.Games
         {
             Student.soundFX = toggle;
         }
-        public void VoiceLines(float beat, int type)
+        public static void VoiceLines(float beat, int type)
         {
             string[] sounds;
             var sound = new MultiSound.Sound[] { };
@@ -554,7 +554,7 @@ namespace HeavenStudio.Games
                         new MultiSound.Sound(sounds[2], beat + .5f),
                     };
 
-                    MultiSound.Play(sound);
+                    MultiSound.Play(sound, forcePlay: true);
                     break;
 
                 case 1:
@@ -565,7 +565,7 @@ namespace HeavenStudio.Games
                         new MultiSound.Sound(sounds[1], beat + .5f),
                     };
 
-                    MultiSound.Play(sound);
+                    MultiSound.Play(sound, forcePlay: true);
                     break;
 
                 case 2:
@@ -576,7 +576,7 @@ namespace HeavenStudio.Games
                         new MultiSound.Sound(sounds[1], beat + .5f),
                     };
 
-                    MultiSound.Play(sound);
+                    MultiSound.Play(sound, forcePlay: true);
                     break;
 
                 case 3:
@@ -588,11 +588,11 @@ namespace HeavenStudio.Games
                         new MultiSound.Sound(sounds[2], beat + 1f),
                     };
 
-                    MultiSound.Play(sound);
+                    MultiSound.Play(sound, forcePlay: true);
                     break;
 
                 case 4:
-                    Jukebox.PlayOneShotGame("djSchool/yay");
+                    Jukebox.PlayOneShotGame("djSchool/yay", forcePlay: true);
                     break;
             }
         }
@@ -630,66 +630,6 @@ namespace HeavenStudio.Games
 
             MultiSound.Play(sound.ToArray(), forcePlay: true);
             wantAndStop = beat;
-        }
-
-        public static void WarnDJVoiceLines(float beat, int type)
-        {
-            string[] sounds;
-            var sound = new MultiSound.Sound[] { };
-            switch (type)
-            {
-                case 0:
-                    sounds = new string[] { "djSchool/checkItOut1", "djSchool/checkItOut2", "djSchool/checkItOut3" };
-                    sound = new MultiSound.Sound[]
-                    {
-                        new MultiSound.Sound(sounds[0], beat),
-                        new MultiSound.Sound(sounds[1], beat + .25f),
-                        new MultiSound.Sound(sounds[2], beat + .5f),
-                    };
-
-                    
-                    break;
-
-                case 1:
-                    sounds = new string[] { "djSchool/letsGo1", "djSchool/letsGo2" };
-                    sound = new MultiSound.Sound[]
-                    {
-                        new MultiSound.Sound(sounds[0], beat),
-                        new MultiSound.Sound(sounds[1], beat + .5f),
-                    };
-
-                    
-                    break;
-
-                case 2:
-                    sounds = new string[] { "djSchool/ohYeah1", "djSchool/ohYeah2" };
-                    sound = new MultiSound.Sound[]
-                    {
-                        new MultiSound.Sound(sounds[0], beat),
-                        new MultiSound.Sound(sounds[1], beat + .5f),
-                    };
-
-                    
-                    break;
-
-                case 3:
-                    sounds = new string[] { "djSchool/ohYeahAlt1", "djSchool/ohYeahAlt2", "djSchool/ohYeahAlt3" };
-                    sound = new MultiSound.Sound[]
-                    {
-                        new MultiSound.Sound(sounds[0], beat),
-                        new MultiSound.Sound(sounds[1], beat + .5f),
-                        new MultiSound.Sound(sounds[2], beat + 1f),
-                    };
-
-                    
-                    break;
-
-                case 4:
-                    Jukebox.PlayOneShotGame("djSchool/yay");
-                    break;
-            }
-            MultiSound.Play(sound, forcePlay: true);
-            wantDJVoiceLines = beat;
         }
         #endregion
     }
