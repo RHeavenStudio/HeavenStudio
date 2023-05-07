@@ -11,17 +11,12 @@ namespace HeavenStudio.Games.Scripts_MrUpbeat
     public class UpbeatMan : MonoBehaviour
     {
         [Header("References")]
-        public MrUpbeat game;
         public Animator animator;
         public Animator blipAnimator;
         public GameObject[] shadows;
 
-        public float targetBeat = 0.25f;
         public int stepTimes = 0;
-        private bool stepped = false;
         private bool onGround = false;
-
-        public GameEvent blip = new GameEvent();
 
         public void Idle()
         {
