@@ -30,9 +30,10 @@ namespace HeavenStudio.Games.Scripts_MeatGrinder
         {
             game.ScheduleInput(startBeat, cueLength, InputType.STANDARD_DOWN | InputType.DIRECTION_DOWN, Hit, Miss, Nothing);
 
-            BeatAction.New(gameObject, new List<BeatAction.Action>()
-            {
-                new BeatAction.Action(cueBased ? startBeat + 0.66f : cueLength + startBeat - 1 + 0.66f, delegate { anim.DoScaledAnimationAsync(meatType+"Thrown", 0.32f); }),
+            BeatAction.New(gameObject, new List<BeatAction.Action>() {
+                new BeatAction.Action(cueBased ? startBeat + 0.66f : cueLength + startBeat - 1 + 0.66f, delegate { 
+                    anim.DoScaledAnimationAsync(meatType+"Thrown", 0.32f); 
+                }),
             });
         }
 
@@ -61,8 +62,7 @@ namespace HeavenStudio.Games.Scripts_MeatGrinder
             anim.DoScaledAnimationAsync(meatType+"Hit", 0.5f);
             animCheck = true;
 
-            if (state >= 1f || state <= -1f)
-            {
+            if (state >= 1f || state <= -1f) {
                 InputActions(true, "tink", "TackHitBarely");
             } else {
                 InputActions(false, "meatHit", "TackHitSuccess");

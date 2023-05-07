@@ -29,8 +29,8 @@ namespace HeavenStudio.Games.Loaders
                 },
                 new GameAction("ThrowObject", "Throw Object")
                 {
-                    function = delegate { var e = eventCaller.currentEntity; DogNinja.QueueObject(e.beat, e["direction"], e["typeL"], e["typeR"], e["shouldPrepare"]); },
-                    inactiveFunction = delegate { var e = eventCaller.currentEntity; DogNinja.QueueObject(e.beat, e["direction"], e["typeL"], e["typeR"], e["shouldPrepare"]); },
+                    function = delegate { var e = eventCaller.currentEntity; DogNinja.QueueObject(e.beat, e["direction"], e["typeL"], e["typeR"], e["shouldPrepare"], false); },
+                    inactiveFunction = delegate { var e = eventCaller.currentEntity; DogNinja.QueueObject(e.beat, e["direction"], e["typeL"], e["typeR"], e["shouldPrepare"], e["muteThrow"]); },
                     defaultLength = 2,
                     parameters = new List<Param>()
                     {
@@ -38,6 +38,7 @@ namespace HeavenStudio.Games.Loaders
                         new Param("typeL", DogNinja.ObjectType.Random, "Left \nObject", "The object to be thrown from the left"),
                         new Param("typeR", DogNinja.ObjectType.Random, "Right Object", "The object to be thrown from the right"),
                         new Param("shouldPrepare", true, "Prepare?", "Should the dog prepare?"),
+                        new Param("muteThrow", false, "Mute", "Mute the throw? (ONLY WHEN INACTIVE)"),
                     },
                 },
                 new GameAction("CutEverything", "Cut Everything!")
@@ -69,7 +70,7 @@ namespace HeavenStudio.Games.Loaders
                     {
                         new Param("type", DogNinja.ObjectType.Random, "Object", "The object to be thrown"),
                     },
-                    preFunction = delegate { var e = eventCaller.currentEntity; DogNinja.QueueObject(e.beat, 0, e["type"], 0, true);},
+                    preFunction = delegate { var e = eventCaller.currentEntity; DogNinja.QueueObject(e.beat, 0, e["type"], 0, true, false);},
                 },
                 new GameAction("ThrowObjectRight", "Throw Object Right")
                 {
@@ -80,7 +81,7 @@ namespace HeavenStudio.Games.Loaders
                     {
                         new Param("type", DogNinja.ObjectType.Random, "Object", "The object to be thrown"),
                     },
-                    preFunction = delegate { var e = eventCaller.currentEntity; DogNinja.QueueObject(e.beat, 1, 0, e["type"], true);},
+                    preFunction = delegate { var e = eventCaller.currentEntity; DogNinja.QueueObject(e.beat, 1, 0, e["type"], true, false);},
                 },
                 new GameAction("ThrowObjectBoth", "Throw Object Both")
                 {
@@ -92,7 +93,7 @@ namespace HeavenStudio.Games.Loaders
                         new Param("typeL", DogNinja.ObjectType.Random, "Left Object", "The object on the left to be thrown"),
                         new Param("typeR", DogNinja.ObjectType.Random, "Right Object", "The object on the right to be thrown"),
                     },
-                    preFunction = delegate { var e = eventCaller.currentEntity; DogNinja.QueueObject(e.beat, 2, e["typeL"], e["typeR"], true);},
+                    preFunction = delegate { var e = eventCaller.currentEntity; DogNinja.QueueObject(e.beat, 2, e["typeL"], e["typeR"], true, false);},
                 },
             });
         }
@@ -228,7 +229,7 @@ namespace HeavenStudio.Games
             dontBop = !bop;
         }
 
-        public static void QueueObject(float beat, int direction, int typeL, int typeR, bool prepare)
+        public static void QueueObject(float beat, int direction, int typeL, int typeR, bool prepare, bool muteThrow)
         {
             int ObjSprite = 1;
             if (typeL == 0 || typeR == 0) {
@@ -238,17 +239,17 @@ namespace HeavenStudio.Games
             }
             
             string sfxNumL = "dogNinja/";
-            if (direction == 0 || direction == 2) {
+            if (direction is 0 or 2) {
                 sfxNumL += typeL < 7 ? "fruit" : Enum.GetName(typeof(ObjectType), typeL);
                 if (typeL == 0) typeL = ObjSprite;
-                Jukebox.PlayOneShotGame(sfxNumL+"1", forcePlay: true);
+                if (!muteThrow) Jukebox.PlayOneShotGame(sfxNumL+"1", forcePlay: true);
             }
             
             string sfxNumR = "dogNinja/";
-            if (direction == 1 || direction == 2) {
+            if (direction is 1 or 2) {
                 sfxNumR += typeR < 7 ? "fruit" : Enum.GetName(typeof(ObjectType), typeR);
                 if (typeR == 0) typeR = ObjSprite;
-                if (!(direction == 2 && typeL == typeR)) Jukebox.PlayOneShotGame(sfxNumR+"1", forcePlay: true);
+                if (!(direction == 2 && typeL == typeR) && !muteThrow) Jukebox.PlayOneShotGame(sfxNumR+"1", forcePlay: true);
             }
 
             queuedThrows.Add(new QueuedThrow() {
@@ -266,7 +267,7 @@ namespace HeavenStudio.Games
         public void ThrowObject(float beat, int direction, int typeL, int typeR, string sfxNumL, string sfxNumR)
         {
             // instantiate a game object and give it its variables
-            if (direction == 0 || direction == 2) {
+            if (direction is 0 or 2) {
                 WhichObject.sprite = ObjectTypes[typeL];
                 ThrowObject ObjectL = Instantiate(ObjectBase, gameObject.transform).GetComponent<ThrowObject>();
                 ObjectL.startBeat = beat;
@@ -278,7 +279,7 @@ namespace HeavenStudio.Games
                 if (direction == 2) ObjectL.shouldSfx = (typeL == typeR);
             }
 
-            if (direction == 1 || direction == 2) {
+            if (direction is 1 or 2) {
                 WhichObject.sprite = ObjectTypes[typeR];
                 ThrowObject ObjectR = Instantiate(ObjectBase, gameObject.transform).GetComponent<ThrowObject>();
                 ObjectR.startBeat = beat;
