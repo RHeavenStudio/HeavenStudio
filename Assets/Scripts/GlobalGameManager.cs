@@ -5,6 +5,7 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 using DG.Tweening;
+using TMPro;
 
 using HeavenStudio.Common;
 
@@ -14,6 +15,7 @@ namespace HeavenStudio
     {
         public static GlobalGameManager instance { get; set; }
         [SerializeField] Image fadeImage;
+        [SerializeField] TMP_Text loadingText;
 
         public static string buildTime = "00/00/0000 00:00:00";
 
@@ -109,6 +111,7 @@ namespace HeavenStudio
             DontDestroyOnLoad(this.gameObject);
             instance = this;
             fadeImage.gameObject.SetActive(false);
+            loadingText.enabled = false;
         }
 
         private void Update() 
@@ -127,6 +130,7 @@ namespace HeavenStudio
 
             //TODO: fade out flow mem loading icon
             instance.fadeImage.DOKill();
+            instance.loadingText.enabled = false;
             instance.fadeImage.DOFade(0, fadeOut).OnComplete(() =>
             {
                 instance.fadeImage.gameObject.SetActive(false);
@@ -137,6 +141,7 @@ namespace HeavenStudio
         {
             yield return new WaitForSeconds(hold);
             instance.fadeImage.DOKill();
+            instance.loadingText.enabled = false;
             instance.fadeImage.DOFade(0, fadeOut).OnComplete(() =>
             {
                 instance.fadeImage.gameObject.SetActive(false);
@@ -174,6 +179,7 @@ namespace HeavenStudio
             instance.fadeImage.DOFade(1, fadeIn).OnComplete(() =>
             {
                 instance.StartCoroutine(instance.LoadSceneAsync(scene, fadeOut));
+                instance.loadingText.enabled = true;
             });
         }
 
@@ -182,6 +188,7 @@ namespace HeavenStudio
             instance.fadeImage.DOKill();
             instance.fadeImage.gameObject.SetActive(true);
             instance.fadeImage.color = new Color(0, 0, 0, 0);
+            instance.loadingText.enabled = false;
             instance.fadeImage.DOFade(1, fadeIn).OnComplete(() =>
             {
                 instance.StartCoroutine(instance.ForceFadeAsync(hold, fadeOut));
