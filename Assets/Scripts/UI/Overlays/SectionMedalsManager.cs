@@ -70,6 +70,7 @@ namespace HeavenStudio.Common
             }
             else
             {
+                GameManager.instance.ClearedSection = isMedalsEligible;
                 GameObject medal = Instantiate(isMedalsEligible ? MedalOkPrefab : MedalMissPrefab, MedalsHolder.transform);
                 medal.SetActive(true);
                 isMedalsEligible = true;
@@ -81,6 +82,7 @@ namespace HeavenStudio.Common
             if (!PersistentDataManager.gameSettings.isMedalOn) return;
             if (PersistentDataManager.gameSettings.isMedalOn && isMedalsStarted)
             {
+                GameManager.instance.ClearedSection = isMedalsEligible;
                 GameObject medal = Instantiate(isMedalsEligible ? MedalOkPrefab : MedalMissPrefab, MedalsHolder.transform);
                 medal.SetActive(true);
             }

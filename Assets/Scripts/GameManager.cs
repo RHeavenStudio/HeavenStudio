@@ -85,6 +85,16 @@ namespace HeavenStudio
         }
         bool skillStarCollected = false;
 
+        // cleared sections
+        List<bool> clearedSections = new List<bool>();
+        public bool ClearedSection
+        {
+            set
+            {
+                clearedSections.Add(value);
+            }
+        }
+
         private void Awake()
         {
             // autoplay = true;
@@ -440,6 +450,7 @@ namespace HeavenStudio
                 GoForAPerfect.instance.Disable();
 
                 SectionMedalsManager.instance.Reset();
+                clearedSections.Clear();
             }
 
             StartCoroutine(PlayCo(beat, delay));
@@ -494,13 +505,23 @@ namespace HeavenStudio
             GoForAPerfect.instance.Disable();
             SectionMedalsManager.instance.OnRemixEnd();
 
+            // pass this data to rating screen + stats
+            Debug.Log($"== Playthrough statistics of {Beatmap["remixtitle"]} (played at {System.DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss")}) ==");
             Debug.Log($"Average input offset for playthrough: {averageInputOffset}ms");
             Debug.Log($"Accuracy for playthrough: {(PlayerAccuracy * 100) : 0.00}");
-
+            Debug.Log($"Cleared {clearedSections.FindAll(c => c).Count} sections out of {Beatmap.beatmapSections.Count}");
+            if (SkillStarManager.instance.IsCollected)
+                Debug.Log($"Skill Star collected");
+            else
+                Debug.Log($"Skill Star not collected");
+            if (GoForAPerfect.instance.perfect)
+                Debug.Log($"Perfect Clear!");
+            
             if (playOnStart || restart)
             {
                 Play(0, restartDelay);
             }
+            // when rating screen gets added playOnStart will instead move to that scene
         }
 
         private IEnumerator WaitReadyAndPlayCo(float beat)
