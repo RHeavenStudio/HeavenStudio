@@ -37,7 +37,7 @@ RectTransform:
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 1165, y: 72}
+  m_SizeDelta: {x: 1165, y: 50}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &6462157638644183228
 CanvasRenderer:
@@ -67,7 +67,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: "Show Splash Screen \non Startup"
+  m_text: Show Splash Screen on Startup
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8597c35f18a008c428fc5870aec75766, type: 2}
   m_sharedMaterial: {fileID: -6562250930271150993, guid: 8597c35f18a008c428fc5870aec75766, type: 2}
@@ -6449,7 +6449,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -212, y: -0.0000030994}
+  m_AnchoredPosition: {x: -52, y: -0.0000030994}
   m_SizeDelta: {x: 30, y: 30}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &5405215836217757241
