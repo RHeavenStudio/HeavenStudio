@@ -64,3 +64,10 @@ body:
       placeholder: Upload a file here
     validations:
       required: false
+  - type: textarea
+    id: context
+    attributes:
+      label: Additional context
+      description: Add any other context or screenshots about the feature request here.
+    validations:
+      required: false
