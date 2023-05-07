@@ -1,8 +1,11 @@
+using System;
 using System.IO;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
+
+using HeavenStudio.Common;
 
 namespace HeavenStudio
 {
@@ -10,6 +13,7 @@ namespace HeavenStudio
     {
         [SerializeField] Animator openingAnim;
         [SerializeField] TMP_Text buildText;
+        [SerializeField] TMP_Text versionDisclaimer;
 
         public static string OnOpenFile;
         bool fastBoot = false;
@@ -39,7 +43,29 @@ namespace HeavenStudio
                 buildText.text = Application.buildGUID.Substring(0, 8) + " " + AppInfo.Date.ToString("dd/MM/yyyy hh:mm:ss");
             #endif
 
-            if (!GlobalGameManager.IsFirstBoot)
+            if (Application.platform is RuntimePlatform.OSXPlayer or RuntimePlatform.OSXEditor)
+            {
+                versionDisclaimer.text = "";
+            }
+            else
+            {
+                string ver = "<color=#FFFFCC>If you're coming from an older Heaven Studio build, copy your settings configs over from\n<color=#FFFF00>";
+                if (Application.platform is RuntimePlatform.WindowsPlayer or RuntimePlatform.WindowsEditor)
+                {
+                    ver += Environment.GetFolderPath(Environment.SpecialFolder.UserProfile) + "\\AppData\\LocalLow\\Megaminerzero\\Heaven Studio\\";
+                    ver += "<color=#FFFFCC>\nto\n<color=#FFFF00>";
+                    ver += Environment.GetFolderPath(Environment.SpecialFolder.UserProfile) + "\\AppData\\LocalLow\\RHeavenStudio\\Heaven Studio\\";
+                }
+                else if (Application.platform is RuntimePlatform.LinuxPlayer or RuntimePlatform.LinuxEditor)
+                {
+                    ver += "~/.config/unity3d/Megaminerzero/Heaven Studio/";
+                    ver += "<color=#FFFFCC>\nto\n<color=#FFFF00>";
+                    ver += "~/.config/unity3d/RHeavenStudio/Heaven Studio/";
+                }
+                versionDisclaimer.text = ver;
+            }
+
+            if (!GlobalGameManager.IsFirstBoot && !PersistentDataManager.gameSettings.showSplash)
             {
                 fastBoot = true;
             }
@@ -57,7 +83,7 @@ namespace HeavenStudio
 
         IEnumerator WaitAndFinishOpening()
         {
-            yield return new WaitForSeconds(3f);
+            yield return new WaitForSeconds(8f);
             OnFinishDisclaimer(0.35f);
         }
 

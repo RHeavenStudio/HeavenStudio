@@ -10,6 +10,7 @@ namespace HeavenStudio.Editor
 {
     public class DispAudioSettings : TabsContent
     {
+        [SerializeField] Toggle splashScreenToggle;
         public TMP_Dropdown resolutionsDropdown;
         public GameObject customSetter;
         public TMP_InputField widthInputField, heightInputField;
@@ -96,8 +97,14 @@ namespace HeavenStudio.Editor
             PersistentDataManager.gameSettings.masterVolume = volSlider.value;
         }
 
+        public void OnSplashChanged()
+        {
+            PersistentDataManager.gameSettings.showSplash = splashScreenToggle.isOn;
+        }
+
         public override void OnOpenTab()
         {
+            splashScreenToggle.isOn = PersistentDataManager.gameSettings.showSplash;
             resolutionsDropdown.value = GlobalGameManager.ScreenSizeIndex;
 
             widthInputField.text = GlobalGameManager.CustomScreenWidth.ToString();
