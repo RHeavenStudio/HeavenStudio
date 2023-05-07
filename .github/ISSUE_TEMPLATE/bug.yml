@@ -1,0 +1,67 @@
+name: Bug Report
+description: Report a bug you have experienced in Heaven Studio
+title: ""
+labels: []
+body:
+  - type: textarea
+    id: what-happened
+    attributes:
+      label: Describe the bug
+      description: A clear and concise description of what the bug is.
+      placeholder: Tell us what happened!
+    validations:
+      required: true
+  - type: textarea
+    id: reproduce
+    attributes:
+      label: How to reproduce the bug?
+      description: Steps to reproduce the behavior
+      placeholder: Tell us what happened!
+    validations:
+      required: true
+  - type: textarea
+    id: screenshot
+    attributes:
+      label: Screenshots/Videos
+      description: If applicable, add screenshots to help explain your problem.
+      placeholder: Upload an attachment here
+    validations:
+      required: false
+  - type: dropdown
+    id: os
+    attributes:
+      label: What Operating System(s) were you using?
+      description: If you are on Linux, Please say your distro under Additional Context
+      multiple: true
+      options:
+        - Windows 7
+        - Windows 8(.1)
+        - Windows 10/11
+        - Linux
+        - MacOS
+  - type: textarea
+    id: log
+    attributes:
+      label: Log file
+      description: Please copy and paste any relevant log output. This will be automatically formatted into code, so no need for backticks.
+      render: shell
+  - type: markdown
+    attributes:
+      value: |
+        How to grab the log file:
+        - Close Heaven Studio (to get a fresh log file)
+        - Re-Open Heaven Studio
+        - Play until you experience your bug
+        - Close Heaven Studio
+        - If you are on Windows, go to `%USERPROFILE%\AppData\LocalLow\RHeavenStudio\Heaven Studio\`
+        - If you are on MacOS, go to `~/Library/Logs/RHeavenStudio/Heaven Studio` (You can access the ~ folder by pressing `Shift + ⌘ + H` in Finder)
+        - If you are on Linux, go to `~/.config/unity3d/RHeavenStudio/Heaven Studio/`
+        - Copy the contents of the `Player.log` file to the textbox above
+  - type: textarea
+    id: files
+    attributes:
+      label: Extra files
+      description: Upload any needed files here, preferably an RIQ file, linking them is also allowed.
+      placeholder: Upload a file here
+    validations:
+      required: false
