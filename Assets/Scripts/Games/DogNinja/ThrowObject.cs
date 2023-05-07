@@ -80,8 +80,7 @@ namespace HeavenStudio.Games.Scripts_DogNinja
 
         private void SuccessSlice() 
         {
-            string slice = "Slice";
-            slice += direction switch
+            string slice = "Slice" + direction switch
             {
                 0 => "Left",
                 1 => "Right",
@@ -112,8 +111,7 @@ namespace HeavenStudio.Games.Scripts_DogNinja
             isActive = false;
             barelyTime = Conductor.instance.songPositionInBeats;
 
-            string barely = "Barely";
-            barely += direction switch
+            string barely = "Barely" + direction switch
             {
                 0 => "Left",
                 1 => "Right",

@@ -50,12 +50,6 @@ namespace HeavenStudio.Games.Scripts_MrUpbeat
             onGround = true;
         }
 
-        public void Blip()
-        {
-            Jukebox.PlayOneShotGame("mrUpbeat/blip");
-            blipAnimator.Play("Blip", 0, 0);
-        }
-
         private void CheckShadows()
         {
             if (onGround) return;
@@ -72,7 +66,5 @@ namespace HeavenStudio.Games.Scripts_MrUpbeat
                 transform.localScale = new Vector3(1, 1);
             }
         }
-       
-
     }
 }

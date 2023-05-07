@@ -57,43 +57,42 @@ namespace HeavenStudio.Games.Loaders
                     defaultLength = 2,
                     inactiveFunction = delegate { DogNinja.HereWeGoInactive(eventCaller.currentEntity.beat); },
                     preFunctionLength = 1,
-                    preFunction = delegate { Debug.Log("should be one behind"); },
                 },
 
                 // these are still here for backwards-compatibility but are hidden in the editor
                 new GameAction("ThrowObjectLeft", "Throw Object Left")
                 {
+                    function = delegate { var e = eventCaller.currentEntity; DogNinja.QueueObject(e.beat, 0, e["type"], 0, true, false);},
                     defaultLength = 2,
                     hidden = true,
-                    preFunctionLength = 0,
                     parameters = new List<Param>()
                     {
                         new Param("type", DogNinja.ObjectType.Random, "Object", "The object to be thrown"),
                     },
-                    preFunction = delegate { var e = eventCaller.currentEntity; DogNinja.QueueObject(e.beat, 0, e["type"], 0, true, false);},
+                    inactiveFunction = delegate { var e = eventCaller.currentEntity; DogNinja.QueueObject(e.beat, 0, e["type"], 0, true, false);},
                 },
                 new GameAction("ThrowObjectRight", "Throw Object Right")
                 {
+                    function = delegate { var e = eventCaller.currentEntity; DogNinja.QueueObject(e.beat, 1, 0, e["type"], true, false);},
                     defaultLength = 2,
                     hidden = true,
-                    preFunctionLength = 0,
                     parameters = new List<Param>()
                     {
                         new Param("type", DogNinja.ObjectType.Random, "Object", "The object to be thrown"),
                     },
-                    preFunction = delegate { var e = eventCaller.currentEntity; DogNinja.QueueObject(e.beat, 1, 0, e["type"], true, false);},
+                    inactiveFunction = delegate { var e = eventCaller.currentEntity; DogNinja.QueueObject(e.beat, 1, 0, e["type"], true, false);},
                 },
                 new GameAction("ThrowObjectBoth", "Throw Object Both")
                 {
+                    function = delegate { var e = eventCaller.currentEntity; DogNinja.QueueObject(e.beat, 2, e["typeL"], e["typeR"], true, false);},
                     defaultLength = 2,
                     hidden = true,
-                    preFunctionLength = 0,
                     parameters = new List<Param>()
                     {
                         new Param("typeL", DogNinja.ObjectType.Random, "Left Object", "The object on the left to be thrown"),
                         new Param("typeR", DogNinja.ObjectType.Random, "Right Object", "The object on the right to be thrown"),
                     },
-                    preFunction = delegate { var e = eventCaller.currentEntity; DogNinja.QueueObject(e.beat, 2, e["typeL"], e["typeR"], true, false);},
+                    inactiveFunction = delegate { var e = eventCaller.currentEntity; DogNinja.QueueObject(e.beat, 2, e["typeL"], e["typeR"], true, false);},
                 },
             });
         }
