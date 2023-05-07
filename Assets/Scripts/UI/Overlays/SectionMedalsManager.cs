@@ -20,11 +20,15 @@ namespace HeavenStudio.Common
         bool isMedalsEligible = true;
 
         // Start is called before the first frame update
+        public void Awake()
+        {
+            instance = this;
+        }
+
         public void Start()
         {
             cond = Conductor.instance;
             GameManager.instance.onSectionChange += OnSectionChange;
-            instance = this;
         }
 
         // Update is called once per frame
