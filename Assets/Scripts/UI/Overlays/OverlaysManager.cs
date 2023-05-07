@@ -235,6 +235,8 @@ namespace HeavenStudio.Common
                     go.transform.localScale = Vector3.one * scale;
                     go.transform.localRotation = Quaternion.Euler(0, 0, rotation);
                     go.SetActive(enable && OverlaysManager.OverlaysEnabled);
+
+                    HeavenStudio.Common.SectionMedalsManager.instance?.AnchorToOverlay(go);
                 }
             }
 

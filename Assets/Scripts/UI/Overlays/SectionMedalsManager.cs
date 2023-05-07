@@ -33,6 +33,13 @@ namespace HeavenStudio.Common
 
         }
 
+        public void AnchorToOverlay(GameObject overlay)
+        {
+            transform.position = overlay.transform.position;
+            transform.rotation = overlay.transform.rotation;
+            transform.localScale = overlay.transform.localScale;
+        }
+
         public void MakeIneligible()
         {
             isMedalsEligible = false;

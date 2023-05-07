@@ -27,7 +27,7 @@ namespace HeavenStudio
                         OnOpenFile = args[i];
                     }
                 }
-                if (args[i] == "--fastboot")
+                if (args[i] == "--nosplash")
                 {
                     fastBoot = true;
                 }
