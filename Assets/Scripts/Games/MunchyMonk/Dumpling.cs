@@ -17,15 +17,16 @@ namespace HeavenStudio.Games.Scripts_MunchyMonk
         
         [Header("References")]
         [SerializeField] Animator smearAnim;
-        [SerializeField] SpriteRenderer smearSr;
         [SerializeField] Animator anim;
-        [SerializeField] SpriteRenderer sr;
+        [SerializeField] SpriteRenderer smearSr;
+        public SpriteRenderer sr;
 
         private MunchyMonk game;
 
         private void Awake()
         {
             game = MunchyMonk.instance;
+            sr = GetComponent<SpriteRenderer>();
         }
 
         private void Start() 
@@ -33,7 +34,7 @@ namespace HeavenStudio.Games.Scripts_MunchyMonk
             sr.color = dumplingColor;
             if (game.dumplings.Count > 1) {
                 anim.Play("IdleOnTop", 0, 0);
-                game.dumplings[0].dumpling.anim.DoScaledAnimationAsync("Squish", 0.5f);
+                game.dumplings[0].anim.DoScaledAnimationAsync("Squish", 0.5f);
             }
         }
 
@@ -62,7 +63,7 @@ namespace HeavenStudio.Games.Scripts_MunchyMonk
                 game.needBlush = false;
             } else {
                 game.MonkAnim.DoScaledAnimationAsync("Eat", 0.4f);
-                game.dumplings[0].dumpling.anim.DoScaledAnimationAsync("FollowHand", 0.5f);
+                game.dumplings[0].anim.DoScaledAnimationAsync("FollowHand", 0.5f);
                 smearAnim.Play("SmearAppear", 0, 0);
                 game.needBlush = true;
                 Jukebox.PlayOneShotGame(sfxName+"gulp");
