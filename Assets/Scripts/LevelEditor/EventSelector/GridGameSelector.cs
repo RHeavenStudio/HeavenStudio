@@ -2,12 +2,14 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.EventSystems;
 
 using TMPro;
 using DG.Tweening;
 using Starpelly;
 
 using HeavenStudio.Editor.Track;
+
 
 namespace HeavenStudio.Editor
 {
@@ -25,9 +27,9 @@ namespace HeavenStudio.Editor
         private RectTransform eventsParent;
 
         [Header("Properties")]
+        [SerializeField] private int currentEventIndex;
         private Minigames.Minigame mg;
         private bool gameOpen;
-        [SerializeField] private int currentEventIndex;
         private int dragTimes;
         public float posDif;
         public int ignoreSelectCount;
@@ -48,7 +50,7 @@ namespace HeavenStudio.Editor
 
         private void Update()
         {
-            if(!(EventParameterManager.instance.active || Conductor.instance.NotStopped()))
+            if (!(EventParameterManager.instance.active || Conductor.instance.NotStopped()) && !IsPointerOverUIElement())
             {
                 if (gameOpen)
                 {
@@ -175,6 +177,31 @@ namespace HeavenStudio.Editor
                 eventsParent.GetChild(i).GetComponent<TMP_Text>().color = EditorTheme.theme.properties.EventNormalCol.Hex2RGB();
 
             eventsParent.GetChild(index).GetComponent<TMP_Text>().color = EditorTheme.theme.properties.EventSelectedCol.Hex2RGB();
+        }
+
+        public bool IsPointerOverUIElement()
+        {
+            return IsPointerOverUIElement(GetEventSystemRaycastResults());
+        }
+
+        private bool IsPointerOverUIElement(List<RaycastResult> eventSystemRaysastResults)
+        {
+            for (int index = 0; index < eventSystemRaysastResults.Count; index++)
+            {
+                RaycastResult curRaysastResult = eventSystemRaysastResults[index];
+                if (curRaysastResult.gameObject.layer == 5)
+                    return true;
+            }
+            return false;
+        }
+
+        static List<RaycastResult> GetEventSystemRaycastResults()
+        {
+            PointerEventData eventData = new PointerEventData(EventSystem.current);
+            eventData.position = Input.mousePosition;
+            List<RaycastResult> raysastResults = new List<RaycastResult>();
+            EventSystem.current.RaycastAll(eventData, raysastResults);
+            return raysastResults;
         }
 
         #endregion

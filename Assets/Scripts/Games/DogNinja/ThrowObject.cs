@@ -12,15 +12,14 @@ namespace HeavenStudio.Games.Scripts_DogNinja
     {
         public float startBeat;
         public int type;
-        public string textObj;
         public bool fromLeft;
-        public bool fromRight;
+        public bool shouldSfx = true;
         public int direction;
+        public string sfxNum;
         
         private Vector3 objPos;
         private bool isActive = true;
         private float barelyTime;
-        string sfxNum = "dogNinja/";
         
         [Header("Animators")]
         Animator DogAnim;
@@ -48,13 +47,7 @@ namespace HeavenStudio.Games.Scripts_DogNinja
         {
             barelyCurve = fromLeft ? BarelyRightCurve : BarelyLeftCurve;
             
-            sfxNum += type < 7 ? "fruit" : textObj;
-            
-            if (direction == 2 && fromLeft) {} else { Jukebox.PlayOneShotGame(sfxNum+"1"); }
-            
             game.ScheduleInput(startBeat, 1f, InputType.STANDARD_DOWN | InputType.DIRECTION_DOWN, Hit, Miss, Out);
-            
-            DogAnim.SetBool("needPrepare", true);
         }
 
         private void Update()
@@ -87,27 +80,25 @@ namespace HeavenStudio.Games.Scripts_DogNinja
 
         private void SuccessSlice() 
         {
-            string Slice = "Slice";
-            if (direction == 0) {
-                Slice += "Left";
-            } else if (direction == 1) {
-                Slice += "Right";
-            } else {
-                Slice += "Both";
-            }
+            string slice = "Slice" + direction switch
+            {
+                0 => "Left",
+                1 => "Right",
+                2 => "Both",
+            };
 
-            DogAnim.DoScaledAnimationAsync(Slice, 0.5f);
-            if (!(direction == 2 && fromLeft)) Jukebox.PlayOneShotGame(sfxNum+"2");
+            DogAnim.DoScaledAnimationAsync(slice, 0.5f);
+            if (shouldSfx) Jukebox.PlayOneShotGame(sfxNum+"2");
 
             game.WhichLeftHalf.sprite = objectLeftHalves[type-1];
             game.WhichRightHalf.sprite = objectRightHalves[type-1];
 
-            SpawnHalves LeftHalf = Instantiate(HalvesLeftBase).GetComponent<SpawnHalves>();
+            SpawnHalves LeftHalf = Instantiate(HalvesLeftBase, game.gameObject.transform).GetComponent<SpawnHalves>();
             LeftHalf.startBeat = startBeat;
             LeftHalf.lefty = fromLeft;
             LeftHalf.objPos = objPos;
 
-            SpawnHalves RightHalf = Instantiate(HalvesRightBase).GetComponent<SpawnHalves>();
+            SpawnHalves RightHalf = Instantiate(HalvesRightBase, game.gameObject.transform).GetComponent<SpawnHalves>();
             RightHalf.startBeat = startBeat;
             RightHalf.lefty = fromLeft;
             RightHalf.objPos = objPos;
@@ -120,16 +111,14 @@ namespace HeavenStudio.Games.Scripts_DogNinja
             isActive = false;
             barelyTime = Conductor.instance.songPositionInBeats;
 
-            string Barely = "Barely";
-            if (direction == 0) {
-                Barely += "Left";
-            } else if (direction == 1) {
-                Barely += "Right";
-            } else {
-                Barely += "Both";
-            }
+            string barely = "Barely" + direction switch
+            {
+                0 => "Left",
+                1 => "Right",
+                2 => "Both",
+            };
 
-            DogAnim.DoScaledAnimationAsync(Barely, 0.5f);
+            DogAnim.DoScaledAnimationAsync(barely, 0.5f);
             Jukebox.PlayOneShotGame("dogNinja/barely");
         }
 

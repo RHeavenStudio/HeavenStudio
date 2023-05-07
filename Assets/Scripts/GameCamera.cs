@@ -30,6 +30,7 @@ namespace HeavenStudio
         public static Vector3 defaultPosition = new Vector3(0, 0, -10);
         public static Vector3 defaultRotEluer = new Vector3(0, 0, 0);
         public static Vector3 defaultShake = new Vector3(0, 0, 0);
+        public static float defaultFoV = 53.15f;
 
         /**
             camera's current transformation
@@ -53,6 +54,7 @@ namespace HeavenStudio
         public static Vector3 additionalPosition;
         public static Vector3 additionalRotEluer;
         public static Vector3 additionalScale;
+        public static float additionalFoV;
 
         [Header("Components")]
         public Color baseColor;
@@ -109,8 +111,11 @@ namespace HeavenStudio
             SetShakeIntensity();
 
             Camera cam = GetCamera();
-            cam.transform.localPosition = position + additionalPosition + shakeResult;
+            // rotate position by additional rotation
+            Vector3 userPos = Quaternion.Euler(additionalRotEluer) * position;
+            cam.transform.localPosition = userPos + additionalPosition + shakeResult;
             cam.transform.eulerAngles = rotEluer + additionalRotEluer;
+            cam.fieldOfView = additionalFoV;
         }
 
         private void UpdateCameraTranslate()
@@ -238,6 +243,7 @@ namespace HeavenStudio
         {
             additionalPosition = new Vector3(0, 0, 0);
             additionalRotEluer = new Vector3(0, 0, 0);
+            additionalFoV = defaultFoV;
         }
 
         public static Camera GetCamera()

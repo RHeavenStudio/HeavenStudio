@@ -19,13 +19,14 @@ namespace HeavenStudio.Games.Loaders
                 {
                     preFunction = delegate {var e = eventCaller.currentEntity; MrUpbeat.Stepping(e.beat, e.length); },
                     defaultLength = 4f,
-                    resizable = true
+                    resizable = true,
                 },
                 new GameAction("blipping", "Beeping")
                 {
-                    function = delegate {var e = eventCaller.currentEntity; MrUpbeat.instance.Blipping(e.beat, e.length); },
+                    function = delegate {var e = eventCaller.currentEntity; MrUpbeat.Blipping(e.beat, e.length); },
                     defaultLength = 4f,
-                    resizable = true
+                    resizable = true,
+                    inactiveFunction = delegate {var e = eventCaller.currentEntity; MrUpbeat.Blipping(e.beat, e.length); },
                 },
                 new GameAction("ding!", "Ding!")
                 {
@@ -47,17 +48,19 @@ namespace HeavenStudio.Games
 
     public class MrUpbeat : Minigame
     {
-        [Header("References")]
-        public Animator metronomeAnim;
-        public UpbeatMan man;
-
-        [Header("Properties")]
+        static List<float> queuedBeeps = new List<float>();
         static List<queuedUpbeatInputs> queuedInputs = new List<queuedUpbeatInputs>();
         public struct queuedUpbeatInputs
         {
             public float beat;
             public bool goRight;
         }
+
+        [Header("References")]
+        public Animator metronomeAnim;
+        public UpbeatMan man;
+
+        [Header("Properties")]
         bool startLeft;
 
         public static MrUpbeat instance;
@@ -72,6 +75,7 @@ namespace HeavenStudio.Games
             if (!Conductor.instance.isPlaying || Conductor.instance.isPaused)
             {
                 if (queuedInputs.Count > 0) queuedInputs.Clear();
+                if (queuedBeeps.Count > 0) queuedBeeps.Clear();
             }
         }
 
@@ -117,6 +121,16 @@ namespace HeavenStudio.Games
                     man.Step();
                 }
             }
+
+            if (queuedBeeps.Count > 0) {
+                var beepAnims = new List<BeatAction.Action>();
+                foreach (var item in queuedBeeps)
+                {
+                    beepAnims.Add(new BeatAction.Action(item, delegate { man.blipAnimator.Play("Blip", 0, 0); }));
+                }
+                BeatAction.New(instance.gameObject, beepAnims);
+                queuedBeeps.Clear();
+            }
         }
 
         public void Ding(bool applause)
@@ -125,15 +139,17 @@ namespace HeavenStudio.Games
             if (applause) Jukebox.PlayOneShot("applause");
         }
 
-        public void Blipping(float beat, float length)
+        public static void Blipping(float beat, float length)
         {
+            List<MultiSound.Sound> beeps = new List<MultiSound.Sound>();
+
             for (int i = 0; i < length + 1; i++) 
             {
-                BeatAction.New(instance.gameObject, new List<BeatAction.Action>()
-                {
-                    new BeatAction.Action(beat + i, delegate { man.Blip(); }),
-                });
+                beeps.Add(new MultiSound.Sound("mrUpbeat/blip", beat + i));
+                queuedBeeps.Add(beat + i);
             }
+
+            MultiSound.Play(beeps.ToArray(), forcePlay: true);
         }
 
         public static void Stepping(float beat, float length)
