@@ -137,6 +137,18 @@ namespace HeavenStudio.Games
             }
         }
 
+        public SuperCurveObject.Path GetPath(string name)
+        {
+            foreach (SuperCurveObject.Path path in ballPaths)
+            {
+                if (path.name == name)
+                {
+                    return path;
+                }
+            }
+            return default(SuperCurveObject.Path);
+        }
+
         private void Update()
         {
             var cond = Conductor.instance;
