@@ -69,8 +69,9 @@ namespace HeavenStudio.Games.Scripts_TossBoys
             }
         }
 
-        public void SetState(State state, float beat)
+        public void SetState(State state, float beat, float length = 0)
         {
+            UpdateLastRealPos();
             startBeat = beat;
             currentState = state;
             currentPath = currentState switch
@@ -105,6 +106,10 @@ namespace HeavenStudio.Games.Scripts_TossBoys
                 State.YellowKeep => game.GetPath("YellowKeep"),
                 _ => throw new System.NotImplementedException()
             };
+            if (length != 0)
+            {
+                currentPath.positions[0].duration = length;
+            }
         }
     }
 }
