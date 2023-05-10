@@ -7334,6 +7334,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e9c2f7ae54a21a949b3e42dc59789af4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  offset: {x: 0, y: 0, z: 0}
 --- !u!1 &2776558183996788987
 GameObject:
   m_ObjectHideFlags: 0
@@ -12602,7 +12603,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &6726788094847305815
 Transform:
   m_ObjectHideFlags: 0
@@ -14874,6 +14875,25 @@ MonoBehaviour:
   specialAo: {fileID: 1558938506013839449}
   specialKii: {fileID: 8747124398442550064}
   currentSpecialKid: {fileID: 0}
+  ballPaths:
+  - name: RedBlue
+    preview: 1
+    anchor: {fileID: 0}
+    positions:
+    - tag: 
+      pos: {x: 0, y: 0, z: 0}
+      target: {fileID: 6159155185360637939}
+      height: 3.5
+      duration: 2
+      useLastRealPos: 0
+      values: []
+    - tag: 
+      pos: {x: 0, y: 0, z: 0}
+      target: {fileID: 7184077458466727580}
+      height: 0
+      duration: 0
+      useLastRealPos: 0
+      values: []
   currentBall: {fileID: 0}
 --- !u!1 &6818650093539870978
 GameObject:

@@ -5,7 +5,7 @@ using HeavenStudio.Util;
 
 namespace HeavenStudio.Games.Scripts_TossBoys
 {
-    public class TossBoysBall : MonoBehaviour
+    public class TossBoysBall : SuperCurveObject
     {
 
     }

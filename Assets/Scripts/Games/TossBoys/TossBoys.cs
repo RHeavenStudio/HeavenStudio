@@ -79,6 +79,7 @@ namespace HeavenStudio.Games.Loaders
 }
 namespace HeavenStudio.Games
 {
+    using HeavenStudio.Games.Scripts_SpaceSoccer;
     using Scripts_TossBoys;
     using UnityEngine.UIElements;
 
@@ -109,6 +110,7 @@ namespace HeavenStudio.Games
         [SerializeField] TossKid currentSpecialKid;
 
         [Header("Properties")]
+        [SerializeField] SuperCurveObject.Path[] ballPaths;
         WhichTossKid lastReceiver = WhichTossKid.None;
         WhichTossKid currentReceiver = WhichTossKid.None;
         public TossBoysBall currentBall = null;
@@ -121,6 +123,18 @@ namespace HeavenStudio.Games
         private void Awake()
         {
             instance = this;
+        }
+
+        new void OnDrawGizmos()
+        {
+            base.OnDrawGizmos();
+            foreach (SuperCurveObject.Path path in ballPaths)
+            {
+                if (path.preview)
+                {
+                    ballPrefab.DrawEditorGizmo(path);
+                }
+            }
         }
 
         private void Update()
