@@ -379,7 +379,7 @@ namespace HeavenStudio.Games
                 case "redYellow":
                     secondBeat = 0.5f;
                     thirdOffset = 0.060f;
-                    currentBall.SetState(TossBoysBall.State.YellowRed, beat);
+                    currentBall.SetState(TossBoysBall.State.RedYellow, beat);
                     break;
                 case "yellowBlue":
                     currentBall.SetState(TossBoysBall.State.YellowBlue, beat);
