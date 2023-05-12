@@ -25,8 +25,8 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 112181105555143135}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 2.365, z: 0}
-  m_LocalScale: {x: 0.961875, y: 1, z: 1}
+  m_LocalPosition: {x: 0, y: 2.344, z: 0}
+  m_LocalScale: {x: 0.9702467, y: 0.9204419, z: 1.0087035}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 3888685956083257698}
@@ -18523,18 +18523,18 @@ ParticleSystem:
       maxGradient:
         serializedVersion: 2
         key0: {r: 1, g: 0, b: 0, a: 1}
-        key1: {r: 1, g: 0.8741455, b: 0, a: 1}
-        key2: {r: 1, g: 0.84205747, b: 0, a: 0}
-        key3: {r: 1, g: 0.31488857, b: 0, a: 0}
-        key4: {r: 0, g: 0, b: 0, a: 0}
+        key1: {r: 1, g: 0.016843732, b: 0.0031826622, a: 1}
+        key2: {r: 1, g: 0.4278365, b: 0.0808407, a: 0}
+        key3: {r: 1, g: 0.9735911, b: 0.18396229, a: 0}
+        key4: {r: 1, g: 0.972549, b: 0.18431373, a: 0}
         key5: {r: 0, g: 0, b: 0, a: 0}
         key6: {r: 0, g: 0, b: 0, a: 0}
         key7: {r: 0, g: 0, b: 0, a: 0}
         ctime0: 0
-        ctime1: 31987
-        ctime2: 33418
-        ctime3: 60334
-        ctime4: 0
+        ctime1: 6892
+        ctime2: 17684
+        ctime3: 32507
+        ctime4: 54352
         ctime5: 0
         ctime6: 0
         ctime7: 0
@@ -18547,23 +18547,23 @@ ParticleSystem:
         atime6: 0
         atime7: 0
         m_Mode: 0
-        m_NumColorKeys: 4
+        m_NumColorKeys: 5
         m_NumAlphaKeys: 2
       minGradient:
         serializedVersion: 2
-        key0: {r: 1, g: 0.84313726, b: 0, a: 1}
-        key1: {r: 1, g: 0.8204378, b: 0, a: 1}
-        key2: {r: 1, g: 0, b: 0, a: 0}
-        key3: {r: 1, g: 0.84313726, b: 0, a: 0}
-        key4: {r: 1, g: 0.84313726, b: 0, a: 0}
+        key0: {r: 1, g: 0.972549, b: 0.18431373, a: 1}
+        key1: {r: 1, g: 0.5258719, b: 0.1583116, a: 1}
+        key2: {r: 1, g: 0.5254902, b: 0.15686275, a: 0}
+        key3: {r: 1, g: 0, b: 0.12769938, a: 0}
+        key4: {r: 1, g: 0.972549, b: 0.18431373, a: 0}
         key5: {r: 0, g: 0, b: 0, a: 0}
         key6: {r: 0, g: 0, b: 0, a: 0}
         key7: {r: 0, g: 0, b: 0, a: 0}
         ctime0: 0
-        ctime1: 13523
-        ctime2: 41479
-        ctime3: 65535
-        ctime4: 65535
+        ctime1: 14953
+        ctime2: 24446
+        ctime3: 32637
+        ctime4: 61634
         ctime5: 0
         ctime6: 0
         ctime7: 0
@@ -22419,7 +22419,7 @@ ParticleSystem:
   m_GameObject: {fileID: 4913874439979320455}
   serializedVersion: 8
   lengthInSec: 0.05
-  simulationSpeed: 2
+  simulationSpeed: 1.4
   stopAction: 0
   cullingMode: 0
   ringBufferMode: 0
@@ -38368,7 +38368,7 @@ ParticleSystem:
     startSpeed:
       serializedVersion: 2
       minMaxState: 0
-      scalar: 7
+      scalar: 6
       minScalar: 5
       maxCurve:
         serializedVersion: 2
@@ -43759,8 +43759,8 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 8448450037515034084}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 1.426, z: 0}
-  m_LocalScale: {x: 0.961875, y: 1, z: 1}
+  m_LocalPosition: {x: 0, y: 1.405, z: 0}
+  m_LocalScale: {x: 0.9702467, y: 0.9204419, z: 1.0087035}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 3888685956083257698}
