@@ -72,19 +72,39 @@ namespace HeavenStudio.Games.Loaders
                         new Param("bop", true, "Bop", "Should the toss boys bop to the beat?"),
                         new Param("auto", false, "Bop (Auto)", "Should the toss boys auto bop to the beat?")
                     }
-                }
+                },
+                new GameAction("changeBG", "Change Background Color")
+                {
+                    function = delegate {var e = eventCaller.currentEntity; TossBoys.instance.FadeBackgroundColor(e["start"], e["end"], e.length, e["toggle"]); },
+                    defaultLength = 1f,
+                    resizable = true,
+                    parameters = new List<Param>()
+                    {
+                        new Param("start", TossBoys.defaultBGColor, "Start Color", "The start color for the fade or the color that will be switched to if -instant- is ticked on."),
+                        new Param("end", TossBoys.defaultBGColor, "End Color", "The end color for the fade."),
+                        new Param("toggle", false, "Instant", "Should the background instantly change color?")
+                    }
+                },
             });
         }
     }
 }
 namespace HeavenStudio.Games
 {
-    using HeavenStudio.Games.Scripts_SpaceSoccer;
+    using DG.Tweening;
     using Scripts_TossBoys;
-    using UnityEngine.UIElements;
 
     public class TossBoys : Minigame
     {
+        private static Color _defaultBGColor;
+        public static Color defaultBGColor
+        {
+            get
+            {
+                ColorUtility.TryParseHtmlString("#53FFA3", out _defaultBGColor);
+                return _defaultBGColor;
+            }
+        }
         public enum KidChoice
         {
             Akachan = 0,
@@ -108,8 +128,10 @@ namespace HeavenStudio.Games
         [SerializeField] GameObject specialAo;
         [SerializeField] GameObject specialKii;
         [SerializeField] TossKid currentSpecialKid;
+        [SerializeField] SpriteRenderer bg;
 
         [Header("Properties")]
+        Tween bgColorTween;
         [SerializeField] SuperCurveObject.Path[] ballPaths;
         WhichTossKid lastReceiver = WhichTossKid.None;
         WhichTossKid currentReceiver = WhichTossKid.None;
@@ -174,6 +196,29 @@ namespace HeavenStudio.Games
                     kiiyan.HitBall(false);
                 }
             }
+        }
+
+        public void ChangeBackgroundColor(Color color, float beats)
+        {
+            var seconds = Conductor.instance.secPerBeat * beats;
+
+            if (bgColorTween != null)
+                bgColorTween.Kill(true);
+
+            if (seconds == 0)
+            {
+                bg.color = color;
+            }
+            else
+            {
+                bgColorTween = bg.DOColor(color, seconds);
+            }
+        }
+
+        public void FadeBackgroundColor(Color start, Color end, float beats, bool instant)
+        {
+            ChangeBackgroundColor(start, 0f);
+            if (!instant) ChangeBackgroundColor(end, beats);
         }
 
         #region Bop 

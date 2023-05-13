@@ -5580,7 +5580,7 @@ Transform:
   m_GameObject: {fileID: 600946145801314392}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0.2, z: 0}
-  m_LocalScale: {x: 17.78201, y: 10.308411, z: 10.308411}
+  m_LocalScale: {x: 100, y: 100, z: 100}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 9055139298877869241}
@@ -7216,6 +7216,7 @@ GameObject:
   m_Component:
   - component: {fileID: 6208734025018225679}
   - component: {fileID: 7204509232832701884}
+  - component: {fileID: 5183397769559032110}
   m_Layer: 0
   m_Name: Ball
   m_TagString: Untagged
@@ -7252,6 +7253,27 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   offset: {x: 0, y: 0, z: 0}
+--- !u!95 &5183397769559032110
+Animator:
+  serializedVersion: 5
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2625640798565580542}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: fa711e41d9eea3747bc01e9aff4f37c7, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorStateOnDisable: 0
+  m_WriteDefaultValuesOnDisable: 0
 --- !u!1 &2776558183996788987
 GameObject:
   m_ObjectHideFlags: 0
@@ -14875,6 +14897,7 @@ MonoBehaviour:
   specialAo: {fileID: 1558938506013839449}
   specialKii: {fileID: 8747124398442550064}
   currentSpecialKid: {fileID: 0}
+  bg: {fileID: 8072457708312067516}
   ballPaths:
   - name: RedBlue
     preview: 0
@@ -14886,7 +14909,9 @@ MonoBehaviour:
       height: 3.5
       duration: 2
       useLastRealPos: 1
-      values: []
+      values:
+      - key: rot
+        value: -202.5
     - tag: 
       pos: {x: 0, y: 0, z: 0}
       target: {fileID: 7184077458466727580}
@@ -14904,7 +14929,9 @@ MonoBehaviour:
       height: 2.75
       duration: 2
       useLastRealPos: 1
-      values: []
+      values:
+      - key: rot
+        value: -720
     - tag: 
       pos: {x: 0, y: 0, z: 0}
       target: {fileID: 2607058173386137206}
@@ -14922,7 +14949,9 @@ MonoBehaviour:
       height: 4.5
       duration: 2
       useLastRealPos: 0
-      values: []
+      values:
+      - key: rot
+        value: 720
     - tag: 
       pos: {x: 0, y: 0, z: 0}
       target: {fileID: 6159155185360637939}
@@ -14940,7 +14969,9 @@ MonoBehaviour:
       height: 3.5
       duration: 2
       useLastRealPos: 1
-      values: []
+      values:
+      - key: rot
+        value: 202.5
     - tag: 
       pos: {x: 0, y: 0, z: 0}
       target: {fileID: 6159155185360637939}
@@ -14958,7 +14989,9 @@ MonoBehaviour:
       height: 3
       duration: 2
       useLastRealPos: 1
-      values: []
+      values:
+      - key: rot
+        value: -720
     - tag: 
       pos: {x: 0, y: 0, z: 0}
       target: {fileID: 8291254834281669822}
@@ -14976,7 +15009,9 @@ MonoBehaviour:
       height: 4.5
       duration: 2
       useLastRealPos: 0
-      values: []
+      values:
+      - key: rot
+        value: 720
     - tag: 
       pos: {x: 0, y: 0, z: 0}
       target: {fileID: 2436898844214260863}
@@ -14994,7 +15029,9 @@ MonoBehaviour:
       height: 2.75
       duration: 2
       useLastRealPos: 1
-      values: []
+      values:
+      - key: rot
+        value: 720
     - tag: 
       pos: {x: 0, y: 0, z: 0}
       target: {fileID: 6159155185360637939}
@@ -15012,7 +15049,9 @@ MonoBehaviour:
       height: 3
       duration: 2
       useLastRealPos: 1
-      values: []
+      values:
+      - key: rot
+        value: 720
     - tag: 
       pos: {x: 0, y: 0, z: 0}
       target: {fileID: 2436898844214260863}
@@ -15030,7 +15069,9 @@ MonoBehaviour:
       height: 4.5
       duration: 2
       useLastRealPos: 0
-      values: []
+      values:
+      - key: rot
+        value: -720
     - tag: 
       pos: {x: 0, y: 0, z: 0}
       target: {fileID: 8291254834281669822}
@@ -15048,7 +15089,9 @@ MonoBehaviour:
       height: 2.5
       duration: 1
       useLastRealPos: 1
-      values: []
+      values:
+      - key: rot
+        value: -202.5
     - tag: 
       pos: {x: 0, y: 0, z: 0}
       target: {fileID: 7184077458466727580}
@@ -15066,7 +15109,9 @@ MonoBehaviour:
       height: 1.5
       duration: 1
       useLastRealPos: 1
-      values: []
+      values:
+      - key: rot
+        value: -720
     - tag: 
       pos: {x: 0, y: 0, z: 0}
       target: {fileID: 2607058173386137206}
@@ -15084,7 +15129,9 @@ MonoBehaviour:
       height: 2.5
       duration: 1
       useLastRealPos: 1
-      values: []
+      values:
+      - key: rot
+        value: 202.5
     - tag: 
       pos: {x: 0, y: 0, z: 0}
       target: {fileID: 6159155185360637939}
@@ -15102,7 +15149,9 @@ MonoBehaviour:
       height: 1.5
       duration: 1
       useLastRealPos: 1
-      values: []
+      values:
+      - key: rot
+        value: -720
     - tag: 
       pos: {x: 0, y: 0, z: 0}
       target: {fileID: 2607058173386137206}
@@ -15120,7 +15169,9 @@ MonoBehaviour:
       height: 1.5
       duration: 1
       useLastRealPos: 1
-      values: []
+      values:
+      - key: rot
+        value: 720
     - tag: 
       pos: {x: 0, y: 0, z: 0}
       target: {fileID: 7184077458466727580}
@@ -15138,7 +15189,9 @@ MonoBehaviour:
       height: 1.5
       duration: 1
       useLastRealPos: 1
-      values: []
+      values:
+      - key: rot
+        value: 720
     - tag: 
       pos: {x: 0, y: 0, z: 0}
       target: {fileID: 6159155185360637939}
@@ -15156,7 +15209,9 @@ MonoBehaviour:
       height: 9
       duration: 3
       useLastRealPos: 1
-      values: []
+      values:
+      - key: rot
+        value: -202.5
     - tag: 
       pos: {x: 0, y: 0, z: 0}
       target: {fileID: 7184077458466727580}
@@ -15174,7 +15229,9 @@ MonoBehaviour:
       height: 9
       duration: 3
       useLastRealPos: 1
-      values: []
+      values:
+      - key: rot
+        value: -720
     - tag: 
       pos: {x: 0, y: 0, z: 0}
       target: {fileID: 2607058173386137206}
@@ -15192,7 +15249,9 @@ MonoBehaviour:
       height: 9
       duration: 3
       useLastRealPos: 1
-      values: []
+      values:
+      - key: rot
+        value: 202.5
     - tag: 
       pos: {x: 0, y: 0, z: 0}
       target: {fileID: 6159155185360637939}
@@ -15210,7 +15269,9 @@ MonoBehaviour:
       height: 9.5
       duration: 3
       useLastRealPos: 1
-      values: []
+      values:
+      - key: rot
+        value: -720
     - tag: 
       pos: {x: 0, y: 0, z: 0}
       target: {fileID: 2607058173386137206}
@@ -15228,7 +15289,9 @@ MonoBehaviour:
       height: 9
       duration: 3
       useLastRealPos: 1
-      values: []
+      values:
+      - key: rot
+        value: 720
     - tag: 
       pos: {x: 0, y: 0, z: 0}
       target: {fileID: 6159155185360637939}
@@ -15246,7 +15309,9 @@ MonoBehaviour:
       height: 9.5
       duration: 3
       useLastRealPos: 1
-      values: []
+      values:
+      - key: rot
+        value: 720
     - tag: 
       pos: {x: 0, y: 0, z: 0}
       target: {fileID: 7184077458466727580}
@@ -15264,7 +15329,9 @@ MonoBehaviour:
       height: 3.8
       duration: 2
       useLastRealPos: 1
-      values: []
+      values:
+      - key: rot
+        value: -202.5
     - tag: 
       pos: {x: 0, y: 0, z: 0}
       target: {fileID: 6159155185360637939}
@@ -15282,7 +15349,9 @@ MonoBehaviour:
       height: 2
       duration: 1
       useLastRealPos: 1
-      values: []
+      values:
+      - key: rot
+        value: -202.5
     - tag: 
       pos: {x: 0, y: 0, z: 0}
       target: {fileID: 6159155185360637939}
@@ -15300,7 +15369,9 @@ MonoBehaviour:
       height: 3.8
       duration: 2
       useLastRealPos: 1
-      values: []
+      values:
+      - key: rot
+        value: 202.5
     - tag: 
       pos: {x: 0, y: 0, z: 0}
       target: {fileID: 7184077458466727580}
@@ -15318,7 +15389,9 @@ MonoBehaviour:
       height: 2
       duration: 1
       useLastRealPos: 1
-      values: []
+      values:
+      - key: rot
+        value: 202.5
     - tag: 
       pos: {x: 0, y: 0, z: 0}
       target: {fileID: 7184077458466727580}
@@ -15336,7 +15409,9 @@ MonoBehaviour:
       height: 3.8
       duration: 2
       useLastRealPos: 1
-      values: []
+      values:
+      - key: rot
+        value: 202.5
     - tag: 
       pos: {x: 0, y: 0, z: 0}
       target: {fileID: 2607058173386137206}
@@ -15354,7 +15429,9 @@ MonoBehaviour:
       height: 2
       duration: 1
       useLastRealPos: 1
-      values: []
+      values:
+      - key: rot
+        value: 202.5
     - tag: 
       pos: {x: 0, y: 0, z: 0}
       target: {fileID: 2607058173386137206}

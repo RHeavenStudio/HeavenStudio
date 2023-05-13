@@ -48,9 +48,12 @@ namespace HeavenStudio.Games.Scripts_TossBoys
 
         private TossBoys game;
 
+        private Animator anim;
+
         private void Awake()
         {
             game = TossBoys.instance;
+            anim = GetComponent<Animator>();
         }
 
         private void Update()
@@ -64,6 +67,8 @@ namespace HeavenStudio.Games.Scripts_TossBoys
                         break;
                     default:
                         transform.position = GetPathPositionFromBeat(currentPath, Mathf.Max(startBeat, Conductor.instance.songPositionInBeats), startBeat);
+                        float rot = GetPathValue("rot");
+                        transform.rotation = Quaternion.Euler(0f, 0f, transform.rotation.eulerAngles.z - (rot * Time.deltaTime * (1f / Conductor.instance.pitchedSecPerBeat)));
                         break;
                 }
             }
@@ -109,6 +114,10 @@ namespace HeavenStudio.Games.Scripts_TossBoys
             if (length != 0)
             {
                 currentPath.positions[0].duration = length;
+            }
+            else
+            {
+                anim.DoScaledAnimationAsync("Hit", 0.5f);
             }
         }
     }
