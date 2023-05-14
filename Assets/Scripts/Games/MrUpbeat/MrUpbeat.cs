@@ -4,7 +4,6 @@ using System.Linq;
 using UnityEngine;
 using System;
 using DG.Tweening;
-using TMPro;
 
 using HeavenStudio.Util;
 
@@ -18,26 +17,27 @@ namespace HeavenStudio.Games.Loaders
             {
                 new GameAction("start stepping", "Start Stepping")
                 {
-                    preFunction = delegate {var e = eventCaller.currentEntity; MrUpbeat.StartStepping(e.beat, e.length, e["force"]); },
+                    preFunction = delegate {var e = eventCaller.currentEntity; MrUpbeat.StartStepping(e.beat, e.length); },
                     defaultLength = 4f,
-                    parameters = new List<Param>()
-                    {
-                        new Param("force", false, "Force Onbeat", "Force Mr. Upbeat to step on the offbeats")
-                    },
                     resizable = true,
                 },
                 new GameAction("ding!", "Ding!")
                 {
-                    function = delegate { MrUpbeat.instance.Ding(eventCaller.currentEntity["toggle"]); },
+                    function = delegate { 
+                        var e = eventCaller.currentEntity; 
+                        MrUpbeat.instance.Ding(eventCaller.currentEntity["toggle"], e["stopBeeping"]); },
                     defaultLength = 0.5f,
                     parameters = new List<Param>()
                     {
-                        new Param("toggle", false, "Applause")
+                        new Param("toggle", false, "Applause", "Plays an applause soud effect."),
+                        new Param("stopBeeping", true, "Stop Beeping?", "When the stepping stops, should the beeping stop too?"),
                     }
                 },
                 new GameAction("changeBG", "Change Background Color")
                 {
-                    function = delegate {var e = eventCaller.currentEntity; MrUpbeat.instance.FadeBackgroundColor(e["start"], e["end"], e.length, e["toggle"]); },
+                    function = delegate {
+                        var e = eventCaller.currentEntity;
+                        MrUpbeat.instance.FadeBackgroundColor(e["start"], e["end"], e.length, e["toggle"]); },
                     defaultLength = 1f,
                     resizable = true,
                     parameters = new List<Param>()
@@ -49,7 +49,10 @@ namespace HeavenStudio.Games.Loaders
                 },
                 new GameAction("upbeatColors", "Upbeat Colors")
                 {
-                    function = delegate {var e = eventCaller.currentEntity; MrUpbeat.instance.UpbeatColors(e["blipColor"], e["setShadow"], e["shadowColor"]); },
+                    function = delegate {
+                        var e = eventCaller.currentEntity; 
+                        MrUpbeat.instance.UpbeatColors(e["blipColor"], e["setShadow"], e["shadowColor"]); 
+                    },
                     defaultLength = 0.5f,
                     parameters = new List<Param>()
                     {
@@ -60,7 +63,10 @@ namespace HeavenStudio.Games.Loaders
                 },
                 new GameAction("blipEvents", "Blip Events")
                 {
-                    function = delegate {var e = eventCaller.currentEntity; MrUpbeat.instance.BlipEvents(e["letter"], e["shouldGrow"], e["resetBlip"], e["beep"]); },
+                    function = delegate {
+                        var e = eventCaller.currentEntity; 
+                        MrUpbeat.instance.BlipEvents(e["letter"], e["shouldGrow"], e["resetBlip"], e["beep"]); 
+                    },
                     defaultLength = 0.5f,
                     parameters = new List<Param>()
                     {
@@ -69,22 +75,6 @@ namespace HeavenStudio.Games.Loaders
                         new Param("resetBlip", false, "Reset Antenna?", "Should Mr. Upbeat's antenna reset?"),
                         new Param("beep", true, "Should Beep?", "Should Mr. Upbeat beep every offbeat?"),
                     }
-                },
-
-                // these are hidden in the editor but blah blah blah blah
-                new GameAction("stepping", "Start Stepping")
-                {
-                    preFunctionLength = 0.5f,
-                    preFunction = delegate {var e = eventCaller.currentEntity; MrUpbeat.StartStepping(e.beat, 0, false); },
-                    defaultLength = 4f,
-                    resizable = true,
-                },
-                new GameAction("blipping", "Beeping")
-                {
-                    function = delegate {var e = eventCaller.currentEntity; MrUpbeat.Blipping(e.beat, e.length); },
-                    defaultLength = 4f,
-                    resizable = true,
-                    inactiveFunction = delegate {var e = eventCaller.currentEntity; MrUpbeat.Blipping(e.beat, e.length); },
                 },
             });
         }
@@ -97,7 +87,6 @@ namespace HeavenStudio.Games
 
     public class MrUpbeat : Minigame
     {
-        static List<float> queuedBeeps = new List<float>();
         static List<float> queuedInputs = new List<float>();
 
         [Header("References")]
@@ -106,98 +95,89 @@ namespace HeavenStudio.Games
         [SerializeField] Material blipMaterial;
         [SerializeField] SpriteRenderer bg;
         [SerializeField] SpriteRenderer[] shadowSr;
-        [SerializeField] TMP_Text blipText;
-        public GameObject textObj;
 
         [Header("Properties")]
         private Tween bgColorTween;
-        private int blipSize = 0;
-        private int stepIterate = 0;
-        private string blipString = "M";
-        private bool shouldBeep = true;
-        private bool autoStep;
-        private float lastReportedBeat = 0f;
+        public int stepIterate = 0;
+        public static bool shouldBeep;
+        static bool noDing;
 
         public static MrUpbeat instance;
 
         private void Awake()
         {
             instance = this;
-            
+
             blipMaterial.SetColor("_ColorBravo", new Color(0, 1f, 0));
+        }
+
+        private void Start()
+        {
+            man.Blip();
         }
 
         void OnDestroy()
         {
-            if (!Conductor.instance.isPlaying || Conductor.instance.isPaused)
-            {
+            if (!Conductor.instance.isPlaying || Conductor.instance.isPaused) {
                 if (queuedInputs.Count > 0) queuedInputs.Clear();
-                if (queuedBeeps.Count > 0) queuedBeeps.Clear();
             }
+
+            shouldBeep = false;
+            stepIterate = 0;
         }
 
         public void Update()
         {
-            if (Conductor.instance.ReportBeat(ref lastReportedBeat, 0.5f) && shouldBeep)
-            {
-                Jukebox.PlayOneShotGame("mrUpbeat/blip");
-                man.blipAnimator.Play("Blip"+(blipSize+1), 0, 0);
-                if (blipSize == 3)  blipText.text = blipString;
-                textObj.SetActive(blipSize == 3 && blipString != "");
-            }
-
-            if (Conductor.instance.ReportBeat(ref lastReportedBeat) && autoStep)
-            {
-                bool x = stepIterate % 2 == 1;
-                MrUpbeat.instance.metronomeAnim.DoScaledAnimationAsync(x ? "MetronomeGoRight" : "MetronomeGoLeft", 0.5f);
-                Jukebox.PlayOneShotGame(x ? "mrUpbeat/metronomeLeft" : "mrUpbeat/metronomeRight");
-                ScheduleInput(Conductor.instance.songPositionInBeats, 0.5f, InputType.STANDARD_DOWN, Success, Miss, Nothing);
-                stepIterate++;
-            }
-            
             var cond = Conductor.instance;
-            if (cond.isPlaying && !cond.isPaused)
-            {
-                if (queuedInputs.Count > 0)
-                {
-                    stepIterate = 0;
-                    foreach (var input in queuedInputs)
-                    {
-                        bool x = stepIterate % 2 == 1;
-                        BeatAction.New(instance.gameObject, new List<BeatAction.Action>()
-                        {
-                            new BeatAction.Action(input - 0.5f, delegate { 
-                                MrUpbeat.instance.metronomeAnim.DoScaledAnimationAsync(x ? "MetronomeGoRight" : "MetronomeGoLeft", 0.5f);
-                                Jukebox.PlayOneShotGame(x ? "mrUpbeat/metronomeLeft" : "mrUpbeat/metronomeRight");
-                                ScheduleInput(input - 0.5f, 0.5f, InputType.STANDARD_DOWN, Success, Miss, Nothing);
+            if (cond.isPlaying && !cond.isPaused) {
+                if (queuedInputs.Count > 0) {
+                    foreach (var input in queuedInputs) {
+                        string dir = stepIterate % 2 == 1 ? "Right" : "Left";
+                        BeatAction.New(instance.gameObject, new List<BeatAction.Action>() {
+                            new BeatAction.Action(input, delegate { 
+                                instance.metronomeAnim.DoScaledAnimationAsync("MetronomeGo" + dir, 0.5f);
+                                Jukebox.PlayOneShotGame("mrUpbeat/metronome" + dir);
+                                ScheduleInput(input, 0.5f, InputType.STANDARD_DOWN, Success, Miss, Nothing);
+                                if (MrUpbeat.noDing) queuedInputs.Add(input + 1);
                             }),
                         });
                         stepIterate++;
                     }
                     queuedInputs.Clear();
                 }
+
                 if (PlayerInput.Pressed() && !IsExpectingInputNow(InputType.STANDARD_DOWN)) {
                     man.Step();
                 }
             }
         }
 
-        public void Ding(bool applause)
+        public void Ding(bool applause, bool stopBeeping)
         {
             Jukebox.PlayOneShotGame("mrUpbeat/ding");
             if (applause) Jukebox.PlayOneShot("applause");
-            shouldBeep = false;
+            if (stopBeeping) shouldBeep = false;
         }
 
-        public static void StartStepping(float beat, float length, bool force)
+        public static void StartStepping(float beat, float length)
         {
-            if (GameManager.instance.currentGame != "mrUpbeat") Blipping(beat, length);
-            MrUpbeat.instance.shouldBeep = true;
+            if (GameManager.instance.currentGame != "mrUpbeat") {
+                Blipping(beat, length);
+                MrUpbeat.shouldBeep = true;
+            } else {
+                BeatAction.New(instance.gameObject, new List<BeatAction.Action>() {
+                    new BeatAction.Action(MathF.Floor(beat), delegate { 
+                        MrUpbeat.shouldBeep = true; 
+                    }),
+                });
+            }
             var dings = EventCaller.GetAllInGameManagerList("mrUpbeat", new string[] { "ding!" });
             if (dings.Count == 0) {
-                MrUpbeat.instance.autoStep = true;
+                MrUpbeat.noDing = true;
+                queuedInputs.Add(MathF.Floor(beat+length));
                 return;
             }
+            MrUpbeat.noDing = false;
             int whichDing = 0;
             for (int i = 0; i < dings.Count; i++) {
                 if (dings[i].beat > beat) {
@@ -205,17 +185,15 @@ namespace HeavenStudio.Games
                     break;
                 }
             }
-            for (int i = 0; i < dings[whichDing].beat-beat + 1; i++) {
-                if (i > length) {
-                    queuedInputs.Add(force ? beat + i : MathF.Floor(beat) - 0.5f + i);
-                }
+            for (int i = (int)length; i < dings[whichDing].beat - MathF.Floor(beat); i++) {
+                queuedInputs.Add(MathF.Floor(beat) + i);
             }
         }
 
         public static void Blipping(float beat, float length)
         {
             List<MultiSound.Sound> beeps = new List<MultiSound.Sound>();
-            var switchGames = EventCaller.GetAllInGameManagerList("mrUpbeat", new string[] { "switchGame" });
+            var switchGames = EventCaller.GetAllInGameManagerList("gameManager", new string[] { "switchGame" });
             int whichSwitch = 0;
             if (switchGames.Count != 0) {
                 for (int i = 0; i < switchGames.Count; i++) {
@@ -226,17 +204,11 @@ namespace HeavenStudio.Games
                 }
             }
 
-            for (int i = 0; i < switchGames[whichSwitch].beat-beat; i++) 
-            {
-                beeps.Add(new MultiSound.Sound("mrUpbeat/blip", beat + i));
-                queuedBeeps.Add(beat + i);
+            for (int i = 0; i < switchGames[whichSwitch].beat - MathF.Floor(beat) - 0.5f; i++) {
+                beeps.Add(new MultiSound.Sound("mrUpbeat/blip", MathF.Floor(beat) + 0.5f + i));
             }
-            MultiSound.Play(beeps.ToArray(), forcePlay: true);
-        }
 
-        public static void Stepping(float beat, float length, bool force)
-        {
-            
+            MultiSound.Play(beeps.ToArray(), forcePlay: true);
         }
 
         public void Success(PlayerActionEvent caller, float state)
@@ -247,15 +219,6 @@ namespace HeavenStudio.Games
         public void Miss(PlayerActionEvent caller)
         {
             man.Fall();
-        }
-
-        bool isPlaying(Animator anim, string stateName)
-        {
-            if (anim.GetCurrentAnimatorStateInfo(0).IsName(stateName) &&
-                    anim.GetCurrentAnimatorStateInfo(0).normalizedTime < 1.0f)
-                return true;
-            else
-                return false;
         }
 
         public void ChangeBackgroundColor(Color color, float beats)
@@ -282,18 +245,17 @@ namespace HeavenStudio.Games
         {
             blipMaterial.SetColor("_ColorBravo", blipColor);
 
-            if (setShadow) foreach (var shadow in shadowSr)
-            {
+            if (setShadow) foreach (var shadow in shadowSr) {
                 shadow.color = new Color(shadowColor.r, shadowColor.g, shadowColor.b, 1);
             }
         }
 
         public void BlipEvents(string inputLetter, bool shouldGrow, bool resetBlip, bool beep)
         {
-            if (shouldGrow && blipSize < 3) blipSize++;
-            if (resetBlip) blipSize = 0;
-            blipString = inputLetter;
-            beep = shouldBeep;
+            if (shouldGrow && man.blipSize < 4) man.blipSize++;
+            if (resetBlip) man.blipSize = 0;
+            man.blipString = inputLetter;
+            shouldBeep = beep;
         }
 
         public void Nothing(PlayerActionEvent caller) {}
