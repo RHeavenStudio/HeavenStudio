@@ -652,6 +652,7 @@ namespace HeavenStudio.Games
         #region Inputs
         void JustHitBall(PlayerActionEvent caller, float state)
         {
+            if (currentBall == null) return;
             if (passBallDict.ContainsKey(caller.startBeat + caller.timer))
             {
                 if (passBallDict[caller.startBeat + caller.timer].datamodel == "tossBoys/pop")
@@ -699,6 +700,7 @@ namespace HeavenStudio.Games
 
         void JustHitBallUnSpecial(PlayerActionEvent caller, float state)
         {
+            if (currentBall == null) return;
             specialAo.SetActive(false);
             specialAka.SetActive(false);
             specialKii.SetActive(false);
@@ -750,6 +752,7 @@ namespace HeavenStudio.Games
 
         void JustKeepContinue(PlayerActionEvent caller, float state)
         {
+            if (currentBall == null) return;
             if (passBallDict.ContainsKey(caller.timer + caller.startBeat))
             {
                 if (passBallDict[caller.timer + caller.startBeat].datamodel is "tossBoys/pass" or "tossBoys/high" or "tossBoys/pop")
@@ -772,6 +775,7 @@ namespace HeavenStudio.Games
 
         void JustKeepCurrent(PlayerActionEvent caller, float state)
         {
+            if (currentBall == null) return;
             Jukebox.PlayOneShotGame("tossBoys/" + GetColorBasedOnTossKid(currentReceiver, false) + "Keep");
             string current = GetColorBasedOnTossKid(currentReceiver, false);
             float beat = caller.timer + caller.startBeat;
@@ -803,6 +807,7 @@ namespace HeavenStudio.Games
 
         void JustKeepCurrentUnSpecial(PlayerActionEvent caller, float state)
         {
+            if (currentBall == null) return;
             specialAo.SetActive(false);
             specialAka.SetActive(false);
             specialKii.SetActive(false);
@@ -820,6 +825,7 @@ namespace HeavenStudio.Games
 
         void JustKeep(PlayerActionEvent caller, float state)
         {
+            if (currentBall == null) return;
             Jukebox.PlayOneShotGame("tossBoys/" + GetColorBasedOnTossKid(lastReceiver, false) + "Keep");
             string last = GetColorBasedOnTossKid(lastReceiver, false);
             string current = GetColorBasedOnTossKid(currentReceiver, true);
@@ -862,6 +868,7 @@ namespace HeavenStudio.Games
 
         void JustKeepUnSpecial(PlayerActionEvent caller, float state)
         {
+            if (currentBall == null) return;
             specialAo.SetActive(false);
             specialAka.SetActive(false);
             specialKii.SetActive(false);
@@ -909,6 +916,7 @@ namespace HeavenStudio.Games
 
         void Miss(PlayerActionEvent caller)
         {
+            if (currentBall == null) return;
             GetCurrentReceiver().Miss();
             aokun.crouch = false;
             akachan.crouch = false;
