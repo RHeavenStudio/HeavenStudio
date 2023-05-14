@@ -30,7 +30,7 @@ namespace HeavenStudio.Games.Scripts_TossBoys
                 spawnedEffect.Play();
                 DoAnimationScaledAsync(crouch ? "CrouchHit" : "Hit", 0.5f);
             }
-            else if (!anim.GetCurrentAnimatorStateInfo(0).IsName(prefix + "Whiff"))
+            else if (!anim.IsPlayingAnimationName(prefix + "Whiff"))
             {
                 DoAnimationScaledAsync("Whiff", 0.5f);
             }

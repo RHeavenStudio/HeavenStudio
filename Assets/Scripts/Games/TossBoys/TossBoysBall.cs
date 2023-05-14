@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using HeavenStudio.Util;
 using UnityEditorInternal;
+using System;
 
 namespace HeavenStudio.Games.Scripts_TossBoys
 {
@@ -48,7 +49,7 @@ namespace HeavenStudio.Games.Scripts_TossBoys
 
         private TossBoys game;
 
-        private Animator anim;
+        [NonSerialized] public Animator anim;
 
         private void Awake()
         {
@@ -114,10 +115,6 @@ namespace HeavenStudio.Games.Scripts_TossBoys
             if (length != 0)
             {
                 currentPath.positions[0].duration = length;
-            }
-            else
-            {
-                anim.DoScaledAnimationAsync("Hit", 0.5f);
             }
         }
     }

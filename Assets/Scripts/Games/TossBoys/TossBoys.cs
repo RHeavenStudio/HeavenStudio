@@ -350,7 +350,7 @@ namespace HeavenStudio.Games
             }
         }
 
-        void DeterminePass(float beat)
+        void DeterminePass(float beat, bool barely)
         {
             var tempLastReceiver = lastReceiver;
             lastReceiver = currentReceiver;
@@ -389,6 +389,14 @@ namespace HeavenStudio.Games
                 default:
                     break;
             }
+            if (barely)
+            {
+                currentBall.anim.DoScaledAnimationAsync("WiggleBall", 0.5f);
+            }
+            else
+            {
+                currentBall.anim.DoScaledAnimationAsync("Hit", 0.5f);
+            }
             if (passBallDict.ContainsKey(beat + eventLength) && passBallDict[beat + eventLength].datamodel == "tossBoys/pop")
             {
                 BeatAction.New(instance.gameObject, new List<BeatAction.Action>()
@@ -405,33 +413,37 @@ namespace HeavenStudio.Games
             float secondBeat = 1f;
             float secondOffset = 0;
             float thirdOffset = 0;
-            switch (last + current)
+            if (currentBall != null)
             {
-                case "redBlue":
-                    currentBall.SetState(TossBoysBall.State.RedBlue, beat);
-                    break;
-                case "blueRed":
-                    secondBeat = 0.5f;
-                    currentBall.SetState(TossBoysBall.State.BlueRed, beat);
-                    break;
-                case "blueYellow":
-                    currentBall.SetState(TossBoysBall.State.BlueYellow, beat);
-                    break;
-                case "yellowRed":
-                    secondBeat = 0.5f;
-                    currentBall.SetState(TossBoysBall.State.YellowRed, beat);
-                    break;
-                case "redYellow":
-                    secondBeat = 0.5f;
-                    thirdOffset = 0.060f;
-                    currentBall.SetState(TossBoysBall.State.RedYellow, beat);
-                    break;
-                case "yellowBlue":
-                    currentBall.SetState(TossBoysBall.State.YellowBlue, beat);
-                    break;
-                default:
-                    break;
+                switch (last + current)
+                {
+                    case "redBlue":
+                        currentBall.SetState(TossBoysBall.State.RedBlue, beat);
+                        break;
+                    case "blueRed":
+                        secondBeat = 0.5f;
+                        currentBall.SetState(TossBoysBall.State.BlueRed, beat);
+                        break;
+                    case "blueYellow":
+                        currentBall.SetState(TossBoysBall.State.BlueYellow, beat);
+                        break;
+                    case "yellowRed":
+                        secondBeat = 0.5f;
+                        currentBall.SetState(TossBoysBall.State.YellowRed, beat);
+                        break;
+                    case "redYellow":
+                        secondBeat = 0.5f;
+                        thirdOffset = 0.060f;
+                        currentBall.SetState(TossBoysBall.State.RedYellow, beat);
+                        break;
+                    case "yellowBlue":
+                        currentBall.SetState(TossBoysBall.State.YellowBlue, beat);
+                        break;
+                    default:
+                        break;
+                }
             }
+
             List<MultiSound.Sound> soundsToPlay = new List<MultiSound.Sound>()
             {
                 new MultiSound.Sound("tossBoys/" + last + current + 1, beat),
@@ -456,33 +468,37 @@ namespace HeavenStudio.Games
             float secondBeat = 0.5f;
             float secondOffset = 0;
             float thirdOffset = 0;
-            switch (last + current)
+            if (currentBall != null)
             {
-                case "redBlue":
-                    currentBall.SetState(TossBoysBall.State.RedBlueDual, beat);
-                    break;
-                case "blueYellow":
-                    currentBall.SetState(TossBoysBall.State.BlueYellowDual, beat);
-                    break;
-                case "yellowBlue":
-                    currentBall.SetState(TossBoysBall.State.YellowBlueDual, beat);
-                    break;
-                case "blueRed":
-                    secondBeat = 0.25f;
-                    thirdOffset = 0.020f;
-                    currentBall.SetState(TossBoysBall.State.BlueRedDual, beat);
-                    break;
-                case "yellowRed":
-                    secondBeat = 0.25f;
-                    currentBall.SetState(TossBoysBall.State.YellowRedDual, beat);
-                    break;
-                case "redYellow":
-                    secondOffset = 0.060f;
-                    currentBall.SetState(TossBoysBall.State.RedYellowDual, beat);
-                    break;
-                default:
-                    break;
+                switch (last + current)
+                {
+                    case "redBlue":
+                        currentBall.SetState(TossBoysBall.State.RedBlueDual, beat);
+                        break;
+                    case "blueYellow":
+                        currentBall.SetState(TossBoysBall.State.BlueYellowDual, beat);
+                        break;
+                    case "yellowBlue":
+                        currentBall.SetState(TossBoysBall.State.YellowBlueDual, beat);
+                        break;
+                    case "blueRed":
+                        secondBeat = 0.25f;
+                        thirdOffset = 0.020f;
+                        currentBall.SetState(TossBoysBall.State.BlueRedDual, beat);
+                        break;
+                    case "yellowRed":
+                        secondBeat = 0.25f;
+                        currentBall.SetState(TossBoysBall.State.YellowRedDual, beat);
+                        break;
+                    case "redYellow":
+                        secondOffset = 0.060f;
+                        currentBall.SetState(TossBoysBall.State.RedYellowDual, beat);
+                        break;
+                    default:
+                        break;
+                }
             }
+
             List<MultiSound.Sound> soundsToPlay = new List<MultiSound.Sound>()
             {
                 new MultiSound.Sound("tossBoys/" + last + current + "Low" + 1, beat),
@@ -508,31 +524,35 @@ namespace HeavenStudio.Games
             float secondBeat = 0.5f;
             float secondOffset = 0;
             float thirdOffset = 0;
-            switch (last + current)
+            if (currentBall != null)
             {
-                case "redBlue":
-                    currentBall.SetState(TossBoysBall.State.RedBlueHigh, beat);
-                    break;
-                case "redYellow":
-                    currentBall.SetState(TossBoysBall.State.RedYellowHigh, beat);
-                    break;
-                case "blueYellow":
-                    currentBall.SetState(TossBoysBall.State.BlueYellowHigh, beat);
-                    break;
-                case "yellowBlue":
-                    currentBall.SetState(TossBoysBall.State.YellowBlueHigh, beat);
-                    break;
-                case "yellowRed":
-                    secondBeat = 0.25f;
-                    currentBall.SetState(TossBoysBall.State.YellowRedHigh, beat);
-                    break;
-                case "blueRed":
-                    secondBeat = 0.25f;
-                    currentBall.SetState(TossBoysBall.State.BlueRedHigh, beat);
-                    break;
-                default:
-                    break;
+                switch (last + current)
+                {
+                    case "redBlue":
+                        currentBall.SetState(TossBoysBall.State.RedBlueHigh, beat);
+                        break;
+                    case "redYellow":
+                        currentBall.SetState(TossBoysBall.State.RedYellowHigh, beat);
+                        break;
+                    case "blueYellow":
+                        currentBall.SetState(TossBoysBall.State.BlueYellowHigh, beat);
+                        break;
+                    case "yellowBlue":
+                        currentBall.SetState(TossBoysBall.State.YellowBlueHigh, beat);
+                        break;
+                    case "yellowRed":
+                        secondBeat = 0.25f;
+                        currentBall.SetState(TossBoysBall.State.YellowRedHigh, beat);
+                        break;
+                    case "blueRed":
+                        secondBeat = 0.25f;
+                        currentBall.SetState(TossBoysBall.State.BlueRedHigh, beat);
+                        break;
+                    default:
+                        break;
+                }
             }
+
             List<MultiSound.Sound> soundsToPlay = new List<MultiSound.Sound>()
             {
                 new MultiSound.Sound("tossBoys/" + last + current + "High" + 1, beat),
@@ -573,17 +593,20 @@ namespace HeavenStudio.Games
                     secondBeat = 0.5f;
                     break;
             }
-            switch (last)
+            if (currentBall != null)
             {
-                case "blue":
-                    currentBall.SetState(TossBoysBall.State.BlueKeep, beat);
-                    break;
-                case "red":
-                    currentBall.SetState(TossBoysBall.State.RedKeep, beat);
-                    break;
-                case "yellow":
-                    currentBall.SetState(TossBoysBall.State.YellowKeep, beat);
-                    break;
+                switch (last)
+                {
+                    case "blue":
+                        currentBall.SetState(TossBoysBall.State.BlueKeep, beat);
+                        break;
+                    case "red":
+                        currentBall.SetState(TossBoysBall.State.RedKeep, beat);
+                        break;
+                    case "yellow":
+                        currentBall.SetState(TossBoysBall.State.YellowKeep, beat);
+                        break;
+                }
             }
             List<MultiSound.Sound> soundsToPlay = new List<MultiSound.Sound>()
             {
@@ -607,18 +630,22 @@ namespace HeavenStudio.Games
         void BlurToss(float beat)
         {
             string current = GetColorBasedOnTossKid(currentReceiver, false);
-            switch (current)
+            if (currentBall != null)
             {
-                case "blue":
-                    currentBall.SetState(TossBoysBall.State.BlueBlur, beat);
-                    break;
-                case "red":
-                    currentBall.SetState(TossBoysBall.State.RedBlur, beat);
-                    break;
-                case "yellow":
-                    currentBall.SetState(TossBoysBall.State.YellowBlur, beat);
-                    break;
+                switch (current)
+                {
+                    case "blue":
+                        currentBall.SetState(TossBoysBall.State.BlueBlur, beat);
+                        break;
+                    case "red":
+                        currentBall.SetState(TossBoysBall.State.RedBlur, beat);
+                        break;
+                    case "yellow":
+                        currentBall.SetState(TossBoysBall.State.YellowBlur, beat);
+                        break;
+                }
             }
+
             ScheduleInput(beat, 2f, GetInputTypeBasedOnCurrentReceiver(), JustKeepContinue, Miss, Empty);
         }
 
@@ -663,11 +690,11 @@ namespace HeavenStudio.Games
             if (state >= 1f || state <= -1f)
             {
                 GetCurrentReceiver().Barely();
-                DeterminePass(caller.timer + caller.startBeat);
+                DeterminePass(caller.timer + caller.startBeat, true);
                 return;
             }
             GetCurrentReceiver().HitBall();
-            DeterminePass(caller.timer + caller.startBeat);
+            DeterminePass(caller.timer + caller.startBeat, false);
         }
 
         void JustHitBallUnSpecial(PlayerActionEvent caller, float state)
@@ -714,11 +741,11 @@ namespace HeavenStudio.Games
             if (state >= 1f || state <= -1f)
             {
                 GetCurrentReceiver().Barely();
-                DeterminePass(caller.timer + caller.startBeat);
+                DeterminePass(caller.timer + caller.startBeat, true);
                 return;
             }
             GetCurrentReceiver().HitBall();
-            DeterminePass(caller.timer + caller.startBeat);
+            DeterminePass(caller.timer + caller.startBeat, false);
         }
 
         void JustKeepContinue(PlayerActionEvent caller, float state)
@@ -748,24 +775,30 @@ namespace HeavenStudio.Games
             Jukebox.PlayOneShotGame("tossBoys/" + GetColorBasedOnTossKid(currentReceiver, false) + "Keep");
             string current = GetColorBasedOnTossKid(currentReceiver, false);
             float beat = caller.timer + caller.startBeat;
-            switch (current)
+            if (currentBall != null)
             {
-                case "blue":
-                    currentBall.SetState(TossBoysBall.State.BlueKeep, beat);
-                    break;
-                case "red":
-                    currentBall.SetState(TossBoysBall.State.RedKeep, beat);
-                    break;
-                case "yellow":
-                    currentBall.SetState(TossBoysBall.State.YellowKeep, beat);
-                    break;
+                switch (current)
+                {
+                    case "blue":
+                        currentBall.SetState(TossBoysBall.State.BlueKeep, beat);
+                        break;
+                    case "red":
+                        currentBall.SetState(TossBoysBall.State.RedKeep, beat);
+                        break;
+                    case "yellow":
+                        currentBall.SetState(TossBoysBall.State.YellowKeep, beat);
+                        break;
+                }
             }
+
             if (state >= 1f || state <= -1f)
             {
+                currentBall.anim.DoScaledAnimationAsync("WiggleBall", 0.5f);
                 GetCurrentReceiver().Barely();
                 return;
             }
             GetCurrentReceiver().HitBall();
+            currentBall.anim.DoScaledAnimationAsync("Hit", 0.5f);
         }
 
         void JustKeepCurrentUnSpecial(PlayerActionEvent caller, float state)
@@ -777,10 +810,12 @@ namespace HeavenStudio.Games
             Jukebox.PlayOneShotGame("tossBoys/" + GetColorBasedOnTossKid(currentReceiver, false) + "Keep");
             if (state >= 1f || state <= -1f)
             {
+                currentBall.anim.DoScaledAnimationAsync("WiggleBall", 0.5f);
                 GetCurrentReceiver().Barely();
                 return;
             }
             GetCurrentReceiver().HitBall();
+            currentBall.anim.DoScaledAnimationAsync("Hit", 0.5f);
         }
 
         void JustKeep(PlayerActionEvent caller, float state)
@@ -789,35 +824,40 @@ namespace HeavenStudio.Games
             string last = GetColorBasedOnTossKid(lastReceiver, false);
             string current = GetColorBasedOnTossKid(currentReceiver, true);
             float beat = caller.timer + caller.startBeat;
-            switch (last + current)
+            if (currentBall != null)
             {
-                case "redBlue":
-                    currentBall.SetState(TossBoysBall.State.RedBlueDual, beat);
-                    break;
-                case "blueYellow":
-                    currentBall.SetState(TossBoysBall.State.BlueYellowDual, beat);
-                    break;
-                case "yellowBlue":
-                    currentBall.SetState(TossBoysBall.State.YellowBlueDual, beat);
-                    break;
-                case "blueRed":
-                    currentBall.SetState(TossBoysBall.State.BlueRedDual, beat);
-                    break;
-                case "yellowRed":
-                    currentBall.SetState(TossBoysBall.State.YellowRedDual, beat);
-                    break;
-                case "redYellow":
-                    currentBall.SetState(TossBoysBall.State.RedYellowDual, beat);
-                    break;
-                default:
-                    break;
+                switch (last + current)
+                {
+                    case "redBlue":
+                        currentBall.SetState(TossBoysBall.State.RedBlueDual, beat);
+                        break;
+                    case "blueYellow":
+                        currentBall.SetState(TossBoysBall.State.BlueYellowDual, beat);
+                        break;
+                    case "yellowBlue":
+                        currentBall.SetState(TossBoysBall.State.YellowBlueDual, beat);
+                        break;
+                    case "blueRed":
+                        currentBall.SetState(TossBoysBall.State.BlueRedDual, beat);
+                        break;
+                    case "yellowRed":
+                        currentBall.SetState(TossBoysBall.State.YellowRedDual, beat);
+                        break;
+                    case "redYellow":
+                        currentBall.SetState(TossBoysBall.State.RedYellowDual, beat);
+                        break;
+                    default:
+                        break;
+                }
             }
             if (state >= 1f || state <= -1f)
             {
+                currentBall.anim.DoScaledAnimationAsync("WiggleBall", 0.5f);
                 GetReceiver(lastReceiver).Barely();
                 return;
             }
-            GetReceiver(lastReceiver).HitBall();        
+            GetReceiver(lastReceiver).HitBall();
+            currentBall.anim.DoScaledAnimationAsync("Hit", 0.5f);
         }
 
         void JustKeepUnSpecial(PlayerActionEvent caller, float state)
@@ -830,35 +870,41 @@ namespace HeavenStudio.Games
             string last = GetColorBasedOnTossKid(lastReceiver, false);
             string current = GetColorBasedOnTossKid(currentReceiver, true);
             float beat = caller.timer + caller.startBeat;
-            switch (last + current)
+            if (currentBall != null)
             {
-                case "redBlue":
-                    currentBall.SetState(TossBoysBall.State.RedBlueDual, beat);
-                    break;
-                case "blueYellow":
-                    currentBall.SetState(TossBoysBall.State.BlueYellowDual, beat);
-                    break;
-                case "yellowBlue":
-                    currentBall.SetState(TossBoysBall.State.YellowBlueDual, beat);
-                    break;
-                case "blueRed":
-                    currentBall.SetState(TossBoysBall.State.BlueRedDual, beat);
-                    break;
-                case "yellowRed":
-                    currentBall.SetState(TossBoysBall.State.YellowRedDual, beat);
-                    break;
-                case "redYellow":
-                    currentBall.SetState(TossBoysBall.State.RedYellowDual, beat);
-                    break;
-                default:
-                    break;
+                switch (last + current)
+                {
+                    case "redBlue":
+                        currentBall.SetState(TossBoysBall.State.RedBlueDual, beat);
+                        break;
+                    case "blueYellow":
+                        currentBall.SetState(TossBoysBall.State.BlueYellowDual, beat);
+                        break;
+                    case "yellowBlue":
+                        currentBall.SetState(TossBoysBall.State.YellowBlueDual, beat);
+                        break;
+                    case "blueRed":
+                        currentBall.SetState(TossBoysBall.State.BlueRedDual, beat);
+                        break;
+                    case "yellowRed":
+                        currentBall.SetState(TossBoysBall.State.YellowRedDual, beat);
+                        break;
+                    case "redYellow":
+                        currentBall.SetState(TossBoysBall.State.RedYellowDual, beat);
+                        break;
+                    default:
+                        break;
+                }
             }
+
             if (state >= 1f || state <= -1f)
             {
+                currentBall.anim.DoScaledAnimationAsync("WiggleBall", 0.5f);
                 GetReceiver(lastReceiver).Barely();
                 return;
             }
             GetReceiver(lastReceiver).HitBall();
+            currentBall.anim.DoScaledAnimationAsync("Hit", 0.5f);
         }
 
         void Miss(PlayerActionEvent caller)
