@@ -6,7 +6,7 @@ using HeavenStudio.Util;
 
 namespace HeavenStudio.Games.Scripts_Fireworks
 {
-    public class Rocket : PlayerActionObject
+    public class Rocket : MonoBehaviour
     {
         [SerializeField] ParticleSystem particleBarelyEffect;
         [SerializeField] private List<ParticleSystem> particleEffects = new List<ParticleSystem>();

@@ -7,7 +7,7 @@ using NaughtyBezierCurves;
 
 namespace HeavenStudio.Games.Scripts_MeatGrinder
 {
-    public class MeatToss : PlayerActionObject
+    public class MeatToss : MonoBehaviour
     {
         public float startBeat;
         public float cueLength;

@@ -8,7 +8,7 @@ using Starpelly;
 
 namespace HeavenStudio.Games.Scripts_FirstContact
 {
-    public class Translator : PlayerActionObject
+    public class Translator : MonoBehaviour
     {
         public Animator anim;
 

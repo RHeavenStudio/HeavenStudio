@@ -32,7 +32,7 @@ namespace HeavenStudio.Games.Global
         private List<DynamicBeatmap.DynamicEntity> idolEvents = new List<DynamicBeatmap.DynamicEntity>();
         private List<DynamicBeatmap.DynamicEntity> closedCaptionsEvents = new List<DynamicBeatmap.DynamicEntity>();
 
-        Textbox instance;
+        public static Textbox instance { get; private set; }
 
         [Header("Objects")]
         public GameObject TextboxEnabler;

@@ -6,7 +6,7 @@ using NaughtyBezierCurves;
 
 namespace HeavenStudio.Games.Scripts_Fireworks
 {
-    public class FireworksBomb : PlayerActionObject
+    public class FireworksBomb : MonoBehaviour
     {
         public BezierCurve3D curve;
         public bool applause;

@@ -14,7 +14,7 @@ namespace HeavenStudio.Games.Scripts_WorkingDough
         ExitingUp = 2,
         ExitingDown = 3
     }
-    public class NPCDoughBall : PlayerActionObject
+    public class NPCDoughBall : MonoBehaviour
     {
         public float startBeat;
 
