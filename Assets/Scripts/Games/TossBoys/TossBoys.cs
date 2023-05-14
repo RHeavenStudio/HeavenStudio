@@ -497,8 +497,8 @@ namespace HeavenStudio.Games
             }
             if (secondBeat == 0.25f) soundsToPlay.Add(new MultiSound.Sound("tossBoys/" + last + current + "Low" + 3, beat + 0.5f, 1, 1, false, thirdOffset));
             MultiSound.Play(soundsToPlay.ToArray());
-            bool stopSpecial = passBallDict.ContainsKey(beat + 1) && passBallDict[beat + 1].datamodel != "tossBoys/dual";
-            ScheduleInput(beat, 1f, GetInputTypeBasedOnCurrentReceiver(), stopSpecial ? JustHitBallUnSpecial : JustHitBall, stopSpecial ? MissUnSpecial : Miss, Empty);
+            bool stopSpecial = passBallDict.ContainsKey(beat + 1) && passBallDict[beat + 1].datamodel is "tossBoys/pass" or "tossBoys/high" or "tossBoys/pop";
+            ScheduleInput(beat, 1f, GetInputTypeBasedOnCurrentReceiver(), stopSpecial ? JustHitBallUnSpecial : JustHitBall, Miss, Empty);
         }
 
         void HighToss(float beat)
@@ -599,8 +599,8 @@ namespace HeavenStudio.Games
                 });
             }
             MultiSound.Play(soundsToPlay.ToArray());
-            bool stopSpecial = passBallDict.ContainsKey(beat + 2) && passBallDict[beat + 2].datamodel != "tossBoys/lightning";
-            ScheduleInput(beat, 1f, GetInputBasedOnTossKid(lastReceiver), stopSpecial ? JustKeepUnSpecial : JustKeep, MissUnSpecial, Empty);
+            bool stopSpecial = passBallDict.ContainsKey(beat + 2) && passBallDict[beat + 2].datamodel is "tossBoys/pass" or "tossBoys/high" or "tossBoys/pop";
+            ScheduleInput(beat, 1f, GetInputBasedOnTossKid(lastReceiver), stopSpecial ? JustKeepUnSpecial : JustKeep, Miss, Empty);
             ScheduleInput(beat, 2f, GetInputTypeBasedOnCurrentReceiver(), JustHitBall, Miss, Empty);
         }
 
@@ -707,7 +707,7 @@ namespace HeavenStudio.Games
                 }
                 if ((WhichTossKid)passBallDict[caller.startBeat + caller.timer]["who"] == currentReceiver)
                 {
-                    MissUnSpecial(null);
+                    Miss(null);
                     return;
                 }
             }
@@ -725,7 +725,15 @@ namespace HeavenStudio.Games
         {
             if (passBallDict.ContainsKey(caller.timer + caller.startBeat))
             {
-                JustHitBallUnSpecial(caller, state);
+                if (passBallDict[caller.timer + caller.startBeat].datamodel is "tossBoys/pass" or "tossBoys/high" or "tossBoys/pop")
+                {
+                    JustHitBallUnSpecial(caller, state);
+                }
+                else
+                {
+                    JustHitBall(caller, state);
+                }
+
             }
             else
             {
@@ -856,14 +864,9 @@ namespace HeavenStudio.Games
         void Miss(PlayerActionEvent caller)
         {
             GetCurrentReceiver().Miss();
-            Destroy(currentBall.gameObject);
-            currentBall = null;
-        }
-
-        void MissUnSpecial(PlayerActionEvent caller)
-        {
-            GetCurrentReceiver().Miss();
-            GetCurrentReceiver().crouch = false;
+            aokun.crouch = false;
+            akachan.crouch = false;
+            kiiyan.crouch = false;
             specialAo.SetActive(false);
             specialAka.SetActive(false);
             specialKii.SetActive(false);
@@ -878,6 +881,10 @@ namespace HeavenStudio.Games
 
         void DoSpecialBasedOnReceiver(float beat)
         {
+            specialAo.SetActive(false);
+            specialAka.SetActive(false);
+            specialKii.SetActive(false);
+            if (currentSpecialKid != null) currentSpecialKid.crouch = false;
             currentSpecialKid = GetCurrentReceiver();
             GetCurrentReceiver().Crouch();
             GetSpecialBasedOnReceiver().SetActive(true);
