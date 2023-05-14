@@ -25,16 +25,19 @@ namespace HeavenStudio.Games.Scripts_MrUpbeat
         public void Blip()
         {
             float c = Conductor.instance.songPositionInBeats;
-            float pos = (MathF.Floor(c * 10)/10 % 1 == 0.5f) ? MathF.Floor(c) : MathF.Round(c);
+            // checks if the position is on an offbeat; accurate until you get down to 20 fps or so (i.e unplayable)
+            float pos = ((MathF.Floor(c * 10)/10 % 1) == 0.5f) ? MathF.Floor(c) : MathF.Round(c);
+
+            // recursive, should happen on the offbeat (unless downbeatMod is different)
             BeatAction.New(gameObject, new List<BeatAction.Action>() {
-                new BeatAction.Action(pos + 0.5f, delegate {
-                    if (MrUpbeat.shouldBeep) {
+                new BeatAction.Action(pos + MrUpbeat.downbeatMod, delegate {
+                    if (MrUpbeat.shouldBlip) {
                         Jukebox.PlayOneShotGame("mrUpbeat/blip");
                         blipAnim.Play("Blip"+(blipSize+1), 0, 0);
                         blipText.text = (blipSize == 4 && blipString != "") ? blipString : "";
                     }
                 }),
-                new BeatAction.Action(pos + 1f, delegate { 
+                new BeatAction.Action(pos + MrUpbeat.downbeatMod + 0.999f, delegate { 
                     Blip();
                 }),
             });
