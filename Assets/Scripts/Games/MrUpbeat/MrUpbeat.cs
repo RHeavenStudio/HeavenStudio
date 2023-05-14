@@ -29,7 +29,7 @@ namespace HeavenStudio.Games.Loaders
                     defaultLength = 0.5f,
                     parameters = new List<Param>()
                     {
-                        new Param("toggle", false, "Applause", "Plays an applause soud effect."),
+                        new Param("toggle", false, "Applause", "Plays an applause sound effect."),
                         new Param("stopBeeping", true, "Stop Beeping?", "When the stepping stops, should the beeping stop too?"),
                     }
                 },
