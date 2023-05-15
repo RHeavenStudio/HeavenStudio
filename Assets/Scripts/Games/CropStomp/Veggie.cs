@@ -8,7 +8,7 @@ using HeavenStudio.Util;
 
 namespace HeavenStudio.Games.Scripts_CropStomp
 {
-    public class Veggie : PlayerActionObject
+    public class Veggie : MonoBehaviour
     {
         static float pickedRotationSpeed = -1080f;
 

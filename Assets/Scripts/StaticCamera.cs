@@ -223,5 +223,10 @@ namespace HeavenStudio
         {
             ambientBgGO.SetActive(toggle);
         }
+
+        public void ToggleCanvasVisibility(bool toggle)
+        {
+            canvas.gameObject.SetActive(toggle);
+        }
     }
 }

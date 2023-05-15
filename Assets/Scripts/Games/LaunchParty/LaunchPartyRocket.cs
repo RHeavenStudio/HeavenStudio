@@ -11,7 +11,7 @@ using static HeavenStudio.EntityTypes;
 
 namespace HeavenStudio.Games.Scripts_LaunchParty
 {
-    public class LaunchPartyRocket : PlayerActionObject
+    public class LaunchPartyRocket : MonoBehaviour
     {
         public List<float> pitches = new List<float>();
         [SerializeField] Animator anim;

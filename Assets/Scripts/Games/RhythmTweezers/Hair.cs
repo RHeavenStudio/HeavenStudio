@@ -5,7 +5,7 @@ using System;
 
 namespace HeavenStudio.Games.Scripts_RhythmTweezers
 {
-    public class Hair : PlayerActionObject
+    public class Hair : MonoBehaviour
     {
         public float createBeat;
         public GameObject hairSprite;

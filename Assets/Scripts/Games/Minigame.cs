@@ -120,7 +120,7 @@ namespace HeavenStudio.Games
 
                 if(closest == null)
                 {
-                    if (input == InputType.ANY || toCompare.inputType.HasFlag(input))
+                    if (input == InputType.ANY || (toCompare.inputType & input) != 0)
                         closest = toCompare;
                 } else
                 {
@@ -131,7 +131,7 @@ namespace HeavenStudio.Games
 
                     if (t2 < t1)
                     {
-                        if (input == InputType.ANY || toCompare.inputType.HasFlag(input))
+                        if (input == InputType.ANY || (toCompare.inputType & input) != 0)
                             closest = toCompare;
                     }
                 }
@@ -218,6 +218,14 @@ namespace HeavenStudio.Games
         public virtual void OnPlay(float beat)
         {
 
+        }
+
+        public virtual void OnStop(float beat)
+        {
+            foreach (var evt in scheduledInputs)
+            {
+                evt.Disable();
+            }
         }
 
         public int MultipleEventsAtOnce()

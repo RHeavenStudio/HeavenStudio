@@ -9,7 +9,7 @@ using NaughtyBezierCurves;
 
 namespace HeavenStudio.Games.Scripts_Spaceball
 {
-    public class SpaceballBall : PlayerActionObject
+    public class SpaceballBall : MonoBehaviour
     {
         #region Public
 
@@ -46,8 +46,6 @@ namespace HeavenStudio.Games.Scripts_Spaceball
             e.gameObject = this.gameObject;
 
             startRot = Random.Range(0, 360);
-
-            isEligible = true;
         }
 
         private void Start()

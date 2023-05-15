@@ -25,7 +25,7 @@ namespace HeavenStudio.Editor
 {
     public class Editor : MonoBehaviour
     {
-        private Initializer Initializer;
+        private GameInitializer Initializer;
 
         [SerializeField] public Canvas MainCanvas;
         [SerializeField] public Camera EditorCamera;
@@ -85,7 +85,7 @@ namespace HeavenStudio.Editor
         private void Start()
         {
             instance = this;
-            Initializer = GetComponent<Initializer>();
+            Initializer = GetComponent<GameInitializer>();
             canSelect = true;
         }
 
@@ -517,13 +517,7 @@ namespace HeavenStudio.Editor
 
         private void UpdateEditorStatus(bool updateTime)
         {
-            if (discordDuringTesting || !Application.isEditor)
-            {
-                if (isDiscordEnabled)
-                {   DiscordRPC.DiscordRPC.UpdateActivity("In Editor", $"{remixName}", updateTime);
-                    Debug.Log("Discord status updated");
-                }
-            }
+            GlobalGameManager.UpdateDiscordStatus($"{remixName}", true, updateTime);
         }
 
         public string GetJson()

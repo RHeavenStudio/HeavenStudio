@@ -80,7 +80,6 @@ namespace HeavenStudio.Editor
         {
             currentEventIndex = amount;
 
-            EventRef.transform.parent.DOKill();
             CurrentSelected.transform.DOKill();
 
             if (currentEventIndex < 0)
@@ -98,20 +97,36 @@ namespace HeavenStudio.Editor
         {
             selectorHeight = GameEventSelectorRect.rect.height;
             eventSize = EventRef.GetComponent<RectTransform>().rect.height;
+            // EventRef.transform.parent.DOKill();
+            float lastLocalY = EventRef.transform.parent.transform.localPosition.y;
 
             if (currentEventIndex * eventSize >= selectorHeight/2 && eventsParent.childCount * eventSize >= selectorHeight)
             {
                 if (currentEventIndex * eventSize < eventsParent.childCount * eventSize - selectorHeight/2)
                 {
-                    EventRef.transform.parent.DOLocalMoveY((currentEventIndex * eventSize) - selectorHeight/2, 0.35f).SetEase(Ease.OutExpo);
+                    EventRef.transform.parent.transform.localPosition = new Vector3(
+                        EventRef.transform.parent.transform.localPosition.x, 
+                        Mathf.Lerp(lastLocalY, (currentEventIndex * eventSize) - selectorHeight/2, 12 * Time.deltaTime),
+                        EventRef.transform.parent.transform.localPosition.z
+                    );
                 }
                 else
                 {
-                    EventRef.transform.parent.DOLocalMoveY((eventsParent.childCount * eventSize) - selectorHeight + (eventSize*0.33f), 0.35f).SetEase(Ease.OutExpo);
+                    EventRef.transform.parent.transform.localPosition = new Vector3(
+                        EventRef.transform.parent.transform.localPosition.x, 
+                        Mathf.Lerp(lastLocalY, (eventsParent.childCount * eventSize) - selectorHeight + (eventSize*0.33f), 12 * Time.deltaTime),
+                        EventRef.transform.parent.transform.localPosition.z
+                    );
                 }
             }
             else
-                EventRef.transform.parent.DOLocalMoveY(0, 0.35f).SetEase(Ease.OutExpo);
+            {
+                EventRef.transform.parent.transform.localPosition = new Vector3(
+                    EventRef.transform.parent.transform.localPosition.x, 
+                    Mathf.Lerp(lastLocalY, 0, 12 * Time.deltaTime),
+                    EventRef.transform.parent.transform.localPosition.z
+                );
+            }
         }
 
         public void SelectGame(string gameName, int index)
@@ -134,7 +149,7 @@ namespace HeavenStudio.Editor
             currentEventIndex = 0;
             UpdateIndex(0, false);
 
-            Editor.instance.SetGameEventTitle($"Select game event for {gameName.Replace("\n", "")}");
+            Editor.instance?.SetGameEventTitle($"Select game event for {gameName.Replace("\n", "")}");
         }
 
         private void AddEvents()

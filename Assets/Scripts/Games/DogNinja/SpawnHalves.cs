@@ -8,7 +8,7 @@ using HeavenStudio.Util;
 
 namespace HeavenStudio.Games.Scripts_DogNinja
 {
-    public class SpawnHalves : PlayerActionObject
+    public class SpawnHalves : MonoBehaviour
     {
         public float startBeat;
         public Vector3 objPos;

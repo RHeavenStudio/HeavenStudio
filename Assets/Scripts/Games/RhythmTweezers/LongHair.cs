@@ -6,7 +6,7 @@ using HeavenStudio.Util;
 
 namespace HeavenStudio.Games.Scripts_RhythmTweezers
 {
-    public class LongHair : PlayerActionObject
+    public class LongHair : MonoBehaviour
     {
         public float createBeat;
         public GameObject hairSprite;
@@ -44,7 +44,7 @@ namespace HeavenStudio.Games.Scripts_RhythmTweezers
                 if (endInput == InputType.DIRECTION_UP) input = PlayerInput.GetAnyDirectionUp();
                 if (input && !game.IsExpectingInputNow(endInput))
                 {
-                    endEvent.MakeInEligible();
+                    endEvent.isEligible = false;
                     EndEarly();
                     return;
                 }

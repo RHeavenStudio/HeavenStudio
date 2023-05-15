@@ -7,7 +7,7 @@ using NaughtyBezierCurves;
 
 namespace HeavenStudio.Games.Scripts_MunchyMonk
 {
-    public class Dumpling : PlayerActionObject
+    public class Dumpling : MonoBehaviour
     {
         public Color dumplingColor;
         public float startBeat;
