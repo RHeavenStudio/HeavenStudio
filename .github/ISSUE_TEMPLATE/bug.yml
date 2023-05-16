@@ -1,6 +1,6 @@
 name: Bug Report
 description: Report a bug you have experienced in Heaven Studio
-labels: []
+labels: ["bug"]
 body:
   - type: textarea
     id: what-happened
@@ -57,10 +57,18 @@ body:
         - If you are on Linux, go to `~/.config/unity3d/RHeavenStudio/Heaven Studio/`
         - Copy the contents of the `Player.log` file to the textbox above
   - type: textarea
+    id: riq
+    attributes:
+      label: RIQ file
+      description: If relevant, upload a RIQ file where this bug happens
+      placeholder: Upload a RIQ here
+      validations:
+        required: false
+  - type: textarea
     id: files
     attributes:
       label: Extra files
-      description: Upload any needed files here, preferably an RIQ file, linking them is also allowed.
+      description: Upload any other needed files here, linking them is also allowed.
       placeholder: Upload a file here
     validations:
       required: false
