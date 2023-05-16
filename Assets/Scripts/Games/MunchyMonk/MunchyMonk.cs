@@ -193,7 +193,7 @@ namespace HeavenStudio.Games
         string moveAnim;
         EasingFunction.Ease lastEase;
         private Dumpling currentDumpling;
-        SingleSuperScroll[] scrollObjects;
+        ScrollObject[] scrollObjects;
         const string sfxName = "munchyMonk/";
 
         public static MunchyMonk instance;
@@ -207,7 +207,7 @@ namespace HeavenStudio.Games
         private void Start() 
         {
             //if (Conductor.instance.)
-            scrollObjects = FindObjectsByType<SingleSuperScroll>(FindObjectsSortMode.None);
+            scrollObjects = FindObjectsByType<ScrollObject>(FindObjectsSortMode.None);
         }
 
         private void Update() 
@@ -266,10 +266,10 @@ namespace HeavenStudio.Games
 
             if (scrollRampUp)
             {
-                scrollRampNum *= (float)1.1*Time.deltaTime;
+                scrollRampNum *= (float)1.01*Time.deltaTime;
                 foreach (var obj in scrollObjects)
                 {
-                    obj.AutoScrollX = scrollRampNum;
+                    obj.XSpeed = scrollRampNum;
                 }
             }
 
@@ -531,7 +531,7 @@ namespace HeavenStudio.Games
             if (isInstant) {
                 foreach (var obj in scrollObjects)
                 {
-                    obj.AutoScrollX = scrollSpeed;
+                    obj.XSpeed = scrollSpeed;
                 }
             } else {
                 scrollRampUp = true;

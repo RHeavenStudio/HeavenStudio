@@ -268,7 +268,7 @@ GameObject:
   m_Component:
   - component: {fileID: 2529755070024774003}
   - component: {fileID: 2802756388202944897}
-  - component: {fileID: 7364361469895097838}
+  - component: {fileID: 7014522824805942743}
   m_Layer: 0
   m_Name: MidHills
   m_TagString: Untagged
@@ -284,8 +284,8 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 739212289150650231}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -6.8549, y: -2.37, z: 0}
-  m_LocalScale: {x: -1.1704086, y: 1.1704084, z: 1.1001838}
+  m_LocalPosition: {x: -6.3324, y: -2.2922, z: 0}
+  m_LocalScale: {x: -1.1075517, y: 1.1075516, z: 1.0410984}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 2169629160349170190}
@@ -343,7 +343,7 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
---- !u!114 &7364361469895097838
+--- !u!114 &7014522824805942743
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -352,17 +352,14 @@ MonoBehaviour:
   m_GameObject: {fileID: 739212289150650231}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d8cde6057dd47f64a84d3039869adaf1, type: 3}
+  m_Script: {fileID: 11500000, guid: 86babf8846fa7a4498e3fa3648f95cc9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  sr: {fileID: 0}
   AutoScroll: 1
-  AutoScrollX: 0
-  AutoScrollY: 0
-  X: 1
-  Y: 1
-  XBounds: 1
-  YBounds: 1
+  XSpeed: 1
+  YSpeed: 0
+  NegativeBounds: {x: -20, y: 0}
+  PositiveBounds: {x: 20, y: 0}
 --- !u!1 &807376699474854874
 GameObject:
   m_ObjectHideFlags: 0
@@ -389,8 +386,8 @@ Transform:
   m_GameObject: {fileID: 807376699474854874}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: -0.09, y: 0.01, z: 0}
-  m_LocalScale: {x: 1.335583, y: 1.3123547, z: 0.7296691}
-  m_ConstrainProportionsScale: 0
+  m_LocalScale: {x: 1.38, y: 1.3559992, z: 0.75393546}
+  m_ConstrainProportionsScale: 1
   m_Children: []
   m_Father: {fileID: 6163636881912119569}
   m_RootOrder: 0
@@ -435,16 +432,16 @@ SpriteRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 99
-  m_Sprite: {fileID: 21300000, guid: f79e740dc5a5f9b4da27ee457ca24e86, type: 3}
+  m_SortingOrder: 3912
+  m_Sprite: {fileID: 21300000, guid: 7f77e0bb25424bb4f847aef3989f6a09, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 0.5803922}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
-  m_Size: {x: 7.15, y: 4.03}
+  m_Size: {x: 12.8, y: 7.2}
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
-  m_WasSpriteAssigned: 0
+  m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
 --- !u!1 &1134876823469298313
@@ -541,7 +538,7 @@ GameObject:
   m_Component:
   - component: {fileID: 7934843796294291948}
   - component: {fileID: 1405959680346794173}
-  - component: {fileID: 3431725146150381533}
+  - component: {fileID: 2213174238203282286}
   m_Layer: 0
   m_Name: Mountains
   m_TagString: Untagged
@@ -557,8 +554,8 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1205877575774920491}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 2.87, y: -1.7470124, z: 0}
-  m_LocalScale: {x: 1.584558, y: 1.584558, z: 1}
+  m_LocalPosition: {x: 2.87, y: -1.7027, z: 0}
+  m_LocalScale: {x: 1.4994594, y: 1.4994594, z: 0.94629496}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 2169629160349170190}
@@ -616,7 +613,7 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
---- !u!114 &3431725146150381533
+--- !u!114 &2213174238203282286
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -625,17 +622,14 @@ MonoBehaviour:
   m_GameObject: {fileID: 1205877575774920491}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d8cde6057dd47f64a84d3039869adaf1, type: 3}
+  m_Script: {fileID: 11500000, guid: 86babf8846fa7a4498e3fa3648f95cc9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  sr: {fileID: 0}
   AutoScroll: 1
-  AutoScrollX: 0
-  AutoScrollY: 0
-  X: 1
-  Y: 1
-  XBounds: 1
-  YBounds: 1
+  XSpeed: 1
+  YSpeed: 0
+  NegativeBounds: {x: -20, y: 0}
+  PositiveBounds: {x: 20, y: 0}
 --- !u!1 &1456433975185408193
 GameObject:
   m_ObjectHideFlags: 0
@@ -1215,7 +1209,7 @@ SpriteRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 1500
   m_Sprite: {fileID: 1605976402678978084, guid: de37f25efaa713347b9cfe924e2e3680, type: 3}
-  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_Color: {r: 1, g: 1, b: 1, a: 0}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
@@ -1340,7 +1334,7 @@ GameObject:
   m_Component:
   - component: {fileID: 5900937793740842020}
   - component: {fileID: 5387078332547408665}
-  - component: {fileID: 7443422232240835392}
+  - component: {fileID: 4656402600080682805}
   m_Layer: 0
   m_Name: TallHills
   m_TagString: Untagged
@@ -1356,8 +1350,8 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2533418371251927258}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -7.67, y: 0.6, z: 0}
-  m_LocalScale: {x: 1.1537356, y: 1.1537356, z: 1}
+  m_LocalPosition: {x: -7.1038, y: 0.51821, z: 0}
+  m_LocalScale: {x: 1.0917743, y: 1.0917743, z: 0.94629496}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 2169629160349170190}
@@ -1415,7 +1409,7 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
---- !u!114 &7443422232240835392
+--- !u!114 &4656402600080682805
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -1424,17 +1418,14 @@ MonoBehaviour:
   m_GameObject: {fileID: 2533418371251927258}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d8cde6057dd47f64a84d3039869adaf1, type: 3}
+  m_Script: {fileID: 11500000, guid: 86babf8846fa7a4498e3fa3648f95cc9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  sr: {fileID: 0}
   AutoScroll: 1
-  AutoScrollX: 0.05
-  AutoScrollY: 0.05
-  X: 1
-  Y: 1
-  XBounds: 1
-  YBounds: 1
+  XSpeed: 1
+  YSpeed: 0
+  NegativeBounds: {x: -20, y: 0}
+  PositiveBounds: {x: 20, y: 0}
 --- !u!1 &2566738640794868358
 GameObject:
   m_ObjectHideFlags: 0
@@ -1651,7 +1642,7 @@ GameObject:
   m_Component:
   - component: {fileID: 6729417936343292177}
   - component: {fileID: 7316351011524415340}
-  - component: {fileID: 4440582919133302836}
+  - component: {fileID: 1309179661640359768}
   m_Layer: 0
   m_Name: DesertHillSprite2
   m_TagString: Untagged
@@ -1667,8 +1658,8 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2848898258884908656}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 6.21721, y: -3.09, z: 0}
-  m_LocalScale: {x: 1.1537356, y: 1.1537356, z: 1}
+  m_LocalPosition: {x: 6.0374, y: -2.9735, z: 0}
+  m_LocalScale: {x: 1.0917743, y: 1.0917743, z: 0.94629496}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 4664790396195204968}
@@ -1726,7 +1717,7 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
---- !u!114 &4440582919133302836
+--- !u!114 &1309179661640359768
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -1735,17 +1726,14 @@ MonoBehaviour:
   m_GameObject: {fileID: 2848898258884908656}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d8cde6057dd47f64a84d3039869adaf1, type: 3}
+  m_Script: {fileID: 11500000, guid: 86babf8846fa7a4498e3fa3648f95cc9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  sr: {fileID: 0}
   AutoScroll: 1
-  AutoScrollX: 0
-  AutoScrollY: 0
-  X: 1
-  Y: 1
-  XBounds: 1
-  YBounds: 1
+  XSpeed: 1
+  YSpeed: 0
+  NegativeBounds: {x: -20, y: 0}
+  PositiveBounds: {x: 20, y: 0}
 --- !u!1 &2898546125529081447
 GameObject:
   m_ObjectHideFlags: 0
@@ -2673,7 +2661,7 @@ SpriteRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 1500
   m_Sprite: {fileID: 1605976402678978084, guid: de37f25efaa713347b9cfe924e2e3680, type: 3}
-  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_Color: {r: 1, g: 1, b: 1, a: 0}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
@@ -3095,7 +3083,7 @@ Transform:
   m_GameObject: {fileID: 5249704345827524699}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 2.18, y: -0.19, z: 0}
-  m_LocalScale: {x: 0.94, y: 0.94, z: 1}
+  m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 3429445985568152165}
@@ -4140,17 +4128,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4c87c9f6cda1a0748b3d81a13719d112, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  inList: 0
-  state:
-    gameObject: {fileID: 0}
-    early: 0
-    perfect: 0
-    late: 0
-    createBeat: 0
-  eligibleHitsList: []
-  aceTimes: 0
-  isEligible: 1
-  triggersAutoplay: 1
   dumplingColor: {r: 1, g: 1, b: 1, a: 1}
   startBeat: 0
   canDestroy: 0
@@ -4531,7 +4508,7 @@ GameObject:
   m_Component:
   - component: {fileID: 8086412976432979886}
   - component: {fileID: 7129764609925869669}
-  - component: {fileID: 1878214194801714706}
+  - component: {fileID: 5828880547652186327}
   m_Layer: 0
   m_Name: CloudBig
   m_TagString: Untagged
@@ -4547,8 +4524,8 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 6720235045024052485}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 5.752, y: 3.4229882, z: 0}
-  m_LocalScale: {x: 1.1537356, y: 1.1537356, z: 1}
+  m_LocalPosition: {x: 5.5972, y: 3.1895, z: 0}
+  m_LocalScale: {x: 1.0917743, y: 1.0917743, z: 0.94629496}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 2169629160349170190}
@@ -4606,7 +4583,7 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
---- !u!114 &1878214194801714706
+--- !u!114 &5828880547652186327
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -4615,17 +4592,14 @@ MonoBehaviour:
   m_GameObject: {fileID: 6720235045024052485}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d8cde6057dd47f64a84d3039869adaf1, type: 3}
+  m_Script: {fileID: 11500000, guid: 86babf8846fa7a4498e3fa3648f95cc9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  sr: {fileID: 0}
   AutoScroll: 1
-  AutoScrollX: 0
-  AutoScrollY: 0
-  X: 1
-  Y: 1
-  XBounds: 1
-  YBounds: 1
+  XSpeed: 1
+  YSpeed: 0
+  NegativeBounds: {x: -20, y: 0}
+  PositiveBounds: {x: 20, y: 0}
 --- !u!1 &6761161352435120153
 GameObject:
   m_ObjectHideFlags: 0
@@ -5155,7 +5129,7 @@ GameObject:
   m_Component:
   - component: {fileID: 7069306874276245283}
   - component: {fileID: 5157026256237712183}
-  - component: {fileID: 7684477825483736971}
+  - component: {fileID: 6748657384860450837}
   m_Layer: 0
   m_Name: DesertHillSprite1
   m_TagString: Untagged
@@ -5171,8 +5145,8 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 8219492712356600011}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -9.91279, y: -3.09, z: 0}
-  m_LocalScale: {x: 1.1537356, y: 1.1537356, z: 1}
+  m_LocalPosition: {x: -9.226, y: -2.9735, z: 0}
+  m_LocalScale: {x: 1.0917743, y: 1.0917743, z: 0.94629496}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 4664790396195204968}
@@ -5230,7 +5204,7 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
---- !u!114 &7684477825483736971
+--- !u!114 &6748657384860450837
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -5239,17 +5213,14 @@ MonoBehaviour:
   m_GameObject: {fileID: 8219492712356600011}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d8cde6057dd47f64a84d3039869adaf1, type: 3}
+  m_Script: {fileID: 11500000, guid: 86babf8846fa7a4498e3fa3648f95cc9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  sr: {fileID: 0}
   AutoScroll: 1
-  AutoScrollX: 0
-  AutoScrollY: 0
-  X: 1
-  Y: 1
-  XBounds: 1
-  YBounds: 1
+  XSpeed: 1
+  YSpeed: 0
+  NegativeBounds: {x: -20, y: 0}
+  PositiveBounds: {x: 20, y: 0}
 --- !u!1 &8528382047392833006
 GameObject:
   m_ObjectHideFlags: 0
@@ -5314,6 +5285,7 @@ GameObject:
   m_Component:
   - component: {fileID: 590582792504222320}
   - component: {fileID: 5354675969053820510}
+  - component: {fileID: 8364003212475266873}
   m_Layer: 0
   m_Name: WaterSprite
   m_TagString: Untagged
@@ -5329,8 +5301,8 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 8633692544295949288}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -2.11, y: -4.6578, z: 0}
-  m_LocalScale: {x: 0.852906, y: 0.852906, z: 1}
+  m_LocalPosition: {x: -1.8425, y: -4.4571, z: 0}
+  m_LocalScale: {x: 0.8071006, y: 0.8071006, z: 0.94629496}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 2169629160349170190}
@@ -5388,6 +5360,23 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
+--- !u!114 &8364003212475266873
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8633692544295949288}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 86babf8846fa7a4498e3fa3648f95cc9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  AutoScroll: 0
+  XSpeed: 1
+  YSpeed: 0
+  NegativeBounds: {x: -20, y: 0}
+  PositiveBounds: {x: 20, y: 0}
 --- !u!1 &8671634408962839517
 GameObject:
   m_ObjectHideFlags: 0
@@ -5398,7 +5387,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4044215000492705279}
   - component: {fileID: 7318876833036451559}
-  - component: {fileID: 976874260464778387}
+  - component: {fileID: 6514881826695601649}
   m_Layer: 0
   m_Name: DesertHillSprite3
   m_TagString: Untagged
@@ -5414,8 +5403,8 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 8671634408962839517}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 12.27, y: -3.09, z: 0}
-  m_LocalScale: {x: -1.153736, y: 1.1537356, z: 1}
+  m_LocalPosition: {x: 11.765, y: -2.9735, z: 0}
+  m_LocalScale: {x: -1.0917747, y: 1.0917743, z: 0.94629496}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 4664790396195204968}
@@ -5473,7 +5462,7 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
---- !u!114 &976874260464778387
+--- !u!114 &6514881826695601649
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -5482,17 +5471,14 @@ MonoBehaviour:
   m_GameObject: {fileID: 8671634408962839517}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d8cde6057dd47f64a84d3039869adaf1, type: 3}
+  m_Script: {fileID: 11500000, guid: 86babf8846fa7a4498e3fa3648f95cc9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  sr: {fileID: 0}
   AutoScroll: 1
-  AutoScrollX: 0
-  AutoScrollY: 0
-  X: 1
-  Y: 1
-  XBounds: 1
-  YBounds: 1
+  XSpeed: 1
+  YSpeed: 0
+  NegativeBounds: {x: -20, y: 0}
+  PositiveBounds: {x: 20, y: 0}
 --- !u!1 &8700103179855839601
 GameObject:
   m_ObjectHideFlags: 0
@@ -5810,7 +5796,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1871091660103544811}
   - component: {fileID: 4025118480975162234}
-  - component: {fileID: 4273459907356663913}
+  - component: {fileID: 3790367838227915195}
   m_Layer: 0
   m_Name: TallHills2
   m_TagString: Untagged
@@ -5826,8 +5812,8 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 9041142239183310377}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 3.0772097, y: -0.46, z: 0}
-  m_LocalScale: {x: 1.1537356, y: 1.1537356, z: 1}
+  m_LocalPosition: {x: 3.0661, y: -0.48484, z: 0}
+  m_LocalScale: {x: 1.0917743, y: 1.0917743, z: 0.94629496}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 2169629160349170190}
@@ -5885,7 +5871,7 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
---- !u!114 &4273459907356663913
+--- !u!114 &3790367838227915195
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -5894,17 +5880,14 @@ MonoBehaviour:
   m_GameObject: {fileID: 9041142239183310377}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d8cde6057dd47f64a84d3039869adaf1, type: 3}
+  m_Script: {fileID: 11500000, guid: 86babf8846fa7a4498e3fa3648f95cc9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  sr: {fileID: 0}
   AutoScroll: 1
-  AutoScrollX: 0
-  AutoScrollY: 0
-  X: 1
-  Y: 1
-  XBounds: 1
-  YBounds: 1
+  XSpeed: 1
+  YSpeed: 0
+  NegativeBounds: {x: -20, y: 0}
+  PositiveBounds: {x: 20, y: 0}
 --- !u!1 &9169262905377000879
 GameObject:
   m_ObjectHideFlags: 0
@@ -5915,7 +5898,7 @@ GameObject:
   m_Component:
   - component: {fileID: 6332278233260095964}
   - component: {fileID: 6447317779789304617}
-  - component: {fileID: 3886892573302485535}
+  - component: {fileID: 1752348584238631895}
   m_Layer: 0
   m_Name: ShortHills
   m_TagString: Untagged
@@ -5931,8 +5914,8 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 9169262905377000879}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -10.818, y: -3.007, z: 0}
-  m_LocalScale: {x: 1.1537356, y: 1.1537356, z: 1}
+  m_LocalPosition: {x: -10.082, y: -2.895, z: 0}
+  m_LocalScale: {x: 1.0917743, y: 1.0917743, z: 0.94629496}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 2169629160349170190}
@@ -5990,7 +5973,7 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
---- !u!114 &3886892573302485535
+--- !u!114 &1752348584238631895
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -5999,14 +5982,11 @@ MonoBehaviour:
   m_GameObject: {fileID: 9169262905377000879}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d8cde6057dd47f64a84d3039869adaf1, type: 3}
+  m_Script: {fileID: 11500000, guid: 86babf8846fa7a4498e3fa3648f95cc9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  sr: {fileID: 0}
   AutoScroll: 1
-  AutoScrollX: 0
-  AutoScrollY: 0
-  X: 1
-  Y: 1
-  XBounds: 1
-  YBounds: 1
+  XSpeed: 1
+  YSpeed: 0
+  NegativeBounds: {x: -20, y: 0}
+  PositiveBounds: {x: 20, y: 0}
