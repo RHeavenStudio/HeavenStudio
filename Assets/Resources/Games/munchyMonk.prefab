@@ -284,7 +284,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 739212289150650231}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -6.3324, y: -2.2922, z: 0}
+  m_LocalPosition: {x: -4, y: 1.97, z: 0}
   m_LocalScale: {x: -1.1075517, y: 1.1075516, z: 1.0410984}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -331,10 +331,10 @@ SpriteRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: -10
-  m_Sprite: {fileID: 4293028737414108667, guid: 96a89d9ac91b4a0499e22d325fc1bb9c, type: 3}
+  m_SortingOrder: -96
+  m_Sprite: {fileID: -6109354006727621133, guid: 96a89d9ac91b4a0499e22d325fc1bb9c, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
-  m_FlipX: 0
+  m_FlipX: 1
   m_FlipY: 0
   m_DrawMode: 0
   m_Size: {x: 3.47, y: 8.96}
@@ -356,7 +356,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   AutoScroll: 1
-  XSpeed: 1
+  XSpeed: -0.15
   YSpeed: 0
   NegativeBounds: {x: -20, y: 0}
   PositiveBounds: {x: 20, y: 0}
@@ -626,7 +626,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   AutoScroll: 1
-  XSpeed: 1
+  XSpeed: -0.06
   YSpeed: 0
   NegativeBounds: {x: -20, y: 0}
   PositiveBounds: {x: 20, y: 0}
@@ -1422,7 +1422,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   AutoScroll: 1
-  XSpeed: 1
+  XSpeed: -0.28
   YSpeed: 0
   NegativeBounds: {x: -20, y: 0}
   PositiveBounds: {x: 20, y: 0}
@@ -1730,7 +1730,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   AutoScroll: 1
-  XSpeed: 1
+  XSpeed: -0.5
   YSpeed: 0
   NegativeBounds: {x: -20, y: 0}
   PositiveBounds: {x: 20, y: 0}
@@ -4571,7 +4571,7 @@ SpriteRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: -92
+  m_SortingOrder: -96
   m_Sprite: {fileID: -886345551953287938, guid: 96a89d9ac91b4a0499e22d325fc1bb9c, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
@@ -4596,7 +4596,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   AutoScroll: 1
-  XSpeed: 1
+  XSpeed: -0.15
   YSpeed: 0
   NegativeBounds: {x: -20, y: 0}
   PositiveBounds: {x: 20, y: 0}
@@ -5217,7 +5217,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   AutoScroll: 1
-  XSpeed: 1
+  XSpeed: -0.5
   YSpeed: 0
   NegativeBounds: {x: -20, y: 0}
   PositiveBounds: {x: 20, y: 0}
@@ -5372,8 +5372,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 86babf8846fa7a4498e3fa3648f95cc9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  AutoScroll: 0
-  XSpeed: 1
+  AutoScroll: 1
+  XSpeed: -0.5
   YSpeed: 0
   NegativeBounds: {x: -20, y: 0}
   PositiveBounds: {x: 20, y: 0}
@@ -5475,7 +5475,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   AutoScroll: 1
-  XSpeed: 1
+  XSpeed: -0.5
   YSpeed: 0
   NegativeBounds: {x: -20, y: 0}
   PositiveBounds: {x: 20, y: 0}
@@ -5859,7 +5859,7 @@ SpriteRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: -95
+  m_SortingOrder: -97
   m_Sprite: {fileID: -9215271416018340848, guid: 96a89d9ac91b4a0499e22d325fc1bb9c, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
@@ -5884,7 +5884,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   AutoScroll: 1
-  XSpeed: 1
+  XSpeed: -0.1
   YSpeed: 0
   NegativeBounds: {x: -20, y: 0}
   PositiveBounds: {x: 20, y: 0}
@@ -5986,7 +5986,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   AutoScroll: 1
-  XSpeed: 1
+  XSpeed: -0.42
   YSpeed: 0
   NegativeBounds: {x: -20, y: 0}
   PositiveBounds: {x: 20, y: 0}
