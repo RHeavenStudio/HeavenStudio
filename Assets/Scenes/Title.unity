@@ -2821,7 +2821,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   createButton: {fileID: 2094622677}
-  Bpm: 114
+  logoAnim: {fileID: 869323824}
+  bpm: 114
 --- !u!82 &1811344143
 AudioSource:
   m_ObjectHideFlags: 0
@@ -2833,7 +2834,7 @@ AudioSource:
   serializedVersion: 4
   OutputAudioMixerGroup: {fileID: -7454359775428337364, guid: e76f74363e1893a42bd3ebe9643b7d12, type: 2}
   m_audioClip: {fileID: 8300000, guid: db628a16ac450d442970008255720d2d, type: 3}
-  m_PlayOnAwake: 1
+  m_PlayOnAwake: 0
   m_Volume: 1
   m_Pitch: 1
   Loop: 1
