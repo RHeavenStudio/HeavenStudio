@@ -44,6 +44,7 @@ namespace HeavenStudio.Games.Scripts_SeeSaw
         [SerializeField] Transform landOutTrans;
         public Transform landInTrans;
         [SerializeField] Transform groundTrans;
+        bool hasChangedAnimMidAir;
 
         private void Awake()
         {
@@ -67,27 +68,47 @@ namespace HeavenStudio.Games.Scripts_SeeSaw
                         return;
                     case JumpState.StartJump:
                         transform.position = GetPathPositionFromBeat(currentPath, Mathf.Max(startBeat, currentBeat), out float height, startBeat);
-                        if (height < heightLastFrame) anim.Play("Jump_OutOut_Fall", 0, 0);
+                        if (height < heightLastFrame && !hasChangedAnimMidAir)
+                        {
+                            anim.Play("Jump_OutOut_Fall", 0, 0);
+                            hasChangedAnimMidAir = true;
+                        }
+
                         heightLastFrame = height;
                         break;
                     case JumpState.StartJumpIn:
                         transform.position = GetPathPositionFromBeat(currentPath, Mathf.Max(startBeat, currentBeat), out float heightIn, startBeat);
-                        if (heightIn < heightLastFrame) anim.Play("Jump_InIn_Fall", 0, 0);
+                        if (heightIn < heightLastFrame && !hasChangedAnimMidAir)
+                        {
+                            anim.Play("Jump_InIn_Fall", 0, 0);
+                            hasChangedAnimMidAir = true;
+                        }
+
                         heightLastFrame = heightIn;
                         break;
                     case JumpState.OutOut:
                         transform.position = GetPathPositionFromBeat(currentPath, Mathf.Max(startBeat, currentBeat), startBeat);
-                        if (currentBeat >= startBeat + 1) anim.Play("Jump_OutOut_Fall", 0, 0);
+                        if (currentBeat >= startBeat + 1 && !hasChangedAnimMidAir)
+                        {
+                            anim.Play("Jump_OutOut_Fall", 0, 0);
+                            hasChangedAnimMidAir = true;
+                        }
+
                         break;
                     case JumpState.InIn:
                         transform.position = GetPathPositionFromBeat(currentPath, Mathf.Max(startBeat, currentBeat), startBeat);
-                        if (currentBeat >= startBeat + 0.5f) anim.Play("Jump_InIn_Fall", 0, 0);
+                        if (currentBeat >= startBeat + 0.5f && !hasChangedAnimMidAir)
+                        {
+                            anim.Play("Jump_InIn_Fall", 0, 0);
+                            hasChangedAnimMidAir = true;
+                        }
                         break;
                     case JumpState.InOut:
                         transform.position = GetPathPositionFromBeat(currentPath, Mathf.Max(startBeat, currentBeat), startBeat);
                         if (currentBeat >= startBeat + 0.5f) 
                         {
-                            anim.Play("Jump_InOut_Tuck", 0, 0);
+                            if (!hasChangedAnimMidAir) anim.Play("Jump_InOut_Tuck", 0, 0);
+                            hasChangedAnimMidAir = true;
                             transform.rotation = Quaternion.Euler(0, 0, (see ? 1 : -1) * Mathf.Lerp(0, 360, cond.GetPositionFromBeat(startBeat + 0.5f, 0.75f)));
                         } 
                         break;
@@ -95,7 +116,8 @@ namespace HeavenStudio.Games.Scripts_SeeSaw
                         transform.position = GetPathPositionFromBeat(currentPath, Mathf.Max(startBeat, currentBeat), startBeat);
                         if (currentBeat >= startBeat + 1f) 
                         {
-                            anim.Play("Jump_OutIn_Tuck", 0, 0);
+                            if (!hasChangedAnimMidAir) anim.Play("Jump_OutIn_Tuck", 0, 0);
+                            hasChangedAnimMidAir = true;
                             transform.rotation = Quaternion.Euler(0, 0, (see ? -1 : 1) * Mathf.Lerp(0, 360, cond.GetPositionFromBeat(startBeat + 1f, 1f)));
                         }
                         break;
@@ -108,8 +130,9 @@ namespace HeavenStudio.Games.Scripts_SeeSaw
                     case JumpState.HighInOut:
                     case JumpState.HighInIn:
                         transform.position = GetPathPositionFromBeat(currentPath, Mathf.Max(startBeat, currentBeat), startBeat);
-                        if (see) return;
-                        GameCamera.additionalPosition = GetPathPositionFromBeat(cameraPath, Mathf.Max(startBeat, currentBeat), startBeat);
+                        if (see || !game.cameraMove) return;
+                        float newCamY = Mathf.Max(GetPathPositionFromBeat(cameraPath, Mathf.Max(startBeat, currentBeat), startBeat).y, 0);
+                        GameCamera.additionalPosition = new Vector3(0, newCamY, 0);
                         break;
                 }
             }
@@ -137,6 +160,10 @@ namespace HeavenStudio.Games.Scripts_SeeSaw
                     transform.position = groundTrans.position;
                     SetState(JumpState.None, 0);
                     return;
+            }
+            if (landType is LandType.Big && !see)
+            {
+                game.SpawnOrbs(!landedOut, Conductor.instance.songPositionInBeats);
             }
             string landOut = landedOut ? "Out" : "In";
             string typeOfLanding = "";
@@ -189,6 +216,7 @@ namespace HeavenStudio.Games.Scripts_SeeSaw
             currentState = state;
             startBeat = beat;
             heightLastFrame = 0;
+            hasChangedAnimMidAir = false;
             switch (currentState)
             {
                 case JumpState.OutOut:
@@ -226,7 +254,7 @@ namespace HeavenStudio.Games.Scripts_SeeSaw
                 case JumpState.HighOutOut:
                     currentPath = game.GetPath(see ? "SeeHighOutOut" : "SawHighOutOut");
                     currentPath.positions[0].height = Mathf.Lerp(12, 28, height);
-                    cameraPath.positions[0].height = Mathf.Lerp(8, 24, height);
+                    cameraPath.positions[0].height = Mathf.Lerp(10, 26, height);
                     cameraPath.positions[0].duration = 2f;
                     anim.DoScaledAnimationAsync(miss ? "BadOut_SeeReact" : "Jump_OutOut_Start", 0.5f);
                     if (see) return;
@@ -238,7 +266,7 @@ namespace HeavenStudio.Games.Scripts_SeeSaw
                 case JumpState.HighOutIn:
                     currentPath = game.GetPath(see ? "SeeHighOutIn" : "SawHighOutIn");
                     currentPath.positions[0].height = Mathf.Lerp(12, 28, height);
-                    cameraPath.positions[0].height = Mathf.Lerp(8, 24, height);
+                    cameraPath.positions[0].height = Mathf.Lerp(10, 26, height);
                     cameraPath.positions[0].duration = 2f;
                     anim.DoScaledAnimationAsync(miss ? "BadOut_SeeReact" : "Jump_OutIn_Start", 0.5f);
                     if (see) return;
@@ -250,7 +278,7 @@ namespace HeavenStudio.Games.Scripts_SeeSaw
                 case JumpState.HighInOut:
                     currentPath = game.GetPath(see ? "SeeHighInOut" : "SawHighInOut");
                     currentPath.positions[0].height = Mathf.Lerp(9, 20, height);
-                    cameraPath.positions[0].height = Mathf.Lerp(5, 16, height);
+                    cameraPath.positions[0].height = Mathf.Lerp(7, 18, height);
                     cameraPath.positions[0].duration = 1f;
                     anim.DoScaledAnimationAsync(miss ? "BadIn_SeeReact" : "Jump_InIn_Start", 0.5f);
                     if (see) return;
@@ -262,7 +290,7 @@ namespace HeavenStudio.Games.Scripts_SeeSaw
                 case JumpState.HighInIn:
                     currentPath = game.GetPath(see ? "SeeHighInIn" : "SawHighInIn");
                     currentPath.positions[0].height = Mathf.Lerp(9, 20, height);
-                    cameraPath.positions[0].height = Mathf.Lerp(5, 16, height);
+                    cameraPath.positions[0].height = Mathf.Lerp(7, 18, height);
                     cameraPath.positions[0].duration = 1f;
                     anim.DoScaledAnimationAsync(miss ? "BadIn_SeeReact" : "Jump_InIn_Start", 0.5f);
                     if (see) return;

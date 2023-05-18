@@ -15,42 +15,46 @@ namespace HeavenStudio.Games.Loaders
             {
                 new GameAction("longLong", "Long Long")
                 {
-                    function = delegate { var e = eventCaller.currentEntity; SeeSaw.instance.LongLong(e.beat, e["high"], e["height"]); },
+                    function = delegate { var e = eventCaller.currentEntity; SeeSaw.instance.cameraMove = e["camMove"]; SeeSaw.instance.LongLong(e.beat, e["high"], e["height"]); },
                     defaultLength = 4f,
                     parameters = new List<Param>()
                     {
                         new Param("high", false, "High", "Will they perform high jumps?"),
-                        new Param("height", new EntityTypes.Float(0, 1, 0), "Height", "Controls how high the high jump will go, 0 is the minimum height, 1 is the maximum height.")
+                        new Param("height", new EntityTypes.Float(0, 1, 0), "Height", "Controls how high the high jump will go, 0 is the minimum height, 1 is the maximum height."),
+                        new Param("camMove", true, "Camera Movement", "Will the camera follow saw when it jumps up high?")
                     }
                 },
                 new GameAction("longShort", "Long Short")
                 {
-                    function = delegate { var e = eventCaller.currentEntity; SeeSaw.instance.LongShort(e.beat, e["high"], e["height"]); },
+                    function = delegate { var e = eventCaller.currentEntity; SeeSaw.instance.cameraMove = e["camMove"]; SeeSaw.instance.LongShort(e.beat, e["high"], e["height"]); },
                     defaultLength = 3f,
                     parameters = new List<Param>()
                     {
                         new Param("high", false, "High", "Will they perform high jumps?"),
-                        new Param("height", new EntityTypes.Float(0, 1, 0), "Height", "Controls how high the high jump will go, 0 is the minimum height, 1 is the maximum height.")
+                        new Param("height", new EntityTypes.Float(0, 1, 0), "Height", "Controls how high the high jump will go, 0 is the minimum height, 1 is the maximum height."),
+                        new Param("camMove", true, "Camera Movement", "Will the camera follow saw when it jumps up high?")
                     }
                 },
                 new GameAction("shortLong", "Short Long")
                 {
-                    function = delegate { var e = eventCaller.currentEntity; SeeSaw.instance.ShortLong(e.beat, e["high"], e["height"]); },
+                    function = delegate { var e = eventCaller.currentEntity; SeeSaw.instance.cameraMove = e["camMove"]; SeeSaw.instance.ShortLong(e.beat, e["high"], e["height"]); },
                     defaultLength = 3f,
                     parameters = new List<Param>()
                     {
                         new Param("high", false, "High", "Will they perform high jumps?"),
-                        new Param("height", new EntityTypes.Float(0, 1, 0), "Height", "Controls how high the high jump will go, 0 is the minimum height, 1 is the maximum height.")
+                        new Param("height", new EntityTypes.Float(0, 1, 0), "Height", "Controls how high the high jump will go, 0 is the minimum height, 1 is the maximum height."),
+                        new Param("camMove", true, "Camera Movement", "Will the camera follow saw when it jumps up high?")
                     }
                 },
                 new GameAction("shortShort", "Short Short")
                 {
-                    function = delegate { var e = eventCaller.currentEntity; SeeSaw.instance.ShortShort(e.beat, e["high"], e["height"]); },
+                    function = delegate { var e = eventCaller.currentEntity; SeeSaw.instance.cameraMove = e["camMove"]; SeeSaw.instance.ShortShort(e.beat, e["high"], e["height"]); },
                     defaultLength = 2f,
                     parameters = new List<Param>()
                     { 
                         new Param("high", false, "High", "Will they perform high jumps?"), 
-                        new Param("height", new EntityTypes.Float(0, 1, 0), "Height", "Controls how high the high jump will go, 0 is the minimum height, 1 is the maximum height.") 
+                        new Param("height", new EntityTypes.Float(0, 1, 0), "Height", "Controls how high the high jump will go, 0 is the minimum height, 1 is the maximum height."),
+                        new Param("camMove", true, "Camera Movement", "Will the camera follow saw when it jumps up high?")
                     }
                 },
             });
@@ -67,10 +71,15 @@ namespace HeavenStudio.Games
         [SerializeField] Animator seeSawAnim;
         [SerializeField] SeeSawGuy see;
         [SerializeField] SeeSawGuy saw;
+        [SerializeField] ParticleSystem leftWhiteOrbs;
+        [SerializeField] ParticleSystem rightBlackOrbs;
+        [SerializeField] GameObject lightningLeft;
+        [SerializeField] GameObject lightningRight;
 
         [Header("Properties")]
         bool canPrepare = true;
         bool canStartJump;
+        public bool cameraMove = true;
         [SerializeField] SuperCurveObject.Path[] jumpPaths;
 
         private int currentJumpIndex;
@@ -497,6 +506,34 @@ namespace HeavenStudio.Games
             return currentJumpIndex < allJumpEvents.Count && allJumpEvents[currentJumpIndex].beat == allJumpEvents[currentJumpIndex - 1].beat + allJumpEvents[currentJumpIndex - 1].length;
         }
 
+        public void SpawnOrbs(bool white, float beat)
+        {
+            ParticleSystem ps = null;
+            if (white)
+            {
+                ps = Instantiate(leftWhiteOrbs, leftWhiteOrbs.transform.parent);
+                lightningLeft.SetActive(true);
+                BeatAction.New(instance.gameObject, new List<BeatAction.Action>()
+                {
+                    new BeatAction.Action(beat + 0.1f, delegate { lightningLeft.SetActive(false); })
+                });
+            }
+            else
+            {
+                ps = Instantiate(rightBlackOrbs, rightBlackOrbs.transform.parent);
+                lightningRight.SetActive(true);
+                BeatAction.New(instance.gameObject, new List<BeatAction.Action>()
+                {
+                    new BeatAction.Action(beat + 0.1f, delegate { lightningRight.SetActive(false); })
+                });
+            }
+            ParticleSystem psChild = ps.transform.GetChild(1).GetComponent<ParticleSystem>();
+            psChild.SetAsyncScaling(1.3f);
+            ps.transform.GetChild(2).GetComponent<ParticleSystem>().SetAsyncScaling(1f);
+            psChild.transform.GetChild(1).GetComponent<ParticleSystem>().SetAsyncScaling(1f);
+            ps.PlayScaledAsync(1.3f);
+        }
+ 
         public void JustLong(PlayerActionEvent caller, float state)
         {
             seeSawAnim.transform.localScale = new Vector3(1, 1, 1);
@@ -540,6 +577,7 @@ namespace HeavenStudio.Games
             DetermineSeeJump(caller.timer + caller.startBeat, false, true, allJumpEvents[currentJumpIndex - 1]["height"]);
             seeSawAnim.DoScaledAnimationAsync("Good", 0.5f);
             Jukebox.PlayOneShotGame("seeSaw/explosionBlack");
+            
             saw.Land(SeeSawGuy.LandType.Big, true);
             if (currentJumpIndex >= 0 && currentJumpIndex != allJumpEvents.Count
                 && allJumpEvents[currentJumpIndex].beat == allJumpEvents[currentJumpIndex - 1].beat + allJumpEvents[currentJumpIndex - 1].length
@@ -608,6 +646,7 @@ namespace HeavenStudio.Games
             DetermineSeeJump(caller.timer + caller.startBeat, false, true, allJumpEvents[currentJumpIndex - 1]["height"]);
             seeSawAnim.DoScaledAnimationAsync("Good", 0.5f);
             Jukebox.PlayOneShotGame("seeSaw/explosionWhite");
+            
             saw.Land(SeeSawGuy.LandType.Big, false);
             if (currentJumpIndex >= 0 && currentJumpIndex != allJumpEvents.Count
                 && allJumpEvents[currentJumpIndex].beat == allJumpEvents[currentJumpIndex - 1].beat + allJumpEvents[currentJumpIndex - 1].length
