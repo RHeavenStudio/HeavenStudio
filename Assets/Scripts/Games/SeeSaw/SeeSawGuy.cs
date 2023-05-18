@@ -146,17 +146,18 @@ namespace HeavenStudio.Games.Scripts_SeeSaw
         public void Choke(float beat, float length)
         {
             if (!canBop || currentState != JumpState.None || dead) return;
+            dead = true;
             anim.DoScaledAnimationAsync("Choke_" + (see ? "See" : "Saw") + "_Intro", 0.5f);
             Jukebox.PlayOneShotGame("seeSaw/explosion" + (see ? "Black" : "White"), beat + length);
             BeatAction.New(gameObject, new List<BeatAction.Action>()
             {
-                new BeatAction.Action(beat + length, delegate { transform.GetChild(0).gameObject.SetActive(false); deathParticle.Play(); dead = true; })
+                new BeatAction.Action(beat + length, delegate { transform.GetChild(0).gameObject.SetActive(false); deathParticle.Play();})
             });
         }
 
         public void Bop()
         {
-            if (!canBop || currentState != JumpState.None) return;
+            if (!canBop || currentState != JumpState.None || dead) return;
             anim.DoScaledAnimationAsync("Bop" + (see ? "See" : "Saw") + (strum ? "_Strum" : ""), 0.5f);
         }
 
