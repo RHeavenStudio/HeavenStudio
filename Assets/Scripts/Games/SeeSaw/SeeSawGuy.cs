@@ -4,6 +4,7 @@ using UnityEngine;
 using HeavenStudio.Util;
 using System.Resources;
 using System.Net;
+using System;
 
 namespace HeavenStudio.Games.Scripts_SeeSaw
 {
@@ -33,6 +34,8 @@ namespace HeavenStudio.Games.Scripts_SeeSaw
             HighInIn
         }
         [SerializeField] bool see;
+        public bool dead;
+        public bool strum;
         public Animator anim;
         JumpState lastState;
         JumpState currentState;
@@ -41,10 +44,12 @@ namespace HeavenStudio.Games.Scripts_SeeSaw
         SeeSaw game;
         float startBeat;
         float heightLastFrame;
+        [NonSerialized] public bool canBop = true;
         [SerializeField] Transform landOutTrans;
         public Transform landInTrans;
         [SerializeField] Transform groundTrans;
         bool hasChangedAnimMidAir;
+        [SerializeField] ParticleSystem deathParticle;
 
         private void Awake()
         {
@@ -136,6 +141,23 @@ namespace HeavenStudio.Games.Scripts_SeeSaw
                         break;
                 }
             }
+        }
+
+        public void Choke(float beat, float length)
+        {
+            if (!canBop || currentState != JumpState.None || dead) return;
+            anim.DoScaledAnimationAsync("Choke_" + (see ? "See" : "Saw") + "_Intro", 0.5f);
+            Jukebox.PlayOneShotGame("seeSaw/explosion" + (see ? "Black" : "White"), beat + length);
+            BeatAction.New(gameObject, new List<BeatAction.Action>()
+            {
+                new BeatAction.Action(beat + length, delegate { transform.GetChild(0).gameObject.SetActive(false); deathParticle.Play(); dead = true; })
+            });
+        }
+
+        public void Bop()
+        {
+            if (!canBop || currentState != JumpState.None) return;
+            anim.DoScaledAnimationAsync("Bop" + (see ? "See" : "Saw") + (strum ? "_Strum" : ""), 0.5f);
         }
 
         public void Land(LandType landType, bool getUpOut)

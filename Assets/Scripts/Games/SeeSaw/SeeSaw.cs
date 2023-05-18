@@ -68,6 +68,32 @@ namespace HeavenStudio.Games.Loaders
                         new Param("colorTo", SeeSaw.defaultBGColor, "End Color", "The color the background will end at."),
                         new Param("ease", EasingFunction.Ease.Linear, "Ease", "The ease of the fade.")
                     }
+                },
+                new GameAction("bop", "Bop")
+                {
+                    function = delegate { var e = eventCaller.currentEntity; SeeSaw.instance.Bop(e.beat, e.length, e["bopSee"], e["bopSaw"], e["autoSee"], e["autoSaw"], e["strumSee"], e["strumSaw"]); },
+                    defaultLength = 1f,
+                    resizable = true,
+                    parameters = new List<Param>()
+                    {
+                        new Param("bopSee", true, "See Bop", "Should see bop?"),
+                        new Param("bopSaw", true, "Saw Bop", "Should saw bop?"),
+                        new Param("autoSee", false, "See Bop (Auto)", "Should see auto bop?"),
+                        new Param("autoSaw", false, "Saw Bop (Auto)", "Should saw auto bop?"),
+                        new Param("strumSee", false, "See Strum", "Should see do the strum bop?"),
+                        new Param("strumSaw", false, "Saw Strum", "Should saw do the strum bop?"),
+                    }
+                },
+                new GameAction("choke", "Choke")
+                {
+                    function = delegate { var e = eventCaller.currentEntity; SeeSaw.instance.Choke(e.beat, e.length, e["see"], e["saw"]); },
+                    defaultLength = 4f,
+                    resizable = true,
+                    parameters = new List<Param>()
+                    {
+                        new Param("see", true, "See", "Will See Choke?"),
+                        new Param("saw", true, "Saw", "Will Saw Choke?")
+                    }
                 }
             });
         }
@@ -103,6 +129,9 @@ namespace HeavenStudio.Games
         [SerializeField] SpriteRenderer bgHigh;
 
         [Header("Properties")]
+        bool sawShouldBop;
+        bool seeShouldBop;
+        GameEvent bop = new GameEvent();
         float bgColorStartBeat;
         float bgColorLength;
         EasingFunction.Ease lastEase;
@@ -175,7 +204,7 @@ namespace HeavenStudio.Games
                     bgLowNewColor = Color.HSVToRGB(H, S, V);
                     bgLow.color = bgLowNewColor;
                 }
-                if (allJumpEvents.Count > 0)
+                if (allJumpEvents.Count > 0 && !(see.dead || saw.dead))
                 {
                     if (currentJumpIndex < allJumpEvents.Count && currentJumpIndex >= 0)
                     {
@@ -192,7 +221,7 @@ namespace HeavenStudio.Games
                                     Jukebox.PlayOneShotGame("seeSaw/prepareHigh", beatToJump);
                                     BeatAction.New(instance.gameObject, new List<BeatAction.Action>()
                                     {
-                                        new BeatAction.Action(beatToJump, delegate { see.SetState(inJump ? SeeSawGuy.JumpState.StartJumpIn : SeeSawGuy.JumpState.StartJump, beatToJump); })
+                                        new BeatAction.Action(beatToJump, delegate { see.SetState(inJump ? SeeSawGuy.JumpState.StartJumpIn : SeeSawGuy.JumpState.StartJump, beatToJump); see.canBop = false; })
                                     });
                                     canPrepare = false;
                                 }
@@ -201,6 +230,50 @@ namespace HeavenStudio.Games
 
                     }
                 }
+                if (cond.ReportBeat(ref bop.lastReportedBeat, bop.startBeat % 1))
+                {
+                    if (seeShouldBop)
+                    {
+                        see.Bop();
+                    }
+                    if (sawShouldBop)
+                    {
+                        saw.Bop();
+                    }
+                }
+            }
+        }
+
+        public void Choke(float beat, float length, bool seeChoke, bool sawChoke)
+        {
+            if (seeChoke) see.Choke(beat, length);
+            if (sawChoke) saw.Choke(beat, length);
+        }
+
+        public void Bop(float beat, float length, bool bopSee, bool bopSaw, bool autoSee, bool autoSaw, bool strumSee, bool strumSaw)
+        {
+            seeShouldBop = autoSee;
+            sawShouldBop = autoSaw;
+            see.strum = strumSee;
+            saw.strum = strumSaw;
+            if (bopSee || bopSaw)
+            {
+                List<BeatAction.Action> bops = new List<BeatAction.Action>();
+                for (int i = 0; i < length; i++)
+                {
+                    bops.Add(new BeatAction.Action(beat + i, delegate
+                    {
+                        if (bopSaw)
+                        {
+                            saw.Bop();
+                        }
+                        if (bopSee)
+                        {
+                            see.Bop();
+                        }
+                    }));
+                }
+                BeatAction.New(instance.gameObject, bops);
             }
         }
 
@@ -215,6 +288,7 @@ namespace HeavenStudio.Games
 
         public void LongLong(float beat, bool high, float height)
         {
+            if (see.dead || saw.dead) return;
             if (currentJumpIndex != 0)
             {
                 if (currentJumpIndex < allJumpEvents.Count && currentJumpIndex > 0)
@@ -226,6 +300,7 @@ namespace HeavenStudio.Games
                     }
                 }
             }
+            saw.canBop = false;
             canStartJump = false;
             seeSawAnim.transform.localScale = new Vector3(-1, 1, 1);
             seeSawAnim.DoScaledAnimationAsync("Good", 0.5f);
@@ -262,10 +337,11 @@ namespace HeavenStudio.Games
 
                 if (currentJumpIndex >= allJumpEvents.Count || allJumpEvents[currentJumpIndex].beat != beat + 4)
                 {
+                    saw.canBop = true;
                     Jukebox.PlayOneShotGame("seeSaw/otherLand", beat + 4);
                     BeatAction.New(instance.gameObject, new List<BeatAction.Action>()
                     {
-                        new BeatAction.Action(beat + 4, delegate { see.Land(SeeSawGuy.LandType.Normal, true); canPrepare = true; canStartJump = true; })
+                        new BeatAction.Action(beat + 4, delegate { see.Land(SeeSawGuy.LandType.Normal, true); canPrepare = true; canStartJump = true; see.canBop = true; })
                     });
                 }
             } 
@@ -273,6 +349,7 @@ namespace HeavenStudio.Games
 
         public void LongShort(float beat, bool high, float height)
         {
+            if (see.dead || saw.dead) return;
             if (currentJumpIndex != 0)
             {
                 if (currentJumpIndex < allJumpEvents.Count && currentJumpIndex > 0)
@@ -284,6 +361,7 @@ namespace HeavenStudio.Games
                     }
                 }
             }
+            saw.canBop = false;
             canStartJump = false;
             seeSawAnim.transform.localScale = new Vector3(-1, 1, 1);
             seeSawAnim.DoScaledAnimationAsync("Good", 0.5f);
@@ -319,11 +397,12 @@ namespace HeavenStudio.Games
 
                 if (currentJumpIndex >= allJumpEvents.Count || allJumpEvents[currentJumpIndex].beat != beat + 3)
                 {
+                    saw.canBop = true;
                     float beatLength = see.ShouldEndJumpOut() ? 4 : 3;
                     Jukebox.PlayOneShotGame("seeSaw/otherLand", beat + beatLength);
                     BeatAction.New(instance.gameObject, new List<BeatAction.Action>()
                     {
-                        new BeatAction.Action(beat + beatLength, delegate { see.Land(SeeSawGuy.LandType.Normal, true); canPrepare = true; canStartJump = true; })
+                        new BeatAction.Action(beat + beatLength, delegate { see.Land(SeeSawGuy.LandType.Normal, true); canPrepare = true; canStartJump = true; see.canBop = true; })
                     });
                 }
             }
@@ -331,6 +410,7 @@ namespace HeavenStudio.Games
 
         public void ShortLong(float beat, bool high, float height)
         {
+            if (see.dead || saw.dead) return;
             if (currentJumpIndex != 0)
             {
                 if (currentJumpIndex < allJumpEvents.Count && currentJumpIndex > 0)
@@ -342,6 +422,7 @@ namespace HeavenStudio.Games
                     }
                 }
             }
+            saw.canBop = false;
             canStartJump = false;
             seeSawAnim.transform.localScale = new Vector3(-1, 1, 1);
             seeSawAnim.DoScaledAnimationAsync("Good", 0.5f);
@@ -377,11 +458,12 @@ namespace HeavenStudio.Games
 
                 if (currentJumpIndex >= allJumpEvents.Count || allJumpEvents[currentJumpIndex].beat != beat + 3)
                 {
+                    saw.canBop = true;
                     float beatLength = see.ShouldEndJumpOut() ? 3 : 2;
                     Jukebox.PlayOneShotGame("seeSaw/otherLand", beat + beatLength);
                     BeatAction.New(instance.gameObject, new List<BeatAction.Action>()
                     {
-                        new BeatAction.Action(beat + beatLength, delegate { see.Land(SeeSawGuy.LandType.Normal, false); canPrepare = true; canStartJump = true; })
+                        new BeatAction.Action(beat + beatLength, delegate { see.Land(SeeSawGuy.LandType.Normal, false); canPrepare = true; canStartJump = true; see.canBop = true; })
                     });
                 }
             }
@@ -389,6 +471,7 @@ namespace HeavenStudio.Games
 
         public void ShortShort(float beat, bool high, float height)
         {
+            if (see.dead || saw.dead) return;
             if (currentJumpIndex != 0)
             {
                 if (currentJumpIndex < allJumpEvents.Count && currentJumpIndex > 0)
@@ -400,6 +483,7 @@ namespace HeavenStudio.Games
                     } 
                 }
             }
+            saw.canBop = false;
             canStartJump = false;
             seeSawAnim.transform.localScale = new Vector3(-1, 1, 1);
             seeSawAnim.DoScaledAnimationAsync("Good", 0.5f);
@@ -435,10 +519,11 @@ namespace HeavenStudio.Games
 
                 if (currentJumpIndex >= allJumpEvents.Count || allJumpEvents[currentJumpIndex].beat != beat + 2)
                 {
+                    saw.canBop = true;
                     Jukebox.PlayOneShotGame("seeSaw/otherLand", beat + 2);
                     BeatAction.New(instance.gameObject, new List<BeatAction.Action>()
                     {
-                        new BeatAction.Action(beat + 2, delegate { see.Land(SeeSawGuy.LandType.Normal, false); canPrepare = true; canStartJump = true; })
+                        new BeatAction.Action(beat + 2, delegate { see.Land(SeeSawGuy.LandType.Normal, false); canPrepare = true; canStartJump = true; see.canBop = true; })
                     });
                 }
             }
