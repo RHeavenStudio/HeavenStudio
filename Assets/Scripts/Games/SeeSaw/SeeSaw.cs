@@ -51,12 +51,24 @@ namespace HeavenStudio.Games.Loaders
                     function = delegate { var e = eventCaller.currentEntity; SeeSaw.instance.cameraMove = e["camMove"]; SeeSaw.instance.ShortShort(e.beat, e["high"], e["height"]); },
                     defaultLength = 2f,
                     parameters = new List<Param>()
-                    { 
-                        new Param("high", false, "High", "Will they perform high jumps?"), 
+                    {
+                        new Param("high", false, "High", "Will they perform high jumps?"),
                         new Param("height", new EntityTypes.Float(0, 1, 0), "Height", "Controls how high the high jump will go, 0 is the minimum height, 1 is the maximum height."),
                         new Param("camMove", true, "Camera Movement", "Will the camera follow saw when it jumps up high?")
                     }
                 },
+                new GameAction("changeBgColor", "Change Background Color")
+                {
+                    function = delegate { var e = eventCaller.currentEntity; SeeSaw.instance.ChangeColor(e.beat, e.length, e["colorFrom"], e["colorTo"], e["ease"]); },
+                    defaultLength = 4f,
+                    resizable = true,
+                    parameters = new List<Param>()
+                    {
+                        new Param("colorFrom", SeeSaw.defaultBGColor, "Start Color", "The color the background will start at."),
+                        new Param("colorTo", SeeSaw.defaultBGColor, "End Color", "The color the background will end at."),
+                        new Param("ease", EasingFunction.Ease.Linear, "Ease", "The ease of the fade.")
+                    }
+                }
             });
         }
     }
@@ -67,6 +79,15 @@ namespace HeavenStudio.Games
     using Scripts_SeeSaw;
     public class SeeSaw : Minigame
     {
+        private static Color _defaultBGColor;
+        public static Color defaultBGColor
+        {
+            get
+            {
+                ColorUtility.TryParseHtmlString("#FF00E4", out _defaultBGColor);
+                return _defaultBGColor;
+            }
+        }
         [Header("Components")]
         [SerializeField] Animator seeSawAnim;
         [SerializeField] SeeSawGuy see;
@@ -76,7 +97,17 @@ namespace HeavenStudio.Games
         [SerializeField] GameObject lightningLeft;
         [SerializeField] GameObject lightningRight;
 
+        //bg stuffs
+        [SerializeField] SpriteRenderer gradient;
+        [SerializeField] SpriteRenderer bgLow;
+        [SerializeField] SpriteRenderer bgHigh;
+
         [Header("Properties")]
+        float bgColorStartBeat;
+        float bgColorLength;
+        EasingFunction.Ease lastEase;
+        Color colorFrom;
+        Color colorTo;
         bool canPrepare = true;
         bool canStartJump;
         public bool cameraMove = true;
@@ -129,6 +160,21 @@ namespace HeavenStudio.Games
             var cond = Conductor.instance;
             if (cond.isPlaying && !cond.isPaused)
             {
+                float normalizedBeat = cond.GetPositionFromBeat(bgColorStartBeat, bgColorLength);
+                if (normalizedBeat > 0 && normalizedBeat <= 1)
+                {
+                    EasingFunction.Function func = EasingFunction.GetEasingFunction(lastEase);
+                    float newColorR = func(colorFrom.r, colorTo.r, normalizedBeat);
+                    float newColorG = func(colorFrom.g, colorTo.g, normalizedBeat);
+                    float newColorB = func(colorFrom.b, colorTo.b, normalizedBeat);
+                    bgHigh.color = new Color(newColorR, newColorG, newColorB);
+                    gradient.color = new Color(newColorR, newColorG, newColorB);
+                    Color bgLowNewColor = new Color(newColorR, newColorG, newColorB);
+                    Color.RGBToHSV(bgLowNewColor, out float H, out float S, out float V);
+                    S *= 0.29f;
+                    bgLowNewColor = Color.HSVToRGB(H, S, V);
+                    bgLow.color = bgLowNewColor;
+                }
                 if (allJumpEvents.Count > 0)
                 {
                     if (currentJumpIndex < allJumpEvents.Count && currentJumpIndex >= 0)
@@ -156,6 +202,15 @@ namespace HeavenStudio.Games
                     }
                 }
             }
+        }
+
+        public void ChangeColor(float beat, float length, Color color1, Color color2, int ease)
+        {
+            bgColorStartBeat = beat;
+            bgColorLength = length;
+            colorFrom = color1;
+            colorTo = color2;
+            lastEase = (EasingFunction.Ease)ease;
         }
 
         public void LongLong(float beat, bool high, float height)
