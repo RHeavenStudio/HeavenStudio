@@ -14,36 +14,35 @@ namespace HeavenStudio
     public class GameManager : MonoBehaviour
     {
         [Header("Lists")]
-        public DynamicBeatmap Beatmap = new DynamicBeatmap();
-        [HideInInspector] public List<DynamicBeatmap.DynamicEntity> playerEntities = new List<DynamicBeatmap.DynamicEntity>();
+        [NonSerialized] public DynamicBeatmap Beatmap = new DynamicBeatmap();
         private List<GameObject> preloadedGames = new List<GameObject>();
-        public List<GameObject> SoundObjects = new List<GameObject>();
+        [NonSerialized] public List<GameObject> SoundObjects = new List<GameObject>();
 
         [Header("Components")]
-        public string txt;
-        public string ext;
-        public Camera GameCamera, CursorCam, OverlayCamera, StaticCamera;
-        public CircleCursor CircleCursor;
-        [HideInInspector] public GameObject GamesHolder;
-        public Games.Global.Flash fade;
-        public Games.Global.Filter filter;
-        public GameObject textbox;
+        [NonSerialized] public Camera GameCamera, CursorCam, OverlayCamera, StaticCamera;
+        [NonSerialized] public CircleCursor CircleCursor;
+        [NonSerialized] public GameObject GamesHolder;
+        [NonSerialized] public Games.Global.Flash fade;
+        [NonSerialized] public Games.Global.Filter filter;
 
         [Header("Games")]
-        public string currentGame;
+        [NonSerialized] public string currentGame;
         Coroutine currentGameSwitchIE;
 
         [Header("Properties")]
-        public int currentEvent, currentTempoEvent, currentVolumeEvent, currentSectionEvent,
+        [NonSerialized] public string txt = null;
+        [NonSerialized] public string ext = null;
+
+        [NonSerialized] public int currentEvent, currentTempoEvent, currentVolumeEvent, currentSectionEvent,
             currentPreEvent, currentPreSwitch, currentPreSequence;
-        public float endBeat;
-        public float startOffset;
-        public bool playOnStart;
-        public float startBeat;
+        [NonSerialized] public float endBeat;
+        [NonSerialized] public float startOffset;
+        [NonSerialized] public bool playOnStart;
+        [NonSerialized] public float startBeat;
         [NonSerialized] public GameObject currentGameO;
-        public bool autoplay;
-        public bool canInput = true;
-        public DynamicBeatmap.ChartSection currentSection, nextSection;
+        [NonSerialized] public bool autoplay;
+        [NonSerialized] public bool canInput = true;
+        [NonSerialized] public DynamicBeatmap.ChartSection currentSection, nextSection;
         public float sectionProgress { get; private set; }
 
         public event Action<float> onBeatChanged;
@@ -86,6 +85,16 @@ namespace HeavenStudio
         }
         bool skillStarCollected = false;
 
+        // cleared sections
+        List<bool> clearedSections = new List<bool>();
+        public bool ClearedSection
+        {
+            set
+            {
+                clearedSections.Add(value);
+            }
+        }
+
         private void Awake()
         {
             // autoplay = true;
@@ -97,23 +106,9 @@ namespace HeavenStudio
             currentPreEvent= 0;
             currentPreSwitch = 0;
             currentPreSequence = 0;
- 
-            this.transform.localScale = new Vector3(30000000, 30000000);
-            
-            SpriteRenderer sp = this.gameObject.AddComponent<SpriteRenderer>();
-            sp.enabled = false;
-            sp.color = Color.black;
-            sp.sprite = Resources.Load<Sprite>("Sprites/GeneralPurpose/Square");
-            sp.sortingOrder = 30000;
-            gameObject.layer = LayerMask.NameToLayer("Flash");
 
-            GameObject fade = new GameObject("flash");
-            this.fade = fade.AddComponent<Games.Global.Flash>();
             GameObject filter = new GameObject("filter");
             this.filter = filter.AddComponent<Games.Global.Filter>();
-
-
-            GlobalGameManager.Init();
 
             eventCaller = this.gameObject.AddComponent<EventCaller>();
             eventCaller.GamesHolder = GamesHolder.transform;
@@ -123,23 +118,23 @@ namespace HeavenStudio
             Conductor.instance.firstBeatOffset = Beatmap.firstBeatOffset;
 
             // note: serialize this shit in the inspector //
-                GameObject textbox = Instantiate(Resources.Load<GameObject>("Prefabs/Common/Textbox"));
-                textbox.name = "Textbox";
+            GameObject textbox = Instantiate(Resources.Load<GameObject>("Prefabs/Common/Textbox"));
+            textbox.name = "Textbox";
 
-                GameObject overlays = Instantiate(Resources.Load<GameObject>("Prefabs/Common/Overlays"));
-                overlays.name = "Overlays";
+            GameObject timingDisp = Instantiate(Resources.Load<GameObject>("Prefabs/Common/Overlays/TimingAccuracy"));
+            timingDisp.name = "TimingDisplay";
 
-                GameObject timingDisp = Instantiate(Resources.Load<GameObject>("Prefabs/Common/Overlays/TimingAccuracy"));
-                timingDisp.name = "TimingDisplay";
+            GameObject skillStarDisp = Instantiate(Resources.Load<GameObject>("Prefabs/Common/Overlays/SkillStar"));
+            skillStarDisp.name = "SkillStar";
 
-                GameObject skillStarDisp = Instantiate(Resources.Load<GameObject>("Prefabs/Common/Overlays/SkillStar"));
-                skillStarDisp.name = "SkillStar";
+            GameObject overlays = Instantiate(Resources.Load<GameObject>("Prefabs/Common/Overlays"));
+            overlays.name = "Overlays";
 
-                GoForAPerfect.instance.Disable();
+            GoForAPerfect.instance.Disable();
             /////
             
 
-            if (txt != null && ext != null)
+            if (txt != null && ext != null && txt.Length != 0 && ext.Length != 0)
             {
                 LoadRemix(txt, ext);
             }
@@ -162,7 +157,7 @@ namespace HeavenStudio
 
             if (playOnStart)
             {
-                Play(startBeat);
+                StartCoroutine(WaitReadyAndPlayCo(startBeat));
             }
         }
 
@@ -204,7 +199,10 @@ namespace HeavenStudio
             Conductor.instance.SetBpm(Beatmap.bpm);
             Conductor.instance.SetVolume(Beatmap.musicVolume);
             Conductor.instance.firstBeatOffset = Beatmap.firstBeatOffset;
-            Stop(0);
+            if (!playOnStart)
+            {
+                Stop(0);
+            }
             SetCurrentEventToClosest(0);
 
             if (Beatmap.entities.Count >= 1)
@@ -319,8 +317,6 @@ namespace HeavenStudio
 
         private void Update()
         {
-            PlayerInput.UpdateInputControllers();
-
             if (BeatmapEntities() < 1) //bruh really you forgot to ckeck tempo changes
                 return;
             if (!Conductor.instance.isPlaying)
@@ -433,44 +429,52 @@ namespace HeavenStudio
 
         #region Play Events
 
-        public void Play(float beat)
+        public void Play(float beat, float delay = 0f)
         {
+            bool paused = Conductor.instance.isPaused;
+            Debug.Log("Playing at " + beat);
             canInput = true;
-            inputOffsetSamples.Clear();
-            averageInputOffset = 0;
+            if (!paused)
+            {
+                inputOffsetSamples.Clear();
+                averageInputOffset = 0;
 
-            totalInputs = 0;
-            totalPlayerAccuracy = 0;
+                totalInputs = 0;
+                totalPlayerAccuracy = 0;
 
-            TimingAccuracyDisplay.instance.ResetArrow();
-            SkillStarManager.instance.Reset();
-            skillStarCollected = false;
+                TimingAccuracyDisplay.instance.ResetArrow();
+                SkillStarManager.instance.Reset();
+                skillStarCollected = false;
 
-            GoForAPerfect.instance.perfect = true;
-            GoForAPerfect.instance.Disable();
+                GoForAPerfect.instance.perfect = true;
+                GoForAPerfect.instance.Disable();
 
-            SectionMedalsManager.instance.Reset();
+                SectionMedalsManager.instance.Reset();
+                clearedSections.Clear();
+            }
 
-            StartCoroutine(PlayCo(beat));
+            StartCoroutine(PlayCo(beat, delay));
             onBeatChanged?.Invoke(beat);
         }
 
-        private IEnumerator PlayCo(float beat)
+        private IEnumerator PlayCo(float beat, float delay = 0f)
         {
-            yield return null;
+            yield return new WaitForSeconds(delay);
             bool paused = Conductor.instance.isPaused;
 
-            Conductor.instance.SetBpm(Beatmap.bpm);
-            Conductor.instance.SetVolume(Beatmap.musicVolume);
-            Conductor.instance.firstBeatOffset = Beatmap.firstBeatOffset;
-
             Conductor.instance.Play(beat);
-            if (!paused)
+            if (paused)
             {
-                SetCurrentEventToClosest(beat);
+                Util.Jukebox.UnpauseOneShots();
             }
-
-            KillAllSounds();
+            else 
+            {
+                Conductor.instance.SetBpm(Beatmap.bpm);
+                Conductor.instance.SetVolume(Beatmap.musicVolume);
+                Conductor.instance.firstBeatOffset = Beatmap.firstBeatOffset;
+                SetCurrentEventToClosest(beat);
+                KillAllSounds();
+            }
 
             Minigame miniGame = currentGameO.GetComponent<Minigame>();
             if (miniGame != null)
@@ -480,11 +484,16 @@ namespace HeavenStudio
         public void Pause()
         {
             Conductor.instance.Pause();
-            KillAllSounds();
+            Util.Jukebox.PauseOneShots();
+            canInput = false;
         }
 
-        public void Stop(float beat)
+        public void Stop(float beat, bool restart = false, float restartDelay = 0f)
         {
+            Minigame miniGame = currentGameO.GetComponent<Minigame>();
+            if (miniGame != null)
+                miniGame.OnStop(beat);
+
             Conductor.instance.Stop(beat);
             SetCurrentEventToClosest(beat);
             onBeatChanged?.Invoke(beat);
@@ -496,13 +505,40 @@ namespace HeavenStudio
             GoForAPerfect.instance.Disable();
             SectionMedalsManager.instance.OnRemixEnd();
 
+            // pass this data to rating screen + stats
+            Debug.Log($"== Playthrough statistics of {Beatmap["remixtitle"]} (played at {System.DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss")}) ==");
             Debug.Log($"Average input offset for playthrough: {averageInputOffset}ms");
             Debug.Log($"Accuracy for playthrough: {(PlayerAccuracy * 100) : 0.00}");
-
-            if (playOnStart)
+            Debug.Log($"Cleared {clearedSections.FindAll(c => c).Count} sections out of {Beatmap.beatmapSections.Count}");
+            if (SkillStarManager.instance.IsCollected)
+                Debug.Log($"Skill Star collected");
+            else
+                Debug.Log($"Skill Star not collected");
+            if (GoForAPerfect.instance.perfect)
+                Debug.Log($"Perfect Clear!");
+            
+            if (playOnStart || restart)
             {
-                Play(0);
+                Play(0, restartDelay);
             }
+            // when rating screen gets added playOnStart will instead move to that scene
+        }
+
+        private IEnumerator WaitReadyAndPlayCo(float beat)
+        {
+            // wait for overlays to be ready
+            yield return new WaitUntil(() => OverlaysManager.OverlaysReady);
+            // wait for first game to be loaded
+            yield return new WaitUntil(() => Beatmap != null && Beatmap.entities.Count > 0);
+
+            SkillStarManager.instance.KillStar();
+            TimingAccuracyDisplay.instance.StopStarFlash();
+            GoForAPerfect.instance.Disable();
+            SectionMedalsManager.instance?.OnRemixEnd();
+
+            GlobalGameManager.UpdateDiscordStatus(Beatmap["remixtitle"], false, true);
+
+            Play(beat, 1f);
         }
 
         public void KillAllSounds()
@@ -671,7 +707,7 @@ namespace HeavenStudio
         {
             if(flash == true)
             {
-                this.GetComponent<SpriteRenderer>().enabled = true;
+                HeavenStudio.StaticCamera.instance.ToggleCanvasVisibility(false);
             }
 
             SetGame(game);
@@ -680,9 +716,10 @@ namespace HeavenStudio
             if (miniGame != null)
                 miniGame.OnGameSwitch(beat);
 
+            //TODO: wait time in beats instead of seconds
             yield return new WaitForSeconds(0.1f);
 
-            this.GetComponent<SpriteRenderer>().enabled = false;
+            HeavenStudio.StaticCamera.instance.ToggleCanvasVisibility(true);
         }
 
         private void SetGame(string game)

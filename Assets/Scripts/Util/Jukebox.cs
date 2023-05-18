@@ -57,6 +57,28 @@ namespace HeavenStudio.Util
         }
 
         /// <summary>
+        ///    Pauses all currently playing sounds.
+        /// </summary>
+        public static void PauseOneShots()
+        {
+            if (oneShotAudioSource != null)
+            {
+                oneShotAudioSource.Pause();
+            }
+        }
+
+        /// <summary>
+        ///    Unpauses all currently playing sounds.
+        /// </summary>
+        public static void UnpauseOneShots()
+        {
+            if (oneShotAudioSource != null)
+            {
+                oneShotAudioSource.UnPause();
+            }
+        }
+
+        /// <summary>
         ///    Gets the length of an audio clip
         /// </summary>
         public static double GetClipLength(string name, float pitch = 1f, string game = null)

@@ -20,9 +20,13 @@ namespace HeavenStudio.Common
         bool isMedalsEligible = true;
 
         // Start is called before the first frame update
-        void Start()
+        public void Awake()
         {
             instance = this;
+        }
+
+        public void Start()
+        {
             cond = Conductor.instance;
             GameManager.instance.onSectionChange += OnSectionChange;
         }
@@ -31,6 +35,13 @@ namespace HeavenStudio.Common
         void Update()
         {
 
+        }
+
+        public void AnchorToOverlay(GameObject overlay)
+        {
+            transform.position = overlay.transform.position;
+            transform.rotation = overlay.transform.rotation;
+            transform.localScale = overlay.transform.localScale;
         }
 
         public void MakeIneligible()
@@ -42,7 +53,7 @@ namespace HeavenStudio.Common
         {
             isMedalsStarted = false;
             isMedalsEligible = true;
-            foreach (Transform child in MedalsHolder.transform)
+            foreach (Transform child in MedalsHolder?.transform)
             {
                 Destroy(child.gameObject);
             }
@@ -59,6 +70,7 @@ namespace HeavenStudio.Common
             }
             else
             {
+                GameManager.instance.ClearedSection = isMedalsEligible;
                 GameObject medal = Instantiate(isMedalsEligible ? MedalOkPrefab : MedalMissPrefab, MedalsHolder.transform);
                 medal.SetActive(true);
                 isMedalsEligible = true;
@@ -70,6 +82,7 @@ namespace HeavenStudio.Common
             if (!PersistentDataManager.gameSettings.isMedalOn) return;
             if (PersistentDataManager.gameSettings.isMedalOn && isMedalsStarted)
             {
+                GameManager.instance.ClearedSection = isMedalsEligible;
                 GameObject medal = Instantiate(isMedalsEligible ? MedalOkPrefab : MedalMissPrefab, MedalsHolder.transform);
                 medal.SetActive(true);
             }

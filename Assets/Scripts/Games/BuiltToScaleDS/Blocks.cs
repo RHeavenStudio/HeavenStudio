@@ -6,7 +6,7 @@ using System;
 namespace HeavenStudio.Games.Scripts_BuiltToScaleDS
 {
     using HeavenStudio.Util;
-    public class Blocks : PlayerActionObject
+    public class Blocks : MonoBehaviour
     {
         public float createBeat;
         public float createLength;

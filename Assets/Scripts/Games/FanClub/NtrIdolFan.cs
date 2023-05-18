@@ -9,7 +9,7 @@ using HeavenStudio.Util;
 
 namespace HeavenStudio.Games.Scripts_FanClub
 {
-    public class NtrIdolFan : PlayerActionObject
+    public class NtrIdolFan : MonoBehaviour
     {
         [Header("References")]
         [SerializeField] private GameObject motionRoot;

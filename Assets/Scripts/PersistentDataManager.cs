@@ -23,6 +23,7 @@ namespace HeavenStudio.Common
         public static void CreateDefaultSettings()
         {
             gameSettings = new GameSettings(
+                true,
                 false,
                 1,
                 GlobalGameManager.DEFAULT_SCREEN_SIZES[1].width,
@@ -70,6 +71,7 @@ namespace HeavenStudio.Common
             }
             else
             {
+                GlobalGameManager.IsFirstBoot = true;
                 CreateDefaultSettings();
             }
         }
@@ -96,6 +98,7 @@ namespace HeavenStudio.Common
         {
             // default settings constructor
             public GameSettings(
+                bool showSplash = false,
                 bool isFullscreen = false,
                 int resolutionIndex = 0,
                 int resolutionWidth = 1280,
@@ -113,6 +116,7 @@ namespace HeavenStudio.Common
                 bool letterboxFxEnable = true
                 )
             {
+                this.showSplash = showSplash;
                 this.isFullscreen = isFullscreen;
 
                 this.resolutionIndex = resolutionIndex;
@@ -151,6 +155,7 @@ namespace HeavenStudio.Common
             }
 
             // Display / Audio Settings
+            public bool showSplash;
             public bool isFullscreen;
 
             public int resolutionIndex;
