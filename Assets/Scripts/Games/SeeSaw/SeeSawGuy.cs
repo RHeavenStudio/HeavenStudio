@@ -137,12 +137,33 @@ namespace HeavenStudio.Games.Scripts_SeeSaw
                     case JumpState.HighInOut:
                     case JumpState.HighInIn:
                         transform.position = GetPathPositionFromBeat(currentPath, Mathf.Max(startBeat, currentBeat), startBeat);
-                        if (see || !game.cameraMove) return;
+                        break;
+                }
+            }
+        }
+
+        private void LateUpdate()
+        {
+            var cond = Conductor.instance;
+
+            float currentBeat = cond.songPositionInBeats;
+
+            if (!see && game.cameraMove && cond.isPlaying && !cond.isPaused)
+            {
+                switch (currentState)
+                {
+                    default:
+                        return;
+                    case JumpState.HighOutOut:
+                    case JumpState.HighOutIn:
+                    case JumpState.HighInOut:
+                    case JumpState.HighInIn:
                         float newCamY = Mathf.Max(GetPathPositionFromBeat(cameraPath, Mathf.Max(startBeat, currentBeat), startBeat).y, 0);
                         GameCamera.additionalPosition = new Vector3(0, newCamY, 0);
                         break;
                 }
             }
+
         }
 
         public void Choke(float beat, float length)

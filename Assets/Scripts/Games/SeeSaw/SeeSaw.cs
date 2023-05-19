@@ -96,6 +96,15 @@ namespace HeavenStudio.Games.Loaders
                         new Param("see", true, "See", "Will See Choke?"),
                         new Param("saw", true, "Saw", "Will Saw Choke?")
                     }
+                },
+                new GameAction("recolor", "Color Pallete")
+                {
+                    function = delegate { var e = eventCaller.currentEntity; SeeSaw.ChangeMappingColor(e["fill"], e["outline"]); },
+                    parameters = new List<Param>()
+                    {
+                        new Param("outline", SeeSaw.defaultOtherColor, "Outline Color", "The color of the outlines on see and saw."),
+                        new Param("fill", Color.white, "Fill Color", "The color of the fills on see and saw")
+                    }
                 }
             });
         }
@@ -105,6 +114,8 @@ namespace HeavenStudio.Games.Loaders
 namespace HeavenStudio.Games
 {
     using Scripts_SeeSaw;
+    using System;
+
     public class SeeSaw : Minigame
     {
         private static Color _defaultBGColor;
@@ -126,6 +137,16 @@ namespace HeavenStudio.Games
             }
         }
 
+        private static Color _defaultOtherColor;
+        public static Color defaultOtherColor
+        {
+            get
+            {
+                ColorUtility.TryParseHtmlString("#0A103C", out _defaultOtherColor);
+                return _defaultOtherColor;
+            }
+        }
+
         [Header("Components")]
         [SerializeField] Animator seeSawAnim;
         [SerializeField] SeeSawGuy see;
@@ -137,6 +158,8 @@ namespace HeavenStudio.Games
         [SerializeField] SpriteRenderer gradient;
         [SerializeField] SpriteRenderer bgLow;
         [SerializeField] SpriteRenderer bgHigh;
+
+        [SerializeField] SpriteRenderer[] recolors;
 
         [Header("Properties")]
         bool sawShouldBop;
@@ -153,6 +176,10 @@ namespace HeavenStudio.Games
         bool canStartJump;
         public bool cameraMove = true;
         [SerializeField] SuperCurveObject.Path[] jumpPaths;
+        [Header("Color Mapping")]
+        public Material MappingMaterial;
+        public static Color FillColor = Color.white;
+        public static Color OutlineColor = new Color(0.03921569f, 0.0627451f, 0.2352941f, 1);
 
         private int currentJumpIndex;
 
@@ -182,6 +209,12 @@ namespace HeavenStudio.Games
             {
                 saw.anim.Play("GetUp_In", 0, 1);
                 saw.transform.position = saw.landInTrans.position;
+            }
+            MappingMaterial.SetColor("_ColorBravo", FillColor);
+            MappingMaterial.SetColor("_ColorDelta", OutlineColor);
+            foreach (var recolor in recolors)
+            {
+                recolor.color = OutlineColor;
             }
         }
 
@@ -253,6 +286,26 @@ namespace HeavenStudio.Games
                         saw.Bop();
                     }
                 }
+            }
+        }
+
+        public static void ChangeMappingColor(Color colorFill, Color colorOutline)
+        {
+            OutlineColor = colorOutline;
+            FillColor = colorFill;
+            if (GameManager.instance.currentGame == "seeSaw")
+            {
+                instance.UpdateColors();
+            }
+        }
+
+        private void UpdateColors()
+        {
+            MappingMaterial.SetColor("_ColorBravo", FillColor);
+            MappingMaterial.SetColor("_ColorDelta", OutlineColor);
+            foreach (var recolor in recolors)
+            {
+                recolor.color = OutlineColor;
             }
         }
 
