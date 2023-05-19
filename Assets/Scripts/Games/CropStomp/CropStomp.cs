@@ -32,6 +32,16 @@ namespace HeavenStudio.Games.Loaders
                         new Param("mute", false, "Mute", "Should the mole laugh sound be muted?")
                     }
                 },
+                new GameAction("plantCollect", "Veggie Collection Values")
+                {
+                    function = delegate { var e = eventCaller.currentEntity; CropStomp.instance.SetCollectThresholds(e["threshold"], e["limit"]); },
+                    defaultLength = 0.5f,
+                    parameters = new List<Param>()
+                    {
+                        new Param("threshold", new EntityTypes.Integer(1, 80, 8), "Threshold", "For each time the threshold is met a new plant will appear in the veggie bag."),
+                        new Param("limit", new EntityTypes.Integer(1, 1000, 80), "Limit", "What is the limit for plants collected?")
+                    }
+                }
             });
         }
     }
@@ -78,6 +88,8 @@ namespace HeavenStudio.Games
         public BezierCurve3D moleCurve;
 
         private Tween shakeTween;
+
+        public ParticleSystem hitParticle;
 
         public static CropStomp instance;
 
@@ -268,6 +280,18 @@ namespace HeavenStudio.Games
             }
 
             isFlicking = false;
+        }
+
+        public void SetCollectThresholds(int thresholdEvolve, int limit)
+        {
+            farmer.plantThreshold = thresholdEvolve;
+            farmer.plantLimit = limit;
+            farmer.UpdatePlants();
+        }
+
+        public void CollectPlant()
+        {
+            farmer.CollectPlant();
         }
 
         private void PlayAnims()
