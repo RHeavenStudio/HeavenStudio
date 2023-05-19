@@ -246,8 +246,8 @@ namespace HeavenStudio.Games
                     bgHigh.color = new Color(newColorR, newColorG, newColorB);
                     gradient.color = new Color(newColorR, newColorG, newColorB);
                     newColorR = func(colorFrom2.r, colorTo2.r, normalizedBeat);
-                    newColorR = func(colorFrom2.g, colorTo2.g, normalizedBeat);
-                    newColorR = func(colorFrom2.b, colorTo2.b, normalizedBeat);
+                    newColorG = func(colorFrom2.g, colorTo2.g, normalizedBeat);
+                    newColorB = func(colorFrom2.b, colorTo2.b, normalizedBeat);
                     bgLow.color = new Color(newColorR, newColorG, newColorB);
                 }
                 if (allJumpEvents.Count > 0 && !(see.dead || saw.dead))
