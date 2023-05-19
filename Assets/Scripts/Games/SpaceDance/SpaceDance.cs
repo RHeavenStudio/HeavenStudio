@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using DG.Tweening;
 using static HeavenStudio.Games.SpaceDance;
+using HeavenStudio.Common;
 
 namespace HeavenStudio.Games.Loaders
 {
@@ -92,7 +93,16 @@ namespace HeavenStudio.Games.Loaders
                         new Param("toggle", true, "Looping", "Should the animation loop?"),
                         new Param("type", SpaceDance.GrampsAnimationType.Talk, "Which animation?", "Which animation should space gramps do?")
                     }
-                }
+                },
+                new GameAction("scroll", "Scrolling Background")
+                {
+                    function = delegate { var e = eventCaller.currentEntity; SpaceDance.instance.UpdateScrollSpeed(e["x"], e["y"]); },
+                    defaultLength = 1f,
+                    parameters = new List<Param>() {
+                        new Param("x", new EntityTypes.Float(-5f, 5f, 0), "Horizontal", "How fast does the background move horizontally?"),
+                        new Param("y", new EntityTypes.Float(-5f, 5f, 0), "Vertical", "How fast does the background move vertically?"),
+                    }
+                },
             });
         }
     }
@@ -108,7 +118,7 @@ namespace HeavenStudio.Games
         {
             get
             {
-                ColorUtility.TryParseHtmlString("#0014D6", out _defaultBGColor);
+                ColorUtility.TryParseHtmlString("#0029D6", out _defaultBGColor);
                 return _defaultBGColor;
             }
         }
@@ -145,6 +155,13 @@ namespace HeavenStudio.Games
         bool grampsLoopingAnim;
         bool grampsSniffing;
 
+        [SerializeField] List<SuperScroll> scrollingBgs = new List<SuperScroll>();
+        float scrollBeat;
+        float scrollOffsetX;
+        float scrollOffsetY;
+        float currentScrollLengthX;
+        float currentScrollLengthY;
+
         public GameEvent bop = new GameEvent();
 
         public static SpaceDance instance;
@@ -161,6 +178,13 @@ namespace HeavenStudio.Games
             var cond = Conductor.instance;
             if (cond.isPlaying && !cond.isPaused)
             {
+                float normalizedX = (Time.realtimeSinceStartup - scrollBeat) * currentScrollLengthX;
+                float normalizedY = (Time.realtimeSinceStartup - scrollBeat) * currentScrollLengthY;
+                foreach (var backgroundSprite in scrollingBgs)
+                {
+                    backgroundSprite.NormalizedX = -scrollOffsetX - normalizedX;
+                    backgroundSprite.NormalizedY = -scrollOffsetY - normalizedY;
+                }
                 if (cond.ReportBeat(ref bop.lastReportedBeat, bop.startBeat % 1))
                 {
                     if (shouldBop && canBop)
@@ -209,6 +233,15 @@ namespace HeavenStudio.Games
                     }
                 }
             }
+        }
+
+        public void UpdateScrollSpeed(float scrollSpeedX, float scrollSpeedY)
+        {
+            scrollOffsetX = (Time.realtimeSinceStartup - scrollBeat) * currentScrollLengthX;
+            scrollOffsetY = (Time.realtimeSinceStartup - scrollBeat) * currentScrollLengthY;
+            currentScrollLengthX = scrollSpeedX;
+            currentScrollLengthY = scrollSpeedY;
+            scrollBeat = Time.realtimeSinceStartup;
         }
 
         public void GrampsAnimations(float beat, int type, bool looping)
