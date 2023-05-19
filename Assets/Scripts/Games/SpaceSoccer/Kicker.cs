@@ -6,7 +6,7 @@ using HeavenStudio.Util;
 
 namespace HeavenStudio.Games.Scripts_SpaceSoccer
 {
-    public class Kicker : PlayerActionObject
+    public class Kicker : MonoBehaviour
     {
         SpaceSoccer game;
 
@@ -82,7 +82,6 @@ namespace HeavenStudio.Games.Scripts_SpaceSoccer
         public void Kick(bool hit, bool highKick = false)
         {
             if (stopBall) return;
-            aceTimes = 0;
 
             if (player)
             {

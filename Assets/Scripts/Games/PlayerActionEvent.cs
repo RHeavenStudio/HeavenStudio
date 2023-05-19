@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -11,8 +12,9 @@ using HeavenStudio.Common;
 namespace HeavenStudio.Games
 {
 
-    public class PlayerActionEvent : PlayerActionObject
+    public class PlayerActionEvent : MonoBehaviour
     {
+        static List<PlayerActionEvent> allEvents = new List<PlayerActionEvent>();
         public static bool EnableAutoplayCheat = true;
         public delegate void ActionEventCallback(PlayerActionEvent caller);
         public delegate void ActionEventCallbackState(PlayerActionEvent caller, float state);
@@ -26,8 +28,12 @@ namespace HeavenStudio.Games
         public float startBeat;
         public float timer;
 
+        public bool isEligible = true;
         public bool canHit  = true; //Indicates if you can still hit the cue or not. If set to false, it'll guarantee a miss
         public bool enabled = true; //Indicates if the PlayerActionEvent is enabled. If set to false, it'll not trigger any events and destroy itself AFTER it's not relevant anymore
+        public bool triggersAutoplay = true;
+        bool lockedByEvent = false;
+        bool markForDeletion = false;
 
         public bool autoplayOnly = false; //Indicates if the input event only triggers when it's autoplay. If set to true, NO Miss or Blank events will be triggered when you're not autoplaying.
 
@@ -51,47 +57,130 @@ namespace HeavenStudio.Games
 
         public void Enable()  { enabled = true; }
         public void Disable() { enabled = false; }
+        public void QueueDeletion() { markForDeletion = true; }
+
+        public bool IsCorrectInput() =>
+            //General inputs, both down and up
+            (PlayerInput.Pressed() && inputType.HasFlag(InputType.STANDARD_DOWN)) ||
+            (PlayerInput.AltPressed() && inputType.HasFlag(InputType.STANDARD_ALT_DOWN)) ||
+            (PlayerInput.GetAnyDirectionDown() && inputType.HasFlag(InputType.DIRECTION_DOWN)) ||
+            (PlayerInput.PressedUp() && inputType.HasFlag(InputType.STANDARD_UP)) ||
+            (PlayerInput.AltPressedUp() && inputType.HasFlag(InputType.STANDARD_ALT_UP)) ||
+            (PlayerInput.GetAnyDirectionUp() && inputType.HasFlag(InputType.DIRECTION_UP)) ||
+            //Specific directional inputs
+            (PlayerInput.GetSpecificDirectionDown(PlayerInput.DOWN) && inputType.HasFlag(InputType.DIRECTION_DOWN_DOWN)) ||
+            (PlayerInput.GetSpecificDirectionDown(PlayerInput.UP) && inputType.HasFlag(InputType.DIRECTION_UP_DOWN)) ||
+            (PlayerInput.GetSpecificDirectionDown(PlayerInput.LEFT) && inputType.HasFlag(InputType.DIRECTION_LEFT_DOWN)) ||
+            (PlayerInput.GetSpecificDirectionDown(PlayerInput.RIGHT) && inputType.HasFlag(InputType.DIRECTION_RIGHT_DOWN)) ||
+
+            (PlayerInput.GetSpecificDirectionUp(PlayerInput.DOWN) && inputType.HasFlag(InputType.DIRECTION_DOWN_UP)) ||
+            (PlayerInput.GetSpecificDirectionUp(PlayerInput.UP) && inputType.HasFlag(InputType.DIRECTION_UP_UP)) ||
+            (PlayerInput.GetSpecificDirectionUp(PlayerInput.LEFT) && inputType.HasFlag(InputType.DIRECTION_LEFT_UP)) ||
+            (PlayerInput.GetSpecificDirectionUp(PlayerInput.RIGHT) && inputType.HasFlag(InputType.DIRECTION_RIGHT_UP));
 
         public void CanHit(bool canHit)
         {
             this.canHit = canHit;
         }
 
+        public void Start()
+        {
+            allEvents.Add(this);
+        }
 
         public void Update()
         {
-            if(!Conductor.instance.NotStopped()){CleanUp();} // If the song is stopped entirely in the editor, destroy itself as we don't want duplicates
+            if (markForDeletion) CleanUp();
+            if(!Conductor.instance.NotStopped()) CleanUp(); // If the song is stopped entirely in the editor, destroy itself as we don't want duplicates
 
             if (noAutoplay && autoplayOnly) autoplayOnly = false;
-            if (noAutoplay && triggersAutoplay){ triggersAutoplay = false; }
+            if (noAutoplay && triggersAutoplay) triggersAutoplay = false;
             if (!enabled) return;
 
             double normalizedTime = GetNormalizedTime();
-            double stateProg = ((normalizedTime - Minigame.PerfectTime()) / (Minigame.LateTime() - Minigame.PerfectTime()) - 0.5f) * 2;
-            StateCheck(normalizedTime);
+            if (GameManager.instance.autoplay)
+            {
+                AutoplayInput(normalizedTime);
+                return;
+            }
 
             //BUGFIX: ActionEvents destroyed too early
             if (normalizedTime > Minigame.EndTime()) Miss();
 
-
-            if (IsCorrectInput() && !autoplayOnly)
+            if (lockedByEvent)
             {
-                if (state.perfect)
+                return;
+            }
+            if (!CheckEventLock())
+            {
+                return;
+            }
+            
+            if (!autoplayOnly && IsCorrectInput())
+            {
+                if (IsExpectingInputNow())
                 {
+                    double stateProg = ((normalizedTime - Minigame.PerfectTime()) / (Minigame.LateTime() - Minigame.PerfectTime()) - 0.5f) * 2;
                     Hit(stateProg, normalizedTime);
-                }
-                else if (state.early && !perfectOnly)
-                {
-                    Hit(-1f, normalizedTime);
-                }
-                else if (state.late && !perfectOnly) 
-                {
-                    Hit(1f, normalizedTime);
                 }
                 else
                 {
                     Blank();
                 }
+            }
+        }
+
+        public void LateUpdate() {
+            if (markForDeletion) {
+                CleanUp();
+                Destroy(this.gameObject);
+            }
+            foreach (PlayerActionEvent evt in allEvents)
+            {
+                evt.lockedByEvent = false;
+            }
+        }
+
+        private bool CheckEventLock()
+        {
+            foreach(PlayerActionEvent toCompare in allEvents)
+            {
+                if (toCompare == this) continue;
+                if (toCompare.autoplayOnly) continue;
+                if ((toCompare.inputType & this.inputType) == 0) continue;
+                if (!toCompare.IsExpectingInputNow()) continue;
+
+                double t1 = this.startBeat + this.timer;
+                double t2 = toCompare.startBeat + toCompare.timer;
+                double songPos = Conductor.instance.songPositionInBeatsAsDouble;
+
+                // compare distance between current time and the events
+                // events that happen at the exact same time with the exact same inputs will return true
+                if (Math.Abs(t1 - songPos) > Math.Abs(t2 - songPos)) 
+                    return false;
+                else if (t1 != t2)  // if they are the same time, we don't want to lock the event
+                    toCompare.lockedByEvent = true;
+            }
+            return true;
+        }
+
+        private void AutoplayInput(double normalizedTime, bool autoPlay = false)
+        {
+            if (triggersAutoplay && (GameManager.instance.autoplay || autoPlay) && GameManager.instance.canInput && normalizedTime >= 1f - (Time.deltaTime*0.5f))
+            {
+                AutoplayEvent();
+                if (!autoPlay)
+                    TimelineAutoplay();
+            }
+        }
+
+        // TODO: move this to timeline code instead
+        private void TimelineAutoplay()
+        {
+            if (Editor.Editor.instance == null) return;
+            if (Editor.Track.Timeline.instance != null && !Editor.Editor.instance.fullscreen)
+            {
+                Editor.Track.Timeline.instance.AutoplayBTN.GetComponent<Animator>().Play("Ace", 0, 0);
             }
         }
 
@@ -104,41 +193,15 @@ namespace HeavenStudio.Games
         double GetNormalizedTime()
         {
             var cond = Conductor.instance;
-            double currTime = cond.GetSongPosFromBeat(cond.songPositionInBeatsAsDouble);
+            double currTime = cond.songPositionAsDouble;
             double targetTime = cond.GetSongPosFromBeat(startBeat + timer);
             double min = targetTime - 1f;
             double max = targetTime + 1f;
             return 1f + (((currTime - min) / (max - min))-0.5f)*2;
         }
 
-        public bool IsCorrectInput()
-        {
-            // This one is a mouthful but it's an evil good to detect the correct input
-            // Forgive me for those input type names
-            return (
-                        //General inputs, both down and up
-                        (PlayerInput.Pressed()              && inputType.HasFlag(InputType.STANDARD_DOWN))        ||
-                        (PlayerInput.AltPressed()           && inputType.HasFlag(InputType.STANDARD_ALT_DOWN))    ||
-                        (PlayerInput.GetAnyDirectionDown()  && inputType.HasFlag(InputType.DIRECTION_DOWN))       ||
-                        (PlayerInput.PressedUp()            && inputType.HasFlag(InputType.STANDARD_UP))          ||
-                        (PlayerInput.AltPressedUp()         && inputType.HasFlag(InputType.STANDARD_ALT_UP))      ||
-                        (PlayerInput.GetAnyDirectionUp()    && inputType.HasFlag(InputType.DIRECTION_UP))         ||
-                        //Specific directional inputs
-                        (PlayerInput.GetSpecificDirectionDown(PlayerInput.DOWN)     && inputType.HasFlag(InputType.DIRECTION_DOWN_DOWN))  ||
-                        (PlayerInput.GetSpecificDirectionDown(PlayerInput.UP)       && inputType.HasFlag(InputType.DIRECTION_UP_DOWN))    ||
-                        (PlayerInput.GetSpecificDirectionDown(PlayerInput.LEFT)     && inputType.HasFlag(InputType.DIRECTION_LEFT_DOWN))  ||
-                        (PlayerInput.GetSpecificDirectionDown(PlayerInput.RIGHT)    && inputType.HasFlag(InputType.DIRECTION_RIGHT_DOWN)) ||
-
-                        (PlayerInput.GetSpecificDirectionUp(PlayerInput.DOWN)       && inputType.HasFlag(InputType.DIRECTION_DOWN_UP))    ||
-                        (PlayerInput.GetSpecificDirectionUp(PlayerInput.UP)         && inputType.HasFlag(InputType.DIRECTION_UP_UP))      ||
-                        (PlayerInput.GetSpecificDirectionUp(PlayerInput.LEFT)       && inputType.HasFlag(InputType.DIRECTION_LEFT_UP))    ||
-                        (PlayerInput.GetSpecificDirectionUp(PlayerInput.RIGHT)      && inputType.HasFlag(InputType.DIRECTION_RIGHT_UP))
-                   );
-        }
-
-
         //For the Autoplay
-        public override void OnAce()
+        public void AutoplayEvent()
         {
             if (EnableAutoplayCheat)
             {
@@ -162,6 +225,7 @@ namespace HeavenStudio.Games
                     double normalized = time - 1f;
                     int offset = Mathf.CeilToInt((float)normalized * 1000);
                     GameManager.instance.AvgInputOffset = offset;
+                    state = System.Math.Max(-1.0, System.Math.Min(1.0, state));
                     OnHit(this, (float) state);
 
                     CleanUp();
@@ -256,9 +320,10 @@ namespace HeavenStudio.Games
 
         public void CleanUp()
         {
+            if (markForDeletion) return;
+            allEvents.Remove(this);
             OnDestroy(this);
-            Destroy(this.gameObject);
+            markForDeletion = true;
         }
-
     }
 }

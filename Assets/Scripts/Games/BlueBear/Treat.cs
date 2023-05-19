@@ -8,7 +8,7 @@ using HeavenStudio.Util;
 
 namespace HeavenStudio.Games.Scripts_BlueBear
 {
-    public class Treat : PlayerActionObject
+    public class Treat : MonoBehaviour
     {
         const float rotSpeed = 360f;
 

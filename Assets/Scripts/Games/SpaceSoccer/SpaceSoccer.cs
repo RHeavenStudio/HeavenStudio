@@ -14,13 +14,17 @@ namespace HeavenStudio.Games.Loaders
             {
                 new GameAction("ball dispense", "Ball Dispense")
                 {
-                    function = delegate { SpaceSoccer.instance.Dispense(eventCaller.currentEntity.beat, !eventCaller.currentEntity["toggle"]); },
+                    function = delegate { SpaceSoccer.instance.Dispense(eventCaller.currentEntity.beat, !eventCaller.currentEntity["toggle"], false, eventCaller.currentEntity["down"]); },
                     defaultLength = 2f,
                     parameters = new List<Param>()
                     {
-                        new Param("toggle", false, "Disable Sound", "Disables the dispense sound")
+                        new Param("toggle", false, "Disable Sound", "Disables the dispense sound"),
+                        new Param("down", false, "Down Sound", "Will the Down sound be played?")
                     },
-                    inactiveFunction = delegate { if (!eventCaller.currentEntity["toggle"]) { SpaceSoccer.DispenseSound(eventCaller.currentEntity.beat); } }
+                    inactiveFunction = delegate 
+                    {
+                        if (!eventCaller.currentEntity["toggle"]) { SpaceSoccer.DispenseSound(eventCaller.currentEntity.beat, eventCaller.currentEntity["down"]);}
+                    }
                 },
                 new GameAction("high kick-toe!", "High Kick-Toe!")
                 {
@@ -91,11 +95,11 @@ namespace HeavenStudio.Games.Loaders
                 },
                 new GameAction("scroll", "Scrolling Background") 
                 {
-                    function = delegate { var e = eventCaller.currentEntity; SpaceSoccer.instance.UpdateScrollSpeed(e.beat, e["x"], e["y"]); },
+                    function = delegate { var e = eventCaller.currentEntity; SpaceSoccer.instance.UpdateScrollSpeed(e["x"], e["y"]); },
                     defaultLength = 1f,
                     parameters = new List<Param>() {
-                        new Param("x", new EntityTypes.Float(-5f, 5f, 0.045f), "Horizontal", "How many horizontal loops in 1 beat?"),
-                        new Param("y", new EntityTypes.Float(-5f, 5f, 0.16f), "Vertical", "How many vertical loops in 1 beat?"),
+                        new Param("x", new EntityTypes.Float(-5f, 5f, 0.09f), "Horizontal", "How fast does the background move horizontally?"),
+                        new Param("y", new EntityTypes.Float(-5f, 5f, 0.32f), "Vertical", "How fast does the background move vertically?"),
                     }
                 },
                 new GameAction("stopBall", "Stop Ball")
@@ -195,8 +199,8 @@ namespace HeavenStudio.Games
         float scrollBeat;
         float scrollOffsetX;
         float scrollOffsetY;
-        float currentScrollLengthX = 0.045f;
-        float currentScrollLengthY = 0.16f;
+        float currentScrollLengthX = 0.09f;
+        float currentScrollLengthY = 0.32f;
         Tween bgColorTween;
         Tween dotColorTween;
         #region Space Kicker Position Easing
@@ -234,8 +238,8 @@ namespace HeavenStudio.Games
         private void Update()
         {
             var cond = Conductor.instance;
-            float normalizedX = (cond.songPositionInBeats - scrollBeat) * currentScrollLengthX;
-            float normalizedY = (cond.songPositionInBeats - scrollBeat) * currentScrollLengthY;
+            float normalizedX = (Time.realtimeSinceStartup - scrollBeat) * currentScrollLengthX;
+            float normalizedY = (Time.realtimeSinceStartup - scrollBeat) * currentScrollLengthY;
             backgroundSprite.NormalizedX = -scrollOffsetX - normalizedX;
             backgroundSprite.NormalizedY = -scrollOffsetY - normalizedY;
 
@@ -329,14 +333,13 @@ namespace HeavenStudio.Games
             return default(SuperCurveObject.Path);
         }
 
-        public void UpdateScrollSpeed(float beat, float scrollSpeedX, float scrollSpeedY) 
+        public void UpdateScrollSpeed(float scrollSpeedX, float scrollSpeedY) 
         {
-            var cond = Conductor.instance;
-            scrollOffsetX = (cond.songPositionInBeats - scrollBeat) * currentScrollLengthX;
-            scrollOffsetY = (cond.songPositionInBeats - scrollBeat) * currentScrollLengthY;
+            scrollOffsetX = (Time.realtimeSinceStartup - scrollBeat) * currentScrollLengthX;
+            scrollOffsetY = (Time.realtimeSinceStartup - scrollBeat) * currentScrollLengthY;
             currentScrollLengthX = scrollSpeedX;
             currentScrollLengthY = scrollSpeedY;
-            scrollBeat = beat;
+            scrollBeat = Time.realtimeSinceStartup;
         }
 
         public void EaseSpaceKickersPositions(float beat, float length, int ease, float xDistance, float yDistance, float zDistance)
@@ -439,7 +442,7 @@ namespace HeavenStudio.Games
             if (ballDispensed) Dispense(lastDispensedBeat, false, true);
         }
 
-        public void Dispense(float beat, bool playSound = true, bool ignorePlayer = false)
+        public void Dispense(float beat, bool playSound = true, bool ignorePlayer = false, bool playDown = false)
         {
             if (!ballDispensed) lastDispensedBeat = beat;
             ballDispensed = true;
@@ -456,7 +459,7 @@ namespace HeavenStudio.Games
                 ball_.Init(kicker, beat);
                 if (kicker.player && playSound)
                 {
-                    DispenseSound(beat);
+                    DispenseSound(beat, playDown);
                 }
                 kicker.DispenseBall(beat);
 
@@ -464,8 +467,9 @@ namespace HeavenStudio.Games
             }
         }
 
-        public static void DispenseSound(float beat)
+        public static void DispenseSound(float beat, bool playDown)
         {
+            if (playDown) Jukebox.PlayOneShot("games/spaceSoccer/down", beat);
             MultiSound.Play(new MultiSound.Sound[]
                 {
                 new MultiSound.Sound("spaceSoccer/dispenseNoise",   beat),

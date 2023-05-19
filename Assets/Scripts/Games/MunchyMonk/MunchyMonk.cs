@@ -37,13 +37,16 @@ namespace HeavenStudio.Games.Loaders
                 },
                 new GameAction("One", "One")
                 {
+                    function = delegate {
+                        var e = eventCaller.currentEntity; 
+                        MunchyMonk.PreOneGoCue(e.beat, e["oneColor"]); 
+                    },
                     defaultLength = 2f,
                     parameters = new List<Param>()
                     {
                         new Param("oneColor", new Color(1, 1, 1, 1), "Color", "Change the color of the dumpling")
                     },
-                    preFunctionLength = 0,
-                    preFunction = delegate {
+                    inactiveFunction = delegate {
                         var e = eventCaller.currentEntity; 
                         MunchyMonk.PreOneGoCue(e.beat, e["oneColor"]); 
                     }
@@ -63,13 +66,16 @@ namespace HeavenStudio.Games.Loaders
                 },
                 new GameAction("Three", "Three")
                 {
+                    function = delegate {
+                        var e = eventCaller.currentEntity; 
+                        MunchyMonk.PreThreeGoCue(e.beat, e["threeColor"]); 
+                    },
                     defaultLength = 4f,
                     parameters = new List<Param>()
                     {
                         new Param("threeColor", new Color(0.34f, 0.77f, 0.36f, 1), "Color", "Change the color of the dumplings")
                     },
-                    preFunctionLength = 0,
-                    preFunction = delegate {
+                    inactiveFunction = delegate {
                         var e = eventCaller.currentEntity; 
                         MunchyMonk.PreThreeGoCue(e.beat, e["threeColor"]); 
                     }
@@ -261,8 +267,9 @@ namespace HeavenStudio.Games
                     && !isStaring){
                     MonkAnim.DoScaledAnimationAsync("Bop", 0.5f);
                 }
-                if (BrowAnim.IsPlayingAnimationName("Bop") && growLevel == 4) BrowAnim.DoScaledAnimationAsync("Bop", 0.5f);
-                if (StacheAnim.IsPlayingAnimationName("Bop"+growLevel)) StacheAnim.DoScaledAnimationAsync("Bop"+growLevel, 0.5f);
+                // commented this out cuz it makes a warning every beat but im not fixing it cuz i need to fix it on my munchy monk branch
+                //if (BrowAnim.IsPlayingAnimationName("Bop") && growLevel == 4) BrowAnim.DoScaledAnimationAsync("Bop", 0.5f);
+                //if (StacheAnim.IsPlayingAnimationName("Bop"+growLevel)) StacheAnim.DoScaledAnimationAsync("Bop"+growLevel, 0.5f);
             }
         }
 

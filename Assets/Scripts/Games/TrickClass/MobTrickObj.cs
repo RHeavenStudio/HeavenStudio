@@ -8,7 +8,7 @@ using HeavenStudio.Util;
 
 namespace HeavenStudio.Games.Scripts_TrickClass
 {
-    public class MobTrickObj : PlayerActionObject
+    public class MobTrickObj : MonoBehaviour
     {
         public bool flyType;
         public float startBeat;

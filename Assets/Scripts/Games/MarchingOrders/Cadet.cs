@@ -6,7 +6,7 @@ using HeavenStudio.Util;
 
 namespace HeavenStudio.Games.Scripts_MarchingOrders
 {
-    public class Cadet : PlayerActionObject
+    public class Cadet : MonoBehaviour
     {
         public bool isSparkler;
 
