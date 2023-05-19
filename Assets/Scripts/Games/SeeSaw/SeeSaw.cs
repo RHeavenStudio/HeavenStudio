@@ -120,8 +120,6 @@ namespace HeavenStudio.Games
         [SerializeField] SeeSawGuy saw;
         [SerializeField] ParticleSystem leftWhiteOrbs;
         [SerializeField] ParticleSystem rightBlackOrbs;
-        [SerializeField] GameObject lightningLeft;
-        [SerializeField] GameObject lightningRight;
 
         //bg stuffs
         [SerializeField] SpriteRenderer gradient;
@@ -160,6 +158,7 @@ namespace HeavenStudio.Games
                     tempEvents.Add(jumpEvents[i]);
                 }
             }
+            tempEvents.Sort((s1, s2) => s1.beat.CompareTo(s2.beat));
             allJumpEvents = tempEvents;
         }
 
@@ -652,20 +651,10 @@ namespace HeavenStudio.Games
             if (white)
             {
                 ps = Instantiate(leftWhiteOrbs, leftWhiteOrbs.transform.parent);
-                lightningLeft.SetActive(true);
-                BeatAction.New(instance.gameObject, new List<BeatAction.Action>()
-                {
-                    new BeatAction.Action(beat + 0.1f, delegate { lightningLeft.SetActive(false); })
-                });
             }
             else
             {
                 ps = Instantiate(rightBlackOrbs, rightBlackOrbs.transform.parent);
-                lightningRight.SetActive(true);
-                BeatAction.New(instance.gameObject, new List<BeatAction.Action>()
-                {
-                    new BeatAction.Action(beat + 0.1f, delegate { lightningRight.SetActive(false); })
-                });
             }
             ParticleSystem psChild = ps.transform.GetChild(1).GetComponent<ParticleSystem>();
             psChild.SetAsyncScaling(1.3f);
@@ -715,7 +704,7 @@ namespace HeavenStudio.Games
                 return;
             }
             DetermineSeeJump(caller.timer + caller.startBeat, false, true, allJumpEvents[currentJumpIndex - 1]["height"]);
-            seeSawAnim.DoScaledAnimationAsync("Good", 0.5f);
+            seeSawAnim.DoScaledAnimationAsync("Lightning", 0.5f);
             Jukebox.PlayOneShotGame("seeSaw/explosionBlack");
             
             saw.Land(SeeSawGuy.LandType.Big, true);
@@ -784,7 +773,7 @@ namespace HeavenStudio.Games
                 return;
             }
             DetermineSeeJump(caller.timer + caller.startBeat, false, true, allJumpEvents[currentJumpIndex - 1]["height"]);
-            seeSawAnim.DoScaledAnimationAsync("Good", 0.5f);
+            seeSawAnim.DoScaledAnimationAsync("Lightning", 0.5f);
             Jukebox.PlayOneShotGame("seeSaw/explosionWhite");
             
             saw.Land(SeeSawGuy.LandType.Big, false);

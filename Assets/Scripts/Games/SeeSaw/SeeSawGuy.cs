@@ -34,7 +34,7 @@ namespace HeavenStudio.Games.Scripts_SeeSaw
             HighInIn
         }
         [SerializeField] bool see;
-        public bool dead;
+        [NonSerialized] public bool dead = false;
         public bool strum;
         public Animator anim;
         JumpState lastState;
@@ -151,7 +151,7 @@ namespace HeavenStudio.Games.Scripts_SeeSaw
             Jukebox.PlayOneShotGame("seeSaw/explosion" + (see ? "Black" : "White"), beat + length);
             BeatAction.New(gameObject, new List<BeatAction.Action>()
             {
-                new BeatAction.Action(beat + length, delegate { transform.GetChild(0).gameObject.SetActive(false); deathParticle.Play();})
+                new BeatAction.Action(beat + length, delegate { anim.DoScaledAnimationAsync("Explode", 0.5f); deathParticle.Play();})
             });
         }
 

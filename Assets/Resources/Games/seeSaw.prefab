@@ -24432,7 +24432,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   offset: {x: 0, y: 0, z: 0}
   see: 0
-  dead: 0
   strum: 0
   anim: {fileID: 0}
   landOutTrans: {fileID: 2459174272852480971}
@@ -54693,13 +54692,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   offset: {x: 0, y: 0, z: 0}
   see: 1
-  dead: 0
   strum: 0
   anim: {fileID: 0}
   landOutTrans: {fileID: 306947710665962224}
   landInTrans: {fileID: 6011569602460589798}
   groundTrans: {fileID: 1721751377086680254}
-  deathParticle: {fileID: 0}
+  deathParticle: {fileID: 2401480996724232829}
 --- !u!1 &7773063793799314151
 GameObject:
   m_ObjectHideFlags: 0
