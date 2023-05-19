@@ -101,7 +101,7 @@ namespace HeavenStudio.Games
         {
             get
             {
-                ColorUtility.TryParseHtmlString("#53FFA3", out _defaultBGColor);
+                ColorUtility.TryParseHtmlString("#62FDBB", out _defaultBGColor);
                 return _defaultBGColor;
             }
         }
@@ -926,6 +926,7 @@ namespace HeavenStudio.Games
             specialKii.SetActive(false);
             Destroy(currentBall.gameObject);
             currentBall = null;
+            Jukebox.PlayOneShotGame("tossBoys/misshit");
         }
 
         void Empty(PlayerActionEvent caller) { }

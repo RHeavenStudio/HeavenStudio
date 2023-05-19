@@ -30,9 +30,10 @@ namespace HeavenStudio.Games.Scripts_TossBoys
                 spawnedEffect.Play();
                 DoAnimationScaledAsync(crouch ? "CrouchHit" : "Hit", 0.5f);
             }
-            else if (!anim.IsPlayingAnimationName(prefix + "Whiff"))
+            else if (!anim.IsPlayingAnimationName(prefix + "Whiff") && !anim.IsPlayingAnimationName(prefix + "Miss"))
             {
                 DoAnimationScaledAsync("Whiff", 0.5f);
+                Jukebox.PlayOneShotGame("tossBoys/whiff");
             }
         }
 
