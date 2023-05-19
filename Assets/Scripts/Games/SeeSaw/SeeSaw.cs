@@ -100,6 +100,7 @@ namespace HeavenStudio.Games.Loaders
                 new GameAction("recolor", "Color Pallete")
                 {
                     function = delegate { var e = eventCaller.currentEntity; SeeSaw.ChangeMappingColor(e["fill"], e["outline"]); },
+                    defaultLength = 0.5f,
                     parameters = new List<Param>()
                     {
                         new Param("outline", SeeSaw.defaultOtherColor, "Outline Color", "The color of the outlines on see and saw."),
