@@ -8,7 +8,7 @@ using HeavenStudio.Util;
 
 namespace HeavenStudio.Games.Scripts_KarateMan
 {
-    public class KarateManPot : PlayerActionObject
+    public class KarateManPot : MonoBehaviour
     {
         public float startBeat;
         public ItemType type;

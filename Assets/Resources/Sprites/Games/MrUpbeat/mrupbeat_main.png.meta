@@ -113,7 +113,7 @@ TextureImporter:
   spriteMeshType: 1
   alignment: 0
   spritePivot: {x: 0.5, y: 0.5}
-  spritePixelsToUnits: 48
+  spritePixelsToUnits: 192
   spriteBorder: {x: 0, y: 0, z: 0, w: 0}
   spriteGenerateFallbackPhysicsShape: 1
   alphaUsage: 1
@@ -133,7 +133,7 @@ TextureImporter:
   platformSettings:
   - serializedVersion: 3
     buildTarget: DefaultTexturePlatform
-    maxTextureSize: 1024
+    maxTextureSize: 4096
     resizeAlgorithm: 0
     textureFormat: -1
     textureCompression: 1
@@ -174,16 +174,16 @@ TextureImporter:
       name: mrupbeat_head_normal
       rect:
         serializedVersion: 2
-        x: 217
-        y: 449
-        width: 62
-        height: 61
+        x: 868
+        y: 1796
+        width: 248
+        height: 244
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
-      tessellationDetail: 0
+      tessellationDetail: -1
       bones: []
       spriteID: d1512f74a017739e0800000000000000
       internalID: -1641719250182597347
@@ -195,16 +195,16 @@ TextureImporter:
       name: mrupbeat_head_blink
       rect:
         serializedVersion: 2
-        x: 281
-        y: 449
-        width: 62
-        height: 61
+        x: 1124
+        y: 1796
+        width: 248
+        height: 244
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
-      tessellationDetail: 0
+      tessellationDetail: -1
       bones: []
       spriteID: 0c308b81ec25e6e80800000000000000
       internalID: -8183512427754159168
@@ -216,16 +216,16 @@ TextureImporter:
       name: mrupbeat_head_shocked
       rect:
         serializedVersion: 2
-        x: 345
-        y: 449
-        width: 62
-        height: 61
+        x: 1380
+        y: 1796
+        width: 248
+        height: 244
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
-      tessellationDetail: 0
+      tessellationDetail: -1
       bones: []
       spriteID: 06bffe14acc822600800000000000000
       internalID: 442070513753258848
@@ -237,16 +237,16 @@ TextureImporter:
       name: mrupbeat_miss_fx
       rect:
         serializedVersion: 2
-        x: 409
-        y: 449
-        width: 102
-        height: 61
+        x: 1636
+        y: 1796
+        width: 408
+        height: 244
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
-      tessellationDetail: 0
+      tessellationDetail: -1
       bones: []
       spriteID: 5a3fcdb6914562940800000000000000
       internalID: 5270992882044302245
@@ -258,16 +258,16 @@ TextureImporter:
       name: mrupbeat_shadow_left
       rect:
         serializedVersion: 2
-        x: 313
-        y: 369
-        width: 94
-        height: 77
+        x: 1252
+        y: 1476
+        width: 376
+        height: 308
       alignment: 9
       pivot: {x: 0.46770754, y: 0.18134259}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
-      tessellationDetail: 0
+      tessellationDetail: -1
       bones: []
       spriteID: ce5e0f8e5b8d327b0800000000000000
       internalID: -5250114464775084564
@@ -279,16 +279,16 @@ TextureImporter:
       name: mrupbeat_shadow_right
       rect:
         serializedVersion: 2
-        x: 217
-        y: 369
-        width: 94
-        height: 77
+        x: 868
+        y: 1476
+        width: 376
+        height: 308
       alignment: 9
       pivot: {x: 0.8090567, y: 0.16817167}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
-      tessellationDetail: 0
+      tessellationDetail: -1
       bones: []
       spriteID: cd425218a4dd56a20800000000000000
       internalID: 3055091234304763100
@@ -300,16 +300,16 @@ TextureImporter:
       name: mrupbeat_smear_fx_0
       rect:
         serializedVersion: 2
-        x: 1
-        y: 105
-        width: 110
-        height: 53
+        x: 4
+        y: 420
+        width: 440
+        height: 212
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
-      tessellationDetail: 0
+      tessellationDetail: -1
       bones: []
       spriteID: 7b5b56b629ff81220800000000000000
       internalID: 2456994601062741431
@@ -321,16 +321,16 @@ TextureImporter:
       name: mrupbeat_smear_fx_1
       rect:
         serializedVersion: 2
-        x: 113
-        y: 98
-        width: 70
-        height: 60
+        x: 452
+        y: 392
+        width: 280
+        height: 240
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
-      tessellationDetail: 0
+      tessellationDetail: -1
       bones: []
       spriteID: 131d12396bc7d82c0800000000000000
       internalID: -4427745735040970447
@@ -342,16 +342,16 @@ TextureImporter:
       name: mrupbeat_smear_fx_2
       rect:
         serializedVersion: 2
-        x: 185
-        y: 97
-        width: 46
-        height: 61
+        x: 740
+        y: 388
+        width: 184
+        height: 244
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
-      tessellationDetail: 0
+      tessellationDetail: -1
       bones: []
       spriteID: 499a34f32526cfb50800000000000000
       internalID: 6628280856970766740
@@ -363,16 +363,16 @@ TextureImporter:
       name: mrupbeat_antenna
       rect:
         serializedVersion: 2
-        x: 281
-        y: 113
-        width: 54
-        height: 45
+        x: 1124
+        y: 452
+        width: 216
+        height: 180
       alignment: 9
       pivot: {x: 0.5925926, y: 0.51111114}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
-      tessellationDetail: 0
+      tessellationDetail: -1
       bones: []
       spriteID: 4ad8de96d6bb82fd0800000000000000
       internalID: -2366435525580190300
@@ -384,16 +384,16 @@ TextureImporter:
       name: mrupbeat_antenna_light_0
       rect:
         serializedVersion: 2
-        x: 233
-        y: 113
-        width: 46
-        height: 45
+        x: 932
+        y: 452
+        width: 184
+        height: 180
       alignment: 9
-      pivot: {x: 0.7173913, y: 0.51111114}
+      pivot: {x: 0.7174, y: 0.51}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
-      tessellationDetail: 0
+      tessellationDetail: -1
       bones: []
       spriteID: e0ea3a5874c1e6b00800000000000000
       internalID: 823626875365731854
@@ -405,16 +405,16 @@ TextureImporter:
       name: mrupbeat_antenna_light_1
       rect:
         serializedVersion: 2
-        x: 385
-        y: 113
-        width: 46
-        height: 45
+        x: 1540
+        y: 452
+        width: 184
+        height: 180
       alignment: 9
-      pivot: {x: 0.7173913, y: 0.51111114}
+      pivot: {x: 0.7174, y: 0.51}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
-      tessellationDetail: 0
+      tessellationDetail: -1
       bones: []
       spriteID: 6d7469eac91630d80800000000000000
       internalID: -8285671563859703850
@@ -426,16 +426,16 @@ TextureImporter:
       name: mrupbeat_antenna_light_2
       rect:
         serializedVersion: 2
-        x: 337
-        y: 113
-        width: 46
-        height: 45
+        x: 1348
+        y: 452
+        width: 184
+        height: 180
       alignment: 9
-      pivot: {x: 0.7173913, y: 0.51111114}
+      pivot: {x: 0.7174, y: 0.51}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
-      tessellationDetail: 0
+      tessellationDetail: -1
       bones: []
       spriteID: 6656e67c6def5e6e0800000000000000
       internalID: -1808759476897028762
@@ -447,16 +447,16 @@ TextureImporter:
       name: mrupbeat_metronome
       rect:
         serializedVersion: 2
-        x: 1
-        y: 1
-        width: 414
-        height: 62
+        x: 6
+        y: 4
+        width: 1656
+        height: 248
       alignment: 9
-      pivot: {x: 0.5770048, y: 0.50376165}
+      pivot: {x: 0.575, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
-      tessellationDetail: 0
+      tessellationDetail: -1
       bones: []
       spriteID: 489c8679efe992c10800000000000000
       internalID: 2029327923406227844
@@ -468,16 +468,16 @@ TextureImporter:
       name: mrupbeat_step_0
       rect:
         serializedVersion: 2
-        x: 113
-        y: 225
-        width: 102
-        height: 86
+        x: 452
+        y: 900
+        width: 408
+        height: 344
       alignment: 9
       pivot: {x: 0.42319235, y: 0.1975449}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
-      tessellationDetail: 0
+      tessellationDetail: -1
       bones: []
       spriteID: c257799ec1a218900800000000000000
       internalID: 684874922003494188
@@ -489,16 +489,16 @@ TextureImporter:
       name: mrupbeat_step_1
       rect:
         serializedVersion: 2
-        x: 113
-        y: 313
-        width: 102
-        height: 93
+        x: 452
+        y: 1252
+        width: 408
+        height: 372
       alignment: 9
       pivot: {x: 0.42973134, y: 0.1378374}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
-      tessellationDetail: 0
+      tessellationDetail: -1
       bones: []
       spriteID: 7667ba0d4474404e0800000000000000
       internalID: -2016408372270893465
@@ -510,16 +510,16 @@ TextureImporter:
       name: mrupbeat_step_2
       rect:
         serializedVersion: 2
-        x: 113
-        y: 409
-        width: 102
-        height: 101
+        x: 452
+        y: 1636
+        width: 408
+        height: 404
       alignment: 9
       pivot: {x: 0.44062924, y: 0.14561266}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
-      tessellationDetail: 0
+      tessellationDetail: -1
       bones: []
       spriteID: ab59c60d1c3af43c0800000000000000
       internalID: -4373096660332669510
@@ -531,16 +531,16 @@ TextureImporter:
       name: mrupbeat_fall_0
       rect:
         serializedVersion: 2
-        x: 1
-        y: 433
-        width: 110
-        height: 77
+        x: 4
+        y: 1732
+        width: 440
+        height: 308
       alignment: 9
       pivot: {x: 0.23131311, y: 0.2206722}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
-      tessellationDetail: 0
+      tessellationDetail: -1
       bones: []
       spriteID: b0577a1c68861ac00800000000000000
       internalID: 910123527689434379
@@ -552,16 +552,16 @@ TextureImporter:
       name: mrupbeat_fall_1
       rect:
         serializedVersion: 2
-        x: 1
-        y: 361
-        width: 110
-        height: 69
+        x: 4
+        y: 1444
+        width: 440
+        height: 276
       alignment: 9
       pivot: {x: 0.25480798, y: 0.24740025}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
-      tessellationDetail: 0
+      tessellationDetail: -1
       bones: []
       spriteID: dc4148012f06bd460800000000000000
       internalID: 7267509016467870925
@@ -573,18 +573,18 @@ TextureImporter:
       name: mrupbeat_fall_2
       rect:
         serializedVersion: 2
-        x: 1
-        y: 225
-        width: 110
-        height: 61
+        x: 4
+        y: 900
+        width: 440
+        height: 244
       alignment: 9
       pivot: {x: 0.19380306, y: 0.24692748}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
-      tessellationDetail: 0
+      tessellationDetail: -1
       bones: []
-      spriteID: 8acdab1cbd71b90f0800000000000000
+      spriteID: 22c7d20975fdbdc30800000000000000
       internalID: 4385344229349358626
       vertices: []
       indices: 
@@ -594,16 +594,16 @@ TextureImporter:
       name: mrupbeat_fall_3
       rect:
         serializedVersion: 2
-        x: 1
-        y: 161
-        width: 110
-        height: 61
+        x: 4
+        y: 644
+        width: 440
+        height: 244
       alignment: 9
       pivot: {x: 0.1929862, y: 0.21257469}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
-      tessellationDetail: 0
+      tessellationDetail: -1
       bones: []
       spriteID: dcef749124666b8c0800000000000000
       internalID: -3983884386284601651
@@ -615,19 +615,334 @@ TextureImporter:
       name: mrupbeat_shadow_fall
       rect:
         serializedVersion: 2
-        x: 353
-        y: 209
-        width: 102
-        height: 37
+        x: 1412
+        y: 836
+        width: 408
+        height: 148
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: e225b6e00cc3a42b0800000000000000
+      internalID: -5599596391108488658
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: mrupbeat_main_0
+      rect:
+        serializedVersion: 2
+        x: 2087
+        y: 1739
+        width: 274
+        height: 273
+      alignment: 9
+      pivot: {x: 1, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: e225b6e00cc3a42b0800000000000000
-      internalID: -5599596391108488658
+      spriteID: 6e085ab157fc51d4b8919eed0bbed063
+      internalID: -2109729356
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: mrupbeat_main_1
+      rect:
+        serializedVersion: 2
+        x: 2474
+        y: 1771
+        width: 205
+        height: 208
+      alignment: 9
+      pivot: {x: 1, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: f49a06fca53fc7b4abe8649503d1dbc7
+      internalID: 1104172675
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: mrupbeat_main_2
+      rect:
+        serializedVersion: 2
+        x: 2851
+        y: 1771
+        width: 159
+        height: 160
+      alignment: 9
+      pivot: {x: 1, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: c317ad675a2c9e142aa43307e416da40
+      internalID: 1848041093
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: mrupbeat_main_3
+      rect:
+        serializedVersion: 2
+        x: 3226
+        y: 1770
+        width: 115
+        height: 114
+      alignment: 9
+      pivot: {x: 1, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 1291cc5abb7f6cf4094cc4f2054983a0
+      internalID: -1123406618
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: mrupbeat_main_4
+      rect:
+        serializedVersion: 2
+        x: 2087
+        y: 1386
+        width: 274
+        height: 273
+      alignment: 9
+      pivot: {x: 1, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 7425b693d12a28947b9c44290c87240f
+      internalID: 1559131365
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: mrupbeat_main_5
+      rect:
+        serializedVersion: 2
+        x: 2474
+        y: 1419
+        width: 206
+        height: 206
+      alignment: 9
+      pivot: {x: 1, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 5034675b48c4fac48b7ca72affb5d257
+      internalID: 1603879706
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: mrupbeat_main_6
+      rect:
+        serializedVersion: 2
+        x: 2852
+        y: 1419
+        width: 158
+        height: 158
+      alignment: 9
+      pivot: {x: 1, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 76ab99f01d26f954c9ac53e7fd5a9940
+      internalID: -1839324359
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: mrupbeat_main_7
+      rect:
+        serializedVersion: 2
+        x: 3226
+        y: 1416
+        width: 115
+        height: 116
+      alignment: 9
+      pivot: {x: 1, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 4e2205bd5ae4abc41b156bacd2b94f2d
+      internalID: 1875985905
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: mrupbeat_main_8
+      rect:
+        serializedVersion: 2
+        x: 2087
+        y: 1034
+        width: 274
+        height: 273
+      alignment: 9
+      pivot: {x: 1, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: bf3f53968ecd256489c86c556651e97a
+      internalID: 219566257
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: mrupbeat_main_9
+      rect:
+        serializedVersion: 2
+        x: 2474
+        y: 1066
+        width: 206
+        height: 206
+      alignment: 9
+      pivot: {x: 1, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 7e56cde8342f3054e83a15b40b1e095a
+      internalID: -1921142482
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: mrupbeat_main_10
+      rect:
+        serializedVersion: 2
+        x: 2852
+        y: 1066
+        width: 158
+        height: 159
+      alignment: 9
+      pivot: {x: 1, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 317ed81527ee0604ab4741879df51d61
+      internalID: -1221532570
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: mrupbeat_main_11
+      rect:
+        serializedVersion: 2
+        x: 3226
+        y: 1063
+        width: 115
+        height: 115
+      alignment: 9
+      pivot: {x: 1, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: a5782e747f873104da5bdacd7042f711
+      internalID: 899455387
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: mrupbeat_main_12
+      rect:
+        serializedVersion: 2
+        x: 3495
+        y: 1754
+        width: 381
+        height: 255
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: b998ae3e6493bdd45bf0ce951024ce70
+      internalID: -2014763855
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: mrupbeat_main_13
+      rect:
+        serializedVersion: 2
+        x: 3495
+        y: 1376
+        width: 381
+        height: 255
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 67b6d15c47a148d4f825a61a7ef411a3
+      internalID: -1248414130
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: mrupbeat_main_14
+      rect:
+        serializedVersion: 2
+        x: 3495
+        y: 1115
+        width: 381
+        height: 255
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: df282a88c9990804bbe1be6b69352b8b
+      internalID: 1471741028
       vertices: []
       indices: 
       edges: []
@@ -654,6 +969,21 @@ TextureImporter:
       mrupbeat_head_blink: -8183512427754159168
       mrupbeat_head_normal: -1641719250182597347
       mrupbeat_head_shocked: 442070513753258848
+      mrupbeat_main_0: -2109729356
+      mrupbeat_main_1: 1104172675
+      mrupbeat_main_10: -1221532570
+      mrupbeat_main_11: 899455387
+      mrupbeat_main_12: -2014763855
+      mrupbeat_main_13: -1248414130
+      mrupbeat_main_14: 1471741028
+      mrupbeat_main_2: 1848041093
+      mrupbeat_main_3: -1123406618
+      mrupbeat_main_4: 1559131365
+      mrupbeat_main_5: 1603879706
+      mrupbeat_main_6: -1839324359
+      mrupbeat_main_7: 1875985905
+      mrupbeat_main_8: 219566257
+      mrupbeat_main_9: -1921142482
       mrupbeat_metronome: 2029327923406227844
       mrupbeat_miss_fx: 5270992882044302245
       mrupbeat_shadow_fall: -5599596391108488658

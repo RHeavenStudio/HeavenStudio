@@ -6,7 +6,7 @@ using HeavenStudio.Util;
 
 namespace HeavenStudio.Games.Scripts_DrummingPractice
 {
-    public class DrummerHit : PlayerActionObject
+    public class DrummerHit : MonoBehaviour
     {
         DrummingPractice game;
         public float startBeat;

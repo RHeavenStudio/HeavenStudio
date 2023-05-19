@@ -7,7 +7,7 @@ using HeavenStudio.Util;
 
 namespace HeavenStudio.Games.Scripts_CatchyTune
 {
-    public class Fruit : PlayerActionObject
+    public class Fruit : MonoBehaviour
     {
 
         public bool isPineapple;

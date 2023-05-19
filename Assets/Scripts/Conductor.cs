@@ -67,7 +67,7 @@ namespace HeavenStudio
         // pitch values
         private float timelinePitch = 1f;
         private float minigamePitch = 1f;
-        public float SongPitch { get => timelinePitch * minigamePitch; }
+        public float SongPitch { get => isPaused ? 0f : (timelinePitch * minigamePitch); }
 
         public void SetTimelinePitch(float pitch)
         {
@@ -87,23 +87,23 @@ namespace HeavenStudio
             instance = this;
         }
 
-        public void SetBeat(float beat)
+        public void SetBeat(double beat)
         {
-            float secFromBeat = (float) GetSongPosFromBeat(beat);
+            double secFromBeat = GetSongPosFromBeat(beat);
 
             if (musicSource.clip != null)
             {
                 if (secFromBeat < musicSource.clip.length)
-                    musicSource.time = secFromBeat;
+                    musicSource.time = (float) secFromBeat;
                 else
                     musicSource.time = 0;
             }
 
-            GameManager.instance.SetCurrentEventToClosest(beat);
+            GameManager.instance.SetCurrentEventToClosest((float) beat);
             songPosBeat = beat;
         }
 
-        public void Play(float beat)
+        public void Play(double beat)
         {
             GameManager.instance.SortEventsList();
             bool negativeOffset = firstBeatOffset < 0f;

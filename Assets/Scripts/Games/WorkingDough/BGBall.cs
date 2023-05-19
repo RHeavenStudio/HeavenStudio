@@ -7,7 +7,7 @@ using HeavenStudio.Util;
 
 namespace HeavenStudio.Games.Scripts_WorkingDough
 {
-    public class BGBall : PlayerActionObject
+    public class BGBall : MonoBehaviour
     {
         public float startBeat;
         public float firstBeatsToTravel = 3f;

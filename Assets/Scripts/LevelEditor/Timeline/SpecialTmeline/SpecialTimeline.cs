@@ -133,7 +133,18 @@ namespace HeavenStudio.Editor.Track
 
                 DynamicBeatmap.TempoChange tempoC = new DynamicBeatmap.TempoChange();
                 tempoC.beat = tempoChange.transform.localPosition.x;
-                tempoC.tempo = GameManager.instance.Beatmap.bpm;
+                if (Input.GetKey(KeyCode.LeftShift) || Input.GetKey(KeyCode.RightShift))
+                {
+                    tempoC.tempo = GameManager.instance.Beatmap.bpm * 2f;
+                }
+                else if (Input.GetKey(KeyCode.LeftControl) || Input.GetKey(KeyCode.RightControl))
+                {
+                    tempoC.tempo = GameManager.instance.Beatmap.bpm / 2f;
+                }
+                else
+                {
+                    tempoC.tempo = GameManager.instance.Beatmap.bpm;
+                }
 
                 tempoTimelineObj.tempoChange = tempoC;
                 GameManager.instance.Beatmap.tempoChanges.Add(tempoC);

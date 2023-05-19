@@ -8,7 +8,7 @@ using DG.Tweening;
 
 namespace HeavenStudio.Games.Scripts_ForkLifter
 {
-    public class Pea : PlayerActionObject
+    public class Pea : MonoBehaviour
     {
         ForkLifter game;
         private Animator anim;

@@ -2,12 +2,14 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.EventSystems;
 
 using TMPro;
 using DG.Tweening;
 using Starpelly;
 
 using HeavenStudio.Editor.Track;
+
 
 namespace HeavenStudio.Editor
 {
@@ -25,9 +27,9 @@ namespace HeavenStudio.Editor
         private RectTransform eventsParent;
 
         [Header("Properties")]
+        [SerializeField] private int currentEventIndex;
         private Minigames.Minigame mg;
         private bool gameOpen;
-        [SerializeField] private int currentEventIndex;
         private int dragTimes;
         public float posDif;
         public int ignoreSelectCount;
@@ -48,7 +50,7 @@ namespace HeavenStudio.Editor
 
         private void Update()
         {
-            if(!(EventParameterManager.instance.active || Conductor.instance.NotStopped()))
+            if (!(EventParameterManager.instance.active || Conductor.instance.NotStopped()) && !IsPointerOverUIElement())
             {
                 if (gameOpen)
                 {
@@ -78,7 +80,6 @@ namespace HeavenStudio.Editor
         {
             currentEventIndex = amount;
 
-            EventRef.transform.parent.DOKill();
             CurrentSelected.transform.DOKill();
 
             if (currentEventIndex < 0)
@@ -96,20 +97,36 @@ namespace HeavenStudio.Editor
         {
             selectorHeight = GameEventSelectorRect.rect.height;
             eventSize = EventRef.GetComponent<RectTransform>().rect.height;
+            // EventRef.transform.parent.DOKill();
+            float lastLocalY = EventRef.transform.parent.transform.localPosition.y;
 
             if (currentEventIndex * eventSize >= selectorHeight/2 && eventsParent.childCount * eventSize >= selectorHeight)
             {
                 if (currentEventIndex * eventSize < eventsParent.childCount * eventSize - selectorHeight/2)
                 {
-                    EventRef.transform.parent.DOLocalMoveY((currentEventIndex * eventSize) - selectorHeight/2, 0.35f).SetEase(Ease.OutExpo);
+                    EventRef.transform.parent.transform.localPosition = new Vector3(
+                        EventRef.transform.parent.transform.localPosition.x, 
+                        Mathf.Lerp(lastLocalY, (currentEventIndex * eventSize) - selectorHeight/2, 12 * Time.deltaTime),
+                        EventRef.transform.parent.transform.localPosition.z
+                    );
                 }
                 else
                 {
-                    EventRef.transform.parent.DOLocalMoveY((eventsParent.childCount * eventSize) - selectorHeight + (eventSize*0.33f), 0.35f).SetEase(Ease.OutExpo);
+                    EventRef.transform.parent.transform.localPosition = new Vector3(
+                        EventRef.transform.parent.transform.localPosition.x, 
+                        Mathf.Lerp(lastLocalY, (eventsParent.childCount * eventSize) - selectorHeight + (eventSize*0.33f), 12 * Time.deltaTime),
+                        EventRef.transform.parent.transform.localPosition.z
+                    );
                 }
             }
             else
-                EventRef.transform.parent.DOLocalMoveY(0, 0.35f).SetEase(Ease.OutExpo);
+            {
+                EventRef.transform.parent.transform.localPosition = new Vector3(
+                    EventRef.transform.parent.transform.localPosition.x, 
+                    Mathf.Lerp(lastLocalY, 0, 12 * Time.deltaTime),
+                    EventRef.transform.parent.transform.localPosition.z
+                );
+            }
         }
 
         public void SelectGame(string gameName, int index)
@@ -132,7 +149,7 @@ namespace HeavenStudio.Editor
             currentEventIndex = 0;
             UpdateIndex(0, false);
 
-            Editor.instance.SetGameEventTitle($"Select game event for {gameName.Replace("\n", "")}");
+            Editor.instance?.SetGameEventTitle($"Select game event for {gameName.Replace("\n", "")}");
         }
 
         private void AddEvents()
@@ -175,6 +192,31 @@ namespace HeavenStudio.Editor
                 eventsParent.GetChild(i).GetComponent<TMP_Text>().color = EditorTheme.theme.properties.EventNormalCol.Hex2RGB();
 
             eventsParent.GetChild(index).GetComponent<TMP_Text>().color = EditorTheme.theme.properties.EventSelectedCol.Hex2RGB();
+        }
+
+        public bool IsPointerOverUIElement()
+        {
+            return IsPointerOverUIElement(GetEventSystemRaycastResults());
+        }
+
+        private bool IsPointerOverUIElement(List<RaycastResult> eventSystemRaysastResults)
+        {
+            for (int index = 0; index < eventSystemRaysastResults.Count; index++)
+            {
+                RaycastResult curRaysastResult = eventSystemRaysastResults[index];
+                if (curRaysastResult.gameObject.layer == 5)
+                    return true;
+            }
+            return false;
+        }
+
+        static List<RaycastResult> GetEventSystemRaycastResults()
+        {
+            PointerEventData eventData = new PointerEventData(EventSystem.current);
+            eventData.position = Input.mousePosition;
+            List<RaycastResult> raysastResults = new List<RaycastResult>();
+            EventSystem.current.RaycastAll(eventData, raysastResults);
+            return raysastResults;
         }
 
         #endregion

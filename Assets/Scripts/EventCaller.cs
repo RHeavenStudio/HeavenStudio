@@ -110,12 +110,9 @@ namespace HeavenStudio
         {
             List<DynamicBeatmap.DynamicEntity> temp1 = GameManager.instance.Beatmap.entities.FindAll(c => c.datamodel.Split('/')[0] == gameName);
             List<DynamicBeatmap.DynamicEntity> temp2 = new List<DynamicBeatmap.DynamicEntity>();
-            for (int i = 0; i < temp1.Count; i++)
+            foreach (string s in include)
             {
-                if (include.Any(temp1[i].datamodel.Split('/')[1].Contains))
-                {
-                    temp2.Add(temp1[i]);
-                }
+                temp2.AddRange(temp1.FindAll(c => c.datamodel.Split('/')[1].Equals(s)));
             }
             return temp2;
         }
@@ -124,30 +121,11 @@ namespace HeavenStudio
         {
             List<DynamicBeatmap.DynamicEntity> temp1 = GameManager.instance.Beatmap.entities.FindAll(c => c.datamodel.Split('/')[0] == gameName);
             List<DynamicBeatmap.DynamicEntity> temp2 = new List<DynamicBeatmap.DynamicEntity>();
-            for (int i = 0; i < temp1.Count; i++)
+            foreach (string s in exclude)
             {
-                if (!exclude.Any(temp1[i].datamodel.Split('/')[1].Contains))
-                {
-                    temp2.Add(temp1[i]);
-                }
+                temp2.AddRange(temp1.FindAll(c => !c.datamodel.Split('/')[1].Equals(s)));
             }
             return temp2;
-        }
-
-        public static List<DynamicBeatmap.DynamicEntity> GetAllPlayerEntities(string gameName)
-        {
-            return GameManager.instance.playerEntities.FindAll(c => c.datamodel.Split('/')[0] == gameName);
-        }
-
-        public static List<DynamicBeatmap.DynamicEntity> GetAllPlayerEntitiesExcept(string gameName)
-        {
-            return GameManager.instance.playerEntities.FindAll(c => c.datamodel.Split('/')[0] != gameName);
-        }
-
-        // elaborate as fuck, boy
-        public static List<DynamicBeatmap.DynamicEntity> GetAllPlayerEntitiesExceptBeforeBeat(string gameName, float beat)
-        {
-            return GameManager.instance.playerEntities.FindAll(c => c.datamodel.Split('/')[0] != gameName && c.beat < beat);
         }
 
         public static List<Minigames.Minigame> FXOnlyGames()

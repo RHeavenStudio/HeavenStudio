@@ -9,7 +9,7 @@ using Starpelly;
 
 namespace HeavenStudio.Games.Scripts_DJSchool
 {
-    public class Student : PlayerActionObject
+    public class Student : MonoBehaviour
     {
         public Animator anim;
         public static bool soundFX;

@@ -321,9 +321,7 @@ namespace HeavenStudio.Games
                 new BeatAction.Action(beat + 1f, delegate { particleEffectMonkeys_2(); }),
             });
 
-
-
-            ScheduleInput(beat, .95f, InputType.STANDARD_DOWN, OnJumpTap, OnJumpTapMiss, OnEmpty); //why .95f? no idea, doesn't sound right w/ 1f
+            ScheduleInput(beat, 1f, InputType.STANDARD_DOWN, OnJumpTap, OnJumpTapMiss, OnEmpty); //why would it be .95f? no idea, sounds fine w/ 1f
 
             BeatAction.New(gameObject, new List<BeatAction.Action>()
             {
@@ -356,8 +354,7 @@ namespace HeavenStudio.Games
                 new BeatAction.Action(beat + 1f, delegate { monkeys[1].Play("FinalJumpTap", 0, 0); }),
             });
 
-
-            ScheduleInput(beat, .95f, InputType.STANDARD_DOWN, OnJumpFinalTap, OnFinalJumpTapMiss, OnEmpty);
+            ScheduleInput(beat, 1f, InputType.STANDARD_DOWN, OnJumpFinalTap, OnFinalJumpTapMiss, OnEmpty);
 
             BeatAction.New(gameObject, new List<BeatAction.Action>()
             {

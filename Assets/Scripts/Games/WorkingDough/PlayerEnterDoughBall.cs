@@ -7,7 +7,7 @@ using HeavenStudio.Util;
 
 namespace HeavenStudio.Games.Scripts_WorkingDough
 {
-    public class PlayerEnterDoughBall : PlayerActionObject
+    public class PlayerEnterDoughBall : MonoBehaviour
     {
         public float startBeat;
         public float firstBeatsToTravel = 0.5f;

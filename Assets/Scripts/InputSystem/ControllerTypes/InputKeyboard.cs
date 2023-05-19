@@ -24,7 +24,7 @@ namespace HeavenStudio.InputSystem
             KeyCode.U,              // north face button
             KeyCode.C,              // left shoulder button
             KeyCode.N,              // right shoulder button
-            KeyCode.Return,         // start button
+            KeyCode.Escape,         // start button
         };
 
         InputDirection hatDirectionCurrent;
