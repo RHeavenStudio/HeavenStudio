@@ -51,6 +51,8 @@ namespace HeavenStudio.Games.Scripts_SeeSaw
         bool hasChangedAnimMidAir;
         [SerializeField] ParticleSystem deathParticle;
 
+        [SerializeField] private Animator invertAnim;
+
         private void Awake()
         {
             anim = transform.GetChild(0).GetComponent<Animator>();
@@ -151,6 +153,7 @@ namespace HeavenStudio.Games.Scripts_SeeSaw
             Jukebox.PlayOneShotGame("seeSaw/explosion" + (see ? "Black" : "White"), beat + length);
             BeatAction.New(gameObject, new List<BeatAction.Action>()
             {
+                new BeatAction.Action(beat + length - 1, delegate { invertAnim.DoScaledAnimationAsync("Invert", 0.5f); }),
                 new BeatAction.Action(beat + length, delegate { anim.DoScaledAnimationAsync("Explode", 0.5f); deathParticle.Play();})
             });
         }
