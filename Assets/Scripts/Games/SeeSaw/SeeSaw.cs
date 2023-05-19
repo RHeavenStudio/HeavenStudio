@@ -59,13 +59,15 @@ namespace HeavenStudio.Games.Loaders
                 },
                 new GameAction("changeBgColor", "Change Background Color")
                 {
-                    function = delegate { var e = eventCaller.currentEntity; SeeSaw.instance.ChangeColor(e.beat, e.length, e["colorFrom"], e["colorTo"], e["ease"]); },
+                    function = delegate { var e = eventCaller.currentEntity; SeeSaw.instance.ChangeColor(e.beat, e.length, e["colorFrom"], e["colorTo"], e["colorFrom2"], e["colorTo2"], e["ease"]); },
                     defaultLength = 4f,
                     resizable = true,
                     parameters = new List<Param>()
                     {
-                        new Param("colorFrom", SeeSaw.defaultBGColor, "Start Color", "The color the background will start at."),
-                        new Param("colorTo", SeeSaw.defaultBGColor, "End Color", "The color the background will end at."),
+                        new Param("colorFrom", SeeSaw.defaultBGColor, "Start Color (Top)", "The color the background will start at."),
+                        new Param("colorTo", SeeSaw.defaultBGColor, "End Color (Top)", "The color the background will end at."),
+                        new Param("colorFrom2", SeeSaw.defaultBGColorBottom, "Start Color (Bottom)", "The color the background will start at."),
+                        new Param("colorTo2", SeeSaw.defaultBGColorBottom, "End Color (Bottom)", "The color the background will end at."),
                         new Param("ease", EasingFunction.Ease.Linear, "Ease", "The ease of the fade.")
                     }
                 },
@@ -114,6 +116,16 @@ namespace HeavenStudio.Games
                 return _defaultBGColor;
             }
         }
+        private static Color _defaultBGColorBottom;
+        public static Color defaultBGColorBottom
+        {
+            get
+            {
+                ColorUtility.TryParseHtmlString("#FFB4F7", out _defaultBGColorBottom);
+                return _defaultBGColorBottom;
+            }
+        }
+
         [Header("Components")]
         [SerializeField] Animator seeSawAnim;
         [SerializeField] SeeSawGuy see;
@@ -135,6 +147,8 @@ namespace HeavenStudio.Games
         EasingFunction.Ease lastEase;
         Color colorFrom;
         Color colorTo;
+        Color colorFrom2;
+        Color colorTo2;
         bool canPrepare = true;
         bool canStartJump;
         public bool cameraMove = true;
@@ -197,11 +211,10 @@ namespace HeavenStudio.Games
                     float newColorB = func(colorFrom.b, colorTo.b, normalizedBeat);
                     bgHigh.color = new Color(newColorR, newColorG, newColorB);
                     gradient.color = new Color(newColorR, newColorG, newColorB);
-                    Color bgLowNewColor = new Color(newColorR, newColorG, newColorB);
-                    Color.RGBToHSV(bgLowNewColor, out float H, out float S, out float V);
-                    S *= 0.29f;
-                    bgLowNewColor = Color.HSVToRGB(H, S, V);
-                    bgLow.color = bgLowNewColor;
+                    newColorR = func(colorFrom2.r, colorTo2.r, normalizedBeat);
+                    newColorR = func(colorFrom2.g, colorTo2.g, normalizedBeat);
+                    newColorR = func(colorFrom2.b, colorTo2.b, normalizedBeat);
+                    bgLow.color = new Color(newColorR, newColorG, newColorB);
                 }
                 if (allJumpEvents.Count > 0 && !(see.dead || saw.dead))
                 {
@@ -276,12 +289,14 @@ namespace HeavenStudio.Games
             }
         }
 
-        public void ChangeColor(float beat, float length, Color color1, Color color2, int ease)
+        public void ChangeColor(float beat, float length, Color color1, Color color2, Color color3, Color color4, int ease)
         {
             bgColorStartBeat = beat;
             bgColorLength = length;
             colorFrom = color1;
             colorTo = color2;
+            colorFrom2 = color3;
+            colorTo2 = color4;
             lastEase = (EasingFunction.Ease)ease;
         }
 
@@ -316,7 +331,7 @@ namespace HeavenStudio.Games
             }
             else
             {
-                see.Land(SeeSawGuy.LandType.Normal, true);
+                see.Land(SeeSawGuy.LandType.Normal, false);
                 MultiSound.Play(new MultiSound.Sound[]
                 {
                     new MultiSound.Sound("seeSaw/otherLongJump", beat),
@@ -377,7 +392,7 @@ namespace HeavenStudio.Games
             }
             else
             {
-                see.Land(SeeSawGuy.LandType.Normal, true);
+                see.Land(SeeSawGuy.LandType.Normal, false);
                 MultiSound.Play(new MultiSound.Sound[]
                 {
                     new MultiSound.Sound("seeSaw/otherLongJump", beat),
@@ -676,7 +691,7 @@ namespace HeavenStudio.Games
             }
             DetermineSeeJump(caller.timer + caller.startBeat);
             seeSawAnim.DoScaledAnimationAsync("Good", 0.5f);
-            saw.Land(SeeSawGuy.LandType.Normal, true);
+            saw.Land(SeeSawGuy.LandType.Normal, false);
             if (currentJumpIndex >= 0 && currentJumpIndex != allJumpEvents.Count 
                 && allJumpEvents[currentJumpIndex].beat == allJumpEvents[currentJumpIndex - 1].beat + allJumpEvents[currentJumpIndex - 1].length 
                 && allJumpEvents[currentJumpIndex]["high"])
@@ -689,7 +704,7 @@ namespace HeavenStudio.Games
             }
             Jukebox.PlayOneShotGame("seeSaw/playerVoiceLong1");
             Jukebox.PlayOneShotGame("seeSaw/just");
-            Jukebox.PlayOneShotGame("seeSaw/playerVoiceLong2", caller.timer + caller.startBeat + 1f);
+            Jukebox.PlayOneShotGame("seeSaw/playerVoiceLong2", caller.timer + caller.startBeat + 1f, 1, 1, false, false, 0.0104166666f);
         }
 
         public void JustLongHigh(PlayerActionEvent caller, float state)
@@ -720,7 +735,7 @@ namespace HeavenStudio.Games
             }
             Jukebox.PlayOneShotGame("seeSaw/playerVoiceLong1");
             Jukebox.PlayOneShotGame("seeSaw/just");
-            Jukebox.PlayOneShotGame("seeSaw/playerVoiceLong2", caller.timer + caller.startBeat + 1f);
+            Jukebox.PlayOneShotGame("seeSaw/playerVoiceLong2", caller.timer + caller.startBeat + 1f, 1, 1, false, false, 0.0104166666f);
         }
 
         public void MissLong(PlayerActionEvent caller)
