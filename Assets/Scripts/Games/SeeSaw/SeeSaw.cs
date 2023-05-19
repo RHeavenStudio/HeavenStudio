@@ -726,10 +726,10 @@ namespace HeavenStudio.Games
                 ps = Instantiate(rightBlackOrbs, rightBlackOrbs.transform.parent);
             }
             ParticleSystem psChild = ps.transform.GetChild(1).GetComponent<ParticleSystem>();
-            psChild.SetAsyncScaling(1.3f);
-            ps.transform.GetChild(2).GetComponent<ParticleSystem>().SetAsyncScaling(1f);
-            psChild.transform.GetChild(1).GetComponent<ParticleSystem>().SetAsyncScaling(1f);
-            ps.PlayScaledAsync(1.3f);
+            psChild.SetAsyncScaling(0.65f);
+            ps.transform.GetChild(2).GetComponent<ParticleSystem>().SetAsyncScaling(0.5f);
+            psChild.transform.GetChild(1).GetComponent<ParticleSystem>().SetAsyncScaling(0.5f);
+            ps.PlayScaledAsync(0.65f);
         }
  
         public void JustLong(PlayerActionEvent caller, float state)

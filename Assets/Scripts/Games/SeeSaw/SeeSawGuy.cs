@@ -229,10 +229,10 @@ namespace HeavenStudio.Games.Scripts_SeeSaw
                     break;
             }
             string animName = "Land_" + landOut + typeOfLanding;
+            anim.DoScaledAnimationAsync(animName, 0.5f);
             if (landType is not LandType.Barely)
             {
                 string getUpAnim = "GetUp_" + landOut + typeOfLanding;
-                anim.DoScaledAnimationAsync(animName, 0.5f);
                 BeatAction.New(gameObject, new List<BeatAction.Action>()
                 {
                     new BeatAction.Action(Conductor.instance.songPositionInBeats + (getUpOut ? 1f : 0.5f), delegate { anim.DoScaledAnimationAsync(getUpAnim, 0.5f); })
