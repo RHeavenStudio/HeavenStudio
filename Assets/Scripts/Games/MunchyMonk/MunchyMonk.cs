@@ -41,15 +41,18 @@ namespace HeavenStudio.Games.Loaders
                 },
                 new GameAction("One", "One")
                 {
+                    function = delegate {
+                        var e = eventCaller.currentEntity; 
+                        MunchyMonk.PreOneGoCue(e.beat, e["oneColor"]); 
+                    },
+                    inactiveFunction = delegate {
+                        var e = eventCaller.currentEntity; 
+                        MunchyMonk.PreOneGoCue(e.beat, e["oneColor"]); 
+                    },
                     defaultLength = 2f,
                     parameters = new List<Param>()
                     {
                         new Param("oneColor", new Color(1, 1, 1, 1), "Color", "Change the color of the dumpling")
-                    },
-                    preFunctionLength = 0,
-                    preFunction = delegate {
-                        var e = eventCaller.currentEntity; 
-                        MunchyMonk.PreOneGoCue(e.beat, e["oneColor"]); 
                     },
                 },
                 new GameAction("TwoTwo", "Two Two")
@@ -68,6 +71,14 @@ namespace HeavenStudio.Games.Loaders
                 },
                 new GameAction("Three", "Three")
                 {
+                    function = delegate {
+                        var e = eventCaller.currentEntity; 
+                        MunchyMonk.PreThreeGoCue(e.beat, e["threeColor1"], e["threeColor2"], e["threeColor3"]); 
+                    },
+                    inactiveFunction = delegate {
+                        var e = eventCaller.currentEntity; 
+                        MunchyMonk.PreThreeGoCue(e.beat, e["threeColor1"], e["threeColor2"], e["threeColor3"]); 
+                    },
                     defaultLength = 4f,
                     parameters = new List<Param>()
                     {
@@ -75,17 +86,12 @@ namespace HeavenStudio.Games.Loaders
                         new Param("threeColor2", new Color(0.34f, 0.77f, 0.36f, 1), "2nd Dumpling Color", "Change the color of the second dumpling"),
                         new Param("threeColor3", new Color(0.34f, 0.77f, 0.36f, 1), "3rd Dumpling Color", "Change the color of the third dumpling"),
                     },
-                    preFunctionLength = 0,
-                    preFunction = delegate {
-                        var e = eventCaller.currentEntity; 
-                        MunchyMonk.PreThreeGoCue(e.beat, e["threeColor1"], e["threeColor2"], e["threeColor3"]); 
-                    },
                 },
                 new GameAction("Modifiers", "Modifiers")
                 {
                     function = delegate {
                         var e = eventCaller.currentEntity; 
-                        MunchyMonk.instance.Modifiers(e.beat, e["inputsTil"], e["resetLevel"], e["setLevel"], e["disableBaby"], e["shouldBlush"]); 
+                        MunchyMonk.Modifiers(e.beat, e["inputsTil"], e["resetLevel"], e["setLevel"], e["disableBaby"], e["shouldBlush"]); 
                     },
                     defaultLength = 0.5f,
                     parameters = new List<Param>()
@@ -99,29 +105,28 @@ namespace HeavenStudio.Games.Loaders
                 },
                 new GameAction("MonkAnimation", "Monk Animations")
                 {
-                    preFunction = delegate {
+                    function = delegate {
                         var e = eventCaller.currentEntity; 
-                        MunchyMonk.PlayMonkAnim(e.beat, e["whichAnim"], e["vineBoom"]);
+                        MunchyMonk.instance.PlayMonkAnim(e.beat, e["whichAnim"], e["vineBoom"]);
                     },
-                    preFunctionLength = 0,
                     parameters = new List<Param>()
                     {
                         new Param("whichAnim", MunchyMonk.WhichMonkAnim.Stare, "Which Animation", "Which animation will the Monk play?"),
                         new Param("vineBoom", false, "Vine Boom", "Just guess with this one."),
                     }
                 },
-                // note: make the bg not scroll by default
                 new GameAction("ScrollBackground", "Scroll Background")
                 {
                     function = delegate {
                         var e = eventCaller.currentEntity; 
-                        MunchyMonk.instance.ScrollBG(e.beat, e["scrollSpeed"], e["instant"]); 
+                        MunchyMonk.instance.ScrollBG(e.beat, e.length, e["scrollSpeed"], e["ease"]); 
                     },
-                    defaultLength = 0.5f,
+                    defaultLength = 1f,
+                    resizable = true,
                     parameters = new List<Param>()
                     {
-                        new Param("scrollSpeed", new EntityTypes.Float(0, 10, 50), "Instant?", "Will the scrolling happen immediately?"),
-                        new Param("instant", false, "Instant?", "Will the scrolling happen immediately?"),
+                        new Param("scrollSpeed", new EntityTypes.Float(0, 20, 5), "Scroll Speed", "What should the scroll speed be?"),
+                        new Param("ease", EasingFunction.Ease.Linear, "Ease", "Which ease should the scroll ramp up have?"),
                     }
                 },
             });
@@ -179,19 +184,30 @@ namespace HeavenStudio.Games
         public float lastReportedBeat = 0f;
         public bool needBlush;
         public bool isStaring;
-        public int growLevel = 0;
-        public int howManyGulps;
-        public int inputsTilGrow = 10;
         bool monkBop = true;
-        bool noBlush;
-        bool disableBaby;
+
+        // these variables are static so that they can be set outside of the game/stay the same between game switches
+        static public int howManyGulps;
+        static public int growLevel = 0;
+        static public int inputsTilGrow = 10;
+        static bool noBlush;
+        static bool disableBaby;
+
+        // the variables for scroll
         bool scrollRampUp;
-        float scrollRampNum;
+        float scrollBeat;
+        float scrollLength;
+        float scrollMod;
+        static float scrollModCurrent = 0;
+        EasingFunction.Ease scrollEase;
+
+        // the variables for the monk moving 
         bool isMoving;
         float movingStartBeat;
         float movingLength;
         string moveAnim;
         EasingFunction.Ease lastEase;
+
         private Dumpling currentDumpling;
         ScrollObject[] scrollObjects;
         const string sfxName = "munchyMonk/";
@@ -206,8 +222,24 @@ namespace HeavenStudio.Games
 
         private void Start() 
         {
-            //if (Conductor.instance.)
             scrollObjects = FindObjectsByType<ScrollObject>(FindObjectsSortMode.None);
+            foreach (var obj in scrollObjects) {
+                obj.SpeedMod = scrollModCurrent;
+            }
+        }
+
+        private void OnDestroy() 
+        {
+            // reset static variables
+            if (queuedOnes.Count > 0) queuedOnes.Clear();
+            if (queuedTwoTwos.Count > 0) queuedThrees.Clear();
+            if (queuedThrees.Count > 0) queuedThrees.Clear();
+
+            howManyGulps = 0;
+            growLevel = 0;
+            inputsTilGrow = 10;
+            noBlush = false;
+            disableBaby = false;
         }
 
         private void Update() 
@@ -240,36 +272,36 @@ namespace HeavenStudio.Games
             // sets hair stuff active when it needs to be
             if (growLevel > 0) {
                 StacheHolder.SetActive(true); 
-                StacheAnim.Play("Idle"+growLevel, 0, 0);
-                if (growLevel == 4) {
-                    BrowHolder.SetActive(true); 
-                    BrowAnim.Play("Idle", 0, 0); 
-                }
-            };
+                StacheAnim.DoScaledAnimationAsync("Idle", 0.5f);
+                if (growLevel == 4) BrowHolder.SetActive(true);
+            }
 
-            // resets the monk when game is paused
+            // resets the monk when game is stopped
             if (!Conductor.instance.NotStopped()) {
                 MonkAnim.DoScaledAnimationAsync("Idle", 0.5f);
             }
 
-            if (isMoving)
-            {
+            if (isMoving) {
                 float normalizedBeat = Conductor.instance.GetPositionFromBeat(movingStartBeat, movingLength);
                 EasingFunction.Function func = EasingFunction.GetEasingFunction(lastEase);
                 float newPos = func(0f, 1f, normalizedBeat);
                 MonkHolderAnim.DoNormalizedAnimation(moveAnim, newPos);
-                if (normalizedBeat >= 1f)
-                {
+                if (normalizedBeat >= 1f) {
                     isMoving = false;
                 }
             }
 
-            if (scrollRampUp)
-            {
-                scrollRampNum *= (float)1.01*Time.deltaTime;
-                foreach (var obj in scrollObjects)
-                {
-                    obj.XSpeed = scrollRampNum;
+            if (scrollRampUp) {
+                float normalizedBeat = Conductor.instance.GetPositionFromBeat(scrollBeat, scrollLength);
+                EasingFunction.Function func = EasingFunction.GetEasingFunction(scrollEase);
+                float newPos = func(scrollModCurrent, scrollMod, normalizedBeat);
+                if (normalizedBeat >= 1f) {
+                    scrollRampUp = false;
+                    scrollModCurrent = scrollMod;
+                }
+                
+                foreach (var obj in scrollObjects) {
+                    obj.SpeedMod = newPos;
                 }
             }
 
@@ -299,6 +331,7 @@ namespace HeavenStudio.Games
                 {
                     MonkAnim.DoScaledAnimationAsync("Bop", 0.5f);
                 }
+
                 if (growLevel == 4) BrowAnim.DoScaledAnimationAsync("Bop", 0.5f);
                 if (growLevel > 0) StacheAnim.DoScaledAnimationAsync("Bop"+growLevel, 0.5f);
             }
@@ -311,7 +344,7 @@ namespace HeavenStudio.Games
                 needBlush = false;
                 MonkAnim.DoScaledAnimationAsync("Bop", 0.5f);
                 if (growLevel == 4) BrowAnim.DoScaledAnimationAsync("Bop", 0.5f);
-                StacheAnim.DoScaledAnimationAsync("Bop"+growLevel, 0.5f);
+                if (growLevel > 0) StacheAnim.DoScaledAnimationAsync("Bop"+growLevel, 0.5f);
             }
         }
 
@@ -351,8 +384,6 @@ namespace HeavenStudio.Games
                 new MultiSound.Sound(sfxName+"one_1", beat),
                 new MultiSound.Sound(sfxName+"one_2", beat + 1f),
             }, forcePlay: true);
-
-            //PlaySoundSequence("munchyMonk", "one_go", beat);
 
             queuedOnes.Add(new QueuedDumpling() 
                 { beat = beat, color1 = firstColor, });
@@ -487,21 +518,22 @@ namespace HeavenStudio.Games
             });
         }
 
-        public static void PlayMonkAnim(float beat, int whichAnim, bool vineBoom)
+        public void PlayMonkAnim(float beat, int whichAnim, bool vineBoom)
         {
             switch (whichAnim)
             {
                 case 1:
-                MunchyMonk.instance.MonkAnim.DoScaledAnimationAsync("Blush", 0.5f);
-                MunchyMonk.instance.needBlush = false;
+                MonkAnim.DoScaledAnimationAsync("Blush", 0.5f);
+                needBlush = false;
                 break;
                 default:
-                MunchyMonk.instance.MonkAnim.DoScaledAnimationAsync("Stare", 0.5f);
-                MunchyMonk.instance.isStaring = true;
+                MonkAnim.DoScaledAnimationAsync("Stare", 0.5f);
+                isStaring = true;
                 break;
             }
             
-            if (whichAnim >= 2) Jukebox.PlayOneShotGame("fanClub/arisa_dab", forcePlay: true);
+            // it's in zeo's video; no reason not to include it :)
+            if (vineBoom) Jukebox.PlayOneShotGame("fanClub/arisa_dab", forcePlay: true);
         }
 
         public void MonkMove(float beat, float length, int goToSide, int ease)
@@ -513,29 +545,31 @@ namespace HeavenStudio.Games
             lastEase = (EasingFunction.Ease)ease;
         }
 
-        public void Modifiers(float beat, int inputsTilGrow, bool resetLevel, int setLevel, bool disableBaby, bool shouldBlush)
+        public static void Modifiers(float beat, int inputsTilGrow, bool resetLevel, int setLevel, bool disableBaby, bool shouldBlush)
         {
-            if (instance.inputsTilGrow != inputsTilGrow) howManyGulps = inputsTilGrow * growLevel;
-            if (setLevel != 0) growLevel = setLevel;
-            if (resetLevel) growLevel = 0;
+            if (MunchyMonk.inputsTilGrow != inputsTilGrow) MunchyMonk.howManyGulps = inputsTilGrow * MunchyMonk.growLevel;
+            if (setLevel != 0) MunchyMonk.growLevel = setLevel;
+            if (resetLevel) {
+                MunchyMonk.growLevel = 0;
+                MunchyMonk.howManyGulps = 0;
+            }
+            
 
-            instance.noBlush = !shouldBlush;
-            instance.inputsTilGrow = inputsTilGrow;
-            instance.disableBaby = disableBaby;
+            MunchyMonk.noBlush = !shouldBlush;
+            MunchyMonk.inputsTilGrow = inputsTilGrow;
+            MunchyMonk.disableBaby = disableBaby;
 
-            Baby.SetActive(!disableBaby);
+            if (GameManager.instance.currentGame == "munchyMonk") 
+                MunchyMonk.instance.Baby.SetActive(!disableBaby);
         }
 
-        public void ScrollBG(float beat, float scrollSpeed, bool isInstant)
+        public void ScrollBG(float beat, float length, float scrollSpeed, int ease)
         {
-            if (isInstant) {
-                foreach (var obj in scrollObjects)
-                {
-                    obj.XSpeed = scrollSpeed;
-                }
-            } else {
-                scrollRampUp = true;
-            }
+            scrollBeat = beat;
+            scrollLength = length;
+            scrollMod = scrollSpeed;
+            scrollRampUp = true;
+            scrollEase = (EasingFunction.Ease)ease;
         }
     }
 }

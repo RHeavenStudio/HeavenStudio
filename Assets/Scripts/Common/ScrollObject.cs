@@ -10,14 +10,14 @@ namespace HeavenStudio.Common
         public float YSpeed = 1.0f;
         public Vector2 NegativeBounds;
         public Vector2 PositiveBounds;
+        [System.NonSerialized] public float SpeedMod = 5;
 
         public void LateUpdate()
         {
             var pos = gameObject.transform.position;
-            float songPos = Conductor.instance.GetBpmAtBeat(Conductor.instance.songPosition)/10000;
-            float _x = songPos*XSpeed;
-            float _y = songPos*YSpeed;
-            if (AutoScroll && Conductor.instance.NotStopped()) {
+            float _x = Time.deltaTime*SpeedMod*XSpeed;
+            float _y = Time.deltaTime*SpeedMod*YSpeed;
+            if (AutoScroll && Conductor.instance.isPlaying) {
                 gameObject.transform.position += new Vector3(_x, _y);
 
                 if (XSpeed > 0 && pos.x >= PositiveBounds.x) {

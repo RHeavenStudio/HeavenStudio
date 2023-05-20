@@ -40,10 +40,6 @@ namespace HeavenStudio.Games.Scripts_MunchyMonk
 
         private void Update()
         {
-            if ((!Conductor.instance.isPlaying && !Conductor.instance.isPaused) || GameManager.instance.currentGame != "munchyMonk") {
-                GameObject.Destroy(gameObject);
-            }
-
             if (canDestroy && anim.IsAnimationNotPlaying()) GameObject.Destroy(gameObject);
         }
 
@@ -67,11 +63,11 @@ namespace HeavenStudio.Games.Scripts_MunchyMonk
                 smearAnim.Play("SmearAppear", 0, 0);
                 game.needBlush = true;
                 Jukebox.PlayOneShotGame(sfxName+"gulp");
-                game.howManyGulps++;
+                MunchyMonk.howManyGulps++;
                 for (int i = 1; i <= 4; i++)
                 {
-                    if (game.howManyGulps == game.inputsTilGrow*i) {
-                        game.growLevel = i;
+                    if (MunchyMonk.howManyGulps == MunchyMonk.inputsTilGrow*i) {
+                        MunchyMonk.growLevel = i;
                     }
                 }
                 GameObject.Destroy(gameObject);
