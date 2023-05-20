@@ -12,7 +12,7 @@ namespace HeavenStudio.Games.Scripts_OctopusMachine
         [SerializeField] SpriteRenderer[] sr;
         [SerializeField] Material mat;
 
-        bool isSquished;
+        public bool isSqueezed;
         bool isPreparing;
         public float lastReportedBeat = 0f;
 
@@ -26,27 +26,23 @@ namespace HeavenStudio.Games.Scripts_OctopusMachine
 
         private void Start() 
         {
-            foreach (var item in sr)
-            {
-                //item.color = octoColor;
-                mat.SetColor("_ColorAlpha", new Color(1f, 0.145f, 0.5f));
-            }
+            mat.SetColor("_ColorAlpha", new Color(1f, 0.34f, 0.62f));
         }
 
         void Update()
         {
-            if (gameObject.activeInHierarchy)
+            if (gameObject.activeInHierarchy && player)
             {
                 if (PlayerInput.Pressed())
                 {
-                    Debug.Log("Normal Press");
+                    Squeeze();
                 }
                 if (PlayerInput.PressedUp())
                 {
                     if (PlayerInput.Pressing(true)) {
-                        Debug.Log("ALT Press Up");
+                        Pop();
                     } else {
-                        Debug.Log("Press Up");
+                        Release();
                     }
                 }
             }
@@ -59,7 +55,7 @@ namespace HeavenStudio.Games.Scripts_OctopusMachine
                 && !anim.IsPlayingAnimationName("Happy")
                 && !anim.IsPlayingAnimationName("Angry")
                 && !anim.IsPlayingAnimationName("Oops")
-                && !isSquished
+                && !isSqueezed
                 && !isPreparing)
             {
                 Bop();
@@ -100,14 +96,16 @@ namespace HeavenStudio.Games.Scripts_OctopusMachine
             isPreparing = whichBop == 4 ? true : false;
         }
 
+        public void ForceSqueeze()
+        {
+            anim.DoScaledAnimationAsync("ForceSqueeze", 0.5f);
+            isSqueezed = true;
+        }
+
         public void GameplayModifiers(bool isActive, Color octoColor)
         {
             gameObject.SetActive(isActive);
-            foreach (var item in sr)
-            {
-                //item.color = octoColor;
-                mat.SetColor("_ColorAlpha", octoColor);
-            }
+            mat.SetColor("_ColorAlpha", octoColor);
         }
 
         public void MoveOctopodes(float x, float y)
@@ -118,7 +116,22 @@ namespace HeavenStudio.Games.Scripts_OctopusMachine
         public void Squeeze() 
         {
             anim.DoScaledAnimationAsync("Squeeze", 0.5f);
-            isSquished = true;
+            Jukebox.PlayOneShotGame("octopusMachine/squeeze");
+            isSqueezed = true;
+        }
+
+        public void Release() 
+        {
+            anim.DoScaledAnimationAsync("Release", 0.5f);
+            Jukebox.PlayOneShotGame("octopusMachine/release");
+            isSqueezed = false;
+        }
+
+        public void Pop() 
+        {
+            anim.DoScaledAnimationAsync("Pop", 0.5f);
+            Jukebox.PlayOneShotGame("octopusMachine/pop");
+            isSqueezed = false;
         }
     }
 }
