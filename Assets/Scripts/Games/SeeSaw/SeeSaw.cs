@@ -292,21 +292,7 @@ namespace HeavenStudio.Games
                         if (currentJumpIndex == 0 
                             || allJumpEvents[currentJumpIndex].beat > allJumpEvents[currentJumpIndex - 1].length + ((allJumpEvents[currentJumpIndex].datamodel is "seeSaw/longShort" or "seeSaw/shortShort") ? 1 : 2))
                         {
-                            bool inJump = allJumpEvents[currentJumpIndex].datamodel is "seeSaw/shortLong" or "seeSaw/shortShort";
-                            if (!(currentJumpIndex + 1 >= allJumpEvents.Count))
-                            {
-                                if (allJumpEvents[currentJumpIndex + 1].beat == allJumpEvents[currentJumpIndex].beat + allJumpEvents[currentJumpIndex].length)
-                                {
-                                    if (allJumpEvents[currentJumpIndex].datamodel is "seeSaw/shortLong")
-                                    {
-                                        inJump = allJumpEvents[currentJumpIndex + 1].datamodel is "seeSaw/shortLong" or "seeSaw/shortShort";
-                                    }
-                                    else if (allJumpEvents[currentJumpIndex].datamodel is "seeSaw/longShort")
-                                    {
-                                        inJump = allJumpEvents[currentJumpIndex + 1].datamodel is "seeSaw/shortLong" or "seeSaw/longLong";
-                                    }
-                                }
-                            }
+                            bool inJump = DetermineStartLandInOrOut();
                             if (cond.songPositionInBeats >= allJumpEvents[currentJumpIndex].beat - (inJump ? 1 : 2))
                             {
                                 if (canPrepare && cond.songPositionInBeats < allJumpEvents[currentJumpIndex].beat)
@@ -414,7 +400,8 @@ namespace HeavenStudio.Games
                 }
             }
             saw.canBop = false;
-            if (canPrepare) see.SetState(SeeSawGuy.JumpState.StartJump, beat - 2);
+            bool inJump = DetermineStartLandInOrOut();
+            if (canPrepare) see.SetState(inJump ? SeeSawGuy.JumpState.StartJumpIn : SeeSawGuy.JumpState.StartJump, beat - (inJump ? 1 : 2));
             canPrepare = false;
             seeSawAnim.transform.localScale = new Vector3(-1, 1, 1);
             seeSawAnim.DoScaledAnimationAsync("Good", 0.5f);
@@ -473,7 +460,8 @@ namespace HeavenStudio.Games
                 }
             }
             saw.canBop = false;
-            if (canPrepare) see.SetState(SeeSawGuy.JumpState.StartJump, beat - 2);
+            bool inJump = DetermineStartLandInOrOut();
+            if (canPrepare) see.SetState(inJump ? SeeSawGuy.JumpState.StartJumpIn : SeeSawGuy.JumpState.StartJump, beat - (inJump ? 1 : 2));
             canPrepare = false;
             seeSawAnim.transform.localScale = new Vector3(-1, 1, 1);
             seeSawAnim.DoScaledAnimationAsync("Good", 0.5f);
@@ -532,7 +520,8 @@ namespace HeavenStudio.Games
                 }
             }
             saw.canBop = false;
-            if (canPrepare) see.SetState(SeeSawGuy.JumpState.StartJumpIn, beat - 1);
+            bool inJump = DetermineStartLandInOrOut();
+            if (canPrepare) see.SetState(inJump ? SeeSawGuy.JumpState.StartJumpIn : SeeSawGuy.JumpState.StartJump, beat - (inJump ? 1 : 2));
             canPrepare = false;
             seeSawAnim.transform.localScale = new Vector3(-1, 1, 1);
             seeSawAnim.DoScaledAnimationAsync("Good", 0.5f);
@@ -591,7 +580,8 @@ namespace HeavenStudio.Games
                 } 
             }
             saw.canBop = false;
-            if (canPrepare) see.SetState(SeeSawGuy.JumpState.StartJumpIn, beat - 1);
+            bool inJump = DetermineStartLandInOrOut();
+            if (canPrepare) see.SetState(inJump ? SeeSawGuy.JumpState.StartJumpIn : SeeSawGuy.JumpState.StartJump, beat - (inJump ? 1 : 2));
             canPrepare = false;
             seeSawAnim.transform.localScale = new Vector3(-1, 1, 1);
             seeSawAnim.DoScaledAnimationAsync("Good", 0.5f);
@@ -636,6 +626,26 @@ namespace HeavenStudio.Games
                     });
                 }
             }
+        }
+
+        private bool DetermineStartLandInOrOut()
+        {
+            bool inJump = allJumpEvents[currentJumpIndex].datamodel is "seeSaw/shortLong" or "seeSaw/shortShort";
+            if (!(currentJumpIndex + 1 >= allJumpEvents.Count))
+            {
+                if (allJumpEvents[currentJumpIndex + 1].beat == allJumpEvents[currentJumpIndex].beat + allJumpEvents[currentJumpIndex].length)
+                {
+                    if (allJumpEvents[currentJumpIndex].datamodel is "seeSaw/shortLong")
+                    {
+                        inJump = false;
+                    }
+                    else if (allJumpEvents[currentJumpIndex].datamodel is "seeSaw/longShort")
+                    {
+                        inJump = true;
+                    }
+                }
+            }
+            return inJump;
         }
 
         public SuperCurveObject.Path GetPath(string name)
