@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using HeavenStudio.Util;
+using DG.Tweening;
 
 namespace HeavenStudio.Games.Loaders
 {
@@ -95,9 +96,7 @@ namespace HeavenStudio.Games.Loaders
 }
 namespace HeavenStudio.Games
 {
-    using DG.Tweening;
     using Scripts_TossBoys;
-    using UnityEngine.UIElements;
 
     public class TossBoys : Minigame
     {
