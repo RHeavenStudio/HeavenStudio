@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.UI;
 
 namespace HeavenStudio.RIQEditor
 {
@@ -11,6 +12,10 @@ namespace HeavenStudio.RIQEditor
         
         [Header("Rect")]
         [SerializeField] private RenderTexture ScreenRenderTexture;
+
+        [Header("GridGameSelector")] 
+        [SerializeField] private GameObject SpecialIconPrefab;
+        [SerializeField] private GameObject NormalIconPrefab;
 
         private void Awake()
         {
@@ -26,6 +31,29 @@ namespace HeavenStudio.RIQEditor
             GameManager.instance.CursorCam.targetTexture = ScreenRenderTexture;
             
             GameManager.instance.Init();
+
+            foreach (var minigame in EventCaller.instance.minigames)
+            {
+                var pref = minigame.fxOnly ? SpecialIconPrefab : NormalIconPrefab;
+                var gameIcon = Instantiate(pref, pref.transform.parent);
+                gameIcon.GetComponent<Image>().sprite = GameIcon(minigame.name);
+            }
+            SpecialIconPrefab.SetActive(false);
+            NormalIconPrefab.SetActive(false);
         }
+
+        #region Custom
+
+        public static Sprite GameIcon(string name)
+        {
+            return Resources.Load<Sprite>($"Sprites/Editor/GameIcons/{name}");
+        }
+
+        public static Texture GameIconMask(string name)
+        {
+            return Resources.Load<Texture>($"Sprites/Editor/GameIcons/{name}_mask");
+        }
+
+        #endregion
     }
 }
