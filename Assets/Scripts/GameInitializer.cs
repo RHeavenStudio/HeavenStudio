@@ -17,6 +17,7 @@ namespace HeavenStudio
         [SerializeField] RenderTexture overlayRenderTexture;
 
         [SerializeField] HeavenStudio.Editor.Editor editorGO;
+        [SerializeField] HeavenStudio.RIQEditor.EditorMain editorGONew;
         [SerializeField] String debug_cmdFile;
 
         [SerializeField] GameManager gameManager;
@@ -96,13 +97,17 @@ namespace HeavenStudio
             GlobalGameManager.OverlayRenderTexture = overlayRenderTexture;
             GlobalGameManager.ResetGameRenderTexture();
 
-            if (editorGO == null)
+            if (editorGO == null && editorGONew == null)
             {
                 OpenCmdRemix(input);
                 Debug.Log(json);
                 gameManager.txt = json;
                 gameManager.ext = ext;
                 gameManager.Init();
+            }
+            else if (editorGONew != null)
+            {
+                editorGONew.Init();
             }
             else
             {

@@ -8,6 +8,9 @@ namespace HeavenStudio.RIQEditor
 
         public Camera EditorCamera;
         public Canvas MainCanvas, TimelineCanvas;
+        
+        [Header("Rect")]
+        [SerializeField] private RenderTexture ScreenRenderTexture;
 
         private void Awake()
         {
@@ -15,6 +18,14 @@ namespace HeavenStudio.RIQEditor
                 Instance = this;
             else
                 Debug.LogError("There shouldn't be more than 1 EditorMain!");
+        }
+
+        public void Init()
+        {
+            GameManager.instance.StaticCamera.targetTexture = ScreenRenderTexture;
+            GameManager.instance.CursorCam.targetTexture = ScreenRenderTexture;
+            
+            GameManager.instance.Init();
         }
     }
 }
