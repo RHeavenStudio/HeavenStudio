@@ -17,13 +17,9 @@ namespace HeavenStudio.Games.Loaders
             {
                 new GameAction("start stepping", "Start Stepping")
                 {
-                    preFunction = delegate {var e = eventCaller.currentEntity; MrUpbeat.StartStepping(e.beat, e.length, e["force"]); },
+                    preFunction = delegate {var e = eventCaller.currentEntity; MrUpbeat.StartStepping(e.beat, e.length); },
                     defaultLength = 4f,
                     resizable = true,
-                    parameters = new List<Param>()
-                    {
-                        new Param("force", false, "Force Mr. Downbeat", "Forces inputs to not be only on the offbeats"),
-                    }
                 },
                 new GameAction("ding", "Ding!")
                 {
@@ -103,7 +99,6 @@ namespace HeavenStudio.Games
         [Header("Properties")]
         private Tween bgColorTween;
         public int stepIterate = 0;
-        public static float downbeatMod = 0.5f;
         public static bool shouldBlip;
         static bool noDing;
 
@@ -127,7 +122,6 @@ namespace HeavenStudio.Games
                 if (queuedInputs.Count > 0) queuedInputs.Clear();
             }
 
-            // these variables wouldn't get reset, even when you go in and out of unity play mode???
             shouldBlip = false;
             stepIterate = 0;
         }
@@ -165,27 +159,22 @@ namespace HeavenStudio.Games
             if (stopBlipping) shouldBlip = false;
         }
 
-        public static void StartStepping(float beat, float length, bool force)
+        public static void StartStepping(float beat, float length)
         {
-            // mr. downbeat stuff. god i hate mr. downbeat
-            // force != true means that mr. upbeat will always blip/step on the offbeats
-            beat = force ? beat - 0.5f : MathF.Floor(beat);
-            downbeatMod = force ? (beat % 1) : 0.5f;
-            
             if (GameManager.instance.currentGame != "mrUpbeat") {
                 Blipping(beat, length);
                 MrUpbeat.shouldBlip = true;
             } else {
                 BeatAction.New(instance.gameObject, new List<BeatAction.Action>() {
-                    new BeatAction.Action(beat, delegate {
-                        MrUpbeat.shouldBlip = true;
+                    new BeatAction.Action(MathF.Floor(beat), delegate { 
+                        MrUpbeat.shouldBlip = true; 
                     }),
                 });
             }
-            var dings = EventCaller.GetAllInGameManagerList("mrUpbeat", new string[] { "ding" });
+            var dings = EventCaller.GetAllInGameManagerList("mrUpbeat", new string[] { "ding!" });
             if (dings.Count == 0) {
                 MrUpbeat.noDing = true;
-                queuedInputs.Add(beat + (force ? length : MathF.Floor(length)));
+                queuedInputs.Add(MathF.Floor(beat+length));
                 return;
             }
             MrUpbeat.noDing = false;
@@ -196,8 +185,8 @@ namespace HeavenStudio.Games
                     break;
                 }
             }
-            for (int i = (int)length; i < dings[whichDing].beat - beat; i++) {
-                queuedInputs.Add(beat + i - (force ? downbeatMod : 0));
+            for (int i = (int)length; i < dings[whichDing].beat - MathF.Floor(beat); i++) {
+                queuedInputs.Add(MathF.Floor(beat) + i);
             }
         }
 
@@ -215,8 +204,8 @@ namespace HeavenStudio.Games
                 }
             }
 
-            for (int i = 0; i < switchGames[whichSwitch].beat - beat - 0.5f; i++) {
-                blips.Add(new MultiSound.Sound("mrUpbeat/blip", beat + 0.5f + i));
+            for (int i = 0; i < switchGames[whichSwitch].beat - MathF.Floor(beat) - 0.5f; i++) {
+                blips.Add(new MultiSound.Sound("mrUpbeat/blip", MathF.Floor(beat) + 0.5f + i));
             }
 
             MultiSound.Play(blips.ToArray(), forcePlay: true);
@@ -263,8 +252,11 @@ namespace HeavenStudio.Games
 
         public void BlipEvents(string inputLetter, bool shouldGrow, bool resetBlip, bool blip)
         {
-            if (shouldGrow && man.blipSize < 4) man.blipSize++;
-            if (resetBlip) man.blipSize = 0;
+            man.shouldGrow = shouldGrow;
+            if (resetBlip) {
+                man.blipSize = 0;
+                man.shouldGrow = false;
+            }
             man.blipString = inputLetter;
             shouldBlip = blip;
         }
