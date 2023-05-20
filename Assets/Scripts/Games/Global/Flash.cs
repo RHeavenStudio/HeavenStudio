@@ -1,6 +1,8 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 using HeavenStudio.Util;
 using System.Linq;
@@ -9,49 +11,40 @@ namespace HeavenStudio.Games.Global
 {
     public class Flash : MonoBehaviour
     {
-        public float startBeat;
-        public float length;
+        [NonSerialized] public float startBeat;
+        [NonSerialized] public float length;
 
-        public Color startColor;
-        public Color endColor;
+        [NonSerialized] public Color startColor;
+        [NonSerialized] public Color endColor;
 
-        public EasingFunction.Ease ease;
-        private EasingFunction.Function func;
+        [NonSerialized] public EasingFunction.Ease ease;
+        [NonSerialized] private EasingFunction.Function func;
 
-        private SpriteRenderer spriteRenderer;
+        [NonSerialized] private Image spriteRenderer;
 
         [SerializeField] private Color currentCol;
 
-        private List<DynamicBeatmap.DynamicEntity> allFadeEvents = new List<DynamicBeatmap.DynamicEntity>();
+        [NonSerialized] private List<DynamicBeatmap.DynamicEntity> allFadeEvents = new List<DynamicBeatmap.DynamicEntity>();
 
         private void Awake()
         {
-            this.gameObject.transform.SetParent(GameManager.instance.gameObject.transform);
-            gameObject.layer = LayerMask.NameToLayer("Flash");
-            this.gameObject.transform.localScale = new Vector3(1, 1);
-
-            spriteRenderer = this.gameObject.AddComponent<SpriteRenderer>();
-
-            spriteRenderer.color = startColor;
-            spriteRenderer.sortingOrder = 30001;
-            spriteRenderer.sprite = Resources.Load<Sprite>("Sprites/GeneralPurpose/Square");
-
+            spriteRenderer = GetComponent<Image>();
+            spriteRenderer.color = currentCol;
             func = EasingFunction.GetEasingFunction(EasingFunction.Ease.Linear);
-
             GameManager.instance.onBeatChanged += OnBeatChanged;
         }
 
         public void OnBeatChanged(float beat)
         {
             allFadeEvents = EventCaller.GetAllInGameManagerList("vfx", new string[] { "flash" });
-            Test(beat);
-
             // backwards-compatibility baybee
             allFadeEvents.AddRange(EventCaller.GetAllInGameManagerList("gameManager", new string[] { "flash" }));
-            Test(beat);
+            allFadeEvents.Sort((x, y) => x.beat.CompareTo(y.beat));
+
+            FindFadeFromBeat(beat);
         }
 
-        private void Test(float beat)
+        private void FindFadeFromBeat(float beat)
         {
             Color startCol = Color.white;
             Color endCol = Color.white;
@@ -105,7 +98,7 @@ namespace HeavenStudio.Games.Global
 
         private void Update()
         {
-            Test(Conductor.instance.songPositionInBeats);
+            FindFadeFromBeat(Conductor.instance.songPositionInBeats);
             float normalizedBeat = Conductor.instance.GetPositionFromBeat(startBeat, length);
             // normalizedBeat = Mathf.Clamp01(normalizedBeat);
 

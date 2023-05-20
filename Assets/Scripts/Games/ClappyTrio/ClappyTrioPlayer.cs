@@ -6,7 +6,7 @@ using HeavenStudio.Util;
 
 namespace HeavenStudio.Games.Scripts_ClappyTrio
 {
-    public class ClappyTrioPlayer : PlayerActionObject
+    public class ClappyTrioPlayer : MonoBehaviour
     {
         ClappyTrio game;
         private float lastClapBeat;
@@ -56,6 +56,7 @@ namespace HeavenStudio.Games.Scripts_ClappyTrio
         private void Miss(PlayerActionEvent caller) {
             game.playerHitLast = false;
             game.missed = true;
+            game.emoCounter = 2;
 
             if (clapStarted)
                 this.canHit = false;
@@ -65,6 +66,7 @@ namespace HeavenStudio.Games.Scripts_ClappyTrio
 
         private void Clap(bool just)
         {
+            game.emoCounter = 2;
             if (just)
             {
                 clapEffect.SetActive(true);

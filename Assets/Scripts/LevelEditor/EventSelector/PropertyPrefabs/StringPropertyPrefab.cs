@@ -32,6 +32,11 @@ namespace HeavenStudio.Editor
                 _ =>
                 {;
                     parameterManager.entity[propertyName] = inputFieldString.text;
+                }
+            );
+            inputFieldString.onEndEdit.AddListener(
+                _ =>
+                {;
                     Editor.instance.editingInputField = false;
                 }
             );

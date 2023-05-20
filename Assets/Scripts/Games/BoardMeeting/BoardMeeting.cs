@@ -62,7 +62,7 @@ namespace HeavenStudio.Games.Loaders
                     defaultLength = 0.5f,
                     parameters = new List<Param>()
                     {
-                        new Param("amount", new EntityTypes.Integer(3, 6, 4), "Amount", "How many executives will there be?")
+                        new Param("amount", new EntityTypes.Integer(3, 5, 4), "Amount", "How many executives will there be?")
                     }
                 }
             });
@@ -119,6 +119,7 @@ namespace HeavenStudio.Games
                         executives[executiveCount - 1].Stop(false);
                         Jukebox.PlayOneShotGame("boardMeeting/miss");
                         Jukebox.PlayOneShot("miss");
+                        ScoreMiss();
                     }
                 }
             }
@@ -279,10 +280,12 @@ namespace HeavenStudio.Games
         public void Spin(int start, int end)
         {
             if (start > executiveCount || end > executiveCount) return;
+            bool forceStart = false;
             if (chairLoopSound == null)
             {
                 chairLoopSound = Jukebox.PlayOneShotGame("boardMeeting/chairLoop", -1, 1, 1, true);
                 firstSpinner = executives[start - 1];
+                forceStart = true;
             }
             for (int i = start - 1; i < end; i++)
             {
@@ -301,7 +304,7 @@ namespace HeavenStudio.Games
                 {
                     soundToPlay = "Player";
                 }
-                executives[i].Spin(soundToPlay);
+                executives[i].Spin(soundToPlay, forceStart);
             }
         }
 
@@ -310,20 +313,33 @@ namespace HeavenStudio.Games
             float startPos = farLeft.position.x;
             float maxWidth = Mathf.Abs(farLeft.position.x - farRight.position.x);
 
-            for (int i = 0; i < executiveCount; i++)
+            float betweenDistance = maxWidth / 3;
+
+            maxWidth = betweenDistance * executiveCount;
+
+            startPos = -(maxWidth / 2);
+
+            for (int i = -1; i < executiveCount; i++)
             {
-                BMExecutive executive;
-                if (i == 0) executive = executives[0];
-                else executive = Instantiate(executives[0], transform);
+                if (i == -1)
+                {
+                    assistantAnim.transform.localPosition = new Vector3(startPos + 5.359f, 0);
+                }
+                else
+                {
+                    BMExecutive executive;
+                    if (i == 0) executive = executives[0];
+                    else executive = Instantiate(executives[0], transform);
 
-                executive.transform.localPosition = new Vector3(startPos + ((maxWidth / (executiveCount - 1)) * i), 0);
-                executive.GetComponent<SortingGroup>().sortingOrder = i;
+                    executive.transform.localPosition = new Vector3(startPos + betweenDistance * (i + 1), 0);
+                    executive.GetComponent<SortingGroup>().sortingOrder = i;
 
-                if (i > 0)
-                    executives.Add(executive);
+                    if (i > 0)
+                        executives.Add(executive);
 
-                if (i == executiveCount - 1)
-                    executive.player = true;
+                    if (i == executiveCount - 1)
+                        executive.player = true;
+                }
             }
         }
 

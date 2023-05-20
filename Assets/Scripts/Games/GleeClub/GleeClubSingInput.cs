@@ -5,7 +5,7 @@ using HeavenStudio.Util;
 
 namespace HeavenStudio.Games.Scripts_GleeClub
 {
-    public class GleeClubSingInput : PlayerActionObject
+    public class GleeClubSingInput : MonoBehaviour
     {
         public float pitch = 1f;
         bool shouldClose = true;

@@ -24,11 +24,14 @@ namespace HeavenStudio.Editor
             if (buggedSelections.Count > 0)
             {
                 for (int i = 0; i < buggedSelections.Count; i++)
-                Deselect(buggedSelections[i]);
+                    Deselect(buggedSelections[i]);
             }
-            if (Input.GetKey(KeyCode.LeftControl))
-                if (Input.GetKeyDown(KeyCode.A))
-                    SelectAll();
+            if (Editor.instance.isShortcutsEnabled)
+            {
+                if (Input.GetKey(KeyCode.LeftControl))
+                    if (Input.GetKeyDown(KeyCode.A))
+                        SelectAll();
+            }
         }
 
         public void ClickSelect(TimelineEventObj eventToAdd)

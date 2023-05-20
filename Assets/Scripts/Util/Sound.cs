@@ -26,6 +26,7 @@ namespace HeavenStudio.Util
         private double startTime;
 
         public float beat;
+        public float offset;
         public float scheduledPitch = 1f;
 
         bool playInstant = false;
@@ -42,7 +43,7 @@ namespace HeavenStudio.Util
 
             if (beat == -1 && !scheduled)
             {
-                audioSource.PlayScheduled(AudioSettings.dspTime);
+                audioSource.Play();
                 playInstant = true;
                 played = true;
                 startTime = cnd.songPositionAsDouble;
@@ -52,7 +53,7 @@ namespace HeavenStudio.Util
             {
                 playInstant = false;
                 scheduledPitch = cnd.SongPitch;
-                startTime = (AudioSettings.dspTime + (cnd.GetSongPosFromBeat(beat) - cnd.songPositionAsDouble)/(double)scheduledPitch);
+                startTime = (AudioSettings.dspTime + (cnd.GetSongPosFromBeat(beat) - cnd.songPositionAsDouble)/(double)scheduledPitch) - offset;
                 audioSource.PlayScheduled(startTime);
             }
         }
@@ -64,7 +65,7 @@ namespace HeavenStudio.Util
             {
                 if (scheduled)
                 {
-                    if (AudioSettings.dspTime > scheduledTime)
+                    if (scheduledPitch != 0 && AudioSettings.dspTime > scheduledTime)
                     {
                         StartCoroutine(NotRelyOnBeatSound());
                         played = true;
@@ -72,7 +73,7 @@ namespace HeavenStudio.Util
                 }
                 else if (!playInstant)
                 {
-                    if (AudioSettings.dspTime > startTime)
+                    if (scheduledPitch != 0 && AudioSettings.dspTime > startTime)
                     {
                         played = true;
                         StartCoroutine(NotRelyOnBeatSound());
@@ -81,9 +82,21 @@ namespace HeavenStudio.Util
                     {
                         if (!played && scheduledPitch != cnd.SongPitch)
                         {
-                            scheduledPitch = cnd.SongPitch;
-                            startTime = (AudioSettings.dspTime + (cnd.GetSongPosFromBeat(beat) - cnd.songPositionAsDouble)/(double)scheduledPitch);
-                            audioSource.SetScheduledStartTime(startTime);
+                            if (cnd.SongPitch == 0)
+                            {
+                                scheduledPitch = cnd.SongPitch;
+                                audioSource.Pause();
+                            }
+                            else
+                            {
+                                if (scheduledPitch == 0)
+                                {
+                                    audioSource.UnPause();
+                                }
+                                scheduledPitch = cnd.SongPitch;
+                                startTime = (AudioSettings.dspTime + (cnd.GetSongPosFromBeat(beat) - cnd.songPositionAsDouble)/(double)scheduledPitch);
+                                audioSource.SetScheduledStartTime(startTime);
+                            }
                         }
                     }
                 }

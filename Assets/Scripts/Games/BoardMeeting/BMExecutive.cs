@@ -30,13 +30,14 @@ namespace HeavenStudio.Games.Scripts_BoardMeeting
             canBop = false;
         }
 
-        public void Spin(string soundToPlay = "A")
+        public void Spin(string soundToPlay = "A", bool forceStart = false)
         {
             if (spinning) return;
             spinning = true;
             preparing = false;
-            if (this == game.firstSpinner) anim.DoUnscaledAnimation("Spin");
-            else anim.DoUnscaledAnimation("Spin", game.firstSpinner.anim.GetCurrentAnimatorStateInfo(0).normalizedTime);
+            string animToPlay = game.firstSpinner.anim.GetCurrentAnimatorStateInfo(0).IsName("Spin") ? "Spin" : "LoopSpin";
+            if (this == game.firstSpinner) anim.DoUnscaledAnimation("Spin", 0);
+            else anim.DoUnscaledAnimation(forceStart ? "Spin" : animToPlay, forceStart ? 0 : game.firstSpinner.anim.GetCurrentAnimatorStateInfo(0).normalizedTime);
             canBop = false;
             Jukebox.PlayOneShotGame("boardMeeting/rollPrepare" + soundToPlay);
             float offset = 0;

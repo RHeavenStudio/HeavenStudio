@@ -22,6 +22,7 @@ namespace HeavenStudio.Common
 
         public float StarTargetTime { get { return starStart + starLength; } }
         public bool IsEligible { get; private set; }
+        public bool IsCollected { get { return state == StarState.Collected; } }
 
         float starStart = float.MaxValue;
         float starLength = float.MaxValue;
@@ -29,10 +30,10 @@ namespace HeavenStudio.Common
         Conductor cond;
 
         // Start is called before the first frame update
-        void Start()
+        public void Start()
         {
-            instance = this;
             cond = Conductor.instance;
+            instance = this;
         }
 
         // Update is called once per frame
