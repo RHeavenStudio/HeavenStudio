@@ -151,6 +151,10 @@ namespace HeavenStudio.Games
         public GameObject spectator;
         public GameObject spectatorAnchor;
 
+        public GameObject Blue;
+        public GameObject BlueRootMotion;
+        public GameObject BlueShadow;
+
         [Header("References")]
         public Material spectatorMat;
 
@@ -158,6 +162,10 @@ namespace HeavenStudio.Games
 
         //arisa's animation controller
         private Animator idolAnimator;
+
+        // blue's animation controller
+        private Animator backupRAnimator;
+        
         //spectators
         private List<GameObject> Spectators;
         public NtrIdolFan Player;

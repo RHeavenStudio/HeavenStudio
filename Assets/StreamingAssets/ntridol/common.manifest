@@ -1,12 +1,12 @@
 ManifestFileVersion: 0
-CRC: 770088614
+CRC: 1913680974
 Hashes:
   AssetFileHash:
     serializedVersion: 2
-    Hash: 7f172c2fcf8040a2381d1c6796d10609
+    Hash: 5a0c517e88df2bb21340743c04581280
   TypeTreeHash:
     serializedVersion: 2
-    Hash: d3bf058e4d6436c8eb488ca7ce259d8a
+    Hash: 83abcfca9d09afdbf08bc73d8478ccb2
 HashAppended: 0
 ClassTypes:
 - Class: 1
@@ -61,26 +61,32 @@ Assets:
 - Assets/Resources/Sprites/Games/FanClub/Animations/Stage/Background.controller
 - Assets/Resources/Sprites/Games/FanClub/Animations/Fan/FanJump.anim
 - Assets/Resources/Sprites/Games/FanClub/Materials/NtrIdol_Idol.mat
-- Assets/Resources/Sprites/Games/FanClub/Materials/idol_wink_circle.mat
+- Assets/Resources/Sprites/Games/FanClub/Animations/Blue/NoPose.anim
 - Assets/Resources/Sprites/Games/FanClub/idol_wink_star.png
 - Assets/Resources/Sprites/Games/FanClub/Animations/Arisa/Arrange/IdolLandArrange.anim
+- Assets/Resources/Sprites/Games/FanClub/Animations/Stage/Bg_Spot.anim
 - Assets/Resources/Sprites/Games/FanClub/Animations/Fan/Head/FanFaceNormal.anim
 - Assets/Resources/Sprites/Games/FanClub/fanClub_DVLight.png
 - Assets/Resources/Sprites/Games/FanClub/Animations/Arisa/Arrange/IdolDabArrange.anim
 - Assets/Resources/Sprites/Games/FanClub/Animations/Stage/Bg_Light.anim
 - Assets/Resources/Sprites/Games/FanClub/fanClub_DVParts.png
+- Assets/Resources/Sprites/Games/FanClub/Animations/Blue/Crap.anim
 - Assets/Resources/Games/fanClub.prefab
-- Assets/Resources/Sprites/Games/FanClub/Animations/Fan/FanPrepare.anim
+- Assets/Resources/Sprites/Games/FanClub/Materials/idol_wink_circle.mat
 - Assets/Resources/Sprites/Games/FanClub/Animations/Arisa/Arrange/IdolSquat1Arrange.anim
 - Assets/Resources/Sprites/Games/FanClub/Animations/Fan/FanCharge.anim
 - Assets/Resources/Sprites/Games/FanClub/Animations/Arisa/Long/IdolWink1.anim
+- Assets/Resources/Sprites/Games/FanClub/Animations/Blue/Beat.anim
 - Assets/Resources/Sprites/Games/FanClub/Animations/Arisa/Arrange/NoPoseArrange.anim
 - Assets/Resources/Prefabs/Games/FanClub/Fan.prefab
 - Assets/Resources/Sprites/Games/FanClub/Materials/NtrIdol_Spectator.mat
+- Assets/Resources/Sprites/Games/FanClub/Animations/Fan/FanPrepare.anim
 - Assets/Resources/Sfx/games/fanClub/play_jump.wav
 - Assets/Resources/Sprites/Games/FanClub/Animations/Arisa/Long/IdolCrap.anim
 - Assets/Resources/Sprites/Games/FanClub/Animations/Fan/FanBigReady.anim
 - Assets/Resources/Sprites/Games/FanClub/Animations/Fan/FanClap.anim
+- Assets/Resources/Sprites/Games/FanClub/Materials/NtrIdol_BackupR.mat
+- Assets/Resources/Prefabs/Games/FanClub/Blue.prefab
 - Assets/Resources/Sprites/Games/FanClub/Materials/idol_wink_star.mat
 - Assets/Resources/Sprites/Games/FanClub/Animations/Arisa/Long/IdolWink0.anim
 - Assets/Resources/Sfx/games/fanClub/crap_impact.wav
@@ -90,7 +96,9 @@ Assets:
 - Assets/Resources/Sprites/Games/FanClub/Animations/Fan/FanFree.anim
 - Assets/Resources/Sprites/Games/FanClub/Animations/Arisa/Long/IdolPeaceNoSync.anim
 - Assets/Resources/Sprites/Games/FanClub/Animations/Arisa/Long/IdolResponse.anim
+- Assets/Resources/Sprites/Games/FanClub/Animations/Blue/Jump.anim
 - Assets/Resources/Sprites/Games/FanClub/Animations/Arisa/Long/IdolBigCall0.anim
+- Assets/Resources/Sprites/Games/FanClub/Animations/Blue/Peace.anim
 - Assets/Resources/Sprites/Games/FanClub/Animations/Arisa/Arrange/IdolJumpArrange.anim
 - Assets/Resources/Sprites/Games/FanClub/Animations/Arisa/Arrange/IdolWink0Arrange.anim
 - Assets/Resources/Sprites/Games/FanClub/Animations/Fan/FanBeat.anim
@@ -99,8 +107,9 @@ Assets:
 - Assets/Resources/Sprites/Games/FanClub/Animations/Arisa/Long/IdolSquat0.anim
 - Assets/Resources/Sprites/Games/FanClub/Animations/Fan/Fan.controller
 - Assets/Resources/Sprites/Games/FanClub/Animations/Arisa/Arrange/IdolCrapArrange.anim
-- Assets/Resources/Sprites/Games/FanClub/idol_wink_circle.png
+- Assets/Resources/Prefabs/Games/FanClub/Arisa.prefab
 - Assets/Resources/Sprites/Games/FanClub/Animations/Arisa/Long/IdolCall0.anim
+- Assets/Resources/Sprites/Games/FanClub/idol_wink_circle.png
 - Assets/Resources/Sprites/Games/FanClub/Animations/Arisa/Arrange/IdolBeatArrange.anim
 - Assets/Resources/Sprites/Games/FanClub/Animations/Arisa/Arrange/IdolCall1Arrange.anim
 - Assets/Resources/Sprites/Games/FanClub/Animations/Arisa/Long/IdolSquat1.anim
@@ -115,6 +124,7 @@ Assets:
 - Assets/Resources/Sprites/Games/FanClub/Animations/Fan/NoPose.anim
 - Assets/Resources/Sprites/Games/FanClub/Animations/Arisa/Arrange/IdolPeaceNoSyncArrange.anim
 - Assets/Resources/Sprites/Games/FanClub/Animations/Stage/Bg.anim
+- Assets/Resources/Sprites/Games/FanClub/Animations/Blue/Blue.controller
 - Assets/Resources/Sfx/games/fanClub/arisa_dab.wav
 - Assets/Resources/Sprites/Games/FanClub/fanClub_IdolParts.png
 - Assets/Resources/Sprites/Games/FanClub/Animations/Arisa/Long/IdolBigCall1.anim
