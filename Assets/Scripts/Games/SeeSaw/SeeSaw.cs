@@ -228,7 +228,7 @@ namespace HeavenStudio.Games
             List<DynamicBeatmap.DynamicEntity> tempEvents = new List<DynamicBeatmap.DynamicEntity>();
             for (int i = 0; i < jumpEvents.Count; i++)
             {
-                if (jumpEvents[i].beat + jumpEvents[i].beat >= Conductor.instance.songPositionInBeats)
+                if (jumpEvents[i].beat >= Conductor.instance.songPositionInBeats)
                 {
                     tempEvents.Add(jumpEvents[i]);
                 }
@@ -252,10 +252,6 @@ namespace HeavenStudio.Games
             }
             tempEvents = tempEvents.Except(tempEvents2).ToList();
             allJumpEvents = tempEvents;
-            foreach (var jump in allJumpEvents)
-            {
-                Debug.Log(jump.beat);
-            }
         }
 
         private void Update()
