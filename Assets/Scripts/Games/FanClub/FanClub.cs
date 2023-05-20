@@ -142,21 +142,29 @@ namespace HeavenStudio.Games
         // userdata here
         [Header("Animators")]
         //stage
-        public Animator StageAnimator;
+        [SerializeField] Animator StageAnimator;
 
         [Header("Objects")]
-        public GameObject Arisa;
-        public GameObject ArisaRootMotion;
-        public GameObject ArisaShadow;
-        public GameObject spectator;
-        public GameObject spectatorAnchor;
+        // our girl
+        [SerializeField] GameObject Arisa;
+        [SerializeField] GameObject ArisaRootMotion;
+        [SerializeField] GameObject ArisaShadow;
 
-        public GameObject Blue;
-        public GameObject BlueRootMotion;
-        public GameObject BlueShadow;
+        // spectators
+        [SerializeField] GameObject spectator;
+        [SerializeField] GameObject spectatorAnchor;
+
+        // backup dancers
+        [SerializeField] GameObject Blue;
+        [SerializeField] GameObject BlueRootMotion;
+        [SerializeField] GameObject BlueShadow;
+
+        [SerializeField] GameObject Orange;
+        [SerializeField] GameObject OrangeRootMotion;
+        [SerializeField] GameObject OrangeShadow;
 
         [Header("References")]
-        public Material spectatorMat;
+        [SerializeField] Material spectatorMat;
 
         // end userdata
 
@@ -165,19 +173,23 @@ namespace HeavenStudio.Games
 
         // blue's animation controller
         private Animator backupRAnimator;
+
+        // orange's animation controller
+        private Animator backupLAnimator;
         
         //spectators
+        private NtrIdolFan Player;
         private List<GameObject> Spectators;
-        public NtrIdolFan Player;
 
         //bop-type animations
-        public GameEvent bop = new GameEvent();
-        public GameEvent specBop = new GameEvent();
-        public GameEvent noBop = new GameEvent();
-        public GameEvent noResponse = new GameEvent();
-        public GameEvent noCall = new GameEvent();
-        public GameEvent noSpecBop = new GameEvent();
+        private GameEvent bop = new GameEvent();
+        private GameEvent specBop = new GameEvent();
+        private GameEvent noBop = new GameEvent();
+        private GameEvent noResponse = new GameEvent();
+        private GameEvent noCall = new GameEvent();
+        private GameEvent noSpecBop = new GameEvent();
 
+        private float idolJumpStartTime = Single.MinValue;
         private static int performanceType = (int) IdolPerformanceType.Normal;
         private bool responseToggle = false;
         private static float wantHais = Single.MinValue;
@@ -185,7 +197,6 @@ namespace HeavenStudio.Games
         private static int wantKamoneType = (int) KamoneResponseType.Through;
         private static bool wantKamoneAlt = false;
         private static float wantBigReady = Single.MinValue;
-        public float idolJumpStartTime = Single.MinValue;
         private bool hasJumped = false;
         private bool goBopIdol = true;
         private bool goBopSpec = true;
@@ -200,6 +211,8 @@ namespace HeavenStudio.Games
             instance = this;
             Spectators = new List<GameObject>();
             idolAnimator = Arisa.GetComponent<Animator>();
+            backupRAnimator = Blue.GetComponent<Animator>();
+            backupLAnimator = Orange.GetComponent<Animator>();
 
             // procedurally spawning the spectators
             // from middle of viewport:
