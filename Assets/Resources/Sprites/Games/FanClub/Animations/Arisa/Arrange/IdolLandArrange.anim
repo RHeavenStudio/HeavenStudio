@@ -1780,6 +1780,25 @@ AnimationClip:
     path: idol_torso/idol_Clt_body_up
     classID: 212
     script: {fileID: 0}
+  - curve:
+      serializedVersion: 2
+      m_Curve:
+      - serializedVersion: 3
+        time: 0
+        value: 1
+        inSlope: Infinity
+        outSlope: Infinity
+        tangentMode: 103
+        weightedMode: 0
+        inWeight: 0
+        outWeight: 0
+      m_PreInfinity: 2
+      m_PostInfinity: 2
+      m_RotationOrder: 4
+    attribute: m_Enabled
+    path: idol_torso/idol_Clt_body_down0
+    classID: 212
+    script: {fileID: 0}
   m_PPtrCurves:
   - curve:
     - time: 0
@@ -1907,7 +1926,7 @@ AnimationClip:
     - time: 0
       value: {fileID: 6636417687825593121, guid: 3ceb27c8c676e7a428cf6e15cd11b7ef, type: 3}
     - time: 0.4
-      value: {fileID: 6636417687825593121, guid: 3ceb27c8c676e7a428cf6e15cd11b7ef, type: 3}
+      value: {fileID: -1062733307327837823, guid: 3ceb27c8c676e7a428cf6e15cd11b7ef, type: 3}
     attribute: m_Sprite
     path: idol_torso/idol_Clt_body_down0
     classID: 212
@@ -2207,6 +2226,13 @@ AnimationClip:
       customType: 26
       isPPtrCurve: 0
     - serializedVersion: 2
+      path: 759741572
+      attribute: 3305885265
+      script: {fileID: 0}
+      typeID: 212
+      customType: 0
+      isPPtrCurve: 0
+    - serializedVersion: 2
       path: 2085883815
       attribute: 0
       script: {fileID: 0}
@@ -2321,7 +2347,7 @@ AnimationClip:
     - {fileID: 7431816273384491690, guid: 3ceb27c8c676e7a428cf6e15cd11b7ef, type: 3}
     - {fileID: 0}
     - {fileID: 6636417687825593121, guid: 3ceb27c8c676e7a428cf6e15cd11b7ef, type: 3}
-    - {fileID: 6636417687825593121, guid: 3ceb27c8c676e7a428cf6e15cd11b7ef, type: 3}
+    - {fileID: -1062733307327837823, guid: 3ceb27c8c676e7a428cf6e15cd11b7ef, type: 3}
   m_AnimationClipSettings:
     serializedVersion: 2
     m_AdditiveReferencePoseClip: {fileID: 0}
@@ -7133,6 +7159,25 @@ AnimationClip:
     attribute: localEulerAnglesRaw.z
     path: idol_torso/idol_Clt_body_down0
     classID: 4
+    script: {fileID: 0}
+  - curve:
+      serializedVersion: 2
+      m_Curve:
+      - serializedVersion: 3
+        time: 0
+        value: 1
+        inSlope: Infinity
+        outSlope: Infinity
+        tangentMode: 103
+        weightedMode: 0
+        inWeight: 0
+        outWeight: 0
+      m_PreInfinity: 2
+      m_PostInfinity: 2
+      m_RotationOrder: 4
+    attribute: m_Enabled
+    path: idol_torso/idol_Clt_body_down0
+    classID: 212
     script: {fileID: 0}
   m_EulerEditorCurves:
   - curve:
