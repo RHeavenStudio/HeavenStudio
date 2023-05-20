@@ -50,6 +50,8 @@ namespace HeavenStudio.Games.Scripts_SeeSaw
         [SerializeField] Transform groundTrans;
         bool hasChangedAnimMidAir;
         [SerializeField] ParticleSystem deathParticle;
+        float wantChoke = -1;
+        float wantChokeLength;
 
         [SerializeField] private Animator invertAnim;
 
@@ -168,7 +170,12 @@ namespace HeavenStudio.Games.Scripts_SeeSaw
 
         public void Choke(float beat, float length)
         {
-            if (!canBop || currentState != JumpState.None || dead) return;
+            if (!canBop || currentState != JumpState.None || dead) 
+            {
+                wantChoke = beat;
+                wantChokeLength = length;
+                return;
+            } 
             dead = true;
             anim.DoScaledAnimationAsync("Choke_" + (see ? "See" : "Saw") + "_Intro", 0.5f);
             Jukebox.PlayOneShotGame("seeSaw/explosion" + (see ? "Black" : "White"), beat + length);
@@ -203,9 +210,20 @@ namespace HeavenStudio.Games.Scripts_SeeSaw
                     break;
                 case JumpState.EndJumpOut:
                 case JumpState.EndJumpIn:
-                    anim.Play("NeutralSee", 0, 0);
                     transform.position = groundTrans.position;
                     SetState(JumpState.None, 0);
+                    if (wantChoke >= Conductor.instance.songPositionInBeats - 0.25f && wantChoke <= Conductor.instance.songPositionInBeats + 0.25f)
+                    {
+                        Choke(wantChoke, wantChokeLength);
+                    }
+                    else if (see ? game.seeShouldBop : game.sawShouldBop)
+                    {
+                        Bop();
+                    }
+                    else
+                    {
+                        anim.Play("NeutralSee", 0, 0);
+                    }
                     return;
             }
             if (landType is LandType.Big && !see)
