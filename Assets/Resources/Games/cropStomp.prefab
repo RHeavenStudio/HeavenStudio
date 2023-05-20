@@ -2251,7 +2251,7 @@ ParticleSystem:
     boxThickness: {x: 0, y: 0, z: 0}
     radiusThickness: 0.5
     donutRadius: 0.2
-    m_Position: {x: 0, y: 0, z: 0}
+    m_Position: {x: 0, y: -0.45044374, z: 0}
     m_Rotation: {x: -0, y: 0, z: 74.38886}
     m_Scale: {x: 1, y: 1, z: 1}
     placementMode: 0
@@ -2561,7 +2561,7 @@ ParticleSystem:
       countCurve:
         serializedVersion: 2
         minMaxState: 0
-        scalar: 5
+        scalar: 3
         minScalar: 30
         maxCurve:
           serializedVersion: 2
