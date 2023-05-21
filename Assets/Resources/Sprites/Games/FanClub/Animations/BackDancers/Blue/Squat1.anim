@@ -315,7 +315,7 @@ AnimationClip:
       m_Curve:
       - serializedVersion: 3
         time: 0
-        value: 1
+        value: 2
         inSlope: Infinity
         outSlope: Infinity
         tangentMode: 103
@@ -384,6 +384,25 @@ AnimationClip:
       m_RotationOrder: 4
     attribute: m_FlipX
     path: idol_torso/idol_arm_R/idol_hand_R
+    classID: 212
+    script: {fileID: 0}
+  - curve:
+      serializedVersion: 2
+      m_Curve:
+      - serializedVersion: 3
+        time: 0
+        value: 2
+        inSlope: Infinity
+        outSlope: Infinity
+        tangentMode: 103
+        weightedMode: 0
+        inWeight: 0
+        outWeight: 0
+      m_PreInfinity: 2
+      m_PostInfinity: 2
+      m_RotationOrder: 4
+    attribute: m_SortingOrder
+    path: idol_torso/idol_arm_R
     classID: 212
     script: {fileID: 0}
   m_PPtrCurves:
@@ -582,6 +601,13 @@ AnimationClip:
       script: {fileID: 0}
       typeID: 212
       customType: 0
+      isPPtrCurve: 0
+    - serializedVersion: 2
+      path: 4050720444
+      attribute: 3762991556
+      script: {fileID: 0}
+      typeID: 212
+      customType: 26
       isPPtrCurve: 0
     - serializedVersion: 2
       path: 672773432
@@ -1301,7 +1327,7 @@ AnimationClip:
       m_Curve:
       - serializedVersion: 3
         time: 0
-        value: 1
+        value: 2
         inSlope: Infinity
         outSlope: Infinity
         tangentMode: 103
@@ -1712,6 +1738,25 @@ AnimationClip:
       m_RotationOrder: 4
     attribute: m_FlipX
     path: idol_torso/idol_arm_R/idol_hand_R
+    classID: 212
+    script: {fileID: 0}
+  - curve:
+      serializedVersion: 2
+      m_Curve:
+      - serializedVersion: 3
+        time: 0
+        value: 2
+        inSlope: Infinity
+        outSlope: Infinity
+        tangentMode: 103
+        weightedMode: 0
+        inWeight: 0
+        outWeight: 0
+      m_PreInfinity: 2
+      m_PostInfinity: 2
+      m_RotationOrder: 4
+    attribute: m_SortingOrder
+    path: idol_torso/idol_arm_R
     classID: 212
     script: {fileID: 0}
   m_EulerEditorCurves:

@@ -60,11 +60,12 @@ namespace HeavenStudio.Games.Loaders
                     },
                     new GameAction("play idol animation", "Idol Coreography")
                     {
-                        function = delegate { var e = eventCaller.currentEntity; FanClub.instance.PlayAnim(e.beat, e.length, e["type"]); },
+                        function = delegate { var e = eventCaller.currentEntity; FanClub.instance.PlayAnim(e.beat, e.length, e["type"], e["who"]); },
                         resizable = true, 
                         parameters = new List<Param>()
                         {
-                            new Param("type", FanClub.IdolAnimations.Bop, "Animation", "Animation to play")
+                            new Param("type", FanClub.IdolAnimations.Bop, "Animation", "Animation to play"),
+                            new Param("who", FanClub.IdolType.All, "Target Idol", "Target to play the animation on")
                         }
                     },
                     new GameAction("play stage animation", "Stage Coreography")
@@ -74,6 +75,17 @@ namespace HeavenStudio.Games.Loaders
                         parameters = new List<Param>()
                         {
                             new Param("type", FanClub.StageAnimations.Flash, "Animation", "Animation to play")
+                        }
+                    },
+                    new GameAction("friend walk", "Backup Dancers Entrance")
+                    {
+                        function = delegate { var e = eventCaller.currentEntity; FanClub.instance.DancerTravel(e.beat, e.length, e["exit"], e["instant"]); },
+                        defaultLength = 16f,
+                        resizable = true, 
+                        parameters = new List<Param>()
+                        {
+                            new Param("exit", false, "Exit", "Backup dancers exit instead"),
+                            new Param("instant", false, "Instant Travel", "Backup dancers instantly finish their travel"),
                         }
                     },
                     new GameAction("set performance type", "Coreography Type")
@@ -138,6 +150,12 @@ namespace HeavenStudio.Games
             Arrange,
             // Tour(this one is fan made so ?)
         }
+        public enum IdolType {
+            All,
+            Idol,
+            LeftDancer,
+            RightDancer
+        }
 
         // userdata here
         [Header("Animators")]
@@ -155,13 +173,8 @@ namespace HeavenStudio.Games
         [SerializeField] GameObject spectatorAnchor;
 
         // backup dancers
-        [SerializeField] GameObject Blue;
-        [SerializeField] GameObject BlueRootMotion;
-        [SerializeField] GameObject BlueShadow;
-
-        [SerializeField] GameObject Orange;
-        [SerializeField] GameObject OrangeRootMotion;
-        [SerializeField] GameObject OrangeShadow;
+        [SerializeField] NtrIdolAmie Blue;
+        [SerializeField] NtrIdolAmie Orange;
 
         [Header("References")]
         [SerializeField] Material spectatorMat;
@@ -262,6 +275,31 @@ namespace HeavenStudio.Games
             ToSpot();
         }
 
+        private void Start()
+        {
+            Blue.Init();
+            Orange.Init();
+
+            var amieWalkEvts = EventCaller.GetAllInGameManagerList("fanClub", new string[] { "friend walk" });
+            foreach (var e in amieWalkEvts)
+            {
+                if (e.beat <= Conductor.instance.songPositionInBeatsAsDouble)
+                {
+                    DancerTravel(e.beat, e.length, e["exit"], e["instant"]);
+                }
+            }
+
+            FanClub.SetPerformanceType((int) IdolPerformanceType.Normal);
+            var choreoTypeEvts = EventCaller.GetAllInGameManagerList("fanClub", new string[] { "set performance type" });
+            foreach (var e in amieWalkEvts)
+            {
+                if (e.beat <= Conductor.instance.songPositionInBeatsAsDouble)
+                {
+                    FanClub.SetPerformanceType(e["type"]);
+                }
+            }
+        }
+
         public static string GetPerformanceSuffix()
         {
             switch (performanceType)
@@ -309,7 +347,11 @@ namespace HeavenStudio.Games
                 if (goBopIdol)
                 {
                     if (!(cond.songPositionInBeats >= noBop.startBeat && cond.songPositionInBeats < noBop.startBeat + noBop.length))
+                    {
                         idolAnimator.Play("IdolBeat" + GetPerformanceSuffix(), 0, 0);
+                        Blue.PlayAnimState("Beat");
+                        Orange.PlayAnimState("Beat");
+                    }
                 }
             }
 
@@ -330,19 +372,12 @@ namespace HeavenStudio.Games
                 hasJumped = true;
                 float yMul = jumpPos * 2f - 1f;
                 float yWeight = -(yMul*yMul) + 1f;
-                //TODO: idol start position
                 ArisaRootMotion.transform.localPosition = new Vector3(0, 2f * yWeight + 0.25f);
                 ArisaShadow.transform.localScale = new Vector3((1f-yWeight*0.8f) * IDOL_SHADOW_SCALE, (1f-yWeight*0.8f) * IDOL_SHADOW_SCALE, 1f);
             }
             else
             {
-                if (hasJumped)
-                {
-                    //DisableBop(cond.songPositionInBeats, 1.5f);
-                    //TODO: landing anim
-                }
                 idolJumpStartTime = Single.MinValue;
-                //TODO: idol start position
                 ArisaRootMotion.transform.localPosition = new Vector3(0, 0);
                 ArisaShadow.transform.localScale = new Vector3(IDOL_SHADOW_SCALE, IDOL_SHADOW_SCALE, 1f);
             }
@@ -367,12 +402,16 @@ namespace HeavenStudio.Games
             {
                 case (int)IdolBopType.Idol:
                     idolAnimator.Play("IdolBeat" + GetPerformanceSuffix(), 0, 0);
+                    Blue.PlayAnimState("Beat");
+                    Orange.PlayAnimState("Beat");
                     break;
                 case (int)IdolBopType.Spectators:
                     BopAll();
                     break;
                 case (int)IdolBopType.Both:
                     idolAnimator.Play("IdolBeat" + GetPerformanceSuffix(), 0, 0);
+                    Blue.PlayAnimState("Beat");
+                    Orange.PlayAnimState("Beat");
                     BopAll();
                     break;
                 default:
@@ -415,66 +454,74 @@ namespace HeavenStudio.Games
             }
         }
 
-        public void PlayAnim(float beat, float length, int type)
+        public void PlayAnim(float beat, float length, int type, int who)
         {
             idolJumpStartTime = Single.MinValue;
             DisableResponse(beat, length + 0.5f);
             DisableBop(beat, length + 0.5f);
             DisableCall(beat, length + 0.5f);
 
-            switch (type)
+            if (who is (int)IdolType.All or (int)IdolType.LeftDancer)
+                Orange.PlayAnim(beat, length, type);
+            if (who is (int)IdolType.All or (int)IdolType.RightDancer)
+                Blue.PlayAnim(beat, length, type);
+
+            if (who is (int)IdolType.All or (int)IdolType.Idol)
             {
-                case (int) IdolAnimations.Bop:
-                    idolAnimator.Play("IdolBeat" + GetPerformanceSuffix(), -1, 0);
-                    break;
-                case (int) IdolAnimations.PeaceVocal:
-                    idolAnimator.Play("IdolPeace" + GetPerformanceSuffix(), -1, 0);
-                    break;
-                case (int) IdolAnimations.Peace:
-                    idolAnimator.Play("IdolPeaceNoSync" + GetPerformanceSuffix(), -1, 0);
-                    break;
-                case (int) IdolAnimations.Clap:
-                    idolAnimator.Play("IdolCrap" + GetPerformanceSuffix(), -1, 0);
-                    break;
-                case (int) IdolAnimations.Call:
-                    BeatAction.New(Arisa, new List<BeatAction.Action>()
+                switch (type)
+                {
+                    case (int)IdolAnimations.Bop:
+                        idolAnimator.Play("IdolBeat" + GetPerformanceSuffix(), -1, 0);
+                        break;
+                    case (int)IdolAnimations.PeaceVocal:
+                        idolAnimator.Play("IdolPeace" + GetPerformanceSuffix(), -1, 0);
+                        break;
+                    case (int)IdolAnimations.Peace:
+                        idolAnimator.Play("IdolPeaceNoSync" + GetPerformanceSuffix(), -1, 0);
+                        break;
+                    case (int)IdolAnimations.Clap:
+                        idolAnimator.Play("IdolCrap" + GetPerformanceSuffix(), -1, 0);
+                        break;
+                    case (int)IdolAnimations.Call:
+                        BeatAction.New(Arisa, new List<BeatAction.Action>()
                     {
                         new BeatAction.Action(beat,             delegate { Arisa.GetComponent<Animator>().Play("IdolCall0" + GetPerformanceSuffix(), -1, 0); }),
                         new BeatAction.Action(beat + 0.75f,     delegate { Arisa.GetComponent<Animator>().Play("IdolCall1" + GetPerformanceSuffix(), -1, 0); }),
                     });
-                    break;
-                case (int) IdolAnimations.Response:
-                    idolAnimator.Play("IdolResponse" + GetPerformanceSuffix(), -1, 0);
-                    break;
-                case (int) IdolAnimations.Jump:
-                    DoIdolJump(beat, length);
-                    break;
-                case (int) IdolAnimations.BigCall:
-                    BeatAction.New(Arisa, new List<BeatAction.Action>()
+                        break;
+                    case (int)IdolAnimations.Response:
+                        idolAnimator.Play("IdolResponse" + GetPerformanceSuffix(), -1, 0);
+                        break;
+                    case (int)IdolAnimations.Jump:
+                        DoIdolJump(beat, length);
+                        break;
+                    case (int)IdolAnimations.BigCall:
+                        BeatAction.New(Arisa, new List<BeatAction.Action>()
                     {
                         new BeatAction.Action(beat,             delegate { Arisa.GetComponent<Animator>().Play("IdolBigCall0" + GetPerformanceSuffix(), -1, 0); }),
                         new BeatAction.Action(beat + length,    delegate { Arisa.GetComponent<Animator>().Play("IdolBigCall1" + GetPerformanceSuffix(), -1, 0); }),
                     });
-                    break;
-                case (int) IdolAnimations.Squat:
-                    BeatAction.New(Arisa, new List<BeatAction.Action>()
+                        break;
+                    case (int)IdolAnimations.Squat:
+                        BeatAction.New(Arisa, new List<BeatAction.Action>()
                     {
                         new BeatAction.Action(beat,             delegate { Arisa.GetComponent<Animator>().Play("IdolSquat0" + GetPerformanceSuffix(), -1, 0); }),
                         new BeatAction.Action(beat + length,    delegate { Arisa.GetComponent<Animator>().Play("IdolSquat1" + GetPerformanceSuffix(), -1, 0); }),
                     });
-                    break;
-                case (int) IdolAnimations.Wink:
-                    BeatAction.New(Arisa, new List<BeatAction.Action>()
+                        break;
+                    case (int)IdolAnimations.Wink:
+                        BeatAction.New(Arisa, new List<BeatAction.Action>()
                     {
                         new BeatAction.Action(beat,             delegate { Arisa.GetComponent<Animator>().Play("IdolWink0" + GetPerformanceSuffix(), -1, 0); }),
                         new BeatAction.Action(beat + length,    delegate { Arisa.GetComponent<Animator>().Play("IdolWink1" + GetPerformanceSuffix(), -1, 0); }),
                     });
-                    break;
-                case (int) IdolAnimations.Dab:
-                    idolAnimator.Play("IdolDab" + GetPerformanceSuffix(), -1, 0);
-                    Jukebox.PlayOneShotGame("fanClub/arisa_dab");
-                    break;
-                default: break;
+                        break;
+                    case (int)IdolAnimations.Dab:
+                        idolAnimator.Play("IdolDab" + GetPerformanceSuffix(), -1, 0);
+                        Jukebox.PlayOneShotGame("fanClub/arisa_dab");
+                        break;
+                    default: break;
+                }
             }
         }
 
@@ -500,6 +547,8 @@ namespace HeavenStudio.Games
         public void ToSpot(bool unspot = true)
         {
             Arisa.GetComponent<NtrIdolAri>().ToSpot(unspot);
+            Blue.ToSpot(unspot);
+            Orange.ToSpot(unspot);
             if (unspot)
                 spectatorMat.SetColor("_Color", new Color(1, 1, 1, 1));
             else
@@ -527,6 +576,8 @@ namespace HeavenStudio.Games
                 if (!(Conductor.instance.songPositionInBeats >= noResponse.startBeat && Conductor.instance.songPositionInBeats < noResponse.startBeat + noResponse.length))
                 {
                     idolAnimator.Play("IdolCrap" + GetPerformanceSuffix(), -1, 0);
+                    Blue.PlayAnimState("Crap");
+                    Orange.PlayAnimState("Crap");
                 }
             }
         }
@@ -539,6 +590,8 @@ namespace HeavenStudio.Games
                     idolAnimator.Play("IdolPeace" + GetPerformanceSuffix(), -1, 0);
                 else
                     idolAnimator.Play("IdolPeaceNoSync" + GetPerformanceSuffix(), -1, 0);
+                Blue.PlayAnimState("Peace");
+                Orange.PlayAnimState("Peace");
             }
         }
 
@@ -629,22 +682,25 @@ namespace HeavenStudio.Games
 
             BeatAction.New(Arisa, new List<BeatAction.Action>()
             {
-                new BeatAction.Action(beat,                         delegate { DoIdolCall(0, isBig); }),
+                new BeatAction.Action(beat,                         delegate { DoIdolCall(0, isBig); Blue.PlayAnimState("Beat"); Orange.PlayAnimState("Beat"); }),
                 new BeatAction.Action(beat + (isBig ? 1f : 0.75f),  delegate { DoIdolCall(1, isBig); }),
-                new BeatAction.Action(beat + 1f,    delegate { PlayPrepare(); }),
+                new BeatAction.Action(beat + 1f,    delegate { PlayPrepare(); Blue.PlayAnimState("Beat"); Orange.PlayAnimState("Beat");  }),
 
-                new BeatAction.Action(beat + 2f,    delegate { PlayLongClap(beat + 2f); DoIdolResponse(); }),
-                new BeatAction.Action(beat + 3f,    delegate { DoIdolResponse(); }),
+                new BeatAction.Action(beat + 2f,    delegate { PlayLongClap(beat + 2f); DoIdolResponse(); Blue.PlayAnimState("Beat"); Orange.PlayAnimState("Beat");  }),
+                new BeatAction.Action(beat + 3f,    delegate { DoIdolResponse(); Blue.PlayAnimState("Beat"); Orange.PlayAnimState("Beat");  }),
                 new BeatAction.Action(beat + 3.5f,  delegate { PlayOneClap(beat + 3.5f); }),
-                new BeatAction.Action(beat + 4f,    delegate { PlayChargeClap(beat + 4f); DoIdolResponse(); }),
+                new BeatAction.Action(beat + 4f,    delegate { PlayChargeClap(beat + 4f); DoIdolResponse(); Blue.PlayAnimState("Beat"); Orange.PlayAnimState("Beat");  }),
                 new BeatAction.Action(beat + 5f,    delegate { PlayJump(beat + 5f);
                     if (doJump) 
                     {
                         DoIdolJump(beat + 5f);
+                        Blue.DoIdolJump(beat + 5f);
+                        Orange.DoIdolJump(beat + 5f);
                     }
                     else
                     {
                         DoIdolResponse();
+                        Blue.PlayAnimState("Beat"); Orange.PlayAnimState("Beat"); 
                     }
                 }),
             });
@@ -820,6 +876,20 @@ namespace HeavenStudio.Games
                 if (i == 3)
                     continue;
                 Spectators[i].GetComponent<NtrIdolFan>().MakeAngry(i > 3);
+            }
+        }
+
+        public void DancerTravel(float beat, float length, bool exit, bool instant)
+        {
+            if (instant)
+            {
+                Blue.FinishEntrance(exit);
+                Orange.FinishEntrance(exit);
+            }
+            else
+            {
+                Blue.StartEntrance(beat, length, exit);
+                Orange.StartEntrance(beat, length, exit);
             }
         }
     }

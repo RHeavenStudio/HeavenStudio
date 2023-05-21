@@ -5115,7 +5115,7 @@ SpriteRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 1
+  m_SortingOrder: 2
   m_Sprite: {fileID: -415898400, guid: 9b797d05e70a609439baca5da1b256c1, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
@@ -5138,6 +5138,7 @@ GameObject:
   - component: {fileID: 1181184590842452136}
   - component: {fileID: 8818229229907938739}
   - component: {fileID: 482717600028097400}
+  - component: {fileID: 1717744287129578326}
   m_Layer: 0
   m_Name: Blue
   m_TagString: Untagged
@@ -5198,6 +5199,26 @@ SortingGroup:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 1
+--- !u!114 &1717744287129578326
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3229957372594480831}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a70ba5b3324088f419aaf7284e75365c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  stepDistance: 1
+  startPostion: 0
+  rootYPos: 0
+  clapEffect: {fileID: 0}
+  winkEffect: {fileID: 0}
+  rootTransform: {fileID: 0}
+  shadow: {fileID: 0}
+  coreMat: {fileID: 0}
 --- !u!1 &3314940652067462793
 GameObject:
   m_ObjectHideFlags: 0
