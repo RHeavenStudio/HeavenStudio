@@ -99,6 +99,10 @@ namespace HeavenStudio.Games.Loaders
                         },
                         inactiveFunction = delegate { var e = eventCaller.currentEntity; FanClub.SetPerformanceType(e["type"]); }
                     },
+                    new GameAction("finish", "Applause")
+                    {
+                        function = delegate { var e = eventCaller.currentEntity; FanClub.instance.FinalCheer(e.beat); }, 
+                    },
                 },
                 new List<string>() {"ntr", "normal"},
                 "ntridol", "jp",
@@ -181,6 +185,9 @@ namespace HeavenStudio.Games
 
         // end userdata
 
+        public bool JudgementPaused { get => noJudgement; }
+        public bool JudgementInputPaused { get => noJudgementInput; set => noJudgementInput = value;}
+
         //arisa's animation controller
         private Animator idolAnimator;
 
@@ -213,6 +220,8 @@ namespace HeavenStudio.Games
         private bool hasJumped = false;
         private bool goBopIdol = true;
         private bool goBopSpec = true;
+        private bool noJudgement = false;
+        private bool noJudgementInput = false;
 
         //game scene
         public static FanClub instance;
@@ -273,6 +282,8 @@ namespace HeavenStudio.Games
             }
 
             ToSpot();
+            noJudgement = false;
+            noJudgementInput = false;
         }
 
         private void Start()
@@ -291,7 +302,7 @@ namespace HeavenStudio.Games
 
             FanClub.SetPerformanceType((int) IdolPerformanceType.Normal);
             var choreoTypeEvts = EventCaller.GetAllInGameManagerList("fanClub", new string[] { "set performance type" });
-            foreach (var e in amieWalkEvts)
+            foreach (var e in choreoTypeEvts)
             {
                 if (e.beat <= Conductor.instance.songPositionInBeatsAsDouble)
                 {
@@ -821,13 +832,35 @@ namespace HeavenStudio.Games
             }
         }
 
-        private void PlayOneClap(float beat)
+        private void PlayOneClap(float beat, int who = -1)
         {
-            BeatAction.New(this.gameObject, new List<BeatAction.Action>()
+            if (who != -1) 
             {
-                new BeatAction.Action(beat, delegate { PlayAnimationAll("FanClap", true, true);}),
-                new BeatAction.Action(beat + 0.1f, delegate { PlayAnimationAll("FanFree", true, true);}),
-            });
+                if (who == 3)
+                {
+                    if (GameManager.instance.autoplay)
+                    {
+                        Player.ClapStart(true, false, 0.1f);
+                    }
+                    return;
+                }
+                // Jukebox.PlayOneShotGame("fanClub/play_clap", volume: 0.08f);
+                Jukebox.PlayOneShotGame("fanClub/crap_impact", pitch: UnityEngine.Random.Range(0.95f, 1.05f), volume: 0.1f);
+                BeatAction.New(Spectators[who], new List<BeatAction.Action>()
+                {
+                    new BeatAction.Action(beat, delegate { Spectators[who].GetComponent<Animator>().Play("FanClap", -1, 0); }),
+                    new BeatAction.Action(beat + 0.1f, delegate { Spectators[who].GetComponent<Animator>().Play("FanFree", -1, 0); }),
+
+                });
+            }
+            else
+            {
+                BeatAction.New(this.gameObject, new List<BeatAction.Action>()
+                {
+                    new BeatAction.Action(beat, delegate { PlayAnimationAll("FanClap", true, true);}),
+                    new BeatAction.Action(beat + 0.1f, delegate { PlayAnimationAll("FanFree", true, true);}),
+                });
+            }
         }
 
         private void PlayLongClap(float beat)
@@ -890,6 +923,69 @@ namespace HeavenStudio.Games
             {
                 Blue.StartEntrance(beat, length, exit);
                 Orange.StartEntrance(beat, length, exit);
+            }
+        }
+
+        public void FinalCheer(float beat)
+        {
+            if (noJudgement) return;
+            noJudgement = true;
+            noJudgementInput = false;
+            goBopSpec = false;
+
+            // recreation of sub61
+            BeatAction.New(this.gameObject, new List<BeatAction.Action>()
+            {
+                new BeatAction.Action(beat, delegate { StartClapLoop(beat, 1);}),
+                
+                new BeatAction.Action(beat + (2f/3f), delegate { StartClapLoop(beat + (2f/3f), 0);}),
+                new BeatAction.Action(beat + (2f/3f), delegate { StartClapLoop(beat + (2f/3f), 3);}),
+
+                new BeatAction.Action(beat + (2f/3f) + 0.25f, delegate { StartClapLoop(beat + (2f/3f) + 0.25f, 6);}),
+                new BeatAction.Action(beat + (2f/3f) + 0.25f, delegate { StartClapLoop(beat + (2f/3f) + 0.25f, 8);}),
+
+                new BeatAction.Action(beat + (2f/3f) + 0.5f, delegate { StartClapLoop(beat + (2f/3f) + 0.5f, 7);}),
+                new BeatAction.Action(beat + (2f/3f) + 0.5f, delegate { StartClapLoop(beat + (2f/3f) + 0.5f, 4);}),
+
+                new BeatAction.Action(beat + 1.5f, delegate { StartClapLoop(beat + 1.5f, 2);}),
+                new BeatAction.Action(beat + 1.5f, delegate { StartClapLoop(beat + 1.5f, 11);}),
+
+                new BeatAction.Action(beat + 1.5f + (1f/3f), delegate { StartClapLoop(beat + 1.5f + (1f/3f), 5);}),
+                new BeatAction.Action(beat + 1.5f + (1f/3f), delegate { StartClapLoop(beat + 1.5f + (1f/3f), 10);}),
+
+                new BeatAction.Action(beat + 2f + (1f/3f), delegate { StartClapLoop(beat + 2f + (1f/3f), 9);}),
+
+                // 0x113
+                new BeatAction.Action(beat + 6f , delegate { CheckApplause();}),
+            });
+
+            MultiSound.Play(new MultiSound.Sound[] {
+                new MultiSound.Sound("fanClub/play_jump", beat,                     pitch: 1f, volume: 0.6f),
+                new MultiSound.Sound("fanClub/play_jump", beat + (2f/3f),           pitch: 0.98f, volume: 0.5f),
+                new MultiSound.Sound("fanClub/play_jump", beat + (2f/3f) + 0.25f,   pitch: UnityEngine.Random.Range(0.9f, 1.05f), volume: 0.6f),
+                new MultiSound.Sound("fanClub/play_jump", beat + (2f/3f) + 0.5f,    pitch: UnityEngine.Random.Range(0.9f, 1.05f), volume: 0.6f),
+                new MultiSound.Sound("fanClub/play_jump", beat + 1.5f,              pitch: UnityEngine.Random.Range(0.9f, 1.05f), volume: 0.6f),
+                new MultiSound.Sound("fanClub/play_jump", beat + 1.5f + (1f/3f),    pitch: UnityEngine.Random.Range(0.9f, 1.05f), volume: 0.6f),
+                new MultiSound.Sound("fanClub/play_jump", beat + 2f + (1f/3f),      pitch: UnityEngine.Random.Range(0.9f, 1.05f), volume: 0.6f),
+            });
+        }
+
+        void StartClapLoop(float beat, int who)
+        {
+            BeatAction.New(Spectators[who], new List<BeatAction.Action>()
+            {
+                new BeatAction.Action(beat, delegate { PlayOneClap(beat, who); }),
+                new BeatAction.Action(beat + 0.5f, delegate { StartClapLoop(beat + 0.5f, who); }),
+            });
+        }
+
+        void CheckApplause()
+        {
+            if (!noJudgementInput)
+            {
+                AngerOnMiss();
+                // fuck you
+                FanClub.instance.ScoreMiss(69);
             }
         }
     }
