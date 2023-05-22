@@ -43,6 +43,18 @@ namespace HeavenStudio.RIQEditor
         [SerializeField] private TMP_Text PlaybackBeatTXT;
         private List<RectTransform> beatLines = new();
 
+        [Header("Public Components")] 
+        public TimelineZoom TimelineZoom;
+
+        private void Start()
+        {
+            UpdateImportant();
+            UpdatePerBeat();
+            CalculateLeftRight();
+            
+            OnZoom(zoom);
+        }
+
         public void Load()
         {
             BlockManager.Load();
@@ -66,18 +78,18 @@ namespace HeavenStudio.RIQEditor
                 }
             }
 
+            for (var i = 0; i < beatLines.Count; i++)
+            {
+                var line = beatLines[i];
+                line.anchoredPosition = new Vector2((i * pixelsPerBeat) - 2, line.anchoredPosition.y);
+            }
+
             PlaybackSlider.anchoredPosition =
                 PlaybackSlider.anchoredPosition.ModifyX(Conductor.instance.songPositionInBeats * pixelsPerBeat);
             PlaybackBeatTXT.text = Conductor.instance.songPositionInBeats.ToString("F");
 
             BeatsHolder.anchoredPosition = BeatsHolder.anchoredPosition.ModifyX(Mathp.Round2Nearest(-Content.anchoredPosition.x, pixelsPerBeat));
-            
-            if (zoom != lastZoom)
-            {
-                OnZoom();
-            }
-            lastZoom = zoom;
-            
+
             BlockManager.UpdateBlockManager();
         }
 
@@ -105,14 +117,14 @@ namespace HeavenStudio.RIQEditor
         }
 
         
-        public void OnZoom()
+        public void OnZoom(float zoom)
         {
             foreach (var t in beatLines)
                 Destroy(t.gameObject);
 
             beatLines.Clear();
 
-            var newLineCount = Mathf.RoundToInt(timelineWidth / pixelsPerBeat) + 2;
+            var newLineCount = Mathf.RoundToInt(timelineWidth / (100 * zoom)) + 2;
 
             for (int i = 0; i < newLineCount; i++)
             {

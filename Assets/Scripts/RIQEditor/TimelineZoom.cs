@@ -1,36 +1,43 @@
 using System;
+using Starpelly;
 using UnityEngine;
 using UnityEngine.EventSystems;
 
 namespace HeavenStudio.RIQEditor
 {
-    public class TimelineZoom : MonoBehaviour, IScrollHandler
+    public class TimelineZoom : MonoBehaviour, IScrollHandler, IPointerDownHandler
     {
-        [SerializeField] float _minimumScale = 0.5f;
-        [SerializeField] Vector2 _initialScale = Vector2.one;
-        [SerializeField] float _maximumScale = 3f;
-        [SerializeField] float _scaleIncrement = .5f;
+        [SerializeField] private float minScale = 0.5f;
+        [SerializeField] private float maxScale = 3f;
+        [SerializeField] private float _scaleIncrement = .5f;
+        [SerializeField] private Vector2 _initialScale = Vector2.one;
 
-        [HideInInspector] Vector3 _scale;
+        private Vector3 _scale;
+        private Vector2 relMousePos;
+        
+        RectTransform rectTransform;
 
-        RectTransform _thisTransform;
+        private bool zooming;
 
         private void Awake()
         {
             _initialScale = transform.localScale;
-            _thisTransform = transform as RectTransform;
+            rectTransform = transform as RectTransform;
 
             _scale.Set(_initialScale.x, _initialScale.y, 1);
-            _thisTransform.localScale = _scale;
+            rectTransform.localScale = _scale;
         }
 
         public void OnScroll(PointerEventData eventData)
         {
+            if (!zooming)
+                relMousePos = rectTransform.anchoredPosition;
+            
             Vector2 relativeMousePosition;
 
             var cam = EditorMain.Instance.EditorCamera;
             if (cam == null) Debug.LogError("Camera not set!");
-            RectTransformUtility.ScreenPointToLocalPointInRectangle(_thisTransform, Input.mousePosition, EditorMain.Instance.EditorCamera, out relativeMousePosition);
+            RectTransformUtility.ScreenPointToLocalPointInRectangle(rectTransform, Input.mousePosition, EditorMain.Instance.EditorCamera, out relativeMousePosition);
 
             float delta = eventData.scrollDelta.y;
             delta = Mathf.Clamp(delta, -1f, 1f);
@@ -45,45 +52,64 @@ namespace HeavenStudio.RIQEditor
             {
                 ZoomOut(delta, relativeMousePosition);
             }
+            zooming = true;
         }
 
         public void ZoomIn(float delta, Vector2 relativeMousePosition)
         {
-            if (!(_scale.x < _maximumScale)) return;
+            if (!(_scale.x < maxScale)) return;
 
             float incre = _scaleIncrement * delta;
 
-            var newScale = Mathf.Clamp(_scale.x + incre, _minimumScale, _maximumScale);
+            var newScale = Mathf.Clamp(_scale.x + incre, minScale, maxScale);
             _scale.Set(newScale, 1, 1);
-            _thisTransform.localScale = _scale;
-            relativeMousePosition = new Vector2(relativeMousePosition.x, 0);
-            _thisTransform.anchoredPosition -= (relativeMousePosition * incre);
+            relativeMousePosition = relativeMousePosition.ModifyY(0);
+            relMousePos -= (relativeMousePosition * incre);
+            
+            EditorMain.Instance.Timeline.OnZoom(newScale);
         }
 
         public void ZoomOut(float delta, Vector2 relativeMousePosition)
         {
-            if (!(_scale.x > _minimumScale)) return;
+            if (!(_scale.x > minScale)) return;
 
             float incre = _scaleIncrement * -delta;
 
             var newScale = _scale.x - incre;
             _scale.Set(newScale, 1, 1);
-            _thisTransform.localScale = _scale;
-            relativeMousePosition = new Vector2(relativeMousePosition.x, 0);
-            _thisTransform.anchoredPosition += (relativeMousePosition * incre);
+            relativeMousePosition = relativeMousePosition.ModifyY(0);
+            relMousePos += (relativeMousePosition * incre);
+            
+            EditorMain.Instance.Timeline.OnZoom(newScale);
         }
 
         private void Update()
         {
-            _thisTransform.localScale =
-                new Vector3(Mathf.Clamp(_thisTransform.localScale.x, _minimumScale, Mathf.Infinity),
-                    _thisTransform.localScale.y);
+            if (zooming)
+            {
+                rectTransform.localScale = Vector3.Lerp(rectTransform.localScale, _scale, Time.deltaTime * 20.0f);
+                rectTransform.anchoredPosition = Vector3.Lerp(rectTransform.anchoredPosition, relMousePos, Time.deltaTime * 20.0f);
+            }
+            
+            rectTransform.localScale =
+                new Vector3(Mathf.Clamp(rectTransform.localScale.x, minScale, Mathf.Infinity),
+                    rectTransform.localScale.y);
+        }
+
+        public void SetNewPos(float newX)
+        {
+            relMousePos = relMousePos.ModifyX(newX);
         }
 
         public void ResetZoom()
         {
             _scale.Set(100, 1, 1);
-            _thisTransform.localScale = _scale;
+            rectTransform.localScale = _scale;
+        }
+
+        public void OnPointerDown(PointerEventData eventData)
+        {
+            zooming = false;
         }
     }
 }
