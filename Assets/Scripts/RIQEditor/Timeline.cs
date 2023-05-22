@@ -33,15 +33,24 @@ namespace HeavenStudio.RIQEditor
 
         private void Update()
         {
-            zoom = RealScrollRect.content.localScale.x;
+            UpdateImportant();
+            UpdatePerBeat();
             
-            pixelsPerBeat = 100 * zoom;
-            
-            timelineWidth = Viewport.rect.width;
-            
-            ScrollRectContent.anchoredPosition = RealScrollRect.content.anchoredPosition;
-            TimebarBG.anchoredPosition = new Vector2(-ScrollRectContent.anchoredPosition.x, TimebarBG.anchoredPosition.y);
-            
+            if (Input.GetKeyDown(KeyCode.Space))
+            {
+                if (Input.GetKey(KeyCode.LeftShift))
+                {
+                    PlayCheck(false);
+                }
+                else
+                {
+                    PlayCheck(true);
+                }
+            }
+
+            PlaybackSlider.anchoredPosition =
+                PlaybackSlider.anchoredPosition.ModifyX(Conductor.instance.songPositionInBeats * pixelsPerBeat);
+
             BeatsHolder.anchoredPosition = BeatsHolder.anchoredPosition.ModifyX(Mathp.Round2Nearest(-Content.anchoredPosition.x, pixelsPerBeat));
             
             if (zoom != lastZoom)
@@ -49,6 +58,23 @@ namespace HeavenStudio.RIQEditor
                 OnZoom();
             }
             lastZoom = zoom;
+        }
+
+        private void UpdateImportant()
+        {
+            zoom = RealScrollRect.content.localScale.x;
+            
+            RealScrollRect.content.anchoredPosition =
+                RealScrollRect.content.anchoredPosition.ModifyX(Mathf.Clamp(RealScrollRect.content.anchoredPosition.x,
+                    -Mathf.Infinity, 0));
+            ScrollRectContent.anchoredPosition = RealScrollRect.content.anchoredPosition;
+            TimebarBG.anchoredPosition = new Vector2(-ScrollRectContent.anchoredPosition.x, TimebarBG.anchoredPosition.y);
+        }
+
+        private void UpdatePerBeat()
+        {
+            pixelsPerBeat = 100 * zoom;
+            timelineWidth = Viewport.rect.width;
         }
         
         public void OnZoom()
@@ -68,5 +94,49 @@ namespace HeavenStudio.RIQEditor
                 beatLines.Add(line.GetComponent<RectTransform>());
             }
         }
+        
+        #region PlayChecks
+        public void PlayCheck(bool fromStart)
+        {
+            if (fromStart)
+            {
+                if (!Conductor.instance.isPlaying && !Conductor.instance.isPaused)
+                {
+                    Play(false, PlaybackSlider.anchoredPosition.x);
+                }
+                else
+                {
+                    Stop(PlaybackSlider.anchoredPosition.x);
+                }
+                    
+            }
+            else
+            {
+                if (!Conductor.instance.isPlaying)
+                {
+                    Play(false, PlaybackSlider.anchoredPosition.x);
+                }
+                else if (!Conductor.instance.isPaused)
+                {
+                    Pause();
+                }
+            }
+        }
+
+        public void Play(bool fromStart, float time)
+        {
+            GameManager.instance.Play(time);
+        }
+
+        public void Pause()
+        {
+            GameManager.instance.Pause();
+        }
+
+        public void Stop(float time)
+        {
+            GameManager.instance.Stop(time);
+        }
+        #endregion
     }
 }
