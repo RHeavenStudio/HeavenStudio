@@ -80,6 +80,8 @@ namespace HeavenStudio
         [Serializable]
         public class DynamicEntity : ICloneable
         {
+            [JsonIgnore] public Guid ID;
+            
             public float beat;
             public int track;
             [JsonProperty(DefaultValueHandling = DefaultValueHandling.Ignore)] public float length;
@@ -87,6 +89,8 @@ namespace HeavenStudio
             public Dictionary<string, dynamic> DynamicData = new Dictionary<string, dynamic>();
 
             public string datamodel;
+            
+            [Obsolete("Not needed in RIQEditor")]
             [JsonIgnore] public Editor.Track.TimelineEventObj eventObj;
 
             public object Clone()

@@ -9,6 +9,7 @@ using HeavenStudio.Util;
 
 namespace HeavenStudio
 {
+    [Obsolete("Use DynamicBeatmap Instead")]
     [Serializable]
     public class Beatmap
     {
@@ -23,6 +24,7 @@ namespace HeavenStudio
         public List<VolumeChange> volumeChanges = new List<VolumeChange>();
         public float firstBeatOffset;
 
+        [Obsolete("Use DynamicBeatmap.DynamicEntity Instead")]
         [Serializable]
         public class Entity : ICloneable
         {

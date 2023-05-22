@@ -9,6 +9,8 @@ namespace HeavenStudio.RIQEditor
 
         public Camera EditorCamera;
         public Canvas MainCanvas, TimelineCanvas;
+
+        public Timeline Timeline;
         
         [Header("Rect")]
         [SerializeField] private RenderTexture ScreenRenderTexture;

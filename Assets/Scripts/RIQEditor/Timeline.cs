@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using Starpelly;
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -14,6 +15,8 @@ namespace HeavenStudio.RIQEditor
         
         public float timelineWidth { get; private set; }
         public float pixelsPerBeat { get; private set; }
+
+        [SerializeField] private TimelineBlockManager BlockManager;
         
         [SerializeField] private ScrollRect RealScrollRect;
         [SerializeField] private RectTransform ScrollRectContent;
@@ -25,10 +28,12 @@ namespace HeavenStudio.RIQEditor
         [SerializeField] private RectTransform BeatsHolder;
         [SerializeField] private RectTransform BeatLine;
         [SerializeField] private RectTransform PlaybackSlider;
+        [SerializeField] private TMP_Text PlaybackBeatTXT;
         private List<RectTransform> beatLines = new();
 
         private void Start()
         {
+            BlockManager.Load();
         }
 
         private void Update()
@@ -50,6 +55,7 @@ namespace HeavenStudio.RIQEditor
 
             PlaybackSlider.anchoredPosition =
                 PlaybackSlider.anchoredPosition.ModifyX(Conductor.instance.songPositionInBeats * pixelsPerBeat);
+            PlaybackBeatTXT.text = Conductor.instance.songPositionInBeats.ToString("F");
 
             BeatsHolder.anchoredPosition = BeatsHolder.anchoredPosition.ModifyX(Mathp.Round2Nearest(-Content.anchoredPosition.x, pixelsPerBeat));
             
