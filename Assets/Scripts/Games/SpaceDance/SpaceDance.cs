@@ -155,7 +155,7 @@ namespace HeavenStudio.Games
         bool grampsLoopingAnim;
         bool grampsSniffing;
 
-        [SerializeField] List<SuperScroll> scrollingBgs = new List<SuperScroll>();
+        [SerializeField] CanvasScroll scroll;
         float scrollBeat;
         float scrollOffsetX;
         float scrollOffsetY;
@@ -180,11 +180,8 @@ namespace HeavenStudio.Games
             {
                 float normalizedX = (Time.realtimeSinceStartup - scrollBeat) * currentScrollLengthX;
                 float normalizedY = (Time.realtimeSinceStartup - scrollBeat) * currentScrollLengthY;
-                foreach (var backgroundSprite in scrollingBgs)
-                {
-                    backgroundSprite.NormalizedX = -scrollOffsetX - normalizedX;
-                    backgroundSprite.NormalizedY = -scrollOffsetY - normalizedY;
-                }
+                scroll.NormalizedX = -scrollOffsetX - normalizedX;
+                scroll.NormalizedY = -scrollOffsetY - normalizedY;
                 if (cond.ReportBeat(ref bop.lastReportedBeat, bop.startBeat % 1))
                 {
                     if (shouldBop && canBop)
