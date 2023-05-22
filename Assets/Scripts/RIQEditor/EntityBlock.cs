@@ -1,3 +1,4 @@
+using Starpelly;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -6,7 +7,9 @@ namespace HeavenStudio.RIQEditor
 {
     public class EntityBlock : MonoBehaviour
     {
-        private DynamicBeatmap.DynamicEntity entity;
+        public DynamicBeatmap.DynamicEntity entity { get; private set; }
+        public bool active;
+        private bool wasActive;
         
         private RectTransform rectTransform;
         private Image icon;
@@ -17,7 +20,7 @@ namespace HeavenStudio.RIQEditor
             this.entity = entity;
         }
         
-        private void Awake()
+        public void GetComponents()
         {
             rectTransform = GetComponent<RectTransform>();
             icon = transform.GetChild(1).GetComponent<Image>();
@@ -35,8 +38,19 @@ namespace HeavenStudio.RIQEditor
 
         public void UpdateBlock(Timeline timeline)
         {
+            if (active != wasActive)
+            {
+                gameObject.SetActive(active);
+            }
+            wasActive = active;
+            if (!active) return;
+            
             rectTransform.sizeDelta = new Vector2(timeline.pixelsPerBeat * entity.length, timeline.LayerHeight());
             rectTransform.anchoredPosition = new Vector2(entity.beat * timeline.pixelsPerBeat, timeline.LayerToY(entity.track));
+            
+            icon.rectTransform.sizeDelta =
+                icon.rectTransform.sizeDelta.ModifyX(Mathf.Clamp(rectTransform.sizeDelta.x - 12, 0,
+                    timeline.LayerHeight() - 12));
         }
     }
 }

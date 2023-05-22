@@ -15,6 +15,15 @@ namespace HeavenStudio.RIQEditor
         
         public float timelineWidth { get; private set; }
         public float pixelsPerBeat { get; private set; }
+        
+        /// <summary>
+        /// The time at the start rect of the timeline.
+        /// </summary>
+        public float timeLeft { get; private set; }
+        /// <summary>
+        /// The time at the end rect of the timeline.
+        /// </summary>
+        public float timeRight { get; private set; }
 
         public int layerCount = 10;
 
@@ -43,6 +52,7 @@ namespace HeavenStudio.RIQEditor
         {
             UpdateImportant();
             UpdatePerBeat();
+            CalculateLeftRight();
             
             if (Input.GetKeyDown(KeyCode.Space))
             {
@@ -67,6 +77,8 @@ namespace HeavenStudio.RIQEditor
                 OnZoom();
             }
             lastZoom = zoom;
+            
+            BlockManager.UpdateBlockManager();
         }
 
         private void UpdateImportant()
@@ -85,6 +97,13 @@ namespace HeavenStudio.RIQEditor
             pixelsPerBeat = 100 * zoom;
             timelineWidth = Viewport.rect.width;
         }
+        
+        private void CalculateLeftRight()
+        {
+            timeLeft = -Content.anchoredPosition.x / pixelsPerBeat;
+            timeRight = (-Content.anchoredPosition.x + Viewport.rect.size.x) / pixelsPerBeat;
+        }
+
         
         public void OnZoom()
         {
