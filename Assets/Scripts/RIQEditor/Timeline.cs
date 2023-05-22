@@ -16,12 +16,15 @@ namespace HeavenStudio.RIQEditor
         public float timelineWidth { get; private set; }
         public float pixelsPerBeat { get; private set; }
 
+        public int layerCount = 10;
+
         [SerializeField] private TimelineBlockManager BlockManager;
         
         [SerializeField] private ScrollRect RealScrollRect;
         [SerializeField] private RectTransform ScrollRectContent;
         [SerializeField] private RectTransform Viewport;
         [SerializeField] private RectTransform Content;
+        [SerializeField] private RectTransform TimelineContent; // Holds things like Blocks and Nodes
         [SerializeField] private RectTransform TimebarBG;
 
         [Header("Beats")]
@@ -31,7 +34,7 @@ namespace HeavenStudio.RIQEditor
         [SerializeField] private TMP_Text PlaybackBeatTXT;
         private List<RectTransform> beatLines = new();
 
-        private void Start()
+        public void Load()
         {
             BlockManager.Load();
         }
@@ -143,6 +146,20 @@ namespace HeavenStudio.RIQEditor
         {
             GameManager.instance.Stop(time);
         }
+        #endregion
+
+        #region Custom
+
+        public float LayerHeight()
+        {
+            return TimelineContent.rect.size.y / layerCount;
+        }
+
+        public float LayerToY(int layer)
+        {
+            return -(layer * LayerHeight());
+        }
+
         #endregion
     }
 }

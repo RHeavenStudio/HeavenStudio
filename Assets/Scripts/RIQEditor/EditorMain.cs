@@ -1,3 +1,7 @@
+using System.IO;
+using System.IO.Compression;
+using HeavenStudio.Editor;
+using SFB;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -54,6 +58,59 @@ namespace HeavenStudio.RIQEditor
         public static Texture GameIconMask(string name)
         {
             return Resources.Load<Texture>($"Sprites/Editor/GameIcons/{name}_mask");
+        }
+
+        #endregion
+
+        #region Saving and Loading
+
+        public void OpenRemix()
+        {
+            var extensions = new[]
+            {
+                new ExtensionFilter("All Supported Files ", new string[] { "riq", "tengoku", "rhmania" }),
+                new ExtensionFilter("Heaven Studio Remix File ", new string[] { "riq" }),
+                new ExtensionFilter("Legacy Heaven Studio Remix ", new string[] { "tengoku", "rhmania" })
+            };
+
+            StandaloneFileBrowser.OpenFilePanelAsync("Open Remix", "", extensions, false, (string[] paths) =>
+            {
+                var path = Path.Combine(paths);
+
+                if (path == string.Empty) return;
+                string extension = path.GetExtension();
+
+                using var zipFile = File.Open(path, FileMode.Open);
+                using var archive = new ZipArchive(zipFile, ZipArchiveMode.Read);
+
+                foreach (var entry in archive.Entries)
+                    switch (entry.Name)
+                    {
+                        case "remix.json":
+                        {
+                            using var stream = entry.Open();
+                            using var reader = new StreamReader(stream);
+                            LoadRemix(reader.ReadToEnd(), extension);
+
+                            break;
+                        }
+                        case "song.ogg":
+                        {
+                            using var stream = entry.Open();
+                            using var memoryStream = new MemoryStream();
+                            stream.CopyTo(memoryStream);
+                            var MusicBytes = memoryStream.ToArray();
+                            Conductor.instance.musicSource.clip = OggVorbis.VorbisPlugin.ToAudioClip(MusicBytes, "music");
+                            break;
+                        }
+                    }
+            });
+        }
+        
+        public void LoadRemix(string json = "", string type = "riq")
+        {
+            GameManager.instance.LoadRemix(json, type);
+            Timeline.Load();
         }
 
         #endregion

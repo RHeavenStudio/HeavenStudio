@@ -10,17 +10,21 @@ namespace HeavenStudio.RIQEditor
         public Dictionary<Guid, EntityBlock> EntityBlocks = new();
 
         [SerializeField] private EntityBlock EntityTemplate;
-        
+
+        private void Start()
+        {
+            EntityTemplate.gameObject.SetActive(false);
+        }
+
         public void Load()
         {
             foreach (var entity in GameManager.instance.Beatmap.entities)
             {
                 var entityBlock = Instantiate(EntityTemplate.gameObject, EntityTemplate.transform.parent).GetComponent<EntityBlock>();
+                entityBlock.gameObject.SetActive(true);
                 entityBlock.SetEntity(entity);
                 EntityBlocks.Add(entity.ID, entityBlock);
             }
-            
-            EntityTemplate.gameObject.SetActive(false);
         }
         
         private void Update()

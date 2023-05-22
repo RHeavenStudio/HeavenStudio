@@ -5,7 +5,6 @@ using System.Text.RegularExpressions;
 using UnityEngine;
 
 using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
 
 using HeavenStudio.Util;
 
@@ -89,9 +88,15 @@ namespace HeavenStudio
             public Dictionary<string, dynamic> DynamicData = new Dictionary<string, dynamic>();
 
             public string datamodel;
-            
+
             [Obsolete("Not needed in RIQEditor")]
             [JsonIgnore] public Editor.Track.TimelineEventObj eventObj;
+
+            public DynamicEntity()
+            {
+                if (ID == Guid.Empty)
+                    ID = Guid.NewGuid();
+            }
 
             public object Clone()
             {
