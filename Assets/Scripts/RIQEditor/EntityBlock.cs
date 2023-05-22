@@ -13,6 +13,7 @@ namespace HeavenStudio.RIQEditor
         
         private RectTransform rectTransform;
         private Image icon;
+        private Image grab;
         private TMP_Text datamodelText;
 
         public void SetEntity(DynamicBeatmap.DynamicEntity entity)
@@ -23,8 +24,9 @@ namespace HeavenStudio.RIQEditor
         public void GetComponents()
         {
             rectTransform = GetComponent<RectTransform>();
-            icon = transform.GetChild(1).GetComponent<Image>();
-            datamodelText = transform.GetChild(2).GetComponent<TMP_Text>();
+            grab = transform.GetChild(1).GetComponent<Image>();
+            icon = transform.GetChild(2).GetComponent<Image>();
+            datamodelText = transform.GetChild(3).GetComponent<TMP_Text>();
         }
 
         private void Start()
@@ -34,6 +36,7 @@ namespace HeavenStudio.RIQEditor
             
             icon.sprite = Resources.Load<Sprite>($"Sprites/Editor/GameIcons/{entity.datamodel.Split(0)}");
             datamodelText.text = action.displayName;
+            grab.gameObject.SetActive(action.resizable);
         }
 
         public void UpdateBlock(Timeline timeline)
