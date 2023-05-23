@@ -1,5 +1,5 @@
 using HeavenStudio.Util;
-using System.Collections;
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -7,37 +7,31 @@ namespace HeavenStudio.Games.Scripts_OctopusMachine
 {
     public class Octopus : MonoBehaviour
     {
-        [SerializeField] Animator anim;
         [SerializeField] bool player;
-        [SerializeField] SpriteRenderer[] sr;
         [SerializeField] Material mat;
+        public Animator anim;
 
+        public bool noBop;
+        public bool cantBop;
         public bool isSqueezed;
-        bool isPreparing;
         public float lastReportedBeat = 0f;
 
         private OctopusMachine game;
-        public static Octopus instance;
 
         void Awake()
         {
             game = OctopusMachine.instance;
         }
 
-        private void Start() 
-        {
-            mat.SetColor("_ColorAlpha", new Color(1f, 0.34f, 0.62f));
-        }
-
         void Update()
         {
             if (gameObject.activeInHierarchy && player)
             {
-                if (PlayerInput.Pressed())
+                if (PlayerInput.Pressed() && !game.IsExpectingInputNow(InputType.STANDARD_DOWN))
                 {
                     Squeeze();
                 }
-                if (PlayerInput.PressedUp())
+                if (PlayerInput.PressedUp() && !game.IsExpectingInputNow(InputType.STANDARD_UP))
                 {
                     if (PlayerInput.Pressing(true)) {
                         Pop();
@@ -51,12 +45,15 @@ namespace HeavenStudio.Games.Scripts_OctopusMachine
         void LateUpdate()
         {
             if (Conductor.instance.ReportBeat(ref lastReportedBeat)
-                && !anim.IsPlayingAnimationName("Bop")
-                && !anim.IsPlayingAnimationName("Happy")
-                && !anim.IsPlayingAnimationName("Angry")
-                && !anim.IsPlayingAnimationName("Oops")
+                && !anim.IsPlayingAnimationName("Prepare")
+                && !anim.IsPlayingAnimationName("PrepareIdle")
+                && !anim.IsPlayingAnimationName("Squeeze")
+                && !anim.IsPlayingAnimationName("ForceSqueeze")
+                && !anim.IsPlayingAnimationName("Release")
+                && !anim.IsPlayingAnimationName("Pop")
                 && !isSqueezed
-                && !isPreparing)
+                && !noBop
+                && !cantBop)
             {
                 Bop();
             }
@@ -76,10 +73,6 @@ namespace HeavenStudio.Games.Scripts_OctopusMachine
             } else {
                 PlayAnimation(0);
             }
-            if (singleBop) {
-                game.hasHit = false;
-                game.hasMissed = false;
-            }
         }
 
         public void PlayAnimation(int whichBop, bool keepBopping = false)
@@ -93,7 +86,6 @@ namespace HeavenStudio.Games.Scripts_OctopusMachine
                 4 => "Prepare",
             };
             anim.DoScaledAnimationAsync(tempAnim, 0.5f);
-            isPreparing = whichBop == 4 ? true : false;
         }
 
         public void ForceSqueeze()
@@ -102,15 +94,15 @@ namespace HeavenStudio.Games.Scripts_OctopusMachine
             isSqueezed = true;
         }
 
-        public void GameplayModifiers(bool isActive, Color octoColor)
+        public void SetColor(Color octoColor)
         {
-            gameObject.SetActive(isActive);
             mat.SetColor("_ColorAlpha", octoColor);
         }
 
-        public void MoveOctopodes(float x, float y)
+        public void OctopusModifiers(float x, float y, bool isActive)
         {
             gameObject.transform.position = new Vector3(x, y, 0);
+            gameObject.SetActive(isActive);
         }
 
         public void Squeeze() 
