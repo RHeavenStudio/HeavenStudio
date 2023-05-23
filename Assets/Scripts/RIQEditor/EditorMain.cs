@@ -2,6 +2,7 @@ using System.IO;
 using System.IO.Compression;
 using HeavenStudio.Editor;
 using SFB;
+using Starpelly;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -11,6 +12,8 @@ namespace HeavenStudio.RIQEditor
     {
         public static EditorMain Instance { get; private set; }
 
+        public readonly EditorTheme Theme = new();
+        
         public Camera EditorCamera;
         public Canvas MainCanvas, TimelineCanvas;
 
@@ -46,6 +49,19 @@ namespace HeavenStudio.RIQEditor
             }
             SpecialIconPrefab.SetActive(false);
             NormalIconPrefab.SetActive(false);
+
+            Theme.LayerColors = new[]
+            {
+                "EF476F".Hex2RGB(),
+                "F5813D".Hex2RGB(),
+                "FFD166".Hex2RGB(),
+                "06D6A0".Hex2RGB(),
+                "118AB2".Hex2RGB(),
+                "1134B2".Hex2RGB(),
+                "7D3DBC".Hex2RGB(),
+                "BD439B".Hex2RGB()
+            };
+            Theme.LoadColors();
         }
 
         #region Custom

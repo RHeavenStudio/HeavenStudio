@@ -35,6 +35,7 @@ namespace HeavenStudio.RIQEditor
         [SerializeField] private RectTransform Content;
         [SerializeField] private RectTransform TimelineContent; // Holds things like Blocks and Nodes
         [SerializeField] private RectTransform TimebarBG;
+        [SerializeField] private RectTransform LayerBG;
 
         [Header("Beats")]
         [SerializeField] private RectTransform BeatsHolder;
@@ -53,6 +54,13 @@ namespace HeavenStudio.RIQEditor
             CalculateLeftRight();
             
             OnZoom(zoom);
+
+            for (var i = 0; i < layerCount; i++)
+            {
+                var layer = Instantiate(LayerBG, LayerBG.transform.parent);
+                layer.GetComponent<RawImage>().enabled = (i % 2 == 0);
+            }
+            LayerBG.gameObject.SetActive(false);
         }
 
         public void Load()
@@ -60,11 +68,13 @@ namespace HeavenStudio.RIQEditor
             BlockManager.Load();
         }
 
-        private void Update()
+        private void LateUpdate()
         {
             UpdateImportant();
             UpdatePerBeat();
             CalculateLeftRight();
+            
+            // RealScrollRect.content.sizeDelta = RealScrollRect.content.sizeDelta.ModifyX(timeRight * pixelsPerBeat);
             
             if (Input.GetKeyDown(KeyCode.Space))
             {

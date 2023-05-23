@@ -12,6 +12,7 @@ namespace HeavenStudio.RIQEditor
         private bool wasActive;
         
         private RectTransform rectTransform;
+        private Image bg;
         private Image icon;
         private Image grab;
         private TMP_Text datamodelText;
@@ -24,6 +25,7 @@ namespace HeavenStudio.RIQEditor
         public void GetComponents()
         {
             rectTransform = GetComponent<RectTransform>();
+            bg = transform.GetChild(0).GetComponent<Image>();
             grab = transform.GetChild(1).GetComponent<Image>();
             icon = transform.GetChild(2).GetComponent<Image>();
             datamodelText = transform.GetChild(3).GetComponent<TMP_Text>();
@@ -54,6 +56,8 @@ namespace HeavenStudio.RIQEditor
             icon.rectTransform.sizeDelta =
                 icon.rectTransform.sizeDelta.ModifyX(Mathf.Clamp(rectTransform.sizeDelta.x - 12, 0,
                     timeline.LayerHeight() - 12));
+            
+            bg.color = EditorMain.Instance.Theme.LayerColorsGradient.Evaluate((float)entity.track / EditorMain.Instance.Timeline.layerCount);
         }
     }
 }
