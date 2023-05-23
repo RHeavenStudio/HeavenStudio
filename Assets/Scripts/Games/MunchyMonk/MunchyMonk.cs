@@ -271,8 +271,7 @@ namespace HeavenStudio.Games
 
             // sets hair stuff active when it needs to be
             if (growLevel > 0) {
-                StacheHolder.SetActive(true); 
-                StacheAnim.DoScaledAnimationAsync("Idle", 0.5f);
+                StacheHolder.SetActive(true);
                 if (growLevel == 4) BrowHolder.SetActive(true);
             }
 
@@ -332,8 +331,10 @@ namespace HeavenStudio.Games
                     MonkAnim.DoScaledAnimationAsync("Bop", 0.5f);
                 }
 
-                if (growLevel == 4) BrowAnim.DoScaledAnimationAsync("Bop", 0.5f);
-                if (growLevel > 0) StacheAnim.DoScaledAnimationAsync("Bop"+growLevel, 0.5f);
+                if (!MonkAnim.IsPlayingAnimationName("Blush") || !MonkAnim.IsPlayingAnimationName("Stare")) {
+                    if (growLevel == 4) BrowAnim.DoScaledAnimationAsync("Bop", 0.5f);
+                    if (growLevel > 0) StacheAnim.DoScaledAnimationAsync($"Bop{growLevel}", 0.5f);
+                }
             }
         }
 
@@ -344,7 +345,7 @@ namespace HeavenStudio.Games
                 needBlush = false;
                 MonkAnim.DoScaledAnimationAsync("Bop", 0.5f);
                 if (growLevel == 4) BrowAnim.DoScaledAnimationAsync("Bop", 0.5f);
-                if (growLevel > 0) StacheAnim.DoScaledAnimationAsync("Bop"+growLevel, 0.5f);
+                if (growLevel > 0) StacheAnim.DoScaledAnimationAsync($"Bop{growLevel}", 0.5f);
             }
         }
 
