@@ -25,9 +25,23 @@ namespace HeavenStudio.Games
     {
         public static Rockers instance;
 
+        public static CallAndResponseHandler crHandlerInstance;
+
         private void Awake()
         {
             instance = this;
+            if (crHandlerInstance == null)
+            {
+                crHandlerInstance = new CallAndResponseHandler(8);
+            }
+        }
+
+        private void OnDestroy()
+        {
+            if (crHandlerInstance != null && (!Conductor.instance.isPlaying || Conductor.instance.isPaused))
+            {
+                crHandlerInstance = null;
+            }
         }
     }
 }
