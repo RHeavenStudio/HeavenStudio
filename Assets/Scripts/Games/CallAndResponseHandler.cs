@@ -21,12 +21,14 @@ namespace HeavenStudio.Games
             public float beat;
             public float relativeBeat; // this beat is relative to the intervalStartBeat
             public Dictionary<string, dynamic> DynamicData; //if you need more properties for your queued event
+            public string tag;
 
-            public CallAndResponseEvent(float beat, float relativeBeat)
+            public CallAndResponseEvent(float beat, float relativeBeat, string tag)
             {
                 this.beat = beat;
                 this.relativeBeat = relativeBeat;
                 DynamicData = new Dictionary<string, dynamic>();
+                this.tag = tag;
             }
 
             public void CreateProperty(string name, dynamic defaultValue)
@@ -77,7 +79,7 @@ namespace HeavenStudio.Games
             this.defaultIntervalLength = defaultIntervalLength;
         }
 
-        private List<CallAndResponseEvent> queuedEvents = new List<CallAndResponseEvent>();
+        public List<CallAndResponseEvent> queuedEvents = new List<CallAndResponseEvent>();
 
         /// <summary>
         /// Returns the normalized progress of the interval
@@ -113,13 +115,13 @@ namespace HeavenStudio.Games
         /// <param name="crParams">Extra properties to add to the event.</param>
         /// <param name="ignoreInterval">If true, this function will not start a new interval if the interval isn't active.</param>
         /// <param name="overrideInterval">If true, overrides the current interval.</param>
-        public void AddEvent(float beat, List<CallAndResponseEventParam> crParams = null, bool ignoreInterval = false, bool overrideInterval = false)
+        public void AddEvent(float beat, string tag = "", List<CallAndResponseEventParam> crParams = null, bool ignoreInterval = false, bool overrideInterval = false)
         {
             if ((!IntervalIsActive() && !ignoreInterval) || overrideInterval)
             {
                 StartInterval(beat, defaultIntervalLength);
             }
-            CallAndResponseEvent addedEvent = new CallAndResponseEvent(beat, beat - intervalStartBeat);
+            CallAndResponseEvent addedEvent = new CallAndResponseEvent(beat, beat - intervalStartBeat, tag);
             if (crParams != null && crParams.Count > 0)
             {
                 foreach (var param in crParams)
@@ -137,10 +139,6 @@ namespace HeavenStudio.Games
         {
             List<CallAndResponseEvent> eventsToReturn = queuedEvents;
             queuedEvents.Clear();
-
-            //Cuts the interval short
-            intervalLength = -1;
-            intervalStartBeat = -1;
             return eventsToReturn;
         }
 
