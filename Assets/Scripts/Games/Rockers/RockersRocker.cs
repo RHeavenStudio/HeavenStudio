@@ -38,6 +38,44 @@ namespace HeavenStudio.Games.Scripts_Rockers
             }
         }
 
+        public void StrumStrings(bool gleeClub, int[] pitches)
+        {
+            StopSounds();
+            Jukebox.PlayOneShotGame("rockers/noise");
+            List<int> eligiblePitches = new List<int>();
+            foreach (var pitch in pitches)
+            {
+                if (pitch != -1) eligiblePitches.Add(pitch);
+            }
+            for (int i = 0; i < eligiblePitches.Count; i++)
+            {
+                float pitch = Jukebox.GetPitchFromSemiTones(eligiblePitches[i], true);
+                float volume = GetVolumeBasedOnAmountOfStrings(eligiblePitches.Count);
+                string soundName = "rockers/strings/" + (gleeClub ? "gleeClub/" : "normal/" + (i + 1));
+                Debug.Log("Pitch: " + pitch + " Volume: " + volume + " Name: " + soundName);
+                stringSounds[i] = Jukebox.PlayOneShotGame(soundName, -1, pitch, volume, true);
+            }
+            DoScaledAnimationAsync("Idle", 0.5f);
+        }
+
+        private float GetVolumeBasedOnAmountOfStrings(int stringAmount)
+        {
+
+            switch (stringAmount)
+            {
+                default:
+                    return 1;
+                case 3:
+                    return 0.893f;
+                case 4:
+                    return 0.75f;
+                case 5:
+                    return 0.686f;
+                case 6:
+                    return 0.62f;
+            }
+        }
+
         public void Mute()
         {
             StopSounds();
