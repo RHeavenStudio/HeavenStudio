@@ -21,11 +21,16 @@ namespace HeavenStudio.Games.Loaders
 
 namespace HeavenStudio.Games
 {
+    using Scripts_Rockers;
     public class Rockers : Minigame
     {
         public static Rockers instance;
 
         public static CallAndResponseHandler crHandlerInstance;
+
+        [Header("Rockers")]
+        [SerializeField] RockersRocker JJ;
+        [SerializeField] RockersRocker Soshi;
 
         private void Awake()
         {
@@ -36,11 +41,36 @@ namespace HeavenStudio.Games
             }
         }
 
+        private void Start()
+        {
+            if (PlayerInput.Pressing())
+            {
+                Soshi.Mute();
+            }
+        }
+
         private void OnDestroy()
         {
             if (crHandlerInstance != null && (!Conductor.instance.isPlaying || Conductor.instance.isPaused))
             {
                 crHandlerInstance = null;
+            }
+        }
+
+        private void Update()
+        {
+            var cond = Conductor.instance;
+
+            if (cond.isPlaying && !cond.isPaused) 
+            { 
+                if (PlayerInput.Pressed())
+                {
+                    Soshi.Mute();
+                }
+                if (PlayerInput.PressedUp() && !IsExpectingInputNow(InputType.STANDARD_UP))
+                {
+                    Soshi.UnHold();
+                }
             }
         }
     }

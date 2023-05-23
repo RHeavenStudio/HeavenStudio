@@ -304,6 +304,8 @@ MonoBehaviour:
   EligibleHits: []
   scheduledInputs: []
   firstEnable: 0
+  JJ: {fileID: 7206269671671175185}
+  Soshi: {fileID: 2385005978484964389}
 --- !u!1 &401841302730654488
 GameObject:
   m_ObjectHideFlags: 0
@@ -2444,6 +2446,7 @@ GameObject:
   m_Component:
   - component: {fileID: 5606319601331460275}
   - component: {fileID: 2127598411386683738}
+  - component: {fileID: 7206269671671175185}
   m_Layer: 0
   m_Name: JJHolder
   m_TagString: Untagged
@@ -2499,6 +2502,19 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
+--- !u!114 &7206269671671175185
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2810100620016649991}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e879fe35102c7154aaed4934ab31bed1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  JJ: 1
 --- !u!1 &2850561757145110148
 GameObject:
   m_ObjectHideFlags: 0
@@ -2929,6 +2945,7 @@ GameObject:
   m_Component:
   - component: {fileID: 2329571518503051211}
   - component: {fileID: 2897987105235744210}
+  - component: {fileID: 2385005978484964389}
   m_Layer: 0
   m_Name: StudentHolder
   m_TagString: Untagged
@@ -2984,6 +3001,19 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
+--- !u!114 &2385005978484964389
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3293362266216100798}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e879fe35102c7154aaed4934ab31bed1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  JJ: 0
 --- !u!1 &3452380618444285355
 GameObject:
   m_ObjectHideFlags: 0
