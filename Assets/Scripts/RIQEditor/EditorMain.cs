@@ -130,5 +130,10 @@ namespace HeavenStudio.RIQEditor
         }
 
         #endregion
+        
+        public static bool MouseInRectTransform(RectTransform rectTransform)
+        {
+            return (rectTransform.gameObject.activeSelf && RectTransformUtility.RectangleContainsScreenPoint(rectTransform, Input.mousePosition, Instance.EditorCamera));
+        }
     }
 }
