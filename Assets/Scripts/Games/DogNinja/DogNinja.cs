@@ -53,10 +53,9 @@ namespace HeavenStudio.Games.Loaders
                 },
                 new GameAction("HereWeGo", "Here We Go!")
                 {
-                    function = delegate { DogNinja.instance.HereWeGo(eventCaller.currentEntity.beat); },
+                    function = delegate { DogNinja.HereWeGo(eventCaller.currentEntity.beat); },
                     defaultLength = 2,
-                    inactiveFunction = delegate { DogNinja.HereWeGoInactive(eventCaller.currentEntity.beat); },
-                    preFunctionLength = 1,
+                    inactiveFunction = delegate { DogNinja.HereWeGo(eventCaller.currentEntity.beat); },
                 },
 
                 // these are still here for backwards-compatibility but are hidden in the editor
@@ -178,9 +177,7 @@ namespace HeavenStudio.Games
 
         void OnDestroy()
         {
-            if (!Conductor.instance.isPlaying || Conductor.instance.isPaused) {
-                if (queuedThrows.Count > 0) queuedThrows.Clear();
-            }
+            if (queuedThrows.Count > 0) queuedThrows.Clear();
         }
 
         private void Update()
@@ -193,16 +190,8 @@ namespace HeavenStudio.Games
             
             if (PlayerInput.Pressed(true) && !IsExpectingInputNow(InputType.STANDARD_DOWN))
             {
-                System.Random rd = new System.Random();
-                string slice;
-                int LorR = rd.Next(0,2);
-                if (LorR < 1) {
-                    slice = "WhiffRight";
-                } else {
-                    slice = "WhiffLeft";
-                }
-
-                DogAnim.DoScaledAnimationAsync(slice, 0.5f);
+                int LorR = (int)(UnityEngine.Random.Range(0, 2));
+                DogAnim.DoScaledAnimationAsync((LorR < 1 ? "WhiffRight" : "WhiffLeft"), 0.5f);
                 Jukebox.PlayOneShotGame("dogNinja/whiff");
                 DogAnim.SetBool("needPrepare", false);
             }
@@ -231,11 +220,7 @@ namespace HeavenStudio.Games
         public static void QueueObject(float beat, int direction, int typeL, int typeR, bool prepare, bool muteThrow)
         {
             int ObjSprite = 1;
-            if (typeL == 0 || typeR == 0) {
-                // random object code. it makes a random number from 1-7 and sets that as the sprite
-                System.Random rd = new System.Random();
-                ObjSprite = rd.Next(1, 7);
-            }
+            if (typeL == 0 || typeR == 0) ObjSprite = (int)(UnityEngine.Random.Range(1, 7));
             
             string sfxNumL = "dogNinja/";
             if (direction is 0 or 2) {
@@ -296,9 +281,7 @@ namespace HeavenStudio.Games
             // plays one anim with sfx when it's not on screen, plays a different anim with no sfx when on screen. ez
             if (!birdOnScreen) {
                 FullBird.SetActive(true);
-                if (sound) { 
-                    Jukebox.PlayOneShotGame(sfxNum+"bird_flap"); 
-                }
+                if (sound) Jukebox.PlayOneShotGame(sfxNum+"bird_flap");
                 BirdAnim.Play("FlyIn", 0, 0);
                 birdOnScreen = true;
                 cutEverythingText.text = customText;
@@ -314,18 +297,13 @@ namespace HeavenStudio.Games
             DogAnim.SetBool("needPrepare", true);
         }
 
-        public void HereWeGo(float beat)
+        public static void HereWeGo(float beat)
         {
             MultiSound.Play(new MultiSound.Sound[] {
-                    new MultiSound.Sound(sfxNum+"here", beat), 
-                    new MultiSound.Sound(sfxNum+"we", beat + 0.5f),
-                    new MultiSound.Sound(sfxNum+"go", beat + 1f)
-                }, forcePlay: true);
-        }
-
-        public static void HereWeGoInactive(float beat)
-        {
-            DogNinja.instance.HereWeGo(beat);
+                new MultiSound.Sound("dogNinja/here", beat), 
+                new MultiSound.Sound("dogNinja/we", beat + 0.5f),
+                new MultiSound.Sound("dogNinja/go", beat + 1f)
+            }, forcePlay: true);
         }
     }
 }

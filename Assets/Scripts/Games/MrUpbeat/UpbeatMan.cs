@@ -26,9 +26,8 @@ namespace HeavenStudio.Games.Scripts_MrUpbeat
         public void Blip()
         {
             float c = Conductor.instance.songPositionInBeats;
-            float pos = (MathF.Floor(c * 10)/10 % 1 == 0.5f) ? MathF.Floor(c) : MathF.Round(c);
             BeatAction.New(gameObject, new List<BeatAction.Action>() {
-                new BeatAction.Action(pos + 0.5f, delegate {
+                new BeatAction.Action(MathF.Floor(c) + 0.5f, delegate {
                     if (MrUpbeat.shouldBlip) {
                         Jukebox.PlayOneShotGame("mrUpbeat/blip");
                         blipAnim.Play("Blip"+(blipSize+1), 0, 0);
@@ -36,7 +35,7 @@ namespace HeavenStudio.Games.Scripts_MrUpbeat
                         if (shouldGrow && blipSize < 4) blipSize++;
                     }
                 }),
-                new BeatAction.Action(pos + 1f, delegate { 
+                new BeatAction.Action(MathF.Floor(c) + 1f, delegate { 
                     Blip();
                 }),
             });

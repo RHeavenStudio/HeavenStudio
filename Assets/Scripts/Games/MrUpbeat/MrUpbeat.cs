@@ -13,7 +13,7 @@ namespace HeavenStudio.Games.Loaders
     public static class AgbUpbeatLoader
     {
         public static Minigame AddGame(EventCaller eventCaller) {
-            return new Minigame("mrUpbeat", "Mr. Upbeat", "ffffff", false, false, new List<GameAction>()
+            return new Minigame("mrUpbeat", "Mr. Upbeat", "E0E0E0", false, false, new List<GameAction>()
             {
                 new GameAction("start stepping", "Start Stepping")
                 {
@@ -39,8 +39,8 @@ namespace HeavenStudio.Games.Loaders
                 {
                     function = delegate {
                         var e = eventCaller.currentEntity;
-                        MrUpbeat.instance.FadeBackgroundColor(e["start"], e["end"], e.length, e["toggle"]); },
-                    defaultLength = 1f,
+                        MrUpbeat.instance.FadeBackgroundColor(e["start"], e["end"], e.length, e["toggle"]); 
+                    },
                     resizable = true,
                     parameters = new List<Param>()
                     {
@@ -73,7 +73,7 @@ namespace HeavenStudio.Games.Loaders
                     parameters = new List<Param>()
                     {
                         new Param("letter", "", "Letter To Appear", "Which letter to appear on the blip"),
-                        new Param("shouldGrow", true, "Grow Antenna?", "Should Mr. Upbeat's antenna grow?"),
+                        new Param("shouldGrow", true, "Grow Antenna?", "Should Mr. Upbeat's antenna grow every blip?"),
                         new Param("resetBlip", false, "Reset Antenna?", "Should Mr. Upbeat's antenna reset?"),
                         new Param("blip", true, "Should Blip?", "Should Mr. Upbeat blip every offbeat?"),
                     }
