@@ -58,7 +58,7 @@ namespace HeavenStudio.Games.Scripts_Rockers
             muted = false;
             strumming = true;
             StopSounds();
-            Jukebox.PlayOneShotGame("rockers/noise");
+            //Jukebox.PlayOneShotGame("rockers/noise");
             lastPitches = pitches;
             for (int i = 0; i < pitches.Length; i++)
             {
