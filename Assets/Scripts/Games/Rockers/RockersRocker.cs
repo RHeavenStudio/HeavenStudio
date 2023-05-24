@@ -81,7 +81,6 @@ namespace HeavenStudio.Games.Scripts_Rockers
             lastG5 = G5;
             for (int i = 0; i < stringSounds.Length; i++)
             {
-                if (pitches[i] == -1) continue;
                 if (stringSounds[i] != null)
                 {
                     stringSounds[i].BendUp(0.05f, FindRelativeBendPitch(i, stringSounds[i].pitch, G5, pitches[i]));
