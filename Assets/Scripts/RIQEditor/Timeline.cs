@@ -15,6 +15,7 @@ namespace HeavenStudio.RIQEditor
         public Vector2 relativeMousePos;
         
         public float timelineWidth { get; private set; }
+        public float timelineHeight { get; private set; }
         public float pixelsPerBeat { get; private set; }
         
         public float mousePos2Beat { get; private set; }
@@ -118,9 +119,9 @@ namespace HeavenStudio.RIQEditor
             {
                 var line = beatLines[i];
                 line.anchoredPosition = new Vector2(i * pixelsPerBeat, line.anchoredPosition.y);
-                line.transform.GetChild(0).GetComponent<TMP_Text>().text = (i + (beatsHolderX / pixelsPerBeat)).ToString("F");
+                line.transform.GetChild(0).GetComponent<TMP_Text>().text = (i + (beatsHolderX / pixelsPerBeat)).ToString("F1");
             }
-            
+
             BlockManager.UpdateBlockManager();
         }
 
@@ -128,9 +129,7 @@ namespace HeavenStudio.RIQEditor
         {
             zoom = RealScrollRect.content.localScale.x;
             
-            RealScrollRect.content.anchoredPosition =
-                RealScrollRect.content.anchoredPosition.ModifyX(Mathf.Clamp(RealScrollRect.content.anchoredPosition.x,
-                    -Mathf.Infinity, 0));
+            // RealScrollRect.content.anchoredPosition = RealScrollRect.content.anchoredPosition.ModifyX(Mathf.Clamp(RealScrollRect.content.anchoredPosition.x, -Mathf.Infinity, 0));
             ScrollRectContent.anchoredPosition = RealScrollRect.content.anchoredPosition;
             TimebarBG.anchoredPosition = new Vector2(-ScrollRectContent.anchoredPosition.x, TimebarBG.anchoredPosition.y);
         }
@@ -139,6 +138,7 @@ namespace HeavenStudio.RIQEditor
         {
             pixelsPerBeat = 100 * zoom;
             timelineWidth = Viewport.rect.width;
+            timelineHeight = TimelineContent.rect.height;
             
             RectTransformUtility.ScreenPointToLocalPointInRectangle(Content, Input.mousePosition,
                 EditorMain.Instance.EditorCamera, out relativeMousePos);
@@ -153,7 +153,6 @@ namespace HeavenStudio.RIQEditor
             timeRight = (-Content.anchoredPosition.x + Viewport.rect.size.x) / pixelsPerBeat;
         }
 
-        
         public void OnZoom(float zoom)
         {
             foreach (var t in beatLines)
@@ -170,6 +169,7 @@ namespace HeavenStudio.RIQEditor
                 line.anchoredPosition = new Vector2(i * pixelsPerBeat, line.anchoredPosition.y);
                 beatLines.Add(line.GetComponent<RectTransform>());
             }
+            BeatLine.gameObject.SetActive(false);
         }
         
         #region Custom
