@@ -19,7 +19,6 @@ namespace HeavenStudio.Games.Scripts_Rockers
             this.gleeClub = gleeClub;
             this.pitches = pitches.ToList();
             game.ScheduleInput(beat, length, InputType.STANDARD_UP, Just, Miss, Empty);
-            Debug.Log("woke up");
         }
 
         private void Just(PlayerActionEvent caller, float state)

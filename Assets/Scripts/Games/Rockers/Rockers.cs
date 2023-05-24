@@ -22,7 +22,7 @@ namespace HeavenStudio.Games.Loaders
                 },
                 new GameAction("riff", "Riff")
                 {
-                    function = delegate { var e = eventCaller.currentEntity; Rockers.instance.Riff(e.beat, new int[6]
+                    function = delegate { var e = eventCaller.currentEntity; Rockers.instance.Riff(e.beat, e.length, new int[6]
                     {
                         e["1JJ"],
                         e["2JJ"],
@@ -39,7 +39,8 @@ namespace HeavenStudio.Games.Loaders
                         e["5S"],
                         e["6S"],
                     }, e["gcS"]); },
-                    defaultLength = 0.5f,
+                    defaultLength = 1f,
+                    resizable = true,
                     parameters = new List<Param>()
                     {
                         new Param("1JJ", new EntityTypes.Integer(-1, 24, 0), "E2 String (JJ)", "How many semitones up is this string pitched? If left at -1, this string will not play."),
@@ -58,10 +59,14 @@ namespace HeavenStudio.Games.Loaders
                         new Param("gcS", false, "Glee Club Guitar (Soshi)", "Will Soshi use the same guitar as in the glee club lessons?")
                     }
                 },
-                new GameAction("mute", "Mute")
+                new GameAction("prepare", "Prepare")
                 {
-                    function = delegate { Rockers.instance.Mute(eventCaller.currentEntity.beat); },
-                    defaultLength = 0.5f
+                    function = delegate { Rockers.instance.Mute(eventCaller.currentEntity["who"]); },
+                    defaultLength = 0.5f,
+                    parameters = new List<Param>()
+                    {
+                        new Param("who", Rockers.WhoMutes.JJ, "Who?", "Who will prepare? (Soshi is only affected by this event in auto-play.)")
+                    }
                 },
                 new GameAction("passTurn", "Pass Turn")
                 {
@@ -78,6 +83,12 @@ namespace HeavenStudio.Games
     using Scripts_Rockers;
     public class Rockers : Minigame
     {
+        public enum WhoMutes
+        {
+            JJ,
+            Soshi,
+            Both
+        }
         public static Rockers instance;
 
         public static CallAndResponseHandler crHandlerInstance;
@@ -182,10 +193,14 @@ namespace HeavenStudio.Games
             if (GameManager.instance.autoplay) Soshi.UnHold();
         }
 
-        public void Riff(float beat, int[] pitches, bool gleeClubJJ, int[] pitchesPlayer, bool gleeClubPlayer)
+        public void Riff(float beat, float length, int[] pitches, bool gleeClubJJ, int[] pitchesPlayer, bool gleeClubPlayer)
         {
             JJ.StrumStrings(gleeClubJJ, pitches);
-            crHandlerInstance.AddEvent(beat, "riff", new List<CallAndResponseHandler.CallAndResponseEventParam>()
+            BeatAction.New(instance.gameObject, new List<BeatAction.Action>()
+            {
+                new BeatAction.Action(beat + length, delegate { JJ.Mute(); })
+            });
+            crHandlerInstance.AddEvent(beat, length, "riff", new List<CallAndResponseHandler.CallAndResponseEventParam>()
             {
                 new CallAndResponseHandler.CallAndResponseEventParam("gleeClub", gleeClubPlayer),
                 new CallAndResponseHandler.CallAndResponseEventParam("1", pitchesPlayer[0]),
@@ -197,10 +212,16 @@ namespace HeavenStudio.Games
             });
         }
 
-        public void Mute(float beat)
+        public void Mute(int whoMutes)
         {
-            JJ.Mute();
-            crHandlerInstance.AddEvent(beat, "mute");
+            if (whoMutes is (int)WhoMutes.JJ or (int)WhoMutes.Both)
+            {
+                JJ.Mute();
+            }
+            if (whoMutes is (int)WhoMutes.Soshi or (int)WhoMutes.Both)
+            {
+                if (GameManager.instance.autoplay) Soshi.Mute();
+            }
         }
 
         public void PassTurn(float beat, float length)
@@ -215,12 +236,8 @@ namespace HeavenStudio.Games
                     {
                         RockersInput riffComp = Instantiate(rockerInputRef, transform);
                         riffComp.Init(crEvent["gleeClub"], new int[6] { crEvent["1"], crEvent["2"], crEvent["3"], crEvent["4"], crEvent["5"], crEvent["6"] }, beat, length + crEvent.relativeBeat);
+                        ScheduleInput(beat, length + crEvent.relativeBeat + crEvent.length, InputType.STANDARD_DOWN, JustMute, MuteMiss, Empty);
                     }
-                    else if (crEvent.tag == "mute")
-                    {
-                        ScheduleAutoplayInput(beat, length + crEvent.relativeBeat, InputType.STANDARD_DOWN, JustMute, MuteEmpty, MuteEmpty);
-                    }
-                    Debug.Log(crEvent.relativeBeat);
                 }
                 crHandlerInstance.queuedEvents.Clear();
                 JJ.UnHold();
@@ -236,7 +253,12 @@ namespace HeavenStudio.Games
             Soshi.Mute();
         } 
 
-        private void MuteEmpty(PlayerActionEvent caller)
+        private void MuteMiss(PlayerActionEvent caller)
+        {
+
+        }
+
+        private void Empty(PlayerActionEvent caller)
         {
 
         }

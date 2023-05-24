@@ -19,16 +19,19 @@ namespace HeavenStudio.Games
         public class CallAndResponseEvent
         {
             public float beat;
+            public float length;
             public float relativeBeat; // this beat is relative to the intervalStartBeat
             public Dictionary<string, dynamic> DynamicData; //if you need more properties for your queued event
             public string tag;
 
-            public CallAndResponseEvent(float beat, float relativeBeat, string tag)
+            public CallAndResponseEvent(float beat, float relativeBeat, string tag, float length = 0)
             {
                 this.beat = beat;
+                this.length = length;
                 this.relativeBeat = relativeBeat;
                 DynamicData = new Dictionary<string, dynamic>();
                 this.tag = tag;
+                this.length = length;
             }
 
             public void CreateProperty(string name, dynamic defaultValue)
@@ -115,13 +118,13 @@ namespace HeavenStudio.Games
         /// <param name="crParams">Extra properties to add to the event.</param>
         /// <param name="ignoreInterval">If true, this function will not start a new interval if the interval isn't active.</param>
         /// <param name="overrideInterval">If true, overrides the current interval.</param>
-        public void AddEvent(float beat, string tag = "", List<CallAndResponseEventParam> crParams = null, bool ignoreInterval = false, bool overrideInterval = false)
+        public void AddEvent(float beat, float length = 0, string tag = "", List<CallAndResponseEventParam> crParams = null, bool ignoreInterval = false, bool overrideInterval = false)
         {
             if ((!IntervalIsActive() && !ignoreInterval) || overrideInterval)
             {
                 StartInterval(beat, defaultIntervalLength);
             }
-            CallAndResponseEvent addedEvent = new CallAndResponseEvent(beat, beat - intervalStartBeat, tag);
+            CallAndResponseEvent addedEvent = new CallAndResponseEvent(beat, beat - intervalStartBeat, tag, length);
             if (crParams != null && crParams.Count > 0)
             {
                 foreach (var param in crParams)
