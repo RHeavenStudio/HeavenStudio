@@ -123,6 +123,7 @@ namespace HeavenStudio.Editor
 
         public void AddIcon(Minigames.Minigame minigame)
         {
+            if (minigame.hidden) return;
             GameObject GameIcon_ = Instantiate(GridGameSelector.GetChild(0).gameObject, GridGameSelector);
             GameIcon_.GetComponent<Image>().sprite = GameIcon(minigame.name);
             GameIcon_.GetComponent<GridGameSelectorGame>().MaskTex = GameIconMask(minigame.name);

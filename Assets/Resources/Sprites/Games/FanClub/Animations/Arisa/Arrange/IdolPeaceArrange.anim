@@ -282,7 +282,7 @@ AnimationClip:
       m_Curve:
       - serializedVersion: 3
         time: 0
-        value: {x: 0.28, y: 2.075, z: 0}
+        value: {x: 0.28, y: 2.125, z: 0}
         inSlope: {x: Infinity, y: Infinity, z: Infinity}
         outSlope: {x: Infinity, y: Infinity, z: Infinity}
         tangentMode: 0
@@ -291,7 +291,7 @@ AnimationClip:
         outWeight: {x: 0.33333334, y: 0.33333334, z: 0.33333334}
       - serializedVersion: 3
         time: 0.05
-        value: {x: 0.28, y: 2.12, z: 0}
+        value: {x: 0.28, y: 2.149, z: 0}
         inSlope: {x: Infinity, y: Infinity, z: Infinity}
         outSlope: {x: Infinity, y: Infinity, z: Infinity}
         tangentMode: 0
@@ -543,7 +543,7 @@ AnimationClip:
     - time: 0
       value: {fileID: -4822148881525915573, guid: 3ceb27c8c676e7a428cf6e15cd11b7ef, type: 3}
     - time: 0.16666667
-      value: {fileID: 5079826356707723058, guid: 3ceb27c8c676e7a428cf6e15cd11b7ef, type: 3}
+      value: {fileID: -4822148881525915573, guid: 3ceb27c8c676e7a428cf6e15cd11b7ef, type: 3}
     attribute: m_Sprite
     path: idol_head
     classID: 212
@@ -858,7 +858,7 @@ AnimationClip:
       isPPtrCurve: 1
     pptrCurveMapping:
     - {fileID: -4822148881525915573, guid: 3ceb27c8c676e7a428cf6e15cd11b7ef, type: 3}
-    - {fileID: 5079826356707723058, guid: 3ceb27c8c676e7a428cf6e15cd11b7ef, type: 3}
+    - {fileID: -4822148881525915573, guid: 3ceb27c8c676e7a428cf6e15cd11b7ef, type: 3}
     - {fileID: -989471627981227243, guid: 3ceb27c8c676e7a428cf6e15cd11b7ef, type: 3}
     - {fileID: 6316182542933813096, guid: 3ceb27c8c676e7a428cf6e15cd11b7ef, type: 3}
     - {fileID: 6316182542933813096, guid: 3ceb27c8c676e7a428cf6e15cd11b7ef, type: 3}
@@ -1662,7 +1662,7 @@ AnimationClip:
       m_Curve:
       - serializedVersion: 3
         time: 0
-        value: 2.075
+        value: 2.125
         inSlope: Infinity
         outSlope: Infinity
         tangentMode: 103
@@ -1671,7 +1671,7 @@ AnimationClip:
         outWeight: 0.33333334
       - serializedVersion: 3
         time: 0.05
-        value: 2.12
+        value: 2.149
         inSlope: Infinity
         outSlope: Infinity
         tangentMode: 103
