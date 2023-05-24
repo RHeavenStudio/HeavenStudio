@@ -78,17 +78,27 @@ namespace HeavenStudio.Games.Scripts_Rockers
                 if (pitches[i] == -1) continue;
                 if (stringSounds[i] != null)
                 {
-                    bendedStringSounds[i] = Jukebox.PlayOneShotGame("rockers/" + (G5 ? "BendG5" : "BendC6"), -1, Jukebox.GetPitchFromSemiTones(pitches[i], true), stringSounds[i].volume, true);
-                    stringSounds[i].Pause();
+                    stringSounds[i].BendUp(0.05f, FindRelativeBendPitch(i, stringSounds[i].pitch, G5, pitches[i]));
+                    StartCoroutine(BendUpLoop(i, pitches[i], G5));
                     soundCounter++;
                 }
             }
             if (soundCounter > 0) Jukebox.PlayOneShotGame("rockers/bendUp");
         }
 
+        IEnumerator BendUpLoop(int index, int pitch, bool G5)
+        {
+            while (strumming && !stringSounds[index].hasBended) 
+            {
+                yield return null;
+            }
+            if (strumming && bending) bendedStringSounds[index] = Jukebox.PlayOneShotGame("rockers/" + (G5 ? "BendG5" : "BendC6"), -1, Jukebox.GetPitchFromSemiTones(pitch, true), stringSounds[index].volume, true);
+        }
+
         public void BendDown()
         {
             if (!bending) return;
+            StopAllCoroutines();
             bending = false;
             foreach (var sound in bendedStringSounds)
             {
@@ -101,7 +111,7 @@ namespace HeavenStudio.Games.Scripts_Rockers
             {
                 if (sound != null)
                 {
-                    sound.UnPause();
+                    sound.BendDown(0.05f);
                 }
             }
             Jukebox.PlayOneShotGame("rockers/bendDown");
@@ -145,6 +155,35 @@ namespace HeavenStudio.Games.Scripts_Rockers
         private void DoScaledAnimationAsync(string name, float time)
         {
             anim.DoScaledAnimationAsync((JJ ? "JJ" : "") + name, time);
+        }
+
+        private float FindRelativeBendPitch(int index, float currentPitch, bool G5, int bendSemitones)
+        {
+            float semiToneValue = Mathf.Pow(2f, 1f / 12f) - 1f;
+            int semiTonesPitched = (int)((currentPitch - 1f) / semiToneValue);
+            int bendedPitch = 0;
+            switch (index)
+            {
+                case 1:
+                    bendedPitch = (G5 ? 39 : 40) + bendSemitones - semiTonesPitched;
+                    break;
+                case 2:
+                    bendedPitch = (G5 ? 46 : 47) + bendSemitones - semiTonesPitched;
+                    break;
+                case 3:
+                    bendedPitch = (G5 ? 29 : 30) + bendSemitones - semiTonesPitched;
+                    break;
+                case 4:
+                    bendedPitch = (G5 ? 24 : 25) + bendSemitones - semiTonesPitched;
+                    break;
+                case 5:
+                    bendedPitch = (G5 ? 16 : 17) + bendSemitones - semiTonesPitched;
+                    break;
+                case 6:
+                    bendedPitch = (G5 ? 15 : 16) + bendSemitones - semiTonesPitched;
+                    break;
+            }
+            return Jukebox.GetPitchFromSemiTones(bendedPitch, true);
         }
     }
 }
