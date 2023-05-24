@@ -23,15 +23,17 @@ namespace HeavenStudio.Games.Loaders
                 },
                 new GameAction("ding", "Ding!")
                 {
-                    function = delegate { 
+                    preFunction = delegate { 
                         var e = eventCaller.currentEntity; 
-                        MrUpbeat.instance.Ding(eventCaller.currentEntity["toggle"], e["stopBlipping"]); },
+                        MrUpbeat.Ding(e.beat, e["toggle"], e["stopBlipping"]); 
+                    },
                     defaultLength = 0.5f,
                     parameters = new List<Param>()
                     {
                         new Param("toggle", false, "Applause", "Plays an applause sound effect."),
                         new Param("stopBlipping", true, "Stop Blipping?", "When the stepping stops, should the blipping stop too?"),
-                    }
+                    },
+                    preFunctionLength = 1f,
                 },
                 new GameAction("changeBG", "Change Background Color")
                 {
@@ -100,13 +102,15 @@ namespace HeavenStudio.Games
         private Tween bgColorTween;
         public int stepIterate = 0;
         public static bool shouldBlip;
-        static bool noDing;
+        static bool isStepping;
+        static bool shouldntStop;
 
         public static MrUpbeat instance;
 
         private void Awake()
         {
             instance = this;
+            isStepping = false;
 
             blipMaterial.SetColor("_ColorBravo", new Color(0, 1f, 0));
         }
@@ -123,6 +127,7 @@ namespace HeavenStudio.Games
             }
 
             shouldBlip = false;
+            isStepping = false;
             stepIterate = 0;
         }
 
@@ -134,11 +139,11 @@ namespace HeavenStudio.Games
                     foreach (var input in queuedInputs) {
                         string dir = stepIterate % 2 == 1 ? "Right" : "Left";
                         BeatAction.New(instance.gameObject, new List<BeatAction.Action>() {
-                            new BeatAction.Action(input, delegate { 
+                            new BeatAction.Action(input, delegate {
                                 instance.metronomeAnim.DoScaledAnimationAsync("MetronomeGo" + dir, 0.5f);
                                 Jukebox.PlayOneShotGame("mrUpbeat/metronome" + dir);
                                 ScheduleInput(input, 0.5f, InputType.STANDARD_DOWN, Success, Miss, Nothing);
-                                if (MrUpbeat.noDing) queuedInputs.Add(input + 1);
+                                if (MrUpbeat.shouldntStop) queuedInputs.Add(input + 1);
                             }),
                         });
                         stepIterate++;
@@ -152,15 +157,23 @@ namespace HeavenStudio.Games
             }
         }
 
-        public void Ding(bool applause, bool stopBlipping)
+        public static void Ding(float beat, bool applause, bool stopBlipping)
         {
-            Jukebox.PlayOneShotGame("mrUpbeat/ding");
-            if (applause) Jukebox.PlayOneShot("applause");
-            if (stopBlipping) shouldBlip = false;
+            MrUpbeat.shouldntStop = false;
+            BeatAction.New(instance.gameObject, new List<BeatAction.Action>() {
+                new BeatAction.Action(beat, delegate {
+                    MrUpbeat.isStepping = false;
+                    Jukebox.PlayOneShotGame("mrUpbeat/ding");
+                    if (applause) Jukebox.PlayOneShot("applause");
+                    if (stopBlipping) MrUpbeat.shouldBlip = false;
+                }),
+            });
         }
 
         public static void StartStepping(float beat, float length)
         {
+            if (MrUpbeat.isStepping) return;
+            MrUpbeat.isStepping = true;
             if (GameManager.instance.currentGame != "mrUpbeat") {
                 Blipping(beat, length);
                 MrUpbeat.shouldBlip = true;
@@ -171,23 +184,9 @@ namespace HeavenStudio.Games
                     }),
                 });
             }
-            var dings = EventCaller.GetAllInGameManagerList("mrUpbeat", new string[] { "ding!" });
-            if (dings.Count == 0) {
-                MrUpbeat.noDing = true;
-                queuedInputs.Add(MathF.Floor(beat+length));
-                return;
-            }
-            MrUpbeat.noDing = false;
-            int whichDing = 0;
-            for (int i = 0; i < dings.Count; i++) {
-                if (dings[i].beat > beat) {
-                    whichDing = i;
-                    break;
-                }
-            }
-            for (int i = (int)length; i < dings[whichDing].beat - MathF.Floor(beat); i++) {
-                queuedInputs.Add(MathF.Floor(beat) + i);
-            }
+
+            MrUpbeat.shouldntStop = true;
+            queuedInputs.Add(MathF.Floor(beat+length));
         }
 
         public static void Blipping(float beat, float length)
