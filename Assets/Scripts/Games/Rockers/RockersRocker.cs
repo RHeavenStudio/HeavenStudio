@@ -13,6 +13,8 @@ namespace HeavenStudio.Games.Scripts_Rockers
 
         [SerializeField] private bool JJ;
 
+        private bool muted;
+
         private void Awake()
         {
             anim = GetComponent<Animator>();
@@ -40,6 +42,7 @@ namespace HeavenStudio.Games.Scripts_Rockers
 
         public void StrumStrings(bool gleeClub, int[] pitches)
         {
+            muted = false;
             StopSounds();
             Jukebox.PlayOneShotGame("rockers/noise");
             List<int> eligiblePitches = new List<int>();
@@ -55,7 +58,7 @@ namespace HeavenStudio.Games.Scripts_Rockers
                 Debug.Log("Pitch: " + pitch + " Volume: " + volume + " Name: " + soundName);
                 stringSounds[i] = Jukebox.PlayOneShotGame(soundName, -1, pitch, volume, true);
             }
-            DoScaledAnimationAsync("Idle", 0.5f);
+            DoScaledAnimationAsync("Strum", 0.5f);
         }
 
         private float GetVolumeBasedOnAmountOfStrings(int stringAmount)
@@ -81,11 +84,14 @@ namespace HeavenStudio.Games.Scripts_Rockers
             StopSounds();
             Jukebox.PlayOneShotGame("rockers/mute");
             DoScaledAnimationAsync("Crouch", 0.5f);
+            muted = true;
         }
 
         public void UnHold()
         {
-            DoScaledAnimationAsync("Idle", 0.5f);
+            if (!muted) return;
+            DoScaledAnimationAsync("UnCrouch", 0.5f);
+            muted = false;
         }
 
         private void DoScaledAnimationAsync(string name, float time)

@@ -17,7 +17,8 @@ namespace HeavenStudio.Games.Loaders
                 {
                     function = delegate { var e = eventCaller.currentEntity; Rockers.instance.StartInterval(e.beat, e.length); },
                     defaultLength = 8f,
-                    resizable = true
+                    resizable = true,
+                    preFunction = delegate { Rockers.PreMoveCamera(eventCaller.currentEntity.beat); }
                 },
                 new GameAction("riff", "Riff")
                 {
@@ -88,6 +89,11 @@ namespace HeavenStudio.Games
         [Header("Input")]
         [SerializeField] RockersInput rockerInputRef;
 
+        private float lastTargetCameraX = 0;
+        private float targetCameraX = 0;
+        private float cameraMoveBeat = -1;
+        private static List<float> queuedCameraEvents = new List<float>();
+
         private void Awake()
         {
             instance = this;
@@ -111,6 +117,7 @@ namespace HeavenStudio.Games
             {
                 crHandlerInstance = null;
             }
+            if (queuedCameraEvents.Count > 0) queuedCameraEvents.Clear();
         }
 
         private void Update()
@@ -127,6 +134,25 @@ namespace HeavenStudio.Games
                 {
                     Soshi.UnHold();
                 }
+
+                if (queuedCameraEvents.Count > 0)
+                {
+                    foreach (var cameraEvent in queuedCameraEvents)
+                    {
+                        MoveCamera(cameraEvent);
+                    }
+                    queuedCameraEvents.Clear();
+                }
+
+                float normalizedBeat = cond.GetPositionFromBeat(cameraMoveBeat, 1f);
+
+                if (normalizedBeat >= 0f && normalizedBeat <= 1f)
+                {
+                    EasingFunction.Function func = EasingFunction.GetEasingFunction(EasingFunction.Ease.EaseInOutQuint);
+
+                    float newX = func(lastTargetCameraX, targetCameraX, normalizedBeat);
+                    GameCamera.additionalPosition = new Vector3(newX, 0, 0);
+                }
             }
             if (!Conductor.instance.isPlaying || Conductor.instance.isPaused)
             {
@@ -134,9 +160,26 @@ namespace HeavenStudio.Games
             }
         }
 
+        public static void PreMoveCamera(float beat)
+        {
+            if (GameManager.instance.currentGame == "rockers")
+            {
+                instance.MoveCamera(beat - 1);
+            }
+            queuedCameraEvents.Add(beat - 1);
+        }
+
+        private void MoveCamera(float beat)
+        {
+            lastTargetCameraX = GameCamera.additionalPosition.x;
+            targetCameraX = JJ.transform.localPosition.x;
+            cameraMoveBeat = beat;
+        }
+
         public void StartInterval(float beat, float length)
         {
             crHandlerInstance.StartInterval(beat, length);
+            if (GameManager.instance.autoplay) Soshi.UnHold();
         }
 
         public void Riff(float beat, int[] pitches, bool gleeClubJJ, int[] pitchesPlayer, bool gleeClubPlayer)
@@ -180,6 +223,11 @@ namespace HeavenStudio.Games
                     Debug.Log(crEvent.relativeBeat);
                 }
                 crHandlerInstance.queuedEvents.Clear();
+                JJ.UnHold();
+
+                lastTargetCameraX = GameCamera.additionalPosition.x;
+                targetCameraX = Soshi.transform.localPosition.x;
+                cameraMoveBeat = beat;
             }
         }
 
