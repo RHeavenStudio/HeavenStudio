@@ -131,16 +131,6 @@ namespace HeavenStudio.Games
             }
             queuedEvents.Add(addedEvent);
         }
-        /// <summary>
-        /// Passes the turn and returns a list of all events gathered in the interval.
-        /// </summary>
-        /// <returns></returns>
-        public List<CallAndResponseEvent> PassTurn()
-        {
-            List<CallAndResponseEvent> eventsToReturn = queuedEvents;
-            queuedEvents.Clear();
-            return eventsToReturn;
-        }
 
         /// <summary>
         /// Check if an event exists at beat.

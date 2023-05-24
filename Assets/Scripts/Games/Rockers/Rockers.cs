@@ -38,6 +38,7 @@ namespace HeavenStudio.Games.Loaders
                         e["5S"],
                         e["6S"],
                     }, e["gcS"]); },
+                    defaultLength = 0.5f,
                     parameters = new List<Param>()
                     {
                         new Param("1JJ", new EntityTypes.Integer(-1, 24, 0), "E2 String (JJ)", "How many semitones up is this string pitched? If left at -1, this string will not play."),
@@ -58,7 +59,8 @@ namespace HeavenStudio.Games.Loaders
                 },
                 new GameAction("mute", "Mute")
                 {
-                    function = delegate { Rockers.instance.Mute(); },
+                    function = delegate { Rockers.instance.Mute(eventCaller.currentEntity.beat); },
+                    defaultLength = 0.5f
                 },
                 new GameAction("passTurn", "Pass Turn")
                 {
@@ -152,26 +154,43 @@ namespace HeavenStudio.Games
             });
         }
 
-        public void Mute()
+        public void Mute(float beat)
         {
             JJ.Mute();
+            crHandlerInstance.AddEvent(beat, "mute");
         }
 
         public void PassTurn(float beat, float length)
         {
             if (crHandlerInstance.queuedEvents.Count > 0)
             {
-                List<CallAndResponseHandler.CallAndResponseEvent> crEvents = crHandlerInstance.PassTurn();
+                List<CallAndResponseHandler.CallAndResponseEvent> crEvents = crHandlerInstance.queuedEvents;
 
                 foreach (var crEvent in crEvents)
                 {
                     if (crEvent.tag == "riff")
                     {
                         RockersInput riffComp = Instantiate(rockerInputRef, transform);
-                        riffComp.Init(crEvent["gleeClub"], new int[6] { crEvent["1"], crEvent["2"], crEvent["3"], crEvent["4"], crEvent["5"], crEvent["6"] }, beat, beat + length + crEvent.relativeBeat);
+                        riffComp.Init(crEvent["gleeClub"], new int[6] { crEvent["1"], crEvent["2"], crEvent["3"], crEvent["4"], crEvent["5"], crEvent["6"] }, beat, length + crEvent.relativeBeat);
                     }
+                    else if (crEvent.tag == "mute")
+                    {
+                        ScheduleAutoplayInput(beat, length + crEvent.relativeBeat, InputType.STANDARD_DOWN, JustMute, MuteEmpty, MuteEmpty);
+                    }
+                    Debug.Log(crEvent.relativeBeat);
                 }
+                crHandlerInstance.queuedEvents.Clear();
             }
+        }
+
+        private void JustMute(PlayerActionEvent caller, float state)
+        {
+            Soshi.Mute();
+        } 
+
+        private void MuteEmpty(PlayerActionEvent caller)
+        {
+
         }
     }
 }
