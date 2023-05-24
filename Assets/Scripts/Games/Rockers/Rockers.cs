@@ -217,7 +217,7 @@ namespace HeavenStudio.Games
         public void Riff(float beat, float length, int[] pitches, bool gleeClubJJ, int[] pitchesPlayer, bool gleeClubPlayer)
         {
             DynamicBeatmap.DynamicEntity foundEvent = riffEvents.Find(x => x.beat == beat);
-            if (foundEvent == null || (riffUsedBeats.Count > 0 && riffUsedBeats.Contains(foundEvent.beat))) return;
+            if ((foundEvent == null || (riffUsedBeats.Count > 0 && riffUsedBeats.Contains(foundEvent.beat))) && riffEvents.Count > 1) return;
             riffUsedBeats.Add(beat);
             JJ.StrumStrings(gleeClubJJ, pitches);
             BeatAction.New(instance.gameObject, new List<BeatAction.Action>()
