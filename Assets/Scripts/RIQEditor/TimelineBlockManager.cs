@@ -125,10 +125,16 @@ namespace HeavenStudio.RIQEditor
                 }
 
                 var newWidth = EditorMain.Instance.Timeline.pixelsPerBeat * nextBeat;
-                rect.anchoredPosition = rect.anchoredPosition.ModifyX(bg.Beat * EditorMain.Instance.Timeline.pixelsPerBeat);
+                var newX = bg.Beat * EditorMain.Instance.Timeline.pixelsPerBeat;
                 rect.sizeDelta = rect.sizeDelta.ModifyX(newWidth);
+                rect.anchoredPosition = rect.anchoredPosition.ModifyX(newX);
                 
-                rect.GetChild(0).GetComponent<RawImage>().uvRect = new Rect(0, 0, newWidth / EditorMain.Instance.Timeline.timelineHeight, 1);
+                rect.GetChild(0).GetComponent<RectTransform>().anchoredPosition =
+                    rect.GetChild(0).GetComponent<RectTransform>().anchoredPosition.ModifyX(EditorMain.Instance.Timeline.timelineX - newX);
+
+                rect.GetChild(0).GetComponent<RectTransform>().sizeDelta = rect.GetChild(0)
+                    .GetComponent<RectTransform>().sizeDelta.ModifyX(EditorMain.Instance.Timeline.timelineWidth);
+                rect.GetChild(0).GetComponent<RawImage>().uvRect = new Rect(0, 0, EditorMain.Instance.Timeline.timelineWidth / EditorMain.Instance.Timeline.timelineHeight, 1);
             }
         }
     }

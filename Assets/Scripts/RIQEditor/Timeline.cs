@@ -14,6 +14,7 @@ namespace HeavenStudio.RIQEditor
         private float lastZoom;
         public Vector2 relativeMousePos;
         
+        public float timelineX { get; private set; }
         public float timelineWidth { get; private set; }
         public float timelineHeight { get; private set; }
         public float pixelsPerBeat { get; private set; }
@@ -137,6 +138,7 @@ namespace HeavenStudio.RIQEditor
         private void UpdatePerBeat()
         {
             pixelsPerBeat = 100 * zoom;
+            timelineX = -Content.anchoredPosition.x;
             timelineWidth = Viewport.rect.width;
             timelineHeight = TimelineContent.rect.height;
             
