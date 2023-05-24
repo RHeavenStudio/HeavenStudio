@@ -8,12 +8,15 @@ namespace HeavenStudio.Games.Scripts_Rockers
     public class RockersRocker : MonoBehaviour
     {
         private Sound[] stringSounds = new Sound[6];
+        private Sound[] bendedStringSounds = new Sound[6];
         private Sound chordSound;
         private Animator anim;
 
         [SerializeField] private bool JJ;
 
         private bool muted;
+        private bool strumming;
+        private bool bending;
 
         private void Awake()
         {
@@ -34,6 +37,13 @@ namespace HeavenStudio.Games.Scripts_Rockers
                     sound.KillLoop(0);
                 }
             }
+            foreach (var sound in bendedStringSounds)
+            {
+                if (sound != null)
+                {
+                    sound.KillLoop(0);
+                }
+            }
             if (chordSound != null)
             {
                 chordSound.KillLoop(0);
@@ -43,22 +53,58 @@ namespace HeavenStudio.Games.Scripts_Rockers
         public void StrumStrings(bool gleeClub, int[] pitches)
         {
             muted = false;
+            strumming = true;
             StopSounds();
             Jukebox.PlayOneShotGame("rockers/noise");
-            List<int> eligiblePitches = new List<int>();
-            foreach (var pitch in pitches)
+            for (int i = 0; i < pitches.Length; i++)
             {
-                if (pitch != -1) eligiblePitches.Add(pitch);
-            }
-            for (int i = 0; i < eligiblePitches.Count; i++)
-            {
-                float pitch = Jukebox.GetPitchFromSemiTones(eligiblePitches[i], true);
-                float volume = GetVolumeBasedOnAmountOfStrings(eligiblePitches.Count);
+                if (pitches[i] == -1) continue;
+                float pitch = Jukebox.GetPitchFromSemiTones(pitches[i], true);
+                float volume = GetVolumeBasedOnAmountOfStrings(pitches.Length);
                 string soundName = "rockers/strings/" + (gleeClub ? "gleeClub/" : "normal/" + (i + 1));
                 Debug.Log("Pitch: " + pitch + " Volume: " + volume + " Name: " + soundName);
                 stringSounds[i] = Jukebox.PlayOneShotGame(soundName, -1, pitch, volume, true);
             }
             DoScaledAnimationAsync("Strum", 0.5f);
+        }
+
+        public void BendUp(bool G5, int[] pitches)
+        {
+            if (bending || !strumming) return;
+            bending = true;
+            int soundCounter = 0;
+            for (int i = 0; i < stringSounds.Length; i++)
+            {
+                if (pitches[i] == -1) continue;
+                if (stringSounds[i] != null)
+                {
+                    bendedStringSounds[i] = Jukebox.PlayOneShotGame("rockers/" + (G5 ? "BendG5" : "BendC6"), -1, Jukebox.GetPitchFromSemiTones(pitches[i], true), stringSounds[i].volume, true);
+                    stringSounds[i].Pause();
+                    soundCounter++;
+                }
+            }
+            if (soundCounter > 0) Jukebox.PlayOneShotGame("rockers/bendUp");
+        }
+
+        public void BendDown()
+        {
+            if (!bending) return;
+            bending = false;
+            foreach (var sound in bendedStringSounds)
+            {
+                if (sound != null)
+                {
+                    sound.KillLoop(0);
+                }
+            }
+            foreach (var sound in stringSounds)
+            {
+                if (sound != null)
+                {
+                    sound.UnPause();
+                }
+            }
+            Jukebox.PlayOneShotGame("rockers/bendDown");
         }
 
         private float GetVolumeBasedOnAmountOfStrings(int stringAmount)
@@ -81,6 +127,8 @@ namespace HeavenStudio.Games.Scripts_Rockers
 
         public void Mute()
         {
+            strumming = false;
+            bending = false;
             StopSounds();
             Jukebox.PlayOneShotGame("rockers/mute");
             DoScaledAnimationAsync("Crouch", 0.5f);

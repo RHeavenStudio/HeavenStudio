@@ -136,6 +136,18 @@ namespace HeavenStudio.Util
                 audioSource.Stop();
         }
 
+        public void Pause()
+        {
+            if (audioSource != null)
+                audioSource.Pause();
+        }
+
+        public void UnPause()
+        {
+            if (audioSource != null)
+                audioSource.UnPause();
+        }
+
         public void Delete()
         {
             GameManager.instance.SoundObjects.Remove(gameObject);
