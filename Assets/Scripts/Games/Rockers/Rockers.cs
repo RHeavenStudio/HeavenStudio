@@ -105,12 +105,33 @@ namespace HeavenStudio.Games
         private float cameraMoveBeat = -1;
         private static List<float> queuedCameraEvents = new List<float>();
 
+        private List<DynamicBeatmap.DynamicEntity> riffEvents = new List<DynamicBeatmap.DynamicEntity>();
+
+        private List<float> riffUsedBeats = new List<float>();
+
         private void Awake()
         {
             instance = this;
             if (crHandlerInstance == null)
             {
                 crHandlerInstance = new CallAndResponseHandler(8);
+            }
+            var tempEvents = EventCaller.GetAllInGameManagerList("rockers", new string[] { "riff" });
+            if (tempEvents.Count > 1)
+            {
+                tempEvents.Sort((s1, s2) => s1.beat.CompareTo(s2.beat));
+                float forbiddenLength = tempEvents[0].beat + tempEvents[0].length;
+                List<DynamicBeatmap.DynamicEntity> tempEvents2 = new List<DynamicBeatmap.DynamicEntity>();
+                for (int i = 1; i < tempEvents.Count; i++)
+                {
+                    if (tempEvents[i].beat > forbiddenLength)
+                    {
+                        tempEvents2.Add(tempEvents[i]);
+                        forbiddenLength = tempEvents[i].beat + tempEvents[i].length;
+                    }
+                }
+                tempEvents2.Add(tempEvents[0]);
+                riffEvents = tempEvents2;
             }
         }
 
@@ -195,6 +216,9 @@ namespace HeavenStudio.Games
 
         public void Riff(float beat, float length, int[] pitches, bool gleeClubJJ, int[] pitchesPlayer, bool gleeClubPlayer)
         {
+            DynamicBeatmap.DynamicEntity foundEvent = riffEvents.Find(x => x.beat == beat);
+            if (foundEvent == null || (riffUsedBeats.Count > 0 && riffUsedBeats.Contains(foundEvent.beat))) return;
+            riffUsedBeats.Add(beat);
             JJ.StrumStrings(gleeClubJJ, pitches);
             BeatAction.New(instance.gameObject, new List<BeatAction.Action>()
             {
