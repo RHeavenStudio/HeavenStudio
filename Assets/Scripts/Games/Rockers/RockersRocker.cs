@@ -11,6 +11,9 @@ namespace HeavenStudio.Games.Scripts_Rockers
         private Sound[] bendedStringSounds = new Sound[6];
         private Sound chordSound;
         private Animator anim;
+        public int[] lastPitches = new int[6];
+        public int[] lastBendPitches = new int[6];
+        public bool lastG5 = true;
 
         [SerializeField] private bool JJ;
 
@@ -56,6 +59,7 @@ namespace HeavenStudio.Games.Scripts_Rockers
             strumming = true;
             StopSounds();
             Jukebox.PlayOneShotGame("rockers/noise");
+            lastPitches = pitches;
             for (int i = 0; i < pitches.Length; i++)
             {
                 if (pitches[i] == -1) continue;
@@ -73,6 +77,8 @@ namespace HeavenStudio.Games.Scripts_Rockers
             if (bending || !strumming) return;
             bending = true;
             int soundCounter = 0;
+            lastBendPitches = pitches;
+            lastG5 = G5;
             for (int i = 0; i < stringSounds.Length; i++)
             {
                 if (pitches[i] == -1) continue;

@@ -286,6 +286,7 @@ Transform:
   - {fileID: 5606319601331460275}
   - {fileID: 767185000445248397}
   - {fileID: 2182325578177703271}
+  - {fileID: 1678916107077499283}
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -308,6 +309,7 @@ MonoBehaviour:
   JJ: {fileID: 7206269671671175185}
   Soshi: {fileID: 2385005978484964389}
   rockerInputRef: {fileID: 3080597624921365079}
+  rockerBendInputRef: {fileID: 1966937570688645389}
 --- !u!1 &401841302730654488
 GameObject:
   m_ObjectHideFlags: 0
@@ -1552,6 +1554,50 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
+--- !u!1 &1499940555651691853
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1678916107077499283}
+  - component: {fileID: 1966937570688645389}
+  m_Layer: 0
+  m_Name: BendInput
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1678916107077499283
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1499940555651691853}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0.2417924, y: 0.0016205013, z: 0.16338366}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 7266849374734142864}
+  m_RootOrder: 5
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1966937570688645389
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1499940555651691853}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 40bd44c5381eb69468a65caa371f3876, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1545172768864729373
 GameObject:
   m_ObjectHideFlags: 0
@@ -4904,7 +4950,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &2182325578177703271
 Transform:
   m_ObjectHideFlags: 0

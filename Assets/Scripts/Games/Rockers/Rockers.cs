@@ -140,6 +140,7 @@ namespace HeavenStudio.Games
 
         [Header("Input")]
         [SerializeField] RockersInput rockerInputRef;
+        [SerializeField] RockerBendInput rockerBendInputRef;
 
         private float lastTargetCameraX = 0;
         private float targetCameraX = 0;
@@ -245,6 +246,14 @@ namespace HeavenStudio.Games
                 if (PlayerInput.PressedUp() && !IsExpectingInputNow(InputType.STANDARD_UP))
                 {
                     Soshi.UnHold();
+                }
+                if (PlayerInput.GetAnyDirectionDown() && !IsExpectingInputNow(InputType.DIRECTION_DOWN))
+                {
+                    Soshi.BendUp(Soshi.lastG5, Soshi.lastBendPitches);
+                }
+                if (PlayerInput.GetAnyDirectionUp() && !IsExpectingInputNow(InputType.DIRECTION_UP))
+                {
+                    Soshi.BendDown();
                 }
 
                 if (queuedCameraEvents.Count > 0)
@@ -367,6 +376,12 @@ namespace HeavenStudio.Games
                         riffComp.Init(crEvent["gleeClub"], new int[6] { crEvent["1"], crEvent["2"], crEvent["3"], crEvent["4"], crEvent["5"], crEvent["6"] }, beat, length + crEvent.relativeBeat);
                         ScheduleInput(beat, length + crEvent.relativeBeat + crEvent.length, InputType.STANDARD_DOWN, JustMute, MuteMiss, Empty);
                     }
+                    else if (crEvent.tag == "bend")
+                    {
+                        RockerBendInput bendComp = Instantiate(rockerBendInputRef, transform);
+                        bendComp.Init(crEvent["G5"], new int[6] { crEvent["1"], crEvent["2"], crEvent["3"], crEvent["4"], crEvent["5"], crEvent["6"] }, beat, length + crEvent.relativeBeat);
+                        ScheduleInput(beat, length + crEvent.relativeBeat + crEvent.length, InputType.DIRECTION_UP, JustUnBend, UnBendMiss, Empty);
+                    }
                 }
                 crHandlerInstance.queuedEvents.Clear();
                 JJ.UnHold();
@@ -383,6 +398,16 @@ namespace HeavenStudio.Games
         } 
 
         private void MuteMiss(PlayerActionEvent caller)
+        {
+
+        }
+
+        private void JustUnBend(PlayerActionEvent caller, float state)
+        {
+            Soshi.BendDown();
+        }
+
+        private void UnBendMiss(PlayerActionEvent caller)
         {
 
         }
