@@ -64,6 +64,7 @@ namespace HeavenStudio.Games.Scripts_Rockers
             }
             DoScaledAnimationAsync("Strum", 0.5f);
             strumEffect.SetActive(true);
+            strumEffect.GetComponent<Animator>().Play("StrumStart", 0, 0);
         }
 
         public void BendUp(int pitch)

@@ -83,6 +83,32 @@ namespace HeavenStudio.Games.Loaders
                 {
                     function = delegate { var e = eventCaller.currentEntity; Rockers.instance.PassTurn(e.beat, e.length); },
                     resizable = true
+                },
+                new GameAction("count", "Count In")
+                {
+                    parameters = new List<Param>()
+                    {
+                        new Param("count", Rockers.CountIn.One, "Count", "Which voiceline?")
+                    },
+                    preFunction = delegate 
+                    { 
+                        var e = eventCaller.currentEntity;
+                        float offSet = 0;
+                        switch (e["count"])
+                        {
+                            case 1:
+                                offSet = 0.028f;
+                                break;
+                            case 2:
+                            case 3:
+                                offSet = 0.033f;
+                                break;
+                            case 4:
+                                offSet = 0.034f;
+                                break;
+                        }
+                        Jukebox.PlayOneShot($"games/rockers/count/{e["count"]}", e.beat, 1, 1, false, null, offSet); 
+                    }
                 }
             });
         }
@@ -101,6 +127,13 @@ namespace HeavenStudio.Games
             JJ,
             Soshi,
             Both
+        }
+        public enum CountIn
+        {
+            One = 1,
+            Two = 2,
+            Three = 3,
+            Four = 4
         }
         public static Rockers instance;
 
