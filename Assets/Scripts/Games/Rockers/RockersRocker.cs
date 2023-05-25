@@ -76,7 +76,6 @@ namespace HeavenStudio.Games.Scripts_Rockers
         {
             if (bending || !strumming) return;
             bending = true;
-            int soundCounter = 0;
             lastBendPitches = pitches;
             lastG5 = G5;
             for (int i = 0; i < stringSounds.Length; i++)
@@ -85,10 +84,10 @@ namespace HeavenStudio.Games.Scripts_Rockers
                 {
                     stringSounds[i].BendUp(0.05f, FindRelativeBendPitch(i, stringSounds[i].pitch, G5, pitches[i]));
                     StartCoroutine(BendUpLoop(i, pitches[i], G5));
-                    soundCounter++;
                 }
             }
-            if (soundCounter > 0) Jukebox.PlayOneShotGame("rockers/bendUp");
+            Jukebox.PlayOneShotGame("rockers/bendUp");
+            DoScaledAnimationAsync("Bend", 0.5f);
         }
 
         IEnumerator BendUpLoop(int index, int pitch, bool G5)
@@ -120,6 +119,7 @@ namespace HeavenStudio.Games.Scripts_Rockers
                 }
             }
             Jukebox.PlayOneShotGame("rockers/bendDown");
+            DoScaledAnimationAsync("Unbend", 0.5f);
         }
 
         private float GetVolumeBasedOnAmountOfStrings(int stringAmount)
