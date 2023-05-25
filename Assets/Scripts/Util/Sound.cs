@@ -34,8 +34,6 @@ namespace HeavenStudio.Util
         bool playInstant = false;
         bool played = false;
 
-        public bool hasBended = false; //only used with rockers
-
         private void Start()
         {
             audioSource = GetComponent<AudioSource>();
@@ -168,8 +166,6 @@ namespace HeavenStudio.Util
 
         public void BendDown(float bendTime)
         {
-            UnPause();
-            hasBended = false;
             StartCoroutine(BendDownLoop(bendTime));
         }
 
@@ -186,20 +182,18 @@ namespace HeavenStudio.Util
                 audioSource.pitch = Mathf.Min(currentPitch, bendedPitch);
                 yield return null;
             }
-            hasBended = true;
-            Pause();
         }
 
         IEnumerator BendDownLoop(float bendTime)
         {
             float bendTimer = 0f;
-            float startingPitch = audioSource.pitch;
+            float startingPitch = pitch;
 
             while (bendTimer < bendTime)
             {
                 bendTimer += Time.deltaTime;
                 float normalizedProgress = Mathp.Normalize(bendTimer, 0, bendTime);
-                float currentPitch = Mathf.Lerp(startingPitch, bendedPitch, -normalizedProgress);
+                float currentPitch = Mathf.Lerp(startingPitch, bendedPitch, 1 - normalizedProgress);
                 audioSource.pitch = Mathf.Max(currentPitch, pitch);
                 yield return null;
             }

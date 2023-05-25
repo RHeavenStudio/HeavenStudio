@@ -61,41 +61,13 @@ namespace HeavenStudio.Games.Loaders
                 },
                 new GameAction("bend", "Bend")
                 {
-                    function = delegate { var e = eventCaller.currentEntity; Rockers.instance.Bend(e.beat, e.length, new int[6]
-                    {
-                        e["1JJ"],
-                        e["2JJ"],
-                        e["3JJ"],
-                        e["4JJ"],
-                        e["5JJ"],
-                        e["6JJ"],
-                    }, e["gcJJ"], new int[6]
-                    {
-                        e["1S"],
-                        e["2S"],
-                        e["3S"],
-                        e["4S"],
-                        e["5S"],
-                        e["6S"],
-                    }, e["gcS"]); },
+                    function = delegate { var e = eventCaller.currentEntity; Rockers.instance.Bend(e.beat, e.length, e["1JJ"], e["1S"]); },
                     defaultLength = 1f,
                     resizable = true,
                     parameters = new List<Param>()
                     {
-                        new Param("1JJ", new EntityTypes.Integer(-24, 24, 0), "E2 String (JJ)", "How many semitones up is this string pitched? If left at -1, this string will not play."),
-                        new Param("2JJ", new EntityTypes.Integer(-24, 24, 0), "A2 String (JJ)", "How many semitones up is this string pitched? If left at -1, this string will not play."),
-                        new Param("3JJ", new EntityTypes.Integer(-24, 24, 0), "D3 String (JJ)", "How many semitones up is this string pitched? If left at -1, this string will not play."),
-                        new Param("4JJ", new EntityTypes.Integer(-24, 24, 0), "G3 String (JJ)", "How many semitones up is this string pitched? If left at -1, this string will not play."),
-                        new Param("5JJ", new EntityTypes.Integer(-24, 24, 0), "B3 String (JJ)", "How many semitones up is this string pitched? If left at -1, this string will not play."),
-                        new Param("6JJ", new EntityTypes.Integer(-24, 24, 0), "E4 String (JJ)", "How many semitones up is this string pitched? If left at -1, this string will not play."),
-                        new Param("gcJJ", true, "Use G5 as base bend note? (JJ)", "If unchecked, uses C6 instead."),
-                        new Param("1S", new EntityTypes.Integer(-24, 24, 0), "E2 String (Soshi)", "How many semitones up is this string pitched? If left at -1, this string will not play."),
-                        new Param("2S", new EntityTypes.Integer(-24, 24, 0), "A2 String (Soshi)", "How many semitones up is this string pitched? If left at -1, this string will not play."),
-                        new Param("3S", new EntityTypes.Integer(-24, 24, 0), "D3 String (Soshi)", "How many semitones up is this string pitched? If left at -1, this string will not play."),
-                        new Param("4S", new EntityTypes.Integer(-24, 24, 0), "G3 String (Soshi)", "How many semitones up is this string pitched? If left at -1, this string will not play."),
-                        new Param("5S", new EntityTypes.Integer(-24, 24, 0), "B3 String (Soshi)", "How many semitones up is this string pitched? If left at -1, this string will not play."),
-                        new Param("6S", new EntityTypes.Integer(-24, 24, 0), "E4 String (Soshi)", "How many semitones up is this string pitched? If left at -1, this string will not play."),
-                        new Param("gcS", true, "Use G5 as base bend note? (Soshi)", "If unchecked, uses C6 instead.")
+                        new Param("1JJ", new EntityTypes.Integer(1, 24, 1), "Pitch Bend (JJ)", "How many semitones up is the current riff gonna be pitchbended?"),
+                        new Param("1S", new EntityTypes.Integer(1, 24, 1), "Pitch Bend (Soshi)", "How many semitones up is the current riff gonna be pitchbended?"),
                     }
                 },
                 new GameAction("prepare", "Prepare")
@@ -249,7 +221,7 @@ namespace HeavenStudio.Games
                 }
                 if (PlayerInput.GetAnyDirectionDown() && !IsExpectingInputNow(InputType.DIRECTION_DOWN))
                 {
-                    Soshi.BendUp(Soshi.lastG5, Soshi.lastBendPitches);
+                    Soshi.BendUp(Soshi.lastBendPitch);
                 }
                 if (PlayerInput.GetAnyDirectionUp() && !IsExpectingInputNow(InputType.DIRECTION_UP))
                 {
@@ -325,7 +297,7 @@ namespace HeavenStudio.Games
             });
         }
 
-        public void Bend(float beat, float length, int[] pitches, bool G5JJ, int[] pitchesPlayer, bool G5Soshi)
+        public void Bend(float beat, float length, int pitchJJ, int pitchSoshi)
         {
             if (riffEvents.Count == 0) return;
             DynamicBeatmap.DynamicEntity foundEvent = bendEvents.Find(x => x.beat == beat);
@@ -333,20 +305,14 @@ namespace HeavenStudio.Games
             DynamicBeatmap.DynamicEntity riffEventToCheck = riffEvents.Find(x => beat >= x.beat && beat < x.beat + x.length);
             if (riffEventToCheck == null) return;
             bendUsedBeats.Add(beat);
-            JJ.BendUp(G5JJ, pitches);
+            JJ.BendUp(pitchJJ);
             BeatAction.New(instance.gameObject, new List<BeatAction.Action>()
             {
                 new BeatAction.Action(beat + length, delegate { JJ.BendDown(); })
             });
             crHandlerInstance.AddEvent(beat, length, "bend", new List<CallAndResponseHandler.CallAndResponseEventParam>()
             {
-                new CallAndResponseHandler.CallAndResponseEventParam("G5", G5Soshi),
-                new CallAndResponseHandler.CallAndResponseEventParam("1", pitchesPlayer[0]),
-                new CallAndResponseHandler.CallAndResponseEventParam("2", pitchesPlayer[1]),
-                new CallAndResponseHandler.CallAndResponseEventParam("3", pitchesPlayer[2]),
-                new CallAndResponseHandler.CallAndResponseEventParam("4", pitchesPlayer[3]),
-                new CallAndResponseHandler.CallAndResponseEventParam("5", pitchesPlayer[4]),
-                new CallAndResponseHandler.CallAndResponseEventParam("6", pitchesPlayer[5]),
+                new CallAndResponseHandler.CallAndResponseEventParam("Pitch", pitchSoshi),
             });
         }
 
@@ -379,7 +345,7 @@ namespace HeavenStudio.Games
                     else if (crEvent.tag == "bend")
                     {
                         RockerBendInput bendComp = Instantiate(rockerBendInputRef, transform);
-                        bendComp.Init(crEvent["G5"], new int[6] { crEvent["1"], crEvent["2"], crEvent["3"], crEvent["4"], crEvent["5"], crEvent["6"] }, beat, length + crEvent.relativeBeat);
+                        bendComp.Init(crEvent["Pitch"], beat, length + crEvent.relativeBeat);
                         ScheduleInput(beat, length + crEvent.relativeBeat + crEvent.length, InputType.DIRECTION_UP, JustUnBend, UnBendMiss, Empty);
                     }
                 }
