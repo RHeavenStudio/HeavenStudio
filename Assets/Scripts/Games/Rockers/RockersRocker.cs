@@ -15,6 +15,8 @@ namespace HeavenStudio.Games.Scripts_Rockers
         public int[] lastBendPitches = new int[6];
         public bool lastG5 = true;
 
+        [SerializeField] private GameObject strumEffect;
+
         [SerializeField] private bool JJ;
 
         private bool muted;
@@ -70,6 +72,7 @@ namespace HeavenStudio.Games.Scripts_Rockers
                 stringSounds[i] = Jukebox.PlayOneShotGame(soundName, -1, pitch, volume, true);
             }
             DoScaledAnimationAsync("Strum", 0.5f);
+            strumEffect.SetActive(true);
         }
 
         public void BendUp(bool G5, int[] pitches)
@@ -143,6 +146,7 @@ namespace HeavenStudio.Games.Scripts_Rockers
         public void Mute()
         {
             strumming = false;
+            strumEffect.SetActive(false);
             bending = false;
             StopSounds();
             Jukebox.PlayOneShotGame("rockers/mute");
