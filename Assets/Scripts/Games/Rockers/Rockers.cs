@@ -147,7 +147,24 @@ namespace HeavenStudio.Games
             PracticeChordD,
             Remix6ChordA,
             Remix10ChordD,
-            Remix10ChordFSharpm
+            Remix10ChordFSharpm,
+            DoremiChordA7,
+            DoremiChordAm7,
+            DoremiChordC,
+            DoremiChordC7,
+            DoremiChordCadd9,
+            DoremiChordDm,
+            DoremiChordDm7,
+            DoremiChordEm,
+            DoremiChordF,
+            DoremiChordFadd9,
+            DoremiChordFm,
+            DoremiChordG,
+            DoremiChordG7,
+            DoremiChordGm,
+            DoremiChordGsus4,
+            DoremiNoteA2,
+            DoremiNoteE2
         }
         public enum WhoMutes
         {
