@@ -46,22 +46,54 @@ namespace HeavenStudio.Games.Scripts_Rockers
             }
         }
 
-        public void StrumStrings(bool gleeClub, int[] pitches)
+        public void StrumStrings(bool gleeClub, int[] pitches, Rockers.PremadeSamples sample, int sampleTones)
         {
             muted = false;
             strumming = true;
             StopSounds();
-            //Jukebox.PlayOneShotGame("rockers/noise");
-            lastPitches = pitches;
-            for (int i = 0; i < pitches.Length; i++)
+            if (sample == Rockers.PremadeSamples.None)
             {
-                if (pitches[i] == -1) continue;
-                float pitch = Jukebox.GetPitchFromSemiTones(pitches[i], true);
-                float volume = GetVolumeBasedOnAmountOfStrings(pitches.Length);
-                string soundName = "rockers/strings/" + (gleeClub ? "gleeClub/" : "normal/" + (i + 1));
-                Debug.Log("Pitch: " + pitch + " Volume: " + volume + " Name: " + soundName);
-                stringSounds[i] = Jukebox.PlayOneShotGame(soundName, -1, pitch, volume, true);
+                lastPitches = pitches;
+                for (int i = 0; i < pitches.Length; i++)
+                {
+                    if (pitches[i] == -1) continue;
+                    float pitch = Jukebox.GetPitchFromSemiTones(pitches[i], true);
+                    float volume = GetVolumeBasedOnAmountOfStrings(pitches.Length);
+                    string soundName = "rockers/strings/" + (gleeClub ? "gleeClub/" : "normal/" + (i + 1));
+                    Debug.Log("Pitch: " + pitch + " Volume: " + volume + " Name: " + soundName);
+                    stringSounds[i] = Jukebox.PlayOneShotGame(soundName, -1, pitch, volume, true);
+                }
             }
+            else
+            {
+                float pitch = Jukebox.GetPitchFromSemiTones(sampleTones, true);
+                string soundName = sample switch
+                {
+                    Rockers.PremadeSamples.None => "",
+                    Rockers.PremadeSamples.BendG5 => "rockers/BendG5",
+                    Rockers.PremadeSamples.BendC6 => "rockers/BendC6",
+                    Rockers.PremadeSamples.ChordA => "rockers/rocker/ChordA",
+                    Rockers.PremadeSamples.ChordAsus4 => "rockers/rocker/ChordAsus4",
+                    Rockers.PremadeSamples.ChordBm => "rockers/rocker/ChordBm",
+                    Rockers.PremadeSamples.ChordCSharpm7 => "rockers/rocker/ChordC#m7",
+                    Rockers.PremadeSamples.ChordDmaj7 => "rockers/rocker/ChordDmaj7",
+                    Rockers.PremadeSamples.ChordDmaj9 => "rockers/rocker/ChordDmaj9",
+                    Rockers.PremadeSamples.ChordFSharp5 => "rockers/rocker/ChordF#5",
+                    Rockers.PremadeSamples.ChordG => "rockers/rocker/ChordG",
+                    Rockers.PremadeSamples.ChordG5 => "rockers/rocker/ChordG5",
+                    Rockers.PremadeSamples.ChordGdim7 => "rockers/rocker/ChordGdim7",
+                    Rockers.PremadeSamples.ChordGm => "rockers/rocker/ChordGm",
+                    Rockers.PremadeSamples.NoteASharp4 => "rockers/rocker/NoteA#4",
+                    Rockers.PremadeSamples.NoteA5 => "rockers/rocker/NoteA5",
+                    Rockers.PremadeSamples.PracticeChordD => "rockers/rocker/PracticeChordD",
+                    Rockers.PremadeSamples.Remix6ChordA => "rockers/rocker/Remix6ChordA",
+                    Rockers.PremadeSamples.Remix10ChordD => "rockers/rocker/Remix10ChordD",
+                    Rockers.PremadeSamples.Remix10ChordFSharpm => "rockers/rocker/Remix10ChordF#m",
+                    _ => throw new System.NotImplementedException(),
+                };
+                chordSound = Jukebox.PlayOneShotGame(soundName, -1, pitch, 1, true);
+            }
+
             DoScaledAnimationAsync("Strum", 0.5f);
             strumEffect.SetActive(true);
             strumEffect.GetComponent<Animator>().Play("StrumStart", 0, 0);
@@ -72,13 +104,21 @@ namespace HeavenStudio.Games.Scripts_Rockers
             if (bending || !strumming) return;
             bending = true;
             lastBendPitch = pitch;
-            for (int i = 0; i < stringSounds.Length; i++)
+            if (chordSound != null)
             {
-                if (stringSounds[i] != null)
+                chordSound.BendUp(0.05f, Jukebox.GetPitchFromSemiTones(Jukebox.GetSemitonesFromPitch(chordSound.pitch) + pitch, true));
+            }
+            else
+            {
+                for (int i = 0; i < stringSounds.Length; i++)
                 {
-                    stringSounds[i].BendUp(0.05f, Jukebox.GetPitchFromSemiTones(Jukebox.GetSemitonesFromPitch(stringSounds[i].pitch) + pitch, true));
+                    if (stringSounds[i] != null)
+                    {
+                        stringSounds[i].BendUp(0.05f, Jukebox.GetPitchFromSemiTones(Jukebox.GetSemitonesFromPitch(stringSounds[i].pitch) + pitch, true));
+                    }
                 }
             }
+
             Jukebox.PlayOneShotGame("rockers/bendUp");
             DoScaledAnimationAsync("Bend", 0.5f);
         }
@@ -94,6 +134,10 @@ namespace HeavenStudio.Games.Scripts_Rockers
                 {
                     sound.BendDown(0.05f);
                 }
+            }
+            if (chordSound != null)
+            {
+                chordSound.BendDown(0.05f);
             }
             Jukebox.PlayOneShotGame("rockers/bendDown");
             DoScaledAnimationAsync("Unbend", 0.5f);

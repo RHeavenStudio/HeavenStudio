@@ -38,7 +38,7 @@ namespace HeavenStudio.Games.Loaders
                         e["4S"],
                         e["5S"],
                         e["6S"],
-                    }, e["gcS"]); },
+                    }, e["gcS"], e["sampleJJ"], e["pitchSampleJJ"], e["sampleS"], e["pitchSampleS"]); },
                     defaultLength = 1f,
                     resizable = true,
                     parameters = new List<Param>()
@@ -49,6 +49,8 @@ namespace HeavenStudio.Games.Loaders
                         new Param("4JJ", new EntityTypes.Integer(-1, 24, 0), "G3 String (JJ)", "How many semitones up is this string pitched? If left at -1, this string will not play."),
                         new Param("5JJ", new EntityTypes.Integer(-1, 24, 0), "B3 String (JJ)", "How many semitones up is this string pitched? If left at -1, this string will not play."),
                         new Param("6JJ", new EntityTypes.Integer(-1, 24, 0), "E4 String (JJ)", "How many semitones up is this string pitched? If left at -1, this string will not play."),
+                        new Param("sampleJJ", Rockers.PremadeSamples.None, "Premade Sample (JJ)", "Use a premade sample?"),
+                        new Param("pitchSampleJJ", new EntityTypes.Integer(0, 24, 0), "Sample Semtiones (JJ)", "Pitch up the sample by X amount of semitones?"),
                         new Param("gcJJ", false, "Glee Club Guitar (JJ)", "Will JJ use the same guitar as in the glee club lessons?"),
                         new Param("1S", new EntityTypes.Integer(-1, 24, 0), "E2 String (Soshi)", "How many semitones up is this string pitched? If left at -1, this string will not play."),
                         new Param("2S", new EntityTypes.Integer(-1, 24, 0), "A2 String (Soshi)", "How many semitones up is this string pitched? If left at -1, this string will not play."),
@@ -56,6 +58,8 @@ namespace HeavenStudio.Games.Loaders
                         new Param("4S", new EntityTypes.Integer(-1, 24, 0), "G3 String (Soshi)", "How many semitones up is this string pitched? If left at -1, this string will not play."),
                         new Param("5S", new EntityTypes.Integer(-1, 24, 0), "B3 String (Soshi)", "How many semitones up is this string pitched? If left at -1, this string will not play."),
                         new Param("6S", new EntityTypes.Integer(-1, 24, 0), "E4 String (Soshi)", "How many semitones up is this string pitched? If left at -1, this string will not play."),
+                        new Param("sampleS", Rockers.PremadeSamples.None, "Premade Sample (Soshi)", "Use a premade sample?"),
+                        new Param("pitchSampleS", new EntityTypes.Integer(0, 24, 0), "Sample Semtiones (Soshi)", "Pitch up the sample by X amount of semitones?"),
                         new Param("gcS", false, "Glee Club Guitar (Soshi)", "Will Soshi use the same guitar as in the glee club lessons?")
                     }
                 },
@@ -122,6 +126,29 @@ namespace HeavenStudio.Games
 
     public class Rockers : Minigame
     {
+        public enum PremadeSamples
+        {
+            None,
+            BendG5,
+            BendC6,
+            ChordA,
+            ChordAsus4,
+            ChordBm,
+            ChordCSharpm7,
+            ChordDmaj7,
+            ChordDmaj9,
+            ChordFSharp5,
+            ChordG,
+            ChordG5,
+            ChordGdim7,
+            ChordGm,
+            NoteASharp4,
+            NoteA5,
+            PracticeChordD,
+            Remix6ChordA,
+            Remix10ChordD,
+            Remix10ChordFSharpm
+        }
         public enum WhoMutes
         {
             JJ,
@@ -308,12 +335,12 @@ namespace HeavenStudio.Games
             if (GameManager.instance.autoplay) Soshi.UnHold();
         }
 
-        public void Riff(float beat, float length, int[] pitches, bool gleeClubJJ, int[] pitchesPlayer, bool gleeClubPlayer)
+        public void Riff(float beat, float length, int[] pitches, bool gleeClubJJ, int[] pitchesPlayer, bool gleeClubPlayer, int sampleJJ, int sampleTonesJJ, int sampleSoshi, int sampleTonesSoshi)
         {
             DynamicBeatmap.DynamicEntity foundEvent = riffEvents.Find(x => x.beat == beat);
             if ((foundEvent == null || (riffUsedBeats.Count > 0 && riffUsedBeats.Contains(foundEvent.beat))) && riffEvents.Count > 1) return;
             riffUsedBeats.Add(beat);
-            JJ.StrumStrings(gleeClubJJ, pitches);
+            JJ.StrumStrings(gleeClubJJ, pitches, (PremadeSamples)sampleJJ, sampleTonesJJ);
             BeatAction.New(instance.gameObject, new List<BeatAction.Action>()
             {
                 new BeatAction.Action(beat + length, delegate { JJ.Mute(); })
@@ -327,6 +354,8 @@ namespace HeavenStudio.Games
                 new CallAndResponseHandler.CallAndResponseEventParam("4", pitchesPlayer[3]),
                 new CallAndResponseHandler.CallAndResponseEventParam("5", pitchesPlayer[4]),
                 new CallAndResponseHandler.CallAndResponseEventParam("6", pitchesPlayer[5]),
+                new CallAndResponseHandler.CallAndResponseEventParam("sample", sampleSoshi),
+                new CallAndResponseHandler.CallAndResponseEventParam("sampleTones", sampleTonesSoshi)
             });
         }
 
@@ -372,7 +401,8 @@ namespace HeavenStudio.Games
                     if (crEvent.tag == "riff")
                     {
                         RockersInput riffComp = Instantiate(rockerInputRef, transform);
-                        riffComp.Init(crEvent["gleeClub"], new int[6] { crEvent["1"], crEvent["2"], crEvent["3"], crEvent["4"], crEvent["5"], crEvent["6"] }, beat, length + crEvent.relativeBeat);
+                        riffComp.Init(crEvent["gleeClub"], new int[6] { crEvent["1"], crEvent["2"], crEvent["3"], crEvent["4"], crEvent["5"], crEvent["6"] }, beat, length + crEvent.relativeBeat, 
+                            (PremadeSamples)crEvent["sample"], crEvent["sampleTones"]);
                         ScheduleInput(beat, length + crEvent.relativeBeat + crEvent.length, InputType.STANDARD_DOWN, JustMute, MuteMiss, Empty);
                     }
                     else if (crEvent.tag == "bend")
