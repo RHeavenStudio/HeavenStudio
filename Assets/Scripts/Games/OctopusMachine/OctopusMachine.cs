@@ -39,7 +39,7 @@ namespace HeavenStudio.Games.Loaders
                 {
                     function = delegate {
                         var e = eventCaller.currentEntity;
-                        OctopusMachine.instance.Squeeze(e.beat, e.length);
+                        OctopusMachine.instance.OctoAction(e.beat, e.length, "Squeeze");
                     },
                     resizable = true,
                     parameters = new List<Param>() {
@@ -57,7 +57,7 @@ namespace HeavenStudio.Games.Loaders
                 {
                     function = delegate {
                         var e = eventCaller.currentEntity;
-                        OctopusMachine.instance.Release(e.beat, e.length);
+                        OctopusMachine.instance.OctoAction(e.beat, e.length, "Release");
                     },
                     resizable = true,
                     priority = 1,
@@ -66,7 +66,7 @@ namespace HeavenStudio.Games.Loaders
                 {
                     function = delegate {
                         var e = eventCaller.currentEntity;
-                        OctopusMachine.instance.Pop(e.beat, e.length);
+                        OctopusMachine.instance.OctoAction(e.beat, e.length, "Pop");
                     },
                     resizable = true,
                     priority = 1,
@@ -80,14 +80,26 @@ namespace HeavenStudio.Games.Loaders
                     function = delegate { OctopusMachine.queuePrepare = true; },
                     defaultLength = 0.5f,
                 },
+                new GameAction("bubbles", "Bubbles")
+                {
+                    function = delegate {
+                        var e = eventCaller.currentEntity;
+                        OctopusMachine.instance.BubbleToggle(e["isInstant"], e["setActive"], e["particleStrength"], e["particleSpeed"]);
+                    },
+                    parameters = new List<Param>() {
+                        new Param("isInstant", true, "Instant", "Will the bubbles disappear appear?"),
+                        new Param("setActive", OctopusMachine.Actives.Activate, "Activate or Deactivate", "Will the bubbles disappear or appear?"),
+                        new Param("particleStrength", new EntityTypes.Float(0, 25, 3), "Bubble Intensity", "The amount of bubbles"),
+                        new Param("particleSpeed", new EntityTypes.Float(0, 25, 5), "Bubble Speed", "The speed of the bubbles"),
+                    },
+                },
                 new GameAction("changeText", "Change Text")
                 {
                     function = delegate {
                         var e = eventCaller.currentEntity;
-                        OctopusMachine.instance.ChangeText(e["failText"], e["text"], e["youText"]);
+                        OctopusMachine.instance.ChangeText(e["text"], e["youText"]);
                     },
                     parameters = new List<Param>() {
-                        new Param("failText", true, "Automatic Text", "Display text depending on if you hit an input or not"),
                         new Param("text", "Do what the others do.", "Text", "Set the text on the screen"),
                         new Param("youText", "You", "You Text", "Set the text that orginally says \"You\""),
                     },
@@ -96,7 +108,7 @@ namespace HeavenStudio.Games.Loaders
                 {
                     function = delegate {
                         var e = eventCaller.currentEntity;
-                        OctopusMachine.instance.ChangeColor(e["color1"], e["color2"], e["octoColor"], e.length, e["bgInstant"]);
+                        OctopusMachine.instance.ChangeColor(e["color1"], e["color2"], e["octoColor"], e["squeezedColor"], e.length, e["bgInstant"]);
                     },
                     parameters = new List<Param>() {
                         new Param("color1", new Color(1f, 0.87f, 0.24f), "Background Start Color", "Set the beginning background color"),
@@ -142,6 +154,7 @@ namespace HeavenStudio.Games
         [SerializeField] TMP_Text Text;
         [SerializeField] TMP_Text YouText;
         [SerializeField] GameObject YouArrow;
+        [SerializeField] ParticleSystem[] Bubbles;
         
         [Header("Octopodes")]
         [SerializeField] Octopus Octopus1;
@@ -153,7 +166,6 @@ namespace HeavenStudio.Games
         public static Color octopodesColor = new Color(0.97f, 0.235f, 0.54f);
         public static Color octopodesSqueezedColor = new Color(1f, 0f, 0f);
         public static bool queuePrepare;
-        public static bool canPrepare = true;
 
         [Header("Variables")]
         Tween bgColorTween;
@@ -178,6 +190,12 @@ namespace HeavenStudio.Games
             Angry,
         }
 
+        public enum Actives
+        {
+            Activate,
+            Deactivate,
+        }
+
         void Awake()
         {
             instance = this;
@@ -191,7 +209,6 @@ namespace HeavenStudio.Games
         {
             bg.color = backgroundColor;
             foreach (var octo in octopodes) octo.AnimationColor(0);
-            canPrepare = true;
         }
 
         void OnDestroy()
@@ -213,50 +230,53 @@ namespace HeavenStudio.Games
 
         public static void Prepare(float beat, float prepBeats)
         {
-            if (!canPrepare) return;
             if (GameManager.instance.currentGame != "octopusMachine") {
                 OctopusMachine.queuePrepare = true;
-                OctopusMachine.canPrepare = false;
             } else {
-                if (instance.Octopus3.isPreparing) return;
                 BeatAction.New(instance.gameObject, new List<BeatAction.Action>() {
                     new BeatAction.Action(beat - prepBeats, delegate { 
                         OctopusMachine.queuePrepare = true;
-                        OctopusMachine.canPrepare = false;
                     })
                 });
             }
         }
 
-        public void ChangeText(bool autoText, string text, string youText)
+        public void ChangeText(string text, string youText)
         {
-            if (autoText) Text.text = hasMissed ? "Wrong! \nTry Again!" : "Good!";
+            //if (autoText) Text.text = hasMissed ? "Wrong! \nTry Again!" : "Good!";
             Text.text = text;
             YouText.text = youText;
             YouArrow.SetActive(youText != "");
         }
 
-        public void Squeeze(float beat, float length)
+        public void BubbleToggle(bool isInstant, int setActive, float particleStrength, float particleSpeed)
         {
-            if (!intervalStarted) StartInterval(beat, length);
-            Octopus1.OctoAction("Squeeze");
-            queuedSqueezes.Add(beat - intervalStartBeat);
+            foreach (var bubble in Bubbles) {
+                bubble.gameObject.SetActive(true);
+                var main = bubble.main;
+                main.prewarm = isInstant;
+                var emm = bubble.emission;
+                emm.rateOverTime = particleStrength;
+                //if (emm.rateOverTime.constant != particleStrength && setActive == 0)
+                if (setActive == 1) bubble.Stop(true, isInstant ? ParticleSystemStopBehavior.StopEmittingAndClear : ParticleSystemStopBehavior.StopEmitting);
+                else {
+                    if (emm.rateOverTime.constant != particleStrength && isInstant) bubble.Stop(true, ParticleSystemStopBehavior.StopEmittingAndClear);
+                    bubble.Play();
+                }
+            }
         }
 
-        public void Release(float beat, float length)
+        public void OctoAction(float beat, float length, string action)
         {
-            if (!Octopus1.isSqueezed) return;
+            if (action != "Squeeze" && !Octopus1.isSqueezed) return;
             if (!intervalStarted) StartInterval(beat, length);
-            Octopus1.OctoAction("Release");
-            queuedReleases.Add(beat - intervalStartBeat);
-        }
+            Octopus1.OctoAction(action);
 
-        public void Pop(float beat, float length)
-        {
-            if (!Octopus1.isSqueezed) return;
-            if (!intervalStarted) StartInterval(beat, length);
-            Octopus1.OctoAction("Pop");
-            queuedPops.Add(beat - intervalStartBeat);
+            var queuedList = queuedSqueezes;
+            if (action == "Release") queuedList = queuedReleases;
+            else if (action == "Pop") queuedList = queuedPops;
+
+            queuedList.Add(beat - intervalStartBeat);
         }
 
         public void Bop(float beat, float length, int whichBop, bool doesBop, bool autoBop)
@@ -274,19 +294,17 @@ namespace HeavenStudio.Games
             if (bgColorTween != null)
                 bgColorTween.Kill(true);
 
-            if (seconds == 0) {
-                bg.color = color;
-            } else {
-                bgColorTween = bg.DOColor(color, seconds);
-            }
+            if (seconds == 0) bg.color = color;
+                else bgColorTween = bg.DOColor(color, seconds);
         }
 
-        public void ChangeColor(Color bgStart, Color bgEnd, Color octoColor, float beats, bool bgInstant)
+        public void ChangeColor(Color bgStart, Color bgEnd, Color octoColor, Color octoSqueezedColor, float beats, bool bgInstant)
         {
             FadeBackgroundColor(bgStart, 0f);
             if (!bgInstant) FadeBackgroundColor(bgEnd, beats);
             backgroundColor = bgEnd;
             octopodesColor = octoColor;
+            octopodesSqueezedColor = octoSqueezedColor;
             mat.SetColor("_ColorAlpha", octoColor);
         }
 
@@ -318,7 +336,6 @@ namespace HeavenStudio.Games
         {
             //if (queuedSqueezes.Count == 0) return;
             intervalStarted = false;
-            hasMissed = false;
             var queuedInputs = new List<BeatAction.Action>();
             foreach (var squeeze in queuedSqueezes) {
                 queuedInputs.Add(new BeatAction.Action(beat + squeeze, delegate { Octopus2.OctoAction("Squeeze"); }));

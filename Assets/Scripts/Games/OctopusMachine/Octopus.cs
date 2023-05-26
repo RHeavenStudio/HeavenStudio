@@ -8,8 +8,8 @@ namespace HeavenStudio.Games.Scripts_OctopusMachine
     public class Octopus : MonoBehaviour
     {
         [SerializeField] SpriteRenderer[] sr;
+        [SerializeField] SpriteRenderer[] srAll;
         [SerializeField] bool player;
-        [SerializeField] Material mat;
         public Animator anim;
 
         public bool noBop;
@@ -18,6 +18,7 @@ namespace HeavenStudio.Games.Scripts_OctopusMachine
         public bool isPreparing;
         public bool queuePrepare;
         public float lastReportedBeat = 0f;
+        public float lastSqueezeBeat;
 
         private OctopusMachine game;
 
@@ -29,7 +30,8 @@ namespace HeavenStudio.Games.Scripts_OctopusMachine
         void Update()
         {
             if (queuePrepare && Conductor.instance.NotStopped()) {
-                if (!(isPreparing || isSqueezed)) {
+                if (!(isPreparing || isSqueezed || anim.IsPlayingAnimationName("Release") || anim.IsPlayingAnimationName("Pop"))) 
+                {
                     anim.DoScaledAnimationAsync("Prepare", 0.5f);
                     isPreparing = true;
                     queuePrepare = false;
@@ -60,7 +62,6 @@ namespace HeavenStudio.Games.Scripts_OctopusMachine
                 && !cantBop)
             {
                 Bop();
-                Debug.Log("dAOWNDOJANDWAN");
             }
         }
 
@@ -96,19 +97,25 @@ namespace HeavenStudio.Games.Scripts_OctopusMachine
             isSqueezed = true;
         }
 
-        public void OctopusModifiers(float x, float y, bool isActive)
+        public void OctopusModifiers(float x, float y, bool enable)
         {
             gameObject.transform.position = new Vector3(x, y, 0);
-            gameObject.SetActive(isActive);
+            foreach (var sprite in srAll) sprite.color = new Color(sprite.color.r, sprite.color.g, sprite.color.b, enable ? 1 : 0);
         }
 
         public void OctoAction(string action) 
         {
+            if (action != "Release" || (Conductor.instance.songPositionInBeats - lastSqueezeBeat) > 0.3f) 
+                Jukebox.PlayOneShotGame($"octopusMachine/{action.ToLower()}");
+
+            if (action == "Squeeze") {
+                lastSqueezeBeat = Conductor.instance.songPositionInBeats;
+                isSqueezed = true;
+            }
+
             anim.DoScaledAnimationAsync(action, 0.5f);
-            Jukebox.PlayOneShotGame($"octopusMachine/{action.ToLower()}");
-            isSqueezed = (action == "Squeeze");
-            OctopusMachine.canPrepare = (action != "Squeeze");
-            isPreparing = false;
+            isPreparing =
+            queuePrepare = false;
         }
 
         public void AnimationColor(int poppingColor) 
