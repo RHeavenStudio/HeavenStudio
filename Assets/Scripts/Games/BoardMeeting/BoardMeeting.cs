@@ -65,7 +65,11 @@ namespace HeavenStudio.Games.Loaders
                         new Param("amount", new EntityTypes.Integer(3, 5, 4), "Amount", "How many executives will there be?")
                     }
                 }
-            });
+            },
+            new List<string>() {"rvl", "normal"},
+            "rvlrotation", "en",
+            new List<string>() {"en"}
+            );
         }
     }
 }
