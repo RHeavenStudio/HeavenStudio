@@ -109,7 +109,10 @@ namespace HeavenStudio
             UpdateCameraTranslate();
             UpdateCameraRotate();
             SetShakeIntensity();
+        }
 
+        private void LateUpdate()
+        {
             Camera cam = GetCamera();
             // rotate position by additional rotation
             Vector3 userPos = Quaternion.Euler(additionalRotEluer) * position;

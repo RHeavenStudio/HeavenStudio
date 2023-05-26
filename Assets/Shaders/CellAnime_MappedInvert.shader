@@ -124,7 +124,7 @@ Shader "Sprites/CellAnime_MappedInvert"
 
                 color.rgb = abs(_Threshold - color.rgb);
 
-                return color;
+                return color * _Color;
             }
         ENDCG
         }

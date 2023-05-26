@@ -81,15 +81,15 @@ TextureImporter:
     filterMode: 1
     aniso: 1
     mipBias: 0
-    wrapU: 1
-    wrapV: 1
-    wrapW: 1
+    wrapU: 0
+    wrapV: 0
+    wrapW: 0
   nPOTScale: 0
   lightmap: 0
   compressionQuality: 50
   spriteMode: 2
   spriteExtrude: 1
-  spriteMeshType: 1
+  spriteMeshType: 0
   alignment: 0
   spritePivot: {x: 0.5, y: 0.5}
   spritePixelsToUnits: 100
@@ -165,10 +165,10 @@ TextureImporter:
       name: munchymonkbg_0
       rect:
         serializedVersion: 2
-        x: 6
-        y: 1030
-        width: 414
-        height: 946
+        x: 42
+        y: 1049
+        width: 347
+        height: 896
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -186,10 +186,10 @@ TextureImporter:
       name: munchymonkbg_1
       rect:
         serializedVersion: 2
-        x: 437
-        y: 1029
-        width: 480
-        height: 948
+        x: 481
+        y: 1049
+        width: 398
+        height: 807
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -207,10 +207,10 @@ TextureImporter:
       name: munchymonkbg_2
       rect:
         serializedVersion: 2
-        x: 931
-        y: 1708
-        width: 825
-        height: 268
+        x: 980
+        y: 1731
+        width: 728
+        height: 203
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -270,10 +270,10 @@ TextureImporter:
       name: munchymonkbg_5
       rect:
         serializedVersion: 2
-        x: 932
-        y: 1401
-        width: 603
-        height: 295
+        x: 987
+        y: 1422
+        width: 500
+        height: 234
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -312,10 +312,10 @@ TextureImporter:
       name: munchymonkbg_7
       rect:
         serializedVersion: 2
-        x: 933
-        y: 1030
-        width: 665
-        height: 357
+        x: 967
+        y: 1062
+        width: 595
+        height: 293
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -354,9 +354,9 @@ TextureImporter:
       name: munchymonkbg_9
       rect:
         serializedVersion: 2
-        x: 214
+        x: 215
         y: 27
-        width: 3276
+        width: 3274
         height: 124
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
@@ -461,7 +461,7 @@ TextureImporter:
         serializedVersion: 2
         x: 3868
         y: 1116
-        width: 88
+        width: 84
         height: 864
       alignment: 0
       pivot: {x: 0.5, y: 0.5}

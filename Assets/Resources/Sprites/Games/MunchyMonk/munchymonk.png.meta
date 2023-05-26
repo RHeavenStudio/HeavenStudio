@@ -236,7 +236,7 @@ TextureImporter:
     externalNormalMap: 0
     heightScale: 0.25
     normalMapFilter: 0
-  isReadable: 0
+  isReadable: 1
   streamingMipmaps: 0
   streamingMipmapsPriority: 0
   vTOnly: 0
@@ -1602,27 +1602,6 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: munchymonk_65
-      rect:
-        serializedVersion: 2
-        x: 3109
-        y: 5795
-        width: 387
-        height: 391
-      alignment: 0
-      pivot: {x: 0.5, y: 0.5}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: 8330ad200b469a890800000000000000
-      internalID: -7446309801755540680
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
       name: munchymonk_66
       rect:
         serializedVersion: 2
@@ -1778,7 +1757,7 @@ TextureImporter:
         width: 605
         height: 524
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
@@ -1786,6 +1765,27 @@ TextureImporter:
       bones: []
       spriteID: 21239922ea88343a0800000000000000
       internalID: -6682347140601531886
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: MMdumpling
+      rect:
+        serializedVersion: 2
+        x: 3180
+        y: 5854
+        width: 263
+        height: 263
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 38ac47cfc1473754b9ce73c3786dcb23
+      internalID: 386239251
       vertices: []
       indices: 
       edges: []
@@ -1801,6 +1801,7 @@ TextureImporter:
     weights: []
     secondaryTextures: []
     nameFileIdTable:
+      MMdumpling: 386239251
       munchymonk_0: 4729902717272003802
       munchymonk_1: -8560562273732883090
       munchymonk_10: -1441660721830477300
