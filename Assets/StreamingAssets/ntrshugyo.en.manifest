@@ -1,0 +1,49 @@
+ManifestFileVersion: 0
+CRC: 2946559203
+Hashes:
+  AssetFileHash:
+    serializedVersion: 2
+    Hash: 174261e3be6e1fcc944e0ac983119c40
+  TypeTreeHash:
+    serializedVersion: 2
+    Hash: 967a2947c03185ae2b8f9de23a19d353
+HashAppended: 0
+ClassTypes:
+- Class: 1
+  Script: {instanceID: 0}
+- Class: 4
+  Script: {instanceID: 0}
+- Class: 21
+  Script: {instanceID: 0}
+- Class: 28
+  Script: {instanceID: 0}
+- Class: 48
+  Script: {instanceID: 0}
+- Class: 74
+  Script: {instanceID: 0}
+- Class: 91
+  Script: {instanceID: 0}
+- Class: 95
+  Script: {instanceID: 0}
+- Class: 114
+  Script: {fileID: 11500000, guid: 86babf8846fa7a4498e3fa3648f95cc9, type: 3}
+- Class: 114
+  Script: {fileID: 11500000, guid: 4c87c9f6cda1a0748b3d81a13719d112, type: 3}
+- Class: 114
+  Script: {fileID: 11500000, guid: eaa148892e198444c9fa22a7565e1d76, type: 3}
+- Class: 115
+  Script: {instanceID: 0}
+- Class: 212
+  Script: {instanceID: 0}
+- Class: 213
+  Script: {instanceID: 0}
+SerializeReferenceClassIdentifiers:
+- AssemblyName: Assembly-CSharp
+  ClassName: HeavenStudio.Util.SoundSequence
+- AssemblyName: Assembly-CSharp
+  ClassName: HeavenStudio.Util.SoundSequence/SequenceClip
+- AssemblyName: Assembly-CSharp
+  ClassName: HeavenStudio.Util.SoundSequence/SequenceKeyValue
+Assets:
+- Assets/Resources/Games/munchyMonk.prefab
+Dependencies: []
