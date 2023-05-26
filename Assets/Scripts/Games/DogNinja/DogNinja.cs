@@ -94,7 +94,11 @@ namespace HeavenStudio.Games.Loaders
                     },
                     inactiveFunction = delegate { var e = eventCaller.currentEntity; DogNinja.QueueObject(e.beat, 2, e["typeL"], e["typeR"], true, false);},
                 },
-            });
+            },
+            new List<string>() {"ntr", "normal"},
+            "ntrninja", "en",
+            new List<string>() {}
+            );
         }
     }
 }
