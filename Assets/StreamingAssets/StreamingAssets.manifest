@@ -1,5 +1,5 @@
 ManifestFileVersion: 0
-CRC: 1318855970
+CRC: 2310005649
 AssetBundleManifest:
   AssetBundleInfos:
     Info_0:
@@ -16,7 +16,8 @@ AssetBundleManifest:
       Dependencies: {}
     Info_4:
       Name: ntrdj/common
-      Dependencies: {}
+      Dependencies:
+        Dependency_0: rvldate/common
     Info_5:
       Name: ctrpillow/locale.en
       Dependencies: {}
@@ -86,3 +87,7 @@ AssetBundleManifest:
     Info_27:
       Name: ntrninja/common
       Dependencies: {}
+    Info_28:
+      Name: rvldate/common
+      Dependencies:
+        Dependency_0: ntrdj/common
