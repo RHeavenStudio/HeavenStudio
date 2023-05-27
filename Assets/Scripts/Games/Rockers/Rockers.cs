@@ -466,7 +466,7 @@ namespace HeavenStudio.Games
             for (int i = 0; i < togetherEvents.Count; i++)
             {
                 var e = togetherEvents[i];
-                if (togetherEvents[i].datamodel == "riffTogether")
+                if (togetherEvents[i].datamodel == "rockers/riffTogether")
                 {
                     actions.Add(new BeatAction.Action(e.beat, delegate 
                     {
