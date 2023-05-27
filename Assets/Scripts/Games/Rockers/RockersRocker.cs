@@ -152,7 +152,7 @@ namespace HeavenStudio.Games.Scripts_Rockers
                 if (disableStrumEffect) return;
                 strumEffect.SetActive(true);
                 bool strumLeft = JJ && jump;
-                strumEffect.GetComponent<Animator>().Play(strumLeft ? "StrumLeft" : "StrumRight", 0, 0);
+                strumEffect.GetComponent<Animator>().Play(strumLeft ? "StrumStartLeft" : "StrumStartRIght", 0, 0);
             }
             else
             {
