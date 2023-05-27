@@ -12,13 +12,13 @@ namespace HeavenStudio.Games.Scripts_OctopusMachine
         [SerializeField] bool player;
         public Animator anim;
 
-        public bool noBop;
         public bool cantBop;
         public bool isSqueezed;
         public bool isPreparing;
         public bool queuePrepare;
         public float lastReportedBeat = 0f;
-        public float lastSqueezeBeat;
+        float lastSqueezeBeat;
+        bool isActive = true;
 
         private OctopusMachine game;
 
@@ -38,14 +38,13 @@ namespace HeavenStudio.Games.Scripts_OctopusMachine
                 }
             }
             
-            if (gameObject.activeInHierarchy && player)
+            if (isActive && player)
             {
                 if (PlayerInput.Pressed() && !game.IsExpectingInputNow(InputType.STANDARD_DOWN)) 
                     OctoAction("Squeeze");
 
                 if (PlayerInput.PressedUp() && !game.IsExpectingInputNow(InputType.STANDARD_UP)) {
-                    if (PlayerInput.Pressing(true)) OctoAction("Pop");
-                    else OctoAction("Release");
+                    OctoAction(PlayerInput.Pressing(true) ? "Pop" : "Release");
                 }
             }
         }
@@ -53,36 +52,23 @@ namespace HeavenStudio.Games.Scripts_OctopusMachine
         void LateUpdate()
         {
             if (Conductor.instance.ReportBeat(ref lastReportedBeat)
+                && !anim.IsPlayingAnimationName("Bop")
+                && !anim.IsPlayingAnimationName("Happy")
+                && !anim.IsPlayingAnimationName("Angry")
+                && !anim.IsPlayingAnimationName("Oops")
                 && !anim.IsPlayingAnimationName("Release")
-                && !anim.IsPlayingAnimationName("Squeeze")
                 && !anim.IsPlayingAnimationName("Pop")
                 && !isPreparing
                 && !isSqueezed
-                && !noBop
-                && !cantBop)
+                && !cantBop )
             {
-                Bop();
-            }
-        }
-
-        public void Bop(bool singleBop = false)
-        {
-            if (game.hasHit) {
-                PlayAnimation(1);
-                game.bopIterate++;
-                if (game.bopIterate == 3) game.hasHit = false;
-            } else if (game.hasMissed) {
-                PlayAnimation(player ? 3 : 2);
-                game.bopIterate++;
-                if (game.bopIterate == 3) game.hasMissed = false;
-            } else {
-                PlayAnimation(0);
-                game.bopIterate = 0;
+                PlayAnimation(game.bopStatus);
             }
         }
 
         public void PlayAnimation(int whichBop)
         {
+            if (whichBop == 2 && player) whichBop = 3;
             anim.DoScaledAnimationAsync(whichBop switch {
                 0 => "Bop",
                 1 => "Happy",
@@ -101,19 +87,16 @@ namespace HeavenStudio.Games.Scripts_OctopusMachine
         {
             gameObject.transform.position = new Vector3(x, y, 0);
             foreach (var sprite in srAll) sprite.color = new Color(sprite.color.r, sprite.color.g, sprite.color.b, enable ? 1 : 0);
+            isActive = enable;
         }
 
         public void OctoAction(string action) 
         {
-            if (action != "Release" || (Conductor.instance.songPositionInBeats - lastSqueezeBeat) > 0.3f) 
-                Jukebox.PlayOneShotGame($"octopusMachine/{action.ToLower()}");
-
-            if (action == "Squeeze") {
-                lastSqueezeBeat = Conductor.instance.songPositionInBeats;
-                isSqueezed = true;
-            }
+            if (action != "Release" || (Conductor.instance.songPositionInBeats - lastSqueezeBeat) > 0.3f) Jukebox.PlayOneShotGame($"octopusMachine/{action.ToLower()}");
+            if (action == "Squeeze") lastSqueezeBeat = Conductor.instance.songPositionInBeats;
 
             anim.DoScaledAnimationAsync(action, 0.5f);
+            isSqueezed = (action == "Squeeze");
             isPreparing =
             queuePrepare = false;
         }
