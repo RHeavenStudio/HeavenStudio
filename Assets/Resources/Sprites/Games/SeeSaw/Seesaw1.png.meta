@@ -1,0 +1,1223 @@
+fileFormatVersion: 2
+guid: 49e1b42234c880d45afaeb51595b5678
+TextureImporter:
+  internalIDToNameTable: []
+  externalObjects: {}
+  serializedVersion: 12
+  mipmaps:
+    mipMapMode: 0
+    enableMipMap: 0
+    sRGBTexture: 1
+    linearTexture: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapsPreserveCoverage: 0
+    alphaTestReferenceValue: 0.5
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+  bumpmap:
+    convertToNormalMap: 0
+    externalNormalMap: 0
+    heightScale: 0.25
+    normalMapFilter: 0
+  isReadable: 0
+  streamingMipmaps: 0
+  streamingMipmapsPriority: 0
+  vTOnly: 0
+  ignoreMasterTextureLimit: 0
+  grayScaleToAlpha: 0
+  generateCubemap: 6
+  cubemapConvolution: 0
+  seamlessCubemap: 0
+  textureFormat: 1
+  maxTextureSize: 2048
+  textureSettings:
+    serializedVersion: 2
+    filterMode: 1
+    aniso: 1
+    mipBias: 0
+    wrapU: 1
+    wrapV: 1
+    wrapW: 1
+  nPOTScale: 0
+  lightmap: 0
+  compressionQuality: 50
+  spriteMode: 2
+  spriteExtrude: 1
+  spriteMeshType: 1
+  alignment: 0
+  spritePivot: {x: 0.5, y: 0.5}
+  spritePixelsToUnits: 100
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spriteGenerateFallbackPhysicsShape: 1
+  alphaUsage: 1
+  alphaIsTransparency: 1
+  spriteTessellationDetail: -1
+  textureType: 8
+  textureShape: 1
+  singleChannelComponent: 0
+  flipbookRows: 1
+  flipbookColumns: 1
+  maxTextureSizeSet: 0
+  compressionQualitySet: 0
+  textureFormatSet: 0
+  ignorePngGamma: 0
+  applyGammaDecoding: 0
+  cookieLightType: 0
+  platformSettings:
+  - serializedVersion: 3
+    buildTarget: DefaultTexturePlatform
+    maxTextureSize: 4096
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 0
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 3
+    buildTarget: Standalone
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 3
+    buildTarget: Server
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  spriteSheet:
+    serializedVersion: 2
+    sprites:
+    - serializedVersion: 2
+      name: Seesaw1_0
+      rect:
+        serializedVersion: 2
+        x: 4099
+        y: 105
+        width: 1362
+        height: 3790
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 90cebcb03d5f3f745b426f690763a751
+      internalID: -968986257
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Seesaw1_1
+      rect:
+        serializedVersion: 2
+        x: 2563
+        y: 3876
+        width: 63
+        height: 63
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 379eb485a92f1754b8196111d95fa672
+      internalID: -875217049
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Seesaw1_2
+      rect:
+        serializedVersion: 2
+        x: 2745
+        y: 3870
+        width: 72
+        height: 72
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: ff363e6b4bc91014ea73426378c78d7d
+      internalID: -1563887690
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Seesaw1_3
+      rect:
+        serializedVersion: 2
+        x: 2927
+        y: 3876
+        width: 86
+        height: 87
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 33cbda424e378674f888fed86b97bdea
+      internalID: 1308559822
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Seesaw1_4
+      rect:
+        serializedVersion: 2
+        x: 3112
+        y: 3864
+        width: 81
+        height: 80
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 70e357344bf7bd247833d74cf70e8598
+      internalID: 720669227
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Seesaw1_5
+      rect:
+        serializedVersion: 2
+        x: 3312
+        y: 3876
+        width: 60
+        height: 60
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: e4ce7e78b33e0a241a1003beff125db2
+      internalID: -806984361
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Seesaw1_6
+      rect:
+        serializedVersion: 2
+        x: 3495
+        y: 3870
+        width: 71
+        height: 72
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 8593f46308856b14792cada6598d8e83
+      internalID: -596298026
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Seesaw1_7
+      rect:
+        serializedVersion: 2
+        x: 2799
+        y: 3673
+        width: 107
+        height: 81
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 282ca17a57eb24f41b87ca07e70ecef7
+      internalID: 1088451220
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Seesaw1_8
+      rect:
+        serializedVersion: 2
+        x: 3023
+        y: 3696
+        width: 106
+        height: 46
+      alignment: 9
+      pivot: {x: 0.49030116, y: 0.5111774}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: c8e0d065baf62e54889f29f2d56a71db
+      internalID: 1395828666
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Seesaw1_9
+      rect:
+        serializedVersion: 2
+        x: 3259
+        y: 3697
+        width: 77
+        height: 45
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: c620f4cb4105df849b526f22963d31a8
+      internalID: 989808596
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Seesaw1_10
+      rect:
+        serializedVersion: 2
+        x: 3470
+        y: 3706
+        width: 96
+        height: 24
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 97db3db8e55800641bcc914ec915c438
+      internalID: -1246256214
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Seesaw1_11
+      rect:
+        serializedVersion: 2
+        x: 2942
+        y: 3500
+        width: 57
+        height: 57
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 5c6aef91ae8e56c4e9158cd6790f0471
+      internalID: -1132860246
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Seesaw1_12
+      rect:
+        serializedVersion: 2
+        x: 3124
+        y: 3434
+        width: 69
+        height: 132
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 7fe7bd1444d26bf44b2df57f949b8989
+      internalID: -180438014
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Seesaw1_13
+      rect:
+        serializedVersion: 2
+        x: 3336
+        y: 3458
+        width: 72
+        height: 105
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 60a809dfe7bd3064a897ea9b51c67ba1
+      internalID: -2087704921
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Seesaw1_14
+      rect:
+        serializedVersion: 2
+        x: 3524
+        y: 3440
+        width: 45
+        height: 117
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 4be68f9a481d5d04aab7b121e43d5729
+      internalID: 681794124
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Seesaw1_15
+      rect:
+        serializedVersion: 2
+        x: 3703
+        y: 3763
+        width: 221
+        height: 170
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 77c8461b769da0d4cb72362fc5528c7d
+      internalID: 115459356
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Seesaw1_16
+      rect:
+        serializedVersion: 2
+        x: 3721
+        y: 3420
+        width: 185
+        height: 241
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 543f191fd93edff4a8af7d342cf5ec16
+      internalID: 1850732012
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Seesaw1_17
+      rect:
+        serializedVersion: 2
+        x: 1841
+        y: 2969
+        width: 223
+        height: 155
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 3267664bfe851b843988607eb2e0c2a6
+      internalID: -1681743884
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Seesaw1_18
+      rect:
+        serializedVersion: 2
+        x: 1838
+        y: 2679
+        width: 232
+        height: 173
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: af30e1eff0ced8940a4c6b44d530aebf
+      internalID: 1457597112
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Seesaw1_19
+      rect:
+        serializedVersion: 2
+        x: 2115
+        y: 2061
+        width: 424
+        height: 337
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 8a28c75fc17804542bdbb902fe9bdbe7
+      internalID: 1611941713
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Seesaw1_20
+      rect:
+        serializedVersion: 2
+        x: 1796
+        y: 1661
+        width: 280
+        height: 239
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 17b1bec6be6c0f7409120a076df535b4
+      internalID: 691305760
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Seesaw1_21
+      rect:
+        serializedVersion: 2
+        x: 2214
+        y: 1643
+        width: 313
+        height: 296
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: a338138cdf4236644b2fa4377a232237
+      internalID: -1467222356
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Seesaw1_22
+      rect:
+        serializedVersion: 2
+        x: 2706
+        y: 1405
+        width: 331
+        height: 277
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 2ab1092bf03b52445a9af2b13c5bb544
+      internalID: -1472614841
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Seesaw1_23
+      rect:
+        serializedVersion: 2
+        x: 2667
+        y: 1837
+        width: 430
+        height: 427
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 0dab7a2de0042954b8460d0f3f36f3f2
+      internalID: 234033242
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Seesaw1_24
+      rect:
+        serializedVersion: 2
+        x: 2211
+        y: 2539
+        width: 597
+        height: 573
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: e523b5c49c644ed4d98066b522934afe
+      internalID: 196405604
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Seesaw1_25
+      rect:
+        serializedVersion: 2
+        x: 3209
+        y: 1470
+        width: 742
+        height: 800
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 6e64b2445b793f3428e6675142f8c415
+      internalID: 494889757
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Seesaw1_26
+      rect:
+        serializedVersion: 2
+        x: 2921
+        y: 2419
+        width: 1018
+        height: 893
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 87e4003c73a578e4ab77291bbebfce96
+      internalID: 1645951214
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Seesaw1_27
+      rect:
+        serializedVersion: 2
+        x: 3303
+        y: 1285
+        width: 81
+        height: 51
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 2d92cb0591514f84da6eddb270cfc822
+      internalID: 1621738485
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Seesaw1_28
+      rect:
+        serializedVersion: 2
+        x: 3282
+        y: 1109
+        width: 129
+        height: 30
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 06fc12e08f3145c4dafa96d6aff96ef7
+      internalID: 1355053803
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Seesaw1_29
+      rect:
+        serializedVersion: 2
+        x: 3312
+        y: 900
+        width: 69
+        height: 72
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 6ba67c41a22678e42b8f9c28471b17a1
+      internalID: -2082414006
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Seesaw1_30
+      rect:
+        serializedVersion: 2
+        x: 3312
+        y: 718
+        width: 63
+        height: 63
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: f7ec4a9565380984aaee85d5d22e234d
+      internalID: 1663833186
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Seesaw1_31
+      rect:
+        serializedVersion: 2
+        x: 3256
+        y: 533
+        width: 143
+        height: 57
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 26d8780916f0f9641ba0b95c7b7ca9c9
+      internalID: 2018955681
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Seesaw1_32
+      rect:
+        serializedVersion: 2
+        x: 2705
+        y: 900
+        width: 376
+        height: 377
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 888e178485c2d80488aa77715aa6fb1f
+      internalID: -1843845955
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Seesaw1_33
+      rect:
+        serializedVersion: 2
+        x: 3536
+        y: 975
+        width: 403
+        height: 373
+      alignment: 9
+      pivot: {x: 0.5234484, y: 0.4838782}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 5a2e2e3b6330507498a2c1f604ce3bc8
+      internalID: 464569146
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Seesaw1_34
+      rect:
+        serializedVersion: 2
+        x: 2694
+        y: 417
+        width: 387
+        height: 353
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: ad751131298914249bff394306efce6c
+      internalID: -1982910971
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Seesaw1_35
+      rect:
+        serializedVersion: 2
+        x: 3536
+        y: 470
+        width: 403
+        height: 373
+      alignment: 9
+      pivot: {x: 0.52984273, y: 0.48387837}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: c710e8b8561fdea4d9e9ea0b0220f888
+      internalID: -233119928
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Seesaw1_36
+      rect:
+        serializedVersion: 2
+        x: 2268
+        y: 32
+        width: 334
+        height: 193
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 8f4ec4106ad355a48a365b0d682dc546
+      internalID: -2051954512
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Seesaw1_37
+      rect:
+        serializedVersion: 2
+        x: 2700
+        y: 29
+        width: 277
+        height: 152
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 5a4f97f3292d7ae4783511ff8c1cf30c
+      internalID: 1619742552
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Seesaw1_38
+      rect:
+        serializedVersion: 2
+        x: 3082
+        y: 57
+        width: 164
+        height: 85
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: d8b47d0351e2ac844b11712771e38771
+      internalID: -1944270897
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Seesaw1_39
+      rect:
+        serializedVersion: 2
+        x: 3381
+        y: 64
+        width: 161
+        height: 54
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: a5d531f63b7dc8f4fb01df8f533b1844
+      internalID: -1421875361
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Seesaw1_40
+      rect:
+        serializedVersion: 2
+        x: 3635
+        y: 70
+        width: 122
+        height: 42
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 8d6df4009eb0fbe4080cd97d21144064
+      internalID: -379885909
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Seesaw1_41
+      rect:
+        serializedVersion: 2
+        x: 3888
+        y: 82
+        width: 39
+        height: 24
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: f15fcef57a7b4934eac9dc23f644042b
+      internalID: -1056428179
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Seesaw1_42
+      rect:
+        serializedVersion: 2
+        x: 140
+        y: 209
+        width: 1400
+        height: 985
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 475d0a4cc313514489431a6e87e7dd7a
+      internalID: -328098408
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Seesaw1_43
+      rect:
+        serializedVersion: 2
+        x: 972
+        y: 3623
+        width: 92
+        height: 307
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: c8b45d075d33e024fb1544b846d6e339
+      internalID: 1982285798
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Seesaw1_44
+      rect:
+        serializedVersion: 2
+        x: 1199
+        y: 3608
+        width: 163
+        height: 328
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 52c64167f00e55d4b9836d430e6f75c2
+      internalID: -710668855
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Seesaw1_45
+      rect:
+        serializedVersion: 2
+        x: 984
+        y: 3253
+        width: 379
+        height: 244
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 2c140274aa195f64aa9da771b23c19cf
+      internalID: 1910679417
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Seesaw1_46
+      rect:
+        serializedVersion: 2
+        x: 927
+        y: 2930
+        width: 331
+        height: 104
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 4a09d55bc0e59ee4997c1b3014d5fb38
+      internalID: 2066789036
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Seesaw1_47
+      rect:
+        serializedVersion: 2
+        x: 1303
+        y: 2930
+        width: 331
+        height: 104
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: bdbc9cfb7f54c044081e84899d978d07
+      internalID: -1703201039
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Seesaw1_48
+      rect:
+        serializedVersion: 2
+        x: 969
+        y: 2781
+        width: 62
+        height: 62
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 26e6fcfb73d90404d9f7a54c3cad2a08
+      internalID: -605354201
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Seesaw1_49
+      rect:
+        serializedVersion: 2
+        x: 1130
+        y: 2757
+        width: 110
+        height: 107
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 8aba59d6fb460a24e92120bb69ead67c
+      internalID: 542759623
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    outline: []
+    physicsShape: []
+    bones: []
+    spriteID: 5e97eb03825dee720800000000000000
+    internalID: 0
+    vertices: []
+    indices: 
+    edges: []
+    weights: []
+    secondaryTextures: []
+    nameFileIdTable:
+      Seesaw1_0: -968986257
+      Seesaw1_1: -875217049
+      Seesaw1_10: -1246256214
+      Seesaw1_11: -1132860246
+      Seesaw1_12: -180438014
+      Seesaw1_13: -2087704921
+      Seesaw1_14: 681794124
+      Seesaw1_15: 115459356
+      Seesaw1_16: 1850732012
+      Seesaw1_17: -1681743884
+      Seesaw1_18: 1457597112
+      Seesaw1_19: 1611941713
+      Seesaw1_2: -1563887690
+      Seesaw1_20: 691305760
+      Seesaw1_21: -1467222356
+      Seesaw1_22: -1472614841
+      Seesaw1_23: 234033242
+      Seesaw1_24: 196405604
+      Seesaw1_25: 494889757
+      Seesaw1_26: 1645951214
+      Seesaw1_27: 1621738485
+      Seesaw1_28: 1355053803
+      Seesaw1_29: -2082414006
+      Seesaw1_3: 1308559822
+      Seesaw1_30: 1663833186
+      Seesaw1_31: 2018955681
+      Seesaw1_32: -1843845955
+      Seesaw1_33: 464569146
+      Seesaw1_34: -1982910971
+      Seesaw1_35: -233119928
+      Seesaw1_36: -2051954512
+      Seesaw1_37: 1619742552
+      Seesaw1_38: -1944270897
+      Seesaw1_39: -1421875361
+      Seesaw1_4: 720669227
+      Seesaw1_40: -379885909
+      Seesaw1_41: -1056428179
+      Seesaw1_42: -328098408
+      Seesaw1_43: 1982285798
+      Seesaw1_44: -710668855
+      Seesaw1_45: 1910679417
+      Seesaw1_46: 2066789036
+      Seesaw1_47: -1703201039
+      Seesaw1_48: -605354201
+      Seesaw1_49: 542759623
+      Seesaw1_5: -806984361
+      Seesaw1_6: -596298026
+      Seesaw1_7: 1088451220
+      Seesaw1_8: 1395828666
+      Seesaw1_9: 989808596
+  spritePackingTag: 
+  pSDRemoveMatte: 0
+  pSDShowRemoveMatteOption: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
