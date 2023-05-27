@@ -56,7 +56,23 @@ namespace HeavenStudio.Games.Scripts_Rockers
         public void ReturnBack()
         {
             together = false;
-            DoScaledAnimationAsync("Return", 0.5f);
+            if (JJ)
+            {
+                muted = false;
+                DoScaledAnimationAsync("Return", 0.5f);
+            }
+            else
+            {
+                if (PlayerInput.Pressing())
+                {
+                    DoScaledAnimationAsync("Crouch", 0.5f);
+                }
+                else
+                {
+                    muted = false;
+                    DoScaledAnimationAsync("Return", 0.5f);
+                }
+            }
         }
 
         public void StrumStrings(bool gleeClub, int[] pitches, Rockers.PremadeSamples sample, int sampleTones, bool disableStrumEffect = false, bool jump = false)
@@ -217,8 +233,8 @@ namespace HeavenStudio.Games.Scripts_Rockers
         public void UnHold()
         {
             if (!muted) return;
-            DoScaledAnimationAsync("UnCrouch", 0.5f);
             muted = false;
+            if (!together) DoScaledAnimationAsync("UnCrouch", 0.5f);
         }
 
         private void DoScaledAnimationAsync(string name, float time)
