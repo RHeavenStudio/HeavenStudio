@@ -51,6 +51,11 @@ namespace HeavenStudio.Games.Scripts_Rockers
         {
             together = true;
             DoScaledAnimationAsync("ComeOnPrepare", 0.5f);
+            if (JJ || (!JJ && PlayerInput.Pressing()))
+            {
+                Jukebox.PlayOneShotGame("rockers/mute");
+                muted = true;
+            }
         }
 
         public void ReturnBack()

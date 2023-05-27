@@ -116,13 +116,25 @@ namespace HeavenStudio.Games.Loaders
                         Jukebox.PlayOneShot($"games/rockers/count/{e["count"]}", e.beat, 1, 1, false, null, offSet); 
                     }
                 },
+                new GameAction("voiceLine", "Together Voice Line")
+                {
+                    parameters = new List<Param>()
+                    {
+                        new Param("cmon", true, "C'mon!", "Use the C'mon voiceline? If unchecked it uses the Last One voiceline."),
+                    },
+                    preFunction = delegate
+                    {
+                        Jukebox.PlayOneShot(eventCaller.currentEntity["cmon"] ? "games/rockers/Cmon" : "games/rockers/LastOne", eventCaller.currentEntity.beat);
+                    }
+                },
                 new GameAction("prepareTogether", "Custom Together Prepare")
                 {
-                    function = delegate { var e = eventCaller.currentEntity; Rockers.instance.TogetherPrepare(e.beat, e["cmon"]); },
+                    function = delegate { var e = eventCaller.currentEntity; Rockers.instance.TogetherPrepare(e.beat, e["cmon"], e["mute"]); },
                     defaultLength = 3f,
                     parameters = new List<Param>()
                     {
-                        new Param("cmon", true, "C'mon!", "Use the C'mon voiceline? If unchecked it uses the Last One voiceline.")
+                        new Param("cmon", true, "C'mon!", "Use the C'mon voiceline? If unchecked it uses the Last One voiceline."),
+                        new Param("mute", false, "Mute", "Will the voiceline be muted?")
                     }
                 },
                 new GameAction("riffTogether", "Custom Together Riff")
@@ -443,20 +455,17 @@ namespace HeavenStudio.Games
             }
         }
 
-        public void TogetherPrepare(float beat, bool cmon)
+        public void TogetherPrepare(float beat, bool cmon, bool muteSound)
         {
             List<DynamicBeatmap.DynamicEntity> togetherEvents = GrabAllTogetherEvents(beat);
             if (togetherEvents.Count == 0 || crHandlerInstance.IntervalIsActive()) return;
-            Jukebox.PlayOneShotGame(cmon ? "rockers/Cmon" : "rockers/LastOne");
+            if (!muteSound) Jukebox.PlayOneShotGame(cmon ? "rockers/Cmon" : "rockers/LastOne");
             List<BeatAction.Action> actions = new List<BeatAction.Action>()
             {
-                new BeatAction.Action(togetherEvents[0].beat - 2, delegate 
-                { 
-                    JJ.PrepareTogether(); 
-                    Soshi.PrepareTogether(); 
-                }),
                 new BeatAction.Action(togetherEvents[0].beat - 1, delegate
                 {
+                    JJ.PrepareTogether();
+                    Soshi.PrepareTogether();
                     Mute((int)WhoMutes.Both);
                 })
             };
