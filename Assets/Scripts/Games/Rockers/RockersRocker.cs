@@ -18,7 +18,7 @@ namespace HeavenStudio.Games.Scripts_Rockers
 
         [SerializeField] private bool JJ;
 
-        private bool muted;
+        [NonSerialized] public bool muted;
         private bool strumming;
         private bool bending;
         [NonSerialized] public bool together;
