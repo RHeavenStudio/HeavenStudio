@@ -129,7 +129,11 @@ namespace HeavenStudio.Games.Loaders
                         new Param("ease", EasingFunction.Ease.Linear, "Ease", "Which ease should the scroll ramp up have?"),
                     }
                 },
-            });
+            },
+            new List<string>() {"ntr", "normal"},
+            "ntrshugyo", "en",
+            new List<string>() {"en"}
+            );
         }
     }
 }
