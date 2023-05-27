@@ -14,15 +14,18 @@ namespace HeavenStudio.Games.Scripts_Rockers
         private Rockers.PremadeSamples sample;
         private int sampleTones;
 
+        private bool jump;
+
         private Rockers game;
 
-        public void Init(bool gleeClub, int[] pitches, float beat, float length, Rockers.PremadeSamples sample, int sampleTones)
+        public void Init(bool gleeClub, int[] pitches, float beat, float length, Rockers.PremadeSamples sample, int sampleTones, bool jump = false)
         {
             game = Rockers.instance;
             this.gleeClub = gleeClub;
             this.pitches = pitches.ToList();
             this.sample = sample;
             this.sampleTones = sampleTones;
+            this.jump = jump;
             game.ScheduleInput(beat, length, InputType.STANDARD_UP, Just, Miss, Empty);
         }
 
@@ -30,10 +33,11 @@ namespace HeavenStudio.Games.Scripts_Rockers
         {
             if (state >= 1f || state <= -1f) 
             {
+                game.Soshi.StrumStrings(gleeClub, pitches.ToArray(), sample, sampleTones, false, jump);
                 Destroy(gameObject);
                 return;
             }
-            game.Soshi.StrumStrings(gleeClub, pitches.ToArray(), sample, sampleTones);
+            game.Soshi.StrumStrings(gleeClub, pitches.ToArray(), sample, sampleTones, false, jump);
             Destroy(gameObject);
         }
 

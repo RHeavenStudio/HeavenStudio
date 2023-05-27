@@ -22,6 +22,7 @@ namespace HeavenStudio.Games.Scripts_Rockers
         {
             if (state >= 1f || state <= -1f)
             {
+                game.Soshi.BendUp(pitch);
                 Destroy(gameObject);
                 return;
             }

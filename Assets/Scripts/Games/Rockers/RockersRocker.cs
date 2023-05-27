@@ -20,6 +20,7 @@ namespace HeavenStudio.Games.Scripts_Rockers
         private bool muted;
         private bool strumming;
         private bool bending;
+        private bool together;
 
         private void Awake()
         {
@@ -46,7 +47,19 @@ namespace HeavenStudio.Games.Scripts_Rockers
             }
         }
 
-        public void StrumStrings(bool gleeClub, int[] pitches, Rockers.PremadeSamples sample, int sampleTones)
+        public void PrepareTogether()
+        {
+            together = true;
+            DoScaledAnimationAsync("ComeOnPrepare", 0.5f);
+        }
+
+        public void ReturnBack()
+        {
+            together = false;
+            DoScaledAnimationAsync("Return", 0.5f);
+        }
+
+        public void StrumStrings(bool gleeClub, int[] pitches, Rockers.PremadeSamples sample, int sampleTones, bool disableStrumEffect = false, bool jump = false)
         {
             muted = false;
             strumming = true;
@@ -111,9 +124,21 @@ namespace HeavenStudio.Games.Scripts_Rockers
                 chordSound = Jukebox.PlayOneShotGame(soundName, -1, pitch, 1, true);
             }
 
-            DoScaledAnimationAsync("Strum", 0.5f);
-            strumEffect.SetActive(true);
-            strumEffect.GetComponent<Animator>().Play("StrumStart", 0, 0);
+            if (together)
+            {
+                DoScaledAnimationAsync(jump ? "Jump" : "ComeOnStrum", 0.5f);
+                if (disableStrumEffect) return;
+                strumEffect.SetActive(true);
+                bool strumLeft = JJ && jump;
+                strumEffect.GetComponent<Animator>().Play(strumLeft ? "StrumLeft" : "StrumRight", 0, 0);
+            }
+            else
+            {
+                DoScaledAnimationAsync("Strum", 0.5f);
+                if (disableStrumEffect) return;
+                strumEffect.SetActive(true);
+                strumEffect.GetComponent<Animator>().Play("StrumStart", 0, 0);
+            }
         }
 
         public void BendUp(int pitch)
@@ -185,7 +210,7 @@ namespace HeavenStudio.Games.Scripts_Rockers
             bending = false;
             StopSounds();
             Jukebox.PlayOneShotGame("rockers/mute");
-            DoScaledAnimationAsync("Crouch", 0.5f);
+            DoScaledAnimationAsync(together ? "ComeOnMute" : "Crouch", 0.5f);
             muted = true;
         }
 
