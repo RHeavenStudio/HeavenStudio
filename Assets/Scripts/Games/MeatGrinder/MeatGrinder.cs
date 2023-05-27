@@ -61,7 +61,7 @@ namespace HeavenStudio.Games.Loaders
                     priority = 4,
                 },
             },
-            new List<string>() {"pco", "normal"},
+            new List<string>() {"pco", "normal", "repeat"},
             "pcomeat", "en",
             new List<string>() {}
             );
