@@ -63,6 +63,7 @@ namespace HeavenStudio.Games.Scripts_Rockers
             }
             else
             {
+                if (strumming) strumEffect.GetComponent<Animator>().Play("StrumIdle", 0, 0);
                 if (PlayerInput.Pressing())
                 {
                     DoScaledAnimationAsync("Crouch", 0.5f);
