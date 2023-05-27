@@ -45,7 +45,7 @@ TextureImporter:
       213: -3432944208663641432
     second: inuMouth
   externalObjects: {}
-  serializedVersion: 11
+  serializedVersion: 12
   mipmaps:
     mipMapMode: 0
     enableMipMap: 0
@@ -66,6 +66,7 @@ TextureImporter:
   streamingMipmaps: 0
   streamingMipmapsPriority: 0
   vTOnly: 0
+  ignoreMasterTextureLimit: 0
   grayScaleToAlpha: 0
   generateCubemap: 6
   cubemapConvolution: 0
@@ -104,6 +105,7 @@ TextureImporter:
   textureFormatSet: 0
   ignorePngGamma: 0
   applyGammaDecoding: 0
+  cookieLightType: 1
   platformSettings:
   - serializedVersion: 3
     buildTarget: DefaultTexturePlatform
@@ -119,6 +121,18 @@ TextureImporter:
     forceMaximumCompressionQuality_BC6H_BC7: 0
   - serializedVersion: 3
     buildTarget: Standalone
+    maxTextureSize: 4096
+    resizeAlgorithm: 1
+    textureFormat: -1
+    textureCompression: 2
+    compressionQuality: 0
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 3
+    buildTarget: Server
     maxTextureSize: 4096
     resizeAlgorithm: 1
     textureFormat: -1
@@ -436,6 +450,21 @@ TextureImporter:
     edges: []
     weights: []
     secondaryTextures: []
+    nameFileIdTable:
+      background: -8551528264012278953
+      backgroundGlow: -2768974374605152282
+      ground: 4054221790298107953
+      inuBounce: 1277806008517062153
+      inuCollar: -634844184711935702
+      inuEar: 1654900032682902085
+      inuFan: 7874366561150129192
+      inuHead: 5033618459941488035
+      inuHeadBounce: -1120999474862527824
+      inuIdle: -1078659944613355180
+      inuMouth: -3432944208663641432
+      inuSenseiPlatform: 423810776407373802
+      inuShadow: 7251623275569825146
+      inuStinkEye: 249072357185814813
   spritePackingTag: 
   pSDRemoveMatte: 0
   pSDShowRemoveMatteOption: 0

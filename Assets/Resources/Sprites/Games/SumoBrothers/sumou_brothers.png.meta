@@ -1,9 +1,129 @@
 fileFormatVersion: 2
-guid: 8c64907ce6b9ba948a869d3723e411a2
+guid: 5fab63953294eec448d9d3b72eedc95f
 TextureImporter:
-  internalIDToNameTable: []
+  internalIDToNameTable:
+  - first:
+      213: 2220080674225272772
+    second: sumoSlap1G
+  - first:
+      213: -2157296434265405390
+    second: sumoSlap2G
+  - first:
+      213: -3963959646493570317
+    second: sumoIdleG
+  - first:
+      213: 7891910666414377473
+    second: sumoStompG
+  - first:
+      213: 9067777096479463812
+    second: sumoPose1G
+  - first:
+      213: 424559531771652937
+    second: sumoSlap1
+  - first:
+      213: 7163208322124430829
+    second: sumoSlap2
+  - first:
+      213: -5313722374744912791
+    second: sumoSlapMiss
+  - first:
+      213: -4597546566781057420
+    second: sumoIdle
+  - first:
+      213: -1970756331250828024
+    second: sumoStomp
+  - first:
+      213: 5635274376280971020
+    second: sumoPose1
+  - first:
+      213: 5782236966841012694
+    second: sumoPose2G
+  - first:
+      213: 8145602058330069441
+    second: sumoPose3G
+  - first:
+      213: -4358567985956909438
+    second: sumoPose4G
+  - first:
+      213: 4790225683669189021
+    second: sumoPose2
+  - first:
+      213: 1765686799284495116
+    second: sumoPose3
+  - first:
+      213: -3779634303371567205
+    second: sumoPose4
+  - first:
+      213: -4779885340759907739
+    second: sumoSlap1B
+  - first:
+      213: -8767112963230444727
+    second: sumoSlap2B
+  - first:
+      213: -8495366384255927278
+    second: sumoPose2B
+  - first:
+      213: -6720856240306821659
+    second: sumoPose4B
+  - first:
+      213: 674282706000060490
+    second: sumoStompB
+  - first:
+      213: 2246774544801696384
+    second: sumoPose1B
+  - first:
+      213: -2550227260710134621
+    second: sumoPose3B
+  - first:
+      213: 2361868494225166041
+    second: sumoIdle1
+  - first:
+      213: -4062681905201533669
+    second: sumoIdle2
+  - first:
+      213: -4948312720817844961
+    second: sumoShadow
+  - first:
+      213: -5506557043992739356
+    second: sumoFoot1
+  - first:
+      213: -4732146126202908803
+    second: sumoFoot2
+  - first:
+      213: 2427292721185091619
+    second: slapMiss
+  - first:
+      213: 3629736518689559403
+    second: stompMiss
+  - first:
+      213: -5125814858161207827
+    second: sumoSlapWhoosh
+  - first:
+      213: 7688654792128702393
+    second: sumoGlasses
+  - first:
+      213: 4012722578137635264
+    second: sumoFoot3
+  - first:
+      213: 1711166965817147809
+    second: sumoIdle3
+  - first:
+      213: -5312421730865648462
+    second: sumoMawashi1
+  - first:
+      213: 3172294611257369846
+    second: sumoMawashi2
+  - first:
+      213: -2488178651933775441
+    second: sumoMawashi3
+  - first:
+      213: -4588480885815971562
+    second: sumoMawashi4
+  - first:
+      213: 7869255448870136849
+    second: sumoMawashi5
   externalObjects: {}
-  serializedVersion: 11
+  serializedVersion: 12
   mipmaps:
     mipMapMode: 0
     enableMipMap: 0
@@ -24,6 +144,7 @@ TextureImporter:
   streamingMipmaps: 0
   streamingMipmapsPriority: 0
   vTOnly: 0
+  ignoreMasterTextureLimit: 0
   grayScaleToAlpha: 0
   generateCubemap: 6
   cubemapConvolution: 0
@@ -41,12 +162,12 @@ TextureImporter:
   nPOTScale: 0
   lightmap: 0
   compressionQuality: 50
-  spriteMode: 1
+  spriteMode: 2
   spriteExtrude: 1
   spriteMeshType: 1
   alignment: 0
   spritePivot: {x: 0.5, y: 0.5}
-  spritePixelsToUnits: 100
+  spritePixelsToUnits: 400
   spriteBorder: {x: 0, y: 0, z: 0, w: 0}
   spriteGenerateFallbackPhysicsShape: 1
   alphaUsage: 1
@@ -62,9 +183,34 @@ TextureImporter:
   textureFormatSet: 0
   ignorePngGamma: 0
   applyGammaDecoding: 0
+  cookieLightType: 1
   platformSettings:
   - serializedVersion: 3
     buildTarget: DefaultTexturePlatform
+    maxTextureSize: 4096
+    resizeAlgorithm: 1
+    textureFormat: -1
+    textureCompression: 2
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 3
+    buildTarget: Standalone
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 3
+    buildTarget: Server
     maxTextureSize: 2048
     resizeAlgorithm: 0
     textureFormat: -1
@@ -77,7 +223,847 @@ TextureImporter:
     forceMaximumCompressionQuality_BC6H_BC7: 0
   spriteSheet:
     serializedVersion: 2
-    sprites: []
+    sprites:
+    - serializedVersion: 2
+      name: sumoSlap1G
+      rect:
+        serializedVersion: 2
+        x: 3048
+        y: 3752
+        width: 336
+        height: 336
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 4c738e75c9f4fce10800000000000000
+      internalID: 2220080674225272772
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: sumoSlap2G
+      rect:
+        serializedVersion: 2
+        x: 3400
+        y: 3752
+        width: 336
+        height: 336
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 238c468a25ebf02e0800000000000000
+      internalID: -2157296434265405390
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: sumoIdleG
+      rect:
+        serializedVersion: 2
+        x: 3048
+        y: 3400
+        width: 336
+        height: 336
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 3fa84c614bf2df8c0800000000000000
+      internalID: -3963959646493570317
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: sumoStompG
+      rect:
+        serializedVersion: 2
+        x: 3400
+        y: 3400
+        width: 336
+        height: 336
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 10acebe10f2b58d60800000000000000
+      internalID: 7891910666414377473
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: sumoPose1G
+      rect:
+        serializedVersion: 2
+        x: 3752
+        y: 3400
+        width: 336
+        height: 336
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 489d412e93737dd70800000000000000
+      internalID: 9067777096479463812
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: sumoSlap1
+      rect:
+        serializedVersion: 2
+        x: 3048
+        y: 3048
+        width: 336
+        height: 336
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 94b614d05a654e500800000000000000
+      internalID: 424559531771652937
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: sumoSlap2
+      rect:
+        serializedVersion: 2
+        x: 3400
+        y: 3048
+        width: 336
+        height: 336
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: ded39544404d86360800000000000000
+      internalID: 7163208322124430829
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: sumoSlapMiss
+      rect:
+        serializedVersion: 2
+        x: 3752
+        y: 3048
+        width: 336
+        height: 336
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 96cc84a47add146b0800000000000000
+      internalID: -5313722374744912791
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: sumoIdle
+      rect:
+        serializedVersion: 2
+        x: 3048
+        y: 2696
+        width: 336
+        height: 336
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 476c2b0a1cb3230c0800000000000000
+      internalID: -4597546566781057420
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: sumoStomp
+      rect:
+        serializedVersion: 2
+        x: 3400
+        y: 2696
+        width: 336
+        height: 336
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 80d31f8ee8776a4e0800000000000000
+      internalID: -1970756331250828024
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: sumoPose1
+      rect:
+        serializedVersion: 2
+        x: 3752
+        y: 2696
+        width: 336
+        height: 336
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: c0796123034843e40800000000000000
+      internalID: 5635274376280971020
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: sumoPose2G
+      rect:
+        serializedVersion: 2
+        x: 3048
+        y: 2344
+        width: 336
+        height: 336
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 6d1d0bfb2e1ae3050800000000000000
+      internalID: 5782236966841012694
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: sumoPose3G
+      rect:
+        serializedVersion: 2
+        x: 3400
+        y: 2348
+        width: 336
+        height: 336
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 1c954703aedfa0170800000000000000
+      internalID: 8145602058330069441
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: sumoPose4G
+      rect:
+        serializedVersion: 2
+        x: 3752
+        y: 2344
+        width: 336
+        height: 336
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 28e06ab62814383c0800000000000000
+      internalID: -4358567985956909438
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: sumoPose2
+      rect:
+        serializedVersion: 2
+        x: 3044
+        y: 1988
+        width: 336
+        height: 336
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: d910e0d21ec4a7240800000000000000
+      internalID: 4790225683669189021
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: sumoPose3
+      rect:
+        serializedVersion: 2
+        x: 3400
+        y: 1992
+        width: 336
+        height: 336
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: c03e2f7f9caf08810800000000000000
+      internalID: 1765686799284495116
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: sumoPose4
+      rect:
+        serializedVersion: 2
+        x: 3752
+        y: 1992
+        width: 336
+        height: 336
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: b9f18ae50aa0c8bc0800000000000000
+      internalID: -3779634303371567205
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: sumoSlap1B
+      rect:
+        serializedVersion: 2
+        x: 3048
+        y: 1640
+        width: 336
+        height: 336
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 562a8e48b9f6aadb0800000000000000
+      internalID: -4779885340759907739
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: sumoSlap2B
+      rect:
+        serializedVersion: 2
+        x: 3400
+        y: 1640
+        width: 336
+        height: 336
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 9435de8c535f45680800000000000000
+      internalID: -8767112963230444727
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: sumoPose2B
+      rect:
+        serializedVersion: 2
+        x: 3752
+        y: 1640
+        width: 336
+        height: 336
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 21c71ada8456a1a80800000000000000
+      internalID: -8495366384255927278
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: sumoPose4B
+      rect:
+        serializedVersion: 2
+        x: 3048
+        y: 1288
+        width: 336
+        height: 336
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 5e56b0aabd8bab2a0800000000000000
+      internalID: -6720856240306821659
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: sumoStompB
+      rect:
+        serializedVersion: 2
+        x: 3400
+        y: 1288
+        width: 336
+        height: 336
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: a40a2517c888b5900800000000000000
+      internalID: 674282706000060490
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: sumoPose1B
+      rect:
+        serializedVersion: 2
+        x: 3752
+        y: 1288
+        width: 336
+        height: 336
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 08a8b496b852e2f10800000000000000
+      internalID: 2246774544801696384
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: sumoPose3B
+      rect:
+        serializedVersion: 2
+        x: 3752
+        y: 936
+        width: 336
+        height: 336
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 3acdadc61d5cb9cd0800000000000000
+      internalID: -2550227260710134621
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: sumoIdle1
+      rect:
+        serializedVersion: 2
+        x: 2216
+        y: 2280
+        width: 720
+        height: 528
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 9de4a7cb1ea07c020800000000000000
+      internalID: 2361868494225166041
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: sumoIdle2
+      rect:
+        serializedVersion: 2
+        x: 1736
+        y: 2280
+        width: 464
+        height: 432
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: b1d2e0d05547e97c0800000000000000
+      internalID: -4062681905201533669
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: sumoShadow
+      rect:
+        serializedVersion: 2
+        x: 1352
+        y: 2088
+        width: 720
+        height: 176
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: f1d0b163ccf045bb0800000000000000
+      internalID: -4948312720817844961
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: sumoFoot1
+      rect:
+        serializedVersion: 2
+        x: 904
+        y: 2280
+        width: 208
+        height: 144
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 4e143612b87c493b0800000000000000
+      internalID: -5506557043992739356
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: sumoFoot2
+      rect:
+        serializedVersion: 2
+        x: 1128
+        y: 2280
+        width: 208
+        height: 144
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: d7f4f629b2a045eb0800000000000000
+      internalID: -4732146126202908803
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: slapMiss
+      rect:
+        serializedVersion: 2
+        x: 456
+        y: 2024
+        width: 432
+        height: 400
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 320f02c9ed97fa120800000000000000
+      internalID: 2427292721185091619
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: stompMiss
+      rect:
+        serializedVersion: 2
+        x: 8
+        y: 2024
+        width: 432
+        height: 400
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: b6311c0f12a6f5230800000000000000
+      internalID: 3629736518689559403
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: sumoSlapWhoosh
+      rect:
+        serializedVersion: 2
+        x: 392
+        y: 2824
+        width: 528
+        height: 176
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: de5c1e25b827dd8b0800000000000000
+      internalID: -5125814858161207827
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: sumoGlasses
+      rect:
+        serializedVersion: 2
+        x: 2312
+        y: 2088
+        width: 240
+        height: 176
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 9b7af651cc693ba60800000000000000
+      internalID: 7688654792128702393
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: sumoFoot3
+      rect:
+        serializedVersion: 2
+        x: 2088
+        y: 2088
+        width: 208
+        height: 176
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 0c9551caced00b730800000000000000
+      internalID: 4012722578137635264
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: sumoIdle3
+      rect:
+        serializedVersion: 2
+        x: 1352
+        y: 2280
+        width: 368
+        height: 432
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 1a10aec0a494fb710800000000000000
+      internalID: 1711166965817147809
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: sumoMawashi1
+      rect:
+        serializedVersion: 2
+        x: 1992
+        y: 2888
+        width: 560
+        height: 400
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 2bcefaa059c7646b0800000000000000
+      internalID: -5312421730865648462
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: sumoMawashi2
+      rect:
+        serializedVersion: 2
+        x: 2568
+        y: 3144
+        width: 336
+        height: 432
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 6f4a1e23421460c20800000000000000
+      internalID: 3172294611257369846
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: sumoMawashi3
+      rect:
+        serializedVersion: 2
+        x: 1992
+        y: 3304
+        width: 560
+        height: 272
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: fa9e6c1f2b6387dd0800000000000000
+      internalID: -2488178651933775441
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: sumoMawashi4
+      rect:
+        serializedVersion: 2
+        x: 2568
+        y: 2888
+        width: 176
+        height: 240
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 611f446f1f07250c0800000000000000
+      internalID: -4588480885815971562
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: sumoMawashi5
+      rect:
+        serializedVersion: 2
+        x: 2760
+        y: 2824
+        width: 240
+        height: 304
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 11c26bc3326353d60800000000000000
+      internalID: 7869255448870136849
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
     outline: []
     physicsShape: []
     bones: []
@@ -88,6 +1074,47 @@ TextureImporter:
     edges: []
     weights: []
     secondaryTextures: []
+    nameFileIdTable:
+      slapMiss: 2427292721185091619
+      stompMiss: 3629736518689559403
+      sumoFoot1: -5506557043992739356
+      sumoFoot2: -4732146126202908803
+      sumoFoot3: 4012722578137635264
+      sumoGlasses: 7688654792128702393
+      sumoIdle: -4597546566781057420
+      sumoIdle1: 2361868494225166041
+      sumoIdle2: -4062681905201533669
+      sumoIdle3: 1711166965817147809
+      sumoIdleG: -3963959646493570317
+      sumoMawashi1: -5312421730865648462
+      sumoMawashi2: 3172294611257369846
+      sumoMawashi3: -2488178651933775441
+      sumoMawashi4: -4588480885815971562
+      sumoMawashi5: 7869255448870136849
+      sumoPose1: 5635274376280971020
+      sumoPose1B: 2246774544801696384
+      sumoPose1G: 9067777096479463812
+      sumoPose2: 4790225683669189021
+      sumoPose2B: -8495366384255927278
+      sumoPose2G: 5782236966841012694
+      sumoPose3: 1765686799284495116
+      sumoPose3B: -2550227260710134621
+      sumoPose3G: 8145602058330069441
+      sumoPose4: -3779634303371567205
+      sumoPose4B: -6720856240306821659
+      sumoPose4G: -4358567985956909438
+      sumoShadow: -4948312720817844961
+      sumoSlap1: 424559531771652937
+      sumoSlap1B: -4779885340759907739
+      sumoSlap1G: 2220080674225272772
+      sumoSlap2: 7163208322124430829
+      sumoSlap2B: -8767112963230444727
+      sumoSlap2G: -2157296434265405390
+      sumoSlapMiss: -5313722374744912791
+      sumoSlapWhoosh: -5125814858161207827
+      sumoStomp: -1970756331250828024
+      sumoStompB: 674282706000060490
+      sumoStompG: 7891910666414377473
   spritePackingTag: 
   pSDRemoveMatte: 0
   pSDShowRemoveMatteOption: 0
