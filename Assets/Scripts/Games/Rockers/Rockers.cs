@@ -90,6 +90,96 @@ namespace HeavenStudio.Games.Loaders
                     function = delegate { var e = eventCaller.currentEntity; Rockers.instance.PassTurn(e.beat, e.length); },
                     resizable = true
                 },
+                new GameAction("cmon", "C'mon!")
+                {
+                    function = delegate { var e = eventCaller.currentEntity; Rockers.instance.DefaultCmon(e.beat, new int[4]
+                    {
+                        e["JJ1"],
+                        e["JJ2"],
+                        e["JJ3"],
+                        e["JJ4"],
+                    }, new int[4]
+                    {
+                        e["pJJ1"],
+                        e["pJJ2"],
+                        e["pJJ3"],
+                        e["pJJ4"],
+                    }, new int[4]
+                    {
+                        e["S1"],
+                        e["S2"],
+                        e["S3"],
+                        e["S4"],
+                    }, new int[4]
+                    {
+                        e["pS1"],
+                        e["pS2"],
+                        e["pS3"],
+                        e["pS4"], 
+                    }
+                    ); },
+                    defaultLength = 11,
+                    parameters = new List<Param>()
+                    {
+                        new Param("JJ1", Rockers.PremadeSamples.ChordG5, "Premade Sample 1 (JJ)", "What sample to use for the 1st riff?"),
+                        new Param("pJJ1", new EntityTypes.Integer(0, 24, 0), "Sample Semtiones 1 (JJ)", "Pitch up the sample by X amount of semitones?"),
+                        new Param("JJ2", Rockers.PremadeSamples.ChordG5, "Premade Sample 2 (JJ)", "What sample to use for the 2nd riff?"),
+                        new Param("pJJ2", new EntityTypes.Integer(0, 24, 0), "Sample Semtiones 2 (JJ)", "Pitch up the sample by X amount of semitones?"),
+                        new Param("JJ3", Rockers.PremadeSamples.ChordG5, "Premade Sample 3 (JJ)", "What sample to use for the 3rd riff?"),
+                        new Param("pJJ3", new EntityTypes.Integer(0, 24, 0), "Sample Semtiones 3 (JJ)", "Pitch up the sample by X amount of semitones?"),
+                        new Param("JJ4", Rockers.PremadeSamples.ChordA, "Premade Sample 4 (JJ)", "What sample to use for the final riff?"),
+                        new Param("pJJ4", new EntityTypes.Integer(0, 24, 0), "Sample Semtiones 4 (JJ)", "Pitch up the sample by X amount of semitones?"),
+                        new Param("S1", Rockers.PremadeSamples.ChordG, "Premade Sample 1 (Soshi)", "What sample to use for the 1st riff?"),
+                        new Param("pS1", new EntityTypes.Integer(0, 24, 0), "Sample Semtiones 1 (Soshi)", "Pitch up the sample by X amount of semitones?"),
+                        new Param("S2", Rockers.PremadeSamples.ChordG, "Premade Sample 2 (Soshi)", "What sample to use for the 2nd riff?"),
+                        new Param("pS2", new EntityTypes.Integer(0, 24, 0), "Sample Semtiones 2 (Soshi)", "Pitch up the sample by X amount of semitones?"),
+                        new Param("S3", Rockers.PremadeSamples.ChordG, "Premade Sample 3 (Soshi)", "What sample to use for the 3rd riff?"),
+                        new Param("pS3", new EntityTypes.Integer(0, 24, 0), "Sample Semtiones 3 (Soshi)", "Pitch up the sample by X amount of semitones?"),
+                        new Param("S4", Rockers.PremadeSamples.ChordA, "Premade Sample 4 (Soshi)", "What sample to use for the final riff?"),
+                        new Param("pS4", new EntityTypes.Integer(0, 24, 0), "Sample Semtiones 4 (Soshi)", "Pitch up the sample by X amount of semitones?"),
+                    }
+                },
+                new GameAction("lastOne", "Last One!")
+                {
+                    function = delegate { var e = eventCaller.currentEntity; Rockers.instance.DefaultLastOne(e.beat, new int[3]
+                    {
+                        e["JJ1"],
+                        e["JJ2"],
+                        e["JJ3"],
+                    }, new int[3]
+                    {
+                        e["pJJ1"],
+                        e["pJJ2"],
+                        e["pJJ3"],
+                    }, new int[3]
+                    {
+                        e["S1"],
+                        e["S2"],
+                        e["S3"],
+                    }, new int[3]
+                    {
+                        e["pS1"],
+                        e["pS2"],
+                        e["pS3"],
+                    }
+                    ); },
+                    defaultLength = 7,
+                    parameters = new List<Param>()
+                    {
+                        new Param("JJ1", Rockers.PremadeSamples.ChordAsus4, "Premade Sample 1 (JJ)", "What sample to use for the 1st riff?"),
+                        new Param("pJJ1", new EntityTypes.Integer(0, 24, 0), "Sample Semtiones 1 (JJ)", "Pitch up the sample by X amount of semitones?"),
+                        new Param("JJ2", Rockers.PremadeSamples.ChordAsus4, "Premade Sample 2 (JJ)", "What sample to use for the 2nd riff?"),
+                        new Param("pJJ2", new EntityTypes.Integer(0, 24, 0), "Sample Semtiones 2 (JJ)", "Pitch up the sample by X amount of semitones?"),
+                        new Param("JJ3", Rockers.PremadeSamples.ChordAsus4, "Premade Sample 3 (JJ)", "What sample to use for the final riff?"),
+                        new Param("pJJ3", new EntityTypes.Integer(0, 24, 0), "Sample Semtiones 3 (JJ)", "Pitch up the sample by X amount of semitones?"),
+                        new Param("S1", Rockers.PremadeSamples.ChordDmaj9, "Premade Sample 1 (Soshi)", "What sample to use for the 1st riff?"),
+                        new Param("pS1", new EntityTypes.Integer(0, 24, 0), "Sample Semtiones 1 (Soshi)", "Pitch up the sample by X amount of semitones?"),
+                        new Param("S2", Rockers.PremadeSamples.ChordDmaj9, "Premade Sample 2 (Soshi)", "What sample to use for the 2nd riff?"),
+                        new Param("pS2", new EntityTypes.Integer(0, 24, 0), "Sample Semtiones 2 (Soshi)", "Pitch up the sample by X amount of semitones?"),
+                        new Param("S3", Rockers.PremadeSamples.ChordDmaj9, "Premade Sample 3 (Soshi)", "What sample to use for the final riff?"),
+                        new Param("pS3", new EntityTypes.Integer(0, 24, 0), "Sample Semtiones 3 (Soshi)", "Pitch up the sample by X amount of semitones?"),
+                    }
+                },
                 new GameAction("count", "Count In")
                 {
                     parameters = new List<Param>()
@@ -470,6 +560,57 @@ namespace HeavenStudio.Games
             }
         }
 
+        public void DefaultLastOne(float beat, int[] JJSamples, int[] JJPitches, int[] SoshiSamples, int[] SoshiPitches)
+        {
+            Jukebox.PlayOneShotGame("rockers/lastOne");
+            lastTargetCameraX = GameCamera.additionalPosition.x;
+            targetCameraX = 0;
+            cameraMoveBeat = beat + 2;
+            BeatAction.New(instance.gameObject, new List<BeatAction.Action>()
+            {
+                new BeatAction.Action(beat + 2, delegate
+                {
+                    JJ.PrepareTogether(true);
+                    Soshi.PrepareTogether(GameManager.instance.autoplay);
+                }),
+                new BeatAction.Action(beat + 3, delegate
+                {
+                    JJ.StrumStrings(false, new int[6], (PremadeSamples)JJSamples[0], JJPitches[0]);
+                }),
+                new BeatAction.Action(beat + 3.5f, delegate
+                {
+                    JJ.Mute();
+                }),
+                new BeatAction.Action(beat + 4.5f, delegate
+                {
+                    JJ.StrumStrings(false, new int[6], (PremadeSamples)JJSamples[1], JJPitches[1]);
+                }),
+                new BeatAction.Action(beat + 5f, delegate
+                {
+                    JJ.Mute();
+                }),
+                new BeatAction.Action(beat + 6, delegate
+                {
+                    JJ.StrumStrings(false, new int[6], (PremadeSamples)JJSamples[2], JJPitches[2]);
+                }),
+                new BeatAction.Action(beat + 6.5f, delegate
+                {
+                    JJ.Mute();
+                }),
+            });
+            RockersInput riffComp = Instantiate(rockerInputRef, transform);
+            riffComp.Init(false, new int[6], beat, 3, (PremadeSamples)SoshiSamples[0], SoshiPitches[0]);
+            ScheduleInput(beat, 3.5f, InputType.STANDARD_DOWN, JustMute, MuteMiss, Empty);
+
+            RockersInput riffComp2 = Instantiate(rockerInputRef, transform);
+            riffComp2.Init(false, new int[6], beat, 4.5f, (PremadeSamples)SoshiSamples[1], SoshiPitches[1]);
+            ScheduleInput(beat, 5f, InputType.STANDARD_DOWN, JustMute, MuteMiss, Empty);
+
+            RockersInput riffComp3 = Instantiate(rockerInputRef, transform);
+            riffComp3.Init(false, new int[6], beat, 6, (PremadeSamples)SoshiSamples[2], SoshiPitches[2]);
+            ScheduleInput(beat, 6.5f, InputType.STANDARD_DOWN, JustMute, MuteMiss, Empty);
+        }
+
         public void DefaultCmon(float beat, int[] JJSamples, int[] JJPitches, int[] SoshiSamples, int[] SoshiPitches)
         {
             Jukebox.PlayOneShotGame("rockers/cmon");
@@ -480,9 +621,8 @@ namespace HeavenStudio.Games
             {
                 new BeatAction.Action(beat + 2, delegate
                 {
-                    JJ.PrepareTogether();
-                    Soshi.PrepareTogether();
-                    Mute((int)WhoMutes.Both);
+                    JJ.PrepareTogether(true);
+                    Soshi.PrepareTogether(GameManager.instance.autoplay);
                 }),
                 new BeatAction.Action(beat + 3, delegate
                 {
@@ -510,13 +650,28 @@ namespace HeavenStudio.Games
                 }),
                 new BeatAction.Action(beat + 7, delegate
                 {
-                    JJ.StrumStrings(false, new int[6], (PremadeSamples)JJSamples[3], JJPitches[3]);
+                    JJ.StrumStrings(false, new int[6], (PremadeSamples)JJSamples[3], JJPitches[3], false, true);
                 }),
                 new BeatAction.Action(beat + 10, delegate
                 {
                     JJ.Mute();
                 }),
             });
+            RockersInput riffComp = Instantiate(rockerInputRef, transform);
+            riffComp.Init(false, new int[6], beat, 3, (PremadeSamples)SoshiSamples[0], SoshiPitches[0]);
+            ScheduleInput(beat, 4, InputType.STANDARD_DOWN, JustMute, MuteMiss, Empty);
+
+            RockersInput riffComp2 = Instantiate(rockerInputRef, transform);
+            riffComp2.Init(false, new int[6], beat, 4.5f, (PremadeSamples)SoshiSamples[1], SoshiPitches[1]);
+            ScheduleInput(beat, 5.5f, InputType.STANDARD_DOWN, JustMute, MuteMiss, Empty);
+
+            RockersInput riffComp3 = Instantiate(rockerInputRef, transform);
+            riffComp3.Init(false, new int[6], beat, 6, (PremadeSamples)SoshiSamples[2], SoshiPitches[2]);
+            ScheduleInput(beat, 6.5f, InputType.STANDARD_DOWN, JustMute, MuteMiss, Empty);
+
+            RockersInput riffComp4 = Instantiate(rockerInputRef, transform);
+            riffComp4.Init(false, new int[6], beat, 7, (PremadeSamples)SoshiSamples[3], SoshiPitches[3], true);
+            ScheduleInput(beat, 10, InputType.STANDARD_DOWN, JustMute, MuteMiss, Empty);
         }
 
         public void TogetherPrepare(float beat, bool cmon, bool muteSound, float muteBeat, float goToMiddleBeat)
