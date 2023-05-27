@@ -129,12 +129,11 @@ namespace HeavenStudio.Games.Loaders
                 },
                 new GameAction("prepareTogether", "Custom Together Prepare")
                 {
-                    function = delegate { var e = eventCaller.currentEntity; Rockers.instance.TogetherPrepare(e.beat, e["cmon"], e["mute"]); },
+                    function = delegate { var e = eventCaller.currentEntity; Rockers.instance.TogetherPrepare(e.beat, e["cmon"] == Rockers.VoiceLineSelection.Cmon, e["cmon"] == Rockers.VoiceLineSelection.None); },
                     defaultLength = 3f,
                     parameters = new List<Param>()
                     {
-                        new Param("cmon", true, "C'mon!", "Use the C'mon voiceline? If unchecked it uses the Last One voiceline."),
-                        new Param("mute", false, "Mute", "Will the voiceline be muted?")
+                        new Param("cmon", Rockers.VoiceLineSelection.Cmon, "Voiceline", "Which voiceline should be used?"),
                     }
                 },
                 new GameAction("riffTogether", "Custom Together Riff")
@@ -252,6 +251,12 @@ namespace HeavenStudio.Games
             Two = 2,
             Three = 3,
             Four = 4
+        }
+        public enum VoiceLineSelection
+        {
+            Cmon,
+            LastOne,
+            None
         }
         public static Rockers instance;
 
