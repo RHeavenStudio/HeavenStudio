@@ -570,6 +570,7 @@ namespace HeavenStudio.Games
             {
                 new BeatAction.Action(beat + 2, delegate
                 {
+                    if (JJ.together || Soshi.together) return;
                     JJ.PrepareTogether(true);
                     Soshi.PrepareTogether(GameManager.instance.autoplay);
                 }),
@@ -621,6 +622,7 @@ namespace HeavenStudio.Games
             {
                 new BeatAction.Action(beat + 2, delegate
                 {
+                    if (JJ.together || Soshi.together) return;
                     JJ.PrepareTogether(true);
                     Soshi.PrepareTogether(GameManager.instance.autoplay);
                 }),
@@ -687,12 +689,14 @@ namespace HeavenStudio.Games
             {
                 new BeatAction.Action(beat + goToMiddleBeat, delegate
                 {
+                    if (JJ.together || Soshi.together) return;
                     JJ.PrepareTogether(goToMiddleBeat == muteBeat);
                     Soshi.PrepareTogether(goToMiddleBeat == muteBeat && GameManager.instance.autoplay);
                 }),
                 new BeatAction.Action(beat + muteBeat, delegate
                 {
                     if (goToMiddleBeat == muteBeat) return;
+                    if (JJ.together || Soshi.together) return;
                     Mute((int)WhoMutes.Both);
                 }),
             });
