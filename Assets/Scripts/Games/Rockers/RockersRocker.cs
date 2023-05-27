@@ -48,14 +48,17 @@ namespace HeavenStudio.Games.Scripts_Rockers
             }
         }
 
-        public void PrepareTogether()
+        public void PrepareTogether(bool forceMute = false)
         {
             together = true;
-            DoScaledAnimationAsync("ComeOnPrepare", 0.5f);
-            if (JJ || (!JJ && PlayerInput.Pressing()))
+            if ((PlayerInput.Pressing() && !JJ) || forceMute)
             {
-                Jukebox.PlayOneShotGame("rockers/mute");
-                muted = true;
+                DoScaledAnimationAsync("ComeOnPrepare", 0.5f);
+                if (forceMute) Mute(true, true);
+            }
+            else
+            {
+                DoScaledAnimationAsync("ComeOnPrepareNoMute", 0.5f);
             }
         }
 
@@ -226,14 +229,14 @@ namespace HeavenStudio.Games.Scripts_Rockers
             }
         }
 
-        public void Mute(bool soundExists = true)
+        public void Mute(bool soundExists = true, bool noAnim = false)
         {
             strumming = false;
             strumEffect.SetActive(false);
             bending = false;
             StopSounds();
             if (soundExists) Jukebox.PlayOneShotGame("rockers/mute");
-            DoScaledAnimationAsync(together ? "ComeOnMute" : "Crouch", 0.5f);
+            if (!noAnim) DoScaledAnimationAsync(together ? "ComeOnMute" : "Crouch", 0.5f);
             muted = true;
         }
 

@@ -129,11 +129,14 @@ namespace HeavenStudio.Games.Loaders
                 },
                 new GameAction("prepareTogether", "Custom Together Prepare")
                 {
-                    function = delegate { var e = eventCaller.currentEntity; Rockers.instance.TogetherPrepare(e.beat, e["cmon"] == (int)Rockers.VoiceLineSelection.Cmon, e["cmon"] == (int)Rockers.VoiceLineSelection.None); },
+                    function = delegate { var e = eventCaller.currentEntity; Rockers.instance.TogetherPrepare(e.beat, e["cmon"] == (int)Rockers.VoiceLineSelection.Cmon, e["cmon"] == (int)Rockers.VoiceLineSelection.None, 
+                        e["muteBeat"], e["middleBeat"]); },
                     defaultLength = 3f,
                     parameters = new List<Param>()
                     {
                         new Param("cmon", Rockers.VoiceLineSelection.Cmon, "Voiceline", "Which voiceline should be used?"),
+                        new Param("muteBeat", new EntityTypes.Integer(0, 30, 2), "Mute Beat", "How many beats from the start of this event will they prepare mute?"),
+                        new Param("middleBeat", new EntityTypes.Integer(0, 30, 2), "Go-to-middle Beat", "How many beats from the start of this event will they go to the middle?"),
                     }
                 },
                 new GameAction("riffTogether", "Custom Together Riff")
@@ -516,23 +519,28 @@ namespace HeavenStudio.Games
             });
         }
 
-        public void TogetherPrepare(float beat, bool cmon, bool muteSound)
+        public void TogetherPrepare(float beat, bool cmon, bool muteSound, float muteBeat, float goToMiddleBeat)
         {
             List<DynamicBeatmap.DynamicEntity> togetherEvents = GrabAllTogetherEvents(beat);
             if (togetherEvents.Count == 0 || crHandlerInstance.IntervalIsActive()) return;
             if (!muteSound) Jukebox.PlayOneShotGame(cmon ? "rockers/Cmon" : "rockers/LastOne");
-            List<BeatAction.Action> actions = new List<BeatAction.Action>()
-            {
-                new BeatAction.Action(togetherEvents[0].beat - 1, delegate
-                {
-                    JJ.PrepareTogether();
-                    Soshi.PrepareTogether();
-                    Mute((int)WhoMutes.Both);
-                })
-            };
+            List<BeatAction.Action> actions = new List<BeatAction.Action>();
             lastTargetCameraX = GameCamera.additionalPosition.x;
             targetCameraX = 0;
-            cameraMoveBeat = togetherEvents[0].beat - 1;
+            cameraMoveBeat = beat + goToMiddleBeat;
+            BeatAction.New(instance.gameObject, new List<BeatAction.Action>()
+            {
+                new BeatAction.Action(beat + goToMiddleBeat, delegate
+                {
+                    JJ.PrepareTogether(goToMiddleBeat == muteBeat);
+                    Soshi.PrepareTogether(goToMiddleBeat == muteBeat && GameManager.instance.autoplay);
+                }),
+                new BeatAction.Action(beat + muteBeat, delegate
+                {
+                    if (goToMiddleBeat == muteBeat) return;
+                    Mute((int)WhoMutes.Both);
+                }),
+            });
             for (int i = 0; i < togetherEvents.Count; i++)
             {
                 var e = togetherEvents[i];
