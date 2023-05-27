@@ -809,7 +809,6 @@ namespace HeavenStudio.Games
                         JJ.ReturnBack();
                         if (prepareBeatsJJ.Count > 0 && prepareBeatsJJ.Contains(beat)) JJ.Mute(false);
                         Soshi.ReturnBack();
-                        if (GameManager.instance.autoplay && Soshi.muted) Soshi.Mute(false);
                     }
                 })
             });
