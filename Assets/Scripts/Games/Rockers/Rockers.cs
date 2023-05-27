@@ -129,7 +129,7 @@ namespace HeavenStudio.Games.Loaders
                 },
                 new GameAction("prepareTogether", "Custom Together Prepare")
                 {
-                    function = delegate { var e = eventCaller.currentEntity; Rockers.instance.TogetherPrepare(e.beat, e["cmon"] == Rockers.VoiceLineSelection.Cmon, e["cmon"] == Rockers.VoiceLineSelection.None); },
+                    function = delegate { var e = eventCaller.currentEntity; Rockers.instance.TogetherPrepare(e.beat, e["cmon"] == (int)Rockers.VoiceLineSelection.Cmon, e["cmon"] == (int)Rockers.VoiceLineSelection.None); },
                     defaultLength = 3f,
                     parameters = new List<Param>()
                     {
@@ -284,12 +284,19 @@ namespace HeavenStudio.Games
 
         private List<float> bendUsedBeats = new List<float>();
 
+        private List<float> prepareBeatsJJ = new List<float>();
+
         private void Awake()
         {
             instance = this;
             if (crHandlerInstance == null)
             {
                 crHandlerInstance = new CallAndResponseHandler(8);
+            }
+            var tempEvents = EventCaller.GetAllInGameManagerList("rockers", new string[] { "prepare" });
+            foreach (var tempEvent in tempEvents)
+            {
+                if (tempEvent["who"] != (int)WhoMutes.Soshi) prepareBeatsJJ.Add(tempEvent.beat);
             }
             GrabAllRiffEvents();
             GrabAllBendEvents();
@@ -460,6 +467,55 @@ namespace HeavenStudio.Games
             }
         }
 
+        public void DefaultCmon(float beat, int[] JJSamples, int[] JJPitches, int[] SoshiSamples, int[] SoshiPitches)
+        {
+            Jukebox.PlayOneShotGame("rockers/cmon");
+            lastTargetCameraX = GameCamera.additionalPosition.x;
+            targetCameraX = 0;
+            cameraMoveBeat = beat + 2;
+            BeatAction.New(instance.gameObject, new List<BeatAction.Action>()
+            {
+                new BeatAction.Action(beat + 2, delegate
+                {
+                    JJ.PrepareTogether();
+                    Soshi.PrepareTogether();
+                    Mute((int)WhoMutes.Both);
+                }),
+                new BeatAction.Action(beat + 3, delegate
+                {
+                    JJ.StrumStrings(false, new int[6], (PremadeSamples)JJSamples[0], JJPitches[0]);
+                }),
+                new BeatAction.Action(beat + 4, delegate
+                {
+                    JJ.Mute();
+                }),
+                new BeatAction.Action(beat + 4.5f, delegate
+                {
+                    JJ.StrumStrings(false, new int[6], (PremadeSamples)JJSamples[1], JJPitches[1]);
+                }),
+                new BeatAction.Action(beat + 5.5f, delegate
+                {
+                    JJ.Mute();
+                }),
+                new BeatAction.Action(beat + 6, delegate
+                {
+                    JJ.StrumStrings(false, new int[6], (PremadeSamples)JJSamples[2], JJPitches[2]);
+                }),
+                new BeatAction.Action(beat + 6.5, delegate
+                {
+                    JJ.Mute();
+                }),
+                new BeatAction.Action(beat + 7, delegate
+                {
+                    JJ.StrumStrings(false, new int[6], (PremadeSamples)JJSamples[3], JJPitches[3]);
+                }),
+                new BeatAction.Action(beat + 10, delegate
+                {
+                    JJ.Mute();
+                }),
+            });
+        }
+
         public void TogetherPrepare(float beat, bool cmon, bool muteSound)
         {
             List<DynamicBeatmap.DynamicEntity> togetherEvents = GrabAllTogetherEvents(beat);
@@ -476,7 +532,7 @@ namespace HeavenStudio.Games
             };
             lastTargetCameraX = GameCamera.additionalPosition.x;
             targetCameraX = 0;
-            cameraMoveBeat = togetherEvents[0].beat - 2;
+            cameraMoveBeat = togetherEvents[0].beat - 1;
             for (int i = 0; i < togetherEvents.Count; i++)
             {
                 var e = togetherEvents[i];
@@ -515,7 +571,6 @@ namespace HeavenStudio.Games
                         }, (PremadeSamples)e["sampleJJ"], e["pitchSampleJJ"], false, true);
                     }));
                     actions.Add(new BeatAction.Action(e.beat + e.length, delegate { JJ.Mute(); }));
-                    actions.Add(new BeatAction.Action(e.beat + e.length + 1f, delegate { JJ.ReturnBack(); Soshi.ReturnBack(); }));
                     RockersInput riffComp = Instantiate(rockerInputRef, transform);
                     riffComp.Init(e["gcS"], new int[6] { e["1S"], e["2S"], e["3S"], e["4S"], e["5S"], e["6S"] }, beat, e.beat - beat,
                         (PremadeSamples)e["sampleS"], e["pitchSampleS"], true);
@@ -540,6 +595,18 @@ namespace HeavenStudio.Games
             lastTargetCameraX = GameCamera.additionalPosition.x;
             targetCameraX = JJ.transform.localPosition.x;
             cameraMoveBeat = beat;
+            BeatAction.New(instance.gameObject, new List<BeatAction.Action>()
+            {
+                new BeatAction.Action(beat, delegate
+                {
+                    if (JJ.together || Soshi.together)
+                    {
+                        JJ.ReturnBack();
+                        if (prepareBeatsJJ.Count > 0 && prepareBeatsJJ.Contains(beat)) JJ.Mute(false);
+                        Soshi.ReturnBack();
+                    }
+                })
+            });
         }
 
         public void StartInterval(float beat, float length)

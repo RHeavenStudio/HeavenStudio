@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using HeavenStudio.Util;
+using System;
 
 namespace HeavenStudio.Games.Scripts_Rockers
 {
@@ -20,7 +21,7 @@ namespace HeavenStudio.Games.Scripts_Rockers
         private bool muted;
         private bool strumming;
         private bool bending;
-        private bool together;
+        [NonSerialized] public bool together;
 
         private void Awake()
         {
@@ -225,13 +226,13 @@ namespace HeavenStudio.Games.Scripts_Rockers
             }
         }
 
-        public void Mute()
+        public void Mute(bool soundExists = true)
         {
             strumming = false;
             strumEffect.SetActive(false);
             bending = false;
             StopSounds();
-            Jukebox.PlayOneShotGame("rockers/mute");
+            if (soundExists) Jukebox.PlayOneShotGame("rockers/mute");
             DoScaledAnimationAsync(together ? "ComeOnMute" : "Crouch", 0.5f);
             muted = true;
         }
