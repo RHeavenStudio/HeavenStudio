@@ -97,6 +97,7 @@ namespace HeavenStudio.Games
         private Material[] gridMaterials;
         private Material[] firstPatternLights;
         private Material[] secondPatternLights;
+        private Material[] elevatorObjectMats;
 
         [Header("Properties")]
         [SerializeField] float beltSpeed = 1f;
@@ -127,6 +128,15 @@ namespace HeavenStudio.Games
             elevatorMaterials = elevatorRenderer.materials;
             beltMaterial = Instantiate(environmentMaterials[8]);
             environmentMaterials[8] = beltMaterial;
+            elevatorObjectMats = new Material[]
+            {
+                Instantiate(elevatorMaterials[0]),
+                Instantiate(elevatorMaterials[1]),
+                Instantiate(elevatorMaterials[2]),
+            };
+            elevatorMaterials[0] = elevatorObjectMats[0];
+            elevatorMaterials[1] = elevatorObjectMats[1];
+            elevatorMaterials[2] = elevatorObjectMats[2];
             elevatorMaterial = Instantiate(elevatorMaterials[3]);
             elevatorMaterials[3] = elevatorMaterial;
             gridMaterials = new Material[]
@@ -198,6 +208,10 @@ namespace HeavenStudio.Games
             foreach (var mat in gridMaterials)
             {
                 mat.SetColor("_Color", currentEnvironmentColor);
+            }
+            foreach (var mat in elevatorObjectMats)
+            {
+                mat.SetColor("_Color", currentObjectColor);
             }
             if (!lighting)
             {
