@@ -61,13 +61,7 @@ namespace HeavenStudio.Games.Loaders
                         new Param("light", false, "Lights", "Should the lights light?")
                     }
                 }
-            });
-
-            },
-            new List<string>() {"ntr", "normal"},
-            "ntrassembly", "en",
-            new List<string>() {}
-            );
+            }, new List<string>() { "ntr", "normal" }, "ntrassembly", "en", new List<string>() { });
         }
     }
 }
@@ -99,7 +93,7 @@ namespace HeavenStudio.Games
         [SerializeField] private Material shooterMaterial;
         [SerializeField] private Material objectMaterial;
         [SerializeField] private Material gridPlaneMaterial;
-        [SerializeField] private Material elevatorMaterial;
+        private Material elevatorMaterial;
         private Material[] gridMaterials;
         private Material[] firstPatternLights;
         private Material[] secondPatternLights;
@@ -109,6 +103,7 @@ namespace HeavenStudio.Games
 
         private Material beltMaterial;
         private Material[] environmentMaterials;
+        private Material[] elevatorMaterials;
         private float currentBeltOffset;
         private bool lighting = false;
         private bool autoLight = false;
@@ -129,9 +124,11 @@ namespace HeavenStudio.Games
             instance = this;
 
             environmentMaterials = environmentRenderer.materials;
+            elevatorMaterials = elevatorRenderer.materials;
             beltMaterial = Instantiate(environmentMaterials[8]);
             environmentMaterials[8] = beltMaterial;
-            elevatorMaterial = elevatorRenderer.materials[3];
+            elevatorMaterial = Instantiate(elevatorMaterials[3]);
+            elevatorMaterials[3] = elevatorMaterial;
             gridMaterials = new Material[]
             {
                 Instantiate(environmentMaterials[9]),
@@ -246,6 +243,7 @@ namespace HeavenStudio.Games
             currentBeltOffset = (currentBeltOffset + Time.deltaTime * -beltSpeed) % 1f;
             beltMaterial.mainTextureOffset = new Vector2(0f, currentBeltOffset);
             environmentRenderer.materials = environmentMaterials;
+            elevatorRenderer.materials = elevatorMaterials;
         }
 
         void LateUpdate()

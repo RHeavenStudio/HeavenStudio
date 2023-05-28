@@ -727,7 +727,24 @@ namespace HeavenStudio.Games
                 }
                 BeatAction.New(instance.gameObject, new List<BeatAction.Action>()
                 {
-                    new BeatAction.Action(caller.startBeat + caller.timer + 0.9f, delegate { wrestlerAnim.Play("Idle", 0, 0); }),
+                    new BeatAction.Action(caller.startBeat + caller.timer + 1f, delegate 
+                    { 
+                        if (shouldBop)
+                        {
+                            if (UnityEngine.Random.Range(1, 18) == 1)
+                            {
+                                wrestlerAnim.DoScaledAnimationAsync("BopPec");
+                            }
+                            else
+                            {
+                                wrestlerAnim.DoScaledAnimationAsync("Bop");
+                            }
+                        }
+                        else
+                        {
+                            wrestlerAnim.Play("Idle", 0, 1);
+                        }
+                    }),
                 });
                 return;
             }
@@ -762,7 +779,24 @@ namespace HeavenStudio.Games
             }
             BeatAction.New(instance.gameObject, new List<BeatAction.Action>()
             {
-                new BeatAction.Action(caller.startBeat + caller.timer + 0.9f, delegate { wrestlerAnim.Play("Idle", 0, 0); }),
+                new BeatAction.Action(caller.startBeat + caller.timer + 1f, delegate 
+                {                         
+                    if (shouldBop)
+                    {
+                        if (UnityEngine.Random.Range(1, 18) == 1)
+                        {
+                            wrestlerAnim.DoScaledAnimationAsync("BopPec");
+                        }
+                        else
+                        {
+                            wrestlerAnim.DoScaledAnimationAsync("Bop");
+                        }
+                    }
+                    else
+                    {
+                        wrestlerAnim.Play("Idle", 0, 1);
+                    } 
+                }),
             });
 
         }
