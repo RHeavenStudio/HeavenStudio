@@ -135,7 +135,11 @@ namespace HeavenStudio.Games.Loaders
                         new Param("speed", new EntityTypes.Float(0, 100, 0.5f), "Scroll Speed", "How fast will the background scroll down?"),
                     }
                 }
-            });
+            },
+            new List<string>() {"rvl", "normal"},
+            "rvlrocket", "en",
+            new List<string>() {}
+            );
         }
     }
 }

@@ -79,7 +79,11 @@ namespace HeavenStudio.Games.Loaders
                         new Param("toggle", true, "Use it?", "Use the faces they do when you miss in the tutorial of Tap Troupe?")
                     }
                 }
-            });
+            },
+            new List<string>() {"rvl", "keep"},
+            "rvllegs", "en",
+            new List<string>() {"en"}
+            );
         }
     }
 }

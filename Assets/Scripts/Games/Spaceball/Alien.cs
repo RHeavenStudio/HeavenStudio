@@ -8,6 +8,7 @@ namespace HeavenStudio.Games.Scripts_Spaceball
 
         private float showBeat = 0;
         private bool isShowing = false;
+        private bool isHiding = false;
 
         const string IdleAnim = "AlienIdle";
         const string SwingAnim = "AlienSwing";
@@ -21,12 +22,12 @@ namespace HeavenStudio.Games.Scripts_Spaceball
 
         private void Update()
         {
-            if (Conductor.instance.isPlaying && !isShowing)
+            if (Conductor.instance.isPlaying && !isShowing && !isHiding)
             {
                 anim.Play(SwingAnim, 0, Conductor.instance.GetLoopPositionFromBeat(0, 1f));
                 anim.speed = 0;
             }
-            else if (!Conductor.instance.isPlaying)
+            else if (!Conductor.instance.isPlaying && !isHiding)
             {
                 anim.Play(IdleAnim, 0, 0);
             }
@@ -34,7 +35,7 @@ namespace HeavenStudio.Games.Scripts_Spaceball
             if (isShowing)
             {
                 float normalizedBeat = Conductor.instance.GetPositionFromBeat(showBeat, 1f);
-                anim.Play(ShowAnim, 0, normalizedBeat);
+                if (!isHiding) anim.Play(ShowAnim, 0, normalizedBeat);
                 anim.speed = 0;
 
                 if (normalizedBeat >= 2)
@@ -44,10 +45,12 @@ namespace HeavenStudio.Games.Scripts_Spaceball
             }
         }
 
-        public void Show(float showBeat)
+        public void Show(float showBeat, bool hide)
         {
             isShowing = true;
             this.showBeat = showBeat;
+            isHiding = hide;
+            if (hide) anim.Play("AlienHide", 0, 0);
         }
     }
 }

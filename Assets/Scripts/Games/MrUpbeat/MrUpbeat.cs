@@ -80,7 +80,11 @@ namespace HeavenStudio.Games.Loaders
                         new Param("blip", true, "Should Blip?", "Should Mr. Upbeat blip every offbeat?"),
                     }
                 },
-            });
+            },
+            new List<string>() {"agb", "keep"},
+            "agboffbeat", "en",
+            new List<string>() {}
+            );
         }
     }
 }

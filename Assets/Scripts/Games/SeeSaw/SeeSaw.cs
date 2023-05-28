@@ -106,7 +106,11 @@ namespace HeavenStudio.Games.Loaders
                         new Param("fill", Color.white, "Fill Color", "The color of the fills on see and saw")
                     }
                 }
-            });
+            },
+            new List<string>() {"rvl", "normal", "keep"},
+            "rvlseesaw", "en",
+            new List<string>() {"en"}
+            );
         }
     }
 }

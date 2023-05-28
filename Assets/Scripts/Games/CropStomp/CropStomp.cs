@@ -32,7 +32,11 @@ namespace HeavenStudio.Games.Loaders
                         new Param("mute", false, "Mute", "Should the mole laugh sound be muted?")
                     }
                 },
-            });
+            },
+            new List<string>() {"ntr", "keep"},
+            "ntrstomp", "en",
+            new List<string>() {}
+            );
         }
     }
 }

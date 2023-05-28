@@ -39,7 +39,11 @@ namespace HeavenStudio.Games.Loaders
                     preFunctionLength = 1f,
                     defaultLength = 2.5f,
                 },
-            });
+            },
+            new List<string>() {"rvl", "normal"},
+            "rvldate", "en",
+            new List<string>() {}
+            );
         }
     }
 }

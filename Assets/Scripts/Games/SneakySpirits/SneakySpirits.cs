@@ -45,7 +45,11 @@ namespace HeavenStudio.Games.Loaders
                         new Param("ease", EasingFunction.Ease.Linear, "Ease", "Which ease should the movement have?")
                     }
                 },
-            });
+            },
+            new List<string>() {"agb", "aim"},
+            "agbghost", "en",
+            new List<string>() {}
+            );
         }
     }
 }
