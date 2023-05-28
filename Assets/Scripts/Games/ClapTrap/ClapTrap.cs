@@ -42,6 +42,12 @@ namespace HeavenStudio.Games.Loaders
                         new Param("stageRightHandColor", ClapTrap.defaultRightColor, "Stage Right Hand Color", "The color used on the dummy's hand (stage right)")
                     }, 
                 },
+                new GameAction("delete", "animate girn")
+                {
+                    function = delegate {var e = eventCaller.currentEntity; ClapTrap.instance.Grin(eventCaller.currentEntity.beat);},
+                    defaultLength = 1f,
+                    parameters = new List<Param>()
+                },
             });
         }
     }
@@ -86,6 +92,31 @@ namespace HeavenStudio.Games
             }
         }
 
+        [Header("Colors")]
+        public SpriteRenderer bg;
+
+        Tween bgColorTween;
+
+        public SpriteRenderer stageLeft;
+
+        public SpriteRenderer stageRight;
+
+        public SpriteRenderer stageLeftRim;
+
+        public SpriteRenderer stageRightRim;
+
+        public enum ClapType
+        {
+            Hand,
+            Cat,
+            Stick,
+            Random,
+        }
+
+        [Header("Animators")]
+        public Animator dollHead;
+
+
         public void Clap(float beat, float length, int type)
         {
 
@@ -99,6 +130,12 @@ namespace HeavenStudio.Games
 
         }
 
+        public void Grin(float beat)
+        {
+            dollHead.DoScaledAnimationAsync("HeadHit", 0.5f);
+
+        }
+
         private void Hit(PlayerActionEvent caller, float state)
         {
             if (state >= 1f || state <= -1f) {
@@ -106,9 +143,11 @@ namespace HeavenStudio.Games
             } 
             else if (state == 0f) {
                 Jukebox.PlayOneShotGame($"clapTrap/aceClap{UnityEngine.Random.Range(1, 4)}");
+                dollHead.DoScaledAnimationAsync("HeadHit", 0.5f);
             }
             else {
                 Jukebox.PlayOneShotGame($"clapTrap/goodClap{UnityEngine.Random.Range(1, 4)}");
+                dollHead.DoScaledAnimationAsync("HeadHit", 0.5f);
             }
         }
 
@@ -162,25 +201,6 @@ namespace HeavenStudio.Games
             stageRightRim.color = stageRightHandColor;
         }
 
-        [Header("Colors")]
-        public SpriteRenderer bg;
-
-        Tween bgColorTween;
-
-        public SpriteRenderer stageLeft;
-
-        public SpriteRenderer stageRight;
-
-        public SpriteRenderer stageLeftRim;
-
-        public SpriteRenderer stageRightRim;
-
-        public enum ClapType
-        {
-            Hand,
-            Cat,
-            Stick,
-            Random,
-        }
+        
     }
 }
