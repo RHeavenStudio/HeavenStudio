@@ -47,7 +47,7 @@ namespace HeavenStudio.Games
         public GameObject fxBase;
 
         private int timer = 0;
-        public float beatInterval = 4f;
+        public float beatInterval = 6f;
         float intervalStartBeat;
         bool intervalStarted;
         public float wizardBeatOffset = 0f;

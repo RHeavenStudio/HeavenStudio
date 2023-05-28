@@ -32,13 +32,24 @@ namespace HeavenStudio.Games.Loaders
                 },
                 new GameAction("play piano", "Play Note")
                 {
-                    function = delegate { BuiltToScaleDS.instance.PlayPiano(eventCaller.currentEntity.beat, eventCaller.currentEntity.length, eventCaller.currentEntity["type"]); }, 
-                    resizable = true, 
-                    parameters = new List<Param>() 
+                    function = delegate { BuiltToScaleDS.instance.PlayPiano(eventCaller.currentEntity.beat, eventCaller.currentEntity.length, eventCaller.currentEntity["type"]); },
+                    resizable = true,
+                    parameters = new List<Param>()
                     {
                         new Param("type", new EntityTypes.Integer(-24, 24, 0), "Semitones", "The number of semitones up or down this note should be pitched")
                     },
                 },
+                new GameAction("color", "Color Palette")
+                {
+                    function = delegate { var e = eventCaller.currentEntity; BuiltToScaleDS.instance.UpdateMappingColors(e["object"], e["shooter"], e["bg"]); },
+                    defaultLength = 0.5f,
+                    parameters = new List<Param>()
+                    {
+                        new Param("object", Color.white, "Object Color"),
+                        new Param("shooter", Color.white, "Shooter Color"),
+                        new Param("bg", new Color(0, 1, 0, 1), "Environment Color")
+                    }
+                }
             });
         }
     }
@@ -67,6 +78,11 @@ namespace HeavenStudio.Games
         public Animator shooterAnim;
         public Animator elevatorAnim;
 
+        [SerializeField] private Material shooterMaterial;
+        [SerializeField] private Material objectMaterial;
+        [SerializeField] private Material gridPlaneMaterial;
+        private Material[] gridMaterials;
+
         [Header("Properties")]
         [SerializeField] float beltSpeed = 1f;
 
@@ -76,6 +92,9 @@ namespace HeavenStudio.Games
 
         [NonSerialized] public bool shootingThisFrame;
         [NonSerialized] public bool lastShotOut = false;
+        private static Color currentObjectColor = Color.white;
+        private static Color currentShooterColor = Color.white;
+        private static Color currentEnvironmentColor = new Color(0, 1, 0, 1);
         
         public static BuiltToScaleDS instance;
 
@@ -86,8 +105,30 @@ namespace HeavenStudio.Games
             environmentMaterials = environmentRenderer.materials;
             beltMaterial = Instantiate(environmentMaterials[8]);
             environmentMaterials[8] = beltMaterial;
+            gridMaterials = new Material[]
+            {
+                Instantiate(environmentMaterials[9]),
+                Instantiate(environmentMaterials[11]),
+                Instantiate(environmentMaterials[12]),
+                Instantiate(environmentMaterials[13]),
+                Instantiate(environmentMaterials[14]),
+            };
+            environmentMaterials[9] = gridMaterials[0];
+            environmentMaterials[11] = gridMaterials[1];
+            environmentMaterials[12] = gridMaterials[2];
+            environmentMaterials[13] = gridMaterials[3];
+            environmentMaterials[14] = gridMaterials[4];
 
             elevatorAnim.Play("MakeRod", 0, 1f);
+            UpdateColors();
+        }
+
+        private void OnDestroy()
+        {
+            currentObjectColor = Color.white;
+            currentShooterColor = Color.white;
+            currentEnvironmentColor = new Color(0, 1, 0, 1);
+            UpdateColors();
         }
 
         private void Start()
@@ -95,6 +136,26 @@ namespace HeavenStudio.Games
             GameCamera.additionalPosition = camPos.position + (Quaternion.Euler(camPos.eulerAngles) * Vector3.forward * 10f);
             GameCamera.additionalRotEluer = camPos.eulerAngles;
             GameCamera.additionalFoV = cameraFoV;
+        }
+
+        public void UpdateMappingColors(Color objectColor, Color shooterColor, Color environmentColor)
+        {
+            currentObjectColor = objectColor;
+            currentShooterColor = shooterColor;
+            currentEnvironmentColor = environmentColor;
+            UpdateColors();
+        }
+
+        private void UpdateColors()
+        {
+            objectMaterial.SetColor("_Color", currentObjectColor);
+            shooterMaterial.SetColor("_Color", currentShooterColor);
+            beltMaterial.SetColor("_Color", currentEnvironmentColor);
+            gridPlaneMaterial.SetColor("_Color", currentEnvironmentColor);
+            foreach (var mat in gridMaterials)
+            {
+                mat.SetColor("_Color", currentEnvironmentColor);
+            }
         }
 
         List<DynamicBeatmap.DynamicEntity> spawnedBlockEvents = new List<DynamicBeatmap.DynamicEntity>();
