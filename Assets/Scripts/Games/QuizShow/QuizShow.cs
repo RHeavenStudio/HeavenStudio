@@ -101,7 +101,11 @@ namespace HeavenStudio.Games.Loaders
                         new Param("value", QuizShow.ShouldExplode.Contestant, "What To Explode", "What will explode?")
                     }
                 }
-            });
+            },
+            new List<string>() {"agb", "repeat"},
+            "agbquiz", "en",
+            new List<string>() {}
+            );
         }
     }
 }

@@ -73,7 +73,11 @@ namespace HeavenStudio.Games.Loaders
                         new Param("toggle", true, "On Beat", "If the live bar animation will be on beat or not")
                     }
                 }
-            });
+            },
+            new List<string>() {"ctr", "repeat"},
+            "ctrinterpreter", "en",
+            new List<string>() {}
+            );
         }
     }
 }

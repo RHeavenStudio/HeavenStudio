@@ -1,12 +1,12 @@
 ManifestFileVersion: 0
-CRC: 810176841
+CRC: 1068373846
 Hashes:
   AssetFileHash:
     serializedVersion: 2
-    Hash: bae88761a5cd51635d8cf7efb8c57aa9
+    Hash: 843d5f9072a6184ac4360ae43bdf684f
   TypeTreeHash:
     serializedVersion: 2
-    Hash: 75caff9c3318ddc90ffacf0b62b7dc12
+    Hash: aa4e522fd1136788371ab66bc52daa28
 HashAppended: 0
 ClassTypes:
 - Class: 1
@@ -33,8 +33,6 @@ ClassTypes:
   Script: {fileID: 11500000, guid: 36f587267a500e643bcbf5b9c04bb1b5, type: 3}
 - Class: 114
   Script: {fileID: 11500000, guid: 48745753d68e10f4da42836193bcb5d9, type: 3}
-- Class: 114
-  Script: {fileID: 11500000, guid: 54588eb7ee0680643aeaf61dcf609903, type: 3}
 - Class: 115
   Script: {instanceID: 0}
 - Class: 212
@@ -45,12 +43,14 @@ SerializeReferenceClassIdentifiers: []
 Assets:
 - Assets/Resources/Sprites/Games/DoubleDate/Animations/Boy.controller
 - Assets/Resources/Sfx/games/djSchool/letsGo2.ogg
+- Assets/Resources/Sprites/Games/DJSchool/djYellow/dj-yellow.png
 - Assets/Resources/Sfx/games/djSchool/andStop1.ogg
 - Assets/Resources/Sfx/games/djSchool/breakCmonLoud2.ogg
 - Assets/Resources/Sfx/games/djSchool/ohYeahAlt1.ogg
 - Assets/Resources/Sfx/games/djSchool/checkItOut2.ogg
 - Assets/Resources/Sprites/Games/DJSchool/Animations/DJ Yellow/IdleBop.anim
 - Assets/Resources/Sprites/Games/DoubleDate/Animations/IdleBop2.anim
+- Assets/Resources/Sprites/Games/DJSchool/Animations/Turntable/Student_Turntable_Swipe.anim
 - Assets/Resources/Sprites/Games/DJSchool/Animations/Student/Hold.anim
 - Assets/Resources/Sprites/Games/DJSchool/Animations/DJ Yellow/Hey.anim
 - Assets/Resources/Sprites/Games/DJSchool/Animations/DJ Yellow/Scratcho2.anim
@@ -84,6 +84,7 @@ Assets:
 - Assets/Resources/Sprites/Games/DJSchool/Animations/Student/Student.controller
 - Assets/Resources/Sprites/Games/DJSchool/Animations/FlashInverse.anim
 - Assets/Resources/Sprites/Games/DJSchool/Animations/flash.controller
+- Assets/Resources/Sfx/games/djSchool/boo.wav
 - Assets/Resources/Sfx/games/djSchool/scratchoHeyAlt1.ogg
 - Assets/Resources/Sfx/games/djSchool/breakCmonAlt1.ogg
 - Assets/Resources/Sfx/games/djSchool/scratchoHeyAlt3.ogg
@@ -92,6 +93,7 @@ Assets:
 - Assets/Resources/Sprites/Games/DJSchool/student.png
 - Assets/Resources/Sfx/games/djSchool/ohYeah2.ogg
 - Assets/Resources/Sprites/Games/DJSchool/Animations/Flash.anim
+- Assets/Resources/Sprites/Games/DJSchool/Animations/Turntable/Student_Turntable_Hold.anim
 - Assets/Resources/Sprites/Games/DJSchool/background.png
 - Assets/Resources/Sfx/games/djSchool/heyLoud.ogg
 - Assets/Resources/Sfx/games/djSchool/scratchoHeyAlt2.ogg
@@ -99,13 +101,16 @@ Assets:
 - Assets/Resources/Sprites/Games/DJSchool/Animations/flashInverse.controller
 - Assets/Resources/Sfx/games/djSchool/recordSwipe.ogg
 - Assets/Resources/Games/djSchool.prefab
+- Assets/Resources/Sprites/Games/DJSchool/Animations/Turntable/Student_Turntable_StartHold.anim
 - Assets/Resources/Sprites/Games/DJSchool/turntable.png
 - Assets/Resources/Sfx/games/djSchool/scratchoHeyAlt4.ogg
 - Assets/Resources/Sfx/games/djSchool/scratchoHey2.ogg
+- Assets/Resources/Sprites/Games/DJSchool/Animations/Turntable/TurnTable_Player.controller
 - Assets/Resources/Sprites/Games/DJSchool/flash.png
 - Assets/Resources/Sprites/Games/DJSchool/Animations/DJ Yellow/Idle.anim
 - Assets/Resources/Sfx/games/djSchool/ooh.ogg
 - Assets/Resources/Sfx/games/djSchool/letsGo.ogg
+- Assets/Resources/Sprites/Games/DJSchool/Animations/Turntable/Student_Turntable_Idle.anim
 - Assets/Resources/Sprites/Games/DJSchool/Animations/DJ Yellow/Hold.anim
 - Assets/Resources/Sfx/games/djSchool/ohYeahAlt2.ogg
 - Assets/Resources/Sprites/Games/DJSchool/Animations/DJ Yellow/HoldBop.anim
@@ -117,6 +122,8 @@ Assets:
 - Assets/Resources/Sfx/games/djSchool/oohLoud.ogg
 - Assets/Resources/Sprites/Games/DJSchool/Animations/Student/HoldBop.anim
 - Assets/Resources/Sfx/games/djSchool/hey.ogg
+- Assets/Resources/Sprites/Games/DJSchool/test.png
 - Assets/Resources/Sfx/games/djSchool/scratchoHeyLoud1.ogg
 - Assets/Resources/Sprites/Games/DJSchool/Animations/Student/IdleBop.anim
-Dependencies: []
+Dependencies:
+- C:/Users/mathi/OneDrive/Documents/GitHub/HeavenStudio/Assets/StreamingAssets/rvldate/common

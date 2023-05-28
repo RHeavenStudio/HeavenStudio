@@ -62,6 +62,12 @@ namespace HeavenStudio.Games.Loaders
                     }
                 }
             });
+
+            },
+            new List<string>() {"ntr", "normal"},
+            "ntrassembly", "en",
+            new List<string>() {}
+            );
         }
     }
 }

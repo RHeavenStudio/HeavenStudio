@@ -70,7 +70,11 @@ namespace HeavenStudio.Games.Loaders
                         new Param("color", Kitties.defaultBGColor, "Change BG Color", "Changes background color"),
                     }
                 }
-            });
+            },
+            new List<string>() {"ctr", "normal"},
+            "ctrteppan", "en",
+            new List<string>() {}
+            );
         }
     }
 }

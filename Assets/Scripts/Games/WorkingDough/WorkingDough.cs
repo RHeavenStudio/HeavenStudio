@@ -91,7 +91,11 @@ namespace HeavenStudio.Games.Loaders
                     defaultLength = 0.5f,
                     priority = 0
                 },
-            });
+            },
+            new List<string>() {"rvl", "repeat"},
+            "rvldough", "en",
+            new List<string>() {}
+            );
         }
     }
 }
