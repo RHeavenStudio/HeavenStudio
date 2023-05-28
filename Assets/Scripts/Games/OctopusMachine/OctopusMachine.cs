@@ -74,11 +74,7 @@ namespace HeavenStudio.Games.Loaders
                     },
                     defaultLength = 0.5f,
                 },
-            },
-            new List<string>() {"ntr", "repeat"},
-            "ntrcork", "en",
-            new List<string>() {}
-            );
+            });
         }
     }
 }
