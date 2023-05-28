@@ -12,7 +12,7 @@ namespace HeavenStudio.Games.Loaders
     public static class NtrOctopusMachineLoader
     {
         public static Minigame AddGame(EventCaller eventCaller) {
-            return new Minigame("octopusMachine", "Octopus Machine \n<color=#eb5454>[INITIALIZATION ONLY]</color>", "FFf362B", false, false, new List<GameAction>()
+            return new Minigame("octopusMachine", "Octopus Machine", "FFf362B", false, false, new List<GameAction>()
             {
                 new GameAction("bop", "Bop")
                 {
@@ -283,10 +283,11 @@ namespace HeavenStudio.Games
 
                 var main = bubble.main;
                 main.prewarm = isInstant;
+                main.simulationSpeed = particleSpeed/10;
 
                 var emm = bubble.emission;
                 emm.rateOverTime = particleStrength;
-
+                
                 if (setActive == 1) bubble.Stop(true, isInstant ? ParticleSystemStopBehavior.StopEmittingAndClear : ParticleSystemStopBehavior.StopEmitting);
                 else bubble.Play();
             }
