@@ -1,5 +1,5 @@
 ManifestFileVersion: 0
-CRC: 3882391198
+CRC: 1872357762
 AssetBundleManifest:
   AssetBundleInfos:
     Info_0:
@@ -133,3 +133,7 @@ AssetBundleManifest:
     Info_42:
       Name: ntrshugyo/locale.en
       Dependencies: {}
+    Info_43:
+      Name: agbquiz/common
+      Dependencies:
+        Dependency_0: karate/common
