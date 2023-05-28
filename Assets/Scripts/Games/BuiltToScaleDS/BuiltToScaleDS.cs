@@ -49,6 +49,17 @@ namespace HeavenStudio.Games.Loaders
                         new Param("shooter", Color.white, "Shooter Color"),
                         new Param("bg", new Color(0, 1, 0, 1), "Environment Color")
                     }
+                },
+                new GameAction("lights", "Lights")
+                {
+                    function = delegate { var e = eventCaller.currentEntity; BuiltToScaleDS.instance.Lights(e.beat, e.length, e["auto"], e["light"] && !e["auto"]); },
+                    defaultLength = 4f,
+                    resizable = true,
+                    parameters = new List<Param>()
+                    {
+                        new Param("auto", true, "Lights (Auto)", "Should the lights auto light?"),
+                        new Param("light", false, "Lights", "Should the lights light?")
+                    }
                 }
             });
         }
@@ -69,6 +80,7 @@ namespace HeavenStudio.Games
 
         [Header("References")]
         [SerializeField] SkinnedMeshRenderer environmentRenderer;
+        [SerializeField] SkinnedMeshRenderer elevatorRenderer;
         public GameObject flyingRodBase;
         public GameObject movingBlocksBase;
         public GameObject hitPartsBase;
@@ -81,7 +93,10 @@ namespace HeavenStudio.Games
         [SerializeField] private Material shooterMaterial;
         [SerializeField] private Material objectMaterial;
         [SerializeField] private Material gridPlaneMaterial;
+        [SerializeField] private Material elevatorMaterial;
         private Material[] gridMaterials;
+        private Material[] firstPatternLights;
+        private Material[] secondPatternLights;
 
         [Header("Properties")]
         [SerializeField] float beltSpeed = 1f;
@@ -89,6 +104,9 @@ namespace HeavenStudio.Games
         private Material beltMaterial;
         private Material[] environmentMaterials;
         private float currentBeltOffset;
+        private bool lighting = false;
+        private bool autoLight = false;
+        private bool firstLight = true;
 
         [NonSerialized] public bool shootingThisFrame;
         [NonSerialized] public bool lastShotOut = false;
@@ -98,6 +116,8 @@ namespace HeavenStudio.Games
         
         public static BuiltToScaleDS instance;
 
+        private GameEvent lightBeat = new GameEvent();
+
         private void Awake()
         {
             instance = this;
@@ -105,6 +125,7 @@ namespace HeavenStudio.Games
             environmentMaterials = environmentRenderer.materials;
             beltMaterial = Instantiate(environmentMaterials[8]);
             environmentMaterials[8] = beltMaterial;
+            elevatorMaterial = elevatorRenderer.materials[3];
             gridMaterials = new Material[]
             {
                 Instantiate(environmentMaterials[9]),
@@ -118,6 +139,24 @@ namespace HeavenStudio.Games
             environmentMaterials[12] = gridMaterials[2];
             environmentMaterials[13] = gridMaterials[3];
             environmentMaterials[14] = gridMaterials[4];
+
+            firstPatternLights = new Material[]
+            {
+                Instantiate(environmentMaterials[1]),
+                Instantiate(environmentMaterials[2]),
+                Instantiate(environmentMaterials[4]),
+            };
+            environmentMaterials[1] = firstPatternLights[0];
+            environmentMaterials[2] = firstPatternLights[1];
+            environmentMaterials[4] = firstPatternLights[2];
+
+            secondPatternLights = new Material[]
+            {
+                Instantiate(environmentMaterials[0]),
+                Instantiate(environmentMaterials[3])
+            };
+            environmentMaterials[0] = secondPatternLights[0];
+            environmentMaterials[3] = secondPatternLights[1];
 
             elevatorAnim.Play("MakeRod", 0, 1f);
             UpdateColors();
@@ -152,9 +191,21 @@ namespace HeavenStudio.Games
             shooterMaterial.SetColor("_Color", currentShooterColor);
             beltMaterial.SetColor("_Color", currentEnvironmentColor);
             gridPlaneMaterial.SetColor("_Color", currentEnvironmentColor);
+            elevatorMaterial.SetColor("_Color", currentEnvironmentColor);
             foreach (var mat in gridMaterials)
             {
                 mat.SetColor("_Color", currentEnvironmentColor);
+            }
+            if (!lighting)
+            {
+                foreach (var mat in firstPatternLights)
+                {
+                    mat.SetColor("_Color", currentEnvironmentColor);
+                }
+                foreach (var mat in secondPatternLights)
+                {
+                    mat.SetColor("_Color", currentEnvironmentColor);
+                }
             }
         }
 
@@ -179,6 +230,11 @@ namespace HeavenStudio.Games
                     spawnedBlockEvents.Add(ev);
                     break;
                 }
+            }
+
+            if (Conductor.instance.ReportBeat(ref lightBeat.lastReportedBeat, lightBeat.startBeat % 1) && autoLight)
+            {
+                HandleLights();
             }
 
             currentBeltOffset = (currentBeltOffset + Time.deltaTime * -beltSpeed) % 1f;
@@ -212,6 +268,75 @@ namespace HeavenStudio.Games
             }
 
             shootingThisFrame = false;
+        }
+
+        public void Lights(float beat, float length, bool autoLights, bool shouldLights)
+        {
+            autoLight = autoLights;
+            lighting = autoLights || shouldLights;
+            if (shouldLights)
+            {
+                List<BeatAction.Action> actions = new List<BeatAction.Action>();
+                for (int i = 0; i < length; i++)
+                {
+                    actions.Add(new BeatAction.Action(beat + i, delegate { HandleLights(); }));
+                }
+                if (!autoLights)
+                {
+                    lighting = false;
+                    actions.Add(new BeatAction.Action(beat + length, delegate
+                    {
+                        foreach (var lightMat in firstPatternLights)
+                        {
+                            lightMat.DOColor(currentEnvironmentColor, 0.2f);
+                        }
+                        foreach (var lightMat in secondPatternLights)
+                        {
+                            lightMat.DOColor(currentEnvironmentColor, 0.2f);
+                        }
+                    }));
+                }
+                BeatAction.New(instance.gameObject, actions);
+            }
+            if (!autoLights && !shouldLights)
+            {
+                lighting = false;
+                foreach (var lightMat in firstPatternLights)
+                {
+                    lightMat.DOColor(currentEnvironmentColor, 0.2f);
+                }
+                foreach (var lightMat in secondPatternLights)
+                {
+                    lightMat.DOColor(currentEnvironmentColor, 0.2f);
+                }
+            }
+        }
+
+        private void HandleLights()
+        {
+            if (firstLight)
+            {
+                foreach (var lightMat in firstPatternLights)
+                {
+                    lightMat.DOColor(Color.white, 0.2f);
+                }
+                foreach (var lightMat in secondPatternLights)
+                {
+                    lightMat.DOColor(currentEnvironmentColor, 0.2f);
+                }
+            }
+            else
+            {
+                foreach (var lightMat in firstPatternLights)
+                {
+                    lightMat.DOColor(currentEnvironmentColor, 0.2f);
+                }
+                foreach (var lightMat in secondPatternLights)
+                {
+                    lightMat.DOColor(Color.white, 0.2f);
+                }
+            }
+            firstLight = !firstLight;
         }
 
         public void SpawnBlocks(float beat, float length)
