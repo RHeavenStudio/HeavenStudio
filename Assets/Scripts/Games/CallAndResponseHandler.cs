@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Starpelly;
 
 namespace HeavenStudio.Games
 {
@@ -72,8 +73,8 @@ namespace HeavenStudio.Games
             }
         }
 
-        private float intervalStartBeat = -1; // the first beat of the interval
-        private float intervalLength = -1; // the duration of the interval in beats
+        public float intervalStartBeat = -1; // the first beat of the interval
+        public float intervalLength = -1; // the duration of the interval in beats
 
         public float defaultIntervalLength; // when an event is queued and the interval has not started yet, it will use this as the interval length.
 
@@ -87,10 +88,16 @@ namespace HeavenStudio.Games
         /// <summary>
         /// Returns the normalized progress of the interval
         /// </summary>
-        public float GetIntervalProgress()
+        public float GetIntervalProgress(float lengthOffset = 0)
         {
-            return Conductor.instance.GetPositionFromBeat(intervalStartBeat, intervalLength);
+            return Conductor.instance.GetPositionFromBeat(intervalStartBeat, intervalLength - lengthOffset);
         }
+
+        public float GetIntervalProgressFromBeat(float beat, float lengthOffset = 0)
+        {
+            return Mathp.Normalize(beat, intervalStartBeat, intervalStartBeat + intervalLength - lengthOffset);
+        }
+
         /// <summary>
         /// Is the interval currently on-going?
         /// </summary>

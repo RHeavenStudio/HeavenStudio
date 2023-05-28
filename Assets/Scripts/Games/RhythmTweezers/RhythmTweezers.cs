@@ -33,6 +33,12 @@ namespace HeavenStudio.Games.Loaders
                     function = delegate { RhythmTweezers.instance.SpawnLongHair(eventCaller.currentEntity.beat); }, 
                     defaultLength = 0.5f
                 },
+                new GameAction("passTurn", "Pass Turn")
+                {
+                    function = delegate { var e = eventCaller.currentEntity; RhythmTweezers.instance.PassTurn(e.beat, e.length); },
+                    resizable = true,
+                    preFunction = delegate { var e = eventCaller.currentEntity; RhythmTweezers.PrePassTurn(e.beat, e.length); }
+                },
                 new GameAction("next vegetable", "Swap Vegetable")
                 {
                     function = delegate { var e = eventCaller.currentEntity; RhythmTweezers.instance.NextVegetable(e.beat, e["type"], e["colorA"], e["colorB"]); }, 
@@ -99,6 +105,7 @@ namespace HeavenStudio.Games.Loaders
 namespace HeavenStudio.Games
 {
     using Scripts_RhythmTweezers;
+    using UnityEngine.UIElements;
 
     public class RhythmTweezers : Minigame
     {
@@ -124,10 +131,9 @@ namespace HeavenStudio.Games
         [NonSerialized] public int hairsLeft = 0;
 
         [Header("Variables")]
-        public float beatInterval = 4f;
-        float intervalStartBeat;
-        bool intervalStarted;
         public float tweezerBeatOffset = 0f;
+        private float passTurnBeat;
+        private float passTurnEndBeat = 2;
 
         [Header("Sprites")]
         public Sprite pluckedHairSprite;
@@ -172,29 +178,45 @@ namespace HeavenStudio.Games
         }
 
         public static RhythmTweezers instance { get; set; }
+        private static CallAndResponseHandler crHandlerInstance;
+
+        private List<Hair> spawnedHairs = new List<Hair>();
+        private List<LongHair> spawnedLongs = new List<LongHair>();
+
+        private static List<float> passedTurns = new List<float>();
 
         private void Awake()
         {
             instance = this;
+            if (crHandlerInstance == null)
+            {
+                crHandlerInstance = new CallAndResponseHandler(4);
+            }
+        }
+
+        private void OnDestroy()
+        {
+            if (crHandlerInstance != null && !Conductor.instance.isPlaying)
+            {
+                crHandlerInstance = null;
+            }
         }
 
         public void SpawnHair(float beat)
         {
+            if (crHandlerInstance.queuedEvents.Count > 0 && crHandlerInstance.queuedEvents.Find(x => x.beat == beat) != null) return;
             // End transition early if the next hair is a lil early.
             StopTransitionIfActive();
 
-            // If interval hasn't started, assume this is the first hair of the interval.
-            if (!intervalStarted)
-            {
-                SetIntervalStart(beat, beatInterval);
-            }
+            crHandlerInstance.AddEvent(beat, 0, "Hair");
 
             Jukebox.PlayOneShotGame("rhythmTweezers/shortAppear", beat);
             Hair hair = Instantiate(hairBase, HairsHolder.transform).GetComponent<Hair>();
+            spawnedHairs.Add(hair);
             hair.gameObject.SetActive(true);
             hair.GetComponent<Animator>().Play("SmallAppear", 0, 0);
 
-            float rot = -58f + 116 * Mathp.Normalize(beat, intervalStartBeat, intervalStartBeat + beatInterval - 1f);
+            float rot = -58f + 116 * crHandlerInstance.GetIntervalProgressFromBeat(beat, 1);
             hair.transform.eulerAngles = new Vector3(0, 0, rot);
             hair.createBeat = beat;
             hairsLeft++;
@@ -204,17 +226,15 @@ namespace HeavenStudio.Games
         {
             StopTransitionIfActive();
 
-            if (!intervalStarted)
-            {
-                SetIntervalStart(beat, beatInterval);
-            }
+            crHandlerInstance.AddEvent(beat, 0, "Long");
 
             Jukebox.PlayOneShotGame("rhythmTweezers/longAppear", beat);
             LongHair hair = Instantiate(longHairBase, HairsHolder.transform).GetComponent<LongHair>();
+            spawnedLongs.Add(hair);
             hair.gameObject.SetActive(true);
             hair.GetComponent<Animator>().Play("LongAppear", 0, 0);
 
-            float rot = -58f + 116 * Mathp.Normalize(beat, intervalStartBeat, intervalStartBeat + beatInterval - 1f);
+            float rot = -58f + 116 * crHandlerInstance.GetIntervalProgressFromBeat(beat, 1);
             hair.transform.eulerAngles = new Vector3(0, 0, rot);
             hair.createBeat = beat;
             hairsLeft++;
@@ -222,17 +242,48 @@ namespace HeavenStudio.Games
 
         public void SetIntervalStart(float beat, float interval = 4f)
         {
-            // Don't do these things if the interval was already started.
-            if (!intervalStarted)
-            {
-                // End transition early if the interval starts a lil early.
-                StopTransitionIfActive();
-                hairsLeft = 0;
-                intervalStarted = true;
-            }
+            StopTransitionIfActive();
+            hairsLeft = 0;
+            crHandlerInstance.StartInterval(beat, interval);
+        }
 
-            intervalStartBeat = beat;
-            beatInterval = interval;
+        public void PassTurn(float beat, float length)
+        {
+            if (crHandlerInstance.queuedEvents.Count > 0)
+            {
+                foreach (var crEvent in crHandlerInstance.queuedEvents)
+                {
+                    if (crEvent.tag == "Hair")
+                    {
+                        Hair hairToInput = spawnedHairs.Find(x => x.createBeat == crEvent.beat);
+                        hairToInput.StartInput(beat + length, crEvent.relativeBeat);
+                    }
+                    else if (crEvent.tag == "Long")
+                    {
+                        LongHair hairToInput = spawnedLongs.Find(x => x.createBeat == crEvent.beat);
+                        hairToInput.StartInput(beat + length, crEvent.relativeBeat);
+                    }
+                }
+                crHandlerInstance.queuedEvents.Clear();
+            }
+        }
+
+        public static void PrePassTurn(float beat, float length)
+        {
+            if (GameManager.instance.currentGame == "rhythmTweezers")
+            {
+                instance.SetPassTurnValues(beat + length);
+            }
+            else
+            {
+                passedTurns.Add(beat + length);
+            }
+        }
+
+        private void SetPassTurnValues(float startBeat)
+        {
+            passTurnBeat = startBeat - 1f;
+            passTurnEndBeat = startBeat + crHandlerInstance.intervalLength;
         }
 
         const float vegDupeOffset = 16.7f;
@@ -261,7 +312,6 @@ namespace HeavenStudio.Games
 
                 ResetVegetable();
                 transitioning = false;
-                intervalStarted = false;
 
             }).SetEase(Ease.InOutSine);
         }
@@ -304,11 +354,16 @@ namespace HeavenStudio.Games
 
         private void Update()
         {
-            if (!Conductor.instance.isPlaying && !Conductor.instance.isPaused && intervalStarted)
+            if (Conductor.instance.isPlaying && !Conductor.instance.isPaused)
             {
-                StopTransitionIfActive();
-                ResetVegetable();
-                intervalStarted = false;
+                if (passedTurns.Count > 0)
+                {
+                    foreach (var turn in passedTurns)
+                    {
+                        SetPassTurnValues(turn);
+                    }
+                    passedTurns.Clear();
+                }
             }
         }
 
@@ -317,12 +372,9 @@ namespace HeavenStudio.Games
             // Set tweezer angle.
             var tweezerAngle = -180f;
             
-            if (intervalStarted)
-            {
-                var tweezerTime = Conductor.instance.songPositionInBeats - beatInterval - tweezerBeatOffset;
-                var unclampedAngle = -58f + 116 * Mathp.Normalize(tweezerTime, intervalStartBeat, intervalStartBeat + beatInterval - 1f);
-                tweezerAngle = Mathf.Clamp(unclampedAngle, -180f, 180f);
-            }
+            var tweezerTime = Conductor.instance.songPositionInBeats;
+            var unclampedAngle = -58f + 116 * Mathp.Normalize(tweezerTime, passTurnBeat + 1f, passTurnEndBeat - 1f);
+            tweezerAngle = Mathf.Clamp(unclampedAngle, -180f, 180f);
 
             Tweezers.transform.eulerAngles = new Vector3(0, 0, tweezerAngle);
 
