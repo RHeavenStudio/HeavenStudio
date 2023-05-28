@@ -92,7 +92,7 @@ namespace HeavenStudio.Games.Scripts_OctopusMachine
 
         public void OctoAction(string action) 
         {
-            if (action != "Release" || (Conductor.instance.songPositionInBeats - lastSqueezeBeat) > 0.3f) Jukebox.PlayOneShotGame($"octopusMachine/{action.ToLower()}");
+            if (action != "Release" || (Conductor.instance.songPositionInBeats - lastSqueezeBeat) > 0.15f) Jukebox.PlayOneShotGame($"octopusMachine/{action.ToLower()}");
             if (action == "Squeeze") lastSqueezeBeat = Conductor.instance.songPositionInBeats;
 
             anim.DoScaledAnimationAsync(action, 0.5f);
@@ -104,6 +104,7 @@ namespace HeavenStudio.Games.Scripts_OctopusMachine
         public void AnimationColor(int poppingColor) 
         {
             foreach (var sprite in sr) sprite.material.SetColor("_ColorAlpha", (poppingColor == 0 ? OctopusMachine.octopodesColor : OctopusMachine.octopodesSqueezedColor));
+            if (poppingColor == 1) isSqueezed = true;
         }
     }
 }

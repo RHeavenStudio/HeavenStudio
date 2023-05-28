@@ -81,7 +81,7 @@ namespace HeavenStudio.Games.Loaders
                         new Param("autoBop", true, "Hit/Miss Bop", "Plays a bop depending on if you hit or missed the cues."),
                         new Param("autoText", true, "Display Text", "Displays text depending on if you hit or missed the cues."),
                         new Param("hitText", "Good!", "Hit Text", "The text to display if you hit the cues."),
-                        new Param("missText", "b", "Miss Text", "The text to display if you missed the cues."),
+                        new Param("missText", "Wrong! n/ Try again!", "Miss Text", "The text to display if you missed the cues."),
                     },
                 },
                 new GameAction("forceSqueeze", "Force Squeeze")
@@ -132,7 +132,7 @@ namespace HeavenStudio.Games.Loaders
                     },
                     resizable = true,
                 },
-                new GameAction("octopusModifiers", "Octopus Modifiers")
+                new GameAction("octopusModifiers", "Octopus Positions")
                 {
                     function = delegate {
                         var e = eventCaller.currentEntity;
@@ -332,7 +332,7 @@ namespace HeavenStudio.Games
             backgroundColor = bgEnd;
             octopodesColor = octoColor;
             octopodesSqueezedColor = octoSqueezedColor;
-            mat.SetColor("_ColorAlpha", octoColor);
+            foreach (var octo in octopodes) octo.AnimationColor(octo.isSqueezed ? 1 : 0);
         }
 
         public void OctopusModifiers(float beat, float oct1x, float oct2x, float oct3x, float oct1y, float oct2y, float oct3y, bool oct1, bool oct2, bool oct3)

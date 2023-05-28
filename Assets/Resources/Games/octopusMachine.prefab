@@ -202,10 +202,9 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 6021239825856414306}
-  - {fileID: 6332919627112342543}
   - {fileID: 127394781152491359}
-  - {fileID: 2949402102668894626}
-  - {fileID: 7637212895704102796}
+  - {fileID: 7103081464811644031}
+  - {fileID: 6332919627112342543}
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -239,6 +238,39 @@ MonoBehaviour:
   - {fileID: 1807530129517536999}
   hasMissed: 0
   bopStatus: 0
+--- !u!1 &2491133148746321643
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 7103081464811644031}
+  m_Layer: 0
+  m_Name: Bubbles
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &7103081464811644031
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2491133148746321643}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children:
+  - {fileID: 2949402102668894626}
+  - {fileID: 7637212895704102796}
+  m_Father: {fileID: 449951099802185354}
+  m_RootOrder: 2
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &5664944715720353040
 GameObject:
   m_ObjectHideFlags: 0
@@ -387,7 +419,7 @@ RectTransform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 449951099802185354}
-  m_RootOrder: 2
+  m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
@@ -637,13 +669,13 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 7470495241131868850}
-  m_LocalRotation: {x: -0.7071068, y: 0, z: 0, w: 0.7071068}
+  m_LocalRotation: {x: -0.7071068, y: -0, z: -0, w: 0.7071068}
   m_LocalPosition: {x: 0, y: -12.4, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 449951099802185354}
-  m_RootOrder: 3
+  m_Father: {fileID: 7103081464811644031}
+  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: -90, y: 0, z: 0}
 --- !u!198 &8525053378749674056
 ParticleSystem:
@@ -5461,7 +5493,7 @@ Transform:
   - {fileID: 5235931276327252281}
   - {fileID: 5326975287461348254}
   m_Father: {fileID: 449951099802185354}
-  m_RootOrder: 1
+  m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &7806863244549955776
 GameObject:
@@ -5488,13 +5520,13 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 7806863244549955776}
-  m_LocalRotation: {x: -0.7071068, y: 0, z: 0, w: 0.7071068}
+  m_LocalRotation: {x: -0.7071068, y: -0, z: -0, w: 0.7071068}
   m_LocalPosition: {x: 0, y: -12.4, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 449951099802185354}
-  m_RootOrder: 4
+  m_Father: {fileID: 7103081464811644031}
+  m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: -90, y: 0, z: 0}
 --- !u!198 &7680921726480175662
 ParticleSystem:
@@ -10337,16 +10369,36 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5634906064278256461, guid: d1e5eac9c0288224aab29579273437cd, type: 3}
       propertyPath: m_Name
-      value: Octopus1_Fab
+      value: Octopus1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7520966591787019065, guid: d1e5eac9c0288224aab29579273437cd, type: 3}
+      propertyPath: queuePrepare
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: d1e5eac9c0288224aab29579273437cd, type: 3}
+--- !u!1 &1454859407913861251 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 5634906064278256461, guid: d1e5eac9c0288224aab29579273437cd, type: 3}
+  m_PrefabInstance: {fileID: 6486177256588229582}
+  m_PrefabAsset: {fileID: 0}
+--- !u!210 &5811091939196329196
+SortingGroup:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1454859407913861251}
+  m_Enabled: 1
+  m_SortingLayerID: 0
+  m_SortingLayer: 0
+  m_SortingOrder: 10
 --- !u!114 &3628864039123357943 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 7520966591787019065, guid: d1e5eac9c0288224aab29579273437cd, type: 3}
   m_PrefabInstance: {fileID: 6486177256588229582}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
+  m_GameObject: {fileID: 1454859407913861251}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 1958bfc64c2ec3f488a2010e690d7696, type: 3}
@@ -10410,7 +10462,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5634906064278256461, guid: d1e5eac9c0288224aab29579273437cd, type: 3}
       propertyPath: m_Name
-      value: Octopus2_Fab
+      value: Octopus2
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: d1e5eac9c0288224aab29579273437cd, type: 3}
@@ -10419,12 +10471,28 @@ MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 7520966591787019065, guid: d1e5eac9c0288224aab29579273437cd, type: 3}
   m_PrefabInstance: {fileID: 8074532309514207097}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
+  m_GameObject: {fileID: 4484940292478059572}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 1958bfc64c2ec3f488a2010e690d7696, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!1 &4484940292478059572 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 5634906064278256461, guid: d1e5eac9c0288224aab29579273437cd, type: 3}
+  m_PrefabInstance: {fileID: 8074532309514207097}
+  m_PrefabAsset: {fileID: 0}
+--- !u!210 &6446183160263875582
+SortingGroup:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4484940292478059572}
+  m_Enabled: 1
+  m_SortingLayerID: 0
+  m_SortingLayer: 0
+  m_SortingOrder: 20
 --- !u!4 &5235931276327252281 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 4082305924089630272, guid: d1e5eac9c0288224aab29579273437cd, type: 3}
@@ -10483,7 +10551,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5634906064278256461, guid: d1e5eac9c0288224aab29579273437cd, type: 3}
       propertyPath: m_Name
-      value: Octopus3_PlayerFab
+      value: Octopus3_Player
       objectReference: {fileID: 0}
     - target: {fileID: 7520966591787019065, guid: d1e5eac9c0288224aab29579273437cd, type: 3}
       propertyPath: player
@@ -10496,12 +10564,28 @@ MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 7520966591787019065, guid: d1e5eac9c0288224aab29579273437cd, type: 3}
   m_PrefabInstance: {fileID: 8163465191804030430}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
+  m_GameObject: {fileID: 4573758789261538963}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 1958bfc64c2ec3f488a2010e690d7696, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!1 &4573758789261538963 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 5634906064278256461, guid: d1e5eac9c0288224aab29579273437cd, type: 3}
+  m_PrefabInstance: {fileID: 8163465191804030430}
+  m_PrefabAsset: {fileID: 0}
+--- !u!210 &2147709393831914783
+SortingGroup:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4573758789261538963}
+  m_Enabled: 1
+  m_SortingLayerID: 0
+  m_SortingLayer: 0
+  m_SortingOrder: 30
 --- !u!4 &5326975287461348254 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 4082305924089630272, guid: d1e5eac9c0288224aab29579273437cd, type: 3}
