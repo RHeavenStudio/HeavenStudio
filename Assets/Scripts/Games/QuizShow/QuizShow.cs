@@ -521,7 +521,6 @@ namespace HeavenStudio.Games
             }
             if (pressCount == countToMatch)
             {
-                GameProfiler.instance.IncreaseScore();
                 Jukebox.PlayOneShotGame("quizShow/correct");
                 contesteeHead.Play("ContesteeSmile", -1, 0);
                 hostHead.Play("HostSmile", -1, 0);
