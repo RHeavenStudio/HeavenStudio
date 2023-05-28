@@ -146,6 +146,7 @@ namespace HeavenStudio.Games
         private Sound kidsLaugh;
         private int currentPose;
         private EasingFunction.Ease lastEase;
+        private GameObject currentNewspaper;
 
         private int currentZoomIndex;
 
@@ -182,8 +183,8 @@ namespace HeavenStudio.Games
             allCameraEvents = tempEvents;
 
             UpdateCameraZoom();
-            shouldNotInput = false;
-            shouldBop = true;
+            wrestlerAnim.Play("Idle", 0, 1);
+            ReporterBlink();
         }
 
         void Update()
@@ -194,7 +195,7 @@ namespace HeavenStudio.Games
             {
                 if (cond.ReportBeat(ref bop.lastReportedBeat, bop.startBeat % 1))
                 {
-                    if ((wrestlerAnim.IsPlayingAnimationName("Idle") || wrestlerAnim.IsPlayingAnimationName("BopPec") || wrestlerAnim.IsPlayingAnimationName("Bop")) && shouldBop)
+                    if (wrestlerAnim.IsAnimationNotPlaying() && shouldBop)
                     {
                         if (UnityEngine.Random.Range(1, 18) == 1)
                         {
@@ -229,7 +230,6 @@ namespace HeavenStudio.Games
                         new BeatAction.Action(cond.songPositionInBeats + 0.1f, delegate { wrestlerTransform.localScale = new Vector3(1f, 1f, 1f); }),
                     });
                 }
-                ReporterBlink();
             }
             if (allCameraEvents.Count > 0)
             {
@@ -295,7 +295,7 @@ namespace HeavenStudio.Games
                     {
                         new BeatAction.Action(beat + i, delegate
                         {
-                            if ((wrestlerAnim.IsPlayingAnimationName("Idle") || wrestlerAnim.IsPlayingAnimationName("BopPec") || wrestlerAnim.IsPlayingAnimationName("Bop")))
+                            if (wrestlerAnim.IsAnimationNotPlaying())
                             {
                                 if (UnityEngine.Random.Range(1, 18) == 1)
                                 {
@@ -456,8 +456,8 @@ namespace HeavenStudio.Games
                 new BeatAction.Action(beat, delegate  {wrestlerAnim.DoScaledAnimationAsync("PreparePose", 0.25f); }),
                 new BeatAction.Action(beat, delegate {shouldBop = false; }),
                 new BeatAction.Action(beat + 1, delegate  { PoseCheck(beat); }),
-                new BeatAction.Action(beat + 3.99f, delegate { wrestlerAnim.Play("Idle", 0, 0); }),
-                new BeatAction.Action(beat + 3.99f, delegate { reporterAnim.Play("IdleReporter", 0, 0); }),
+                new BeatAction.Action(beat + 3.99f, delegate { wrestlerAnim.Play("Idle", 0, 1); }),
+                new BeatAction.Action(beat + 3.99f, delegate { reporterAnim.DoUnscaledAnimation("IdleReporter"); }),
                 new BeatAction.Action(beat + 3.99f, delegate { shouldNotInput = false; }),
                 new BeatAction.Action(beat + 3.99f, delegate { shouldBop = true; }),
             });
@@ -471,14 +471,18 @@ namespace HeavenStudio.Games
                         {
                             keepZoomOut = true;
                             blackVoid.color = Color.black;
-                            newspaper.SetActive(true);
+                            GameObject spawnedNewsPaper = Instantiate(newspaper, transform);
+                            spawnedNewsPaper.SetActive(true);
+                            currentNewspaper = spawnedNewsPaper;
+                            wrestlerNewspaperAnim = spawnedNewsPaper.transform.GetChild(1).GetComponent<Animator>();
+                            reporterNewspaperAnim = spawnedNewsPaper.transform.GetChild(2).GetComponent<Animator>();
                             if (UnityEngine.Random.Range(1, 3) == 1)
                             {
-                                newspaper.GetComponent<Animator>().Play("NewspaperEnter", 0, 0);
+                                spawnedNewsPaper.GetComponent<Animator>().Play("NewspaperEnter", 0, 0);
                             }
                             else
                             {
-                                newspaper.GetComponent<Animator>().Play("NewspaperEnterRight", 0, 0);
+                                spawnedNewsPaper.GetComponent<Animator>().Play("NewspaperEnterRight", 0, 0);
                             }
                             if (!hitPose)
                             {
@@ -496,7 +500,7 @@ namespace HeavenStudio.Games
                         new BeatAction.Action(beat + 3f + newspaperBeats, delegate
                         {
                             blackVoid.color = new Color(1f, 1f, 1f, 0);
-                            newspaper.SetActive(false);
+                            Destroy(currentNewspaper); currentNewspaper = null;
                             lastCamPos = new Vector3(0, 0, -10);
                             Jukebox.KillLoop(kidsLaugh, 0.25f);
                             keepZoomOut = false;
@@ -533,14 +537,18 @@ namespace HeavenStudio.Games
                         new BeatAction.Action(beat + 3f, delegate
                         {
                             blackVoid.color = Color.black;
-                            newspaper.SetActive(true);
+                            GameObject spawnedNewsPaper = Instantiate(newspaper, transform);
+                            spawnedNewsPaper.SetActive(true);
+                            currentNewspaper = spawnedNewsPaper;
+                            wrestlerNewspaperAnim = spawnedNewsPaper.transform.GetChild(1).GetComponent<Animator>();
+                            reporterNewspaperAnim = spawnedNewsPaper.transform.GetChild(2).GetComponent<Animator>();
                             if (UnityEngine.Random.Range(1, 3) == 1)
                             {
-                                newspaper.GetComponent<Animator>().Play("NewspaperEnter", 0, 0);
+                                spawnedNewsPaper.GetComponent<Animator>().Play("NewspaperEnter", 0, 0);
                             }
                             else
                             {
-                                newspaper.GetComponent<Animator>().Play("NewspaperEnterRight", 0, 0);
+                                spawnedNewsPaper.GetComponent<Animator>().Play("NewspaperEnterRight", 0, 0);
                             }
                             if (!hitPose)
                             {
@@ -558,7 +566,7 @@ namespace HeavenStudio.Games
                         new BeatAction.Action(beat + 3f + newspaperBeats, delegate
                         {
                             blackVoid.color = new Color(1f, 1f, 1f, 0);
-                            newspaper.SetActive(false);
+                            Destroy(currentNewspaper); currentNewspaper = null;
                             Jukebox.KillLoop(kidsLaugh, 0.25f);
                         })
                     });
@@ -629,14 +637,12 @@ namespace HeavenStudio.Games
 
         public void ReporterBlink()
         {
-            int randomNumber = UnityEngine.Random.Range(1, 200);
-            if (randomNumber == 1)
+            if (reporterAnim.GetCurrentAnimatorStateInfo(0).IsName("IdleReporter"))
             {
-                if (reporterAnim.IsPlayingAnimationName("IdleReporter"))
-                {
-                    reporterAnim.DoScaledAnimationAsync("BlinkReporter", 0.5f);
-                }
+                reporterAnim.DoUnscaledAnimation("BlinkReporter");
             }
+            float randomTime = UnityEngine.Random.Range(0.3f, 1.8f);
+            Invoke("ReporterBlink", randomTime);
         }
 
         public void JustQuestion(PlayerActionEvent caller, float state)
