@@ -84,9 +84,7 @@ namespace HeavenStudio.Games
         private int clapIndex;
 
         private ClappyTrioPlayer ClappyTrioPlayer;
-
-        public bool playerHitLast = false;
-        public bool missed;
+        public int misses;
         bool shouldBop;
         bool doEmotion = true;
         public int emoCounter;
@@ -182,7 +180,6 @@ namespace HeavenStudio.Games
             ClappyTrioPlayer.clapStarted = true;
             ClappyTrioPlayer.canHit = true; // this is technically a lie, this just restores the ability to hit
 
-            playerHitLast = false;
             isClapping = true;
             
             // makes the other lions clap
@@ -217,15 +214,18 @@ namespace HeavenStudio.Games
             shouldBop = autoBop;
             if (startBop)
             {
+                List<BeatAction.Action> bops = new List<BeatAction.Action>();
                 for (int i = 0; i < length; i++)
                 {
                     if (i == 0 && startBop && autoBop) continue;
                     float spawnBeat = beat + i;
-                    BeatAction.New(instance.gameObject, new List<BeatAction.Action>()
+                    bops.Add(new BeatAction.Action(spawnBeat, delegate { Bop(spawnBeat); }));
+                    if (i == length - 1)
                     {
-                        new BeatAction.Action(spawnBeat, delegate { Bop(spawnBeat); })
-                    });
+                        bops.Add(new BeatAction.Action(spawnBeat, delegate { misses = 0; }));
+                    }
                 }
+                if (bops.Count > 0) BeatAction.New(instance.gameObject, bops);
             }
         }
 
@@ -233,14 +233,14 @@ namespace HeavenStudio.Games
         {
             if (doEmotion && emoCounter > 0)
             {
-                if (playerHitLast)
+                if (misses == 0)
                 {
                     for (int i = 0; i < Lion.Count; i++)
                     {
                         SetFace(i, 1);
                     }
                 }
-                else if (missed)
+                else if (misses > 0)
                 {
                     var a = EventCaller.GetAllInGameManagerList("clappyTrio", new string[] { "clap" });
                     var b = a.FindAll(c => c.beat < beat);
