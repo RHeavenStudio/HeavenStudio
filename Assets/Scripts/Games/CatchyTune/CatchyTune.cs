@@ -47,15 +47,6 @@ namespace HeavenStudio.Games.Loaders
                         new Param("bop", CatchyTune.WhoBops.Both, "Bop", "Should Plalin and Alalin bop?"),
                         new Param("bopAuto", CatchyTune.WhoBops.None, "Bop", "Should Plalin and Alalin auto bop?"),
                     },
-                },
-                new GameAction("background", "Background")
-                {
-                    function = delegate {var e = eventCaller.currentEntity; CatchyTune.instance.changeBG(e["BG"]); },
-                    defaultLength = 0.5f,
-                    parameters = new List<Param>()
-                    {
-                        new Param("BG", CatchyTune.Background.Long, "BG", "The background to change to")
-                    },
                 }
             },
             new List<string>() {"ctr", "normal"},
@@ -104,8 +95,6 @@ namespace HeavenStudio.Games
         public GameObject pineappleBase;
         public Transform fruitHolder;
         public GameObject heartMessage;
-
-        public GameObject bg1;
         public GameObject bg2;
 
         // when to stop playing the catch animation
@@ -317,20 +306,6 @@ namespace HeavenStudio.Games
                     break;
                 default:
                     break;
-            }
-        }
-
-        public void changeBG(int bg)
-        {
-            if (bg == 0)
-            {
-                bg1.SetActive(true);
-                bg2.SetActive(false);
-            }
-            else
-            {
-                bg1.SetActive(false);
-                bg2.SetActive(true);
             }
         }
 

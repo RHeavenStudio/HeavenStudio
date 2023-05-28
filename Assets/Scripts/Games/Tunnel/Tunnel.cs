@@ -27,7 +27,11 @@ namespace HeavenStudio.Games.Loaders
                     defaultLength = 4f, 
                     resizable = true,
                 }
-            });
+            },
+            new List<string>() {"ntr", "keep"},
+            "ntrtunnel", "en",
+            new List<string>() {"en"}
+            );
         }
     }
 }

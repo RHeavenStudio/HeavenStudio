@@ -27,7 +27,11 @@ namespace HeavenStudio.Games.Loaders
                     function = delegate { WizardsWaltz.instance.SpawnFlower(eventCaller.currentEntity.beat); }, 
                     defaultLength = 0.5f,
                 },
-            });
+            },
+            new List<string>() {"agb", "repeat"},
+            "agbwizard", "en",
+            new List<string>() {}
+            );
         }
     }
 }
@@ -47,7 +51,7 @@ namespace HeavenStudio.Games
         public GameObject fxBase;
 
         private int timer = 0;
-        public float beatInterval = 4f;
+        public float beatInterval = 6f;
         float intervalStartBeat;
         bool intervalStarted;
         public float wizardBeatOffset = 0f;

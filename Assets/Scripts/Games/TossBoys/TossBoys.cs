@@ -90,7 +90,11 @@ namespace HeavenStudio.Games.Loaders
                         new Param("toggle", false, "Instant", "Should the background instantly change color?")
                     }
                 },
-            });
+            },
+            new List<string>() {"agb", "normal"},
+            "agbtoss", "en",
+            new List<string>() {}
+            );
         }
     }
 }
@@ -838,22 +842,22 @@ namespace HeavenStudio.Games
                 switch (last + current)
                 {
                     case "redBlue":
-                        currentBall.SetState(TossBoysBall.State.RedBlueDual, beat);
+                        currentBall.SetState(TossBoysBall.State.RedBlueDual, beat, currentEventLength / 2);
                         break;
                     case "blueYellow":
-                        currentBall.SetState(TossBoysBall.State.BlueYellowDual, beat);
+                        currentBall.SetState(TossBoysBall.State.BlueYellowDual, beat, currentEventLength / 2);
                         break;
                     case "yellowBlue":
-                        currentBall.SetState(TossBoysBall.State.YellowBlueDual, beat);
+                        currentBall.SetState(TossBoysBall.State.YellowBlueDual, beat, currentEventLength / 2);
                         break;
                     case "blueRed":
-                        currentBall.SetState(TossBoysBall.State.BlueRedDual, beat);
+                        currentBall.SetState(TossBoysBall.State.BlueRedDual, beat, currentEventLength / 2);
                         break;
                     case "yellowRed":
-                        currentBall.SetState(TossBoysBall.State.YellowRedDual, beat);
+                        currentBall.SetState(TossBoysBall.State.YellowRedDual, beat, currentEventLength / 2);
                         break;
                     case "redYellow":
-                        currentBall.SetState(TossBoysBall.State.RedYellowDual, beat);
+                        currentBall.SetState(TossBoysBall.State.RedYellowDual, beat, currentEventLength / 2);
                         break;
                     default:
                         break;

@@ -91,7 +91,11 @@ namespace HeavenStudio.Games.Loaders
                     defaultLength = 0.5f,
                     hidden = true
                 },
-            });
+            },
+            new List<string>() {"ntr", "repeat"},
+            "ntrchorus", "en",
+            new List<string>() {"en"}
+            );
         }
     }
 }

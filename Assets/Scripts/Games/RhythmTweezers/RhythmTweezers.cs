@@ -87,7 +87,11 @@ namespace HeavenStudio.Games.Loaders
                         new Param("colorB", RhythmTweezers.defaultBgColor, "End Color", "The ending color in the fade")
                     } 
                 }
-            });
+            },
+            new List<string>() {"agb", "repeat"},
+            "agbhair", "en",
+            new List<string>() {}
+            );
         }
     }
 }

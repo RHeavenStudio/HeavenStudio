@@ -67,7 +67,11 @@ namespace HeavenStudio.Games.Loaders
                         new Param("toggle", true, "Remix 5", "Should the background from Remix 5 tengoku appear?")
                     }
                 }
-            });
+            },
+            new List<string>() {"agb", "normal"},
+            "agbexplode", "en",
+            new List<string>() {}
+            );
         }
     }
 }
