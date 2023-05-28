@@ -81,7 +81,11 @@ namespace HeavenStudio.Games.Loaders
                         new Param("instant", false, "Instant", "Will the giraffe enter/exit instantly?")
                     }
                 }
-            });
+            },
+            new List<string>() {"agb", "normal"},
+            "agbtap", "en",
+            new List<string>() {}
+            );
         }
     }
 }

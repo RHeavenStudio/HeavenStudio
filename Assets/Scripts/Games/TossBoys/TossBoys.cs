@@ -90,7 +90,11 @@ namespace HeavenStudio.Games.Loaders
                         new Param("toggle", false, "Instant", "Should the background instantly change color?")
                     }
                 },
-            });
+            },
+            new List<string>() {"agb", "normal"},
+            "agbtoss", "en",
+            new List<string>() {}
+            );
         }
     }
 }

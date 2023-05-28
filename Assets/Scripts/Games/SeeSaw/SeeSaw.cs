@@ -107,7 +107,7 @@ namespace HeavenStudio.Games.Loaders
                     }
                 }
             },
-            new List<string>() {"rvl", "normal"},
+            new List<string>() {"rvl", "normal", "keep"},
             "rvlseesaw", "en",
             new List<string>() {"en"}
             );
