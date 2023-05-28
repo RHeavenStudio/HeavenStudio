@@ -44,7 +44,11 @@ namespace HeavenStudio.Games.Loaders
                 },
                 new GameAction("alien", "Show Alien")
                 {
-                    function = delegate { Spaceball.instance.alien.Show(eventCaller.currentEntity.beat); } 
+                    function = delegate { Spaceball.instance.alien.Show(eventCaller.currentEntity.beat, eventCaller.currentEntity["hide"]); },
+                    parameters = new List<Param>()
+                    {
+                        new Param("hide", false, "Hide", "Should the alien be hidden?")
+                    }
                 },
                 new GameAction("camera", "Zoom Camera")
                 {
