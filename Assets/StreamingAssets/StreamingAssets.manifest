@@ -1,5 +1,5 @@
 ManifestFileVersion: 0
-CRC: 3250753703
+CRC: 2724712150
 AssetBundleManifest:
   AssetBundleInfos:
     Info_0:
@@ -158,3 +158,10 @@ AssetBundleManifest:
     Info_50:
       Name: rvlseesaw/locale.en
       Dependencies: {}
+    Info_51:
+      Name: agbghost/common
+      Dependencies: {}
+    Info_52:
+      Name: agbbatter/common
+      Dependencies:
+        Dependency_0: karate/common
