@@ -192,6 +192,32 @@ namespace HeavenStudio.Games
             {
                 crHandlerInstance = new CallAndResponseHandler(4);
             }
+            if (crHandlerInstance.queuedEvents.Count > 0)
+            {
+                foreach (var crEvent in crHandlerInstance.queuedEvents)
+                {
+                    if (crEvent.tag == "Hair")
+                    {
+                        Hair hair = Instantiate(hairBase, HairsHolder.transform).GetComponent<Hair>();
+                        spawnedHairs.Add(hair);
+                        hair.gameObject.SetActive(true);
+                        hair.GetComponent<Animator>().Play("SmallAppear", 0, 1);
+                        float rot = -58f + 116 * Mathp.Normalize(crEvent.relativeBeat, 0, crHandlerInstance.intervalLength - 1);
+                        hair.transform.eulerAngles = new Vector3(0, 0, rot);
+                        hair.createBeat = crEvent.beat;
+                    }
+                    else if (crEvent.tag == "Long")
+                    {
+                        LongHair hair = Instantiate(longHairBase, HairsHolder.transform).GetComponent<LongHair>();
+                        spawnedLongs.Add(hair);
+                        hair.gameObject.SetActive(true);
+                        hair.GetComponent<Animator>().Play("LongAppear", 0, 1);
+                        float rot = -58f + 116 * Mathp.Normalize(crEvent.relativeBeat, 0, crHandlerInstance.intervalLength - 1);
+                        hair.transform.eulerAngles = new Vector3(0, 0, rot);
+                        hair.createBeat = crEvent.beat;
+                    }
+                }
+            }
         }
 
         private void OnDestroy()
@@ -204,7 +230,7 @@ namespace HeavenStudio.Games
 
         public void SpawnHair(float beat)
         {
-            if (crHandlerInstance.queuedEvents.Count > 0 && crHandlerInstance.queuedEvents.Find(x => x.beat == beat) != null) return;
+            if (crHandlerInstance.queuedEvents.Count > 0 && crHandlerInstance.queuedEvents.Find(x => x.beat == beat || (beat >= x.beat && beat <= x.beat + x.length)) != null) return;
             // End transition early if the next hair is a lil early.
             StopTransitionIfActive();
 
@@ -219,14 +245,14 @@ namespace HeavenStudio.Games
             float rot = -58f + 116 * crHandlerInstance.GetIntervalProgressFromBeat(beat, 1);
             hair.transform.eulerAngles = new Vector3(0, 0, rot);
             hair.createBeat = beat;
-            hairsLeft++;
         }
 
         public void SpawnLongHair(float beat)
         {
+            if (crHandlerInstance.queuedEvents.Count > 0 && crHandlerInstance.queuedEvents.Find(x => x.beat == beat || (beat >= x.beat && beat <= x.beat + x.length)) != null) return;
             StopTransitionIfActive();
 
-            crHandlerInstance.AddEvent(beat, 0, "Long");
+            crHandlerInstance.AddEvent(beat, 0.5f, "Long");
 
             Jukebox.PlayOneShotGame("rhythmTweezers/longAppear", beat);
             LongHair hair = Instantiate(longHairBase, HairsHolder.transform).GetComponent<LongHair>();
@@ -237,7 +263,6 @@ namespace HeavenStudio.Games
             float rot = -58f + 116 * crHandlerInstance.GetIntervalProgressFromBeat(beat, 1);
             hair.transform.eulerAngles = new Vector3(0, 0, rot);
             hair.createBeat = beat;
-            hairsLeft++;
         }
 
         public void SetIntervalStart(float beat, float interval = 4f)
@@ -251,6 +276,7 @@ namespace HeavenStudio.Games
         {
             if (crHandlerInstance.queuedEvents.Count > 0)
             {
+                hairsLeft = crHandlerInstance.queuedEvents.Count;
                 foreach (var crEvent in crHandlerInstance.queuedEvents)
                 {
                     if (crEvent.tag == "Hair")
