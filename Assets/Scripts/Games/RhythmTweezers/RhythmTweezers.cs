@@ -62,18 +62,6 @@ namespace HeavenStudio.Games.Loaders
                         new Param("colorB", RhythmTweezers.defaultPotatoColor, "Potato Color", "The color of the potato")
                     }
                 },
-                new GameAction("set tweezer delay", "Offset Tweezer")
-                {
-                    function = delegate { RhythmTweezers.instance.tweezerBeatOffset = eventCaller.currentEntity.length; },
-                    resizable = true,
-                    priority = 2
-                },
-                new GameAction("reset tweezer delay", "Reset Tweezer Offset")
-                {
-                    function = delegate { RhythmTweezers.instance.tweezerBeatOffset = 0f; }, 
-                    defaultLength = 0.5f,
-                    priority = 2
-                },
                 new GameAction("set background color", "Background Colour")
                 {
                     function = delegate { var e = eventCaller.currentEntity; RhythmTweezers.instance.ChangeBackgroundColor(e["colorA"], 0f); }, 
@@ -131,7 +119,6 @@ namespace HeavenStudio.Games
         [NonSerialized] public int hairsLeft = 0;
 
         [Header("Variables")]
-        public float tweezerBeatOffset = 0f;
         private float passTurnBeat;
         private float passTurnEndBeat = 2;
 
