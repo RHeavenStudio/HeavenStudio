@@ -64,6 +64,12 @@ namespace HeavenStudio.Games.Loaders
                         new Param("colorB", RhythmTweezers.defaultPotatoColor, "Potato Color", "The color of the potato")
                     }
                 },
+                new GameAction("noPeek", "No Peeking Sign")
+                {
+                    preFunction = delegate { var e = eventCaller.currentEntity; RhythmTweezers.PreNoPeeking(e.beat, e.length); },
+                    defaultLength = 4f,
+                    resizable = true
+                },
                 new GameAction("set background color", "Background Colour")
                 {
                     function = delegate { var e = eventCaller.currentEntity; RhythmTweezers.instance.ChangeBackgroundColor(e["colorA"], 0f); }, 
@@ -104,6 +110,12 @@ namespace HeavenStudio.Games
             Potato
         }
 
+        private struct QueuedPeek
+        {
+            public float beat;
+            public float length;
+        }
+
         [Header("References")]
         public Transform VegetableHolder;
         public SpriteRenderer Vegetable;
@@ -114,6 +126,7 @@ namespace HeavenStudio.Games
         public GameObject hairBase;
         public GameObject longHairBase;
         public GameObject pluckedHairBase;
+        [SerializeField] private Animator noPeeking;
 
         public GameObject HairsHolder;
         public GameObject DroppedHairsHolder;
@@ -122,6 +135,7 @@ namespace HeavenStudio.Games
         [Header("Variables")]
         private float passTurnBeat;
         private float passTurnEndBeat = 2;
+        private static List<QueuedPeek> queuedPeeks = new List<QueuedPeek>();
 
         [Header("Sprites")]
         public Sprite pluckedHairSprite;
@@ -172,6 +186,9 @@ namespace HeavenStudio.Games
         private List<LongHair> spawnedLongs = new List<LongHair>();
 
         private static List<float> passedTurns = new List<float>();
+
+        private float peekBeat = -1;
+        private bool peekRising;
 
         private void Awake()
         {
@@ -397,6 +414,32 @@ namespace HeavenStudio.Games
             ChangeBackgroundColor(end, beats);
         }
 
+        public static void PreNoPeeking(float beat, float length)
+        {
+            if (GameManager.instance.currentGame == "rhythmTweezers")
+            {
+                instance.NoPeeking(beat, length);
+            }
+            else
+            {
+                queuedPeeks.Add(new QueuedPeek()
+                {
+                    beat = beat,
+                    length = length
+                });
+            }
+        }
+
+        public void NoPeeking(float beat, float length)
+        {
+            peekBeat = beat - 1f;
+            peekRising = true;
+            BeatAction.New(instance.gameObject, new List<BeatAction.Action>()
+            {
+                new BeatAction.Action(beat + length, delegate { peekBeat = beat + length; peekRising = false; })
+            });
+        }
+
         private void Update()
         {
             if (Conductor.instance.isPlaying && !Conductor.instance.isPaused)
@@ -408,6 +451,19 @@ namespace HeavenStudio.Games
                         SetPassTurnValues(turn);
                     }
                     passedTurns.Clear();
+                }
+                if (queuedPeeks.Count > 0)
+                {
+                    foreach (var peek in queuedPeeks)
+                    {
+                        NoPeeking(peek.beat, peek.length);
+                    }
+                    queuedPeeks.Clear();
+                }
+                float normalizedBeat = Conductor.instance.GetPositionFromBeat(peekBeat, 1);
+                if (normalizedBeat >= 0f && normalizedBeat <= 1f)
+                {
+                    noPeeking.DoNormalizedAnimation(peekRising ? "NoPeekRise" : "NoPeekLower", normalizedBeat);
                 }
             }
         }
