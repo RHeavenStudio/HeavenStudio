@@ -32,6 +32,7 @@ namespace HeavenStudio.Games.Scripts_Rockers
 
         private void Miss(PlayerActionEvent caller)
         {
+            game.JJ.Miss();
             Destroy(gameObject);
         }
 

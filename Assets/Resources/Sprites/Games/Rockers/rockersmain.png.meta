@@ -1092,7 +1092,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: rockersmain_47
+      name: blu
       rect:
         serializedVersion: 2
         x: 2041
@@ -1100,7 +1100,7 @@ TextureImporter:
         width: 862
         height: 305
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
@@ -1113,7 +1113,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: rockersmain_48
+      name: blu1
       rect:
         serializedVersion: 2
         x: 2039
@@ -1134,7 +1134,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: rockersmain_49
+      name: blu2
       rect:
         serializedVersion: 2
         x: 2039
@@ -1142,7 +1142,7 @@ TextureImporter:
         width: 879
         height: 291
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
@@ -1155,7 +1155,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: rockersmain_50
+      name: yel
       rect:
         serializedVersion: 2
         x: 1052
@@ -1163,7 +1163,7 @@ TextureImporter:
         width: 872
         height: 326
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
@@ -1176,7 +1176,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: rockersmain_51
+      name: yel1
       rect:
         serializedVersion: 2
         x: 1061
@@ -1184,7 +1184,7 @@ TextureImporter:
         width: 866
         height: 339
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
@@ -1197,7 +1197,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: rockersmain_52
+      name: yel2
       rect:
         serializedVersion: 2
         x: 1063
@@ -1205,7 +1205,7 @@ TextureImporter:
         width: 874
         height: 355
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
@@ -1228,6 +1228,9 @@ TextureImporter:
     weights: []
     secondaryTextures: []
     nameFileIdTable:
+      blu: 957959430
+      blu1: 1527891480
+      blu2: -411850707
       rockersmain_0: -147532523
       rockersmain_1: 217688304
       rockersmain_10: -700290158
@@ -1270,17 +1273,14 @@ TextureImporter:
       rockersmain_44: 404327938
       rockersmain_45: -1781691053
       rockersmain_46: 94881053
-      rockersmain_47: 957959430
-      rockersmain_48: 1527891480
-      rockersmain_49: -411850707
       rockersmain_5: -1993929609
-      rockersmain_50: -7660382
-      rockersmain_51: 1779970764
-      rockersmain_52: 1882861776
       rockersmain_6: -1361573815
       rockersmain_7: -404011496
       rockersmain_8: -2135006096
       rockersmain_9: 1170814229
+      yel: -7660382
+      yel1: 1779970764
+      yel2: 1882861776
   spritePackingTag: 
   pSDRemoveMatte: 0
   pSDShowRemoveMatteOption: 0

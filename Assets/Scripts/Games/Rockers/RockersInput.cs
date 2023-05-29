@@ -33,7 +33,7 @@ namespace HeavenStudio.Games.Scripts_Rockers
         {
             if (state >= 1f || state <= -1f) 
             {
-                game.Soshi.StrumStrings(gleeClub, pitches.ToArray(), sample, sampleTones, false, jump);
+                game.Soshi.StrumStrings(gleeClub, pitches.ToArray(), sample, sampleTones, false, jump, true);
                 Destroy(gameObject);
                 return;
             }
@@ -43,6 +43,7 @@ namespace HeavenStudio.Games.Scripts_Rockers
 
         private void Miss(PlayerActionEvent caller)
         {
+            game.JJ.Miss();
             Destroy(gameObject);
         }
 

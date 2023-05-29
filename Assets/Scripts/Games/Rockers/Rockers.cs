@@ -378,7 +378,7 @@ namespace HeavenStudio.Games
         public static CallAndResponseHandler crHandlerInstance;
 
         [Header("Rockers")]
-        [SerializeField] private RockersRocker JJ;
+        public RockersRocker JJ;
         public RockersRocker Soshi;
 
         [Header("Input")]
@@ -992,7 +992,7 @@ namespace HeavenStudio.Games
 
         private void MuteMiss(PlayerActionEvent caller)
         {
-
+            JJ.Miss();
         }
 
         private void JustUnBend(PlayerActionEvent caller, float state)
@@ -1002,7 +1002,7 @@ namespace HeavenStudio.Games
 
         private void UnBendMiss(PlayerActionEvent caller)
         {
-
+            JJ.Miss();
         }
 
         private void Empty(PlayerActionEvent caller)

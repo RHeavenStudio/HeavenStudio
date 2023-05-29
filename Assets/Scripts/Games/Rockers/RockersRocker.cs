@@ -23,6 +23,13 @@ namespace HeavenStudio.Games.Scripts_Rockers
         private bool bending;
         [NonSerialized] public bool together;
 
+        [SerializeField] List<Sprite> bluSprites = new List<Sprite>();
+        [SerializeField] List<Sprite> yelSprites = new List<Sprite>();
+        [SerializeField] List<Sprite> normalSprites = new List<Sprite>();
+
+        [SerializeField] List<SpriteRenderer> lightningLefts = new List<SpriteRenderer>();
+        [SerializeField] List<SpriteRenderer> lightningRights = new List<SpriteRenderer>();
+
         private void Awake()
         {
             anim = GetComponent<Animator>();
@@ -59,7 +66,14 @@ namespace HeavenStudio.Games.Scripts_Rockers
             else
             {
                 DoScaledAnimationAsync("ComeOnPrepareNoMute", 0.5f);
+                if (strumming) strumEffect.GetComponent<Animator>().Play("StrumRight", 0, 0);
             }
+        }
+
+        public void Miss()
+        {
+            if (strumming) return;
+            DoScaledAnimationAsync(together ? "Miss" : "MissComeOn", 0.5f);
         }
 
         public void ReturnBack()
@@ -85,7 +99,7 @@ namespace HeavenStudio.Games.Scripts_Rockers
             }
         }
 
-        public void StrumStrings(bool gleeClub, int[] pitches, Rockers.PremadeSamples sample, int sampleTones, bool disableStrumEffect = false, bool jump = false)
+        public void StrumStrings(bool gleeClub, int[] pitches, Rockers.PremadeSamples sample, int sampleTones, bool disableStrumEffect = false, bool jump = false, bool barely = false)
         {
             muted = false;
             strumming = true;
@@ -164,6 +178,27 @@ namespace HeavenStudio.Games.Scripts_Rockers
                 if (disableStrumEffect) return;
                 strumEffect.SetActive(true);
                 strumEffect.GetComponent<Animator>().Play("StrumStart", 0, 0);
+            }
+
+            if (!JJ)
+            {
+                if (barely)
+                {
+                    bool useYel = UnityEngine.Random.Range(1, 3) == 1;
+                    for (int i = 0; i < 3; i++)
+                    {
+                        if (lightningRights[i].gameObject.activeSelf) lightningRights[i].sprite = useYel ? yelSprites[i] : bluSprites[i];
+                        if (lightningLefts[i].gameObject.activeSelf) lightningLefts[i].sprite = useYel ? yelSprites[i] : bluSprites[i];
+                    }
+                }
+                else
+                {
+                    for (int i = 0; i < 3; i++)
+                    {
+                        if (lightningRights[i].gameObject.activeSelf) lightningRights[i].sprite = normalSprites[i];
+                        if (lightningLefts[i].gameObject.activeSelf) lightningLefts[i].sprite = normalSprites[i];
+                    }
+                }
             }
         }
 
