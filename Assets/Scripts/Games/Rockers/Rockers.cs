@@ -569,7 +569,7 @@ namespace HeavenStudio.Games
 
                 if (normalizedBeat >= 0f && normalizedBeat <= 1f)
                 {
-                    EasingFunction.Function func = EasingFunction.GetEasingFunction(EasingFunction.Ease.EaseInOutQuint);
+                    EasingFunction.Function func = EasingFunction.GetEasingFunction(EasingFunction.Ease.EaseInOutQuad);
 
                     float newX = func(lastTargetCameraX, targetCameraX, normalizedBeat);
                     GameCamera.additionalPosition = new Vector3(newX, 0, 0);
