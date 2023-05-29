@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 using HeavenStudio.Util;
+using UnityEngine.UIElements;
 
 namespace HeavenStudio.Games.Scripts_RhythmTweezers
 {
@@ -23,6 +24,8 @@ namespace HeavenStudio.Games.Scripts_RhythmTweezers
 
         private float inputBeat;
 
+        PlayerActionEvent endEvent;
+
         private void Awake()
         {
             game = RhythmTweezers.instance;
@@ -34,7 +37,6 @@ namespace HeavenStudio.Games.Scripts_RhythmTweezers
         {
             inputBeat = beat + length;
             game.ScheduleInput(beat, length, InputType.STANDARD_DOWN | InputType.DIRECTION_DOWN, StartJust, StartMiss, Out);
-            game.ScheduleInput(beat, length + 0.5f, InputType.STANDARD_UP | InputType.DIRECTION_DOWN_UP, EndJust, Out, Out);
         }
 
         private void Update()
@@ -48,7 +50,11 @@ namespace HeavenStudio.Games.Scripts_RhythmTweezers
                 float normalizedBeat = Conductor.instance.GetPositionFromBeat(inputBeat, 0.5f);
                 anim.Play("LoopPull", 0, normalizedBeat);
                 tweezers.anim.Play("Tweezers_LongPluck", 0, normalizedBeat);
-
+                if (!game.IsExpectingInputNow(InputType.STANDARD_UP | InputType.DIRECTION_DOWN_UP) && PlayerInput.PressedUp(true) && normalizedBeat < 1f)
+                {
+                    EndEarly();
+                    endEvent.Disable();
+                }
                 // Auto-release if holding at release time.
                 if (normalizedBeat >= 1f && !game.IsExpectingInputNow(InputType.STANDARD_UP | InputType.DIRECTION_DOWN_UP))
                     EndAce();
@@ -59,6 +65,7 @@ namespace HeavenStudio.Games.Scripts_RhythmTweezers
 
         public void EndAce()
         {
+            if (pluckState != 1) return;
             tweezers.LongPluck(true, this);
             tweezers.hitOnFrame++;
 
@@ -72,7 +79,7 @@ namespace HeavenStudio.Games.Scripts_RhythmTweezers
         {
             var normalized = Conductor.instance.GetPositionFromBeat(inputBeat, 0.5f);
             anim.Play("LoopPullReverse", 0, normalized);
-            tweezers.anim.Play("Idle", 0, 0);
+            tweezers.anim.Play("Tweezers_Idle", 0, 0);
 
             if (pullSound != null)
                 pullSound.Stop();
@@ -89,6 +96,7 @@ namespace HeavenStudio.Games.Scripts_RhythmTweezers
             }
             pullSound = Jukebox.PlayOneShotGame($"rhythmTweezers/longPull{UnityEngine.Random.Range(1, 5)}");
             pluckState = 1;
+            endEvent = game.ScheduleInput(inputBeat, 0.5f, InputType.STANDARD_UP | InputType.DIRECTION_DOWN_UP, EndJust, Out, Out);
         }
 
         private void StartMiss(PlayerActionEvent caller) 
