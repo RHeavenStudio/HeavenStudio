@@ -326,6 +326,7 @@ namespace HeavenStudio.Games
 
         private void SetPassTurnValues(float startBeat)
         {
+            if (crHandlerInstance.intervalLength <= 0) return;
             passTurnBeat = startBeat - 1f;
             passTurnEndBeat = startBeat + crHandlerInstance.intervalLength;
         }
