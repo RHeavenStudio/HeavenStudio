@@ -22,7 +22,8 @@ namespace HeavenStudio.Games.Loaders
                     parameters = new List<Param>()
                     {
                         new Param("moveCamera", true, "Move Camera", "Should the camera move?")
-                    }
+                    },
+                    inactiveFunction = delegate { var e = eventCaller.currentEntity; Rockers.InactiveInterval(e.beat, e.length); }
                 },
                 new GameAction("riff", "Riff")
                 {
@@ -66,7 +67,16 @@ namespace HeavenStudio.Games.Loaders
                         new Param("sampleS", Rockers.PremadeSamples.None, "Premade Sample (Soshi)", "Use a premade sample?"),
                         new Param("pitchSampleS", new EntityTypes.Integer(0, 24, 0), "Sample Semtiones (Soshi)", "Pitch up the sample by X amount of semitones?"),
                         new Param("gcS", false, "Glee Club Guitar (Soshi)", "Will Soshi use the same guitar as in the glee club lessons?")
-                    }
+                    },
+                    inactiveFunction = delegate { var e = eventCaller.currentEntity; Rockers.InactiveRiff(e.beat, e.length, new int[6]
+                    {
+                        e["1S"],
+                        e["2S"],
+                        e["3S"],
+                        e["4S"],
+                        e["5S"],
+                        e["6S"],
+                    }, e["gcS"], e["sampleS"], e["pitchSampleS"]); } 
                 },
                 new GameAction("bend", "Bend")
                 {
@@ -78,7 +88,8 @@ namespace HeavenStudio.Games.Loaders
                         new Param("respond", true, "Respond", "Will this guitar bend have to be responded to?"),
                         new Param("1JJ", new EntityTypes.Integer(1, 24, 1), "Pitch Bend (JJ)", "How many semitones up is the current riff gonna be pitchbended?"),
                         new Param("1S", new EntityTypes.Integer(1, 24, 1), "Pitch Bend (Soshi)", "How many semitones up is the current riff gonna be pitchbended?"),
-                    }
+                    },
+                    inactiveFunction = delegate { var e = eventCaller.currentEntity; Rockers.InactiveBend(e.beat, e.length, e["1S"]); }
                 },
                 new GameAction("prepare", "Prepare")
                 {
@@ -383,11 +394,11 @@ namespace HeavenStudio.Games
 
         private List<DynamicBeatmap.DynamicEntity> riffEvents = new List<DynamicBeatmap.DynamicEntity>();
 
-        private List<float> riffUsedBeats = new List<float>();
+        private static List<float> riffUsedBeats = new List<float>();
 
         private List<DynamicBeatmap.DynamicEntity> bendEvents = new List<DynamicBeatmap.DynamicEntity>();
 
-        private List<float> bendUsedBeats = new List<float>();
+        private static List<float> bendUsedBeats = new List<float>();
 
         private List<float> prepareBeatsJJ = new List<float>();
 
@@ -403,11 +414,11 @@ namespace HeavenStudio.Games
             {
                 if (tempEvent["who"] != (int)WhoMutes.Soshi) prepareBeatsJJ.Add(tempEvent.beat);
             }
-            GrabAllRiffEvents();
-            GrabAllBendEvents();
+            riffEvents = GrabAllRiffEvents();
+            bendEvents = GrabAllBendEvents();
         }
 
-        private void GrabAllRiffEvents()
+        private static List<DynamicBeatmap.DynamicEntity> GrabAllRiffEvents()
         {
             var tempEvents = EventCaller.GetAllInGameManagerList("rockers", new string[] { "riff" });
             if (tempEvents.Count > 1)
@@ -424,15 +435,15 @@ namespace HeavenStudio.Games
                     }
                 }
                 tempEvents2.Add(tempEvents[0]);
-                riffEvents = tempEvents2;
+                return tempEvents2;
             }
             else
             {
-                riffEvents = tempEvents;
+                return tempEvents;
             }
         }
 
-        private void GrabAllBendEvents()
+        private static List<DynamicBeatmap.DynamicEntity> GrabAllBendEvents()
         {
             var tempEvents = EventCaller.GetAllInGameManagerList("rockers", new string[] { "bend" });
             if (tempEvents.Count > 1)
@@ -449,11 +460,11 @@ namespace HeavenStudio.Games
                     }
                 }
                 tempEvents2.Add(tempEvents[0]);
-                bendEvents = tempEvents2;
+                return tempEvents2;
             }
             else
             {
-                bendEvents = tempEvents;
+                return tempEvents;
             }
         }
 
@@ -517,9 +528,11 @@ namespace HeavenStudio.Games
 
         private void OnDestroy()
         {
-            if (!Conductor.instance.isPlaying || Conductor.instance.isPaused)
+            if (!Conductor.instance.isPlaying)
             {
                 crHandlerInstance = null;
+                if (riffUsedBeats.Count > 0) riffUsedBeats.Clear();
+                if (bendUsedBeats.Count > 0) bendUsedBeats.Clear();
             }
             if (queuedCameraEvents.Count > 0) queuedCameraEvents.Clear();
             if (queuedPreInterval.Count > 0) queuedPreInterval.Clear();
@@ -575,9 +588,11 @@ namespace HeavenStudio.Games
                     GameCamera.additionalPosition = new Vector3(newX, 0, 0);
                 }
             }
-            if (!Conductor.instance.isPlaying || Conductor.instance.isPaused)
+            if (!Conductor.instance.isPlaying)
             {
                 crHandlerInstance = null;
+                if (riffUsedBeats.Count > 0) riffUsedBeats.Clear();
+                if (bendUsedBeats.Count > 0) bendUsedBeats.Clear();
             }
         }
 
@@ -814,10 +829,63 @@ namespace HeavenStudio.Games
             });
         }
 
+        public static void InactiveInterval(float beat, float length)
+        {
+            if (crHandlerInstance == null)
+            {
+                crHandlerInstance = new CallAndResponseHandler(8);
+            }
+            crHandlerInstance.StartInterval(beat, length);
+        }
+
         public void StartInterval(float beat, float length)
         {
             crHandlerInstance.StartInterval(beat, length);
             if (GameManager.instance.autoplay) Soshi.UnHold();
+        }
+
+        public static void InactiveRiff(float beat, float length, int[] pitchesPlayer, bool gleeClubPlayer, int sampleSoshi, int sampleTonesSoshi)
+        {
+            if (crHandlerInstance == null)
+            {
+                crHandlerInstance = new CallAndResponseHandler(8);
+            }
+            List<DynamicBeatmap.DynamicEntity> foundRiffEvents = GrabAllRiffEvents();
+            DynamicBeatmap.DynamicEntity foundEvent = foundRiffEvents.Find(x => x.beat == beat);
+            if ((foundEvent == null || (riffUsedBeats.Count > 0 && riffUsedBeats.Contains(foundEvent.beat))) && foundRiffEvents.Count > 1) return;
+            riffUsedBeats.Add(beat);
+            crHandlerInstance.AddEvent(beat, length, "riff", new List<CallAndResponseHandler.CallAndResponseEventParam>()
+            {
+                new CallAndResponseHandler.CallAndResponseEventParam("gleeClub", gleeClubPlayer),
+                new CallAndResponseHandler.CallAndResponseEventParam("1", pitchesPlayer[0]),
+                new CallAndResponseHandler.CallAndResponseEventParam("2", pitchesPlayer[1]),
+                new CallAndResponseHandler.CallAndResponseEventParam("3", pitchesPlayer[2]),
+                new CallAndResponseHandler.CallAndResponseEventParam("4", pitchesPlayer[3]),
+                new CallAndResponseHandler.CallAndResponseEventParam("5", pitchesPlayer[4]),
+                new CallAndResponseHandler.CallAndResponseEventParam("6", pitchesPlayer[5]),
+                new CallAndResponseHandler.CallAndResponseEventParam("sample", sampleSoshi),
+                new CallAndResponseHandler.CallAndResponseEventParam("sampleTones", sampleTonesSoshi)
+            });
+        }
+
+        public static void InactiveBend(float beat, float length, int pitchSoshi)
+        {
+            if (crHandlerInstance == null)
+            {
+                crHandlerInstance = new CallAndResponseHandler(8);
+            }
+            var bendEventsToCheck = GrabAllBendEvents();
+            var riffEventsToCheck = GrabAllRiffEvents();
+            if (riffEventsToCheck.Count == 0) return;
+            DynamicBeatmap.DynamicEntity foundEvent = bendEventsToCheck.Find(x => x.beat == beat);
+            if ((foundEvent == null || (bendUsedBeats.Count > 0 && bendUsedBeats.Contains(foundEvent.beat))) && bendEventsToCheck.Count > 1) return;
+            DynamicBeatmap.DynamicEntity riffEventToCheck = riffEventsToCheck.Find(x => beat >= x.beat && beat < x.beat + x.length);
+            if (riffEventToCheck == null) return;
+            bendUsedBeats.Add(beat);
+            crHandlerInstance.AddEvent(beat, length, "bend", new List<CallAndResponseHandler.CallAndResponseEventParam>()
+            {
+                new CallAndResponseHandler.CallAndResponseEventParam("Pitch", pitchSoshi),
+            });
         }
 
         public void Riff(float beat, float length, int[] pitches, bool gleeClubJJ, int[] pitchesPlayer, bool gleeClubPlayer, int sampleJJ, int sampleTonesJJ, int sampleSoshi, int sampleTonesSoshi, bool noRespond)
