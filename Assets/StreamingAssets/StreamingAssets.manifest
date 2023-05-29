@@ -1,12 +1,12 @@
 ManifestFileVersion: 0
-CRC: 315200736
+CRC: 4078305681
 AssetBundleManifest:
   AssetBundleInfos:
     Info_0:
       Name: karate/common
       Dependencies: {}
     Info_1:
-      Name: ntrsamurai/common
+      Name: ntridol/common
       Dependencies: {}
     Info_2:
       Name: agbmarcher/common
@@ -22,19 +22,19 @@ AssetBundleManifest:
       Name: ctrpillow/locale.en
       Dependencies: {}
     Info_6:
-      Name: rvlbooks/locale.en
+      Name: ctrpillow/common
       Dependencies: {}
     Info_7:
-      Name: ntridol/locale.jp
+      Name: rvlbooks/locale.en
       Dependencies: {}
     Info_8:
-      Name: ctrpillow/common
+      Name: ntridol/locale.jp
       Dependencies: {}
     Info_9:
       Name: rvlbooks/common
       Dependencies: {}
     Info_10:
-      Name: ntridol/common
+      Name: ntrsamurai/common
       Dependencies: {}
     Info_11:
       Name: agbmarcher/locale.en
@@ -61,159 +61,159 @@ AssetBundleManifest:
       Name: rvlbadminton/common
       Dependencies: {}
     Info_19:
-      Name: agbghost/common
-      Dependencies: {}
-    Info_20:
-      Name: agbclap/common
-      Dependencies: {}
-    Info_21:
-      Name: ctrteppan/common
-      Dependencies: {}
-    Info_22:
-      Name: rvldough/common
-      Dependencies: {}
-    Info_23:
-      Name: rvlseesaw/common
-      Dependencies: {}
-    Info_24:
-      Name: rvlfork/common
-      Dependencies: {}
-    Info_25:
-      Name: mobtrick/common
-      Dependencies: {}
-    Info_26:
-      Name: rvlinterview/locale.en
-      Dependencies: {}
-    Info_27:
-      Name: rvlseal/locale.en
-      Dependencies: {}
-    Info_28:
-      Name: agbtoss/common
-      Dependencies: {}
-    Info_29:
-      Name: ntrassembly/common
-      Dependencies: {}
-    Info_30:
-      Name: rvlinterview/common
-      Dependencies: {}
-    Info_31:
-      Name: rvlrotation/common
-      Dependencies: {}
-    Info_32:
-      Name: agbhair/common
-      Dependencies: {}
-    Info_33:
-      Name: ctrinterpreter/common
-      Dependencies: {}
-    Info_34:
-      Name: rvllegs/common
-      Dependencies: {}
-    Info_35:
       Name: rvlbadminton/locale.en
       Dependencies: {}
-    Info_36:
-      Name: pcosomen/common
+    Info_20:
+      Name: ctrbear/common
       Dependencies: {}
-    Info_37:
+    Info_21:
+      Name: rvlrotation/common
+      Dependencies: {}
+    Info_22:
+      Name: rvlrotation/locale.en
+      Dependencies: {}
+    Info_23:
+      Name: ntrassembly/common
+      Dependencies: {}
+    Info_24:
+      Name: agbclap/common
+      Dependencies: {}
+    Info_25:
+      Name: ntrstomp/common
+      Dependencies: {}
+    Info_26:
+      Name: ntrninja/common
+      Dependencies: {}
+    Info_27:
+      Name: rvldate/common
+      Dependencies:
+        Dependency_0: ntrdj/common
+    Info_28:
       Name: ctrintro/common
       Dependencies: {}
+    Info_29:
+      Name: agbexplode/common
+      Dependencies: {}
+    Info_30:
+      Name: ctrinterpreter/common
+      Dependencies: {}
+    Info_31:
+      Name: rvlseal/common
+      Dependencies: {}
+    Info_32:
+      Name: rvlseal/locale.en
+      Dependencies: {}
+    Info_33:
+      Name: rvlfork/common
+      Dependencies: {}
+    Info_34:
+      Name: ntrchorus/common
+      Dependencies: {}
+    Info_35:
+      Name: ntrchorus/locale.en
+      Dependencies: {}
+    Info_36:
+      Name: ctrteppan/common
+      Dependencies: {}
+    Info_37:
+      Name: rvlrocket/common
+      Dependencies: {}
     Info_38:
-      Name: agbquiz/common
-      Dependencies:
-        Dependency_0: karate/common
+      Name: ntrbackbeat/common
+      Dependencies: {}
     Info_39:
-      Name: ntrshugyo/locale.en
+      Name: pcomeat/common
       Dependencies: {}
     Info_40:
       Name: agboffbeat/common
       Dependencies: {}
     Info_41:
-      Name: ctrbear/common
+      Name: ntrshugyo/common
       Dependencies: {}
     Info_42:
-      Name: ntrninja/common
+      Name: ntrshugyo/locale.en
       Dependencies: {}
     Info_43:
-      Name: ntrsoccer/common
-      Dependencies: {}
+      Name: agbquiz/common
+      Dependencies:
+        Dependency_0: karate/common
     Info_44:
-      Name: ntrbackbeat/common
+      Name: ntrpingpong/common
       Dependencies: {}
     Info_45:
-      Name: rvlrocket/common
+      Name: pcosomen/common
       Dependencies: {}
     Info_46:
-      Name: ntrstomp/common
+      Name: agbhair/common
       Dependencies: {}
     Info_47:
-      Name: agbspacedance/common
+      Name: rvlinterview/common
       Dependencies: {}
     Info_48:
+      Name: rvlinterview/locale.en
+      Dependencies: {}
+    Info_49:
+      Name: rvlseesaw/common
+      Dependencies: {}
+    Info_50:
+      Name: rvlseesaw/locale.en
+      Dependencies: {}
+    Info_51:
+      Name: agbghost/common
+      Dependencies: {}
+    Info_52:
       Name: agbbatter/common
       Dependencies:
         Dependency_0: karate/common
-    Info_49:
-      Name: rvldate/common
-      Dependencies:
-        Dependency_0: ntrdj/common
-    Info_50:
-      Name: ntrboxshow/common
-      Dependencies: {}
-    Info_51:
-      Name: agbexplode/common
-      Dependencies: {}
-    Info_52:
-      Name: ntrcork/common
-      Dependencies: {}
     Info_53:
-      Name: pcomeat/common
+      Name: agbspacedance/common
       Dependencies: {}
     Info_54:
-      Name: ntrsoccer/locale.en
-      Dependencies: {}
-    Info_55:
       Name: agbspacedance/locale.jp
       Dependencies: {}
+    Info_55:
+      Name: ntrsoccer/common
+      Dependencies: {}
     Info_56:
-      Name: rvldrum/common
+      Name: ntrsoccer/locale.en
       Dependencies: {}
     Info_57:
-      Name: ntrtunnel/locale.en
+      Name: rvldrum/common
       Dependencies: {}
     Info_58:
-      Name: rvlseal/common
-      Dependencies: {}
-    Info_59:
-      Name: ntrboxshow/locale.en
-      Dependencies: {}
-    Info_60:
-      Name: ntrpingpong/common
-      Dependencies: {}
-    Info_61:
-      Name: ntrtunnel/common
-      Dependencies: {}
-    Info_62:
-      Name: ntrshugyo/common
-      Dependencies: {}
-    Info_63:
-      Name: ntrchorus/common
-      Dependencies: {}
-    Info_64:
-      Name: rvlseesaw/locale.en
-      Dependencies: {}
-    Info_65:
-      Name: agbwizard/common
-      Dependencies: {}
-    Info_66:
       Name: agbtap/common
       Dependencies:
         Dependency_0: ntridol/common
+    Info_59:
+      Name: rvllegs/common
+      Dependencies: {}
+    Info_60:
+      Name: rvllegs/locale.en
+      Dependencies: {}
+    Info_61:
+      Name: ntrboxshow/common
+      Dependencies: {}
+    Info_62:
+      Name: ntrboxshow/locale.en
+      Dependencies: {}
+    Info_63:
+      Name: agbtoss/common
+      Dependencies: {}
+    Info_64:
+      Name: mobtrick/common
+      Dependencies: {}
+    Info_65:
+      Name: ntrtunnel/common
+      Dependencies: {}
+    Info_66:
+      Name: ntrtunnel/locale.en
+      Dependencies: {}
     Info_67:
-      Name: ntrchorus/locale.en
+      Name: agbwizard/common
       Dependencies: {}
     Info_68:
-      Name: rvlrotation/locale.en
+      Name: rvldough/common
       Dependencies: {}
     Info_69:
-      Name: rvllegs/locale.en
+      Name: ntrcork/common
       Dependencies: {}
