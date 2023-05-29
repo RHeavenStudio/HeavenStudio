@@ -93,7 +93,6 @@ namespace HeavenStudio.Games.Loaders
 namespace HeavenStudio.Games
 {
     using Scripts_RhythmTweezers;
-    using UnityEngine.UIElements;
 
     public class RhythmTweezers : Minigame
     {
@@ -256,6 +255,7 @@ namespace HeavenStudio.Games
         {
             StopTransitionIfActive();
             hairsLeft = 0;
+            eyeSize = 0;
             crHandlerInstance.StartInterval(beat, interval);
         }
 
