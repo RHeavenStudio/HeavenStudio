@@ -75,6 +75,8 @@ namespace HeavenStudio.Games.Scripts_OctopusMachine
                 2 => "Angry",
                 3 => "Oops",
             }, 0.5f);
+            isPreparing =
+            isSqueezed = false;
         }
 
         public void ForceSqueeze()

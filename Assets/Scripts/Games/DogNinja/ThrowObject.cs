@@ -125,16 +125,13 @@ namespace HeavenStudio.Games.Scripts_DogNinja
         private void Hit(PlayerActionEvent caller, float state)
         {
             game.DogAnim.SetBool("needPrepare", false);
-            if (state >= 1f || state <= -1f) {
-                JustSlice();
-            } else {
-                SuccessSlice();
-            }
+            if (state >= 1f || state <= -1f) JustSlice();
+                else SuccessSlice();
         }
 
         private void Miss(PlayerActionEvent caller)
         {
-            if (!DogAnim.GetBool("needPrepare")) ;
+            if (!DogAnim.GetBool("needPrepare")) return;
             DogAnim.DoScaledAnimationAsync("UnPrepare", 0.5f);
             DogAnim.SetBool("needPrepare", false);
         }

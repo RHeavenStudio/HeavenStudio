@@ -25,7 +25,7 @@ namespace HeavenStudio
         public double songPositionAsDouble => songPos;
 
         // Current song position, in beats
-        private double songPosBeat; // for Conductor use only
+        public double songPosBeat; // for Conductor use only
         public float songPositionInBeats => (float) songPosBeat;
         public double songPositionInBeatsAsDouble => songPosBeat;
 

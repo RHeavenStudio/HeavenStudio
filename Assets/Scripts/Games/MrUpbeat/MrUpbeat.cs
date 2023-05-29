@@ -137,8 +137,7 @@ namespace HeavenStudio.Games
 
         public void Update()
         {
-            var cond = Conductor.instance;
-            if (cond.isPlaying && !cond.isPaused) {
+            if (Conductor.instance.isPlaying && !Conductor.instance.isPaused) {
                 if (queuedInputs.Count > 0) {
                     foreach (var input in queuedInputs) {
                         string dir = stepIterate % 2 == 1 ? "Right" : "Left";

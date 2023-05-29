@@ -109,6 +109,10 @@ namespace HeavenStudio.Games.Loaders
                         var e = eventCaller.currentEntity; 
                         MunchyMonk.instance.PlayMonkAnim(e.beat, e["whichAnim"], e["vineBoom"]);
                     },
+                    inactiveFunction = delegate {
+                        var e = eventCaller.currentEntity; 
+                        MunchyMonk.instance.PlayMonkAnimInactive(e["vineBoom"]);
+                    },
                     parameters = new List<Param>()
                     {
                         new Param("whichAnim", MunchyMonk.WhichMonkAnim.Stare, "Which Animation", "Which animation will the Monk play?"),
@@ -211,8 +215,6 @@ namespace HeavenStudio.Games
         float movingLength;
         string moveAnim;
         EasingFunction.Ease lastEase;
-
-        private Dumpling currentDumpling;
         ScrollObject[] scrollObjects;
         const string sfxName = "munchyMonk/";
 
@@ -227,9 +229,7 @@ namespace HeavenStudio.Games
         private void Start() 
         {
             scrollObjects = FindObjectsByType<ScrollObject>(FindObjectsSortMode.None);
-            foreach (var obj in scrollObjects) {
-                obj.SpeedMod = scrollModCurrent;
-            }
+            foreach (var obj in scrollObjects) obj.SpeedMod = scrollModCurrent;
         }
 
         private void OnDestroy() 
@@ -249,15 +249,12 @@ namespace HeavenStudio.Games
         private void Update() 
         {
             // input stuff
-            if (PlayerInput.Pressed() && !IsExpectingInputNow(InputType.STANDARD_DOWN))
-            {
+            if (PlayerInput.Pressed(true) && (!IsExpectingInputNow(InputType.STANDARD_DOWN) || !IsExpectingInputNow(InputType.DIRECTION_DOWN))) {
                 MonkArmsAnim.DoScaledAnimationAsync("WristSlap", 0.5f);
                 Jukebox.PlayOneShotGame(sfxName+"slap");
                 isStaring = false;
                 // early input stuff
-                if (dumplings.Count != 0) {
-                    InputFunctions(3);
-                }
+                if (dumplings.Count != 0) InputFunctions(3);
             }
 
             // blushes when done eating but not when staring
@@ -280,18 +277,14 @@ namespace HeavenStudio.Games
             }
 
             // resets the monk when game is stopped
-            if (!Conductor.instance.NotStopped()) {
-                MonkAnim.DoScaledAnimationAsync("Idle", 0.5f);
-            }
+            if (!Conductor.instance.NotStopped()) MonkAnim.DoScaledAnimationAsync("Idle", 0.5f);
 
             if (isMoving) {
                 float normalizedBeat = Conductor.instance.GetPositionFromBeat(movingStartBeat, movingLength);
                 EasingFunction.Function func = EasingFunction.GetEasingFunction(lastEase);
                 float newPos = func(0f, 1f, normalizedBeat);
                 MonkHolderAnim.DoNormalizedAnimation(moveAnim, newPos);
-                if (normalizedBeat >= 1f) {
-                    isMoving = false;
-                }
+                if (normalizedBeat >= 1f) isMoving = false;
             }
 
             if (scrollRampUp) {
@@ -303,24 +296,22 @@ namespace HeavenStudio.Games
                     scrollModCurrent = scrollMod;
                 }
                 
-                foreach (var obj in scrollObjects) {
-                    obj.SpeedMod = newPos;
-                }
+                foreach (var obj in scrollObjects) obj.SpeedMod = newPos;
             }
 
             // cue queuing stuff
             if (queuedOnes.Count > 0) {
-                foreach (var dumpling in queuedOnes) { OneGoCue(dumpling.beat, dumpling.color1); }
+                foreach (var dumpling in queuedOnes) OneGoCue(dumpling.beat, dumpling.color1);
                 queuedOnes.Clear();
             }
 
             if (queuedTwoTwos.Count > 0) {
-                foreach (var dumpling in queuedTwoTwos) { TwoTwoCue(dumpling.beat, dumpling.color1, dumpling.color2); }
+                foreach (var dumpling in queuedTwoTwos) TwoTwoCue(dumpling.beat, dumpling.color1, dumpling.color2);
                 queuedTwoTwos.Clear();
             }
 
             if (queuedThrees.Count > 0) {
-                foreach (var dumpling in queuedThrees) { ThreeGoCue(dumpling.beat, dumpling.color1, dumpling.color2, dumpling.color3); }
+                foreach (var dumpling in queuedThrees) ThreeGoCue(dumpling.beat, dumpling.color1, dumpling.color2, dumpling.color3);
                 queuedThrees.Clear();
             }
         }
@@ -355,17 +346,16 @@ namespace HeavenStudio.Games
 
         public void InputFunctions(int whichVar, float state = 0)
         {
-            currentDumpling = dumplings[dumplings.Count-1];
             switch (whichVar)
             {
                 case 1:
-                currentDumpling.HitFunction(state);
+                dumplings[dumplings.Count-1].HitFunction(state);
                 break;
                 case 2:
-                currentDumpling.MissFunction();
+                dumplings[dumplings.Count-1].MissFunction();
                 break;
                 case 3:
-                currentDumpling.EarlyFunction();
+                dumplings[dumplings.Count-1].EarlyFunction();
                 break;
             }
             dumplings.RemoveAt(dumplings.Count-1);
@@ -385,10 +375,7 @@ namespace HeavenStudio.Games
 
         public static void PreOneGoCue(float beat, Color firstColor)
         {
-            MultiSound.Play(new MultiSound.Sound[] {
-                new MultiSound.Sound(sfxName+"one_1", beat),
-                new MultiSound.Sound(sfxName+"one_2", beat + 1f),
-            }, forcePlay: true);
+            PlaySoundSequence("munchyMonk", "oneGo", beat);
 
             queuedOnes.Add(new QueuedDumpling() 
                 { beat = beat, color1 = firstColor, });
@@ -415,13 +402,8 @@ namespace HeavenStudio.Games
 
         public static void PreTwoTwoCue(float beat, Color firstColor, Color secondColor)
         {
-            MultiSound.Play(new MultiSound.Sound[] { 
-                new MultiSound.Sound(sfxName+"two_1", beat - 0.5f),
-                new MultiSound.Sound(sfxName+"two_2", beat), 
-                new MultiSound.Sound(sfxName+"two_3", beat + 1f),
-                new MultiSound.Sound(sfxName+"two_4", beat + 1.5f),
-            }, forcePlay: true);
-            
+            PlaySoundSequence("munchyMonk", "twoGo", beat);
+
             queuedTwoTwos.Add(new QueuedDumpling() { 
                 beat = beat,
                 color1 = firstColor,
@@ -458,12 +440,7 @@ namespace HeavenStudio.Games
 
         public static void PreThreeGoCue(float beat, Color firstColor, Color secondColor, Color thirdColor)
         {
-            MultiSound.Play(new MultiSound.Sound[] {
-                    new MultiSound.Sound(sfxName+"three_1", beat),
-                    new MultiSound.Sound(sfxName+"three_2", beat + 1f),
-                    new MultiSound.Sound(sfxName+"three_3", beat + 2f),
-                    new MultiSound.Sound(sfxName+"three_4", beat + 3f),
-                }, forcePlay: true);
+            PlaySoundSequence("munchyMonk", "threeGo", beat);
             
             queuedThrees.Add(new QueuedDumpling() { 
                 beat = beat,
@@ -538,6 +515,11 @@ namespace HeavenStudio.Games
             }
             
             // it's in zeo's video; no reason not to include it :)
+            if (vineBoom) Jukebox.PlayOneShotGame("fanClub/arisa_dab", forcePlay: true);
+        }
+
+        public void PlayMonkAnimInactive(bool vineBoom)
+        {
             if (vineBoom) Jukebox.PlayOneShotGame("fanClub/arisa_dab", forcePlay: true);
         }
 
