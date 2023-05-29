@@ -20,16 +20,18 @@ namespace HeavenStudio.Games.Loaders
                     function = delegate { RhythmTweezers.instance.SetIntervalStart(eventCaller.currentEntity.beat, eventCaller.currentEntity.length); }, 
                     defaultLength = 4f, 
                     resizable = true,
-                    priority = 1
+                    priority = 1,
+                    inactiveFunction = delegate { RhythmTweezers.InactiveInterval(eventCaller.currentEntity.beat, eventCaller.currentEntity.length); }
                 },
                 new GameAction("short hair", "Short Hair")
                 {
-
+                    inactiveFunction = delegate { RhythmTweezers.SpawnHairInactive(eventCaller.currentEntity.beat); },
                     function = delegate { RhythmTweezers.instance.SpawnHair(eventCaller.currentEntity.beat); }, 
                     defaultLength = 0.5f
                 },
                 new GameAction("long hair", "Curly Hair")
                 {
+                    inactiveFunction = delegate { RhythmTweezers.SpawnLongHairInactive(eventCaller.currentEntity.beat); },
                     function = delegate { RhythmTweezers.instance.SpawnLongHair(eventCaller.currentEntity.beat); }, 
                     defaultLength = 0.5f
                 },
@@ -214,6 +216,26 @@ namespace HeavenStudio.Games
             }
         }
 
+        public static void SpawnHairInactive(float beat)
+        {
+            if (crHandlerInstance == null)
+            {
+                crHandlerInstance = new CallAndResponseHandler(4);
+            }
+            if (crHandlerInstance.queuedEvents.Count > 0 && crHandlerInstance.queuedEvents.Find(x => x.beat == beat || (beat >= x.beat && beat <= x.beat + x.length)) != null) return;
+            crHandlerInstance.AddEvent(beat, 0, "Hair");
+        }
+
+        public static void SpawnLongHairInactive(float beat)
+        {
+            if (crHandlerInstance == null)
+            {
+                crHandlerInstance = new CallAndResponseHandler(4);
+            }
+            if (crHandlerInstance.queuedEvents.Count > 0 && crHandlerInstance.queuedEvents.Find(x => x.beat == beat || (beat >= x.beat && beat <= x.beat + x.length)) != null) return;
+            crHandlerInstance.AddEvent(beat, 0.5f, "Long");
+        }
+
         public void SpawnHair(float beat)
         {
             if (crHandlerInstance.queuedEvents.Count > 0 && crHandlerInstance.queuedEvents.Find(x => x.beat == beat || (beat >= x.beat && beat <= x.beat + x.length)) != null) return;
@@ -256,6 +278,15 @@ namespace HeavenStudio.Games
             StopTransitionIfActive();
             hairsLeft = 0;
             eyeSize = 0;
+            crHandlerInstance.StartInterval(beat, interval);
+        }
+
+        public static void InactiveInterval(float beat, float interval)
+        {
+            if (crHandlerInstance == null)
+            {
+                crHandlerInstance = new CallAndResponseHandler(4);
+            }
             crHandlerInstance.StartInterval(beat, interval);
         }
 
