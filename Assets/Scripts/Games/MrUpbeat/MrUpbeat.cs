@@ -15,9 +15,12 @@ namespace HeavenStudio.Games.Loaders
         public static Minigame AddGame(EventCaller eventCaller) {
             return new Minigame("mrUpbeat", "Mr. Upbeat", "E0E0E0", false, false, new List<GameAction>()
             {
-                new GameAction("start stepping", "Start Stepping")
+                new GameAction("prepare", "Prepare")
                 {
-                    preFunction = delegate {var e = eventCaller.currentEntity; MrUpbeat.StartStepping(e.beat, e.length); },
+                    preFunction = delegate {
+                        var e = eventCaller.currentEntity;
+                        MrUpbeat.StartStepping(e.beat, e.length);
+                    },
                     defaultLength = 4f,
                     resizable = true,
                 },
@@ -77,6 +80,14 @@ namespace HeavenStudio.Games.Loaders
                         new Param("resetBlip", false, "Reset Antenna?", "Should Mr. Upbeat's antenna reset?"),
                         new Param("blip", true, "Should Blip?", "Should Mr. Upbeat blip every offbeat?"),
                     }
+                },
+
+                // backwards compatibility !!!!
+                new GameAction("start stepping", "Start Stepping")
+                {
+                    hidden = true,
+                    preFunction = delegate {var e = eventCaller.currentEntity; MrUpbeat.StartStepping(e.beat, e.length); },
+                    resizable = true,
                 },
             },
             new List<string>() {"agb", "keep"},

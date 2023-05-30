@@ -375,7 +375,7 @@ namespace HeavenStudio.Games
 
         public static void PreOneGoCue(float beat, Color firstColor)
         {
-            PlaySoundSequence("munchyMonk", "oneGo", beat);
+            PlaySoundSequence("munchyMonk", "one_go", beat);
 
             queuedOnes.Add(new QueuedDumpling() 
                 { beat = beat, color1 = firstColor, });
@@ -402,7 +402,7 @@ namespace HeavenStudio.Games
 
         public static void PreTwoTwoCue(float beat, Color firstColor, Color secondColor)
         {
-            PlaySoundSequence("munchyMonk", "twoGo", beat);
+            PlaySoundSequence("munchyMonk", "two_go", beat);
 
             queuedTwoTwos.Add(new QueuedDumpling() { 
                 beat = beat,
@@ -440,7 +440,7 @@ namespace HeavenStudio.Games
 
         public static void PreThreeGoCue(float beat, Color firstColor, Color secondColor, Color thirdColor)
         {
-            PlaySoundSequence("munchyMonk", "threeGo", beat);
+            PlaySoundSequence("munchyMonk", "three_go", beat);
             
             queuedThrees.Add(new QueuedDumpling() { 
                 beat = beat,

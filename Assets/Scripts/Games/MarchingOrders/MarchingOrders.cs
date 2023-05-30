@@ -28,13 +28,14 @@ namespace HeavenStudio.Games.Loaders
                 {
                     new GameAction("bop", "Bop")
                     {
-                        function = delegate { var e = eventCaller.currentEntity; MarchingOrders.instance.BopAction(e.beat, e.length, e["bop"], e["autoBop"]); },
+                        function = delegate { var e = eventCaller.currentEntity; MarchingOrders.instance.BopAction(e.beat, e.length, e["bop"], e["autoBop"], e["clap"]); },
                         defaultLength = 1f,
                         resizable = true,
                         parameters = new List<Param>()
                         {
                             new Param("bop", true, "Bop", "Should the cadets bop?"),
-                            new Param("autoBop", false, "Bop (Auto)", "Should the cadets auto bop?")
+                            new Param("autoBop", false, "Bop (Auto)", "Should the cadets auto bop?"),
+                            new Param("clap", false, "Clap", "Should the cadets clap instead of bop?"),
                         }
                     },
                     new GameAction("attention", "Attention...")
@@ -57,26 +58,26 @@ namespace HeavenStudio.Games.Loaders
                     {
                         function = delegate {
                             var e = eventCaller.currentEntity;
-                            MarchingOrders.instance.FaceTurn(e.beat, e["direction"], false, false);
+                            MarchingOrders.instance.FaceTurn(e.beat, e["direction"], false, e["point"]);
                         },
                         defaultLength = 4f,
                         parameters = new List<Param>()
                         {
                             new Param("direction", MarchingOrders.DirectionFaceTurn.Right, "Direction", "The direction for the cadets to face."),
-                            new Param("toggle", false, "Point", "Point and face a direction instead of just facing a direction."),
+                            new Param("point", false, "Point", "Point and face a direction instead of just facing a direction."),
                         }
                     },
                     new GameAction("faceTurnFast", "Fast Face Turn")
                     {
                         function = delegate { 
                             var e = eventCaller.currentEntity; 
-                            MarchingOrders.instance.FaceTurn(e.beat, e["direction"], true, false); 
+                            MarchingOrders.instance.FaceTurn(e.beat, e["direction"], true, e["point"]); 
                         },
                         defaultLength = 3f,
                         parameters = new List<Param>()
                         {
                             new Param("direction", MarchingOrders.DirectionFaceTurn.Right, "Direction", "The direction for the cadets to face."),
-                            new Param("toggle", false, "Point", "Point and face a direction instead of just facing a direction."),
+                            new Param("point", false, "Point", "Point and face a direction instead of just facing a direction."),
                         }
                     },
                     new GameAction("halt", "Halt!")
@@ -172,6 +173,7 @@ namespace HeavenStudio.Games
 
         [Header("Variables")]
         bool goBop;
+        bool shouldClap;
         bool keepMarching;
         private int marchOtherCount;
         private int marchPlayerCount;
@@ -220,8 +222,8 @@ namespace HeavenStudio.Games
             }
 
             if (goBop && Conductor.instance.ReportBeat(ref lastReportedBeat)) {
-                foreach (var cadet in Cadets) cadet.DoScaledAnimationAsync("Bop", 0.5f);
-                CadetPlayer.DoScaledAnimationAsync("Bop", 0.5f);
+                foreach (var cadet in Cadets) cadet.DoScaledAnimationAsync(shouldClap ? "Clap" : "Bop", 0.5f);
+                CadetPlayer.DoScaledAnimationAsync(shouldClap ? "Clap" : "Bop", 0.5f);
             }
 
             if (Conductor.instance.isPlaying && !Conductor.instance.isPaused) {
@@ -267,28 +269,41 @@ namespace HeavenStudio.Games
 
         public void LeftSuccess(PlayerActionEvent caller, float state)
         {
-            if (state <= -1f || state >= 1f) Jukebox.PlayOneShot("nearMiss");
-            else Jukebox.PlayOneShotGame("marchingOrders/turnActionPlayer");
-
-            CadetHeadPlayer.DoScaledAnimationAsync("FaceL", 0.5f);
+            TurnSuccess(state, "L");
         }
 
         public void RightSuccess(PlayerActionEvent caller, float state)
         {
+            TurnSuccess(state, "R");
+        }
+
+        public void LeftPointSuccess(PlayerActionEvent caller, float state)
+        {
+            TurnSuccess(state, "L", true);
+        }
+
+        public void RightPointSuccess(PlayerActionEvent caller, float state)
+        {
+            TurnSuccess(state, "R", true);
+        }
+
+        void TurnSuccess(float state, string dir, bool shouldPoint = false)
+        {
             if (state <= -1f || state >= 1f) Jukebox.PlayOneShot("nearMiss");
             else Jukebox.PlayOneShotGame("marchingOrders/turnActionPlayer");
 
-            CadetHeadPlayer.DoScaledAnimationAsync("FaceR", 0.5f);
+            CadetHeadPlayer.DoScaledAnimationAsync("Face"+dir, 0.5f);
+            if (shouldPoint) CadetPlayer.DoScaledAnimationAsync("Point"+dir, 0.5f);
         }
 
         public void GenericMiss(PlayerActionEvent caller)
         {
+            if (Conductor.instance.songPositionInBeats - lastMissBeat <= 1.1f) return;
             Miss();
         }
 
         public void Miss()
         {
-            if (Conductor.instance.songPositionInBeats - lastMissBeat <= 1.2f) return;
             lastMissBeat = Conductor.instance.songPositionInBeats;
             Jukebox.PlayOneShot("miss");
             Sarge.DoScaledAnimationAsync("Anger", 0.5f);
@@ -311,15 +326,16 @@ namespace HeavenStudio.Games
             CadetPlayer.DoScaledAnimationAsync("Halt", 0.5f);
         }
 
-        public void BopAction(float beat, float length, bool shouldBop, bool autoBop)
+        public void BopAction(float beat, float length, bool shouldBop, bool autoBop, bool clap)
         {
             goBop = autoBop;
+            shouldClap = clap;
             if (shouldBop) {
                 for (int i = 0; i < length; i++) {
                     BeatAction.New(instance.gameObject, new List<BeatAction.Action>() {
                         new BeatAction.Action(beat + i, delegate {
-                            foreach (var cadet in Cadets) cadet.DoScaledAnimationAsync("Bop", 0.5f);
-                            CadetPlayer.DoScaledAnimationAsync("Bop", 0.5f);
+                            foreach (var cadet in Cadets) cadet.DoScaledAnimationAsync(shouldClap ? "Clap" : "Bop", 0.5f);
+                            CadetPlayer.DoScaledAnimationAsync(shouldClap ? "Clap" : "Bop", 0.5f);
                         })
                     });
                 }
@@ -377,7 +393,7 @@ namespace HeavenStudio.Games
             bool x = (direction == 0);
             int turnLength = (isFast ? 0 : 1);
 
-            ScheduleInput(beat, turnLength + 2f, x ? InputType.DIRECTION_RIGHT_DOWN : InputType.DIRECTION_LEFT_DOWN, x ? RightSuccess : LeftSuccess, GenericMiss, Empty);
+            ScheduleInput(beat, turnLength + 2f, x ? InputType.DIRECTION_RIGHT_DOWN : InputType.DIRECTION_LEFT_DOWN, x ? (shouldPoint ? RightPointSuccess : RightSuccess) : (shouldPoint ? LeftPointSuccess : LeftSuccess), GenericMiss, Empty);
             MultiSound.Play(new MultiSound.Sound[] {
                 new MultiSound.Sound($"marchingOrders/{(x ? "right" : "left")}FaceTurn1{(isFast ? "fast" : "")}", beat),
                 new MultiSound.Sound($"marchingOrders/{(x ? "right" : "left")}FaceTurn2{(isFast ? "fast" : "")}", beat + 0.5f),
@@ -386,9 +402,9 @@ namespace HeavenStudio.Games
             }, forcePlay: true);
             
             BeatAction.New(gameObject, new List<BeatAction.Action>() {
-                new BeatAction.Action(beat + turnLength + 2f,delegate { 
+                new BeatAction.Action(beat + turnLength + 2f,delegate {
                     if (shouldPoint) foreach (var cadet in Cadets) cadet.DoScaledAnimationAsync($"Point{(x ? "R" : "L")}", 0.5f);
-                    else foreach (var head in CadetHeads) head.DoScaledAnimationAsync($"Face{(x ? "R" : "L")}", 0.5f);
+                    foreach (var head in CadetHeads) head.DoScaledAnimationAsync($"Face{(x ? "R" : "L")}", 0.5f);
                 })
             });
             
