@@ -63,7 +63,7 @@ namespace HeavenStudio
             }
             if (songPosBeat >= targetBopBeat)
             {
-                if (targetBopBeat > 4) logoAnim.Play("LogoBop", 0, 0);
+                if (targetBopBeat > 4 || loops > 0) logoAnim.Play("LogoBop", 0, 0);
                 targetBopBeat += 1;
             }
         }
