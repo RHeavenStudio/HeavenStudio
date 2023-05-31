@@ -79,7 +79,11 @@ namespace HeavenStudio.Games.Loaders
                     },
                     hidden = true
                 },
-            });
+            },
+            new List<string>() {"rvl", "repeat"},
+            "rvldrum", "en",
+            new List<string>() {}
+            );
         }
     }
 }

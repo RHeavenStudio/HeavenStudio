@@ -25,7 +25,7 @@ namespace HeavenStudio
             public string displayName;
             public string color;
             public GameObject holder;
-            public bool threeD;
+            public bool hidden;
             public bool fxOnly;
             public List<GameAction> actions = new List<GameAction>();
 
@@ -57,13 +57,13 @@ namespace HeavenStudio
                 set => soundSequences = value;
             }
 
-            public Minigame(string name, string displayName, string color, bool threeD, bool fxOnly, List<GameAction> actions, List<string> tags = null, string assetBundle = "", string defaultLocale = "en", List<string> supportedLocales = null, bool inferred = false)
+            public Minigame(string name, string displayName, string color, bool hidden, bool fxOnly, List<GameAction> actions, List<string> tags = null, string assetBundle = "", string defaultLocale = "en", List<string> supportedLocales = null, bool inferred = false)
             {
                 this.name = name;
                 this.displayName = displayName;
                 this.color = color;
                 this.actions = actions;
-                this.threeD = threeD;
+                this.hidden = hidden;
                 this.fxOnly = fxOnly;
 
                 this.tags = tags ?? new List<string>();

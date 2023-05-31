@@ -93,7 +93,11 @@ namespace HeavenStudio.Games.Loaders
                         new Param("type", SpaceDance.GrampsAnimationType.Talk, "Which animation?", "Which animation should space gramps do?")
                     }
                 }
-            });
+            },
+            new List<string>() {"agb", "normal"},
+            "agbspacedance", "jp",
+            new List<string>() {"jp"}
+            );
         }
     }
 }

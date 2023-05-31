@@ -45,7 +45,11 @@ namespace HeavenStudio.Games.Loaders
                         new Param("toggle", false, "Bop (Auto)", "Should the somen man bop automatically?")
                     }
                 }
-            });
+            },
+            new List<string>() {"pco", "normal"},
+            "pcosomen", "en",
+            new List<string>() {}
+            );
         }
     }
 }
