@@ -41,7 +41,11 @@ namespace HeavenStudio.Games.Loaders
                         new Param("autoBop", false, "Bop (Auto)", "Should the girl and boy auto bop?")
                     }
                 },
-            });
+            },
+            new List<string>() {"mob", "normal"},
+            "mobtrick", "en",
+            new List<string>() {}
+            );
         }
     }
 }
