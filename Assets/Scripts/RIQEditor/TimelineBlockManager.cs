@@ -1,9 +1,11 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using Starpelly;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.Pool;
 
 namespace HeavenStudio.RIQEditor
 {
@@ -16,6 +18,10 @@ namespace HeavenStudio.RIQEditor
 
         private List<GameSwitchBG> GameSwitchBGs = new();
 
+        public ObjectPool<EntityBlock> Pool;
+
+        private DynamicBeatmap.DynamicEntity entityToSet;
+        
         private struct GameSwitchBG
         {
             public float Beat;
@@ -32,17 +38,68 @@ namespace HeavenStudio.RIQEditor
         {
             EntityTemplate.gameObject.SetActive(false);
             GameSwitchBGTemplate.gameObject.SetActive(false);
+
+            Pool = new ObjectPool<EntityBlock>(CreateBlock, OnTakeBlockFromPool, OnReturnBlockToPool, OnDestroyBlock, true, 125, 1500);
+        }
+
+        private EntityBlock CreateBlock()
+        {
+            EntityBlock block = Instantiate(EntityTemplate.gameObject, EditorMain.Instance.Timeline.BlocksHolder).GetComponent<EntityBlock>();
+            block.GetComponents();
+            block.SetPool(Pool);
+
+            return block;
+        }
+
+        private void OnTakeBlockFromPool(EntityBlock block)
+        {
+            block.SetEntity(entityToSet);
+            block.SetBlockInfo();
+            
+            block.gameObject.SetActive(true);
+            EntityBlocks.Add(entityToSet.ID, block);
+        }
+
+        private void OnReturnBlockToPool(EntityBlock block)
+        {
+            EntityBlocks.Remove(block.entity.ID);
+            block.gameObject.SetActive(false);
+        }
+
+        private void OnDestroyBlock(EntityBlock block)
+        {
+            Destroy(block.gameObject);
         }
 
         public void Load()
         {
+            var timeLeft = EditorMain.Instance.Timeline.timeLeft;
+            var timeRight = EditorMain.Instance.Timeline.timeRight;
+            
             foreach (var entity in GameManager.instance.Beatmap.entities)
             {
-                var entityBlock = Instantiate(EntityTemplate.gameObject, EntityTemplate.transform.parent).GetComponent<EntityBlock>();
+                var left = (entity.beat + entity.length) > timeLeft;
+                var right = (entity.beat) < timeRight;
+                var active = left && right;
+                
+                if (!active)
+                    continue;
+
+                /*
+                var isGameSwitch = entity.datamodel.Split(1) == "switchGame";
+                var holder = (isGameSwitch)
+                    ? EditorMain.Instance.Timeline.FullHeightBlocksHolder
+                    : EditorMain.Instance.Timeline.BlocksHolder;
+                var entityBlock = Instantiate(EntityTemplate.gameObject, holder).GetComponent<EntityBlock>();
                 entityBlock.SetEntity(entity);
                 entityBlock.GetComponents();
                 entityBlock.gameObject.SetActive(false);
+                entityBlock.isGameSwitch = isGameSwitch;
                 EntityBlocks.Add(entity.ID, entityBlock);
+                */
+
+                entityToSet = entity;
+                Pool.Get();
             }
             
             var gameSwitches = GameManager.instance.Beatmap.entities.FindAll(c => c.datamodel.Split(1) == "switchGame");
@@ -86,17 +143,34 @@ namespace HeavenStudio.RIQEditor
         {
             var timeLeft = EditorMain.Instance.Timeline.timeLeft;
             var timeRight = EditorMain.Instance.Timeline.timeRight;
-            foreach (var block in EntityBlocks)
+            // Problem regarding smooth zooming on edges, investigate.
+            foreach (var entity in GameManager.instance.Beatmap.entities)
             {
-                var blockScr = block.Value;
-                var blockBeat = blockScr.entity.beat;
-                blockScr.active =
-                    (blockBeat + blockScr.entity.length) > timeLeft
-                    &&
-                    (blockBeat) < timeRight;
-                // if (!block.Value.gameObject.activeSelf) continue;
-                
-                blockScr.UpdateBlock(EditorMain.Instance.Timeline);
+                var left = (entity.beat + entity.length) > timeLeft;
+                var right = (entity.beat) < timeRight;
+                var active = left && right;
+
+                if (active)
+                {
+                    if (!EntityBlocks.ContainsKey(entity.ID))
+                    {
+                        entityToSet = entity;
+                        Pool.Get();
+                        EntityBlocks[entity.ID].UpdateBlock(EditorMain.Instance.Timeline);
+                    }
+                    else
+                    {
+                        EntityBlocks[entity.ID].UpdateBlock(EditorMain.Instance.Timeline);
+                    }
+                }
+                else
+                {
+                    if (EntityBlocks.ContainsKey(entity.ID))
+                        Pool.Release(EntityBlocks[entity.ID]);
+
+                    if (!right)
+                        break;
+                }
             }
             
             var allEnds = EventCaller.GetAllInGameManagerList("gameManager", new string[] { "end" });

@@ -46,6 +46,9 @@ namespace HeavenStudio.RIQEditor
         [SerializeField] private RectTransform TimelineContent; // Holds things like Blocks and Nodes
         [SerializeField] private RectTransform TimebarBG;
         [SerializeField] private RectTransform LayerBG;
+        
+        public RectTransform BlocksHolder;
+        public RectTransform FullHeightBlocksHolder;
 
         [Header("Beats")]
         [SerializeField] private RectTransform BeatsHolder;
