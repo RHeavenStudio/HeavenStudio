@@ -13,6 +13,8 @@ namespace HeavenStudio
 
         [SerializeField] private Animator logoAnim;
 
+        [SerializeField] private List<Animator> starAnims;
+
         [SerializeField] private float bpm = 114f;
 
         private AudioSource musicSource;
@@ -25,6 +27,9 @@ namespace HeavenStudio
         private int loops;
 
         private double lastAbsTime;
+
+        private bool altBop;
+
         private void Start()
         {
             musicSource = GetComponent<AudioSource>();
@@ -37,7 +42,7 @@ namespace HeavenStudio
             if (songPos >= musicSource.clip.length)
             {
                 time = 0;
-                targetBopBeat = 0;
+                targetBopBeat = 1;
                 loops++;
             }
             double absTime = Time.realtimeSinceStartup;
@@ -63,7 +68,15 @@ namespace HeavenStudio
             }
             if (songPosBeat >= targetBopBeat)
             {
-                if (targetBopBeat > 4 || loops > 0) logoAnim.Play("LogoBop", 0, 0);
+                if (targetBopBeat > 4 || loops > 0) 
+                {
+                    logoAnim.Play(altBop ? "LogoBop2" : "LogoBop", 0, 0);
+                    altBop = !altBop;
+                }
+                foreach (var star in starAnims)
+                {
+                    star.Play("StarBop", 0, 0);
+                }
                 targetBopBeat += 1;
             }
         }
