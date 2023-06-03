@@ -2313,7 +2313,7 @@ MonoBehaviour:
   hairBase: {fileID: 4104508031135416673}
   longHairBase: {fileID: 2904820922900361117}
   pluckedHairBase: {fileID: 184971667096376006}
-  noPeeking: {fileID: 4042312405385502527}
+  noPeekingRef: {fileID: 3878030345257055540}
   HairsHolder: {fileID: 2002856028339003249}
   DroppedHairsHolder: {fileID: 5787274807233818894}
   pluckedHairSprite: {fileID: 3562159510210354730, guid: 8b24cfccb5b27054bbfccc7d7a912b73, type: 3}
@@ -2532,13 +2532,14 @@ GameObject:
   - component: {fileID: 5084500039877720310}
   - component: {fileID: 738095676056161706}
   - component: {fileID: 4042312405385502527}
+  - component: {fileID: 3878030345257055540}
   m_Layer: 0
   m_Name: noPeek_2
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &5084500039877720310
 Transform:
   m_ObjectHideFlags: 0
@@ -2627,6 +2628,21 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
+--- !u!114 &3878030345257055540
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7224876636347965409}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2c173ef5dba9631449b99fcbc50ff9e8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  noPeekFullSprite: {fileID: 7840551089617349417, guid: 8b24cfccb5b27054bbfccc7d7a912b73, type: 3}
+  noPeekHalfLeftSprite: {fileID: 5276483324951909424, guid: 8b24cfccb5b27054bbfccc7d7a912b73, type: 3}
+  noPeekHalfRightSprite: {fileID: -6168475699144272206, guid: 8b24cfccb5b27054bbfccc7d7a912b73, type: 3}
 --- !u!1 &7665197146870558127
 GameObject:
   m_ObjectHideFlags: 0

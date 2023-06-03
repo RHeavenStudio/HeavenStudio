@@ -61,9 +61,13 @@ namespace HeavenStudio.Games.Loaders
                 },
                 new GameAction("noPeek", "No Peeking Sign")
                 {
-                    preFunction = delegate { var e = eventCaller.currentEntity; RhythmTweezers.PreNoPeeking(e.beat, e.length); },
+                    preFunction = delegate { var e = eventCaller.currentEntity; RhythmTweezers.PreNoPeeking(e.beat, e.length, e["type"]); },
                     defaultLength = 4f,
-                    resizable = true
+                    resizable = true,
+                    parameters = new List<Param>()
+                    {
+                        new Param("type", RhythmTweezers.NoPeekSignType.Full, "Sign Type", "Which sign will be used?")
+                    }
                 },
                 new GameAction("fade background color", "Background Fade")
                 {
@@ -139,10 +143,18 @@ namespace HeavenStudio.Games
             Potato
         }
 
+        public enum NoPeekSignType
+        {
+            Full,
+            HalfRight,
+            HalfLeft
+        }
+
         private struct QueuedPeek
         {
             public float beat;
             public float length;
+            public int type;
         }
 
         [Header("References")]
@@ -155,7 +167,7 @@ namespace HeavenStudio.Games
         public GameObject hairBase;
         public GameObject longHairBase;
         public GameObject pluckedHairBase;
-        [SerializeField] private Animator noPeeking;
+        [SerializeField] NoPeekingSign noPeekingRef;
 
         public GameObject HairsHolder;
         public GameObject DroppedHairsHolder;
@@ -215,9 +227,6 @@ namespace HeavenStudio.Games
         private List<LongHair> spawnedLongs = new List<LongHair>();
 
         private static List<float> passedTurns = new List<float>();
-
-        private float peekBeat = -1;
-        private bool peekRising;
 
         private void Awake()
         {
@@ -443,30 +452,28 @@ namespace HeavenStudio.Games
             ChangeBackgroundColor(end, beats);
         }
 
-        public static void PreNoPeeking(float beat, float length)
+        public static void PreNoPeeking(float beat, float length, int type)
         {
             if (GameManager.instance.currentGame == "rhythmTweezers")
             {
-                instance.NoPeeking(beat, length);
+                instance.NoPeeking(beat, length, type);
             }
             else
             {
                 queuedPeeks.Add(new QueuedPeek()
                 {
                     beat = beat,
-                    length = length
+                    length = length,
+                    type = type
                 });
             }
         }
 
-        public void NoPeeking(float beat, float length)
+        public void NoPeeking(float beat, float length, int type)
         {
-            peekBeat = beat - 1f;
-            peekRising = true;
-            BeatAction.New(instance.gameObject, new List<BeatAction.Action>()
-            {
-                new BeatAction.Action(beat + length, delegate { peekBeat = beat + length; peekRising = false; })
-            });
+            NoPeekingSign spawnedNoPeekingSign = Instantiate(noPeekingRef, transform);
+            spawnedNoPeekingSign.gameObject.SetActive(true);
+            spawnedNoPeekingSign.Init(beat, length, type);
         }
 
         private void Update()
@@ -485,14 +492,9 @@ namespace HeavenStudio.Games
                 {
                     foreach (var peek in queuedPeeks)
                     {
-                        NoPeeking(peek.beat, peek.length);
+                        NoPeeking(peek.beat, peek.length, peek.type);
                     }
                     queuedPeeks.Clear();
-                }
-                float normalizedBeat = Conductor.instance.GetPositionFromBeat(peekBeat, 1);
-                if (normalizedBeat >= 0f && normalizedBeat <= 1f)
-                {
-                    noPeeking.DoNormalizedAnimation(peekRising ? "NoPeekRise" : "NoPeekLower", normalizedBeat);
                 }
             }
         }
