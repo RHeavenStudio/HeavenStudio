@@ -15,6 +15,8 @@ namespace HeavenStudio
 
         [SerializeField] private List<Animator> starAnims;
 
+        [SerializeField] private Animator pressAnyKeyAnim;
+
         [SerializeField] private float bpm = 114f;
 
         [SerializeField] private RawImage bg;
@@ -35,8 +37,15 @@ namespace HeavenStudio
 
         private bool altBop;
 
+        private bool logoRevealed;
+
+        private bool menuMode;
+
+        private Animator menuAnim;
+
         private void Start()
         {
+            menuAnim = GetComponent<Animator>();
             musicSource = GetComponent<AudioSource>();
             createButton.onClick.AddListener(delegate { GlobalGameManager.LoadScene("Editor"); Jukebox.PlayOneShot("ui/UIEnter"); });
             musicSource.Play();
@@ -60,16 +69,27 @@ namespace HeavenStudio
             songPos = time;
 
             songPosBeat = SecsToBeats(songPos);
+            if (logoRevealed && !menuMode && Input.anyKeyDown)
+            {
+                menuMode = true;
+                menuAnim.Play("Revealed", 0, 0);
+                pressAnyKeyAnim.Play("PressKeyFadeOut", 0, 0);
+            }
             if (loops == 0)
             {
                 float normalizedBeat = GetPositionFromBeat(4, 1);
                 if (normalizedBeat > 0 && normalizedBeat <= 1f)
                 {
                     logoAnim.DoNormalizedAnimation("Reveal", normalizedBeat);
+                    pressAnyKeyAnim.DoNormalizedAnimation("PressKeyFadeIn", normalizedBeat);
                 }
                 else if (normalizedBeat < 0)
                 {
                     logoAnim.DoNormalizedAnimation("Reveal", 0);
+                }
+                else if (normalizedBeat > 1f)
+                {
+                    logoRevealed = true;
                 }
             }
             if (songPosBeat >= targetBopBeat)
