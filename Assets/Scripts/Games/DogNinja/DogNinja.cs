@@ -185,6 +185,10 @@ namespace HeavenStudio.Games
             if (!Conductor.instance.isPlaying || Conductor.instance.isPaused) {
                 if (queuedThrows.Count > 0) queuedThrows.Clear();
             }
+            foreach (var evt in scheduledInputs)
+            {
+                evt.Disable();
+            }
         }
 
         private void Update()

@@ -229,6 +229,11 @@ namespace HeavenStudio.Games
             if (queuedPops.Count > 0) queuedPops.Clear();
             
             mat.SetColor("_ColorAlpha", new Color(0.97f, 0.235f, 0.54f));
+
+            foreach (var evt in scheduledInputs)
+            {
+                evt.Disable();
+            }
         }
 
         private void Update() 

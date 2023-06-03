@@ -164,6 +164,10 @@ namespace HeavenStudio.Games
         {
             if (queuedPoses.Count > 0) queuedPoses.Clear();
             Jukebox.KillLoop(kidsLaugh, 2f);
+            foreach (var evt in scheduledInputs)
+            {
+                evt.Disable();
+            }
         }
 
         public override void OnTimeChange()

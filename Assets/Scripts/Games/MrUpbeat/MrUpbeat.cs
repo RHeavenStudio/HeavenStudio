@@ -134,6 +134,10 @@ namespace HeavenStudio.Games
             // these variables wouldn't get reset, even when you go in and out of unity play mode???
             shouldBlip = false;
             stepIterate = 0;
+            foreach (var evt in scheduledInputs)
+            {
+                evt.Disable();
+            }
         }
 
         public void Update()

@@ -94,6 +94,10 @@ namespace HeavenStudio.Games
         {
             if (queuedGhosts.Count > 0) queuedGhosts.Clear();
             Conductor.instance.SetMinigamePitch(1f);
+            foreach (var evt in scheduledInputs)
+            {
+                evt.Disable();
+            }
         }
 
         void Awake()

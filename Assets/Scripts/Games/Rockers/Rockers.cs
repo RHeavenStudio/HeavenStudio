@@ -545,6 +545,10 @@ namespace HeavenStudio.Games
             }
             if (queuedCameraEvents.Count > 0) queuedCameraEvents.Clear();
             if (queuedPreInterval.Count > 0) queuedPreInterval.Clear();
+            foreach (var evt in scheduledInputs)
+            {
+                evt.Disable();
+            }
         }
 
         private void Update()

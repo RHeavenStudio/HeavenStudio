@@ -181,6 +181,10 @@ namespace HeavenStudio.Games
             currentShooterColor = Color.white;
             currentEnvironmentColor = new Color(0, 1, 0, 1);
             UpdateColors();
+            foreach (var evt in scheduledInputs)
+            {
+                evt.Disable();
+            }
         }
 
         private void Start()

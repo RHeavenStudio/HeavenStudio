@@ -132,6 +132,10 @@ namespace HeavenStudio.Games
         void OnDestroy()
         {
             if (queuedFireworks.Count > 0) queuedFireworks.Clear();
+            foreach (var evt in scheduledInputs)
+            {
+                evt.Disable();
+            }
         }
 
         void Awake()

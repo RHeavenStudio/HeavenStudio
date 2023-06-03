@@ -116,6 +116,10 @@ namespace HeavenStudio.Games
 
         private void OnDestroy() {
             queuedBalls.Clear();
+            foreach (var evt in scheduledInputs)
+            {
+                evt.Disable();
+            }
         }
 
         private void Awake()

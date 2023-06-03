@@ -109,7 +109,11 @@ namespace HeavenStudio.Games
 
         void OnDestroy()
         {
-            if (queuedVoiceLines.Count > 0) queuedVoiceLines.Clear(); 
+            if (queuedVoiceLines.Count > 0) queuedVoiceLines.Clear();
+            foreach (var evt in scheduledInputs)
+            {
+                evt.Disable();
+            }
         }
 
         void Start()

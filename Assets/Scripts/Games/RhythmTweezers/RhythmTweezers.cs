@@ -269,6 +269,10 @@ namespace HeavenStudio.Games
             {
                 crHandlerInstance = null;
             }
+            foreach (var evt in scheduledInputs)
+            {
+                evt.Disable();
+            }
         }
 
         public static void SpawnHairInactive(float beat)
