@@ -101,6 +101,7 @@ namespace HeavenStudio.Games.Scripts_Rockers
 
         public void StrumStrings(bool gleeClub, int[] pitches, Rockers.PremadeSamples sample, int sampleTones, bool disableStrumEffect = false, bool jump = false, bool barely = false)
         {
+            if (strumming) return;
             muted = false;
             strumming = true;
             StopSounds();
@@ -275,9 +276,9 @@ namespace HeavenStudio.Games.Scripts_Rockers
             muted = true;
         }
 
-        public void UnHold()
+        public void UnHold(bool overrideMute = false)
         {
-            if (!muted) return;
+            if (!muted && !overrideMute) return;
             muted = false;
             if (!together) DoScaledAnimationAsync("UnCrouch", 0.5f);
         }

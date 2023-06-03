@@ -100,6 +100,15 @@ namespace HeavenStudio.Games.Loaders
                         new Param("who", Rockers.WhoMutes.JJ, "Who?", "Who will prepare? (Soshi is only affected by this event in auto-play.)")
                     }
                 },
+                new GameAction("unPrepare", "Unprepare")
+                {
+                    function = delegate { Rockers.instance.UnMute(eventCaller.currentEntity["who"]); },
+                    defaultLength = 0.5f,
+                    parameters = new List<Param>()
+                    {
+                        new Param("who", Rockers.WhoMutes.JJ, "Who?", "Who will unprepare? (Soshi is only affected by this event in auto-play.)")
+                    }
+                },
                 new GameAction("passTurn", "Pass Turn")
                 {
                     function = delegate { var e = eventCaller.currentEntity; Rockers.instance.PassTurn(e.beat, e.length, e["moveCamera"]); },
@@ -942,6 +951,18 @@ namespace HeavenStudio.Games
             if (whoMutes is (int)WhoMutes.Soshi or (int)WhoMutes.Both)
             {
                 if (GameManager.instance.autoplay) Soshi.Mute();
+            }
+        }
+
+        public void UnMute(int whoMutes)
+        {
+            if (whoMutes is (int)WhoMutes.JJ or (int)WhoMutes.Both)
+            {
+                JJ.UnHold(true);
+            }
+            if (whoMutes is (int)WhoMutes.Soshi or (int)WhoMutes.Both)
+            {
+                if (GameManager.instance.autoplay) Soshi.UnHold(true);
             }
         }
 

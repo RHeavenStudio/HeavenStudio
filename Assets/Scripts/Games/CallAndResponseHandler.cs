@@ -114,6 +114,10 @@ namespace HeavenStudio.Games
         /// <param name="length">The length of the interval.</param>
         public void StartInterval(float beat, float length)
         {
+            if (!IntervalIsActive()) 
+            {
+                if (queuedEvents.Count > 0) queuedEvents.Clear();
+            }
             intervalStartBeat = beat;
             intervalLength = length;
             defaultIntervalLength = length;
