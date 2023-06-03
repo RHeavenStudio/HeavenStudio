@@ -17,6 +17,11 @@ namespace HeavenStudio
 
         [SerializeField] private float bpm = 114f;
 
+        [SerializeField] private RawImage bg;
+
+        [SerializeField] private float bgXSpeed;
+        [SerializeField] private float bgYSpeed;
+
         private AudioSource musicSource;
 
         private double songPosBeat;
@@ -39,6 +44,7 @@ namespace HeavenStudio
 
         private void Update()
         {
+            bg.uvRect = new Rect(bg.uvRect.position + (new Vector2(bgXSpeed, bgYSpeed) * Time.deltaTime), bg.uvRect.size);
             if (songPos >= musicSource.clip.length)
             {
                 time = 0;
