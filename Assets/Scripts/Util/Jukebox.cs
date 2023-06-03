@@ -302,11 +302,12 @@ namespace HeavenStudio.Util
             }
         }
         /// <summary>
-        /// Returns the semitones from a pitch. Does not work with pitches pitched to music.
+        /// Returns the semitones from a pitch.
         /// </summary>
         /// <param name="pitch">The pitch of the sound.</param>
-        public static int GetSemitonesFromPitch(float pitch)
+        public static int GetSemitonesFromPitch(float pitch, bool pitchToMusic)
         {
+            if (pitchToMusic) return (int)((12f * Mathf.Log(pitch, 2)) / Conductor.instance.musicSource.pitch);
             return (int)(12f * Mathf.Log(pitch, 2));
         }
 

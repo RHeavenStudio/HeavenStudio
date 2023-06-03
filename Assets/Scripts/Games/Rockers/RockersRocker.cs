@@ -209,7 +209,7 @@ namespace HeavenStudio.Games.Scripts_Rockers
             lastBendPitch = pitch;
             if (chordSound != null)
             {
-                chordSound.BendUp(0.05f, Jukebox.GetPitchFromSemiTones(Jukebox.GetSemitonesFromPitch(chordSound.pitch) + pitch, true));
+                chordSound.BendUp(0.05f, Jukebox.GetPitchFromSemiTones(Jukebox.GetSemitonesFromPitch(chordSound.pitch, true) + pitch, true));
             }
             else
             {
@@ -217,7 +217,7 @@ namespace HeavenStudio.Games.Scripts_Rockers
                 {
                     if (stringSounds[i] != null)
                     {
-                        stringSounds[i].BendUp(0.05f, Jukebox.GetPitchFromSemiTones(Jukebox.GetSemitonesFromPitch(stringSounds[i].pitch) + pitch, true));
+                        stringSounds[i].BendUp(0.05f, Jukebox.GetPitchFromSemiTones(Jukebox.GetSemitonesFromPitch(stringSounds[i].pitch, true) + pitch, true));
                     }
                 }
             }
