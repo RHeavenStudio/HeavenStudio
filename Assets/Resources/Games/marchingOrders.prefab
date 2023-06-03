@@ -53,7 +53,7 @@ SpriteRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 10754, guid: 0000000000000000f000000000000000, type: 0}
+  - {fileID: 2100000, guid: bf7f9ec729b7e9045a288759d14d56db, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -197,7 +197,7 @@ GameObject:
   - component: {fileID: 1361520185717226678}
   - component: {fileID: 3540459721523927521}
   m_Layer: 0
-  m_Name: bgFloor
+  m_Name: bgConveyorEnd
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -216,7 +216,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 1558448215581441312}
-  m_RootOrder: 5
+  m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!212 &3540459721523927521
 SpriteRenderer:
@@ -238,7 +238,7 @@ SpriteRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 10754, guid: 0000000000000000f000000000000000, type: 0}
+  - {fileID: 2100000, guid: bf7f9ec729b7e9045a288759d14d56db, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -439,8 +439,8 @@ Transform:
   - {fileID: 4676267018483621227}
   - {fileID: 984938186019639657}
   - {fileID: 261519192782193763}
-  - {fileID: 6527557388389161080}
   - {fileID: 1361520185717226678}
+  - {fileID: 6527557388389161080}
   m_Father: {fileID: 4161079182365989534}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -469,7 +469,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 5863847991924868836}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0.3003, y: 1.288, z: 0}
+  m_LocalPosition: {x: 0, y: 1.288, z: 0}
   m_LocalScale: {x: 2.08, y: 2.08, z: 2.09291}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -496,7 +496,7 @@ SpriteRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 10754, guid: 0000000000000000f000000000000000, type: 0}
+  - {fileID: 2100000, guid: 0be801670a2ac834d8453186f3eb73da, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -522,7 +522,7 @@ SpriteRenderer:
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 2
-  m_Size: {x: 29.694405, y: 0.6176}
+  m_Size: {x: 29.415764, y: 0.6175508}
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
   m_WasSpriteAssigned: 1
@@ -689,7 +689,7 @@ SpriteRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 10754, guid: 0000000000000000f000000000000000, type: 0}
+  - {fileID: 2100000, guid: 91027fc755acd3548bad013313a801cc, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -715,7 +715,7 @@ SpriteRenderer:
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 2
-  m_Size: {x: 30.01, y: 4.827}
+  m_Size: {x: 30.00913, y: 4.8285537}
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
   m_WasSpriteAssigned: 1
@@ -746,7 +746,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 6905043434746370247}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -0.0677, y: 0, z: 0}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 64, y: 32, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -795,7 +795,7 @@ SpriteRenderer:
   m_SortingLayer: 0
   m_SortingOrder: -50
   m_Sprite: {fileID: 7482667652216324306, guid: ef2fa2a75dc283e40b9d4fe1f20dc6fb, type: 3}
-  m_Color: {r: 0.2627451, g: 0.36078432, b: 0.39215687, a: 1}
+  m_Color: {r: 0.259, g: 0.353, b: 0.404, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
@@ -1025,7 +1025,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 1558448215581441312}
-  m_RootOrder: 4
+  m_RootOrder: 5
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!212 &3013021226428393446
 SpriteRenderer:
@@ -1208,15 +1208,26 @@ MonoBehaviour:
   - {fileID: 2005447675422110731}
   - {fileID: 737841632799169188}
   - {fileID: 416600750635270691}
-  CadetPlayer: {fileID: 4446640221286175446}
   CadetHeads:
   - {fileID: 4974999718687797401}
   - {fileID: 6116768891052629558}
   - {fileID: 6563547612708980401}
+  CadetPlayer: {fileID: 4446640221286175446}
   CadetHeadPlayer: {fileID: 7164053086998959684}
   ConveyorGo:
   - {fileID: 4980280138814842025}
   - {fileID: 4763266687155397968}
+  BackgroundRecolorable:
+  - {fileID: 68857249694856436}
+  - {fileID: 1407974127237282970}
+  - {fileID: 1930671809848167571}
+  - {fileID: 1740930099051121168}
+  - {fileID: 3540459721523927521}
+  - {fileID: 3013021226428393446}
+  RecolorMats:
+  - {fileID: 2100000, guid: 91027fc755acd3548bad013313a801cc, type: 2}
+  - {fileID: 2100000, guid: 0be801670a2ac834d8453186f3eb73da, type: 2}
+  - {fileID: 2100000, guid: bf7f9ec729b7e9045a288759d14d56db, type: 2}
 --- !u!1001 &930450041863206205
 PrefabInstance:
   m_ObjectHideFlags: 0
