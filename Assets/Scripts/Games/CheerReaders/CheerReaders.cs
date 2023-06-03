@@ -104,7 +104,11 @@ namespace HeavenStudio.Games.Loaders
                     function = delegate {CheerReaders.instance.ResetPose(); },
                     defaultLength = 0.5f
                 }
-            });
+            },
+            new List<string>() {"rvl", "normal"},
+            "rvlbooks", "en",
+             new List<string>() {"en"}
+            );
         }
     }
 }

@@ -90,7 +90,11 @@ namespace HeavenStudio.Games.Loaders
                     function = delegate { FlipperFlop.instance.ToggleTuck(); },
                     defaultLength = 0.5f
                 }
-            });
+            },
+            new List<string>() {"ntr", "keep"},
+            "rvlseal", "en",
+            new List<string>() {"en"}
+            );
         }
     }
 }

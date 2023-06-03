@@ -140,7 +140,11 @@ namespace HeavenStudio.Games.Loaders
                     },
                     hidden = true
                 },
-            });
+            },
+            new List<string>() {"ntr", "keep"},
+            "ntrsoccer", "en",
+            new List<string>() {"en"}
+            );
         }
     }
 }

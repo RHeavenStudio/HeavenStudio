@@ -60,7 +60,11 @@ namespace HeavenStudio.Games.Loaders
                     resizable = true,
                     priority = 4,
                 },
-            });
+            },
+            new List<string>() {"pco", "normal", "repeat"},
+            "pcomeat", "en",
+            new List<string>() {}
+            );
         }
     }
 }

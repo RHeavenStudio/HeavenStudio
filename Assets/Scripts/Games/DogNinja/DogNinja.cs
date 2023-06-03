@@ -11,7 +11,7 @@ namespace HeavenStudio.Games.Loaders
     public static class NtrDogNinjaLoader
     {
         public static Minigame AddGame(EventCaller eventCaller) {
-            return new Minigame("dogNinja", "Dog Ninja", "554899", true, false, new List<GameAction>()
+            return new Minigame("dogNinja", "Dog Ninja", "554899", false, false, new List<GameAction>()
             {
                 new GameAction("Bop", "Bop")
                 {
@@ -94,7 +94,11 @@ namespace HeavenStudio.Games.Loaders
                     },
                     inactiveFunction = delegate { var e = eventCaller.currentEntity; DogNinja.QueueObject(e.beat, 2, e["typeL"], e["typeR"], true, false);},
                 },
-            });
+            },
+            new List<string>() {"ntr", "normal"},
+            "ntrninja", "en",
+            new List<string>() {}
+            );
         }
     }
 }

@@ -42,7 +42,11 @@ namespace HeavenStudio.Games.Loaders
                         new Param("limit", new EntityTypes.Integer(1, 1000, 80), "Limit", "What is the limit for plants collected?")
                     }
                 }
-            });
+            },
+            new List<string>() {"ntr", "keep"},
+            "ntrstomp", "en",
+            new List<string>() {}
+            );
         }
     }
 }

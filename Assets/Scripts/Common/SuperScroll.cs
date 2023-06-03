@@ -21,6 +21,9 @@ namespace HeavenStudio.Common
         public float NormalizedX = 0.0f;
         public float NormalizedY = 0.0f;
         public Vector2 Normalized { get { return new Vector2(NormalizedX, NormalizedY); } set { NormalizedX = value.x; NormalizedY = value.y; } }
+        public bool AutoScroll;
+        public float AutoScrollX;
+        public float AutoScrollY;
 
         public float TileX = 1.0f;
         public float TileY = 1.0f;
@@ -37,7 +40,7 @@ namespace HeavenStudio.Common
             _renderer.material = _shader;
 
             var spriteRect = _sprite.rect;
-            var tex = CropTexture(_sprite.texture, new Rect(spriteRect.x, spriteRect.y, spriteRect.width, spriteRect .height));
+            var tex = CropTexture(_sprite.texture, new Rect(spriteRect.x, spriteRect.y, spriteRect.width, spriteRect.height));
             tex.wrapMode = TextureWrapMode.Repeat;
             Material.mainTexture = tex;
         }
@@ -46,6 +49,12 @@ namespace HeavenStudio.Common
         {
             _renderer.material.mainTextureScale = Tile;
             _renderer.material.mainTextureOffset = new Vector2(NormalizedX, -NormalizedY) * Tile;
+
+            if (AutoScroll) {
+                float songPos = Conductor.instance.songPositionInBeats/100;
+                NormalizedX = songPos*AutoScrollX;
+                NormalizedY = songPos*AutoScrollY;
+            }
         }
 
         #endregion
