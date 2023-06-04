@@ -228,7 +228,7 @@ namespace HeavenStudio.Games
             SoundByte.PlayOneShotGame("samuraiSliceNtr/ntrSamurai_in00");
         }
 
-        public NtrSamuraiChild CreateChild(float beat)
+        public NtrSamuraiChild CreateChild(double beat)
         {
             var mobj = GameObject.Instantiate(childParent, objectHolder);
             var mobjDat = mobj.GetComponent<NtrSamuraiChild>();

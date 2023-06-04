@@ -271,7 +271,7 @@ namespace HeavenStudio.Games.Scripts_DJSchool
             });
         }
 
-        public void OnMissSwipeForPlayerInput(float beat)
+        public void OnMissSwipeForPlayerInput(double beat)
         {
             isHolding = false;
 

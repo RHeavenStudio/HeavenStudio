@@ -665,7 +665,7 @@ namespace HeavenStudio.Games
             return default(SuperCurveObject.Path);
         }
 
-        void DetermineSeeJump(float beat, bool miss = false, bool high = false, float height = 0)
+        void DetermineSeeJump(double beat, bool miss = false, bool high = false, float height = 0)
         {
             if (currentJumpIndex >= 0
                 && (allJumpEvents[currentJumpIndex - 1].datamodel == "seeSaw/longLong" || allJumpEvents[currentJumpIndex - 1].datamodel == "seeSaw/shortLong"))

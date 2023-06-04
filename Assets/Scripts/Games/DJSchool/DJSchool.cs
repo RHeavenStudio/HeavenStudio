@@ -124,7 +124,7 @@ namespace HeavenStudio.Games
         public float beatOfInstance;
         private bool djYellowBopLeft;
         public bool shouldBeHolding = false;
-        public float smileBeat = -10f;
+        public double smileBeat = double.MinValue;
 
         public static DJSchool instance { get; private set; }
 

@@ -15,8 +15,8 @@ namespace HeavenStudio.Games.Scripts_AirRally
         [SerializeField] float TargetHeightLong;
         [SerializeField] ParticleSystem hitEffect;
 
-        public float startBeat;
-        public float flyBeats;
+        public double startBeat;
+        public double flyBeats;
 
         public bool flyType;
         bool miss = false;
@@ -74,7 +74,7 @@ namespace HeavenStudio.Games.Scripts_AirRally
 
             if (miss && flyPos > 4f)
             {
-                if (cond.GetPositionFromBeat(startBeat, flyBeats + 1f) >= 1f)
+                if (cond.GetPositionFromBeat(startBeat, flyBeats + 1) >= 1.0)
                 {
                     GameObject.Destroy(gameObject);
                     return;

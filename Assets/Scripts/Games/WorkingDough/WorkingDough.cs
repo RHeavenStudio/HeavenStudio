@@ -427,7 +427,7 @@ namespace HeavenStudio.Games
             });
         }
 
-        public void SpawnPlayerBallResult(float beat, bool isBig, BezierCurve3D firstCurve, BezierCurve3D secondCurve, float firstBeatsToTravel, float secondBeatsToTravel)
+        public void SpawnPlayerBallResult(double beat, bool isBig, BezierCurve3D firstCurve, BezierCurve3D secondCurve, float firstBeatsToTravel, float secondBeatsToTravel)
         {
             var objectToSpawn = isBig ? playerEnterBigBall : playerEnterSmallBall;
             var spawnedBall = GameObject.Instantiate(objectToSpawn, ballHolder);
@@ -551,7 +551,7 @@ namespace HeavenStudio.Games
 
         void WrongInputBig(PlayerActionEvent caller, float state)
         {
-            float beat = caller.startBeat + caller.timer;
+            double beat = caller.startBeat + caller.timer;
             shouldMiss = false;
             if (currentBalls.Count > 0)
             {
@@ -571,7 +571,7 @@ namespace HeavenStudio.Games
 
         void WrongInputSmall(PlayerActionEvent caller, float state)
         {
-            float beat = caller.startBeat + caller.timer;
+            double beat = caller.startBeat + caller.timer;
             shouldMiss = false;
             if (currentBalls.Count > 0)
             {
@@ -603,7 +603,7 @@ namespace HeavenStudio.Games
                 GameObject.Destroy(currentBall);
             }
 
-            float beat = caller.startBeat + caller.timer;
+            double beat = caller.startBeat + caller.timer;
             SpawnPlayerBallResult(beat, true, playerMissCurveFirst, playerMissCurveSecond, 0.25f, 0.75f);
             BeatAction.New(instance.gameObject, new List<BeatAction.Action>()
             {
@@ -626,7 +626,7 @@ namespace HeavenStudio.Games
                 currentBalls.Remove(currentBall);
                 GameObject.Destroy(currentBall);
             }
-            float beat = caller.startBeat + caller.timer;
+            double beat = caller.startBeat + caller.timer;
             SpawnPlayerBallResult(beat, false, playerMissCurveFirst, playerMissCurveSecond, 0.25f, 0.75f);
             BeatAction.New(instance.gameObject, new List<BeatAction.Action>()
             {
@@ -639,7 +639,7 @@ namespace HeavenStudio.Games
         void JustSmall(PlayerActionEvent caller, float state)
         {
             if (GameManager.instance.currentGame != "workingDough") return;
-            float beat = caller.startBeat + caller.timer;
+            double beat = caller.startBeat + caller.timer;
             if (currentBalls.Count > 0)
             {
                 GameObject currentBall = currentBalls[0];
@@ -665,7 +665,7 @@ namespace HeavenStudio.Games
         void JustBig(PlayerActionEvent caller, float state)
         {
             if (GameManager.instance.currentGame != "workingDough") return;
-            float beat = caller.startBeat + caller.timer;
+            double beat = caller.startBeat + caller.timer;
             if (currentBalls.Count > 0)
             {
                 GameObject currentBall = currentBalls[0];
@@ -688,7 +688,7 @@ namespace HeavenStudio.Games
             Success(true, beat);
         }
 
-        void Success(bool isBig, float beat)
+        void Success(bool isBig, double beat)
         {
             if (isBig)
             {
@@ -708,7 +708,7 @@ namespace HeavenStudio.Games
                 new BeatAction.Action(beat + 0.1f, delegate { playerImpact.SetActive(false); }),
                 new BeatAction.Action(beat + 0.9f, delegate { arrowSRRightPlayer.sprite = redArrowSprite; }),
                 new BeatAction.Action(beat + 1f, delegate { arrowSRRightPlayer.sprite = whiteArrowSprite; }),
-                new BeatAction.Action(beat + 2f, delegate { SpawnBGBall(beat + 2f, isBig); }),
+                new BeatAction.Action(beat + 2f, delegate { SpawnBGBall((float) beat + 2f, isBig); }),
             });
         }
 

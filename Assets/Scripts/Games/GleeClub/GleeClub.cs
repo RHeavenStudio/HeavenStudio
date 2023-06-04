@@ -470,7 +470,7 @@ namespace HeavenStudio.Games
 
         void Out(PlayerActionEvent caller) { }
 
-        public void ShowHeart(float beat)
+        public void ShowHeart(double beat)
         {
 
             BeatAction.New(instance.gameObject, new List<BeatAction.Action>()

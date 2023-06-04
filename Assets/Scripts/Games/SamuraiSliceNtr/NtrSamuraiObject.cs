@@ -19,7 +19,7 @@ namespace HeavenStudio.Games.Scripts_NtrSamurai
         public Transform doubleLaunchPos;
         public Transform heldPos;
         
-        public float startBeat;
+        public double startBeat;
         public int type;
         public bool isDebris = false;
         public int holdingCash = 1;
@@ -89,7 +89,7 @@ namespace HeavenStudio.Games.Scripts_NtrSamurai
                 SamuraiSliceNtr.instance.ScheduleAutoplayInput(startBeat, 1.75f, InputType.STANDARD_ALT_UP, DoUnStepAutoplay, LaunchThrough, LaunchThrough).countsForAccuracy = false;
 
                 currentCurve = SamuraiSliceNtr.instance.InCurve;
-                transform.rotation = Quaternion.Euler(0, 0, transform.rotation.eulerAngles.z + (360f * startBeat));
+                transform.rotation = Quaternion.Euler(0, 0, transform.rotation.eulerAngles.z + (360f * (float) startBeat));
 
                 var cond = Conductor.instance;
                 float flyPos = cond.GetPositionFromBeat(launchProg.startBeat, 3f);

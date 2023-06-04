@@ -27,8 +27,8 @@ namespace HeavenStudio.Util
 
         private double startTime;
 
-        public float beat;
-        public float offset;
+        public double beat;
+        public double offset;
         public float scheduledPitch = 1f;
 
         bool playInstant = false;
@@ -158,6 +158,7 @@ namespace HeavenStudio.Util
 
         #region Bend
         // All of these should only be used with rockers.
+        // minenice: consider doing these in the audio thread so they can work per-sample?
         public void BendUp(float bendTime, float bendedPitch)
         {
             this.bendedPitch = bendedPitch;

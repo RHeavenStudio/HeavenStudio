@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -23,16 +24,16 @@ namespace HeavenStudio.Games.Scripts_DoubleDate
 
         void Update()
         {
-            float beat = conductor.songPositionInBeats;
-            float height = 0f;
+            double beat = conductor.songPositionInBeats;
+            double height = 0f;
             if (pathStartBeat > float.MinValue)
             {
-                Vector3 pos = GetPathPositionFromBeat(path, Mathf.Max(beat, pathStartBeat), out height, pathStartBeat);
+                Vector3 pos = GetPathPositionFromBeat(path, Math.Max(beat, pathStartBeat), out height, pathStartBeat);
                 transform.position = pos;
                 float rot = GetPathValue("rot");
                 transform.rotation = Quaternion.Euler(0f, 0f, transform.rotation.eulerAngles.z - (rot * Time.deltaTime * (1f/conductor.pitchedSecPerBeat)));
             }
-            shadow.transform.position = new Vector3(transform.position.x, Mathf.Min(transform.position.y - height, game.floorHeight), transform.position.z);
+            shadow.transform.position = new Vector3(transform.position.x, (float) Math.Min(transform.position.y - height, game.floorHeight), transform.position.z);
             shadow.transform.localScale = Vector3.one * Mathf.Clamp(((transform.position.y) - game.shadowDepthScaleMin) / (game.shadowDepthScaleMax - game.shadowDepthScaleMin), 0f, 1f);
         }
 

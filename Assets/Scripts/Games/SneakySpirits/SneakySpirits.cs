@@ -220,7 +220,7 @@ namespace HeavenStudio.Games
             }
         }
 
-        void WhiffArrow(float beat)
+        void WhiffArrow(double beat)
         {
             GameObject spawnedArrow = Instantiate(arrowMissPrefab, transform);
             spawnedArrow.SetActive(true);

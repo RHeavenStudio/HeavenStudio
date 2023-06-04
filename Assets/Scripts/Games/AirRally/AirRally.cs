@@ -210,7 +210,7 @@ namespace HeavenStudio.Games
             Forthington.GetComponent<Animator>().Play("Hit");
         }
 
-        public void ReturnObject(float beat, float targetBeat, bool type)
+        public void ReturnObject(double beat, double targetBeat, bool type)
         {
             var shuttleScript = ActiveShuttle.GetComponent<Shuttlecock>();
             shuttleScript.flyPos = 0f;

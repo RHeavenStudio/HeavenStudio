@@ -40,8 +40,8 @@ namespace HeavenStudio.Games
         /// <param name="OnBlank">Method to run whenever there's an Input while this is Scheduled (Shouldn't be used too much)</param>
         /// <returns></returns>
         public PlayerActionEvent ScheduleInput(
-            float startBeat,
-            float timer,
+            double startBeat,
+            double timer,
             InputType inputType,
             PlayerActionEvent.ActionEventCallbackState OnHit,
             PlayerActionEvent.ActionEventCallback OnMiss,
@@ -74,8 +74,8 @@ namespace HeavenStudio.Games
             return evt;
         }
 
-        public PlayerActionEvent ScheduleAutoplayInput(float startBeat,
-            float timer,
+        public PlayerActionEvent ScheduleAutoplayInput(double startBeat,
+            double timer,
             InputType inputType,
             PlayerActionEvent.ActionEventCallbackState OnHit,
             PlayerActionEvent.ActionEventCallback OnMiss,
@@ -86,8 +86,8 @@ namespace HeavenStudio.Games
             return evt;
         }
 
-        public PlayerActionEvent ScheduleUserInput(float startBeat,
-            float timer,
+        public PlayerActionEvent ScheduleUserInput(double startBeat,
+            double timer,
             InputType inputType,
             PlayerActionEvent.ActionEventCallbackState OnHit,
             PlayerActionEvent.ActionEventCallback OnMiss,
@@ -124,8 +124,8 @@ namespace HeavenStudio.Games
                         closest = toCompare;
                 } else
                 {
-                    float t1 = closest.startBeat + closest.timer;
-                    float t2 = toCompare.startBeat + toCompare.timer;
+                    double t1 = closest.startBeat + closest.timer;
+                    double t2 = toCompare.startBeat + toCompare.timer;
 
                     // Debug.Log("t1=" + t1 + " -- t2=" + t2);
 

@@ -145,7 +145,7 @@ namespace HeavenStudio.Games
         WhichTossKid lastReceiver = WhichTossKid.None;
         WhichTossKid currentReceiver = WhichTossKid.None;
         public TossBoysBall currentBall = null;
-        Dictionary<float, RiqEntity> passBallDict = new Dictionary<float, RiqEntity>();
+        Dictionary<double, RiqEntity> passBallDict = new();
         string currentPassType;
         public static TossBoys instance;
         bool shouldBop = true;
@@ -354,13 +354,13 @@ namespace HeavenStudio.Games
             {
                 if (passBallEvents[i].beat >= Conductor.instance.songPositionInBeats)
                 {
-                    if (passBallDict.ContainsKey((float) passBallEvents[i].beat)) continue;
-                    passBallDict.Add((float) passBallEvents[i].beat, passBallEvents[i]);
+                    if (passBallDict.ContainsKey(passBallEvents[i].beat)) continue;
+                    passBallDict.Add(passBallEvents[i].beat, passBallEvents[i]);
                 }
             }
         }
 
-        void DeterminePass(float beat, bool barely)
+        void DeterminePass(double beat, bool barely)
         {
             var tempLastReceiver = lastReceiver;
             lastReceiver = currentReceiver;
@@ -414,7 +414,7 @@ namespace HeavenStudio.Games
             }
         }
 
-        void PassBall(float beat, float length)
+        void PassBall(double beat, float length)
         {
             string last = GetColorBasedOnTossKid(lastReceiver, false);
             string current = GetColorBasedOnTossKid(currentReceiver, true);
@@ -469,7 +469,7 @@ namespace HeavenStudio.Games
             ScheduleInput(beat, length, GetInputTypeBasedOnCurrentReceiver(), JustHitBall, Miss, Empty);
         }
 
-        void DualToss(float beat, float length)
+        void DualToss(double beat, float length)
         {
             string last = GetColorBasedOnTossKid(lastReceiver, false);
             string current = GetColorBasedOnTossKid(currentReceiver, true);
@@ -525,7 +525,7 @@ namespace HeavenStudio.Games
             ScheduleInput(beat, length, GetInputTypeBasedOnCurrentReceiver(), stopSpecial ? JustHitBallUnSpecial : JustHitBall, Miss, Empty);
         }
 
-        void HighToss(float beat, float length)
+        void HighToss(double beat, float length)
         {
             string last = GetColorBasedOnTossKid(lastReceiver, false);
             string current = GetColorBasedOnTossKid(currentReceiver, true);
@@ -578,7 +578,7 @@ namespace HeavenStudio.Games
             ScheduleInput(beat, length, GetInputTypeBasedOnCurrentReceiver(), JustHitBall, Miss, Empty);
         }
 
-        void LightningToss(float beat, float length)
+        void LightningToss(double beat, float length)
         {
             string last = GetColorBasedOnTossKid(lastReceiver, false);
             string current = GetColorBasedOnTossKid(currentReceiver, true);
@@ -635,7 +635,7 @@ namespace HeavenStudio.Games
             ScheduleInput(beat, length, GetInputTypeBasedOnCurrentReceiver(), JustHitBall, Miss, Empty);
         }
 
-        void BlurToss(float beat)
+        void BlurToss(double beat)
         {
             string current = GetColorBasedOnTossKid(currentReceiver, false);
             if (currentBall != null)
@@ -786,7 +786,7 @@ namespace HeavenStudio.Games
             if (currentBall == null) return;
             SoundByte.PlayOneShotGame("tossBoys/" + GetColorBasedOnTossKid(currentReceiver, false) + "Keep");
             string current = GetColorBasedOnTossKid(currentReceiver, false);
-            float beat = caller.timer + caller.startBeat;
+            double beat = caller.timer + caller.startBeat;
             if (currentBall != null)
             {
                 switch (current)
@@ -837,7 +837,7 @@ namespace HeavenStudio.Games
             SoundByte.PlayOneShotGame("tossBoys/" + GetColorBasedOnTossKid(lastReceiver, false) + "Keep");
             string last = GetColorBasedOnTossKid(lastReceiver, false);
             string current = GetColorBasedOnTossKid(currentReceiver, true);
-            float beat = caller.timer + caller.startBeat;
+            double beat = caller.timer + caller.startBeat;
             if (currentBall != null)
             {
                 switch (last + current)
@@ -884,7 +884,7 @@ namespace HeavenStudio.Games
             SoundByte.PlayOneShotGame("tossBoys/" + GetColorBasedOnTossKid(lastReceiver, false) + "Keep");
             string last = GetColorBasedOnTossKid(lastReceiver, false);
             string current = GetColorBasedOnTossKid(currentReceiver, true);
-            float beat = caller.timer + caller.startBeat;
+            double beat = caller.timer + caller.startBeat;
             if (currentBall != null)
             {
                 switch (last + current)
@@ -942,7 +942,7 @@ namespace HeavenStudio.Games
 
         #region HelperFunctions
 
-        void DoSpecialBasedOnReceiver(float beat)
+        void DoSpecialBasedOnReceiver(double beat)
         {
             specialAo.SetActive(false);
             specialAka.SetActive(false);

@@ -336,7 +336,7 @@ namespace HeavenStudio.Games.Scripts_SpaceSoccer
             if (ball != null && stop) Destroy(ball.gameObject);
         }
 
-        void MissBall(float targetBeat)
+        void MissBall(double targetBeat)
         {
             if (stopBall) return;
 
