@@ -116,6 +116,10 @@ namespace HeavenStudio.Games
             rightCrumbAppearThreshold = 15;
             leftCrumbAppearThreshold = 30;
             eatenTreats = 0;
+            foreach (var evt in scheduledInputs)
+            {
+                evt.Disable();
+            }
         }
 
         private void Awake()

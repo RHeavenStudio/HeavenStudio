@@ -477,6 +477,10 @@ namespace HeavenStudio.Games
         {
             if (queuedIntervals.Count > 0) queuedIntervals.Clear();
             if (queuedBalls.Count > 0) queuedBalls.Clear();
+            foreach (var evt in scheduledInputs)
+            {
+                evt.Disable();
+            }
         }
 
         void Update()

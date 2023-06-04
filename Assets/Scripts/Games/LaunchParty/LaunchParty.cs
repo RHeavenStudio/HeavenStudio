@@ -205,6 +205,10 @@ namespace HeavenStudio.Games
         void OnDestroy()
         {
             if (queuedRockets.Count > 0) queuedRockets.Clear();
+            foreach (var evt in scheduledInputs)
+            {
+                evt.Disable();
+            }
         } 
 
         void Awake()

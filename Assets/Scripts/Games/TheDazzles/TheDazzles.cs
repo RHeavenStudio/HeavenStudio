@@ -209,6 +209,10 @@ namespace HeavenStudio.Games
         {
             if (queuedPoses.Count > 0) queuedPoses.Clear();
             if (queuedCrouches.Count > 0) queuedCrouches.Clear();
+            foreach (var evt in scheduledInputs)
+            {
+                evt.Disable();
+            }
         }
 
         void Awake()

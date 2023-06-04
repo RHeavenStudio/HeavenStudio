@@ -1,12 +1,12 @@
 ManifestFileVersion: 0
-CRC: 3916303394
+CRC: 1136233610
 Hashes:
   AssetFileHash:
     serializedVersion: 2
-    Hash: 5acf98ca9dc16abbe04934c5199b97fe
+    Hash: 101ae668a759fcb025f6a99a186dac08
   TypeTreeHash:
     serializedVersion: 2
-    Hash: ac80f714e5bc98fbcf2462d906bb0a0d
+    Hash: 2c80689270eb926e14ce7cc1f6116e6c
 HashAppended: 0
 ClassTypes:
 - Class: 1
@@ -37,6 +37,8 @@ ClassTypes:
   Script: {fileID: 11500000, guid: 62c1e08c47081e84da8af20ea652e2a7, type: 3}
 - Class: 114
   Script: {fileID: 11500000, guid: d8ea112b8d0c51343bca3ebc026d0295, type: 3}
+- Class: 114
+  Script: {fileID: 11500000, guid: 2c173ef5dba9631449b99fcbc50ff9e8, type: 3}
 - Class: 115
   Script: {instanceID: 0}
 - Class: 212
@@ -59,11 +61,13 @@ Assets:
 - Assets/Resources/Sprites/Games/RhythmTweezers/Animations/Vegetable/Hop10.anim
 - Assets/Resources/Sfx/games/rhythmTweezers/longPull4.ogg
 - Assets/Resources/Sfx/games/rhythmTweezers/longPull3.ogg
+- Assets/Resources/Sprites/Games/RhythmTweezers/Animations/Vegetable/AltSmile.anim
 - Assets/Resources/Sfx/games/rhythmTweezers/shortPluck14.ogg
 - Assets/Resources/Sprites/Games/RhythmTweezers/Animations/Vegetable/HopFinal.anim
 - Assets/Resources/Sprites/Games/RhythmTweezers/Animations/Vegetable/Hop2.anim
 - Assets/Resources/Sprites/Games/RhythmTweezers/Animations/Vegetable/Hop5.anim
 - Assets/Resources/Sprites/Games/RhythmTweezers/hairAndThings.png
+- Assets/Resources/Sprites/Games/RhythmTweezers/Animations/noPeek_2.controller
 - Assets/Resources/Sprites/Games/RhythmTweezers/Animations/Tweezers/Tweezers_Pluck_Success.anim
 - Assets/Resources/Sfx/games/rhythmTweezers/shortPluck5.ogg
 - Assets/Resources/Sprites/Games/RhythmTweezers/Animations/Hairs/LongAppear.anim
@@ -87,10 +91,12 @@ Assets:
 - Assets/Resources/Sfx/games/rhythmTweezers/shortAppear.ogg
 - Assets/Resources/Sfx/games/rhythmTweezers/shortPluck10.ogg
 - Assets/Resources/Sprites/Games/RhythmTweezers/Animations/Tweezers/Tweezers_Idle.anim
-- Assets/Resources/Sprites/Games/RhythmTweezers/Animations/Tweezers/Tweezers_Pluck_Fail.anim
+- Assets/Resources/Sprites/Games/RhythmTweezers/Animations/NoPeekLower.anim
 - Assets/Resources/Sprites/Games/RhythmTweezers/Animations/Vegetable/Hop7.anim
+- Assets/Resources/Sprites/Games/RhythmTweezers/Animations/Tweezers/Tweezers_Pluck_Fail.anim
 - Assets/Resources/Sprites/Games/RhythmTweezers/Animations/Vegetable/Idle.anim
 - Assets/Resources/Sprites/Games/RhythmTweezers/Animations/Vegetable/Hop9.anim
+- Assets/Resources/Sprites/Games/RhythmTweezers/Animations/NoPeekRise.anim
 - Assets/Resources/Sprites/Games/RhythmTweezers/Animations/Hairs/HairHolder.controller
 - Assets/Resources/Sprites/Games/RhythmTweezers/Animations/Vegetable/Hop1.anim
 - Assets/Resources/Sfx/games/rhythmTweezers/shortPluck2.ogg
@@ -101,6 +107,7 @@ Assets:
 - Assets/Resources/Sprites/Games/RhythmTweezers/Animations/Vegetable/Hop8.anim
 - Assets/Resources/Sprites/Games/RhythmTweezers/Animations/Tweezers/Tweezers_LongPluck.anim
 - Assets/Resources/Sfx/games/rhythmTweezers/shortPluck11.ogg
+- Assets/Resources/Sprites/Games/RhythmTweezers/Animations/NoPeekIdle.anim
 - Assets/Resources/Sfx/games/rhythmTweezers/shortPluck20.ogg
 - Assets/Resources/Sfx/games/rhythmTweezers/shortPluck15.ogg
 Dependencies: []

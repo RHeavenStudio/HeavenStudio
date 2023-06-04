@@ -165,6 +165,10 @@ namespace HeavenStudio.Games
             shouldBlip = false;
             isStepping = false;
             stepIterate = 0;
+            foreach (var evt in scheduledInputs)
+            {
+                evt.Disable();
+            }
         }
 
         public void Update()

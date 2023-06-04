@@ -166,6 +166,10 @@ namespace HeavenStudio.Games
             {
                 if (queuedInputs.Count > 0) queuedInputs.Clear();
             }
+            foreach (var evt in scheduledInputs)
+            {
+                evt.Disable();
+            }
         }
 
         private void Awake()

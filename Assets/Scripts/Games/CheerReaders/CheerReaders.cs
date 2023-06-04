@@ -178,6 +178,10 @@ namespace HeavenStudio.Games
         void OnDestroy()
         {
             Jukebox.KillLoop(SpinningLoop, 0.5f);
+            foreach (var evt in scheduledInputs)
+            {
+                evt.Disable();
+            }
         }
 
         public override void OnTimeChange()

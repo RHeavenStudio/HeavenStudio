@@ -165,6 +165,10 @@ namespace HeavenStudio.Games
             if (queuedSteps.Count > 0) queuedSteps.Clear();
             if (queuedTaps.Count > 0) queuedTaps.Clear();
             prepareTap = false;
+            foreach (var evt in scheduledInputs)
+            {
+                evt.Disable();
+            }
         }
 
         public override void OnTimeChange()

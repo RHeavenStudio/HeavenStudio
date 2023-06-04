@@ -188,6 +188,10 @@ namespace HeavenStudio.Games
             if (queuedInputs.Count > 0) queuedInputs.Clear();
             if (queuedAttentions.Count > 0) queuedAttentions.Clear();
             if (queuedFlipperRollVoiceLines.Count > 0) queuedFlipperRollVoiceLines.Clear();
+            foreach (var evt in scheduledInputs)
+            {
+                evt.Disable();
+            }
         }
 
         private void Update()

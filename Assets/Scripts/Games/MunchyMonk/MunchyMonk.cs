@@ -244,6 +244,11 @@ namespace HeavenStudio.Games
             inputsTilGrow = 10;
             noBlush = false;
             disableBaby = false;
+
+            foreach (var evt in scheduledInputs)
+            {
+                evt.Disable();
+            }
         }
 
         private void Update() 

@@ -119,6 +119,10 @@ namespace HeavenStudio.Games
                 intervalStarted = false;
                 beatInterval = 4f;
             }
+            foreach (var evt in scheduledInputs)
+            {
+                evt.Disable();
+            }
         }
 
         private void Update() 

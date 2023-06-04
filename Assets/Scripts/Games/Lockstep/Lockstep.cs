@@ -194,6 +194,10 @@ namespace HeavenStudio.Games
         void OnDestroy()
         {
             if (queuedInputs.Count > 0) queuedInputs.Clear();
+            foreach (var evt in scheduledInputs)
+            {
+                evt.Disable();
+            }
         }
 
         void UpdateAndRenderSlaves()

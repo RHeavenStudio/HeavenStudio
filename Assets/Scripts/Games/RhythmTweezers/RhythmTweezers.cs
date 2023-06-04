@@ -20,73 +20,108 @@ namespace HeavenStudio.Games.Loaders
                     function = delegate { RhythmTweezers.instance.SetIntervalStart(eventCaller.currentEntity.beat, eventCaller.currentEntity.length); }, 
                     defaultLength = 4f, 
                     resizable = true,
-                    priority = 1
+                    priority = 1,
+                    inactiveFunction = delegate { RhythmTweezers.InactiveInterval(eventCaller.currentEntity.beat, eventCaller.currentEntity.length); }
                 },
                 new GameAction("short hair", "Short Hair")
                 {
-
+                    inactiveFunction = delegate { RhythmTweezers.SpawnHairInactive(eventCaller.currentEntity.beat); },
                     function = delegate { RhythmTweezers.instance.SpawnHair(eventCaller.currentEntity.beat); }, 
                     defaultLength = 0.5f
                 },
                 new GameAction("long hair", "Curly Hair")
                 {
+                    inactiveFunction = delegate { RhythmTweezers.SpawnLongHairInactive(eventCaller.currentEntity.beat); },
                     function = delegate { RhythmTweezers.instance.SpawnLongHair(eventCaller.currentEntity.beat); }, 
                     defaultLength = 0.5f
                 },
+                new GameAction("passTurn", "Pass Turn")
+                {
+                    function = delegate { var e = eventCaller.currentEntity; RhythmTweezers.instance.PassTurn(e.beat, e.length); },
+                    resizable = true,
+                    preFunction = delegate { var e = eventCaller.currentEntity; RhythmTweezers.PrePassTurn(e.beat, e.length); }
+                },
                 new GameAction("next vegetable", "Swap Vegetable")
                 {
-                    function = delegate { var e = eventCaller.currentEntity; RhythmTweezers.instance.NextVegetable(e.beat, e["type"], e["colorA"], e["colorB"]); }, 
+                    function = delegate 
+                    { 
+                        var e = eventCaller.currentEntity; 
+                        if (!e["instant"]) RhythmTweezers.instance.NextVegetable(e.beat, e["type"], e["colorA"], e["colorB"]); 
+                        else RhythmTweezers.instance.ChangeVegetableImmediate(e["type"], e["colorA"], e["colorB"]);
+                    }, 
                     defaultLength = 0.5f, 
                     parameters = new List<Param>() 
+                    {
+                        new Param("type", RhythmTweezers.VegetableType.Onion, "Type", "The vegetable to switch to"),
+                        new Param("colorA", RhythmTweezers.defaultOnionColor, "Onion Color", "The color of the onion"),
+                        new Param("colorB", RhythmTweezers.defaultPotatoColor, "Potato Color", "The color of the potato"),
+                        new Param("instant", false, "Instant", "Instantly change vegetable?")
+                    },
+                    priority = 3
+                },
+                new GameAction("noPeek", "No Peeking Sign")
+                {
+                    preFunction = delegate { var e = eventCaller.currentEntity; RhythmTweezers.PreNoPeeking(e.beat, e.length, e["type"]); },
+                    defaultLength = 4f,
+                    resizable = true,
+                    parameters = new List<Param>()
+                    {
+                        new Param("type", RhythmTweezers.NoPeekSignType.Full, "Sign Type", "Which sign will be used?")
+                    }
+                },
+                new GameAction("fade background color", "Background Fade")
+                {
+                    function = delegate 
+                    { 
+                        var e = eventCaller.currentEntity; 
+                        if (e["instant"])
+                        {
+                            RhythmTweezers.instance.ChangeBackgroundColor(e["colorA"], 0f);
+                        }
+                        else
+                        {
+                            RhythmTweezers.instance.FadeBackgroundColor(e["colorA"], e["colorB"], e.length);
+                        }
+                    },
+                    resizable = true, 
+                    parameters = new List<Param>() 
+                    {
+                        new Param("colorA", Color.white, "Start Color", "The starting color in the fade"),
+                        new Param("colorB", RhythmTweezers.defaultBgColor, "End Color", "The ending color in the fade"),
+                        new Param("instant", false, "Instant", "Instantly change color to start color?")
+                    } 
+                },
+                new GameAction("altSmile", "Use Alt Smile")
+                {
+                    function = delegate
+                    {
+                        RhythmTweezers.instance.VegetableAnimator.SetBool("UseAltSmile", !RhythmTweezers.instance.VegetableAnimator.GetBool("UseAltSmile"));
+                    },
+                    defaultLength = 0.5f
+                },
+                //backwards compatibility
+                new GameAction("change vegetable", "Change Vegetable (Instant)")
+                {
+                    function = delegate { var e = eventCaller.currentEntity; RhythmTweezers.instance.ChangeVegetableImmediate(e["type"], e["colorA"], e["colorB"]); },
+                    defaultLength = 0.5f,
+                    parameters = new List<Param>()
                     {
                         new Param("type", RhythmTweezers.VegetableType.Onion, "Type", "The vegetable to switch to"),
                         new Param("colorA", RhythmTweezers.defaultOnionColor, "Onion Color", "The color of the onion"),
                         new Param("colorB", RhythmTweezers.defaultPotatoColor, "Potato Color", "The color of the potato")
                     },
-                    priority = 3
-                },
-                new GameAction("change vegetable", "Change Vegetable (Instant)")
-                {
-                    function = delegate { var e = eventCaller.currentEntity; RhythmTweezers.instance.ChangeVegetableImmediate(e["type"], e["colorA"], e["colorB"]); }, 
-                    defaultLength = 0.5f, 
-                    parameters = new List<Param>() 
-                    {
-                        new Param("type", RhythmTweezers.VegetableType.Onion, "Type", "The vegetable to switch to"),
-                        new Param("colorA", RhythmTweezers.defaultOnionColor, "Onion Color", "The color of the onion"),
-                        new Param("colorB", RhythmTweezers.defaultPotatoColor, "Potato Color", "The color of the potato")
-                    }
-                },
-                new GameAction("set tweezer delay", "Offset Tweezer")
-                {
-                    function = delegate { RhythmTweezers.instance.tweezerBeatOffset = eventCaller.currentEntity.length; },
-                    resizable = true,
-                    priority = 2
-                },
-                new GameAction("reset tweezer delay", "Reset Tweezer Offset")
-                {
-                    function = delegate { RhythmTweezers.instance.tweezerBeatOffset = 0f; }, 
-                    defaultLength = 0.5f,
-                    priority = 2
+                    hidden = true,
                 },
                 new GameAction("set background color", "Background Colour")
                 {
-                    function = delegate { var e = eventCaller.currentEntity; RhythmTweezers.instance.ChangeBackgroundColor(e["colorA"], 0f); }, 
+                    function = delegate { var e = eventCaller.currentEntity; RhythmTweezers.instance.ChangeBackgroundColor(e["colorA"], 0f); },
                     defaultLength = 0.5f,
-                    parameters = new List<Param>() 
+                    parameters = new List<Param>()
                     {
                         new Param("colorA", RhythmTweezers.defaultBgColor, "Background Color", "The background color to change to")
-                    } 
+                    },
+                    hidden = true
                 },
-                new GameAction("fade background color", "Background Fade")
-                {
-                    function = delegate { var e = eventCaller.currentEntity; RhythmTweezers.instance.FadeBackgroundColor(e["colorA"], e["colorB"], e.length); },
-                    resizable = true, 
-                    parameters = new List<Param>() 
-                    {
-                        new Param("colorA", Color.white, "Start Color", "The starting color in the fade"),
-                        new Param("colorB", RhythmTweezers.defaultBgColor, "End Color", "The ending color in the fade")
-                    } 
-                }
             },
             new List<string>() {"agb", "repeat"},
             "agbhair", "en",
@@ -108,6 +143,20 @@ namespace HeavenStudio.Games
             Potato
         }
 
+        public enum NoPeekSignType
+        {
+            Full,
+            HalfRight,
+            HalfLeft
+        }
+
+        private struct QueuedPeek
+        {
+            public float beat;
+            public float length;
+            public int type;
+        }
+
         [Header("References")]
         public Transform VegetableHolder;
         public SpriteRenderer Vegetable;
@@ -118,16 +167,16 @@ namespace HeavenStudio.Games
         public GameObject hairBase;
         public GameObject longHairBase;
         public GameObject pluckedHairBase;
+        [SerializeField] NoPeekingSign noPeekingRef;
 
         public GameObject HairsHolder;
         public GameObject DroppedHairsHolder;
         [NonSerialized] public int hairsLeft = 0;
 
         [Header("Variables")]
-        public float beatInterval = 4f;
-        float intervalStartBeat;
-        bool intervalStarted;
-        public float tweezerBeatOffset = 0f;
+        private float passTurnBeat;
+        private float passTurnEndBeat = 2;
+        private static List<QueuedPeek> queuedPeeks = new List<QueuedPeek>();
 
         [Header("Sprites")]
         public Sprite pluckedHairSprite;
@@ -172,67 +221,173 @@ namespace HeavenStudio.Games
         }
 
         public static RhythmTweezers instance { get; set; }
+        private static CallAndResponseHandler crHandlerInstance;
+
+        private List<Hair> spawnedHairs = new List<Hair>();
+        private List<LongHair> spawnedLongs = new List<LongHair>();
+
+        private static List<float> passedTurns = new List<float>();
 
         private void Awake()
         {
             instance = this;
+            if (crHandlerInstance == null)
+            {
+                crHandlerInstance = new CallAndResponseHandler(4);
+            }
+            if (crHandlerInstance.queuedEvents.Count > 0)
+            {
+                foreach (var crEvent in crHandlerInstance.queuedEvents)
+                {
+                    if (crEvent.tag == "Hair")
+                    {
+                        Hair hair = Instantiate(hairBase, HairsHolder.transform).GetComponent<Hair>();
+                        spawnedHairs.Add(hair);
+                        hair.gameObject.SetActive(true);
+                        hair.GetComponent<Animator>().Play("SmallAppear", 0, 1);
+                        float rot = -58f + 116 * Mathp.Normalize(crEvent.relativeBeat, 0, crHandlerInstance.intervalLength - 1);
+                        hair.transform.eulerAngles = new Vector3(0, 0, rot);
+                        hair.createBeat = crEvent.beat;
+                    }
+                    else if (crEvent.tag == "Long")
+                    {
+                        LongHair hair = Instantiate(longHairBase, HairsHolder.transform).GetComponent<LongHair>();
+                        spawnedLongs.Add(hair);
+                        hair.gameObject.SetActive(true);
+                        hair.GetComponent<Animator>().Play("LongAppear", 0, 1);
+                        float rot = -58f + 116 * Mathp.Normalize(crEvent.relativeBeat, 0, crHandlerInstance.intervalLength - 1);
+                        hair.transform.eulerAngles = new Vector3(0, 0, rot);
+                        hair.createBeat = crEvent.beat;
+                    }
+                }
+            }
+        }
+
+        private void OnDestroy()
+        {
+            if (crHandlerInstance != null && !Conductor.instance.isPlaying)
+            {
+                crHandlerInstance = null;
+            }
+            foreach (var evt in scheduledInputs)
+            {
+                evt.Disable();
+            }
+        }
+
+        public static void SpawnHairInactive(float beat)
+        {
+            if (crHandlerInstance == null)
+            {
+                crHandlerInstance = new CallAndResponseHandler(4);
+            }
+            if (crHandlerInstance.queuedEvents.Count > 0 && crHandlerInstance.queuedEvents.Find(x => x.beat == beat || (beat >= x.beat && beat <= x.beat + x.length)) != null) return;
+            crHandlerInstance.AddEvent(beat, 0, "Hair");
+        }
+
+        public static void SpawnLongHairInactive(float beat)
+        {
+            if (crHandlerInstance == null)
+            {
+                crHandlerInstance = new CallAndResponseHandler(4);
+            }
+            if (crHandlerInstance.queuedEvents.Count > 0 && crHandlerInstance.queuedEvents.Find(x => x.beat == beat || (beat >= x.beat && beat <= x.beat + x.length)) != null) return;
+            crHandlerInstance.AddEvent(beat, 0.5f, "Long");
         }
 
         public void SpawnHair(float beat)
         {
+            if (crHandlerInstance.queuedEvents.Count > 0 && crHandlerInstance.queuedEvents.Find(x => x.beat == beat || (beat >= x.beat && beat <= x.beat + x.length)) != null) return;
             // End transition early if the next hair is a lil early.
             StopTransitionIfActive();
 
-            // If interval hasn't started, assume this is the first hair of the interval.
-            if (!intervalStarted)
-            {
-                SetIntervalStart(beat, beatInterval);
-            }
+            crHandlerInstance.AddEvent(beat, 0, "Hair");
 
             Jukebox.PlayOneShotGame("rhythmTweezers/shortAppear", beat);
             Hair hair = Instantiate(hairBase, HairsHolder.transform).GetComponent<Hair>();
+            spawnedHairs.Add(hair);
             hair.gameObject.SetActive(true);
             hair.GetComponent<Animator>().Play("SmallAppear", 0, 0);
 
-            float rot = -58f + 116 * Mathp.Normalize(beat, intervalStartBeat, intervalStartBeat + beatInterval - 1f);
+            float rot = -58f + 116 * crHandlerInstance.GetIntervalProgressFromBeat(beat, 1);
             hair.transform.eulerAngles = new Vector3(0, 0, rot);
             hair.createBeat = beat;
-            hairsLeft++;
         }
 
         public void SpawnLongHair(float beat)
         {
+            if (crHandlerInstance.queuedEvents.Count > 0 && crHandlerInstance.queuedEvents.Find(x => x.beat == beat || (beat >= x.beat && beat <= x.beat + x.length)) != null) return;
             StopTransitionIfActive();
 
-            if (!intervalStarted)
-            {
-                SetIntervalStart(beat, beatInterval);
-            }
+            crHandlerInstance.AddEvent(beat, 0.5f, "Long");
 
             Jukebox.PlayOneShotGame("rhythmTweezers/longAppear", beat);
             LongHair hair = Instantiate(longHairBase, HairsHolder.transform).GetComponent<LongHair>();
+            spawnedLongs.Add(hair);
             hair.gameObject.SetActive(true);
             hair.GetComponent<Animator>().Play("LongAppear", 0, 0);
 
-            float rot = -58f + 116 * Mathp.Normalize(beat, intervalStartBeat, intervalStartBeat + beatInterval - 1f);
+            float rot = -58f + 116 * crHandlerInstance.GetIntervalProgressFromBeat(beat, 1);
             hair.transform.eulerAngles = new Vector3(0, 0, rot);
             hair.createBeat = beat;
-            hairsLeft++;
         }
 
         public void SetIntervalStart(float beat, float interval = 4f)
         {
-            // Don't do these things if the interval was already started.
-            if (!intervalStarted)
-            {
-                // End transition early if the interval starts a lil early.
-                StopTransitionIfActive();
-                hairsLeft = 0;
-                intervalStarted = true;
-            }
+            StopTransitionIfActive();
+            hairsLeft = 0;
+            eyeSize = 0;
+            crHandlerInstance.StartInterval(beat, interval);
+        }
 
-            intervalStartBeat = beat;
-            beatInterval = interval;
+        public static void InactiveInterval(float beat, float interval)
+        {
+            if (crHandlerInstance == null)
+            {
+                crHandlerInstance = new CallAndResponseHandler(4);
+            }
+            crHandlerInstance.StartInterval(beat, interval);
+        }
+
+        public void PassTurn(float beat, float length)
+        {
+            if (crHandlerInstance.queuedEvents.Count > 0)
+            {
+                hairsLeft = crHandlerInstance.queuedEvents.Count;
+                foreach (var crEvent in crHandlerInstance.queuedEvents)
+                {
+                    if (crEvent.tag == "Hair")
+                    {
+                        Hair hairToInput = spawnedHairs.Find(x => x.createBeat == crEvent.beat);
+                        hairToInput.StartInput(beat + length, crEvent.relativeBeat);
+                    }
+                    else if (crEvent.tag == "Long")
+                    {
+                        LongHair hairToInput = spawnedLongs.Find(x => x.createBeat == crEvent.beat);
+                        hairToInput.StartInput(beat + length, crEvent.relativeBeat);
+                    }
+                }
+                crHandlerInstance.queuedEvents.Clear();
+            }
+        }
+
+        public static void PrePassTurn(float beat, float length)
+        {
+            if (GameManager.instance.currentGame == "rhythmTweezers")
+            {
+                instance.SetPassTurnValues(beat + length);
+            }
+            else
+            {
+                passedTurns.Add(beat + length);
+            }
+        }
+
+        private void SetPassTurnValues(float startBeat)
+        {
+            if (crHandlerInstance.intervalLength <= 0) return;
+            passTurnBeat = startBeat - 1f;
+            passTurnEndBeat = startBeat + crHandlerInstance.intervalLength;
         }
 
         const float vegDupeOffset = 16.7f;
@@ -261,7 +416,6 @@ namespace HeavenStudio.Games
 
                 ResetVegetable();
                 transitioning = false;
-                intervalStarted = false;
 
             }).SetEase(Ease.InOutSine);
         }
@@ -302,13 +456,50 @@ namespace HeavenStudio.Games
             ChangeBackgroundColor(end, beats);
         }
 
+        public static void PreNoPeeking(float beat, float length, int type)
+        {
+            if (GameManager.instance.currentGame == "rhythmTweezers")
+            {
+                instance.NoPeeking(beat, length, type);
+            }
+            else
+            {
+                queuedPeeks.Add(new QueuedPeek()
+                {
+                    beat = beat,
+                    length = length,
+                    type = type
+                });
+            }
+        }
+
+        public void NoPeeking(float beat, float length, int type)
+        {
+            NoPeekingSign spawnedNoPeekingSign = Instantiate(noPeekingRef, transform);
+            spawnedNoPeekingSign.gameObject.SetActive(true);
+            spawnedNoPeekingSign.Init(beat, length, type);
+        }
+
         private void Update()
         {
-            if (!Conductor.instance.isPlaying && !Conductor.instance.isPaused && intervalStarted)
+            if (Conductor.instance.isPlaying && !Conductor.instance.isPaused)
             {
-                StopTransitionIfActive();
-                ResetVegetable();
-                intervalStarted = false;
+                if (passedTurns.Count > 0)
+                {
+                    foreach (var turn in passedTurns)
+                    {
+                        SetPassTurnValues(turn);
+                    }
+                    passedTurns.Clear();
+                }
+                if (queuedPeeks.Count > 0)
+                {
+                    foreach (var peek in queuedPeeks)
+                    {
+                        NoPeeking(peek.beat, peek.length, peek.type);
+                    }
+                    queuedPeeks.Clear();
+                }
             }
         }
 
@@ -317,12 +508,9 @@ namespace HeavenStudio.Games
             // Set tweezer angle.
             var tweezerAngle = -180f;
             
-            if (intervalStarted)
-            {
-                var tweezerTime = Conductor.instance.songPositionInBeats - beatInterval - tweezerBeatOffset;
-                var unclampedAngle = -58f + 116 * Mathp.Normalize(tweezerTime, intervalStartBeat, intervalStartBeat + beatInterval - 1f);
-                tweezerAngle = Mathf.Clamp(unclampedAngle, -180f, 180f);
-            }
+            var tweezerTime = Conductor.instance.songPositionInBeats;
+            var unclampedAngle = -58f + 116 * Mathp.Normalize(tweezerTime, passTurnBeat + 1f, passTurnEndBeat - 1f);
+            tweezerAngle = Mathf.Clamp(unclampedAngle, -180f, 180f);
 
             Tweezers.transform.eulerAngles = new Vector3(0, 0, tweezerAngle);
 
