@@ -66,6 +66,7 @@ namespace HeavenStudio
         {
             BasicCheck();
 
+            Minigames.InitPreprocessor();
             loadedScene = SceneManager.GetActiveScene().name;
 
             PersistentDataManager.LoadSettings();

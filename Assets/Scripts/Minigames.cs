@@ -20,6 +20,150 @@ namespace HeavenStudio
     
     public class Minigames
     {
+        public static void InitPreprocessor()
+        {
+            RiqBeatmap.OnUpdateBeatmap += PreProcessBeatmap;
+        }
+
+        public static Dictionary<string, object> propertiesModel = new() 
+            {
+                // mapper set properties? (future: use this to flash the button)
+                {"propertiesmodified", false},
+
+                ////// CATEGORY 1: SONG INFO
+                // general chart info
+                {"remixtitle", "New Remix"},        // chart name
+                {"remixauthor", "Your Name"},       // charter's name
+                {"remixdesc", "Remix Description"}, // chart description
+                {"remixlevel", 1},                  // chart difficulty (maybe offer a suggestion but still have the mapper determine it)
+                {"remixtempo", 120f},               // avg. chart tempo
+                {"remixtags", ""},                  // chart tags
+                {"icontype", 0},                    // chart icon (presets, custom - future)
+                {"iconurl", ""},                    // custom icon location (future)
+                {"challengetype", 0},               // perfect challenge type
+
+                // chart song info
+                {"idolgenre", "Song Genre"},        // song genre
+                {"idolsong", "Song Name"},          // song name
+                {"idolcredit", "Artist"},           // song artist
+
+                ////// CATEGORY 2: PROLOGUE AND EPILOGUE
+                // chart prologue
+                {"prologuetype", 0},                // prologue card animation (future)
+                {"prologuecaption", "Remix"},       // prologue card sub-title (future)
+
+                // chart results screen messages
+                {"resultcaption", "Rhythm League Notes"},                       // result screen header
+                {"resultcommon_hi", "Good rhythm."},                            // generic "Superb" message (one-liner, or second line for single-type)
+                {"resultcommon_ok", "Eh. Passable."},                           // generic "OK" message (one-liner, or second line for single-type)
+                {"resultcommon_ng", "Try harder next time."},                   // generic "Try Again" message (one-liner, or second line for single-type)
+
+                    // the following are shown / hidden in-editor depending on the tags of the games used
+                {"resultnormal_hi", "You show strong fundamentals."},           // "Superb" message for normal games (two-liner)
+                {"resultnormal_ng", "Work on your fundamentals."},              // "Try Again" message for normal games (two-liner)
+
+                {"resultkeep_hi", "You kept the beat well."},                   // "Superb" message for keep-the-beat games (two-liner)
+                {"resultkeep_ng", "You had trouble keeping the beat."},         // "Try Again" message for keep-the-beat games (two-liner)
+
+                {"resultaim_hi", "You had great aim."},                         // "Superb" message for aim games (two-liner)
+                {"resultaim_ng", "Your aim was a little shaky."},               // "Try Again" message for aim games (two-liner)
+
+                {"resultrepeat_hi", "You followed the example well."},          // "Superb" message for call-and-response games (two-liner)
+                {"resultrepeat_ng", "Next time, follow the example better."},   // "Try Again" message for call-and-response games (two-liner)
+            };
+
+        /// <summary>
+        /// processes an riq beatmap after it is loaded
+        /// </summary>
+        public static RiqBeatmapData? PreProcessBeatmap(string version, RiqBeatmapData data)
+        {
+            Debug.Log("Preprocessing beatmap...");
+            Minigames.Minigame game;
+            Minigames.GameAction action;
+            System.Type type, pType;
+            foreach (var e in data.entities)
+            {
+                var gameName = e.datamodel.Split(0);
+                var actionName = e.datamodel.Split(1);
+                game = EventCaller.instance.GetMinigame(gameName);
+                if (game == null)
+                {
+                    Debug.LogWarning($"Unknown game {gameName} found in remix.json! Adding game...");
+                    game = new Minigames.Minigame(gameName, gameName.DisplayName() + " \n<color=#eb5454>[inferred from remix.json]</color>", "", false, false, new List<Minigames.GameAction>(), inferred: true);
+                    EventCaller.instance.minigames.Add(game);
+                    if (Editor.Editor.instance != null)
+                        Editor.Editor.instance.AddIcon(game);
+                }
+                action = EventCaller.instance.GetGameAction(game, actionName);
+                if (action == null)
+                {
+                    Debug.LogWarning($"Unknown action {gameName}/{actionName} found in remix.json! Adding action...");
+                    var parameters = new List<Minigames.Param>();
+                    foreach (var item in e.dynamicData)
+                    {
+                        var value = item.Value;
+                        if (value.GetType() == typeof(long))
+                            value = new EntityTypes.Integer(int.MinValue, int.MaxValue, (int)value);
+                        else if (value.GetType() == typeof(double))
+                            value = new EntityTypes.Float(float.NegativeInfinity, float.PositiveInfinity, (float)value);
+                        parameters.Add(new Minigames.Param(item.Key, value, item.Key, "[inferred from remix.json]"));
+                    }
+                    action = new Minigames.GameAction(actionName, actionName.DisplayName(), e.length, true, parameters);
+                    game.actions.Add(action);
+                }
+
+                //check each param of the action
+                if (action.parameters != null)
+                {
+                    foreach (var param in action.parameters)
+                    {
+                        type = param.parameter.GetType();
+                        //add property if it doesn't exist
+                        if (!e.dynamicData.ContainsKey(param.propertyName))
+                        {
+                            Debug.LogWarning($"Property {param.propertyName} does not exist in the entity's dynamic data! Adding...");
+                            if (type == typeof(EntityTypes.Integer))
+                                e.dynamicData.Add(param.propertyName, ((EntityTypes.Integer)param.parameter).val);
+                            else if (type == typeof(EntityTypes.Float))
+                                e.dynamicData.Add(param.propertyName, ((EntityTypes.Float)param.parameter).val);
+                            else if (type.IsEnum && param.propertyName != "ease")
+                                e.dynamicData.Add(param.propertyName, (int)param.parameter);
+                            else
+                                e.dynamicData.Add(param.propertyName, Convert.ChangeType(param.parameter, type));
+                            continue;
+                        }
+                        pType = e[param.propertyName].GetType();
+                        if (pType != type)
+                        {
+                            if (type == typeof(EntityTypes.Integer))
+                                e.dynamicData[param.propertyName] = (int)e[param.propertyName];
+                            else if (type == typeof(EntityTypes.Float))
+                                e.dynamicData[param.propertyName] = (float)e[param.propertyName];
+                            else if (type == typeof(Util.EasingFunction.Ease) && pType == typeof(string))
+                                e.dynamicData[param.propertyName] = Enum.Parse(typeof(Util.EasingFunction.Ease), (string)e[param.propertyName]);
+                            else if (type.IsEnum)
+                                e.dynamicData[param.propertyName] = (int)e[param.propertyName];
+                            else if (pType == typeof(Newtonsoft.Json.Linq.JObject))
+                                e.dynamicData[param.propertyName] = e[param.propertyName].ToObject(type);
+                            else
+                                e.dynamicData[param.propertyName] = Convert.ChangeType(e[param.propertyName], type);
+                        }
+                    }
+                }
+            }
+
+            //go thru each property of the model beatmap and add any missing keyvalue pair
+            foreach (var prop in propertiesModel)
+            {
+                if (!data.properties.ContainsKey(prop.Key))
+                {
+                    data.properties.Add(prop.Key, prop.Value);
+                }
+            }
+
+            return data;
+        }
+
         public class Minigame
         {
             

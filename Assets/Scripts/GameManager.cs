@@ -103,7 +103,7 @@ namespace HeavenStudio
             instance = this;
         }
 
-        public void Init()
+        public void Init(bool preLoaded = false)
         {
             currentPreEvent= 0;
             currentPreSwitch = 0;
@@ -136,9 +136,10 @@ namespace HeavenStudio
             /////
             
 
-            if (txt != null && ext != null && txt.Length != 0 && ext.Length != 0)
+            if (preLoaded)
             {
-                LoadRemix(txt, ext);
+                LoadRemix();
+                StartCoroutine(LoadMusic());
             }
             else
             {
@@ -165,23 +166,31 @@ namespace HeavenStudio
 
         public void NewRemix()
         {
-            Beatmap = new();
+            Beatmap = new("1", "HeavenStudio");
+            Beatmap.data.properties = Minigames.propertiesModel;
             Beatmap.AddNewTempoChange(0, 120f);
             Beatmap.AddNewVolumeChange(0, 100f);
             Beatmap.data.offset = 0f;
             Conductor.instance.musicSource.clip = null;
+            RiqFileHandler.WriteRiq(Beatmap);
         }
 
-        public void LoadRemix(string json = "", string type = "riq", int version = 0)
+        public IEnumerator LoadMusic()
         {
+            yield return RiqFileHandler.LoadSong();
+            Conductor.instance.musicSource.clip = RiqFileHandler.StreamedAudioClip;
+        }
 
-            if (json != "")
+        public void LoadRemix()
+        {
+            try
             {
                 Beatmap = RiqFileHandler.ReadRiq();
             }
-            else
+            catch (Exception e)
             {
-                NewRemix();
+                Debug.LogError($"Failed to load remix: {e.Message}");
+                return;
             }
             SortEventsList();
             Conductor.instance.SetBpm(Beatmap.TempoChanges[0]["tempo"]);
@@ -518,6 +527,8 @@ namespace HeavenStudio
             yield return new WaitUntil(() => OverlaysManager.OverlaysReady);
             // wait for first game to be loaded
             yield return new WaitUntil(() => Beatmap != null && Beatmap.Entities.Count > 0);
+            //wait for audio clip to be loaded
+            yield return new WaitUntil(() => Conductor.instance.musicSource.clip != null);
 
             SkillStarManager.instance.KillStar();
             TimingAccuracyDisplay.instance.StopStarFlash();
