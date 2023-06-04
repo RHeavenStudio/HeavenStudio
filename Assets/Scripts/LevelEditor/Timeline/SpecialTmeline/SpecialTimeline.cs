@@ -47,12 +47,21 @@ namespace HeavenStudio.Editor.Track
         public void Setup()
         {
             ClearSpecialTimeline();
-
+            GameManager.instance.SortEventsList();
+            
+            bool first = true;
             foreach (var tempoChange in GameManager.instance.Beatmap.TempoChanges)
-                AddTempoChange(false, tempoChange);
+            {
+                AddTempoChange(false, tempoChange, first);
+                first = false;
+            }
 
+            first = true;
             foreach (var volumeChange in GameManager.instance.Beatmap.VolumeChanges)
-                AddVolumeChange(false, volumeChange);
+            {
+                AddVolumeChange(false, volumeChange, first);
+                first = false;
+            }
 
             foreach (var sectionChange in GameManager.instance.Beatmap.SectionMarkers)
                 AddChartSection(false, sectionChange);
@@ -116,7 +125,7 @@ namespace HeavenStudio.Editor.Track
             specialTimelineObjs.Clear();
         }
 
-        public void AddTempoChange(bool create, RiqEntity? tempoChange_ = null)
+        public void AddTempoChange(bool create, RiqEntity tempoChange_ = null, bool first = false)
         {      
             GameObject tempoChange = Instantiate(RefTempoChange.gameObject, this.transform);
 
@@ -147,8 +156,9 @@ namespace HeavenStudio.Editor.Track
             }
             else
             {
-                tempoTimelineObj.tempoChange = tempoChange_.Value;
+                tempoTimelineObj.tempoChange = tempoChange_;
                 tempoChange.transform.localPosition = new Vector3((float) tempoTimelineObj.tempoChange.beat, tempoChange.transform.localPosition.y);
+                tempoTimelineObj.first = first;
             }
             tempoTimelineObj.SetVisibility(Timeline.instance.timelineState.currentState);
 
@@ -157,7 +167,7 @@ namespace HeavenStudio.Editor.Track
             Timeline.instance.FitToSong();
         }
 
-        public void AddVolumeChange(bool create, RiqEntity? volumeChange_ = null)
+        public void AddVolumeChange(bool create, RiqEntity volumeChange_ = null, bool first = false)
         {      
             GameObject volumeChange = Instantiate(RefVolumeChange.gameObject, this.transform);
 
@@ -180,15 +190,16 @@ namespace HeavenStudio.Editor.Track
             }
             else
             {
-                volumeTimelineObj.volumeChange = volumeChange_.Value;
+                volumeTimelineObj.volumeChange = volumeChange_;
                 volumeChange.transform.localPosition = new Vector3((float) volumeTimelineObj.volumeChange.beat, volumeChange.transform.localPosition.y);
+                volumeTimelineObj.first = first;
             }
             volumeTimelineObj.SetVisibility(Timeline.instance.timelineState.currentState);
 
             specialTimelineObjs.Add(volumeTimelineObj);
         }
 
-        public void AddChartSection(bool create, RiqEntity? chartSection_ = null)
+        public void AddChartSection(bool create, RiqEntity chartSection_ = null)
         {      
             GameObject chartSection = Instantiate(RefSectionChange.gameObject, this.transform);
 
@@ -213,7 +224,7 @@ namespace HeavenStudio.Editor.Track
             }
             else
             {
-                sectionTimelineObj.chartSection = chartSection_.Value;
+                sectionTimelineObj.chartSection = chartSection_;
                 chartSection.transform.localPosition = new Vector3((float) sectionTimelineObj.chartSection.beat, chartSection.transform.localPosition.y);
             }
             sectionTimelineObj.SetVisibility(Timeline.instance.timelineState.currentState);

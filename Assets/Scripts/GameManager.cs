@@ -45,7 +45,7 @@ namespace HeavenStudio
         [NonSerialized] public bool autoplay;
         [NonSerialized] public bool canInput = true;
         [NonSerialized] public RiqEntity currentSection, nextSection;
-        public float sectionProgress { get; private set; }
+        public double sectionProgress { get; private set; }
 
         public event Action<double> onBeatChanged;
         public event Action<RiqEntity> onSectionChange;
@@ -400,18 +400,18 @@ namespace HeavenStudio
                 }
             }
 
-            if (string.IsNullOrEmpty(currentSection.datamodel))
+            if (currentSection == null)
             {
                 sectionProgress = 0;
             }
             else
             {
-                float currectSectionStart = (float)cond.GetSongPosFromBeat(currentSection.beat);
+                double currectSectionStart = cond.GetSongPosFromBeat(currentSection.beat);
 
-                if (string.IsNullOrEmpty(nextSection.datamodel))
-                    sectionProgress = (cond.songPosition - currectSectionStart) / ((float)cond.GetSongPosFromBeat(endBeat) - currectSectionStart);
+                if (nextSection == null)
+                    sectionProgress = (cond.songPosition - currectSectionStart) / (cond.GetSongPosFromBeat(endBeat) - currectSectionStart);
                 else
-                    sectionProgress = (cond.songPosition - currectSectionStart) / ((float)cond.GetSongPosFromBeat(nextSection.beat) - currectSectionStart);
+                    sectionProgress = (cond.songPosition - currectSectionStart) / (cond.GetSongPosFromBeat(nextSection.beat) - currectSectionStart);
             }
         }
 
@@ -558,6 +558,7 @@ namespace HeavenStudio
             Beatmap.Entities.Sort((x, y) => x.beat.CompareTo(y.beat));
             Beatmap.TempoChanges.Sort((x, y) => x.beat.CompareTo(y.beat));
             Beatmap.VolumeChanges.Sort((x, y) => x.beat.CompareTo(y.beat));
+            Beatmap.SectionMarkers.Sort((x, y) => x.beat.CompareTo(y.beat));
         }
 
         void SortEventsByPriority(List<RiqEntity> entities)

@@ -61,6 +61,7 @@ namespace HeavenStudio.Editor.Track
 
         public override void OnRightClick()
         {
+            if (first) return;
             if (Timeline.instance.timelineState.currentState == Timeline.CurrentTimelineState.State.MusicVolume)
             {
                 GameManager.instance.Beatmap.VolumeChanges.Remove(volumeChange);

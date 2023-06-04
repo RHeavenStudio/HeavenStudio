@@ -63,6 +63,7 @@ namespace HeavenStudio.Editor.Track
 
         public override void OnRightClick()
         {
+            if (first) return;
             if (Timeline.instance.timelineState.currentState == Timeline.CurrentTimelineState.State.TempoChange)
             {
                 GameManager.instance.Beatmap.TempoChanges.Remove(tempoChange);

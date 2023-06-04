@@ -20,6 +20,7 @@ namespace HeavenStudio
     
     public class Minigames
     {
+        
         public static void InitPreprocessor()
         {
             RiqBeatmap.OnUpdateBeatmap += PreProcessBeatmap;
@@ -150,6 +151,32 @@ namespace HeavenStudio
                         }
                     }
                 }
+            }
+
+            foreach (var tempo in data.tempoChanges)
+            {
+                tempo["tempo"] = (float)tempo["tempo"];
+                tempo["swing"] = (float)tempo["swing"];
+                if (tempo.dynamicData.ContainsKey("timeSignature"))
+                    tempo["timeSignature"] = (Vector2)tempo["timeSignature"];
+                else
+                    tempo.dynamicData.Add("timeSignature", new Vector2(4, 4));
+            }
+
+            foreach (var vol in data.volumeChanges)
+            {
+                vol["volume"] = (float)vol["volume"];
+                vol["fade"] = Enum.Parse(typeof(Util.EasingFunction.Ease), (string)vol["fade"]);
+            }
+
+            foreach (var section in data.beatmapSections)
+            {
+                section["sectionName"] = (string)section["sectionName"];
+                section["isCheckpoint"] = (bool)section["isCheckpoint"];
+                section["startPerfect"] = (bool)section["startPerfect"];
+                section["breakSection"] = (bool)section["breakSection"];
+                section["extendsPrevious"] = (bool)section["extendsPrevious"];
+                section["sectionWeight"] = (float)section["sectionWeight"];
             }
 
             //go thru each property of the model beatmap and add any missing keyvalue pair

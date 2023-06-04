@@ -397,6 +397,7 @@ namespace HeavenStudio.Editor
                 catch (System.Exception e)
                 {
                     Debug.Log($"Error importing RIQ: {e.Message}");
+                    Debug.LogException(e);
                 }
 
                 StartCoroutine(LoadMusic());

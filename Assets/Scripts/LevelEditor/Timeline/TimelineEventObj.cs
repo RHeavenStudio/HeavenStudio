@@ -76,8 +76,11 @@ namespace HeavenStudio.Editor.Track
         private void Update()
         {
             selected = Selections.instance.eventsSelected.Contains(this);
-            if (entity.uid != eventObjID)
-                entity = GameManager.instance.Beatmap.Entities.Find(a => a.uid == eventObjID);
+            if (eventObjID != entity.uid)
+            {
+                eventObjID = GameManager.instance.Beatmap.Entities.Find(a => a == entity).uid;
+                Debug.Log($"assigning uid {eventObjID}");
+            }
 
             mouseHovering = RectTransformUtility.RectangleContainsScreenPoint(rectTransform, Input.mousePosition, Editor.instance.EditorCamera) && Timeline.instance.timelineState.selected;
 

@@ -734,7 +734,7 @@ namespace HeavenStudio.Editor.Track
             return tex2D;
         }
 
-        public TimelineEventObj AddEventObject(string eventName, bool dragNDrop = false, Vector3 pos = new Vector3(), RiqEntity? entity = null, bool addEvent = false)
+        public TimelineEventObj AddEventObject(string eventName, bool dragNDrop = false, Vector3 pos = new Vector3(), RiqEntity entity = null, bool addEvent = false)
         {
             var game = EventCaller.instance.GetMinigame(eventName.Split(0));
             var action = EventCaller.instance.GetGameAction(game, eventName.Split(1));
@@ -745,9 +745,9 @@ namespace HeavenStudio.Editor.Track
             TimelineEventObj eventObj = g.GetComponent<TimelineEventObj>();
 
             if (eventName.Split(1) == "switchGame")
-            eventObj.Icon.sprite = Editor.GameIcon(eventName.Split(2));
-                else
-            eventObj.Icon.sprite = Editor.GameIcon(eventName.Split(0));
+                eventObj.Icon.sprite = Editor.GameIcon(eventName.Split(2));
+            else
+                eventObj.Icon.sprite = Editor.GameIcon(eventName.Split(0));
 
             Minigames.GameAction gameAction = EventCaller.instance.GetGameAction(EventCaller.instance.GetMinigame(eventName.Split(0)), eventName.Split(1));
 
@@ -762,9 +762,9 @@ namespace HeavenStudio.Editor.Track
                 else
                 {
                     eventObj.resizable = true;
-                    if (!entity.HasValue && gameAction.defaultLength != entity.Value.length && dragNDrop == false)
+                    if (entity != null && gameAction.defaultLength != entity.length && dragNDrop == false)
                     {
-                        g.GetComponent<RectTransform>().sizeDelta = new Vector2(entity.Value.length, LayerHeight());
+                        g.GetComponent<RectTransform>().sizeDelta = new Vector2(entity.length, LayerHeight());
                     }
                     else
                     {
@@ -772,8 +772,6 @@ namespace HeavenStudio.Editor.Track
                     }
                 }
             }
-
-            g.SetActive(true);
 
             if (dragNDrop)
             {
@@ -783,17 +781,18 @@ namespace HeavenStudio.Editor.Track
                 Selections.instance.ClickSelect(eventObj);
                 eventObj.moving = true;
             }
-
+            else
+            {
+                entity["track"] = eventObj.GetTrack();
+            }
 
             if (addEvent)
             {
-                RiqEntity tempEntity = entity.Value;
+                RiqEntity tempEntity = entity;
 
-                if (!entity.HasValue)
+                if (entity == null)
                 {
                     RiqEntity en = GameManager.instance.Beatmap.AddNewEntity(eventName, g.transform.localPosition.x, gameAction.defaultLength);
-
-                    GameManager.instance.Beatmap.Entities.Add(en);
                     GameManager.instance.SortEventsList();
 
                     tempEntity = en;
@@ -824,25 +823,26 @@ namespace HeavenStudio.Editor.Track
                             //tempEntity[ep[i].propertyName] = returnVal;
                             tempEntity.CreateProperty(ep[i].propertyName, returnVal);
                         }
-                        eventObj.entity = tempEntity;
                     }
                 }
                 else
                 {
-                    if (!dragNDrop)
-                        tempEntity["track"] = eventObj.GetTrack();
-                    eventObj.entity = tempEntity;
                     GameManager.instance.Beatmap.Entities.Add(tempEntity);
                     GameManager.instance.SortEventsList();
                 }
+
+                eventObj.entity = tempEntity;
             }
             else
             {
-                eventObj.entity = entity.Value;
+                eventObj.entity = entity;
             }
 
             eventObjs.Add(eventObj);
             eventObj.eventObjID = eventObj.entity.uid;
+            Debug.Log($"Added event object {eventObj.eventObjID}");
+
+            g.SetActive(true);
 
             return eventObj;
         }
@@ -865,13 +865,14 @@ namespace HeavenStudio.Editor.Track
 
         public void DestroyEventObject(RiqEntity entity)
         {
+            Debug.Log($"Destroying event object {entity.datamodel} at beat {entity.beat} (uid: {entity.uid})");
             if (EventParameterManager.instance.entity == entity)
                 EventParameterManager.instance.Disable();
 
             // eventObjs.Remove(entity.eventObj);
             foreach (TimelineEventObj e in eventObjs)
             {
-                if (e.eventObjID == entity.uid)
+                if (e.entity == entity)
                 {
                     Destroy(e.gameObject);
                     eventObjs.Remove(e);
@@ -879,7 +880,6 @@ namespace HeavenStudio.Editor.Track
                 }
             }
             GameManager.instance.Beatmap.Entities.Remove(entity);
-
             
             GameManager.instance.SortEventsList();
         }

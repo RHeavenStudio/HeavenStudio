@@ -63,7 +63,7 @@ namespace HeavenStudio.Common
 
         public void OnSectionChange(RiqEntity section)
         {
-            if (string.IsNullOrEmpty(section.datamodel)) return;
+            if (section == null) return;
             if (!PersistentDataManager.gameSettings.isMedalOn) return;
             if (PersistentDataManager.gameSettings.isMedalOn && !isMedalsStarted)
             {

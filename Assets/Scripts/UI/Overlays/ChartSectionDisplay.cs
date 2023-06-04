@@ -21,28 +21,28 @@ namespace HeavenStudio.Common
         {
             GameManager.instance.onSectionChange += OnSectionChange;
             GameManager.instance.onBeatChanged += OnBeatChanged;
-            gameObject.SetActive(!string.IsNullOrEmpty(GameManager.instance.currentSection.datamodel));
+            gameObject.SetActive(GameManager.instance.currentSection != null);
         }
 
         // Update is called once per frame
         void Update()
         {
-            SectionProgress.value = GameManager.instance.sectionProgress;
+            SectionProgress.value = (float) GameManager.instance.sectionProgress;
         }
 
         public void OnBeatChanged(double beat)
         {
-            gameObject.SetActive(!string.IsNullOrEmpty(GameManager.instance.currentSection.datamodel));
-            SectionProgress.value = GameManager.instance.sectionProgress;
+            gameObject.SetActive(GameManager.instance.currentSection != null);
+            SectionProgress.value = (float) GameManager.instance.sectionProgress;
         }
 
         public void OnSectionChange(RiqEntity section)
         {
-            if ((!string.IsNullOrEmpty(section.datamodel)))
+            if (section != null)
             {
                 gameObject.SetActive(true);
                 SectionText.text = section["sectionName"];
-                SectionProgress.value = GameManager.instance.sectionProgress;
+                SectionProgress.value = (float) GameManager.instance.sectionProgress;
 
                 if (PersistentDataManager.gameSettings.perfectChallengeType == PersistentDataManager.PerfectChallengeType.Off) return;
                 if (!OverlaysManager.OverlaysEnabled) return;
