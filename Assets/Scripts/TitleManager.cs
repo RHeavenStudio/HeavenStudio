@@ -4,6 +4,7 @@ using UnityEngine.UI;
 using UnityEngine;
 using HeavenStudio.Util;
 using Starpelly;
+using System.Linq;
 
 namespace HeavenStudio
 {
@@ -49,6 +50,8 @@ namespace HeavenStudio
             musicSource = GetComponent<AudioSource>();
             createButton.onClick.AddListener(delegate { GlobalGameManager.LoadScene("Editor"); Jukebox.PlayOneShot("ui/UIEnter"); });
             musicSource.Play();
+            var _rand = new System.Random();
+            starAnims = starAnims.OrderBy(_ => _rand.Next()).ToList();
         }
 
         private void Update()
@@ -57,7 +60,7 @@ namespace HeavenStudio
             if (songPos >= musicSource.clip.length)
             {
                 time = 0;
-                targetBopBeat = 1;
+                targetBopBeat = 0;
                 loops++;
             }
             double absTime = Time.realtimeSinceStartup;
@@ -92,16 +95,28 @@ namespace HeavenStudio
                     logoRevealed = true;
                 }
             }
-            if (songPosBeat >= targetBopBeat)
+            if (songPosBeat - 1 >= targetBopBeat)
             {
-                if (targetBopBeat > 4 || loops > 0) 
+                if (targetBopBeat <= 3 && loops == 0)
+                {
+                    starAnims[(int)targetBopBeat].Play("StarAppearBop", 0, 0);
+                    if (targetBopBeat == 3) starAnims[4].Play("StarAppearBop", 0, 0);
+                    for (int i = 0; i < (int)targetBopBeat; i++)
+                    {
+                        starAnims[i].Play("StarBopNoRot", 0, 0);
+                    }
+                }
+                else
+                {
+                    foreach (var star in starAnims)
+                    {
+                        star.Play("StarBop", 0, 0);
+                    }
+                }
+                if (targetBopBeat > 3 || loops > 0) 
                 {
                     logoAnim.Play(altBop ? "LogoBop2" : "LogoBop", 0, 0);
                     altBop = !altBop;
-                }
-                foreach (var star in starAnims)
-                {
-                    star.Play("StarBop", 0, 0);
                 }
                 targetBopBeat += 1;
             }
