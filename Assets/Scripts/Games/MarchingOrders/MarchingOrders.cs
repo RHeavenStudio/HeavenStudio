@@ -136,7 +136,7 @@ namespace HeavenStudio.Games.Loaders
                     // hidden in the editor but here cuz backwards compatibility
                     new GameAction("marching", "Start Marching (old)")
                     {
-                        hidden = false,
+                        hidden = true,
                         preFunction = delegate {
                             var e = eventCaller.currentEntity;
                             MarchingOrders.instance.ForceMarching(e.beat, e.length);
