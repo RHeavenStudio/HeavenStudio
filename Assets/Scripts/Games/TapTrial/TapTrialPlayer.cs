@@ -31,9 +31,9 @@ namespace HeavenStudio.Games.Scripts_TapTrial
         public void Tap(bool hit, int type)
         {
             if (hit)
-                Jukebox.PlayOneShotGame("tapTrial/tap");
+                SoundByte.PlayOneShotGame("tapTrial/tap");
             else
-                Jukebox.PlayOneShotGame("tapTrial/tonk");
+                SoundByte.PlayOneShotGame("tapTrial/tonk");
 
 
             switch (type)

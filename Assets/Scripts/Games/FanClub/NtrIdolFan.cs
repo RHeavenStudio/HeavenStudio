@@ -161,7 +161,7 @@ namespace HeavenStudio.Games.Scripts_FanClub
                 shadow.transform.localScale = new Vector3(1.4f, 1.4f, 1f);
                 if (hasJumped)
                 {
-                    Jukebox.PlayOneShotGame("fanClub/landing_impact", pitch: UnityEngine.Random.Range(0.95f, 1f), volume: 1f/4);
+                    SoundByte.PlayOneShotGame("fanClub/landing_impact", pitch: UnityEngine.Random.Range(0.95f, 1f), volume: 1f/4);
                     if (player)
                     {
                         animator.Play("FanPrepare", -1, 0);
@@ -191,8 +191,8 @@ namespace HeavenStudio.Games.Scripts_FanClub
             jumpStartTime = -99f;
             animator.speed = 1f;
             animator.Play("FanClap", -1, 0);
-            Jukebox.PlayOneShotGame("fanClub/play_clap");
-            Jukebox.PlayOneShotGame("fanClub/crap_impact");
+            SoundByte.PlayOneShotGame("fanClub/play_clap");
+            SoundByte.PlayOneShotGame("fanClub/crap_impact");
             clappingStartTime = cond.songPositionInBeats;
 
             if (doCharge)
@@ -229,7 +229,7 @@ namespace HeavenStudio.Games.Scripts_FanClub
 
             var cond = Conductor.instance;
             animator.Play("FanJump", -1, 0);
-            Jukebox.PlayOneShotGame("fanClub/play_jump");
+            SoundByte.PlayOneShotGame("fanClub/play_jump");
             jumpStartTime = cond.songPositionInBeats;
             clappingStartTime = Single.MinValue;
             stopCharge = false;

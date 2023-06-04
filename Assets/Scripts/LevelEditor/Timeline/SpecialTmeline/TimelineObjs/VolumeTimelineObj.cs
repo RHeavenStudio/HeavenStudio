@@ -5,6 +5,8 @@ using UnityEngine;
 using TMPro;
 
 using DG.Tweening;
+using Jukebox;
+using Jukebox.Legacy;
 
 namespace HeavenStudio.Editor.Track
 {
@@ -14,7 +16,7 @@ namespace HeavenStudio.Editor.Track
         [SerializeField] private TMP_Text volumeTXT;
         [SerializeField] private GameObject volumeLine;
 
-        public DynamicBeatmap.VolumeChange volumeChange;
+        public RiqEntity volumeChange;
 
         new private void Update()
         {
@@ -31,10 +33,10 @@ namespace HeavenStudio.Editor.Track
                     if (Input.GetKey(KeyCode.LeftControl))
                         newVolume /= 100f;
 
-                    volumeChange.volume += newVolume;
+                    volumeChange["volume"] += newVolume;
 
                     //make sure volume is positive
-                    volumeChange.volume = Mathf.Clamp(volumeChange.volume, 0, 100);
+                    volumeChange["volume"] = Mathf.Clamp(volumeChange["volume"], 0, 100);
                 }
             }
 
@@ -43,7 +45,7 @@ namespace HeavenStudio.Editor.Track
 
         private void UpdateVolume()
         {
-            volumeTXT.text = $"{volumeChange.volume}%";
+            volumeTXT.text = $"{volumeChange["volume"]}%";
         }
 
         public override void Init()
@@ -61,14 +63,14 @@ namespace HeavenStudio.Editor.Track
         {
             if (Timeline.instance.timelineState.currentState == Timeline.CurrentTimelineState.State.MusicVolume)
             {
-                GameManager.instance.Beatmap.volumeChanges.Remove(volumeChange);
+                GameManager.instance.Beatmap.VolumeChanges.Remove(volumeChange);
                 DeleteObj();
             }
         }
 
         public override bool OnMove(float beat)
         {
-            foreach (var volumeChange in GameManager.instance.Beatmap.volumeChanges)
+            foreach (var volumeChange in GameManager.instance.Beatmap.VolumeChanges)
             {
                 if (this.volumeChange == volumeChange)
                     continue;

@@ -23,7 +23,7 @@ namespace HeavenStudio.Games.Loaders
                         new Param("smile", false, "Smile", "If the characters smile with the heart message after catching"),
                         new Param("endSmile", new EntityTypes.Float(2, 100), "End Smile Beat", "How many beats after the catch should the smile end?")
                     },
-                    preFunction = delegate {var e = eventCaller.currentEntity; CatchyTune.PreDropFruit(e.beat, e["side"], e["smile"], false, e["endSmile"]); },
+                    preFunction = delegate {var e = eventCaller.currentEntity; CatchyTune.PreDropFruit((float) e.beat, e["side"], e["smile"], false, e["endSmile"]); },
                 },
 
                 new GameAction("pineapple", "Pineapple")
@@ -35,12 +35,12 @@ namespace HeavenStudio.Games.Loaders
                         new Param("smile", false, "Smile", "If the characters smile with the heart message after catching"),
                         new Param("endSmile", new EntityTypes.Float(2, 100), "End Smile Beat", "How many beats after the catch should the smile end?")
                     },
-                    preFunction = delegate {var e = eventCaller.currentEntity; CatchyTune.PreDropFruit(e.beat, e["side"], e["smile"], true, e["endSmile"]); },
+                    preFunction = delegate {var e = eventCaller.currentEntity; CatchyTune.PreDropFruit((float) e.beat, e["side"], e["smile"], true, e["endSmile"]); },
                 },
 
                 new GameAction("bop", "Bop")
                 {
-                    function = delegate {var e = eventCaller.currentEntity; CatchyTune.instance.Bop(e.beat, e.length, e["bop"], e["bopAuto"]); },
+                    function = delegate {var e = eventCaller.currentEntity; CatchyTune.instance.Bop((float) e.beat, e.length, e["bop"], e["bopAuto"]); },
                     resizable = true,
                     parameters = new List<Param>()
                     {
@@ -335,7 +335,7 @@ namespace HeavenStudio.Games
         public void catchMiss(bool side, bool isPineapple)
         {
             // not the right sound at all but need an accurate rip
-            Jukebox.PlayOneShotGame("catchyTune/fruitThrough");
+            SoundByte.PlayOneShotGame("catchyTune/fruitThrough");
 
             float beat = Conductor.instance.songPositionInBeats;
 
@@ -355,7 +355,7 @@ namespace HeavenStudio.Games
 
         public void catchWhiff(bool side)
         {
-            Jukebox.PlayOneShotGame("catchyTune/whiff");
+            SoundByte.PlayOneShotGame("catchyTune/whiff");
             whiffAnim(side);
         }
 
@@ -363,11 +363,11 @@ namespace HeavenStudio.Games
         {
             if (side)
             {
-                Jukebox.PlayOneShotGame("catchyTune/barely right");
+                SoundByte.PlayOneShotGame("catchyTune/barely right");
             }
             else
             {
-                Jukebox.PlayOneShotGame("catchyTune/barely left");
+                SoundByte.PlayOneShotGame("catchyTune/barely left");
             }
 
             whiffAnim(side);

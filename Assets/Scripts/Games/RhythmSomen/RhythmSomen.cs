@@ -14,30 +14,30 @@ namespace HeavenStudio.Games.Loaders
             {
                 new GameAction("crane (far)", "Far Crane")
                 {
-                    function = delegate { RhythmSomen.instance.DoFarCrane(eventCaller.currentEntity.beat); },
+                    function = delegate { RhythmSomen.instance.DoFarCrane((float) eventCaller.currentEntity.beat); },
                     defaultLength = 4.0f,
                 },
                 new GameAction("crane (close)", "Close Crane")
                 {
-                    function = delegate { RhythmSomen.instance.DoCloseCrane(eventCaller.currentEntity.beat); },
+                    function = delegate { RhythmSomen.instance.DoCloseCrane((float) eventCaller.currentEntity.beat); },
                     defaultLength = 3.0f,
                 },
                 new GameAction("crane (both)", "Both Cranes")
                 {
-                    function = delegate { RhythmSomen.instance.DoBothCrane(eventCaller.currentEntity.beat); },
+                    function = delegate { RhythmSomen.instance.DoBothCrane((float) eventCaller.currentEntity.beat); },
                     defaultLength = 4.0f,
                 },
                 new GameAction("offbeat bell", "Offbeat Warning")
                 {
-                    function = delegate { RhythmSomen.instance.DoBell(eventCaller.currentEntity.beat); },
+                    function = delegate { RhythmSomen.instance.DoBell((float) eventCaller.currentEntity.beat); },
                 },
                 new GameAction("slurp", "Slurp")
                 {
-                    function = delegate { RhythmSomen.instance.Slurp(eventCaller.currentEntity.beat); }
+                    function = delegate { RhythmSomen.instance.Slurp((float) eventCaller.currentEntity.beat); }
                 },
                 new GameAction("bop", "Bop") 
                 {
-                    function = delegate { var e = eventCaller.currentEntity; RhythmSomen.instance.ToggleBop(e.beat, e.length, e["toggle2"], e["toggle"]); },
+                    function = delegate { var e = eventCaller.currentEntity; RhythmSomen.instance.ToggleBop((float) e.beat, e.length, e["toggle2"], e["toggle"]); },
                     resizable = true,
                     parameters = new List<Param>()
                     {
@@ -95,7 +95,7 @@ namespace HeavenStudio.Games
 
             if (PlayerInput.Pressed() && !IsExpectingInputNow())
             {
-                Jukebox.PlayOneShotGame("rhythmSomen/somen_mistake");
+                SoundByte.PlayOneShotGame("rhythmSomen/somen_mistake");
                 FrontArm.Play("ArmPluck", -1, 0);
                 backArm.Play("BackArmNothing", 0, 0);
                 hasSlurped = false;
@@ -208,7 +208,7 @@ namespace HeavenStudio.Games
         public void DoBell(float beat)
         {
             //Bell Sound lol
-            Jukebox.PlayOneShotGame("rhythmSomen/somen_bell");
+            SoundByte.PlayOneShotGame("rhythmSomen/somen_bell");
 
             BeatAction.New(Player, new List<BeatAction.Action>()
                     {
@@ -224,14 +224,14 @@ namespace HeavenStudio.Games
             splashEffect.Play();
             if (state >= 1f || state <= -1f)
             {
-                Jukebox.PlayOneShotGame("rhythmSomen/somen_splash");
+                SoundByte.PlayOneShotGame("rhythmSomen/somen_splash");
                 FrontArm.Play("ArmPluckNG", -1, 0);
                 EffectSweat.Play("BlobSweating", -1, 0);
                 missed = true;
                 return;
             }
-            Jukebox.PlayOneShotGame("rhythmSomen/somen_catch");
-            Jukebox.PlayOneShotGame("rhythmSomen/somen_catch_old", volume: 0.25f);
+            SoundByte.PlayOneShotGame("rhythmSomen/somen_catch");
+            SoundByte.PlayOneShotGame("rhythmSomen/somen_catch_old", volume: 0.25f);
             FrontArm.Play("ArmPluckOK", -1, 0);
             EffectHit.Play("HitAppear", -1, 0);
             missed = false;

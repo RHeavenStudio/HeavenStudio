@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 using HeavenStudio.Util;
+using Jukebox;
 
 namespace HeavenStudio.Games.Loaders
 {
@@ -14,7 +15,7 @@ namespace HeavenStudio.Games.Loaders
             {
                 new GameAction("shoot", "Pitch Ball")
                 {
-                    function = delegate { Spaceball.instance.Shoot(eventCaller.currentEntity.beat, false, eventCaller.currentEntity["type"]); },
+                    function = delegate { Spaceball.instance.Shoot((float) eventCaller.currentEntity.beat, false, eventCaller.currentEntity["type"]); },
                     preFunction = delegate { Spaceball.instance.PrepareDispenser(); },
                     preFunctionLength = 1,
                     defaultLength = 2, 
@@ -25,7 +26,7 @@ namespace HeavenStudio.Games.Loaders
                 },
 				new GameAction("shootHigh", "Pitch High Ball")
                 {
-                    function = delegate { Spaceball.instance.Shoot(eventCaller.currentEntity.beat, true, eventCaller.currentEntity["type"]); },
+                    function = delegate { Spaceball.instance.Shoot((float) eventCaller.currentEntity.beat, true, eventCaller.currentEntity["type"]); },
                     preFunction = delegate { Spaceball.instance.PrepareDispenser(); },
                     preFunctionLength = 1,
                     defaultLength = 3,
@@ -44,7 +45,7 @@ namespace HeavenStudio.Games.Loaders
                 },
                 new GameAction("alien", "Show Alien")
                 {
-                    function = delegate { Spaceball.instance.alien.Show(eventCaller.currentEntity.beat, eventCaller.currentEntity["hide"]); },
+                    function = delegate { Spaceball.instance.alien.Show((float) eventCaller.currentEntity.beat, eventCaller.currentEntity["hide"]); },
                     parameters = new List<Param>()
                     {
                         new Param("hide", false, "Hide", "Should the alien be hidden?")
@@ -58,7 +59,7 @@ namespace HeavenStudio.Games.Loaders
                     parameters = new List<Param>() 
                     {
                         new Param("valA", new EntityTypes.Integer(1, 320, 10), "Zoom", "The camera's zoom level (Lower value = Zoomed in)"),
-                        new Param("ease", EasingFunction.Ease.Linear, "Ease", "The easing function to use while zooming") 
+                        new Param("ease", Util.EasingFunction.Ease.Linear, "Ease", "The easing function to use while zooming") 
                     } 
                 },
                 new GameAction("prepare dispenser", "Dispenser Prepare")
@@ -109,15 +110,15 @@ namespace HeavenStudio.Games
         public Sprite[] BallSprites;
         public Material[] CostumeColors;
 
-        private List<DynamicBeatmap.DynamicEntity> _allCameraEvents = new List<DynamicBeatmap.DynamicEntity>();
+        private List<RiqEntity> _allCameraEvents = new List<RiqEntity>();
 
         public Alien alien;
 
-        private EasingFunction.Ease lastEase;
+        private Util.EasingFunction.Ease lastEase;
 
         public static Spaceball instance { get; set; }
 
-        public override void OnGameSwitch(float beat)
+        public override void OnGameSwitch(double beat)
         {
             for (int i = 1; i < BallsHolder.transform.childCount; i++)
                 Destroy(BallsHolder.transform.GetChild(i).gameObject);
@@ -136,7 +137,7 @@ namespace HeavenStudio.Games
         {
             instance = this;
             var camEvents = EventCaller.GetAllInGameManagerList("spaceball", new string[] { "camera" });
-            List<DynamicBeatmap.DynamicEntity> tempEvents = new List<DynamicBeatmap.DynamicEntity>();
+            List<RiqEntity> tempEvents = new List<RiqEntity>();
             for (int i = 0; i < camEvents.Count; i++)
             {
                 if (camEvents[i].beat + camEvents[i].beat >= Conductor.instance.songPositionInBeats)
@@ -179,7 +180,7 @@ namespace HeavenStudio.Games
                         }
                         else
                         {
-                            EasingFunction.Function func = EasingFunction.GetEasingFunction(lastEase);
+                            Util.EasingFunction.Function func = Util.EasingFunction.GetEasingFunction(lastEase);
 
                             float newPosZ = func(lastCamDistance + 10, currentZoomCamDistance + 10, normalizedBeat);
                             GameCamera.additionalPosition = new Vector3(0, 0, newPosZ);
@@ -211,7 +212,7 @@ namespace HeavenStudio.Games
                         lastCamDistance = _allCameraEvents[0]["valA"] * -1;
                 }
 
-                currentZoomCamBeat = _allCameraEvents[currentZoomIndex].beat;
+                currentZoomCamBeat = (float)_allCameraEvents[currentZoomIndex].beat;
                 currentZoomCamLength = _allCameraEvents[currentZoomIndex].length;
 
                 float dist = _allCameraEvents[currentZoomIndex]["valA"] * -1;
@@ -221,7 +222,7 @@ namespace HeavenStudio.Games
                 else
                     currentZoomCamDistance = dist;
 
-                lastEase = (EasingFunction.Ease) _allCameraEvents[currentZoomIndex]["ease"];
+                lastEase = (Util.EasingFunction.Ease) _allCameraEvents[currentZoomIndex]["ease"];
             }
         }
 
@@ -240,11 +241,11 @@ namespace HeavenStudio.Games
             if (high)
             {
                 ball.GetComponent<SpaceballBall>().high = true;
-                Jukebox.PlayOneShotGame("spaceball/longShoot");
+                SoundByte.PlayOneShotGame("spaceball/longShoot");
             }
             else
             {
-                Jukebox.PlayOneShotGame("spaceball/shoot");
+                SoundByte.PlayOneShotGame("spaceball/shoot");
             }
 
             ball.GetComponent<SpaceballBall>().Sprite.sprite = BallSprites[type];

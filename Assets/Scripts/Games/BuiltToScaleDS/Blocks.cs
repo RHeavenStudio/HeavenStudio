@@ -90,7 +90,7 @@ namespace HeavenStudio.Games.Scripts_BuiltToScaleDS
             game.SpawnObject(BuiltToScaleDS.BTSObject.HitPieces);
             Destroy(gameObject);
 
-            Jukebox.PlayOneShotGame("builtToScaleDS/Hit");
+            SoundByte.PlayOneShotGame("builtToScaleDS/Hit");
         }
 
         void NearMiss()
@@ -102,7 +102,7 @@ namespace HeavenStudio.Games.Scripts_BuiltToScaleDS
             game.SpawnObject(BuiltToScaleDS.BTSObject.MissPieces);
             Destroy(gameObject);
 
-            Jukebox.PlayOneShotGame("builtToScaleDS/Crumble");
+            SoundByte.PlayOneShotGame("builtToScaleDS/Crumble");
         }
     }
 }

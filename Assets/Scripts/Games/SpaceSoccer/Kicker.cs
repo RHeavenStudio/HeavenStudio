@@ -85,7 +85,7 @@ namespace HeavenStudio.Games.Scripts_SpaceSoccer
 
             if (player)
             {
-                Jukebox.PlayOneShotGame("spaceSoccer/kick");
+                SoundByte.PlayOneShotGame("spaceSoccer/kick");
             }
 
             if (hit)
@@ -183,12 +183,12 @@ namespace HeavenStudio.Games.Scripts_SpaceSoccer
                 kickLeftWhiff = !kickLeftWhiff;
             }
 
-            if (player) Jukebox.PlayOneShotGame("spaceSoccer/highkicktoe1");
+            if (player) SoundByte.PlayOneShotGame("spaceSoccer/highkicktoe1");
             if (hit && ball)
             {
                 ball.HighKick();
 
-                if (player) Jukebox.PlayOneShotGame("spaceSoccer/highkicktoe1_hit");
+                if (player) SoundByte.PlayOneShotGame("spaceSoccer/highkicktoe1_hit");
             }
 
         }
@@ -207,10 +207,10 @@ namespace HeavenStudio.Games.Scripts_SpaceSoccer
 
             if (player)
             {
-                Jukebox.PlayOneShotGame("spaceSoccer/highkicktoe3");
+                SoundByte.PlayOneShotGame("spaceSoccer/highkicktoe3");
                 if (hit && ball)
                 {
-                    Jukebox.PlayOneShotGame("spaceSoccer/highkicktoe3_hit");
+                    SoundByte.PlayOneShotGame("spaceSoccer/highkicktoe3_hit");
                 }
             }
 
@@ -239,7 +239,7 @@ namespace HeavenStudio.Games.Scripts_SpaceSoccer
                 kickLeft = true;
             }
 
-            var highKicks = GameManager.instance.Beatmap.entities.FindAll(c => c.datamodel == "spaceSoccer/high kick-toe!");
+            var highKicks = GameManager.instance.Beatmap.Entities.FindAll(c => c.datamodel == "spaceSoccer/high kick-toe!");
             for (int i = 0; i < highKicks.Count; i++)
             {
                 if ((highKicks[i].beat - 0.15f) <= Conductor.instance.songPositionInBeats && highKicks[i].beat + 1f > Conductor.instance.songPositionInBeats)
@@ -249,7 +249,7 @@ namespace HeavenStudio.Games.Scripts_SpaceSoccer
 
                     if (ball)
                     {
-                        ball.highKickSwing = highKicks[i].swing;
+                        ball.highKickSwing = highKicks[i]["swing"];
                         if (ball.highKickSwing == 0f)
                             ball.highKickSwing = 0.5f;
                     }
@@ -344,7 +344,7 @@ namespace HeavenStudio.Games.Scripts_SpaceSoccer
             ball = null;
             // queue the miss sound
             MultiSound.Play(new MultiSound.Sound[] { new MultiSound.Sound("spaceSoccer/missNeutral", targetBeat + (float)cond.SecsToBeats(Minigame.EndTime()-1, 
-                cond.GetBpmAtBeat(targetBeat)), Jukebox.GetPitchFromCents(UnityEngine.Random.Range(-75, 75), false)) });
+                cond.GetBpmAtBeat(targetBeat)), SoundByte.GetPitchFromCents(UnityEngine.Random.Range(-75, 75), false)) });
         }
 
         private void KickJust(PlayerActionEvent caller, float state)

@@ -140,7 +140,7 @@ namespace HeavenStudio.Games.Scripts_KarateMan
                 if (!KarateMan.instance.IsExpectingInputNow(InputType.STANDARD_DOWN | InputType.DIRECTION_DOWN))
                 {
                     Punch(1);
-                    Jukebox.PlayOneShotGame("karateman/swingNoHit", forcePlay: true);
+                    SoundByte.PlayOneShotGame("karateman/swingNoHit", forcePlay: true);
                 }
             }
             
@@ -174,7 +174,7 @@ namespace HeavenStudio.Games.Scripts_KarateMan
                 else if (inKick && cond.GetPositionFromBeat(lastChargeTime, 2.75f) <= 0.5f && !KarateMan.instance.IsExpectingInputNow(InputType.STANDARD_UP | InputType.DIRECTION_UP))
                 {
                     Kick(cond.songPositionInBeats);
-                    Jukebox.PlayOneShotGame("karateman/swingKick", forcePlay: true);
+                    SoundByte.PlayOneShotGame("karateman/swingKick", forcePlay: true);
                 }
             }
 

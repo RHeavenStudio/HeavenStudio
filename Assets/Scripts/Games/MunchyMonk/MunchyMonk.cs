@@ -17,7 +17,7 @@ namespace HeavenStudio.Games.Loaders
                 {
                     function = delegate {
                         var e = eventCaller.currentEntity; 
-                        MunchyMonk.instance.Bop(e.beat, e["bop"], e["autoBop"]); 
+                        MunchyMonk.instance.Bop((float) e.beat, e["bop"], e["autoBop"]); 
                     },
                     parameters = new List<Param>()
                     {
@@ -30,7 +30,7 @@ namespace HeavenStudio.Games.Loaders
                 {
                     function = delegate {
                         var e = eventCaller.currentEntity; 
-                        MunchyMonk.instance.MonkMove(e.beat, e.length, e["goToSide"], e["ease"]); 
+                        MunchyMonk.instance.MonkMove((float) e.beat, e.length, e["goToSide"], e["ease"]); 
                     },
                     resizable = true,
                     parameters = new List<Param>()
@@ -43,11 +43,11 @@ namespace HeavenStudio.Games.Loaders
                 {
                     function = delegate {
                         var e = eventCaller.currentEntity; 
-                        MunchyMonk.PreOneGoCue(e.beat, e["oneColor"]); 
+                        MunchyMonk.PreOneGoCue((float) e.beat, e["oneColor"]); 
                     },
                     inactiveFunction = delegate {
                         var e = eventCaller.currentEntity; 
-                        MunchyMonk.PreOneGoCue(e.beat, e["oneColor"]); 
+                        MunchyMonk.PreOneGoCue((float) e.beat, e["oneColor"]); 
                     },
                     defaultLength = 2f,
                     parameters = new List<Param>()
@@ -66,18 +66,18 @@ namespace HeavenStudio.Games.Loaders
                     preFunctionLength = 0.5f,
                     preFunction = delegate {
                         var e = eventCaller.currentEntity; 
-                        MunchyMonk.PreTwoTwoCue(e.beat, e["twoColor1"], e["twoColor2"]);
+                        MunchyMonk.PreTwoTwoCue((float) e.beat, e["twoColor1"], e["twoColor2"]);
                     },
                 },
                 new GameAction("Three", "Three")
                 {
                     function = delegate {
                         var e = eventCaller.currentEntity; 
-                        MunchyMonk.PreThreeGoCue(e.beat, e["threeColor1"], e["threeColor2"], e["threeColor3"]); 
+                        MunchyMonk.PreThreeGoCue((float) e.beat, e["threeColor1"], e["threeColor2"], e["threeColor3"]); 
                     },
                     inactiveFunction = delegate {
                         var e = eventCaller.currentEntity; 
-                        MunchyMonk.PreThreeGoCue(e.beat, e["threeColor1"], e["threeColor2"], e["threeColor3"]); 
+                        MunchyMonk.PreThreeGoCue((float) e.beat, e["threeColor1"], e["threeColor2"], e["threeColor3"]); 
                     },
                     defaultLength = 4f,
                     parameters = new List<Param>()
@@ -91,7 +91,7 @@ namespace HeavenStudio.Games.Loaders
                 {
                     function = delegate {
                         var e = eventCaller.currentEntity; 
-                        MunchyMonk.Modifiers(e.beat, e["inputsTil"], e["resetLevel"], e["setLevel"], e["disableBaby"], e["shouldBlush"]); 
+                        MunchyMonk.Modifiers((float) e.beat, e["inputsTil"], e["resetLevel"], e["setLevel"], e["disableBaby"], e["shouldBlush"]); 
                     },
                     defaultLength = 0.5f,
                     parameters = new List<Param>()
@@ -107,7 +107,7 @@ namespace HeavenStudio.Games.Loaders
                 {
                     function = delegate {
                         var e = eventCaller.currentEntity; 
-                        MunchyMonk.instance.PlayMonkAnim(e.beat, e["whichAnim"], e["vineBoom"]);
+                        MunchyMonk.instance.PlayMonkAnim((float) e.beat, e["whichAnim"], e["vineBoom"]);
                     },
                     parameters = new List<Param>()
                     {
@@ -119,7 +119,7 @@ namespace HeavenStudio.Games.Loaders
                 {
                     function = delegate {
                         var e = eventCaller.currentEntity; 
-                        MunchyMonk.instance.ScrollBG(e.beat, e.length, e["scrollSpeed"], e["ease"]); 
+                        MunchyMonk.instance.ScrollBG((float) e.beat, e.length, e["scrollSpeed"], e["ease"]); 
                     },
                     defaultLength = 1f,
                     resizable = true,
@@ -257,7 +257,7 @@ namespace HeavenStudio.Games
             if (PlayerInput.Pressed() && !IsExpectingInputNow(InputType.STANDARD_DOWN))
             {
                 MonkArmsAnim.DoScaledAnimationAsync("WristSlap", 0.5f);
-                Jukebox.PlayOneShotGame(sfxName+"slap");
+                SoundByte.PlayOneShotGame(sfxName+"slap");
                 isStaring = false;
                 // early input stuff
                 if (dumplings.Count != 0) {
@@ -543,7 +543,7 @@ namespace HeavenStudio.Games
             }
             
             // it's in zeo's video; no reason not to include it :)
-            if (vineBoom) Jukebox.PlayOneShotGame("fanClub/arisa_dab", forcePlay: true);
+            if (vineBoom) SoundByte.PlayOneShotGame("fanClub/arisa_dab", forcePlay: true);
         }
 
         public void MonkMove(float beat, float length, int goToSide, int ease)

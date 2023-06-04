@@ -6,6 +6,8 @@ using UnityEngine.UI;
 using TMPro;
 
 using HeavenStudio.Editor;
+using Jukebox;
+using Jukebox.Legacy;
 
 namespace HeavenStudio.Common
 {
@@ -19,7 +21,7 @@ namespace HeavenStudio.Common
         {
             GameManager.instance.onSectionChange += OnSectionChange;
             GameManager.instance.onBeatChanged += OnBeatChanged;
-            gameObject.SetActive(GameManager.instance.currentSection != null);
+            gameObject.SetActive(!string.IsNullOrEmpty(GameManager.instance.currentSection.datamodel));
         }
 
         // Update is called once per frame
@@ -28,23 +30,23 @@ namespace HeavenStudio.Common
             SectionProgress.value = GameManager.instance.sectionProgress;
         }
 
-        public void OnBeatChanged(float beat)
+        public void OnBeatChanged(double beat)
         {
-            gameObject.SetActive(GameManager.instance.currentSection != null);
+            gameObject.SetActive(!string.IsNullOrEmpty(GameManager.instance.currentSection.datamodel));
             SectionProgress.value = GameManager.instance.sectionProgress;
         }
 
-        public void OnSectionChange(DynamicBeatmap.ChartSection section)
+        public void OnSectionChange(RiqEntity section)
         {
-            if (section != null)
+            if ((!string.IsNullOrEmpty(section.datamodel)))
             {
                 gameObject.SetActive(true);
-                SectionText.text = section.sectionName;
+                SectionText.text = section["sectionName"];
                 SectionProgress.value = GameManager.instance.sectionProgress;
 
                 if (PersistentDataManager.gameSettings.perfectChallengeType == PersistentDataManager.PerfectChallengeType.Off) return;
                 if (!OverlaysManager.OverlaysEnabled) return;
-                if (section.startPerfect && GoForAPerfect.instance != null && GoForAPerfect.instance.perfect && !GoForAPerfect.instance.gameObject.activeSelf)
+                if (section["startPerfect"] && GoForAPerfect.instance != null && GoForAPerfect.instance.perfect && !GoForAPerfect.instance.gameObject.activeSelf)
                 {
                     GoForAPerfect.instance.Enable(section.beat);
                 }

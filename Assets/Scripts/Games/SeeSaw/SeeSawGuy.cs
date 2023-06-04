@@ -178,7 +178,7 @@ namespace HeavenStudio.Games.Scripts_SeeSaw
             } 
             dead = true;
             anim.DoScaledAnimationAsync("Choke_" + (see ? "See" : "Saw") + "_Intro", 0.5f);
-            Jukebox.PlayOneShotGame("seeSaw/explosion" + (see ? "Black" : "White"), beat + length);
+            SoundByte.PlayOneShotGame("seeSaw/explosion" + (see ? "Black" : "White"), beat + length);
             BeatAction.New(gameObject, new List<BeatAction.Action>()
             {
                 new BeatAction.Action(beat + length - 1, delegate { invertAnim.DoScaledAnimationAsync("Invert", 0.5f); }),

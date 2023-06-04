@@ -15,7 +15,7 @@ namespace HeavenStudio.Games.Loaders
             {
                 new GameAction("turn right", "Turn Right")
                 {
-                    function = delegate { var e = eventCaller.currentEntity; SpaceDance.instance.DoTurnRight(e.beat, e["whoSpeaks"], e["gramps"]); },
+                    function = delegate { var e = eventCaller.currentEntity; SpaceDance.instance.DoTurnRight((float) e.beat, e["whoSpeaks"], e["gramps"]); },
                     defaultLength = 2.0f,
                     parameters = new List<Param>()
                     {
@@ -25,7 +25,7 @@ namespace HeavenStudio.Games.Loaders
                 },
                 new GameAction("sit down", "Sit Down")
                 {
-                    function = delegate { var e = eventCaller.currentEntity; SpaceDance.instance.DoSitDown(e.beat, e["whoSpeaks"], e["gramps"]); },
+                    function = delegate { var e = eventCaller.currentEntity; SpaceDance.instance.DoSitDown((float) e.beat, e["whoSpeaks"], e["gramps"]); },
                     defaultLength = 2.0f,
                     parameters = new List<Param>()
                     {
@@ -35,7 +35,7 @@ namespace HeavenStudio.Games.Loaders
                 },
                 new GameAction("punch", "Punch")
                 {
-                    function = delegate { var e = eventCaller.currentEntity; SpaceDance.instance.DoPunch(e.beat, e["whoSpeaks"], e["gramps"]); },
+                    function = delegate { var e = eventCaller.currentEntity; SpaceDance.instance.DoPunch((float) e.beat, e["whoSpeaks"], e["gramps"]); },
                     defaultLength = 2.0f,
                     parameters = new List<Param>()
                     {
@@ -45,7 +45,7 @@ namespace HeavenStudio.Games.Loaders
                 },
                 new GameAction("shootingStar", "Shooting Star")
                 {
-                    function = delegate { var e = eventCaller.currentEntity; SpaceDance.instance.UpdateShootingStar(e.beat, e.length, e["ease"]); },
+                    function = delegate { var e = eventCaller.currentEntity; SpaceDance.instance.UpdateShootingStar((float) e.beat, e.length, e["ease"]); },
                     defaultLength = 2f,
                     resizable = true,
                     parameters = new List<Param>()
@@ -85,7 +85,7 @@ namespace HeavenStudio.Games.Loaders
                 },
                 new GameAction("grampsAnims", "Space Gramps Animations")
                 {
-                    function = delegate {var e = eventCaller.currentEntity; SpaceDance.instance.GrampsAnimations(e.beat, e["type"], e["toggle"]); },
+                    function = delegate {var e = eventCaller.currentEntity; SpaceDance.instance.GrampsAnimations((float) e.beat, e["type"], e["toggle"]); },
                     defaultLength = 0.5f,
                     parameters = new List<Param>()
                     {
@@ -197,19 +197,19 @@ namespace HeavenStudio.Games
                 {
                     if (PlayerInput.Pressed() && !IsExpectingInputNow(InputType.STANDARD_DOWN))
                     {
-                        Jukebox.PlayOneShotGame("spaceDance/inputBad");
+                        SoundByte.PlayOneShotGame("spaceDance/inputBad");
                         DancerP.DoScaledAnimationAsync("PunchDo", 0.5f);
                         // Look at this later, sound effect has some weird clipping on it sometimes?? popping. like. fucking popopop idk why its doing that its fine theres no sample weirdness ughh
                     }
                     if (PlayerInput.GetSpecificDirectionDown(1) && !IsExpectingInputNow(InputType.DIRECTION_RIGHT_DOWN))
                     {
                         DancerP.DoScaledAnimationAsync("TurnRightDo", 0.5f);
-                        Jukebox.PlayOneShotGame("spaceDance/inputBad");
+                        SoundByte.PlayOneShotGame("spaceDance/inputBad");
                     }
                     if (PlayerInput.GetSpecificDirectionDown(2) && !IsExpectingInputNow(InputType.DIRECTION_DOWN_DOWN))
                     {
                         DancerP.DoScaledAnimationAsync("SitDownDo", 0.5f);
-                        Jukebox.PlayOneShotGame("spaceDance/inputBad");
+                        SoundByte.PlayOneShotGame("spaceDance/inputBad");
                     }
                 }
             }
@@ -603,7 +603,7 @@ namespace HeavenStudio.Games
         {
             if (state >= 1f || state <= -1f)
             {
-                Jukebox.PlayOneShotGame("spaceDance/inputBad");
+                SoundByte.PlayOneShotGame("spaceDance/inputBad");
                 DancerP.DoScaledAnimationAsync("TurnRightDo", 0.5f);
                 Gramps.DoScaledAnimationAsync("GrampsOhFuck", 0.5f);
                 return;
@@ -613,13 +613,13 @@ namespace HeavenStudio.Games
 
         public void RightSuccess()
             {
-            Jukebox.PlayOneShotGame("spaceDance/inputGood");
+            SoundByte.PlayOneShotGame("spaceDance/inputGood");
             DancerP.DoScaledAnimationAsync("TurnRightDo", 0.5f);
              }
 
         public void RightMiss(PlayerActionEvent caller)
         {
-            Jukebox.PlayOneShotGame("spaceDance/inputBad2");
+            SoundByte.PlayOneShotGame("spaceDance/inputBad2");
             DancerP.DoScaledAnimationAsync("Ouch", 0.5f);
             Hit.Play("HitTurn", -1, 0);
             Gramps.DoScaledAnimationAsync("GrampsOhFuck", 0.5f);
@@ -629,7 +629,7 @@ namespace HeavenStudio.Games
         {
             if (state >= 1f || state <= -1f)
             {
-                Jukebox.PlayOneShotGame("spaceDance/inputBad");
+                SoundByte.PlayOneShotGame("spaceDance/inputBad");
                 DancerP.DoScaledAnimationAsync("SitDownDo", 0.5f);
                 Gramps.DoScaledAnimationAsync("GrampsOhFuck", 0.5f);
                 return;
@@ -639,13 +639,13 @@ namespace HeavenStudio.Games
 
         public void SitSuccess()
         {
-            Jukebox.PlayOneShotGame("spaceDance/inputGood");
+            SoundByte.PlayOneShotGame("spaceDance/inputGood");
             DancerP.DoScaledAnimationAsync("SitDownDo", 0.5f);
         }
 
         public void SitMiss(PlayerActionEvent caller)
         {
-            Jukebox.PlayOneShotGame("spaceDance/inputBad2");
+            SoundByte.PlayOneShotGame("spaceDance/inputBad2");
             DancerP.DoScaledAnimationAsync("Ouch", 0.5f);
             Hit.Play("HitSit", -1, 0);
             Gramps.DoScaledAnimationAsync("GrampsOhFuck", 0.5f);
@@ -655,7 +655,7 @@ namespace HeavenStudio.Games
         {
             if (state >= 1f || state <= -1f)
             {
-                Jukebox.PlayOneShotGame("spaceDance/inputBad");
+                SoundByte.PlayOneShotGame("spaceDance/inputBad");
                 DancerP.DoScaledAnimationAsync("PunchDo", 0.5f);
                 Gramps.DoScaledAnimationAsync("GrampsOhFuck", 0.5f);
                 return;
@@ -665,13 +665,13 @@ namespace HeavenStudio.Games
 
         public void PunchSuccess()
             {
-            Jukebox.PlayOneShotGame("spaceDance/inputGood");
+            SoundByte.PlayOneShotGame("spaceDance/inputGood");
             DancerP.DoScaledAnimationAsync("PunchDo", 0.5f);
              }
 
         public void PunchMiss(PlayerActionEvent caller)
         {
-            Jukebox.PlayOneShotGame("spaceDance/inputBad2");
+            SoundByte.PlayOneShotGame("spaceDance/inputBad2");
             DancerP.DoScaledAnimationAsync("Ouch", 0.5f);
             Hit.Play("HitPunch", -1, 0);
             Gramps.DoScaledAnimationAsync("GrampsOhFuck", 0.5f);

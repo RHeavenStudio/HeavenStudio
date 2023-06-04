@@ -14,7 +14,7 @@ namespace HeavenStudio.Games.Loaders
             {
                 new GameAction("ball dispense", "Ball Dispense")
                 {
-                    function = delegate { SpaceSoccer.instance.Dispense(eventCaller.currentEntity.beat, !eventCaller.currentEntity["toggle"], false, eventCaller.currentEntity["down"]); },
+                    function = delegate { SpaceSoccer.instance.Dispense((float) eventCaller.currentEntity.beat, !eventCaller.currentEntity["toggle"], false, eventCaller.currentEntity["down"]); },
                     defaultLength = 2f,
                     parameters = new List<Param>()
                     {
@@ -23,7 +23,7 @@ namespace HeavenStudio.Games.Loaders
                     },
                     inactiveFunction = delegate 
                     {
-                        if (!eventCaller.currentEntity["toggle"]) { SpaceSoccer.DispenseSound(eventCaller.currentEntity.beat, eventCaller.currentEntity["down"]);}
+                        if (!eventCaller.currentEntity["toggle"]) { SpaceSoccer.DispenseSound((float) eventCaller.currentEntity.beat, eventCaller.currentEntity["down"]);}
                     }
                 },
                 new GameAction("high kick-toe!", "High Kick-Toe!")
@@ -36,7 +36,7 @@ namespace HeavenStudio.Games.Loaders
                 },
                 new GameAction("npc kickers enter or exit", "NPC Kickers Enter or Exit")
                 {
-                    function = delegate { var e = eventCaller.currentEntity; SpaceSoccer.instance.NPCKickersEnterOrExit(e.beat, e.length, e["choice"], e["ease"], e["amount"], e["x"], e["y"], e["z"], e["override"], e["preset"]); },
+                    function = delegate { var e = eventCaller.currentEntity; SpaceSoccer.instance.NPCKickersEnterOrExit((float) e.beat, e.length, e["choice"], e["ease"], e["amount"], e["x"], e["y"], e["z"], e["override"], e["preset"]); },
                     defaultLength = 4f,
                     parameters = new List<Param>()
                     {
@@ -53,7 +53,7 @@ namespace HeavenStudio.Games.Loaders
                 },
                 new GameAction("easePos", "Ease NPC Space Kicker Distances")
                 {
-                    function = delegate {var e = eventCaller.currentEntity; SpaceSoccer.instance.EaseSpaceKickersPositions(e.beat, e.length, e["ease"], e["x"], e["y"], e["z"]); },
+                    function = delegate {var e = eventCaller.currentEntity; SpaceSoccer.instance.EaseSpaceKickersPositions((float) e.beat, e.length, e["ease"], e["x"], e["y"], e["z"]); },
                     defaultLength = 4f,
                     resizable = true,
                     parameters = new List<Param>()
@@ -66,7 +66,7 @@ namespace HeavenStudio.Games.Loaders
                 },
                 new GameAction("pMove", "Move Player")
                 {
-                    function = delegate {var e = eventCaller.currentEntity; SpaceSoccer.instance.MovePlayerKicker(e.beat, e.length, e["ease"], e["x"], e["y"], e["z"], e["sound"], e["preset"]); },
+                    function = delegate {var e = eventCaller.currentEntity; SpaceSoccer.instance.MovePlayerKicker((float) e.beat, e.length, e["ease"], e["x"], e["y"], e["z"], e["sound"], e["preset"]); },
                     defaultLength = 4f,
                     resizable = true,
                     parameters = new List<Param>()
@@ -131,7 +131,7 @@ namespace HeavenStudio.Games.Loaders
                         {
                             choice = (int)SpaceSoccer.AnimationToPlay.Enter;
                         }
-                        SpaceSoccer.instance.NPCKickersEnterOrExit(e.beat, e.length, choice, (int)EasingFunction.Ease.Instant, 5, 1.75f, 0.25f, 0.75f, true, (int)SpaceSoccer.EnterExitPresets.Custom);
+                        SpaceSoccer.instance.NPCKickersEnterOrExit((float) e.beat, e.length, choice, (int)EasingFunction.Ease.Instant, 5, 1.75f, 0.25f, 0.75f, true, (int)SpaceSoccer.EnterExitPresets.Custom);
                     },
                     defaultLength = 0.5f,
                     parameters = new List<Param>()
@@ -199,7 +199,7 @@ namespace HeavenStudio.Games
         [Header("Properties")]
         [SerializeField] SuperCurveObject.Path[] ballPaths;
         public bool ballDispensed;
-        float lastDispensedBeat;
+        double lastDispensedBeat;
         float scrollBeat;
         float scrollOffsetX;
         float scrollOffsetY;
@@ -308,9 +308,9 @@ namespace HeavenStudio.Games
             }
         }
 
-        public override void OnGameSwitch(float beat)
+        public override void OnGameSwitch(double beat)
         {
-            foreach(var entity in GameManager.instance.Beatmap.entities)
+            foreach(var entity in GameManager.instance.Beatmap.Entities)
             {
                 if(entity.beat > beat) //the list is sorted based on the beat of the entity, so this should work fine.
                 {
@@ -397,10 +397,10 @@ namespace HeavenStudio.Games
                 case (int)LaunchSoundToPlay.None:
                     break;
                 case (int)LaunchSoundToPlay.LaunchStart:
-                    Jukebox.PlayOneShotGame("spaceSoccer/jet1");
+                    SoundByte.PlayOneShotGame("spaceSoccer/jet1");
                     break;
                 case (int)LaunchSoundToPlay.LaunchEnd:
-                    Jukebox.PlayOneShotGame("spaceSoccer/jet2");
+                    SoundByte.PlayOneShotGame("spaceSoccer/jet2");
                     break;
             }
         }
@@ -446,7 +446,7 @@ namespace HeavenStudio.Games
             if (ballDispensed) Dispense(lastDispensedBeat, false, true);
         }
 
-        public void Dispense(float beat, bool playSound = true, bool ignorePlayer = false, bool playDown = false)
+        public void Dispense(double beat, bool playSound = true, bool ignorePlayer = false, bool playDown = false)
         {
             if (!ballDispensed) lastDispensedBeat = beat;
             ballDispensed = true;
@@ -460,12 +460,12 @@ namespace HeavenStudio.Games
                 GameObject ball = Instantiate(ballRef, kicker.transform.GetChild(0));
                 ball.SetActive(true);
                 Ball ball_ = ball.GetComponent<Ball>();
-                ball_.Init(kicker, beat);
+                ball_.Init(kicker, (float)beat);
                 if (kicker.player && playSound)
                 {
-                    DispenseSound(beat, playDown);
+                    DispenseSound((float)beat, playDown);
                 }
-                kicker.DispenseBall(beat);
+                kicker.DispenseBall((float)beat);
 
                 kicker.canKick = true;
             }
@@ -473,7 +473,7 @@ namespace HeavenStudio.Games
 
         public static void DispenseSound(float beat, bool playDown)
         {
-            if (playDown) Jukebox.PlayOneShot("games/spaceSoccer/down", beat);
+            if (playDown) SoundByte.PlayOneShot("games/spaceSoccer/down", beat);
             MultiSound.Play(new MultiSound.Sound[]
                 {
                 new MultiSound.Sound("spaceSoccer/dispenseNoise",   beat),

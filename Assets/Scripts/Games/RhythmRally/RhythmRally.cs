@@ -16,7 +16,7 @@ namespace HeavenStudio.Games.Loaders
             {
                 new GameAction("bop", "Bop")
                 {
-                    function = delegate {var e = eventCaller.currentEntity; RhythmRally.instance.Bop(e.beat, e.length, e["bop"], e["bopAuto"]); },
+                    function = delegate {var e = eventCaller.currentEntity; RhythmRally.instance.Bop((float) e.beat, e.length, e["bop"], e["bopAuto"]); },
                     resizable = true,
                     parameters = new List<Param>()
                     {
@@ -26,30 +26,30 @@ namespace HeavenStudio.Games.Loaders
                 },
                 new GameAction("whistle", "Whistle")
                 {
-                    preFunction = delegate { RhythmRally.PlayWhistle(eventCaller.currentEntity.beat); },
+                    preFunction = delegate { RhythmRally.PlayWhistle((float) eventCaller.currentEntity.beat); },
                     defaultLength = 0.5f
                 },
                 new GameAction("toss ball", "Toss Ball")
                 {
-                    function = delegate { RhythmRally.instance.Toss(eventCaller.currentEntity.beat, eventCaller.currentEntity.length, 6f, true); },
+                    function = delegate { RhythmRally.instance.Toss((float) eventCaller.currentEntity.beat, eventCaller.currentEntity.length, 6f, true); },
                     defaultLength = 2f,
                     resizable = true
                 },
                 new GameAction("rally", "Rally")
                 {
-                    function = delegate { RhythmRally.instance.Serve(eventCaller.currentEntity.beat, RhythmRally.RallySpeed.Normal); },
+                    function = delegate { RhythmRally.instance.Serve((float) eventCaller.currentEntity.beat, RhythmRally.RallySpeed.Normal); },
                     defaultLength = 4f,
                     resizable = true
                 },
                 new GameAction("slow rally", "Slow Rally")
                 {
-                    function = delegate { RhythmRally.instance.Serve(eventCaller.currentEntity.beat, RhythmRally.RallySpeed.Slow); },
+                    function = delegate { RhythmRally.instance.Serve((float) eventCaller.currentEntity.beat, RhythmRally.RallySpeed.Slow); },
                     defaultLength = 8f,
                     resizable = true
                 },
                 new GameAction("fast rally", "Fast Rally")
                 {
-                    function = delegate { RhythmRally.instance.PrepareFastRally(eventCaller.currentEntity.beat, RhythmRally.RallySpeed.Fast, eventCaller.currentEntity["muteAudio"]); },
+                    function = delegate { RhythmRally.instance.PrepareFastRally((float) eventCaller.currentEntity.beat, RhythmRally.RallySpeed.Fast, eventCaller.currentEntity["muteAudio"]); },
                     defaultLength = 6f,
                     parameters = new List<Param>()
                     {
@@ -58,7 +58,7 @@ namespace HeavenStudio.Games.Loaders
                 },
                 new GameAction("superfast rally", "Superfast Rally")
                 {
-                    function = delegate { RhythmRally.instance.PrepareFastRally(eventCaller.currentEntity.beat, RhythmRally.RallySpeed.SuperFast, eventCaller.currentEntity["muteAudio"]); },
+                    function = delegate { RhythmRally.instance.PrepareFastRally((float) eventCaller.currentEntity.beat, RhythmRally.RallySpeed.SuperFast, eventCaller.currentEntity["muteAudio"]); },
                     defaultLength = 12f,
                     parameters = new List<Param>()
                     {
@@ -67,13 +67,13 @@ namespace HeavenStudio.Games.Loaders
                 },
                 new GameAction("tonktinktonk", "Tonk-Tink-Tonk (Stretchable)")
                 {
-                    preFunction = delegate {var e = eventCaller.currentEntity; RhythmRally.TonkTinkTonkStretchable(e.beat, e.length); },
+                    preFunction = delegate {var e = eventCaller.currentEntity; RhythmRally.TonkTinkTonkStretchable((float) e.beat, e.length); },
                     defaultLength = 4f,
                     resizable = true
                 },
                 new GameAction("superfast stretchable", "Superfast Rally (Stretchable)")
                 {
-                    function = delegate { var e = eventCaller.currentEntity; RhythmRally.instance.SuperFastRallyStretchable(e.beat, e.length); },
+                    function = delegate { var e = eventCaller.currentEntity; RhythmRally.instance.SuperFastRallyStretchable((float) e.beat, e.length); },
                     defaultLength = 8f,
                     resizable = true
                 },
@@ -280,7 +280,7 @@ namespace HeavenStudio.Games
                 // Check if the opponent should swing.
                 if (!served && timeBeforeNextHit <= 0f)
                 {
-                    var rallies = GameManager.instance.Beatmap.entities.FindAll(c => c.datamodel == "rhythmRally/rally" || c.datamodel == "rhythmRally/slow rally");
+                    var rallies = GameManager.instance.Beatmap.Entities.FindAll(c => c.datamodel == "rhythmRally/rally" || c.datamodel == "rhythmRally/slow rally");
                     for (int i = 0; i < rallies.Count; i++)
                     {
                         var rally = rallies[i];

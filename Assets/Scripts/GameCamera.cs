@@ -4,6 +4,8 @@ using UnityEngine;
 
 using HeavenStudio.Util;
 using System.Linq;
+using Jukebox;
+using Jukebox.Legacy;
 
 namespace HeavenStudio
 {
@@ -20,9 +22,9 @@ namespace HeavenStudio
             Z
         }
 
-        private List<DynamicBeatmap.DynamicEntity> positionEvents = new List<DynamicBeatmap.DynamicEntity>();
-        private List<DynamicBeatmap.DynamicEntity> rotationEvents = new List<DynamicBeatmap.DynamicEntity>();
-        private List<DynamicBeatmap.DynamicEntity> shakeEvents = new List<DynamicBeatmap.DynamicEntity>();
+        private List<RiqEntity> positionEvents = new();
+        private List<RiqEntity> rotationEvents = new();
+        private List<RiqEntity> shakeEvents = new();
 
         /**
             default cam position, for quick-resetting
@@ -77,7 +79,7 @@ namespace HeavenStudio
             rotEluerLast = defaultRotEluer;
         }
 
-        public void OnBeatChanged(float beat)
+        public void OnBeatChanged(double beat)
         {
             ResetTransforms();
             ResetAdditionalTransforms();
@@ -128,7 +130,7 @@ namespace HeavenStudio
                 float prog = Conductor.instance.GetPositionFromBeat(e.beat, e.length);
                 if (prog >= 0f)
                 {
-                    EasingFunction.Function func = EasingFunction.GetEasingFunction((EasingFunction.Ease) e["ease"]);
+                    Util.EasingFunction.Function func = Util.EasingFunction.GetEasingFunction((Util.EasingFunction.Ease) e["ease"]);
                     switch (e["axis"])
                     {
                         case (int) CameraAxis.X:
@@ -176,7 +178,7 @@ namespace HeavenStudio
                 float prog = Conductor.instance.GetPositionFromBeat(e.beat, e.length);
                 if (prog >= 0f)
                 {
-                    EasingFunction.Function func = EasingFunction.GetEasingFunction((EasingFunction.Ease) e["ease"]);
+                    Util.EasingFunction.Function func = Util.EasingFunction.GetEasingFunction((Util.EasingFunction.Ease) e["ease"]);
                     switch (e["axis"])
                     {
                         case (int) CameraAxis.X:

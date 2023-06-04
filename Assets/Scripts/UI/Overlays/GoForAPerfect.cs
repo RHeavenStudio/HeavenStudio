@@ -87,7 +87,7 @@ namespace HeavenStudio.Common
 
             texAnim.Play("GoForAPerfect_Miss");
             pAnim.Play("PerfectIcon_Miss", -1, 0);
-            Jukebox.PlayOneShot("perfectMiss");
+            SoundByte.PlayOneShot("perfectMiss");
 
             if (GameProfiler.instance != null)
                 GameProfiler.instance.perfect = false;

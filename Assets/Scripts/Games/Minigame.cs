@@ -194,12 +194,12 @@ namespace HeavenStudio.Games
 
         public int firstEnable = 0;
 
-        public virtual void OnGameSwitch(float beat)
+        public virtual void OnGameSwitch(double beat)
         {
             //Below is a template that can be used for handling previous entities.
             //section below is if you only want to look at entities that overlap the game switch
             /*
-            List<Beatmap.Entity> prevEntities = GameManager.instance.Beatmap.entities.FindAll(c => c.beat <= beat && c.datamodel.Split(0) == [insert game name]);
+            List<Beatmap.Entity> prevEntities = GameManager.instance.Beatmap.Entities.FindAll(c => c.beat <= beat && c.datamodel.Split(0) == [insert game name]);
             foreach(Beatmap.Entity entity in prevEntities)
             {
                 if(entity.beat + entity.length >= beat)
@@ -215,12 +215,12 @@ namespace HeavenStudio.Games
 
         }
 
-        public virtual void OnPlay(float beat)
+        public virtual void OnPlay(double beat)
         {
 
         }
 
-        public virtual void OnStop(float beat)
+        public virtual void OnStop(double beat)
         {
             foreach (var evt in scheduledInputs)
             {

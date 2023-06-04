@@ -5,7 +5,7 @@ using UnityEngine;
 
 namespace HeavenStudio.Util
 {
-    public class Jukebox
+    public class SoundByte
     {
         static GameObject oneShotAudioSourceObject;
         static AudioSource oneShotAudioSource;

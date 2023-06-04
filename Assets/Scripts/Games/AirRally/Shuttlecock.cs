@@ -106,7 +106,7 @@ namespace HeavenStudio.Games.Scripts_AirRally
         public void DoNearMiss()
         {
             miss = true;
-            Jukebox.PlayOneShot("miss");
+            SoundByte.PlayOneShot("miss");
             transform.position = PlayerTarget.position;
             Rigidbody2D rb = GetComponent<Rigidbody2D>();
             rb.simulated = true;

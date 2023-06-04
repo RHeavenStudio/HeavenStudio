@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using UnityEngine;
 
 using HeavenStudio.Util;
+using Jukebox;
+using Jukebox.Legacy;
 
 namespace HeavenStudio.Games.Loaders
 {
@@ -14,12 +16,12 @@ namespace HeavenStudio.Games.Loaders
             {
                 new GameAction("clap", "Clap")
                 {
-                    function = delegate { ClappyTrio.instance.Clap(eventCaller.currentEntity.beat, eventCaller.currentEntity.length); }, 
+                    function = delegate { ClappyTrio.instance.Clap((float) eventCaller.currentEntity.beat, eventCaller.currentEntity.length); }, 
                     resizable = true
                 },
                 new GameAction("bop", "Bop")
                 {
-                    function = delegate { var e = eventCaller.currentEntity; ClappyTrio.instance.BopToggle(e.beat, e.length, e["bop"], e["autoBop"], e["emo"]); },
+                    function = delegate { var e = eventCaller.currentEntity; ClappyTrio.instance.BopToggle((float) e.beat, e.length, e["bop"], e["autoBop"], e["emo"]); },
                     resizable = true,
                     parameters = new List<Param>()
                     {
@@ -38,10 +40,10 @@ namespace HeavenStudio.Games.Loaders
                 },
                 new GameAction("sign", "Sign Enter")
                 {
-                    function = delegate { var e = eventCaller.currentEntity;  ClappyTrio.instance.Sign(e.beat, e.length, e["ease"], e["down"]); },
+                    function = delegate { var e = eventCaller.currentEntity;  ClappyTrio.instance.Sign((float) e.beat, e.length, e["ease"], e["down"]); },
                     parameters = new List<Param>()
                     {
-                        new Param("ease", EasingFunction.Ease.Linear, "Ease", "Which ease should the sign move with?"),
+                        new Param("ease", Util.EasingFunction.Ease.Linear, "Ease", "Which ease should the sign move with?"),
                         new Param("down", true, "Down", "Should the sign go down?")
                     },
                     resizable = true
@@ -98,7 +100,7 @@ namespace HeavenStudio.Games
         [SerializeField] Animator signAnim;
         float signStartBeat;
         float signLength;
-        EasingFunction.Ease lastEase;
+        Util.EasingFunction.Ease lastEase;
         bool signGoDown;
 
         public static ClappyTrio instance { get; set; }
@@ -112,9 +114,9 @@ namespace HeavenStudio.Games
             clapSounds = null;
             InitLions();
         }
-        public override void OnGameSwitch(float beat)
+        public override void OnGameSwitch(double beat)
         {
-            DynamicBeatmap.DynamicEntity changeLion = GameManager.instance.Beatmap.entities.FindLast(c => c.datamodel == "clappyTrio/change lion count" && c.beat <= beat);
+            RiqEntity changeLion = GameManager.instance.Beatmap.Entities.FindLast(c => c.datamodel == "clappyTrio/change lion count" && c.beat <= beat);
             if(changeLion != null)
             {
                 EventCaller.instance.CallEvent(changeLion, true);
@@ -134,7 +136,7 @@ namespace HeavenStudio.Games
 
                 if (normalizedBeat > 0 && normalizedBeat <= 1)
                 {
-                    EasingFunction.Function func = EasingFunction.GetEasingFunction(lastEase);
+                    Util.EasingFunction.Function func = Util.EasingFunction.GetEasingFunction(lastEase);
                     float newPos = func(0, 1, normalizedBeat);
                     signAnim.DoNormalizedAnimation(signGoDown ? "Enter" : "Exit", newPos);
                 }
@@ -143,10 +145,10 @@ namespace HeavenStudio.Games
 
         public void Sign(float beat, float length, int ease, bool down)
         {
-            Jukebox.PlayOneShotGame("clappyTrio/sign");
+            SoundByte.PlayOneShotGame("clappyTrio/sign");
             signStartBeat = beat;
             signLength = length;
-            lastEase = (EasingFunction.Ease)ease;
+            lastEase = (Util.EasingFunction.Ease)ease;
             signGoDown = down;
         }
 
@@ -209,7 +211,7 @@ namespace HeavenStudio.Games
                 SetFace(i, type);
             }
             PlayAnimationAll("Prepare");
-            Jukebox.PlayOneShotGame("clappyTrio/ready");
+            SoundByte.PlayOneShotGame("clappyTrio/ready");
         }
 
         public void BopToggle(float beat, float length, bool startBop, bool autoBop, bool emo)

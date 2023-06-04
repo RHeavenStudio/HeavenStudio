@@ -14,7 +14,7 @@ namespace HeavenStudio.Games.Loaders
             {
                 new GameAction("bop", "Bop")
                 {
-                    function = delegate { var e = eventCaller.currentEntity; DJSchool.instance.Bop(e.beat, e.length, e["toggle2"], e["toggle"]);  }, 
+                    function = delegate { var e = eventCaller.currentEntity; DJSchool.instance.Bop((float) e.beat, e.length, e["toggle2"], e["toggle"]);  }, 
                     resizable = true,
                     parameters = new List<Param>()
                     {
@@ -24,9 +24,9 @@ namespace HeavenStudio.Games.Loaders
                 },
                 new GameAction("and stop ooh", "And Stop!")
                 {
-                    function = delegate { var e = eventCaller.currentEntity; DJSchool.instance.AndStop(e.beat, e["toggle"]);  }, 
+                    function = delegate { var e = eventCaller.currentEntity; DJSchool.instance.AndStop((float) e.beat, e["toggle"]);  }, 
                     defaultLength = 2.5f, 
-                    inactiveFunction = delegate { var e = eventCaller.currentEntity; DJSchool.WarnAndStop(e.beat, e["toggle"]);  },
+                    inactiveFunction = delegate { var e = eventCaller.currentEntity; DJSchool.WarnAndStop((float) e.beat, e["toggle"]);  },
                     parameters = new List<Param>()
                     {
                         new Param("toggle", true, "Ooh", "Whether or not the \"ooh\" sound should be played")
@@ -34,9 +34,9 @@ namespace HeavenStudio.Games.Loaders
                 },
                 new GameAction("break c'mon ooh", "Break, C'mon!")
                 {
-                    function = delegate { var e = eventCaller.currentEntity; DJSchool.instance.BreakCmon(e.beat, e["type"], e["toggle"]);  }, 
+                    function = delegate { var e = eventCaller.currentEntity; DJSchool.instance.BreakCmon((float) e.beat, e["type"], e["toggle"]);  }, 
                     defaultLength = 3f,
-                    inactiveFunction = delegate { var e = eventCaller.currentEntity; DJSchool.WarnBreakCmon(e.beat, e["type"], e["toggle"]); },
+                    inactiveFunction = delegate { var e = eventCaller.currentEntity; DJSchool.WarnBreakCmon((float) e.beat, e["type"], e["toggle"]); },
                     parameters = new List<Param>()
                     {
                         new Param("type", DJSchool.DJVoice.Standard, "Voice", "The voice line to play"),
@@ -45,7 +45,7 @@ namespace HeavenStudio.Games.Loaders
                 },
                 new GameAction("scratch-o hey", "Scratch-o")
                 {
-                    function = delegate { DJSchool.instance.ScratchoHey(eventCaller.currentEntity.beat, eventCaller.currentEntity["type"], eventCaller.currentEntity["toggle"], eventCaller.currentEntity["toggle2"]);  }, 
+                    function = delegate { DJSchool.instance.ScratchoHey((float) eventCaller.currentEntity.beat, eventCaller.currentEntity["type"], eventCaller.currentEntity["toggle"], eventCaller.currentEntity["toggle2"]);  }, 
                     defaultLength = 3f,
                     parameters = new List<Param>()
                     {
@@ -56,9 +56,9 @@ namespace HeavenStudio.Games.Loaders
                 },
                 new GameAction("dj voice lines", "DJ Yellow Banter")
                 {
-                    function = delegate { DJSchool.VoiceLines(eventCaller.currentEntity.beat, eventCaller.currentEntity["type"]);  }, 
+                    function = delegate { DJSchool.VoiceLines((float) eventCaller.currentEntity.beat, eventCaller.currentEntity["type"]);  }, 
                     defaultLength = 2f,
-                    inactiveFunction = delegate { DJSchool.VoiceLines(eventCaller.currentEntity.beat, eventCaller.currentEntity["type"]);  },
+                    inactiveFunction = delegate { DJSchool.VoiceLines((float) eventCaller.currentEntity.beat, eventCaller.currentEntity["type"]);  },
                     parameters = new List<Param>()
                     {
                         new Param("type", DJSchool.DJVoiceLines.CheckItOut, "Voice Lines", "The voice line to play"),
@@ -142,7 +142,7 @@ namespace HeavenStudio.Games
         static float wantAndStop = Single.MinValue;
         static float wantDJVoiceLines = Single.MinValue;
 
-        public override void OnGameSwitch(float beat)
+        public override void OnGameSwitch(double beat)
         {
             if (wantBreak != Single.MinValue)
             {
@@ -592,7 +592,7 @@ namespace HeavenStudio.Games
                     break;
 
                 case 4:
-                    Jukebox.PlayOneShotGame("djSchool/yay", forcePlay: true);
+                    SoundByte.PlayOneShotGame("djSchool/yay", forcePlay: true);
                     break;
             }
         }

@@ -15,7 +15,7 @@ namespace HeavenStudio.Games.Loaders
                 new GameAction("clap", "Cat Clap")
                 {
                     function = delegate { Kitties.instance.Clap(eventCaller.currentEntity["toggle"], eventCaller.currentEntity["toggle1"], eventCaller.currentEntity["toggle2"],
-                        eventCaller.currentEntity.beat,  eventCaller.currentEntity["type"]); },
+                        (float) eventCaller.currentEntity.beat,  eventCaller.currentEntity["type"]); },
 
                     defaultLength = 4f,
                     parameters = new List<Param>()
@@ -29,7 +29,7 @@ namespace HeavenStudio.Games.Loaders
 
                 new GameAction("roll", "Roll")
                     {
-                        function = delegate { Kitties.instance.Roll(eventCaller.currentEntity["toggle"], eventCaller.currentEntity.beat);  },
+                        function = delegate { Kitties.instance.Roll(eventCaller.currentEntity["toggle"], (float) eventCaller.currentEntity.beat);  },
 
                         defaultLength = 4f,
 
@@ -41,14 +41,14 @@ namespace HeavenStudio.Games.Loaders
 
                 new GameAction ("fish", "Fish")
                 {
-                    function = delegate { Kitties.instance.CatchFish(eventCaller.currentEntity.beat); },
+                    function = delegate { Kitties.instance.CatchFish((float) eventCaller.currentEntity.beat); },
                     defaultLength = 4f,
                 },
 
                 new GameAction("instantSpawn", "Instant Spawn")
                 {
                     function = delegate { Kitties.instance.InstantSpawn(eventCaller.currentEntity["toggle"], eventCaller.currentEntity["toggle1"],
-                        eventCaller.currentEntity.beat,  eventCaller.currentEntity["type"]); },
+                        (float) eventCaller.currentEntity.beat,  eventCaller.currentEntity["type"]); },
 
                     defaultLength = .5f,
                     parameters = new List<Param>()

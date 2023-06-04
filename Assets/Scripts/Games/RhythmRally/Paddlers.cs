@@ -60,7 +60,7 @@ namespace HeavenStudio.Games.Scripts_RhythmRally
         void NearMiss(float state)
         {
             MissBall();
-            Jukebox.PlayOneShot("miss");
+            SoundByte.PlayOneShot("miss");
             playerAnim.DoScaledAnimationAsync("Swing", 0.5f); ;
 
             game.missCurve.KeyPoints[0].Position = game.ball.transform.position;

@@ -27,7 +27,7 @@ namespace HeavenStudio.Games.Loaders
                 {
                     new GameAction("bop", "Bop")
                     {
-                        function = delegate { var e = eventCaller.currentEntity; MarchingOrders.instance.BopAction(e.beat, e.length, e["bop"], e["autoBop"]); },
+                        function = delegate { var e = eventCaller.currentEntity; MarchingOrders.instance.BopAction((float) e.beat, e.length, e["bop"], e["autoBop"]); },
                         defaultLength = 1f,
                         resizable = true,
                         parameters = new List<Param>()
@@ -41,7 +41,7 @@ namespace HeavenStudio.Games.Loaders
                     {
                         preFunction = delegate { 
                             var e = eventCaller.currentEntity; 
-                            MarchingOrders.PreMarch(e.beat, e.length); 
+                            MarchingOrders.PreMarch((float) e.beat, e.length); 
                         },
                         defaultLength = 4f,
                         resizable = true,
@@ -49,32 +49,32 @@ namespace HeavenStudio.Games.Loaders
 
                     new GameAction("attention", "Attention...")
                     {
-                        function = delegate { var e = eventCaller.currentEntity; MarchingOrders.instance.SargeAttention(e.beat); },
+                        function = delegate { var e = eventCaller.currentEntity; MarchingOrders.instance.SargeAttention((float) e.beat); },
                         defaultLength = 2f,
-                        preFunction = delegate { var e = eventCaller.currentEntity; MarchingOrders.AttentionSound(e.beat);}
+                        preFunction = delegate { var e = eventCaller.currentEntity; MarchingOrders.AttentionSound((float) e.beat);}
                     },
 
                     new GameAction("march", "March!")
                     {
-                        function = delegate { var e = eventCaller.currentEntity; MarchingOrders.instance.SargeMarch(e.beat, e["toggle"]); },
+                        function = delegate { var e = eventCaller.currentEntity; MarchingOrders.instance.SargeMarch((float) e.beat, e["toggle"]); },
                         defaultLength = 2f,
                         parameters = new List<Param>
                         {
                             new Param("toggle", false, "Disable Voice", "Disable the Drill Sergeant's call")
                         },
-                        inactiveFunction = delegate { var e = eventCaller.currentEntity; MarchingOrders.MarchSound(e.beat, e["toggle"]);}
+                        inactiveFunction = delegate { var e = eventCaller.currentEntity; MarchingOrders.MarchSound((float) e.beat, e["toggle"]);}
                     },
 
                     new GameAction("halt", "Halt!")
                     {
-                        function = delegate { var e = eventCaller.currentEntity; MarchingOrders.instance.SargeHalt(e.beat); },
+                        function = delegate { var e = eventCaller.currentEntity; MarchingOrders.instance.SargeHalt((float) e.beat); },
                         defaultLength = 2f,
-                        inactiveFunction = delegate { var e = eventCaller.currentEntity; MarchingOrders.HaltSound(e.beat);}
+                        inactiveFunction = delegate { var e = eventCaller.currentEntity; MarchingOrders.HaltSound((float) e.beat);}
                     },
 
                     new GameAction("face turn", "Direction to Turn")
                     {
-                        function = delegate { var e = eventCaller.currentEntity; MarchingOrders.instance.SargeFaceTurn(e.beat, e["type"], e["type2"], false); },
+                        function = delegate { var e = eventCaller.currentEntity; MarchingOrders.instance.SargeFaceTurn((float) e.beat, e["type"], e["type2"], false); },
                         defaultLength = 4f,
                         parameters = new List<Param>()
                         {
@@ -86,7 +86,7 @@ namespace HeavenStudio.Games.Loaders
 
                     /*new GameAction("background", "Set the Background") colors aren't implemented yet
                     {
-                        function = delegate { var e = eventCaller.currentEntity; MarchingOrders.instance.BackgroundColorSet(e.beat, e["type"], e["type2"], e["colorDefault"], e["colorPipe"], e["colorFloor"], e["colorFill"]); },
+                        function = delegate { var e = eventCaller.currentEntity; MarchingOrders.instance.BackgroundColorSet((float) e.beat, e["type"], e["type2"], e["colorDefault"], e["colorPipe"], e["colorFloor"], e["colorFill"]); },
                         defaultLength = 0.5f,
                         parameters = new List<Param>()
                         {
@@ -188,16 +188,16 @@ namespace HeavenStudio.Games
         {
             if (state <= -1f || state >= 1f)
             {
-                Jukebox.PlayOneShot("nearNiss");
+                SoundByte.PlayOneShot("nearNiss");
             }
             else
-                Jukebox.PlayOneShotGame("marchingOrders/turnActionPlayer");
+                SoundByte.PlayOneShotGame("marchingOrders/turnActionPlayer");
             CadetHeadPlayer.DoScaledAnimationAsync("FaceL", 0.5f);
         }
 
         public void GenericMiss(PlayerActionEvent caller)
         {
-            Jukebox.PlayOneShot("miss");
+            SoundByte.PlayOneShot("miss");
             Sarge.DoScaledAnimationAsync("Anger", 0.5f);
             Steam.DoScaledAnimationAsync("Steam", 0.5f);
         }
@@ -208,10 +208,10 @@ namespace HeavenStudio.Games
         {
             if (state <= -1f || state >= 1f)
             {
-                Jukebox.PlayOneShot("nearNiss");
+                SoundByte.PlayOneShot("nearNiss");
             }
             else
-                Jukebox.PlayOneShotGame("marchingOrders/turnActionPlayer");
+                SoundByte.PlayOneShotGame("marchingOrders/turnActionPlayer");
             CadetHeadPlayer.DoScaledAnimationAsync("FaceR", 0.5f);
         }
 
@@ -221,10 +221,10 @@ namespace HeavenStudio.Games
         {
             if (state <= -1f || state >= 1f)
             {
-                Jukebox.PlayOneShot("nearNiss");
+                SoundByte.PlayOneShot("nearNiss");
             }
             else
-                Jukebox.PlayOneShotGame("marchingOrders/stepPlayer", volume: 0.25f);
+                SoundByte.PlayOneShotGame("marchingOrders/stepPlayer", volume: 0.25f);
             marchPlayerCount++;
             CadetPlayer.DoScaledAnimationAsync(marchPlayerCount % 2 != 0 ? "MarchR" : "MarchL", 0.5f);
         }
@@ -235,10 +235,10 @@ namespace HeavenStudio.Games
         {
             if (state <= -1f || state >= 1f)
             {
-                Jukebox.PlayOneShot("nearNiss");
+                SoundByte.PlayOneShot("nearNiss");
             }
             else
-                Jukebox.PlayOneShotGame("marchingOrders/stepPlayer", volume: 0.25f);
+                SoundByte.PlayOneShotGame("marchingOrders/stepPlayer", volume: 0.25f);
             CadetPlayer.DoScaledAnimationAsync("Halt", 0.5f);
         }
 
@@ -271,7 +271,7 @@ namespace HeavenStudio.Games
             {
                 if (PlayerInput.Pressed())
                 {
-                    Jukebox.PlayOneShot("miss");
+                    SoundByte.PlayOneShot("miss");
                     Sarge.DoScaledAnimationAsync("Anger", 0.5f);
                     Steam.DoScaledAnimationAsync("Steam", 0.5f);
 
@@ -285,7 +285,7 @@ namespace HeavenStudio.Games
             {
                 if (PlayerInput.AltPressed())
                 {
-                    Jukebox.PlayOneShot("miss");
+                    SoundByte.PlayOneShot("miss");
                     Sarge.DoScaledAnimationAsync("Anger", 0.5f);
                     Steam.DoScaledAnimationAsync("Steam", 0.5f);
 
@@ -296,7 +296,7 @@ namespace HeavenStudio.Games
             {
                 if (PlayerInput.Pressed(true) && PlayerInput.GetSpecificDirection(PlayerInput.LEFT))
                 {
-                    Jukebox.PlayOneShot("miss");
+                    SoundByte.PlayOneShot("miss");
                     Sarge.DoScaledAnimationAsync("Anger", 0.5f);
                     Steam.DoScaledAnimationAsync("Steam", 0.5f);
 
@@ -307,7 +307,7 @@ namespace HeavenStudio.Games
             {    
                 if (PlayerInput.Pressed(true) && PlayerInput.GetSpecificDirection(PlayerInput.RIGHT))
                 {
-                    Jukebox.PlayOneShot("miss");
+                    SoundByte.PlayOneShot("miss");
                     Sarge.DoScaledAnimationAsync("Anger", 0.5f);
                     Steam.DoScaledAnimationAsync("Steam", 0.5f);
 

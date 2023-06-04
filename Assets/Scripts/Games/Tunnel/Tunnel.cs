@@ -16,14 +16,14 @@ namespace HeavenStudio.Games.Loaders
             {
                 new GameAction("cowbell", "Cowbell")
                 {
-                    preFunction = delegate { Tunnel.PreStartCowbell(eventCaller.currentEntity.beat, eventCaller.currentEntity.length); },
+                    preFunction = delegate { Tunnel.PreStartCowbell((float) eventCaller.currentEntity.beat, eventCaller.currentEntity.length); },
                     defaultLength = 4f,
                     resizable = true,
 
                 },
                 new GameAction("countin", "Count In")
                 {
-                    preFunction = delegate { Tunnel.CountIn(eventCaller.currentEntity.beat, eventCaller.currentEntity.length); }, 
+                    preFunction = delegate { Tunnel.CountIn((float) eventCaller.currentEntity.beat, eventCaller.currentEntity.length); }, 
                     defaultLength = 4f, 
                     resizable = true,
                 }
@@ -130,7 +130,7 @@ namespace HeavenStudio.Games
 
         public void HitCowbell()
         {
-            Jukebox.PlayOneShot("count-ins/cowbell");
+            SoundByte.PlayOneShot("count-ins/cowbell");
 
             handStart = Conductor.instance.songPositionInBeats;
             

@@ -26,7 +26,7 @@ namespace HeavenStudio.Games.Scripts_ForkLifter
             var currentDspTime = AudioSettings.dspTime;
             var cond = Conductor.instance;
             var zoomStartTime = currentDspTime + (double)(cond.pitchedSecPerBeat * 2) - 0.317;
-            Jukebox.PlayOneShotScheduledGame("forkLifter/zoomFast", (double)zoomStartTime);
+            SoundByte.PlayOneShotScheduledGame("forkLifter/zoomFast", (double)zoomStartTime);
 
             GetComponentInChildren<SpriteRenderer>().sprite = game.peaSprites[type];
 
@@ -91,7 +91,7 @@ namespace HeavenStudio.Games.Scripts_ForkLifter
 
             ForkLifterPlayer.instance.FastEffectHit(type);
 
-            Jukebox.PlayOneShotGame("forkLifter/stab");
+            SoundByte.PlayOneShotGame("forkLifter/stab");
 
             ForkLifterPlayer.instance.currentPerfectPeasOnFork++;
 
@@ -136,7 +136,7 @@ namespace HeavenStudio.Games.Scripts_ForkLifter
 
             ForkLifterPlayer.instance.FastEffectHit(type);
 
-            Jukebox.PlayOneShot("miss");
+            SoundByte.PlayOneShot("miss");
 
             ForkLifterPlayer.instance.currentEarlyPeasOnFork++;
 
@@ -167,7 +167,7 @@ namespace HeavenStudio.Games.Scripts_ForkLifter
 
             ForkLifterPlayer.instance.FastEffectHit(type);
 
-            Jukebox.PlayOneShot("miss");
+            SoundByte.PlayOneShot("miss");
 
             ForkLifterPlayer.instance.currentLatePeasOnFork++;
             Destroy(this.gameObject);
@@ -198,7 +198,7 @@ namespace HeavenStudio.Games.Scripts_ForkLifter
 
         private void Miss(PlayerActionEvent caller) 
         {
-            Jukebox.PlayOneShot("forkLifter/disappointed");
+            SoundByte.PlayOneShot("forkLifter/disappointed");
             BeatAction.New(game.gameObject, new List<BeatAction.Action>()
             {
                 new BeatAction.Action(startBeat+ 2.45f, delegate { 

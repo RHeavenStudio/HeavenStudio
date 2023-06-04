@@ -8,6 +8,7 @@ using UnityEngine;
 using UnityEngine.Rendering;
 using static HeavenStudio.EntityTypes;
 using static HeavenStudio.Games.CheerReaders;
+using Jukebox;
 
 namespace HeavenStudio.Games.Loaders
 {
@@ -20,7 +21,7 @@ namespace HeavenStudio.Games.Loaders
             {
                 new GameAction("oneTwoThree", "One Two Three!")
                 {
-                    function = delegate {var e = eventCaller.currentEntity; CheerReaders.instance.OneTwoThree(e.beat, e["solo"]); CheerReaders.instance.SetIsDoingCue(e.beat, e.length);},
+                    function = delegate {var e = eventCaller.currentEntity; CheerReaders.instance.OneTwoThree((float) e.beat, e["solo"]); CheerReaders.instance.SetIsDoingCue((float) e.beat, e.length);},
                     defaultLength = 3f,
                     parameters = new List<Param>()
                     {
@@ -29,7 +30,7 @@ namespace HeavenStudio.Games.Loaders
                 },
                 new GameAction("itsUpToYou", "It's Up To You!")
                 {
-                    function = delegate {var e = eventCaller.currentEntity; CheerReaders.instance.ItsUpToYou(e.beat, e["solo"]); CheerReaders.instance.SetIsDoingCue(e.beat, e.length);},
+                    function = delegate {var e = eventCaller.currentEntity; CheerReaders.instance.ItsUpToYou((float) e.beat, e["solo"]); CheerReaders.instance.SetIsDoingCue((float) e.beat, e.length);},
                     defaultLength = 3f,
                     parameters = new List<Param>()
                     {
@@ -38,7 +39,7 @@ namespace HeavenStudio.Games.Loaders
                 },
                 new GameAction("letsGoReadABunchaBooks", "Let's Go Read A Buncha Books!")
                 {
-                    function = delegate {var e = eventCaller.currentEntity; CheerReaders.instance.LetsGoReadABunchaBooks(e.beat, e["solo"]); CheerReaders.instance.SetIsDoingCue(e.beat, e.length);},
+                    function = delegate {var e = eventCaller.currentEntity; CheerReaders.instance.LetsGoReadABunchaBooks((float) e.beat, e["solo"]); CheerReaders.instance.SetIsDoingCue((float) e.beat, e.length);},
                     defaultLength = 3f,
                     parameters = new List<Param>()
                     {
@@ -47,7 +48,7 @@ namespace HeavenStudio.Games.Loaders
                 },
                 new GameAction("rahRahSisBoomBaBoom", "Rah-Rah Sis Boom Bah-Boom!")
                 {
-                    function = delegate {var e = eventCaller.currentEntity; CheerReaders.instance.RahRahSisBoomBaBoom(e.beat, e["solo"], e["consecutive"]); CheerReaders.instance.SetIsDoingCue(e.beat, e.length);},
+                    function = delegate {var e = eventCaller.currentEntity; CheerReaders.instance.RahRahSisBoomBaBoom((float) e.beat, e["solo"], e["consecutive"]); CheerReaders.instance.SetIsDoingCue((float) e.beat, e.length);},
                     defaultLength = 4f,
                     parameters = new List<Param>()
                     {
@@ -57,7 +58,7 @@ namespace HeavenStudio.Games.Loaders
                 },
                 new GameAction("okItsOn", "OK It's On!")
                 {
-                    function = delegate {var e = eventCaller.currentEntity; CheerReaders.instance.OkItsOnStretchable(e.beat, e.length, e["solo"], e["toggle"], e["poster"], e["happy"]); CheerReaders.instance.SetIsDoingCue(e.beat, e.length, false);},
+                    function = delegate {var e = eventCaller.currentEntity; CheerReaders.instance.OkItsOnStretchable((float) e.beat, e.length, e["solo"], e["toggle"], e["poster"], e["happy"]); CheerReaders.instance.SetIsDoingCue((float) e.beat, e.length, false);},
                     defaultLength = 4f,
                     parameters = new List<Param>()
                     {
@@ -69,7 +70,7 @@ namespace HeavenStudio.Games.Loaders
                 },
                 new GameAction("okItsOnStretch", "OK It's On! (Stretchable)")
                 {
-                    function = delegate {var e = eventCaller.currentEntity; CheerReaders.instance.OkItsOnStretchable(e.beat, e.length, e["solo"], e["toggle"], e["poster"], e["happy"]); CheerReaders.instance.SetIsDoingCue(e.beat, e.length, false); },
+                    function = delegate {var e = eventCaller.currentEntity; CheerReaders.instance.OkItsOnStretchable((float) e.beat, e.length, e["solo"], e["toggle"], e["poster"], e["happy"]); CheerReaders.instance.SetIsDoingCue((float) e.beat, e.length, false); },
                     defaultLength = 4f,
                     resizable = true,
                     parameters = new List<Param>()
@@ -91,7 +92,7 @@ namespace HeavenStudio.Games.Loaders
                 },
                 new GameAction("bop", "Bop")
                 {
-                    function = delegate {var e = eventCaller.currentEntity; CheerReaders.instance.BopToggle(e.beat, e.length, e["toggle"], e["toggle2"]); },
+                    function = delegate {var e = eventCaller.currentEntity; CheerReaders.instance.BopToggle((float) e.beat, e.length, e["toggle"], e["toggle2"]); },
                     resizable = true,
                     parameters = new List<Param>()
                     {
@@ -173,11 +174,11 @@ namespace HeavenStudio.Games
         int currentZoomIndex;
         float currentZoomCamBeat;
         float currentZoomCamLength;
-        private List<DynamicBeatmap.DynamicEntity> allCameraEvents = new List<DynamicBeatmap.DynamicEntity>();
+        private List<RiqEntity> allCameraEvents = new List<RiqEntity>();
 
         void OnDestroy()
         {
-            Jukebox.KillLoop(SpinningLoop, 0.5f);
+            SoundByte.KillLoop(SpinningLoop, 0.5f);
             foreach (var evt in scheduledInputs)
             {
                 evt.Disable();
@@ -210,7 +211,7 @@ namespace HeavenStudio.Games
             allGirls.AddRange(thirdRow);
             var camEvents = EventCaller.GetAllInGameManagerList("cheerReaders", new string[] { "okItsOn" });
             camEvents.AddRange(EventCaller.GetAllInGameManagerList("cheerReaders", new string[] { "okItsOnStretch" }));
-            List<DynamicBeatmap.DynamicEntity> tempEvents = new List<DynamicBeatmap.DynamicEntity>();
+            List<RiqEntity> tempEvents = new List<RiqEntity>();
             for (int i = 0; i < camEvents.Count; i++)
             {
                 if (camEvents[i].beat + camEvents[i].beat >= Conductor.instance.songPositionInBeats)
@@ -256,7 +257,7 @@ namespace HeavenStudio.Games
                         }
                         else
                         {
-                            EasingFunction.Function func = EasingFunction.GetEasingFunction(EasingFunction.Ease.EaseInOutQuint);
+                            Util.EasingFunction.Function func = Util.EasingFunction.GetEasingFunction(Util.EasingFunction.Ease.EaseInOutQuint);
                             float newZoom = func(shouldDoSuccessZoom ? 4f : 1.5f, 0, normalizedZoomOutAgainBeat);
                             GameCamera.additionalPosition = new Vector3(0, 0, newZoom);
                         }
@@ -269,7 +270,7 @@ namespace HeavenStudio.Games
                         }
                         else
                         {
-                            EasingFunction.Function func = EasingFunction.GetEasingFunction(EasingFunction.Ease.EaseOutQuint);
+                            Util.EasingFunction.Function func = Util.EasingFunction.GetEasingFunction(Util.EasingFunction.Ease.EaseOutQuint);
                             float newZoom = func(-1, shouldDoSuccessZoom ? 4f : 1.5f, normalizedZoomInBeat);
                             GameCamera.additionalPosition = new Vector3(0, 0, newZoom);
                         }
@@ -282,7 +283,7 @@ namespace HeavenStudio.Games
                         }
                         else
                         {
-                            EasingFunction.Function func = EasingFunction.GetEasingFunction(EasingFunction.Ease.EaseOutQuint);
+                            Util.EasingFunction.Function func = Util.EasingFunction.GetEasingFunction(Util.EasingFunction.Ease.EaseOutQuint);
                             float newZoom = func(0f, 1f, normalizedZoomOutBeat);
                             GameCamera.additionalPosition = new Vector3(0, 0, newZoom * -1);
                         }
@@ -292,22 +293,22 @@ namespace HeavenStudio.Games
                 {
                     player.FlipBook(false);
                     missPoster.SetActive(false);
-                    Jukebox.PlayOneShotGame("cheerReaders/miss");
+                    SoundByte.PlayOneShotGame("cheerReaders/miss");
                     ScoreMiss(1f);
                 }
                 if (PlayerInput.AltPressed() && !IsExpectingInputNow(InputType.STANDARD_ALT_DOWN)) 
                 {
-                    Jukebox.PlayOneShotGame("cheerReaders/doingoing");
+                    SoundByte.PlayOneShotGame("cheerReaders/doingoing");
                     player.StartSpinBook();
                     missPoster.SetActive(false);
-                    SpinningLoop = Jukebox.PlayOneShotGame("cheerReaders/bookSpinLoop", -1, 1, 1, true);
+                    SpinningLoop = SoundByte.PlayOneShotGame("cheerReaders/bookSpinLoop", -1, 1, 1, true);
                     ScoreMiss(1f);
                 }
                 if (PlayerInput.AltPressedUp() && !IsExpectingInputNow(InputType.STANDARD_ALT_UP))
                 {
-                    Jukebox.PlayOneShotGame("cheerReaders/doingoing");
+                    SoundByte.PlayOneShotGame("cheerReaders/doingoing");
                     player.StopSpinBook();
-                    Jukebox.KillLoop(SpinningLoop, 0f);
+                    SoundByte.KillLoop(SpinningLoop, 0f);
                     ScoreMiss(1f);
                     missPoster.SetActive(true);
                 }
@@ -326,7 +327,7 @@ namespace HeavenStudio.Games
             }
             else if (!cond.isPlaying)
             {
-                Jukebox.KillLoop(SpinningLoop, 0.5f);
+                SoundByte.KillLoop(SpinningLoop, 0.5f);
             }
         }
 
@@ -366,7 +367,7 @@ namespace HeavenStudio.Games
         {
             if (currentZoomIndex < allCameraEvents.Count && currentZoomIndex >= 0)
             {
-                currentZoomCamBeat = allCameraEvents[currentZoomIndex].beat;
+                currentZoomCamBeat = (float) allCameraEvents[currentZoomIndex].beat;
                 currentZoomCamLength = allCameraEvents[currentZoomIndex].length;
             }
         }
@@ -399,7 +400,7 @@ namespace HeavenStudio.Games
             switch (whoSpeaks)
             {
                 case (int)WhoSpeaks.Solo:
-                    Jukebox.PlayOneShotGame("cheerReaders/Solo/yayS");
+                    SoundByte.PlayOneShotGame("cheerReaders/Solo/yayS");
                     player.Yay(true);
                     foreach (var nerd in allGirls)
                     {
@@ -407,7 +408,7 @@ namespace HeavenStudio.Games
                     }
                     break;
                 case (int)WhoSpeaks.Girls:
-                    Jukebox.PlayOneShotGame("cheerReaders/Girls/yayGirls");
+                    SoundByte.PlayOneShotGame("cheerReaders/Girls/yayGirls");
                     foreach (var nerd in allGirls)
                     {
                         nerd.Yay(true);
@@ -415,7 +416,7 @@ namespace HeavenStudio.Games
                     player.Yay(false);
                     break;
                 default:
-                    Jukebox.PlayOneShotGame("cheerReaders/All/yay");
+                    SoundByte.PlayOneShotGame("cheerReaders/All/yay");
                     foreach (var nerd in allGirls)
                     {
                         nerd.Yay(true);
@@ -1360,7 +1361,7 @@ namespace HeavenStudio.Games
             missPoster.SetActive(false);
             if (state >= 1f || state <= -1f)
             {
-                Jukebox.PlayOneShotGame("cheerReaders/doingoing");
+                SoundByte.PlayOneShotGame("cheerReaders/doingoing");
                 player.FlipBook(); //Need near miss anims
                 return;
             }
@@ -1372,7 +1373,7 @@ namespace HeavenStudio.Games
             missPoster.SetActive(false);
             if (state >= 1f || state <= -1f)
             {
-                Jukebox.PlayOneShotGame("cheerReaders/doingoing");
+                SoundByte.PlayOneShotGame("cheerReaders/doingoing");
                 player.FlipBook(); //Need near miss anims
                 return;
             }
@@ -1385,11 +1386,11 @@ namespace HeavenStudio.Games
             shouldYay = true;
             if (boom)
             {
-                Jukebox.PlayOneShotGame("cheerReaders/bookBoom");
+                SoundByte.PlayOneShotGame("cheerReaders/bookBoom");
             }
             else
             {
-                Jukebox.PlayOneShotGame("cheerReaders/bookPlayer");
+                SoundByte.PlayOneShotGame("cheerReaders/bookPlayer");
             }
         }
 
@@ -1398,9 +1399,9 @@ namespace HeavenStudio.Games
             missPoster.SetActive(false);
             if (state >= 1f || state <= -1f)
             {
-                Jukebox.PlayOneShotGame("cheerReaders/doingoing");
+                SoundByte.PlayOneShotGame("cheerReaders/doingoing");
                 player.StartSpinBook();
-                SpinningLoop = Jukebox.PlayOneShotGame("cheerReaders/bookSpinLoop", -1, 1, 1, true);
+                SpinningLoop = SoundByte.PlayOneShotGame("cheerReaders/bookSpinLoop", -1, 1, 1, true);
                 return;
             }
             SuccessHoldSpin();
@@ -1409,16 +1410,16 @@ namespace HeavenStudio.Games
         void SuccessHoldSpin()
         {
             player.StartSpinBook();
-            Jukebox.PlayOneShotGame("cheerReaders/bookSpin");
-            SpinningLoop = Jukebox.PlayOneShotScheduledGame("cheerReaders/bookSpinLoop", Jukebox.GetClipLengthGame("cheerReaders/bookSpin"), 1, 1, true);
+            SoundByte.PlayOneShotGame("cheerReaders/bookSpin");
+            SpinningLoop = SoundByte.PlayOneShotScheduledGame("cheerReaders/bookSpinLoop", SoundByte.GetClipLengthGame("cheerReaders/bookSpin"), 1, 1, true);
         }
 
         void JustReleaseSpin(PlayerActionEvent caller, float state)
         {
-            Jukebox.KillLoop(SpinningLoop, 0f);
+            SoundByte.KillLoop(SpinningLoop, 0f);
             if (state >= 1f || state <= -1f)
             {
-                Jukebox.PlayOneShotGame("cheerReaders/doingoing");
+                SoundByte.PlayOneShotGame("cheerReaders/doingoing");
                 player.StopSpinBook();
                 shouldDoSuccessZoom = false;
                 missPoster.SetActive(true);
@@ -1429,7 +1430,7 @@ namespace HeavenStudio.Games
 
         void SuccessReleaseSpin()
         {
-            Jukebox.PlayOneShotGame("cheerReaders/bookOpen");
+            SoundByte.PlayOneShotGame("cheerReaders/bookOpen");
             player.StopSpinBook();
             shouldYay = true;
             shouldDoSuccessZoom = true;
@@ -1440,7 +1441,7 @@ namespace HeavenStudio.Games
         {
             playerMask.SetActive(false);
             missPoster.SetActive(false);
-            Jukebox.PlayOneShotGame("cheerReaders/doingoing");
+            SoundByte.PlayOneShotGame("cheerReaders/doingoing");
             player.Miss();
             shouldDoSuccessZoom = false;
             foreach (var girl in allGirls)

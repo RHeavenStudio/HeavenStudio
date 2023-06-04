@@ -46,7 +46,7 @@ namespace HeavenStudio.Games.Scripts_RhythmTweezers
 
             if (ace)
             {
-                Jukebox.PlayOneShotGame($"rhythmTweezers/shortPluck{UnityEngine.Random.Range(1, 21)}");
+                SoundByte.PlayOneShotGame($"rhythmTweezers/shortPluck{UnityEngine.Random.Range(1, 21)}");
 
                 hair.hairSprite.SetActive(false);
                 hair.stubbleSprite.SetActive(true);
@@ -63,8 +63,8 @@ namespace HeavenStudio.Games.Scripts_RhythmTweezers
             }
             else
             {
-                Jukebox.PlayOneShotGame($"rhythmTweezers/shortPluck{UnityEngine.Random.Range(1, 21)}");
-                Jukebox.PlayOneShot("miss");
+                SoundByte.PlayOneShotGame($"rhythmTweezers/shortPluck{UnityEngine.Random.Range(1, 21)}");
+                SoundByte.PlayOneShot("miss");
 
                 hair.hairSprite.SetActive(false);
                 hair.missedSprite.SetActive(true);
@@ -84,7 +84,7 @@ namespace HeavenStudio.Games.Scripts_RhythmTweezers
 
             if (ace)
             {
-                Jukebox.PlayOneShotGame("rhythmTweezers/longPullEnd");
+                SoundByte.PlayOneShotGame("rhythmTweezers/longPullEnd");
 
                 hair.hairSprite.SetActive(false);
                 hair.stubbleSprite.SetActive(true);

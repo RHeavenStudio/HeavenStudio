@@ -15,43 +15,43 @@ namespace HeavenStudio.Games.Loaders
             {
                 new GameAction("beat intervals", "Start Interval")
                 {
-                    function = delegate { var e = eventCaller.currentEntity; WorkingDough.instance.SetIntervalStart(e.beat, e.length);  },
-                    preFunction = delegate { var e = eventCaller.currentEntity; WorkingDough.PreSetIntervalStart(e.beat, e.length);  },
+                    function = delegate { var e = eventCaller.currentEntity; WorkingDough.instance.SetIntervalStart((float) e.beat, e.length);  },
+                    preFunction = delegate { var e = eventCaller.currentEntity; WorkingDough.PreSetIntervalStart((float) e.beat, e.length);  },
                     defaultLength = 8f,
                     resizable = true,
                     priority = 2
                 },
                 new GameAction("small ball", "Small Ball")
                 {
-                    function = delegate { var e = eventCaller.currentEntity; WorkingDough.instance.OnSpawnBall(e.beat, false);  },
-                    preFunction = delegate { var e = eventCaller.currentEntity; WorkingDough.PreSpawnBall(e.beat, false);  },
+                    function = delegate { var e = eventCaller.currentEntity; WorkingDough.instance.OnSpawnBall((float) e.beat, false);  },
+                    preFunction = delegate { var e = eventCaller.currentEntity; WorkingDough.PreSpawnBall((float) e.beat, false);  },
                     defaultLength = 0.5f,
                     priority = 1
                 },
                 new GameAction("big ball", "Big Ball")
                 {
-                    function = delegate { var e = eventCaller.currentEntity; WorkingDough.instance.OnSpawnBall(e.beat, true);  },
-                    preFunction = delegate { var e = eventCaller.currentEntity; WorkingDough.PreSpawnBall(e.beat, true);  },
+                    function = delegate { var e = eventCaller.currentEntity; WorkingDough.instance.OnSpawnBall((float) e.beat, true);  },
+                    preFunction = delegate { var e = eventCaller.currentEntity; WorkingDough.PreSpawnBall((float) e.beat, true);  },
                     defaultLength = 0.5f,
                     priority = 1
                 },
                 new GameAction("launch spaceship", "Launch Spaceship")
                 {
-                    function = delegate { var e = eventCaller.currentEntity; WorkingDough.instance.LaunchShip(e.beat, e.length);  },
+                    function = delegate { var e = eventCaller.currentEntity; WorkingDough.instance.LaunchShip((float) e.beat, e.length);  },
                     defaultLength = 4f,
                     resizable = true,
                     priority = 0
                 },
                 new GameAction("rise spaceship", "Rise Up Spaceship")
                 {
-                    function = delegate { var e = eventCaller.currentEntity; WorkingDough.instance.RiseUpShip(e.beat, e.length);  },
+                    function = delegate { var e = eventCaller.currentEntity; WorkingDough.instance.RiseUpShip((float) e.beat, e.length);  },
                     defaultLength = 4f,
                     resizable = true,
                     priority = 0
                 },
                 new GameAction("lift dough dudes", "Lift Dough Dudes")
                 {
-                    function = delegate { var e = eventCaller.currentEntity; WorkingDough.instance.Elevate(e.beat, e.length, e["toggle"]);  },
+                    function = delegate { var e = eventCaller.currentEntity; WorkingDough.instance.Elevate((float) e.beat, e.length, e["toggle"]);  },
                     defaultLength = 4f,
                     parameters = new List<Param>()
                     {
@@ -72,7 +72,7 @@ namespace HeavenStudio.Games.Loaders
                 },
                 new GameAction("mr game and watch enter or exit", "Mr. G&W Enter or Exit")
                 {
-                    function = delegate { var e = eventCaller.currentEntity; WorkingDough.instance.GANDWEnterOrExit(e.beat, e.length, e["toggle"]);  },
+                    function = delegate { var e = eventCaller.currentEntity; WorkingDough.instance.GANDWEnterOrExit((float) e.beat, e.length, e["toggle"]);  },
                     defaultLength = 4f,
                     parameters = new List<Param>()
                     {
@@ -540,12 +540,12 @@ namespace HeavenStudio.Games
             if (PlayerInput.Pressed() && !IsExpectingInputNow(InputType.STANDARD_DOWN))
             {
                 doughDudesPlayer.GetComponent<Animator>().Play("SmallDoughJump", 0, 0);
-                Jukebox.PlayOneShotGame("workingDough/PlayerSmallJump");
+                SoundByte.PlayOneShotGame("workingDough/PlayerSmallJump");
             }
             else if (PlayerInput.AltPressed() && !IsExpectingInputNow(InputType.STANDARD_ALT_DOWN))
             {
                 doughDudesPlayer.GetComponent<Animator>().Play("BigDoughJump", 0, 0);
-                Jukebox.PlayOneShotGame("workingDough/PlayerBigJump");
+                SoundByte.PlayOneShotGame("workingDough/PlayerBigJump");
             }
         }
 
@@ -560,7 +560,7 @@ namespace HeavenStudio.Games
                 GameObject.Destroy(currentBall);
             }
             doughDudesPlayer.GetComponent<Animator>().Play("SmallDoughJump", 0, 0);
-            Jukebox.PlayOneShotGame("workingDough/BigBallTooWeak");
+            SoundByte.PlayOneShotGame("workingDough/BigBallTooWeak");
             SpawnPlayerBallResult(beat, true, playerWrongInputTooWeakFirstCurve, playerWrongInputTooWeakSecondCurve, 0.5f, 1f);
             playerImpact.SetActive(true);
             BeatAction.New(instance.gameObject, new List<BeatAction.Action>()
@@ -581,7 +581,7 @@ namespace HeavenStudio.Games
             }
             GameObject.Instantiate(breakParticleEffect, breakParticleHolder);
             doughDudesPlayer.GetComponent<Animator>().Play("BigDoughJump", 0, 0);
-            Jukebox.PlayOneShotGame("workingDough/BreakBall");
+            SoundByte.PlayOneShotGame("workingDough/BreakBall");
             playerImpact.SetActive(true);
             BeatAction.New(instance.gameObject, new List<BeatAction.Action>()
             {
@@ -608,7 +608,7 @@ namespace HeavenStudio.Games
             BeatAction.New(instance.gameObject, new List<BeatAction.Action>()
             {
                 new BeatAction.Action(beat + 0.25f, delegate { missImpact.SetActive(true); }),
-                new BeatAction.Action(beat + 0.25f, delegate { Jukebox.PlayOneShotGame("workingDough/BallMiss"); }),
+                new BeatAction.Action(beat + 0.25f, delegate { SoundByte.PlayOneShotGame("workingDough/BallMiss"); }),
                 new BeatAction.Action(beat + 0.35f, delegate { missImpact.SetActive(false); }),
             });
         }
@@ -631,7 +631,7 @@ namespace HeavenStudio.Games
             BeatAction.New(instance.gameObject, new List<BeatAction.Action>()
             {
                 new BeatAction.Action(beat + 0.25f, delegate { missImpact.SetActive(true); }),
-                new BeatAction.Action(beat + 0.25f, delegate { Jukebox.PlayOneShotGame("workingDough/BallMiss"); }),
+                new BeatAction.Action(beat + 0.25f, delegate { SoundByte.PlayOneShotGame("workingDough/BallMiss"); }),
                 new BeatAction.Action(beat + 0.35f, delegate { missImpact.SetActive(false); }),
             });
         }
@@ -648,7 +648,7 @@ namespace HeavenStudio.Games
             }
             if (state >= 1f || state <= -1f)
             {
-                Jukebox.PlayOneShotGame("workingDough/SmallBarely");
+                SoundByte.PlayOneShotGame("workingDough/SmallBarely");
                 doughDudesPlayer.GetComponent<Animator>().Play("SmallDoughJump", 0, 0);
 
                 playerImpact.SetActive(true);
@@ -674,7 +674,7 @@ namespace HeavenStudio.Games
             }
             if (state >= 1f || state <= -1f)
             {
-                Jukebox.PlayOneShotGame("workingDough/BigBarely");
+                SoundByte.PlayOneShotGame("workingDough/BigBarely");
                 doughDudesPlayer.GetComponent<Animator>().Play("BigDoughJump", 0, 0);
 
                 playerImpact.SetActive(true);
@@ -692,13 +692,13 @@ namespace HeavenStudio.Games
         {
             if (isBig)
             {
-                Jukebox.PlayOneShotGame("workingDough/rightBig");
+                SoundByte.PlayOneShotGame("workingDough/rightBig");
                 doughDudesPlayer.GetComponent<Animator>().Play("BigDoughJump", 0, 0);
                 backgroundAnimator.Play("BackgroundFlash", 0, 0);
             }
             else
             {
-                Jukebox.PlayOneShotGame("workingDough/rightSmall");
+                SoundByte.PlayOneShotGame("workingDough/rightSmall");
                 doughDudesPlayer.GetComponent<Animator>().Play("SmallDoughJump", 0, 0);
             }
             playerImpact.SetActive(true);
@@ -760,8 +760,8 @@ namespace HeavenStudio.Games
             BeatAction.New(instance.gameObject, new List<BeatAction.Action>()
             {
                 new BeatAction.Action(beat + length, delegate { spaceshipAnimator.Play("SpaceshipLaunch", 0, 0); }),
-                new BeatAction.Action(beat + length, delegate { Jukebox.PlayOneShotGame("workingDough/LaunchRobot"); }),
-                new BeatAction.Action(beat + length, delegate { Jukebox.PlayOneShotGame("workingDough/Rocket"); }),
+                new BeatAction.Action(beat + length, delegate { SoundByte.PlayOneShotGame("workingDough/LaunchRobot"); }),
+                new BeatAction.Action(beat + length, delegate { SoundByte.PlayOneShotGame("workingDough/Rocket"); }),
             });
         }
 

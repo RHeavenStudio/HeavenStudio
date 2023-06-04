@@ -65,7 +65,7 @@ namespace HeavenStudio.Games.Scripts_DoubleDate
             if (state >= 1f || state <= -1f)
             {
                 path = game.GetPath("BasketBallNg" + (state > 0 ? "Late" : "Early"));
-                Jukebox.PlayOneShot("miss");
+                SoundByte.PlayOneShot("miss");
                 game.Kick(false);
                 GetComponent<SpriteRenderer>().sortingOrder = 8;
                 return;
@@ -79,12 +79,12 @@ namespace HeavenStudio.Games.Scripts_DoubleDate
             pathStartBeat = conductor.songPositionInBeats;
             path = game.GetPath("BasketBallJust");
             game.Kick();
-            Jukebox.PlayOneShotGame("doubleDate/kick");
+            SoundByte.PlayOneShotGame("doubleDate/kick");
         }
 
         void Miss(PlayerActionEvent caller)
         {
-            Jukebox.PlayOneShotGame("doubleDate/weasel_hide");
+            SoundByte.PlayOneShotGame("doubleDate/weasel_hide");
             game.MissKick(pathStartBeat + 2.25f);
         }
 

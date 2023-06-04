@@ -17,33 +17,33 @@ namespace HeavenStudio.Games.Loaders
                     // both same timing
                     new GameAction("jump (side to middle)", "Side to Middle Jumps")
                     {
-                        function = delegate {PajamaParty.instance.DoThreeJump(eventCaller.currentEntity.beat);},
+                        function = delegate {PajamaParty.instance.DoThreeJump((float) eventCaller.currentEntity.beat);},
                         defaultLength = 4f,
-                        inactiveFunction = delegate {PajamaParty.WarnThreeJump(eventCaller.currentEntity.beat);}
+                        inactiveFunction = delegate {PajamaParty.WarnThreeJump((float) eventCaller.currentEntity.beat);}
                     },
                     new GameAction("jump (back to front)", "Back to Front Jumps")
                     {
-                        function =delegate {PajamaParty.instance.DoFiveJump(eventCaller.currentEntity.beat);}, 
+                        function =delegate {PajamaParty.instance.DoFiveJump((float) eventCaller.currentEntity.beat);}, 
                         defaultLength = 4f, 
-                        inactiveFunction = delegate {PajamaParty.WarnFiveJump(eventCaller.currentEntity.beat);}
+                        inactiveFunction = delegate {PajamaParty.WarnFiveJump((float) eventCaller.currentEntity.beat);}
                     },
                     //idem
                     new GameAction("slumber", "Slumber")
                     {
-                        function = delegate {var e = eventCaller.currentEntity; PajamaParty.instance.DoSleepSequence(e.beat, e["toggle"], e["type"]);}, 
+                        function = delegate {var e = eventCaller.currentEntity; PajamaParty.instance.DoSleepSequence((float) e.beat, e["toggle"], e["type"]);}, 
                         defaultLength = 8f,
                         parameters = new List<Param>()
                         {
                             new Param("type", PajamaParty.SleepType.Normal, "Sleep Type", "Type of sleep action to use"),
                             new Param("toggle", false, "Alt. Animation", "Use an alternate animation for Mako")
                         }, 
-                        inactiveFunction = delegate {var e = eventCaller.currentEntity; PajamaParty.WarnSleepSequence(e.beat, e["toggle"], e["type"]);}
+                        inactiveFunction = delegate {var e = eventCaller.currentEntity; PajamaParty.WarnSleepSequence((float) e.beat, e["toggle"], e["type"]);}
                     },
                     new GameAction("throw", "Throw Pillows")
                     {
-                        function = delegate {PajamaParty.instance.DoThrowSequence(eventCaller.currentEntity.beat);}, 
+                        function = delegate {PajamaParty.instance.DoThrowSequence((float) eventCaller.currentEntity.beat);}, 
                         defaultLength = 8f,
-                        inactiveFunction = delegate {PajamaParty.WarnThrowSequence(eventCaller.currentEntity.beat);}
+                        inactiveFunction = delegate {PajamaParty.WarnThrowSequence((float) eventCaller.currentEntity.beat);}
                     },
                     // todo cosmetic crap
                     // background stuff
@@ -129,7 +129,7 @@ namespace HeavenStudio.Games
             }
         }
 
-        public override void OnGameSwitch(float beat)
+        public override void OnGameSwitch(double beat)
         {
             if (WantThreeJump != Single.MinValue)
             {

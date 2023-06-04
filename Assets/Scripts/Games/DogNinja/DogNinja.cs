@@ -15,7 +15,7 @@ namespace HeavenStudio.Games.Loaders
             {
                 new GameAction("Bop", "Bop")
                 {
-                    function = delegate { DogNinja.instance.Bop(eventCaller.currentEntity.beat, eventCaller.currentEntity["toggle"]); }, 
+                    function = delegate { DogNinja.instance.Bop((float) eventCaller.currentEntity.beat, eventCaller.currentEntity["toggle"]); }, 
                     defaultLength = 0.5f,
                     parameters = new List<Param>()
                     {
@@ -24,13 +24,13 @@ namespace HeavenStudio.Games.Loaders
                 },
                 new GameAction("Prepare", "Prepare")
                 {
-                    function = delegate { DogNinja.instance.Prepare(eventCaller.currentEntity.beat); }, 
+                    function = delegate { DogNinja.instance.Prepare((float) eventCaller.currentEntity.beat); }, 
                     defaultLength = 0.5f,
                 },
                 new GameAction("ThrowObject", "Throw Object")
                 {
-                    function = delegate { var e = eventCaller.currentEntity; DogNinja.QueueObject(e.beat, e["direction"], e["typeL"], e["typeR"], e["shouldPrepare"], false); },
-                    inactiveFunction = delegate { var e = eventCaller.currentEntity; DogNinja.QueueObject(e.beat, e["direction"], e["typeL"], e["typeR"], e["shouldPrepare"], e["muteThrow"]); },
+                    function = delegate { var e = eventCaller.currentEntity; DogNinja.QueueObject((float) e.beat, e["direction"], e["typeL"], e["typeR"], e["shouldPrepare"], false); },
+                    inactiveFunction = delegate { var e = eventCaller.currentEntity; DogNinja.QueueObject((float) e.beat, e["direction"], e["typeL"], e["typeR"], e["shouldPrepare"], e["muteThrow"]); },
                     defaultLength = 2,
                     parameters = new List<Param>()
                     {
@@ -43,7 +43,7 @@ namespace HeavenStudio.Games.Loaders
                 },
                 new GameAction("CutEverything", "Cut Everything!")
                 {
-                    function = delegate { var e = eventCaller.currentEntity; DogNinja.instance.CutEverything(e.beat, e["toggle"], e["text"]); }, 
+                    function = delegate { var e = eventCaller.currentEntity; DogNinja.instance.CutEverything((float) e.beat, e["toggle"], e["text"]); }, 
                     defaultLength = 0.5f,
                     parameters = new List<Param>()
                     {
@@ -53,38 +53,38 @@ namespace HeavenStudio.Games.Loaders
                 },
                 new GameAction("HereWeGo", "Here We Go!")
                 {
-                    function = delegate { DogNinja.instance.HereWeGo(eventCaller.currentEntity.beat); },
+                    function = delegate { DogNinja.instance.HereWeGo((float) eventCaller.currentEntity.beat); },
                     defaultLength = 2,
-                    inactiveFunction = delegate { DogNinja.HereWeGoInactive(eventCaller.currentEntity.beat); },
+                    inactiveFunction = delegate { DogNinja.HereWeGoInactive((float) eventCaller.currentEntity.beat); },
                     preFunctionLength = 1,
                 },
 
                 // these are still here for backwards-compatibility but are hidden in the editor
                 new GameAction("ThrowObjectLeft", "Throw Object Left")
                 {
-                    function = delegate { var e = eventCaller.currentEntity; DogNinja.QueueObject(e.beat, 0, e["type"], 0, true, false);},
+                    function = delegate { var e = eventCaller.currentEntity; DogNinja.QueueObject((float) e.beat, 0, e["type"], 0, true, false);},
                     defaultLength = 2,
                     hidden = true,
                     parameters = new List<Param>()
                     {
                         new Param("type", DogNinja.ObjectType.Random, "Object", "The object to be thrown"),
                     },
-                    inactiveFunction = delegate { var e = eventCaller.currentEntity; DogNinja.QueueObject(e.beat, 0, e["type"], 0, true, false);},
+                    inactiveFunction = delegate { var e = eventCaller.currentEntity; DogNinja.QueueObject((float) e.beat, 0, e["type"], 0, true, false);},
                 },
                 new GameAction("ThrowObjectRight", "Throw Object Right")
                 {
-                    function = delegate { var e = eventCaller.currentEntity; DogNinja.QueueObject(e.beat, 1, 0, e["type"], true, false);},
+                    function = delegate { var e = eventCaller.currentEntity; DogNinja.QueueObject((float) e.beat, 1, 0, e["type"], true, false);},
                     defaultLength = 2,
                     hidden = true,
                     parameters = new List<Param>()
                     {
                         new Param("type", DogNinja.ObjectType.Random, "Object", "The object to be thrown"),
                     },
-                    inactiveFunction = delegate { var e = eventCaller.currentEntity; DogNinja.QueueObject(e.beat, 1, 0, e["type"], true, false);},
+                    inactiveFunction = delegate { var e = eventCaller.currentEntity; DogNinja.QueueObject((float) e.beat, 1, 0, e["type"], true, false);},
                 },
                 new GameAction("ThrowObjectBoth", "Throw Object Both")
                 {
-                    function = delegate { var e = eventCaller.currentEntity; DogNinja.QueueObject(e.beat, 2, e["typeL"], e["typeR"], true, false);},
+                    function = delegate { var e = eventCaller.currentEntity; DogNinja.QueueObject((float) e.beat, 2, e["typeL"], e["typeR"], true, false);},
                     defaultLength = 2,
                     hidden = true,
                     parameters = new List<Param>()
@@ -92,7 +92,7 @@ namespace HeavenStudio.Games.Loaders
                         new Param("typeL", DogNinja.ObjectType.Random, "Left Object", "The object on the left to be thrown"),
                         new Param("typeR", DogNinja.ObjectType.Random, "Right Object", "The object on the right to be thrown"),
                     },
-                    inactiveFunction = delegate { var e = eventCaller.currentEntity; DogNinja.QueueObject(e.beat, 2, e["typeL"], e["typeR"], true, false);},
+                    inactiveFunction = delegate { var e = eventCaller.currentEntity; DogNinja.QueueObject((float) e.beat, 2, e["typeL"], e["typeR"], true, false);},
                 },
             },
             new List<string>() {"ntr", "normal"},
@@ -211,7 +211,7 @@ namespace HeavenStudio.Games
                 }
 
                 DogAnim.DoScaledAnimationAsync(slice, 0.5f);
-                Jukebox.PlayOneShotGame("dogNinja/whiff");
+                SoundByte.PlayOneShotGame("dogNinja/whiff");
                 DogAnim.SetBool("needPrepare", false);
             }
 
@@ -249,14 +249,14 @@ namespace HeavenStudio.Games
             if (direction is 0 or 2) {
                 sfxNumL += typeL < 7 ? "fruit" : Enum.GetName(typeof(ObjectType), typeL);
                 if (typeL == 0) typeL = ObjSprite;
-                if (!muteThrow) Jukebox.PlayOneShotGame(sfxNumL+"1", forcePlay: true);
+                if (!muteThrow) SoundByte.PlayOneShotGame(sfxNumL+"1", forcePlay: true);
             }
             
             string sfxNumR = "dogNinja/";
             if (direction is 1 or 2) {
                 sfxNumR += typeR < 7 ? "fruit" : Enum.GetName(typeof(ObjectType), typeR);
                 if (typeR == 0) typeR = ObjSprite;
-                if (!(direction == 2 && typeL == typeR) && !muteThrow) Jukebox.PlayOneShotGame(sfxNumR+"1", forcePlay: true);
+                if (!(direction == 2 && typeL == typeR) && !muteThrow) SoundByte.PlayOneShotGame(sfxNumR+"1", forcePlay: true);
             }
 
             queuedThrows.Add(new QueuedThrow() {
@@ -305,7 +305,7 @@ namespace HeavenStudio.Games
             if (!birdOnScreen) {
                 FullBird.SetActive(true);
                 if (sound) { 
-                    Jukebox.PlayOneShotGame(sfxNum+"bird_flap"); 
+                    SoundByte.PlayOneShotGame(sfxNum+"bird_flap"); 
                 }
                 BirdAnim.Play("FlyIn", 0, 0);
                 birdOnScreen = true;

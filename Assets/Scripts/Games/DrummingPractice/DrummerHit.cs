@@ -25,7 +25,7 @@ namespace HeavenStudio.Games.Scripts_DrummingPractice
             BeatAction.New(game.gameObject, new List<BeatAction.Action>()
             {
                 new BeatAction.Action(startBeat+1f, delegate { 
-                    Jukebox.PlayOneShotGame("drummingPractice/drum");
+                    SoundByte.PlayOneShotGame("drummingPractice/drum");
                     game.leftDrummer.Hit(true, false);
                     game.rightDrummer.Hit(true, false);
                 }),

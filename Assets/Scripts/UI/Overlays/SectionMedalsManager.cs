@@ -4,6 +4,8 @@ using UnityEngine;
 
 using HeavenStudio.Util;
 using HeavenStudio.Games;
+using Jukebox;
+using Jukebox.Legacy;
 
 namespace HeavenStudio.Common
 {
@@ -59,9 +61,9 @@ namespace HeavenStudio.Common
             }
         }
 
-        public void OnSectionChange(DynamicBeatmap.ChartSection section)
+        public void OnSectionChange(RiqEntity section)
         {
-            if (section == null) return;
+            if (string.IsNullOrEmpty(section.datamodel)) return;
             if (!PersistentDataManager.gameSettings.isMedalOn) return;
             if (PersistentDataManager.gameSettings.isMedalOn && !isMedalsStarted)
             {

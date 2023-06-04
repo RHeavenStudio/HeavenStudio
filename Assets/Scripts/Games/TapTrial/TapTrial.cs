@@ -16,7 +16,7 @@ namespace HeavenStudio.Games.Loaders
             {
                 new GameAction("bop", "Bop")
                 {
-                    function = delegate { var e = eventCaller.currentEntity; TapTrial.instance.Bop(e.beat, e.length, e["toggle"], e["toggle2"]); }, 
+                    function = delegate { var e = eventCaller.currentEntity; TapTrial.instance.Bop((float) e.beat, e.length, e["toggle"], e["toggle2"]); }, 
                     resizable = true,
                     parameters = new List<Param>()
                     {
@@ -27,36 +27,36 @@ namespace HeavenStudio.Games.Loaders
                 new GameAction("tap", "Tap")
                 {
 
-                    function = delegate { TapTrial.instance.Tap(eventCaller.currentEntity.beat); }, 
+                    function = delegate { TapTrial.instance.Tap((float) eventCaller.currentEntity.beat); }, 
                     defaultLength = 2.0f
                 },
                 new GameAction("double tap", "Double Tap")
                 {
 
-                    function = delegate { TapTrial.instance.DoubleTap(eventCaller.currentEntity.beat); }, 
+                    function = delegate { TapTrial.instance.DoubleTap((float) eventCaller.currentEntity.beat); }, 
                     defaultLength = 2.0f
                 },
                 new GameAction("triple tap", "Triple Tap")
                 {
 
-                    function = delegate { TapTrial.instance.TripleTap(eventCaller.currentEntity.beat); }, 
+                    function = delegate { TapTrial.instance.TripleTap((float) eventCaller.currentEntity.beat); }, 
                     defaultLength = 4.0f
                 },
                 new GameAction("jump tap prep", "Prepare Stance")
                 {
 
-                    function = delegate { TapTrial.instance.JumpTapPrep(eventCaller.currentEntity.beat); }, 
+                    function = delegate { TapTrial.instance.JumpTapPrep((float) eventCaller.currentEntity.beat); }, 
                 },
                 new GameAction("jump tap", "Jump Tap")
                 {
 
-                    function = delegate { TapTrial.instance.JumpTap(eventCaller.currentEntity.beat); }, 
+                    function = delegate { TapTrial.instance.JumpTap((float) eventCaller.currentEntity.beat); }, 
                     defaultLength = 2.0f
                 },
                 new GameAction("final jump tap", "Final Jump Tap")
                 {
 
-                    function = delegate { TapTrial.instance.FinalJumpTap(eventCaller.currentEntity.beat); }, 
+                    function = delegate { TapTrial.instance.FinalJumpTap((float) eventCaller.currentEntity.beat); }, 
                     defaultLength = 2.0f
                 },
                 new GameAction("scroll event", "Scroll Background")
@@ -166,7 +166,7 @@ namespace HeavenStudio.Games
                 if (PlayerInput.Pressed() && !IsExpectingInputNow())
                 {
                     player.anim.Play("Tap", 0, 0);
-                    Jukebox.PlayOneShotGame("tapTrial/tonk");
+                    SoundByte.PlayOneShotGame("tapTrial/tonk");
                 }
             }
         }
@@ -199,7 +199,7 @@ namespace HeavenStudio.Games
         public void Tap(float beat)
         {
             isPrep = true;
-            Jukebox.PlayOneShotGame("tapTrial/ook");
+            SoundByte.PlayOneShotGame("tapTrial/ook");
             player.anim.DoScaledAnimationAsync("TapPrepare", 0.5f);
 
             //Monkey Tap Prepare Anim
@@ -313,7 +313,7 @@ namespace HeavenStudio.Games
         {
             isPrep = true;
             hasJumped = true;
-            Jukebox.PlayOneShotGame("tapTrial/jumptap1");
+            SoundByte.PlayOneShotGame("tapTrial/jumptap1");
 
             player.anim.Play("JumpTap", 0, 0);
             BeatAction.New(gameObject, new List<BeatAction.Action>()
@@ -346,7 +346,7 @@ namespace HeavenStudio.Games
             isPrep = true;
             hasJumped = true;
             isFinalJump = true;
-            Jukebox.PlayOneShotGame("tapTrial/jumptap2");
+            SoundByte.PlayOneShotGame("tapTrial/jumptap2");
 
             player.anim.Play("FinalJump");
             BeatAction.New(gameObject, new List<BeatAction.Action>()
@@ -409,31 +409,31 @@ namespace HeavenStudio.Games
         #region Player Action Scripts
         public void OnTap(PlayerActionEvent caller, float beat)
         {
-            Jukebox.PlayOneShotGame("tapTrial/tap");
+            SoundByte.PlayOneShotGame("tapTrial/tap");
             player.anim.DoScaledAnimationAsync("Tap", 0.6f);
             player_effects[0].GetComponent<ParticleSystem>().Play();
         }
         public void OnDoubleTap(PlayerActionEvent caller, float beat)
         {
-            Jukebox.PlayOneShotGame("tapTrial/tap");
+            SoundByte.PlayOneShotGame("tapTrial/tap");
             player.anim.DoScaledAnimationAsync("DoubleTap", 0.6f);
             player_effects[1].GetComponent<ParticleSystem>().Play();
         }
 
         public void OnTapMiss(PlayerActionEvent caller)
         {
-            Jukebox.PlayOneShotGame("tapTrial/tapMonkey", pitch: 1.5f, volume: .3f);
+            SoundByte.PlayOneShotGame("tapTrial/tapMonkey", pitch: 1.5f, volume: .3f);
         }
 
         public void OnJumpTapMiss(PlayerActionEvent caller)
         {
-            Jukebox.PlayOneShotGame("tapTrial/tapMonkey", pitch: 1.5f, volume: .3f);
+            SoundByte.PlayOneShotGame("tapTrial/tapMonkey", pitch: 1.5f, volume: .3f);
             player.anim.Play("JumpTap_Miss", 0, 0);
         }
 
         public void OnFinalJumpTapMiss(PlayerActionEvent caller)
         {
-            Jukebox.PlayOneShotGame("tapTrial/tapMonkey", pitch: 1.5f, volume: .3f);
+            SoundByte.PlayOneShotGame("tapTrial/tapMonkey", pitch: 1.5f, volume: .3f);
             player.anim.Play("FinalJump_Miss", 0, 0);
         }
 
@@ -460,18 +460,18 @@ namespace HeavenStudio.Games
                 player.tripleOffset += 1;
             }
             player_effects[0].GetComponent<ParticleSystem>().Play();
-            Jukebox.PlayOneShotGame("tapTrial/tap");
+            SoundByte.PlayOneShotGame("tapTrial/tap");
         }
         public void OnJumpTap(PlayerActionEvent caller, float beat)
         {
-            Jukebox.PlayOneShotGame("tapTrial/tap");
+            SoundByte.PlayOneShotGame("tapTrial/tap");
             player.anim.Play("JumpTap_Success", 0, 0);
             player_effects[0].GetComponent<ParticleSystem>().Play();
             player_effects[1].GetComponent<ParticleSystem>().Play();
         }
         public void OnJumpFinalTap(PlayerActionEvent caller, float beat)
         {
-            Jukebox.PlayOneShotGame("tapTrial/tap");
+            SoundByte.PlayOneShotGame("tapTrial/tap");
             player.anim.Play("FinalJump_Tap");
             player_effects[0].GetComponent<ParticleSystem>().Play();
             player_effects[1].GetComponent<ParticleSystem>().Play();

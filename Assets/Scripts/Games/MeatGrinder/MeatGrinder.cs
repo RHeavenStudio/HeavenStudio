@@ -17,7 +17,7 @@ namespace HeavenStudio.Games.Loaders
                 {
                     function = delegate {
                         var e = eventCaller.currentEntity; 
-                        MeatGrinder.instance.MeatToss(e.beat); 
+                        MeatGrinder.instance.MeatToss((float) e.beat); 
                     },
                     defaultLength = 2f,
                     priority = 2,
@@ -26,14 +26,14 @@ namespace HeavenStudio.Games.Loaders
                 {
                     function = delegate {
                         var e = eventCaller.currentEntity; 
-                        MeatGrinder.instance.MeatCall(e.beat); 
+                        MeatGrinder.instance.MeatCall((float) e.beat); 
                     },
                     defaultLength = 0.5f,
                     priority = 2,
                     preFunctionLength = 1f,
                     preFunction = delegate {
                         var e = eventCaller.currentEntity; 
-                        MeatGrinder.PreInterval(e.beat, 4f);
+                        MeatGrinder.PreInterval((float) e.beat, 4f);
                     },
                 },
                 new GameAction("StartInterval", "Start Interval")
@@ -43,14 +43,14 @@ namespace HeavenStudio.Games.Loaders
                     priority = 1,
                     preFunction = delegate {
                         var e = eventCaller.currentEntity;
-                        MeatGrinder.PreInterval(e.beat, e.length);
+                        MeatGrinder.PreInterval((float) e.beat, e.length);
                     },
                 },
                 new GameAction("bop", "Bop")
                 {
                     function = delegate {
                         var e = eventCaller.currentEntity; 
-                        MeatGrinder.instance.Bop(e.beat, e.length, e["bop"], e["bossBop"]); 
+                        MeatGrinder.instance.Bop((float) e.beat, e.length, e["bop"], e["bossBop"]); 
                     },
                     parameters = new List<Param>()
                     {
@@ -140,7 +140,7 @@ namespace HeavenStudio.Games
                 ScoreMiss();
                 TackAnim.DoScaledAnimationAsync("TackEmptyHit", 0.5f);
                 TackAnim.SetBool("tackMeated", false);
-                Jukebox.PlayOneShotGame(sfxName+"whiff");
+                SoundByte.PlayOneShotGame(sfxName+"whiff");
                 if (bossAnnoyed) BossAnim.DoScaledAnimationAsync("Bop", 0.5f);
             }
 
@@ -221,7 +221,7 @@ namespace HeavenStudio.Games
         
         public void MeatToss(float beat)
         {
-            Jukebox.PlayOneShotGame(sfxName+"toss");
+            SoundByte.PlayOneShotGame(sfxName+"toss");
             
             MeatToss Meat = Instantiate(MeatBase, gameObject.transform).GetComponent<MeatToss>();
             Meat.startBeat = beat;
@@ -233,7 +233,7 @@ namespace HeavenStudio.Games
         public void MeatCall(float beat) 
         {
             BossAnim.DoScaledAnimationAsync("BossCall", 0.5f);
-            Jukebox.PlayOneShotGame(sfxName+"signal");
+            SoundByte.PlayOneShotGame(sfxName+"signal");
             
             if (!intervalStarted)
             {

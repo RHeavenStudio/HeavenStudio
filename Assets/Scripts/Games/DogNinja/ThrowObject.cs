@@ -88,7 +88,7 @@ namespace HeavenStudio.Games.Scripts_DogNinja
             };
 
             DogAnim.DoScaledAnimationAsync(slice, 0.5f);
-            if (shouldSfx) Jukebox.PlayOneShotGame(sfxNum+"2");
+            if (shouldSfx) SoundByte.PlayOneShotGame(sfxNum+"2");
 
             game.WhichLeftHalf.sprite = objectLeftHalves[type-1];
             game.WhichRightHalf.sprite = objectRightHalves[type-1];
@@ -119,7 +119,7 @@ namespace HeavenStudio.Games.Scripts_DogNinja
             };
 
             DogAnim.DoScaledAnimationAsync(barely, 0.5f);
-            Jukebox.PlayOneShotGame("dogNinja/barely");
+            SoundByte.PlayOneShotGame("dogNinja/barely");
         }
 
         private void Hit(PlayerActionEvent caller, float state)

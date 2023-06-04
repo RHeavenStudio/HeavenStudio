@@ -10,6 +10,7 @@ using System.Diagnostics;
 using UnityEngine;
 using UnityEngine.Rendering;
 using static HeavenStudio.EntityTypes;
+using Jukebox;
 
 namespace HeavenStudio.Games.Loaders
 {
@@ -22,7 +23,7 @@ namespace HeavenStudio.Games.Loaders
             {
                 new GameAction("rocket", "Family Model")
                 {
-                    preFunction = delegate { var e = eventCaller.currentEntity; LaunchParty.LaunchRocket(e.beat, e["offset"], e["note1"], e["note2"], e["note3"], e["note4"]); },
+                    preFunction = delegate { var e = eventCaller.currentEntity; LaunchParty.LaunchRocket((float) e.beat, e["offset"], e["note1"], e["note2"], e["note3"], e["note4"]); },
                     defaultLength = 4f,
                     parameters = new List<Param>()
                     {
@@ -35,7 +36,7 @@ namespace HeavenStudio.Games.Loaders
                 },
                 new GameAction("partyCracker", "Party-Popper")
                 {
-                    preFunction = delegate { var e = eventCaller.currentEntity; LaunchParty.LaunchPartyCracker(e.beat, e["offset"], e["note1"], e["note2"], e["note3"], e["note4"], e["note5"], e["note6"]); },
+                    preFunction = delegate { var e = eventCaller.currentEntity; LaunchParty.LaunchPartyCracker((float) e.beat, e["offset"], e["note1"], e["note2"], e["note3"], e["note4"], e["note5"], e["note6"]); },
                     defaultLength = 3f,
                     parameters = new List<Param>()
                     {
@@ -50,7 +51,7 @@ namespace HeavenStudio.Games.Loaders
                 },
                 new GameAction("bell", "Bell")
                 {
-                    preFunction = delegate { var e = eventCaller.currentEntity; LaunchParty.LaunchBell(e.beat, e["offset"], e["note1"], e["note2"], e["note3"], e["note4"], e["note5"], e["note6"], e["note7"], e["note8"],
+                    preFunction = delegate { var e = eventCaller.currentEntity; LaunchParty.LaunchBell((float) e.beat, e["offset"], e["note1"], e["note2"], e["note3"], e["note4"], e["note5"], e["note6"], e["note7"], e["note8"],
                         e["note9"]); },
                     defaultLength = 3f,
                     parameters = new List<Param>()
@@ -69,7 +70,7 @@ namespace HeavenStudio.Games.Loaders
                 },
                 new GameAction("bowlingPin", "Bowling Pin")
                 {
-                    preFunction = delegate { var e = eventCaller.currentEntity; LaunchParty.LaunchBowlingPin(e.beat, e["offset"], e["note1"], e["note2"], e["note3"], e["note4"], e["note5"], e["note6"], e["note7"], 
+                    preFunction = delegate { var e = eventCaller.currentEntity; LaunchParty.LaunchBowlingPin((float) e.beat, e["offset"], e["note1"], e["note2"], e["note3"], e["note4"], e["note5"], e["note6"], e["note7"], 
                         e["note8"], e["note9"], e["note10"], e["note11"], e["note12"], e["note13"], e["note14"], e["note15"]); },
                     defaultLength = 3f,
                     parameters = new List<Param>()
@@ -101,7 +102,7 @@ namespace HeavenStudio.Games.Loaders
                         new Param("xPos", new EntityTypes.Float(-40f, 40f, 0f), "X Position", "Which position on the X axis should the Launch Pad travel to?"),
                         new Param("yPos", new EntityTypes.Float(-30f, 30f, 0f), "Y Position", "Which position on the Y axis should the Launch Pad travel to?"),
                         new Param("zPos", new EntityTypes.Float(-90f, 90f, 0f), "Z Position", "Which position on the Z axis should the Launch Pad travel to?"),
-                        new Param("ease", EasingFunction.Ease.Linear, "Ease", "Which ease should the Launch Pad use?")
+                        new Param("ease", Util.EasingFunction.Ease.Linear, "Ease", "Which ease should the Launch Pad use?")
                     }
                 },
                 new GameAction("rotMove", "Change Launch Pad Rotation")
@@ -111,12 +112,12 @@ namespace HeavenStudio.Games.Loaders
                     parameters = new List<Param>()
                     {
                         new Param("rot", new EntityTypes.Float(-360, 360, 0), "Angle", "Which angle of rotation should the Launch Pad rotate towards?"),
-                        new Param("ease", EasingFunction.Ease.Linear, "Ease", "Which ease should the Launch Pad use?")
+                        new Param("ease", Util.EasingFunction.Ease.Linear, "Ease", "Which ease should the Launch Pad use?")
                     }
                 },
                 new GameAction("toggleStars", "Toggle Falling Stars")
                 {
-                    function = delegate {var e = eventCaller.currentEntity; LaunchParty.instance.CreateParticles(e.beat, e["toggle"], e["valA"], e["valB"], e["valC"]);},
+                    function = delegate {var e = eventCaller.currentEntity; LaunchParty.instance.CreateParticles((float) e.beat, e["toggle"], e["valA"], e["valB"], e["valC"]);},
                     defaultLength = 0.5f,
                     parameters = new List<Param>()
                     {
@@ -174,8 +175,8 @@ namespace HeavenStudio.Games
         private Vector3 currentPadPos = new Vector3(0, -2.4f, 0);
         private float lastPadRotation;
         private float currentPadRotation;
-        private EasingFunction.Ease lastPosEase;
-        private EasingFunction.Ease lastRotEase;
+        private Util.EasingFunction.Ease lastPosEase;
+        private Util.EasingFunction.Ease lastRotEase;
         public enum RocketType
         {
             Family = 0,
@@ -196,9 +197,9 @@ namespace HeavenStudio.Games
 
         private int currentRotIndex;
 
-        private List<DynamicBeatmap.DynamicEntity> allPosEvents = new List<DynamicBeatmap.DynamicEntity>();
+        private List<RiqEntity> allPosEvents = new List<RiqEntity>();
 
-        private List<DynamicBeatmap.DynamicEntity> allRotEvents = new List<DynamicBeatmap.DynamicEntity>();
+        private List<RiqEntity> allRotEvents = new List<RiqEntity>();
 
         public static LaunchParty instance;
 
@@ -216,7 +217,7 @@ namespace HeavenStudio.Games
             instance = this;
             lensFlareAnim.Play("Flashing", 0, 0);
             var posEvents = EventCaller.GetAllInGameManagerList("launchParty", new string[] { "posMove" });
-            List<DynamicBeatmap.DynamicEntity> tempPosEvents = new List<DynamicBeatmap.DynamicEntity>();
+            List<RiqEntity> tempPosEvents = new List<RiqEntity>();
             for (int i = 0; i < posEvents.Count; i++)
             {
                 if (posEvents[i].beat + posEvents[i].beat >= Conductor.instance.songPositionInBeats)
@@ -228,7 +229,7 @@ namespace HeavenStudio.Games
             allPosEvents = tempPosEvents;
 
             var rotEvents = EventCaller.GetAllInGameManagerList("launchParty", new string[] { "rotMove" });
-            List<DynamicBeatmap.DynamicEntity> tempRotEvents = new List<DynamicBeatmap.DynamicEntity>();
+            List<RiqEntity> tempRotEvents = new List<RiqEntity>();
             for (int i = 0; i < rotEvents.Count; i++)
             {
                 if (rotEvents[i].beat + rotEvents[i].beat >= Conductor.instance.songPositionInBeats)
@@ -284,7 +285,7 @@ namespace HeavenStudio.Games
                         }
                         else
                         {
-                            EasingFunction.Function func = EasingFunction.GetEasingFunction(lastPosEase);
+                            Util.EasingFunction.Function func = Util.EasingFunction.GetEasingFunction(lastPosEase);
 
                             float newPosX = func(lastPadPos.x, currentPadPos.x, normalizedBeat);
                             float newPosY = func(lastPadPos.y, currentPadPos.y, normalizedBeat);
@@ -321,7 +322,7 @@ namespace HeavenStudio.Games
                         }
                         else
                         {
-                            EasingFunction.Function func = EasingFunction.GetEasingFunction(lastRotEase);
+                            Util.EasingFunction.Function func = Util.EasingFunction.GetEasingFunction(lastRotEase);
 
                             float newRotZ = func(lastPadRotation, currentPadRotation, normalizedBeat);
                             launchPadRotatable.rotation = Quaternion.Euler(0, 0, newRotZ);
@@ -341,10 +342,10 @@ namespace HeavenStudio.Games
             if (currentPosIndex < allPosEvents.Count && currentPosIndex >= 0)
             {
                 lastPadPos = launchPad.position;
-                currentPosBeat = allPosEvents[currentPosIndex].beat;
+                currentPosBeat = (float)allPosEvents[currentPosIndex].beat;
                 currentPosLength = allPosEvents[currentPosIndex].length;
                 currentPadPos = new Vector3(allPosEvents[currentPosIndex]["xPos"], allPosEvents[currentPosIndex]["yPos"], allPosEvents[currentPosIndex]["zPos"]);
-                lastPosEase = (EasingFunction.Ease)allPosEvents[currentPosIndex]["ease"];
+                lastPosEase = (Util.EasingFunction.Ease)allPosEvents[currentPosIndex]["ease"];
             }
         }
 
@@ -353,10 +354,10 @@ namespace HeavenStudio.Games
             if (currentRotIndex < allRotEvents.Count && currentRotIndex >= 0)
             {
                 lastPadRotation = launchPadRotatable.rotation.eulerAngles.z;
-                currentRotBeat = allRotEvents[currentRotIndex].beat;
+                currentRotBeat = (float)allRotEvents[currentRotIndex].beat;
                 currentRotLength = allRotEvents[currentRotIndex].length;
                 currentPadRotation = allRotEvents[currentRotIndex]["rot"];
-                lastRotEase = (EasingFunction.Ease)allRotEvents[currentRotIndex]["ease"];
+                lastRotEase = (Util.EasingFunction.Ease)allRotEvents[currentRotIndex]["ease"];
             }
         }
 
@@ -383,7 +384,7 @@ namespace HeavenStudio.Games
             List<float> pitchedNotes = new List<float>();
             foreach (var note in notes)
             {
-                pitchedNotes.Add(Jukebox.GetPitchFromSemiTones(note, true));
+                pitchedNotes.Add(SoundByte.GetPitchFromSemiTones(note, true));
             }
             rocketScript.pitches.AddRange(pitchedNotes);
             switch (type)

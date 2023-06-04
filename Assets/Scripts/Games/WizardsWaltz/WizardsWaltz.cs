@@ -17,14 +17,14 @@ namespace HeavenStudio.Games.Loaders
             {
                 new GameAction("start interval", "Start Interval")
                 {
-                    function = delegate { WizardsWaltz.instance.SetIntervalStart(eventCaller.currentEntity.beat, eventCaller.currentEntity.length); }, 
+                    function = delegate { WizardsWaltz.instance.SetIntervalStart((float) eventCaller.currentEntity.beat, eventCaller.currentEntity.length); }, 
                     defaultLength = 6f, 
                     resizable = true,
                     priority = 1
                 },
                 new GameAction("plant", "Plant")
                 {
-                    function = delegate { WizardsWaltz.instance.SpawnFlower(eventCaller.currentEntity.beat); }, 
+                    function = delegate { WizardsWaltz.instance.SpawnFlower((float) eventCaller.currentEntity.beat); }, 
                     defaultLength = 0.5f,
                 },
             },
@@ -65,7 +65,7 @@ namespace HeavenStudio.Games
             instance = this;
             wizard.Init();
 
-            var nextStart = GameManager.instance.Beatmap.entities.Find(c => c.datamodel == "wizardsWaltz/start interval" && c.beat + c.length >= Conductor.instance.songPositionInBeats);
+            var nextStart = GameManager.instance.Beatmap.Entities.Find(c => c.datamodel == "wizardsWaltz/start interval" && c.beat + c.length >= Conductor.instance.songPositionInBeats);
 
             if (nextStart != null)
             {
@@ -121,7 +121,7 @@ namespace HeavenStudio.Games
             if (!intervalStarted)
                 SetIntervalStart(beat, beatInterval);
 
-            Jukebox.PlayOneShotGame("wizardsWaltz/plant", beat);
+            SoundByte.PlayOneShotGame("wizardsWaltz/plant", beat);
             Plant plant = Instantiate(plantBase, plantHolder.transform).GetComponent<Plant>();
 
             var songPos = Conductor.instance.songPositionInBeats - wizardBeatOffset;

@@ -5,6 +5,7 @@ using UnityEngine;
 using TMPro;
 
 using DG.Tweening;
+using Jukebox;
 
 namespace HeavenStudio.Editor.Track
 {
@@ -15,7 +16,7 @@ namespace HeavenStudio.Editor.Track
         [SerializeField] private GameObject chartLine;
         [SerializeField] private SectionDialog sectionDialog;
 
-        public DynamicBeatmap.ChartSection chartSection;
+        public RiqEntity chartSection;
 
         new private void Update()
         {
@@ -30,7 +31,7 @@ namespace HeavenStudio.Editor.Track
 
         public void UpdateLabel()
         {
-            sectionLabel.text = chartSection.sectionName;
+            sectionLabel.text = chartSection["sectionName"];
         }
 
         public override void Init()
@@ -55,7 +56,7 @@ namespace HeavenStudio.Editor.Track
 
         public override bool OnMove(float beat)
         {
-            foreach (var sectionChange in GameManager.instance.Beatmap.beatmapSections)
+            foreach (RiqEntity sectionChange in GameManager.instance.Beatmap.SectionMarkers)
             {
                 if (this.chartSection == sectionChange)
                     continue;

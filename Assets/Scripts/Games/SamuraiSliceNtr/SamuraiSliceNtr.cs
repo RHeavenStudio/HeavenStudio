@@ -17,7 +17,7 @@ namespace HeavenStudio.Games.Loaders
             {
                 new GameAction("bop", "Bop")
                 {
-                    function = delegate {var e = eventCaller.currentEntity; SamuraiSliceNtr.instance.Bop(e.beat, e.length, e["whoBops"], e["whoBopsAuto"]); },
+                    function = delegate {var e = eventCaller.currentEntity; SamuraiSliceNtr.instance.Bop((float) e.beat, e.length, e["whoBops"], e["whoBopsAuto"]); },
                     resizable = true,
                     parameters = new List<Param>()
                     {
@@ -29,7 +29,7 @@ namespace HeavenStudio.Games.Loaders
                 {
                     function = delegate
                     {
-                        SamuraiSliceNtr.instance.ObjectIn(eventCaller.currentEntity.beat, (int)SamuraiSliceNtr.ObjectType.Melon, (int) eventCaller.currentEntity["valA"], eventCaller.currentEntity["2b2t"]);
+                        SamuraiSliceNtr.instance.ObjectIn((float) eventCaller.currentEntity.beat, (int)SamuraiSliceNtr.ObjectType.Melon, (int) eventCaller.currentEntity["valA"], eventCaller.currentEntity["2b2t"]);
                     }, 
                     defaultLength = 5,
                     parameters = new List<Param>()
@@ -42,7 +42,7 @@ namespace HeavenStudio.Games.Loaders
                 {
                     function = delegate
                     {
-                        SamuraiSliceNtr.instance.ObjectIn(eventCaller.currentEntity.beat, (int)SamuraiSliceNtr.ObjectType.Fish, (int) eventCaller.currentEntity["valA"]);
+                        SamuraiSliceNtr.instance.ObjectIn((float) eventCaller.currentEntity.beat, (int)SamuraiSliceNtr.ObjectType.Fish, (int) eventCaller.currentEntity["valA"]);
                     },
                     defaultLength = 7,
                     parameters = new List<Param>()
@@ -54,7 +54,7 @@ namespace HeavenStudio.Games.Loaders
                 {
                     function = delegate
                     {
-                        SamuraiSliceNtr.instance.ObjectIn(eventCaller.currentEntity.beat, (int)SamuraiSliceNtr.ObjectType.Demon, (int) eventCaller.currentEntity["valA"]);
+                        SamuraiSliceNtr.instance.ObjectIn((float) eventCaller.currentEntity.beat, (int)SamuraiSliceNtr.ObjectType.Demon, (int) eventCaller.currentEntity["valA"]);
                     },
                     defaultLength = 7,
                     parameters = new List<Param>()
@@ -67,7 +67,7 @@ namespace HeavenStudio.Games.Loaders
                 {
                     function = delegate
                     {
-                        SamuraiSliceNtr.instance.ObjectIn(eventCaller.currentEntity.beat, eventCaller.currentEntity["type"], (int) eventCaller.currentEntity["valA"]);
+                        SamuraiSliceNtr.instance.ObjectIn((float) eventCaller.currentEntity.beat, eventCaller.currentEntity["type"], (int) eventCaller.currentEntity["valA"]);
                     },
                     defaultLength = 8,
                     parameters = new List<Param>()
@@ -188,7 +188,7 @@ namespace HeavenStudio.Games
 
         public void DoStep()
         {
-            Jukebox.PlayOneShotGame("samuraiSliceNtr/ntrSamurai_launchThrough");
+            SoundByte.PlayOneShotGame("samuraiSliceNtr/ntrSamurai_launchThrough");
             player.Step(false);
             launcher.GetComponent<Animator>().Play("Launch", -1, 0);
         }
@@ -205,7 +205,7 @@ namespace HeavenStudio.Games
             {
                 launcher.GetComponent<Animator>().Play("UnStep", -1, 0);
             }
-            Jukebox.PlayOneShotGame("samuraiSliceNtr/ntrSamurai_through");
+            SoundByte.PlayOneShotGame("samuraiSliceNtr/ntrSamurai_through");
             player.Slash();
         }
 
@@ -225,7 +225,7 @@ namespace HeavenStudio.Games
 
             mobj.SetActive(true);
 
-            Jukebox.PlayOneShotGame("samuraiSliceNtr/ntrSamurai_in00");
+            SoundByte.PlayOneShotGame("samuraiSliceNtr/ntrSamurai_in00");
         }
 
         public NtrSamuraiChild CreateChild(float beat)

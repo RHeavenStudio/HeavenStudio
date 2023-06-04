@@ -69,12 +69,12 @@ namespace HeavenStudio.Games.Scripts_ClappyTrio
             if (just)
             {
                 clapEffect.SetActive(true);
-                Jukebox.PlayOneShotGame("clappyTrio/rightClap");
+                SoundByte.PlayOneShotGame("clappyTrio/rightClap");
             }
             else
             {
                 clapEffect.SetActive(false);
-                Jukebox.PlayOneShot("miss");
+                SoundByte.PlayOneShot("miss");
                 game.misses++;
 
                 if (clapStarted)

@@ -15,7 +15,7 @@ namespace HeavenStudio.Games.Loaders
             {
                 new GameAction("firework", "Firework")
                 {
-                    preFunction = delegate {var e = eventCaller.currentEntity; Fireworks.PreSpawnFirework(e.beat, false, e["whereToSpawn"], e["toggle"], e["explosionType"], e["applause"], e["offSet"]); },
+                    preFunction = delegate {var e = eventCaller.currentEntity; Fireworks.PreSpawnFirework((float) e.beat, false, e["whereToSpawn"], e["toggle"], e["explosionType"], e["applause"], e["offSet"]); },
                     defaultLength = 4f,
                     parameters = new List<Param>()
                     {
@@ -28,7 +28,7 @@ namespace HeavenStudio.Games.Loaders
                 },
                 new GameAction("sparkler", "Sparkler")
                 {
-                    preFunction = delegate {var e = eventCaller.currentEntity; Fireworks.PreSpawnFirework(e.beat, true, e["whereToSpawn"], e["toggle"], e["explosionType"], e["applause"], e["offSet"]); },
+                    preFunction = delegate {var e = eventCaller.currentEntity; Fireworks.PreSpawnFirework((float) e.beat, true, e["whereToSpawn"], e["toggle"], e["explosionType"], e["applause"], e["offSet"]); },
                     defaultLength = 2f,
                     parameters = new List<Param>()
                     {
@@ -41,7 +41,7 @@ namespace HeavenStudio.Games.Loaders
                 },
                 new GameAction("bomb", "Bomb")
                 {
-                    function = delegate {var e = eventCaller.currentEntity; Fireworks.instance.SpawnBomb(e.beat, e["toggle"], e["applause"]); },
+                    function = delegate {var e = eventCaller.currentEntity; Fireworks.instance.SpawnBomb((float) e.beat, e["toggle"], e["applause"]); },
                     defaultLength = 3f,
                     parameters = new List<Param>()
                     {
@@ -51,7 +51,7 @@ namespace HeavenStudio.Games.Loaders
                 },
                 new GameAction("countIn", "Count-In")
                 {
-                    preFunction = delegate {var e = eventCaller.currentEntity; Fireworks.CountIn(e.beat, e["count"]); },
+                    preFunction = delegate {var e = eventCaller.currentEntity; Fireworks.CountIn((float) e.beat, e["count"]); },
                     defaultLength = 1f,
                     parameters = new List<Param>()
                     {
@@ -272,7 +272,7 @@ namespace HeavenStudio.Games
 
         public void SpawnBomb(float beat, bool practice, bool applause)
         {
-            Jukebox.PlayOneShotGame("fireworks/tamaya_4");
+            SoundByte.PlayOneShotGame("fireworks/tamaya_4");
             if (practice)
             {
                 MultiSound.Play(new MultiSound.Sound[]

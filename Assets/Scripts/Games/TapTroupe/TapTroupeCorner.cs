@@ -69,7 +69,7 @@ namespace HeavenStudio.Games.Scripts_TapTroupe
             BeatAction.New(game.gameObject, new List<BeatAction.Action>()
             {
                 new BeatAction.Action(beat, delegate { bodyAnim.Play("PartyPopper", 0, 0); }),
-                new BeatAction.Action(beat + 1f, delegate { bodyAnim.DoScaledAnimationAsync("PartyPopperPop", 0.25f); Jukebox.PlayOneShotGame("tapTroupe/popper"); popperEffect.Play(); }),
+                new BeatAction.Action(beat + 1f, delegate { bodyAnim.DoScaledAnimationAsync("PartyPopperPop", 0.25f); SoundByte.PlayOneShotGame("tapTroupe/popper"); popperEffect.Play(); }),
                 new BeatAction.Action(beat + 3f, delegate { bodyAnim.Play("IdleBody", 0, 0); })
             });
         }

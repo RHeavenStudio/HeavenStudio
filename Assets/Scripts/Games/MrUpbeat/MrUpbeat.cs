@@ -17,7 +17,7 @@ namespace HeavenStudio.Games.Loaders
             {
                 new GameAction("start stepping", "Start Stepping")
                 {
-                    preFunction = delegate {var e = eventCaller.currentEntity; MrUpbeat.StartStepping(e.beat, e.length, e["force"]); },
+                    preFunction = delegate {var e = eventCaller.currentEntity; MrUpbeat.StartStepping((float) e.beat, e.length, e["force"]); },
                     defaultLength = 4f,
                     resizable = true,
                     parameters = new List<Param>()
@@ -150,7 +150,7 @@ namespace HeavenStudio.Games
                         BeatAction.New(instance.gameObject, new List<BeatAction.Action>() {
                             new BeatAction.Action(input, delegate { 
                                 instance.metronomeAnim.DoScaledAnimationAsync("MetronomeGo" + dir, 0.5f);
-                                Jukebox.PlayOneShotGame("mrUpbeat/metronome" + dir);
+                                SoundByte.PlayOneShotGame("mrUpbeat/metronome" + dir);
                                 ScheduleInput(input, 0.5f, InputType.STANDARD_DOWN, Success, Miss, Nothing);
                                 if (MrUpbeat.noDing) queuedInputs.Add(input + 1);
                             }),
@@ -168,8 +168,8 @@ namespace HeavenStudio.Games
 
         public void Ding(bool applause, bool stopBlipping)
         {
-            Jukebox.PlayOneShotGame("mrUpbeat/ding");
-            if (applause) Jukebox.PlayOneShot("applause");
+            SoundByte.PlayOneShotGame("mrUpbeat/ding");
+            if (applause) SoundByte.PlayOneShot("applause");
             if (stopBlipping) shouldBlip = false;
         }
 

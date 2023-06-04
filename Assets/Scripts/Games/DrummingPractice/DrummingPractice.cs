@@ -16,7 +16,7 @@ namespace HeavenStudio.Games.Loaders
             {
                 new GameAction("bop", "Bop")
                 {
-                    function = delegate { var e = eventCaller.currentEntity; DrummingPractice.instance.SetBop(e.beat, e.length, e["bop"], e["autoBop"]); }, 
+                    function = delegate { var e = eventCaller.currentEntity; DrummingPractice.instance.SetBop((float) e.beat, e.length, e["bop"], e["autoBop"]); }, 
                     resizable = true,
                     parameters = new List<Param>()
                     {
@@ -26,7 +26,7 @@ namespace HeavenStudio.Games.Loaders
                 },
                 new GameAction("drum", "Hit Drum")
                 {
-                    function = delegate { var e = eventCaller.currentEntity; DrummingPractice.instance.Prepare(e.beat, e["toggle"]); }, 
+                    function = delegate { var e = eventCaller.currentEntity; DrummingPractice.instance.Prepare((float) e.beat, e["toggle"]); }, 
                     defaultLength = 2f, 
                     parameters = new List<Param>()
                     {
@@ -47,7 +47,7 @@ namespace HeavenStudio.Games.Loaders
                 },
                 new GameAction("move npc drummers", "NPC Drummers Enter or Exit")
                 {
-                    function = delegate {var e = eventCaller.currentEntity; DrummingPractice.instance.NPCDrummersEnterOrExit(e.beat, e.length, e["exit"], e["ease"]); },
+                    function = delegate {var e = eventCaller.currentEntity; DrummingPractice.instance.NPCDrummersEnterOrExit((float) e.beat, e.length, e["exit"], e["ease"]); },
                     defaultLength = 4f,
                     resizable = true,
                     parameters = new List<Param>()
@@ -126,9 +126,9 @@ namespace HeavenStudio.Games
             SetMiis();
         }
         
-        public override void OnGameSwitch(float beat)
+        public override void OnGameSwitch(double beat)
         {
-            var changeMii = GameManager.instance.Beatmap.entities.FindLast(c => c.datamodel == "drummingPractice/set mii" && c.beat <= beat);
+            var changeMii = GameManager.instance.Beatmap.Entities.FindLast(c => c.datamodel == "drummingPractice/set mii" && c.beat <= beat);
             if(changeMii != null)
             {
                 EventCaller.instance.CallEvent(changeMii, true);
@@ -208,7 +208,7 @@ namespace HeavenStudio.Games
             count++;
 
             SetFaces(0);
-            Jukebox.PlayOneShotGame("drummingPractice/prepare");
+            SoundByte.PlayOneShotGame("drummingPractice/prepare");
 
             GameObject hit = Instantiate(hitPrefab);
             hit.transform.parent = hitPrefab.transform.parent;

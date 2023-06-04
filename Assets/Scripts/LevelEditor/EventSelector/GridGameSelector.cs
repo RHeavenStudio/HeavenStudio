@@ -251,10 +251,10 @@ namespace HeavenStudio.Editor
                                 index = 0;
                         }
 
-                        eventObj = Timeline.instance.AddEventObject(mg.name + "/" + mg.actions[index].actionName, true, new Vector3(0, 0), null, true, Timeline.RandomID());
+                        eventObj = Timeline.instance.AddEventObject(mg.name + "/" + mg.actions[index].actionName, true, new Vector3(0, 0), null, true);
                     }
                     else
-                        eventObj = Timeline.instance.AddEventObject($"gameManager/switchGame/{mg.name}", true, new Vector3(0, 0), null, true, Timeline.RandomID());
+                        eventObj = Timeline.instance.AddEventObject($"gameManager/switchGame/{mg.name}", true, new Vector3(0, 0), null, true);
                 }
                 else
                 {
@@ -268,7 +268,7 @@ namespace HeavenStudio.Editor
                         index = currentEventIndex;
                     }
 
-                    eventObj = Timeline.instance.AddEventObject(mg.name + "/" + mg.actions[index].actionName, true, new Vector3(0, 0), null, true, Timeline.RandomID());
+                    eventObj = Timeline.instance.AddEventObject(mg.name + "/" + mg.actions[index].actionName, true, new Vector3(0, 0), null, true);
                 }
 
                 eventObj.isCreating = true;

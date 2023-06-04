@@ -110,7 +110,7 @@ namespace HeavenStudio.Games.Scripts_DJSchool
             missed = false;
             shouldBeHolding = true;
 
-            Jukebox.PlayOneShotGame("djSchool/recordStop");
+            SoundByte.PlayOneShotGame("djSchool/recordStop");
 
             anim.DoScaledAnimationAsync("Hold", 0.5f);
             tableAnim.DoScaledAnimationAsync("Student_Turntable_StartHold", 0.5f);
@@ -127,7 +127,7 @@ namespace HeavenStudio.Games.Scripts_DJSchool
             //isHolding = true;
             if (canBoo)
             {
-                Sound booSound = Jukebox.PlayOneShotGame("djSchool/boo", -1, 1, 0.8f);
+                Sound booSound = SoundByte.PlayOneShotGame("djSchool/boo", -1, 1, 0.8f);
                 CancelInvoke();
                 canBoo = false;
                 Invoke("EnableBoo", booSound.clip.length);
@@ -148,7 +148,7 @@ namespace HeavenStudio.Games.Scripts_DJSchool
 
             missed = true;
 
-            Jukebox.PlayOneShotGame("djSchool/recordStop");
+            SoundByte.PlayOneShotGame("djSchool/recordStop");
             
             anim.DoScaledAnimationAsync("Hold", 0.5f);
             tableAnim.DoScaledAnimationAsync("Student_Turntable_StartHold", 0.5f);
@@ -173,7 +173,7 @@ namespace HeavenStudio.Games.Scripts_DJSchool
             anim.DoScaledAnimationAsync("Unhold", 0.5f);
             if (canBoo)
             {
-                Sound booSound = Jukebox.PlayOneShotGame("djSchool/boo", -1, 1, 0.8f);
+                Sound booSound = SoundByte.PlayOneShotGame("djSchool/boo", -1, 1, 0.8f);
                 CancelInvoke();
                 canBoo = false;
                 Invoke("EnableBoo", booSound.clip.length);
@@ -193,7 +193,7 @@ namespace HeavenStudio.Games.Scripts_DJSchool
         public void OnHitSwipeCheer(PlayerActionEvent caller, float beat)
         {
             OnHitSwipe(caller, beat);
-            Jukebox.PlayOneShotGame("djSchool/cheer", caller.timer + caller.startBeat + 1f, 1, 0.8f);
+            SoundByte.PlayOneShotGame("djSchool/cheer", caller.timer + caller.startBeat + 1f, 1, 0.8f);
         }
         public void OnHitSwipe(PlayerActionEvent caller, float beat)
         {
@@ -205,7 +205,7 @@ namespace HeavenStudio.Games.Scripts_DJSchool
 
                 missed = false;
                 shouldBeHolding = false;
-                Jukebox.PlayOneShotGame("djSchool/recordSwipe");
+                SoundByte.PlayOneShotGame("djSchool/recordSwipe");
                 FlashFX(false);
                 swiping = true;
 
@@ -228,7 +228,7 @@ namespace HeavenStudio.Games.Scripts_DJSchool
             else
             {
                 OnMissSwipeForPlayerInput(caller.timer + caller.startBeat + 1f);
-                Jukebox.PlayOneShotGame("djSchool/recordSwipe");
+                SoundByte.PlayOneShotGame("djSchool/recordSwipe");
                 BeatAction.New(gameObject, new List<BeatAction.Action>()
                 {
                     new BeatAction.Action(beat, delegate { anim.Play("Swipe", 0, 0); }),
@@ -252,7 +252,7 @@ namespace HeavenStudio.Games.Scripts_DJSchool
             mixer.audioMixer.FindSnapshot("Main").TransitionTo(.01f);
             if (canBoo)
             {
-                Sound booSound = Jukebox.PlayOneShotGame("djSchool/boo", caller.timer + caller.startBeat + 1f, 1, 0.8f);
+                Sound booSound = SoundByte.PlayOneShotGame("djSchool/boo", caller.timer + caller.startBeat + 1f, 1, 0.8f);
                 CancelInvoke();
                 canBoo = false;
                 Invoke("EnableBoo", booSound.clip.length);

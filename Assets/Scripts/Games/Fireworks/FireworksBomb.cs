@@ -46,7 +46,7 @@ namespace HeavenStudio.Games.Scripts_Fireworks
             });
             if (state >= 1f || state <= -1f)
             {
-                Jukebox.PlayOneShotGame("fireworks/miss");
+                SoundByte.PlayOneShotGame("fireworks/miss");
 
                 return;
             }
@@ -55,9 +55,9 @@ namespace HeavenStudio.Games.Scripts_Fireworks
 
         void Success(PlayerActionEvent caller)
         {
-            Jukebox.PlayOneShotGame("fireworks/taikoExplode");
+            SoundByte.PlayOneShotGame("fireworks/taikoExplode");
             game.FadeFlashColor(Color.white, new Color(1, 1, 1, 0), 0.5f);
-            if (applause) Jukebox.PlayOneShot("applause", caller.timer + caller.startBeat + 1f);
+            if (applause) SoundByte.PlayOneShot("applause", caller.timer + caller.startBeat + 1f);
         }
 
         void Out(PlayerActionEvent caller) { }

@@ -156,7 +156,7 @@ namespace HeavenStudio.Games.Scripts_CatchyTune
             }
             else 
             {
-                Jukebox.PlayOneShotGame(soundText + "Catch");
+                SoundByte.PlayOneShotGame(soundText + "Catch");
                 game.catchSuccess(side, isPineapple, smile, startBeat + beatLength, endSmile);
                 Destroy(this.gameObject);
             }

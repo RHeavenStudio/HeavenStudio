@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 using HeavenStudio.Util;
+using Jukebox;
 
 namespace HeavenStudio.Games.Loaders
 {
@@ -15,7 +16,7 @@ namespace HeavenStudio.Games.Loaders
             {
                 new GameAction("bop", "Bop")
                 {
-                    function = delegate { var e = eventCaller.currentEntity; KarateMan.instance.ToggleBop(e.beat, e.length, e["toggle2"], e["toggle"]); },
+                    function = delegate { var e = eventCaller.currentEntity; KarateMan.instance.ToggleBop((float) e.beat, e.length, e["toggle2"], e["toggle"]); },
                     resizable = true,
                     parameters = new List<Param>()
                     {
@@ -25,7 +26,7 @@ namespace HeavenStudio.Games.Loaders
                     inactiveFunction = delegate { KarateMan.ToggleBopUnloaded(eventCaller.currentEntity["toggle"]); }
                 },
                 new GameAction("hit", "Toss Object") {
-                    function = delegate { var e = eventCaller.currentEntity; KarateMan.instance.CreateItem(e.beat, e["type"], e["type2"], e["mute"]); }, 
+                    function = delegate { var e = eventCaller.currentEntity; KarateMan.instance.CreateItem((float) e.beat, e["type"], e["type2"], e["mute"]); }, 
                     defaultLength = 2,
                     parameters = new List<Param>()
                     {
@@ -36,7 +37,7 @@ namespace HeavenStudio.Games.Loaders
                 },
                 new GameAction("bulb", "Toss Lightbulb")
                 {
-                    function = delegate { var e = eventCaller.currentEntity; KarateMan.instance.CreateBulbSpecial(e.beat, e["type"], e["colorA"], e["type2"]); }, 
+                    function = delegate { var e = eventCaller.currentEntity; KarateMan.instance.CreateBulbSpecial((float) e.beat, e["type"], e["colorA"], e["type2"]); }, 
                     defaultLength = 2,
                     parameters = new List<Param>()
                     {
@@ -47,7 +48,7 @@ namespace HeavenStudio.Games.Loaders
                 },
                 new GameAction("kick", "Special: Kick")
                 {
-                    function = delegate { var e = eventCaller.currentEntity; KarateMan.instance.Kick(e.beat, e["toggle"], e["type"]); }, 
+                    function = delegate { var e = eventCaller.currentEntity; KarateMan.instance.Kick((float) e.beat, e["toggle"], e["type"]); }, 
                     defaultLength = 4f,
                     parameters = new List<Param>()
                     {
@@ -57,7 +58,7 @@ namespace HeavenStudio.Games.Loaders
                 },
                 new GameAction("combo", "Special: Combo")
                 {
-                    function = delegate { var e = eventCaller.currentEntity; KarateMan.instance.Combo(e.beat, e["type"]); }, 
+                    function = delegate { var e = eventCaller.currentEntity; KarateMan.instance.Combo((float) e.beat, e["type"]); }, 
                     defaultLength = 4,
                     parameters = new List<Param>()
                     {
@@ -66,33 +67,33 @@ namespace HeavenStudio.Games.Loaders
                 },
                 new GameAction("hitX", "Warnings")
                 {
-                    function = delegate { var e = eventCaller.currentEntity; KarateMan.instance.DoWord(e.beat, e["type"]); }, 
+                    function = delegate { var e = eventCaller.currentEntity; KarateMan.instance.DoWord((float) e.beat, e["type"]); }, 
                     defaultLength = 1f,
                     parameters = new List<Param>()
                     {
                         new Param("type", KarateMan.HitThree.HitThree, "Type", "The warning text to show")
                     },
-                    inactiveFunction = delegate { var e = eventCaller.currentEntity; KarateMan.DoWordSound(e.beat, e["type"]); }
+                    inactiveFunction = delegate { var e = eventCaller.currentEntity; KarateMan.DoWordSound((float) e.beat, e["type"]); }
                 },
                 new GameAction("special camera", "Special Camera")
                 {
-                    function = delegate { var e = eventCaller.currentEntity; KarateMan.DoSpecialCamera(e.beat, e.length, e["toggle"]); }, 
+                    function = delegate { var e = eventCaller.currentEntity; KarateMan.DoSpecialCamera((float) e.beat, e.length, e["toggle"]); }, 
                     defaultLength = 8f, 
                     resizable = true, 
                     parameters = new List<Param>()
                     {
                         new Param("toggle", true, "Return Camera", "Camera zooms back in?"),
                     },
-                    inactiveFunction = delegate { var e = eventCaller.currentEntity; KarateMan.DoSpecialCamera(e.beat, e.length, e["toggle"]); }    
+                    inactiveFunction = delegate { var e = eventCaller.currentEntity; KarateMan.DoSpecialCamera((float) e.beat, e.length, e["toggle"]); }    
                 },
                 new GameAction("prepare", "Preparation Stance")
                 {
-                    function = delegate { var e = eventCaller.currentEntity; KarateMan.instance.Prepare(e.beat, e.length);}, 
+                    function = delegate { var e = eventCaller.currentEntity; KarateMan.instance.Prepare((float) e.beat, e.length);}, 
                     resizable = true
                 },
                 new GameAction("set gameplay modifiers", "Gameplay Modifiers")
                 {
-                    function = delegate { var e = eventCaller.currentEntity; KarateMan.instance.SetGameplayMods(e.beat, e["type"], e["toggle"]); }, 
+                    function = delegate { var e = eventCaller.currentEntity; KarateMan.instance.SetGameplayMods((float) e.beat, e["type"], e["toggle"]); }, 
                     defaultLength = 0.5f,
                     parameters = new List<Param>()
                     {
@@ -102,7 +103,7 @@ namespace HeavenStudio.Games.Loaders
                 },
                 new GameAction("set background effects", "Background Appearance")
                 {
-                    function = delegate { var e = eventCaller.currentEntity; KarateMan.instance.SetBgAndShadowCol(e.beat, e.length, e["type"], e["type2"], e["colorA"], e["colorB"], e["type3"]); KarateMan.instance.SetBgTexture(e["type4"], e["type5"], e["colorC"], e["colorD"]); }, 
+                    function = delegate { var e = eventCaller.currentEntity; KarateMan.instance.SetBgAndShadowCol((float) e.beat, e.length, e["type"], e["type2"], e["colorA"], e["colorB"], e["type3"]); KarateMan.instance.SetBgTexture(e["type4"], e["type5"], e["colorC"], e["colorD"]); }, 
                     defaultLength = 0.5f, 
                     resizable = true, 
                     parameters = new List<Param>()
@@ -118,7 +119,7 @@ namespace HeavenStudio.Games.Loaders
                         new Param("colorD", new Color(), "Fading Filter Color", "When using the Fade background effect, make filter colour fade to this colour"),
 
                     },
-                    inactiveFunction = delegate { var e = eventCaller.currentEntity; KarateMan.SetBgEffectsUnloaded(e.beat, e.length, e["type"], e["type2"], e["colorA"], e["colorB"], e["type3"], e["type4"], e["type5"], e["colorC"], e["colorD"]); }
+                    inactiveFunction = delegate { var e = eventCaller.currentEntity; KarateMan.SetBgEffectsUnloaded((float) e.beat, e.length, e["type"], e["type2"], e["colorA"], e["colorB"], e["type3"], e["type4"], e["type5"], e["colorC"], e["colorD"]); }
                 },
                 new GameAction("set object colors", "Object Colors")
                 {
@@ -134,7 +135,7 @@ namespace HeavenStudio.Games.Loaders
                 },
                 new GameAction("particle effects", "Particle Effects")
                 {
-                    function = delegate { var e = eventCaller.currentEntity; KarateMan.instance.SetParticleEffect(e.beat, e["type"], e["valA"], e["valB"]); }, 
+                    function = delegate { var e = eventCaller.currentEntity; KarateMan.instance.SetParticleEffect((float) e.beat, e["type"], e["valA"], e["valB"]); }, 
                     defaultLength = 0.5f,
                     parameters = new List<Param>()
                     {
@@ -156,41 +157,41 @@ namespace HeavenStudio.Games.Loaders
                 // These are still here for backwards-compatibility but are hidden in the editor
                 new GameAction("pot", "")
                 {
-                    function = delegate { KarateMan.instance.CreateItem(eventCaller.currentEntity.beat, 0, (int) KarateMan.HitType.Pot); }, 
+                    function = delegate { KarateMan.instance.CreateItem((float) eventCaller.currentEntity.beat, 0, (int) KarateMan.HitType.Pot); }, 
                     defaultLength = 2, 
                     hidden = true
                 },
                 new GameAction("rock", "")
                 {
-                    function = delegate { KarateMan.instance.CreateItem(eventCaller.currentEntity.beat, 0, (int) KarateMan.HitType.Rock); }, 
+                    function = delegate { KarateMan.instance.CreateItem((float) eventCaller.currentEntity.beat, 0, (int) KarateMan.HitType.Rock); }, 
                     defaultLength = 2, 
                     hidden = true
                 },
                 new GameAction("ball", "")
                 {
-                    function = delegate { KarateMan.instance.CreateItem(eventCaller.currentEntity.beat, 0, (int) KarateMan.HitType.Ball); }, 
+                    function = delegate { KarateMan.instance.CreateItem((float) eventCaller.currentEntity.beat, 0, (int) KarateMan.HitType.Ball); }, 
                     defaultLength = 2, 
                     hidden = true
                 },
                 new GameAction("tacobell", "")
                 {
-                    function = delegate { KarateMan.instance.CreateItem(eventCaller.currentEntity.beat, 0, (int) KarateMan.HitType.TacoBell); }, 
+                    function = delegate { KarateMan.instance.CreateItem((float) eventCaller.currentEntity.beat, 0, (int) KarateMan.HitType.TacoBell); }, 
                     defaultLength = 2, 
                     hidden = true
                 },
                 new GameAction("bgfxon", "")
                 {
-                    function = delegate { var e = eventCaller.currentEntity; KarateMan.instance.SetBgFx((int) KarateMan.BackgroundFXType.Sunburst, e.beat, e.length); }, 
+                    function = delegate { var e = eventCaller.currentEntity; KarateMan.instance.SetBgFx((int) KarateMan.BackgroundFXType.Sunburst, (float) e.beat, e.length); }, 
                     hidden = true
                 },
                 new GameAction("bgfxoff", "")
                 {
-                    function = delegate { var e = eventCaller.currentEntity; KarateMan.instance.SetBgFx((int) KarateMan.BackgroundFXType.None, e.beat, e.length); }, 
+                    function = delegate { var e = eventCaller.currentEntity; KarateMan.instance.SetBgFx((int) KarateMan.BackgroundFXType.None, (float) e.beat, e.length); }, 
                     hidden = true
                 },
                 new GameAction("hit3", "")
                 {
-                    function = delegate { var e = eventCaller.currentEntity; KarateMan.instance.DoWord(e.beat, e["type"]); },
+                    function = delegate { var e = eventCaller.currentEntity; KarateMan.instance.DoWord((float) e.beat, e["type"]); },
                     parameters = new List<Param>()
                     {
                         new Param("type", KarateMan.HitThree.HitThree, "Type", "The warning text to show")
@@ -199,13 +200,13 @@ namespace HeavenStudio.Games.Loaders
                 },
                 new GameAction("hit4", "")
                 {
-                    function = delegate { KarateMan.instance.DoWord(eventCaller.currentEntity.beat, (int) KarateMan.HitThree.HitFour); },
+                    function = delegate { KarateMan.instance.DoWord((float) eventCaller.currentEntity.beat, (int) KarateMan.HitThree.HitFour); },
                     hidden = true
                 },
                 new GameAction("set background color", "")
                 {
 
-                    function = delegate { var e = eventCaller.currentEntity; KarateMan.instance.SetBgAndShadowCol(e.beat, e.length, e["type"], e["type2"], e["colorA"], e["colorB"], (int) KarateMan.currentBgEffect); }, 
+                    function = delegate { var e = eventCaller.currentEntity; KarateMan.instance.SetBgAndShadowCol((float) e.beat, e.length, e["type"], e["type2"], e["colorA"], e["colorB"], (int) KarateMan.currentBgEffect); }, 
                     defaultLength = 0.5f,
                     parameters = new List<Param>()
                     {
@@ -219,7 +220,7 @@ namespace HeavenStudio.Games.Loaders
                 },
                 new GameAction("set background fx", "")
                 {
-                    function = delegate { var e = eventCaller.currentEntity; KarateMan.instance.SetBgFx(e["type"], e.beat, e.length); }, 
+                    function = delegate { var e = eventCaller.currentEntity; KarateMan.instance.SetBgFx(e["type"], (float) e.beat, e.length); }, 
                     defaultLength = 0.5f,
                     parameters = new List<Param>()
                     {
@@ -448,7 +449,7 @@ namespace HeavenStudio.Games
             cameraPosition = CameraPosition[0].position;
         }
 
-        public override void OnPlay(float beat)
+        public override void OnPlay(double beat)
         {
             var cond = Conductor.instance;
             if (!cond.isPlaying)
@@ -474,7 +475,7 @@ namespace HeavenStudio.Games
             bgBloodRenderer = BGBlood.GetComponent<SpriteRenderer>();
             bgRadialRenderer = BGRadial.GetComponent<SpriteRenderer>();
 
-            SetBgEffectsToLast(cond.songPositionInBeats);
+            SetBgEffectsToLast(cond.songPositionInBeatsAsDouble);
             SetBgAndShadowCol(WantBgChangeStart, WantBgChangeLength, bgType, (int) currentShadowType, bgColour, customShadowColour, (int)currentBgEffect);
             SetBgTexture(textureType, textureFilterType, filterColour, filterColour);
             UpdateMaterialColour(BodyColor, HighlightColor, ItemColor);
@@ -512,17 +513,17 @@ namespace HeavenStudio.Games
                 if (cond.songPositionInBeats <= startCamSpecial + cameraReturnLength)
                 {
                     float prog = cond.GetPositionFromBeat(startCamSpecial, cameraReturnLength);
-                    camX = EasingFunction.EaseOutCubic(CameraPosition[0].position.x, CameraPosition[1].position.x, prog);
-                    camY = EasingFunction.EaseOutCubic(CameraPosition[0].position.y, CameraPosition[1].position.y, prog);
-                    camZ = EasingFunction.EaseOutCubic(CameraPosition[0].position.z, CameraPosition[1].position.z, prog);
+                    camX = Util.EasingFunction.EaseOutCubic(CameraPosition[0].position.x, CameraPosition[1].position.x, prog);
+                    camY = Util.EasingFunction.EaseOutCubic(CameraPosition[0].position.y, CameraPosition[1].position.y, prog);
+                    camZ = Util.EasingFunction.EaseOutCubic(CameraPosition[0].position.z, CameraPosition[1].position.z, prog);
                     cameraPosition = new Vector3(camX, camY, camZ);
                 }
                 else if (cond.songPositionInBeats >= wantsReturn - cameraReturnLength)
                 {
                     float prog = cond.GetPositionFromBeat(wantsReturn - cameraReturnLength, cameraReturnLength);
-                    camX = EasingFunction.EaseOutQuad(CameraPosition[1].position.x, CameraPosition[0].position.x, prog);
-                    camY = EasingFunction.EaseOutQuad(CameraPosition[1].position.y, CameraPosition[0].position.y, prog);
-                    camZ = EasingFunction.EaseOutQuad(CameraPosition[1].position.z, CameraPosition[0].position.z, prog);
+                    camX = Util.EasingFunction.EaseOutQuad(CameraPosition[1].position.x, CameraPosition[0].position.x, prog);
+                    camY = Util.EasingFunction.EaseOutQuad(CameraPosition[1].position.y, CameraPosition[0].position.y, prog);
+                    camZ = Util.EasingFunction.EaseOutQuad(CameraPosition[1].position.z, CameraPosition[0].position.z, prog);
                     cameraPosition = new Vector3(camX, camY, camZ);
                 }
                 else
@@ -561,16 +562,16 @@ namespace HeavenStudio.Games
             BGEffect.transform.position = new Vector3(GameCamera.instance.transform.position.x, GameCamera.instance.transform.position.y, 0);
         }
 
-        static List<DynamicBeatmap.DynamicEntity> allHits = new List<DynamicBeatmap.DynamicEntity>();
-        static List<DynamicBeatmap.DynamicEntity> allEnds = new List<DynamicBeatmap.DynamicEntity>();
-        public static int CountHitsToEnd(float fromBeat)
+        static List<RiqEntity> allHits = new List<RiqEntity>();
+        static List<RiqEntity> allEnds = new List<RiqEntity>();
+        public static int CountHitsToEnd(double fromBeat)
         {
             allHits = EventCaller.GetAllInGameManagerList("karateman", new string[] { "hit", "bulb", "kick", "combo" });
             allEnds = EventCaller.GetAllInGameManagerList("gameManager", new string[] { "switchGame", "end" });
 
             allHits.Sort((x, y) => x.beat.CompareTo(y.beat));
             allEnds.Sort((x, y) => x.beat.CompareTo(y.beat));
-            float endBeat = Single.MaxValue;
+            double endBeat = double.MaxValue;
 
             //get the beat of the closest end event
             foreach (var end in allEnds)
@@ -740,7 +741,7 @@ namespace HeavenStudio.Games
                     CreateItemInstance(beat, "Item00", expression);
                     break;
             }
-            if (!muteSound) Jukebox.PlayOneShotGame(outSound, forcePlay: true);
+            if (!muteSound) SoundByte.PlayOneShotGame(outSound, forcePlay: true);
         }
 
         public void CreateBulbSpecial(float beat, int type, Color c, int expression)
@@ -756,12 +757,12 @@ namespace HeavenStudio.Games
                 mobj.GetComponent<KarateManPot>().SetBulbColor(c);
             else
                 mobj.GetComponent<KarateManPot>().SetBulbColor(LightBulbColors[type]);
-            Jukebox.PlayOneShotGame(outSound, forcePlay: true);
+            SoundByte.PlayOneShotGame(outSound, forcePlay: true);
         }
 
         public void Combo(float beat, int expression)
         {
-            Jukebox.PlayOneShotGame("karateman/barrelOutCombos", forcePlay: true);
+            SoundByte.PlayOneShotGame("karateman/barrelOutCombos", forcePlay: true);
 
             int comboId = KarateManPot.GetNewCombo();
 
@@ -788,7 +789,7 @@ namespace HeavenStudio.Games
 
         public void Kick(float beat, bool ball, int expression)
         {
-            Jukebox.PlayOneShotGame("karateman/barrelOutKicks", forcePlay: true);
+            SoundByte.PlayOneShotGame("karateman/barrelOutKicks", forcePlay: true);
 
             CreateItemInstance(beat, "Item05", expression, KarateManPot.ItemType.KickBarrel, content: ball);
 
@@ -817,26 +818,26 @@ namespace HeavenStudio.Games
             return mobj;
         }
 
-        void SetBgEffectsToLast(float beat)
+        void SetBgEffectsToLast(double beat)
         {
-            var bgfx = GameManager.instance.Beatmap.entities.FindAll(en => en.datamodel == "karateman/set background effects");
+            var bgfx = GameManager.instance.Beatmap.Entities.FindAll(en => en.datamodel == "karateman/set background effects");
             for (int i = 0; i < bgfx.Count; i++)
             {
                 var e = bgfx[i];
                 if (e.beat > beat)
                     break;
-                SetBgEffectsUnloaded(e.beat, e.length, e["type"], e["type2"], e["colorA"], e["colorB"], e["type3"], e["type4"], e["type5"], e["colorC"], e["colorD"]);
+                SetBgEffectsUnloaded((float) e.beat, e.length, e["type"], e["type2"], e["colorA"], e["colorB"], e["type3"], e["type4"], e["type5"], e["colorC"], e["colorD"]);
             }
-            var camfx = GameManager.instance.Beatmap.entities.FindAll(en => en.datamodel == "karateman/special camera");
+            var camfx = GameManager.instance.Beatmap.Entities.FindAll(en => en.datamodel == "karateman/special camera");
             DoSpecialCamera(0, 0, true);
             for (int i = 0; i < camfx.Count; i++)
             {
                 var e = camfx[i];
                 if (e.beat > beat)
                     break;
-                DoSpecialCamera(e.beat, e.length, e["toggle"]);
+                DoSpecialCamera((float) e.beat, e.length, e["toggle"]);
             }
-            var objfx = GameManager.instance.Beatmap.entities.FindAll(en => en.datamodel == "karateman/set object colors");
+            var objfx = GameManager.instance.Beatmap.Entities.FindAll(en => en.datamodel == "karateman/set object colors");
             for (int i = 0; i < objfx.Count; i++)
             {
                 var e = objfx[i];

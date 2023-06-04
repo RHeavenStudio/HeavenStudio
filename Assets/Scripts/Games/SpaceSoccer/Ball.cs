@@ -63,7 +63,7 @@ namespace HeavenStudio.Games.Scripts_SpaceSoccer
                 return;
             }
 
-            var highKicks = GameManager.instance.Beatmap.entities.FindAll(c => c.datamodel == "spaceSoccer/high kick-toe!");
+            var highKicks = GameManager.instance.Beatmap.Entities.FindAll(c => c.datamodel == "spaceSoccer/high kick-toe!");
             int numHighKicks = 0;
             //determine what state the ball was in for the previous kick.
             for(int i = 0; i < highKicks.Count; i++)
@@ -85,7 +85,7 @@ namespace HeavenStudio.Games.Scripts_SpaceSoccer
                 }
                 else
                 {
-                    highKickSwing = highKicks[i].swing;
+                    highKickSwing = highKicks[i]["swing"];
                     if (highKickSwing == 0f)
                         highKickSwing = 0.5f;
 
@@ -93,7 +93,7 @@ namespace HeavenStudio.Games.Scripts_SpaceSoccer
                     {
                         //Debug.Log("Setting state to high kick");
                         state = State.HighKicked;
-                        float relativeBeat = highKicks[i].beat - dispensedBeat;
+                        float relativeBeat = (float)highKicks[i].beat - dispensedBeat;
                         startBeat = dispensedBeat + Mathf.Ceil(relativeBeat); //there is a chance this makes startBeat later than the current beat, but it shouldn't matter too much. It would only happen if the user places the high kicks incorrectly.
                         nextAnimBeat = startBeat + GetAnimLength(State.HighKicked);
                         kicker.kickTimes = Mathf.CeilToInt(relativeBeat) - numHighKicks - 1;
@@ -103,7 +103,7 @@ namespace HeavenStudio.Games.Scripts_SpaceSoccer
                     {
                         //Debug.Log("Setting state to toe");
                         state = State.Toe;
-                        float relativeBeat = Mathf.Ceil(highKicks[i].beat - dispensedBeat) + GetAnimLength(State.HighKicked); //there is a chance this makes startBeat later than the current beat, but it shouldn't matter too much. It would only happen if the user places the high kicks incorrectly.
+                        float relativeBeat = Mathf.Ceil((float)highKicks[i].beat - dispensedBeat) + GetAnimLength(State.HighKicked); //there is a chance this makes startBeat later than the current beat, but it shouldn't matter too much. It would only happen if the user places the high kicks incorrectly.
                         startBeat = dispensedBeat + relativeBeat;
                         nextAnimBeat = startBeat + GetAnimLength(State.Toe);
                         kicker.kickTimes = (int)(relativeBeat - GetAnimLength(State.HighKicked)) - numHighKicks;
@@ -126,7 +126,7 @@ namespace HeavenStudio.Games.Scripts_SpaceSoccer
         public void Kick(bool player)
         {
             if (player)
-            Jukebox.PlayOneShotGame("spaceSoccer/ballHit", -1, Jukebox.GetPitchFromCents(UnityEngine.Random.Range(-38, 39), false));
+            SoundByte.PlayOneShotGame("spaceSoccer/ballHit", -1, SoundByte.GetPitchFromCents(UnityEngine.Random.Range(-38, 39), false));
 
             lastSpriteRot = spriteHolder.transform.eulerAngles.z;
 

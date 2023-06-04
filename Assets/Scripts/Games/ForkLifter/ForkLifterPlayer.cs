@@ -72,17 +72,17 @@ namespace HeavenStudio.Games.Scripts_ForkLifter
         {
             if (topbun && middleburger && bottombun)
             {
-                Jukebox.PlayOneShotGame("forkLifter/burger");
+                SoundByte.PlayOneShotGame("forkLifter/burger");
             }
             else
             {
                 if (currentEarlyPeasOnFork > 0 || currentLatePeasOnFork > 0)
                 {
-                    Jukebox.PlayOneShotGame($"forkLifter/cough_{Random.Range(1, 3)}");
+                    SoundByte.PlayOneShotGame($"forkLifter/cough_{Random.Range(1, 3)}");
                 }
                 else
                 {
-                    Jukebox.PlayOneShotGame("forkLifter/gulp");
+                    SoundByte.PlayOneShotGame("forkLifter/gulp");
                 }
             }
 
@@ -118,7 +118,7 @@ namespace HeavenStudio.Games.Scripts_ForkLifter
 
             if (p == null)
             {
-                Jukebox.PlayOneShotGame("forkLifter/stabnohit");
+                SoundByte.PlayOneShotGame("forkLifter/stabnohit");
             }
 
             anim.Play("Player_Stab", 0, 0);

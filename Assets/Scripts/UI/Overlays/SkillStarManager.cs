@@ -101,7 +101,7 @@ namespace HeavenStudio.Common
                 state = StarState.Collected;
                 starAnim.Play("StarJust", -1, 0f);
                 starParticle.Play();
-                Jukebox.PlayOneShot("skillStar");
+                SoundByte.PlayOneShot("skillStar");
 
                 TimingAccuracyDisplay.instance.StopStarFlash();
                 return true;

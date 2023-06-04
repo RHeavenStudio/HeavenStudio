@@ -7,6 +7,8 @@ using UnityEngine.EventSystems;
 
 using TMPro;
 using Starpelly;
+using Jukebox;
+using Jukebox.Legacy;
 
 namespace HeavenStudio.Editor.Track
 {
@@ -184,11 +186,11 @@ namespace HeavenStudio.Editor.Track
             }
             eventObjs.Clear();
 
-            for (int i = 0; i < GameManager.instance.Beatmap.entities.Count; i++)
+            for (int i = 0; i < GameManager.instance.Beatmap.Entities.Count; i++)
             {
-                var e = GameManager.instance.Beatmap.entities[i];
+                var e = GameManager.instance.Beatmap.Entities[i];
 
-                AddEventObject(e.datamodel, false, new Vector3(e.beat, -e.track * LayerHeight()), e, false, RandomID());
+                AddEventObject(e.datamodel, false, new Vector3((float)e.beat, -e["track"] * LayerHeight()), e, false);
             }
 
             SpecialInfo.Setup();
@@ -319,7 +321,7 @@ namespace HeavenStudio.Editor.Track
         {
             Debug.Log("what");
             // DrawWaveform();
-            StartCoroutine(DrawWaveformRealtime());
+            // StartCoroutine(DrawWaveformRealtime());
         }
 
         public void AutoBtnUpdate()
@@ -366,11 +368,11 @@ namespace HeavenStudio.Editor.Track
 
         private void Update()
         {
-            waveform.rectTransform.anchoredPosition = new Vector2(
-                -(GameManager.instance.Beatmap.firstBeatOffset / (60.0f / GameManager.instance.Beatmap.bpm)), 
-                waveform.rectTransform.anchoredPosition.y);
+            // waveform.rectTransform.anchoredPosition = new Vector2(
+            //     -(GameManager.instance.Beatmap.data.offset / (60.0f / GameManager.instance.Beatmap.bpm)), 
+            //     waveform.rectTransform.anchoredPosition.y);
 
-            WaveformBTN.transform.GetChild(0).GetComponent<Image>().color = (Conductor.instance.musicSource.clip != null && waveform.gameObject.activeInHierarchy) ? Color.white : Color.gray;
+            // WaveformBTN.transform.GetChild(0).GetComponent<Image>().color = (Conductor.instance.musicSource.clip != null && waveform.gameObject.activeInHierarchy) ? Color.white : Color.gray;
 
             if (!Conductor.instance.isPlaying && !Conductor.instance.isPaused)
             {
@@ -638,7 +640,8 @@ namespace HeavenStudio.Editor.Track
         {
             if (Conductor.instance.musicSource.clip == null) return;
 
-            waveform.gameObject.SetActive(!waveform.gameObject.activeInHierarchy);
+            // waveform.gameObject.SetActive(!waveform.gameObject.activeInHierarchy);
+            waveform.gameObject.SetActive(false);
         }
 
         public IEnumerator DrawWaveformRealtime()
@@ -731,7 +734,7 @@ namespace HeavenStudio.Editor.Track
             return tex2D;
         }
 
-        public TimelineEventObj AddEventObject(string eventName, bool dragNDrop = false, Vector3 pos = new Vector3(), DynamicBeatmap.DynamicEntity entity = null, bool addEvent = false, string eventId = "")
+        public TimelineEventObj AddEventObject(string eventName, bool dragNDrop = false, Vector3 pos = new Vector3(), RiqEntity? entity = null, bool addEvent = false)
         {
             var game = EventCaller.instance.GetMinigame(eventName.Split(0));
             var action = EventCaller.instance.GetGameAction(game, eventName.Split(1));
@@ -759,9 +762,9 @@ namespace HeavenStudio.Editor.Track
                 else
                 {
                     eventObj.resizable = true;
-                    if (entity != null && gameAction.defaultLength != entity.length && dragNDrop == false)
+                    if (!entity.HasValue && gameAction.defaultLength != entity.Value.length && dragNDrop == false)
                     {
-                        g.GetComponent<RectTransform>().sizeDelta = new Vector2(entity.length, LayerHeight());
+                        g.GetComponent<RectTransform>().sizeDelta = new Vector2(entity.Value.length, LayerHeight());
                     }
                     else
                     {
@@ -780,24 +783,17 @@ namespace HeavenStudio.Editor.Track
                 Selections.instance.ClickSelect(eventObj);
                 eventObj.moving = true;
             }
-            else
-            {
-                entity.eventObj = g.GetComponent<TimelineEventObj>();
-                entity.track = entity.eventObj.GetTrack();
-            }
 
 
             if (addEvent)
             {
-                DynamicBeatmap.DynamicEntity tempEntity = entity;
+                RiqEntity tempEntity = entity.Value;
 
-                if (entity == null)
+                if (!entity.HasValue)
                 {
-                    DynamicBeatmap.DynamicEntity en = new DynamicBeatmap.DynamicEntity();
-                    en.datamodel = eventName;
-                    en.eventObj = eventObj;
+                    RiqEntity en = GameManager.instance.Beatmap.AddNewEntity(eventName, g.transform.localPosition.x, gameAction.defaultLength);
 
-                    GameManager.instance.Beatmap.entities.Add(en);
+                    GameManager.instance.Beatmap.Entities.Add(en);
                     GameManager.instance.SortEventsList();
 
                     tempEntity = en;
@@ -828,18 +824,25 @@ namespace HeavenStudio.Editor.Track
                             //tempEntity[ep[i].propertyName] = returnVal;
                             tempEntity.CreateProperty(ep[i].propertyName, returnVal);
                         }
+                        eventObj.entity = tempEntity;
                     }
                 }
                 else
                 {
-                    GameManager.instance.Beatmap.entities.Add(entity);
+                    if (!dragNDrop)
+                        tempEntity["track"] = eventObj.GetTrack();
+                    eventObj.entity = tempEntity;
+                    GameManager.instance.Beatmap.Entities.Add(tempEntity);
                     GameManager.instance.SortEventsList();
                 }
             }
+            else
+            {
+                eventObj.entity = entity.Value;
+            }
 
             eventObjs.Add(eventObj);
-
-            eventObj.eventObjID = eventId;
+            eventObj.eventObjID = eventObj.entity.uid;
 
             return eventObj;
         }
@@ -847,8 +850,8 @@ namespace HeavenStudio.Editor.Track
         private List<TimelineEventObj> duplicatedEventObjs = new List<TimelineEventObj>();
         public TimelineEventObj CopyEventObject(TimelineEventObj e)
         {
-            DynamicBeatmap.DynamicEntity clone = e.entity.DeepCopy();
-            TimelineEventObj dup = AddEventObject(clone.datamodel, false, new Vector3(clone.beat, -clone.track * Timeline.instance.LayerHeight()), clone, true, RandomID());
+            RiqEntity clone = e.entity.DeepCopy();
+            TimelineEventObj dup = AddEventObject(clone.datamodel, false, new Vector3((float)clone.beat, -clone["track"] * Timeline.instance.LayerHeight()), clone, true);
             duplicatedEventObjs.Add(dup);
 
             return dup;
@@ -860,16 +863,24 @@ namespace HeavenStudio.Editor.Track
             duplicatedEventObjs = new List<TimelineEventObj>();
         }
 
-        public void DestroyEventObject(DynamicBeatmap.DynamicEntity entity)
+        public void DestroyEventObject(RiqEntity entity)
         {
             if (EventParameterManager.instance.entity == entity)
                 EventParameterManager.instance.Disable();
 
-            eventObjs.Remove(entity.eventObj);
-            GameManager.instance.Beatmap.entities.Remove(entity);
-            Timeline.instance.eventObjs.Remove(entity.eventObj);
+            // eventObjs.Remove(entity.eventObj);
+            foreach (TimelineEventObj e in eventObjs)
+            {
+                if (e.eventObjID == entity.uid)
+                {
+                    Destroy(e.gameObject);
+                    eventObjs.Remove(e);
+                    break;
+                }
+            }
+            GameManager.instance.Beatmap.Entities.Remove(entity);
 
-            Destroy(entity.eventObj.gameObject);
+            
             GameManager.instance.SortEventsList();
         }
 
@@ -915,7 +926,7 @@ namespace HeavenStudio.Editor.Track
 
         public void UpdateOffsetText()
         {
-            FirstBeatOffset.text = (GameManager.instance.Beatmap.firstBeatOffset * 1000f).ToString("G");
+            FirstBeatOffset.text = (GameManager.instance.Beatmap.data.offset * 1000f).ToString("G");
         }
 
         public void UpdateOffsetFromText()
@@ -930,14 +941,14 @@ namespace HeavenStudio.Editor.Track
             // Limit decimal places to 4.
             newOffset = (float)System.Math.Round(newOffset, 4);
 
-            GameManager.instance.Beatmap.firstBeatOffset = newOffset;
+            GameManager.instance.Beatmap.data.offset = newOffset;
 
             UpdateOffsetText();
         }
 
         public void UpdateStartingBPMText()
         {
-            StartingTempoSpecialAll.text = GameManager.instance.Beatmap.bpm.ToString("G");
+            StartingTempoSpecialAll.text = GameManager.instance.Beatmap.TempoChanges[0]["tempo"].ToString("G");
             StartingTempoSpecialTempo.text = StartingTempoSpecialAll.text;
         }
 
@@ -960,7 +971,9 @@ namespace HeavenStudio.Editor.Track
             // Limit decimal places to 4.
             newBPM = System.Math.Round(newBPM, 4);
 
-            GameManager.instance.Beatmap.bpm = (float) newBPM;
+            RiqEntity tempoChange = GameManager.instance.Beatmap.TempoChanges[0];
+            tempoChange["tempo"] = (float) newBPM;
+            GameManager.instance.Beatmap.TempoChanges[0] = tempoChange;
 
             // In case the newBPM ended up differing from the inputted string.
             UpdateStartingBPMText();
@@ -970,7 +983,7 @@ namespace HeavenStudio.Editor.Track
 
         public void UpdateStartingVolText()
         {
-            StartingVolumeSpecialVolume.text = (GameManager.instance.Beatmap.musicVolume).ToString("G");
+            StartingVolumeSpecialVolume.text = (GameManager.instance.Beatmap.VolumeChanges[0]["volume"]).ToString("G");
         }
 
         public void UpdateStartingVolFromText()
@@ -982,7 +995,9 @@ namespace HeavenStudio.Editor.Track
             var newVol = Convert.ToInt32(StartingVolumeSpecialVolume.text);
             newVol = Mathf.Clamp(newVol, 0, 100);
 
-            GameManager.instance.Beatmap.musicVolume = newVol;
+            RiqEntity volChange = GameManager.instance.Beatmap.VolumeChanges[0];
+            volChange["volume"] = newVol;
+            GameManager.instance.Beatmap.VolumeChanges[0] = volChange;
 
             UpdateStartingVolText();
         }

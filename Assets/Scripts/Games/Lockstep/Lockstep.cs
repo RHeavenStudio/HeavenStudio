@@ -19,7 +19,7 @@ namespace HeavenStudio.Games.Loaders
             {
                 new GameAction("bop", "Bop")
                 {
-                    function = delegate { var e = eventCaller.currentEntity; Lockstep.instance.Bop(e.beat, e.length, e["toggle"], e["toggle2"]); },
+                    function = delegate { var e = eventCaller.currentEntity; Lockstep.instance.Bop((float) e.beat, e.length, e["toggle"], e["toggle2"]); },
                     resizable = true,
                     parameters = new List<Param>()
                     {
@@ -29,31 +29,31 @@ namespace HeavenStudio.Games.Loaders
                 },
                 new GameAction("marching", "Stepping")
                 {
-                    preFunction = delegate {var e = eventCaller.currentEntity; Lockstep.Marching(e.beat, e.length);},
+                    preFunction = delegate {var e = eventCaller.currentEntity; Lockstep.Marching((float) e.beat, e.length);},
                     defaultLength = 4f,
                     resizable = true
                 },
                 new GameAction("offbeatSwitch", "Switch to Offbeat")
                 {
-                    preFunction = delegate { var e = eventCaller.currentEntity; Lockstep.OffbeatSwitch(e.beat); },
+                    preFunction = delegate { var e = eventCaller.currentEntity; Lockstep.OffbeatSwitch((float) e.beat); },
                     defaultLength = 3.5f
                 },
                 new GameAction("onbeatSwitch", "Switch to Onbeat")
                 {
-                    preFunction = delegate { var e = eventCaller.currentEntity; Lockstep.OnbeatSwitch(e.beat); },
+                    preFunction = delegate { var e = eventCaller.currentEntity; Lockstep.OnbeatSwitch((float) e.beat); },
                     defaultLength = 2f
                 },
                 new GameAction("hai", "Hai!")
                 {
-                    function = delegate { var e = eventCaller.currentEntity; Lockstep.instance.Hai(e.beat); },
+                    function = delegate { var e = eventCaller.currentEntity; Lockstep.instance.Hai((float) e.beat); },
                     defaultLength = 1f,
-                    inactiveFunction = delegate { var e = eventCaller.currentEntity; Lockstep.instance.Hai(e.beat);}
+                    inactiveFunction = delegate { var e = eventCaller.currentEntity; Lockstep.instance.Hai((float) e.beat);}
                 },
                 new GameAction("ho", "Ho!")
                 {
-                    function = delegate { var e = eventCaller.currentEntity; Lockstep.instance.Ho(e.beat); },
+                    function = delegate { var e = eventCaller.currentEntity; Lockstep.instance.Ho((float) e.beat); },
                     defaultLength = 1f,
-                    inactiveFunction = delegate { var e = eventCaller.currentEntity; Lockstep.instance.Ho(e.beat);}
+                    inactiveFunction = delegate { var e = eventCaller.currentEntity; Lockstep.instance.Ho((float) e.beat);}
                 },
                 new GameAction("set colours", "Set Colours")
                 {
@@ -258,7 +258,7 @@ namespace HeavenStudio.Games
                     {
                         stepswitcherPlayer.DoScaledAnimationAsync("OffbeatMarch", 0.5f);
                     }
-                    Jukebox.PlayOneShotGame("lockstep/miss");
+                    SoundByte.PlayOneShotGame("lockstep/miss");
                     ScoreMiss();
                 }
             }
@@ -289,12 +289,12 @@ namespace HeavenStudio.Games
 
         public void Hai(float beat)
         {
-            Jukebox.PlayOneShotGame("lockstep/switch1");
+            SoundByte.PlayOneShotGame("lockstep/switch1");
         }
 
         public void Ho(float beat)
         {
-            Jukebox.PlayOneShotGame("lockstep/switch4");
+            SoundByte.PlayOneShotGame("lockstep/switch4");
         }
 
         public static void OnbeatSwitch(float beat)
@@ -382,12 +382,12 @@ namespace HeavenStudio.Games
                 double beatAnimCheck = cond.songPositionInBeatsAsDouble - 0.25;
                 if (beatAnimCheck % 1.0 >= 0.5)
                 {
-                    Jukebox.PlayOneShotGame("lockstep/tink");
+                    SoundByte.PlayOneShotGame("lockstep/tink");
                     stepswitcherPlayer.DoScaledAnimationAsync("OnbeatMarch", 0.5f);
                 }
                 else
                 {
-                    Jukebox.PlayOneShotGame("lockstep/tink");
+                    SoundByte.PlayOneShotGame("lockstep/tink");
                     stepswitcherPlayer.DoScaledAnimationAsync("OffbeatMarch", 0.5f);
                 }
                 return;
@@ -400,12 +400,12 @@ namespace HeavenStudio.Games
             double beatAnimCheck = beat - 0.25;
             if (beatAnimCheck % 1.0 >= 0.5)
             {
-                Jukebox.PlayOneShotGame($"lockstep/marchOnbeat{UnityEngine.Random.Range(1, 3)}");
+                SoundByte.PlayOneShotGame($"lockstep/marchOnbeat{UnityEngine.Random.Range(1, 3)}");
                 stepswitcherPlayer.DoScaledAnimationAsync("OnbeatMarch", 0.5f);
             }
             else
             {
-                Jukebox.PlayOneShotGame($"lockstep/marchOffbeat{UnityEngine.Random.Range(1, 3)}");
+                SoundByte.PlayOneShotGame($"lockstep/marchOffbeat{UnityEngine.Random.Range(1, 3)}");
                 stepswitcherPlayer.DoScaledAnimationAsync("OffbeatMarch", 0.5f);
             }
         }
@@ -417,13 +417,13 @@ namespace HeavenStudio.Games
             if (beatAnimCheck % 2 != 0 && currentMissStage != HowMissed.MissedOff)
             {
                 stepswitcherPlayer.Play("OffbeatMiss", 0, 0);
-                Jukebox.PlayOneShotGame("lockstep/wayOff");
+                SoundByte.PlayOneShotGame("lockstep/wayOff");
                 currentMissStage = HowMissed.MissedOff;
             }
             else if (beatAnimCheck % 2 == 0 && currentMissStage != HowMissed.MissedOn)
             {
                 stepswitcherPlayer.Play("OnbeatMiss", 0, 0);
-                Jukebox.PlayOneShotGame("lockstep/wayOff");
+                SoundByte.PlayOneShotGame("lockstep/wayOff");
                 currentMissStage = HowMissed.MissedOn;
             }
         }

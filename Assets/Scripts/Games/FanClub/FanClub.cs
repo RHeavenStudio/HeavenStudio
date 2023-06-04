@@ -15,7 +15,7 @@ namespace HeavenStudio.Games.Loaders
                 {
                     new GameAction("bop", "Bop")
                     {
-                        function = delegate { var e = eventCaller.currentEntity; FanClub.instance.Bop(e.beat, e.length, e["type"], e["type2"]); }, 
+                        function = delegate { var e = eventCaller.currentEntity; FanClub.instance.Bop((float) e.beat, e.length, e["type"], e["type2"]); }, 
                         resizable = true,
                         parameters = new List<Param>()
                         {
@@ -25,18 +25,18 @@ namespace HeavenStudio.Games.Loaders
                     },
                     new GameAction("yeah, yeah, yeah", "Yeah, Yeah, Yeah!")
                     {
-                        function = delegate { var e = eventCaller.currentEntity; FanClub.instance.CallHai(e.beat, e["toggle"]); }, 
+                        function = delegate { var e = eventCaller.currentEntity; FanClub.instance.CallHai((float) e.beat, e["toggle"]); }, 
                         defaultLength = 8,
                         parameters = new List<Param>()
                         {
                             new Param("toggle", false, "Disable call", "Disable the idol's call")
                         },
-                        inactiveFunction = delegate { var e = eventCaller.currentEntity; FanClub.WarnHai(e.beat, e["toggle"]);},
-                        preFunction = delegate { var e = eventCaller.currentEntity; FanClub.HaiSound(e.beat, e["toggle"]); }
+                        inactiveFunction = delegate { var e = eventCaller.currentEntity; FanClub.WarnHai((float) e.beat, e["toggle"]);},
+                        preFunction = delegate { var e = eventCaller.currentEntity; FanClub.HaiSound((float) e.beat, e["toggle"]); }
                     },
                     new GameAction("I suppose", "I Suppose!")
                     {
-                        function = delegate { var e = eventCaller.currentEntity; FanClub.instance.CallKamone(e.beat, e["toggle"], 0, e["type"], e["alt"]); }, 
+                        function = delegate { var e = eventCaller.currentEntity; FanClub.instance.CallKamone((float) e.beat, e["toggle"], 0, e["type"], e["alt"]); }, 
                         defaultLength = 6, 
                         parameters = new List<Param>()
                         {
@@ -44,23 +44,23 @@ namespace HeavenStudio.Games.Loaders
                             new Param("toggle", false, "Disable call", "Disable the idol's call"),
                             new Param("alt", false, "Alternate cue", "Use an alternate cue")
                         },
-                        inactiveFunction = delegate { var e = eventCaller.currentEntity; FanClub.WarnKamone(e.beat, e["toggle"], 0, e["type"], e["alt"]);},
-                        preFunction = delegate { var e = eventCaller.currentEntity; FanClub.KamoneSound(e.beat, e["toggle"], 0, e["type"], e["alt"]); }
+                        inactiveFunction = delegate { var e = eventCaller.currentEntity; FanClub.WarnKamone((float) e.beat, e["toggle"], 0, e["type"], e["alt"]);},
+                        preFunction = delegate { var e = eventCaller.currentEntity; FanClub.KamoneSound((float) e.beat, e["toggle"], 0, e["type"], e["alt"]); }
                     },
                     new GameAction("double clap", "Double Clap")
                     {
-                        function = delegate { var e = eventCaller.currentEntity; FanClub.instance.CallBigReady(e.beat, e["toggle"]); }, 
+                        function = delegate { var e = eventCaller.currentEntity; FanClub.instance.CallBigReady((float) e.beat, e["toggle"]); }, 
                         defaultLength = 4,
                         parameters = new List<Param>()
                         {
                             new Param("toggle", false, "Disable call", "Disable the call")
                         },
-                        inactiveFunction = delegate { var e = eventCaller.currentEntity; FanClub.WarnBigReady(e.beat, e["toggle"]); },
-                        preFunction = delegate { var e = eventCaller.currentEntity; FanClub.BigReadySound(e.beat, e["toggle"]); }
+                        inactiveFunction = delegate { var e = eventCaller.currentEntity; FanClub.WarnBigReady((float) e.beat, e["toggle"]); },
+                        preFunction = delegate { var e = eventCaller.currentEntity; FanClub.BigReadySound((float) e.beat, e["toggle"]); }
                     },
                     new GameAction("play idol animation", "Idol Coreography")
                     {
-                        function = delegate { var e = eventCaller.currentEntity; FanClub.instance.PlayAnim(e.beat, e.length, e["type"], e["who"]); },
+                        function = delegate { var e = eventCaller.currentEntity; FanClub.instance.PlayAnim((float) e.beat, e.length, e["type"], e["who"]); },
                         resizable = true, 
                         parameters = new List<Param>()
                         {
@@ -70,7 +70,7 @@ namespace HeavenStudio.Games.Loaders
                     },
                     new GameAction("play stage animation", "Stage Coreography")
                     {
-                        function = delegate { var e = eventCaller.currentEntity; FanClub.instance.PlayAnimStage(e.beat, e["type"]); }, 
+                        function = delegate { var e = eventCaller.currentEntity; FanClub.instance.PlayAnimStage((float) e.beat, e["type"]); }, 
                         resizable = true, 
                         parameters = new List<Param>()
                         {
@@ -79,7 +79,7 @@ namespace HeavenStudio.Games.Loaders
                     },
                     new GameAction("friend walk", "Backup Dancers Entrance")
                     {
-                        function = delegate { var e = eventCaller.currentEntity; FanClub.instance.DancerTravel(e.beat, e.length, e["exit"], e["instant"]); },
+                        function = delegate { var e = eventCaller.currentEntity; FanClub.instance.DancerTravel((float) e.beat, e.length, e["exit"], e["instant"]); },
                         defaultLength = 16f,
                         resizable = true, 
                         parameters = new List<Param>()
@@ -101,7 +101,7 @@ namespace HeavenStudio.Games.Loaders
                     },
                     new GameAction("finish", "Applause")
                     {
-                        function = delegate { var e = eventCaller.currentEntity; FanClub.instance.FinalCheer(e.beat); }, 
+                        function = delegate { var e = eventCaller.currentEntity; FanClub.instance.FinalCheer((float) e.beat); }, 
                     },
                 },
                 new List<string>() {"ntr", "normal"},
@@ -296,7 +296,7 @@ namespace HeavenStudio.Games
             {
                 if (e.beat <= Conductor.instance.songPositionInBeatsAsDouble)
                 {
-                    DancerTravel(e.beat, e.length, e["exit"], e["instant"]);
+                    DancerTravel((float) e.beat, e.length, e["exit"], e["instant"]);
                 }
             }
 
@@ -331,7 +331,7 @@ namespace HeavenStudio.Games
             }
         }
 
-        public override void OnGameSwitch(float beat)
+        public override void OnGameSwitch(double beat)
         {
             if (wantHais != Single.MinValue)
             {
@@ -529,7 +529,7 @@ namespace HeavenStudio.Games
                         break;
                     case (int)IdolAnimations.Dab:
                         idolAnimator.Play("IdolDab" + GetPerformanceSuffix(), -1, 0);
-                        Jukebox.PlayOneShotGame("fanClub/arisa_dab");
+                        SoundByte.PlayOneShotGame("fanClub/arisa_dab");
                         break;
                     default: break;
                 }
@@ -845,7 +845,7 @@ namespace HeavenStudio.Games
                     return;
                 }
                 // Jukebox.PlayOneShotGame("fanClub/play_clap", volume: 0.08f);
-                Jukebox.PlayOneShotGame("fanClub/crap_impact", pitch: UnityEngine.Random.Range(0.95f, 1.05f), volume: 0.1f);
+                SoundByte.PlayOneShotGame("fanClub/crap_impact", pitch: UnityEngine.Random.Range(0.95f, 1.05f), volume: 0.1f);
                 BeatAction.New(Spectators[who], new List<BeatAction.Action>()
                 {
                     new BeatAction.Action(beat, delegate { Spectators[who].GetComponent<Animator>().Play("FanClap", -1, 0); }),

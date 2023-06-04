@@ -15,17 +15,17 @@ namespace HeavenStudio.Games.Loaders
             {
                 new GameAction("donut", "Donut")
                 {
-                    function = delegate { BlueBear.instance.SpawnTreat(eventCaller.currentEntity.beat, false); }, 
+                    function = delegate { BlueBear.instance.SpawnTreat((float) eventCaller.currentEntity.beat, false); }, 
                     defaultLength = 3,
                 },
                 new GameAction("cake", "Cake")
                 {
-                    function = delegate { BlueBear.instance.SpawnTreat(eventCaller.currentEntity.beat, true); }, 
+                    function = delegate { BlueBear.instance.SpawnTreat((float) eventCaller.currentEntity.beat, true); }, 
                     defaultLength = 4,
                 },
                 new GameAction("setEmotion", "Set Emotion")
                 {
-                    function = delegate { var e = eventCaller.currentEntity; BlueBear.instance.SetEmotion(e.beat, e.length, e["type"]); },
+                    function = delegate { var e = eventCaller.currentEntity; BlueBear.instance.SetEmotion((float) e.beat, e.length, e["type"]); },
                     defaultLength = 0.5f,
                     parameters = new List<Param>()
                     {
@@ -281,7 +281,7 @@ namespace HeavenStudio.Games
 
             newTreat.SetActive(true);
 
-            Jukebox.PlayOneShotGame(isCake ? "blueBear/cake" : "blueBear/donut");
+            SoundByte.PlayOneShotGame(isCake ? "blueBear/cake" : "blueBear/donut");
 
             SquashBag(isCake);
         }

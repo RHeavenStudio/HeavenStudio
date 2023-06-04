@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using UnityEngine;
 
 using Starpelly;
+using Jukebox;
+using Jukebox.Legacy;
 
 namespace HeavenStudio
 {
@@ -46,7 +48,7 @@ namespace HeavenStudio
         public AudioSource musicSource;
 
         // The offset to the first beat of the song in seconds
-        public float firstBeatOffset;
+        public double firstBeatOffset;
 
         // Conductor instance
         public static Conductor instance;
@@ -158,7 +160,7 @@ namespace HeavenStudio
                     }  
                     else
                     {
-                        musicSource.time = (float) startPos + firstBeatOffset;
+                        musicSource.time = (float) (startPos + firstBeatOffset);
                     }
 
                     musicSource.PlayScheduled(AudioSettings.dspTime);
@@ -179,7 +181,7 @@ namespace HeavenStudio
             musicSource.Pause();
         }
 
-        public void Stop(float time)
+        public void Stop(double time)
         {
             this.time = time;
 
@@ -214,7 +216,7 @@ namespace HeavenStudio
             {
                 if (ReportBeat(ref lastReportedBeat))
                 {
-                    metronomeSound = Util.Jukebox.PlayOneShot("metronome", lastReportedBeat);
+                    metronomeSound = Util.SoundByte.PlayOneShot("metronome", lastReportedBeat);
                 }
                 else if (songPositionInBeats < lastReportedBeat)
                 {
@@ -250,15 +252,15 @@ namespace HeavenStudio
             return Mathf.Repeat((songPositionInBeats / length) + beatOffset, 1);
         }
 
-        public float GetPositionFromBeat(float startBeat, float length)
+        public float GetPositionFromBeat(double startBeat, double length)
         {
-            float a = Mathp.Normalize(songPositionInBeats, startBeat, startBeat + length);
+            float a = Mathp.Normalize(songPositionInBeats, (float)startBeat, (float)(startBeat + length));
             return a;
         }
 
         public float GetBeatFromPosition(float position, float startBeat, float length)
         {
-            return Mathp.DeNormalize(position, startBeat, startBeat + length);
+            return Mathp.DeNormalize(position, (float)startBeat, (float)(startBeat + length));
         }
 
         public float GetPositionFromMargin(float targetBeat, float margin)
@@ -271,26 +273,26 @@ namespace HeavenStudio
             return GetBeatFromPosition(position, targetBeat - margin, margin);
         }
 
-        private List<DynamicBeatmap.TempoChange> GetSortedTempoChanges(DynamicBeatmap chart)
+        private List<RiqEntity> GetSortedTempoChanges()
         {
             GameManager.instance.SortEventsList();
-            return GameManager.instance.Beatmap.tempoChanges;
+            return GameManager.instance.Beatmap.TempoChanges;
         }
 
-        public float GetBpmAtBeat(float beat)
+        public float GetBpmAtBeat(double beat)
         {
             var chart = GameManager.instance.Beatmap;
-            if (chart.tempoChanges.Count == 0)
-                return chart.bpm;
-            float bpm = chart.bpm;
+            if (chart.TempoChanges.Count == 0)
+                return 120f;
+            float bpm = chart.TempoChanges[0]["tempo"];
 
-            foreach (DynamicBeatmap.TempoChange t in chart.tempoChanges)
+            foreach (RiqEntity t in chart.TempoChanges)
             {
                 if (t.beat > beat)
                 {
                     break;
                 }
-                bpm = t.tempo;
+                bpm = t["tempo"];
             }
 
             return bpm;
@@ -299,13 +301,13 @@ namespace HeavenStudio
         public double GetSongPosFromBeat(double beat)
         {
             var chart = GameManager.instance.Beatmap;
-            float bpm = chart.bpm;
+            float bpm = 120f;
 
             double counter = 0f;
 
-            float lastTempoChangeBeat = 0f;
+            double lastTempoChangeBeat = 0f;
 
-            foreach (DynamicBeatmap.TempoChange t in chart.tempoChanges)
+            foreach (RiqEntity t in chart.TempoChanges)
             {
                 if (t.beat > beat)
                 {
@@ -313,7 +315,7 @@ namespace HeavenStudio
                 }
 
                 counter += (t.beat - lastTempoChangeBeat) * 60/bpm;
-                bpm = t.tempo;
+                bpm = t["tempo"];
                 lastTempoChangeBeat = t.beat;
             }
 
@@ -336,9 +338,9 @@ namespace HeavenStudio
             {
                 double lastTempoChangeBeat = 0f;
                 double counterSeconds = -firstBeatOffset;
-                float lastBpm = GameManager.instance.Beatmap.bpm;
+                float lastBpm = 120f;
                 
-                foreach (DynamicBeatmap.TempoChange  t in GameManager.instance.Beatmap.tempoChanges)
+                foreach (RiqEntity t in GameManager.instance.Beatmap.TempoChanges)
                 {
                     double beatToNext = t.beat - lastTempoChangeBeat;
                     double secToNext = BeatsToSecs(beatToNext, lastBpm);
@@ -348,7 +350,7 @@ namespace HeavenStudio
                         break;
                     
                     lastTempoChangeBeat = t.beat;
-                    lastBpm = t.tempo;
+                    lastBpm = t["tempo"];
                     counterSeconds = nextSecs;
                 }
                 return lastTempoChangeBeat + SecsToBeats(seconds - counterSeconds, lastBpm);

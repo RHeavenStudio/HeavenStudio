@@ -52,7 +52,7 @@ namespace HeavenStudio.Games.Scripts_MeatGrinder
         private void InputActions(bool annoyBoss, string whichSfx, string whichAnim)
         {
             game.bossAnnoyed = annoyBoss;
-            Jukebox.PlayOneShotGame("meatGrinder/"+whichSfx);
+            SoundByte.PlayOneShotGame("meatGrinder/"+whichSfx);
             game.TackAnim.DoScaledAnimationAsync(whichAnim, 0.5f);
         } 
 

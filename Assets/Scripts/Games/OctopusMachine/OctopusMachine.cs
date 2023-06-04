@@ -30,7 +30,7 @@ namespace HeavenStudio.Games.Loaders
                 {
                     function = delegate {
                         var e = eventCaller.currentEntity;
-                        OctopusMachine.instance.StartInterval(e.beat, e.length);
+                        OctopusMachine.instance.StartInterval((float) e.beat, e.length);
                     },
                     resizable = true,
                     priority = 5,
@@ -39,7 +39,7 @@ namespace HeavenStudio.Games.Loaders
                 {
                     function = delegate {
                         var e = eventCaller.currentEntity;
-                        OctopusMachine.instance.OctoAction(e.beat, e.length, "Squeeze");
+                        OctopusMachine.instance.OctoAction((float) e.beat, e.length, "Squeeze");
                     },
                     resizable = true,
                     parameters = new List<Param>() {
@@ -49,7 +49,7 @@ namespace HeavenStudio.Games.Loaders
                     preFunctionLength = 4f,
                     preFunction = delegate {
                         var e = eventCaller.currentEntity;
-                        if (e["shouldPrep"]) OctopusMachine.Prepare(e.beat, e["prepBeats"]);
+                        if (e["shouldPrep"]) OctopusMachine.Prepare((float) e.beat, e["prepBeats"]);
                     },
                     priority = 1,
                 },
@@ -57,7 +57,7 @@ namespace HeavenStudio.Games.Loaders
                 {
                     function = delegate {
                         var e = eventCaller.currentEntity;
-                        OctopusMachine.instance.OctoAction(e.beat, e.length, "Release");
+                        OctopusMachine.instance.OctoAction((float) e.beat, e.length, "Release");
                     },
                     resizable = true,
                     priority = 1,
@@ -66,7 +66,7 @@ namespace HeavenStudio.Games.Loaders
                 {
                     function = delegate {
                         var e = eventCaller.currentEntity;
-                        OctopusMachine.instance.OctoAction(e.beat, e.length, "Pop");
+                        OctopusMachine.instance.OctoAction((float) e.beat, e.length, "Pop");
                     },
                     resizable = true,
                     priority = 1,
@@ -136,7 +136,7 @@ namespace HeavenStudio.Games.Loaders
                 {
                     function = delegate {
                         var e = eventCaller.currentEntity;
-                        OctopusMachine.instance.OctopusModifiers(e.beat, e["oct1x"], e["oct2x"], e["oct3x"], e["oct1y"], e["oct2y"], e["oct3y"], e["oct1"], e["oct2"], e["oct3"]);
+                        OctopusMachine.instance.OctopusModifiers((float) e.beat, e["oct1x"], e["oct2x"], e["oct3x"], e["oct1y"], e["oct2y"], e["oct3y"], e["oct1"], e["oct2"], e["oct3"]);
                     },
                     parameters = new List<Param>() {
                         new Param("oct1", true, "Show Octopus 1", "Should the first octopus be enabled?"),

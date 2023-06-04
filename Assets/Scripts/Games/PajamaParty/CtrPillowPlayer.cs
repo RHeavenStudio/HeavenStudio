@@ -51,7 +51,7 @@ namespace HeavenStudio.Games.Scripts_PajamaParty
 
             if (PlayerInput.Pressed() && canJump && !PajamaParty.instance.IsExpectingInputNow(InputType.STANDARD_DOWN))
             {
-                Jukebox.PlayOneShot("miss");
+                SoundByte.PlayOneShot("miss");
                 PlayerJump(cond.songPositionInBeats, true, false);
                 PajamaParty.instance.ScoreMiss();
             }
@@ -61,7 +61,7 @@ namespace HeavenStudio.Games.Scripts_PajamaParty
             }
             if (PlayerInput.AltPressedUp() && charging && !PajamaParty.instance.IsExpectingInputNow(InputType.STANDARD_ALT_UP))
             {
-                Jukebox.PlayOneShot("miss");
+                SoundByte.PlayOneShot("miss");
                 EndCharge(cond.songPositionInBeats, false, false);
                 PajamaParty.instance.ScoreMiss();
             }
@@ -133,7 +133,7 @@ namespace HeavenStudio.Games.Scripts_PajamaParty
                         anim.DoUnscaledAnimation("MakoCatch");
                     }
                     //TODO: change when locales are a thing
-                    Jukebox.PlayOneShotGame("pajamaParty/catch" + UnityEngine.Random.Range(0, 2)); //bruh
+                    SoundByte.PlayOneShotGame("pajamaParty/catch" + UnityEngine.Random.Range(0, 2)); //bruh
 
                     Projectile.SetActive(false);
                     hasThrown = false;
@@ -201,7 +201,7 @@ namespace HeavenStudio.Games.Scripts_PajamaParty
                         beat + 0.5f,
                         delegate { 
                             anim.DoScaledAnimationAsync("MakoPickUp");
-                            Jukebox.PlayOneShotGame("pajamaParty/catch" + UnityEngine.Random.Range(0, 2)); //bruh
+                            SoundByte.PlayOneShotGame("pajamaParty/catch" + UnityEngine.Random.Range(0, 2)); //bruh
                             Projectile.SetActive(false);
                             canCharge = true;
                             canJump = true;
@@ -243,12 +243,12 @@ namespace HeavenStudio.Games.Scripts_PajamaParty
                     var cond = Conductor.instance;
                     if (state <= -1f || state >= 1f)
                     {
-                        Jukebox.PlayOneShot("miss");
+                        SoundByte.PlayOneShot("miss");
                         PlayerJump(cond.songPositionInBeats, false, true);
                     }
                     else
                     {
-                        Jukebox.PlayOneShotGame("pajamaParty/jumpJust");
+                        SoundByte.PlayOneShotGame("pajamaParty/jumpJust");
                         PlayerJump(cond.songPositionInBeats, false, false);
                     }
                     caller.CanHit(false);
@@ -277,7 +277,7 @@ namespace HeavenStudio.Games.Scripts_PajamaParty
             public void ChargeJustOrNg(PlayerActionEvent caller, float state) {
                 StartCharge();
                 throwNg = (state <= -1f || state >= 1f);
-                Jukebox.PlayOneShotGame("pajamaParty/throw4");
+                SoundByte.PlayOneShotGame("pajamaParty/throw4");
             }
 
             public void ThrowJustOrNg(PlayerActionEvent caller, float state)
@@ -287,12 +287,12 @@ namespace HeavenStudio.Games.Scripts_PajamaParty
                     var cond = Conductor.instance;
                     if (state <= -1f || state >= 1f)
                     {
-                        Jukebox.PlayOneShot("miss");
+                        SoundByte.PlayOneShot("miss");
                         EndCharge(cond.songPositionInBeats, true, true);
                     }
                     else
                     {
-                        Jukebox.PlayOneShotGame("pajamaParty/throw5");
+                        SoundByte.PlayOneShotGame("pajamaParty/throw5");
                         EndCharge(cond.songPositionInBeats, true, (throwNg || false));
                     }
                     caller.CanHit(false);
@@ -400,7 +400,7 @@ namespace HeavenStudio.Games.Scripts_PajamaParty
                         anim.DoUnscaledAnimation("MakoSleepNg");
                     else
                     {
-                        Jukebox.PlayOneShotGame("pajamaParty/siesta4");
+                        SoundByte.PlayOneShotGame("pajamaParty/siesta4");
                         anim.DoScaledAnimationAsync("MakoSleepJust");
 
                         if (!longSleep)
@@ -411,7 +411,7 @@ namespace HeavenStudio.Games.Scripts_PajamaParty
                                     caller.startBeat + 7f,
                                     delegate { 
                                         anim.DoScaledAnimationAsync("MakoAwake");
-                                        Jukebox.PlayOneShotGame("pajamaParty/siestaDone");
+                                        SoundByte.PlayOneShotGame("pajamaParty/siestaDone");
                                     }
                                 ),
                             });
@@ -438,7 +438,7 @@ namespace HeavenStudio.Games.Scripts_PajamaParty
                 if (canSleep)
                 {
                     anim.DoScaledAnimationAsync("MakoSleepOut", 0.5f);
-                    Jukebox.PlayOneShotGame("pajamaParty/siestaBad");
+                    SoundByte.PlayOneShotGame("pajamaParty/siestaBad");
                     caller.CanHit(false);
                     canSleep = false;
                 }

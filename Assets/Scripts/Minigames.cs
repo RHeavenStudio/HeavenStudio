@@ -7,6 +7,8 @@ using DG.Tweening;
 using HeavenStudio.Util;
 using HeavenStudio.Editor.Track;
 using HeavenStudio.Games;
+using Jukebox;
+using Jukebox.Legacy;
 
 using System;
 using System.Linq;
@@ -233,7 +235,7 @@ namespace HeavenStudio
         }
 
         public delegate void EventCallback();
-        public delegate void ParamChangeCallback(string paramName, object paramValue, DynamicBeatmap.DynamicEntity entity);
+        public delegate void ParamChangeCallback(string paramName, object paramValue, RiqEntity entity);
 
         // overengineered af but it's a modified version of
         // https://stackoverflow.com/a/19877141
@@ -259,12 +261,12 @@ namespace HeavenStudio
                 new Minigame("gameManager", "Game Manager", "", false, true, new List<GameAction>()
                 {
                     new GameAction("switchGame", "Switch Game", 0.5f, false, 
-                        function: delegate { var e = eventCaller.currentEntity; GameManager.instance.SwitchGame(eventCaller.currentSwitchGame, eventCaller.currentEntity.beat, e["toggle"]); }, 
+                        function: delegate { var e = eventCaller.currentEntity; GameManager.instance.SwitchGame(eventCaller.currentSwitchGame, (float) eventCaller.currentEntity.beat, e["toggle"]); }, 
                         parameters: new List<Param>()
                             {
                             new Param("toggle", true, "Black Flash", "Enable or disable the black screen for this Game Switch")
                             },
-                        inactiveFunction: delegate { var e = eventCaller.currentEntity; GameManager.instance.SwitchGame(eventCaller.currentSwitchGame, eventCaller.currentEntity.beat, e["toggle"]); }
+                        inactiveFunction: delegate { var e = eventCaller.currentEntity; GameManager.instance.SwitchGame(eventCaller.currentSwitchGame, (float) eventCaller.currentEntity.beat, e["toggle"]); }
                     ),
                     new GameAction("end", "End Remix",
                         function: delegate { 
@@ -280,7 +282,7 @@ namespace HeavenStudio
                         //temp for testing
                         function = delegate {
                             var e = eventCaller.currentEntity;
-                            HeavenStudio.Common.SkillStarManager.instance.DoStarIn(e.beat, e.length); 
+                            HeavenStudio.Common.SkillStarManager.instance.DoStarIn((float) e.beat, e.length); 
                             // BeatAction.New(HeavenStudio.Common.SkillStarManager.instance.gameObject, new List<BeatAction.Action>(){
                             //     new BeatAction.Action(e.beat + e.length, delegate {
                             //         HeavenStudio.Common.SkillStarManager.instance.DoStarJust();
@@ -307,7 +309,7 @@ namespace HeavenStudio
                             new Param("colorB", Color.white, "End Color"),
                             new Param("valA", new EntityTypes.Float(0, 1, 1), "Start Opacity"),
                             new Param("valB", new EntityTypes.Float(0, 1, 0), "End Opacity"),
-                            new Param("ease", EasingFunction.Ease.Linear, "Ease")
+                            new Param("ease", Util.EasingFunction.Ease.Linear, "Ease")
                         },
                         hidden: true
                     ),
@@ -316,7 +318,7 @@ namespace HeavenStudio
                         new Param("valA", new EntityTypes.Float(-50, 50, 0), "Right / Left"),
                         new Param("valB", new EntityTypes.Float(-50, 50, 0), "Up / Down"),
                         new Param("valC", new EntityTypes.Float(-0, 250, 10), "In / Out"),
-                        new Param("ease", EasingFunction.Ease.Linear, "Ease Type")
+                        new Param("ease", Util.EasingFunction.Ease.Linear, "Ease Type")
                     },
                     hidden: true ),
                     new GameAction("rotate camera", "", 1f, true, new List<Param>() 
@@ -324,7 +326,7 @@ namespace HeavenStudio
                         new Param("valA", new EntityTypes.Integer(-360, 360, 0), "Pitch"),
                         new Param("valB", new EntityTypes.Integer(-360, 360, 0), "Yaw"),
                         new Param("valC", new EntityTypes.Integer(-360, 360, 0), "Roll"),
-                        new Param("ease", EasingFunction.Ease.Linear, "Ease Type")
+                        new Param("ease", Util.EasingFunction.Ease.Linear, "Ease Type")
                     },
                     hidden: true ),
                 }),
@@ -336,14 +338,14 @@ namespace HeavenStudio
                         {
                             new Param("type", SoundEffects.CountInType.Normal, "Type", "The sounds to play for the count-in")
                         },
-                        delegate { var e = eventCaller.currentEntity; SoundEffects.FourBeatCountIn(e.beat, e.length / 4f, e["type"]); }
+                        delegate { var e = eventCaller.currentEntity; SoundEffects.FourBeatCountIn((float) e.beat, e.length / 4f, e["type"]); }
                     ),
                     new GameAction("8 beat count-in", "8 Beat Count-In", 8f, true,
                         new List<Param>()
                         {
                             new Param("type", SoundEffects.CountInType.Normal, "Type", "The sounds to play for the count-in")
                         },
-                        delegate { var e = eventCaller.currentEntity; SoundEffects.EightBeatCountIn(e.beat, e.length / 8f, e["type"]); }
+                        delegate { var e = eventCaller.currentEntity; SoundEffects.EightBeatCountIn((float) e.beat, e.length / 8f, e["type"]); }
                     ),
                     new GameAction("count", "Count", 1f, false,
                         new List<Param>()
@@ -357,7 +359,7 @@ namespace HeavenStudio
                         function: delegate { SoundEffects.Cowbell(); }
                     ),
                     new GameAction("ready!", "Ready!", 2f, true,
-                        function: delegate { var e = eventCaller.currentEntity; SoundEffects.Ready(e.beat, e.length / 2f); }
+                        function: delegate { var e = eventCaller.currentEntity; SoundEffects.Ready((float) e.beat, e.length / 2f); }
                     ),
                     new GameAction("and", "And", 0.5f,
                         function: delegate { SoundEffects.And(); }
@@ -371,10 +373,10 @@ namespace HeavenStudio
                     ),
 
                     // These are still here for backwards-compatibility but are hidden in the editor
-                    new GameAction("4 beat count-in (alt)", "", 4f, function: delegate { var e = eventCaller.currentEntity; SoundEffects.FourBeatCountIn(e.beat, e.length, 1); }, hidden: true),
-                    new GameAction("4 beat count-in (cowbell)", "", 4f, function: delegate { var e = eventCaller.currentEntity; SoundEffects.FourBeatCountIn(e.beat, e.length, 2); }, hidden: true),
-                    new GameAction("8 beat count-in (alt)", "", 8f, function: delegate { var e = eventCaller.currentEntity; SoundEffects.EightBeatCountIn(e.beat, e.length, 1); }, hidden: true),
-                    new GameAction("8 beat count-in (cowbell)", "", 8f, function: delegate { var e = eventCaller.currentEntity; SoundEffects.EightBeatCountIn(e.beat, e.length, 2); }, hidden: true),
+                    new GameAction("4 beat count-in (alt)", "", 4f, function: delegate { var e = eventCaller.currentEntity; SoundEffects.FourBeatCountIn((float) e.beat, e.length, 1); }, hidden: true),
+                    new GameAction("4 beat count-in (cowbell)", "", 4f, function: delegate { var e = eventCaller.currentEntity; SoundEffects.FourBeatCountIn((float) e.beat, e.length, 2); }, hidden: true),
+                    new GameAction("8 beat count-in (alt)", "", 8f, function: delegate { var e = eventCaller.currentEntity; SoundEffects.EightBeatCountIn((float) e.beat, e.length, 1); }, hidden: true),
+                    new GameAction("8 beat count-in (cowbell)", "", 8f, function: delegate { var e = eventCaller.currentEntity; SoundEffects.EightBeatCountIn((float) e.beat, e.length, 2); }, hidden: true),
 
                     new GameAction("one", "", function: delegate { SoundEffects.Count(0, false); }, hidden: true),
                     new GameAction("two", "", function: delegate { SoundEffects.Count(1, false); }, hidden: true),
@@ -396,7 +398,7 @@ namespace HeavenStudio
                             new Param("colorB", Color.white, "End Color"),
                             new Param("valA", new EntityTypes.Float(0, 1, 1), "Start Opacity"),
                             new Param("valB", new EntityTypes.Float(0, 1, 0), "End Opacity"),
-                            new Param("ease", EasingFunction.Ease.Linear, "Ease")
+                            new Param("ease", Util.EasingFunction.Ease.Linear, "Ease")
                         }
                     ),
                     new GameAction("filter", "Filter", 1f, true,
@@ -413,7 +415,7 @@ namespace HeavenStudio
                             new Param("valA", new EntityTypes.Float(-50, 50, 0), "Right / Left", "Next position on the X axis"),
                             new Param("valB", new EntityTypes.Float(-50, 50, 0), "Up / Down", "Next position on the Y axis"),
                             new Param("valC", new EntityTypes.Float(-0, 250, 10), "In / Out", "Next position on the Z axis"),
-                            new Param("ease", EasingFunction.Ease.Linear, "Ease Type"),
+                            new Param("ease", Util.EasingFunction.Ease.Linear, "Ease Type"),
                             new Param("axis", GameCamera.CameraAxis.All, "Axis", "The axis to move the camera on" )
                         }
                     ),
@@ -422,7 +424,7 @@ namespace HeavenStudio
                             new Param("valA", new EntityTypes.Integer(-360, 360, 0), "Pitch", "Next rotation on the X axis"),
                             new Param("valB", new EntityTypes.Integer(-360, 360, 0), "Yaw", "Next rotation on the Y axis"),
                             new Param("valC", new EntityTypes.Integer(-360, 360, 0), "Roll", "Next rotation on the Z axis"),
-                            new Param("ease", EasingFunction.Ease.Linear, "Ease Type"),
+                            new Param("ease", Util.EasingFunction.Ease.Linear, "Ease Type"),
                             new Param("axis", GameCamera.CameraAxis.All, "Axis", "The axis to move the camera on" )
                         } 
                     ),
@@ -430,21 +432,21 @@ namespace HeavenStudio
                         {
                             new Param("valA", new EntityTypes.Float(-50, 50, 0), "Right / Left", "Next position on the X axis"),
                             new Param("valB", new EntityTypes.Float(-50, 50, 0), "Up / Down", "Next position on the Y axis"),
-                            new Param("ease", EasingFunction.Ease.Linear, "Ease Type"),
+                            new Param("ease", Util.EasingFunction.Ease.Linear, "Ease Type"),
                             new Param("axis", StaticCamera.ViewAxis.All, "Axis", "The axis to pan the viewport in" )
                         }
                     ),
                     new GameAction("rotate view", "Rotate Viewport", 1f, true, new List<Param>() 
                         {
                             new Param("valA", new EntityTypes.Float(-360, 360, 0), "Rotation", "Next viewport rotation"),
-                            new Param("ease", EasingFunction.Ease.Linear, "Ease Type"),
+                            new Param("ease", Util.EasingFunction.Ease.Linear, "Ease Type"),
                         }
                     ),
                     new GameAction("scale view", "Scale Viewport", 1f, true, new List<Param>() 
                         {
                             new Param("valA", new EntityTypes.Float(0, 50, 1), "Width", "Next viewport width"),
                             new Param("valB", new EntityTypes.Float(0, 50, 1), "Height", "Next viewport height"),
-                            new Param("ease", EasingFunction.Ease.Linear, "Ease Type"),
+                            new Param("ease", Util.EasingFunction.Ease.Linear, "Ease Type"),
                             new Param("axis", StaticCamera.ViewAxis.All, "Axis", "The axis to scale the viewport in" )
                         }
                     ),

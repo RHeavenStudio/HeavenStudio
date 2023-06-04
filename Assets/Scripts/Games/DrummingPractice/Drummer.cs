@@ -103,13 +103,13 @@ namespace HeavenStudio.Games.Scripts_DrummingPractice
 
         private void HitSound(bool applause)
         {
-            Jukebox.PlayOneShotGame("drummingPractice/hit");
-            if (applause) Jukebox.PlayOneShot("applause");
+            SoundByte.PlayOneShotGame("drummingPractice/hit");
+            if (applause) SoundByte.PlayOneShot("applause");
         }
 
         private void MissSound()
         {
-            Jukebox.PlayOneShotGame("drummingPractice/miss");
+            SoundByte.PlayOneShotGame("drummingPractice/miss");
         }
 
         public void EndHit()

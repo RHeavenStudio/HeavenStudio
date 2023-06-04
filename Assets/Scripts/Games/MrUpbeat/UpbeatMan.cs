@@ -32,7 +32,7 @@ namespace HeavenStudio.Games.Scripts_MrUpbeat
             BeatAction.New(gameObject, new List<BeatAction.Action>() {
                 new BeatAction.Action(pos + MrUpbeat.downbeatMod, delegate {
                     if (MrUpbeat.shouldBlip) {
-                        Jukebox.PlayOneShotGame("mrUpbeat/blip");
+                        SoundByte.PlayOneShotGame("mrUpbeat/blip");
                         blipAnim.Play("Blip"+(blipSize+1), 0, 0);
                         blipText.text = (blipSize == 4 && blipString != "") ? blipString : "";
                     }
@@ -54,7 +54,7 @@ namespace HeavenStudio.Games.Scripts_MrUpbeat
 
             anim.DoScaledAnimationAsync("Step", 0.5f);
             letterAnim.DoScaledAnimationAsync(x ? "StepRight" : "StepLeft", 0.5f);
-            Jukebox.PlayOneShotGame("mrUpbeat/step");
+            SoundByte.PlayOneShotGame("mrUpbeat/step");
         }
 
         public void Fall()
@@ -64,7 +64,7 @@ namespace HeavenStudio.Games.Scripts_MrUpbeat
             blipText.text = "";
             
             anim.DoScaledAnimationAsync("Fall", 0.5f);
-            Jukebox.PlayOneShot("miss");
+            SoundByte.PlayOneShot("miss");
             shadows[0].SetActive(false);
             shadows[1].SetActive(false);
         }

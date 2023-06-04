@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using HeavenStudio.Util;
 using DG.Tweening;
+using Jukebox;
 
 namespace HeavenStudio.Games.Loaders
 {
@@ -15,7 +16,7 @@ namespace HeavenStudio.Games.Loaders
             {
                 new GameAction("dispense", "Dispense")
                 {
-                    function = delegate { var e = eventCaller.currentEntity; TossBoys.instance.Dispense(e.beat, e.length, e["who"], e["call"]); },
+                    function = delegate { var e = eventCaller.currentEntity; TossBoys.instance.Dispense((float) e.beat, e.length, e["who"], e["call"]); },
                     defaultLength = 2f,
                     resizable = true,
                     parameters = new List<Param>()
@@ -70,7 +71,7 @@ namespace HeavenStudio.Games.Loaders
                 },
                 new GameAction("bop", "Bop")
                 {
-                    function = delegate { var e = eventCaller.currentEntity; TossBoys.instance.Bop(e.beat, e.length, e["auto"], e["bop"]); },
+                    function = delegate { var e = eventCaller.currentEntity; TossBoys.instance.Bop((float) e.beat, e.length, e["auto"], e["bop"]); },
                     resizable = true,
                     parameters = new List<Param>()
                     {
@@ -144,7 +145,7 @@ namespace HeavenStudio.Games
         WhichTossKid lastReceiver = WhichTossKid.None;
         WhichTossKid currentReceiver = WhichTossKid.None;
         public TossBoysBall currentBall = null;
-        Dictionary<float, DynamicBeatmap.DynamicEntity> passBallDict = new Dictionary<float, DynamicBeatmap.DynamicEntity>();
+        Dictionary<float, RiqEntity> passBallDict = new Dictionary<float, RiqEntity>();
         string currentPassType;
         public static TossBoys instance;
         bool shouldBop = true;
@@ -259,7 +260,7 @@ namespace HeavenStudio.Games
             SetPassBallEvents();
             SetReceiver(who);
             GetCurrentReceiver().ShowArrow(beat, length - 1);
-            Jukebox.PlayOneShotGame("tossBoys/ballStart" + GetColorBasedOnTossKid(currentReceiver, true));
+            SoundByte.PlayOneShotGame("tossBoys/ballStart" + GetColorBasedOnTossKid(currentReceiver, true));
             hatchAnim.Play("HatchOpen", 0, 0);
             currentBall = Instantiate(ballPrefab, transform);
             currentBall.gameObject.SetActive(true);
@@ -353,8 +354,8 @@ namespace HeavenStudio.Games
             {
                 if (passBallEvents[i].beat >= Conductor.instance.songPositionInBeats)
                 {
-                    if (passBallDict.ContainsKey(passBallEvents[i].beat)) continue;
-                    passBallDict.Add(passBallEvents[i].beat, passBallEvents[i]);
+                    if (passBallDict.ContainsKey((float) passBallEvents[i].beat)) continue;
+                    passBallDict.Add((float) passBallEvents[i].beat, passBallEvents[i]);
                 }
             }
         }
@@ -372,7 +373,7 @@ namespace HeavenStudio.Games
             else
             {
                 /*
-                DynamicBeatmap.DynamicEntity spawnedEntity = new DynamicBeatmap.DynamicEntity();
+                RiqEntity spawnedEntity = new RiqEntity();
                 spawnedEntity.DynamicData.Add("who", (int)tempLastReceiver);
                 spawnedEntity.datamodel = currentPassType;
                 passBallDict.Add(beat, spawnedEntity);
@@ -670,13 +671,13 @@ namespace HeavenStudio.Games
                     switch (currentReceiver)
                     {
                         case WhichTossKid.Akachan:
-                            Jukebox.PlayOneShotGame("tossBoys/redPop");
+                            SoundByte.PlayOneShotGame("tossBoys/redPop");
                             break;
                         case WhichTossKid.Aokun:
-                            Jukebox.PlayOneShotGame("tossBoys/bluePop");
+                            SoundByte.PlayOneShotGame("tossBoys/bluePop");
                             break;
                         case WhichTossKid.Kiiyan:
-                            Jukebox.PlayOneShotGame("tossBoys/yellowPop");
+                            SoundByte.PlayOneShotGame("tossBoys/yellowPop");
                             break;
                         default:
                             break;
@@ -722,13 +723,13 @@ namespace HeavenStudio.Games
                     switch (currentReceiver)
                     {
                         case WhichTossKid.Akachan:
-                            Jukebox.PlayOneShotGame("tossBoys/redPop");
+                            SoundByte.PlayOneShotGame("tossBoys/redPop");
                             break;
                         case WhichTossKid.Aokun:
-                            Jukebox.PlayOneShotGame("tossBoys/bluePop");
+                            SoundByte.PlayOneShotGame("tossBoys/bluePop");
                             break;
                         case WhichTossKid.Kiiyan:
-                            Jukebox.PlayOneShotGame("tossBoys/yellowPop");
+                            SoundByte.PlayOneShotGame("tossBoys/yellowPop");
                             break;
                         default:
                             break;
@@ -783,7 +784,7 @@ namespace HeavenStudio.Games
         void JustKeepCurrent(PlayerActionEvent caller, float state)
         {
             if (currentBall == null) return;
-            Jukebox.PlayOneShotGame("tossBoys/" + GetColorBasedOnTossKid(currentReceiver, false) + "Keep");
+            SoundByte.PlayOneShotGame("tossBoys/" + GetColorBasedOnTossKid(currentReceiver, false) + "Keep");
             string current = GetColorBasedOnTossKid(currentReceiver, false);
             float beat = caller.timer + caller.startBeat;
             if (currentBall != null)
@@ -819,7 +820,7 @@ namespace HeavenStudio.Games
             specialAka.SetActive(false);
             specialKii.SetActive(false);
             currentSpecialKid.crouch = false;
-            Jukebox.PlayOneShotGame("tossBoys/" + GetColorBasedOnTossKid(currentReceiver, false) + "Keep");
+            SoundByte.PlayOneShotGame("tossBoys/" + GetColorBasedOnTossKid(currentReceiver, false) + "Keep");
             if (state >= 1f || state <= -1f)
             {
                 currentBall.anim.DoScaledAnimationAsync("WiggleBall", 0.5f);
@@ -833,7 +834,7 @@ namespace HeavenStudio.Games
         void JustKeep(PlayerActionEvent caller, float state)
         {
             if (currentBall == null) return;
-            Jukebox.PlayOneShotGame("tossBoys/" + GetColorBasedOnTossKid(lastReceiver, false) + "Keep");
+            SoundByte.PlayOneShotGame("tossBoys/" + GetColorBasedOnTossKid(lastReceiver, false) + "Keep");
             string last = GetColorBasedOnTossKid(lastReceiver, false);
             string current = GetColorBasedOnTossKid(currentReceiver, true);
             float beat = caller.timer + caller.startBeat;
@@ -880,7 +881,7 @@ namespace HeavenStudio.Games
             specialAka.SetActive(false);
             specialKii.SetActive(false);
             currentSpecialKid.crouch = false;
-            Jukebox.PlayOneShotGame("tossBoys/" + GetColorBasedOnTossKid(lastReceiver, false) + "Keep");
+            SoundByte.PlayOneShotGame("tossBoys/" + GetColorBasedOnTossKid(lastReceiver, false) + "Keep");
             string last = GetColorBasedOnTossKid(lastReceiver, false);
             string current = GetColorBasedOnTossKid(currentReceiver, true);
             float beat = caller.timer + caller.startBeat;
@@ -933,7 +934,7 @@ namespace HeavenStudio.Games
             specialKii.SetActive(false);
             Destroy(currentBall.gameObject);
             currentBall = null;
-            Jukebox.PlayOneShotGame("tossBoys/misshit");
+            SoundByte.PlayOneShotGame("tossBoys/misshit");
         }
 
         void Empty(PlayerActionEvent caller) { }
@@ -968,7 +969,7 @@ namespace HeavenStudio.Games
                     });
                     break;
                 case WhichTossKid.Kiiyan:
-                    Jukebox.PlayOneShotGame("tossBoys/yellowSpecial", beat);
+                    SoundByte.PlayOneShotGame("tossBoys/yellowSpecial", beat);
                     break;
                 default:
                     break;

@@ -90,14 +90,14 @@ namespace HeavenStudio.Games.Scripts_Spaceball
 
             if (isTacobell)
             {
-                Jukebox.PlayOneShotGame("spaceball/tacobell");
+                SoundByte.PlayOneShotGame("spaceball/tacobell");
             }
-            Jukebox.PlayOneShotGame("spaceball/hit");
+            SoundByte.PlayOneShotGame("spaceball/hit");
 
             // jank fix for a bug with autoplay - freeform
             if (GameManager.instance.autoplay && Conductor.instance.isPlaying && GameManager.instance.canInput)
             {
-                Jukebox.PlayOneShotGame("spaceball/swing");
+                SoundByte.PlayOneShotGame("spaceball/swing");
             }
 
             randomEndPosX = Random.Range(4f, 16f);
@@ -119,7 +119,7 @@ namespace HeavenStudio.Games.Scripts_Spaceball
             rb.AddForce(transform.right * 400);
             rb.gravityScale = 9;
 
-            Jukebox.PlayOneShot("miss");
+            SoundByte.PlayOneShot("miss");
 
             Destroy(gameObject, 5f);
 
@@ -138,7 +138,7 @@ namespace HeavenStudio.Games.Scripts_Spaceball
 
         private void Miss(PlayerActionEvent caller)
         {
-            Jukebox.PlayOneShotGame("spaceball/fall");
+            SoundByte.PlayOneShotGame("spaceball/fall");
             Instantiate(Spaceball.instance.Dust, Spaceball.instance.Dust.transform.parent).SetActive(true);
             Destroy(this.gameObject);
 

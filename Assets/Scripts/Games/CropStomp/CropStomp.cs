@@ -4,6 +4,7 @@ using HeavenStudio.Util;
 using System;
 using System.Collections.Generic;
 using UnityEngine;
+using Jukebox;
 
 namespace HeavenStudio.Games.Loaders
 {
@@ -15,9 +16,9 @@ namespace HeavenStudio.Games.Loaders
             {
                 new GameAction("start marching", "Start Marching")
                 {
-                    function = delegate { CropStomp.instance.StartMarching(eventCaller.currentEntity.beat); }, 
+                    function = delegate { CropStomp.instance.StartMarching((float) eventCaller.currentEntity.beat); }, 
                     defaultLength = 2f,
-                    inactiveFunction = delegate { CropStomp.MarchInactive(eventCaller.currentEntity.beat); }
+                    inactiveFunction = delegate { CropStomp.MarchInactive((float) eventCaller.currentEntity.beat); }
                 },
                 new GameAction("veggies", "Veggies")
                 {
@@ -99,7 +100,7 @@ namespace HeavenStudio.Games
 
             // Initialize vegetables.
             var cond = Conductor.instance;
-            var entities = GameManager.instance.Beatmap.entities;
+            var entities = GameManager.instance.Beatmap.Entities;
 
             float startBeat = cond.songPositionInBeats;
             float endBeat = Single.MaxValue;
@@ -110,7 +111,7 @@ namespace HeavenStudio.Games
                 var marchStarts = entities.FindAll(m => m.datamodel == "cropStomp/start marching");
                 for (int i = 0; i < marchStarts.Count; i++)
                 {
-                    var sampleBeat = marchStarts[i].beat;
+                    var sampleBeat = (float) marchStarts[i].beat;
                     if (cond.songPositionInBeats <= sampleBeat + 0.25f) // 0.25-beat buffer in case the start marching event is directly next to the game switch event.
                     {
                         startBeat = sampleBeat;
@@ -155,7 +156,7 @@ namespace HeavenStudio.Games
                 if (end.datamodel.Split(2) == "cropStomp") continue;
                 if (end.beat > startBeat)
                 {
-                    endBeat = end.beat;
+                    endBeat = (float) end.beat;
                     break;
                 }
             }
@@ -167,7 +168,7 @@ namespace HeavenStudio.Games
             // Spawn veggies.
             for (int i = 0; i < vegEvents.Count; i++)
             {
-                var vegBeat = vegEvents[i].beat;
+                var vegBeat = (float) vegEvents[i].beat;
                 var vegLength = vegEvents[i].length;
 
                 // Only consider veggie events that aren't past the start point.
@@ -189,7 +190,7 @@ namespace HeavenStudio.Games
             // Spawn moles.
             for (int i = 0; i < moleEvents.Count; i++)
             {
-                var moleBeat = moleEvents[i].beat;
+                var moleBeat = (float) moleEvents[i].beat;
 
                 if (startBeat <= moleBeat && moleBeat < endBeat)
                 {
@@ -198,7 +199,7 @@ namespace HeavenStudio.Games
             }
         }
 
-        List<DynamicBeatmap.DynamicEntity> cuedMoleSounds = new List<DynamicBeatmap.DynamicEntity>();
+        List<RiqEntity> cuedMoleSounds = new List<RiqEntity>();
         private void Update()
         {
             var cond = Conductor.instance;
@@ -207,18 +208,18 @@ namespace HeavenStudio.Games
                 return;
 
             // Mole sounds.
-            var moleEvents = GameManager.instance.Beatmap.entities.FindAll(m => m.datamodel == "cropStomp/mole");
+            var moleEvents = GameManager.instance.Beatmap.Entities.FindAll(m => m.datamodel == "cropStomp/mole");
             for (int i = 0; i < moleEvents.Count; i++)
             {
                 var moleEvent = moleEvents[i];
                 if (moleEvent["mute"]) continue;
-                var timeToEvent = moleEvent.beat - cond.songPositionInBeats;
+                var timeToEvent = (float) moleEvent.beat - cond.songPositionInBeats;
                 if (timeToEvent <= 4f && timeToEvent > 2f && !cuedMoleSounds.Contains(moleEvent))
                 {
                     cuedMoleSounds.Add(moleEvent);
-                    MultiSound.Play(new MultiSound.Sound[] { new MultiSound.Sound("cropStomp/moleNyeh", (moleEvent.beat - 2f) - moleSoundOffsets[0] * Conductor.instance.songBpm / 60f),
-                                                            new MultiSound.Sound("cropStomp/moleHeh1", (moleEvent.beat - 1.5f) - moleSoundOffsets[1] * Conductor.instance.songBpm / 60f),
-                                                            new MultiSound.Sound("cropStomp/moleHeh2", (moleEvent.beat - 1f) - moleSoundOffsets[2] * Conductor.instance.songBpm / 60f) });
+                    MultiSound.Play(new MultiSound.Sound[] { new MultiSound.Sound("cropStomp/moleNyeh", ((float) moleEvent.beat - 2f) - moleSoundOffsets[0] * Conductor.instance.songBpm / 60f),
+                                                            new MultiSound.Sound("cropStomp/moleHeh1", ((float) moleEvent.beat - 1.5f) - moleSoundOffsets[1] * Conductor.instance.songBpm / 60f),
+                                                            new MultiSound.Sound("cropStomp/moleHeh2", ((float) moleEvent.beat - 1f) - moleSoundOffsets[2] * Conductor.instance.songBpm / 60f) });
                 }
             }
 
@@ -324,7 +325,7 @@ namespace HeavenStudio.Games
             
             legsAnim.Play(stompAnim, 0, 0);
 
-            Jukebox.PlayOneShotGame("cropStomp/stomp");
+            SoundByte.PlayOneShotGame("cropStomp/stomp");
 
             if (shakeTween != null)
                 shakeTween.Kill(true);
@@ -354,10 +355,10 @@ namespace HeavenStudio.Games
                 return;
             }
             inactiveStart = beat;
-            DynamicBeatmap.DynamicEntity gameSwitch = GameManager.instance.Beatmap.entities.Find(c => c.beat >= beat && c.datamodel == "gameManager/switchGame/cropStomp");
+            RiqEntity gameSwitch = GameManager.instance.Beatmap.Entities.Find(c => c.beat >= beat && c.datamodel == "gameManager/switchGame/cropStomp");
             if (gameSwitch == null)
                 return;
-            int length = Mathf.CeilToInt((gameSwitch.beat - beat)/2);
+            int length = Mathf.CeilToInt(((float)gameSwitch.beat - beat)/2);
             MultiSound.Sound[] sounds = new MultiSound.Sound[length];
             for(int i = 0; i < length; i++)
             {

@@ -139,7 +139,7 @@ namespace HeavenStudio.Games.Scripts_CropStomp
 
                 pickedBeat = Conductor.instance.songPositionInBeats;
 
-                Jukebox.PlayOneShot("miss");
+                SoundByte.PlayOneShot("miss");
 
                 MissedUpdate();
             }
@@ -154,7 +154,7 @@ namespace HeavenStudio.Games.Scripts_CropStomp
             veggieState = -1;
                     
             if (!isMole)
-                Jukebox.PlayOneShotGame("cropStomp/veggieMiss");
+                SoundByte.PlayOneShotGame("cropStomp/veggieMiss");
             caller.Disable();
         }
 
@@ -275,7 +275,7 @@ namespace HeavenStudio.Games.Scripts_CropStomp
                     new BeatAction.Action(pickedBeat + pickTime, delegate { GameObject.Destroy(gameObject); })
                 });
 
-                Jukebox.PlayOneShotGame("cropStomp/veggieKay");
+                SoundByte.PlayOneShotGame("cropStomp/veggieKay");
 
                 hitCurve = game.pickCurve;
             }
@@ -286,7 +286,7 @@ namespace HeavenStudio.Games.Scripts_CropStomp
                     new BeatAction.Action(pickedBeat + pickTime, delegate { GameObject.Destroy(gameObject); })
                 });
 
-                Jukebox.PlayOneShotGame("cropStomp/GEUH");
+                SoundByte.PlayOneShotGame("cropStomp/GEUH");
 
                 hitCurve = game.moleCurve;
             }

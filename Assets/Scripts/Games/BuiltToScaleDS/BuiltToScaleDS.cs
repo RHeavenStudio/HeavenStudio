@@ -6,6 +6,7 @@ using DG.Tweening;
 using System;
 
 using HeavenStudio.Util;
+using Jukebox;
 
 namespace HeavenStudio.Games.Loaders
 {
@@ -17,7 +18,7 @@ namespace HeavenStudio.Games.Loaders
             {
                 new GameAction("spawn blocks", "Widget")
                 {
-                    function = delegate {var e = eventCaller.currentEntity; BuiltToScaleDS.instance.MultiplePiano(e.beat, e.length, e["silent"], e["note1"], e["note2"], e["note3"], e["note4"], e["note5"], e["note6"]); },
+                    function = delegate {var e = eventCaller.currentEntity; BuiltToScaleDS.instance.MultiplePiano((float) e.beat, e.length, e["silent"], e["note1"], e["note2"], e["note3"], e["note4"], e["note5"], e["note6"]); },
                     resizable = true,
                     parameters = new List<Param>()
                     {
@@ -32,7 +33,7 @@ namespace HeavenStudio.Games.Loaders
                 },
                 new GameAction("play piano", "Play Note")
                 {
-                    function = delegate { BuiltToScaleDS.instance.PlayPiano(eventCaller.currentEntity.beat, eventCaller.currentEntity.length, eventCaller.currentEntity["type"]); },
+                    function = delegate { BuiltToScaleDS.instance.PlayPiano((float) eventCaller.currentEntity.beat, eventCaller.currentEntity.length, eventCaller.currentEntity["type"]); },
                     resizable = true,
                     parameters = new List<Param>()
                     {
@@ -52,7 +53,7 @@ namespace HeavenStudio.Games.Loaders
                 },
                 new GameAction("lights", "Lights")
                 {
-                    function = delegate { var e = eventCaller.currentEntity; BuiltToScaleDS.instance.Lights(e.beat, e.length, e["auto"], e["light"] && !e["auto"]); },
+                    function = delegate { var e = eventCaller.currentEntity; BuiltToScaleDS.instance.Lights((float) e.beat, e.length, e["auto"], e["light"] && !e["auto"]); },
                     defaultLength = 4f,
                     resizable = true,
                     parameters = new List<Param>()
@@ -230,15 +231,15 @@ namespace HeavenStudio.Games
             }
         }
 
-        List<DynamicBeatmap.DynamicEntity> spawnedBlockEvents = new List<DynamicBeatmap.DynamicEntity>();
+        List<RiqEntity> spawnedBlockEvents = new List<RiqEntity>();
         void Update()
         {
             if (!Conductor.instance.isPlaying && !Conductor.instance.isPaused)
                 return;
 
-            var currentBeat = Conductor.instance.songPositionInBeats;
+            var currentBeat = Conductor.instance.songPositionInBeatsAsDouble;
 
-            var blockEvents = GameManager.instance.Beatmap.entities.FindAll(c => c.datamodel == "builtToScaleDS/spawn blocks");
+            var blockEvents = GameManager.instance.Beatmap.Entities.FindAll(c => c.datamodel == "builtToScaleDS/spawn blocks");
             for (int i = 0; i < blockEvents.Count; i++)
             {
                 var ev = blockEvents[i];
@@ -247,7 +248,7 @@ namespace HeavenStudio.Games
                 var spawnBeat = ev.beat - ev.length;
                 if (currentBeat > spawnBeat && currentBeat < ev.beat + ev.length)
                 {
-                    SpawnBlocks(spawnBeat, ev.length);
+                    SpawnBlocks((float) spawnBeat, ev.length);
                     spawnedBlockEvents.Add(ev);
                     break;
                 }
@@ -278,7 +279,7 @@ namespace HeavenStudio.Games
                 shootingThisFrame = true;
                 Shoot();
                 SpawnObject(BTSObject.FlyingRod);
-                Jukebox.PlayOneShotGame("builtToScaleDS/Boing");
+                SoundByte.PlayOneShotGame("builtToScaleDS/Boing");
             }
 
             if (!shootingThisFrame)
@@ -436,8 +437,8 @@ namespace HeavenStudio.Games
 
         public void PlayPiano(float beat, float length, int semiTones)
         {
-            var pianoPitch = Jukebox.GetPitchFromSemiTones(semiTones, true);
-            var pianoSource = Jukebox.PlayOneShotGame("builtToScaleDS/Piano", -1, pianoPitch, 0.8f, true);
+            var pianoPitch = SoundByte.GetPitchFromSemiTones(semiTones, true);
+            var pianoSource = SoundByte.PlayOneShotGame("builtToScaleDS/Piano", -1, pianoPitch, 0.8f, true);
 
             pianoSource.SetLoopParams(beat + length, 0.1f);
         }

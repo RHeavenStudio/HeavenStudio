@@ -17,36 +17,36 @@ namespace HeavenStudio.Games.Loaders
             {
                 new GameAction("start interval", "Start Interval")
                 {
-                    function = delegate { RhythmTweezers.instance.SetIntervalStart(eventCaller.currentEntity.beat, eventCaller.currentEntity.length); }, 
+                    function = delegate { RhythmTweezers.instance.SetIntervalStart((float) eventCaller.currentEntity.beat, eventCaller.currentEntity.length); }, 
                     defaultLength = 4f, 
                     resizable = true,
                     priority = 1,
-                    inactiveFunction = delegate { RhythmTweezers.InactiveInterval(eventCaller.currentEntity.beat, eventCaller.currentEntity.length); }
+                    inactiveFunction = delegate { RhythmTweezers.InactiveInterval((float) eventCaller.currentEntity.beat, eventCaller.currentEntity.length); }
                 },
                 new GameAction("short hair", "Short Hair")
                 {
-                    inactiveFunction = delegate { RhythmTweezers.SpawnHairInactive(eventCaller.currentEntity.beat); },
-                    function = delegate { RhythmTweezers.instance.SpawnHair(eventCaller.currentEntity.beat); }, 
+                    inactiveFunction = delegate { RhythmTweezers.SpawnHairInactive((float) eventCaller.currentEntity.beat); },
+                    function = delegate { RhythmTweezers.instance.SpawnHair((float) eventCaller.currentEntity.beat); }, 
                     defaultLength = 0.5f
                 },
                 new GameAction("long hair", "Curly Hair")
                 {
-                    inactiveFunction = delegate { RhythmTweezers.SpawnLongHairInactive(eventCaller.currentEntity.beat); },
-                    function = delegate { RhythmTweezers.instance.SpawnLongHair(eventCaller.currentEntity.beat); }, 
+                    inactiveFunction = delegate { RhythmTweezers.SpawnLongHairInactive((float) eventCaller.currentEntity.beat); },
+                    function = delegate { RhythmTweezers.instance.SpawnLongHair((float) eventCaller.currentEntity.beat); }, 
                     defaultLength = 0.5f
                 },
                 new GameAction("passTurn", "Pass Turn")
                 {
-                    function = delegate { var e = eventCaller.currentEntity; RhythmTweezers.instance.PassTurn(e.beat, e.length); },
+                    function = delegate { var e = eventCaller.currentEntity; RhythmTweezers.instance.PassTurn((float) e.beat, e.length); },
                     resizable = true,
-                    preFunction = delegate { var e = eventCaller.currentEntity; RhythmTweezers.PrePassTurn(e.beat, e.length); }
+                    preFunction = delegate { var e = eventCaller.currentEntity; RhythmTweezers.PrePassTurn((float) e.beat, e.length); }
                 },
                 new GameAction("next vegetable", "Swap Vegetable")
                 {
                     function = delegate 
                     { 
                         var e = eventCaller.currentEntity; 
-                        if (!e["instant"]) RhythmTweezers.instance.NextVegetable(e.beat, e["type"], e["colorA"], e["colorB"]); 
+                        if (!e["instant"]) RhythmTweezers.instance.NextVegetable((float) e.beat, e["type"], e["colorA"], e["colorB"]); 
                         else RhythmTweezers.instance.ChangeVegetableImmediate(e["type"], e["colorA"], e["colorB"]);
                     }, 
                     defaultLength = 0.5f, 
@@ -61,7 +61,7 @@ namespace HeavenStudio.Games.Loaders
                 },
                 new GameAction("noPeek", "No Peeking Sign")
                 {
-                    preFunction = delegate { var e = eventCaller.currentEntity; RhythmTweezers.PreNoPeeking(e.beat, e.length, e["type"]); },
+                    preFunction = delegate { var e = eventCaller.currentEntity; RhythmTweezers.PreNoPeeking((float) e.beat, e.length, e["type"]); },
                     defaultLength = 4f,
                     resizable = true,
                     parameters = new List<Param>()
@@ -303,7 +303,7 @@ namespace HeavenStudio.Games
 
             crHandlerInstance.AddEvent(beat, 0, "Hair");
 
-            Jukebox.PlayOneShotGame("rhythmTweezers/shortAppear", beat);
+            SoundByte.PlayOneShotGame("rhythmTweezers/shortAppear", beat);
             Hair hair = Instantiate(hairBase, HairsHolder.transform).GetComponent<Hair>();
             spawnedHairs.Add(hair);
             hair.gameObject.SetActive(true);
@@ -321,7 +321,7 @@ namespace HeavenStudio.Games
 
             crHandlerInstance.AddEvent(beat, 0.5f, "Long");
 
-            Jukebox.PlayOneShotGame("rhythmTweezers/longAppear", beat);
+            SoundByte.PlayOneShotGame("rhythmTweezers/longAppear", beat);
             LongHair hair = Instantiate(longHairBase, HairsHolder.transform).GetComponent<LongHair>();
             spawnedLongs.Add(hair);
             hair.gameObject.SetActive(true);
@@ -395,7 +395,7 @@ namespace HeavenStudio.Games
         {
             transitioning = true;
 
-            Jukebox.PlayOneShotGame("rhythmTweezers/register", beat);
+            SoundByte.PlayOneShotGame("rhythmTweezers/register", beat);
 
             Sprite nextVeggieSprite = type == 0 ? onionSprite : potatoSprite;
             Color nextColor = type == 0 ? onionColor : potatoColor;

@@ -19,7 +19,7 @@ namespace HeavenStudio.Games.Loaders
                 {
                     preFunction = delegate
                     {
-                        TrickClass.PreTossObject(eventCaller.currentEntity.beat, (int)TrickClass.TrickObjType.Ball);
+                        TrickClass.PreTossObject((float) eventCaller.currentEntity.beat, (int)TrickClass.TrickObjType.Ball);
                     }, 
                     defaultLength = 2,
                 },
@@ -27,13 +27,13 @@ namespace HeavenStudio.Games.Loaders
                 {
                     preFunction = delegate
                     {
-                        TrickClass.PreTossObject(eventCaller.currentEntity.beat, (int)TrickClass.TrickObjType.Plane);
+                        TrickClass.PreTossObject((float) eventCaller.currentEntity.beat, (int)TrickClass.TrickObjType.Plane);
                     },
                     defaultLength = 3,
                 },
                 new GameAction("bop", "Bop")
                 {
-                    function = delegate { var e = eventCaller.currentEntity; TrickClass.instance.Bop(e.beat, e.length, e["bop"], e["autoBop"]); },
+                    function = delegate { var e = eventCaller.currentEntity; TrickClass.instance.Bop((float) e.beat, e.length, e["bop"], e["autoBop"]); },
                     resizable = true, 
                     parameters = new List<Param>()
                     {
@@ -233,10 +233,10 @@ namespace HeavenStudio.Games
             switch (type)
             {
                 case (int) TrickObjType.Plane:
-                    Jukebox.PlayOneShotGame("trickClass/girl_toss_plane");
+                    SoundByte.PlayOneShotGame("trickClass/girl_toss_plane");
                     break;
                 default:
-                    Jukebox.PlayOneShotGame("trickClass/girl_toss_ball");
+                    SoundByte.PlayOneShotGame("trickClass/girl_toss_ball");
                     break;
             }
             SpawnObject(beat, type);
@@ -278,7 +278,7 @@ namespace HeavenStudio.Games
             if (playerCanDodge > Conductor.instance.songPositionInBeats) return;
 
             //anim
-            Jukebox.PlayOneShotGame("trickClass/player_dodge");
+            SoundByte.PlayOneShotGame("trickClass/player_dodge");
             playerAnim.DoScaledAnimationAsync("Dodge", slow ? 0.6f : 1f);
             playerBopStart = Conductor.instance.songPositionInBeats + 0.75f;
             

@@ -13,7 +13,7 @@ namespace HeavenStudio.Games.Loaders
             {
                 new GameAction("bop", "Bop")
                 {
-                    function = delegate { var e = eventCaller.currentEntity; DoubleDate.instance.Bop(e.beat, e.length, e["bop"], e["autoBop"]); },
+                    function = delegate { var e = eventCaller.currentEntity; DoubleDate.instance.Bop((float) e.beat, e.length, e["bop"], e["autoBop"]); },
                     resizable = true,
                     parameters = new List<Param>()
                     {
@@ -23,19 +23,19 @@ namespace HeavenStudio.Games.Loaders
                 },
                 new GameAction("soccer", "Soccer Ball")
                 {
-                    preFunction = delegate { var e = eventCaller.currentEntity; DoubleDate.QueueSoccerBall(e.beat); },
+                    preFunction = delegate { var e = eventCaller.currentEntity; DoubleDate.QueueSoccerBall((float) e.beat); },
                     preFunctionLength = 1f,
                     defaultLength = 2f,
                 },
                 new GameAction("basket", "Basket Ball")
                 {
-                    preFunction = delegate { var e = eventCaller.currentEntity; DoubleDate.QueueBasketBall(e.beat); },
+                    preFunction = delegate { var e = eventCaller.currentEntity; DoubleDate.QueueBasketBall((float) e.beat); },
                     preFunctionLength = 1f,
                     defaultLength = 2f,
                 },
                 new GameAction("football", "Football")
                 {
-                    preFunction = delegate { var e = eventCaller.currentEntity; DoubleDate.QueueFootBall(e.beat); },
+                    preFunction = delegate { var e = eventCaller.currentEntity; DoubleDate.QueueFootBall((float) e.beat); },
                     preFunctionLength = 1f,
                     defaultLength = 2.5f,
                 },
@@ -109,7 +109,7 @@ namespace HeavenStudio.Games
             }
         }
 
-        public override void OnPlay(float beat)
+        public override void OnPlay(double beat)
         {
             queuedBalls.Clear();
         }
@@ -169,7 +169,7 @@ namespace HeavenStudio.Games
             }
             if (PlayerInput.Pressed() && !IsExpectingInputNow(InputType.STANDARD_DOWN))
             {
-                Jukebox.PlayOneShotGame("doubleDate/kick_whiff");
+                SoundByte.PlayOneShotGame("doubleDate/kick_whiff");
                 Kick(true, true, false);
             }
             clouds.transform.position = Vector3.left * ((Time.realtimeSinceStartup * cloudSpeed) % cloudDistance);
@@ -251,7 +251,7 @@ namespace HeavenStudio.Games
             {
                 instance.SpawnSoccerBall(beat);
             }
-            Jukebox.PlayOneShotGame("doubleDate/soccerBounce", beat, forcePlay: true);
+            SoundByte.PlayOneShotGame("doubleDate/soccerBounce", beat, forcePlay: true);
         }
 
         public static void QueueBasketBall(float beat)

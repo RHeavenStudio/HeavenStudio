@@ -29,7 +29,7 @@ namespace HeavenStudio.Games.Loaders
                 //new GameAction("start rally",                    delegate { AirRally.instance.StartRally(true); }, .5f, false),
                 new GameAction("rally", "Rally")
                 {
-                    function = delegate { AirRally.instance.SetDistance(e.currentEntity["type"]); AirRally.instance.Rally(e.currentEntity.beat, e.currentEntity["toggle"], e.currentEntity.length); }, 
+                    function = delegate { AirRally.instance.SetDistance(e.currentEntity["type"]); AirRally.instance.Rally((float) e.currentEntity.beat, e.currentEntity["toggle"], e.currentEntity.length); }, 
                     defaultLength = 2f, 
                     resizable = true, 
                     parameters = new List<Param>()
@@ -40,7 +40,7 @@ namespace HeavenStudio.Games.Loaders
                 },
                 new GameAction("ba bum bum bum", "Ba Bum Bum Bum")
                 {
-                    function = delegate { AirRally.instance.BaBumBumBum(e.currentEntity.beat, e.currentEntity["toggle"], e.currentEntity["type"]); }, 
+                    function = delegate { AirRally.instance.BaBumBumBum((float) e.currentEntity.beat, e.currentEntity["toggle"], e.currentEntity["type"]); }, 
                     defaultLength = 7f, 
                     parameters = new List<Param>()
                     { 
@@ -50,7 +50,7 @@ namespace HeavenStudio.Games.Loaders
                 },
                 new GameAction("forthington voice lines", "Forthington Voice Lines")
                 {
-                    preFunction = delegate { AirRally.ForthVoice(e.currentEntity.beat, e.currentEntity["type"], e.currentEntity["type2"]); }, 
+                    preFunction = delegate { AirRally.ForthVoice((float) e.currentEntity.beat, e.currentEntity["type"], e.currentEntity["type2"]); }, 
                     parameters = new List<Param>()
                     { 
                         new Param("type", AirRally.CountSound.one, "Type", "The number Forthington will say"),
@@ -133,7 +133,7 @@ namespace HeavenStudio.Games
             if(PlayerInput.Pressed() && !IsExpectingInputNow())
             {
                 Baxter.GetComponent<Animator>().Play("Hit");
-                Jukebox.PlayOneShotGame("airRally/whooshForth_Close", -1f);
+                SoundByte.PlayOneShotGame("airRally/whooshForth_Close", -1f);
             }
 
             var cond = Conductor.instance;
@@ -336,8 +336,8 @@ namespace HeavenStudio.Games
                         BeatAction.New(gameObject, new List<BeatAction.Action>()
                         {
                             new BeatAction.Action(beat, delegate { Baxter.GetComponent<Animator>().Play("CloseReady"); }),
-                            new BeatAction.Action(beat, delegate { Jukebox.PlayOneShotGame("airRally/hitForth_Close"); }),
-                            new BeatAction.Action(beat, delegate { if(!(silent || babum)) { Jukebox.PlayOneShotGame("airRally/nya_Close"); } }),
+                            new BeatAction.Action(beat, delegate { SoundByte.PlayOneShotGame("airRally/hitForth_Close"); }),
+                            new BeatAction.Action(beat, delegate { if(!(silent || babum)) { SoundByte.PlayOneShotGame("airRally/nya_Close"); } }),
                             new BeatAction.Action(beat + 1f, delegate { if(!babum) { Forthington.GetComponent<Animator>().Play("Ready"); } }),
                         });
                         break;
@@ -347,8 +347,8 @@ namespace HeavenStudio.Games
                         BeatAction.New(gameObject, new List<BeatAction.Action>()
                         {
                             new BeatAction.Action(beat, delegate { Baxter.GetComponent<Animator>().Play("FarReady"); }),
-                            new BeatAction.Action(beat, delegate { Jukebox.PlayOneShotGame("airRally/hitForth_Far"); }),
-                            new BeatAction.Action(beat, delegate { if(!(silent || babum)) { Jukebox.PlayOneShotGame("airRally/nya_Far"); } }),
+                            new BeatAction.Action(beat, delegate { SoundByte.PlayOneShotGame("airRally/hitForth_Far"); }),
+                            new BeatAction.Action(beat, delegate { if(!(silent || babum)) { SoundByte.PlayOneShotGame("airRally/nya_Far"); } }),
                             new BeatAction.Action(beat + 1f, delegate { if(!babum) { Forthington.GetComponent<Animator>().Play("Ready"); } }),
                         });
                         break;
@@ -358,8 +358,8 @@ namespace HeavenStudio.Games
                         BeatAction.New(gameObject, new List<BeatAction.Action>()
                         {
                             new BeatAction.Action(beat, delegate { Baxter.GetComponent<Animator>().Play("FarReady"); }),
-                            new BeatAction.Action(beat, delegate { Jukebox.PlayOneShotGame("airRally/hitForth_Farther"); }),
-                            new BeatAction.Action(beat, delegate { if(!(silent || babum)) { Jukebox.PlayOneShotGame("airRally/nya_Farther"); } }),
+                            new BeatAction.Action(beat, delegate { SoundByte.PlayOneShotGame("airRally/hitForth_Farther"); }),
+                            new BeatAction.Action(beat, delegate { if(!(silent || babum)) { SoundByte.PlayOneShotGame("airRally/nya_Farther"); } }),
                             new BeatAction.Action(beat + 1f, delegate { if(!babum) { Forthington.GetComponent<Animator>().Play("Ready"); } }),
                         });
                         break;
@@ -369,8 +369,8 @@ namespace HeavenStudio.Games
                         BeatAction.New(gameObject, new List<BeatAction.Action>()
                         {
                             new BeatAction.Action(beat, delegate { Baxter.GetComponent<Animator>().Play("FarReady"); }),
-                            new BeatAction.Action(beat, delegate { Jukebox.PlayOneShotGame("airRally/hitForth_Farthest"); }),
-                            new BeatAction.Action(beat, delegate { if(!(silent || babum)) { Jukebox.PlayOneShotGame("airRally/nya_Farthest"); } }),
+                            new BeatAction.Action(beat, delegate { SoundByte.PlayOneShotGame("airRally/hitForth_Farthest"); }),
+                            new BeatAction.Action(beat, delegate { if(!(silent || babum)) { SoundByte.PlayOneShotGame("airRally/nya_Farthest"); } }),
                             new BeatAction.Action(beat + 1f, delegate { if(!babum) { Forthington.GetComponent<Animator>().Play("Ready"); } }),
                         });
                         break;
@@ -524,19 +524,19 @@ namespace HeavenStudio.Games
 
                 if (e_BaBumState == DistanceSound.close)
                 {
-                    Jukebox.PlayOneShotGame("airRally/hitBaxter_Close");
+                    SoundByte.PlayOneShotGame("airRally/hitBaxter_Close");
                 }
                 if (e_BaBumState == DistanceSound.far)
                 {
-                    Jukebox.PlayOneShotGame("airRally/hitBaxter_Far");
+                    SoundByte.PlayOneShotGame("airRally/hitBaxter_Far");
                 }
                 if (e_BaBumState == DistanceSound.farther)
                 {
-                    Jukebox.PlayOneShotGame("airRally/hitBaxter_Farther");
+                    SoundByte.PlayOneShotGame("airRally/hitBaxter_Farther");
                 }
                 if (e_BaBumState == DistanceSound.farthest)
                 {
-                    Jukebox.PlayOneShotGame("airRally/hitBaxter_Farthest");
+                    SoundByte.PlayOneShotGame("airRally/hitBaxter_Farthest");
                 }
             }
             served = false;
@@ -560,19 +560,19 @@ namespace HeavenStudio.Games
 
                 if (e_BaBumState == DistanceSound.close)
                 {
-                    Jukebox.PlayOneShotGame("airRally/hitBaxter_Close");
+                    SoundByte.PlayOneShotGame("airRally/hitBaxter_Close");
                 }
                 if (e_BaBumState == DistanceSound.far)
                 {
-                    Jukebox.PlayOneShotGame("airRally/hitBaxter_Far");
+                    SoundByte.PlayOneShotGame("airRally/hitBaxter_Far");
                 }
                 if (e_BaBumState == DistanceSound.farther)
                 {
-                    Jukebox.PlayOneShotGame("airRally/hitBaxter_Farther");
+                    SoundByte.PlayOneShotGame("airRally/hitBaxter_Farther");
                 }
                 if (e_BaBumState == DistanceSound.farthest)
                 {
-                    Jukebox.PlayOneShotGame("airRally/hitBaxter_Farthest");
+                    SoundByte.PlayOneShotGame("airRally/hitBaxter_Farthest");
                 }
             }
             served = false;

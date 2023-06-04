@@ -92,7 +92,7 @@ namespace HeavenStudio.Games.Scripts_OctopusMachine
 
         public void OctoAction(string action) 
         {
-            if (action != "Release" || (Conductor.instance.songPositionInBeats - lastSqueezeBeat) > 0.15f) Jukebox.PlayOneShotGame($"octopusMachine/{action.ToLower()}");
+            if (action != "Release" || (Conductor.instance.songPositionInBeats - lastSqueezeBeat) > 0.15f) SoundByte.PlayOneShotGame($"octopusMachine/{action.ToLower()}");
             if (action == "Squeeze") lastSqueezeBeat = Conductor.instance.songPositionInBeats;
 
             anim.DoScaledAnimationAsync(action, 0.5f);

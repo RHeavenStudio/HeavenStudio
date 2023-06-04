@@ -94,7 +94,7 @@ namespace HeavenStudio.Games.Scripts_RhythmTweezers
                 pluckState = -1;
                 return; 
             }
-            pullSound = Jukebox.PlayOneShotGame($"rhythmTweezers/longPull{UnityEngine.Random.Range(1, 5)}");
+            pullSound = SoundByte.PlayOneShotGame($"rhythmTweezers/longPull{UnityEngine.Random.Range(1, 5)}");
             pluckState = 1;
             endEvent = game.ScheduleInput(inputBeat, 0.5f, InputType.STANDARD_UP | InputType.DIRECTION_DOWN_UP, EndJust, Out, Out);
         }
