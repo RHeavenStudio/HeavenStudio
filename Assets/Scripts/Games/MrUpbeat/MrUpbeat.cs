@@ -15,6 +15,7 @@ namespace HeavenStudio.Games.Loaders
         public static Minigame AddGame(EventCaller eventCaller) {
             return new Minigame("mrUpbeat", "Mr. Upbeat", "E0E0E0", false, false, new List<GameAction>()
             {
+                
                 new GameAction("prepare", "Prepare")
                 {
                     preFunction = delegate {
@@ -80,6 +81,26 @@ namespace HeavenStudio.Games.Loaders
                         new Param("resetBlip", false, "Reset Antenna?", "Should Mr. Upbeat's antenna reset?"),
                         new Param("blip", true, "Should Blip?", "Should Mr. Upbeat blip every offbeat?"),
                     }
+                },
+                // will implement these soon
+                new GameAction("fourBeatCountInOffbeat", "4 Beat Count-In")
+                {
+                    preFunction = delegate {
+                        var e = eventCaller.currentEntity;
+                        //MrUpbeat.CountIn(e.beat, e.length);
+                    },
+                    defaultLength = 4f,
+                    resizable = true,
+                    hidden = true,
+                },
+                new GameAction("countOffbeat", "4 Beat Count-In")
+                {
+                    //function = delegate { MrUpbeat.Count(eventCaller.currentEntity["number"]); },
+                    parameters = new List<Param>()
+                    {
+                        new Param("number", SoundEffects.CountNumbers.One, "Number", "The sound to play"),
+                    },
+                    hidden = true,
                 },
 
                 // backwards compatibility !!!!
@@ -273,6 +294,22 @@ namespace HeavenStudio.Games
             man.blipString = inputLetter;
             shouldBlip = blip;
         }
+
+        /*
+        public static void Count(int number)
+        {
+            Jukebox.PlayOneShotGame("mrUpbeat/count"+(number + 1), forcePlay: true);
+        }
+
+        public static void CountIn(float beat, float length)
+        {
+            var sound = new List<MultiSound.Sound>() {
+                
+            };
+            
+            MultiSound.Play(sound.ToArray(), forcePlay: true);
+        }
+        */
 
         public void Nothing(PlayerActionEvent caller) {}
     }

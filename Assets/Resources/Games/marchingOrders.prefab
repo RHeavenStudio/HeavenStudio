@@ -26,7 +26,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 8019333146763382}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 6.1808, y: -3.373, z: 0}
+  m_LocalPosition: {x: 6.181, y: -3.37, z: 0}
   m_LocalScale: {x: 2.082, y: 2.082, z: 2.09291}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -406,7 +406,7 @@ MonoBehaviour:
   XSpeed: 1
   YSpeed: 0
   NegativeBounds: {x: 0, y: 0}
-  PositiveBounds: {x: 1000, y: 0}
+  PositiveBounds: {x: 32767, y: 0}
 --- !u!1 &4721136555746708586
 GameObject:
   m_ObjectHideFlags: 0
@@ -1219,11 +1219,10 @@ MonoBehaviour:
   - {fileID: 4763266687155397968}
   BackgroundRecolorable:
   - {fileID: 68857249694856436}
-  - {fileID: 1407974127237282970}
-  - {fileID: 1930671809848167571}
-  - {fileID: 1740930099051121168}
-  - {fileID: 3540459721523927521}
   - {fileID: 3013021226428393446}
+  BGColors:
+  - {r: 0.25882354, g: 0.3529412, b: 0.4039216, a: 0}
+  - {r: 0.15686275, g: 0.2509804, b: 0.29803923, a: 0}
   RecolorMats:
   - {fileID: 2100000, guid: 91027fc755acd3548bad013313a801cc, type: 2}
   - {fileID: 2100000, guid: 0be801670a2ac834d8453186f3eb73da, type: 2}

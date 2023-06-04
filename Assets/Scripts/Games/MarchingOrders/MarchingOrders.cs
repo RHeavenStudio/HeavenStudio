@@ -53,6 +53,7 @@ namespace HeavenStudio.Games.Loaders
                         {
                             new Param("disableVoice", false, "Disable Voice", "Disable the Drill Sergeant's call")
                         },
+                        priority = 5,
                     },
                     new GameAction("faceTurn", "Face Turn")
                     {
@@ -96,7 +97,9 @@ namespace HeavenStudio.Games.Loaders
                         {
                             new Param("start", true, "Start Moving", "Start moving the conveyor"),
                             new Param("direction", MarchingOrders.Direction.Right, "Direction", "Direction"),
-                        }
+                        },
+                        defaultLength = 7f,
+                        resizable = true,
                     },
                     new GameAction("background", "Background Colors")
                     {
@@ -112,22 +115,20 @@ namespace HeavenStudio.Games.Loaders
                             new Param("colorTiles1", new Color(1f, 0.76f, 0.52f), "Tile Outline Color", "Sets the color of the tile outline"),
                             new Param("colorTiles2", new Color(1f, 0.6f, 0.2f), "Tile Shading Color", "Sets the color of the tile shading"),
                             new Param("colorTiles3", new Color(1f, 0.675f, 0f), "Tile Fill Color", "Sets the color of the tile's main color"),
-                            new Param("colorPipes1", new Color(), "Pipe Outline Color", "Sets the color of the pipes' outline"),
-                            new Param("colorPipes2", new Color(), "Pipe Shading Color", "Sets the color of the pipes' shading"),
-                            new Param("colorPipes3", new Color(), "Pipe Fill Color", "Sets the color of the pipes"),
-                            new Param("colorConveyor1", new Color(), "Conveyor Fill Color", "Sets the color of the conveyer belt"),
-                            new Param("colorConveyor2", new Color(), "Conveyor Trim Color", "Sets the conveyor's trim color"),
+                            new Param("colorPipes1", new Color(0.41f, 0.54f, 0.34f), "Pipe Outline Color", "Sets the color of the pipes' outline"),
+                            new Param("colorPipes2", new Color(0.43f, 0.8f, 0.45f), "Pipe Shading Color", "Sets the color of the pipes' shading"),
+                            new Param("colorPipes3", new Color(0.48f, 0.89f, 0.54f), "Pipe Fill Color", "Sets the color of the pipes"),
+                            new Param("colorConveyor1", new Color(0.157f, 0.25f, 0.3f), "Conveyor Fill Color", "Sets the color of the conveyer belt"),
+                            new Param("colorConveyor2", new Color(0.55f, 0.57f, 0.04f), "Conveyor Trim Color", "Sets the conveyor's trim color"),
                         }
                     },
                     
                     new GameAction("forceMarching", "Force Marching")
                     {
-                        preFunction = delegate { MarchingOrders.SargeMarch(eventCaller.currentEntity.beat - 2, true); },
-                        resizable = true,
-                    },
-                    new GameAction("forceMarching", "Force Marching")
-                    {
-                        preFunction = delegate { MarchingOrders.wantMarch = eventCaller.currentEntity.beat - 1; },
+                        preFunction = delegate {
+                            var e = eventCaller.currentEntity;
+                            MarchingOrders.instance.ForceMarching(e.beat, e.length);
+                        },
                         preFunctionLength = 1,
                         resizable = true,
                     },
@@ -135,8 +136,12 @@ namespace HeavenStudio.Games.Loaders
                     // hidden in the editor but here cuz backwards compatibility
                     new GameAction("marching", "Start Marching (old)")
                     {
-                        hidden = true,
-                        preFunction = delegate { MarchingOrders.SargeMarch(eventCaller.currentEntity.beat - 2, true); },
+                        hidden = false,
+                        preFunction = delegate {
+                            var e = eventCaller.currentEntity;
+                            MarchingOrders.instance.ForceMarching(e.beat, e.length);
+                        },
+                        preFunctionLength = 1,
                         resizable = true,
                     },
                     new GameAction("face turn", "Direction to Turn (old)")
@@ -178,25 +183,14 @@ namespace HeavenStudio.Games
         [SerializeField] Animator[] CadetHeads = new Animator[3];
         [SerializeField] Animator CadetPlayer;
         [SerializeField] Animator CadetHeadPlayer;
-        [SerializeField] ScrollObject[] ConveyorGo;
-        [SerializeField] SpriteRenderer[] BackgroundRecolorable;
+
+        [Header("Colorable")]
         [SerializeField] Material[] RecolorMats;
+        [SerializeField] SpriteRenderer[] BackgroundRecolorable;
+        static Color BGColor1 = new Color(0.26f, 0.35f, 0.4f), BGColor2 = new Color(0.16f, 0.25f, 0.29f);
 
-        /*
-        [Header("Background")]
-        [SerializeField] GameObject BGMain1;
-        [SerializeField] SpriteRenderer Background;
-        [SerializeField] SpriteRenderer Pipes;
-        [SerializeField] SpriteRenderer Floor;
-        [SerializeField] SpriteRenderer Wall;
-        [SerializeField] SpriteRenderer Conveyor;
-
-        [Header("Color Map")]
-        [SerializeField] static Color pipesColor;
-        [SerializeField] static Color floorColor;
-        [SerializeField] static Color wallColor;
-        [SerializeField] static Color fillColor;
-        */
+        [Header("Objects")]
+        [SerializeField] ScrollObject[] ConveyorGo;
 
         [Header("Variables")]
         bool goBop;
@@ -231,10 +225,14 @@ namespace HeavenStudio.Games
         void Awake()
         {
             instance = this;
+            
+            for (int i = 0; i < BackgroundRecolorable.Length; i++) BackgroundRecolorable[i].color = i == 0 ? BGColor1 : BGColor2;
         }
 
         void Update()
         {
+            for (int i = 0; i < BackgroundRecolorable.Length; i++) BackgroundRecolorable[i].color = i == 0 ? BGColor1 : BGColor2;
+            
             if (wantMarch != float.MinValue) {
                 queuedMarches.Add(wantMarch);
                 marchOtherCount =
@@ -267,7 +265,11 @@ namespace HeavenStudio.Games
                 }
             }
 
-            if (ConveyorGo[0].AutoScroll && (ConveyorGo[1].gameObject.transform.position.x <= 0)) foreach (var scroll in ConveyorGo) scroll.AutoScroll = false;
+            if (ConveyorGo[0].AutoScroll && (ConveyorGo[1].gameObject.transform.position.x < 0)) {
+                foreach (var scroll in ConveyorGo) scroll.AutoScroll = false;
+                ConveyorGo[0].gameObject.transform.position = new Vector3(0, 0);
+                ConveyorGo[1].gameObject.transform.position = new Vector3(6.181f, -3.37f);
+            }
 
             // input stuff below
 
@@ -377,6 +379,7 @@ namespace HeavenStudio.Games
         
         public static void SargeMarch(float beat, bool noVoice)
         {
+            if (MarchingOrders.wantMarch != float.MinValue) return;
             MarchingOrders.wantMarch = beat + 1;
 
             if (!noVoice) PlaySoundSequence("marchingOrders", "susume", beat);
@@ -384,6 +387,20 @@ namespace HeavenStudio.Games
             if (GameManager.instance.currentGame == "marchingOrders") {
                 MarchingOrders.instance.PreMarch(beat);
                 if (!noVoice) MarchingOrders.instance.Sarge.DoScaledAnimationAsync("Talk", 0.5f);
+            }
+        }
+
+        public void ForceMarching(float beat, float length)
+        {
+            for (int i = 0; i < length; i++) {
+                ScheduleInput(beat + i - 1, 1f, InputType.STANDARD_DOWN, MarchHit, GenericMiss, Empty);
+                BeatAction.New(instance.gameObject, new List<BeatAction.Action>() {
+                    new BeatAction.Action(beat + i, delegate {
+                        marchOtherCount++;
+                        foreach (var cadet in Cadets) cadet.DoScaledAnimationAsync(marchOtherCount % 2 != 0 ? "MarchR" : "MarchL", 0.5f);
+                        Jukebox.PlayOneShotGame("marchingOrders/stepOther");
+                    }),
+                });
             }
         }
 
@@ -444,39 +461,35 @@ namespace HeavenStudio.Games
             if (preset == 2) UpdateMaterialColor(fill, tiles1, tiles2, tiles3, pipes1, pipes2, pipes3, conveyor1, conveyor2);
             else {
                 bool x = preset == 0;
-                //UpdateMaterialColor();
+                UpdateMaterialColor(
+                    x ? new Color(0.26f, 0.36f, 0.39f) : new Color(0.25f, 0.45f, 0.52f),
+                    x ? new Color(1f,    0.76f, 0.52f) : new Color(0.45f, 0.71f, 0.81f),
+                    x ? new Color(1f,    0.6f,  0.2f)  : new Color(0.65f, 0.87f, 0.94f),
+                    x ? new Color(1f,    0.68f, 0f)    : new Color(0.65f, 0.87f, 0.94f),
+                    x ? new Color(0.41f, 0.54f, 0.34f) : new Color(0.36f, 0.58f, 0.64f),
+                    x ? new Color(0.43f, 0.8f,  0.45f) : new Color(0.48f, 0.65f, 0.71f),
+                    x ? new Color(0.48f, 0.89f, 0.54f) : new Color(0.48f, 0.65f, 0.71f),
+                    x ? new Color(0.16f, 0.25f, 0.3f)  : new Color(0.32f, 0.55f, 0.62f),
+                    x ? new Color(0.55f, 0.57f, 0.04f) : new Color(0.17f, 0.31f, 0.35f)
+                );
             }
-            
-            //Pipes.color = pipesColor;
-            //UpdateColor(pipes, floor, wall);
         }
 
         public void UpdateMaterialColor(Color fill, Color tiles1, Color tiles2, Color tiles3, Color pipes1, Color pipes2, Color pipes3, Color conveyor1, Color conveyor2)
         {
-            BackgroundRecolorable[0].color = fill;
+            BGColor1 = fill;
+            BGColor2 = conveyor1;
 
-            RecolorMats[0].SetColor("_ColorAlpha", tiles3);
-            RecolorMats[0].SetColor("_ColorBravo", tiles2);
-            RecolorMats[0].SetColor("_ColorDelta", tiles1);
-            
-            RecolorMats[1].SetColor("_ColorAlpha", pipes1);
-            RecolorMats[1].SetColor("_ColorBravo", pipes2);
-            RecolorMats[1].SetColor("_ColorDelta", pipes3);
+            Recolor(0, tiles3, tiles2, tiles1);
+            Recolor(1, pipes2, pipes1, pipes3);
+            Recolor(2, new Color(0, 0, 0), conveyor1, conveyor2);
 
-            RecolorMats[2].SetColor("_ColorBravo", conveyor1);
-            RecolorMats[2].SetColor("_ColorDelta", conveyor2);
-
-            BackgroundRecolorable[5].color = conveyor1;
+            void Recolor(int i, Color color1, Color color2, Color color3) {
+                RecolorMats[i].SetColor("_ColorAlpha", color1);
+                RecolorMats[i].SetColor("_ColorBravo", color2);
+                RecolorMats[i].SetColor("_ColorDelta", color3);
+            }
         }
-
-        /*
-        red
-        SetColor("_ColorAlpha", new Color(1, 0, 0, 1));
-        green
-        SetColor("_ColorBravo", new Color(1, 0, 0, 1));
-        blue
-        SetColor("_ColorDelta", new Color(1, 0, 0, 1));
-        */
 
         public static void AttentionSound(float beat)
         {
@@ -491,7 +504,7 @@ namespace HeavenStudio.Games
         public void MoveConveyor(float length, bool go, int direction)
         {
             foreach (var scroll in ConveyorGo) {
-                scroll.SpeedMod = ((direction == 0 ? 4 : -4)/length)*(Conductor.instance.songBpm/100);
+                scroll.SpeedMod = ((direction == 0 ? 20 : -20)/length)*(Conductor.instance.songBpm/100);
                 scroll.AutoScroll = go;
             }
         }
