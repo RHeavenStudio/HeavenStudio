@@ -19,7 +19,7 @@ namespace HeavenStudio.Games.Loaders
                     resizable = true,
                     parameters = new List<Param>()
                     {
-                        new Param("slapper", ClapTrap.ClapType.Hand, "Which slapper?", "The thing attempting to hit the dummy"),
+                        new Param("slapper", ClapTrap.ClapType.Hand, "Slapper", "The slapper attempting to hit the doll"),
                     }
                 },
                 new GameAction("change background color", "Change Background Color")
@@ -42,12 +42,16 @@ namespace HeavenStudio.Games.Loaders
                         new Param("stageRightHandColor", ClapTrap.defaultRightColor, "Stage Right Hand Color", "The color used on the dummy's hand (stage right)")
                     }, 
                 },
-                new GameAction("delete", "animate girn")
+                new GameAction("doll animations", "Doll Animations")
                 {
-                    function = delegate {var e = eventCaller.currentEntity; ClapTrap.instance.Grin(eventCaller.currentEntity.beat);},
+                    function = delegate {var e = eventCaller.currentEntity; ClapTrap.instance.DollAnimations(eventCaller.currentEntity.beat, eventCaller.currentEntity["animate"]);},
                     defaultLength = 1f,
                     parameters = new List<Param>()
+                    {
+                        new Param("animate", ClapTrap.DollAnim.Inhale, "Animation", "The animation that the doll will play"),
+                    }
                 },
+                
             });
         }
     }
@@ -109,8 +113,18 @@ namespace HeavenStudio.Games
         {
             Hand,
             Cat,
+            Leek,
             Stick,
-            Random,
+            Random
+        }
+
+        public enum DollAnim
+        {
+            Idle,
+            Inhale,
+            Exhale,
+            Talk,
+            
         }
 
         [Header("Animators")]
@@ -130,9 +144,26 @@ namespace HeavenStudio.Games
 
         }
 
-        public void Grin(float beat)
+        public void DollAnimations(float beat, int animate)
         {
-            dollHead.DoScaledAnimationAsync("HeadHit", 0.5f);
+            if (animate == 0)
+            {
+                dollHead.DoScaledAnimationAsync("HeadIdle", 0.5f);
+            }
+            else if (animate == 1)
+            {
+                dollHead.DoScaledAnimationAsync("HeadBreatheIn", 0.5f);
+                Jukebox.PlayOneShotGame($"clapTrap/deepInhale");
+            }
+            else if (animate == 2)
+            {
+                dollHead.DoScaledAnimationAsync("HeadBreatheOut", 0.5f);
+                Jukebox.PlayOneShotGame($"clapTrap/deepExhale{UnityEngine.Random.Range(1, 2)}");
+            }
+            else if (animate == 3)
+            {
+                dollHead.DoScaledAnimationAsync("HeadTalk", 0.5f);
+            }
 
         }
 
@@ -140,6 +171,7 @@ namespace HeavenStudio.Games
         {
             if (state >= 1f || state <= -1f) {
                 Jukebox.PlayOneShotGame($"clapTrap/barely{UnityEngine.Random.Range(1, 2)}");
+                dollHead.DoScaledAnimationAsync("HeadBarely", 0.5f);
             } 
             else if (state == 0f) {
                 Jukebox.PlayOneShotGame($"clapTrap/aceClap{UnityEngine.Random.Range(1, 4)}");
@@ -154,6 +186,7 @@ namespace HeavenStudio.Games
         private void Miss(PlayerActionEvent caller)
         {
             Jukebox.PlayOneShotGame($"clapTrap/miss");
+            dollHead.DoScaledAnimationAsync("HeadMiss", 0.5f);
         }
 
         private void Out(PlayerActionEvent caller) 
