@@ -143,7 +143,7 @@ namespace HeavenStudio.Games
         public Animator Gramps;
         public Animator Hit;
         public GameObject Player;
-        public bool shouldBop = false;
+        [NonSerialized] public bool shouldBop = true;
         bool canBop = true;
         bool grampsCanBop = true;
         public bool spaceGrampsShouldBop = false;
@@ -215,17 +215,20 @@ namespace HeavenStudio.Games
                     {
                         Jukebox.PlayOneShotGame("spaceDance/inputBad");
                         DancerP.DoScaledAnimationAsync("PunchDo", 0.5f);
+                        Gramps.Play("GrampsOhFuck", 0, 0);
                         // Look at this later, sound effect has some weird clipping on it sometimes?? popping. like. fucking popopop idk why its doing that its fine theres no sample weirdness ughh
                     }
                     if (PlayerInput.GetSpecificDirectionDown(1) && !IsExpectingInputNow(InputType.DIRECTION_RIGHT_DOWN))
                     {
                         DancerP.DoScaledAnimationAsync("TurnRightDo", 0.5f);
                         Jukebox.PlayOneShotGame("spaceDance/inputBad");
+                        Gramps.Play("GrampsOhFuck", 0, 0);
                     }
                     if (PlayerInput.GetSpecificDirectionDown(2) && !IsExpectingInputNow(InputType.DIRECTION_DOWN_DOWN))
                     {
                         DancerP.DoScaledAnimationAsync("SitDownDo", 0.5f);
                         Jukebox.PlayOneShotGame("spaceDance/inputBad");
+                        Gramps.Play("GrampsOhFuck", 0, 0);
                     }
                 }
             }
@@ -666,7 +669,7 @@ namespace HeavenStudio.Games
             Jukebox.PlayOneShotGame("spaceDance/inputBad2");
             DancerP.DoScaledAnimationAsync("Ouch", 0.5f);
             Hit.Play("HitTurn", -1, 0);
-            Gramps.DoScaledAnimationAsync("GrampsOhFuck", 0.5f);
+            Gramps.DoScaledAnimationAsync("GrampsMiss", 0.5f);
         }
 
         public void JustSit(PlayerActionEvent caller, float state)
@@ -692,7 +695,7 @@ namespace HeavenStudio.Games
             Jukebox.PlayOneShotGame("spaceDance/inputBad2");
             DancerP.DoScaledAnimationAsync("Ouch", 0.5f);
             Hit.Play("HitSit", -1, 0);
-            Gramps.DoScaledAnimationAsync("GrampsOhFuck", 0.5f);
+            Gramps.DoScaledAnimationAsync("GrampsMiss", 0.5f);
         }
 
         public void JustPunch(PlayerActionEvent caller, float state)
@@ -718,7 +721,7 @@ namespace HeavenStudio.Games
             Jukebox.PlayOneShotGame("spaceDance/inputBad2");
             DancerP.DoScaledAnimationAsync("Ouch", 0.5f);
             Hit.Play("HitPunch", -1, 0);
-            Gramps.DoScaledAnimationAsync("GrampsOhFuck", 0.5f);
+            Gramps.DoScaledAnimationAsync("GrampsMiss", 0.5f);
         }
 
         public void Empty(PlayerActionEvent caller) { }
