@@ -79,6 +79,7 @@ namespace HeavenStudio.Editor.Track
 
         public void StartMove()
         {
+            if (first) return;
             Vector3 mousePos = Editor.instance.EditorCamera.ScreenToWorldPoint(Input.mousePosition);
             startPosX = mousePos.x - transform.position.x;
             moving = true;

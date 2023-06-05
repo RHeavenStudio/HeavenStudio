@@ -38,6 +38,9 @@ namespace HeavenStudio.Editor.Track
                     //make sure tempo is positive
                     if (tempoChange["tempo"] < 1)
                         tempoChange["tempo"] = 1;
+                    
+                    if (first && newTempo != 0)
+                        Timeline.instance.UpdateStartingBPMText();
                 }
             }
 

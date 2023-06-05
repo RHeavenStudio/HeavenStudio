@@ -136,12 +136,22 @@ namespace HeavenStudio
                         pType = e[param.propertyName].GetType();
                         if (pType != type)
                         {
+                            Debug.Log($"parameter {param.propertyName} is of type {pType} but should be {type}");
                             if (type == typeof(EntityTypes.Integer))
                                 e.dynamicData[param.propertyName] = (int)e[param.propertyName];
                             else if (type == typeof(EntityTypes.Float))
                                 e.dynamicData[param.propertyName] = (float)e[param.propertyName];
-                            else if (type == typeof(Util.EasingFunction.Ease) && pType == typeof(string))
-                                e.dynamicData[param.propertyName] = Enum.Parse(typeof(Util.EasingFunction.Ease), (string)e[param.propertyName]);
+                            else if (type == typeof(Util.EasingFunction.Ease) && (pType == typeof(string) || pType == typeof(int) || pType == typeof(long)))
+                            {
+                                Debug.Log($"ease of type {pType}");
+                                if (pType == typeof(int) || pType == typeof(long) || pType == typeof(Jukebox.EasingFunction.Ease))
+                                {
+                                    Debug.Log($"ease of type {pType} is {e[param.propertyName]}");
+                                    e.dynamicData[param.propertyName] = (Util.EasingFunction.Ease)e[param.propertyName];
+                                }
+                                else
+                                    e.dynamicData[param.propertyName] = Enum.Parse(typeof(Util.EasingFunction.Ease), (string)e[param.propertyName]);
+                            }
                             else if (type.IsEnum)
                                 e.dynamicData[param.propertyName] = (int)e[param.propertyName];
                             else if (pType == typeof(Newtonsoft.Json.Linq.JObject))
@@ -166,7 +176,10 @@ namespace HeavenStudio
             foreach (var vol in data.volumeChanges)
             {
                 vol["volume"] = (float)vol["volume"];
-                vol["fade"] = Enum.Parse(typeof(Util.EasingFunction.Ease), (string)vol["fade"]);
+                if (vol["fade"].GetType() == typeof(string))
+                    vol["fade"] = Enum.Parse(typeof(Util.EasingFunction.Ease), (string)vol["fade"]);
+                else
+                    vol["fade"] = (Util.EasingFunction.Ease)vol["fade"];
             }
 
             foreach (var section in data.beatmapSections)

@@ -37,9 +37,11 @@ namespace HeavenStudio.Editor.Track
 
                     //make sure volume is positive
                     volumeChange["volume"] = Mathf.Clamp(volumeChange["volume"], 0, 100);
+
+                    if (first && newVolume != 0)
+                        Timeline.instance.UpdateStartingVolText();
                 }
             }
-
             UpdateVolume();
         }
 
