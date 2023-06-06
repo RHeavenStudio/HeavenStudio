@@ -57,7 +57,11 @@ namespace HeavenStudio.Games.Loaders
                         new Param("type2", AirRally.DistanceSound.close, "Type", "How far is Forthington?")
                     },
                 }
-            });
+            },
+            new List<string>() {"rvl", "normal"},
+            "rvlbadminton", "en",
+            new List<string>() {"en"}
+            );
         }
     }
 }
@@ -105,7 +109,11 @@ namespace HeavenStudio.Games
 
         void OnDestroy()
         {
-            if (queuedVoiceLines.Count > 0) queuedVoiceLines.Clear(); 
+            if (queuedVoiceLines.Count > 0) queuedVoiceLines.Clear();
+            foreach (var evt in scheduledInputs)
+            {
+                evt.Disable();
+            }
         }
 
         void Start()

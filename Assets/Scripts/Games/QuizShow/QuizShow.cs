@@ -101,7 +101,11 @@ namespace HeavenStudio.Games.Loaders
                         new Param("value", QuizShow.ShouldExplode.Contestant, "What To Explode", "What will explode?")
                     }
                 }
-            });
+            },
+            new List<string>() {"agb", "repeat"},
+            "agbquiz", "en",
+            new List<string>() {}
+            );
         }
     }
 }
@@ -190,6 +194,10 @@ namespace HeavenStudio.Games
             if (!Conductor.instance.isPlaying || Conductor.instance.isPaused)
             {
                 if (queuedInputs.Count > 0) queuedInputs.Clear();
+            }
+            foreach (var evt in scheduledInputs)
+            {
+                evt.Disable();
             }
         }
 
@@ -521,7 +529,6 @@ namespace HeavenStudio.Games
             }
             if (pressCount == countToMatch)
             {
-                GameProfiler.instance.IncreaseScore();
                 Jukebox.PlayOneShotGame("quizShow/correct");
                 contesteeHead.Play("ContesteeSmile", -1, 0);
                 hostHead.Play("HostSmile", -1, 0);

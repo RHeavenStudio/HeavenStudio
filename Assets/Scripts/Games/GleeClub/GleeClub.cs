@@ -91,7 +91,11 @@ namespace HeavenStudio.Games.Loaders
                     defaultLength = 0.5f,
                     hidden = true
                 },
-            });
+            },
+            new List<string>() {"ntr", "repeat"},
+            "ntrchorus", "en",
+            new List<string>() {"en"}
+            );
         }
     }
 }
@@ -173,6 +177,10 @@ namespace HeavenStudio.Games
             {
                 if (queuedSingings.Count > 0) queuedSingings.Clear();
                 if (queuedBatons.Count > 0) queuedBatons.Clear();
+            }
+            foreach (var evt in scheduledInputs)
+            {
+                evt.Disable();
             }
         }
 

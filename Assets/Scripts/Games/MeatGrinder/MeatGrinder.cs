@@ -40,7 +40,7 @@ namespace HeavenStudio.Games.Loaders
                 {
                     defaultLength = 4f,
                     resizable = true,
-                    priority = 1,
+                    priority = 5,
                     preFunction = delegate {
                         var e = eventCaller.currentEntity;
                         MeatGrinder.PreInterval(e.beat, e.length);
@@ -58,9 +58,13 @@ namespace HeavenStudio.Games.Loaders
                         new Param("bossBop", false, "Boss Bops? (Auto)", "Does Boss Auto bop?"),
                     },
                     resizable = true,
-                    priority = 4,
+                    priority = 1,
                 },
-            });
+            },
+            new List<string>() {"pco", "normal", "repeat"},
+            "pcomeat", "en",
+            new List<string>() {}
+            );
         }
     }
 }
@@ -89,7 +93,6 @@ namespace HeavenStudio.Games
         bool intervalStarted;
         float intervalStartBeat;
         bool bossBop = true;
-        bool hasSignaled;
         public float beatInterval = 4f;
         public bool bossAnnoyed = false;
         private float lastReportedBeat = 0f;
@@ -114,22 +117,17 @@ namespace HeavenStudio.Games
                 if (queuedInputs.Count > 0) queuedInputs.Clear();
                 if (queuedIntervals.Count > 0) queuedIntervals.Clear();
                 intervalStarted = false;
+                beatInterval = 4f;
+            }
+            foreach (var evt in scheduledInputs)
+            {
+                evt.Disable();
             }
         }
 
         private void Update() 
         {
-            if (!Conductor.instance.isPlaying || Conductor.instance.isPaused) {
-                if (queuedInputs.Count > 0) queuedInputs.Clear();
-            }
-
-            if (!Conductor.instance.NotStopped()) {
-                intervalStarted = false;
-                beatInterval = 4f;
-            }
-
-            if (PlayerInput.Pressed(true) && !IsExpectingInputNow(InputType.STANDARD_DOWN)) {
-                ScoreMiss();
+            if (PlayerInput.Pressed(true) && (!IsExpectingInputNow(InputType.STANDARD_DOWN) || !IsExpectingInputNow(InputType.DIRECTION_DOWN))) {
                 TackAnim.DoScaledAnimationAsync("TackEmptyHit", 0.5f);
                 TackAnim.SetBool("tackMeated", false);
                 Jukebox.PlayOneShotGame(sfxName+"whiff");
@@ -152,24 +150,19 @@ namespace HeavenStudio.Games
                 && bossBop)
             {
                 BossAnim.DoScaledAnimationAsync(bossAnnoyed ? "BossMiss" : "Bop", 0.5f);
-            };
+            }
         }
 
         public void Bop(float beat, float length, bool doesBop, bool autoBop)
         {
             bossBop = autoBop;
-            if (doesBop)
-            {
-                for (int i = 0; i < length; i++)
-                {
-                    BeatAction.New(instance.gameObject, new List<BeatAction.Action>()
-                    {
-                        new BeatAction.Action(beat + i, delegate
-                        {
-                            if (!BossAnim.IsPlayingAnimationName("BossCall") && !BossAnim.IsPlayingAnimationName("BossSignal"))
-                            {
+            if (doesBop) {
+                for (int i = 0; i < length; i++) {
+                    BeatAction.New(instance.gameObject, new List<BeatAction.Action>() {
+                        new BeatAction.Action(beat + i, delegate {
+                            if (!BossAnim.IsPlayingAnimationName("BossCall") && !BossAnim.IsPlayingAnimationName("BossSignal")) {
                                 BossAnim.DoScaledAnimationAsync(bossAnnoyed ? "BossMiss" : "Bop", 0.5f);
-                            };
+                            }
                         })
                     });
                 }
@@ -227,17 +220,13 @@ namespace HeavenStudio.Games
             BossAnim.DoScaledAnimationAsync("BossCall", 0.5f);
             Jukebox.PlayOneShotGame(sfxName+"signal");
             
-            if (!intervalStarted)
-            {
-                StartInterval(beat, beatInterval);
-            }
+            StartInterval(beat, beatInterval);
 
             queuedInputs.Add(beat - intervalStartBeat);
         }
 
         public void PassTurn(float beat)
         {
-            hasSignaled = false;
             intervalStarted = false;
             foreach (var input in queuedInputs)
             {

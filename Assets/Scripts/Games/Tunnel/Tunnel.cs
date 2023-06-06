@@ -27,7 +27,11 @@ namespace HeavenStudio.Games.Loaders
                     defaultLength = 4f, 
                     resizable = true,
                 }
-            });
+            },
+            new List<string>() {"ntr", "keep"},
+            "ntrtunnel", "en",
+            new List<string>() {"en"}
+            );
         }
     }
 }
@@ -81,6 +85,10 @@ namespace HeavenStudio.Games
         void OnDestroy()
         {
             if (queuedInputs.Count > 0) queuedInputs.Clear();
+            foreach (var evt in scheduledInputs)
+            {
+                evt.Disable();
+            }
         }
 
         private void Start()

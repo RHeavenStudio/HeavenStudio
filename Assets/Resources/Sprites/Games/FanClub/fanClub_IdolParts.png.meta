@@ -360,7 +360,7 @@ TextureImporter:
       name: idol_Hed_neutral
       rect:
         serializedVersion: 2
-        x: 69
+        x: 67
         y: 5526
         width: 579
         height: 579
@@ -449,7 +449,7 @@ TextureImporter:
         width: 579
         height: 579
       alignment: 9
-      pivot: {x: 0.5, y: 0.5}
+      pivot: {x: 0.49861568, y: 0.49446616}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
@@ -470,7 +470,7 @@ TextureImporter:
         width: 579
         height: 579
       alignment: 9
-      pivot: {x: 0.5, y: 0.5}
+      pivot: {x: 0.49856088, y: 0.4985613}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
@@ -1746,10 +1746,10 @@ TextureImporter:
       name: idol_Clt_body_down0
       rect:
         serializedVersion: 2
-        x: 1641
-        y: 4491
-        width: 294
-        height: 207
+        x: 3669
+        y: 4424
+        width: 303
+        height: 239
       alignment: 9
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -2103,12 +2103,12 @@ TextureImporter:
       name: idol_Clt_body_down0_half
       rect:
         serializedVersion: 2
-        x: 1608
-        y: 4456
-        width: 181
-        height: 272
+        x: 3653
+        y: 4408
+        width: 168
+        height: 271
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
@@ -2116,6 +2116,27 @@ TextureImporter:
       bones: []
       spriteID: 55b40ffee685f13c0800000000000000
       internalID: -4386690278540424363
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: fanClub_IdolParts_0
+      rect:
+        serializedVersion: 2
+        x: 2602
+        y: 1126
+        width: 903
+        height: 898
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: de4b5d042adabe54a923619571c18f17
+      internalID: -310380506
       vertices: []
       indices: 
       edges: []
@@ -2131,6 +2152,7 @@ TextureImporter:
     weights: []
     secondaryTextures: []
     nameFileIdTable:
+      fanClub_IdolParts_0: -310380506
       fanClub_IdolParts_13: 7817682494542373926
       fanClub_IdolParts_14: 8406083837722042950
       fan_Arm00: -2989691326247451308

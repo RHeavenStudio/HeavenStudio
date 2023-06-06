@@ -2,42 +2,45 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class NtrIdolAri : MonoBehaviour
+namespace HeavenStudio.Games.Scripts_FanClub
 {
-    [Header("Objects")]
-    public ParticleSystem idolClapEffect;
-    public ParticleSystem idolWinkEffect;
-    public ParticleSystem idolKissEffect;
-    public ParticleSystem idolWinkArrEffect;
-
-    [Header("References")]
-    public Material coreMat;
-
-    public void ClapParticle()
+    public class NtrIdolAri : MonoBehaviour
     {
-        idolClapEffect.Play();
-    }
+        [Header("Objects")]
+        public ParticleSystem idolClapEffect;
+        public ParticleSystem idolWinkEffect;
+        public ParticleSystem idolKissEffect;
+        public ParticleSystem idolWinkArrEffect;
 
-    public void WinkParticle()
-    {
-        idolWinkEffect.Play();
-    }
+        [Header("References")]
+        public Material coreMat;
 
-    public void KissParticle()
-    {
-        idolKissEffect.Play();
-    }
+        public void ClapParticle()
+        {
+            idolClapEffect.Play();
+        }
 
-    public void WinkArrangeParticle()
-    {
-        idolWinkArrEffect.Play();
-    }
+        public void WinkParticle()
+        {
+            idolWinkEffect.Play();
+        }
 
-    public void ToSpot(bool unspot = true)
-    {
-        if (unspot)
-            coreMat.SetColor("_AddColor", new Color(0, 0, 0, 0));
-        else
-            coreMat.SetColor("_AddColor", new Color(0, 100/255f, 200/255f, 0));
+        public void KissParticle()
+        {
+            idolKissEffect.Play();
+        }
+
+        public void WinkArrangeParticle()
+        {
+            idolWinkArrEffect.Play();
+        }
+
+        public void ToSpot(bool unspot = true)
+        {
+            if (unspot)
+                coreMat.SetColor("_AddColor", new Color(0, 0, 0, 0));
+            else
+                coreMat.SetColor("_AddColor", new Color(0, 100 / 255f, 200 / 255f, 0));
+        }
     }
 }

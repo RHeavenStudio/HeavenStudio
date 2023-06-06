@@ -79,7 +79,11 @@ namespace HeavenStudio.Games.Loaders
                     },
                     hidden = true
                 },
-            });
+            },
+            new List<string>() {"rvl", "repeat"},
+            "rvldrum", "en",
+            new List<string>() {}
+            );
         }
     }
 }
@@ -151,6 +155,10 @@ namespace HeavenStudio.Games
             if (!Conductor.instance.isPlaying || Conductor.instance.isPaused)
             {
                 if (queuedInputs.Count > 0) queuedInputs.Clear();
+            }
+            foreach (var evt in scheduledInputs)
+            {
+                evt.Disable();
             }
         }
 

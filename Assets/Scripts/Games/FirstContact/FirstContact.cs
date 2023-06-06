@@ -73,7 +73,11 @@ namespace HeavenStudio.Games.Loaders
                         new Param("toggle", true, "On Beat", "If the live bar animation will be on beat or not")
                     }
                 }
-            });
+            },
+            new List<string>() {"ctr", "repeat"},
+            "ctrinterpreter", "en",
+            new List<string>() {}
+            );
         }
     }
 }
@@ -161,6 +165,10 @@ namespace HeavenStudio.Games
             if (!Conductor.instance.isPlaying || Conductor.instance.isPaused)
             {
                 if (queuedInputs.Count > 0) queuedInputs.Clear();
+            }
+            foreach (var evt in scheduledInputs)
+            {
+                evt.Disable();
             }
         }
 

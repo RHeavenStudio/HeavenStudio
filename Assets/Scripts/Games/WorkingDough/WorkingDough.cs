@@ -91,7 +91,11 @@ namespace HeavenStudio.Games.Loaders
                     defaultLength = 0.5f,
                     priority = 0
                 },
-            });
+            },
+            new List<string>() {"rvl", "repeat"},
+            "rvldough", "en",
+            new List<string>() {}
+            );
         }
     }
 }
@@ -473,6 +477,10 @@ namespace HeavenStudio.Games
         {
             if (queuedIntervals.Count > 0) queuedIntervals.Clear();
             if (queuedBalls.Count > 0) queuedBalls.Clear();
+            foreach (var evt in scheduledInputs)
+            {
+                evt.Disable();
+            }
         }
 
         void Update()

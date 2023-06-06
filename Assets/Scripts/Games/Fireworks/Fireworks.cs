@@ -67,7 +67,11 @@ namespace HeavenStudio.Games.Loaders
                         new Param("toggle", true, "Remix 5", "Should the background from Remix 5 tengoku appear?")
                     }
                 }
-            });
+            },
+            new List<string>() {"agb", "normal"},
+            "agbexplode", "en",
+            new List<string>() {}
+            );
         }
     }
 }
@@ -128,6 +132,10 @@ namespace HeavenStudio.Games
         void OnDestroy()
         {
             if (queuedFireworks.Count > 0) queuedFireworks.Clear();
+            foreach (var evt in scheduledInputs)
+            {
+                evt.Disable();
+            }
         }
 
         void Awake()

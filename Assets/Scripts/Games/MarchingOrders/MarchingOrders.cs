@@ -11,6 +11,7 @@
 //  AFTER FEATURE COMPLETION
 // - delete all notes once the minigame is considered feature-complete
 
+using HeavenStudio.Common;
 using HeavenStudio.Util;
 using System;
 using System.Collections.Generic;
@@ -27,78 +28,137 @@ namespace HeavenStudio.Games.Loaders
                 {
                     new GameAction("bop", "Bop")
                     {
-                        function = delegate { var e = eventCaller.currentEntity; MarchingOrders.instance.BopAction(e.beat, e.length, e["bop"], e["autoBop"]); },
+                        function = delegate { var e = eventCaller.currentEntity; MarchingOrders.instance.BopAction(e.beat, e.length, e["bop"], e["autoBop"], e["clap"]); },
                         defaultLength = 1f,
                         resizable = true,
                         parameters = new List<Param>()
                         {
                             new Param("bop", true, "Bop", "Should the cadets bop?"),
-                            new Param("autoBop", false, "Bop (Auto)", "Should the cadets auto bop?")
+                            new Param("autoBop", false, "Bop (Auto)", "Should the cadets auto bop?"),
+                            new Param("clap", false, "Clap", "Should the cadets clap instead of bop?"),
                         }
                     },
-
-                    new GameAction("marching", "Cadets March")
-                    {
-                        preFunction = delegate { 
-                            var e = eventCaller.currentEntity; 
-                            MarchingOrders.PreMarch(e.beat, e.length); 
-                        },
-                        defaultLength = 4f,
-                        resizable = true,
-                    },
-
                     new GameAction("attention", "Attention...")
                     {
                         function = delegate { var e = eventCaller.currentEntity; MarchingOrders.instance.SargeAttention(e.beat); },
                         defaultLength = 2f,
                         preFunction = delegate { var e = eventCaller.currentEntity; MarchingOrders.AttentionSound(e.beat);}
                     },
-
                     new GameAction("march", "March!")
                     {
-                        function = delegate { var e = eventCaller.currentEntity; MarchingOrders.instance.SargeMarch(e.beat, e["toggle"]); },
+                        function = delegate { var e = eventCaller.currentEntity; MarchingOrders.SargeMarch(e.beat, e["disableVoice"]); },
+                        inactiveFunction = delegate { var e = eventCaller.currentEntity; MarchingOrders.SargeMarch(e.beat, e["disableVoice"]); },
                         defaultLength = 2f,
                         parameters = new List<Param>
                         {
-                            new Param("toggle", false, "Disable Voice", "Disable the Drill Sergeant's call")
+                            new Param("disableVoice", false, "Disable Voice", "Disable the Drill Sergeant's call")
                         },
-                        inactiveFunction = delegate { var e = eventCaller.currentEntity; MarchingOrders.MarchSound(e.beat, e["toggle"]);}
+                        priority = 5,
                     },
-
-                    new GameAction("halt", "Halt!")
+                    new GameAction("faceTurn", "Face Turn")
                     {
-                        function = delegate { var e = eventCaller.currentEntity; MarchingOrders.instance.SargeHalt(e.beat); },
-                        defaultLength = 2f,
-                        inactiveFunction = delegate { var e = eventCaller.currentEntity; MarchingOrders.HaltSound(e.beat);}
-                    },
-
-                    new GameAction("face turn", "Direction to Turn")
-                    {
-                        function = delegate { var e = eventCaller.currentEntity; MarchingOrders.instance.SargeFaceTurn(e.beat, e["type"], e["type2"], false); },
+                        function = delegate {
+                            var e = eventCaller.currentEntity;
+                            MarchingOrders.instance.FaceTurn(e.beat, e["direction"], false, e["point"]);
+                        },
                         defaultLength = 4f,
                         parameters = new List<Param>()
                         {
-                            new Param("type", MarchingOrders.DirectionFaceTurn.Right, "Direction", "The direction the sergeant wants the cadets to face"),
-                            new Param("type2", MarchingOrders.FaceTurnLength.Normal, "Length", "The duration of the turning event"),
-                            //new Param("toggle", false, "Point", "Do the pointing animation instead of just the head turn")
+                            new Param("direction", MarchingOrders.Direction.Right, "Direction", "The direction for the cadets to face."),
+                            new Param("point", false, "Point", "Point and face a direction instead of just facing a direction."),
                         }
                     },
-
-                    /*new GameAction("background", "Set the Background") colors aren't implemented yet
+                    new GameAction("faceTurnFast", "Fast Face Turn")
                     {
-                        function = delegate { var e = eventCaller.currentEntity; MarchingOrders.instance.BackgroundColorSet(e.beat, e["type"], e["type2"], e["colorDefault"], e["colorPipe"], e["colorFloor"], e["colorFill"]); },
+                        function = delegate { 
+                            var e = eventCaller.currentEntity; 
+                            MarchingOrders.instance.FaceTurn(e.beat, e["direction"], true, e["point"]); 
+                        },
+                        defaultLength = 3f,
+                        parameters = new List<Param>()
+                        {
+                            new Param("direction", MarchingOrders.Direction.Right, "Direction", "The direction for the cadets to face."),
+                            new Param("point", false, "Point", "Point and face a direction instead of just facing a direction."),
+                        }
+                    },
+                    new GameAction("halt", "Halt!")
+                    {
+                        function = delegate { MarchingOrders.instance.Halt(eventCaller.currentEntity.beat); },
+                        defaultLength = 2f,
+                        inactiveFunction = delegate { MarchingOrders.HaltSound(eventCaller.currentEntity.beat);}
+                    },
+                    new GameAction("go", "Go!")
+                    {
+                        function = delegate {
+                            var e = eventCaller.currentEntity;
+                            MarchingOrders.instance.MoveConveyor(e.length, e["start"], e["direction"]);
+                        },
+                        parameters = new List<Param>()
+                        {
+                            new Param("start", true, "Start Moving", "Start moving the conveyor"),
+                            new Param("direction", MarchingOrders.Direction.Right, "Direction", "Direction"),
+                        },
+                        defaultLength = 7f,
+                        resizable = true,
+                    },
+                    new GameAction("background", "Background Colors")
+                    {
+                        function = delegate {
+                            var e = eventCaller.currentEntity;
+                            MarchingOrders.instance.BackgroundColorSet(e["preset"], e["colorFill"], e["colorTiles1"], e["colorTiles2"], e["colorTiles3"], e["colorPipes1"], e["colorPipes2"], e["colorPipes3"], e["colorConveyor1"], e["colorConveyor2"]);
+                        },
                         defaultLength = 0.5f,
                         parameters = new List<Param>()
                         {
-                            new Param("type", MarchingOrders.BackgroundColor.Blue, "Color", "The game Background Color"),
-                            new Param("type2", MarchingOrders.BackgroundType.SingleColor, "Color Type", "The way the color is applied to the background"),
-                            new Param("colorDefault", new Color(), "Wall Color", "Sets the color of the wall"),
-                            new Param("colorPipe", new Color(), "Pipes Color", "Sets the color of the pipes"),
-                            new Param("colorFloor", new Color(), "Floor Color", "Sets the color of the floor and conveyer belt"),
-                            new Param("colorFill", new Color(), "Fill Color", "Sets the fill color")
+                            new Param("preset", MarchingOrders.BackgroundColor.Yellow, "Color", "Choose from a preset, or choose custom and set colors below"),
+                            new Param("colorFill", new Color(0.259f, 0.353f, 0.404f), "Wall Color", "Sets the color of the wall"),
+                            new Param("colorTiles1", new Color(1f, 0.76f, 0.52f), "Tile Outline Color", "Sets the color of the tile outline"),
+                            new Param("colorTiles2", new Color(1f, 0.6f, 0.2f), "Tile Shading Color", "Sets the color of the tile shading"),
+                            new Param("colorTiles3", new Color(1f, 0.675f, 0f), "Tile Fill Color", "Sets the color of the tile's main color"),
+                            new Param("colorPipes1", new Color(0.41f, 0.54f, 0.34f), "Pipe Outline Color", "Sets the color of the pipes' outline"),
+                            new Param("colorPipes2", new Color(0.43f, 0.8f, 0.45f), "Pipe Shading Color", "Sets the color of the pipes' shading"),
+                            new Param("colorPipes3", new Color(0.48f, 0.89f, 0.54f), "Pipe Fill Color", "Sets the color of the pipes"),
+                            new Param("colorConveyor1", new Color(0.157f, 0.25f, 0.3f), "Conveyor Fill Color", "Sets the color of the conveyer belt"),
+                            new Param("colorConveyor2", new Color(0.55f, 0.57f, 0.04f), "Conveyor Trim Color", "Sets the conveyor's trim color"),
                         }
-                    },*/
-                }, // this cause problems with the background
+                    },
+                    
+                    new GameAction("forceMarching", "Force Marching")
+                    {
+                        preFunction = delegate {
+                            var e = eventCaller.currentEntity;
+                            MarchingOrders.instance.ForceMarching(e.beat, e.length);
+                        },
+                        preFunctionLength = 1,
+                        resizable = true,
+                    },
+                    
+                    // hidden in the editor but here cuz backwards compatibility
+                    new GameAction("marching", "Start Marching (old)")
+                    {
+                        hidden = true,
+                        preFunction = delegate {
+                            var e = eventCaller.currentEntity;
+                            MarchingOrders.instance.ForceMarching(e.beat, e.length);
+                        },
+                        preFunctionLength = 1,
+                        resizable = true,
+                    },
+                    new GameAction("face turn", "Direction to Turn (old)")
+                    {
+                        hidden = true,
+                        function = delegate {
+                            var e = eventCaller.currentEntity;
+                            MarchingOrders.instance.FaceTurn(e.beat, e["type"], e["type2"], false);
+                        },
+                        defaultLength = 4f,
+                        parameters = new List<Param>()
+                        {
+                            new Param("type", MarchingOrders.Direction.Right, "Direction", "The direction the sergeant wants the cadets to face"),
+                            new Param("type2", MarchingOrders.FaceTurnLength.Normal, "Length", "The duration of the turning event"),
+                        }
+                    },
+                },
                 new List<string>() { "agb", "normal" },
                 "agbmarcher", "en",
                 new List<string>() { "en", "jp" }
@@ -114,413 +174,342 @@ namespace HeavenStudio.Games
     {
         public static MarchingOrders instance;
 
-        [Header("Sarge")]
-        public Animator Sarge;
-        public Animator Steam;
+        static List<float> queuedMarches = new List<float>();
 
-        [Header("Cadets")]
-        public Animator Cadet1;
-        public Animator Cadet2;
-        public Animator Cadet3;
-        public Animator CadetPlayer;
-        public Animator CadetHead1;
-        public Animator CadetHead2;
-        public Animator CadetHead3;
-        public Animator CadetHeadPlayer;
+        [Header("Animators")]
+        [SerializeField] Animator Sarge;
+        [SerializeField] Animator Steam;
+        [SerializeField] Animator[] Cadets = new Animator[3];
+        [SerializeField] Animator[] CadetHeads = new Animator[3];
+        [SerializeField] Animator CadetPlayer;
+        [SerializeField] Animator CadetHeadPlayer;
 
-        [Header("Background")]
-        public GameObject BGMain1;
-        public SpriteRenderer Background;
-        public SpriteRenderer Pipes;
-        public SpriteRenderer Floor;
-        public SpriteRenderer Wall;
-        public SpriteRenderer Conveyor;
+        [Header("Colorable")]
+        [SerializeField] Material[] RecolorMats;
+        [SerializeField] SpriteRenderer[] BackgroundRecolorable;
+        static Color BGColor1 = new Color(0.26f, 0.35f, 0.4f), BGColor2 = new Color(0.16f, 0.25f, 0.29f);
 
-        [Header("Color Map")]
-        public static Color pipesColor;
-        public static Color floorColor;
-        public static Color wallColor;
-        public static Color fillColor;
+        [Header("Objects")]
+        [SerializeField] ScrollObject[] ConveyorGo;
 
-        [Header("Game Events")]
+        [Header("Variables")]
         bool goBop;
-        public GameEvent bop = new GameEvent();
-        public GameEvent noBop = new GameEvent();
-        public GameEvent marching = new GameEvent();
-
+        bool shouldClap;
+        bool keepMarching;
         private int marchOtherCount;
         private int marchPlayerCount;
-        private int turnLength;
-        private int background;
-        private float steamTime;
-
-        static float wantMarch = float.MaxValue;
-        static float wantMarchLength = 0f;
+        private float lastMissBeat;
+        private float lastReportedBeat;
+        public static float wantMarch = float.MinValue;
         
-        public enum DirectionFaceTurn
+
+        public enum Direction
         {
             Right,
             Left,
         }
+
         public enum FaceTurnLength
         {
             Normal,
             Fast,
         }
+
         public enum BackgroundColor
         {
-            Blue,
             Yellow,
+            Blue,
             Custom,
         }
-        public enum BackgroundType
-        {
-            SingleColor,
-            DifferentColor
-        }
-        // Start is called before the first frame update
+
         void Awake()
         {
             instance = this;
+            
+            for (int i = 0; i < BackgroundRecolorable.Length; i++) BackgroundRecolorable[i].color = i == 0 ? BGColor1 : BGColor2;
+        }
+
+        void Update()
+        {
+            for (int i = 0; i < BackgroundRecolorable.Length; i++) BackgroundRecolorable[i].color = i == 0 ? BGColor1 : BGColor2;
+            
+            if (wantMarch != float.MinValue) {
+                queuedMarches.Add(wantMarch);
+                marchOtherCount =
+                marchPlayerCount = 0;
+                keepMarching = true;
+                wantMarch = float.MinValue;
+            }
+
+            if (goBop && Conductor.instance.ReportBeat(ref lastReportedBeat)) {
+                foreach (var cadet in Cadets) cadet.DoScaledAnimationAsync(shouldClap ? "Clap" : "Bop", 0.5f);
+                CadetPlayer.DoScaledAnimationAsync(shouldClap ? "Clap" : "Bop", 0.5f);
+            }
+
+            if (Conductor.instance.isPlaying && !Conductor.instance.isPaused) {
+                if (queuedMarches.Count > 0) {
+                    foreach (var march in queuedMarches) {
+                        BeatAction.New(instance.gameObject, new List<BeatAction.Action>() {
+                            new BeatAction.Action(march, delegate {
+                                ScheduleInput(march, 1f, InputType.STANDARD_DOWN, MarchHit, GenericMiss, Empty);
+                            }),
+                            new BeatAction.Action(march + 1, delegate {
+                                marchOtherCount++;
+                                foreach (var cadet in Cadets) cadet.DoScaledAnimationAsync(marchOtherCount % 2 != 0 ? "MarchR" : "MarchL", 0.5f);
+                                Jukebox.PlayOneShotGame("marchingOrders/stepOther");
+                                if (keepMarching) queuedMarches.Add(march + 1);
+                            }),
+                        });
+                    }
+                    queuedMarches.Clear();
+                }
+            }
+
+            if (ConveyorGo[0].AutoScroll && (ConveyorGo[1].gameObject.transform.position.x < 0)) {
+                foreach (var scroll in ConveyorGo) scroll.AutoScroll = false;
+                ConveyorGo[0].gameObject.transform.position = new Vector3(0, 0);
+                ConveyorGo[1].gameObject.transform.position = new Vector3(6.181f, -3.37f);
+            }
+
+            // input stuff below
+
+            if (PlayerInput.Pressed() && !IsExpectingInputNow(InputType.STANDARD_DOWN)) {
+                Miss();
+                marchPlayerCount++;
+                CadetPlayer.DoScaledAnimationAsync((marchPlayerCount % 2 != 0 ? "MarchR" : "MarchL"), 0.5f);
+            }
+
+            if (PlayerInput.AltPressed() && !IsExpectingInputNow(InputType.STANDARD_ALT_DOWN)) {
+                Miss();
+                CadetPlayer.DoScaledAnimationAsync("Halt", 0.5f);
+            }
+
+            if (PlayerInput.Pressed(true) && PlayerInput.GetSpecificDirection(PlayerInput.LEFT) && !IsExpectingInputNow(InputType.DIRECTION_LEFT_DOWN)) {
+                Miss();
+                CadetHeadPlayer.DoScaledAnimationAsync("FaceL", 0.5f);
+            }
+
+            if (PlayerInput.Pressed(true) && PlayerInput.GetSpecificDirection(PlayerInput.RIGHT) && !IsExpectingInputNow(InputType.DIRECTION_RIGHT_DOWN)) {
+                Miss();
+                CadetHeadPlayer.DoScaledAnimationAsync("FaceR", 0.5f);
+            }
         }
 
         public void LeftSuccess(PlayerActionEvent caller, float state)
         {
-            if (state <= -1f || state >= 1f)
-            {
-                Jukebox.PlayOneShot("nearNiss");
-            }
-            else
-                Jukebox.PlayOneShotGame("marchingOrders/turnActionPlayer");
-            CadetHeadPlayer.DoScaledAnimationAsync("FaceL", 0.5f);
+            TurnSuccess(state, "L");
+        }
+
+        public void RightSuccess(PlayerActionEvent caller, float state)
+        {
+            TurnSuccess(state, "R");
+        }
+
+        public void LeftPointSuccess(PlayerActionEvent caller, float state)
+        {
+            TurnSuccess(state, "L", true);
+        }
+
+        public void RightPointSuccess(PlayerActionEvent caller, float state)
+        {
+            TurnSuccess(state, "R", true);
+        }
+
+        void TurnSuccess(float state, string dir, bool shouldPoint = false)
+        {
+            if (state <= -1f || state >= 1f) Jukebox.PlayOneShot("nearMiss");
+            else Jukebox.PlayOneShotGame("marchingOrders/turnActionPlayer");
+
+            CadetHeadPlayer.DoScaledAnimationAsync("Face"+dir, 0.5f);
+            if (shouldPoint) CadetPlayer.DoScaledAnimationAsync("Point"+dir, 0.5f);
         }
 
         public void GenericMiss(PlayerActionEvent caller)
         {
+            if (Conductor.instance.songPositionInBeats - lastMissBeat <= 1.1f) return;
+            Miss();
+        }
+
+        public void Miss()
+        {
+            lastMissBeat = Conductor.instance.songPositionInBeats;
             Jukebox.PlayOneShot("miss");
             Sarge.DoScaledAnimationAsync("Anger", 0.5f);
             Steam.DoScaledAnimationAsync("Steam", 0.5f);
         }
 
-        public void LeftEmpty(PlayerActionEvent caller) {}
-
-        public void RightSuccess(PlayerActionEvent caller, float state)
-        {
-            if (state <= -1f || state >= 1f)
-            {
-                Jukebox.PlayOneShot("nearNiss");
-            }
-            else
-                Jukebox.PlayOneShotGame("marchingOrders/turnActionPlayer");
-            CadetHeadPlayer.DoScaledAnimationAsync("FaceR", 0.5f);
-        }
-
-        public void RightEmpty(PlayerActionEvent caller) {}
-
         public void MarchHit(PlayerActionEvent caller, float state)
         {
-            if (state <= -1f || state >= 1f)
-            {
-                Jukebox.PlayOneShot("nearNiss");
-            }
-            else
-                Jukebox.PlayOneShotGame("marchingOrders/stepPlayer", volume: 0.25f);
+            if (state <= -1f || state >= 1f) Jukebox.PlayOneShot("nearMiss");
+            else Jukebox.PlayOneShotGame("marchingOrders/stepPlayer", volume: 0.25f);
             marchPlayerCount++;
             CadetPlayer.DoScaledAnimationAsync(marchPlayerCount % 2 != 0 ? "MarchR" : "MarchL", 0.5f);
         }
 
-        public void MarchEmpty(PlayerActionEvent caller) {}
-
         public void HaltHit(PlayerActionEvent caller, float state)
         {
-            if (state <= -1f || state >= 1f)
-            {
-                Jukebox.PlayOneShot("nearNiss");
-            }
-            else
-                Jukebox.PlayOneShotGame("marchingOrders/stepPlayer", volume: 0.25f);
+            if (state <= -1f || state >= 1f) Jukebox.PlayOneShot("nearMiss");
+            else Jukebox.PlayOneShotGame("marchingOrders/stepPlayer", volume: 0.25f);
+            
             CadetPlayer.DoScaledAnimationAsync("Halt", 0.5f);
         }
 
-        public void HaltEmpty(PlayerActionEvent caller) {}
-
-        // Update is called once per frame
-        void Update()
-        {
-            var cond = Conductor.instance;
-            var currBeat = cond.songPositionInBeats;
-
-            if (cond.songPositionInBeatsAsDouble >= wantMarch)
-            {
-                PrepareMarch(wantMarch, wantMarchLength, true);
-                wantMarch = float.MaxValue;
-            }
-
-            if (cond.ReportBeat(ref bop.lastReportedBeat, bop.startBeat % 1, true))
-            {
-                if (goBop)
-                {
-                    Cadet1.DoScaledAnimationAsync("Bop", 0.5f);
-                    Cadet2.DoScaledAnimationAsync("Bop", 0.5f);
-                    Cadet3.DoScaledAnimationAsync("Bop", 0.5f);
-                    CadetPlayer.DoScaledAnimationAsync("Bop", 0.5f);
-                }
-            }
-
-            if (!IsExpectingInputNow(InputType.STANDARD_DOWN))
-            {
-                if (PlayerInput.Pressed())
-                {
-                    Jukebox.PlayOneShot("miss");
-                    Sarge.DoScaledAnimationAsync("Anger", 0.5f);
-                    Steam.DoScaledAnimationAsync("Steam", 0.5f);
-
-                    marchPlayerCount++;
-                    var marchPlayerAnim = (marchPlayerCount % 2 != 0 ? "MarchR" : "MarchL");
-
-                    CadetPlayer.DoScaledAnimationAsync(marchPlayerAnim, 0.5f);
-                }
-            }
-            if (!IsExpectingInputNow(InputType.STANDARD_ALT_DOWN))
-            {
-                if (PlayerInput.AltPressed())
-                {
-                    Jukebox.PlayOneShot("miss");
-                    Sarge.DoScaledAnimationAsync("Anger", 0.5f);
-                    Steam.DoScaledAnimationAsync("Steam", 0.5f);
-
-                    CadetPlayer.DoScaledAnimationAsync("Halt", 0.5f);
-                }
-            }
-            if (!IsExpectingInputNow(InputType.DIRECTION_LEFT_DOWN))
-            {
-                if (PlayerInput.Pressed(true) && PlayerInput.GetSpecificDirection(PlayerInput.LEFT))
-                {
-                    Jukebox.PlayOneShot("miss");
-                    Sarge.DoScaledAnimationAsync("Anger", 0.5f);
-                    Steam.DoScaledAnimationAsync("Steam", 0.5f);
-
-                    CadetHeadPlayer.DoScaledAnimationAsync("FaceL", 0.5f);
-                }
-            }
-            if (!IsExpectingInputNow(InputType.DIRECTION_RIGHT_DOWN))
-            {    
-                if (PlayerInput.Pressed(true) && PlayerInput.GetSpecificDirection(PlayerInput.RIGHT))
-                {
-                    Jukebox.PlayOneShot("miss");
-                    Sarge.DoScaledAnimationAsync("Anger", 0.5f);
-                    Steam.DoScaledAnimationAsync("Steam", 0.5f);
-
-                    CadetHeadPlayer.DoScaledAnimationAsync("FaceR", 0.5f);
-                }
-            }
-        }
-
-        public void BopAction(float beat, float length, bool shouldBop, bool autoBop)
+        public void BopAction(float beat, float length, bool shouldBop, bool autoBop, bool clap)
         {
             goBop = autoBop;
-            if (shouldBop)
-            {
-                for (int i = 0; i < length; i++)
-                {
-                    BeatAction.New(instance.gameObject, new List<BeatAction.Action>()
-                    {
-                        new BeatAction.Action(beat + i, delegate
-                        {
-                            Cadet1.DoScaledAnimationAsync("Bop", 0.5f);
-                            Cadet2.DoScaledAnimationAsync("Bop", 0.5f);
-                            Cadet3.DoScaledAnimationAsync("Bop", 0.5f);
-                            CadetPlayer.DoScaledAnimationAsync("Bop", 0.5f);
+            shouldClap = clap;
+            if (shouldBop) {
+                for (int i = 0; i < length; i++) {
+                    BeatAction.New(instance.gameObject, new List<BeatAction.Action>() {
+                        new BeatAction.Action(beat + i, delegate {
+                            foreach (var cadet in Cadets) cadet.DoScaledAnimationAsync(shouldClap ? "Clap" : "Bop", 0.5f);
+                            CadetPlayer.DoScaledAnimationAsync(shouldClap ? "Clap" : "Bop", 0.5f);
                         })
                     });
                 }
             }
         }
 
-        public static void PreMarch(float beat, float length)
-        {
-            wantMarch = beat - 1;
-            wantMarchLength = length;
-        }
-
-        public void PrepareMarch(float beat, float length = 0, bool first = false)
-        {
-            if (GameManager.instance.currentGame != "marchingOrders")
-                return;
-            if (first)
-            {
-                marching.length = length;
-                marching.startBeat = beat + 1;
-
-                marchOtherCount = 0;
-                marchPlayerCount = 0;
-            }
-            else
-            {
-                marchOtherCount++;
-                Cadet1.DoScaledAnimationAsync(marchOtherCount % 2 != 0 ? "MarchR" : "MarchL", 0.5f);
-                Cadet2.DoScaledAnimationAsync(marchOtherCount % 2 != 0 ? "MarchR" : "MarchL", 0.5f);
-                Cadet3.DoScaledAnimationAsync(marchOtherCount % 2 != 0 ? "MarchR" : "MarchL", 0.5f);
-            }
-
-            if (beat + 1 < marching.startBeat + marching.length)
-            {
-                Debug.Log($"PrepareMarch next {beat + 1}, {marching.startBeat}, {marching.length}");
-                BeatAction.New(gameObject, new List<BeatAction.Action>() 
-                {
-                    new BeatAction.Action(beat + 1f,     delegate {
-                        PrepareMarch(beat + 1);
-                        MultiSound.Play(new MultiSound.Sound[] {
-                            new MultiSound.Sound("marchingOrders/stepOther", beat + 1),
-                        }, true);
-                    }),
-                });
-                ScheduleInput(beat, 1f, InputType.STANDARD_DOWN, MarchHit, GenericMiss, MarchEmpty);
-            }
-        }
-
         public void SargeAttention(float beat)
         {
-            BeatAction.New(gameObject, new List<BeatAction.Action>() 
-            {
-               new BeatAction.Action(beat + 0.25f,     delegate { Sarge.DoScaledAnimationAsync("Talk", 0.5f);}),
+            BeatAction.New(gameObject, new List<BeatAction.Action>() {
+                new BeatAction.Action(beat + 0.25f, delegate { Sarge.DoScaledAnimationAsync("Talk", 0.5f);}),
             });
         }
         
-        public void SargeMarch(float beat, bool noVoice)
+        public static void SargeMarch(float beat, bool noVoice)
         {
-            marchOtherCount = 0;
-            marchPlayerCount = 0;
-            MarchSound(beat, noVoice);
+            if (MarchingOrders.wantMarch != float.MinValue) return;
+            MarchingOrders.wantMarch = beat + 1;
 
-            if (!noVoice)
-                Sarge.DoScaledAnimationAsync("Talk", 0.5f);
+            if (!noVoice) PlaySoundSequence("marchingOrders", "susume", beat);
+
+            if (GameManager.instance.currentGame == "marchingOrders") {
+                MarchingOrders.instance.PreMarch(beat);
+                if (!noVoice) MarchingOrders.instance.Sarge.DoScaledAnimationAsync("Talk", 0.5f);
+            }
+        }
+
+        public void ForceMarching(float beat, float length)
+        {
+            for (int i = 0; i < length; i++) {
+                ScheduleInput(beat + i - 1, 1f, InputType.STANDARD_DOWN, MarchHit, GenericMiss, Empty);
+                BeatAction.New(instance.gameObject, new List<BeatAction.Action>() {
+                    new BeatAction.Action(beat + i, delegate {
+                        marchOtherCount++;
+                        foreach (var cadet in Cadets) cadet.DoScaledAnimationAsync(marchOtherCount % 2 != 0 ? "MarchR" : "MarchL", 0.5f);
+                        Jukebox.PlayOneShotGame("marchingOrders/stepOther");
+                    }),
+                });
+            }
+        }
+
+        public void PreMarch(float beat)
+        {
             BeatAction.New(gameObject, new List<BeatAction.Action>()
             {
-                new BeatAction.Action(beat + 1f,     delegate { Cadet1.DoScaledAnimationAsync("MarchL", 0.5f);}),
-                new BeatAction.Action(beat + 1f,     delegate { Cadet2.DoScaledAnimationAsync("MarchL", 0.5f);}),
-                new BeatAction.Action(beat + 1f,     delegate { Cadet3.DoScaledAnimationAsync("MarchL", 0.5f);}),
-                new BeatAction.Action(beat + 1f,     delegate { CadetPlayer.DoScaledAnimationAsync("MarchL", 0.5f);}),
+                new BeatAction.Action(beat + 1f, delegate { 
+                    foreach (var cadet in Cadets) cadet.DoScaledAnimationAsync("MarchL", 0.5f);
+                    CadetPlayer.DoScaledAnimationAsync("MarchL", 0.5f);
+                }),
             });
         }
         
-        public void SargeHalt(float beat)
+        public void Halt(float beat)
         {
+            keepMarching = false;
             HaltSound(beat);            
 
-            ScheduleInput(beat, 1f, InputType.STANDARD_ALT_DOWN, HaltHit, GenericMiss, HaltEmpty);
+            ScheduleInput(beat, 1f, InputType.STANDARD_ALT_DOWN, HaltHit, GenericMiss, Empty);
             BeatAction.New(gameObject, new List<BeatAction.Action>() 
             {
-                new BeatAction.Action(beat,     delegate { Sarge.DoScaledAnimationAsync("Talk", 0.5f);}),
-                new BeatAction.Action(beat + 1f,     delegate { Cadet1.DoScaledAnimationAsync("Halt", 0.5f);}),
-                new BeatAction.Action(beat + 1f,     delegate { Cadet2.DoScaledAnimationAsync("Halt", 0.5f);}),
-                new BeatAction.Action(beat + 1f,     delegate { Cadet3.DoScaledAnimationAsync("Halt", 0.5f);}),
+                new BeatAction.Action(beat, delegate { Sarge.DoScaledAnimationAsync("Talk", 0.5f);}),
+                new BeatAction.Action(beat + 1f, delegate { foreach (var cadet in Cadets) cadet.DoScaledAnimationAsync("Halt", 0.5f);}),
             });
         }
         
-        public void SargeFaceTurn(float beat, int type, int type2, bool toggle)
+        public void FaceTurn(float beat, int direction, bool isFast, bool shouldPoint)
         {
-            string fastTurn = "";
-            switch (type2)
-            {
-                case (int) MarchingOrders.FaceTurnLength.Fast:
-                    turnLength = 0;
-                    fastTurn = "fast";
-                    break;
-                default:
-                    turnLength = 1;
-                    fastTurn = "";
-                    break;
-            }
+            // x is true if the direction is right
+            bool x = (direction == 0);
+            int turnLength = (isFast ? 0 : 1);
+
+            ScheduleInput(beat, turnLength + 2f, x ? InputType.DIRECTION_RIGHT_DOWN : InputType.DIRECTION_LEFT_DOWN, x ? (shouldPoint ? RightPointSuccess : RightSuccess) : (shouldPoint ? LeftPointSuccess : LeftSuccess), GenericMiss, Empty);
+            MultiSound.Play(new MultiSound.Sound[] {
+                new MultiSound.Sound($"marchingOrders/{(x ? "right" : "left")}FaceTurn1{(isFast ? "fast" : "")}", beat),
+                new MultiSound.Sound($"marchingOrders/{(x ? "right" : "left")}FaceTurn2{(isFast ? "fast" : "")}", beat + 0.5f),
+                new MultiSound.Sound($"marchingOrders/{(x ? "right" : "left")}FaceTurn3", beat + turnLength + 1f),
+                new MultiSound.Sound("marchingOrders/turnAction", beat + turnLength + 2f),
+            }, forcePlay: true);
             
-             
-            switch (type)
-            {
-                case (int) MarchingOrders.DirectionFaceTurn.Left:
-                    ScheduleInput(beat, turnLength + 2f, InputType.DIRECTION_LEFT_DOWN, LeftSuccess, GenericMiss, LeftEmpty);
-                    MultiSound.Play(new MultiSound.Sound[] {
-                    new MultiSound.Sound("marchingOrders/leftFaceTurn1" + fastTurn, beat),
-                    new MultiSound.Sound("marchingOrders/leftFaceTurn2" + fastTurn, beat + 0.5f),
-                    new MultiSound.Sound("marchingOrders/leftFaceTurn3", beat + turnLength + 1f),
-                    new MultiSound.Sound("marchingOrders/turnAction", beat + turnLength + 2f),
-                    }, forcePlay: true);
-                    
-                    BeatAction.New(gameObject, new List<BeatAction.Action>() 
-                        {
-                        new BeatAction.Action(beat + turnLength + 2f,     delegate { if (!toggle) CadetHead1.DoScaledAnimationAsync("FaceL", 0.5f);
-                            else Cadet1.DoScaledAnimationAsync("PointL"); }),
-                        new BeatAction.Action(beat + turnLength + 2f,     delegate { if (!toggle) CadetHead2.DoScaledAnimationAsync("FaceL", 0.5f);
-                            else Cadet2.DoScaledAnimationAsync("PointL");}),
-                        new BeatAction.Action(beat + turnLength + 2f,     delegate { if (!toggle) CadetHead3.DoScaledAnimationAsync("FaceL", 0.5f);
-                            else Cadet3.DoScaledAnimationAsync("PointL");}),
-                        });
-                    break;
-                default:
-                    ScheduleInput(beat, turnLength + 2f, InputType.DIRECTION_RIGHT_DOWN, RightSuccess, GenericMiss, RightEmpty);
-                    MultiSound.Play(new MultiSound.Sound[] {
-                    new MultiSound.Sound("marchingOrders/rightFaceTurn1" + fastTurn, beat),
-                    new MultiSound.Sound("marchingOrders/rightFaceTurn2" + fastTurn, beat + 0.5f),
-                    new MultiSound.Sound("marchingOrders/rightFaceTurn3", beat + turnLength + 1f),
-                    new MultiSound.Sound("marchingOrders/turnAction", beat + turnLength + 2f),
-                    }, forcePlay: true);
-                    
-                    BeatAction.New(gameObject, new List<BeatAction.Action>() 
-                        {
-                        new BeatAction.Action(beat + turnLength + 2f,     delegate { if (!toggle) CadetHead1.DoScaledAnimationAsync("FaceR", 0.5f);
-                            else Cadet1.DoScaledAnimationAsync("PointR");}),
-                        new BeatAction.Action(beat + turnLength + 2f,     delegate { if (!toggle) CadetHead2.DoScaledAnimationAsync("FaceR", 0.5f);
-                            else Cadet2.DoScaledAnimationAsync("PointR");}),
-                        new BeatAction.Action(beat + turnLength + 2f,     delegate { if (!toggle) CadetHead3.DoScaledAnimationAsync("FaceR", 0.5f);
-                            else Cadet3.DoScaledAnimationAsync("PointR");}),
-                        });
-                    break;
-            }
+            BeatAction.New(gameObject, new List<BeatAction.Action>() {
+                new BeatAction.Action(beat + turnLength + 2f,delegate {
+                    if (shouldPoint) foreach (var cadet in Cadets) cadet.DoScaledAnimationAsync($"Point{(x ? "R" : "L")}", 0.5f);
+                    foreach (var head in CadetHeads) head.DoScaledAnimationAsync($"Face{(x ? "R" : "L")}", 0.5f);
+                })
+            });
             
             BeatAction.New(gameObject, new List<BeatAction.Action>() 
             {
-                new BeatAction.Action(beat,     delegate { Sarge.DoScaledAnimationAsync("Talk", 0.5f);}),
-                new BeatAction.Action(beat + turnLength + 1f,     delegate { Sarge.DoScaledAnimationAsync("Talk", 0.5f);}),
+                new BeatAction.Action(beat, delegate { Sarge.DoScaledAnimationAsync("Talk", 0.5f);}),
+                new BeatAction.Action(beat + turnLength + 1f, delegate { Sarge.DoScaledAnimationAsync("Talk", 0.5f);}),
             });
         }
         
-        /*public void BackgroundColorSet(float beat, int type, int colorType, Color wall, Color pipes, Color floor, Color fill)
+        public void BackgroundColorSet(int preset, Color fill, Color tiles1, Color tiles2, Color tiles3, Color pipes1, Color pipes2, Color pipes3, Color conveyor1, Color conveyor2)
         {
-            background = type;
-            if (colorType == (int) MarchingOrders.BackgroundColor.Custom)
-            { 
-                pipesColor = pipes; 
-                floorColor = floor;
-                wallColor = wall;
-                fillColor = fill;
+            if (preset == 2) UpdateMaterialColor(fill, tiles1, tiles2, tiles3, pipes1, pipes2, pipes3, conveyor1, conveyor2);
+            else {
+                bool x = preset == 0;
+                UpdateMaterialColor(
+                    x ? new Color(0.26f, 0.36f, 0.39f) : new Color(0.25f, 0.45f, 0.52f),
+                    x ? new Color(1f,    0.76f, 0.52f) : new Color(0.45f, 0.71f, 0.81f),
+                    x ? new Color(1f,    0.6f,  0.2f)  : new Color(0.65f, 0.87f, 0.94f),
+                    x ? new Color(1f,    0.68f, 0f)    : new Color(0.65f, 0.87f, 0.94f),
+                    x ? new Color(0.41f, 0.54f, 0.34f) : new Color(0.36f, 0.58f, 0.64f),
+                    x ? new Color(0.43f, 0.8f,  0.45f) : new Color(0.48f, 0.65f, 0.71f),
+                    x ? new Color(0.48f, 0.89f, 0.54f) : new Color(0.48f, 0.65f, 0.71f),
+                    x ? new Color(0.16f, 0.25f, 0.3f)  : new Color(0.32f, 0.55f, 0.62f),
+                    x ? new Color(0.55f, 0.57f, 0.04f) : new Color(0.17f, 0.31f, 0.35f)
+                );
             }
-            Pipes.color = pipesColor;
-            UpdateMaterialColour(pipes, floor, wall);
         }
 
-        public static void UpdateMaterialColour(Color mainCol, Color highlightCol, Color objectCol)
+        public void UpdateMaterialColor(Color fill, Color tiles1, Color tiles2, Color tiles3, Color pipes1, Color pipes2, Color pipes3, Color conveyor1, Color conveyor2)
         {
-            pipesColor = mainCol;
-            floorColor = highlightCol;
-            wallColor = objectCol;
-        }*/
+            BGColor1 = fill;
+            BGColor2 = conveyor1;
+
+            Recolor(0, tiles3, tiles2, tiles1);
+            Recolor(1, pipes2, pipes1, pipes3);
+            Recolor(2, new Color(0, 0, 0), conveyor1, conveyor2);
+
+            void Recolor(int i, Color color1, Color color2, Color color3) {
+                RecolorMats[i].SetColor("_ColorAlpha", color1);
+                RecolorMats[i].SetColor("_ColorBravo", color2);
+                RecolorMats[i].SetColor("_ColorDelta", color3);
+            }
+        }
 
         public static void AttentionSound(float beat)
         {
             PlaySoundSequence("marchingOrders", "zentai", beat - 1);
         }
         
-        public static void MarchSound(float beat, bool noVoice)
-        {
-            if (!noVoice)
-            {
-                PlaySoundSequence("marchingOrders", "susume", beat);
-            }
-        }
-        
         public static void HaltSound(float beat)
         {
             PlaySoundSequence("marchingOrders", "tomare", beat);
         }
+
+        public void MoveConveyor(float length, bool go, int direction)
+        {
+            foreach (var scroll in ConveyorGo) {
+                scroll.SpeedMod = ((direction == 0 ? 20 : -20)/length)*(Conductor.instance.songBpm/100);
+                scroll.AutoScroll = go;
+            }
+        }
+
+        static void Empty(PlayerActionEvent caller) { }
     }
 }
 

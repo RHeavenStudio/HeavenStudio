@@ -103,7 +103,11 @@ namespace HeavenStudio.Games.Loaders
                         new Param("y", new EntityTypes.Float(-5f, 5f, 0), "Vertical", "How fast does the background move vertically?"),
                     }
                 },
-            });
+            },
+            new List<string>() {"agb", "normal"},
+            "agbspacedance", "jp",
+            new List<string>() {"jp"}
+            );
         }
     }
 }

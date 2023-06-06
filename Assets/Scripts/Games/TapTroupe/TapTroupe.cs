@@ -79,7 +79,11 @@ namespace HeavenStudio.Games.Loaders
                         new Param("toggle", true, "Use it?", "Use the faces they do when you miss in the tutorial of Tap Troupe?")
                     }
                 }
-            });
+            },
+            new List<string>() {"rvl", "keep"},
+            "rvllegs", "en",
+            new List<string>() {"en"}
+            );
         }
     }
 }
@@ -161,6 +165,10 @@ namespace HeavenStudio.Games
             if (queuedSteps.Count > 0) queuedSteps.Clear();
             if (queuedTaps.Count > 0) queuedTaps.Clear();
             prepareTap = false;
+            foreach (var evt in scheduledInputs)
+            {
+                evt.Disable();
+            }
         }
 
         public override void OnTimeChange()

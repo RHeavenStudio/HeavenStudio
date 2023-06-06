@@ -1,6 +1,0 @@
-#define w_date_sport_rugger	0	// (null)
-#define w_date_sport_rugger_other	1	// (null)
-#define w_date_sport_karateka	2	// (null)
-#define w_date_sport_volley	3	// (null)
-#define w_date_sport_student	4	// (null)
-#define w_date_sport_dog	5	// (null)

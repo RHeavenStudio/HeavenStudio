@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Starpelly;
 
 namespace HeavenStudio.Util
 {
@@ -8,6 +9,7 @@ namespace HeavenStudio.Util
     {
         public AudioClip clip;
         public float pitch = 1;
+        public float bendedPitch = 1; //only used with rockers
         public float volume = 1;
 
         // For use with PlayOneShotScheduled
@@ -136,11 +138,68 @@ namespace HeavenStudio.Util
                 audioSource.Stop();
         }
 
+        public void Pause()
+        {
+            if (audioSource != null)
+                audioSource.Pause();
+        }
+
+        public void UnPause()
+        {
+            if (audioSource != null)
+                audioSource.UnPause();
+        }
+
         public void Delete()
         {
             GameManager.instance.SoundObjects.Remove(gameObject);
             Destroy(gameObject);
         }
+
+        #region Bend
+        // All of these should only be used with rockers.
+        public void BendUp(float bendTime, float bendedPitch)
+        {
+            this.bendedPitch = bendedPitch;
+            StartCoroutine(BendUpLoop(bendTime));
+        }
+
+        public void BendDown(float bendTime)
+        {
+            StartCoroutine(BendDownLoop(bendTime));
+        }
+
+        IEnumerator BendUpLoop(float bendTime)
+        {
+            float startingPitch = audioSource.pitch;
+            float bendTimer = 0f;
+
+            while (bendTimer < bendTime)
+            {
+                bendTimer += Time.deltaTime;
+                float normalizedProgress = Mathp.Normalize(bendTimer, 0, bendTime);
+                float currentPitch = Mathf.Lerp(startingPitch, bendedPitch, normalizedProgress);
+                audioSource.pitch = Mathf.Min(currentPitch, bendedPitch);
+                yield return null;
+            }
+        }
+
+        IEnumerator BendDownLoop(float bendTime)
+        {
+            float bendTimer = 0f;
+            float startingPitch = pitch;
+
+            while (bendTimer < bendTime)
+            {
+                bendTimer += Time.deltaTime;
+                float normalizedProgress = Mathp.Normalize(bendTimer, 0, bendTime);
+                float currentPitch = Mathf.Lerp(startingPitch, bendedPitch, 1 - normalizedProgress);
+                audioSource.pitch = Mathf.Max(currentPitch, pitch);
+                yield return null;
+            }
+        }
+
+        #endregion
 
         public void KillLoop(float fadeTime)
         {

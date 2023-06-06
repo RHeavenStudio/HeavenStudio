@@ -44,11 +44,14 @@ namespace HeavenStudio.Games.Loaders
                 },
                 new GameAction("alien", "Show Alien")
                 {
-                    function = delegate { Spaceball.instance.alien.Show(eventCaller.currentEntity.beat); } 
+                    function = delegate { Spaceball.instance.alien.Show(eventCaller.currentEntity.beat, eventCaller.currentEntity["hide"]); },
+                    parameters = new List<Param>()
+                    {
+                        new Param("hide", false, "Hide", "Should the alien be hidden?")
+                    }
                 },
                 new GameAction("camera", "Zoom Camera")
                 {
-                    function = delegate { Spaceball.instance.OverrideCurrentZoom(); }, 
                     defaultLength = 4, 
                     resizable = true, 
                     parameters = new List<Param>() 
@@ -61,7 +64,11 @@ namespace HeavenStudio.Games.Loaders
                 {
                     function = delegate { Spaceball.instance.PrepareDispenser(); }, 
                 },
-            });;
+            },
+            new List<string>() {"agb", "normal"},
+            "agbbatter", "en",
+            new List<string>() {}
+            );
         }
     }
 }
@@ -85,10 +92,10 @@ namespace HeavenStudio.Games
             SphereHead
         }
 
-        public GameObject Ball;
-        public GameObject BallsHolder;
+        [SerializeField] GameObject Ball;
+        [SerializeField] GameObject BallsHolder;
 
-        public GameObject Dispenser;
+        [SerializeField] GameObject Dispenser;
         public GameObject Dust;
 
         private float lastCamDistance;
@@ -98,8 +105,8 @@ namespace HeavenStudio.Games
 
         private int currentZoomIndex;
 
-        public Sprite[] BallSprites;
-        public Material[] CostumeColors;
+        [SerializeField] Sprite[] BallSprites;
+        [SerializeField] Material[] CostumeColors;
 
         private List<DynamicBeatmap.DynamicEntity> _allCameraEvents = new List<DynamicBeatmap.DynamicEntity>();
 
@@ -139,7 +146,7 @@ namespace HeavenStudio.Games
 
             _allCameraEvents = tempEvents;
 
-            UpdateCameraZoom();
+            currentZoomCamDistance = -10;
         }
 
         private void Update()
@@ -215,11 +222,6 @@ namespace HeavenStudio.Games
 
                 lastEase = (EasingFunction.Ease) _allCameraEvents[currentZoomIndex]["ease"];
             }
-        }
-
-        public void OverrideCurrentZoom()
-        {
-            // lastCamDistance = GameCamera.instance.camera.transform.localPosition.z;
         }
 
         public void Shoot(float beat, bool high, int type)

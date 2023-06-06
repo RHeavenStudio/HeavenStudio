@@ -84,7 +84,11 @@ namespace HeavenStudio.Games.Loaders
                     defaultLength = 3, 
                     hidden = true
                 },
-            });
+            },
+            new List<string>() {"rvl", "normal"},
+            "rvlfork", "en",
+            new List<string>() {}
+            );
         }
     }
 }

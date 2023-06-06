@@ -1,9 +1,0 @@
-#define w_date_bg_bg_front	0	// (null)
-#define w_date_bg_bg_back	1	// (null)
-#define w_date_bg_leaves	2	// (null)
-#define w_date_bg_leaf	3	// (null)
-#define w_date_bg_clouds	4	// (null)
-#define w_date_bg_sky	5	// (null)
-#define w_date_bg_butterfly_00	6	// (null)
-#define w_date_bg_butterfly_01	7	// (null)
-#define w_date_bg_wind_mill	8	// �A�����W�Q�[���ƃ��x�������낦�邽�߂̃_�~�[

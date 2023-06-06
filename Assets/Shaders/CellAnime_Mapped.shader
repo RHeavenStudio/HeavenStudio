@@ -97,7 +97,7 @@ Shader "Sprites/CellAnime_Mapped"
                 OUT.vertex = UnityObjectToClipPos(OUT.worldPosition);
 
                 OUT.texcoord = TRANSFORM_TEX(v.texcoord, _MainTex);
-                OUT.color = v.color;
+                OUT.color = v.color; // don't multiply by colour here since it messes with RGB mapping, we do it later in the frag stage instead
                 return OUT;
             }
 
@@ -118,7 +118,7 @@ Shader "Sprites/CellAnime_Mapped"
                 clip (color.a - 0.001);
                 #endif
 
-                return color;
+                return color * _Color;
             }
         ENDCG
         }

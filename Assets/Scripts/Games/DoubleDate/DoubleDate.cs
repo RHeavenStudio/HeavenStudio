@@ -39,7 +39,11 @@ namespace HeavenStudio.Games.Loaders
                     preFunctionLength = 1f,
                     defaultLength = 2.5f,
                 },
-            });
+            },
+            new List<string>() {"rvl", "normal"},
+            "rvldate", "en",
+            new List<string>() {}
+            );
         }
     }
 }
@@ -112,6 +116,10 @@ namespace HeavenStudio.Games
 
         private void OnDestroy() {
             queuedBalls.Clear();
+            foreach (var evt in scheduledInputs)
+            {
+                evt.Disable();
+            }
         }
 
         private void Awake()

@@ -301,6 +301,15 @@ namespace HeavenStudio.Util
                 return Mathf.Pow(2f, (1f / 12f) * semiTones);
             }
         }
+        /// <summary>
+        /// Returns the semitones from a pitch.
+        /// </summary>
+        /// <param name="pitch">The pitch of the sound.</param>
+        public static int GetSemitonesFromPitch(float pitch, bool pitchToMusic)
+        {
+            if (pitchToMusic) return (int)((12f * Mathf.Log(pitch, 2)) / Conductor.instance.musicSource.pitch);
+            return (int)(12f * Mathf.Log(pitch, 2));
+        }
 
         /// <summary>
         /// Gets a pitch multiplier from cents.

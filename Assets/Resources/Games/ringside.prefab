@@ -5588,6 +5588,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1260199467373772929}
   - component: {fileID: 7604629278988158414}
+  - component: {fileID: 4336159175150130}
   m_Layer: 0
   m_Name: Wrestler
   m_TagString: Untagged
@@ -5644,6 +5645,17 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
+--- !u!210 &4336159175150130
+SortingGroup:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3970161046200975285}
+  m_Enabled: 1
+  m_SortingLayerID: 0
+  m_SortingLayer: 0
+  m_SortingOrder: 0
 --- !u!1 &3978447576222901827
 GameObject:
   m_ObjectHideFlags: 0
@@ -5906,6 +5918,7 @@ GameObject:
   m_Component:
   - component: {fileID: 6047925687552533486}
   - component: {fileID: 236637703450929012}
+  - component: {fileID: 243308089420204307}
   m_Layer: 0
   m_Name: Audience
   m_TagString: Untagged
@@ -5957,6 +5970,17 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
+--- !u!210 &243308089420204307
+SortingGroup:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4027633158746793122}
+  m_Enabled: 1
+  m_SortingLayerID: 0
+  m_SortingLayer: 0
+  m_SortingOrder: 2
 --- !u!1 &4043660164824168224
 GameObject:
   m_ObjectHideFlags: 0
@@ -13803,6 +13827,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4587579683068271383}
   - component: {fileID: 7025224658307706580}
+  - component: {fileID: 1162145027587709431}
   m_Layer: 0
   m_Name: Reporter
   m_TagString: Untagged
@@ -13854,6 +13879,17 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
+--- !u!210 &1162145027587709431
+SortingGroup:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5893917310037722026}
+  m_Enabled: 1
+  m_SortingLayerID: 0
+  m_SortingLayer: 0
+  m_SortingOrder: 1
 --- !u!1 &5899198963558737307
 GameObject:
   m_ObjectHideFlags: 0

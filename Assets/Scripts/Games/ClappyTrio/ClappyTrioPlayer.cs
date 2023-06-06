@@ -54,8 +54,7 @@ namespace HeavenStudio.Games.Scripts_ClappyTrio
         }
 
         private void Miss(PlayerActionEvent caller) {
-            game.playerHitLast = false;
-            game.missed = true;
+            game.misses++;
             game.emoCounter = 2;
 
             if (clapStarted)
@@ -71,16 +70,12 @@ namespace HeavenStudio.Games.Scripts_ClappyTrio
             {
                 clapEffect.SetActive(true);
                 Jukebox.PlayOneShotGame("clappyTrio/rightClap");
-
-                if (this.canHit)
-                    game.playerHitLast = true;
             }
             else
             {
                 clapEffect.SetActive(false);
                 Jukebox.PlayOneShot("miss");
-                game.playerHitLast = false;
-                game.missed = true;
+                game.misses++;
 
                 if (clapStarted)
                     this.canHit = false;

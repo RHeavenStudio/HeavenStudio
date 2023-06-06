@@ -45,7 +45,11 @@ namespace HeavenStudio.Games.Loaders
                         new Param("ease", EasingFunction.Ease.Linear, "Ease", "Which ease should the movement have?")
                     }
                 },
-            });
+            },
+            new List<string>() {"agb", "aim"},
+            "agbghost", "en",
+            new List<string>() {}
+            );
         }
     }
 }
@@ -90,6 +94,10 @@ namespace HeavenStudio.Games
         {
             if (queuedGhosts.Count > 0) queuedGhosts.Clear();
             Conductor.instance.SetMinigamePitch(1f);
+            foreach (var evt in scheduledInputs)
+            {
+                evt.Disable();
+            }
         }
 
         void Awake()
