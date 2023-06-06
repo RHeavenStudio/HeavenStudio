@@ -86,17 +86,20 @@ namespace HeavenStudio
 
             ChangeAudioSettings(currentDspSize, currentSampleRate);
 
+            Application.targetFrameRate = -1;
+            QualitySettings.vSyncCount = 0;
+            QualitySettings.maxQueuedFrames = 1;
             if (PersistentDataManager.gameSettings.isFullscreen)
             {
-                Screen.SetResolution(Display.main.systemWidth, Display.main.systemHeight, FullScreenMode.FullScreenWindow);
+                Screen.SetResolution(Display.main.systemWidth, Display.main.systemHeight, FullScreenMode.ExclusiveFullScreen);
                 Screen.fullScreen = true;
             }
             else
             {
+                Screen.fullScreenMode = FullScreenMode.Windowed;
                 Screen.fullScreen = false;
                 ChangeScreenSize();
             }
-            QualitySettings.maxQueuedFrames = 1;
             PlayerInput.InitInputControllers();
             #if UNITY_EDITOR
                 Starpelly.OS.ChangeWindowTitle("Heaven Studio UNITYEDITOR ");
@@ -201,7 +204,7 @@ namespace HeavenStudio
             if (!Screen.fullScreen)
             {
                 // Set the resolution to the display's current resolution
-                Screen.SetResolution(Display.main.systemWidth, Display.main.systemHeight, FullScreenMode.FullScreenWindow);
+                Screen.SetResolution(Display.main.systemWidth, Display.main.systemHeight, FullScreenMode.ExclusiveFullScreen);
                 Screen.fullScreen = true;
                 PersistentDataManager.gameSettings.isFullscreen = true;
             }
