@@ -56,8 +56,8 @@ namespace HeavenStudio.Games.Scripts_RhythmTweezers
                     endEvent.Disable();
                 }
                 // Auto-release if holding at release time.
-                if (normalizedBeat >= 1f && !game.IsExpectingInputNow(InputType.STANDARD_UP | InputType.DIRECTION_DOWN_UP))
-                    EndAce();
+                if (normalizedBeat >= 1f)
+                    endEvent.Hit(0, 1);
             }
 
             loop.transform.localScale = Vector2.one / holder.transform.localScale;
