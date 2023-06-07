@@ -294,6 +294,8 @@ namespace HeavenStudio
         {
             Debug.Log("Disconnecting JoyShocks...");
             PlayerInput.DisconnectJoyshocks();
+            Debug.Log("Clearing RIQ Cache...");
+            Jukebox.RiqFileHandler.ClearCache();
         }
     }
 }

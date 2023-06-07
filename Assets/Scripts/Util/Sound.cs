@@ -48,7 +48,7 @@ namespace HeavenStudio.Util
                 audioSource.Play();
                 playInstant = true;
                 played = true;
-                startTime = cnd.songPositionAsDouble;
+                startTime = AudioSettings.dspTime;
                 StartCoroutine(NotRelyOnBeatSound());
             }
             else

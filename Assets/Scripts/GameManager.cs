@@ -637,12 +637,12 @@ namespace HeavenStudio
                 if (allEnds.Count > 0)
                     endBeat = allEnds.Select(c => c.beat).Min();
                 else
-                    endBeat = Conductor.instance.SongLengthInBeats();
+                    endBeat = Conductor.instance.SongLengthInBeatsAsDouble();
             }
             else
             {
                 SetGame("noGame");
-                endBeat = Conductor.instance.SongLengthInBeats();
+                endBeat = Conductor.instance.SongLengthInBeatsAsDouble();
             }
 
             if (Beatmap.TempoChanges.Count > 0)

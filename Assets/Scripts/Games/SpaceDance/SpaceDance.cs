@@ -365,9 +365,9 @@ namespace HeavenStudio.Games
             });
         }
 
-        public void UpdateShootingStar(double beat, float length, int ease)
+        public void UpdateShootingStar(double beat, float length, EasingFunction.Ease ease)
         {
-            lastEase = (EasingFunction.Ease)ease;
+            lastEase = ease;
             shootingStarLength = length;
             shootingStarStartBeat = beat;
             isShootingStar = true;

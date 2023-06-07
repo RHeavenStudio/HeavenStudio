@@ -35,13 +35,14 @@ namespace HeavenStudio
 
         // Current time of the song
         private double time;
-
-        double lastAbsTime;
+        double dspTime, lastDspTime;
+        double absTime, lastAbsTime;
 
         // the dspTime we started at
         private double dspStart;
         private float dspStartTime => (float)dspStart;
         public double dspStartTimeAsDouble => dspStart;
+        DateTime startTime;
 
         //the beat we started at
         private double startBeat;
@@ -131,7 +132,7 @@ namespace HeavenStudio
                     time = startPos;
             }
             
-            //TODO: make this take into account past tempo changes
+            songPos = time;
             songPosBeat = GetBeatFromSongPos(time - firstBeatOffset);
             // Debug.Log("corrected starting playback @ beat " + songPosBeat);
 
@@ -169,7 +170,9 @@ namespace HeavenStudio
                     musicSource.PlayScheduled(AudioSettings.dspTime);
                 }
             }
-            lastAbsTime = Time.realtimeSinceStartupAsDouble;
+            startTime = DateTime.Now;
+            lastAbsTime = (DateTime.Now - startTime).TotalSeconds;
+            lastDspTime = AudioSettings.dspTime;
             dspStart = AudioSettings.dspTime;
             startBeat = beat;
 
@@ -188,6 +191,7 @@ namespace HeavenStudio
         {
             this.time = time;
 
+            songPos = time;
             songPosBeat = 0;
 
             isPlaying = false;
@@ -195,23 +199,36 @@ namespace HeavenStudio
 
             musicSource.Stop();
         }
-        float test;
 
+        double deltaTimeReal { get { 
+            double ret = absTime - lastAbsTime; 
+            lastAbsTime = absTime;
+            return ret;
+        }}
+
+        double deltaTimeDsp { get { 
+            double ret = dspTime - lastDspTime; 
+            lastDspTime = dspTime;
+            return ret;
+        }}
+        
         public void Update()
         {
             if (isPlaying)
             {
-                double absTime = Time.realtimeSinceStartupAsDouble;
-                double dt = (absTime - lastAbsTime) * SongPitch;
-                lastAbsTime = absTime;
+                absTime = (DateTime.Now - startTime).TotalSeconds;
+                dspTime = AudioSettings.dspTime - dspStart;
+                double dt = deltaTimeReal;
 
-                time += dt;
+                //todo: dspTime to sync with audio thread in case of drift
+
+                time += dt * SongPitch;
 
                 songPos = time;
-
                 songPosBeat = GetBeatFromSongPos(songPos - firstBeatOffset);
             }
         }
+
 
         public void LateUpdate()
         {
@@ -379,22 +396,19 @@ namespace HeavenStudio
 
         public float SongLengthInBeats()
         {
-            if (!musicSource.clip) return 0;
-            return (float) GetBeatFromSongPos(musicSource.clip.length);
+            return (float)SongLengthInBeatsAsDouble();
         }
 
-        public bool SongPosLessThanClipLength(float t)
+        public double SongLengthInBeatsAsDouble()
         {
-            if (musicSource.clip != null)
-                return t < musicSource.clip.length;
-            else
-                return false;
+            if (!musicSource.clip) return 0;
+            return GetBeatFromSongPos(musicSource.clip.length - firstBeatOffset);
         }
 
         public bool SongPosLessThanClipLength(double t)
         {
             if (musicSource.clip != null)
-                return t < musicSource.clip.length;
+                return t < musicSource.clip.length - firstBeatOffset;
             else
                 return false;
         }
