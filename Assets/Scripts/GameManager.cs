@@ -139,7 +139,6 @@ namespace HeavenStudio
             if (preLoaded)
             {
                 LoadRemix();
-                StartCoroutine(LoadMusic());
             }
             else
             {
@@ -192,6 +191,7 @@ namespace HeavenStudio
                 Debug.LogError($"Failed to load remix: {e.Message}");
                 return;
             }
+            StartCoroutine(LoadMusic());
             SortEventsList();
             Conductor.instance.SetBpm(Beatmap.TempoChanges[0]["tempo"]);
             Conductor.instance.SetVolume(Beatmap.VolumeChanges[0]["volume"]);

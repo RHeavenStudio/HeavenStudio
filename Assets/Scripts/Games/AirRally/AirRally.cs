@@ -134,7 +134,7 @@ namespace HeavenStudio.Games
             }
 
             var cond = Conductor.instance;
-            var currentBeat = cond.songPositionInBeats;
+            var currentBeat = cond.songPositionInBeatsAsDouble;
             var hitBeat = serveBeat;
 
             if (started)
@@ -513,7 +513,7 @@ namespace HeavenStudio.Games
             }
             else
             {
-                ReturnObject(Conductor.instance.songPositionInBeats, caller.startBeat + caller.timer + 1f, false);
+                ReturnObject(Conductor.instance.songPositionInBeatsAsDouble, caller.startBeat + caller.timer + 1f, false);
                 hasMissed = false;
                 ActiveShuttle.GetComponent<Shuttlecock>().DoHit(e_BaBumState);
 
@@ -549,7 +549,7 @@ namespace HeavenStudio.Games
             }
             else
             {
-                ReturnObject(Conductor.instance.songPositionInBeats, caller.startBeat + caller.timer + 2f, true);
+                ReturnObject(Conductor.instance.songPositionInBeatsAsDouble, caller.startBeat + caller.timer + 2f, true);
                 hasMissed = false;
                 ActiveShuttle.GetComponent<Shuttlecock>().DoHit(e_BaBumState);
 
