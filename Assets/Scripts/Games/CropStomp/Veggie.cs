@@ -204,6 +204,10 @@ namespace HeavenStudio.Games.Scripts_CropStomp
             {
                 var veggieScale = Mathf.Min(1.5f - pickPosition, 1f);
                 veggieTrans.localScale = Vector2.one * veggieScale;
+                if (pickPosition >= 1f)
+                {
+                    game.CollectPlant();
+                }
             }
         }
 
@@ -218,6 +222,10 @@ namespace HeavenStudio.Games.Scripts_CropStomp
             gotStomped = true;
 
             var cond = Conductor.instance;
+
+            ParticleSystem spawnedHit = Instantiate(game.hitParticle, game.hitParticle.transform.parent);
+
+            spawnedHit.Play();
 
             veggieState = 1;
             game.ScheduleInput(targetBeat, isMole ? 0.5f : 1f, InputType.STANDARD_UP, PickJust, PickMiss, Out);

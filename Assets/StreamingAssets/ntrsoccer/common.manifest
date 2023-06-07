@@ -1,12 +1,12 @@
 ManifestFileVersion: 0
-CRC: 3488930233
+CRC: 337558814
 Hashes:
   AssetFileHash:
     serializedVersion: 2
-    Hash: a9c9dac999629c0c527c02062936b2ce
+    Hash: 5af9ef9ef8ce13d47f20469f1a296684
   TypeTreeHash:
     serializedVersion: 2
-    Hash: 51a0b88ccba7cafc2f0ee80d78c276ea
+    Hash: 2905bc0cc75ab3c285414c8f78497ac3
 HashAppended: 0
 ClassTypes:
 - Class: 1
@@ -15,13 +15,7 @@ ClassTypes:
   Script: {instanceID: 0}
 - Class: 21
   Script: {instanceID: 0}
-- Class: 23
-  Script: {instanceID: 0}
 - Class: 28
-  Script: {instanceID: 0}
-- Class: 33
-  Script: {instanceID: 0}
-- Class: 43
   Script: {instanceID: 0}
 - Class: 48
   Script: {instanceID: 0}
@@ -34,15 +28,21 @@ ClassTypes:
 - Class: 95
   Script: {instanceID: 0}
 - Class: 114
-  Script: {fileID: 11500000, guid: cd6b3558bb367914eb7c7991d6c93205, type: 3}
+  Script: {fileID: 11500000, guid: 0cd44c1031e13a943bb63640046fad76, type: 3}
 - Class: 114
-  Script: {fileID: 11500000, guid: 0479575deb5a235418550268de76edaa, type: 3}
+  Script: {fileID: 11500000, guid: 1344c3c82d62a2a41a3576d8abb8e3ea, type: 3}
+- Class: 114
+  Script: {fileID: 11500000, guid: cd6b3558bb367914eb7c7991d6c93205, type: 3}
 - Class: 114
   Script: {fileID: 11500000, guid: 6b323a3095c4c2e4db991ebafc1384cc, type: 3}
 - Class: 114
   Script: {fileID: 11500000, guid: 924b8b91d38165d49bde41b195970f76, type: 3}
 - Class: 114
+  Script: {fileID: 11500000, guid: dc42784cf147c0c48a680349fa168899, type: 3}
+- Class: 114
   Script: {fileID: 11500000, guid: 848efddf5f5eaa94eacf8601e36f81bf, type: 3}
+- Class: 114
+  Script: {fileID: 11500000, guid: a6dfb70e45ff5004cab0352936d3f10a, type: 3}
 - Class: 115
   Script: {instanceID: 0}
 - Class: 210
@@ -51,11 +51,21 @@ ClassTypes:
   Script: {instanceID: 0}
 - Class: 213
   Script: {instanceID: 0}
+- Class: 222
+  Script: {instanceID: 0}
+- Class: 223
+  Script: {instanceID: 0}
+- Class: 224
+  Script: {instanceID: 0}
 SerializeReferenceClassIdentifiers:
 - AssemblyName: Assembly-CSharp
   ClassName: HeavenStudio.SuperCurveObject/Path
 - AssemblyName: Assembly-CSharp
   ClassName: HeavenStudio.SuperCurveObject/PathPos
+- AssemblyName: UnityEngine.CoreModule
+  ClassName: UnityEngine.Events.PersistentCallGroup
+- AssemblyName: UnityEngine.UI
+  ClassName: UnityEngine.UI.MaskableGraphic/CullStateChangedEvent
 Assets:
 - Assets/Resources/Sprites/Games/SpaceSoccer/Animations/NPCKickersPresent.anim
 - Assets/Resources/Sprites/Games/SpaceSoccer/Animations/ToeLeft.anim

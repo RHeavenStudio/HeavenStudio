@@ -14,9 +14,37 @@ namespace HeavenStudio.Games.Scripts_CropStomp
 
         PlayerActionEvent stomp;
 
+        [SerializeField] private Transform collectedHolder;
+
+        [SerializeField] private GameObject plantLeftRef;
+        [SerializeField] private GameObject plantRightRef;
+        private List<GameObject> spawnedPlants = new List<GameObject>();
+
+        [SerializeField] private float plantDistance = 0.5f;
+
+        public int plantThreshold = 8;
+
+        public int plantLimit = 80;
+
+        private static int collectedPlants = 0;
+
+        private void OnDestroy()
+        {
+            if (!Conductor.instance.isPlaying)
+            {
+                collectedPlants = 0;
+                UpdatePlants();
+            }
+        }
+
         public void Init()
         {
             game = CropStomp.instance;
+            if (!Conductor.instance.isPlaying)
+            {
+                collectedPlants = 0;
+            }
+            UpdatePlants();
         }
 
         private void Update()
@@ -37,6 +65,33 @@ namespace HeavenStudio.Games.Scripts_CropStomp
             if (PlayerInput.Pressed() && !game.IsExpectingInputNow(InputType.STANDARD_DOWN))
             {
                 game.bodyAnim.Play("Crouch", 0, 0);
+            }
+        }
+
+        public void CollectPlant()
+        {
+            if (collectedPlants >= plantLimit) return;
+            collectedPlants++;
+            UpdatePlants();
+        }
+
+        public void UpdatePlants()
+        {
+            if (spawnedPlants.Count > 0)
+            {
+                foreach (var plant in spawnedPlants)
+                {
+                    Destroy(plant);
+                }
+                spawnedPlants.Clear();
+            }
+            for (int i = 0; i < collectedPlants && i < plantLimit; i += plantThreshold)
+            {
+                GameObject spawnedPlant = Instantiate(((i / plantThreshold) % 2 == 0) ? plantRightRef : plantLeftRef, collectedHolder);
+                spawnedPlant.transform.localPosition = new Vector3(0, (i / plantThreshold) * plantDistance + plantDistance, 0);
+                spawnedPlant.GetComponent<SpriteRenderer>().sortingOrder = (i / plantThreshold) - 2;
+                spawnedPlant.SetActive(true);
+                spawnedPlants.Add(spawnedPlant);
             }
         }
 
@@ -73,6 +128,7 @@ namespace HeavenStudio.Games.Scripts_CropStomp
             {
                 game.Stomp();
                 game.bodyAnim.Play("Stomp", 0, 0);
+
             }
             nextStompBeat += 2f;
             stomp?.Disable();

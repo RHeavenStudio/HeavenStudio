@@ -154,6 +154,7 @@ namespace HeavenStudio.Games
     using Scripts_SpaceSoccer;
     using HeavenStudio.Common;
     using UnityEngine.Rendering;
+    using UnityEngine.UI;
 
     public class SpaceSoccer : Minigame
     {
@@ -193,7 +194,8 @@ namespace HeavenStudio.Games
         [SerializeField] private GameObject kickerPrefab;
         [SerializeField] private GameObject ballRef;
         [SerializeField] private List<Kicker> kickers;
-        [SerializeField] private SuperScroll backgroundSprite;
+        [SerializeField] private CanvasScroll backgroundSprite;
+        [SerializeField] private RawImage bgImage;
         [SerializeField] private SpriteRenderer bg;
 
         [Header("Properties")]
@@ -245,7 +247,7 @@ namespace HeavenStudio.Games
             float normalizedX = (Time.realtimeSinceStartup - scrollBeat) * currentScrollLengthX;
             float normalizedY = (Time.realtimeSinceStartup - scrollBeat) * currentScrollLengthY;
             backgroundSprite.NormalizedX = -scrollOffsetX - normalizedX;
-            backgroundSprite.NormalizedY = -scrollOffsetY - normalizedY;
+            backgroundSprite.NormalizedY = scrollOffsetY + normalizedY;
 
             float normalizedEaseBeat = cond.GetPositionFromBeat(easeBeat, easeLength);
             if (normalizedEaseBeat <= 1 && normalizedEaseBeat > 0)
@@ -500,12 +502,12 @@ namespace HeavenStudio.Games
             if (seconds == 0)
             {
                 bg.color = color;
-                backgroundSprite.Material.SetColor("_Color", dotColor);
+                bgImage.color = dotColor;
             }
             else
             {
                 bgColorTween = bg.DOColor(color, seconds);
-                dotColorTween = backgroundSprite.Material.DOColor(dotColor, seconds);
+                dotColorTween = bgImage.DOColor(dotColor, seconds);
             }
         }
 

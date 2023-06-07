@@ -1,12 +1,12 @@
 ManifestFileVersion: 0
-CRC: 2665291872
+CRC: 867686949
 Hashes:
   AssetFileHash:
     serializedVersion: 2
-    Hash: 8fe3596b49e40872c2ca4de31e4acfda
+    Hash: ab071928443b2918657baca4069aef38
   TypeTreeHash:
     serializedVersion: 2
-    Hash: 666e1c934de72fd88bc6cb4f5baa3a36
+    Hash: ddb2c4a70034b0784bb73c06ec09460c
 HashAppended: 0
 ClassTypes:
 - Class: 1
@@ -28,14 +28,32 @@ ClassTypes:
 - Class: 95
   Script: {instanceID: 0}
 - Class: 114
+  Script: {fileID: 11500000, guid: 0cd44c1031e13a943bb63640046fad76, type: 3}
+- Class: 114
+  Script: {fileID: 11500000, guid: 1344c3c82d62a2a41a3576d8abb8e3ea, type: 3}
+- Class: 114
+  Script: {fileID: 11500000, guid: dc42784cf147c0c48a680349fa168899, type: 3}
+- Class: 114
   Script: {fileID: 11500000, guid: 8dbd5e988233f9a4f931eddbafe8719a, type: 3}
+- Class: 114
+  Script: {fileID: 11500000, guid: a6dfb70e45ff5004cab0352936d3f10a, type: 3}
 - Class: 115
   Script: {instanceID: 0}
 - Class: 212
   Script: {instanceID: 0}
 - Class: 213
   Script: {instanceID: 0}
-SerializeReferenceClassIdentifiers: []
+- Class: 222
+  Script: {instanceID: 0}
+- Class: 223
+  Script: {instanceID: 0}
+- Class: 224
+  Script: {instanceID: 0}
+SerializeReferenceClassIdentifiers:
+- AssemblyName: UnityEngine.CoreModule
+  ClassName: UnityEngine.Events.PersistentCallGroup
+- AssemblyName: UnityEngine.UI
+  ClassName: UnityEngine.UI.MaskableGraphic/CullStateChangedEvent
 Assets:
 - Assets/Resources/Sprites/Games/SpaceDance/Animations/Ouch.anim
 - Assets/Resources/Sprites/Games/SpaceDance/Animations/GrampsTurnRightDo.anim
@@ -51,9 +69,10 @@ Assets:
 - Assets/Resources/Games/spaceDance.prefab
 - Assets/Resources/Sprites/Games/SpaceDance/Animations/GrampsPunchStartEven.anim
 - Assets/Resources/Sprites/Games/SpaceDance/Effect.png
+- Assets/Resources/Sprites/Games/SpaceDance/Animations/GrampsMiss.anim
 - Assets/Resources/Sprites/Games/SpaceDance/Animations/GrampsSitDownDo.anim
-- Assets/Resources/Sprites/Games/SpaceDance/Animations/ShootingStar.anim
 - Assets/Resources/Sfx/games/spaceDance/voicelessTurn.wav
+- Assets/Resources/Sprites/Games/SpaceDance/Animations/ShootingStar.anim
 - Assets/Resources/Sprites/Games/SpaceDance/Animations/Stand.anim
 - Assets/Resources/Sprites/Games/SpaceDance/BGStarsUS2.png
 - Assets/Resources/Sfx/games/spaceDance/voicelessSit.wav
