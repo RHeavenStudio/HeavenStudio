@@ -15,11 +15,8 @@ namespace HeavenStudio.Games.Scripts_DJSchool
         public static bool soundFX;
 
         [Header("Properties")]
-        public float holdBeat;
-        public float swipeBeat;
         public bool isHolding;
         public bool shouldBeHolding;
-        public bool eligible;
         public bool missed;
         public bool swiping;
         bool canBoo = true;
@@ -29,7 +26,7 @@ namespace HeavenStudio.Games.Scripts_DJSchool
         [SerializeField] private GameObject flashFX;
         [SerializeField] private GameObject flashFXInverse;
         [SerializeField] private GameObject TurnTable;
-        [SerializeField] private GameObject slamFX;
+        //[SerializeField] private GameObject slamFX;
         AudioMixerGroup mixer;
 
         private Animator tableAnim;
@@ -222,7 +219,7 @@ namespace HeavenStudio.Games.Scripts_DJSchool
                 tableAnim.speed = 1;
                 tableAnim.DoScaledAnimationAsync("Student_Turntable_Swipe", 0.5f);
 
-                Instantiate(slamFX, this.transform.parent).SetActive(true);
+                //Instantiate(slamFX, this.transform.parent).SetActive(true);
                 mixer.audioMixer.FindSnapshot("Main").TransitionTo(.01f);
             }
             else
@@ -238,7 +235,7 @@ namespace HeavenStudio.Games.Scripts_DJSchool
                 tableAnim.speed = 1;
                 tableAnim.DoScaledAnimationAsync("Student_Turntable_Swipe", 0.5f);
 
-                Instantiate(slamFX, this.transform.parent).SetActive(true);
+                //Instantiate(slamFX, this.transform.parent).SetActive(true);
                 mixer.audioMixer.FindSnapshot("Main").TransitionTo(.01f);
             }
             

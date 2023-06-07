@@ -75,13 +75,14 @@ namespace HeavenStudio.Games.Loaders
                 {
                     function = delegate { 
                         var e = eventCaller.currentEntity;
-                        OctopusMachine.instance.AutoAction(e["autoBop"], e["autoText"], e["hitText"], e["missText"]); 
+                        OctopusMachine.instance.AutoAction(e["forceBop"], e["autoBop"], e["autoText"], e["hitText"], e["missText"]); 
                     },
                     parameters = new List<Param>() {
+                        new Param("forceBop", true, "Force Bop", "Forces a bop, even if an animation is playing."),
                         new Param("autoBop", true, "Hit/Miss Bop", "Plays a bop depending on if you hit or missed the cues."),
                         new Param("autoText", true, "Display Text", "Displays text depending on if you hit or missed the cues."),
                         new Param("hitText", "Good!", "Hit Text", "The text to display if you hit the cues."),
-                        new Param("missText", "Wrong! n/ Try again!", "Miss Text", "The text to display if you missed the cues."),
+                        new Param("missText", "Wrong! Try again!", "Miss Text", "The text to display if you missed the cues."),
                     },
                 },
                 new GameAction("forceSqueeze", "Force Squeeze")
@@ -240,7 +241,7 @@ namespace HeavenStudio.Games
         {
             if (queuePrepare) {
                 foreach (var octo in octopodes) octo.queuePrepare = true;
-                if (Text.text is "Wrong! \nTry Again!" or "Good!") Text.text = "";
+                if (Text.text is "Wrong! Try Again!" or "Good!") Text.text = "";
                 queuePrepare = false;
             }
 
@@ -276,12 +277,15 @@ namespace HeavenStudio.Games
             YouArrow.SetActive(youText != "");
         }
 
-        public void AutoAction(bool autoBop, bool autoText, string hitText, string missText)
+        public void AutoAction(bool forceBop, bool autoBop, bool autoText, string hitText, string missText)
         {
             autoAction = true;
             if (autoBop) bopStatus = hasMissed ? 2 : 1;
             if (autoText) Text.text = hasMissed ? missText : hitText;
-            foreach (var octo in octopodes) octo.cantBop = false;
+            foreach (var octo in octopodes) {
+                if (forceBop) octo.PlayAnimation(bopStatus);
+                octo.cantBop = false;
+            }
             hasMissed = false;
         }
 
@@ -398,21 +402,21 @@ namespace HeavenStudio.Games
         private void SqueezeHit(PlayerActionEvent caller, float state)
         {
             octopodes[2].OctoAction("Squeeze");
+            if (state <= -1f || state >= 1f) Jukebox.PlayOneShotGame("nearMiss");
         }
 
         private void ReleaseHit(PlayerActionEvent caller, float state)
         {
             octopodes[2].OctoAction("Release");
+            if (state <= -1f || state >= 1f) Jukebox.PlayOneShotGame("nearMiss");
         }
 
         private void PopHit(PlayerActionEvent caller, float state)
         {
             octopodes[2].OctoAction("Pop");
+            if (state <= -1f || state >= 1f) Jukebox.PlayOneShotGame("nearMiss");
         }
 
-        private void Miss(PlayerActionEvent caller)
-        {
-            hasMissed = true;
-        }
+        private void Miss(PlayerActionEvent caller) { }
     }
 }

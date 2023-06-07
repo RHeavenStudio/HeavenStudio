@@ -454,17 +454,17 @@ namespace HeavenStudio.Games
         {
             string[] sounds = new string[] { };
 
-            if (type == 0)
+            switch (type)
             {
+                case 0:
                 sounds = new string[] { "djSchool/scratchoHey1", "djSchool/scratchoHey2", "djSchool/scratchoHey3", "djSchool/scratchoHey4", "djSchool/hey" };
-            }
-            else if (type == 1)
-            {
+                break;
+                case 1:
                 sounds = new string[] { "djSchool/scratchoHeyAlt1", "djSchool/scratchoHeyAlt2", "djSchool/scratchoHeyAlt3", "djSchool/scratchoHeyAlt4", "djSchool/heyAlt" };
-            }
-            else if (type == 2)
-            {
+                break;
+                default:
                 sounds = new string[] { "djSchool/scratchoHeyLoud1", "djSchool/scratchoHeyLoud2", "djSchool/scratchoHeyLoud3", "djSchool/scratchoHeyLoud4", "djSchool/heyLoud" };
+                break;
             }
 
             float timing = 0f;

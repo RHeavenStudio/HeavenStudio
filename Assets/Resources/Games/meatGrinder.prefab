@@ -98,17 +98,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f5e4b8f117d68e142ae364804ec945d3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  inList: 0
-  state:
-    gameObject: {fileID: 151360738741628551}
-    early: 0
-    perfect: 0
-    late: 0
-    createBeat: 0
-  eligibleHitsList: []
-  aceTimes: 0
-  isEligible: 0
-  triggersAutoplay: 1
   startBeat: 0
   cueLength: 0
   cueBased: 0
@@ -553,7 +542,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2030340203805381603}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -6.39, y: -1.9, z: 0.06297263}
+  m_LocalPosition: {x: -6.39, y: -1.9, z: 0}
   m_LocalScale: {x: 0.76532537, y: 0.7653255, z: 0.7653254}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -1696,8 +1685,8 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 8179118432937757279}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0.06297263}
-  m_LocalScale: {x: 0.99999994, y: 1, z: 0.99320865}
+  m_LocalPosition: {x: -0.8337, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 0.99320865}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 4773680412020886884}
@@ -1748,8 +1737,8 @@ SpriteRenderer:
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
-  m_DrawMode: 0
-  m_Size: {x: 18.49, y: 11.11}
+  m_DrawMode: 2
+  m_Size: {x: 57.807255, y: 11.081}
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
   m_WasSpriteAssigned: 1
@@ -1780,7 +1769,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 8395760008825518300}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 2.65, y: -4.72, z: 0.06297263}
+  m_LocalPosition: {x: 2.65, y: -4.72, z: 0}
   m_LocalScale: {x: 0.704094, y: 0.704094, z: 0.704094}
   m_ConstrainProportionsScale: 0
   m_Children: []

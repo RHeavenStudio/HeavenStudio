@@ -40,11 +40,16 @@ namespace HeavenStudio.Games.Scripts_OctopusMachine
             
             if (isActive && player)
             {
-                if (PlayerInput.Pressed() && !game.IsExpectingInputNow(InputType.STANDARD_DOWN)) 
+                if (PlayerInput.Pressed() && !game.IsExpectingInputNow(InputType.STANDARD_DOWN)) {
                     OctoAction("Squeeze");
+                    Jukebox.PlayOneShotGame("nearMiss");
+                    game.hasMissed = true;
+                }
 
                 if (PlayerInput.PressedUp() && !game.IsExpectingInputNow(InputType.STANDARD_UP)) {
                     OctoAction(PlayerInput.Pressing(true) ? "Pop" : "Release");
+                    Jukebox.PlayOneShotGame("nearMiss");
+                    game.hasMissed = true;
                 }
             }
         }
@@ -75,6 +80,8 @@ namespace HeavenStudio.Games.Scripts_OctopusMachine
                 2 => "Angry",
                 3 => "Oops",
             }, 0.5f);
+            isPreparing =
+            isSqueezed = false;
         }
 
         public void ForceSqueeze()

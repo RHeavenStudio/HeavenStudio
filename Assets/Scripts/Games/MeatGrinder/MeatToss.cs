@@ -13,7 +13,6 @@ namespace HeavenStudio.Games.Scripts_MeatGrinder
         public float cueLength;
         public bool cueBased;
         public string meatType;
-        bool animCheck;
 
         [Header("Animators")]
         private Animator anim;
@@ -39,14 +38,7 @@ namespace HeavenStudio.Games.Scripts_MeatGrinder
 
         private void Update()
         {
-            if (GameManager.instance.currentGame != "meatGrinder") {
-                GameObject.Destroy(gameObject);
-            }
-
-            if (!Conductor.instance.isPlaying && !Conductor.instance.isPaused) {
-                GameObject.Destroy(gameObject);
-            }
-            if (anim.IsAnimationNotPlaying() && animCheck) GameObject.Destroy(gameObject);
+            if (anim.IsPlayingAnimationName("DarkIdle") || anim.IsPlayingAnimationName("LightIdle")) GameObject.Destroy(gameObject);
         }
         
         private void InputActions(bool annoyBoss, string whichSfx, string whichAnim)
@@ -60,7 +52,6 @@ namespace HeavenStudio.Games.Scripts_MeatGrinder
         {
             game.TackAnim.SetBool("tackMeated", false);
             anim.DoScaledAnimationAsync(meatType+"Hit", 0.5f);
-            animCheck = true;
 
             if (state >= 1f || state <= -1f) {
                 InputActions(true, "tink", "TackHitBarely");
