@@ -15,7 +15,7 @@ namespace HeavenStudio.Games.Loaders
                 {
                     new GameAction("bop", "Bop")
                     {
-                        function = delegate { var e = eventCaller.currentEntity; FanClub.instance.Bop((float) e.beat, e.length, e["type"], e["type2"]); }, 
+                        function = delegate { var e = eventCaller.currentEntity; FanClub.instance.Bop(e.beat, e.length, e["type"], e["type2"]); }, 
                         resizable = true,
                         parameters = new List<Param>()
                         {
@@ -25,18 +25,18 @@ namespace HeavenStudio.Games.Loaders
                     },
                     new GameAction("yeah, yeah, yeah", "Yeah, Yeah, Yeah!")
                     {
-                        function = delegate { var e = eventCaller.currentEntity; FanClub.instance.CallHai((float) e.beat, e["toggle"]); }, 
+                        function = delegate { var e = eventCaller.currentEntity; FanClub.instance.CallHai(e.beat, e["toggle"]); }, 
                         defaultLength = 8,
                         parameters = new List<Param>()
                         {
                             new Param("toggle", false, "Disable call", "Disable the idol's call")
                         },
-                        inactiveFunction = delegate { var e = eventCaller.currentEntity; FanClub.WarnHai((float) e.beat, e["toggle"]);},
-                        preFunction = delegate { var e = eventCaller.currentEntity; FanClub.HaiSound((float) e.beat, e["toggle"]); }
+                        inactiveFunction = delegate { var e = eventCaller.currentEntity; FanClub.WarnHai(e.beat, e["toggle"]);},
+                        preFunction = delegate { var e = eventCaller.currentEntity; FanClub.HaiSound(e.beat, e["toggle"]); }
                     },
                     new GameAction("I suppose", "I Suppose!")
                     {
-                        function = delegate { var e = eventCaller.currentEntity; FanClub.instance.CallKamone((float) e.beat, e["toggle"], 0, e["type"], e["alt"]); }, 
+                        function = delegate { var e = eventCaller.currentEntity; FanClub.instance.CallKamone(e.beat, e["toggle"], 0, e["type"], e["alt"]); }, 
                         defaultLength = 6, 
                         parameters = new List<Param>()
                         {
@@ -44,23 +44,23 @@ namespace HeavenStudio.Games.Loaders
                             new Param("toggle", false, "Disable call", "Disable the idol's call"),
                             new Param("alt", false, "Alternate cue", "Use an alternate cue")
                         },
-                        inactiveFunction = delegate { var e = eventCaller.currentEntity; FanClub.WarnKamone((float) e.beat, e["toggle"], 0, e["type"], e["alt"]);},
-                        preFunction = delegate { var e = eventCaller.currentEntity; FanClub.KamoneSound((float) e.beat, e["toggle"], 0, e["type"], e["alt"]); }
+                        inactiveFunction = delegate { var e = eventCaller.currentEntity; FanClub.WarnKamone(e.beat, e["toggle"], 0, e["type"], e["alt"]);},
+                        preFunction = delegate { var e = eventCaller.currentEntity; FanClub.KamoneSound(e.beat, e["toggle"], 0, e["type"], e["alt"]); }
                     },
                     new GameAction("double clap", "Double Clap")
                     {
-                        function = delegate { var e = eventCaller.currentEntity; FanClub.instance.CallBigReady((float) e.beat, e["toggle"]); }, 
+                        function = delegate { var e = eventCaller.currentEntity; FanClub.instance.CallBigReady(e.beat, e["toggle"]); }, 
                         defaultLength = 4,
                         parameters = new List<Param>()
                         {
                             new Param("toggle", false, "Disable call", "Disable the call")
                         },
-                        inactiveFunction = delegate { var e = eventCaller.currentEntity; FanClub.WarnBigReady((float) e.beat, e["toggle"]); },
-                        preFunction = delegate { var e = eventCaller.currentEntity; FanClub.BigReadySound((float) e.beat, e["toggle"]); }
+                        inactiveFunction = delegate { var e = eventCaller.currentEntity; FanClub.WarnBigReady(e.beat, e["toggle"]); },
+                        preFunction = delegate { var e = eventCaller.currentEntity; FanClub.BigReadySound(e.beat, e["toggle"]); }
                     },
                     new GameAction("play idol animation", "Idol Coreography")
                     {
-                        function = delegate { var e = eventCaller.currentEntity; FanClub.instance.PlayAnim((float) e.beat, e.length, e["type"], e["who"]); },
+                        function = delegate { var e = eventCaller.currentEntity; FanClub.instance.PlayAnim(e.beat, e.length, e["type"], e["who"]); },
                         resizable = true, 
                         parameters = new List<Param>()
                         {
@@ -70,7 +70,7 @@ namespace HeavenStudio.Games.Loaders
                     },
                     new GameAction("play stage animation", "Stage Coreography")
                     {
-                        function = delegate { var e = eventCaller.currentEntity; FanClub.instance.PlayAnimStage((float) e.beat, e["type"]); }, 
+                        function = delegate { var e = eventCaller.currentEntity; FanClub.instance.PlayAnimStage(e.beat, e["type"]); }, 
                         resizable = true, 
                         parameters = new List<Param>()
                         {
@@ -79,7 +79,7 @@ namespace HeavenStudio.Games.Loaders
                     },
                     new GameAction("friend walk", "Backup Dancers Entrance")
                     {
-                        function = delegate { var e = eventCaller.currentEntity; FanClub.instance.DancerTravel((float) e.beat, e.length, e["exit"], e["instant"]); },
+                        function = delegate { var e = eventCaller.currentEntity; FanClub.instance.DancerTravel(e.beat, e.length, e["exit"], e["instant"]); },
                         defaultLength = 16f,
                         resizable = true, 
                         parameters = new List<Param>()
@@ -101,7 +101,7 @@ namespace HeavenStudio.Games.Loaders
                     },
                     new GameAction("finish", "Applause")
                     {
-                        function = delegate { var e = eventCaller.currentEntity; FanClub.instance.FinalCheer((float) e.beat); }, 
+                        function = delegate { var e = eventCaller.currentEntity; FanClub.instance.FinalCheer(e.beat); }, 
                     },
                 },
                 new List<string>() {"ntr", "normal"},
@@ -209,14 +209,14 @@ namespace HeavenStudio.Games
         private GameEvent noCall = new GameEvent();
         private GameEvent noSpecBop = new GameEvent();
 
-        private float idolJumpStartTime = Single.MinValue;
+        private double idolJumpStartTime = double.MinValue;
         private static int performanceType = (int) IdolPerformanceType.Normal;
         private bool responseToggle = false;
-        private static float wantHais = Single.MinValue;
-        private static float wantKamone = Single.MinValue;
+        private static double wantHais = double.MinValue;
+        private static double wantKamone = double.MinValue;
         private static int wantKamoneType = (int) KamoneResponseType.Through;
         private static bool wantKamoneAlt = false;
-        private static float wantBigReady = Single.MinValue;
+        private static double wantBigReady = double.MinValue;
         private bool hasJumped = false;
         private bool goBopIdol = true;
         private bool goBopSpec = true;
@@ -296,7 +296,7 @@ namespace HeavenStudio.Games
             {
                 if (e.beat <= Conductor.instance.songPositionInBeatsAsDouble)
                 {
-                    DancerTravel((float) e.beat, e.length, e["exit"], e["instant"]);
+                    DancerTravel(e.beat, e.length, e["exit"], e["instant"]);
                 }
             }
 
@@ -333,20 +333,20 @@ namespace HeavenStudio.Games
 
         public override void OnGameSwitch(double beat)
         {
-            if (wantHais != Single.MinValue)
+            if (wantHais != double.MinValue)
             {
                 ContinueHais(wantHais);
-                wantHais = Single.MinValue;
+                wantHais = double.MinValue;
             }
-            if (wantKamone != Single.MinValue)
+            if (wantKamone != double.MinValue)
             {
                 ContinueKamone(wantKamone, 0, wantKamoneType, wantKamoneAlt);
-                wantKamone = Single.MinValue;
+                wantKamone = double.MinValue;
             }
-            if (wantBigReady != Single.MinValue)
+            if (wantBigReady != double.MinValue)
             {
                 ContinueBigReady(wantBigReady);
-                wantBigReady = Single.MinValue;
+                wantBigReady = double.MinValue;
             }
         }
 
@@ -357,7 +357,7 @@ namespace HeavenStudio.Games
             {
                 if (goBopIdol)
                 {
-                    if (!(cond.songPositionInBeats >= noBop.startBeat && cond.songPositionInBeats < noBop.startBeat + noBop.length))
+                    if (!(cond.songPositionInBeatsAsDouble >= noBop.startBeat && cond.songPositionInBeatsAsDouble < noBop.startBeat + noBop.length))
                     {
                         idolAnimator.Play("IdolBeat" + GetPerformanceSuffix(), 0, 0);
                         Blue.PlayAnimState("Beat");
@@ -370,7 +370,7 @@ namespace HeavenStudio.Games
             {
                 if (goBopSpec)
                 {
-                    if (!(cond.songPositionInBeats >= noSpecBop.startBeat && cond.songPositionInBeats < noSpecBop.startBeat + noSpecBop.length))
+                    if (!(cond.songPositionInBeatsAsDouble >= noSpecBop.startBeat && cond.songPositionInBeatsAsDouble < noSpecBop.startBeat + noSpecBop.length))
                         BopAll();
                 }
             }
@@ -378,7 +378,7 @@ namespace HeavenStudio.Games
             //idol jumping physics
             float jumpPos = cond.GetPositionFromBeat(idolJumpStartTime, 1f);
             float IDOL_SHADOW_SCALE = 1.18f;
-            if (cond.songPositionInBeats >= idolJumpStartTime && cond.songPositionInBeats < idolJumpStartTime + 1f)
+            if (cond.songPositionInBeatsAsDouble >= idolJumpStartTime && cond.songPositionInBeatsAsDouble < idolJumpStartTime + 1f)
             {
                 hasJumped = true;
                 float yMul = jumpPos * 2f - 1f;
@@ -388,13 +388,13 @@ namespace HeavenStudio.Games
             }
             else
             {
-                idolJumpStartTime = Single.MinValue;
+                idolJumpStartTime = double.MinValue;
                 ArisaRootMotion.transform.localPosition = new Vector3(0, 0);
                 ArisaShadow.transform.localScale = new Vector3(IDOL_SHADOW_SCALE, IDOL_SHADOW_SCALE, 1f);
             }
         }
 
-        public void Bop(float beat, float length, int target = (int) IdolBopType.Both, int targetAuto = (int)IdolBopType.Both)
+        public void Bop(double beat, float length, int target = (int) IdolBopType.Both, int targetAuto = (int)IdolBopType.Both)
         {
             goBopIdol = targetAuto == (int)IdolBopType.Both || targetAuto == (int)IdolBopType.Idol;
             goBopSpec = targetAuto == (int)IdolBopType.Both || targetAuto == (int)IdolBopType.Spectators;
@@ -430,33 +430,33 @@ namespace HeavenStudio.Games
             }
         }
 
-        private void DisableBop(float beat, float length)
+        private void DisableBop(double beat, float length)
         {
             noBop.length = length;
             noBop.startBeat = beat;
         }
 
-        private void DisableResponse(float beat, float length)
+        private void DisableResponse(double beat, float length)
         {
             noResponse.length = length;
             noResponse.startBeat = beat;
         }
 
-        private void DisableCall(float beat, float length)
+        private void DisableCall(double beat, float length)
         {
             noCall.length = length;
             noCall.startBeat = beat;
         }
 
-        private void DisableSpecBop(float beat, float length)
+        private void DisableSpecBop(double beat, float length)
         {
-            float bt = Conductor.instance.songPositionInBeats;
+            double bt = Conductor.instance.songPositionInBeatsAsDouble;
             if (bt >= noSpecBop.startBeat && bt < noSpecBop.startBeat + noSpecBop.length)
             {
-                float thisStToNextSt = beat - noSpecBop.startBeat;
-                float newLen = thisStToNextSt + length;
+                double thisStToNextSt = beat - noSpecBop.startBeat;
+                double newLen = thisStToNextSt + length;
                 if (newLen > noSpecBop.length)
-                    noSpecBop.length = thisStToNextSt + length;
+                    noSpecBop.length = (float)thisStToNextSt + length;
             }
             else
             {
@@ -465,9 +465,9 @@ namespace HeavenStudio.Games
             }
         }
 
-        public void PlayAnim(float beat, float length, int type, int who)
+        public void PlayAnim(double beat, float length, int type, int who)
         {
-            idolJumpStartTime = Single.MinValue;
+            idolJumpStartTime = double.MinValue;
             DisableResponse(beat, length + 0.5f);
             DisableBop(beat, length + 0.5f);
             DisableCall(beat, length + 0.5f);
@@ -536,7 +536,7 @@ namespace HeavenStudio.Games
             }
         }
 
-        public void PlayAnimStage(float beat, int type)
+        public void PlayAnimStage(double beat, int type)
         {
             switch (type)
             {
@@ -566,7 +566,7 @@ namespace HeavenStudio.Games
                 spectatorMat.SetColor("_Color", new Color(117/255f, 177/255f, 209/255f, 1));
         }
 
-        private void DoIdolJump(float beat, float length = 3f)
+        private void DoIdolJump(double beat, float length = 3f)
         {
             DisableBop(beat, length);
             DisableResponse(beat, length);
@@ -584,7 +584,7 @@ namespace HeavenStudio.Games
         {
             if (!responseToggle)
             {
-                if (!(Conductor.instance.songPositionInBeats >= noResponse.startBeat && Conductor.instance.songPositionInBeats < noResponse.startBeat + noResponse.length))
+                if (!(Conductor.instance.songPositionInBeatsAsDouble >= noResponse.startBeat && Conductor.instance.songPositionInBeatsAsDouble < noResponse.startBeat + noResponse.length))
                 {
                     idolAnimator.Play("IdolCrap" + GetPerformanceSuffix(), -1, 0);
                     Blue.PlayAnimState("Crap");
@@ -595,7 +595,7 @@ namespace HeavenStudio.Games
 
         private void DoIdolPeace(bool sync = true)
         {
-            if (!(Conductor.instance.songPositionInBeats >= noCall.startBeat && Conductor.instance.songPositionInBeats < noCall.startBeat + noCall.length))
+            if (!(Conductor.instance.songPositionInBeatsAsDouble >= noCall.startBeat && Conductor.instance.songPositionInBeatsAsDouble < noCall.startBeat + noCall.length))
             {
                 if (sync)
                     idolAnimator.Play("IdolPeace" + GetPerformanceSuffix(), -1, 0);
@@ -610,14 +610,14 @@ namespace HeavenStudio.Games
         {
             if (responseToggle)
             {
-                if (!(Conductor.instance.songPositionInBeats >= noResponse.startBeat && Conductor.instance.songPositionInBeats < noResponse.startBeat + noResponse.length))
+                if (!(Conductor.instance.songPositionInBeatsAsDouble >= noResponse.startBeat && Conductor.instance.songPositionInBeatsAsDouble < noResponse.startBeat + noResponse.length))
                     idolAnimator.Play("IdolResponse" + GetPerformanceSuffix(), -1, 0);
             }
         }
 
         private void DoIdolCall(int part = 0, bool big = false)
         {
-            if (!(Conductor.instance.songPositionInBeats >= noCall.startBeat && Conductor.instance.songPositionInBeats < noCall.startBeat + noCall.length))
+            if (!(Conductor.instance.songPositionInBeatsAsDouble >= noCall.startBeat && Conductor.instance.songPositionInBeatsAsDouble < noCall.startBeat + noCall.length))
             {
                 if (big)
                 {
@@ -631,7 +631,7 @@ namespace HeavenStudio.Games
         }
 
         const float HAIS_LENGTH = 4.5f;
-        public void CallHai(float beat, bool noSound = false, int type = 0)
+        public void CallHai(double beat, bool noSound = false, int type = 0)
         {
             responseToggle = false;
             DisableBop(beat, 8f);
@@ -658,25 +658,25 @@ namespace HeavenStudio.Games
             PlaySoundSequence("fanClub", "crowd_hai", beat + 4f);
         }
 
-        public static void WarnHai(float beat, bool noSound = false, int type = 0)
+        public static void WarnHai(double beat, bool noSound = false, int type = 0)
         {
             wantHais = beat;
         }
 
-        public static void HaiSound(float beat, bool noSound = false, int type = 0)
+        public static void HaiSound(double beat, bool noSound = false, int type = 0)
         {
             if (noSound) return;
             PlaySoundSequence("fanClub", "arisa_hai", beat);
         }
 
 
-        public void ContinueHais(float beat, int type = 0)
+        public void ContinueHais(double beat, int type = 0)
         {
             CallHai(beat, true, type);
         }
 
         const float CALL_LENGTH = 2.5f;
-        public void CallKamone(float beat, bool noSound = false, int type = 0, int responseType = (int) KamoneResponseType.Through, bool alt = false)
+        public void CallKamone(double beat, bool noSound = false, int type = 0, int responseType = (int) KamoneResponseType.Through, bool alt = false)
         {
             bool doJump = (responseType == (int) KamoneResponseType.Jump || responseType == (int) KamoneResponseType.JumpFast);
             bool isBig = (responseType == (int) KamoneResponseType.ThroughFast || responseType == (int) KamoneResponseType.JumpFast);
@@ -719,14 +719,14 @@ namespace HeavenStudio.Games
             PlaySoundSequence("fanClub", alt ? "crowd_iina" : "crowd_kamone", beat + 2f);
         }
 
-        public static void WarnKamone(float beat, bool noSound = false, int type = 0, int responseType = (int) KamoneResponseType.Through, bool alt = false)
+        public static void WarnKamone(double beat, bool noSound = false, int type = 0, int responseType = (int) KamoneResponseType.Through, bool alt = false)
         {
             wantKamone = beat;
             wantKamoneType = responseType;
             wantKamoneAlt = alt;
         }
 
-        public static void KamoneSound(float beat, bool noSound = false, int type = 0, int responseType = (int) KamoneResponseType.Through, bool alt = false)
+        public static void KamoneSound(double beat, bool noSound = false, int type = 0, int responseType = (int) KamoneResponseType.Through, bool alt = false)
         {
             if (noSound) return;
             if (responseType == (int) KamoneResponseType.ThroughFast || responseType == (int) KamoneResponseType.JumpFast)
@@ -739,13 +739,13 @@ namespace HeavenStudio.Games
             }
         }
 
-        public void ContinueKamone(float beat, int type = 0, int responseType = (int) KamoneResponseType.Through, bool alt = false)
+        public void ContinueKamone(double beat, int type = 0, int responseType = (int) KamoneResponseType.Through, bool alt = false)
         {
             CallKamone(beat, true, type, responseType, alt);
         }
 
         const float BIGCALL_LENGTH = 2.75f;
-        public void CallBigReady(float beat, bool noSound = false)
+        public void CallBigReady(double beat, bool noSound = false)
         {
             Prepare(beat + 1.5f);
             Prepare(beat + 2f);
@@ -762,23 +762,23 @@ namespace HeavenStudio.Games
             });
         }
 
-        public static void WarnBigReady(float beat, bool noSound = false)
+        public static void WarnBigReady(double beat, bool noSound = false)
         {
             wantBigReady = beat;
         }
 
-        public static void BigReadySound(float beat, bool noSound = false)
+        public static void BigReadySound(double beat, bool noSound = false)
         {
             if (noSound) return;
             PlaySoundSequence("fanClub", "crowd_big_ready", beat);
         }
 
-        public void ContinueBigReady(float beat)
+        public void ContinueBigReady(double beat)
         {
             CallBigReady(beat, true);
         }
 
-        public void Prepare(float beat, int type = 0)
+        public void Prepare(double beat, int type = 0)
         {
             Player.AddHit(beat, type);
         }
@@ -832,7 +832,7 @@ namespace HeavenStudio.Games
             }
         }
 
-        private void PlayOneClap(float beat, int who = -1)
+        private void PlayOneClap(double beat, int who = -1)
         {
             if (who != -1) 
             {
@@ -863,7 +863,7 @@ namespace HeavenStudio.Games
             }
         }
 
-        private void PlayLongClap(float beat)
+        private void PlayLongClap(double beat)
         {
             BeatAction.New(this.gameObject, new List<BeatAction.Action>()
             {
@@ -872,7 +872,7 @@ namespace HeavenStudio.Games
             });
         }
 
-        private void PlayChargeClap(float beat)
+        private void PlayChargeClap(double beat)
         {
             BeatAction.New(this.gameObject, new List<BeatAction.Action>()
             {
@@ -881,7 +881,7 @@ namespace HeavenStudio.Games
             });
         }
 
-        private void StartJump(int idx, float beat)
+        private void StartJump(int idx, double beat)
         {
             Spectators[idx].GetComponent<NtrIdolFan>().jumpStartTime = beat;
             BeatAction.New(Spectators[idx], new List<BeatAction.Action>()
@@ -891,7 +891,7 @@ namespace HeavenStudio.Games
             });
         }
 
-        private void PlayJump(float beat)
+        private void PlayJump(double beat)
         {
             for (int i = 0; i < Spectators.Count; i++)
             {
@@ -912,7 +912,7 @@ namespace HeavenStudio.Games
             }
         }
 
-        public void DancerTravel(float beat, float length, bool exit, bool instant)
+        public void DancerTravel(double beat, float length, bool exit, bool instant)
         {
             if (instant)
             {
@@ -926,7 +926,7 @@ namespace HeavenStudio.Games
             }
         }
 
-        public void FinalCheer(float beat)
+        public void FinalCheer(double beat)
         {
             if (noJudgement) return;
             noJudgement = true;
@@ -970,7 +970,7 @@ namespace HeavenStudio.Games
             });
         }
 
-        void StartClapLoop(float beat, int who)
+        void StartClapLoop(double beat, int who)
         {
             BeatAction.New(Spectators[who], new List<BeatAction.Action>()
             {

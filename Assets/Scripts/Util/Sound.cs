@@ -1,5 +1,5 @@
+using System;
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using Starpelly;
 
@@ -17,8 +17,8 @@ namespace HeavenStudio.Util
         public double scheduledTime;
 
         public bool looping;
-        public float loopEndBeat = -1;
-        public float fadeTime;
+        public double loopEndBeat = -1;
+        public double fadeTime;
         int loopIndex = 0;
 
         private AudioSource audioSource;
@@ -126,7 +126,7 @@ namespace HeavenStudio.Util
             }
         }
 
-        public void SetLoopParams(float endBeat, float fadeTime)
+        public void SetLoopParams(double endBeat, double fadeTime)
         {
             loopEndBeat = endBeat;
             this.fadeTime = fadeTime;
@@ -202,20 +202,20 @@ namespace HeavenStudio.Util
 
         #endregion
 
-        public void KillLoop(float fadeTime)
+        public void KillLoop(double fadeTime)
         {
             StartCoroutine(FadeLoop(fadeTime));
         }
 
         float loopFadeTimer = 0f;
-        IEnumerator FadeLoop(float fadeTime)
+        IEnumerator FadeLoop(double fadeTime)
         {
             float startingVol = audioSource.volume;
 
             while (loopFadeTimer < fadeTime)
             {
                 loopFadeTimer += Time.deltaTime;
-                audioSource.volume = Mathf.Max((1f - (loopFadeTimer / fadeTime)) * startingVol, 0f);
+                audioSource.volume = (float) Math.Max((1f - (loopFadeTimer / fadeTime)) * startingVol, 0.0);
                 yield return null;
             }
 

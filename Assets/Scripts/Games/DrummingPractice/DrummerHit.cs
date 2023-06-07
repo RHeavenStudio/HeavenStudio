@@ -9,7 +9,7 @@ namespace HeavenStudio.Games.Scripts_DrummingPractice
     public class DrummerHit : MonoBehaviour
     {
         DrummingPractice game;
-        public float startBeat;
+        public double startBeat;
         public bool applause = true;
 
         // Start is called before the first frame update

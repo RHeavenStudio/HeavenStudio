@@ -199,7 +199,7 @@ namespace HeavenStudio.Games
         private int marchOtherCount;
         private int marchPlayerCount;
         private float lastMissBeat;
-        private float lastReportedBeat;
+        private double lastReportedBeat;
         public static float wantMarch = float.MinValue;
         
 

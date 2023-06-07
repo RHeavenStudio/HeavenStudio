@@ -13,7 +13,7 @@ namespace HeavenStudio.Games.Scripts_ForkLifter
         ForkLifter game;
         private Animator anim;
 
-        public float startBeat;
+        public double startBeat;
 
         public int type;
 
@@ -25,8 +25,8 @@ namespace HeavenStudio.Games.Scripts_ForkLifter
             // SCHEDULING zoom sound so it lines up with when it meets the fork.
             var currentDspTime = AudioSettings.dspTime;
             var cond = Conductor.instance;
-            var zoomStartTime = currentDspTime + (double)(cond.pitchedSecPerBeat * 2) - 0.317;
-            SoundByte.PlayOneShotScheduledGame("forkLifter/zoomFast", (double)zoomStartTime);
+            var zoomStartTime = currentDspTime + (cond.pitchedSecPerBeatAsDouble * 2) - 0.317;
+            SoundByte.PlayOneShotScheduledGame("forkLifter/zoomFast", zoomStartTime);
 
             GetComponentInChildren<SpriteRenderer>().sprite = game.peaSprites[type];
 

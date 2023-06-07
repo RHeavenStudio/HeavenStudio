@@ -8,7 +8,7 @@ namespace HeavenStudio.Games.Scripts_CropStomp
 {
     public class Farmer : MonoBehaviour
     {
-        public float nextStompBeat;
+        public double nextStompBeat;
 
         private CropStomp game;
 

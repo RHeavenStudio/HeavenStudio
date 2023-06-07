@@ -95,7 +95,7 @@ namespace HeavenStudio.Games
         bool bossBop = true;
         public float beatInterval = 4f;
         public bool bossAnnoyed = false;
-        private float lastReportedBeat = 0f;
+        private double lastReportedBeat = 0f;
         const string sfxName = "meatGrinder/";
 
         public static MeatGrinder instance;

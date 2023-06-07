@@ -12,7 +12,7 @@ namespace HeavenStudio.Games.Scripts_Fireworks
         public bool applause;
         private bool exploded;
         private Fireworks game;
-        private float startBeat;
+        private double startBeat;
         private Animator anim;
 
         void Awake()
@@ -21,7 +21,7 @@ namespace HeavenStudio.Games.Scripts_Fireworks
             anim = GetComponent<Animator>();
         }
 
-        public void Init(float beat)
+        public void Init(double beat)
         {
             game.ScheduleInput(beat, 1f, InputType.STANDARD_DOWN, Just, Out, Out);
             startBeat = beat;

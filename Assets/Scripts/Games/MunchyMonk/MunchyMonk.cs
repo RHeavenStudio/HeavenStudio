@@ -189,7 +189,7 @@ namespace HeavenStudio.Games
 
         [Header("Variables")]
         [SerializeField] Sprite[] dumplingSprites;
-        public float lastReportedBeat = 0f;
+        public double lastReportedBeat = 0f;
         public bool needBlush;
         public bool isStaring;
         bool monkBop = true;

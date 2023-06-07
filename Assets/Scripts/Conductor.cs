@@ -16,10 +16,12 @@ namespace HeavenStudio
         public float songBpm;
 
         // The number of seconds for each song beat
-        public float secPerBeat;
+        public float secPerBeat => (float)secPerBeatAsDouble;
+        public double secPerBeatAsDouble;
 
         // The number of seconds for each song beat, inversely scaled to song pitch (higer pitch = shorter time)
-        public float pitchedSecPerBeat => (secPerBeat / SongPitch);
+        public float pitchedSecPerBeat => (float)pitchedSecPerBeatAsDouble;
+        public double pitchedSecPerBeatAsDouble => (secPerBeat / SongPitch);
 
         // Current song position, in seconds
         private double songPos; // for Conductor use only
@@ -37,8 +39,9 @@ namespace HeavenStudio
         double lastAbsTime;
 
         // the dspTime we started at
-        private double dspStartTime;
-        public double dspStartTimeAsDouble => dspStartTime;
+        private double dspStart;
+        private float dspStartTime => (float)dspStart;
+        public double dspStartTimeAsDouble => dspStart;
 
         //the beat we started at
         private double startBeat;
@@ -60,7 +63,7 @@ namespace HeavenStudio
         public bool isPaused;
 
         // Last reported beat based on song position
-        private float lastReportedBeat = 0f;
+        private double lastReportedBeat = 0f;
 
         // Metronome tick sound enabled
         public bool metronome = false;
@@ -167,7 +170,7 @@ namespace HeavenStudio
                 }
             }
             lastAbsTime = Time.realtimeSinceStartupAsDouble;
-            dspStartTime = AudioSettings.dspTime;
+            dspStart = AudioSettings.dspTime;
             startBeat = beat;
 
             // GameManager.instance.SetCurrentEventToClosest(songPositionInBeats);
@@ -233,7 +236,7 @@ namespace HeavenStudio
             }
         }
 
-        public bool ReportBeat(ref float lastReportedBeat, float offset = 0, bool shiftBeatToOffset = true)
+        public bool ReportBeat(ref double lastReportedBeat, double offset = 0, bool shiftBeatToOffset = true)
         {
             bool result = songPositionInBeats + (shiftBeatToOffset ? offset : 0f) >= (lastReportedBeat) + 1f;
             if (result)
@@ -358,7 +361,7 @@ namespace HeavenStudio
         //
 
         // convert real seconds to beats
-        public float GetRestFromRealTime(float seconds)
+        public double GetRestFromRealTime(double seconds)
         {
             return seconds/pitchedSecPerBeat;
         }
@@ -366,7 +369,7 @@ namespace HeavenStudio
         public void SetBpm(float bpm)
         {
             this.songBpm = bpm;
-            secPerBeat = 60f / songBpm;
+            secPerBeatAsDouble = 60.0 / songBpm;
         }
 
         public void SetVolume(float percent)

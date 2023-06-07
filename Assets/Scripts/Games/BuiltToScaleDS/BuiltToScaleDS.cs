@@ -18,7 +18,7 @@ namespace HeavenStudio.Games.Loaders
             {
                 new GameAction("spawn blocks", "Widget")
                 {
-                    function = delegate {var e = eventCaller.currentEntity; BuiltToScaleDS.instance.MultiplePiano((float) e.beat, e.length, e["silent"], e["note1"], e["note2"], e["note3"], e["note4"], e["note5"], e["note6"]); },
+                    function = delegate {var e = eventCaller.currentEntity; BuiltToScaleDS.instance.MultiplePiano(e.beat, e.length, e["silent"], e["note1"], e["note2"], e["note3"], e["note4"], e["note5"], e["note6"]); },
                     resizable = true,
                     parameters = new List<Param>()
                     {
@@ -33,7 +33,7 @@ namespace HeavenStudio.Games.Loaders
                 },
                 new GameAction("play piano", "Play Note")
                 {
-                    function = delegate { BuiltToScaleDS.instance.PlayPiano((float) eventCaller.currentEntity.beat, eventCaller.currentEntity.length, eventCaller.currentEntity["type"]); },
+                    function = delegate { BuiltToScaleDS.instance.PlayPiano(eventCaller.currentEntity.beat, eventCaller.currentEntity.length, eventCaller.currentEntity["type"]); },
                     resizable = true,
                     parameters = new List<Param>()
                     {
@@ -53,7 +53,7 @@ namespace HeavenStudio.Games.Loaders
                 },
                 new GameAction("lights", "Lights")
                 {
-                    function = delegate { var e = eventCaller.currentEntity; BuiltToScaleDS.instance.Lights((float) e.beat, e.length, e["auto"], e["light"] && !e["auto"]); },
+                    function = delegate { var e = eventCaller.currentEntity; BuiltToScaleDS.instance.Lights(e.beat, e.length, e["auto"], e["light"] && !e["auto"]); },
                     defaultLength = 4f,
                     resizable = true,
                     parameters = new List<Param>()
@@ -248,7 +248,7 @@ namespace HeavenStudio.Games
                 var spawnBeat = ev.beat - ev.length;
                 if (currentBeat > spawnBeat && currentBeat < ev.beat + ev.length)
                 {
-                    SpawnBlocks((float) spawnBeat, ev.length);
+                    SpawnBlocks(spawnBeat, ev.length);
                     spawnedBlockEvents.Add(ev);
                     break;
                 }
@@ -293,7 +293,7 @@ namespace HeavenStudio.Games
             shootingThisFrame = false;
         }
 
-        public void Lights(float beat, float length, bool autoLights, bool shouldLights)
+        public void Lights(double beat, float length, bool autoLights, bool shouldLights)
         {
             autoLight = autoLights;
             lighting = autoLights || shouldLights;
@@ -362,7 +362,7 @@ namespace HeavenStudio.Games
             firstLight = !firstLight;
         }
 
-        public void SpawnBlocks(float beat, float length)
+        public void SpawnBlocks(double beat, float length)
         {
             var newBlocks = GameObject.Instantiate(movingBlocksBase, blocksHolder).GetComponent<Blocks>();
             newBlocks.createBeat = beat;
@@ -377,7 +377,7 @@ namespace HeavenStudio.Games
         const int blockTotalFrames = 80;
         const int spawnFrameOffset = -3;
         List<int> criticalFrames = new List<int> { 7, 15, 23, 31, 39, 47 };
-        public void SetBlockTime(Blocks blocks, float spawnBeat, float length)
+        public void SetBlockTime(Blocks blocks, double spawnBeat, float length)
         {
             float spawnTimeOffset = (float)spawnFrameOffset / (float)blockFramesPerSecond;
 
@@ -389,7 +389,7 @@ namespace HeavenStudio.Games
 
             float speedMult = secondsToHitFrame / secondsToHitBeat;
 
-            float secondsPastSpawnTime = secondsPerBeat * (Conductor.instance.songPositionInBeats - spawnBeat) + spawnTimeOffset;
+            float secondsPastSpawnTime = secondsPerBeat * (Conductor.instance.songPositionInBeats - (float)spawnBeat) + spawnTimeOffset;
             float framesPastSpawnTime = blockFramesPerSecond * speedMult * secondsPastSpawnTime;
             
             // The only way I could deal with Unity's interpolation shenanigans without having a stroke.
@@ -435,7 +435,7 @@ namespace HeavenStudio.Games
             elevatorAnim.Play("MakeRod", 0, 0);
         }
 
-        public void PlayPiano(float beat, float length, int semiTones)
+        public void PlayPiano(double beat, float length, int semiTones)
         {
             var pianoPitch = SoundByte.GetPitchFromSemiTones(semiTones, true);
             var pianoSource = SoundByte.PlayOneShotGame("builtToScaleDS/Piano", -1, pianoPitch, 0.8f, true);
@@ -443,7 +443,7 @@ namespace HeavenStudio.Games
             pianoSource.SetLoopParams(beat + length, 0.1f);
         }
 
-        public void MultiplePiano(float beat, float length, bool silent, int note1, int note2, int note3, int note4, int note5, int note6)
+        public void MultiplePiano(double beat, float length, bool silent, int note1, int note2, int note3, int note4, int note5, int note6)
         {
             if (silent) return;
             BeatAction.New(instance.gameObject, new List<BeatAction.Action>()

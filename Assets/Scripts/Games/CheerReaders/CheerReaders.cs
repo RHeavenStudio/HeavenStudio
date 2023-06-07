@@ -21,7 +21,7 @@ namespace HeavenStudio.Games.Loaders
             {
                 new GameAction("oneTwoThree", "One Two Three!")
                 {
-                    function = delegate {var e = eventCaller.currentEntity; CheerReaders.instance.OneTwoThree((float) e.beat, e["solo"]); CheerReaders.instance.SetIsDoingCue((float) e.beat, e.length);},
+                    function = delegate {var e = eventCaller.currentEntity; CheerReaders.instance.OneTwoThree(e.beat, e["solo"]); CheerReaders.instance.SetIsDoingCue(e.beat, e.length);},
                     defaultLength = 3f,
                     parameters = new List<Param>()
                     {
@@ -30,7 +30,7 @@ namespace HeavenStudio.Games.Loaders
                 },
                 new GameAction("itsUpToYou", "It's Up To You!")
                 {
-                    function = delegate {var e = eventCaller.currentEntity; CheerReaders.instance.ItsUpToYou((float) e.beat, e["solo"]); CheerReaders.instance.SetIsDoingCue((float) e.beat, e.length);},
+                    function = delegate {var e = eventCaller.currentEntity; CheerReaders.instance.ItsUpToYou(e.beat, e["solo"]); CheerReaders.instance.SetIsDoingCue(e.beat, e.length);},
                     defaultLength = 3f,
                     parameters = new List<Param>()
                     {
@@ -39,7 +39,7 @@ namespace HeavenStudio.Games.Loaders
                 },
                 new GameAction("letsGoReadABunchaBooks", "Let's Go Read A Buncha Books!")
                 {
-                    function = delegate {var e = eventCaller.currentEntity; CheerReaders.instance.LetsGoReadABunchaBooks((float) e.beat, e["solo"]); CheerReaders.instance.SetIsDoingCue((float) e.beat, e.length);},
+                    function = delegate {var e = eventCaller.currentEntity; CheerReaders.instance.LetsGoReadABunchaBooks(e.beat, e["solo"]); CheerReaders.instance.SetIsDoingCue(e.beat, e.length);},
                     defaultLength = 3f,
                     parameters = new List<Param>()
                     {
@@ -48,7 +48,7 @@ namespace HeavenStudio.Games.Loaders
                 },
                 new GameAction("rahRahSisBoomBaBoom", "Rah-Rah Sis Boom Bah-Boom!")
                 {
-                    function = delegate {var e = eventCaller.currentEntity; CheerReaders.instance.RahRahSisBoomBaBoom((float) e.beat, e["solo"], e["consecutive"]); CheerReaders.instance.SetIsDoingCue((float) e.beat, e.length);},
+                    function = delegate {var e = eventCaller.currentEntity; CheerReaders.instance.RahRahSisBoomBaBoom(e.beat, e["solo"], e["consecutive"]); CheerReaders.instance.SetIsDoingCue(e.beat, e.length);},
                     defaultLength = 4f,
                     parameters = new List<Param>()
                     {
@@ -58,7 +58,7 @@ namespace HeavenStudio.Games.Loaders
                 },
                 new GameAction("okItsOn", "OK It's On!")
                 {
-                    function = delegate {var e = eventCaller.currentEntity; CheerReaders.instance.OkItsOnStretchable((float) e.beat, e.length, e["solo"], e["toggle"], e["poster"], e["happy"]); CheerReaders.instance.SetIsDoingCue((float) e.beat, e.length, false);},
+                    function = delegate {var e = eventCaller.currentEntity; CheerReaders.instance.OkItsOnStretchable(e.beat, e.length, e["solo"], e["toggle"], e["poster"], e["happy"]); CheerReaders.instance.SetIsDoingCue(e.beat, e.length, false);},
                     defaultLength = 4f,
                     parameters = new List<Param>()
                     {
@@ -70,7 +70,7 @@ namespace HeavenStudio.Games.Loaders
                 },
                 new GameAction("okItsOnStretch", "OK It's On! (Stretchable)")
                 {
-                    function = delegate {var e = eventCaller.currentEntity; CheerReaders.instance.OkItsOnStretchable((float) e.beat, e.length, e["solo"], e["toggle"], e["poster"], e["happy"]); CheerReaders.instance.SetIsDoingCue((float) e.beat, e.length, false); },
+                    function = delegate {var e = eventCaller.currentEntity; CheerReaders.instance.OkItsOnStretchable(e.beat, e.length, e["solo"], e["toggle"], e["poster"], e["happy"]); CheerReaders.instance.SetIsDoingCue(e.beat, e.length, false); },
                     defaultLength = 4f,
                     resizable = true,
                     parameters = new List<Param>()
@@ -92,7 +92,7 @@ namespace HeavenStudio.Games.Loaders
                 },
                 new GameAction("bop", "Bop")
                 {
-                    function = delegate {var e = eventCaller.currentEntity; CheerReaders.instance.BopToggle((float) e.beat, e.length, e["toggle"], e["toggle2"]); },
+                    function = delegate {var e = eventCaller.currentEntity; CheerReaders.instance.BopToggle(e.beat, e.length, e["toggle"], e["toggle2"]); },
                     resizable = true,
                     parameters = new List<Param>()
                     {
@@ -165,14 +165,14 @@ namespace HeavenStudio.Games
         bool shouldBop = true;
         bool canBop = true;
         public bool doingCue;
-        float cueLength;
-        float cueBeat;
+        double cueLength;
+        double cueBeat;
         bool shouldYay;
         bool shouldDoSuccessZoom;
         public bool shouldBeBlack = false;
         public GameEvent bop = new GameEvent();
         int currentZoomIndex;
-        float currentZoomCamBeat;
+        double currentZoomCamBeat;
         float currentZoomCamLength;
         private List<RiqEntity> allCameraEvents = new List<RiqEntity>();
 
@@ -214,7 +214,7 @@ namespace HeavenStudio.Games
             List<RiqEntity> tempEvents = new List<RiqEntity>();
             for (int i = 0; i < camEvents.Count; i++)
             {
-                if (camEvents[i].beat + camEvents[i].beat >= Conductor.instance.songPositionInBeats)
+                if (camEvents[i].beat + camEvents[i].beat >= Conductor.instance.songPositionInBeatsAsDouble)
                 {
                     tempEvents.Add(camEvents[i]);
                 }
@@ -239,7 +239,7 @@ namespace HeavenStudio.Games
                 {
                     if (currentZoomIndex < allCameraEvents.Count && currentZoomIndex >= 0)
                     {
-                        if (Conductor.instance.songPositionInBeats >= allCameraEvents[currentZoomIndex].beat)
+                        if (Conductor.instance.songPositionInBeatsAsDouble >= allCameraEvents[currentZoomIndex].beat)
                         {
                             UpdateCameraZoom();
                             currentZoomIndex++;
@@ -367,7 +367,7 @@ namespace HeavenStudio.Games
         {
             if (currentZoomIndex < allCameraEvents.Count && currentZoomIndex >= 0)
             {
-                currentZoomCamBeat = (float) allCameraEvents[currentZoomIndex].beat;
+                currentZoomCamBeat = allCameraEvents[currentZoomIndex].beat;
                 currentZoomCamLength = allCameraEvents[currentZoomIndex].length;
             }
         }
@@ -426,7 +426,7 @@ namespace HeavenStudio.Games
             }
         }
 
-        public void BopToggle(float beat, float length, bool startBop, bool bopAuto)
+        public void BopToggle(double beat, float length, bool startBop, bool bopAuto)
         {
             shouldBop = bopAuto;
             if (startBop)
@@ -464,7 +464,7 @@ namespace HeavenStudio.Games
             }
         }
 
-        public void SetIsDoingCue(float beat, float length, bool shouldSwitchColor = true)
+        public void SetIsDoingCue(double beat, float length, bool shouldSwitchColor = true)
         {
             if (!doingCue) shouldYay = false;
             foreach (var girl in allGirls)
@@ -482,7 +482,7 @@ namespace HeavenStudio.Games
             });
         }
 
-        public void OneTwoThree(float beat, int whoSpeaks)
+        public void OneTwoThree(double beat, int whoSpeaks)
         {
             canBop = false;
             ScheduleInput(beat, 2, InputType.STANDARD_DOWN, JustFlip, MissFlip, Nothing);
@@ -610,7 +610,7 @@ namespace HeavenStudio.Games
             });
         }
 
-        public void ItsUpToYou(float beat, int whoSpeaks)
+        public void ItsUpToYou(double beat, int whoSpeaks)
         {
             canBop = false;
             ScheduleInput(beat, 2, InputType.STANDARD_DOWN, JustFlip, MissFlip, Nothing);
@@ -768,7 +768,7 @@ namespace HeavenStudio.Games
             });
         }
 
-        public void LetsGoReadABunchaBooks(float beat, int whoSpeaks)
+        public void LetsGoReadABunchaBooks(double beat, int whoSpeaks)
         {
             canBop = false;
             ScheduleInput(beat, 2, InputType.STANDARD_DOWN, JustFlip, MissFlip, Nothing);
@@ -954,7 +954,7 @@ namespace HeavenStudio.Games
             });
         }
 
-        public void RahRahSisBoomBaBoom(float beat, int whoSpeaks, bool consecutive)
+        public void RahRahSisBoomBaBoom(double beat, int whoSpeaks, bool consecutive)
         {
             canBop = false;
             ScheduleInput(beat, 2.5f, InputType.STANDARD_DOWN, JustFlipBoom, MissFlip, Nothing);
@@ -1164,7 +1164,7 @@ namespace HeavenStudio.Games
             });
         }
 
-        public void OkItsOnStretchable(float beat, float length, int whoSpeaks, bool whistle, int posterToChoose, bool shouldHappyFace)
+        public void OkItsOnStretchable(double beat, float length, int whoSpeaks, bool whistle, int posterToChoose, bool shouldHappyFace)
         {
             canBop = false;
             float actualLength = length * 0.25f;

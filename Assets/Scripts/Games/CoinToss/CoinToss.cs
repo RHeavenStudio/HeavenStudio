@@ -16,7 +16,7 @@ namespace HeavenStudio.Games.Loaders
             {
                 new GameAction("toss", "Toss Coin")
                 {
-                    function = delegate { CoinToss.instance.TossCoin((float) eventCaller.currentEntity.beat, eventCaller.currentEntity["type"], eventCaller.currentEntity["toggle"]); }, 
+                    function = delegate { CoinToss.instance.TossCoin(eventCaller.currentEntity.beat, eventCaller.currentEntity["type"], eventCaller.currentEntity["toggle"]); }, 
                     defaultLength = 7, 
                     parameters = new List<Param>()
                     {
@@ -155,7 +155,7 @@ namespace HeavenStudio.Games
             //nothing
         }
 
-        public void TossCoin(float beat, int type, bool audienceReacting)
+        public void TossCoin(double beat, int type, bool audienceReacting)
         {
             if (coin != null) return;
 
@@ -189,7 +189,7 @@ namespace HeavenStudio.Games
             //coin.perfectOnly = true;
         }
 
-        public void TossCoin(float beat)
+        public void TossCoin(double beat)
         {
             if (coin != null) return;
 

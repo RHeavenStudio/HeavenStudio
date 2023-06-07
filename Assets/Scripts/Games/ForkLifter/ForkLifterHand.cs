@@ -25,7 +25,7 @@ namespace HeavenStudio.Games.Scripts_ForkLifter
             List<RiqEntity> tempEvents = new List<RiqEntity>();
             for (int i = 0; i < flickEntities.Count; i++)
             {
-                if (flickEntities[i].beat >= Conductor.instance.songPositionInBeats)
+                if (flickEntities[i].beat >= Conductor.instance.songPositionInBeatsAsDouble)
                 {
                     tempEvents.Add(flickEntities[i]);
                 }

@@ -55,7 +55,7 @@ namespace HeavenStudio.Games.Scripts_BoardMeeting
                     offset = 0;
                     break;
             }
-            rollLoop = SoundByte.PlayOneShotGame("boardMeeting/roll" + soundToPlay, Conductor.instance.songPositionInBeats + 0.5f - Conductor.instance.GetRestFromRealTime(offset), 1, 1, true);
+            rollLoop = SoundByte.PlayOneShotGame("boardMeeting/roll" + soundToPlay, Conductor.instance.songPositionInBeatsAsDouble + 0.5f - Conductor.instance.GetRestFromRealTime(offset), 1, 1, true);
         }
 
         public void Stop(bool hit = true)
@@ -71,7 +71,7 @@ namespace HeavenStudio.Games.Scripts_BoardMeeting
 
             BeatAction.New(game.gameObject, new List<BeatAction.Action>()
             {
-                new BeatAction.Action(Conductor.instance.songPositionInBeats + 1.5f, delegate { canBop = true; })
+                new BeatAction.Action(Conductor.instance.songPositionInBeatsAsDouble + 1.5f, delegate { canBop = true; })
             });
         }
 

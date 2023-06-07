@@ -16,9 +16,9 @@ namespace HeavenStudio.Games.Loaders
             {
                 new GameAction("start marching", "Start Marching")
                 {
-                    function = delegate { CropStomp.instance.StartMarching((float) eventCaller.currentEntity.beat); }, 
+                    function = delegate { CropStomp.instance.StartMarching(eventCaller.currentEntity.beat); }, 
                     defaultLength = 2f,
-                    inactiveFunction = delegate { CropStomp.MarchInactive((float) eventCaller.currentEntity.beat); }
+                    inactiveFunction = delegate { CropStomp.MarchInactive(eventCaller.currentEntity.beat); }
                 },
                 new GameAction("veggies", "Veggies")
                 {
@@ -55,14 +55,14 @@ namespace HeavenStudio.Games
         float grassWidth;
         float dotsWidth = 19.2f;
 
-        private float newBeat = -1f; // So that marching can happen on beat 0.
-        private float marchStartBeat = -1f;
-        private float marchOffset;
+        private double newBeat = -1f; // So that marching can happen on beat 0.
+        private double marchStartBeat = -1f;
+        private double marchOffset;
         private int currentMarchBeat;
         private int stepCount;
         private bool isStepping;
         
-        private static float inactiveStart = -1f;
+        private static double inactiveStart = -1f;
 
         public bool isMarching => marchStartBeat != -1f;
 
@@ -102,8 +102,8 @@ namespace HeavenStudio.Games
             var cond = Conductor.instance;
             var entities = GameManager.instance.Beatmap.Entities;
 
-            float startBeat = cond.songPositionInBeats;
-            float endBeat = Single.MaxValue;
+            double startBeat = cond.songPositionInBeatsAsDouble;
+            double endBeat = double.MaxValue;
 
             if (inactiveStart == -1f)
             {
@@ -111,8 +111,8 @@ namespace HeavenStudio.Games
                 var marchStarts = entities.FindAll(m => m.datamodel == "cropStomp/start marching");
                 for (int i = 0; i < marchStarts.Count; i++)
                 {
-                    var sampleBeat = (float) marchStarts[i].beat;
-                    if (cond.songPositionInBeats <= sampleBeat + 0.25f) // 0.25-beat buffer in case the start marching event is directly next to the game switch event.
+                    var sampleBeat = marchStarts[i].beat;
+                    if (cond.songPositionInBeatsAsDouble <= sampleBeat + 0.25f) // 0.25-beat buffer in case the start marching event is directly next to the game switch event.
                     {
                         startBeat = sampleBeat;
                         break;
@@ -124,7 +124,7 @@ namespace HeavenStudio.Games
                 // Find the beat of the next step, assuming marching started at inactiveStart.
                 int stepsPassed = 0;
 
-                while (inactiveStart + (stepsPassed * 2f) < cond.songPositionInBeats)
+                while (inactiveStart + (stepsPassed * 2f) < cond.songPositionInBeatsAsDouble)
                 {
                     stepsPassed++;
 
@@ -156,7 +156,7 @@ namespace HeavenStudio.Games
                 if (end.datamodel.Split(2) == "cropStomp") continue;
                 if (end.beat > startBeat)
                 {
-                    endBeat = (float) end.beat;
+                    endBeat = end.beat;
                     break;
                 }
             }
@@ -168,7 +168,7 @@ namespace HeavenStudio.Games
             // Spawn veggies.
             for (int i = 0; i < vegEvents.Count; i++)
             {
-                var vegBeat = (float) vegEvents[i].beat;
+                var vegBeat = vegEvents[i].beat;
                 var vegLength = vegEvents[i].length;
 
                 // Only consider veggie events that aren't past the start point.
@@ -190,7 +190,7 @@ namespace HeavenStudio.Games
             // Spawn moles.
             for (int i = 0; i < moleEvents.Count; i++)
             {
-                var moleBeat = (float) moleEvents[i].beat;
+                var moleBeat = moleEvents[i].beat;
 
                 if (startBeat <= moleBeat && moleBeat < endBeat)
                 {
@@ -213,13 +213,13 @@ namespace HeavenStudio.Games
             {
                 var moleEvent = moleEvents[i];
                 if (moleEvent["mute"]) continue;
-                var timeToEvent = (float) moleEvent.beat - cond.songPositionInBeats;
+                var timeToEvent = moleEvent.beat - cond.songPositionInBeatsAsDouble;
                 if (timeToEvent <= 4f && timeToEvent > 2f && !cuedMoleSounds.Contains(moleEvent))
                 {
                     cuedMoleSounds.Add(moleEvent);
-                    MultiSound.Play(new MultiSound.Sound[] { new MultiSound.Sound("cropStomp/moleNyeh", ((float) moleEvent.beat - 2f) - moleSoundOffsets[0] * Conductor.instance.songBpm / 60f),
-                                                            new MultiSound.Sound("cropStomp/moleHeh1", ((float) moleEvent.beat - 1.5f) - moleSoundOffsets[1] * Conductor.instance.songBpm / 60f),
-                                                            new MultiSound.Sound("cropStomp/moleHeh2", ((float) moleEvent.beat - 1f) - moleSoundOffsets[2] * Conductor.instance.songBpm / 60f) });
+                    MultiSound.Play(new MultiSound.Sound[] { new MultiSound.Sound("cropStomp/moleNyeh", (moleEvent.beat - 2f) - moleSoundOffsets[0] * Conductor.instance.songBpm / 60f),
+                                                            new MultiSound.Sound("cropStomp/moleHeh1", (moleEvent.beat - 1.5f) - moleSoundOffsets[1] * Conductor.instance.songBpm / 60f),
+                                                            new MultiSound.Sound("cropStomp/moleHeh2", (moleEvent.beat - 1f) - moleSoundOffsets[2] * Conductor.instance.songBpm / 60f) });
                 }
             }
 
@@ -305,7 +305,7 @@ namespace HeavenStudio.Games
             }
         }
 
-        public void StartMarching(float beat)
+        public void StartMarching(double beat)
         {
             marchStartBeat = beat;
             marchOffset = marchStartBeat % 1;
@@ -336,19 +336,19 @@ namespace HeavenStudio.Games
             isStepping = true;
         }
 
-        private void SpawnVeggie(float beat, float startBeat, bool isMole)
+        private void SpawnVeggie(double beat, double startBeat, bool isMole)
         {
             var newVeggie = GameObject.Instantiate(isMole ? baseMole : baseVeggie, veggieHolder).GetComponent<Veggie>();
 
             newVeggie.targetBeat = beat;
 
             var veggieX = (beat - startBeat) * -stepDistance / 2f;
-            newVeggie.transform.localPosition = new Vector3(veggieX, 0f, 0f);
+            newVeggie.transform.localPosition = new Vector3((float)veggieX, 0f, 0f);
             newVeggie.Init();
             newVeggie.gameObject.SetActive(true);
         }
         
-        public static void MarchInactive(float beat)
+        public static void MarchInactive(double beat)
         {
             if (GameManager.instance.currentGame == "cropStomp") //this function is only meant for making march sounds while the game is inactive
             {
@@ -358,7 +358,7 @@ namespace HeavenStudio.Games
             RiqEntity gameSwitch = GameManager.instance.Beatmap.Entities.Find(c => c.beat >= beat && c.datamodel == "gameManager/switchGame/cropStomp");
             if (gameSwitch == null)
                 return;
-            int length = Mathf.CeilToInt(((float)gameSwitch.beat - beat)/2);
+            int length = (int)Math.Ceiling((gameSwitch.beat - beat)/2);
             MultiSound.Sound[] sounds = new MultiSound.Sound[length];
             for(int i = 0; i < length; i++)
             {

@@ -16,7 +16,7 @@ namespace HeavenStudio.Games.Scripts_OctopusMachine
         public bool isSqueezed;
         public bool isPreparing;
         public bool queuePrepare;
-        public float lastReportedBeat = 0f;
+        public double lastReportedBeat = 0f;
         float lastSqueezeBeat;
         bool isActive = true;
 

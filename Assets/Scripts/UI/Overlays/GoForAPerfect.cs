@@ -19,8 +19,8 @@ namespace HeavenStudio.Common
         public bool perfect;
 
         Conductor cond;
-        float lastReportedBeat = 0f;
-        float currentBeat = 0f;
+        double lastReportedBeat = 0f;
+        double currentBeat = 0f;
         long currentBlink = 0;
 
 

@@ -1,3 +1,4 @@
+using System;
 using System.Text;
 using System.Collections.Generic;
 using UnityEngine;
@@ -16,7 +17,7 @@ namespace HeavenStudio.Games.Loaders
             {
                 new GameAction("beat intervals", "Start Interval")
                 {
-                    function = delegate { var e = eventCaller.currentEntity; FirstContact.instance.SetIntervalStart((float) e.beat, e.length, e["dialogue"]);  },
+                    function = delegate { var e = eventCaller.currentEntity; FirstContact.instance.SetIntervalStart(e.beat, e.length, e["dialogue"]);  },
                     parameters = new List<Param>()
                     {
                         new Param("dialogue", "REPLACE THIS", "Mistranslation Dialogue", "The line to use when messing up the translation")
@@ -27,7 +28,7 @@ namespace HeavenStudio.Games.Loaders
                 },
                 new GameAction("alien speak", "Bob Speak")
                 {
-                    function = delegate { var e = eventCaller.currentEntity; FirstContact.instance.AlienSpeak((float) e.beat, e["dialogue"], e["spaceNum"]);  },
+                    function = delegate { var e = eventCaller.currentEntity; FirstContact.instance.AlienSpeak(e.beat, e["dialogue"], e["spaceNum"]);  },
                     defaultLength = 0.5f,
                     parameters = new List<Param>()
                     {
@@ -38,16 +39,16 @@ namespace HeavenStudio.Games.Loaders
                 },
                 new GameAction("alien turnover", "Pass Turn")
                 {
-                    function = delegate { FirstContact.instance.AlienTurnOver((float) eventCaller.currentEntity.beat, eventCaller.currentEntity.length);  },
+                    function = delegate { FirstContact.instance.AlienTurnOver(eventCaller.currentEntity.beat, eventCaller.currentEntity.length);  },
                     resizable = true
                 },
                 new GameAction("alien success", "Success")
                 {
-                    function = delegate { FirstContact.instance.AlienSuccess((float) eventCaller.currentEntity.beat);  },
+                    function = delegate { FirstContact.instance.AlienSuccess(eventCaller.currentEntity.beat);  },
                 },
                 new GameAction("mission control", "Show Mission Control")
                 {
-                    function = delegate { var e = eventCaller.currentEntity; FirstContact.instance.MissionControlDisplay((float) e.beat, e["toggle"], e.length);  },
+                    function = delegate { var e = eventCaller.currentEntity; FirstContact.instance.MissionControlDisplay(e.beat, e["toggle"], e.length);  },
                     resizable = true,
                     parameters = new List<Param>
                     {
@@ -99,7 +100,7 @@ namespace HeavenStudio.Games
         public int alienSpeakCount;
         public int translatorSpeakCount;
         public bool hasMissed;
-        private float lastReportedBeat = 0;
+        private double lastReportedBeat = 0;
 
         [Header("Components")]
         [SerializeField] GameObject alien;
@@ -119,7 +120,7 @@ namespace HeavenStudio.Games
         [Header("Variables")]
         int currentVoicelineIndex = -1;
         public bool intervalStarted;
-        float intervalStartBeat;
+        double intervalStartBeat;
         public float beatInterval = 4f;
         public bool noHitOnce, isSpeaking;
         //public int version;
@@ -137,7 +138,7 @@ namespace HeavenStudio.Games
         static List<QueuedSecondContactInput> queuedInputs = new List<QueuedSecondContactInput>();
         struct QueuedSecondContactInput
         {
-            public float beatAwayFromStart;
+            public double beatAwayFromStart;
             public string dialogue;
         }
 
@@ -189,7 +190,7 @@ namespace HeavenStudio.Games
             translateFailTextbox.SetActive(false);
         }
 
-        public void SetIntervalStart(float beat, float interval, string outDialogue)
+        public void SetIntervalStart(double beat, float interval, string outDialogue)
         {
             translator.GetComponent<Animator>().Play("translator_lookAtAlien", 0, 0);
             if (!intervalStarted)
@@ -231,9 +232,9 @@ namespace HeavenStudio.Games
             {
                 liveBar.GetComponent<Animator>().Play("liveBar", 0, 0);
             }
-            else if (Conductor.instance.songPositionInBeats < lastReportedBeat)
+            else if (Conductor.instance.songPositionInBeatsAsDouble < lastReportedBeat)
             {
-                lastReportedBeat = Mathf.Round(Conductor.instance.songPositionInBeats);
+                lastReportedBeat = Math.Round(Conductor.instance.songPositionInBeatsAsDouble);
             }
 
             if (PlayerInput.Pressed(true) && !IsExpectingInputNow(InputType.STANDARD_DOWN | InputType.DIRECTION_DOWN))
@@ -291,7 +292,7 @@ namespace HeavenStudio.Games
 
         }
 
-        public void AlienSpeak(float beat, string dialogue, int spaceNum)
+        public void AlienSpeak(double beat, string dialogue, int spaceNum)
         {
             queuedInputs.Add(new QueuedSecondContactInput()
             {
@@ -317,7 +318,7 @@ namespace HeavenStudio.Games
             UpdateAlienTextbox();
         }
 
-        public void AlienTurnOver(float beat, float length)
+        public void AlienTurnOver(double beat, float length)
         {
             if (queuedInputs.Count == 0) return;
             SoundByte.PlayOneShotGame("firstContact/turnover");
@@ -341,10 +342,9 @@ namespace HeavenStudio.Games
             queuedInputs.Clear();
         }
 
-        public void AlienSuccess(float beat)
+        public void AlienSuccess(double beat)
         {
             string animString = "";
-            float secondSoundOffset = 0f;
             List<MultiSound.Sound> sound = new List<MultiSound.Sound>();
             if (!(hasMissed || noHitOnce))
             {
@@ -410,7 +410,7 @@ namespace HeavenStudio.Games
             translateFailText.text = respDiagBuffer;
         }
 
-        public void MissionControlDisplay(float beat, bool stay, float length)
+        public void MissionControlDisplay(double beat, bool stay, float length)
         {
             missionControl.SetActive(true);
 

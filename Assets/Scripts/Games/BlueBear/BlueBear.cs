@@ -15,17 +15,17 @@ namespace HeavenStudio.Games.Loaders
             {
                 new GameAction("donut", "Donut")
                 {
-                    function = delegate { BlueBear.instance.SpawnTreat((float) eventCaller.currentEntity.beat, false); }, 
+                    function = delegate { BlueBear.instance.SpawnTreat(eventCaller.currentEntity.beat, false); }, 
                     defaultLength = 3,
                 },
                 new GameAction("cake", "Cake")
                 {
-                    function = delegate { BlueBear.instance.SpawnTreat((float) eventCaller.currentEntity.beat, true); }, 
+                    function = delegate { BlueBear.instance.SpawnTreat(eventCaller.currentEntity.beat, true); }, 
                     defaultLength = 4,
                 },
                 new GameAction("setEmotion", "Set Emotion")
                 {
-                    function = delegate { var e = eventCaller.currentEntity; BlueBear.instance.SetEmotion((float) e.beat, e.length, e["type"]); },
+                    function = delegate { var e = eventCaller.currentEntity; BlueBear.instance.SetEmotion(e.beat, e.length, e["type"]); },
                     defaultLength = 0.5f,
                     parameters = new List<Param>()
                     {
@@ -93,7 +93,7 @@ namespace HeavenStudio.Games
         static int rightCrumbAppearThreshold = 15;
         static int leftCrumbAppearThreshold = 30;
         static int eatenTreats = 0;
-        float emotionStartBeat;
+        double emotionStartBeat;
         float emotionLength;
         string emotionAnimName;
         bool crying;
@@ -216,7 +216,7 @@ namespace HeavenStudio.Games
             }
         }
 
-        public void SetEmotion(float beat, float length, int emotion)
+        public void SetEmotion(double beat, float length, int emotion)
         {
             switch (emotion)
             {
@@ -270,7 +270,7 @@ namespace HeavenStudio.Games
             }
         }
 
-        public void SpawnTreat(float beat, bool isCake)
+        public void SpawnTreat(double beat, bool isCake)
         {
             var objectToSpawn = isCake ? cakeBase : donutBase;
             var newTreat = GameObject.Instantiate(objectToSpawn, foodHolder);

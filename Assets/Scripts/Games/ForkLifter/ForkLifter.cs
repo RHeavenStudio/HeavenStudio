@@ -16,7 +16,7 @@ namespace HeavenStudio.Games.Loaders
             {
                 new GameAction("flick", "Flick Food")
                 {
-                    function = delegate { var e = eventCaller.currentEntity; ForkLifter.instance.Flick((float) e.beat, e["type"]); }, 
+                    function = delegate { var e = eventCaller.currentEntity; ForkLifter.instance.Flick(e.beat, e["type"]); }, 
                     defaultLength = 3,
                     parameters = new List<Param>()
                     {
@@ -62,25 +62,25 @@ namespace HeavenStudio.Games.Loaders
                 // These are still here for backwards-compatibility but are hidden in the editor
                 new GameAction("pea", "")
                 {
-                    function = delegate { ForkLifter.instance.Flick((float) eventCaller.currentEntity.beat, 0); }, 
+                    function = delegate { ForkLifter.instance.Flick(eventCaller.currentEntity.beat, 0); }, 
                     defaultLength = 3, 
                     hidden = true
                 },
                 new GameAction("topbun", "")
                 {
-                    function = delegate { ForkLifter.instance.Flick((float) eventCaller.currentEntity.beat, 1); }, 
+                    function = delegate { ForkLifter.instance.Flick(eventCaller.currentEntity.beat, 1); }, 
                     defaultLength = 3, 
                     hidden = true
                 },
                 new GameAction("burger", "")
                 {
-                    function = delegate { ForkLifter.instance.Flick((float) eventCaller.currentEntity.beat, 2); }, 
+                    function = delegate { ForkLifter.instance.Flick(eventCaller.currentEntity.beat, 2); }, 
                     defaultLength = 3, 
                     hidden = true
                 },
                 new GameAction("bottombun", "")
                 {
-                    function = delegate { ForkLifter.instance.Flick((float) eventCaller.currentEntity.beat, 3); }, 
+                    function = delegate { ForkLifter.instance.Flick(eventCaller.currentEntity.beat, 3); }, 
                     defaultLength = 3, 
                     hidden = true
                 },
@@ -143,7 +143,7 @@ namespace HeavenStudio.Games
             ForkLifterHand.CheckNextFlick();
         }
 
-        public void Flick(float beat, int type)
+        public void Flick(double beat, int type)
         {
             SoundByte.PlayOneShotGame("forkLifter/flick");
             handAnim.Play("Hand_Flick", 0, 0);

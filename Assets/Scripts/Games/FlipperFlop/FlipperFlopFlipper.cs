@@ -44,8 +44,8 @@ namespace HeavenStudio.Games.Scripts_FlipperFlop
             faceAnim.Play("FaceAngry", 0, 0);
             BeatAction.New(game.gameObject, new List<BeatAction.Action>()
             {
-                new BeatAction.Action(Conductor.instance.songPositionInBeats + 0.1f, delegate { leftImpact.SetActive(false); rightImpact.SetActive(false); }),
-                new BeatAction.Action(Conductor.instance.songPositionInBeats + 0.3f, delegate { faceAnim.Play("FaceAnnoyed", 0, 0); })
+                new BeatAction.Action(Conductor.instance.songPositionInBeatsAsDouble + 0.1f, delegate { leftImpact.SetActive(false); rightImpact.SetActive(false); }),
+                new BeatAction.Action(Conductor.instance.songPositionInBeatsAsDouble + 0.3f, delegate { faceAnim.Play("FaceAnnoyed", 0, 0); })
             });
         }
 
@@ -78,7 +78,7 @@ namespace HeavenStudio.Games.Scripts_FlipperFlop
                     game.BumpIntoOtherSeal(!left);
                     BeatAction.New(this.gameObject, new List<BeatAction.Action>()
                     {
-                        new BeatAction.Action(Conductor.instance.songPositionInBeats + 0.3f, delegate { faceAnim.Play("FaceGoofy"); }),
+                        new BeatAction.Action(Conductor.instance.songPositionInBeatsAsDouble + 0.3f, delegate { faceAnim.Play("FaceGoofy"); }),
                     });
                 }
 
@@ -120,7 +120,7 @@ namespace HeavenStudio.Games.Scripts_FlipperFlop
                     game.BumpIntoOtherSeal(!left);
                     BeatAction.New(this.gameObject, new List<BeatAction.Action>()
                     {
-                        new BeatAction.Action(Conductor.instance.songPositionInBeats + 0.3f, delegate { faceAnim.Play("FaceGoofy"); }),
+                        new BeatAction.Action(Conductor.instance.songPositionInBeatsAsDouble + 0.3f, delegate { faceAnim.Play("FaceGoofy"); }),
                     });
                 }
             }

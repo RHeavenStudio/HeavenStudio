@@ -16,12 +16,12 @@ namespace HeavenStudio.Games.Loaders
             {
                 new GameAction("clap", "Clap")
                 {
-                    function = delegate { ClappyTrio.instance.Clap((float) eventCaller.currentEntity.beat, eventCaller.currentEntity.length); }, 
+                    function = delegate { ClappyTrio.instance.Clap(eventCaller.currentEntity.beat, eventCaller.currentEntity.length); }, 
                     resizable = true
                 },
                 new GameAction("bop", "Bop")
                 {
-                    function = delegate { var e = eventCaller.currentEntity; ClappyTrio.instance.BopToggle((float) e.beat, e.length, e["bop"], e["autoBop"], e["emo"]); },
+                    function = delegate { var e = eventCaller.currentEntity; ClappyTrio.instance.BopToggle(e.beat, e.length, e["bop"], e["autoBop"], e["emo"]); },
                     resizable = true,
                     parameters = new List<Param>()
                     {
@@ -40,7 +40,7 @@ namespace HeavenStudio.Games.Loaders
                 },
                 new GameAction("sign", "Sign Enter")
                 {
-                    function = delegate { var e = eventCaller.currentEntity;  ClappyTrio.instance.Sign((float) e.beat, e.length, e["ease"], e["down"]); },
+                    function = delegate { var e = eventCaller.currentEntity;  ClappyTrio.instance.Sign(e.beat, e.length, e["ease"], e["down"]); },
                     parameters = new List<Param>()
                     {
                         new Param("ease", Util.EasingFunction.Ease.Linear, "Ease", "Which ease should the sign move with?"),
@@ -98,7 +98,7 @@ namespace HeavenStudio.Games
         public GameEvent bop = new GameEvent();
 
         [SerializeField] Animator signAnim;
-        float signStartBeat;
+        double signStartBeat;
         float signLength;
         Util.EasingFunction.Ease lastEase;
         bool signGoDown;
@@ -128,7 +128,7 @@ namespace HeavenStudio.Games
             var cond = Conductor.instance;
             if (cond.ReportBeat(ref bop.lastReportedBeat, bop.startBeat % 1))
             {
-                if (shouldBop) Bop(cond.songPositionInBeats);
+                if (shouldBop) Bop(cond.songPositionInBeatsAsDouble);
             }
             if (cond.isPlaying && !cond.isPaused)
             {
@@ -143,7 +143,7 @@ namespace HeavenStudio.Games
             }
         }
 
-        public void Sign(float beat, float length, int ease, bool down)
+        public void Sign(double beat, float length, int ease, bool down)
         {
             SoundByte.PlayOneShotGame("clappyTrio/sign");
             signStartBeat = beat;
@@ -181,7 +181,7 @@ namespace HeavenStudio.Games
                 clapAction.Delete();
         }
 
-        public void Clap(float beat, float length)
+        public void Clap(double beat, float length)
         {
             ClappyTrioPlayer.clapStarted = true;
             ClappyTrioPlayer.canHit = true; // this is technically a lie, this just restores the ability to hit
@@ -214,7 +214,7 @@ namespace HeavenStudio.Games
             SoundByte.PlayOneShotGame("clappyTrio/ready");
         }
 
-        public void BopToggle(float beat, float length, bool startBop, bool autoBop, bool emo)
+        public void BopToggle(double beat, float length, bool startBop, bool autoBop, bool emo)
         {
             doEmotion = !emo;
             shouldBop = autoBop;
@@ -224,7 +224,7 @@ namespace HeavenStudio.Games
                 for (int i = 0; i < length; i++)
                 {
                     if (i == 0 && startBop && autoBop) continue;
-                    float spawnBeat = beat + i;
+                    double spawnBeat = beat + i;
                     bops.Add(new BeatAction.Action(spawnBeat, delegate { Bop(spawnBeat); }));
                     if (i == length - 1)
                     {
@@ -235,7 +235,7 @@ namespace HeavenStudio.Games
             }
         }
 
-        public void Bop(float beat)
+        public void Bop(double beat)
         {
             if (doEmotion && emoCounter > 0)
             {

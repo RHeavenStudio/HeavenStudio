@@ -246,7 +246,7 @@ namespace HeavenStudio.Games
             return sameTime;
         }
 
-        public static MultiSound PlaySoundSequence(string game, string name, float startBeat, params SoundSequence.SequenceParams[] args)
+        public static MultiSound PlaySoundSequence(string game, string name, double startBeat, params SoundSequence.SequenceParams[] args)
         {
             Minigames.Minigame gameInfo = GameManager.instance.GetGameInfo(game);
             foreach (SoundSequence.SequenceKeyValue pair in gameInfo.LoadedSoundSequences)

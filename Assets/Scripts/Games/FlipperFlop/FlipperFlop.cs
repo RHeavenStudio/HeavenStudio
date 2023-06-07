@@ -14,7 +14,7 @@ namespace HeavenStudio.Games.Loaders
             {
                 new GameAction("attentionCompany", "Attention Company!")
                 {
-                    preFunction = delegate {var e = eventCaller.currentEntity; FlipperFlop.AttentionCompany((float) e.beat, e["toggle"]); },
+                    preFunction = delegate {var e = eventCaller.currentEntity; FlipperFlop.AttentionCompany(e.beat, e["toggle"]); },
                     defaultLength = 4f,
                     parameters = new List<Param>()
                     {
@@ -23,7 +23,7 @@ namespace HeavenStudio.Games.Loaders
                 },
                 new GameAction("attentionCompanyAlt", "Attention Company! (Remix 5)")
                 {
-                    preFunction = delegate {var e = eventCaller.currentEntity; FlipperFlop.AttentionCompany((float) e.beat, e["toggle"], true); },
+                    preFunction = delegate {var e = eventCaller.currentEntity; FlipperFlop.AttentionCompany(e.beat, e["toggle"], true); },
                     defaultLength = 3f,
                     parameters = new List<Param>()
                     {
@@ -32,18 +32,18 @@ namespace HeavenStudio.Games.Loaders
                 },
                 new GameAction("flipping", "Flipping")
                 {
-                    preFunction = delegate {var e = eventCaller.currentEntity; FlipperFlop.Flipping((float) e.beat, e.length, false); },
+                    preFunction = delegate {var e = eventCaller.currentEntity; FlipperFlop.Flipping(e.beat, e.length, false); },
                     defaultLength = 4f,
                     resizable = true
                 },
                 new GameAction("tripleFlip", "Triple Flip")
                 {
-                    function = delegate {var e = eventCaller.currentEntity; FlipperFlop.instance.TripleFlip((float) e.beat); },
+                    function = delegate {var e = eventCaller.currentEntity; FlipperFlop.instance.TripleFlip(e.beat); },
                     defaultLength = 4f
                 },
                 new GameAction("flipperRollVoiceLine", "Flipper Roll Voice Line")
                 {
-                    preFunction = delegate {var e = eventCaller.currentEntity; FlipperFlop.FlipperRollVoiceLine((float) e.beat, e["amount"], e["toggle"]); },
+                    preFunction = delegate {var e = eventCaller.currentEntity; FlipperFlop.FlipperRollVoiceLine(e.beat, e["amount"], e["toggle"]); },
                     parameters = new List<Param>()
                     {
                         new Param("amount", new EntityTypes.Integer(1, 10, 1), "Amount", "1, 2, 3... etc. - flipper rolls"),
@@ -53,7 +53,7 @@ namespace HeavenStudio.Games.Loaders
                 },
                 new GameAction("flipperRolling", "Flipper Rolling")
                 {
-                    preFunction = delegate {var e = eventCaller.currentEntity; FlipperFlop.Flipping((float) e.beat, e.length, true, e["uh"], e["thatsIt"], e["appreciation"], e["heart"], e["barber"]); },
+                    preFunction = delegate {var e = eventCaller.currentEntity; FlipperFlop.Flipping(e.beat, e.length, true, e["uh"], e["thatsIt"], e["appreciation"], e["heart"], e["barber"]); },
                     parameters = new List<Param>()
                     {
                         new Param("uh", new EntityTypes.Integer(0, 3, 0), "Uh Count", "How many Uhs should Captain Tuck say after the flippers roll?"),
@@ -67,7 +67,7 @@ namespace HeavenStudio.Games.Loaders
                 },
                 new GameAction("bop", "Bop") 
                 {
-                    function = delegate {var e = eventCaller.currentEntity; FlipperFlop.instance.Bop((float) e.beat, e.length, e["whoBops"], e["whoBopsAuto"]); },
+                    function = delegate {var e = eventCaller.currentEntity; FlipperFlop.instance.Bop(e.beat, e.length, e["whoBops"], e["whoBopsAuto"]); },
                     resizable = true,
                     parameters = new List<Param>()
                     {
@@ -77,7 +77,7 @@ namespace HeavenStudio.Games.Loaders
                 },
                 new GameAction("walk", "Captain Tuck Walk")
                 {
-                    function = delegate { var e = eventCaller.currentEntity; FlipperFlop.instance.CaptainWalk((float) e.beat, e.length, e["ease"]); },
+                    function = delegate { var e = eventCaller.currentEntity; FlipperFlop.instance.CaptainWalk(e.beat, e.length, e["ease"]); },
                     defaultLength = 4f,
                     resizable = true,
                     parameters = new List<Param>()
@@ -118,9 +118,9 @@ namespace HeavenStudio.Games
         static List<QueuedFlip> queuedInputs = new List<QueuedFlip>();
         [SerializeField] FlipperFlopFlipper flipperPlayer;
         [SerializeField] List<FlipperFlopFlipper> flippers = new List<FlipperFlopFlipper>();
-        List<float> queuedMovements = new List<float>();
+        List<double> queuedMovements = new();
         static List<QueuedAttention> queuedAttentions = new List<QueuedAttention>();
-        static List<float> queuedFlipperRollVoiceLines = new List<float>();
+        static List<double> queuedFlipperRollVoiceLines = new();
         float lastXPos;
         float currentXPos;
         float lastCameraXPos;
@@ -130,12 +130,12 @@ namespace HeavenStudio.Games
         bool goBopFlip;
         bool goBopTuck;
         EasingFunction.Ease lastEase;
-        float walkStartBeat;
+        double walkStartBeat;
         float walkLength;
         CaptainTuckBopType currentCaptainBop;
         public struct QueuedFlip
         {
-            public float beat;
+            public double beat;
             public float length;
             public bool roll;
             public int uh;
@@ -146,7 +146,7 @@ namespace HeavenStudio.Games
         }
         public struct QueuedAttention
         {
-            public float beat;
+            public double beat;
             public bool mute;
             public bool remix5;
         }
@@ -245,7 +245,7 @@ namespace HeavenStudio.Games
                 }
                 if (queuedMovements.Count > 0)
                 {
-                    if (cond.songPositionInBeats >= queuedMovements[0])
+                    if (cond.songPositionInBeatsAsDouble >= queuedMovements[0])
                     {
                         if (!isMoving)
                         {
@@ -310,7 +310,7 @@ namespace HeavenStudio.Games
             }
         }
 
-        public void Bop(float beat, float length, int whoBops, int whoBopsAuto)
+        public void Bop(double beat, float length, int whoBops, int whoBopsAuto)
         {
             goBopFlip = whoBopsAuto == (int)WhoBops.Flippers || whoBopsAuto == (int)WhoBops.Both;
             goBopTuck = whoBopsAuto == (int)WhoBops.CaptainTuck || whoBopsAuto == (int)WhoBops.Both;
@@ -373,7 +373,7 @@ namespace HeavenStudio.Games
             }
         }
 
-        public void CaptainWalk(float beat, float length, int ease)
+        public void CaptainWalk(double beat, float length, int ease)
         {
             captainTuckAnim.gameObject.SetActive(true);
             isWalking = true;
@@ -382,7 +382,7 @@ namespace HeavenStudio.Games
             walkLength = length;
         }
 
-        public static void Flipping(float beat, float length, bool roll, int uh = 0, bool thatsIt = false, int appreciation = 0, bool heart = false, bool thatsItBarberShop = false)
+        public static void Flipping(double beat, float length, bool roll, int uh = 0, bool thatsIt = false, int appreciation = 0, bool heart = false, bool thatsItBarberShop = false)
         {
             if (GameManager.instance.currentGame == "flipperFlop")
             {
@@ -394,7 +394,7 @@ namespace HeavenStudio.Games
             }
         }
 
-        public void QueueFlips(float beat, float length, bool roll, int uh = 0, bool thatsIt = false, int appreciation = 0, bool heart = false, bool thatsItBarberShop = false)
+        public void QueueFlips(double beat, float length, bool roll, int uh = 0, bool thatsIt = false, int appreciation = 0, bool heart = false, bool thatsItBarberShop = false)
         {
             int flopCount = 1;
             int recounts = 0;
@@ -650,7 +650,7 @@ namespace HeavenStudio.Games
             }
         }
 
-        public static void AppreciationVoiceLine(float beat, int appreciation, bool heart)
+        public static void AppreciationVoiceLine(double beat, int appreciation, bool heart)
         {
             if (FlipperFlop.instance.missed) return;
             if (appreciation == (int)AppreciationType.Random) appreciation = UnityEngine.Random.Range(1, 6);
@@ -750,7 +750,7 @@ namespace HeavenStudio.Games
             }
         }
 
-        public void TripleFlip(float beat)
+        public void TripleFlip(double beat)
         {
             MultiSound.Play(new MultiSound.Sound[]
             {
@@ -778,7 +778,7 @@ namespace HeavenStudio.Games
             });
         }
 
-        public static void AttentionCompany(float beat, bool mute, bool remix5 = false)
+        public static void AttentionCompany(double beat, bool mute, bool remix5 = false)
         {
             if (mute)
             {
@@ -810,7 +810,7 @@ namespace HeavenStudio.Games
             }
         }
 
-        public void AttentionCompanyAnimation(float beat, bool mute, bool remix5)
+        public void AttentionCompanyAnimation(double beat, bool mute, bool remix5)
         {
             List<BeatAction.Action> speaks = new List<BeatAction.Action>()
             {
@@ -872,7 +872,7 @@ namespace HeavenStudio.Games
 
             foreach (var speak in speaks)
             {
-                if (Conductor.instance.songPositionInBeats > speak.beat)
+                if (Conductor.instance.songPositionInBeatsAsDouble > speak.beat)
                 {
                     speaksToRemove.Add(speak);
                 }
@@ -889,7 +889,7 @@ namespace HeavenStudio.Games
             BeatAction.New(instance.gameObject, speaks);
         }
 
-        public static void FlipperRollVoiceLine(float beat, int amount, bool now)
+        public static void FlipperRollVoiceLine(double beat, int amount, bool now)
         {
             if (now)
             {
@@ -1012,7 +1012,7 @@ namespace HeavenStudio.Games
             }
         }
 
-        public void FlipperRollVoiceLineAnimation(float beat)
+        public void FlipperRollVoiceLineAnimation(double beat)
         {
             List<BeatAction.Action> speaks = new List<BeatAction.Action>()
             {
@@ -1026,7 +1026,7 @@ namespace HeavenStudio.Games
 
             foreach (var speak in speaks)
             {
-                if (Conductor.instance.songPositionInBeats > speak.beat) speaksToRemove.Add(speak);
+                if (Conductor.instance.songPositionInBeatsAsDouble > speak.beat) speaksToRemove.Add(speak);
             }
 
             if (speaksToRemove.Count > 0)

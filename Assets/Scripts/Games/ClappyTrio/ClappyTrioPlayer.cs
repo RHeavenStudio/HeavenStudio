@@ -9,7 +9,7 @@ namespace HeavenStudio.Games.Scripts_ClappyTrio
     public class ClappyTrioPlayer : MonoBehaviour
     {
         ClappyTrio game;
-        private float lastClapBeat;
+        private double lastClapBeat;
         private float lastClapLength;
 
         public bool clapStarted = false;
@@ -32,7 +32,7 @@ namespace HeavenStudio.Games.Scripts_ClappyTrio
             }
         }
 
-        public void QueueClap(float startBeat, float length)
+        public void QueueClap(double startBeat, float length)
         {
             lastClapBeat = startBeat;
             lastClapLength = length;

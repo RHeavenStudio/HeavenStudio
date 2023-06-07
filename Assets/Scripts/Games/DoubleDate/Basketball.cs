@@ -12,7 +12,7 @@ namespace HeavenStudio.Games.Scripts_DoubleDate
     {
         private DoubleDate game;
         private SuperCurveObject.Path path;
-        private float pathStartBeat = float.MinValue;
+        private double pathStartBeat = double.MinValue;
         private Conductor conductor;
         private GameObject shadow;
 
@@ -26,7 +26,7 @@ namespace HeavenStudio.Games.Scripts_DoubleDate
         {
             double beat = conductor.songPositionInBeatsAsDouble;
             double height = 0f;
-            if (pathStartBeat > float.MinValue)
+            if (pathStartBeat > double.MinValue)
             {
                 Vector3 pos = GetPathPositionFromBeat(path, Math.Max(beat, pathStartBeat), out height, pathStartBeat);
                 transform.position = pos;
@@ -37,7 +37,7 @@ namespace HeavenStudio.Games.Scripts_DoubleDate
             shadow.transform.localScale = Vector3.one * Mathf.Clamp(((transform.position.y) - game.shadowDepthScaleMin) / (game.shadowDepthScaleMax - game.shadowDepthScaleMin), 0f, 1f);
         }
 
-        public void Init(float beat)
+        public void Init(double beat)
         {
             game.ScheduleInput(beat, 1f, InputType.STANDARD_DOWN, Just, Miss, Empty);
             path = game.GetPath("BasketBallIn");
@@ -57,13 +57,13 @@ namespace HeavenStudio.Games.Scripts_DoubleDate
         {
             BeatAction.New(gameObject, new List<BeatAction.Action>()
             {
-                new BeatAction.Action(conductor.songPositionInBeats + 3f, delegate
+                new BeatAction.Action(conductor.songPositionInBeatsAsDouble + 3f, delegate
                 {
                     Destroy(gameObject);
                 }),
             });
             UpdateLastRealPos();
-            pathStartBeat = conductor.songPositionInBeats;
+            pathStartBeat = conductor.songPositionInBeatsAsDouble;
             if (state >= 1f || state <= -1f)
             {
                 path = game.GetPath("BasketBallNg" + (state > 0 ? "Late" : "Early"));
@@ -78,7 +78,7 @@ namespace HeavenStudio.Games.Scripts_DoubleDate
         void Hit()
         {
             UpdateLastRealPos();
-            pathStartBeat = conductor.songPositionInBeats;
+            pathStartBeat = conductor.songPositionInBeatsAsDouble;
             path = game.GetPath("BasketBallJust");
             game.Kick();
             SoundByte.PlayOneShotGame("doubleDate/kick");

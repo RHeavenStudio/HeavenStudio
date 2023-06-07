@@ -79,7 +79,7 @@ namespace HeavenStudio.Games.Scripts_GleeClub
             currentSound = SoundByte.PlayOneShotGame("gleeClub/LoudWailLoop", -1, currentPitch, 1f, true);
             BeatAction.New(game.gameObject, new List<BeatAction.Action>()
             {
-                new BeatAction.Action(Conductor.instance.songPositionInBeats + 1f, delegate { UnYell(); })
+                new BeatAction.Action(Conductor.instance.songPositionInBeatsAsDouble + 1f, delegate { UnYell(); })
             });
         }
 

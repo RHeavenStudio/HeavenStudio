@@ -10,7 +10,7 @@ namespace HeavenStudio.Games.Scripts_DogNinja
 {
     public class ThrowObject : MonoBehaviour
     {
-        public float startBeat;
+        public double startBeat;
         public int type;
         public bool fromLeft;
         public bool shouldSfx = true;
@@ -19,7 +19,7 @@ namespace HeavenStudio.Games.Scripts_DogNinja
         
         private Vector3 objPos;
         private bool isActive = true;
-        private float barelyTime;
+        private double barelyTime;
         
         [Header("Animators")]
         Animator DogAnim;
@@ -109,13 +109,14 @@ namespace HeavenStudio.Games.Scripts_DogNinja
         private void JustSlice()
         {
             isActive = false;
-            barelyTime = Conductor.instance.songPositionInBeats;
+            barelyTime = Conductor.instance.songPositionInBeatsAsDouble;
 
             string barely = "Barely" + direction switch
             {
                 0 => "Left",
                 1 => "Right",
                 2 => "Both",
+                _ => "Both",
             };
 
             DogAnim.DoScaledAnimationAsync(barely, 0.5f);

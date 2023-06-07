@@ -14,7 +14,7 @@ namespace HeavenStudio.Games.Scripts_Fireworks
         [SerializeField] Animator anim;
         public bool isSparkler;
         private Fireworks game;
-        public float startBeat;
+        public double startBeat;
         public bool applause;
         private bool exploded;
         private float startY;
@@ -63,7 +63,7 @@ namespace HeavenStudio.Games.Scripts_Fireworks
             }
         }
 
-        public void Init(float beat, int explosionToChoose)
+        public void Init(double beat, int explosionToChoose)
         {
             startBeat = beat;
             startY = transform.position.y - offSet;

@@ -21,7 +21,7 @@ namespace HeavenStudio.Games.Loaders
                 },
                 new GameAction("spinEqui", "Spin")
                 {
-                    function = delegate {var e = eventCaller.currentEntity; BoardMeeting.instance.SpinEqui((float) e.beat, e.length); },
+                    function = delegate {var e = eventCaller.currentEntity; BoardMeeting.instance.SpinEqui(e.beat, e.length); },
                     resizable = true,
                     priority = 2
                 },
@@ -37,18 +37,18 @@ namespace HeavenStudio.Games.Loaders
                 },
                 new GameAction("stop", "Stop")
                 {
-                    function = delegate { var e = eventCaller.currentEntity; BoardMeeting.instance.Stop((float) e.beat, e.length); },
+                    function = delegate { var e = eventCaller.currentEntity; BoardMeeting.instance.Stop(e.beat, e.length); },
                     resizable = true,
                     priority = 1
                 },
                 new GameAction("assStop", "Assistant Stop")
                 {
-                    function = delegate { var e = eventCaller.currentEntity; BoardMeeting.instance.AssistantStop((float) e.beat); },
+                    function = delegate { var e = eventCaller.currentEntity; BoardMeeting.instance.AssistantStop(e.beat); },
                     defaultLength = 3f
                 },
                 new GameAction("bop", "Bop")
                 {
-                    function = delegate { var e = eventCaller.currentEntity; BoardMeeting.instance.Bop((float) e.beat, e.length, e["bop"], e["auto"]); },
+                    function = delegate { var e = eventCaller.currentEntity; BoardMeeting.instance.Bop(e.beat, e.length, e["bop"], e["auto"]); },
                     resizable = true,
                     parameters = new List<Param>()
                     {
@@ -144,7 +144,7 @@ namespace HeavenStudio.Games
             }
         }
 
-        public void Bop(float beat, float length, bool goBop, bool autoBop)
+        public void Bop(double beat, float length, bool goBop, bool autoBop)
         {
             shouldBop = autoBop;
             if (goBop)
@@ -162,7 +162,7 @@ namespace HeavenStudio.Games
             }
         }
 
-        public void AssistantStop(float beat)
+        public void AssistantStop(double beat)
         {
             assistantCanBop = false;
             string twoSound = "boardMeeting/two";
@@ -199,7 +199,7 @@ namespace HeavenStudio.Games
             ScheduleInput(beat, 2f, InputType.STANDARD_DOWN, JustAssistant, MissAssistant, Empty);
         }
 
-        public void Stop(float beat, float length)
+        public void Stop(double beat, float length)
         {
             executivesCanBop = false;
             List<BeatAction.Action> stops = new List<BeatAction.Action>();
@@ -249,7 +249,7 @@ namespace HeavenStudio.Games
             }
         }
 
-        public void SpinEqui(float beat, float length)
+        public void SpinEqui(double beat, float length)
         {
             if (chairLoopSound == null) chairLoopSound = SoundByte.PlayOneShotGame("boardMeeting/chairLoop", -1, 1, 1, true);
             firstSpinner = executives[0];

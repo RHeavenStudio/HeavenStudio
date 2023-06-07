@@ -190,7 +190,7 @@ namespace HeavenStudio.Games
         bool autoAction;
         float intervalStartBeat;
         float beatInterval = 1f;
-        float lastReportedBeat;
+        double lastReportedBeat;
 
         static List<float> queuedSqueezes = new List<float>();
         static List<float> queuedReleases = new List<float>();
