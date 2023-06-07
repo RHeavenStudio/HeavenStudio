@@ -944,6 +944,7 @@ namespace HeavenStudio.Editor.Track
             GameManager.instance.Beatmap.data.offset = newOffset;
 
             UpdateOffsetText();
+            FitToSong();
         }
 
         public void UpdateStartingBPMText()
