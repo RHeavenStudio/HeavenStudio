@@ -9,7 +9,7 @@ namespace HeavenStudio.Games.Scripts_RhythmTweezers
 {
     public class LongHair : MonoBehaviour
     {
-        public float createBeat;
+        public double createBeat;
         public GameObject hairSprite;
         public GameObject stubbleSprite;
         private RhythmTweezers game;
@@ -22,7 +22,7 @@ namespace HeavenStudio.Games.Scripts_RhythmTweezers
 
         private Sound pullSound;
 
-        private float inputBeat;
+        private double inputBeat;
 
         PlayerActionEvent endEvent;
 
@@ -33,7 +33,7 @@ namespace HeavenStudio.Games.Scripts_RhythmTweezers
             tweezers = game.Tweezers;
         }
 
-        public void StartInput(float beat, float length)
+        public void StartInput(double beat, double length)
         {
             inputBeat = beat + length;
             game.ScheduleInput(beat, length, InputType.STANDARD_DOWN | InputType.DIRECTION_DOWN, StartJust, StartMiss, Out);

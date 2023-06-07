@@ -23,7 +23,7 @@ namespace HeavenStudio.Games.Loaders
             {
                 new GameAction("rocket", "Family Model")
                 {
-                    preFunction = delegate { var e = eventCaller.currentEntity; LaunchParty.LaunchRocket((float) e.beat, e["offset"], e["note1"], e["note2"], e["note3"], e["note4"]); },
+                    preFunction = delegate { var e = eventCaller.currentEntity; LaunchParty.LaunchRocket(e.beat, e["offset"], e["note1"], e["note2"], e["note3"], e["note4"]); },
                     defaultLength = 4f,
                     parameters = new List<Param>()
                     {
@@ -36,7 +36,7 @@ namespace HeavenStudio.Games.Loaders
                 },
                 new GameAction("partyCracker", "Party-Popper")
                 {
-                    preFunction = delegate { var e = eventCaller.currentEntity; LaunchParty.LaunchPartyCracker((float) e.beat, e["offset"], e["note1"], e["note2"], e["note3"], e["note4"], e["note5"], e["note6"]); },
+                    preFunction = delegate { var e = eventCaller.currentEntity; LaunchParty.LaunchPartyCracker(e.beat, e["offset"], e["note1"], e["note2"], e["note3"], e["note4"], e["note5"], e["note6"]); },
                     defaultLength = 3f,
                     parameters = new List<Param>()
                     {
@@ -51,7 +51,7 @@ namespace HeavenStudio.Games.Loaders
                 },
                 new GameAction("bell", "Bell")
                 {
-                    preFunction = delegate { var e = eventCaller.currentEntity; LaunchParty.LaunchBell((float) e.beat, e["offset"], e["note1"], e["note2"], e["note3"], e["note4"], e["note5"], e["note6"], e["note7"], e["note8"],
+                    preFunction = delegate { var e = eventCaller.currentEntity; LaunchParty.LaunchBell(e.beat, e["offset"], e["note1"], e["note2"], e["note3"], e["note4"], e["note5"], e["note6"], e["note7"], e["note8"],
                         e["note9"]); },
                     defaultLength = 3f,
                     parameters = new List<Param>()
@@ -70,7 +70,7 @@ namespace HeavenStudio.Games.Loaders
                 },
                 new GameAction("bowlingPin", "Bowling Pin")
                 {
-                    preFunction = delegate { var e = eventCaller.currentEntity; LaunchParty.LaunchBowlingPin((float) e.beat, e["offset"], e["note1"], e["note2"], e["note3"], e["note4"], e["note5"], e["note6"], e["note7"], 
+                    preFunction = delegate { var e = eventCaller.currentEntity; LaunchParty.LaunchBowlingPin(e.beat, e["offset"], e["note1"], e["note2"], e["note3"], e["note4"], e["note5"], e["note6"], e["note7"], 
                         e["note8"], e["note9"], e["note10"], e["note11"], e["note12"], e["note13"], e["note14"], e["note15"]); },
                     defaultLength = 3f,
                     parameters = new List<Param>()
@@ -117,7 +117,7 @@ namespace HeavenStudio.Games.Loaders
                 },
                 new GameAction("toggleStars", "Toggle Falling Stars")
                 {
-                    function = delegate {var e = eventCaller.currentEntity; LaunchParty.instance.CreateParticles((float) e.beat, e["toggle"], e["valA"], e["valB"], e["valC"]);},
+                    function = delegate {var e = eventCaller.currentEntity; LaunchParty.instance.CreateParticles(e.beat, e["toggle"], e["valA"], e["valB"], e["valC"]);},
                     defaultLength = 0.5f,
                     parameters = new List<Param>()
                     {
@@ -187,7 +187,7 @@ namespace HeavenStudio.Games
         public struct QueuedRocket
         {
             public RocketType type;
-            public float beat;
+            public double beat;
             public float offSet;
             public List<int> notes; 
         }
@@ -220,7 +220,7 @@ namespace HeavenStudio.Games
             List<RiqEntity> tempPosEvents = new List<RiqEntity>();
             for (int i = 0; i < posEvents.Count; i++)
             {
-                if (posEvents[i].beat + posEvents[i].beat >= Conductor.instance.songPositionInBeats)
+                if (posEvents[i].beat + posEvents[i].beat >= Conductor.instance.songPositionInBeatsAsDouble)
                 {
                     tempPosEvents.Add(posEvents[i]);
                 }
@@ -232,7 +232,7 @@ namespace HeavenStudio.Games
             List<RiqEntity> tempRotEvents = new List<RiqEntity>();
             for (int i = 0; i < rotEvents.Count; i++)
             {
-                if (rotEvents[i].beat + rotEvents[i].beat >= Conductor.instance.songPositionInBeats)
+                if (rotEvents[i].beat + rotEvents[i].beat >= Conductor.instance.songPositionInBeatsAsDouble)
                 {
                     tempRotEvents.Add(rotEvents[i]);
                 }
@@ -262,7 +262,7 @@ namespace HeavenStudio.Games
             {
                 if (currentPosIndex < allPosEvents.Count && currentPosIndex >= 0)
                 {
-                    if (cond.songPositionInBeats >= allPosEvents[currentPosIndex].beat)
+                    if (cond.songPositionInBeatsAsDouble >= allPosEvents[currentPosIndex].beat)
                     {
                         UpdateLaunchPadPos();
                         currentPosIndex++;
@@ -299,7 +299,7 @@ namespace HeavenStudio.Games
             {
                 if (currentRotIndex < allRotEvents.Count && currentRotIndex >= 0)
                 {
-                    if (cond.songPositionInBeats >= allRotEvents[currentRotIndex].beat)
+                    if (cond.songPositionInBeatsAsDouble >= allRotEvents[currentRotIndex].beat)
                     {
                         UpdateLaunchPadRot();
                         currentRotIndex++;
@@ -361,7 +361,7 @@ namespace HeavenStudio.Games
             }
         }
 
-        public void SpawnRocket(float beat, float beatOffset, RocketType type, List<int> notes)
+        public void SpawnRocket(double beat, float beatOffset, RocketType type, List<int> notes)
         {
             GameObject rocketToSpawn = rocket;
             switch (type)
@@ -408,7 +408,7 @@ namespace HeavenStudio.Games
             });
         }
 
-        public static void LaunchRocket(float beat, float beatOffset, int noteOne, int noteTwo, int noteThree, int noteFour)
+        public static void LaunchRocket(double beat, float beatOffset, int noteOne, int noteTwo, int noteThree, int noteFour)
         {
             List<int> pitches = new List<int>()
             {
@@ -427,7 +427,7 @@ namespace HeavenStudio.Games
             }
         }
 
-        public static void LaunchPartyCracker(float beat, float beatOffset, int noteOne, int noteTwo, int noteThree, int noteFour, int noteFive, int noteSix)
+        public static void LaunchPartyCracker(double beat, float beatOffset, int noteOne, int noteTwo, int noteThree, int noteFour, int noteFive, int noteSix)
         {
             List<int> pitches = new List<int>()
             {
@@ -448,7 +448,7 @@ namespace HeavenStudio.Games
             }
         }
 
-        public static void LaunchBell(float beat, float beatOffset, int noteOne, int noteTwo, int noteThree, int noteFour, int noteFive, int noteSix, int noteSeven, int noteEight, int noteNine)
+        public static void LaunchBell(double beat, float beatOffset, int noteOne, int noteTwo, int noteThree, int noteFour, int noteFive, int noteSix, int noteSeven, int noteEight, int noteNine)
         {
             List<int> pitches = new List<int>()
             {
@@ -472,7 +472,7 @@ namespace HeavenStudio.Games
             }
         }
 
-        public static void LaunchBowlingPin(float beat, float beatOffset, int noteOne, int noteTwo, int noteThree, int noteFour, int noteFive, int noteSix, int noteSeven, 
+        public static void LaunchBowlingPin(double beat, float beatOffset, int noteOne, int noteTwo, int noteThree, int noteFour, int noteFive, int noteSix, int noteSeven, 
             int noteEight, int noteNine, int noteTen, int noteEleven, int noteTwelve, int noteThirteen, int noteFourteen, int noteFifteen)
         {
             List<int> pitches = new List<int>()
@@ -503,7 +503,7 @@ namespace HeavenStudio.Games
             }
         }
 
-        public void CreateParticles(float beat, bool toggle, float starDensity, float starSpeed, float starSpeedBack)
+        public void CreateParticles(double beat, bool toggle, float starDensity, float starSpeed, float starSpeedBack)
         {
             ParticleSystem.EmissionModule emm;
             ParticleSystem.EmissionModule emm2;

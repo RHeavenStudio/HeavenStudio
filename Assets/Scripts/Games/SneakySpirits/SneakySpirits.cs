@@ -13,7 +13,7 @@ namespace HeavenStudio.Games.Loaders
             {
                 new GameAction("spawnGhost", "Ghost")
                 {
-                    preFunction = delegate { var e = eventCaller.currentEntity; SneakySpirits.PreSpawnGhost((float) e.beat, e.length, e["slowDown"], e["volume1"], e["volume2"], e["volume3"], e["volume4"], e["volume5"], e["volume6"],
+                    preFunction = delegate { var e = eventCaller.currentEntity; SneakySpirits.PreSpawnGhost(e.beat, e.length, e["slowDown"], e["volume1"], e["volume2"], e["volume3"], e["volume4"], e["volume5"], e["volume6"],
                         e["volume7"]); },
                     defaultLength = 1f,
                     resizable = true,
@@ -36,7 +36,7 @@ namespace HeavenStudio.Games.Loaders
                 },
                 new GameAction("movebow", "Bow Enter or Exit")
                 {
-                    function = delegate {var e = eventCaller.currentEntity; SneakySpirits.instance.MoveBow((float) e.beat, e.length, e["exit"], e["ease"]); },
+                    function = delegate {var e = eventCaller.currentEntity; SneakySpirits.instance.MoveBow(e.beat, e.length, e["exit"], e["ease"]); },
                     defaultLength = 4f,
                     resizable = true,
                     parameters = new List<Param>()
@@ -61,7 +61,7 @@ namespace HeavenStudio.Games
     {
         public struct QueuedGhost
         {
-            public float beat;
+            public double beat;
             public float length;
             public bool slowDown;
             public List<int> volumes;
@@ -83,7 +83,7 @@ namespace HeavenStudio.Games
         private static List<QueuedGhost> queuedGhosts = new List<QueuedGhost>();
         private bool hasArrowLoaded;
         float movingLength;
-        float movingStartBeat;
+        double movingStartBeat;
         bool isMoving;
         string moveAnim;
         EasingFunction.Ease lastEase;
@@ -121,7 +121,7 @@ namespace HeavenStudio.Games
                 }
                 if (PlayerInput.Pressed() && !IsExpectingInputNow(InputType.STANDARD_DOWN) && hasArrowLoaded)
                 {
-                    WhiffArrow(cond.songPositionInBeats);
+                    WhiffArrow(cond.songPositionInBeatsAsDouble);
                 }
                 if (isMoving)
                 {
@@ -149,7 +149,7 @@ namespace HeavenStudio.Games
             hasArrowLoaded = true;
         }
 
-        public void MoveBow(float beat, float length, bool enter, int ease)
+        public void MoveBow(double beat, float length, bool enter, int ease)
         {
             movingStartBeat = beat;
             movingLength = length;
@@ -158,7 +158,7 @@ namespace HeavenStudio.Games
             lastEase = (EasingFunction.Ease)ease;
         }
 
-        public static void PreSpawnGhost(float beat, float length, bool slowDown, int volume1, int volume2, int volume3, int volume4, int volume5, int volume6, int volume7)
+        public static void PreSpawnGhost(double beat, float length, bool slowDown, int volume1, int volume2, int volume3, int volume4, int volume5, int volume6, int volume7)
         {
             MultiSound.Play(new MultiSound.Sound[]
             {
@@ -192,7 +192,7 @@ namespace HeavenStudio.Games
             }
         }
 
-        public void SpawnGhost(float beat, float length, bool slowDown, List<int> volumes)
+        public void SpawnGhost(double beat, float length, bool slowDown, List<int> volumes)
         {
             if (slowDown)
             {
@@ -210,8 +210,8 @@ namespace HeavenStudio.Games
             List<BeatAction.Action> ghostSpawns = new List<BeatAction.Action>();
             for(int i = 0; i < 7; i++)
             {
-                float spawnBeat = beat + length * i;
-                if (spawnBeat >= Conductor.instance.songPositionInBeats)
+                double spawnBeat = beat + length * i;
+                if (spawnBeat >= Conductor.instance.songPositionInBeatsAsDouble)
                 {
                     SneakySpiritsGhost spawnedGhost = Instantiate(movingGhostPrefab, ghostPositions[i], false);
                     spawnedGhost.transform.position = new Vector3(spawnedGhost.transform.position.x, spawnedGhost.transform.position.y - (1 - volumes[i] * 0.01f) * 2.5f, spawnedGhost.transform.position.z);

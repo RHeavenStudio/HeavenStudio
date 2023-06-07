@@ -269,6 +269,7 @@ namespace HeavenStudio.Editor
                         return;
                     }
                 }
+                await Task.Yield();
             } 
             );
             #else
@@ -289,6 +290,7 @@ namespace HeavenStudio.Editor
                         return;
                     }
                 }
+                await Task.Yield();
             }
             );
             #endif

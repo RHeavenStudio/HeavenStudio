@@ -9,7 +9,6 @@ namespace HeavenStudio.Games.Scripts_TapTrial
         [Header("References")]
         [System.NonSerialized] public Animator anim;
 
-        public float nextBeat;
         public int tripleOffset = 0;
 
         private void Awake()
@@ -19,9 +18,6 @@ namespace HeavenStudio.Games.Scripts_TapTrial
 
         private void Update()
         {
-            float normalizedBeat = Conductor.instance.GetPositionFromMargin(nextBeat, 1f);
-
-
             if (PlayerInput.Pressed())
             {
                 Tap(false, 0);

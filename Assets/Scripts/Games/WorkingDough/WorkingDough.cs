@@ -15,43 +15,43 @@ namespace HeavenStudio.Games.Loaders
             {
                 new GameAction("beat intervals", "Start Interval")
                 {
-                    function = delegate { var e = eventCaller.currentEntity; WorkingDough.instance.SetIntervalStart((float) e.beat, e.length);  },
-                    preFunction = delegate { var e = eventCaller.currentEntity; WorkingDough.PreSetIntervalStart((float) e.beat, e.length);  },
+                    function = delegate { var e = eventCaller.currentEntity; WorkingDough.instance.SetIntervalStart(e.beat, e.length);  },
+                    preFunction = delegate { var e = eventCaller.currentEntity; WorkingDough.PreSetIntervalStart(e.beat, e.length);  },
                     defaultLength = 8f,
                     resizable = true,
                     priority = 2
                 },
                 new GameAction("small ball", "Small Ball")
                 {
-                    function = delegate { var e = eventCaller.currentEntity; WorkingDough.instance.OnSpawnBall((float) e.beat, false);  },
-                    preFunction = delegate { var e = eventCaller.currentEntity; WorkingDough.PreSpawnBall((float) e.beat, false);  },
+                    function = delegate { var e = eventCaller.currentEntity; WorkingDough.instance.OnSpawnBall(e.beat, false);  },
+                    preFunction = delegate { var e = eventCaller.currentEntity; WorkingDough.PreSpawnBall(e.beat, false);  },
                     defaultLength = 0.5f,
                     priority = 1
                 },
                 new GameAction("big ball", "Big Ball")
                 {
-                    function = delegate { var e = eventCaller.currentEntity; WorkingDough.instance.OnSpawnBall((float) e.beat, true);  },
-                    preFunction = delegate { var e = eventCaller.currentEntity; WorkingDough.PreSpawnBall((float) e.beat, true);  },
+                    function = delegate { var e = eventCaller.currentEntity; WorkingDough.instance.OnSpawnBall(e.beat, true);  },
+                    preFunction = delegate { var e = eventCaller.currentEntity; WorkingDough.PreSpawnBall(e.beat, true);  },
                     defaultLength = 0.5f,
                     priority = 1
                 },
                 new GameAction("launch spaceship", "Launch Spaceship")
                 {
-                    function = delegate { var e = eventCaller.currentEntity; WorkingDough.instance.LaunchShip((float) e.beat, e.length);  },
+                    function = delegate { var e = eventCaller.currentEntity; WorkingDough.instance.LaunchShip(e.beat, e.length);  },
                     defaultLength = 4f,
                     resizable = true,
                     priority = 0
                 },
                 new GameAction("rise spaceship", "Rise Up Spaceship")
                 {
-                    function = delegate { var e = eventCaller.currentEntity; WorkingDough.instance.RiseUpShip((float) e.beat, e.length);  },
+                    function = delegate { var e = eventCaller.currentEntity; WorkingDough.instance.RiseUpShip(e.beat, e.length);  },
                     defaultLength = 4f,
                     resizable = true,
                     priority = 0
                 },
                 new GameAction("lift dough dudes", "Lift Dough Dudes")
                 {
-                    function = delegate { var e = eventCaller.currentEntity; WorkingDough.instance.Elevate((float) e.beat, e.length, e["toggle"]);  },
+                    function = delegate { var e = eventCaller.currentEntity; WorkingDough.instance.Elevate(e.beat, e.length, e["toggle"]);  },
                     defaultLength = 4f,
                     parameters = new List<Param>()
                     {
@@ -72,7 +72,7 @@ namespace HeavenStudio.Games.Loaders
                 },
                 new GameAction("mr game and watch enter or exit", "Mr. G&W Enter or Exit")
                 {
-                    function = delegate { var e = eventCaller.currentEntity; WorkingDough.instance.GANDWEnterOrExit((float) e.beat, e.length, e["toggle"]);  },
+                    function = delegate { var e = eventCaller.currentEntity; WorkingDough.instance.GANDWEnterOrExit(e.beat, e.length, e["toggle"]);  },
                     defaultLength = 4f,
                     parameters = new List<Param>()
                     {
@@ -139,26 +139,26 @@ namespace HeavenStudio.Games
 
         [Header("Variables")]
         public bool intervalStarted;
-        float intervalStartBeat;
+        double intervalStartBeat;
         float risingLength = 4f;
-        float risingStartBeat;
+        double risingStartBeat;
         float liftingLength = 4f;
-        float liftingStartBeat;
+        double liftingStartBeat;
         public static float beatInterval = 8f;
         float gandMovingLength = 4f;
-        float gandMovingStartBeat;
+        double gandMovingStartBeat;
         public bool bigMode;
         public bool bigModePlayer;
         static List<QueuedBall> queuedBalls = new List<QueuedBall>();
         struct QueuedBall
         {
-            public float beat;
+            public double beat;
             public bool isBig;
         }
         static List<QueuedInterval> queuedIntervals = new List<QueuedInterval>();
         struct QueuedInterval
         {
-            public float beat;
+            public double beat;
             public float interval;
         }
         private List<GameObject> currentBalls = new List<GameObject>();
@@ -213,7 +213,7 @@ namespace HeavenStudio.Games
             doughDudesHolderAnim.Play("OnGround", 0, 0);
         }
 
-        public void SetIntervalStart(float beat, float interval)
+        public void SetIntervalStart(double beat, float interval)
         {
             Debug.Log("Start Interval");
             if (!intervalStarted)
@@ -262,7 +262,7 @@ namespace HeavenStudio.Games
             intervalStartBeat = beat;
         }
 
-        public void SpawnBall(float beat, bool isBig)
+        public void SpawnBall(double beat, bool isBig)
         {
             if (!intervalStarted && ballTriggerSetInterval)
             {
@@ -303,7 +303,7 @@ namespace HeavenStudio.Games
             });
         }
 
-        public void InstantExitBall(float beat, bool isBig, float offSet)
+        public void InstantExitBall(double beat, bool isBig, double offSet)
         {
             var objectToSpawn = isBig ? bigBallNPC : smallBallNPC;
             var spawnedBall = GameObject.Instantiate(objectToSpawn, ballHolder);
@@ -314,7 +314,7 @@ namespace HeavenStudio.Games
             ballComponent.enterUpCurve = npcEnterUpCurve;
             ballComponent.exitDownCurve = npcExitDownCurve;
             ballComponent.enterDownCurve = npcEnterDownCurve;
-            ballComponent.currentFlyingStage = (FlyingStage)(2 - Mathf.Abs(offSet));
+            ballComponent.currentFlyingStage = (FlyingStage)(2 - (int)Math.Abs(offSet));
 
             if (isBig && !bigMode)
             {
@@ -339,9 +339,9 @@ namespace HeavenStudio.Games
             });
         }
 
-        public static void PreSpawnBall(float beat, bool isBig)
+        public static void PreSpawnBall(double beat, bool isBig)
         {
-            float spawnBeat = beat - 1f;
+            double spawnBeat = beat - 1f;
             beat -= 1f;
             if (GameManager.instance.currentGame == "workingDough")
             {
@@ -370,7 +370,7 @@ namespace HeavenStudio.Games
             }
         }
 
-        public void OnSpawnBall(float beat, bool isBig)
+        public void OnSpawnBall(double beat, bool isBig)
         {
             beat -= 1f;
             BeatAction.New(instance.gameObject, new List<BeatAction.Action>()
@@ -379,7 +379,7 @@ namespace HeavenStudio.Games
             });
         }
 
-        public void OnSpawnBallInactive(float beat, bool isBig)
+        public void OnSpawnBallInactive(double beat, bool isBig)
         {
             queuedBalls.Add(new QueuedBall()
             {
@@ -388,7 +388,7 @@ namespace HeavenStudio.Games
             });
         }
 
-        public void SpawnPlayerBall(float beat, bool isBig)
+        public void SpawnPlayerBall(double beat, bool isBig)
         {
             var objectToSpawn = isBig ? playerEnterBigBall : playerEnterSmallBall;
             var spawnedBall = GameObject.Instantiate(objectToSpawn, ballHolder);
@@ -442,7 +442,7 @@ namespace HeavenStudio.Games
             spawnedBall.SetActive(true);
         }
 
-        public static void PreSetIntervalStart(float beat, float interval)
+        public static void PreSetIntervalStart(double beat, float interval)
         {
             beat -= 1f;
             if (GameManager.instance.currentGame == "workingDough")
@@ -516,8 +516,8 @@ namespace HeavenStudio.Games
             {
                 foreach (var ball in queuedBalls)
                 {
-                    float offSet = ball.beat - cond.songPositionInBeats;
-                    float spawnOffset = offSet > 1f ? offSet - 1 : 0;
+                    double offSet = ball.beat - cond.songPositionInBeatsAsDouble;
+                    double spawnOffset = offSet > 1f ? offSet - 1 : 0;
                     if (ball.isBig) NPCBallTransporters.GetComponent<Animator>().Play("BigMode", 0, 0);
                     BeatAction.New(instance.gameObject, new List<BeatAction.Action>()
                     {
@@ -708,11 +708,11 @@ namespace HeavenStudio.Games
                 new BeatAction.Action(beat + 0.1f, delegate { playerImpact.SetActive(false); }),
                 new BeatAction.Action(beat + 0.9f, delegate { arrowSRRightPlayer.sprite = redArrowSprite; }),
                 new BeatAction.Action(beat + 1f, delegate { arrowSRRightPlayer.sprite = whiteArrowSprite; }),
-                new BeatAction.Action(beat + 2f, delegate { SpawnBGBall((float) beat + 2f, isBig); }),
+                new BeatAction.Action(beat + 2f, delegate { SpawnBGBall(beat + 2f, isBig); }),
             });
         }
 
-        void SpawnBGBall(float beat, bool isBig)
+        void SpawnBGBall(double beat, bool isBig)
         {
             var objectToSpawn = isBig ? bigBGBall : smallBGBall;
             var spawnedBall = GameObject.Instantiate(objectToSpawn, ballHolder);
@@ -735,7 +735,7 @@ namespace HeavenStudio.Games
             doughDudesHolderAnim.Play(isUp ? "InAir" : "OnGround", 0, 0);
         }
 
-        public void Elevate(float beat, float length, bool isUp)
+        public void Elevate(double beat, float length, bool isUp)
         {
             liftingAnimName = isUp ? "LiftUp" : "LiftDown";
             liftingStartBeat = beat;
@@ -748,7 +748,7 @@ namespace HeavenStudio.Games
             });
         } 
 
-        public void LaunchShip(float beat, float length)
+        public void LaunchShip(double beat, float length)
         {
             spaceshipRisen = true;
             if (!spaceshipLights.activeSelf)
@@ -765,7 +765,7 @@ namespace HeavenStudio.Games
             });
         }
 
-        public void RiseUpShip(float beat, float length)
+        public void RiseUpShip(double beat, float length)
         { 
             spaceshipRisen = true;
             spaceshipRising = true;
@@ -783,7 +783,7 @@ namespace HeavenStudio.Games
             });
         }
 
-        public void GANDWEnterOrExit(float beat, float length, bool shouldExit)
+        public void GANDWEnterOrExit(double beat, float length, bool shouldExit)
         {
             gandwMoving = true;
             gandwHasEntered = false;

@@ -18,7 +18,7 @@ namespace HeavenStudio.Games.Scripts_Rockers
 
         private Rockers game;
 
-        public void Init(bool gleeClub, int[] pitches, float beat, float length, Rockers.PremadeSamples sample, int sampleTones, bool jump = false)
+        public void Init(bool gleeClub, int[] pitches, double beat, double length, Rockers.PremadeSamples sample, int sampleTones, bool jump = false)
         {
             game = Rockers.instance;
             this.gleeClub = gleeClub;

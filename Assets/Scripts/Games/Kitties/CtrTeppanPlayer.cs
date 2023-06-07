@@ -50,26 +50,26 @@ namespace HeavenStudio.Games.Scripts_Kitties
             }
         }
 
-        public void ScheduleClap(float beat, int type)
+        public void ScheduleClap(double beat, int type)
         {
             spawnType = type;
             Kitties.instance.ScheduleInput(beat, 2.5f, InputType.STANDARD_DOWN, ClapSuccessOne, ClapMissOne, ClapEmpty);
             Kitties.instance.ScheduleInput(beat, 3f, InputType.STANDARD_DOWN, ClapSuccessTwo, ClapMissTwo, ClapEmpty);
         }
 
-        public void ScheduleRoll(float beat)
+        public void ScheduleRoll(double beat)
         {
                 Kitties.instance.ScheduleInput(beat, 2f, InputType.STANDARD_ALT_DOWN, SpinSuccessOne, SpinMissOne, SpinEmpty);
         }
 
-        public void ScheduleRollFinish(float beat)
+        public void ScheduleRollFinish(double beat)
         {
             Debug.Log(hasSpun);
             if (hasSpun)
                 Kitties.instance.ScheduleInput(beat, 2.75f, InputType.STANDARD_ALT_UP, SpinSuccessTwo, SpinMissTwo, SpinEmpty);
         }
 
-        public void ScheduleFish(float beat)
+        public void ScheduleFish(double beat)
         {
             Kitties.instance.ScheduleInput(beat, 2.75f, InputType.STANDARD_DOWN, FishSuccess, FishMiss, FishEmpty);
         }
@@ -165,7 +165,7 @@ namespace HeavenStudio.Games.Scripts_Kitties
             hasSpun = false;
             var cond = Conductor.instance;
             SoundByte.PlayOneShotGame("kitties/roll5", -1f, 1, .1f);
-            SoundByte.PlayOneShotGame("kitties/roll6", cond.songPositionInBeats + .75f, 1, .1f);
+            SoundByte.PlayOneShotGame("kitties/roll6", cond.songPositionInBeatsAsDouble + .75f, 1, .1f);
         }
 
         public void SpinMissTwo(PlayerActionEvent caller)

@@ -48,7 +48,7 @@ namespace HeavenStudio.Games.Scripts_LaunchParty
             noInput = false;
         }
 
-        public void InitFamilyRocket(float beat)
+        public void InitFamilyRocket(double beat)
         {
             game.ScheduleInput(beat, 3f, InputType.STANDARD_DOWN, JustFamilyRocket, Miss, Nothing);
 
@@ -72,7 +72,7 @@ namespace HeavenStudio.Games.Scripts_LaunchParty
             });
         }
 
-        public void InitPartyCracker(float beat)
+        public void InitPartyCracker(double beat)
         {
             game.ScheduleInput(beat, 2f, InputType.STANDARD_DOWN, JustPartyCracker, Miss, Nothing);
 
@@ -100,7 +100,7 @@ namespace HeavenStudio.Games.Scripts_LaunchParty
             });
         }
 
-        public void InitBell(float beat)
+        public void InitBell(double beat)
         {
             game.ScheduleInput(beat, 2f, InputType.STANDARD_DOWN, JustBell, Miss, Nothing);
 
@@ -132,7 +132,7 @@ namespace HeavenStudio.Games.Scripts_LaunchParty
             });
         }
 
-        public void InitBowlingPin(float beat)
+        public void InitBowlingPin(double beat)
         {
             game.ScheduleInput(beat, 2f, InputType.STANDARD_DOWN, JustBowlingPin, Miss, Nothing);
 

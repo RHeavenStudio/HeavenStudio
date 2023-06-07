@@ -28,7 +28,7 @@ namespace HeavenStudio.Games.Loaders
                 {
                     new GameAction("bop", "Bop")
                     {
-                        function = delegate { var e = eventCaller.currentEntity; MarchingOrders.instance.BopAction((float) e.beat, e.length, e["bop"], e["autoBop"], e["clap"]); },
+                        function = delegate { var e = eventCaller.currentEntity; MarchingOrders.instance.BopAction(e.beat, e.length, e["bop"], e["autoBop"], e["clap"]); },
                         defaultLength = 1f,
                         resizable = true,
                         parameters = new List<Param>()
@@ -40,14 +40,14 @@ namespace HeavenStudio.Games.Loaders
                     },
                     new GameAction("attention", "Attention...")
                     {
-                        function = delegate { var e = eventCaller.currentEntity; MarchingOrders.instance.SargeAttention((float) e.beat); },
+                        function = delegate { var e = eventCaller.currentEntity; MarchingOrders.instance.SargeAttention(e.beat); },
                         defaultLength = 2f,
-                        preFunction = delegate { var e = eventCaller.currentEntity; MarchingOrders.AttentionSound((float) e.beat);}
+                        preFunction = delegate { var e = eventCaller.currentEntity; MarchingOrders.AttentionSound(e.beat);}
                     },
                     new GameAction("march", "March!")
                     {
-                        function = delegate { var e = eventCaller.currentEntity; MarchingOrders.SargeMarch((float) e.beat, e["disableVoice"]); },
-                        inactiveFunction = delegate { var e = eventCaller.currentEntity; MarchingOrders.SargeMarch((float) e.beat, e["disableVoice"]); },
+                        function = delegate { var e = eventCaller.currentEntity; MarchingOrders.SargeMarch(e.beat, e["disableVoice"]); },
+                        inactiveFunction = delegate { var e = eventCaller.currentEntity; MarchingOrders.SargeMarch(e.beat, e["disableVoice"]); },
                         defaultLength = 2f,
                         parameters = new List<Param>
                         {
@@ -59,7 +59,7 @@ namespace HeavenStudio.Games.Loaders
                     {
                         function = delegate {
                             var e = eventCaller.currentEntity;
-                            MarchingOrders.instance.FaceTurn((float) e.beat, e["direction"], false, e["point"]);
+                            MarchingOrders.instance.FaceTurn(e.beat, e["direction"], false, e["point"]);
                         },
                         defaultLength = 4f,
                         parameters = new List<Param>()
@@ -72,7 +72,7 @@ namespace HeavenStudio.Games.Loaders
                     {
                         function = delegate { 
                             var e = eventCaller.currentEntity; 
-                            MarchingOrders.instance.FaceTurn((float) e.beat, e["direction"], true, e["point"]); 
+                            MarchingOrders.instance.FaceTurn(e.beat, e["direction"], true, e["point"]); 
                         },
                         defaultLength = 3f,
                         parameters = new List<Param>()
@@ -83,9 +83,9 @@ namespace HeavenStudio.Games.Loaders
                     },
                     new GameAction("halt", "Halt!")
                     {
-                        function = delegate { MarchingOrders.instance.Halt((float) eventCaller.currentEntity.beat); },
+                        function = delegate { MarchingOrders.instance.Halt(eventCaller.currentEntity.beat); },
                         defaultLength = 2f,
-                        inactiveFunction = delegate { MarchingOrders.HaltSound((float) eventCaller.currentEntity.beat);}
+                        inactiveFunction = delegate { MarchingOrders.HaltSound(eventCaller.currentEntity.beat);}
                     },
                     new GameAction("go", "Go!")
                     {
@@ -127,7 +127,7 @@ namespace HeavenStudio.Games.Loaders
                     {
                         preFunction = delegate {
                             var e = eventCaller.currentEntity;
-                            MarchingOrders.instance.ForceMarching((float) e.beat, e.length);
+                            MarchingOrders.instance.ForceMarching(e.beat, e.length);
                         },
                         preFunctionLength = 1,
                         resizable = true,
@@ -139,7 +139,7 @@ namespace HeavenStudio.Games.Loaders
                         hidden = true,
                         preFunction = delegate {
                             var e = eventCaller.currentEntity;
-                            MarchingOrders.instance.ForceMarching((float) e.beat, e.length);
+                            MarchingOrders.instance.ForceMarching(e.beat, e.length);
                         },
                         preFunctionLength = 1,
                         resizable = true,
@@ -149,7 +149,7 @@ namespace HeavenStudio.Games.Loaders
                         hidden = true,
                         function = delegate {
                             var e = eventCaller.currentEntity;
-                            MarchingOrders.instance.FaceTurn((float) e.beat, e["type"], e["type2"], false);
+                            MarchingOrders.instance.FaceTurn(e.beat, e["type"], e["type2"], false);
                         },
                         defaultLength = 4f,
                         parameters = new List<Param>()
@@ -174,7 +174,7 @@ namespace HeavenStudio.Games
     {
         public static MarchingOrders instance;
 
-        static List<float> queuedMarches = new List<float>();
+        static List<double> queuedMarches = new();
 
         [Header("Animators")]
         [SerializeField] Animator Sarge;
@@ -198,9 +198,9 @@ namespace HeavenStudio.Games
         bool keepMarching;
         private int marchOtherCount;
         private int marchPlayerCount;
-        private float lastMissBeat;
+        private double lastMissBeat;
         private double lastReportedBeat;
-        public static float wantMarch = float.MinValue;
+        public static double wantMarch = double.MinValue;
         
 
         public enum Direction
@@ -233,12 +233,12 @@ namespace HeavenStudio.Games
         {
             for (int i = 0; i < BackgroundRecolorable.Length; i++) BackgroundRecolorable[i].color = i == 0 ? BGColor1 : BGColor2;
             
-            if (wantMarch != float.MinValue) {
+            if (wantMarch != double.MinValue) {
                 queuedMarches.Add(wantMarch);
                 marchOtherCount =
                 marchPlayerCount = 0;
                 keepMarching = true;
-                wantMarch = float.MinValue;
+                wantMarch = double.MinValue;
             }
 
             if (goBop && Conductor.instance.ReportBeat(ref lastReportedBeat)) {
@@ -326,13 +326,13 @@ namespace HeavenStudio.Games
 
         public void GenericMiss(PlayerActionEvent caller)
         {
-            if (Conductor.instance.songPositionInBeats - lastMissBeat <= 1.1f) return;
+            if (Conductor.instance.songPositionInBeatsAsDouble - lastMissBeat <= 1.1f) return;
             Miss();
         }
 
         public void Miss()
         {
-            lastMissBeat = Conductor.instance.songPositionInBeats;
+            lastMissBeat = Conductor.instance.songPositionInBeatsAsDouble;
             SoundByte.PlayOneShot("miss");
             Sarge.DoScaledAnimationAsync("Anger", 0.5f);
             Steam.DoScaledAnimationAsync("Steam", 0.5f);
@@ -354,7 +354,7 @@ namespace HeavenStudio.Games
             CadetPlayer.DoScaledAnimationAsync("Halt", 0.5f);
         }
 
-        public void BopAction(float beat, float length, bool shouldBop, bool autoBop, bool clap)
+        public void BopAction(double beat, float length, bool shouldBop, bool autoBop, bool clap)
         {
             goBop = autoBop;
             shouldClap = clap;
@@ -370,16 +370,16 @@ namespace HeavenStudio.Games
             }
         }
 
-        public void SargeAttention(float beat)
+        public void SargeAttention(double beat)
         {
             BeatAction.New(gameObject, new List<BeatAction.Action>() {
                 new BeatAction.Action(beat + 0.25f, delegate { Sarge.DoScaledAnimationAsync("Talk", 0.5f);}),
             });
         }
         
-        public static void SargeMarch(float beat, bool noVoice)
+        public static void SargeMarch(double beat, bool noVoice)
         {
-            if (MarchingOrders.wantMarch != float.MinValue) return;
+            if (MarchingOrders.wantMarch != double.MinValue) return;
             MarchingOrders.wantMarch = beat + 1;
 
             if (!noVoice) PlaySoundSequence("marchingOrders", "susume", beat);
@@ -390,7 +390,7 @@ namespace HeavenStudio.Games
             }
         }
 
-        public void ForceMarching(float beat, float length)
+        public void ForceMarching(double beat, float length)
         {
             for (int i = 0; i < length; i++) {
                 ScheduleInput(beat + i - 1, 1f, InputType.STANDARD_DOWN, MarchHit, GenericMiss, Empty);
@@ -404,7 +404,7 @@ namespace HeavenStudio.Games
             }
         }
 
-        public void PreMarch(float beat)
+        public void PreMarch(double beat)
         {
             BeatAction.New(gameObject, new List<BeatAction.Action>()
             {
@@ -415,7 +415,7 @@ namespace HeavenStudio.Games
             });
         }
         
-        public void Halt(float beat)
+        public void Halt(double beat)
         {
             keepMarching = false;
             HaltSound(beat);            
@@ -428,7 +428,7 @@ namespace HeavenStudio.Games
             });
         }
         
-        public void FaceTurn(float beat, int direction, bool isFast, bool shouldPoint)
+        public void FaceTurn(double beat, int direction, bool isFast, bool shouldPoint)
         {
             // x is true if the direction is right
             bool x = (direction == 0);
@@ -491,12 +491,12 @@ namespace HeavenStudio.Games
             }
         }
 
-        public static void AttentionSound(float beat)
+        public static void AttentionSound(double beat)
         {
             PlaySoundSequence("marchingOrders", "zentai", beat - 1);
         }
         
-        public static void HaltSound(float beat)
+        public static void HaltSound(double beat)
         {
             PlaySoundSequence("marchingOrders", "tomare", beat);
         }

@@ -16,7 +16,7 @@ namespace HeavenStudio.Games.Scripts_WorkingDough
     }
     public class NPCDoughBall : MonoBehaviour
     {
-        public float startBeat;
+        public double startBeat;
 
         public FlyingStage currentFlyingStage = FlyingStage.EnteringUp;
 

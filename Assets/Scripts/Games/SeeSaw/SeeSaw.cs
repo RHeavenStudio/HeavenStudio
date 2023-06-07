@@ -15,7 +15,7 @@ namespace HeavenStudio.Games.Loaders
             {
                 new GameAction("longLong", "Long Long")
                 {
-                    function = delegate { var e = eventCaller.currentEntity; SeeSaw.instance.cameraMove = e["camMove"]; SeeSaw.instance.LongLong((float) e.beat, e["high"], e["height"]); },
+                    function = delegate { var e = eventCaller.currentEntity; SeeSaw.instance.cameraMove = e["camMove"]; SeeSaw.instance.LongLong(e.beat, e["high"], e["height"]); },
                     defaultLength = 4f,
                     parameters = new List<Param>()
                     {
@@ -26,7 +26,7 @@ namespace HeavenStudio.Games.Loaders
                 },
                 new GameAction("longShort", "Long Short")
                 {
-                    function = delegate { var e = eventCaller.currentEntity; SeeSaw.instance.cameraMove = e["camMove"]; SeeSaw.instance.LongShort((float) e.beat, e["high"], e["height"]); },
+                    function = delegate { var e = eventCaller.currentEntity; SeeSaw.instance.cameraMove = e["camMove"]; SeeSaw.instance.LongShort(e.beat, e["high"], e["height"]); },
                     defaultLength = 3f,
                     parameters = new List<Param>()
                     {
@@ -37,7 +37,7 @@ namespace HeavenStudio.Games.Loaders
                 },
                 new GameAction("shortLong", "Short Long")
                 {
-                    function = delegate { var e = eventCaller.currentEntity; SeeSaw.instance.cameraMove = e["camMove"]; SeeSaw.instance.ShortLong((float) e.beat, e["high"], e["height"]); },
+                    function = delegate { var e = eventCaller.currentEntity; SeeSaw.instance.cameraMove = e["camMove"]; SeeSaw.instance.ShortLong(e.beat, e["high"], e["height"]); },
                     defaultLength = 3f,
                     parameters = new List<Param>()
                     {
@@ -48,7 +48,7 @@ namespace HeavenStudio.Games.Loaders
                 },
                 new GameAction("shortShort", "Short Short")
                 {
-                    function = delegate { var e = eventCaller.currentEntity; SeeSaw.instance.cameraMove = e["camMove"]; SeeSaw.instance.ShortShort((float) e.beat, e["high"], e["height"]); },
+                    function = delegate { var e = eventCaller.currentEntity; SeeSaw.instance.cameraMove = e["camMove"]; SeeSaw.instance.ShortShort(e.beat, e["high"], e["height"]); },
                     defaultLength = 2f,
                     parameters = new List<Param>()
                     {
@@ -59,7 +59,7 @@ namespace HeavenStudio.Games.Loaders
                 },
                 new GameAction("changeBgColor", "Change Background Color")
                 {
-                    function = delegate { var e = eventCaller.currentEntity; SeeSaw.instance.ChangeColor((float) e.beat, e.length, e["colorFrom"], e["colorTo"], e["colorFrom2"], e["colorTo2"], e["ease"]); },
+                    function = delegate { var e = eventCaller.currentEntity; SeeSaw.instance.ChangeColor(e.beat, e.length, e["colorFrom"], e["colorTo"], e["colorFrom2"], e["colorTo2"], e["ease"]); },
                     defaultLength = 4f,
                     resizable = true,
                     parameters = new List<Param>()
@@ -73,7 +73,7 @@ namespace HeavenStudio.Games.Loaders
                 },
                 new GameAction("bop", "Bop")
                 {
-                    function = delegate { var e = eventCaller.currentEntity; SeeSaw.instance.Bop((float) e.beat, e.length, e["bopSee"], e["bopSaw"], e["autoSee"], e["autoSaw"], e["strumSee"], e["strumSaw"]); },
+                    function = delegate { var e = eventCaller.currentEntity; SeeSaw.instance.Bop(e.beat, e.length, e["bopSee"], e["bopSaw"], e["autoSee"], e["autoSaw"], e["strumSee"], e["strumSaw"]); },
                     defaultLength = 1f,
                     resizable = true,
                     parameters = new List<Param>()
@@ -88,7 +88,7 @@ namespace HeavenStudio.Games.Loaders
                 },
                 new GameAction("choke", "Choke")
                 {
-                    function = delegate { var e = eventCaller.currentEntity; SeeSaw.instance.Choke((float) e.beat, e.length, e["see"], e["saw"]); },
+                    function = delegate { var e = eventCaller.currentEntity; SeeSaw.instance.Choke(e.beat, e.length, e["see"], e["saw"]); },
                     defaultLength = 4f,
                     resizable = true,
                     parameters = new List<Param>()
@@ -171,7 +171,7 @@ namespace HeavenStudio.Games
         [NonSerialized] public bool sawShouldBop;
         [NonSerialized] public bool seeShouldBop;
         GameEvent bop = new GameEvent();
-        float bgColorStartBeat;
+        double bgColorStartBeat;
         float bgColorLength;
         Util.EasingFunction.Ease lastEase;
         Color colorFrom;
@@ -196,12 +196,12 @@ namespace HeavenStudio.Games
         {
             instance = this;
             if (allJumpEvents.Count > 0) return;
-            GrabJumpEvents(Conductor.instance.songPositionInBeats);
+            GrabJumpEvents(Conductor.instance.songPositionInBeatsAsDouble);
         }
 
         public override void OnGameSwitch(double beat)
         {
-            GrabJumpEvents((float) beat);
+            GrabJumpEvents(beat);
         }
 
         private void Start()
@@ -231,7 +231,7 @@ namespace HeavenStudio.Games
             }
         }
 
-        private void GrabJumpEvents(float beat)
+        private void GrabJumpEvents(double beat)
         {
             Debug.Log("Beat: " + beat);
             var jumpEvents = EventCaller.GetAllInGameManagerList("seeSaw", new string[] { "longLong", "longShort", "shortLong", "shortShort" });
@@ -298,9 +298,9 @@ namespace HeavenStudio.Games
                             || allJumpEvents[currentJumpIndex].beat > allJumpEvents[currentJumpIndex - 1].length + ((allJumpEvents[currentJumpIndex].datamodel is "seeSaw/longShort" or "seeSaw/shortShort") ? 1 : 2))
                         {
                             bool inJump = DetermineStartLandInOrOut();
-                            if (cond.songPositionInBeats >= allJumpEvents[currentJumpIndex].beat - (inJump ? 1 : 2))
+                            if (cond.songPositionInBeatsAsDouble >= allJumpEvents[currentJumpIndex].beat - (inJump ? 1 : 2))
                             {
-                                if (canPrepare && cond.songPositionInBeats < allJumpEvents[currentJumpIndex].beat)
+                                if (canPrepare && cond.songPositionInBeatsAsDouble < allJumpEvents[currentJumpIndex].beat)
                                 {
 
                                     float beatToJump = (float)allJumpEvents[currentJumpIndex].beat - (inJump ? 1 : 2);
@@ -350,13 +350,13 @@ namespace HeavenStudio.Games
             }
         }
 
-        public void Choke(float beat, float length, bool seeChoke, bool sawChoke)
+        public void Choke(double beat, float length, bool seeChoke, bool sawChoke)
         {
             if (seeChoke) see.Choke(beat, length);
             if (sawChoke) saw.Choke(beat, length);
         }
 
-        public void Bop(float beat, float length, bool bopSee, bool bopSaw, bool autoSee, bool autoSaw, bool strumSee, bool strumSaw)
+        public void Bop(double beat, float length, bool bopSee, bool bopSaw, bool autoSee, bool autoSaw, bool strumSee, bool strumSaw)
         {
             seeShouldBop = autoSee;
             sawShouldBop = autoSaw;
@@ -383,7 +383,7 @@ namespace HeavenStudio.Games
             }
         }
 
-        public void ChangeColor(float beat, float length, Color color1, Color color2, Color color3, Color color4, int ease)
+        public void ChangeColor(double beat, float length, Color color1, Color color2, Color color3, Color color4, int ease)
         {
             bgColorStartBeat = beat;
             bgColorLength = length;
@@ -394,7 +394,7 @@ namespace HeavenStudio.Games
             lastEase = (Util.EasingFunction.Ease)ease;
         }
 
-        public void LongLong(float beat, bool high, float height)
+        public void LongLong(double beat, bool high, float height)
         {
             if (see.dead || saw.dead) return;
             if (currentJumpIndex != 0)
@@ -454,7 +454,7 @@ namespace HeavenStudio.Games
             } 
         }
 
-        public void LongShort(float beat, bool high, float height)
+        public void LongShort(double beat, bool high, float height)
         {
             if (see.dead || saw.dead) return;
             if (currentJumpIndex != 0)
@@ -514,7 +514,7 @@ namespace HeavenStudio.Games
             }
         }
 
-        public void ShortLong(float beat, bool high, float height)
+        public void ShortLong(double beat, bool high, float height)
         {
             if (see.dead || saw.dead) return;
             if (currentJumpIndex != 0)
@@ -574,7 +574,7 @@ namespace HeavenStudio.Games
             }
         }
 
-        public void ShortShort(float beat, bool high, float height)
+        public void ShortShort(double beat, bool high, float height)
         {
             if (see.dead || saw.dead) return;
             if (currentJumpIndex != 0)
@@ -722,7 +722,7 @@ namespace HeavenStudio.Games
             }
         }
 
-        void DetermineSawJump(float beat, bool high, float height)
+        void DetermineSawJump(double beat, bool high, float height)
         {
             if (currentJumpIndex >= 0)
             {
@@ -770,7 +770,7 @@ namespace HeavenStudio.Games
             return currentJumpIndex < allJumpEvents.Count && allJumpEvents[currentJumpIndex].beat == allJumpEvents[currentJumpIndex - 1].beat + allJumpEvents[currentJumpIndex - 1].length;
         }
 
-        public void SpawnOrbs(bool white, float beat)
+        public void SpawnOrbs(bool white, double beat)
         {
             ParticleSystem ps = null;
             if (white)

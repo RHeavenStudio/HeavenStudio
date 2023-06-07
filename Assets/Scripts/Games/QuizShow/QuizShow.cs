@@ -15,7 +15,7 @@ namespace HeavenStudio.Games.Loaders
             {
                 new GameAction("intervalStart", "Start Interval")
                 {
-                    function = delegate {var e = eventCaller.currentEntity; QuizShow.instance.StartInterval((float) e.beat, e.length); },
+                    function = delegate {var e = eventCaller.currentEntity; QuizShow.instance.StartInterval(e.beat, e.length); },
                     defaultLength = 8f,
                     resizable = true
                 },
@@ -25,17 +25,17 @@ namespace HeavenStudio.Games.Loaders
                 },
                 new GameAction("dPad", "DPad Press")
                 {
-                    function = delegate {var e = eventCaller.currentEntity; QuizShow.instance.HostPressButton((float) e.beat, true); },
+                    function = delegate {var e = eventCaller.currentEntity; QuizShow.instance.HostPressButton(e.beat, true); },
                     defaultLength = 0.5f
                 },
                 new GameAction("aButton", "A Button Press")
                 {
-                    function = delegate {var e = eventCaller.currentEntity; QuizShow.instance.HostPressButton((float) e.beat, false); },
+                    function = delegate {var e = eventCaller.currentEntity; QuizShow.instance.HostPressButton(e.beat, false); },
                     defaultLength = 0.5f
                 },
                 new GameAction("randomPresses", "Random Presses")
                 {
-                    function = delegate { var e = eventCaller.currentEntity; QuizShow.instance.RandomPress((float) e.beat, e.length, e["min"], e["max"], e["random"], e["con"]); },
+                    function = delegate { var e = eventCaller.currentEntity; QuizShow.instance.RandomPress(e.beat, e.length, e["min"], e["max"], e["random"], e["con"]); },
                     parameters = new List<Param>()
                     {
                         new Param("min", new EntityTypes.Integer(0, 666, 0), "Minimum", "The minimum number of presses this block will do."),
@@ -47,7 +47,7 @@ namespace HeavenStudio.Games.Loaders
                 },
                 new GameAction("passTurn", "Pass Turn")
                 {
-                    function = delegate {var e = eventCaller.currentEntity; QuizShow.instance.PassTurn((float) e.beat, e.length, e["sound"], e["con"], e["visual"], e["audio"]); },
+                    function = delegate {var e = eventCaller.currentEntity; QuizShow.instance.PassTurn(e.beat, e.length, e["sound"], e["con"], e["visual"], e["audio"]); },
                     defaultLength = 1f,
                     resizable = true,
                     parameters = new List<Param>()
@@ -60,7 +60,7 @@ namespace HeavenStudio.Games.Loaders
                 },
                 new GameAction("revealAnswer", "Reveal Answer")
                 {
-                    function = delegate { var e = eventCaller.currentEntity; QuizShow.instance.RevealAnswer((float) e.beat, e.length); },
+                    function = delegate { var e = eventCaller.currentEntity; QuizShow.instance.RevealAnswer(e.beat, e.length); },
                     defaultLength = 4f,
                     resizable = true
                 },
@@ -170,8 +170,8 @@ namespace HeavenStudio.Games
         bool intervalStarted;
         bool shouldResetCount;
         bool doingConsectiveIntervals;
-        float intervalStartBeat;
-        float playerIntervalStartBeat;
+        double intervalStartBeat;
+        double playerIntervalStartBeat;
         float playerBeatInterval;
         float beatInterval = 8f;
         int currentStage;
@@ -181,7 +181,7 @@ namespace HeavenStudio.Games
         bool signExploded;
         struct QueuedInput 
         {
-            public float beat;
+            public double beat;
             public bool dpad;
         }
         static List<QueuedInput> queuedInputs = new List<QueuedInput>();
@@ -237,7 +237,7 @@ namespace HeavenStudio.Games
             currentStage = stage;
         }
 
-        public void RandomPress(float beat, float length, int min, int max, int whichButtons, bool consecutive)
+        public void RandomPress(double beat, float length, int min, int max, int whichButtons, bool consecutive)
         {
             if (min > max) return;
             int pressAmount = UnityEngine.Random.Range(min, max + 1);
@@ -265,7 +265,7 @@ namespace HeavenStudio.Games
                             dpad = i % 2 != 0;
                             break;
                     }
-                    float spawnBeat = beat + i * length;
+                    double spawnBeat = beat + i * length;
                     buttonEvents.Add(new BeatAction.Action(spawnBeat, delegate { HostPressButton(spawnBeat, dpad); }));
                 }
             }
@@ -293,7 +293,7 @@ namespace HeavenStudio.Games
                             dpad = i % 2 != 0;
                             break;
                     }
-                    float spawnBeat = beat + i * length;
+                    double spawnBeat = beat + i * length;
                     buttonEvents.Add(new BeatAction.Action(spawnBeat, delegate { HostPressButton(spawnBeat, dpad); }));
                     pressAmount--;
                 }
@@ -302,7 +302,7 @@ namespace HeavenStudio.Games
             BeatAction.New(instance.gameObject, buttonEvents);
         }
 
-        public void HostPressButton(float beat, bool dpad)
+        public void HostPressButton(double beat, bool dpad)
         {
             if (!intervalStarted)
             {
@@ -339,7 +339,7 @@ namespace HeavenStudio.Games
             instance.hostRightArmAnim.DoScaledAnimationAsync("HostPrepare", 0.5f);
         }
 
-        public void StartInterval(float beat, float interval)
+        public void StartInterval(double beat, float interval)
         {
             if (!intervalStarted)
             {
@@ -360,7 +360,7 @@ namespace HeavenStudio.Games
             intervalStarted = true;
         }
 
-        public void PassTurn(float beat, float length, bool timeUpSound, bool consecutive, bool visualClock, int audioClock)
+        public void PassTurn(double beat, float length, bool timeUpSound, bool consecutive, bool visualClock, int audioClock)
         {
             if (queuedInputs.Count == 0) return;
             if (shouldPrepareArms) 
@@ -503,7 +503,7 @@ namespace HeavenStudio.Games
             }
         }
 
-        public void RevealAnswer(float beat, float length)
+        public void RevealAnswer(double beat, float length)
         {
             blackOut.SetActive(true);
             BeatAction.New(instance.gameObject, new List<BeatAction.Action>()

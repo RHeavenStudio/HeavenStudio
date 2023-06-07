@@ -17,7 +17,7 @@ namespace HeavenStudio.Games.Loaders
             {
                 new GameAction("bop", "Bop")
                 {
-                    function = delegate {var e = eventCaller.currentEntity; SamuraiSliceNtr.instance.Bop((float) e.beat, e.length, e["whoBops"], e["whoBopsAuto"]); },
+                    function = delegate {var e = eventCaller.currentEntity; SamuraiSliceNtr.instance.Bop(e.beat, e.length, e["whoBops"], e["whoBopsAuto"]); },
                     resizable = true,
                     parameters = new List<Param>()
                     {
@@ -29,7 +29,7 @@ namespace HeavenStudio.Games.Loaders
                 {
                     function = delegate
                     {
-                        SamuraiSliceNtr.instance.ObjectIn((float) eventCaller.currentEntity.beat, (int)SamuraiSliceNtr.ObjectType.Melon, (int) eventCaller.currentEntity["valA"], eventCaller.currentEntity["2b2t"]);
+                        SamuraiSliceNtr.instance.ObjectIn(eventCaller.currentEntity.beat, (int)SamuraiSliceNtr.ObjectType.Melon, (int) eventCaller.currentEntity["valA"], eventCaller.currentEntity["2b2t"]);
                     }, 
                     defaultLength = 5,
                     parameters = new List<Param>()
@@ -42,7 +42,7 @@ namespace HeavenStudio.Games.Loaders
                 {
                     function = delegate
                     {
-                        SamuraiSliceNtr.instance.ObjectIn((float) eventCaller.currentEntity.beat, (int)SamuraiSliceNtr.ObjectType.Fish, (int) eventCaller.currentEntity["valA"]);
+                        SamuraiSliceNtr.instance.ObjectIn(eventCaller.currentEntity.beat, (int)SamuraiSliceNtr.ObjectType.Fish, (int) eventCaller.currentEntity["valA"]);
                     },
                     defaultLength = 7,
                     parameters = new List<Param>()
@@ -54,7 +54,7 @@ namespace HeavenStudio.Games.Loaders
                 {
                     function = delegate
                     {
-                        SamuraiSliceNtr.instance.ObjectIn((float) eventCaller.currentEntity.beat, (int)SamuraiSliceNtr.ObjectType.Demon, (int) eventCaller.currentEntity["valA"]);
+                        SamuraiSliceNtr.instance.ObjectIn(eventCaller.currentEntity.beat, (int)SamuraiSliceNtr.ObjectType.Demon, (int) eventCaller.currentEntity["valA"]);
                     },
                     defaultLength = 7,
                     parameters = new List<Param>()
@@ -67,7 +67,7 @@ namespace HeavenStudio.Games.Loaders
                 {
                     function = delegate
                     {
-                        SamuraiSliceNtr.instance.ObjectIn((float) eventCaller.currentEntity.beat, eventCaller.currentEntity["type"], (int) eventCaller.currentEntity["valA"]);
+                        SamuraiSliceNtr.instance.ObjectIn(eventCaller.currentEntity.beat, eventCaller.currentEntity["type"], (int) eventCaller.currentEntity["valA"]);
                     },
                     defaultLength = 8,
                     parameters = new List<Param>()
@@ -154,7 +154,7 @@ namespace HeavenStudio.Games
                 DoSlice();
         }
 
-        public void Bop(float beat, float length, int whoBops, int whoBopsAuto)
+        public void Bop(double beat, float length, int whoBops, int whoBopsAuto)
         {
             goBopSamurai = whoBopsAuto == (int)WhoBops.Samurai || whoBopsAuto == (int)WhoBops.Both;
             goBopChild = whoBopsAuto == (int)WhoBops.Children || whoBopsAuto == (int)WhoBops.Both;
@@ -209,13 +209,13 @@ namespace HeavenStudio.Games
             player.Slash();
         }
 
-        public void Bop(float beat, float length) 
+        public void Bop(double beat, float length) 
         {
             bop.length = length;
             bop.startBeat = beat;
         }
 
-        public void ObjectIn(float beat, int type = (int) ObjectType.Melon, int value = 1, bool funnyMinecraft = false)
+        public void ObjectIn(double beat, int type = (int) ObjectType.Melon, int value = 1, bool funnyMinecraft = false)
         {
             var mobj = GameObject.Instantiate(objectPrefab, objectHolder);
             var mobjDat = mobj.GetComponent<NtrSamuraiObject>();

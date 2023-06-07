@@ -15,7 +15,7 @@ namespace HeavenStudio.Games.Loaders
             {
                 new GameAction("shoot", "Pitch Ball")
                 {
-                    function = delegate { Spaceball.instance.Shoot((float) eventCaller.currentEntity.beat, false, eventCaller.currentEntity["type"]); },
+                    function = delegate { Spaceball.instance.Shoot(eventCaller.currentEntity.beat, false, eventCaller.currentEntity["type"]); },
                     preFunction = delegate { Spaceball.instance.PrepareDispenser(); },
                     preFunctionLength = 1,
                     defaultLength = 2, 
@@ -26,7 +26,7 @@ namespace HeavenStudio.Games.Loaders
                 },
 				new GameAction("shootHigh", "Pitch High Ball")
                 {
-                    function = delegate { Spaceball.instance.Shoot((float) eventCaller.currentEntity.beat, true, eventCaller.currentEntity["type"]); },
+                    function = delegate { Spaceball.instance.Shoot(eventCaller.currentEntity.beat, true, eventCaller.currentEntity["type"]); },
                     preFunction = delegate { Spaceball.instance.PrepareDispenser(); },
                     preFunctionLength = 1,
                     defaultLength = 3,
@@ -45,7 +45,7 @@ namespace HeavenStudio.Games.Loaders
                 },
                 new GameAction("alien", "Show Alien")
                 {
-                    function = delegate { Spaceball.instance.alien.Show((float) eventCaller.currentEntity.beat, eventCaller.currentEntity["hide"]); },
+                    function = delegate { Spaceball.instance.alien.Show(eventCaller.currentEntity.beat, eventCaller.currentEntity["hide"]); },
                     parameters = new List<Param>()
                     {
                         new Param("hide", false, "Hide", "Should the alien be hidden?")
@@ -139,7 +139,7 @@ namespace HeavenStudio.Games
             List<RiqEntity> tempEvents = new List<RiqEntity>();
             for (int i = 0; i < camEvents.Count; i++)
             {
-                if (camEvents[i].beat + camEvents[i].beat >= Conductor.instance.songPositionInBeats)
+                if (camEvents[i].beat + camEvents[i].beat >= Conductor.instance.songPositionInBeatsAsDouble)
                 {
                     tempEvents.Add(camEvents[i]);
                 }
@@ -156,7 +156,7 @@ namespace HeavenStudio.Games
             {
                 if (currentZoomIndex < _allCameraEvents.Count && currentZoomIndex >= 0)
                 {
-                    if (Conductor.instance.songPositionInBeats >= _allCameraEvents[currentZoomIndex].beat)
+                    if (Conductor.instance.songPositionInBeatsAsDouble >= _allCameraEvents[currentZoomIndex].beat)
                     {
                         UpdateCameraZoom();
                         currentZoomIndex++;
@@ -225,7 +225,7 @@ namespace HeavenStudio.Games
             }
         }
 
-        public void Shoot(float beat, bool high, int type)
+        public void Shoot(double beat, bool high, int type)
         {
             GameObject ball = Instantiate(Ball);
             ball.transform.parent = Ball.transform.parent;

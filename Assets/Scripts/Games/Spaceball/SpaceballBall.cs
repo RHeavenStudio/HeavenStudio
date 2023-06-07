@@ -13,7 +13,7 @@ namespace HeavenStudio.Games.Scripts_Spaceball
     {
         #region Public
 
-        public float startBeat;
+        public double startBeat;
 
         public bool high;
         public bool isTacobell;
@@ -31,7 +31,7 @@ namespace HeavenStudio.Games.Scripts_Spaceball
         [SerializeField] private BezierCurve3D pitchHighCurve;
 
         private bool hit;
-        private float hitBeat;
+        private double hitBeat;
         private Vector3 hitPos;
         private float hitRot;
         private float randomEndPosX;
@@ -84,7 +84,7 @@ namespace HeavenStudio.Games.Scripts_Spaceball
         private void Hit()
         {
             hit = true;
-            hitBeat = Conductor.instance.songPositionInBeats;
+            hitBeat = Conductor.instance.songPositionInBeatsAsDouble;
             hitPos = Holder.localPosition;
             hitRot = Holder.eulerAngles.z;
 

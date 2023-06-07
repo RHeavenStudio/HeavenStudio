@@ -16,7 +16,7 @@ namespace HeavenStudio.Games.Loaders
             {
                 new GameAction("stepping", "Stepping")
                 {
-                    preFunction = delegate { var e = eventCaller.currentEntity; TapTroupe.PreStepping((float) e.beat, e.length, e["startTap"]); },
+                    preFunction = delegate { var e = eventCaller.currentEntity; TapTroupe.PreStepping(e.beat, e.length, e["startTap"]); },
                     defaultLength = 4f,
                     resizable = true,
                     parameters = new List<Param>()
@@ -26,7 +26,7 @@ namespace HeavenStudio.Games.Loaders
                 },
                 new GameAction("tapping", "Tapping")
                 {
-                    preFunction = delegate { var e = eventCaller.currentEntity; TapTroupe.PreTapping((float) e.beat, e.length, e["okay"], e["okayType"], e["animType"], e["popperBeats"], e["randomVoiceLine"]); },
+                    preFunction = delegate { var e = eventCaller.currentEntity; TapTroupe.PreTapping(e.beat, e.length, e["okay"], e["okayType"], e["animType"], e["popperBeats"], e["randomVoiceLine"]); },
                     defaultLength = 3f,
                     resizable = true,
                     parameters = new List<Param>()
@@ -40,7 +40,7 @@ namespace HeavenStudio.Games.Loaders
                 },
                 new GameAction("bop", "Bop")
                 {
-                    function = delegate {var e = eventCaller.currentEntity; TapTroupe.instance.Bop((float) e.beat, e.length, e["bop"], e["bopAuto"]); },
+                    function = delegate {var e = eventCaller.currentEntity; TapTroupe.instance.Bop(e.beat, e.length, e["bop"], e["bopAuto"]); },
                     resizable = true,
                     parameters = new List<Param>()
                     {
@@ -106,7 +106,7 @@ namespace HeavenStudio.Games
         [SerializeField] GameObject darkness;
         private Animator zoomOutAnim;
         [Header("Properties")]
-        private float currentZoomCamBeat;
+        private double currentZoomCamBeat;
         private float currentZoomCamLength;
         private Util.EasingFunction.Ease lastEase;
 
@@ -129,13 +129,13 @@ namespace HeavenStudio.Games
         public GameEvent bop = new GameEvent();
         public struct QueuedSteps
         {
-            public float beat;
+            public double beat;
             public float length;
             public bool startTap;
         }
         public struct QueuedTaps
         {
-            public float beat;
+            public double beat;
             public float length;
             public bool okay;
             public int okayType;
@@ -185,7 +185,7 @@ namespace HeavenStudio.Games
             List<RiqEntity> tempEvents = new List<RiqEntity>();
             for (int i = 0; i < camEvents.Count; i++)
             {
-                if (camEvents[i].beat + camEvents[i].beat >= Conductor.instance.songPositionInBeats)
+                if (camEvents[i].beat + camEvents[i].beat >= Conductor.instance.songPositionInBeatsAsDouble)
                 {
                     tempEvents.Add(camEvents[i]);
                 }
@@ -260,7 +260,7 @@ namespace HeavenStudio.Games
             {
                 if (currentZoomIndex < allCameraEvents.Count && currentZoomIndex >= 0)
                 {
-                    if (Conductor.instance.songPositionInBeats >= allCameraEvents[currentZoomIndex].beat)
+                    if (Conductor.instance.songPositionInBeatsAsDouble >= allCameraEvents[currentZoomIndex].beat)
                     {
                         UpdateCameraZoom();
                         currentZoomIndex++;
@@ -317,7 +317,7 @@ namespace HeavenStudio.Games
             if (currentZoomIndex < allCameraEvents.Count && currentZoomIndex >= 0)
             {
                 currentZoomCamLength = allCameraEvents[currentZoomIndex].length;
-                currentZoomCamBeat = (float) allCameraEvents[currentZoomIndex].beat;
+                currentZoomCamBeat = allCameraEvents[currentZoomIndex].beat;
                 lastEase = (Util.EasingFunction.Ease)allCameraEvents[currentZoomIndex]["ease"];
             }
         }
@@ -327,7 +327,7 @@ namespace HeavenStudio.Games
             keepZoomOut = true;
         }
 
-        public static void PreStepping(float beat, float length, bool startTap)
+        public static void PreStepping(double beat, float length, bool startTap)
         {
             if (GameManager.instance.currentGame == "tapTroupe")
             {
@@ -340,7 +340,7 @@ namespace HeavenStudio.Games
             }
         }
 
-        public void Stepping(float beat, float length, bool startTap)
+        public void Stepping(double beat, float length, bool startTap)
         {
             for (int i = 0; i < length; i++)
             {
@@ -368,7 +368,7 @@ namespace HeavenStudio.Games
             });
         }
 
-        public static void PreTapping(float beat, float length, bool okay, int okayType, int animType, float popperBeats, bool randomVoiceLine)
+        public static void PreTapping(double beat, float length, bool okay, int okayType, int animType, float popperBeats, bool randomVoiceLine)
         {
             MultiSound.Play(new MultiSound.Sound[]
             {
@@ -390,12 +390,12 @@ namespace HeavenStudio.Games
             }
         }
 
-        public void Tapping(float beat, float length, bool okay, int okayType, int animType, float popperBeats, bool randomVoiceLine)
+        public void Tapping(double beat, float length, bool okay, int okayType, int animType, float popperBeats, bool randomVoiceLine)
         {
             float actualLength = length - 0.5f;
             actualLength -= actualLength % 0.75f;
             bool secondBam = false;
-            float finalBeatToSpawn = 0f;
+            double finalBeatToSpawn = 0f;
             if (actualLength < 2.25f) actualLength = 2.25f;
             List<MultiSound.Sound> soundsToPlay = new List<MultiSound.Sound>
             {
@@ -405,12 +405,12 @@ namespace HeavenStudio.Games
             {
                 string soundToPlay = "bamvoice1";
                 string otherSoundToPlay = "other3";
-                float beatToSpawn = beat + i + 0.5f;
+                double beatToSpawn = beat + i + 0.5f;
                 if (i + 0.75f >= actualLength)
                 {
                     soundToPlay = "startTap";
                     otherSoundToPlay = "other2";
-                    beatToSpawn = Mathf.Ceil(beat + i);
+                    beatToSpawn = Math.Ceiling(beat + i);
                     finalBeatToSpawn = beatToSpawn;
                     BeatAction.New(instance.gameObject, new List<BeatAction.Action>()
                     {
@@ -582,7 +582,7 @@ namespace HeavenStudio.Games
             MultiSound.Play(soundsToPlay.ToArray(), forcePlay: true);
         }
 
-        public void Bop(float beat, float length, bool shouldBop, bool autoBop)
+        public void Bop(double beat, float length, bool shouldBop, bool autoBop)
         {
             goBop = autoBop;
             if (shouldBop)

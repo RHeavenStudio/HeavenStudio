@@ -66,7 +66,7 @@ namespace HeavenStudio.Games.Scripts_TossBoys
                         //Do Jackshit
                         break;
                     default:
-                        transform.position = GetPathPositionFromBeat(currentPath, Math.Max(startBeat, Conductor.instance.songPositionInBeats), startBeat);
+                        transform.position = GetPathPositionFromBeat(currentPath, Math.Max(startBeat, Conductor.instance.songPositionInBeatsAsDouble), startBeat);
                         float rot = GetPathValue("rot");
                         transform.rotation = Quaternion.Euler(0f, 0f, transform.rotation.eulerAngles.z - (rot * Time.deltaTime * (1f / Conductor.instance.pitchedSecPerBeat)));
                         break;

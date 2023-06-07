@@ -9,8 +9,8 @@ namespace HeavenStudio.Games.Scripts_MeatGrinder
 {
     public class MeatToss : MonoBehaviour
     {
-        public float startBeat;
-        public float cueLength;
+        public double startBeat;
+        public double cueLength;
         public bool cueBased;
         public string meatType;
 

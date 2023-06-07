@@ -17,7 +17,7 @@ namespace HeavenStudio.Games.Scripts_OctopusMachine
         public bool isPreparing;
         public bool queuePrepare;
         public double lastReportedBeat = 0f;
-        float lastSqueezeBeat;
+        double lastSqueezeBeat;
         bool isActive = true;
 
         private OctopusMachine game;
@@ -79,6 +79,7 @@ namespace HeavenStudio.Games.Scripts_OctopusMachine
                 1 => "Happy",
                 2 => "Angry",
                 3 => "Oops",
+                _ => "Bop"
             }, 0.5f);
             isPreparing =
             isSqueezed = false;
@@ -99,8 +100,8 @@ namespace HeavenStudio.Games.Scripts_OctopusMachine
 
         public void OctoAction(string action) 
         {
-            if (action != "Release" || (Conductor.instance.songPositionInBeats - lastSqueezeBeat) > 0.15f) SoundByte.PlayOneShotGame($"octopusMachine/{action.ToLower()}");
-            if (action == "Squeeze") lastSqueezeBeat = Conductor.instance.songPositionInBeats;
+            if (action != "Release" || (Conductor.instance.songPositionInBeatsAsDouble - lastSqueezeBeat) > 0.15f) SoundByte.PlayOneShotGame($"octopusMachine/{action.ToLower()}");
+            if (action == "Squeeze") lastSqueezeBeat = Conductor.instance.songPositionInBeatsAsDouble;
 
             anim.DoScaledAnimationAsync(action, 0.5f);
             isSqueezed = (action == "Squeeze");

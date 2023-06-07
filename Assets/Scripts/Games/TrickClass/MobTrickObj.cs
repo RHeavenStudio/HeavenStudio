@@ -11,7 +11,7 @@ namespace HeavenStudio.Games.Scripts_TrickClass
     public class MobTrickObj : MonoBehaviour
     {
         public bool flyType;
-        public float startBeat;
+        public double startBeat;
         bool miss = false;
 
         float flyBeats;
@@ -115,7 +115,7 @@ namespace HeavenStudio.Games.Scripts_TrickClass
 
         public void DodgeJustOrNg(PlayerActionEvent caller, float state)
         {
-            if (game.playerCanDodge <= Conductor.instance.songPositionInBeats)
+            if (game.playerCanDodge <= Conductor.instance.songPositionInBeatsAsDouble)
             {
                 if (state <= -1f || state >= 1f)
                 {

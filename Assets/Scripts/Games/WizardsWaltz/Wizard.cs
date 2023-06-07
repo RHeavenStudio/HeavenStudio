@@ -23,7 +23,7 @@ namespace HeavenStudio.Games.Scripts_WizardsWaltz
 
         void Update()
         {
-            songPos = Conductor.instance.songPositionInBeats - game.wizardBeatOffset;
+            songPos = (float)(Conductor.instance.songPositionInBeatsAsDouble - game.wizardBeatOffset);
             var am = game.beatInterval / 2f;
             var x = Mathf.Sin(Mathf.PI * songPos / am) * 6;
             var y = Mathf.Cos(Mathf.PI * songPos / am);

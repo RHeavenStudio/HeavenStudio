@@ -10,7 +10,7 @@ namespace HeavenStudio.Games.Scripts_MunchyMonk
     public class Dumpling : MonoBehaviour
     {
         public Color dumplingColor;
-        public float startBeat;
+        public double startBeat;
         
         const string sfxName = "munchyMonk/";
         public bool canDestroy;
@@ -89,8 +89,8 @@ namespace HeavenStudio.Games.Scripts_MunchyMonk
             smearAnim.Play("SmearAppear", 0, 0);
             anim.DoScaledAnimationAsync("HitHead", 0.5f);
             MultiSound.Play(new MultiSound.Sound[] {
-                new MultiSound.Sound(sfxName+"slap", Conductor.instance.songPositionInBeats),
-                new MultiSound.Sound(sfxName+"miss", Conductor.instance.songPositionInBeats),
+                new MultiSound.Sound(sfxName+"slap", Conductor.instance.songPositionInBeatsAsDouble),
+                new MultiSound.Sound(sfxName+"miss", Conductor.instance.songPositionInBeatsAsDouble),
             });
             canDestroy = true;
             game.needBlush = false;

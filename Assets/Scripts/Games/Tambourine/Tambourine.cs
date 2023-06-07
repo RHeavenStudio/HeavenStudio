@@ -15,33 +15,33 @@ namespace HeavenStudio.Games.Loaders
             {
                 new GameAction("beat intervals", "Start Interval")
                 {
-                    function = delegate {var e = eventCaller.currentEntity; Tambourine.instance.StartInterval((float) e.beat, e.length); },
+                    function = delegate {var e = eventCaller.currentEntity; Tambourine.instance.StartInterval(e.beat, e.length); },
                     defaultLength = 8f,
                     resizable = true,
                     priority = 1
                 },
                 new GameAction("shake", "Shake")
                 {
-                    function = delegate {var e = eventCaller.currentEntity; Tambourine.instance.MonkeyInput((float) e.beat, false); },
+                    function = delegate {var e = eventCaller.currentEntity; Tambourine.instance.MonkeyInput(e.beat, false); },
                     defaultLength = 0.5f,
                     priority = 2
                 },
                 new GameAction("hit", "Hit")
                 {
-                    function = delegate {var e = eventCaller.currentEntity; Tambourine.instance.MonkeyInput((float) e.beat, true); },
+                    function = delegate {var e = eventCaller.currentEntity; Tambourine.instance.MonkeyInput(e.beat, true); },
                     defaultLength = 0.5f,
                     priority = 2
                 },
                 new GameAction("pass turn", "Pass Turn")
                 {
-                    function = delegate {var e = eventCaller.currentEntity; Tambourine.instance.PassTurn((float) e.beat, e.length); },
+                    function = delegate {var e = eventCaller.currentEntity; Tambourine.instance.PassTurn(e.beat, e.length); },
                     defaultLength = 1f,
                     resizable = true,
                     priority = 3
                 },
                 new GameAction("bop", "Bop")
                 {
-                    function = delegate {var e = eventCaller.currentEntity; Tambourine.instance.Bop((float) e.beat, e.length, e["whoBops"], e["whoBopsAuto"]); },
+                    function = delegate {var e = eventCaller.currentEntity; Tambourine.instance.Bop(e.beat, e.length, e["whoBops"], e["whoBopsAuto"]); },
                     parameters = new List<Param>()
                     {
                         new Param("whoBops", Tambourine.WhoBops.Both, "Who Bops", "Who will bop."),
@@ -52,7 +52,7 @@ namespace HeavenStudio.Games.Loaders
                 },
                 new GameAction("success", "Success")
                 {
-                    function = delegate {var e = eventCaller.currentEntity; Tambourine.instance.SuccessFace((float) e.beat); },
+                    function = delegate {var e = eventCaller.currentEntity; Tambourine.instance.SuccessFace(e.beat); },
                     defaultLength = 1f,
                     priority = 4,
                 },
@@ -114,7 +114,7 @@ namespace HeavenStudio.Games
 
         [Header("Variables")]
         bool intervalStarted;
-        float intervalStartBeat;
+        double intervalStartBeat;
         float beatInterval = 8f;
         float misses;
         bool frogPresent;
@@ -136,7 +136,7 @@ namespace HeavenStudio.Games
         struct QueuedTambourineInput
         {
             public bool hit;
-            public float beatAwayFromStart;
+            public double beatAwayFromStart;
         }
 
         public static Tambourine instance;
@@ -209,7 +209,7 @@ namespace HeavenStudio.Games
             }
         }
 
-        public void StartInterval(float beat, float interval)
+        public void StartInterval(double beat, float interval)
         {
             intervalStartBeat = beat;
             beatInterval = interval;
@@ -223,7 +223,7 @@ namespace HeavenStudio.Games
             }
         }
 
-        public void MonkeyInput(float beat, bool hit)
+        public void MonkeyInput(double beat, bool hit)
         {
             if (!intervalStarted)
             {
@@ -246,7 +246,7 @@ namespace HeavenStudio.Games
             });
         }
 
-        public void PassTurn(float beat, float length)
+        public void PassTurn(double beat, float length)
         {
             if (queuedInputs.Count == 0) return;
             monkeyAnimator.Play("MonkeyPassTurn", 0, 0);
@@ -275,7 +275,7 @@ namespace HeavenStudio.Games
             queuedInputs.Clear();
         }
 
-        public void Bop(float beat, float length, int whoBops, int whoBopsAuto)
+        public void Bop(double beat, float length, int whoBops, int whoBopsAuto)
         {
             monkeyGoBop = whoBopsAuto == (int)WhoBops.Monkey || whoBopsAuto == (int)WhoBops.Both;
             handsGoBop = whoBopsAuto == (int)WhoBops.Player || whoBopsAuto == (int)WhoBops.Both;
@@ -306,7 +306,7 @@ namespace HeavenStudio.Games
 
         }
 
-        public void SuccessFace(float beat)
+        public void SuccessFace(double beat)
         {
             DesummonFrog();
             if (misses > 0) return;

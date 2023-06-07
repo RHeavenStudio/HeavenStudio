@@ -6,7 +6,7 @@ namespace HeavenStudio.Games.Scripts_Spaceball
     {
         private Animator anim;
 
-        private float showBeat = 0;
+        private double showBeat = 0;
         private bool isShowing = false;
         private bool isHiding = false;
 
@@ -45,7 +45,7 @@ namespace HeavenStudio.Games.Scripts_Spaceball
             }
         }
 
-        public void Show(float showBeat, bool hide)
+        public void Show(double showBeat, bool hide)
         {
             isShowing = true;
             this.showBeat = showBeat;

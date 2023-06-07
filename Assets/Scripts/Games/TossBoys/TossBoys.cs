@@ -16,7 +16,7 @@ namespace HeavenStudio.Games.Loaders
             {
                 new GameAction("dispense", "Dispense")
                 {
-                    function = delegate { var e = eventCaller.currentEntity; TossBoys.instance.Dispense((float) e.beat, e.length, e["who"], e["call"]); },
+                    function = delegate { var e = eventCaller.currentEntity; TossBoys.instance.Dispense(e.beat, e.length, e["who"], e["call"]); },
                     defaultLength = 2f,
                     resizable = true,
                     parameters = new List<Param>()
@@ -71,7 +71,7 @@ namespace HeavenStudio.Games.Loaders
                 },
                 new GameAction("bop", "Bop")
                 {
-                    function = delegate { var e = eventCaller.currentEntity; TossBoys.instance.Bop((float) e.beat, e.length, e["auto"], e["bop"]); },
+                    function = delegate { var e = eventCaller.currentEntity; TossBoys.instance.Bop(e.beat, e.length, e["auto"], e["bop"]); },
                     resizable = true,
                     parameters = new List<Param>()
                     {
@@ -239,7 +239,7 @@ namespace HeavenStudio.Games
             kiiyan.Bop();
         }
 
-        public void Bop(float beat, float length, bool auto, bool goBop)
+        public void Bop(double beat, float length, bool auto, bool goBop)
         {
             shouldBop = auto;
             if (goBop)
@@ -254,7 +254,7 @@ namespace HeavenStudio.Games
         }
         #endregion
 
-        public void Dispense(float beat, float length, int who, bool call)
+        public void Dispense(double beat, float length, int who, bool call)
         {
             if (currentBall != null) return;
             SetPassBallEvents();
@@ -281,7 +281,7 @@ namespace HeavenStudio.Games
 
             if (call)
             {
-                float callBeat = beat;
+                double callBeat = beat;
                 switch (who)
                 {
                     case (int)WhichTossKid.Akachan:
@@ -352,7 +352,7 @@ namespace HeavenStudio.Games
             var passBallEvents = EventCaller.GetAllInGameManagerList("tossBoys", new string[] { "pass", "dual", "pop", "high", "lightning", "blur" });
             for (int i = 0;  i < passBallEvents.Count; i++)
             {
-                if (passBallEvents[i].beat >= Conductor.instance.songPositionInBeats)
+                if (passBallEvents[i].beat >= Conductor.instance.songPositionInBeatsAsDouble)
                 {
                     if (passBallDict.ContainsKey(passBallEvents[i].beat)) continue;
                     passBallDict.Add(passBallEvents[i].beat, passBallEvents[i]);

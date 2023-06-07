@@ -16,7 +16,7 @@ namespace HeavenStudio.Games.Loaders
             {
                 new GameAction("bop", "Bop")
                 {
-                    function = delegate {var e = eventCaller.currentEntity; RhythmRally.instance.Bop((float) e.beat, e.length, e["bop"], e["bopAuto"]); },
+                    function = delegate {var e = eventCaller.currentEntity; RhythmRally.instance.Bop(e.beat, e.length, e["bop"], e["bopAuto"]); },
                     resizable = true,
                     parameters = new List<Param>()
                     {
@@ -26,30 +26,30 @@ namespace HeavenStudio.Games.Loaders
                 },
                 new GameAction("whistle", "Whistle")
                 {
-                    preFunction = delegate { RhythmRally.PlayWhistle((float) eventCaller.currentEntity.beat); },
+                    preFunction = delegate { RhythmRally.PlayWhistle(eventCaller.currentEntity.beat); },
                     defaultLength = 0.5f
                 },
                 new GameAction("toss ball", "Toss Ball")
                 {
-                    function = delegate { RhythmRally.instance.Toss((float) eventCaller.currentEntity.beat, eventCaller.currentEntity.length, 6f, true); },
+                    function = delegate { RhythmRally.instance.Toss(eventCaller.currentEntity.beat, eventCaller.currentEntity.length, 6f, true); },
                     defaultLength = 2f,
                     resizable = true
                 },
                 new GameAction("rally", "Rally")
                 {
-                    function = delegate { RhythmRally.instance.Serve((float) eventCaller.currentEntity.beat, RhythmRally.RallySpeed.Normal); },
+                    function = delegate { RhythmRally.instance.Serve(eventCaller.currentEntity.beat, RhythmRally.RallySpeed.Normal); },
                     defaultLength = 4f,
                     resizable = true
                 },
                 new GameAction("slow rally", "Slow Rally")
                 {
-                    function = delegate { RhythmRally.instance.Serve((float) eventCaller.currentEntity.beat, RhythmRally.RallySpeed.Slow); },
+                    function = delegate { RhythmRally.instance.Serve(eventCaller.currentEntity.beat, RhythmRally.RallySpeed.Slow); },
                     defaultLength = 8f,
                     resizable = true
                 },
                 new GameAction("fast rally", "Fast Rally")
                 {
-                    function = delegate { RhythmRally.instance.PrepareFastRally((float) eventCaller.currentEntity.beat, RhythmRally.RallySpeed.Fast, eventCaller.currentEntity["muteAudio"]); },
+                    function = delegate { RhythmRally.instance.PrepareFastRally(eventCaller.currentEntity.beat, RhythmRally.RallySpeed.Fast, eventCaller.currentEntity["muteAudio"]); },
                     defaultLength = 6f,
                     parameters = new List<Param>()
                     {
@@ -58,7 +58,7 @@ namespace HeavenStudio.Games.Loaders
                 },
                 new GameAction("superfast rally", "Superfast Rally")
                 {
-                    function = delegate { RhythmRally.instance.PrepareFastRally((float) eventCaller.currentEntity.beat, RhythmRally.RallySpeed.SuperFast, eventCaller.currentEntity["muteAudio"]); },
+                    function = delegate { RhythmRally.instance.PrepareFastRally(eventCaller.currentEntity.beat, RhythmRally.RallySpeed.SuperFast, eventCaller.currentEntity["muteAudio"]); },
                     defaultLength = 12f,
                     parameters = new List<Param>()
                     {
@@ -67,13 +67,13 @@ namespace HeavenStudio.Games.Loaders
                 },
                 new GameAction("tonktinktonk", "Tonk-Tink-Tonk (Stretchable)")
                 {
-                    preFunction = delegate {var e = eventCaller.currentEntity; RhythmRally.TonkTinkTonkStretchable((float) e.beat, e.length); },
+                    preFunction = delegate {var e = eventCaller.currentEntity; RhythmRally.TonkTinkTonkStretchable(e.beat, e.length); },
                     defaultLength = 4f,
                     resizable = true
                 },
                 new GameAction("superfast stretchable", "Superfast Rally (Stretchable)")
                 {
-                    function = delegate { var e = eventCaller.currentEntity; RhythmRally.instance.SuperFastRallyStretchable((float) e.beat, e.length); },
+                    function = delegate { var e = eventCaller.currentEntity; RhythmRally.instance.SuperFastRallyStretchable(e.beat, e.length); },
                     defaultLength = 8f,
                     resizable = true
                 },
@@ -141,10 +141,10 @@ namespace HeavenStudio.Games
         public bool missed;
         public bool served;
         public bool tossing;
-        public float serveBeat;
-        public float targetBeat;
-        public float tossBeat;
-        public float missBeat;
+        public double serveBeat;
+        public double targetBeat;
+        public double tossBeat;
+        public double missBeat;
         public float tossLength;
         private bool inPose;
 
@@ -169,7 +169,7 @@ namespace HeavenStudio.Games
         void Update()
         {
             var cond = Conductor.instance;
-            var currentBeat = cond.songPositionInBeats;
+            var currentBeat = cond.songPositionInBeatsAsDouble;
             
             var hitBeat = serveBeat; // Beat when the last paddler hit the ball
             var beatDur1 = 1f; // From paddle to table
@@ -367,7 +367,7 @@ namespace HeavenStudio.Games
             GameCamera.additionalFoV = cameraFOV;
         }
 
-        public void Bop(float beat, float length, bool bop, bool bopAuto)
+        public void Bop(double beat, float length, bool bop, bool bopAuto)
         {
             goBop = bopAuto;
             if (bop)
@@ -399,7 +399,7 @@ namespace HeavenStudio.Games
                 opponentAnim.DoScaledAnimationAsync("Beat", 0.5f);
         }
 
-        public void Serve(float beat, RallySpeed speed)
+        public void Serve(double beat, RallySpeed speed)
         {
             if (!ball.activeSelf)
                 ball.SetActive(true);
@@ -416,7 +416,7 @@ namespace HeavenStudio.Games
             serveBeat = beat;
             rallySpeed = speed;
 
-            var bounceBeat = 0f;
+            double bounceBeat = 0f;
 
             switch (rallySpeed)
             {
@@ -442,7 +442,7 @@ namespace HeavenStudio.Games
             ScheduleInput(serveBeat, targetBeat, InputType.STANDARD_DOWN, paddlers.Just, paddlers.Miss, paddlers.Out);
         }
 
-        public void Toss(float beat, float length, float height, bool firstToss = false)
+        public void Toss(double beat, float length, float height, bool firstToss = false)
         {
             // Hide trail while tossing to prevent weirdness while teleporting ball.
             ballTrail.gameObject.SetActive(false);
@@ -464,7 +464,7 @@ namespace HeavenStudio.Games
                 ball.SetActive(true);
         }
 
-        private void TossUpdate(float beat, float duration)
+        private void TossUpdate(double beat, float duration)
         {
             var tossPosition = Conductor.instance.GetPositionFromBeat(beat, duration);
             ball.transform.position = tossCurve.GetPoint(Mathf.Clamp(tossPosition, 0, 1));
@@ -473,7 +473,7 @@ namespace HeavenStudio.Games
                 ball.SetActive(false);
         }
 
-        public static void PlayWhistle(float beat)
+        public static void PlayWhistle(double beat)
         {
             MultiSound.Play(new MultiSound.Sound[]
             {
@@ -496,7 +496,7 @@ namespace HeavenStudio.Games
             cameraPivot.DOScale(camZoom, len).SetEase(ease);
         }
 
-        public void PrepareFastRally(float beat, RallySpeed speedChange, bool muteAudio = false)
+        public void PrepareFastRally(double beat, RallySpeed speedChange, bool muteAudio = false)
         {
             if (speedChange == RallySpeed.Fast)
             {
@@ -517,7 +517,7 @@ namespace HeavenStudio.Games
             }
         }
 
-        public static void TonkTinkTonkStretchable(float beat, float length)
+        public static void TonkTinkTonkStretchable(double beat, float length)
         {
             List<MultiSound.Sound> soundsToPlay = new List<MultiSound.Sound>();
             bool tink = false;
@@ -529,13 +529,13 @@ namespace HeavenStudio.Games
             MultiSound.Play(soundsToPlay.ToArray(), forcePlay: true);
         }
 
-        public void SuperFastRallyStretchable(float beat, float length)
+        public void SuperFastRallyStretchable(double beat, float length)
         {
             List<BeatAction.Action> servesToPerform = new List<BeatAction.Action>();
 
             for (int i = 0; i < length; i += 2)
             {
-                float beatToSpawn = beat + i;
+                double beatToSpawn = beat + i;
                 servesToPerform.Add( new BeatAction.Action(beatToSpawn, delegate { Serve(beatToSpawn, RallySpeed.SuperFast); }) );
             }
             BeatAction.New(gameObject, servesToPerform);

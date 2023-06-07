@@ -50,7 +50,7 @@ namespace HeavenStudio.Games.Scripts_SeeSaw
         [SerializeField] Transform groundTrans;
         bool hasChangedAnimMidAir;
         [SerializeField] ParticleSystem deathParticle;
-        float wantChoke = -1;
+        double wantChoke = -1;
         float wantChokeLength;
 
         [SerializeField] private Animator invertAnim;
@@ -67,7 +67,7 @@ namespace HeavenStudio.Games.Scripts_SeeSaw
         {
             var cond = Conductor.instance;
 
-            float currentBeat = cond.songPositionInBeats;
+            double currentBeat = cond.songPositionInBeatsAsDouble;
 
             if (cond.isPlaying && !cond.isPaused)
             {
@@ -148,7 +148,7 @@ namespace HeavenStudio.Games.Scripts_SeeSaw
         {
             var cond = Conductor.instance;
 
-            float currentBeat = cond.songPositionInBeats;
+            double currentBeat = cond.songPositionInBeatsAsDouble;
 
             if (!see && game.cameraMove && cond.isPlaying && !cond.isPaused)
             {
@@ -160,7 +160,7 @@ namespace HeavenStudio.Games.Scripts_SeeSaw
                     case JumpState.HighOutIn:
                     case JumpState.HighInOut:
                     case JumpState.HighInIn:
-                        float newCamY = Mathf.Max(GetPathPositionFromBeat(cameraPath, Math.Max(startBeat, currentBeat), startBeat).y, 0);
+                        float newCamY = Math.Max(GetPathPositionFromBeat(cameraPath, Math.Max(startBeat, currentBeat), startBeat).y, 0);
                         GameCamera.additionalPosition = new Vector3(0, newCamY, 0);
                         break;
                 }
@@ -168,7 +168,7 @@ namespace HeavenStudio.Games.Scripts_SeeSaw
 
         }
 
-        public void Choke(float beat, float length)
+        public void Choke(double beat, float length)
         {
             if (!canBop || currentState != JumpState.None || dead) 
             {
@@ -212,7 +212,7 @@ namespace HeavenStudio.Games.Scripts_SeeSaw
                 case JumpState.EndJumpIn:
                     transform.position = groundTrans.position;
                     SetState(JumpState.None, 0);
-                    if (wantChoke >= Conductor.instance.songPositionInBeats - 0.25f && wantChoke <= Conductor.instance.songPositionInBeats + 0.25f)
+                    if (wantChoke >= Conductor.instance.songPositionInBeatsAsDouble - 0.25f && wantChoke <= Conductor.instance.songPositionInBeatsAsDouble + 0.25f)
                     {
                         Choke(wantChoke, wantChokeLength);
                     }
@@ -228,7 +228,7 @@ namespace HeavenStudio.Games.Scripts_SeeSaw
             }
             if (landType is LandType.Big && !see)
             {
-                game.SpawnOrbs(!landedOut, Conductor.instance.songPositionInBeats);
+                game.SpawnOrbs(!landedOut, Conductor.instance.songPositionInBeatsAsDouble);
             }
             string landOut = landedOut ? "Out" : "In";
             string typeOfLanding = "";
@@ -253,7 +253,7 @@ namespace HeavenStudio.Games.Scripts_SeeSaw
                 string getUpAnim = "GetUp_" + landOut + typeOfLanding;
                 BeatAction.New(gameObject, new List<BeatAction.Action>()
                 {
-                    new BeatAction.Action(Conductor.instance.songPositionInBeats + (getUpOut ? 1f : 0.5f), delegate { anim.DoScaledAnimationAsync(getUpAnim, 0.5f); })
+                    new BeatAction.Action(Conductor.instance.songPositionInBeatsAsDouble + (getUpOut ? 1f : 0.5f), delegate { anim.DoScaledAnimationAsync(getUpAnim, 0.5f); })
                 });
             }
             transform.position = landedOut ? landOutTrans.position : landInTrans.position;

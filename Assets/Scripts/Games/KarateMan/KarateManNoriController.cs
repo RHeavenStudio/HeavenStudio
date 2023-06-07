@@ -49,7 +49,7 @@ namespace HeavenStudio.Games.Scripts_KarateMan
 
         }
 
-        public void SetNoriMode(float fromBeat, int mode, int startingNori = 0)
+        public void SetNoriMode(double fromBeat, int mode, int startingNori = 0)
         {
             float scaleFactor = 0f;
             //clear all children of the holder

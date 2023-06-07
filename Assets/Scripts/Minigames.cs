@@ -445,12 +445,12 @@ namespace HeavenStudio
                 new Minigame("gameManager", "Game Manager", "", false, true, new List<GameAction>()
                 {
                     new GameAction("switchGame", "Switch Game", 0.5f, false, 
-                        function: delegate { var e = eventCaller.currentEntity; GameManager.instance.SwitchGame(eventCaller.currentSwitchGame, (float) eventCaller.currentEntity.beat, e["toggle"]); }, 
+                        function: delegate { var e = eventCaller.currentEntity; GameManager.instance.SwitchGame(eventCaller.currentSwitchGame, eventCaller.currentEntity.beat, e["toggle"]); }, 
                         parameters: new List<Param>()
                             {
                             new Param("toggle", true, "Black Flash", "Enable or disable the black screen for this Game Switch")
                             },
-                        inactiveFunction: delegate { var e = eventCaller.currentEntity; GameManager.instance.SwitchGame(eventCaller.currentSwitchGame, (float) eventCaller.currentEntity.beat, e["toggle"]); }
+                        inactiveFunction: delegate { var e = eventCaller.currentEntity; GameManager.instance.SwitchGame(eventCaller.currentSwitchGame, eventCaller.currentEntity.beat, e["toggle"]); }
                     ),
                     new GameAction("end", "End Remix",
                         function: delegate { 
@@ -466,7 +466,7 @@ namespace HeavenStudio
                         //temp for testing
                         function = delegate {
                             var e = eventCaller.currentEntity;
-                            HeavenStudio.Common.SkillStarManager.instance.DoStarIn((float) e.beat, e.length); 
+                            HeavenStudio.Common.SkillStarManager.instance.DoStarIn(e.beat, e.length); 
                             // BeatAction.New(HeavenStudio.Common.SkillStarManager.instance.gameObject, new List<BeatAction.Action>(){
                             //     new BeatAction.Action(e.beat + e.length, delegate {
                             //         HeavenStudio.Common.SkillStarManager.instance.DoStarJust();
@@ -522,14 +522,14 @@ namespace HeavenStudio
                         {
                             new Param("type", SoundEffects.CountInType.Normal, "Type", "The sounds to play for the count-in")
                         },
-                        delegate { var e = eventCaller.currentEntity; SoundEffects.FourBeatCountIn((float) e.beat, e.length / 4f, e["type"]); }
+                        delegate { var e = eventCaller.currentEntity; SoundEffects.FourBeatCountIn(e.beat, e.length / 4f, e["type"]); }
                     ),
                     new GameAction("8 beat count-in", "8 Beat Count-In", 8f, true,
                         new List<Param>()
                         {
                             new Param("type", SoundEffects.CountInType.Normal, "Type", "The sounds to play for the count-in")
                         },
-                        delegate { var e = eventCaller.currentEntity; SoundEffects.EightBeatCountIn((float) e.beat, e.length / 8f, e["type"]); }
+                        delegate { var e = eventCaller.currentEntity; SoundEffects.EightBeatCountIn(e.beat, e.length / 8f, e["type"]); }
                     ),
                     new GameAction("count", "Count", 1f, false,
                         new List<Param>()
@@ -543,7 +543,7 @@ namespace HeavenStudio
                         function: delegate { SoundEffects.Cowbell(); }
                     ),
                     new GameAction("ready!", "Ready!", 2f, true,
-                        function: delegate { var e = eventCaller.currentEntity; SoundEffects.Ready((float) e.beat, e.length / 2f); }
+                        function: delegate { var e = eventCaller.currentEntity; SoundEffects.Ready(e.beat, e.length / 2f); }
                     ),
                     new GameAction("and", "And", 0.5f,
                         function: delegate { SoundEffects.And(); }
@@ -557,10 +557,10 @@ namespace HeavenStudio
                     ),
 
                     // These are still here for backwards-compatibility but are hidden in the editor
-                    new GameAction("4 beat count-in (alt)", "", 4f, function: delegate { var e = eventCaller.currentEntity; SoundEffects.FourBeatCountIn((float) e.beat, e.length, 1); }, hidden: true),
-                    new GameAction("4 beat count-in (cowbell)", "", 4f, function: delegate { var e = eventCaller.currentEntity; SoundEffects.FourBeatCountIn((float) e.beat, e.length, 2); }, hidden: true),
-                    new GameAction("8 beat count-in (alt)", "", 8f, function: delegate { var e = eventCaller.currentEntity; SoundEffects.EightBeatCountIn((float) e.beat, e.length, 1); }, hidden: true),
-                    new GameAction("8 beat count-in (cowbell)", "", 8f, function: delegate { var e = eventCaller.currentEntity; SoundEffects.EightBeatCountIn((float) e.beat, e.length, 2); }, hidden: true),
+                    new GameAction("4 beat count-in (alt)", "", 4f, function: delegate { var e = eventCaller.currentEntity; SoundEffects.FourBeatCountIn(e.beat, e.length, 1); }, hidden: true),
+                    new GameAction("4 beat count-in (cowbell)", "", 4f, function: delegate { var e = eventCaller.currentEntity; SoundEffects.FourBeatCountIn(e.beat, e.length, 2); }, hidden: true),
+                    new GameAction("8 beat count-in (alt)", "", 8f, function: delegate { var e = eventCaller.currentEntity; SoundEffects.EightBeatCountIn(e.beat, e.length, 1); }, hidden: true),
+                    new GameAction("8 beat count-in (cowbell)", "", 8f, function: delegate { var e = eventCaller.currentEntity; SoundEffects.EightBeatCountIn(e.beat, e.length, 2); }, hidden: true),
 
                     new GameAction("one", "", function: delegate { SoundEffects.Count(0, false); }, hidden: true),
                     new GameAction("two", "", function: delegate { SoundEffects.Count(1, false); }, hidden: true),

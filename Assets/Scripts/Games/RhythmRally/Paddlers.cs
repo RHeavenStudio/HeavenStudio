@@ -38,7 +38,7 @@ namespace HeavenStudio.Games.Scripts_RhythmRally
         {
             game.served = false;
 
-            var hitBeat = cond.songPositionInBeats;
+            var hitBeat = cond.songPositionInBeatsAsDouble;
 
             var bounceBeat = game.serveBeat + game.targetBeat + 1f;
 
@@ -65,7 +65,7 @@ namespace HeavenStudio.Games.Scripts_RhythmRally
 
             game.missCurve.KeyPoints[0].Position = game.ball.transform.position;
             game.missCurve.transform.localScale = new Vector3(-state, 1f, 1f);
-            game.missBeat = cond.songPositionInBeats;
+            game.missBeat = cond.songPositionInBeatsAsDouble;
             game.ball.SetActive(true);
         }
 
@@ -88,7 +88,7 @@ namespace HeavenStudio.Games.Scripts_RhythmRally
             MultiSound.Play(new MultiSound.Sound[] { new MultiSound.Sound("rhythmRally/Whistle", whistleBeat) });
         }
 
-        public void BounceFX(float bounceBeat)
+        public void BounceFX(double bounceBeat)
         {
             BeatAction.New(this.gameObject, new List<BeatAction.Action>()
             {

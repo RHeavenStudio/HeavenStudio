@@ -13,7 +13,7 @@ namespace HeavenStudio.Games.Global
 {
     public class Flash : MonoBehaviour
     {
-        [NonSerialized] public float startBeat;
+        [NonSerialized] public double startBeat;
         [NonSerialized] public float length;
 
         [NonSerialized] public Color startColor;
@@ -83,12 +83,12 @@ namespace HeavenStudio.Games.Global
                         endCol = new Color(colB.r, colB.g, colB.b, startEntity["valB"]);
                     }
 
-                    SetFade((float) startEntity.beat, startEntity.length, startCol, endCol, (Util.EasingFunction.Ease) startEntity["ease"]);
+                    SetFade(startEntity.beat, startEntity.length, startCol, endCol, (Util.EasingFunction.Ease) startEntity["ease"]);
                 }
             }
         }
 
-        public void SetFade(float beat, float length, Color startCol, Color endCol, Util.EasingFunction.Ease ease)
+        public void SetFade(double beat, float length, Color startCol, Color endCol, Util.EasingFunction.Ease ease)
         {
             this.startBeat = beat;
             this.length = length;
@@ -100,7 +100,7 @@ namespace HeavenStudio.Games.Global
 
         private void Update()
         {
-            FindFadeFromBeat(Conductor.instance.songPositionInBeats);
+            FindFadeFromBeat(Conductor.instance.songPositionInBeatsAsDouble);
             float normalizedBeat = Conductor.instance.GetPositionFromBeat(startBeat, length);
             // normalizedBeat = Mathf.Clamp01(normalizedBeat);
 

@@ -16,7 +16,7 @@ namespace HeavenStudio.Games.Loaders
             {
                 new GameAction("turn right", "Turn Right")
                 {
-                    function = delegate { var e = eventCaller.currentEntity; SpaceDance.instance.DoTurnRight((float) e.beat, e["whoSpeaks"], e["gramps"]); },
+                    function = delegate { var e = eventCaller.currentEntity; SpaceDance.instance.DoTurnRight(e.beat, e["whoSpeaks"], e["gramps"]); },
                     defaultLength = 2.0f,
                     parameters = new List<Param>()
                     {
@@ -26,7 +26,7 @@ namespace HeavenStudio.Games.Loaders
                 },
                 new GameAction("sit down", "Sit Down")
                 {
-                    function = delegate { var e = eventCaller.currentEntity; SpaceDance.instance.DoSitDown((float) e.beat, e["whoSpeaks"], e["gramps"]); },
+                    function = delegate { var e = eventCaller.currentEntity; SpaceDance.instance.DoSitDown(e.beat, e["whoSpeaks"], e["gramps"]); },
                     defaultLength = 2.0f,
                     parameters = new List<Param>()
                     {
@@ -36,7 +36,7 @@ namespace HeavenStudio.Games.Loaders
                 },
                 new GameAction("punch", "Punch")
                 {
-                    function = delegate { var e = eventCaller.currentEntity; SpaceDance.instance.DoPunch((float) e.beat, e["whoSpeaks"], e["gramps"]); },
+                    function = delegate { var e = eventCaller.currentEntity; SpaceDance.instance.DoPunch(e.beat, e["whoSpeaks"], e["gramps"]); },
                     defaultLength = 2.0f,
                     parameters = new List<Param>()
                     {
@@ -46,7 +46,7 @@ namespace HeavenStudio.Games.Loaders
                 },
                 new GameAction("shootingStar", "Shooting Star")
                 {
-                    function = delegate { var e = eventCaller.currentEntity; SpaceDance.instance.UpdateShootingStar((float) e.beat, e.length, e["ease"]); },
+                    function = delegate { var e = eventCaller.currentEntity; SpaceDance.instance.UpdateShootingStar(e.beat, e.length, e["ease"]); },
                     defaultLength = 2f,
                     resizable = true,
                     parameters = new List<Param>()
@@ -68,7 +68,7 @@ namespace HeavenStudio.Games.Loaders
                 },
                 new GameAction("bop", "Bop")
                 {
-                    function = delegate { var e = eventCaller.currentEntity; SpaceDance.instance.EpicBop((float) e.beat, e.length, e["auto"], e["bop"], e["grampsAuto"], e["gramps"]); },
+                    function = delegate { var e = eventCaller.currentEntity; SpaceDance.instance.EpicBop(e.beat, e.length, e["auto"], e["bop"], e["grampsAuto"], e["gramps"]); },
                     parameters = new List<Param>()
                     {
                         new Param("bop", true, "Dancers Bop", "Should the dancers bop?"),
@@ -81,7 +81,7 @@ namespace HeavenStudio.Games.Loaders
                 },
                 new GameAction("grampsAnims", "Space Gramps Animations")
                 {
-                    function = delegate {var e = eventCaller.currentEntity; SpaceDance.instance.GrampsAnimations((float) e.beat, e["type"], e["toggle"]); },
+                    function = delegate {var e = eventCaller.currentEntity; SpaceDance.instance.GrampsAnimations(e.beat, e["type"], e["toggle"]); },
                     defaultLength = 0.5f,
                     parameters = new List<Param>()
                     {
@@ -148,7 +148,7 @@ namespace HeavenStudio.Games
         bool grampsCanBop = true;
         public bool spaceGrampsShouldBop = false;
         float shootingStarLength;
-        float shootingStarStartBeat;
+        double shootingStarStartBeat;
         EasingFunction.Ease lastEase;
         bool isShootingStar;
         bool grampsLoopingAnim;
@@ -243,7 +243,7 @@ namespace HeavenStudio.Games
             scrollBeat = Time.realtimeSinceStartup;
         }
 
-        public void GrampsAnimations(float beat, int type, bool looping)
+        public void GrampsAnimations(double beat, int type, bool looping)
         {
             switch (type)
             {
@@ -283,7 +283,7 @@ namespace HeavenStudio.Games
             }
         }
 
-        void GrampsSniffLoop(float beat)
+        void GrampsSniffLoop(double beat)
         {
             if (!grampsLoopingAnim || !grampsSniffing) return;
             spaceGrampsShouldBop = false;
@@ -317,7 +317,7 @@ namespace HeavenStudio.Games
             });
         }
 
-        void GrampsTalkLoop(float beat)
+        void GrampsTalkLoop(double beat)
         {
             if (!grampsLoopingAnim || grampsSniffing) return;
             spaceGrampsShouldBop = false;
@@ -365,7 +365,7 @@ namespace HeavenStudio.Games
             });
         }
 
-        public void UpdateShootingStar(float beat, float length, int ease)
+        public void UpdateShootingStar(double beat, float length, int ease)
         {
             lastEase = (EasingFunction.Ease)ease;
             shootingStarLength = length;
@@ -373,7 +373,7 @@ namespace HeavenStudio.Games
             isShootingStar = true;
         }
 
-        public void DoTurnRight(float beat, int whoSpeaks, bool grampsTurns)
+        public void DoTurnRight(double beat, int whoSpeaks, bool grampsTurns)
         {
             canBop = false;
             if (grampsTurns) grampsCanBop = false;
@@ -435,7 +435,7 @@ namespace HeavenStudio.Games
 
         }
 
-        public void DoSitDown(float beat, int whoSpeaks, bool grampsSits)
+        public void DoSitDown(double beat, int whoSpeaks, bool grampsSits)
         {
             canBop = false;
             if (grampsSits) grampsCanBop = false;
@@ -500,7 +500,7 @@ namespace HeavenStudio.Games
 
         }
 
-        public void DoPunch(float beat, int whoSpeaks, bool grampsPunches)
+        public void DoPunch(double beat, int whoSpeaks, bool grampsPunches)
         {
             canBop = false;
             if (grampsPunches) grampsCanBop = false;
@@ -586,7 +586,7 @@ namespace HeavenStudio.Games
 
         }
 
-        public void EpicBop(float beat, float length, bool autoDancers, bool dancers, bool autoGramps, bool gramps)
+        public void EpicBop(double beat, float length, bool autoDancers, bool dancers, bool autoGramps, bool gramps)
         {
             shouldBop = autoDancers;
             spaceGrampsShouldBop = autoGramps;

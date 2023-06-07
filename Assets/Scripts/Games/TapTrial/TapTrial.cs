@@ -16,7 +16,7 @@ namespace HeavenStudio.Games.Loaders
             {
                 new GameAction("bop", "Bop")
                 {
-                    function = delegate { var e = eventCaller.currentEntity; TapTrial.instance.Bop((float) e.beat, e.length, e["toggle"], e["toggle2"]); }, 
+                    function = delegate { var e = eventCaller.currentEntity; TapTrial.instance.Bop(e.beat, e.length, e["toggle"], e["toggle2"]); }, 
                     resizable = true,
                     parameters = new List<Param>()
                     {
@@ -27,36 +27,36 @@ namespace HeavenStudio.Games.Loaders
                 new GameAction("tap", "Tap")
                 {
 
-                    function = delegate { TapTrial.instance.Tap((float) eventCaller.currentEntity.beat); }, 
+                    function = delegate { TapTrial.instance.Tap(eventCaller.currentEntity.beat); }, 
                     defaultLength = 2.0f
                 },
                 new GameAction("double tap", "Double Tap")
                 {
 
-                    function = delegate { TapTrial.instance.DoubleTap((float) eventCaller.currentEntity.beat); }, 
+                    function = delegate { TapTrial.instance.DoubleTap(eventCaller.currentEntity.beat); }, 
                     defaultLength = 2.0f
                 },
                 new GameAction("triple tap", "Triple Tap")
                 {
 
-                    function = delegate { TapTrial.instance.TripleTap((float) eventCaller.currentEntity.beat); }, 
+                    function = delegate { TapTrial.instance.TripleTap(eventCaller.currentEntity.beat); }, 
                     defaultLength = 4.0f
                 },
                 new GameAction("jump tap prep", "Prepare Stance")
                 {
 
-                    function = delegate { TapTrial.instance.JumpTapPrep((float) eventCaller.currentEntity.beat); }, 
+                    function = delegate { TapTrial.instance.JumpTapPrep(eventCaller.currentEntity.beat); }, 
                 },
                 new GameAction("jump tap", "Jump Tap")
                 {
 
-                    function = delegate { TapTrial.instance.JumpTap((float) eventCaller.currentEntity.beat); }, 
+                    function = delegate { TapTrial.instance.JumpTap(eventCaller.currentEntity.beat); }, 
                     defaultLength = 2.0f
                 },
                 new GameAction("final jump tap", "Final Jump Tap")
                 {
 
-                    function = delegate { TapTrial.instance.FinalJumpTap((float) eventCaller.currentEntity.beat); }, 
+                    function = delegate { TapTrial.instance.FinalJumpTap(eventCaller.currentEntity.beat); }, 
                     defaultLength = 2.0f
                 },
                 new GameAction("scroll event", "Scroll Background")
@@ -112,10 +112,8 @@ namespace HeavenStudio.Games
         [SerializeField] GameObject giraffe;
         bool goBop = true, isPrep;
         bool hasJumped, isFinalJump;
-        public float jumpStartTime = Single.MinValue;
+        public double jumpStartTime = double.MinValue;
         float jumpPos;
-        public float time;
-        bool once;
         public bool crIsRunning;
         [SerializeField] GameObject bg;
         bool giraffeIsIn;
@@ -137,7 +135,7 @@ namespace HeavenStudio.Games
             }
 
             jumpPos = Conductor.instance.GetPositionFromBeat(jumpStartTime, 1f);
-            if (Conductor.instance.songPositionInBeats >= jumpStartTime && Conductor.instance.songPositionInBeats < jumpStartTime + 1f)
+            if (Conductor.instance.songPositionInBeatsAsDouble >= jumpStartTime && Conductor.instance.songPositionInBeatsAsDouble < jumpStartTime + 1f)
             {
                 float yMul = jumpPos * 2f - 1f;
                 float yWeight = -(yMul * yMul) + 1f;
@@ -181,7 +179,7 @@ namespace HeavenStudio.Games
             }
         }
 
-        public void Bop(float beat, float length, bool isBopping, bool autoBop)
+        public void Bop(double beat, float length, bool isBopping, bool autoBop)
         {
             goBop = autoBop;
             if (isBopping)
@@ -196,7 +194,7 @@ namespace HeavenStudio.Games
             }
         }
 
-        public void Tap(float beat)
+        public void Tap(double beat)
         {
             isPrep = true;
             SoundByte.PlayOneShotGame("tapTrial/ook");
@@ -219,7 +217,7 @@ namespace HeavenStudio.Games
             });
         }
 
-        public void DoubleTap(float beat)
+        public void DoubleTap(double beat)
         {
             isPrep = true;
             MultiSound.Play(new MultiSound.Sound[]
@@ -257,7 +255,7 @@ namespace HeavenStudio.Games
             ScheduleInput(beat, 1.5f, InputType.STANDARD_DOWN, OnDoubleTap, OnTapMiss, OnEmpty);
         }
 
-        public void TripleTap(float beat)
+        public void TripleTap(double beat)
         {
             isPrep = true;
             MultiSound.Play(new MultiSound.Sound[]
@@ -309,7 +307,7 @@ namespace HeavenStudio.Games
             });
         }
 
-        public void JumpTap(float beat)
+        public void JumpTap(double beat)
         {
             isPrep = true;
             hasJumped = true;
@@ -318,7 +316,7 @@ namespace HeavenStudio.Games
             player.anim.Play("JumpTap", 0, 0);
             BeatAction.New(gameObject, new List<BeatAction.Action>()
             {
-                new BeatAction.Action(beat, delegate {jumpStartTime = Conductor.instance.songPositionInBeats;}),
+                new BeatAction.Action(beat, delegate {jumpStartTime = Conductor.instance.songPositionInBeatsAsDouble;}),
                 new BeatAction.Action(beat, delegate {monkeys[0].Play("JumpTap", 0, 0); }),
                 new BeatAction.Action(beat, delegate {monkeys[1].Play("JumpTap", 0, 0); }),
                 new BeatAction.Action(beat + 1f, delegate { particleEffectMonkeys(); monkeys[0].Play("Jumpactualtap", 0, 0); monkeys[1].Play("Jumpactualtap", 0, 0); }),
@@ -333,7 +331,7 @@ namespace HeavenStudio.Games
             });
         }
 
-        public void JumpTapPrep(float beat)
+        public void JumpTapPrep(double beat)
         {
             isPrep = true;
             monkeys[0].Play("JumpPrepare", 0, 0);
@@ -341,7 +339,7 @@ namespace HeavenStudio.Games
             player.anim.Play("JumpPrepare", 0, 0);
         }
 
-        public void FinalJumpTap(float beat)
+        public void FinalJumpTap(double beat)
         {
             isPrep = true;
             hasJumped = true;
@@ -351,7 +349,7 @@ namespace HeavenStudio.Games
             player.anim.Play("FinalJump");
             BeatAction.New(gameObject, new List<BeatAction.Action>()
             {
-                new BeatAction.Action(beat, delegate {jumpStartTime = Conductor.instance.songPositionInBeats;}),
+                new BeatAction.Action(beat, delegate {jumpStartTime = Conductor.instance.songPositionInBeatsAsDouble;}),
                 new BeatAction.Action(beat, delegate {monkeys[0].Play("Jump", 0, 0); }),
                 new BeatAction.Action(beat, delegate {monkeys[1].Play("Jump", 0, 0); }),
                 new BeatAction.Action(beat + 1f, delegate { monkeys[0].Play("FinalJumpTap", 0, 0); particleEffectMonkeys(); particleEffectMonkeys_2(); }),

@@ -16,14 +16,14 @@ namespace HeavenStudio.Games.Loaders
             {
                 new GameAction("cowbell", "Cowbell")
                 {
-                    preFunction = delegate { Tunnel.PreStartCowbell((float) eventCaller.currentEntity.beat, eventCaller.currentEntity.length); },
+                    preFunction = delegate { Tunnel.PreStartCowbell(eventCaller.currentEntity.beat, eventCaller.currentEntity.length); },
                     defaultLength = 4f,
                     resizable = true,
 
                 },
                 new GameAction("countin", "Count In")
                 {
-                    preFunction = delegate { Tunnel.CountIn((float) eventCaller.currentEntity.beat, eventCaller.currentEntity.length); }, 
+                    preFunction = delegate { Tunnel.CountIn(eventCaller.currentEntity.beat, eventCaller.currentEntity.length); }, 
                     defaultLength = 4f, 
                     resizable = true,
                 }
@@ -72,7 +72,7 @@ namespace HeavenStudio.Games
         public bool started;
         public struct QueuedCowbell
         {
-            public float beat;
+            public double beat;
             public float length;
         }
         static List<QueuedCowbell> queuedInputs = new List<QueuedCowbell>();
@@ -137,7 +137,7 @@ namespace HeavenStudio.Games
             cowbellAnimator.Play("Shake",-1,0);
         }
 
-        public static void PreStartCowbell(float beat, float length)
+        public static void PreStartCowbell(double beat, float length)
         {
             if (GameManager.instance.currentGame == "tunnel")
             {
@@ -149,7 +149,7 @@ namespace HeavenStudio.Games
             }
         }
 
-        public void StartCowbell(float beat, float length)
+        public void StartCowbell(double beat, float length)
         {
             started = true;
             for(int i = 0; i < length; i++)
@@ -189,7 +189,7 @@ namespace HeavenStudio.Games
 
 
         
-        public static void CountIn(float beat, float length)
+        public static void CountIn(double beat, float length)
         {
 
             List<MultiSound.Sound> cuelist = new List<MultiSound.Sound>();

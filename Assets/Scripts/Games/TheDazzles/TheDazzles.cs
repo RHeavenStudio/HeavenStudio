@@ -16,7 +16,7 @@ namespace HeavenStudio.Games.Loaders
             {
                 new GameAction("crouch", "Crouch")
                 {
-                    preFunction = delegate { var e = eventCaller.currentEntity; TheDazzles.PreCrouch((float) e.beat, e.length, e["countIn"]);  },
+                    preFunction = delegate { var e = eventCaller.currentEntity; TheDazzles.PreCrouch(e.beat, e.length, e["countIn"]);  },
                     defaultLength = 3f,
                     parameters = new List<Param>()
                     {
@@ -25,7 +25,7 @@ namespace HeavenStudio.Games.Loaders
                 },
                 new GameAction("crouchStretch", "Crouch (Stretchable)")
                 {
-                    preFunction = delegate { var e = eventCaller.currentEntity; TheDazzles.PreCrouch((float) e.beat, e.length, e["countIn"]); },
+                    preFunction = delegate { var e = eventCaller.currentEntity; TheDazzles.PreCrouch(e.beat, e.length, e["countIn"]); },
                     defaultLength = 3f,
                     resizable = true,
                     parameters = new List<Param>()
@@ -35,7 +35,7 @@ namespace HeavenStudio.Games.Loaders
                 },
                 new GameAction("poseThree", "Pose Horizontal")
                 {
-                    preFunction = delegate { var e = eventCaller.currentEntity; TheDazzles.PrePose((float) e.beat, e.length, 0f, 1f, 2f, 0f, 1f, 2f, e["toggle"]); },
+                    preFunction = delegate { var e = eventCaller.currentEntity; TheDazzles.PrePose(e.beat, e.length, 0f, 1f, 2f, 0f, 1f, 2f, e["toggle"]); },
                     defaultLength = 3f,
                     parameters = new List<Param>()
                     {
@@ -44,7 +44,7 @@ namespace HeavenStudio.Games.Loaders
                 },
                 new GameAction("poseTwo", "Pose Vertical")
                 {
-                    preFunction = delegate { var e = eventCaller.currentEntity; TheDazzles.PrePose((float) e.beat, e.length, 0f, 0f, 0f, 2f, 2f, 2f, e["toggle"]); },
+                    preFunction = delegate { var e = eventCaller.currentEntity; TheDazzles.PrePose(e.beat, e.length, 0f, 0f, 0f, 2f, 2f, 2f, e["toggle"]); },
                     defaultLength = 4f,
                     parameters = new List<Param>()
                     {
@@ -53,7 +53,7 @@ namespace HeavenStudio.Games.Loaders
                 },
                 new GameAction("poseSixDiagonal", "Pose Diagonal")
                 {
-                    preFunction = delegate { var e = eventCaller.currentEntity; TheDazzles.PrePose((float) e.beat, e.length, 0f, 2.75f, 1.5f, 2f, 0.75f, 3.5f, e["toggle"]); },
+                    preFunction = delegate { var e = eventCaller.currentEntity; TheDazzles.PrePose(e.beat, e.length, 0f, 2.75f, 1.5f, 2f, 0.75f, 3.5f, e["toggle"]); },
                     defaultLength = 4.5f,
                     parameters = new List<Param>()
                     {
@@ -62,7 +62,7 @@ namespace HeavenStudio.Games.Loaders
                 },
                 new GameAction("poseSixColumns", "Pose Rows")
                 {
-                    preFunction = delegate { var e = eventCaller.currentEntity; TheDazzles.PrePose((float) e.beat, e.length, 0f, 0.5f, 1f, 2f, 2.5f, 3f, e["toggle"]); },
+                    preFunction = delegate { var e = eventCaller.currentEntity; TheDazzles.PrePose(e.beat, e.length, 0f, 0.5f, 1f, 2f, 2.5f, 3f, e["toggle"]); },
                     defaultLength = 4f,
                     parameters = new List<Param>()
                     {
@@ -71,7 +71,7 @@ namespace HeavenStudio.Games.Loaders
                 },
                 new GameAction("poseSix", "Pose Six")
                 {
-                    preFunction = delegate { var e = eventCaller.currentEntity; TheDazzles.PrePose((float) e.beat, e.length, 0f, 0.5f, 1f, 1.5f, 2f, 2.5f, e["toggle"]); },
+                    preFunction = delegate { var e = eventCaller.currentEntity; TheDazzles.PrePose(e.beat, e.length, 0f, 0.5f, 1f, 1.5f, 2f, 2.5f, e["toggle"]); },
                     defaultLength = 4.5f,
                     parameters = new List<Param>()
                     {
@@ -80,7 +80,7 @@ namespace HeavenStudio.Games.Loaders
                 },
                 new GameAction("customPose", "Custom Pose")
                 {
-                    preFunction = delegate { var e = eventCaller.currentEntity; TheDazzles.PrePose((float) e.beat, e.length, e["upLeft"], e["upMiddle"], e["upRight"], e["downLeft"], e["downMiddle"], e["player"], e["toggle"]); },
+                    preFunction = delegate { var e = eventCaller.currentEntity; TheDazzles.PrePose(e.beat, e.length, e["upLeft"], e["upMiddle"], e["upRight"], e["downLeft"], e["downMiddle"], e["player"], e["toggle"]); },
                     defaultLength = 3f,
                     resizable = true,
                     parameters = new List<Param>()
@@ -101,7 +101,7 @@ namespace HeavenStudio.Games.Loaders
                 },
                 new GameAction("bop", "Bop")
                 {
-                    function = delegate { var e = eventCaller.currentEntity; TheDazzles.instance.Bop((float) e.beat, e.length, e["toggle2"], e["toggle"]); },
+                    function = delegate { var e = eventCaller.currentEntity; TheDazzles.instance.Bop(e.beat, e.length, e["toggle2"], e["toggle"]); },
                     resizable = true,
                     parameters = new List<Param>()
                     {
@@ -125,6 +125,31 @@ namespace HeavenStudio.Games
     {
         public struct PosesToPerform : IComparable<PosesToPerform>
         {
+            // override object.Equals
+            public override bool Equals(object obj)
+            {
+                //
+                // See the full list of guidelines at
+                //   http://go.microsoft.com/fwlink/?LinkID=85237
+                // and also the guidance for operator== at
+                //   http://go.microsoft.com/fwlink/?LinkId=85238
+                //
+                
+                if (obj == null || GetType() != obj.GetType())
+                {
+                    return false;
+                }
+                
+                // TODO: write your implementation of Equals() here
+                throw new System.NotImplementedException();
+            }
+            
+            // override object.GetHashCode
+            public override int GetHashCode()
+            {
+                // TODO: write your implementation of GetHashCode() here
+                throw new System.NotImplementedException();
+            }
             public int CompareTo(PosesToPerform other)
             {
                 if (other == null) return 1;
@@ -166,7 +191,7 @@ namespace HeavenStudio.Games
         }
         public struct QueuedPose
         {
-            public float beat;
+            public double beat;
             public float length;
             public float upLeftBeat;
             public float upMiddleBeat;
@@ -178,7 +203,7 @@ namespace HeavenStudio.Games
         }
         public struct QueuedCrouch
         {
-            public float beat;
+            public double beat;
             public float length;
             public int countInType;
         }
@@ -194,7 +219,7 @@ namespace HeavenStudio.Games
         bool canBop = true;
         bool doingPoses = false;
         bool shouldHold = false;
-        float crouchEndBeat;
+        double crouchEndBeat;
         public bool shouldBop = true;
         public GameEvent bop = new GameEvent();
         static List<QueuedPose> queuedPoses = new List<QueuedPose>();
@@ -304,7 +329,7 @@ namespace HeavenStudio.Games
             }
         }
 
-        public void Bop(float beat, float length, bool goBop, bool autoBop)
+        public void Bop(double beat, float length, bool goBop, bool autoBop)
         {
             shouldBop = autoBop;
             if (goBop)
@@ -336,7 +361,7 @@ namespace HeavenStudio.Games
             player.Prepare();
         }
 
-        public static void PreCrouch(float beat, float length, int countInType)
+        public static void PreCrouch(double beat, float length, int countInType)
         {
             float actualLength = length / 3;
             int realCountInType = countInType;
@@ -374,7 +399,7 @@ namespace HeavenStudio.Games
             }
         }
 
-        public void CrouchStretchable(float beat, float length, int countInType)
+        public void CrouchStretchable(double beat, float length, int countInType)
         {
             float actualLength = length / 3;
             crouchEndBeat = beat + length;
@@ -404,7 +429,7 @@ namespace HeavenStudio.Games
             });
         }
 
-        public static void PrePose(float beat, float length, float upLeftBeat, float upMiddleBeat, float upRightBeat, float downLeftBeat, float downMiddleBeat, float playerBeat, bool stars)
+        public static void PrePose(double beat, float length, float upLeftBeat, float upMiddleBeat, float upRightBeat, float downLeftBeat, float downMiddleBeat, float playerBeat, bool stars)
         {
             if (GameManager.instance.currentGame == "theDazzles")
             {
@@ -417,7 +442,7 @@ namespace HeavenStudio.Games
             }
         }
 
-        public void Pose(float beat, float length, float upLeftBeat, float upMiddleBeat, float upRightBeat, float downLeftBeat, float downMiddleBeat, float playerBeat, bool stars)
+        public void Pose(double beat, float length, float upLeftBeat, float upMiddleBeat, float upRightBeat, float downLeftBeat, float downMiddleBeat, float playerBeat, bool stars)
         {
             if (stars)
             {
@@ -427,7 +452,7 @@ namespace HeavenStudio.Games
             {
                 ScheduleInput(beat, playerBeat, InputType.STANDARD_UP, JustPose, MissPose, Nothing);
             }
-            float crouchBeat = beat - 1f;
+            double crouchBeat = beat - 1f;
             if (crouchBeat < crouchEndBeat) 
             { 
                 crouchBeat = crouchEndBeat - 1f;

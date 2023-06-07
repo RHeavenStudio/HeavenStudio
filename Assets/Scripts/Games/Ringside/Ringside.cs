@@ -16,7 +16,7 @@ namespace HeavenStudio.Games.Loaders
             {
                 new GameAction("question", "Question")
                 {
-                    function = delegate {var e = eventCaller.currentEntity; Ringside.instance.Question((float) e.beat, e["alt"], e["variant"]); },
+                    function = delegate {var e = eventCaller.currentEntity; Ringside.instance.Question(e.beat, e["alt"], e["variant"]); },
                     parameters = new List<Param>()
                     {
                         new Param("alt", false, "Alt", "Whether the alt voice line should be used or not."),
@@ -26,7 +26,7 @@ namespace HeavenStudio.Games.Loaders
                 },
                 new GameAction("woahYouGoBigGuy", "Woah You Go Big Guy!")
                 {
-                    function = delegate {var e = eventCaller.currentEntity; Ringside.instance.BigGuy((float) e.beat, e["variant"]); },
+                    function = delegate {var e = eventCaller.currentEntity; Ringside.instance.BigGuy(e.beat, e["variant"]); },
                     parameters = new List<Param>()
                     {
                         new Param("variant", Ringside.QuestionVariant.Random, "Variant", "Which variant of the cue do you wish to play.")
@@ -35,7 +35,7 @@ namespace HeavenStudio.Games.Loaders
                 },
                 new GameAction("poseForTheFans", "Pose For The Fans!")
                 {
-                    preFunction = delegate {var e = eventCaller.currentEntity; Ringside.PoseForTheFans((float) e.beat, e["and"], e["variant"], e["keepZoomedOut"], e["newspaperBeats"]); },
+                    preFunction = delegate {var e = eventCaller.currentEntity; Ringside.PoseForTheFans(e.beat, e["and"], e["variant"], e["keepZoomedOut"], e["newspaperBeats"]); },
                     parameters = new List<Param>()
                     {
                         new Param("and", false, "And", "Whether the And voice line should be said or not."),
@@ -48,7 +48,7 @@ namespace HeavenStudio.Games.Loaders
                 },
                 new GameAction("toggleBop", "Bop")
                 {
-                    function = delegate {var e = eventCaller.currentEntity; Ringside.instance.ToggleBop((float) e.beat, e.length, e["bop2"], e["bop"]); },
+                    function = delegate {var e = eventCaller.currentEntity; Ringside.instance.ToggleBop(e.beat, e.length, e["bop2"], e["bop"]); },
                     parameters = new List<Param>()
                     {
                         new Param("bop2", true, "Bop?", "Whether the wrestler should bop or not."),
@@ -67,8 +67,8 @@ namespace HeavenStudio.Games.Loaders
                 },
                 new GameAction("questionScaled", "Question (Stretchable)")
                 {
-                    function = delegate {var e = eventCaller.currentEntity; Ringside.instance.Question((float) e.beat, e["alt"], e["variant"], e.length); },
-                    preFunction = delegate {if (Ringside.instance == null) return; var e = eventCaller.currentEntity; Ringside.instance.PreQuestion((float) e.beat, e["variant"], e.length); },
+                    function = delegate {var e = eventCaller.currentEntity; Ringside.instance.Question(e.beat, e["alt"], e["variant"], e.length); },
+                    preFunction = delegate {if (Ringside.instance == null) return; var e = eventCaller.currentEntity; Ringside.instance.PreQuestion(e.beat, e["variant"], e.length); },
                     parameters = new List<Param>()
                     {
                         new Param("alt", false, "Alt", "Whether the alt voice line should be used or not."),
@@ -120,7 +120,7 @@ namespace HeavenStudio.Games
         public static List<QueuedPose> queuedPoses = new List<QueuedPose>();
         public struct QueuedPose
         {
-            public float beat;
+            public double beat;
             public bool keepZoomedOut;
             public float newspaperBeats;
         }
@@ -183,7 +183,7 @@ namespace HeavenStudio.Games
             List<RiqEntity> tempEvents = new List<RiqEntity>();
             for (int i = 0; i < camEvents.Count; i++)
             {
-                if (camEvents[i].beat + camEvents[i].beat >= Conductor.instance.songPositionInBeats)
+                if (camEvents[i].beat + camEvents[i].beat >= Conductor.instance.songPositionInBeatsAsDouble)
                 {
                     tempEvents.Add(camEvents[i]);
                 }
@@ -236,7 +236,7 @@ namespace HeavenStudio.Games
                     wrestlerTransform.localScale = new Vector3(1.1f, 1.1f, 1f);
                     BeatAction.New(instance.gameObject, new List<BeatAction.Action>()
                     {
-                        new BeatAction.Action(cond.songPositionInBeats + 0.1f, delegate { wrestlerTransform.localScale = new Vector3(1f, 1f, 1f); }),
+                        new BeatAction.Action(cond.songPositionInBeatsAsDouble + 0.1f, delegate { wrestlerTransform.localScale = new Vector3(1f, 1f, 1f); }),
                     });
                 }
             }
@@ -244,7 +244,7 @@ namespace HeavenStudio.Games
             {
                 if (currentZoomIndex < allCameraEvents.Count && currentZoomIndex >= 0)
                 {
-                    if (Conductor.instance.songPositionInBeats >= allCameraEvents[currentZoomIndex].beat)
+                    if (Conductor.instance.songPositionInBeatsAsDouble >= allCameraEvents[currentZoomIndex].beat)
                     {
                         UpdateCameraZoom();
                         currentZoomIndex++;
@@ -293,7 +293,7 @@ namespace HeavenStudio.Games
 
         }
 
-        public void ToggleBop(float beat, float length, bool startBopping, bool autoBop)
+        public void ToggleBop(double beat, float length, bool startBopping, bool autoBop)
         {
             shouldBop = autoBop;
             if (startBopping)
@@ -333,7 +333,7 @@ namespace HeavenStudio.Games
             }
         }
 
-        public void Question(float beat, bool alt, int questionVariant, float length = 4f)
+        public void Question(double beat, bool alt, int questionVariant, float length = 4f)
         {
             if (length <= 2f) return;
             int currentQuestion = questionVariant;
@@ -367,7 +367,7 @@ namespace HeavenStudio.Games
             ThatTrue(beat + totalExtend, currentQuestion);
         }
 
-        public void PreQuestion(float beat, int questionVariant, float length = 4f)
+        public void PreQuestion(double beat, int questionVariant, float length = 4f)
         {
             if (GameManager.instance.currentGame != "ringside") return;
             if (instance == null) return;
@@ -383,7 +383,7 @@ namespace HeavenStudio.Games
             }
         }
 
-        public void ThatTrue(float beat, int currentQuestion)
+        public void ThatTrue(double beat, int currentQuestion)
         {
             MultiSound.Play(new MultiSound.Sound[]
             {
@@ -397,7 +397,7 @@ namespace HeavenStudio.Games
             });
         }
 
-        public void BigGuy(float beat, int questionVariant)
+        public void BigGuy(double beat, int questionVariant)
         {
             int currentQuestion = questionVariant;
             if (currentQuestion == (int)QuestionVariant.Random) currentQuestion = UnityEngine.Random.Range(1, 4);
@@ -421,7 +421,7 @@ namespace HeavenStudio.Games
             });
         }
 
-        public static void PoseForTheFans(float beat, bool and, int variant, bool keepZoomedOut, float newspaperBeats)
+        public static void PoseForTheFans(double beat, bool and, int variant, bool keepZoomedOut, float newspaperBeats)
         {
             if (and)
             {
@@ -449,7 +449,7 @@ namespace HeavenStudio.Games
             }
         }
 
-        public void QueuePose(float beat, bool keepZoomedOut, float newspaperBeats)
+        public void QueuePose(double beat, bool keepZoomedOut, float newspaperBeats)
         {
             if (newspaperBeats > 0)
             {
@@ -593,7 +593,7 @@ namespace HeavenStudio.Games
             }
         }
 
-        public void PoseCheck(float beat)
+        public void PoseCheck(double beat)
         {
             ScheduleInput(beat, 2f, InputType.STANDARD_ALT_DOWN, JustPoseForTheFans, MissPose, Nothing);
         }

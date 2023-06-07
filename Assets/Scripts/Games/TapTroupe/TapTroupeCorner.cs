@@ -63,7 +63,7 @@ namespace HeavenStudio.Games.Scripts_TapTroupe
             bodyAnim.DoScaledAnimationAsync("OkaySign", 0.25f);
         }
 
-        public void PartyPopper(float beat)
+        public void PartyPopper(double beat)
         {
             bodyAnim.Play("PartyPopperReady", 0, 0);
             BeatAction.New(game.gameObject, new List<BeatAction.Action>()

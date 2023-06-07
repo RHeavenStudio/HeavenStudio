@@ -16,12 +16,12 @@ namespace HeavenStudio.Games.Scripts_SpaceSoccer
         private bool kickPrepare = false;
         public bool kickLeft;
         bool kickLeftWhiff;
-        public float dispenserBeat; //unused
+        public double dispenserBeat; //unused
         public int kickTimes = 0;
         public bool player;
         private string animName = "Enter";
         private float animLength;
-        private float animStartBeat;
+        private double animStartBeat;
         private EasingFunction.Ease ease;
         bool stopBall;
 
@@ -39,7 +39,7 @@ namespace HeavenStudio.Games.Scripts_SpaceSoccer
             anim = GetComponent<Animator>();
         }
 
-        public void SetAnimParams(float beat, float length, string anim, int easeToPut)
+        public void SetAnimParams(double beat, float length, string anim, int easeToPut)
         {
             animStartBeat = beat;
             animLength = length;
@@ -50,7 +50,7 @@ namespace HeavenStudio.Games.Scripts_SpaceSoccer
             enterExitAnim.DoNormalizedAnimation(animName, newAnimPos);
         }
 
-        public void DispenseBall(float beat)
+        public void DispenseBall(double beat)
         {
             if (player)
             {
@@ -58,8 +58,8 @@ namespace HeavenStudio.Games.Scripts_SpaceSoccer
             }
             else
             {
-                float beatToKick = beat + ball.GetAnimLength(Ball.State.Dispensing);
-                if (beatToKick < Conductor.instance.songPositionInBeats) beatToKick = ball.nextAnimBeat;
+                double beatToKick = beat + ball.GetAnimLength(Ball.State.Dispensing);
+                if (beatToKick < Conductor.instance.songPositionInBeatsAsDouble) beatToKick = ball.nextAnimBeat;
                 if (ball.state == Ball.State.HighKicked)
                 {
                     BeatAction.New(this.gameObject, new List<BeatAction.Action>()
@@ -242,7 +242,7 @@ namespace HeavenStudio.Games.Scripts_SpaceSoccer
             var highKicks = GameManager.instance.Beatmap.Entities.FindAll(c => c.datamodel == "spaceSoccer/high kick-toe!");
             for (int i = 0; i < highKicks.Count; i++)
             {
-                if ((highKicks[i].beat - 0.15f) <= Conductor.instance.songPositionInBeats && highKicks[i].beat + 1f > Conductor.instance.songPositionInBeats)
+                if ((highKicks[i].beat - 0.15f) <= Conductor.instance.songPositionInBeatsAsDouble && highKicks[i].beat + 1f > Conductor.instance.songPositionInBeatsAsDouble)
                 {
                     canHighKick = true;
                     canKick = false;
@@ -288,7 +288,7 @@ namespace HeavenStudio.Games.Scripts_SpaceSoccer
             }
         }
 
-        private void KickCheck(bool hit,  bool overrideState = false, float beat = 0f)
+        private void KickCheck(bool hit,  bool overrideState = false, double beat = 0f)
         {
             if (stopBall) return;
             if (canHighKick)
