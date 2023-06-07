@@ -402,19 +402,19 @@ namespace HeavenStudio.Games
         private void SqueezeHit(PlayerActionEvent caller, float state)
         {
             octopodes[2].OctoAction("Squeeze");
-            if (state <= -1f || state >= 1f) Jukebox.PlayOneShotGame("nearMiss");
+            if (state <= -1f || state >= 1f) SoundByte.PlayOneShotGame("nearMiss");
         }
 
         private void ReleaseHit(PlayerActionEvent caller, float state)
         {
             octopodes[2].OctoAction("Release");
-            if (state <= -1f || state >= 1f) Jukebox.PlayOneShotGame("nearMiss");
+            if (state <= -1f || state >= 1f) SoundByte.PlayOneShotGame("nearMiss");
         }
 
         private void PopHit(PlayerActionEvent caller, float state)
         {
             octopodes[2].OctoAction("Pop");
-            if (state <= -1f || state >= 1f) Jukebox.PlayOneShotGame("nearMiss");
+            if (state <= -1f || state >= 1f) SoundByte.PlayOneShotGame("nearMiss");
         }
 
         private void Miss(PlayerActionEvent caller) { }

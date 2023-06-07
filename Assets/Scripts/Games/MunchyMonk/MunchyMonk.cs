@@ -525,7 +525,7 @@ namespace HeavenStudio.Games
 
         public void PlayMonkAnimInactive(bool vineBoom)
         {
-            if (vineBoom) Jukebox.PlayOneShotGame("fanClub/arisa_dab", forcePlay: true);
+            if (vineBoom) SoundByte.PlayOneShotGame("fanClub/arisa_dab", forcePlay: true);
         }
 
         public void MonkMove(float beat, float length, int goToSide, int ease)
