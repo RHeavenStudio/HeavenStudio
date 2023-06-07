@@ -287,6 +287,7 @@ namespace HeavenStudio.Editor
                     catch (System.Exception e)
                     {
                         Debug.Log($"Error selecting music file: {e.Message}");
+                        Debug.LogException(e);
                         return;
                     }
                 }
