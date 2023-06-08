@@ -16,6 +16,10 @@ namespace HeavenStudio
         public static GlobalGameManager instance { get; set; }
         [SerializeField] Image fadeImage;
         [SerializeField] TMP_Text loadingText;
+        [SerializeField] GameObject errorPanel;
+        [SerializeField] TMP_Text errorHeader;
+        [SerializeField] TMP_Text errorMsg;
+        [SerializeField] TMP_Text errorBuild;
 
         public static string buildTime = "00/00/0000 00:00:00";
 
