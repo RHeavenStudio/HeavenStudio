@@ -74,6 +74,8 @@ namespace HeavenStudio
         private float timelinePitch = 1f;
         private float minigamePitch = 1f;
         public float SongPitch { get => isPaused ? 0f : (timelinePitch * minigamePitch); }
+        private float musicScheduledPitch = 1f;
+        private double musicScheduledTime = 0;
 
         public void SetTimelinePitch(float pitch)
         {
@@ -111,72 +113,43 @@ namespace HeavenStudio
 
         public void Play(double beat)
         {
+            var chart = GameManager.instance.Beatmap;
+            double offset = chart.data.offset;
+            bool negativeOffset = offset < 0;
+            double dspTime = AudioSettings.dspTime;
             GameManager.instance.SortEventsList();
-            bool negativeOffset = firstBeatOffset < 0f;
-            bool negativeStartTime = false;
 
-            // Debug.Log("starting playback @ beat " + beat + ", offset is " + firstBeatOffset);
+            double startPos = GetSongPosFromBeat(beat);
+            time = startPos;
 
-            var startPos = GetSongPosFromBeat(beat);
-            if (negativeOffset)
+            if (musicSource.clip != null && startPos < musicSource.clip.length - offset)
             {
-                time = startPos;
-            }
-            else
-            {
-                negativeStartTime = startPos - firstBeatOffset < 0f;
-
-                if (negativeStartTime)
-                    time = startPos - firstBeatOffset;
-                else
-                    time = startPos;
-            }
-            
-            songPos = time;
-            songPosBeat = GetBeatFromSongPos(time - firstBeatOffset);
-            // Debug.Log("corrected starting playback @ beat " + songPosBeat);
-
-            isPlaying = true;
-            isPaused = false;
-
-            if (SongPosLessThanClipLength(startPos))
-            {
-                if (negativeOffset)
+                // https://www.desmos.com/calculator/81ywfok6xk
+                double musicStartDelay = -offset - startPos;
+                if (musicStartDelay > 0)
                 {
-                    var musicStartTime = startPos + firstBeatOffset;
-
-                    if (musicStartTime < 0f)
-                    {
-                        musicSource.time = (float) startPos;
-                        musicSource.PlayScheduled(AudioSettings.dspTime - firstBeatOffset / SongPitch);
-                    }
-                    else
-                    {
-                        musicSource.time = (float) musicStartTime;
-                        musicSource.PlayScheduled(AudioSettings.dspTime);
-                    }
+                    musicSource.time = 0;
+                    // this can break if the user changes pitch before the audio starts playing
+                    musicScheduledTime = dspTime + musicStartDelay / SongPitch;
+                    musicScheduledPitch = SongPitch;
+                    musicSource.PlayScheduled(musicScheduledTime);
                 }
                 else
                 {
-                    if (negativeStartTime)
-                    {
-                        musicSource.time = (float) startPos;
-                    }  
-                    else
-                    {
-                        musicSource.time = (float) (startPos + firstBeatOffset);
-                    }
-
-                    musicSource.PlayScheduled(AudioSettings.dspTime);
+                    musicSource.time = (float)-musicStartDelay;
+                    musicSource.PlayScheduled(dspTime);
                 }
             }
+
+            songPosBeat = GetBeatFromSongPos(time);
             startTime = DateTime.Now;
             lastAbsTime = (DateTime.Now - startTime).TotalSeconds;
             lastDspTime = AudioSettings.dspTime;
-            dspStart = AudioSettings.dspTime;
-            startBeat = beat;
-
-            // GameManager.instance.SetCurrentEventToClosest(songPositionInBeats);
+            dspStart = dspTime;
+            startBeat = songPosBeat;
+            
+            isPlaying = true;
+            isPaused = false;
         }
 
         public void Pause()
@@ -216,6 +189,23 @@ namespace HeavenStudio
         {
             if (isPlaying)
             {
+                if (AudioSettings.dspTime < musicScheduledTime && musicScheduledPitch != SongPitch)
+                {
+                    if (SongPitch == 0f)
+                    {
+                        musicSource.Pause();
+                    }
+                    else
+                    {
+                        if (musicScheduledPitch == 0f)
+                            musicSource.UnPause();
+                        musicScheduledPitch = SongPitch;
+
+                        musicScheduledTime = (AudioSettings.dspTime + (-GameManager.instance.Beatmap.data.offset - songPositionAsDouble)/(double)SongPitch);
+                        musicSource.SetScheduledStartTime(musicScheduledTime);
+                    }
+                }
+
                 absTime = (DateTime.Now - startTime).TotalSeconds;
                 dspTime = AudioSettings.dspTime - dspStart;
                 double dt = deltaTimeReal;
