@@ -257,7 +257,7 @@ TextureImporter:
         serializedVersion: 2
         x: 418
         y: 999
-        width: 296
+        width: 220
         height: 148
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
@@ -1218,7 +1218,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: NightWalkGBA_53
+      name: platform
       rect:
         serializedVersion: 2
         x: 264
@@ -1239,13 +1239,13 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: NightWalkGBA_54
+      name: jumplat2
       rect:
         serializedVersion: 2
-        x: 915
+        x: 888
         y: 0
-        width: 148
-        height: 1437
+        width: 202
+        height: 1444
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -1344,13 +1344,13 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: NightWalkGBA_59
+      name: jumpplat1
       rect:
         serializedVersion: 2
-        x: 1118
-        y: 1
-        width: 97
-        height: 1391
+        x: 1067
+        y: 0
+        width: 202
+        height: 1444
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -1407,7 +1407,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: NightWalkGBA_62
+      name: light
       rect:
         serializedVersion: 2
         x: 488
@@ -1574,6 +1574,27 @@ TextureImporter:
       indices: 
       edges: []
       weights: []
+    - serializedVersion: 2
+      name: jumplat3
+      rect:
+        serializedVersion: 2
+        x: 672
+        y: 0
+        width: 202
+        height: 1444
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: fd9616c17cc0bf14abfb0c54fc981683
+      internalID: -199434903
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
     outline: []
     physicsShape: []
     bones: []
@@ -1629,17 +1650,13 @@ TextureImporter:
       NightWalkGBA_49: -1115354204
       NightWalkGBA_5: 1455939149
       NightWalkGBA_52: -867128651
-      NightWalkGBA_53: 1193791270
-      NightWalkGBA_54: 2115410046
       NightWalkGBA_55: 1321917234
       NightWalkGBA_56: 185895591
       NightWalkGBA_57: 1545199381
       NightWalkGBA_58: 570068404
-      NightWalkGBA_59: 629073624
       NightWalkGBA_6: 572682246
       NightWalkGBA_60: -1055323021
       NightWalkGBA_61: 2140544610
-      NightWalkGBA_62: -1879352647
       NightWalkGBA_63: -405823323
       NightWalkGBA_64: 1313748795
       NightWalkGBA_65: 1128627772
@@ -1655,6 +1672,11 @@ TextureImporter:
       bp: 529839015
       br: 592522720
       by: 2115022471
+      jumplat2: 2115410046
+      jumplat3: -199434903
+      jumpplat1: 629073624
+      light: -1879352647
+      platform: 1193791270
   spritePackingTag: 
   pSDRemoveMatte: 0
   pSDShowRemoveMatteOption: 0
