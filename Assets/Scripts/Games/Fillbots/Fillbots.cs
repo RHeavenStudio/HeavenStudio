@@ -38,6 +38,7 @@ namespace HeavenStudio.Games
 
         [Header("Components")]
         [SerializeField] private NtrFillbot mediumBot;
+        [SerializeField] private Animator filler;
 
         public static Fillbots instance;
 
@@ -94,6 +95,13 @@ namespace HeavenStudio.Games
             NtrFillbot spawnedBot = Instantiate(mediumBot, transform);
             spawnedBot.holdLength = holdLength;
             spawnedBot.Init(beat);
+            BeatAction.New(instance.gameObject, new List<BeatAction.Action>()
+            {
+                new BeatAction.Action(beat + 3, delegate
+                {
+                    filler.DoScaledAnimationAsync("FillerPrepare", 0.5f);
+                })
+            });
         }
     }
 }
