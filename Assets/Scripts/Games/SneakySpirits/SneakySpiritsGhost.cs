@@ -16,7 +16,7 @@ namespace HeavenStudio.Games.Scripts_SneakySpirits
             game = SneakySpirits.instance;
         }
 
-        public void Init(float spawnBeat, float length)
+        public void Init(double spawnBeat, float length)
         {
             BeatAction.New(game.gameObject, new List<BeatAction.Action>()
             {

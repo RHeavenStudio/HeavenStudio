@@ -33,7 +33,7 @@ namespace HeavenStudio.Games.Scripts_TossBoys
             else if (!anim.IsPlayingAnimationName(prefix + "Whiff") && !anim.IsPlayingAnimationName(prefix + "Miss"))
             {
                 DoAnimationScaledAsync("Whiff", 0.5f);
-                Jukebox.PlayOneShotGame("tossBoys/whiff");
+                SoundByte.PlayOneShotGame("tossBoys/whiff");
             }
         }
 
@@ -72,7 +72,7 @@ namespace HeavenStudio.Games.Scripts_TossBoys
             DoAnimationScaledAsync("Barely", 0.5f);
         }
 
-        public void ShowArrow(float startBeat, float length)
+        public void ShowArrow(double startBeat, float length)
         {
             BeatAction.New(game.gameObject, new List<BeatAction.Action>(){
                 new BeatAction.Action(startBeat, delegate { arrow.SetActive(true); }),

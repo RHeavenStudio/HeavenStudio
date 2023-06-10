@@ -174,7 +174,7 @@ namespace HeavenStudio.Games
     {
         public static MarchingOrders instance;
 
-        static List<float> queuedMarches = new List<float>();
+        static List<double> queuedMarches = new();
 
         [Header("Animators")]
         [SerializeField] Animator Sarge;
@@ -198,9 +198,9 @@ namespace HeavenStudio.Games
         bool keepMarching;
         private int marchOtherCount;
         private int marchPlayerCount;
-        private float lastMissBeat;
-        private float lastReportedBeat;
-        public static float wantMarch = float.MinValue;
+        private double lastMissBeat;
+        private double lastReportedBeat;
+        public static double wantMarch = double.MinValue;
         
 
         public enum Direction
@@ -233,12 +233,12 @@ namespace HeavenStudio.Games
         {
             for (int i = 0; i < BackgroundRecolorable.Length; i++) BackgroundRecolorable[i].color = i == 0 ? BGColor1 : BGColor2;
             
-            if (wantMarch != float.MinValue) {
+            if (wantMarch != double.MinValue) {
                 queuedMarches.Add(wantMarch);
                 marchOtherCount =
                 marchPlayerCount = 0;
                 keepMarching = true;
-                wantMarch = float.MinValue;
+                wantMarch = double.MinValue;
             }
 
             if (goBop && Conductor.instance.ReportBeat(ref lastReportedBeat)) {
@@ -256,7 +256,7 @@ namespace HeavenStudio.Games
                             new BeatAction.Action(march + 1, delegate {
                                 marchOtherCount++;
                                 foreach (var cadet in Cadets) cadet.DoScaledAnimationAsync(marchOtherCount % 2 != 0 ? "MarchR" : "MarchL", 0.5f);
-                                Jukebox.PlayOneShotGame("marchingOrders/stepOther");
+                                SoundByte.PlayOneShotGame("marchingOrders/stepOther");
                                 if (keepMarching) queuedMarches.Add(march + 1);
                             }),
                         });
@@ -317,8 +317,8 @@ namespace HeavenStudio.Games
 
         void TurnSuccess(float state, string dir, bool shouldPoint = false)
         {
-            if (state <= -1f || state >= 1f) Jukebox.PlayOneShot("nearMiss");
-            else Jukebox.PlayOneShotGame("marchingOrders/turnActionPlayer");
+            if (state <= -1f || state >= 1f) SoundByte.PlayOneShot("nearMiss");
+            else SoundByte.PlayOneShotGame("marchingOrders/turnActionPlayer");
 
             CadetHeadPlayer.DoScaledAnimationAsync("Face"+dir, 0.5f);
             if (shouldPoint) CadetPlayer.DoScaledAnimationAsync("Point"+dir, 0.5f);
@@ -326,35 +326,35 @@ namespace HeavenStudio.Games
 
         public void GenericMiss(PlayerActionEvent caller)
         {
-            if (Conductor.instance.songPositionInBeats - lastMissBeat <= 1.1f) return;
+            if (Conductor.instance.songPositionInBeatsAsDouble - lastMissBeat <= 1.1f) return;
             Miss();
         }
 
         public void Miss()
         {
-            lastMissBeat = Conductor.instance.songPositionInBeats;
-            Jukebox.PlayOneShot("miss");
+            lastMissBeat = Conductor.instance.songPositionInBeatsAsDouble;
+            SoundByte.PlayOneShot("miss");
             Sarge.DoScaledAnimationAsync("Anger", 0.5f);
             Steam.DoScaledAnimationAsync("Steam", 0.5f);
         }
 
         public void MarchHit(PlayerActionEvent caller, float state)
         {
-            if (state <= -1f || state >= 1f) Jukebox.PlayOneShot("nearMiss");
-            else Jukebox.PlayOneShotGame("marchingOrders/stepPlayer", volume: 0.25f);
+            if (state <= -1f || state >= 1f) SoundByte.PlayOneShot("nearMiss");
+            else SoundByte.PlayOneShotGame("marchingOrders/stepPlayer", volume: 0.25f);
             marchPlayerCount++;
             CadetPlayer.DoScaledAnimationAsync(marchPlayerCount % 2 != 0 ? "MarchR" : "MarchL", 0.5f);
         }
 
         public void HaltHit(PlayerActionEvent caller, float state)
         {
-            if (state <= -1f || state >= 1f) Jukebox.PlayOneShot("nearMiss");
-            else Jukebox.PlayOneShotGame("marchingOrders/stepPlayer", volume: 0.25f);
+            if (state <= -1f || state >= 1f) SoundByte.PlayOneShot("nearMiss");
+            else SoundByte.PlayOneShotGame("marchingOrders/stepPlayer", volume: 0.25f);
             
             CadetPlayer.DoScaledAnimationAsync("Halt", 0.5f);
         }
 
-        public void BopAction(float beat, float length, bool shouldBop, bool autoBop, bool clap)
+        public void BopAction(double beat, float length, bool shouldBop, bool autoBop, bool clap)
         {
             goBop = autoBop;
             shouldClap = clap;
@@ -370,16 +370,16 @@ namespace HeavenStudio.Games
             }
         }
 
-        public void SargeAttention(float beat)
+        public void SargeAttention(double beat)
         {
             BeatAction.New(gameObject, new List<BeatAction.Action>() {
                 new BeatAction.Action(beat + 0.25f, delegate { Sarge.DoScaledAnimationAsync("Talk", 0.5f);}),
             });
         }
         
-        public static void SargeMarch(float beat, bool noVoice)
+        public static void SargeMarch(double beat, bool noVoice)
         {
-            if (MarchingOrders.wantMarch != float.MinValue) return;
+            if (MarchingOrders.wantMarch != double.MinValue) return;
             MarchingOrders.wantMarch = beat + 1;
 
             if (!noVoice) PlaySoundSequence("marchingOrders", "susume", beat);
@@ -390,7 +390,7 @@ namespace HeavenStudio.Games
             }
         }
 
-        public void ForceMarching(float beat, float length)
+        public void ForceMarching(double beat, float length)
         {
             for (int i = 0; i < length; i++) {
                 ScheduleInput(beat + i - 1, 1f, InputType.STANDARD_DOWN, MarchHit, GenericMiss, Empty);
@@ -398,13 +398,13 @@ namespace HeavenStudio.Games
                     new BeatAction.Action(beat + i, delegate {
                         marchOtherCount++;
                         foreach (var cadet in Cadets) cadet.DoScaledAnimationAsync(marchOtherCount % 2 != 0 ? "MarchR" : "MarchL", 0.5f);
-                        Jukebox.PlayOneShotGame("marchingOrders/stepOther");
+                        SoundByte.PlayOneShotGame("marchingOrders/stepOther");
                     }),
                 });
             }
         }
 
-        public void PreMarch(float beat)
+        public void PreMarch(double beat)
         {
             BeatAction.New(gameObject, new List<BeatAction.Action>()
             {
@@ -415,7 +415,7 @@ namespace HeavenStudio.Games
             });
         }
         
-        public void Halt(float beat)
+        public void Halt(double beat)
         {
             keepMarching = false;
             HaltSound(beat);            
@@ -428,7 +428,7 @@ namespace HeavenStudio.Games
             });
         }
         
-        public void FaceTurn(float beat, int direction, bool isFast, bool shouldPoint)
+        public void FaceTurn(double beat, int direction, bool isFast, bool shouldPoint)
         {
             // x is true if the direction is right
             bool x = (direction == 0);
@@ -491,12 +491,12 @@ namespace HeavenStudio.Games
             }
         }
 
-        public static void AttentionSound(float beat)
+        public static void AttentionSound(double beat)
         {
             PlaySoundSequence("marchingOrders", "zentai", beat - 1);
         }
         
-        public static void HaltSound(float beat)
+        public static void HaltSound(double beat)
         {
             PlaySoundSequence("marchingOrders", "tomare", beat);
         }

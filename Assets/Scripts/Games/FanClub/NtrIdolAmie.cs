@@ -25,11 +25,11 @@ namespace HeavenStudio.Games.Scripts_FanClub
         public Material coreMat;
 
         Animator anim;
-        float startStepBeat = float.MaxValue;
+        double startStepBeat = double.MaxValue;
         float stepLength = 16f;
         bool exiting = false;
         int currentAnim = 0;
-        float startJumpTime = float.MinValue;
+        double startJumpTime = double.MinValue;
         bool hasJumped = false;
 
         const int StepCount = 8;
@@ -41,14 +41,14 @@ namespace HeavenStudio.Games.Scripts_FanClub
             if (cond.songPositionInBeatsAsDouble >= startStepBeat + stepLength)
             {
                 FinishEntrance(exiting);
-                startStepBeat = float.MaxValue;
+                startStepBeat = double.MaxValue;
                 currentAnim = 0;
             }
             else if (cond.songPositionInBeatsAsDouble >= startStepBeat)
             {
                 currentAnim = (int)((cond.songPositionInBeatsAsDouble - startStepBeat) / (stepLength / AnimCount));
-                float startAnimBeat = startStepBeat + (stepLength / AnimCount) * currentAnim;
-                float endAnimBeat = startAnimBeat + (stepLength / AnimCount);
+                double startAnimBeat = startStepBeat + (stepLength / AnimCount) * currentAnim;
+                double endAnimBeat = startAnimBeat + (stepLength / AnimCount);
                 float prog = (float)((cond.songPositionInBeatsAsDouble - startAnimBeat - 0.75) / (endAnimBeat - startAnimBeat));
                 prog = Mathf.Clamp01(prog * 4);
                 if (exiting)
@@ -64,12 +64,12 @@ namespace HeavenStudio.Games.Scripts_FanClub
                     rootTransform.transform.localPosition = new Vector3(startPostion + stepDistance * currentAnim + stepDistance * prog, rootYPos);
             }
 
-            if (startStepBeat == float.MaxValue)
+            if (startStepBeat == double.MaxValue)
             {
                 //idol jumping physics
                 float jumpPos = cond.GetPositionFromBeat(startJumpTime, 1f);
                 float IDOL_SHADOW_SCALE = 1.18f;
-                if (cond.songPositionInBeats >= startJumpTime && cond.songPositionInBeats < startJumpTime + 1f)
+                if (cond.songPositionInBeatsAsDouble >= startJumpTime && cond.songPositionInBeatsAsDouble < startJumpTime + 1f)
                 {
                     hasJumped = true;
                     float yMul = jumpPos * 2f - 1f;
@@ -111,7 +111,7 @@ namespace HeavenStudio.Games.Scripts_FanClub
             anim = GetComponent<Animator>();
         }
 
-        public void StartEntrance(float beat, float length, bool exit) {
+        public void StartEntrance(double beat, float length, bool exit) {
             gameObject.SetActive(true);
             rootTransform.SetActive(true);
             shadow.SetActive(true);
@@ -156,9 +156,9 @@ namespace HeavenStudio.Games.Scripts_FanClub
                 coreMat.SetColor("_Color", new Color(117/255f, 177/255f, 209/255f, 1));
         }
 
-        public void DoIdolJump(float beat)
+        public void DoIdolJump(double beat)
         {
-            if (startStepBeat != float.MaxValue) return;
+            if (startStepBeat != double.MaxValue) return;
             if (!gameObject.activeInHierarchy) return;
             startJumpTime = beat;
 
@@ -170,11 +170,11 @@ namespace HeavenStudio.Games.Scripts_FanClub
             });
         }
 
-        public void PlayAnim(float beat, float length, int type)
+        public void PlayAnim(double beat, float length, int type)
         {
-            if (startStepBeat != float.MaxValue) return;
+            if (startStepBeat != double.MaxValue) return;
             if (!gameObject.activeInHierarchy) return;
-            startJumpTime = float.MinValue;
+            startJumpTime = double.MinValue;
             // DisableResponse(beat, length + 0.5f);
             // DisableBop(beat, length + 0.5f);
             // DisableCall(beat, length + 0.5f);
@@ -223,7 +223,7 @@ namespace HeavenStudio.Games.Scripts_FanClub
 
         public void PlayAnimState(string state)
         {
-            if (startStepBeat != float.MaxValue) return;
+            if (startStepBeat != double.MaxValue) return;
             if (!gameObject.activeInHierarchy) return;
             anim.Play(state, -1, 0);
         }

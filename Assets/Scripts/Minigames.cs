@@ -7,6 +7,8 @@ using DG.Tweening;
 using HeavenStudio.Util;
 using HeavenStudio.Editor.Track;
 using HeavenStudio.Games;
+using Jukebox;
+using Jukebox.Legacy;
 
 using System;
 using System.Linq;
@@ -18,6 +20,204 @@ namespace HeavenStudio
     
     public class Minigames
     {
+        
+        public static void InitPreprocessor()
+        {
+            RiqBeatmap.OnUpdateBeatmap += PreProcessBeatmap;
+        }
+
+        public static Dictionary<string, object> propertiesModel = new() 
+            {
+                // mapper set properties? (future: use this to flash the button)
+                {"propertiesmodified", false},
+
+                ////// CATEGORY 1: SONG INFO
+                // general chart info
+                {"remixtitle", "New Remix"},        // chart name
+                {"remixauthor", "Your Name"},       // charter's name
+                {"remixdesc", "Remix Description"}, // chart description
+                {"remixlevel", 1},                  // chart difficulty (maybe offer a suggestion but still have the mapper determine it)
+                {"remixtempo", 120f},               // avg. chart tempo
+                {"remixtags", ""},                  // chart tags
+                {"icontype", 0},                    // chart icon (presets, custom - future)
+                {"iconurl", ""},                    // custom icon location (future)
+                {"challengetype", 0},               // perfect challenge type
+
+                // chart song info
+                {"idolgenre", "Song Genre"},        // song genre
+                {"idolsong", "Song Name"},          // song name
+                {"idolcredit", "Artist"},           // song artist
+
+                ////// CATEGORY 2: PROLOGUE AND EPILOGUE
+                // chart prologue
+                {"prologuetype", 0},                // prologue card animation (future)
+                {"prologuecaption", "Remix"},       // prologue card sub-title (future)
+
+                // chart results screen messages
+                {"resultcaption", "Rhythm League Notes"},                       // result screen header
+                {"resultcommon_hi", "Good rhythm."},                            // generic "Superb" message (one-liner, or second line for single-type)
+                {"resultcommon_ok", "Eh. Passable."},                           // generic "OK" message (one-liner, or second line for single-type)
+                {"resultcommon_ng", "Try harder next time."},                   // generic "Try Again" message (one-liner, or second line for single-type)
+
+                    // the following are shown / hidden in-editor depending on the tags of the games used
+                {"resultnormal_hi", "You show strong fundamentals."},           // "Superb" message for normal games (two-liner)
+                {"resultnormal_ng", "Work on your fundamentals."},              // "Try Again" message for normal games (two-liner)
+
+                {"resultkeep_hi", "You kept the beat well."},                   // "Superb" message for keep-the-beat games (two-liner)
+                {"resultkeep_ng", "You had trouble keeping the beat."},         // "Try Again" message for keep-the-beat games (two-liner)
+
+                {"resultaim_hi", "You had great aim."},                         // "Superb" message for aim games (two-liner)
+                {"resultaim_ng", "Your aim was a little shaky."},               // "Try Again" message for aim games (two-liner)
+
+                {"resultrepeat_hi", "You followed the example well."},          // "Superb" message for call-and-response games (two-liner)
+                {"resultrepeat_ng", "Next time, follow the example better."},   // "Try Again" message for call-and-response games (two-liner)
+            };
+
+        /// <summary>
+        /// processes an riq beatmap after it is loaded
+        /// </summary>
+        public static RiqBeatmapData? PreProcessBeatmap(string version, RiqBeatmapData data)
+        {
+            Debug.Log("Preprocessing beatmap...");
+            Minigames.Minigame game;
+            Minigames.GameAction action;
+            System.Type type, pType;
+            foreach (var e in data.entities)
+            {
+                var gameName = e.datamodel.Split(0);
+                var actionName = e.datamodel.Split(1);
+                game = EventCaller.instance.GetMinigame(gameName);
+                if (game == null)
+                {
+                    Debug.LogWarning($"Unknown game {gameName} found in remix.json! Adding game...");
+                    game = new Minigames.Minigame(gameName, gameName.DisplayName() + " \n<color=#eb5454>[inferred from remix.json]</color>", "", false, false, new List<Minigames.GameAction>(), inferred: true);
+                    EventCaller.instance.minigames.Add(game);
+                    if (Editor.Editor.instance != null)
+                        Editor.Editor.instance.AddIcon(game);
+                }
+                action = EventCaller.instance.GetGameAction(game, actionName);
+                if (action == null)
+                {
+                    Debug.LogWarning($"Unknown action {gameName}/{actionName} found in remix.json! Adding action...");
+                    var parameters = new List<Minigames.Param>();
+                    foreach (var item in e.dynamicData)
+                    {
+                        var value = item.Value;
+                        if (value.GetType() == typeof(long))
+                            value = new EntityTypes.Integer(int.MinValue, int.MaxValue, (int)value);
+                        else if (value.GetType() == typeof(double))
+                            value = new EntityTypes.Float(float.NegativeInfinity, float.PositiveInfinity, (float)value);
+                        parameters.Add(new Minigames.Param(item.Key, value, item.Key, "[inferred from remix.json]"));
+                    }
+                    action = new Minigames.GameAction(actionName, actionName.DisplayName(), e.length, true, parameters);
+                    game.actions.Add(action);
+                }
+
+                //check each param of the action
+                if (action.parameters != null)
+                {
+                    foreach (var param in action.parameters)
+                    {
+                        type = param.parameter.GetType();
+                        //add property if it doesn't exist
+                        if (!e.dynamicData.ContainsKey(param.propertyName))
+                        {
+                            Debug.LogWarning($"Property {param.propertyName} does not exist in the entity's dynamic data! Adding...");
+                            if (type == typeof(EntityTypes.Integer))
+                                e.dynamicData.Add(param.propertyName, ((EntityTypes.Integer)param.parameter).val);
+                            else if (type == typeof(EntityTypes.Float))
+                                e.dynamicData.Add(param.propertyName, ((EntityTypes.Float)param.parameter).val);
+                            else if (type.IsEnum && param.propertyName != "ease")
+                                e.dynamicData.Add(param.propertyName, (int)param.parameter);
+                            else
+                                e.dynamicData.Add(param.propertyName, Convert.ChangeType(param.parameter, type));
+                            continue;
+                        }
+                        pType = e[param.propertyName].GetType();
+                        if (pType != type)
+                        {
+                            try
+                            {
+                                if (type == typeof(EntityTypes.Integer))
+                                    e.dynamicData[param.propertyName] = (int)e[param.propertyName];
+                                else if (type == typeof(EntityTypes.Float))
+                                    e.dynamicData[param.propertyName] = (float)e[param.propertyName];
+                                else if (type == typeof(Util.EasingFunction.Ease) && (pType == typeof(string) || pType == typeof(int) || pType == typeof(long)))
+                                {
+                                    if (pType == typeof(int) || pType == typeof(long) || pType == typeof(Jukebox.EasingFunction.Ease))
+                                    {
+                                        e.dynamicData[param.propertyName] = (Util.EasingFunction.Ease)e[param.propertyName];
+                                    }
+                                    else
+                                        e.dynamicData[param.propertyName] = Enum.Parse(typeof(Util.EasingFunction.Ease), (string)e[param.propertyName]);
+                                }
+                                else if (type.IsEnum)
+                                    e.dynamicData[param.propertyName] = (int)e[param.propertyName];
+                                else if (pType == typeof(Newtonsoft.Json.Linq.JObject))
+                                    e.dynamicData[param.propertyName] = e[param.propertyName].ToObject(type);
+                                else
+                                    e.dynamicData[param.propertyName] = Convert.ChangeType(e[param.propertyName], type);
+                            }
+                            catch
+                            {
+                                Debug.LogWarning($"Could not convert {param.propertyName} to {type}! Using default value...");
+                                // GlobalGameManager.ShowErrorMessage("Warning", $"Could not convert {e.datamodel}/{param.propertyName} to {type}! This will be loaded using the default value, so chart may be unstable.");
+                                // use default value
+                                if (type == typeof(EntityTypes.Integer))
+                                    e.dynamicData[param.propertyName] = ((EntityTypes.Integer)param.parameter).val;
+                                else if (type == typeof(EntityTypes.Float))
+                                    e.dynamicData[param.propertyName] = ((EntityTypes.Float)param.parameter).val;
+                                else if (type.IsEnum && param.propertyName != "ease")
+                                    e.dynamicData[param.propertyName] = (int)param.parameter;
+                                else
+                                    e.dynamicData[param.propertyName] = Convert.ChangeType(param.parameter, type);
+                            }
+                        }
+                    }
+                }
+            }
+
+            foreach (var tempo in data.tempoChanges)
+            {
+                tempo["tempo"] = (float)tempo["tempo"];
+                tempo["swing"] = (float)tempo["swing"];
+                if (tempo.dynamicData.ContainsKey("timeSignature"))
+                    tempo["timeSignature"] = (Vector2)tempo["timeSignature"];
+                else
+                    tempo.dynamicData.Add("timeSignature", new Vector2(4, 4));
+            }
+
+            foreach (var vol in data.volumeChanges)
+            {
+                vol["volume"] = (float)vol["volume"];
+                if (vol["fade"].GetType() == typeof(string))
+                    vol["fade"] = Enum.Parse(typeof(Util.EasingFunction.Ease), (string)vol["fade"]);
+                else
+                    vol["fade"] = (Util.EasingFunction.Ease)vol["fade"];
+            }
+
+            foreach (var section in data.beatmapSections)
+            {
+                section["sectionName"] = (string)section["sectionName"];
+                section["isCheckpoint"] = (bool)section["isCheckpoint"];
+                section["startPerfect"] = (bool)section["startPerfect"];
+                section["breakSection"] = (bool)section["breakSection"];
+                section["extendsPrevious"] = (bool)section["extendsPrevious"];
+                section["sectionWeight"] = (float)section["sectionWeight"];
+            }
+
+            //go thru each property of the model beatmap and add any missing keyvalue pair
+            foreach (var prop in propertiesModel)
+            {
+                if (!data.properties.ContainsKey(prop.Key))
+                {
+                    data.properties.Add(prop.Key, prop.Value);
+                }
+            }
+
+            return data;
+        }
+
         public class Minigame
         {
             
@@ -233,7 +433,7 @@ namespace HeavenStudio
         }
 
         public delegate void EventCallback();
-        public delegate void ParamChangeCallback(string paramName, object paramValue, DynamicBeatmap.DynamicEntity entity);
+        public delegate void ParamChangeCallback(string paramName, object paramValue, RiqEntity entity);
 
         // overengineered af but it's a modified version of
         // https://stackoverflow.com/a/19877141
@@ -307,7 +507,7 @@ namespace HeavenStudio
                             new Param("colorB", Color.white, "End Color"),
                             new Param("valA", new EntityTypes.Float(0, 1, 1), "Start Opacity"),
                             new Param("valB", new EntityTypes.Float(0, 1, 0), "End Opacity"),
-                            new Param("ease", EasingFunction.Ease.Linear, "Ease")
+                            new Param("ease", Util.EasingFunction.Ease.Linear, "Ease")
                         },
                         hidden: true
                     ),
@@ -316,7 +516,7 @@ namespace HeavenStudio
                         new Param("valA", new EntityTypes.Float(-50, 50, 0), "Right / Left"),
                         new Param("valB", new EntityTypes.Float(-50, 50, 0), "Up / Down"),
                         new Param("valC", new EntityTypes.Float(-0, 250, 10), "In / Out"),
-                        new Param("ease", EasingFunction.Ease.Linear, "Ease Type")
+                        new Param("ease", Util.EasingFunction.Ease.Linear, "Ease Type")
                     },
                     hidden: true ),
                     new GameAction("rotate camera", "", 1f, true, new List<Param>() 
@@ -324,7 +524,7 @@ namespace HeavenStudio
                         new Param("valA", new EntityTypes.Integer(-360, 360, 0), "Pitch"),
                         new Param("valB", new EntityTypes.Integer(-360, 360, 0), "Yaw"),
                         new Param("valC", new EntityTypes.Integer(-360, 360, 0), "Roll"),
-                        new Param("ease", EasingFunction.Ease.Linear, "Ease Type")
+                        new Param("ease", Util.EasingFunction.Ease.Linear, "Ease Type")
                     },
                     hidden: true ),
                 }),
@@ -396,7 +596,7 @@ namespace HeavenStudio
                             new Param("colorB", Color.white, "End Color"),
                             new Param("valA", new EntityTypes.Float(0, 1, 1), "Start Opacity"),
                             new Param("valB", new EntityTypes.Float(0, 1, 0), "End Opacity"),
-                            new Param("ease", EasingFunction.Ease.Linear, "Ease")
+                            new Param("ease", Util.EasingFunction.Ease.Linear, "Ease")
                         }
                     ),
                     new GameAction("filter", "Filter", 1f, true,
@@ -413,7 +613,7 @@ namespace HeavenStudio
                             new Param("valA", new EntityTypes.Float(-50, 50, 0), "Right / Left", "Next position on the X axis"),
                             new Param("valB", new EntityTypes.Float(-50, 50, 0), "Up / Down", "Next position on the Y axis"),
                             new Param("valC", new EntityTypes.Float(-0, 250, 10), "In / Out", "Next position on the Z axis"),
-                            new Param("ease", EasingFunction.Ease.Linear, "Ease Type"),
+                            new Param("ease", Util.EasingFunction.Ease.Linear, "Ease Type"),
                             new Param("axis", GameCamera.CameraAxis.All, "Axis", "The axis to move the camera on" )
                         }
                     ),
@@ -422,7 +622,7 @@ namespace HeavenStudio
                             new Param("valA", new EntityTypes.Integer(-360, 360, 0), "Pitch", "Next rotation on the X axis"),
                             new Param("valB", new EntityTypes.Integer(-360, 360, 0), "Yaw", "Next rotation on the Y axis"),
                             new Param("valC", new EntityTypes.Integer(-360, 360, 0), "Roll", "Next rotation on the Z axis"),
-                            new Param("ease", EasingFunction.Ease.Linear, "Ease Type"),
+                            new Param("ease", Util.EasingFunction.Ease.Linear, "Ease Type"),
                             new Param("axis", GameCamera.CameraAxis.All, "Axis", "The axis to move the camera on" )
                         } 
                     ),
@@ -430,21 +630,21 @@ namespace HeavenStudio
                         {
                             new Param("valA", new EntityTypes.Float(-50, 50, 0), "Right / Left", "Next position on the X axis"),
                             new Param("valB", new EntityTypes.Float(-50, 50, 0), "Up / Down", "Next position on the Y axis"),
-                            new Param("ease", EasingFunction.Ease.Linear, "Ease Type"),
+                            new Param("ease", Util.EasingFunction.Ease.Linear, "Ease Type"),
                             new Param("axis", StaticCamera.ViewAxis.All, "Axis", "The axis to pan the viewport in" )
                         }
                     ),
                     new GameAction("rotate view", "Rotate Viewport", 1f, true, new List<Param>() 
                         {
                             new Param("valA", new EntityTypes.Float(-360, 360, 0), "Rotation", "Next viewport rotation"),
-                            new Param("ease", EasingFunction.Ease.Linear, "Ease Type"),
+                            new Param("ease", Util.EasingFunction.Ease.Linear, "Ease Type"),
                         }
                     ),
                     new GameAction("scale view", "Scale Viewport", 1f, true, new List<Param>() 
                         {
                             new Param("valA", new EntityTypes.Float(0, 50, 1), "Width", "Next viewport width"),
                             new Param("valB", new EntityTypes.Float(0, 50, 1), "Height", "Next viewport height"),
-                            new Param("ease", EasingFunction.Ease.Linear, "Ease Type"),
+                            new Param("ease", Util.EasingFunction.Ease.Linear, "Ease Type"),
                             new Param("axis", StaticCamera.ViewAxis.All, "Axis", "The axis to scale the viewport in" )
                         }
                     ),

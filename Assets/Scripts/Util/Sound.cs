@@ -1,5 +1,5 @@
+using System;
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using Starpelly;
 
@@ -17,8 +17,8 @@ namespace HeavenStudio.Util
         public double scheduledTime;
 
         public bool looping;
-        public float loopEndBeat = -1;
-        public float fadeTime;
+        public double loopEndBeat = -1;
+        public double fadeTime;
         int loopIndex = 0;
 
         private AudioSource audioSource;
@@ -27,8 +27,8 @@ namespace HeavenStudio.Util
 
         private double startTime;
 
-        public float beat;
-        public float offset;
+        public double beat;
+        public double offset;
         public float scheduledPitch = 1f;
 
         bool playInstant = false;
@@ -48,7 +48,7 @@ namespace HeavenStudio.Util
                 audioSource.Play();
                 playInstant = true;
                 played = true;
-                startTime = cnd.songPositionAsDouble;
+                startTime = AudioSettings.dspTime;
                 StartCoroutine(NotRelyOnBeatSound());
             }
             else
@@ -126,7 +126,7 @@ namespace HeavenStudio.Util
             }
         }
 
-        public void SetLoopParams(float endBeat, float fadeTime)
+        public void SetLoopParams(double endBeat, double fadeTime)
         {
             loopEndBeat = endBeat;
             this.fadeTime = fadeTime;
@@ -158,6 +158,7 @@ namespace HeavenStudio.Util
 
         #region Bend
         // All of these should only be used with rockers.
+        // minenice: consider doing these in the audio thread so they can work per-sample?
         public void BendUp(float bendTime, float bendedPitch)
         {
             this.bendedPitch = bendedPitch;
@@ -201,20 +202,20 @@ namespace HeavenStudio.Util
 
         #endregion
 
-        public void KillLoop(float fadeTime)
+        public void KillLoop(double fadeTime)
         {
             StartCoroutine(FadeLoop(fadeTime));
         }
 
         float loopFadeTimer = 0f;
-        IEnumerator FadeLoop(float fadeTime)
+        IEnumerator FadeLoop(double fadeTime)
         {
             float startingVol = audioSource.volume;
 
             while (loopFadeTimer < fadeTime)
             {
                 loopFadeTimer += Time.deltaTime;
-                audioSource.volume = Mathf.Max((1f - (loopFadeTimer / fadeTime)) * startingVol, 0f);
+                audioSource.volume = (float) Math.Max((1f - (loopFadeTimer / fadeTime)) * startingVol, 0.0);
                 yield return null;
             }
 

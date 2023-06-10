@@ -9,7 +9,7 @@ namespace HeavenStudio.Games.Scripts_WorkingDough
 {
     public class BGBall : MonoBehaviour
     {
-        public float startBeat;
+        public double startBeat;
         public float firstBeatsToTravel = 3f;
         public float secondBeatsToTravel = 1f;
         public float thirdBeatsToTravel = 3f;

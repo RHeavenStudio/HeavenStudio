@@ -153,7 +153,7 @@ namespace HeavenStudio.Games
         static List<QueuedDumpling> queuedThrees = new List<QueuedDumpling>();
         struct QueuedDumpling
         {
-            public float beat;
+            public double beat;
             public Color color1;
             public Color color2;
             public Color color3;
@@ -189,7 +189,7 @@ namespace HeavenStudio.Games
 
         [Header("Variables")]
         [SerializeField] Sprite[] dumplingSprites;
-        public float lastReportedBeat = 0f;
+        public double lastReportedBeat = 0f;
         public bool needBlush;
         public bool isStaring;
         bool monkBop = true;
@@ -203,7 +203,7 @@ namespace HeavenStudio.Games
 
         // the variables for scroll
         bool scrollRampUp;
-        float scrollBeat;
+        double scrollBeat;
         float scrollLength;
         float scrollMod;
         static float scrollModCurrent = 0;
@@ -211,7 +211,7 @@ namespace HeavenStudio.Games
 
         // the variables for the monk moving 
         bool isMoving;
-        float movingStartBeat;
+        double movingStartBeat;
         float movingLength;
         string moveAnim;
         EasingFunction.Ease lastEase;
@@ -256,7 +256,7 @@ namespace HeavenStudio.Games
             // input stuff
             if (PlayerInput.Pressed(true) && (!IsExpectingInputNow(InputType.STANDARD_DOWN) || !IsExpectingInputNow(InputType.DIRECTION_DOWN))) {
                 MonkArmsAnim.DoScaledAnimationAsync("WristSlap", 0.5f);
-                Jukebox.PlayOneShotGame(sfxName+"slap");
+                SoundByte.PlayOneShotGame(sfxName+"slap");
                 isStaring = false;
                 // early input stuff
                 if (dumplings.Count != 0) InputFunctions(3);
@@ -338,7 +338,7 @@ namespace HeavenStudio.Games
             }
         }
 
-        public void Bop(float beat, bool bop, bool autoBop)
+        public void Bop(double beat, bool bop, bool autoBop)
         {
             monkBop = autoBop;
             if (bop) {
@@ -378,7 +378,7 @@ namespace HeavenStudio.Games
 
         public void Early(PlayerActionEvent caller) { }
 
-        public static void PreOneGoCue(float beat, Color firstColor)
+        public static void PreOneGoCue(double beat, Color firstColor)
         {
             PlaySoundSequence("munchyMonk", "one_go", beat);
 
@@ -386,7 +386,7 @@ namespace HeavenStudio.Games
                 { beat = beat, color1 = firstColor, });
         }
 
-        public void OneGoCue(float beat, Color firstColor)
+        public void OneGoCue(double beat, Color firstColor)
         {
             BeatAction.New(gameObject, new List<BeatAction.Action>() {
                 new BeatAction.Action(beat, delegate { 
@@ -405,7 +405,7 @@ namespace HeavenStudio.Games
             });
         }
 
-        public static void PreTwoTwoCue(float beat, Color firstColor, Color secondColor)
+        public static void PreTwoTwoCue(double beat, Color firstColor, Color secondColor)
         {
             PlaySoundSequence("munchyMonk", "two_go", beat);
 
@@ -416,7 +416,7 @@ namespace HeavenStudio.Games
             });
         }
 
-        public void TwoTwoCue(float beat, Color firstColor, Color secondColor)
+        public void TwoTwoCue(double beat, Color firstColor, Color secondColor)
         {
             BeatAction.New(gameObject, new List<BeatAction.Action>() {
                 new BeatAction.Action(beat-0.5f, delegate { 
@@ -443,7 +443,7 @@ namespace HeavenStudio.Games
             });
         }
 
-        public static void PreThreeGoCue(float beat, Color firstColor, Color secondColor, Color thirdColor)
+        public static void PreThreeGoCue(double beat, Color firstColor, Color secondColor, Color thirdColor)
         {
             PlaySoundSequence("munchyMonk", "three_go", beat);
             
@@ -455,7 +455,7 @@ namespace HeavenStudio.Games
             });
         }
 
-        public void ThreeGoCue(float beat, Color firstColor, Color secondColor, Color thirdColor)
+        public void ThreeGoCue(double beat, Color firstColor, Color secondColor, Color thirdColor)
         {
             BeatAction.New(instance.gameObject, new List<BeatAction.Action>() {
                 new BeatAction.Action(beat, delegate { 
@@ -505,7 +505,7 @@ namespace HeavenStudio.Games
             });
         }
 
-        public void PlayMonkAnim(float beat, int whichAnim, bool vineBoom)
+        public void PlayMonkAnim(double beat, int whichAnim, bool vineBoom)
         {
             switch (whichAnim)
             {
@@ -520,15 +520,15 @@ namespace HeavenStudio.Games
             }
             
             // it's in zeo's video; no reason not to include it :)
-            if (vineBoom) Jukebox.PlayOneShotGame("fanClub/arisa_dab", forcePlay: true);
+            if (vineBoom) SoundByte.PlayOneShotGame("fanClub/arisa_dab", forcePlay: true);
         }
 
         public void PlayMonkAnimInactive(bool vineBoom)
         {
-            if (vineBoom) Jukebox.PlayOneShotGame("fanClub/arisa_dab", forcePlay: true);
+            if (vineBoom) SoundByte.PlayOneShotGame("fanClub/arisa_dab", forcePlay: true);
         }
 
-        public void MonkMove(float beat, float length, int goToSide, int ease)
+        public void MonkMove(double beat, float length, int goToSide, int ease)
         {
             movingStartBeat = beat;
             movingLength = length;
@@ -537,7 +537,7 @@ namespace HeavenStudio.Games
             lastEase = (EasingFunction.Ease)ease;
         }
 
-        public static void Modifiers(float beat, int inputsTilGrow, bool resetLevel, int setLevel, bool disableBaby, bool shouldBlush)
+        public static void Modifiers(double beat, int inputsTilGrow, bool resetLevel, int setLevel, bool disableBaby, bool shouldBlush)
         {
             if (MunchyMonk.inputsTilGrow != inputsTilGrow) MunchyMonk.howManyGulps = inputsTilGrow * MunchyMonk.growLevel;
             if (setLevel != 0) MunchyMonk.growLevel = setLevel;
@@ -555,7 +555,7 @@ namespace HeavenStudio.Games
                 MunchyMonk.instance.Baby.SetActive(!disableBaby);
         }
 
-        public void ScrollBG(float beat, float length, float scrollSpeed, int ease)
+        public void ScrollBG(double beat, float length, float scrollSpeed, int ease)
         {
             scrollBeat = beat;
             scrollLength = length;

@@ -188,13 +188,13 @@ namespace HeavenStudio.Games
         int bopIterate = 0;
         bool intervalStarted;
         bool autoAction;
-        float intervalStartBeat;
+        double intervalStartBeat;
         float beatInterval = 1f;
-        float lastReportedBeat;
+        double lastReportedBeat;
 
-        static List<float> queuedSqueezes = new List<float>();
-        static List<float> queuedReleases = new List<float>();
-        static List<float> queuedPops = new List<float>();
+        static List<double> queuedSqueezes = new();
+        static List<double> queuedReleases = new();
+        static List<double> queuedPops = new();
 
         public static OctopusMachine instance;
 
@@ -257,7 +257,7 @@ namespace HeavenStudio.Games
             }
         }
 
-        public static void Prepare(float beat, float prepBeats)
+        public static void Prepare(double beat, float prepBeats)
         {
             if (GameManager.instance.currentGame != "octopusMachine") {
                 OctopusMachine.queuePrepare = true;
@@ -306,7 +306,7 @@ namespace HeavenStudio.Games
             }
         }
 
-        public void OctoAction(float beat, float length, string action)
+        public void OctoAction(double beat, float length, string action)
         {
             if (action != "Squeeze" && !octopodes[0].isSqueezed) return;
             if (!intervalStarted) StartInterval(beat, length);
@@ -319,7 +319,7 @@ namespace HeavenStudio.Games
             queuedList.Add(beat - intervalStartBeat);
         }
 
-        public void Bop(float length, int whichBop, bool singleBop, bool keepBop)
+        public void Bop(double length, int whichBop, bool singleBop, bool keepBop)
         {
             foreach (var octo in octopodes) {
                 if (singleBop) octo.PlayAnimation(whichBop);
@@ -349,7 +349,7 @@ namespace HeavenStudio.Games
             foreach (var octo in octopodes) octo.AnimationColor(octo.isSqueezed ? 1 : 0);
         }
 
-        public void OctopusModifiers(float beat, float oct1x, float oct2x, float oct3x, float oct1y, float oct2y, float oct3y, bool oct1, bool oct2, bool oct3)
+        public void OctopusModifiers(double beat, float oct1x, float oct2x, float oct3x, float oct1y, float oct2y, float oct3y, bool oct1, bool oct2, bool oct3)
         {
             octopodes[0].OctopusModifiers(oct1x, oct1y, oct1);
             octopodes[1].OctopusModifiers(oct2x, oct2y, oct2);
@@ -361,7 +361,7 @@ namespace HeavenStudio.Games
             foreach (var octo in octopodes) octo.ForceSqueeze();
         }
         
-        public void StartInterval(float beat, float length)
+        public void StartInterval(double beat, float length)
         {
             intervalStartBeat = beat;
             beatInterval = length;
@@ -373,7 +373,7 @@ namespace HeavenStudio.Games
             });
         }
 
-        public void PassTurn(float beat)
+        public void PassTurn(double beat)
         {
             intervalStarted = false;
             var queuedInputs = new List<BeatAction.Action>();
@@ -402,19 +402,19 @@ namespace HeavenStudio.Games
         private void SqueezeHit(PlayerActionEvent caller, float state)
         {
             octopodes[2].OctoAction("Squeeze");
-            if (state <= -1f || state >= 1f) Jukebox.PlayOneShotGame("nearMiss");
+            if (state <= -1f || state >= 1f) SoundByte.PlayOneShotGame("nearMiss");
         }
 
         private void ReleaseHit(PlayerActionEvent caller, float state)
         {
             octopodes[2].OctoAction("Release");
-            if (state <= -1f || state >= 1f) Jukebox.PlayOneShotGame("nearMiss");
+            if (state <= -1f || state >= 1f) SoundByte.PlayOneShotGame("nearMiss");
         }
 
         private void PopHit(PlayerActionEvent caller, float state)
         {
             octopodes[2].OctoAction("Pop");
-            if (state <= -1f || state >= 1f) Jukebox.PlayOneShotGame("nearMiss");
+            if (state <= -1f || state >= 1f) SoundByte.PlayOneShotGame("nearMiss");
         }
 
         private void Miss(PlayerActionEvent caller) { }

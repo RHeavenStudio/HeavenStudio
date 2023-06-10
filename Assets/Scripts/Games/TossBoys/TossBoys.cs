@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using HeavenStudio.Util;
 using DG.Tweening;
+using Jukebox;
 
 namespace HeavenStudio.Games.Loaders
 {
@@ -144,7 +145,7 @@ namespace HeavenStudio.Games
         WhichTossKid lastReceiver = WhichTossKid.None;
         WhichTossKid currentReceiver = WhichTossKid.None;
         public TossBoysBall currentBall = null;
-        Dictionary<float, DynamicBeatmap.DynamicEntity> passBallDict = new Dictionary<float, DynamicBeatmap.DynamicEntity>();
+        Dictionary<double, RiqEntity> passBallDict = new();
         string currentPassType;
         public static TossBoys instance;
         bool shouldBop = true;
@@ -238,7 +239,7 @@ namespace HeavenStudio.Games
             kiiyan.Bop();
         }
 
-        public void Bop(float beat, float length, bool auto, bool goBop)
+        public void Bop(double beat, float length, bool auto, bool goBop)
         {
             shouldBop = auto;
             if (goBop)
@@ -253,13 +254,13 @@ namespace HeavenStudio.Games
         }
         #endregion
 
-        public void Dispense(float beat, float length, int who, bool call)
+        public void Dispense(double beat, float length, int who, bool call)
         {
             if (currentBall != null) return;
             SetPassBallEvents();
             SetReceiver(who);
             GetCurrentReceiver().ShowArrow(beat, length - 1);
-            Jukebox.PlayOneShotGame("tossBoys/ballStart" + GetColorBasedOnTossKid(currentReceiver, true));
+            SoundByte.PlayOneShotGame("tossBoys/ballStart" + GetColorBasedOnTossKid(currentReceiver, true));
             hatchAnim.Play("HatchOpen", 0, 0);
             currentBall = Instantiate(ballPrefab, transform);
             currentBall.gameObject.SetActive(true);
@@ -280,7 +281,7 @@ namespace HeavenStudio.Games
 
             if (call)
             {
-                float callBeat = beat;
+                double callBeat = beat;
                 switch (who)
                 {
                     case (int)WhichTossKid.Akachan:
@@ -351,7 +352,7 @@ namespace HeavenStudio.Games
             var passBallEvents = EventCaller.GetAllInGameManagerList("tossBoys", new string[] { "pass", "dual", "pop", "high", "lightning", "blur" });
             for (int i = 0;  i < passBallEvents.Count; i++)
             {
-                if (passBallEvents[i].beat >= Conductor.instance.songPositionInBeats)
+                if (passBallEvents[i].beat >= Conductor.instance.songPositionInBeatsAsDouble)
                 {
                     if (passBallDict.ContainsKey(passBallEvents[i].beat)) continue;
                     passBallDict.Add(passBallEvents[i].beat, passBallEvents[i]);
@@ -359,7 +360,7 @@ namespace HeavenStudio.Games
             }
         }
 
-        void DeterminePass(float beat, bool barely)
+        void DeterminePass(double beat, bool barely)
         {
             var tempLastReceiver = lastReceiver;
             lastReceiver = currentReceiver;
@@ -372,7 +373,7 @@ namespace HeavenStudio.Games
             else
             {
                 /*
-                DynamicBeatmap.DynamicEntity spawnedEntity = new DynamicBeatmap.DynamicEntity();
+                RiqEntity spawnedEntity = new RiqEntity();
                 spawnedEntity.DynamicData.Add("who", (int)tempLastReceiver);
                 spawnedEntity.datamodel = currentPassType;
                 passBallDict.Add(beat, spawnedEntity);
@@ -413,7 +414,7 @@ namespace HeavenStudio.Games
             }
         }
 
-        void PassBall(float beat, float length)
+        void PassBall(double beat, float length)
         {
             string last = GetColorBasedOnTossKid(lastReceiver, false);
             string current = GetColorBasedOnTossKid(currentReceiver, true);
@@ -468,7 +469,7 @@ namespace HeavenStudio.Games
             ScheduleInput(beat, length, GetInputTypeBasedOnCurrentReceiver(), JustHitBall, Miss, Empty);
         }
 
-        void DualToss(float beat, float length)
+        void DualToss(double beat, float length)
         {
             string last = GetColorBasedOnTossKid(lastReceiver, false);
             string current = GetColorBasedOnTossKid(currentReceiver, true);
@@ -524,7 +525,7 @@ namespace HeavenStudio.Games
             ScheduleInput(beat, length, GetInputTypeBasedOnCurrentReceiver(), stopSpecial ? JustHitBallUnSpecial : JustHitBall, Miss, Empty);
         }
 
-        void HighToss(float beat, float length)
+        void HighToss(double beat, float length)
         {
             string last = GetColorBasedOnTossKid(lastReceiver, false);
             string current = GetColorBasedOnTossKid(currentReceiver, true);
@@ -577,7 +578,7 @@ namespace HeavenStudio.Games
             ScheduleInput(beat, length, GetInputTypeBasedOnCurrentReceiver(), JustHitBall, Miss, Empty);
         }
 
-        void LightningToss(float beat, float length)
+        void LightningToss(double beat, float length)
         {
             string last = GetColorBasedOnTossKid(lastReceiver, false);
             string current = GetColorBasedOnTossKid(currentReceiver, true);
@@ -634,7 +635,7 @@ namespace HeavenStudio.Games
             ScheduleInput(beat, length, GetInputTypeBasedOnCurrentReceiver(), JustHitBall, Miss, Empty);
         }
 
-        void BlurToss(float beat)
+        void BlurToss(double beat)
         {
             string current = GetColorBasedOnTossKid(currentReceiver, false);
             if (currentBall != null)
@@ -670,13 +671,13 @@ namespace HeavenStudio.Games
                     switch (currentReceiver)
                     {
                         case WhichTossKid.Akachan:
-                            Jukebox.PlayOneShotGame("tossBoys/redPop");
+                            SoundByte.PlayOneShotGame("tossBoys/redPop");
                             break;
                         case WhichTossKid.Aokun:
-                            Jukebox.PlayOneShotGame("tossBoys/bluePop");
+                            SoundByte.PlayOneShotGame("tossBoys/bluePop");
                             break;
                         case WhichTossKid.Kiiyan:
-                            Jukebox.PlayOneShotGame("tossBoys/yellowPop");
+                            SoundByte.PlayOneShotGame("tossBoys/yellowPop");
                             break;
                         default:
                             break;
@@ -722,13 +723,13 @@ namespace HeavenStudio.Games
                     switch (currentReceiver)
                     {
                         case WhichTossKid.Akachan:
-                            Jukebox.PlayOneShotGame("tossBoys/redPop");
+                            SoundByte.PlayOneShotGame("tossBoys/redPop");
                             break;
                         case WhichTossKid.Aokun:
-                            Jukebox.PlayOneShotGame("tossBoys/bluePop");
+                            SoundByte.PlayOneShotGame("tossBoys/bluePop");
                             break;
                         case WhichTossKid.Kiiyan:
-                            Jukebox.PlayOneShotGame("tossBoys/yellowPop");
+                            SoundByte.PlayOneShotGame("tossBoys/yellowPop");
                             break;
                         default:
                             break;
@@ -783,9 +784,9 @@ namespace HeavenStudio.Games
         void JustKeepCurrent(PlayerActionEvent caller, float state)
         {
             if (currentBall == null) return;
-            Jukebox.PlayOneShotGame("tossBoys/" + GetColorBasedOnTossKid(currentReceiver, false) + "Keep");
+            SoundByte.PlayOneShotGame("tossBoys/" + GetColorBasedOnTossKid(currentReceiver, false) + "Keep");
             string current = GetColorBasedOnTossKid(currentReceiver, false);
-            float beat = caller.timer + caller.startBeat;
+            double beat = caller.timer + caller.startBeat;
             if (currentBall != null)
             {
                 switch (current)
@@ -819,7 +820,7 @@ namespace HeavenStudio.Games
             specialAka.SetActive(false);
             specialKii.SetActive(false);
             currentSpecialKid.crouch = false;
-            Jukebox.PlayOneShotGame("tossBoys/" + GetColorBasedOnTossKid(currentReceiver, false) + "Keep");
+            SoundByte.PlayOneShotGame("tossBoys/" + GetColorBasedOnTossKid(currentReceiver, false) + "Keep");
             if (state >= 1f || state <= -1f)
             {
                 currentBall.anim.DoScaledAnimationAsync("WiggleBall", 0.5f);
@@ -833,10 +834,10 @@ namespace HeavenStudio.Games
         void JustKeep(PlayerActionEvent caller, float state)
         {
             if (currentBall == null) return;
-            Jukebox.PlayOneShotGame("tossBoys/" + GetColorBasedOnTossKid(lastReceiver, false) + "Keep");
+            SoundByte.PlayOneShotGame("tossBoys/" + GetColorBasedOnTossKid(lastReceiver, false) + "Keep");
             string last = GetColorBasedOnTossKid(lastReceiver, false);
             string current = GetColorBasedOnTossKid(currentReceiver, true);
-            float beat = caller.timer + caller.startBeat;
+            double beat = caller.timer + caller.startBeat;
             if (currentBall != null)
             {
                 switch (last + current)
@@ -880,10 +881,10 @@ namespace HeavenStudio.Games
             specialAka.SetActive(false);
             specialKii.SetActive(false);
             currentSpecialKid.crouch = false;
-            Jukebox.PlayOneShotGame("tossBoys/" + GetColorBasedOnTossKid(lastReceiver, false) + "Keep");
+            SoundByte.PlayOneShotGame("tossBoys/" + GetColorBasedOnTossKid(lastReceiver, false) + "Keep");
             string last = GetColorBasedOnTossKid(lastReceiver, false);
             string current = GetColorBasedOnTossKid(currentReceiver, true);
-            float beat = caller.timer + caller.startBeat;
+            double beat = caller.timer + caller.startBeat;
             if (currentBall != null)
             {
                 switch (last + current)
@@ -933,7 +934,7 @@ namespace HeavenStudio.Games
             specialKii.SetActive(false);
             Destroy(currentBall.gameObject);
             currentBall = null;
-            Jukebox.PlayOneShotGame("tossBoys/misshit");
+            SoundByte.PlayOneShotGame("tossBoys/misshit");
         }
 
         void Empty(PlayerActionEvent caller) { }
@@ -941,7 +942,7 @@ namespace HeavenStudio.Games
 
         #region HelperFunctions
 
-        void DoSpecialBasedOnReceiver(float beat)
+        void DoSpecialBasedOnReceiver(double beat)
         {
             specialAo.SetActive(false);
             specialAka.SetActive(false);
@@ -968,7 +969,7 @@ namespace HeavenStudio.Games
                     });
                     break;
                 case WhichTossKid.Kiiyan:
-                    Jukebox.PlayOneShotGame("tossBoys/yellowSpecial", beat);
+                    SoundByte.PlayOneShotGame("tossBoys/yellowSpecial", beat);
                     break;
                 default:
                     break;

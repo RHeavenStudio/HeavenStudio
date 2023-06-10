@@ -111,7 +111,7 @@ namespace HeavenStudio.Games
         static List<QueuedThrow> queuedThrows = new List<QueuedThrow>();
         struct QueuedThrow
         {
-            public float beat;
+            public double beat;
             public int direction;
             public int typeL;
             public int typeR;
@@ -137,7 +137,7 @@ namespace HeavenStudio.Games
 
         [SerializeField] Sprite[] ObjectTypes;
 
-        private float lastReportedBeat = 0f;
+        private double lastReportedBeat = 0f;
         private bool birdOnScreen = false;
         static bool dontBop = false;
         private const string sfxNum = "dogNinja/";
@@ -211,7 +211,7 @@ namespace HeavenStudio.Games
                 }
 
                 DogAnim.DoScaledAnimationAsync(slice, 0.5f);
-                Jukebox.PlayOneShotGame("dogNinja/whiff");
+                SoundByte.PlayOneShotGame("dogNinja/whiff");
                 DogAnim.SetBool("needPrepare", false);
             }
 
@@ -231,12 +231,12 @@ namespace HeavenStudio.Games
             }
         }
 
-        public void Bop(float beat, bool bop)
+        public void Bop(double beat, bool bop)
         {
             dontBop = !bop;
         }
 
-        public static void QueueObject(float beat, int direction, int typeL, int typeR, bool prepare, bool muteThrow)
+        public static void QueueObject(double beat, int direction, int typeL, int typeR, bool prepare, bool muteThrow)
         {
             int ObjSprite = 1;
             if (typeL == 0 || typeR == 0) {
@@ -249,14 +249,14 @@ namespace HeavenStudio.Games
             if (direction is 0 or 2) {
                 sfxNumL += typeL < 7 ? "fruit" : Enum.GetName(typeof(ObjectType), typeL);
                 if (typeL == 0) typeL = ObjSprite;
-                if (!muteThrow) Jukebox.PlayOneShotGame(sfxNumL+"1", forcePlay: true);
+                if (!muteThrow) SoundByte.PlayOneShotGame(sfxNumL+"1", forcePlay: true);
             }
             
             string sfxNumR = "dogNinja/";
             if (direction is 1 or 2) {
                 sfxNumR += typeR < 7 ? "fruit" : Enum.GetName(typeof(ObjectType), typeR);
                 if (typeR == 0) typeR = ObjSprite;
-                if (!(direction == 2 && typeL == typeR) && !muteThrow) Jukebox.PlayOneShotGame(sfxNumR+"1", forcePlay: true);
+                if (!(direction == 2 && typeL == typeR) && !muteThrow) SoundByte.PlayOneShotGame(sfxNumR+"1", forcePlay: true);
             }
 
             queuedThrows.Add(new QueuedThrow() {
@@ -271,7 +271,7 @@ namespace HeavenStudio.Games
             if (prepare) DogNinja.instance.DogAnim.SetBool("needPrepare", true);
         }
 
-        public void ThrowObject(float beat, int direction, int typeL, int typeR, string sfxNumL, string sfxNumR)
+        public void ThrowObject(double beat, int direction, int typeL, int typeR, string sfxNumL, string sfxNumR)
         {
             // instantiate a game object and give it its variables
             if (direction is 0 or 2) {
@@ -299,13 +299,13 @@ namespace HeavenStudio.Games
             }
         }
 
-        public void CutEverything(float beat, bool sound, string customText)
+        public void CutEverything(double beat, bool sound, string customText)
         {
             // plays one anim with sfx when it's not on screen, plays a different anim with no sfx when on screen. ez
             if (!birdOnScreen) {
                 FullBird.SetActive(true);
                 if (sound) { 
-                    Jukebox.PlayOneShotGame(sfxNum+"bird_flap"); 
+                    SoundByte.PlayOneShotGame(sfxNum+"bird_flap"); 
                 }
                 BirdAnim.Play("FlyIn", 0, 0);
                 birdOnScreen = true;
@@ -316,13 +316,13 @@ namespace HeavenStudio.Games
             }
         }
 
-        public void Prepare(float beat)
+        public void Prepare(double beat)
         {
             if (!DogAnim.GetBool("needPrepare")) DogAnim.DoScaledAnimationAsync("Prepare", 0.5f);
             DogAnim.SetBool("needPrepare", true);
         }
 
-        public void HereWeGo(float beat)
+        public void HereWeGo(double beat)
         {
             MultiSound.Play(new MultiSound.Sound[] {
                     new MultiSound.Sound(sfxNum+"here", beat), 
@@ -331,7 +331,7 @@ namespace HeavenStudio.Games
                 }, forcePlay: true);
         }
 
-        public static void HereWeGoInactive(float beat)
+        public static void HereWeGoInactive(double beat)
         {
             DogNinja.instance.HereWeGo(beat);
         }

@@ -36,7 +36,7 @@ namespace HeavenStudio.Games.Scripts_Kitties
 
             if (PlayerInput.Pressed() && canClap && !Kitties.instance.IsExpectingInputNow(InputType.STANDARD_DOWN))
             {
-                Jukebox.PlayOneShot("miss");
+                SoundByte.PlayOneShot("miss");
                 if (spawnType != 3)
                     anim.Play("ClapFail", 0, 0);
                 else
@@ -50,26 +50,26 @@ namespace HeavenStudio.Games.Scripts_Kitties
             }
         }
 
-        public void ScheduleClap(float beat, int type)
+        public void ScheduleClap(double beat, int type)
         {
             spawnType = type;
             Kitties.instance.ScheduleInput(beat, 2.5f, InputType.STANDARD_DOWN, ClapSuccessOne, ClapMissOne, ClapEmpty);
             Kitties.instance.ScheduleInput(beat, 3f, InputType.STANDARD_DOWN, ClapSuccessTwo, ClapMissTwo, ClapEmpty);
         }
 
-        public void ScheduleRoll(float beat)
+        public void ScheduleRoll(double beat)
         {
                 Kitties.instance.ScheduleInput(beat, 2f, InputType.STANDARD_ALT_DOWN, SpinSuccessOne, SpinMissOne, SpinEmpty);
         }
 
-        public void ScheduleRollFinish(float beat)
+        public void ScheduleRollFinish(double beat)
         {
             Debug.Log(hasSpun);
             if (hasSpun)
                 Kitties.instance.ScheduleInput(beat, 2.75f, InputType.STANDARD_ALT_UP, SpinSuccessTwo, SpinMissTwo, SpinEmpty);
         }
 
-        public void ScheduleFish(float beat)
+        public void ScheduleFish(double beat)
         {
             Kitties.instance.ScheduleInput(beat, 2.75f, InputType.STANDARD_DOWN, FishSuccess, FishMiss, FishEmpty);
         }
@@ -80,13 +80,13 @@ namespace HeavenStudio.Games.Scripts_Kitties
             {
                 if (state >= 1f || state <= -1f)
                 {  //todo: proper near miss feedback
-                    Jukebox.PlayOneShotGame("kitties/ClapMiss1");
-                    Jukebox.PlayOneShotGame("kitties/tink");
+                    SoundByte.PlayOneShotGame("kitties/ClapMiss1");
+                    SoundByte.PlayOneShotGame("kitties/tink");
                     anim.Play("ClapMiss", 0, 0);
                 }
                 else
                 {
-                    Jukebox.PlayOneShotGame("kitties/clap1");
+                    SoundByte.PlayOneShotGame("kitties/clap1");
                     anim.Play("Clap1", 0, 0);
                 }
             }
@@ -94,18 +94,18 @@ namespace HeavenStudio.Games.Scripts_Kitties
             {
                 if (state >= 1f || state <= -1f)
                 {  //todo: proper near miss feedback
-                    Jukebox.PlayOneShotGame("kitties/ClapMiss1");
-                    Jukebox.PlayOneShotGame("kitties/tink");
+                    SoundByte.PlayOneShotGame("kitties/ClapMiss1");
+                    SoundByte.PlayOneShotGame("kitties/tink");
                     anim.Play("FaceClapFail", 0, 0);
                 }
 
-                Jukebox.PlayOneShotGame("kitties/clap1");
+                SoundByte.PlayOneShotGame("kitties/clap1");
                 anim.Play("FaceClap", 0, 0);
             }
         }
         public void ClapMissOne(PlayerActionEvent Caller)
         {
-            Jukebox.PlayOneShotGame("kitties/ClapMiss1");
+            SoundByte.PlayOneShotGame("kitties/ClapMiss1");
         }
         public void ClapEmpty(PlayerActionEvent Caller)
         {
@@ -118,13 +118,13 @@ namespace HeavenStudio.Games.Scripts_Kitties
             {
                 if (state >= 1f || state <= -1f)
                 {  //todo: proper near miss feedback
-                    Jukebox.PlayOneShotGame("kitties/ClapMiss2");
-                    Jukebox.PlayOneShotGame("kitties/tink");
+                    SoundByte.PlayOneShotGame("kitties/ClapMiss2");
+                    SoundByte.PlayOneShotGame("kitties/tink");
                     anim.Play("ClapMiss", 0, 0);
                 }
                 else
                 {
-                    Jukebox.PlayOneShotGame("kitties/clap2");
+                    SoundByte.PlayOneShotGame("kitties/clap2");
                     anim.Play("Clap2", 0, 0);
                 }
             }
@@ -132,31 +132,31 @@ namespace HeavenStudio.Games.Scripts_Kitties
             {
                 if (state >= 1f || state <= -1f)
                 {  //todo: proper near miss feedback
-                    Jukebox.PlayOneShotGame("kitties/ClapMiss2");
-                    Jukebox.PlayOneShotGame("kitties/tink");
+                    SoundByte.PlayOneShotGame("kitties/ClapMiss2");
+                    SoundByte.PlayOneShotGame("kitties/tink");
                     anim.Play("FaceClapFail", 0, 0);
                 }
 
-                Jukebox.PlayOneShotGame("kitties/clap2");
+                SoundByte.PlayOneShotGame("kitties/clap2");
                 anim.Play("FaceClap", 0, 0);
             }
         }
 
         public void ClapMissTwo(PlayerActionEvent Caller)
         {
-            Jukebox.PlayOneShotGame("kitties/ClapMiss2");
+            SoundByte.PlayOneShotGame("kitties/ClapMiss2");
         }
 
         public void SpinSuccessOne(PlayerActionEvent caller, float beat)
         {
             hasSpun = true;
-            Jukebox.PlayOneShotGame("kitties/roll5");
+            SoundByte.PlayOneShotGame("kitties/roll5");
             anim.Play("Rolling", 0, 0);
         }
 
         public void SpinSuccessTwo(PlayerActionEvent caller, float beat)
         {
-            Jukebox.PlayOneShotGame("kitties/roll6");
+            SoundByte.PlayOneShotGame("kitties/roll6");
             anim.Play("RollEnd", 0, 0);
         }
 
@@ -164,8 +164,8 @@ namespace HeavenStudio.Games.Scripts_Kitties
         {
             hasSpun = false;
             var cond = Conductor.instance;
-            Jukebox.PlayOneShotGame("kitties/roll5", -1f, 1, .1f);
-            Jukebox.PlayOneShotGame("kitties/roll6", cond.songPositionInBeats + .75f, 1, .1f);
+            SoundByte.PlayOneShotGame("kitties/roll5", -1f, 1, .1f);
+            SoundByte.PlayOneShotGame("kitties/roll6", cond.songPositionInBeatsAsDouble + .75f, 1, .1f);
         }
 
         public void SpinMissTwo(PlayerActionEvent caller)
@@ -174,7 +174,7 @@ namespace HeavenStudio.Games.Scripts_Kitties
             {
                 RollFail();
             }
-            Jukebox.PlayOneShotGame("kitties/roll6", -1f, 1, .3f);
+            SoundByte.PlayOneShotGame("kitties/roll6", -1f, 1, .3f);
         }
 
         public void SpinEmpty(PlayerActionEvent caller)
@@ -184,7 +184,7 @@ namespace HeavenStudio.Games.Scripts_Kitties
 
         public void RollFail()
         {
-            Jukebox.PlayOneShot("miss");
+            SoundByte.PlayOneShot("miss");
             anim.Play("RollFail", 0, 0);
             hasSpun = false;
         }
@@ -192,14 +192,14 @@ namespace HeavenStudio.Games.Scripts_Kitties
         public void FishSuccess(PlayerActionEvent caller, float beat)
         {
             Kitties.instance.RemoveCats(false);
-            Jukebox.PlayOneShotGame("kitties/fish4");
+            SoundByte.PlayOneShotGame("kitties/fish4");
             fish.Play("CaughtSuccess", 0, 0);
         }
 
         public void FishMiss(PlayerActionEvent caller)
         {
             Kitties.instance.RemoveCats(false);
-            Jukebox.PlayOneShot("miss");
+            SoundByte.PlayOneShot("miss");
             fish.Play("CaughtFail", 0, 0);
         }
 

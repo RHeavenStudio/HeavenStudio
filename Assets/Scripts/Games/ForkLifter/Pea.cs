@@ -13,7 +13,7 @@ namespace HeavenStudio.Games.Scripts_ForkLifter
         ForkLifter game;
         private Animator anim;
 
-        public float startBeat;
+        public double startBeat;
 
         public int type;
 
@@ -25,8 +25,8 @@ namespace HeavenStudio.Games.Scripts_ForkLifter
             // SCHEDULING zoom sound so it lines up with when it meets the fork.
             var currentDspTime = AudioSettings.dspTime;
             var cond = Conductor.instance;
-            var zoomStartTime = currentDspTime + (double)(cond.pitchedSecPerBeat * 2) - 0.317;
-            Jukebox.PlayOneShotScheduledGame("forkLifter/zoomFast", (double)zoomStartTime);
+            var zoomStartTime = currentDspTime + (cond.pitchedSecPerBeatAsDouble * 2) - 0.317;
+            SoundByte.PlayOneShotScheduledGame("forkLifter/zoomFast", zoomStartTime);
 
             GetComponentInChildren<SpriteRenderer>().sprite = game.peaSprites[type];
 
@@ -91,7 +91,7 @@ namespace HeavenStudio.Games.Scripts_ForkLifter
 
             ForkLifterPlayer.instance.FastEffectHit(type);
 
-            Jukebox.PlayOneShotGame("forkLifter/stab");
+            SoundByte.PlayOneShotGame("forkLifter/stab");
 
             ForkLifterPlayer.instance.currentPerfectPeasOnFork++;
 
@@ -136,7 +136,7 @@ namespace HeavenStudio.Games.Scripts_ForkLifter
 
             ForkLifterPlayer.instance.FastEffectHit(type);
 
-            Jukebox.PlayOneShot("miss");
+            SoundByte.PlayOneShot("miss");
 
             ForkLifterPlayer.instance.currentEarlyPeasOnFork++;
 
@@ -167,7 +167,7 @@ namespace HeavenStudio.Games.Scripts_ForkLifter
 
             ForkLifterPlayer.instance.FastEffectHit(type);
 
-            Jukebox.PlayOneShot("miss");
+            SoundByte.PlayOneShot("miss");
 
             ForkLifterPlayer.instance.currentLatePeasOnFork++;
             Destroy(this.gameObject);
@@ -198,7 +198,7 @@ namespace HeavenStudio.Games.Scripts_ForkLifter
 
         private void Miss(PlayerActionEvent caller) 
         {
-            Jukebox.PlayOneShot("forkLifter/disappointed");
+            SoundByte.PlayOneShot("forkLifter/disappointed");
             BeatAction.New(game.gameObject, new List<BeatAction.Action>()
             {
                 new BeatAction.Action(startBeat+ 2.45f, delegate { 

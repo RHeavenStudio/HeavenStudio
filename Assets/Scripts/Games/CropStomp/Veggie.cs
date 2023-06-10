@@ -20,15 +20,15 @@ namespace HeavenStudio.Games.Scripts_CropStomp
         public BezierCurve3D curve;
         private BezierCurve3D hitCurve;
 
-        public float targetBeat;
-        private float stompedBeat;
-        private float pickedBeat;
+        public double targetBeat;
+        private double stompedBeat;
+        private double pickedBeat;
         private float pickTime = 1f;
         private int veggieState = 0;
         private bool boinked; // Player got barely when trying to pick.
         private bool pickEligible = true;
 
-        private float landBeat;
+        private double landBeat;
 
         private Tween squashTween;
 
@@ -137,9 +137,9 @@ namespace HeavenStudio.Games.Scripts_CropStomp
                 var key2Pos = key2.Position;
                 key2.Position = new Vector3(key2Pos.x, veggieTrans.position.y + 2f, key2Pos.z);
 
-                pickedBeat = Conductor.instance.songPositionInBeats;
+                pickedBeat = Conductor.instance.songPositionInBeatsAsDouble;
 
-                Jukebox.PlayOneShot("miss");
+                SoundByte.PlayOneShot("miss");
 
                 MissedUpdate();
             }
@@ -154,7 +154,7 @@ namespace HeavenStudio.Games.Scripts_CropStomp
             veggieState = -1;
                     
             if (!isMole)
-                Jukebox.PlayOneShotGame("cropStomp/veggieMiss");
+                SoundByte.PlayOneShotGame("cropStomp/veggieMiss");
             caller.Disable();
         }
 
@@ -231,7 +231,7 @@ namespace HeavenStudio.Games.Scripts_CropStomp
             game.ScheduleInput(targetBeat, isMole ? 0.5f : 1f, InputType.STANDARD_UP, PickJust, PickMiss, Out);
             targetBeat = targetBeat + (isMole ? 0.5f : 1f);
 
-            stompedBeat = cond.songPositionInBeats;
+            stompedBeat = cond.songPositionInBeatsAsDouble;
 
             landBeat = targetBeat + (float)cond.SecsToBeats(Minigame.EndTime()-1, cond.GetBpmAtBeat(targetBeat));
 
@@ -273,7 +273,7 @@ namespace HeavenStudio.Games.Scripts_CropStomp
             var keyPos = key1.Position;
             key1.Position = new Vector3(keyPos.x, veggieTrans.position.y, keyPos.z);
 
-            pickedBeat = Conductor.instance.songPositionInBeats;
+            pickedBeat = Conductor.instance.songPositionInBeatsAsDouble;
 
             if (!isMole)
             {
@@ -283,7 +283,7 @@ namespace HeavenStudio.Games.Scripts_CropStomp
                     new BeatAction.Action(pickedBeat + pickTime, delegate { GameObject.Destroy(gameObject); })
                 });
 
-                Jukebox.PlayOneShotGame("cropStomp/veggieKay");
+                SoundByte.PlayOneShotGame("cropStomp/veggieKay");
 
                 hitCurve = game.pickCurve;
             }
@@ -294,7 +294,7 @@ namespace HeavenStudio.Games.Scripts_CropStomp
                     new BeatAction.Action(pickedBeat + pickTime, delegate { GameObject.Destroy(gameObject); })
                 });
 
-                Jukebox.PlayOneShotGame("cropStomp/GEUH");
+                SoundByte.PlayOneShotGame("cropStomp/GEUH");
 
                 hitCurve = game.moleCurve;
             }

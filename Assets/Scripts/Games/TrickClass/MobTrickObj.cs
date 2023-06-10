@@ -11,7 +11,7 @@ namespace HeavenStudio.Games.Scripts_TrickClass
     public class MobTrickObj : MonoBehaviour
     {
         public bool flyType;
-        public float startBeat;
+        public double startBeat;
         bool miss = false;
 
         float flyBeats;
@@ -115,7 +115,7 @@ namespace HeavenStudio.Games.Scripts_TrickClass
 
         public void DodgeJustOrNg(PlayerActionEvent caller, float state)
         {
-            if (game.playerCanDodge <= Conductor.instance.songPositionInBeats)
+            if (game.playerCanDodge <= Conductor.instance.songPositionInBeatsAsDouble)
             {
                 if (state <= -1f || state >= 1f)
                 {
@@ -124,15 +124,15 @@ namespace HeavenStudio.Games.Scripts_TrickClass
                     MultiSound.Play(new MultiSound.Sound[] { 
                         new MultiSound.Sound(GetDodgeSound(), startBeat + flyBeats, volume: 0.4f), 
                     });
-                    Jukebox.PlayOneShotGame(GetDodgeSound(), volume: 0.6f);
-                    Jukebox.PlayOneShot("miss");
+                    SoundByte.PlayOneShotGame(GetDodgeSound(), volume: 0.6f);
+                    SoundByte.PlayOneShot("miss");
                     DoObjMiss();
                 }
                 else
                 {
                     //just
                     game.PlayerDodge();
-                    Jukebox.PlayOneShotGame("trickClass/player_dodge_success", volume: 0.8f, pitch: UnityEngine.Random.Range(0.85f, 1.15f));
+                    SoundByte.PlayOneShotGame("trickClass/player_dodge_success", volume: 0.8f, pitch: UnityEngine.Random.Range(0.85f, 1.15f));
                     MultiSound.Play(new MultiSound.Sound[] { 
                         new MultiSound.Sound(GetDodgeSound(), startBeat + flyBeats, volume: 0.4f), 
                     });
@@ -140,7 +140,7 @@ namespace HeavenStudio.Games.Scripts_TrickClass
             }
             else
             {
-                Jukebox.PlayOneShotGame(GetDodgeSound());
+                SoundByte.PlayOneShotGame(GetDodgeSound());
                 DoObjMiss();
                 game.PlayerThrough();
                 caller.isEligible = false;
@@ -150,7 +150,7 @@ namespace HeavenStudio.Games.Scripts_TrickClass
 
         public void DodgeMiss(PlayerActionEvent caller)
         {
-            Jukebox.PlayOneShotGame(GetDodgeSound());
+            SoundByte.PlayOneShotGame(GetDodgeSound());
             DoObjMiss();
             game.PlayerThrough();
         }

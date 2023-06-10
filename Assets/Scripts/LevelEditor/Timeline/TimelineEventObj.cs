@@ -5,6 +5,8 @@ using UnityEngine.UI;
 
 using Starpelly;
 using DG.Tweening;
+using Jukebox;
+using Jukebox.Legacy;
 
 namespace HeavenStudio.Editor.Track
 {
@@ -29,7 +31,7 @@ namespace HeavenStudio.Editor.Track
         // private GameObject moveTemp;
 
         [Header("Properties")]
-        public DynamicBeatmap.DynamicEntity entity;
+        public RiqEntity entity;
         public float length;
         public bool eligibleToMove = false;
         private bool lastVisible;
@@ -43,7 +45,7 @@ namespace HeavenStudio.Editor.Track
         private bool resizingRight;
         private bool inResizeRegion;
         public bool isCreating;
-        public string eventObjID;
+        public int eventObjID;
 
         [Header("Colors")]
         public Color NormalCol;
@@ -74,7 +76,11 @@ namespace HeavenStudio.Editor.Track
         private void Update()
         {
             selected = Selections.instance.eventsSelected.Contains(this);
-            entity = GameManager.instance.Beatmap.entities.Find(a => a.eventObj == this);
+            if (eventObjID != entity.uid)
+            {
+                eventObjID = GameManager.instance.Beatmap.Entities.Find(a => a == entity).uid;
+                Debug.Log($"assigning uid {eventObjID}");
+            }
 
             mouseHovering = RectTransformUtility.RectangleContainsScreenPoint(rectTransform, Input.mousePosition, Editor.instance.EditorCamera) && Timeline.instance.timelineState.selected;
 
@@ -100,7 +106,7 @@ namespace HeavenStudio.Editor.Track
 
             #endregion
 
-            SetColor(entity.track);
+            SetColor(entity["track"]);
 
             if (selected)
             {
@@ -143,7 +149,7 @@ namespace HeavenStudio.Editor.Track
                 }
 
                 rectTransform.sizeDelta = new Vector2(rectTransform.sizeDelta.x, Timeline.instance.LayerHeight());
-                this.transform.localPosition = new Vector3(this.transform.localPosition.x, -entity.track * Timeline.instance.LayerHeight());
+                this.transform.localPosition = new Vector3(this.transform.localPosition.x, -entity["track"] * Timeline.instance.LayerHeight());
                 return;
             }
 
@@ -250,7 +256,7 @@ namespace HeavenStudio.Editor.Track
             }
 
             rectTransform.sizeDelta = new Vector2(rectTransform.sizeDelta.x, Timeline.instance.LayerHeight());
-            this.transform.localPosition = new Vector3(this.transform.localPosition.x, -entity.track * Timeline.instance.LayerHeight());
+            this.transform.localPosition = new Vector3(this.transform.localPosition.x, -entity["track"] * Timeline.instance.LayerHeight());
         }
 
         #region ClickEvents
@@ -406,7 +412,7 @@ namespace HeavenStudio.Editor.Track
 
         private void OnMove()
         {
-            if (GameManager.instance.Beatmap.entities.FindAll(c => c.beat == this.transform.localPosition.x && c.track == GetTrack() && c != this.entity).Count > 0)
+            if (GameManager.instance.Beatmap.Entities.FindAll(c => c.beat == this.transform.localPosition.x && c["track"] == GetTrack() && c != this.entity).Count > 0)
             {
                 eligibleToMove = false;
             }
@@ -423,7 +429,7 @@ namespace HeavenStudio.Editor.Track
             entity.length = rectTransform.sizeDelta.x;
             entity.beat = this.transform.localPosition.x;
             GameManager.instance.SortEventsList();
-            entity.track = GetTrack();
+            entity["track"] = GetTrack();
         }
 
         #endregion
@@ -477,7 +483,7 @@ namespace HeavenStudio.Editor.Track
         {
             // better safety net than canada's healthcare system
             // this is still hilarious
-            // GameManager.instance.Beatmap.entities.Remove(GameManager.instance.Beatmap.entities.Find(c => c.eventObj = this));
+            // GameManager.instance.Beatmap.Entities.Remove(GameManager.instance.Beatmap.Entities.Find(c => c.eventObj = this));
         }
 
         #endregion

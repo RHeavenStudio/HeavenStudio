@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -11,7 +12,7 @@ namespace HeavenStudio.Games.Scripts_DoubleDate
         private DoubleDate game;
         
         private SuperCurveObject.Path path;
-        private float pathStartBeat = float.MinValue;
+        private double pathStartBeat = double.MinValue;
         private Conductor conductor;
         private GameObject shadow;
 
@@ -23,20 +24,20 @@ namespace HeavenStudio.Games.Scripts_DoubleDate
 
         void Update()
         {
-            float beat = conductor.songPositionInBeats;
-            float height = 0f;
-            if (pathStartBeat > float.MinValue)
+            double beat = conductor.songPositionInBeatsAsDouble;
+            double height = 0f;
+            if (pathStartBeat > double.MinValue)
             {
-                Vector3 pos = GetPathPositionFromBeat(path, Mathf.Max(beat, pathStartBeat), out height, pathStartBeat);
+                Vector3 pos = GetPathPositionFromBeat(path, Math.Max(beat, pathStartBeat), out height, pathStartBeat);
                 transform.position = pos;
                 float rot = GetPathValue("rot");
                 transform.rotation = Quaternion.Euler(0f, 0f, transform.rotation.eulerAngles.z - (rot * Time.deltaTime * (1f/conductor.pitchedSecPerBeat)));
             }
-            shadow.transform.position = new Vector3(transform.position.x, Mathf.Min(transform.position.y - height, game.floorHeight), transform.position.z);
+            shadow.transform.position = new Vector3(transform.position.x, (float) Math.Min(transform.position.y - height, game.floorHeight), transform.position.z);
             shadow.transform.localScale = Vector3.one * Mathf.Clamp(((transform.position.y) - game.shadowDepthScaleMin) / (game.shadowDepthScaleMax - game.shadowDepthScaleMin), 0f, 1f);
         }
 
-        public void Init(float beat)
+        public void Init(double beat)
         {
             game.ScheduleInput(beat, 1.5f, InputType.STANDARD_DOWN, Just, Miss, Empty);
             path = game.GetPath("FootBallInNoHit");  // there's a second path for footballs that hit the weasels, use that if the weasels haven't been hit recently
@@ -57,14 +58,14 @@ namespace HeavenStudio.Games.Scripts_DoubleDate
             if (state >= 1f || state <= -1f)
             {
                 UpdateLastRealPos();
-                pathStartBeat = conductor.songPositionInBeats;
+                pathStartBeat = conductor.songPositionInBeatsAsDouble;
                 path = game.GetPath("FootBallNg" + (state > 0 ? "Late" : "Early"));
-                Jukebox.PlayOneShot("miss");
+                SoundByte.PlayOneShot("miss");
                 game.Kick(false);
                 GetComponent<SpriteRenderer>().sortingOrder = 8;
                 BeatAction.New(gameObject, new List<BeatAction.Action>()
                 {
-                    new BeatAction.Action(conductor.songPositionInBeats + 4f, delegate
+                    new BeatAction.Action(conductor.songPositionInBeatsAsDouble + 4f, delegate
                     {
                         Destroy(gameObject);
                     }),
@@ -74,16 +75,16 @@ namespace HeavenStudio.Games.Scripts_DoubleDate
             Hit();
             BeatAction.New(gameObject, new List<BeatAction.Action>()
             {
-                new BeatAction.Action(conductor.songPositionInBeats + 1f, delegate
+                new BeatAction.Action(conductor.songPositionInBeatsAsDouble + 1f, delegate
                 {
                     shadow.SetActive(false);
                     GetComponent<SpriteRenderer>().sortingOrder = -5;
                     transform.localScale *= 0.25f;
                     path = game.GetPath("FootBallFall");
                     UpdateLastRealPos();
-                    pathStartBeat = conductor.songPositionInBeats + 1f;
+                    pathStartBeat = conductor.songPositionInBeatsAsDouble + 1f;
                 }),
-                new BeatAction.Action(conductor.songPositionInBeats + 12f, delegate
+                new BeatAction.Action(conductor.songPositionInBeatsAsDouble + 12f, delegate
                 {
                     Destroy(gameObject);
                 }),
@@ -93,30 +94,30 @@ namespace HeavenStudio.Games.Scripts_DoubleDate
         void Hit()
         {
             UpdateLastRealPos();
-            pathStartBeat = conductor.songPositionInBeats;
+            pathStartBeat = conductor.songPositionInBeatsAsDouble;
             path = game.GetPath("FootBallJust");
             game.Kick(true, true, jump: true);
-            Jukebox.PlayOneShotGame("doubleDate/footballKick");
+            SoundByte.PlayOneShotGame("doubleDate/footballKick");
         }
 
         void Miss(PlayerActionEvent caller)
         {
-            if (conductor.songPositionInBeats > game.lastHitWeasel + 2.25f)
+            if (conductor.songPositionInBeatsAsDouble > game.lastHitWeasel + 2.25f)
             {
                 path = game.GetPath("FootBallIn");
                 float impact = GetPointTimeByTag(path, "impact");
                 if (impact > 0)
                 {
                     GetComponent<SpriteRenderer>().sortingOrder = 8;
-                    Jukebox.PlayOneShotGame("doubleDate/weasel_hit", pathStartBeat + impact);
-                    Jukebox.PlayOneShotGame("doubleDate/weasel_scream", pathStartBeat + impact);
+                    SoundByte.PlayOneShotGame("doubleDate/weasel_hit", pathStartBeat + impact);
+                    SoundByte.PlayOneShotGame("doubleDate/weasel_scream", pathStartBeat + impact);
                     game.MissKick(pathStartBeat + impact, true);
                 }
             }
 
             BeatAction.New(gameObject, new List<BeatAction.Action>()
             {
-                new BeatAction.Action(conductor.songPositionInBeats + 5f, delegate
+                new BeatAction.Action(conductor.songPositionInBeatsAsDouble + 5f, delegate
                 {
                     Destroy(gameObject);
                 }),

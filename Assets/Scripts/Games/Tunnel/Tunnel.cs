@@ -72,7 +72,7 @@ namespace HeavenStudio.Games
         public bool started;
         public struct QueuedCowbell
         {
-            public float beat;
+            public double beat;
             public float length;
         }
         static List<QueuedCowbell> queuedInputs = new List<QueuedCowbell>();
@@ -130,14 +130,14 @@ namespace HeavenStudio.Games
 
         public void HitCowbell()
         {
-            Jukebox.PlayOneShot("count-ins/cowbell");
+            SoundByte.PlayOneShot("count-ins/cowbell");
 
             handStart = Conductor.instance.songPositionInBeats;
             
             cowbellAnimator.Play("Shake",-1,0);
         }
 
-        public static void PreStartCowbell(float beat, float length)
+        public static void PreStartCowbell(double beat, float length)
         {
             if (GameManager.instance.currentGame == "tunnel")
             {
@@ -149,7 +149,7 @@ namespace HeavenStudio.Games
             }
         }
 
-        public void StartCowbell(float beat, float length)
+        public void StartCowbell(double beat, float length)
         {
             started = true;
             for(int i = 0; i < length; i++)
@@ -189,7 +189,7 @@ namespace HeavenStudio.Games
 
 
         
-        public static void CountIn(float beat, float length)
+        public static void CountIn(double beat, float length)
         {
 
             List<MultiSound.Sound> cuelist = new List<MultiSound.Sound>();

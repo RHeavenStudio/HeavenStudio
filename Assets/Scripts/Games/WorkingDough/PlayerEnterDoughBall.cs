@@ -9,7 +9,7 @@ namespace HeavenStudio.Games.Scripts_WorkingDough
 {
     public class PlayerEnterDoughBall : MonoBehaviour
     {
-        public float startBeat;
+        public double startBeat;
         public float firstBeatsToTravel = 0.5f;
         public float secondBeatsToTravel = 0.5f;
         public bool goingDown = false;

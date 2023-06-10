@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using UnityEngine;
 using HeavenStudio.Util;
 
+using Jukebox;
+
 namespace HeavenStudio.Games.Loaders
 {
     using static Minigames;
@@ -233,7 +235,7 @@ namespace HeavenStudio.Games.Loaders
                                 offSet = 0.034f;
                                 break;
                         }
-                        Jukebox.PlayOneShot($"games/rockers/count/{e["count"]}", e.beat, 1, 1, false, null, offSet); 
+                        SoundByte.PlayOneShot($"games/rockers/count/{e["count"]}", e.beat, 1, 1, false, null, offSet); 
                     }
                 },
                 new GameAction("voiceLine", "Together Voice Line")
@@ -244,7 +246,7 @@ namespace HeavenStudio.Games.Loaders
                     },
                     preFunction = delegate
                     {
-                        Jukebox.PlayOneShot(eventCaller.currentEntity["cmon"] ? "games/rockers/Cmon" : "games/rockers/LastOne", eventCaller.currentEntity.beat);
+                        SoundByte.PlayOneShot(eventCaller.currentEntity["cmon"] ? "games/rockers/Cmon" : "games/rockers/LastOne", eventCaller.currentEntity.beat);
                     }
                 },
                 new GameAction("prepareTogether", "Custom Together Prepare")
@@ -396,20 +398,20 @@ namespace HeavenStudio.Games
 
         private float lastTargetCameraX = 0;
         private float targetCameraX = 0;
-        private float cameraMoveBeat = -1;
-        private float endBeat = Single.MaxValue;
-        private static List<float> queuedCameraEvents = new List<float>();
-        private static List<float> queuedPreInterval = new List<float>();
+        private double cameraMoveBeat = -1;
+        private double endBeat = double.MaxValue;
+        private static List<double> queuedCameraEvents = new();
+        private static List<double> queuedPreInterval = new();
 
-        private List<DynamicBeatmap.DynamicEntity> riffEvents = new List<DynamicBeatmap.DynamicEntity>();
+        private List<RiqEntity> riffEvents = new List<RiqEntity>();
 
-        private static List<float> riffUsedBeats = new List<float>();
+        private static List<double> riffUsedBeats = new();
 
-        private List<DynamicBeatmap.DynamicEntity> bendEvents = new List<DynamicBeatmap.DynamicEntity>();
+        private List<RiqEntity> bendEvents = new List<RiqEntity>();
 
-        private static List<float> bendUsedBeats = new List<float>();
+        private static List<double> bendUsedBeats = new();
 
-        private List<float> prepareBeatsJJ = new List<float>();
+        private List<double> prepareBeatsJJ = new();
 
         private void Awake()
         {
@@ -427,14 +429,14 @@ namespace HeavenStudio.Games
             bendEvents = GrabAllBendEvents();
         }
 
-        private static List<DynamicBeatmap.DynamicEntity> GrabAllRiffEvents()
+        private static List<RiqEntity> GrabAllRiffEvents()
         {
             var tempEvents = EventCaller.GetAllInGameManagerList("rockers", new string[] { "riff" });
             if (tempEvents.Count > 1)
             {
                 tempEvents.Sort((s1, s2) => s1.beat.CompareTo(s2.beat));
-                float forbiddenLength = tempEvents[0].beat + tempEvents[0].length;
-                List<DynamicBeatmap.DynamicEntity> tempEvents2 = new List<DynamicBeatmap.DynamicEntity>();
+                double forbiddenLength = tempEvents[0].beat + tempEvents[0].length;
+                List<RiqEntity> tempEvents2 = new List<RiqEntity>();
                 for (int i = 1; i < tempEvents.Count; i++)
                 {
                     if (tempEvents[i].beat > forbiddenLength)
@@ -452,14 +454,14 @@ namespace HeavenStudio.Games
             }
         }
 
-        private static List<DynamicBeatmap.DynamicEntity> GrabAllBendEvents()
+        private static List<RiqEntity> GrabAllBendEvents()
         {
             var tempEvents = EventCaller.GetAllInGameManagerList("rockers", new string[] { "bend" });
             if (tempEvents.Count > 1)
             {
                 tempEvents.Sort((s1, s2) => s1.beat.CompareTo(s2.beat));
-                float forbiddenLength = tempEvents[0].beat + tempEvents[0].length;
-                List<DynamicBeatmap.DynamicEntity> tempEvents2 = new List<DynamicBeatmap.DynamicEntity>();
+                double forbiddenLength = tempEvents[0].beat + tempEvents[0].length;
+                List<RiqEntity> tempEvents2 = new List<RiqEntity>();
                 for (int i = 1; i < tempEvents.Count; i++)
                 {
                     if (tempEvents[i].beat > forbiddenLength)
@@ -477,7 +479,7 @@ namespace HeavenStudio.Games
             }
         }
 
-        private List<DynamicBeatmap.DynamicEntity> GrabAllTogetherEvents(float beat)
+        private List<RiqEntity> GrabAllTogetherEvents(double beat)
         {
             var tempEvents = EventCaller.GetAllInGameManagerList("rockers", new string[] { "riffTogether", "riffTogetherEnd" });
             var allEnds = EventCaller.GetAllInGameManagerList("gameManager", new string[] { "switchGame" });
@@ -496,7 +498,7 @@ namespace HeavenStudio.Games
             if (tempEvents.Count > 0)
             {
                 tempEvents.Sort((s1, s2) => s1.beat.CompareTo(s2.beat));
-                List<DynamicBeatmap.DynamicEntity> tempEvents2 = new List<DynamicBeatmap.DynamicEntity>();
+                List<RiqEntity> tempEvents2 = new List<RiqEntity>();
                 for (int i = 0; i < tempEvents.Count; i++)
                 {
                     if (tempEvents[i].beat > beat)
@@ -504,8 +506,8 @@ namespace HeavenStudio.Games
                         tempEvents2.Add(tempEvents[i]);
                     }
                 }
-                List<DynamicBeatmap.DynamicEntity> tempEvents3 = new List<DynamicBeatmap.DynamicEntity>();
-                float forbiddenLength = tempEvents2[0].beat + tempEvents2[0].length;
+                List<RiqEntity> tempEvents3 = new List<RiqEntity>();
+                double forbiddenLength = tempEvents2[0].beat + tempEvents2[0].length;
                 tempEvents3.Add(tempEvents2[0]);
                 for (int i = 1; i < tempEvents2.Count; i++)
                 {
@@ -514,7 +516,7 @@ namespace HeavenStudio.Games
                         tempEvents3.Add(tempEvents2[i]);
                     }
                 }
-                List<DynamicBeatmap.DynamicEntity> tempEvents4 = new List<DynamicBeatmap.DynamicEntity>();
+                List<RiqEntity> tempEvents4 = new List<RiqEntity>();
                 for (int i = 0; i < tempEvents3.Count; i++)
                 {
                     if (tempEvents3[i].beat < endBeat)
@@ -595,7 +597,7 @@ namespace HeavenStudio.Games
 
                 if (normalizedBeat >= 0f && normalizedBeat <= 1f)
                 {
-                    EasingFunction.Function func = EasingFunction.GetEasingFunction(EasingFunction.Ease.EaseInOutQuad);
+                    Util.EasingFunction.Function func = Util.EasingFunction.GetEasingFunction(Util.EasingFunction.Ease.EaseInOutQuad);
 
                     float newX = func(lastTargetCameraX, targetCameraX, normalizedBeat);
                     GameCamera.additionalPosition = new Vector3(newX, 0, 0);
@@ -609,9 +611,9 @@ namespace HeavenStudio.Games
             }
         }
 
-        public void DefaultLastOne(float beat, int[] JJSamples, int[] JJPitches, int[] SoshiSamples, int[] SoshiPitches, bool moveCamera)
+        public void DefaultLastOne(double beat, int[] JJSamples, int[] JJPitches, int[] SoshiSamples, int[] SoshiPitches, bool moveCamera)
         {
-            Jukebox.PlayOneShotGame("rockers/lastOne");
+            SoundByte.PlayOneShotGame("rockers/lastOne");
             if (moveCamera)
             {
                 lastTargetCameraX = GameCamera.additionalPosition.x;
@@ -665,9 +667,9 @@ namespace HeavenStudio.Games
             ScheduleInput(beat, 6.5f, InputType.STANDARD_DOWN, JustMute, MuteMiss, Empty);
         }
 
-        public void DefaultCmon(float beat, int[] JJSamples, int[] JJPitches, int[] SoshiSamples, int[] SoshiPitches, bool moveCamera)
+        public void DefaultCmon(double beat, int[] JJSamples, int[] JJPitches, int[] SoshiSamples, int[] SoshiPitches, bool moveCamera)
         {
-            Jukebox.PlayOneShotGame("rockers/cmon");
+            SoundByte.PlayOneShotGame("rockers/cmon");
             if (moveCamera)
             {
                 lastTargetCameraX = GameCamera.additionalPosition.x;
@@ -732,11 +734,11 @@ namespace HeavenStudio.Games
             ScheduleInput(beat, 10, InputType.STANDARD_DOWN, JustMute, MuteMiss, Empty);
         }
 
-        public void TogetherPrepare(float beat, bool cmon, bool muteSound, float muteBeat, float goToMiddleBeat, bool moveCamera)
+        public void TogetherPrepare(double beat, bool cmon, bool muteSound, float muteBeat, float goToMiddleBeat, bool moveCamera)
         {
-            List<DynamicBeatmap.DynamicEntity> togetherEvents = GrabAllTogetherEvents(beat);
+            List<RiqEntity> togetherEvents = GrabAllTogetherEvents(beat);
             if (togetherEvents.Count == 0 || crHandlerInstance.IntervalIsActive()) return;
-            if (!muteSound) Jukebox.PlayOneShotGame(cmon ? "rockers/Cmon" : "rockers/LastOne");
+            if (!muteSound) SoundByte.PlayOneShotGame(cmon ? "rockers/Cmon" : "rockers/LastOne");
             List<BeatAction.Action> actions = new List<BeatAction.Action>();
             if (moveCamera)
             {
@@ -807,7 +809,7 @@ namespace HeavenStudio.Games
             BeatAction.New(instance.gameObject, actions);
         }
 
-        public static void PreMoveCamera(float beat, bool moveCamera)
+        public static void PreMoveCamera(double beat, bool moveCamera)
         {
             if (GameManager.instance.currentGame == "rockers")
             {
@@ -818,7 +820,7 @@ namespace HeavenStudio.Games
             queuedPreInterval.Add(beat - 1);
         }
 
-        private void MoveCamera(float beat)
+        private void MoveCamera(double beat)
         {
             lastTargetCameraX = GameCamera.additionalPosition.x;
             targetCameraX = JJ.transform.localPosition.x;
@@ -826,7 +828,7 @@ namespace HeavenStudio.Games
 
         }
 
-        private void PreInterval(float beat)
+        private void PreInterval(double beat)
         {
             BeatAction.New(instance.gameObject, new List<BeatAction.Action>()
             {
@@ -842,7 +844,7 @@ namespace HeavenStudio.Games
             });
         }
 
-        public static void InactiveInterval(float beat, float length)
+        public static void InactiveInterval(double beat, float length)
         {
             if (crHandlerInstance == null)
             {
@@ -851,20 +853,20 @@ namespace HeavenStudio.Games
             crHandlerInstance.StartInterval(beat, length);
         }
 
-        public void StartInterval(float beat, float length)
+        public void StartInterval(double beat, float length)
         {
             crHandlerInstance.StartInterval(beat, length);
             if (GameManager.instance.autoplay) Soshi.UnHold();
         }
 
-        public static void InactiveRiff(float beat, float length, int[] pitchesPlayer, bool gleeClubPlayer, int sampleSoshi, int sampleTonesSoshi)
+        public static void InactiveRiff(double beat, float length, int[] pitchesPlayer, bool gleeClubPlayer, int sampleSoshi, int sampleTonesSoshi)
         {
             if (crHandlerInstance == null)
             {
                 crHandlerInstance = new CallAndResponseHandler(8);
             }
-            List<DynamicBeatmap.DynamicEntity> foundRiffEvents = GrabAllRiffEvents();
-            DynamicBeatmap.DynamicEntity foundEvent = foundRiffEvents.Find(x => x.beat == beat);
+            List<RiqEntity> foundRiffEvents = GrabAllRiffEvents();
+            RiqEntity foundEvent = foundRiffEvents.Find(x => x.beat == beat);
             if ((foundEvent == null || (riffUsedBeats.Count > 0 && riffUsedBeats.Contains(foundEvent.beat))) && foundRiffEvents.Count > 1) return;
             riffUsedBeats.Add(beat);
             crHandlerInstance.AddEvent(beat, length, "riff", new List<CallAndResponseHandler.CallAndResponseEventParam>()
@@ -881,7 +883,7 @@ namespace HeavenStudio.Games
             });
         }
 
-        public static void InactiveBend(float beat, float length, int pitchSoshi)
+        public static void InactiveBend(double beat, float length, int pitchSoshi)
         {
             if (crHandlerInstance == null)
             {
@@ -890,9 +892,9 @@ namespace HeavenStudio.Games
             var bendEventsToCheck = GrabAllBendEvents();
             var riffEventsToCheck = GrabAllRiffEvents();
             if (riffEventsToCheck.Count == 0) return;
-            DynamicBeatmap.DynamicEntity foundEvent = bendEventsToCheck.Find(x => x.beat == beat);
-            if ((foundEvent == null || (bendUsedBeats.Count > 0 && bendUsedBeats.Contains(foundEvent.beat))) && bendEventsToCheck.Count > 1) return;
-            DynamicBeatmap.DynamicEntity riffEventToCheck = riffEventsToCheck.Find(x => beat >= x.beat && beat < x.beat + x.length);
+            RiqEntity foundEvent = bendEventsToCheck.Find(x => x.beat == beat);
+            if ((foundEvent == null || (bendUsedBeats.Count > 0 && bendUsedBeats.Contains((float)foundEvent.beat))) && bendEventsToCheck.Count > 1) return;
+            RiqEntity riffEventToCheck = riffEventsToCheck.Find(x => beat >= x.beat && beat < x.beat + x.length);
             if (riffEventToCheck == null) return;
             bendUsedBeats.Add(beat);
             crHandlerInstance.AddEvent(beat, length, "bend", new List<CallAndResponseHandler.CallAndResponseEventParam>()
@@ -901,10 +903,10 @@ namespace HeavenStudio.Games
             });
         }
 
-        public void Riff(float beat, float length, int[] pitches, bool gleeClubJJ, int[] pitchesPlayer, bool gleeClubPlayer, int sampleJJ, int sampleTonesJJ, int sampleSoshi, int sampleTonesSoshi, bool noRespond)
+        public void Riff(double beat, float length, int[] pitches, bool gleeClubJJ, int[] pitchesPlayer, bool gleeClubPlayer, int sampleJJ, int sampleTonesJJ, int sampleSoshi, int sampleTonesSoshi, bool noRespond)
         {
-            DynamicBeatmap.DynamicEntity foundEvent = riffEvents.Find(x => x.beat == beat);
-            if ((foundEvent == null || (riffUsedBeats.Count > 0 && riffUsedBeats.Contains(foundEvent.beat))) && riffEvents.Count > 1) return;
+            RiqEntity foundEvent = riffEvents.Find(x => x.beat == beat);
+            if ((foundEvent == null || (riffUsedBeats.Count > 0 && riffUsedBeats.Contains((float)foundEvent.beat))) && riffEvents.Count > 1) return;
             riffUsedBeats.Add(beat);
             JJ.StrumStrings(gleeClubJJ, pitches, (PremadeSamples)sampleJJ, sampleTonesJJ, noRespond);
             BeatAction.New(instance.gameObject, new List<BeatAction.Action>()
@@ -926,12 +928,12 @@ namespace HeavenStudio.Games
             });
         }
 
-        public void Bend(float beat, float length, int pitchJJ, int pitchSoshi, bool noRespond)
+        public void Bend(double beat, float length, int pitchJJ, int pitchSoshi, bool noRespond)
         {
             if (riffEvents.Count == 0) return;
-            DynamicBeatmap.DynamicEntity foundEvent = bendEvents.Find(x => x.beat == beat);
-            if ((foundEvent == null || (bendUsedBeats.Count > 0 && bendUsedBeats.Contains(foundEvent.beat))) && bendEvents.Count > 1) return;
-            DynamicBeatmap.DynamicEntity riffEventToCheck = riffEvents.Find(x => beat >= x.beat && beat < x.beat + x.length);
+            RiqEntity foundEvent = bendEvents.Find(x => x.beat == beat);
+            if ((foundEvent == null || (bendUsedBeats.Count > 0 && bendUsedBeats.Contains((float)foundEvent.beat))) && bendEvents.Count > 1) return;
+            RiqEntity riffEventToCheck = riffEvents.Find(x => beat >= x.beat && beat < x.beat + x.length);
             if (riffEventToCheck == null) return;
             bendUsedBeats.Add(beat);
             JJ.BendUp(pitchJJ);
@@ -970,7 +972,7 @@ namespace HeavenStudio.Games
             }
         }
 
-        public void PassTurn(float beat, float length, bool moveCamera)
+        public void PassTurn(double beat, float length, bool moveCamera)
         {
             if (crHandlerInstance.queuedEvents.Count > 0)
             {

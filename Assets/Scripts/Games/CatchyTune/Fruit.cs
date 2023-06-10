@@ -11,13 +11,13 @@ namespace HeavenStudio.Games.Scripts_CatchyTune
     {
 
         public bool isPineapple;
-        public float startBeat;
+        public double startBeat;
 
         public Animator anim;
 
         public bool side;
 
-        public float barelyStart = 0f;
+        public double barelyStart = 0f;
 
         public bool smile;
 
@@ -87,7 +87,7 @@ namespace HeavenStudio.Games.Scripts_CatchyTune
             }
         }
 
-        public static void PlaySound(float startBeat, bool side, bool isPineapple)
+        public static void PlaySound(double startBeat, bool side, bool isPineapple)
         {
             string soundText = "catchyTune/";
 
@@ -141,7 +141,7 @@ namespace HeavenStudio.Games.Scripts_CatchyTune
             if (state <= -1f || state >= 1f)
             {
                 //near miss (barely)
-                barelyStart = Conductor.instance.songPositionInBeats;
+                barelyStart = Conductor.instance.songPositionInBeatsAsDouble;
                 
                 game.catchBarely(side);
 
@@ -156,7 +156,7 @@ namespace HeavenStudio.Games.Scripts_CatchyTune
             }
             else 
             {
-                Jukebox.PlayOneShotGame(soundText + "Catch");
+                SoundByte.PlayOneShotGame(soundText + "Catch");
                 game.catchSuccess(side, isPineapple, smile, startBeat + beatLength, endSmile);
                 Destroy(this.gameObject);
             }

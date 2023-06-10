@@ -98,11 +98,11 @@ namespace HeavenStudio.Games
         public GameObject bg2;
 
         // when to stop playing the catch animation
-        private float stopCatchLeft = 0f;
-        private float stopCatchRight = 0f;
+        private double stopCatchLeft = 0;
+        private double stopCatchRight = 0;
 
-        private float startSmile = 0f;
-        private float stopSmile = 0f;
+        private double startSmile = 0;
+        private double stopSmile = 0;
 
         private bool bopLeft = true;
         private bool bopRight = true;
@@ -112,7 +112,7 @@ namespace HeavenStudio.Games
         static List<QueuedFruit> queuedFruits = new List<QueuedFruit>();
         struct QueuedFruit
         {
-            public float beat;
+            public double beat;
             public int side;
             public bool smile;
             public bool isPineapple;
@@ -143,20 +143,20 @@ namespace HeavenStudio.Games
                 }
 
                 // print(stopCatchLeft + " " + stopCatchRight);
-                // print("current beat: " + conductor.songPositionInBeats);
-                if (stopCatchLeft > 0 && stopCatchLeft <= cond.songPositionInBeats)
+                // print("current beat: " + conductor.songPositionInBeatsAsDouble);
+                if (stopCatchLeft > 0 && stopCatchLeft <= cond.songPositionInBeatsAsDouble)
                 {
                     plalinAnim.Play("idle", 0, 0);
                     stopCatchLeft = 0;
                 }
 
-                if (stopCatchRight > 0 && stopCatchRight <= cond.songPositionInBeats)
+                if (stopCatchRight > 0 && stopCatchRight <= cond.songPositionInBeatsAsDouble)
                 {
                     alalinAnim.Play("idle", 0, 0);
                     stopCatchRight = 0;
                 }
 
-                if (startSmile > 0 && startSmile <= cond.songPositionInBeats)
+                if (startSmile > 0 && startSmile <= cond.songPositionInBeatsAsDouble)
                 {
                     //print("smile start");
                     plalinAnim.Play("smile", 1, 0);
@@ -165,7 +165,7 @@ namespace HeavenStudio.Games
                     heartMessage.SetActive(true);
                 }
 
-                if (stopSmile > 0 && stopSmile <= cond.songPositionInBeats)
+                if (stopSmile > 0 && stopSmile <= cond.songPositionInBeatsAsDouble)
                 {
                     //print("smile stop");
                     plalinAnim.Play("stopsmile", 1, 0);
@@ -201,7 +201,7 @@ namespace HeavenStudio.Games
             }
         }
 
-        public void DropFruit(float beat, int side, bool smile, bool isPineapple, float endSmile)
+        public void DropFruit(double beat, int side, bool smile, bool isPineapple, float endSmile)
         {
             var objectToSpawn = isPineapple ? pineappleBase : orangeBase;
 
@@ -217,9 +217,9 @@ namespace HeavenStudio.Games
         }
 
         //minenice: experiment to test preFunction
-        public static void PreDropFruit(float beat, int side, bool smile, bool isPineapple, float endSmile)
+        public static void PreDropFruit(double beat, int side, bool smile, bool isPineapple, float endSmile)
         {
-            float spawnBeat = beat - 1f;
+            double spawnBeat = beat - 1;
             beat = beat - (isPineapple ? 2f : 1f);
             if (GameManager.instance.currentGame == "catchyTune")
             {
@@ -250,7 +250,7 @@ namespace HeavenStudio.Games
             }
         }
 
-        public void DropFruitSingle(float beat, bool side, bool smile, GameObject objectToSpawn, float endSmile)
+        public void DropFruitSingle(double beat, bool side, bool smile, GameObject objectToSpawn, float endSmile)
         {
 
             var newFruit = GameObject.Instantiate(objectToSpawn, fruitHolder);
@@ -262,7 +262,7 @@ namespace HeavenStudio.Games
             newFruit.SetActive(true);
         }
 
-        public void Bop(float beat, float length, int whoBops, int whoBopsAuto)
+        public void Bop(double beat, float length, int whoBops, int whoBopsAuto)
         {
             bopLeft = whoBopsAuto == (int)WhoBops.Plalin || whoBopsAuto == (int)WhoBops.Both;
             bopRight = whoBopsAuto == (int)WhoBops.Alalin || whoBopsAuto == (int)WhoBops.Both;
@@ -309,7 +309,7 @@ namespace HeavenStudio.Games
             }
         }
 
-        public void catchSuccess(bool side, bool isPineapple, bool smile, float beat, float endSmile)
+        public void catchSuccess(bool side, bool isPineapple, bool smile, double beat, float endSmile)
         {
             string anim = isPineapple ? "catchPineapple" : "catchOrange";
 
@@ -335,9 +335,9 @@ namespace HeavenStudio.Games
         public void catchMiss(bool side, bool isPineapple)
         {
             // not the right sound at all but need an accurate rip
-            Jukebox.PlayOneShotGame("catchyTune/fruitThrough");
+            SoundByte.PlayOneShotGame("catchyTune/fruitThrough");
 
-            float beat = Conductor.instance.songPositionInBeats;
+            double beat = Conductor.instance.songPositionInBeatsAsDouble;
 
             string fruitType = isPineapple ? "Pineapple" : "Orange";
             
@@ -355,7 +355,7 @@ namespace HeavenStudio.Games
 
         public void catchWhiff(bool side)
         {
-            Jukebox.PlayOneShotGame("catchyTune/whiff");
+            SoundByte.PlayOneShotGame("catchyTune/whiff");
             whiffAnim(side);
         }
 
@@ -363,11 +363,11 @@ namespace HeavenStudio.Games
         {
             if (side)
             {
-                Jukebox.PlayOneShotGame("catchyTune/barely right");
+                SoundByte.PlayOneShotGame("catchyTune/barely right");
             }
             else
             {
-                Jukebox.PlayOneShotGame("catchyTune/barely left");
+                SoundByte.PlayOneShotGame("catchyTune/barely left");
             }
 
             whiffAnim(side);
@@ -375,7 +375,7 @@ namespace HeavenStudio.Games
 
         public void whiffAnim(bool side)
         {
-            float beat = Conductor.instance.songPositionInBeats;
+            double beat = Conductor.instance.songPositionInBeatsAsDouble;
             
             if (side)
             {

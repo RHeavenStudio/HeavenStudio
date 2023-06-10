@@ -170,8 +170,8 @@ namespace HeavenStudio.Games
         bool intervalStarted;
         bool shouldResetCount;
         bool doingConsectiveIntervals;
-        float intervalStartBeat;
-        float playerIntervalStartBeat;
+        double intervalStartBeat;
+        double playerIntervalStartBeat;
         float playerBeatInterval;
         float beatInterval = 8f;
         int currentStage;
@@ -181,7 +181,7 @@ namespace HeavenStudio.Games
         bool signExploded;
         struct QueuedInput 
         {
-            public float beat;
+            public double beat;
             public bool dpad;
         }
         static List<QueuedInput> queuedInputs = new List<QueuedInput>();
@@ -237,7 +237,7 @@ namespace HeavenStudio.Games
             currentStage = stage;
         }
 
-        public void RandomPress(float beat, float length, int min, int max, int whichButtons, bool consecutive)
+        public void RandomPress(double beat, float length, int min, int max, int whichButtons, bool consecutive)
         {
             if (min > max) return;
             int pressAmount = UnityEngine.Random.Range(min, max + 1);
@@ -265,7 +265,7 @@ namespace HeavenStudio.Games
                             dpad = i % 2 != 0;
                             break;
                     }
-                    float spawnBeat = beat + i * length;
+                    double spawnBeat = beat + i * length;
                     buttonEvents.Add(new BeatAction.Action(spawnBeat, delegate { HostPressButton(spawnBeat, dpad); }));
                 }
             }
@@ -293,7 +293,7 @@ namespace HeavenStudio.Games
                             dpad = i % 2 != 0;
                             break;
                     }
-                    float spawnBeat = beat + i * length;
+                    double spawnBeat = beat + i * length;
                     buttonEvents.Add(new BeatAction.Action(spawnBeat, delegate { HostPressButton(spawnBeat, dpad); }));
                     pressAmount--;
                 }
@@ -302,7 +302,7 @@ namespace HeavenStudio.Games
             BeatAction.New(instance.gameObject, buttonEvents);
         }
 
-        public void HostPressButton(float beat, bool dpad)
+        public void HostPressButton(double beat, bool dpad)
         {
             if (!intervalStarted)
             {
@@ -317,7 +317,7 @@ namespace HeavenStudio.Games
             {
                 hostHead.DoScaledAnimationAsync("HostStage" + currentStage.ToString(), 0.5f);
             }
-            Jukebox.PlayOneShotGame( dpad ? "quizShow/hostDPad" : "quizShow/hostA");
+            SoundByte.PlayOneShotGame( dpad ? "quizShow/hostDPad" : "quizShow/hostA");
             if (dpad)
             {
                 hostRightArmAnim.DoScaledAnimationAsync("HostRightHit", 0.5f);
@@ -339,7 +339,7 @@ namespace HeavenStudio.Games
             instance.hostRightArmAnim.DoScaledAnimationAsync("HostPrepare", 0.5f);
         }
 
-        public void StartInterval(float beat, float interval)
+        public void StartInterval(double beat, float interval)
         {
             if (!intervalStarted)
             {
@@ -360,7 +360,7 @@ namespace HeavenStudio.Games
             intervalStarted = true;
         }
 
-        public void PassTurn(float beat, float length, bool timeUpSound, bool consecutive, bool visualClock, int audioClock)
+        public void PassTurn(double beat, float length, bool timeUpSound, bool consecutive, bool visualClock, int audioClock)
         {
             if (queuedInputs.Count == 0) return;
             if (shouldPrepareArms) 
@@ -392,7 +392,7 @@ namespace HeavenStudio.Games
             float timeUpBeat = 0f;
             if (audioClock == (int)ClockAudio.Both || audioClock == (int)ClockAudio.Start) 
             {
-                Jukebox.PlayOneShotGame("quizShow/timerStart");
+                SoundByte.PlayOneShotGame("quizShow/timerStart");
                 timeUpBeat = 0.5f;
             }
             if (audioClock == (int)ClockAudio.End) timeUpBeat = 0.5f;
@@ -403,7 +403,7 @@ namespace HeavenStudio.Games
                 { 
                     if (!consecutive) 
                     {
-                        if (audioClock == (int)ClockAudio.Both || audioClock == (int)ClockAudio.End) Jukebox.PlayOneShotGame("quizShow/timerStop"); 
+                        if (audioClock == (int)ClockAudio.Both || audioClock == (int)ClockAudio.End) SoundByte.PlayOneShotGame("quizShow/timerStop"); 
                         contesteeLeftArmAnim.DoScaledAnimationAsync("LeftRest", 0.5f);
                         contesteeRightArmAnim.DoScaledAnimationAsync("RightRest", 0.5f);
                         shouldPrepareArms = true;
@@ -411,7 +411,7 @@ namespace HeavenStudio.Games
                     }
                 }   
             ),
-                new BeatAction.Action(beat + length + beatInterval + timeUpBeat, delegate { if (timeUpSound && !consecutive) Jukebox.PlayOneShotGame("quizShow/timeUp"); })
+                new BeatAction.Action(beat + length + beatInterval + timeUpBeat, delegate { if (timeUpSound && !consecutive) SoundByte.PlayOneShotGame("quizShow/timeUp"); })
             });
             foreach (var input in queuedInputs) 
             {
@@ -443,12 +443,12 @@ namespace HeavenStudio.Games
             }
             if (dpad)
             {
-                Jukebox.PlayOneShotGame("quizShow/contestantDPad");
+                SoundByte.PlayOneShotGame("quizShow/contestantDPad");
                 contesteeLeftArmAnim.DoScaledAnimationAsync("LeftArmPress", 0.5f);
             }
             else
             {
-                Jukebox.PlayOneShotGame("quizShow/contestantA");
+                SoundByte.PlayOneShotGame("quizShow/contestantA");
                 contesteeRightArmAnim.DoScaledAnimationAsync("RightArmHit", 0.5f);
             }
             pressCount++;
@@ -477,7 +477,7 @@ namespace HeavenStudio.Games
             {
                 case (int)ShouldExplode.Contestant:
                     if (contExploded) return;
-                    Jukebox.PlayOneShotGame("quizShow/contestantExplode");
+                    SoundByte.PlayOneShotGame("quizShow/contestantExplode");
                     firstDigitSr.color = new Color(1, 1, 1, 0);
                     secondDigitSr.color = new Color(1, 1, 1, 0);
                     contCounter.sprite = explodedCounter;
@@ -486,7 +486,7 @@ namespace HeavenStudio.Games
                     break;
                 case (int)ShouldExplode.Host:
                     if (hostExploded) return;
-                    Jukebox.PlayOneShotGame("quizShow/hostExplode");
+                    SoundByte.PlayOneShotGame("quizShow/hostExplode");
                     hostFirstDigitSr.color = new Color(1, 1, 1, 0);
                     hostSecondDigitSr.color = new Color(1, 1, 1, 0);
                     hostCounter.sprite = explodedCounter;
@@ -495,7 +495,7 @@ namespace HeavenStudio.Games
                     break;
                 case (int)ShouldExplode.Sign:
                     if (signExploded) return;
-                    Jukebox.PlayOneShotGame("quizShow/signExplode");
+                    SoundByte.PlayOneShotGame("quizShow/signExplode");
                     signExploded = true;
                     signExplosion.Play();
                     signAnim.Play("Exploded", 0, 0);
@@ -503,14 +503,14 @@ namespace HeavenStudio.Games
             }
         }
 
-        public void RevealAnswer(float beat, float length)
+        public void RevealAnswer(double beat, float length)
         {
             blackOut.SetActive(true);
             BeatAction.New(instance.gameObject, new List<BeatAction.Action>()
             {
                 new BeatAction.Action(beat + length, delegate 
                 { 
-                    Jukebox.PlayOneShotGame("quizShow/answerReveal");
+                    SoundByte.PlayOneShotGame("quizShow/answerReveal");
                     hostFirstDigitSr.sprite = hostNumberSprites[GetSpecificDigit(countToMatch, 1)];
                     hostSecondDigitSr.sprite = hostNumberSprites[GetSpecificDigit(countToMatch, 2)];
                 })
@@ -523,26 +523,26 @@ namespace HeavenStudio.Games
             blackOut.SetActive(false);
             if (revealAnswer)
             {
-                Jukebox.PlayOneShotGame("quizShow/answerReveal");
+                SoundByte.PlayOneShotGame("quizShow/answerReveal");
                 hostFirstDigitSr.sprite = hostNumberSprites[GetSpecificDigit(countToMatch, 1)];
                 hostSecondDigitSr.sprite = hostNumberSprites[GetSpecificDigit(countToMatch, 2)];
             }
             if (pressCount == countToMatch)
             {
-                Jukebox.PlayOneShotGame("quizShow/correct");
+                SoundByte.PlayOneShotGame("quizShow/correct");
                 contesteeHead.Play("ContesteeSmile", -1, 0);
                 hostHead.Play("HostSmile", -1, 0);
-                if (audience) Jukebox.PlayOneShotGame("quizShow/audienceCheer");
-                if (jingle) Jukebox.PlayOneShotGame("quizShow/correctJingle");
+                if (audience) SoundByte.PlayOneShotGame("quizShow/audienceCheer");
+                if (jingle) SoundByte.PlayOneShotGame("quizShow/correctJingle");
             }
             else
             {
                 ScoreMiss();
-                Jukebox.PlayOneShotGame("quizShow/incorrect");
+                SoundByte.PlayOneShotGame("quizShow/incorrect");
                 contesteeHead.Play("ContesteeSad", -1, 0);
                 hostHead.Play("HostSad", -1, 0);
-                if (audience) Jukebox.PlayOneShotGame("quizShow/audienceSad");
-                if (jingle) Jukebox.PlayOneShotGame("quizShow/incorrectJingle");
+                if (audience) SoundByte.PlayOneShotGame("quizShow/audienceSad");
+                if (jingle) SoundByte.PlayOneShotGame("quizShow/incorrectJingle");
             }
         }
 

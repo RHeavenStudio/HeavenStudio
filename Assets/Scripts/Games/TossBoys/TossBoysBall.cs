@@ -42,7 +42,7 @@ namespace HeavenStudio.Games.Scripts_TossBoys
 
         private State currentState;
 
-        private float startBeat;
+        private double startBeat;
 
         private Path currentPath;
 
@@ -66,7 +66,7 @@ namespace HeavenStudio.Games.Scripts_TossBoys
                         //Do Jackshit
                         break;
                     default:
-                        transform.position = GetPathPositionFromBeat(currentPath, Mathf.Max(startBeat, Conductor.instance.songPositionInBeats), startBeat);
+                        transform.position = GetPathPositionFromBeat(currentPath, Math.Max(startBeat, Conductor.instance.songPositionInBeatsAsDouble), startBeat);
                         float rot = GetPathValue("rot");
                         transform.rotation = Quaternion.Euler(0f, 0f, transform.rotation.eulerAngles.z - (rot * Time.deltaTime * (1f / Conductor.instance.pitchedSecPerBeat)));
                         break;
@@ -74,7 +74,7 @@ namespace HeavenStudio.Games.Scripts_TossBoys
             }
         }
 
-        public void SetState(State state, float beat, float length = 0)
+        public void SetState(State state, double beat, float length = 0)
         {
             UpdateLastRealPos();
             startBeat = beat;

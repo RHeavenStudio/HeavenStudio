@@ -6,6 +6,7 @@ using DG.Tweening;
 using System;
 
 using HeavenStudio.Util;
+using Jukebox;
 
 namespace HeavenStudio.Games.Loaders
 {
@@ -230,15 +231,15 @@ namespace HeavenStudio.Games
             }
         }
 
-        List<DynamicBeatmap.DynamicEntity> spawnedBlockEvents = new List<DynamicBeatmap.DynamicEntity>();
+        List<RiqEntity> spawnedBlockEvents = new List<RiqEntity>();
         void Update()
         {
             if (!Conductor.instance.isPlaying && !Conductor.instance.isPaused)
                 return;
 
-            var currentBeat = Conductor.instance.songPositionInBeats;
+            var currentBeat = Conductor.instance.songPositionInBeatsAsDouble;
 
-            var blockEvents = GameManager.instance.Beatmap.entities.FindAll(c => c.datamodel == "builtToScaleDS/spawn blocks");
+            var blockEvents = GameManager.instance.Beatmap.Entities.FindAll(c => c.datamodel == "builtToScaleDS/spawn blocks");
             for (int i = 0; i < blockEvents.Count; i++)
             {
                 var ev = blockEvents[i];
@@ -278,7 +279,7 @@ namespace HeavenStudio.Games
                 shootingThisFrame = true;
                 Shoot();
                 SpawnObject(BTSObject.FlyingRod);
-                Jukebox.PlayOneShotGame("builtToScaleDS/Boing");
+                SoundByte.PlayOneShotGame("builtToScaleDS/Boing");
             }
 
             if (!shootingThisFrame)
@@ -292,7 +293,7 @@ namespace HeavenStudio.Games
             shootingThisFrame = false;
         }
 
-        public void Lights(float beat, float length, bool autoLights, bool shouldLights)
+        public void Lights(double beat, float length, bool autoLights, bool shouldLights)
         {
             autoLight = autoLights;
             lighting = autoLights || shouldLights;
@@ -361,7 +362,7 @@ namespace HeavenStudio.Games
             firstLight = !firstLight;
         }
 
-        public void SpawnBlocks(float beat, float length)
+        public void SpawnBlocks(double beat, float length)
         {
             var newBlocks = GameObject.Instantiate(movingBlocksBase, blocksHolder).GetComponent<Blocks>();
             newBlocks.createBeat = beat;
@@ -376,7 +377,7 @@ namespace HeavenStudio.Games
         const int blockTotalFrames = 80;
         const int spawnFrameOffset = -3;
         List<int> criticalFrames = new List<int> { 7, 15, 23, 31, 39, 47 };
-        public void SetBlockTime(Blocks blocks, float spawnBeat, float length)
+        public void SetBlockTime(Blocks blocks, double spawnBeat, float length)
         {
             float spawnTimeOffset = (float)spawnFrameOffset / (float)blockFramesPerSecond;
 
@@ -388,7 +389,7 @@ namespace HeavenStudio.Games
 
             float speedMult = secondsToHitFrame / secondsToHitBeat;
 
-            float secondsPastSpawnTime = secondsPerBeat * (Conductor.instance.songPositionInBeats - spawnBeat) + spawnTimeOffset;
+            float secondsPastSpawnTime = secondsPerBeat * (Conductor.instance.songPositionInBeats - (float)spawnBeat) + spawnTimeOffset;
             float framesPastSpawnTime = blockFramesPerSecond * speedMult * secondsPastSpawnTime;
             
             // The only way I could deal with Unity's interpolation shenanigans without having a stroke.
@@ -434,15 +435,15 @@ namespace HeavenStudio.Games
             elevatorAnim.Play("MakeRod", 0, 0);
         }
 
-        public void PlayPiano(float beat, float length, int semiTones)
+        public void PlayPiano(double beat, float length, int semiTones)
         {
-            var pianoPitch = Jukebox.GetPitchFromSemiTones(semiTones, true);
-            var pianoSource = Jukebox.PlayOneShotGame("builtToScaleDS/Piano", -1, pianoPitch, 0.8f, true);
+            var pianoPitch = SoundByte.GetPitchFromSemiTones(semiTones, true);
+            var pianoSource = SoundByte.PlayOneShotGame("builtToScaleDS/Piano", -1, pianoPitch, 0.8f, true);
 
             pianoSource.SetLoopParams(beat + length, 0.1f);
         }
 
-        public void MultiplePiano(float beat, float length, bool silent, int note1, int note2, int note3, int note4, int note5, int note6)
+        public void MultiplePiano(double beat, float length, bool silent, int note1, int note2, int note3, int note4, int note5, int note6)
         {
             if (silent) return;
             BeatAction.New(instance.gameObject, new List<BeatAction.Action>()

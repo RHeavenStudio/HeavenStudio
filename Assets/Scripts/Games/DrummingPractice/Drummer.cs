@@ -24,7 +24,7 @@ namespace HeavenStudio.Games.Scripts_DrummingPractice
 
         private bool hitting = false;
 
-        private float canBopBeat = -2f;
+        private double canBopBeat = -2f;
 
         // in the future: use the MiiStudio API to render any mii from a nintendo account / MNMS / Mii Studio code?
         // figure out how to call the API from unity?
@@ -59,7 +59,7 @@ namespace HeavenStudio.Games.Scripts_DrummingPractice
                 animator.Play("Bop", 0, 0);
         }
 
-        public void Prepare(float beat, int type)
+        public void Prepare(double beat, int type)
         {
             canBopBeat = beat;
             count = type;
@@ -103,13 +103,13 @@ namespace HeavenStudio.Games.Scripts_DrummingPractice
 
         private void HitSound(bool applause)
         {
-            Jukebox.PlayOneShotGame("drummingPractice/hit");
-            if (applause) Jukebox.PlayOneShot("applause");
+            SoundByte.PlayOneShotGame("drummingPractice/hit");
+            if (applause) SoundByte.PlayOneShot("applause");
         }
 
         private void MissSound()
         {
-            Jukebox.PlayOneShotGame("drummingPractice/miss");
+            SoundByte.PlayOneShotGame("drummingPractice/miss");
         }
 
         public void EndHit()

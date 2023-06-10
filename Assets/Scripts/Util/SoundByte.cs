@@ -5,7 +5,7 @@ using UnityEngine;
 
 namespace HeavenStudio.Util
 {
-    public class Jukebox
+    public class SoundByte
     {
         static GameObject oneShotAudioSourceObject;
         static AudioSource oneShotAudioSource;
@@ -135,7 +135,7 @@ namespace HeavenStudio.Util
         ///    Unpitched, non-scheduled, non-looping sounds are played using a global One-Shot audio source that doesn't create a Sound object.
         ///    Looped sounds return their created Sound object so they can be canceled after creation.
         /// </summary>
-        public static Sound PlayOneShot(string name, float beat = -1, float pitch = 1f, float volume = 1f, bool looping = false, string game = null, float offset = 0f)
+        public static Sound PlayOneShot(string name, double beat = -1, float pitch = 1f, float volume = 1f, bool looping = false, string game = null, double offset = 0f)
         {
             AudioClip clip = null;
             if (game != null)
@@ -247,7 +247,7 @@ namespace HeavenStudio.Util
         ///    Unpitched, non-scheduled, non-looping sounds are played using a global One-Shot audio source that doesn't create a Sound object.
         ///    Looped sounds return their created Sound object so they can be canceled after creation.
         /// </summary>
-        public static Sound PlayOneShotGame(string name, float beat = -1, float pitch = 1f, float volume = 1f, bool looping = false, bool forcePlay = false, float offset = 0f)
+        public static Sound PlayOneShotGame(string name, double beat = -1, float pitch = 1f, float volume = 1f, bool looping = false, bool forcePlay = false, double offset = 0f)
         {
             string gameName = name.Split('/')[0];
             var inf = GameManager.instance.GetGameInfo(gameName);

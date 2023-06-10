@@ -10,6 +10,7 @@ using System.Diagnostics;
 using UnityEngine;
 using UnityEngine.Rendering;
 using static HeavenStudio.EntityTypes;
+using Jukebox;
 
 namespace HeavenStudio.Games.Loaders
 {
@@ -101,7 +102,7 @@ namespace HeavenStudio.Games.Loaders
                         new Param("xPos", new EntityTypes.Float(-40f, 40f, 0f), "X Position", "Which position on the X axis should the Launch Pad travel to?"),
                         new Param("yPos", new EntityTypes.Float(-30f, 30f, 0f), "Y Position", "Which position on the Y axis should the Launch Pad travel to?"),
                         new Param("zPos", new EntityTypes.Float(-90f, 90f, 0f), "Z Position", "Which position on the Z axis should the Launch Pad travel to?"),
-                        new Param("ease", EasingFunction.Ease.Linear, "Ease", "Which ease should the Launch Pad use?")
+                        new Param("ease", Util.EasingFunction.Ease.Linear, "Ease", "Which ease should the Launch Pad use?")
                     }
                 },
                 new GameAction("rotMove", "Change Launch Pad Rotation")
@@ -111,7 +112,7 @@ namespace HeavenStudio.Games.Loaders
                     parameters = new List<Param>()
                     {
                         new Param("rot", new EntityTypes.Float(-360, 360, 0), "Angle", "Which angle of rotation should the Launch Pad rotate towards?"),
-                        new Param("ease", EasingFunction.Ease.Linear, "Ease", "Which ease should the Launch Pad use?")
+                        new Param("ease", Util.EasingFunction.Ease.Linear, "Ease", "Which ease should the Launch Pad use?")
                     }
                 },
                 new GameAction("toggleStars", "Toggle Falling Stars")
@@ -174,8 +175,8 @@ namespace HeavenStudio.Games
         private Vector3 currentPadPos = new Vector3(0, -2.4f, 0);
         private float lastPadRotation;
         private float currentPadRotation;
-        private EasingFunction.Ease lastPosEase;
-        private EasingFunction.Ease lastRotEase;
+        private Util.EasingFunction.Ease lastPosEase;
+        private Util.EasingFunction.Ease lastRotEase;
         public enum RocketType
         {
             Family = 0,
@@ -186,7 +187,7 @@ namespace HeavenStudio.Games
         public struct QueuedRocket
         {
             public RocketType type;
-            public float beat;
+            public double beat;
             public float offSet;
             public List<int> notes; 
         }
@@ -196,9 +197,9 @@ namespace HeavenStudio.Games
 
         private int currentRotIndex;
 
-        private List<DynamicBeatmap.DynamicEntity> allPosEvents = new List<DynamicBeatmap.DynamicEntity>();
+        private List<RiqEntity> allPosEvents = new List<RiqEntity>();
 
-        private List<DynamicBeatmap.DynamicEntity> allRotEvents = new List<DynamicBeatmap.DynamicEntity>();
+        private List<RiqEntity> allRotEvents = new List<RiqEntity>();
 
         public static LaunchParty instance;
 
@@ -216,10 +217,10 @@ namespace HeavenStudio.Games
             instance = this;
             lensFlareAnim.Play("Flashing", 0, 0);
             var posEvents = EventCaller.GetAllInGameManagerList("launchParty", new string[] { "posMove" });
-            List<DynamicBeatmap.DynamicEntity> tempPosEvents = new List<DynamicBeatmap.DynamicEntity>();
+            List<RiqEntity> tempPosEvents = new List<RiqEntity>();
             for (int i = 0; i < posEvents.Count; i++)
             {
-                if (posEvents[i].beat + posEvents[i].beat >= Conductor.instance.songPositionInBeats)
+                if (posEvents[i].beat + posEvents[i].beat >= Conductor.instance.songPositionInBeatsAsDouble)
                 {
                     tempPosEvents.Add(posEvents[i]);
                 }
@@ -228,10 +229,10 @@ namespace HeavenStudio.Games
             allPosEvents = tempPosEvents;
 
             var rotEvents = EventCaller.GetAllInGameManagerList("launchParty", new string[] { "rotMove" });
-            List<DynamicBeatmap.DynamicEntity> tempRotEvents = new List<DynamicBeatmap.DynamicEntity>();
+            List<RiqEntity> tempRotEvents = new List<RiqEntity>();
             for (int i = 0; i < rotEvents.Count; i++)
             {
-                if (rotEvents[i].beat + rotEvents[i].beat >= Conductor.instance.songPositionInBeats)
+                if (rotEvents[i].beat + rotEvents[i].beat >= Conductor.instance.songPositionInBeatsAsDouble)
                 {
                     tempRotEvents.Add(rotEvents[i]);
                 }
@@ -261,7 +262,7 @@ namespace HeavenStudio.Games
             {
                 if (currentPosIndex < allPosEvents.Count && currentPosIndex >= 0)
                 {
-                    if (cond.songPositionInBeats >= allPosEvents[currentPosIndex].beat)
+                    if (cond.songPositionInBeatsAsDouble >= allPosEvents[currentPosIndex].beat)
                     {
                         UpdateLaunchPadPos();
                         currentPosIndex++;
@@ -284,7 +285,7 @@ namespace HeavenStudio.Games
                         }
                         else
                         {
-                            EasingFunction.Function func = EasingFunction.GetEasingFunction(lastPosEase);
+                            Util.EasingFunction.Function func = Util.EasingFunction.GetEasingFunction(lastPosEase);
 
                             float newPosX = func(lastPadPos.x, currentPadPos.x, normalizedBeat);
                             float newPosY = func(lastPadPos.y, currentPadPos.y, normalizedBeat);
@@ -298,7 +299,7 @@ namespace HeavenStudio.Games
             {
                 if (currentRotIndex < allRotEvents.Count && currentRotIndex >= 0)
                 {
-                    if (cond.songPositionInBeats >= allRotEvents[currentRotIndex].beat)
+                    if (cond.songPositionInBeatsAsDouble >= allRotEvents[currentRotIndex].beat)
                     {
                         UpdateLaunchPadRot();
                         currentRotIndex++;
@@ -321,7 +322,7 @@ namespace HeavenStudio.Games
                         }
                         else
                         {
-                            EasingFunction.Function func = EasingFunction.GetEasingFunction(lastRotEase);
+                            Util.EasingFunction.Function func = Util.EasingFunction.GetEasingFunction(lastRotEase);
 
                             float newRotZ = func(lastPadRotation, currentPadRotation, normalizedBeat);
                             launchPadRotatable.rotation = Quaternion.Euler(0, 0, newRotZ);
@@ -341,10 +342,10 @@ namespace HeavenStudio.Games
             if (currentPosIndex < allPosEvents.Count && currentPosIndex >= 0)
             {
                 lastPadPos = launchPad.position;
-                currentPosBeat = allPosEvents[currentPosIndex].beat;
+                currentPosBeat = (float)allPosEvents[currentPosIndex].beat;
                 currentPosLength = allPosEvents[currentPosIndex].length;
                 currentPadPos = new Vector3(allPosEvents[currentPosIndex]["xPos"], allPosEvents[currentPosIndex]["yPos"], allPosEvents[currentPosIndex]["zPos"]);
-                lastPosEase = (EasingFunction.Ease)allPosEvents[currentPosIndex]["ease"];
+                lastPosEase = (Util.EasingFunction.Ease)allPosEvents[currentPosIndex]["ease"];
             }
         }
 
@@ -353,14 +354,14 @@ namespace HeavenStudio.Games
             if (currentRotIndex < allRotEvents.Count && currentRotIndex >= 0)
             {
                 lastPadRotation = launchPadRotatable.rotation.eulerAngles.z;
-                currentRotBeat = allRotEvents[currentRotIndex].beat;
+                currentRotBeat = (float)allRotEvents[currentRotIndex].beat;
                 currentRotLength = allRotEvents[currentRotIndex].length;
                 currentPadRotation = allRotEvents[currentRotIndex]["rot"];
-                lastRotEase = (EasingFunction.Ease)allRotEvents[currentRotIndex]["ease"];
+                lastRotEase = (Util.EasingFunction.Ease)allRotEvents[currentRotIndex]["ease"];
             }
         }
 
-        public void SpawnRocket(float beat, float beatOffset, RocketType type, List<int> notes)
+        public void SpawnRocket(double beat, float beatOffset, RocketType type, List<int> notes)
         {
             GameObject rocketToSpawn = rocket;
             switch (type)
@@ -383,7 +384,7 @@ namespace HeavenStudio.Games
             List<float> pitchedNotes = new List<float>();
             foreach (var note in notes)
             {
-                pitchedNotes.Add(Jukebox.GetPitchFromSemiTones(note, true));
+                pitchedNotes.Add(SoundByte.GetPitchFromSemiTones(note, true));
             }
             rocketScript.pitches.AddRange(pitchedNotes);
             switch (type)
@@ -407,7 +408,7 @@ namespace HeavenStudio.Games
             });
         }
 
-        public static void LaunchRocket(float beat, float beatOffset, int noteOne, int noteTwo, int noteThree, int noteFour)
+        public static void LaunchRocket(double beat, float beatOffset, int noteOne, int noteTwo, int noteThree, int noteFour)
         {
             List<int> pitches = new List<int>()
             {
@@ -426,7 +427,7 @@ namespace HeavenStudio.Games
             }
         }
 
-        public static void LaunchPartyCracker(float beat, float beatOffset, int noteOne, int noteTwo, int noteThree, int noteFour, int noteFive, int noteSix)
+        public static void LaunchPartyCracker(double beat, float beatOffset, int noteOne, int noteTwo, int noteThree, int noteFour, int noteFive, int noteSix)
         {
             List<int> pitches = new List<int>()
             {
@@ -447,7 +448,7 @@ namespace HeavenStudio.Games
             }
         }
 
-        public static void LaunchBell(float beat, float beatOffset, int noteOne, int noteTwo, int noteThree, int noteFour, int noteFive, int noteSix, int noteSeven, int noteEight, int noteNine)
+        public static void LaunchBell(double beat, float beatOffset, int noteOne, int noteTwo, int noteThree, int noteFour, int noteFive, int noteSix, int noteSeven, int noteEight, int noteNine)
         {
             List<int> pitches = new List<int>()
             {
@@ -471,7 +472,7 @@ namespace HeavenStudio.Games
             }
         }
 
-        public static void LaunchBowlingPin(float beat, float beatOffset, int noteOne, int noteTwo, int noteThree, int noteFour, int noteFive, int noteSix, int noteSeven, 
+        public static void LaunchBowlingPin(double beat, float beatOffset, int noteOne, int noteTwo, int noteThree, int noteFour, int noteFive, int noteSix, int noteSeven, 
             int noteEight, int noteNine, int noteTen, int noteEleven, int noteTwelve, int noteThirteen, int noteFourteen, int noteFifteen)
         {
             List<int> pitches = new List<int>()
@@ -502,7 +503,7 @@ namespace HeavenStudio.Games
             }
         }
 
-        public void CreateParticles(float beat, bool toggle, float starDensity, float starSpeed, float starSpeedBack)
+        public void CreateParticles(double beat, bool toggle, float starDensity, float starSpeed, float starSpeedBack)
         {
             ParticleSystem.EmissionModule emm;
             ParticleSystem.EmissionModule emm2;

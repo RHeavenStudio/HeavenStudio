@@ -65,7 +65,7 @@ namespace HeavenStudio.Games
         }
         public struct QueuedObject
         {
-            public float beat;
+            public double beat;
             public int type;
         }
         public static List<QueuedObject> queuedInputs = new List<QueuedObject>();
@@ -92,9 +92,9 @@ namespace HeavenStudio.Games
         public GameEvent bop = new GameEvent();
         bool goBop = true;
 
-        public float playerCanDodge = Single.MinValue;
-        float playerBopStart = Single.MinValue;
-        float girlBopStart = Single.MinValue;
+        public double playerCanDodge = double.MinValue;
+        double playerBopStart = double.MinValue;
+        double girlBopStart = double.MinValue;
         bool showBubble = true;
 
 
@@ -117,10 +117,10 @@ namespace HeavenStudio.Games
             var cond = Conductor.instance;
             if (cond.ReportBeat(ref bop.lastReportedBeat, bop.startBeat % 1) && goBop)
             {
-                if (cond.songPositionInBeats > playerBopStart)
+                if (cond.songPositionInBeatsAsDouble > playerBopStart)
                     playerAnim.DoScaledAnimationAsync("Bop");
 
-                if (cond.songPositionInBeats > girlBopStart)
+                if (cond.songPositionInBeatsAsDouble > girlBopStart)
                     girlAnim.DoScaledAnimationAsync("Bop");
             }
 
@@ -155,14 +155,14 @@ namespace HeavenStudio.Games
                 }
             }
 
-            if (PlayerInput.Pressed() && !IsExpectingInputNow() && (playerCanDodge <= Conductor.instance.songPositionInBeats))
+            if (PlayerInput.Pressed() && !IsExpectingInputNow() && (playerCanDodge <= Conductor.instance.songPositionInBeatsAsDouble))
             {
                 PlayerDodge(true);
-                playerCanDodge = Conductor.instance.songPositionInBeats + 0.6f;
+                playerCanDodge = Conductor.instance.songPositionInBeatsAsDouble + 0.6f;
             }
         }
 
-        public void Bop(float beat, float length, bool shouldBop, bool autoBop)
+        public void Bop(double beat, float length, bool shouldBop, bool autoBop)
         {
             var cond = Conductor.instance;
             goBop = autoBop;
@@ -174,10 +174,10 @@ namespace HeavenStudio.Games
                     {
                         new BeatAction.Action(beat + i, delegate
                         {
-                            if (cond.songPositionInBeats > playerBopStart)
+                            if (cond.songPositionInBeatsAsDouble > playerBopStart)
                                 playerAnim.DoScaledAnimationAsync("Bop");
 
-                            if (cond.songPositionInBeats > girlBopStart)
+                            if (cond.songPositionInBeatsAsDouble > girlBopStart)
                                 girlAnim.DoScaledAnimationAsync("Bop");
                         })
                     });
@@ -190,7 +190,7 @@ namespace HeavenStudio.Games
             instance.showBubble = !instance.showBubble;
         }
         
-                public static void PreTossObject(float beat, int type)
+        public static void PreTossObject(double beat, int type)
         {
             if (GameManager.instance.currentGame == "trickClass")
             {
@@ -228,24 +228,24 @@ namespace HeavenStudio.Games
             }
         }
 
-        public void TossObject(float beat, int type)
+        public void TossObject(double beat, int type)
         {
             switch (type)
             {
                 case (int) TrickObjType.Plane:
-                    Jukebox.PlayOneShotGame("trickClass/girl_toss_plane");
+                    SoundByte.PlayOneShotGame("trickClass/girl_toss_plane");
                     break;
                 default:
-                    Jukebox.PlayOneShotGame("trickClass/girl_toss_ball");
+                    SoundByte.PlayOneShotGame("trickClass/girl_toss_ball");
                     break;
             }
             SpawnObject(beat, type);
 
             girlAnim.DoScaledAnimationAsync("Throw");
-            girlBopStart = Conductor.instance.songPositionInBeats + 0.75f;
+            girlBopStart = Conductor.instance.songPositionInBeatsAsDouble + 0.75f;
         }
 
-        public void SpawnObject(float beat, int type)
+        public void SpawnObject(double beat, int type)
         {
             GameObject objectToSpawn;
             BezierCurve3D curve;
@@ -275,27 +275,27 @@ namespace HeavenStudio.Games
 
         public void PlayerDodge(bool slow = false)
         {
-            if (playerCanDodge > Conductor.instance.songPositionInBeats) return;
+            if (playerCanDodge > Conductor.instance.songPositionInBeatsAsDouble) return;
 
             //anim
-            Jukebox.PlayOneShotGame("trickClass/player_dodge");
+            SoundByte.PlayOneShotGame("trickClass/player_dodge");
             playerAnim.DoScaledAnimationAsync("Dodge", slow ? 0.6f : 1f);
-            playerBopStart = Conductor.instance.songPositionInBeats + 0.75f;
+            playerBopStart = Conductor.instance.songPositionInBeatsAsDouble + 0.75f;
             
         }
 
         public void PlayerDodgeNg()
         {
             playerAnim.DoScaledAnimationAsync("DodgeNg");
-            playerBopStart = Conductor.instance.songPositionInBeats + 0.75f;
-            playerCanDodge = Conductor.instance.songPositionInBeats + 0.15f;
+            playerBopStart = Conductor.instance.songPositionInBeatsAsDouble + 0.75f;
+            playerCanDodge = Conductor.instance.songPositionInBeatsAsDouble + 0.15f;
         }
 
         public void PlayerThrough()
         {
             playerAnim.DoScaledAnimationAsync("Through");
-            playerBopStart = Conductor.instance.songPositionInBeats + 0.75f;
-            playerCanDodge = Conductor.instance.songPositionInBeats + 0.15f;
+            playerBopStart = Conductor.instance.songPositionInBeatsAsDouble + 0.75f;
+            playerCanDodge = Conductor.instance.songPositionInBeatsAsDouble + 0.15f;
         }
     }
 }

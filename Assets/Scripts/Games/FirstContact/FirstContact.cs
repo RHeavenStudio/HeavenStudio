@@ -1,3 +1,4 @@
+using System;
 using System.Text;
 using System.Collections.Generic;
 using UnityEngine;
@@ -99,7 +100,7 @@ namespace HeavenStudio.Games
         public int alienSpeakCount;
         public int translatorSpeakCount;
         public bool hasMissed;
-        private float lastReportedBeat = 0;
+        private double lastReportedBeat = 0;
 
         [Header("Components")]
         [SerializeField] GameObject alien;
@@ -119,7 +120,7 @@ namespace HeavenStudio.Games
         [Header("Variables")]
         int currentVoicelineIndex = -1;
         public bool intervalStarted;
-        float intervalStartBeat;
+        double intervalStartBeat;
         public float beatInterval = 4f;
         public bool noHitOnce, isSpeaking;
         //public int version;
@@ -137,7 +138,7 @@ namespace HeavenStudio.Games
         static List<QueuedSecondContactInput> queuedInputs = new List<QueuedSecondContactInput>();
         struct QueuedSecondContactInput
         {
-            public float beatAwayFromStart;
+            public double beatAwayFromStart;
             public string dialogue;
         }
 
@@ -189,7 +190,7 @@ namespace HeavenStudio.Games
             translateFailTextbox.SetActive(false);
         }
 
-        public void SetIntervalStart(float beat, float interval, string outDialogue)
+        public void SetIntervalStart(double beat, float interval, string outDialogue)
         {
             translator.GetComponent<Animator>().Play("translator_lookAtAlien", 0, 0);
             if (!intervalStarted)
@@ -231,9 +232,9 @@ namespace HeavenStudio.Games
             {
                 liveBar.GetComponent<Animator>().Play("liveBar", 0, 0);
             }
-            else if (Conductor.instance.songPositionInBeats < lastReportedBeat)
+            else if (Conductor.instance.songPositionInBeatsAsDouble < lastReportedBeat)
             {
-                lastReportedBeat = Mathf.Round(Conductor.instance.songPositionInBeats);
+                lastReportedBeat = Math.Round(Conductor.instance.songPositionInBeatsAsDouble);
             }
 
             if (PlayerInput.Pressed(true) && !IsExpectingInputNow(InputType.STANDARD_DOWN | InputType.DIRECTION_DOWN))
@@ -248,7 +249,7 @@ namespace HeavenStudio.Games
                 }
                 else if (!noHitOnce && !missionControl.activeInHierarchy)
                 {
-                    Jukebox.PlayOneShotGame("firstContact/ALIEN_PLAYER_MISS2_A", -1, Jukebox.GetPitchFromSemiTones(UnityEngine.Random.Range(-2, 1), false));
+                    SoundByte.PlayOneShotGame("firstContact/ALIEN_PLAYER_MISS2_A", -1, SoundByte.GetPitchFromSemiTones(UnityEngine.Random.Range(-2, 1), false));
                 }
             }
         }
@@ -291,7 +292,7 @@ namespace HeavenStudio.Games
 
         }
 
-        public void AlienSpeak(float beat, string dialogue, int spaceNum)
+        public void AlienSpeak(double beat, string dialogue, int spaceNum)
         {
             queuedInputs.Add(new QueuedSecondContactInput()
             {
@@ -302,8 +303,8 @@ namespace HeavenStudio.Games
             if (voiceline == currentVoicelineIndex) voiceline++;
             if (voiceline > 10) voiceline = 1;
             currentVoicelineIndex = voiceline;
-            Jukebox.PlayOneShotGame("firstContact/Bob" + voiceline, beat, Jukebox.GetPitchFromCents(UnityEngine.Random.Range(-100, 0), false));
-            Jukebox.PlayOneShotGame("firstContact/BobB");
+            SoundByte.PlayOneShotGame("firstContact/Bob" + voiceline, beat, SoundByte.GetPitchFromCents(UnityEngine.Random.Range(-100, 0), false));
+            SoundByte.PlayOneShotGame("firstContact/BobB");
             alien.GetComponent<Animator>().DoScaledAnimationAsync("alien_talk", 0.5f);
             if (UnityEngine.Random.Range(0, 5) == 0) translator.GetComponent<Animator>().DoScaledAnimationAsync("translator_lookAtAlien_nod", 0.5f);
             callDiagList.Add(dialogue);
@@ -317,10 +318,10 @@ namespace HeavenStudio.Games
             UpdateAlienTextbox();
         }
 
-        public void AlienTurnOver(float beat, float length)
+        public void AlienTurnOver(double beat, float length)
         {
             if (queuedInputs.Count == 0) return;
-            Jukebox.PlayOneShotGame("firstContact/turnover");
+            SoundByte.PlayOneShotGame("firstContact/turnover");
             alienTextbox.SetActive(false);
             alien.GetComponent<Animator>().Play("alien_point", 0, 0);
 
@@ -341,10 +342,9 @@ namespace HeavenStudio.Games
             queuedInputs.Clear();
         }
 
-        public void AlienSuccess(float beat)
+        public void AlienSuccess(double beat)
         {
             string animString = "";
-            float secondSoundOffset = 0f;
             List<MultiSound.Sound> sound = new List<MultiSound.Sound>();
             if (!(hasMissed || noHitOnce))
             {
@@ -353,8 +353,8 @@ namespace HeavenStudio.Games
                     new MultiSound.Sound("firstContact/successCrowd", beat),
                     new MultiSound.Sound("firstContact/nod", beat),
                     new MultiSound.Sound("firstContact/nod", beat + 0.5f),
-                    new MultiSound.Sound("firstContact/successExtra" + UnityEngine.Random.Range(1, 3), beat + 0.5f, Jukebox.GetPitchFromCents(UnityEngine.Random.Range(-50, 50), false)),
-                    new MultiSound.Sound("firstContact/whistle", beat + UnityEngine.Random.Range(0.5f, 1.5f), Jukebox.GetPitchFromCents(UnityEngine.Random.Range(-50, 100), false), UnityEngine.Random.Range(0.4f, 1f)),
+                    new MultiSound.Sound("firstContact/successExtra" + UnityEngine.Random.Range(1, 3), beat + 0.5f, SoundByte.GetPitchFromCents(UnityEngine.Random.Range(-50, 50), false)),
+                    new MultiSound.Sound("firstContact/whistle", beat + UnityEngine.Random.Range(0.5f, 1.5f), SoundByte.GetPitchFromCents(UnityEngine.Random.Range(-50, 100), false), UnityEngine.Random.Range(0.4f, 1f)),
                 };
                 animString = "alien_success";
             }
@@ -410,7 +410,7 @@ namespace HeavenStudio.Games
             translateFailText.text = respDiagBuffer;
         }
 
-        public void MissionControlDisplay(float beat, bool stay, float length)
+        public void MissionControlDisplay(double beat, bool stay, float length)
         {
             missionControl.SetActive(true);
 
@@ -452,7 +452,7 @@ namespace HeavenStudio.Games
 
         void FailContact()
         {
-            Jukebox.PlayOneShotGame("firstContact/failContact");
+            SoundByte.PlayOneShotGame("firstContact/failContact");
             translator.GetComponent<Animator>().DoScaledAnimationAsync("translator_speak", 0.5f);
             if (!hasMissed && callDiagIndex == 0)
             {
@@ -466,7 +466,7 @@ namespace HeavenStudio.Games
 
         void TrailingContact()
         {
-            Jukebox.PlayOneShotGame("firstContact/slightlyFail");
+            SoundByte.PlayOneShotGame("firstContact/slightlyFail");
             translator.GetComponent<Animator>().Play("translator_eh", 0, 0);
             if (!hasMissed)
             {
@@ -494,7 +494,7 @@ namespace HeavenStudio.Games
 
             if (state >= 1f || state <= -1f)
             {
-                Jukebox.PlayOneShotGame("firstContact/ALIEN_PLAYER_A", -1, Jukebox.GetPitchFromSemiTones(UnityEngine.Random.Range(-3, 3), false));
+                SoundByte.PlayOneShotGame("firstContact/ALIEN_PLAYER_A", -1, SoundByte.GetPitchFromSemiTones(UnityEngine.Random.Range(-3, 3), false));
                 translator.GetComponent<Animator>().DoScaledAnimationAsync("translator_speak", 0.5f);
                 if (callDiagIndex == 0) return;
                 TrailingContact();
@@ -502,8 +502,8 @@ namespace HeavenStudio.Games
             }
 
             translator.GetComponent<Animator>().DoScaledAnimationAsync("translator_speak", 0.5f);
-            Jukebox.PlayOneShotGame("firstContact/ALIEN_PLAYER_A", -1, Jukebox.GetPitchFromSemiTones(UnityEngine.Random.Range(-3, 3), false));
-            Jukebox.PlayOneShotGame("firstContact/ALIEN_PLAYER_B");
+            SoundByte.PlayOneShotGame("firstContact/ALIEN_PLAYER_A", -1, SoundByte.GetPitchFromSemiTones(UnityEngine.Random.Range(-3, 3), false));
+            SoundByte.PlayOneShotGame("firstContact/ALIEN_PLAYER_B");
             if (hasMissed)
             {
                 caller.isEligible = false;
@@ -522,7 +522,7 @@ namespace HeavenStudio.Games
         {
             if (!noHitOnce)
             {
-                Jukebox.PlayOneShotGame("firstContact/alienNoHit");
+                SoundByte.PlayOneShotGame("firstContact/alienNoHit");
                 noHitOnce = true;
             }
 

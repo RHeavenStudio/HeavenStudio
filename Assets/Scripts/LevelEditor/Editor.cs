@@ -18,6 +18,8 @@ using HeavenStudio.Editor.Track;
 using HeavenStudio.Util;
 using HeavenStudio.StudioDance;
 
+using Jukebox;
+
 using System.IO.Compression;
 using System.Text;
 
@@ -77,8 +79,6 @@ namespace HeavenStudio.Editor
         public bool isDiscordEnabled = true;
 
         public bool isShortcutsEnabled { get { return (!inAuthorativeMenu) && (!editingInputField); } }
-
-        private byte[] MusicBytes;
 
         public static Editor instance { get; private set; }
 
@@ -256,11 +256,22 @@ namespace HeavenStudio.Editor
             {
                 if (paths.Length > 0)
                 {
-                    Conductor.instance.musicSource.clip = await LoadClip(Path.Combine(paths)); 
-                    changedMusic = true;
-                    
-                    Timeline.FitToSong();
+                    try
+                    {
+                        if (paths.Length == 0) return;
+                        RiqFileHandler.WriteSong(paths[0]);
+                        StartCoroutine(LoadMusic());
+                        return;
+                    }
+                    catch (System.Exception e)
+                    {
+                        Debug.Log($"Error selecting music file: {e.Message}");
+                        Debug.LogException(e);
+                        GlobalGameManager.ShowErrorMessage("Error", e.Message);
+                        return;
+                    }
                 }
+                await Task.Yield();
             } 
             );
             #else
@@ -268,83 +279,33 @@ namespace HeavenStudio.Editor
             {
                 if (paths.Length > 0)
                 {
-                    Conductor.instance.musicSource.clip = await LoadClip("file://" + Path.Combine(paths));
-                    changedMusic = true;
-
-                    Timeline.FitToSong();
-                    Timeline.CreateWaveform();
+                    try
+                    {
+                        if (paths.Length == 0) return;
+                        RiqFileHandler.WriteSong(paths[0]);
+                        StartCoroutine(LoadMusic());
+                        return;
+                    }
+                    catch (System.Exception e)
+                    {
+                        Debug.Log($"Error selecting music file: {e.Message}");
+                        Debug.LogException(e);
+                        GlobalGameManager.ShowErrorMessage("Error", e.Message);
+                        return;
+                    }
                 }
+                await Task.Yield();
             }
             );
             #endif
         }
 
-        private async Task<AudioClip> LoadClip(string path)
+        IEnumerator LoadMusic()
         {
-            AudioClip clip = null;
-
-            AudioType audioType = AudioType.OGGVORBIS;
-
-            // this is a bad solution but i'm lazy
-            if (path.Substring(path.Length - 3) == "ogg")
-                audioType = AudioType.OGGVORBIS;
-            else if (path.Substring(path.Length - 3) == "mp3")
-                audioType = AudioType.MPEG;
-            else if (path.Substring(path.Length - 3) == "wav")
-                audioType = AudioType.WAV;
-
-            using (UnityWebRequest uwr = UnityWebRequestMultimedia.GetAudioClip(path, audioType))
-            {
-                uwr.SendWebRequest();
-
-                try
-                {
-                    while (!uwr.isDone) await Task.Delay(5);
-
-                    if (uwr.result == UnityWebRequest.Result.ProtocolError) Debug.Log($"{uwr.error}");
-                    else
-                    {
-                        clip = DownloadHandlerAudioClip.GetContent(uwr);
-                    }
-                }
-                catch (Exception err)
-                {
-                    Debug.Log($"{err.Message}, {err.StackTrace}");
-                }
-            }
-
-            try
-            {
-                if (clip != null)
-                    MusicBytes = OggVorbis.VorbisPlugin.GetOggVorbis(clip, 1);
-                else
-                {
-                    MusicBytes = null;
-                    Debug.LogWarning("Failed to load music file! The stream is currently empty.");
-                }
-            }
-            catch (System.ArgumentNullException)
-            {
-                clip = null;
-                MusicBytes = null;
-                Debug.LogWarning("Failed to load music file! The stream is currently empty.");
-            }
-            catch (System.ArgumentOutOfRangeException)
-            {
-                clip = null;
-                MusicBytes = null;
-                Debug.LogWarning("Failed to load music file! The stream is malformed.");
-            }
-            catch (System.ArgumentException)
-            {
-                clip = null;
-                MusicBytes = null;
-                Debug.LogWarning("Failed to load music file! Only 1 or 2 channels are supported!.");
-            }
-
-            return clip;
+            yield return GameManager.instance.LoadMusic();
+            Timeline.FitToSong();
+            // Timeline.CreateWaveform();
         }
-
 
         public void SaveRemix(bool saveAs = true)
         {
@@ -383,24 +344,17 @@ namespace HeavenStudio.Editor
 
         private void SaveRemixFile(string path)
         {
-            using (FileStream zipFile = File.Open(path, FileMode.Create))
+            try
             {
-                using (var archive = new ZipArchive(zipFile, ZipArchiveMode.Update))
-                {
-                    var levelFile = archive.CreateEntry("remix.json", System.IO.Compression.CompressionLevel.NoCompression);
-                    using (var zipStream = levelFile.Open())
-                        zipStream.Write(Encoding.UTF8.GetBytes(GetJson()), 0, Encoding.UTF8.GetBytes(GetJson()).Length);
-
-                    if (MusicBytes != null)
-                    {
-                        var musicFile = archive.CreateEntry("song.ogg", System.IO.Compression.CompressionLevel.NoCompression);
-                        using (var zipStream = musicFile.Open())
-                            zipStream.Write(MusicBytes, 0, MusicBytes.Length);
-                    }
-                }
-
-                currentRemixPath = path;
-                UpdateEditorStatus(false);
+                RiqFileHandler.WriteRiq(GameManager.instance.Beatmap);
+                RiqFileHandler.PackRiq(path, true);
+                Debug.Log("Packed RIQ successfully!");
+                return;
+            }
+            catch (System.Exception e)
+            {
+                Debug.Log($"Error packing RIQ: {e.Message}");
+                return;
             }
         }
 
@@ -410,17 +364,18 @@ namespace HeavenStudio.Editor
                 Timeline.instance?.Stop(0);
             else
                 GameManager.instance.Stop(0);
-            MusicBytes = null;
-            LoadRemix("");
+            LoadRemix(true);
         }
 
-        public void LoadRemix(string json = "", string type = "riq")
+        public void LoadRemix(bool create = false)
         {
-            GameManager.instance.LoadRemix(json, type);
+            if (create)
+                GameManager.instance.NewRemix();
+            else
+            {
+                GameManager.instance.LoadRemix(true);
+            }
             Timeline.instance.LoadRemix();
-            // Timeline.instance.SpecialInfo.UpdateStartingBPMText();
-            // Timeline.instance.VolumeInfo.UpdateStartingVolumeText();
-            // Timeline.instance.SpecialInfo.UpdateOffsetText();
             Timeline.FitToSong();
 
             currentRemixPath = string.Empty;
@@ -440,49 +395,30 @@ namespace HeavenStudio.Editor
                 var path = Path.Combine(paths);
 
                 if (path == string.Empty) return;
-                loadedMusic = false;
-                string extension = path.GetExtension();
 
-                using var zipFile = File.Open(path, FileMode.Open);
-                using var archive = new ZipArchive(zipFile, ZipArchiveMode.Read);
-
-                foreach (var entry in archive.Entries)
-                    switch (entry.Name)
-                    {
-                        case "remix.json":
-                        {
-                            using var stream = entry.Open();
-                            using var reader = new StreamReader(stream);
-                            LoadRemix(reader.ReadToEnd(), extension);
-
-                            break;
-                        }
-                        case "song.ogg":
-                        {
-                            using var stream = entry.Open();
-                            using var memoryStream = new MemoryStream();
-                            stream.CopyTo(memoryStream);
-                            MusicBytes = memoryStream.ToArray();
-                            Conductor.instance.musicSource.clip = OggVorbis.VorbisPlugin.ToAudioClip(MusicBytes, "music");
-                            loadedMusic = true;
-                            Timeline.FitToSong();
-
-                            break;
-                        }
-                    }
-
-                if (!loadedMusic)
+                GlobalGameManager.ShowLoadingMessage("Loading", $"Loading remix from {path}");
+                try
                 {
-                    Conductor.instance.musicSource.clip = null;
-                    MusicBytes = null;
+                    string tmpDir = RiqFileHandler.ExtractRiq(path);
+                    Debug.Log("Imported RIQ successfully!");
+                    LoadRemix();
                 }
+                catch (System.Exception e)
+                {
+                    Debug.Log($"Error importing RIQ: {e.Message}");
+                    Debug.LogException(e);
+                    GlobalGameManager.ShowErrorMessage("Error Loading RIQ", e.Message + "\n\n" + e.StackTrace);
+                    return;
+                }
+
+                StartCoroutine(LoadMusic());
 
                 currentRemixPath = path;
                 remixName = Path.GetFileName(path);
                 UpdateEditorStatus(false);
                 CommandManager.instance.Clear();
-                Timeline.FitToSong();
-                Timeline.CreateWaveform();
+                
+                GlobalGameManager.instance.HideDialog();
             });
         }
 
@@ -519,13 +455,6 @@ namespace HeavenStudio.Editor
         private void UpdateEditorStatus(bool updateTime)
         {
             GlobalGameManager.UpdateDiscordStatus($"{remixName}", true, updateTime);
-        }
-
-        public string GetJson()
-        {
-            string json = string.Empty;
-            json = JsonConvert.SerializeObject(GameManager.instance.Beatmap);
-            return json;
         }
 
         public void SetGameEventTitle(string txt)

@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 using HeavenStudio.Util;
+using Jukebox;
 
 namespace HeavenStudio.Games.Loaders
 {
@@ -367,8 +368,8 @@ namespace HeavenStudio.Games
         [Header("Camera Positions")]
         public Transform[] CameraPosition;
         Vector3 cameraPosition;
-        static float startCamSpecial = Single.MinValue;
-        static float wantsReturn = Single.MinValue;
+        static double startCamSpecial = double.MinValue;
+        static double wantsReturn = double.MinValue;
         static float cameraReturnLength = 0f;
         static CameraAngle cameraAngle = CameraAngle.Normal;
 
@@ -388,13 +389,13 @@ namespace HeavenStudio.Games
 
         [Header("Word")]
         public Animator Word;
-        static float wordClearTime = Single.MinValue;
+        static double wordClearTime = double.MinValue;
         const float hitVoiceOffset = 0.042f;
 
         [Header("Backgrounds")]
         static int bgType = (int) BackgroundType.Yellow;
         public static int currentBgEffect = (int) BackgroundFXType.None;
-        static float bgFadeTime = Single.MinValue;
+        static double bgFadeTime = double.MinValue;
         static float bgFadeDuration = 0f;
         static Color bgColour = Color.white;
         public SpriteRenderer BGPlane;
@@ -438,7 +439,7 @@ namespace HeavenStudio.Games
         public static bool WantBop = true;
         public static bool WantNori = true;
         public static int WantNoriType = (int) NoriMode.None;
-        public static float WantBgChangeStart = Single.MinValue;
+        public static double WantBgChangeStart = double.MinValue;
         public static float WantBgChangeLength = 0f;
 
         private void Awake()
@@ -448,7 +449,7 @@ namespace HeavenStudio.Games
             cameraPosition = CameraPosition[0].position;
         }
 
-        public override void OnPlay(float beat)
+        public override void OnPlay(double beat)
         {
             var cond = Conductor.instance;
             if (!cond.isPlaying)
@@ -474,7 +475,7 @@ namespace HeavenStudio.Games
             bgBloodRenderer = BGBlood.GetComponent<SpriteRenderer>();
             bgRadialRenderer = BGRadial.GetComponent<SpriteRenderer>();
 
-            SetBgEffectsToLast(cond.songPositionInBeats);
+            SetBgEffectsToLast(cond.songPositionInBeatsAsDouble);
             SetBgAndShadowCol(WantBgChangeStart, WantBgChangeLength, bgType, (int) currentShadowType, bgColour, customShadowColour, (int)currentBgEffect);
             SetBgTexture(textureType, textureFilterType, filterColour, filterColour);
             UpdateMaterialColour(BodyColor, HighlightColor, ItemColor);
@@ -485,7 +486,7 @@ namespace HeavenStudio.Games
         {
             var cond = Conductor.instance;
             if (!cond.isPlaying)
-                SetBgEffectsToLast(cond.songPositionInBeats);
+                SetBgEffectsToLast(cond.songPositionInBeatsAsDouble);
             
             switch (currentBgEffect)
             {
@@ -499,30 +500,30 @@ namespace HeavenStudio.Games
                     bgEffectAnimator.Play("NoPose", -1, 0);
                     break;
             }
-            if (cond.songPositionInBeats >= wordClearTime)
+            if (cond.songPositionInBeatsAsDouble >= wordClearTime)
             {
                 Word.Play("NoPose");
             }
 
-            if (cond.songPositionInBeats >= startCamSpecial && cond.songPositionInBeats <= wantsReturn)
+            if (cond.songPositionInBeatsAsDouble >= startCamSpecial && cond.songPositionInBeatsAsDouble <= wantsReturn)
             {
                 float camX = 0f;
                 float camY = 0f;
                 float camZ = 0f;
-                if (cond.songPositionInBeats <= startCamSpecial + cameraReturnLength)
+                if (cond.songPositionInBeatsAsDouble <= startCamSpecial + cameraReturnLength)
                 {
                     float prog = cond.GetPositionFromBeat(startCamSpecial, cameraReturnLength);
-                    camX = EasingFunction.EaseOutCubic(CameraPosition[0].position.x, CameraPosition[1].position.x, prog);
-                    camY = EasingFunction.EaseOutCubic(CameraPosition[0].position.y, CameraPosition[1].position.y, prog);
-                    camZ = EasingFunction.EaseOutCubic(CameraPosition[0].position.z, CameraPosition[1].position.z, prog);
+                    camX = Util.EasingFunction.EaseOutCubic(CameraPosition[0].position.x, CameraPosition[1].position.x, prog);
+                    camY = Util.EasingFunction.EaseOutCubic(CameraPosition[0].position.y, CameraPosition[1].position.y, prog);
+                    camZ = Util.EasingFunction.EaseOutCubic(CameraPosition[0].position.z, CameraPosition[1].position.z, prog);
                     cameraPosition = new Vector3(camX, camY, camZ);
                 }
-                else if (cond.songPositionInBeats >= wantsReturn - cameraReturnLength)
+                else if (cond.songPositionInBeatsAsDouble >= wantsReturn - cameraReturnLength)
                 {
                     float prog = cond.GetPositionFromBeat(wantsReturn - cameraReturnLength, cameraReturnLength);
-                    camX = EasingFunction.EaseOutQuad(CameraPosition[1].position.x, CameraPosition[0].position.x, prog);
-                    camY = EasingFunction.EaseOutQuad(CameraPosition[1].position.y, CameraPosition[0].position.y, prog);
-                    camZ = EasingFunction.EaseOutQuad(CameraPosition[1].position.z, CameraPosition[0].position.z, prog);
+                    camX = Util.EasingFunction.EaseOutQuad(CameraPosition[1].position.x, CameraPosition[0].position.x, prog);
+                    camY = Util.EasingFunction.EaseOutQuad(CameraPosition[1].position.y, CameraPosition[0].position.y, prog);
+                    camZ = Util.EasingFunction.EaseOutQuad(CameraPosition[1].position.z, CameraPosition[0].position.z, prog);
                     cameraPosition = new Vector3(camX, camY, camZ);
                 }
                 else
@@ -538,11 +539,11 @@ namespace HeavenStudio.Games
             }
 
             float fadeProg = cond.GetPositionFromBeat(bgFadeTime, bgFadeDuration);
-            if (bgFadeTime != Single.MinValue && fadeProg >= 0)
+            if (bgFadeTime != double.MinValue && fadeProg >= 0)
             {
                 if (fadeProg >= 1f)
                 {
-                    bgFadeTime = Single.MinValue;
+                    bgFadeTime = double.MinValue;
                     bgFadeDuration = 0f;
                     BGPlane.color = bgColour;
                     filterColour = filterColourNext;
@@ -561,16 +562,16 @@ namespace HeavenStudio.Games
             BGEffect.transform.position = new Vector3(GameCamera.instance.transform.position.x, GameCamera.instance.transform.position.y, 0);
         }
 
-        static List<DynamicBeatmap.DynamicEntity> allHits = new List<DynamicBeatmap.DynamicEntity>();
-        static List<DynamicBeatmap.DynamicEntity> allEnds = new List<DynamicBeatmap.DynamicEntity>();
-        public static int CountHitsToEnd(float fromBeat)
+        static List<RiqEntity> allHits = new List<RiqEntity>();
+        static List<RiqEntity> allEnds = new List<RiqEntity>();
+        public static int CountHitsToEnd(double fromBeat)
         {
             allHits = EventCaller.GetAllInGameManagerList("karateman", new string[] { "hit", "bulb", "kick", "combo" });
             allEnds = EventCaller.GetAllInGameManagerList("gameManager", new string[] { "switchGame", "end" });
 
             allHits.Sort((x, y) => x.beat.CompareTo(y.beat));
             allEnds.Sort((x, y) => x.beat.CompareTo(y.beat));
-            float endBeat = Single.MaxValue;
+            double endBeat = double.MaxValue;
 
             //get the beat of the closest end event
             foreach (var end in allEnds)
@@ -604,26 +605,26 @@ namespace HeavenStudio.Games
             return count;
         }
 
-        public static void DoSpecialCamera(float beat, float length, bool returns)
+        public static void DoSpecialCamera(double beat, float length, bool returns)
         {
             if (cameraAngle == CameraAngle.Normal)
             {
                 startCamSpecial = beat;
                 cameraAngle = CameraAngle.Special;
             }
-            wantsReturn = returns ? beat + length - 0.001f : Single.MaxValue;
+            wantsReturn = returns ? beat + length - 0.001f : double.MaxValue;
             cameraReturnLength = Mathf.Min(2f, length*0.5f);
         }
 
-        public void DoWord(float beat, int type, bool doSound = true)
+        public void DoWord(double beat, int type, bool doSound = true)
         {
             Word.Play(DoWordSound(beat, type, doSound));
         }
 
-        public static string DoWordSound(float beat, int type, bool doSound = true)
+        public static string DoWordSound(double beat, int type, bool doSound = true)
         {
             String word = "NoPose";
-            float clear = 0f;
+            double clear = 0f;
             switch (type)
             {
                 case (int) HitThree.HitTwo:
@@ -689,18 +690,18 @@ namespace HeavenStudio.Games
                         }, forcePlay: true);
                     break;
             }
-            if (Conductor.instance.songPositionInBeats <= clear && Conductor.instance.songPositionInBeats >= beat)
+            if (Conductor.instance.songPositionInBeatsAsDouble <= clear && Conductor.instance.songPositionInBeatsAsDouble >= beat)
             {
                 wordClearTime = clear;
             }
             return word;
         }
 
-        public void CreateItem(float beat, int type, int expression, bool muteSound = false)
+        public void CreateItem(double beat, int type, int expression, bool muteSound = false)
         {
 
             string outSound;
-            if (Starpelly.Mathp.GetDecimalFromFloat(beat + 0.5f) == 0f)
+            if ((beat + 0.5f) % 1.0 == 0f)
                 outSound = "karateman/offbeatObjectOut";
             else
                 outSound = "karateman/objectOut";
@@ -711,7 +712,7 @@ namespace HeavenStudio.Games
                     CreateItemInstance(beat, "Item00", expression);
                     break;
                 case (int) HitType.Lightbulb:
-                    if (Starpelly.Mathp.GetDecimalFromFloat(beat + 0.5f) == 0f)
+                    if ((beat + 0.5f) % 1.0 == 0f)
                         outSound = "karateman/offbeatLightbulbOut";
                     else
                         outSound = "karateman/lightbulbOut";
@@ -740,13 +741,13 @@ namespace HeavenStudio.Games
                     CreateItemInstance(beat, "Item00", expression);
                     break;
             }
-            if (!muteSound) Jukebox.PlayOneShotGame(outSound, forcePlay: true);
+            if (!muteSound) SoundByte.PlayOneShotGame(outSound, forcePlay: true);
         }
 
-        public void CreateBulbSpecial(float beat, int type, Color c, int expression)
+        public void CreateBulbSpecial(double beat, int type, Color c, int expression)
         {
             string outSound;
-            if (Starpelly.Mathp.GetDecimalFromFloat(beat + 0.5f) == 0f)
+            if (beat + 0.5f % 1.0 == 0f)
                 outSound = "karateman/offbeatLightbulbOut";
             else
                 outSound = "karateman/lightbulbOut";
@@ -756,12 +757,12 @@ namespace HeavenStudio.Games
                 mobj.GetComponent<KarateManPot>().SetBulbColor(c);
             else
                 mobj.GetComponent<KarateManPot>().SetBulbColor(LightBulbColors[type]);
-            Jukebox.PlayOneShotGame(outSound, forcePlay: true);
+            SoundByte.PlayOneShotGame(outSound, forcePlay: true);
         }
 
-        public void Combo(float beat, int expression)
+        public void Combo(double beat, int expression)
         {
-            Jukebox.PlayOneShotGame("karateman/barrelOutCombos", forcePlay: true);
+            SoundByte.PlayOneShotGame("karateman/barrelOutCombos", forcePlay: true);
 
             int comboId = KarateManPot.GetNewCombo();
 
@@ -786,9 +787,9 @@ namespace HeavenStudio.Games
             }, forcePlay: true);
         }
 
-        public void Kick(float beat, bool ball, int expression)
+        public void Kick(double beat, bool ball, int expression)
         {
-            Jukebox.PlayOneShotGame("karateman/barrelOutKicks", forcePlay: true);
+            SoundByte.PlayOneShotGame("karateman/barrelOutKicks", forcePlay: true);
 
             CreateItemInstance(beat, "Item05", expression, KarateManPot.ItemType.KickBarrel, content: ball);
 
@@ -801,7 +802,7 @@ namespace HeavenStudio.Games
             }, forcePlay: true);
         }
 
-        public GameObject CreateItemInstance(float beat, string awakeAnim, int successExpression, KarateManPot.ItemType type = KarateManPot.ItemType.Pot, int comboId = -1, bool content = false)
+        public GameObject CreateItemInstance(double beat, string awakeAnim, int successExpression, KarateManPot.ItemType type = KarateManPot.ItemType.Pot, int comboId = -1, bool content = false)
         {
             GameObject mobj = GameObject.Instantiate(Item, ItemHolder);
             KarateManPot mobjDat = mobj.GetComponent<KarateManPot>();
@@ -817,9 +818,9 @@ namespace HeavenStudio.Games
             return mobj;
         }
 
-        void SetBgEffectsToLast(float beat)
+        void SetBgEffectsToLast(double beat)
         {
-            var bgfx = GameManager.instance.Beatmap.entities.FindAll(en => en.datamodel == "karateman/set background effects");
+            var bgfx = GameManager.instance.Beatmap.Entities.FindAll(en => en.datamodel == "karateman/set background effects");
             for (int i = 0; i < bgfx.Count; i++)
             {
                 var e = bgfx[i];
@@ -827,7 +828,7 @@ namespace HeavenStudio.Games
                     break;
                 SetBgEffectsUnloaded(e.beat, e.length, e["type"], e["type2"], e["colorA"], e["colorB"], e["type3"], e["type4"], e["type5"], e["colorC"], e["colorD"]);
             }
-            var camfx = GameManager.instance.Beatmap.entities.FindAll(en => en.datamodel == "karateman/special camera");
+            var camfx = GameManager.instance.Beatmap.Entities.FindAll(en => en.datamodel == "karateman/special camera");
             DoSpecialCamera(0, 0, true);
             for (int i = 0; i < camfx.Count; i++)
             {
@@ -836,7 +837,7 @@ namespace HeavenStudio.Games
                     break;
                 DoSpecialCamera(e.beat, e.length, e["toggle"]);
             }
-            var objfx = GameManager.instance.Beatmap.entities.FindAll(en => en.datamodel == "karateman/set object colors");
+            var objfx = GameManager.instance.Beatmap.Entities.FindAll(en => en.datamodel == "karateman/set object colors");
             for (int i = 0; i < objfx.Count; i++)
             {
                 var e = objfx[i];
@@ -848,7 +849,7 @@ namespace HeavenStudio.Games
             SetBgTexture(textureType, textureFilterType, filterColour, filterColour);
         }
 
-        public static void SetBgEffectsUnloaded(float beat, float length, int newBgType, int newShadowType, Color bgCol, Color shadowCol, int bgFx, int texture, int textureFilter, Color filterCol, Color filterColNext)
+        public static void SetBgEffectsUnloaded(double beat, float length, int newBgType, int newShadowType, Color bgCol, Color shadowCol, int bgFx, int texture, int textureFilter, Color filterCol, Color filterColNext)
         {
             WantBgChangeStart = beat;
             WantBgChangeLength = length;
@@ -863,7 +864,7 @@ namespace HeavenStudio.Games
             filterColourNext = filterColNext;
         }
 
-        public void SetBgAndShadowCol(float beat, float length, int newBgType, int shadowType, Color a, Color b, int fx)
+        public void SetBgAndShadowCol(double beat, float length, int newBgType, int shadowType, Color a, Color b, int fx)
         {
             SetBgFx(fx, beat, length);
             UpdateShadowColour(shadowType, b);
@@ -886,7 +887,7 @@ namespace HeavenStudio.Games
                 filterColour = Color.LerpUnclamped(bgColour, ShadowBlendColor, 0.45f);
         }
 
-        public void SetBgFx(int fx, float beat, float length)
+        public void SetBgFx(int fx, double beat, float length)
         {
             switch (fx)
             {
@@ -938,7 +939,7 @@ namespace HeavenStudio.Games
             UpdateFilterColour(bgColour, filterColour);
         }
 
-        public void SetGameplayMods(float beat, int mode, bool combo)
+        public void SetGameplayMods(double beat, int mode, bool combo)
         {
             NoriGO.SetActive(true);
             Nori.SetNoriMode(beat, mode);
@@ -1003,7 +1004,7 @@ namespace HeavenStudio.Games
             ItemColor = objectCol;
         }
 
-        public void SetParticleEffect(float beat, int type, float windStrength, float particleStrength)
+        public void SetParticleEffect(double beat, int type, float windStrength, float particleStrength)
         {
             ParticleSystem.EmissionModule emm;
             switch (type)
@@ -1035,10 +1036,10 @@ namespace HeavenStudio.Games
             Wind.windMain = windStrength;
         }
 
-        public void ToggleBop(float beat, float length, bool toggle, bool autoBop)
+        public void ToggleBop(double beat, float length, bool toggle, bool autoBop)
         {
             if (autoBop)
-                Joe.bop.length = Single.MaxValue;
+                Joe.bop.length = float.MaxValue;
             else
                 Joe.bop.length = 0;
             if (toggle)
@@ -1061,7 +1062,7 @@ namespace HeavenStudio.Games
             WantBop = toggle;
         }
 
-        public void Prepare(float beat, float length)
+        public void Prepare(double beat, float length)
         {
             Joe.Prepare(beat, length);
         }

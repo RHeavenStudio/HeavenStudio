@@ -37,11 +37,11 @@ namespace HeavenStudio.Games.Scripts_FirstContact
                 //{
                 //    Jukebox.PlayOneShotGame("firstContact/citrusRemix/1_r");
                 //}
-                Jukebox.PlayOneShotGame("firstContact/" + RandomizerLines());
+                SoundByte.PlayOneShotGame("firstContact/" + RandomizerLines());
             }
             else
             {
-                Jukebox.PlayOneShotGame("firstContact/failContact");
+                SoundByte.PlayOneShotGame("firstContact/failContact");
             }
 
             BeatAction.New(this.gameObject, new List<BeatAction.Action>()
@@ -52,7 +52,7 @@ namespace HeavenStudio.Games.Scripts_FirstContact
 
         public void EhTranslation()
         {
-            Jukebox.PlayOneShotGame("firstContact/slightlyFail");
+            SoundByte.PlayOneShotGame("firstContact/slightlyFail");
             BeatAction.New(this.gameObject, new List<BeatAction.Action>()
             {
                 new BeatAction.Action(.5f, delegate { anim.Play("translator_eh", 0, 0);}),

@@ -19,13 +19,13 @@ namespace HeavenStudio.Games
         }
         public class CallAndResponseEvent
         {
-            public float beat;
+            public double beat;
             public float length;
-            public float relativeBeat; // this beat is relative to the intervalStartBeat
+            public double relativeBeat; // this beat is relative to the intervalStartBeat
             public Dictionary<string, dynamic> DynamicData; //if you need more properties for your queued event
             public string tag;
 
-            public CallAndResponseEvent(float beat, float relativeBeat, string tag, float length = 0)
+            public CallAndResponseEvent(double beat, double relativeBeat, string tag, float length = 0)
             {
                 this.beat = beat;
                 this.length = length;
@@ -73,7 +73,7 @@ namespace HeavenStudio.Games
             }
         }
 
-        public float intervalStartBeat = -1; // the first beat of the interval
+        public double intervalStartBeat = -1; // the first beat of the interval
         public float intervalLength = -1; // the duration of the interval in beats
 
         public float defaultIntervalLength; // when an event is queued and the interval has not started yet, it will use this as the interval length.
@@ -93,9 +93,9 @@ namespace HeavenStudio.Games
             return Conductor.instance.GetPositionFromBeat(intervalStartBeat, intervalLength - lengthOffset);
         }
 
-        public float GetIntervalProgressFromBeat(float beat, float lengthOffset = 0)
+        public float GetIntervalProgressFromBeat(double beat, float lengthOffset = 0)
         {
-            return Mathp.Normalize(beat, intervalStartBeat, intervalStartBeat + intervalLength - lengthOffset);
+            return (float)((beat - intervalStartBeat) / ((intervalStartBeat + intervalLength - lengthOffset) - intervalStartBeat));
         }
 
         /// <summary>
@@ -112,7 +112,7 @@ namespace HeavenStudio.Games
         /// </summary>
         /// <param name="beat">The interval start beat.</param>
         /// <param name="length">The length of the interval.</param>
-        public void StartInterval(float beat, float length)
+        public void StartInterval(double beat, float length)
         {
             if (!IntervalIsActive()) 
             {
@@ -129,7 +129,7 @@ namespace HeavenStudio.Games
         /// <param name="crParams">Extra properties to add to the event.</param>
         /// <param name="ignoreInterval">If true, this function will not start a new interval if the interval isn't active.</param>
         /// <param name="overrideInterval">If true, overrides the current interval.</param>
-        public void AddEvent(float beat, float length = 0, string tag = "", List<CallAndResponseEventParam> crParams = null, bool ignoreInterval = false, bool overrideInterval = false)
+        public void AddEvent(double beat, float length = 0, string tag = "", List<CallAndResponseEventParam> crParams = null, bool ignoreInterval = false, bool overrideInterval = false)
         {
             if ((!IntervalIsActive() && !ignoreInterval) || overrideInterval)
             {
@@ -150,7 +150,7 @@ namespace HeavenStudio.Games
         /// Check if an event exists at beat.
         /// </summary>
         /// <param name="beat">The beat to check.</param>
-        public bool EventExistsAtBeat(float beat)
+        public bool EventExistsAtBeat(double beat)
         {
             if (queuedEvents.Count == 0)
             {
@@ -164,7 +164,7 @@ namespace HeavenStudio.Games
         /// Check if an event exists at relativeBeat.
         /// </summary>
         /// <param name="beat">The beat to check.</param>
-        public bool EventExistsAtRelativetBeat(float relativeBeat)
+        public bool EventExistsAtRelativetBeat(double relativeBeat)
         {
             if (queuedEvents.Count == 0)
             {

@@ -18,7 +18,7 @@ namespace HeavenStudio.Games
                 sound += "1";
             else
                 sound += "2";
-            Jukebox.PlayOneShot("count-ins/" + sound);
+            SoundByte.PlayOneShot("count-ins/" + sound);
         }
 
         public enum CountInType { Normal, Alt, Cowbell }
@@ -41,7 +41,7 @@ namespace HeavenStudio.Games
             }
             return sounds;
         }
-        public static void FourBeatCountIn(float beat, float length, int type)
+        public static void FourBeatCountIn(double beat, float length, int type)
         {
             string[] sounds = { "one", "two", "three", "four" };
             sounds = GetCountInSounds(sounds, (CountInType)type);
@@ -55,7 +55,7 @@ namespace HeavenStudio.Games
             }, false);
         }
 
-        public static void EightBeatCountIn(float beat, float length, int type)
+        public static void EightBeatCountIn(double beat, float length, int type)
         {
             string[] sounds = { "one", "two", "one", "two", "three", "four" };
             sounds = GetCountInSounds(sounds, (CountInType)type);
@@ -73,10 +73,10 @@ namespace HeavenStudio.Games
 
         public static void Cowbell()
         {
-            Jukebox.PlayOneShot("count-ins/cowbell");
+            SoundByte.PlayOneShot("count-ins/cowbell");
         }
 
-        public static void Ready(float beat, float length)
+        public static void Ready(double beat, float length)
         {
             MultiSound.Play(new MultiSound.Sound[]
             {
@@ -87,7 +87,7 @@ namespace HeavenStudio.Games
 
         public static void And()
         {
-            Jukebox.PlayOneShot("count-ins/and");
+            SoundByte.PlayOneShot("count-ins/and");
         }
 
         public static void Go(bool alt)
@@ -97,7 +97,7 @@ namespace HeavenStudio.Games
                 sound += "1";
             else
                 sound += "2";
-            Jukebox.PlayOneShot(sound);
+            SoundByte.PlayOneShot(sound);
         }
     }
 

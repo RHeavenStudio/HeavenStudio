@@ -7,7 +7,7 @@ namespace HeavenStudio.Util
 {
     public class MultiSound : MonoBehaviour
     {
-        private float startBeat;
+        private double startBeat;
         private bool game;
         private bool forcePlay;
         public List<Sound> sounds = new List<Sound>();
@@ -16,13 +16,13 @@ namespace HeavenStudio.Util
         public class Sound
         {
             public string name { get; set; }
-            public float beat { get; set; }
+            public double beat { get; set; }
             public float pitch { get; set; }
             public float volume { get; set; }
             public bool looping { get; set; }
-            public float offset { get; set; }
+            public double offset { get; set; }
 
-            public Sound(string name, float beat, float pitch = 1f, float volume = 1f, bool looping = false, float offset = 0f)
+            public Sound(string name, double beat, float pitch = 1f, float volume = 1f, bool looping = false, double offset = 0f)
             {
                 this.name = name;
                 this.beat = beat;
@@ -48,9 +48,9 @@ namespace HeavenStudio.Util
             {
                 Util.Sound s;
                 if (game)
-                    s = Jukebox.PlayOneShotGame(sounds[i].name, sounds[i].beat, sounds[i].pitch, sounds[i].volume, sounds[i].looping, forcePlay, sounds[i].offset);
+                    s = SoundByte.PlayOneShotGame(sounds[i].name, sounds[i].beat, sounds[i].pitch, sounds[i].volume, sounds[i].looping, forcePlay, sounds[i].offset);
                 else
-                    s = Jukebox.PlayOneShot(sounds[i].name, sounds[i].beat, sounds[i].pitch, sounds[i].volume, sounds[i].looping, null, sounds[i].offset);
+                    s = SoundByte.PlayOneShot(sounds[i].name, sounds[i].beat, sounds[i].pitch, sounds[i].volume, sounds[i].looping, null, sounds[i].offset);
                 ms.playingSounds.Add(s);
             }
 

@@ -61,7 +61,7 @@ namespace HeavenStudio.Games
     {
         public struct QueuedGhost
         {
-            public float beat;
+            public double beat;
             public float length;
             public bool slowDown;
             public List<int> volumes;
@@ -83,7 +83,7 @@ namespace HeavenStudio.Games
         private static List<QueuedGhost> queuedGhosts = new List<QueuedGhost>();
         private bool hasArrowLoaded;
         float movingLength;
-        float movingStartBeat;
+        double movingStartBeat;
         bool isMoving;
         string moveAnim;
         EasingFunction.Ease lastEase;
@@ -121,7 +121,7 @@ namespace HeavenStudio.Games
                 }
                 if (PlayerInput.Pressed() && !IsExpectingInputNow(InputType.STANDARD_DOWN) && hasArrowLoaded)
                 {
-                    WhiffArrow(cond.songPositionInBeats);
+                    WhiffArrow(cond.songPositionInBeatsAsDouble);
                 }
                 if (isMoving)
                 {
@@ -149,7 +149,7 @@ namespace HeavenStudio.Games
             hasArrowLoaded = true;
         }
 
-        public void MoveBow(float beat, float length, bool enter, int ease)
+        public void MoveBow(double beat, float length, bool enter, int ease)
         {
             movingStartBeat = beat;
             movingLength = length;
@@ -158,7 +158,7 @@ namespace HeavenStudio.Games
             lastEase = (EasingFunction.Ease)ease;
         }
 
-        public static void PreSpawnGhost(float beat, float length, bool slowDown, int volume1, int volume2, int volume3, int volume4, int volume5, int volume6, int volume7)
+        public static void PreSpawnGhost(double beat, float length, bool slowDown, int volume1, int volume2, int volume3, int volume4, int volume5, int volume6, int volume7)
         {
             MultiSound.Play(new MultiSound.Sound[]
             {
@@ -192,7 +192,7 @@ namespace HeavenStudio.Games
             }
         }
 
-        public void SpawnGhost(float beat, float length, bool slowDown, List<int> volumes)
+        public void SpawnGhost(double beat, float length, bool slowDown, List<int> volumes)
         {
             if (slowDown)
             {
@@ -210,8 +210,8 @@ namespace HeavenStudio.Games
             List<BeatAction.Action> ghostSpawns = new List<BeatAction.Action>();
             for(int i = 0; i < 7; i++)
             {
-                float spawnBeat = beat + length * i;
-                if (spawnBeat >= Conductor.instance.songPositionInBeats)
+                double spawnBeat = beat + length * i;
+                if (spawnBeat >= Conductor.instance.songPositionInBeatsAsDouble)
                 {
                     SneakySpiritsGhost spawnedGhost = Instantiate(movingGhostPrefab, ghostPositions[i], false);
                     spawnedGhost.transform.position = new Vector3(spawnedGhost.transform.position.x, spawnedGhost.transform.position.y - (1 - volumes[i] * 0.01f) * 2.5f, spawnedGhost.transform.position.z);
@@ -220,14 +220,14 @@ namespace HeavenStudio.Games
             }
         }
 
-        void WhiffArrow(float beat)
+        void WhiffArrow(double beat)
         {
             GameObject spawnedArrow = Instantiate(arrowMissPrefab, transform);
             spawnedArrow.SetActive(true);
             spawnedArrow.GetComponent<Animator>().DoScaledAnimationAsync("ArrowRecoil", 0.5f);
             bowAnim.DoScaledAnimationAsync("BowRecoil", 0.25f);
             hasArrowLoaded = false;
-            Jukebox.PlayOneShotGame("sneakySpirits/arrowMiss", -1, 2);
+            SoundByte.PlayOneShotGame("sneakySpirits/arrowMiss", -1, 2);
             BeatAction.New(instance.gameObject, new List<BeatAction.Action>()
             {
                 new BeatAction.Action(beat + 3f, delegate { 
@@ -244,7 +244,7 @@ namespace HeavenStudio.Games
             if (!hasArrowLoaded) return;
             if (state >= 1f || state <= -1f)
             {
-                Jukebox.PlayOneShotGame("sneakySpirits/ghostScared");
+                SoundByte.PlayOneShotGame("sneakySpirits/ghostScared");
                 WhiffArrow(caller.startBeat + caller.timer);
                 GameObject spawnedGhost = Instantiate(ghostMissPrefab, transform);
                 spawnedGhost.SetActive(true);
@@ -268,7 +268,7 @@ namespace HeavenStudio.Games
             if (!hasArrowLoaded) return;
             if (state >= 1f || state <= -1f)
             {
-                Jukebox.PlayOneShotGame("sneakySpirits/ghostScared");
+                SoundByte.PlayOneShotGame("sneakySpirits/ghostScared");
                 WhiffArrow(caller.startBeat + caller.timer);
                 GameObject spawnedGhost = Instantiate(ghostMissPrefab, transform);
                 spawnedGhost.SetActive(true);
@@ -311,7 +311,7 @@ namespace HeavenStudio.Games
             spawnedDeath.startBeat = caller.startBeat + caller.timer;
             spawnedDeath.length = 1f;
             spawnedDeath.gameObject.SetActive(true);
-            Jukebox.PlayOneShotGame("sneakySpirits/hit");
+            SoundByte.PlayOneShotGame("sneakySpirits/hit");
             bowAnim.DoScaledAnimationAsync("BowRecoil", 0.25f);
             if (slowDown) 
             {
@@ -339,7 +339,7 @@ namespace HeavenStudio.Games
 
         void Miss(PlayerActionEvent caller)
         {
-            Jukebox.PlayOneShotGame("sneakySpirits/ghostEscape");
+            SoundByte.PlayOneShotGame("sneakySpirits/ghostEscape");
             GameObject spawnedGhost = Instantiate(ghostMissPrefab, transform);
             spawnedGhost.SetActive(true);
             spawnedGhost.GetComponent<Animator>().DoScaledAnimationAsync("GhostMiss", 0.5f);
@@ -348,7 +348,7 @@ namespace HeavenStudio.Games
                 new BeatAction.Action(caller.startBeat + caller.timer + 1f, delegate {
                     if (GameManager.instance.currentGame == "sneakySpirits")
                     {
-                        Jukebox.PlayOneShotGame("sneakySpirits/laugh", -1, 1.2f);
+                        SoundByte.PlayOneShotGame("sneakySpirits/laugh", -1, 1.2f);
                         spawnedGhost.GetComponent<Animator>().DoScaledAnimationAsync("GhostLaugh", 0.25f);
                     }
                 }),

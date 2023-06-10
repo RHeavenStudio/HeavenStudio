@@ -9,7 +9,7 @@ namespace HeavenStudio.Games.Scripts_WizardsWaltz
     {
         public Animator animator;
         public SpriteRenderer spriteRenderer;
-        public float createBeat;
+        public double createBeat;
 
         private WizardsWaltz game;
         private bool hit = false;

@@ -7,7 +7,7 @@ namespace HeavenStudio.Games.Scripts_RhythmTweezers
 {
     public class NoPeekingSign : MonoBehaviour
     {
-        private float peekBeat = -1;
+        private double peekBeat = -1;
         private bool peekRising;
         private bool shouldDelete;
         private Animator anim;
@@ -22,7 +22,7 @@ namespace HeavenStudio.Games.Scripts_RhythmTweezers
             sr = GetComponent<SpriteRenderer>();
         }
 
-        public void Init(float beat, float length, int type)
+        public void Init(double beat, float length, int type)
         {
             peekBeat = beat - 1;
             peekRising = true;

@@ -95,7 +95,7 @@ namespace HeavenStudio.Games
 
             if (PlayerInput.Pressed() && !IsExpectingInputNow())
             {
-                Jukebox.PlayOneShotGame("rhythmSomen/somen_mistake");
+                SoundByte.PlayOneShotGame("rhythmSomen/somen_mistake");
                 FrontArm.Play("ArmPluck", -1, 0);
                 backArm.Play("BackArmNothing", 0, 0);
                 hasSlurped = false;
@@ -104,7 +104,7 @@ namespace HeavenStudio.Games
             }
         }
 
-        public void Slurp(float beat)
+        public void Slurp(double beat)
         {
             if (!missed)
             {
@@ -125,7 +125,7 @@ namespace HeavenStudio.Games
             }
         }
 
-        public void ToggleBop(float beat, float length, bool bopOrNah, bool autoBop)
+        public void ToggleBop(double beat, float length, bool bopOrNah, bool autoBop)
         {
             shouldBop = autoBop;
             if (bopOrNah)
@@ -143,7 +143,7 @@ namespace HeavenStudio.Games
             }
         }
 
-        public void DoFarCrane(float beat)
+        public void DoFarCrane(double beat)
         {
             //Far Drop Multisound
             ScheduleInput(beat, 3f, InputType.STANDARD_DOWN, CatchSuccess, CatchMiss, CatchEmpty);
@@ -162,7 +162,7 @@ namespace HeavenStudio.Games
 
         }
 
-        public void DoCloseCrane(float beat)
+        public void DoCloseCrane(double beat)
         {
             //Close Drop Multisound
             ScheduleInput(beat, 2f, InputType.STANDARD_DOWN, CatchSuccess, CatchMiss, CatchEmpty);
@@ -181,7 +181,7 @@ namespace HeavenStudio.Games
 
         }
 
-        public void DoBothCrane(float beat)
+        public void DoBothCrane(double beat)
         {
             //Both Drop Multisound
             ScheduleInput(beat, 2f, InputType.STANDARD_DOWN, CatchSuccess, CatchMiss, CatchEmpty);
@@ -205,10 +205,10 @@ namespace HeavenStudio.Games
 
         }
 
-        public void DoBell(float beat)
+        public void DoBell(double beat)
         {
             //Bell Sound lol
-            Jukebox.PlayOneShotGame("rhythmSomen/somen_bell");
+            SoundByte.PlayOneShotGame("rhythmSomen/somen_bell");
 
             BeatAction.New(Player, new List<BeatAction.Action>()
                     {
@@ -224,14 +224,14 @@ namespace HeavenStudio.Games
             splashEffect.Play();
             if (state >= 1f || state <= -1f)
             {
-                Jukebox.PlayOneShotGame("rhythmSomen/somen_splash");
+                SoundByte.PlayOneShotGame("rhythmSomen/somen_splash");
                 FrontArm.Play("ArmPluckNG", -1, 0);
                 EffectSweat.Play("BlobSweating", -1, 0);
                 missed = true;
                 return;
             }
-            Jukebox.PlayOneShotGame("rhythmSomen/somen_catch");
-            Jukebox.PlayOneShotGame("rhythmSomen/somen_catch_old", volume: 0.25f);
+            SoundByte.PlayOneShotGame("rhythmSomen/somen_catch");
+            SoundByte.PlayOneShotGame("rhythmSomen/somen_catch_old", volume: 0.25f);
             FrontArm.Play("ArmPluckOK", -1, 0);
             EffectHit.Play("HitAppear", -1, 0);
             missed = false;
