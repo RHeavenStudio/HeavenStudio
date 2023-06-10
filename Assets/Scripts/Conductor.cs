@@ -113,6 +113,7 @@ namespace HeavenStudio
 
         public void Play(double beat)
         {
+            if (isPlaying) return;
             var chart = GameManager.instance.Beatmap;
             double offset = chart.data.offset;
             bool negativeOffset = offset < 0;
@@ -154,6 +155,7 @@ namespace HeavenStudio
 
         public void Pause()
         {
+            if (!isPlaying) return;
             isPlaying = false;
             isPaused = true;
 

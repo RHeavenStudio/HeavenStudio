@@ -138,7 +138,7 @@ namespace HeavenStudio
 
             if (preLoaded)
             {
-                LoadRemix();
+                LoadRemix(false);
             }
             else
             {
@@ -176,11 +176,30 @@ namespace HeavenStudio
 
         public IEnumerator LoadMusic()
         {
-            yield return RiqFileHandler.LoadSong();
+            IEnumerator load = RiqFileHandler.LoadSong();
+            while (true)
+            {
+                object current = load.Current;
+                try
+                {
+                    if (load.MoveNext() == false)
+                    {
+                        break;
+                    }
+                    current = load.Current;
+                }
+                catch (Exception e)
+                {
+                    Debug.LogError($"Failed to load music: {e.Message}");
+                    GlobalGameManager.ShowErrorMessage("Error Loading Music", e.Message + "\n\n" + e.StackTrace);
+                    yield break;
+                }
+                yield return current;
+            }
             Conductor.instance.musicSource.clip = RiqFileHandler.StreamedAudioClip;
         }
 
-        public void LoadRemix()
+        public void LoadRemix(bool editor = false)
         {
             try
             {
@@ -189,9 +208,11 @@ namespace HeavenStudio
             catch (Exception e)
             {
                 Debug.LogError($"Failed to load remix: {e.Message}");
+                GlobalGameManager.ShowErrorMessage("Error Loading RIQ", e.Message + "\n\n" + e.StackTrace);
                 return;
             }
-            StartCoroutine(LoadMusic());
+            if (!editor)
+                StartCoroutine(LoadMusic());
             SortEventsList();
             Conductor.instance.SetBpm(Beatmap.TempoChanges[0]["tempo"]);
             Conductor.instance.SetVolume(Beatmap.VolumeChanges[0]["volume"]);
@@ -245,7 +266,7 @@ namespace HeavenStudio
                 {
                     string gameName = gameSwitchs[currentPreSwitch].datamodel.Split(2);
                     var inf = GetGameInfo(gameName);
-                    if (inf.usesAssetBundle && !inf.AssetsLoaded) 
+                    if (inf != null && inf.usesAssetBundle && !inf.AssetsLoaded) 
                     {
                         Debug.Log($"ASYNC loading assetbundles for game {gameName}");
                         StartCoroutine(inf.LoadCommonAssetBundleAsync());
@@ -266,7 +287,7 @@ namespace HeavenStudio
                     {
                         string gameName = entity.datamodel.Split('/')[0];
                         var inf = GetGameInfo(gameName);
-                        if (inf.usesAssetBundle && !inf.AssetsLoaded) 
+                        if (inf != null && inf.usesAssetBundle && !inf.AssetsLoaded) 
                         {
                             Debug.Log($"ASYNC loading assetbundles for game {gameName}");
                             StartCoroutine(inf.LoadCommonAssetBundleAsync());
@@ -298,15 +319,12 @@ namespace HeavenStudio
                         currentPreSequence++;
                         string gameName = entity.datamodel.Split('/')[0];
                         var inf = GetGameInfo(gameName);
-                        if (inf.usesAssetBundle && inf.AssetsLoaded && !inf.SequencesPreloaded) 
+                        if (inf != null && inf.usesAssetBundle && inf.AssetsLoaded && !inf.SequencesPreloaded) 
                         {
                             Debug.Log($"Preloading game {gameName}");
                             PreloadGameSequences(gameName);
                         }
-                        else
-                        {
-                            eventCaller.CallPreEvent(entity);
-                        }
+                        eventCaller.CallPreEvent(entity);
                     }
                 }
             }
@@ -747,6 +765,7 @@ namespace HeavenStudio
         {
             var gameInfo = GetGameInfo(game);
             //load the games' sound sequences
+            // TODO: this blocks the main thread, and sound sequences sould be stored in a ScriptableObject
             if (gameInfo != null && gameInfo.LoadedSoundSequences == null)
                 gameInfo.LoadedSoundSequences = GetGame(game).GetComponent<Minigame>().SoundSequences;
         }

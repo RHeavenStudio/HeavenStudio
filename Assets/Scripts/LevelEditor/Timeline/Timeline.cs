@@ -840,7 +840,6 @@ namespace HeavenStudio.Editor.Track
 
             eventObjs.Add(eventObj);
             eventObj.eventObjID = eventObj.entity.uid;
-            Debug.Log($"Added event object {eventObj.eventObjID}");
 
             g.SetActive(true);
 
@@ -865,7 +864,6 @@ namespace HeavenStudio.Editor.Track
 
         public void DestroyEventObject(RiqEntity entity)
         {
-            Debug.Log($"Destroying event object {entity.datamodel} at beat {entity.beat} (uid: {entity.uid})");
             if (EventParameterManager.instance.entity == entity)
                 EventParameterManager.instance.Disable();
 

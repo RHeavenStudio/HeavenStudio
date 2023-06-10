@@ -266,6 +266,8 @@ namespace HeavenStudio.Editor
                     catch (System.Exception e)
                     {
                         Debug.Log($"Error selecting music file: {e.Message}");
+                        Debug.LogException(e);
+                        GlobalGameManager.ShowErrorMessage("Error", e.Message);
                         return;
                     }
                 }
@@ -288,6 +290,7 @@ namespace HeavenStudio.Editor
                     {
                         Debug.Log($"Error selecting music file: {e.Message}");
                         Debug.LogException(e);
+                        GlobalGameManager.ShowErrorMessage("Error", e.Message);
                         return;
                     }
                 }
@@ -369,7 +372,9 @@ namespace HeavenStudio.Editor
             if (create)
                 GameManager.instance.NewRemix();
             else
-                GameManager.instance.LoadRemix();
+            {
+                GameManager.instance.LoadRemix(true);
+            }
             Timeline.instance.LoadRemix();
             Timeline.FitToSong();
 
@@ -391,6 +396,7 @@ namespace HeavenStudio.Editor
 
                 if (path == string.Empty) return;
 
+                GlobalGameManager.ShowLoadingMessage("Loading", $"Loading remix from {path}");
                 try
                 {
                     string tmpDir = RiqFileHandler.ExtractRiq(path);
@@ -401,6 +407,8 @@ namespace HeavenStudio.Editor
                 {
                     Debug.Log($"Error importing RIQ: {e.Message}");
                     Debug.LogException(e);
+                    GlobalGameManager.ShowErrorMessage("Error Loading RIQ", e.Message + "\n\n" + e.StackTrace);
+                    return;
                 }
 
                 StartCoroutine(LoadMusic());
@@ -409,6 +417,8 @@ namespace HeavenStudio.Editor
                 remixName = Path.GetFileName(path);
                 UpdateEditorStatus(false);
                 CommandManager.instance.Clear();
+                
+                GlobalGameManager.instance.HideDialog();
             });
         }
 

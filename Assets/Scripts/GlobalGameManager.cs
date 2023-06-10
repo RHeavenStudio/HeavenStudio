@@ -14,12 +14,20 @@ namespace HeavenStudio
     public class GlobalGameManager : MonoBehaviour
     {
         public static GlobalGameManager instance { get; set; }
+
+        [Header("Loading Screen")]
         [SerializeField] Image fadeImage;
         [SerializeField] TMP_Text loadingText;
-        [SerializeField] GameObject errorPanel;
-        [SerializeField] TMP_Text errorHeader;
-        [SerializeField] TMP_Text errorMsg;
+
+        [Header("Dialog Box")]
+        [SerializeField] GameObject messagePanel;
+        [SerializeField] TMP_Text messageHeader;
+        [SerializeField] TMP_Text messageBody;
         [SerializeField] TMP_Text errorBuild;
+        [SerializeField] Button errorOkButton;
+        [SerializeField] Button errorLogButton;
+        [SerializeField] Slider dialogProgress;
+        public static bool IsShowingDialog;
 
         public static string buildTime = "00/00/0000 00:00:00";
 
@@ -120,6 +128,9 @@ namespace HeavenStudio
             instance = this;
             fadeImage.gameObject.SetActive(false);
             loadingText.enabled = false;
+
+            messagePanel.SetActive(false);
+            IsShowingDialog = false;
         }
 
         private void Update() 
@@ -154,6 +165,18 @@ namespace HeavenStudio
             {
                 instance.fadeImage.gameObject.SetActive(false);
             });
+        }
+
+        public void HideDialog()
+        {
+            Debug.Log("Hiding dialog");
+            messagePanel.SetActive(false);
+            IsShowingDialog = false;
+        }
+
+        public void OpenLogFolder()
+        {
+            // TODO
         }
 
         public static void BasicCheck()
@@ -201,6 +224,57 @@ namespace HeavenStudio
             {
                 instance.StartCoroutine(instance.ForceFadeAsync(hold, fadeOut));
             });
+        }
+
+        public static void ShowErrorMessage(string header, string message)
+        {
+            IsShowingDialog = true;
+            if (Conductor.instance != null && Conductor.instance.isPlaying)
+                Conductor.instance.Pause();
+
+            instance.messageHeader.text = header;
+            instance.messageBody.text = message;
+            instance.errorOkButton.gameObject.SetActive(true);
+            // instance.errorLogButton.gameObject.SetActive(true);
+            instance.dialogProgress.gameObject.SetActive(false);
+
+            instance.errorBuild.gameObject.SetActive(true);
+            #if UNITY_EDITOR
+                instance.errorBuild.text = "(EDITOR) " + System.DateTime.UtcNow.ToString("dd/MM/yyyy hh:mm:ss");
+            #else
+                instance.errorBuild.text = Application.buildGUID.Substring(0, 8) + " " + AppInfo.Date.ToString("dd/MM/yyyy hh:mm:ss");
+            #endif
+
+            instance.messagePanel.SetActive(true);
+        }
+
+        public static void ShowLoadingMessage(string header, string message, float progress = -1)
+        {
+            Debug.Log("ShowLoadingMessage");
+            IsShowingDialog = true;
+            if (Conductor.instance != null && Conductor.instance.isPlaying)
+                Conductor.instance.Pause();
+
+            instance.messageHeader.text = header;
+            instance.messageBody.text = message;
+            instance.errorOkButton.gameObject.SetActive(false);
+            instance.errorBuild.gameObject.SetActive(false);
+            // instance.errorLogButton.gameObject.SetActive(false);
+            if (progress >= 0)
+            {
+                instance.dialogProgress.gameObject.SetActive(true);
+                instance.dialogProgress.value = progress;
+            }
+            instance.messagePanel.SetActive(true);
+        }
+
+        public static void SetLoadingMessageProgress(float progress)
+        {
+            if (IsShowingDialog)
+            {
+                instance.dialogProgress.gameObject.SetActive(true);
+                instance.dialogProgress.value = progress;
+            }
         }
 
         public static void WindowFullScreen()

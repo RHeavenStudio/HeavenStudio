@@ -42,6 +42,7 @@ namespace HeavenStudio.Common
 
         void Pause()
         {
+            if (!Conductor.instance.isPlaying) return;
             Conductor.instance.Pause();
             pauseBeat = Conductor.instance.songPositionInBeatsAsDouble;
             chartTitleText.text = GameManager.instance.Beatmap["remixtitle"];
@@ -56,6 +57,7 @@ namespace HeavenStudio.Common
 
         void UnPause(bool instant = false)
         {
+            if ((!instant) && (!Conductor.instance.isPaused)) return;
             Conductor.instance.Play(pauseBeat);
             if (instant)
             {

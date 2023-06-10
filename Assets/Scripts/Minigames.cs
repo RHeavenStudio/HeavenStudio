@@ -136,28 +136,42 @@ namespace HeavenStudio
                         pType = e[param.propertyName].GetType();
                         if (pType != type)
                         {
-                            Debug.Log($"parameter {param.propertyName} is of type {pType} but should be {type}");
-                            if (type == typeof(EntityTypes.Integer))
-                                e.dynamicData[param.propertyName] = (int)e[param.propertyName];
-                            else if (type == typeof(EntityTypes.Float))
-                                e.dynamicData[param.propertyName] = (float)e[param.propertyName];
-                            else if (type == typeof(Util.EasingFunction.Ease) && (pType == typeof(string) || pType == typeof(int) || pType == typeof(long)))
+                            try
                             {
-                                Debug.Log($"ease of type {pType}");
-                                if (pType == typeof(int) || pType == typeof(long) || pType == typeof(Jukebox.EasingFunction.Ease))
+                                if (type == typeof(EntityTypes.Integer))
+                                    e.dynamicData[param.propertyName] = (int)e[param.propertyName];
+                                else if (type == typeof(EntityTypes.Float))
+                                    e.dynamicData[param.propertyName] = (float)e[param.propertyName];
+                                else if (type == typeof(Util.EasingFunction.Ease) && (pType == typeof(string) || pType == typeof(int) || pType == typeof(long)))
                                 {
-                                    Debug.Log($"ease of type {pType} is {e[param.propertyName]}");
-                                    e.dynamicData[param.propertyName] = (Util.EasingFunction.Ease)e[param.propertyName];
+                                    if (pType == typeof(int) || pType == typeof(long) || pType == typeof(Jukebox.EasingFunction.Ease))
+                                    {
+                                        e.dynamicData[param.propertyName] = (Util.EasingFunction.Ease)e[param.propertyName];
+                                    }
+                                    else
+                                        e.dynamicData[param.propertyName] = Enum.Parse(typeof(Util.EasingFunction.Ease), (string)e[param.propertyName]);
                                 }
+                                else if (type.IsEnum)
+                                    e.dynamicData[param.propertyName] = (int)e[param.propertyName];
+                                else if (pType == typeof(Newtonsoft.Json.Linq.JObject))
+                                    e.dynamicData[param.propertyName] = e[param.propertyName].ToObject(type);
                                 else
-                                    e.dynamicData[param.propertyName] = Enum.Parse(typeof(Util.EasingFunction.Ease), (string)e[param.propertyName]);
+                                    e.dynamicData[param.propertyName] = Convert.ChangeType(e[param.propertyName], type);
                             }
-                            else if (type.IsEnum)
-                                e.dynamicData[param.propertyName] = (int)e[param.propertyName];
-                            else if (pType == typeof(Newtonsoft.Json.Linq.JObject))
-                                e.dynamicData[param.propertyName] = e[param.propertyName].ToObject(type);
-                            else
-                                e.dynamicData[param.propertyName] = Convert.ChangeType(e[param.propertyName], type);
+                            catch
+                            {
+                                Debug.LogWarning($"Could not convert {param.propertyName} to {type}! Using default value...");
+                                // GlobalGameManager.ShowErrorMessage("Warning", $"Could not convert {e.datamodel}/{param.propertyName} to {type}! This will be loaded using the default value, so chart may be unstable.");
+                                // use default value
+                                if (type == typeof(EntityTypes.Integer))
+                                    e.dynamicData[param.propertyName] = ((EntityTypes.Integer)param.parameter).val;
+                                else if (type == typeof(EntityTypes.Float))
+                                    e.dynamicData[param.propertyName] = ((EntityTypes.Float)param.parameter).val;
+                                else if (type.IsEnum && param.propertyName != "ease")
+                                    e.dynamicData[param.propertyName] = (int)param.parameter;
+                                else
+                                    e.dynamicData[param.propertyName] = Convert.ChangeType(param.parameter, type);
+                            }
                         }
                     }
                 }
