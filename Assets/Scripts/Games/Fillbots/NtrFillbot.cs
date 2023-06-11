@@ -60,9 +60,9 @@ namespace HeavenStudio.Games.Scripts_Fillbots
 
         private bool holding;
 
-        private float lerpPosX;
+        private float lerpDistance;
 
-        private bool canStop = true;
+        private float normalizedFill;
 
         private void OnDestroy()
         {
@@ -85,13 +85,19 @@ namespace HeavenStudio.Games.Scripts_Fillbots
             bodyTrans.position = new Vector3(bodyTrans.position.x, bodyTrans.position.y + limbFallHeight);
 
             startPosX = transform.position.x;
+
+            lerpDistance = 0 - startPosX;
         }
 
         public void MoveConveyer(float normalized)
         {
+            if (holding)
+            {
+                StopConveyer();
+                return;
+            }
             if (!headHasFallen || !bodyHasFallen || !legsHaveFallen) return;
-            canStop = true;
-            transform.position = new Vector3(Mathf.LerpUnclamped(startPosX, lerpPosX, normalized), transform.position.y);
+            transform.position = new Vector3(Mathf.LerpUnclamped(startPosX, startPosX + lerpDistance, normalized), transform.position.y);
 
             if (normalized >= 4)
             {
@@ -103,11 +109,7 @@ namespace HeavenStudio.Games.Scripts_Fillbots
         public void StopConveyer()
         {
             if (!headHasFallen || !bodyHasFallen || !legsHaveFallen) return;
-            if (!canStop) return;
-            float lerpDistance = lerpPosX - startPosX;
             startPosX = transform.position.x;
-            lerpPosX = startPosX + lerpDistance;
-            canStop = false;
         }
 
         public void Init(double beat)
@@ -176,32 +178,63 @@ namespace HeavenStudio.Games.Scripts_Fillbots
                     }
                 }
 
-                if (beepEvent != null && beepEvent.enabled && ReportBeat(ref beepEvent.lastReportedBeat))
-                {
-                    if (beepEvent.lastReportedBeat < beepEvent.startBeat + beepEvent.length)
-                    {
-                        SoundByte.PlayOneShotGame("fillbots/beep");
-                    }
-                    fullBody.DoScaledAnimationAsync("HoldBeat", 1f);
-                    game.filler.DoScaledAnimationAsync("HoldBeat", 1f);
-                }
-
                 if (holding)
                 {
                     float normalizedBeat = cond.GetPositionFromBeat(startBeat + 4, holdLength);
+                    float normalizedExplodeBeat = cond.GetPositionFromBeat(startBeat + 4, holdLength + 2);
+
+                    if (beepEvent != null && beepEvent.enabled && ReportBeat(ref beepEvent.lastReportedBeat))
+                    {
+                        if (beepEvent.lastReportedBeat < beepEvent.startBeat + beepEvent.length)
+                        {
+                            SoundByte.PlayOneShotGame("fillbots/beep");
+                        }
+                        fullBody.DoScaledAnimationAsync("HoldBeat", 1f);
+                        game.filler.DoScaledAnimationAsync("HoldBeat", 1f);
+                    }
 
                     fillAnim.DoNormalizedAnimation("Fill", Mathf.Clamp(normalizedBeat, 0, 1));
-                    if (PlayerInput.PressedUp() && !game.IsExpectingInputNow(InputType.STANDARD_UP))
+                    if (!game.IsExpectingInputNow(InputType.STANDARD_UP) && normalizedExplodeBeat >= 1f)
                     {
-                        fullBody.Play("Dead", 0, 0);
-                        holding = false;
+                        SoundByte.PlayOneShotGame("fillbots/explosion");
+                        game.currentBots.Remove(this);
+                        Destroy(gameObject);
                     }
+                    else if (PlayerInput.PressedUp() && !game.IsExpectingInputNow(InputType.STANDARD_UP))
+                    {
+                        if (normalizedBeat < 1)
+                        {
+                            fullBody.Play("Dead", 0, 0);
+                            fillSound.KillLoop(0);
+                            beepEvent.enabled = false;
+                            holding = false;
+                            normalizedFill = normalizedBeat;
+                            SoundByte.PlayOneShotGame("fillbots/miss");
+                            if (game.conveyerStartBeat == -1) game.conveyerStartBeat = cond.songPositionInBeats + 1;
+                        }
+                        else if (normalizedBeat >= 1)
+                        {
+                            fullBody.Play("Dead", 0, 0);
+                            fillSound.KillLoop(0);
+                            beepEvent.enabled = false;
+                            holding = false;
+                            normalizedFill = normalizedBeat;
+                            SoundByte.PlayOneShotGame("fillbots/miss");
+                            if (game.conveyerStartBeat == -1) game.conveyerStartBeat = cond.songPositionInBeats + 1;
+                        }
+                    }
+                }
+                else
+                {
+                    fillAnim.DoNormalizedAnimation("Fill", normalizedFill);
                 }
             }
         }
 
         private void JustHold(PlayerActionEvent caller, float state)
         {
+            game.filler.DoScaledAnimationAsync("Hold", 0.5f);
+            SoundByte.PlayOneShotGame("fillbots/armExtension");
             if (state >= 1f || state <= -1f)
             {
                 fullBody.Play("HoldBarely", 0, 0);
@@ -212,8 +245,6 @@ namespace HeavenStudio.Games.Scripts_Fillbots
             transform.position = new Vector3(0, transform.position.y, 0);
             holding = true;
             fullBody.DoScaledAnimationAsync("Hold", 1f);
-            game.filler.DoScaledAnimationAsync("Hold", 0.5f);
-            SoundByte.PlayOneShotGame("fillbots/armExtension");
             SoundByte.PlayOneShotGame("fillbots/beep");
             fillSound = SoundByte.PlayOneShotGame("fillbots/water", -1, 1 / (float)(holdLength / 3), 1, true);
             releaseEvent = game.ScheduleInput(startBeat + 4, holdLength, InputType.STANDARD_UP, JustRelease, OutRelease, OutRelease);
@@ -236,12 +267,22 @@ namespace HeavenStudio.Games.Scripts_Fillbots
             fillSound.KillLoop(0);
             beepEvent.enabled = false;
             holding = false;
-            game.filler.DoScaledAnimationAsync("Release", 0.5f);
             if (game.conveyerStartBeat != -2) game.conveyerStartBeat = caller.timer + caller.startBeat + 1;
-            if (state >= 1f || state <= -1f)
+            if (state >= 1f)
             {
+                SoundByte.PlayOneShotGame("fillbots/miss");
+                game.filler.DoScaledAnimationAsync("ReleaseWhiff", 0.5f);
+                SoundByte.PlayOneShotGame("fillbots/armRetractionWhiff");
                 return;
             }
+            else if (state <= -1f)
+            {
+                SoundByte.PlayOneShotGame("fillbots/miss");
+                game.filler.DoScaledAnimationAsync("ReleaseWhiff", 0.5f);
+                SoundByte.PlayOneShotGame("fillbots/armRetractionWhiff");
+                return;
+            }
+            game.filler.DoScaledAnimationAsync("Release", 0.5f);
             SoundByte.PlayOneShotGame("fillbots/armRetraction");
             fullBody.DoScaledAnimationAsync("Release", 1f);
             string sizePrefix = size switch

@@ -518,6 +518,7 @@ GameObject:
   - component: {fileID: 2070320588382753355}
   - component: {fileID: 4290602135507938543}
   - component: {fileID: 2237466706539414986}
+  - component: {fileID: 2683389436290257437}
   m_Layer: 0
   m_Name: Conveyer
   m_TagString: Untagged
@@ -614,6 +615,17 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
+--- !u!210 &2683389436290257437
+SortingGroup:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3041902986915776654}
+  m_Enabled: 1
+  m_SortingLayerID: 0
+  m_SortingLayer: 0
+  m_SortingOrder: 1
 --- !u!1 &3486375956011209790
 GameObject:
   m_ObjectHideFlags: 0

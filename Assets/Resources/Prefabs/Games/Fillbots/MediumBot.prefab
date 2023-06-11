@@ -625,6 +625,7 @@ GameObject:
   m_Component:
   - component: {fileID: 3566918977115226187}
   - component: {fileID: 1884715170989137582}
+  - component: {fileID: 755017336671867292}
   m_Layer: 0
   m_Name: MediumBot
   m_TagString: Untagged
@@ -672,6 +673,17 @@ MonoBehaviour:
   body: {fileID: 233663896046199226}
   head: {fileID: 1555999227183591988}
   fillAnim: {fileID: 3960380650713155144}
+--- !u!210 &755017336671867292
+SortingGroup:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7038732336128464859}
+  m_Enabled: 1
+  m_SortingLayerID: 0
+  m_SortingLayer: 0
+  m_SortingOrder: 0
 --- !u!1 &7716400162364290482
 GameObject:
   m_ObjectHideFlags: 0

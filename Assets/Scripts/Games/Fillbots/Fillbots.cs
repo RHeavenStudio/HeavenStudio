@@ -86,7 +86,7 @@ namespace HeavenStudio.Games
                 }
                 if (PlayerInput.PressedUp() && !IsExpectingInputNow(InputType.STANDARD_UP))
                 {
-                    filler.DoScaledAnimationAsync("Release", 0.5f);
+                    filler.DoScaledAnimationAsync("ReleaseWhiff", 0.5f);
                     SoundByte.PlayOneShotGame("fillbots/armRetractionWhiff");
                 }
 
@@ -170,7 +170,7 @@ namespace HeavenStudio.Games
                 }),
                 new BeatAction.Action(beat + 3, delegate
                 {
-                    filler.DoScaledAnimationAsync("FillerPrepare", 0.5f);
+                    if (!PlayerInput.Pressing()) filler.DoScaledAnimationAsync("FillerPrepare", 0.5f);
                     conveyerStartBeat = beat + 3;
                 })
             });
