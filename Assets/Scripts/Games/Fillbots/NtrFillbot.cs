@@ -176,7 +176,7 @@ namespace HeavenStudio.Games.Scripts_Fillbots
                     }
                 }
 
-                if (beepEvent != null && beepEvent.enabled && cond.ReportBeat(ref beepEvent.lastReportedBeat))
+                if (beepEvent != null && beepEvent.enabled && ReportBeat(ref beepEvent.lastReportedBeat))
                 {
                     if (beepEvent.lastReportedBeat < beepEvent.startBeat + beepEvent.length)
                     {
@@ -262,6 +262,17 @@ namespace HeavenStudio.Games.Scripts_Fillbots
         private void OutRelease(PlayerActionEvent caller)
         {
 
+        }
+
+        public bool ReportBeat(ref double lastReportedBeat)
+        {
+            var cond = Conductor.instance;
+            bool result = cond.songPositionInBeats >= (lastReportedBeat) + 1f;
+            if (result)
+            {
+                lastReportedBeat += 1f;
+            }
+            return result;
         }
     }
 }
