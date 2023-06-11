@@ -924,7 +924,8 @@ namespace HeavenStudio.Editor.Track
 
         public void UpdateOffsetText()
         {
-            FirstBeatOffset.text = (GameManager.instance.Beatmap.data.offset * 1000f).ToString("G");
+            // show up to 4 decimal places
+            FirstBeatOffset.text = (GameManager.instance.Beatmap.data.offset * 1000f).ToString("F0");
         }
 
         public void UpdateOffsetFromText()
@@ -934,10 +935,7 @@ namespace HeavenStudio.Editor.Track
                 FirstBeatOffset.text = "0";
             
             // Convert ms to s.
-            var newOffset = Convert.ToSingle(FirstBeatOffset.text) / 1000f;
-
-            // Limit decimal places to 4.
-            newOffset = (float)System.Math.Round(newOffset, 4);
+            double newOffset = Convert.ToDouble(FirstBeatOffset.text) / 1000f;
 
             GameManager.instance.Beatmap.data.offset = newOffset;
 
