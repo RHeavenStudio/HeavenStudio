@@ -215,7 +215,7 @@ namespace HeavenStudio.Games.Scripts_Fillbots
             game.filler.DoScaledAnimationAsync("Hold", 0.5f);
             SoundByte.PlayOneShotGame("fillbots/armExtension");
             SoundByte.PlayOneShotGame("fillbots/beep");
-            fillSound = SoundByte.PlayOneShotGame("fillbots/water", -1, 1 / ((float)holdLength * 0.25f), 1, true);
+            fillSound = SoundByte.PlayOneShotGame("fillbots/water", -1, 1 / (float)(holdLength / 3), 1, true);
             releaseEvent = game.ScheduleInput(startBeat + 4, holdLength, InputType.STANDARD_UP, JustRelease, OutRelease, OutRelease);
             beepEvent = new GameEvent()
             {

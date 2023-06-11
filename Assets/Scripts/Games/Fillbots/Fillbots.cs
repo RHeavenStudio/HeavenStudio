@@ -14,7 +14,7 @@ namespace HeavenStudio.Games.Loaders
             {
                 new GameAction("medium", "Medium Bot")
                 {
-                    preFunction = delegate { Fillbots.PreSpawnFillbot(eventCaller.currentEntity.beat, 4, Scripts_Fillbots.BotSize.Medium, Scripts_Fillbots.BotVariant.Normal); },
+                    preFunction = delegate { Fillbots.PreSpawnFillbot(eventCaller.currentEntity.beat, 3, Scripts_Fillbots.BotSize.Medium, Scripts_Fillbots.BotVariant.Normal); },
                     defaultLength = 8f
                 }
             });
