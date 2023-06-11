@@ -188,6 +188,11 @@ namespace HeavenStudio
                     }
                     current = load.Current;
                 }
+                catch (System.IO.FileNotFoundException f)
+                {
+                    Debug.LogWarning("chart has no music: " + f.Message);
+                    Conductor.instance.musicSource.clip = null;
+                }
                 catch (Exception e)
                 {
                     Debug.LogError($"Failed to load music: {e.Message}");

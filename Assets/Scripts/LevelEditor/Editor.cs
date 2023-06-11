@@ -315,7 +315,7 @@ namespace HeavenStudio.Editor
             }
             else
             {
-                if (currentRemixPath == string.Empty)
+                if (currentRemixPath == string.Empty || currentRemixPath == null)
                 {
                     SaveRemixFilePanel();
                 }
@@ -370,15 +370,16 @@ namespace HeavenStudio.Editor
         public void LoadRemix(bool create = false)
         {
             if (create)
+            {
                 GameManager.instance.NewRemix();
+                currentRemixPath = string.Empty;
+            }
             else
             {
                 GameManager.instance.LoadRemix(true);
             }
             Timeline.instance.LoadRemix();
             Timeline.FitToSong();
-
-            currentRemixPath = string.Empty;
         }
 
         public void OpenRemix()
