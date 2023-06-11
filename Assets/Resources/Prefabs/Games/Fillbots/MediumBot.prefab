@@ -414,6 +414,7 @@ GameObject:
   - component: {fileID: 7605662072637104455}
   - component: {fileID: 153391827222204876}
   - component: {fileID: 7967358876063018519}
+  - component: {fileID: 8311452243846348873}
   m_Layer: 0
   m_Name: FullBody
   m_TagString: Untagged
@@ -511,6 +512,25 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
+--- !u!114 &8311452243846348873
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4117856232097131538}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 272afd477a0f2014ba9a9ca4b9879869, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  mask: {fileID: 5293701840656416076}
+  sprites:
+  - {fileID: 1040336252, guid: 40b431067104e8a4d9649906df585d74, type: 3}
+  - {fileID: 1083567521, guid: 40b431067104e8a4d9649906df585d74, type: 3}
+  - {fileID: -507403067, guid: 40b431067104e8a4d9649906df585d74, type: 3}
+  - {fileID: 180657246, guid: 40b431067104e8a4d9649906df585d74, type: 3}
+  - {fileID: 980497348, guid: 40b431067104e8a4d9649906df585d74, type: 3}
 --- !u!1 &5669306600923038008
 GameObject:
   m_ObjectHideFlags: 0
