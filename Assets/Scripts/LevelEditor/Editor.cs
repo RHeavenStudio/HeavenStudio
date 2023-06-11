@@ -393,7 +393,6 @@ namespace HeavenStudio.Editor
             StandaloneFileBrowser.OpenFilePanelAsync("Open Remix", "", extensions, false, (string[] paths) =>
             {
                 var path = Path.Combine(paths);
-
                 if (path == string.Empty) return;
                 
                 try
