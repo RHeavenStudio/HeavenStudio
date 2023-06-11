@@ -38,7 +38,7 @@ namespace HeavenStudio.Games
 
         [Header("Components")]
         [SerializeField] private NtrFillbot mediumBot;
-        [SerializeField] private Animator filler;
+        public Animator filler;
 
         public static Fillbots instance;
 
@@ -68,6 +68,16 @@ namespace HeavenStudio.Games
                         SpawnFillbot(queuedBot.beat, queuedBot.holdLength, queuedBot.size, queuedBot.variant);
                     }
                     queuedBots.Clear();
+                }
+                if (PlayerInput.Pressed() && !IsExpectingInputNow(InputType.STANDARD_DOWN))
+                {
+                    filler.DoScaledAnimationAsync("Hold", 0.5f);
+                    SoundByte.PlayOneShotGame("fillbots/armExtension");
+                }
+                if (PlayerInput.PressedUp() && !IsExpectingInputNow(InputType.STANDARD_UP))
+                {
+                    filler.DoScaledAnimationAsync("Release", 0.5f);
+                    SoundByte.PlayOneShotGame("fillbots/armRetractionWhiff");
                 }
             }
         }
