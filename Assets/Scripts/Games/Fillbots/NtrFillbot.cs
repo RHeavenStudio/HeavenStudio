@@ -222,6 +222,7 @@ namespace HeavenStudio.Games.Scripts_Fillbots
                             SoundByte.PlayOneShotGame("fillbots/miss");
                             if (game.conveyerStartBeat == -1) game.conveyerStartBeat = cond.songPositionInBeats + 1;
                         }
+                        releaseEvent.Disable();
                     }
                 }
                 else
@@ -273,6 +274,7 @@ namespace HeavenStudio.Games.Scripts_Fillbots
                 SoundByte.PlayOneShotGame("fillbots/miss");
                 game.filler.DoScaledAnimationAsync("ReleaseWhiff", 0.5f);
                 SoundByte.PlayOneShotGame("fillbots/armRetractionWhiff");
+                fullBody.DoScaledAnimationAsync("ReleaseLate", 0.5f);
                 return;
             }
             else if (state <= -1f)
@@ -280,6 +282,7 @@ namespace HeavenStudio.Games.Scripts_Fillbots
                 SoundByte.PlayOneShotGame("fillbots/miss");
                 game.filler.DoScaledAnimationAsync("ReleaseWhiff", 0.5f);
                 SoundByte.PlayOneShotGame("fillbots/armRetractionWhiff");
+                fullBody.DoScaledAnimationAsync("ReleaseEarly", 0.5f);
                 return;
             }
             game.filler.DoScaledAnimationAsync("Release", 0.5f);

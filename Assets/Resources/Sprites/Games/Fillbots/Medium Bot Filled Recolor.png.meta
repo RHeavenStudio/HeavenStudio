@@ -105,15 +105,15 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: Medium Bot Filled Recolor_0
+      name: lateB2
       rect:
         serializedVersion: 2
         x: 4037
         y: 969
         width: 433
         height: 793
-      alignment: 0
-      pivot: {x: 0.5, y: 0.5}
+      alignment: 9
+      pivot: {x: 0.47841865, y: 0.46128246}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
@@ -126,15 +126,15 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Medium Bot Filled Recolor_1
+      name: lateA2
       rect:
         serializedVersion: 2
         x: 3032
         y: 937
-        width: 428
+        width: 462
         height: 825
-      alignment: 0
-      pivot: {x: 0.5, y: 0.5}
+      alignment: 9
+      pivot: {x: 0.49999946, y: 0.47116625}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
@@ -252,7 +252,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Medium Bot Filled Recolor_7
+      name: early3
       rect:
         serializedVersion: 2
         x: 1286
@@ -273,7 +273,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Medium Bot Filled Recolor_8
+      name: early2
       rect:
         serializedVersion: 2
         x: 1737
@@ -294,7 +294,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Medium Bot Filled Recolor_9
+      name: early1
       rect:
         serializedVersion: 2
         x: 2133
@@ -315,7 +315,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Medium Bot Filled Recolor_10
+      name: lateA1
       rect:
         serializedVersion: 2
         x: 2539
@@ -336,7 +336,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Medium Bot Filled Recolor_11
+      name: lateB1
       rect:
         serializedVersion: 2
         x: 3554
@@ -787,10 +787,6 @@ TextureImporter:
     weights: []
     secondaryTextures: []
     nameFileIdTable:
-      Medium Bot Filled Recolor_0: 2043392972
-      Medium Bot Filled Recolor_1: 592479105
-      Medium Bot Filled Recolor_10: 828003793
-      Medium Bot Filled Recolor_11: -1624187910
       Medium Bot Filled Recolor_12: -1463077447
       Medium Bot Filled Recolor_14: -1401419066
       Medium Bot Filled Recolor_15: -1020178794
@@ -813,9 +809,13 @@ TextureImporter:
       Medium Bot Filled Recolor_30: -929841017
       Medium Bot Filled Recolor_31: 1445063237
       Medium Bot Filled Recolor_4: 1853615290
-      Medium Bot Filled Recolor_7: 1221760277
-      Medium Bot Filled Recolor_8: -74431848
-      Medium Bot Filled Recolor_9: -702802170
+      early1: -702802170
+      early2: -74431848
+      early3: 1221760277
+      lateA1: 828003793
+      lateA2: 592479105
+      lateB1: -1624187910
+      lateB2: 2043392972
       stretch1: -1884407146
       stretch2: 674987060
       stretch3: 1009109504
