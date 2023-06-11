@@ -25,6 +25,8 @@ namespace HeavenStudio.Games.Loaders
 namespace HeavenStudio.Games
 {
     using Scripts_Fillbots;
+    using System;
+
     public class Fillbots : Minigame
     {
         private struct QueuedFillbot
@@ -39,8 +41,16 @@ namespace HeavenStudio.Games
         [Header("Components")]
         [SerializeField] private NtrFillbot mediumBot;
         public Animator filler;
+        [SerializeField] private Transform[] gears;
+        [SerializeField] private Animator conveyerBelt;
 
         public static Fillbots instance;
+
+        [NonSerialized] public List<NtrFillbot> currentBots = new List<NtrFillbot>();
+
+        [NonSerialized] public double conveyerStartBeat = -1;
+
+        [NonSerialized] public float conveyerNormalizedOffset;
 
         private void Awake()
         {
@@ -79,6 +89,49 @@ namespace HeavenStudio.Games
                     filler.DoScaledAnimationAsync("Release", 0.5f);
                     SoundByte.PlayOneShotGame("fillbots/armRetractionWhiff");
                 }
+
+                if (conveyerStartBeat >= 0)
+                {
+                    float normalizedBeat = cond.GetPositionFromBeat(conveyerStartBeat, 1);
+
+                    if (normalizedBeat >= 0)
+                    {
+                        for (int i = 0; i < currentBots.Count; i++)
+                        {
+                            var bot = currentBots[i];
+                            bot.MoveConveyer(normalizedBeat);
+                        }
+                        conveyerBelt.Play("Move", -1, ((normalizedBeat + conveyerNormalizedOffset) % 1) / 4);
+                        foreach (var gear in gears)
+                        {
+                            gear.localEulerAngles = new Vector3(0, 0, Mathf.LerpUnclamped(0, 90, normalizedBeat + conveyerNormalizedOffset));
+                        }
+                    }
+                    else
+                    {
+                        foreach (var bot in currentBots)
+                        {
+                            bot.StopConveyer();
+                        }
+                        conveyerBelt.Play("Move", -1, (conveyerNormalizedOffset % 1) / 4);
+                        foreach (var gear in gears)
+                        {
+                            gear.localEulerAngles = new Vector3(0, 0, Mathf.LerpUnclamped(0, 90, conveyerNormalizedOffset));
+                        }
+                    }
+                }
+                else
+                {
+                    foreach (var bot in currentBots)
+                    {
+                        bot.StopConveyer();
+                    }
+                    conveyerBelt.Play("Move", -1, (conveyerNormalizedOffset % 1) / 4);
+                    foreach (var gear in gears)
+                    {
+                        gear.localEulerAngles = new Vector3(0, 0, Mathf.LerpUnclamped(0, 90, conveyerNormalizedOffset));
+                    }
+                }
             }
         }
 
@@ -110,9 +163,15 @@ namespace HeavenStudio.Games
             spawnedBot.Init(beat);
             BeatAction.New(instance.gameObject, new List<BeatAction.Action>()
             {
+                new BeatAction.Action(beat, delegate
+                {
+                    if (conveyerStartBeat != -1) conveyerNormalizedOffset = Conductor.instance.GetPositionFromBeat(conveyerStartBeat, 1);
+                    conveyerStartBeat = -2;
+                }),
                 new BeatAction.Action(beat + 3, delegate
                 {
                     filler.DoScaledAnimationAsync("FillerPrepare", 0.5f);
+                    conveyerStartBeat = beat + 3;
                 })
             });
         }

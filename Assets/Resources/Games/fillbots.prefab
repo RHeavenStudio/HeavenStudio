@@ -517,6 +517,7 @@ GameObject:
   m_Component:
   - component: {fileID: 2070320588382753355}
   - component: {fileID: 4290602135507938543}
+  - component: {fileID: 2237466706539414986}
   m_Layer: 0
   m_Name: Conveyer
   m_TagString: Untagged
@@ -592,6 +593,27 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
+--- !u!95 &2237466706539414986
+Animator:
+  serializedVersion: 5
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3041902986915776654}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: 65eaca3e3da4ccc4eb3ef7e44b8d2749, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorStateOnDisable: 0
+  m_WriteDefaultValuesOnDisable: 0
 --- !u!1 &3486375956011209790
 GameObject:
   m_ObjectHideFlags: 0
@@ -1302,6 +1324,10 @@ MonoBehaviour:
   firstEnable: 0
   mediumBot: {fileID: 1884715170989137582, guid: 3de1d3cd9808711448ace845114bf9e0, type: 3}
   filler: {fileID: 3297081550122758325}
+  gears:
+  - {fileID: 4840209470412854651}
+  - {fileID: 4526144785777034668}
+  conveyerBelt: {fileID: 2237466706539414986}
 --- !u!1 &6708099093686922731
 GameObject:
   m_ObjectHideFlags: 0
@@ -1665,7 +1691,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 7653508434358181563}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 27.35, y: 0, z: 0}
+  m_LocalPosition: {x: 26.885, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []

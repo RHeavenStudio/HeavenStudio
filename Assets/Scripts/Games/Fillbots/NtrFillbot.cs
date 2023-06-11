@@ -60,6 +60,10 @@ namespace HeavenStudio.Games.Scripts_Fillbots
 
         private bool holding;
 
+        private float lerpPosX;
+
+        private bool canStop = true;
+
         private void OnDestroy()
         {
             if (fillSound != null) fillSound.KillLoop(0);
@@ -81,6 +85,29 @@ namespace HeavenStudio.Games.Scripts_Fillbots
             bodyTrans.position = new Vector3(bodyTrans.position.x, bodyTrans.position.y + limbFallHeight);
 
             startPosX = transform.position.x;
+        }
+
+        public void MoveConveyer(float normalized)
+        {
+            if (!headHasFallen || !bodyHasFallen || !legsHaveFallen) return;
+            canStop = true;
+            transform.position = new Vector3(Mathf.LerpUnclamped(startPosX, lerpPosX, normalized), transform.position.y);
+
+            if (normalized >= 4)
+            {
+                game.currentBots.Remove(this);
+                Destroy(gameObject);
+            }
+        }
+
+        public void StopConveyer()
+        {
+            if (!headHasFallen || !bodyHasFallen || !legsHaveFallen) return;
+            if (!canStop) return;
+            float lerpDistance = lerpPosX - startPosX;
+            startPosX = transform.position.x;
+            lerpPosX = startPosX + lerpDistance;
+            canStop = false;
         }
 
         public void Init(double beat)
@@ -117,6 +144,8 @@ namespace HeavenStudio.Games.Scripts_Fillbots
             });
 
             game.ScheduleInput(startBeat, 4, InputType.STANDARD_DOWN, JustHold, HoldOut, HoldOut);
+
+            game.currentBots.Add(this);
         }
 
         private void Update()
@@ -178,6 +207,9 @@ namespace HeavenStudio.Games.Scripts_Fillbots
                 fullBody.Play("HoldBarely", 0, 0);
                 return;
             }
+            if (game.conveyerStartBeat != -1) game.conveyerNormalizedOffset = Conductor.instance.GetPositionFromBeat(game.conveyerStartBeat, 1);
+            game.conveyerStartBeat = -1;
+            transform.position = new Vector3(0, transform.position.y, 0);
             holding = true;
             fullBody.DoScaledAnimationAsync("Hold", 1f);
             game.filler.DoScaledAnimationAsync("Hold", 0.5f);
@@ -205,6 +237,7 @@ namespace HeavenStudio.Games.Scripts_Fillbots
             beepEvent.enabled = false;
             holding = false;
             game.filler.DoScaledAnimationAsync("Release", 0.5f);
+            if (game.conveyerStartBeat != -2) game.conveyerStartBeat = caller.timer + caller.startBeat + 1;
             if (state >= 1f || state <= -1f)
             {
                 return;
