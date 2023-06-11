@@ -160,16 +160,23 @@ namespace HeavenStudio.Games
 
             // find out when the next game switch (or remix end) happens
             var allEnds = EventCaller.GetAllInGameManagerList("gameManager", new string[] { "switchGame", "end" });
-            allEnds.Sort((x, y) => x.beat.CompareTo(y.beat));
-
-            //get the beat of the closest end event
-            foreach (var end in allEnds)
+            if (allEnds.Count == 0)
             {
-                if (end.datamodel.Split(2) == "cropStomp") continue;
-                if (end.beat > startBeat)
+                endBeat = double.MaxValue;
+            }
+            else
+            {
+                allEnds.Sort((x, y) => x.beat.CompareTo(y.beat));
+
+                //get the beat of the closest end event
+                foreach (var end in allEnds)
                 {
-                    endBeat = end.beat;
-                    break;
+                    if (end.datamodel.Split(2) == "cropStomp") continue;
+                    if (end.beat > startBeat)
+                    {
+                        endBeat = end.beat;
+                        break;
+                    }
                 }
             }
 
