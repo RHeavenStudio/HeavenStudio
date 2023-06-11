@@ -24,7 +24,7 @@ namespace HeavenStudio.Games.Scripts_Fillbots
         [Header("Properties")]
         [SerializeField] private BotSize size;
         [SerializeField] private BotVariant variant;
-        public double holdLength = 4;
+        public double holdLength = 4f;
         [SerializeField] private float limbFallHeight = 15f;
 
         [Header("Body Parts")]
@@ -35,6 +35,8 @@ namespace HeavenStudio.Games.Scripts_Fillbots
         private Transform bodyTrans;
         [SerializeField] private Animator head;
         private Transform headTrans;
+
+        [SerializeField] private Animator fillAnim;
 
         private float legsPosY;
         private float bodyPosY;
@@ -47,6 +49,21 @@ namespace HeavenStudio.Games.Scripts_Fillbots
         private bool headHasFallen;
 
         private Fillbots game;
+
+        private float startPosX;
+
+        private GameEvent beepEvent;
+
+        private PlayerActionEvent releaseEvent;
+
+        private Sound fillSound;
+
+        private bool holding;
+
+        private void OnDestroy()
+        {
+            if (fillSound != null) fillSound.KillLoop(0);
+        }
 
         private void Awake()
         {
@@ -62,6 +79,8 @@ namespace HeavenStudio.Games.Scripts_Fillbots
             legsTrans.position = new Vector3(legsTrans.position.x, legsTrans.position.y + limbFallHeight);
             headTrans.position = new Vector3(headTrans.position.x, headTrans.position.y + limbFallHeight);
             bodyTrans.position = new Vector3(bodyTrans.position.x, bodyTrans.position.y + limbFallHeight);
+
+            startPosX = transform.position.x;
         }
 
         public void Init(double beat)
@@ -96,6 +115,8 @@ namespace HeavenStudio.Games.Scripts_Fillbots
                 new MultiSound.Sound("fillbots/" + sizePrefix + "Fall", beat + 1),
                 new MultiSound.Sound("fillbots/" + sizePrefix + "Fall", beat + 2),
             });
+
+            game.ScheduleInput(startBeat, 4, InputType.STANDARD_DOWN, JustHold, HoldOut, HoldOut);
         }
 
         private void Update()
@@ -125,7 +146,89 @@ namespace HeavenStudio.Games.Scripts_Fillbots
                         headTrans.position = new Vector3(headTrans.position.x, Mathf.Clamp(lerpedY, headPosY, headPosY + limbFallHeight));
                     }
                 }
+
+                if (beepEvent != null && beepEvent.enabled && cond.ReportBeat(ref beepEvent.lastReportedBeat))
+                {
+                    if (beepEvent.lastReportedBeat < beepEvent.startBeat + beepEvent.length)
+                    {
+                        SoundByte.PlayOneShotGame("fillbots/beep");
+                    }
+                    fullBody.DoScaledAnimationAsync("HoldBeat", 1f);
+                    game.filler.DoScaledAnimationAsync("HoldBeat", 1f);
+                }
+
+                if (holding)
+                {
+                    float normalizedBeat = cond.GetPositionFromBeat(startBeat + 4, holdLength);
+
+                    fillAnim.DoNormalizedAnimation("Fill", Mathf.Clamp(normalizedBeat, 0, 1));
+                    if (PlayerInput.PressedUp() && !game.IsExpectingInputNow(InputType.STANDARD_UP))
+                    {
+                        fullBody.Play("Dead", 0, 0);
+                        holding = false;
+                    }
+                }
             }
+        }
+
+        private void JustHold(PlayerActionEvent caller, float state)
+        {
+            if (state >= 1f || state <= -1f)
+            {
+                fullBody.Play("HoldBarely", 0, 0);
+                return;
+            }
+            holding = true;
+            fullBody.DoScaledAnimationAsync("Hold", 1f);
+            game.filler.DoScaledAnimationAsync("Hold", 0.5f);
+            SoundByte.PlayOneShotGame("fillbots/armExtension");
+            SoundByte.PlayOneShotGame("fillbots/beep");
+            fillSound = SoundByte.PlayOneShotGame("fillbots/water", -1, 1 / ((float)holdLength * 0.25f), 1, true);
+            releaseEvent = game.ScheduleInput(startBeat + 4, holdLength, InputType.STANDARD_UP, JustRelease, OutRelease, OutRelease);
+            beepEvent = new GameEvent()
+            {
+                startBeat = startBeat + 4,
+                lastReportedBeat = startBeat + 4,
+                length = (float)holdLength,
+                enabled = true
+            };
+        }
+
+        private void HoldOut(PlayerActionEvent caller)
+        {
+
+        }
+
+        private void JustRelease(PlayerActionEvent caller, float state)
+        {
+            fillSound.KillLoop(0);
+            beepEvent.enabled = false;
+            holding = false;
+            game.filler.DoScaledAnimationAsync("Release", 0.5f);
+            if (state >= 1f || state <= -1f)
+            {
+                return;
+            }
+            SoundByte.PlayOneShotGame("fillbots/armRetraction");
+            fullBody.DoScaledAnimationAsync("Release", 1f);
+            string sizePrefix = size switch
+            {
+                BotSize.Small => "small",
+                BotSize.Medium => "medium",
+                BotSize.Large => "big",
+                _ => throw new System.NotImplementedException()
+            };
+            MultiSound.Play(new MultiSound.Sound[]
+            {
+                new MultiSound.Sound("fillbots/" + sizePrefix + "Move", caller.startBeat + caller.timer + 0.5),
+                new MultiSound.Sound("fillbots/" + sizePrefix + "OK1", caller.startBeat + caller.timer + 0.5),
+                new MultiSound.Sound("fillbots/" + sizePrefix + "OK2", caller.startBeat + caller.timer + 1),
+            });
+        }
+
+        private void OutRelease(PlayerActionEvent caller)
+        {
+
         }
     }
 }

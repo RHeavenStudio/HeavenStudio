@@ -103,7 +103,10 @@ namespace HeavenStudio.Games
         private void SpawnFillbot(double beat, double holdLength, BotSize size, BotVariant variant)
         {
             NtrFillbot spawnedBot = Instantiate(mediumBot, transform);
-            spawnedBot.holdLength = holdLength;
+            if (holdLength > 0)
+            {
+                spawnedBot.holdLength = holdLength;
+            }
             spawnedBot.Init(beat);
             BeatAction.New(instance.gameObject, new List<BeatAction.Action>()
             {
