@@ -73,6 +73,70 @@ namespace HeavenStudio
                 {"resultrepeat_ng", "Next time, follow the example better."},   // "Try Again" message for call-and-response games (two-liner)
             };
 
+        static Dictionary<string, object> tempoChangeModel = new()
+        {
+            {"tempo", 120f},
+            {"swing", 0f},
+            {"timeSignature", new Vector2(4, 4)},
+        };
+
+        static Dictionary<string, object> volumeChangeModel = new()
+        {
+            {"volume", 1f},
+            {"fade", Util.EasingFunction.Ease.Instant},
+        };
+
+        static Dictionary<string, object> sectionMarkModel = new()
+        {
+            {"sectionName", ""},
+            {"isCheckpoint", false},
+            {"startPerfect", false},
+            {"breakSection", false},
+            {"extendsPrevious", false},
+            {"sectionWeight", 1f},
+        };
+
+        static void PreProcessSpecialEntity(RiqEntity e, Dictionary<string, object> model)
+        {
+            foreach (var t in model)
+            {
+                string propertyName = t.Key;
+                Type type = t.Value.GetType();
+                if (!e.dynamicData.ContainsKey(propertyName))
+                {
+                    e.CreateProperty(propertyName, t.Value);
+                }
+                Type pType = e[propertyName].GetType();
+                if (pType != type)
+                {
+                    try
+                    {
+                        if (type == typeof(Util.EasingFunction.Ease) && (pType == typeof(string) || pType == typeof(int) || pType == typeof(long)))
+                        {
+                            if (pType == typeof(int) || pType == typeof(long) || pType == typeof(Jukebox.EasingFunction.Ease))
+                            {
+                                e[propertyName] = (Util.EasingFunction.Ease)e[propertyName];
+                            }
+                            else
+                                e[propertyName] = Enum.Parse(typeof(Util.EasingFunction.Ease), (string)e[propertyName]);
+                        }
+                        else if (type.IsEnum)
+                            e[propertyName] = (int)e[propertyName];
+                        else if (pType == typeof(Newtonsoft.Json.Linq.JObject))
+                            e[propertyName] = e[propertyName].ToObject(type);
+                        else
+                            e[propertyName] = Convert.ChangeType(e[propertyName], type);
+                    }
+                    catch
+                    {
+                        Debug.LogWarning($"Could not convert {propertyName} to {type}! Using default value...");
+                        // use default value
+                        e.CreateProperty(propertyName, t.Value);
+                    }
+                }
+            }
+        }
+
         /// <summary>
         /// processes an riq beatmap after it is loaded
         /// </summary>
@@ -179,31 +243,17 @@ namespace HeavenStudio
 
             foreach (var tempo in data.tempoChanges)
             {
-                tempo["tempo"] = (float)tempo["tempo"];
-                tempo["swing"] = (float)tempo["swing"];
-                if (tempo.dynamicData.ContainsKey("timeSignature"))
-                    tempo["timeSignature"] = (Vector2)tempo["timeSignature"];
-                else
-                    tempo.dynamicData.Add("timeSignature", new Vector2(4, 4));
+                PreProcessSpecialEntity(tempo, tempoChangeModel);
             }
 
             foreach (var vol in data.volumeChanges)
             {
-                vol["volume"] = (float)vol["volume"];
-                if (vol["fade"].GetType() == typeof(string))
-                    vol["fade"] = Enum.Parse(typeof(Util.EasingFunction.Ease), (string)vol["fade"]);
-                else
-                    vol["fade"] = (Util.EasingFunction.Ease)vol["fade"];
+                PreProcessSpecialEntity(vol, volumeChangeModel);
             }
 
             foreach (var section in data.beatmapSections)
             {
-                section["sectionName"] = (string)section["sectionName"];
-                section["isCheckpoint"] = (bool)section["isCheckpoint"];
-                section["startPerfect"] = (bool)section["startPerfect"];
-                section["breakSection"] = (bool)section["breakSection"];
-                section["extendsPrevious"] = (bool)section["extendsPrevious"];
-                section["sectionWeight"] = (float)section["sectionWeight"];
+                PreProcessSpecialEntity(section, sectionMarkModel);
             }
 
             //go thru each property of the model beatmap and add any missing keyvalue pair
