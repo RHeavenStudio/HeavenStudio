@@ -7,50 +7,34 @@ using HeavenStudio.Util;
 
 namespace HeavenStudio.Games.Scripts_WorkingDough
 {
-    public class BGBall : MonoBehaviour
+    public class BGBall : SuperCurveObject
     {
-        public double startBeat;
-        public float firstBeatsToTravel = 3f;
-        public float secondBeatsToTravel = 1f;
-        public float thirdBeatsToTravel = 3f;
-        public enum CurveStage
+        private double startBeat = double.MinValue;
+        private Path path;
+        [SerializeField] private GameObject gandw;
+
+        public void Init(double beat, bool hasGandw)
         {
-            Conveyer = 0,
-            StartFall = 1,
-            Fall = 2
+            startBeat = beat;
+            path = WorkingDough.instance.GetPath("BGBall");
+            if (gandw != null) gandw.SetActive(hasGandw);
+            Update();
         }
-        public CurveStage currentCurveStage;
-        [NonSerialized] public BezierCurve3D firstCurve;
-        [NonSerialized] public BezierCurve3D secondCurve;
-        [NonSerialized] public BezierCurve3D thirdCurve;
 
         private void Update()
         {
             var cond = Conductor.instance;
 
-            float flyPos = 0f;
-
-            switch (currentCurveStage)
+            if (cond.isPlaying && !cond.isPaused)
             {
-                case CurveStage.Conveyer:
-                    flyPos = cond.GetPositionFromBeat(startBeat, firstBeatsToTravel);
-                    transform.position = firstCurve.GetPoint(flyPos);
-                    if (flyPos > 1f)
-                    {
-                        currentCurveStage = CurveStage.StartFall;
-                    }
-                    break;
-                case CurveStage.StartFall:
-                    flyPos = cond.GetPositionFromBeat(startBeat + firstBeatsToTravel, secondBeatsToTravel);
-                    transform.position = secondCurve.GetPoint(flyPos);
-                    if (flyPos > 1f) currentCurveStage = CurveStage.Fall;
-                    break;
-                case CurveStage.Fall:
-                    flyPos = cond.GetPositionFromBeat(startBeat + secondBeatsToTravel + firstBeatsToTravel, thirdBeatsToTravel);
-
-                    transform.position = thirdCurve.GetPoint(flyPos);
-                    if (flyPos > 1f) GameObject.Destroy(gameObject);
-                    break;
+                double beat = cond.songPositionInBeats;
+                if (startBeat !=  double.MinValue)
+                {
+                    Vector3 pos = GetPathPositionFromBeat(path, Math.Max(startBeat, beat), startBeat);
+                    transform.position = pos;
+                    transform.rotation = Quaternion.Euler(0f, 0f, transform.rotation.eulerAngles.z - (-90 * Time.deltaTime * (1f / Conductor.instance.pitchedSecPerBeat)));
+                    if (beat >= startBeat + 9) Destroy(gameObject);
+                }
             }
         }
     }

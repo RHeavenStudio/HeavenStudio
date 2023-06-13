@@ -170,15 +170,13 @@ namespace HeavenStudio
                         if (item.Key == "track")
                             continue;
                         if (item.Value == null) 
-                        {
-                            e[item.Key] = 0;
-                        }
+                            continue;
                         var value = item.Value;
                         if (value.GetType() == typeof(long))
                             value = new EntityTypes.Integer(int.MinValue, int.MaxValue, (int)value);
                         else if (value.GetType() == typeof(double))
                             value = new EntityTypes.Float(float.NegativeInfinity, float.PositiveInfinity, (float)value);
-                        parameters.Add(new Minigames.Param(item.Key, value, item.Key, "[inferred from remix.json]"));
+                        parameters.Add(new Minigames.Param(item.Key, value, item.Key.DisplayName(), "[inferred from remix.json]"));
                     }
                     action = new Minigames.GameAction(actionName, actionName.DisplayName(), e.length, true, parameters);
                     game.actions.Add(action);

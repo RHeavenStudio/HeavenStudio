@@ -7,55 +7,33 @@ using HeavenStudio.Util;
 
 namespace HeavenStudio.Games.Scripts_WorkingDough
 {
-    public enum FlyingStage
+    public class NPCDoughBall : SuperCurveObject
     {
-        EnteringUp = 0,
-        EnteringDown = 1,
-        ExitingUp = 2,
-        ExitingDown = 3
-    }
-    public class NPCDoughBall : MonoBehaviour
-    {
-        public double startBeat;
+        private double startBeat = double.MinValue;
+        private Path path;
+        [SerializeField] private GameObject gandw;
 
-        public FlyingStage currentFlyingStage = FlyingStage.EnteringUp;
-
-
-        [NonSerialized] public BezierCurve3D enterUpCurve;
-        [NonSerialized] public BezierCurve3D enterDownCurve;
-        [NonSerialized] public BezierCurve3D exitUpCurve;
-        [NonSerialized] public BezierCurve3D exitDownCurve;
+        public void Init(double beat, bool hasGandw)
+        {
+            startBeat = beat;
+            path = WorkingDough.instance.GetPath("NPCBall");
+            if (gandw != null) gandw.SetActive(hasGandw);
+            Update();
+        }
 
         private void Update()
         {
             var cond = Conductor.instance;
 
-            float flyPos = 0f;
-
-            switch (currentFlyingStage) {
-                case FlyingStage.EnteringUp:
-                    flyPos = cond.GetPositionFromBeat(startBeat, 0.5f);
-                    transform.position = enterUpCurve.GetPoint(flyPos);
-                    if (flyPos > 1f) currentFlyingStage = FlyingStage.EnteringDown;
-                    break;
-                case FlyingStage.EnteringDown:
-                    flyPos = cond.GetPositionFromBeat(startBeat + 0.5f, 0.5f);
-
-                    transform.position = enterDownCurve.GetPoint(flyPos);
-                    if (flyPos > 1f) currentFlyingStage = FlyingStage.ExitingUp;
-                    break;
-                case FlyingStage.ExitingUp:
-                    flyPos = cond.GetPositionFromBeat(startBeat + 1f, 0.5f);
-
-                    transform.position = exitUpCurve.GetPoint(flyPos);
-                    if (flyPos > 1f) currentFlyingStage = FlyingStage.ExitingDown;
-                    break;
-                case FlyingStage.ExitingDown:
-                    flyPos = cond.GetPositionFromBeat(startBeat + 1.5f, 0.5f);
-
-                    transform.position = exitDownCurve.GetPoint(flyPos);
-                    if (flyPos > 1f) GameObject.Destroy(gameObject);
-                    break;
+            if (cond.isPlaying && !cond.isPaused)
+            {
+                double beat = cond.songPositionInBeats;
+                if (startBeat > double.MinValue)
+                {
+                    Vector3 pos = GetPathPositionFromBeat(path, Math.Max(beat, startBeat), startBeat);
+                    transform.position = pos;
+                    if (beat >= startBeat + 2) Destroy(gameObject);
+                }
             }
         }
     }

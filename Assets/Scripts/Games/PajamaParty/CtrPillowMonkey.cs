@@ -15,20 +15,24 @@ namespace HeavenStudio.Games.Scripts_PajamaParty
         public GameObject Projectile;
 
         public Animator anim;
+        public bool shouldBop = false;
 
         public int row;
         public int col;
 
+        double lastReportedBeat;
         double startJumpTime = double.MinValue;
         float jumpLength = 1f;
         float jumpHeight = 4f;
         int jumpAlt;
 
-        private bool hasJumped = false;
+        bool shouldntBop = false;
+        bool hasJumped = false;
 
         double startThrowTime = double.MinValue;
         float throwLength = 4f;
         float throwHeight = 12f;
+
         private bool hasThrown = false;
         
         void Awake()
@@ -67,6 +71,7 @@ namespace HeavenStudio.Games.Scripts_PajamaParty
             {
                 if (hasJumped)
                 {
+                    shouldntBop = false;
                     hasJumped = false;
                     PajamaParty.instance.DoBedImpact();
                     anim.DoScaledAnimationAsync("MonkeyLand");
@@ -98,7 +103,16 @@ namespace HeavenStudio.Games.Scripts_PajamaParty
                     anim.DoUnscaledAnimation("MonkeyBeat");
                     Projectile.SetActive(false);
                     hasThrown = false;
+                    shouldntBop = false;
                 }
+            }
+        }
+
+        private void LateUpdate() 
+        {
+            if (Conductor.instance.ReportBeat(ref lastReportedBeat) && anim.IsAnimationNotPlaying() && !hasThrown && !shouldntBop && shouldBop)
+            {
+                anim.DoScaledAnimationAsync("MonkeyBeat", 0.5f);
             }
         }
 
@@ -114,6 +128,7 @@ namespace HeavenStudio.Games.Scripts_PajamaParty
 
         public void Charge(double beat)
         {
+            shouldntBop = true;
             anim.DoUnscaledAnimation("MonkeyReady");
         }
 
@@ -126,6 +141,7 @@ namespace HeavenStudio.Games.Scripts_PajamaParty
 
         public void ReadySleep(double beat, int action)
         {
+            shouldntBop = true;
             var cond = Conductor.instance;
             startThrowTime = double.MinValue;
             Projectile.transform.localPosition = new Vector3(0, 0);

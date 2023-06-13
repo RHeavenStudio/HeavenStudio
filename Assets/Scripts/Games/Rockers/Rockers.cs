@@ -113,12 +113,12 @@ namespace HeavenStudio.Games.Loaders
                 },
                 new GameAction("passTurn", "Pass Turn")
                 {
-                    function = delegate { var e = eventCaller.currentEntity; Rockers.instance.PassTurn(e.beat, e.length, e["moveCamera"]); },
-                    resizable = true,
+                    preFunction = delegate { var e = eventCaller.currentEntity; Rockers.PrePassTurn(e.beat, e["moveCamera"]); },
                     parameters = new List<Param>
                     {
                         new Param("moveCamera", true, "Move Camera", "Should the camera move?")
-                    }
+                    },
+                    preFunctionLength = 1
                 },
                 new GameAction("cmon", "C'mon!")
                 {
@@ -322,6 +322,7 @@ namespace HeavenStudio.Games
     using Scripts_Rockers;
     using Starpelly;
     using System;
+    using UnityEngine.UIElements;
 
     public class Rockers : Minigame
     {
@@ -529,6 +530,14 @@ namespace HeavenStudio.Games
             return tempEvents;
         }
 
+        struct QueuedPassTurn
+        {
+            public double beat;
+            public bool moveCamera;
+        }
+
+        private static List<QueuedPassTurn> passedTurns = new List<QueuedPassTurn>();
+
         private void Start()
         {
             if (PlayerInput.Pressing())
@@ -591,6 +600,15 @@ namespace HeavenStudio.Games
                         PreInterval(interval);
                     }
                     queuedPreInterval.Clear();
+                }
+
+                if (passedTurns.Count > 0)
+                {
+                    foreach (var turn in passedTurns)
+                    {
+                        PassTurn(turn.beat, turn.moveCamera);
+                    }
+                    passedTurns.Clear();
                 }
 
                 float normalizedBeat = cond.GetPositionFromBeat(cameraMoveBeat, 1f);
@@ -972,14 +990,29 @@ namespace HeavenStudio.Games
             }
         }
 
-        public void PassTurn(double beat, float length, bool moveCamera)
+        public static void PrePassTurn(double beat, bool moveCamera)
+        {
+            if (GameManager.instance.currentGame == "rockers")
+            {
+                instance.PassTurn(beat, moveCamera);
+            }
+            else
+            {
+                passedTurns.Add(new QueuedPassTurn
+                {
+                    beat = beat,
+                    moveCamera = moveCamera
+                });
+            }
+        }
+
+        private void PassTurn(double beat, bool moveCamera)
         {
             if (crHandlerInstance.queuedEvents.Count > 0)
             {
-
                 BeatAction.New(instance.gameObject, new List<BeatAction.Action>()
                 {
-                    new BeatAction.Action(beat + (length / 2), delegate
+                    new BeatAction.Action(beat -1, delegate
                     {
                         List<CallAndResponseHandler.CallAndResponseEvent> crEvents = crHandlerInstance.queuedEvents;
 
@@ -988,26 +1021,51 @@ namespace HeavenStudio.Games
                             if (crEvent.tag == "riff")
                             {
                                 RockersInput riffComp = Instantiate(rockerInputRef, transform);
-                                riffComp.Init(crEvent["gleeClub"], new int[6] { crEvent["1"], crEvent["2"], crEvent["3"], crEvent["4"], crEvent["5"], crEvent["6"] }, beat, length + crEvent.relativeBeat,
+                                riffComp.Init(crEvent["gleeClub"], new int[6] { crEvent["1"], crEvent["2"], crEvent["3"], crEvent["4"], crEvent["5"], crEvent["6"] }, beat, crEvent.relativeBeat,
                                     (PremadeSamples)crEvent["sample"], crEvent["sampleTones"]);
-                                ScheduleInput(beat, length + crEvent.relativeBeat + crEvent.length, InputType.STANDARD_DOWN, JustMute, MuteMiss, Empty);
+                                ScheduleInput(beat, crEvent.relativeBeat + crEvent.length, InputType.STANDARD_DOWN, JustMute, MuteMiss, Empty);
                             }
                             else if (crEvent.tag == "bend")
                             {
                                 RockerBendInput bendComp = Instantiate(rockerBendInputRef, transform);
-                                bendComp.Init(crEvent["Pitch"], beat, length + crEvent.relativeBeat);
-                                ScheduleInput(beat, length + crEvent.relativeBeat + crEvent.length, InputType.DIRECTION_UP, JustUnBend, UnBendMiss, Empty);
+                                bendComp.Init(crEvent["Pitch"], beat, crEvent.relativeBeat);
+                                ScheduleInput(beat, crEvent.relativeBeat + crEvent.length, InputType.DIRECTION_UP, JustUnBend, UnBendMiss, Empty);
                             }
                         }
                         crHandlerInstance.queuedEvents.Clear();
                     }),
-                    new BeatAction.Action(beat + length, delegate { JJ.UnHold(); })
+                    new BeatAction.Action(beat, delegate 
+                    { 
+                        JJ.UnHold();
+                        if (crHandlerInstance.queuedEvents.Count > 0)
+                        {
+                            List<CallAndResponseHandler.CallAndResponseEvent> crEvents = crHandlerInstance.queuedEvents;
+
+                            foreach (var crEvent in crEvents)
+                            {
+                                if (crEvent.tag == "riff")
+                                {
+                                    RockersInput riffComp = Instantiate(rockerInputRef, transform);
+                                    riffComp.Init(crEvent["gleeClub"], new int[6] { crEvent["1"], crEvent["2"], crEvent["3"], crEvent["4"], crEvent["5"], crEvent["6"] }, beat, crEvent.relativeBeat,
+                                        (PremadeSamples)crEvent["sample"], crEvent["sampleTones"]);
+                                    ScheduleInput(beat, crEvent.relativeBeat + crEvent.length, InputType.STANDARD_DOWN, JustMute, MuteMiss, Empty);
+                                }
+                                else if (crEvent.tag == "bend")
+                                {
+                                    RockerBendInput bendComp = Instantiate(rockerBendInputRef, transform);
+                                    bendComp.Init(crEvent["Pitch"], beat, crEvent.relativeBeat);
+                                    ScheduleInput(beat, crEvent.relativeBeat + crEvent.length, InputType.DIRECTION_UP, JustUnBend, UnBendMiss, Empty);
+                                }
+                            }
+                            crHandlerInstance.queuedEvents.Clear();
+                        }
+                    })
                 });
                 if (moveCamera)
                 {
                     lastTargetCameraX = GameCamera.additionalPosition.x;
                     targetCameraX = Soshi.transform.localPosition.x;
-                    cameraMoveBeat = beat;
+                    cameraMoveBeat = beat - 1;
                 }
             }
         }

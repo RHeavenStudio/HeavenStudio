@@ -7,36 +7,200 @@ using HeavenStudio.Util;
 
 namespace HeavenStudio.Games.Scripts_WorkingDough
 {
-    public class PlayerEnterDoughBall : MonoBehaviour
+    public class PlayerEnterDoughBall : SuperCurveObject
     {
-        public double startBeat;
-        public float firstBeatsToTravel = 0.5f;
-        public float secondBeatsToTravel = 0.5f;
-        public bool goingDown = false;
-        public bool deletingAutomatically = true;
-        [NonSerialized] public BezierCurve3D firstCurve;
-        [NonSerialized] public BezierCurve3D secondCurve;
+        private enum State
+        {
+            None,
+            Entering,
+            Hit,
+            Barely,
+            Miss,
+            Weak
+        }
+        private State currentState;
+
+        private double startBeat;
+
+        private bool big;
+
+        private Path enterPath;
+        private Path hitPath;
+        private Path barelyPath;
+        private Path missPath;
+        private Path weakPath;
+
+        private WorkingDough game;
+
+        private PlayerActionEvent wrongInput;
+        private PlayerActionEvent rightInput;
+
+        [SerializeField] private GameObject gandw;
+
+        private void Awake()
+        {
+            game = WorkingDough.instance;
+        }
+
+        public void Init(double beat, bool isBig, bool hasGandw)
+        {
+            startBeat = beat;
+            big = isBig;
+            enterPath = game.GetPath("PlayerEnter");
+            hitPath = game.GetPath("PlayerHit");
+            barelyPath = game.GetPath("PlayerBarely");
+            missPath = game.GetPath("PlayerMiss");
+            weakPath = game.GetPath("PlayerWeak");
+            rightInput = game.ScheduleInput(beat, 1, isBig ? InputType.STANDARD_ALT_DOWN : InputType.STANDARD_DOWN, Just, Miss, Empty);
+            wrongInput = game.ScheduleUserInput(beat, 1, isBig ? InputType.STANDARD_DOWN : InputType.STANDARD_ALT_DOWN, WrongInput, Empty, Empty);
+            currentState = State.Entering;
+            if (gandw != null) gandw.SetActive(hasGandw);
+            Update();
+        }
 
         private void Update()
         {
             var cond = Conductor.instance;
 
-            float flyPos = 0f;
-
-            if (goingDown)
+            if (cond.isPlaying && !cond.isPaused)
             {
-                flyPos = cond.GetPositionFromBeat(startBeat + firstBeatsToTravel, secondBeatsToTravel);
+                Vector3 pos = new Vector3();
+                double beat = cond.songPositionInBeats;
+                switch (currentState)
+                {
+                    case State.None:
+                        break;
+                    case State.Entering:
+                        pos = GetPathPositionFromBeat(enterPath, Math.Max(beat, startBeat), startBeat);
+                        break;
+                    case State.Hit:
+                        pos = GetPathPositionFromBeat(hitPath, Math.Max(beat, startBeat), startBeat);
+                        if (beat >= startBeat + 1)
+                        {
+                            Destroy(gameObject);
+                        }
+                        break;
+                    case State.Miss:
+                        pos = GetPathPositionFromBeat(missPath, Math.Max(beat, startBeat), startBeat);
+                        if (beat >= startBeat + 1)
+                        {
+                            Destroy(gameObject);
+                        }
+                        break;
+                    case State.Weak:
+                        pos = GetPathPositionFromBeat(weakPath, Math.Max(beat, startBeat), startBeat);
+                        if (beat >= startBeat + 1)
+                        {
+                            Destroy(gameObject);
+                        }
+                        break;
+                    case State.Barely:
+                        pos = GetPathPositionFromBeat(barelyPath, Math.Max(beat, startBeat), startBeat);
+                        if (beat >= startBeat + 2)
+                        {
+                            Destroy(gameObject);
+                        }
+                        break;
+                }
+                transform.position = pos;
+            }
+        }
 
-                transform.position = secondCurve.GetPoint(flyPos);
-                if (flyPos > 1f) if (deletingAutomatically) GameObject.Destroy(gameObject);
+        private void Just(PlayerActionEvent caller, float state)
+        {
+            wrongInput.Disable();
+            double beat = Conductor.instance.songPositionInBeats;
+            startBeat = beat;
+            game.playerImpact.SetActive(true);
+            BeatAction.New(game.gameObject, new List<BeatAction.Action>()
+            {
+                new BeatAction.Action(beat + 0.1f, delegate { game.playerImpact.SetActive(false); }),
+            });
+            if (state >= 1f || state <= -1f)
+            {
+                currentState = State.Barely;
+                SoundByte.PlayOneShot("miss");
+                if (big)
+                {
+                    SoundByte.PlayOneShotGame("workingDough/bigPlayer");
+                    game.doughDudesPlayer.GetComponent<Animator>().Play("BigDoughJump", 0, 0);
+                }
+                else
+                {
+                    SoundByte.PlayOneShotGame("workingDough/smallPlayer");
+                    game.doughDudesPlayer.GetComponent<Animator>().Play("SmallDoughJump", 0, 0);
+                }
+                Update();
+                return;
+            }
+            currentState = State.Hit;
+            if (big)
+            {
+                SoundByte.PlayOneShotGame("workingDough/bigPlayer");
+                SoundByte.PlayOneShotGame("workingDough/hitBigPlayer");
+                game.doughDudesPlayer.GetComponent<Animator>().Play("BigDoughJump", 0, 0);
+                game.backgroundAnimator.Play("BackgroundFlash", 0, 0);
             }
             else
             {
-                flyPos = cond.GetPositionFromBeat(startBeat, firstBeatsToTravel);
-                transform.position = firstCurve.GetPoint(flyPos);
-                if (flyPos > 1f) goingDown = true;
+                SoundByte.PlayOneShotGame("workingDough/smallPlayer");
+                SoundByte.PlayOneShotGame("workingDough/hitSmallPlayer");
+                game.doughDudesPlayer.GetComponent<Animator>().Play("SmallDoughJump", 0, 0);
+            }
+            bool hasGandw = false;
+            if (gandw != null) hasGandw = gandw.activeSelf;
+            BeatAction.New(game.gameObject, new List<BeatAction.Action>()
+            {
+                new BeatAction.Action(beat + 0.9f, delegate { game.arrowSRRightPlayer.sprite = game.redArrowSprite; }),
+                new BeatAction.Action(beat + 1f, delegate { game.arrowSRRightPlayer.sprite = game.whiteArrowSprite; }),
+                new BeatAction.Action(beat + 2f, delegate { game.SpawnBGBall(beat + 2f, big, hasGandw); }),
+            });
+            Update();
+        }
+
+        private void WrongInput(PlayerActionEvent caller, float state)
+        {
+            double beat = Conductor.instance.songPositionInBeats;
+            rightInput.Disable();
+            game.playerImpact.SetActive(true);
+            BeatAction.New(game.gameObject, new List<BeatAction.Action>()
+            {
+                new BeatAction.Action(beat + 0.1f, delegate { game.playerImpact.SetActive(false); }),
+            });
+            if (big)
+            {
+                currentState = State.Weak;
+                startBeat = beat;
+                game.doughDudesPlayer.GetComponent<Animator>().Play("SmallDoughJump", 0, 0);
+                SoundByte.PlayOneShotGame("workingDough/smallPlayer");
+                SoundByte.PlayOneShotGame("workingDough/tooBig");
+                Update();
+            }
+            else
+            {
+                GameObject.Instantiate(game.breakParticleEffect, game.breakParticleHolder);
+                game.doughDudesPlayer.GetComponent<Animator>().Play("BigDoughJump", 0, 0);
+                SoundByte.PlayOneShotGame("workingDough/bigPlayer");
+                SoundByte.PlayOneShotGame("workingDough/tooSmall");
+                Destroy(gameObject);
             }
         }
+
+        private void Miss(PlayerActionEvent caller)
+        {
+            double beat = caller.timer + caller.startBeat;
+            currentState = State.Miss;
+            startBeat = beat;
+            Update();
+            BeatAction.New(game.gameObject, new List<BeatAction.Action>()
+            {
+                new BeatAction.Action(beat + 0.25f, delegate { game.missImpact.SetActive(true); }),
+                new BeatAction.Action(beat + 0.25f, delegate { SoundByte.PlayOneShotGame("workingDough/BallMiss"); }),
+                new BeatAction.Action(beat + 0.35f, delegate { game.missImpact.SetActive(false); }),
+            });
+        }
+
+        private void Empty(PlayerActionEvent caller) { }
     }
 }
 

@@ -386,9 +386,7 @@ namespace HeavenStudio.Editor
         {
             var extensions = new[]
             {
-                new ExtensionFilter("All Supported Files ", new string[] { "riq", "tengoku", "rhmania" }),
                 new ExtensionFilter("Heaven Studio Remix File ", new string[] { "riq" }),
-                new ExtensionFilter("Legacy Heaven Studio Remix ", new string[] { "tengoku", "rhmania" })
             };
 
             StandaloneFileBrowser.OpenFilePanelAsync("Open Remix", "", extensions, false, (string[] paths) =>

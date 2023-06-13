@@ -1,12 +1,12 @@
 ManifestFileVersion: 0
-CRC: 2090388953
+CRC: 3049152735
 Hashes:
   AssetFileHash:
     serializedVersion: 2
-    Hash: ad96894296d74ec5b5b200f0f4a27631
+    Hash: 814ad6a6b85fbff30bbec94e01c84c95
   TypeTreeHash:
     serializedVersion: 2
-    Hash: 8b55a6917405b0202af0602af7feed59
+    Hash: 1937315467cf052612009b19bb313daf
 HashAppended: 0
 ClassTypes:
 - Class: 1
@@ -23,18 +23,12 @@ ClassTypes:
   Script: {instanceID: 0}
 - Class: 74
   Script: {instanceID: 0}
-- Class: 83
-  Script: {instanceID: 0}
 - Class: 91
   Script: {instanceID: 0}
 - Class: 95
   Script: {instanceID: 0}
 - Class: 114
-  Script: {fileID: 11500000, guid: 066a41e004f415b4eb74d5e61a2aadbe, type: 3}
-- Class: 114
   Script: {fileID: 11500000, guid: f589a35cd43c5a146b78729182754157, type: 3}
-- Class: 114
-  Script: {fileID: 11500000, guid: b0cca3244f403c24f819a870f31cdc29, type: 3}
 - Class: 114
   Script: {fileID: 11500000, guid: 90b8363d14ba26043977a371000195e9, type: 3}
 - Class: 114
@@ -51,45 +45,38 @@ ClassTypes:
   Script: {instanceID: 0}
 - Class: 213
   Script: {instanceID: 0}
-SerializeReferenceClassIdentifiers: []
+SerializeReferenceClassIdentifiers:
+- AssemblyName: Assembly-CSharp
+  ClassName: HeavenStudio.SuperCurveObject/Path
+- AssemblyName: Assembly-CSharp
+  ClassName: HeavenStudio.SuperCurveObject/PathPos
 Assets:
 - Assets/Resources/Sprites/Games/WorkingDough/Animations/PlayerNoBigMode.anim
 - Assets/Resources/Sprites/Games/WorkingDough/Animations/OnGround.anim
 - Assets/Resources/Sprites/Games/WorkingDough/Animations/BallTransporterRightOpened.anim
-- Assets/Resources/Sfx/games/workingDough/Xylophone.wav
 - Assets/Resources/Sprites/Games/WorkingDough/Animations/SmallDoughDudeIdle.anim
 - Assets/Resources/Sprites/Games/WorkingDough/Animations/BigMode.anim
 - Assets/Resources/Sprites/Games/WorkingDough/Animations/Alarm.controller
 - Assets/Resources/Sprites/Games/WorkingDough/Animations/SpaceshipLights.anim
-- Assets/Resources/Sfx/games/workingDough/SmallBarely.wav
-- Assets/Resources/Sfx/games/workingDough/NPCBigBall.ogg
 - Assets/Resources/Sprites/Games/WorkingDough/Animations/BallTransporterRight.controller
 - Assets/Resources/Sprites/Games/WorkingDough/Animations/ConveyerBelt.anim
 - Assets/Resources/Sprites/Games/WorkingDough/Animations/DoughDudesHolder.controller
 - Assets/Resources/Sprites/Games/WorkingDough/Animations/PlayerExitBigMode.anim
-- Assets/Resources/Sfx/games/workingDough/BigBarely.wav
+- Assets/Resources/Sprites/Games/WorkingDough/Animations/BallTransporterLeftClose.anim
 - Assets/Resources/Sprites/Games/WorkingDough/Animations/BallTransporterLeftClosed.anim
 - Assets/Resources/Sprites/Games/WorkingDough/Animations/LiftUp.anim
-- Assets/Resources/Sprites/Games/WorkingDough/Animations/BallTransporterLeftClose.anim
 - Assets/Resources/Sprites/Games/WorkingDough/Animations/InAir.anim
-- Assets/Resources/Sfx/games/workingDough/Idk.wav
-- Assets/Resources/Sfx/games/workingDough/Break.wav
-- Assets/Resources/Sfx/games/workingDough/LaunchRobot.wav
 - Assets/Resources/Sprites/Games/WorkingDough/Animations/RiseSpaceship.anim
 - Assets/Resources/Sprites/Games/WorkingDough/Animations/BallTransporterRightClosed.anim
-- Assets/Resources/Sfx/games/workingDough/Gong.wav
 - Assets/Resources/Sprites/Games/WorkingDough/Animations/GANDWEnter.anim
+- Assets/Resources/Sprites/Games/WorkingDough/Animations/PlayerBigMode.anim
 - Assets/Resources/Sprites/Games/WorkingDough/Animations/MrGameAndWatch.controller
 - Assets/Resources/Sprites/Games/WorkingDough/Animations/NPCBallTransporters.controller
-- Assets/Resources/Sprites/Games/WorkingDough/Animations/PlayerBigMode.anim
 - Assets/Resources/Sprites/Games/WorkingDough/Animations/GANDWLeave.anim
 - Assets/Resources/Sprites/Games/WorkingDough/Animations/SpaceshipShake.anim
-- Assets/Resources/Sfx/games/workingDough/Splash.wav
 - Assets/Resources/Sprites/Games/WorkingDough/Animations/BackgroundBlack.anim
-- Assets/Resources/Sprites/Games/WorkingDough/Animations/BigDoughDudeIdle.anim
 - Assets/Resources/Sprites/Games/WorkingDough/Animations/SpaceshipLaunched.anim
-- Assets/Resources/Sfx/games/workingDough/BallMiss.wav
-- Assets/Resources/Sfx/games/workingDough/Blunt.wav
+- Assets/Resources/Sprites/Games/WorkingDough/Animations/BigDoughDudeIdle.anim
 - Assets/Resources/Sprites/Games/WorkingDough/Animations/GANDWLeft.anim
 - Assets/Resources/Sprites/Games/WorkingDough/Animations/BallTransporterRightClose.anim
 - Assets/Resources/Sprites/Games/WorkingDough/Animations/ConveyerBelt.controller
@@ -98,14 +85,12 @@ Assets:
 - Assets/Resources/Sprites/Games/WorkingDough/Animations/LiftDown.anim
 - Assets/Resources/Sprites/Games/WorkingDough/Animations/NPCExitBigMode.anim
 - Assets/Resources/Sprites/Games/WorkingDough/Animations/AbsorbBall.anim
-- Assets/Resources/Sfx/games/workingDough/BigBallTooWeak.wav
 - Assets/Resources/Sprites/Games/WorkingDough/cellanim.tpl.mm1.png
 - Assets/Resources/Sprites/Games/WorkingDough/cellanim.tpl 2.png
 - Assets/Resources/Sprites/Games/WorkingDough/Animations/Lights.controller
-- Assets/Resources/Sfx/games/workingDough/SmallBall.wav
+- Assets/Resources/Sprites/Games/WorkingDough/Animations/NPCGoBigMode.anim
 - Assets/Resources/Sprites/Games/WorkingDough/Animations/MrGameAndWatchLeverDown.anim
 - Assets/Resources/Sprites/Games/WorkingDough/Animations/Risen.anim
-- Assets/Resources/Sprites/Games/WorkingDough/Animations/NPCGoBigMode.anim
 - Assets/Resources/Sprites/Games/WorkingDough/Animations/PlayerGoBigMode.anim
 - Assets/Resources/Sprites/Games/WorkingDough/Animations/SpaceshipLaunch.anim
 - Assets/Resources/Sprites/Games/WorkingDough/Animations/GANDWLeverUp.anim
@@ -113,17 +98,9 @@ Assets:
 - Assets/Resources/Sprites/Games/WorkingDough/Animations/DoughDudes.controller
 - Assets/Resources/Sprites/Games/WorkingDough/Animations/BallTransporterLeft.controller
 - Assets/Resources/Sprites/Games/WorkingDough/Animations/BallTransporterRightOpen.anim
-- Assets/Resources/Sfx/games/workingDough/rightBig.ogg
 - Assets/Resources/Sprites/Games/WorkingDough/Animations/PlayerBallTransporters.controller
-- Assets/Resources/Sfx/games/workingDough/PlayerSmallJump.wav
 - Assets/Resources/Sprites/Games/WorkingDough/Animations/AlarmIdle.anim
-- Assets/Resources/Sfx/games/workingDough/NPCSmallBall.ogg
-- Assets/Resources/Sfx/games/workingDough/Bong.wav
 - Assets/Resources/Sprites/Games/WorkingDough/Animations/SpaceShipParts.anim
-- Assets/Resources/Sfx/games/workingDough/PlayerBigJump.wav
-- Assets/Resources/Sfx/games/workingDough/rightSmall.ogg
-- Assets/Resources/Sfx/games/workingDough/BreakBall.wav
-- Assets/Resources/Sfx/games/workingDough/Rocket.wav
 - Assets/Resources/Sprites/Games/WorkingDough/Animations/BigDoughDude.controller
 - Assets/Resources/Sprites/Games/WorkingDough/Animations/SmallDoughDude.controller
 - Assets/Resources/Sprites/Games/WorkingDough/Animations/BigDoughJump.anim

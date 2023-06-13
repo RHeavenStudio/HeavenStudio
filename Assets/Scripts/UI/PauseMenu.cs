@@ -42,6 +42,7 @@ namespace HeavenStudio.Common
 
         void Pause()
         {
+            if (GlobalGameManager.IsShowingDialog) return;
             if (!Conductor.instance.isPlaying) return;
             Conductor.instance.Pause();
             pauseBeat = Conductor.instance.songPositionInBeatsAsDouble;

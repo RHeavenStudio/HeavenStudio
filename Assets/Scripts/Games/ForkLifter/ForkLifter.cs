@@ -59,6 +59,17 @@ namespace HeavenStudio.Games.Loaders
                     },
                     resizable = true
                 },
+                new GameAction("bop", "Bop")
+                {
+                    function = delegate { var e = eventCaller.currentEntity; ForkLifter.instance.Bop(e.beat, e.length, e["bop"], e["autoBop"]); },
+                    parameters = new List<Param>()
+                    {
+                        new Param("bop", true, "Keep Bopping", "Should Fork bop for the duration of the block?"),
+                        new Param("autoBop", false, "Keep Bopping (Auto)", "Should Fork bop indefinitely?"),
+                    },
+                    resizable = true,
+                },
+                
                 // These are still here for backwards-compatibility but are hidden in the editor
                 new GameAction("pea", "")
                 {
@@ -141,6 +152,19 @@ namespace HeavenStudio.Games
         {
             base.OnGameSwitch(beat);
             ForkLifterHand.CheckNextFlick();
+        }
+
+        
+        public void Bop(double beat, double length, bool doesBop, bool autoBop)
+        {
+            playerInstance.shouldBop = (autoBop || doesBop);
+            if (!autoBop && doesBop) {
+                BeatAction.New(gameObject, new List<BeatAction.Action>() {
+                    new BeatAction.Action(beat + length, delegate {
+                        playerInstance.shouldBop = false;
+                    })
+                });
+            }
         }
 
         public void Flick(double beat, int type)

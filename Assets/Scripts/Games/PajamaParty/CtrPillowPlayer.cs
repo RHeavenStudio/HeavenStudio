@@ -16,27 +16,31 @@ namespace HeavenStudio.Games.Scripts_PajamaParty
         public GameObject Projectile_Root;
 
         public Animator anim;
+        double lastReportedBeat;
         double startJumpTime = double.MinValue;
         float jumpLength = 0;
         float jumpHeight = 0;
         bool jumpNg = false;
 
-        private bool hasJumped = false;
-        private bool canJump = true;
+        bool canJump = true;
+        bool hasJumped = false;
 
         private bool charging = false;
         private bool canCharge = true;
 
+        private bool startedSleeping = false;
+
         double startThrowTime = double.MinValue;
         float throwLength = 0;
         float throwHeight = 0;
-        // true = throw, false = dropped ("Out")
-        bool throwType = true;
+        
+        bool throwType = true; // true = throw, false = dropped ("Out")
         bool hasThrown = false;
         bool throwNg = false;
         bool longSleep = false;
 
         public bool canSleep = false;
+        public bool shouldBop = false;
 
         void Awake()
         {
@@ -44,7 +48,6 @@ namespace HeavenStudio.Games.Scripts_PajamaParty
             longSleep = false;
         }
 
-        // Update is called once per frame
         void Update()
         {
             var cond = Conductor.instance;
@@ -145,6 +148,14 @@ namespace HeavenStudio.Games.Scripts_PajamaParty
             }
         }
 
+        private void LateUpdate() 
+        {
+            if (Conductor.instance.ReportBeat(ref lastReportedBeat) && anim.IsAnimationNotPlaying() && !hasThrown && !startedSleeping && canCharge && shouldBop)
+            {
+                anim.DoScaledAnimationAsync("MakoBeat", 0.5f);
+            }
+        }
+
         public void ProjectileThrow(double beat, bool drop = false, bool ng = false)
         {
             throwNg = ng;
@@ -167,6 +178,7 @@ namespace HeavenStudio.Games.Scripts_PajamaParty
 
         public void PlayerJump(double beat, bool pressout = false, bool ng = false)
         {
+            startedSleeping = false;
             startJumpTime = beat;
             canCharge = false;
             canJump = false;
@@ -179,6 +191,7 @@ namespace HeavenStudio.Games.Scripts_PajamaParty
 
         public void StartCharge()
         {
+            startedSleeping = false;
             canJump = false;
             anim.DoUnscaledAnimation("MakoReady");
             charging = true;
@@ -312,6 +325,7 @@ namespace HeavenStudio.Games.Scripts_PajamaParty
         // sleep cue
             public void StartSleepSequence(double beat, bool alt, int action)
             {
+                startedSleeping = true;
                 if (hasJumped)
                 {
                     hasJumped = false;

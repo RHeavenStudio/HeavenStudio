@@ -55,7 +55,7 @@ namespace HeavenStudio
             {
                 if (editorGO == null && OpeningManager.OnOpenFile.IndexOfAny(Path.GetInvalidPathChars()) == -1)
                 {
-                    if (File.Exists(OpeningManager.OnOpenFile))
+                    if (File.Exists(OpeningManager.OnOpenFile) && Path.GetExtension(OpeningManager.OnOpenFile) == ".riq")
                     {
                         input = OpeningManager.OnOpenFile;
                         fromCmd = true;
