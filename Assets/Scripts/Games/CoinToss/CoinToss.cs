@@ -155,12 +155,12 @@ namespace HeavenStudio.Games
             //nothing
         }
 
-        public void TossCoin(float beat, int type, bool audienceReacting)
+        public void TossCoin(double beat, int type, bool audienceReacting)
         {
             if (coin != null) return;
 
             //Play sound and animations
-            Jukebox.PlayOneShotGame("coinToss/throw");
+            SoundByte.PlayOneShotGame("coinToss/throw");
             handAnimator.Play("Throw", 0, 0);
             //Game state says the hand is throwing the coin
             isThrowing = true;
@@ -169,7 +169,7 @@ namespace HeavenStudio.Games
                 {
                     case (int) CoinToss.CoinVariation.Cowbell:
                         //this was intentional. it was to avoid the throw and cowbells to go offbeat.
-                        Jukebox.PlayOneShotGame("coinToss/cowbell1");
+                        SoundByte.PlayOneShotGame("coinToss/cowbell1");
                         MultiSound.Play(new MultiSound.Sound[] {
                         new MultiSound.Sound("coinToss/cowbell2", beat + 1f, offset: 0.01f),
                         new MultiSound.Sound("coinToss/cowbell1", beat + 2f, offset: 0.01f),
@@ -189,12 +189,12 @@ namespace HeavenStudio.Games
             //coin.perfectOnly = true;
         }
 
-        public void TossCoin(float beat)
+        public void TossCoin(double beat)
         {
             if (coin != null) return;
 
             //Play sound and animations
-            Jukebox.PlayOneShotGame("coinToss/throw");
+            SoundByte.PlayOneShotGame("coinToss/throw");
             handAnimator.Play("Throw", 0, 0);
             //Game state says the hand is throwing the coin
             isThrowing = true;
@@ -206,8 +206,8 @@ namespace HeavenStudio.Games
 
         public void CatchSuccess(PlayerActionEvent caller, float state)
         {
-            Jukebox.PlayOneShotGame("coinToss/catch");
-            if(this.audienceReacting) Jukebox.PlayOneShot("applause");
+            SoundByte.PlayOneShotGame("coinToss/catch");
+            if(this.audienceReacting) SoundByte.PlayOneShot("applause");
             handAnimator.Play("Catch_success", 0, 0);
 
             isThrowing = false; 
@@ -215,8 +215,8 @@ namespace HeavenStudio.Games
 
         public void CatchMiss(PlayerActionEvent caller)
         {
-            Jukebox.PlayOneShot("miss");
-            if(this.audienceReacting) Jukebox.PlayOneShot("audience/disappointed");
+            SoundByte.PlayOneShot("miss");
+            if(this.audienceReacting) SoundByte.PlayOneShot("audience/disappointed");
             handAnimator.Play("Pickup", 0, 0);
 
             isThrowing = false;

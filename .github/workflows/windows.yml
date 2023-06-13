@@ -1,6 +1,8 @@
 name: Build Windows
 
-on: [push]
+on:
+  push:
+    branches: [ "master", "release_1" ]
 
 jobs:
   build:

@@ -1,11 +1,13 @@
 {
   "dependencies": {
-    "com.ecasillas.missingrefsfinder": {
-      "version": "https://github.com/edcasillas/unity-missing-references-finder.git",
+    "com.rheavenstudio.jukebox": {
+      "version": "https://github.com/RHeavenStudio/Jukebox.git?path=/Assets/Scripts/Jukebox",
       "depth": 0,
       "source": "git",
-      "dependencies": {},
-      "hash": "183e49b96580cfcd348ec0437d6fa8f7c4e9b280"
+      "dependencies": {
+        "com.unity.nuget.newtonsoft-json": "3.2.1"
+      },
+      "hash": "619442ba26163fb6a00dd50ba52e2fdeaea33e37"
     },
     "com.unity.2d.sprite": {
       "version": "1.0.0",
@@ -60,8 +62,8 @@
       "url": "https://packages.unity.com"
     },
     "com.unity.nuget.newtonsoft-json": {
-      "version": "3.0.2",
-      "depth": 0,
+      "version": "3.2.1",
+      "depth": 1,
       "source": "registry",
       "dependencies": {},
       "url": "https://packages.unity.com"

@@ -5,6 +5,8 @@ using System.Linq;
 using UnityEngine;
 
 using Starpelly;
+using Jukebox;
+using Jukebox.Legacy;
 using Newtonsoft.Json;
 using HeavenStudio.Games;
 using HeavenStudio.Common;
@@ -14,44 +16,43 @@ namespace HeavenStudio
     public class GameManager : MonoBehaviour
     {
         [Header("Lists")]
-        public DynamicBeatmap Beatmap = new DynamicBeatmap();
-        [HideInInspector] public List<DynamicBeatmap.DynamicEntity> playerEntities = new List<DynamicBeatmap.DynamicEntity>();
+        [NonSerialized] public RiqBeatmap Beatmap = new();
         private List<GameObject> preloadedGames = new List<GameObject>();
-        public List<GameObject> SoundObjects = new List<GameObject>();
+        [NonSerialized] public List<GameObject> SoundObjects = new List<GameObject>();
 
         [Header("Components")]
-        public string txt;
-        public string ext;
-        public Camera GameCamera, CursorCam, OverlayCamera, StaticCamera;
-        public CircleCursor CircleCursor;
-        [HideInInspector] public GameObject GamesHolder;
-        public Games.Global.Flash fade;
-        public Games.Global.Filter filter;
-        public GameObject textbox;
+        [NonSerialized] public Camera GameCamera, CursorCam, OverlayCamera, StaticCamera;
+        [NonSerialized] public CircleCursor CircleCursor;
+        [NonSerialized] public GameObject GamesHolder;
+        [NonSerialized] public Games.Global.Flash fade;
+        [NonSerialized] public Games.Global.Filter filter;
 
         [Header("Games")]
-        public string currentGame;
+        [NonSerialized] public string currentGame;
         Coroutine currentGameSwitchIE;
 
         [Header("Properties")]
-        public int currentEvent, currentTempoEvent, currentVolumeEvent, currentSectionEvent,
-            currentPreEvent, currentPreSwitch, currentPreSequence;
-        public float endBeat;
-        public float startOffset;
-        public bool playOnStart;
-        public float startBeat;
-        [NonSerialized] public GameObject currentGameO;
-        public bool autoplay;
-        public bool canInput = true;
-        public DynamicBeatmap.ChartSection currentSection, nextSection;
-        public float sectionProgress { get; private set; }
+        [NonSerialized] public string txt = null;
+        [NonSerialized] public string ext = null;
 
-        public event Action<float> onBeatChanged;
-        public event Action<DynamicBeatmap.ChartSection> onSectionChange;
+        [NonSerialized] public int currentEvent, currentTempoEvent, currentVolumeEvent, currentSectionEvent,
+            currentPreEvent, currentPreSwitch, currentPreSequence;
+        [NonSerialized] public double endBeat;
+        [NonSerialized] public float startOffset;
+        [NonSerialized] public bool playOnStart;
+        [NonSerialized] public double startBeat;
+        [NonSerialized] public GameObject currentGameO;
+        [NonSerialized] public bool autoplay;
+        [NonSerialized] public bool canInput = true;
+        [NonSerialized] public RiqEntity currentSection, nextSection;
+        public double sectionProgress { get; private set; }
+
+        public event Action<double> onBeatChanged;
+        public event Action<RiqEntity> onSectionChange;
 
         public int BeatmapEntities()
         {
-            return Beatmap.entities.Count + Beatmap.tempoChanges.Count + Beatmap.volumeChanges.Count + Beatmap.beatmapSections.Count;
+            return Beatmap.Entities.Count + Beatmap.TempoChanges.Count + Beatmap.VolumeChanges.Count + Beatmap.SectionMarkers.Count;
         }
 
         public static GameManager instance { get; private set; }
@@ -86,62 +87,58 @@ namespace HeavenStudio
         }
         bool skillStarCollected = false;
 
+        // cleared sections
+        List<bool> clearedSections = new List<bool>();
+        public bool ClearedSection
+        {
+            set
+            {
+                clearedSections.Add(value);
+            }
+        }
+
         private void Awake()
         {
             // autoplay = true;
             instance = this;
         }
 
-        public void Init()
+        public void Init(bool preLoaded = false)
         {
             currentPreEvent= 0;
             currentPreSwitch = 0;
             currentPreSequence = 0;
- 
-            this.transform.localScale = new Vector3(30000000, 30000000);
-            
-            SpriteRenderer sp = this.gameObject.AddComponent<SpriteRenderer>();
-            sp.enabled = false;
-            sp.color = Color.black;
-            sp.sprite = Resources.Load<Sprite>("Sprites/GeneralPurpose/Square");
-            sp.sortingOrder = 30000;
-            gameObject.layer = LayerMask.NameToLayer("Flash");
 
-            GameObject fade = new GameObject("flash");
-            this.fade = fade.AddComponent<Games.Global.Flash>();
             GameObject filter = new GameObject("filter");
             this.filter = filter.AddComponent<Games.Global.Filter>();
-
-
-            GlobalGameManager.Init();
 
             eventCaller = this.gameObject.AddComponent<EventCaller>();
             eventCaller.GamesHolder = GamesHolder.transform;
             eventCaller.Init();
-            Conductor.instance.SetBpm(Beatmap.bpm);
-            Conductor.instance.SetVolume(Beatmap.musicVolume);
-            Conductor.instance.firstBeatOffset = Beatmap.firstBeatOffset;
+            Conductor.instance.SetBpm(120f);
+            Conductor.instance.SetVolume(100f);
+            Conductor.instance.firstBeatOffset = Beatmap.data.offset;
 
             // note: serialize this shit in the inspector //
-                GameObject textbox = Instantiate(Resources.Load<GameObject>("Prefabs/Common/Textbox"));
-                textbox.name = "Textbox";
+            GameObject textbox = Instantiate(Resources.Load<GameObject>("Prefabs/Common/Textbox"));
+            textbox.name = "Textbox";
 
-                GameObject overlays = Instantiate(Resources.Load<GameObject>("Prefabs/Common/Overlays"));
-                overlays.name = "Overlays";
+            GameObject timingDisp = Instantiate(Resources.Load<GameObject>("Prefabs/Common/Overlays/TimingAccuracy"));
+            timingDisp.name = "TimingDisplay";
 
-                GameObject timingDisp = Instantiate(Resources.Load<GameObject>("Prefabs/Common/Overlays/TimingAccuracy"));
-                timingDisp.name = "TimingDisplay";
+            GameObject skillStarDisp = Instantiate(Resources.Load<GameObject>("Prefabs/Common/Overlays/SkillStar"));
+            skillStarDisp.name = "SkillStar";
 
-                GameObject skillStarDisp = Instantiate(Resources.Load<GameObject>("Prefabs/Common/Overlays/SkillStar"));
-                skillStarDisp.name = "SkillStar";
+            GameObject overlays = Instantiate(Resources.Load<GameObject>("Prefabs/Common/Overlays"));
+            overlays.name = "Overlays";
 
-                GoForAPerfect.instance.Disable();
+            GoForAPerfect.instance.Disable();
             /////
             
 
-            if (txt != null && ext != null)
+            if (preLoaded)
             {
-                LoadRemix(txt, ext);
+                LoadRemix(false);
             }
             else
             {
@@ -150,10 +147,10 @@ namespace HeavenStudio
 
             SortEventsList();
 
-            if (Beatmap.entities.Count >= 1)
+            if (Beatmap.Entities.Count >= 1)
             {
-                SetCurrentGame(Beatmap.entities[0].datamodel.Split(0));
-                SetGame(Beatmap.entities[0].datamodel.Split(0));
+                SetCurrentGame(Beatmap.Entities[0].datamodel.Split(0));
+                SetGame(Beatmap.Entities[0].datamodel.Split(0));
             }
             else
             {
@@ -162,55 +159,79 @@ namespace HeavenStudio
 
             if (playOnStart)
             {
-                Play(startBeat);
+                StartCoroutine(WaitReadyAndPlayCo(startBeat));
             }
         }
 
         public void NewRemix()
         {
-            Beatmap = new DynamicBeatmap();
-            Beatmap.bpm = 120f;
-            Beatmap.musicVolume = 100;
-            Beatmap.firstBeatOffset = 0f;
+            Beatmap = new("1", "HeavenStudio");
+            Beatmap.data.properties = Minigames.propertiesModel;
+            Beatmap.AddNewTempoChange(0, 120f);
+            Beatmap.AddNewVolumeChange(0, 100f);
+            Beatmap.data.offset = 0f;
             Conductor.instance.musicSource.clip = null;
+            RiqFileHandler.WriteRiq(Beatmap);
         }
 
-        public void LoadRemix(string json = "", string type = "riq", int version = 0)
+        public IEnumerator LoadMusic()
         {
-
-            if (json != "")
+            IEnumerator load = RiqFileHandler.LoadSong();
+            while (true)
             {
-                switch (type)
+                object current = load.Current;
+                try
                 {
-                    case "tengoku":
-                    case "rhmania":
-                        Beatmap toConvert = JsonConvert.DeserializeObject<Beatmap>(json);
-                        Beatmap = DynamicBeatmap.BeatmapConverter(toConvert);
+                    if (load.MoveNext() == false)
+                    {
                         break;
-                    case "riq":
-                        Beatmap = JsonConvert.DeserializeObject<DynamicBeatmap>(json);
-                        Beatmap.PostProcess();
-                        break;
-                    default:
-                        NewRemix();
-                        break;
+                    }
+                    current = load.Current;
                 }
+                catch (System.IO.FileNotFoundException f)
+                {
+                    Debug.LogWarning("chart has no music: " + f.Message);
+                    Conductor.instance.musicSource.clip = null;
+                }
+                catch (Exception e)
+                {
+                    Debug.LogError($"Failed to load music: {e.Message}");
+                    GlobalGameManager.ShowErrorMessage("Error Loading Music", e.Message + "\n\n" + e.StackTrace);
+                    yield break;
+                }
+                yield return current;
             }
-            else
+            Conductor.instance.musicSource.clip = RiqFileHandler.StreamedAudioClip;
+        }
+
+        public void LoadRemix(bool editor = false)
+        {
+            try
             {
-                NewRemix();
+                Beatmap = RiqFileHandler.ReadRiq();
             }
+            catch (Exception e)
+            {
+                Debug.LogError($"Failed to load remix: {e.Message}");
+                GlobalGameManager.ShowErrorMessage("Error Loading RIQ", e.Message + "\n\n" + e.StackTrace);
+                return;
+            }
+            if (!editor)
+                StartCoroutine(LoadMusic());
             SortEventsList();
-            Conductor.instance.SetBpm(Beatmap.bpm);
-            Conductor.instance.SetVolume(Beatmap.musicVolume);
-            Conductor.instance.firstBeatOffset = Beatmap.firstBeatOffset;
-            Stop(0);
+            Conductor.instance.SetBpm(Beatmap.TempoChanges[0]["tempo"]);
+            Conductor.instance.SetVolume(Beatmap.VolumeChanges[0]["volume"]);
+            Conductor.instance.firstBeatOffset = Beatmap.data.offset;
+            if (!playOnStart)
+            {
+                Stop(0);
+            }
             SetCurrentEventToClosest(0);
 
-            if (Beatmap.entities.Count >= 1)
+            if (Beatmap.Entities.Count >= 1)
             {
-                SetCurrentGame(Beatmap.entities[0].datamodel.Split(0));
-                SetGame(Beatmap.entities[0].datamodel.Split(0));
+                SetCurrentGame(Beatmap.Entities[0].datamodel.Split(0));
+                SetGame(Beatmap.Entities[0].datamodel.Split(0));
             }
             else
             {
@@ -243,14 +264,14 @@ namespace HeavenStudio
         {
             //seek ahead to preload games that have assetbundles
             //check game switches first
-            var gameSwitchs = Beatmap.entities.FindAll(c => c.datamodel.Split(1) == "switchGame");
+            var gameSwitchs = Beatmap.Entities.FindAll(c => c.datamodel.Split(1) == "switchGame");
             if (currentPreSwitch < gameSwitchs.Count && currentPreSwitch >= 0)
             {
                 if (start + seekTime >= gameSwitchs[currentPreSwitch].beat)
                 {
                     string gameName = gameSwitchs[currentPreSwitch].datamodel.Split(2);
                     var inf = GetGameInfo(gameName);
-                    if (inf.usesAssetBundle && !inf.AssetsLoaded) 
+                    if (inf != null && inf.usesAssetBundle && !inf.AssetsLoaded) 
                     {
                         Debug.Log($"ASYNC loading assetbundles for game {gameName}");
                         StartCoroutine(inf.LoadCommonAssetBundleAsync());
@@ -260,18 +281,18 @@ namespace HeavenStudio
                 }
             }
             //then check game entities
-            List<float> entities = Beatmap.entities.Select(c => c.beat).ToList();
-            if (currentPreEvent < Beatmap.entities.Count && currentPreEvent >= 0)
+            List<double> entities = Beatmap.Entities.Select(c => c.beat).ToList();
+            if (currentPreEvent < Beatmap.Entities.Count && currentPreEvent >= 0)
             {
                 if (start + seekTime >= entities[currentPreEvent])
                 {
-                    var entitiesAtSameBeat = Beatmap.entities.FindAll(c => c.beat == Beatmap.entities[currentPreEvent].beat && !EventCaller.FXOnlyGames().Contains(EventCaller.instance.GetMinigame(c.datamodel.Split('/')[0])));
+                    var entitiesAtSameBeat = Beatmap.Entities.FindAll(c => c.beat == Beatmap.Entities[currentPreEvent].beat && !EventCaller.FXOnlyGames().Contains(EventCaller.instance.GetMinigame(c.datamodel.Split('/')[0])));
                     SortEventsByPriority(entitiesAtSameBeat);
-                    foreach (DynamicBeatmap.DynamicEntity entity in entitiesAtSameBeat)
+                    foreach (RiqEntity entity in entitiesAtSameBeat)
                     {
                         string gameName = entity.datamodel.Split('/')[0];
                         var inf = GetGameInfo(gameName);
-                        if (inf.usesAssetBundle && !inf.AssetsLoaded) 
+                        if (inf != null && inf.usesAssetBundle && !inf.AssetsLoaded) 
                         {
                             Debug.Log($"ASYNC loading assetbundles for game {gameName}");
                             StartCoroutine(inf.LoadCommonAssetBundleAsync());
@@ -285,33 +306,30 @@ namespace HeavenStudio
 
         public void SeekAheadAndDoPreEvent(double start)
         {
-            List<float> entities = Beatmap.entities.Select(c => c.beat).ToList();
-            if (currentPreSequence < Beatmap.entities.Count && currentPreSequence >= 0)
+            List<double> entities = Beatmap.Entities.Select(c => c.beat).ToList();
+            if (currentPreSequence < Beatmap.Entities.Count && currentPreSequence >= 0)
             {
-                var seekEntity = Beatmap.entities[currentPreSequence];
+                var seekEntity = Beatmap.Entities[currentPreSequence];
 
                 float seekTime = EventCaller.instance.GetGameAction(
                     EventCaller.instance.GetMinigame(seekEntity.datamodel.Split(0)), seekEntity.datamodel.Split(1)).preFunctionLength;
 
                 if (start + seekTime >= entities[currentPreSequence])
                 {
-                    float beat = seekEntity.beat;
-                    var entitiesAtSameBeat = Beatmap.entities.FindAll(c => c.beat == seekEntity.beat);
+                    double beat = seekEntity.beat;
+                    var entitiesAtSameBeat = Beatmap.Entities.FindAll(c => c.beat == seekEntity.beat);
                     SortEventsByPriority(entitiesAtSameBeat);
-                    foreach (DynamicBeatmap.DynamicEntity entity in entitiesAtSameBeat)
+                    foreach (RiqEntity entity in entitiesAtSameBeat)
                     {
                         currentPreSequence++;
                         string gameName = entity.datamodel.Split('/')[0];
                         var inf = GetGameInfo(gameName);
-                        if (inf.usesAssetBundle && inf.AssetsLoaded && !inf.SequencesPreloaded) 
+                        if (inf != null && inf.usesAssetBundle && inf.AssetsLoaded && !inf.SequencesPreloaded) 
                         {
                             Debug.Log($"Preloading game {gameName}");
                             PreloadGameSequences(gameName);
                         }
-                        else
-                        {
-                            eventCaller.CallPreEvent(entity);
-                        }
+                        eventCaller.CallPreEvent(entity);
                     }
                 }
             }
@@ -319,48 +337,46 @@ namespace HeavenStudio
 
         private void Update()
         {
-            PlayerInput.UpdateInputControllers();
-
             if (BeatmapEntities() < 1) //bruh really you forgot to ckeck tempo changes
                 return;
             if (!Conductor.instance.isPlaying)
                 return;
             Conductor cond = Conductor.instance;
             
-            List<float> entities = Beatmap.entities.Select(c => c.beat).ToList();
+            List<double> entities = Beatmap.Entities.Select(c => c.beat).ToList();
 
-            List<float> tempoChanges = Beatmap.tempoChanges.Select(c => c.beat).ToList();
-            if (currentTempoEvent < Beatmap.tempoChanges.Count && currentTempoEvent >= 0)
+            List<double> tempoChanges = Beatmap.TempoChanges.Select(c => c.beat).ToList();
+            if (currentTempoEvent < Beatmap.TempoChanges.Count && currentTempoEvent >= 0)
             {
                 if (cond.songPositionInBeatsAsDouble >= tempoChanges[currentTempoEvent])
                 {
-                    cond.SetBpm(Beatmap.tempoChanges[currentTempoEvent].tempo);
+                    cond.SetBpm(Beatmap.TempoChanges[currentTempoEvent]["tempo"]);
                     currentTempoEvent++;
                 }
             }
 
-            List<float> volumeChanges = Beatmap.volumeChanges.Select(c => c.beat).ToList();
-            if (currentVolumeEvent < Beatmap.volumeChanges.Count && currentVolumeEvent >= 0)
+            List<double> volumeChanges = Beatmap.VolumeChanges.Select(c => c.beat).ToList();
+            if (currentVolumeEvent < Beatmap.VolumeChanges.Count && currentVolumeEvent >= 0)
             {
                 if (cond.songPositionInBeatsAsDouble >= volumeChanges[currentVolumeEvent])
                 {
-                    cond.SetVolume(Beatmap.volumeChanges[currentVolumeEvent].volume);
+                    cond.SetVolume(Beatmap.VolumeChanges[currentVolumeEvent]["volume"]);
                     currentVolumeEvent++;
                 }
             }
 
-            List<float> chartSections = Beatmap.beatmapSections.Select(c => c.beat).ToList();
-            if (currentSectionEvent < Beatmap.beatmapSections.Count && currentSectionEvent >= 0)
+            List<double> chartSections = Beatmap.SectionMarkers.Select(c => c.beat).ToList();
+            if (currentSectionEvent < Beatmap.SectionMarkers.Count && currentSectionEvent >= 0)
             {
                 if (cond.songPositionInBeatsAsDouble >= chartSections[currentSectionEvent])
                 {
-                    Debug.Log("Section " + Beatmap.beatmapSections[currentSectionEvent].sectionName + " started");
-                    currentSection = Beatmap.beatmapSections[currentSectionEvent];
+                    Debug.Log("Section " + Beatmap.SectionMarkers[currentSectionEvent]["sectionName"] + " started");
+                    currentSection = Beatmap.SectionMarkers[currentSectionEvent];
                     currentSectionEvent++;
-                    if (currentSectionEvent < Beatmap.beatmapSections.Count)
-                        nextSection = Beatmap.beatmapSections[currentSectionEvent];
+                    if (currentSectionEvent < Beatmap.SectionMarkers.Count)
+                        nextSection = Beatmap.SectionMarkers[currentSectionEvent];
                     else
-                        nextSection = null;
+                        nextSection = default(RiqEntity);
                     onSectionChange?.Invoke(currentSection);
                 }
             }
@@ -371,13 +387,13 @@ namespace HeavenStudio
 
             SeekAheadAndDoPreEvent(Conductor.instance.songPositionInBeatsAsDouble);
 
-            if (currentEvent < Beatmap.entities.Count && currentEvent >= 0)
+            if (currentEvent < Beatmap.Entities.Count && currentEvent >= 0)
             {
                 if (cond.songPositionInBeatsAsDouble >= entities[currentEvent])
                 {
                     // allows for multiple events on the same beat to be executed on the same frame, so no more 1-frame delay
-                    var entitiesAtSameBeat = Beatmap.entities.FindAll(c => c.beat == Beatmap.entities[currentEvent].beat && !EventCaller.FXOnlyGames().Contains(EventCaller.instance.GetMinigame(c.datamodel.Split('/')[0])));
-                    var fxEntities = Beatmap.entities.FindAll(c => c.beat == Beatmap.entities[currentEvent].beat && EventCaller.FXOnlyGames().Contains(EventCaller.instance.GetMinigame(c.datamodel.Split('/')[0])));
+                    var entitiesAtSameBeat = Beatmap.Entities.FindAll(c => c.beat == Beatmap.Entities[currentEvent].beat && !EventCaller.FXOnlyGames().Contains(EventCaller.instance.GetMinigame(c.datamodel.Split('/')[0])));
+                    var fxEntities = Beatmap.Entities.FindAll(c => c.beat == Beatmap.Entities[currentEvent].beat && EventCaller.FXOnlyGames().Contains(EventCaller.instance.GetMinigame(c.datamodel.Split('/')[0])));
 
                     SortEventsByPriority(fxEntities);
                     SortEventsByPriority(entitiesAtSameBeat);
@@ -389,7 +405,7 @@ namespace HeavenStudio
                         currentEvent++;
                     }
 
-                    foreach (DynamicBeatmap.DynamicEntity entity in entitiesAtSameBeat)
+                    foreach (RiqEntity entity in entitiesAtSameBeat)
                     {
                         // if game isn't loaded, preload game so whatever event that would be called will still run outside if needed
                         if (entity.datamodel.Split('/')[0] != currentGame)
@@ -413,12 +429,12 @@ namespace HeavenStudio
             }
             else
             {
-                float currectSectionStart = (float)cond.GetSongPosFromBeat(currentSection.beat);
+                double currectSectionStart = cond.GetSongPosFromBeat(currentSection.beat);
 
-                if (nextSection == null) 
-                    sectionProgress = (cond.songPosition - currectSectionStart) / ((float)cond.GetSongPosFromBeat(endBeat) - currectSectionStart);
+                if (nextSection == null)
+                    sectionProgress = (cond.songPosition - currectSectionStart) / (cond.GetSongPosFromBeat(endBeat) - currectSectionStart);
                 else
-                    sectionProgress = (cond.songPosition - currectSectionStart) / ((float)cond.GetSongPosFromBeat(nextSection.beat) - currectSectionStart);
+                    sectionProgress = (cond.songPosition - currectSectionStart) / (cond.GetSongPosFromBeat(nextSection.beat) - currectSectionStart);
             }
         }
 
@@ -433,44 +449,52 @@ namespace HeavenStudio
 
         #region Play Events
 
-        public void Play(float beat)
+        public void Play(double beat, float delay = 0f)
         {
+            bool paused = Conductor.instance.isPaused;
+            Debug.Log("Playing at " + beat);
             canInput = true;
-            inputOffsetSamples.Clear();
-            averageInputOffset = 0;
+            if (!paused)
+            {
+                inputOffsetSamples.Clear();
+                averageInputOffset = 0;
 
-            totalInputs = 0;
-            totalPlayerAccuracy = 0;
+                totalInputs = 0;
+                totalPlayerAccuracy = 0;
 
-            TimingAccuracyDisplay.instance.ResetArrow();
-            SkillStarManager.instance.Reset();
-            skillStarCollected = false;
+                TimingAccuracyDisplay.instance.ResetArrow();
+                SkillStarManager.instance.Reset();
+                skillStarCollected = false;
 
-            GoForAPerfect.instance.perfect = true;
-            GoForAPerfect.instance.Disable();
+                GoForAPerfect.instance.perfect = true;
+                GoForAPerfect.instance.Disable();
 
-            SectionMedalsManager.instance.Reset();
+                SectionMedalsManager.instance.Reset();
+                clearedSections.Clear();
+            }
 
-            StartCoroutine(PlayCo(beat));
+            StartCoroutine(PlayCo(beat, delay));
             onBeatChanged?.Invoke(beat);
         }
 
-        private IEnumerator PlayCo(float beat)
+        private IEnumerator PlayCo(double beat, float delay = 0f)
         {
-            yield return null;
+            yield return new WaitForSeconds(delay);
             bool paused = Conductor.instance.isPaused;
 
-            Conductor.instance.SetBpm(Beatmap.bpm);
-            Conductor.instance.SetVolume(Beatmap.musicVolume);
-            Conductor.instance.firstBeatOffset = Beatmap.firstBeatOffset;
-
             Conductor.instance.Play(beat);
-            if (!paused)
+            if (paused)
             {
-                SetCurrentEventToClosest(beat);
+                Util.SoundByte.UnpauseOneShots();
             }
-
-            KillAllSounds();
+            else 
+            {
+                Conductor.instance.SetBpm(Beatmap.TempoChanges[0]["tempo"]);
+                Conductor.instance.SetVolume(Beatmap.VolumeChanges[0]["volume"]);
+                Conductor.instance.firstBeatOffset = Beatmap.data.offset;
+                SetCurrentEventToClosest(beat);
+                KillAllSounds();
+            }
 
             Minigame miniGame = currentGameO.GetComponent<Minigame>();
             if (miniGame != null)
@@ -480,11 +504,16 @@ namespace HeavenStudio
         public void Pause()
         {
             Conductor.instance.Pause();
-            KillAllSounds();
+            Util.SoundByte.PauseOneShots();
+            canInput = false;
         }
 
-        public void Stop(float beat)
+        public void Stop(double beat, bool restart = false, float restartDelay = 0f)
         {
+            Minigame miniGame = currentGameO.GetComponent<Minigame>();
+            if (miniGame != null)
+                miniGame.OnStop(beat);
+
             Conductor.instance.Stop(beat);
             SetCurrentEventToClosest(beat);
             onBeatChanged?.Invoke(beat);
@@ -496,13 +525,42 @@ namespace HeavenStudio
             GoForAPerfect.instance.Disable();
             SectionMedalsManager.instance.OnRemixEnd();
 
+            // pass this data to rating screen + stats
+            Debug.Log($"== Playthrough statistics of {Beatmap["remixtitle"]} (played at {System.DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss")}) ==");
             Debug.Log($"Average input offset for playthrough: {averageInputOffset}ms");
             Debug.Log($"Accuracy for playthrough: {(PlayerAccuracy * 100) : 0.00}");
-
-            if (playOnStart)
+            Debug.Log($"Cleared {clearedSections.FindAll(c => c).Count} sections out of {Beatmap.SectionMarkers.Count}");
+            if (SkillStarManager.instance.IsCollected)
+                Debug.Log($"Skill Star collected");
+            else
+                Debug.Log($"Skill Star not collected");
+            if (GoForAPerfect.instance.perfect)
+                Debug.Log($"Perfect Clear!");
+            
+            if (playOnStart || restart)
             {
-                Play(0);
+                Play(0, restartDelay);
             }
+            // when rating screen gets added playOnStart will instead move to that scene
+        }
+
+        private IEnumerator WaitReadyAndPlayCo(double beat)
+        {
+            // wait for overlays to be ready
+            yield return new WaitUntil(() => OverlaysManager.OverlaysReady);
+            // wait for first game to be loaded
+            yield return new WaitUntil(() => Beatmap != null && Beatmap.Entities.Count > 0);
+            //wait for audio clip to be loaded
+            yield return new WaitUntil(() => Conductor.instance.musicSource.clip != null);
+
+            SkillStarManager.instance.KillStar();
+            TimingAccuracyDisplay.instance.StopStarFlash();
+            GoForAPerfect.instance.Disable();
+            SectionMedalsManager.instance?.OnRemixEnd();
+
+            GlobalGameManager.UpdateDiscordStatus(Beatmap["remixtitle"], false, true);
+
+            Play(beat, 1f);
         }
 
         public void KillAllSounds()
@@ -511,7 +569,7 @@ namespace HeavenStudio
                 Destroy(SoundObjects[i].gameObject);
             
             SoundObjects.Clear();
-            Util.Jukebox.KillOneShots();
+            Util.SoundByte.KillOneShots();
         }
 
         #endregion
@@ -520,12 +578,13 @@ namespace HeavenStudio
 
         public void SortEventsList()
         {
-            Beatmap.entities.Sort((x, y) => x.beat.CompareTo(y.beat));
-            Beatmap.tempoChanges.Sort((x, y) => x.beat.CompareTo(y.beat));
-            Beatmap.volumeChanges.Sort((x, y) => x.beat.CompareTo(y.beat));
+            Beatmap.Entities.Sort((x, y) => x.beat.CompareTo(y.beat));
+            Beatmap.TempoChanges.Sort((x, y) => x.beat.CompareTo(y.beat));
+            Beatmap.VolumeChanges.Sort((x, y) => x.beat.CompareTo(y.beat));
+            Beatmap.SectionMarkers.Sort((x, y) => x.beat.CompareTo(y.beat));
         }
 
-        void SortEventsByPriority(List<DynamicBeatmap.DynamicEntity> entities)
+        void SortEventsByPriority(List<RiqEntity> entities)
         {
             entities.Sort((x, y) => {
                 Minigames.Minigame xGame = EventCaller.instance.GetMinigame(x.datamodel.Split(0));
@@ -538,25 +597,33 @@ namespace HeavenStudio
 
         }
 
-        public void SetCurrentEventToClosest(float beat)
+        public static double GetClosestInList(List<double> list, double compareTo)
+        {
+            if (list.Count > 0)
+                return list.Aggregate((x, y) => Math.Abs(x - compareTo) < Math.Abs(y - compareTo) ? x : y);
+            else
+                return double.MinValue;
+        }
+
+        public void SetCurrentEventToClosest(double beat)
         {
             SortEventsList();
             onBeatChanged?.Invoke(beat);
-            if (Beatmap.entities.Count > 0)
+            if (Beatmap.Entities.Count > 0)
             {
-                List<float> entities = Beatmap.entities.Select(c => c.beat).ToList();
+                List<double> entities = Beatmap.Entities.Select(c => c.beat).ToList();
 
-                currentEvent = entities.IndexOf(Mathp.GetClosestInList(entities, beat));
-                currentPreEvent = entities.IndexOf(Mathp.GetClosestInList(entities, beat));
-                currentPreSequence = entities.IndexOf(Mathp.GetClosestInList(entities, beat));
+                currentEvent = entities.IndexOf(GetClosestInList(entities, beat));
+                currentPreEvent = entities.IndexOf(GetClosestInList(entities, beat));
+                currentPreSequence = entities.IndexOf(GetClosestInList(entities, beat));
 
-                var gameSwitchs = Beatmap.entities.FindAll(c => c.datamodel.Split(1) == "switchGame");
+                var gameSwitchs = Beatmap.Entities.FindAll(c => c.datamodel.Split(1) == "switchGame");
 
-                string newGame = Beatmap.entities[currentEvent].datamodel.Split(0);
+                string newGame = Beatmap.Entities[currentEvent].datamodel.Split(0);
 
                 if (gameSwitchs.Count > 0)
                 {
-                    int index = gameSwitchs.FindIndex(c => c.beat == Mathp.GetClosestInList(gameSwitchs.Select(c => c.beat).ToList(), beat));
+                    int index = gameSwitchs.FindIndex(c => c.beat == GetClosestInList(gameSwitchs.Select(c => c.beat).ToList(), beat));
                     currentPreSwitch = index;
                     var closestGameSwitch = gameSwitchs[index];
                     if (closestGameSwitch.beat <= beat)
@@ -567,7 +634,7 @@ namespace HeavenStudio
                     {
                         if (index == 0)
                         {
-                            newGame = Beatmap.entities[0].datamodel.Split(0);
+                            newGame = Beatmap.Entities[0].datamodel.Split(0);
                         }
                         else
                         {
@@ -577,7 +644,7 @@ namespace HeavenStudio
                             }
                             else
                             {
-                                newGame = Beatmap.entities[Beatmap.entities.IndexOf(closestGameSwitch) - 1].datamodel.Split(0);
+                                newGame = Beatmap.Entities[Beatmap.Entities.IndexOf(closestGameSwitch) - 1].datamodel.Split(0);
                             }
                         }
                     }
@@ -589,22 +656,22 @@ namespace HeavenStudio
                     SetGame(newGame);
                 }
 
-                List<DynamicBeatmap.DynamicEntity> allEnds = EventCaller.GetAllInGameManagerList("gameManager", new string[] { "end" });
+                List<RiqEntity> allEnds = EventCaller.GetAllInGameManagerList("gameManager", new string[] { "end" });
                 if (allEnds.Count > 0)
                     endBeat = allEnds.Select(c => c.beat).Min();
                 else
-                    endBeat = Conductor.instance.SongLengthInBeats();
+                    endBeat = Conductor.instance.SongLengthInBeatsAsDouble();
             }
             else
             {
                 SetGame("noGame");
-                endBeat = Conductor.instance.SongLengthInBeats();
+                endBeat = Conductor.instance.SongLengthInBeatsAsDouble();
             }
 
-            if (Beatmap.tempoChanges.Count > 0)
+            if (Beatmap.TempoChanges.Count > 0)
             {
                 currentTempoEvent = 0;
-                List<float> tempoChanges = Beatmap.tempoChanges.Select(c => c.beat).ToList();
+                List<double> tempoChanges = Beatmap.TempoChanges.Select(c => c.beat).ToList();
 
                 //for tempo changes, just go over all of em until the last one we pass
                 for (int t = 0; t < tempoChanges.Count; t++)
@@ -619,10 +686,10 @@ namespace HeavenStudio
                 // Debug.Log("currentTempoEvent is now " + currentTempoEvent);
             }
 
-            if (Beatmap.volumeChanges.Count > 0)
+            if (Beatmap.VolumeChanges.Count > 0)
             {
                 currentVolumeEvent = 0;
-                List<float> volumeChanges = Beatmap.volumeChanges.Select(c => c.beat).ToList();
+                List<double> volumeChanges = Beatmap.VolumeChanges.Select(c => c.beat).ToList();
 
                 for (int t = 0; t < volumeChanges.Count; t++)
                 {
@@ -634,12 +701,12 @@ namespace HeavenStudio
                 }
             }
 
-            currentSection = null;
-            nextSection = null;
-            if (Beatmap.beatmapSections.Count > 0)
+            currentSection = default(RiqEntity);
+            nextSection = default(RiqEntity);
+            if (Beatmap.SectionMarkers.Count > 0)
             {
                 currentSectionEvent = 0;
-                List<float> beatmapSections = Beatmap.beatmapSections.Select(c => c.beat).ToList();
+                List<double> beatmapSections = Beatmap.SectionMarkers.Select(c => c.beat).ToList();
 
                 for (int t = 0; t < beatmapSections.Count; t++)
                 {
@@ -657,7 +724,7 @@ namespace HeavenStudio
 
         #endregion
 
-        public void SwitchGame(string game, float beat, bool flash)
+        public void SwitchGame(string game, double beat, bool flash)
         {
             if (game != currentGame)
             {
@@ -667,11 +734,11 @@ namespace HeavenStudio
             }
         }
 
-        IEnumerator SwitchGameIE(string game, float beat, bool flash)
+        IEnumerator SwitchGameIE(string game, double beat, bool flash)
         {
             if(flash == true)
             {
-                this.GetComponent<SpriteRenderer>().enabled = true;
+                HeavenStudio.StaticCamera.instance.ToggleCanvasVisibility(false);
             }
 
             SetGame(game);
@@ -680,9 +747,10 @@ namespace HeavenStudio
             if (miniGame != null)
                 miniGame.OnGameSwitch(beat);
 
+            //TODO: wait time in beats instead of seconds
             yield return new WaitForSeconds(0.1f);
 
-            this.GetComponent<SpriteRenderer>().enabled = false;
+            HeavenStudio.StaticCamera.instance.ToggleCanvasVisibility(true);
         }
 
         private void SetGame(string game)
@@ -702,6 +770,7 @@ namespace HeavenStudio
         {
             var gameInfo = GetGameInfo(game);
             //load the games' sound sequences
+            // TODO: this blocks the main thread, and sound sequences sould be stored in a ScriptableObject
             if (gameInfo != null && gameInfo.LoadedSoundSequences == null)
                 gameInfo.LoadedSoundSequences = GetGame(game).GetComponent<Minigame>().SoundSequences;
         }
@@ -713,7 +782,7 @@ namespace HeavenStudio
             {
                 if (gameInfo.fxOnly)
                 {
-                    var gameInfos = Beatmap.entities
+                    var gameInfos = Beatmap.Entities
                         .Select(x => x.datamodel.Split(0))
                         .Select(x => GetGameInfo(x))
                         .Where(x => x != null)

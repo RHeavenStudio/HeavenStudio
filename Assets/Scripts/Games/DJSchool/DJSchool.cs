@@ -56,9 +56,9 @@ namespace HeavenStudio.Games.Loaders
                 },
                 new GameAction("dj voice lines", "DJ Yellow Banter")
                 {
-                    function = delegate { DJSchool.instance.VoiceLines(eventCaller.currentEntity.beat, eventCaller.currentEntity["type"]);  }, 
+                    function = delegate { DJSchool.VoiceLines(eventCaller.currentEntity.beat, eventCaller.currentEntity["type"]);  }, 
                     defaultLength = 2f,
-                    inactiveFunction = delegate { DJSchool.WarnDJVoiceLines(eventCaller.currentEntity.beat, eventCaller.currentEntity["type"]);  },
+                    inactiveFunction = delegate { DJSchool.VoiceLines(eventCaller.currentEntity.beat, eventCaller.currentEntity["type"]);  },
                     parameters = new List<Param>()
                     {
                         new Param("type", DJSchool.DJVoiceLines.CheckItOut, "Voice Lines", "The voice line to play"),
@@ -113,7 +113,7 @@ namespace HeavenStudio.Games
         [SerializeField] private Student student;
         [SerializeField] private GameObject djYellow;
         private Animator djYellowAnim;
-        private float lastReportedBeat = 0f;
+        private double lastReportedBeat = 0f;
         public DJYellow djYellowScript;
 
         [Header("Properties")]
@@ -121,10 +121,10 @@ namespace HeavenStudio.Games
         public bool djYellowHolding;
         public bool andStop;
         public bool goBop;
-        public float beatOfInstance;
+        public double beatOfInstance;
         private bool djYellowBopLeft;
         public bool shouldBeHolding = false;
-        public float smileBeat = -10f;
+        public double smileBeat = double.MinValue;
 
         public static DJSchool instance { get; private set; }
 
@@ -138,26 +138,26 @@ namespace HeavenStudio.Games
         }
 
         //For inactive game purposes
-        static float wantBreak = Single.MinValue;
-        static float wantAndStop = Single.MinValue;
-        static float wantDJVoiceLines = Single.MinValue;
+        static double wantBreak = double.MinValue;
+        static double wantAndStop = double.MinValue;
+        static double wantDJVoiceLines = double.MinValue;
 
-        public override void OnGameSwitch(float beat)
+        public override void OnGameSwitch(double beat)
         {
-            if (wantBreak != Single.MinValue)
+            if (wantBreak != double.MinValue)
             {
                 BreakCmon(wantBreak, 0, false, false);
-                wantBreak = Single.MinValue;
+                wantBreak = double.MinValue;
             }
-            else if(wantAndStop != Single.MinValue)
+            else if(wantAndStop != double.MinValue)
             {
                 AndStop(wantAndStop, false, false);
-                wantAndStop = Single.MinValue;
+                wantAndStop = double.MinValue;
             }
-            else if(wantDJVoiceLines != Single.MinValue)
+            else if(wantDJVoiceLines != double.MinValue)
             {
                 VoiceLines(wantDJVoiceLines, 0);
-                wantDJVoiceLines = Single.MinValue;
+                wantDJVoiceLines = double.MinValue;
             }
         }
 
@@ -168,7 +168,7 @@ namespace HeavenStudio.Games
 
             //if (cond.ReportBeat(ref bop.lastReportedBeat, bop.startBeat % 1))
             //{
-            //    if (cond.songPositionInBeats >= bop.startBeat && cond.songPositionInBeats < bop.startBeat + bop.length)
+            //    if (cond.songPositionInBeatsAsDouble >= bop.startBeat && cond.songPositionInBeatsAsDouble < bop.startBeat + bop.length)
             //    {
             //        if (student.anim.IsAnimationNotPlaying())
             //        {
@@ -245,9 +245,9 @@ namespace HeavenStudio.Games
                 }
                 
             }
-            else if (Conductor.instance.songPositionInBeats < lastReportedBeat)
+            else if (Conductor.instance.songPositionInBeatsAsDouble < lastReportedBeat)
             {
-                lastReportedBeat = Mathf.Round(Conductor.instance.songPositionInBeats);
+                lastReportedBeat = Math.Round(Conductor.instance.songPositionInBeatsAsDouble);
             }
 
             if(PlayerInput.Pressed() && !IsExpectingInputNow() && !student.isHolding) //Start hold miss
@@ -287,7 +287,7 @@ namespace HeavenStudio.Games
             shouldBeHolding = true;
         }
 
-        public void Bop(float beat, float length, bool isBopping, bool autoBop)
+        public void Bop(double beat, float length, bool isBopping, bool autoBop)
         {
             goBop = autoBop;
             if (isBopping)
@@ -314,7 +314,7 @@ namespace HeavenStudio.Games
                             }
                             if (!andStop && !djYellowHolding)
                             {
-                                float normalizedSmileBeat = Conductor.instance.GetPositionFromBeat(smileBeat, 3f);
+                                double normalizedSmileBeat = Conductor.instance.GetPositionFromBeat(smileBeat, 3f);
                                 if (normalizedSmileBeat >= 0 && normalizedSmileBeat <= 1f) djYellowScript.ChangeHeadSprite(DJYellow.DJExpression.Happy);
                                 else if (!djYellowScript.HeadSpriteCheck(DJYellow.DJExpression.CrossEyed)) djYellowScript.ChangeHeadSprite(DJYellow.DJExpression.NeutralLeft);
                                 djYellowScript.Reverse((normalizedSmileBeat >= 0 && normalizedSmileBeat <= 1f) || djYellowScript.HeadSpriteCheck(DJYellow.DJExpression.CrossEyed));
@@ -339,38 +339,27 @@ namespace HeavenStudio.Games
             }
         }
 
-        public void BreakCmon(float beat, int type, bool ooh, bool doSound = true)
+        public void BreakCmon(double beat, int type, bool ooh, bool doSound = true)
         {
             if (djYellowHolding) return;
 
-            string[] sounds = new string[] { };
-
-            switch (type)
-            {
-                case 0:
-                    sounds = new string[] { "djSchool/breakCmon1", "djSchool/breakCmon2", "djSchool/ooh" };
-                    break;
-                case 1:
-                    sounds = new string[] { "djSchool/breakCmonAlt1", "djSchool/breakCmonAlt2", "djSchool/oohAlt" };
-                    break;
-                case 2:
-                    sounds = new string[] { "djSchool/breakCmonLoud1", "djSchool/breakCmonLoud2", "djSchool/oohLoud" };
-                    break;
-            }
+            string[] sounds = type switch {
+                0 => new string[] { "djSchool/breakCmon1", "djSchool/breakCmon2", "djSchool/ooh" },
+                1 => new string[] { "djSchool/breakCmonAlt1", "djSchool/breakCmonAlt2", "djSchool/oohAlt" },
+                2 => new string[] { "djSchool/breakCmonLoud1", "djSchool/breakCmonLoud2", "djSchool/oohLoud" },
+            };
 
             if (doSound)
             {
-                var sound = new MultiSound.Sound[]
-                {
-                    new MultiSound.Sound(sounds[0],   beat),
-                    new MultiSound.Sound(sounds[1], beat + 1f, offset: 0.030f),
-                    new MultiSound.Sound("", beat + 2f)
-                };
+                List<MultiSound.Sound> sound = new List<MultiSound.Sound>()
+            {
+                new MultiSound.Sound(sounds[0], beat),
+                new MultiSound.Sound(sounds[1], beat + 1f, offset: 0.030f),
+            };
 
-                if (ooh)
-                    sound[2] = new MultiSound.Sound(sounds[2], beat + 2f);
+            if (ooh) sound.Add(new MultiSound.Sound(sounds[2], beat + 2f));
 
-                MultiSound.Play(sound);
+            MultiSound.Play(sound.ToArray());
             }
             
 
@@ -415,24 +404,21 @@ namespace HeavenStudio.Games
             ScheduleInput(beat, 2f, InputType.STANDARD_DOWN, student.OnHitHold, student.OnMissHold, student.OnEmpty);
         }
 
-       
-        public void AndStop(float beat, bool ooh, bool doSound = true)
+        public void AndStop(double beat, bool ooh, bool doSound = true)
         {
             if (djYellowHolding) return;
 
             if (doSound)
             {
-                var sound = new MultiSound.Sound[]
+                List<MultiSound.Sound> sound = new List<MultiSound.Sound>()
                 {
-                    new MultiSound.Sound("djSchool/andStop1",   beat),
-                    new MultiSound.Sound("djSchool/andStop2",   beat + .5f, offset: 0.1200f),
-                    new MultiSound.Sound("", beat + 1.5f)
+                    new MultiSound.Sound("djSchool/andStop1", beat),
+                    new MultiSound.Sound("djSchool/andStop2", beat + .5f, offset: 0.1200f),
                 };
 
-                if (ooh)
-                    sound[2] = new MultiSound.Sound("djSchool/oohAlt", beat + 1.5f);
+                if (ooh) sound.Add(new MultiSound.Sound("djSchool/oohAlt", beat + 1.5f));
 
-                MultiSound.Play(sound);
+                MultiSound.Play(sound.ToArray());
             }
             
 
@@ -441,7 +427,7 @@ namespace HeavenStudio.Games
                 new BeatAction.Action(beat + 0.5f, delegate 
                 {
                     djYellow.GetComponent<Animator>().DoScaledAnimationAsync("BreakCmon", 0.5f);
-                    float normalizedSmileBeat = Conductor.instance.GetPositionFromBeat(smileBeat, 3f);
+                    double normalizedSmileBeat = Conductor.instance.GetPositionFromBeat(smileBeat, 3f);
                     if (normalizedSmileBeat >= 0 && normalizedSmileBeat <= 1f)
                     {
                         djYellowScript.ChangeHeadSprite(DJYellow.DJExpression.Happy);
@@ -464,21 +450,21 @@ namespace HeavenStudio.Games
             ScheduleInput(beat, 1.5f, InputType.STANDARD_DOWN, student.OnHitHold, student.OnMissHold, student.OnEmpty);
         }
 
-        public void ScratchoHey(float beat, int type, bool remix4, bool cheer)
+        public void ScratchoHey(double beat, int type, bool remix4, bool cheer)
         {
             string[] sounds = new string[] { };
 
-            if (type == 0)
+            switch (type)
             {
+                case 0:
                 sounds = new string[] { "djSchool/scratchoHey1", "djSchool/scratchoHey2", "djSchool/scratchoHey3", "djSchool/scratchoHey4", "djSchool/hey" };
-            }
-            else if (type == 1)
-            {
+                break;
+                case 1:
                 sounds = new string[] { "djSchool/scratchoHeyAlt1", "djSchool/scratchoHeyAlt2", "djSchool/scratchoHeyAlt3", "djSchool/scratchoHeyAlt4", "djSchool/heyAlt" };
-            }
-            else if (type == 2)
-            {
+                break;
+                default:
                 sounds = new string[] { "djSchool/scratchoHeyLoud1", "djSchool/scratchoHeyLoud2", "djSchool/scratchoHeyLoud3", "djSchool/scratchoHeyLoud4", "djSchool/heyLoud" };
+                break;
             }
 
             float timing = 0f;
@@ -553,7 +539,7 @@ namespace HeavenStudio.Games
         {
             Student.soundFX = toggle;
         }
-        public void VoiceLines(float beat, int type)
+        public static void VoiceLines(double beat, int type)
         {
             string[] sounds;
             var sound = new MultiSound.Sound[] { };
@@ -568,7 +554,7 @@ namespace HeavenStudio.Games
                         new MultiSound.Sound(sounds[2], beat + .5f),
                     };
 
-                    MultiSound.Play(sound);
+                    MultiSound.Play(sound, forcePlay: true);
                     break;
 
                 case 1:
@@ -579,7 +565,7 @@ namespace HeavenStudio.Games
                         new MultiSound.Sound(sounds[1], beat + .5f),
                     };
 
-                    MultiSound.Play(sound);
+                    MultiSound.Play(sound, forcePlay: true);
                     break;
 
                 case 2:
@@ -590,7 +576,7 @@ namespace HeavenStudio.Games
                         new MultiSound.Sound(sounds[1], beat + .5f),
                     };
 
-                    MultiSound.Play(sound);
+                    MultiSound.Play(sound, forcePlay: true);
                     break;
 
                 case 3:
@@ -602,121 +588,49 @@ namespace HeavenStudio.Games
                         new MultiSound.Sound(sounds[2], beat + 1f),
                     };
 
-                    MultiSound.Play(sound);
+                    MultiSound.Play(sound, forcePlay: true);
                     break;
 
                 case 4:
-                    Jukebox.PlayOneShotGame("djSchool/yay");
+                    SoundByte.PlayOneShotGame("djSchool/yay", forcePlay: true);
                     break;
             }
         }
 
         #region Inactive Game Commands
-        public static void WarnBreakCmon(float beat, int type, bool ooh)
+        public static void WarnBreakCmon(double beat, int type, bool ooh)
         {
-            string[] sounds = new string[] { };
-            switch (type)
-            {
-                case 0:
-                    sounds = new string[] { "djSchool/breakCmon1", "djSchool/breakCmon2", "djSchool/ooh" };
-                    break;
-                case 1:
-                    sounds = new string[] { "djSchool/breakCmonAlt1", "djSchool/breakCmonAlt2", "djSchool/oohAlt" };
-                    break;
-                case 2:
-                    sounds = new string[] { "djSchool/breakCmonLoud1", "djSchool/breakCmonLoud2", "djSchool/oohLoud" };
-                    break;
-            }
-
-            var sound = new MultiSound.Sound[]
-            {
-                new MultiSound.Sound(sounds[0],   beat),
-                new MultiSound.Sound(sounds[1], beat + 1f, offset: 0.030f),
-                new MultiSound.Sound("", beat + 2f)
+            string[] sounds = type switch {
+                0 => new string[] { "djSchool/breakCmon1", "djSchool/breakCmon2", "djSchool/ooh" },
+                1 => new string[] { "djSchool/breakCmonAlt1", "djSchool/breakCmonAlt2", "djSchool/oohAlt" },
+                2 => new string[] { "djSchool/breakCmonLoud1", "djSchool/breakCmonLoud2", "djSchool/oohLoud" },
+                _ => new string[] { "djSchool/breakCmon1", "djSchool/breakCmon2", "djSchool/ooh" },
             };
 
-            if (ooh)
-                sound[2] = new MultiSound.Sound(sounds[2], beat + 2f);
+            List<MultiSound.Sound> sound = new List<MultiSound.Sound>()
+            {
+                new MultiSound.Sound(sounds[0], beat),
+                new MultiSound.Sound(sounds[1], beat + 1f, offset: 0.030f),
+            };
 
-            MultiSound.Play(sound, forcePlay: true);
+            if (ooh) sound.Add(new MultiSound.Sound(sounds[2], beat + 2f));
+
+            MultiSound.Play(sound.ToArray(), forcePlay: true);
             wantBreak = beat;
         }
 
-        public static void WarnAndStop(float beat, bool ooh)
+        public static void WarnAndStop(double beat, bool ooh)
         {
-            var sound = new MultiSound.Sound[]
+            List<MultiSound.Sound> sound = new List<MultiSound.Sound>()
             {
                 new MultiSound.Sound("djSchool/andStop1", beat),
                 new MultiSound.Sound("djSchool/andStop2", beat + .5f, offset: 0.1200f),
-                new MultiSound.Sound("", beat + 1.5f)
             };
 
-            if (ooh) 
-                sound[2] = new MultiSound.Sound("djSchool/oohAlt", beat + 1.5f);
+            if (ooh) sound.Add(new MultiSound.Sound("djSchool/oohAlt", beat + 1.5f));
 
-
-            MultiSound.Play(sound, forcePlay: true);
+            MultiSound.Play(sound.ToArray(), forcePlay: true);
             wantAndStop = beat;
-        }
-
-        public static void WarnDJVoiceLines(float beat, int type)
-        {
-            string[] sounds;
-            var sound = new MultiSound.Sound[] { };
-            switch (type)
-            {
-                case 0:
-                    sounds = new string[] { "djSchool/checkItOut1", "djSchool/checkItOut2", "djSchool/checkItOut3" };
-                    sound = new MultiSound.Sound[]
-                    {
-                        new MultiSound.Sound(sounds[0], beat),
-                        new MultiSound.Sound(sounds[1], beat + .25f),
-                        new MultiSound.Sound(sounds[2], beat + .5f),
-                    };
-
-                    
-                    break;
-
-                case 1:
-                    sounds = new string[] { "djSchool/letsGo1", "djSchool/letsGo2" };
-                    sound = new MultiSound.Sound[]
-                    {
-                        new MultiSound.Sound(sounds[0], beat),
-                        new MultiSound.Sound(sounds[1], beat + .5f),
-                    };
-
-                    
-                    break;
-
-                case 2:
-                    sounds = new string[] { "djSchool/ohYeah1", "djSchool/ohYeah2" };
-                    sound = new MultiSound.Sound[]
-                    {
-                        new MultiSound.Sound(sounds[0], beat),
-                        new MultiSound.Sound(sounds[1], beat + .5f),
-                    };
-
-                    
-                    break;
-
-                case 3:
-                    sounds = new string[] { "djSchool/ohYeahAlt1", "djSchool/ohYeahAlt2", "djSchool/ohYeahAlt3" };
-                    sound = new MultiSound.Sound[]
-                    {
-                        new MultiSound.Sound(sounds[0], beat),
-                        new MultiSound.Sound(sounds[1], beat + .5f),
-                        new MultiSound.Sound(sounds[2], beat + 1f),
-                    };
-
-                    
-                    break;
-
-                case 4:
-                    Jukebox.PlayOneShotGame("djSchool/yay");
-                    break;
-            }
-            MultiSound.Play(sound, forcePlay: true);
-            wantDJVoiceLines = beat;
         }
         #endregion
     }

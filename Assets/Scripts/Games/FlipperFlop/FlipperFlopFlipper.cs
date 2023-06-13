@@ -44,8 +44,8 @@ namespace HeavenStudio.Games.Scripts_FlipperFlop
             faceAnim.Play("FaceAngry", 0, 0);
             BeatAction.New(game.gameObject, new List<BeatAction.Action>()
             {
-                new BeatAction.Action(Conductor.instance.songPositionInBeats + 0.1f, delegate { leftImpact.SetActive(false); rightImpact.SetActive(false); }),
-                new BeatAction.Action(Conductor.instance.songPositionInBeats + 0.3f, delegate { faceAnim.Play("FaceAnnoyed", 0, 0); })
+                new BeatAction.Action(Conductor.instance.songPositionInBeatsAsDouble + 0.1f, delegate { leftImpact.SetActive(false); rightImpact.SetActive(false); }),
+                new BeatAction.Action(Conductor.instance.songPositionInBeatsAsDouble + 0.3f, delegate { faceAnim.Play("FaceAnnoyed", 0, 0); })
             });
         }
 
@@ -60,13 +60,13 @@ namespace HeavenStudio.Games.Scripts_FlipperFlop
             {
                 if (player && hit && !barely)
                 {
-                    Jukebox.PlayOneShotGame("flipperFlop/roll" + (left ? "L" : "R"));
+                    SoundByte.PlayOneShotGame("flipperFlop/roll" + (left ? "L" : "R"));
                     faceAnim.Play("FaceNormal", 0, 0);
                     canBlink = true;
                 }
                 else if (player && barely && hit)
                 {
-                    Jukebox.PlayOneShotGame("flipperFlop/tink");
+                    SoundByte.PlayOneShotGame("flipperFlop/tink");
                     faceAnim.Play("FaceBarely", 0, 0);
                     canBlink = false;
                 }
@@ -74,11 +74,11 @@ namespace HeavenStudio.Games.Scripts_FlipperFlop
                 {
                     faceAnim.Play("FaceOw");
                     canBlink = false;
-                    Jukebox.PlayOneShotGame("flipperFlop/failgroan");
+                    SoundByte.PlayOneShotGame("flipperFlop/failgroan");
                     game.BumpIntoOtherSeal(!left);
                     BeatAction.New(this.gameObject, new List<BeatAction.Action>()
                     {
-                        new BeatAction.Action(Conductor.instance.songPositionInBeats + 0.3f, delegate { faceAnim.Play("FaceGoofy"); }),
+                        new BeatAction.Action(Conductor.instance.songPositionInBeatsAsDouble + 0.3f, delegate { faceAnim.Play("FaceGoofy"); }),
                     });
                 }
 
@@ -91,18 +91,18 @@ namespace HeavenStudio.Games.Scripts_FlipperFlop
                     if (up && !barely)
                     {
                         faceAnim.Play("FaceNormal", 0, 0);
-                        Jukebox.PlayOneShotGame($"flipperFlop/flipB{UnityEngine.Random.Range(1, 3)}");
+                        SoundByte.PlayOneShotGame($"flipperFlop/flipB{UnityEngine.Random.Range(1, 3)}");
                         canBlink = true;
                     }
                     else if (!barely)
                     {
-                        Jukebox.PlayOneShotGame($"flipperFlop/flip{UnityEngine.Random.Range(1, 3)}");
+                        SoundByte.PlayOneShotGame($"flipperFlop/flip{UnityEngine.Random.Range(1, 3)}");
                         faceAnim.Play("FaceNormal", 0, 0);
                         canBlink = true;
                     }
                     else
                     {
-                        Jukebox.PlayOneShotGame("flipperFlop/tink");
+                        SoundByte.PlayOneShotGame("flipperFlop/tink");
                         faceAnim.Play("FaceBarely", 0, 0);
                         canBlink = false;
                     }
@@ -114,13 +114,13 @@ namespace HeavenStudio.Games.Scripts_FlipperFlop
                     string shouldReverse = up ? "Reverse" : "";
                     string leftOrRight = left ? "Left" : "Right";
 
-                    Jukebox.PlayOneShotGame("flipperFlop/failgroan", -1, 1, 0.5f);
-                    Jukebox.PlayOneShotGame("flipperFlop/punch", -1, 1, 0.5f);
+                    SoundByte.PlayOneShotGame("flipperFlop/failgroan", -1, 1, 0.5f);
+                    SoundByte.PlayOneShotGame("flipperFlop/punch", -1, 1, 0.5f);
                     anim.DoScaledAnimationAsync(shouldReverse + "MissFlop" + leftOrRight, 0.5f);
                     game.BumpIntoOtherSeal(!left);
                     BeatAction.New(this.gameObject, new List<BeatAction.Action>()
                     {
-                        new BeatAction.Action(Conductor.instance.songPositionInBeats + 0.3f, delegate { faceAnim.Play("FaceGoofy"); }),
+                        new BeatAction.Action(Conductor.instance.songPositionInBeatsAsDouble + 0.3f, delegate { faceAnim.Play("FaceGoofy"); }),
                     });
                 }
             }

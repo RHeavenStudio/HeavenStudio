@@ -65,7 +65,7 @@ namespace HeavenStudio.Games.Scripts_TheDazzles
             anim.Play("Prepare", 0, 0);
         }
 
-        public void StartReleaseBox(float beat)
+        public void StartReleaseBox(double beat)
         {
             BeatAction.New(game.gameObject, new List<BeatAction.Action>()
             {

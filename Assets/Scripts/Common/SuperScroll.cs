@@ -6,6 +6,8 @@ namespace HeavenStudio.Common
     {
         #region Private
 
+        [SerializeField] private Material _shader;
+
         [SerializeField]
         private Renderer _renderer;
 
@@ -19,6 +21,9 @@ namespace HeavenStudio.Common
         public float NormalizedX = 0.0f;
         public float NormalizedY = 0.0f;
         public Vector2 Normalized { get { return new Vector2(NormalizedX, NormalizedY); } set { NormalizedX = value.x; NormalizedY = value.y; } }
+        public bool AutoScroll;
+        public float AutoScrollX;
+        public float AutoScrollY;
 
         public float TileX = 1.0f;
         public float TileY = 1.0f;
@@ -32,10 +37,10 @@ namespace HeavenStudio.Common
 
         private void Start()
         {
-            _renderer.material = new Material(Shader.Find("Unlit/Transparent"));
+            _renderer.material = _shader;
 
             var spriteRect = _sprite.rect;
-            var tex = CropTexture(_sprite.texture, new Rect(spriteRect.x, spriteRect.y, spriteRect.width, spriteRect .height));
+            var tex = CropTexture(_sprite.texture, new Rect(spriteRect.x, spriteRect.y, spriteRect.width, spriteRect.height));
             tex.wrapMode = TextureWrapMode.Repeat;
             Material.mainTexture = tex;
         }
@@ -44,6 +49,12 @@ namespace HeavenStudio.Common
         {
             _renderer.material.mainTextureScale = Tile;
             _renderer.material.mainTextureOffset = new Vector2(NormalizedX, -NormalizedY) * Tile;
+
+            if (AutoScroll) {
+                float songPos = Conductor.instance.songPositionInBeats/100;
+                NormalizedX = songPos*AutoScrollX;
+                NormalizedY = songPos*AutoScrollY;
+            }
         }
 
         #endregion
@@ -53,7 +64,7 @@ namespace HeavenStudio.Common
         private Texture2D CropTexture(Texture2D original, Rect rect)
         {
             var colors = original.GetPixels((int)rect.x, (int)rect.y, (int)rect.width, (int)rect.height);
-            var newTex = new Texture2D((int)rect.width - (int)rect.x, (int)rect.height - (int)rect.y);
+            var newTex = new Texture2D((int)rect.width, (int)rect.height);
 
             newTex.SetPixels(colors);
             newTex.Apply();

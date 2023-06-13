@@ -5,9 +5,9 @@ using System;
 
 namespace HeavenStudio.Games.Scripts_RhythmTweezers
 {
-    public class Hair : PlayerActionObject
+    public class Hair : MonoBehaviour
     {
-        public float createBeat;
+        public double createBeat;
         public GameObject hairSprite;
         public GameObject stubbleSprite;
         public GameObject missedSprite;
@@ -15,20 +15,15 @@ namespace HeavenStudio.Games.Scripts_RhythmTweezers
         private Tweezers tweezers;
         private bool plucked;
 
-        PlayerActionEvent pluckEvent;
-
         private void Awake()
         {
             game = RhythmTweezers.instance;
             tweezers = game.Tweezers;
         }
 
-        private void Start() {
-            pluckEvent = game.ScheduleInput(createBeat, game.tweezerBeatOffset + game.beatInterval, InputType.STANDARD_DOWN | InputType.DIRECTION_DOWN, Just, Miss, Out);
-        }
-
-        private void Update()
+        public void StartInput(double beat, double length)
         {
+            game.ScheduleInput(beat, length, InputType.STANDARD_DOWN | InputType.DIRECTION_DOWN, Just, Miss, Out);
         }
 
         public void Ace()
@@ -60,11 +55,5 @@ namespace HeavenStudio.Games.Scripts_RhythmTweezers
         }
 
         private void Out(PlayerActionEvent caller) {}
-
-        void OnDestroy()
-        {
-            if (pluckEvent != null)
-                pluckEvent.Disable();
-        }
     }
 }

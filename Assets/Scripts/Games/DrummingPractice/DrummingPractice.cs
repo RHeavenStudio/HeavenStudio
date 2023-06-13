@@ -67,7 +67,11 @@ namespace HeavenStudio.Games.Loaders
                         new Param("colorC", new Color(1, 247/255f, 0), "Streak Color", "The color of streaks that appear on a successful hit")
                     }
                 }
-            });
+            },
+            new List<string>() {"ctr", "normal"},
+            "ctrintro", "en",
+            new List<string>() {}
+            );
         }
     }
 }
@@ -105,7 +109,7 @@ namespace HeavenStudio.Games
 
         [Header("Variables")]
         float movingLength;
-        float movingStartBeat;
+        double movingStartBeat;
         bool isMoving;
         string moveAnim;
         EasingFunction.Ease lastEase;
@@ -122,9 +126,9 @@ namespace HeavenStudio.Games
             SetMiis();
         }
         
-        public override void OnGameSwitch(float beat)
+        public override void OnGameSwitch(double beat)
         {
-            var changeMii = GameManager.instance.Beatmap.entities.FindLast(c => c.datamodel == "drummingPractice/set mii" && c.beat <= beat);
+            var changeMii = GameManager.instance.Beatmap.Entities.FindLast(c => c.datamodel == "drummingPractice/set mii" && c.beat <= beat);
             if(changeMii != null)
             {
                 EventCaller.instance.CallEvent(changeMii, true);
@@ -160,7 +164,7 @@ namespace HeavenStudio.Games
             }
         }
 
-        public void NPCDrummersEnterOrExit(float beat, float length, bool exit, int ease)
+        public void NPCDrummersEnterOrExit(double beat, float length, bool exit, int ease)
         {
             movingStartBeat = beat;
             movingLength = length;
@@ -173,7 +177,7 @@ namespace HeavenStudio.Games
             });
         }
 
-        public void SetBop(float beat, float length, bool shouldBop, bool autoBop)
+        public void SetBop(double beat, float length, bool shouldBop, bool autoBop)
         {
             goBop = autoBop;
             if (shouldBop)
@@ -195,7 +199,7 @@ namespace HeavenStudio.Games
             rightDrummer.Bop();
         }
 
-        public void Prepare(float beat, bool applause)
+        public void Prepare(double beat, bool applause)
         {
             int type = count % 2;
             player.Prepare(beat, type);
@@ -204,7 +208,7 @@ namespace HeavenStudio.Games
             count++;
 
             SetFaces(0);
-            Jukebox.PlayOneShotGame("drummingPractice/prepare");
+            SoundByte.PlayOneShotGame("drummingPractice/prepare");
 
             GameObject hit = Instantiate(hitPrefab);
             hit.transform.parent = hitPrefab.transform.parent;

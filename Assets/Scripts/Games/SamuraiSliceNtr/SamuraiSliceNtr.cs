@@ -154,7 +154,7 @@ namespace HeavenStudio.Games
                 DoSlice();
         }
 
-        public void Bop(float beat, float length, int whoBops, int whoBopsAuto)
+        public void Bop(double beat, float length, int whoBops, int whoBopsAuto)
         {
             goBopSamurai = whoBopsAuto == (int)WhoBops.Samurai || whoBopsAuto == (int)WhoBops.Both;
             goBopChild = whoBopsAuto == (int)WhoBops.Children || whoBopsAuto == (int)WhoBops.Both;
@@ -188,7 +188,7 @@ namespace HeavenStudio.Games
 
         public void DoStep()
         {
-            Jukebox.PlayOneShotGame("samuraiSliceNtr/ntrSamurai_launchThrough");
+            SoundByte.PlayOneShotGame("samuraiSliceNtr/ntrSamurai_launchThrough");
             player.Step(false);
             launcher.GetComponent<Animator>().Play("Launch", -1, 0);
         }
@@ -205,17 +205,17 @@ namespace HeavenStudio.Games
             {
                 launcher.GetComponent<Animator>().Play("UnStep", -1, 0);
             }
-            Jukebox.PlayOneShotGame("samuraiSliceNtr/ntrSamurai_through");
+            SoundByte.PlayOneShotGame("samuraiSliceNtr/ntrSamurai_through");
             player.Slash();
         }
 
-        public void Bop(float beat, float length) 
+        public void Bop(double beat, float length) 
         {
             bop.length = length;
             bop.startBeat = beat;
         }
 
-        public void ObjectIn(float beat, int type = (int) ObjectType.Melon, int value = 1, bool funnyMinecraft = false)
+        public void ObjectIn(double beat, int type = (int) ObjectType.Melon, int value = 1, bool funnyMinecraft = false)
         {
             var mobj = GameObject.Instantiate(objectPrefab, objectHolder);
             var mobjDat = mobj.GetComponent<NtrSamuraiObject>();
@@ -225,10 +225,10 @@ namespace HeavenStudio.Games
 
             mobj.SetActive(true);
 
-            Jukebox.PlayOneShotGame("samuraiSliceNtr/ntrSamurai_in00");
+            SoundByte.PlayOneShotGame("samuraiSliceNtr/ntrSamurai_in00");
         }
 
-        public NtrSamuraiChild CreateChild(float beat)
+        public NtrSamuraiChild CreateChild(double beat)
         {
             var mobj = GameObject.Instantiate(childParent, objectHolder);
             var mobjDat = mobj.GetComponent<NtrSamuraiChild>();

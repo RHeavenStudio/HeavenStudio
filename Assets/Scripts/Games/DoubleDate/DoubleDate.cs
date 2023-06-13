@@ -23,20 +23,27 @@ namespace HeavenStudio.Games.Loaders
                 },
                 new GameAction("soccer", "Soccer Ball")
                 {
-                    function = delegate { var e = eventCaller.currentEntity; DoubleDate.instance.SpawnSoccerBall(e.beat); },
+                    preFunction = delegate { var e = eventCaller.currentEntity; DoubleDate.QueueSoccerBall(e.beat); },
+                    preFunctionLength = 1f,
                     defaultLength = 2f,
                 },
                 new GameAction("basket", "Basket Ball")
                 {
-                    function = delegate { var e = eventCaller.currentEntity; DoubleDate.instance.SpawnBasketBall(e.beat); },
+                    preFunction = delegate { var e = eventCaller.currentEntity; DoubleDate.QueueBasketBall(e.beat); },
+                    preFunctionLength = 1f,
                     defaultLength = 2f,
                 },
                 new GameAction("football", "Football")
                 {
-                    function = delegate { var e = eventCaller.currentEntity; DoubleDate.instance.SpawnFootBall(e.beat); },
+                    preFunction = delegate { var e = eventCaller.currentEntity; DoubleDate.QueueFootBall(e.beat); },
+                    preFunctionLength = 1f,
                     defaultLength = 2.5f,
                 },
-            });
+            },
+            new List<string>() {"rvl", "normal"},
+            "rvldate", "en",
+            new List<string>() {}
+            );
         }
     }
 }
@@ -48,24 +55,80 @@ namespace HeavenStudio.Games
     public class DoubleDate : Minigame
     {
         [Header("Prefabs")]
-        [SerializeField] SoccerBall soccer;
-        [SerializeField] Basketball basket;
-        [SerializeField] Football football;
-        [SerializeField] GameObject leaves;
+        [SerializeField] GameObject soccer;
+        [SerializeField] GameObject basket;
+        [SerializeField] GameObject football;
+        [SerializeField] GameObject dropShadow;
+        [SerializeField] ParticleSystem leaves;
+
         [Header("Components")]
         [SerializeField] Animator boyAnim;
         [SerializeField] Animator girlAnim;
         [SerializeField] DoubleDateWeasels weasels;
         [SerializeField] Animator treeAnim;
+        [SerializeField] GameObject clouds;
+
         [Header("Variables")]
+        [SerializeField] public float cloudSpeed;
+        [SerializeField] public float cloudDistance;
+        [SerializeField] public float floorHeight;
+        [SerializeField] public float shadowDepthScaleMin;
+        [SerializeField] public float shadowDepthScaleMax;
+        [SerializeField] SuperCurveObject.Path[] ballBouncePaths;
+        double lastGirlGacha = double.MinValue;
         bool shouldBop = true;
         bool canBop = true;
         GameEvent bop = new GameEvent();
         public static DoubleDate instance;
-        
+        public static List<QueuedBall> queuedBalls = new List<QueuedBall>();
+        [NonSerialized] public double lastHitWeasel = double.MinValue;
+
+        public enum BallType
+        {
+            Soccer,
+            Basket,
+            Football
+        }
+
+        public struct QueuedBall
+        {
+            public double beat;
+            public BallType type;
+        }
+
+        // Editor gizmo to draw trajectories
+        new void OnDrawGizmos()
+        {
+            base.OnDrawGizmos();
+            foreach (SuperCurveObject.Path path in ballBouncePaths)
+            {
+                if (path.preview)
+                {
+                    soccer.GetComponent<SoccerBall>().DrawEditorGizmo(path);
+                }
+            }
+        }
+
+        public override void OnPlay(double beat)
+        {
+            queuedBalls.Clear();
+        }
+
+        private void OnDestroy() {
+            queuedBalls.Clear();
+            foreach (var evt in scheduledInputs)
+            {
+                evt.Disable();
+            }
+        }
+
         private void Awake()
         {
             instance = this;
+        }
+
+        private void Start() {
+            clouds.transform.position = Vector3.left * ((Time.realtimeSinceStartup * cloudSpeed) % cloudDistance);
         }
 
         void Update()
@@ -73,16 +136,43 @@ namespace HeavenStudio.Games
             var cond = Conductor.instance;
             if (cond.isPlaying && !cond.isPaused)
             {
+                if (queuedBalls.Count != 0)
+                {
+                    foreach (QueuedBall ball in queuedBalls)
+                    {
+                        switch (ball.type)
+                        {
+                            case BallType.Soccer:
+                                SpawnSoccerBall(ball.beat);
+                                break;
+                            case BallType.Basket:
+                                SpawnBasketBall(ball.beat);
+                                break;
+                            case BallType.Football:
+                                SpawnFootBall(ball.beat);
+                                break;
+                        }
+                    }
+                    queuedBalls.Clear();
+                }
                 if (cond.ReportBeat(ref bop.lastReportedBeat, bop.startBeat % 1) && shouldBop)
                 {
                     SingleBop();
                 }
             }
+            else
+            {
+                if ((!cond.isPaused) && queuedBalls.Count != 0)
+                {
+                    queuedBalls.Clear();
+                }
+            }
             if (PlayerInput.Pressed() && !IsExpectingInputNow(InputType.STANDARD_DOWN))
             {
-                Jukebox.PlayOneShotGame("doubleDate/kick_whiff");
+                SoundByte.PlayOneShotGame("doubleDate/kick_whiff");
                 Kick(true, true, false);
             }
+            clouds.transform.position = Vector3.left * ((Time.realtimeSinceStartup * cloudSpeed) % cloudDistance);
         }
 
         public void ToggleBop(bool go)
@@ -90,7 +180,7 @@ namespace HeavenStudio.Games
             canBop = go;
         }
 
-        public void Bop(float beat, float length, bool goBop, bool autoBop)
+        public void Bop(double beat, float length, bool goBop, bool autoBop)
         {
             shouldBop = autoBop;
             if (goBop)
@@ -111,24 +201,30 @@ namespace HeavenStudio.Games
             {
                 boyAnim.DoScaledAnimationAsync("IdleBop", 1f);
             }
-            girlAnim.DoScaledAnimationAsync("GirlBop", 1f);
+            if (Conductor.instance.songPositionInBeatsAsDouble > lastGirlGacha)
+                girlAnim.DoScaledAnimationAsync("GirlBop", 1f);
             weasels.Bop();
         }
 
-        public void Kick(bool hit = true, bool forceNoLeaves = false, bool weaselsHappy = true)
+        public void Kick(bool hit = true, bool forceNoLeaves = false, bool weaselsHappy = true, bool jump = false)
         {
             if (hit)
             {
-                boyAnim.DoScaledAnimationAsync("Kick", 1f);
-                if (weaselsHappy) weasels.Happy();
+                boyAnim.DoScaledAnimationAsync("Kick", 0.5f);
+                if (jump)
+                {
+                    weasels.Jump();
+                    lastGirlGacha = Conductor.instance.songPositionInBeatsAsDouble + 0.5f;
+                    girlAnim.DoScaledAnimationAsync("GirlLookUp", 0.5f);
+                }
+                else if (weaselsHappy) weasels.Happy();
                 if (!forceNoLeaves)
                 {
                     BeatAction.New(instance.gameObject, new List<BeatAction.Action>()
                     {
-                        new BeatAction.Action(Conductor.instance.songPositionInBeats + 1f, delegate
+                        new BeatAction.Action(Conductor.instance.songPositionInBeatsAsDouble + 1f, delegate
                         {
-                            GameObject spawnedLeaves = Instantiate(leaves, transform);
-                            spawnedLeaves.SetActive(true);
+                            leaves.Play();
                             treeAnim.DoScaledAnimationAsync("TreeRustle", 1f);
                         })
                     });
@@ -136,38 +232,126 @@ namespace HeavenStudio.Games
             }
             else
             {
-                boyAnim.DoScaledAnimationAsync("Barely", 1f);
+                boyAnim.DoScaledAnimationAsync("Barely", 0.5f);
+                weasels.Surprise();
             }
         }
 
-        public void SpawnSoccerBall(float beat)
+        public static void QueueSoccerBall(double beat)
         {
-            SoccerBall spawnedBall = Instantiate(soccer, instance.transform);
-            spawnedBall.Init(beat);
-            Jukebox.PlayOneShotGame("doubleDate/soccerBounce", beat);
+            if (GameManager.instance.currentGame != "doubleDate")
+            {
+                queuedBalls.Add(new QueuedBall()
+                {
+                    beat = beat,
+                    type = BallType.Soccer
+                });
+            }
+            else
+            {
+                instance.SpawnSoccerBall(beat);
+            }
+            SoundByte.PlayOneShotGame("doubleDate/soccerBounce", beat, forcePlay: true);
         }
 
-        public void SpawnBasketBall(float beat)
+        public static void QueueBasketBall(double beat)
         {
-            Basketball spawnedBall = Instantiate(basket, instance.transform);
-            spawnedBall.Init(beat);
+            if (GameManager.instance.currentGame != "doubleDate")
+            {
+                queuedBalls.Add(new QueuedBall()
+                {
+                    beat = beat,
+                    type = BallType.Basket
+                });
+            }
+            else
+            {
+                instance.SpawnBasketBall(beat);
+            }
             MultiSound.Play(new MultiSound.Sound[]
             {
                 new MultiSound.Sound("doubleDate/basketballBounce", beat),
                 new MultiSound.Sound("doubleDate/basketballBounce", beat + 0.75f),
-            });
+            }, forcePlay: true);
         }
 
-        public void SpawnFootBall(float beat)
+        public static void QueueFootBall(double beat)
         {
-            Football spawnedBall = Instantiate(football, instance.transform);
-            spawnedBall.Init(beat);
+            if (GameManager.instance.currentGame != "doubleDate")
+            {
+                queuedBalls.Add(new QueuedBall()
+                {
+                    beat = beat,
+                    type = BallType.Football
+                });
+            }
+            else
+            {
+                instance.SpawnFootBall(beat);
+            }
             MultiSound.Play(new MultiSound.Sound[]
             {
                 new MultiSound.Sound("doubleDate/footballBounce", beat),
                 new MultiSound.Sound("doubleDate/footballBounce", beat + 0.75f),
-            });
+            }, forcePlay: true);
+        }
+
+        public void SpawnSoccerBall(double beat)
+        {
+            SoccerBall spawnedBall = Instantiate(soccer, instance.transform).GetComponent<SoccerBall>();
+            spawnedBall.Init(beat);
+        }
+
+        public void SpawnBasketBall(double beat)
+        {
+            Basketball spawnedBall = Instantiate(basket, instance.transform).GetComponent<Basketball>();
+            spawnedBall.Init(beat);
+        }
+
+        public void SpawnFootBall(double beat)
+        {
+            Football spawnedBall = Instantiate(football, instance.transform).GetComponent<Football>();
+            spawnedBall.Init(beat);
+        }
+
+        public void MissKick(double beat, bool hit = false)
+        {
+            lastGirlGacha = Conductor.instance.songPositionInBeatsAsDouble + 1.5f;
+            girlAnim.DoScaledAnimationAsync("GirlSad", 0.5f);
+            if (hit)
+            {
+                lastHitWeasel = Conductor.instance.songPositionInBeatsAsDouble;
+                BeatAction.New(gameObject, new List<BeatAction.Action>()
+                {
+                    new BeatAction.Action(beat - (0.25f/3f), delegate { weasels.Hit(beat); }),
+                });
+            }
+            else
+            {
+                lastHitWeasel = Conductor.instance.songPositionInBeatsAsDouble;
+                BeatAction.New(gameObject, new List<BeatAction.Action>()
+                {
+                    new BeatAction.Action(beat + 0.25, delegate { weasels.Hide(beat + 0.25f); }),
+                });
+            }
+        }
+
+        public SuperCurveObject.Path GetPath(string name)
+        {
+            foreach (SuperCurveObject.Path path in ballBouncePaths)
+            {
+                if (path.name == name)
+                {
+                    return path;
+                }
+            }
+            return default(SuperCurveObject.Path);
+        }
+
+        public GameObject MakeDropShadow()
+        {
+            GameObject shadow = Instantiate(dropShadow, transform);
+            return shadow;
         }
     }
-
 }

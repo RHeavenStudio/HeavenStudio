@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using System;
 using Starpelly;
+using TMPro;
 
 using HeavenStudio.Util;
 
@@ -11,68 +12,59 @@ namespace HeavenStudio.Games.Scripts_MrUpbeat
     public class UpbeatMan : MonoBehaviour
     {
         [Header("References")]
-        public MrUpbeat game;
-        public Animator animator;
-        public Animator blipAnimator;
-        public GameObject[] shadows;
+        [SerializeField] Animator anim;
+        [SerializeField] Animator blipAnim;
+        [SerializeField] Animator letterAnim;
+        [SerializeField] GameObject[] shadows;
+        [SerializeField] TMP_Text blipText;
 
-        public float targetBeat = 0.25f;
         public int stepTimes = 0;
-        private bool stepped = false;
-        private bool onGround = false;
+        public int blipSize = 0;
+        public bool shouldGrow;
+        public string blipString = "M";
 
-        public GameEvent blip = new GameEvent();
-
-        public void Idle()
+        public void Blip()
         {
-            stepTimes = 0;
-            transform.localScale = new Vector3(1, 1);
-            animator.Play("Idle", 0, 0);
+            double c = Conductor.instance.songPositionInBeatsAsDouble;
+            BeatAction.New(gameObject, new List<BeatAction.Action>() {
+                new BeatAction.Action(Math.Floor(c) + 0.5f, delegate {
+                    if (MrUpbeat.shouldBlip) {
+                        SoundByte.PlayOneShotGame("mrUpbeat/blip");
+                        blipAnim.Play("Blip"+(blipSize+1), 0, 0);
+                        blipText.text = (blipSize == 4 && blipString != "") ? blipString : "";
+                        if (shouldGrow && blipSize < 4) blipSize++;
+                    }
+                }),
+                new BeatAction.Action(Math.Floor(c) + 1f, delegate { 
+                    Blip();
+                }),
+            });
         }
 
         public void Step()
         {
             stepTimes++;
+            
+            bool x = (stepTimes % 2 == 1);
+            shadows[0].SetActive(!x);
+            shadows[1].SetActive(x);
+            transform.localScale = new Vector3(x ? -1 : 1, 1);
 
-            animator.Play("Step", 0, 0);
-            Jukebox.PlayOneShotGame("mrUpbeat/step");
-
-            onGround = false;
-            CheckShadows();
+            anim.DoScaledAnimationAsync("Step", 0.5f);
+            letterAnim.DoScaledAnimationAsync(x ? "StepRight" : "StepLeft", 0.5f);
+            SoundByte.PlayOneShotGame("mrUpbeat/step");
         }
 
         public void Fall()
         {
-            animator.Play("Fall", 0, 0);
-            Jukebox.PlayOneShot("miss");
+            blipSize = 0;
+            blipAnim.Play("Idle", 0, 0);
+            blipText.text = "";
+            
+            anim.DoScaledAnimationAsync("Fall", 0.5f);
+            SoundByte.PlayOneShot("miss");
             shadows[0].SetActive(false);
             shadows[1].SetActive(false);
-            onGround = true;
         }
-
-        public void Blip()
-        {
-            Jukebox.PlayOneShotGame("mrUpbeat/blip");
-            blipAnimator.Play("Blip", 0, 0);
-        }
-
-        private void CheckShadows()
-        {
-            if (onGround) return;
-
-            if (stepTimes % 2 == 1)
-            {
-                shadows[0].SetActive(false);
-                shadows[1].SetActive(true);
-                transform.localScale = new Vector3(-1, 1);
-            } else
-            {
-                shadows[0].SetActive(true);
-                shadows[1].SetActive(false);
-                transform.localScale = new Vector3(1, 1);
-            }
-        }
-       
-
     }
 }

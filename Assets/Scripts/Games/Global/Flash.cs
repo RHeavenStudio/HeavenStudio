@@ -1,57 +1,52 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 using HeavenStudio.Util;
 using System.Linq;
+using Jukebox;
+using Jukebox.Legacy;
 
 namespace HeavenStudio.Games.Global
 {
     public class Flash : MonoBehaviour
     {
-        public float startBeat;
-        public float length;
+        [NonSerialized] public double startBeat;
+        [NonSerialized] public float length;
 
-        public Color startColor;
-        public Color endColor;
+        [NonSerialized] public Color startColor;
+        [NonSerialized] public Color endColor;
 
-        public EasingFunction.Ease ease;
-        private EasingFunction.Function func;
+        [NonSerialized] public Util.EasingFunction.Ease ease;
+        [NonSerialized] private Util.EasingFunction.Function func;
 
-        private SpriteRenderer spriteRenderer;
+        [NonSerialized] private Image spriteRenderer;
 
         [SerializeField] private Color currentCol;
 
-        private List<DynamicBeatmap.DynamicEntity> allFadeEvents = new List<DynamicBeatmap.DynamicEntity>();
+        [NonSerialized] private List<RiqEntity> allFadeEvents = new List<RiqEntity>();
 
         private void Awake()
         {
-            this.gameObject.transform.SetParent(GameManager.instance.gameObject.transform);
-            gameObject.layer = LayerMask.NameToLayer("Flash");
-            this.gameObject.transform.localScale = new Vector3(1, 1);
-
-            spriteRenderer = this.gameObject.AddComponent<SpriteRenderer>();
-
-            spriteRenderer.color = startColor;
-            spriteRenderer.sortingOrder = 30001;
-            spriteRenderer.sprite = Resources.Load<Sprite>("Sprites/GeneralPurpose/Square");
-
-            func = EasingFunction.GetEasingFunction(EasingFunction.Ease.Linear);
-
+            spriteRenderer = GetComponent<Image>();
+            spriteRenderer.color = currentCol;
+            func = Util.EasingFunction.GetEasingFunction(Util.EasingFunction.Ease.Linear);
             GameManager.instance.onBeatChanged += OnBeatChanged;
         }
 
-        public void OnBeatChanged(float beat)
+        public void OnBeatChanged(double beat)
         {
             allFadeEvents = EventCaller.GetAllInGameManagerList("vfx", new string[] { "flash" });
-            Test(beat);
-
             // backwards-compatibility baybee
             allFadeEvents.AddRange(EventCaller.GetAllInGameManagerList("gameManager", new string[] { "flash" }));
-            Test(beat);
+            allFadeEvents.Sort((x, y) => x.beat.CompareTo(y.beat));
+
+            FindFadeFromBeat(beat);
         }
 
-        private void Test(float beat)
+        private void FindFadeFromBeat(double beat)
         {
             Color startCol = Color.white;
             Color endCol = Color.white;
@@ -60,7 +55,7 @@ namespace HeavenStudio.Games.Global
 
             if (allFadeEvents.Count > 0)
             {
-                DynamicBeatmap.DynamicEntity startEntity = null;
+                RiqEntity startEntity = default(RiqEntity);
 
                 for (int i = 0; i < allFadeEvents.Count; i++)
                 {
@@ -77,7 +72,7 @@ namespace HeavenStudio.Games.Global
                     }
                 }
 
-                if (startEntity != null)
+                if (!string.IsNullOrEmpty(startEntity.datamodel))
                 {
                     if (!override_)
                     {
@@ -88,24 +83,24 @@ namespace HeavenStudio.Games.Global
                         endCol = new Color(colB.r, colB.g, colB.b, startEntity["valB"]);
                     }
 
-                    SetFade(startEntity.beat, startEntity.length, startCol, endCol, (EasingFunction.Ease) startEntity["ease"]);
+                    SetFade(startEntity.beat, startEntity.length, startCol, endCol, (Util.EasingFunction.Ease) startEntity["ease"]);
                 }
             }
         }
 
-        public void SetFade(float beat, float length, Color startCol, Color endCol, EasingFunction.Ease ease)
+        public void SetFade(double beat, float length, Color startCol, Color endCol, Util.EasingFunction.Ease ease)
         {
             this.startBeat = beat;
             this.length = length;
             this.startColor = startCol;
             this.endColor = endCol;
             this.ease = ease;
-            func = EasingFunction.GetEasingFunction(ease);
+            func = Util.EasingFunction.GetEasingFunction(ease);
         }
 
         private void Update()
         {
-            Test(Conductor.instance.songPositionInBeats);
+            FindFadeFromBeat(Conductor.instance.songPositionInBeatsAsDouble);
             float normalizedBeat = Conductor.instance.GetPositionFromBeat(startBeat, length);
             // normalizedBeat = Mathf.Clamp01(normalizedBeat);
 

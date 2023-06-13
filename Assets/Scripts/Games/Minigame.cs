@@ -9,7 +9,7 @@ namespace HeavenStudio.Games
 {
     public class Minigame : MonoBehaviour
     {
-        public static double earlyTime = 0.07f, perfectTime = 0.04f, aceEarlyTime = 0.01f, aceLateTime = 0.01f, lateTime = 0.04f, endTime = 0.07f;
+        public static double earlyTime = 0.075f, perfectTime = 0.06f, aceEarlyTime = 0.01f, aceLateTime = 0.01f, lateTime = 0.06f, endTime = 0.075f;
         public static float rankHiThreshold = 0.8f, rankOkThreshold = 0.6f;
         [SerializeField] public SoundSequence.SequenceKeyValue[] SoundSequences;
 
@@ -40,8 +40,8 @@ namespace HeavenStudio.Games
         /// <param name="OnBlank">Method to run whenever there's an Input while this is Scheduled (Shouldn't be used too much)</param>
         /// <returns></returns>
         public PlayerActionEvent ScheduleInput(
-            float startBeat,
-            float timer,
+            double startBeat,
+            double timer,
             InputType inputType,
             PlayerActionEvent.ActionEventCallbackState OnHit,
             PlayerActionEvent.ActionEventCallback OnMiss,
@@ -74,8 +74,8 @@ namespace HeavenStudio.Games
             return evt;
         }
 
-        public PlayerActionEvent ScheduleAutoplayInput(float startBeat,
-            float timer,
+        public PlayerActionEvent ScheduleAutoplayInput(double startBeat,
+            double timer,
             InputType inputType,
             PlayerActionEvent.ActionEventCallbackState OnHit,
             PlayerActionEvent.ActionEventCallback OnMiss,
@@ -86,8 +86,8 @@ namespace HeavenStudio.Games
             return evt;
         }
 
-        public PlayerActionEvent ScheduleUserInput(float startBeat,
-            float timer,
+        public PlayerActionEvent ScheduleUserInput(double startBeat,
+            double timer,
             InputType inputType,
             PlayerActionEvent.ActionEventCallbackState OnHit,
             PlayerActionEvent.ActionEventCallback OnMiss,
@@ -120,18 +120,18 @@ namespace HeavenStudio.Games
 
                 if(closest == null)
                 {
-                    if (input == InputType.ANY || toCompare.inputType.HasFlag(input))
+                    if (input == InputType.ANY || (toCompare.inputType & input) != 0)
                         closest = toCompare;
                 } else
                 {
-                    float t1 = closest.startBeat + closest.timer;
-                    float t2 = toCompare.startBeat + toCompare.timer;
+                    double t1 = closest.startBeat + closest.timer;
+                    double t2 = toCompare.startBeat + toCompare.timer;
 
                     // Debug.Log("t1=" + t1 + " -- t2=" + t2);
 
                     if (t2 < t1)
                     {
-                        if (input == InputType.ANY || toCompare.inputType.HasFlag(input))
+                        if (input == InputType.ANY || (toCompare.inputType & input) != 0)
                             closest = toCompare;
                     }
                 }
@@ -194,12 +194,12 @@ namespace HeavenStudio.Games
 
         public int firstEnable = 0;
 
-        public virtual void OnGameSwitch(float beat)
+        public virtual void OnGameSwitch(double beat)
         {
             //Below is a template that can be used for handling previous entities.
             //section below is if you only want to look at entities that overlap the game switch
             /*
-            List<Beatmap.Entity> prevEntities = GameManager.instance.Beatmap.entities.FindAll(c => c.beat <= beat && c.datamodel.Split(0) == [insert game name]);
+            List<Beatmap.Entity> prevEntities = GameManager.instance.Beatmap.Entities.FindAll(c => c.beat <= beat && c.datamodel.Split(0) == [insert game name]);
             foreach(Beatmap.Entity entity in prevEntities)
             {
                 if(entity.beat + entity.length >= beat)
@@ -215,9 +215,17 @@ namespace HeavenStudio.Games
 
         }
 
-        public virtual void OnPlay(float beat)
+        public virtual void OnPlay(double beat)
         {
 
+        }
+
+        public virtual void OnStop(double beat)
+        {
+            foreach (var evt in scheduledInputs)
+            {
+                evt.Disable();
+            }
         }
 
         public int MultipleEventsAtOnce()
@@ -238,7 +246,7 @@ namespace HeavenStudio.Games
             return sameTime;
         }
 
-        public static MultiSound PlaySoundSequence(string game, string name, float startBeat, params SoundSequence.SequenceParams[] args)
+        public static MultiSound PlaySoundSequence(string game, string name, double startBeat, params SoundSequence.SequenceParams[] args)
         {
             Minigames.Minigame gameInfo = GameManager.instance.GetGameInfo(game);
             foreach (SoundSequence.SequenceKeyValue pair in gameInfo.LoadedSoundSequences)
@@ -270,7 +278,7 @@ namespace HeavenStudio.Games
             }
         }
 
-        private void OnDrawGizmos() {
+        protected void OnDrawGizmos() {
             Gizmos.color = Color.magenta;
             Gizmos.DrawWireCube(Vector3.zero, new Vector3(17.77695f, 10, 0));
         }

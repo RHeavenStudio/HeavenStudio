@@ -23,7 +23,7 @@ namespace HeavenStudio.Games.Scripts_WizardsWaltz
 
         void Update()
         {
-            songPos = Conductor.instance.songPositionInBeats - game.wizardBeatOffset;
+            songPos = (float)(Conductor.instance.songPositionInBeatsAsDouble - game.wizardBeatOffset);
             var am = game.beatInterval / 2f;
             var x = Mathf.Sin(Mathf.PI * songPos / am) * 6;
             var y = Mathf.Cos(Mathf.PI * songPos / am);
@@ -43,7 +43,7 @@ namespace HeavenStudio.Games.Scripts_WizardsWaltz
             if (PlayerInput.Pressed(true))
             {
                 animator.Play("Magic", 0, 0);
-                Jukebox.PlayOneShotGame("wizardsWaltz/wand");
+                SoundByte.PlayOneShotGame("wizardsWaltz/wand");
             }
         }
 
@@ -63,13 +63,13 @@ namespace HeavenStudio.Games.Scripts_WizardsWaltz
             }
             if (hit)
             {
-                Jukebox.PlayOneShotGame("wizardsWaltz/grow");
+                SoundByte.PlayOneShotGame("wizardsWaltz/grow");
                 plant.Bloom();
                 game.girl.Happy();
             }
             else
             {
-                Jukebox.PlayOneShot("miss");
+                SoundByte.PlayOneShot("miss");
                 plant.Eat();
                 game.girl.Sad();
             }

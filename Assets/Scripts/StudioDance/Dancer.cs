@@ -6,8 +6,8 @@ namespace HeavenStudio.StudioDance
     public class Dancer : MonoBehaviour
     {
         private Animator animator;
-        private float lastReportedBeat = 0f;
-        private float currentBeat = 0f;
+        private double lastReportedBeat = 0f;
+        private double currentBeat = 0f;
 
         private bool isDance = false;
 

@@ -56,6 +56,19 @@ namespace HeavenStudio.Games.Loaders
                     defaultLength = 1f,
                     priority = 4,
                 },
+                new GameAction("fade background", "Background Color")
+                {
+                    function = delegate {var e = eventCaller.currentEntity; Tambourine.instance.FadeBackgroundColor(e["colorA"], e["colorB"], e.length, e["instant"]); },
+                    defaultLength = 4f,
+                    resizable = true,
+                    parameters = new List<Param>()
+                    {
+                        new Param("colorA", Color.white, "Start Color", "The starting color of the fade."),
+                        new Param("colorB", Tambourine.defaultBGColor, "End Color", "The ending color of the fade."),
+                        new Param("instant", false, "Instant", "Instantly set the color of the background to the start color?")
+                    }
+                },
+                //backwards-compatibility
                 new GameAction("set background color", "Background Color")
                 {
                     function = delegate {var e = eventCaller.currentEntity; Tambourine.instance.ChangeBackgroundColor(e["colorA"], 0f); },
@@ -63,20 +76,14 @@ namespace HeavenStudio.Games.Loaders
                     parameters = new List<Param>()
                     {
                         new Param("colorA", Tambourine.defaultBGColor, "Background Color", "The background color to change to.")
-                    }
+                    },
+                    hidden = true
                 },
-                new GameAction("fade background", "Fade Background Color")
-                {
-                    function = delegate {var e = eventCaller.currentEntity; Tambourine.instance.FadeBackgroundColor(e["colorA"], e["colorB"], e.length); },
-                    defaultLength = 4f,
-                    resizable = true,
-                    parameters = new List<Param>()
-                    {
-                        new Param("colorA", Color.white, "Start Color", "The starting color of the fade."),
-                        new Param("colorB", Tambourine.defaultBGColor, "End Color", "The ending color of the fade.")
-                    }
-                }
-            });
+            },
+            new List<string>() {"rvl", "repeat"},
+            "rvldrum", "en",
+            new List<string>() {}
+            );
         }
     }
 }
@@ -107,7 +114,7 @@ namespace HeavenStudio.Games
 
         [Header("Variables")]
         bool intervalStarted;
-        float intervalStartBeat;
+        double intervalStartBeat;
         float beatInterval = 8f;
         float misses;
         bool frogPresent;
@@ -129,7 +136,7 @@ namespace HeavenStudio.Games
         struct QueuedTambourineInput
         {
             public bool hit;
-            public float beatAwayFromStart;
+            public double beatAwayFromStart;
         }
 
         public static Tambourine instance;
@@ -148,6 +155,10 @@ namespace HeavenStudio.Games
             if (!Conductor.instance.isPlaying || Conductor.instance.isPaused)
             {
                 if (queuedInputs.Count > 0) queuedInputs.Clear();
+            }
+            foreach (var evt in scheduledInputs)
+            {
+                evt.Disable();
             }
         }
 
@@ -175,7 +186,7 @@ namespace HeavenStudio.Games
             if (PlayerInput.Pressed() && !IsExpectingInputNow(InputType.STANDARD_DOWN))
             {
                 handsAnimator.Play("Shake", 0, 0);
-                Jukebox.PlayOneShotGame($"tambourine/player/shake/{UnityEngine.Random.Range(1, 6)}");
+                SoundByte.PlayOneShotGame($"tambourine/player/shake/{UnityEngine.Random.Range(1, 6)}");
                 sweatAnimator.Play("Sweating", 0, 0);
                 SummonFrog();
                 ScoreMiss();
@@ -187,7 +198,7 @@ namespace HeavenStudio.Games
             else if (PlayerInput.AltPressed() && !IsExpectingInputNow(InputType.STANDARD_ALT_DOWN))
             {
                 handsAnimator.Play("Smack", 0, 0);
-                Jukebox.PlayOneShotGame($"tambourine/player/hit/{UnityEngine.Random.Range(1, 6)}");
+                SoundByte.PlayOneShotGame($"tambourine/player/hit/{UnityEngine.Random.Range(1, 6)}");
                 sweatAnimator.Play("Sweating", 0, 0);
                 SummonFrog();
                 ScoreMiss();
@@ -198,7 +209,7 @@ namespace HeavenStudio.Games
             }
         }
 
-        public void StartInterval(float beat, float interval)
+        public void StartInterval(double beat, float interval)
         {
             intervalStartBeat = beat;
             beatInterval = interval;
@@ -212,7 +223,7 @@ namespace HeavenStudio.Games
             }
         }
 
-        public void MonkeyInput(float beat, bool hit)
+        public void MonkeyInput(double beat, bool hit)
         {
             if (!intervalStarted)
             {
@@ -221,12 +232,12 @@ namespace HeavenStudio.Games
             if (hit)
             {
                 monkeyAnimator.Play("MonkeySmack", 0, 0);
-                Jukebox.PlayOneShotGame($"tambourine/monkey/hit/{UnityEngine.Random.Range(1, 6)}");
+                SoundByte.PlayOneShotGame($"tambourine/monkey/hit/{UnityEngine.Random.Range(1, 6)}");
             }
             else
             {
                 monkeyAnimator.Play("MonkeyShake", 0, 0);
-                Jukebox.PlayOneShotGame($"tambourine/monkey/shake/{UnityEngine.Random.Range(1, 6)}");
+                SoundByte.PlayOneShotGame($"tambourine/monkey/shake/{UnityEngine.Random.Range(1, 6)}");
             }
             queuedInputs.Add(new QueuedTambourineInput()
             {
@@ -235,11 +246,11 @@ namespace HeavenStudio.Games
             });
         }
 
-        public void PassTurn(float beat, float length)
+        public void PassTurn(double beat, float length)
         {
             if (queuedInputs.Count == 0) return;
             monkeyAnimator.Play("MonkeyPassTurn", 0, 0);
-            Jukebox.PlayOneShotGame($"tambourine/monkey/turnPass/{UnityEngine.Random.Range(1, 6)}");
+            SoundByte.PlayOneShotGame($"tambourine/monkey/turnPass/{UnityEngine.Random.Range(1, 6)}");
             happyFace.SetActive(true);
             intervalStarted = false;
             BeatAction.New(instance.gameObject, new List<BeatAction.Action>()
@@ -264,7 +275,7 @@ namespace HeavenStudio.Games
             queuedInputs.Clear();
         }
 
-        public void Bop(float beat, float length, int whoBops, int whoBopsAuto)
+        public void Bop(double beat, float length, int whoBops, int whoBopsAuto)
         {
             monkeyGoBop = whoBopsAuto == (int)WhoBops.Monkey || whoBopsAuto == (int)WhoBops.Both;
             handsGoBop = whoBopsAuto == (int)WhoBops.Player || whoBopsAuto == (int)WhoBops.Both;
@@ -295,12 +306,12 @@ namespace HeavenStudio.Games
 
         }
 
-        public void SuccessFace(float beat)
+        public void SuccessFace(double beat)
         {
             DesummonFrog();
             if (misses > 0) return;
             flowerParticles.Play();
-            Jukebox.PlayOneShotGame($"tambourine/player/turnPass/sweep");
+            SoundByte.PlayOneShotGame($"tambourine/player/turnPass/sweep");
             MultiSound.Play(new MultiSound.Sound[]
             {
                 new MultiSound.Sound("tambourine/player/turnPass/note1", beat),
@@ -320,8 +331,8 @@ namespace HeavenStudio.Games
             if (state >= 1f || state <= -1f)
             {
                 handsAnimator.Play("Smack", 0, 0);
-                Jukebox.PlayOneShotGame($"tambourine/player/hit/{UnityEngine.Random.Range(1, 6)}");
-                Jukebox.PlayOneShotGame("tambourine/miss");
+                SoundByte.PlayOneShotGame($"tambourine/player/hit/{UnityEngine.Random.Range(1, 6)}");
+                SoundByte.PlayOneShotGame("tambourine/miss");
                 sweatAnimator.Play("Sweating", 0, 0);
                 misses++;
                 if (!intervalStarted)
@@ -338,8 +349,8 @@ namespace HeavenStudio.Games
             if (state >= 1f || state <= -1f)
             {
                 handsAnimator.Play("Shake", 0, 0);
-                Jukebox.PlayOneShotGame($"tambourine/player/shake/{UnityEngine.Random.Range(1, 6)}");
-                Jukebox.PlayOneShotGame("tambourine/miss");
+                SoundByte.PlayOneShotGame($"tambourine/player/shake/{UnityEngine.Random.Range(1, 6)}");
+                SoundByte.PlayOneShotGame("tambourine/miss");
                 sweatAnimator.Play("Sweating", 0, 0);
                 misses++;
                 if (!intervalStarted)
@@ -357,12 +368,12 @@ namespace HeavenStudio.Games
             if (hit)
             {
                 handsAnimator.Play("Smack", 0, 0);
-                Jukebox.PlayOneShotGame($"tambourine/player/hit/{UnityEngine.Random.Range(1, 6)}");
+                SoundByte.PlayOneShotGame($"tambourine/player/hit/{UnityEngine.Random.Range(1, 6)}");
             }
             else
             {
                 handsAnimator.Play("Shake", 0, 0);
-                Jukebox.PlayOneShotGame($"tambourine/player/shake/{UnityEngine.Random.Range(1, 6)}");
+                SoundByte.PlayOneShotGame($"tambourine/player/shake/{UnityEngine.Random.Range(1, 6)}");
             }
         }
 
@@ -394,16 +405,16 @@ namespace HeavenStudio.Games
             }
         }
 
-        public void FadeBackgroundColor(Color start, Color end, float beats)
+        public void FadeBackgroundColor(Color start, Color end, float beats, bool instant)
         {
             ChangeBackgroundColor(start, 0f);
-            ChangeBackgroundColor(end, beats);
+            if (!instant) ChangeBackgroundColor(end, beats);
         }
 
         public void SummonFrog()
         {
             if (frogPresent) return;
-            Jukebox.PlayOneShotGame("tambourine/frog");
+            SoundByte.PlayOneShotGame("tambourine/frog");
             frogAnimator.Play("FrogEnter", 0, 0);
             frogPresent = true;
         }

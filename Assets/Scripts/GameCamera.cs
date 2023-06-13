@@ -4,6 +4,8 @@ using UnityEngine;
 
 using HeavenStudio.Util;
 using System.Linq;
+using Jukebox;
+using Jukebox.Legacy;
 
 namespace HeavenStudio
 {
@@ -20,9 +22,9 @@ namespace HeavenStudio
             Z
         }
 
-        private List<DynamicBeatmap.DynamicEntity> positionEvents = new List<DynamicBeatmap.DynamicEntity>();
-        private List<DynamicBeatmap.DynamicEntity> rotationEvents = new List<DynamicBeatmap.DynamicEntity>();
-        private List<DynamicBeatmap.DynamicEntity> shakeEvents = new List<DynamicBeatmap.DynamicEntity>();
+        private List<RiqEntity> positionEvents = new();
+        private List<RiqEntity> rotationEvents = new();
+        private List<RiqEntity> shakeEvents = new();
 
         /**
             default cam position, for quick-resetting
@@ -30,6 +32,7 @@ namespace HeavenStudio
         public static Vector3 defaultPosition = new Vector3(0, 0, -10);
         public static Vector3 defaultRotEluer = new Vector3(0, 0, 0);
         public static Vector3 defaultShake = new Vector3(0, 0, 0);
+        public static float defaultFoV = 53.15f;
 
         /**
             camera's current transformation
@@ -53,6 +56,7 @@ namespace HeavenStudio
         public static Vector3 additionalPosition;
         public static Vector3 additionalRotEluer;
         public static Vector3 additionalScale;
+        public static float additionalFoV;
 
         [Header("Components")]
         public Color baseColor;
@@ -75,7 +79,7 @@ namespace HeavenStudio
             rotEluerLast = defaultRotEluer;
         }
 
-        public void OnBeatChanged(float beat)
+        public void OnBeatChanged(double beat)
         {
             ResetTransforms();
             ResetAdditionalTransforms();
@@ -107,10 +111,16 @@ namespace HeavenStudio
             UpdateCameraTranslate();
             UpdateCameraRotate();
             SetShakeIntensity();
+        }
 
+        private void LateUpdate()
+        {
             Camera cam = GetCamera();
-            cam.transform.localPosition = position + additionalPosition + shakeResult;
+            // rotate position by additional rotation
+            Vector3 userPos = Quaternion.Euler(additionalRotEluer) * position;
+            cam.transform.localPosition = userPos + additionalPosition + shakeResult;
             cam.transform.eulerAngles = rotEluer + additionalRotEluer;
+            cam.fieldOfView = additionalFoV;
         }
 
         private void UpdateCameraTranslate()
@@ -120,7 +130,7 @@ namespace HeavenStudio
                 float prog = Conductor.instance.GetPositionFromBeat(e.beat, e.length);
                 if (prog >= 0f)
                 {
-                    EasingFunction.Function func = EasingFunction.GetEasingFunction((EasingFunction.Ease) e["ease"]);
+                    Util.EasingFunction.Function func = Util.EasingFunction.GetEasingFunction((Util.EasingFunction.Ease) e["ease"]);
                     switch (e["axis"])
                     {
                         case (int) CameraAxis.X:
@@ -168,7 +178,7 @@ namespace HeavenStudio
                 float prog = Conductor.instance.GetPositionFromBeat(e.beat, e.length);
                 if (prog >= 0f)
                 {
-                    EasingFunction.Function func = EasingFunction.GetEasingFunction((EasingFunction.Ease) e["ease"]);
+                    Util.EasingFunction.Function func = Util.EasingFunction.GetEasingFunction((Util.EasingFunction.Ease) e["ease"]);
                     switch (e["axis"])
                     {
                         case (int) CameraAxis.X:
@@ -238,6 +248,7 @@ namespace HeavenStudio
         {
             additionalPosition = new Vector3(0, 0, 0);
             additionalRotEluer = new Vector3(0, 0, 0);
+            additionalFoV = defaultFoV;
         }
 
         public static Camera GetCamera()

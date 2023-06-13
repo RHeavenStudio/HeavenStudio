@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using DG.Tweening;
 using static HeavenStudio.Games.SpaceDance;
+using HeavenStudio.Common;
 
 namespace HeavenStudio.Games.Loaders
 {
@@ -65,23 +66,18 @@ namespace HeavenStudio.Games.Loaders
                         new Param("toggle", false, "Instant", "Should the background instantly change color?")
                     }
                 },
-                new GameAction("bop", "Single Bop")
+                new GameAction("bop", "Bop")
                 {
-                    function = delegate { SpaceDance.instance.Bop(); SpaceDance.instance.GrampsBop(eventCaller.currentEntity["gramps"]); },
+                    function = delegate { var e = eventCaller.currentEntity; SpaceDance.instance.EpicBop(e.beat, e.length, e["auto"], e["bop"], e["grampsAuto"], e["gramps"]); },
                     parameters = new List<Param>()
                     {
-                        new Param("gramps", false, "Gramps Bop", "Should Space Gramps bop with the dancers?")
-                    }
-                },
-                new GameAction("bopToggle", "Bop Toggle")
-                {
-                    function = delegate { SpaceDance.instance.shouldBop = eventCaller.currentEntity["toggle"]; SpaceDance.instance.spaceGrampsShouldBop = eventCaller.currentEntity["gramps"]; },
-                    defaultLength = 0.5f,
-                    parameters = new List<Param>()
-                    {
-                        new Param("toggle", true, "Should bop?", "Should the dancers bop?"),
-                        new Param("gramps", false, "Gramps Bop", "Should Space Gramps bop with the dancers?")
-                    }
+                        new Param("bop", true, "Dancers Bop", "Should the dancers bop?"),
+                        new Param("auto", false, "Dancers Bop (Auto)", "Should the dancers auto bop?"),
+                        new Param("gramps", false, "Gramps Bop", "Should Space Gramps bop with the dancers?"),
+                        new Param("grampsAuto", false, "Gramps Bop (Auto)", "Should Space Gramps auto bop with the dancers?")
+                    },
+                    resizable = true,
+                    defaultLength = 4f
                 },
                 new GameAction("grampsAnims", "Space Gramps Animations")
                 {
@@ -92,8 +88,21 @@ namespace HeavenStudio.Games.Loaders
                         new Param("toggle", true, "Looping", "Should the animation loop?"),
                         new Param("type", SpaceDance.GrampsAnimationType.Talk, "Which animation?", "Which animation should space gramps do?")
                     }
-                }
-            });
+                },
+                new GameAction("scroll", "Scrolling Background")
+                {
+                    function = delegate { var e = eventCaller.currentEntity; SpaceDance.instance.UpdateScrollSpeed(e["x"], e["y"]); },
+                    defaultLength = 1f,
+                    parameters = new List<Param>() {
+                        new Param("x", new EntityTypes.Float(-5f, 5f, 0), "Horizontal", "How fast does the background move horizontally?"),
+                        new Param("y", new EntityTypes.Float(-5f, 5f, 0), "Vertical", "How fast does the background move vertically?"),
+                    }
+                },
+            },
+            new List<string>() {"agb", "normal"},
+            "agbspacedance", "jp",
+            new List<string>() {"jp"}
+            );
         }
     }
 }
@@ -108,7 +117,7 @@ namespace HeavenStudio.Games
         {
             get
             {
-                ColorUtility.TryParseHtmlString("#0014D6", out _defaultBGColor);
+                ColorUtility.TryParseHtmlString("#0029D6", out _defaultBGColor);
                 return _defaultBGColor;
             }
         }
@@ -134,16 +143,23 @@ namespace HeavenStudio.Games
         public Animator Gramps;
         public Animator Hit;
         public GameObject Player;
-        public bool shouldBop = false;
+        [NonSerialized] public bool shouldBop = true;
         bool canBop = true;
         bool grampsCanBop = true;
         public bool spaceGrampsShouldBop = false;
         float shootingStarLength;
-        float shootingStarStartBeat;
+        double shootingStarStartBeat;
         EasingFunction.Ease lastEase;
         bool isShootingStar;
         bool grampsLoopingAnim;
         bool grampsSniffing;
+
+        [SerializeField] CanvasScroll scroll;
+        float scrollBeat;
+        float scrollOffsetX;
+        float scrollOffsetY;
+        float currentScrollLengthX;
+        float currentScrollLengthY;
 
         public GameEvent bop = new GameEvent();
 
@@ -161,13 +177,17 @@ namespace HeavenStudio.Games
             var cond = Conductor.instance;
             if (cond.isPlaying && !cond.isPaused)
             {
+                float normalizedX = (Time.realtimeSinceStartup - scrollBeat) * currentScrollLengthX;
+                float normalizedY = (Time.realtimeSinceStartup - scrollBeat) * currentScrollLengthY;
+                scroll.NormalizedX = -scrollOffsetX - normalizedX;
+                scroll.NormalizedY = -scrollOffsetY - normalizedY;
                 if (cond.ReportBeat(ref bop.lastReportedBeat, bop.startBeat % 1))
                 {
-                    if (shouldBop && canBop)
+                    if (shouldBop)
                     {
                         Bop();
                     }
-                    if (spaceGrampsShouldBop && grampsCanBop)
+                    if (spaceGrampsShouldBop)
                     {
                         GrampsBop();
                     }
@@ -193,25 +213,37 @@ namespace HeavenStudio.Games
                 {
                     if (PlayerInput.Pressed() && !IsExpectingInputNow(InputType.STANDARD_DOWN))
                     {
-                        Jukebox.PlayOneShotGame("spaceDance/inputBad");
+                        SoundByte.PlayOneShotGame("spaceDance/inputBad");
                         DancerP.DoScaledAnimationAsync("PunchDo", 0.5f);
+                        Gramps.Play("GrampsOhFuck", 0, 0);
                         // Look at this later, sound effect has some weird clipping on it sometimes?? popping. like. fucking popopop idk why its doing that its fine theres no sample weirdness ughh
                     }
                     if (PlayerInput.GetSpecificDirectionDown(1) && !IsExpectingInputNow(InputType.DIRECTION_RIGHT_DOWN))
                     {
                         DancerP.DoScaledAnimationAsync("TurnRightDo", 0.5f);
-                        Jukebox.PlayOneShotGame("spaceDance/inputBad");
+                        SoundByte.PlayOneShotGame("spaceDance/inputBad");
+                        Gramps.Play("GrampsOhFuck", 0, 0);
                     }
                     if (PlayerInput.GetSpecificDirectionDown(2) && !IsExpectingInputNow(InputType.DIRECTION_DOWN_DOWN))
                     {
                         DancerP.DoScaledAnimationAsync("SitDownDo", 0.5f);
-                        Jukebox.PlayOneShotGame("spaceDance/inputBad");
+                        SoundByte.PlayOneShotGame("spaceDance/inputBad");
+                        Gramps.Play("GrampsOhFuck", 0, 0);
                     }
                 }
             }
         }
 
-        public void GrampsAnimations(float beat, int type, bool looping)
+        public void UpdateScrollSpeed(float scrollSpeedX, float scrollSpeedY)
+        {
+            scrollOffsetX = (Time.realtimeSinceStartup - scrollBeat) * currentScrollLengthX;
+            scrollOffsetY = (Time.realtimeSinceStartup - scrollBeat) * currentScrollLengthY;
+            currentScrollLengthX = scrollSpeedX;
+            currentScrollLengthY = scrollSpeedY;
+            scrollBeat = Time.realtimeSinceStartup;
+        }
+
+        public void GrampsAnimations(double beat, int type, bool looping)
         {
             switch (type)
             {
@@ -251,7 +283,7 @@ namespace HeavenStudio.Games
             }
         }
 
-        void GrampsSniffLoop(float beat)
+        void GrampsSniffLoop(double beat)
         {
             if (!grampsLoopingAnim || !grampsSniffing) return;
             spaceGrampsShouldBop = false;
@@ -285,7 +317,7 @@ namespace HeavenStudio.Games
             });
         }
 
-        void GrampsTalkLoop(float beat)
+        void GrampsTalkLoop(double beat)
         {
             if (!grampsLoopingAnim || grampsSniffing) return;
             spaceGrampsShouldBop = false;
@@ -333,15 +365,15 @@ namespace HeavenStudio.Games
             });
         }
 
-        public void UpdateShootingStar(float beat, float length, int ease)
+        public void UpdateShootingStar(double beat, float length, EasingFunction.Ease ease)
         {
-            lastEase = (EasingFunction.Ease)ease;
+            lastEase = ease;
             shootingStarLength = length;
             shootingStarStartBeat = beat;
             isShootingStar = true;
         }
 
-        public void DoTurnRight(float beat, int whoSpeaks, bool grampsTurns)
+        public void DoTurnRight(double beat, int whoSpeaks, bool grampsTurns)
         {
             canBop = false;
             if (grampsTurns) grampsCanBop = false;
@@ -398,12 +430,12 @@ namespace HeavenStudio.Games
                     Dancer3.DoScaledAnimationAsync("TurnRightDo", 0.5f);
                     if (grampsTurns) Gramps.DoScaledAnimationAsync("GrampsTurnRightDo", 0.5f);
                 }),
-                new BeatAction.Action(beat + 1.99f,     delegate { canBop = true; grampsCanBop = true; }),
+                new BeatAction.Action(beat + 1.5f,     delegate { canBop = true; grampsCanBop = true; }),
             });
 
         }
 
-        public void DoSitDown(float beat, int whoSpeaks, bool grampsSits)
+        public void DoSitDown(double beat, int whoSpeaks, bool grampsSits)
         {
             canBop = false;
             if (grampsSits) grampsCanBop = false;
@@ -463,12 +495,12 @@ namespace HeavenStudio.Games
                     Dancer3.DoScaledAnimationAsync("SitDownDo", 0.5f);
                     if (grampsSits) Gramps.DoScaledAnimationAsync("GrampsSitDownDo", 0.5f);
                 }),
-                new BeatAction.Action(beat + 1.99f,     delegate { canBop = true; grampsCanBop = true; }),
+                new BeatAction.Action(beat + 1.5f,     delegate { canBop = true; grampsCanBop = true; }),
             });
 
         }
 
-        public void DoPunch(float beat, int whoSpeaks, bool grampsPunches)
+        public void DoPunch(double beat, int whoSpeaks, bool grampsPunches)
         {
             canBop = false;
             if (grampsPunches) grampsCanBop = false;
@@ -554,22 +586,41 @@ namespace HeavenStudio.Games
 
         }
 
+        public void EpicBop(double beat, float length, bool autoDancers, bool dancers, bool autoGramps, bool gramps)
+        {
+            shouldBop = autoDancers;
+            spaceGrampsShouldBop = autoGramps;
+            if (dancers || gramps)
+            {
+                List<BeatAction.Action> bops = new List<BeatAction.Action>();
+                for (int i = 0; i < length; i++)
+                {
+                    if (dancers)
+                    {
+                        bops.Add(new BeatAction.Action(beat + i, delegate { Bop(); }));
+                    }
+                    if (gramps)
+                    {
+                        bops.Add(new BeatAction.Action(beat + i, delegate { GrampsBop(); }));
+                    }
+                }
+                BeatAction.New(instance.gameObject, bops);
+            }
+        }
+
         public void Bop()
         {
-            canBop = true;
+            if (!canBop) return;
             DancerP.DoScaledAnimationAsync("Bop", 0.5f);
             Dancer1.DoScaledAnimationAsync("Bop", 0.5f);
             Dancer2.DoScaledAnimationAsync("Bop", 0.5f);
             Dancer3.DoScaledAnimationAsync("Bop", 0.5f);
         }
 
-        public void GrampsBop(bool forceBop = false)
+        public void GrampsBop()
         {
-            if (spaceGrampsShouldBop || forceBop) 
-            {
-                grampsCanBop = true;
-                Gramps.DoScaledAnimationAsync("GrampsBop", 0.5f);
-            } 
+            if (!grampsCanBop) return;
+            Gramps.DoScaledAnimationAsync("GrampsBop", 0.5f);
         }
 
         public void ChangeBackgroundColor(Color color, float beats)
@@ -599,7 +650,7 @@ namespace HeavenStudio.Games
         {
             if (state >= 1f || state <= -1f)
             {
-                Jukebox.PlayOneShotGame("spaceDance/inputBad");
+                SoundByte.PlayOneShotGame("spaceDance/inputBad");
                 DancerP.DoScaledAnimationAsync("TurnRightDo", 0.5f);
                 Gramps.DoScaledAnimationAsync("GrampsOhFuck", 0.5f);
                 return;
@@ -609,23 +660,23 @@ namespace HeavenStudio.Games
 
         public void RightSuccess()
             {
-            Jukebox.PlayOneShotGame("spaceDance/inputGood");
+            SoundByte.PlayOneShotGame("spaceDance/inputGood");
             DancerP.DoScaledAnimationAsync("TurnRightDo", 0.5f);
              }
 
         public void RightMiss(PlayerActionEvent caller)
         {
-            Jukebox.PlayOneShotGame("spaceDance/inputBad2");
+            SoundByte.PlayOneShotGame("spaceDance/inputBad2");
             DancerP.DoScaledAnimationAsync("Ouch", 0.5f);
             Hit.Play("HitTurn", -1, 0);
-            Gramps.DoScaledAnimationAsync("GrampsOhFuck", 0.5f);
+            Gramps.DoScaledAnimationAsync("GrampsMiss", 0.5f);
         }
 
         public void JustSit(PlayerActionEvent caller, float state)
         {
             if (state >= 1f || state <= -1f)
             {
-                Jukebox.PlayOneShotGame("spaceDance/inputBad");
+                SoundByte.PlayOneShotGame("spaceDance/inputBad");
                 DancerP.DoScaledAnimationAsync("SitDownDo", 0.5f);
                 Gramps.DoScaledAnimationAsync("GrampsOhFuck", 0.5f);
                 return;
@@ -635,23 +686,23 @@ namespace HeavenStudio.Games
 
         public void SitSuccess()
         {
-            Jukebox.PlayOneShotGame("spaceDance/inputGood");
+            SoundByte.PlayOneShotGame("spaceDance/inputGood");
             DancerP.DoScaledAnimationAsync("SitDownDo", 0.5f);
         }
 
         public void SitMiss(PlayerActionEvent caller)
         {
-            Jukebox.PlayOneShotGame("spaceDance/inputBad2");
+            SoundByte.PlayOneShotGame("spaceDance/inputBad2");
             DancerP.DoScaledAnimationAsync("Ouch", 0.5f);
             Hit.Play("HitSit", -1, 0);
-            Gramps.DoScaledAnimationAsync("GrampsOhFuck", 0.5f);
+            Gramps.DoScaledAnimationAsync("GrampsMiss", 0.5f);
         }
 
         public void JustPunch(PlayerActionEvent caller, float state)
         {
             if (state >= 1f || state <= -1f)
             {
-                Jukebox.PlayOneShotGame("spaceDance/inputBad");
+                SoundByte.PlayOneShotGame("spaceDance/inputBad");
                 DancerP.DoScaledAnimationAsync("PunchDo", 0.5f);
                 Gramps.DoScaledAnimationAsync("GrampsOhFuck", 0.5f);
                 return;
@@ -661,16 +712,16 @@ namespace HeavenStudio.Games
 
         public void PunchSuccess()
             {
-            Jukebox.PlayOneShotGame("spaceDance/inputGood");
+            SoundByte.PlayOneShotGame("spaceDance/inputGood");
             DancerP.DoScaledAnimationAsync("PunchDo", 0.5f);
              }
 
         public void PunchMiss(PlayerActionEvent caller)
         {
-            Jukebox.PlayOneShotGame("spaceDance/inputBad2");
+            SoundByte.PlayOneShotGame("spaceDance/inputBad2");
             DancerP.DoScaledAnimationAsync("Ouch", 0.5f);
             Hit.Play("HitPunch", -1, 0);
-            Gramps.DoScaledAnimationAsync("GrampsOhFuck", 0.5f);
+            Gramps.DoScaledAnimationAsync("GrampsMiss", 0.5f);
         }
 
         public void Empty(PlayerActionEvent caller) { }

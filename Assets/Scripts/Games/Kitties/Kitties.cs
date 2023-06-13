@@ -70,7 +70,11 @@ namespace HeavenStudio.Games.Loaders
                         new Param("color", Kitties.defaultBGColor, "Change BG Color", "Changes background color"),
                     }
                 }
-            });
+            },
+            new List<string>() {"ctr", "normal"},
+            "ctrteppan", "en",
+            new List<string>() {}
+            );
         }
     }
 }
@@ -123,7 +127,7 @@ namespace HeavenStudio.Games
 
         }
 
-        public void Clap(bool isMice, bool isInverse, bool keepSpawned, float beat, int type)
+        public void Clap(bool isMice, bool isInverse, bool keepSpawned, double beat, int type)
         {
             player.ScheduleClap(beat, type);
             MultiSound.Play(new MultiSound.Sound[] {
@@ -211,7 +215,7 @@ namespace HeavenStudio.Games
             }
         }
 
-        public void Roll(bool keepSpawned, float beat)
+        public void Roll(bool keepSpawned, double beat)
         {
             if (!player.canClap)
                 return;
@@ -261,7 +265,7 @@ namespace HeavenStudio.Games
             }
         }
 
-        public void CatchFish(float beat)
+        public void CatchFish(double beat)
         {
             //if (!player.canClap)
             //    return;
@@ -434,7 +438,7 @@ namespace HeavenStudio.Games
                 player.canClap = false;
         }
 
-        public void InstantSpawn(bool isMice, bool isInverse, float beat, int pos)
+        public void InstantSpawn(bool isMice, bool isInverse, double beat, int pos)
         {
             BeatAction.New(Cats[0], new List<BeatAction.Action>()
                 {

@@ -6,10 +6,10 @@ using HeavenStudio.Util;
 
 namespace HeavenStudio.Games.Scripts_ClappyTrio
 {
-    public class ClappyTrioPlayer : PlayerActionObject
+    public class ClappyTrioPlayer : MonoBehaviour
     {
         ClappyTrio game;
-        private float lastClapBeat;
+        private double lastClapBeat;
         private float lastClapLength;
 
         public bool clapStarted = false;
@@ -32,7 +32,7 @@ namespace HeavenStudio.Games.Scripts_ClappyTrio
             }
         }
 
-        public void QueueClap(float startBeat, float length)
+        public void QueueClap(double startBeat, float length)
         {
             lastClapBeat = startBeat;
             lastClapLength = length;
@@ -54,7 +54,8 @@ namespace HeavenStudio.Games.Scripts_ClappyTrio
         }
 
         private void Miss(PlayerActionEvent caller) {
-            game.playerHitLast = false;
+            game.misses++;
+            game.emoCounter = 2;
 
             if (clapStarted)
                 this.canHit = false;
@@ -64,19 +65,17 @@ namespace HeavenStudio.Games.Scripts_ClappyTrio
 
         private void Clap(bool just)
         {
+            game.emoCounter = 2;
             if (just)
             {
                 clapEffect.SetActive(true);
-                Jukebox.PlayOneShotGame("clappyTrio/rightClap");
-
-                if (this.canHit)
-                    game.playerHitLast = true;
+                SoundByte.PlayOneShotGame("clappyTrio/rightClap");
             }
             else
             {
                 clapEffect.SetActive(false);
-                Jukebox.PlayOneShot("miss");
-                game.playerHitLast = false;
+                SoundByte.PlayOneShot("miss");
+                game.misses++;
 
                 if (clapStarted)
                     this.canHit = false;

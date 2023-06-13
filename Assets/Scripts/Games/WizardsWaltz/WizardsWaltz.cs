@@ -18,7 +18,7 @@ namespace HeavenStudio.Games.Loaders
                 new GameAction("start interval", "Start Interval")
                 {
                     function = delegate { WizardsWaltz.instance.SetIntervalStart(eventCaller.currentEntity.beat, eventCaller.currentEntity.length); }, 
-                    defaultLength = 4f, 
+                    defaultLength = 6f, 
                     resizable = true,
                     priority = 1
                 },
@@ -27,7 +27,11 @@ namespace HeavenStudio.Games.Loaders
                     function = delegate { WizardsWaltz.instance.SpawnFlower(eventCaller.currentEntity.beat); }, 
                     defaultLength = 0.5f,
                 },
-            });
+            },
+            new List<string>() {"agb", "repeat"},
+            "agbwizard", "en",
+            new List<string>() {}
+            );
         }
     }
 }
@@ -47,10 +51,10 @@ namespace HeavenStudio.Games
         public GameObject fxBase;
 
         private int timer = 0;
-        public float beatInterval = 4f;
-        float intervalStartBeat;
+        public float beatInterval = 6f;
+        double intervalStartBeat;
         bool intervalStarted;
-        public float wizardBeatOffset = 0f;
+        public double wizardBeatOffset = 0f;
 
         [NonSerialized] public int plantsLeft = 0; //this variable is unused
 
@@ -61,7 +65,7 @@ namespace HeavenStudio.Games
             instance = this;
             wizard.Init();
 
-            var nextStart = GameManager.instance.Beatmap.entities.Find(c => c.datamodel == "wizardsWaltz/start interval" && c.beat + c.length >= Conductor.instance.songPositionInBeats);
+            var nextStart = GameManager.instance.Beatmap.Entities.Find(c => c.datamodel == "wizardsWaltz/start interval" && c.beat + c.length >= Conductor.instance.songPositionInBeatsAsDouble);
 
             if (nextStart != null)
             {
@@ -81,7 +85,7 @@ namespace HeavenStudio.Games
         {
             if (timer % 8 == 0 || UnityEngine.Random.Range(0,8) == 0)
             {
-                var songPos = Conductor.instance.songPositionInBeats - wizardBeatOffset;
+                var songPos = (float)(Conductor.instance.songPositionInBeatsAsDouble - wizardBeatOffset);
                 var am = beatInterval / 2f;
                 var x = Mathf.Sin(Mathf.PI * songPos / am) * 6 + UnityEngine.Random.Range(-0.5f, 0.5f);
                 var y = Mathf.Cos(Mathf.PI * songPos / am) * 0.5f + UnityEngine.Random.Range(-0.5f, 0.5f);
@@ -97,7 +101,7 @@ namespace HeavenStudio.Games
             timer++;
         }
 
-        public void SetIntervalStart(float beat, float interval = 4f)
+        public void SetIntervalStart(double beat, float interval = 4f)
         {
             // Don't do these things if the interval was already started.
             if (!intervalStarted)
@@ -111,16 +115,16 @@ namespace HeavenStudio.Games
             beatInterval = interval;
         }
 
-        public void SpawnFlower(float beat)
+        public void SpawnFlower(double beat)
         {
             // If interval hasn't started, assume this is the first hair of the interval.
             if (!intervalStarted)
                 SetIntervalStart(beat, beatInterval);
 
-            Jukebox.PlayOneShotGame("wizardsWaltz/plant", beat);
+            SoundByte.PlayOneShotGame("wizardsWaltz/plant", beat);
             Plant plant = Instantiate(plantBase, plantHolder.transform).GetComponent<Plant>();
 
-            var songPos = Conductor.instance.songPositionInBeats - wizardBeatOffset;
+            var songPos = (float)(Conductor.instance.songPositionInBeatsAsDouble - wizardBeatOffset);
             var am = (beatInterval / 2f);
             var x = Mathf.Sin(Mathf.PI * songPos / am) * 6;
             var y = -3f + Mathf.Cos(Mathf.PI * songPos / am) * 1.5f;
