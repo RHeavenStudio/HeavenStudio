@@ -6510,6 +6510,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 824038721985106241}
+  - component: {fileID: 8064148387307941128}
   m_Layer: 0
   m_Name: Crowd
   m_TagString: Untagged
@@ -6538,6 +6539,27 @@ Transform:
   m_Father: {fileID: 1016084219209268057}
   m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!95 &8064148387307941128
+Animator:
+  serializedVersion: 5
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8491555674750016180}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: 190f9e38c3ab81e4b84330fe8eae9e34, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorStateOnDisable: 0
+  m_WriteDefaultValuesOnDisable: 0
 --- !u!1 &8873470111622911925
 GameObject:
   m_ObjectHideFlags: 0
