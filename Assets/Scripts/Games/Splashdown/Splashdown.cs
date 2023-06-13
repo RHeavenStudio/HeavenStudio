@@ -77,7 +77,7 @@ namespace HeavenStudio.Games
                 currentSynchrettes.Clear();
             }
             if (player != null) Destroy(player.gameObject);
-            float startPos = -Mathf.Floor(amount / 2) * synchretteDistance;
+            float startPos = -((amount / 2) * synchretteDistance) + ((amount % 2 == 0) ? synchretteDistance / 2 : 0);
 
             for (int i = 0; i < amount; i++)
             {

@@ -21,6 +21,7 @@ namespace HeavenStudio.Games.Scripts_Splashdown
                     smallSplashParticles.PlayScaledAsync(0.5f);
                     break;
                 case "BigSplash":
+                case "Appearsplash":
                     bigSplashParticles.PlayScaledAsync(0.5f);
                     break;
                 default:

@@ -44,8 +44,8 @@ namespace HeavenStudio.Games.Scripts_Splashdown
         public void Appear(bool miss = false)
         {
             SetState(MovementState.None);
-            if (!miss) anim.DoScaledAnimationAsync("Appear" + game.currentAppearType, 0.5f);
-            else anim.DoScaledAnimationAsync("MissAppear", 0.5f);
+            if (!miss) anim.DoScaledAnimationAsync("Appear" + game.currentAppearType, 0.4f);
+            else anim.DoScaledAnimationAsync("MissAppear", 0.4f);
             Instantiate(splashPrefab, transform).Init("Appearsplash");
         }
 
