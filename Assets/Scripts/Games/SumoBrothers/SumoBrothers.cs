@@ -95,16 +95,16 @@ namespace HeavenStudio.Games
 
         public enum PoseType
         {
-            Crouching = 0,
-            Crossed = 1,
-            Pointing = 2,
-            Finale = 3
+            Crouching,
+            Crossed,
+            Pointing,
+            Finale
         }
 
         public enum BGType
         {
-            TheGreatWave = 0,
-            OtaniOniji = 1
+            TheGreatWave,
+            OtaniOniji
         }
 
         // Start is called before the first frame update
@@ -253,7 +253,7 @@ namespace HeavenStudio.Games
 
             #endregion
 
-            SumoBrothers.instance.EndPoseCheck(beat);
+            ScheduleInput(beat, 4f, InputType.STANDARD_ALT_DOWN, PoseHit, PoseMiss, Nothing);
 
             var tweet = Jukebox.PlayOneShotGame("sumoBrothers/posesignal", -1, 1f, 1f, true);
             tweet.SetLoopParams(beat + 3, 0.05f);
@@ -268,29 +268,21 @@ namespace HeavenStudio.Games
 
         }
 
-        public void EndPoseCheck(float beat)
+        void PoseHit(PlayerActionEvent caller, float state)
         {
-
-            
-           //ScheduleInput(beat, 5f, InputType.STANDARD_ALT_DOWN, SuccessEndPose, MissEndPose, Nothing);
-
-        }
-
-        public void SuccessEndPose(PlayerActionEvent caller)
-        {
-
+            Jukebox.PlayOneShotGame("sumoBrothers/pose");
 
 
         }
 
-        public void MissEndPose(PlayerActionEvent caller)
+        void PoseMiss(PlayerActionEvent caller)
         {
 
 
 
         }
 
-        public void Nothing(PlayerActionEvent caller) { }
+        void Nothing(PlayerActionEvent caller) { }
 
     }
 }
