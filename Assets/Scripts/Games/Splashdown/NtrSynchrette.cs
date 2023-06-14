@@ -19,6 +19,9 @@ namespace HeavenStudio.Games.Scripts_Splashdown
 
         private bool missedJump;
 
+        [SerializeField] private float jumpHeight = 5f;
+        [SerializeField] private float jumpStart = -3f;
+
         private enum MovementState
         {
             None,
@@ -51,13 +54,13 @@ namespace HeavenStudio.Games.Scripts_Splashdown
                     if (normalizedUpBeat <= 1f)
                     {
                         EasingFunction.Function func = EasingFunction.GetEasingFunction(EasingFunction.Ease.EaseOutCubic);
-                        float newPosYUp = func(-3, 5f, normalizedUpBeat);
+                        float newPosYUp = func(jumpStart, jumpHeight, normalizedUpBeat);
                         synchretteTransform.localPosition = new Vector3(0f, newPosYUp, 0f);
                     }
                     else
                     {
                         EasingFunction.Function func = EasingFunction.GetEasingFunction(EasingFunction.Ease.EaseInCubic);
-                        float newPosYDown = func(5f, -3, normalizedDownBeat);
+                        float newPosYDown = func(jumpHeight, jumpStart, normalizedDownBeat);
                         synchretteTransform.localPosition = new Vector3(0f, newPosYDown, 0f);
                     }
                     if (missedJump) return;
