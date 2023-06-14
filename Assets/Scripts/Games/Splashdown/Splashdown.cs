@@ -39,6 +39,11 @@ namespace HeavenStudio.Games.Loaders
                     function = delegate { var e = eventCaller.currentEntity; Splashdown.instance.TogetherJump(e.beat); },
                     defaultLength = 4f
                 },
+                new GameAction("togetherR9", "Together Jump (Remix 9)")
+                {
+                    function = delegate { var e = eventCaller.currentEntity; Splashdown.instance.TogetherJumpRemix9(e.beat); },
+                    defaultLength = 3f
+                },
                 new GameAction("amount", "Synchrette Amount")
                 {
                     function = delegate { Splashdown.instance.SpawnSynchrettes(eventCaller.currentEntity["amount"]); },
@@ -202,6 +207,28 @@ namespace HeavenStudio.Games
                 new MultiSound.Sound("splashdown/splashOthers", beat + 3.75),
             });
             ScheduleInput(beat, 2, InputType.STANDARD_UP, JustJump, Out, Out);
+        }
+
+        public void TogetherJumpRemix9(double beat)
+        {
+            SoundByte.PlayOneShotGame("splashdown/togetherRemix9", beat, Conductor.instance.songBpm / 120);
+            BeatAction.New(instance.gameObject, new List<BeatAction.Action>()
+            {
+                new BeatAction.Action(beat + 1, delegate
+                {
+                    foreach (var synchrette in currentSynchrettes)
+                    {
+                        synchrette.Jump(beat + 1);
+                    }
+                })
+            });
+            MultiSound.Play(new MultiSound.Sound[]
+            {
+                new MultiSound.Sound("splashdown/jumpOthers", beat + 1),
+                new MultiSound.Sound("splashdown/rollOthers", beat + 2),
+                new MultiSound.Sound("splashdown/splashOthers", beat + 2.75),
+            });
+            ScheduleInput(beat, 1, InputType.STANDARD_UP, JustJump, Out, Out);
         }
 
         private void JustDown(PlayerActionEvent caller, float state)
