@@ -66,6 +66,29 @@ namespace HeavenStudio.Games
             SpawnSynchrettes(3);
         }
 
+        private void Update()
+        {
+            var cond = Conductor.instance;
+
+            if (cond.isPlaying && !cond.isPaused)
+            {
+                if (PlayerInput.Pressed() && !IsExpectingInputNow(InputType.STANDARD_DOWN))
+                {
+                    SoundByte.PlayOneShot("miss");
+                    SoundByte.PlayOneShotGame("splashdown/downPlayer");
+                    player.GoDown();
+                    ScoreMiss();
+                }
+                if (PlayerInput.PressedUp() && !IsExpectingInputNow(InputType.STANDARD_UP))
+                {
+                    SoundByte.PlayOneShot("miss");
+                    player.Appear(true);
+                    SoundByte.PlayOneShotGame("splashdown/upPlayer");
+                    ScoreMiss();
+                }
+            }
+        }
+
         public void SpawnSynchrettes(int amount)
         {
             if (currentSynchrettes.Count > 0)
