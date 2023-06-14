@@ -202,13 +202,14 @@ namespace HeavenStudio.Games
         private void JustJump(PlayerActionEvent caller, float state)
         {
             double diveBeat = caller.timer + caller.startBeat;
+            SoundByte.PlayOneShotGame("splashdown/jumpPlayer");
+            SoundByte.PlayOneShotGame("splashdown/splashPlayer", diveBeat + 1.75);
             if (state >= 1f || state <= -1f)
             {
+                player.Jump(diveBeat, true);
                 return;
             }
-            SoundByte.PlayOneShotGame("splashdown/jumpPlayer");
             SoundByte.PlayOneShotGame("splashdown/rollPlayer", diveBeat + 1);
-            SoundByte.PlayOneShotGame("splashdown/splashPlayer", diveBeat + 1.75);
             player.Jump(diveBeat);
         }
 

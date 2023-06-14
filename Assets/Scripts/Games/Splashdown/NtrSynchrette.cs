@@ -17,6 +17,8 @@ namespace HeavenStudio.Games.Scripts_Splashdown
 
         private double startBeat;
 
+        private bool missedJump;
+
         private enum MovementState
         {
             None,
@@ -58,6 +60,7 @@ namespace HeavenStudio.Games.Scripts_Splashdown
                         float newPosYDown = func(4.5f, -3, normalizedDownBeat);
                         synchretteTransform.localPosition = new Vector3(0f, newPosYDown, 0f);
                     }
+                    if (missedJump) return;
                     float normalizedRotBeat = cond.GetPositionFromBeat(startBeat + 1, 0.25);
                     float newAngle = Mathf.Lerp(0, 360, normalizedRotBeat);
                     synchretteTransform.localEulerAngles = new Vector3(0, 0, newAngle);
@@ -88,11 +91,12 @@ namespace HeavenStudio.Games.Scripts_Splashdown
             Instantiate(splashPrefab, splashHolder).Init("GodownSplash");
         }
 
-        public void Jump(double beat)
+        public void Jump(double beat, bool missed = false)
         {
+            missedJump = missed;
             SetState(MovementState.Jumping, beat);
             Instantiate(splashPrefab, splashHolder).Init("Appearsplash");
-            anim.Play("Dolphin", 0, 0);
+            anim.DoScaledAnimationAsync(missed ? "DolphinMiss" : "Dolphin", 0.5f);
             BeatAction.New(gameObject, new List<BeatAction.Action>()
             {
                 new BeatAction.Action(beat + 1.75, delegate { Instantiate(splashPrefab, splashHolder).Init("BigSplash"); }),
@@ -108,6 +112,7 @@ namespace HeavenStudio.Games.Scripts_Splashdown
         {
             currentMovementState = state;
             startBeat = beat;
+            synchretteTransform.localEulerAngles = Vector3.zero;
         }
     }
 }
