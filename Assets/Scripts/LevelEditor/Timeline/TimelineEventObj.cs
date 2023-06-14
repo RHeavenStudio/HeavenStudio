@@ -197,37 +197,17 @@ namespace HeavenStudio.Editor.Track
 
                     lastPos = transform.localPosition;
                 }
-            }
-            else if (resizingLeft)
-            {
-                if (moving)
-                    moving = false;
-
-                SetPivot(new Vector2(1, rectTransform.pivot.y));
-                Vector2 sizeDelta = rectTransform.sizeDelta;
-
-                Vector2 mousePos;
-                RectTransformUtility.ScreenPointToLocalPointInRectangle(rectTransform, Input.mousePosition, Editor.instance.EditorCamera, out mousePos);
-
-                sizeDelta = new Vector2(-mousePos.x + 0.15f, sizeDelta.y);
-                sizeDelta = new Vector2(Mathf.Clamp(sizeDelta.x, Timeline.SnapInterval(), rectTransform.localPosition.x), sizeDelta.y);
-
-                rectTransform.sizeDelta = new Vector2(Mathp.Round2Nearest(sizeDelta.x, Timeline.SnapInterval()), sizeDelta.y);
-                SetPivot(new Vector2(0, rectTransform.pivot.y));
-                OnComplete(false);
-            }
-            else if (resizingRight)
-            {
-                if (moving)
-                    moving = false;
+            } else {
+                if (moving) moving = false;
+                if (resizingLeft) SetPivot(new Vector2(1, rectTransform.pivot.y));
 
                 Vector2 sizeDelta = rectTransform.sizeDelta;
-
                 Vector2 mousePos;
+
                 RectTransformUtility.ScreenPointToLocalPointInRectangle(rectTransform, Input.mousePosition, Editor.instance.EditorCamera, out mousePos);
 
-                sizeDelta = new Vector2(mousePos.x + 0.15f, sizeDelta.y);
-                sizeDelta = new Vector2(Mathf.Clamp(sizeDelta.x, Timeline.SnapInterval(), Mathf.Infinity), sizeDelta.y);
+                sizeDelta = new Vector2((resizingLeft ? -mousePos.x : mousePos.x) + 0.15f, sizeDelta.y);
+                sizeDelta = new Vector2(Mathf.Clamp(sizeDelta.x, Timeline.SnapInterval(), (resizingLeft ? rectTransform.localPosition.x : Mathf.Infinity)), sizeDelta.y);
 
                 rectTransform.sizeDelta = new Vector2(Mathp.Round2Nearest(sizeDelta.x, Timeline.SnapInterval()), sizeDelta.y);
                 SetPivot(new Vector2(0, rectTransform.pivot.y));
@@ -243,7 +223,7 @@ namespace HeavenStudio.Editor.Track
             if (resizing && selected || inResizeRegion && selected)
             {
                 if (resizable)
-                Cursor.SetCursor(Resources.Load<Texture2D>("Cursors/horizontal_resize"), new Vector2(8, 8), CursorMode.Auto);
+                    Cursor.SetCursor(Resources.Load<Texture2D>("Cursors/horizontal_resize"), new Vector2(8, 8), CursorMode.Auto);
             }
             // should consider adding this someday
             // else if (moving && selected || mouseHovering && selected)
@@ -276,6 +256,8 @@ namespace HeavenStudio.Editor.Track
                         Selections.instance.ClickSelect(this);
                     }
                 }
+            } else if (Input.GetMouseButtonUp(2)) {
+                GridGameSelector.instance.SelectGame((EventCaller.instance.GetMinigame(entity.datamodel.Split('/')[0])).displayName, 1);
             }
         }
 

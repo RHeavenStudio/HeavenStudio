@@ -1,6 +1,7 @@
 using UnityEngine;
 using UnityEngine.Rendering;
 using UnityEngine.UI;
+using UnityEngine.EventSystems;
 
 using DG.Tweening;
 
@@ -9,6 +10,8 @@ namespace HeavenStudio.Editor
     public class GridGameSelectorGame : MonoBehaviour
     {
         public GameObject GameTitlePreview;
+        public Animator FavoriteStar;
+        public bool StarActive;
 
         public GridGameSelector GridGameSelector;
 
@@ -19,6 +22,8 @@ namespace HeavenStudio.Editor
         private void Start()
         {
             Tooltip.AddTooltip(this.gameObject, this.gameObject.name);
+            Debug.Log(StarActive);
+            if (StarActive) FavoriteStar.Play("Appear", -1, 1);
         }
 
         public void SetupTextures()
@@ -34,7 +39,12 @@ namespace HeavenStudio.Editor
 
         public void OnClick()
         {
-            GridGameSelector.SelectGame(this.gameObject.name, this.transform.GetSiblingIndex());
+            if (Input.GetMouseButtonUp(1)) {
+                FavoriteStar.Play(StarActive ? "Disappear" : "Appear");
+                StarActive = !StarActive;
+            } else if (Input.GetMouseButtonUp(0)) {
+                GridGameSelector.SelectGame(this.gameObject.name, this.transform.GetSiblingIndex());
+            }
         }
 
         //TODO: animate between shapes

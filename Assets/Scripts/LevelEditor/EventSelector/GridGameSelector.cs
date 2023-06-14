@@ -36,8 +36,11 @@ namespace HeavenStudio.Editor
         private float selectorHeight;
         private float eventSize;
 
+        public static GridGameSelector instance;
+
         private void Start()
         {
+            instance = this;
             GameEventSelectorRect = GameEventSelector.GetComponent<RectTransform>();
             selectorHeight = GameEventSelectorRect.rect.height;
             eventSize = EventRef.GetComponent<RectTransform>().rect.height;
