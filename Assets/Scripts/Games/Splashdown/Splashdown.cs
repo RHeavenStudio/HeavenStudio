@@ -28,6 +28,12 @@ namespace HeavenStudio.Games.Loaders
                         new Param("type", new EntityTypes.Integer(1, 3, 1), "Type")
                     }
                 },
+                new GameAction("jump", "Jump")
+                {
+                    function = delegate { var e = eventCaller.currentEntity; Splashdown.instance.Jump(e.beat, e.length); },
+                    defaultLength = 2f,
+                    resizable = true
+                },
                 new GameAction("amount", "Synchrette Amount")
                 {
                     function = delegate { Splashdown.instance.SpawnSynchrettes(eventCaller.currentEntity["amount"]); },
@@ -105,7 +111,7 @@ namespace HeavenStudio.Games
             for (int i = 0; i < amount; i++)
             {
                 NtrSynchrette spawnedSynchrette = Instantiate(synchrettePrefab, synchretteHolder);
-                spawnedSynchrette.transform.localPosition = new Vector3(startPos + (synchretteDistance * i), 0, 0);
+                spawnedSynchrette.transform.localPosition = new Vector3(startPos + (synchretteDistance * i), spawnedSynchrette.transform.localPosition.y, 0);
                 if (i < amount - 1) currentSynchrettes.Add(spawnedSynchrette);
                 else player = spawnedSynchrette;
             }
@@ -150,6 +156,27 @@ namespace HeavenStudio.Games
             ScheduleInput(beat, currentSynchrettes.Count * length, InputType.STANDARD_UP, JustUp, Out, Out);
         }
 
+        public void Jump(double beat, float length)
+        {
+            List<BeatAction.Action> actions = new List<BeatAction.Action>();
+            for (int i = 0; i < currentSynchrettes.Count; i++)
+            {
+                NtrSynchrette synchretteToDive = currentSynchrettes[i];
+                double diveBeat = beat + (i * length);
+                actions.Add(new BeatAction.Action(diveBeat, delegate
+                {
+                    synchretteToDive.Jump(diveBeat);
+                }));
+                SoundByte.PlayOneShotGame("splashdown/yeah", diveBeat);
+                SoundByte.PlayOneShotGame("splashdown/jumpOthers", diveBeat);
+                SoundByte.PlayOneShotGame("splashdown/rollOthers", diveBeat + 1);
+                SoundByte.PlayOneShotGame("splashdown/splashOthers", diveBeat + 1.75);
+            }
+            BeatAction.New(instance.gameObject, actions);
+            SoundByte.PlayOneShotGame("splashdown/yeah", beat + (currentSynchrettes.Count * length));
+            ScheduleInput(beat, currentSynchrettes.Count * length, InputType.STANDARD_UP, JustJump, Out, Out);
+        }
+
         private void JustDown(PlayerActionEvent caller, float state)
         {
             SoundByte.PlayOneShotGame("splashdown/downPlayer");
@@ -170,6 +197,19 @@ namespace HeavenStudio.Games
                 return;
             }
             player.Appear();
+        }
+
+        private void JustJump(PlayerActionEvent caller, float state)
+        {
+            double diveBeat = caller.timer + caller.startBeat;
+            if (state >= 1f || state <= -1f)
+            {
+                return;
+            }
+            SoundByte.PlayOneShotGame("splashdown/jumpPlayer");
+            SoundByte.PlayOneShotGame("splashdown/rollPlayer", diveBeat + 1);
+            SoundByte.PlayOneShotGame("splashdown/splashPlayer", diveBeat + 1.75);
+            player.Jump(diveBeat);
         }
 
         private void Out(PlayerActionEvent caller) { }
