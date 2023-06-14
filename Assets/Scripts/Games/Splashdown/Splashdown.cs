@@ -30,19 +30,31 @@ namespace HeavenStudio.Games.Loaders
                 },
                 new GameAction("jump", "Jump")
                 {
-                    function = delegate { var e = eventCaller.currentEntity; Splashdown.instance.Jump(e.beat, e.length); },
+                    function = delegate { var e = eventCaller.currentEntity; Splashdown.instance.Jump(e.beat, e.length, e["dolphin"]); },
                     defaultLength = 2f,
-                    resizable = true
+                    resizable = true,
+                    parameters = new List<Param>()
+                    {
+                        new Param("dolphin", true, "Dolphin")
+                    }
                 },
                 new GameAction("together", "Together Jump")
                 {
-                    function = delegate { var e = eventCaller.currentEntity; Splashdown.instance.TogetherJump(e.beat); },
-                    defaultLength = 4f
+                    function = delegate { var e = eventCaller.currentEntity; Splashdown.instance.TogetherJump(e.beat, e["al"]); },
+                    defaultLength = 4f,
+                    parameters = new List<Param>()
+                    {
+                        new Param("al", false, "Alley-Oop!")
+                    }
                 },
                 new GameAction("togetherR9", "Together Jump (Remix 9)")
                 {
-                    function = delegate { var e = eventCaller.currentEntity; Splashdown.instance.TogetherJumpRemix9(e.beat); },
-                    defaultLength = 3f
+                    function = delegate { var e = eventCaller.currentEntity; Splashdown.instance.TogetherJumpRemix9(e.beat, e["al"]); },
+                    defaultLength = 3f,
+                    parameters = new List<Param>()
+                    {
+                        new Param("al", false, "Alley-Oop!")
+                    }
                 },
                 new GameAction("amount", "Synchrette Amount")
                 {
@@ -73,6 +85,7 @@ namespace HeavenStudio.Games
 
         private List<NtrSynchrette> currentSynchrettes = new List<NtrSynchrette>();
         private NtrSynchrette player;
+        [NonSerialized] public bool noDolphin;
 
         [NonSerialized] public int currentAppearType = 1;
 
@@ -166,8 +179,9 @@ namespace HeavenStudio.Games
             ScheduleInput(beat, currentSynchrettes.Count * length, InputType.STANDARD_UP, JustUp, Out, Out);
         }
 
-        public void Jump(double beat, float length)
+        public void Jump(double beat, float length, bool dolphin)
         {
+            noDolphin = !dolphin;
             List<BeatAction.Action> actions = new List<BeatAction.Action>();
             for (int i = 0; i < currentSynchrettes.Count; i++)
             {
@@ -187,8 +201,9 @@ namespace HeavenStudio.Games
             ScheduleInput(beat, currentSynchrettes.Count * length, InputType.STANDARD_UP, JustJump, Out, Out);
         }
 
-        public void TogetherJump(double beat)
+        public void TogetherJump(double beat, bool alleyoop)
         {
+            noDolphin = alleyoop;
             SoundByte.PlayOneShotGame("splashdown/together", beat, Conductor.instance.songBpm / 120);
             BeatAction.New(instance.gameObject, new List<BeatAction.Action>()
             {
@@ -200,17 +215,32 @@ namespace HeavenStudio.Games
                     }
                 })
             });
-            MultiSound.Play(new MultiSound.Sound[]
+            if (alleyoop)
             {
-                new MultiSound.Sound("splashdown/jumpOthers", beat + 2),
-                new MultiSound.Sound("splashdown/rollOthers", beat + 3),
-                new MultiSound.Sound("splashdown/splashOthers", beat + 3.75),
-            });
-            ScheduleInput(beat, 2, InputType.STANDARD_UP, JustJump, Out, Out);
+                MultiSound.Play(new MultiSound.Sound[]
+                {
+                    new MultiSound.Sound("splashdown/jumpOthers", beat + 2),
+                    new MultiSound.Sound("splashdown/alleyOop1", beat + 2.5, 1, 1, false, 0.014),
+                    new MultiSound.Sound("splashdown/alleyOop2", beat + 2.75),
+                    new MultiSound.Sound("splashdown/alleyOop3", beat + 3, 1, 1, false, 0.014),
+                    new MultiSound.Sound("splashdown/splashOthers", beat + 3.75),
+                });
+            }
+            else
+            {
+                MultiSound.Play(new MultiSound.Sound[]
+                {
+                    new MultiSound.Sound("splashdown/jumpOthers", beat + 2),
+                    new MultiSound.Sound("splashdown/rollOthers", beat + 3),
+                    new MultiSound.Sound("splashdown/splashOthers", beat + 3.75),
+                });
+            }
+            ScheduleInput(beat, 2, InputType.STANDARD_UP, alleyoop ? JustJumpNoRollSound : JustJump, Out, Out);
         }
 
-        public void TogetherJumpRemix9(double beat)
+        public void TogetherJumpRemix9(double beat, bool alleyoop)
         {
+            noDolphin = alleyoop;
             SoundByte.PlayOneShotGame("splashdown/togetherRemix9", beat, Conductor.instance.songBpm / 120);
             BeatAction.New(instance.gameObject, new List<BeatAction.Action>()
             {
@@ -222,13 +252,27 @@ namespace HeavenStudio.Games
                     }
                 })
             });
-            MultiSound.Play(new MultiSound.Sound[]
+            if (alleyoop)
             {
-                new MultiSound.Sound("splashdown/jumpOthers", beat + 1),
-                new MultiSound.Sound("splashdown/rollOthers", beat + 2),
-                new MultiSound.Sound("splashdown/splashOthers", beat + 2.75),
-            });
-            ScheduleInput(beat, 1, InputType.STANDARD_UP, JustJump, Out, Out);
+                MultiSound.Play(new MultiSound.Sound[]
+                {
+                    new MultiSound.Sound("splashdown/jumpOthers", beat + 1),
+                    new MultiSound.Sound("splashdown/alleyOop1", beat + 1.5, 1, 1, false, 0.014),
+                    new MultiSound.Sound("splashdown/alleyOop2", beat + 1.75),
+                    new MultiSound.Sound("splashdown/alleyOop3", beat + 2, 1, 1, false, 0.014),
+                    new MultiSound.Sound("splashdown/splashOthers", beat + 2.75),
+                });
+            }
+            else
+            {
+                MultiSound.Play(new MultiSound.Sound[]
+                {
+                    new MultiSound.Sound("splashdown/jumpOthers", beat + 1),
+                    new MultiSound.Sound("splashdown/rollOthers", beat + 2),
+                    new MultiSound.Sound("splashdown/splashOthers", beat + 2.75),
+                });
+            }
+            ScheduleInput(beat, 1, InputType.STANDARD_UP, alleyoop ? JustJumpNoRollSound : JustJump, Out, Out);
         }
 
         private void JustDown(PlayerActionEvent caller, float state)
@@ -264,6 +308,19 @@ namespace HeavenStudio.Games
                 return;
             }
             SoundByte.PlayOneShotGame("splashdown/rollPlayer", diveBeat + 1);
+            player.Jump(diveBeat);
+        }
+
+        private void JustJumpNoRollSound(PlayerActionEvent caller, float state)
+        {
+            double diveBeat = caller.timer + caller.startBeat;
+            SoundByte.PlayOneShotGame("splashdown/jumpPlayer");
+            SoundByte.PlayOneShotGame("splashdown/splashPlayer", diveBeat + 1.75);
+            if (state >= 1f || state <= -1f)
+            {
+                player.Jump(diveBeat, true);
+                return;
+            }
             player.Jump(diveBeat);
         }
 

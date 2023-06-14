@@ -12,6 +12,7 @@ namespace HeavenStudio.Games.Scripts_Splashdown
         [SerializeField] private Animator anim;
         [SerializeField] private Transform synchretteTransform;
         [SerializeField] private Transform splashHolder;
+        [SerializeField] private Animator throwAnim;
 
         private Splashdown game;
 
@@ -99,7 +100,16 @@ namespace HeavenStudio.Games.Scripts_Splashdown
             missedJump = missed;
             SetState(MovementState.Jumping, beat);
             Instantiate(splashPrefab, splashHolder).Init("Appearsplash");
-            anim.DoScaledAnimationAsync(missed ? "DolphinMiss" : "Dolphin", 0.5f);
+            if (game.noDolphin)
+            {
+                anim.DoScaledAnimationAsync(missed ? "JumpMiss" : "JumpOut", 0.5f);
+                throwAnim.gameObject.SetActive(true);
+                throwAnim.DoScaledAnimationAsync("Throw", 0.5f);
+            }
+            else
+            {
+                anim.DoScaledAnimationAsync(missed ? "DolphinMiss" : "Dolphin", 0.5f);
+            }
             BeatAction.New(gameObject, new List<BeatAction.Action>()
             {
                 new BeatAction.Action(beat + 1.75, delegate { Instantiate(splashPrefab, splashHolder).Init("BigSplash"); }),
