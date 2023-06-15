@@ -81,10 +81,10 @@ namespace HeavenStudio.Games.Scripts_Splashdown
             }
         }
 
-        public void Appear(bool miss = false)
+        public void Appear(bool miss = false, int appearType = 1)
         {
             SetState(MovementState.None, startBeat);
-            if (!miss) anim.DoScaledAnimationAsync("Appear" + game.currentAppearType, 0.4f);
+            if (!miss) anim.DoScaledAnimationAsync("Appear" + appearType, 0.4f);
             else anim.DoScaledAnimationAsync("MissAppear", 0.4f);
             Instantiate(splashPrefab, splashHolder).Init("Appearsplash");
         }
@@ -95,12 +95,12 @@ namespace HeavenStudio.Games.Scripts_Splashdown
             Instantiate(splashPrefab, splashHolder).Init("GodownSplash");
         }
 
-        public void Jump(double beat, bool missed = false)
+        public void Jump(double beat, bool missed = false, bool noDolphin = false)
         {
             missedJump = missed;
             SetState(MovementState.Jumping, beat);
             Instantiate(splashPrefab, splashHolder).Init("Appearsplash");
-            if (game.noDolphin)
+            if (noDolphin)
             {
                 anim.DoScaledAnimationAsync(missed ? "JumpMiss" : "JumpOut", 0.5f);
                 throwAnim.gameObject.SetActive(true);

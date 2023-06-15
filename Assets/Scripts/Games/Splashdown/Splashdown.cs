@@ -85,9 +85,6 @@ namespace HeavenStudio.Games
 
         private List<NtrSynchrette> currentSynchrettes = new List<NtrSynchrette>();
         private NtrSynchrette player;
-        [NonSerialized] public bool noDolphin;
-
-        [NonSerialized] public int currentAppearType = 1;
 
         private void Awake()
         {
@@ -161,7 +158,6 @@ namespace HeavenStudio.Games
 
         public void GoUp(double beat, float length, int appearType)
         {
-            currentAppearType = appearType;
             List<BeatAction.Action> actions = new List<BeatAction.Action>();
             for (int i = 0; i < currentSynchrettes.Count; i++)
             {
@@ -169,19 +165,29 @@ namespace HeavenStudio.Games
                 double diveBeat = beat + (i * length);
                 actions.Add(new BeatAction.Action(diveBeat, delegate
                 {
-                    synchretteToDive.Appear();
+                    synchretteToDive.Appear(false, appearType);
                 }));
                 SoundByte.PlayOneShotGame("splashdown/whistle", diveBeat);
                 SoundByte.PlayOneShotGame("splashdown/upOthers", diveBeat);
             }
             BeatAction.New(instance.gameObject, actions);
             SoundByte.PlayOneShotGame("splashdown/whistle", beat + (currentSynchrettes.Count * length));
-            ScheduleInput(beat, currentSynchrettes.Count * length, InputType.STANDARD_UP, JustUp, Out, Out);
+            switch (appearType)
+            {
+                case 1:
+                    ScheduleInput(beat, currentSynchrettes.Count * length, InputType.STANDARD_UP, JustUp1, Out, Out);
+                    break;
+                case 2:
+                    ScheduleInput(beat, currentSynchrettes.Count * length, InputType.STANDARD_UP, JustUp2, Out, Out);
+                    break;
+                case 3:
+                    ScheduleInput(beat, currentSynchrettes.Count * length, InputType.STANDARD_UP, JustUp3, Out, Out);
+                    break;
+            }
         }
 
         public void Jump(double beat, float length, bool dolphin)
         {
-            noDolphin = !dolphin;
             List<BeatAction.Action> actions = new List<BeatAction.Action>();
             for (int i = 0; i < currentSynchrettes.Count; i++)
             {
@@ -189,7 +195,7 @@ namespace HeavenStudio.Games
                 double diveBeat = beat + (i * length);
                 actions.Add(new BeatAction.Action(diveBeat, delegate
                 {
-                    synchretteToDive.Jump(diveBeat);
+                    synchretteToDive.Jump(diveBeat, false, !dolphin);
                 }));
                 SoundByte.PlayOneShotGame("splashdown/yeah", diveBeat);
                 SoundByte.PlayOneShotGame("splashdown/jumpOthers", diveBeat);
@@ -198,12 +204,11 @@ namespace HeavenStudio.Games
             }
             BeatAction.New(instance.gameObject, actions);
             SoundByte.PlayOneShotGame("splashdown/yeah", beat + (currentSynchrettes.Count * length));
-            ScheduleInput(beat, currentSynchrettes.Count * length, InputType.STANDARD_UP, JustJump, Out, Out);
+            ScheduleInput(beat, currentSynchrettes.Count * length, InputType.STANDARD_UP, dolphin ? JustJump : JustJumpNoDolphin, Out, Out);
         }
 
         public void TogetherJump(double beat, bool alleyoop)
         {
-            noDolphin = alleyoop;
             SoundByte.PlayOneShotGame("splashdown/together", beat, Conductor.instance.songBpm / 120);
             BeatAction.New(instance.gameObject, new List<BeatAction.Action>()
             {
@@ -211,7 +216,7 @@ namespace HeavenStudio.Games
                 {
                     foreach (var synchrette in currentSynchrettes)
                     {
-                        synchrette.Jump(beat + 2);
+                        synchrette.Jump(beat + 2, false, alleyoop);
                     }
                 })
             });
@@ -240,7 +245,6 @@ namespace HeavenStudio.Games
 
         public void TogetherJumpRemix9(double beat, bool alleyoop)
         {
-            noDolphin = alleyoop;
             SoundByte.PlayOneShotGame("splashdown/togetherRemix9", beat, Conductor.instance.songBpm / 120);
             BeatAction.New(instance.gameObject, new List<BeatAction.Action>()
             {
@@ -248,7 +252,7 @@ namespace HeavenStudio.Games
                 {
                     foreach (var synchrette in currentSynchrettes)
                     {
-                        synchrette.Jump(beat + 1);
+                        synchrette.Jump(beat + 1, false, alleyoop);
                     }
                 })
             });
@@ -285,7 +289,7 @@ namespace HeavenStudio.Games
             }
         }
 
-        private void JustUp(PlayerActionEvent caller, float state)
+        private void JustUp1(PlayerActionEvent caller, float state)
         {
             SoundByte.PlayOneShotGame("splashdown/upPlayer");
             if (state >= 1f || state <= -1f)
@@ -294,7 +298,31 @@ namespace HeavenStudio.Games
                 player.Appear(true);
                 return;
             }
-            player.Appear();
+            player.Appear(false, 1);
+        }
+
+        private void JustUp2(PlayerActionEvent caller, float state)
+        {
+            SoundByte.PlayOneShotGame("splashdown/upPlayer");
+            if (state >= 1f || state <= -1f)
+            {
+                SoundByte.PlayOneShot("miss");
+                player.Appear(true);
+                return;
+            }
+            player.Appear(false, 2);
+        }
+
+        private void JustUp3(PlayerActionEvent caller, float state)
+        {
+            SoundByte.PlayOneShotGame("splashdown/upPlayer");
+            if (state >= 1f || state <= -1f)
+            {
+                SoundByte.PlayOneShot("miss");
+                player.Appear(true);
+                return;
+            }
+            player.Appear(false, 3);
         }
 
         private void JustJump(PlayerActionEvent caller, float state)
@@ -311,6 +339,20 @@ namespace HeavenStudio.Games
             player.Jump(diveBeat);
         }
 
+        private void JustJumpNoDolphin(PlayerActionEvent caller, float state)
+        {
+            double diveBeat = caller.timer + caller.startBeat;
+            SoundByte.PlayOneShotGame("splashdown/jumpPlayer");
+            SoundByte.PlayOneShotGame("splashdown/splashPlayer", diveBeat + 1.75);
+            if (state >= 1f || state <= -1f)
+            {
+                player.Jump(diveBeat, true, true);
+                return;
+            }
+            SoundByte.PlayOneShotGame("splashdown/rollPlayer", diveBeat + 1);
+            player.Jump(diveBeat, false, true);
+        }
+
         private void JustJumpNoRollSound(PlayerActionEvent caller, float state)
         {
             double diveBeat = caller.timer + caller.startBeat;
@@ -318,10 +360,10 @@ namespace HeavenStudio.Games
             SoundByte.PlayOneShotGame("splashdown/splashPlayer", diveBeat + 1.75);
             if (state >= 1f || state <= -1f)
             {
-                player.Jump(diveBeat, true);
+                player.Jump(diveBeat, true, true);
                 return;
             }
-            player.Jump(diveBeat);
+            player.Jump(diveBeat, false, true);
         }
 
         private void Out(PlayerActionEvent caller) { }
