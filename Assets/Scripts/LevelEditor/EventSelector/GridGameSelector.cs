@@ -46,7 +46,7 @@ namespace HeavenStudio.Editor
             eventSize = EventRef.GetComponent<RectTransform>().rect.height;
 
             eventsParent = EventRef.transform.parent.GetChild(2).GetComponent<RectTransform>();
-            SelectGame("Game Manager", 1);
+            SelectGame("Game Manager");
 
             SetColors();
         }
@@ -132,13 +132,14 @@ namespace HeavenStudio.Editor
             }
         }
 
-        public void SelectGame(string gameName, int index)
+        public void SelectGame(string gameName, int index = 0)
         {
             if (SelectedGameIcon != null)
             {
                 SelectedGameIcon.GetComponent<GridGameSelectorGame>().UnClickIcon();
             }
-            mg = EventCaller.instance.minigames.Find(c => c.displayName == gameName);
+            int mgIndex = EventCaller.instance.minigames.FindIndex(c => c.displayName == gameName);
+            mg = EventCaller.instance.minigames[mgIndex];
             SelectedMinigame = gameName;
             gameOpen = true;
 
@@ -146,11 +147,11 @@ namespace HeavenStudio.Editor
             AddEvents();
 
             // transform.GetChild(index).GetChild(0).gameObject.SetActive(true);
-            SelectedGameIcon = transform.GetChild(index).gameObject;
+            SelectedGameIcon = transform.GetChild(mgIndex+1).gameObject;
             SelectedGameIcon.GetComponent<GridGameSelectorGame>().ClickIcon();
 
-            currentEventIndex = 0;
-            UpdateIndex(0, false);
+            currentEventIndex = index;
+            UpdateIndex(index, false);
 
             Editor.instance?.SetGameEventTitle($"Select game event for {gameName.Replace("\n", "")}");
         }

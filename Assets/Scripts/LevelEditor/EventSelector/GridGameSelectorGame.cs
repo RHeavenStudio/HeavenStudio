@@ -10,8 +10,8 @@ namespace HeavenStudio.Editor
     public class GridGameSelectorGame : MonoBehaviour
     {
         public GameObject GameTitlePreview;
-        public Animator FavoriteStar;
-        public bool StarActive;
+        public Animator StarAnim;
+        bool starActive;
 
         public GridGameSelector GridGameSelector;
 
@@ -22,8 +22,11 @@ namespace HeavenStudio.Editor
         private void Start()
         {
             Tooltip.AddTooltip(this.gameObject, this.gameObject.name);
-            Debug.Log(StarActive);
-            if (StarActive) FavoriteStar.Play("Appear", -1, 1);
+        }
+
+        private void OnEnable()
+        {
+            if (starActive) StarAnim.Play("Appear", 0, 1);
         }
 
         public void SetupTextures()
@@ -39,11 +42,15 @@ namespace HeavenStudio.Editor
 
         public void OnClick()
         {
-            if (Input.GetMouseButtonUp(1)) {
-                FavoriteStar.Play(StarActive ? "Disappear" : "Appear");
-                StarActive = !StarActive;
-            } else if (Input.GetMouseButtonUp(0)) {
-                GridGameSelector.SelectGame(this.gameObject.name, this.transform.GetSiblingIndex());
+            if (Input.GetMouseButtonUp(1)) 
+            {
+                if (starActive) StarAnim.CrossFade("Disappear", 0.01f);
+                else StarAnim.Play("Appear");
+                starActive = !starActive;
+            } 
+            else if (Input.GetMouseButtonUp(0)) 
+            {
+                GridGameSelector.SelectGame(this.gameObject.name);
             }
         }
 

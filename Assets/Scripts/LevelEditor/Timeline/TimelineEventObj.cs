@@ -257,7 +257,21 @@ namespace HeavenStudio.Editor.Track
                     }
                 }
             } else if (Input.GetMouseButtonUp(2)) {
-                GridGameSelector.instance.SelectGame((EventCaller.instance.GetMinigame(entity.datamodel.Split('/')[0])).displayName, 1);
+                var mgs = EventCaller.instance.minigames;
+                string[] datamodels = entity.datamodel.Split('/');
+
+                bool isSwitchGame = (datamodels[1] == "switchGame");
+                int gameIndex = mgs.FindIndex(c => c.name == datamodels[isSwitchGame ? 2 : 0]);
+                int block = isSwitchGame ? 0 : mgs[gameIndex].actions.FindIndex(c => c.actionName == datamodels[1]) + 1;
+
+                if (!isSwitchGame) {
+                    if (datamodels[0] == "gameManager") block -= 2;
+                    else if (datamodels[0] is "countIn" or "vfx") block--;
+                }
+
+                //Debug.Log(mgs[gameIndex].actions.Find(c => c.actionName == datamodels[1])+" "+datamodels[1]);
+                
+                GridGameSelector.instance.SelectGame(mgs[gameIndex].displayName, block);
             }
         }
 
