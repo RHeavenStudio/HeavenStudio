@@ -56,6 +56,12 @@ namespace HeavenStudio.Games.Loaders
                         new Param("al", false, "Alley-Oop!")
                     }
                 },
+                new GameAction("intro", "Intro")
+                {
+                    function = delegate { var e = eventCaller.currentEntity; Splashdown.instance.Intro(e.beat, e.length); },
+                    resizable = true,
+                    defaultLength = 8
+                },
                 new GameAction("amount", "Synchrette Amount")
                 {
                     function = delegate { Splashdown.instance.SpawnSynchrettes(eventCaller.currentEntity["amount"]); },
@@ -136,6 +142,32 @@ namespace HeavenStudio.Games
                 if (i < amount - 1) currentSynchrettes.Add(spawnedSynchrette);
                 else player = spawnedSynchrette;
             }
+        }
+
+        public void Intro(double beat, float length)
+        {
+            List<BeatAction.Action> actions = new List<BeatAction.Action>();
+            for (int i = 0; i < length - 1; i++)
+            {
+                actions.Add(new BeatAction.Action(beat + i, delegate
+                {
+                    foreach (var synchrette in currentSynchrettes)
+                    {
+                        synchrette.Bop();
+                    }
+                    player.Bop();
+                }));
+            }
+            actions.Add(new BeatAction.Action(beat + length - 1, delegate
+            {
+                foreach (var synchrette in currentSynchrettes)
+                {
+                    synchrette.JumpIntoWater(beat + length - 1);
+                }
+                player.JumpIntoWater(beat + length - 1);
+            }));
+            SoundByte.PlayOneShotGame("splashdown/start", beat + length - 0.25);
+            BeatAction.New(instance.gameObject, actions);
         }
 
         public void GoDown(double beat, float length)

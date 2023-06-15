@@ -28,7 +28,9 @@ namespace HeavenStudio.Games.Scripts_Splashdown
             None,
             Dive,
             Jumping,
-            Raise
+            Raise,
+            Stand,
+            JumpIntoWater
         }
 
         private MovementState currentMovementState;
@@ -78,6 +80,25 @@ namespace HeavenStudio.Games.Scripts_Splashdown
                         SetState(MovementState.None, 0);
                     }
                     break;
+                case MovementState.Stand:
+                    synchretteTransform.localPosition = new Vector3(0, 2.73f, 0);
+                    break;
+                case MovementState.JumpIntoWater:
+                    float normalizedUp = cond.GetPositionFromBeat(startBeat, 0.5);
+                    float normalizedDown = cond.GetPositionFromBeat(startBeat + 0.5, 0.5);
+                    if (normalizedUp <= 1f)
+                    {
+                        EasingFunction.Function func = EasingFunction.GetEasingFunction(EasingFunction.Ease.EaseOutCubic);
+                        float newPosYUp = func(2.73f, 4.5f, normalizedUp);
+                        synchretteTransform.localPosition = new Vector3(0f, newPosYUp, 0f);
+                    }
+                    else
+                    {
+                        EasingFunction.Function func = EasingFunction.GetEasingFunction(EasingFunction.Ease.EaseInCubic);
+                        float newPosYDown = func(4.5f, -4, normalizedDown);
+                        synchretteTransform.localPosition = new Vector3(0f, newPosYDown, 0f);
+                    }
+                    break;
             }
         }
 
@@ -93,6 +114,32 @@ namespace HeavenStudio.Games.Scripts_Splashdown
         {
             SetState(MovementState.Dive, startBeat);
             Instantiate(splashPrefab, splashHolder).Init("GodownSplash");
+        }
+
+        public void Bop()
+        {
+            anim.DoScaledAnimationAsync("Bop", 0.5f);
+            if (currentMovementState != MovementState.Stand)
+            {
+                SetState(MovementState.Stand, 0);
+            }
+        }
+
+        public void JumpIntoWater(double beat)
+        {
+            anim.Play("Idle", 0, 0);
+            SetState(MovementState.JumpIntoWater, beat);
+            BeatAction.New(gameObject, new List<BeatAction.Action>()
+            {
+                new BeatAction.Action(beat + 0.75, delegate
+                {
+                    Instantiate(splashPrefab, splashHolder).Init("GodownSplash");
+                }),
+                new BeatAction.Action(beat + 1, delegate
+                {
+                    SetState(MovementState.Raise, beat + 1);
+                })
+            });
         }
 
         public void Jump(double beat, bool missed = false, bool noDolphin = false)
