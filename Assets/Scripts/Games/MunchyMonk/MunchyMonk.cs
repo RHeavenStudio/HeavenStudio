@@ -329,9 +329,12 @@ namespace HeavenStudio.Games
                 foreach (var obj in scrollObjects) obj.SpeedMod = newPos;
             }
 
-            if (CloudMonkey.transform.position.x < -5 || CloudMonkey.transform.position.x > 15.5) {
-                CloudMonkey.SetActive(false);
+            if(CloudMonkey!=null) {
+                if (CloudMonkey.transform.position.x < -5 || CloudMonkey.transform.position.x > 15.5) {
+                    CloudMonkey.SetActive(false);
+                }
             }
+
 
             // cue queuing stuff
             if (queuedOnes.Count > 0) {
@@ -365,8 +368,10 @@ namespace HeavenStudio.Games
                     if (growLevel > 0) StacheAnim.DoScaledAnimationAsync($"Bop{growLevel}", 0.5f);
                 }
 
-                if (CloudMonkey.activeInHierarchy) {
-                    CloudMonkey.GetComponent<Animator>().DoScaledAnimationAsync("Bop", 0.5f);
+                if(CloudMonkey!=null) {
+                    if (CloudMonkey.activeInHierarchy) {
+                        CloudMonkey.GetComponent<Animator>().DoScaledAnimationAsync("Bop", 0.5f);
+                    }
                 }
             }
         }
