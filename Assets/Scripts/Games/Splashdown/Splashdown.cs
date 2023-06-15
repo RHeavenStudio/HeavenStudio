@@ -80,6 +80,7 @@ namespace HeavenStudio.Games
         [Header("References")]
         [SerializeField] private Transform synchretteHolder;
         [SerializeField] private NtrSynchrette synchrettePrefab;
+        [SerializeField] private Animator crowdAnim;
         [Header("Properties")]
         [SerializeField] private float synchretteDistance;
 
@@ -337,6 +338,11 @@ namespace HeavenStudio.Games
             }
             SoundByte.PlayOneShotGame("splashdown/rollPlayer", diveBeat + 1);
             player.Jump(diveBeat);
+            BeatAction.New(instance.gameObject, new List<BeatAction.Action>()
+            {
+                new BeatAction.Action(diveBeat + 1.75, delegate { crowdAnim.DoScaledAnimationAsync("CrowdCheer", 0.5f); }),
+                new BeatAction.Action(diveBeat + 4, delegate { crowdAnim.Play("CrowdIdle", 0, 0); })
+            });
         }
 
         private void JustJumpNoDolphin(PlayerActionEvent caller, float state)
@@ -351,6 +357,11 @@ namespace HeavenStudio.Games
             }
             SoundByte.PlayOneShotGame("splashdown/rollPlayer", diveBeat + 1);
             player.Jump(diveBeat, false, true);
+            BeatAction.New(instance.gameObject, new List<BeatAction.Action>()
+            {
+                new BeatAction.Action(diveBeat + 1.75, delegate { crowdAnim.DoScaledAnimationAsync("CrowdCheer", 0.5f); }),
+                new BeatAction.Action(diveBeat + 4, delegate { crowdAnim.Play("CrowdIdle", 0, 0); })
+            });
         }
 
         private void JustJumpNoRollSound(PlayerActionEvent caller, float state)
@@ -364,6 +375,11 @@ namespace HeavenStudio.Games
                 return;
             }
             player.Jump(diveBeat, false, true);
+            BeatAction.New(instance.gameObject, new List<BeatAction.Action>()
+            {
+                new BeatAction.Action(diveBeat + 1.75, delegate { crowdAnim.DoScaledAnimationAsync("CrowdCheer", 0.5f); }),
+                new BeatAction.Action(diveBeat + 4, delegate { crowdAnim.Play("CrowdIdle", 0, 0); })
+            });
         }
 
         private void Out(PlayerActionEvent caller) { }
