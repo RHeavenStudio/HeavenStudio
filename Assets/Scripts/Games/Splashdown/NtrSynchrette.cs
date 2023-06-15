@@ -38,6 +38,7 @@ namespace HeavenStudio.Games.Scripts_Splashdown
         private void Awake()
         {
             game = Splashdown.instance;
+            Update();
         }
 
         private void Update()
@@ -46,7 +47,20 @@ namespace HeavenStudio.Games.Scripts_Splashdown
             switch (currentMovementState)
             {
                 case MovementState.None:
-                    synchretteTransform.localPosition = Vector3.zero;
+                    float normalizedFloatDownBeat = cond.GetPositionFromBeat(0, 1) % 2;
+                    float normalizedFloatUpBeat = cond.GetPositionFromBeat(1, 1) % 2;
+                    if (normalizedFloatUpBeat <= 1f)
+                    {
+                        EasingFunction.Function func = EasingFunction.GetEasingFunction(EasingFunction.Ease.EaseInOutQuad);
+                        float newPosYUp = func(0, -0.5f, normalizedFloatUpBeat);
+                        synchretteTransform.localPosition = new Vector3(0f, newPosYUp, 0f);
+                    }
+                    else
+                    {
+                        EasingFunction.Function func = EasingFunction.GetEasingFunction(EasingFunction.Ease.EaseInOutQuad);
+                        float newPosYDown = func(-0.5f, 0, normalizedFloatDownBeat);
+                        synchretteTransform.localPosition = new Vector3(0f, newPosYDown, 0f);
+                    }
                     break;
                 case MovementState.Dive:
                     synchretteTransform.localPosition = new Vector3(0f, -6f, 0f);
@@ -173,6 +187,7 @@ namespace HeavenStudio.Games.Scripts_Splashdown
             currentMovementState = state;
             startBeat = beat;
             synchretteTransform.localEulerAngles = Vector3.zero;
+            Update();
         }
     }
 }
