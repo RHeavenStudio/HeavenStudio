@@ -48,12 +48,12 @@ namespace HeavenStudio.Editor
             eventsParent = EventRef.transform.parent.GetChild(2).GetComponent<RectTransform>();
             SelectGame("Game Manager");
 
-            SetColors();
+            //SetColors();
         }
 
         private void Update()
         {
-            if (!(EventParameterManager.instance.active || Conductor.instance.NotStopped()) && !IsPointerOverUIElement())
+            if (!EventParameterManager.instance.active && !IsPointerOverUIElement())
             {
                 if (gameOpen)
                 {
@@ -91,9 +91,6 @@ namespace HeavenStudio.Editor
                 currentEventIndex = 0;
 
             CurrentSelected.transform.DOLocalMoveY(eventsParent.transform.GetChild(currentEventIndex).localPosition.y + eventsParent.transform.localPosition.y, 0.35f).SetEase(Ease.OutExpo);
-
-            if (updateCol)
-            SetColors(currentEventIndex);
         }
 
         private void UpdateScrollPosition()
@@ -130,23 +127,39 @@ namespace HeavenStudio.Editor
                     EventRef.transform.parent.transform.localPosition.z
                 );
             }
+            SetColors();
         }
 
+        // will automatically select game + game icon
+        // index is the event it will highlight (which was basically just added for pick block)
+        // TODO: automatically scroll if the game is offscreen, because i can't figure it out rn. -AJ
         public void SelectGame(string gameName, int index = 0)
         {
             if (SelectedGameIcon != null)
             {
                 SelectedGameIcon.GetComponent<GridGameSelectorGame>().UnClickIcon();
             }
-            int mgIndex = EventCaller.instance.minigames.FindIndex(c => c.displayName == gameName);
-            mg = EventCaller.instance.minigames[mgIndex];
+            var mgs = EventCaller.instance.minigames;
+            int mgIndex = 0, hidden = 0;
+            for (int i = 0; i < mgs.Count; i++)
+            {
+                if (mgs[i].displayName == gameName && !mgs[i].hidden) {
+                    mgIndex = i;
+                    break;
+                } else if (mgs[i].hidden) {
+                    hidden++;
+                }
+            }
+            
+            mg = mgs[mgIndex];
             SelectedMinigame = gameName;
             gameOpen = true;
 
             DestroyEvents();
-            AddEvents();
+            AddEvents(index);
 
             // transform.GetChild(index).GetChild(0).gameObject.SetActive(true);
+            mgIndex -= hidden;
             SelectedGameIcon = transform.GetChild(mgIndex+1).gameObject;
             SelectedGameIcon.GetComponent<GridGameSelectorGame>().ClickIcon();
 
@@ -156,14 +169,17 @@ namespace HeavenStudio.Editor
             Editor.instance?.SetGameEventTitle($"Select game event for {gameName.Replace("\n", "")}");
         }
 
-        private void AddEvents()
+        private void AddEvents(int index = 0)
         {
             if (!EventCaller.FXOnlyGames().Contains(EventCaller.instance.GetMinigame(mg.name)))
             {
                 GameObject sg = Instantiate(EventRef, eventsParent);
                 sg.GetComponent<TMP_Text>().text = "Switch Game";
                 sg.SetActive(true);
-                sg.GetComponent<TMP_Text>().color = EditorTheme.theme.properties.EventSelectedCol.Hex2RGB();
+                if (index == 0) sg.GetComponent<TMP_Text>().color = EditorTheme.theme.properties.EventSelectedCol.Hex2RGB();
+            } else {
+                index++;
+                if (mg.name == "gameManager") index++;
             }
 
             for (int i = 0; i < mg.actions.Count; i++)
@@ -172,6 +188,7 @@ namespace HeavenStudio.Editor
                 GameObject g = Instantiate(EventRef, eventsParent);
                 g.GetComponent<TMP_Text>().text = mg.actions[i].displayName;
                 g.SetActive(true);
+                if (index - 1 == i) g.GetComponent<TMP_Text>().color = EditorTheme.theme.properties.EventSelectedCol.Hex2RGB();
             }
         }
 
@@ -188,14 +205,14 @@ namespace HeavenStudio.Editor
             }
         }
 
-        private void SetColors(int index = 0)
+        private void SetColors()
         {
-            CurrentSelected.GetComponent<Image>().color = EditorTheme.theme.properties.EventSelectedCol.Hex2RGB();
+            //CurrentSelected.GetComponent<Image>().color = EditorTheme.theme.properties.EventSelectedCol.Hex2RGB();
 
             for (int i = 0; i < eventsParent.transform.childCount; i++)
-                eventsParent.GetChild(i).GetComponent<TMP_Text>().color = EditorTheme.theme.properties.EventNormalCol.Hex2RGB();
+                            eventsParent.GetChild(i).GetComponent<TMP_Text>().color = EditorTheme.theme.properties.EventNormalCol.Hex2RGB();
 
-            eventsParent.GetChild(index).GetComponent<TMP_Text>().color = EditorTheme.theme.properties.EventSelectedCol.Hex2RGB();
+            eventsParent.GetChild(currentEventIndex).GetComponent<TMP_Text>().color = EditorTheme.theme.properties.EventSelectedCol.Hex2RGB();
         }
 
         public bool IsPointerOverUIElement()

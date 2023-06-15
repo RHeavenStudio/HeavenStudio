@@ -44,8 +44,7 @@ namespace HeavenStudio.Editor
         {
             if (Input.GetMouseButtonUp(1)) 
             {
-                if (starActive) StarAnim.CrossFade("Disappear", 0.01f);
-                else StarAnim.Play("Appear");
+                StarAnim.CrossFade(starActive ? "Disappear" : "Appear", 0.3f);
                 starActive = !starActive;
             } 
             else if (Input.GetMouseButtonUp(0)) 
