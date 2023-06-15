@@ -102,14 +102,14 @@ namespace HeavenStudio.Games.Scripts_Splashdown
                     float normalizedDown = cond.GetPositionFromBeat(startBeat + 0.5, 0.5);
                     if (normalizedUp <= 1f)
                     {
-                        EasingFunction.Function func = EasingFunction.GetEasingFunction(EasingFunction.Ease.EaseOutCubic);
-                        float newPosYUp = func(2.73f, 4.5f, normalizedUp);
+                        EasingFunction.Function func = EasingFunction.GetEasingFunction(EasingFunction.Ease.EaseOutQuad);
+                        float newPosYUp = func(2.73f, 4f, normalizedUp);
                         synchretteTransform.localPosition = new Vector3(0f, newPosYUp, 0f);
                     }
                     else
                     {
-                        EasingFunction.Function func = EasingFunction.GetEasingFunction(EasingFunction.Ease.EaseInCubic);
-                        float newPosYDown = func(4.5f, -4, normalizedDown);
+                        EasingFunction.Function func = EasingFunction.GetEasingFunction(EasingFunction.Ease.EaseInQuad);
+                        float newPosYDown = func(4f, -3, normalizedDown);
                         synchretteTransform.localPosition = new Vector3(0f, newPosYDown, 0f);
                     }
                     break;
