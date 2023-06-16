@@ -231,7 +231,7 @@ namespace HeavenStudio.Games
             instance = this;
             if (crHandlerInstance == null)
             {
-                crHandlerInstance = new CallAndResponseHandler(4);
+                crHandlerInstance = new CallAndResponseHandler();
             }
             if (crHandlerInstance.queuedEvents.Count > 0)
             {
@@ -277,7 +277,7 @@ namespace HeavenStudio.Games
         {
             if (crHandlerInstance == null)
             {
-                crHandlerInstance = new CallAndResponseHandler(4);
+                crHandlerInstance = new CallAndResponseHandler();
             }
             if (crHandlerInstance.queuedEvents.Count > 0 && crHandlerInstance.queuedEvents.Find(x => x.beat == beat || (beat >= x.beat && beat <= x.beat + x.length)) != null) return;
             crHandlerInstance.AddEvent(beat, 0, "Hair");
@@ -287,7 +287,7 @@ namespace HeavenStudio.Games
         {
             if (crHandlerInstance == null)
             {
-                crHandlerInstance = new CallAndResponseHandler(4);
+                crHandlerInstance = new CallAndResponseHandler();
             }
             if (crHandlerInstance.queuedEvents.Count > 0 && crHandlerInstance.queuedEvents.Find(x => x.beat == beat || (beat >= x.beat && beat <= x.beat + x.length)) != null) return;
             crHandlerInstance.AddEvent(beat, 0.5f, "Long");
@@ -342,7 +342,7 @@ namespace HeavenStudio.Games
         {
             if (crHandlerInstance == null)
             {
-                crHandlerInstance = new CallAndResponseHandler(4);
+                crHandlerInstance = new CallAndResponseHandler();
             }
             crHandlerInstance.StartInterval(beat, interval);
         }
