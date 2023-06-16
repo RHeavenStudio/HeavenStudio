@@ -4,6 +4,7 @@ using UnityEngine;
 using System;
 
 using HeavenStudio.Util;
+using Starpelly;
 
 namespace HeavenStudio.Games.Scripts_RhythmTweezers
 {
@@ -17,6 +18,8 @@ namespace HeavenStudio.Games.Scripts_RhythmTweezers
         private bool holdingHair;
         public SpriteRenderer heldHairSprite;
         public Transform tweezerSpriteTrans;
+        private double passTurnBeat = -1;
+        private double passTurnEndBeat = -1;
 
         private void Awake()
         {
@@ -24,6 +27,37 @@ namespace HeavenStudio.Games.Scripts_RhythmTweezers
             vegetableAnim = RhythmTweezers.instance.VegetableAnimator;
 
             game = RhythmTweezers.instance;
+        }
+
+        public void Init(double beat, double endBeat)
+        {
+            passTurnBeat = beat;
+            passTurnEndBeat = endBeat;
+            Update();
+        }
+
+        private void Update()
+        {
+            if (passTurnBeat != -1)
+            {
+                // Set tweezer angle.
+                float tweezerTime = Conductor.instance.GetPositionFromBeat(passTurnBeat, passTurnEndBeat - 1f - passTurnBeat);
+                var unclampedAngle = -58f + (116 * tweezerTime);
+                var tweezerAngle = Mathf.Clamp(unclampedAngle, -180f, 180f);
+
+                transform.eulerAngles = new Vector3(0, 0, tweezerAngle);
+
+                // Set tweezer to follow vegetable.
+                var currentTweezerPos = transform.localPosition;
+                var vegetablePos = game.Vegetable.transform.localPosition;
+                var vegetableHolderPos = game.VegetableHolder.transform.localPosition;
+                transform.localPosition = new Vector3(vegetableHolderPos.x, vegetablePos.y + 1f, currentTweezerPos.z);
+
+                if (tweezerAngle == 180)
+                {
+                    Destroy(gameObject);
+                }
+            }
         }
 
         private void LateUpdate()

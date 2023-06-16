@@ -349,11 +349,14 @@ namespace HeavenStudio.Games
 
         public void PassTurn(double beat)
         {
-            if (crHandlerInstance.queuedEvents.Count > 0)
+            Tweezers spawnedTweezers = Instantiate(Tweezers, transform);
+            spawnedTweezers.gameObject.SetActive(true);
+            spawnedTweezers.Init(beat, beat + crHandlerInstance.intervalLength);
+            BeatAction.New(instance.gameObject, new List<BeatAction.Action>()
             {
-                BeatAction.New(instance.gameObject, new List<BeatAction.Action>()
+                new BeatAction.Action(beat - 1, delegate
                 {
-                    new BeatAction.Action(beat - 1, delegate
+                    if (crHandlerInstance.queuedEvents.Count > 0)
                     {
                         hairsLeft = crHandlerInstance.queuedEvents.Count;
                         foreach (var crEvent in crHandlerInstance.queuedEvents)
@@ -361,59 +364,52 @@ namespace HeavenStudio.Games
                             if (crEvent.tag == "Hair")
                             {
                                 Hair hairToInput = spawnedHairs.Find(x => x.createBeat == crEvent.beat);
-                                hairToInput.StartInput(beat, crEvent.relativeBeat);
+                                hairToInput.StartInput(beat, crEvent.relativeBeat, spawnedTweezers);
                             }
                             else if (crEvent.tag == "Long")
                             {
                                 LongHair hairToInput = spawnedLongs.Find(x => x.createBeat == crEvent.beat);
-                                hairToInput.StartInput(beat, crEvent.relativeBeat);
+                                hairToInput.StartInput(beat, crEvent.relativeBeat, spawnedTweezers);
                             }
                         }
                         crHandlerInstance.queuedEvents.Clear();
-                    }),
-                    new BeatAction.Action(beat, delegate
+                    }
+
+                }),
+                new BeatAction.Action(beat, delegate
+                {
+                    if (crHandlerInstance.queuedEvents.Count > 0)
                     {
-                        if (crHandlerInstance.queuedEvents.Count > 0)
+                        hairsLeft += crHandlerInstance.queuedEvents.Count;
+                        foreach (var crEvent in crHandlerInstance.queuedEvents)
                         {
-                            hairsLeft += crHandlerInstance.queuedEvents.Count;
-                            foreach (var crEvent in crHandlerInstance.queuedEvents)
+                            if (crEvent.tag == "Hair")
                             {
-                                if (crEvent.tag == "Hair")
-                                {
-                                    Hair hairToInput = spawnedHairs.Find(x => x.createBeat == crEvent.beat);
-                                    hairToInput.StartInput(beat, crEvent.relativeBeat);
-                                }
-                                else if (crEvent.tag == "Long")
-                                {
-                                    LongHair hairToInput = spawnedLongs.Find(x => x.createBeat == crEvent.beat);
-                                    hairToInput.StartInput(beat, crEvent.relativeBeat);
-                                }
+                                Hair hairToInput = spawnedHairs.Find(x => x.createBeat == crEvent.beat);
+                                hairToInput.StartInput(beat, crEvent.relativeBeat, spawnedTweezers);
                             }
-                            crHandlerInstance.queuedEvents.Clear();
+                            else if (crEvent.tag == "Long")
+                            {
+                                LongHair hairToInput = spawnedLongs.Find(x => x.createBeat == crEvent.beat);
+                                hairToInput.StartInput(beat, crEvent.relativeBeat, spawnedTweezers);
+                            }
                         }
-                    })
-                });
-            }
+                        crHandlerInstance.queuedEvents.Clear();
+                    }
+                })
+            });
         }
 
         public static void PrePassTurn(double beat)
         {
             if (GameManager.instance.currentGame == "rhythmTweezers")
             {
-                instance.SetPassTurnValues(beat);
                 instance.PassTurn(beat);
             }
             else
             {
                 passedTurns.Add(beat);
             }
-        }
-
-        private void SetPassTurnValues(double startBeat)
-        {
-            if (crHandlerInstance.intervalLength <= 0) return;
-            passTurnBeat = startBeat - 1;
-            passTurnEndBeat = startBeat + crHandlerInstance.intervalLength;
         }
 
         const float vegDupeOffset = 16.7f;
@@ -514,7 +510,6 @@ namespace HeavenStudio.Games
                 {
                     foreach (var turn in passedTurns)
                     {
-                        SetPassTurnValues(turn);
                         PassTurn(turn);
                     }
                     passedTurns.Clear();
@@ -528,24 +523,6 @@ namespace HeavenStudio.Games
                     queuedPeeks.Clear();
                 }
             }
-        }
-
-        private void LateUpdate()
-        {
-            // Set tweezer angle.
-            var tweezerAngle = -180f;
-            
-            var tweezerTime = Conductor.instance.songPositionInBeats;
-            var unclampedAngle = -58f + 116 * Mathp.Normalize(tweezerTime, (float)passTurnBeat + 1f, (float)passTurnEndBeat - 1f);
-            tweezerAngle = Mathf.Clamp(unclampedAngle, -180f, 180f);
-
-            Tweezers.transform.eulerAngles = new Vector3(0, 0, tweezerAngle);
-
-            // Set tweezer to follow vegetable.
-            var currentTweezerPos = Tweezers.transform.localPosition;
-            var vegetablePos = Vegetable.transform.localPosition;
-            var vegetableHolderPos = VegetableHolder.transform.localPosition;
-            Tweezers.transform.localPosition = new Vector3(vegetableHolderPos.x, vegetablePos.y + 1f, currentTweezerPos.z);
         }
 
         private void ResetVegetable()
