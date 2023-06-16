@@ -17,7 +17,7 @@ namespace HeavenStudio.Games.Loaders
             {
                 new GameAction("start interval", "Start Interval")
                 {
-                    preFunction = delegate { RhythmTweezers.PreInterval(eventCaller.currentEntity.beat, Mathf.Max(1, eventCaller.currentEntity.length), eventCaller.currentEntity["auto"]); }, 
+                    preFunction = delegate { RhythmTweezers.PreInterval(eventCaller.currentEntity.beat, eventCaller.currentEntity.length, eventCaller.currentEntity["auto"]); }, 
                     defaultLength = 4f, 
                     resizable = true,
                     parameters = new List<Param>()
