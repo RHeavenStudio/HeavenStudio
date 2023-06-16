@@ -233,11 +233,7 @@ namespace HeavenStudio.Games
         private void Awake()
         {
             instance = this;
-            if (crHandlerInstance == null)
-            {
-                crHandlerInstance = new CallAndResponseHandler();
-            }
-            if (crHandlerInstance.queuedEvents.Count > 0)
+            if (crHandlerInstance != null && crHandlerInstance.queuedEvents.Count > 0)
             {
                 foreach (var crEvent in crHandlerInstance.queuedEvents)
                 {
@@ -265,9 +261,14 @@ namespace HeavenStudio.Games
             }
         }
 
+        public override void OnPlay(double beat)
+        {
+            crHandlerInstance = null;
+        }
+
         private void OnDestroy()
         {
-            if (crHandlerInstance != null && !Conductor.instance.isPlaying)
+            if (!Conductor.instance.isPlaying)
             {
                 crHandlerInstance = null;
             }
@@ -356,6 +357,7 @@ namespace HeavenStudio.Games
         private void SetIntervalStart(double beat, double gameSwitchBeat, float interval = 4f, bool autoPassTurn = true)
         {
             StopTransitionIfActive();
+            crHandlerInstance = new();
             crHandlerInstance.StartInterval(beat, interval);
             List<RiqEntity> relevantHairEvents = GetAllHairsInBetweenBeat(beat, beat + interval);
             foreach (var hairEvent in relevantHairEvents)
@@ -385,10 +387,7 @@ namespace HeavenStudio.Games
             }
             if (autoPassTurn)
             {
-                BeatAction.New(instance.gameObject, new List<BeatAction.Action>()
-                {
-                    new BeatAction.Action(beat + interval - 2, delegate { PassTurn(beat + interval, interval); })
-                });
+                PassTurn(beat + interval, interval);
             }
         }
 
