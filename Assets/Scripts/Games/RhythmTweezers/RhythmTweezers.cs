@@ -357,7 +357,8 @@ namespace HeavenStudio.Games
         private void SetIntervalStart(double beat, double gameSwitchBeat, float interval = 4f, bool autoPassTurn = true)
         {
             StopTransitionIfActive();
-            crHandlerInstance = new();
+            CallAndResponseHandler newHandler = new();
+            crHandlerInstance = newHandler;
             crHandlerInstance.StartInterval(beat, interval);
             List<RiqEntity> relevantHairEvents = GetAllHairsInBetweenBeat(beat, beat + interval);
             foreach (var hairEvent in relevantHairEvents)
@@ -387,7 +388,7 @@ namespace HeavenStudio.Games
             }
             if (autoPassTurn)
             {
-                PassTurn(beat + interval, interval);
+                PassTurn(beat + interval, interval, newHandler);
             }
         }
 
@@ -425,10 +426,10 @@ namespace HeavenStudio.Games
 
         private void PassTurnStandalone(double beat)
         {
-            PassTurn(beat, crHandlerInstance.intervalLength);
+            PassTurn(beat, crHandlerInstance.intervalLength, crHandlerInstance);
         }
 
-        private void PassTurn(double beat, double length)
+        private void PassTurn(double beat, double length, CallAndResponseHandler crHandler)
         {
             Tweezers spawnedTweezers = Instantiate(Tweezers, transform);
             spawnedTweezers.gameObject.SetActive(true);
@@ -437,11 +438,11 @@ namespace HeavenStudio.Games
             {
                 new BeatAction.Action(beat - 0.25, delegate
                 {
-                    if (crHandlerInstance.queuedEvents.Count > 0)
+                    if (crHandler.queuedEvents.Count > 0)
                     {
                         currentTweezers = spawnedTweezers;
-                        spawnedTweezers.hairsLeft = crHandlerInstance.queuedEvents.Count;
-                        foreach (var crEvent in crHandlerInstance.queuedEvents)
+                        spawnedTweezers.hairsLeft = crHandler.queuedEvents.Count;
+                        foreach (var crEvent in crHandler.queuedEvents)
                         {
                             if (crEvent.tag == "Hair")
                             {
@@ -454,7 +455,7 @@ namespace HeavenStudio.Games
                                 hairToInput.StartInput(beat, crEvent.relativeBeat, spawnedTweezers);
                             }
                         }
-                        crHandlerInstance.queuedEvents.Clear();
+                        crHandler.queuedEvents.Clear();
                     }
 
                 }),
