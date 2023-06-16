@@ -7,7 +7,7 @@ namespace HeavenStudio.Games.Scripts_RhythmTweezers
 {
     public class Hair : MonoBehaviour
     {
-        public double createBeat;
+        [NonSerialized] public double createBeat;
         public GameObject hairSprite;
         public GameObject stubbleSprite;
         public GameObject missedSprite;

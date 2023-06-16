@@ -20,6 +20,8 @@ namespace HeavenStudio.Games.Scripts_RhythmTweezers
         public Transform tweezerSpriteTrans;
         private double passTurnBeat = -1;
         private double passTurnEndBeat = -1;
+        [NonSerialized] public int hairsLeft;
+        private int eyeSize = 0;
 
         private void Awake()
         {
@@ -85,13 +87,13 @@ namespace HeavenStudio.Games.Scripts_RhythmTweezers
                 hair.hairSprite.SetActive(false);
                 hair.stubbleSprite.SetActive(true);
 
-                game.hairsLeft--;
-                game.eyeSize = Mathf.Clamp(game.eyeSize + 1, 0, 10);
+                hairsLeft--;
+                eyeSize = Mathf.Clamp(eyeSize + 1, 0, 10);
 
-                if (game.hairsLeft <= 0)
+                if (hairsLeft <= 0)
                     vegetableAnim.Play("HopFinal", 0, 0);
                 else
-                    vegetableAnim.Play("Hop" + game.eyeSize.ToString(), 0, 0);
+                    vegetableAnim.Play("Hop" + eyeSize.ToString(), 0, 0);
 
                 anim.Play("Tweezers_Pluck_Success", 0, 0);
             }
@@ -125,13 +127,13 @@ namespace HeavenStudio.Games.Scripts_RhythmTweezers
                 // Making transparent instead of disabling because animators are silly.
                 hair.loop.GetComponent<SpriteRenderer>().color = Color.clear;
 
-                game.hairsLeft--;
-                game.eyeSize = Mathf.Clamp(game.eyeSize + 1, 0, 10);
+                hairsLeft--;
+                eyeSize = Mathf.Clamp(eyeSize + 1, 0, 10);
 
-                if (game.hairsLeft <= 0)
+                if (hairsLeft <= 0)
                     vegetableAnim.Play("HopFinal", 0, 0);
                 else
-                    vegetableAnim.Play("Hop" + game.eyeSize.ToString(), 0, 0);
+                    vegetableAnim.Play("Hop" + eyeSize.ToString(), 0, 0);
 
                 anim.Play("Tweezers_Pluck_Success", 0, 0);
             }
