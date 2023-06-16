@@ -426,7 +426,7 @@ namespace HeavenStudio.Games
 
         private void PassTurnStandalone(double beat)
         {
-            PassTurn(beat, crHandlerInstance.intervalLength, crHandlerInstance);
+            if (crHandlerInstance != null) PassTurn(beat, crHandlerInstance.intervalLength, crHandlerInstance);
         }
 
         private void PassTurn(double beat, double length, CallAndResponseHandler crHandler)
