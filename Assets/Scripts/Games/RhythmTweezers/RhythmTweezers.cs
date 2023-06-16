@@ -17,11 +17,13 @@ namespace HeavenStudio.Games.Loaders
             {
                 new GameAction("start interval", "Start Interval")
                 {
-                    function = delegate { RhythmTweezers.instance.SetIntervalStart(eventCaller.currentEntity.beat, eventCaller.currentEntity.length); }, 
+                    preFunction = delegate { RhythmTweezers.PreInterval(eventCaller.currentEntity.beat, Mathf.Max(1, eventCaller.currentEntity.length), eventCaller.currentEntity["auto"]); }, 
                     defaultLength = 4f, 
                     resizable = true,
-                    priority = 1,
-                    inactiveFunction = delegate { RhythmTweezers.InactiveInterval(eventCaller.currentEntity.beat, eventCaller.currentEntity.length); }
+                    parameters = new List<Param>()
+                    {
+                        new Param("auto", true, "Auto Pass Turn", "Will the turn automatically be passed at the end of this event?")
+                    }
                 },
                 new GameAction("short hair", "Short Hair")
                 {
@@ -220,6 +222,13 @@ namespace HeavenStudio.Games
         private List<LongHair> spawnedLongs = new List<LongHair>();
 
         private static List<double> passedTurns = new();
+        private struct QueuedInterval
+        {
+            public double beat;
+            public float interval;
+            public bool autoPassTurn;
+        }
+        private static List<QueuedInterval> queuedIntervals = new List<QueuedInterval>();
 
         private void Awake()
         {
@@ -268,24 +277,30 @@ namespace HeavenStudio.Games
             }
         }
 
-        public static void SpawnHairInactive(double beat)
+        private void SpawnHairInactive(double beat)
         {
-            if (crHandlerInstance == null)
-            {
-                crHandlerInstance = new CallAndResponseHandler();
-            }
             if (crHandlerInstance.queuedEvents.Count > 0 && crHandlerInstance.queuedEvents.Find(x => x.beat == beat || (beat >= x.beat && beat <= x.beat + x.length)) != null) return;
             crHandlerInstance.AddEvent(beat, 0, "Hair");
+            Hair hair = Instantiate(hairBase, HairsHolder.transform).GetComponent<Hair>();
+            spawnedHairs.Add(hair);
+            hair.gameObject.SetActive(true);
+            hair.GetComponent<Animator>().Play("SmallAppear", 0, 1);
+            float rot = -58f + 116 * crHandlerInstance.GetIntervalProgressFromBeat(beat, 1);
+            hair.transform.eulerAngles = new Vector3(0, 0, rot);
+            hair.createBeat = beat;
         }
 
-        public static void SpawnLongHairInactive(double beat)
+        private void SpawnLongHairInactive(double beat)
         {
-            if (crHandlerInstance == null)
-            {
-                crHandlerInstance = new CallAndResponseHandler();
-            }
             if (crHandlerInstance.queuedEvents.Count > 0 && crHandlerInstance.queuedEvents.Find(x => x.beat == beat || (beat >= x.beat && beat <= x.beat + x.length)) != null) return;
             crHandlerInstance.AddEvent(beat, 0.5f, "Long");
+            LongHair hair = Instantiate(longHairBase, HairsHolder.transform).GetComponent<LongHair>();
+            spawnedLongs.Add(hair);
+            hair.gameObject.SetActive(true);
+            hair.GetComponent<Animator>().Play("LongAppear", 0, 1);
+            float rot = -58f + 116 * crHandlerInstance.GetIntervalProgressFromBeat(beat, 1);
+            hair.transform.eulerAngles = new Vector3(0, 0, rot);
+            hair.createBeat = beat;
         }
 
         public void SpawnHair(double beat)
@@ -338,38 +353,60 @@ namespace HeavenStudio.Games
             hair.createBeat = beat;
         }
 
-        public void SetIntervalStart(double beat, float interval = 4f, bool autoPassTurn = true)
+        private void SetIntervalStart(double beat, double gameSwitchBeat, float interval = 4f, bool autoPassTurn = true)
         {
             StopTransitionIfActive();
             crHandlerInstance.StartInterval(beat, interval);
             List<RiqEntity> relevantHairEvents = GetAllHairsInBetweenBeat(beat, beat + interval);
             foreach (var hairEvent in relevantHairEvents)
             {
-                if (hairEvent.datamodel == "rhythmTweezers/short hair")
+                if (hairEvent.beat >= gameSwitchBeat)
                 {
-                    SpawnHair(hairEvent.beat);
+                    if (hairEvent.datamodel == "rhythmTweezers/short hair")
+                    {
+                        SpawnHair(hairEvent.beat);
+                    }
+                    else
+                    {
+                        SpawnLongHair(hairEvent.beat);
+                    }
                 }
                 else
                 {
-                    SpawnLongHair(hairEvent.beat);
+                    if (hairEvent.datamodel == "rhythmTweezers/short hair")
+                    {
+                        SpawnHairInactive(hairEvent.beat);
+                    }
+                    else
+                    {
+                        SpawnLongHairInactive(hairEvent.beat);
+                    }
                 }
             }
             if (autoPassTurn)
             {
                 BeatAction.New(instance.gameObject, new List<BeatAction.Action>()
                 {
-                    new BeatAction.Action(beat + interval - 2, delegate { PassTurn(beat + interval); })
+                    new BeatAction.Action(beat + interval - 2, delegate { PassTurn(beat + interval, interval); })
                 });
             }
         }
 
-        public static void InactiveInterval(double beat, float interval)
+        public static void PreInterval(double beat, float interval = 4f, bool autoPassTurn = true)
         {
-            if (crHandlerInstance == null)
+            if (GameManager.instance.currentGame == "rhythmTweezers")
             {
-                crHandlerInstance = new CallAndResponseHandler();
+                instance.SetIntervalStart(beat, beat, interval, autoPassTurn);
             }
-            crHandlerInstance.StartInterval(beat, interval);
+            else
+            {
+                queuedIntervals.Add(new QueuedInterval()
+                {
+                    beat = beat,
+                    interval = interval,
+                    autoPassTurn = autoPassTurn
+                });
+            }
         }
 
         private static List<RiqEntity> GetAllHairsInBetweenBeat(double beat, double endBeat)
@@ -387,11 +424,16 @@ namespace HeavenStudio.Games
             return tempEvents;
         }
 
-        public void PassTurn(double beat)
+        private void PassTurnStandalone(double beat)
+        {
+            PassTurn(beat, crHandlerInstance.intervalLength);
+        }
+
+        private void PassTurn(double beat, double length)
         {
             Tweezers spawnedTweezers = Instantiate(Tweezers, transform);
             spawnedTweezers.gameObject.SetActive(true);
-            spawnedTweezers.Init(beat, beat + crHandlerInstance.intervalLength);
+            spawnedTweezers.Init(beat, beat + length);
             BeatAction.New(instance.gameObject, new List<BeatAction.Action>()
             {
                 new BeatAction.Action(beat - 0.25, delegate
@@ -424,7 +466,7 @@ namespace HeavenStudio.Games
         {
             if (GameManager.instance.currentGame == "rhythmTweezers")
             {
-                instance.PassTurn(beat);
+                instance.PassTurnStandalone(beat);
             }
             else
             {
@@ -530,7 +572,7 @@ namespace HeavenStudio.Games
                 {
                     foreach (var turn in passedTurns)
                     {
-                        PassTurn(turn);
+                        PassTurnStandalone(turn);
                     }
                     passedTurns.Clear();
                 }
@@ -541,6 +583,21 @@ namespace HeavenStudio.Games
                         NoPeeking(peek.beat, peek.length, peek.type);
                     }
                     queuedPeeks.Clear();
+                }
+            }
+        }
+
+        public override void OnGameSwitch(double beat)
+        {
+            if (Conductor.instance.isPlaying && !Conductor.instance.isPaused)
+            {
+                if (queuedIntervals.Count > 0)
+                {
+                    foreach (var interval in queuedIntervals)
+                    {
+                        SetIntervalStart(interval.beat, beat, interval.interval, interval.autoPassTurn);
+                    }
+                    queuedIntervals.Clear();
                 }
             }
         }

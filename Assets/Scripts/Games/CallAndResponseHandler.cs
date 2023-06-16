@@ -88,7 +88,7 @@ namespace HeavenStudio.Games
 
         public float GetIntervalProgressFromBeat(double beat, float lengthOffset = 0)
         {
-            return (float)((beat - intervalStartBeat) / ((intervalStartBeat + intervalLength - lengthOffset) - intervalStartBeat));
+            return (float)((beat - intervalStartBeat) / Mathf.Max(1, intervalLength - lengthOffset));
         }
 
         /// <summary>

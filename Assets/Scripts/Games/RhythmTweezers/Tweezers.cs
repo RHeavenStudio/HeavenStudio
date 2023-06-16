@@ -43,7 +43,7 @@ namespace HeavenStudio.Games.Scripts_RhythmTweezers
             if (passTurnBeat != -1)
             {
                 // Set tweezer angle.
-                float tweezerTime = Conductor.instance.GetPositionFromBeat(passTurnBeat, passTurnEndBeat - 1f - passTurnBeat);
+                float tweezerTime = Conductor.instance.GetPositionFromBeat(passTurnBeat, Math.Max(passTurnEndBeat - 1f - passTurnBeat, 1));
                 var unclampedAngle = -58f + (116 * tweezerTime);
                 var tweezerAngle = Mathf.Clamp(unclampedAngle, -180f, 180f);
 
