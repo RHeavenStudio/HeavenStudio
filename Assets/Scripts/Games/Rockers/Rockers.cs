@@ -419,7 +419,7 @@ namespace HeavenStudio.Games
             instance = this;
             if (crHandlerInstance == null)
             {
-                crHandlerInstance = new CallAndResponseHandler(8);
+                crHandlerInstance = new CallAndResponseHandler();
             }
             var tempEvents = EventCaller.GetAllInGameManagerList("rockers", new string[] { "prepare" });
             foreach (var tempEvent in tempEvents)
@@ -866,7 +866,7 @@ namespace HeavenStudio.Games
         {
             if (crHandlerInstance == null)
             {
-                crHandlerInstance = new CallAndResponseHandler(8);
+                crHandlerInstance = new CallAndResponseHandler();
             }
             crHandlerInstance.StartInterval(beat, length);
         }
@@ -881,7 +881,7 @@ namespace HeavenStudio.Games
         {
             if (crHandlerInstance == null)
             {
-                crHandlerInstance = new CallAndResponseHandler(8);
+                crHandlerInstance = new CallAndResponseHandler();
             }
             List<RiqEntity> foundRiffEvents = GrabAllRiffEvents();
             RiqEntity foundEvent = foundRiffEvents.Find(x => x.beat == beat);
@@ -905,7 +905,7 @@ namespace HeavenStudio.Games
         {
             if (crHandlerInstance == null)
             {
-                crHandlerInstance = new CallAndResponseHandler(8);
+                crHandlerInstance = new CallAndResponseHandler();
             }
             var bendEventsToCheck = GrabAllBendEvents();
             var riffEventsToCheck = GrabAllRiffEvents();

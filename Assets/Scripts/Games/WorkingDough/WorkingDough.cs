@@ -217,7 +217,7 @@ namespace HeavenStudio.Games
         {
             if (crHandlerInstance == null)
             {
-                crHandlerInstance = new CallAndResponseHandler(8);
+                crHandlerInstance = new CallAndResponseHandler();
             }
             instance = this;
         }
@@ -409,7 +409,7 @@ namespace HeavenStudio.Games
         {
             if (crHandlerInstance == null)
             {
-                crHandlerInstance = new CallAndResponseHandler(8);
+                crHandlerInstance = new CallAndResponseHandler();
             }
             crHandlerInstance.AddEvent(beat, 0, isBig ? "big" : "small", new List<CallAndResponseHandler.CallAndResponseEventParam>()
             {
@@ -431,7 +431,7 @@ namespace HeavenStudio.Games
         {
             if (crHandlerInstance == null)
             {
-                crHandlerInstance = new CallAndResponseHandler(8);
+                crHandlerInstance = new CallAndResponseHandler();
             }
             crHandlerInstance.StartInterval(beat, interval);
         }
