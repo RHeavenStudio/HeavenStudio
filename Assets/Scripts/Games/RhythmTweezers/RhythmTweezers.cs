@@ -25,14 +25,10 @@ namespace HeavenStudio.Games.Loaders
                 },
                 new GameAction("short hair", "Short Hair")
                 {
-                    inactiveFunction = delegate { RhythmTweezers.SpawnHairInactive(eventCaller.currentEntity.beat); },
-                    function = delegate { RhythmTweezers.instance.SpawnHair(eventCaller.currentEntity.beat); }, 
                     defaultLength = 0.5f
                 },
                 new GameAction("long hair", "Curly Hair")
                 {
-                    inactiveFunction = delegate { RhythmTweezers.SpawnLongHairInactive(eventCaller.currentEntity.beat); },
-                    function = delegate { RhythmTweezers.instance.SpawnLongHair(eventCaller.currentEntity.beat); }, 
                     defaultLength = 0.5f
                 },
                 new GameAction("passTurn", "Pass Turn")
@@ -131,6 +127,7 @@ namespace HeavenStudio.Games.Loaders
 
 namespace HeavenStudio.Games
 {
+    using Jukebox;
     using Scripts_RhythmTweezers;
 
     public class RhythmTweezers : Minigame
@@ -162,6 +159,7 @@ namespace HeavenStudio.Games
         public Animator VegetableAnimator;
         public SpriteRenderer bg;
         public Tweezers Tweezers;
+        private Tweezers currentTweezers;
         public GameObject hairBase;
         public GameObject longHairBase;
         public GameObject pluckedHairBase;
@@ -169,7 +167,6 @@ namespace HeavenStudio.Games
 
         public GameObject HairsHolder;
         public GameObject DroppedHairsHolder;
-        [NonSerialized] public int hairsLeft = 0;
 
         [Header("Variables")]
         private double passTurnBeat;
@@ -181,8 +178,6 @@ namespace HeavenStudio.Games
         public Sprite missedHairSprite;
         public Sprite onionSprite;
         public Sprite potatoSprite;
-
-        [NonSerialized] public int eyeSize = 0;
 
         Tween transitionTween;
         bool transitioning = false;
@@ -304,8 +299,15 @@ namespace HeavenStudio.Games
             SoundByte.PlayOneShotGame("rhythmTweezers/shortAppear", beat);
             Hair hair = Instantiate(hairBase, HairsHolder.transform).GetComponent<Hair>();
             spawnedHairs.Add(hair);
-            hair.gameObject.SetActive(true);
-            hair.GetComponent<Animator>().Play("SmallAppear", 0, 0);
+
+            BeatAction.New(instance.gameObject, new List<BeatAction.Action>()
+            {
+                new BeatAction.Action(beat, delegate
+                {
+                    hair.gameObject.SetActive(true);
+                    hair.GetComponent<Animator>().Play("SmallAppear", 0, 0);
+                })
+            });
 
             float rot = -58f + 116 * crHandlerInstance.GetIntervalProgressFromBeat(beat, 1);
             hair.transform.eulerAngles = new Vector3(0, 0, rot);
@@ -322,20 +324,43 @@ namespace HeavenStudio.Games
             SoundByte.PlayOneShotGame("rhythmTweezers/longAppear", beat);
             LongHair hair = Instantiate(longHairBase, HairsHolder.transform).GetComponent<LongHair>();
             spawnedLongs.Add(hair);
-            hair.gameObject.SetActive(true);
-            hair.GetComponent<Animator>().Play("LongAppear", 0, 0);
+            BeatAction.New(instance.gameObject, new List<BeatAction.Action>()
+            {
+                new BeatAction.Action(beat, delegate
+                {
+                    hair.gameObject.SetActive(true);
+                    hair.GetComponent<Animator>().Play("LongAppear", 0, 0);
+                })
+            });
 
             float rot = -58f + 116 * crHandlerInstance.GetIntervalProgressFromBeat(beat, 1);
             hair.transform.eulerAngles = new Vector3(0, 0, rot);
             hair.createBeat = beat;
         }
 
-        public void SetIntervalStart(double beat, float interval = 4f)
+        public void SetIntervalStart(double beat, float interval = 4f, bool autoPassTurn = true)
         {
             StopTransitionIfActive();
-            hairsLeft = 0;
-            eyeSize = 0;
             crHandlerInstance.StartInterval(beat, interval);
+            List<RiqEntity> relevantHairEvents = GetAllHairsInBetweenBeat(beat, beat + interval);
+            foreach (var hairEvent in relevantHairEvents)
+            {
+                if (hairEvent.datamodel == "rhythmTweezers/short hair")
+                {
+                    SpawnHair(hairEvent.beat);
+                }
+                else
+                {
+                    SpawnLongHair(hairEvent.beat);
+                }
+            }
+            if (autoPassTurn)
+            {
+                BeatAction.New(instance.gameObject, new List<BeatAction.Action>()
+                {
+                    new BeatAction.Action(beat + interval - 2, delegate { PassTurn(beat + interval); })
+                });
+            }
         }
 
         public static void InactiveInterval(double beat, float interval)
@@ -347,6 +372,21 @@ namespace HeavenStudio.Games
             crHandlerInstance.StartInterval(beat, interval);
         }
 
+        private static List<RiqEntity> GetAllHairsInBetweenBeat(double beat, double endBeat)
+        {
+            List<RiqEntity> hairEvents = EventCaller.GetAllInGameManagerList("rhythmTweezers", new string[] { "short hair", "long hair"});
+            List<RiqEntity> tempEvents = new();
+
+            foreach (var entity in hairEvents)
+            {
+                if (entity.beat >= beat && entity.beat < endBeat)
+                {
+                    tempEvents.Add(entity);
+                }
+            }
+            return tempEvents;
+        }
+
         public void PassTurn(double beat)
         {
             Tweezers spawnedTweezers = Instantiate(Tweezers, transform);
@@ -354,11 +394,12 @@ namespace HeavenStudio.Games
             spawnedTweezers.Init(beat, beat + crHandlerInstance.intervalLength);
             BeatAction.New(instance.gameObject, new List<BeatAction.Action>()
             {
-                new BeatAction.Action(beat - 1, delegate
+                new BeatAction.Action(beat - 0.25, delegate
                 {
                     if (crHandlerInstance.queuedEvents.Count > 0)
                     {
-                        hairsLeft = crHandlerInstance.queuedEvents.Count;
+                        currentTweezers = spawnedTweezers;
+                        spawnedTweezers.hairsLeft = crHandlerInstance.queuedEvents.Count;
                         foreach (var crEvent in crHandlerInstance.queuedEvents)
                         {
                             if (crEvent.tag == "Hair")
@@ -376,27 +417,6 @@ namespace HeavenStudio.Games
                     }
 
                 }),
-                new BeatAction.Action(beat, delegate
-                {
-                    if (crHandlerInstance.queuedEvents.Count > 0)
-                    {
-                        hairsLeft += crHandlerInstance.queuedEvents.Count;
-                        foreach (var crEvent in crHandlerInstance.queuedEvents)
-                        {
-                            if (crEvent.tag == "Hair")
-                            {
-                                Hair hairToInput = spawnedHairs.Find(x => x.createBeat == crEvent.beat);
-                                hairToInput.StartInput(beat, crEvent.relativeBeat, spawnedTweezers);
-                            }
-                            else if (crEvent.tag == "Long")
-                            {
-                                LongHair hairToInput = spawnedLongs.Find(x => x.createBeat == crEvent.beat);
-                                hairToInput.StartInput(beat, crEvent.relativeBeat, spawnedTweezers);
-                            }
-                        }
-                        crHandlerInstance.queuedEvents.Clear();
-                    }
-                })
             });
         }
 
@@ -528,7 +548,7 @@ namespace HeavenStudio.Games
         private void ResetVegetable()
         {
             // If the tweezers happen to be holding a hair, drop it immediately so it can be destroyed below.
-            Tweezers.DropHeldHair();
+            currentTweezers?.DropHeldHair();
 
             foreach (Transform t in HairsHolder.transform)
             {
@@ -541,8 +561,6 @@ namespace HeavenStudio.Games
             }
 
             VegetableAnimator.Play("Idle", 0, 0);
-
-            eyeSize = 0;
         }
 
         private void StopTransitionIfActive()
