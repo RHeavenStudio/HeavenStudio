@@ -365,7 +365,7 @@ namespace HeavenStudio.Games
             {
                 //Jump and play sound
                 new BeatAction.Action(beat + 0.1f, delegate { arrowSRLeftNPC.sprite = whiteArrowSprite; }),
-                new BeatAction.Action(beat + 1f, delegate { doughDudesNPC.GetComponent<Animator>().Play(isBig ? "BigDoughJump" :"SmallDoughJump", 0, 0); }),
+                new BeatAction.Action(beat + 1f, delegate { doughDudesNPC.GetComponent<Animator>().DoScaledAnimationAsync(isBig ? "BigDoughJump" :"SmallDoughJump", 0.5f); }),
                 new BeatAction.Action(beat + 1f, delegate { npcImpact.SetActive(true); }),
                 new BeatAction.Action(beat + 1.1f, delegate { npcImpact.SetActive(false); }),
                 new BeatAction.Action(beat + 1.9f, delegate { arrowSRRightNPC.sprite = redArrowSprite; }),
@@ -532,12 +532,12 @@ namespace HeavenStudio.Games
             }
             if (PlayerInput.Pressed() && !IsExpectingInputNow(InputType.STANDARD_DOWN))
             {
-                doughDudesPlayer.GetComponent<Animator>().Play("SmallDoughJump", 0, 0);
+                doughDudesPlayer.GetComponent<Animator>().DoScaledAnimationAsync("SmallDoughJump", 0.5f);
                 SoundByte.PlayOneShotGame("workingDough/smallPlayer");
             }
             else if (PlayerInput.AltPressed() && !IsExpectingInputNow(InputType.STANDARD_ALT_DOWN))
             {
-                doughDudesPlayer.GetComponent<Animator>().Play("BigDoughJump", 0, 0);
+                doughDudesPlayer.GetComponent<Animator>().DoScaledAnimationAsync("BigDoughJump", 0.5f);
                 SoundByte.PlayOneShotGame("workingDough/bigPlayer");
             }
         }

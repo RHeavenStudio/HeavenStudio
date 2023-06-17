@@ -20,7 +20,7 @@ namespace HeavenStudio.Games.Scripts_WorkingDough
         }
         private State currentState;
 
-        private double startBeat;
+        private double startBeat = double.MinValue;
 
         private bool big;
 
@@ -64,45 +64,49 @@ namespace HeavenStudio.Games.Scripts_WorkingDough
 
             if (cond.isPlaying && !cond.isPaused)
             {
-                Vector3 pos = new Vector3();
-                double beat = cond.songPositionInBeats;
-                switch (currentState)
+                if (startBeat > double.MinValue)
                 {
-                    case State.None:
-                        break;
-                    case State.Entering:
-                        pos = GetPathPositionFromBeat(enterPath, Math.Max(beat, startBeat), startBeat);
-                        break;
-                    case State.Hit:
-                        pos = GetPathPositionFromBeat(hitPath, Math.Max(beat, startBeat), startBeat);
-                        if (beat >= startBeat + 1)
-                        {
-                            Destroy(gameObject);
-                        }
-                        break;
-                    case State.Miss:
-                        pos = GetPathPositionFromBeat(missPath, Math.Max(beat, startBeat), startBeat);
-                        if (beat >= startBeat + 1)
-                        {
-                            Destroy(gameObject);
-                        }
-                        break;
-                    case State.Weak:
-                        pos = GetPathPositionFromBeat(weakPath, Math.Max(beat, startBeat), startBeat);
-                        if (beat >= startBeat + 1)
-                        {
-                            Destroy(gameObject);
-                        }
-                        break;
-                    case State.Barely:
-                        pos = GetPathPositionFromBeat(barelyPath, Math.Max(beat, startBeat), startBeat);
-                        if (beat >= startBeat + 2)
-                        {
-                            Destroy(gameObject);
-                        }
-                        break;
+                    Vector3 pos = new Vector3();
+                    double beat = cond.songPositionInBeats;
+                    switch (currentState)
+                    {
+                        case State.None:
+                            break;
+                        case State.Entering:
+                            pos = GetPathPositionFromBeat(enterPath, Math.Max(beat, startBeat), startBeat);
+                            break;
+                        case State.Hit:
+                            pos = GetPathPositionFromBeat(hitPath, Math.Max(beat, startBeat), startBeat);
+                            if (beat >= startBeat + 1)
+                            {
+                                Destroy(gameObject);
+                            }
+                            break;
+                        case State.Miss:
+                            pos = GetPathPositionFromBeat(missPath, Math.Max(beat, startBeat), startBeat);
+                            if (beat >= startBeat + 1)
+                            {
+                                Destroy(gameObject);
+                            }
+                            break;
+                        case State.Weak:
+                            pos = GetPathPositionFromBeat(weakPath, Math.Max(beat, startBeat), startBeat);
+                            if (beat >= startBeat + 1)
+                            {
+                                Destroy(gameObject);
+                            }
+                            break;
+                        case State.Barely:
+                            pos = GetPathPositionFromBeat(barelyPath, Math.Max(beat, startBeat), startBeat);
+                            if (beat >= startBeat + 2)
+                            {
+                                Destroy(gameObject);
+                            }
+                            break;
+                    }
+                    if (startBeat <= beat) transform.position = pos;
+                    else transform.position = new Vector3(-80, -80);
                 }
-                transform.position = pos;
             }
         }
 
@@ -123,12 +127,12 @@ namespace HeavenStudio.Games.Scripts_WorkingDough
                 if (big)
                 {
                     SoundByte.PlayOneShotGame("workingDough/bigPlayer");
-                    game.doughDudesPlayer.GetComponent<Animator>().Play("BigDoughJump", 0, 0);
+                    game.doughDudesPlayer.GetComponent<Animator>().DoScaledAnimationAsync("BigDoughJump", 0.5f);
                 }
                 else
                 {
                     SoundByte.PlayOneShotGame("workingDough/smallPlayer");
-                    game.doughDudesPlayer.GetComponent<Animator>().Play("SmallDoughJump", 0, 0);
+                    game.doughDudesPlayer.GetComponent<Animator>().DoScaledAnimationAsync("SmallDoughJump", 0.5f);
                 }
                 Update();
                 return;
@@ -138,14 +142,14 @@ namespace HeavenStudio.Games.Scripts_WorkingDough
             {
                 SoundByte.PlayOneShotGame("workingDough/bigPlayer");
                 SoundByte.PlayOneShotGame("workingDough/hitBigPlayer");
-                game.doughDudesPlayer.GetComponent<Animator>().Play("BigDoughJump", 0, 0);
+                game.doughDudesPlayer.GetComponent<Animator>().DoScaledAnimationAsync("BigDoughJump", 0.5f);
                 game.backgroundAnimator.Play("BackgroundFlash", 0, 0);
             }
             else
             {
                 SoundByte.PlayOneShotGame("workingDough/smallPlayer");
                 SoundByte.PlayOneShotGame("workingDough/hitSmallPlayer");
-                game.doughDudesPlayer.GetComponent<Animator>().Play("SmallDoughJump", 0, 0);
+                game.doughDudesPlayer.GetComponent<Animator>().DoScaledAnimationAsync("SmallDoughJump", 0.5f);
             }
             bool hasGandw = false;
             if (gandw != null) hasGandw = gandw.activeSelf;
@@ -171,7 +175,7 @@ namespace HeavenStudio.Games.Scripts_WorkingDough
             {
                 currentState = State.Weak;
                 startBeat = beat;
-                game.doughDudesPlayer.GetComponent<Animator>().Play("SmallDoughJump", 0, 0);
+                game.doughDudesPlayer.GetComponent<Animator>().DoScaledAnimationAsync("SmallDoughJump", 0.5f);
                 SoundByte.PlayOneShotGame("workingDough/smallPlayer");
                 SoundByte.PlayOneShotGame("workingDough/tooBig");
                 Update();
@@ -179,7 +183,7 @@ namespace HeavenStudio.Games.Scripts_WorkingDough
             else
             {
                 GameObject.Instantiate(game.breakParticleEffect, game.breakParticleHolder);
-                game.doughDudesPlayer.GetComponent<Animator>().Play("BigDoughJump", 0, 0);
+                game.doughDudesPlayer.GetComponent<Animator>().DoScaledAnimationAsync("BigDoughJump", 0.5f);
                 SoundByte.PlayOneShotGame("workingDough/bigPlayer");
                 SoundByte.PlayOneShotGame("workingDough/tooSmall");
                 Destroy(gameObject);
