@@ -55,6 +55,7 @@ namespace HeavenStudio.Editor
         [SerializeField] private Button TempoFinderBTN;
         [SerializeField] private Button SnapDiagBTN;
         [SerializeField] private Button ChartParamBTN;
+        [SerializeField] private Button SortGamesBTN;
 
         [SerializeField] private Button EditorThemeBTN;
         [SerializeField] private Button EditorSettingsBTN;
@@ -111,6 +112,7 @@ namespace HeavenStudio.Editor
             Tooltip.AddTooltip(TempoFinderBTN.gameObject, "Tempo Finder");
             Tooltip.AddTooltip(SnapDiagBTN.gameObject, "Snap Settings");
             Tooltip.AddTooltip(ChartParamBTN.gameObject, "Remix Properties");
+            Tooltip.AddTooltip(SortGamesBTN.gameObject, "Sort By Favorite");
 
             Tooltip.AddTooltip(EditorSettingsBTN.gameObject, "Editor Settings <color=#adadad>[Ctrl+Shift+O]</color>");
             UpdateEditorStatus(true);
@@ -129,7 +131,7 @@ namespace HeavenStudio.Editor
             GameIcon_.GetComponent<GridGameSelectorGame>().MaskTex = GameIconMask(minigame.name);
             GameIcon_.GetComponent<GridGameSelectorGame>().UnClickIcon();
             GameIcon_.gameObject.SetActive(true);
-            GameIcon_.name = minigame.displayName;
+            GameIcon_.name = minigame.name;
         }
 
         public void LateUpdate()

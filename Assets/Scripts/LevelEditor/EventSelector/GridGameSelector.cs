@@ -22,6 +22,8 @@ namespace HeavenStudio.Editor
         public GameObject GameEventSelector;
         public GameObject EventRef;
         public GameObject CurrentSelected;
+        public GameObject Scrollbar;
+        public RectTransform Viewport;
         public RectTransform GameEventSelectorCanScroll;
         private RectTransform GameEventSelectorRect;
         private RectTransform eventsParent;
@@ -29,10 +31,11 @@ namespace HeavenStudio.Editor
         [Header("Properties")]
         [SerializeField] private int currentEventIndex;
         private Minigames.Minigame mg;
-        private bool gameOpen;
-        private int dragTimes;
         public float posDif;
         public int ignoreSelectCount;
+        private int sortStatus;
+        private int dragTimes;
+        private bool gameOpen;
         private float selectorHeight;
         private float eventSize;
 
@@ -46,7 +49,7 @@ namespace HeavenStudio.Editor
             eventSize = EventRef.GetComponent<RectTransform>().rect.height;
 
             eventsParent = EventRef.transform.parent.GetChild(2).GetComponent<RectTransform>();
-            SelectGame("Game Manager");
+            SelectGame("gameManager");
 
             //SetColors();
         }
@@ -96,77 +99,66 @@ namespace HeavenStudio.Editor
         private void UpdateScrollPosition()
         {
             selectorHeight = GameEventSelectorRect.rect.height;
-            eventSize = EventRef.GetComponent<RectTransform>().rect.height;
-            // EventRef.transform.parent.DOKill();
-            float lastLocalY = EventRef.transform.parent.transform.localPosition.y;
+            //eventSize = EventRef.GetComponent<RectTransform>().rect.height;
+            
+            Vector3 lastPos = EventRef.transform.parent.transform.localPosition;
+            float end = 0;
 
-            if (currentEventIndex * eventSize >= selectorHeight/2 && eventsParent.childCount * eventSize >= selectorHeight)
+            if ((currentEventIndex * eventSize >= selectorHeight/2) && (eventsParent.childCount * eventSize >= selectorHeight))
             {
                 if (currentEventIndex * eventSize < eventsParent.childCount * eventSize - selectorHeight/2)
-                {
-                    EventRef.transform.parent.transform.localPosition = new Vector3(
-                        EventRef.transform.parent.transform.localPosition.x, 
-                        Mathf.Lerp(lastLocalY, (currentEventIndex * eventSize) - selectorHeight/2, 12 * Time.deltaTime),
-                        EventRef.transform.parent.transform.localPosition.z
-                    );
-                }
+                    end = (currentEventIndex * eventSize) - selectorHeight/2;
                 else
-                {
-                    EventRef.transform.parent.transform.localPosition = new Vector3(
-                        EventRef.transform.parent.transform.localPosition.x, 
-                        Mathf.Lerp(lastLocalY, (eventsParent.childCount * eventSize) - selectorHeight + (eventSize*0.33f), 12 * Time.deltaTime),
-                        EventRef.transform.parent.transform.localPosition.z
-                    );
-                }
+                    end = (eventsParent.childCount * eventSize) - selectorHeight + (eventSize * 0.33f);
             }
-            else
-            {
-                EventRef.transform.parent.transform.localPosition = new Vector3(
-                    EventRef.transform.parent.transform.localPosition.x, 
-                    Mathf.Lerp(lastLocalY, 0, 12 * Time.deltaTime),
-                    EventRef.transform.parent.transform.localPosition.z
-                );
-            }
+            EventRef.transform.parent.transform.localPosition = new Vector3(
+                lastPos.x, 
+                Mathf.Lerp(lastPos.y, end, 12 * Time.deltaTime),
+                lastPos.z
+            );
             SetColors();
         }
 
-        // will automatically select game + game icon
+        // will automatically select game + game icon, and scroll to the game if it's offscreen
         // index is the event it will highlight (which was basically just added for pick block)
-        // TODO: automatically scroll if the game is offscreen, because i can't figure it out rn. -AJ
+        // TODO: automatically scroll if the game is offscreen, because i can't figure it out/can't figure out a good way to do it rn. -AJ
         public void SelectGame(string gameName, int index = 0)
         {
+            EventParameterManager.instance.Disable();
             if (SelectedGameIcon != null)
             {
                 SelectedGameIcon.GetComponent<GridGameSelectorGame>().UnClickIcon();
             }
-            var mgs = EventCaller.instance.minigames;
-            int mgIndex = 0, hidden = 0;
-            for (int i = 0; i < mgs.Count; i++)
-            {
-                if (mgs[i].displayName == gameName && !mgs[i].hidden) {
-                    mgIndex = i;
-                    break;
-                } else if (mgs[i].hidden) {
-                    hidden++;
-                }
+
+            mg = EventCaller.instance.GetMinigame(gameName);
+            if (mg == null) {
+                SelectGame("gameManager");
+                Debug.Log($"SelectGame() has failed, did you mean to input '{gameName}'?");
+                return;
             }
             
-            mg = mgs[mgIndex];
             SelectedMinigame = gameName;
             gameOpen = true;
 
             DestroyEvents();
             AddEvents(index);
 
-            // transform.GetChild(index).GetChild(0).gameObject.SetActive(true);
-            mgIndex -= hidden;
-            SelectedGameIcon = transform.GetChild(mgIndex+1).gameObject;
+            SelectedGameIcon = transform.Find(gameName).gameObject;
             SelectedGameIcon.GetComponent<GridGameSelectorGame>().ClickIcon();
 
             currentEventIndex = index;
             UpdateIndex(index, false);
 
-            Editor.instance?.SetGameEventTitle($"Select game event for {gameName.Replace("\n", "")}");
+            Editor.instance?.SetGameEventTitle($"Select game event for {mg.displayName.Replace("\n", "")}");
+
+            // should auto scroll if it's offscreen
+            // just barely doesn't work, and works even less with zooming. im sure there's a much better way to do it
+            /*
+            var pos = 1 - ((mgIndex / 4)-0.02f) / (Mathf.Ceil(mgsActive / 4) - 3);
+            var posMin = (pos + Viewport.rect.height); //+ (pos * 0.01f);
+            if (Scrollbar.value < pos) Scrollbar.value = pos;
+            else if (Scrollbar.value > posMin) Scrollbar.value = posMin;
+            */
         }
 
         private void AddEvents(int index = 0)
@@ -213,6 +205,58 @@ namespace HeavenStudio.Editor
                             eventsParent.GetChild(i).GetComponent<TMP_Text>().color = EditorTheme.theme.properties.EventNormalCol.Hex2RGB();
 
             eventsParent.GetChild(currentEventIndex).GetComponent<TMP_Text>().color = EditorTheme.theme.properties.EventSelectedCol.Hex2RGB();
+        }
+
+        // TODO: find the equation to get the sizes automatically, nobody's been able to figure one out yet (might have to be manual?)
+        public void Zoom()
+        {
+            if (!Input.GetKey(KeyCode.LeftControl)) return;
+            var glg = GetComponent<GridLayoutGroup>();
+            var sizes = new List<float>() {
+                209.5f,
+                102.3f,
+                66.6f,
+                48.6f,
+                37.9f,
+                30.8f,
+                25.7f,
+                24.3f,
+            };
+
+            if (glg.constraintCount + 1 > sizes.Count && Input.GetAxisRaw("Mouse ScrollWheel") < 0) return;
+
+            glg.constraintCount += (Input.GetAxisRaw("Mouse ScrollWheel") > 0) ? -1 : 1;
+            glg.cellSize = new Vector2(sizes[glg.constraintCount - 1], sizes[glg.constraintCount - 1]);
+        }
+
+        // method called when clicking the sort button in the editor, skips sorting first three "games"
+        // sorts by favorites if there are any, and sorts alphabetically if there aren't.
+        public void Sort()
+        {
+            var mgs = EventCaller.instance.minigames;
+            var mgsActive = new List<string>();
+            for (int i = 3; i < mgs.Count; i++)
+            {
+                if (!mgs[i].hidden) mgsActive.Add(mgs[i].name);
+            }
+            mgsActive.Sort();
+            var favs = new List<Transform>();
+            bool fav = false;
+            for (int i = 0; i < mgsActive.Count; i++)
+            {
+                var mg = transform.Find(mgsActive[i]);
+                if (mg.GetComponent<GridGameSelectorGame>().StarActive) {
+                    favs.Add(mg);
+                    fav = true;
+                }
+            }
+            if (!fav) {
+                for (int i = 0; i < mgsActive.Count; i++)
+                    transform.Find(mgsActive[i]).SetSiblingIndex(i+4);
+            } else {
+                for (int i = 0; i < favs.Count; i++)
+                    favs[i].SetSiblingIndex(i+4);
+            }
         }
 
         public bool IsPointerOverUIElement()

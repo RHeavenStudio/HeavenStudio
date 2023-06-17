@@ -110,11 +110,13 @@ namespace HeavenStudio.Editor.Track
 
             if (selected)
             {
+                /*
                 if (Input.GetKeyDown(KeyCode.Delete))
                 {
-                    /*Selections.instance.Deselect(this);
-                    Timeline.instance.DestroyEventObject(entity);*/
+                    Selections.instance.Deselect(this);
+                    Timeline.instance.DestroyEventObject(entity);
                 }
+                */
 
                 selectedImage.gameObject.SetActive(true);
                 for (int i = 0; i < outline.childCount; i++)
@@ -158,8 +160,8 @@ namespace HeavenStudio.Editor.Track
                 if (Timeline.instance.eventObjs.FindAll(c => c.moving).Count > 0 && selected)
                 {
                     Vector3 mousePos = Editor.instance.EditorCamera.ScreenToWorldPoint(Input.mousePosition);
-                    //duplicate the entity if holding alt or m-click
-                    if ((!wasDuplicated) && (Input.GetKey(KeyCode.LeftAlt) || Input.GetMouseButton(2)))
+                    // duplicate the entity if holding alt
+                    if ((!wasDuplicated) && Input.GetKey(KeyCode.LeftAlt))
                     {
                         Selections.instance.Deselect(this);
                         this.wasDuplicated = false;
@@ -256,22 +258,6 @@ namespace HeavenStudio.Editor.Track
                         Selections.instance.ClickSelect(this);
                     }
                 }
-            } else if (Input.GetMouseButtonUp(2)) {
-                var mgs = EventCaller.instance.minigames;
-                string[] datamodels = entity.datamodel.Split('/');
-
-                bool isSwitchGame = (datamodels[1] == "switchGame");
-                int gameIndex = mgs.FindIndex(c => c.name == datamodels[isSwitchGame ? 2 : 0]);
-                int block = isSwitchGame ? 0 : mgs[gameIndex].actions.FindIndex(c => c.actionName == datamodels[1]) + 1;
-
-                if (!isSwitchGame) {
-                    if (datamodels[0] == "gameManager") block -= 2;
-                    else if (datamodels[0] is "countIn" or "vfx") block--;
-                }
-
-                //Debug.Log(mgs[gameIndex].actions.Find(c => c.actionName == datamodels[1])+" "+datamodels[1]);
-                
-                GridGameSelector.instance.SelectGame(mgs[gameIndex].displayName, block);
             }
         }
 
@@ -296,6 +282,22 @@ namespace HeavenStudio.Editor.Track
             else if (Input.GetMouseButton(1))
             {
                 EventParameterManager.instance.StartParams(entity);
+            }
+            else if (Input.GetMouseButton(2))
+            {
+                var mgs = EventCaller.instance.minigames;
+                string[] datamodels = entity.datamodel.Split('/');
+
+                bool isSwitchGame = (datamodels[1] == "switchGame");
+                int gameIndex = mgs.FindIndex(c => c.name == datamodels[isSwitchGame ? 2 : 0]);
+                int block = isSwitchGame ? 0 : mgs[gameIndex].actions.FindIndex(c => c.actionName == datamodels[1]) + 1;
+
+                if (!isSwitchGame) {
+                    if (datamodels[0] == "gameManager") block -= 2;
+                    else if (datamodels[0] is "countIn" or "vfx") block--;
+                }
+                
+                GridGameSelector.instance.SelectGame(datamodels[isSwitchGame ? 2 : 0], block);
             }
         }
 
@@ -364,7 +366,6 @@ namespace HeavenStudio.Editor.Track
                 ResetResize();
             }
         }
-
 
         public void OnRightDown()
         {

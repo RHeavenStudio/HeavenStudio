@@ -11,7 +11,7 @@ namespace HeavenStudio.Editor
     {
         public GameObject GameTitlePreview;
         public Animator StarAnim;
-        bool starActive;
+        public bool StarActive;
 
         public GridGameSelector GridGameSelector;
 
@@ -21,12 +21,12 @@ namespace HeavenStudio.Editor
 
         private void Start()
         {
-            Tooltip.AddTooltip(this.gameObject, this.gameObject.name);
+            Tooltip.AddTooltip(this.gameObject, EventCaller.instance.GetMinigame(this.gameObject.name).displayName);
         }
 
         private void OnEnable()
         {
-            if (starActive) StarAnim.Play("Appear", 0, 1);
+            if (StarActive) StarAnim.Play("Appear", 0, 1);
         }
 
         public void SetupTextures()
@@ -42,15 +42,34 @@ namespace HeavenStudio.Editor
 
         public void OnClick()
         {
-            if (Input.GetMouseButtonUp(1)) 
-            {
-                StarAnim.CrossFade(starActive ? "Disappear" : "Appear", 0.3f);
-                starActive = !starActive;
-            } 
-            else if (Input.GetMouseButtonUp(0)) 
+            if (Input.GetMouseButtonUp(0)) 
             {
                 GridGameSelector.SelectGame(this.gameObject.name);
             }
+        }
+
+        public void OnDown()
+        {
+            if (Input.GetMouseButtonDown(1)) 
+            {
+                // while holding shift and the game icon clicked has a star, it will disable all stars.
+                if (Input.GetKey(KeyCode.LeftShift)) {
+                    if (!StarActive) return;
+                    for (int i = 0; i < transform.parent.childCount; i++)
+                    {
+                        var ggsg = transform.parent.GetChild(i).GetComponent<GridGameSelectorGame>();
+                        if (ggsg.StarActive) ggsg.Star();
+                    }
+                } else {
+                    Star();
+                }
+            } 
+        }
+
+        public void Star() 
+        {
+            StarAnim.CrossFade(StarActive ? "Disappear" : "Appear", 0.3f);
+            StarActive = !StarActive;
         }
 
         //TODO: animate between shapes
