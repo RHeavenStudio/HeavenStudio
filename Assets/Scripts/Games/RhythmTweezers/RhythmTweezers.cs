@@ -313,7 +313,7 @@ namespace HeavenStudio.Games
             crHandlerInstance.AddEvent(beat, 0, "Hair");
 
             SoundByte.PlayOneShotGame("rhythmTweezers/shortAppear", beat);
-            Hair hair = Instantiate(hairBase, HairsHolder.transform).GetComponent<Hair>();
+            Hair hair = Instantiate(hairBase, transform).GetComponent<Hair>();
             spawnedHairs.Add(hair);
 
             BeatAction.New(instance.gameObject, new List<BeatAction.Action>()
@@ -322,6 +322,7 @@ namespace HeavenStudio.Games
                 {
                     hair.gameObject.SetActive(true);
                     hair.GetComponent<Animator>().Play("SmallAppear", 0, 0);
+                    hair.transform.SetParent(HairsHolder.transform, false);
                 })
             });
 
@@ -338,7 +339,7 @@ namespace HeavenStudio.Games
             crHandlerInstance.AddEvent(beat, 0.5f, "Long");
 
             SoundByte.PlayOneShotGame("rhythmTweezers/longAppear", beat);
-            LongHair hair = Instantiate(longHairBase, HairsHolder.transform).GetComponent<LongHair>();
+            LongHair hair = Instantiate(longHairBase, transform).GetComponent<LongHair>();
             spawnedLongs.Add(hair);
             BeatAction.New(instance.gameObject, new List<BeatAction.Action>()
             {
@@ -346,6 +347,7 @@ namespace HeavenStudio.Games
                 {
                     hair.gameObject.SetActive(true);
                     hair.GetComponent<Animator>().Play("LongAppear", 0, 0);
+                    hair.transform.SetParent(HairsHolder.transform, false);
                 })
             });
 
