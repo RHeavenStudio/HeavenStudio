@@ -101,7 +101,7 @@ namespace HeavenStudio.Games
         static double WantFiveJump = double.MinValue;
         static double WantThrowSequence = double.MinValue;
         static double WantSleepSequence = double.MinValue;
-        static double WantInstantSleep = Single.MinValue;
+        static double WantInstantSleep = double.MinValue;
         static bool WantSleepType = false;
         static int WantSleepAction = (int) PajamaParty.SleepType.Normal;
         static int WantInstantSleepAction = (int) PajamaParty.SleepType.Normal;

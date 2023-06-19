@@ -23,7 +23,7 @@ namespace HeavenStudio.Editor
         public GameObject EventRef;
         public GameObject CurrentSelected;
         public GameObject Scrollbar;
-        public RectTransform Viewport;
+        public RectTransform GameSelectionRect;
         public RectTransform GameEventSelectorCanScroll;
         private RectTransform GameEventSelectorRect;
         private RectTransform eventsParent;
@@ -133,7 +133,7 @@ namespace HeavenStudio.Editor
             mg = EventCaller.instance.GetMinigame(gameName);
             if (mg == null) {
                 SelectGame("gameManager");
-                Debug.Log($"SelectGame() has failed, did you mean to input '{gameName}'?");
+                Debug.LogWarning($"SelectGame() has failed, did you mean to input '{gameName}'?");
                 return;
             }
             
