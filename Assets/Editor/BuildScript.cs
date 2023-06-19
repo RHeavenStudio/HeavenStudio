@@ -19,9 +19,28 @@ namespace UnityBuilderAction
         [MenuItem("File/Build Windows")]
         public static void StartWindows()
         {
+            string appName = PlayerSettings.productName;
             // Get filename.
-            string path = EditorUtility.SaveFolderPanel("Build out WINDOWS to...", "", "");
-            Build( BuildTarget.StandaloneWindows, 0, path + "/" );
+            string path = EditorUtility.SaveFilePanel("Build out WINDOWS to...", "", appName, "exe");
+            Build( BuildTarget.StandaloneWindows, 0, path);
+        }
+
+        [MenuItem("File/Build Linux")]
+        public static void StartLinux()
+        {
+            string appName = PlayerSettings.productName;
+            // Get filename.
+            string path = EditorUtility.SaveFilePanel("Build out LINUX to...", "", appName, "");
+            Build( BuildTarget.StandaloneLinux64, 0, path);
+        }
+
+        [MenuItem("File/Build Mac")]
+        public static void StartMac()
+        {
+            string appName = PlayerSettings.productName;
+            // Get filename.
+            string path = EditorUtility.SaveFilePanel("Build out MAC to...", "", appName, "app");
+            Build( BuildTarget.StandaloneOSX, 0, path);
         }
 
         public static void Build()
@@ -175,20 +194,16 @@ namespace UnityBuilderAction
             string[] scenes = EditorBuildSettings.scenes.Where(scene => scene.enabled).Select(s => s.path).ToArray();
 
             string dataPath = "";
-            string extension = "";
             switch ( buildTarget ) {
                 case BuildTarget.StandaloneWindows:
                 case BuildTarget.StandaloneWindows64:
-                    dataPath = $"{appName}_Data/";
-                    extension = ".exe";
+                    dataPath = $"_Data/";
                     break;
                 case BuildTarget.StandaloneOSX:
-                    dataPath = $"{appName}.app/Contents/";
-                    extension = ".app";
+                    dataPath = $".app/Contents/";
                     break;
                 case BuildTarget.StandaloneLinux64:
-                    dataPath = $"{appName}_Data/";
-                    extension = ".x86_64";
+                    dataPath = $"_Data/";
                     break;
             }
 
@@ -197,14 +212,15 @@ namespace UnityBuilderAction
                 scenes = scenes,
                 target = buildTarget,
 //                targetGroup = BuildPipeline.GetBuildTargetGroup(buildTarget),
-                locationPathName = filePath + $"{appName}{extension}",
+                locationPathName = filePath,
 //                options = UnityEditor.BuildOptions.Development
 #if UNITY_2021_2_OR_NEWER
                 subtarget = buildSubtarget
 #endif
             };
 
-            string assetBundleDirectory = filePath + dataPath + "StreamingAssets";
+            string buildDirectory = filePath.Substring(0, filePath.LastIndexOf('/')) + "/";
+            string assetBundleDirectory = buildDirectory + appName + dataPath + "StreamingAssets";
             if (!Directory.Exists(assetBundleDirectory))
             {
                 Directory.CreateDirectory(assetBundleDirectory);
