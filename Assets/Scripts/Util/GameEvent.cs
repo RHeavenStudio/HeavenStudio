@@ -3,8 +3,8 @@ namespace HeavenStudio.Util
     public class GameEvent
     {
         public float length;
-        public float startBeat;
-        public float lastReportedBeat;
+        public double startBeat;
+        public double lastReportedBeat;
         public bool enabled;
     }
 }

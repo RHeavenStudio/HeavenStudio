@@ -19,6 +19,7 @@ namespace HeavenStudio.Editor.Track
 
         public bool moving = false;
         public bool hovering;
+        public bool first = false;
 
         private void Start()
         {
@@ -78,6 +79,7 @@ namespace HeavenStudio.Editor.Track
 
         public void StartMove()
         {
+            if (first) return;
             Vector3 mousePos = Editor.instance.EditorCamera.ScreenToWorldPoint(Input.mousePosition);
             startPosX = mousePos.x - transform.position.x;
             moving = true;
@@ -86,6 +88,7 @@ namespace HeavenStudio.Editor.Track
 
         public void DeleteObj()
         {
+            if (first) return;
             transform.parent.GetComponent<SpecialTimeline>().specialTimelineObjs.Remove(this);
             Destroy(this.gameObject);
         }

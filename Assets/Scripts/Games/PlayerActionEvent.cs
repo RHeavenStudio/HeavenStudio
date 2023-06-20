@@ -25,8 +25,8 @@ namespace HeavenStudio.Games
 
         public ActionEventCallback OnDestroy; //Function to trigger whenever this event gets destroyed. /!\ Shouldn't be used for a minigame! Use OnMiss instead /!\
 
-        public float startBeat;
-        public float timer;
+        public double startBeat;
+        public double timer;
 
         public bool isEligible = true;
         public bool canHit  = true; //Indicates if you can still hit the cue or not. If set to false, it'll guarantee a miss

@@ -5,6 +5,8 @@ using UnityEngine;
 using TMPro;
 
 using DG.Tweening;
+using Jukebox;
+using Jukebox.Legacy;
 
 namespace HeavenStudio.Editor.Track
 {
@@ -14,7 +16,7 @@ namespace HeavenStudio.Editor.Track
         [SerializeField] private TMP_Text tempoTXT;
         [SerializeField] private GameObject tempoLine;
 
-        public DynamicBeatmap.TempoChange tempoChange;
+        public RiqEntity tempoChange;
 
         new private void Update()
         {
@@ -31,11 +33,14 @@ namespace HeavenStudio.Editor.Track
                     if (Input.GetKey(KeyCode.LeftControl))
                         newTempo /= 100f;
 
-                    tempoChange.tempo += newTempo;
+                    tempoChange["tempo"] += newTempo;
 
                     //make sure tempo is positive
-                    if (tempoChange.tempo < 1)
-                        tempoChange.tempo = 1;
+                    if (tempoChange["tempo"] < 1)
+                        tempoChange["tempo"] = 1;
+                    
+                    if (first && newTempo != 0)
+                        Timeline.instance.UpdateStartingBPMText();
                 }
             }
 
@@ -44,7 +49,7 @@ namespace HeavenStudio.Editor.Track
 
         private void UpdateTempo()
         {
-            tempoTXT.text = $"{tempoChange.tempo} BPM";
+            tempoTXT.text = $"{tempoChange["tempo"]} BPM";
             Timeline.instance.FitToSong();
         }
 
@@ -61,16 +66,17 @@ namespace HeavenStudio.Editor.Track
 
         public override void OnRightClick()
         {
+            if (first) return;
             if (Timeline.instance.timelineState.currentState == Timeline.CurrentTimelineState.State.TempoChange)
             {
-                GameManager.instance.Beatmap.tempoChanges.Remove(tempoChange);
+                GameManager.instance.Beatmap.TempoChanges.Remove(tempoChange);
                 DeleteObj();
             }
         }
 
         public override bool OnMove(float beat)
         {
-            foreach (var tempoChange in GameManager.instance.Beatmap.tempoChanges)
+            foreach (var tempoChange in GameManager.instance.Beatmap.TempoChanges)
             {
                 if (this.tempoChange == tempoChange)
                     continue;

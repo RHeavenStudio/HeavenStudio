@@ -1,8 +1,8 @@
 using System;
 
 public static class AppInfo {
-    public const string Version = "0.0.975";
-    public static readonly DateTime Date = new DateTime(2023, 05, 28, 15, 45, 42, 208, DateTimeKind.Utc);
+    public const string Version = "0.0.981";
+    public static readonly DateTime Date = new DateTime(2023, 06, 19, 03, 38, 42, 219, DateTimeKind.Utc);
 }
 
 
@@ -18,7 +18,7 @@ public class BuildNumberUpdater : UnityEditor.Build.IPreprocessBuild
     private const string AppInfoFileName = "AppInfo.cs";
 
     public int callbackOrder {
-        get { return 0; }
+        get { return 1; }
     }
 
     void UnityEditor.Build.IPreprocessBuild.OnPreprocessBuild(UnityEditor.BuildTarget target, string path) {

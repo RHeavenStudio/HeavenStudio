@@ -3,12 +3,14 @@ using System.Collections.Generic;
 using System.IO;
 using Starpelly;
 using UnityEngine;
+using Jukebox;
+using Jukebox.Legacy;
 
 namespace HeavenStudio.Games.Global
 {
     public class Filter : MonoBehaviour
     {
-        private List<DynamicBeatmap.DynamicEntity> allFilterEvents = new List<DynamicBeatmap.DynamicEntity>();
+        private List<RiqEntity> allFilterEvents = new List<RiqEntity>();
         private int lastFilterIndexesCount = 0; // Optimization
 
         private List<AmplifyColorEffect> amplifies = new List<AmplifyColorEffect>(); // keeps memory of all the filters on the main camera
@@ -92,14 +94,14 @@ namespace HeavenStudio.Games.Global
 
         #region Filter
 
-        private void OnBeatChanged(float beat)
+        private void OnBeatChanged(double beat)
         {
             allFilterEvents = EventCaller.GetAllInGameManagerList("vfx", new string[] { "filter" });
         }
 
         private void Update()
         {
-            var songPosBeat = Conductor.instance.songPositionInBeats;
+            var songPosBeat = Conductor.instance.songPositionInBeatsAsDouble;
 
             var filterIndexes = new List<int>();
             for (int i = 0; i < allFilterEvents.Count; i++)
@@ -138,17 +140,17 @@ namespace HeavenStudio.Games.Global
                     intensity = Mathf.Lerp(1, 0, Mathp.Normalize(intensity, 0, 100));
                     var blendAmount = intensity;
 
-                    var endFadeInTime = Mathf.Lerp(filter.beat, filter.beat + filter.length, fadeInTime);
-                    var startFadeOutTime = filter.beat + (Mathf.Lerp(0, filter.length, Mathf.Lerp(1, 0, fadeOutTime)));
+                    var endFadeInTime = Mathf.Lerp((float) filter.beat, (float) filter.beat + filter.length, fadeInTime);
+                    var startFadeOutTime = (float) filter.beat + (Mathf.Lerp(0, filter.length, Mathf.Lerp(1, 0, fadeOutTime)));
 
                     if (songPosBeat < endFadeInTime)
                     {
-                        var normalizedFadeIn = Mathp.Normalize(songPosBeat, filter.beat, endFadeInTime);
+                        var normalizedFadeIn = Mathp.Normalize((float) songPosBeat, (float) filter.beat, endFadeInTime);
                         blendAmount = Mathf.Lerp(1f, intensity, normalizedFadeIn);
                     }
                     else if (songPosBeat >= startFadeOutTime)
                     {
-                        var normalizedFadeOut = Mathf.Clamp01(Mathp.Normalize(songPosBeat, startFadeOutTime, filter.beat + filter.length));
+                        var normalizedFadeOut = Mathf.Clamp01(Mathp.Normalize((float) songPosBeat, startFadeOutTime, (float) filter.beat + filter.length));
                         blendAmount = Mathf.Lerp(intensity, 1f, normalizedFadeOut);
                     }
 

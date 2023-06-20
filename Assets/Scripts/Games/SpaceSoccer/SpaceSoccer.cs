@@ -201,7 +201,7 @@ namespace HeavenStudio.Games
         [Header("Properties")]
         [SerializeField] SuperCurveObject.Path[] ballPaths;
         public bool ballDispensed;
-        float lastDispensedBeat;
+        double lastDispensedBeat;
         float scrollBeat;
         float scrollOffsetX;
         float scrollOffsetY;
@@ -278,7 +278,7 @@ namespace HeavenStudio.Games
             }
         }
 
-        public void NPCKickersEnterOrExit(float beat, float length, int animToPut, int easeToPut, int amount, float xDistance, float yDistance, float zDistance, bool overrideEasing, int preset)
+        public void NPCKickersEnterOrExit(double beat, float length, int animToPut, int easeToPut, int amount, float xDistance, float yDistance, float zDistance, bool overrideEasing, int preset)
         {
             switch (preset)
             {
@@ -310,9 +310,9 @@ namespace HeavenStudio.Games
             }
         }
 
-        public override void OnGameSwitch(float beat)
+        public override void OnGameSwitch(double beat)
         {
-            foreach(var entity in GameManager.instance.Beatmap.entities)
+            foreach(var entity in GameManager.instance.Beatmap.Entities)
             {
                 if(entity.beat > beat) //the list is sorted based on the beat of the entity, so this should work fine.
                 {
@@ -348,9 +348,9 @@ namespace HeavenStudio.Games
             scrollBeat = Time.realtimeSinceStartup;
         }
 
-        public void EaseSpaceKickersPositions(float beat, float length, int ease, float xDistance, float yDistance, float zDistance)
+        public void EaseSpaceKickersPositions(double beat, float length, int ease, float xDistance, float yDistance, float zDistance)
         {
-            easeBeat = beat;
+            easeBeat = (float)beat;
             easeLength = length;
             lastEase = (EasingFunction.Ease)ease;
             lastPos = currentPos;
@@ -368,7 +368,7 @@ namespace HeavenStudio.Games
             }
         }
 
-        public void MovePlayerKicker(float beat, float length, int ease, float xPos, float yPos, float zPos, int soundToPlay, int preset)
+        public void MovePlayerKicker(double beat, float length, int ease, float xPos, float yPos, float zPos, int soundToPlay, int preset)
         {
             switch (preset)
             {
@@ -389,7 +389,7 @@ namespace HeavenStudio.Games
                     soundToPlay = (int)LaunchSoundToPlay.LaunchEnd;
                     break;
             }
-            easeBeatP = beat;
+            easeBeatP = (float)beat;
             easeLengthP = length;
             lastEaseP = (EasingFunction.Ease)ease;
             lastPosP = currentPosP;
@@ -399,10 +399,10 @@ namespace HeavenStudio.Games
                 case (int)LaunchSoundToPlay.None:
                     break;
                 case (int)LaunchSoundToPlay.LaunchStart:
-                    Jukebox.PlayOneShotGame("spaceSoccer/jet1");
+                    SoundByte.PlayOneShotGame("spaceSoccer/jet1");
                     break;
                 case (int)LaunchSoundToPlay.LaunchEnd:
-                    Jukebox.PlayOneShotGame("spaceSoccer/jet2");
+                    SoundByte.PlayOneShotGame("spaceSoccer/jet2");
                     break;
             }
         }
@@ -448,7 +448,7 @@ namespace HeavenStudio.Games
             if (ballDispensed) Dispense(lastDispensedBeat, false, true);
         }
 
-        public void Dispense(float beat, bool playSound = true, bool ignorePlayer = false, bool playDown = false)
+        public void Dispense(double beat, bool playSound = true, bool ignorePlayer = false, bool playDown = false)
         {
             if (!ballDispensed) lastDispensedBeat = beat;
             ballDispensed = true;
@@ -462,20 +462,20 @@ namespace HeavenStudio.Games
                 GameObject ball = Instantiate(ballRef, kicker.transform.GetChild(0));
                 ball.SetActive(true);
                 Ball ball_ = ball.GetComponent<Ball>();
-                ball_.Init(kicker, beat);
+                ball_.Init(kicker, (float)beat);
                 if (kicker.player && playSound)
                 {
-                    DispenseSound(beat, playDown);
+                    DispenseSound((float)beat, playDown);
                 }
-                kicker.DispenseBall(beat);
+                kicker.DispenseBall((float)beat);
 
                 kicker.canKick = true;
             }
         }
 
-        public static void DispenseSound(float beat, bool playDown)
+        public static void DispenseSound(double beat, bool playDown)
         {
-            if (playDown) Jukebox.PlayOneShot("games/spaceSoccer/down", beat);
+            if (playDown) SoundByte.PlayOneShot("games/spaceSoccer/down", beat);
             MultiSound.Play(new MultiSound.Sound[]
                 {
                 new MultiSound.Sound("spaceSoccer/dispenseNoise",   beat),

@@ -114,7 +114,7 @@ namespace HeavenStudio.Games
 
         [Header("Variables")]
         bool intervalStarted;
-        float intervalStartBeat;
+        double intervalStartBeat;
         float beatInterval = 8f;
         float misses;
         bool frogPresent;
@@ -136,7 +136,7 @@ namespace HeavenStudio.Games
         struct QueuedTambourineInput
         {
             public bool hit;
-            public float beatAwayFromStart;
+            public double beatAwayFromStart;
         }
 
         public static Tambourine instance;
@@ -186,7 +186,7 @@ namespace HeavenStudio.Games
             if (PlayerInput.Pressed() && !IsExpectingInputNow(InputType.STANDARD_DOWN))
             {
                 handsAnimator.Play("Shake", 0, 0);
-                Jukebox.PlayOneShotGame($"tambourine/player/shake/{UnityEngine.Random.Range(1, 6)}");
+                SoundByte.PlayOneShotGame($"tambourine/player/shake/{UnityEngine.Random.Range(1, 6)}");
                 sweatAnimator.Play("Sweating", 0, 0);
                 SummonFrog();
                 ScoreMiss();
@@ -198,7 +198,7 @@ namespace HeavenStudio.Games
             else if (PlayerInput.AltPressed() && !IsExpectingInputNow(InputType.STANDARD_ALT_DOWN))
             {
                 handsAnimator.Play("Smack", 0, 0);
-                Jukebox.PlayOneShotGame($"tambourine/player/hit/{UnityEngine.Random.Range(1, 6)}");
+                SoundByte.PlayOneShotGame($"tambourine/player/hit/{UnityEngine.Random.Range(1, 6)}");
                 sweatAnimator.Play("Sweating", 0, 0);
                 SummonFrog();
                 ScoreMiss();
@@ -209,7 +209,7 @@ namespace HeavenStudio.Games
             }
         }
 
-        public void StartInterval(float beat, float interval)
+        public void StartInterval(double beat, float interval)
         {
             intervalStartBeat = beat;
             beatInterval = interval;
@@ -223,7 +223,7 @@ namespace HeavenStudio.Games
             }
         }
 
-        public void MonkeyInput(float beat, bool hit)
+        public void MonkeyInput(double beat, bool hit)
         {
             if (!intervalStarted)
             {
@@ -232,12 +232,12 @@ namespace HeavenStudio.Games
             if (hit)
             {
                 monkeyAnimator.Play("MonkeySmack", 0, 0);
-                Jukebox.PlayOneShotGame($"tambourine/monkey/hit/{UnityEngine.Random.Range(1, 6)}");
+                SoundByte.PlayOneShotGame($"tambourine/monkey/hit/{UnityEngine.Random.Range(1, 6)}");
             }
             else
             {
                 monkeyAnimator.Play("MonkeyShake", 0, 0);
-                Jukebox.PlayOneShotGame($"tambourine/monkey/shake/{UnityEngine.Random.Range(1, 6)}");
+                SoundByte.PlayOneShotGame($"tambourine/monkey/shake/{UnityEngine.Random.Range(1, 6)}");
             }
             queuedInputs.Add(new QueuedTambourineInput()
             {
@@ -246,11 +246,11 @@ namespace HeavenStudio.Games
             });
         }
 
-        public void PassTurn(float beat, float length)
+        public void PassTurn(double beat, float length)
         {
             if (queuedInputs.Count == 0) return;
             monkeyAnimator.Play("MonkeyPassTurn", 0, 0);
-            Jukebox.PlayOneShotGame($"tambourine/monkey/turnPass/{UnityEngine.Random.Range(1, 6)}");
+            SoundByte.PlayOneShotGame($"tambourine/monkey/turnPass/{UnityEngine.Random.Range(1, 6)}");
             happyFace.SetActive(true);
             intervalStarted = false;
             BeatAction.New(instance.gameObject, new List<BeatAction.Action>()
@@ -275,7 +275,7 @@ namespace HeavenStudio.Games
             queuedInputs.Clear();
         }
 
-        public void Bop(float beat, float length, int whoBops, int whoBopsAuto)
+        public void Bop(double beat, float length, int whoBops, int whoBopsAuto)
         {
             monkeyGoBop = whoBopsAuto == (int)WhoBops.Monkey || whoBopsAuto == (int)WhoBops.Both;
             handsGoBop = whoBopsAuto == (int)WhoBops.Player || whoBopsAuto == (int)WhoBops.Both;
@@ -306,12 +306,12 @@ namespace HeavenStudio.Games
 
         }
 
-        public void SuccessFace(float beat)
+        public void SuccessFace(double beat)
         {
             DesummonFrog();
             if (misses > 0) return;
             flowerParticles.Play();
-            Jukebox.PlayOneShotGame($"tambourine/player/turnPass/sweep");
+            SoundByte.PlayOneShotGame($"tambourine/player/turnPass/sweep");
             MultiSound.Play(new MultiSound.Sound[]
             {
                 new MultiSound.Sound("tambourine/player/turnPass/note1", beat),
@@ -331,8 +331,8 @@ namespace HeavenStudio.Games
             if (state >= 1f || state <= -1f)
             {
                 handsAnimator.Play("Smack", 0, 0);
-                Jukebox.PlayOneShotGame($"tambourine/player/hit/{UnityEngine.Random.Range(1, 6)}");
-                Jukebox.PlayOneShotGame("tambourine/miss");
+                SoundByte.PlayOneShotGame($"tambourine/player/hit/{UnityEngine.Random.Range(1, 6)}");
+                SoundByte.PlayOneShotGame("tambourine/miss");
                 sweatAnimator.Play("Sweating", 0, 0);
                 misses++;
                 if (!intervalStarted)
@@ -349,8 +349,8 @@ namespace HeavenStudio.Games
             if (state >= 1f || state <= -1f)
             {
                 handsAnimator.Play("Shake", 0, 0);
-                Jukebox.PlayOneShotGame($"tambourine/player/shake/{UnityEngine.Random.Range(1, 6)}");
-                Jukebox.PlayOneShotGame("tambourine/miss");
+                SoundByte.PlayOneShotGame($"tambourine/player/shake/{UnityEngine.Random.Range(1, 6)}");
+                SoundByte.PlayOneShotGame("tambourine/miss");
                 sweatAnimator.Play("Sweating", 0, 0);
                 misses++;
                 if (!intervalStarted)
@@ -368,12 +368,12 @@ namespace HeavenStudio.Games
             if (hit)
             {
                 handsAnimator.Play("Smack", 0, 0);
-                Jukebox.PlayOneShotGame($"tambourine/player/hit/{UnityEngine.Random.Range(1, 6)}");
+                SoundByte.PlayOneShotGame($"tambourine/player/hit/{UnityEngine.Random.Range(1, 6)}");
             }
             else
             {
                 handsAnimator.Play("Shake", 0, 0);
-                Jukebox.PlayOneShotGame($"tambourine/player/shake/{UnityEngine.Random.Range(1, 6)}");
+                SoundByte.PlayOneShotGame($"tambourine/player/shake/{UnityEngine.Random.Range(1, 6)}");
             }
         }
 
@@ -414,7 +414,7 @@ namespace HeavenStudio.Games
         public void SummonFrog()
         {
             if (frogPresent) return;
-            Jukebox.PlayOneShotGame("tambourine/frog");
+            SoundByte.PlayOneShotGame("tambourine/frog");
             frogAnimator.Play("FrogEnter", 0, 0);
             frogPresent = true;
         }

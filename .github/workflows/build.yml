@@ -1,0 +1,75 @@
+name: Build Heaven Studio
+
+on:
+  push:
+    branches: [ "master", "release_1", "actions_rework" ]
+
+jobs:
+  build:
+    name: Build for ${{ matrix.targetPlatform }}
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        targetPlatform:
+          - StandaloneWindows64
+          - StandaloneOSX
+          - StandaloneLinux64
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+        # with:
+        #   lfs: true
+
+      # Cache reused Library files to speed up compilation
+      - uses: actions/cache@v3
+        with:
+          path: Library
+          key: Library-${{ hashFiles('Assets/**', 'Packages/**', 'ProjectSettings/**') }}
+          restore-keys: |
+            Library-
+
+      # Test (No tests yet, leaving this here for future.)
+      # - name: Run tests
+      #   uses: game-ci/unity-test-runner@v2
+      #   env:
+      #     UNITY_LICENSE: ${{ secrets.UNITY_LICENSE }}
+      #   with:
+      #     githubToken: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Build project
+        uses: game-ci/unity-builder@v2
+        env:
+          UNITY_LICENSE: ${{ secrets.UNITY_LICENSE }}
+          UNITY_EMAIL: ${{ secrets.UNITY_EMAIL }}
+          UNITY_PASSWORD: ${{ secrets.UNITY_PASSWORD }}
+        with:
+          unityVersion: auto
+          buildName: Heaven Studio
+          buildsPath: build
+          buildMethod: UnityBuilderAction.BuildScript.Build
+          targetPlatform: ${{ matrix.targetPlatform }}
+
+      # Required on Mac/Linux to keep executable permissions
+      - name: Tar files
+        if: matrix.targetPlatform != 'StandaloneWindows64'
+        run: tar -cvf ${{ matrix.targetPlatform }}.tar ./build/${{ matrix.targetPlatform }}
+
+      - name: Upload Artifact (Windows)
+        if: matrix.targetPlatform == 'StandaloneWindows64'
+        uses: actions/upload-artifact@v3
+        with:
+          name: ${{ matrix.targetPlatform }}-build
+          path: ./build/${{ matrix.targetPlatform }}/
+
+      - name: Upload Artifact (macOS / Linux)
+        if: matrix.targetPlatform != 'StandaloneWindows64'
+        uses: actions/upload-artifact@v3
+        with:
+          name: ${{ matrix.targetPlatform }}-build
+          path: ${{ matrix.targetPlatform }}.tar
+
+      - name: debug thing
+        run: tree .
+

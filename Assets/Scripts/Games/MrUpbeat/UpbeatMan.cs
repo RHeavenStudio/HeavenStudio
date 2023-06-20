@@ -25,17 +25,17 @@ namespace HeavenStudio.Games.Scripts_MrUpbeat
 
         public void Blip()
         {
-            float c = Conductor.instance.songPositionInBeats;
+            double c = Conductor.instance.songPositionInBeatsAsDouble;
             BeatAction.New(gameObject, new List<BeatAction.Action>() {
-                new BeatAction.Action(MathF.Floor(c) + 0.5f, delegate {
+                new BeatAction.Action(Math.Floor(c) + 0.5f, delegate {
                     if (MrUpbeat.shouldBlip) {
-                        Jukebox.PlayOneShotGame("mrUpbeat/blip");
+                        SoundByte.PlayOneShotGame("mrUpbeat/blip");
                         blipAnim.Play("Blip"+(blipSize+1), 0, 0);
                         blipText.text = (blipSize == 4 && blipString != "") ? blipString : "";
                         if (shouldGrow && blipSize < 4) blipSize++;
                     }
                 }),
-                new BeatAction.Action(MathF.Floor(c) + 1f, delegate { 
+                new BeatAction.Action(Math.Floor(c) + 1f, delegate { 
                     Blip();
                 }),
             });
@@ -52,7 +52,7 @@ namespace HeavenStudio.Games.Scripts_MrUpbeat
 
             anim.DoScaledAnimationAsync("Step", 0.5f);
             letterAnim.DoScaledAnimationAsync(x ? "StepRight" : "StepLeft", 0.5f);
-            Jukebox.PlayOneShotGame("mrUpbeat/step");
+            SoundByte.PlayOneShotGame("mrUpbeat/step");
         }
 
         public void Fall()
@@ -62,7 +62,7 @@ namespace HeavenStudio.Games.Scripts_MrUpbeat
             blipText.text = "";
             
             anim.DoScaledAnimationAsync("Fall", 0.5f);
-            Jukebox.PlayOneShot("miss");
+            SoundByte.PlayOneShot("miss");
             shadows[0].SetActive(false);
             shadows[1].SetActive(false);
         }

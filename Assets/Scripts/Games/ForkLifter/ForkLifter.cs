@@ -35,7 +35,7 @@ namespace HeavenStudio.Games.Loaders
                 new GameAction("sigh", "Sigh")
                 {
 
-                    function = delegate { Jukebox.PlayOneShot("games/forkLifter/sigh"); }
+                    function = delegate { SoundByte.PlayOneShot("games/forkLifter/sigh"); }
                 },
                 new GameAction("color", "Background Color")
                 {
@@ -59,6 +59,17 @@ namespace HeavenStudio.Games.Loaders
                     },
                     resizable = true
                 },
+                new GameAction("bop", "Bop")
+                {
+                    function = delegate { var e = eventCaller.currentEntity; ForkLifter.instance.Bop(e.beat, e.length, e["bop"], e["autoBop"]); },
+                    parameters = new List<Param>()
+                    {
+                        new Param("bop", true, "Keep Bopping", "Should Fork bop for the duration of the block?"),
+                        new Param("autoBop", false, "Keep Bopping (Auto)", "Should Fork bop indefinitely?"),
+                    },
+                    resizable = true,
+                },
+                
                 // These are still here for backwards-compatibility but are hidden in the editor
                 new GameAction("pea", "")
                 {
@@ -137,15 +148,28 @@ namespace HeavenStudio.Games
             instance = this;
         }
 
-        public override void OnGameSwitch(float beat)
+        public override void OnGameSwitch(double beat)
         {
             base.OnGameSwitch(beat);
             ForkLifterHand.CheckNextFlick();
         }
 
-        public void Flick(float beat, int type)
+        
+        public void Bop(double beat, double length, bool doesBop, bool autoBop)
         {
-            Jukebox.PlayOneShotGame("forkLifter/flick");
+            playerInstance.shouldBop = (autoBop || doesBop);
+            if (!autoBop && doesBop) {
+                BeatAction.New(gameObject, new List<BeatAction.Action>() {
+                    new BeatAction.Action(beat + length, delegate {
+                        playerInstance.shouldBop = false;
+                    })
+                });
+            }
+        }
+
+        public void Flick(double beat, int type)
+        {
+            SoundByte.PlayOneShotGame("forkLifter/flick");
             handAnim.Play("Hand_Flick", 0, 0);
             ForkLifterHand.currentFlickIndex++;
             GameObject fo = Instantiate(flickedObject);

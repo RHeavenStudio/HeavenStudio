@@ -125,6 +125,31 @@ namespace HeavenStudio.Games
     {
         public struct PosesToPerform : IComparable<PosesToPerform>
         {
+            // override object.Equals
+            public override bool Equals(object obj)
+            {
+                //
+                // See the full list of guidelines at
+                //   http://go.microsoft.com/fwlink/?LinkID=85237
+                // and also the guidance for operator== at
+                //   http://go.microsoft.com/fwlink/?LinkId=85238
+                //
+                
+                if (obj == null || GetType() != obj.GetType())
+                {
+                    return false;
+                }
+                
+                // TODO: write your implementation of Equals() here
+                throw new System.NotImplementedException();
+            }
+            
+            // override object.GetHashCode
+            public override int GetHashCode()
+            {
+                // TODO: write your implementation of GetHashCode() here
+                throw new System.NotImplementedException();
+            }
             public int CompareTo(PosesToPerform other)
             {
                 if (other == null) return 1;
@@ -166,7 +191,7 @@ namespace HeavenStudio.Games
         }
         public struct QueuedPose
         {
-            public float beat;
+            public double beat;
             public float length;
             public float upLeftBeat;
             public float upMiddleBeat;
@@ -178,7 +203,7 @@ namespace HeavenStudio.Games
         }
         public struct QueuedCrouch
         {
-            public float beat;
+            public double beat;
             public float length;
             public int countInType;
         }
@@ -194,7 +219,7 @@ namespace HeavenStudio.Games
         bool canBop = true;
         bool doingPoses = false;
         bool shouldHold = false;
-        float crouchEndBeat;
+        double crouchEndBeat;
         public bool shouldBop = true;
         public GameEvent bop = new GameEvent();
         static List<QueuedPose> queuedPoses = new List<QueuedPose>();
@@ -256,7 +281,7 @@ namespace HeavenStudio.Games
                 if (PlayerInput.Pressed() && !IsExpectingInputNow(InputType.STANDARD_DOWN))
                 {
                     player.Prepare(false);
-                    Jukebox.PlayOneShotGame("theDazzles/miss");
+                    SoundByte.PlayOneShotGame("theDazzles/miss");
                     foreach (var girl in npcGirls)
                     {
                         if (girl.currentEmotion != TheDazzlesGirl.Emotion.Ouch) girl.currentEmotion = TheDazzlesGirl.Emotion.Angry;
@@ -267,7 +292,7 @@ namespace HeavenStudio.Games
                     if (doingPoses)
                     {
                         player.Pose(false);
-                        Jukebox.PlayOneShotGame("theDazzles/miss");
+                        SoundByte.PlayOneShotGame("theDazzles/miss");
                         foreach (var girl in npcGirls)
                         {
                             girl.Ouch();
@@ -284,7 +309,7 @@ namespace HeavenStudio.Games
                     if (doingPoses)
                     {
                         player.Pose(false);
-                        Jukebox.PlayOneShotGame("theDazzles/miss");
+                        SoundByte.PlayOneShotGame("theDazzles/miss");
                         foreach (var girl in npcGirls)
                         {
                             girl.Ouch();
@@ -304,7 +329,7 @@ namespace HeavenStudio.Games
             }
         }
 
-        public void Bop(float beat, float length, bool goBop, bool autoBop)
+        public void Bop(double beat, float length, bool goBop, bool autoBop)
         {
             shouldBop = autoBop;
             if (goBop)
@@ -336,7 +361,7 @@ namespace HeavenStudio.Games
             player.Prepare();
         }
 
-        public static void PreCrouch(float beat, float length, int countInType)
+        public static void PreCrouch(double beat, float length, int countInType)
         {
             float actualLength = length / 3;
             int realCountInType = countInType;
@@ -374,7 +399,7 @@ namespace HeavenStudio.Games
             }
         }
 
-        public void CrouchStretchable(float beat, float length, int countInType)
+        public void CrouchStretchable(double beat, float length, int countInType)
         {
             float actualLength = length / 3;
             crouchEndBeat = beat + length;
@@ -404,7 +429,7 @@ namespace HeavenStudio.Games
             });
         }
 
-        public static void PrePose(float beat, float length, float upLeftBeat, float upMiddleBeat, float upRightBeat, float downLeftBeat, float downMiddleBeat, float playerBeat, bool stars)
+        public static void PrePose(double beat, float length, float upLeftBeat, float upMiddleBeat, float upRightBeat, float downLeftBeat, float downMiddleBeat, float playerBeat, bool stars)
         {
             if (GameManager.instance.currentGame == "theDazzles")
             {
@@ -417,7 +442,7 @@ namespace HeavenStudio.Games
             }
         }
 
-        public void Pose(float beat, float length, float upLeftBeat, float upMiddleBeat, float upRightBeat, float downLeftBeat, float downMiddleBeat, float playerBeat, bool stars)
+        public void Pose(double beat, float length, float upLeftBeat, float upMiddleBeat, float upRightBeat, float downLeftBeat, float downMiddleBeat, float playerBeat, bool stars)
         {
             if (stars)
             {
@@ -427,7 +452,7 @@ namespace HeavenStudio.Games
             {
                 ScheduleInput(beat, playerBeat, InputType.STANDARD_UP, JustPose, MissPose, Nothing);
             }
-            float crouchBeat = beat - 1f;
+            double crouchBeat = beat - 1f;
             if (crouchBeat < crouchEndBeat) 
             { 
                 crouchBeat = crouchEndBeat - 1f;
@@ -545,8 +570,8 @@ namespace HeavenStudio.Games
         void JustPose(PlayerActionEvent caller, float state)
         {
             shouldHold = false;
-            Jukebox.PlayOneShotGame("theDazzles/pose");
-            Jukebox.PlayOneShotGame("theDazzles/posePlayer");
+            SoundByte.PlayOneShotGame("theDazzles/pose");
+            SoundByte.PlayOneShotGame("theDazzles/posePlayer");
             if (state >= 1f || state <= -1f)
             {
                 player.Pose();
@@ -558,8 +583,8 @@ namespace HeavenStudio.Games
         void JustPoseStars(PlayerActionEvent caller, float state)
         {
             shouldHold = false;
-            Jukebox.PlayOneShotGame("theDazzles/pose");
-            Jukebox.PlayOneShotGame("theDazzles/posePlayer");
+            SoundByte.PlayOneShotGame("theDazzles/pose");
+            SoundByte.PlayOneShotGame("theDazzles/posePlayer");
             if (state >= 1f || state <= -1f)
             {
                 player.Pose();
@@ -571,7 +596,7 @@ namespace HeavenStudio.Games
         void SuccessPose(bool stars)
         {
             player.Pose();
-            Jukebox.PlayOneShotGame("theDazzles/applause");
+            SoundByte.PlayOneShotGame("theDazzles/applause");
             foreach (var girl in npcGirls)
             {
                 girl.currentEmotion = TheDazzlesGirl.Emotion.Happy;
@@ -580,7 +605,7 @@ namespace HeavenStudio.Games
             if (stars) 
             {
                 starsEffect.Play();
-                Jukebox.PlayOneShotGame($"theDazzles/stars{UnityEngine.Random.Range(1, 6)}");
+                SoundByte.PlayOneShotGame($"theDazzles/stars{UnityEngine.Random.Range(1, 6)}");
             } 
             else poseEffect.Play();
         }

@@ -13,10 +13,10 @@ namespace HeavenStudio.Games.Scripts_BlueBear
         const float rotSpeed = 360f;
 
         public bool isCake;
-        public float startBeat;
+        public double startBeat;
 
         bool flying = true;
-        float flyBeats;
+        double flyBeats;
 
         [NonSerialized] public BezierCurve3D curve;
 
@@ -59,11 +59,11 @@ namespace HeavenStudio.Games.Scripts_BlueBear
 
             if (isCake)
             {
-                Jukebox.PlayOneShotGame("blueBear/chompCake");
+                SoundByte.PlayOneShotGame("blueBear/chompCake");
             }
             else
             {
-                Jukebox.PlayOneShotGame("blueBear/chompDonut");
+                SoundByte.PlayOneShotGame("blueBear/chompDonut");
             }
 
             game.Bite(isCake);

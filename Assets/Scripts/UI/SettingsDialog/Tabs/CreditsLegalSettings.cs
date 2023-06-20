@@ -38,7 +38,7 @@ namespace HeavenStudio.Editor
             if (SecretActive) return;
 
             SecretActive = true;
-            Jukebox.PlayOneShot("applause");
+            SoundByte.PlayOneShot("applause");
             Debug.Log("Activating Studio Dance...");
 
             if (Editor.instance == null)

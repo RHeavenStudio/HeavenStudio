@@ -1,11 +1,7 @@
-using System.Collections;
-using System.Collections.Generic;
+using System;
 using UnityEngine;
 
-using NaughtyBezierCurves;
 using HeavenStudio.Util;
-using UnityEngine.UIElements;
-using DG.Tweening;
 
 namespace HeavenStudio.Games.Scripts_SpaceSoccer
 {
@@ -23,9 +19,9 @@ namespace HeavenStudio.Games.Scripts_SpaceSoccer
         //[SerializeField] private BezierCurve3D toeCurve;
 
         [Header("Properties")]
-        public float startBeat;
+        public double startBeat;
         public State state;
-        public float nextAnimBeat;
+        public double nextAnimBeat;
         public float highKickSwing = 0f;
         private float lastSpriteRot;
         public bool canKick;
@@ -41,12 +37,12 @@ namespace HeavenStudio.Games.Scripts_SpaceSoccer
         {
             lastRealPos = transform.localPosition;
         }
-        public void Init(Kicker kicker, float dispensedBeat)
+        public void Init(Kicker kicker, double dispensedBeat)
         {
             this.kicker = kicker;
             kicker.ball = this;
             kicker.dispenserBeat = dispensedBeat;
-            float currentBeat = Conductor.instance.songPositionInBeats;
+            double currentBeat = Conductor.instance.songPositionInBeatsAsDouble;
             kickPath = SpaceSoccer.instance.GetPath("Kick");
             dispensePath = SpaceSoccer.instance.GetPath("Dispense");
             highKickPath = SpaceSoccer.instance.GetPath("HighKick");
@@ -63,7 +59,7 @@ namespace HeavenStudio.Games.Scripts_SpaceSoccer
                 return;
             }
 
-            var highKicks = GameManager.instance.Beatmap.entities.FindAll(c => c.datamodel == "spaceSoccer/high kick-toe!");
+            var highKicks = GameManager.instance.Beatmap.Entities.FindAll(c => c.datamodel == "spaceSoccer/high kick-toe!");
             int numHighKicks = 0;
             //determine what state the ball was in for the previous kick.
             for(int i = 0; i < highKicks.Count; i++)
@@ -77,7 +73,7 @@ namespace HeavenStudio.Games.Scripts_SpaceSoccer
                 {
                     //Debug.Log("Setting state to kicked");
                     state = State.Kicked;
-                    float relativeBeat = currentBeat - dispensedBeat;
+                    double relativeBeat = currentBeat - dispensedBeat;
                     startBeat = dispensedBeat + (int)(relativeBeat - 0.1); //this makes the startBeat be for the kick that is currently in progress, but it won't play the kicker's animation for that kick. the -0.1 makes it so that if playback is started right when the kicker kicks, it still plays the kicker's animation.
                     nextAnimBeat = startBeat + GetAnimLength(State.Kicked);
                     kicker.kickTimes = (int)(relativeBeat - 0.1) - numHighKicks - 1; //every high kick has 2 kicks in the same time a regular keep-up does 3 kicks.
@@ -85,7 +81,7 @@ namespace HeavenStudio.Games.Scripts_SpaceSoccer
                 }
                 else
                 {
-                    highKickSwing = highKicks[i].swing;
+                    highKickSwing = highKicks[i]["swing"];
                     if (highKickSwing == 0f)
                         highKickSwing = 0.5f;
 
@@ -93,17 +89,17 @@ namespace HeavenStudio.Games.Scripts_SpaceSoccer
                     {
                         //Debug.Log("Setting state to high kick");
                         state = State.HighKicked;
-                        float relativeBeat = highKicks[i].beat - dispensedBeat;
-                        startBeat = dispensedBeat + Mathf.Ceil(relativeBeat); //there is a chance this makes startBeat later than the current beat, but it shouldn't matter too much. It would only happen if the user places the high kicks incorrectly.
+                        double relativeBeat = highKicks[i].beat - dispensedBeat;
+                        startBeat = dispensedBeat + Math.Ceiling(relativeBeat); //there is a chance this makes startBeat later than the current beat, but it shouldn't matter too much. It would only happen if the user places the high kicks incorrectly.
                         nextAnimBeat = startBeat + GetAnimLength(State.HighKicked);
-                        kicker.kickTimes = Mathf.CeilToInt(relativeBeat) - numHighKicks - 1;
+                        kicker.kickTimes = (int)Math.Ceiling(relativeBeat) - numHighKicks - 1;
                         break;
                     }
                     else
                     {
                         //Debug.Log("Setting state to toe");
                         state = State.Toe;
-                        float relativeBeat = Mathf.Ceil(highKicks[i].beat - dispensedBeat) + GetAnimLength(State.HighKicked); //there is a chance this makes startBeat later than the current beat, but it shouldn't matter too much. It would only happen if the user places the high kicks incorrectly.
+                        double relativeBeat = Math.Ceiling(highKicks[i].beat - dispensedBeat) + GetAnimLength(State.HighKicked); //there is a chance this makes startBeat later than the current beat, but it shouldn't matter too much. It would only happen if the user places the high kicks incorrectly.
                         startBeat = dispensedBeat + relativeBeat;
                         nextAnimBeat = startBeat + GetAnimLength(State.Toe);
                         kicker.kickTimes = (int)(relativeBeat - GetAnimLength(State.HighKicked)) - numHighKicks;
@@ -115,7 +111,7 @@ namespace HeavenStudio.Games.Scripts_SpaceSoccer
             {
                 //Debug.Log("Defaulting to kicked state");
                 state = State.Kicked;
-                float relativeBeat = currentBeat - dispensedBeat;
+                double relativeBeat = currentBeat - dispensedBeat;
                 startBeat = dispensedBeat + (int)(relativeBeat - 0.1); //this makes the startBeat be for the kick that is currently in progress, but it won't play the kicker's animation for that kick. the -0.1 makes it so that if playback is started right when the kicker kicks, it still plays the kicker's animation.
                 nextAnimBeat = startBeat + GetAnimLength(State.Kicked);
                 kicker.kickTimes = (int)(relativeBeat - 0.1) - numHighKicks - 1;
@@ -126,7 +122,7 @@ namespace HeavenStudio.Games.Scripts_SpaceSoccer
         public void Kick(bool player)
         {
             if (player)
-            Jukebox.PlayOneShotGame("spaceSoccer/ballHit", -1, Jukebox.GetPitchFromCents(UnityEngine.Random.Range(-38, 39), false));
+            SoundByte.PlayOneShotGame("spaceSoccer/ballHit", -1, SoundByte.GetPitchFromCents(UnityEngine.Random.Range(-38, 39), false));
 
             lastSpriteRot = spriteHolder.transform.eulerAngles.z;
 
@@ -184,7 +180,7 @@ namespace HeavenStudio.Games.Scripts_SpaceSoccer
 
         private void Update()
         {
-            float beat = Conductor.instance.songPositionInBeats;
+            double beat = Conductor.instance.songPositionInBeatsAsDouble;
             switch (state) //handle animations
             {
                 case State.None: //the only time any ball should ever have this state is if it's the unused offscreen ball (which is the only reason this state exists)
@@ -199,7 +195,7 @@ namespace HeavenStudio.Games.Scripts_SpaceSoccer
                         //dispenseCurve.KeyPoints[0].transform.position = new Vector3(kicker.transform.GetChild(0).position.x - 6f, kicker.transform.GetChild(0).position.y - 6f);
                         //dispenseCurve.KeyPoints[1].transform.position = new Vector3(kicker.transform.GetChild(0).position.x - 1f, kicker.transform.GetChild(0).position.y - 6f);
                         //holder.transform.localPosition = dispenseCurve.GetPoint(normalizedBeatAnim);
-                        holder.transform.localPosition = GetPathPositionFromBeat(dispensePath, Mathf.Max(beat, startBeat), out float height, startBeat);
+                        holder.transform.localPosition = GetPathPositionFromBeat(dispensePath, Math.Max(beat, startBeat), out double height, startBeat);
                         spriteHolder.transform.eulerAngles = new Vector3(0, 0, Mathf.Lerp(0f, -1440f, normalizedBeatAnim));
                         break;
                     }
@@ -221,7 +217,7 @@ namespace HeavenStudio.Games.Scripts_SpaceSoccer
                         }
 
                         //holder.transform.localPosition = kickCurve.GetPoint(normalizedBeatAnim);
-                        holder.transform.localPosition = GetPathPositionFromBeat(kickPath, Mathf.Max(beat, startBeat), out float height, startBeat);
+                        holder.transform.localPosition = GetPathPositionFromBeat(kickPath, Math.Max(beat, startBeat), out double height, startBeat);
                         break;
                     }
                 case State.HighKicked:
@@ -232,7 +228,7 @@ namespace HeavenStudio.Games.Scripts_SpaceSoccer
                         //highKickCurve.KeyPoints[1].transform.position = new Vector3(kicker.transform.GetChild(0).position.x - 3.5f, kicker.transform.GetChild(0).position.y - 6f);
 
                         //holder.transform.localPosition = highKickCurve.GetPoint(normalizedBeatAnim);
-                        holder.transform.localPosition = GetPathPositionFromBeat(highKickPath, Mathf.Max(beat, startBeat), out float height, startBeat);
+                        holder.transform.localPosition = GetPathPositionFromBeat(highKickPath, Math.Max(beat, startBeat), out double height, startBeat);
                         spriteHolder.transform.eulerAngles = new Vector3(0, 0, Mathf.Lerp(lastSpriteRot, lastSpriteRot + 360f, normalizedBeatAnim));
                         break;
                     }
@@ -253,7 +249,7 @@ namespace HeavenStudio.Games.Scripts_SpaceSoccer
                         }
 
                         //holder.transform.localPosition = toeCurve.GetPoint(normalizedBeatAnim);
-                        holder.transform.localPosition = GetPathPositionFromBeat(toePath, Mathf.Max(beat, startBeat), out float height, startBeat);
+                        holder.transform.localPosition = GetPathPositionFromBeat(toePath, Math.Max(beat, startBeat), out double height, startBeat);
                         break;
                     }
             }

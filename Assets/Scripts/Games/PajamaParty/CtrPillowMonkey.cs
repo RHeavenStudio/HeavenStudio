@@ -15,20 +15,24 @@ namespace HeavenStudio.Games.Scripts_PajamaParty
         public GameObject Projectile;
 
         public Animator anim;
+        public bool shouldBop = false;
 
         public int row;
         public int col;
 
-        float startJumpTime = Single.MinValue;
+        double lastReportedBeat;
+        double startJumpTime = double.MinValue;
         float jumpLength = 1f;
         float jumpHeight = 4f;
         int jumpAlt;
 
-        private bool hasJumped = false;
+        bool shouldntBop = false;
+        bool hasJumped = false;
 
-        float startThrowTime = Single.MinValue;
+        double startThrowTime = double.MinValue;
         float throwLength = 4f;
         float throwHeight = 12f;
+
         private bool hasThrown = false;
         
         void Awake()
@@ -67,13 +71,14 @@ namespace HeavenStudio.Games.Scripts_PajamaParty
             {
                 if (hasJumped)
                 {
+                    shouldntBop = false;
                     hasJumped = false;
                     PajamaParty.instance.DoBedImpact();
                     anim.DoScaledAnimationAsync("MonkeyLand");
                     Monkey.transform.rotation = Quaternion.Euler(0, 0, 0);
                     jumpAlt = 0;
                 }
-                startJumpTime = Single.MinValue;
+                startJumpTime = double.MinValue;
                 Monkey.transform.localPosition = new Vector3(0, 0);
                 Shadow.transform.localScale = new Vector3(1.2f, 0.8f, 1f);
             }
@@ -90,7 +95,7 @@ namespace HeavenStudio.Games.Scripts_PajamaParty
             }
             else
             {
-                startThrowTime = Single.MinValue;
+                startThrowTime = double.MinValue;
                 if (hasThrown)
                 {
                     Projectile.transform.localPosition = new Vector3(0, 0);
@@ -98,11 +103,20 @@ namespace HeavenStudio.Games.Scripts_PajamaParty
                     anim.DoUnscaledAnimation("MonkeyBeat");
                     Projectile.SetActive(false);
                     hasThrown = false;
+                    shouldntBop = false;
                 }
             }
         }
 
-        public void Jump(float beat, int alt = 1)
+        private void LateUpdate() 
+        {
+            if (Conductor.instance.ReportBeat(ref lastReportedBeat) && anim.IsAnimationNotPlaying() && !hasThrown && !shouldntBop && shouldBop)
+            {
+                anim.DoScaledAnimationAsync("MonkeyBeat", 0.5f);
+            }
+        }
+
+        public void Jump(double beat, int alt = 1)
         {
             startJumpTime = beat;
             jumpAlt = 0;
@@ -112,22 +126,24 @@ namespace HeavenStudio.Games.Scripts_PajamaParty
             }
         }
 
-        public void Charge(float beat)
+        public void Charge(double beat)
         {
+            shouldntBop = true;
             anim.DoUnscaledAnimation("MonkeyReady");
         }
 
-        public void Throw(float beat)
+        public void Throw(double beat)
         {
             anim.DoUnscaledAnimation("MonkeyThrow");
             startThrowTime = beat;
             Projectile.SetActive(true);
         }
 
-        public void ReadySleep(float beat, int action)
+        public void ReadySleep(double beat, int action)
         {
+            shouldntBop = true;
             var cond = Conductor.instance;
-            startThrowTime = Single.MinValue;
+            startThrowTime = double.MinValue;
             Projectile.transform.localPosition = new Vector3(0, 0);
             Projectile.transform.rotation = Quaternion.Euler(0, 0, 0);
             if (hasThrown)
@@ -136,7 +152,7 @@ namespace HeavenStudio.Games.Scripts_PajamaParty
                 hasThrown = false;
             }
 
-            startJumpTime = Single.MinValue;
+            startJumpTime = double.MinValue;
             Monkey.transform.localPosition = new Vector3(0, 0);
             Shadow.transform.localScale = new Vector3(1.2f, 0.8f, 1f);
             

@@ -7,7 +7,7 @@ namespace HeavenStudio.Games.Scripts_RhythmTweezers
 {
     public class Hair : MonoBehaviour
     {
-        public float createBeat;
+        public double createBeat;
         public GameObject hairSprite;
         public GameObject stubbleSprite;
         public GameObject missedSprite;
@@ -21,7 +21,7 @@ namespace HeavenStudio.Games.Scripts_RhythmTweezers
             tweezers = game.Tweezers;
         }
 
-        public void StartInput(float beat, float length)
+        public void StartInput(double beat, double length)
         {
             game.ScheduleInput(beat, length, InputType.STANDARD_DOWN | InputType.DIRECTION_DOWN, Just, Miss, Out);
         }

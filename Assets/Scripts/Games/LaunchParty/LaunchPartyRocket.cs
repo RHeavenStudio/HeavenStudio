@@ -34,8 +34,8 @@ namespace HeavenStudio.Games.Scripts_LaunchParty
             if (GameManager.instance.currentGame != "launchParty") Destroy(gameObject);
             if (PlayerInput.Pressed() && !game.IsExpectingInputNow(InputType.STANDARD_DOWN) && !noInput)
             {
-                Jukebox.PlayOneShotGame("launchParty/miss");
-                Jukebox.PlayOneShotGame("launchParty/rocket_endBad");
+                SoundByte.PlayOneShotGame("launchParty/miss");
+                SoundByte.PlayOneShotGame("launchParty/rocket_endBad");
                 string leftOrRight = (UnityEngine.Random.Range(1, 3) == 1) ? "Left" : "Right";
                 if (!anim.IsPlayingAnimationName("RocketBarelyLeft") && !anim.IsPlayingAnimationName("RocketBarelyRight")) anim.Play("RocketBarely" + leftOrRight, 0, 0);
                 game.ScoreMiss(0.5);
@@ -48,7 +48,7 @@ namespace HeavenStudio.Games.Scripts_LaunchParty
             noInput = false;
         }
 
-        public void InitFamilyRocket(float beat)
+        public void InitFamilyRocket(double beat)
         {
             game.ScheduleInput(beat, 3f, InputType.STANDARD_DOWN, JustFamilyRocket, Miss, Nothing);
 
@@ -72,7 +72,7 @@ namespace HeavenStudio.Games.Scripts_LaunchParty
             });
         }
 
-        public void InitPartyCracker(float beat)
+        public void InitPartyCracker(double beat)
         {
             game.ScheduleInput(beat, 2f, InputType.STANDARD_DOWN, JustPartyCracker, Miss, Nothing);
 
@@ -100,7 +100,7 @@ namespace HeavenStudio.Games.Scripts_LaunchParty
             });
         }
 
-        public void InitBell(float beat)
+        public void InitBell(double beat)
         {
             game.ScheduleInput(beat, 2f, InputType.STANDARD_DOWN, JustBell, Miss, Nothing);
 
@@ -132,7 +132,7 @@ namespace HeavenStudio.Games.Scripts_LaunchParty
             });
         }
 
-        public void InitBowlingPin(float beat)
+        public void InitBowlingPin(double beat)
         {
             game.ScheduleInput(beat, 2f, InputType.STANDARD_DOWN, JustBowlingPin, Miss, Nothing);
 
@@ -181,8 +181,8 @@ namespace HeavenStudio.Games.Scripts_LaunchParty
             if (state >= 1f || state <= -1f)
             {
                 number.SetActive(false);
-                Jukebox.PlayOneShotGame("launchParty/miss");
-                Jukebox.PlayOneShotGame("launchParty/rocket_endBad");
+                SoundByte.PlayOneShotGame("launchParty/miss");
+                SoundByte.PlayOneShotGame("launchParty/rocket_endBad");
                 string leftOrRight = (UnityEngine.Random.Range(1, 3) == 1) ? "Left" : "Right";
                 anim.Play("RocketBarely" + leftOrRight, 0, 0);
                 BeatAction.New(gameObject, new List<BeatAction.Action>()
@@ -227,8 +227,8 @@ namespace HeavenStudio.Games.Scripts_LaunchParty
             {
                 string leftOrRight = (UnityEngine.Random.Range(1, 3) == 1) ? "Left" : "Right";
                 anim.Play("RocketBarely" + leftOrRight, 0, 0);
-                Jukebox.PlayOneShotGame("launchParty/miss");
-                Jukebox.PlayOneShotGame("launchParty/rocket_endBad");
+                SoundByte.PlayOneShotGame("launchParty/miss");
+                SoundByte.PlayOneShotGame("launchParty/rocket_endBad");
                 BeatAction.New(gameObject, new List<BeatAction.Action>()
                 {
                     new BeatAction.Action(caller.startBeat + caller.timer + 1f, delegate { GameObject.Destroy(gameObject); }),
@@ -271,8 +271,8 @@ namespace HeavenStudio.Games.Scripts_LaunchParty
             {
                 string leftOrRight = (UnityEngine.Random.Range(1, 3) == 1) ? "Left" : "Right";
                 anim.Play("RocketBarely" + leftOrRight, 0, 0);
-                Jukebox.PlayOneShotGame("launchParty/miss");
-                Jukebox.PlayOneShotGame("launchParty/rocket_endBad");
+                SoundByte.PlayOneShotGame("launchParty/miss");
+                SoundByte.PlayOneShotGame("launchParty/rocket_endBad");
                 BeatAction.New(gameObject, new List<BeatAction.Action>()
                 {
                     new BeatAction.Action(caller.startBeat + caller.timer + 1f, delegate { GameObject.Destroy(gameObject); }),
@@ -315,8 +315,8 @@ namespace HeavenStudio.Games.Scripts_LaunchParty
             {
                 string leftOrRight = (UnityEngine.Random.Range(1, 3) == 1) ? "Left" : "Right";
                 anim.Play("RocketBarely" + leftOrRight, 0, 0);
-                Jukebox.PlayOneShotGame("launchParty/miss");
-                Jukebox.PlayOneShotGame("launchParty/rocket_endBad");
+                SoundByte.PlayOneShotGame("launchParty/miss");
+                SoundByte.PlayOneShotGame("launchParty/rocket_endBad");
                 BeatAction.New(gameObject, new List<BeatAction.Action>()
                 {
                     new BeatAction.Action(caller.startBeat + caller.timer + 1f, delegate { GameObject.Destroy(gameObject); }),
@@ -346,7 +346,7 @@ namespace HeavenStudio.Games.Scripts_LaunchParty
         void Miss(PlayerActionEvent caller)
         {
             noInput = true;
-            Jukebox.PlayOneShotGame("launchParty/miss");
+            SoundByte.PlayOneShotGame("launchParty/miss");
             number.SetActive(false);
             anim.Play("RocketMiss", 0, 0);
             BeatAction.New(gameObject, new List<BeatAction.Action>()

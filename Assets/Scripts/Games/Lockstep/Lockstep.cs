@@ -155,7 +155,7 @@ namespace HeavenStudio.Games
         [SerializeField] Material stepperMaterial;
 
         [Header("Properties")]
-        static List<float> queuedInputs = new List<float>();
+        static List<double> queuedInputs = new();
         Sprite masterSprite;
         HowMissed currentMissStage;
         bool lessSteppers = false;
@@ -238,7 +238,7 @@ namespace HeavenStudio.Games
                 {
                     foreach (var input in queuedInputs)
                     {
-                        ScheduleInput(cond.songPositionInBeats, input - cond.songPositionInBeats, InputType.STANDARD_DOWN, Just, Miss, Nothing);
+                        ScheduleInput(cond.songPositionInBeatsAsDouble, input - cond.songPositionInBeats, InputType.STANDARD_DOWN, Just, Miss, Nothing);
                         BeatAction.New(instance.gameObject, new List<BeatAction.Action>()
                         {
                             new BeatAction.Action(input, delegate { EvaluateMarch(); }),
@@ -258,7 +258,7 @@ namespace HeavenStudio.Games
                     {
                         stepswitcherPlayer.DoScaledAnimationAsync("OffbeatMarch", 0.5f);
                     }
-                    Jukebox.PlayOneShotGame("lockstep/miss");
+                    SoundByte.PlayOneShotGame("lockstep/miss");
                     ScoreMiss();
                 }
             }
@@ -269,7 +269,7 @@ namespace HeavenStudio.Games
             }
         }
 
-        public void Bop(float beat, float length, bool shouldBop, bool autoBop)
+        public void Bop(double beat, float length, bool shouldBop, bool autoBop)
         {
             goBop = autoBop;
             if (shouldBop)
@@ -287,17 +287,17 @@ namespace HeavenStudio.Games
             }
         }
 
-        public void Hai(float beat)
+        public void Hai(double beat)
         {
-            Jukebox.PlayOneShotGame("lockstep/switch1");
+            SoundByte.PlayOneShotGame("lockstep/switch1", beat);
         }
 
-        public void Ho(float beat)
+        public void Ho(double beat)
         {
-            Jukebox.PlayOneShotGame("lockstep/switch4");
+            SoundByte.PlayOneShotGame("lockstep/switch4", beat);
         }
 
-        public static void OnbeatSwitch(float beat)
+        public static void OnbeatSwitch(double beat)
         {
             MultiSound.Play(new MultiSound.Sound[]
             {
@@ -317,7 +317,7 @@ namespace HeavenStudio.Games
             });
         }
 
-        public static void OffbeatSwitch(float beat)
+        public static void OffbeatSwitch(double beat)
         {
             MultiSound.Play(new MultiSound.Sound[]
             {
@@ -338,7 +338,7 @@ namespace HeavenStudio.Games
             });
         }
 
-        public static void Marching(float beat, float length)
+        public static void Marching(double beat, float length)
         {
             if (GameManager.instance.currentGame == "lockstep")
             {
@@ -362,7 +362,7 @@ namespace HeavenStudio.Games
         public void EvaluateMarch()
         {
             var cond = Conductor.instance;
-            var beatAnimCheck = Math.Round(cond.songPositionInBeats * 2);
+            var beatAnimCheck = Math.Round(cond.songPositionInBeatsAsDouble * 2);
             if (beatAnimCheck % 2 != 0)
             {
                 PlayStepperAnim("OffbeatMarch", false, 0.5f);
@@ -382,12 +382,12 @@ namespace HeavenStudio.Games
                 double beatAnimCheck = cond.songPositionInBeatsAsDouble - 0.25;
                 if (beatAnimCheck % 1.0 >= 0.5)
                 {
-                    Jukebox.PlayOneShotGame("lockstep/tink");
+                    SoundByte.PlayOneShotGame("lockstep/tink");
                     stepswitcherPlayer.DoScaledAnimationAsync("OnbeatMarch", 0.5f);
                 }
                 else
                 {
-                    Jukebox.PlayOneShotGame("lockstep/tink");
+                    SoundByte.PlayOneShotGame("lockstep/tink");
                     stepswitcherPlayer.DoScaledAnimationAsync("OffbeatMarch", 0.5f);
                 }
                 return;
@@ -400,12 +400,12 @@ namespace HeavenStudio.Games
             double beatAnimCheck = beat - 0.25;
             if (beatAnimCheck % 1.0 >= 0.5)
             {
-                Jukebox.PlayOneShotGame($"lockstep/marchOnbeat{UnityEngine.Random.Range(1, 3)}");
+                SoundByte.PlayOneShotGame($"lockstep/marchOnbeat{UnityEngine.Random.Range(1, 3)}");
                 stepswitcherPlayer.DoScaledAnimationAsync("OnbeatMarch", 0.5f);
             }
             else
             {
-                Jukebox.PlayOneShotGame($"lockstep/marchOffbeat{UnityEngine.Random.Range(1, 3)}");
+                SoundByte.PlayOneShotGame($"lockstep/marchOffbeat{UnityEngine.Random.Range(1, 3)}");
                 stepswitcherPlayer.DoScaledAnimationAsync("OffbeatMarch", 0.5f);
             }
         }
@@ -417,13 +417,13 @@ namespace HeavenStudio.Games
             if (beatAnimCheck % 2 != 0 && currentMissStage != HowMissed.MissedOff)
             {
                 stepswitcherPlayer.Play("OffbeatMiss", 0, 0);
-                Jukebox.PlayOneShotGame("lockstep/wayOff");
+                SoundByte.PlayOneShotGame("lockstep/wayOff");
                 currentMissStage = HowMissed.MissedOff;
             }
             else if (beatAnimCheck % 2 == 0 && currentMissStage != HowMissed.MissedOn)
             {
                 stepswitcherPlayer.Play("OnbeatMiss", 0, 0);
-                Jukebox.PlayOneShotGame("lockstep/wayOff");
+                SoundByte.PlayOneShotGame("lockstep/wayOff");
                 currentMissStage = HowMissed.MissedOn;
             }
         }

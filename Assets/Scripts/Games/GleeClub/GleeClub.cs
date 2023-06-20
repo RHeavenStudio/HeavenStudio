@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using HeavenStudio.Util;
+using Jukebox;
 
 namespace HeavenStudio.Games.Loaders
 {
@@ -113,7 +114,7 @@ namespace HeavenStudio.Games
         }
         public struct QueuedSinging
         {
-            public float startBeat;
+            public double startBeat;
             public float length;
             public int semiTones;
             public int semiTonesPlayer;
@@ -133,9 +134,9 @@ namespace HeavenStudio.Games
         public ChorusKid playerChorusKid;
         [Header("Variables")]
         static List<QueuedSinging> queuedSingings = new List<QueuedSinging>();
-        static List<float> queuedBatons = new List<float>();
+        static List<double> queuedBatons = new();
         bool intervalStarted;
-        float intervalStartBeat;
+        double intervalStartBeat;
         float beatInterval = 4f;
         public bool missed;
         public static GleeClub instance;
@@ -143,16 +144,16 @@ namespace HeavenStudio.Games
 
         int startIntervalIndex;
 
-        private List<DynamicBeatmap.DynamicEntity> allIntervalEvents = new List<DynamicBeatmap.DynamicEntity>();
+        private List<RiqEntity> allIntervalEvents = new List<RiqEntity>();
 
         void Awake()
         {
             instance = this;
             var camEvents = EventCaller.GetAllInGameManagerList("gleeClub", new string[] { "intervalStart" });
-            List<DynamicBeatmap.DynamicEntity> tempEvents = new List<DynamicBeatmap.DynamicEntity>();
+            List<RiqEntity> tempEvents = new List<RiqEntity>();
             for (int i = 0; i < camEvents.Count; i++)
             {
-                if (camEvents[i].beat + camEvents[i].beat >= Conductor.instance.songPositionInBeats)
+                if (camEvents[i].beat + camEvents[i].beat >= Conductor.instance.songPositionInBeatsAsDouble)
                 {
                     tempEvents.Add(camEvents[i]);
                 }
@@ -223,9 +224,9 @@ namespace HeavenStudio.Games
                 {
                     if (startIntervalIndex < allIntervalEvents.Count && startIntervalIndex >= 0)
                     {
-                        if (Conductor.instance.songPositionInBeats >= allIntervalEvents[startIntervalIndex].beat)
+                        if (Conductor.instance.songPositionInBeatsAsDouble >= allIntervalEvents[startIntervalIndex].beat)
                         {
-                            StartInterval(allIntervalEvents[startIntervalIndex].beat, allIntervalEvents[startIntervalIndex].length);
+                            StartInterval((float)allIntervalEvents[startIntervalIndex].beat, allIntervalEvents[startIntervalIndex].length);
                             startIntervalIndex++;
                         }
                     }
@@ -256,22 +257,22 @@ namespace HeavenStudio.Games
 
         public void ForceSing(int semiTones, int semiTones1, int semiTonesPlayer)
         {
-            leftChorusKid.currentPitch = Jukebox.GetPitchFromSemiTones(semiTones, true);
-            middleChorusKid.currentPitch = Jukebox.GetPitchFromSemiTones(semiTones1, true);
-            playerChorusKid.currentPitch = Jukebox.GetPitchFromSemiTones(semiTonesPlayer, true);
+            leftChorusKid.currentPitch = SoundByte.GetPitchFromSemiTones(semiTones, true);
+            middleChorusKid.currentPitch = SoundByte.GetPitchFromSemiTones(semiTones1, true);
+            playerChorusKid.currentPitch = SoundByte.GetPitchFromSemiTones(semiTonesPlayer, true);
             leftChorusKid.StartSinging(true);
             middleChorusKid.StartSinging(true);
             if (!PlayerInput.Pressing() || GameManager.instance.autoplay) playerChorusKid.StartSinging(true);
             else missed = true;
         }
 
-        public void TogetherNow(float beat, int semiTones, int semiTones1, int semiTonesPlayer, float conductorPitch)
+        public void TogetherNow(double beat, int semiTones, int semiTones1, int semiTonesPlayer, float conductorPitch)
         {
             if (!playerChorusKid.disappeared) ScheduleInput(beat, 2.5f, InputType.STANDARD_UP, JustTogetherNow, Out, Out);
             if (!playerChorusKid.disappeared) ScheduleInput(beat, 3.5f, InputType.STANDARD_DOWN, JustTogetherNowClose, MissBaton, Out);
-            float pitch = Jukebox.GetPitchFromSemiTones(semiTones, true);
-            float pitch1 = Jukebox.GetPitchFromSemiTones(semiTones1, true);
-            currentYellPitch = Jukebox.GetPitchFromSemiTones(semiTonesPlayer, true);
+            float pitch = SoundByte.GetPitchFromSemiTones(semiTones, true);
+            float pitch1 = SoundByte.GetPitchFromSemiTones(semiTones1, true);
+            currentYellPitch = SoundByte.GetPitchFromSemiTones(semiTonesPlayer, true);
             MultiSound.Play(new MultiSound.Sound[]
             {
                 new MultiSound.Sound("gleeClub/togetherEN-01", beat + 0.5f, conductorPitch),
@@ -318,16 +319,16 @@ namespace HeavenStudio.Games
             playerChorusKid.StopSinging(true);
         }
 
-        public void StartInterval(float beat, float length)
+        public void StartInterval(double beat, float length)
         {
             intervalStartBeat = beat;
             beatInterval = length;
             intervalStarted = true;
         }
 
-        public void Sing(float beat, float length, int semiTones, int semiTones1, int semiTonesPlayer, int closeMouth, bool repeating, int semiTonesLeft2, int semiTonesLeft3, int semiTonesMiddle2)
+        public void Sing(double beat, float length, int semiTones, int semiTones1, int semiTonesPlayer, int closeMouth, bool repeating, int semiTonesLeft2, int semiTonesLeft3, int semiTonesMiddle2)
         {
-            float pitch = Jukebox.GetPitchFromSemiTones(semiTones, true);
+            float pitch = SoundByte.GetPitchFromSemiTones(semiTones, true);
             if (!intervalStarted)
             {
                 StartInterval(beat, length);
@@ -351,7 +352,7 @@ namespace HeavenStudio.Games
             });
         }
 
-        public void PassTurn(float beat, float length)
+        public void PassTurn(double beat, float length)
         {
             if (queuedSingings.Count == 0) return;
             intervalStarted = false;
@@ -359,17 +360,17 @@ namespace HeavenStudio.Games
             if (!playerChorusKid.disappeared) ShowHeart(beat + length + beatInterval * 2 + 1);
             foreach (var sing in queuedSingings)
             {
-                float playerPitch = Jukebox.GetPitchFromSemiTones(sing.semiTonesPlayer, true);
+                float playerPitch = SoundByte.GetPitchFromSemiTones(sing.semiTonesPlayer, true);
                 if (!playerChorusKid.disappeared)
                 {
                     GleeClubSingInput spawnedInput = Instantiate(singInputPrefab, transform);
                     spawnedInput.pitch = playerPitch;
                     spawnedInput.Init(beat + length + sing.startBeat + beatInterval, sing.length, sing.closeMouth);
                 }
-                float pitch = Jukebox.GetPitchFromSemiTones(sing.semiTones, true);
-                float pitchLeft2 = Jukebox.GetPitchFromSemiTones(sing.semiTonesLeft2, true);
-                float pitchLeft3 = Jukebox.GetPitchFromSemiTones(sing.semiTonesLeft3, true);
-                float pitchMiddle2 = Jukebox.GetPitchFromSemiTones(sing.semiTonesMiddle2, true);
+                float pitch = SoundByte.GetPitchFromSemiTones(sing.semiTones, true);
+                float pitchLeft2 = SoundByte.GetPitchFromSemiTones(sing.semiTonesLeft2, true);
+                float pitchLeft3 = SoundByte.GetPitchFromSemiTones(sing.semiTonesLeft3, true);
+                float pitchMiddle2 = SoundByte.GetPitchFromSemiTones(sing.semiTonesMiddle2, true);
                 BeatAction.New(instance.gameObject, new List<BeatAction.Action>()
                 {
                     new BeatAction.Action(beat + length + sing.startBeat, delegate
@@ -416,7 +417,7 @@ namespace HeavenStudio.Games
             queuedSingings.Clear();
         }
 
-        public static void PreBaton(float beat)
+        public static void PreBaton(double beat)
         {
             MultiSound.Play(new MultiSound.Sound[]
             {
@@ -433,7 +434,7 @@ namespace HeavenStudio.Games
             }
         }
 
-        public void Baton(float beat)
+        public void Baton(double beat)
         {
             missed = false;
             if (!playerChorusKid.disappeared) ScheduleInput(beat, 1, InputType.STANDARD_DOWN, JustBaton, MissBaton, Out);
@@ -469,7 +470,7 @@ namespace HeavenStudio.Games
 
         void Out(PlayerActionEvent caller) { }
 
-        public void ShowHeart(float beat)
+        public void ShowHeart(double beat)
         {
 
             BeatAction.New(instance.gameObject, new List<BeatAction.Action>()

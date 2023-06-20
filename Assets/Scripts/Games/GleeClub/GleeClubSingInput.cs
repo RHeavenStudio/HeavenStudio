@@ -18,7 +18,7 @@ namespace HeavenStudio.Games.Scripts_GleeClub
             game = GleeClub.instance;
         }
 
-        public void Init(float beat, float length, int close)
+        public void Init(double beat, float length, int close)
         {
             shouldClose = close != (int)GleeClub.MouthOpenClose.OnlyOpen;
             shouldOpen = close != (int)GleeClub.MouthOpenClose.OnlyClose;

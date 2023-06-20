@@ -252,17 +252,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0cdbd028573cd4841b9c1d04402b370f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  inList: 0
-  state:
-    gameObject: {fileID: 0}
-    early: 0
-    perfect: 0
-    late: 0
-    createBeat: 0
-  eligibleHitsList: []
-  aceTimes: 0
-  isEligible: 0
-  triggersAutoplay: 1
   startBeat: 0
   type: 0
 --- !u!1 &5813499710761815890
@@ -844,7 +833,6 @@ GameObject:
   - component: {fileID: 5813499710947595607}
   - component: {fileID: 5813499710947595606}
   - component: {fileID: 5813499710947595605}
-  - component: {fileID: 5813499710947595604}
   m_Layer: 0
   m_Name: Player
   m_TagString: Player
@@ -905,8 +893,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c9c51533490c0324d82d217287adee49, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  fork: {fileID: 5813499711444186600}
-  peaSprite: {fileID: 5655859219183449053, guid: 52117e1d5cd298c42adfea952676c7d6, type: 3}
   hitFX: {fileID: 8176908352783466543, guid: 52117e1d5cd298c42adfea952676c7d6, type: 3}
   hitFXG: {fileID: -5878435943444112389, guid: 52117e1d5cd298c42adfea952676c7d6, type: 3}
   hitFXMiss: {fileID: -2809503619127399702, guid: 52117e1d5cd298c42adfea952676c7d6, type: 3}
@@ -914,39 +900,13 @@ MonoBehaviour:
   early: {fileID: 5813499712459541102}
   perfect: {fileID: 5813499711811786914}
   late: {fileID: 5813499711317768476}
-  col: {fileID: 5813499710947595604}
+  shouldBop: 0
   currentEarlyPeasOnFork: 0
   currentPerfectPeasOnFork: 0
   currentLatePeasOnFork: 0
   topbun: 0
   middleburger: 0
   bottombun: 0
---- !u!61 &5813499710947595604
-BoxCollider2D:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5813499710947595600}
-  m_Enabled: 1
-  m_Density: 1
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_UsedByEffector: 0
-  m_UsedByComposite: 0
-  m_Offset: {x: 3.623232, y: 0.49944234}
-  m_SpriteTilingProperty:
-    border: {x: 0, y: 0, z: 0, w: 0}
-    pivot: {x: 0, y: 0}
-    oldSize: {x: 0, y: 0}
-    newSize: {x: 0, y: 0}
-    adaptiveTilingThreshold: 0
-    drawMode: 0
-    adaptiveTiling: 0
-  m_AutoTiling: 0
-  serializedVersion: 2
-  m_Size: {x: 6.6845694, y: 10.207912}
-  m_EdgeRadius: 0
 --- !u!1 &5813499711025093260
 GameObject:
   m_ObjectHideFlags: 0
@@ -2465,7 +2425,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 5813499712187904561}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -1.8296, y: 0.2744, z: 0}
+  m_LocalPosition: {x: -1.846, y: 0.27, z: 0}
   m_LocalScale: {x: 0.98477775, y: 0.98477775, z: 0.9847778}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -2540,7 +2500,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &5813499712412291570
 Transform:
   m_ObjectHideFlags: 0

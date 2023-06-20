@@ -9,8 +9,8 @@ namespace HeavenStudio.Games.Scripts_MeatGrinder
 {
     public class MeatToss : MonoBehaviour
     {
-        public float startBeat;
-        public float cueLength;
+        public double startBeat;
+        public double cueLength;
         public bool cueBased;
         public string meatType;
 
@@ -44,7 +44,7 @@ namespace HeavenStudio.Games.Scripts_MeatGrinder
         private void InputActions(bool annoyBoss, string whichSfx, string whichAnim)
         {
             game.bossAnnoyed = annoyBoss;
-            Jukebox.PlayOneShotGame("meatGrinder/"+whichSfx);
+            SoundByte.PlayOneShotGame("meatGrinder/"+whichSfx);
             game.TackAnim.DoScaledAnimationAsync(whichAnim, 0.5f);
         } 
 

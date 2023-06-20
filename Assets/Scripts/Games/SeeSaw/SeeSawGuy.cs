@@ -42,15 +42,15 @@ namespace HeavenStudio.Games.Scripts_SeeSaw
         Path currentPath;
         Path cameraPath;
         SeeSaw game;
-        float startBeat;
-        float heightLastFrame;
+        double startBeat;
+        double heightLastFrame;
         [NonSerialized] public bool canBop = true;
         [SerializeField] Transform landOutTrans;
         public Transform landInTrans;
         [SerializeField] Transform groundTrans;
         bool hasChangedAnimMidAir;
         [SerializeField] ParticleSystem deathParticle;
-        float wantChoke = -1;
+        double wantChoke = -1;
         float wantChokeLength;
 
         [SerializeField] private Animator invertAnim;
@@ -67,7 +67,7 @@ namespace HeavenStudio.Games.Scripts_SeeSaw
         {
             var cond = Conductor.instance;
 
-            float currentBeat = cond.songPositionInBeats;
+            double currentBeat = cond.songPositionInBeatsAsDouble;
 
             if (cond.isPlaying && !cond.isPaused)
             {
@@ -76,7 +76,7 @@ namespace HeavenStudio.Games.Scripts_SeeSaw
                     default:
                         return;
                     case JumpState.StartJump:
-                        transform.position = GetPathPositionFromBeat(currentPath, Mathf.Max(startBeat, currentBeat), out float height, startBeat);
+                        transform.position = GetPathPositionFromBeat(currentPath, Math.Max(startBeat, currentBeat), out double height, startBeat);
                         if (height < heightLastFrame && !hasChangedAnimMidAir)
                         {
                             anim.Play("Jump_OutOut_Fall", 0, 0);
@@ -86,7 +86,7 @@ namespace HeavenStudio.Games.Scripts_SeeSaw
                         heightLastFrame = height;
                         break;
                     case JumpState.StartJumpIn:
-                        transform.position = GetPathPositionFromBeat(currentPath, Mathf.Max(startBeat, currentBeat), out float heightIn, startBeat);
+                        transform.position = GetPathPositionFromBeat(currentPath, Math.Max(startBeat, currentBeat), out double heightIn, startBeat);
                         if (heightIn < heightLastFrame && !hasChangedAnimMidAir)
                         {
                             anim.Play("Jump_InIn_Fall", 0, 0);
@@ -96,7 +96,7 @@ namespace HeavenStudio.Games.Scripts_SeeSaw
                         heightLastFrame = heightIn;
                         break;
                     case JumpState.OutOut:
-                        transform.position = GetPathPositionFromBeat(currentPath, Mathf.Max(startBeat, currentBeat), startBeat);
+                        transform.position = GetPathPositionFromBeat(currentPath, Math.Max(startBeat, currentBeat), startBeat);
                         if (currentBeat >= startBeat + 1 && !hasChangedAnimMidAir)
                         {
                             anim.Play("Jump_OutOut_Fall", 0, 0);
@@ -105,7 +105,7 @@ namespace HeavenStudio.Games.Scripts_SeeSaw
 
                         break;
                     case JumpState.InIn:
-                        transform.position = GetPathPositionFromBeat(currentPath, Mathf.Max(startBeat, currentBeat), startBeat);
+                        transform.position = GetPathPositionFromBeat(currentPath, Math.Max(startBeat, currentBeat), startBeat);
                         if (currentBeat >= startBeat + 0.5f && !hasChangedAnimMidAir)
                         {
                             anim.Play("Jump_InIn_Fall", 0, 0);
@@ -113,7 +113,7 @@ namespace HeavenStudio.Games.Scripts_SeeSaw
                         }
                         break;
                     case JumpState.InOut:
-                        transform.position = GetPathPositionFromBeat(currentPath, Mathf.Max(startBeat, currentBeat), startBeat);
+                        transform.position = GetPathPositionFromBeat(currentPath, Math.Max(startBeat, currentBeat), startBeat);
                         if (currentBeat >= startBeat + 0.5f) 
                         {
                             if (!hasChangedAnimMidAir) anim.Play("Jump_InOut_Tuck", 0, 0);
@@ -122,7 +122,7 @@ namespace HeavenStudio.Games.Scripts_SeeSaw
                         } 
                         break;
                     case JumpState.OutIn:
-                        transform.position = GetPathPositionFromBeat(currentPath, Mathf.Max(startBeat, currentBeat), startBeat);
+                        transform.position = GetPathPositionFromBeat(currentPath, Math.Max(startBeat, currentBeat), startBeat);
                         if (currentBeat >= startBeat + 1f) 
                         {
                             if (!hasChangedAnimMidAir) anim.Play("Jump_OutIn_Tuck", 0, 0);
@@ -132,13 +132,13 @@ namespace HeavenStudio.Games.Scripts_SeeSaw
                         break;
                     case JumpState.EndJumpOut:
                     case JumpState.EndJumpIn:
-                        transform.position = GetPathPositionFromBeat(currentPath, Mathf.Max(startBeat, currentBeat), startBeat);
+                        transform.position = GetPathPositionFromBeat(currentPath, Math.Max(startBeat, currentBeat), startBeat);
                         break;
                     case JumpState.HighOutOut:
                     case JumpState.HighOutIn:
                     case JumpState.HighInOut:
                     case JumpState.HighInIn:
-                        transform.position = GetPathPositionFromBeat(currentPath, Mathf.Max(startBeat, currentBeat), startBeat);
+                        transform.position = GetPathPositionFromBeat(currentPath, Math.Max(startBeat, currentBeat), startBeat);
                         break;
                 }
             }
@@ -148,7 +148,7 @@ namespace HeavenStudio.Games.Scripts_SeeSaw
         {
             var cond = Conductor.instance;
 
-            float currentBeat = cond.songPositionInBeats;
+            double currentBeat = cond.songPositionInBeatsAsDouble;
 
             if (!see && game.cameraMove && cond.isPlaying && !cond.isPaused)
             {
@@ -160,7 +160,7 @@ namespace HeavenStudio.Games.Scripts_SeeSaw
                     case JumpState.HighOutIn:
                     case JumpState.HighInOut:
                     case JumpState.HighInIn:
-                        float newCamY = Mathf.Max(GetPathPositionFromBeat(cameraPath, Mathf.Max(startBeat, currentBeat), startBeat).y, 0);
+                        float newCamY = Math.Max(GetPathPositionFromBeat(cameraPath, Math.Max(startBeat, currentBeat), startBeat).y, 0);
                         GameCamera.additionalPosition = new Vector3(0, newCamY, 0);
                         break;
                 }
@@ -168,7 +168,7 @@ namespace HeavenStudio.Games.Scripts_SeeSaw
 
         }
 
-        public void Choke(float beat, float length)
+        public void Choke(double beat, float length)
         {
             if (!canBop || currentState != JumpState.None || dead) 
             {
@@ -178,7 +178,7 @@ namespace HeavenStudio.Games.Scripts_SeeSaw
             } 
             dead = true;
             anim.DoScaledAnimationAsync("Choke_" + (see ? "See" : "Saw") + "_Intro", 0.5f);
-            Jukebox.PlayOneShotGame("seeSaw/explosion" + (see ? "Black" : "White"), beat + length);
+            SoundByte.PlayOneShotGame("seeSaw/explosion" + (see ? "Black" : "White"), beat + length);
             BeatAction.New(gameObject, new List<BeatAction.Action>()
             {
                 new BeatAction.Action(beat + length - 1, delegate { invertAnim.DoScaledAnimationAsync("Invert", 0.5f); }),
@@ -212,7 +212,7 @@ namespace HeavenStudio.Games.Scripts_SeeSaw
                 case JumpState.EndJumpIn:
                     transform.position = groundTrans.position;
                     SetState(JumpState.None, 0);
-                    if (wantChoke >= Conductor.instance.songPositionInBeats - 0.25f && wantChoke <= Conductor.instance.songPositionInBeats + 0.25f)
+                    if (wantChoke >= Conductor.instance.songPositionInBeatsAsDouble - 0.25f && wantChoke <= Conductor.instance.songPositionInBeatsAsDouble + 0.25f)
                     {
                         Choke(wantChoke, wantChokeLength);
                     }
@@ -228,7 +228,7 @@ namespace HeavenStudio.Games.Scripts_SeeSaw
             }
             if (landType is LandType.Big && !see)
             {
-                game.SpawnOrbs(!landedOut, Conductor.instance.songPositionInBeats);
+                game.SpawnOrbs(!landedOut, Conductor.instance.songPositionInBeatsAsDouble);
             }
             string landOut = landedOut ? "Out" : "In";
             string typeOfLanding = "";
@@ -253,7 +253,7 @@ namespace HeavenStudio.Games.Scripts_SeeSaw
                 string getUpAnim = "GetUp_" + landOut + typeOfLanding;
                 BeatAction.New(gameObject, new List<BeatAction.Action>()
                 {
-                    new BeatAction.Action(Conductor.instance.songPositionInBeats + (getUpOut ? 1f : 0.5f), delegate { anim.DoScaledAnimationAsync(getUpAnim, 0.5f); })
+                    new BeatAction.Action(Conductor.instance.songPositionInBeatsAsDouble + (getUpOut ? 1f : 0.5f), delegate { anim.DoScaledAnimationAsync(getUpAnim, 0.5f); })
                 });
             }
             transform.position = landedOut ? landOutTrans.position : landInTrans.position;
@@ -275,7 +275,7 @@ namespace HeavenStudio.Games.Scripts_SeeSaw
             }
         }
 
-        public void SetState(JumpState state, float beat, bool miss = false, float height = 0)
+        public void SetState(JumpState state, double beat, bool miss = false, float height = 0)
         {
             lastState = currentState;
             currentState = state;
