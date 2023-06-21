@@ -76,10 +76,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fc6d77daa4e399f4fbac22c2f7de8777, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  platformRef: {fileID: 1815905863429998752, guid: 73364b4dafdbd914f83c316a1fcf8dd7, type: 3}
+  platformRef: {fileID: 1558448204157038467, guid: 73364b4dafdbd914f83c316a1fcf8dd7, type: 3}
   defaultYPos: -11.76
   platformDistance: 3.8
-  platformAmount: 15
+  playerXPos: -6.78
 --- !u!1 &955264990193298390
 GameObject:
   m_ObjectHideFlags: 0
@@ -679,6 +679,7 @@ MonoBehaviour:
   EligibleHits: []
   scheduledInputs: []
   firstEnable: 0
+  playYan: {fileID: 1314280037714680423}
 --- !u!1 &4465275889429203320
 GameObject:
   m_ObjectHideFlags: 0
