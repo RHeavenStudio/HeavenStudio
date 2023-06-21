@@ -11,8 +11,6 @@ namespace HeavenStudio.Games.Scripts_AgbNightWalk
         public float defaultYPos = -11.76f;
         public float platformDistance = 3.80f;
         public float playerXPos = -6.78f;
-
-        List<AgbPlatform> platforms = new();
     }
 }
 
