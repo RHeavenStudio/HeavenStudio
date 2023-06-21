@@ -1,3 +1,4 @@
+using HeavenStudio.Util;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -11,10 +12,15 @@ namespace HeavenStudio.Games.Scripts_AgbNightWalk
         [Header("Properties")]
         [SerializeField] private AgbPlatform platformRef;
         public float defaultYPos = -11.76f;
+        public float heightAmount = 2;
+        [NonSerialized] public int defaultHeightUnits = 0;
         public float platformDistance = 3.80f;
         public float playerXPos = -6.78f;
         [Range(1, 100)]
         public int platformCount = 20;
+        private float lastHeight = 0;
+        private float heightToRaiseTo = 0;
+        private double raiseBeat = -1;
 
         private void Awake()
         {
@@ -28,8 +34,8 @@ namespace HeavenStudio.Games.Scripts_AgbNightWalk
                 for (int i = 0; i < platformCount; i++)
                 {
                     AgbPlatform platform = Instantiate(platformRef, transform);
-                    platform.StartInput(game.countInBeat + i + 8 - (platformCount * 0.5), game.countInBeat + i + 8);
                     platform.handler = this;
+                    platform.StartInput(game.countInBeat + i + 8 - (platformCount * 0.5), game.countInBeat + i + 8);
                     platform.gameObject.SetActive(true);
                 }
             }
@@ -38,11 +44,36 @@ namespace HeavenStudio.Games.Scripts_AgbNightWalk
                 for (int i = 0; i < platformCount; i++)
                 {
                     AgbPlatform platform = Instantiate(platformRef, transform);
-                    platform.StartInput(Math.Ceiling(beat) + i - (platformCount * 1.5), Math.Ceiling(beat) + i - platformCount);
                     platform.handler = this;
+                    platform.StartInput(Math.Ceiling(beat) + i - (platformCount * 1.5), Math.Ceiling(beat) + i - platformCount);
                     platform.gameObject.SetActive(true);
                 }
             }
+        }
+
+        private void Update()
+        {
+            var cond = Conductor.instance;
+            if (cond.isPlaying && !cond.isPaused)
+            {
+                if (raiseBeat != -1)
+                {
+                    float normalizedBeat = Mathf.Clamp(cond.GetPositionFromBeat(raiseBeat, 1), 0, 1);
+                    EasingFunction.Function func = EasingFunction.GetEasingFunction(EasingFunction.Ease.EaseOutQuint);
+
+                    float newPosY = func(lastHeight, heightToRaiseTo, normalizedBeat);
+
+                    transform.localPosition = new Vector3(0, -newPosY, 0);
+                }
+            }
+        }
+
+        public void RaiseHeight(double beat, int lastUnits, int currentUnits)
+        {
+            raiseBeat = beat;
+            lastHeight = lastUnits * heightAmount * transform.localScale.y;
+            heightToRaiseTo = currentUnits * heightAmount * transform.localScale.y;
+            Update();
         }
     }
 }

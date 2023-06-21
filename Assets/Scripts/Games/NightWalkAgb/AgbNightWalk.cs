@@ -23,6 +23,13 @@ namespace HeavenStudio.Games.Loaders
                     {
                         new Param("mute", false, "Mute Cowbell")
                     }
+                },
+                new GameAction("height", "Platform Height")
+                {
+                    parameters = new List<Param>()
+                    {
+                        new Param("value", new EntityTypes.Integer(-10, 10, 1), "Height Units")
+                    }
                 }
             });
         }
@@ -41,6 +48,7 @@ namespace HeavenStudio.Games
         [NonSerialized] public double countInBeat = -1;
         [Header("Curves")]
         [SerializeField] SuperCurveObject.Path[] jumpPaths;
+        [NonSerialized] public Dictionary<double, RiqEntity> platformHeightChanges = new Dictionary<double, RiqEntity>();
 
         new void OnDrawGizmos()
         {
@@ -69,6 +77,18 @@ namespace HeavenStudio.Games
         private void Awake()
         {
             instance = this;
+            List<RiqEntity> heightEvents = EventCaller.GetAllInGameManagerList("nightWalkAgb", new string[] { "height" });
+            foreach (var height in heightEvents)
+            {
+                if (platformHeightChanges.ContainsKey(height.beat))
+                {
+                    platformHeightChanges[height.beat]["value"] += height["value"];
+                }
+                else
+                {
+                    platformHeightChanges.Add(height.beat, height);
+                }
+            }
         }
 
         public override void OnGameSwitch(double beat)

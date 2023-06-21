@@ -23,8 +23,30 @@ namespace HeavenStudio.Games.Scripts_AgbNightWalk
 
         private PlatformType type = PlatformType.Flower;
 
+        private float additionalHeight = 0f;
+        private int additionalHeightInUnits = 0;
+        private int lastAdditionalHeightInUnits = 0;
+
+        [SerializeField] private GameObject platform;
+
         public void StartInput(double beat, double hitBeat)
         {
+            if (game == null) game = AgbNightWalk.instance;
+            if (game.platformHeightChanges.ContainsKey(hitBeat))
+            {
+                handler.defaultHeightUnits += game.platformHeightChanges[hitBeat]["value"];
+            }
+            lastAdditionalHeightInUnits = handler.defaultHeightUnits;
+            additionalHeight = handler.defaultHeightUnits * handler.heightAmount;
+            if (game.platformHeightChanges.ContainsKey(hitBeat + 1))
+            {
+                additionalHeightInUnits = lastAdditionalHeightInUnits + game.platformHeightChanges[hitBeat + 1]["value"];
+            }
+            else
+            {
+                additionalHeightInUnits = lastAdditionalHeightInUnits;
+            }
+            platform.SetActive(!game.platformHeightChanges.ContainsKey(hitBeat + 1));
             startBeat = beat;
             endBeat = hitBeat;
             if (startBeat < endBeat)
@@ -49,7 +71,7 @@ namespace HeavenStudio.Games.Scripts_AgbNightWalk
 
                 float newPosX = Mathf.LerpUnclamped(handler.playerXPos + (float)((endBeat - startBeat) * handler.platformDistance), handler.playerXPos, normalizedBeat);
 
-                transform.localPosition = new Vector3(newPosX, handler.defaultYPos);
+                transform.localPosition = new Vector3(newPosX, handler.defaultYPos + additionalHeight);
 
                 if (cond.songPositionInBeats > endBeat + (handler.platformCount * 0.5f))
                 {
@@ -66,6 +88,7 @@ namespace HeavenStudio.Games.Scripts_AgbNightWalk
         }
         private void Just(PlayerActionEvent caller, float state)
         {
+            handler.RaiseHeight(Conductor.instance.songPositionInBeats, lastAdditionalHeightInUnits, additionalHeightInUnits);
             game.playYan.Jump(Conductor.instance.songPositionInBeats);
             if (state >= 1 || state <= -1)
             {
