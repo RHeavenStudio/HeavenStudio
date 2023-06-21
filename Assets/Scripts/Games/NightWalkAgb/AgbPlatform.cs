@@ -34,13 +34,13 @@ namespace HeavenStudio.Games.Scripts_AgbNightWalk
             if (game == null) game = AgbNightWalk.instance;
             if (game.platformHeightChanges.ContainsKey(hitBeat))
             {
-                handler.defaultHeightUnits += game.platformHeightChanges[hitBeat]["value"];
+                handler.defaultHeightUnits += game.platformHeightChanges[hitBeat];
             }
             lastAdditionalHeightInUnits = handler.defaultHeightUnits;
             additionalHeight = handler.defaultHeightUnits * handler.heightAmount;
             if (game.platformHeightChanges.ContainsKey(hitBeat + 1))
             {
-                additionalHeightInUnits = lastAdditionalHeightInUnits + game.platformHeightChanges[hitBeat + 1]["value"];
+                additionalHeightInUnits = lastAdditionalHeightInUnits + game.platformHeightChanges[hitBeat + 1];
             }
             else
             {

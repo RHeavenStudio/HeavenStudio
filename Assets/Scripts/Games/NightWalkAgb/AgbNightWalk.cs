@@ -28,7 +28,9 @@ namespace HeavenStudio.Games.Loaders
                 {
                     parameters = new List<Param>()
                     {
-                        new Param("value", new EntityTypes.Integer(-10, 10, 1), "Height Units")
+                        new Param("value", new EntityTypes.Integer(-10, 10, 1), "Height Units"),
+                        new Param("rmin", new EntityTypes.Integer(-10, 10, 0), "Random Units (Minimum)"),
+                        new Param("rmax", new EntityTypes.Integer(-10, 10, 0), "Random Units (Maximum)"),
                     }
                 }
             });
@@ -48,7 +50,7 @@ namespace HeavenStudio.Games
         [NonSerialized] public double countInBeat = -1;
         [Header("Curves")]
         [SerializeField] SuperCurveObject.Path[] jumpPaths;
-        [NonSerialized] public Dictionary<double, RiqEntity> platformHeightChanges = new Dictionary<double, RiqEntity>();
+        [NonSerialized] public Dictionary<double, int> platformHeightChanges = new Dictionary<double, int>();
 
         new void OnDrawGizmos()
         {
@@ -80,13 +82,14 @@ namespace HeavenStudio.Games
             List<RiqEntity> heightEvents = EventCaller.GetAllInGameManagerList("nightWalkAgb", new string[] { "height" });
             foreach (var height in heightEvents)
             {
+                int randomValue = UnityEngine.Random.Range(height["rmin"], height["rmax"]);
                 if (platformHeightChanges.ContainsKey(height.beat))
                 {
-                    platformHeightChanges[height.beat]["value"] += height["value"];
+                    platformHeightChanges[height.beat] += height["value"] + randomValue;
                 }
                 else
                 {
-                    platformHeightChanges.Add(height.beat, height);
+                    platformHeightChanges.Add(height.beat, height["value"] + randomValue);
                 }
             }
         }
