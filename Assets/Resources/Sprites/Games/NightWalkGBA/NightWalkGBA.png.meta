@@ -189,7 +189,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: NightWalkGBA_4
+      name: jumpImpact
       rect:
         serializedVersion: 2
         x: 753
@@ -903,7 +903,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: NightWalkGBA_38
+      name: stem
       rect:
         serializedVersion: 2
         x: 531
@@ -924,7 +924,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: NightWalkGBA_39
+      name: Heart
       rect:
         serializedVersion: 2
         x: 693
@@ -1606,6 +1606,7 @@ TextureImporter:
     weights: []
     secondaryTextures: []
     nameFileIdTable:
+      Heart: -291031518
       NightWalkGBA_0: 130521762
       NightWalkGBA_1: 1507133511
       NightWalkGBA_10: 379567741
@@ -1638,9 +1639,6 @@ TextureImporter:
       NightWalkGBA_35: 1835935371
       NightWalkGBA_36: 384230439
       NightWalkGBA_37: 1021962739
-      NightWalkGBA_38: -124737513
-      NightWalkGBA_39: -291031518
-      NightWalkGBA_4: -938550924
       NightWalkGBA_40: -1838287392
       NightWalkGBA_41: -543996660
       NightWalkGBA_42: 1233041225
@@ -1672,11 +1670,13 @@ TextureImporter:
       bp: 529839015
       br: 592522720
       by: 2115022471
+      jumpImpact: -938550924
       jumplat2: 2115410046
       jumplat3: -199434903
       jumpplat1: 629073624
       light: -1879352647
       platform: 1193791270
+      stem: -124737513
   spritePackingTag: 
   pSDRemoveMatte: 0
   pSDShowRemoveMatteOption: 0

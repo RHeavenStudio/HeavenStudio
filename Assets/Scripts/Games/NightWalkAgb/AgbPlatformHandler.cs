@@ -28,7 +28,8 @@ namespace HeavenStudio.Games.Scripts_AgbNightWalk
                 for (int i = 0; i < platformCount; i++)
                 {
                     AgbPlatform platform = Instantiate(platformRef, transform);
-                    platform.Init(game.countInBeat + i + 8 - (platformCount * 0.5), game.countInBeat + i + 8, this);
+                    platform.StartInput(game.countInBeat + i + 8 - (platformCount * 0.5), game.countInBeat + i + 8);
+                    platform.handler = this;
                     platform.gameObject.SetActive(true);
                 }
             }
@@ -37,7 +38,8 @@ namespace HeavenStudio.Games.Scripts_AgbNightWalk
                 for (int i = 0; i < platformCount; i++)
                 {
                     AgbPlatform platform = Instantiate(platformRef, transform);
-                    platform.Init(Math.Ceiling(beat) + i - (platformCount * 1.5), Math.Ceiling(beat) + i - platformCount, this);
+                    platform.StartInput(Math.Ceiling(beat) + i - (platformCount * 1.5), Math.Ceiling(beat) + i - platformCount);
+                    platform.handler = this;
                     platform.gameObject.SetActive(true);
                 }
             }

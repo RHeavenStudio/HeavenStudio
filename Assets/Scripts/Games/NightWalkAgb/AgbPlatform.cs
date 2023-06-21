@@ -1,3 +1,4 @@
+using HeavenStudio.Util;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -7,12 +8,23 @@ namespace HeavenStudio.Games.Scripts_AgbNightWalk
 {
     public class AgbPlatform : MonoBehaviour
     {
+        public enum PlatformType
+        {
+            Flower = 1,
+            Lollipop = 2,
+            Umbrella = 3
+        }
         private double startBeat;
         private double endBeat;
-        private AgbPlatformHandler handler;
-        public void Init(double beat, double hitBeat, AgbPlatformHandler handlerToPut)
+        [NonSerialized] public AgbPlatformHandler handler;
+        private Animator anim;
+
+        private AgbNightWalk game;
+
+        private PlatformType type = PlatformType.Flower;
+
+        public void StartInput(double beat, double hitBeat)
         {
-            handler = handlerToPut;
             startBeat = beat;
             endBeat = hitBeat;
             if (startBeat < endBeat)
@@ -23,6 +35,8 @@ namespace HeavenStudio.Games.Scripts_AgbNightWalk
 
         private void Awake()
         {
+            game = AgbNightWalk.instance;
+            anim = GetComponent<Animator>();
             Update();
         }
 
@@ -47,14 +61,18 @@ namespace HeavenStudio.Games.Scripts_AgbNightWalk
         private void ResetInput()
         {
             double newStartBeat = endBeat + (handler.platformCount * 0.5f);
-            Init(newStartBeat, newStartBeat + (handler.platformCount * 0.5f), handler);
+            anim.Play("Idle", 0, 0);
+            StartInput(newStartBeat, newStartBeat + (handler.platformCount * 0.5f));
         }
         private void Just(PlayerActionEvent caller, float state)
         {
+            game.playYan.Jump(Conductor.instance.songPositionInBeats);
             if (state >= 1 || state <= -1)
             {
                 return;
             }
+            SoundByte.PlayOneShotGame("nightWalkAgb/jump" + (int)type);
+            anim.DoScaledAnimationAsync("Flower", 0.5f);
         }
 
         private void Miss(PlayerActionEvent caller)

@@ -80,6 +80,7 @@ MonoBehaviour:
   defaultYPos: -11.76
   platformDistance: 3.8
   playerXPos: -6.78
+  platformCount: 20
 --- !u!1 &955264990193298390
 GameObject:
   m_ObjectHideFlags: 0
@@ -438,7 +439,7 @@ SpriteRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 1
+  m_SortingOrder: 5
   m_Sprite: {fileID: 379567741, guid: 425aa48453840844d9f049d7ebd849ce, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
@@ -496,6 +497,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cad73dbef6e1da04d8e17fbf557d5f8e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  offset: {x: 0, y: 0, z: 0}
   balloons:
   - {fileID: 5000215835220187240}
   - {fileID: 7323822048235362859}
@@ -681,6 +683,25 @@ MonoBehaviour:
   firstEnable: 0
   playYan: {fileID: 1314280037714680423}
   platformHandler: {fileID: 6715217060937385611}
+  jumpPaths:
+  - name: Jump
+    preview: 1
+    anchor: {fileID: 0}
+    positions:
+    - tag: 
+      pos: {x: 0, y: 0, z: 0}
+      target: {fileID: 0}
+      height: 2
+      duration: 1
+      useLastRealPos: 0
+      values: []
+    - tag: 
+      pos: {x: 0, y: 0, z: 0}
+      target: {fileID: 0}
+      height: 0
+      duration: 0
+      useLastRealPos: 0
+      values: []
 --- !u!1 &4465275889429203320
 GameObject:
   m_ObjectHideFlags: 0

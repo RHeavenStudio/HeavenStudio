@@ -36,9 +36,35 @@ namespace HeavenStudio.Games
     public class AgbNightWalk : Minigame
     {
         public static AgbNightWalk instance;
-        [SerializeField] private AgbPlayYan playYan;
+        public AgbPlayYan playYan;
         [SerializeField] private AgbPlatformHandler platformHandler;
         [NonSerialized] public double countInBeat = -1;
+        [Header("Curves")]
+        [SerializeField] SuperCurveObject.Path[] jumpPaths;
+
+        new void OnDrawGizmos()
+        {
+            base.OnDrawGizmos();
+            foreach (SuperCurveObject.Path path in jumpPaths)
+            {
+                if (path.preview)
+                {
+                    playYan.DrawEditorGizmo(path);
+                }
+            }
+        }
+
+        public SuperCurveObject.Path GetPath(string name)
+        {
+            foreach (SuperCurveObject.Path path in jumpPaths)
+            {
+                if (path.name == name)
+                {
+                    return path;
+                }
+            }
+            return default(SuperCurveObject.Path);
+        }
 
         private void Awake()
         {
