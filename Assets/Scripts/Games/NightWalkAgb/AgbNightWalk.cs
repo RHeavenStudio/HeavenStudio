@@ -37,6 +37,7 @@ namespace HeavenStudio.Games
     {
         public static AgbNightWalk instance;
         [SerializeField] private AgbPlayYan playYan;
+        [SerializeField] private AgbPlatformHandler platformHandler;
         [NonSerialized] public double countInBeat = -1;
 
         private void Awake()
@@ -47,11 +48,13 @@ namespace HeavenStudio.Games
         public override void OnGameSwitch(double beat)
         {
             SetCountInBeat(beat);
+            platformHandler.SpawnPlatforms(beat);
         }
 
         public override void OnPlay(double beat)
         {
             SetCountInBeat(beat);
+            platformHandler.SpawnPlatforms(beat);
         }
 
         private void SetCountInBeat(double beat)
@@ -85,8 +88,11 @@ namespace HeavenStudio.Games
                             tempEvents.Add(countIn);
                         }
                     }
-                    tempEvents.Sort((x, y) => x.beat.CompareTo(y.beat));
-                    countInBeat = tempEvents[tempEvents.Count - 1].beat;
+                    if (tempEvents.Count > 0)
+                    {
+                        tempEvents.Sort((x, y) => x.beat.CompareTo(y.beat));
+                        countInBeat = tempEvents[tempEvents.Count - 1].beat;
+                    }
                 }
             }
             UpdateBalloons(beat);
@@ -136,6 +142,7 @@ namespace HeavenStudio.Games
                             tempEvents.Add(countIn);
                         }
                     }
+                    if (tempEvents.Count == 0) return true;
                     tempEvents.Sort((x, y) => x.beat.CompareTo(y.beat));
                     return countInEntity == tempEvents[tempEvents.Count - 1];
                 }
