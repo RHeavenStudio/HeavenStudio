@@ -29,6 +29,7 @@ namespace HeavenStudio.Games.Scripts_AgbNightWalk
 
         [SerializeField] private GameObject platform;
         private bool canKick;
+        private bool doFillStartSound = false;
 
         public void StartInput(double beat, double hitBeat)
         {
@@ -41,7 +42,7 @@ namespace HeavenStudio.Games.Scripts_AgbNightWalk
             endBeat = hitBeat;
             if (game.platformTypes.ContainsKey(hitBeat))
             {
-                if (game.platformTypes[hitBeat] == AgbNightWalk.PlatformType.Lollipop)
+                if (game.platformTypes[hitBeat].platformType == AgbNightWalk.PlatformType.Lollipop)
                 {
                     type = PlatformType.Lollipop;
                 }
@@ -49,10 +50,15 @@ namespace HeavenStudio.Games.Scripts_AgbNightWalk
                 {
                     type = PlatformType.Umbrella;
                 }
+                doFillStartSound = false;
             }
             else
             {
                 type = PlatformType.Flower;
+                if (game.platformTypes.ContainsKey(hitBeat + 1)) 
+                { 
+                    doFillStartSound = game.platformTypes[hitBeat + 1].fillType != AgbNightWalk.FillType.None;
+                }
             }
             if (startBeat < endBeat)
             {
@@ -131,7 +137,8 @@ namespace HeavenStudio.Games.Scripts_AgbNightWalk
             {
                 return;
             }
-            SoundByte.PlayOneShotGame("nightWalkAgb/jump" + (int)type);
+            if (doFillStartSound) SoundByte.PlayOneShotGame("nightWalkAgb/fillStart");
+            else SoundByte.PlayOneShotGame("nightWalkAgb/jump" + (int)type);
             switch (type)
             {
                 case PlatformType.Flower:

@@ -35,9 +35,18 @@ namespace HeavenStudio.Games.Loaders
                 },
                 new GameAction("type", "Platform Type")
                 {
+                    preFunction = delegate 
+                    { 
+                        var e = eventCaller.currentEntity; 
+                        if (e["type"] == (int)AgbNightWalk.PlatformType.Umbrella)
+                        {
+                            AgbNightWalk.FillSound(e.beat, (AgbNightWalk.FillType)e["fill"]);
+                        } 
+                    },
                     parameters = new List<Param>()
                     {
-                        new Param("type", AgbNightWalk.PlatformType.Lollipop, "Type")
+                        new Param("type", AgbNightWalk.PlatformType.Lollipop, "Type"),
+                        new Param("fill", AgbNightWalk.FillType.None, "Umbrella Drum Pattern")
                     }
                 },
                 new GameAction("noJump", "No Jumping")
@@ -61,6 +70,15 @@ namespace HeavenStudio.Games
             Lollipop = 2,
             Umbrella = 3
         }
+
+        public enum FillType
+        {
+            None,
+            Pattern1,
+            Pattern2,
+            Pattern3,
+        }
+
         public static AgbNightWalk instance;
         public AgbPlayYan playYan;
         [SerializeField] private AgbPlatformHandler platformHandler;
@@ -73,7 +91,12 @@ namespace HeavenStudio.Games
             public int value;
         }
         List<HeightEvent> heightEntityEvents = new();
-        [NonSerialized] public Dictionary<double, PlatformType> platformTypes = new();
+        [NonSerialized] public Dictionary<double, TypeEvent> platformTypes = new();
+        public struct TypeEvent
+        {
+            public PlatformType platformType;
+            public FillType fillType;
+        }
 
         new void OnDrawGizmos()
         {
@@ -117,7 +140,12 @@ namespace HeavenStudio.Games
                 if (!platformTypes.ContainsKey(typeEvent.beat)) 
                 {
                     PlatformType type = (PlatformType)typeEvent["type"];
-                    platformTypes.Add(typeEvent.beat, type);
+                    FillType fill = (FillType)typeEvent["fill"];
+                    platformTypes.Add(typeEvent.beat, new TypeEvent
+                    {
+                        fillType = fill,
+                        platformType = type
+                    });
                 }
                 
             }
@@ -150,6 +178,39 @@ namespace HeavenStudio.Games
         {
             SetCountInBeat(beat);
             platformHandler.SpawnPlatforms(beat);
+        }
+
+        public static void FillSound(double beat, FillType fill)
+        {
+            switch (fill)
+            {
+                case FillType.None:
+                    break;
+                case FillType.Pattern1:
+                    MultiSound.Play(new MultiSound.Sound[]
+                    {
+                        new MultiSound.Sound("nightWalkAgb/fill1A", beat - ((1/3) * 2)),
+                        new MultiSound.Sound("nightWalkAgb/fill1B", beat - 0.5),
+                        new MultiSound.Sound("nightWalkAgb/fill1C", beat - (1/3)),
+                        new MultiSound.Sound("nightWalkAgb/fill1D", beat - ((1/3) * 0.5)),
+                    }, forcePlay: true);
+                    break;
+                case FillType.Pattern2:
+                    MultiSound.Play(new MultiSound.Sound[]
+                    {
+                        new MultiSound.Sound("nightWalkAgb/fill2A", beat - ((1/3) * 2)),
+                        new MultiSound.Sound("nightWalkAgb/fill2B", beat - 0.5),
+                        new MultiSound.Sound("nightWalkAgb/fill2C", beat - ((1/3) * 0.5)),
+                    }, forcePlay: true);
+                    break;
+                case FillType.Pattern3:
+                    MultiSound.Play(new MultiSound.Sound[]
+                    {
+                        new MultiSound.Sound("nightWalkAgb/fill3A", beat - ((1/3) * 2)),
+                        new MultiSound.Sound("nightWalkAgb/fill3B", beat - 0.5),
+                    }, forcePlay: true);
+                    break;
+            }
         }
 
         private void SetCountInBeat(double beat)
