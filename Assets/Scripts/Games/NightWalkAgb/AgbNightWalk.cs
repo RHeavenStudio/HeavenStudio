@@ -32,6 +32,11 @@ namespace HeavenStudio.Games.Loaders
                         new Param("rmin", new EntityTypes.Integer(-10, 10, 0), "Random Units (Minimum)"),
                         new Param("rmax", new EntityTypes.Integer(-10, 10, 0), "Random Units (Maximum)"),
                     }
+                },
+                new GameAction("noJump", "No Jumping")
+                {
+                    defaultLength = 4,
+                    resizable = true
                 }
             });
         }
@@ -104,6 +109,12 @@ namespace HeavenStudio.Games
                 height += heightEvent.value;
             }
             return height;
+        }
+
+        public bool ShouldNotJumpOnBeat(double beat)
+        {
+            List<RiqEntity> heightEvents = EventCaller.GetAllInGameManagerList("nightWalkAgb", new string[] { "noJump" });
+            return heightEvents.Find(x => beat >= x.beat && beat < x.beat + x.length) != null;
         }
 
         public override void OnGameSwitch(double beat)

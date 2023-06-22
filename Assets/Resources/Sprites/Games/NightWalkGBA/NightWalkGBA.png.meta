@@ -252,7 +252,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: NightWalkGBA_7
+      name: noteImpact
       rect:
         serializedVersion: 2
         x: 418
@@ -714,7 +714,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: NightWalkGBA_29
+      name: walk1
       rect:
         serializedVersion: 2
         x: 961
@@ -735,7 +735,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: NightWalkGBA_30
+      name: walk2
       rect:
         serializedVersion: 2
         x: 1226
@@ -756,7 +756,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: NightWalkGBA_31
+      name: walk3
       rect:
         serializedVersion: 2
         x: 1452
@@ -777,7 +777,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: NightWalkGBA_32
+      name: walk4
       rect:
         serializedVersion: 2
         x: 1683
@@ -1386,7 +1386,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: NightWalkGBA_61
+      name: light2
       rect:
         serializedVersion: 2
         x: 404
@@ -1491,7 +1491,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: NightWalkGBA_66
+      name: note
       rect:
         serializedVersion: 2
         x: 281
@@ -1629,11 +1629,7 @@ TextureImporter:
       NightWalkGBA_26: 2057711124
       NightWalkGBA_27: 745754822
       NightWalkGBA_28: 1216645664
-      NightWalkGBA_29: -239389510
       NightWalkGBA_3: 242634543
-      NightWalkGBA_30: 1010555121
-      NightWalkGBA_31: 1167249015
-      NightWalkGBA_32: 1487079887
       NightWalkGBA_33: -2078596099
       NightWalkGBA_34: -2145292818
       NightWalkGBA_35: 1835935371
@@ -1654,15 +1650,12 @@ TextureImporter:
       NightWalkGBA_58: 570068404
       NightWalkGBA_6: 572682246
       NightWalkGBA_60: -1055323021
-      NightWalkGBA_61: 2140544610
       NightWalkGBA_63: -405823323
       NightWalkGBA_64: 1313748795
       NightWalkGBA_65: 1128627772
-      NightWalkGBA_66: -1832946202
       NightWalkGBA_67: -1454669647
       NightWalkGBA_68: 1756074533
       NightWalkGBA_69: 890641523
-      NightWalkGBA_7: -354181421
       NightWalkGBA_8: -918192081
       NightWalkGBA_9: -979178364
       bb: 1820544703
@@ -1675,8 +1668,15 @@ TextureImporter:
       jumplat3: -199434903
       jumpplat1: 629073624
       light: -1879352647
+      light2: 2140544610
+      note: -1832946202
+      noteImpact: -354181421
       platform: 1193791270
       stem: -124737513
+      walk1: -239389510
+      walk2: 1010555121
+      walk3: 1167249015
+      walk4: 1487079887
   spritePackingTag: 
   pSDRemoveMatte: 0
   pSDShowRemoveMatteOption: 0

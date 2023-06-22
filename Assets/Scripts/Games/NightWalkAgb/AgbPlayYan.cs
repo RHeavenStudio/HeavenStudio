@@ -19,11 +19,13 @@ namespace HeavenStudio.Games.Scripts_AgbNightWalk
         private double jumpBeat;
         [SerializeField] private List<Animator> balloons = new List<Animator>();
         private Path jumpPath;
+        private Animator anim;
 
         private void Awake()
         {
             game = AgbNightWalk.instance;
             jumpPath = game.GetPath("Jump");
+            anim = GetComponent<Animator>();
             foreach (var balloon in balloons)
             {
                 balloon.Play("Idle", 0, UnityEngine.Random.Range(0f, 1f));
@@ -43,7 +45,7 @@ namespace HeavenStudio.Games.Scripts_AgbNightWalk
                         float normalizedBeat = cond.GetPositionFromBeat(jumpBeat, 1);
                         if (normalizedBeat >= 1f)
                         {
-                            jumpingState = JumpingState.Walking;
+                            Walk();
                         }
                         break;
                     case JumpingState.Walking:
@@ -60,7 +62,15 @@ namespace HeavenStudio.Games.Scripts_AgbNightWalk
         {
             jumpingState = JumpingState.Jumping;
             jumpBeat = beat;
+            anim.Play("Jump", 0, 0);
             Update();
+        }
+
+        public void Walk()
+        {
+            if (jumpingState == JumpingState.Walking) return;
+            jumpingState = JumpingState.Walking;
+            anim.DoScaledAnimationAsync("Walk", 0.5f);
         }
         public void PopBalloon(int index, bool instant)
         {

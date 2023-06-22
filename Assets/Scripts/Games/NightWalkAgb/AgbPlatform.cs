@@ -28,6 +28,7 @@ namespace HeavenStudio.Games.Scripts_AgbNightWalk
         private int lastAdditionalHeightInUnits = 0;
 
         [SerializeField] private GameObject platform;
+        private bool canKick;
 
         public void StartInput(double beat, double hitBeat)
         {
@@ -40,7 +41,38 @@ namespace HeavenStudio.Games.Scripts_AgbNightWalk
             endBeat = hitBeat;
             if (startBeat < endBeat)
             {
-                AgbNightWalk.instance.ScheduleInput(startBeat, endBeat - startBeat, InputType.STANDARD_DOWN, Just, Miss, Empty);
+                if (game.ShouldNotJumpOnBeat(endBeat))
+                {
+                    AgbNightWalk.instance.ScheduleUserInput(startBeat, endBeat - startBeat, InputType.STANDARD_DOWN, Just, Miss, Empty);
+                    BeatAction.New(gameObject, new List<BeatAction.Action>()
+                    {
+                        new BeatAction.Action(endBeat, delegate
+                        {
+                            if (GameManager.instance.autoplay)
+                            {
+                                game.playYan.Walk();
+                            }
+                        }),
+                        new BeatAction.Action(endBeat + 0.5, delegate 
+                        { 
+                            if (GameManager.instance.autoplay)
+                            {
+                                anim.DoScaledAnimationAsync("Note", 0.5f);
+                                SoundByte.PlayOneShotGame("nightWalkAgb/open" + (int)type);
+                            }
+                        })
+                    });
+                }
+                else
+                {
+                    AgbNightWalk.instance.ScheduleInput(startBeat, endBeat - startBeat, InputType.STANDARD_DOWN, Just, Miss, Empty);
+                }
+                SoundByte.PlayOneShotGame("nightWalkAgb/boxKick", endBeat);
+                canKick = true;
+                BeatAction.New(gameObject, new List<BeatAction.Action>()
+                {
+                    new BeatAction.Action(endBeat, delegate { if (canKick) anim.Play("Kick", 0, 0); })
+                });
             }
         }
 
@@ -77,6 +109,7 @@ namespace HeavenStudio.Games.Scripts_AgbNightWalk
         }
         private void Just(PlayerActionEvent caller, float state)
         {
+            canKick = false;
             handler.RaiseHeight(Conductor.instance.songPositionInBeats, lastAdditionalHeightInUnits, additionalHeightInUnits);
             game.playYan.Jump(Conductor.instance.songPositionInBeats);
             if (state >= 1 || state <= -1)
@@ -89,7 +122,12 @@ namespace HeavenStudio.Games.Scripts_AgbNightWalk
 
         private void Miss(PlayerActionEvent caller)
         {
-
+            game.playYan.Walk();
+            SoundByte.PlayOneShotGame("nightWalkAgb/open" + (int)type, caller.timer + caller.startBeat + 0.5);
+            BeatAction.New(gameObject, new List<BeatAction.Action>()
+            {
+                new BeatAction.Action(caller.timer + caller.startBeat + 0.5, delegate { anim.DoScaledAnimationAsync("Note", 0.5f); })
+            });
         }
         
         private void Empty(PlayerActionEvent caller) { }
