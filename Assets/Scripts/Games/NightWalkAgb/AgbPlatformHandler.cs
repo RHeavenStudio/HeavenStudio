@@ -78,6 +78,23 @@ namespace HeavenStudio.Games.Scripts_AgbNightWalk
             }
         }
 
+        public void DestroyPlatforms(double startBeat, double firstBeat, double lastBeat)
+        {
+            List<AgbPlatform> platformsToDestroy = allPlatforms.FindAll(x => x.endBeat >= firstBeat && x.endBeat <= lastBeat);
+            platformsToDestroy.Sort((x, y) => x.endBeat.CompareTo(y.endBeat));
+            List<BeatAction.Action> actions = new();
+            for (int i = 0; i < platformsToDestroy.Count; i++)
+            {
+                AgbPlatform currentPlatformToDdestroy = platformsToDestroy[i];
+                double fallBeat = startBeat + i;
+                actions.Add(new BeatAction.Action(fallBeat, delegate
+                {
+                    currentPlatformToDdestroy.Disappear(fallBeat);
+                }));
+            }
+            BeatAction.New(gameObject, actions);
+        }
+
         public void RaiseHeight(double beat, int lastUnits, int currentUnits)
         {
             raiseBeat = beat;

@@ -15,7 +15,7 @@ namespace HeavenStudio.Games.Scripts_AgbNightWalk
             Umbrella = 3
         }
         private double startBeat;
-        private double endBeat;
+        [NonSerialized] public double endBeat;
         [NonSerialized] public AgbPlatformHandler handler;
         private Animator anim;
 
@@ -35,6 +35,8 @@ namespace HeavenStudio.Games.Scripts_AgbNightWalk
         private bool stopped;
         private Sound kickSound;
         [SerializeField] private GameObject fallYan;
+        private bool playYanIsFalling;
+        private double playYanFallBeat;
 
         public void StartInput(double beat, double hitBeat)
         {
@@ -139,6 +141,13 @@ namespace HeavenStudio.Games.Scripts_AgbNightWalk
                         ResetInput();
                     }
                 }
+                if (playYanIsFalling)
+                {
+                    float normalizedFallBeat = cond.GetPositionFromBeat(playYanFallBeat, 2);
+                    EasingFunction.Function func = EasingFunction.GetEasingFunction(EasingFunction.Ease.EaseInQuad);
+                    float newPlayYanY = func(0, -12, normalizedFallBeat);
+                    fallYan.transform.localPosition = new Vector3(0, newPlayYanY);
+                }
             }
         }
 
@@ -147,6 +156,19 @@ namespace HeavenStudio.Games.Scripts_AgbNightWalk
             stopped = true;
             if (inputEvent != null) inputEvent.Disable();
             if (kickSound != null) kickSound.Delete();
+        }
+
+        public void Disappear(double beat)
+        {
+            anim.DoScaledAnimationAsync("Destroy", 0.5f);
+            SoundByte.PlayOneShotGame("nightWalkAgb/disappear");
+            if (fallYan.activeSelf)
+            {
+                SoundByte.PlayOneShotGame("nightWalkAgb/fall");
+                playYanIsFalling = true;
+                playYanFallBeat = beat;
+                Update();
+            }
         }
 
         private void ResetInput()
@@ -194,6 +216,7 @@ namespace HeavenStudio.Games.Scripts_AgbNightWalk
             else
             {
                 handler.StopAll();
+                handler.DestroyPlatforms(caller.timer + caller.startBeat + 2, endBeat - 3, endBeat + 6);
                 SoundByte.PlayOneShotGame("nightWalkAgb/wot");
                 game.playYan.Hide();
                 fallYan.SetActive(true);
