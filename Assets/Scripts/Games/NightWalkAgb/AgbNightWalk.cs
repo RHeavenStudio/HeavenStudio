@@ -15,7 +15,7 @@ namespace HeavenStudio.Games.Loaders
         {
             return new Minigame("nightWalkAgb", "Night Walk (GBA)", "FFFFFF", false, false, new List<GameAction>()
             {
-                new GameAction("countIn", "Count In")
+                new GameAction("countIn", "8 Beat Count-In")
                 {
                     preFunction = delegate { if (!eventCaller.currentEntity["mute"] && AgbNightWalk.IsValidCountIn(eventCaller.currentEntity)) AgbNightWalk.CountInSound(eventCaller.currentEntity.beat); },
                     defaultLength = 8,
@@ -50,7 +50,12 @@ namespace HeavenStudio.Games
         [NonSerialized] public double countInBeat = -1;
         [Header("Curves")]
         [SerializeField] SuperCurveObject.Path[] jumpPaths;
-        [NonSerialized] public Dictionary<double, int> platformHeightChanges = new Dictionary<double, int>();
+        private struct HeightEvent
+        {
+            public double beat;
+            public int value;
+        }
+        List<HeightEvent> heightEntityEvents = new();
 
         new void OnDrawGizmos()
         {
@@ -80,18 +85,25 @@ namespace HeavenStudio.Games
         {
             instance = this;
             List<RiqEntity> heightEvents = EventCaller.GetAllInGameManagerList("nightWalkAgb", new string[] { "height" });
-            foreach (var height in heightEvents)
+            foreach (var heightEvent in heightEvents)
             {
-                int randomValue = UnityEngine.Random.Range(height["rmin"], height["rmax"]);
-                if (platformHeightChanges.ContainsKey(height.beat))
+                heightEntityEvents.Add(new HeightEvent()
                 {
-                    platformHeightChanges[height.beat] += height["value"] + randomValue;
-                }
-                else
-                {
-                    platformHeightChanges.Add(height.beat, height["value"] + randomValue);
-                }
+                    beat = heightEvent.beat,
+                    value = heightEvent["value"] + UnityEngine.Random.Range(heightEvent["rmin"], heightEvent["rmax"] + 1)
+                });
             }
+        }
+
+        public int FindHeightUnitsAtBeat(double beat)
+        {
+            List<HeightEvent> tempEvents = heightEntityEvents.FindAll(e => e.beat <= beat);
+            int height = 0;
+            foreach (var heightEvent in tempEvents)
+            {
+                height += heightEvent.value;
+            }
+            return height;
         }
 
         public override void OnGameSwitch(double beat)

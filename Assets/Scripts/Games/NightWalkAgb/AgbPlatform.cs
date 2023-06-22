@@ -32,21 +32,10 @@ namespace HeavenStudio.Games.Scripts_AgbNightWalk
         public void StartInput(double beat, double hitBeat)
         {
             if (game == null) game = AgbNightWalk.instance;
-            if (game.platformHeightChanges.ContainsKey(hitBeat))
-            {
-                handler.defaultHeightUnits += game.platformHeightChanges[hitBeat];
-            }
-            lastAdditionalHeightInUnits = handler.defaultHeightUnits;
-            additionalHeight = handler.defaultHeightUnits * handler.heightAmount;
-            if (game.platformHeightChanges.ContainsKey(hitBeat + 1))
-            {
-                additionalHeightInUnits = lastAdditionalHeightInUnits + game.platformHeightChanges[hitBeat + 1];
-            }
-            else
-            {
-                additionalHeightInUnits = lastAdditionalHeightInUnits;
-            }
-            platform.SetActive(!game.platformHeightChanges.ContainsKey(hitBeat + 1));
+            lastAdditionalHeightInUnits = game.FindHeightUnitsAtBeat(hitBeat);
+            additionalHeightInUnits = game.FindHeightUnitsAtBeat(hitBeat + 1);
+            additionalHeight = lastAdditionalHeightInUnits * handler.heightAmount;
+            platform.SetActive(lastAdditionalHeightInUnits == additionalHeightInUnits);
             startBeat = beat;
             endBeat = hitBeat;
             if (startBeat < endBeat)

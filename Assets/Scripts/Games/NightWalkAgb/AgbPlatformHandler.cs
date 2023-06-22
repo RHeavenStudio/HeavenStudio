@@ -13,7 +13,6 @@ namespace HeavenStudio.Games.Scripts_AgbNightWalk
         [SerializeField] private AgbPlatform platformRef;
         public float defaultYPos = -11.76f;
         public float heightAmount = 2;
-        [NonSerialized] public int defaultHeightUnits = 0;
         public float platformDistance = 3.80f;
         public float playerXPos = -6.78f;
         [Range(1, 100)]
