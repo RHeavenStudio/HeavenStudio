@@ -39,6 +39,21 @@ namespace HeavenStudio.Games.Scripts_AgbNightWalk
             platform.SetActive(lastAdditionalHeightInUnits == additionalHeightInUnits);
             startBeat = beat;
             endBeat = hitBeat;
+            if (game.platformTypes.ContainsKey(hitBeat))
+            {
+                if (game.platformTypes[hitBeat] == AgbNightWalk.PlatformType.Lollipop)
+                {
+                    type = PlatformType.Lollipop;
+                }
+                else
+                {
+                    type = PlatformType.Umbrella;
+                }
+            }
+            else
+            {
+                type = PlatformType.Flower;
+            }
             if (startBeat < endBeat)
             {
                 if (game.ShouldNotJumpOnBeat(endBeat))
@@ -117,7 +132,18 @@ namespace HeavenStudio.Games.Scripts_AgbNightWalk
                 return;
             }
             SoundByte.PlayOneShotGame("nightWalkAgb/jump" + (int)type);
-            anim.DoScaledAnimationAsync("Flower", 0.5f);
+            switch (type)
+            {
+                case PlatformType.Flower:
+                    anim.DoScaledAnimationAsync("Flower", 0.5f);
+                    break;
+                case PlatformType.Lollipop:
+                    anim.DoScaledAnimationAsync("Lollipop", 0.5f);
+                    break;
+                case PlatformType.Umbrella:
+                    anim.DoScaledAnimationAsync("Umbrella", 0.5f);
+                    break;
+            }
         }
 
         private void Miss(PlayerActionEvent caller)

@@ -33,6 +33,13 @@ namespace HeavenStudio.Games.Loaders
                         new Param("rmax", new EntityTypes.Integer(-10, 10, 0), "Random Units (Maximum)"),
                     }
                 },
+                new GameAction("type", "Platform Type")
+                {
+                    parameters = new List<Param>()
+                    {
+                        new Param("type", AgbNightWalk.PlatformType.Lollipop, "Type")
+                    }
+                },
                 new GameAction("noJump", "No Jumping")
                 {
                     defaultLength = 4,
@@ -49,6 +56,11 @@ namespace HeavenStudio.Games
 
     public class AgbNightWalk : Minigame
     {
+        public enum PlatformType
+        {
+            Lollipop = 2,
+            Umbrella = 3
+        }
         public static AgbNightWalk instance;
         public AgbPlayYan playYan;
         [SerializeField] private AgbPlatformHandler platformHandler;
@@ -61,6 +73,7 @@ namespace HeavenStudio.Games
             public int value;
         }
         List<HeightEvent> heightEntityEvents = new();
+        [NonSerialized] public Dictionary<double, PlatformType> platformTypes = new();
 
         new void OnDrawGizmos()
         {
@@ -97,6 +110,16 @@ namespace HeavenStudio.Games
                     beat = heightEvent.beat,
                     value = heightEvent["value"] + UnityEngine.Random.Range(heightEvent["rmin"], heightEvent["rmax"] + 1)
                 });
+            }
+            List<RiqEntity> typeEvents = EventCaller.GetAllInGameManagerList("nightWalkAgb", new string[] { "type" });
+            foreach (var typeEvent in typeEvents)
+            {
+                if (!platformTypes.ContainsKey(typeEvent.beat)) 
+                {
+                    PlatformType type = (PlatformType)typeEvent["type"];
+                    platformTypes.Add(typeEvent.beat, type);
+                }
+                
             }
         }
 
