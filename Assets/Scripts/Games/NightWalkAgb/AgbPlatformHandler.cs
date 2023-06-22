@@ -45,7 +45,7 @@ namespace HeavenStudio.Games.Scripts_AgbNightWalk
                 {
                     AgbPlatform platform = Instantiate(platformRef, transform);
                     platform.handler = this;
-                    platform.StartInput(Math.Ceiling(beat) + i - (platformCount * 1.5), Math.Ceiling(beat) + i - platformCount);
+                    platform.StartInput(beat, Math.Ceiling(beat) + i - platformCount);
                     platform.gameObject.SetActive(true);
                 }
             }
