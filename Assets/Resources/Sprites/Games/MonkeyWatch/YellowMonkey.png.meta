@@ -1,0 +1,1796 @@
+fileFormatVersion: 2
+guid: ece735d14a3649247bd5b86a66019d14
+TextureImporter:
+  internalIDToNameTable: []
+  externalObjects: {}
+  serializedVersion: 12
+  mipmaps:
+    mipMapMode: 0
+    enableMipMap: 0
+    sRGBTexture: 1
+    linearTexture: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapsPreserveCoverage: 0
+    alphaTestReferenceValue: 0.5
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+  bumpmap:
+    convertToNormalMap: 0
+    externalNormalMap: 0
+    heightScale: 0.25
+    normalMapFilter: 0
+  isReadable: 0
+  streamingMipmaps: 0
+  streamingMipmapsPriority: 0
+  vTOnly: 0
+  ignoreMasterTextureLimit: 0
+  grayScaleToAlpha: 0
+  generateCubemap: 6
+  cubemapConvolution: 0
+  seamlessCubemap: 0
+  textureFormat: 1
+  maxTextureSize: 2048
+  textureSettings:
+    serializedVersion: 2
+    filterMode: 1
+    aniso: 1
+    mipBias: 0
+    wrapU: 1
+    wrapV: 1
+    wrapW: 1
+  nPOTScale: 0
+  lightmap: 0
+  compressionQuality: 50
+  spriteMode: 2
+  spriteExtrude: 1
+  spriteMeshType: 1
+  alignment: 0
+  spritePivot: {x: 0.5, y: 0.5}
+  spritePixelsToUnits: 100
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spriteGenerateFallbackPhysicsShape: 1
+  alphaUsage: 1
+  alphaIsTransparency: 1
+  spriteTessellationDetail: -1
+  textureType: 8
+  textureShape: 1
+  singleChannelComponent: 0
+  flipbookRows: 1
+  flipbookColumns: 1
+  maxTextureSizeSet: 0
+  compressionQualitySet: 0
+  textureFormatSet: 0
+  ignorePngGamma: 0
+  applyGammaDecoding: 0
+  cookieLightType: 0
+  platformSettings:
+  - serializedVersion: 3
+    buildTarget: DefaultTexturePlatform
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 3
+    buildTarget: Standalone
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 3
+    buildTarget: Server
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  spriteSheet:
+    serializedVersion: 2
+    sprites:
+    - serializedVersion: 2
+      name: YellowMonkey_0
+      rect:
+        serializedVersion: 2
+        x: 24
+        y: 942
+        width: 80
+        height: 46
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 4a45f2a37836f7f4ca4b20bd9f735ea9
+      internalID: 965511078
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: YellowMonkey_1
+      rect:
+        serializedVersion: 2
+        x: 152
+        y: 942
+        width: 80
+        height: 46
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 603016014bd55ad4ab6ae911cb774019
+      internalID: 1127406036
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: YellowMonkey_2
+      rect:
+        serializedVersion: 2
+        x: 280
+        y: 942
+        width: 80
+        height: 46
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: ba6c41776c2ca0f44bffd3d5748344c5
+      internalID: -948935254
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: YellowMonkey_3
+      rect:
+        serializedVersion: 2
+        x: 408
+        y: 942
+        width: 80
+        height: 46
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 002d447945ad45c4693ed3ba699151c4
+      internalID: -1697481924
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: YellowMonkey_4
+      rect:
+        serializedVersion: 2
+        x: 540
+        y: 944
+        width: 72
+        height: 46
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: d4574077dd95a2543a6868c0f005ca49
+      internalID: 1833233236
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: YellowMonkey_5
+      rect:
+        serializedVersion: 2
+        x: 676
+        y: 944
+        width: 56
+        height: 46
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 93a3146cb19b1bc4c8a17d7ed688b058
+      internalID: -645111153
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: YellowMonkey_6
+      rect:
+        serializedVersion: 2
+        x: 799
+        y: 944
+        width: 66
+        height: 46
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 5125a909ef309cf4cbcd53d4fda29eab
+      internalID: -232610484
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: YellowMonkey_7
+      rect:
+        serializedVersion: 2
+        x: 919
+        y: 946
+        width: 82
+        height: 46
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 69e17edac0be8fe4aaebc1d79056a1d7
+      internalID: -28325943
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: YellowMonkey_8
+      rect:
+        serializedVersion: 2
+        x: 23
+        y: 850
+        width: 82
+        height: 46
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 5450b01f79f2ede44b679096b3e4302d
+      internalID: -1894111207
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: YellowMonkey_9
+      rect:
+        serializedVersion: 2
+        x: 156
+        y: 852
+        width: 72
+        height: 46
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: d69604ec5c876834b88beedd1dc4a830
+      internalID: 29727674
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: YellowMonkey_10
+      rect:
+        serializedVersion: 2
+        x: 273
+        y: 875
+        width: 46
+        height: 21
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 87efbda62c025674f933486160f98854
+      internalID: 1750096047
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: YellowMonkey_11
+      rect:
+        serializedVersion: 2
+        x: 349
+        y: 872
+        width: 62
+        height: 36
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 01214aa328b6ca9488c8958ee8e6f13b
+      internalID: 552770996
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: YellowMonkey_12
+      rect:
+        serializedVersion: 2
+        x: 439
+        y: 866
+        width: 66
+        height: 46
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: c21729b16a974da48800079fe5847082
+      internalID: 1193611724
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: YellowMonkey_13
+      rect:
+        serializedVersion: 2
+        x: 627
+        y: 843
+        width: 66
+        height: 66
+      alignment: 9
+      pivot: {x: 0.5, y: 0.985}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 1853e8ba75b9811439f2f1a09f0a12af
+      internalID: 1429406580
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: YellowMonkey_14
+      rect:
+        serializedVersion: 2
+        x: 731
+        y: 843
+        width: 66
+        height: 66
+      alignment: 9
+      pivot: {x: 0.5, y: 0.985}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: f73588f233ef1814c947fe05e68e98af
+      internalID: -70320958
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: YellowMonkey_15
+      rect:
+        serializedVersion: 2
+        x: 835
+        y: 843
+        width: 66
+        height: 66
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 8130cb1ad15b2854c9ced9595a5bea5f
+      internalID: 1518970876
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: YellowMonkey_16
+      rect:
+        serializedVersion: 2
+        x: 531
+        y: 786
+        width: 26
+        height: 29
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 4cb040953d1be4744b527f5eb855e3c8
+      internalID: 1029899912
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: YellowMonkey_17
+      rect:
+        serializedVersion: 2
+        x: 943
+        y: 843
+        width: 58
+        height: 18
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: eb1daaf1a72fa2545962bf20dfd67c9f
+      internalID: -1550717160
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: YellowMonkey_18
+      rect:
+        serializedVersion: 2
+        x: 20
+        y: 785
+        width: 24
+        height: 30
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 817b1d3dbe6e99044aea1d6b36e1bbf2
+      internalID: -1233933164
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: YellowMonkey_19
+      rect:
+        serializedVersion: 2
+        x: 83
+        y: 785
+        width: 26
+        height: 30
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 8bb46f940e6e5ea41908eab233efd497
+      internalID: 307967110
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: YellowMonkey_20
+      rect:
+        serializedVersion: 2
+        x: 148
+        y: 789
+        width: 24
+        height: 22
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: f1f3fb1886c9e4b49834798018b9db82
+      internalID: 2081031743
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: YellowMonkey_21
+      rect:
+        serializedVersion: 2
+        x: 208
+        y: 786
+        width: 99
+        height: 30
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 18c7fc0028401204487e3a29c1b06334
+      internalID: -1534182649
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: YellowMonkey_22
+      rect:
+        serializedVersion: 2
+        x: 340
+        y: 785
+        width: 24
+        height: 30
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: b090197c6f5805e42ad14ae9c74549c1
+      internalID: -1968266969
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: YellowMonkey_23
+      rect:
+        serializedVersion: 2
+        x: 404
+        y: 785
+        width: 23
+        height: 30
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: d0bdd2d32528d8c40a682d7ed1b7e46e
+      internalID: 1372828174
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: YellowMonkey_24
+      rect:
+        serializedVersion: 2
+        x: 470
+        y: 784
+        width: 21
+        height: 32
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 01b0c601212659a41b4022d22f6bf383
+      internalID: -13530083
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: YellowMonkey_25
+      rect:
+        serializedVersion: 2
+        x: 591
+        y: 780
+        width: 25
+        height: 31
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: dc1ff4d2952e79842ae3dfd81135ded0
+      internalID: 963194427
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: YellowMonkey_26
+      rect:
+        serializedVersion: 2
+        x: 644
+        y: 768
+        width: 24
+        height: 42
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 934574e7d7910a648a4b4a857090f4c0
+      internalID: 14843991
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: YellowMonkey_27
+      rect:
+        serializedVersion: 2
+        x: 698
+        y: 762
+        width: 44
+        height: 44
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 8f820281374a15c44beae0e02da44a93
+      internalID: -169874611
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: YellowMonkey_28
+      rect:
+        serializedVersion: 2
+        x: 775
+        y: 759
+        width: 50
+        height: 50
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 7113e7ade5c48064791ce1eba810f3c5
+      internalID: 683105700
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: YellowMonkey_29
+      rect:
+        serializedVersion: 2
+        x: 861
+        y: 447
+        width: 141
+        height: 356
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 4fac620168b74644da652dc2357d1289
+      internalID: -564762824
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: YellowMonkey_30
+      rect:
+        serializedVersion: 2
+        x: 19
+        y: 709
+        width: 34
+        height: 37
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 43fba5fcb425dce40ae1d6c0037a6ca2
+      internalID: -1925233001
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: YellowMonkey_31
+      rect:
+        serializedVersion: 2
+        x: 89
+        y: 710
+        width: 38
+        height: 36
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: d053af1bc68f1d848a698a5dba106fe2
+      internalID: 127201726
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: YellowMonkey_32
+      rect:
+        serializedVersion: 2
+        x: 161
+        y: 707
+        width: 38
+        height: 42
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 3e36c3f085f6dbd4d9af5b320dd86f70
+      internalID: 1548927398
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: YellowMonkey_33
+      rect:
+        serializedVersion: 2
+        x: 242
+        y: 706
+        width: 32
+        height: 38
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: e0bfe0e5032d56644ae308517011bcf0
+      internalID: -1194296731
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: YellowMonkey_34
+      rect:
+        serializedVersion: 2
+        x: 307
+        y: 707
+        width: 34
+        height: 42
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: a6d87c9f52214944daffd1a6bfd0e71a
+      internalID: 2102349253
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: YellowMonkey_35
+      rect:
+        serializedVersion: 2
+        x: 381
+        y: 708
+        width: 30
+        height: 40
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 4b04c35ffd0f3804f8ec667c61538107
+      internalID: -1651821594
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: YellowMonkey_36
+      rect:
+        serializedVersion: 2
+        x: 454
+        y: 707
+        width: 28
+        height: 42
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 3aa3a8d4d8f266b4580bcca9fe6c4938
+      internalID: -1499432972
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: YellowMonkey_37
+      rect:
+        serializedVersion: 2
+        x: 522
+        y: 708
+        width: 44
+        height: 40
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: d616ab401ff7f474fb8c164b016c2b98
+      internalID: 18379627
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: YellowMonkey_38
+      rect:
+        serializedVersion: 2
+        x: 599
+        y: 709
+        width: 34
+        height: 37
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 3df80423cf67bd441b34e3e62e45251f
+      internalID: -1785524092
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: YellowMonkey_39
+      rect:
+        serializedVersion: 2
+        x: 670
+        y: 697
+        width: 44
+        height: 38
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: b65346353ec3eca43a2f94048620dba9
+      internalID: 1639296475
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: YellowMonkey_40
+      rect:
+        serializedVersion: 2
+        x: 771
+        y: 603
+        width: 10
+        height: 122
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: af5ad1fe9cedae64ea5141ec633c42f2
+      internalID: 662616171
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: YellowMonkey_41
+      rect:
+        serializedVersion: 2
+        x: 804
+        y: 576
+        width: 24
+        height: 152
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 914d76f534a105e478a0792e2127a74d
+      internalID: -1754132441
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: YellowMonkey_42
+      rect:
+        serializedVersion: 2
+        x: 15
+        y: 655
+        width: 58
+        height: 18
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: b215a3d024f314541993d62c014daaec
+      internalID: 301627176
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: YellowMonkey_43
+      rect:
+        serializedVersion: 2
+        x: 103
+        y: 656
+        width: 47
+        height: 16
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 4c07a84cabfba304ba55eae6e80bcbb4
+      internalID: -574289481
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: YellowMonkey_44
+      rect:
+        serializedVersion: 2
+        x: 191
+        y: 655
+        width: 26
+        height: 18
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: d28702c1711a47346bbb4dda59b9e5b7
+      internalID: -1222337371
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: YellowMonkey_45
+      rect:
+        serializedVersion: 2
+        x: 245
+        y: 649
+        width: 30
+        height: 29
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: ecda1d0ac0997334d921fb21904f6f73
+      internalID: -909474966
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: YellowMonkey_46
+      rect:
+        serializedVersion: 2
+        x: 304
+        y: 657
+        width: 56
+        height: 14
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 603675e3118ef0e408412afff80cc5e1
+      internalID: 331659960
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: YellowMonkey_47
+      rect:
+        serializedVersion: 2
+        x: 398
+        y: 627
+        width: 28
+        height: 42
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 6ecfd86c0b5848c44aad32876e6dcb2c
+      internalID: 525673308
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: YellowMonkey_48
+      rect:
+        serializedVersion: 2
+        x: 468
+        y: 627
+        width: 32
+        height: 42
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 601d2e923872c9c47941ab73776a911b
+      internalID: -1195462895
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: YellowMonkey_49
+      rect:
+        serializedVersion: 2
+        x: 539
+        y: 627
+        width: 34
+        height: 42
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 262f7eef7c2b6db42a547ca243fbfb16
+      internalID: -2028350389
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: YellowMonkey_50
+      rect:
+        serializedVersion: 2
+        x: 606
+        y: 627
+        width: 45
+        height: 42
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: e7bb6bff6a2b5ef40914582e6719a00d
+      internalID: 440706406
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: YellowMonkey_51
+      rect:
+        serializedVersion: 2
+        x: 678
+        y: 628
+        width: 44
+        height: 40
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 46f5afe17302b1241b5d9501826efd4c
+      internalID: -88685482
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: YellowMonkey_52
+      rect:
+        serializedVersion: 2
+        x: 266
+        y: 613
+        width: 68
+        height: 14
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 9086e6af339109a4dbfd88010e45f08b
+      internalID: -1829047945
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: YellowMonkey_53
+      rect:
+        serializedVersion: 2
+        x: 34
+        y: 562
+        width: 60
+        height: 47
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: fe051e6dafff2ab408ffca983fac52a1
+      internalID: -1968869198
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: YellowMonkey_54
+      rect:
+        serializedVersion: 2
+        x: 164
+        y: 562
+        width: 56
+        height: 47
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 9a87b7160a297104c89bbfb56c1c15a2
+      internalID: -1505573281
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: YellowMonkey_55
+      rect:
+        serializedVersion: 2
+        x: 269
+        y: 560
+        width: 62
+        height: 29
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 16abf413e7400b846bc08aef93394bc4
+      internalID: 671829876
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: YellowMonkey_56
+      rect:
+        serializedVersion: 2
+        x: 361
+        y: 572
+        width: 54
+        height: 24
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 6feff5442363da040af567f408008c14
+      internalID: -591886900
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: YellowMonkey_57
+      rect:
+        serializedVersion: 2
+        x: 448
+        y: 564
+        width: 48
+        height: 32
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 8ef2f797b8ce3a14dbd7c876cdf66bd2
+      internalID: -1625129906
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: YellowMonkey_58
+      rect:
+        serializedVersion: 2
+        x: 525
+        y: 552
+        width: 46
+        height: 45
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: cfbe63661e9b54f41b5e9f980c5196dd
+      internalID: 1850260440
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: YellowMonkey_59
+      rect:
+        serializedVersion: 2
+        x: 595
+        y: 561
+        width: 42
+        height: 38
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 5e2db94ebe975e44e8a2bcd6f84850cf
+      internalID: -2092694573
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: YellowMonkey_60
+      rect:
+        serializedVersion: 2
+        x: 664
+        y: 575
+        width: 56
+        height: 18
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 244032cbb78143d429909ee429900ec2
+      internalID: -479455839
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: YellowMonkey_61
+      rect:
+        serializedVersion: 2
+        x: 17
+        y: 164
+        width: 230
+        height: 284
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: fd136f7788050954ead6050e7ce87408
+      internalID: 1500831418
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: YellowMonkey_62
+      rect:
+        serializedVersion: 2
+        x: 38
+        y: 464
+        width: 52
+        height: 47
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 97882fa1e7a3a4a46896adaeee93d66c
+      internalID: 1232198187
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: YellowMonkey_63
+      rect:
+        serializedVersion: 2
+        x: 294
+        y: 157
+        width: 244
+        height: 358
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 9fd7471ac9d3a214590415ac08fd7e20
+      internalID: -1589668304
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: YellowMonkey_64
+      rect:
+        serializedVersion: 2
+        x: 585
+        y: 468
+        width: 126
+        height: 64
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 41a7800f5fd321f448c4cdd1e39f6aa7
+      internalID: 514754651
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: YellowMonkey_65
+      rect:
+        serializedVersion: 2
+        x: 739
+        y: 459
+        width: 90
+        height: 90
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 9055bc9e1f40c3f45a37c48a84e68b50
+      internalID: -649944683
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: YellowMonkey_66
+      rect:
+        serializedVersion: 2
+        x: 643
+        y: 347
+        width: 90
+        height: 90
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 254f76ca10a69e9438e8f3d7c858c5a6
+      internalID: -1219023696
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: YellowMonkey_67
+      rect:
+        serializedVersion: 2
+        x: 757
+        y: 305
+        width: 14
+        height: 126
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 18b485c869d009e438dacb8458d72a43
+      internalID: 280724905
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: YellowMonkey_68
+      rect:
+        serializedVersion: 2
+        x: 798
+        y: 278
+        width: 28
+        height: 156
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 17cbd1f5bf6646048ae59b5d07e7f366
+      internalID: 1815016734
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: YellowMonkey_69
+      rect:
+        serializedVersion: 2
+        x: 863
+        y: 122
+        width: 138
+        height: 303
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 940a0508b7510ad4da9242df1d274e18
+      internalID: -1767818034
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: YellowMonkey_70
+      rect:
+        serializedVersion: 2
+        x: 709
+        y: 301
+        width: 22
+        height: 21
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 52d70949329c5534daad5dc7f4d29dc1
+      internalID: -1558937788
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: YellowMonkey_71
+      rect:
+        serializedVersion: 2
+        x: 15
+        y: 17
+        width: 113
+        height: 83
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 282c40c585fba934ca2ff53f5d99acaf
+      internalID: 629375275
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: YellowMonkey_72
+      rect:
+        serializedVersion: 2
+        x: 161
+        y: 17
+        width: 110
+        height: 83
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 584f8d8c741686d4e918723ac262dea7
+      internalID: 680733116
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: YellowMonkey_73
+      rect:
+        serializedVersion: 2
+        x: 304
+        y: 17
+        width: 112
+        height: 83
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 2fee081bf507c4945bba870fda240fa2
+      internalID: 424911737
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: YellowMonkey_74
+      rect:
+        serializedVersion: 2
+        x: 446
+        y: 86
+        width: 108
+        height: 20
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: f878802ec29f78c4fa8f21f79250959b
+      internalID: 805316789
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: YellowMonkey_75
+      rect:
+        serializedVersion: 2
+        x: 923
+        y: 72
+        width: 18
+        height: 45
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 9, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: ee2b24a45ecbdfa41ba521a706fd9784
+      internalID: -1409151922
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    outline: []
+    physicsShape: []
+    bones: []
+    spriteID: 5e97eb03825dee720800000000000000
+    internalID: 0
+    vertices: []
+    indices: 
+    edges: []
+    weights: []
+    secondaryTextures: []
+    nameFileIdTable:
+      YellowMonkey_0: 965511078
+      YellowMonkey_1: 1127406036
+      YellowMonkey_10: 1750096047
+      YellowMonkey_11: 552770996
+      YellowMonkey_12: 1193611724
+      YellowMonkey_13: 1429406580
+      YellowMonkey_14: -70320958
+      YellowMonkey_15: 1518970876
+      YellowMonkey_16: 1029899912
+      YellowMonkey_17: -1550717160
+      YellowMonkey_18: -1233933164
+      YellowMonkey_19: 307967110
+      YellowMonkey_2: -948935254
+      YellowMonkey_20: 2081031743
+      YellowMonkey_21: -1534182649
+      YellowMonkey_22: -1968266969
+      YellowMonkey_23: 1372828174
+      YellowMonkey_24: -13530083
+      YellowMonkey_25: 963194427
+      YellowMonkey_26: 14843991
+      YellowMonkey_27: -169874611
+      YellowMonkey_28: 683105700
+      YellowMonkey_29: -564762824
+      YellowMonkey_3: -1697481924
+      YellowMonkey_30: -1925233001
+      YellowMonkey_31: 127201726
+      YellowMonkey_32: 1548927398
+      YellowMonkey_33: -1194296731
+      YellowMonkey_34: 2102349253
+      YellowMonkey_35: -1651821594
+      YellowMonkey_36: -1499432972
+      YellowMonkey_37: 18379627
+      YellowMonkey_38: -1785524092
+      YellowMonkey_39: 1639296475
+      YellowMonkey_4: 1833233236
+      YellowMonkey_40: 662616171
+      YellowMonkey_41: -1754132441
+      YellowMonkey_42: 301627176
+      YellowMonkey_43: -574289481
+      YellowMonkey_44: -1222337371
+      YellowMonkey_45: -909474966
+      YellowMonkey_46: 331659960
+      YellowMonkey_47: 525673308
+      YellowMonkey_48: -1195462895
+      YellowMonkey_49: -2028350389
+      YellowMonkey_5: -645111153
+      YellowMonkey_50: 440706406
+      YellowMonkey_51: -88685482
+      YellowMonkey_52: -1829047945
+      YellowMonkey_53: -1968869198
+      YellowMonkey_54: -1505573281
+      YellowMonkey_55: 671829876
+      YellowMonkey_56: -591886900
+      YellowMonkey_57: -1625129906
+      YellowMonkey_58: 1850260440
+      YellowMonkey_59: -2092694573
+      YellowMonkey_6: -232610484
+      YellowMonkey_60: -479455839
+      YellowMonkey_61: 1500831418
+      YellowMonkey_62: 1232198187
+      YellowMonkey_63: -1589668304
+      YellowMonkey_64: 514754651
+      YellowMonkey_65: -649944683
+      YellowMonkey_66: -1219023696
+      YellowMonkey_67: 280724905
+      YellowMonkey_68: 1815016734
+      YellowMonkey_69: -1767818034
+      YellowMonkey_7: -28325943
+      YellowMonkey_70: -1558937788
+      YellowMonkey_71: 629375275
+      YellowMonkey_72: 680733116
+      YellowMonkey_73: 424911737
+      YellowMonkey_74: 805316789
+      YellowMonkey_75: -1409151922
+      YellowMonkey_76: -523591808
+      YellowMonkey_8: -1894111207
+      YellowMonkey_9: 29727674
+  spritePackingTag: 
+  pSDRemoveMatte: 0
+  pSDShowRemoveMatteOption: 0
+  userData: 
+  assetBundleName: rvlwatch/common
+  assetBundleVariant: 
