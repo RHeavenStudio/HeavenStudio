@@ -31,13 +31,19 @@ namespace HeavenStudio.Games.Scripts_AgbNightWalk
         private bool canKick;
         private bool doFillStartSound = false;
 
+        private PlayerActionEvent inputEvent;
+        private bool stopped;
+        private Sound kickSound;
+        [SerializeField] private GameObject fallYan;
+
         public void StartInput(double beat, double hitBeat)
         {
             if (game == null) game = AgbNightWalk.instance;
             lastAdditionalHeightInUnits = game.FindHeightUnitsAtBeat(hitBeat);
             additionalHeightInUnits = game.FindHeightUnitsAtBeat(hitBeat + 1);
             additionalHeight = lastAdditionalHeightInUnits * handler.heightAmount;
-            platform.SetActive(lastAdditionalHeightInUnits == additionalHeightInUnits);
+            bool nextPlatformIsSameHeight = lastAdditionalHeightInUnits == additionalHeightInUnits;
+            platform.SetActive(nextPlatformIsSameHeight);
             startBeat = beat;
             endBeat = hitBeat;
             if (game.platformTypes.ContainsKey(hitBeat))
@@ -64,36 +70,47 @@ namespace HeavenStudio.Games.Scripts_AgbNightWalk
             {
                 if (game.ShouldNotJumpOnBeat(endBeat))
                 {
-                    AgbNightWalk.instance.ScheduleUserInput(startBeat, endBeat - startBeat, InputType.STANDARD_DOWN, Just, Miss, Empty);
-                    BeatAction.New(gameObject, new List<BeatAction.Action>()
+                    inputEvent = AgbNightWalk.instance.ScheduleUserInput(startBeat, endBeat - startBeat, InputType.STANDARD_DOWN, Just, Miss, Empty);
+                    if (nextPlatformIsSameHeight)
                     {
-                        new BeatAction.Action(endBeat, delegate
+                        BeatAction.New(gameObject, new List<BeatAction.Action>()
                         {
-                            if (GameManager.instance.autoplay)
+                            new BeatAction.Action(endBeat, delegate
                             {
-                                game.playYan.Walk();
-                            }
-                        }),
-                        new BeatAction.Action(endBeat + 0.5, delegate 
-                        { 
-                            if (GameManager.instance.autoplay)
+                                if (GameManager.instance.autoplay && !stopped)
+                                {
+                                    game.playYan.Walk();
+                                }
+                            }),
+                            new BeatAction.Action(endBeat + 0.5, delegate
                             {
-                                anim.DoScaledAnimationAsync("Note", 0.5f);
-                                SoundByte.PlayOneShotGame("nightWalkAgb/open" + (int)type);
-                            }
-                        })
-                    });
+                                if (GameManager.instance.autoplay && !stopped)
+                                {
+                                    anim.DoScaledAnimationAsync("Note", 0.5f);
+                                    SoundByte.PlayOneShotGame("nightWalkAgb/open" + (int)type);
+                                }
+                            })
+                        });
+                    }
+                    else
+                    {
+
+                    }
                 }
                 else
                 {
-                    AgbNightWalk.instance.ScheduleInput(startBeat, endBeat - startBeat, InputType.STANDARD_DOWN, Just, Miss, Empty);
+                    inputEvent = AgbNightWalk.instance.ScheduleInput(startBeat, endBeat - startBeat, InputType.STANDARD_DOWN, Just, Miss, Empty);
                 }
-                SoundByte.PlayOneShotGame("nightWalkAgb/boxKick", endBeat);
-                canKick = true;
-                BeatAction.New(gameObject, new List<BeatAction.Action>()
+                if (nextPlatformIsSameHeight)
                 {
-                    new BeatAction.Action(endBeat, delegate { if (canKick) anim.Play("Kick", 0, 0); })
-                });
+                    kickSound = SoundByte.PlayOneShotGame("nightWalkAgb/boxKick", endBeat);
+                    canKick = true;
+                    BeatAction.New(gameObject, new List<BeatAction.Action>()
+                    {
+                        new BeatAction.Action(endBeat, delegate { if (canKick && !stopped) anim.Play("Kick", 0, 0); })
+                    });
+                }
+
             }
         }
 
@@ -109,17 +126,27 @@ namespace HeavenStudio.Games.Scripts_AgbNightWalk
             var cond = Conductor.instance;
             if (cond.isPlaying && !cond.isPaused)
             {
-                float normalizedBeat = cond.GetPositionFromBeat(startBeat, endBeat - startBeat);
-
-                float newPosX = Mathf.LerpUnclamped(handler.playerXPos + (float)((endBeat - startBeat) * handler.platformDistance), handler.playerXPos, normalizedBeat);
-
-                transform.localPosition = new Vector3(newPosX, handler.defaultYPos + additionalHeight);
-
-                if (cond.songPositionInBeats > endBeat + (handler.platformCount * 0.5f))
+                if (!stopped)
                 {
-                    ResetInput();
+                    float normalizedBeat = cond.GetPositionFromBeat(startBeat, endBeat - startBeat);
+
+                    float newPosX = Mathf.LerpUnclamped(handler.playerXPos + (float)((endBeat - startBeat) * handler.platformDistance), handler.playerXPos, normalizedBeat);
+
+                    transform.localPosition = new Vector3(newPosX, handler.defaultYPos + additionalHeight);
+
+                    if (cond.songPositionInBeats > endBeat + (handler.platformCount * 0.5f))
+                    {
+                        ResetInput();
+                    }
                 }
             }
+        }
+
+        public void Stop()
+        {
+            stopped = true;
+            if (inputEvent != null) inputEvent.Disable();
+            if (kickSound != null) kickSound.Delete();
         }
 
         private void ResetInput()
@@ -155,12 +182,22 @@ namespace HeavenStudio.Games.Scripts_AgbNightWalk
 
         private void Miss(PlayerActionEvent caller)
         {
-            game.playYan.Walk();
-            SoundByte.PlayOneShotGame("nightWalkAgb/open" + (int)type, caller.timer + caller.startBeat + 0.5);
-            BeatAction.New(gameObject, new List<BeatAction.Action>()
+            if (platform.activeSelf)
             {
-                new BeatAction.Action(caller.timer + caller.startBeat + 0.5, delegate { anim.DoScaledAnimationAsync("Note", 0.5f); })
-            });
+                game.playYan.Walk();
+                SoundByte.PlayOneShotGame("nightWalkAgb/open" + (int)type, caller.timer + caller.startBeat + 0.5);
+                BeatAction.New(gameObject, new List<BeatAction.Action>()
+                {
+                    new BeatAction.Action(caller.timer + caller.startBeat + 0.5, delegate { anim.DoScaledAnimationAsync("Note", 0.5f); })
+                });
+            }
+            else
+            {
+                handler.StopAll();
+                SoundByte.PlayOneShotGame("nightWalkAgb/wot");
+                game.playYan.Hide();
+                fallYan.SetActive(true);
+            }
         }
         
         private void Empty(PlayerActionEvent caller) { }

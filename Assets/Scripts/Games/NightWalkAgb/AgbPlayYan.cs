@@ -89,6 +89,11 @@ namespace HeavenStudio.Games.Scripts_AgbNightWalk
                 balloon.DoNormalizedAnimation("Pop", 1);
             }
         }
+
+        public void Hide()
+        {
+            anim.gameObject.SetActive(false);
+        }
     }
 }
 

@@ -336,7 +336,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: NightWalkGBA_11
+      name: fall1
       rect:
         serializedVersion: 2
         x: 967
@@ -357,7 +357,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: NightWalkGBA_12
+      name: fall2
       rect:
         serializedVersion: 2
         x: 1191
@@ -378,7 +378,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: NightWalkGBA_13
+      name: fall3
       rect:
         serializedVersion: 2
         x: 1437
@@ -1610,9 +1610,6 @@ TextureImporter:
       NightWalkGBA_0: 130521762
       NightWalkGBA_1: 1507133511
       NightWalkGBA_10: 379567741
-      NightWalkGBA_11: -2087613087
-      NightWalkGBA_12: 1736942892
-      NightWalkGBA_13: 1997566507
       NightWalkGBA_14: -2114634637
       NightWalkGBA_15: 950189746
       NightWalkGBA_16: 1245348893
@@ -1663,6 +1660,9 @@ TextureImporter:
       bp: 529839015
       br: 592522720
       by: 2115022471
+      fall1: -2087613087
+      fall2: 1736942892
+      fall3: 1997566507
       jumpImpact: -938550924
       jumplat2: 2115410046
       jumplat3: -199434903

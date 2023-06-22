@@ -20,6 +20,7 @@ namespace HeavenStudio.Games.Scripts_AgbNightWalk
         private float lastHeight = 0;
         private float heightToRaiseTo = 0;
         private double raiseBeat = -1;
+        [NonSerialized] public List<AgbPlatform> allPlatforms = new();
 
         private void Awake()
         {
@@ -33,6 +34,7 @@ namespace HeavenStudio.Games.Scripts_AgbNightWalk
                 for (int i = 0; i < platformCount; i++)
                 {
                     AgbPlatform platform = Instantiate(platformRef, transform);
+                    allPlatforms.Add(platform);
                     platform.handler = this;
                     platform.StartInput(game.countInBeat + i + 8 - (platformCount * 0.5), game.countInBeat + i + 8);
                     platform.gameObject.SetActive(true);
@@ -43,6 +45,7 @@ namespace HeavenStudio.Games.Scripts_AgbNightWalk
                 for (int i = 0; i < platformCount; i++)
                 {
                     AgbPlatform platform = Instantiate(platformRef, transform);
+                    allPlatforms.Add(platform);
                     platform.handler = this;
                     platform.StartInput(beat, Math.Ceiling(beat) + i - platformCount);
                     platform.gameObject.SetActive(true);
@@ -64,6 +67,14 @@ namespace HeavenStudio.Games.Scripts_AgbNightWalk
 
                     transform.localPosition = new Vector3(0, -newPosY, 0);
                 }
+            }
+        }
+
+        public void StopAll()
+        {
+            foreach (var platform in allPlatforms)
+            {
+                platform.Stop();
             }
         }
 
