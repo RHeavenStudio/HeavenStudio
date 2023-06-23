@@ -14,13 +14,15 @@ namespace HeavenStudio.Games.Scripts_AgbNightWalk
             Walking,
             Jumping,
             Shocked,
-            Falling
+            Falling,
+            Whiffing
         }
         private JumpingState jumpingState;
         private AgbNightWalk game;
         private double jumpBeat;
         [SerializeField] private List<Animator> balloons = new List<Animator>();
         private Path jumpPath;
+        private Path whiffPath;
         private Animator anim;
         private float fallStartY;
         private double playYanFallBeat;
@@ -29,6 +31,7 @@ namespace HeavenStudio.Games.Scripts_AgbNightWalk
         {
             game = AgbNightWalk.instance;
             jumpPath = game.GetPath("Jump");
+            whiffPath = game.GetPath("Whiff");
             anim = GetComponent<Animator>();
             foreach (var balloon in balloons)
             {
@@ -46,13 +49,19 @@ namespace HeavenStudio.Games.Scripts_AgbNightWalk
                     case JumpingState.Jumping:
                         Vector3 pos = GetPathPositionFromBeat(jumpPath, Math.Min(jumpBeat + 1, cond.songPositionInBeatsAsDouble), jumpBeat);
                         transform.localPosition = pos;
-                        float normalizedBeat = cond.GetPositionFromBeat(jumpBeat, 1);
+                        float normalizedBeat = cond.GetPositionFromBeat(jumpBeat, jumpPath.positions[0].duration);
                         if (normalizedBeat >= 1f)
                         {
                             Walk();
                         }
                         break;
                     case JumpingState.Walking:
+                        transform.localPosition = Vector3.zero;
+                        if (PlayerInput.Pressed() && !game.IsExpectingInputNow(InputType.STANDARD_DOWN))
+                        {
+                            Whiff(cond.songPositionInBeatsAsDouble);
+                        }
+                        break;
                     case JumpingState.Flying:
                         transform.localPosition = Vector3.zero;
                         break;
@@ -63,6 +72,15 @@ namespace HeavenStudio.Games.Scripts_AgbNightWalk
                         EasingFunction.Function func = EasingFunction.GetEasingFunction(EasingFunction.Ease.EaseInQuad);
                         float newPlayYanY = func(fallStartY, -12, normalizedFallBeat);
                         transform.localPosition = new Vector3(0, newPlayYanY);
+                        break;
+                    case JumpingState.Whiffing:
+                        Vector3 pos2 = GetPathPositionFromBeat(whiffPath, Math.Min(jumpBeat + 0.5, cond.songPositionInBeatsAsDouble), jumpBeat);
+                        transform.localPosition = pos2;
+                        float normalizedBeat2 = cond.GetPositionFromBeat(jumpBeat, 0.5);
+                        if (normalizedBeat2 >= 1f)
+                        {
+                            Walk();
+                        }
                         break;
                 }
             }
@@ -88,6 +106,15 @@ namespace HeavenStudio.Games.Scripts_AgbNightWalk
         public void Jump(double beat)
         {
             jumpingState = JumpingState.Jumping;
+            jumpBeat = beat;
+            anim.Play("Jump", 0, 0);
+            jumpPath.positions[0].duration = 1 - (float)Conductor.instance.SecsToBeats(Minigame.earlyTime, Conductor.instance.GetBpmAtBeat(jumpBeat));
+            Update();
+        }
+
+        public void Whiff(double beat)
+        {
+            jumpingState = JumpingState.Whiffing;
             jumpBeat = beat;
             anim.Play("Jump", 0, 0);
             Update();
