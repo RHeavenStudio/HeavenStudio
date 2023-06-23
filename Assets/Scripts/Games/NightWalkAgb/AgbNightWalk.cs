@@ -189,24 +189,24 @@ namespace HeavenStudio.Games
                 case FillType.Pattern1:
                     MultiSound.Play(new MultiSound.Sound[]
                     {
-                        new MultiSound.Sound("nightWalkAgb/fill1A", beat - ((1/3) * 2)),
+                        new MultiSound.Sound("nightWalkAgb/fill1A", beat - 0.66666),
                         new MultiSound.Sound("nightWalkAgb/fill1B", beat - 0.5),
-                        new MultiSound.Sound("nightWalkAgb/fill1C", beat - (1/3)),
-                        new MultiSound.Sound("nightWalkAgb/fill1D", beat - ((1/3) * 0.5)),
+                        new MultiSound.Sound("nightWalkAgb/fill1C", beat - 0.33333),
+                        new MultiSound.Sound("nightWalkAgb/fill1D", beat - 0.16666),
                     }, forcePlay: true);
                     break;
                 case FillType.Pattern2:
                     MultiSound.Play(new MultiSound.Sound[]
                     {
-                        new MultiSound.Sound("nightWalkAgb/fill2A", beat - ((1/3) * 2)),
+                        new MultiSound.Sound("nightWalkAgb/fill2A", beat - 0.66666),
                         new MultiSound.Sound("nightWalkAgb/fill2B", beat - 0.5),
-                        new MultiSound.Sound("nightWalkAgb/fill2C", beat - ((1/3) * 0.5)),
+                        new MultiSound.Sound("nightWalkAgb/fill2C", beat - 0.16666),
                     }, forcePlay: true);
                     break;
                 case FillType.Pattern3:
                     MultiSound.Play(new MultiSound.Sound[]
                     {
-                        new MultiSound.Sound("nightWalkAgb/fill3A", beat - ((1/3) * 2)),
+                        new MultiSound.Sound("nightWalkAgb/fill3A", beat - 0.66666),
                         new MultiSound.Sound("nightWalkAgb/fill3B", beat - 0.5),
                     }, forcePlay: true);
                     break;
