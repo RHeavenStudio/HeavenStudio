@@ -32,7 +32,7 @@ namespace HeavenStudio.Games.Scripts_AgbNightWalk
         private bool doFillStartSound = false;
 
         private PlayerActionEvent inputEvent;
-        private bool stopped;
+        [NonSerialized] public bool stopped;
         private Sound kickSound;
         [SerializeField] private GameObject fallYan;
         [SerializeField] private Animator fish;

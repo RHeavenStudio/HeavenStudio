@@ -15,10 +15,19 @@ namespace HeavenStudio.Games.Loaders
         {
             return new Minigame("nightWalkAgb", "Night Walk (GBA)", "FFFFFF", false, false, new List<GameAction>()
             {
-                new GameAction("countIn", "8 Beat Count-In")
+                new GameAction("countIn8", "8 Beat Count-In")
                 {
-                    preFunction = delegate { if (!eventCaller.currentEntity["mute"] && AgbNightWalk.IsValidCountIn(eventCaller.currentEntity)) AgbNightWalk.CountInSound(eventCaller.currentEntity.beat); },
+                    preFunction = delegate { if (!eventCaller.currentEntity["mute"] && AgbNightWalk.IsValidCountIn(eventCaller.currentEntity)) AgbNightWalk.CountInSound8(eventCaller.currentEntity.beat); },
                     defaultLength = 8,
+                    parameters = new List<Param>()
+                    {
+                        new Param("mute", false, "Mute Cowbell")
+                    }
+                },
+                new GameAction("countIn4", "4 Beat Count-In")
+                {
+                    preFunction = delegate { if (!eventCaller.currentEntity["mute"] && AgbNightWalk.IsValidCountIn(eventCaller.currentEntity)) AgbNightWalk.CountInSound4(eventCaller.currentEntity.beat); },
+                    defaultLength = 4,
                     parameters = new List<Param>()
                     {
                         new Param("mute", false, "Mute Cowbell")
@@ -55,7 +64,8 @@ namespace HeavenStudio.Games.Loaders
                     parameters = new List<Param>()
                     {
                         new Param("mute", false, "Mute Cue")
-                    }
+                    },
+                    preFunctionLength = 1
                 },
                 new GameAction("noJump", "No Jumping")
                 {
@@ -91,6 +101,7 @@ namespace HeavenStudio.Games
         public AgbPlayYan playYan;
         [SerializeField] private AgbPlatformHandler platformHandler;
         [NonSerialized] public double countInBeat = -1;
+        [NonSerialized] public float countInLength = 8;
         [Header("Curves")]
         [SerializeField] SuperCurveObject.Path[] jumpPaths;
         private struct HeightEvent
@@ -201,6 +212,7 @@ namespace HeavenStudio.Games
 
         public static void FishSound(double beat)
         {
+            if (GameManager.instance.currentGame == "nightWalkAgb" && instance.platformHandler.PlatformsStopped()) return;
             MultiSound.Play(new MultiSound.Sound[]
             {
                 new MultiSound.Sound("nightWalkAgb/fish1", beat - 1),
@@ -245,13 +257,14 @@ namespace HeavenStudio.Games
 
         private void SetCountInBeat(double beat)
         {
-            List<RiqEntity> countInEvents = EventCaller.GetAllInGameManagerList("nightWalkAgb", new string[] { "countIn" });
+            List<RiqEntity> countInEvents = EventCaller.GetAllInGameManagerList("nightWalkAgb", new string[] { "countIn8", "countIn4" });
             if (countInEvents.Count > 0)
             {
                 var allEnds = EventCaller.GetAllInGameManagerList("gameManager", new string[] { "switchGame" });
                 if (allEnds.Count == 0)
                 {
                     countInBeat = countInEvents[0].beat;
+                    countInLength = countInEvents[0].length;
                 }
                 else
                 {
@@ -278,6 +291,7 @@ namespace HeavenStudio.Games
                     {
                         tempEvents.Sort((x, y) => x.beat.CompareTo(y.beat));
                         countInBeat = tempEvents[tempEvents.Count - 1].beat;
+                        countInLength = tempEvents[tempEvents.Count - 1].length;
                     }
                 }
             }
@@ -286,7 +300,7 @@ namespace HeavenStudio.Games
 
         public static bool IsValidCountIn(RiqEntity countInEntity)
         {
-            List<RiqEntity> countInEvents = EventCaller.GetAllInGameManagerList("nightWalkAgb", new string[] { "countIn" });
+            List<RiqEntity> countInEvents = EventCaller.GetAllInGameManagerList("nightWalkAgb", new string[] { "countIn8", "countIn4" });
             if (countInEvents.Count > 0)
             {
                 var allEnds = EventCaller.GetAllInGameManagerList("gameManager", new string[] { "switchGame" });
@@ -340,16 +354,32 @@ namespace HeavenStudio.Games
         {
             if (countInBeat != -1)
             {
-                BeatAction.New(instance.gameObject, new List<BeatAction.Action>()
+                if (countInLength == 8)
                 {
-                    new BeatAction.Action(countInBeat, delegate { playYan.PopBalloon(0, beat >= countInBeat); }),
-                    new BeatAction.Action(countInBeat + 2, delegate { playYan.PopBalloon(1, beat >= countInBeat + 2); }),
-                    new BeatAction.Action(countInBeat + 4, delegate { playYan.PopBalloon(2, beat >= countInBeat + 4); }),
-                    new BeatAction.Action(countInBeat + 5, delegate { playYan.PopBalloon(3, beat >= countInBeat + 5); }),
-                    new BeatAction.Action(countInBeat + 6, delegate { playYan.PopBalloon(4, beat >= countInBeat + 6); }),
-                    new BeatAction.Action(countInBeat + 7, delegate { playYan.PopBalloon(5, beat >= countInBeat + 7); }),
-                    new BeatAction.Action(countInBeat + 8, delegate { playYan.PopBalloon(6, beat >= countInBeat + 8); }),
-                });
+                    BeatAction.New(instance.gameObject, new List<BeatAction.Action>()
+                    {
+                        new BeatAction.Action(countInBeat, delegate { playYan.PopBalloon(0, beat >= countInBeat); }),
+                        new BeatAction.Action(countInBeat + 2, delegate { playYan.PopBalloon(1, beat >= countInBeat + 2); }),
+                        new BeatAction.Action(countInBeat + 4, delegate { playYan.PopBalloon(2, beat >= countInBeat + 4); }),
+                        new BeatAction.Action(countInBeat + 5, delegate { playYan.PopBalloon(3, beat >= countInBeat + 5); }),
+                        new BeatAction.Action(countInBeat + 6, delegate { playYan.PopBalloon(4, beat >= countInBeat + 6); }),
+                        new BeatAction.Action(countInBeat + 7, delegate { playYan.PopBalloon(5, beat >= countInBeat + 7); }),
+                        new BeatAction.Action(countInBeat + 8, delegate { playYan.PopBalloon(6, beat >= countInBeat + 8); }),
+                    });
+                }
+                else
+                {
+                    playYan.PopBalloon(0, true);
+                    playYan.PopBalloon(1, true);
+                    BeatAction.New(instance.gameObject, new List<BeatAction.Action>()
+                    {
+                        new BeatAction.Action(countInBeat, delegate { playYan.PopBalloon(2, beat >= countInBeat); }),
+                        new BeatAction.Action(countInBeat + 1, delegate { playYan.PopBalloon(3, beat >= countInBeat + 1); }),
+                        new BeatAction.Action(countInBeat + 2, delegate { playYan.PopBalloon(4, beat >= countInBeat + 2); }),
+                        new BeatAction.Action(countInBeat + 3, delegate { playYan.PopBalloon(5, beat >= countInBeat + 3); }),
+                        new BeatAction.Action(countInBeat + 4, delegate { playYan.PopBalloon(6, beat >= countInBeat + 4); }),
+                    });
+                }
             }
             else
             {
@@ -357,7 +387,7 @@ namespace HeavenStudio.Games
             }
         }
 
-        public static void CountInSound(double beat)
+        public static void CountInSound8(double beat)
         {
             MultiSound.Play(new MultiSound.Sound[]
             {
@@ -367,6 +397,17 @@ namespace HeavenStudio.Games
                 new MultiSound.Sound("count-ins/cowbell", beat + 5),
                 new MultiSound.Sound("count-ins/cowbell", beat + 6),
                 new MultiSound.Sound("count-ins/cowbell", beat + 7),
+            }, false, true);
+        }
+
+        public static void CountInSound4(double beat)
+        {
+            MultiSound.Play(new MultiSound.Sound[]
+            {
+                new MultiSound.Sound("count-ins/cowbell", beat),
+                new MultiSound.Sound("count-ins/cowbell", beat + 1),
+                new MultiSound.Sound("count-ins/cowbell", beat + 2),
+                new MultiSound.Sound("count-ins/cowbell", beat + 3),
             }, false, true);
         }
     }
