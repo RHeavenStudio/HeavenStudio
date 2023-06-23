@@ -122,11 +122,17 @@ namespace HeavenStudio.Games.Scripts_AgbNightWalk
                 }
                 if (nextPlatformIsSameHeight)
                 {
-                    kickSound = SoundByte.PlayOneShotGame("nightWalkAgb/boxKick", endBeat);
                     canKick = true;
                     BeatAction.New(gameObject, new List<BeatAction.Action>()
                     {
-                        new BeatAction.Action(endBeat, delegate { if (canKick && !stopped) anim.Play("Kick", 0, 0); })
+                        new BeatAction.Action(endBeat, delegate 
+                        { 
+                            if (canKick && !stopped)
+                            {
+                                SoundByte.PlayOneShotGame("nightWalkAgb/boxKick");
+                                anim.Play("Kick", 0, 0);
+                            } 
+                        })
                     });
                 }
 
@@ -172,7 +178,6 @@ namespace HeavenStudio.Games.Scripts_AgbNightWalk
         {
             stopped = true;
             if (inputEvent != null) inputEvent.Disable();
-            if (kickSound != null) kickSound.Delete();
         }
 
         public void Disappear(double beat)
