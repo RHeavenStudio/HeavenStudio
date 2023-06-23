@@ -56,7 +56,8 @@ namespace HeavenStudio.Games.Loaders
                     {
                         new Param("type", AgbNightWalk.PlatformType.Lollipop, "Type"),
                         new Param("fill", AgbNightWalk.FillType.None, "Umbrella Drum Pattern")
-                    }
+                    },
+                    preFunctionLength = 1
                 },
                 new GameAction("fish", "Electric Fish")
                 {
@@ -69,6 +70,12 @@ namespace HeavenStudio.Games.Loaders
                 },
                 new GameAction("noJump", "No Jumping")
                 {
+                    defaultLength = 4,
+                    resizable = true
+                },
+                new GameAction("walkingCountIn", "Walking Count-In")
+                {
+                    preFunction = delegate { var e = eventCaller.currentEntity; AgbNightWalk.WalkingCountIn(e.beat, e.length); },
                     defaultLength = 4,
                     resizable = true
                 }
@@ -221,8 +228,20 @@ namespace HeavenStudio.Games
             }, forcePlay: true);
         }
 
+        public static void WalkingCountIn(double beat, float length)
+        {
+            List<MultiSound.Sound> sounds = new();
+            for (int i = 0; i < length; i++)
+            {
+                sounds.Add(new MultiSound.Sound("nightWalkAgb/boxKick", beat + i));
+                sounds.Add(new MultiSound.Sound("nightWalkAgb/open1", beat + 0.5 + i));
+            }
+            MultiSound.Play(sounds.ToArray(), forcePlay: true);
+        }
+
         public static void FillSound(double beat, FillType fill)
         {
+            if (GameManager.instance.currentGame == "nightWalkAgb" && instance.platformHandler.PlatformsStopped()) return;
             double third = 1.0 / 3.0;
             switch (fill)
             {
