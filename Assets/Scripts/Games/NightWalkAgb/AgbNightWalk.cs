@@ -49,6 +49,14 @@ namespace HeavenStudio.Games.Loaders
                         new Param("fill", AgbNightWalk.FillType.None, "Umbrella Drum Pattern")
                     }
                 },
+                new GameAction("fish", "Electric Fish")
+                {
+                    preFunction = delegate { if (!eventCaller.currentEntity["mute"]) AgbNightWalk.FishSound(eventCaller.currentEntity.beat); },
+                    parameters = new List<Param>()
+                    {
+                        new Param("mute", false, "Mute Cue")
+                    }
+                },
                 new GameAction("noJump", "No Jumping")
                 {
                     defaultLength = 4,
@@ -92,6 +100,7 @@ namespace HeavenStudio.Games
         }
         List<HeightEvent> heightEntityEvents = new();
         [NonSerialized] public Dictionary<double, TypeEvent> platformTypes = new();
+        private List<double> fishBeats = new();
         public struct TypeEvent
         {
             public PlatformType platformType;
@@ -149,6 +158,16 @@ namespace HeavenStudio.Games
                 }
                 
             }
+            List<RiqEntity> fishEvents = EventCaller.GetAllInGameManagerList("nightWalkAgb", new string[] { "fish" });
+            foreach(var fishEvent in fishEvents)
+            {
+                fishBeats.Add(fishEvent.beat);
+            }
+        }
+
+        public bool FishOnBeat(double beat)
+        {
+            return fishBeats.Contains(beat);
         }
 
         public int FindHeightUnitsAtBeat(double beat)
@@ -180,8 +199,19 @@ namespace HeavenStudio.Games
             platformHandler.SpawnPlatforms(beat);
         }
 
+        public static void FishSound(double beat)
+        {
+            MultiSound.Play(new MultiSound.Sound[]
+            {
+                new MultiSound.Sound("nightWalkAgb/fish1", beat - 1),
+                new MultiSound.Sound("nightWalkAgb/fish2", beat - 0.75),
+                new MultiSound.Sound("nightWalkAgb/fish3", beat - 0.5),
+            }, forcePlay: true);
+        }
+
         public static void FillSound(double beat, FillType fill)
         {
+            double third = 1.0 / 3.0;
             switch (fill)
             {
                 case FillType.None:
@@ -189,24 +219,24 @@ namespace HeavenStudio.Games
                 case FillType.Pattern1:
                     MultiSound.Play(new MultiSound.Sound[]
                     {
-                        new MultiSound.Sound("nightWalkAgb/fill1A", beat - 0.66666),
+                        new MultiSound.Sound("nightWalkAgb/fill1A", beat - (third * 2)),
                         new MultiSound.Sound("nightWalkAgb/fill1B", beat - 0.5),
-                        new MultiSound.Sound("nightWalkAgb/fill1C", beat - 0.33333),
-                        new MultiSound.Sound("nightWalkAgb/fill1D", beat - 0.16666),
+                        new MultiSound.Sound("nightWalkAgb/fill1C", beat - third),
+                        new MultiSound.Sound("nightWalkAgb/fill1D", beat - (third * 0.5)),
                     }, forcePlay: true);
                     break;
                 case FillType.Pattern2:
                     MultiSound.Play(new MultiSound.Sound[]
                     {
-                        new MultiSound.Sound("nightWalkAgb/fill2A", beat - 0.66666),
+                        new MultiSound.Sound("nightWalkAgb/fill2A", beat - (third * 2)),
                         new MultiSound.Sound("nightWalkAgb/fill2B", beat - 0.5),
-                        new MultiSound.Sound("nightWalkAgb/fill2C", beat - 0.16666),
+                        new MultiSound.Sound("nightWalkAgb/fill2C", beat - (third * 0.5)),
                     }, forcePlay: true);
                     break;
                 case FillType.Pattern3:
                     MultiSound.Play(new MultiSound.Sound[]
                     {
-                        new MultiSound.Sound("nightWalkAgb/fill3A", beat - 0.66666),
+                        new MultiSound.Sound("nightWalkAgb/fill3A", beat - (third * 2)),
                         new MultiSound.Sound("nightWalkAgb/fill3B", beat - 0.5),
                     }, forcePlay: true);
                     break;

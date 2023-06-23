@@ -12,7 +12,9 @@ namespace HeavenStudio.Games.Scripts_AgbNightWalk
         {
             Flying,
             Walking,
-            Jumping
+            Jumping,
+            Shocked,
+            Falling
         }
         private JumpingState jumpingState;
         private AgbNightWalk game;
@@ -20,6 +22,8 @@ namespace HeavenStudio.Games.Scripts_AgbNightWalk
         [SerializeField] private List<Animator> balloons = new List<Animator>();
         private Path jumpPath;
         private Animator anim;
+        private float fallStartY;
+        private double playYanFallBeat;
 
         private void Awake()
         {
@@ -49,13 +53,36 @@ namespace HeavenStudio.Games.Scripts_AgbNightWalk
                         }
                         break;
                     case JumpingState.Walking:
-                        transform.localPosition = Vector3.zero;
-                        break;
                     case JumpingState.Flying:
                         transform.localPosition = Vector3.zero;
                         break;
+                    case JumpingState.Shocked:
+                        break;
+                    case JumpingState.Falling:
+                        float normalizedFallBeat = cond.GetPositionFromBeat(playYanFallBeat, 2);
+                        EasingFunction.Function func = EasingFunction.GetEasingFunction(EasingFunction.Ease.EaseInQuad);
+                        float newPlayYanY = func(fallStartY, -12, normalizedFallBeat);
+                        transform.localPosition = new Vector3(0, newPlayYanY);
+                        break;
                 }
             }
+        }
+
+        public void Shock()
+        {
+            jumpingState = JumpingState.Shocked;
+            anim.DoScaledAnimationAsync("Shock", 0.5f);
+            fallStartY = transform.localPosition.y;
+            SoundByte.PlayOneShotGame("nightWalkAgb/shock");
+        }
+
+        public void Fall(double beat)
+        {
+            jumpingState = JumpingState.Falling;
+            anim.Play("Jump", 0, 0);
+            playYanFallBeat = beat;
+            SoundByte.PlayOneShotGame("nightWalkAgb/fall");
+            Update();
         }
 
         public void Jump(double beat)

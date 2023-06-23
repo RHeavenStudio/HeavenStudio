@@ -35,8 +35,10 @@ namespace HeavenStudio.Games.Scripts_AgbNightWalk
         private bool stopped;
         private Sound kickSound;
         [SerializeField] private GameObject fallYan;
+        [SerializeField] private Animator fish;
         private bool playYanIsFalling;
         private double playYanFallBeat;
+        private bool isFish;
 
         public void StartInput(double beat, double hitBeat)
         {
@@ -48,6 +50,8 @@ namespace HeavenStudio.Games.Scripts_AgbNightWalk
             platform.SetActive(nextPlatformIsSameHeight);
             startBeat = beat;
             endBeat = hitBeat;
+            isFish = game.FishOnBeat(endBeat);
+            fish.gameObject.SetActive(isFish);
             if (game.platformTypes.ContainsKey(hitBeat))
             {
                 if (game.platformTypes[hitBeat].platformType == AgbNightWalk.PlatformType.Lollipop)
@@ -70,7 +74,7 @@ namespace HeavenStudio.Games.Scripts_AgbNightWalk
             }
             if (startBeat < endBeat)
             {
-                if (game.ShouldNotJumpOnBeat(endBeat))
+                if (game.ShouldNotJumpOnBeat(endBeat) || isFish)
                 {
                     inputEvent = AgbNightWalk.instance.ScheduleUserInput(startBeat, endBeat - startBeat, InputType.STANDARD_DOWN, Just, Miss, Empty);
                     if (nextPlatformIsSameHeight)
@@ -96,10 +100,23 @@ namespace HeavenStudio.Games.Scripts_AgbNightWalk
                     }
                     else
                     {
-
+                        BeatAction.New(gameObject, new List<BeatAction.Action>()
+                        {
+                            new BeatAction.Action(endBeat, delegate
+                            {
+                                if (GameManager.instance.autoplay && !stopped)
+                                {
+                                    handler.StopAll();
+                                    handler.DestroyPlatforms(endBeat + 2, endBeat - 3, endBeat + 6);
+                                    SoundByte.PlayOneShotGame("nightWalkAgb/wot");
+                                    game.playYan.Hide();
+                                    fallYan.SetActive(true);
+                                }
+                            })
+                        });
                     }
                 }
-                else
+                else if (!isFish)
                 {
                     inputEvent = AgbNightWalk.instance.ScheduleInput(startBeat, endBeat - startBeat, InputType.STANDARD_DOWN, Just, Miss, Empty);
                 }
@@ -180,8 +197,28 @@ namespace HeavenStudio.Games.Scripts_AgbNightWalk
         private void Just(PlayerActionEvent caller, float state)
         {
             canKick = false;
-            handler.RaiseHeight(Conductor.instance.songPositionInBeats, lastAdditionalHeightInUnits, additionalHeightInUnits);
-            game.playYan.Jump(Conductor.instance.songPositionInBeats);
+            double beat = Conductor.instance.songPositionInBeats;
+            handler.RaiseHeight(beat, lastAdditionalHeightInUnits, additionalHeightInUnits);
+            game.playYan.Jump(beat);
+            if (isFish)
+            {
+                BeatAction.New(gameObject, new List<BeatAction.Action>()
+                {
+                    new BeatAction.Action(beat + 0.5, delegate
+                    {
+                        game.ScoreMiss();
+                        game.playYan.Shock();
+                        fish.DoScaledAnimationAsync("Shock", 0.5f);
+                        handler.StopAll();
+                        handler.DestroyPlatforms(caller.timer + caller.startBeat + 2, endBeat - 2, endBeat + 6);
+                    }),
+                    new BeatAction.Action(caller.timer + caller.startBeat + 4, delegate
+                    {
+                        game.playYan.Fall(caller.timer + caller.startBeat + 4);
+                        fish.DoScaledAnimationAsync("FishIdle", 0.5f);
+                    })
+                });
+            }
             if (state >= 1 || state <= -1)
             {
                 return;
@@ -216,7 +253,7 @@ namespace HeavenStudio.Games.Scripts_AgbNightWalk
             else
             {
                 handler.StopAll();
-                handler.DestroyPlatforms(caller.timer + caller.startBeat + 2, endBeat - 3, endBeat + 6);
+                handler.DestroyPlatforms(caller.timer + caller.startBeat + 2, endBeat - 2, endBeat + 6);
                 SoundByte.PlayOneShotGame("nightWalkAgb/wot");
                 game.playYan.Hide();
                 fallYan.SetActive(true);
