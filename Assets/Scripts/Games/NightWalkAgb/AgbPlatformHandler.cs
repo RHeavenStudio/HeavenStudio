@@ -19,7 +19,7 @@ namespace HeavenStudio.Games.Scripts_AgbNightWalk
         public int platformCount = 20;
         private float lastHeight = 0;
         private float heightToRaiseTo = 0;
-        private double raiseBeat = -1;
+        private double raiseBeat = double.MinValue;
         [NonSerialized] public List<AgbPlatform> allPlatforms = new();
 
         private void Awake()
@@ -29,7 +29,7 @@ namespace HeavenStudio.Games.Scripts_AgbNightWalk
 
         public void SpawnPlatforms(double beat)
         {
-            if (game.countInBeat != -1)
+            if (game.countInBeat != double.MinValue)
             {
                 for (int i = 0; i < platformCount; i++)
                 {
@@ -42,13 +42,21 @@ namespace HeavenStudio.Games.Scripts_AgbNightWalk
             }
             else
             {
+                double firstInputBeat = Math.Ceiling(beat);
                 for (int i = 0; i < platformCount; i++)
                 {
                     AgbPlatform platform = Instantiate(platformRef, transform);
                     allPlatforms.Add(platform);
                     platform.handler = this;
-                    platform.StartInput(beat, Math.Ceiling(beat) + i - platformCount);
+                    platform.StartInput(beat, firstInputBeat + i - platformCount);
                     platform.gameObject.SetActive(true);
+                }
+                int lastUnits = game.FindHeightUnitsAtBeat(firstInputBeat - 1);
+                int currentUnits = game.FindHeightUnitsAtBeat(firstInputBeat);
+                RaiseHeight(firstInputBeat - 1, lastUnits, currentUnits);
+                if (lastUnits != currentUnits)
+                {
+                    game.playYan.Jump(firstInputBeat - 1);
                 }
             }
         }
@@ -58,7 +66,7 @@ namespace HeavenStudio.Games.Scripts_AgbNightWalk
             var cond = Conductor.instance;
             if (cond.isPlaying && !cond.isPaused)
             {
-                if (raiseBeat != -1)
+                if (raiseBeat != double.MinValue)
                 {
                     float normalizedBeat = Mathf.Clamp(cond.GetPositionFromBeat(raiseBeat, 1), 0, 1);
                     EasingFunction.Function func = EasingFunction.GetEasingFunction(EasingFunction.Ease.EaseOutQuint);

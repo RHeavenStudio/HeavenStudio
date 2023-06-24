@@ -107,7 +107,7 @@ namespace HeavenStudio.Games
         public static AgbNightWalk instance;
         public AgbPlayYan playYan;
         [SerializeField] private AgbPlatformHandler platformHandler;
-        [NonSerialized] public double countInBeat = -1;
+        [NonSerialized] public double countInBeat = double.MinValue;
         [NonSerialized] public float countInLength = 8;
         [Header("Curves")]
         [SerializeField] SuperCurveObject.Path[] jumpPaths;
@@ -331,7 +331,7 @@ namespace HeavenStudio.Games
                 {
                     allEnds.Sort((x, y) => x.beat.CompareTo(y.beat));
                     List<RiqEntity> tempEnds = new();
-                    double beat = -1;
+                    double beat = double.MinValue;
                     for (int i = 0; i < allEnds.Count; i++)
                     {
                         if (allEnds[i].datamodel.Split(2) == "nightWalkAgb")
