@@ -26,6 +26,7 @@ namespace HeavenStudio.Games.Scripts_AgbNightWalk
         private Animator anim;
         private float fallStartY;
         private double playYanFallBeat;
+        private double walkBeat;
         [SerializeField] private float randomMinBalloonX = -0.45f;
         [SerializeField] private float randomMaxBalloonX = 0.45f;
 
@@ -61,6 +62,7 @@ namespace HeavenStudio.Games.Scripts_AgbNightWalk
                         break;
                     case JumpingState.Walking:
                         transform.localPosition = Vector3.zero;
+                        anim.DoScaledAnimation("Walk", walkBeat, 0.5f, 0.75f);
                         if (PlayerInput.Pressed() && !game.IsExpectingInputNow(InputType.STANDARD_DOWN))
                         {
                             Whiff(cond.songPositionInBeatsAsDouble);
@@ -129,7 +131,7 @@ namespace HeavenStudio.Games.Scripts_AgbNightWalk
         {
             if (jumpingState == JumpingState.Walking) return;
             jumpingState = JumpingState.Walking;
-            anim.DoScaledAnimationAsync("Walk", 0.5f);
+            walkBeat = Conductor.instance.songPositionInBeats;
         }
         public void PopBalloon(int index, bool instant)
         {
