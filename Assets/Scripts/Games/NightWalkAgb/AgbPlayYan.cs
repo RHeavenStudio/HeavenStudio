@@ -121,6 +121,7 @@ namespace HeavenStudio.Games.Scripts_AgbNightWalk
             jumpingState = JumpingState.Whiffing;
             jumpBeat = beat;
             anim.Play("Jump", 0, 0);
+            SoundByte.PlayOneShotGame("nightWalkAgb/whiff");
             Update();
         }
 

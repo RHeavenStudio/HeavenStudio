@@ -226,6 +226,7 @@ namespace HeavenStudio.Games.Scripts_AgbNightWalk
             }
             if (state >= 1 || state <= -1)
             {
+                SoundByte.PlayOneShotGame("nightWalkAgb/ng");
                 switch (type)
                 {
                     case PlatformType.Flower:
