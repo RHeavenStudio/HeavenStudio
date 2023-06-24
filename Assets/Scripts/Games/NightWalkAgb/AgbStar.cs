@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using HeavenStudio.Util;
+using System;
 
 namespace HeavenStudio.Games.Scripts_AgbNightWalk
 {
@@ -11,7 +12,8 @@ namespace HeavenStudio.Games.Scripts_AgbNightWalk
         private float originY;
         private AgbStarHandler handler;
         private Animator anim;
-        private int evoStage = 1;
+        [NonSerialized] public int evoStage = 1;
+        private bool devolved = false;
 
         private void Awake()
         {
@@ -33,19 +35,25 @@ namespace HeavenStudio.Games.Scripts_AgbNightWalk
 
         public void Blink()
         {
-            anim.Play("Blink" + evoStage, 0, 0);
+            if (devolved) return;
+            if (anim.IsAnimationNotPlaying())
+            {
+                anim.Play("Blink" + evoStage, 0, 0);
+            }
         }
 
         public void Evolve()
         {
-            if (evoStage >= 5) return;
+            if (evoStage >= 5 || devolved) return;
             anim.Play("Evolve" + evoStage, 0, 0);
             evoStage++;
         }
 
         public void Devolve()
         {
+            if (devolved) return;
             anim.Play("Devolve" + evoStage, 0, 0);
+            devolved = true;
         }
     }
 }
