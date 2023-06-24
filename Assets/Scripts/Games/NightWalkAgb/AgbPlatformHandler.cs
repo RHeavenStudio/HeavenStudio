@@ -11,16 +11,21 @@ namespace HeavenStudio.Games.Scripts_AgbNightWalk
         private AgbNightWalk game;
         [Header("Properties")]
         [SerializeField] private AgbPlatform platformRef;
+        [SerializeField] private AgbStarHandler starHandler;
         public float defaultYPos = -11.76f;
         public float heightAmount = 2;
         public float platformDistance = 3.80f;
         public float playerXPos = -6.78f;
+        [SerializeField] private float starLength = 16;
+        [SerializeField] private float starHeight = 0.0625f;
         [Range(1, 100)]
         public int platformCount = 20;
         private float lastHeight = 0;
         private float heightToRaiseTo = 0;
         private double raiseBeat = double.MinValue;
         [NonSerialized] public List<AgbPlatform> allPlatforms = new();
+        private int lastHeightUnits;
+        private int currentHeightUnits;
 
         private void Awake()
         {
@@ -74,7 +79,12 @@ namespace HeavenStudio.Games.Scripts_AgbNightWalk
                     float newPosY = func(lastHeight, heightToRaiseTo, normalizedBeat);
 
                     transform.localPosition = new Vector3(0, -newPosY, 0);
+                    starHandler.normalizedY = -func(starHeight * lastHeightUnits, starHeight * currentHeightUnits, normalizedBeat);
                 }
+
+                float normalizedValue = cond.GetPositionFromBeat(0, starLength);
+
+                starHandler.normalizedX = -normalizedValue;
             }
         }
 
@@ -113,6 +123,8 @@ namespace HeavenStudio.Games.Scripts_AgbNightWalk
             raiseBeat = beat;
             lastHeight = lastUnits * heightAmount * transform.localScale.y;
             heightToRaiseTo = currentUnits * heightAmount * transform.localScale.y;
+            currentHeightUnits = currentUnits;
+            lastHeightUnits = lastUnits;
             Update();
         }
     }
