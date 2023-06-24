@@ -26,6 +26,8 @@ namespace HeavenStudio.Games.Scripts_AgbNightWalk
         private Animator anim;
         private float fallStartY;
         private double playYanFallBeat;
+        [SerializeField] private float randomMinBalloonX = -0.45f;
+        [SerializeField] private float randomMaxBalloonX = 0.45f;
 
         private void Awake()
         {
@@ -36,6 +38,8 @@ namespace HeavenStudio.Games.Scripts_AgbNightWalk
             foreach (var balloon in balloons)
             {
                 balloon.Play("Idle", 0, UnityEngine.Random.Range(0f, 1f));
+                Transform balloonTrans = balloon.transform.parent;
+                balloonTrans.localPosition = new Vector3(balloonTrans.localPosition.x + UnityEngine.Random.Range(randomMinBalloonX, randomMaxBalloonX), balloonTrans.localPosition.y);
             }
         }
 
