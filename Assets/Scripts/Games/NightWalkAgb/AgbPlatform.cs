@@ -226,6 +226,18 @@ namespace HeavenStudio.Games.Scripts_AgbNightWalk
             }
             if (state >= 1 || state <= -1)
             {
+                switch (type)
+                {
+                    case PlatformType.Flower:
+                        anim.DoScaledAnimationAsync("FlowerBarely", 0.5f);
+                        break;
+                    case PlatformType.Lollipop:
+                        anim.DoScaledAnimationAsync("LollipopBarely", 0.5f);
+                        break;
+                    case PlatformType.Umbrella:
+                        anim.DoScaledAnimationAsync("UmbrellaBarely", 0.5f);
+                        break;
+                }
                 return;
             }
             if (doFillStartSound) SoundByte.PlayOneShotGame("nightWalkAgb/fillStart");
