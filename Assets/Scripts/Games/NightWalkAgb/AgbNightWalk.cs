@@ -377,13 +377,13 @@ namespace HeavenStudio.Games
                 {
                     BeatAction.New(instance.gameObject, new List<BeatAction.Action>()
                     {
-                        new BeatAction.Action(countInBeat, delegate { playYan.PopBalloon(0, beat >= countInBeat); }),
-                        new BeatAction.Action(countInBeat + 2, delegate { playYan.PopBalloon(1, beat >= countInBeat + 2); }),
-                        new BeatAction.Action(countInBeat + 4, delegate { playYan.PopBalloon(2, beat >= countInBeat + 4); }),
-                        new BeatAction.Action(countInBeat + 5, delegate { playYan.PopBalloon(3, beat >= countInBeat + 5); }),
-                        new BeatAction.Action(countInBeat + 6, delegate { playYan.PopBalloon(4, beat >= countInBeat + 6); }),
-                        new BeatAction.Action(countInBeat + 7, delegate { playYan.PopBalloon(5, beat >= countInBeat + 7); }),
-                        new BeatAction.Action(countInBeat + 8, delegate { playYan.PopBalloon(6, beat >= countInBeat + 8); }),
+                        new BeatAction.Action(countInBeat, delegate { playYan.PopBalloon(0, beat > countInBeat); }),
+                        new BeatAction.Action(countInBeat + 2, delegate { playYan.PopBalloon(1, beat > countInBeat + 2); }),
+                        new BeatAction.Action(countInBeat + 4, delegate { playYan.PopBalloon(2, beat > countInBeat + 4); }),
+                        new BeatAction.Action(countInBeat + 5, delegate { playYan.PopBalloon(3, beat > countInBeat + 5); }),
+                        new BeatAction.Action(countInBeat + 6, delegate { playYan.PopBalloon(4, beat > countInBeat + 6); }),
+                        new BeatAction.Action(countInBeat + 7, delegate { playYan.PopBalloon(5, beat > countInBeat + 7); }),
+                        new BeatAction.Action(countInBeat + 8, delegate { playYan.PopBalloon(6, beat > countInBeat + 8); }),
                     });
                 }
                 else
@@ -392,11 +392,11 @@ namespace HeavenStudio.Games
                     playYan.PopBalloon(1, true);
                     BeatAction.New(instance.gameObject, new List<BeatAction.Action>()
                     {
-                        new BeatAction.Action(countInBeat, delegate { playYan.PopBalloon(2, beat >= countInBeat); }),
-                        new BeatAction.Action(countInBeat + 1, delegate { playYan.PopBalloon(3, beat >= countInBeat + 1); }),
-                        new BeatAction.Action(countInBeat + 2, delegate { playYan.PopBalloon(4, beat >= countInBeat + 2); }),
-                        new BeatAction.Action(countInBeat + 3, delegate { playYan.PopBalloon(5, beat >= countInBeat + 3); }),
-                        new BeatAction.Action(countInBeat + 4, delegate { playYan.PopBalloon(6, beat >= countInBeat + 4); }),
+                        new BeatAction.Action(countInBeat, delegate { playYan.PopBalloon(2, beat > countInBeat); }),
+                        new BeatAction.Action(countInBeat + 1, delegate { playYan.PopBalloon(3, beat > countInBeat + 1); }),
+                        new BeatAction.Action(countInBeat + 2, delegate { playYan.PopBalloon(4, beat > countInBeat + 2); }),
+                        new BeatAction.Action(countInBeat + 3, delegate { playYan.PopBalloon(5, beat > countInBeat + 3); }),
+                        new BeatAction.Action(countInBeat + 4, delegate { playYan.PopBalloon(6, beat > countInBeat + 4); }),
                     });
                 }
             }

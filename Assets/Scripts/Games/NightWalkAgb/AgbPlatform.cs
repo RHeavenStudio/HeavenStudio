@@ -33,7 +33,6 @@ namespace HeavenStudio.Games.Scripts_AgbNightWalk
 
         private PlayerActionEvent inputEvent;
         [NonSerialized] public bool stopped;
-        private Sound kickSound;
         [SerializeField] private GameObject fallYan;
         [SerializeField] private Animator fish;
         private bool playYanIsFalling;
@@ -111,6 +110,7 @@ namespace HeavenStudio.Games.Scripts_AgbNightWalk
                                     SoundByte.PlayOneShotGame("nightWalkAgb/wot");
                                     game.playYan.Hide();
                                     fallYan.SetActive(true);
+                                    fallYan.GetComponent<Animator>().DoScaledAnimationAsync("FallSmear", 0.5f);
                                 }
                             })
                         });
@@ -275,6 +275,7 @@ namespace HeavenStudio.Games.Scripts_AgbNightWalk
                 SoundByte.PlayOneShotGame("nightWalkAgb/wot");
                 game.playYan.Hide();
                 fallYan.SetActive(true);
+                fallYan.GetComponent<Animator>().DoScaledAnimationAsync("FallSmear", 0.5f);
             }
         }
         
