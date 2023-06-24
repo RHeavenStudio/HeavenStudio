@@ -44,13 +44,13 @@ namespace HeavenStudio.Games.Loaders
                 },
                 new GameAction("type", "Platform Type")
                 {
-                    preFunction = delegate 
-                    { 
-                        var e = eventCaller.currentEntity; 
+                    preFunction = delegate
+                    {
+                        var e = eventCaller.currentEntity;
                         if (e["type"] == (int)AgbNightWalk.PlatformType.Umbrella)
                         {
                             AgbNightWalk.FillSound(e.beat, (AgbNightWalk.FillType)e["fill"]);
-                        } 
+                        }
                     },
                     parameters = new List<Param>()
                     {
@@ -78,6 +78,25 @@ namespace HeavenStudio.Games.Loaders
                     preFunction = delegate { var e = eventCaller.currentEntity; AgbNightWalk.WalkingCountIn(e.beat, e.length); },
                     defaultLength = 4,
                     resizable = true
+                },
+                new GameAction("evolveAmount", "Star Evolve Amount")
+                {
+                    function = delegate { AgbNightWalk.instance.evolveAmount = eventCaller.currentEntity["am"]; },
+                    defaultLength = 0.5f,
+                    parameters = new List<Param>()
+                    {
+                        new Param("am", new EntityTypes.Integer(0, 100, 1), "Amount", "How many stars will evolve when play-yan jumps?"),
+                    }
+                },
+                new GameAction("forceEvolve", "Force Star Evolve")
+                {
+                    function = delegate { var e = eventCaller.currentEntity; AgbNightWalk.instance.ForceEvolve(e.beat, e.length, e["am"], e["repeat"]); },
+                    resizable = true,
+                    parameters = new List<Param>()
+                    {
+                        new Param("am", new EntityTypes.Integer(0, 100, 1), "Star Amount", "How many stars will evolve?"),
+                        new Param("repeat", new EntityTypes.Integer(0, 100, 1), "Repeat Amount", "How many times will this event repeat?"),
+                    }
                 }
             });
         }
@@ -107,6 +126,7 @@ namespace HeavenStudio.Games
         public static AgbNightWalk instance;
         public AgbPlayYan playYan;
         [SerializeField] private AgbPlatformHandler platformHandler;
+        public AgbStarHandler starHandler;
         [NonSerialized] public double countInBeat = double.MinValue;
         [NonSerialized] public float countInLength = 8;
         [Header("Curves")]
@@ -124,6 +144,8 @@ namespace HeavenStudio.Games
             public PlatformType platformType;
             public FillType fillType;
         }
+
+        [NonSerialized] public int evolveAmount = 1;
 
         new void OnDrawGizmos()
         {
@@ -181,6 +203,19 @@ namespace HeavenStudio.Games
             {
                 fishBeats.Add(fishEvent.beat);
             }
+        }
+
+        public void ForceEvolve(double beat, float length, int starAmount, int repeatAmount)
+        {
+            List<BeatAction.Action> actions = new();
+            for (int i = 0; i < repeatAmount; i++)
+            {
+                actions.Add(new BeatAction.Action(beat + (length * i), delegate
+                {
+                    starHandler.Evolve(starAmount);
+                }));
+            }
+            BeatAction.New(instance.gameObject, actions);
         }
 
         public bool FishOnBeat(double beat)

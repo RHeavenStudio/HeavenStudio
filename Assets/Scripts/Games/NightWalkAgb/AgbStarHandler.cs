@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using HeavenStudio.Util;
 using System;
+using System.Linq;
 
 namespace HeavenStudio.Games.Scripts_AgbNightWalk
 {
@@ -62,7 +63,18 @@ namespace HeavenStudio.Games.Scripts_AgbNightWalk
         {
             for (int i = 0; i < amount; i++)
             {
-                currentStars[UnityEngine.Random.Range(0, currentStars.Length)].Evolve();
+                List<AgbStar> nonEvolvedStars = currentStars.ToList().FindAll(x => x.evoStage == collectiveEvoStage);
+                if (nonEvolvedStars.Count > 0)
+                {
+                    AgbStar randomStar = nonEvolvedStars[UnityEngine.Random.Range(0, nonEvolvedStars.Count)];
+                    randomStar.Evolve();
+                }
+                else
+                {
+                    collectiveEvoStage++;
+                    if (collectiveEvoStage > 5) collectiveEvoStage = 5;
+                    currentStars[UnityEngine.Random.Range(0, currentStars.Length)].Evolve();
+                }
             }
         }
 

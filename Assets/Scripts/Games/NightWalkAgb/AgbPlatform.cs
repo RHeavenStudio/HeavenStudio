@@ -255,6 +255,7 @@ namespace HeavenStudio.Games.Scripts_AgbNightWalk
                     anim.DoScaledAnimationAsync("Umbrella", 0.5f);
                     break;
             }
+            game.starHandler.Evolve(game.evolveAmount);
         }
 
         private void Miss(PlayerActionEvent caller)
