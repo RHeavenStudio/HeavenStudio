@@ -14,7 +14,7 @@ namespace HeavenStudio.InputSystem
         public static InputController[] Initialize()
         {
             PlayerInput.PlayerInputCleanUp += DisposeJoyshocks;
-            
+
             InputController[] controllers;
             int jslDevicesFound = 0;
             int jslDevicesConnected = 0;
@@ -40,6 +40,7 @@ namespace HeavenStudio.InputSystem
                 {
                     Debug.Log("Setting up JoyShock: ( Handle " + i + ", type " + JslGetControllerType(i) + " )");
                     InputJoyshock joyshock = new InputJoyshock(i);
+                    joyshock.SetPlayer(null);
                     joyshock.InitializeController();
                     controllers[i] = joyshock;
                 }
