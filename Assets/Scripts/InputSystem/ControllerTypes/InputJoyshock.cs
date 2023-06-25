@@ -6,7 +6,7 @@ using HeavenStudio.Util;
 
 using static JSL;
 
-namespace HeavenStudio.InputSystem
+namespace HeavenStudio.InputSystem.Loaders
 {
     public static class InputJoyshockInitializer
     {
@@ -55,7 +55,10 @@ namespace HeavenStudio.InputSystem
             JslDisconnectAndDisposeAll();
         }
     }
+}
 
+namespace HeavenStudio.InputSystem
+{
     public class InputJoyshock : InputController
     {
         static string[] joyShockNames =

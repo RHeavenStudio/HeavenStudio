@@ -4,7 +4,7 @@ using UnityEngine;
 
 using static JSL;
 
-namespace HeavenStudio.InputSystem
+namespace HeavenStudio.InputSystem.Loaders
 {
     public static class InputKeyboardInitializer
     {
@@ -17,7 +17,10 @@ namespace HeavenStudio.InputSystem
             return new InputController[] { keyboard };
         }
     }
+}
 
+namespace HeavenStudio.InputSystem
+{
     public class InputKeyboard : InputController
     {
         static KeyCode[] keyCodes = (KeyCode[]) System.Enum.GetValues(typeof(UnityEngine.KeyCode));
