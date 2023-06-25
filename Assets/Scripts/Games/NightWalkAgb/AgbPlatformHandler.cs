@@ -26,6 +26,7 @@ namespace HeavenStudio.Games.Scripts_AgbNightWalk
         [NonSerialized] public List<AgbPlatform> allPlatforms = new();
         private int lastHeightUnits;
         private int currentHeightUnits;
+        private bool stopStars;
 
         private void Awake()
         {
@@ -81,7 +82,7 @@ namespace HeavenStudio.Games.Scripts_AgbNightWalk
                     transform.localPosition = new Vector3(0, -newPosY, 0);
                     starHandler.normalizedY = -func(starHeight * lastHeightUnits, starHeight * currentHeightUnits, normalizedBeat);
                 }
-
+                if (stopStars) return;
                 float normalizedValue = cond.GetPositionFromBeat(0, starLength);
 
                 starHandler.normalizedX = -normalizedValue;
@@ -94,6 +95,7 @@ namespace HeavenStudio.Games.Scripts_AgbNightWalk
             {
                 platform.Stop();
             }
+            stopStars = true;
         }
 
         public bool PlatformsStopped()
