@@ -153,7 +153,7 @@ namespace HeavenStudio.Games
             public FillType fillType;
         }
 
-        [NonSerialized] public int evolveAmount = 1;
+        [NonSerialized] public int evolveAmount = 2;
         [NonSerialized] public int hitJumps;
         [NonSerialized] public static int hitJumpsPersist;
 
