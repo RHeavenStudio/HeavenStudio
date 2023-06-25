@@ -39,6 +39,7 @@ namespace HeavenStudio.Games.Scripts_AgbNightWalk
         private double playYanFallBeat;
         private bool isFish;
         private bool isFinalBlock;
+        private bool isEndEvent;
 
         public void StartInput(double beat, double hitBeat)
         {
@@ -53,7 +54,8 @@ namespace HeavenStudio.Games.Scripts_AgbNightWalk
             endBeat = hitBeat;
             isFish = game.FishOnBeat(endBeat);
             fish.gameObject.SetActive(isFish);
-            bool isEndEvent = game.endBeat == endBeat;
+            isEndEvent = game.endBeat == endBeat;
+            if (isEndEvent) anim.Play("EndIdle", 0, 0);
             if (game.platformTypes.ContainsKey(hitBeat))
             {
                 if (game.platformTypes[hitBeat].platformType == AgbNightWalk.PlatformType.Lollipop)
@@ -123,7 +125,7 @@ namespace HeavenStudio.Games.Scripts_AgbNightWalk
                 {
                     inputEvent = AgbNightWalk.instance.ScheduleInput(startBeat, endBeat - startBeat, InputType.STANDARD_DOWN, isEndEvent ? JustEnd : Just, Miss, Empty);
                 }
-                if (nextPlatformIsSameHeight)
+                if (nextPlatformIsSameHeight && !isEndEvent)
                 {
                     canKick = true;
                     BeatAction.New(gameObject, new List<BeatAction.Action>()
@@ -152,6 +154,7 @@ namespace HeavenStudio.Games.Scripts_AgbNightWalk
             Update();
         }
 
+        private bool startGlowing;
         private void Update()
         {
             var cond = Conductor.instance;
@@ -176,6 +179,12 @@ namespace HeavenStudio.Games.Scripts_AgbNightWalk
                     EasingFunction.Function func = EasingFunction.GetEasingFunction(EasingFunction.Ease.EaseInQuad);
                     float newPlayYanY = func(0, -12, normalizedFallBeat);
                     fallYan.transform.localPosition = new Vector3(0, newPlayYanY);
+                }
+
+                if (!startGlowing && isEndEvent && game.hitJumps >= game.requiredJumps && AgbNightWalk.hitJumpsPersist >= game.requiredJumpsP)
+                {
+                    anim.DoScaledAnimationAsync("EndGlow", 0.5f);
+                    startGlowing = true;
                 }
             }
         }
@@ -235,13 +244,14 @@ namespace HeavenStudio.Games.Scripts_AgbNightWalk
             }
             else if (isFinalBlock)
             {
+                double missTime = 1 - Conductor.instance.SecsToBeats(Minigame.earlyTime, Conductor.instance.GetBpmAtBeat(beat));
                 BeatAction.New(gameObject, new List<BeatAction.Action>()
                 {
-                    new BeatAction.Action(beat + 0.5, delegate
+                    new BeatAction.Action(beat + missTime, delegate
                     {
                         game.ScoreMiss();
                         handler.StopAll();
-                        game.playYan.Fall(beat + 0.5);
+                        game.playYan.Fall(beat + missTime);
                         handler.DestroyPlatforms(caller.timer + caller.startBeat + 2, endBeat - 2, endBeat);
                     }),
  
@@ -290,7 +300,7 @@ namespace HeavenStudio.Games.Scripts_AgbNightWalk
             {
                 anim.DoScaledAnimationAsync("EndPop", 0.5f);
                 handler.StopAll();
-                handler.DestroyPlatforms(caller.timer + caller.startBeat + 4, endBeat - 2, endBeat + 1);
+                handler.DestroyPlatforms(caller.timer + caller.startBeat + 2, endBeat - 2, endBeat + 1);
                 game.playYan.Float(Conductor.instance.songPositionInBeats);
                 handler.DevolveAll();
                 if (isFish)
@@ -313,15 +323,8 @@ namespace HeavenStudio.Games.Scripts_AgbNightWalk
             }
             else
             {
-                game.playYan.Whiff(Conductor.instance.songPositionInBeats);
-                game.ScoreMiss();
-                if (!platform.activeSelf)
-                {
-                    BeatAction.New(gameObject, new List<BeatAction.Action>()
-                    {
-                        new BeatAction.Action(beat + Conductor.instance.SecsToBeats(Minigame.lateTime, Conductor.instance.GetBpmAtBeat(beat)), delegate { Miss(caller); })
-                    });
-                }
+                handler.RaiseHeight(beat, lastAdditionalHeightInUnits, additionalHeightInUnits);
+                game.playYan.Jump(beat);
             }
         }
 
