@@ -72,8 +72,8 @@ namespace HeavenStudio.Games.Loaders
                 {
                     parameters = new List<Param>()
                     {
-                        new Param("minAmount", new EntityTypes.Integer(0, 10000, 10), "Minimum Jumps Required"),
-                        new Param("minAmountP", new EntityTypes.Integer(0, 10000, 0), "Minimum Jumps Required (Persistent)"),
+                        new Param("minAmount", new EntityTypes.Integer(0, 1000, 10), "Minimum Jumps Required"),
+                        new Param("minAmountP", new EntityTypes.Integer(0, 1000, 0), "Minimum Jumps Required (Persistent)"),
                     }
                 },
                 new GameAction("noJump", "No Jumping")
@@ -93,7 +93,7 @@ namespace HeavenStudio.Games.Loaders
                     defaultLength = 0.5f,
                     parameters = new List<Param>()
                     {
-                        new Param("am", new EntityTypes.Integer(0, 100, 1), "Amount", "How many stars will evolve when play-yan jumps?"),
+                        new Param("am", new EntityTypes.Integer(0, 100, 2), "Amount", "How many stars will evolve when play-yan jumps?"),
                     }
                 },
                 new GameAction("forceEvolve", "Force Star Evolve")
