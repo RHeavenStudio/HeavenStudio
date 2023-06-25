@@ -94,7 +94,7 @@ namespace HeavenStudio.Games.Scripts_AgbNightWalk
                             }),
                             new BeatAction.Action(endBeat + 0.5, delegate
                             {
-                                if (GameManager.instance.autoplay && !stopped)
+                                if (GameManager.instance.autoplay && !stopped && !isEndEvent)
                                 {
                                     anim.DoScaledAnimationAsync("Note", 0.5f);
                                     SoundByte.PlayOneShotGame("nightWalkAgb/open" + (int)type);
