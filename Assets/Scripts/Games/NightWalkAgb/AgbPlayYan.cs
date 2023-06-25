@@ -22,7 +22,7 @@ namespace HeavenStudio.Games.Scripts_AgbNightWalk
         private AgbNightWalk game;
         private double jumpBeat;
         [SerializeField] private List<Animator> balloons = new List<Animator>();
-        [SerializeField] private GameObject star;
+        [SerializeField] private Animator star;
         private Path jumpPath;
         private Path whiffPath;
         private Animator anim;
@@ -123,10 +123,16 @@ namespace HeavenStudio.Games.Scripts_AgbNightWalk
             anim.Play("Jump", 0, 0);
             playYanFallBeat = beat;
             fallStartY = transform.localPosition.y;
-            star.SetActive(true);
+            star.gameObject.SetActive(true);
+            StarBlink();
             Update();
         }
 
+        private void StarBlink()
+        {
+            if (UnityEngine.Random.Range(1, 3) == 1) star.DoScaledAnimationAsync("Blink", 0.5f);
+            Invoke("StarBlink", UnityEngine.Random.Range(0.05f, 0.3f));
+        }
         public void Jump(double beat)
         {
             jumpingState = JumpingState.Jumping;
