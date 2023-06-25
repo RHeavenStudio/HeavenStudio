@@ -38,6 +38,7 @@ namespace HeavenStudio.Games.Scripts_AgbNightWalk
         private bool playYanIsFalling;
         private double playYanFallBeat;
         private bool isFish;
+        private bool isFinalBlock;
 
         public void StartInput(double beat, double hitBeat)
         {
@@ -46,11 +47,13 @@ namespace HeavenStudio.Games.Scripts_AgbNightWalk
             additionalHeightInUnits = game.FindHeightUnitsAtBeat(hitBeat + 1);
             additionalHeight = lastAdditionalHeightInUnits * handler.heightAmount;
             bool nextPlatformIsSameHeight = lastAdditionalHeightInUnits == additionalHeightInUnits;
-            platform.SetActive(nextPlatformIsSameHeight);
+            isFinalBlock = hitBeat == game.endBeat + 1;
+            platform.SetActive(nextPlatformIsSameHeight && !isFinalBlock);
             startBeat = beat;
             endBeat = hitBeat;
             isFish = game.FishOnBeat(endBeat);
             fish.gameObject.SetActive(isFish);
+            bool isEndEvent = game.endBeat == endBeat;
             if (game.platformTypes.ContainsKey(hitBeat))
             {
                 if (game.platformTypes[hitBeat].platformType == AgbNightWalk.PlatformType.Lollipop)
@@ -75,8 +78,8 @@ namespace HeavenStudio.Games.Scripts_AgbNightWalk
             {
                 if (game.ShouldNotJumpOnBeat(endBeat) || isFish)
                 {
-                    inputEvent = AgbNightWalk.instance.ScheduleUserInput(startBeat, endBeat - startBeat, InputType.STANDARD_DOWN, Just, Miss, Empty);
-                    if (nextPlatformIsSameHeight)
+                    inputEvent = AgbNightWalk.instance.ScheduleUserInput(startBeat, endBeat - startBeat, InputType.STANDARD_DOWN, isEndEvent ? JustEnd : Just, Miss, Empty);
+                    if (nextPlatformIsSameHeight && !isFinalBlock)
                     {
                         BeatAction.New(gameObject, new List<BeatAction.Action>()
                         {
@@ -118,7 +121,7 @@ namespace HeavenStudio.Games.Scripts_AgbNightWalk
                 }
                 else if (!isFish)
                 {
-                    inputEvent = AgbNightWalk.instance.ScheduleInput(startBeat, endBeat - startBeat, InputType.STANDARD_DOWN, Just, Miss, Empty);
+                    inputEvent = AgbNightWalk.instance.ScheduleInput(startBeat, endBeat - startBeat, InputType.STANDARD_DOWN, isEndEvent ? JustEnd : Just, Miss, Empty);
                 }
                 if (nextPlatformIsSameHeight)
                 {
@@ -199,8 +202,11 @@ namespace HeavenStudio.Games.Scripts_AgbNightWalk
         private void ResetInput()
         {
             double newStartBeat = endBeat + (handler.platformCount * 0.5f);
-            anim.Play("Idle", 0, 0);
-            StartInput(newStartBeat, newStartBeat + (handler.platformCount * 0.5f));
+            if (newStartBeat + (handler.platformCount * 0.5f) <= game.endBeat + 1)
+            {
+                anim.Play("Idle", 0, 0);
+                StartInput(newStartBeat, newStartBeat + (handler.platformCount * 0.5f));
+            }
         }
         private void Just(PlayerActionEvent caller, float state)
         {
@@ -225,6 +231,20 @@ namespace HeavenStudio.Games.Scripts_AgbNightWalk
                         game.playYan.Fall(caller.timer + caller.startBeat + 4);
                         fish.DoScaledAnimationAsync("FishIdle", 0.5f);
                     })
+                });
+            }
+            else if (isFinalBlock)
+            {
+                BeatAction.New(gameObject, new List<BeatAction.Action>()
+                {
+                    new BeatAction.Action(beat + 0.5, delegate
+                    {
+                        game.ScoreMiss();
+                        handler.StopAll();
+                        game.playYan.Fall(beat + 0.5);
+                        handler.DestroyPlatforms(caller.timer + caller.startBeat + 2, endBeat - 2, endBeat);
+                    }),
+ 
                 });
             }
             if (state >= 1 || state <= -1)
@@ -265,11 +285,44 @@ namespace HeavenStudio.Games.Scripts_AgbNightWalk
 
         private void JustEnd(PlayerActionEvent caller, float state)
         {
-            anim.DoScaledAnimationAsync("EndPop", 0.5f);
-            handler.StopAll();
-            handler.DestroyPlatforms(caller.timer + caller.startBeat + 4, endBeat - 2, endBeat + 1);
-            game.playYan.Float(Conductor.instance.songPositionInBeats);
-            handler.DevolveAll();
+            double beat = caller.timer + caller.startBeat;
+            if (game.hitJumps >= game.requiredJumps && AgbNightWalk.hitJumpsPersist >= game.requiredJumpsP) 
+            {
+                anim.DoScaledAnimationAsync("EndPop", 0.5f);
+                handler.StopAll();
+                handler.DestroyPlatforms(caller.timer + caller.startBeat + 4, endBeat - 2, endBeat + 1);
+                game.playYan.Float(Conductor.instance.songPositionInBeats);
+                handler.DevolveAll();
+                if (isFish)
+                {
+                    BeatAction.New(gameObject, new List<BeatAction.Action>()
+                {
+                    new BeatAction.Action(beat + 0.5, delegate
+                    {
+                        game.ScoreMiss();
+                        game.playYan.Shock();
+                        fish.DoScaledAnimationAsync("Shock", 0.5f);
+                    }),
+                    new BeatAction.Action(caller.timer + caller.startBeat + 4, delegate
+                    {
+                        game.playYan.Fall(caller.timer + caller.startBeat + 4);
+                        fish.DoScaledAnimationAsync("FishIdle", 0.5f);
+                    })
+                });
+                }
+            }
+            else
+            {
+                game.playYan.Whiff(Conductor.instance.songPositionInBeats);
+                game.ScoreMiss();
+                if (!platform.activeSelf)
+                {
+                    BeatAction.New(gameObject, new List<BeatAction.Action>()
+                    {
+                        new BeatAction.Action(beat + Conductor.instance.SecsToBeats(Minigame.lateTime, Conductor.instance.GetBpmAtBeat(beat)), delegate { Miss(caller); })
+                    });
+                }
+            }
         }
 
         private void Miss(PlayerActionEvent caller)

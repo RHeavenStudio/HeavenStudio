@@ -104,7 +104,6 @@ namespace HeavenStudio.Games.Scripts_AgbNightWalk
         {
             jumpingState = JumpingState.Shocked;
             anim.DoScaledAnimationAsync("Shock", 0.5f);
-            fallStartY = transform.localPosition.y;
             SoundByte.PlayOneShotGame("nightWalkAgb/shock");
         }
 
@@ -113,6 +112,7 @@ namespace HeavenStudio.Games.Scripts_AgbNightWalk
             jumpingState = JumpingState.Falling;
             anim.Play("Jump", 0, 0);
             playYanFallBeat = beat;
+            fallStartY = transform.localPosition.y;
             SoundByte.PlayOneShotGame("nightWalkAgb/fall");
             Update();
         }
