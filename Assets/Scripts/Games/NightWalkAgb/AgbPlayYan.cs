@@ -131,7 +131,7 @@ namespace HeavenStudio.Games.Scripts_AgbNightWalk
         private void StarBlink()
         {
             if (UnityEngine.Random.Range(1, 3) == 1) star.DoScaledAnimationAsync("Blink", 0.5f);
-            Invoke("StarBlink", UnityEngine.Random.Range(0.05f, 0.3f));
+            Invoke("StarBlink", UnityEngine.Random.Range(0.1f, 0.3f));
         }
         public void Jump(double beat)
         {
