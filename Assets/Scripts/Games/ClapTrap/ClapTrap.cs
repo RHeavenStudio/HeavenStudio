@@ -112,9 +112,9 @@ namespace HeavenStudio.Games
         public enum ClapType
         {
             Hand,
-            Cat,
+            Paw,
             Leek,
-            Stick,
+            Branch,
             Random
         }
 
@@ -129,6 +129,33 @@ namespace HeavenStudio.Games
 
         [Header("Animators")]
         public Animator dollHead;
+        public Animator dollArms;
+
+        [Header("Can Clap")]
+        // look at me go, I'm a boolean
+        // wow now I'm an integer
+        private int canClap = 0;
+
+        void Awake()
+        {
+            instance = this;
+        }
+
+        private void Update()
+        {
+            if (PlayerInput.Pressed() && canClap == 0 && !IsExpectingInputNow(InputType.STANDARD_DOWN))
+            {
+                Jukebox.PlayOneShotGame($"clapTrap/clap");
+                dollArms.DoScaledAnimationAsync("ArmsWhiff", 0.5f);
+                BeatAction.New(instance.gameObject, new List<BeatAction.Action>()
+                {
+                    new BeatAction.Action(Conductor.instance.songPositionInBeats, delegate { canClap += 1; }),
+                    new BeatAction.Action(Conductor.instance.songPositionInBeats + 1.2, delegate { canClap += -1; })
+                });
+            }
+
+
+        }
 
 
         public void Clap(float beat, float length, int type)
@@ -142,6 +169,46 @@ namespace HeavenStudio.Games
             }, forcePlay: true);
             ScheduleInput(beat, length * 4, InputType.STANDARD_DOWN | InputType.DIRECTION_DOWN, Hit, Miss, Out);
 
+        }
+
+
+        private void Hit(PlayerActionEvent caller, float state)
+        {
+            if (state >= 1f || state <= -1f) {
+                Jukebox.PlayOneShotGame($"clapTrap/barely{UnityEngine.Random.Range(1, 2)}");
+                dollHead.DoScaledAnimationAsync("HeadBarely", 0.5f);
+            } 
+            else if (state == 0f) {
+                Jukebox.PlayOneShotGame($"clapTrap/aceClap{UnityEngine.Random.Range(1, 4)}");
+                dollHead.DoScaledAnimationAsync("HeadHit", 0.5f);
+            }
+            else {
+                Jukebox.PlayOneShotGame($"clapTrap/goodClap{UnityEngine.Random.Range(1, 4)}");
+                dollHead.DoScaledAnimationAsync("HeadHit", 0.5f);
+            }
+            dollArms.DoScaledAnimationAsync("ArmsHit", 0.5f);
+            BeatAction.New(instance.gameObject, new List<BeatAction.Action>()
+                {
+                    new BeatAction.Action(Conductor.instance.songPositionInBeats, delegate { canClap += 1; }),
+                    new BeatAction.Action(Conductor.instance.songPositionInBeats + 1.8, delegate { canClap += -1; })
+                });
+        }
+
+        private void Miss(PlayerActionEvent caller)
+        {
+            Jukebox.PlayOneShotGame($"clapTrap/miss");
+            dollHead.DoScaledAnimationAsync("HeadMiss", 0.5f);
+            dollArms.DoScaledAnimationAsync("ArmsMiss", 0.5f);
+            BeatAction.New(instance.gameObject, new List<BeatAction.Action>()
+                {
+                    new BeatAction.Action(Conductor.instance.songPositionInBeats, delegate { canClap += 1; }),
+                    new BeatAction.Action(Conductor.instance.songPositionInBeats + 1.2, delegate { canClap += -1; })
+                });
+        }
+
+        private void Out(PlayerActionEvent caller) 
+        {
+            
         }
 
         public void DollAnimations(float beat, int animate)
@@ -165,38 +232,6 @@ namespace HeavenStudio.Games
                 dollHead.DoScaledAnimationAsync("HeadTalk", 0.5f);
             }
 
-        }
-
-        private void Hit(PlayerActionEvent caller, float state)
-        {
-            if (state >= 1f || state <= -1f) {
-                Jukebox.PlayOneShotGame($"clapTrap/barely{UnityEngine.Random.Range(1, 2)}");
-                dollHead.DoScaledAnimationAsync("HeadBarely", 0.5f);
-            } 
-            else if (state == 0f) {
-                Jukebox.PlayOneShotGame($"clapTrap/aceClap{UnityEngine.Random.Range(1, 4)}");
-                dollHead.DoScaledAnimationAsync("HeadHit", 0.5f);
-            }
-            else {
-                Jukebox.PlayOneShotGame($"clapTrap/goodClap{UnityEngine.Random.Range(1, 4)}");
-                dollHead.DoScaledAnimationAsync("HeadHit", 0.5f);
-            }
-        }
-
-        private void Miss(PlayerActionEvent caller)
-        {
-            Jukebox.PlayOneShotGame($"clapTrap/miss");
-            dollHead.DoScaledAnimationAsync("HeadMiss", 0.5f);
-        }
-
-        private void Out(PlayerActionEvent caller) 
-        {
-            
-        }
-
-        void Awake()
-        {
-            instance = this;
         }
 
 
