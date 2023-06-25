@@ -1,9 +1,23 @@
+using System;
+using System.Linq;
+using System.Reflection;
+using System.IO;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using HeavenStudio.InputSystem;
 
 using static JSL;
+
+namespace HeavenStudio.InputSystem
+{
+    public class LoadOrder : Attribute {
+        public int Order { get; set; }
+        public LoadOrder(int order) {
+            Order = order;
+        }
+    }
+}
 
 namespace HeavenStudio
 {
@@ -15,62 +29,40 @@ namespace HeavenStudio
         public const int DOWN = 2;
         public const int LEFT = 3;
         
-        ///////////////////////////////
-        ////TEMPORARY JSL FUNCTIONS////
-        ///////////////////////////////
-        
-        static int jslDevicesFound = 0;
-        static int jslDevicesConnected = 0;
-        static int[] jslDeviceHandles;
-        
         static List<InputController> inputDevices;
-        
+
+        public delegate InputController[] InputControllerInitializer();
+
+        public delegate void InputControllerDispose();
+        public static event InputControllerDispose PlayerInputCleanUp;
+
+        static List<InputControllerInitializer> loadRunners;
+        static void BuildLoadRunnerList() {
+            loadRunners = System.Reflection.Assembly.GetExecutingAssembly()
+            .GetTypes()
+            .Where(x => x.Namespace == "HeavenStudio.InputSystem.Loaders" && x.GetMethod("Initialize", BindingFlags.Public | BindingFlags.Static) != null)
+            .Select(t => (InputControllerInitializer) Delegate.CreateDelegate(
+                typeof(InputControllerInitializer), 
+                null, 
+                t.GetMethod("Initialize", BindingFlags.Public | BindingFlags.Static),
+                false
+                ))
+            .ToList();
+
+            loadRunners.Sort((x, y) => x.Method.GetCustomAttribute<LoadOrder>().Order.CompareTo(y.Method.GetCustomAttribute<LoadOrder>().Order));
+        }
+
         public static int InitInputControllers()
         {
             inputDevices = new List<InputController>();
-            //Keyboard setup
-            InputKeyboard keyboard = new InputKeyboard();
-            keyboard.SetPlayer(1);
-            keyboard.InitializeController();
-            inputDevices.Add(keyboard);
-            //end Keyboard setup
-            
-            //JoyShock setup
-            Debug.Log("Flushing possible JoyShocks...");
-            DisconnectJoyshocks();
-            
-            jslDevicesFound = JslConnectDevices();
-            if (jslDevicesFound > 0)
-            {
-                jslDeviceHandles = new int[jslDevicesFound];
-                jslDevicesConnected = JslGetConnectedDeviceHandles(jslDeviceHandles, jslDevicesFound);
-                if (jslDevicesConnected < jslDevicesFound)
-                {
-                    Debug.Log("Found " + jslDevicesFound + " JoyShocks, but only " + jslDevicesConnected + " are connected.");
-                }
-                else
-                {
-                    Debug.Log("Found " + jslDevicesFound + " JoyShocks.");
-                    Debug.Log("Connected " + jslDevicesConnected + " JoyShocks.");
-                }
-                
-                foreach (int i in jslDeviceHandles)
-                {
-                    Debug.Log("Setting up JoyShock: ( Handle " + i + ", type " + JslGetControllerType(i) + " )");
-                    InputJoyshock joyshock = new InputJoyshock(i);
-                    joyshock.InitializeController();
-                    joyshock.SetPlayer(inputDevices.Count + 1);
-                    inputDevices.Add(joyshock);
+
+            BuildLoadRunnerList();
+            foreach (InputControllerInitializer runner in loadRunners) {
+                InputController[] controllers = runner();
+                if (controllers != null) {
+                    inputDevices.AddRange(controllers);
                 }
             }
-            else
-            {
-                Debug.Log("No JoyShocks found.");
-            }
-            //end JoyShock setup
-            
-            //TODO: XInput setup (boo)
-            //end XInput setup
             
             return inputDevices.Count;
         }
@@ -159,28 +151,15 @@ namespace HeavenStudio
             }
         }
         
-        public static void DisconnectJoyshocks()
+        public static void CleanUp()
         {
-            if (jslDeviceHandles != null && jslDevicesConnected > 0 && jslDeviceHandles.Length > 0)
-            {
-                foreach (InputController i in inputDevices)
-                {
-                    if (typeof(InputJoyshock) == i.GetType())
-                    {
-                        InputJoyshock joy = (InputJoyshock)i;
-                        joy.DisconnectJoyshock();
-                    }
-                }
-            }
-            JslDisconnectAndDisposeAll();
-            jslDevicesFound = 0;
-            jslDevicesConnected = 0;
+            PlayerInputCleanUp?.Invoke();
         }
         
         // The autoplay isn't activated AND
         // The song is actually playing AND
         // The GameManager allows you to Input
-        public static bool playerHasControl()
+        public static bool PlayerHasControl()
         {
             return !GameManager.instance.autoplay && Conductor.instance.isPlaying && GameManager.instance.canInput;
         }
@@ -214,19 +193,19 @@ namespace HeavenStudio
         public static bool AltPressed()
         {
             bool down = GetInputController(1).GetButtonDown((int) InputController.ButtonsPad.PadS);
-            return down && playerHasControl();
+            return down && PlayerHasControl();
         }
         
         public static bool AltPressedUp()
         {
             bool up = GetInputController(1).GetButtonUp((int) InputController.ButtonsPad.PadS);
-            return up && playerHasControl();
+            return up && PlayerHasControl();
         }
         
         public static bool AltPressing()
         {
             bool pressing = GetInputController(1).GetButton((int) InputController.ButtonsPad.PadS);
-            return pressing && playerHasControl();
+            return pressing && PlayerHasControl();
         }
         
         //Directions
@@ -238,7 +217,7 @@ namespace HeavenStudio
             || c.GetHatDirectionDown((InputController.InputDirection) DOWN)
             || c.GetHatDirectionDown((InputController.InputDirection) LEFT)
             || c.GetHatDirectionDown((InputController.InputDirection) RIGHT)
-            ) && playerHasControl();
+            ) && PlayerHasControl();
             
         }
         
@@ -249,7 +228,7 @@ namespace HeavenStudio
             || c.GetHatDirectionUp((InputController.InputDirection) DOWN)
             || c.GetHatDirectionUp((InputController.InputDirection) LEFT)
             || c.GetHatDirectionUp((InputController.InputDirection) RIGHT)
-            ) && playerHasControl();
+            ) && PlayerHasControl();
             
         }
         
@@ -260,23 +239,23 @@ namespace HeavenStudio
             || c.GetHatDirection((InputController.InputDirection) DOWN)
             || c.GetHatDirection((InputController.InputDirection) LEFT)
             || c.GetHatDirection((InputController.InputDirection) RIGHT)
-            ) && playerHasControl();
+            ) && PlayerHasControl();
             
         }
         
         public static bool GetSpecificDirection(int direction)
         {
-            return GetInputController(1).GetHatDirection((InputController.InputDirection) direction) && playerHasControl();
+            return GetInputController(1).GetHatDirection((InputController.InputDirection) direction) && PlayerHasControl();
         }
         
         public static bool GetSpecificDirectionDown(int direction)
         {
-            return GetInputController(1).GetHatDirectionDown((InputController.InputDirection) direction) && playerHasControl();
+            return GetInputController(1).GetHatDirectionDown((InputController.InputDirection) direction) && PlayerHasControl();
         }
         
         public static bool GetSpecificDirectionUp(int direction)
         {
-            return GetInputController(1).GetHatDirectionUp((InputController.InputDirection) direction) && playerHasControl();
+            return GetInputController(1).GetHatDirectionUp((InputController.InputDirection) direction) && PlayerHasControl();
         }
     }
 }

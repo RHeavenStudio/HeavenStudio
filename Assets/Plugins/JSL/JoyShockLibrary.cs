@@ -100,10 +100,35 @@ public static class JSL
         float t1Y;
     }
 
+    [StructLayout(LayoutKind.Sequential)]
+    public struct JSL_AUTO_CALIBRATION {
+        float confidence;
+        bool autoCalibrationEnabled;
+        bool isSteady;
+    }
+
+    [StructLayout(LayoutKind.Sequential)]
+    public struct JSL_SETTINGS {
+        int gyroSpace;
+        int bodyColour;
+        int lGripColour;
+        int rGripColour;
+        int buttonColour;
+        int playerNumber;
+        int controllerType;
+        int splitType;
+        bool isCalibrating;
+        bool autoCalibrationEnabled;
+        bool isConnected;
+    }
+
     public delegate void EventCallback(int handle, JOY_SHOCK_STATE state, JOY_SHOCK_STATE lastState,
         IMU_STATE imuState, IMU_STATE lastImuState, float deltaTime);
     
     public delegate void TouchCallback(int handle, TOUCH_STATE state, TOUCH_STATE lastState, float deltaTime);
+
+    public delegate void ConnectionCallback(int handle);
+    public delegate void DeconnectionCallback(int handle, bool isConnected);
 
     [DllImport("JoyShockLibrary")]
     public static extern int JslConnectDevices();
@@ -111,6 +136,8 @@ public static class JSL
     public static extern int JslGetConnectedDeviceHandles(int[] deviceHandleArray, int size);
     [DllImport("JoyShockLibrary")]
     public static extern void JslDisconnectAndDisposeAll();
+    [DllImport("JoyShockLibrary")]
+    public static extern void JslStillConnected(int deviceId);
 
     [DllImport("JoyShockLibrary", CallingConvention = CallingConvention.Cdecl)]
     public static extern JOY_SHOCK_STATE JslGetSimpleState(int deviceId);
@@ -122,11 +149,16 @@ public static class JSL
     public static extern TOUCH_STATE JslGetTouchState(int deviceId);
 
     [DllImport("JoyShockLibrary")]
+    public static extern void JslSetGyroSpace(int deviceId, int gyroSpace);
+
+    [DllImport("JoyShockLibrary")]
     public static extern float JslGetStickStep(int deviceId);
     [DllImport("JoyShockLibrary")]
     public static extern float JslGetTriggerStep(int deviceId);
     [DllImport("JoyShockLibrary")]
     public static extern float JslGetPollRate(int deviceId);
+    [DllImport("JoyShockLibrary")]
+    public static extern float JslGetTimeSinceLastUpdate(int deviceId);
 
     [DllImport("JoyShockLibrary")]
     public static extern float JslGetTouchId(int deviceId, bool secondTouch = false);
@@ -147,12 +179,23 @@ public static class JSL
     public static extern void JslGetCalibrationOffset(int deviceId, ref float xOffset, ref float yOffset, ref float zOffset);
     [DllImport("JoyShockLibrary")]
     public static extern void JslGetCalibrationOffset(int deviceId, float xOffset, float yOffset, float zOffset);
+    [DllImport("JoyShockLibrary")]
+    public static extern JSL_AUTO_CALIBRATION JslGetAutoCalibrationStatus(int deviceId);
 
     [DllImport("JoyShockLibrary")]
     public static extern void JslSetCallback(EventCallback callback);
     [DllImport("JoyShockLibrary")]
     public static extern void JslSetTouchCallback(TouchCallback callback);
+    // this function will get called for each device when it is newly connected
+    [DllImport("JoyShockLibrary")]
+    public static extern void JslSetConnectCallback(ConnectionCallback callback);
+    // this function will get called for each device when it is disconnected
+    [DllImport("JoyShockLibrary")]
+    public static extern void JslSetDisconnectCallback(DeconnectionCallback callback);
     
+    // super-getter for reading a whole lot of state at once
+    [DllImport("JoyShockLibrary")]
+    public static extern JSL_SETTINGS JslGetControllerInfoAndSettings(int deviceId);
     [DllImport("JoyShockLibrary")]
     public static extern int JslGetControllerType(int deviceId);
     [DllImport("JoyShockLibrary")]

@@ -6,6 +6,18 @@ using static JSL;
 
 namespace HeavenStudio.InputSystem
 {
+    public static class InputKeyboardInitializer
+    {
+        [LoadOrder(0)]
+        public static InputController[] Initialize()
+        {
+            InputKeyboard keyboard = new InputKeyboard();
+            keyboard.SetPlayer(1);
+            keyboard.InitializeController();
+            return new InputController[] { keyboard };
+        }
+    }
+
     public class InputKeyboard : InputController
     {
         static KeyCode[] keyCodes = (KeyCode[]) System.Enum.GetValues(typeof(UnityEngine.KeyCode));

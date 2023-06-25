@@ -8,6 +8,53 @@ using static JSL;
 
 namespace HeavenStudio.InputSystem
 {
+    public static class InputJoyshockInitializer
+    {
+        [LoadOrder(1)]
+        public static InputController[] Initialize()
+        {
+            PlayerInput.PlayerInputCleanUp += DisposeJoyshocks;
+            
+            InputController[] controllers;
+            int jslDevicesFound = 0;
+            int jslDevicesConnected = 0;
+            int[] jslDeviceHandles;
+
+            jslDevicesFound = JslConnectDevices();
+            if (jslDevicesFound > 0)
+            {
+                jslDeviceHandles = new int[jslDevicesFound];
+                jslDevicesConnected = JslGetConnectedDeviceHandles(jslDeviceHandles, jslDevicesFound);
+                if (jslDevicesConnected < jslDevicesFound)
+                {
+                    Debug.Log("Found " + jslDevicesFound + " JoyShocks, but only " + jslDevicesConnected + " are connected.");
+                }
+                else
+                {
+                    Debug.Log("Found " + jslDevicesFound + " JoyShocks.");
+                    Debug.Log("Connected " + jslDevicesConnected + " JoyShocks.");
+                }
+
+                controllers = new InputController[jslDevicesConnected];
+                foreach (int i in jslDeviceHandles)
+                {
+                    Debug.Log("Setting up JoyShock: ( Handle " + i + ", type " + JslGetControllerType(i) + " )");
+                    InputJoyshock joyshock = new InputJoyshock(i);
+                    joyshock.InitializeController();
+                    controllers[i] = joyshock;
+                }
+                return controllers;
+            }
+            Debug.Log("No JoyShocks found.");
+            return null;
+        }
+
+        public static void DisposeJoyshocks()
+        {
+            JslDisconnectAndDisposeAll();
+        }
+    }
+
     public class InputJoyshock : InputController
     {
         static string[] joyShockNames =

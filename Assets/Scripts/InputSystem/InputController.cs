@@ -97,7 +97,8 @@ namespace HeavenStudio.InputSystem
         {
             Pad,
             Baton,
-            Touch
+            Touch,
+            Move
         }
 
         //buttons used in Heaven Studio gameplay (Pad Style)
@@ -123,8 +124,8 @@ namespace HeavenStudio.InputSystem
             BatonE = 1, // |
             BatonW = 2, // |
             BatonN = 3, //--
-            BatonA = 4, // < ...map to this, but are directional
-            BatonB = 5, // should never be used alone
+            BatonFace = 4, // < ...map to this, but are directional
+            BatonTrigger = 5, // should never be used alone
             Baton1 = 6,
             Baton2 = 7,
             BatonPause = 8,
@@ -140,6 +141,8 @@ namespace HeavenStudio.InputSystem
             TouchButtonL = 4,
             TouchButtonR = 4,
         }
+
+        // FUTURE: Move Style needs to be implemented per-game (maybe implement checks for common actions?)
     
         protected int? playerNum;
         protected int directionStateCurrent = 0;

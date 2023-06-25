@@ -371,7 +371,7 @@ namespace HeavenStudio
         void OnApplicationQuit()
         {
             Debug.Log("Disconnecting JoyShocks...");
-            PlayerInput.DisconnectJoyshocks();
+            PlayerInput.CleanUp();
             Debug.Log("Clearing RIQ Cache...");
             Jukebox.RiqFileHandler.ClearCache();
         }
