@@ -15,12 +15,14 @@ namespace HeavenStudio.Games.Scripts_AgbNightWalk
             Jumping,
             Shocked,
             Falling,
-            Whiffing
+            Whiffing,
+            Floating
         }
         private JumpingState jumpingState;
         private AgbNightWalk game;
         private double jumpBeat;
         [SerializeField] private List<Animator> balloons = new List<Animator>();
+        [SerializeField] private GameObject star;
         private Path jumpPath;
         private Path whiffPath;
         private Animator anim;
@@ -88,6 +90,12 @@ namespace HeavenStudio.Games.Scripts_AgbNightWalk
                             Walk();
                         }
                         break;
+                    case JumpingState.Floating:
+                        float normalizedFloatBeat = cond.GetPositionFromBeat(playYanFallBeat, 10);
+                        EasingFunction.Function funcF = EasingFunction.GetEasingFunction(EasingFunction.Ease.Linear);
+                        float newPlayYanYF = funcF(fallStartY, 12, normalizedFloatBeat);
+                        transform.localPosition = new Vector3(0, newPlayYanYF);
+                        break;
                 }
             }
         }
@@ -106,6 +114,16 @@ namespace HeavenStudio.Games.Scripts_AgbNightWalk
             anim.Play("Jump", 0, 0);
             playYanFallBeat = beat;
             SoundByte.PlayOneShotGame("nightWalkAgb/fall");
+            Update();
+        }
+
+        public void Float(double beat)
+        {
+            jumpingState = JumpingState.Floating;
+            anim.Play("Jump", 0, 0);
+            playYanFallBeat = beat;
+            fallStartY = transform.localPosition.y;
+            star.SetActive(true);
             Update();
         }
 

@@ -68,6 +68,14 @@ namespace HeavenStudio.Games.Loaders
                     },
                     preFunctionLength = 1
                 },
+                new GameAction("end", "End")
+                {
+                    parameters = new List<Param>()
+                    {
+                        new Param("minAmount", new EntityTypes.Integer(0, 10000, 20), "Minimum Jumps Required"),
+                        new Param("minAmount", new EntityTypes.Integer(0, 10000, 100), "Minimum Jumps Required (Persistent)"),
+                    }
+                },
                 new GameAction("noJump", "No Jumping")
                 {
                     defaultLength = 4,
@@ -97,7 +105,7 @@ namespace HeavenStudio.Games.Loaders
                         new Param("am", new EntityTypes.Integer(0, 100, 1), "Star Amount", "How many stars will evolve?"),
                         new Param("repeat", new EntityTypes.Integer(0, 100, 1), "Repeat Amount", "How many times will this event repeat?"),
                     }
-                }
+                },
             });
         }
     }
@@ -146,6 +154,12 @@ namespace HeavenStudio.Games
         }
 
         [NonSerialized] public int evolveAmount = 1;
+        [NonSerialized] public int hitJumps;
+        [NonSerialized] public static int hitJumpsPersist;
+
+        [NonSerialized] public double endBeat = double.MaxValue;
+        [NonSerialized] public int requiredJumps;
+        [NonSerialized] public int requiredJumpsP;
 
         new void OnDrawGizmos()
         {
@@ -205,6 +219,15 @@ namespace HeavenStudio.Games
             }
         }
 
+        private void OnDestroy()
+        {
+            foreach (var evt in scheduledInputs)
+            {
+                evt.Disable();
+            }
+            if (!Conductor.instance.isPlaying) hitJumpsPersist = 0;
+        }
+
         public void ForceEvolve(double beat, float length, int starAmount, int repeatAmount)
         {
             List<BeatAction.Action> actions = new();
@@ -243,13 +266,21 @@ namespace HeavenStudio.Games
         public override void OnGameSwitch(double beat)
         {
             SetCountInBeat(beat);
+            SetEndValues(beat);
             platformHandler.SpawnPlatforms(beat);
         }
 
         public override void OnPlay(double beat)
         {
             SetCountInBeat(beat);
+            SetEndValues(beat);
             platformHandler.SpawnPlatforms(beat);
+            hitJumpsPersist = 0;
+        }
+
+        public void SetEndValues(double beat)
+        {
+
         }
 
         public static void FishSound(double beat)

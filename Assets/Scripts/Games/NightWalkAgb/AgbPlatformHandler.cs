@@ -98,6 +98,11 @@ namespace HeavenStudio.Games.Scripts_AgbNightWalk
             stopStars = true;
         }
 
+        public void DevolveAll()
+        {
+            starHandler.Devolve();
+        }
+
         public bool PlatformsStopped()
         {
             return allPlatforms[0].stopped;

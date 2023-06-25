@@ -127,11 +127,14 @@ namespace HeavenStudio.Games.Scripts_AgbNightWalk
                     {
                         new BeatAction.Action(endBeat, delegate 
                         { 
-                            if (canKick && !stopped)
+                            if (!stopped)
                             {
                                 SoundByte.PlayOneShotGame("nightWalkAgb/boxKick");
-                                anim.Play("Kick", 0, 0);
-                            } 
+                                if (canKick)
+                                {
+                                    anim.Play("Kick", 0, 0);
+                                }
+                            }
                         })
                     });
                 }
@@ -256,6 +259,17 @@ namespace HeavenStudio.Games.Scripts_AgbNightWalk
                     break;
             }
             game.starHandler.Evolve(game.evolveAmount);
+            game.hitJumps++;
+            AgbNightWalk.hitJumpsPersist++;
+        }
+
+        private void JustEnd(PlayerActionEvent caller, float state)
+        {
+            anim.DoScaledAnimationAsync("EndPop", 0.5f);
+            handler.StopAll();
+            handler.DestroyPlatforms(caller.timer + caller.startBeat + 4, endBeat - 2, endBeat + 1);
+            game.playYan.Float(Conductor.instance.songPositionInBeats);
+            handler.DevolveAll();
         }
 
         private void Miss(PlayerActionEvent caller)
