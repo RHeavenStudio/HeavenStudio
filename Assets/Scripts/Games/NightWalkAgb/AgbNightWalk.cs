@@ -73,7 +73,7 @@ namespace HeavenStudio.Games.Loaders
                     parameters = new List<Param>()
                     {
                         new Param("minAmount", new EntityTypes.Integer(0, 10000, 20), "Minimum Jumps Required"),
-                        new Param("minAmount", new EntityTypes.Integer(0, 10000, 100), "Minimum Jumps Required (Persistent)"),
+                        new Param("minAmountP", new EntityTypes.Integer(0, 10000, 100), "Minimum Jumps Required (Persistent)"),
                     }
                 },
                 new GameAction("noJump", "No Jumping")
@@ -280,7 +280,38 @@ namespace HeavenStudio.Games
 
         public void SetEndValues(double beat)
         {
-
+            List<RiqEntity> endEvents = EventCaller.GetAllInGameManagerList("nightWalkAgb", new string[] { "end" });
+            if (endEvents.Count > 0)
+            {
+                var allEnds = EventCaller.GetAllInGameManagerList("gameManager", new string[] { "switchGame" });
+                if (allEnds.Count == 0)
+                {
+                    endBeat = endEvents[^1].beat;
+                    requiredJumps = endEvents[^1]["minAmount"];
+                    requiredJumpsP = endEvents[^1]["minAmountP"];
+                }
+                else
+                {
+                    allEnds.Sort((x, y) => x.beat.CompareTo(y.beat));
+                    double nextSwitchBeat = double.MaxValue;
+                    foreach (var end in allEnds)
+                    {
+                        if (end.datamodel.Split(2) == "nightWalkAgb") continue;
+                        if (end.beat > beat)
+                        {
+                            nextSwitchBeat = end.beat;
+                            break;
+                        }
+                    }
+                    var tempEvents = endEvents.FindAll(e => e.beat >= beat && e.beat < nextSwitchBeat);
+                    if (tempEvents.Count > 0)
+                    {
+                        endBeat = tempEvents[^1].beat;
+                        requiredJumps = tempEvents[^1]["minAmount"];
+                        requiredJumpsP = tempEvents[^1]["minAmountP"];
+                    }
+                }
+            }
         }
 
         public static void FishSound(double beat)
@@ -348,8 +379,8 @@ namespace HeavenStudio.Games
                 var allEnds = EventCaller.GetAllInGameManagerList("gameManager", new string[] { "switchGame" });
                 if (allEnds.Count == 0)
                 {
-                    countInBeat = countInEvents[0].beat;
-                    countInLength = countInEvents[0].length;
+                    countInBeat = countInEvents[^1].beat;
+                    countInLength = countInEvents[^1].length;
                 }
                 else
                 {
