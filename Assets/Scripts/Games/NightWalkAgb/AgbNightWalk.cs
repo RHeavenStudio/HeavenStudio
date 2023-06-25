@@ -61,12 +61,7 @@ namespace HeavenStudio.Games.Loaders
                 },
                 new GameAction("fish", "Electric Fish")
                 {
-                    preFunction = delegate { if (!eventCaller.currentEntity["mute"]) AgbNightWalk.FishSound(eventCaller.currentEntity.beat); },
-                    parameters = new List<Param>()
-                    {
-                        new Param("mute", false, "Mute Cue")
-                    },
-                    preFunctionLength = 1
+
                 },
                 new GameAction("end", "End")
                 {
@@ -314,7 +309,7 @@ namespace HeavenStudio.Games
             }
         }
 
-        public static void FishSound(double beat)
+        /*public static void FishSound(double beat)
         {
             if (GameManager.instance.currentGame == "nightWalkAgb" && instance.platformHandler.PlatformsStopped()) return;
             MultiSound.Play(new MultiSound.Sound[]
@@ -323,7 +318,7 @@ namespace HeavenStudio.Games
                 new MultiSound.Sound("nightWalkAgb/fish2", beat - 0.75),
                 new MultiSound.Sound("nightWalkAgb/fish3", beat - 0.5),
             }, forcePlay: true);
-        }
+        }*/
 
         public static void WalkingCountIn(double beat, float length)
         {
