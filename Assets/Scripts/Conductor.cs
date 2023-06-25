@@ -88,27 +88,33 @@ namespace HeavenStudio
             minigamePitch = pitch;
             musicSource.pitch = SongPitch;
         }
-        
 
         void Awake()
         {
             instance = this;
         }
 
+        void Start()
+        {
+            musicSource.priority = 0;
+        }
+
         public void SetBeat(double beat)
         {
-            double secFromBeat = GetSongPosFromBeat(beat);
+            var chart = GameManager.instance.Beatmap;
+            double offset = chart.data.offset;
+            double startPos = GetSongPosFromBeat(beat);
 
-            if (musicSource.clip != null)
-            {
-                if (secFromBeat < musicSource.clip.length)
-                    musicSource.time = (float) secFromBeat;
-                else
-                    musicSource.time = 0;
-            }
+            double dspTime = AudioSettings.dspTime;
 
-            GameManager.instance.SetCurrentEventToClosest((float) beat);
-            songPosBeat = beat;
+            time = startPos;
+            firstBeatOffset = offset;
+
+            SeekMusicToTime(startPos);
+
+            songPosBeat = GetBeatFromSongPos(time);
+            
+            GameManager.instance.SetCurrentEventToClosest(beat);
         }
 
         public void Play(double beat)
@@ -116,35 +122,35 @@ namespace HeavenStudio
             if (isPlaying) return;
             var chart = GameManager.instance.Beatmap;
             double offset = chart.data.offset;
-            bool negativeOffset = offset < 0;
             double dspTime = AudioSettings.dspTime;
             GameManager.instance.SortEventsList();
 
             double startPos = GetSongPosFromBeat(beat);
+            firstBeatOffset = offset;
             time = startPos;
 
             if (musicSource.clip != null && startPos < musicSource.clip.length - offset)
             {
-                // https://www.desmos.com/calculator/81ywfok6xk
+                SeekMusicToTime(startPos);
                 double musicStartDelay = -offset - startPos;
                 if (musicStartDelay > 0)
                 {
-                    musicSource.time = 0;
-                    // this can break if the user changes pitch before the audio starts playing
                     musicScheduledTime = dspTime + musicStartDelay / SongPitch;
                     musicScheduledPitch = SongPitch;
                     musicSource.PlayScheduled(musicScheduledTime);
                 }
                 else
                 {
-                    musicSource.time = (float)-musicStartDelay;
-                    musicSource.PlayScheduled(dspTime);
+                    musicScheduledTime = dspTime;
+                    musicScheduledPitch = SongPitch;
+
+                    musicSource.Play();
                 }
             }
 
             songPosBeat = GetBeatFromSongPos(time);
             startTime = DateTime.Now;
-            lastAbsTime = (DateTime.Now - startTime).TotalSeconds;
+            lastAbsTime = 0;
             lastDspTime = AudioSettings.dspTime;
             dspStart = dspTime;
             startBeat = songPosBeat;
@@ -175,6 +181,26 @@ namespace HeavenStudio
             musicSource.Stop();
         }
 
+        void SeekMusicToTime(double startPos)
+        {
+            double offset = GameManager.instance.Beatmap.data.offset;
+            if (musicSource.clip != null && startPos < musicSource.clip.length - offset)
+            {
+                // https://www.desmos.com/calculator/81ywfok6xk
+                double musicStartDelay = -offset - startPos;
+                if (musicStartDelay > 0)
+                {
+                    musicSource.timeSamples = 0;
+                }
+                else
+                {
+                    int freq = musicSource.clip.frequency;
+                    int samples = (int)(freq * (startPos + offset));
+
+                    musicSource.timeSamples = samples;
+                }
+            }
+        }
         double deltaTimeReal { get { 
             double ret = absTime - lastAbsTime; 
             lastAbsTime = absTime;
@@ -217,7 +243,7 @@ namespace HeavenStudio
                 time += dt * SongPitch;
 
                 songPos = time;
-                songPosBeat = GetBeatFromSongPos(songPos - firstBeatOffset);
+                songPosBeat = GetBeatFromSongPos(songPos);
             }
         }
 
@@ -349,7 +375,7 @@ namespace HeavenStudio
             public double GetBeatFromSongPos(double seconds)
             {
                 double lastTempoChangeBeat = 0f;
-                double counterSeconds = -firstBeatOffset;
+                double counterSeconds = 0;
                 float lastBpm = 120f;
                 
                 foreach (RiqEntity t in GameManager.instance.Beatmap.TempoChanges)
