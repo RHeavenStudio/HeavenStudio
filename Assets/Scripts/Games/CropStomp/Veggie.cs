@@ -233,7 +233,7 @@ namespace HeavenStudio.Games.Scripts_CropStomp
 
             stompedBeat = cond.songPositionInBeatsAsDouble;
 
-            landBeat = targetBeat + (float)cond.SecsToBeats(Minigame.EndTime()-1, cond.GetBpmAtBeat(targetBeat));
+            landBeat = targetBeat + (float)cond.SecsToBeats(Minigame.NgLateTime()-1, cond.GetBpmAtBeat(targetBeat));
 
             if (autoTriggered)
             {

@@ -201,7 +201,7 @@ namespace HeavenStudio.Games.Scripts_KarateMan
             switch (forceHand)
             {
                 case 0:
-                    if (cond.songPositionInBeatsAsDouble - lastPunchTime < 0.25f + (Minigame.LateTime() - 1f))
+                    if (cond.songPositionInBeatsAsDouble - lastPunchTime < 0.25f + (Minigame.JustLateTime() - 1f))
                     {
                         lastPunchTime = double.MinValue;
                         anim.DoScaledAnimationAsync("Straight", 0.5f);
