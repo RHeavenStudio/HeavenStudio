@@ -67,7 +67,11 @@ namespace HeavenStudio.Games.Loaders
                 {
                     preFunctionLength = 1,
                     defaultLength = 2,
-                    preFunction = delegate { var e = eventCaller.currentEntity; AgbNightWalk.PlayRollCue(e.beat, e); }
+                    preFunction = delegate { var e = eventCaller.currentEntity; if (!e["mute"]) AgbNightWalk.PlayRollCue(e.beat, e); },
+                    parameters = new List<Param>()
+                    {
+                        new Param("mute", false, "Mute Sound")
+                    }
                 },
                 new GameAction("end", "End")
                 {
