@@ -248,6 +248,23 @@ namespace HeavenStudio.Games.Scripts_AgbNightWalk
 
         private void JustRollRelease(PlayerActionEvent caller, float state)
         {
+            if (isFish)
+            {
+                game.ScoreMiss();
+                game.playYan.Shock();
+                fish.DoScaledAnimationAsync("Shock", 0.5f);
+                handler.StopAll();
+                handler.DestroyPlatforms(caller.timer + caller.startBeat + 2, endBeat - 2, endBeat + 6);
+                BeatAction.New(gameObject, new List<BeatAction.Action>()
+                {
+                    new BeatAction.Action(caller.timer + caller.startBeat + 4, delegate
+                    {
+                        game.playYan.Fall(caller.timer + caller.startBeat + 4);
+                        fish.DoScaledAnimationAsync("FishIdle", 0.5f);
+                    })
+                });
+                return;
+            }
             if (state >= 1f || state <= -1f)
             {
                 SoundByte.PlayOneShotGame("nightWalkAgb/ng");
