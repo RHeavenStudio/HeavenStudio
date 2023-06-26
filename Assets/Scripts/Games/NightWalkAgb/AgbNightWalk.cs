@@ -94,7 +94,7 @@ namespace HeavenStudio.Games.Loaders
                     defaultLength = 0.5f,
                     parameters = new List<Param>()
                     {
-                        new Param("am", new EntityTypes.Integer(0, 100, 2), "Amount", "How many stars will evolve when play-yan jumps?"),
+                        new Param("am", new EntityTypes.Integer(0, 100, 1), "Amount", "How many stars will evolve when play-yan jumps?"),
                     }
                 },
                 new GameAction("forceEvolve", "Force Star Evolve")
@@ -155,7 +155,7 @@ namespace HeavenStudio.Games
             public FillType fillType;
         }
 
-        [NonSerialized] public int evolveAmount = 2;
+        [NonSerialized] public int evolveAmount = 1;
         [NonSerialized] public int hitJumps;
         [NonSerialized] public static int hitJumpsPersist;
 
