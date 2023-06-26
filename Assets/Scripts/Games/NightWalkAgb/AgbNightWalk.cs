@@ -191,8 +191,11 @@ namespace HeavenStudio.Games
         {
             instance = this;
             List<RiqEntity> heightEvents = EventCaller.GetAllInGameManagerList("nightWalkAgb", new string[] { "height" });
+            List<RiqEntity> rollEvents = EventCaller.GetAllInGameManagerList("nightWalkAgb", new string[] { "roll" });
+            var validRollEvents = rollEvents.FindAll(x => IsValidRollCue(x));
             foreach (var heightEvent in heightEvents)
             {
+                if (validRollEvents.Count > 0 && validRollEvents.Find(x => heightEvent.beat >= x.beat + 1 && heightEvent.beat < x.beat + 2) != null) continue;
                 heightEntityEvents.Add(new HeightEvent()
                 {
                     beat = heightEvent.beat,
@@ -219,7 +222,6 @@ namespace HeavenStudio.Games
             {
                 fishBeats.Add(fishEvent.beat);
             }
-            List<RiqEntity> rollEvents = EventCaller.GetAllInGameManagerList("nightWalkAgb", new string[] { "roll" });
             foreach (var rollEvent in rollEvents)
             {
                 rollBeats.Add(rollEvent.beat);

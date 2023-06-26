@@ -50,8 +50,10 @@ namespace HeavenStudio.Games.Scripts_AgbNightWalk
         public void StartInput(double beat, double hitBeat)
         {
             if (game == null) game = AgbNightWalk.instance;
+            if (anim == null) anim = GetComponent<Animator>();
+            isRollPlatform = game.RollOnBeat(hitBeat);
             lastAdditionalHeightInUnits = game.FindHeightUnitsAtBeat(hitBeat);
-            additionalHeightInUnits = game.FindHeightUnitsAtBeat(hitBeat + 1);
+            additionalHeightInUnits = game.FindHeightUnitsAtBeat(hitBeat + (isRollPlatform ? 2 : 1));
             additionalHeight = lastAdditionalHeightInUnits * handler.heightAmount;
             nextPlatformIsSameHeight = lastAdditionalHeightInUnits == additionalHeightInUnits;
             isFinalBlock = hitBeat == game.endBeat + 1;
@@ -62,7 +64,7 @@ namespace HeavenStudio.Games.Scripts_AgbNightWalk
             isFish = game.FishOnBeat(endBeat);
             fish.gameObject.SetActive(isFish);
             isEndEvent = game.endBeat == endBeat;
-            isRollPlatform = game.RollOnBeat(endBeat);
+
             rollPlatform.transform.parent.gameObject.SetActive(isRollPlatform);
             rollPlatformLong.SetActive(nextPlatformIsSameHeight && !isFinalBlock && !isEndEvent);
             if (isEndEvent) 
