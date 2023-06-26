@@ -476,8 +476,8 @@ namespace HeavenStudio.Games.Scripts_AgbNightWalk
             SoundByte.PlayOneShot("games/nightWalkRvl/highJump7");
             if (!isEndEvent) rollPlatform.DoScaledAnimationAsync("Umbrella", 0.5f);
             game.starHandler.Evolve(game.evolveAmount * 2);
-            game.hitJumps++;
-            AgbNightWalk.hitJumpsPersist++;
+            game.hitJumps += 2;
+            AgbNightWalk.hitJumpsPersist += 2;
         }
 
         private void RollMissHold(PlayerActionEvent caller)
