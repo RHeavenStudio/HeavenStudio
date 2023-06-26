@@ -656,6 +656,7 @@ MonoBehaviour:
   star: {fileID: 7943729825301934244}
   randomMinBalloonX: -0.45
   randomMaxBalloonX: 0.45
+  spriteTrans: {fileID: 3224445989681038566}
 --- !u!95 &8149215091084911589
 Animator:
   serializedVersion: 5
@@ -958,7 +959,7 @@ MonoBehaviour:
       useLastRealPos: 0
       values: []
   - name: Whiff
-    preview: 1
+    preview: 0
     anchor: {fileID: 0}
     positions:
     - tag: 
@@ -966,6 +967,24 @@ MonoBehaviour:
       target: {fileID: 0}
       height: 0.5
       duration: 0.5
+      useLastRealPos: 0
+      values: []
+    - tag: 
+      pos: {x: 0, y: 0, z: 0}
+      target: {fileID: 0}
+      height: 0
+      duration: 0
+      useLastRealPos: 0
+      values: []
+  - name: highJump
+    preview: 1
+    anchor: {fileID: 0}
+    positions:
+    - tag: 
+      pos: {x: 0, y: 2, z: 0}
+      target: {fileID: 0}
+      height: 4.5
+      duration: 1.5
       useLastRealPos: 0
       values: []
     - tag: 

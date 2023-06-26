@@ -16,7 +16,9 @@ namespace HeavenStudio.Games.Scripts_AgbNightWalk
             Shocked,
             Falling,
             Whiffing,
-            Floating
+            Floating,
+            Rolling,
+            HighJumping
         }
         private JumpingState jumpingState;
         private AgbNightWalk game;
@@ -25,18 +27,21 @@ namespace HeavenStudio.Games.Scripts_AgbNightWalk
         [SerializeField] private Animator star;
         private Path jumpPath;
         private Path whiffPath;
+        private Path highJumpPath;
         private Animator anim;
         private float fallStartY;
         private double playYanFallBeat;
         private double walkBeat;
         [SerializeField] private float randomMinBalloonX = -0.45f;
         [SerializeField] private float randomMaxBalloonX = 0.45f;
+        [SerializeField] private Transform spriteTrans; //for rolling rotation
 
         private void Awake()
         {
             game = AgbNightWalk.instance;
             jumpPath = game.GetPath("Jump");
             whiffPath = game.GetPath("Whiff");
+            highJumpPath = game.GetPath("highJump");
             anim = GetComponent<Animator>();
             foreach (var balloon in balloons)
             {
@@ -54,7 +59,7 @@ namespace HeavenStudio.Games.Scripts_AgbNightWalk
                 switch (jumpingState)
                 {
                     case JumpingState.Jumping:
-                        Vector3 pos = GetPathPositionFromBeat(jumpPath, Math.Min(jumpBeat + 1, cond.songPositionInBeatsAsDouble), jumpBeat);
+                        Vector3 pos = GetPathPositionFromBeat(jumpPath, Math.Min(jumpBeat + jumpPath.positions[0].duration, cond.songPositionInBeatsAsDouble), jumpBeat);
                         transform.localPosition = pos;
                         float normalizedBeat = cond.GetPositionFromBeat(jumpBeat, jumpPath.positions[0].duration);
                         if (normalizedBeat >= 1f)
@@ -96,6 +101,20 @@ namespace HeavenStudio.Games.Scripts_AgbNightWalk
                         float newPlayYanYF = funcF(fallStartY, 12, normalizedFloatBeat);
                         transform.localPosition = new Vector3(0, newPlayYanYF);
                         break;
+                    case JumpingState.Rolling:
+                        float normalizedRoll = cond.GetPositionFromBeat(jumpBeat, 0.5f);
+                        float newRot = Mathf.LerpUnclamped(0, -360, normalizedRoll);
+                        spriteTrans.localEulerAngles = new Vector3(0, 0, newRot);
+                        break;
+                    case JumpingState.HighJumping:
+                        Vector3 posH = GetPathPositionFromBeat(highJumpPath, Math.Min(jumpBeat + highJumpPath.positions[0].duration, cond.songPositionInBeatsAsDouble), jumpBeat);
+                        transform.localPosition = posH;
+                        float normalizedBeatH = cond.GetPositionFromBeat(jumpBeat, highJumpPath.positions[0].duration);
+                        if (normalizedBeatH >= 1f)
+                        {
+                            Walk();
+                        }
+                        break;
                 }
             }
         }
@@ -105,6 +124,7 @@ namespace HeavenStudio.Games.Scripts_AgbNightWalk
             jumpingState = JumpingState.Shocked;
             anim.DoScaledAnimationAsync("Shock", 0.5f);
             SoundByte.PlayOneShotGame("nightWalkAgb/shock");
+            spriteTrans.localEulerAngles = Vector3.zero;
         }
 
         public void Fall(double beat)
@@ -114,6 +134,7 @@ namespace HeavenStudio.Games.Scripts_AgbNightWalk
             playYanFallBeat = beat;
             fallStartY = transform.localPosition.y;
             SoundByte.PlayOneShotGame("nightWalkAgb/fall");
+            spriteTrans.localEulerAngles = Vector3.zero;
             Update();
         }
 
@@ -125,6 +146,7 @@ namespace HeavenStudio.Games.Scripts_AgbNightWalk
             fallStartY = transform.localPosition.y;
             star.gameObject.SetActive(true);
             StarBlink();
+            spriteTrans.localEulerAngles = Vector3.zero;
             Update();
         }
 
@@ -138,7 +160,26 @@ namespace HeavenStudio.Games.Scripts_AgbNightWalk
             jumpingState = JumpingState.Jumping;
             jumpBeat = beat;
             anim.Play("Jump", 0, 0);
+            spriteTrans.localEulerAngles = Vector3.zero;
             jumpPath.positions[0].duration = 1 - (float)Conductor.instance.SecsToBeats(Minigame.earlyTime, Conductor.instance.GetBpmAtBeat(jumpBeat));
+            Update();
+        }
+
+        public void HighJump(double beat)
+        {
+            jumpingState = JumpingState.HighJumping;
+            jumpBeat = beat;
+            anim.DoScaledAnimationAsync("HighJump", 0.5f);
+            spriteTrans.localEulerAngles = Vector3.zero;
+            highJumpPath.positions[0].duration = 1.5f - (float)Conductor.instance.SecsToBeats(Minigame.earlyTime, Conductor.instance.GetBpmAtBeat(jumpBeat));
+            Update();
+        }
+
+        public void Roll(double beat)
+        {
+            jumpingState = JumpingState.Rolling;
+            jumpBeat = beat;
+            anim.DoScaledAnimationAsync("Roll", 0.5f);
             Update();
         }
 
@@ -148,6 +189,7 @@ namespace HeavenStudio.Games.Scripts_AgbNightWalk
             jumpBeat = beat;
             anim.Play("Jump", 0, 0);
             SoundByte.PlayOneShotGame("nightWalkAgb/whiff");
+            spriteTrans.localEulerAngles = Vector3.zero;
             Update();
         }
 
@@ -156,6 +198,7 @@ namespace HeavenStudio.Games.Scripts_AgbNightWalk
             if (jumpingState == JumpingState.Walking) return;
             jumpingState = JumpingState.Walking;
             walkBeat = Conductor.instance.songPositionInBeats;
+            spriteTrans.localEulerAngles = Vector3.zero;
         }
         public void PopBalloon(int index, bool instant)
         {

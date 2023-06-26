@@ -32,6 +32,7 @@ namespace HeavenStudio.Games.Scripts_AgbNightWalk
         private bool doFillStartSound = false;
 
         private PlayerActionEvent inputEvent;
+        private PlayerActionEvent releaseEvent;
         [NonSerialized] public bool stopped;
         [SerializeField] private GameObject fallYan;
         [SerializeField] private Animator fish;
@@ -60,11 +61,13 @@ namespace HeavenStudio.Games.Scripts_AgbNightWalk
             fish.gameObject.SetActive(isFish);
             isEndEvent = game.endBeat == endBeat;
             if (isEndEvent) anim.Play("EndIdle", 0, 0);
-            isRollPlatform = !isEndEvent && game.RollOnBeat(endBeat);
+            isRollPlatform = game.RollOnBeat(endBeat);
             rollPlatform.SetActive(isRollPlatform);
             if (isRollPlatform)
             {
                 platform.SetActive(false);
+                inputEvent = game.ScheduleInput(startBeat, endBeat - startBeat, InputType.STANDARD_ALT_DOWN, JustRollHold, RollMissHold, Empty);
+                releaseEvent = game.ScheduleInput(startBeat, endBeat - startBeat + 0.5, InputType.STANDARD_ALT_UP, JustRollRelease, RollMissRelease, Empty);
             }
             else
             {
@@ -206,6 +209,7 @@ namespace HeavenStudio.Games.Scripts_AgbNightWalk
         {
             stopped = true;
             if (inputEvent != null) inputEvent.Disable();
+            if (releaseEvent != null) releaseEvent.Disable();
         }
 
         public void Disappear(double beat)
@@ -230,6 +234,36 @@ namespace HeavenStudio.Games.Scripts_AgbNightWalk
                 StartInput(newStartBeat, newStartBeat + (handler.platformCount * 0.5f));
             }
         }
+        private void JustRollHold(PlayerActionEvent caller, float state)
+        {
+            if (state >= 1f || state <= -1f)
+            {
+                return;
+            }
+            game.playYan.Roll(Conductor.instance.songPositionInBeats);
+            SoundByte.PlayOneShot("games/nightWalkRvl/highJump6");
+        }
+
+        private void JustRollRelease(PlayerActionEvent caller, float state)
+        {
+            if (state >= 1f || state <= -1f)
+            {
+                return;
+            }
+            game.playYan.HighJump(Conductor.instance.songPositionInBeats);
+            SoundByte.PlayOneShot("games/nightWalkRvl/highJump7");
+        }
+
+        private void RollMissHold(PlayerActionEvent caller)
+        {
+
+        }
+
+        private void RollMissRelease(PlayerActionEvent caller)
+        {
+
+        }
+
         private void Just(PlayerActionEvent caller, float state)
         {
             canKick = false;

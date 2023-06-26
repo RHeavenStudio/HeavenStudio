@@ -432,6 +432,7 @@ namespace HeavenStudio.Games
                 new MultiSound.Sound("games/nightWalkRvl/highJump2", beat - 0.75),
                 new MultiSound.Sound("games/nightWalkRvl/highJump3", beat - 0.5),
                 new MultiSound.Sound("games/nightWalkRvl/highJump4", beat - 0.25),
+                new MultiSound.Sound("games/nightWalkRvl/highJump5", beat),
             }, false, true);
         }
 
