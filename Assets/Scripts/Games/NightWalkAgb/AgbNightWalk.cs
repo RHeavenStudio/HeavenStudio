@@ -339,11 +339,21 @@ namespace HeavenStudio.Games
                         if (end.beat <= entity.beat) tempEnds.Add(end);
                     }
                 }
+                List<RiqEntity> tempEnds2 = new();
+                foreach (var end in tempEnds)
+                {
+                    if (end.beat <= entity.beat) tempEnds2.Add(end);
+                }
                 double lastSwitchBeat = double.MinValue;
-                if (tempEnds.Count > 0)
+                if (tempEnds2.Count > 0)
+                {
+                    tempEnds2.Sort((x, y) => x.beat.CompareTo(y.beat));
+                    lastSwitchBeat = tempEnds2[^1].beat;
+                }
+                else if (tempEnds.Count > 0)
                 {
                     tempEnds.Sort((x, y) => x.beat.CompareTo(y.beat));
-                    lastSwitchBeat = tempEnds[^1].beat;
+                    lastSwitchBeat = tempEnds[0].beat;
                 }
                 double countInBeat = double.MinValue;
                 float countInLength = 0;
