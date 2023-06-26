@@ -339,8 +339,12 @@ namespace HeavenStudio.Games
                         if (end.beat <= entity.beat) tempEnds.Add(end);
                     }
                 }
-                tempEnds.Sort((x, y) => x.beat.CompareTo(y.beat));
-                double lastSwitchBeat = tempEnds[^1].beat;
+                double lastSwitchBeat = double.MinValue;
+                if (tempEnds.Count > 0)
+                {
+                    tempEnds.Sort((x, y) => x.beat.CompareTo(y.beat));
+                    lastSwitchBeat = tempEnds[^1].beat;
+                }
                 double countInBeat = double.MinValue;
                 float countInLength = 0;
                 FindCountInBeatAndLength(lastSwitchBeat, ref countInBeat, ref countInLength);
@@ -400,6 +404,7 @@ namespace HeavenStudio.Games
         public static void PlayRollCue(double beat, RiqEntity entity)
         {
             if (!IsValidRollCue(entity)) return;
+            Debug.Log("played roll sound");
             MultiSound.Play(new MultiSound.Sound[]
             {
                 new MultiSound.Sound("games/nightWalkRvl/highJump1", beat - 1),
