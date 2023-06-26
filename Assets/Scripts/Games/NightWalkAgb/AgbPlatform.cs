@@ -242,7 +242,7 @@ namespace HeavenStudio.Games.Scripts_AgbNightWalk
                 return;
             }
             game.playYan.Roll(Conductor.instance.songPositionInBeats);
-            SoundByte.PlayOneShot("games/nightWalkRvl/highJump6");
+            SoundByte.PlayOneShot("games/nightWalkRvl/highJump5");
             anim.DoScaledAnimationAsync("Flower", 0.5f);
         }
 
@@ -251,6 +251,7 @@ namespace HeavenStudio.Games.Scripts_AgbNightWalk
             if (isFish)
             {
                 game.ScoreMiss();
+                game.playYan.transform.localPosition = new Vector3(0, 2);
                 game.playYan.Shock();
                 fish.DoScaledAnimationAsync("Shock", 0.5f);
                 handler.StopAll();
@@ -274,6 +275,9 @@ namespace HeavenStudio.Games.Scripts_AgbNightWalk
             game.playYan.HighJump(Conductor.instance.songPositionInBeats);
             SoundByte.PlayOneShot("games/nightWalkRvl/highJump7");
             rollPlatform.DoScaledAnimationAsync("RollHit", 0.5f);
+            game.starHandler.Evolve(game.evolveAmount);
+            game.hitJumps++;
+            AgbNightWalk.hitJumpsPersist++;
         }
 
         private void RollMissHold(PlayerActionEvent caller)
