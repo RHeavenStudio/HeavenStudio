@@ -364,7 +364,7 @@ namespace HeavenStudio.Games.Scripts_AgbNightWalk
             {
                 if (game.hitJumps >= game.requiredJumps && AgbNightWalk.hitJumpsPersist >= game.requiredJumpsP)
                 {
-                    anim.DoScaledAnimationAsync("EndPop", 0.5f);
+                    rollPlatform.DoScaledAnimationAsync("EndPop", 0.5f);
                     handler.StopAll();
                     handler.DestroyPlatforms(caller.timer + caller.startBeat + 2, endBeat - 2, endBeat + 1);
                     game.playYan.Float(Conductor.instance.songPositionInBeats);
@@ -461,11 +461,11 @@ namespace HeavenStudio.Games.Scripts_AgbNightWalk
             if (state >= 1f || state <= -1f)
             {
                 SoundByte.PlayOneShotGame("nightWalkAgb/ng");
-                rollPlatform.DoScaledAnimationAsync("UmbrellaBarely", 0.5f);
+                if (!isEndEvent) rollPlatform.DoScaledAnimationAsync("UmbrellaBarely", 0.5f);
                 return;
             }
             SoundByte.PlayOneShot("games/nightWalkRvl/highJump7");
-            rollPlatform.DoScaledAnimationAsync("Umbrella", 0.5f);
+            if (!isEndEvent) rollPlatform.DoScaledAnimationAsync("Umbrella", 0.5f);
             game.starHandler.Evolve(game.evolveAmount * 2);
             game.hitJumps++;
             AgbNightWalk.hitJumpsPersist++;

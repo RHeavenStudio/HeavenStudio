@@ -226,7 +226,7 @@ namespace HeavenStudio.Games
             {
                 fishBeats.Add(fishEvent.beat);
             }
-            foreach (var rollEvent in rollEvents)
+            foreach (var rollEvent in validRollEvents)
             {
                 rollBeats.Add(rollEvent.beat);
             }
@@ -346,6 +346,11 @@ namespace HeavenStudio.Games
         public static bool IsValidRollCue(RiqEntity entity)
         {
             List<RiqEntity> allEnds = EventCaller.GetAllInGameManagerList("gameManager", new string[] { "switchGame" });
+            List<RiqEntity> allRolls = EventCaller.GetAllInGameManagerList("nightWalkAgb", new string[] { "roll" });
+            if (allRolls.Find(x => x != entity && entity.beat >= x.beat && entity.beat < x.beat + x.length) != null)
+            {
+                return false;
+            }
             if (allEnds.Count > 0)
             {
                 List<RiqEntity> tempEnds = new();
