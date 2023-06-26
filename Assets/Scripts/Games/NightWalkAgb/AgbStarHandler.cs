@@ -24,6 +24,7 @@ namespace HeavenStudio.Games.Scripts_AgbNightWalk
         private AgbStar[] currentStars;
         private int collectiveEvoStage = 1;
         private GameEvent blinkEvent = new GameEvent();
+        private float halfScreenBoundaryX = 17.77695f / 2;
 
         private void Awake()
         {
@@ -53,9 +54,13 @@ namespace HeavenStudio.Games.Scripts_AgbNightWalk
 
         private void Blink()
         {
+            List<AgbStar> alreadyBlinked = new List<AgbStar>();
             for (int i = 0; i < blinkAmount; i++)
             {
-                currentStars[UnityEngine.Random.Range(0, currentStars.Length)].Blink();
+                AgbStar blinkedStar = currentStars[UnityEngine.Random.Range(0, currentStars.Length)];
+                if (alreadyBlinked.Count > 0 && alreadyBlinked.Contains(blinkedStar)) continue;
+                blinkedStar.Blink();
+                alreadyBlinked.Add(blinkedStar);
             }
         }
 
@@ -64,7 +69,7 @@ namespace HeavenStudio.Games.Scripts_AgbNightWalk
             for (int i = 0; i < amount; i++)
             {
                 List<AgbStar> nonEvolvedStars = currentStars.ToList().FindAll(x => x.evoStage == collectiveEvoStage);
-                List<AgbStar> onScreenStars = nonEvolvedStars.FindAll(x => x.transform.localPosition.x <= 17.77695f && x.transform.localPosition.x >= -17.77695f && x.transform.localPosition.y <= 10 && x.transform.localPosition.y >= -10);
+                List<AgbStar> onScreenStars = nonEvolvedStars.FindAll(x => x.transform.localPosition.x <= halfScreenBoundaryX && x.transform.localPosition.x >= -halfScreenBoundaryX && x.transform.localPosition.y <= 5 && x.transform.localPosition.y >= -5);
                 //Debug.Log("OnScreen: " + onScreenStars.Count + " nonEvolved: " + nonEvolvedStars.Count);
                 if (onScreenStars.Count > 0)
                 {
