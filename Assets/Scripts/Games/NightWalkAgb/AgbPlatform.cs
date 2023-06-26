@@ -238,10 +238,12 @@ namespace HeavenStudio.Games.Scripts_AgbNightWalk
         {
             if (state >= 1f || state <= -1f)
             {
+                anim.DoScaledAnimationAsync("FlowerBarely", 0.5f);
                 return;
             }
             game.playYan.Roll(Conductor.instance.songPositionInBeats);
             SoundByte.PlayOneShot("games/nightWalkRvl/highJump6");
+            anim.DoScaledAnimationAsync("Flower", 0.5f);
         }
 
         private void JustRollRelease(PlayerActionEvent caller, float state)
