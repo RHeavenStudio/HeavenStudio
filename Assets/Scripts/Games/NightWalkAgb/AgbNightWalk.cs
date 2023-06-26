@@ -336,7 +336,7 @@ namespace HeavenStudio.Games
                 {
                     if (end.datamodel.Split(2) == "nightWalkAgb")
                     {
-                        if (end.beat <= entity.beat) tempEnds.Add(end);
+                        tempEnds.Add(end);
                     }
                 }
                 List<RiqEntity> tempEnds2 = new();
@@ -358,7 +358,7 @@ namespace HeavenStudio.Games
                 double countInBeat = double.MinValue;
                 float countInLength = 0;
                 FindCountInBeatAndLength(lastSwitchBeat, ref countInBeat, ref countInLength);
-                return entity.beat >= countInBeat + countInLength;
+                return entity.beat >= countInBeat + countInLength && entity.beat >= lastSwitchBeat;
             }
             else
             {
