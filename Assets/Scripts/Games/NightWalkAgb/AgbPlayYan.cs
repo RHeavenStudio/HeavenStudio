@@ -69,7 +69,7 @@ namespace HeavenStudio.Games.Scripts_AgbNightWalk
                         break;
                     case JumpingState.Walking:
                         transform.localPosition = Vector3.zero;
-                        anim.DoScaledAnimation("Walk", walkBeat, 0.5f, 0.75f);
+                        anim.DoScaledAnimation("Walk", walkBeat, 0.5f, 0.35f);
                         if (PlayerInput.Pressed() && !game.IsExpectingInputNow(InputType.STANDARD_DOWN))
                         {
                             Whiff(cond.songPositionInBeatsAsDouble);
