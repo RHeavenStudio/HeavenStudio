@@ -1206,7 +1206,7 @@ TextureImporter:
         height: 43
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
-      border: {x: 0, y: 0, z: 0, w: 0}
+      border: {x: 13, y: 15, z: 17, w: 15}
       outline: []
       physicsShape: []
       tessellationDetail: 0
@@ -1616,6 +1616,27 @@ TextureImporter:
       indices: 
       edges: []
       weights: []
+    - serializedVersion: 2
+      name: platformnorod
+      rect:
+        serializedVersion: 2
+        x: 1117
+        y: 1294
+        width: 98
+        height: 97
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 5234a4cff0126f346998ec148abe5962
+      internalID: -1710010968
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
     outline: []
     physicsShape: []
     bones: []
@@ -1693,6 +1714,7 @@ TextureImporter:
       note: -1832946202
       noteImpact: -354181421
       platform: 1193791270
+      platformnorod: -1710010968
       roll1: 1372235165
       roll2: -564146531
       shockyan: 1851998298
