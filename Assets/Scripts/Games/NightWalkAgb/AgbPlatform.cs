@@ -251,6 +251,7 @@ namespace HeavenStudio.Games.Scripts_AgbNightWalk
             if (state >= 1f || state <= -1f)
             {
                 SoundByte.PlayOneShotGame("nightWalkAgb/ng");
+                rollPlatform.DoScaledAnimationAsync("RollBarely", 0.5f);
                 return;
             }
             game.playYan.HighJump(Conductor.instance.songPositionInBeats);
