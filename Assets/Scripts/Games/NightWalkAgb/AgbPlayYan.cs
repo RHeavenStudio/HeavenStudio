@@ -18,7 +18,9 @@ namespace HeavenStudio.Games.Scripts_AgbNightWalk
             Whiffing,
             Floating,
             Rolling,
-            HighJumping
+            HighJumping,
+            JumpingFall,
+            HighJumpingFall
         }
         private JumpingState jumpingState;
         private AgbNightWalk game;
@@ -50,7 +52,7 @@ namespace HeavenStudio.Games.Scripts_AgbNightWalk
                 balloonTrans.localPosition = new Vector3(balloonTrans.localPosition.x + UnityEngine.Random.Range(randomMinBalloonX, randomMaxBalloonX), balloonTrans.localPosition.y);
             }
         }
-
+        bool hasFallen;
         private void Update()
         {
             var cond = Conductor.instance;
@@ -65,6 +67,16 @@ namespace HeavenStudio.Games.Scripts_AgbNightWalk
                         if (normalizedBeat >= 1f)
                         {
                             Walk();
+                        }
+                        break;
+                    case JumpingState.JumpingFall:
+                        Vector3 posf = GetPathPositionFromBeat(jumpPath, cond.songPositionInBeatsAsDouble, jumpBeat);
+                        transform.localPosition = posf;
+                        float normalizedBeatf = cond.GetPositionFromBeat(jumpBeat, jumpPath.positions[0].duration);
+                        if (normalizedBeatf >= 1f && !hasFallen)
+                        {
+                            hasFallen = true;
+                            SoundByte.PlayOneShotGame("nightWalkAgb/fall");
                         }
                         break;
                     case JumpingState.Walking:
@@ -115,6 +127,16 @@ namespace HeavenStudio.Games.Scripts_AgbNightWalk
                             Walk();
                         }
                         break;
+                    case JumpingState.HighJumpingFall:
+                        Vector3 posHf = GetPathPositionFromBeat(highJumpPath, cond.songPositionInBeatsAsDouble, jumpBeat);
+                        transform.localPosition = posHf;
+                        float normalizedBeatHf = cond.GetPositionFromBeat(jumpBeat, highJumpPath.positions[0].duration);
+                        if (normalizedBeatHf >= 1f && !hasFallen)
+                        {
+                            hasFallen = true;
+                            SoundByte.PlayOneShotGame("nightWalkAgb/fall");
+                        }
+                        break;
                 }
             }
         }
@@ -155,9 +177,9 @@ namespace HeavenStudio.Games.Scripts_AgbNightWalk
             if (UnityEngine.Random.Range(1, 3) == 1) star.DoScaledAnimationAsync("Blink", 0.5f);
             Invoke("StarBlink", UnityEngine.Random.Range(0.1f, 0.3f));
         }
-        public void Jump(double beat)
+        public void Jump(double beat, bool fall = false)
         {
-            jumpingState = JumpingState.Jumping;
+            jumpingState = fall ? JumpingState.JumpingFall : JumpingState.Jumping;
             jumpBeat = beat;
             anim.Play("Jump", 0, 0);
             spriteTrans.localEulerAngles = Vector3.zero;
@@ -165,13 +187,14 @@ namespace HeavenStudio.Games.Scripts_AgbNightWalk
             Update();
         }
 
-        public void HighJump(double beat)
+        public void HighJump(double beat, bool fall = false, bool barely = false)
         {
-            jumpingState = JumpingState.HighJumping;
+            jumpingState = fall ? JumpingState.HighJumpingFall : JumpingState.HighJumping;
             jumpBeat = beat;
             anim.DoScaledAnimationAsync("HighJump", 0.5f);
             spriteTrans.localEulerAngles = Vector3.zero;
             highJumpPath.positions[0].duration = 1.5f - (float)Conductor.instance.SecsToBeats(Minigame.earlyTime, Conductor.instance.GetBpmAtBeat(jumpBeat));
+            highJumpPath.positions[0].height = barely ? 3.5f : 4.5f;
             Update();
         }
 

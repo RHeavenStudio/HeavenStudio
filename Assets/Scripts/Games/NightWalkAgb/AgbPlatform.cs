@@ -38,6 +38,7 @@ namespace HeavenStudio.Games.Scripts_AgbNightWalk
         [SerializeField] private GameObject fallYan;
         [SerializeField] private Animator fish;
         [SerializeField] private Animator rollPlatform;
+        [SerializeField] private GameObject rollPlatformLong;
         private bool playYanIsFalling;
         private double playYanFallBeat;
         private bool isFish;
@@ -61,9 +62,14 @@ namespace HeavenStudio.Games.Scripts_AgbNightWalk
             isFish = game.FishOnBeat(endBeat);
             fish.gameObject.SetActive(isFish);
             isEndEvent = game.endBeat == endBeat;
-            if (isEndEvent) anim.Play("EndIdle", 0, 0);
             isRollPlatform = game.RollOnBeat(endBeat);
             rollPlatform.transform.parent.gameObject.SetActive(isRollPlatform);
+            rollPlatformLong.SetActive(nextPlatformIsSameHeight && !isFinalBlock && !isEndEvent);
+            if (isEndEvent) 
+            {
+                if (isRollPlatform) rollPlatform.Play("EndIdle", 0, 0);
+                else anim.Play("EndIdle", 0, 0);
+            }
             if (isRollPlatform)
             {
                 platform.SetActive(false);
@@ -230,7 +236,8 @@ namespace HeavenStudio.Games.Scripts_AgbNightWalk
 
                 if (!startGlowing && isEndEvent && game.hitJumps >= game.requiredJumps && AgbNightWalk.hitJumpsPersist >= game.requiredJumpsP)
                 {
-                    anim.DoScaledAnimationAsync("EndGlow", 0.5f);
+                    if (isRollPlatform) rollPlatform.DoScaledAnimationAsync("EndGlow", 0.5f);
+                    else anim.DoScaledAnimationAsync("EndGlow", 0.5f);
                     startGlowing = true;
                 }
             }
@@ -281,6 +288,7 @@ namespace HeavenStudio.Games.Scripts_AgbNightWalk
         private void JustRollRelease(PlayerActionEvent caller, float state)
         {
             canKickRelease = false;
+            double beat = Conductor.instance.songPositionInBeats;
             if (isFish)
             {
                 game.ScoreMiss();
@@ -297,7 +305,68 @@ namespace HeavenStudio.Games.Scripts_AgbNightWalk
                         fish.DoScaledAnimationAsync("FishIdle", 0.5f);
                     })
                 });
-                return;
+            }
+            else if (isFinalBlock)
+            {
+                handler.DestroyPlatforms(caller.timer + caller.startBeat + 2, endBeat - 2, endBeat);
+                double missTime = 1.5 - Conductor.instance.SecsToBeats(Minigame.earlyTime, Conductor.instance.GetBpmAtBeat(beat));
+                BeatAction.New(gameObject, new List<BeatAction.Action>()
+                {
+                    new BeatAction.Action(beat + missTime, delegate
+                    {
+                        game.ScoreMiss();
+                        handler.StopAll();
+                    }),
+
+                });
+            }
+            if (isEndEvent)
+            {
+                if (game.hitJumps >= game.requiredJumps && AgbNightWalk.hitJumpsPersist >= game.requiredJumpsP)
+                {
+                    anim.DoScaledAnimationAsync("EndPop", 0.5f);
+                    handler.StopAll();
+                    handler.DestroyPlatforms(caller.timer + caller.startBeat + 2, endBeat - 2, endBeat + 1);
+                    game.playYan.Float(Conductor.instance.songPositionInBeats);
+                    handler.DevolveAll();
+                    if (isFish)
+                    {
+                        BeatAction.New(gameObject, new List<BeatAction.Action>()
+                        {
+                            new BeatAction.Action(beat + 0.5, delegate
+                            {
+                                game.ScoreMiss();
+                                game.playYan.Shock();
+                                fish.DoScaledAnimationAsync("Shock", 0.5f);
+                            }),
+                            new BeatAction.Action(caller.timer + caller.startBeat + 4, delegate
+                            {
+                                game.playYan.Fall(caller.timer + caller.startBeat + 4);
+                                fish.DoScaledAnimationAsync("FishIdle", 0.5f);
+                            })
+                        });
+                    }
+                }
+                else
+                {
+                    game.playYan.HighJump(beat, true, state >= 1f || state <= -1f);
+                    handler.DestroyPlatforms(caller.timer + caller.startBeat + 2, endBeat - 2, endBeat);
+                    double missTime = 1.5 - Conductor.instance.SecsToBeats(Minigame.earlyTime, Conductor.instance.GetBpmAtBeat(beat));
+                    BeatAction.New(gameObject, new List<BeatAction.Action>()
+                    {
+                        new BeatAction.Action(beat + missTime, delegate
+                        {
+                            game.ScoreMiss();
+                            handler.StopAll();
+                        }),
+
+                    });
+                }
+            }
+            else
+            {
+                handler.RaiseHeight(beat, lastAdditionalHeightInUnits, additionalHeightInUnits);
+                game.playYan.HighJump(beat, isFinalBlock, state >= 1f || state <= -1f);
             }
             if (state >= 1f || state <= -1f)
             {
@@ -305,7 +374,6 @@ namespace HeavenStudio.Games.Scripts_AgbNightWalk
                 rollPlatform.DoScaledAnimationAsync("UmbrellaBarely", 0.5f);
                 return;
             }
-            game.playYan.HighJump(Conductor.instance.songPositionInBeats);
             SoundByte.PlayOneShot("games/nightWalkRvl/highJump7");
             rollPlatform.DoScaledAnimationAsync("Umbrella", 0.5f);
             game.starHandler.Evolve(game.evolveAmount);
@@ -338,7 +406,7 @@ namespace HeavenStudio.Games.Scripts_AgbNightWalk
             canKick = false;
             double beat = Conductor.instance.songPositionInBeats;
             handler.RaiseHeight(beat, lastAdditionalHeightInUnits, additionalHeightInUnits);
-            game.playYan.Jump(beat);
+            game.playYan.Jump(beat, isFinalBlock);
             if (isFish)
             {
                 BeatAction.New(gameObject, new List<BeatAction.Action>()
@@ -360,6 +428,7 @@ namespace HeavenStudio.Games.Scripts_AgbNightWalk
             }
             else if (isFinalBlock)
             {
+                handler.DestroyPlatforms(caller.timer + caller.startBeat + 2, endBeat - 2, endBeat);
                 double missTime = 1 - Conductor.instance.SecsToBeats(Minigame.earlyTime, Conductor.instance.GetBpmAtBeat(beat));
                 BeatAction.New(gameObject, new List<BeatAction.Action>()
                 {
@@ -367,11 +436,13 @@ namespace HeavenStudio.Games.Scripts_AgbNightWalk
                     {
                         game.ScoreMiss();
                         handler.StopAll();
-                        game.playYan.Fall(beat + missTime);
-                        handler.DestroyPlatforms(caller.timer + caller.startBeat + 2, endBeat - 2, endBeat);
                     }),
  
                 });
+            }
+            if (isEndEvent)
+            {
+
             }
             if (state >= 1 || state <= -1)
             {
@@ -422,19 +493,19 @@ namespace HeavenStudio.Games.Scripts_AgbNightWalk
                 if (isFish)
                 {
                     BeatAction.New(gameObject, new List<BeatAction.Action>()
-                {
-                    new BeatAction.Action(beat + 0.5, delegate
                     {
-                        game.ScoreMiss();
-                        game.playYan.Shock();
-                        fish.DoScaledAnimationAsync("Shock", 0.5f);
-                    }),
-                    new BeatAction.Action(caller.timer + caller.startBeat + 4, delegate
-                    {
-                        game.playYan.Fall(caller.timer + caller.startBeat + 4);
-                        fish.DoScaledAnimationAsync("FishIdle", 0.5f);
-                    })
-                });
+                        new BeatAction.Action(beat + 0.5, delegate
+                        {
+                            game.ScoreMiss();
+                            game.playYan.Shock();
+                            fish.DoScaledAnimationAsync("Shock", 0.5f);
+                        }),
+                        new BeatAction.Action(caller.timer + caller.startBeat + 4, delegate
+                        {
+                            game.playYan.Fall(caller.timer + caller.startBeat + 4);
+                            fish.DoScaledAnimationAsync("FishIdle", 0.5f);
+                        })
+                    });
                 }
             }
             else
