@@ -123,7 +123,7 @@ namespace HeavenStudio.Games.Scripts_AgbNightWalk
         private void OnDrawGizmos()
         {
             Gizmos.color = Color.blue;
-            Gizmos.DrawWireCube(Vector3.zero, new Vector3(boundaryX, boundaryY, 0));
+            Gizmos.DrawWireCube(Vector3.zero, new Vector3(boundaryX * 2, boundaryY * 2, 0));
         }
 
         private bool ReportBlinkBeat(ref double lastReportedBeat)
