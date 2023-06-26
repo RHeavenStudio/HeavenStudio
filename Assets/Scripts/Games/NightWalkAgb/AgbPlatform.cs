@@ -90,7 +90,7 @@ namespace HeavenStudio.Games.Scripts_AgbNightWalk
                     {
                         inputEvent = game.ScheduleUserInput(startBeat, endBeat - startBeat, InputType.STANDARD_ALT_DOWN, JustRollHold, RollMissHold, Empty);
                         releaseEvent = game.ScheduleUserInput(startBeat, endBeat - startBeat + 0.5, InputType.STANDARD_ALT_UP, JustRollRelease, RollMissRelease, Empty);
-                        if (nextPlatformIsSameHeight && !isFinalBlock)
+                        if (nextPlatformIsSameHeight && !isFinalBlock && !isEndEvent)
                         {
                             BeatAction.New(gameObject, new List<BeatAction.Action>()
                             {
