@@ -36,7 +36,7 @@ namespace HeavenStudio.Games.Scripts_AgbNightWalk
         [NonSerialized] public bool stopped;
         [SerializeField] private GameObject fallYan;
         [SerializeField] private Animator fish;
-        [SerializeField] private GameObject rollPlatform;
+        [SerializeField] private Animator rollPlatform;
         private bool playYanIsFalling;
         private double playYanFallBeat;
         private bool isFish;
@@ -62,7 +62,7 @@ namespace HeavenStudio.Games.Scripts_AgbNightWalk
             isEndEvent = game.endBeat == endBeat;
             if (isEndEvent) anim.Play("EndIdle", 0, 0);
             isRollPlatform = game.RollOnBeat(endBeat);
-            rollPlatform.SetActive(isRollPlatform);
+            rollPlatform.gameObject.SetActive(isRollPlatform);
             if (isRollPlatform)
             {
                 platform.SetActive(false);
@@ -250,10 +250,12 @@ namespace HeavenStudio.Games.Scripts_AgbNightWalk
         {
             if (state >= 1f || state <= -1f)
             {
+                SoundByte.PlayOneShotGame("nightWalkAgb/ng");
                 return;
             }
             game.playYan.HighJump(Conductor.instance.songPositionInBeats);
             SoundByte.PlayOneShot("games/nightWalkRvl/highJump7");
+            rollPlatform.DoScaledAnimationAsync("RollHit", 0.5f);
         }
 
         private void RollMissHold(PlayerActionEvent caller)
