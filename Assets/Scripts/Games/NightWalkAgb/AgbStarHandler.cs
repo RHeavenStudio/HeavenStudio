@@ -65,6 +65,7 @@ namespace HeavenStudio.Games.Scripts_AgbNightWalk
             {
                 List<AgbStar> nonEvolvedStars = currentStars.ToList().FindAll(x => x.evoStage == collectiveEvoStage);
                 List<AgbStar> onScreenStars = nonEvolvedStars.FindAll(x => x.transform.localPosition.x <= 17.77695f && x.transform.localPosition.x >= -17.77695f && x.transform.localPosition.y <= 10 && x.transform.localPosition.y >= -10);
+                Debug.Log("OnScreen: " + onScreenStars.Count + " nonEvolved: " + nonEvolvedStars.Count);
                 if (onScreenStars.Count > 0)
                 {
                     AgbStar randomStar = onScreenStars[UnityEngine.Random.Range(0, onScreenStars.Count)];

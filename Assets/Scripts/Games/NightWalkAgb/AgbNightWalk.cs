@@ -63,6 +63,12 @@ namespace HeavenStudio.Games.Loaders
                 {
 
                 },
+                new GameAction("roll", "Roll")
+                {
+                    preFunctionLength = 1,
+                    defaultLength = 2,
+                    preFunction = delegate { var e = eventCaller.currentEntity; AgbNightWalk.PlayRollCue(e.beat, e); }
+                },
                 new GameAction("end", "End")
                 {
                     parameters = new List<Param>()
@@ -319,6 +325,89 @@ namespace HeavenStudio.Games
                 new MultiSound.Sound("nightWalkAgb/fish3", beat - 0.5),
             }, forcePlay: true);
         }*/
+
+        public static bool IsValidRollCue(RiqEntity entity)
+        {
+            List<RiqEntity> allEnds = EventCaller.GetAllInGameManagerList("gameManager", new string[] { "switchGame" });
+            if (allEnds.Count > 0)
+            {
+                List<RiqEntity> tempEnds = new();
+                foreach (var end in allEnds)
+                {
+                    if (end.datamodel.Split(2) == "nightWalkAgb")
+                    {
+                        if (end.beat <= entity.beat) tempEnds.Add(end);
+                    }
+                }
+                tempEnds.Sort((x, y) => x.beat.CompareTo(y.beat));
+                double lastSwitchBeat = tempEnds[^1].beat;
+                double countInBeat = double.MinValue;
+                float countInLength = 0;
+                FindCountInBeatAndLength(lastSwitchBeat, ref countInBeat, ref countInLength);
+                return entity.beat >= countInBeat + countInLength;
+            }
+            else
+            {
+                double countInBeat = double.MinValue;
+                float countInLength = 0;
+                FindCountInBeatAndLength(0, ref countInBeat, ref countInLength);
+                return entity.beat >= countInBeat + countInLength;
+            }
+        }
+
+        public static void FindCountInBeatAndLength(double beat, ref double countInBeat, ref float countInLength)
+        {
+            List<RiqEntity> countInEvents = EventCaller.GetAllInGameManagerList("nightWalkAgb", new string[] { "countIn8", "countIn4" });
+            if (countInEvents.Count > 0)
+            {
+                var allEnds = EventCaller.GetAllInGameManagerList("gameManager", new string[] { "switchGame" });
+                if (allEnds.Count == 0)
+                {
+                    countInBeat = countInEvents[^1].beat;
+                    countInLength = countInEvents[^1].length;
+                }
+                else
+                {
+                    allEnds.Sort((x, y) => x.beat.CompareTo(y.beat));
+                    double nextSwitchBeat = double.MaxValue;
+                    foreach (var end in allEnds)
+                    {
+                        if (end.datamodel.Split(2) == "nightWalkAgb") continue;
+                        if (end.beat > beat)
+                        {
+                            nextSwitchBeat = end.beat;
+                            break;
+                        }
+                    }
+                    List<RiqEntity> tempEvents = new();
+                    foreach (var countIn in countInEvents)
+                    {
+                        if (countIn.beat < nextSwitchBeat)
+                        {
+                            tempEvents.Add(countIn);
+                        }
+                    }
+                    if (tempEvents.Count > 0)
+                    {
+                        tempEvents.Sort((x, y) => x.beat.CompareTo(y.beat));
+                        countInBeat = tempEvents[tempEvents.Count - 1].beat;
+                        countInLength = tempEvents[tempEvents.Count - 1].length;
+                    }
+                }
+            }
+        }
+
+        public static void PlayRollCue(double beat, RiqEntity entity)
+        {
+            if (!IsValidRollCue(entity)) return;
+            MultiSound.Play(new MultiSound.Sound[]
+            {
+                new MultiSound.Sound("games/nightWalkRvl/highJump1", beat - 1),
+                new MultiSound.Sound("games/nightWalkRvl/highJump2", beat - 0.75),
+                new MultiSound.Sound("games/nightWalkRvl/highJump3", beat - 0.5),
+                new MultiSound.Sound("games/nightWalkRvl/highJump4", beat - 0.25),
+            }, false, true);
+        }
 
         public static void WalkingCountIn(double beat, float length)
         {
