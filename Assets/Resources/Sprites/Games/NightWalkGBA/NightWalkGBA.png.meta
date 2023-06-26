@@ -588,7 +588,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: NightWalkGBA_23
+      name: roll1
       rect:
         serializedVersion: 2
         x: 1888
@@ -609,7 +609,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: NightWalkGBA_24
+      name: roll2
       rect:
         serializedVersion: 2
         x: 2060
@@ -798,7 +798,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: NightWalkGBA_34
+      name: highJump1
       rect:
         serializedVersion: 2
         x: 3169
@@ -819,7 +819,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: NightWalkGBA_35
+      name: highJump2
       rect:
         serializedVersion: 2
         x: 3351
@@ -1644,16 +1644,12 @@ TextureImporter:
       NightWalkGBA_20: -193465265
       NightWalkGBA_21: -1673937283
       NightWalkGBA_22: -1483504733
-      NightWalkGBA_23: 1372235165
-      NightWalkGBA_24: -564146531
       NightWalkGBA_25: -1611729225
       NightWalkGBA_26: 2057711124
       NightWalkGBA_27: 745754822
       NightWalkGBA_28: 1216645664
       NightWalkGBA_3: 242634543
       NightWalkGBA_33: -2078596099
-      NightWalkGBA_34: -2145292818
-      NightWalkGBA_35: 1835935371
       NightWalkGBA_36: 384230439
       NightWalkGBA_37: 1021962739
       NightWalkGBA_40: -1838287392
@@ -1686,6 +1682,8 @@ TextureImporter:
       fall1: -2087613087
       fall2: 1736942892
       fall3: 1997566507
+      highJump1: -2145292818
+      highJump2: 1835935371
       jumpImpact: -938550924
       jumplat2: 2115410046
       jumplat3: -199434903
@@ -1695,6 +1693,8 @@ TextureImporter:
       note: -1832946202
       noteImpact: -354181421
       platform: 1193791270
+      roll1: 1372235165
+      roll2: -564146531
       shockyan: 1851998298
       star1: -118935731
       star2: -1214346626
