@@ -51,6 +51,14 @@ namespace HeavenStudio.Games.Scripts_AgbNightWalk
         {
             if (game == null) game = AgbNightWalk.instance;
             if (anim == null) anim = GetComponent<Animator>();
+            if (hitBeat > game.endBeat + 1) 
+            {
+                foreach (Transform child in transform)
+                {
+                    child.gameObject.SetActive(false);
+                }
+                return;
+            }
             isRollPlatform = game.RollOnBeat(hitBeat);
             lastAdditionalHeightInUnits = game.FindHeightUnitsAtBeat(hitBeat);
             additionalHeightInUnits = game.FindHeightUnitsAtBeat(hitBeat + (isRollPlatform ? 2 : 1));
@@ -268,11 +276,8 @@ namespace HeavenStudio.Games.Scripts_AgbNightWalk
         private void ResetInput()
         {
             double newStartBeat = endBeat + (handler.platformCount * 0.5f);
-            if (newStartBeat + (handler.platformCount * 0.5f) <= game.endBeat + 1)
-            {
-                anim.Play("Idle", 0, 0);
-                StartInput(newStartBeat, newStartBeat + (handler.platformCount * 0.5f));
-            }
+            anim.Play("Idle", 0, 0);
+            StartInput(newStartBeat, newStartBeat + (handler.platformCount * 0.5f));
         }
         private void JustRollHold(PlayerActionEvent caller, float state)
         {
