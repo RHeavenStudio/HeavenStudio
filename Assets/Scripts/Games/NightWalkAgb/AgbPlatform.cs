@@ -29,6 +29,7 @@ namespace HeavenStudio.Games.Scripts_AgbNightWalk
 
         [SerializeField] private GameObject platform;
         private bool canKick;
+        private bool canKickRelease;
         private bool doFillStartSound = false;
 
         private PlayerActionEvent inputEvent;
@@ -62,12 +63,42 @@ namespace HeavenStudio.Games.Scripts_AgbNightWalk
             isEndEvent = game.endBeat == endBeat;
             if (isEndEvent) anim.Play("EndIdle", 0, 0);
             isRollPlatform = game.RollOnBeat(endBeat);
-            rollPlatform.gameObject.SetActive(isRollPlatform);
+            rollPlatform.transform.parent.gameObject.SetActive(isRollPlatform);
             if (isRollPlatform)
             {
                 platform.SetActive(false);
-                inputEvent = game.ScheduleInput(startBeat, endBeat - startBeat, InputType.STANDARD_ALT_DOWN, JustRollHold, RollMissHold, Empty);
-                releaseEvent = game.ScheduleInput(startBeat, endBeat - startBeat + 0.5, InputType.STANDARD_ALT_UP, JustRollRelease, RollMissRelease, Empty);
+                if (startBeat < endBeat)
+                {
+                    inputEvent = game.ScheduleInput(startBeat, endBeat - startBeat, InputType.STANDARD_ALT_DOWN, JustRollHold, RollMissHold, Empty);
+                    releaseEvent = game.ScheduleInput(startBeat, endBeat - startBeat + 0.5, InputType.STANDARD_ALT_UP, JustRollRelease, RollMissRelease, Empty);
+                    canKick = true;
+                    canKickRelease = true;
+                    BeatAction.New(gameObject, new List<BeatAction.Action>()
+                    {
+                        new BeatAction.Action(endBeat, delegate
+                        {
+                            if (!stopped)
+                            {
+                                SoundByte.PlayOneShotGame("nightWalkAgb/boxKick");
+                                if (canKick)
+                                {
+                                    anim.Play("Kick", 0, 0);
+                                }
+                            }
+                        }),
+                        new BeatAction.Action(endBeat + 0.5, delegate
+                        {
+                            if (!stopped)
+                            {
+                                SoundByte.PlayOneShotGame("nightWalkAgb/boxKick");
+                                if (canKickRelease)
+                                {
+                                    rollPlatform.Play("Kick", 0, 0);
+                                }
+                            }
+                        }),
+                    });
+                }
             }
             else
             {
@@ -144,19 +175,19 @@ namespace HeavenStudio.Games.Scripts_AgbNightWalk
                     {
                         canKick = true;
                         BeatAction.New(gameObject, new List<BeatAction.Action>()
-                    {
-                        new BeatAction.Action(endBeat, delegate
                         {
-                            if (!stopped)
+                            new BeatAction.Action(endBeat, delegate
                             {
-                                SoundByte.PlayOneShotGame("nightWalkAgb/boxKick");
-                                if (canKick)
+                                if (!stopped)
                                 {
-                                    anim.Play("Kick", 0, 0);
+                                    SoundByte.PlayOneShotGame("nightWalkAgb/boxKick");
+                                    if (canKick)
+                                    {
+                                        anim.Play("Kick", 0, 0);
+                                    }
                                 }
-                            }
-                        })
-                    });
+                            })
+                        });
                     }
 
                 }
@@ -236,6 +267,7 @@ namespace HeavenStudio.Games.Scripts_AgbNightWalk
         }
         private void JustRollHold(PlayerActionEvent caller, float state)
         {
+            canKick = false;
             if (state >= 1f || state <= -1f)
             {
                 anim.DoScaledAnimationAsync("FlowerBarely", 0.5f);
@@ -248,6 +280,7 @@ namespace HeavenStudio.Games.Scripts_AgbNightWalk
 
         private void JustRollRelease(PlayerActionEvent caller, float state)
         {
+            canKickRelease = false;
             if (isFish)
             {
                 game.ScoreMiss();
@@ -269,12 +302,12 @@ namespace HeavenStudio.Games.Scripts_AgbNightWalk
             if (state >= 1f || state <= -1f)
             {
                 SoundByte.PlayOneShotGame("nightWalkAgb/ng");
-                rollPlatform.DoScaledAnimationAsync("RollBarely", 0.5f);
+                rollPlatform.DoScaledAnimationAsync("UmbrellaBarely", 0.5f);
                 return;
             }
             game.playYan.HighJump(Conductor.instance.songPositionInBeats);
             SoundByte.PlayOneShot("games/nightWalkRvl/highJump7");
-            rollPlatform.DoScaledAnimationAsync("RollHit", 0.5f);
+            rollPlatform.DoScaledAnimationAsync("Umbrella", 0.5f);
             game.starHandler.Evolve(game.evolveAmount);
             game.hitJumps++;
             AgbNightWalk.hitJumpsPersist++;
@@ -282,12 +315,22 @@ namespace HeavenStudio.Games.Scripts_AgbNightWalk
 
         private void RollMissHold(PlayerActionEvent caller)
         {
-
+            game.playYan.Walk();
+            SoundByte.PlayOneShotGame("nightWalkAgb/open" + (int)type, caller.timer + caller.startBeat + 0.5);
+            BeatAction.New(gameObject, new List<BeatAction.Action>()
+            {
+                new BeatAction.Action(caller.timer + caller.startBeat + 0.5, delegate { anim.DoScaledAnimationAsync("Note", 0.5f); })
+            });
         }
 
         private void RollMissRelease(PlayerActionEvent caller)
         {
-
+            game.playYan.Walk();
+            SoundByte.PlayOneShotGame("nightWalkAgb/open" + (int)type, caller.timer + caller.startBeat + 0.5);
+            BeatAction.New(gameObject, new List<BeatAction.Action>()
+            {
+                new BeatAction.Action(caller.timer + caller.startBeat + 0.5, delegate { rollPlatform.DoScaledAnimationAsync("Note", 0.5f); })
+            });
         }
 
         private void Just(PlayerActionEvent caller, float state)
