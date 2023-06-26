@@ -141,10 +141,10 @@ namespace HeavenStudio.Games.Scripts_AgbNightWalk
             }
         }
 
-        public void Shock()
+        public void Shock(bool roll = false)
         {
             jumpingState = JumpingState.Shocked;
-            anim.DoScaledAnimationAsync("Shock", 0.5f);
+            anim.DoScaledAnimationAsync(roll ? "RollShock" : "Shock", 0.5f);
             SoundByte.PlayOneShotGame("nightWalkAgb/shock");
             spriteTrans.localEulerAngles = Vector3.zero;
         }

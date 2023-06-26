@@ -89,7 +89,6 @@ namespace HeavenStudio.Games.Scripts_AgbNightWalk
                     if (game.ShouldNotJumpOnBeat(endBeat) || isFish)
                     {
                         inputEvent = game.ScheduleUserInput(startBeat, endBeat - startBeat, InputType.STANDARD_ALT_DOWN, JustRollHold, RollMissHold, Empty);
-                        releaseEvent = game.ScheduleUserInput(startBeat, endBeat - startBeat + 0.5, InputType.STANDARD_ALT_UP, JustRollRelease, RollMissRelease, Empty);
                         if (nextPlatformIsSameHeight && !isFinalBlock && !isEndEvent)
                         {
                             BeatAction.New(gameObject, new List<BeatAction.Action>()
@@ -142,7 +141,6 @@ namespace HeavenStudio.Games.Scripts_AgbNightWalk
                     else
                     {
                         inputEvent = game.ScheduleInput(startBeat, endBeat - startBeat, InputType.STANDARD_ALT_DOWN, JustRollHold, RollMissHold, Empty);
-                        releaseEvent = game.ScheduleInput(startBeat, endBeat - startBeat + 0.5, InputType.STANDARD_ALT_UP, JustRollRelease, RollMissRelease, Empty);
                     }
                     canKick = true;
                     BeatAction.New(gameObject, new List<BeatAction.Action>()
@@ -327,6 +325,7 @@ namespace HeavenStudio.Games.Scripts_AgbNightWalk
         public void Disappear(double beat)
         {
             anim.DoScaledAnimationAsync("Destroy", 0.5f);
+            rollPlatform.DoScaledAnimationAsync("Destroy", 0.5f);
             SoundByte.PlayOneShotGame("nightWalkAgb/disappear");
             if (fallYan.activeSelf || fallYanRoll.activeSelf)
             {
@@ -346,6 +345,16 @@ namespace HeavenStudio.Games.Scripts_AgbNightWalk
         private void JustRollHold(PlayerActionEvent caller, float state)
         {
             canKick = false;
+
+            if (caller.noAutoplay)
+            {
+                releaseEvent = game.ScheduleUserInput(startBeat, endBeat - startBeat + 0.5, InputType.STANDARD_ALT_UP, JustRollRelease, RollMissRelease, Empty);
+            }
+            else
+            {
+                releaseEvent = game.ScheduleInput(startBeat, endBeat - startBeat + 0.5, InputType.STANDARD_ALT_UP, JustRollRelease, RollMissRelease, Empty);
+            }
+
             if (state >= 1f || state <= -1f)
             {
                 anim.DoScaledAnimationAsync("FlowerBarely", 0.5f);
@@ -393,7 +402,7 @@ namespace HeavenStudio.Games.Scripts_AgbNightWalk
                     {
                         game.ScoreMiss();
                         game.playYan.transform.localPosition = new Vector3(0, 2);
-                        game.playYan.Shock();
+                        game.playYan.Shock(true);
                         fish.DoScaledAnimationAsync("Shock", 0.5f);
                         handler.StopAll();
                         handler.DestroyPlatforms(caller.timer + caller.startBeat + 2, endBeat - 2, endBeat + 6);
@@ -431,7 +440,7 @@ namespace HeavenStudio.Games.Scripts_AgbNightWalk
                 {
                     game.ScoreMiss();
                     game.playYan.transform.localPosition = new Vector3(0, 2);
-                    game.playYan.Shock();
+                    game.playYan.Shock(true);
                     fish.DoScaledAnimationAsync("Shock", 0.5f);
                     handler.StopAll();
                     handler.DestroyPlatforms(caller.timer + caller.startBeat + 2, endBeat - 2, endBeat + 6);
@@ -473,6 +482,15 @@ namespace HeavenStudio.Games.Scripts_AgbNightWalk
 
         private void RollMissHold(PlayerActionEvent caller)
         {
+            if (caller.noAutoplay)
+            {
+                releaseEvent = game.ScheduleUserInput(startBeat, endBeat - startBeat + 0.5, InputType.STANDARD_ALT_UP, JustRollRelease, RollMissRelease, Empty);
+            }
+            else
+            {
+                releaseEvent = game.ScheduleInput(startBeat, endBeat - startBeat + 0.5, InputType.STANDARD_ALT_UP, JustRollRelease, RollMissRelease, Empty);
+            }
+            releaseEvent.canHit = false;
             game.playYan.Walk();
             SoundByte.PlayOneShotGame("nightWalkAgb/open" + (int)type, caller.timer + caller.startBeat + 0.5);
             BeatAction.New(gameObject, new List<BeatAction.Action>()
@@ -483,7 +501,7 @@ namespace HeavenStudio.Games.Scripts_AgbNightWalk
 
         private void RollMissRelease(PlayerActionEvent caller)
         {
-            if (nextPlatformIsSameHeight)
+            if (nextPlatformIsSameHeight && !isEndEvent)
             {
                 game.playYan.Walk();
                 SoundByte.PlayOneShotGame("nightWalkAgb/open" + (int)type, caller.timer + caller.startBeat + 0.5);
