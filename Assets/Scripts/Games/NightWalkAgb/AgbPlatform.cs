@@ -35,11 +35,14 @@ namespace HeavenStudio.Games.Scripts_AgbNightWalk
         [NonSerialized] public bool stopped;
         [SerializeField] private GameObject fallYan;
         [SerializeField] private Animator fish;
+        [SerializeField] private GameObject rollPlatform;
         private bool playYanIsFalling;
         private double playYanFallBeat;
         private bool isFish;
         private bool isFinalBlock;
         private bool isEndEvent;
+        private bool nextPlatformIsSameHeight;
+        private bool isRollPlatform;
 
         public void StartInput(double beat, double hitBeat)
         {
@@ -47,43 +50,52 @@ namespace HeavenStudio.Games.Scripts_AgbNightWalk
             lastAdditionalHeightInUnits = game.FindHeightUnitsAtBeat(hitBeat);
             additionalHeightInUnits = game.FindHeightUnitsAtBeat(hitBeat + 1);
             additionalHeight = lastAdditionalHeightInUnits * handler.heightAmount;
-            bool nextPlatformIsSameHeight = lastAdditionalHeightInUnits == additionalHeightInUnits;
+            nextPlatformIsSameHeight = lastAdditionalHeightInUnits == additionalHeightInUnits;
             isFinalBlock = hitBeat == game.endBeat + 1;
             platform.SetActive(nextPlatformIsSameHeight && !isFinalBlock);
             startBeat = beat;
             endBeat = hitBeat;
+            if (game.RollOnBeat(endBeat - 1)) endBeat += handler.platformCount;
             isFish = game.FishOnBeat(endBeat);
             fish.gameObject.SetActive(isFish);
             isEndEvent = game.endBeat == endBeat;
             if (isEndEvent) anim.Play("EndIdle", 0, 0);
-            if (game.platformTypes.ContainsKey(hitBeat))
+            isRollPlatform = !isEndEvent && game.RollOnBeat(endBeat);
+            rollPlatform.SetActive(isRollPlatform);
+            if (isRollPlatform)
             {
-                if (game.platformTypes[hitBeat].platformType == AgbNightWalk.PlatformType.Lollipop)
-                {
-                    type = PlatformType.Lollipop;
-                }
-                else
-                {
-                    type = PlatformType.Umbrella;
-                }
-                doFillStartSound = false;
+                platform.SetActive(false);
             }
             else
             {
-                type = PlatformType.Flower;
-                if (game.platformTypes.ContainsKey(hitBeat + 1)) 
-                { 
-                    doFillStartSound = game.platformTypes[hitBeat + 1].fillType != AgbNightWalk.FillType.None;
-                }
-            }
-            if (startBeat < endBeat)
-            {
-                if (game.ShouldNotJumpOnBeat(endBeat) || isFish)
+                if (game.platformTypes.ContainsKey(hitBeat))
                 {
-                    inputEvent = AgbNightWalk.instance.ScheduleUserInput(startBeat, endBeat - startBeat, InputType.STANDARD_DOWN, isEndEvent ? JustEnd : Just, Miss, Empty);
-                    if (nextPlatformIsSameHeight && !isFinalBlock)
+                    if (game.platformTypes[hitBeat].platformType == AgbNightWalk.PlatformType.Lollipop)
                     {
-                        BeatAction.New(gameObject, new List<BeatAction.Action>()
+                        type = PlatformType.Lollipop;
+                    }
+                    else
+                    {
+                        type = PlatformType.Umbrella;
+                    }
+                    doFillStartSound = false;
+                }
+                else
+                {
+                    type = PlatformType.Flower;
+                    if (game.platformTypes.ContainsKey(hitBeat + 1))
+                    {
+                        doFillStartSound = game.platformTypes[hitBeat + 1].fillType != AgbNightWalk.FillType.None;
+                    }
+                }
+                if (startBeat < endBeat)
+                {
+                    if (game.ShouldNotJumpOnBeat(endBeat) || isFish)
+                    {
+                        inputEvent = AgbNightWalk.instance.ScheduleUserInput(startBeat, endBeat - startBeat, InputType.STANDARD_DOWN, isEndEvent ? JustEnd : Just, Miss, Empty);
+                        if (nextPlatformIsSameHeight && !isFinalBlock)
+                        {
+                            BeatAction.New(gameObject, new List<BeatAction.Action>()
                         {
                             new BeatAction.Action(endBeat, delegate
                             {
@@ -101,10 +113,10 @@ namespace HeavenStudio.Games.Scripts_AgbNightWalk
                                 }
                             })
                         });
-                    }
-                    else
-                    {
-                        BeatAction.New(gameObject, new List<BeatAction.Action>()
+                        }
+                        else
+                        {
+                            BeatAction.New(gameObject, new List<BeatAction.Action>()
                         {
                             new BeatAction.Action(endBeat, delegate
                             {
@@ -119,19 +131,19 @@ namespace HeavenStudio.Games.Scripts_AgbNightWalk
                                 }
                             })
                         });
+                        }
                     }
-                }
-                else if (!isFish)
-                {
-                    inputEvent = AgbNightWalk.instance.ScheduleInput(startBeat, endBeat - startBeat, InputType.STANDARD_DOWN, isEndEvent ? JustEnd : Just, Miss, Empty);
-                }
-                if (nextPlatformIsSameHeight && !isEndEvent)
-                {
-                    canKick = true;
-                    BeatAction.New(gameObject, new List<BeatAction.Action>()
+                    else if (!isFish)
                     {
-                        new BeatAction.Action(endBeat, delegate 
-                        { 
+                        inputEvent = AgbNightWalk.instance.ScheduleInput(startBeat, endBeat - startBeat, InputType.STANDARD_DOWN, isEndEvent ? JustEnd : Just, Miss, Empty);
+                    }
+                    if (nextPlatformIsSameHeight && !isEndEvent)
+                    {
+                        canKick = true;
+                        BeatAction.New(gameObject, new List<BeatAction.Action>()
+                    {
+                        new BeatAction.Action(endBeat, delegate
+                        {
                             if (!stopped)
                             {
                                 SoundByte.PlayOneShotGame("nightWalkAgb/boxKick");
@@ -142,8 +154,9 @@ namespace HeavenStudio.Games.Scripts_AgbNightWalk
                             }
                         })
                     });
-                }
+                    }
 
+                }
             }
         }
 
@@ -330,7 +343,7 @@ namespace HeavenStudio.Games.Scripts_AgbNightWalk
 
         private void Miss(PlayerActionEvent caller)
         {
-            if (platform.activeSelf)
+            if (nextPlatformIsSameHeight)
             {
                 game.playYan.Walk();
                 SoundByte.PlayOneShotGame("nightWalkAgb/open" + (int)type, caller.timer + caller.startBeat + 0.5);

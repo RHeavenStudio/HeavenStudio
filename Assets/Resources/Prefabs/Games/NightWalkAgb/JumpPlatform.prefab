@@ -277,6 +277,7 @@ MonoBehaviour:
   platform: {fileID: 8602790381015410525}
   fallYan: {fileID: 142440390168805750}
   fish: {fileID: 3392966659349309181}
+  rollPlatform: {fileID: 3096308579732643404}
 --- !u!95 &4653690538679061971
 Animator:
   serializedVersion: 5
@@ -1000,7 +1001,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 4921680285842369143}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 4.4, y: 6.48, z: 0}
+  m_LocalPosition: {x: 4.7253, y: 6.48, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -1053,7 +1054,7 @@ SpriteRenderer:
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 1
-  m_Size: {x: 3.78, y: 0.43}
+  m_Size: {x: 4.430684, y: 0.43}
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
   m_WasSpriteAssigned: 1

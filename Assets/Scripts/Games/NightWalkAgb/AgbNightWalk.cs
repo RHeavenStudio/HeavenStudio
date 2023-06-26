@@ -148,6 +148,7 @@ namespace HeavenStudio.Games
         List<HeightEvent> heightEntityEvents = new();
         [NonSerialized] public Dictionary<double, TypeEvent> platformTypes = new();
         private List<double> fishBeats = new();
+        private List<double> rollBeats = new();
         public struct TypeEvent
         {
             public PlatformType platformType;
@@ -218,6 +219,11 @@ namespace HeavenStudio.Games
             {
                 fishBeats.Add(fishEvent.beat);
             }
+            List<RiqEntity> rollEvents = EventCaller.GetAllInGameManagerList("nightWalkAgb", new string[] { "roll" });
+            foreach (var rollEvent in rollEvents)
+            {
+                rollBeats.Add(rollEvent.beat);
+            }
         }
 
         private void OnDestroy()
@@ -245,6 +251,11 @@ namespace HeavenStudio.Games
         public bool FishOnBeat(double beat)
         {
             return fishBeats.Contains(beat);
+        }
+
+        public bool RollOnBeat(double beat)
+        {
+            return rollBeats.Contains(beat);
         }
 
         public int FindHeightUnitsAtBeat(double beat)
