@@ -39,6 +39,7 @@ These builds include experimental new features that will not be included in Rele
 
 
 #### Important Notes:
+- MP3 audio with variable bitrate encoding may [desync when seeking in the editor](https://github.com/RHeavenStudio/HeavenStudio/issues/490). Either use MP3s with constant bitrate encoding or use one of our other supported formats (OGG Vorbis, WAV...)
 - On MacOS and Linux builds you may [experience bugs with audio-related tasks](https://github.com/RHeavenStudio/HeavenStudio/issues/72), but in most cases Heaven Studio works perfectly.
 - On MacOS you'll need to have Discord open in the background for now, there's a bug that causes the DiscordSDK library to crash when the rich presence is updated while Discord is not open in the background.
 
