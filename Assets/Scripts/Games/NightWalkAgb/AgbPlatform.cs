@@ -60,6 +60,13 @@ namespace HeavenStudio.Games.Scripts_AgbNightWalk
                 }
                 return;
             }
+            if (game.RollOnBeat(hitBeat - 1))
+            {
+                startBeat = beat;
+                endBeat = hitBeat;
+                ResetInput();
+                return;
+            }
             isRollPlatform = game.RollOnBeat(hitBeat);
             lastAdditionalHeightInUnits = game.FindHeightUnitsAtBeat(hitBeat);
             additionalHeightInUnits = game.FindHeightUnitsAtBeat(hitBeat + (isRollPlatform ? 2 : 1));
@@ -69,7 +76,6 @@ namespace HeavenStudio.Games.Scripts_AgbNightWalk
             platform.SetActive(nextPlatformIsSameHeight && !isFinalBlock);
             startBeat = beat;
             endBeat = hitBeat;
-            if (game.RollOnBeat(endBeat - 1)) endBeat += handler.platformCount;
             isFish = game.FishOnBeat(endBeat);
             fish.gameObject.SetActive(isFish);
             isEndEvent = game.endBeat == endBeat;
@@ -336,11 +342,11 @@ namespace HeavenStudio.Games.Scripts_AgbNightWalk
             }
         }
 
-        private void ResetInput()
+        private void ResetInput(float multiplier = 0.5f)
         {
-            double newStartBeat = endBeat + (handler.platformCount * 0.5f);
+            double newStartBeat = endBeat + (handler.platformCount * multiplier);
             anim.Play("Idle", 0, 0);
-            StartInput(newStartBeat, newStartBeat + (handler.platformCount * 0.5f));
+            StartInput(newStartBeat, newStartBeat + (handler.platformCount * multiplier));
         }
         private void JustRollHold(PlayerActionEvent caller, float state)
         {

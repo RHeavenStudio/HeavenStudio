@@ -380,14 +380,16 @@ namespace HeavenStudio.Games
                 double countInBeat = double.MinValue;
                 float countInLength = 0;
                 FindCountInBeatAndLength(lastSwitchBeat, ref countInBeat, ref countInLength);
-                return entity.beat >= countInBeat + countInLength && entity.beat >= lastSwitchBeat;
+                bool isNotOffbeat = entity.beat % 1 == countInBeat % 1;
+                return entity.beat >= countInBeat + countInLength && entity.beat >= lastSwitchBeat && isNotOffbeat;
             }
             else
             {
                 double countInBeat = double.MinValue;
                 float countInLength = 0;
                 FindCountInBeatAndLength(0, ref countInBeat, ref countInLength);
-                return entity.beat >= countInBeat + countInLength;
+                bool isNotOffbeat = entity.beat % 1 == countInBeat % 1;
+                return entity.beat >= countInBeat + countInLength && isNotOffbeat;
             }
         }
 
