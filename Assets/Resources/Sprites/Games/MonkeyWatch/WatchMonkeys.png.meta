@@ -1431,12 +1431,12 @@ TextureImporter:
       name: YellowMonkey_70
       rect:
         serializedVersion: 2
-        x: 2836
-        y: 1204
-        width: 88
-        height: 84
-      alignment: 0
-      pivot: {x: 0.5, y: 0.5}
+        x: 2832
+        y: 1200
+        width: 97
+        height: 93
+      alignment: 9
+      pivot: {x: 0.49582443, y: 0.48693454}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
@@ -1553,6 +1553,27 @@ TextureImporter:
       indices: 
       edges: []
       weights: []
+    - serializedVersion: 2
+      name: WatchMonkeys_0
+      rect:
+        serializedVersion: 2
+        x: 2809
+        y: 1358
+        width: 131
+        height: 202
+      alignment: 9
+      pivot: {x: 0.51231885, y: 0.6238494}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: db0e6282685e10747aed80db08697123
+      internalID: -299946460
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
     outline: []
     physicsShape: []
     bones: []
@@ -1564,6 +1585,7 @@ TextureImporter:
     weights: []
     secondaryTextures: []
     nameFileIdTable:
+      WatchMonkeys_0: -299946460
       YellowMonkey_0: 965511078
       YellowMonkey_1: 1127406036
       YellowMonkey_10: 1750096047
