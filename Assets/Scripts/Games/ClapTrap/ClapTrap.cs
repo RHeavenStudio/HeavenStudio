@@ -19,7 +19,9 @@ namespace HeavenStudio.Games.Loaders
                     resizable = true,
                     parameters = new List<Param>()
                     {
-                        new Param("slapper", ClapTrap.ClapType.Hand, "Slapper", "The slapper attempting to hit the doll"),
+                        new Param("object", ClapTrap.ClapType.Hand, "Object", "The object attempting to hit the doll"),
+                        //new Param("sighBeat", new EntityTypes.Float(2, 100), "Sigh Beat", "The slapper attempting to hit the doll"),
+                        new Param("spotlight", true, "Spotlight", "Whether or not there's a spotlight for the cue"),
                     }
                 },
                 new GameAction("change background color", "Change Background Color")
@@ -130,11 +132,13 @@ namespace HeavenStudio.Games
         [Header("Animators")]
         public Animator dollHead;
         public Animator dollArms;
+        public Animator clapEffect;
 
         [Header("Can Clap")]
         // look at me go, I'm a boolean
         // wow now I'm an integer
-        private int canClap = 0;
+        // aaaand back to a boolean
+        private bool canClap = true;
 
         void Awake()
         {
@@ -143,14 +147,17 @@ namespace HeavenStudio.Games
 
         private void Update()
         {
-            if (PlayerInput.Pressed() && canClap == 0 && !IsExpectingInputNow(InputType.STANDARD_DOWN))
+            if (PlayerInput.Pressed() && canClap == true && !IsExpectingInputNow(InputType.STANDARD_DOWN))
             {
                 Jukebox.PlayOneShotGame($"clapTrap/clap");
+
                 dollArms.DoScaledAnimationAsync("ArmsWhiff", 0.5f);
+                clapEffect.DoScaledAnimationAsync("ClapEffect", 0.5f);
+
                 BeatAction.New(instance.gameObject, new List<BeatAction.Action>()
                 {
-                    new BeatAction.Action(Conductor.instance.songPositionInBeats, delegate { canClap += 1; }),
-                    new BeatAction.Action(Conductor.instance.songPositionInBeats + 1.2, delegate { canClap += -1; })
+                    new BeatAction.Action(Conductor.instance.songPositionInBeats, delegate { canClap = false; }),
+                    new BeatAction.Action(Conductor.instance.songPositionInBeats + 1.2, delegate { canClap = true; })
                 });
             }
 
@@ -186,12 +193,9 @@ namespace HeavenStudio.Games
                 Jukebox.PlayOneShotGame($"clapTrap/goodClap{UnityEngine.Random.Range(1, 4)}");
                 dollHead.DoScaledAnimationAsync("HeadHit", 0.5f);
             }
+
             dollArms.DoScaledAnimationAsync("ArmsHit", 0.5f);
-            BeatAction.New(instance.gameObject, new List<BeatAction.Action>()
-                {
-                    new BeatAction.Action(Conductor.instance.songPositionInBeats, delegate { canClap += 1; }),
-                    new BeatAction.Action(Conductor.instance.songPositionInBeats + 1.8, delegate { canClap += -1; })
-                });
+            clapEffect.DoScaledAnimationAsync("ClapEffect", 0.5f);
         }
 
         private void Miss(PlayerActionEvent caller)
@@ -199,11 +203,6 @@ namespace HeavenStudio.Games
             Jukebox.PlayOneShotGame($"clapTrap/miss");
             dollHead.DoScaledAnimationAsync("HeadMiss", 0.5f);
             dollArms.DoScaledAnimationAsync("ArmsMiss", 0.5f);
-            BeatAction.New(instance.gameObject, new List<BeatAction.Action>()
-                {
-                    new BeatAction.Action(Conductor.instance.songPositionInBeats, delegate { canClap += 1; }),
-                    new BeatAction.Action(Conductor.instance.songPositionInBeats + 1.2, delegate { canClap += -1; })
-                });
         }
 
         private void Out(PlayerActionEvent caller) 
