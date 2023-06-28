@@ -2,7 +2,6 @@ using HeavenStudio.Util;
 using System;
 using System.Collections.Generic;
 using UnityEngine;
-using NaughtyBezierCurves;
 
 namespace HeavenStudio.Games.Loaders
 {
@@ -15,26 +14,23 @@ namespace HeavenStudio.Games.Loaders
             {
                 new GameAction("beat intervals", "Start Interval")
                 {
-                    preFunction = delegate { var e = eventCaller.currentEntity; WorkingDough.PreSetIntervalStart(e.beat, e.length);  },
+                    preFunction = delegate { var e = eventCaller.currentEntity; WorkingDough.PreSetIntervalStart(e.beat, e.length, e["auto"]);  },
                     defaultLength = 8f,
                     resizable = true,
-                    priority = 2,
+                    parameters = new List<Param>()
+                    {
+                        new Param("auto", true, "Auto Pass Turn", "Will the turn automatically be passed at the end of this event?")
+                    }
                 },
                 new GameAction("small ball", "Small Ball")
                 {
-                    preFunction = delegate { var e = eventCaller.currentEntity; WorkingDough.PreSpawnBall(e.beat, false, false);  },
                     defaultLength = 0.5f,
                     priority = 1,
-                    inactiveFunction = delegate { var e = eventCaller.currentEntity; WorkingDough.OnSpawnBallInactive(e.beat, false, false); },
-                    function = delegate { var e = eventCaller.currentEntity; WorkingDough.instance.OnSpawnBall(e.beat, false, false); }
                 },
                 new GameAction("big ball", "Big Ball")
                 {
-                    preFunction = delegate { var e = eventCaller.currentEntity; WorkingDough.PreSpawnBall(e.beat, true, e["hasGandw"]);  },
                     defaultLength = 0.5f,
                     priority = 1,
-                    inactiveFunction = delegate { var e = eventCaller.currentEntity; WorkingDough.OnSpawnBallInactive(e.beat, true, e["hasGandw"]); },
-                    function = delegate { var e = eventCaller.currentEntity; WorkingDough.instance.OnSpawnBall(e.beat, true, e["hasGandw"]); },
                     parameters = new List<Param>()
                     {
                         new Param("hasGandw", false, "Has Mr. Game & Watch")
@@ -103,8 +99,12 @@ namespace HeavenStudio.Games.Loaders
                 },
                 new GameAction("disableBG", "Toggle Background")
                 {
-                    function = delegate { WorkingDough.instance.DisableBG(); },
-                    defaultLength = 0.5f
+                    function = delegate { WorkingDough.instance.DisableBG(eventCaller.currentEntity["ship"]); },
+                    defaultLength = 0.5f,
+                    parameters = new List<Param>()
+                    {
+                        new Param("ship", false, "Spaceship Only", "Will only the spaceship be affected by this event?")
+                    }
                 }
             },
             new List<string>() {"rvl", "repeat"},
@@ -117,6 +117,7 @@ namespace HeavenStudio.Games.Loaders
 
 namespace HeavenStudio.Games
 {
+    using Jukebox;
     using Scripts_WorkingDough;
 
     public class WorkingDough : Minigame
@@ -154,6 +155,7 @@ namespace HeavenStudio.Games
         [SerializeField] Animator gandwAnim;
 
         [SerializeField] private GameObject[] bgObjects;
+        [SerializeField] private GameObject shipObject;
         private bool bgDisabled;
 
         [Header("Variables")]
@@ -165,14 +167,7 @@ namespace HeavenStudio.Games
         double gandMovingStartBeat;
         public bool bigMode;
         public bool bigModePlayer;
-        static List<QueuedBall> queuedBalls = new List<QueuedBall>();
         static List<double> passedTurns = new List<double>();
-        struct QueuedBall
-        {
-            public double beat;
-            public bool isBig;
-            public bool hasGandw;
-        }
         public bool spaceshipRisen = false;
         public bool spaceshipRising = false;
         bool liftingDoughDudes;
@@ -215,10 +210,6 @@ namespace HeavenStudio.Games
 
         void Awake()
         {
-            if (crHandlerInstance == null)
-            {
-                crHandlerInstance = new CallAndResponseHandler(8);
-            }
             instance = this;
         }
 
@@ -228,73 +219,83 @@ namespace HeavenStudio.Games
             doughDudesHolderAnim.Play("OnGround", 0, 0);
         }
 
-        public void DisableBG()
+        private bool shipOnly;
+
+        public void DisableBG(bool ship)
         {
+            shipOnly = ship;
             bgDisabled = !bgDisabled;
             foreach (var bgObject in bgObjects)
             {
-                bgObject.SetActive(!bgDisabled);
+                bgObject.SetActive(!bgDisabled || shipOnly);
             }
+            shipObject.SetActive(!bgDisabled && !shipOnly);
         }
 
-        public void SetIntervalStart(double beat, float interval)
+        private static List<RiqEntity> GetAllBallsInBetweenBeat(double beat, double endBeat)
         {
-            if (!crHandlerInstance.IntervalIsActive())
-            {
-                bigMode = false;
-                BeatAction.New(ballTransporterLeftNPC, new List<BeatAction.Action>()
-                {
-                    new BeatAction.Action(beat - 1, delegate
-                    {
-                        if (!instance.ballTransporterLeftNPC.GetComponent<Animator>().IsPlayingAnimationName("BallTransporterLeftOpened"))
-                        {
-                            instance.ballTransporterLeftNPC.GetComponent<Animator>().Play("BallTransporterLeftOpen", 0, 0);
-                            instance.ballTransporterRightNPC.GetComponent<Animator>().Play("BallTransporterRightOpen", 0, 0);
-                            if (instance.gandwHasEntered && !bgDisabled) instance.gandwAnim.Play("GANDWLeverUp", 0, 0);
-                        }
-                    }),
-                //Open player transporters
-                    /*
-                    new BeatAction.Action(beat + interval - 1f, delegate {
-                         ballTransporterRightPlayer.GetComponent<Animator>().Play("BallTransporterRightOpen", 0, 0);
-                    }),
-                    new BeatAction.Action(beat + interval - 1f, delegate {
-                        ballTransporterRightPlayer.GetComponent<Animator>().Play("BallTransporterRightOpen", 0, 0);
-                    }),*/
+            List<RiqEntity> ballEvents = EventCaller.GetAllInGameManagerList("workingDough", new string[] { "small ball", "big ball" });
+            List<RiqEntity> tempEvents = new();
 
-                    //Close npc transporters
-                    new BeatAction.Action(beat + interval, delegate {
-                        if (bigMode)
-                        {
-                            NPCBallTransporters.GetComponent<Animator>().Play("NPCExitBigMode", 0, 0);
-                            bigMode = false;
-                        }
-                    }),
-                    /*
-                    new BeatAction.Action(beat + interval + 1, delegate { if (!intervalStarted) ballTransporterLeftNPC.GetComponent<Animator>().Play("BallTransporterLeftClose", 0, 0); }),
-                    new BeatAction.Action(beat + interval + 1, delegate { if (!intervalStarted) ballTransporterRightNPC.GetComponent<Animator>().Play("BallTransporterRightClose", 0, 0); }),
-                    new BeatAction.Action(beat + interval + 1, delegate { if (gandwHasEntered) gandwAnim.Play("MrGameAndWatchLeverDown", 0, 0); }),
-                    //Close player transporters
-                    new BeatAction.Action(beat + interval * 2 + 1, delegate { ballTransporterLeftPlayer.GetComponent<Animator>().Play("BallTransporterLeftClose", 0, 0); }),
-                    new BeatAction.Action(beat + interval * 2 + 1, delegate { ballTransporterRightPlayer.GetComponent<Animator>().Play("BallTransporterRightClose", 0, 0); }),
-                    new BeatAction.Action(beat + interval * 2 + 1, delegate {
-                        if (bigModePlayer)
-                        {
-                            PlayerBallTransporters.GetComponent<Animator>().Play("PlayerExitBigMode", 0, 0);
-                            bigModePlayer = false;
-                        }
-                    }),
-                    */
-                });
+            foreach (var entity in ballEvents)
+            {
+                if (entity.beat >= beat && entity.beat < endBeat)
+                {
+                    tempEvents.Add(entity);
+                }
             }
+            return tempEvents;
+        }
+
+        public void SetIntervalStart(double beat, double gameSwitchBeat, float interval = 8f, bool autoPassTurn = true)
+        {
+            CallAndResponseHandler newHandler = new();
+            crHandlerInstance = newHandler;
             crHandlerInstance.StartInterval(beat, interval);
+            List<RiqEntity> relevantBalls = GetAllBallsInBetweenBeat(beat, beat + interval);
+            bool hasBigBall = false;
+            foreach (var ball in relevantBalls)
+            {
+                bool isBig = ball.datamodel == "workingDough/big ball";
+                if (ball.beat >= gameSwitchBeat)
+                {
+                    SpawnBall(ball.beat - 1, isBig, isBig && ball["hasGandw"]);
+                    OnSpawnBall(ball.beat, isBig, isBig && ball["hasGandw"]);
+                }
+                else
+                {
+                    OnSpawnBallInactive(ball.beat, isBig, isBig && ball["hasGandw"]);
+                }
+                if (isBig) hasBigBall = true;
+            }
+            if (autoPassTurn)
+            {
+                PassTurn(beat + interval, interval, newHandler);
+            }
+            BeatAction.New(ballTransporterLeftNPC, new List<BeatAction.Action>()
+            {
+                new BeatAction.Action(beat - 1, delegate
+                {
+                    bigMode = hasBigBall;
+                    if (bigMode)
+                    {
+                        NPCBallTransporters.GetComponent<Animator>().Play("NPCGoBigMode", 0, 0);
+                    }
+                    if (!instance.ballTransporterLeftNPC.GetComponent<Animator>().IsPlayingAnimationName("BallTransporterLeftOpened"))
+                    {
+                        instance.ballTransporterLeftNPC.GetComponent<Animator>().Play("BallTransporterLeftOpen", 0, 0);
+                        instance.ballTransporterRightNPC.GetComponent<Animator>().Play("BallTransporterRightOpen", 0, 0);
+                        if (instance.gandwHasEntered && !bgDisabled) instance.gandwAnim.Play("GANDWLeverUp", 0, 0);
+                    }
+                }),
+            });
         }
 
         public static void PrePassTurn(double beat)
         {
             if (GameManager.instance.currentGame == "workingDough")
             {
-                instance.PassTurn(beat);
+                instance.PassTurnStandalone(beat);
             }
             else
             {
@@ -302,45 +303,61 @@ namespace HeavenStudio.Games
             }
         }
 
-        private void PassTurn(double beat)
+        private void PassTurnStandalone(double beat)
         {
-            if (crHandlerInstance.queuedEvents.Count > 0)
+            if (crHandlerInstance != null) PassTurn(beat, crHandlerInstance.intervalLength, crHandlerInstance);
+        }
+
+        private void PassTurn(double beat, double length, CallAndResponseHandler crHandler)
+        {
+            BeatAction.New(instance.gameObject, new List<BeatAction.Action>()
             {
-                ballTransporterRightPlayer.GetComponent<Animator>().Play("BallTransporterRightOpen", 0, 0);
-                ballTransporterLeftPlayer.GetComponent<Animator>().Play("BallTransporterLeftOpen", 0, 0);
-                foreach (var ball in crHandlerInstance.queuedEvents)
+                new BeatAction.Action(beat - 1, delegate
                 {
-                    SpawnPlayerBall(beat + ball.relativeBeat - 1, ball.tag == "big", ball["hasGandw"]);
-                }
-                crHandlerInstance.queuedEvents.Clear();
-                BeatAction.New(instance.gameObject, new List<BeatAction.Action>()
-                {
-                    new BeatAction.Action(beat, delegate
+                    ballTransporterRightPlayer.GetComponent<Animator>().Play("BallTransporterRightOpen", 0, 0);
+                    ballTransporterLeftPlayer.GetComponent<Animator>().Play("BallTransporterLeftOpen", 0, 0);
+                    if (crHandler.queuedEvents.Count > 0)
                     {
-                        if (crHandlerInstance.queuedEvents.Count > 0)
+                        bool hasBig = false;
+                        foreach (var ball in crHandler.queuedEvents)
                         {
-                            foreach (var ball in crHandlerInstance.queuedEvents)
-                            {
-                                SpawnPlayerBall(beat + ball.relativeBeat - 1, ball.tag == "big", ball["hasGandw"]);
-                            }
-                            crHandlerInstance.queuedEvents.Clear();
+                            SpawnPlayerBall(beat + ball.relativeBeat - 1, ball.tag == "big", ball["hasGandw"]);
+                            if (ball.tag == "big") hasBig = true;
                         }
-                    }),
-                    new BeatAction.Action(beat + 1, delegate { if (!crHandlerInstance.IntervalIsActive()) ballTransporterLeftNPC.GetComponent<Animator>().Play("BallTransporterLeftClose", 0, 0); }),
-                    new BeatAction.Action(beat + 1, delegate { if (!crHandlerInstance.IntervalIsActive()) ballTransporterRightNPC.GetComponent<Animator>().Play("BallTransporterRightClose", 0, 0); }),
-                    new BeatAction.Action(beat + 1, delegate { if (gandwHasEntered && !bgDisabled) gandwAnim.Play("MrGameAndWatchLeverDown", 0, 0); }),
-                    //Close player transporters
-                    new BeatAction.Action(beat + crHandlerInstance.intervalLength + 1, delegate { ballTransporterLeftPlayer.GetComponent<Animator>().Play("BallTransporterLeftClose", 0, 0); }),
-                    new BeatAction.Action(beat + crHandlerInstance.intervalLength + 1, delegate { ballTransporterRightPlayer.GetComponent<Animator>().Play("BallTransporterRightClose", 0, 0); }),
-                    new BeatAction.Action(beat + crHandlerInstance.intervalLength + 1, delegate {
+                        crHandler.queuedEvents.Clear();
+                        bigModePlayer = hasBig;
                         if (bigModePlayer)
                         {
-                            PlayerBallTransporters.GetComponent<Animator>().Play("PlayerExitBigMode", 0, 0);
-                            bigModePlayer = false;
+                            PlayerBallTransporters.GetComponent<Animator>().Play("PlayerGoBigMode", 0, 0);
                         }
-                    }),
-                });
-            }
+                    }
+                }),
+                new BeatAction.Action(beat + 1, delegate 
+                { 
+                    if (gandwHasEntered && !bgDisabled) gandwAnim.Play("MrGameAndWatchLeverDown", 0, 0);
+                    if (crHandlerInstance == null || !crHandlerInstance.IntervalIsActive()) 
+                    {
+                        ballTransporterLeftNPC.GetComponent<Animator>().Play("BallTransporterLeftClose", 0, 0);
+                        ballTransporterRightNPC.GetComponent<Animator>().Play("BallTransporterRightClose", 0, 0);
+                    }
+                    if (bigMode)
+                    {
+                        NPCBallTransporters.GetComponent<Animator>().Play("NPCExitBigMode", 0, 0);
+                        bigMode = false;
+                    }
+                }),
+                //Close player transporters
+                new BeatAction.Action(beat + length + 1, delegate 
+                {
+                    ballTransporterLeftPlayer.GetComponent<Animator>().Play("BallTransporterLeftClose", 0, 0);
+                    ballTransporterRightPlayer.GetComponent<Animator>().Play("BallTransporterRightClose", 0, 0);
+                    if (bigModePlayer)
+                    {
+                        PlayerBallTransporters.GetComponent<Animator>().Play("PlayerExitBigMode", 0, 0);
+                        bigModePlayer = false;
+                    }
+                }),
+            });
         }
 
         public void SpawnBall(double beat, bool isBig, bool hasGandw)
@@ -351,19 +368,10 @@ namespace HeavenStudio.Games
             var ballComponent = spawnedBall.GetComponent<NPCDoughBall>();
             spawnedBall.SetActive(true);
             ballComponent.Init(beat, hasGandw);
-
-
-            if (isBig && !bigMode)
-            {
-                NPCBallTransporters.GetComponent<Animator>().Play("NPCGoBigMode", 0, 0);
-                bigMode = true;
-            }
-
-
-            arrowSRLeftNPC.sprite = redArrowSprite;
             BeatAction.New(doughDudesNPC, new List<BeatAction.Action>()
             {
                 //Jump and play sound
+                new BeatAction.Action(beat, delegate { arrowSRLeftNPC.sprite = redArrowSprite; }),
                 new BeatAction.Action(beat + 0.1f, delegate { arrowSRLeftNPC.sprite = whiteArrowSprite; }),
                 new BeatAction.Action(beat + 1f, delegate { doughDudesNPC.GetComponent<Animator>().DoScaledAnimationAsync(isBig ? "BigDoughJump" :"SmallDoughJump", 0.5f); }),
                 new BeatAction.Action(beat + 1f, delegate { npcImpact.SetActive(true); }),
@@ -373,43 +381,11 @@ namespace HeavenStudio.Games
             });
         }
 
-        public static void PreSpawnBall(double beat, bool isBig, bool hasGandw)
-        {
-            double spawnBeat = beat - 1f;
-            beat -= 1f;
-            if (GameManager.instance.currentGame == "workingDough")
-            {
-                BeatAction.New(instance.gameObject, new List<BeatAction.Action>()
-                {
-                    new BeatAction.Action(spawnBeat, delegate
-                    {
-                        if (!instance.ballTransporterLeftNPC.GetComponent<Animator>().IsPlayingAnimationName("BallTransporterLeftOpened") && !crHandlerInstance.IntervalIsActive() && !instance.bgDisabled)
-                        {
-                            instance.ballTransporterLeftNPC.GetComponent<Animator>().Play("BallTransporterLeftOpen", 0, 0);
-                            instance.ballTransporterRightNPC.GetComponent<Animator>().Play("BallTransporterRightOpen", 0, 0);
-                            if (instance.gandwHasEntered) instance.gandwAnim.Play("GANDWLeverUp", 0, 0);
-                        }
-                    }),
-                    new BeatAction.Action(spawnBeat, delegate { if (instance != null) instance.SpawnBall(beat, isBig, hasGandw); }),
-                    // new BeatAction.Action(spawnBeat + instance.beatInterval, delegate { instance.SpawnPlayerBall(beat + instance.beatInterval, isBig); }),
-                });
-            }
-            else
-            {
-                queuedBalls.Add(new QueuedBall()
-                {
-                    beat = beat + 1f,
-                    isBig = isBig,
-                    hasGandw = hasGandw
-                });
-            }
-        }
-
         public static void OnSpawnBallInactive(double beat, bool isBig, bool hasGandw)
         {
             if (crHandlerInstance == null)
             {
-                crHandlerInstance = new CallAndResponseHandler(8);
+                crHandlerInstance = new CallAndResponseHandler();
             }
             crHandlerInstance.AddEvent(beat, 0, isBig ? "big" : "small", new List<CallAndResponseHandler.CallAndResponseEventParam>()
             {
@@ -423,17 +399,8 @@ namespace HeavenStudio.Games
             {
                 new CallAndResponseHandler.CallAndResponseEventParam("hasGandw", hasGandw)
             });
-            SoundByte.PlayOneShotGame(isBig ? "workingDough/hitBigOther" : "workingDough/hitSmallOther");
-            SoundByte.PlayOneShotGame(isBig ? "workingDough/bigOther" : "workingDough/smallOther");
-        }
-
-        public static void InactiveInterval(double beat, float interval)
-        {
-            if (crHandlerInstance == null)
-            {
-                crHandlerInstance = new CallAndResponseHandler(8);
-            }
-            crHandlerInstance.StartInterval(beat, interval);
+            SoundByte.PlayOneShotGame(isBig ? "workingDough/hitBigOther" : "workingDough/hitSmallOther", beat);
+            SoundByte.PlayOneShotGame(isBig ? "workingDough/bigOther" : "workingDough/smallOther", beat);
         }
 
         public void SpawnPlayerBall(double beat, bool isBig, bool hasGandw)
@@ -445,12 +412,6 @@ namespace HeavenStudio.Games
             spawnedBall.SetActive(true);
             ballComponent.Init(beat, isBig, hasGandw);
 
-            if (isBig && !bigModePlayer)
-            {
-                PlayerBallTransporters.GetComponent<Animator>().Play("PlayerGoBigMode", 0, 0);
-                bigModePlayer = true;
-            }
-
             BeatAction.New(doughDudesPlayer, new List<BeatAction.Action>()
             {
                 new BeatAction.Action(beat, delegate { arrowSRLeftPlayer.sprite = redArrowSprite; }),
@@ -458,17 +419,30 @@ namespace HeavenStudio.Games
             });
         }
 
-        public static void PreSetIntervalStart(double beat, float interval)
+        private struct QueuedInterval
+        {
+            public double beat;
+            public float interval;
+            public bool auto;
+        }
+        private static List<QueuedInterval> queuedIntervals = new();
+
+        public static void PreSetIntervalStart(double beat, float interval, bool auto)
         {
             if (GameManager.instance.currentGame == "workingDough")
             {
                 // instance.ballTriggerSetInterval = false;
                 // beatInterval = interval;
-                instance.SetIntervalStart(beat, interval);
+                instance.SetIntervalStart(beat, beat, interval, auto);
             }
             else
             {
-                InactiveInterval(beat, interval);
+                queuedIntervals.Add(new QueuedInterval
+                {
+                    beat = beat,
+                    interval = interval,
+                    auto = auto
+                });
             }
         }
 
@@ -478,7 +452,6 @@ namespace HeavenStudio.Games
             {
                 crHandlerInstance = null;
             }
-            if (queuedBalls.Count > 0) queuedBalls.Clear();
             foreach (var evt in scheduledInputs)
             {
                 evt.Disable();
@@ -487,38 +460,26 @@ namespace HeavenStudio.Games
 
         public override void OnGameSwitch(double beat)
         {
-            if (queuedBalls.Count > 0)
+            if (Conductor.instance.isPlaying && !Conductor.instance.isPaused)
             {
-                foreach (var ball in queuedBalls)
+                if (queuedIntervals.Count > 0)
                 {
-                    if (ball.isBig) NPCBallTransporters.GetComponent<Animator>().Play("BigMode", 0, 0);
-                    if (!crHandlerInstance.IntervalIsActive())
+                    foreach (var interval in queuedIntervals)
                     {
-                        ballTransporterLeftNPC.GetComponent<Animator>().Play("BallTransporterLeftOpened", 0, 0);
-                        ballTransporterRightNPC.GetComponent<Animator>().Play("BallTransporterRightOpened", 0, 0);
-                        if (gandwHasEntered && !bgDisabled) gandwAnim.Play("GANDWLeverUp", 0, 0);
+                        SetIntervalStart(interval.beat, beat, interval.interval, interval.auto);
                     }
-                    if (ball.beat > beat - 1)
-                    {
-                        BeatAction.New(instance.gameObject, new List<BeatAction.Action>()
-                        {
-                            new BeatAction.Action(ball.beat - 1, delegate { SpawnBall(ball.beat - 1, ball.isBig, ball.hasGandw); })
-                        });
-                    }
-
+                    queuedIntervals.Clear();
                 }
-                queuedBalls.Clear();
             }
+        }
+
+        public override void OnPlay(double beat)
+        {
+            crHandlerInstance = null;
         }
 
         void Update()
         {
-            Conductor cond = Conductor.instance;
-            if (!cond.isPlaying || cond.isPaused)
-            {
-                if (queuedBalls.Count > 0) queuedBalls.Clear();
-            }
-
             if (spaceshipRising && !bgDisabled) spaceshipAnimator.DoScaledAnimation("RiseSpaceship", risingStartBeat, risingLength);
             if (liftingDoughDudes && !bgDisabled) doughDudesHolderAnim.DoScaledAnimation(liftingAnimName, liftingStartBeat, liftingLength);
             if (gandwMoving && !bgDisabled) gandwAnim.DoScaledAnimation(gandwMovingAnimName, gandMovingStartBeat, gandMovingLength);
@@ -526,7 +487,7 @@ namespace HeavenStudio.Games
             {
                 foreach (var passTurn in passedTurns)
                 {
-                    PassTurn(passTurn);
+                    PassTurnStandalone(passTurn);
                 }
                 passedTurns.Clear();
             }
