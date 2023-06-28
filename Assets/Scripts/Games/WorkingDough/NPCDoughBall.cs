@@ -31,8 +31,7 @@ namespace HeavenStudio.Games.Scripts_WorkingDough
                 if (startBeat > double.MinValue)
                 {
                     Vector3 pos = GetPathPositionFromBeat(path, Math.Max(beat, startBeat), startBeat);
-                    if (startBeat <= beat) transform.position = pos;
-                    else transform.position = new Vector3(-80, -80);
+                    transform.position = pos;
                     if (beat >= startBeat + 2) Destroy(gameObject);
                 }
             }

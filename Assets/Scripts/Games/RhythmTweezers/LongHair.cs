@@ -26,11 +26,15 @@ namespace HeavenStudio.Games.Scripts_RhythmTweezers
 
         PlayerActionEvent endEvent;
 
-        public void StartInput(double beat, double length, Tweezers tweezer)
+        private void Awake()
         {
             game = RhythmTweezers.instance;
             anim = GetComponent<Animator>();
-            tweezers = tweezer;
+            tweezers = game.Tweezers;
+        }
+
+        public void StartInput(double beat, double length)
+        {
             inputBeat = beat + length;
             game.ScheduleInput(beat, length, InputType.STANDARD_DOWN | InputType.DIRECTION_DOWN, StartJust, StartMiss, Out);
         }

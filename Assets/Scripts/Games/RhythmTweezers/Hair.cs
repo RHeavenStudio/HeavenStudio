@@ -7,17 +7,22 @@ namespace HeavenStudio.Games.Scripts_RhythmTweezers
 {
     public class Hair : MonoBehaviour
     {
-        [NonSerialized] public double createBeat;
+        public double createBeat;
         public GameObject hairSprite;
         public GameObject stubbleSprite;
         public GameObject missedSprite;
         private RhythmTweezers game;
         private Tweezers tweezers;
+        private bool plucked;
 
-        public void StartInput(double beat, double length, Tweezers tweezer)
+        private void Awake()
         {
             game = RhythmTweezers.instance;
-            tweezers = tweezer;
+            tweezers = game.Tweezers;
+        }
+
+        public void StartInput(double beat, double length)
+        {
             game.ScheduleInput(beat, length, InputType.STANDARD_DOWN | InputType.DIRECTION_DOWN, Just, Miss, Out);
         }
 
@@ -25,12 +30,14 @@ namespace HeavenStudio.Games.Scripts_RhythmTweezers
         {
             tweezers.Pluck(true, this);
             tweezers.hitOnFrame++;
+            plucked = true;
         }
 
         public void NearMiss()
         {
             tweezers.Pluck(false, this);
             tweezers.hitOnFrame++;
+            plucked = true;
         }
 
         private void Just(PlayerActionEvent caller, float state)
