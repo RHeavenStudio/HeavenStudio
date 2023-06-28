@@ -35,7 +35,7 @@ namespace HeavenStudio.Games.Scripts_MonkeyWatch
         // animation event
         public void UpdateRotation()
         {
-            gameObject.transform.localRotation = new Quaternion(0, 0, (gameObject.transform.localRotation.z - rotation), 0);
+            //var rot = gameObject.transform;
         }
 
         private void Miss(PlayerActionEvent caller)

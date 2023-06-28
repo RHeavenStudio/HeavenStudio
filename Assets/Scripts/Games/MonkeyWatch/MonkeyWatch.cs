@@ -45,6 +45,7 @@ namespace HeavenStudio.Games.Loaders
                 },
                 new GameAction("customMonkey", "Custom Monkey")
                 {
+                    function = delegate { var e = eventCaller.currentEntity; MonkeyWatch.instance.CustomMonkeySFX(e.beat, e["sfx"]); },
                     defaultLength = 0.5f,
                     parameters = new List<Param>()
                     {
@@ -132,8 +133,8 @@ namespace HeavenStudio.Games
                     if (offbeatEvents[i]["custom"]) {
                         for (int j = 0; j < customEvents.Count; j++)
                         {
-                            if (customEvents[j].beat > offbeatBeat+2
-                            && customEvents[j].beat < offbeatBeat+offbeatEvents[i].length)
+                            if (customEvents[j].beat >= offbeatBeat+2
+                            && customEvents[j].beat <= offbeatBeat+offbeatEvents[i].length)
                             {
                                 tempMonkeys.Add(new CustomMonkey{
                                     beat = customEvents[j].beat,
@@ -246,23 +247,8 @@ namespace HeavenStudio.Games
 
         public static void PurpleMonkeySFX(double beat, float length, bool mute, CustomMonkey[] monkeys = null)
         {
-            var tempMonkeys = new List<CustomMonkey>();
-            if (monkeys == null) {
-                for (int i = 2; i < length; i++) {
-                    tempMonkeys.Add(new CustomMonkey{beat = beat + 0.5f + i, sfx = (i % 2 == 0 ? 1 : 2)});
-                }
-            }
-            monkeys = tempMonkeys.ToArray();
-            
             var sfx = new List<MultiSound.Sound>();
 
-            for (int i = 0; i < monkeys.Length; i++)
-            {
-                sfx.AddRange(new MultiSound.Sound[] {
-                    new MultiSound.Sound($"monkeyWatch/voiceKi{monkeys[i].sfx}",      monkeys[i].beat       ),
-                    new MultiSound.Sound($"monkeyWatch/voiceKi{monkeys[i].sfx}Echo1", monkeys[i].beat + 0.25),
-                });
-            }
             if (!mute) {
                 sfx.AddRange(new MultiSound.Sound[] {
                     new MultiSound.Sound("monkeyWatch/voiceUki1",      beat       ),
@@ -273,21 +259,43 @@ namespace HeavenStudio.Games
                     new MultiSound.Sound("monkeyWatch/voiceUki3Echo1", beat + 2.25),
                 });
             }
+
+            if (monkeys == null) {
+                for (int i = 2; i < length; i++) {
+                    sfx.AddRange(new MultiSound.Sound[] {
+                        new MultiSound.Sound($"monkeyWatch/voiceKi{(i % 2 == 0 ? 1 : 2)}",      beat + i + 0.5 ),
+                        new MultiSound.Sound($"monkeyWatch/voiceKi{(i % 2 == 0 ? 1 : 2)}Echo1", beat + i + 0.75),
+                    });
+                }
+            }
+
             MultiSound.Play(sfx.ToArray(), forcePlay: true);
         }
 
         public void PurpleMonkeys(double beat, float length, bool mute, CustomMonkey[] monkeys = null)
         {
-            if (monkeys == null) 
-                monkeys = new CustomMonkey[] {
-                    new CustomMonkey{beat = beat + 2.5f, sfx = 1},
-                    new CustomMonkey{beat = beat + 3.5f, sfx = 2},
-                };
+            var tempMonkeys = new List<CustomMonkey>();
+            if (monkeys == null) {
+                for (int i = 2; i < length; i++) {
+                    tempMonkeys.Add(new CustomMonkey{beat = beat + 0.5f + i, sfx = (i % 2 == 0 ? 1 : 2)});
+                }
+                monkeys = tempMonkeys.ToArray();
+            }
+
+            
 
             for (int i = 0; i < monkeys.Length; i++)
             {
                 ScheduleInput(beat, monkeys[i].beat - beat, InputType.STANDARD_DOWN, (monkeys[i].sfx == 3 ? JustYellow : JustPurple), Miss, Nothing);
             }
+        }
+
+        public void CustomMonkeySFX(double beat, int sfx)
+        {
+            MultiSound.Play(new MultiSound.Sound[] {
+                new MultiSound.Sound($"monkeyWatch/voiceKi{sfx}",      beat       ),
+                new MultiSound.Sound($"monkeyWatch/voiceKi{sfx}Echo1", beat + 0.25),
+            });
         }
 
         public void JustYellow(PlayerActionEvent caller, float state)
@@ -303,7 +311,7 @@ namespace HeavenStudio.Games
         void Just(float state, bool isYellow)
         {
             lastMonkeyClapped++;
-            monkeyPlayer.anim.DoScaledAnimationAsync("Clap", 0.5f);
+            monkeyPlayer.UpdateRotation();
             if (state >= 1f || state <= -1f) {
                 SoundByte.PlayOneShot("miss");
             } else {
