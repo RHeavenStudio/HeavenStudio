@@ -4,6 +4,7 @@ using UnityEngine;
 using System;
 
 using HeavenStudio.Util;
+using Starpelly;
 
 namespace HeavenStudio.Games.Scripts_RhythmTweezers
 {
@@ -17,6 +18,10 @@ namespace HeavenStudio.Games.Scripts_RhythmTweezers
         private bool holdingHair;
         public SpriteRenderer heldHairSprite;
         public Transform tweezerSpriteTrans;
+        private double passTurnBeat = -1;
+        private double passTurnEndBeat = -1;
+        [NonSerialized] public int hairsLeft;
+        private int eyeSize = 0;
 
         private void Awake()
         {
@@ -24,6 +29,37 @@ namespace HeavenStudio.Games.Scripts_RhythmTweezers
             vegetableAnim = RhythmTweezers.instance.VegetableAnimator;
 
             game = RhythmTweezers.instance;
+        }
+
+        public void Init(double beat, double endBeat)
+        {
+            passTurnBeat = beat;
+            passTurnEndBeat = endBeat;
+            Update();
+        }
+
+        private void Update()
+        {
+            if (passTurnBeat != -1)
+            {
+                // Set tweezer angle.
+                float tweezerTime = Conductor.instance.GetPositionFromBeat(passTurnBeat, Math.Max(passTurnEndBeat - 1f - passTurnBeat, 1));
+                var unclampedAngle = -58f + (116 * tweezerTime);
+                var tweezerAngle = Mathf.Clamp(unclampedAngle, -180f, 180f);
+
+                transform.eulerAngles = new Vector3(0, 0, tweezerAngle);
+
+                // Set tweezer to follow vegetable.
+                var currentTweezerPos = transform.localPosition;
+                var vegetablePos = game.Vegetable.transform.localPosition;
+                var vegetableHolderPos = game.VegetableHolder.transform.localPosition;
+                transform.localPosition = new Vector3(vegetableHolderPos.x, vegetablePos.y + 1f, currentTweezerPos.z);
+
+                if (tweezerAngle == 180)
+                {
+                    Destroy(gameObject);
+                }
+            }
         }
 
         private void LateUpdate()
@@ -51,13 +87,13 @@ namespace HeavenStudio.Games.Scripts_RhythmTweezers
                 hair.hairSprite.SetActive(false);
                 hair.stubbleSprite.SetActive(true);
 
-                game.hairsLeft--;
-                game.eyeSize = Mathf.Clamp(game.eyeSize + 1, 0, 10);
+                hairsLeft--;
+                eyeSize = Mathf.Clamp(eyeSize + 1, 0, 10);
 
-                if (game.hairsLeft <= 0)
+                if (hairsLeft <= 0)
                     vegetableAnim.Play("HopFinal", 0, 0);
                 else
-                    vegetableAnim.Play("Hop" + game.eyeSize.ToString(), 0, 0);
+                    vegetableAnim.Play("Hop" + eyeSize.ToString(), 0, 0);
 
                 anim.Play("Tweezers_Pluck_Success", 0, 0);
             }
@@ -91,13 +127,13 @@ namespace HeavenStudio.Games.Scripts_RhythmTweezers
                 // Making transparent instead of disabling because animators are silly.
                 hair.loop.GetComponent<SpriteRenderer>().color = Color.clear;
 
-                game.hairsLeft--;
-                game.eyeSize = Mathf.Clamp(game.eyeSize + 1, 0, 10);
+                hairsLeft--;
+                eyeSize = Mathf.Clamp(eyeSize + 1, 0, 10);
 
-                if (game.hairsLeft <= 0)
+                if (hairsLeft <= 0)
                     vegetableAnim.Play("HopFinal", 0, 0);
                 else
-                    vegetableAnim.Play("Hop" + game.eyeSize.ToString(), 0, 0);
+                    vegetableAnim.Play("Hop" + eyeSize.ToString(), 0, 0);
 
                 anim.Play("Tweezers_Pluck_Success", 0, 0);
             }
