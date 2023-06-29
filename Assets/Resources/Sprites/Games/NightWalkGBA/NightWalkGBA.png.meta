@@ -1658,6 +1658,48 @@ TextureImporter:
       indices: 
       edges: []
       weights: []
+    - serializedVersion: 2
+      name: smol
+      rect:
+        serializedVersion: 2
+        x: 331
+        y: 518
+        width: 230
+        height: 130
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 1c0799baacd79a74cb791232255ac9b6
+      internalID: 1781156713
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: long
+      rect:
+        serializedVersion: 2
+        x: 179
+        y: 287
+        width: 486
+        height: 132
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: a36ddff1dd2b1f14f968ef2ba1e9e857
+      internalID: -778396330
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
     outline: []
     physicsShape: []
     bones: []
@@ -1732,6 +1774,7 @@ TextureImporter:
       jumpplat1: 629073624
       light: -1879352647
       light2: 2140544610
+      long: -778396330
       norod2: 1536196528
       norod3: 1438410946
       note: -1832946202
@@ -1741,6 +1784,7 @@ TextureImporter:
       roll1: 1372235165
       roll2: -564146531
       shockyan: 1851998298
+      smol: 1781156713
       star1: -118935731
       star2: -1214346626
       star3: 185895591

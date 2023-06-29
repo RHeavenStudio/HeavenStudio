@@ -40,6 +40,7 @@ namespace HeavenStudio.Games.Scripts_AgbNightWalk
         [SerializeField] private Animator fish;
         [SerializeField] private Animator rollPlatform;
         [SerializeField] private GameObject rollPlatformLong;
+        [SerializeField] private GameObject rollPlatformLong2;
         private bool playYanIsFalling;
         private double playYanFallBeat;
         private bool isFish;
@@ -82,6 +83,7 @@ namespace HeavenStudio.Games.Scripts_AgbNightWalk
 
             rollPlatform.transform.parent.gameObject.SetActive(isRollPlatform);
             rollPlatformLong.SetActive(nextPlatformIsSameHeight && !isFinalBlock && !isEndEvent);
+            rollPlatformLong2.SetActive(nextPlatformIsSameHeight && !isFinalBlock && !isEndEvent);
             if (isEndEvent) 
             {
                 if (isRollPlatform) rollPlatform.Play("EndIdle", 0, 0);
