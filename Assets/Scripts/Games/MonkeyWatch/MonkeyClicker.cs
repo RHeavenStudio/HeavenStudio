@@ -35,12 +35,6 @@ namespace HeavenStudio.Games.Scripts_MonkeyWatch
             
         }
 
-        // animation event
-        public void UpdateRotation()
-        {
-            //var rot = gameObject.transform;
-        }
-
         private void Miss(PlayerActionEvent caller)
         {
             
@@ -49,6 +43,17 @@ namespace HeavenStudio.Games.Scripts_MonkeyWatch
         private void Out(PlayerActionEvent caller) 
         {
             
+        }
+
+        // animation events
+        public void UpdateRotation(float rot)
+        {
+            gameObject.transform.localEulerAngles -= new Vector3(0, 0, rot);
+        }
+
+        public void PlayAnimation(string anim)
+        {
+            ClickerAnim.DoScaledAnimationAsync(anim, 0.5f);
         }
     }
 }

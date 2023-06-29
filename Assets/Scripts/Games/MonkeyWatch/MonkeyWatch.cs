@@ -63,10 +63,10 @@ namespace HeavenStudio.Games.Loaders
                     //preFunction = delegate { var e = eventCaller.currentEntity; MonkeyWatch.OnbeatSwitch(e.beat); },
                     defaultLength = 2f
                 },
-            },
+            }/*,
             new List<string>() {"rvl", "keep"},
             "rvlwatch", "en",
-            new List<string>() {}
+            new List<string>() {} */
             );
         }
     }
@@ -226,7 +226,7 @@ namespace HeavenStudio.Games
             {
                 if (offbeatMonkeys[i].beat == beat) {
                     PinkMonkeys(beat, offbeatMonkeys[i].length, offbeatMonkeys[i].mute, offbeatMonkeys[i].monkeys);
-                    PinkMonkeySFX(beat, offbeatMonkeys[i].length, offbeatMonkeys[i].mute, (offbeatMonkeys[i].monkeys.Length == 0));
+                    PinkMonkeySFX(beat, offbeatMonkeys[i].length, offbeatMonkeys[i].mute, (offbeatMonkeys[i].monkeys == null));
                 }
             }
 
@@ -312,7 +312,6 @@ namespace HeavenStudio.Games
         void Just(float state, bool isYellow)
         {
             lastMonkeyClapped++;
-            monkeyPlayer.UpdateRotation();
             string whichAnim = "PlayerClap";
             if (state >= 1f || state <= -1f) {
                 SoundByte.PlayOneShot("miss");
@@ -322,13 +321,26 @@ namespace HeavenStudio.Games
                 if (!isYellow) whichAnim += "Big";
             }
             monkeyPlayer.MonkeyAnim.DoScaledAnimationAsync(whichAnim, 0.5f);
+            monkeyPlayer.UpdateRotation(6);
         }
 
         public void Miss(PlayerActionEvent caller)
         {
-            SoundByte.PlayOneShot("miss");
+            monkeyPlayer.UpdateRotation(6);
         }
 
         public void Nothing(PlayerActionEvent caller) {}
+
+        /* starting from the first monkey, these are the amount of monkeys clapped before the prepare animation switches.
+        4 +
+        8 +
+        7 +
+        8 +
+        7 +
+        8 +
+        7 +
+        7 +
+        4
+        */
     }
 }
