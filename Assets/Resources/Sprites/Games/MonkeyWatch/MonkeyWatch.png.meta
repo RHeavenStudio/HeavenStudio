@@ -67,7 +67,7 @@ TextureImporter:
   platformSettings:
   - serializedVersion: 3
     buildTarget: DefaultTexturePlatform
-    maxTextureSize: 2048
+    maxTextureSize: 4096
     resizeAlgorithm: 0
     textureFormat: -1
     textureCompression: 1
@@ -108,12 +108,12 @@ TextureImporter:
       name: MonkeyWatch_0
       rect:
         serializedVersion: 2
-        x: 79
-        y: 255
-        width: 5459
-        height: 2551
-      alignment: 9
-      pivot: {x: 0.48187697, y: 0.53442585}
+        x: 1115
+        y: 2034
+        width: 743
+        height: 195
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
@@ -129,10 +129,10 @@ TextureImporter:
       name: MonkeyWatch_1
       rect:
         serializedVersion: 2
-        x: 5645
-        y: 11
-        width: 244
-        height: 2850
+        x: 1115
+        y: 1741
+        width: 802
+        height: 247
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -150,10 +150,10 @@ TextureImporter:
       name: MonkeyWatch_2
       rect:
         serializedVersion: 2
-        x: 5919
-        y: 2656
-        width: 256
-        height: 162
+        x: 1129
+        y: 1530
+        width: 853
+        height: 195
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -171,10 +171,10 @@ TextureImporter:
       name: MonkeyWatch_3
       rect:
         serializedVersion: 2
-        x: 6236
-        y: 2647
-        width: 256
-        height: 171
+        x: 1099
+        y: 1126
+        width: 976
+        height: 393
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -192,10 +192,10 @@ TextureImporter:
       name: MonkeyWatch_4
       rect:
         serializedVersion: 2
-        x: 6553
-        y: 2656
-        width: 256
-        height: 162
+        x: 30
+        y: 1194
+        width: 1026
+        height: 989
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -213,10 +213,10 @@ TextureImporter:
       name: MonkeyWatch_5
       rect:
         serializedVersion: 2
-        x: 6946
-        y: 2789
-        width: 137
-        height: 38
+        x: 1960
+        y: 1899
+        width: 379
+        height: 309
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -234,10 +234,10 @@ TextureImporter:
       name: MonkeyWatch_6
       rect:
         serializedVersion: 2
-        x: 7237
-        y: 2416
-        width: 77
-        height: 437
+        x: 2666
+        y: 2025
+        width: 260
+        height: 182
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -255,10 +255,10 @@ TextureImporter:
       name: MonkeyWatch_7
       rect:
         serializedVersion: 2
-        x: 7396
-        y: 1470
-        width: 1361
-        height: 1361
+        x: 2957
+        y: 2041
+        width: 227
+        height: 145
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -276,10 +276,10 @@ TextureImporter:
       name: MonkeyWatch_8
       rect:
         serializedVersion: 2
-        x: 6874
-        y: 2669
-        width: 51
-        height: 111
+        x: 3206
+        y: 2036
+        width: 244
+        height: 150
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -297,10 +297,10 @@ TextureImporter:
       name: MonkeyWatch_9
       rect:
         serializedVersion: 2
-        x: 7118
-        y: 2677
-        width: 74
-        height: 107
+        x: 3205
+        y: 1776
+        width: 247
+        height: 156
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -318,10 +318,10 @@ TextureImporter:
       name: MonkeyWatch_10
       rect:
         serializedVersion: 2
-        x: 6951
-        y: 2613
-        width: 158
-        height: 56
+        x: 3472
+        y: 1874
+        width: 154
+        height: 313
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -339,10 +339,10 @@ TextureImporter:
       name: MonkeyWatch_11
       rect:
         serializedVersion: 2
-        x: 5906
-        y: 1971
-        width: 86
-        height: 398
+        x: 3658
+        y: 1874
+        width: 181
+        height: 314
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -360,10 +360,10 @@ TextureImporter:
       name: MonkeyWatch_12
       rect:
         serializedVersion: 2
-        x: 6043
-        y: 2213
-        width: 1152
-        height: 130
+        x: 3873
+        y: 2130
+        width: 196
+        height: 1929
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -381,10 +381,10 @@ TextureImporter:
       name: MonkeyWatch_13
       rect:
         serializedVersion: 2
-        x: 5953
-        y: 1436
-        width: 1327
-        height: 484
+        x: 22
+        y: 2258
+        width: 3767
+        height: 1838
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -402,61 +402,19 @@ TextureImporter:
       name: MonkeyWatch_14
       rect:
         serializedVersion: 2
-        x: 5940
-        y: 1038
-        width: 1096
-        height: 252
+        x: 3909
+        y: 2143
+        width: 119
+        height: 62
       alignment: 0
-      pivot: {x: 0.5, y: 0.5}
+      pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 1db03a6d91c6af24897520290e2015ca
+      spriteID: 7b97cdbcff637c345a55f8cc0f7881e5
       internalID: -112909732
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: MonkeyWatch_15
-      rect:
-        serializedVersion: 2
-        x: 5945
-        y: 752
-        width: 941
-        height: 149
-      alignment: 0
-      pivot: {x: 0.5, y: 0.5}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: 145753b281145e34caf60b5f8bda9338
-      internalID: -2102552351
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: MonkeyWatch_16
-      rect:
-        serializedVersion: 2
-        x: 6968
-        y: 567
-        width: 364
-        height: 385
-      alignment: 0
-      pivot: {x: 0.5, y: 0.5}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: b0d744d6d014f824a8a7ed3855b590b6
-      internalID: 307813381
       vertices: []
       indices: 
       edges: []
