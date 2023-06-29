@@ -13,7 +13,10 @@ namespace HeavenStudio.Games.Scripts_MonkeyWatch
         public float rotation;
 
         [Header("Animators")]
-        public Animator anim;
+        public Animator MonkeyAnim;
+        public Animator ClickerAnim;
+        public ParticleSystem YellowStars;
+        public ParticleSystem PinkStars;
 
         private MonkeyWatch game;
         

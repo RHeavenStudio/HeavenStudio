@@ -19458,7 +19458,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &7374162996054782378
 Transform:
   m_ObjectHideFlags: 0
@@ -20448,7 +20448,7 @@ SpriteRenderer:
   m_Size: {x: 1.8575, y: 0.4875}
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
-  m_WasSpriteAssigned: 1
+  m_WasSpriteAssigned: 0
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
 --- !u!1 &5931211115465723547
@@ -21253,7 +21253,7 @@ MonoBehaviour:
   monkeyPlayer: {fileID: 5368117777341597701}
   watchHoleParent: {fileID: 3735448262030941676}
   yellowMonkey: {fileID: 3151069026564347634, guid: 224742d4a2c74034997943856f560054, type: 3}
-  purpleMonkey: {fileID: 3151069026564347634, guid: ee03844036eaebc479ce042d119d5cd2, type: 3}
+  pinkMonkey: {fileID: 0}
 --- !u!1 &6181011653585253546
 GameObject:
   m_ObjectHideFlags: 0
@@ -21364,7 +21364,7 @@ Transform:
   m_GameObject: {fileID: 6250700901501120224}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 200, y: 200, z: 1}
+  m_LocalScale: {x: 320, y: 180, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 5742479390175277464}
@@ -24055,7 +24055,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   rotation: 0
-  anim: {fileID: 910339928251400446}
+  MonkeyAnim: {fileID: 0}
+  ClickerAnim: {fileID: 0}
+  YellowStars: {fileID: 0}
+  PinkStars: {fileID: 0}
 --- !u!95 &910339928251400446
 Animator:
   serializedVersion: 5
