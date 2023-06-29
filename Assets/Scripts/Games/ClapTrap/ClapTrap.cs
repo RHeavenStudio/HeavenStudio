@@ -14,40 +14,51 @@ namespace HeavenStudio.Games.Loaders
             {
                 new GameAction("clap", "Clap")
                 {
-                    function = delegate {var e = eventCaller.currentEntity; ClapTrap.instance.Clap(eventCaller.currentEntity.beat, eventCaller.currentEntity.length, eventCaller.currentEntity["slapper"]);},
+                    function = delegate {var e = eventCaller.currentEntity; ClapTrap.instance.Clap(eventCaller.currentEntity.beat, eventCaller.currentEntity.length, eventCaller.currentEntity["object"]);},
                     defaultLength = 1f,
                     resizable = true,
                     parameters = new List<Param>()
                     {
                         new Param("object", ClapTrap.ClapType.Hand, "Object", "The object attempting to hit the doll"),
                         //new Param("sighBeat", new EntityTypes.Float(2, 100), "Sigh Beat", "The slapper attempting to hit the doll"),
-                        new Param("spotlight", true, "Spotlight", "Whether or not there's a spotlight for the cue"),
+                       // new Param("spotlight", true, "Spotlight", "Whether or not there's a spotlight for the cue"),
                     }
                 },
                 new GameAction("change background color", "Change Background Color")
                 {
-                    function = delegate { var e = eventCaller.currentEntity; ClapTrap.instance.FadeBackgroundColor(e["colorA"], e["colorB"], e.length); },
+                    function = delegate { var e = eventCaller.currentEntity; ClapTrap.instance.FadeBackgroundColor(e["bgColorA"], e["bgColorB"], e.length); },
                     resizable = true, 
                     parameters = new List<Param>()
                     {
-                        new Param("colorA", ClapTrap.defaultBgColor, "Start Color", "The starting color in the fade"),
-                        new Param("colorB", ClapTrap.defaultBgColor, "End Color", "The ending color in the fade")
+                        new Param("bgColorA", ClapTrap.defaultBgColor, "Start Color", "The starting color in the fade"),
+                        new Param("bgColorB", ClapTrap.defaultBgColor, "End Color", "The ending color in the fade")
                     }, 
                 },
                 new GameAction("change hand color", "Change Hand Colors")
                 {
                     function = delegate { var e = eventCaller.currentEntity; ClapTrap.instance.ChangeHandColor(e["stageLeftHandColor"], e["stageRightHandColor"]); },
-                    defaultLength = 1f,
+                    defaultLength = 0.5f,
                     parameters = new List<Param>()
                     {
-                        new Param("stageLeftHandColor", ClapTrap.defaultLeftColor, "Stage Left Hand Color", "The color used on the dummy's hand (stage left)"),
-                        new Param("stageRightHandColor", ClapTrap.defaultRightColor, "Stage Right Hand Color", "The color used on the dummy's hand (stage right)")
+                        new Param("stageLeftHandColor", ClapTrap.defaultLeftColor, "Left Hand Color", "The color used on the dummy's hand (stage left)"),
+                        new Param("stageRightHandColor", ClapTrap.defaultRightColor, "Right Hand Color", "The color used on the dummy's hand (stage right)")
                     }, 
+                },
+                new GameAction("spotlight", "Change Spotlight Colors")
+                {
+                    function = delegate { var e = eventCaller.currentEntity; ClapTrap.instance.ChangeSpotlightColor(e["spotlightTop"], e["spotlightBottom"], e["spotlightGlow"]); },
+                    defaultLength = 0.5f,
+                    parameters = new List<Param>()
+                    {
+                        new Param("spotlightBottom", ClapTrap.bottomSpotlight, "Bottom Color", "The color at the bottom of the spotlight"),
+                        new Param("spotlightTop", ClapTrap.topSpotlight, "Top Color", "The color at the top of the spotlight"),
+                        new Param("spotlightGlow", ClapTrap.glowSpotlight, "Glow Color", "The color that glows around the spotlight")
+                    },
                 },
                 new GameAction("doll animations", "Doll Animations")
                 {
                     function = delegate {var e = eventCaller.currentEntity; ClapTrap.instance.DollAnimations(eventCaller.currentEntity.beat, eventCaller.currentEntity["animate"]);},
-                    defaultLength = 1f,
+                    defaultLength = 0.5f,
                     parameters = new List<Param>()
                     {
                         new Param("animate", ClapTrap.DollAnim.Inhale, "Animation", "The animation that the doll will play"),
@@ -63,8 +74,23 @@ namespace HeavenStudio.Games
 {
     public partial class ClapTrap : Minigame
     {
-        [Header("Sprite Renderers")]
-        [SerializeField] SpriteRenderer Background;
+        public enum ClapType
+        {
+            Hand,
+            Paw,
+            Leek,
+            Branch,
+            Random
+        }
+
+        public enum DollAnim
+        {
+            Idle,
+            Inhale,
+            Exhale,
+            Talk,
+
+        }
 
         public static ClapTrap instance;
 
@@ -98,6 +124,39 @@ namespace HeavenStudio.Games
             }
         }
 
+        private static Color _topSpotlight;
+        public static Color topSpotlight
+        {
+            get
+            {
+                ColorUtility.TryParseHtmlString("#FFFFFF", out _topSpotlight);
+                return _topSpotlight;
+            }
+        }
+
+        private static Color _bottomSpotlight;
+        public static Color bottomSpotlight
+        {
+            get
+            {
+                ColorUtility.TryParseHtmlString("#FFE118", out _bottomSpotlight);
+                return _bottomSpotlight;
+            }
+        }
+
+        private static Color _glowSpotlight;
+        public static Color glowSpotlight
+        {
+            get
+            {
+                ColorUtility.TryParseHtmlString("#FFFFFF", out _glowSpotlight);
+                return _glowSpotlight;
+            }
+        }
+
+        [Header("Sprite Renderers")]
+        [SerializeField] SpriteRenderer Background;
+
         [Header("Colors")]
         public SpriteRenderer bg;
 
@@ -111,38 +170,29 @@ namespace HeavenStudio.Games
 
         public SpriteRenderer stageRightRim;
 
-        public enum ClapType
-        {
-            Hand,
-            Paw,
-            Leek,
-            Branch,
-            Random
-        }
-
-        public enum DollAnim
-        {
-            Idle,
-            Inhale,
-            Exhale,
-            Talk,
-            
-        }
+        [Header("Spotlight")]
+        public GameObject spotlight;
+        public Material spotlightMaterial;
 
         [Header("Animators")]
         public Animator dollHead;
         public Animator dollArms;
         public Animator clapEffect;
 
-        [Header("Can Clap")]
-        // look at me go, I'm a boolean
-        // wow now I'm an integer
-        // aaaand back to a boolean
+        [Header("Values")]
         private bool canClap = true;
+        private int currentClaps = 0;
+        private Color backgroundColor;
 
         void Awake()
         {
             instance = this;
+
+            spotlightMaterial.SetColor("_ColorAlpha", topSpotlight);
+            spotlightMaterial.SetColor("_ColorBravo", glowSpotlight);
+            spotlightMaterial.SetColor("_ColorDelta", bottomSpotlight);
+
+            backgroundColor = defaultBgColor;
         }
 
         private void Update()
@@ -164,6 +214,16 @@ namespace HeavenStudio.Games
 
         }
 
+        private void LateUpdate()
+        {
+            if (spotlight.activeSelf == true && currentClaps == 0)
+            {
+                spotlight.SetActive(false);
+                bg.color = backgroundColor;
+            }
+            print(currentClaps);
+        }
+
 
         public void Clap(float beat, float length, int type)
         {
@@ -175,6 +235,20 @@ namespace HeavenStudio.Games
                 new MultiSound.Sound("clapTrap/whiff", beat + length * 4, offset : (float)(Jukebox.GetClipLengthGame("clapTrap/whiff"))),
             }, forcePlay: true);
             ScheduleInput(beat, length * 4, InputType.STANDARD_DOWN | InputType.DIRECTION_DOWN, Hit, Miss, Out);
+
+            currentClaps += 1;
+            BeatAction.New(instance.gameObject, new List<BeatAction.Action>()
+            {
+                new BeatAction.Action(beat + length * 4, delegate { currentClaps -= 1; })
+            });
+
+            spotlight.SetActive(true);
+
+            if (bg.color != Color.black)
+            {
+                backgroundColor = bg.color;
+            }
+            bg.color = Color.black;
 
         }
 
@@ -252,12 +326,18 @@ namespace HeavenStudio.Games
             {
                 bgColorTween = bg.DOColor(color, seconds);
             }
+
+                backgroundColor = color;
+            
+            
         }
 
         public void FadeBackgroundColor(Color start, Color end, float beats)
         {
             ChangeBackgroundColor(start, 0f);
             ChangeBackgroundColor(end, beats);
+
+            
         }
 
         public void ChangeHandColor(Color stageLeftHandColor, Color stageRightHandColor)
@@ -268,6 +348,13 @@ namespace HeavenStudio.Games
             stageRightRim.color = stageRightHandColor;
         }
 
-        
+        public void ChangeSpotlightColor(Color topSpotlightColor, Color bottomSpotlightColor, Color glowSpotlightColor)
+        {
+            spotlightMaterial.SetColor("_ColorAlpha", topSpotlightColor);
+            spotlightMaterial.SetColor("_ColorBravo", glowSpotlightColor);
+            spotlightMaterial.SetColor("_ColorDelta", bottomSpotlightColor);
+        }
+
+
     }
 }
