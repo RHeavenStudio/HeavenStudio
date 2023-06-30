@@ -41,17 +41,26 @@ namespace HeavenStudio.Games.Loaders
                         new Param("custom", false, "Custom Cue", "Place the \"Custom Monkey\" block 2 beats after the start of this one to create a custom pink monkey cue."),
                     },
                     resizable = true,
-                    inactiveFunction = delegate { var e = eventCaller.currentEntity; MonkeyWatch.WarnPinkMonkeys(e.beat, e.length, e["mute"]); },
+                    inactiveFunction = delegate {
+                        var e = eventCaller.currentEntity;
+                        MonkeyWatch.WarnPinkMonkeys(e.beat, e.length, e["mute"]);
+                    },
                 },
                 new GameAction("customMonkey", "Custom Monkey")
                 {
-                    function = delegate { var e = eventCaller.currentEntity; MonkeyWatch.instance.CustomMonkeySFX(e.beat, e["sfx"]); },
+                    function = delegate {
+                        var e = eventCaller.currentEntity;
+                        MonkeyWatch.instance.CustomMonkeySFX(e.beat, e["sfx"]);
+                    },
                     defaultLength = 0.5f,
                     parameters = new List<Param>()
                     {
                         new Param("sfx", MonkeyWatch.SfxTypes.First, "Which SFX", "Choose between the first and second \"ki\" sfx")
                     },
-                    inactiveFunction = delegate { var e = eventCaller.currentEntity; MonkeyWatch.WarnPinkMonkeys(e.beat, e.length, e["mute"]); },
+                    inactiveFunction = delegate {
+                        var e = eventCaller.currentEntity;
+                        MonkeyWatch.WarnPinkMonkeys(e.beat, e.length, e["mute"]);
+                    },
                 },
                 new GameAction("monkeyModifiers", "Monkey Modifiers")
                 {
@@ -144,7 +153,7 @@ namespace HeavenStudio.Games
                         }
                     }
                     offbeatMonkeys.Add(new OffbeatMonkey{
-                        beat = offbeatBeat,
+                        beat = Mathf.Round((float)offbeatBeat),
                         mute = offbeatEvents[i]["mute"],
                         length = offbeatEvents[i].length,
                         monkeys = (tempMonkeys.Count == 0 ? null : tempMonkeys.ToArray()),
@@ -227,6 +236,7 @@ namespace HeavenStudio.Games
                 if (offbeatMonkeys[i].beat == beat) {
                     PinkMonkeys(beat, offbeatMonkeys[i].length, offbeatMonkeys[i].mute, offbeatMonkeys[i].monkeys);
                     PinkMonkeySFX(beat, offbeatMonkeys[i].length, offbeatMonkeys[i].mute, (offbeatMonkeys[i].monkeys == null));
+                    break;
                 }
             }
 
@@ -291,6 +301,13 @@ namespace HeavenStudio.Games
 
         public void CustomMonkeySFX(double beat, int sfx)
         {
+            for (int i = 0; i < offbeatMonkeys.Count; i++)
+            {
+                if (beat >= offbeatMonkeys[i].beat+2 && beat < offbeatMonkeys[i].beat+offbeatMonkeys[i].length) {
+                    PinkMonkeys(beat, offbeatMonkeys[i].length, offbeatMonkeys[i].mute, offbeatMonkeys[i].monkeys);
+                    PinkMonkeySFX(beat, offbeatMonkeys[i].length, offbeatMonkeys[i].mute, (offbeatMonkeys[i].monkeys == null));
+                }
+            }
             MultiSound.Play(new MultiSound.Sound[] {
                 new MultiSound.Sound($"monkeyWatch/voiceKi{sfx}",      beat       ),
                 new MultiSound.Sound($"monkeyWatch/voiceKi{sfx}Echo1", beat + 0.25),
