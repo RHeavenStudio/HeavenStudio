@@ -35,20 +35,14 @@ namespace HeavenStudio.Games.Scripts_MonkeyWatch
             
         }
 
-        private void Miss(PlayerActionEvent caller)
-        {
-            
-        }
-
-        private void Out(PlayerActionEvent caller) 
-        {
-            
-        }
-
         // animation events
         public void UpdateRotation(float rot)
         {
-            gameObject.transform.localEulerAngles -= new Vector3(0, 0, rot);
+            gameObject.transform.eulerAngles -= new Vector3(0, 0, rot);
+
+            // offset the rotation of the particle effects so that they're always upright
+            YellowStars.transform.eulerAngles = Vector3.zero;
+            PinkStars.transform.eulerAngles = Vector3.zero;
         }
 
         public void PlayAnimation(string anim)

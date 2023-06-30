@@ -30,7 +30,10 @@ namespace HeavenStudio.Games.Loaders
                         MonkeyWatch.instance.Clapping(e.beat);
                     },
                     defaultLength = 2f,
-                    inactiveFunction = delegate {var e = eventCaller.currentEntity; MonkeyWatch.ClappingInactive(e.beat);},
+                    inactiveFunction = delegate {
+                        var e = eventCaller.currentEntity;
+                        MonkeyWatch.ClappingInactive(e.beat);
+                    },
                 },
                 new GameAction("offbeatMonkeys", "Offbeat Monkeys")
                 {
@@ -48,10 +51,6 @@ namespace HeavenStudio.Games.Loaders
                 },
                 new GameAction("customMonkey", "Custom Monkey")
                 {
-                    function = delegate {
-                        var e = eventCaller.currentEntity;
-                        MonkeyWatch.instance.CustomMonkeySFX(e.beat, e["sfx"]);
-                    },
                     defaultLength = 0.5f,
                     parameters = new List<Param>()
                     {
@@ -104,7 +103,8 @@ namespace HeavenStudio.Games
         }
 
         static List<double> queuedInputs = new();
-        List<OffbeatMonkey> offbeatMonkeys = new List<OffbeatMonkey>();
+        Dictionary<double, OffbeatMonkey> offbeatMonkeys = new Dictionary<double, OffbeatMonkey>();
+        List<RiqEntity> customMonkeys = new List<RiqEntity>();
         List<GameObject> watchHoles = new List<GameObject>();
 
         public struct OffbeatMonkey
@@ -112,7 +112,6 @@ namespace HeavenStudio.Games
             public double beat;
             public bool mute;
             public float length;
-            public CustomMonkey[] monkeys;
         }
 
         public struct CustomMonkey
@@ -131,33 +130,19 @@ namespace HeavenStudio.Games
         void Awake()
         {
             instance = this;
+            customMonkeys = EventCaller.GetAllInGameManagerList("monkeyWatch", new string[] { "customMonkey" });
             var offbeatEvents = EventCaller.GetAllInGameManagerList("monkeyWatch", new string[] { "offbeatMonkeys" });
-            var customEvents  = EventCaller.GetAllInGameManagerList("monkeyWatch", new string[] { "customMonkey" });
             for (int i = 0; i < offbeatEvents.Count; i++)
             {
-                double offbeatBeat = offbeatEvents[i].beat;
-                if (offbeatBeat >= Conductor.instance.songPositionInBeatsAsDouble)
+                if (offbeatEvents[i].beat >= Conductor.instance.songPositionInBeats)
                 {
-                    var tempMonkeys = new List<CustomMonkey>();
-                    if (offbeatEvents[i]["custom"]) {
-                        for (int j = 0; j < customEvents.Count; j++)
-                        {
-                            if (customEvents[j].beat >= offbeatBeat+2
-                            && customEvents[j].beat <= offbeatBeat+offbeatEvents[i].length)
-                            {
-                                tempMonkeys.Add(new CustomMonkey{
-                                    beat = customEvents[j].beat,
-                                    sfx = customEvents[j]["sfx"],
-                                });
-                            }
+                    offbeatMonkeys.Add(
+                        Mathf.Round((float)offbeatEvents[i].beat), 
+                        new OffbeatMonkey{
+                            mute = offbeatEvents[i]["mute"],
+                            length = offbeatEvents[i].length,
                         }
-                    }
-                    offbeatMonkeys.Add(new OffbeatMonkey{
-                        beat = Mathf.Round((float)offbeatBeat),
-                        mute = offbeatEvents[i]["mute"],
-                        length = offbeatEvents[i].length,
-                        monkeys = (tempMonkeys.Count == 0 ? null : tempMonkeys.ToArray()),
-                    });
+                    );
                 }
             }
 
@@ -169,19 +154,19 @@ namespace HeavenStudio.Games
 
         private void Start() 
         {
-            GameCamera.additionalPosition = new Vector3(0, 18.95f, 0);
+            GameCamera.additionalPosition = new Vector3(0, 19.548f, 0);
         }
 
         public override void OnGameSwitch(double beat)
         {
             if (wantOffbeat.length != 0)
             {
-                PinkMonkeys(wantOffbeat.beat, wantOffbeat.length, wantOffbeat.mute);
+                double offBeat = wantOffbeat.beat;
+                PinkMonkeys(offBeat, wantOffbeat.length, wantOffbeat.mute, customMonkeys.FindAll(x => x.beat >= offBeat + 2 && x.beat < offBeat + wantOffbeat.length));
                 wantOffbeat = new OffbeatMonkey{
                     beat = 0,
                     length = 0,
                     mute = false,
-                    monkeys = null,
                 };
             }
             if (wantClapping != double.MinValue) {
@@ -221,27 +206,20 @@ namespace HeavenStudio.Games
             startedClapping = true;
         }
 
-        public void Clapping(double beat)
+        public void Clapping(double beat, double inputCheck = double.MinValue)
         {
-            bool schedule = true;
-            for (int i = 0; i < offbeatMonkeys.Count; i++)
-            {
-                if (beat >= offbeatMonkeys[i].beat+2 && beat < offbeatMonkeys[i].beat+offbeatMonkeys[i].length)
-                    schedule = false;
-            }
-            if (schedule) ScheduleInput(beat, 1f, InputType.STANDARD_DOWN, JustYellow, Miss, Nothing);
-            
-            for (int i = 0; i < offbeatMonkeys.Count; i++)
-            {
-                if (offbeatMonkeys[i].beat == beat) {
-                    PinkMonkeys(beat, offbeatMonkeys[i].length, offbeatMonkeys[i].mute, offbeatMonkeys[i].monkeys);
-                    PinkMonkeySFX(beat, offbeatMonkeys[i].length, offbeatMonkeys[i].mute, (offbeatMonkeys[i].monkeys == null));
-                    break;
-                }
+            if (offbeatMonkeys.ContainsKey(beat)) {
+                var monkeys = customMonkeys.FindAll(x => x.beat >= beat + 2 && x.beat < beat + offbeatMonkeys[beat].length);
+                PinkMonkeys(beat, offbeatMonkeys[beat].length, offbeatMonkeys[beat].mute, monkeys);
+                PinkMonkeySFX(beat, offbeatMonkeys[beat].length, offbeatMonkeys[beat].mute, monkeys);
+            } else if (offbeatMonkeys.ContainsKey(beat - 2)) {
+                inputCheck = (beat - 2) + offbeatMonkeys[beat - 2].length;
             }
 
+            if (inputCheck <= beat) ScheduleInput(beat, 1f, InputType.STANDARD_DOWN, JustYellow, Miss, Nothing);
+
             BeatAction.New(gameObject, new List<BeatAction.Action>() {
-                new BeatAction.Action(beat + 2, delegate { Clapping(beat + 2); }),
+                new BeatAction.Action(beat + 2, delegate { Clapping(beat + 2, inputCheck); }),
             });
         }
 
@@ -253,10 +231,10 @@ namespace HeavenStudio.Games
                 mute = mute,
             };
             ClappingInactive(beat);
-            PinkMonkeySFX(beat, length, mute, true);
+            PinkMonkeySFX(beat, length, mute, EventCaller.GetAllInGameManagerList("monkeyWatch", new string[] { "offbeatMonkeys" }));
         }
 
-        public static void PinkMonkeySFX(double beat, float length, bool mute, bool notCustom)
+        public static void PinkMonkeySFX(double beat, float length, bool mute, List<RiqEntity> monkeys)
         {
             var sfx = new List<MultiSound.Sound>();
 
@@ -271,11 +249,18 @@ namespace HeavenStudio.Games
                 });
             }
 
-            if (notCustom) {
+            if (monkeys == null) {
                 for (int i = 2; i < length; i++) {
                     sfx.AddRange(new MultiSound.Sound[] {
                         new MultiSound.Sound($"monkeyWatch/voiceKi{(i % 2 == 0 ? 1 : 2)}",      beat + i + 0.5 ),
                         new MultiSound.Sound($"monkeyWatch/voiceKi{(i % 2 == 0 ? 1 : 2)}Echo1", beat + i + 0.75),
+                    });
+                }
+            } else {
+                for (int i = 0; i < monkeys.Count; i++) {
+                    sfx.AddRange(new MultiSound.Sound[] {
+                        new MultiSound.Sound($"monkeyWatch/voiceKi{(i % 2 == 0 ? 1 : 2)}",      monkeys[i].beat       ),
+                        new MultiSound.Sound($"monkeyWatch/voiceKi{(i % 2 == 0 ? 1 : 2)}Echo1", monkeys[i].beat + 0.25),
                     });
                 }
             }
@@ -283,47 +268,28 @@ namespace HeavenStudio.Games
             MultiSound.Play(sfx.ToArray(), forcePlay: true);
         }
 
-        public void PinkMonkeys(double beat, float length, bool mute, CustomMonkey[] monkeys = null)
+        public void PinkMonkeys(double beat, float length, bool mute, List<RiqEntity> monkeys)
         {
-            var tempMonkeys = new List<CustomMonkey>();
-            if (monkeys == null) {
+            if (monkeys.Count == 0) {
                 for (int i = 2; i < length; i++) {
-                    tempMonkeys.Add(new CustomMonkey{beat = beat + 0.5f + i, sfx = (i % 2 == 0 ? 1 : 2)});
+                    ScheduleInput(beat, i + 0.5, InputType.STANDARD_DOWN, JustPink, Miss, Nothing);
                 }
-                monkeys = tempMonkeys.ToArray();
-            }
-
-            for (int i = 0; i < monkeys.Length; i++)
-            {
-                ScheduleInput(beat, monkeys[i].beat - beat, InputType.STANDARD_DOWN, (monkeys[i].sfx == 3 ? JustYellow : JustPink), Miss, Nothing);
+            } else {
+                for (int i = 0; i < monkeys.Count; i++)
+                {
+                    ScheduleInput(beat, monkeys[i].beat - beat, InputType.STANDARD_DOWN, (monkeys[i]["sfx"] == 3 ? JustYellow : JustPink), Miss, Nothing);
+                }
             }
         }
 
-        public void CustomMonkeySFX(double beat, int sfx)
-        {
-            for (int i = 0; i < offbeatMonkeys.Count; i++)
-            {
-                if (beat >= offbeatMonkeys[i].beat+2 && beat < offbeatMonkeys[i].beat+offbeatMonkeys[i].length) {
-                    PinkMonkeys(beat, offbeatMonkeys[i].length, offbeatMonkeys[i].mute, offbeatMonkeys[i].monkeys);
-                    PinkMonkeySFX(beat, offbeatMonkeys[i].length, offbeatMonkeys[i].mute, (offbeatMonkeys[i].monkeys == null));
-                }
-            }
-            MultiSound.Play(new MultiSound.Sound[] {
-                new MultiSound.Sound($"monkeyWatch/voiceKi{sfx}",      beat       ),
-                new MultiSound.Sound($"monkeyWatch/voiceKi{sfx}Echo1", beat + 0.25),
-            });
-        }
-
-        public void JustYellow(PlayerActionEvent caller, float state)
+        void JustYellow(PlayerActionEvent caller, float state)
         {
             Just(state, true);
-            monkeyPlayer.YellowStars.Play();
         }
 
-        public void JustPink(PlayerActionEvent caller, float state)
+        void JustPink(PlayerActionEvent caller, float state)
         {
             Just(state, false);
-            monkeyPlayer.PinkStars.Play();
         }
 
         void Just(float state, bool isYellow)
@@ -335,18 +301,23 @@ namespace HeavenStudio.Games
                 whichAnim += "Barely";
             } else {
                 SoundByte.PlayOneShotGame(isYellow ? $"monkeyWatch/clapOnbeat{UnityEngine.Random.Range(1, 5)}" : "monkeyWatch/clapOffbeat");
-                if (!isYellow) whichAnim += "Big";
+                if (isYellow)
+                    monkeyPlayer.YellowStars.Play();
+                else {
+                    monkeyPlayer.PinkStars.Play();
+                    whichAnim += "Big";
+                }
             }
             monkeyPlayer.MonkeyAnim.DoScaledAnimationAsync(whichAnim, 0.5f);
-            monkeyPlayer.UpdateRotation(6);
+            monkeyPlayer.ClickerAnim.DoScaledAnimationAsync("Click", 0.5f);
         }
 
-        public void Miss(PlayerActionEvent caller)
+        void Miss(PlayerActionEvent caller)
         {
-            monkeyPlayer.UpdateRotation(6);
+            monkeyPlayer.ClickerAnim.DoScaledAnimationAsync("Click", 0.5f);
         }
 
-        public void Nothing(PlayerActionEvent caller) {}
+        void Nothing(PlayerActionEvent caller) {}
 
         /* starting from the first monkey, these are the amount of monkeys clapped before the prepare animation switches.
         4 +
