@@ -114,12 +114,6 @@ namespace HeavenStudio.Games
             public float length;
         }
 
-        public struct CustomMonkey
-        {
-            public double beat;
-            public int sfx;
-        }
-
         static OffbeatMonkey wantOffbeat;
         static double wantClapping = double.MinValue;
         public static bool startedClapping;
@@ -154,14 +148,15 @@ namespace HeavenStudio.Games
 
         private void Start() 
         {
-            GameCamera.additionalPosition = new Vector3(0, 19.548f, 0);
+            GameCamera.additionalPosition = new Vector3(0, 17.7f, 0);
         }
 
         public override void OnGameSwitch(double beat)
         {
+            double offBeat = double.MinValue;
             if (wantOffbeat.length != 0)
             {
-                double offBeat = wantOffbeat.beat;
+                offBeat = wantOffbeat.beat;
                 PinkMonkeys(offBeat, wantOffbeat.length, wantOffbeat.mute, customMonkeys.FindAll(x => x.beat >= offBeat + 2 && x.beat < offBeat + wantOffbeat.length));
                 wantOffbeat = new OffbeatMonkey{
                     beat = 0,
@@ -170,7 +165,7 @@ namespace HeavenStudio.Games
                 };
             }
             if (wantClapping != double.MinValue) {
-                Clapping(wantClapping);
+                Clapping(wantClapping, offBeat + wantOffbeat.length);
                 wantClapping = double.MinValue;
             }
         }
@@ -201,7 +196,6 @@ namespace HeavenStudio.Games
 
         public static void ClappingInactive(double beat)
         {
-            if (wantClapping == double.MinValue) return;
             wantClapping = beat;
             startedClapping = true;
         }
@@ -228,10 +222,9 @@ namespace HeavenStudio.Games
             wantOffbeat = new OffbeatMonkey{
                 beat = beat,
                 length = length,
-                mute = mute,
+                mute = true,
             };
-            ClappingInactive(beat);
-            PinkMonkeySFX(beat, length, mute, EventCaller.GetAllInGameManagerList("monkeyWatch", new string[] { "offbeatMonkeys" }));
+            PinkMonkeySFX(beat, length, mute, EventCaller.GetAllInGameManagerList("monkeyWatch", new string[] { "customMonkeys" }));
         }
 
         public static void PinkMonkeySFX(double beat, float length, bool mute, List<RiqEntity> monkeys)
@@ -249,7 +242,7 @@ namespace HeavenStudio.Games
                 });
             }
 
-            if (monkeys == null) {
+            if (monkeys.Count == 0) {
                 for (int i = 2; i < length; i++) {
                     sfx.AddRange(new MultiSound.Sound[] {
                         new MultiSound.Sound($"monkeyWatch/voiceKi{(i % 2 == 0 ? 1 : 2)}",      beat + i + 0.5 ),
