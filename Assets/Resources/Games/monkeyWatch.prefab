@@ -25078,7 +25078,7 @@ ParticleSystem:
     m_TextureBilinearFiltering: 0
     randomDirectionAmount: 0.2
     sphericalDirectionAmount: 0
-    randomPositionAmount: 0.3
+    randomPositionAmount: 0.1
     radius:
       value: 1
       mode: 0
@@ -25139,7 +25139,7 @@ ParticleSystem:
     arc:
       value: 45
       mode: 3
-      spread: 0.1
+      spread: 1
       speed:
         serializedVersion: 2
         minMaxState: 0
@@ -30493,7 +30493,7 @@ ParticleSystem:
     m_TextureColorAffectsParticles: 1
     m_TextureAlphaAffectsParticles: 1
     m_TextureBilinearFiltering: 0
-    randomDirectionAmount: 0.1
+    randomDirectionAmount: 0.2
     sphericalDirectionAmount: 0
     randomPositionAmount: 0.1
     radius:
