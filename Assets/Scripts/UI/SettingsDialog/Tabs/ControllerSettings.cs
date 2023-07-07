@@ -147,7 +147,7 @@ namespace HeavenStudio.Editor
 
         public void SearchAndConnectControllers()
         {
-            int connected = PlayerInput.InitInputControllers();
+            int connected = PlayerInput.RefreshInputControllers();
             numConnectedLabel.text = "Connected: " + connected;
             currentControllerLabel.text = "Current Controller: " + PlayerInput.GetInputController(1).GetDeviceName();
             PopulateControllersDropdown();

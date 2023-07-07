@@ -36,8 +36,12 @@ namespace HeavenStudio
         public delegate void InputControllerDispose();
         public static event InputControllerDispose PlayerInputCleanUp;
 
+        public delegate InputController[] InputControllerRefresh();
+        public static List<InputControllerRefresh> PlayerInputRefresh;
+
         static List<InputControllerInitializer> loadRunners;
         static void BuildLoadRunnerList() {
+            PlayerInputRefresh = new();
             loadRunners = System.Reflection.Assembly.GetExecutingAssembly()
             .GetTypes()
             .Where(x => x.Namespace == "HeavenStudio.InputSystem.Loaders" && x.GetMethod("Initialize", BindingFlags.Public | BindingFlags.Static) != null)
@@ -64,6 +68,20 @@ namespace HeavenStudio
                 }
             }
             
+            return inputDevices.Count;
+        }
+
+        public static int RefreshInputControllers()
+        {
+            inputDevices = new List<InputController>();
+            if (PlayerInputRefresh != null) {
+                foreach (InputControllerRefresh runner in PlayerInputRefresh) {
+                    InputController[] controllers = runner();
+                    if (controllers != null) {
+                        inputDevices.AddRange(controllers);
+                    }
+                }
+            }
             return inputDevices.Count;
         }
         

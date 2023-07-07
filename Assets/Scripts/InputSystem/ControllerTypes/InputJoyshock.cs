@@ -13,7 +13,11 @@ namespace HeavenStudio.InputSystem.Loaders
         [LoadOrder(1)]
         public static InputController[] Initialize()
         {
+            InputJoyshock.joyshocks = new();
             PlayerInput.PlayerInputCleanUp += DisposeJoyshocks;
+            PlayerInput.PlayerInputRefresh.Add(Refresh);
+
+            InputJoyshock.JslEventInit();
 
             InputController[] controllers;
             int jslDevicesFound = 0;
@@ -53,6 +57,35 @@ namespace HeavenStudio.InputSystem.Loaders
         public static void DisposeJoyshocks()
         {
             JslDisconnectAndDisposeAll();
+        }
+
+        public static InputController[] Refresh()
+        {
+            InputJoyshock.joyshocks.Clear();
+            InputController[] controllers;
+            int jslDevicesFound = 0;
+            int jslDevicesConnected = 0;
+            int[] jslDeviceHandles;
+
+            jslDevicesFound = JslConnectDevices();
+            if (jslDevicesFound > 0)
+            {
+                jslDeviceHandles = new int[jslDevicesFound];
+                jslDevicesConnected = JslGetConnectedDeviceHandles(jslDeviceHandles, jslDevicesFound);
+
+                controllers = new InputController[jslDevicesConnected];
+                foreach (int i in jslDeviceHandles)
+                {
+                    Debug.Log("Setting up JoyShock: ( Handle " + i + ", type " + JslGetControllerType(i) + " )");
+                    InputJoyshock joyshock = new InputJoyshock(i);
+                    joyshock.SetPlayer(null);
+                    joyshock.InitializeController();
+                    controllers[i] = joyshock;
+                }
+                return controllers;
+            }
+            Debug.Log("No JoyShocks found.");
+            return null;
         }
     }
 }
@@ -126,6 +159,8 @@ namespace HeavenStudio.InputSystem
             ButtonMaskPlus,
         };
 
+        public static Dictionary<int, InputJoyshock> joyshocks;
+
         float stickDeadzone = 0.5f;
 
         int joyshockHandle;
@@ -133,9 +168,11 @@ namespace HeavenStudio.InputSystem
         int splitType;
         int lightbarColour;
         string joyshockName;
+        double totalReportDt;
 
         //buttons, sticks, triggers
-        JOY_SHOCK_STATE joyBtStateCurrent, joyBtStateLast;
+        JoyshockButtonState[] buttonStates = new JoyshockButtonState[11];
+        JOY_SHOCK_STATE joyBtStateCurrent;
         //gyro and accelerometer
         IMU_STATE joyImuStateCurrent, joyImuStateLast;
         //touchpad
@@ -143,17 +180,69 @@ namespace HeavenStudio.InputSystem
 
         InputJoyshock otherHalf;
 
+        public struct JoyshockButtonState
+        {
+            public double time;     // time passed since state
+            public bool pressed;    // true if button is down
+            public bool isDelta;    // true if the button changed state since last frame
+        }
+
+        public struct TimestampedState
+        {
+            public double timestamp;
+            public JOY_SHOCK_STATE input;
+        }
+
+        protected List<TimestampedState> inputStack;        // asynnc input events / polling should feed into this dict
+        protected List<TimestampedState> lastInputStack;    // when processing input copy the inputStack to this dict
+        protected bool wantClearInputStack = false;         // strobe from main thread to clear the input stack
+        protected double reportTime = 0;                // same timeline as Time.timeSinceStartup
+        protected double lastReportTime = 0;                // same timeline as Time.timeSinceStartup
+
         public InputJoyshock(int handle)
         {
             joyshockHandle = handle;
         }
 
+        public static void JslEventInit()
+        {
+            JslSetCallback(JslEventCallback);
+        }
+
+        static void JslEventCallback(int handle, JOY_SHOCK_STATE state, JOY_SHOCK_STATE lastState,
+        IMU_STATE imuState, IMU_STATE lastImuState, float deltaTime)
+        {
+            if (!joyshocks.ContainsKey(handle)) return;
+            InputJoyshock js = joyshocks[handle];
+            if (js == null) return;
+            if (js.inputStack == null) return;
+
+            if (js.wantClearInputStack)
+            {
+                js.inputStack.Clear();
+                js.wantClearInputStack = false;
+                js.totalReportDt = (js.lastReportTime*2) - js.reportTime;
+                js.lastReportTime = js.reportTime;
+            }
+            js.totalReportDt += deltaTime;
+            js.inputStack.Add(new TimestampedState
+            {
+                timestamp = js.totalReportDt,
+                input = state
+            });
+        }
+
         public override void InitializeController()
         {
+            inputStack = new();
+            lastInputStack = new();
+
+            buttonStates = new JoyshockButtonState[11];
             joyBtStateCurrent = new JOY_SHOCK_STATE();
-            joyBtStateLast = new JOY_SHOCK_STATE();
+
             joyImuStateCurrent = new IMU_STATE();
             joyImuStateLast = new IMU_STATE();
+
             joyTouchStateCurrent = new TOUCH_STATE();
             joyTouchStateLast = new TOUCH_STATE();
 
@@ -163,23 +252,60 @@ namespace HeavenStudio.InputSystem
             joyshockName = joyShockNames[type];
 
             splitType = JslGetControllerSplitType(joyshockHandle);
+
+            joyshocks.Add(joyshockHandle, this);
         }
 
         public override void UpdateState()
         {
-            //buttons
-            joyBtStateLast = joyBtStateCurrent;
-            joyBtStateCurrent = JslGetSimpleState(joyshockHandle);
+            lastInputStack = new(inputStack);
+            wantClearInputStack = true;
+            reportTime = Time.realtimeSinceStartupAsDouble;
 
-            //gyro and accelerometer
-            joyImuStateLast = joyImuStateCurrent;
-            joyImuStateCurrent = JslGetIMUState(joyshockHandle);
+            // Debug.Log($"=== updating state for {joyshockName} id {joyshockHandle} ===");
+            for (int i = 0; i < buttonStates.Length; i++)
+            {
+                buttonStates[i].isDelta = false;
+            }
+            foreach(TimestampedState state in lastInputStack)
+            {
+                // Debug.Log($"checking state at {state.timestamp} ({reportTime - state.timestamp}s ago), input {state.input.buttons}");
+                joyBtStateCurrent = state.input;
 
-            //touchpad
-            joyTouchStateLast = joyTouchStateCurrent;
-            joyTouchStateCurrent = JslGetTouchState(joyshockHandle);
+                for (int i = 0; i < buttonStates.Length; i++)
+                {
+                    JoyshockButtonState st = buttonStates[i];
+                    int bt = mappings[i];
+                    if (otherHalf == null)
+                    {
+                        switch (splitType)
+                        {
+                            case SplitLeft:
+                                bt = mappingsSplitLeft[i];
+                                break;
+                            case SplitRight:
+                                bt = mappingsSplitRight[i];
+                                break;
+                            default:
+                                break;
+                        }
+                    }
 
-            //stick direction state
+                    if (bt != -1)
+                    {
+                        bool pressed = BitwiseUtils.WantCurrent(state.input.buttons, 1 << bt);
+                        if (pressed != st.pressed && !st.isDelta)
+                        {
+                            Debug.Log($"button {i} ({bt}) state changed to {pressed}, was {st.pressed} (time {reportTime - state.timestamp}s ago)");
+                            buttonStates[i].pressed = pressed;
+                            buttonStates[i].isDelta = true;
+                            buttonStates[i].time = reportTime - state.timestamp;
+                        }
+                    }
+                }
+            }
+
+            //stick direction state, only handled on update
             //split controllers will need to be rotated to compensate
             //left rotates counterclockwise, right rotates clockwise, all by 90 degrees
             float xAxis = 0f;
@@ -215,6 +341,8 @@ namespace HeavenStudio.InputSystem
             directionStateCurrent |= ((xAxis >= stickDeadzone) ? (1 << ((int) InputDirection.Right)) : 0);
             directionStateCurrent |= ((xAxis <= -stickDeadzone) ? (1 << ((int) InputDirection.Left)) : 0);
             //Debug.Log("stick direction: " + directionStateCurrent + "| x axis: " + xAxis + " y axis: " + yAxis);
+
+            lastInputStack.Clear();
         }
 
         public override string GetDeviceName()
@@ -248,9 +376,26 @@ namespace HeavenStudio.InputSystem
             return features;
         }
 
+        public override bool GetIsConnected()
+        {
+            return JslStillConnected(joyshockHandle);
+        }
+
+        public override bool GetIsPoorConnection()
+        {
+            return false;
+        }
+
         public override int GetLastButtonDown()
         {
-            return BitwiseUtils.FirstSetBit(joyBtStateCurrent.buttons & joyBtStateLast.buttons);
+            for (int i = 0; i < buttonStates.Length; i++)
+            {
+                if (buttonStates[i].pressed && buttonStates[i].isDelta)
+                {
+                    return i;
+                }
+            }
+            return -1;
         }
 
         public override KeyCode GetLastKeyDown()
@@ -260,71 +405,17 @@ namespace HeavenStudio.InputSystem
 
         public override bool GetButton(int button)
         {
-            int bt = 0;
-            if (otherHalf == null)
-            {
-                if (splitType == SplitLeft)
-                {
-                    bt = mappingsSplitLeft[button];
-                }
-                else if (splitType == SplitRight)
-                {
-                    bt = mappingsSplitRight[button];
-                }
-                else
-                {
-                    bt = mappings[button];
-                }
-                return BitwiseUtils.WantCurrent(joyBtStateCurrent.buttons, 1 << bt);
-            }
-            bt = mappings[button];
-            return BitwiseUtils.WantCurrent(joyBtStateCurrent.buttons, 1 << bt) || BitwiseUtils.WantCurrent(otherHalf.joyBtStateCurrent.buttons, 1 << bt);
+            return buttonStates[button].pressed;
         }
 
         public override bool GetButtonDown(int button)
         {
-            int bt = 0;
-            if (otherHalf == null)
-            {
-                if (splitType == SplitLeft)
-                {
-                    bt = mappingsSplitLeft[button];
-                }
-                else if (splitType == SplitRight)
-                {
-                    bt = mappingsSplitRight[button];
-                }
-                else
-                {
-                    bt = mappings[button];
-                }
-                return BitwiseUtils.WantCurrentAndNotLast(joyBtStateCurrent.buttons, joyBtStateLast.buttons, 1 << bt);
-            }
-            bt = mappings[button];
-            return BitwiseUtils.WantCurrentAndNotLast(joyBtStateCurrent.buttons, joyBtStateLast.buttons, 1 << bt) || BitwiseUtils.WantCurrentAndNotLast(otherHalf.joyBtStateCurrent.buttons, otherHalf.joyBtStateLast.buttons, 1 << bt);
+            return buttonStates[button].pressed && buttonStates[button].isDelta;
         }
 
         public override bool GetButtonUp(int button)
         {
-            int bt = 0;
-            if (otherHalf == null)
-            {
-                if (splitType == SplitLeft)
-                {
-                    bt = mappingsSplitLeft[button];
-                }
-                else if (splitType == SplitRight)
-                {
-                    bt = mappingsSplitRight[button];
-                }
-                else
-                {
-                    bt = mappings[button];
-                }
-                return BitwiseUtils.WantNotCurrentAndLast(joyBtStateCurrent.buttons, joyBtStateLast.buttons, 1 << bt);
-            }
-            bt = mappings[button];
-            return BitwiseUtils.WantNotCurrentAndLast(joyBtStateCurrent.buttons, joyBtStateLast.buttons, 1 << bt) || BitwiseUtils.WantNotCurrentAndLast(otherHalf.joyBtStateCurrent.buttons, otherHalf.joyBtStateLast.buttons, 1 << bt);
+            return (!buttonStates[button].pressed) && buttonStates[button].isDelta;
         }
 
         public override float GetAxis(InputAxis axis)
@@ -354,7 +445,6 @@ namespace HeavenStudio.InputSystem
 
         public override bool GetHatDirection(InputDirection direction)
         {
-            //todo: check analogue stick hat direction too
             int bt;
             switch (direction)
             {
@@ -378,7 +468,6 @@ namespace HeavenStudio.InputSystem
 
         public override bool GetHatDirectionDown(InputDirection direction)
         {
-            //todo: check analogue stick hat direction too
             int bt;
             switch (direction)
             {
@@ -402,7 +491,6 @@ namespace HeavenStudio.InputSystem
 
         public override bool GetHatDirectionUp(InputDirection direction)
         {
-            //todo: check analogue stick hat direction too
             int bt;
             switch (direction)
             {

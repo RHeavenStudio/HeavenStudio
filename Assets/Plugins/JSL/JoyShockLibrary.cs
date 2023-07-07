@@ -137,7 +137,7 @@ public static class JSL
     [DllImport("JoyShockLibrary")]
     public static extern void JslDisconnectAndDisposeAll();
     [DllImport("JoyShockLibrary")]
-    public static extern void JslStillConnected(int deviceId);
+    public static extern bool JslStillConnected(int deviceId);
 
     [DllImport("JoyShockLibrary", CallingConvention = CallingConvention.Cdecl)]
     public static extern JOY_SHOCK_STATE JslGetSimpleState(int deviceId);

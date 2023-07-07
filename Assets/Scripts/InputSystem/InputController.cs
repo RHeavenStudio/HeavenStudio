@@ -120,10 +120,10 @@ namespace HeavenStudio.InputSystem
         //FUTURE: buttons used in Heaven Studio gameplay ("Form Baton" / WiiMote Style)
         public enum ButtonsBaton : int
         {
-            BatonS = 0, //-- all these...
-            BatonE = 1, // |
-            BatonW = 2, // |
-            BatonN = 3, //--
+            BatonS = 0,    //-- all these...
+            BatonE = 1,    // |
+            BatonW = 2,    // |
+            BatonN = 3,    //--
             BatonFace = 4, // < ...map to this, but are directional
             BatonTrigger = 5, // should never be used alone
             Baton1 = 6,
@@ -139,11 +139,14 @@ namespace HeavenStudio.InputSystem
             TouchTap = 2,
             TouchFlick = 3,
             TouchButtonL = 4,
-            TouchButtonR = 4,
+            TouchButtonR = 5,
         }
 
         // FUTURE: Move Style needs to be implemented per-game (maybe implement checks for common actions?)
-    
+
+        protected int currentInputFlags = 0;
+        protected int lastInputFlags = 0;
+
         protected int? playerNum;
         protected int directionStateCurrent = 0;
         protected int directionStateLast = 0;
@@ -153,6 +156,8 @@ namespace HeavenStudio.InputSystem
 
         public abstract string GetDeviceName(); // Get the name of the controller
         public abstract InputFeatures GetFeatures(); // Get the features of the controller
+        public abstract bool GetIsConnected();
+        public abstract bool GetIsPoorConnection();
 
         public abstract int GetLastButtonDown();    // Get the last button down
         public abstract KeyCode GetLastKeyDown();   // Get the last key down (used for keyboards and other devices that use Keycode)

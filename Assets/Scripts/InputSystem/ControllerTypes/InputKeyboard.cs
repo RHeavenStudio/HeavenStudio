@@ -1,3 +1,5 @@
+using System;
+using System.Linq;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -11,6 +13,16 @@ namespace HeavenStudio.InputSystem.Loaders
         [LoadOrder(0)]
         public static InputController[] Initialize()
         {
+            PlayerInput.PlayerInputRefresh.Add(Refresh);
+
+            InputKeyboard keyboard = new InputKeyboard();
+            keyboard.SetPlayer(1);
+            keyboard.InitializeController();
+            return new InputController[] { keyboard };
+        }
+
+        public static InputController[] Refresh()
+        {
             InputKeyboard keyboard = new InputKeyboard();
             keyboard.SetPlayer(1);
             keyboard.InitializeController();
@@ -23,7 +35,10 @@ namespace HeavenStudio.InputSystem
 {
     public class InputKeyboard : InputController
     {
-        static KeyCode[] keyCodes = (KeyCode[]) System.Enum.GetValues(typeof(UnityEngine.KeyCode));
+        private static readonly KeyCode[] keyCodes = Enum.GetValues(typeof(KeyCode))
+        .Cast<KeyCode>()
+        .Where(k => ((int)k < (int)KeyCode.Mouse0))
+        .ToArray();
 
         //FUTURE: remappable controls
         //KeyCode[] mappings = new KeyCode[Enum.GetNames(typeof(ButtonsPad)).Length];
@@ -65,6 +80,16 @@ namespace HeavenStudio.InputSystem
             return InputFeatures.Readable_StringInput | InputFeatures.Style_Pad | InputFeatures.Style_Baton;
         }
 
+        public override bool GetIsConnected()
+        {
+            return true;
+        }
+
+        public override bool GetIsPoorConnection()
+        {
+            return false;
+        }
+
         public override int GetLastButtonDown()
         {
             return 0;
@@ -72,9 +97,13 @@ namespace HeavenStudio.InputSystem
 
         public override KeyCode GetLastKeyDown()
         {
-            for(KeyCode i = keyCodes[1]; i <= KeyCode.Menu; i++) {
-                if (Input.GetKeyDown(i))
-                    return i;
+            if (Input.anyKeyDown)
+            {
+                for (KeyCode i = keyCodes[1]; i <= KeyCode.Menu; i++)
+                {
+                    if (Input.GetKeyDown(i))
+                        return i;
+                }
             }
             return KeyCode.None;
         }
