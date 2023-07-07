@@ -8,16 +8,23 @@ namespace HeavenStudio.Games.Scripts_ClapTrap
 {
     public class Sword : MonoBehaviour
     {
-
-
         public double cueStart;
-        public double cueLength;
+        public float cueLength;
         public int cueType;
+
+        private Animator dollHead;
+        private Animator dollArms;
+
+        private ClapTrap game;
 
         // Start is called before the first frame update
         void Awake()
         {
-            ClapTrap.instance.ScheduleInput(cueStart, cueLength, InputType.STANDARD_DOWN | InputType.DIRECTION_DOWN, Hit, Miss, Out);
+            game = ClapTrap.instance;
+            dollHead = game.dollHead;
+            dollArms = game.dollArms;
+            
+            game.ScheduleInput((float)cueStart, cueLength, InputType.STANDARD_DOWN | InputType.DIRECTION_DOWN, Hit, Miss, Out);
         }
 
         // Update is called once per frame
@@ -50,11 +57,9 @@ namespace HeavenStudio.Games.Scripts_ClapTrap
             }
 
             dollArms.DoScaledAnimationAsync("ArmsHit", 0.5f);
-            clapEffect.DoScaledAnimationAsync("ClapEffect", 0.5f);
+            game.clapEffect.DoScaledAnimationAsync("ClapEffect", 0.5f);
 
-
-            swordClone.SetActive(true);
-            swordClone.GetComponent<Animator>().DoScaledAnimationAsync("swordHandHit", 0.5f);
+            GetComponent<Animator>().DoScaledAnimationAsync("swordHandHit", 0.5f);
         }
 
         private void Miss(PlayerActionEvent caller)

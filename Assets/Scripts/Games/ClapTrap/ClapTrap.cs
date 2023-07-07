@@ -213,12 +213,11 @@ namespace HeavenStudio.Games
 
         public void Clap(float beat, float length, int type, bool spotlightToggle)
         {
-
             MultiSound.Play(new MultiSound.Sound[] { 
-                new MultiSound.Sound("clapTrap/donk", beat),
-                new MultiSound.Sound("clapTrap/donk", beat + length), 
-                new MultiSound.Sound("clapTrap/donk", beat + length * 2),
-                new MultiSound.Sound("clapTrap/whiff", beat + length * 4, offset : (float)(Jukebox.GetClipLengthGame("clapTrap/whiff"))),
+                new MultiSound.Sound("clapTrap/donk",  beat),
+                new MultiSound.Sound("clapTrap/donk",  beat + length), 
+                new MultiSound.Sound("clapTrap/donk",  beat + length * 2),
+                new MultiSound.Sound("clapTrap/whiff", beat + length * 4.5),
             }, forcePlay: true);
 
             if (spotlightToggle)
@@ -242,13 +241,8 @@ namespace HeavenStudio.Games
             swordClone.cueLength = length * 4;
             swordClone.cueStart = beat;
             swordClone.cueType = type;
-
-            
         }
-
-
         
-
         public void DollAnimations(float beat, int animate)
         {
             if (animate == 0)
@@ -269,20 +263,15 @@ namespace HeavenStudio.Games
             {
                 dollHead.DoScaledAnimationAsync("HeadTalk", 0.5f);
             }
-
         }
-
 
         public void ChangeBackgroundColor(Color color, float beats)
         {
             var seconds = Conductor.instance.secPerBeat * beats;
 
-            {
-                if (bgColorTween != null)
-                    bgColorTween.Kill(true);
-            }
+            if (bgColorTween != null)
+                bgColorTween.Kill(true);
             
-
             if (seconds == 0)
             {
                 bg.color = color;
@@ -292,9 +281,7 @@ namespace HeavenStudio.Games
                 bgColorTween = bg.DOColor(color, seconds);
             }
 
-                backgroundColor = color;
-            
-            
+            backgroundColor = color;
         }
 
         public void FadeBackgroundColor(Color start, Color end, float beats)
@@ -319,7 +306,5 @@ namespace HeavenStudio.Games
             spotlightMaterial.SetColor("_ColorBravo", glowSpotlightColor);
             spotlightMaterial.SetColor("_ColorDelta", bottomSpotlightColor);
         }
-
-
     }
 }
