@@ -162,12 +162,12 @@ namespace HeavenStudio.InputSystem
         public abstract int GetLastButtonDown();    // Get the last button down
         public abstract KeyCode GetLastKeyDown();   // Get the last key down (used for keyboards and other devices that use Keycode)
         public abstract bool GetButton(int button); // is button currently pressed?
-        public abstract bool GetButtonDown(int button); // is button just pressed?
-        public abstract bool GetButtonUp(int button);   // is button just released?
+        public abstract bool GetButtonDown(int button, out double dt); // is button just pressed?
+        public abstract bool GetButtonUp(int button, out double dt);   // is button just released?
         public abstract float GetAxis(InputAxis axis);    // Get the value of an axis
         public abstract bool GetHatDirection(InputDirection direction);    // is direction active?
-        public abstract bool GetHatDirectionDown(InputDirection direction); // direction just became active?
-        public abstract bool GetHatDirectionUp(InputDirection direction);  // direction just became inactive?
+        public abstract bool GetHatDirectionDown(InputDirection direction, out double dt); // direction just became active?
+        public abstract bool GetHatDirectionUp(InputDirection direction, out double dt);  // direction just became inactive?
 
         public abstract void SetPlayer(int? playerNum);  // Set the player number (starts at 1, set to -1 or null for no player)
         public abstract int? GetPlayer();            // Get the player number (null if no player)

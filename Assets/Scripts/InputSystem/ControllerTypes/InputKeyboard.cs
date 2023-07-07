@@ -113,13 +113,15 @@ namespace HeavenStudio.InputSystem
             return Input.GetKey(mappings[button]);
         }
 
-        public override bool GetButtonDown(int button)
+        public override bool GetButtonDown(int button, out double dt)
         {
+            dt = 0;
             return Input.GetKeyDown(mappings[button]);
         }
 
-        public override bool GetButtonUp(int button)
+        public override bool GetButtonUp(int button, out double dt)
         {
+            dt = 0;
             return Input.GetKeyUp(mappings[button]);
         }
 
@@ -146,8 +148,9 @@ namespace HeavenStudio.InputSystem
             }
         }
 
-        public override bool GetHatDirectionDown(InputDirection direction)
+        public override bool GetHatDirectionDown(InputDirection direction, out double dt)
         {
+            dt = 0;
             switch (direction)
             {
                 case InputDirection.Up:
@@ -163,8 +166,9 @@ namespace HeavenStudio.InputSystem
             }
         }
 
-        public override bool GetHatDirectionUp(InputDirection direction)
+        public override bool GetHatDirectionUp(InputDirection direction, out double dt)
         {
+            dt = 0;
             switch (direction)
             {
                 case InputDirection.Up:

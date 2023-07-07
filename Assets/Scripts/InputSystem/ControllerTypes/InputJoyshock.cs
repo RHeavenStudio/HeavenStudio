@@ -56,6 +56,10 @@ namespace HeavenStudio.InputSystem.Loaders
 
         public static void DisposeJoyshocks()
         {
+            foreach (InputJoyshock joyshock in InputJoyshock.joyshocks.Values)
+            {
+                joyshock.CleanUp();
+            }
             JslDisconnectAndDisposeAll();
         }
 
@@ -182,7 +186,7 @@ namespace HeavenStudio.InputSystem
 
         public struct JoyshockButtonState
         {
-            public double time;     // time passed since state
+            public double dt;     // time passed since state
             public bool pressed;    // true if button is down
             public bool isDelta;    // true if the button changed state since last frame
         }
@@ -196,8 +200,7 @@ namespace HeavenStudio.InputSystem
         protected List<TimestampedState> inputStack;        // asynnc input events / polling should feed into this dict
         protected List<TimestampedState> lastInputStack;    // when processing input copy the inputStack to this dict
         protected bool wantClearInputStack = false;         // strobe from main thread to clear the input stack
-        protected double reportTime = 0;                // same timeline as Time.timeSinceStartup
-        protected double lastReportTime = 0;                // same timeline as Time.timeSinceStartup
+        protected double reportTime = 0;
 
         public InputJoyshock(int handle)
         {
@@ -221,8 +224,7 @@ namespace HeavenStudio.InputSystem
             {
                 js.inputStack.Clear();
                 js.wantClearInputStack = false;
-                js.totalReportDt = (js.lastReportTime*2) - js.reportTime;
-                js.lastReportTime = js.reportTime;
+                js.totalReportDt -= js.reportTime;
             }
             js.totalReportDt += deltaTime;
             js.inputStack.Add(new TimestampedState
@@ -256,25 +258,28 @@ namespace HeavenStudio.InputSystem
             joyshocks.Add(joyshockHandle, this);
         }
 
+        public void CleanUp()
+        {
+            JslSetPlayerNumber(joyshockHandle, 0);
+            JslSetLightColour(joyshockHandle, 0);
+        }
+
         public override void UpdateState()
         {
             lastInputStack = new(inputStack);
             wantClearInputStack = true;
-            reportTime = Time.realtimeSinceStartupAsDouble;
+            reportTime = totalReportDt;
 
-            // Debug.Log($"=== updating state for {joyshockName} id {joyshockHandle} ===");
             for (int i = 0; i < buttonStates.Length; i++)
             {
                 buttonStates[i].isDelta = false;
             }
             foreach(TimestampedState state in lastInputStack)
             {
-                // Debug.Log($"checking state at {state.timestamp} ({reportTime - state.timestamp}s ago), input {state.input.buttons}");
                 joyBtStateCurrent = state.input;
 
                 for (int i = 0; i < buttonStates.Length; i++)
                 {
-                    JoyshockButtonState st = buttonStates[i];
                     int bt = mappings[i];
                     if (otherHalf == null)
                     {
@@ -294,12 +299,11 @@ namespace HeavenStudio.InputSystem
                     if (bt != -1)
                     {
                         bool pressed = BitwiseUtils.WantCurrent(state.input.buttons, 1 << bt);
-                        if (pressed != st.pressed && !st.isDelta)
+                        if (pressed != buttonStates[i].pressed && !buttonStates[i].isDelta)
                         {
-                            Debug.Log($"button {i} ({bt}) state changed to {pressed}, was {st.pressed} (time {reportTime - state.timestamp}s ago)");
                             buttonStates[i].pressed = pressed;
                             buttonStates[i].isDelta = true;
-                            buttonStates[i].time = reportTime - state.timestamp;
+                            buttonStates[i].dt = reportTime - state.timestamp;
                         }
                     }
                 }
@@ -408,14 +412,16 @@ namespace HeavenStudio.InputSystem
             return buttonStates[button].pressed;
         }
 
-        public override bool GetButtonDown(int button)
+        public override bool GetButtonDown(int button, out double dt)
         {
+            dt = buttonStates[button].dt;
             return buttonStates[button].pressed && buttonStates[button].isDelta;
         }
 
-        public override bool GetButtonUp(int button)
+        public override bool GetButtonUp(int button, out double dt)
         {
-            return (!buttonStates[button].pressed) && buttonStates[button].isDelta;
+            dt = buttonStates[button].dt;
+            return !buttonStates[button].pressed && buttonStates[button].isDelta;
         }
 
         public override float GetAxis(InputAxis axis)
@@ -466,7 +472,7 @@ namespace HeavenStudio.InputSystem
             return GetButton(bt) || BitwiseUtils.WantCurrent(directionStateCurrent, 1 << (int) direction);
         }
 
-        public override bool GetHatDirectionDown(InputDirection direction)
+        public override bool GetHatDirectionDown(InputDirection direction, out double dt)
         {
             int bt;
             switch (direction)
@@ -484,12 +490,15 @@ namespace HeavenStudio.InputSystem
                     bt = mappings[3];
                     break;
                 default:
+                    dt = 0;
                     return false;
             }
-            return GetButtonDown(bt) || BitwiseUtils.WantCurrentAndNotLast(directionStateCurrent, directionStateLast, 1 << (int) direction);
+            bool btbool = GetButtonDown(bt, out dt);
+            if (!btbool) dt = 0;
+            return btbool || BitwiseUtils.WantCurrentAndNotLast(directionStateCurrent, directionStateLast, 1 << (int) direction);
         }
 
-        public override bool GetHatDirectionUp(InputDirection direction)
+        public override bool GetHatDirectionUp(InputDirection direction, out double dt)
         {
             int bt;
             switch (direction)
@@ -507,9 +516,12 @@ namespace HeavenStudio.InputSystem
                     bt = mappings[3];
                     break;
                 default:
+                    dt = 0;
                     return false;
             }
-            return GetButtonUp(bt) || BitwiseUtils.WantNotCurrentAndLast(directionStateCurrent, directionStateLast, 1 << (int) direction);
+            bool btbool = GetButtonUp(bt, out dt);
+            if (!btbool) dt = 0;
+            return btbool || BitwiseUtils.WantNotCurrentAndLast(directionStateCurrent, directionStateLast, 1 << (int) direction);
         }
 
         public override void SetPlayer(int? playerNum)

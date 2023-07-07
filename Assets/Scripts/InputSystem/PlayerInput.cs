@@ -191,13 +191,25 @@ namespace HeavenStudio
         
         public static bool Pressed(bool includeDPad = false)
         {
-            bool keyDown = GetInputController(1).GetButtonDown((int) InputController.ButtonsPad.PadE) || (includeDPad && GetAnyDirectionDown());
-            return keyDown && !GameManager.instance.autoplay && Conductor.instance.isPlaying && GameManager.instance.canInput ;
+            bool keyDown = GetInputController(1).GetButtonDown((int) InputController.ButtonsPad.PadE, out _) || (includeDPad && GetAnyDirectionDown());
+            return keyDown && !GameManager.instance.autoplay && Conductor.instance.isPlaying && GameManager.instance.canInput;
+        }
+
+        public static bool Pressed(out double dt, bool includeDPad = false)
+        {
+            bool keyDown = GetInputController(1).GetButtonDown((int) InputController.ButtonsPad.PadE, out dt) || (includeDPad && GetAnyDirectionDown());
+            return keyDown && !GameManager.instance.autoplay && Conductor.instance.isPlaying && GameManager.instance.canInput;
         }
         
         public static bool PressedUp(bool includeDPad = false)
         {
-            bool keyUp = GetInputController(1).GetButtonUp((int) InputController.ButtonsPad.PadE) || (includeDPad && GetAnyDirectionUp());
+            bool keyUp = GetInputController(1).GetButtonUp((int) InputController.ButtonsPad.PadE, out _) || (includeDPad && GetAnyDirectionUp());
+            return keyUp && !GameManager.instance.autoplay && Conductor.instance.isPlaying && GameManager.instance.canInput;
+        }
+        
+        public static bool PressedUp(out double dt, bool includeDPad = false)
+        {
+            bool keyUp = GetInputController(1).GetButtonUp((int) InputController.ButtonsPad.PadE, out dt) || (includeDPad && GetAnyDirectionUp());
             return keyUp && !GameManager.instance.autoplay && Conductor.instance.isPlaying && GameManager.instance.canInput;
         }
         
@@ -210,13 +222,25 @@ namespace HeavenStudio
         
         public static bool AltPressed()
         {
-            bool down = GetInputController(1).GetButtonDown((int) InputController.ButtonsPad.PadS);
+            bool down = GetInputController(1).GetButtonDown((int) InputController.ButtonsPad.PadS, out _);
+            return down && PlayerHasControl();
+        }
+
+        public static bool AltPressed(out double dt)
+        {
+            bool down = GetInputController(1).GetButtonDown((int) InputController.ButtonsPad.PadS, out dt);
             return down && PlayerHasControl();
         }
         
         public static bool AltPressedUp()
         {
-            bool up = GetInputController(1).GetButtonUp((int) InputController.ButtonsPad.PadS);
+            bool up = GetInputController(1).GetButtonUp((int) InputController.ButtonsPad.PadS, out _);
+            return up && PlayerHasControl();
+        }
+        
+        public static bool AltPressedUp(out double dt)
+        {
+            bool up = GetInputController(1).GetButtonUp((int) InputController.ButtonsPad.PadS, out dt);
             return up && PlayerHasControl();
         }
         
@@ -231,23 +255,45 @@ namespace HeavenStudio
         public static bool GetAnyDirectionDown()
         {
             InputController c = GetInputController(1);
-            return (c.GetHatDirectionDown((InputController.InputDirection) UP)
-            || c.GetHatDirectionDown((InputController.InputDirection) DOWN)
-            || c.GetHatDirectionDown((InputController.InputDirection) LEFT)
-            || c.GetHatDirectionDown((InputController.InputDirection) RIGHT)
+            return (c.GetHatDirectionDown((InputController.InputDirection) UP, out _)
+            || c.GetHatDirectionDown((InputController.InputDirection) DOWN, out _)
+            || c.GetHatDirectionDown((InputController.InputDirection) LEFT, out _)
+            || c.GetHatDirectionDown((InputController.InputDirection) RIGHT, out _)
             ) && PlayerHasControl();
-            
+        }
+
+        public static bool GetAnyDirectionDown(out double dt)
+        {
+            InputController c = GetInputController(1);
+            bool r1 = c.GetHatDirectionDown((InputController.InputDirection)UP, out double d1);
+            bool r2 = c.GetHatDirectionDown((InputController.InputDirection)DOWN, out double d2);
+            bool r3 = c.GetHatDirectionDown((InputController.InputDirection)LEFT, out double d3);
+            bool r4 = c.GetHatDirectionDown((InputController.InputDirection)RIGHT, out double d4);
+            bool r = (r1 || r2 || r3 || r4) && PlayerHasControl();
+            dt = Math.Max(Math.Max(Math.Max(d1, d2), d3), d4);
+            return r;
         }
         
         public static bool GetAnyDirectionUp()
         {
             InputController c = GetInputController(1);
-            return (c.GetHatDirectionUp((InputController.InputDirection) UP)
-            || c.GetHatDirectionUp((InputController.InputDirection) DOWN)
-            || c.GetHatDirectionUp((InputController.InputDirection) LEFT)
-            || c.GetHatDirectionUp((InputController.InputDirection) RIGHT)
-            ) && PlayerHasControl();
-            
+            return (c.GetHatDirectionUp((InputController.InputDirection) UP, out _)
+            || c.GetHatDirectionUp((InputController.InputDirection) DOWN, out _)
+            || c.GetHatDirectionUp((InputController.InputDirection) LEFT, out _)
+            || c.GetHatDirectionUp((InputController.InputDirection) RIGHT, out _)
+            ) && PlayerHasControl();            
+        }
+
+        public static bool GetAnyDirectionUp(out double dt)
+        {
+            InputController c = GetInputController(1);
+            bool r1 = c.GetHatDirectionUp((InputController.InputDirection)UP, out double d1);
+            bool r2 = c.GetHatDirectionUp((InputController.InputDirection)DOWN, out double d2);
+            bool r3 = c.GetHatDirectionUp((InputController.InputDirection)LEFT, out double d3);
+            bool r4 = c.GetHatDirectionUp((InputController.InputDirection)RIGHT, out double d4);
+            bool r = (r1 || r2 || r3 || r4) && PlayerHasControl();
+            dt = Math.Max(Math.Max(Math.Max(d1, d2), d3), d4);
+            return r;
         }
         
         public static bool GetAnyDirection()
@@ -258,7 +304,6 @@ namespace HeavenStudio
             || c.GetHatDirection((InputController.InputDirection) LEFT)
             || c.GetHatDirection((InputController.InputDirection) RIGHT)
             ) && PlayerHasControl();
-            
         }
         
         public static bool GetSpecificDirection(int direction)
@@ -268,12 +313,22 @@ namespace HeavenStudio
         
         public static bool GetSpecificDirectionDown(int direction)
         {
-            return GetInputController(1).GetHatDirectionDown((InputController.InputDirection) direction) && PlayerHasControl();
+            return GetInputController(1).GetHatDirectionDown((InputController.InputDirection) direction, out _) && PlayerHasControl();
         }
         
         public static bool GetSpecificDirectionUp(int direction)
         {
-            return GetInputController(1).GetHatDirectionUp((InputController.InputDirection) direction) && PlayerHasControl();
+            return GetInputController(1).GetHatDirectionUp((InputController.InputDirection) direction, out _) && PlayerHasControl();
+        }
+        
+        public static bool GetSpecificDirectionDown(int direction, out double dt)
+        {
+            return GetInputController(1).GetHatDirectionDown((InputController.InputDirection) direction, out dt) && PlayerHasControl();
+        }
+        
+        public static bool GetSpecificDirectionUp(int direction, out double dt)
+        {
+            return GetInputController(1).GetHatDirectionUp((InputController.InputDirection) direction, out dt) && PlayerHasControl();
         }
     }
 }

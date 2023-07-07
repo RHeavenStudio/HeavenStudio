@@ -66,24 +66,29 @@ namespace HeavenStudio.Games
         public void Disable() { enabled = false; }
         public void QueueDeletion() { markForDeletion = true; }
 
-        public bool IsCorrectInput() =>
-            //General inputs, both down and up
-            (PlayerInput.Pressed() && inputType.HasFlag(InputType.STANDARD_DOWN)) ||
-            (PlayerInput.AltPressed() && inputType.HasFlag(InputType.STANDARD_ALT_DOWN)) ||
-            (PlayerInput.GetAnyDirectionDown() && inputType.HasFlag(InputType.DIRECTION_DOWN)) ||
-            (PlayerInput.PressedUp() && inputType.HasFlag(InputType.STANDARD_UP)) ||
-            (PlayerInput.AltPressedUp() && inputType.HasFlag(InputType.STANDARD_ALT_UP)) ||
-            (PlayerInput.GetAnyDirectionUp() && inputType.HasFlag(InputType.DIRECTION_UP)) ||
-            //Specific directional inputs
-            (PlayerInput.GetSpecificDirectionDown(PlayerInput.DOWN) && inputType.HasFlag(InputType.DIRECTION_DOWN_DOWN)) ||
-            (PlayerInput.GetSpecificDirectionDown(PlayerInput.UP) && inputType.HasFlag(InputType.DIRECTION_UP_DOWN)) ||
-            (PlayerInput.GetSpecificDirectionDown(PlayerInput.LEFT) && inputType.HasFlag(InputType.DIRECTION_LEFT_DOWN)) ||
-            (PlayerInput.GetSpecificDirectionDown(PlayerInput.RIGHT) && inputType.HasFlag(InputType.DIRECTION_RIGHT_DOWN)) ||
+        public bool IsCorrectInput(out double dt)
+        {
+            dt = 0;
+            return (
+                //General inputs, both down and up
+                (PlayerInput.Pressed(out dt) && inputType.HasFlag(InputType.STANDARD_DOWN)) ||
+                (PlayerInput.AltPressed(out dt) && inputType.HasFlag(InputType.STANDARD_ALT_DOWN)) ||
+                (PlayerInput.GetAnyDirectionDown(out dt) && inputType.HasFlag(InputType.DIRECTION_DOWN)) ||
+                (PlayerInput.PressedUp(out dt) && inputType.HasFlag(InputType.STANDARD_UP)) ||
+                (PlayerInput.AltPressedUp(out dt) && inputType.HasFlag(InputType.STANDARD_ALT_UP)) ||
+                (PlayerInput.GetAnyDirectionUp(out dt) && inputType.HasFlag(InputType.DIRECTION_UP)) ||
+                //Specific directional inputs
+                (PlayerInput.GetSpecificDirectionDown(PlayerInput.DOWN, out dt) && inputType.HasFlag(InputType.DIRECTION_DOWN_DOWN)) ||
+                (PlayerInput.GetSpecificDirectionDown(PlayerInput.UP, out dt) && inputType.HasFlag(InputType.DIRECTION_UP_DOWN)) ||
+                (PlayerInput.GetSpecificDirectionDown(PlayerInput.LEFT, out dt) && inputType.HasFlag(InputType.DIRECTION_LEFT_DOWN)) ||
+                (PlayerInput.GetSpecificDirectionDown(PlayerInput.RIGHT, out dt) && inputType.HasFlag(InputType.DIRECTION_RIGHT_DOWN)) ||
 
-            (PlayerInput.GetSpecificDirectionUp(PlayerInput.DOWN) && inputType.HasFlag(InputType.DIRECTION_DOWN_UP)) ||
-            (PlayerInput.GetSpecificDirectionUp(PlayerInput.UP) && inputType.HasFlag(InputType.DIRECTION_UP_UP)) ||
-            (PlayerInput.GetSpecificDirectionUp(PlayerInput.LEFT) && inputType.HasFlag(InputType.DIRECTION_LEFT_UP)) ||
-            (PlayerInput.GetSpecificDirectionUp(PlayerInput.RIGHT) && inputType.HasFlag(InputType.DIRECTION_RIGHT_UP));
+                (PlayerInput.GetSpecificDirectionUp(PlayerInput.DOWN, out dt) && inputType.HasFlag(InputType.DIRECTION_DOWN_UP)) ||
+                (PlayerInput.GetSpecificDirectionUp(PlayerInput.UP, out dt) && inputType.HasFlag(InputType.DIRECTION_UP_UP)) ||
+                (PlayerInput.GetSpecificDirectionUp(PlayerInput.LEFT, out dt) && inputType.HasFlag(InputType.DIRECTION_LEFT_UP)) ||
+                (PlayerInput.GetSpecificDirectionUp(PlayerInput.RIGHT, out dt) && inputType.HasFlag(InputType.DIRECTION_RIGHT_UP))
+            );
+        }
 
         public void CanHit(bool canHit)
         {
@@ -123,8 +128,9 @@ namespace HeavenStudio.Games
                 return;
             }
             
-            if (!autoplayOnly && (IsHittable == null || IsHittable != null && IsHittable()) && IsCorrectInput())
+            if (!autoplayOnly && (IsHittable == null || IsHittable != null && IsHittable()) && IsCorrectInput(out double dt))
             {
+                normalizedTime -= dt;
                 if (IsExpectingInputNow())
                 {
                     double stateProg = ((normalizedTime - Minigame.JustEarlyTime()) / (Minigame.JustLateTime() - Minigame.JustEarlyTime()) - 0.5f) * 2;
@@ -235,7 +241,7 @@ namespace HeavenStudio.Games
         {
             if (OnHit != null && enabled)
             {
-                if(canHit)
+                if (canHit)
                 {
                     double normalized = time - 1f;
                     int offset = Mathf.CeilToInt((float)normalized * 1000);
