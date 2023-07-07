@@ -14,14 +14,14 @@ namespace HeavenStudio.Games.Loaders
             {
                 new GameAction("clap", "Clap")
                 {
-                    function = delegate {var e = eventCaller.currentEntity; ClapTrap.instance.Clap(eventCaller.currentEntity.beat, eventCaller.currentEntity.length, eventCaller.currentEntity["object"]);},
+                    function = delegate {var e = eventCaller.currentEntity; ClapTrap.instance.Clap(e.beat, e.length, e["object"], e["spotlight"]);},
                     defaultLength = 1f,
                     resizable = true,
                     parameters = new List<Param>()
                     {
                         new Param("object", ClapTrap.ClapType.Hand, "Object", "The object attempting to hit the doll"),
                         //new Param("sighBeat", new EntityTypes.Float(2, 100), "Sigh Beat", "The slapper attempting to hit the doll"),
-                       // new Param("spotlight", true, "Spotlight", "Whether or not there's a spotlight for the cue"),
+                        new Param("spotlight", true, "Spotlight", "Whether or not there's a spotlight for the cue"),
                     }
                 },
                 new GameAction("change background color", "Change Background Color")
@@ -50,8 +50,8 @@ namespace HeavenStudio.Games.Loaders
                     defaultLength = 0.5f,
                     parameters = new List<Param>()
                     {
-                        new Param("spotlightBottom", ClapTrap.bottomSpotlight, "Bottom Color", "The color at the bottom of the spotlight"),
-                        new Param("spotlightTop", ClapTrap.topSpotlight, "Top Color", "The color at the top of the spotlight"),
+                        new Param("spotlightBottom", ClapTrap.defaultBgColor, "Bottom Color", "The color at the bottom of the spotlight"),
+                        new Param("spotlightTop", ClapTrap.glowSpotlight, "Top Color", "The color at the top of the spotlight"),
                         new Param("spotlightGlow", ClapTrap.glowSpotlight, "Glow Color", "The color that glows around the spotlight")
                     },
                 },
@@ -72,13 +72,16 @@ namespace HeavenStudio.Games.Loaders
 
 namespace HeavenStudio.Games
 {
-    public partial class ClapTrap : Minigame
+    using Scripts_ClapTrap;
+
+    public class ClapTrap : Minigame
     {
+
         public enum ClapType
         {
             Hand,
             Paw,
-            Leek,
+            GreenOnion,
             Branch,
             Random
         }
@@ -124,26 +127,6 @@ namespace HeavenStudio.Games
             }
         }
 
-        private static Color _topSpotlight;
-        public static Color topSpotlight
-        {
-            get
-            {
-                ColorUtility.TryParseHtmlString("#FFFFFF", out _topSpotlight);
-                return _topSpotlight;
-            }
-        }
-
-        private static Color _bottomSpotlight;
-        public static Color bottomSpotlight
-        {
-            get
-            {
-                ColorUtility.TryParseHtmlString("#FFE118", out _bottomSpotlight);
-                return _bottomSpotlight;
-            }
-        }
-
         private static Color _glowSpotlight;
         public static Color glowSpotlight
         {
@@ -178,19 +161,23 @@ namespace HeavenStudio.Games
         public Animator dollHead;
         public Animator dollArms;
         public Animator clapEffect;
+        public Animator sword;
 
-        [Header("Values")]
+        [Header("Sword")]
+        public GameObject swordObj;
+
+        [Header("Properties")]
         private bool canClap = true;
         private int currentClaps = 0;
         private Color backgroundColor;
-
+        
         void Awake()
         {
             instance = this;
 
-            spotlightMaterial.SetColor("_ColorAlpha", topSpotlight);
+            spotlightMaterial.SetColor("_ColorAlpha", glowSpotlight);
             spotlightMaterial.SetColor("_ColorBravo", glowSpotlight);
-            spotlightMaterial.SetColor("_ColorDelta", bottomSpotlight);
+            spotlightMaterial.SetColor("_ColorDelta", defaultBgColor);
 
             backgroundColor = defaultBgColor;
         }
@@ -221,11 +208,10 @@ namespace HeavenStudio.Games
                 spotlight.SetActive(false);
                 bg.color = backgroundColor;
             }
-            print(currentClaps);
         }
 
 
-        public void Clap(float beat, float length, int type)
+        public void Clap(float beat, float length, int type, bool spotlightToggle)
         {
 
             MultiSound.Play(new MultiSound.Sound[] { 
@@ -234,55 +220,34 @@ namespace HeavenStudio.Games
                 new MultiSound.Sound("clapTrap/donk", beat + length * 2),
                 new MultiSound.Sound("clapTrap/whiff", beat + length * 4, offset : (float)(Jukebox.GetClipLengthGame("clapTrap/whiff"))),
             }, forcePlay: true);
-            ScheduleInput(beat, length * 4, InputType.STANDARD_DOWN | InputType.DIRECTION_DOWN, Hit, Miss, Out);
 
-            currentClaps += 1;
-            BeatAction.New(instance.gameObject, new List<BeatAction.Action>()
+            if (spotlightToggle)
             {
+                currentClaps += 1;
+                BeatAction.New(instance.gameObject, new List<BeatAction.Action>()
+                {
                 new BeatAction.Action(beat + length * 4, delegate { currentClaps -= 1; })
-            });
+                });
 
-            spotlight.SetActive(true);
+                spotlight.SetActive(true);
 
-            if (bg.color != Color.black)
-            {
-                backgroundColor = bg.color;
-            }
-            bg.color = Color.black;
-
-        }
-
-
-        private void Hit(PlayerActionEvent caller, float state)
-        {
-            if (state >= 1f || state <= -1f) {
-                Jukebox.PlayOneShotGame($"clapTrap/barely{UnityEngine.Random.Range(1, 2)}");
-                dollHead.DoScaledAnimationAsync("HeadBarely", 0.5f);
-            } 
-            else if (state == 0f) {
-                Jukebox.PlayOneShotGame($"clapTrap/aceClap{UnityEngine.Random.Range(1, 4)}");
-                dollHead.DoScaledAnimationAsync("HeadHit", 0.5f);
-            }
-            else {
-                Jukebox.PlayOneShotGame($"clapTrap/goodClap{UnityEngine.Random.Range(1, 4)}");
-                dollHead.DoScaledAnimationAsync("HeadHit", 0.5f);
+                if (bg.color != Color.black)
+                {
+                    backgroundColor = bg.color;
+                }
+                bg.color = Color.black;
             }
 
-            dollArms.DoScaledAnimationAsync("ArmsHit", 0.5f);
-            clapEffect.DoScaledAnimationAsync("ClapEffect", 0.5f);
-        }
+            Sword swordClone = Instantiate(swordObj, gameObject.transform).GetComponent<Sword>();
+            swordClone.cueLength = length * 4;
+            swordClone.cueStart = beat;
+            swordClone.cueType = type;
 
-        private void Miss(PlayerActionEvent caller)
-        {
-            Jukebox.PlayOneShotGame($"clapTrap/miss");
-            dollHead.DoScaledAnimationAsync("HeadMiss", 0.5f);
-            dollArms.DoScaledAnimationAsync("ArmsMiss", 0.5f);
-        }
-
-        private void Out(PlayerActionEvent caller) 
-        {
             
         }
+
+
+        
 
         public void DollAnimations(float beat, int animate)
         {
