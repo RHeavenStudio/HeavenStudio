@@ -74,6 +74,19 @@ namespace HeavenStudio.Games.Loaders
                         new Param("objColC", Lockstep.stepperLight, "Stepper Light", "Select the color that appears for the light side of the stepwitchers."),
                     },
                     defaultLength = 0.5f,
+                },
+                new GameAction("zoom", "Preset Zooms")
+                {
+                    function = delegate { Lockstep.instance.SetZoom(eventCaller.currentEntity["zoom"]); },
+                    parameters = new List<Param>()
+                    {
+                        new Param("zoom", Lockstep.ZoomPresets.Regular, "Zoom Level")
+                    }
+                },
+                new GameAction("bach", "Show Bach")
+                {
+                    defaultLength = 4,
+                    resizable = true,
                 }
             },
             new List<string>() {"ntr", "keep"},
@@ -147,7 +160,8 @@ namespace HeavenStudio.Games
         [SerializeField] Animator stepswitcherPlayer;
         [SerializeField] Animator stepswitcherLeft;
         [SerializeField] Animator stepswitcherRight;
-
+        [SerializeField] Animator bach;
+        
         // master stepper dictates what sprite the slave steppers use
         [SerializeField] Animator masterStepperAnim;
         [SerializeField] SpriteRenderer masterStepperSprite;
@@ -176,8 +190,18 @@ namespace HeavenStudio.Games
         bool goBop;
         public GameEvent bop = new GameEvent();
         List<double> switches = new();
+        private List<RiqEntity> bachEvents = new();
 
         public static Lockstep instance;
+
+        public enum ZoomPresets
+        {
+            Regular,
+            NotThatFar,
+            Far,
+            VeryFar,
+            ExtremelyFar
+        }
 
         void Awake()
         {
@@ -190,8 +214,14 @@ namespace HeavenStudio.Games
             {
                 switches.Add(switchEvent.beat + switchEvent.length - 1);
             }
+
+            bachEvents = EventCaller.GetAllInGameManagerList("lockstep", new string[] { "bach" });
         }
 
+        private bool BachOnBeat(double beat)
+        {
+            return bachEvents.Find(x => beat >= x.beat && beat < x.beat + x.length) != null;
+        }
         public override void OnGameSwitch(double beat)
         {
             QueueSwitchBGs(beat);
@@ -306,6 +336,19 @@ namespace HeavenStudio.Games
                 masterSprite = masterStepperSprite.sprite;
                 UpdateAndRenderSlaves();
             }
+        }
+
+        public void SetZoom(int zoom)
+        {
+            GameCamera.additionalPosition = new Vector3(0, 0, (ZoomPresets)zoom switch
+            {
+                ZoomPresets.Regular => 0,
+                ZoomPresets.NotThatFar => -4.5f,
+                ZoomPresets.Far => -11,
+                ZoomPresets.VeryFar => -26,
+                ZoomPresets.ExtremelyFar => -63,
+                _ => throw new System.NotImplementedException()
+            });
         }
 
         public void Bop(double beat, float length, bool shouldBop, bool autoBop)
@@ -508,10 +551,16 @@ namespace HeavenStudio.Games
             marchRecursing = true;
             if (NextStepIsSwitch(beat)) beat -= 0.5;
             bool offBeat = beat % 1 != 0;
+            bool bachOnBeat = BachOnBeat(beat);
             ScheduleInput(beat - 1, 1, InputType.STANDARD_DOWN, offBeat ? JustOff : JustOn, offBeat ? MissOff : MissOn, Nothing);
             BeatAction.New(instance.gameObject, new List<BeatAction.Action>()
             {
-                new BeatAction.Action(beat, delegate { EvaluateMarch(offBeat); MarchRecursive(beat + 1); }),
+                new BeatAction.Action(beat, delegate 
+                { 
+                    EvaluateMarch(offBeat); 
+                    MarchRecursive(beat + 1);
+                    if (bachOnBeat) bach.DoScaledAnimationAsync(offBeat ? "BachOff" : "BachOn", 0.5f);
+                }),
             });
         }
 
