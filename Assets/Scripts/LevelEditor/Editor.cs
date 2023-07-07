@@ -55,7 +55,10 @@ namespace HeavenStudio.Editor
         [SerializeField] private Button TempoFinderBTN;
         [SerializeField] private Button SnapDiagBTN;
         [SerializeField] private Button ChartParamBTN;
-        [SerializeField] private Button SortGamesBTN;
+        [SerializeField] private Button SortAlphabetBTN;
+        [SerializeField] private Button SortFavoritesBTN;
+        [SerializeField] private Button SortChronologicBTN;
+        [SerializeField] private TMP_InputField SearchBar;
 
         [SerializeField] private Button EditorThemeBTN;
         [SerializeField] private Button EditorSettingsBTN;
@@ -112,7 +115,10 @@ namespace HeavenStudio.Editor
             Tooltip.AddTooltip(TempoFinderBTN.gameObject, "Tempo Finder");
             Tooltip.AddTooltip(SnapDiagBTN.gameObject, "Snap Settings");
             Tooltip.AddTooltip(ChartParamBTN.gameObject, "Remix Properties");
-            Tooltip.AddTooltip(SortGamesBTN.gameObject, "Sort By Favorite");
+            Tooltip.AddTooltip(SortAlphabetBTN.gameObject, "Sort Alphabetically");
+            Tooltip.AddTooltip(SortFavoritesBTN.gameObject, "Sort By Favorite");
+            Tooltip.AddTooltip(SortChronologicBTN.gameObject, "Sort Chronologically");
+            Tooltip.AddTooltip(SearchBar.gameObject, "Search Games");
 
             Tooltip.AddTooltip(EditorSettingsBTN.gameObject, "Editor Settings <color=#adadad>[Ctrl+Shift+O]</color>");
             UpdateEditorStatus(true);
