@@ -16,17 +16,31 @@ namespace HeavenStudio.Games.Loaders
                 {
                     function = delegate {
                         var e = eventCaller.currentEntity;
-                        MannequinFactory.instance.HeadOut(e.beat, e["type"]);
+                        MannequinFactory.instance.HeadOut(e.beat, 1);
                     }, 
                     defaultLength = 7,
-                    parameters = new List<Param>()
-                    {
-                        new Param("type", MannequinFactory.HeadOutTypes.NoClap, "Cue Type", "Should the mannequin go out wrong or not?"),
-                    }
+                },
+                new GameAction("misalignedHeadOut", "Send Misaligned Head Out")
+                {
+                    function = delegate {
+                        var e = eventCaller.currentEntity;
+                        MannequinFactory.instance.HeadOut(e.beat, 2);
+                    }, 
+                    defaultLength = 7,
+                },
+                new GameAction("randomHeadOut", "Send Random Head Out")
+                {
+                    function = delegate {
+                        var e = eventCaller.currentEntity;
+                        MannequinFactory.instance.HeadOut(e.beat, 0);
+                    }, 
+                    defaultLength = 7,
                 },
                 new GameAction("changeText", "Change Text")
                 {
-                    function = delegate { MannequinFactory.instance.ChangeSignText(eventCaller.currentEntity["text"]); }, 
+                    function = delegate {
+                        MannequinFactory.instance.SignText.text = eventCaller.currentEntity["text"];
+                    }, 
                     defaultLength = 0.5f,
                     parameters = new List<Param>()
                     {
@@ -67,7 +81,7 @@ namespace HeavenStudio.Games
         
         [Header("References")]
         [SerializeField] SpriteRenderer bg;
-        [SerializeField] TMP_Text SignText;
+        public TMP_Text SignText;
         public GameObject MannequinHeadObject;
         Tween bgColorTween;
 
@@ -94,7 +108,7 @@ namespace HeavenStudio.Games
 
             if (PlayerInput.Pressed(true) && PlayerInput.GetSpecificDirection(3) && !IsExpectingInputNow(InputType.DIRECTION_LEFT_DOWN)) 
             {
-                HandAnim.DoScaledAnimationAsync("Slap");
+                HandAnim.DoScaledAnimationAsync("SlapEmpty");
             }
         }
 
@@ -121,12 +135,7 @@ namespace HeavenStudio.Games
 
             MannequinHead head = Instantiate(MannequinHeadObject, gameObject.transform).GetComponent<MannequinHead>();
             head.startBeat = beat;
-            head.withClap = (cueType == 2);
-        }
-
-        public void ChangeSignText(string text)
-        {
-            SignText.text = text;
+            head.needClap = (cueType == 2);
         }
 
         public void BackgroundColor(Color start, Color end, float beats, bool instant)
