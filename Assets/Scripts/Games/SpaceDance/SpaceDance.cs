@@ -39,7 +39,7 @@ namespace HeavenStudio.Games.Loaders
                 {
                     function = delegate { var e = eventCaller.currentEntity; SpaceDance.instance.DoPunch(e.beat, e["gramps"]); },
                     preFunction = delegate { var e = eventCaller.currentEntity; SpaceDance.PunchSfx(e.beat, e["whoSpeaks"]); },
-                    defaultLength = 2.5f,
+                    defaultLength = 2.0f,
                     parameters = new List<Param>()
                     {
                         new Param("whoSpeaks", SpaceDance.WhoSpeaks.Dancers, "Who Speaks?", "Who will say the voice line for the cue?"),
