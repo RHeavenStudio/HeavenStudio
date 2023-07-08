@@ -1151,7 +1151,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &1868111375
 Transform:
   m_ObjectHideFlags: 0
@@ -12635,7 +12635,11 @@ MonoBehaviour:
   monkeyTapLR: {fileID: 212431379663778180}
   monkeyTapRL: {fileID: 5541817519409219506}
   monkeyTapRR: {fileID: 3397012794117013568}
+  rootPlayer: {fileID: 2121235250141794466}
+  rootMonkeyL: {fileID: 1538215877987515297}
+  rootMonkeyR: {fileID: 4019713540622668404}
   jumpHeight: 4
+  monkeyJumpHeight: 3
 --- !u!1 &3010247174315464539
 GameObject:
   m_ObjectHideFlags: 0

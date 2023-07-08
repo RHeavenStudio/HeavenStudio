@@ -39,17 +39,16 @@ namespace HeavenStudio.Games.Loaders
                 },
                 new GameAction("jump tap prep", "Prepare Stance")
                 {
-                    function = delegate {  }, 
+                    function = delegate { TapTrial.instance.JumpPrepare(); }, 
                 },
                 new GameAction("jump tap", "Jump Tap")
                 {
-                    function = delegate {  }, 
-                    defaultLength = 2.0f
-                },
-                new GameAction("final jump tap", "Final Jump Tap")
-                {
-                    function = delegate {  }, 
-                    defaultLength = 2.0f
+                    function = delegate { var e = eventCaller.currentEntity; TapTrial.instance.JumpTap(e.beat, e["final"]); }, 
+                    defaultLength = 2.0f,
+                    parameters = new List<Param>()
+                    {
+                        new Param("final", false, "Final")
+                    }
                 },
                 new GameAction("scroll event", "Scroll Background")
                 {
@@ -70,7 +69,14 @@ namespace HeavenStudio.Games.Loaders
                         new Param("toggle", true, "Enter?", "Giraffe will enter the scene"),
                         new Param("instant", false, "Instant", "Will the giraffe enter/exit instantly?")
                     }
-                }
+                },
+                // backwards-compatibility
+                new GameAction("final jump tap", "Final Jump Tap")
+                {
+                    function = delegate { var e = eventCaller.currentEntity; TapTrial.instance.JumpTap(e.beat, true); },
+                    defaultLength = 2.0f,
+                    hidden = true
+                },
             },
             new List<string>() {"agb", "normal"},
             "agbtap", "en",
@@ -90,12 +96,16 @@ namespace HeavenStudio.Games
         [SerializeField] private TapTrialPlayer player;
         [SerializeField] private Animator monkeyL, monkeyR;
         [SerializeField] private ParticleSystem monkeyTapLL, monkeyTapLR, monkeyTapRL, monkeyTapRR;
+        [SerializeField] private Transform rootPlayer, rootMonkeyL, rootMonkeyR;
         [Header("Values")]
         [SerializeField] private float jumpHeight = 4f;
+        [SerializeField] private float monkeyJumpHeight = 3f;
 
         private GameEvent bop = new();
         private bool canBop = true;
         private bool shouldBop = true;
+
+        private double jumpStartBeat = double.MinValue;
 
         public static TapTrial instance;
 
@@ -113,6 +123,38 @@ namespace HeavenStudio.Games
                 if (shouldBop && cond.ReportBeat(ref bop.lastReportedBeat, bop.startBeat % 1))
                 {
                     SingleBop();
+                }
+
+                float normalizedJumpBeat = cond.GetPositionFromBeat(jumpStartBeat, 1);
+
+                if (normalizedJumpBeat >= 0 && normalizedJumpBeat <= 1)
+                {
+                    if (normalizedJumpBeat >= 0.5f)
+                    {
+                        float normalizedUp = cond.GetPositionFromBeat(jumpStartBeat, 0.5);
+                        EasingFunction.Function func = EasingFunction.GetEasingFunction(EasingFunction.Ease.EaseOutQuad);
+                        float newPlayerY = func(0, jumpHeight, normalizedUp);
+                        float newMonkeyY = func(0, monkeyJumpHeight, normalizedUp);
+                        rootPlayer.localPosition = new Vector3(0, newPlayerY);
+                        rootMonkeyL.localPosition = new Vector3(0, newMonkeyY);
+                        rootMonkeyR.localPosition = new Vector3(0, newMonkeyY);
+                    }
+                    else
+                    {
+                        float normalizedDown = cond.GetPositionFromBeat(jumpStartBeat + 0.5, 0.5);
+                        EasingFunction.Function func = EasingFunction.GetEasingFunction(EasingFunction.Ease.EaseInQuad);
+                        float newPlayerY = func(jumpHeight, 0, normalizedDown);
+                        float newMonkeyY = func(monkeyJumpHeight, 0, normalizedDown);
+                        rootPlayer.localPosition = new Vector3(0, newPlayerY);
+                        rootMonkeyL.localPosition = new Vector3(0, newMonkeyY);
+                        rootMonkeyR.localPosition = new Vector3(0, newMonkeyY);
+                    }
+                }
+                else
+                {
+                    rootPlayer.localPosition = Vector3.zero;
+                    rootMonkeyL.localPosition = Vector3.zero;
+                    rootMonkeyR.localPosition = Vector3.zero;
                 }
             }
         }
@@ -250,6 +292,65 @@ namespace HeavenStudio.Games
             ScheduleInput(beat, 2, InputType.STANDARD_DOWN, JustTripleTap, Empty, Empty);
             ScheduleInput(beat, 2.5, InputType.STANDARD_DOWN, JustTripleTap, Empty, Empty);
             ScheduleInput(beat, 3, InputType.STANDARD_DOWN, JustTripleTap, Empty, Empty);
+        }
+
+        public void JumpPrepare()
+        {
+            canBop = false;
+            player.PrepareJump();
+            PlayMonkeyAnimationScaledAsync("JumpPrepare", 0.5f);
+        }
+
+        public void JumpTap(double beat, bool final)
+        {
+            canBop = false;
+            jumpStartBeat = beat;
+            BeatAction.New(gameObject, new List<BeatAction.Action>()
+            {
+                new BeatAction.Action(beat, delegate
+                {
+                    player.Jump(final);
+                    PlayMonkeyAnimationScaledAsync("JumpTap", 0.5f);
+                }),
+                new BeatAction.Action(beat + 1, delegate
+                {
+                    PlayMonkeyAnimationScaledAsync(final ? "FinalJumpTap" : "Jumpactualtap", 0.5f);
+                    MonkeyParticles(true);
+                    MonkeyParticles(false);
+                }),
+                new BeatAction.Action(beat + 1.5, delegate
+                {
+                    canBop = final;
+                })
+            });
+
+            MultiSound.Play(new MultiSound.Sound[]
+            {
+                new MultiSound.Sound(final ? "tapTrial/jumptap2" : "tapTrial/jumptap1", beat),
+                new MultiSound.Sound("tapTrial/tapMonkey", beat + 1),
+            });
+
+            ScheduleInput(beat, 1, InputType.STANDARD_DOWN, final ? JustJumpTapFinal : JustJumpTap, final ? MissJumpFinal : MissJump, Empty);
+        }
+
+        private void JustJumpTap(PlayerActionEvent caller, float state)
+        {
+            player.JumpTap(state < 1f && state > -1f, false);
+        }
+
+        private void JustJumpTapFinal(PlayerActionEvent caller, float state)
+        {
+            player.JumpTap(state < 1f && state > -1f, true);
+        }
+
+        private void MissJump(PlayerActionEvent caller)
+        {
+            player.JumpTapMiss(false);
+        }
+
+        private void MissJumpFinal(PlayerActionEvent caller)
+        {
+            player.JumpTapMiss(true);
         }
 
         private void JustTap(PlayerActionEvent caller, float state)
