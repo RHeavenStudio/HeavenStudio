@@ -2,8 +2,6 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using DG.Tweening;
-
 using HeavenStudio.Util;
 
 namespace HeavenStudio.Games.Loaders
@@ -26,43 +24,36 @@ namespace HeavenStudio.Games.Loaders
                 },
                 new GameAction("tap", "Tap")
                 {
-
                     function = delegate { TapTrial.instance.Tap(eventCaller.currentEntity.beat); }, 
                     defaultLength = 2.0f
                 },
                 new GameAction("double tap", "Double Tap")
                 {
-
                     function = delegate { TapTrial.instance.DoubleTap(eventCaller.currentEntity.beat); }, 
                     defaultLength = 2.0f
                 },
                 new GameAction("triple tap", "Triple Tap")
                 {
-
                     function = delegate { TapTrial.instance.TripleTap(eventCaller.currentEntity.beat); }, 
                     defaultLength = 4.0f
                 },
                 new GameAction("jump tap prep", "Prepare Stance")
                 {
-
-                    function = delegate { TapTrial.instance.JumpTapPrep(eventCaller.currentEntity.beat); }, 
+                    function = delegate {  }, 
                 },
                 new GameAction("jump tap", "Jump Tap")
                 {
-
-                    function = delegate { TapTrial.instance.JumpTap(eventCaller.currentEntity.beat); }, 
+                    function = delegate {  }, 
                     defaultLength = 2.0f
                 },
                 new GameAction("final jump tap", "Final Jump Tap")
                 {
-
-                    function = delegate { TapTrial.instance.FinalJumpTap(eventCaller.currentEntity.beat); }, 
+                    function = delegate {  }, 
                     defaultLength = 2.0f
                 },
                 new GameAction("scroll event", "Scroll Background")
                 {
-
-                    function = delegate { TapTrial.instance.scrollEvent(eventCaller.currentEntity["toggle"], eventCaller.currentEntity["flash"]); }, 
+                    function = delegate {  }, 
                     defaultLength = .5f,
                     parameters = new List<Param>()
                     {
@@ -72,8 +63,7 @@ namespace HeavenStudio.Games.Loaders
                 },
                 new GameAction("giraffe events", "Giraffe Animations")
                 {
-
-                    function = delegate { TapTrial.instance.giraffeEvent(eventCaller.currentEntity["instant"]); }, 
+                    function = delegate { }, 
                     defaultLength = .5f,
                     parameters = new List<Param>()
                     {
@@ -93,34 +83,21 @@ namespace HeavenStudio.Games.Loaders
 namespace HeavenStudio.Games
 {
     using Scripts_TapTrial;
-    using HeavenStudio.Common;
 
     public class TapTrial : Minigame
     {
-        [Header("References")]
-        public TapTrialPlayer player;
-        //public GameObject tap;
-        [SerializeField] List<Animator> monkeys;
-        [SerializeField] List<GameObject> monkey_roots;
-        [SerializeField] GameObject player_root;
-        //temporary
-        [SerializeField] List<GameObject> monkey_effects;
-        [SerializeField] List<GameObject> player_effects;
-        [SerializeField] Scroll scrollBG;
-        [SerializeField] SpriteRenderer flash;
-        [SerializeField] ScrollForTap scroll;
-        [SerializeField] GameObject giraffe;
-        bool goBop = true, isPrep;
-        bool hasJumped, isFinalJump;
-        public double jumpStartTime = double.MinValue;
-        float jumpPos;
-        public bool crIsRunning;
-        [SerializeField] GameObject bg;
-        bool giraffeIsIn;
+        [Header("Components")]
+        [SerializeField] private TapTrialPlayer player;
+        [SerializeField] private Animator monkeyL, monkeyR;
+        [SerializeField] private ParticleSystem monkeyTapLL, monkeyTapLR, monkeyTapRL, monkeyTapRR;
+        [Header("Values")]
+        [SerializeField] private float jumpHeight = 4f;
 
-        public GameEvent bop = new GameEvent();
+        private GameEvent bop = new();
+        private bool canBop = true;
+        private bool shouldBop = true;
 
-        public static TapTrial instance { get; set; }
+        public static TapTrial instance;
 
         private void Awake()
         {
@@ -129,387 +106,182 @@ namespace HeavenStudio.Games
 
         private void Update()
         {
-            if (Conductor.instance.ReportBeat(ref bop.lastReportedBeat, bop.startBeat % 1))
-            {
-                if (goBop) SingleBop();
-            }
+            var cond = Conductor.instance;
 
-            jumpPos = Conductor.instance.GetPositionFromBeat(jumpStartTime, 1f);
-            if (Conductor.instance.songPositionInBeatsAsDouble >= jumpStartTime && Conductor.instance.songPositionInBeatsAsDouble < jumpStartTime + 1f)
+            if (cond.isPlaying && !cond.isPaused)
             {
-                float yMul = jumpPos * 2f - 1f;
-                float yWeight = -(yMul * yMul) + 1f;
-                monkey_roots[0].transform.localPosition = new Vector3(0, 1.5f * yWeight);
-                monkey_roots[1].transform.localPosition = new Vector3(0, 1.5f * yWeight);
-                if (!isFinalJump)
+                if (shouldBop && cond.ReportBeat(ref bop.lastReportedBeat, bop.startBeat % 1))
                 {
-                    player_root.transform.localPosition = new Vector3(0f, 2.5f * yWeight);
-                }
-                else
-                {
-                    player_root.transform.localPosition = new Vector3(0f, 3.5f * yWeight);
-                }
-
-            }
-            else
-            {
-                monkey_roots[0].transform.localPosition = new Vector3(0, 0);
-                monkey_roots[1].transform.localPosition = new Vector3(0, 0);
-                player_root.transform.localPosition = new Vector3(0, 0);
-                if (hasJumped)
-                {
-                    //Jukebox.PlayOneShotGame("fanClub/landing_impact", pitch: UnityEngine.Random.Range(0.95f, 1f), volume: 1f / 4);
-                }
-                hasJumped = false;
-                if (PlayerInput.Pressed() && !IsExpectingInputNow())
-                {
-                    player.anim.Play("Tap", 0, 0);
-                    SoundByte.PlayOneShotGame("tapTrial/tonk");
+                    SingleBop();
                 }
             }
         }
 
-        void SingleBop()
+        public void Bop(double beat, float length, bool bop, bool autoBop)
         {
-            if (!isPrep)
+            shouldBop = autoBop;
+            if (bop)
             {
-                if (monkeys[0].GetCurrentAnimatorStateInfo(0).IsName("Idle")) monkeys[0].DoScaledAnimationAsync("Bop", 0.5f);
-                if (monkeys[1].GetCurrentAnimatorStateInfo(0).IsName("Idle")) monkeys[1].DoScaledAnimationAsync("Bop", 0.5f);
-                if (player.anim.GetCurrentAnimatorStateInfo(0).IsName("Idle")) player.anim.DoScaledAnimationAsync("Bop", 0.5f);
+                List<BeatAction.Action> actions = new();
+                for (int i = 0; i  < length; i++)
+                {
+                    actions.Add(new BeatAction.Action(beat + i, delegate { SingleBop(); }));
+                }
+                BeatAction.New(gameObject, actions);
             }
         }
 
-        public void Bop(double beat, float length, bool isBopping, bool autoBop)
+        private void SingleBop()
         {
-            goBop = autoBop;
-            if (isBopping)
-            {
-                for (int i = 0; i < length; i++)
-                {
-                    BeatAction.New(instance.gameObject, new List<BeatAction.Action>()
-                    {
-                        new BeatAction.Action(beat + i, delegate { SingleBop(); })
-                    });
-                }
-            }
+            if (!canBop) return;
+            PlayMonkeyAnimationScaledAsync("Bop", 0.5f);
+            player.Bop();
         }
 
         public void Tap(double beat)
         {
-            isPrep = true;
-            SoundByte.PlayOneShotGame("tapTrial/ook");
-            player.anim.DoScaledAnimationAsync("TapPrepare", 0.5f);
-
-            //Monkey Tap Prepare Anim
-            BeatAction.New(gameObject, new List<BeatAction.Action>()
+            canBop = false;
+            BeatAction.New(instance.gameObject, new List<BeatAction.Action>()
             {
-                new BeatAction.Action(beat, delegate { monkeys[0].DoScaledAnimationAsync("TapPrepare", 0.5f); }),
-                new BeatAction.Action(beat, delegate { monkeys[1].DoScaledAnimationAsync("TapPrepare", 0.5f); }),
-                new BeatAction.Action(beat + 1f, delegate { monkeys[0].DoScaledAnimationAsync("Tap", 0.6f); particleEffectMonkeys(); }),
-                new BeatAction.Action(beat + 1f, delegate { monkeys[1].DoScaledAnimationAsync("Tap", 0.6f); }),
+                new BeatAction.Action(beat, delegate
+                {
+                    PlayMonkeyAnimationScaledAsync("TapPrepare", 0.5f);
+                    player.PrepareTap();
+                }),
+                new BeatAction.Action(beat + 1, delegate
+                {
+                    PlayMonkeyAnimationScaledAsync("Tap", 0.5f);
+                    MonkeyParticles(true);
+                }),
+                new BeatAction.Action(beat + 1.5, delegate
+                {
+                    canBop = true;
+                })
             });
-            //CreateTap(beat);
-            ScheduleInput(beat, 1f, InputType.STANDARD_DOWN, OnTap, OnTapMiss, OnEmpty);
 
-            BeatAction.New(gameObject, new List<BeatAction.Action>()
+            MultiSound.Play(new MultiSound.Sound[]
             {
-                new BeatAction.Action(beat + 1.5f, delegate { isPrep = false; })
+                new MultiSound.Sound("tapTrial/ook", beat),
+                new MultiSound.Sound("tapTrial/tapMonkey", beat + 1),
             });
+
+            ScheduleInput(beat, 1, InputType.STANDARD_DOWN, JustTap, Empty, Empty);
         }
 
         public void DoubleTap(double beat)
         {
-            isPrep = true;
+            canBop = false;
+            BeatAction.New(instance.gameObject, new List<BeatAction.Action>()
+            {
+                new BeatAction.Action(beat, delegate
+                {
+                    PlayMonkeyAnimationScaledAsync("DoubleTapPrepare", 0.5f);
+                    player.PrepareTap(true);
+                }),
+                new BeatAction.Action(beat + 0.5, delegate
+                {
+                    PlayMonkeyAnimationScaledAsync("DoubleTapPrepare_2", 0.5f);
+                }),
+                new BeatAction.Action(beat + 1, delegate
+                {
+                    PlayMonkeyAnimationScaledAsync("DoubleTap", 0.5f);
+                    MonkeyParticles(false);
+                }),
+                new BeatAction.Action(beat + 1.5, delegate
+                {
+                    PlayMonkeyAnimationScaledAsync("DoubleTap", 0.5f);
+                    MonkeyParticles(false);
+                    canBop = true;
+                }),
+            });
+
             MultiSound.Play(new MultiSound.Sound[]
             {
-                new MultiSound.Sound("tapTrial/ookook",   beat),
-                new MultiSound.Sound("tapTrial/ookook",   beat + 0.5f)
+                new MultiSound.Sound("tapTrial/ookook", beat),
+                new MultiSound.Sound("tapTrial/ookook", beat + 0.5),
+                new MultiSound.Sound("tapTrial/tapMonkey", beat + 1),
+                new MultiSound.Sound("tapTrial/tapMonkey", beat + 1.5),
             });
 
-            player.anim.DoScaledAnimationAsync("DoubleTapPrepare", 0.5f);
-
-            BeatAction.New(gameObject, new List<BeatAction.Action>()
-            {
-                new BeatAction.Action(beat, delegate { monkeys[0].DoScaledAnimationAsync("DoubleTapPrepare", 0.5f); }),
-                new BeatAction.Action(beat + .5f, delegate { monkeys[0].DoScaledAnimationAsync("DoubleTapPrepare_2", 0.5f); }),
-                new BeatAction.Action(beat + 1f, delegate { monkeys[0].DoScaledAnimationAsync("DoubleTap", 0.6f); particleEffectMonkeys(); }),
-                new BeatAction.Action(beat + 1.5f, delegate { monkeys[0].DoScaledAnimationAsync("DoubleTap", 0.6f); particleEffectMonkeys(); }),
-                new BeatAction.Action(beat + 1.99f, delegate {monkeys[0].Play("Idle", 0, 0); }),
-            });
-
-            BeatAction.New(gameObject, new List<BeatAction.Action>()
-            {
-                new BeatAction.Action(beat, delegate { monkeys[1].DoScaledAnimationAsync("DoubleTapPrepare", 0.5f); }),
-                new BeatAction.Action(beat + .5f, delegate { monkeys[1].DoScaledAnimationAsync("DoubleTapPrepare_2", 0.5f); }),
-                new BeatAction.Action(beat + 1f, delegate { monkeys[1].DoScaledAnimationAsync("DoubleTap", 0.6f); }),
-                new BeatAction.Action(beat + 1.5f, delegate { monkeys[1].DoScaledAnimationAsync("DoubleTap", 0.6f); }),
-                new BeatAction.Action(beat + 1.99f, delegate {monkeys[1].Play("Idle", 0, 0); }),
-            });
-
-            BeatAction.New(gameObject, new List<BeatAction.Action>()
-            {
-                new BeatAction.Action(beat + 1.5f, delegate { isPrep = false; })
-            });
-
-            ScheduleInput(beat, 1f, InputType.STANDARD_DOWN, OnDoubleTap, OnTapMiss, OnEmpty);
-            ScheduleInput(beat, 1.5f, InputType.STANDARD_DOWN, OnDoubleTap, OnTapMiss, OnEmpty);
+            ScheduleInput(beat, 1, InputType.STANDARD_DOWN, JustDoubleTap, Empty, Empty);
+            ScheduleInput(beat, 1.5, InputType.STANDARD_DOWN, JustDoubleTap, Empty, Empty);
         }
 
         public void TripleTap(double beat)
         {
-            isPrep = true;
+            canBop = false;
+            BeatAction.New(instance.gameObject, new List<BeatAction.Action>()
+            {
+                new BeatAction.Action(beat, delegate
+                {
+                    player.PrepareTripleTap();
+                    PlayMonkeyAnimationScaledAsync("PostPrepare_1", 0.5f);
+                }),
+                new BeatAction.Action(beat + 0.5, delegate
+                {
+                    PlayMonkeyAnimationScaledAsync("PostPrepare_2", 0.5f);
+                }),
+                new BeatAction.Action(beat + 2, delegate
+                {
+                    PlayMonkeyAnimationScaledAsync("PostTap", 0.5f);
+                    MonkeyParticles(true);
+                }),
+                new BeatAction.Action(beat + 2.5, delegate
+                {
+                    PlayMonkeyAnimationScaledAsync("PostTap_2", 0.5f);
+                    MonkeyParticles(false);
+                }),
+                new BeatAction.Action(beat + 3, delegate
+                {
+                    PlayMonkeyAnimationScaledAsync("PostTap", 0.5f);
+                    MonkeyParticles(true);
+                }),
+            });
+
             MultiSound.Play(new MultiSound.Sound[]
             {
-                new MultiSound.Sound("tapTrial/ooki1",   beat),
-                new MultiSound.Sound("tapTrial/ooki2",   beat + 0.5f)
+                new MultiSound.Sound("tapTrial/ooki1", beat),
+                new MultiSound.Sound("tapTrial/ooki2", beat + 0.5),
+                new MultiSound.Sound("tapTrial/tapMonkey", beat + 2),
+                new MultiSound.Sound("tapTrial/tapMonkey", beat + 2.5),
+                new MultiSound.Sound("tapTrial/tapMonkey", beat + 3),
             });
 
-            player.tripleOffset = 0;
-
-            BeatAction.New(gameObject, new List<BeatAction.Action>()
-            {
-                new BeatAction.Action(beat, delegate { player.anim.Play("PosePrepare_1", 0, 0);}),
-                new BeatAction.Action(beat + .5f, delegate { player.anim.Play("PosePrepare_2", 0, 0);}),
-            });
-
-            BeatAction.New(gameObject, new List<BeatAction.Action>()
-            {
-                new BeatAction.Action(beat, delegate { monkeys[0].Play("PostPrepare_1", 0, 0); }),
-                new BeatAction.Action(beat + .5f, delegate { monkeys[0].Play("PostPrepare_2", 0, 0); }),
-                new BeatAction.Action(beat + 2f, delegate { monkeys[0].Play("PostTap", 0, 0); }),
-                new BeatAction.Action(beat + 2.5f, delegate { monkeys[0].Play("PostTap_2", 0, 0); }),
-                new BeatAction.Action(beat + 3f, delegate { monkeys[0].Play("PostTap", 0, 0);}),
-            });
-
-            BeatAction.New(gameObject, new List<BeatAction.Action>()
-            {
-                new BeatAction.Action(beat, delegate { monkeys[1].Play("PostPrepare_1", 0, 0); }),
-                new BeatAction.Action(beat + .5f, delegate { monkeys[1].Play("PostPrepare_2", 0, 0); }),
-                new BeatAction.Action(beat + 2f, delegate { monkeys[1].Play("PostTap", 0, 0); }),
-                new BeatAction.Action(beat + 2.5f, delegate { monkeys[1].Play("PostTap_2", 0, 0);}),
-                new BeatAction.Action(beat + 3f, delegate { monkeys[1].Play("PostTap", 0, 0);}),
-            });
-
-            BeatAction.New(gameObject, new List<BeatAction.Action>()
-            {
-                new BeatAction.Action(beat + 2f, delegate { particleEffectMonkeys(); }),
-                new BeatAction.Action(beat + 2.5f, delegate { particleEffectMonkeys(); }),
-                new BeatAction.Action(beat + 3f, delegate { particleEffectMonkeys(); }),
-            });
-
-            ScheduleInput(beat, 2f, InputType.STANDARD_DOWN, OnTripleTap, OnTapMiss, OnEmpty);
-            ScheduleInput(beat, 2.5f, InputType.STANDARD_DOWN, OnTripleTap, OnTapMiss, OnEmpty);
-            ScheduleInput(beat, 3f, InputType.STANDARD_DOWN, OnTripleTap, OnTapMiss, OnEmpty);
-
-            BeatAction.New(gameObject, new List<BeatAction.Action>()
-            {
-                new BeatAction.Action(beat + 4f, delegate { isPrep = false; })
-            });
+            ScheduleInput(beat, 2, InputType.STANDARD_DOWN, JustTripleTap, Empty, Empty);
+            ScheduleInput(beat, 2.5, InputType.STANDARD_DOWN, JustTripleTap, Empty, Empty);
+            ScheduleInput(beat, 3, InputType.STANDARD_DOWN, JustTripleTap, Empty, Empty);
         }
 
-        public void JumpTap(double beat)
+        private void JustTap(PlayerActionEvent caller, float state)
         {
-            isPrep = true;
-            hasJumped = true;
-            SoundByte.PlayOneShotGame("tapTrial/jumptap1");
-
-            player.anim.Play("JumpTap", 0, 0);
-            BeatAction.New(gameObject, new List<BeatAction.Action>()
-            {
-                new BeatAction.Action(beat, delegate {jumpStartTime = Conductor.instance.songPositionInBeatsAsDouble;}),
-                new BeatAction.Action(beat, delegate {monkeys[0].Play("JumpTap", 0, 0); }),
-                new BeatAction.Action(beat, delegate {monkeys[1].Play("JumpTap", 0, 0); }),
-                new BeatAction.Action(beat + 1f, delegate { particleEffectMonkeys(); monkeys[0].Play("Jumpactualtap", 0, 0); monkeys[1].Play("Jumpactualtap", 0, 0); }),
-                new BeatAction.Action(beat + 1f, delegate { particleEffectMonkeys_2(); }),
-            });
-
-            ScheduleInput(beat, 1f, InputType.STANDARD_DOWN, OnJumpTap, OnJumpTapMiss, OnEmpty); //why would it be .95f? no idea, sounds fine w/ 1f
-
-            BeatAction.New(gameObject, new List<BeatAction.Action>()
-            {
-                new BeatAction.Action(beat + 2f, delegate { isPrep = false; })
-            });
+            player.Tap(state < 1f && state > -1f);
         }
 
-        public void JumpTapPrep(double beat)
+        private void JustDoubleTap(PlayerActionEvent caller, float state)
         {
-            isPrep = true;
-            monkeys[0].Play("JumpPrepare", 0, 0);
-            monkeys[1].Play("JumpPrepare", 0, 0);
-            player.anim.Play("JumpPrepare", 0, 0);
+            player.Tap(state < 1f && state > -1f, true);
         }
 
-        public void FinalJumpTap(double beat)
+        private void JustTripleTap(PlayerActionEvent caller, float state)
         {
-            isPrep = true;
-            hasJumped = true;
-            isFinalJump = true;
-            SoundByte.PlayOneShotGame("tapTrial/jumptap2");
-
-            player.anim.Play("FinalJump");
-            BeatAction.New(gameObject, new List<BeatAction.Action>()
-            {
-                new BeatAction.Action(beat, delegate {jumpStartTime = Conductor.instance.songPositionInBeatsAsDouble;}),
-                new BeatAction.Action(beat, delegate {monkeys[0].Play("Jump", 0, 0); }),
-                new BeatAction.Action(beat, delegate {monkeys[1].Play("Jump", 0, 0); }),
-                new BeatAction.Action(beat + 1f, delegate { monkeys[0].Play("FinalJumpTap", 0, 0); particleEffectMonkeys(); particleEffectMonkeys_2(); }),
-                new BeatAction.Action(beat + 1f, delegate { monkeys[1].Play("FinalJumpTap", 0, 0); }),
-            });
-
-            ScheduleInput(beat, 1f, InputType.STANDARD_DOWN, OnJumpFinalTap, OnFinalJumpTapMiss, OnEmpty);
-
-            BeatAction.New(gameObject, new List<BeatAction.Action>()
-            {
-                new BeatAction.Action(beat + 2f, delegate { isPrep = false; })
-            });
+            player.TripleTap(state < 1f && state > -1f);
         }
 
-        public void giraffeEvent(bool instant)
+        private void Empty(PlayerActionEvent caller) { }
+
+        private void PlayMonkeyAnimationScaledAsync(string name, float timeScale)
         {
-            float animTime = 0;
-            if (instant) animTime = 1;
-            if (!giraffeIsIn)
-            {
-                giraffe.SetActive(true);
-                giraffe.GetComponent<Animator>().Play("Enter", 0, animTime);
-                giraffeIsIn = true;
-            }
-            else if (giraffeIsIn)
-            {
-                giraffe.GetComponent<Animator>().Play("Exit", 0, animTime);
-                giraffeIsIn = false;
-            }
+            monkeyL.DoScaledAnimationAsync(name, timeScale);
+            monkeyR.DoScaledAnimationAsync(name, timeScale);
         }
 
-        public void scrollEvent(bool isScrolling, bool flashToWhite)
+        private void MonkeyParticles(bool left)
         {
-            if (isScrolling)
-            {
-                if (!crIsRunning) // if coroutine is not running, play the following once
-                {
-                    if (flashToWhite)
-                    {
-                        Sequence sequence = DOTween.Sequence();
-                        sequence.Append(flash.DOColor(new Color(flash.color.r, flash.color.g, flash.color.b, .8f), 2f));
-                        //sequence.Kill();
-                    }
-                    StartCoroutine(timer());
-                }
-            }
-            else //should be the reverse of the code above
-            {
-                scrollBG.enabled = false;
-                scrollBG.scrollSpeedY = 0;
-            }
-        }
+            ParticleSystem spawnedEffectL = Instantiate(left ? monkeyTapLL : monkeyTapLR, transform);
+            spawnedEffectL.Play();
 
-
-        #region Player Action Scripts
-        public void OnTap(PlayerActionEvent caller, float beat)
-        {
-            SoundByte.PlayOneShotGame("tapTrial/tap");
-            player.anim.DoScaledAnimationAsync("Tap", 0.6f);
-            player_effects[0].GetComponent<ParticleSystem>().Play();
+            ParticleSystem spawnedEffectR = Instantiate(left ? monkeyTapRL : monkeyTapRR, transform);
+            spawnedEffectR.Play();
         }
-        public void OnDoubleTap(PlayerActionEvent caller, float beat)
-        {
-            SoundByte.PlayOneShotGame("tapTrial/tap");
-            player.anim.DoScaledAnimationAsync("DoubleTap", 0.6f);
-            player_effects[1].GetComponent<ParticleSystem>().Play();
-        }
-
-        public void OnTapMiss(PlayerActionEvent caller)
-        {
-            SoundByte.PlayOneShotGame("tapTrial/tapMonkey", pitch: 1.5f, volume: .3f);
-        }
-
-        public void OnJumpTapMiss(PlayerActionEvent caller)
-        {
-            SoundByte.PlayOneShotGame("tapTrial/tapMonkey", pitch: 1.5f, volume: .3f);
-            player.anim.Play("JumpTap_Miss", 0, 0);
-        }
-
-        public void OnFinalJumpTapMiss(PlayerActionEvent caller)
-        {
-            SoundByte.PlayOneShotGame("tapTrial/tapMonkey", pitch: 1.5f, volume: .3f);
-            player.anim.Play("FinalJump_Miss", 0, 0);
-        }
-
-        public void OnEmpty(PlayerActionEvent caller)
-        {
-            //empty
-        }
-        public void OnTripleTap(PlayerActionEvent caller, float beat)
-        {
-            if (player.tripleOffset % 2 == 0)
-            {
-                BeatAction.New(gameObject, new List<BeatAction.Action>()
-                {
-                    new BeatAction.Action(beat, delegate { player.anim.Play("PoseTap_L", 0, 0); })
-                });
-                player.tripleOffset += 1;
-            }
-            else
-            {
-                BeatAction.New(gameObject, new List<BeatAction.Action>()
-                {
-                    new BeatAction.Action(beat, delegate { player.anim.Play("PoseTap_R", 0, 0); })
-                });
-                player.tripleOffset += 1;
-            }
-            player_effects[0].GetComponent<ParticleSystem>().Play();
-            SoundByte.PlayOneShotGame("tapTrial/tap");
-        }
-        public void OnJumpTap(PlayerActionEvent caller, float beat)
-        {
-            SoundByte.PlayOneShotGame("tapTrial/tap");
-            player.anim.Play("JumpTap_Success", 0, 0);
-            player_effects[0].GetComponent<ParticleSystem>().Play();
-            player_effects[1].GetComponent<ParticleSystem>().Play();
-        }
-        public void OnJumpFinalTap(PlayerActionEvent caller, float beat)
-        {
-            SoundByte.PlayOneShotGame("tapTrial/tap");
-            player.anim.Play("FinalJump_Tap");
-            player_effects[0].GetComponent<ParticleSystem>().Play();
-            player_effects[1].GetComponent<ParticleSystem>().Play();
-            isFinalJump = false;
-        }
-        #endregion
-
-        #region Misc. Functions
-        public void particleEffectMonkeys()
-        {
-            monkey_effects[0].GetComponent<ParticleSystem>().Play();
-            monkey_effects[1].GetComponent<ParticleSystem>().Play();
-        }
-
-        public void particleEffectMonkeys_2()
-        {
-            monkey_effects[2].GetComponent<ParticleSystem>().Play();
-            monkey_effects[3].GetComponent<ParticleSystem>().Play();
-        }
-
-        IEnumerator timer()
-        {
-            crIsRunning = true;
-            while (scroll.scrollSpeedY < 20)
-            {
-                scroll.scrollSpeedY += 5f;
-                yield return new WaitForSecondsRealtime(.5f);
-            }
-        }
-        #endregion
-
-        //this is the orig way for input handling
-        //public void CreateTap(float beat, int type = 0)
-        //{
-        //    GameObject _tap = Instantiate(tap);
-        //    _tap.transform.parent = tap.transform.parent;
-        //    _tap.SetActive(true);
-        //    Tap t = _tap.GetComponent<Tap>();
-        //    t.startBeat = beat;
-        //    t.type = type;
-        //}
     }
 }
