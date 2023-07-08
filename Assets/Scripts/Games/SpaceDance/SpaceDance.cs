@@ -3,7 +3,6 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 using DG.Tweening;
-using static HeavenStudio.Games.SpaceDance;
 using HeavenStudio.Common;
 
 namespace HeavenStudio.Games.Loaders
@@ -16,7 +15,8 @@ namespace HeavenStudio.Games.Loaders
             {
                 new GameAction("turn right", "Turn Right")
                 {
-                    function = delegate { var e = eventCaller.currentEntity; SpaceDance.instance.DoTurnRight(e.beat, e["whoSpeaks"], e["gramps"]); },
+                    function = delegate { var e = eventCaller.currentEntity; SpaceDance.instance.DoTurnRight(e.beat, e["gramps"]); },
+                    preFunction = delegate { var e = eventCaller.currentEntity; SpaceDance.TurnRightSfx(e.beat, e["whoSpeaks"]); },
                     defaultLength = 2.0f,
                     parameters = new List<Param>()
                     {
@@ -26,7 +26,8 @@ namespace HeavenStudio.Games.Loaders
                 },
                 new GameAction("sit down", "Sit Down")
                 {
-                    function = delegate { var e = eventCaller.currentEntity; SpaceDance.instance.DoSitDown(e.beat, e["whoSpeaks"], e["gramps"]); },
+                    function = delegate { var e = eventCaller.currentEntity; SpaceDance.instance.DoSitDown(e.beat, e["gramps"]); },
+                    preFunction = delegate { var e = eventCaller.currentEntity; SpaceDance.SitDownSfx(e.beat, e["whoSpeaks"]); },
                     defaultLength = 2.0f,
                     parameters = new List<Param>()
                     {
@@ -36,8 +37,9 @@ namespace HeavenStudio.Games.Loaders
                 },
                 new GameAction("punch", "Punch")
                 {
-                    function = delegate { var e = eventCaller.currentEntity; SpaceDance.instance.DoPunch(e.beat, e["whoSpeaks"], e["gramps"]); },
-                    defaultLength = 2.0f,
+                    function = delegate { var e = eventCaller.currentEntity; SpaceDance.instance.DoPunch(e.beat, e["gramps"]); },
+                    preFunction = delegate { var e = eventCaller.currentEntity; SpaceDance.PunchSfx(e.beat, e["whoSpeaks"]); },
+                    defaultLength = 2.5f,
                     parameters = new List<Param>()
                     {
                         new Param("whoSpeaks", SpaceDance.WhoSpeaks.Dancers, "Who Speaks?", "Who will say the voice line for the cue?"),
@@ -46,7 +48,7 @@ namespace HeavenStudio.Games.Loaders
                 },
                 new GameAction("shootingStar", "Shooting Star")
                 {
-                    function = delegate { var e = eventCaller.currentEntity; SpaceDance.instance.UpdateShootingStar(e.beat, e.length, e["ease"]); },
+                    function = delegate { var e = eventCaller.currentEntity; SpaceDance.instance.UpdateShootingStar(e.beat, e.length, (EasingFunction.Ease)e["ease"]); },
                     defaultLength = 2f,
                     resizable = true,
                     parameters = new List<Param>()
@@ -373,12 +375,8 @@ namespace HeavenStudio.Games
             isShootingStar = true;
         }
 
-        public void DoTurnRight(double beat, int whoSpeaks, bool grampsTurns)
+        public static void TurnRightSfx(double beat, int whoSpeaks)
         {
-            canBop = false;
-            if (grampsTurns) grampsCanBop = false;
-            ScheduleInput(beat, 1f, InputType.DIRECTION_RIGHT_DOWN, JustRight, RightMiss, Empty);
-
             List<MultiSound.Sound> soundsToPlay = new List<MultiSound.Sound>()
             {
                 new MultiSound.Sound("spaceDance/voicelessTurn", beat),
@@ -412,21 +410,28 @@ namespace HeavenStudio.Games
             }
 
             MultiSound.Play(soundsToPlay.ToArray());
+        }
+
+        public void DoTurnRight(double beat, bool grampsTurns)
+        {
+            canBop = false;
+            if (grampsTurns) grampsCanBop = false;
+            ScheduleInput(beat, 1f, InputType.DIRECTION_RIGHT_DOWN, JustRight, RightMiss, Empty);
 
             BeatAction.New(Player, new List<BeatAction.Action>() 
             {
-                new BeatAction.Action(beat,     delegate { DancerP.DoScaledAnimationAsync("TurnRightStart", 0.5f);}),
-                new BeatAction.Action(beat,     delegate { Dancer1.DoScaledAnimationAsync("TurnRightStart", 0.5f);}),
-                new BeatAction.Action(beat,     delegate { Dancer2.DoScaledAnimationAsync("TurnRightStart", 0.5f);}),
                 new BeatAction.Action(beat,     delegate 
-                { 
+                {
+                    DancerP.DoScaledAnimationAsync("TurnRightStart", 0.5f);
+                    Dancer1.DoScaledAnimationAsync("TurnRightStart", 0.5f);
+                    Dancer2.DoScaledAnimationAsync("TurnRightStart", 0.5f);
                     Dancer3.DoScaledAnimationAsync("TurnRightStart", 0.5f);
                     if (grampsTurns) Gramps.DoScaledAnimationAsync("GrampsTurnRightStart", 0.5f);
                 }),
-                new BeatAction.Action(beat + 1f,     delegate { Dancer1.DoScaledAnimationAsync("TurnRightDo", 0.5f);}),
-                new BeatAction.Action(beat + 1f,     delegate { Dancer2.DoScaledAnimationAsync("TurnRightDo", 0.5f);}),
                 new BeatAction.Action(beat + 1f,     delegate 
                 {
+                    Dancer1.DoScaledAnimationAsync("TurnRightDo", 0.5f);
+                    Dancer2.DoScaledAnimationAsync("TurnRightDo", 0.5f);
                     Dancer3.DoScaledAnimationAsync("TurnRightDo", 0.5f);
                     if (grampsTurns) Gramps.DoScaledAnimationAsync("GrampsTurnRightDo", 0.5f);
                 }),
@@ -435,11 +440,8 @@ namespace HeavenStudio.Games
 
         }
 
-        public void DoSitDown(double beat, int whoSpeaks, bool grampsSits)
+        public static void SitDownSfx(double beat, int whoSpeaks)
         {
-            canBop = false;
-            if (grampsSits) grampsCanBop = false;
-            ScheduleInput(beat, 1f, InputType.DIRECTION_DOWN_DOWN, JustSit, SitMiss, Empty);
             List<MultiSound.Sound> soundsToPlay = new List<MultiSound.Sound>()
             {
                 new MultiSound.Sound("spaceDance/voicelessSit", beat),
@@ -477,21 +479,28 @@ namespace HeavenStudio.Games
             }
 
             MultiSound.Play(soundsToPlay.ToArray());
+        }
+
+        public void DoSitDown(double beat, bool grampsSits)
+        {
+            canBop = false;
+            if (grampsSits) grampsCanBop = false;
+            ScheduleInput(beat, 1f, InputType.DIRECTION_DOWN_DOWN, JustSit, SitMiss, Empty);
 
             BeatAction.New(Player, new List<BeatAction.Action>() 
             {
-                new BeatAction.Action(beat,     delegate { DancerP.DoScaledAnimationAsync("SitDownStart", 0.5f);}),
-                new BeatAction.Action(beat,     delegate { Dancer1.DoScaledAnimationAsync("SitDownStart", 0.5f);}),
-                new BeatAction.Action(beat,     delegate { Dancer2.DoScaledAnimationAsync("SitDownStart", 0.5f);}),
                 new BeatAction.Action(beat,     delegate 
-                { 
+                {
+                    DancerP.DoScaledAnimationAsync("SitDownStart", 0.5f);
+                    Dancer1.DoScaledAnimationAsync("SitDownStart", 0.5f);
+                    Dancer2.DoScaledAnimationAsync("SitDownStart", 0.5f);
                     Dancer3.DoScaledAnimationAsync("SitDownStart", 0.5f);
                     if (grampsSits) Gramps.DoScaledAnimationAsync("GrampsSitDownStart", 0.5f);
                 }),
-                new BeatAction.Action(beat + 1f,     delegate { Dancer1.DoScaledAnimationAsync("SitDownDo", 0.5f);}),
-                new BeatAction.Action(beat + 1f,     delegate { Dancer2.DoScaledAnimationAsync("SitDownDo", 0.5f);}),
                 new BeatAction.Action(beat + 1f,     delegate 
-                { 
+                {
+                    Dancer1.DoScaledAnimationAsync("SitDownDo", 0.5f);
+                    Dancer2.DoScaledAnimationAsync("SitDownDo", 0.5f);
                     Dancer3.DoScaledAnimationAsync("SitDownDo", 0.5f);
                     if (grampsSits) Gramps.DoScaledAnimationAsync("GrampsSitDownDo", 0.5f);
                 }),
@@ -500,11 +509,8 @@ namespace HeavenStudio.Games
 
         }
 
-        public void DoPunch(double beat, int whoSpeaks, bool grampsPunches)
+        public static void PunchSfx(double beat, int whoSpeaks)
         {
-            canBop = false;
-            if (grampsPunches) grampsCanBop = false;
-            ScheduleInput(beat, 1.5f, InputType.STANDARD_DOWN, JustPunch, PunchMiss, Empty);
             List<MultiSound.Sound> soundsToPlay = new List<MultiSound.Sound>()
             {
                 new MultiSound.Sound("spaceDance/voicelessPunch", beat),
@@ -548,40 +554,51 @@ namespace HeavenStudio.Games
             }
 
             MultiSound.Play(soundsToPlay.ToArray());
+        }
+
+        public void DoPunch(double beat, bool grampsPunches)
+        {
+            canBop = false;
+            if (grampsPunches) grampsCanBop = false;
+            ScheduleInput(beat, 1.5f, InputType.STANDARD_DOWN, JustPunch, PunchMiss, Empty);
 
             BeatAction.New(Player, new List<BeatAction.Action>() 
                 {
-                new BeatAction.Action(beat,     delegate { DancerP.DoScaledAnimationAsync("PunchStartInner", 0.5f);}),
-                new BeatAction.Action(beat,     delegate { Dancer1.DoScaledAnimationAsync("PunchStartInner", 0.5f);}),
-                new BeatAction.Action(beat,     delegate { Dancer2.DoScaledAnimationAsync("PunchStartInner", 0.5f);}),
-                new BeatAction.Action(beat,     delegate 
-                { 
+                new BeatAction.Action(beat, delegate 
+                {
+                    DancerP.DoScaledAnimationAsync("PunchStartInner", 0.5f);
+                    Dancer1.DoScaledAnimationAsync("PunchStartInner", 0.5f);
+                    Dancer2.DoScaledAnimationAsync("PunchStartInner", 0.5f);
                     Dancer3.DoScaledAnimationAsync("PunchStartInner", 0.5f);
                     if (grampsPunches) Gramps.DoScaledAnimationAsync("GrampsPunchStartOdd", 0.5f);
                 }),
-                new BeatAction.Action(beat + 0.5f,     delegate { DancerP.DoScaledAnimationAsync("PunchStartOuter", 0.5f);}),
-                new BeatAction.Action(beat + 0.5f,     delegate { Dancer1.DoScaledAnimationAsync("PunchStartOuter", 0.5f);}),
-                new BeatAction.Action(beat + 0.5f,     delegate { Dancer2.DoScaledAnimationAsync("PunchStartOuter", 0.5f);}),
-                new BeatAction.Action(beat + 0.5f,     delegate 
-                { 
+                new BeatAction.Action(beat + 0.5f,  delegate 
+                {
+                    DancerP.DoScaledAnimationAsync("PunchStartOuter", 0.5f);
+                    Dancer1.DoScaledAnimationAsync("PunchStartOuter", 0.5f);
+                    Dancer2.DoScaledAnimationAsync("PunchStartOuter", 0.5f);
                     Dancer3.DoScaledAnimationAsync("PunchStartOuter", 0.5f);
                     if (grampsPunches) Gramps.DoScaledAnimationAsync("GrampsPunchStartEven", 0.5f);
                 }),
-                new BeatAction.Action(beat + 1f,     delegate { DancerP.DoScaledAnimationAsync("PunchStartInner", 0.5f);}),
-                new BeatAction.Action(beat + 1f,     delegate { Dancer1.DoScaledAnimationAsync("PunchStartInner", 0.5f);}),
-                new BeatAction.Action(beat + 1f,     delegate { Dancer2.DoScaledAnimationAsync("PunchStartInner", 0.5f);}),
-                new BeatAction.Action(beat + 1f,     delegate 
-                { 
+                new BeatAction.Action(beat + 1f, delegate 
+                {
+                    DancerP.DoScaledAnimationAsync("PunchStartInner", 0.5f);
+                    Dancer1.DoScaledAnimationAsync("PunchStartInner", 0.5f);
+                    Dancer2.DoScaledAnimationAsync("PunchStartInner", 0.5f);
                     Dancer3.DoScaledAnimationAsync("PunchStartInner", 0.5f);
                     if (grampsPunches) Gramps.DoScaledAnimationAsync("GrampsPunchStartOdd", 0.5f);
                 }),
-                new BeatAction.Action(beat + 1.5f,     delegate { Dancer1.DoScaledAnimationAsync("PunchDo", 0.5f);}),
-                new BeatAction.Action(beat + 1.5f,     delegate { Dancer2.DoScaledAnimationAsync("PunchDo", 0.5f);}),
-                new BeatAction.Action(beat + 1.5f,     delegate 
-                { 
+                new BeatAction.Action(beat + 1.5f, delegate 
+                {
+                    Dancer1.DoScaledAnimationAsync("PunchDo", 0.5f);
+                    Dancer2.DoScaledAnimationAsync("PunchDo", 0.5f);
                     Dancer3.DoScaledAnimationAsync("PunchDo", 0.5f);
                     if (grampsPunches) Gramps.DoScaledAnimationAsync("GrampsPunchDo", 0.5f);
                 }),
+                new BeatAction.Action(beat + 2.5, delegate
+                {
+                    canBop = true; grampsCanBop = true;
+                })
                 });
 
         }
