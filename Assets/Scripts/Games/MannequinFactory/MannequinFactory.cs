@@ -47,10 +47,10 @@ namespace HeavenStudio.Games.Loaders
                     },
                     resizable = true
                 },
-            }/*,
+            },
             new List<string>() {"agb", "normal"},
             "agbmannequin", "en",
-            new List<string>() {}*/
+            new List<string>() {}
             );
         }
     }
