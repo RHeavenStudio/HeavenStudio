@@ -96,8 +96,8 @@ namespace HeavenStudio.Games.Loaders
                     function = delegate { var e = eventCaller.currentEntity; SpaceDance.instance.UpdateScrollSpeed(e["x"], e["y"]); },
                     defaultLength = 1f,
                     parameters = new List<Param>() {
-                        new Param("x", new EntityTypes.Float(-5f, 5f, 0), "Horizontal", "How fast does the background move horizontally?"),
-                        new Param("y", new EntityTypes.Float(-5f, 5f, 0), "Vertical", "How fast does the background move vertically?"),
+                        new Param("x", new EntityTypes.Float(-10f, 10f, 0), "Horizontal", "How fast does the background move horizontally?"),
+                        new Param("y", new EntityTypes.Float(-10f, 10f, 0), "Vertical", "How fast does the background move vertically?"),
                     }
                 },
             },
@@ -157,11 +157,10 @@ namespace HeavenStudio.Games
         bool grampsSniffing;
 
         [SerializeField] CanvasScroll scroll;
-        float scrollBeat;
-        float scrollOffsetX;
-        float scrollOffsetY;
-        float currentScrollLengthX;
-        float currentScrollLengthY;
+        float xScrollMultiplier = 0;
+        float yScrollMultiplier = 0;
+        [SerializeField] private float xBaseSpeed = 1;
+        [SerializeField] private float yBaseSpeed = 1;
 
         public GameEvent bop = new GameEvent();
 
@@ -179,10 +178,8 @@ namespace HeavenStudio.Games
             var cond = Conductor.instance;
             if (cond.isPlaying && !cond.isPaused)
             {
-                float normalizedX = (Time.realtimeSinceStartup - scrollBeat) * currentScrollLengthX;
-                float normalizedY = (Time.realtimeSinceStartup - scrollBeat) * currentScrollLengthY;
-                scroll.NormalizedX = -scrollOffsetX - normalizedX;
-                scroll.NormalizedY = -scrollOffsetY - normalizedY;
+                scroll.NormalizedX -= xBaseSpeed * xScrollMultiplier * Time.deltaTime;
+                scroll.NormalizedY -= yBaseSpeed * yScrollMultiplier * Time.deltaTime;
                 if (cond.ReportBeat(ref bop.lastReportedBeat, bop.startBeat % 1))
                 {
                     if (shouldBop)
@@ -237,11 +234,8 @@ namespace HeavenStudio.Games
 
         public void UpdateScrollSpeed(float scrollSpeedX, float scrollSpeedY)
         {
-            scrollOffsetX = (Time.realtimeSinceStartup - scrollBeat) * currentScrollLengthX;
-            scrollOffsetY = (Time.realtimeSinceStartup - scrollBeat) * currentScrollLengthY;
-            currentScrollLengthX = scrollSpeedX;
-            currentScrollLengthY = scrollSpeedY;
-            scrollBeat = Time.realtimeSinceStartup;
+            xScrollMultiplier = scrollSpeedX;
+            yScrollMultiplier = scrollSpeedY;
         }
 
         public void GrampsAnimations(double beat, int type, bool looping)
