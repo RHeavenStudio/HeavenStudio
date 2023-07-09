@@ -10,34 +10,6 @@ namespace HeavenStudio.InputSystem
     /// </summary>
     public abstract class InputController
     {
-        //Buttons and Axis used by most controllers
-        public enum InputButtons : int
-        {
-            ButtonPadUp = 0,
-            ButtonPadDown = 1,
-            ButtonPadLeft = 2,
-            ButtonPadRight = 3,
-            ButtonPlus = 4,
-            ButtonOptions = 4,
-            ButtonMinus = 5,
-            ButtonShare = 5,
-            ButtonLClick = 6,
-            ButtonRClick = 7,
-            ButtonL = 8,
-            ButtonR = 9,
-            ButtonZL = 10,
-            ButtonZR = 11,
-            ButtonFaceS = 12,
-            ButtonFaceE = 13,
-            ButtonFaceW = 14,
-            ButtonFaceN = 15,
-            ButtonHome = 16,
-            ButtonPS = 16,
-            ButtonCapture = 17,
-            ButtonTouchpadClick = 17,
-            ButtonSL = 18,
-            ButtonSR = 19,
-        }
         public enum InputAxis : int
         {
             AxisLTrigger = 4,
@@ -101,45 +73,56 @@ namespace HeavenStudio.InputSystem
             Move
         }
 
+        public const int BINDS_MAX = 12; //maximum number of binds per controller
+
         //buttons used in Heaven Studio gameplay (Pad Style)
         public enum ButtonsPad : int
         {
-            PadUp = 0,
-            PadDown = 1,
-            PadLeft = 2,
-            PadRight = 3,
-            PadS = 4,
-            PadE = 5,
-            PadW = 6,
-            PadN = 7,
-            PadL = 8,
-            PadR = 9,
-            PadPause = 10,
+            Up = 0,
+            Down = 1,
+            Left = 2,
+            Right = 3,
+            South = 4,
+            East = 5,
+            West = 6,
+            North = 7,
+            L = 8,
+            R = 9,
+            Pause = 10,
         }
 
         //FUTURE: buttons used in Heaven Studio gameplay ("Form Baton" / WiiMote Style)
         public enum ButtonsBaton : int
         {
-            BatonS = 0,    //-- all these...
-            BatonE = 1,    // |
-            BatonW = 2,    // |
-            BatonN = 3,    //--
-            BatonFace = 4, // < ...map to this, but are directional
-            BatonTrigger = 5, // should never be used alone
-            Baton1 = 6,
-            Baton2 = 7,
-            BatonPause = 8,
+            South = 0,      //-- all these...
+            East = 1,       // |
+            West = 2,       // |
+            North = 3,      //--
+            Face = 4,       // < ...are also equivalent to this, but with added directionality
+            Trigger = 5,    // should never be used alone, but still bindable separately (controller logic should handle confirming & timestamping face + trigger input)
+            Up = 6,     // Wiimote 1
+            Down = 7,   // Wiimote 2
+            Pause = 8,
         }
 
         //FUTURE: buttons used in Heaven Studio gameplay (Touch Style)
         public enum ButtonsTouch : int
         {
-            TouchL = 0,
-            TouchR = 1,
-            TouchTap = 2,
-            TouchFlick = 3,
-            TouchButtonL = 4,
-            TouchButtonR = 5,
+            Tap = 0,   // flicks are handled like a motion, don't have a binding
+            Left = 1,     // also maps to tap, but with directionality (tap the left side of the panel)
+            Right = 2,    // also maps to tap, but with directionality (tap the right side of the panel)
+            ButtonL = 3,
+            ButtonR = 4,
+            Pause = 5,
+        }
+
+        [System.Serializable]
+        public struct ControlBindings
+        {
+            public string ControllerName;
+            public int[] Pad;
+            public int[] Baton;
+            public int[] Touch;
         }
 
         // FUTURE: Move Style needs to be implemented per-game (maybe implement checks for common actions?)
@@ -158,6 +141,10 @@ namespace HeavenStudio.InputSystem
         public abstract InputFeatures GetFeatures(); // Get the features of the controller
         public abstract bool GetIsConnected();
         public abstract bool GetIsPoorConnection();
+
+        // public abstract int[] GetDefaultMappings(ControlStyles style);
+        // public abstract int[] GetCurrentMappings(ControlStyles style);
+        // public abstract int[] SetCurrentMappings(ControlStyles style);
 
         public abstract int GetLastButtonDown();    // Get the last button down
         public abstract KeyCode GetLastKeyDown();   // Get the last key down (used for keyboards and other devices that use Keycode)

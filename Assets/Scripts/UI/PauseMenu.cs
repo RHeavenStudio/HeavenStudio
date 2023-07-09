@@ -85,7 +85,7 @@ namespace HeavenStudio.Common
         void Update()
         {
             if (isQuitting) return;
-            if (PlayerInput.GetInputController(1).GetButtonDown((int) InputController.ButtonsPad.PadPause, out _))
+            if (PlayerInput.GetInputController(1).GetButtonDown((int) InputController.ButtonsPad.Pause, out _))
             {
                 if (isPaused)
                 {
@@ -98,7 +98,7 @@ namespace HeavenStudio.Common
             }
             else if (isPaused && canPick && !settingsDialog.IsOpen)
             {
-                if (Input.GetKeyDown(KeyCode.UpArrow) || PlayerInput.GetInputController(1).GetButtonDown((int)InputController.ButtonsPad.PadUp, out _))
+                if (Input.GetKeyDown(KeyCode.UpArrow) || PlayerInput.GetInputController(1).GetButtonDown((int)InputController.ButtonsPad.Up, out _))
                 {
                     optionSelected--;
                     if (optionSelected < 0)
@@ -107,7 +107,7 @@ namespace HeavenStudio.Common
                     }
                     ChooseOption((Options) optionSelected);
                 }
-                else if (Input.GetKeyDown(KeyCode.DownArrow) || PlayerInput.GetInputController(1).GetButtonDown((int)InputController.ButtonsPad.PadDown, out _))
+                else if (Input.GetKeyDown(KeyCode.DownArrow) || PlayerInput.GetInputController(1).GetButtonDown((int)InputController.ButtonsPad.Down, out _))
                 {
                     optionSelected++;
                     if (optionSelected > optionHolder.transform.childCount - 1)
@@ -116,7 +116,7 @@ namespace HeavenStudio.Common
                     }
                     ChooseOption((Options) optionSelected);
                 }
-                else if (Input.GetKeyDown(KeyCode.Return) || PlayerInput.GetInputController(1).GetButtonDown((int)InputController.ButtonsPad.PadE, out _))
+                else if (Input.GetKeyDown(KeyCode.Return) || PlayerInput.GetInputController(1).GetButtonDown((int)InputController.ButtonsPad.East, out _))
                 {
                     UseOption((Options) optionSelected);
                 }

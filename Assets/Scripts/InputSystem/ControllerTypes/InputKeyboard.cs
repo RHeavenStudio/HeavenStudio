@@ -42,7 +42,7 @@ namespace HeavenStudio.InputSystem
 
         //FUTURE: remappable controls
         //KeyCode[] mappings = new KeyCode[Enum.GetNames(typeof(ButtonsPad)).Length];
-        KeyCode[] mappings = new KeyCode[]
+        KeyCode[] defaultMappings = new KeyCode[]
         {
             KeyCode.W,              // dpad up
             KeyCode.S,              // dpad down
@@ -110,19 +110,19 @@ namespace HeavenStudio.InputSystem
 
         public override bool GetButton(int button)
         {
-            return Input.GetKey(mappings[button]);
+            return Input.GetKey(defaultMappings[button]);
         }
 
         public override bool GetButtonDown(int button, out double dt)
         {
             dt = 0;
-            return Input.GetKeyDown(mappings[button]);
+            return Input.GetKeyDown(defaultMappings[button]);
         }
 
         public override bool GetButtonUp(int button, out double dt)
         {
             dt = 0;
-            return Input.GetKeyUp(mappings[button]);
+            return Input.GetKeyUp(defaultMappings[button]);
         }
 
         public override float GetAxis(InputAxis axis)
@@ -136,13 +136,13 @@ namespace HeavenStudio.InputSystem
             switch (direction)
             {
                 case InputDirection.Up:
-                    return Input.GetKey(mappings[0]);
+                    return Input.GetKey(defaultMappings[0]);
                 case InputDirection.Down:
-                    return Input.GetKey(mappings[1]);
+                    return Input.GetKey(defaultMappings[1]);
                 case InputDirection.Left:
-                    return Input.GetKey(mappings[2]);
+                    return Input.GetKey(defaultMappings[2]);
                 case InputDirection.Right:
-                    return Input.GetKey(mappings[3]);
+                    return Input.GetKey(defaultMappings[3]);
                 default:
                     return false;
             }
@@ -154,13 +154,13 @@ namespace HeavenStudio.InputSystem
             switch (direction)
             {
                 case InputDirection.Up:
-                    return Input.GetKeyDown(mappings[0]);
+                    return Input.GetKeyDown(defaultMappings[0]);
                 case InputDirection.Down:
-                    return Input.GetKeyDown(mappings[1]);
+                    return Input.GetKeyDown(defaultMappings[1]);
                 case InputDirection.Left:
-                    return Input.GetKeyDown(mappings[2]);
+                    return Input.GetKeyDown(defaultMappings[2]);
                 case InputDirection.Right:
-                    return Input.GetKeyDown(mappings[3]);
+                    return Input.GetKeyDown(defaultMappings[3]);
                 default:
                     return false;
             }
@@ -172,13 +172,13 @@ namespace HeavenStudio.InputSystem
             switch (direction)
             {
                 case InputDirection.Up:
-                    return Input.GetKeyUp(mappings[0]);
+                    return Input.GetKeyUp(defaultMappings[0]);
                 case InputDirection.Down:
-                    return Input.GetKeyUp(mappings[1]);
+                    return Input.GetKeyUp(defaultMappings[1]);
                 case InputDirection.Left:
-                    return Input.GetKeyUp(mappings[2]);
+                    return Input.GetKeyUp(defaultMappings[2]);
                 case InputDirection.Right:
-                    return Input.GetKeyUp(mappings[3]);
+                    return Input.GetKeyUp(defaultMappings[3]);
                 default:
                     return false;
             }

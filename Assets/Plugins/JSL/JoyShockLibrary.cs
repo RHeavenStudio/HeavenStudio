@@ -76,50 +76,50 @@ public static class JSL
 
     [StructLayout(LayoutKind.Sequential)]
     public struct MOTION_STATE {
-        float quatW;
-        float quatX;
-        float quatY;
-        float quatZ;
-        float accelX;
-        float accelY;
-        float accelZ;
-        float gravX;
-        float gravY;
-        float gravZ;
+        public float quatW;
+        public float quatX;
+        public float quatY;
+        public float quatZ;
+        public float accelX;
+        public float accelY;
+        public float accelZ;
+        public float gravX;
+        public float gravY;
+        public float gravZ;
     }
 
     [StructLayout(LayoutKind.Sequential)]
     public struct TOUCH_STATE {
-        int t0Id;
-        int t1Id;
-        bool t0Down;
-        bool t1Down;
-        float t0X;
-        float t0Y;
-        float t1X;
-        float t1Y;
+        public int t0Id;
+        public int t1Id;
+        public bool t0Down;
+        public bool t1Down;
+        public float t0X;
+        public float t0Y;
+        public float t1X;
+        public float t1Y;
     }
 
     [StructLayout(LayoutKind.Sequential)]
     public struct JSL_AUTO_CALIBRATION {
-        float confidence;
-        bool autoCalibrationEnabled;
-        bool isSteady;
+        public float confidence;
+        public bool autoCalibrationEnabled;
+        public bool isSteady;
     }
 
     [StructLayout(LayoutKind.Sequential)]
     public struct JSL_SETTINGS {
-        int gyroSpace;
-        int bodyColour;
-        int lGripColour;
-        int rGripColour;
-        int buttonColour;
-        int playerNumber;
-        int controllerType;
-        int splitType;
-        bool isCalibrating;
-        bool autoCalibrationEnabled;
-        bool isConnected;
+        public int gyroSpace;
+        public int bodyColour;
+        public int lGripColour;
+        public int rGripColour;
+        public int buttonColour;
+        public int playerNumber;
+        public int controllerType;
+        public int splitType;
+        public bool isCalibrating;
+        public bool autoCalibrationEnabled;
+        public bool isConnected;
     }
 
     public delegate void EventCallback(int handle, JOY_SHOCK_STATE state, JOY_SHOCK_STATE lastState,

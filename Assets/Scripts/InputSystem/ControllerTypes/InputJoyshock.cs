@@ -120,7 +120,7 @@ namespace HeavenStudio.InputSystem
         };
 
         //TODO: see if single joy-con mappings differ from a normal pad (they don't!)
-        int[] mappings = new[]
+        int[] defaultMappings = new[]
         {
             ButtonMaskUp,
             ButtonMaskDown,
@@ -133,8 +133,9 @@ namespace HeavenStudio.InputSystem
             ButtonMaskL,
             ButtonMaskR,
             ButtonMaskPlus,
+            -1
         };
-        int[] mappingsSplitLeft = new[]
+        int[] defaultMappingsL = new[]
         {
             -1,
             -1,
@@ -147,8 +148,9 @@ namespace HeavenStudio.InputSystem
             ButtonMaskSL,
             ButtonMaskSR,
             ButtonMaskMinus,
+            -1
         };
-        int[] mappingsSplitRight = new[]
+        int[] defaultMappingsR = new[]
         {
             -1,
             -1,
@@ -161,6 +163,7 @@ namespace HeavenStudio.InputSystem
             ButtonMaskSL,
             ButtonMaskSR,
             ButtonMaskPlus,
+            -1
         };
 
         public static Dictionary<int, InputJoyshock> joyshocks;
@@ -172,15 +175,18 @@ namespace HeavenStudio.InputSystem
         int splitType;
         int lightbarColour;
         string joyshockName;
-        double totalReportDt;
+        DateTime startTime;
 
         //buttons, sticks, triggers
-        JoyshockButtonState[] buttonStates = new JoyshockButtonState[11];
+        JoyshockButtonState[] buttonStates = new JoyshockButtonState[BINDS_MAX];
         JOY_SHOCK_STATE joyBtStateCurrent;
         //gyro and accelerometer
         IMU_STATE joyImuStateCurrent, joyImuStateLast;
         //touchpad
         TOUCH_STATE joyTouchStateCurrent, joyTouchStateLast;
+
+        // controller settings
+        JSL_SETTINGS joySettings;
 
         InputJoyshock otherHalf;
 
@@ -207,6 +213,24 @@ namespace HeavenStudio.InputSystem
             joyshockHandle = handle;
         }
 
+        int GetButtonForSplitType(int action)
+        {
+            if (action < 0 || action >= BINDS_MAX) return -1;
+            if (otherHalf == null)
+            {
+                switch (splitType)
+                {
+                    case SplitLeft:
+                        return defaultMappingsL[action];
+                    case SplitRight:
+                        return defaultMappingsR[action];
+                    default:
+                        return defaultMappings[action];
+                }
+            }
+            return defaultMappings[action];
+        }
+
         public static void JslEventInit()
         {
             JslSetCallback(JslEventCallback);
@@ -224,22 +248,21 @@ namespace HeavenStudio.InputSystem
             {
                 js.inputStack.Clear();
                 js.wantClearInputStack = false;
-                js.totalReportDt -= js.reportTime;
             }
-            js.totalReportDt += deltaTime;
             js.inputStack.Add(new TimestampedState
             {
-                timestamp = js.totalReportDt,
+                timestamp = (DateTime.Now - js.startTime).TotalSeconds,
                 input = state
             });
         }
 
         public override void InitializeController()
         {
+            startTime = DateTime.Now;
             inputStack = new();
             lastInputStack = new();
 
-            buttonStates = new JoyshockButtonState[11];
+            buttonStates = new JoyshockButtonState[BINDS_MAX];
             joyBtStateCurrent = new JOY_SHOCK_STATE();
 
             joyImuStateCurrent = new IMU_STATE();
@@ -248,12 +271,14 @@ namespace HeavenStudio.InputSystem
             joyTouchStateCurrent = new TOUCH_STATE();
             joyTouchStateLast = new TOUCH_STATE();
 
+
             //FUTURE: remappable controls
 
-            type = JslGetControllerType(joyshockHandle);
+            joySettings = JslGetControllerInfoAndSettings(joyshockHandle);
+            type = joySettings.controllerType;
             joyshockName = joyShockNames[type];
 
-            splitType = JslGetControllerSplitType(joyshockHandle);
+            splitType = joySettings.splitType;
 
             joyshocks.Add(joyshockHandle, this);
         }
@@ -266,9 +291,9 @@ namespace HeavenStudio.InputSystem
 
         public override void UpdateState()
         {
+            reportTime = (DateTime.Now - startTime).TotalSeconds;
             lastInputStack = new(inputStack);
             wantClearInputStack = true;
-            reportTime = totalReportDt;
 
             for (int i = 0; i < buttonStates.Length; i++)
             {
@@ -280,22 +305,7 @@ namespace HeavenStudio.InputSystem
 
                 for (int i = 0; i < buttonStates.Length; i++)
                 {
-                    int bt = mappings[i];
-                    if (otherHalf == null)
-                    {
-                        switch (splitType)
-                        {
-                            case SplitLeft:
-                                bt = mappingsSplitLeft[i];
-                                break;
-                            case SplitRight:
-                                bt = mappingsSplitRight[i];
-                                break;
-                            default:
-                                break;
-                        }
-                    }
-
+                    int bt = GetButtonForSplitType(i);
                     if (bt != -1)
                     {
                         bool pressed = BitwiseUtils.WantCurrent(state.input.buttons, 1 << bt);
@@ -409,17 +419,20 @@ namespace HeavenStudio.InputSystem
 
         public override bool GetButton(int button)
         {
+            if (button == -1) {return false;}
             return buttonStates[button].pressed;
         }
 
         public override bool GetButtonDown(int button, out double dt)
         {
+            if (button == -1) {dt = 0; return false;}
             dt = buttonStates[button].dt;
             return buttonStates[button].pressed && buttonStates[button].isDelta;
         }
 
         public override bool GetButtonUp(int button, out double dt)
         {
+            if (button == -1) {dt = 0; return false;}
             dt = buttonStates[button].dt;
             return !buttonStates[button].pressed && buttonStates[button].isDelta;
         }
@@ -455,16 +468,16 @@ namespace HeavenStudio.InputSystem
             switch (direction)
             {
                 case InputDirection.Up:
-                    bt = mappings[0];
+                    bt = GetButtonForSplitType(0);
                     break;
                 case InputDirection.Down:
-                    bt = mappings[1];
+                    bt = GetButtonForSplitType(1);
                     break;
                 case InputDirection.Left:
-                    bt = mappings[2];
+                    bt = GetButtonForSplitType(2);
                     break;
                 case InputDirection.Right:
-                    bt = mappings[3];
+                    bt = GetButtonForSplitType(3);
                     break;
                 default:
                     return false;
@@ -478,16 +491,16 @@ namespace HeavenStudio.InputSystem
             switch (direction)
             {
                 case InputDirection.Up:
-                    bt = mappings[0];
+                    bt = GetButtonForSplitType(0);
                     break;
                 case InputDirection.Down:
-                    bt = mappings[1];
+                    bt = GetButtonForSplitType(1);
                     break;
                 case InputDirection.Left:
-                    bt = mappings[2];
+                    bt = GetButtonForSplitType(2);
                     break;
                 case InputDirection.Right:
-                    bt = mappings[3];
+                    bt = GetButtonForSplitType(3);
                     break;
                 default:
                     dt = 0;
@@ -504,16 +517,16 @@ namespace HeavenStudio.InputSystem
             switch (direction)
             {
                 case InputDirection.Up:
-                    bt = mappings[0];
+                    bt = GetButtonForSplitType(0);
                     break;
                 case InputDirection.Down:
-                    bt = mappings[1];
+                    bt = GetButtonForSplitType(1);
                     break;
                 case InputDirection.Left:
-                    bt = mappings[2];
+                    bt = GetButtonForSplitType(2);
                     break;
                 case InputDirection.Right:
-                    bt = mappings[3];
+                    bt = GetButtonForSplitType(3);
                     break;
                 default:
                     dt = 0;
@@ -558,32 +571,32 @@ namespace HeavenStudio.InputSystem
             if (otherHalf != null)
             {
                 // gets the colour of the right controller if is split
-                return BitwiseUtils.IntToRgb(splitType == SplitRight ? JslGetControllerColour(joyshockHandle) : JslGetControllerColour(GetOtherHalf().GetHandle()));
+                return BitwiseUtils.IntToRgb(splitType == SplitRight ? joySettings.bodyColour : GetOtherHalf().joySettings.bodyColour);
             }
-            return BitwiseUtils.IntToRgb(JslGetControllerColour(joyshockHandle));
+            return BitwiseUtils.IntToRgb(joySettings.bodyColour);
         }
 
         public Color GetButtonColor()
         {
-            return BitwiseUtils.IntToRgb(JslGetControllerButtonColour(joyshockHandle));
+            return BitwiseUtils.IntToRgb(joySettings.buttonColour);
         }
 
         public Color GetLeftGripColor()
         {
             if (otherHalf != null)
             {
-                return BitwiseUtils.IntToRgb(splitType == SplitLeft ? JslGetControllerColour(joyshockHandle) : JslGetControllerColour(GetOtherHalf().GetHandle()));
+                return BitwiseUtils.IntToRgb(splitType == SplitLeft ? joySettings.lGripColour : GetOtherHalf().joySettings.lGripColour);
             }
-            return BitwiseUtils.IntToRgb(JslGetControllerLeftGripColour(joyshockHandle));
+            return BitwiseUtils.IntToRgb(joySettings.lGripColour);
         }
 
         public Color GetRightGripColor()
         {
             if (otherHalf != null)
             {
-                return BitwiseUtils.IntToRgb(splitType == SplitRight ? JslGetControllerColour(joyshockHandle) : JslGetControllerColour(GetOtherHalf().GetHandle()));
+                return BitwiseUtils.IntToRgb(splitType == SplitRight ? joySettings.rGripColour : GetOtherHalf().joySettings.rGripColour);
             }
-            return BitwiseUtils.IntToRgb(JslGetControllerRightGripColour(joyshockHandle));
+            return BitwiseUtils.IntToRgb(joySettings.rGripColour);
         }
 
         public Color GetLightbarColour()
