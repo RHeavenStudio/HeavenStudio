@@ -62,12 +62,12 @@ namespace HeavenStudio.Games.Loaders
                 },
                 new GameAction("giraffe events", "Giraffe Animations")
                 {
-                    function = delegate { }, 
-                    defaultLength = .5f,
+                    function = delegate { var e = eventCaller.currentEntity; TapTrial.instance.GiraffeAnims(e.beat, e.length, e["toggle"], e["instant"]); }, 
+                    resizable = true,
                     parameters = new List<Param>()
                     {
-                        new Param("toggle", true, "Enter?", "Giraffe will enter the scene"),
-                        new Param("instant", false, "Instant", "Will the giraffe enter/exit instantly?")
+                        new Param("toggle", TapTrial.GiraffeAnimation.Enter, "Animation", "Which animation?"),
+                        new Param("instant", EasingFunction.Ease.Linear, "Ease", "Which ease will be used?")
                     }
                 },
                 // backwards-compatibility
@@ -94,7 +94,7 @@ namespace HeavenStudio.Games
     {
         [Header("Components")]
         [SerializeField] private TapTrialPlayer player;
-        [SerializeField] private Animator monkeyL, monkeyR;
+        [SerializeField] private Animator monkeyL, monkeyR, giraffe;
         [SerializeField] private ParticleSystem monkeyTapLL, monkeyTapLR, monkeyTapRL, monkeyTapRR;
         [SerializeField] private Transform rootPlayer, rootMonkeyL, rootMonkeyR;
         [Header("Values")]
@@ -124,39 +124,77 @@ namespace HeavenStudio.Games
                 {
                     SingleBop();
                 }
+                float normalizedGiraffeBeat = cond.GetPositionFromBeat(animStartBeat, animLength);
+                EasingFunction.Function func = EasingFunction.GetEasingFunction(currentEase);
 
-                float normalizedJumpBeat = cond.GetPositionFromBeat(jumpStartBeat, 1);
-
-                if (normalizedJumpBeat >= 0 && normalizedJumpBeat <= 1)
+                switch (currentAnim)
                 {
-                    if (normalizedJumpBeat >= 0.5f)
-                    {
-                        float normalizedUp = cond.GetPositionFromBeat(jumpStartBeat, 0.5);
-                        EasingFunction.Function func = EasingFunction.GetEasingFunction(EasingFunction.Ease.EaseOutQuad);
-                        float newPlayerY = func(0, jumpHeight, normalizedUp);
-                        float newMonkeyY = func(0, monkeyJumpHeight, normalizedUp);
-                        rootPlayer.localPosition = new Vector3(0, newPlayerY);
-                        rootMonkeyL.localPosition = new Vector3(0, newMonkeyY);
-                        rootMonkeyR.localPosition = new Vector3(0, newMonkeyY);
-                    }
-                    else
-                    {
-                        float normalizedDown = cond.GetPositionFromBeat(jumpStartBeat + 0.5, 0.5);
-                        EasingFunction.Function func = EasingFunction.GetEasingFunction(EasingFunction.Ease.EaseInQuad);
-                        float newPlayerY = func(jumpHeight, 0, normalizedDown);
-                        float newMonkeyY = func(monkeyJumpHeight, 0, normalizedDown);
-                        rootPlayer.localPosition = new Vector3(0, newPlayerY);
-                        rootMonkeyL.localPosition = new Vector3(0, newMonkeyY);
-                        rootMonkeyR.localPosition = new Vector3(0, newMonkeyY);
-                    }
+                    case GiraffeAnimation.Enter:
+                        giraffe.DoNormalizedAnimation("Enter", func(0, 1, normalizedGiraffeBeat));
+                        break;
+                    case GiraffeAnimation.Exit:
+                        giraffe.DoNormalizedAnimation("Exit", func(0, 1, normalizedGiraffeBeat));
+                        break;
+                    case GiraffeAnimation.Blink: break;
+                }
+
+                JumpUpdate(cond);
+            }
+        }
+
+        private void JumpUpdate(Conductor cond)
+        {
+            float normalizedJumpBeat = cond.GetPositionFromBeat(jumpStartBeat, 1);
+
+            if (normalizedJumpBeat >= 0 && normalizedJumpBeat <= 1)
+            {
+                if (normalizedJumpBeat >= 0.5f)
+                {
+                    float normalizedUp = cond.GetPositionFromBeat(jumpStartBeat, 0.5);
+                    EasingFunction.Function func = EasingFunction.GetEasingFunction(EasingFunction.Ease.EaseOutQuad);
+                    float newPlayerY = func(0, jumpHeight, normalizedUp);
+                    float newMonkeyY = func(0, monkeyJumpHeight, normalizedUp);
+                    rootPlayer.localPosition = new Vector3(0, newPlayerY);
+                    rootMonkeyL.localPosition = new Vector3(0, newMonkeyY);
+                    rootMonkeyR.localPosition = new Vector3(0, newMonkeyY);
                 }
                 else
                 {
-                    rootPlayer.localPosition = Vector3.zero;
-                    rootMonkeyL.localPosition = Vector3.zero;
-                    rootMonkeyR.localPosition = Vector3.zero;
+                    float normalizedDown = cond.GetPositionFromBeat(jumpStartBeat + 0.5, 0.5);
+                    EasingFunction.Function func = EasingFunction.GetEasingFunction(EasingFunction.Ease.EaseInQuad);
+                    float newPlayerY = func(jumpHeight, 0, normalizedDown);
+                    float newMonkeyY = func(monkeyJumpHeight, 0, normalizedDown);
+                    rootPlayer.localPosition = new Vector3(0, newPlayerY);
+                    rootMonkeyL.localPosition = new Vector3(0, newMonkeyY);
+                    rootMonkeyR.localPosition = new Vector3(0, newMonkeyY);
                 }
             }
+            else
+            {
+                rootPlayer.localPosition = Vector3.zero;
+                rootMonkeyL.localPosition = Vector3.zero;
+                rootMonkeyR.localPosition = Vector3.zero;
+            }
+        }
+
+        public enum GiraffeAnimation
+        {
+            Enter,
+            Exit,
+            Blink
+        }
+        private GiraffeAnimation currentAnim = GiraffeAnimation.Enter;
+        private double animStartBeat = double.MinValue;
+        private float animLength = 0;
+        private EasingFunction.Ease currentEase = EasingFunction.Ease.Instant;
+
+        public void GiraffeAnims(double beat, float length, int type, int ease)
+        {
+            animStartBeat = beat;
+            animLength = length;
+            currentAnim = (GiraffeAnimation)type;
+            currentEase = (EasingFunction.Ease)ease;
+            if (currentAnim == GiraffeAnimation.Blink) giraffe.DoScaledAnimationAsync("Blink", 0.5f);
         }
 
         public void Bop(double beat, float length, bool bop, bool autoBop)
@@ -207,7 +245,7 @@ namespace HeavenStudio.Games
                 new MultiSound.Sound("tapTrial/tapMonkey", beat + 1),
             });
 
-            ScheduleInput(beat, 1, InputType.STANDARD_DOWN, JustTap, Empty, Empty);
+            ScheduleInput(beat, 1, InputType.STANDARD_DOWN, JustTap, Miss, Empty);
         }
 
         public void DoubleTap(double beat)
@@ -245,8 +283,8 @@ namespace HeavenStudio.Games
                 new MultiSound.Sound("tapTrial/tapMonkey", beat + 1.5),
             });
 
-            ScheduleInput(beat, 1, InputType.STANDARD_DOWN, JustDoubleTap, Empty, Empty);
-            ScheduleInput(beat, 1.5, InputType.STANDARD_DOWN, JustDoubleTap, Empty, Empty);
+            ScheduleInput(beat, 1, InputType.STANDARD_DOWN, JustDoubleTap, Miss, Empty);
+            ScheduleInput(beat, 1.5, InputType.STANDARD_DOWN, JustDoubleTap, Miss, Empty);
         }
 
         public void TripleTap(double beat)
@@ -289,9 +327,9 @@ namespace HeavenStudio.Games
                 new MultiSound.Sound("tapTrial/tapMonkey", beat + 3),
             });
 
-            ScheduleInput(beat, 2, InputType.STANDARD_DOWN, JustTripleTap, Empty, Empty);
-            ScheduleInput(beat, 2.5, InputType.STANDARD_DOWN, JustTripleTap, Empty, Empty);
-            ScheduleInput(beat, 3, InputType.STANDARD_DOWN, JustTripleTap, Empty, Empty);
+            ScheduleInput(beat, 2, InputType.STANDARD_DOWN, JustTripleTap, Miss, Empty);
+            ScheduleInput(beat, 2.5, InputType.STANDARD_DOWN, JustTripleTap, Miss, Empty);
+            ScheduleInput(beat, 3, InputType.STANDARD_DOWN, JustTripleTap, Miss, Empty);
         }
 
         public void JumpPrepare()
@@ -346,11 +384,13 @@ namespace HeavenStudio.Games
         private void MissJump(PlayerActionEvent caller)
         {
             player.JumpTapMiss(false);
+            if (giraffe.IsAnimationNotPlaying()) giraffe.DoScaledAnimationAsync("Miss", 0.5f);
         }
 
         private void MissJumpFinal(PlayerActionEvent caller)
         {
             player.JumpTapMiss(true);
+            if (giraffe.IsAnimationNotPlaying()) giraffe.DoScaledAnimationAsync("Miss", 0.5f);
         }
 
         private void JustTap(PlayerActionEvent caller, float state)
@@ -366,6 +406,11 @@ namespace HeavenStudio.Games
         private void JustTripleTap(PlayerActionEvent caller, float state)
         {
             player.TripleTap(state < 1f && state > -1f);
+        }
+
+        private void Miss(PlayerActionEvent caller)
+        {
+            if (giraffe.IsAnimationNotPlaying()) giraffe.DoScaledAnimationAsync("Miss", 0.5f);
         }
 
         private void Empty(PlayerActionEvent caller) { }
