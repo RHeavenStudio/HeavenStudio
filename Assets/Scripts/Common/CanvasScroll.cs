@@ -21,7 +21,7 @@ namespace HeavenStudio.Common
         {
             foreach (var img in _imgs)
             {
-                img.uvRect = new Rect(new Vector2(NormalizedX, NormalizedY) * Tile, img.uvRect.size);
+                img.uvRect = new Rect(Normalized * Tile, img.uvRect.size);
             }
         }
     }

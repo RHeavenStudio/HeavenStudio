@@ -53,11 +53,11 @@ namespace HeavenStudio.Games.Loaders
                 new GameAction("scroll event", "Scroll Background")
                 {
                     function = delegate {  }, 
-                    defaultLength = .5f,
+                    defaultLength = 1f,
                     parameters = new List<Param>()
                     {
                         new Param("toggle", true, "Scroll FX", "Will scroll"),
-                        new Param("flash", false, "Flash FX", "Will flash to white"),
+                        new Param("flash", true, "Flash FX", "Will flash to white"),
                     }
                 },
                 new GameAction("giraffe events", "Giraffe Animations")
@@ -88,6 +88,7 @@ namespace HeavenStudio.Games.Loaders
 
 namespace HeavenStudio.Games
 {
+    using HeavenStudio.Common;
     using Scripts_TapTrial;
 
     public class TapTrial : Minigame
@@ -97,6 +98,7 @@ namespace HeavenStudio.Games
         [SerializeField] private Animator monkeyL, monkeyR, giraffe;
         [SerializeField] private ParticleSystem monkeyTapLL, monkeyTapLR, monkeyTapRL, monkeyTapRR;
         [SerializeField] private Transform rootPlayer, rootMonkeyL, rootMonkeyR;
+        [SerializeField] private CanvasScroll bgScroll;
         [Header("Values")]
         [SerializeField] private float jumpHeight = 4f;
         [SerializeField] private float monkeyJumpHeight = 3f;
@@ -117,28 +119,31 @@ namespace HeavenStudio.Games
         private void Update()
         {
             var cond = Conductor.instance;
-
             if (cond.isPlaying && !cond.isPaused)
             {
                 if (shouldBop && cond.ReportBeat(ref bop.lastReportedBeat, bop.startBeat % 1))
                 {
                     SingleBop();
                 }
-                float normalizedGiraffeBeat = cond.GetPositionFromBeat(animStartBeat, animLength);
-                EasingFunction.Function func = EasingFunction.GetEasingFunction(currentEase);
-
-                switch (currentAnim)
-                {
-                    case GiraffeAnimation.Enter:
-                        giraffe.DoNormalizedAnimation("Enter", func(0, 1, normalizedGiraffeBeat));
-                        break;
-                    case GiraffeAnimation.Exit:
-                        giraffe.DoNormalizedAnimation("Exit", func(0, 1, normalizedGiraffeBeat));
-                        break;
-                    case GiraffeAnimation.Blink: break;
-                }
-
+                GiraffeUpdate(cond);
                 JumpUpdate(cond);
+            }
+        }
+
+        private void GiraffeUpdate(Conductor cond)
+        {
+            float normalizedGiraffeBeat = cond.GetPositionFromBeat(animStartBeat, animLength);
+            EasingFunction.Function func = EasingFunction.GetEasingFunction(currentEase);
+
+            switch (currentAnim)
+            {
+                case GiraffeAnimation.Enter:
+                    giraffe.DoNormalizedAnimation("Enter", func(0, 1, normalizedGiraffeBeat));
+                    break;
+                case GiraffeAnimation.Exit:
+                    giraffe.DoNormalizedAnimation("Exit", func(0, 1, normalizedGiraffeBeat));
+                    break;
+                case GiraffeAnimation.Blink: break;
             }
         }
 
@@ -184,9 +189,9 @@ namespace HeavenStudio.Games
             Blink
         }
         private GiraffeAnimation currentAnim = GiraffeAnimation.Enter;
-        private double animStartBeat = double.MinValue;
+        private double animStartBeat = -1;
         private float animLength = 0;
-        private EasingFunction.Ease currentEase = EasingFunction.Ease.Instant;
+        private EasingFunction.Ease currentEase = EasingFunction.Ease.Linear;
 
         public void GiraffeAnims(double beat, float length, int type, int ease)
         {
