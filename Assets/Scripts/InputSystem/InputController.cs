@@ -127,8 +127,7 @@ namespace HeavenStudio.InputSystem
 
         // FUTURE: Move Style needs to be implemented per-game (maybe implement checks for common actions?)
 
-        protected int currentInputFlags = 0;
-        protected int lastInputFlags = 0;
+        protected ControlBindings currentBindings;
 
         protected int? playerNum;
         protected int directionStateCurrent = 0;
@@ -142,22 +141,105 @@ namespace HeavenStudio.InputSystem
         public abstract bool GetIsConnected();
         public abstract bool GetIsPoorConnection();
 
-        // public abstract int[] GetDefaultMappings(ControlStyles style);
-        // public abstract int[] GetCurrentMappings(ControlStyles style);
-        // public abstract int[] SetCurrentMappings(ControlStyles style);
+        /// <summary>
+        /// Gets the controller's default mappings
+        /// </summary>
+        /// <returns></returns>
+        public abstract ControlBindings GetDefaultBindings();
 
-        public abstract int GetLastButtonDown();    // Get the last button down
-        public abstract KeyCode GetLastKeyDown();   // Get the last key down (used for keyboards and other devices that use Keycode)
-        public abstract bool GetButton(int button); // is button currently pressed?
-        public abstract bool GetButtonDown(int button, out double dt); // is button just pressed?
-        public abstract bool GetButtonUp(int button, out double dt);   // is button just released?
-        public abstract float GetAxis(InputAxis axis);    // Get the value of an axis
-        public abstract bool GetHatDirection(InputDirection direction);    // is direction active?
-        public abstract bool GetHatDirectionDown(InputDirection direction, out double dt); // direction just became active?
-        public abstract bool GetHatDirectionUp(InputDirection direction, out double dt);  // direction just became inactive?
+        /// <summary>
+        /// Resets the controller's mappings to default
+        /// </summary>
+        public abstract void ResetBindings();
 
-        public abstract void SetPlayer(int? playerNum);  // Set the player number (starts at 1, set to -1 or null for no player)
-        public abstract int? GetPlayer();            // Get the player number (null if no player)
+        /// <summary>
+        /// Gets the controller's current mappings
+        /// </summary>
+        /// <returns></returns>
+        public abstract ControlBindings GetCurrentBindings();
+
+        /// <summary>
+        /// Sets the controller's current mappings
+        /// </summary>
+        /// <param name="newBinds"></param>
+        public abstract void SetCurrentBindings(ControlBindings newBinds);
+
+        /// <summary>
+        /// Gets the last pressed button
+        /// </summary>
+        /// <returns></returns>
+        public abstract int GetLastButtonDown();
+
+        /// <summary>
+        /// Gets the last pressed key (keyboards)
+        /// </summary>
+        /// <returns></returns>
+        public abstract KeyCode GetLastKeyDown();
+
+        /// <summary>
+        /// True if the given button is being held
+        /// </summary>
+        /// <param name="button"></param>
+        /// <returns></returns>
+        public abstract bool GetButton(int button);
+
+        /// <summary>
+        /// True if the button was just pressed this Update
+        /// </summary>
+        /// <param name="button"></param>
+        /// <param name="dt">time since the reported event, use to compensate for controller delays</param>
+        /// <returns></returns>
+        public abstract bool GetButtonDown(int button, out double dt);
+
+        /// <summary>
+        /// True if the button was just released this Update
+        /// </summary>
+        /// <param name="button"></param>
+        /// <param name="dt">time since the reported event, use to compensate for controller delays</param>
+        /// <returns></returns>
+        public abstract bool GetButtonUp(int button, out double dt);
+
+        /// <summary>
+        /// Get the value of an analogue axis
+        /// </summary>
+        /// <param name="axis"></param>
+        /// <returns></returns>
+        public abstract float GetAxis(InputAxis axis);
+
+        /// <summary>
+        /// True if the current direction is active
+        /// </summary>
+        /// <param name="direction"></param>
+        /// <returns></returns>
+        public abstract bool GetHatDirection(InputDirection direction);
+
+        /// <summary>
+        /// True if the current direction just became active this Update
+        /// </summary>
+        /// <param name="direction"></param>
+        /// <param name="dt">time since the reported event, use to compensate for controller delays</param>
+        /// <returns></returns>
+        public abstract bool GetHatDirectionDown(InputDirection direction, out double dt);
+
+        /// <summary>
+        /// True if the current direction just became inactive this Update
+        /// </summary>
+        /// <param name="direction"></param>
+        /// <param name="dt">time since the reported event, use to compensate for controller delays</param>
+        /// <returns></returns>
+        public abstract bool GetHatDirectionUp(InputDirection direction, out double dt);
+
+        /// <summary>
+        /// Sets the player number (starts at 1, set to -1 or null for no player)
+        /// </summary>
+        /// <param name="playerNum"></param>
+        public abstract void SetPlayer(int? playerNum);
+
+        /// <summary>
+        /// Gets the player number (starts at 1, -1 or null for no player)
+        /// </summary>
+        /// <returns></returns>
+        public abstract int? GetPlayer();
 
         //public abstract Sprite GetDisplayIcon();    //"big icon" for the controller in the settings menu
         //public abstract Sprite GetPlaybackIcon();   //"small icon" for the controller during playback

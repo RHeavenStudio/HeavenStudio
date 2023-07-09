@@ -40,21 +40,23 @@ namespace HeavenStudio.InputSystem
         .Where(k => ((int)k < (int)KeyCode.Mouse0))
         .ToArray();
 
-        //FUTURE: remappable controls
-        //KeyCode[] mappings = new KeyCode[Enum.GetNames(typeof(ButtonsPad)).Length];
-        KeyCode[] defaultMappings = new KeyCode[]
+        static readonly ControlBindings defaultBindings = new()
         {
-            KeyCode.W,              // dpad up
-            KeyCode.S,              // dpad down
-            KeyCode.A,              // dpad left  
-            KeyCode.D,              // dpad right
-            KeyCode.K,              // south face button
-            KeyCode.J,              // east face button
-            KeyCode.I,              // west face button
-            KeyCode.U,              // north face button
-            KeyCode.C,              // left shoulder button
-            KeyCode.N,              // right shoulder button
-            KeyCode.Escape,         // start button
+            ControllerName = "Keyboard",
+            Pad = new int[]
+            {
+                (int)KeyCode.W,
+                (int)KeyCode.S,
+                (int)KeyCode.A,
+                (int)KeyCode.D,
+                (int)KeyCode.K,
+                (int)KeyCode.J,
+                (int)KeyCode.I,
+                (int)KeyCode.U,
+                (int)KeyCode.C,
+                (int)KeyCode.N,
+                (int)KeyCode.Escape,
+            },
         };
 
         InputDirection hatDirectionCurrent;
@@ -62,7 +64,7 @@ namespace HeavenStudio.InputSystem
 
         public override void InitializeController()
         {
-            //FUTURE: remappable controls
+            currentBindings = GetDefaultBindings();
         }
 
         public override void UpdateState()
@@ -90,6 +92,22 @@ namespace HeavenStudio.InputSystem
             return false;
         }
 
+        public override ControlBindings GetDefaultBindings()
+        {
+            return defaultBindings;
+        }
+
+        public override void ResetBindings()
+        { }
+
+        public override ControlBindings GetCurrentBindings()
+        {
+            return currentBindings;
+        }
+
+        public override void SetCurrentBindings(ControlBindings newBinds)
+        { }
+
         public override int GetLastButtonDown()
         {
             return 0;
@@ -110,19 +128,19 @@ namespace HeavenStudio.InputSystem
 
         public override bool GetButton(int button)
         {
-            return Input.GetKey(defaultMappings[button]);
+            return Input.GetKey((KeyCode)defaultBindings.Pad[button]);
         }
 
         public override bool GetButtonDown(int button, out double dt)
         {
             dt = 0;
-            return Input.GetKeyDown(defaultMappings[button]);
+            return Input.GetKeyDown((KeyCode)defaultBindings.Pad[button]);
         }
 
         public override bool GetButtonUp(int button, out double dt)
         {
             dt = 0;
-            return Input.GetKeyUp(defaultMappings[button]);
+            return Input.GetKeyUp((KeyCode)defaultBindings.Pad[button]);
         }
 
         public override float GetAxis(InputAxis axis)
@@ -136,13 +154,13 @@ namespace HeavenStudio.InputSystem
             switch (direction)
             {
                 case InputDirection.Up:
-                    return Input.GetKey(defaultMappings[0]);
+                    return Input.GetKey((KeyCode)defaultBindings.Pad[0]);
                 case InputDirection.Down:
-                    return Input.GetKey(defaultMappings[1]);
+                    return Input.GetKey((KeyCode)defaultBindings.Pad[1]);
                 case InputDirection.Left:
-                    return Input.GetKey(defaultMappings[2]);
+                    return Input.GetKey((KeyCode)defaultBindings.Pad[2]);
                 case InputDirection.Right:
-                    return Input.GetKey(defaultMappings[3]);
+                    return Input.GetKey((KeyCode)defaultBindings.Pad[3]);
                 default:
                     return false;
             }
@@ -154,13 +172,13 @@ namespace HeavenStudio.InputSystem
             switch (direction)
             {
                 case InputDirection.Up:
-                    return Input.GetKeyDown(defaultMappings[0]);
+                    return Input.GetKeyDown((KeyCode)defaultBindings.Pad[0]);
                 case InputDirection.Down:
-                    return Input.GetKeyDown(defaultMappings[1]);
+                    return Input.GetKeyDown((KeyCode)defaultBindings.Pad[1]);
                 case InputDirection.Left:
-                    return Input.GetKeyDown(defaultMappings[2]);
+                    return Input.GetKeyDown((KeyCode)defaultBindings.Pad[2]);
                 case InputDirection.Right:
-                    return Input.GetKeyDown(defaultMappings[3]);
+                    return Input.GetKeyDown((KeyCode)defaultBindings.Pad[3]);
                 default:
                     return false;
             }
@@ -172,13 +190,13 @@ namespace HeavenStudio.InputSystem
             switch (direction)
             {
                 case InputDirection.Up:
-                    return Input.GetKeyUp(defaultMappings[0]);
+                    return Input.GetKeyUp((KeyCode)defaultBindings.Pad[0]);
                 case InputDirection.Down:
-                    return Input.GetKeyUp(defaultMappings[1]);
+                    return Input.GetKeyUp((KeyCode)defaultBindings.Pad[1]);
                 case InputDirection.Left:
-                    return Input.GetKeyUp(defaultMappings[2]);
+                    return Input.GetKeyUp((KeyCode)defaultBindings.Pad[2]);
                 case InputDirection.Right:
-                    return Input.GetKeyUp(defaultMappings[3]);
+                    return Input.GetKeyUp((KeyCode)defaultBindings.Pad[3]);
                 default:
                     return false;
             }

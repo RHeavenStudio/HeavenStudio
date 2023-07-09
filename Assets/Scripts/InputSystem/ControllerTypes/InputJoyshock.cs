@@ -98,7 +98,7 @@ namespace HeavenStudio.InputSystem
 {
     public class InputJoyshock : InputController
     {
-        static string[] joyShockNames =
+        static readonly string[] joyShockNames =
         {
             "Unknown",
             "Joy-Con (L)",
@@ -108,7 +108,7 @@ namespace HeavenStudio.InputSystem
             "DualSense"
         };
 
-        static int[] dsPlayerColours = new[]
+        static readonly int[] dsPlayerColours = new[]
         {
             0xd41817,
             0x04d4fa,
@@ -119,8 +119,7 @@ namespace HeavenStudio.InputSystem
             0x888888
         };
 
-        //TODO: see if single joy-con mappings differ from a normal pad (they don't!)
-        int[] defaultMappings = new[]
+        static readonly int[] defaultMappings = new[]
         {
             ButtonMaskUp,
             ButtonMaskDown,
@@ -135,7 +134,7 @@ namespace HeavenStudio.InputSystem
             ButtonMaskPlus,
             -1
         };
-        int[] defaultMappingsL = new[]
+        static readonly int[] defaultMappingsL = new[]
         {
             -1,
             -1,
@@ -150,7 +149,7 @@ namespace HeavenStudio.InputSystem
             ButtonMaskMinus,
             -1
         };
-        int[] defaultMappingsR = new[]
+        static readonly int[] defaultMappingsR = new[]
         {
             -1,
             -1,
@@ -189,6 +188,7 @@ namespace HeavenStudio.InputSystem
         JSL_SETTINGS joySettings;
 
         InputJoyshock otherHalf;
+        bool isPair;
 
         public struct JoyshockButtonState
         {
@@ -215,20 +215,21 @@ namespace HeavenStudio.InputSystem
 
         int GetButtonForSplitType(int action)
         {
+            if (currentBindings.ControllerName == null) return -1;
             if (action < 0 || action >= BINDS_MAX) return -1;
+            ControlBindings actionMap = currentBindings;
             if (otherHalf == null)
             {
                 switch (splitType)
                 {
                     case SplitLeft:
-                        return defaultMappingsL[action];
                     case SplitRight:
-                        return defaultMappingsR[action];
+                        return actionMap.Pad[action];
                     default:
                         return defaultMappings[action];
                 }
             }
-            return defaultMappings[action];
+            return actionMap.Pad[action];
         }
 
         public static void JslEventInit()
@@ -239,7 +240,7 @@ namespace HeavenStudio.InputSystem
         static void JslEventCallback(int handle, JOY_SHOCK_STATE state, JOY_SHOCK_STATE lastState,
         IMU_STATE imuState, IMU_STATE lastImuState, float deltaTime)
         {
-            if (!joyshocks.ContainsKey(handle)) return;
+            if (joyshocks == null || !joyshocks.ContainsKey(handle)) return;
             InputJoyshock js = joyshocks[handle];
             if (js == null) return;
             if (js.inputStack == null) return;
@@ -272,13 +273,13 @@ namespace HeavenStudio.InputSystem
             joyTouchStateLast = new TOUCH_STATE();
 
 
-            //FUTURE: remappable controls
-
             joySettings = JslGetControllerInfoAndSettings(joyshockHandle);
             type = joySettings.controllerType;
             joyshockName = joyShockNames[type];
 
             splitType = joySettings.splitType;
+
+            currentBindings = GetDefaultBindings();
 
             joyshocks.Add(joyshockHandle, this);
         }
@@ -399,6 +400,46 @@ namespace HeavenStudio.InputSystem
         {
             return false;
         }
+
+        public override ControlBindings GetDefaultBindings()
+        {
+            ControlBindings binds = new ControlBindings();
+            switch (type)
+            {
+                case TypeJoyConLeft:
+                    binds.Pad = defaultMappingsL;
+                    binds.ControllerName = "Joy-Con (L)";
+                    break;
+                case TypeJoyConRight:
+                    binds.Pad = defaultMappingsR;
+                    binds.ControllerName = "Joy-Con (R)";
+                    break;
+                case TypeProController:
+                    binds.Pad = defaultMappings;
+                    binds.ControllerName = "Pro Controller";
+                    break;
+                case TypeDualShock4:
+                    binds.Pad = defaultMappings;
+                    binds.ControllerName = "DualShock 4";
+                    break;
+                case TypeDualSense:
+                    binds.Pad = defaultMappings;
+                    binds.ControllerName = "DualSense";
+                    break;
+            }
+            return binds;
+        }
+
+        public override void ResetBindings()
+        { }
+
+        public override ControlBindings GetCurrentBindings()
+        {
+            return currentBindings;
+        }
+
+        public override void SetCurrentBindings(ControlBindings newBinds)
+        { }
 
         public override int GetLastButtonDown()
         {
