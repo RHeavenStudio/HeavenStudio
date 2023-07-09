@@ -47,14 +47,17 @@ namespace HeavenStudio.Games.Scripts_TapTrial
             {
                 case TapState.Tap:
                     game.ScoreMiss();
+                    game.ResetScroll();
                     Tap(false, false);
                     break;
                 case TapState.DoubleTap:
                     game.ScoreMiss();
+                    game.ResetScroll();
                     Tap(false, true);
                     break;
                 case TapState.TripleTap:
                     game.ScoreMiss();
+                    game.ResetScroll();
                     break;
                 case TapState.Jumping:
                     break;
@@ -84,6 +87,7 @@ namespace HeavenStudio.Games.Scripts_TapTrial
             else
             {
                 SoundByte.PlayOneShot("nearMiss");
+                game.ResetScroll();
             }
             anim.DoScaledAnimationAsync(final ? "FinalJump_Tap" : "JumpTap_Success", 0.5f);
         }
@@ -109,6 +113,7 @@ namespace HeavenStudio.Games.Scripts_TapTrial
             else
             {
                 SoundByte.PlayOneShot("nearMiss");
+                game.ResetScroll();
             }
             anim.DoScaledAnimationAsync(doubleTap ? "DoubleTap" : "Tap", 0.5f);
         }
@@ -133,6 +138,7 @@ namespace HeavenStudio.Games.Scripts_TapTrial
             else
             {
                 SoundByte.PlayOneShot("nearMiss");
+                game.ResetScroll();
             }
 
             anim.DoScaledAnimationAsync(tapLeft ? "PoseTap_L" : "PoseTap_R", 0.5f);

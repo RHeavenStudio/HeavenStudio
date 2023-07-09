@@ -52,12 +52,13 @@ namespace HeavenStudio.Games.Loaders
                 },
                 new GameAction("scroll event", "Scroll Background")
                 {
-                    function = delegate {  }, 
+                    function = delegate { var e = eventCaller.currentEntity; TapTrial.instance.Scroll(e["toggle"], e["flash"], e["m"]); }, 
                     defaultLength = 1f,
                     parameters = new List<Param>()
                     {
                         new Param("toggle", true, "Scroll FX", "Will scroll"),
                         new Param("flash", true, "Flash FX", "Will flash to white"),
+                        new Param("m", new EntityTypes.Float(0, 10, 1), "Speed Multiplier")
                     }
                 },
                 new GameAction("giraffe events", "Giraffe Animations")
@@ -99,9 +100,11 @@ namespace HeavenStudio.Games
         [SerializeField] private ParticleSystem monkeyTapLL, monkeyTapLR, monkeyTapRL, monkeyTapRR;
         [SerializeField] private Transform rootPlayer, rootMonkeyL, rootMonkeyR;
         [SerializeField] private CanvasScroll bgScroll;
+        [SerializeField] private SpriteRenderer flash;
         [Header("Values")]
         [SerializeField] private float jumpHeight = 4f;
         [SerializeField] private float monkeyJumpHeight = 3f;
+        [SerializeField] private float maxFlashOpacity = 0.8f;
 
         private GameEvent bop = new();
         private bool canBop = true;
@@ -127,7 +130,45 @@ namespace HeavenStudio.Games
                 }
                 GiraffeUpdate(cond);
                 JumpUpdate(cond);
+                ScrollUpdate(cond);
             }
+        }
+
+        public void Scroll(bool scroll, bool flash, float multiplier)
+        {
+            scrolling = scroll;
+            flashing = flash;
+            scrollMultiplier = multiplier;
+            ResetScroll();
+        }
+
+        public void ResetScroll()
+        {
+            currentScrollSpeed = 0;
+            currentNormalizedY = 0;
+            flash.color = new Color(1, 1, 1, 0);
+        }
+        
+        private bool scrolling;
+        private bool flashing;
+        [SerializeField] private float maxScrollSpeed = 0.25f;
+        [SerializeField] private float accelerationSpeed = 0.01f;
+        private float currentScrollSpeed = 0;
+        private float currentNormalizedY = 0;
+        private float scrollMultiplier = 1;
+        private void ScrollUpdate(Conductor cond)
+        {
+            if (!scrolling)
+            {
+                bgScroll.Normalized = Vector2.zero;
+                ResetScroll();
+                return;
+            }
+            currentNormalizedY += currentScrollSpeed * Time.deltaTime;
+            bgScroll.NormalizedY = currentNormalizedY * scrollMultiplier;
+            if (flashing) flash.color = new Color(1, 1, 1, Mathf.Lerp(0, maxFlashOpacity, currentNormalizedY));
+            currentScrollSpeed += accelerationSpeed * Time.deltaTime;
+            currentScrollSpeed = Mathf.Min(maxScrollSpeed, currentScrollSpeed);
         }
 
         private void GiraffeUpdate(Conductor cond)
@@ -390,12 +431,14 @@ namespace HeavenStudio.Games
         {
             player.JumpTapMiss(false);
             if (giraffe.IsAnimationNotPlaying()) giraffe.DoScaledAnimationAsync("Miss", 0.5f);
+            ResetScroll();
         }
 
         private void MissJumpFinal(PlayerActionEvent caller)
         {
             player.JumpTapMiss(true);
             if (giraffe.IsAnimationNotPlaying()) giraffe.DoScaledAnimationAsync("Miss", 0.5f);
+            ResetScroll();
         }
 
         private void JustTap(PlayerActionEvent caller, float state)
@@ -416,6 +459,7 @@ namespace HeavenStudio.Games
         private void Miss(PlayerActionEvent caller)
         {
             if (giraffe.IsAnimationNotPlaying()) giraffe.DoScaledAnimationAsync("Miss", 0.5f);
+            ResetScroll();
         }
 
         private void Empty(PlayerActionEvent caller) { }
