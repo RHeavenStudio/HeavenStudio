@@ -889,7 +889,7 @@ namespace HeavenStudio.Games
                 else
                 {
                     if (riffEvents.Count == 0) continue;
-                    RiqEntity foundEvent = bendEvents.Find(x => x.beat == beat);
+                    RiqEntity foundEvent = bendEvents.Find(x => x.beat == input.beat);
                     if ((foundEvent == null || (bendUsedBeats.Count > 0 && bendUsedBeats.Contains((float)foundEvent.beat))) && bendEvents.Count > 1) continue;
                     RiqEntity riffEventToCheck = riffEvents.Find(x => beat >= x.beat && beat < x.beat + x.length);
                     if (riffEventToCheck == null) continue;
@@ -1033,13 +1033,14 @@ namespace HeavenStudio.Games
                                 RockersInput riffComp = Instantiate(rockerInputRef, transform);
                                 riffComp.Init(crEvent["gleeClub"], new int[6] { crEvent["1"], crEvent["2"], crEvent["3"], crEvent["4"], crEvent["5"], crEvent["6"] }, beat, crEvent.relativeBeat,
                                     (PremadeSamples)crEvent["sample"], crEvent["sampleTones"]);
-                                ScheduleInput(beat, crEvent.relativeBeat + crEvent.length, InputType.STANDARD_DOWN, JustMute, MuteMiss, Empty);
+                                if (crEvent.length > 0.5f) ScheduleAutoplayInput(beat, crEvent.relativeBeat + crEvent.length, InputType.STANDARD_DOWN, JustMute, MuteMiss, Empty);
+                                else ScheduleInput(beat, crEvent.relativeBeat + crEvent.length, InputType.STANDARD_DOWN, JustMute, MuteMiss, Empty);
                             }
                             else if (crEvent.tag == "bend")
                             {
                                 RockerBendInput bendComp = Instantiate(rockerBendInputRef, transform);
                                 bendComp.Init(crEvent["Pitch"], beat, crEvent.relativeBeat);
-                                ScheduleInput(beat, crEvent.relativeBeat + crEvent.length, InputType.DIRECTION_UP, JustUnBend, UnBendMiss, Empty);
+                                ScheduleAutoplayInput(beat, crEvent.relativeBeat + crEvent.length, InputType.DIRECTION_UP, JustUnBend, UnBendMiss, Empty);
                             }
                         }
                         handler.queuedEvents.Clear();
