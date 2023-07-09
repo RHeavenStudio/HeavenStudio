@@ -119,7 +119,6 @@ namespace HeavenStudio.InputSystem
         [System.Serializable]
         public struct ControlBindings
         {
-            public string ControllerName;
             public int[] Pad;
             public int[] Baton;
             public int[] Touch;
@@ -137,6 +136,7 @@ namespace HeavenStudio.InputSystem
         public abstract void UpdateState(); // Update the state of the controller
 
         public abstract string GetDeviceName(); // Get the name of the controller
+        public abstract string[] GetButtonNames(); // Get the names of the buttons on the controller
         public abstract InputFeatures GetFeatures(); // Get the features of the controller
         public abstract bool GetIsConnected();
         public abstract bool GetIsPoorConnection();

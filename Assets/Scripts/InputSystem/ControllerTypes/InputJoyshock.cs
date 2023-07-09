@@ -165,6 +165,97 @@ namespace HeavenStudio.InputSystem
             -1
         };
 
+        static readonly string[] nsProButtonNames = new[]
+        {
+            "Up",
+            "Down",
+            "Left",
+            "Right",
+            "Plus",
+            "Minus",
+            "Left Stick Click",
+            "Right Stick Click",
+            "L",
+            "R",
+            "ZL",
+            "ZR",
+            "B",
+            "A",
+            "Y",
+            "X",
+            "Home",
+            "Capture",
+        };
+
+        static readonly string[] nsConButtonNames = new[]
+        {
+            "Up",
+            "Down",
+            "Left",
+            "Right",
+            "Plus",
+            "Minus",
+            "Left Stick Click",
+            "Right Stick Click",
+            "L",
+            "R",
+            "ZL",
+            "ZR",
+            "B",
+            "A",
+            "Y",
+            "X",
+            "Home",
+            "Capture",
+            "SL",
+            "SR",
+        };
+
+        static readonly string[] ps4ButtonNames = new[]
+        {
+            "Up",
+            "Down",
+            "Left",
+            "Right",
+            "Options",
+            "Share",
+            "L3",
+            "R3",
+            "L",
+            "R",
+            "L2",
+            "R2",
+            "X",
+            "Circle",
+            "Square",
+            "Triangle",
+            "PS",
+            "Touchpad Click",
+        };
+
+        static readonly string[] ps5ButtonNames = new[]
+        {
+            "Up",
+            "Down",
+            "Left",
+            "Right",
+            "Options",
+            "Share",
+            "L3",
+            "R3",
+            "L",
+            "R",
+            "L2",
+            "R2",
+            "X",
+            "Circle",
+            "Square",
+            "Triangle",
+            "PS",
+            "Create",
+            "Mic",
+        };
+
         public static Dictionary<int, InputJoyshock> joyshocks;
 
         float stickDeadzone = 0.5f;
@@ -215,7 +306,7 @@ namespace HeavenStudio.InputSystem
 
         int GetButtonForSplitType(int action)
         {
-            if (currentBindings.ControllerName == null) return -1;
+            if (currentBindings.Pad == null) return -1;
             if (action < 0 || action >= BINDS_MAX) return -1;
             ControlBindings actionMap = currentBindings;
             if (otherHalf == null)
@@ -367,6 +458,21 @@ namespace HeavenStudio.InputSystem
             return joyshockName;
         }
 
+        public override string[] GetButtonNames()
+        {
+            switch (type)
+            {
+                case TypeProController:
+                    return nsProButtonNames;
+                case TypeDualShock4:
+                    return ps4ButtonNames;
+                case TypeDualSense:
+                    return ps5ButtonNames;
+                default:
+                    return nsConButtonNames;
+            }
+        }
+
         public override InputFeatures GetFeatures()
         {
             InputFeatures features = InputFeatures.Readable_MotionSensor | InputFeatures.Extra_Rumble | InputFeatures.Style_Pad | InputFeatures.Style_Baton;
@@ -408,23 +514,18 @@ namespace HeavenStudio.InputSystem
             {
                 case TypeJoyConLeft:
                     binds.Pad = defaultMappingsL;
-                    binds.ControllerName = "Joy-Con (L)";
                     break;
                 case TypeJoyConRight:
                     binds.Pad = defaultMappingsR;
-                    binds.ControllerName = "Joy-Con (R)";
                     break;
                 case TypeProController:
                     binds.Pad = defaultMappings;
-                    binds.ControllerName = "Pro Controller";
                     break;
                 case TypeDualShock4:
                     binds.Pad = defaultMappings;
-                    binds.ControllerName = "DualShock 4";
                     break;
                 case TypeDualSense:
                     binds.Pad = defaultMappings;
-                    binds.ControllerName = "DualSense";
                     break;
             }
             return binds;

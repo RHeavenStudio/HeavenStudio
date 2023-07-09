@@ -25,6 +25,14 @@ namespace HeavenStudio.Editor
 
         [SerializeField] private Material controllerMat;
 
+        [SerializeField] private List<GameObject> PadBindingsMenus;
+        [SerializeField] private List<GameObject> BatonBindingsMenus;
+        [SerializeField] private List<GameObject> TouchBindingsMenus;
+
+        [SerializeField] private List<TMP_Text> PadBindingsTxt;
+        [SerializeField] private List<TMP_Text> BatonBindingsTxt;
+        [SerializeField] private List<TMP_Text> TouchBindingsTxt;
+
         private bool isAutoSearching = false;
         private bool isPairSearching = false;
         private bool pairSelectLR = false;  //true = left, false = right
@@ -171,6 +179,31 @@ namespace HeavenStudio.Editor
         public void ShowControllerIcon(InputController controller)
         {
             string name = controller.GetDeviceName();
+            string[] buttons = controller.GetButtonNames();
+
+            //show binds
+            int ac = 0;
+            foreach (int i in controller.GetCurrentBindings().Pad)
+            {
+                if (ac >= PadBindingsTxt.Count) break;
+                if (buttons[i] == null)
+                {
+                    PadBindingsTxt[ac].text = "UNKNOWN";
+                    ac++;
+                    continue;
+                }
+                if (i != -1)
+                {
+                    PadBindingsTxt[ac].text = buttons[i];
+                }
+                else
+                {
+                    PadBindingsTxt[ac].text = "NOT BOUND";
+                }
+                ac++;
+            }
+
+            //show icon
             foreach (var icon in controllerIcons)
             {
                 if (icon.name == name)
@@ -182,6 +215,7 @@ namespace HeavenStudio.Editor
                     icon.SetActive(false);
                 }
             }
+
             //setup material
             Color colour;
             switch (name)

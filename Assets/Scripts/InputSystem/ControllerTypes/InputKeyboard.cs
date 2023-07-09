@@ -42,7 +42,6 @@ namespace HeavenStudio.InputSystem
 
         static readonly ControlBindings defaultBindings = new()
         {
-            ControllerName = "Keyboard",
             Pad = new int[]
             {
                 (int)KeyCode.W,
@@ -75,6 +74,16 @@ namespace HeavenStudio.InputSystem
         public override string GetDeviceName()
         {
             return "Keyboard";
+        }
+
+        public override string[] GetButtonNames()
+        {
+            string[] names = new string[(int)KeyCode.Mouse0];
+            for (int i = 0; i < keyCodes.Length; i++)
+            {
+                names[(int)keyCodes[i]] = keyCodes[i].ToString();
+            }
+            return names;
         }
 
         public override InputFeatures GetFeatures()
