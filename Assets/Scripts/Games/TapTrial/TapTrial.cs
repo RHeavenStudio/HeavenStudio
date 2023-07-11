@@ -288,7 +288,7 @@ namespace HeavenStudio.Games
             MultiSound.Play(new MultiSound.Sound[]
             {
                 new MultiSound.Sound("tapTrial/ook", beat),
-                new MultiSound.Sound("tapTrial/tapMonkey", beat + 1),
+                new MultiSound.Sound("tapTrial/tapMonkey", beat + 1, 1.4f, 0.5f),
             });
 
             ScheduleInput(beat, 1, InputType.STANDARD_DOWN, JustTap, Miss, Empty);
@@ -325,8 +325,8 @@ namespace HeavenStudio.Games
             {
                 new MultiSound.Sound("tapTrial/ookook", beat),
                 new MultiSound.Sound("tapTrial/ookook", beat + 0.5),
-                new MultiSound.Sound("tapTrial/tapMonkey", beat + 1),
-                new MultiSound.Sound("tapTrial/tapMonkey", beat + 1.5),
+                new MultiSound.Sound("tapTrial/tapMonkey", beat + 1, 1.4f, 0.5f),
+                new MultiSound.Sound("tapTrial/tapMonkey", beat + 1.5, 1.4f, 0.5f),
             });
 
             ScheduleInput(beat, 1, InputType.STANDARD_DOWN, JustDoubleTap, Miss, Empty);
@@ -368,9 +368,9 @@ namespace HeavenStudio.Games
             {
                 new MultiSound.Sound("tapTrial/ooki1", beat),
                 new MultiSound.Sound("tapTrial/ooki2", beat + 0.5),
-                new MultiSound.Sound("tapTrial/tapMonkey", beat + 2),
-                new MultiSound.Sound("tapTrial/tapMonkey", beat + 2.5),
-                new MultiSound.Sound("tapTrial/tapMonkey", beat + 3),
+                new MultiSound.Sound("tapTrial/tapMonkey", beat + 2, 1.4f, 0.5f),
+                new MultiSound.Sound("tapTrial/tapMonkey", beat + 2.5, 1.4f, 0.5f),
+                new MultiSound.Sound("tapTrial/tapMonkey", beat + 3, 1.4f, 0.5f),
             });
 
             ScheduleInput(beat, 2, InputType.STANDARD_DOWN, JustTripleTap, Miss, Empty);
@@ -411,7 +411,7 @@ namespace HeavenStudio.Games
             MultiSound.Play(new MultiSound.Sound[]
             {
                 new MultiSound.Sound(final ? "tapTrial/jumptap2" : "tapTrial/jumptap1", beat),
-                new MultiSound.Sound("tapTrial/tapMonkey", beat + 1),
+                new MultiSound.Sound("tapTrial/tapMonkey", beat + 1, 1.4f, 0.5f),
             });
 
             ScheduleInput(beat, 1, InputType.STANDARD_DOWN, final ? JustJumpTapFinal : JustJumpTap, final ? MissJumpFinal : MissJump, Empty);
