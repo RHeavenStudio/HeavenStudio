@@ -340,7 +340,7 @@ namespace HeavenStudio.Games
             {
                 new BeatAction.Action(beat, delegate
                 {
-                    player.PrepareTripleTap();
+                    player.PrepareTripleTap(beat);
                     PlayMonkeyAnimationScaledAsync("PostPrepare_1", 0.5f);
                 }),
                 new BeatAction.Action(beat + 0.5, delegate
@@ -394,7 +394,7 @@ namespace HeavenStudio.Games
                 new BeatAction.Action(beat, delegate
                 {
                     player.Jump(final);
-                    PlayMonkeyAnimationScaledAsync("JumpTap", 0.5f);
+                    PlayMonkeyAnimationScaledAsync(final ? "Jump" : "JumpTap", 0.5f);
                 }),
                 new BeatAction.Action(beat + 1, delegate
                 {
