@@ -1,7 +1,8 @@
 using UnityEngine;
-
+using System;
 using HeavenStudio.Util;
 using System.Collections;
+using System.Collections.Generic;
 
 namespace HeavenStudio.Games.Scripts_TapTrial
 {
@@ -118,11 +119,18 @@ namespace HeavenStudio.Games.Scripts_TapTrial
             anim.DoScaledAnimationAsync(doubleTap ? "DoubleTap" : "Tap", 0.5f);
         }
 
-        public void PrepareTripleTap()
+        public void PrepareTripleTap(double beat)
         {
-            anim.DoScaledAnimationAsync("Pose", 0.5f);
+            anim.DoScaledAnimationAsync("PosePrepare_1", 0.5f);
             state = TapState.TripleTap;
             tripleTaps = 0;
+            BeatAction.New(gameObject, new List<BeatAction.Action>()
+            {
+                new BeatAction.Action(beat + 0.5, delegate
+                {
+                    anim.DoScaledAnimationAsync("PosePrepare_2", 0.5f);
+                })
+            });
         }
 
         public void TripleTap(bool ace)
