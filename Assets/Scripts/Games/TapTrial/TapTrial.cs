@@ -176,15 +176,18 @@ namespace HeavenStudio.Games
             float normalizedGiraffeBeat = cond.GetPositionFromBeat(animStartBeat, animLength);
             EasingFunction.Function func = EasingFunction.GetEasingFunction(currentEase);
 
-            switch (currentAnim)
+            if (normalizedGiraffeBeat <= 1f && normalizedGiraffeBeat >= 0f)
             {
-                case GiraffeAnimation.Enter:
-                    giraffe.DoNormalizedAnimation("Enter", func(0, 1, normalizedGiraffeBeat));
-                    break;
-                case GiraffeAnimation.Exit:
-                    giraffe.DoNormalizedAnimation("Exit", func(0, 1, normalizedGiraffeBeat));
-                    break;
-                case GiraffeAnimation.Blink: break;
+                switch (currentAnim)
+                {
+                    case GiraffeAnimation.Enter:
+                        giraffe.DoNormalizedAnimation("Enter", func(0, 1, normalizedGiraffeBeat));
+                        break;
+                    case GiraffeAnimation.Exit:
+                        giraffe.DoNormalizedAnimation("Exit", func(0, 1, normalizedGiraffeBeat));
+                        break;
+                    default: break;
+                }
             }
         }
 
@@ -458,7 +461,7 @@ namespace HeavenStudio.Games
 
         private void Miss(PlayerActionEvent caller)
         {
-            if (giraffe.IsAnimationNotPlaying()) giraffe.DoScaledAnimationAsync("Miss", 0.5f);
+            if (giraffe.IsAnimationNotPlaying() && currentAnim != GiraffeAnimation.Exit) giraffe.DoScaledAnimationAsync("Miss", 0.5f);
             ResetScroll();
         }
 
