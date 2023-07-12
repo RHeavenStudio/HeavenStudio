@@ -29,7 +29,7 @@ namespace HeavenStudio.Games.Loaders
                         new Param("toggle2", false, "Bop (Auto)", "Should the stepswitchers auto bop?"),
                     },
                 },
-                new GameAction("marching", "Stepping")
+                new GameAction("stepping", "Stepping")
                 {
                     preFunction = delegate {var e = eventCaller.currentEntity; Lockstep.Marching(e.beat, e["sound"], e["amount"], e["visual"]);},
                     parameters = new List<Param>()
@@ -87,6 +87,19 @@ namespace HeavenStudio.Games.Loaders
                 {
                     defaultLength = 4,
                     resizable = true,
+                },
+                new GameAction("marching", "Force Stepping")
+                {
+                    preFunction = delegate {var e = eventCaller.currentEntity; Lockstep.Marching(e.beat, e["sound"], e["amount"], e["visual"], true, e.length);},
+                    parameters = new List<Param>()
+                    {
+                        new Param("sound", false, "Sound", "Hai if onbeat, ho if offbeat."),
+                        new Param("amount", new EntityTypes.Integer(1, 50, 1), "Sound Amount", "How many sounds will play consecutively?"),
+                        new Param("visual", true, "Background Visual")
+                    },
+                    preFunctionLength = 1,
+                    resizable = true,
+                    defaultLength = 4
                 }
             },
             new List<string>() {"ntr", "keep"},
@@ -307,7 +320,14 @@ namespace HeavenStudio.Games
                 {
                     foreach (var input in queuedInputs)
                     {
-                        StartMarching(input.beat, input.sound, input.amount, input.visual);
+                        if (input.force)
+                        {
+                            ForceMarching(input.beat, input.length, input.sound, input.amount, input.visual);
+                        }
+                        else
+                        {
+                            StartMarching(input.beat, input.sound, input.amount, input.visual);
+                        }
                     }
                     queuedInputs.Clear();
                 }
@@ -500,15 +520,24 @@ namespace HeavenStudio.Games
         private struct QueuedMarch
         {
             public double beat;
+            public float length;
             public bool sound;
             public int amount;
             public bool visual;
+            public bool force;
         }
-        public static void Marching(double beat, bool sound, int amount, bool visual)
+        public static void Marching(double beat, bool sound, int amount, bool visual, bool force = false, float length = 0)
         {
             if (GameManager.instance.currentGame == "lockstep")
             {
-                instance.StartMarching(beat, sound, amount, visual);
+                if (force)
+                {
+                    instance.ForceMarching(beat, length, sound, amount, visual);
+                }
+                else
+                {
+                    instance.StartMarching(beat, sound, amount, visual);
+                }
             }
             else
             {
@@ -517,9 +546,46 @@ namespace HeavenStudio.Games
                     amount = amount,
                     beat = beat,
                     sound = sound,
-                    visual = visual
+                    visual = visual,
+                    length = length,
+                    force = force
                 });
             }
+        }
+
+        private void ForceMarching(double beat, float length, bool sound, int amount, bool visual)
+        {
+            bool offBeat = beat % 1 != 0;
+            if (sound)
+            {
+                MultiSound.Sound[] sounds = new MultiSound.Sound[amount];
+                for (int i = 0; i < amount; i++)
+                {
+                    sounds[i] = new MultiSound.Sound($"lockstep/" + (offBeat ? "ho" : "hai"), beat + i, 1, 1, false, offBeat ? 0.03086419753 : 0.02314814814);
+                }
+                MultiSound.Play(sounds, true, true);
+            }
+            List<BeatAction.Action> steps = new()
+            {
+                new BeatAction.Action(beat, delegate
+                {
+                    if (visual) ChangeBeatBackGroundColour(offBeat);
+                    if (BachOnBeat(beat)) bach.DoScaledAnimationAsync(offBeat ? "BachOff" : "BachOn", 0.5f);
+                    EvaluateMarch(offBeat);
+                })
+            };
+            ScheduleInput(beat - 1, 1, InputType.STANDARD_DOWN, offBeat ? JustOff : JustOn, offBeat ? MissOff : MissOn, Nothing);
+            for (int i = 1; i < length; i++)
+            {
+                double stepBeat = beat + i;
+                steps.Add(new BeatAction.Action(stepBeat, delegate
+                {
+                    if (BachOnBeat(stepBeat)) bach.DoScaledAnimationAsync(offBeat ? "BachOff" : "BachOn", 0.5f);
+                    EvaluateMarch(offBeat);
+                }));
+                ScheduleInput(stepBeat - 1, 1, InputType.STANDARD_DOWN, offBeat ? JustOff : JustOn, offBeat ? MissOff : MissOn, Nothing);
+            }
+            BeatAction.New(gameObject, steps);
         }
 
         private void StartMarching(double beat, bool sound, int amount, bool visual)
