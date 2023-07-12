@@ -991,10 +991,6 @@ PrefabInstance:
       propertyPath: m_Name
       value: Elephant
       objectReference: {fileID: 0}
-    - target: {fileID: 7540716611123628191, guid: b3040fc162a3d6342971f82026e4335f, type: 3}
-      propertyPath: m_IsActive
-      value: 1
-      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: b3040fc162a3d6342971f82026e4335f, type: 3}
 --- !u!4 &1255668799032437719 stripped
@@ -1002,29 +998,3 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 6285390310926959546, guid: b3040fc162a3d6342971f82026e4335f, type: 3}
   m_PrefabInstance: {fileID: 5068582788322912365}
   m_PrefabAsset: {fileID: 0}
---- !u!1 &3382547463692624114 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 7540716611123628191, guid: b3040fc162a3d6342971f82026e4335f, type: 3}
-  m_PrefabInstance: {fileID: 5068582788322912365}
-  m_PrefabAsset: {fileID: 0}
---- !u!95 &4576220083147392467
-Animator:
-  serializedVersion: 5
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3382547463692624114}
-  m_Enabled: 1
-  m_Avatar: {fileID: 0}
-  m_Controller: {fileID: 9100000, guid: dd5bff53f5bfac2418bdb1b68e751e7a, type: 2}
-  m_CullingMode: 0
-  m_UpdateMode: 0
-  m_ApplyRootMotion: 0
-  m_LinearVelocityBlending: 0
-  m_StabilizeFeet: 0
-  m_WarningMessage: 
-  m_HasTransformHierarchy: 1
-  m_AllowConstantClipSamplingOptimization: 1
-  m_KeepAnimatorStateOnDisable: 0
-  m_WriteDefaultValuesOnDisable: 0
