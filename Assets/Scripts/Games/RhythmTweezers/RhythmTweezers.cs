@@ -171,8 +171,6 @@ namespace HeavenStudio.Games
         public GameObject DroppedHairsHolder;
 
         [Header("Variables")]
-        private double passTurnBeat;
-        private double passTurnEndBeat = 2;
         private static List<QueuedPeek> queuedPeeks = new List<QueuedPeek>();
 
         [Header("Sprites")]
