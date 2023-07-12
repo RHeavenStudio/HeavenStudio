@@ -35,6 +35,7 @@ namespace HeavenStudio.Games.Loaders
                     parameters = new List<Param>()
                     {
                         new Param("spaceNum", new EntityTypes.Integer(0, 12, 0), "Amount of spaces", "Spaces to add before the untranslated icon"),
+                        new Param("dotdotdot", false, "Has ellipses?", "Will the man symbol be proceeded by a <...>?"),
                         new Param("dialogue", "", "Dialogue", "What should this sound translate to?")
                     },
                     priority = 1
@@ -93,6 +94,7 @@ namespace HeavenStudio.Games
         const string MID_MSG_MISS = "<color=\"red\"> ..? </color>";
         const string MSG_ALIEN = "<sprite name=\"AlienIcn\">";
         const string MSG_MAN = "<sprite name=\"ManIcn\">";
+        const string MSG_MAN_DDD = "...<sprite name=\"ManIcn\">";
         // I should add a DonkTroll sprite 🫰🫰🫰🫰🫰
 
         public static FirstContact instance { get; private set; }
@@ -259,7 +261,7 @@ namespace HeavenStudio.Games
                 {
                     queuedSpeaks.Add(new BeatAction.Action(speakEventToCheck.beat, delegate
                     {
-                        AlienSpeak(speakEventToCheck.beat, speakEventToCheck["spaceNum"]);
+                        AlienSpeak(speakEventToCheck.beat, speakEventToCheck["spaceNum"], speakEventToCheck["dotdotdot"]);
                     }));
                 }
                 else
@@ -351,7 +353,7 @@ namespace HeavenStudio.Games
 
         }
 
-        private void AlienSpeak(double beat, int spaceNum)
+        private void AlienSpeak(double beat, int spaceNum, bool hasDDD)
         {
             int voiceline = UnityEngine.Random.Range(1, 11);
             if (voiceline == currentVoicelineIndex) voiceline++;
@@ -367,7 +369,7 @@ namespace HeavenStudio.Games
             {
                 callDiagBuffer += " ";
             }
-            callDiagBuffer += MSG_MAN;
+            callDiagBuffer += hasDDD ? MSG_MAN_DDD : MSG_MAN;
             UpdateAlienTextbox();
         }
 
