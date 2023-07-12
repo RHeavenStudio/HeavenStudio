@@ -1004,6 +1004,7 @@ namespace HeavenStudio.Games
                         List<double> bendUsedBeats = new();
                         foreach (var crEvent in relevantInputs)
                         {
+                            if (!crEvent["respond"]) continue;
                             double relativeBeat = crEvent.beat - intervalStartBeat;
                             if (crEvent.datamodel == "rockers/riff")
                             {
