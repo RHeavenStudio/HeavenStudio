@@ -246,6 +246,10 @@ namespace HeavenStudio.Games
                     alienTextbox.SetActive(false);
                     translateTextbox.SetActive(false);
                     translateFailTextbox.SetActive(false);
+                    if (autoPassTurn)
+                    {
+                        AlienTurnOver(beat + interval, beat, beat + interval);
+                    }
                 })
             };
             for (int i = 0; i < relevantSpeakEvents.Count; i++)
@@ -264,10 +268,6 @@ namespace HeavenStudio.Games
                 }
             }
             BeatAction.New(gameObject, queuedSpeaks);
-            if (autoPassTurn)
-            {
-                AlienTurnOver(beat + interval, beat, beat + interval);
-            }
         }
 
         public override void OnGameSwitch(double beat)
