@@ -1890,6 +1890,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 3439047595127619699}
+  - component: {fileID: -3114631264593203074}
   m_Layer: 0
   m_Name: WhiteMonkeys
   m_TagString: Untagged
@@ -1915,6 +1916,23 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &-3114631264593203074
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7969179947406382610}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2f9ee457016acdc4eb5dbfdc03be0d6f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  holdLength: 3
+  fullRotateAngle: 120
+  anim: {fileID: 8483464683545527156}
+  type: 2
+  rotatePivot: {fileID: 3903953954711634507}
 --- !u!1 &8302616130811808557
 GameObject:
   m_ObjectHideFlags: 0
