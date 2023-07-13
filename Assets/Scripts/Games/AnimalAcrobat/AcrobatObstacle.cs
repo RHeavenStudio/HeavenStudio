@@ -5,15 +5,15 @@ using HeavenStudio.Util;
 
 namespace HeavenStudio.Games.Scripts_AnimalAcrobat
 {
+    public enum ObstacleType
+    {
+        Elephant,
+        Giraffe,
+        Monkeys,
+        Monkey
+    }
     public class AcrobatObstacle : MonoBehaviour
     {
-        private enum ObstacleType
-        {
-            Elephant,
-            Giraffe,
-            Monkeys,
-            Monkey
-        }
         [Header("Properties")]
         [SerializeField] private float holdLength = 2f;
         [SerializeField] private float fullRotateAngle = 120f;
@@ -69,13 +69,16 @@ namespace HeavenStudio.Games.Scripts_AnimalAcrobat
         {
             float normalizedSwingBeat = cond.GetPositionFromBeat(startBeat, holdLength);
             float negativeOffset = (normalizedSwingBeat < 0) ? -1 : 0;
+            float normalizedAdjusted = Mathf.Abs(normalizedSwingBeat % 1);
             if ((Mathf.Floor(normalizedSwingBeat) + negativeOffset) % 2 == 0)
             {
-                rotatePivot.localEulerAngles = new Vector3(0, 0, func(-halfAngle, halfAngle, Mathf.Abs(normalizedSwingBeat % 1)));
+                rotatePivot.localEulerAngles = new Vector3(0, 0, func(-halfAngle, halfAngle, normalizedAdjusted));
+                if (type == ObstacleType.Monkeys) anim.DoNormalizedAnimation("WhiteMonkeysSwing", normalizedAdjusted);
             }
             else
             {
-                rotatePivot.localEulerAngles = new Vector3(0, 0, func(halfAngle, -halfAngle, Mathf.Abs(normalizedSwingBeat % 1)));
+                rotatePivot.localEulerAngles = new Vector3(0, 0, func(halfAngle, -halfAngle, normalizedAdjusted));
+                if (type == ObstacleType.Monkeys) anim.DoNormalizedAnimation("WhiteMonkeysSwing", 1 - normalizedAdjusted);
             }
         }
     }
