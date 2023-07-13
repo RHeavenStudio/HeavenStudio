@@ -1,53 +1,163 @@
 using UnityEngine;
-
+using System;
 using HeavenStudio.Util;
+using System.Collections;
+using System.Collections.Generic;
 
 namespace HeavenStudio.Games.Scripts_TapTrial
 {
     public class TapTrialPlayer : MonoBehaviour
     {
-        [Header("References")]
-        [System.NonSerialized] public Animator anim;
+        private enum TapState
+        {
+            Tap,
+            DoubleTap,
+            TripleTap,
+            Jumping
+        }
+        private TapState state = TapState.Tap;
+        private int tripleTaps = 0;
+        private Animator anim;
+        [SerializeField] private ParticleSystem tapEffectLeft;
+        [SerializeField] private ParticleSystem tapEffectRight;
 
-        public int tripleOffset = 0;
+        private TapTrial game;
 
         private void Awake()
         {
             anim = GetComponent<Animator>();
+            game = TapTrial.instance;
         }
 
         private void Update()
         {
-            if (PlayerInput.Pressed())
+            if (PlayerInput.Pressed() && !game.IsExpectingInputNow(InputType.STANDARD_DOWN))
             {
-                Tap(false, 0);
+                WhiffTap();
             }
         }
 
-        public void Tap(bool hit, int type)
+        public void Bop()
         {
-            if (hit)
-                SoundByte.PlayOneShotGame("tapTrial/tap");
-            else
-                SoundByte.PlayOneShotGame("tapTrial/tonk");
+            anim.DoScaledAnimationAsync("Bop", 0.5f);
+        }
 
-
-            switch (type)
+        private void WhiffTap()
+        {
+            switch (state)
             {
-                case 0:
-                    anim.Play("Tap", 0, 0);
+                case TapState.Tap:
+                    game.ScoreMiss();
+                    game.ResetScroll();
+                    Tap(false, false);
                     break;
-                case 1:
-                    anim.Play("DoubleTap", 0, 0);
+                case TapState.DoubleTap:
+                    game.ScoreMiss();
+                    game.ResetScroll();
+                    Tap(false, true);
                     break;
-                case 2:
-                    if(tripleOffset % 2 == 0)
-                        anim.Play("DoubleTap", 0, 0);
-                    else
-                        anim.Play("Tap", 0, 0);
-                    tripleOffset++;
+                case TapState.TripleTap:
+                    game.ScoreMiss();
+                    game.ResetScroll();
+                    break;
+                case TapState.Jumping:
                     break;
             }
+        }
+
+        public void PrepareJump()
+        {
+            anim.DoScaledAnimationAsync("JumpPrepare", 0.5f);
+            state = TapState.Jumping;
+        }
+
+        public void Jump(bool final)
+        {
+            anim.DoScaledAnimationAsync(final ? "FinalJump" : "JumpTap", 0.5f);
+            state = TapState.Jumping;
+        }
+
+        public void JumpTap(bool ace, bool final)
+        {
+            if (ace)
+            {
+                SoundByte.PlayOneShotGame("tapTrial/tap");
+                SpawnTapEffect(true);
+                SpawnTapEffect(false);
+            }
+            else
+            {
+                SoundByte.PlayOneShot("nearMiss");
+                game.ResetScroll();
+            }
+            anim.DoScaledAnimationAsync(final ? "FinalJump_Tap" : "JumpTap_Success", 0.5f);
+        }
+
+        public void JumpTapMiss(bool final)
+        {
+            anim.DoScaledAnimationAsync(final ? "FinalJump_Miss" : "JumpTap_Miss", 0.5f);
+        }
+
+        public void PrepareTap(bool doubleTap = false)
+        {
+            anim.DoScaledAnimationAsync(doubleTap ? "DoubleTapPrepare" : "TapPrepare", 0.5f);
+            state = doubleTap ? TapState.DoubleTap : TapState.Tap;
+        }
+
+        public void Tap(bool ace, bool doubleTap = false)
+        {
+            if (ace)
+            {
+                SoundByte.PlayOneShotGame("tapTrial/tap");
+                SpawnTapEffect(!doubleTap);
+            }
+            else
+            {
+                SoundByte.PlayOneShot("nearMiss");
+                game.ResetScroll();
+            }
+            anim.DoScaledAnimationAsync(doubleTap ? "DoubleTap" : "Tap", 0.5f);
+        }
+
+        public void PrepareTripleTap(double beat)
+        {
+            anim.DoScaledAnimationAsync("PosePrepare_1", 0.5f);
+            state = TapState.TripleTap;
+            tripleTaps = 0;
+            BeatAction.New(gameObject, new List<BeatAction.Action>()
+            {
+                new BeatAction.Action(beat + 0.5, delegate
+                {
+                    anim.DoScaledAnimationAsync("PosePrepare_2", 0.5f);
+                })
+            });
+        }
+
+        public void TripleTap(bool ace)
+        {
+            bool tapLeft = tripleTaps % 2 == 0;
+            tripleTaps++;
+
+            if (ace)
+            {
+                SoundByte.PlayOneShotGame("tapTrial/tap");
+                SpawnTapEffect(tapLeft);
+            }
+            else
+            {
+                SoundByte.PlayOneShot("nearMiss");
+                game.ResetScroll();
+            }
+
+            anim.DoScaledAnimationAsync(tapLeft ? "PoseTap_L" : "PoseTap_R", 0.5f);
+        }
+
+
+
+        private void SpawnTapEffect(bool left)
+        {
+            ParticleSystem spawnedTap = Instantiate(left ? tapEffectLeft : tapEffectRight, game.transform);
+            spawnedTap.Play();
         }
     }
 }
