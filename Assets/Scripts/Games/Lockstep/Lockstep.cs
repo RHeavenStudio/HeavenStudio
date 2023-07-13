@@ -4,8 +4,10 @@ borrowed from other games */
 //Don't worry Raffy everyone starts somewhere - Rasmus
 
 using HeavenStudio.Util;
+using Jukebox;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 namespace HeavenStudio.Games.Loaders
@@ -15,7 +17,7 @@ namespace HeavenStudio.Games.Loaders
     {
         public static Minigame AddGame(EventCaller eventCaller)
         {
-            return new Minigame("lockstep", "Lockstep \n<color=#eb5454>[WIP]</color>", "f0338d", false, false, new List<GameAction>()
+            return new Minigame("lockstep", "Lockstep", "f0338d", false, false, new List<GameAction>()
             {
                 new GameAction("bop", "Bop")
                 {
@@ -27,33 +29,38 @@ namespace HeavenStudio.Games.Loaders
                         new Param("toggle2", false, "Bop (Auto)", "Should the stepswitchers auto bop?"),
                     },
                 },
-                new GameAction("marching", "Stepping")
+                new GameAction("stepping", "Stepping")
                 {
-                    preFunction = delegate {var e = eventCaller.currentEntity; Lockstep.Marching(e.beat, e.length);},
-                    defaultLength = 4f,
-                    resizable = true
+                    preFunction = delegate {var e = eventCaller.currentEntity; Lockstep.Marching(e.beat, e["sound"], e["amount"], e["visual"]);},
+                    parameters = new List<Param>()
+                    {
+                        new Param("sound", false, "Sound", "Hai if onbeat, ho if offbeat."),
+                        new Param("amount", new EntityTypes.Integer(1, 50, 1), "Sound Amount", "How many sounds will play consecutively?"),
+                        new Param("visual", true, "Background Visual")
+                    },
+                    preFunctionLength = 1
                 },
                 new GameAction("offbeatSwitch", "Switch to Offbeat")
                 {
-                    preFunction = delegate { var e = eventCaller.currentEntity; Lockstep.OffbeatSwitch(e.beat); },
-                    defaultLength = 3.5f
+                    preFunction = delegate { var e = eventCaller.currentEntity; Lockstep.OffbeatSwitchSound(e.beat, e["ho"], e["sound"]); },
+                    defaultLength = 4.5f,
+                    parameters = new List<Param>()
+                    {
+                        new Param("sound", true, "Sound Cue"),
+                        new Param("ho", true, "Ho Sounds", "Will the <ho, ho, ho, ho> sound be present?"),
+                        new Param("visual", true, "Background Visual")
+                    }
                 },
                 new GameAction("onbeatSwitch", "Switch to Onbeat")
                 {
-                    preFunction = delegate { var e = eventCaller.currentEntity; Lockstep.OnbeatSwitch(e.beat); },
-                    defaultLength = 2f
-                },
-                new GameAction("hai", "Hai!")
-                {
-                    function = delegate { var e = eventCaller.currentEntity; Lockstep.instance.Hai(e.beat); },
-                    defaultLength = 1f,
-                    inactiveFunction = delegate { var e = eventCaller.currentEntity; Lockstep.instance.Hai(e.beat);}
-                },
-                new GameAction("ho", "Ho!")
-                {
-                    function = delegate { var e = eventCaller.currentEntity; Lockstep.instance.Ho(e.beat); },
-                    defaultLength = 1f,
-                    inactiveFunction = delegate { var e = eventCaller.currentEntity; Lockstep.instance.Ho(e.beat);}
+                    preFunction = delegate { var e = eventCaller.currentEntity; Lockstep.OnbeatSwitchSound(e.beat, e["hai"], e["sound"]); },
+                    defaultLength = 3f,
+                    parameters = new List<Param>()
+                    {
+                        new Param("sound", true, "Sound Cue"),
+                        new Param("hai", new EntityTypes.Integer(0, 100, 1), "Hai Amount"),
+                        new Param("visual", true, "Background Visual")
+                    }
                 },
                 new GameAction("set colours", "Set Colours")
                 {
@@ -67,6 +74,32 @@ namespace HeavenStudio.Games.Loaders
                         new Param("objColC", Lockstep.stepperLight, "Stepper Light", "Select the color that appears for the light side of the stepwitchers."),
                     },
                     defaultLength = 0.5f,
+                },
+                new GameAction("zoom", "Preset Zooms")
+                {
+                    function = delegate { Lockstep.instance.SetZoom(eventCaller.currentEntity["zoom"]); },
+                    parameters = new List<Param>()
+                    {
+                        new Param("zoom", Lockstep.ZoomPresets.Regular, "Zoom Level")
+                    }
+                },
+                new GameAction("bach", "Show Bach")
+                {
+                    defaultLength = 4,
+                    resizable = true,
+                },
+                new GameAction("marching", "Force Stepping")
+                {
+                    preFunction = delegate {var e = eventCaller.currentEntity; Lockstep.Marching(e.beat, e["sound"], e["amount"], e["visual"], true, e.length);},
+                    parameters = new List<Param>()
+                    {
+                        new Param("sound", false, "Sound", "Hai if onbeat, ho if offbeat."),
+                        new Param("amount", new EntityTypes.Integer(1, 50, 1), "Sound Amount", "How many sounds will play consecutively?"),
+                        new Param("visual", true, "Background Visual")
+                    },
+                    preFunctionLength = 1,
+                    resizable = true,
+                    defaultLength = 4
                 }
             },
             new List<string>() {"ntr", "keep"},
@@ -140,7 +173,8 @@ namespace HeavenStudio.Games
         [SerializeField] Animator stepswitcherPlayer;
         [SerializeField] Animator stepswitcherLeft;
         [SerializeField] Animator stepswitcherRight;
-
+        [SerializeField] Animator bach;
+        
         // master stepper dictates what sprite the slave steppers use
         [SerializeField] Animator masterStepperAnim;
         [SerializeField] SpriteRenderer masterStepperSprite;
@@ -155,7 +189,7 @@ namespace HeavenStudio.Games
         [SerializeField] Material stepperMaterial;
 
         [Header("Properties")]
-        static List<double> queuedInputs = new();
+        static List<QueuedMarch> queuedInputs = new();
         Sprite masterSprite;
         HowMissed currentMissStage;
         bool lessSteppers = false;
@@ -168,14 +202,71 @@ namespace HeavenStudio.Games
         bool offColorActive;
         bool goBop;
         public GameEvent bop = new GameEvent();
+        List<double> switches = new();
+        private List<RiqEntity> bachEvents = new();
 
         public static Lockstep instance;
+
+        public enum ZoomPresets
+        {
+            Regular,
+            NotThatFar,
+            Far,
+            VeryFar,
+            ExtremelyFar
+        }
 
         void Awake()
         {
             instance = this;
             currentBGOnColor = defaultBGColorOn;
             currentBGOffColor = defaultBGColorOff;
+            var switchEvents = EventCaller.GetAllInGameManagerList("lockstep", new string[] { "onbeatSwitch", "offbeatSwitch" });
+
+            foreach (var switchEvent in switchEvents)
+            {
+                switches.Add(switchEvent.beat + switchEvent.length - 1);
+            }
+
+            bachEvents = EventCaller.GetAllInGameManagerList("lockstep", new string[] { "bach" });
+        }
+
+        private bool BachOnBeat(double beat)
+        {
+            return bachEvents.Find(x => beat >= x.beat && beat < x.beat + x.length) != null;
+        }
+        public override void OnGameSwitch(double beat)
+        {
+            QueueSwitchBGs(beat);
+        }
+
+        public override void OnPlay(double beat)
+        {
+            QueueSwitchBGs(beat);
+        }
+
+        private void QueueSwitchBGs(double beat)
+        {
+            double nextGameSwitchBeat = double.MaxValue;
+            List<RiqEntity> allEnds = EventCaller.GetAllInGameManagerList("gameManager", new string[] { "switchGame", "end" }).FindAll(x => x.beat > beat);
+            if (allEnds.Count > 0)
+            {
+                nextGameSwitchBeat = allEnds[0].beat;
+            }
+
+            var switchEventsOn = EventCaller.GetAllInGameManagerList("lockstep", new string[] { "onbeatSwitch" });
+            foreach (var on in switchEventsOn)
+            {
+                if (on.beat >= nextGameSwitchBeat || !on["visual"]) return;
+                OnbeatSwitch(on.beat, beat);
+            }
+
+            var switchEventsOff = EventCaller.GetAllInGameManagerList("lockstep", new string[] { "offbeatSwitch" });
+            foreach (var off in switchEventsOff)
+            {
+                if (off.beat >= nextGameSwitchBeat || !off["visual"]) return;
+                OffbeatSwitch(off.beat, beat);
+            }
         }
 
         void Start() {
@@ -189,15 +280,6 @@ namespace HeavenStudio.Games
             masterStepperAnim.gameObject.SetActive(!lessSteppers);
 
             UpdateAndRenderSlaves();
-        }
-
-        void OnDestroy()
-        {
-            if (queuedInputs.Count > 0) queuedInputs.Clear();
-            foreach (var evt in scheduledInputs)
-            {
-                evt.Disable();
-            }
         }
 
         void UpdateAndRenderSlaves()
@@ -222,7 +304,7 @@ namespace HeavenStudio.Games
             }
         }
 
-        public void Update()
+        private void Update()
         {
             var cond = Conductor.instance;
             if (cond.isPlaying && !cond.isPaused)
@@ -238,11 +320,14 @@ namespace HeavenStudio.Games
                 {
                     foreach (var input in queuedInputs)
                     {
-                        ScheduleInput(cond.songPositionInBeatsAsDouble, input - cond.songPositionInBeats, InputType.STANDARD_DOWN, Just, Miss, Nothing);
-                        BeatAction.New(instance.gameObject, new List<BeatAction.Action>()
+                        if (input.force)
                         {
-                            new BeatAction.Action(input, delegate { EvaluateMarch(); }),
-                        });
+                            ForceMarching(input.beat, input.length, input.sound, input.amount, input.visual);
+                        }
+                        else
+                        {
+                            StartMarching(input.beat, input.sound, input.amount, input.visual);
+                        }
                     }
                     queuedInputs.Clear();
                 }
@@ -258,15 +343,32 @@ namespace HeavenStudio.Games
                     {
                         stepswitcherPlayer.DoScaledAnimationAsync("OffbeatMarch", 0.5f);
                     }
-                    SoundByte.PlayOneShotGame("lockstep/miss");
+                    SoundByte.PlayOneShot("miss");
                     ScoreMiss();
                 }
             }
+        }
+
+        private void LateUpdate()
+        {
             if (masterSprite != masterStepperSprite.sprite)
             {
                 masterSprite = masterStepperSprite.sprite;
                 UpdateAndRenderSlaves();
             }
+        }
+
+        public void SetZoom(int zoom)
+        {
+            GameCamera.additionalPosition = new Vector3(0, 0, (ZoomPresets)zoom switch
+            {
+                ZoomPresets.Regular => 0,
+                ZoomPresets.NotThatFar => -4.5f,
+                ZoomPresets.Far => -11,
+                ZoomPresets.VeryFar => -26,
+                ZoomPresets.ExtremelyFar => -63,
+                _ => throw new System.NotImplementedException()
+            });
         }
 
         public void Bop(double beat, float length, bool shouldBop, bool autoBop)
@@ -287,83 +389,255 @@ namespace HeavenStudio.Games
             }
         }
 
-        public void Hai(double beat)
+        public static void OnbeatSwitchSound(double beat, int hais, bool sound)
         {
-            SoundByte.PlayOneShotGame("lockstep/switch1", beat);
+            if (sound)
+            {
+                MultiSound.Play(new MultiSound.Sound[]
+                {
+                new MultiSound.Sound("lockstep/nha1", beat, 1, 1, false, 0.03086419753),
+                new MultiSound.Sound("lockstep/nha2", beat + 0.5f, 1, 1, false, 0.04629629629),
+                new MultiSound.Sound("lockstep/nha1", beat + 1f, 1, 1, false, 0.03086419753),
+                new MultiSound.Sound("lockstep/nha2", beat + 1.5f, 1, 1, false, 0.04629629629)
+                }, forcePlay: true);
+            }
+
+            if (hais > 0)
+            {
+                List<MultiSound.Sound> haisList = new();
+
+                for (int i = 0; i < hais; i++)
+                {
+                    haisList.Add(new MultiSound.Sound("lockstep/hai", beat + 2 + i, 1, 1, false, 0.02314814814));
+                }
+
+                double nextOffBeat = double.MaxValue;
+                var switchEventsOn = EventCaller.GetAllInGameManagerList("lockstep", new string[] { "offbeatSwitch" });
+                switchEventsOn.Sort((x, y) => x.beat.CompareTo(y.beat));
+                for (int i = 0; i < switchEventsOn.Count; i++)
+                {
+                    if (switchEventsOn[i].beat > beat)
+                    {
+                        nextOffBeat = switchEventsOn[i].beat;
+                        break;
+                    }
+                }
+
+                var haisActual = haisList.FindAll(x => x.beat < nextOffBeat);
+
+                MultiSound.Play(haisActual.ToArray(), true, true);
+            }
         }
 
-        public void Ho(double beat)
+        private void OnbeatSwitch(double beat, double gameswitchBeat)
         {
-            SoundByte.PlayOneShotGame("lockstep/switch4", beat);
+            List<BeatAction.Action> allActions = new List<BeatAction.Action>()
+            {
+                new BeatAction.Action(beat, delegate { ChangeBeatBackGroundColour(false); }),
+                new BeatAction.Action(beat + 0.5f, delegate { ChangeBeatBackGroundColour(true); }),
+                new BeatAction.Action(beat + 1f, delegate
+                {
+                    ChangeBeatBackGroundColour(false);
+                }),
+                new BeatAction.Action(beat + 1.5f, delegate 
+                { 
+                    ChangeBeatBackGroundColour(true);
+                }),
+                new BeatAction.Action(beat + 1.75f, delegate { if (!marchRecursing) MarchRecursive(beat + 2f); }),
+                new BeatAction.Action(beat + 2f, delegate { ChangeBeatBackGroundColour(false); }),
+            };
+            List<BeatAction.Action> actions = new();
+            foreach (var action in allActions)
+            {
+                if (action.beat >= gameswitchBeat) actions.Add(action);
+            }
+            if (actions.Count > 0) BeatAction.New(instance.gameObject, actions);
         }
 
-        public static void OnbeatSwitch(double beat)
+        public static void OffbeatSwitchSound(double beat, bool hoSound, bool sound)
         {
-            MultiSound.Play(new MultiSound.Sound[]
+            if (sound)
             {
-                new MultiSound.Sound("lockstep/switch5", beat),
-                new MultiSound.Sound("lockstep/switch6", beat + 0.5f),
-                new MultiSound.Sound("lockstep/switch5", beat + 1f),
-                new MultiSound.Sound("lockstep/switch6", beat + 1.5f)
-            }, forcePlay: true);
+                MultiSound.Play(new MultiSound.Sound[]
+                {
+                    new MultiSound.Sound("lockstep/hai", beat, 1, 1, false, 0.02314814814),
+                    new MultiSound.Sound("lockstep/hai", beat + 1f, 1, 1, false, 0.02314814814),
+                    new MultiSound.Sound("lockstep/hai", beat + 2f, 1, 1, false, 0.02314814814),
+                    new MultiSound.Sound("lockstep/hahai1", beat + 3f, 1, 1, false, 0.03086419753),
+                    new MultiSound.Sound("lockstep/hahai2", beat + 3.5f, 1, 1, false, 0.03086419753),
+                }, forcePlay: true);
+            }
+            if (hoSound)
+            {
+                List<MultiSound.Sound> hos = new List<MultiSound.Sound>
+                {
+                    new MultiSound.Sound("lockstep/ho", beat + 4.5f, 1, 1, false, 0.03086419753),
+                    new MultiSound.Sound("lockstep/ho", beat + 5.5f, 1, 0.6835514f, false, 0.03086419753),
+                    new MultiSound.Sound("lockstep/ho", beat + 6.5f, 1, 0.3395127f, false, 0.03086419753),
+                    new MultiSound.Sound("lockstep/ho", beat + 7.5f, 1, 0.1200322f, false, 0.03086419753),
+                };
 
-            BeatAction.New(instance.gameObject, new List<BeatAction.Action>()
-            {
-                new BeatAction.Action(beat, delegate { if (GameManager.instance.currentGame == "lockstep") Lockstep.instance.ChangeBeatBackGroundColour(false); }),
-                new BeatAction.Action(beat + 0.5f, delegate { if (GameManager.instance.currentGame == "lockstep") Lockstep.instance.ChangeBeatBackGroundColour(true); }),
-                new BeatAction.Action(beat + 1f, delegate { if (GameManager.instance.currentGame == "lockstep") Lockstep.instance.ChangeBeatBackGroundColour(false); }),
-                new BeatAction.Action(beat + 1.5f, delegate { if (GameManager.instance.currentGame == "lockstep") Lockstep.instance.ChangeBeatBackGroundColour(true); }),
-                new BeatAction.Action(beat + 2f, delegate { if (GameManager.instance.currentGame == "lockstep") Lockstep.instance.ChangeBeatBackGroundColour(false); }),
-            });
+                double nextOnBeat = double.MaxValue;
+                var switchEventsOn = EventCaller.GetAllInGameManagerList("lockstep", new string[] { "onbeatSwitch" });
+                switchEventsOn.Sort((x, y) => x.beat.CompareTo(y.beat));
+                for (int i = 0; i < switchEventsOn.Count; i++)
+                {
+                    if (switchEventsOn[i].beat > beat)
+                    {
+                        nextOnBeat = switchEventsOn[i].beat;
+                        break;
+                    }
+                }
+
+                var hosActual = hos.FindAll(x => x.beat < nextOnBeat);
+
+                MultiSound.Play(hosActual.ToArray(), true, true);
+            }
         }
 
-        public static void OffbeatSwitch(double beat)
+        private void OffbeatSwitch(double beat, double gameswitchBeat)
         {
-            MultiSound.Play(new MultiSound.Sound[]
+            List<BeatAction.Action> allActions = new List<BeatAction.Action>()
             {
-                new MultiSound.Sound("lockstep/switch1", beat),
-                new MultiSound.Sound("lockstep/switch1", beat + 1f),
-                new MultiSound.Sound("lockstep/switch1", beat + 2f),
-                new MultiSound.Sound("lockstep/switch2", beat + 3f),
-                new MultiSound.Sound("lockstep/switch3", beat + 3.5f),
-            }, forcePlay: true);
-
-            BeatAction.New(instance.gameObject, new List<BeatAction.Action>()
+                new BeatAction.Action(beat, delegate { ChangeBeatBackGroundColour(true); }),
+                new BeatAction.Action(beat + 1f, delegate { ChangeBeatBackGroundColour(false); }),
+                new BeatAction.Action(beat + 2f, delegate { ChangeBeatBackGroundColour(true); }),
+                new BeatAction.Action(beat + 3f, delegate
+                {
+                    ChangeBeatBackGroundColour(false);
+                }),
+                new BeatAction.Action(beat + 3.25f, delegate { if (!marchRecursing) MarchRecursive(beat + 3.5f); }),
+                new BeatAction.Action(beat + 3.5f, delegate { ChangeBeatBackGroundColour(true); }),
+            };
+            List<BeatAction.Action> actions = new();
+            foreach (var action in allActions)
             {
-                new BeatAction.Action(beat, delegate { if (GameManager.instance.currentGame == "lockstep") Lockstep.instance.ChangeBeatBackGroundColour(true); }),
-                new BeatAction.Action(beat + 1f, delegate { if (GameManager.instance.currentGame == "lockstep") Lockstep.instance.ChangeBeatBackGroundColour(false); }),
-                new BeatAction.Action(beat + 2f, delegate { if (GameManager.instance.currentGame == "lockstep") Lockstep.instance.ChangeBeatBackGroundColour(true); }),
-                new BeatAction.Action(beat + 3f, delegate { if (GameManager.instance.currentGame == "lockstep") Lockstep.instance.ChangeBeatBackGroundColour(false); }),
-                new BeatAction.Action(beat + 3.5f, delegate { if (GameManager.instance.currentGame == "lockstep") Lockstep.instance.ChangeBeatBackGroundColour(true); }),
-            });
+                if (action.beat >= gameswitchBeat) actions.Add(action);
+            }
+            if (actions.Count > 0) BeatAction.New(instance.gameObject, actions);
         }
 
-        public static void Marching(double beat, float length)
+        private struct QueuedMarch
+        {
+            public double beat;
+            public float length;
+            public bool sound;
+            public int amount;
+            public bool visual;
+            public bool force;
+        }
+        public static void Marching(double beat, bool sound, int amount, bool visual, bool force = false, float length = 0)
         {
             if (GameManager.instance.currentGame == "lockstep")
             {
-                List<BeatAction.Action> actions = new List<BeatAction.Action>();
-                for (int i = 0; i < length; i++)
+                if (force)
                 {
-                    Lockstep.instance.ScheduleInput(beat - 1, 1 + i, InputType.STANDARD_DOWN, Lockstep.instance.Just, Lockstep.instance.Miss, Lockstep.instance.Nothing);
-                    actions.Add(new BeatAction.Action(beat + i, delegate { Lockstep.instance.EvaluateMarch(); }));
+                    instance.ForceMarching(beat, length, sound, amount, visual);
                 }
-                BeatAction.New(instance.gameObject, actions);
+                else
+                {
+                    instance.StartMarching(beat, sound, amount, visual);
+                }
             }
             else
             {
-                for (int i = 0; i < length; i++)
+                queuedInputs.Add(new QueuedMarch
                 {
-                    queuedInputs.Add(beat + i);
-                }
+                    amount = amount,
+                    beat = beat,
+                    sound = sound,
+                    visual = visual,
+                    length = length,
+                    force = force
+                });
             }
         }
 
-        public void EvaluateMarch()
+        private void ForceMarching(double beat, float length, bool sound, int amount, bool visual)
         {
-            var cond = Conductor.instance;
-            var beatAnimCheck = Math.Round(cond.songPositionInBeatsAsDouble * 2);
-            if (beatAnimCheck % 2 != 0)
+            bool offBeat = beat % 1 != 0;
+            if (sound)
+            {
+                MultiSound.Sound[] sounds = new MultiSound.Sound[amount];
+                for (int i = 0; i < amount; i++)
+                {
+                    sounds[i] = new MultiSound.Sound($"lockstep/" + (offBeat ? "ho" : "hai"), beat + i, 1, 1, false, offBeat ? 0.03086419753 : 0.02314814814);
+                }
+                MultiSound.Play(sounds, true, true);
+            }
+            List<BeatAction.Action> steps = new()
+            {
+                new BeatAction.Action(beat, delegate
+                {
+                    if (visual) ChangeBeatBackGroundColour(offBeat);
+                    if (BachOnBeat(beat)) bach.DoScaledAnimationAsync(offBeat ? "BachOff" : "BachOn", 0.5f);
+                    EvaluateMarch(offBeat);
+                })
+            };
+            ScheduleInput(beat - 1, 1, InputType.STANDARD_DOWN, offBeat ? JustOff : JustOn, offBeat ? MissOff : MissOn, Nothing);
+            for (int i = 1; i < length; i++)
+            {
+                double stepBeat = beat + i;
+                steps.Add(new BeatAction.Action(stepBeat, delegate
+                {
+                    if (BachOnBeat(stepBeat)) bach.DoScaledAnimationAsync(offBeat ? "BachOff" : "BachOn", 0.5f);
+                    EvaluateMarch(offBeat);
+                }));
+                ScheduleInput(stepBeat - 1, 1, InputType.STANDARD_DOWN, offBeat ? JustOff : JustOn, offBeat ? MissOff : MissOn, Nothing);
+            }
+            BeatAction.New(gameObject, steps);
+        }
+
+        private void StartMarching(double beat, bool sound, int amount, bool visual)
+        {
+            if (marchRecursing) return;
+            bool offBeat = beat % 1 != 0;
+            if (visual)
+            {
+                BeatAction.New(instance.gameObject, new List<BeatAction.Action>()
+                {
+                    new BeatAction.Action(beat, delegate { ChangeBeatBackGroundColour(offBeat); })
+                });
+            }
+            if (sound)
+            {
+                MultiSound.Sound[] sounds = new MultiSound.Sound[amount];
+                for (int i = 0; i < amount; i++)
+                {
+                    sounds[i] = new MultiSound.Sound($"lockstep/" + (offBeat ? "ho" : "hai"), beat + i, 1, 1, false, offBeat ? 0.03086419753 : 0.02314814814);
+                }
+                MultiSound.Play(sounds, true, true);
+            }
+            MarchRecursive(beat);
+        }
+
+        private bool marchRecursing;
+        private void MarchRecursive(double beat)
+        {
+            marchRecursing = true;
+            if (NextStepIsSwitch(beat)) beat -= 0.5;
+            bool offBeat = beat % 1 != 0;
+            bool bachOnBeat = BachOnBeat(beat);
+            ScheduleInput(beat - 1, 1, InputType.STANDARD_DOWN, offBeat ? JustOff : JustOn, offBeat ? MissOff : MissOn, Nothing);
+            BeatAction.New(instance.gameObject, new List<BeatAction.Action>()
+            {
+                new BeatAction.Action(beat, delegate 
+                { 
+                    EvaluateMarch(offBeat); 
+                    MarchRecursive(beat + 1);
+                    if (bachOnBeat) bach.DoScaledAnimationAsync(offBeat ? "BachOff" : "BachOn", 0.5f);
+                }),
+            });
+        }
+
+        private bool NextStepIsSwitch(double beat)
+        {
+            return switches.Contains(beat - 0.5);
+        }
+
+        public void EvaluateMarch(bool offBeat)
+        {
+            if (offBeat)
             {
                 PlayStepperAnim("OffbeatMarch", false, 0.5f);
             }
@@ -373,59 +647,46 @@ namespace HeavenStudio.Games
             }
         }
 
-        public void Just(PlayerActionEvent caller, float state)
+        private void JustOn(PlayerActionEvent caller, float state)
         {
             currentMissStage = HowMissed.NotMissed;
-            var cond = Conductor.instance;
+            stepswitcherPlayer.DoScaledAnimationAsync("OnbeatMarch", 0.5f);
             if (state >= 1f || state <= -1f)
             {
-                double beatAnimCheck = cond.songPositionInBeatsAsDouble - 0.25;
-                if (beatAnimCheck % 1.0 >= 0.5)
-                {
-                    SoundByte.PlayOneShotGame("lockstep/tink");
-                    stepswitcherPlayer.DoScaledAnimationAsync("OnbeatMarch", 0.5f);
-                }
-                else
-                {
-                    SoundByte.PlayOneShotGame("lockstep/tink");
-                    stepswitcherPlayer.DoScaledAnimationAsync("OffbeatMarch", 0.5f);
-                }
+                SoundByte.PlayOneShot("nearMiss");
                 return;
             }
-            Success(cond.songPositionInBeatsAsDouble);
+            SoundByte.PlayOneShotGame($"lockstep/foot{UnityEngine.Random.Range(1, 3)}");
+            SoundByte.PlayOneShotGame("lockstep/drumOn");
         }
 
-        public void Success(double beat)
+        private void JustOff(PlayerActionEvent caller, float state)
         {
-            double beatAnimCheck = beat - 0.25;
-            if (beatAnimCheck % 1.0 >= 0.5)
+            currentMissStage = HowMissed.NotMissed;
+            stepswitcherPlayer.DoScaledAnimationAsync("OffbeatMarch", 0.5f);
+            if (state >= 1f || state <= -1f)
             {
-                SoundByte.PlayOneShotGame($"lockstep/marchOnbeat{UnityEngine.Random.Range(1, 3)}");
-                stepswitcherPlayer.DoScaledAnimationAsync("OnbeatMarch", 0.5f);
+                SoundByte.PlayOneShot("nearMiss");
+                return;
             }
-            else
-            {
-                SoundByte.PlayOneShotGame($"lockstep/marchOffbeat{UnityEngine.Random.Range(1, 3)}");
-                stepswitcherPlayer.DoScaledAnimationAsync("OffbeatMarch", 0.5f);
-            }
+            SoundByte.PlayOneShotGame($"lockstep/foot{UnityEngine.Random.Range(1, 3)}");
+            SoundByte.PlayOneShotGame("lockstep/drumOff");
         }
 
-        public void Miss(PlayerActionEvent caller)
+        private void MissOn(PlayerActionEvent caller)
         {
-            var beatAnimCheck = Math.Round(caller.startBeat * 2);
-            
-            if (beatAnimCheck % 2 != 0 && currentMissStage != HowMissed.MissedOff)
-            {
-                stepswitcherPlayer.Play("OffbeatMiss", 0, 0);
-                SoundByte.PlayOneShotGame("lockstep/wayOff");
-                currentMissStage = HowMissed.MissedOff;
-            }
-            else if (beatAnimCheck % 2 == 0 && currentMissStage != HowMissed.MissedOn)
-            {
-                stepswitcherPlayer.Play("OnbeatMiss", 0, 0);
-                SoundByte.PlayOneShotGame("lockstep/wayOff");
-                currentMissStage = HowMissed.MissedOn;
-            }
+            if (currentMissStage == HowMissed.MissedOn) return;
+            stepswitcherPlayer.Play("OnbeatMiss", 0, 0);
+            SoundByte.PlayOneShotGame("lockstep/wayOff");
+            currentMissStage = HowMissed.MissedOn;
+        }
+
+        private void MissOff(PlayerActionEvent caller)
+        {
+            if (currentMissStage == HowMissed.MissedOff) return;
+            stepswitcherPlayer.Play("OffbeatMiss", 0, 0);
+            SoundByte.PlayOneShotGame("lockstep/wayOff");
+            currentMissStage = HowMissed.MissedOff;
         }
 
         public void ChangeBeatBackGroundColour(bool off)
