@@ -1,8 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using HeavenStudio.Util;
-using HeavenStudio.Games.Scripts_AnimalAcrobat;
 using Jukebox;
 
 namespace HeavenStudio.Games.Loaders
