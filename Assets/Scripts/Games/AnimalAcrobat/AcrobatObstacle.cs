@@ -76,7 +76,7 @@ namespace HeavenStudio.Games.Scripts_AnimalAcrobat
             bool goingRight = (Mathf.Floor(normalizedSwingBeat) + negativeOffset) % 2 == 0;
             float dirMult = goingRight ? 1 : -1;
             rotatePivot.localEulerAngles = new Vector3(0, 0, func(-halfAngle * dirMult, halfAngle * dirMult, normalizedAdjusted));
-            if (type == ObstacleType.Monkeys) anim.DoNormalizedAnimation("WhiteMonkeysSwing", normalizedAdjusted);
+            if (type == ObstacleType.Monkeys) anim.DoNormalizedAnimation("WhiteMonkeysSwing", normalizedSwingBeat);
         }
 
         private void JustHold(PlayerActionEvent caller, float state)
@@ -95,6 +95,8 @@ namespace HeavenStudio.Games.Scripts_AnimalAcrobat
                     SoundByte.PlayOneShotGame("animalAcrobat/giraffeReleaseLoop", beat, 1, 1, true).SetLoopParams(beat + 4, 0);
                     MultiSound.Play(new MultiSound.Sound[] 
                     {
+                        new MultiSound.Sound("animalAcrobat/ringOfFireCymbal", beat + 2),
+                        new MultiSound.Sound("animalAcrobat/audienceCheer", beat + 2.25f),
                         new MultiSound.Sound("animalAcrobat/flip", beat + 3),
                         new MultiSound.Sound("cymbal", beat + 4)
                     });
