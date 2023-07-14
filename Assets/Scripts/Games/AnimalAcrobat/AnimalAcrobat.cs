@@ -55,6 +55,7 @@ namespace HeavenStudio.Games
         [SerializeField] private AcrobatObstacle giraffeRef;
         [SerializeField] private float giraffeDistance;
         [SerializeField] private float giraffeStart;
+        [SerializeField] private float afterGiraffeExtraDistance;
         [Header("Monkeys")]
         [SerializeField] private AcrobatObstacle monkeysRef;
         [SerializeField] private float monkeysDistance;
@@ -266,6 +267,7 @@ namespace HeavenStudio.Games
                             startBeat = animal.beat,
                             type = ObstacleType.Giraffe
                         });
+                        startPos += afterGiraffeExtraDistance;
                         break;
                     case "animalAcrobat/monkeys":
                         startPos += monkeysDistance;
