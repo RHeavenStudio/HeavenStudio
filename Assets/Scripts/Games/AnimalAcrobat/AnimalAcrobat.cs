@@ -119,6 +119,12 @@ namespace HeavenStudio.Games
             }
         }
 
+        private void StartJump(double beat)
+        {
+            SoundByte.PlayOneShotGame("animalAcrobat/beginningLeap", beat);
+        }
+
+        #region Camera
         private void CameraMoveUpdate(Conductor cond)
         {
             if (movesIndex >= moves.Count) return;
@@ -200,6 +206,7 @@ namespace HeavenStudio.Games
                 GameCamera.additionalPosition = new Vector3(newPosX, newPosY, 0);
             }
         }
+        #endregion
 
         #region Spawn Animals
         public override void OnPlay(double beat)
@@ -218,6 +225,7 @@ namespace HeavenStudio.Games
             if (animalEvents.Count == 0) return;
             animalEvents.Sort((x, y) => x.beat.CompareTo(y.beat));
             double nextBeat = animalEvents[0].beat;
+            StartJump(nextBeat - 1);
             float startPos = animalEvents[0].datamodel switch
             {
                 "animalAcrobat/elephant" => elephantStart - elephantDistance,

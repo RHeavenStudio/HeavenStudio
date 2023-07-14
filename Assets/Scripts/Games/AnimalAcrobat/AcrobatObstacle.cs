@@ -23,11 +23,13 @@ namespace HeavenStudio.Games.Scripts_AnimalAcrobat
         private double startBeat = double.MinValue;
         private float halfAngle;
         private EasingFunction.Function func;
+        private AnimalAcrobat game;
 
         private void Awake()
         {
             halfAngle = fullRotateAngle / 2;
             func = EasingFunction.GetEasingFunction(EasingFunction.Ease.EaseInOutQuad);
+            game = AnimalAcrobat.instance;
         }
 
         public void Init(double beat, double gameSwitchBeat)
@@ -53,6 +55,7 @@ namespace HeavenStudio.Games.Scripts_AnimalAcrobat
                     }),
                 });
             }
+            game.ScheduleInput(beat - 1, 1, InputType.STANDARD_DOWN, JustHold, Empty, Empty);
             Update();
         }
 
@@ -70,17 +73,40 @@ namespace HeavenStudio.Games.Scripts_AnimalAcrobat
             float normalizedSwingBeat = cond.GetPositionFromBeat(startBeat, holdLength);
             float negativeOffset = (normalizedSwingBeat < 0) ? -1 : 0;
             float normalizedAdjusted = Mathf.Abs(normalizedSwingBeat % 1);
-            if ((Mathf.Floor(normalizedSwingBeat) + negativeOffset) % 2 == 0)
+            bool goingRight = (Mathf.Floor(normalizedSwingBeat) + negativeOffset) % 2 == 0;
+            float dirMult = goingRight ? 1 : -1;
+            rotatePivot.localEulerAngles = new Vector3(0, 0, func(-halfAngle * dirMult, halfAngle * dirMult, normalizedAdjusted));
+            if (type == ObstacleType.Monkeys) anim.DoNormalizedAnimation("WhiteMonkeysSwing", normalizedAdjusted);
+        }
+
+        private void JustHold(PlayerActionEvent caller, float state)
+        {
+            SoundByte.PlayOneShotGame("animalAcrobat/grab");
+            game.ScheduleInput(startBeat, holdLength, InputType.STANDARD_UP, JustRelease, Empty, Empty);
+        }
+
+        private void JustRelease(PlayerActionEvent caller, float state)
+        {
+            double beat = caller.startBeat + caller.timer;
+            switch (type)
             {
-                rotatePivot.localEulerAngles = new Vector3(0, 0, func(-halfAngle, halfAngle, normalizedAdjusted));
-                if (type == ObstacleType.Monkeys) anim.DoNormalizedAnimation("WhiteMonkeysSwing", normalizedAdjusted);
-            }
-            else
-            {
-                rotatePivot.localEulerAngles = new Vector3(0, 0, func(halfAngle, -halfAngle, normalizedAdjusted));
-                if (type == ObstacleType.Monkeys) anim.DoNormalizedAnimation("WhiteMonkeysSwing", 1 - normalizedAdjusted);
+                case ObstacleType.Giraffe:
+                    SoundByte.PlayOneShotGame("animalAcrobat/giraffeRelease");
+                    SoundByte.PlayOneShotGame("animalAcrobat/giraffeReleaseLoop", beat, 1, 1, true).SetLoopParams(beat + 4, 0);
+                    MultiSound.Play(new MultiSound.Sound[] 
+                    {
+                        new MultiSound.Sound("animalAcrobat/flip", beat + 3),
+                        new MultiSound.Sound("cymbal", beat + 4)
+                    });
+                    break;
+                default:
+                    SoundByte.PlayOneShotGame("animalAcrobat/release");
+                    SoundByte.PlayOneShotGame("animalAcrobat/flip", beat + 1);
+                    break;
             }
         }
+
+        private void Empty(PlayerActionEvent caller) { }
     }
 }
 
