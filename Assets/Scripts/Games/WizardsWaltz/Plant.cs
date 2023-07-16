@@ -12,20 +12,20 @@ namespace HeavenStudio.Games.Scripts_WizardsWaltz
         public double createBeat;
 
         private WizardsWaltz game;
-        private bool hit = false;
         private bool passed = false;
 
         public int order = 0;
 
-        private void Awake()
+        public void Init(bool spawnedInactive) 
         {
             game = WizardsWaltz.instance;
             spriteRenderer.sortingOrder = order;
-            animator.Play("Appear", 0, 0);
+            animator.Play("Appear", 0, spawnedInactive ? 1 : 0);
         }
 
-        private void Start() {
-            game.ScheduleInput(createBeat, game.beatInterval, InputType.STANDARD_DOWN | InputType.DIRECTION_DOWN, Just, Miss, Out);
+        public void StartInput(double beat, float length)
+        {
+            game.ScheduleInput(beat, length, InputType.STANDARD_DOWN | InputType.DIRECTION_DOWN, Just, Miss, Out);
         }
 
         private void Update()
@@ -65,13 +65,11 @@ namespace HeavenStudio.Games.Scripts_WizardsWaltz
         public void Ace()
         {
             game.wizard.Magic(this, true);
-            hit = true;
         }
 
         public void NearMiss()
         {
             game.wizard.Magic(this, false);
-            hit = true;
         }
 
         private void Just(PlayerActionEvent caller, float state)

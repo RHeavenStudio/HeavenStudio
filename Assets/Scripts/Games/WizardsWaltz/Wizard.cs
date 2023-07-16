@@ -10,9 +10,6 @@ namespace HeavenStudio.Games.Scripts_WizardsWaltz
         public Animator animator;
         public GameObject shadow;
 
-        private float newBeat = 0;
-        private int beats = 0;
-
         private WizardsWaltz game;
         private float songPos;
 
@@ -31,7 +28,7 @@ namespace HeavenStudio.Games.Scripts_WizardsWaltz
             //var scale = 1 - Mathf.Cos(Mathf.PI * songPos / am) * 0.35f;
 
             transform.position = new Vector3(x, 3f - y * 0.5f, z);
-            shadow.transform.position = new Vector3(x, -3f + y * 1.5f, z);
+            shadow.transform.position = new Vector3(x, game.plantYOffset + y * 1.5f, z);
 
             /*var xscale = scale;
             if (y > 0) xscale *= -1;
