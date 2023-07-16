@@ -106,6 +106,19 @@ namespace HeavenStudio.Games
             InitExecutives();
         }
 
+        private void OnDestroy()
+        {
+            foreach(var evt in scheduledInputs)
+            {
+                evt.Disable();
+            }
+            if (chairLoopSound != null)
+            {
+                chairLoopSound.KillLoop(0);
+                chairLoopSound = null;
+            }
+        }
+
         private void Update()
         {
             var cond = Conductor.instance;
@@ -124,6 +137,15 @@ namespace HeavenStudio.Games
                         SoundByte.PlayOneShotGame("boardMeeting/miss");
                         SoundByte.PlayOneShot("miss");
                         ScoreMiss();
+                        foreach (var evt in scheduledInputs)
+                        {
+                            evt.Disable();
+                        }
+                        if (chairLoopSound != null)
+                        {
+                            chairLoopSound.KillLoop(0);
+                            chairLoopSound = null;
+                        }
                     }
                 }
             }
