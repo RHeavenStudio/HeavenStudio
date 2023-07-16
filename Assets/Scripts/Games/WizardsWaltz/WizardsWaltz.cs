@@ -56,11 +56,8 @@ namespace HeavenStudio.Games
         public Girl girl;
         public GameObject plantHolder;
         public GameObject plantBase;
-        public GameObject fxHolder;
-        public GameObject fxBase;
 
         [Header("Properties")]
-        private int timer = 0;
         [NonSerialized] public float beatInterval = 6f;
         [NonSerialized] public double intervalStartBeat;
         public double wizardBeatOffset = 0f;
@@ -135,26 +132,6 @@ namespace HeavenStudio.Games
                     passedTurns.Clear();
                 }
             }
-        }
-
-        private void FixedUpdate()
-        {
-            if (timer % 8 == 0 || UnityEngine.Random.Range(0,8) == 0)
-            {
-                var songPos = (float)(Conductor.instance.songPositionInBeatsAsDouble - wizardBeatOffset);
-                var am = beatInterval / 2f;
-                var x = Mathf.Sin(Mathf.PI * songPos / am) * xRange + UnityEngine.Random.Range(-0.5f, 0.5f);
-                var y = Mathf.Cos(Mathf.PI * songPos / am) * (yRange * 0.5f) + UnityEngine.Random.Range(-0.5f, 0.5f);
-                var z = Mathf.Cos(Mathf.PI * songPos / am) * zRange + UnityEngine.Random.Range(-0.5f, 0.5f);
-                //var scale = 1 - Mathf.Cos(Mathf.PI * songPos / am) * 0.35f + UnityEngine.Random.Range(-0.2f, 0.2f);
-
-                MagicFX magic = Instantiate(fxBase, fxHolder.transform).GetComponent<MagicFX>();
-
-                magic.transform.position = new Vector3(x, 2f + y, z);;
-                magic.gameObject.SetActive(true);
-            }
-
-            timer++;
         }
 
         private List<RiqEntity> GetAllPlantsBetweenBeat(double beat, double endBeat)
