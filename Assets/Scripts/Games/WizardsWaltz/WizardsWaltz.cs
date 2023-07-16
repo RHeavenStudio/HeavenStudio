@@ -50,15 +50,22 @@ namespace HeavenStudio.Games
         public GameObject fxHolder;
         public GameObject fxBase;
 
+        [Header("Properties")]
         private int timer = 0;
-        public float beatInterval = 6f;
-        double intervalStartBeat;
+        [NonSerialized] public float beatInterval = 6f;
+        [NonSerialized] public double intervalStartBeat;
         bool intervalStarted;
         public double wizardBeatOffset = 0f;
+        public float xRange = 5;
+        public float zRange = 5;
+        public float yRange = 0.5f;
+        [SerializeField] private float plantYOffset = -2f;
 
         [NonSerialized] public int plantsLeft = 0; //this variable is unused
 
         public static WizardsWaltz instance;
+
+        private static CallAndResponseHandler crInstance;
 
         private void Awake()
         {
@@ -87,14 +94,14 @@ namespace HeavenStudio.Games
             {
                 var songPos = (float)(Conductor.instance.songPositionInBeatsAsDouble - wizardBeatOffset);
                 var am = beatInterval / 2f;
-                var x = Mathf.Sin(Mathf.PI * songPos / am) * 6 + UnityEngine.Random.Range(-0.5f, 0.5f);
-                var y = Mathf.Cos(Mathf.PI * songPos / am) * 0.5f + UnityEngine.Random.Range(-0.5f, 0.5f);
-                var scale = 1 - Mathf.Cos(Mathf.PI * songPos / am) * 0.35f + UnityEngine.Random.Range(-0.2f, 0.2f);
+                var x = Mathf.Sin(Mathf.PI * songPos / am) * xRange + UnityEngine.Random.Range(-0.5f, 0.5f);
+                var y = Mathf.Cos(Mathf.PI * songPos / am) * (yRange * 0.5f) + UnityEngine.Random.Range(-0.5f, 0.5f);
+                var z = Mathf.Cos(Mathf.PI * songPos / am) * zRange + UnityEngine.Random.Range(-0.5f, 0.5f);
+                //var scale = 1 - Mathf.Cos(Mathf.PI * songPos / am) * 0.35f + UnityEngine.Random.Range(-0.2f, 0.2f);
 
                 MagicFX magic = Instantiate(fxBase, fxHolder.transform).GetComponent<MagicFX>();
 
-                magic.transform.position = new Vector3(x, 2f + y, 0);
-                magic.transform.localScale = wizard.gameObject.transform.localScale;
+                magic.transform.position = new Vector3(x, 2f + y, z);;
                 magic.gameObject.SetActive(true);
             }
 
@@ -126,16 +133,18 @@ namespace HeavenStudio.Games
 
             var songPos = (float)(Conductor.instance.songPositionInBeatsAsDouble - wizardBeatOffset);
             var am = (beatInterval / 2f);
-            var x = Mathf.Sin(Mathf.PI * songPos / am) * 6;
-            var y = -3f + Mathf.Cos(Mathf.PI * songPos / am) * 1.5f;
-            var scale = 1 - Mathf.Cos(Mathf.PI * songPos / am) * 0.35f;
+            var x = Mathf.Sin(Mathf.PI * songPos / am) * xRange;
+            var y = plantYOffset + Mathf.Cos(Mathf.PI * songPos / am) * (yRange * 1.5f);
+            var z = Mathf.Cos(Mathf.PI * songPos / am) * zRange;
+            /*var scale = 1 - Mathf.Cos(Mathf.PI * songPos / am) * 0.35f;
             var xscale = scale;
-            if (y > -3.5f) xscale *= -1;
+            if (y > -3.5f) xscale *= -1;*/
 
-            plant.transform.localPosition = new Vector3(x, y, 0);
-            plant.transform.localScale = new Vector3(xscale, scale, 1);
+            plant.transform.localPosition = new Vector3(x, y, z);
+            //plant.transform.localScale = new Vector3(xscale, scale, 1);
 
-            plant.order = (int)Math.Round((scale - 1) * 1000);
+            //plant.order = (int)Math.Round((scale - 1) * 1000);
+            plant.order = (int)Math.Round(z * -1);
             plant.gameObject.SetActive(true);
 
             plant.createBeat = beat;
