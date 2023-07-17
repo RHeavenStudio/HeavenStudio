@@ -766,7 +766,7 @@ namespace HeavenStudio
                 HeavenStudio.StaticCamera.instance.ToggleCanvasVisibility(false);
             }
 
-            SetGame(game);
+            SetGame(game, false);
 
             Minigame miniGame = currentGameO.GetComponent<Minigame>();
             if (miniGame != null)
@@ -776,9 +776,10 @@ namespace HeavenStudio
             yield return new WaitForSeconds(Conductor.instance.pitchedSecPerBeat / 4);
 
             HeavenStudio.StaticCamera.instance.ToggleCanvasVisibility(true);
+            SetAmbientGlowToCurrentMinigameColor();
         }
 
-        private void SetGame(string game)
+        private void SetGame(string game, bool useMinigameColor = true)
         {
             Destroy(currentGameO);
 
@@ -786,7 +787,7 @@ namespace HeavenStudio
             currentGameO.transform.parent = eventCaller.GamesHolder.transform;
             currentGameO.name = game;
 
-            SetCurrentGame(game);
+            SetCurrentGame(game, useMinigameColor);
 
             ResetCamera();
         }
@@ -833,19 +834,26 @@ namespace HeavenStudio
             return EventCaller.instance.minigames.Find(c => c.name == name);
         }
 
-        public void SetCurrentGame(string game)
+        public void SetCurrentGame(string game, bool useMinigameColor = true)
         {
             currentGame = game;
             if (GetGameInfo(currentGame) != null)
             {
                 CircleCursor.InnerCircle.GetComponent<SpriteRenderer>().color = Colors.Hex2RGB(GetGameInfo(currentGame).color);
-                HeavenStudio.StaticCamera.instance.SetAmbientGlowColour(Colors.Hex2RGB(GetGameInfo(currentGame).color));
+                if (useMinigameColor) HeavenStudio.StaticCamera.instance.SetAmbientGlowColour(Colors.Hex2RGB(GetGameInfo(currentGame).color));
+                else HeavenStudio.StaticCamera.instance.SetAmbientGlowColour(Color.black);
             }
             else
             {
                 CircleCursor.InnerCircle.GetComponent<SpriteRenderer>().color = Color.white;
                 HeavenStudio.StaticCamera.instance.SetAmbientGlowColour(Color.black);
             }
+        }
+
+        private void SetAmbientGlowToCurrentMinigameColor()
+        {
+            if (GetGameInfo(currentGame) != null) 
+                HeavenStudio.StaticCamera.instance.SetAmbientGlowColour(Colors.Hex2RGB(GetGameInfo(currentGame).color));
         }
 
         private bool SongPosLessThanClipLength(float t)
