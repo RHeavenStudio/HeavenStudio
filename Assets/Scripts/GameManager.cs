@@ -761,7 +761,7 @@ namespace HeavenStudio
 
         IEnumerator SwitchGameIE(string game, double beat, bool flash)
         {
-            if(flash == true)
+            if(flash)
             {
                 HeavenStudio.StaticCamera.instance.ToggleCanvasVisibility(false);
             }
@@ -772,8 +772,8 @@ namespace HeavenStudio
             if (miniGame != null)
                 miniGame.OnGameSwitch(beat);
 
-            //TODO: wait time in beats instead of seconds
-            yield return new WaitForSeconds(0.1f);
+            //before beat-based: yield return new WaitForSeconds(0.1f);
+            yield return new WaitForSeconds(Conductor.instance.pitchedSecPerBeat / 4);
 
             HeavenStudio.StaticCamera.instance.ToggleCanvasVisibility(true);
         }
