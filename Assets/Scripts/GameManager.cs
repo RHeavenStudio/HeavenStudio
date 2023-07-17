@@ -840,20 +840,20 @@ namespace HeavenStudio
             if (GetGameInfo(currentGame) != null)
             {
                 CircleCursor.InnerCircle.GetComponent<SpriteRenderer>().color = Colors.Hex2RGB(GetGameInfo(currentGame).color);
-                if (useMinigameColor) HeavenStudio.StaticCamera.instance.SetAmbientGlowColour(Colors.Hex2RGB(GetGameInfo(currentGame).color));
-                else HeavenStudio.StaticCamera.instance.SetAmbientGlowColour(Color.black);
+                if (useMinigameColor) HeavenStudio.StaticCamera.instance.SetAmbientGlowColour(Colors.Hex2RGB(GetGameInfo(currentGame).color), true);
+                else HeavenStudio.StaticCamera.instance.SetAmbientGlowColour(HeavenStudio.GameCamera.currentColor, false);
             }
             else
             {
                 CircleCursor.InnerCircle.GetComponent<SpriteRenderer>().color = Color.white;
-                HeavenStudio.StaticCamera.instance.SetAmbientGlowColour(Color.black);
+                HeavenStudio.StaticCamera.instance.SetAmbientGlowColour(HeavenStudio.GameCamera.currentColor, false);
             }
         }
 
         private void SetAmbientGlowToCurrentMinigameColor()
         {
             if (GetGameInfo(currentGame) != null) 
-                HeavenStudio.StaticCamera.instance.SetAmbientGlowColour(Colors.Hex2RGB(GetGameInfo(currentGame).color));
+                HeavenStudio.StaticCamera.instance.SetAmbientGlowColour(Colors.Hex2RGB(GetGameInfo(currentGame).color), true);
         }
 
         private bool SongPosLessThanClipLength(float t)
