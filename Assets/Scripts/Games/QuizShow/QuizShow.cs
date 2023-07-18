@@ -185,6 +185,8 @@ namespace HeavenStudio.Games
         bool signExploded;
         int pressCount;
         int countToMatch;
+        private double playerStartBeat = -1;
+        private float playerLength;
         public static QuizShow instance;
         private struct RandomPress
         {
@@ -218,14 +220,17 @@ namespace HeavenStudio.Games
             var cond = Conductor.instance;
             if (cond.isPlaying && !cond.isPaused)
             {
-                //make this only happen while the player interval is active
-                if (PlayerInput.Pressed())
+                float normalizedBeat = cond.GetPositionFromBeat(playerStartBeat, playerLength);
+                if (normalizedBeat >= 0f && normalizedBeat <= 1f)
                 {
-                    ContesteePressButton(false);
-                }
-                if (PlayerInput.GetAnyDirectionDown())
-                {
-                    ContesteePressButton(true);
+                    if (PlayerInput.Pressed())
+                    {
+                        ContesteePressButton(false);
+                    }
+                    if (PlayerInput.GetAnyDirectionDown())
+                    {
+                        ContesteePressButton(true);
+                    }
                 }
             }
 
@@ -513,6 +518,8 @@ namespace HeavenStudio.Games
 
         private void PassTurn(double beat, double intervalBeat, float intervalLength, bool timeUpSound, bool consecutive, bool visualClock, int audioClock)
         {
+            playerStartBeat = beat + 1;
+            playerLength = intervalLength;
             var relevantInputs = GetInputsBetweenBeat(intervalBeat, intervalBeat + intervalLength);
             relevantInputs.Sort((x, y) => x.beat.CompareTo(y.beat));
 
