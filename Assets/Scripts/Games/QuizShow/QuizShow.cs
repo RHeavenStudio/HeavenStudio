@@ -186,10 +186,31 @@ namespace HeavenStudio.Games
         int pressCount;
         int countToMatch;
         public static QuizShow instance;
+        private struct RandomPress
+        {
+            public List<RiqEntity> randomPresses;
+            public double beat;
+        }
+
+        private List<RandomPress> randomPresses = new();
 
         void Awake()
         {
             instance = this;
+        }
+
+        public override void OnPlay(double beat)
+        {
+            var allRandomEvents = EventCaller.GetAllInGameManagerList("quizShow", new string[] { "randomPresses" });
+            foreach (var randomEvent in allRandomEvents)
+            {
+                randomPresses.Add(new RandomPress()
+                {
+                    beat = randomEvent.beat,
+                    randomPresses = GetRandomPress(randomEvent.beat, randomEvent.length,
+                    randomEvent["min"], randomEvent["max"], randomEvent["random"], randomEvent["con"])
+                });
+            }
         }
 
         void Update()
@@ -220,7 +241,19 @@ namespace HeavenStudio.Games
 
         private List<RiqEntity> GetInputsBetweenBeat(double beat, double endBeat)
         {
-            return EventCaller.GetAllInGameManagerList("quizShow", new string[] { "dPad", "aButton", "randomPresses" }).FindAll(x => x.beat >= beat && x.beat < endBeat);
+            List<RiqEntity> allEvents = new();
+            List<RiqEntity> nonRandoms = EventCaller.GetAllInGameManagerList("quizShow", new string[] { "dPad", "aButton" }).FindAll(x => x.beat >= beat && x.beat < endBeat);
+            List<RiqEntity> randoms = new();
+            foreach (var rand in randomPresses)
+            {
+                if (rand.beat >= beat && rand.beat < endBeat)
+                {
+                    randoms.AddRange(rand.randomPresses);
+                }
+            }
+            allEvents.AddRange(nonRandoms);
+            allEvents.AddRange(randoms);
+            return allEvents;
         }
 
         private RiqEntity GetLastIntervalBeforeBeat(double beat)
@@ -238,12 +271,12 @@ namespace HeavenStudio.Games
             currentStage = stage;
         }
 
-        public void RandomPress(double beat, float length, int min, int max, int whichButtons, bool consecutive)
+        private List<RiqEntity> GetRandomPress(double beat, float length, int min, int max, int whichButtons, bool consecutive)
         {
-            if (min > max) return;
+            if (min > max) return new();
             int pressAmount = UnityEngine.Random.Range(min, max + 1);
-            if (pressAmount < 1) return;
-            List<BeatAction.Action> buttonEvents = new List<BeatAction.Action>();
+            if (pressAmount < 1) return new();
+            List<RiqEntity> buttonEntities = new();
             if (consecutive)
             {
                 for (int i = 0; i < pressAmount; i++)
@@ -267,7 +300,11 @@ namespace HeavenStudio.Games
                             break;
                     }
                     double spawnBeat = beat + i * length;
-                    buttonEvents.Add(new BeatAction.Action(spawnBeat, delegate { HostPressButton(spawnBeat, dpad); }));
+                    buttonEntities.Add(new RiqEntity(new RiqEntityData()
+                    {
+                        beat = spawnBeat,
+                        datamodel = dpad ? "dPad" : "aButton"
+                    }));
                 }
             }
             else
@@ -295,12 +332,15 @@ namespace HeavenStudio.Games
                             break;
                     }
                     double spawnBeat = beat + i * length;
-                    buttonEvents.Add(new BeatAction.Action(spawnBeat, delegate { HostPressButton(spawnBeat, dpad); }));
+                    buttonEntities.Add(new RiqEntity(new RiqEntityData()
+                    {
+                        beat = spawnBeat,
+                        datamodel = dpad ? "dPad" : "aButton"
+                    }));
                     pressAmount--;
                 }
             }
-
-            BeatAction.New(instance.gameObject, buttonEvents);
+            return buttonEntities;
         }
 
         public void HostPressButton(double beat, bool dpad)
@@ -377,6 +417,16 @@ namespace HeavenStudio.Games
                 }
                 queuedIntervals.Clear();
             }
+            var allRandomEvents = EventCaller.GetAllInGameManagerList("quizShow", new string[] { "randomPresses" });
+            foreach (var randomEvent in allRandomEvents)
+            {
+                randomPresses.Add(new RandomPress()
+                {
+                    beat = randomEvent.beat,
+                    randomPresses = GetRandomPress(randomEvent.beat, randomEvent.length,
+                    randomEvent["min"], randomEvent["max"], randomEvent["random"], randomEvent["con"])
+                });
+            }
         }
 
         private void StartInterval(double beat, float interval,
@@ -404,10 +454,11 @@ namespace HeavenStudio.Games
             relevantInputs.Sort((x, y) => x.beat.CompareTo(y.beat));
             for (int i = 0; i < relevantInputs.Count; i++)
             {
-                double inputBeat = relevantInputs[i].beat;
+                var input = relevantInputs[i];
+                double inputBeat = input.beat;
                 if (inputBeat < gameSwitchBeat) continue;
-                bool isDpad = relevantInputs[i].datamodel == "quizShow/dPad";
-
+                bool isDpad = input.datamodel == "quizShow/dPad";
+                bool isRandom = input.datamodel == "quizShow/randomPresses";
                 actions.Add(new BeatAction.Action(inputBeat, delegate
                 {
                     HostPressButton(inputBeat, isDpad);
