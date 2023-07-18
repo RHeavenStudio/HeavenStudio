@@ -549,6 +549,7 @@ namespace HeavenStudio.Games
             }
             if (audioClock == (int)ClockAudio.End) timeUpBeat = 0.5f;
             QSTimer spawnedTimer = Instantiate(stopWatchRef, transform);
+            if (!visualClock) Destroy(spawnedTimer.gameObject);
             List<BeatAction.Action> actions = new()
             {
                 new BeatAction.Action(beat, delegate
@@ -578,8 +579,8 @@ namespace HeavenStudio.Games
                         contesteeLeftArmAnim.DoScaledAnimationAsync("LeftRest", 0.5f);
                         contesteeRightArmAnim.DoScaledAnimationAsync("RightRest", 0.5f);
                         shouldPrepareArms = true;
-                        Destroy(spawnedTimer.gameObject);
                     }
+                    if (visualClock) Destroy(spawnedTimer.gameObject);
                 }
             ),
                 new BeatAction.Action(beat + 1 + intervalLength + timeUpBeat, delegate { if (timeUpSound && !consecutive) SoundByte.PlayOneShotGame("quizShow/timeUp"); }),
