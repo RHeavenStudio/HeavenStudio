@@ -15,9 +15,18 @@ namespace HeavenStudio.Games.Loaders
             {
                 new GameAction("intervalStart", "Start Interval")
                 {
-                    function = delegate {var e = eventCaller.currentEntity; QuizShow.instance.StartInterval(e.beat, e.length); },
+                    preFunction = delegate { var e = eventCaller.currentEntity; QuizShow.PreInterval(e.beat, e.length, 
+                        e["auto"], e["sound"], e["con"], e["visual"], e["audio"]); },
                     defaultLength = 8f,
-                    resizable = true
+                    resizable = true,
+                    parameters = new List<Param>()
+                    {
+                        new Param("auto", true, "Auto Pass Turn"),
+                        new Param("sound", true, "Play Time-Up Sound?", "Should the Time-Up sound play at the end of the interval?"),
+                        new Param("con", false, "Consecutive", "Disables everything that happens at the end of the interval if ticked on."),
+                        new Param("visual", true, "Stopwatch (Visual)", "Should the stopwatch visually appear?"),
+                        new Param("audio", QuizShow.ClockAudio.Both, "Stopwatch (Audio)", "Should the sounds of the stopwatch play?")
+                    }
                 },
                 new GameAction("prepare", "Prepare Host Hands")
                 {
@@ -25,17 +34,14 @@ namespace HeavenStudio.Games.Loaders
                 },
                 new GameAction("dPad", "DPad Press")
                 {
-                    function = delegate {var e = eventCaller.currentEntity; QuizShow.instance.HostPressButton(e.beat, true); },
                     defaultLength = 0.5f
                 },
                 new GameAction("aButton", "A Button Press")
                 {
-                    function = delegate {var e = eventCaller.currentEntity; QuizShow.instance.HostPressButton(e.beat, false); },
                     defaultLength = 0.5f
                 },
                 new GameAction("randomPresses", "Random Presses")
                 {
-                    function = delegate { var e = eventCaller.currentEntity; QuizShow.instance.RandomPress(e.beat, e.length, e["min"], e["max"], e["random"], e["con"]); },
                     parameters = new List<Param>()
                     {
                         new Param("min", new EntityTypes.Integer(0, 666, 0), "Minimum", "The minimum number of presses this block will do."),
@@ -47,7 +53,7 @@ namespace HeavenStudio.Games.Loaders
                 },
                 new GameAction("passTurn", "Pass Turn")
                 {
-                    function = delegate {var e = eventCaller.currentEntity; QuizShow.instance.PassTurn(e.beat, e.length, e["sound"], e["con"], e["visual"], e["audio"]); },
+                    preFunction = delegate {var e = eventCaller.currentEntity; QuizShow.PrePassTurn(e.beat, e["sound"], e["con"], e["visual"], e["audio"]); },
                     defaultLength = 1f,
                     resizable = true,
                     parameters = new List<Param>()
@@ -112,6 +118,9 @@ namespace HeavenStudio.Games.Loaders
 
 namespace HeavenStudio.Games
 {
+    using Jukebox;
+    using Scripts_QuizShow;
+
     public class QuizShow : Minigame
     {
         public enum ClockAudio
@@ -152,7 +161,7 @@ namespace HeavenStudio.Games
         [SerializeField] Animator hostHead;
         [SerializeField] Animator signAnim;
         [SerializeField] Transform timerTransform;
-        [SerializeField] GameObject stopWatch;
+        [SerializeField] QSTimer stopWatchRef;
         [SerializeField] GameObject blackOut;
         [SerializeField] SpriteRenderer firstDigitSr;
         [SerializeField] SpriteRenderer secondDigitSr;
@@ -167,39 +176,16 @@ namespace HeavenStudio.Games
         [SerializeField] List<Sprite> contestantNumberSprites = new List<Sprite>();
         [SerializeField] List<Sprite> hostNumberSprites = new List<Sprite>();
         [SerializeField] Sprite explodedCounter;
-        bool intervalStarted;
         bool shouldResetCount;
         bool doingConsectiveIntervals;
-        double intervalStartBeat;
-        double playerIntervalStartBeat;
-        float playerBeatInterval;
-        float beatInterval = 8f;
         int currentStage;
         bool shouldPrepareArms = true;
         bool contExploded;
         bool hostExploded;
         bool signExploded;
-        struct QueuedInput 
-        {
-            public double beat;
-            public bool dpad;
-        }
-        static List<QueuedInput> queuedInputs = new List<QueuedInput>();
         int pressCount;
         int countToMatch;
         public static QuizShow instance;
-
-        void OnDestroy()
-        {
-            if (!Conductor.instance.isPlaying || Conductor.instance.isPaused)
-            {
-                if (queuedInputs.Count > 0) queuedInputs.Clear();
-            }
-            foreach (var evt in scheduledInputs)
-            {
-                evt.Disable();
-            }
-        }
 
         void Awake()
         {
@@ -211,20 +197,35 @@ namespace HeavenStudio.Games
             var cond = Conductor.instance;
             if (cond.isPlaying && !cond.isPaused)
             {
-                float normalizedBeat = cond.GetPositionFromBeat(playerIntervalStartBeat, playerBeatInterval);
-                if (normalizedBeat >= 0 && normalizedBeat <= 1)
+                //make this only happen while the player interval is active
+                if (PlayerInput.Pressed())
                 {
-                    timerTransform.rotation = Quaternion.Euler(0, 0, normalizedBeat * -360);
-                    if (PlayerInput.Pressed())
-                    {
-                        ContesteePressButton(false);
-                    }
-                    if (PlayerInput.GetAnyDirectionDown())
-                    {
-                        ContesteePressButton(true);
-                    }
+                    ContesteePressButton(false);
+                }
+                if (PlayerInput.GetAnyDirectionDown())
+                {
+                    ContesteePressButton(true);
                 }
             }
+
+            if (passedTurns.Count > 0)
+            {
+                foreach (var pass in passedTurns)
+                {
+                    PassTurnStandalone(pass.beat, pass.timeUpSound, pass.consecutive, pass.visualClock, pass.audioClock);
+                }
+                passedTurns.Clear();
+            }
+        }
+
+        private List<RiqEntity> GetInputsBetweenBeat(double beat, double endBeat)
+        {
+            return EventCaller.GetAllInGameManagerList("quizShow", new string[] { "dPad", "aButton", "randomPresses" }).FindAll(x => x.beat >= beat && x.beat < endBeat);
+        }
+
+        private RiqEntity GetLastIntervalBeforeBeat(double beat)
+        {
+            return EventCaller.GetAllInGameManagerList("quizShow", new string[] { "intervalStart" }).FindLast(x => x.beat <= beat);
         }
 
         public void CountModifier(bool shouldReset)
@@ -304,10 +305,6 @@ namespace HeavenStudio.Games
 
         public void HostPressButton(double beat, bool dpad)
         {
-            if (!intervalStarted)
-            {
-                StartInterval(beat, beatInterval);
-            }
             if (currentStage == 0) 
             {
                 contesteeHead.Play("ContesteeHeadIdle", -1, 0);
@@ -317,7 +314,7 @@ namespace HeavenStudio.Games
             {
                 hostHead.DoScaledAnimationAsync("HostStage" + currentStage.ToString(), 0.5f);
             }
-            SoundByte.PlayOneShotGame( dpad ? "quizShow/hostDPad" : "quizShow/hostA");
+            SoundByte.PlayOneShotGame(dpad ? "quizShow/hostDPad" : "quizShow/hostA");
             if (dpad)
             {
                 hostRightArmAnim.DoScaledAnimationAsync("HostRightHit", 0.5f);
@@ -326,11 +323,6 @@ namespace HeavenStudio.Games
             {
                 hostLeftArmAnim.DoScaledAnimationAsync("HostLeftHit", 0.5f);
             }
-            queuedInputs.Add(new QueuedInput 
-            {
-                beat = beat - intervalStartBeat,
-                dpad = dpad,
-            });
         }
 
         public void HostPrepareHands()
@@ -339,92 +331,209 @@ namespace HeavenStudio.Games
             instance.hostRightArmAnim.DoScaledAnimationAsync("HostPrepare", 0.5f);
         }
 
-        public void StartInterval(double beat, float interval)
+        public static void PreInterval(double beat, float interval,
+            bool autoPassTurn, bool timeUpSound, bool consecutive, bool visualClock, int audioClock)
         {
-            if (!intervalStarted)
+            if (GameManager.instance.currentGame == "quizShow")
             {
-                if (shouldPrepareArms)
-                {
-                    hostLeftArmAnim.DoNormalizedAnimation("HostLeftPrepare", 1);
-                    hostRightArmAnim.DoNormalizedAnimation("HostPrepare", 1);
-                    contesteeHead.Play("ContesteeHeadIdle", 0, 0);
-                }
-                if (!doingConsectiveIntervals) pressCount = 0;
-                firstDigitSr.sprite = contestantNumberSprites[0];
-                secondDigitSr.sprite = contestantNumberSprites[0];
-                hostFirstDigitSr.sprite = hostNumberSprites[10];
-                hostSecondDigitSr.sprite = hostNumberSprites[10];
-            }
-            intervalStartBeat = beat;
-            beatInterval = interval;
-            intervalStarted = true;
-        }
-
-        public void PassTurn(double beat, float length, bool timeUpSound, bool consecutive, bool visualClock, int audioClock)
-        {
-            if (queuedInputs.Count == 0) return;
-            if (shouldPrepareArms) 
-            {
-                contesteeLeftArmAnim.DoScaledAnimationAsync("LeftPrepare", 0.5f);
-                contesteeRightArmAnim.DoScaledAnimationAsync("RIghtPrepare", 0.5f);
-            }
-            if (!consecutive)
-            {
-                hostLeftArmAnim.DoScaledAnimationAsync("HostLeftRest", 0.5f);
-                hostRightArmAnim.DoScaledAnimationAsync("HostRightRest", 0.5f);
-            }
-            shouldPrepareArms = false;
-            if (visualClock) stopWatch.SetActive(true);
-            intervalStarted = false;
-            if (doingConsectiveIntervals)
-            {
-                countToMatch += queuedInputs.Count;
+                instance.StartInterval(beat, interval, beat, autoPassTurn, timeUpSound, consecutive, visualClock, audioClock);
             }
             else
             {
-                countToMatch = queuedInputs.Count;
+                queuedIntervals.Add(new QueuedInterval()
+                {
+                    beat = beat,
+                    interval = interval,
+                    autoPassTurn = autoPassTurn,
+                    timeUpSound = timeUpSound,
+                    consecutive = consecutive,
+                    visualClock = visualClock,
+                    audioClock = audioClock
+                });
+            }
+        }
+
+        private struct QueuedInterval
+        {
+            public double beat;
+            public float interval;
+            public bool autoPassTurn;
+            public bool timeUpSound;
+            public bool consecutive;
+            public bool visualClock;
+            public int audioClock;
+        }
+
+        private static List<QueuedInterval> queuedIntervals = new();
+
+        public override void OnGameSwitch(double beat)
+        {
+            if (queuedIntervals.Count > 0)
+            {
+                foreach (var interval in queuedIntervals)
+                {
+                    StartInterval(interval.beat, interval.interval, beat, interval.autoPassTurn, 
+                        interval.timeUpSound, interval.consecutive, interval.visualClock, interval.audioClock);
+                }
+                queuedIntervals.Clear();
+            }
+        }
+
+        private void StartInterval(double beat, float interval,
+            double gameSwitchBeat, bool autoPassTurn, bool timeUpSound, bool consecutive, bool visualClock, int audioClock)
+        {
+            List<BeatAction.Action> actions = new()
+            {
+                new BeatAction.Action(beat, delegate
+                {
+                    if (shouldPrepareArms)
+                    {
+                        hostLeftArmAnim.DoNormalizedAnimation("HostLeftPrepare", 1);
+                        hostRightArmAnim.DoNormalizedAnimation("HostPrepare", 1);
+                        contesteeHead.Play("ContesteeHeadIdle", 0, 0);
+                    }
+                    if (!doingConsectiveIntervals) pressCount = 0;
+                    firstDigitSr.sprite = contestantNumberSprites[0];
+                    secondDigitSr.sprite = contestantNumberSprites[0];
+                    hostFirstDigitSr.sprite = hostNumberSprites[10];
+                    hostSecondDigitSr.sprite = hostNumberSprites[10];
+                })
+            };
+
+            var relevantInputs = GetInputsBetweenBeat(beat, beat + interval);
+            relevantInputs.Sort((x, y) => x.beat.CompareTo(y.beat));
+            for (int i = 0; i < relevantInputs.Count; i++)
+            {
+                double inputBeat = relevantInputs[i].beat;
+                if (inputBeat < gameSwitchBeat) continue;
+                bool isDpad = relevantInputs[i].datamodel == "quizShow/dPad";
+
+                actions.Add(new BeatAction.Action(inputBeat, delegate
+                {
+                    HostPressButton(inputBeat, isDpad);
+                }));
+            }
+            BeatAction.New(gameObject, actions);
+
+            if (autoPassTurn)
+            {
+                PassTurn(beat + interval, beat, interval, timeUpSound, consecutive, visualClock, audioClock);
+            }
+        }
+
+        public static void PrePassTurn(double beat, bool timeUpSound, bool consecutive, bool visualClock, int audioClock)
+        {
+            if (GameManager.instance.currentGame == "quizShow")
+            {
+                instance.PassTurnStandalone(beat, timeUpSound, consecutive, visualClock, audioClock);
+            }
+            else
+            {
+                passedTurns.Add(new PassedTurn()
+                {
+                    beat = beat,
+                    timeUpSound = timeUpSound,
+                    consecutive = consecutive,
+                    visualClock = visualClock,
+                    audioClock = audioClock
+                });
+            }
+        }
+
+        private struct PassedTurn
+        {
+            public double beat;
+            public bool timeUpSound;
+            public bool consecutive;
+            public bool visualClock;
+            public int audioClock;
+        }
+
+        private static List<PassedTurn> passedTurns = new();
+
+        private void PassTurnStandalone(double beat, bool timeUpSound, bool consecutive, bool visualClock, int audioClock)
+        {
+            var lastInterval = GetLastIntervalBeforeBeat(beat);
+            if (lastInterval != null)
+            {
+                PassTurn(beat, lastInterval.beat, lastInterval.length, timeUpSound, consecutive, visualClock, audioClock);
+            }
+        }
+
+        private void PassTurn(double beat, double intervalBeat, float intervalLength, bool timeUpSound, bool consecutive, bool visualClock, int audioClock)
+        {
+            var relevantInputs = GetInputsBetweenBeat(intervalBeat, intervalBeat + intervalLength);
+            relevantInputs.Sort((x, y) => x.beat.CompareTo(y.beat));
+
+            for (int i = 0; i < relevantInputs.Count; i++)
+            {
+                double inputBeat = relevantInputs[i].beat - intervalBeat;
+                bool isDpad = relevantInputs[i].datamodel == "quizShow/dPad";
+                if (isDpad)
+                {
+                    ScheduleAutoplayInput(beat, 1 + inputBeat, InputType.DIRECTION_DOWN, AutoplayDPad, Nothing, Nothing);
+                }
+                else
+                {
+                    ScheduleAutoplayInput(beat, 1 + inputBeat, InputType.STANDARD_DOWN, AutoplayAButton, Nothing, Nothing);
+                }
+            }
+
+            if (doingConsectiveIntervals)
+            {
+                countToMatch += relevantInputs.Count;
+            }
+            else
+            {
+                countToMatch = relevantInputs.Count;
             }
             int hundredLoops = Mathf.FloorToInt(countToMatch / 100);
             countToMatch -= hundredLoops * 100;
             doingConsectiveIntervals = consecutive;
-            playerBeatInterval = beatInterval;
-            playerIntervalStartBeat = beat + length;
             float timeUpBeat = 0f;
             if (audioClock == (int)ClockAudio.Both || audioClock == (int)ClockAudio.Start) 
             {
-                SoundByte.PlayOneShotGame("quizShow/timerStart");
+                SoundByte.PlayOneShotGame("quizShow/timerStart", beat);
                 timeUpBeat = 0.5f;
             }
             if (audioClock == (int)ClockAudio.End) timeUpBeat = 0.5f;
-            
-            BeatAction.New(instance.gameObject, new List<BeatAction.Action>()
+            QSTimer spawnedTimer = Instantiate(stopWatchRef, transform);
+            List<BeatAction.Action> actions = new()
             {
-                new BeatAction.Action(beat + length + beatInterval, delegate 
-                { 
-                    if (!consecutive) 
+                new BeatAction.Action(beat, delegate
+                {
+                    if (shouldPrepareArms)
                     {
-                        if (audioClock == (int)ClockAudio.Both || audioClock == (int)ClockAudio.End) SoundByte.PlayOneShotGame("quizShow/timerStop"); 
+                        contesteeLeftArmAnim.DoScaledAnimationAsync("LeftPrepare", 0.5f);
+                        contesteeRightArmAnim.DoScaledAnimationAsync("RIghtPrepare", 0.5f);
+                    }
+                    if (!consecutive)
+                    {
+                        hostLeftArmAnim.DoScaledAnimationAsync("HostLeftRest", 0.5f);
+                        hostRightArmAnim.DoScaledAnimationAsync("HostRightRest", 0.5f);
+                    }
+                    shouldPrepareArms = false;
+                    if (visualClock)
+                    {
+                        spawnedTimer.gameObject.SetActive(true);
+                        spawnedTimer.Init(beat + 1, intervalLength);
+                    }
+                }),
+                new BeatAction.Action(beat + 1 + intervalLength, delegate
+                {
+                    if (!consecutive)
+                    {
+                        if (audioClock == (int)ClockAudio.Both || audioClock == (int)ClockAudio.End) SoundByte.PlayOneShotGame("quizShow/timerStop");
                         contesteeLeftArmAnim.DoScaledAnimationAsync("LeftRest", 0.5f);
                         contesteeRightArmAnim.DoScaledAnimationAsync("RightRest", 0.5f);
                         shouldPrepareArms = true;
-                        stopWatch.SetActive(false);
+                        Destroy(spawnedTimer.gameObject);
                     }
-                }   
+                }
             ),
-                new BeatAction.Action(beat + length + beatInterval + timeUpBeat, delegate { if (timeUpSound && !consecutive) SoundByte.PlayOneShotGame("quizShow/timeUp"); })
-            });
-            foreach (var input in queuedInputs) 
-            {
-                if (input.dpad) 
-                {
-                    ScheduleAutoplayInput(beat, length + input.beat, InputType.DIRECTION_DOWN, AutoplayDPad, Nothing, Nothing);
-                }
-                else 
-                {
-                    ScheduleAutoplayInput(beat, length + input.beat, InputType.STANDARD_DOWN, AutoplayAButton, Nothing, Nothing);
-                }
-            }
-            queuedInputs.Clear();
+                new BeatAction.Action(beat + 1 + intervalLength + timeUpBeat, delegate { if (timeUpSound && !consecutive) SoundByte.PlayOneShotGame("quizShow/timeUp"); }),
+            };
+            BeatAction.New(instance.gameObject, actions);
         }
 
         void ContesteePressButton(bool dpad)
