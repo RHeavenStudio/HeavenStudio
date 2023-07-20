@@ -677,6 +677,13 @@ namespace HeavenStudio
                             new Param("axis", GameCamera.CameraAxis.All, "Axis", "The axis to move the camera on" )
                         } 
                     ),
+                    new GameAction("camera background color", "Camera Background Color", 1, true, new List<Param>()
+                        {
+                            new Param("color", Color.black, "Start Color"),
+                            new Param("color2", Color.black, "End Color"),
+                            new Param("ease", Util.EasingFunction.Ease.Linear, "Ease Type")
+                        }
+                    ),
                     new GameAction("pan view", "Pan Viewport", 1f, true, new List<Param>() 
                         {
                             new Param("valA", new EntityTypes.Float(-50, 50, 0), "Right / Left", "Next position on the X axis"),

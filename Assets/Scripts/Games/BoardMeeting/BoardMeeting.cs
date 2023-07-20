@@ -77,6 +77,7 @@ namespace HeavenStudio.Games.Loaders
 namespace HeavenStudio.Games
 {
     using Scripts_BoardMeeting;
+    using System;
 
     public class BoardMeeting : Minigame
     {
@@ -94,7 +95,7 @@ namespace HeavenStudio.Games
         bool assistantCanBop = true;
         bool executivesCanBop = true;
         public GameEvent bop = new GameEvent();
-        Sound chairLoopSound = null;
+        [NonSerialized] public Sound chairLoopSound = null;
         int missCounter = 0;
         private Tween shakeTween;
 
@@ -104,6 +105,19 @@ namespace HeavenStudio.Games
         {
             instance = this;
             InitExecutives();
+        }
+
+        private void OnDestroy()
+        {
+            foreach(var evt in scheduledInputs)
+            {
+                evt.Disable();
+            }
+            if (chairLoopSound != null)
+            {
+                chairLoopSound.KillLoop(0);
+                chairLoopSound = null;
+            }
         }
 
         private void Update()
@@ -124,6 +138,10 @@ namespace HeavenStudio.Games
                         SoundByte.PlayOneShotGame("boardMeeting/miss");
                         SoundByte.PlayOneShot("miss");
                         ScoreMiss();
+                        foreach (var evt in scheduledInputs)
+                        {
+                            evt.Disable();
+                        }
                     }
                 }
             }
@@ -309,6 +327,16 @@ namespace HeavenStudio.Games
                     soundToPlay = "Player";
                 }
                 executives[i].Spin(soundToPlay, forceStart);
+            }
+        }
+
+        public void StopChairLoopSoundIfLastToStop()
+        {
+            if (executives.FindAll(x => x.spinning).Count > 1) return;
+            if (chairLoopSound != null)
+            {
+                chairLoopSound.KillLoop(0);
+                chairLoopSound = null;
             }
         }
 

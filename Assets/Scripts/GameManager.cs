@@ -761,24 +761,25 @@ namespace HeavenStudio
 
         IEnumerator SwitchGameIE(string game, double beat, bool flash)
         {
-            if(flash == true)
+            if(flash)
             {
                 HeavenStudio.StaticCamera.instance.ToggleCanvasVisibility(false);
             }
 
-            SetGame(game);
+            SetGame(game, false);
 
             Minigame miniGame = currentGameO.GetComponent<Minigame>();
             if (miniGame != null)
                 miniGame.OnGameSwitch(beat);
 
-            //TODO: wait time in beats instead of seconds
-            yield return new WaitForSeconds(0.1f);
+            //before beat-based: yield return new WaitForSeconds(0.1f);
+            yield return new WaitForSeconds(Conductor.instance.pitchedSecPerBeat / 4);
 
             HeavenStudio.StaticCamera.instance.ToggleCanvasVisibility(true);
+            SetAmbientGlowToCurrentMinigameColor();
         }
 
-        private void SetGame(string game)
+        private void SetGame(string game, bool useMinigameColor = true)
         {
             Destroy(currentGameO);
 
@@ -786,7 +787,7 @@ namespace HeavenStudio
             currentGameO.transform.parent = eventCaller.GamesHolder.transform;
             currentGameO.name = game;
 
-            SetCurrentGame(game);
+            SetCurrentGame(game, useMinigameColor);
 
             ResetCamera();
         }
@@ -833,19 +834,28 @@ namespace HeavenStudio
             return EventCaller.instance.minigames.Find(c => c.name == name);
         }
 
-        public void SetCurrentGame(string game)
+        public void SetCurrentGame(string game, bool useMinigameColor = true)
         {
             currentGame = game;
             if (GetGameInfo(currentGame) != null)
             {
                 CircleCursor.InnerCircle.GetComponent<SpriteRenderer>().color = Colors.Hex2RGB(GetGameInfo(currentGame).color);
-                HeavenStudio.StaticCamera.instance.SetAmbientGlowColour(Colors.Hex2RGB(GetGameInfo(currentGame).color));
+                if (useMinigameColor) HeavenStudio.StaticCamera.instance.SetAmbientGlowColour(Colors.Hex2RGB(GetGameInfo(currentGame).color), true);
+                //else HeavenStudio.StaticCamera.instance.SetAmbientGlowColour(HeavenStudio.GameCamera.currentColor, false);
+                else HeavenStudio.StaticCamera.instance.SetAmbientGlowColour(Color.black, false);
             }
             else
             {
                 CircleCursor.InnerCircle.GetComponent<SpriteRenderer>().color = Color.white;
-                HeavenStudio.StaticCamera.instance.SetAmbientGlowColour(Color.black);
+                //HeavenStudio.StaticCamera.instance.SetAmbientGlowColour(HeavenStudio.GameCamera.currentColor, false);
+                HeavenStudio.StaticCamera.instance.SetAmbientGlowColour(Color.black, false);
             }
+        }
+
+        private void SetAmbientGlowToCurrentMinigameColor()
+        {
+            if (GetGameInfo(currentGame) != null) 
+                HeavenStudio.StaticCamera.instance.SetAmbientGlowColour(Colors.Hex2RGB(GetGameInfo(currentGame).color), true);
         }
 
         private bool SongPosLessThanClipLength(float t)

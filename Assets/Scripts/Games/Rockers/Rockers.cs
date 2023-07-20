@@ -356,8 +356,6 @@ namespace HeavenStudio.Games
         }
         public static Rockers instance;
 
-        public static CallAndResponseHandler crHandlerInstance;
-
         [Header("Rockers")]
         public RockersRocker JJ;
         public RockersRocker Soshi;
@@ -392,10 +390,6 @@ namespace HeavenStudio.Games
         private void Awake()
         {
             instance = this;
-            if (crHandlerInstance == null)
-            {
-                crHandlerInstance = new CallAndResponseHandler();
-            }
             var tempEvents = EventCaller.GetAllInGameManagerList("rockers", new string[] { "prepare" });
             foreach (var tempEvent in tempEvents)
             {
@@ -470,6 +464,15 @@ namespace HeavenStudio.Games
             return tempEvents;
         }
 
+        private RiqEntity GetLastIntervalBeforeBeat(double beat)
+        {
+            List<RiqEntity> intervalEvents = EventCaller.GetAllInGameManagerList("rockers", new string[] { "intervalStart" });
+            if (intervalEvents.Count == 0) return null;
+            var tempEvents = intervalEvents.FindAll(x => x.beat <= beat);
+            tempEvents.Sort((x, y) => x.beat.CompareTo(y.beat));
+            return tempEvents[^1];
+        }
+
         private List<RiqEntity> GrabAllTogetherEvents(double beat)
         {
             var tempEvents = EventCaller.GetAllInGameManagerList("rockers", new string[] { "riffTogether", "riffTogetherEnd" });
@@ -534,11 +537,6 @@ namespace HeavenStudio.Games
             {
                 Soshi.Mute();
             }
-        }
-
-        public override void OnPlay(double beat)
-        {
-            crHandlerInstance = null;
         }
 
         private void OnDestroy()
@@ -741,7 +739,7 @@ namespace HeavenStudio.Games
         public void TogetherPrepare(double beat, bool cmon, bool muteSound, float muteBeat, float goToMiddleBeat, bool moveCamera)
         {
             List<RiqEntity> togetherEvents = GrabAllTogetherEvents(beat);
-            if (togetherEvents.Count == 0 || crHandlerInstance.IntervalIsActive()) return;
+            if (togetherEvents.Count == 0) return;
             if (!muteSound) SoundByte.PlayOneShotGame(cmon ? "rockers/Cmon" : "rockers/LastOne");
             List<BeatAction.Action> actions = new List<BeatAction.Action>();
             if (moveCamera)
@@ -841,9 +839,6 @@ namespace HeavenStudio.Games
 
         public void StartInterval(double beat, float length, double gameSwitchBeat, bool autoPassTurn, bool moveCamera)
         {
-            CallAndResponseHandler newHandler = new();
-            crHandlerInstance = newHandler;
-            crHandlerInstance.StartInterval(beat, length);
             List<RiqEntity> relevantInputs = GrabAllInputsBetween(beat, beat + length);
             List<double> riffUsedBeats = new List<double>();
             List<double> bendUsedBeats = new();
@@ -854,21 +849,6 @@ namespace HeavenStudio.Games
                     RiqEntity foundEvent = riffEvents.Find(x => x.beat == input.beat);
                     if ((foundEvent == null || (riffUsedBeats.Count > 0 && riffUsedBeats.Contains((float)foundEvent.beat))) && riffEvents.Count > 1) continue;
                     riffUsedBeats.Add(input.beat);
-                    if (input["respond"])
-                    {
-                        crHandlerInstance.AddEvent(input.beat, input.length, "riff", new List<CallAndResponseHandler.CallAndResponseEventParam>()
-                        {
-                            new CallAndResponseHandler.CallAndResponseEventParam("gleeClub", input["gcS"]),
-                            new CallAndResponseHandler.CallAndResponseEventParam("1", input["1S"]),
-                            new CallAndResponseHandler.CallAndResponseEventParam("2", input["2S"]),
-                            new CallAndResponseHandler.CallAndResponseEventParam("3", input["3S"]),
-                            new CallAndResponseHandler.CallAndResponseEventParam("4", input["4S"]),
-                            new CallAndResponseHandler.CallAndResponseEventParam("5", input["5S"]),
-                            new CallAndResponseHandler.CallAndResponseEventParam("6", input["6S"]),
-                            new CallAndResponseHandler.CallAndResponseEventParam("sample", input["sampleS"]),
-                            new CallAndResponseHandler.CallAndResponseEventParam("sampleTones", input["pitchSampleS"])
-                        });
-                    }
                     if (input.beat >= gameSwitchBeat)
                     {
                         BeatAction.New(instance.gameObject, new List<BeatAction.Action>()
@@ -889,18 +869,11 @@ namespace HeavenStudio.Games
                 else
                 {
                     if (riffEvents.Count == 0) continue;
-                    RiqEntity foundEvent = bendEvents.Find(x => x.beat == beat);
+                    RiqEntity foundEvent = bendEvents.Find(x => x.beat == input.beat);
                     if ((foundEvent == null || (bendUsedBeats.Count > 0 && bendUsedBeats.Contains((float)foundEvent.beat))) && bendEvents.Count > 1) continue;
-                    RiqEntity riffEventToCheck = riffEvents.Find(x => beat >= x.beat && beat < x.beat + x.length);
+                    RiqEntity riffEventToCheck = riffEvents.Find(x => input.beat >= x.beat && input.beat < x.beat + x.length);
                     if (riffEventToCheck == null) continue;
                     bendUsedBeats.Add(beat);
-                    if (input["respond"])
-                    {
-                        crHandlerInstance.AddEvent(input.beat, input.length, "bend", new List<CallAndResponseHandler.CallAndResponseEventParam>()
-                        {
-                            new CallAndResponseHandler.CallAndResponseEventParam("Pitch", input["1S"]),
-                        });
-                    }
                     if (input.beat >= gameSwitchBeat)
                     {
                         BeatAction.New(instance.gameObject, new List<BeatAction.Action>()
@@ -926,7 +899,7 @@ namespace HeavenStudio.Games
                     }
                 }),
             });
-            if (autoPassTurn) PassTurn(beat + length, moveCamera, newHandler);
+            if (autoPassTurn) PassTurn(beat + length, moveCamera, beat, length);
         }
 
         public void Riff(double beat, float length, int[] pitches, bool gleeClubJJ, int sampleJJ, int sampleTonesJJ, bool noRespond)
@@ -1004,12 +977,15 @@ namespace HeavenStudio.Games
 
         private void StandalonePassTurn(double beat, bool moveCamera)
         {
-            if (crHandlerInstance != null) PassTurn(beat, moveCamera, crHandlerInstance);
+            RiqEntity lastInterval = GetLastIntervalBeforeBeat(beat);
+            if (lastInterval == null) return;
+            PassTurn(beat, moveCamera, lastInterval.beat, lastInterval.length);
         }
 
-        private void PassTurn(double beat, bool moveCamera, CallAndResponseHandler handler)
+        private void PassTurn(double beat, bool moveCamera, double intervalStartBeat, float intervalLength)
         {
-            if (crHandlerInstance.queuedEvents.Count > 0)
+            var relevantInputs = GrabAllInputsBetween(intervalStartBeat, intervalStartBeat + intervalLength);
+            if (relevantInputs.Count > 0)
             {
                 BeatAction.New(instance.gameObject, new List<BeatAction.Action>()
                 {
@@ -1024,25 +1000,38 @@ namespace HeavenStudio.Games
                     }),
                     new BeatAction.Action(beat -0.25, delegate
                     {
-                        List<CallAndResponseHandler.CallAndResponseEvent> crEvents = handler.queuedEvents;
-
-                        foreach (var crEvent in crEvents)
+                        List<double> riffUsedBeats = new List<double>();
+                        List<double> bendUsedBeats = new();
+                        foreach (var crEvent in relevantInputs)
                         {
-                            if (crEvent.tag == "riff")
+                            if (!crEvent["respond"]) continue;
+                            double relativeBeat = crEvent.beat - intervalStartBeat;
+                            if (crEvent.datamodel == "rockers/riff")
                             {
+                                RiqEntity foundEvent = riffEvents.Find(x => x.beat == crEvent.beat);
+                                if ((foundEvent == null || (riffUsedBeats.Count > 0 && riffUsedBeats.Contains((float)foundEvent.beat))) && riffEvents.Count > 1) continue;
+                                riffUsedBeats.Add(crEvent.beat);
+
                                 RockersInput riffComp = Instantiate(rockerInputRef, transform);
-                                riffComp.Init(crEvent["gleeClub"], new int[6] { crEvent["1"], crEvent["2"], crEvent["3"], crEvent["4"], crEvent["5"], crEvent["6"] }, beat, crEvent.relativeBeat,
-                                    (PremadeSamples)crEvent["sample"], crEvent["sampleTones"]);
-                                ScheduleInput(beat, crEvent.relativeBeat + crEvent.length, InputType.STANDARD_DOWN, JustMute, MuteMiss, Empty);
+                                riffComp.Init(crEvent["gcS"], new int[6] { crEvent["1S"], crEvent["2S"], crEvent["3S"], crEvent["4S"], crEvent["5S"], crEvent["6S"] }, beat, relativeBeat,
+                                    (PremadeSamples)crEvent["sampleS"], crEvent["pitchSampleS"]);
+                                if (crEvent.length > 0.5f) ScheduleAutoplayInput(beat, relativeBeat + crEvent.length, InputType.STANDARD_DOWN, JustMute, MuteMiss, Empty);
+                                else ScheduleInput(beat, relativeBeat + crEvent.length, InputType.STANDARD_DOWN, JustMute, MuteMiss, Empty);
                             }
-                            else if (crEvent.tag == "bend")
+                            else
                             {
+                                if (riffEvents.Count == 0) continue;
+                                RiqEntity foundEvent = bendEvents.Find(x => x.beat == crEvent.beat);
+                                if ((foundEvent == null || (bendUsedBeats.Count > 0 && bendUsedBeats.Contains((float)foundEvent.beat))) && bendEvents.Count > 1) continue;
+                                RiqEntity riffEventToCheck = riffEvents.Find(x => crEvent.beat >= x.beat && crEvent.beat < x.beat + x.length);
+                                if (riffEventToCheck == null) continue;
+                                bendUsedBeats.Add(beat);
+
                                 RockerBendInput bendComp = Instantiate(rockerBendInputRef, transform);
-                                bendComp.Init(crEvent["Pitch"], beat, crEvent.relativeBeat);
-                                ScheduleInput(beat, crEvent.relativeBeat + crEvent.length, InputType.DIRECTION_UP, JustUnBend, UnBendMiss, Empty);
+                                bendComp.Init(crEvent["1S"], beat, relativeBeat);
+                                ScheduleAutoplayInput(beat, relativeBeat + crEvent.length, InputType.DIRECTION_UP, JustUnBend, UnBendMiss, Empty);
                             }
                         }
-                        handler.queuedEvents.Clear();
                     }),
                     new BeatAction.Action(beat, delegate 
                     { 
