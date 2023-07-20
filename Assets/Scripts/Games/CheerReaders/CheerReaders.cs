@@ -19,7 +19,7 @@ namespace HeavenStudio.Games.Loaders
         {
             return new Minigame("cheerReaders", "Cheer Readers", "ffffde", false, false, new List<GameAction>()
             {
-                new GameAction("oneTwoThree", "“One! Two! Three!”")
+                new GameAction("oneTwoThree", "One! Two! Three!")
                 {
                     function = delegate {var e = eventCaller.currentEntity; CheerReaders.instance.OneTwoThree(e.beat, e["solo"]); CheerReaders.instance.SetIsDoingCue(e.beat, e.length);},
                     defaultLength = 3f,
@@ -28,7 +28,7 @@ namespace HeavenStudio.Games.Loaders
                         new Param("solo", CheerReaders.WhoSpeaks.Both, "Who Speaks", "Who should say the voice line?")
                     }
                 },
-                new GameAction("itsUpToYou", "“It’s up to you!”")
+                new GameAction("itsUpToYou", "It's Up To You!")
                 {
                     function = delegate {var e = eventCaller.currentEntity; CheerReaders.instance.ItsUpToYou(e.beat, e["solo"]); CheerReaders.instance.SetIsDoingCue(e.beat, e.length);},
                     defaultLength = 3f,
@@ -37,7 +37,7 @@ namespace HeavenStudio.Games.Loaders
                         new Param("solo", CheerReaders.WhoSpeaks.Both, "Who Speaks", "Who should say the voice line?")
                     }
                 },
-                new GameAction("letsGoReadABunchaBooks", "“Let’s go read a buncha books!”")
+                new GameAction("letsGoReadABunchaBooks", "Let's Go Read A Buncha Books!")
                 {
                     function = delegate {var e = eventCaller.currentEntity; CheerReaders.instance.LetsGoReadABunchaBooks(e.beat, e["solo"]); CheerReaders.instance.SetIsDoingCue(e.beat, e.length);},
                     defaultLength = 3f,
@@ -46,7 +46,7 @@ namespace HeavenStudio.Games.Loaders
                         new Param("solo", CheerReaders.WhoSpeaks.Both, "Who Speaks", "Who should say the voice line?")
                     }
                 },
-                new GameAction("rahRahSisBoomBaBoom", "“Rah-rah sis boom bah-BOOM!”")
+                new GameAction("rahRahSisBoomBaBoom", "Rah-Rah Sis Boom Bah-BOOM!")
                 {
                     function = delegate {var e = eventCaller.currentEntity; CheerReaders.instance.RahRahSisBoomBaBoom(e.beat, e["solo"], e["consecutive"]); CheerReaders.instance.SetIsDoingCue(e.beat, e.length);},
                     defaultLength = 4f,
@@ -56,7 +56,7 @@ namespace HeavenStudio.Games.Loaders
                         new Param("consecutive", false, "Consecutive", "Is this cue using the alternate consecutive version?")
                     }
                 },
-                new GameAction("okItsOn", "“OK, it’s on!”")
+                new GameAction("okItsOn", "OK, It's On!")
                 {
                     function = delegate {var e = eventCaller.currentEntity; CheerReaders.instance.OkItsOnStretchable(e.beat, e.length, e["solo"], e["toggle"], e["poster"], e["happy"]); CheerReaders.instance.SetIsDoingCue(e.beat, e.length, false);},
                     defaultLength = 4f,
@@ -65,10 +65,10 @@ namespace HeavenStudio.Games.Loaders
                         new Param("solo", CheerReaders.WhoSpeaks.Both, "Who Speaks", "Who should say the voice line?"),
                         new Param("toggle", true, "Whistle", "Should the whistle sound play?"),
                         new Param("poster", CheerReaders.PosterToChoose.Random, "Poster", "Which image should the School Library Pep Squad display?"),
-                        new Param("happy", true, "Make Happy Face?", "Will the School Library Pep Squad smile happily 2 beats after flipping books they hold?")
+                        new Param("happy", true, "Make Happy Face?", "Will the School Library Pep Squad smile happily 2 beats after flipping their books?")
                     }
                 },
-                new GameAction("okItsOnStretch", "“OK, it’s on!” (stretchable)")
+                new GameAction("okItsOnStretch", "OK, It's On! (Stretchable)")
                 {
                     function = delegate {var e = eventCaller.currentEntity; CheerReaders.instance.OkItsOnStretchable(e.beat, e.length, e["solo"], e["toggle"], e["poster"], e["happy"]); CheerReaders.instance.SetIsDoingCue(e.beat, e.length, false); },
                     defaultLength = 4f,
@@ -81,7 +81,7 @@ namespace HeavenStudio.Games.Loaders
                         new Param("happy", true, "Do Happy Face?", "Will the School Library Pep Squad smile happily 2 beats after showing off their books?")
                     }
                 },
-                new GameAction("yay", "“Yay!”")
+                new GameAction("yay", "Yay!")
                 {
                     function = delegate {CheerReaders.instance.Yay(eventCaller.currentEntity["solo"]); },
                     defaultLength = 0.5f,
