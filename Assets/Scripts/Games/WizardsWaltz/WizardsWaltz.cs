@@ -65,7 +65,7 @@ namespace HeavenStudio.Games
         public float zRange = 5;
         public float yRange = 0.5f;
         public float plantYOffset = -2f;
-        private List<Plant> currentPlants = new();
+        [NonSerialized] public List<Plant> currentPlants = new();
 
         public static WizardsWaltz instance;
 

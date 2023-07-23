@@ -92,6 +92,7 @@ namespace HeavenStudio.Games.Scripts_WizardsWaltz
         {
             yield return new WaitForSeconds(Conductor.instance.secPerBeat * game.beatInterval / 2f);
             Destroy(gameObject);
+            game.currentPlants.Remove(this);
         }
     }
 }
