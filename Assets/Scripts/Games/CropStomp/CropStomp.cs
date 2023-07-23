@@ -38,6 +38,13 @@ namespace HeavenStudio.Games.Loaders
                         new Param("mute", false, "Mute", "Should the mole laugh sound be muted?")
                     }
                 },
+                new GameAction("end", "End")
+                {
+                    parameters = new List<Param>()
+                    {
+                        new Param("mute", true, "Mute Humming?")
+                    }
+                },
                 new GameAction("plantCollect", "Veggie Collection Values")
                 {
                     function = delegate { var e = eventCaller.currentEntity; 
@@ -48,7 +55,7 @@ namespace HeavenStudio.Games.Loaders
                         new Param("threshold", new EntityTypes.Integer(1, 80, 8), "Threshold", "For each time the threshold is met a new plant will appear in the veggie bag."),
                         new Param("limit", new EntityTypes.Integer(1, 1000, 80), "Limit", "What is the limit for plants collected?"),
                         new Param("force", false, "Force Amount of Collected Plants"),
-                        new Param("forceAmount", new EntityTypes.Integer(1, 1000, 1), "Force Amount")
+                        new Param("forceAmount", new EntityTypes.Integer(0, 1000, 0), "Force Amount")
                     }
                 }
             },
@@ -75,6 +82,8 @@ namespace HeavenStudio.Games
 
         private double newBeat = -1f; // So that marching can happen on beat 0.
         private double marchStartBeat = -1f;
+        private double marchEndBeat = double.MaxValue;
+        private bool willNotHum = true;
         private double marchOffset;
         private int currentMarchBeat;
         private int stepCount;
@@ -231,11 +240,27 @@ namespace HeavenStudio.Games
         public override void OnGameSwitch(double beat)
         {
             SetInitTresholds(beat);
+            SetMarchEndBeat(beat);
         }
 
         public override void OnPlay(double beat)
         {
             SetInitTresholds(beat);
+            SetMarchEndBeat(beat);
+        }
+
+        private void SetMarchEndBeat(double beat)
+        {
+            double nextEndBeat = double.MaxValue;
+            var nextEnd = EventCaller.GetAllInGameManagerList("gameManager", new string[] { "switchGame", "end" }).Find(e => e.beat > beat);
+            if (nextEnd != null) nextEndBeat = nextEnd.beat;
+
+            var allEnds = EventCaller.GetAllInGameManagerList("cropStomp", new string[] { "end" });
+            var tempEnds = allEnds.FindAll(x => x.beat >= beat && x.beat < nextEndBeat);
+            if (tempEnds.Count == 0) return;
+
+            marchEndBeat = tempEnds[0].beat;
+            willNotHum = tempEnds[0]["mute"];
         }
 
         public static void MoleSound(double beat)
@@ -259,16 +284,21 @@ namespace HeavenStudio.Games
                 return;
             // Debug.Log(newBeat);
 
+            bool cameraLocked = cond.songPositionInBeats >= marchEndBeat;
+            bool isHumming = !(cameraLocked && willNotHum);
+
             if (cond.ReportBeat(ref newBeat, marchOffset, true))
             {
                 currentMarchBeat += 1;
 
                 PlayAnims();
-                if (currentMarchBeat % 2 != 0) //step sound
+                if (currentMarchBeat % 2 != 0 && isHumming) //step sound
                 {
                     MultiSound.Play(new MultiSound.Sound[] {new MultiSound.Sound("cropStomp/hmm", newBeat + marchOffset)});
                 }
             }
+
+            if (cameraLocked) return;
 
             // Object scroll.
             var scrollPos = scrollingHolder.localPosition;

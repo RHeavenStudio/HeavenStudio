@@ -80,7 +80,7 @@ namespace HeavenStudio.Games.Scripts_CropStomp
 
         public void UpdatePlants()
         {
-            startPlant.SetActive(collectedPlants > 0);
+            startPlant.SetActive(collectedPlants >= plantThreshold);
             if (spawnedPlants.Count > 0)
             {
                 foreach (var plant in spawnedPlants)
@@ -89,8 +89,7 @@ namespace HeavenStudio.Games.Scripts_CropStomp
                 }
                 spawnedPlants.Clear();
             }
-            if (collectedPlants <= 1) return;
-            for (int i = 0; i < collectedPlants - 1 && i < plantLimit; i += plantThreshold)
+            for (int i = 0; i <= collectedPlants - (plantThreshold * 2) && i < plantLimit; i += plantThreshold)
             {
                 int realIndex = i / plantThreshold;
                 GameObject spawnedPlant = Instantiate((realIndex % 2 == 0) ? plantRightRef : plantLeftRef, collectedHolder);
