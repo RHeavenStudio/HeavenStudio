@@ -7186,9 +7186,9 @@ MonoBehaviour:
   collectedHolder: {fileID: 1877007400490525041}
   plantLeftRef: {fileID: 782346608357714935}
   plantRightRef: {fileID: 351003806918785885}
-  plantDistance: 0.1
-  plantThreshold: 8
-  plantLimit: 80
+  startPlant: {fileID: 977280992292700036}
+  plantDistance: 0.2
+  plantStartDistance: 0.2
 --- !u!1 &8306659953435150053
 GameObject:
   m_ObjectHideFlags: 0
