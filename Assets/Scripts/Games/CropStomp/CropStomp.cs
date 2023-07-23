@@ -355,9 +355,9 @@ namespace HeavenStudio.Games
             SetCollectThresholds(tempCollect["threshold"], tempCollect["limit"], tempCollect["force"], tempCollect["forceAmount"]);
         }
 
-        public void CollectPlant()
+        public void CollectPlant(int veggieType)
         {
-            farmer.CollectPlant();
+            farmer.CollectPlant(veggieType);
         }
 
         private void PlayAnims()
