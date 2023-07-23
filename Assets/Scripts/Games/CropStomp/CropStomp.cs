@@ -36,7 +36,8 @@ namespace HeavenStudio.Games.Loaders
                     parameters = new List<Param>()
                     {
                         new Param("mute", false, "Mute", "Should the mole laugh sound be muted?")
-                    }
+                    },
+                    preFunctionLength = 6
                 },
                 new GameAction("end", "End")
                 {
@@ -267,10 +268,10 @@ namespace HeavenStudio.Games
         {
             MultiSound.Play(new MultiSound.Sound[] 
             { 
-                new MultiSound.Sound("cropStomp/moleNyeh", beat - 2f),
-                new MultiSound.Sound("cropStomp/moleHeh1", beat - 1.5f),
-                new MultiSound.Sound("cropStomp/moleHeh2", beat - 1f) 
-            });
+                new MultiSound.Sound("cropStomp/moleNyeh", beat - 2, 1, 1, false, 0.134),
+                new MultiSound.Sound("cropStomp/moleHeh1", beat - 1.5, 1, 1, false, 0.05),
+                new MultiSound.Sound("cropStomp/moleHeh2", beat - 1, 1, 1, false, 0.061) 
+            }, forcePlay: true);
         }
 
         private void Update()
