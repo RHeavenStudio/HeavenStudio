@@ -135,6 +135,8 @@ namespace HeavenStudio.InputSystem
         public abstract void InitializeController();
         public abstract void UpdateState(); // Update the state of the controller
 
+        public abstract void OnSelected();
+
         public abstract string GetDeviceName(); // Get the name of the controller
         public abstract string[] GetButtonNames(); // Get the names of the buttons on the controller
         public abstract InputFeatures GetFeatures(); // Get the features of the controller

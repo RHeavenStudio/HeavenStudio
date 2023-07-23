@@ -70,6 +70,11 @@ namespace HeavenStudio.InputSystem
         {
             // Update the state of the controller
         }
+
+        public override void OnSelected()
+        { 
+
+        }
         
         public override string GetDeviceName()
         {
@@ -103,11 +108,15 @@ namespace HeavenStudio.InputSystem
 
         public override ControlBindings GetDefaultBindings()
         {
-            return defaultBindings;
+            ControlBindings b = new();
+            b.Pad = defaultBindings.Pad.DeepClone();
+            return b;
         }
 
         public override void ResetBindings()
-        { }
+        {
+            currentBindings = GetDefaultBindings();
+        }
 
         public override ControlBindings GetCurrentBindings()
         {
@@ -115,7 +124,9 @@ namespace HeavenStudio.InputSystem
         }
 
         public override void SetCurrentBindings(ControlBindings newBinds)
-        { }
+        {
+            currentBindings = newBinds;
+        }
 
         public override int GetLastButtonDown()
         {
@@ -137,19 +148,19 @@ namespace HeavenStudio.InputSystem
 
         public override bool GetButton(int button)
         {
-            return Input.GetKey((KeyCode)defaultBindings.Pad[button]);
+            return Input.GetKey((KeyCode)currentBindings.Pad[button]);
         }
 
         public override bool GetButtonDown(int button, out double dt)
         {
             dt = 0;
-            return Input.GetKeyDown((KeyCode)defaultBindings.Pad[button]);
+            return Input.GetKeyDown((KeyCode)currentBindings.Pad[button]);
         }
 
         public override bool GetButtonUp(int button, out double dt)
         {
             dt = 0;
-            return Input.GetKeyUp((KeyCode)defaultBindings.Pad[button]);
+            return Input.GetKeyUp((KeyCode)currentBindings.Pad[button]);
         }
 
         public override float GetAxis(InputAxis axis)
@@ -163,13 +174,13 @@ namespace HeavenStudio.InputSystem
             switch (direction)
             {
                 case InputDirection.Up:
-                    return Input.GetKey((KeyCode)defaultBindings.Pad[0]);
+                    return Input.GetKey((KeyCode)currentBindings.Pad[0]);
                 case InputDirection.Down:
-                    return Input.GetKey((KeyCode)defaultBindings.Pad[1]);
+                    return Input.GetKey((KeyCode)currentBindings.Pad[1]);
                 case InputDirection.Left:
-                    return Input.GetKey((KeyCode)defaultBindings.Pad[2]);
+                    return Input.GetKey((KeyCode)currentBindings.Pad[2]);
                 case InputDirection.Right:
-                    return Input.GetKey((KeyCode)defaultBindings.Pad[3]);
+                    return Input.GetKey((KeyCode)currentBindings.Pad[3]);
                 default:
                     return false;
             }
@@ -181,13 +192,13 @@ namespace HeavenStudio.InputSystem
             switch (direction)
             {
                 case InputDirection.Up:
-                    return Input.GetKeyDown((KeyCode)defaultBindings.Pad[0]);
+                    return Input.GetKeyDown((KeyCode)currentBindings.Pad[0]);
                 case InputDirection.Down:
-                    return Input.GetKeyDown((KeyCode)defaultBindings.Pad[1]);
+                    return Input.GetKeyDown((KeyCode)currentBindings.Pad[1]);
                 case InputDirection.Left:
-                    return Input.GetKeyDown((KeyCode)defaultBindings.Pad[2]);
+                    return Input.GetKeyDown((KeyCode)currentBindings.Pad[2]);
                 case InputDirection.Right:
-                    return Input.GetKeyDown((KeyCode)defaultBindings.Pad[3]);
+                    return Input.GetKeyDown((KeyCode)currentBindings.Pad[3]);
                 default:
                     return false;
             }
@@ -199,13 +210,13 @@ namespace HeavenStudio.InputSystem
             switch (direction)
             {
                 case InputDirection.Up:
-                    return Input.GetKeyUp((KeyCode)defaultBindings.Pad[0]);
+                    return Input.GetKeyUp((KeyCode)currentBindings.Pad[0]);
                 case InputDirection.Down:
-                    return Input.GetKeyUp((KeyCode)defaultBindings.Pad[1]);
+                    return Input.GetKeyUp((KeyCode)currentBindings.Pad[1]);
                 case InputDirection.Left:
-                    return Input.GetKeyUp((KeyCode)defaultBindings.Pad[2]);
+                    return Input.GetKeyUp((KeyCode)currentBindings.Pad[2]);
                 case InputDirection.Right:
-                    return Input.GetKeyUp((KeyCode)defaultBindings.Pad[3]);
+                    return Input.GetKeyUp((KeyCode)currentBindings.Pad[3]);
                 default:
                     return false;
             }

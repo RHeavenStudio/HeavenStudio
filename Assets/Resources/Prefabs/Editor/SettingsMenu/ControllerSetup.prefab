@@ -121,7 +121,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 1789125923604313479}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 3918594455367347236}
+        m_TargetAssemblyTypeName: HeavenStudio.Editor.ControllerSettings, Assembly-CSharp
+        m_MethodName: StartBindSingle
+        m_Mode: 3
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 6
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!1 &709950367650092544
 GameObject:
   m_ObjectHideFlags: 0
@@ -243,7 +255,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 5435393540210743207}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 3918594455367347236}
+        m_TargetAssemblyTypeName: HeavenStudio.Editor.ControllerSettings, Assembly-CSharp
+        m_MethodName: StartBindAll
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!1 &932619564154202904
 GameObject:
   m_ObjectHideFlags: 0
@@ -500,7 +524,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 792239685723647610}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 3918594455367347236}
+        m_TargetAssemblyTypeName: HeavenStudio.Editor.ControllerSettings, Assembly-CSharp
+        m_MethodName: StartBindSingle
+        m_Mode: 3
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 8
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!1 &1805243853809551032
 GameObject:
   m_ObjectHideFlags: 0
@@ -894,7 +930,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 6269267112121897415}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 3918594455367347236}
+        m_TargetAssemblyTypeName: HeavenStudio.Editor.ControllerSettings, Assembly-CSharp
+        m_MethodName: StartBindSingle
+        m_Mode: 3
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 1
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!1 &2034840868618852683
 GameObject:
   m_ObjectHideFlags: 0
@@ -1016,7 +1064,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 35254328104671188}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 3918594455367347236}
+        m_TargetAssemblyTypeName: HeavenStudio.Editor.ControllerSettings, Assembly-CSharp
+        m_MethodName: StartBindSingle
+        m_Mode: 3
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 10
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!1 &2145596997305372604
 GameObject:
   m_ObjectHideFlags: 0
@@ -1773,7 +1833,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 7710667939191343808}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 3918594455367347236}
+        m_TargetAssemblyTypeName: HeavenStudio.Editor.ControllerSettings, Assembly-CSharp
+        m_MethodName: ResetBindings
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!1 &3766128194742277427
 GameObject:
   m_ObjectHideFlags: 0
@@ -1895,7 +1967,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 210566438248114970}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 3918594455367347236}
+        m_TargetAssemblyTypeName: HeavenStudio.Editor.ControllerSettings, Assembly-CSharp
+        m_MethodName: StartBindSingle
+        m_Mode: 3
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 2
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!1 &3918594454379110542
 GameObject:
   m_ObjectHideFlags: 0
@@ -6845,7 +6929,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 6137118343964882282}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 3918594455367347236}
+        m_TargetAssemblyTypeName: HeavenStudio.Editor.ControllerSettings, Assembly-CSharp
+        m_MethodName: StartBindSingle
+        m_Mode: 3
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 9
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!1 &4345149076986626764
 GameObject:
   m_ObjectHideFlags: 0
@@ -6967,7 +7063,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 5923174635250535527}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 3918594455367347236}
+        m_TargetAssemblyTypeName: HeavenStudio.Editor.ControllerSettings, Assembly-CSharp
+        m_MethodName: StartBindSingle
+        m_Mode: 3
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 3
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!1 &4591438066257397785
 GameObject:
   m_ObjectHideFlags: 0
@@ -7224,7 +7332,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 8423613209900499461}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 3918594455367347236}
+        m_TargetAssemblyTypeName: HeavenStudio.Editor.ControllerSettings, Assembly-CSharp
+        m_MethodName: StartBindSingle
+        m_Mode: 3
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 5
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!1 &4715650870925269137
 GameObject:
   m_ObjectHideFlags: 0
@@ -7828,7 +7948,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 7902023666975019330}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 3918594455367347236}
+        m_TargetAssemblyTypeName: HeavenStudio.Editor.ControllerSettings, Assembly-CSharp
+        m_MethodName: StartBindSingle
+        m_Mode: 3
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 4
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!1 &6904951872627906333
 GameObject:
   m_ObjectHideFlags: 0
@@ -8163,7 +8295,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 1947131030887139730}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 3918594455367347236}
+        m_TargetAssemblyTypeName: HeavenStudio.Editor.ControllerSettings, Assembly-CSharp
+        m_MethodName: StartBindSingle
+        m_Mode: 3
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!1 &7286520951384392067
 GameObject:
   m_ObjectHideFlags: 0
@@ -8630,7 +8774,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 6834631479334570439}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 3918594455367347236}
+        m_TargetAssemblyTypeName: HeavenStudio.Editor.ControllerSettings, Assembly-CSharp
+        m_MethodName: StartBindSingle
+        m_Mode: 3
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 7
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!1 &8613303898747138299
 GameObject:
   m_ObjectHideFlags: 0

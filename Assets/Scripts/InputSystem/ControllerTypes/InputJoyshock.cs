@@ -1,4 +1,5 @@
 using System;
+using System.Threading.Tasks;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -451,6 +452,20 @@ namespace HeavenStudio.InputSystem
             lastInputStack.Clear();
         }
 
+        public override void OnSelected()
+        { 
+            Task.Run(() => SelectionVibrate());
+        }
+
+        async void SelectionVibrate()
+        {
+            JslSetRumbleFrequency(GetHandle(), 0.4f, 0.4f, 80f, 160f);
+            await Task.Delay(500);
+            JslSetRumbleFrequency(GetHandle(), 0.5f, 0.5f, 160f, 320f);
+            await Task.Delay(250);
+            JslSetRumbleFrequency(GetHandle(), 0f, 0f, 0f, 0f);
+        }
+
         public override string GetDeviceName()
         {
             if (otherHalf != null)
@@ -532,7 +547,9 @@ namespace HeavenStudio.InputSystem
         }
 
         public override void ResetBindings()
-        { }
+        {
+            currentBindings = GetDefaultBindings();
+        }
 
         public override ControlBindings GetCurrentBindings()
         {
@@ -540,7 +557,9 @@ namespace HeavenStudio.InputSystem
         }
 
         public override void SetCurrentBindings(ControlBindings newBinds)
-        { }
+        {
+            currentBindings = newBinds;
+        }
 
         public override int GetLastButtonDown()
         {

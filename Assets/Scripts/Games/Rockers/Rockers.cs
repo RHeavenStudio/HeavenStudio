@@ -539,11 +539,6 @@ namespace HeavenStudio.Games
             }
         }
 
-        public override void OnPlay(double beat)
-        {
-            crHandlerInstance = null;
-        }
-
         private void OnDestroy()
         {
             if (queuedCameraEvents.Count > 0) queuedCameraEvents.Clear();
@@ -1072,4 +1067,3 @@ namespace HeavenStudio.Games
         }
     }
 }
-

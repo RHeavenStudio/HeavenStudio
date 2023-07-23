@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
+using System.Threading.Tasks;
 
 using HeavenStudio;
 using HeavenStudio.Util;
@@ -37,56 +38,93 @@ namespace HeavenStudio.Editor
         private bool isPairSearching = false;
         private bool pairSelectLR = false;  //true = left, false = right
 
+        private bool bindAllMode;
+        private int currentBindingBt;
+
         private void Start() {
             numConnectedLabel.text = "Connected: " + PlayerInput.GetNumControllersConnected();
             currentControllerLabel.text = "Current Controller: " + PlayerInput.GetInputController(1).GetDeviceName();
             PopulateControllersDropdown();
 
+            ShowControllerBinds(PlayerInput.GetInputController(1));
             ShowControllerIcon(PlayerInput.GetInputController(1));
-
-            controllersDropdown.onValueChanged.AddListener(delegate 
-            {
-                InputController lastController = PlayerInput.GetInputController(1);
-                InputController newController = PlayerInput.GetInputControllers()[controllersDropdown.value];
-
-                AssignController(newController, lastController);
-            });
         }
 
         private void Update() {
-            if (isAutoSearching) {
-                var controllers = PlayerInput.GetInputControllers();
-                foreach (var controller in controllers) {
-                    if (controller.GetLastButtonDown() > 0 || controller.GetLastKeyDown() > 0) {
-                        InputController lastController = PlayerInput.GetInputController(1);
-                        isAutoSearching = false;
-                        autoSearchLabel.SetActive(false);
-                        AssignController(controller, lastController);
+            InputController currentController = PlayerInput.GetInputController(1);
+            if (currentBindingBt >= 0)
+            {
+                int bt = currentController.GetLastButtonDown();
+                KeyCode key = currentController.GetLastKeyDown();
+                if (bt > 0)
+                {
+                    InputController.ControlBindings binds = currentController.GetCurrentBindings();
+                    binds.Pad[currentBindingBt] = bt;
+                    currentController.SetCurrentBindings(binds);
+                    currentControllerLabel.text = "Current Controller: " + currentController.GetDeviceName();
+                    ShowControllerBinds(currentController);
+                    AdvanceAutoBind(currentController);
+                }
+                else if (key > 0)
+                {
+                    InputController.ControlBindings binds = currentController.GetCurrentBindings();
+                    binds.Pad[currentBindingBt] = (int)key;
+                    currentController.SetCurrentBindings(binds);
+                    currentControllerLabel.text = "Current Controller: " + currentController.GetDeviceName();
+                    ShowControllerBinds(currentController);
+                    AdvanceAutoBind(currentController);
+                }
+                return;
+            }
+            else
+            {
+                if (isAutoSearching) {
+                    var controllers = PlayerInput.GetInputControllers();
+                    foreach (var newController in controllers) {
+                        if (newController.GetLastButtonDown() > 0 || newController.GetLastKeyDown() > 0) {
+                            isAutoSearching = false;
+                            autoSearchLabel.SetActive(false);
+                            AssignController(newController, currentController);
 
-                        controllersDropdown.value = PlayerInput.GetInputControllerId(1);
+                            controllersDropdown.value = PlayerInput.GetInputControllerId(1);
+                        }
+                    }
+                }
+                else if (isPairSearching) {
+                    var controllers = PlayerInput.GetInputControllers();
+                    InputController.InputFeatures lrFlag = pairSelectLR ? InputController.InputFeatures.Extra_SplitControllerLeft : InputController.InputFeatures.Extra_SplitControllerRight;
+                    foreach (var pairController in controllers) {
+                        if (pairController == currentController) continue;
+
+                        InputController.InputFeatures features = pairController.GetFeatures();
+                        if (!features.HasFlag(lrFlag)) continue;
+
+                        if (pairController.GetLastButtonDown() > 0 || pairController.GetLastKeyDown() > 0) {
+                            (PlayerInput.GetInputController(1) as InputJoyshock)?.AssignOtherHalf((InputJoyshock) pairController);
+                            isPairSearching = false;
+                            pairSearchLabel.SetActive(false);
+                            currentControllerLabel.text = "Current Controller: " + pairController.GetDeviceName();
+                            pairingLabel.text = "Joy-Con Pair Selected\nPairing Successful!";
+                            ShowControllerIcon(pairController);
+
+                            currentController.OnSelected();
+                            pairController.OnSelected();
+                        }
                     }
                 }
             }
-            else if (isPairSearching) {
-                var controllers = PlayerInput.GetInputControllers();
-                InputController.InputFeatures lrFlag = pairSelectLR ? InputController.InputFeatures.Extra_SplitControllerLeft : InputController.InputFeatures.Extra_SplitControllerRight;
-                foreach (var controller in controllers) {
-                    if (controller == PlayerInput.GetInputController(1)) continue;
-                    InputController.InputFeatures features = controller.GetFeatures();
-                    if (!features.HasFlag(lrFlag)) continue;
-                    if (controller.GetLastButtonDown() > 0 || controller.GetLastKeyDown() > 0) {
-                        InputJoyshock con = (InputJoyshock) PlayerInput.GetInputController(1);
-                        con.AssignOtherHalf((InputJoyshock) controller);
-                        isPairSearching = false;
-                        pairSearchLabel.SetActive(false);
-                        currentControllerLabel.text = "Current Controller: " + controller.GetDeviceName();
-                        pairingLabel.text = "Joy-Con Pair Selected\nPairing Successful!";
-                        ShowControllerIcon(controller);
+        }
 
-                        StartCoroutine(SelectionVibrate(con));
-                        StartCoroutine(SelectionVibrate((InputJoyshock) controller));
-                    }
-                }
+        void AdvanceAutoBind(InputController currentController)
+        {
+            if (bindAllMode && (currentBindingBt + 1 <= (int)InputController.ButtonsPad.Pause)) // Pause is always the last button
+            {
+                currentBindingBt++;
+                currentControllerLabel.text = $"Now Binding: {(InputController.ButtonsPad) currentBindingBt}";
+            }
+            else
+            {
+                CancelBind();
             }
         }
 
@@ -96,17 +134,17 @@ namespace HeavenStudio.Editor
             newController.SetPlayer(1);
 
             if (typeof(InputJoyshock) == lastController.GetType()) {
-                InputJoyshock con = (InputJoyshock) lastController;
-                con.UnAssignOtherHalf();
+                (lastController as InputJoyshock)?.UnAssignOtherHalf();
             }
 
             if (typeof(InputJoyshock) == newController.GetType()) {
-                InputJoyshock con = (InputJoyshock) newController;
-                StartCoroutine(SelectionVibrate(con));
-                con.UnAssignOtherHalf();
+                newController.OnSelected();
+                (newController as InputJoyshock)?.UnAssignOtherHalf();
             }
 
             currentControllerLabel.text = "Current Controller: " + newController.GetDeviceName();
+            
+            ShowControllerBinds(newController);
             ShowControllerIcon(newController);
 
             InputController.InputFeatures features = newController.GetFeatures();
@@ -130,7 +168,47 @@ namespace HeavenStudio.Editor
             }
         }
 
+        public void ControllerDropdownChange()
+        {
+            CancelBind();
+            InputController lastController = PlayerInput.GetInputController(1);
+            InputController newController = PlayerInput.GetInputControllers()[controllersDropdown.value];
+
+            AssignController(newController, lastController);
+        }
+
+        public void StartBindSingle(int bt)
+        {
+            CancelBind();
+            currentBindingBt = bt;
+            currentControllerLabel.text = $"Now Binding: {(InputController.ButtonsPad) bt}";
+        }
+
+        public void StartBindAll()
+        {
+            CancelBind();
+            bindAllMode = true;
+            currentBindingBt = 0;
+            currentControllerLabel.text = $"Now Binding: {(InputController.ButtonsPad) 0}";
+        }
+
+        public void CancelBind()
+        {
+            bindAllMode = false;
+            currentBindingBt = -1;
+            currentControllerLabel.text = "Current Controller: " + PlayerInput.GetInputController(1).GetDeviceName();
+        }
+
+        public void ResetBindings()
+        {
+            CancelBind();
+            InputController controller = PlayerInput.GetInputController(1);
+            controller.ResetBindings();
+            ShowControllerBinds(controller);
+        }
+
         public void StartAutoSearch() {
+            CancelBind();
             if (!isPairSearching)
             {
                 autoSearchLabel.SetActive(true);
@@ -139,6 +217,7 @@ namespace HeavenStudio.Editor
         }
 
         public void StartPairSearch() {
+            CancelBind();
             if (!isAutoSearching) {
                 pairSearchLabel.SetActive(true);
                 isPairSearching = true;
@@ -146,6 +225,7 @@ namespace HeavenStudio.Editor
         }
 
         public void CancelPairSearch() {
+            CancelBind();
             if (isPairSearching) {
                 pairSearchLabel.SetActive(false);
                 isPairSearching = false;
@@ -176,9 +256,8 @@ namespace HeavenStudio.Editor
             controllersDropdown.value = 0;
         }
 
-        public void ShowControllerIcon(InputController controller)
+        public void ShowControllerBinds(InputController controller)
         {
-            string name = controller.GetDeviceName();
             string[] buttons = controller.GetButtonNames();
 
             //show binds
@@ -202,6 +281,11 @@ namespace HeavenStudio.Editor
                 }
                 ac++;
             }
+        }
+
+        public void ShowControllerIcon(InputController controller)
+        {
+            string name = controller.GetDeviceName();
 
             //show icon
             foreach (var icon in controllerIcons)
@@ -269,23 +353,14 @@ namespace HeavenStudio.Editor
             }
         }
 
-        IEnumerator SelectionVibrate(InputJoyshock controller)
-        {
-            JslSetRumbleFrequency(controller.GetHandle(), 0.4f, 0.4f, 80f, 160f);
-            yield return new WaitForSeconds(0.15f);
-            JslSetRumbleFrequency(controller.GetHandle(), 0f, 0f, 0f, 0f);
-            yield return new WaitForSeconds(0.05f);
-            JslSetRumbleFrequency(controller.GetHandle(), 0.5f, 0.5f, 160f, 320f);
-            yield return new WaitForSeconds(0.25f);
-            JslSetRumbleFrequency(controller.GetHandle(), 0f, 0f, 0f, 0f);
-        }
-
         public override void OnOpenTab()
         {
+            CancelBind();
         }
 
         public override void OnCloseTab()
         {
+            CancelBind();
         }
     }
 }
