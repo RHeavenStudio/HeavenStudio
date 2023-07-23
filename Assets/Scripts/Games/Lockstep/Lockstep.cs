@@ -257,15 +257,15 @@ namespace HeavenStudio.Games
             var switchEventsOn = EventCaller.GetAllInGameManagerList("lockstep", new string[] { "onbeatSwitch" });
             foreach (var on in switchEventsOn)
             {
-                if (on.beat >= nextGameSwitchBeat || !on["visual"]) return;
-                OnbeatSwitch(on.beat, beat);
+                if (on.beat >= nextGameSwitchBeat) continue;
+                OnbeatSwitch(on.beat, beat, on["visual"]);
             }
 
             var switchEventsOff = EventCaller.GetAllInGameManagerList("lockstep", new string[] { "offbeatSwitch" });
             foreach (var off in switchEventsOff)
             {
-                if (off.beat >= nextGameSwitchBeat || !off["visual"]) return;
-                OffbeatSwitch(off.beat, beat);
+                if (off.beat >= nextGameSwitchBeat) continue;
+                OffbeatSwitch(off.beat, beat, off["visual"]);
             }
         }
 
@@ -429,22 +429,22 @@ namespace HeavenStudio.Games
             }
         }
 
-        private void OnbeatSwitch(double beat, double gameswitchBeat)
+        private void OnbeatSwitch(double beat, double gameswitchBeat, bool visual)
         {
             List<BeatAction.Action> allActions = new List<BeatAction.Action>()
             {
-                new BeatAction.Action(beat, delegate { ChangeBeatBackGroundColour(false); }),
-                new BeatAction.Action(beat + 0.5f, delegate { ChangeBeatBackGroundColour(true); }),
+                new BeatAction.Action(beat, delegate { if(visual) ChangeBeatBackGroundColour(false); }),
+                new BeatAction.Action(beat + 0.5f, delegate { if (visual) ChangeBeatBackGroundColour(true); }),
                 new BeatAction.Action(beat + 1f, delegate
                 {
-                    ChangeBeatBackGroundColour(false);
+                    if(visual) ChangeBeatBackGroundColour(false);
                 }),
                 new BeatAction.Action(beat + 1.5f, delegate 
-                { 
-                    ChangeBeatBackGroundColour(true);
+                {
+                    if (visual) ChangeBeatBackGroundColour(true);
                 }),
                 new BeatAction.Action(beat + 1.75f, delegate { if (!marchRecursing) MarchRecursive(beat + 2f); }),
-                new BeatAction.Action(beat + 2f, delegate { ChangeBeatBackGroundColour(false); }),
+                new BeatAction.Action(beat + 2f, delegate { if (visual) ChangeBeatBackGroundColour(false); }),
             };
             List<BeatAction.Action> actions = new();
             foreach (var action in allActions)
@@ -495,19 +495,19 @@ namespace HeavenStudio.Games
             }
         }
 
-        private void OffbeatSwitch(double beat, double gameswitchBeat)
+        private void OffbeatSwitch(double beat, double gameswitchBeat, bool visual)
         {
             List<BeatAction.Action> allActions = new List<BeatAction.Action>()
             {
-                new BeatAction.Action(beat, delegate { ChangeBeatBackGroundColour(true); }),
-                new BeatAction.Action(beat + 1f, delegate { ChangeBeatBackGroundColour(false); }),
-                new BeatAction.Action(beat + 2f, delegate { ChangeBeatBackGroundColour(true); }),
+                new BeatAction.Action(beat, delegate { if (visual) ChangeBeatBackGroundColour(true); }),
+                new BeatAction.Action(beat + 1f, delegate { if (visual) ChangeBeatBackGroundColour(false); }),
+                new BeatAction.Action(beat + 2f, delegate { if (visual) ChangeBeatBackGroundColour(true); }),
                 new BeatAction.Action(beat + 3f, delegate
                 {
-                    ChangeBeatBackGroundColour(false);
+                    if (visual) ChangeBeatBackGroundColour(false);
                 }),
                 new BeatAction.Action(beat + 3.25f, delegate { if (!marchRecursing) MarchRecursive(beat + 3.5f); }),
-                new BeatAction.Action(beat + 3.5f, delegate { ChangeBeatBackGroundColour(true); }),
+                new BeatAction.Action(beat + 3.5f, delegate { if (visual) ChangeBeatBackGroundColour(true); }),
             };
             List<BeatAction.Action> actions = new();
             foreach (var action in allActions)
