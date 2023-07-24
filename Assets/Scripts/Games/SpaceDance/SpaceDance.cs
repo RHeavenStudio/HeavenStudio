@@ -402,7 +402,7 @@ namespace HeavenStudio.Games
                     break;
             }
 
-            MultiSound.Play(soundsToPlay.ToArray());
+            MultiSound.Play(soundsToPlay.ToArray(), true, true);
         }
 
         public void DoTurnRight(double beat, bool grampsTurns)
@@ -471,7 +471,7 @@ namespace HeavenStudio.Games
                     break;
             }
 
-            MultiSound.Play(soundsToPlay.ToArray());
+            MultiSound.Play(soundsToPlay.ToArray(), true, true);
         }
 
         public void DoSitDown(double beat, bool grampsSits)
@@ -546,7 +546,7 @@ namespace HeavenStudio.Games
                     break;
             }
 
-            MultiSound.Play(soundsToPlay.ToArray());
+            MultiSound.Play(soundsToPlay.ToArray(), true, true);
         }
 
         public void DoPunch(double beat, bool grampsPunches)

@@ -319,7 +319,9 @@ namespace HeavenStudio.Games
                 {
                     continue;
                 }
-                Dispense(entity.beat, false);
+                bool isOnGameSwitchBeat = entity.beat == beat;
+                Debug.Log(isOnGameSwitchBeat);
+                Dispense(entity.beat, isOnGameSwitchBeat && !entity["toggle"], false, isOnGameSwitchBeat && entity["down"]);
                 break;
             }
         }
@@ -449,9 +451,8 @@ namespace HeavenStudio.Games
             for (int i = 0; i < kickers.Count; i++)
             {
                 Kicker kicker = kickers[i];
-                if (i == 0) kicker.player = true;
-
-                if (kicker.ball != null || (ignorePlayer && i == 0)) continue;
+                kicker.player = i == 0;
+                if (kicker.ball != null || (ignorePlayer && kicker.player)) continue;
 
                 GameObject ball = Instantiate(ballRef, kicker.transform.GetChild(0));
                 ball.SetActive(true);

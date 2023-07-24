@@ -267,6 +267,11 @@ namespace HeavenStudio.Games
             player.Bop();
         }
 
+        private bool IsEventAtBeat(double beat, double endBeat)
+        {
+            return EventCaller.GetAllInGameManagerList("tapTrial", new string[] { "tap", "double tap", "triple tap", "jump tap" }).Find(x => x.beat >= beat && x.beat < endBeat) != null;
+        }
+
         public void Tap(double beat)
         {
             canBop = false;
@@ -284,7 +289,7 @@ namespace HeavenStudio.Games
                 }),
                 new BeatAction.Action(beat + 1.5, delegate
                 {
-                    canBop = true;
+                    if (!IsEventAtBeat(beat + 1, beat + 2)) canBop = true;
                 })
             });
 
@@ -320,7 +325,7 @@ namespace HeavenStudio.Games
                 {
                     PlayMonkeyAnimationScaledAsync("DoubleTap", 0.5f);
                     MonkeyParticles(false);
-                    canBop = true;
+                    if (!IsEventAtBeat(beat + 1, beat + 2)) canBop = true;
                 }),
             });
 
@@ -407,7 +412,7 @@ namespace HeavenStudio.Games
                 }),
                 new BeatAction.Action(beat + 1.5, delegate
                 {
-                    canBop = final;
+                    if (!IsEventAtBeat(beat + 1, beat + 2)) canBop = final;
                 })
             });
 
