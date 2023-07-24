@@ -59,13 +59,6 @@ namespace HeavenStudio.Games
     using Scripts_SneakySpirits;
     public class SneakySpirits : Minigame
     {
-        public struct QueuedGhost
-        {
-            public double beat;
-            public float length;
-            public bool slowDown;
-            public List<int> volumes;
-        }
         [Header("Components")]
         [SerializeField] Animator bowAnim;
         [SerializeField] Animator bowHolderAnim;
@@ -79,8 +72,7 @@ namespace HeavenStudio.Games
         [SerializeField] GameObject slowRain;
         [SerializeField] GameObject normalTree;
         [SerializeField] GameObject slowTree;
-        [Header("Variables")]
-        private static List<QueuedGhost> queuedGhosts = new List<QueuedGhost>();
+
         private bool hasArrowLoaded;
         float movingLength;
         double movingStartBeat;
@@ -92,11 +84,32 @@ namespace HeavenStudio.Games
 
         void OnDestroy()
         {
-            if (queuedGhosts.Count > 0) queuedGhosts.Clear();
             Conductor.instance.SetMinigamePitch(1f);
             foreach (var evt in scheduledInputs)
             {
                 evt.Disable();
+            }
+        }
+
+        public override void OnGameSwitch(double beat)
+        {
+            InitGhosts(beat);
+        }
+
+        private void InitGhosts(double beat)
+        {
+            var allGhosts = EventCaller.GetAllInGameManagerList("sneakySpirits", new string[] { "spawnGhost" });
+
+            foreach (var ghost in allGhosts)
+            {
+                if (ghost.beat < beat && ghost.beat + (ghost.length * 7) >= beat)
+                {
+                    SpawnGhost(ghost.beat, beat, ghost.length, ghost["slowDown"], new List<int>()
+                    {
+                        ghost["volume1"], ghost["volume2"], ghost["volume3"], ghost["volume4"], ghost["volume5"], ghost["volume6"],
+                        ghost["volume7"],
+                    });
+                }
             }
         }
 
@@ -111,14 +124,6 @@ namespace HeavenStudio.Games
             var cond = Conductor.instance;
             if (cond.isPlaying && !cond.isPaused)
             {
-                if (queuedGhosts.Count > 0)
-                {
-                    foreach(var ghost in queuedGhosts)
-                    {
-                        SpawnGhost(ghost.beat, ghost.length, ghost.slowDown, ghost.volumes);
-                    }
-                    queuedGhosts.Clear();
-                }
                 if (PlayerInput.Pressed() && !IsExpectingInputNow(InputType.STANDARD_DOWN) && hasArrowLoaded)
                 {
                     WhiffArrow(cond.songPositionInBeatsAsDouble);
@@ -137,7 +142,6 @@ namespace HeavenStudio.Games
             }
             else if (!cond.isPlaying)
             {
-                queuedGhosts.Clear();
                 Conductor.instance.SetMinigamePitch(1f);
             }
         }
@@ -172,27 +176,14 @@ namespace HeavenStudio.Games
             }, forcePlay: true);
             if (GameManager.instance.currentGame == "sneakySpirits")
             {
-                SneakySpirits.instance.SpawnGhost(beat, length, slowDown, new List<int>()
+                SneakySpirits.instance.SpawnGhost(beat, beat, length, slowDown, new List<int>()
                 {
                     volume1, volume2, volume3, volume4, volume5, volume6, volume7
                 });
             }
-            else
-            {
-                queuedGhosts.Add(new QueuedGhost
-                {
-                    beat = beat,
-                    length = length,
-                    volumes = new List<int>()
-                    {
-                        volume1, volume2, volume3, volume4, volume5, volume6, volume7
-                    },
-                    slowDown = slowDown,
-                });
-            }
         }
 
-        public void SpawnGhost(double beat, float length, bool slowDown, List<int> volumes)
+        public void SpawnGhost(double beat, double gameSwitchBeat, float length, bool slowDown, List<int> volumes)
         {
             if (slowDown)
             {
@@ -211,7 +202,7 @@ namespace HeavenStudio.Games
             for(int i = 0; i < 7; i++)
             {
                 double spawnBeat = beat + length * i;
-                if (spawnBeat >= Conductor.instance.songPositionInBeatsAsDouble)
+                if (spawnBeat >= gameSwitchBeat)
                 {
                     SneakySpiritsGhost spawnedGhost = Instantiate(movingGhostPrefab, ghostPositions[i], false);
                     spawnedGhost.transform.position = new Vector3(spawnedGhost.transform.position.x, spawnedGhost.transform.position.y - (1 - volumes[i] * 0.01f) * 2.5f, spawnedGhost.transform.position.z);
