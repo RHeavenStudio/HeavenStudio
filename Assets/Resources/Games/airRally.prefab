@@ -233,12 +233,8 @@ MonoBehaviour:
   OtherTarget: {fileID: 3866424594885495325}
   TargetHeight: 3.5
   TargetHeightLong: 7
+  TargetHeightToss: 3.5
   hitEffect: {fileID: 2145078698617108457}
-  startBeat: 0
-  flyBeats: 0
-  flyType: 0
-  flyPos: 0
-  isReturning: 0
 --- !u!50 &3357137883913922099
 Rigidbody2D:
   serializedVersion: 4
@@ -6778,7 +6774,6 @@ MonoBehaviour:
   Shuttlecock: {fileID: 964190685}
   ActiveShuttle: {fileID: 0}
   objHolder: {fileID: 516790545}
-  e_BaBumState: 0
   hasMissed: 0
   wayPointBeatLength: 1
 --- !u!1 &3889466559927977854

@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using HeavenStudio.Util;
-
+using System;
 
 namespace HeavenStudio.Games.Scripts_AirRally
 {
@@ -12,17 +12,19 @@ namespace HeavenStudio.Games.Scripts_AirRally
         [SerializeField] Transform OtherTarget;
         [SerializeField] float TargetHeight;
         [SerializeField] float TargetHeightLong;
+        [SerializeField] float TargetHeightToss = 2.5f;
         [SerializeField] ParticleSystem hitEffect;
 
         private Rigidbody2D rb;
 
-        public double startBeat;
-        public double flyBeats;
+        [NonSerialized] public double startBeat;
+        [NonSerialized] public double flyBeats;
 
-        public bool flyType;
+        [NonSerialized] public bool flyType;
         bool miss = false;
-        public float flyPos;
-        public bool isReturning;
+        [NonSerialized] public float flyPos;
+        [NonSerialized] public bool isReturning;
+        [NonSerialized] public bool isTossed = false;
         AirRally game;
 
         private void Awake()
@@ -43,6 +45,11 @@ namespace HeavenStudio.Games.Scripts_AirRally
 
             Vector3 startPos = isReturning ? PlayerTarget.position : OtherTarget.position;
             Vector3 endPos = isReturning ? OtherTarget.position : PlayerTarget.position;
+            if (isTossed)
+            {
+                startPos = OtherTarget.position;
+                endPos = OtherTarget.position;
+            }
             Vector3 lastPos = transform.position;
             if (!rb.simulated)
             {
@@ -52,24 +59,33 @@ namespace HeavenStudio.Games.Scripts_AirRally
 
                 float yMul = flyPos * 2f - 1f;
                 float yWeight = -(yMul*yMul) + 1f;
-                transform.position += Vector3.up * yWeight * (flyType ? TargetHeightLong : TargetHeight);
+                if (isTossed) transform.position += Vector3.up * yWeight * TargetHeightToss;
+                else transform.position += Vector3.up * yWeight * (flyType ? TargetHeightLong : TargetHeight);
             }
 
             // calculates next position
             {
                 float rotation;
-                if (flyPos > 0.5)
+                if (isTossed)
                 {
-                    Vector3 midPos = Vector3.LerpUnclamped(startPos, endPos, 0.5f);
-                    midPos += Vector3.up * (flyType ? TargetHeightLong : TargetHeight);
-                    Vector3 direction = (transform.position - midPos).normalized;
-                    rotation = Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg;
+                    rotation = Mathf.Lerp(90, -90, flyPos);
                 }
                 else
                 {
-                    Vector3 direction = (transform.position - lastPos).normalized;
-                    rotation = Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg;
+                    if (flyPos > 0.5)
+                    {
+                        Vector3 midPos = Vector3.LerpUnclamped(startPos, endPos, 0.5f);
+                        midPos += Vector3.up * (flyType ? TargetHeightLong : TargetHeight);
+                        Vector3 direction = (transform.position - midPos).normalized;
+                        rotation = Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg;
+                    }
+                    else
+                    {
+                        Vector3 direction = (transform.position - lastPos).normalized;
+                        rotation = Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg;
+                    }
                 }
+
 
                 this.transform.eulerAngles = new Vector3(0, 0, rotation - 90f);
             }

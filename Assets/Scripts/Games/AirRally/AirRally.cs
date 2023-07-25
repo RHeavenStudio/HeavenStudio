@@ -167,22 +167,38 @@ namespace HeavenStudio.Games
 
         public void ServeObject(double beat, double targetBeat, bool type)
         {
-            if (!shuttleActive)
+            BeatAction.New(gameObject, new List<BeatAction.Action>
             {
-                ActiveShuttle = GameObject.Instantiate(Shuttlecock, objHolder.transform);
-                ActiveShuttle.SetActive(true);
-            }
-            
-            var shuttleScript = ActiveShuttle.GetComponent<Shuttlecock>();
-            shuttleScript.flyPos = 0f;
-            shuttleScript.isReturning = false;
-            shuttleScript.startBeat = beat;
-            shuttleScript.flyBeats = targetBeat - beat;
-            shuttleScript.flyType = type;
-            
-            shuttleActive = true;
+                new BeatAction.Action(beat - 0.5, delegate
+                {
+                    if (!shuttleActive)
+                    {
+                        ActiveShuttle = GameObject.Instantiate(Shuttlecock, objHolder.transform);
+                        ActiveShuttle.SetActive(true);
+                        var shuttleScript = ActiveShuttle.GetComponent<Shuttlecock>();
+                        shuttleScript.flyPos = 0f;
+                        shuttleScript.startBeat = beat - 0.5;
+                        shuttleScript.flyBeats = 0.5;
+                        shuttleScript.isTossed = true;
 
-            Forthington.DoScaledAnimationAsync("Hit", 0.5f);
+                        shuttleActive = true;
+
+                        Forthington.DoScaledAnimationAsync("Ready", 0.5f);
+                    }
+                }),
+                new BeatAction.Action(beat, delegate
+                {
+                    var shuttleScript = ActiveShuttle.GetComponent<Shuttlecock>();
+                    shuttleScript.flyPos = 0f;
+                    shuttleScript.isReturning = false;
+                    shuttleScript.startBeat = beat;
+                    shuttleScript.flyBeats = targetBeat - beat;
+                    shuttleScript.flyType = type;
+                    shuttleScript.isTossed = false;
+
+                    Forthington.DoScaledAnimationAsync("Hit", 0.5f);
+                })
+            });     
         }
 
         public void ReturnObject(double beat, double targetBeat, bool type)
@@ -193,6 +209,7 @@ namespace HeavenStudio.Games
             shuttleScript.startBeat = beat;
             shuttleScript.flyBeats = targetBeat - beat;
             shuttleScript.flyType = type;
+            shuttleScript.isTossed = false;
         }
 
         #region count-ins
@@ -518,12 +535,13 @@ namespace HeavenStudio.Games
                 {
                     if (isBaBumBeat) BaBumBumBum(beat, countBaBum);
                     else RallyRecursion(beat + 2);
+
+                    ServeObject(beat, beat + 1, false);
                 }),
                 new BeatAction.Action(beat, delegate
                 {
                     string distanceString = GetDistanceStringAtBeat(beat);
                     Baxter.DoScaledAnimationAsync((distanceString == "Close") ? "CloseReady" : "FarReady", 0.5f);
-                    ServeObject(beat, beat + 1, false);
                     SoundByte.PlayOneShotGame("airRally/hitForth_" + distanceString);
                     if (!(silent || isBaBumBeat)) SoundByte.PlayOneShotGame("airRally/nya_" + distanceString);
                 }),
@@ -593,10 +611,13 @@ namespace HeavenStudio.Games
                     if (isBaBumBeat) BaBumBumBum(beat + 4, countBaBum);
                     else RallyRecursion(beat + 6); 
                 }),
-                new BeatAction.Action(beat + 1f, delegate { Forthington.DoScaledAnimationAsync("Ready", 0.5f); }),
+                new BeatAction.Action(beat + 1f, delegate 
+                { 
+                    Forthington.DoScaledAnimationAsync("Ready", 0.5f);
+                    ServeObject(beat + 2f, beat + 4f, true);
+                }),
                 new BeatAction.Action(beat + 2f, delegate 
                 { 
-                    ServeObject(beat + 2f, beat + 4f, true);
                     Baxter.DoScaledAnimationAsync(GetDistanceStringAtBeat(beat + 2f, false, true) + "Ready", 0.5f);
                 } ),
                 new BeatAction.Action(beat + 3f, delegate { Forthington.DoScaledAnimationAsync("TalkShort", 0.5f); }),
