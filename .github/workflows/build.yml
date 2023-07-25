@@ -3,6 +3,7 @@ name: Build Heaven Studio
 on:
   push:
     branches: [ "master", "release_1", "actions_rework" ]
+  workflow_dispatch: {}  
 
 jobs:
   build:

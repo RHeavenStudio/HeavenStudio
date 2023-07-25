@@ -256,7 +256,7 @@ namespace HeavenStudio.Editor
         {
             var extensions = new[]
             {
-                new ExtensionFilter("Music Files", "mp3", "ogg", "wav")
+                new ExtensionFilter("Music Files", "mp3", "ogg", "wav", "aiff", "aif", "aifc")
             };
 
             #if UNITY_STANDALONE_WINDOWS
