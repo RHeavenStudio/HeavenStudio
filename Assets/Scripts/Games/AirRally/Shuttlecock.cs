@@ -15,6 +15,8 @@ namespace HeavenStudio.Games.Scripts_AirRally
         [SerializeField] float TargetHeightLong;
         [SerializeField] ParticleSystem hitEffect;
 
+        private Rigidbody2D rb;
+
         public double startBeat;
         public double flyBeats;
 
@@ -27,6 +29,7 @@ namespace HeavenStudio.Games.Scripts_AirRally
         private void Awake()
         {
             game = AirRally.instance;
+            rb = GetComponent<Rigidbody2D>();
         }
 
         void Start()
@@ -42,7 +45,7 @@ namespace HeavenStudio.Games.Scripts_AirRally
             Vector3 startPos = isReturning ? PlayerTarget.position : OtherTarget.position;
             Vector3 endPos = isReturning ? OtherTarget.position : PlayerTarget.position;
             Vector3 lastPos = transform.position;
-            if (!GetComponent<Rigidbody2D>().simulated)
+            if (!rb.simulated)
             {
                 flyPos = cond.GetPositionFromBeat(startBeat, flyBeats);
 

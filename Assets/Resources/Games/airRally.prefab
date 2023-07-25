@@ -907,7 +907,7 @@ Transform:
   m_GameObject: {fileID: 401608696343977152}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 10, y: 10, z: 1}
+  m_LocalScale: {x: 2.5, y: 2.5, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 715521291780950400}
@@ -954,7 +954,7 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
-  m_Sprite: {fileID: -1990177761786304044, guid: e23334ca6a0f16d428d6a5583dbedc52, type: 3}
+  m_Sprite: {fileID: 1359986940, guid: afc47a11f25f9ec48b96a0108063d62a, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -978,9 +978,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   sprites:
-  - {fileID: -1990177761786304044, guid: e23334ca6a0f16d428d6a5583dbedc52, type: 3}
-  - {fileID: -5486629317781960954, guid: e23334ca6a0f16d428d6a5583dbedc52, type: 3}
-  - {fileID: 1270396315638742336, guid: e23334ca6a0f16d428d6a5583dbedc52, type: 3}
+  - {fileID: 1359986940, guid: afc47a11f25f9ec48b96a0108063d62a, type: 3}
+  - {fileID: -542562183, guid: afc47a11f25f9ec48b96a0108063d62a, type: 3}
+  - {fileID: -1505868692, guid: afc47a11f25f9ec48b96a0108063d62a, type: 3}
   spawnRange: {x: 10, y: 5, z: 0}
   baseSpeed: 52
   fadeDist: 24
@@ -6574,7 +6574,7 @@ Transform:
   m_GameObject: {fileID: 2634339784214450155}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 1.469, y: -0.231, z: 51}
-  m_LocalScale: {x: 458.11703, y: 11.080412, z: 6.2056437}
+  m_LocalScale: {x: 114.52925, y: 2.7701025, z: 6.2056437}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 5941024551543388197}
@@ -6621,7 +6621,7 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: -99
-  m_Sprite: {fileID: -7495362214144749356, guid: e23334ca6a0f16d428d6a5583dbedc52, type: 3}
+  m_Sprite: {fileID: -1316422046, guid: afc47a11f25f9ec48b96a0108063d62a, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -6949,7 +6949,7 @@ Transform:
   m_GameObject: {fileID: 4270512504792158018}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 10, y: 10, z: 1}
+  m_LocalScale: {x: 2.5, y: 2.5, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 5538137172198949364}
@@ -6996,7 +6996,7 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
-  m_Sprite: {fileID: -1990177761786304044, guid: e23334ca6a0f16d428d6a5583dbedc52, type: 3}
+  m_Sprite: {fileID: 1359986940, guid: afc47a11f25f9ec48b96a0108063d62a, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -7020,9 +7020,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   sprites:
-  - {fileID: -1990177761786304044, guid: e23334ca6a0f16d428d6a5583dbedc52, type: 3}
-  - {fileID: -5486629317781960954, guid: e23334ca6a0f16d428d6a5583dbedc52, type: 3}
-  - {fileID: 1270396315638742336, guid: e23334ca6a0f16d428d6a5583dbedc52, type: 3}
+  - {fileID: 1359986940, guid: afc47a11f25f9ec48b96a0108063d62a, type: 3}
+  - {fileID: -542562183, guid: afc47a11f25f9ec48b96a0108063d62a, type: 3}
+  - {fileID: -1505868692, guid: afc47a11f25f9ec48b96a0108063d62a, type: 3}
   spawnRange: {x: 10, y: 5, z: 0}
   baseSpeed: 52
   fadeDist: 24
@@ -7677,7 +7677,7 @@ Transform:
   m_GameObject: {fileID: 5876158704267206464}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 7, y: 7, z: 1}
+  m_LocalScale: {x: 1.75, y: 1.75, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 1662667863044407717}
@@ -7724,7 +7724,7 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
-  m_Sprite: {fileID: -1990177761786304044, guid: e23334ca6a0f16d428d6a5583dbedc52, type: 3}
+  m_Sprite: {fileID: 1359986940, guid: afc47a11f25f9ec48b96a0108063d62a, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -7748,9 +7748,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   sprites:
-  - {fileID: -1990177761786304044, guid: e23334ca6a0f16d428d6a5583dbedc52, type: 3}
-  - {fileID: -5486629317781960954, guid: e23334ca6a0f16d428d6a5583dbedc52, type: 3}
-  - {fileID: 1270396315638742336, guid: e23334ca6a0f16d428d6a5583dbedc52, type: 3}
+  - {fileID: 1359986940, guid: afc47a11f25f9ec48b96a0108063d62a, type: 3}
+  - {fileID: -542562183, guid: afc47a11f25f9ec48b96a0108063d62a, type: 3}
+  - {fileID: -1505868692, guid: afc47a11f25f9ec48b96a0108063d62a, type: 3}
   spawnRange: {x: 76, y: 3, z: 0}
   baseSpeed: 60
   fadeDist: 24
