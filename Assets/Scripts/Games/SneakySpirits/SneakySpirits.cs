@@ -13,10 +13,19 @@ namespace HeavenStudio.Games.Loaders
             {
                 new GameAction("spawnGhost", "Ghost")
                 {
-                    preFunction = delegate { var e = eventCaller.currentEntity; SneakySpirits.PreSpawnGhost(e.beat, e.length, e["slowDown"], e["volume1"], e["volume2"], e["volume3"], e["volume4"], e["volume5"], e["volume6"],
+                    preFunction = delegate { var e = eventCaller.currentEntity; SneakySpirits.PreSpawnGhost(e.beat, e.length, e["volume1"], e["volume2"], e["volume3"], e["volume4"], e["volume5"], e["volume6"],
                         e["volume7"]); },
                     defaultLength = 1f,
                     resizable = true,
+                    function = delegate 
+                    { 
+                        var e = eventCaller.currentEntity; 
+                        SneakySpirits.instance.SpawnGhost(e.beat, e.beat, e.length, e["slowDown"], new List<int>()
+                        {
+                            e["volume1"], e["volume2"], e["volume3"], e["volume4"], e["volume5"], e["volume6"],
+                        e["volume7"]
+                        }); 
+                    },
                     parameters = new List<Param>()
                     {
                         new Param("slowDown", true, "Slowdown Effect", "Should there be a slowdown effect when the ghost is hit?"),
@@ -162,7 +171,7 @@ namespace HeavenStudio.Games
             lastEase = (EasingFunction.Ease)ease;
         }
 
-        public static void PreSpawnGhost(double beat, float length, bool slowDown, int volume1, int volume2, int volume3, int volume4, int volume5, int volume6, int volume7)
+        public static void PreSpawnGhost(double beat, float length, int volume1, int volume2, int volume3, int volume4, int volume5, int volume6, int volume7)
         {
             MultiSound.Play(new MultiSound.Sound[]
             {
@@ -174,13 +183,6 @@ namespace HeavenStudio.Games
                 new MultiSound.Sound("sneakySpirits/moving", beat + length * 5, 1f, volume6 * 0.01f),
                 new MultiSound.Sound("sneakySpirits/moving", beat + length * 6, 1f, volume7 * 0.01f),
             }, forcePlay: true);
-            if (GameManager.instance.currentGame == "sneakySpirits")
-            {
-                SneakySpirits.instance.SpawnGhost(beat, beat, length, slowDown, new List<int>()
-                {
-                    volume1, volume2, volume3, volume4, volume5, volume6, volume7
-                });
-            }
         }
 
         public void SpawnGhost(double beat, double gameSwitchBeat, float length, bool slowDown, List<int> volumes)
