@@ -371,9 +371,20 @@ namespace HeavenStudio.Games
             return (DistanceSound)allDistances[^1]["type"];
         }
 
-        private static string GetDistanceStringAtBeat(double beat, bool emptyClose = false)
+        private static string GetDistanceStringAtBeat(double beat, bool emptyClose = false, bool farFarther = false)
         {
-            if (emptyClose)
+            if (farFarther)
+            {
+                return DistanceAtBeat(beat) switch
+                {
+                    DistanceSound.close => "Close",
+                    DistanceSound.far => "Far",
+                    DistanceSound.farther => "Far",
+                    DistanceSound.farthest => "Farthest",
+                    _ => throw new System.NotImplementedException()
+                };
+            }
+            else if (emptyClose)
             {
                 return DistanceAtBeat(beat) switch
                 {
@@ -583,7 +594,11 @@ namespace HeavenStudio.Games
                     else RallyRecursion(beat + 6); 
                 }),
                 new BeatAction.Action(beat + 1f, delegate { Forthington.DoScaledAnimationAsync("Ready", 0.5f); }),
-                new BeatAction.Action(beat + 2f, delegate { ServeObject(beat + 2f, beat + 4f, true); } ),
+                new BeatAction.Action(beat + 2f, delegate 
+                { 
+                    ServeObject(beat + 2f, beat + 4f, true);
+                    Baxter.DoScaledAnimationAsync(GetDistanceStringAtBeat(beat + 2f, false, true) + "Ready", 0.5f);
+                } ),
                 new BeatAction.Action(beat + 3f, delegate { Forthington.DoScaledAnimationAsync("TalkShort", 0.5f); }),
                 new BeatAction.Action(beat + 3.5f, delegate { if(!count || isBaBumBeat) Forthington.DoScaledAnimationAsync("TalkShort", 0.5f); }),
                 new BeatAction.Action(beat + 4f, delegate { Forthington.DoScaledAnimationAsync("Ready", 0.5f); }),
