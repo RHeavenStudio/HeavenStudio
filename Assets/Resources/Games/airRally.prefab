@@ -929,7 +929,7 @@ SpriteRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 1e826be1545f24645a13510361c0418f, type: 2}
+  - {fileID: 2100000, guid: 3b16b893f67f7394284478ae9421435d, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -6596,7 +6596,7 @@ SpriteRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 10754, guid: 0000000000000000f000000000000000, type: 0}
+  - {fileID: 2100000, guid: a434a3143bd01104a8814989ec1c7c7d, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -6774,6 +6774,13 @@ MonoBehaviour:
   Shuttlecock: {fileID: 964190685}
   ActiveShuttle: {fileID: 0}
   objHolder: {fileID: 516790545}
+  bgMat: {fileID: 2100000, guid: a434a3143bd01104a8814989ec1c7c7d, type: 2}
+  objectMat: {fileID: 2100000, guid: 1e826be1545f24645a13510361c0418f, type: 2}
+  cloudMat: {fileID: 2100000, guid: 3b16b893f67f7394284478ae9421435d, type: 2}
+  noonColor: {r: 1, g: 0.83795786, b: 0.6556604, a: 1}
+  nightColor: {r: 0.33285868, g: 0.53547454, b: 0.8301887, a: 1}
+  noonColorCloud: {r: 1, g: 0.93626714, b: 0.8632076, a: 1}
+  nightColorCloud: {r: 0.6921057, g: 0.8065844, b: 0.9716981, a: 1}
   hasMissed: 0
   wayPointBeatLength: 1
 --- !u!1 &3889466559927977854
@@ -6963,7 +6970,7 @@ SpriteRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 1e826be1545f24645a13510361c0418f, type: 2}
+  - {fileID: 2100000, guid: 3b16b893f67f7394284478ae9421435d, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -7775,7 +7782,7 @@ SpriteRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 1e826be1545f24645a13510361c0418f, type: 2}
+  - {fileID: 2100000, guid: 3b16b893f67f7394284478ae9421435d, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0

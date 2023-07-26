@@ -70,6 +70,22 @@ namespace HeavenStudio.Games.Loaders
                         new Param("type", AirRally.CountSound.one, "Type", "The number Forthington will say"),
                     },
                 },
+                new GameAction("day", "Day/Night Cycle")
+                {
+                    function = delegate 
+                    {
+                        AirRally.instance.SetDayNightCycle(e.currentEntity.beat, e.currentEntity.length,
+                            (AirRally.DayNightCycle)e.currentEntity["start"], (AirRally.DayNightCycle)e.currentEntity["end"],
+                            (EasingFunction.Ease)e.currentEntity["ease"]);
+                    },
+                    resizable = true,
+                    parameters = new List<Param>()
+                    {
+                        new Param("start", AirRally.DayNightCycle.Day, "Start Time"),
+                        new Param("end", AirRally.DayNightCycle.Noon, "End Time"),
+                        new Param("ease", EasingFunction.Ease.Linear, "Ease")
+                    }
+                },
                 new GameAction("silence", "Silence")
                 {
                     defaultLength = 2f,
@@ -100,6 +116,20 @@ namespace HeavenStudio.Games
         [SerializeField] GameObject Shuttlecock;
         public GameObject ActiveShuttle;
         [SerializeField] GameObject objHolder;
+
+        [Header("Day/Night Cycle")]
+        [SerializeField] private Material bgMat;
+        [SerializeField] private Material objectMat;
+        [SerializeField] private Material cloudMat;
+        [SerializeField] private Color noonColor;
+        [SerializeField] private Color nightColor;
+        [SerializeField] private Color noonColorCloud;
+        [SerializeField] private Color nightColorCloud;
+        private DayNightCycle lastTime = DayNightCycle.Day;
+        private DayNightCycle currentTime = DayNightCycle.Day;
+        private Util.EasingFunction.Ease timeEase = Util.EasingFunction.Ease.Instant;
+        private double startTimeBeat = 0;
+        private float timeLength = 0f;
 
         [Header("Variables")]
         bool shuttleActive;
@@ -147,6 +177,104 @@ namespace HeavenStudio.Games
             {
                 forthTrans.position = new Vector3(forthTrans.position.x, forthTrans.position.y, wayPointZForForth);
             }
+
+            DayNightCycleUpdate();
+        }
+
+        private Color objectsColorFrom = Color.white;
+        private Color objectsColorTo = Color.white;
+        private Color bgColorFrom = Color.white;
+        private Color bgColorTo = Color.white;
+        private Color cloudColorFrom = Color.white;
+        private Color cloudColorTo = Color.white;
+
+        private void DayNightCycleUpdate()
+        {
+            var cond = Conductor.instance;
+
+            float normalizedBeat = cond.GetPositionFromBeat(startTimeBeat, timeLength);
+
+            if (normalizedBeat < 0)
+            {
+                bgMat.SetColor("_Color", bgColorFrom);
+                cloudMat.SetColor("_Color", cloudColorFrom);
+                objectMat.SetColor("_Color", objectsColorFrom);
+            }
+            else if (normalizedBeat >= 0 && normalizedBeat <= 1f)
+            {
+                bgMat.SetColor("_Color", GetEasedColor(bgColorFrom, bgColorTo));
+                cloudMat.SetColor("_Color", GetEasedColor(cloudColorFrom, cloudColorTo));
+                objectMat.SetColor("_Color", GetEasedColor(objectsColorFrom, objectsColorTo));
+            }
+            else if (normalizedBeat > 1)
+            {
+                bgMat.SetColor("_Color", bgColorTo);
+                cloudMat.SetColor("_Color", cloudColorTo);
+                objectMat.SetColor("_Color", objectsColorTo);
+            }
+
+            Color GetEasedColor(Color start, Color end)
+            {
+                var func = Util.EasingFunction.GetEasingFunction(timeEase);
+                float r = func(start.r, end.r, normalizedBeat);
+                float g = func(start.g, end.g, normalizedBeat);
+                float b = func(start.b, end.b, normalizedBeat);
+
+                return new Color(r, g, b, 1);
+            }
+        }
+
+        public void SetDayNightCycle(double beat, float length, DayNightCycle start, DayNightCycle end, Util.EasingFunction.Ease ease)
+        {
+            startTimeBeat = beat;
+            timeLength = length;
+            lastTime = start;
+            currentTime = end;
+            timeEase = ease;
+            objectsColorFrom = lastTime switch
+            {
+                DayNightCycle.Noon => Color.black,
+                _ => Color.white,
+            };
+
+            objectsColorTo = currentTime switch
+            {
+                DayNightCycle.Noon => Color.black,
+                _ => Color.white,
+            };
+
+            bgColorFrom = lastTime switch
+            {
+                DayNightCycle.Day => Color.white,
+                DayNightCycle.Noon => noonColor,
+                DayNightCycle.Night => nightColor,
+                _ => throw new System.NotImplementedException()
+            };
+
+            bgColorTo = currentTime switch
+            {
+                DayNightCycle.Day => Color.white,
+                DayNightCycle.Noon => noonColor,
+                DayNightCycle.Night => nightColor,
+                _ => throw new System.NotImplementedException()
+            };
+
+            cloudColorFrom = lastTime switch
+            {
+                DayNightCycle.Day => Color.white,
+                DayNightCycle.Noon => noonColorCloud,
+                DayNightCycle.Night => nightColorCloud,
+                _ => throw new System.NotImplementedException()
+            };
+
+            cloudColorTo = currentTime switch
+            {
+                DayNightCycle.Day => Color.white,
+                DayNightCycle.Noon => noonColorCloud,
+                DayNightCycle.Night => nightColorCloud,
+                _ => throw new System.NotImplementedException()
+            };
+            DayNightCycleUpdate();
         }
 
         private static bool IsCatchBeat(double beat)
@@ -173,6 +301,13 @@ namespace HeavenStudio.Games
             two,
             three,
             four
+        }
+
+        public enum DayNightCycle
+        {
+            Day = 0,
+            Noon = 1,
+            Night = 2
         }
 
         public void ServeObject(double beat, double targetBeat, bool type)
@@ -454,6 +589,7 @@ namespace HeavenStudio.Games
 
         public override void OnGameSwitch(double beat)
         {
+            PersistDayNight(beat);
             if (TryGetLastDistanceEvent(beat, out RiqEntity distanceEvent))
             {
                 SetDistance(distanceEvent.beat, distanceEvent["type"], distanceEvent["ease"]);
@@ -491,6 +627,21 @@ namespace HeavenStudio.Games
             tempCounts.Sort((x, y) => x.beat.CompareTo(y.beat));
 
             BeatAction.New(instance.gameObject, tempCounts);
+        }
+
+        public override void OnPlay(double beat)
+        {
+            PersistDayNight(beat);
+        }
+
+        private void PersistDayNight(double beat)
+        {
+            var allDayNights = EventCaller.GetAllInGameManagerList("airRally", new string[] { "day" }).FindAll(x => x.beat < beat);
+            if (allDayNights.Count == 0) return;
+
+            var e = allDayNights[^1];
+
+            SetDayNightCycle(e.beat, e.length, (DayNightCycle)e["start"], (DayNightCycle)e["end"], (Util.EasingFunction.Ease)e["ease"]);
         }
 
         public static void PreStartRally(double beat)
