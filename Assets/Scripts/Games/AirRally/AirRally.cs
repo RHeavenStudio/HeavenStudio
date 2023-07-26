@@ -22,11 +22,12 @@ namespace HeavenStudio.Games.Loaders
                 },
                 new GameAction("ba bum bum bum", "Ba Bum Bum Bum")
                 {
-                    preFunction = delegate { AirRally.PreStartBaBumBumBum(e.currentEntity.beat, e.currentEntity["toggle"]); },
+                    preFunction = delegate { AirRally.PreStartBaBumBumBum(e.currentEntity.beat, e.currentEntity["toggle"], e.currentEntity["toggle2"]); },
                     defaultLength = 6f, 
                     parameters = new List<Param>()
                     { 
                         new Param("toggle", true, "Count", "Make Forthington Count"),
+                        new Param("toggle2", false, "Alternate Voiceline")
                     },
                     preFunctionLength = 1
                 },
@@ -38,6 +39,10 @@ namespace HeavenStudio.Games.Loaders
                         new Param("type", AirRally.DistanceSound.close, "Type", "How far is Forthington?"),
                         new Param("ease", EasingFunction.Ease.EaseOutQuad, "Ease")
                     }
+                },
+                new GameAction("catch", "Catch Birdie")
+                {
+
                 },
                 new GameAction("4beat", "4 Beat Count-In")
                 {
@@ -142,6 +147,11 @@ namespace HeavenStudio.Games
             {
                 forthTrans.position = new Vector3(forthTrans.position.x, forthTrans.position.y, wayPointZForForth);
             }
+        }
+
+        private static bool IsCatchBeat(double beat)
+        {
+            return EventCaller.GetAllInGameManagerList("airRally", new string[] { "catch" }).Find(x => beat == x.beat) != null;
         }
 
         private bool IsSilentAtBeat(double beat)
@@ -440,6 +450,7 @@ namespace HeavenStudio.Games
         private static double wantStartRally = double.MinValue;
         private static double wantStartBaBum = double.MinValue;
         private static bool wantCount = true;
+        private static bool wantAlt = false;
 
         public override void OnGameSwitch(double beat)
         {
@@ -454,7 +465,7 @@ namespace HeavenStudio.Games
             }
             else if (wantStartBaBum >= beat && IsBaBumBeat(wantStartBaBum))
             {
-                StartBaBumBumBum(wantStartBaBum, wantCount);
+                StartBaBumBumBum(wantStartBaBum, wantCount, wantAlt);
             }
 
             var allCounts = EventCaller.GetAllInGameManagerList("airRally", new string[] { "forthington voice lines", "4beat", "8beat" }).FindAll(x => x.beat < beat && x.beat + x.length > beat);
@@ -484,6 +495,7 @@ namespace HeavenStudio.Games
 
         public static void PreStartRally(double beat)
         {
+            if (IsCatchBeat(beat)) return;
             if (GameManager.instance.currentGame == "airRally")
             {
                 instance.StartRally(beat);
@@ -500,25 +512,27 @@ namespace HeavenStudio.Games
             RallyRecursion(beat);
         }
 
-        public static void PreStartBaBumBumBum(double beat, bool count)
+        public static void PreStartBaBumBumBum(double beat, bool count, bool alt)
         {
+            if (IsCatchBeat(beat)) return;
             if (GameManager.instance.currentGame == "airRally")
             {
-                instance.StartBaBumBumBum(beat, count);
+                instance.StartBaBumBumBum(beat, count, alt);
             }
             else
             {
                 wantStartBaBum = beat;
                 wantCount = count;
+                wantAlt = alt;
             }
         }
 
-        private void StartBaBumBumBum(double beat, bool count)
+        private void StartBaBumBumBum(double beat, bool count, bool alt)
         {
             if (recursingRally || IsRallyBeat(beat)) return;
             recursingRally = true;
 
-            BaBumBumBum(beat, count);
+            BaBumBumBum(beat, count, alt);
         }
 
         private void RallyRecursion(double beat)
@@ -526,6 +540,8 @@ namespace HeavenStudio.Games
             bool isBaBumBeat = IsBaBumBeat(beat);
             bool countBaBum = CountBaBum(beat);
             bool silent = IsSilentAtBeat(beat);
+            bool isCatch = IsCatchBeat(beat + 2);
+            bool altBum = AltBaBum(beat);
 
             SoundByte.PlayOneShotGame("airRally/whooshForth_" + GetDistanceStringAtBeat(beat + 0.25), beat + 0.25);
 
@@ -533,17 +549,19 @@ namespace HeavenStudio.Games
             {
                 new BeatAction.Action(beat - 0.5, delegate
                 {
-                    if (isBaBumBeat) BaBumBumBum(beat, countBaBum);
-                    else RallyRecursion(beat + 2);
-
                     ServeObject(beat, beat + 1, false);
+
+                    if (isCatch) return;
+
+                    if (isBaBumBeat) BaBumBumBum(beat, countBaBum, altBum);
+                    else RallyRecursion(beat + 2);
                 }),
                 new BeatAction.Action(beat, delegate
                 {
                     string distanceString = GetDistanceStringAtBeat(beat);
                     Baxter.DoScaledAnimationAsync((distanceString == "Close") ? "CloseReady" : "FarReady", 0.5f);
                     SoundByte.PlayOneShotGame("airRally/hitForth_" + distanceString);
-                    if (!(silent || isBaBumBeat)) SoundByte.PlayOneShotGame("airRally/nya_" + distanceString);
+                    if (!(silent || isBaBumBeat) || (isCatch && !silent)) SoundByte.PlayOneShotGame("airRally/nya_" + distanceString);
                 }),
                 new BeatAction.Action(beat + 1, delegate
                 {
@@ -572,26 +590,44 @@ namespace HeavenStudio.Games
             return baBumEvent["toggle"];
         }
 
-        private void BaBumBumBum(double beat, bool count)
+        private bool AltBaBum(double beat)
         {
+            var baBumEvent = EventCaller.GetAllInGameManagerList("airRally", new string[] { "ba bum bum bum" }).Find(x => x.beat == beat);
+            if (baBumEvent == null) return false;
+
+            return baBumEvent["toggle2"];
+        }
+
+        private void BaBumBumBum(double beat, bool count, bool alt)
+        {
+            bool isCatch = IsCatchBeat(beat + 6);
             bool isBaBumBeat = IsBaBumBeat(beat + 4);
             bool countBaBum = CountBaBum(beat + 4);
+            bool altBum = AltBaBum(beat + 4);
 
             List<MultiSound.Sound> sounds = new List<MultiSound.Sound>();
 
             sounds.AddRange(new List<MultiSound.Sound>()
             {
-                new MultiSound.Sound("airRally/baBumBumBum_" + GetDistanceStringAtBeat(beat + - 0.5) + "1", beat - 0.5),
-                new MultiSound.Sound("airRally/baBumBumBum_" + GetDistanceStringAtBeat(beat) + "2", beat),
-                new MultiSound.Sound("airRally/baBumBumBum_" + GetDistanceStringAtBeat(beat + 1f) + "3", beat + 1),
-                new MultiSound.Sound("airRally/baBumBumBum_" + GetDistanceStringAtBeat(beat + 2f) + "4", beat + 2),
+                new MultiSound.Sound("airRally/baBumBumBum_" + GetDistanceStringAlt(beat + - 0.5) + "1", beat - 0.5),
+                new MultiSound.Sound("airRally/baBumBumBum_" + GetDistanceStringAlt(beat) + "2", beat),
+                new MultiSound.Sound("airRally/baBumBumBum_" + GetDistanceStringAlt(beat + 1f) + "3", beat + 1),
+                new MultiSound.Sound("airRally/baBumBumBum_" + GetDistanceStringAlt(beat + 2f) + "4", beat + 2),
                 new MultiSound.Sound("airRally/hitForth_" + GetDistanceStringAtBeat(beat + 2f), beat + 2),
                 new MultiSound.Sound("airRally/whooshForth_" + GetDistanceStringAtBeat(beat + 2.5), beat + 2.5),
             });
 
+            string GetDistanceStringAlt(double beatAlt)
+            {
+                string distanceString = GetDistanceStringAtBeat(beatAlt);
+                string altString = alt ? "Alt" : "";
+                if (distanceString != "Far") altString = "";
+                return distanceString + altString;
+            }
+
             if (GetDistanceStringAtBeat(beat + 3f) == "Far") sounds.Add(new MultiSound.Sound("airRally/whooshForth_Far2", beat + 3f));
 
-            if (count && !isBaBumBeat)
+            if (count && !isBaBumBeat && !isCatch)
             {
                 sounds.AddRange(new List<MultiSound.Sound>()
                 {
@@ -608,7 +644,8 @@ namespace HeavenStudio.Games
             {
                 new BeatAction.Action(beat, delegate 
                 {
-                    if (isBaBumBeat) BaBumBumBum(beat + 4, countBaBum);
+                    if (isCatch) return;
+                    if (isBaBumBeat) BaBumBumBum(beat + 4, countBaBum, altBum);
                     else RallyRecursion(beat + 6); 
                 }),
                 new BeatAction.Action(beat + 1f, delegate 
@@ -626,6 +663,16 @@ namespace HeavenStudio.Games
             });
 
             ScheduleInput(beat, 4f, InputType.STANDARD_DOWN, LongShotOnHit, RallyOnMiss, RallyEmpty);
+        }
+
+
+        private void CatchBirdie() 
+        {
+            Forthington.DoScaledAnimationAsync("Catch", 0.5f);
+            SoundByte.PlayOneShotGame("airRally/birdieCatch");
+            shuttleActive = false;
+            recursingRally = false;
+            if (ActiveShuttle != null) Destroy(ActiveShuttle);
         }
 
         public void RallyOnHit(PlayerActionEvent caller, float state)
@@ -654,6 +701,17 @@ namespace HeavenStudio.Games
                 };
 
                 SoundByte.PlayOneShotGame("airRally/hitBaxter_" + distanceString);
+
+                if (IsCatchBeat(caller.startBeat + caller.timer + 1))
+                {
+                    BeatAction.New(instance.gameObject, new List<BeatAction.Action>()
+                    {
+                        new BeatAction.Action(caller.startBeat + caller.timer + 1, delegate
+                        {
+                            CatchBirdie();
+                        })
+                    });
+                }
             }
         }
 
@@ -683,6 +741,17 @@ namespace HeavenStudio.Games
                 };
 
                 SoundByte.PlayOneShotGame("airRally/hitBaxter_" + distanceString);
+
+                if (IsCatchBeat(caller.startBeat + caller.timer + 2))
+                {
+                    BeatAction.New(instance.gameObject, new List<BeatAction.Action>()
+                    {
+                        new BeatAction.Action(caller.startBeat + caller.timer + 2, delegate
+                        {
+                            CatchBirdie();
+                        })
+                    });
+                }
             }
         }
 
