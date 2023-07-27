@@ -261,6 +261,8 @@ namespace HeavenStudio.InputSystem
             "Mic",
         };
 
+        static readonly float debounceTime = 1f/90f;
+
         public static Dictionary<int, InputJoyshock> joyshocks;
 
         float stickDeadzone = 0.5f;
@@ -291,6 +293,7 @@ namespace HeavenStudio.InputSystem
         {
             public double dt;     // time passed since state
             public bool pressed;    // true if button is down
+            public float debounce;  // timer to ignore button updates
             public bool isDelta;    // true if the button changed state since last frame
         }
 
@@ -389,6 +392,9 @@ namespace HeavenStudio.InputSystem
             for (int i = 0; i < actionStates.Length; i++)
             {
                 actionStates[i].isDelta = false;
+                actionStates[i].debounce -= Time.deltaTime;
+                if (actionStates[i].debounce < 0)
+                    actionStates[i].debounce = 0;
             }
             for (int i = 0; i < buttonStates.Length; i++)
             {
@@ -407,9 +413,13 @@ namespace HeavenStudio.InputSystem
                         bool pressed = BitwiseUtils.WantCurrent(state.input.buttons, 1 << bt);
                         if (pressed != actionStates[i].pressed && !actionStates[i].isDelta)
                         {
-                            actionStates[i].pressed = pressed;
-                            actionStates[i].isDelta = true;
-                            actionStates[i].dt = reportTime - state.timestamp;
+                            if (actionStates[i].debounce <= 0)
+                            {
+                                actionStates[i].pressed = pressed;
+                                actionStates[i].isDelta = true;
+                                actionStates[i].dt = reportTime - state.timestamp;
+                            }
+                            actionStates[i].debounce = debounceTime;
                         }
                     }
                 }
