@@ -46,6 +46,8 @@ namespace HeavenStudio.Editor
             numConnectedLabel.text = "Connected: " + PlayerInput.GetNumControllersConnected();
             currentControllerLabel.text = "Current Controller: " + PlayerInput.GetInputController(1).GetDeviceName();
             PopulateControllersDropdown();
+            
+            pairSearchItem.SetActive(false);
 
             ShowControllerBinds(PlayerInput.GetInputController(1));
             ShowControllerIcon(PlayerInput.GetInputController(1));
@@ -265,7 +267,7 @@ namespace HeavenStudio.Editor
             }
             controllersDropdown.ClearOptions();
             controllersDropdown.AddOptions(dropDownData);
-            controllersDropdown.value = 0;
+            controllersDropdown.value = PlayerInput.GetInputControllerId(1);
         }
 
         public void ShowControllerBinds(InputController controller)

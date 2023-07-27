@@ -483,10 +483,10 @@ namespace HeavenStudio.InputSystem
 
         async void SelectionVibrate()
         {
-            JslSetRumbleFrequency(GetHandle(), 0.4f, 0.4f, 80f, 160f);
-            await Task.Delay(500);
-            JslSetRumbleFrequency(GetHandle(), 0.5f, 0.5f, 160f, 320f);
-            await Task.Delay(250);
+            JslSetRumbleFrequency(GetHandle(), 0.5f, 0.5f, 80f, 160f);
+            await Task.Delay(100);
+            JslSetRumbleFrequency(GetHandle(), 0.75f, 0.75f, 160f, 320f);
+            await Task.Delay(50);
             JslSetRumbleFrequency(GetHandle(), 0f, 0f, 0f, 0f);
         }
 
@@ -508,7 +508,10 @@ namespace HeavenStudio.InputSystem
                 case TypeDualSense:
                     return ps5ButtonNames;
                 default:
-                    return nsConButtonNames;
+                    if (otherHalf == null)
+                        return nsConButtonNames;
+                    else
+                        return nsProButtonNames;
             }
         }
 
@@ -552,10 +555,16 @@ namespace HeavenStudio.InputSystem
             switch (type)
             {
                 case TypeJoyConLeft:
-                    binds.Pad = defaultMappingsL;
+                    if (otherHalf == null)
+                        binds.Pad = defaultMappingsL;
+                    else
+                        binds.Pad = defaultMappings;
                     break;
                 case TypeJoyConRight:
-                    binds.Pad = defaultMappingsR;
+                    if (otherHalf == null)
+                        binds.Pad = defaultMappingsR;
+                    else
+                        binds.Pad = defaultMappings;
                     break;
                 case TypeProController:
                     binds.Pad = defaultMappings;
