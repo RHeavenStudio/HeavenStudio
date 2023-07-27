@@ -99,6 +99,18 @@ namespace HeavenStudio.Games.Loaders
                         new Param("ease", EasingFunction.Ease.Linear, "Ease")
                     }
                 },
+                new GameAction("cloud", "Cloud Density")
+                {
+                    function = delegate
+                    {
+                        AirRally.instance.SetCloudRates(e.currentEntity["main"], e.currentEntity["side"]);
+                    },
+                    parameters = new List<Param>()
+                    {
+                        new Param("main", new EntityTypes.Integer(0, 200, 67), "Main Clouds", "How many clouds per second?"),
+                        new Param("side", new EntityTypes.Integer(0, 100, 25), "Side Clouds", "How many clouds per second?"),
+                    }
+                },
                 new GameAction("silence", "Silence")
                 {
                     defaultLength = 2f,
@@ -130,6 +142,7 @@ namespace HeavenStudio.Games
         [SerializeField] GameObject Shuttlecock;
         public GameObject ActiveShuttle;
         [SerializeField] GameObject objHolder;
+        [SerializeField] private CloudsManager cloudManagerMain, cloudManagerLeft, cloudManagerRight;
 
         [Header("Day/Night Cycle")]
         [SerializeField] private Material bgMat;
@@ -171,6 +184,10 @@ namespace HeavenStudio.Games
             instance = this;
             forthTrans = Forthington.transform;
             baxterTrans = Baxter.transform;
+            if (!Conductor.instance.isPlaying)
+            {
+                InitClouds(0);
+            }
         }      
 
         // Update is called once per frame
@@ -202,6 +219,13 @@ namespace HeavenStudio.Games
                 DistanceUpdate();
             }
             DayNightCycleUpdate();
+        }
+
+        public void SetCloudRates(int main, int side)
+        {
+            cloudManagerMain.SetCloudsPerSecond(main);
+            cloudManagerLeft.SetCloudsPerSecond(side);
+            cloudManagerRight.SetCloudsPerSecond(side);
         }
 
         private Color objectsColorFrom = Color.white;
@@ -641,6 +665,7 @@ namespace HeavenStudio.Games
         {
             PersistDayNight(beat);
             PersistEnter(beat);
+            InitClouds(beat);
             if (TryGetLastDistanceEvent(beat, out RiqEntity distanceEvent))
             {
                 SetDistance(distanceEvent.beat, distanceEvent["type"], distanceEvent["ease"]);
@@ -684,6 +709,19 @@ namespace HeavenStudio.Games
         {
             PersistDayNight(beat);
             PersistEnter(beat);
+            InitClouds(beat);
+        }
+
+        private void InitClouds(double beat)
+        {
+            var cloudEvent = EventCaller.GetAllInGameManagerList("airRally", new string[] { "cloud" }).Find(x => x.beat == beat);
+            if (cloudEvent != null)
+            {
+                SetCloudRates(cloudEvent["main"], cloudEvent["side"]);
+            }
+            cloudManagerMain.Init();
+            cloudManagerLeft.Init();
+            cloudManagerRight.Init();
         }
 
         private void PersistEnter(double beat)

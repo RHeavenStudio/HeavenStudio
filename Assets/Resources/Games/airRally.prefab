@@ -1267,7 +1267,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   cloudRoot: {fileID: 715521291780950400}
   cloudPrefab: {fileID: 401608696343977152}
-  maxCloudAmt: 96
+  maxCloudAmt: 200
   prebakeMultiplier: 2.5
   cloudsPerSecond: 25
 --- !u!1 &1295134938081073202
@@ -6774,6 +6774,9 @@ MonoBehaviour:
   Shuttlecock: {fileID: 964190685}
   ActiveShuttle: {fileID: 0}
   objHolder: {fileID: 516790545}
+  cloudManagerMain: {fileID: 2291459469940149212}
+  cloudManagerLeft: {fileID: 1628409150631071652}
+  cloudManagerRight: {fileID: 5987722310119055673}
   bgMat: {fileID: 2100000, guid: a434a3143bd01104a8814989ec1c7c7d, type: 2}
   objectMat: {fileID: 2100000, guid: 1e826be1545f24645a13510361c0418f, type: 2}
   cloudMat: {fileID: 2100000, guid: 3b16b893f67f7394284478ae9421435d, type: 2}
@@ -6831,7 +6834,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   cloudRoot: {fileID: 5538137172198949364}
   cloudPrefab: {fileID: 4270512504792158018}
-  maxCloudAmt: 96
+  maxCloudAmt: 200
   prebakeMultiplier: 2.5
   cloudsPerSecond: 25
 --- !u!1 &4061025867320626885
@@ -8252,7 +8255,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   cloudRoot: {fileID: 1662667863044407717}
   cloudPrefab: {fileID: 5876158704267206464}
-  maxCloudAmt: 200
+  maxCloudAmt: 400
   prebakeMultiplier: 2.5
   cloudsPerSecond: 67
 --- !u!1 &7535555310122580223

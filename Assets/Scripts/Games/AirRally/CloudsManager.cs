@@ -19,10 +19,13 @@ namespace HeavenStudio.Games.Scripts_AirRally
         float lastTime = 0f;
 
         // Start is called before the first frame update
-        void Start()
+        public void Init()
         {
             SetCloudRate();
             int cloudsToPreBake = Mathf.RoundToInt(cloudsPerSecond * prebakeMultiplier);
+
+            if (maxCloudAmt < cloudsToPreBake) maxCloudAmt = cloudsToPreBake;
+
             pool = new Cloud[maxCloudAmt];
             for (int i = 0; i < maxCloudAmt; i++)
             {
@@ -63,6 +66,12 @@ namespace HeavenStudio.Games.Scripts_AirRally
                 lastTime = time;
                 GetAvailableCloud()?.StartCloud(cloudRoot.position, false);
             }
+        }
+
+        public void SetCloudsPerSecond(int cloudsPerSec)
+        {
+            cloudsPerSecond = cloudsPerSec;
+            SetCloudRate();
         }
 
         private void SetCloudRate()
