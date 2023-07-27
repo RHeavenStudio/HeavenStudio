@@ -192,62 +192,62 @@ namespace HeavenStudio
         
         public static bool Pressed(bool includeDPad = false)
         {
-            bool keyDown = GetInputController(1).GetButtonDown((int) InputController.ButtonsPad.East, out _) || (includeDPad && GetAnyDirectionDown());
+            bool keyDown = GetInputController(1).GetActionDown((int) InputController.ActionsPad.East, out _) || (includeDPad && GetAnyDirectionDown());
             return keyDown && !GameManager.instance.autoplay && Conductor.instance.isPlaying && GameManager.instance.canInput;
         }
 
         public static bool Pressed(out double dt, bool includeDPad = false)
         {
-            bool keyDown = GetInputController(1).GetButtonDown((int) InputController.ButtonsPad.East, out dt) || (includeDPad && GetAnyDirectionDown());
+            bool keyDown = GetInputController(1).GetActionDown((int) InputController.ActionsPad.East, out dt) || (includeDPad && GetAnyDirectionDown());
             return keyDown && !GameManager.instance.autoplay && Conductor.instance.isPlaying && GameManager.instance.canInput;
         }
         
         public static bool PressedUp(bool includeDPad = false)
         {
-            bool keyUp = GetInputController(1).GetButtonUp((int) InputController.ButtonsPad.East, out _) || (includeDPad && GetAnyDirectionUp());
+            bool keyUp = GetInputController(1).GetActionUp((int) InputController.ActionsPad.East, out _) || (includeDPad && GetAnyDirectionUp());
             return keyUp && !GameManager.instance.autoplay && Conductor.instance.isPlaying && GameManager.instance.canInput;
         }
         
         public static bool PressedUp(out double dt, bool includeDPad = false)
         {
-            bool keyUp = GetInputController(1).GetButtonUp((int) InputController.ButtonsPad.East, out dt) || (includeDPad && GetAnyDirectionUp());
+            bool keyUp = GetInputController(1).GetActionUp((int) InputController.ActionsPad.East, out dt) || (includeDPad && GetAnyDirectionUp());
             return keyUp && !GameManager.instance.autoplay && Conductor.instance.isPlaying && GameManager.instance.canInput;
         }
         
         public static bool Pressing(bool includeDPad = false)
         {
-            bool pressing = GetInputController(1).GetButton((int) InputController.ButtonsPad.East) || (includeDPad && GetAnyDirection());
+            bool pressing = GetInputController(1).GetAction((int) InputController.ActionsPad.East) || (includeDPad && GetAnyDirection());
             return pressing && !GameManager.instance.autoplay && Conductor.instance.isPlaying && GameManager.instance.canInput;
         }
         
         
         public static bool AltPressed()
         {
-            bool down = GetInputController(1).GetButtonDown((int) InputController.ButtonsPad.South, out _);
+            bool down = GetInputController(1).GetActionDown((int) InputController.ActionsPad.South, out _);
             return down && PlayerHasControl();
         }
 
         public static bool AltPressed(out double dt)
         {
-            bool down = GetInputController(1).GetButtonDown((int) InputController.ButtonsPad.South, out dt);
+            bool down = GetInputController(1).GetActionDown((int) InputController.ActionsPad.South, out dt);
             return down && PlayerHasControl();
         }
         
         public static bool AltPressedUp()
         {
-            bool up = GetInputController(1).GetButtonUp((int) InputController.ButtonsPad.South, out _);
+            bool up = GetInputController(1).GetActionUp((int) InputController.ActionsPad.South, out _);
             return up && PlayerHasControl();
         }
         
         public static bool AltPressedUp(out double dt)
         {
-            bool up = GetInputController(1).GetButtonUp((int) InputController.ButtonsPad.South, out dt);
+            bool up = GetInputController(1).GetActionUp((int) InputController.ActionsPad.South, out dt);
             return up && PlayerHasControl();
         }
         
         public static bool AltPressing()
         {
-            bool pressing = GetInputController(1).GetButton((int) InputController.ButtonsPad.South);
+            bool pressing = GetInputController(1).GetAction((int) InputController.ActionsPad.South);
             return pressing && PlayerHasControl();
         }
         

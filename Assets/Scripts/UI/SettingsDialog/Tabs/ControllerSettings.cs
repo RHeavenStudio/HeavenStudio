@@ -55,20 +55,10 @@ namespace HeavenStudio.Editor
             if (currentBindingBt >= 0)
             {
                 int bt = currentController.GetLastButtonDown();
-                KeyCode key = currentController.GetLastKeyDown();
                 if (bt > 0)
                 {
                     InputController.ControlBindings binds = currentController.GetCurrentBindings();
                     binds.Pad[currentBindingBt] = bt;
-                    currentController.SetCurrentBindings(binds);
-                    currentControllerLabel.text = "Current Controller: " + currentController.GetDeviceName();
-                    ShowControllerBinds(currentController);
-                    AdvanceAutoBind(currentController);
-                }
-                else if (key > 0)
-                {
-                    InputController.ControlBindings binds = currentController.GetCurrentBindings();
-                    binds.Pad[currentBindingBt] = (int)key;
                     currentController.SetCurrentBindings(binds);
                     currentControllerLabel.text = "Current Controller: " + currentController.GetDeviceName();
                     ShowControllerBinds(currentController);
@@ -81,7 +71,8 @@ namespace HeavenStudio.Editor
                 if (isAutoSearching) {
                     var controllers = PlayerInput.GetInputControllers();
                     foreach (var newController in controllers) {
-                        if (newController.GetLastButtonDown() > 0 || newController.GetLastKeyDown() > 0) {
+                        if (newController.GetLastButtonDown() > 0) 
+                        {
                             isAutoSearching = false;
                             autoSearchLabel.SetActive(false);
                             AssignController(newController, currentController);
@@ -99,7 +90,8 @@ namespace HeavenStudio.Editor
                         InputController.InputFeatures features = pairController.GetFeatures();
                         if (!features.HasFlag(lrFlag)) continue;
 
-                        if (pairController.GetLastButtonDown() > 0 || pairController.GetLastKeyDown() > 0) {
+                        if (pairController.GetLastButtonDown() > 0) 
+                        {
                             (PlayerInput.GetInputController(1) as InputJoyshock)?.AssignOtherHalf((InputJoyshock) pairController);
                             isPairSearching = false;
                             pairSearchLabel.SetActive(false);
@@ -117,27 +109,40 @@ namespace HeavenStudio.Editor
 
         void AdvanceAutoBind(InputController currentController)
         {
-            if (bindAllMode && (currentBindingBt + 1 <= (int)InputController.ButtonsPad.Pause)) // Pause is always the last button
+            if (bindAllMode)
             {
                 currentBindingBt++;
-                currentControllerLabel.text = $"Now Binding: {(InputController.ButtonsPad) currentBindingBt}";
+                Debug.Log("Binding: " + currentBindingBt);
+                while (currentController.GetIsActionUnbindable(currentBindingBt, InputController.ControlStyles.Pad) && currentBindingBt < (int)InputController.ActionsPad.Pause) 
+                {
+                    currentBindingBt++;
+                    Debug.Log("Unbindable, binding: " + currentBindingBt);
+                }
+                if (currentBindingBt > (int)InputController.ActionsPad.Pause)
+                {
+                    CancelBind();
+                    return;
+                }
+                
+                currentControllerLabel.text = $"Now Binding: {(InputController.ActionsPad) currentBindingBt}";
             }
-            else
-            {
-                CancelBind();
-            }
+            else CancelBind();
         }
 
         void AssignController(InputController newController, InputController lastController)
         {
+            Debug.Log("Assigning controller: " + newController.GetDeviceName());
+
             lastController.SetPlayer(-1);
             newController.SetPlayer(1);
 
-            if (typeof(InputJoyshock) == lastController.GetType()) {
+            if ((lastController as InputJoyshock) != null) 
+            {
                 (lastController as InputJoyshock)?.UnAssignOtherHalf();
             }
 
-            if (typeof(InputJoyshock) == newController.GetType()) {
+            if ((newController as InputJoyshock) != null) 
+            {
                 newController.OnSelected();
                 (newController as InputJoyshock)?.UnAssignOtherHalf();
             }
@@ -149,14 +154,14 @@ namespace HeavenStudio.Editor
 
             InputController.InputFeatures features = newController.GetFeatures();
             if (features.HasFlag(InputController.InputFeatures.Extra_SplitControllerLeft)) {
-                pairingLabel.text = "Joy-Con (L) Selected\nPress A to pair with Joy-Con (R)";
+                pairingLabel.text = "Joy-Con (L) Selected\nPress any button on Joy-Con (R) to pair.";
 
                 pairSelectLR = !features.HasFlag(InputController.InputFeatures.Extra_SplitControllerLeft);
                 pairSearchItem.SetActive(true);
                 StartPairSearch();
             }
             else if (features.HasFlag(InputController.InputFeatures.Extra_SplitControllerRight)) {
-                pairingLabel.text = "Joy-Con (R) Selected\nPress A to pair with Joy-Con (L)";
+                pairingLabel.text = "Joy-Con (R) Selected\nPress any button on Joy-Con (L) to pair.";
 
                 pairSelectLR = !features.HasFlag(InputController.InputFeatures.Extra_SplitControllerLeft);
                 pairSearchItem.SetActive(true);
@@ -180,16 +185,20 @@ namespace HeavenStudio.Editor
         public void StartBindSingle(int bt)
         {
             CancelBind();
+            if (PlayerInput.GetInputController(1).GetIsActionUnbindable(bt, InputController.ControlStyles.Pad)) 
+            {
+                return;
+            }
             currentBindingBt = bt;
-            currentControllerLabel.text = $"Now Binding: {(InputController.ButtonsPad) bt}";
+            currentControllerLabel.text = $"Now Binding: {(InputController.ActionsPad) bt}";
         }
 
         public void StartBindAll()
         {
             CancelBind();
             bindAllMode = true;
-            currentBindingBt = 0;
-            currentControllerLabel.text = $"Now Binding: {(InputController.ButtonsPad) 0}";
+            currentBindingBt = -1;
+            AdvanceAutoBind(PlayerInput.GetInputController(1));
         }
 
         public void CancelBind()
@@ -230,6 +239,7 @@ namespace HeavenStudio.Editor
                 pairSearchLabel.SetActive(false);
                 isPairSearching = false;
                 pairingLabel.text = "Joy-Con Selected\nPairing was cancelled.";
+                pairSearchItem.SetActive(true);
             }
         }
 
@@ -265,19 +275,18 @@ namespace HeavenStudio.Editor
             foreach (int i in controller.GetCurrentBindings().Pad)
             {
                 if (ac >= PadBindingsTxt.Count) break;
-                if (buttons[i] == null)
+                
+                if (i == -1)
+                {
+                    PadBindingsTxt[ac].text = "NOT BOUND";
+                }
+                else if (buttons[i] == null)
                 {
                     PadBindingsTxt[ac].text = "UNKNOWN";
-                    ac++;
-                    continue;
-                }
-                if (i != -1)
-                {
-                    PadBindingsTxt[ac].text = buttons[i];
                 }
                 else
                 {
-                    PadBindingsTxt[ac].text = "NOT BOUND";
+                    PadBindingsTxt[ac].text = buttons[i];
                 }
                 ac++;
             }

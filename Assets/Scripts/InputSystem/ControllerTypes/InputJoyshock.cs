@@ -137,10 +137,10 @@ namespace HeavenStudio.InputSystem
         };
         static readonly int[] defaultMappingsL = new[]
         {
-            -1,
-            -1,
-            -1,
-            -1,
+            20,
+            21,
+            22,
+            23,
             ButtonMaskLeft,
             ButtonMaskDown,
             ButtonMaskUp,
@@ -152,10 +152,10 @@ namespace HeavenStudio.InputSystem
         };
         static readonly int[] defaultMappingsR = new[]
         {
-            -1,
-            -1,
-            -1,
-            -1,
+            20,
+            21,
+            22,
+            23,
             ButtonMaskE,
             ButtonMaskN,
             ButtonMaskS,
@@ -210,6 +210,10 @@ namespace HeavenStudio.InputSystem
             "Capture",
             "SL",
             "SR",
+            "Stick Up",
+            "Stick Down",
+            "Stick Left",
+            "Stick Right",
         };
 
         static readonly string[] ps4ButtonNames = new[]
@@ -269,7 +273,8 @@ namespace HeavenStudio.InputSystem
         DateTime startTime;
 
         //buttons, sticks, triggers
-        JoyshockButtonState[] buttonStates = new JoyshockButtonState[BINDS_MAX];
+        JoyshockButtonState[] actionStates = new JoyshockButtonState[BINDS_MAX];
+        JoyshockButtonState[] buttonStates = new JoyshockButtonState[ButtonMaskSR + 1];
         JOY_SHOCK_STATE joyBtStateCurrent;
         //gyro and accelerometer
         IMU_STATE joyImuStateCurrent, joyImuStateLast;
@@ -310,17 +315,8 @@ namespace HeavenStudio.InputSystem
             if (currentBindings.Pad == null) return -1;
             if (action < 0 || action >= BINDS_MAX) return -1;
             ControlBindings actionMap = currentBindings;
-            if (otherHalf == null)
-            {
-                switch (splitType)
-                {
-                    case SplitLeft:
-                    case SplitRight:
-                        return actionMap.Pad[action];
-                    default:
-                        return defaultMappings[action];
-                }
-            }
+            if (actionMap.Pad[action] > ButtonMaskSR) return -1;
+            
             return actionMap.Pad[action];
         }
 
@@ -355,7 +351,8 @@ namespace HeavenStudio.InputSystem
             inputStack = new();
             lastInputStack = new();
 
-            buttonStates = new JoyshockButtonState[BINDS_MAX];
+            actionStates = new JoyshockButtonState[BINDS_MAX];
+            buttonStates = new JoyshockButtonState[ButtonMaskSR + 1];
             joyBtStateCurrent = new JOY_SHOCK_STATE();
 
             joyImuStateCurrent = new IMU_STATE();
@@ -385,29 +382,46 @@ namespace HeavenStudio.InputSystem
         public override void UpdateState()
         {
             reportTime = (DateTime.Now - startTime).TotalSeconds;
+            lastInputStack.Capacity = inputStack.Count;
             lastInputStack = new(inputStack);
             wantClearInputStack = true;
 
+            for (int i = 0; i < actionStates.Length; i++)
+            {
+                actionStates[i].isDelta = false;
+            }
             for (int i = 0; i < buttonStates.Length; i++)
             {
                 buttonStates[i].isDelta = false;
             }
+
             foreach(TimestampedState state in lastInputStack)
             {
                 joyBtStateCurrent = state.input;
 
-                for (int i = 0; i < buttonStates.Length; i++)
+                for (int i = 0; i < actionStates.Length; i++)
                 {
                     int bt = GetButtonForSplitType(i);
                     if (bt != -1)
                     {
                         bool pressed = BitwiseUtils.WantCurrent(state.input.buttons, 1 << bt);
-                        if (pressed != buttonStates[i].pressed && !buttonStates[i].isDelta)
+                        if (pressed != actionStates[i].pressed && !actionStates[i].isDelta)
                         {
-                            buttonStates[i].pressed = pressed;
-                            buttonStates[i].isDelta = true;
-                            buttonStates[i].dt = reportTime - state.timestamp;
+                            actionStates[i].pressed = pressed;
+                            actionStates[i].isDelta = true;
+                            actionStates[i].dt = reportTime - state.timestamp;
                         }
+                    }
+                }
+
+                for (int i = 0; i < buttonStates.Length; i++)
+                {
+                    bool pressed = BitwiseUtils.WantCurrent(state.input.buttons, 1 << i);
+                    if (pressed != buttonStates[i].pressed && !buttonStates[i].isDelta)
+                    {
+                        buttonStates[i].pressed = pressed;
+                        buttonStates[i].isDelta = true;
+                        buttonStates[i].dt = reportTime - state.timestamp;
                     }
                 }
             }
@@ -561,6 +575,25 @@ namespace HeavenStudio.InputSystem
             currentBindings = newBinds;
         }
 
+        public override bool GetIsActionUnbindable(int action, ControlStyles style)
+        {
+            if (otherHalf == null)
+            {
+                switch (splitType)
+                {
+                    case SplitLeft:
+                    case SplitRight:
+                        switch (style)
+                        {
+                            case ControlStyles.Pad:
+                                return action is 0 or 1 or 2 or 3;
+                        }
+                        break;
+                }
+            }
+            return false;
+        }
+
         public override int GetLastButtonDown()
         {
             for (int i = 0; i < buttonStates.Length; i++)
@@ -573,29 +606,36 @@ namespace HeavenStudio.InputSystem
             return -1;
         }
 
-        public override KeyCode GetLastKeyDown()
+        public override int GetLastActionDown()
         {
-            return KeyCode.None;
+            for (int i = 0; i < actionStates.Length; i++)
+            {
+                if (actionStates[i].pressed && actionStates[i].isDelta)
+                {
+                    return i;
+                }
+            }
+            return -1;
         }
 
-        public override bool GetButton(int button)
+        public override bool GetAction(int button)
         {
             if (button == -1) {return false;}
-            return buttonStates[button].pressed;
+            return actionStates[button].pressed;
         }
 
-        public override bool GetButtonDown(int button, out double dt)
+        public override bool GetActionDown(int button, out double dt)
         {
             if (button == -1) {dt = 0; return false;}
-            dt = buttonStates[button].dt;
-            return buttonStates[button].pressed && buttonStates[button].isDelta;
+            dt = actionStates[button].dt;
+            return actionStates[button].pressed && actionStates[button].isDelta;
         }
 
-        public override bool GetButtonUp(int button, out double dt)
+        public override bool GetActionUp(int button, out double dt)
         {
             if (button == -1) {dt = 0; return false;}
-            dt = buttonStates[button].dt;
-            return !buttonStates[button].pressed && buttonStates[button].isDelta;
+            dt = actionStates[button].dt;
+            return !actionStates[button].pressed && actionStates[button].isDelta;
         }
 
         public override float GetAxis(InputAxis axis)
@@ -643,7 +683,7 @@ namespace HeavenStudio.InputSystem
                 default:
                     return false;
             }
-            return GetButton(bt) || BitwiseUtils.WantCurrent(directionStateCurrent, 1 << (int) direction);
+            return GetAction(bt) || BitwiseUtils.WantCurrent(directionStateCurrent, 1 << (int) direction);
         }
 
         public override bool GetHatDirectionDown(InputDirection direction, out double dt)
@@ -667,7 +707,7 @@ namespace HeavenStudio.InputSystem
                     dt = 0;
                     return false;
             }
-            bool btbool = GetButtonDown(bt, out dt);
+            bool btbool = GetActionDown(bt, out dt);
             if (!btbool) dt = 0;
             return btbool || BitwiseUtils.WantCurrentAndNotLast(directionStateCurrent, directionStateLast, 1 << (int) direction);
         }
@@ -693,7 +733,7 @@ namespace HeavenStudio.InputSystem
                     dt = 0;
                     return false;
             }
-            bool btbool = GetButtonUp(bt, out dt);
+            bool btbool = GetActionUp(bt, out dt);
             if (!btbool) dt = 0;
             return btbool || BitwiseUtils.WantNotCurrentAndLast(directionStateCurrent, directionStateLast, 1 << (int) direction);
         }

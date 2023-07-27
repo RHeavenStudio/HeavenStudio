@@ -128,36 +128,46 @@ namespace HeavenStudio.InputSystem
             currentBindings = newBinds;
         }
 
-        public override int GetLastButtonDown()
+        public override bool GetIsActionUnbindable(int action, ControlStyles style)
         {
-            return 0;
+            return false;
         }
 
-        public override KeyCode GetLastKeyDown()
+        public override int GetLastButtonDown()
         {
             if (Input.anyKeyDown)
             {
                 for (KeyCode i = keyCodes[1]; i <= KeyCode.Menu; i++)
                 {
                     if (Input.GetKeyDown(i))
-                        return i;
+                        return (int)i;
                 }
             }
-            return KeyCode.None;
+            return (int)KeyCode.None;
         }
 
-        public override bool GetButton(int button)
+        public override int GetLastActionDown()
+        {
+            for (int i = 0; i < BINDS_MAX; i++)
+            {
+                if (Input.GetKeyDown((KeyCode)currentBindings.Pad[i]))
+                    return i;
+            }
+            return -1;
+        }
+
+        public override bool GetAction(int button)
         {
             return Input.GetKey((KeyCode)currentBindings.Pad[button]);
         }
 
-        public override bool GetButtonDown(int button, out double dt)
+        public override bool GetActionDown(int button, out double dt)
         {
             dt = 0;
             return Input.GetKeyDown((KeyCode)currentBindings.Pad[button]);
         }
 
-        public override bool GetButtonUp(int button, out double dt)
+        public override bool GetActionUp(int button, out double dt)
         {
             dt = 0;
             return Input.GetKeyUp((KeyCode)currentBindings.Pad[button]);

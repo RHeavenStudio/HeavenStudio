@@ -76,7 +76,7 @@ namespace HeavenStudio.InputSystem
         public const int BINDS_MAX = 12; //maximum number of binds per controller
 
         //buttons used in Heaven Studio gameplay (Pad Style)
-        public enum ButtonsPad : int
+        public enum ActionsPad : int
         {
             Up = 0,
             Down = 1,
@@ -92,7 +92,7 @@ namespace HeavenStudio.InputSystem
         }
 
         //FUTURE: buttons used in Heaven Studio gameplay ("Form Baton" / WiiMote Style)
-        public enum ButtonsBaton : int
+        public enum ActionsBaton : int
         {
             South = 0,      //-- all these...
             East = 1,       // |
@@ -106,7 +106,7 @@ namespace HeavenStudio.InputSystem
         }
 
         //FUTURE: buttons used in Heaven Studio gameplay (Touch Style)
-        public enum ButtonsTouch : int
+        public enum ActionsTouch : int
         {
             Tap = 0,   // flicks are handled like a motion, don't have a binding
             Left = 1,     // also maps to tap, but with directionality (tap the left side of the panel)
@@ -167,39 +167,47 @@ namespace HeavenStudio.InputSystem
         public abstract void SetCurrentBindings(ControlBindings newBinds);
 
         /// <summary>
-        /// Gets the last pressed button
+        /// Whether a given action can have be rebount
+        /// </summary>
+        /// <param name="action">action to check</param>
+        /// <param name="style">control style to check</param>
+        /// <returns></returns>
+        public abstract bool GetIsActionUnbindable(int action, ControlStyles style);
+
+        /// <summary>
+        /// Gets the last pressed physical button
         /// </summary>
         /// <returns></returns>
         public abstract int GetLastButtonDown();
 
         /// <summary>
-        /// Gets the last pressed key (keyboards)
+        /// Gets the last pressed virtual action
         /// </summary>
         /// <returns></returns>
-        public abstract KeyCode GetLastKeyDown();
+        public abstract int GetLastActionDown();
 
         /// <summary>
-        /// True if the given button is being held
+        /// True if the given action is being held
         /// </summary>
-        /// <param name="button"></param>
+        /// <param name="action"></param>
         /// <returns></returns>
-        public abstract bool GetButton(int button);
+        public abstract bool GetAction(int action);
 
         /// <summary>
-        /// True if the button was just pressed this Update
+        /// True if the action was just pressed this Update
         /// </summary>
-        /// <param name="button"></param>
+        /// <param name="action"></param>
         /// <param name="dt">time since the reported event, use to compensate for controller delays</param>
         /// <returns></returns>
-        public abstract bool GetButtonDown(int button, out double dt);
+        public abstract bool GetActionDown(int action, out double dt);
 
         /// <summary>
-        /// True if the button was just released this Update
+        /// True if the action was just released this Update
         /// </summary>
-        /// <param name="button"></param>
+        /// <param name="action"></param>
         /// <param name="dt">time since the reported event, use to compensate for controller delays</param>
         /// <returns></returns>
-        public abstract bool GetButtonUp(int button, out double dt);
+        public abstract bool GetActionUp(int action, out double dt);
 
         /// <summary>
         /// Get the value of an analogue axis
