@@ -21,6 +21,7 @@ namespace HeavenStudio.Editor
         [SerializeField] private GameObject pairSearchItem;
         [SerializeField] private GameObject autoSearchLabel;
         [SerializeField] private GameObject pairSearchLabel;
+        [SerializeField] private GameObject pairSearchCancelBt;
         [SerializeField] private TMP_Text pairingLabel;
         [SerializeField] private List<GameObject> controllerIcons;
 
@@ -229,6 +230,7 @@ namespace HeavenStudio.Editor
             CancelBind();
             if (!isAutoSearching) {
                 pairSearchLabel.SetActive(true);
+                pairSearchCancelBt.SetActive(true);
                 isPairSearching = true;
             }
         }
@@ -237,9 +239,9 @@ namespace HeavenStudio.Editor
             CancelBind();
             if (isPairSearching) {
                 pairSearchLabel.SetActive(false);
+                pairSearchCancelBt.SetActive(false);
                 isPairSearching = false;
                 pairingLabel.text = "Joy-Con Selected\nPairing was cancelled.";
-                pairSearchItem.SetActive(true);
             }
         }
 

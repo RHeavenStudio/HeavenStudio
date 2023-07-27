@@ -4431,6 +4431,7 @@ MonoBehaviour:
   pairSearchItem: {fileID: 3918594454393827277}
   autoSearchLabel: {fileID: 3918594454453368363}
   pairSearchLabel: {fileID: 3918594455337952172}
+  pairSearchCancelBt: {fileID: 3918594455780710549}
   pairingLabel: {fileID: 3918594454521024532}
   controllerIcons:
   - {fileID: 3918594454983356908}
@@ -5376,7 +5377,7 @@ GameObject:
   - component: {fileID: 3918594455780710538}
   - component: {fileID: 3918594455780710539}
   m_Layer: 5
-  m_Name: AutoSearch
+  m_Name: AutoSearchCancel
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
