@@ -134,7 +134,7 @@ TextureImporter:
         width: 665
         height: 570
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
@@ -155,7 +155,7 @@ TextureImporter:
         width: 748
         height: 657
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
@@ -176,7 +176,7 @@ TextureImporter:
         width: 976
         height: 824
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
@@ -184,6 +184,90 @@ TextureImporter:
       bones: []
       spriteID: 59d3606264e585a4e84e320ddc0ee949
       internalID: -1505868692
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: island0
+      rect:
+        serializedVersion: 2
+        x: 4960
+        y: 4869
+        width: 1145
+        height: 484
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 70cb8b728efee4f4ca20c93977739689
+      internalID: -297293688
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: island1
+      rect:
+        serializedVersion: 2
+        x: 4706
+        y: 5588
+        width: 1420
+        height: 434
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 701e0b79e0b1dbf4684bf34df6105c5f
+      internalID: -634743292
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: island2
+      rect:
+        serializedVersion: 2
+        x: 4622
+        y: 1916
+        width: 1434
+        height: 777
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: a164d4c2e9c8d81488d920c201a14b7e
+      internalID: -863517228
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: island2lights
+      rect:
+        serializedVersion: 2
+        x: 3985
+        y: 52
+        width: 986
+        height: 515
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 5b77bf5a1d1e2bf43859ed7356636ae6
+      internalID: 1604021986
       vertices: []
       indices: 
       edges: []
@@ -203,6 +287,10 @@ TextureImporter:
       Cloud_1: -542562183
       Cloud_2: -1505868692
       Gradient: -1316422046
+      island0: -297293688
+      island1: -634743292
+      island2: -863517228
+      island2lights: 1604021986
   spritePackingTag: 
   pSDRemoveMatte: 0
   pSDShowRemoveMatteOption: 0

@@ -145,6 +145,7 @@ namespace HeavenStudio.Games
         [SerializeField] private CloudsManager cloudManagerMain, cloudManagerLeft, cloudManagerRight;
 
         [Header("Day/Night Cycle")]
+        [SerializeField] private SpriteRenderer island2Lights;
         [SerializeField] private Material bgMat;
         [SerializeField] private Material objectMat;
         [SerializeField] private Material cloudMat;
@@ -267,24 +268,32 @@ namespace HeavenStudio.Games
 
             float normalizedBeat = cond.GetPositionFromBeat(startTimeBeat, timeLength);
 
+            Color lightsColor = new Color(1, 1, 1, 0);
+
             if (normalizedBeat < 0)
             {
                 bgMat.SetColor("_Color", bgColorFrom);
                 cloudMat.SetColor("_Color", cloudColorFrom);
                 objectMat.SetColor("_Color", objectsColorFrom);
+                lightsColor = (lastTime == DayNightCycle.Night) ? new Color(1, 1, 1, 1) : new Color(1, 1, 1, 0);
             }
             else if (normalizedBeat >= 0 && normalizedBeat <= 1f)
             {
                 bgMat.SetColor("_Color", GetEasedColor(bgColorFrom, bgColorTo));
                 cloudMat.SetColor("_Color", GetEasedColor(cloudColorFrom, cloudColorTo));
                 objectMat.SetColor("_Color", GetEasedColor(objectsColorFrom, objectsColorTo));
+                lightsColor = GetEasedColor((lastTime == DayNightCycle.Night) ? new Color(1, 1, 1, 1) : new Color(1, 1, 1, 0),
+                    (currentTime == DayNightCycle.Night) ? new Color(1, 1, 1, 1) : new Color(1, 1, 1, 0));
             }
             else if (normalizedBeat > 1)
             {
                 bgMat.SetColor("_Color", bgColorTo);
                 cloudMat.SetColor("_Color", cloudColorTo);
                 objectMat.SetColor("_Color", objectsColorTo);
+                lightsColor = (currentTime == DayNightCycle.Night) ? new Color(1, 1, 1, 1) : new Color(1, 1, 1, 0);
             }
+
+            island2Lights.color = lightsColor;
 
             Color GetEasedColor(Color start, Color end)
             {
@@ -292,8 +301,9 @@ namespace HeavenStudio.Games
                 float r = func(start.r, end.r, normalizedBeat);
                 float g = func(start.g, end.g, normalizedBeat);
                 float b = func(start.b, end.b, normalizedBeat);
+                float a = func(start.a, end.a, normalizedBeat);
 
-                return new Color(r, g, b, 1);
+                return new Color(r, g, b, a);
             }
         }
 
