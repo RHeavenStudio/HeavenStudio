@@ -9,8 +9,9 @@ namespace HeavenStudio.Games.Scripts_AirRally
         [SerializeField] Transform cloudRoot;
         [SerializeField] GameObject cloudPrefab;
         [SerializeField] int maxCloudAmt = 32;
-        [SerializeField] int cloudsToPreBake = 10;
-        [SerializeField] float cloudRepeatRate = 0.1f;
+        [SerializeField] float prebakeMultiplier = 2.5f;
+        [SerializeField] private float cloudsPerSecond = 67;
+        private float cloudRepeatRate = 0.1f;
 
 
         Cloud[] pool;
@@ -20,6 +21,8 @@ namespace HeavenStudio.Games.Scripts_AirRally
         // Start is called before the first frame update
         void Start()
         {
+            SetCloudRate();
+            int cloudsToPreBake = Mathf.RoundToInt(cloudsPerSecond * prebakeMultiplier);
             pool = new Cloud[maxCloudAmt];
             for (int i = 0; i < maxCloudAmt; i++)
             {
@@ -59,6 +62,18 @@ namespace HeavenStudio.Games.Scripts_AirRally
             {
                 lastTime = time;
                 GetAvailableCloud()?.StartCloud(cloudRoot.position, false);
+            }
+        }
+
+        private void SetCloudRate()
+        {
+            if (cloudsPerSecond == 0)
+            {
+                cloudRepeatRate = float.MaxValue;
+            }
+            else
+            {
+                cloudRepeatRate = 1 / cloudsPerSecond;
             }
         }
     }

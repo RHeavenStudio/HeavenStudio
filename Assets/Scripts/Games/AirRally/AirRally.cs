@@ -44,6 +44,19 @@ namespace HeavenStudio.Games.Loaders
                 {
 
                 },
+                new GameAction("enter", "Enter")
+                {
+                    function = delegate
+                    {
+                        AirRally.instance.SetEnter(e.currentEntity.beat, e.currentEntity.length, e.currentEntity["ease"], true);
+                    },
+                    resizable = true,
+                    defaultLength = 2f,
+                    parameters = new List<Param>()
+                    {
+                        new Param("ease", EasingFunction.Ease.EaseOutQuad, "Ease")
+                    }
+                },
                 new GameAction("4beat", "4 Beat Count-In")
                 {
                     defaultLength = 4f,
@@ -113,6 +126,7 @@ namespace HeavenStudio.Games
         [SerializeField] Animator Baxter;
         [SerializeField] Animator Forthington;
         private Transform forthTrans;
+        private Transform baxterTrans;
         [SerializeField] GameObject Shuttlecock;
         public GameObject ActiveShuttle;
         [SerializeField] GameObject objHolder;
@@ -137,6 +151,10 @@ namespace HeavenStudio.Games
 
         [Header("Waypoint")]
         [SerializeField] private float wayPointBeatLength = 0.25f;
+        [SerializeField] private float wayPointEnter = -3.16f;
+        private double enterStartBeat = -1;
+        private float enterLength = 0f;
+        private Util.EasingFunction.Ease enterEase = Util.EasingFunction.Ease.EaseOutQuad;
         private double wayPointStartBeat = 0;
         private float lastWayPointZForForth = 3.16f;
         private float wayPointZForForth = 3.16f;
@@ -152,6 +170,7 @@ namespace HeavenStudio.Games
         {
             instance = this;
             forthTrans = Forthington.transform;
+            baxterTrans = Baxter.transform;
         }      
 
         // Update is called once per frame
@@ -163,6 +182,45 @@ namespace HeavenStudio.Games
                 SoundByte.PlayOneShotGame("airRally/whooshForth_Close", -1f);
             }
 
+            float normalizedEnterBeat = Conductor.instance.GetPositionFromBeat(enterStartBeat, enterLength);
+
+            if (normalizedEnterBeat < 0)
+            {
+                forthTrans.position = new Vector3(forthTrans.position.x, forthTrans.position.y, wayPointEnter);
+                baxterTrans.position = new Vector3(baxterTrans.position.x, baxterTrans.position.y, wayPointEnter);
+            }
+            else if (normalizedEnterBeat >= 0 && normalizedEnterBeat <= 1f)
+            {
+                var func = Util.EasingFunction.GetEasingFunction(enterEase);
+
+                float newZ = func(wayPointEnter, 3.16f, normalizedEnterBeat);
+                forthTrans.position = new Vector3(forthTrans.position.x, forthTrans.position.y, newZ);
+                baxterTrans.position = new Vector3(baxterTrans.position.x, baxterTrans.position.y, newZ);
+            }
+            else
+            {
+                DistanceUpdate();
+            }
+            DayNightCycleUpdate();
+        }
+
+        private Color objectsColorFrom = Color.white;
+        private Color objectsColorTo = Color.white;
+        private Color bgColorFrom = Color.white;
+        private Color bgColorTo = Color.white;
+        private Color cloudColorFrom = Color.white;
+        private Color cloudColorTo = Color.white;
+
+        public void SetEnter(double beat, float length, int ease, bool playSound = true)
+        {
+            if (playSound) SoundByte.PlayOneShotGame("airRally/planesSpeedUp");
+            enterStartBeat = beat;
+            enterLength = length;
+            enterEase = (Util.EasingFunction.Ease)ease;
+        }
+
+        private void DistanceUpdate()
+        {
             float normalizedBeat = Conductor.instance.GetPositionFromBeat(wayPointStartBeat, wayPointBeatLength);
 
             if (normalizedBeat >= 0f && normalizedBeat <= 1f)
@@ -177,16 +235,7 @@ namespace HeavenStudio.Games
             {
                 forthTrans.position = new Vector3(forthTrans.position.x, forthTrans.position.y, wayPointZForForth);
             }
-
-            DayNightCycleUpdate();
         }
-
-        private Color objectsColorFrom = Color.white;
-        private Color objectsColorTo = Color.white;
-        private Color bgColorFrom = Color.white;
-        private Color bgColorTo = Color.white;
-        private Color cloudColorFrom = Color.white;
-        private Color cloudColorTo = Color.white;
 
         private void DayNightCycleUpdate()
         {
@@ -524,6 +573,7 @@ namespace HeavenStudio.Games
                 DistanceSound.farthest => 255.16f,
                 _ => throw new System.NotImplementedException()
             };
+            DistanceUpdate();
         }
 
         private static DistanceSound DistanceAtBeat(double beat)
@@ -590,6 +640,7 @@ namespace HeavenStudio.Games
         public override void OnGameSwitch(double beat)
         {
             PersistDayNight(beat);
+            PersistEnter(beat);
             if (TryGetLastDistanceEvent(beat, out RiqEntity distanceEvent))
             {
                 SetDistance(distanceEvent.beat, distanceEvent["type"], distanceEvent["ease"]);
@@ -632,6 +683,31 @@ namespace HeavenStudio.Games
         public override void OnPlay(double beat)
         {
             PersistDayNight(beat);
+            PersistEnter(beat);
+        }
+
+        private void PersistEnter(double beat)
+        {
+            double nextGameSwitchBeat = double.MaxValue;
+
+            var nextGameSwitch = EventCaller.GetAllInGameManagerList("gameManager", new string[] { "switchGame" }).Find(x => x.beat > beat);
+            if (nextGameSwitch != null) nextGameSwitchBeat = nextGameSwitch.beat;
+            var allEnters = EventCaller.GetAllInGameManagerList("airRally", new string[] { "enter" });
+            if (allEnters.Count == 0) return;
+            var nextEnter = allEnters.Find(x => x.beat >= beat && x.beat < nextGameSwitchBeat);
+            if (nextEnter != null)
+            {
+                SetEnter(nextEnter.beat, nextEnter.length, nextEnter["ease"], false);
+            }
+            else
+            {
+                var overlappingEnters = allEnters.FindAll(x => x.beat < beat && x.beat + x.length > beat);
+                if (overlappingEnters.Count == 0) return;
+                foreach (var overlappingEnter in overlappingEnters)
+                {
+                    SetEnter(overlappingEnter.beat, overlappingEnter.length, overlappingEnter["ease"], false);
+                }
+            }
         }
 
         private void PersistDayNight(double beat)
