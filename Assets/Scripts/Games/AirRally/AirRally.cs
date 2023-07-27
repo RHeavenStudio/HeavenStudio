@@ -107,8 +107,8 @@ namespace HeavenStudio.Games.Loaders
                     },
                     parameters = new List<Param>()
                     {
-                        new Param("main", new EntityTypes.Integer(0, 200, 67), "Main Clouds", "How many clouds per second?"),
-                        new Param("side", new EntityTypes.Integer(0, 100, 25), "Side Clouds", "How many clouds per second?"),
+                        new Param("main", new EntityTypes.Integer(0, 300, 30), "Main Clouds", "How many clouds per second?"),
+                        new Param("side", new EntityTypes.Integer(0, 100, 10), "Side Clouds", "How many clouds per second?"),
                     }
                 },
                 new GameAction("silence", "Silence")

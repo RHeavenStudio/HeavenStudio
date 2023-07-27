@@ -1267,9 +1267,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   cloudRoot: {fileID: 715521291780950400}
   cloudPrefab: {fileID: 401608696343977152}
-  maxCloudAmt: 200
-  prebakeMultiplier: 2.5
-  cloudsPerSecond: 25
+  maxCloudAmt: 500
+  prebakeMultiplier: 1
+  cloudsPerSecond: 10
 --- !u!1 &1295134938081073202
 GameObject:
   m_ObjectHideFlags: 0
@@ -6834,9 +6834,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   cloudRoot: {fileID: 5538137172198949364}
   cloudPrefab: {fileID: 4270512504792158018}
-  maxCloudAmt: 200
-  prebakeMultiplier: 2.5
-  cloudsPerSecond: 25
+  maxCloudAmt: 500
+  prebakeMultiplier: 1
+  cloudsPerSecond: 10
 --- !u!1 &4061025867320626885
 GameObject:
   m_ObjectHideFlags: 0
@@ -8255,9 +8255,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   cloudRoot: {fileID: 1662667863044407717}
   cloudPrefab: {fileID: 5876158704267206464}
-  maxCloudAmt: 400
-  prebakeMultiplier: 2.5
-  cloudsPerSecond: 67
+  maxCloudAmt: 1500
+  prebakeMultiplier: 1
+  cloudsPerSecond: 30
 --- !u!1 &7535555310122580223
 GameObject:
   m_ObjectHideFlags: 0
