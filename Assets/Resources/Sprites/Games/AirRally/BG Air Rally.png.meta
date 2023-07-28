@@ -260,7 +260,7 @@ TextureImporter:
         width: 986
         height: 515
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
@@ -268,6 +268,69 @@ TextureImporter:
       bones: []
       spriteID: 5b77bf5a1d1e2bf43859ed7356636ae6
       internalID: 1604021986
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: island3
+      rect:
+        serializedVersion: 2
+        x: 5133
+        y: 4144
+        width: 981
+        height: 569
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 3760261b7b1dbf444b21eede0f2b3641
+      internalID: 1851791412
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: smallisle0
+      rect:
+        serializedVersion: 2
+        x: 4109
+        y: 1572
+        width: 397
+        height: 147
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 597fe6bded8afb84f911b750f4f62005
+      internalID: 1996268707
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: smallisle1
+      rect:
+        serializedVersion: 2
+        x: 4092
+        y: 1190
+        width: 395
+        height: 148
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 7768d83db9fd4af4582bc3726bbfea4b
+      internalID: 632036711
       vertices: []
       indices: 
       edges: []
@@ -291,6 +354,9 @@ TextureImporter:
       island1: -634743292
       island2: -863517228
       island2lights: 1604021986
+      island3: 1851791412
+      smallisle0: 1996268707
+      smallisle1: 632036711
   spritePackingTag: 
   pSDRemoveMatte: 0
   pSDShowRemoveMatteOption: 0

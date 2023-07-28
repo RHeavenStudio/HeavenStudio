@@ -111,6 +111,17 @@ namespace HeavenStudio.Games.Loaders
                         new Param("side", new EntityTypes.Integer(0, 100, 10), "Side Clouds", "How many clouds per second?"),
                     }
                 },
+                new GameAction("islandSpeed", "Islands Speed")
+                {
+                    function = delegate
+                    {
+                        AirRally.instance.SetIslandSpeed(e.currentEntity["speed"]);
+                    },
+                    parameters = new List<Param>()
+                    {
+                        new Param("speed", new EntityTypes.Float(0, 10, 1), "Speed")
+                    }
+                },
                 new GameAction("silence", "Silence")
                 {
                     defaultLength = 2f,
@@ -143,6 +154,7 @@ namespace HeavenStudio.Games
         public GameObject ActiveShuttle;
         [SerializeField] GameObject objHolder;
         [SerializeField] private CloudsManager cloudManagerMain, cloudManagerLeft, cloudManagerRight;
+        [SerializeField] private IslandsManager islandManager;
 
         [Header("Day/Night Cycle")]
         [SerializeField] private SpriteRenderer island2Lights;
@@ -220,6 +232,11 @@ namespace HeavenStudio.Games
                 DistanceUpdate();
             }
             DayNightCycleUpdate();
+        }
+
+        public void SetIslandSpeed(float speed)
+        {
+            islandManager.additionalSpeedMult = speed;
         }
 
         public void SetCloudRates(int main, int side)
@@ -675,6 +692,7 @@ namespace HeavenStudio.Games
         {
             PersistDayNight(beat);
             PersistEnter(beat);
+            PersistIslandSpeed(beat);
             InitClouds(beat);
             if (TryGetLastDistanceEvent(beat, out RiqEntity distanceEvent))
             {
@@ -719,6 +737,7 @@ namespace HeavenStudio.Games
         {
             PersistDayNight(beat);
             PersistEnter(beat);
+            PersistIslandSpeed(beat);
             InitClouds(beat);
         }
 
@@ -766,6 +785,16 @@ namespace HeavenStudio.Games
             var e = allDayNights[^1];
 
             SetDayNightCycle(e.beat, e.length, (DayNightCycle)e["start"], (DayNightCycle)e["end"], (Util.EasingFunction.Ease)e["ease"]);
+        }
+
+        private void PersistIslandSpeed(double beat)
+        {
+            var allSpeeds = EventCaller.GetAllInGameManagerList("airRally", new string[] { "islandSpeed" }).FindAll(x => x.beat < beat);
+            if (allSpeeds.Count == 0) return;
+
+            var e = allSpeeds[^1];
+
+            SetIslandSpeed(e["speed"]);
         }
 
         public static void PreStartRally(double beat)
