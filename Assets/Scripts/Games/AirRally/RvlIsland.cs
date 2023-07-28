@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using DG.Tweening;
 
 namespace HeavenStudio.Games.Scripts_AirRally
 {
@@ -13,9 +14,12 @@ namespace HeavenStudio.Games.Scripts_AirRally
         [NonSerialized] public float normalizedOffset = 0f;
         [SerializeField] private SpriteRenderer[] srs;
 
+        private Tween[] fadeInTweens;
+
         private void Awake()
         {
             startPos = transform.position;
+            fadeInTweens = new Tween[srs.Length];
         }
 
         private void Update()
@@ -27,6 +31,12 @@ namespace HeavenStudio.Games.Scripts_AirRally
             if (transform.position.z < manager.endZ)
             {
                 normalized = -normalizedOffset;
+                for(int i = 0; i < srs.Length; i++)
+                {
+                    srs[i].color = new Color(1, 1, 1, 0);
+                    if (fadeInTweens[i] != null) fadeInTweens[i].Kill(true);
+                    fadeInTweens[i] = srs[i].DOColor(Color.white, 0.4f);
+                }
             }
         }
     }
