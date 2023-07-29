@@ -1057,6 +1057,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 891c0b37d3276da4fa7ea5ba3332dc13, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  manager: {fileID: 5987722310119055673}
+  type: 0
   sprites:
   - {fileID: 1359986940, guid: afc47a11f25f9ec48b96a0108063d62a, type: 3}
   - {fileID: -542562183, guid: afc47a11f25f9ec48b96a0108063d62a, type: 3}
@@ -7036,6 +7038,7 @@ Transform:
   - {fileID: 715521291780950400}
   - {fileID: 5579290252213927423}
   - {fileID: 4947373842694248506}
+  - {fileID: 1326642397934182037}
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -7064,6 +7067,7 @@ MonoBehaviour:
   cloudManagerLeft: {fileID: 1628409150631071652}
   cloudManagerRight: {fileID: 5987722310119055673}
   cloudManagerTop: {fileID: 98469910329583253}
+  snowflakeManager: {fileID: 69134606483725833}
   islandManager: {fileID: 773254606273922326}
   pterosaurs: {fileID: 8956186585826682776, guid: 7a19ac87977d55e45b44e7058c36e417, type: 3}
   geese: {fileID: 3804544692715476050, guid: 5dfba65541f56014aa33ad5718debe9f, type: 3}
@@ -7073,9 +7077,9 @@ MonoBehaviour:
   objectMat: {fileID: 2100000, guid: 1e826be1545f24645a13510361c0418f, type: 2}
   cloudMat: {fileID: 2100000, guid: 3b16b893f67f7394284478ae9421435d, type: 2}
   noonColor: {r: 1, g: 0.83795786, b: 0.6556604, a: 1}
-  nightColor: {r: 0.33285868, g: 0.53547454, b: 0.8301887, a: 1}
+  nightColor: {r: 0.514151, g: 0.7130812, b: 1, a: 1}
   noonColorCloud: {r: 1, g: 0.93626714, b: 0.8632076, a: 1}
-  nightColorCloud: {r: 0.6921057, g: 0.8065844, b: 0.9716981, a: 1}
+  nightColorCloud: {r: 0.7728729, g: 0.8596476, b: 0.9811321, a: 1}
   hasMissed: 0
   wayPointBeatLength: 1
   wayPointEnter: -10
@@ -7394,6 +7398,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 891c0b37d3276da4fa7ea5ba3332dc13, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  manager: {fileID: 1628409150631071652}
+  type: 0
   sprites:
   - {fileID: 1359986940, guid: afc47a11f25f9ec48b96a0108063d62a, type: 3}
   - {fileID: -542562183, guid: afc47a11f25f9ec48b96a0108063d62a, type: 3}
@@ -7501,6 +7507,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 891c0b37d3276da4fa7ea5ba3332dc13, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  manager: {fileID: 98469910329583253}
+  type: 0
   sprites:
   - {fileID: 1359986940, guid: afc47a11f25f9ec48b96a0108063d62a, type: 3}
   - {fileID: -542562183, guid: afc47a11f25f9ec48b96a0108063d62a, type: 3}
@@ -8300,6 +8308,56 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
+--- !u!1 &5639779363459376065
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1326642397934182037}
+  - component: {fileID: 69134606483725833}
+  m_Layer: 0
+  m_Name: Snowflakes
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1326642397934182037
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5639779363459376065}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 128}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children:
+  - {fileID: 1480761631889398828}
+  m_Father: {fileID: 2963175922999495697}
+  m_RootOrder: 9
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &69134606483725833
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5639779363459376065}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f9a1426575a6edb4b8f43668daac9f21, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  cloudRoot: {fileID: 1326642397934182037}
+  cloudPrefab: {fileID: 6032574890478271307}
+  maxCloudAmt: 200
+  prebakeMultiplier: 1
+  cloudsPerSecond: 0
 --- !u!1 &5876158704267206464
 GameObject:
   m_ObjectHideFlags: 0
@@ -8397,11 +8455,119 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 891c0b37d3276da4fa7ea5ba3332dc13, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  manager: {fileID: 2291459469940149212}
+  type: 0
   sprites:
   - {fileID: 1359986940, guid: afc47a11f25f9ec48b96a0108063d62a, type: 3}
   - {fileID: -542562183, guid: afc47a11f25f9ec48b96a0108063d62a, type: 3}
   - {fileID: -1505868692, guid: afc47a11f25f9ec48b96a0108063d62a, type: 3}
   spawnRange: {x: 76, y: 2, z: 0}
+  baseSpeed: 60
+  fadeDist: 24
+  lifeTime: 3
+  fadeInTime: 0.25
+  isWorking: 0
+--- !u!1 &6032574890478271307
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1480761631889398828}
+  - component: {fileID: 5365786898453536615}
+  - component: {fileID: 9144866405559773696}
+  m_Layer: 0
+  m_Name: snowflake
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 0
+--- !u!4 &1480761631889398828
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6032574890478271307}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 0.7, y: 0.7, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1326642397934182037}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!212 &5365786898453536615
+SpriteRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6032574890478271307}
+  m_Enabled: 1
+  m_CastShadows: 0
+  m_ReceiveShadows: 0
+  m_DynamicOccludee: 1
+  m_StaticShadowCaster: 0
+  m_MotionVectors: 1
+  m_LightProbeUsage: 1
+  m_ReflectionProbeUsage: 1
+  m_RayTracingMode: 0
+  m_RayTraceProcedural: 0
+  m_RenderingLayerMask: 1
+  m_RendererPriority: 0
+  m_Materials:
+  - {fileID: 10754, guid: 0000000000000000f000000000000000, type: 0}
+  m_StaticBatchInfo:
+    firstSubMesh: 0
+    subMeshCount: 0
+  m_StaticBatchRoot: {fileID: 0}
+  m_ProbeAnchor: {fileID: 0}
+  m_LightProbeVolumeOverride: {fileID: 0}
+  m_ScaleInLightmap: 1
+  m_ReceiveGI: 1
+  m_PreserveUVs: 0
+  m_IgnoreNormalsForChartDetection: 0
+  m_ImportantGI: 0
+  m_StitchLightmapSeams: 1
+  m_SelectedEditorRenderState: 0
+  m_MinimumChartSize: 4
+  m_AutoUVMaxDistance: 0.5
+  m_AutoUVMaxAngle: 89
+  m_LightmapParameters: {fileID: 0}
+  m_SortingLayerID: 0
+  m_SortingLayer: 0
+  m_SortingOrder: 0
+  m_Sprite: {fileID: 960454226, guid: afc47a11f25f9ec48b96a0108063d62a, type: 3}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_FlipX: 0
+  m_FlipY: 0
+  m_DrawMode: 0
+  m_Size: {x: 3.83, y: 4.1}
+  m_AdaptiveModeThreshold: 0.5
+  m_SpriteTileMode: 0
+  m_WasSpriteAssigned: 1
+  m_MaskInteraction: 0
+  m_SpriteSortPoint: 0
+--- !u!114 &9144866405559773696
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6032574890478271307}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 891c0b37d3276da4fa7ea5ba3332dc13, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  manager: {fileID: 69134606483725833}
+  type: 1
+  sprites: []
+  spawnRange: {x: 100, y: 50, z: 0}
   baseSpeed: 60
   fadeDist: 24
   lifeTime: 3

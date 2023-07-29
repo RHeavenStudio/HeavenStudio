@@ -6,6 +6,14 @@ namespace HeavenStudio.Games.Scripts_AirRally
 {
     public class Cloud : MonoBehaviour
     {
+        private enum Type
+        {
+            Cloud,
+            Snowflake,
+            Tree
+        }
+        [SerializeField] private CloudsManager manager;
+        [SerializeField] private Type type = Type.Cloud;
         [SerializeField] Sprite[] sprites;
         [SerializeField] Vector3 spawnRange;
         [SerializeField] float baseSpeed = 1f;
@@ -29,8 +37,8 @@ namespace HeavenStudio.Games.Scripts_AirRally
         // Update is called once per frame
         void Update()
         {
-            time += Time.deltaTime;
-            transform.position += Vector3.forward * -baseSpeed * Time.deltaTime;
+            time += Time.deltaTime * manager.speedMult;
+            transform.position += Vector3.forward * -baseSpeed * manager.speedMult * Time.deltaTime;
 
             // get distance to camera
             float dist = Vector3.Distance(cam.transform.position, transform.position);
@@ -56,7 +64,18 @@ namespace HeavenStudio.Games.Scripts_AirRally
             isWorking = true;
             time = 0f;
             gameObject.SetActive(true);
-            spriteRenderer.sprite = sprites[Random.Range(0, sprites.Length)];
+            switch (type)
+            {
+                case Type.Cloud:
+                    spriteRenderer.sprite = sprites[Random.Range(0, sprites.Length)];
+                    break;
+                case Type.Snowflake:
+                    transform.localEulerAngles = new Vector3(0, 0, Random.Range(0f, 360f));
+                    break;
+                case Type.Tree:
+                    break;
+                default: break;
+            }
             transform.position = origin;
             transform.position += new Vector3(Random.Range(-spawnRange.x, spawnRange.x), Random.Range(-spawnRange.y, spawnRange.y), Random.Range(-spawnRange.z, spawnRange.z));
             if (prebake)

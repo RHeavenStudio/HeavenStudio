@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -12,6 +13,7 @@ namespace HeavenStudio.Games.Scripts_AirRally
         [SerializeField] float prebakeMultiplier = 2.5f;
         [SerializeField] private float cloudsPerSecond = 67;
         private float cloudRepeatRate = 0.1f;
+        [NonSerialized] public float speedMult = 1f;
 
 
         Cloud[] pool;

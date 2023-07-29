@@ -40,10 +40,7 @@ namespace HeavenStudio.Games.Loaders
                         new Param("ease", EasingFunction.Ease.EaseOutQuad, "Ease")
                     }
                 },
-                new GameAction("catch", "Catch Birdie")
-                {
-
-                },
+                new GameAction("catch", "Catch Birdie"),
                 new GameAction("enter", "Enter")
                 {
                     function = delegate
@@ -55,6 +52,17 @@ namespace HeavenStudio.Games.Loaders
                     parameters = new List<Param>()
                     {
                         new Param("ease", EasingFunction.Ease.EaseOutQuad, "Ease")
+                    }
+                },
+                new GameAction("forward", "Animals Look Forward")
+                {
+                    function = delegate
+                    {
+                        AirRally.instance.Forward(e.currentEntity["reset"]);
+                    },
+                    parameters = new List<Param>()
+                    {
+                        new Param("reset", false, "Reset", "Reset to Idle pose?")
                     }
                 },
                 new GameAction("4beat", "4 Beat Count-In")
@@ -119,13 +127,34 @@ namespace HeavenStudio.Games.Loaders
                 {
                     function = delegate
                     {
-                        AirRally.instance.SetCloudRates(e.currentEntity["main"], e.currentEntity["side"], e.currentEntity["top"]);
+                        AirRally.instance.SetCloudRates(e.currentEntity.beat, e.currentEntity.length, e.currentEntity["main"], e.currentEntity["side"], e.currentEntity["top"], 
+                            e.currentEntity["speed"], e.currentEntity["endSpeed"], e.currentEntity["ease"]);
                     },
+                    resizable = true,
                     parameters = new List<Param>()
                     {
                         new Param("main", new EntityTypes.Integer(0, 300, 30), "Main Clouds", "How many clouds per second?"),
                         new Param("side", new EntityTypes.Integer(0, 100, 10), "Side Clouds", "How many clouds per second?"),
-                        new Param("top", new EntityTypes.Integer(0, 100, 0), "Top Clouds", "How many clouds per second?")
+                        new Param("top", new EntityTypes.Integer(0, 100, 0), "Top Clouds", "How many clouds per second?"),
+                        new Param("speed", new EntityTypes.Float(-10, 10, 1), "Speed Multiplier"),
+                        new Param("endSpeed", new EntityTypes.Float(-10, 10, 1), "End Speed Multiplier"),
+                        new Param("ease", EasingFunction.Ease.Linear, "Ease")
+                    }
+                },
+                new GameAction("snowflake", "Snowflake Density")
+                {
+                    function = delegate
+                    {
+                        AirRally.instance.SetSnowflakeRates(e.currentEntity.beat, e.currentEntity.length, e.currentEntity["cps"], 
+                            e.currentEntity["speed"], e.currentEntity["endSpeed"], e.currentEntity["ease"]);
+                    },
+                    resizable = true,
+                    parameters = new List<Param>()
+                    {
+                        new Param("cps", new EntityTypes.Integer(0, 200, 0), "Snowflakes per Second"),
+                        new Param("speed", new EntityTypes.Float(-10, 10, 1), "Speed Multiplier"),
+                        new Param("endSpeed", new EntityTypes.Float(-10, 10, 1), "End Speed Multiplier"),
+                        new Param("ease", EasingFunction.Ease.Linear, "Ease")
                     }
                 },
                 new GameAction("islandSpeed", "Islands Speed")
@@ -177,7 +206,7 @@ namespace HeavenStudio.Games
         [SerializeField] GameObject Shuttlecock;
         public GameObject ActiveShuttle;
         [SerializeField] GameObject objHolder;
-        [SerializeField] private CloudsManager cloudManagerMain, cloudManagerLeft, cloudManagerRight, cloudManagerTop;
+        [SerializeField] private CloudsManager cloudManagerMain, cloudManagerLeft, cloudManagerRight, cloudManagerTop, snowflakeManager;
         [SerializeField] private IslandsManager islandManager;
         [SerializeField] private RvlBirds pterosaurs, geese, bluebirds;
 
@@ -257,6 +286,35 @@ namespace HeavenStudio.Games
                 DistanceUpdate();
             }
             DayNightCycleUpdate();
+            WeatherUpdate();
+        }
+
+        public void Forward(bool reset)
+        {
+            Baxter.Play(reset ? "Idle" : "Forward", 0, 0);
+            Forthington.Play(reset ? "Idle" : "Forward", 0, 0);
+        }
+
+        //lol funny name
+        private void WeatherUpdate()
+        {
+            float normalizedBeatC = Conductor.instance.GetPositionFromBeat(startBeatCloudSpeed, cloudSpeedLength);
+            float normalizedBeatS = Conductor.instance.GetPositionFromBeat(startBeatSnowflakeSpeed, snowflakeSpeedLength);
+
+            var funcC = Util.EasingFunction.GetEasingFunction(cloudSpeedEase);
+
+            float newSpeedC = funcC(cloudSpeed, cloudEndSpeed, normalizedBeatC);
+
+            cloudManagerMain.speedMult = newSpeedC;
+            cloudManagerLeft.speedMult = newSpeedC;
+            cloudManagerRight.speedMult = newSpeedC;
+            cloudManagerTop.speedMult = newSpeedC;
+
+            var funcS = Util.EasingFunction.GetEasingFunction(snowflakeSpeedEase);
+
+            float newSpeedS = funcC(snowflakeSpeed, snowflakeEndSpeed, normalizedBeatC);
+
+            snowflakeManager.speedMult = newSpeedS;
         }
 
         public void SpawnBirds(int type, float xSpeed, float zSpeed, float startZ, bool invert)
@@ -292,12 +350,40 @@ namespace HeavenStudio.Games
             islandManager.additionalSpeedMult = speed;
         }
 
-        public void SetCloudRates(int main, int side, int top)
+        private double startBeatCloudSpeed = -1f;
+        private float cloudSpeedLength = 0f;
+        private float cloudSpeed = 1f;
+        private float cloudEndSpeed = 1f;
+        private Util.EasingFunction.Ease cloudSpeedEase = Util.EasingFunction.Ease.Linear;
+
+        public void SetCloudRates(double beat, float length, int main, int side, int top, float speed, float endSpeed, int ease)
         {
             cloudManagerMain.SetCloudsPerSecond(main);
             cloudManagerLeft.SetCloudsPerSecond(side);
             cloudManagerRight.SetCloudsPerSecond(side);
             cloudManagerTop.SetCloudsPerSecond(top);
+
+            startBeatCloudSpeed = beat;
+            cloudSpeedLength = length;
+            cloudEndSpeed = endSpeed;
+            cloudSpeed = speed;
+            cloudSpeedEase = (Util.EasingFunction.Ease)ease;
+        }
+
+        private double startBeatSnowflakeSpeed = -1f;
+        private float snowflakeSpeedLength = 0f;
+        private float snowflakeSpeed = 1f;
+        private float snowflakeEndSpeed = 1f;
+        private Util.EasingFunction.Ease snowflakeSpeedEase = Util.EasingFunction.Ease.Linear;
+
+        public void SetSnowflakeRates(double beat, float length, int cps, float speed, float endSpeed, int ease)
+        {
+            snowflakeManager.SetCloudsPerSecond(cps);
+            startBeatSnowflakeSpeed = beat;
+            snowflakeSpeedLength = length;
+            snowflakeEndSpeed = endSpeed;
+            snowflakeSpeed = speed;
+            snowflakeSpeedEase = (Util.EasingFunction.Ease)ease;
         }
 
         private Color objectsColorFrom = Color.white;
@@ -800,12 +886,22 @@ namespace HeavenStudio.Games
             var cloudEvent = EventCaller.GetAllInGameManagerList("airRally", new string[] { "cloud" }).Find(x => x.beat == beat);
             if (cloudEvent != null)
             {
-                SetCloudRates(cloudEvent["main"], cloudEvent["side"], cloudEvent["top"]);
+                SetCloudRates(cloudEvent.beat, cloudEvent.length, cloudEvent["main"], cloudEvent["side"], cloudEvent["top"], 
+                    cloudEvent["speed"], cloudEvent["endSpeed"], cloudEvent["ease"]);
             }
             cloudManagerMain.Init();
             cloudManagerLeft.Init();
             cloudManagerRight.Init();
             cloudManagerTop.Init();
+
+            var snowflakeEvent = EventCaller.GetAllInGameManagerList("airRally", new string[] { "snowflake" }).Find(x => x.beat == beat);
+            if (snowflakeEvent != null)
+            {
+                SetSnowflakeRates(snowflakeEvent.beat, snowflakeEvent.length, snowflakeEvent["cps"], snowflakeEvent["speed"], 
+                    snowflakeEvent["endSpeed"], snowflakeEvent["ease"]);
+            }
+
+            snowflakeManager.Init();
         }
 
         private void PersistEnter(double beat)
