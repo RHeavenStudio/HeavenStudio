@@ -83,6 +83,22 @@ namespace HeavenStudio.Games.Loaders
                         new Param("type", AirRally.CountSound.one, "Type", "The number Forthington will say"),
                     },
                 },
+                new GameAction("spawnBird", "Spawn Birds")
+                {
+                    function = delegate
+                    {
+                        AirRally.instance.SpawnBirds(e.currentEntity["type"], e.currentEntity["xSpeed"], e.currentEntity["zSpeed"],
+                            e.currentEntity["startZ"], e.currentEntity["invert"]);
+                    },
+                    parameters = new List<Param>()
+                    {
+                        new Param("type", AirRally.BirdType.Pterosaurs, "Type"),
+                        new Param("xSpeed", new EntityTypes.Float(-10, 10, 1), "X Speed Multiplier"),
+                        new Param("zSpeed", new EntityTypes.Float(-10, 10, 1), "Z Speed Multiplier"),
+                        new Param("startZ", new EntityTypes.Float(0, 1000, 200), "Z Start Position"),
+                        new Param("invert", false, "Invert X Direction")
+                    }
+                },
                 new GameAction("day", "Day/Night Cycle")
                 {
                     function = delegate 
@@ -103,12 +119,13 @@ namespace HeavenStudio.Games.Loaders
                 {
                     function = delegate
                     {
-                        AirRally.instance.SetCloudRates(e.currentEntity["main"], e.currentEntity["side"]);
+                        AirRally.instance.SetCloudRates(e.currentEntity["main"], e.currentEntity["side"], e.currentEntity["top"]);
                     },
                     parameters = new List<Param>()
                     {
                         new Param("main", new EntityTypes.Integer(0, 300, 30), "Main Clouds", "How many clouds per second?"),
                         new Param("side", new EntityTypes.Integer(0, 100, 10), "Side Clouds", "How many clouds per second?"),
+                        new Param("top", new EntityTypes.Integer(0, 100, 0), "Top Clouds", "How many clouds per second?")
                     }
                 },
                 new GameAction("islandSpeed", "Islands Speed")
@@ -143,6 +160,13 @@ namespace HeavenStudio.Games
 
     public class AirRally : Minigame
     {
+        public enum BirdType
+        {
+            Pterosaurs,
+            Geese,
+            Bluebirds
+        }
+
         public static AirRally instance { get; set; }
 
         [Header("Component")]
@@ -153,8 +177,9 @@ namespace HeavenStudio.Games
         [SerializeField] GameObject Shuttlecock;
         public GameObject ActiveShuttle;
         [SerializeField] GameObject objHolder;
-        [SerializeField] private CloudsManager cloudManagerMain, cloudManagerLeft, cloudManagerRight;
+        [SerializeField] private CloudsManager cloudManagerMain, cloudManagerLeft, cloudManagerRight, cloudManagerTop;
         [SerializeField] private IslandsManager islandManager;
+        [SerializeField] private RvlBirds pterosaurs, geese, bluebirds;
 
         [Header("Day/Night Cycle")]
         [SerializeField] private SpriteRenderer island2Lights;
@@ -234,16 +259,45 @@ namespace HeavenStudio.Games
             DayNightCycleUpdate();
         }
 
+        public void SpawnBirds(int type, float xSpeed, float zSpeed, float startZ, bool invert)
+        {
+            RvlBirds birdsToSpawn = null;
+            switch ((BirdType)type)
+            {
+                case BirdType.Pterosaurs:
+                    birdsToSpawn = pterosaurs;
+                    break;
+                case BirdType.Geese:
+                    birdsToSpawn = geese;
+                    break;
+                case BirdType.Bluebirds:
+                    birdsToSpawn = bluebirds;
+                    break;
+                default:
+                    break;
+            }
+
+            RvlBirds spawnedBird = Instantiate(birdsToSpawn, transform);
+
+            spawnedBird.speedMultX = invert ? -xSpeed : xSpeed;
+            spawnedBird.speedMultZ = zSpeed;
+            spawnedBird.transform.position =
+                new Vector3(invert ? -spawnedBird.transform.position.x : spawnedBird.transform.position.x, 
+                spawnedBird.transform.position.y, startZ);
+            spawnedBird.transform.localScale = new Vector3(invert ? -1 : 1, 1, 1);
+        }
+
         public void SetIslandSpeed(float speed)
         {
             islandManager.additionalSpeedMult = speed;
         }
 
-        public void SetCloudRates(int main, int side)
+        public void SetCloudRates(int main, int side, int top)
         {
             cloudManagerMain.SetCloudsPerSecond(main);
             cloudManagerLeft.SetCloudsPerSecond(side);
             cloudManagerRight.SetCloudsPerSecond(side);
+            cloudManagerTop.SetCloudsPerSecond(top);
         }
 
         private Color objectsColorFrom = Color.white;
@@ -746,11 +800,12 @@ namespace HeavenStudio.Games
             var cloudEvent = EventCaller.GetAllInGameManagerList("airRally", new string[] { "cloud" }).Find(x => x.beat == beat);
             if (cloudEvent != null)
             {
-                SetCloudRates(cloudEvent["main"], cloudEvent["side"]);
+                SetCloudRates(cloudEvent["main"], cloudEvent["side"], cloudEvent["top"]);
             }
             cloudManagerMain.Init();
             cloudManagerLeft.Init();
             cloudManagerRight.Init();
+            cloudManagerTop.Init();
         }
 
         private void PersistEnter(double beat)
