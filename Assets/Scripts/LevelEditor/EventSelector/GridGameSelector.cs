@@ -128,7 +128,7 @@ namespace HeavenStudio.Editor
 
         // will automatically select game + game icon, and (eventually?) scroll to the game if it's offscreen
         // index is the event it will highlight (which was basically just added for pick block)
-        // TODO: automatically scroll if the game is offscreen, because i can't figure it out/can't figure out a good way to do it rn. -AJ
+        // TODO: automatically scroll if the game is offscreen, because i can't figure out a good way to do it rn. -AJ
         public void SelectGame(string gameName, int index = 0)
         {
             if (SelectedGameIcon != null)
@@ -142,8 +142,6 @@ namespace HeavenStudio.Editor
                 Debug.LogWarning($"SelectGame() has failed, did you mean to input '{gameName}'?");
                 return;
             }
-
-            Debug.Log(SelectedMinigame.wantAssetBundle);
 
             EventParameterManager.instance.Disable();
 
@@ -263,6 +261,12 @@ namespace HeavenStudio.Editor
             var favs = allMgs.FindAll(x => x.GetComponent<GridGameSelectorGame>().StarActive);
             var mgs  = allMgs.FindAll(x => !x.GetComponent<GridGameSelectorGame>().StarActive);
 
+            if (Input.GetKey(KeyCode.LeftShift)) {
+                foreach (var fav in favs)
+                    fav.GetComponent<GridGameSelectorGame>().Star();
+                return;
+            }
+
             for (int i = 0; i < favs.Count; i++) {
                 favs[i].SetSiblingIndex(i + fxActive.Count + 1);
             }
@@ -273,7 +277,7 @@ namespace HeavenStudio.Editor
 
         void SortChronologic(List<Transform> mgs)
         {
-            var systems = new List<List<Transform>>() {
+            var systems = new List<Transform>[] {
                 new List<Transform>(),
                 new List<Transform>(),
                 new List<Transform>(),
@@ -282,10 +286,9 @@ namespace HeavenStudio.Editor
             };
             for (int i = 0; i < mgs.Count; i++)
             {
-                string assBun = EventCaller.instance.GetMinigame(mgs[i].name).wantAssetBundle;
-                if (assBun.Length >= 3) {
-                    string systemType = assBun.Substring(0, 3);
-                    systems[systemType switch {
+                var tags = EventCaller.instance.GetMinigame(mgs[i].name).tags;
+                if (tags.Count != 0) {
+                    systems[tags[0] switch {
                         "agb" => 0,
                         "ntr" => 1,
                         "rvl" => 2,
@@ -304,7 +307,6 @@ namespace HeavenStudio.Editor
                 {
                     system[i].SetSiblingIndex(j);
                     j++;
-                    Debug.Log(mgs[i].name);
                 }
             }
         }

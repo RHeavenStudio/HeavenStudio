@@ -184,22 +184,27 @@ namespace HeavenStudio.Games
 
         public void Bop(double beat, double length, bool doesBop, bool autoBop)
         {
-            void Bops(bool bop) {
-                Mako.shouldBop = bop;
-                for (int y = 0; y < 5; y++) {
-                    for (int x = 0; x < 5; x++) {
-                        if (!(y == 0 && x == 2)) monkeys[x, y].shouldBop = bop;
-                    }
+            Mako.shouldBop = autoBop;
+            for (int y = 0; y < 5; y++) {
+                for (int x = 0; x < 5; x++) {
+                    if (!(y == 0 && x == 2)) monkeys[x, y].shouldBop = autoBop;
                 }
             }
             
-            Bops(autoBop || doesBop);
-            if (!autoBop && doesBop) {
-                BeatAction.New(gameObject, new List<BeatAction.Action>() {
-                    new BeatAction.Action(beat + length, delegate {
-                        Bops(false);
-                    })
-                });
+            if (doesBop) {
+                var actions = new List<BeatAction.Action>();
+                for (int i = 0; i < length; i++)
+                {
+                    actions.Add(new BeatAction.Action(beat + i, delegate {
+                        Mako.anim.DoScaledAnimationAsync("MakoBeat", 0.5f);
+                        for (int y = 0; y < 5; y++) {
+                            for (int x = 0; x < 5; x++) {
+                                if (!(y == 0 && x == 2)) monkeys[x, y].anim.DoScaledAnimationAsync("MonkeyBeat", 0.5f);
+                            }
+                        }
+                    }));
+                }
+                BeatAction.New(gameObject, actions);
             }
         }
 
