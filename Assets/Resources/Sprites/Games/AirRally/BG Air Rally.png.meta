@@ -1079,7 +1079,7 @@ TextureImporter:
         width: 1665
         height: 1600
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
@@ -1087,6 +1087,48 @@ TextureImporter:
       bones: []
       spriteID: 98e8c1f51c708884da9dcdb9cb2701d0
       internalID: -1115395127
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: bgclouds0
+      rect:
+        serializedVersion: 2
+        x: 425
+        y: 2627
+        width: 3570
+        height: 148
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 90af5e2a1c64d33418393b1acaba96de
+      internalID: -299807539
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: bgclouds1
+      rect:
+        serializedVersion: 2
+        x: 3382
+        y: 3007
+        width: 2177
+        height: 218
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 0bff2af9e731d2d43ab38573f72621de
+      internalID: 1054732398
       vertices: []
       indices: 
       edges: []
@@ -1111,6 +1153,8 @@ TextureImporter:
       bbwing2: -1125930374
       bbwing3: 505838627
       bbwing4: -1890838444
+      bgclouds0: -299807539
+      bgclouds1: 1054732398
       bluebirdbody: 126674409
       captainbody: 1358497370
       captainwing0: -1763083724
