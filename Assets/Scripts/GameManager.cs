@@ -259,7 +259,9 @@ namespace HeavenStudio
                 Debug.Log(Beatmap.data.riqOrigin);
                 if (Beatmap.data.riqOrigin != "HeavenStudio")
                 {
-                    GlobalGameManager.ShowErrorMessage("Warning", "This chart was made for another game,\nand thus may not be playable in Heaven Studio.\n<color=\"yellow\">You may be able to edit this chart in Heaven Studio to be used in its original game.</color>\n\n<alpha=#AA>Chart Origin: " + Beatmap.data.riqOrigin.DisplayName());
+                    string origin = Beatmap.data.riqOrigin?.DisplayName() ?? "Unknown Origin";
+                    GlobalGameManager.ShowErrorMessage("Warning", 
+                        $"This chart came from\n<alpha=#AA>{origin}</color>\nand uses content not included in Heaven Studio.\n\n<color=\"yellow\">You may be able to edit this chart in Heaven Studio to be used in its original program.</color>");
                 }
             }
         }
