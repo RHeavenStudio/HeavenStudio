@@ -1058,7 +1058,7 @@ TextureImporter:
         width: 383
         height: 410
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
@@ -1066,6 +1066,27 @@ TextureImporter:
       bones: []
       spriteID: f5f4d7d5c37aa284db91b82545b3aa55
       internalID: 960454226
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: rainbow
+      rect:
+        serializedVersion: 2
+        x: 541
+        y: 4431
+        width: 1665
+        height: 1600
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 98e8c1f51c708884da9dcdb9cb2701d0
+      internalID: -1115395127
       vertices: []
       indices: 
       edges: []
@@ -1124,6 +1145,7 @@ TextureImporter:
       ptrightwing2: -685542321
       ptrightwing3: 1712622973
       ptrightwing4: 710652352
+      rainbow: -1115395127
       smallisle0: 1996268707
       smallisle1: 632036711
       snowflake: 960454226

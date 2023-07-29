@@ -107,6 +107,18 @@ namespace HeavenStudio.Games.Loaders
                         new Param("invert", false, "Invert X Direction")
                     }
                 },
+                new GameAction("rainbow", "Rainbow")
+                {
+                    function = delegate
+                    {
+                        AirRally.instance.SpawnRainbow(e.currentEntity.beat, e.currentEntity["speed"], e.currentEntity["start"]);
+                    },
+                    parameters = new List<Param>()
+                    {
+                        new Param("start", new EntityTypes.Float(0, 500, 100), "Start Position"),
+                        new Param("speed", new EntityTypes.Float(-10, 10, 1), "Speed Multiplier")
+                    }
+                },
                 new GameAction("day", "Day/Night Cycle")
                 {
                     function = delegate 
@@ -208,7 +220,7 @@ namespace HeavenStudio.Games
         [SerializeField] GameObject objHolder;
         [SerializeField] private CloudsManager cloudManagerMain, cloudManagerLeft, cloudManagerRight, cloudManagerTop, snowflakeManager;
         [SerializeField] private IslandsManager islandManager;
-        [SerializeField] private RvlBirds pterosaurs, geese, bluebirds;
+        [SerializeField] private RvlBirds pterosaurs, geese, bluebirds, rainbow;
 
         [Header("Day/Night Cycle")]
         [SerializeField] private SpriteRenderer island2Lights;
@@ -343,6 +355,14 @@ namespace HeavenStudio.Games
                 new Vector3(invert ? -spawnedBird.transform.position.x : spawnedBird.transform.position.x, 
                 spawnedBird.transform.position.y, startZ);
             spawnedBird.transform.localScale = new Vector3(invert ? -1 : 1, 1, 1);
+        }
+
+        public void SpawnRainbow(double beat, float speed, float start)
+        {
+            RvlBirds spawnedRainbow = Instantiate(rainbow, transform);
+            spawnedRainbow.speedMultZ = speed;
+            spawnedRainbow.transform.position = new Vector3(spawnedRainbow.transform.position.x, spawnedRainbow.transform.position.y, start);
+            spawnedRainbow.FadeIn(beat);
         }
 
         public void SetIslandSpeed(float speed)
