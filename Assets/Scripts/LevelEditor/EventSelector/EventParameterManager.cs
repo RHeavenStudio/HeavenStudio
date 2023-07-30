@@ -60,7 +60,7 @@ namespace HeavenStudio.Editor
             eventSelector.SetActive(true);
 
             DestroyParams();
-            Editor.instance.SetGameEventTitle($"Select game event for {gridGameSelector.SelectedMinigame.Replace("\n", "")}");
+            Editor.instance.SetGameEventTitle($"Select game event for {gridGameSelector.SelectedMinigame.displayName.Replace("\n", "")}");
         }
 
         public void StartParams(RiqEntity entity)

@@ -746,17 +746,14 @@ namespace HeavenStudio.Games
 
         public void CreateBulbSpecial(double beat, int type, Color c, int expression)
         {
-            string outSound;
-            if (beat + 0.5f % 1.0 == 0f)
-                outSound = "karateman/offbeatLightbulbOut";
-            else
-                outSound = "karateman/lightbulbOut";
             var mobj = CreateItemInstance(beat, "Item01", expression, KarateManPot.ItemType.Bulb);
 
             if (type == (int) LightBulbType.Custom)
                 mobj.GetComponent<KarateManPot>().SetBulbColor(c);
             else
                 mobj.GetComponent<KarateManPot>().SetBulbColor(LightBulbColors[type]);
+
+            string outSound = "karateman/" + ((beat + 0.5) % 1 == 0 ? "offbeatLightbulbOut" : "lightbulbOut");
             SoundByte.PlayOneShotGame(outSound, forcePlay: true);
         }
 
