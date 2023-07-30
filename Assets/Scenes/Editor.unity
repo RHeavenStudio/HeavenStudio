@@ -13310,7 +13310,7 @@ MonoBehaviour:
   m_HandleRect: {fileID: 704039020}
   m_Direction: 0
   m_Value: 0
-  m_Size: 0.10518808
+  m_Size: 0.10518809
   m_NumberOfSteps: 0
   m_OnValueChanged:
     m_PersistentCalls:
@@ -24762,7 +24762,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0.5}
   m_AnchorMax: {x: 1, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: 129.97508}
+  m_AnchoredPosition: {x: 0, y: 129.94975}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 1}
 --- !u!114 &1154875944
@@ -24848,6 +24848,8 @@ MonoBehaviour:
   GameEventSelectorCanScroll: {fileID: 110654310}
   SearchBar: {fileID: 320483642}
   currentEventIndex: 0
+  mgsActive: []
+  fxActive: []
   posDif: 15
   ignoreSelectCount: 2
 --- !u!114 &1154875948
@@ -29274,7 +29276,7 @@ MonoBehaviour:
   EditorCamera: {fileID: 2047408675}
   ScreenRenderTexture: {fileID: 8400000, guid: d3f3d6ca32122da4d9e3a8e7aa2ede16, type: 2}
   Screen: {fileID: 558010761}
-  GridGameSelector: {fileID: 1154875943}
+  GridGameSelectorRect: {fileID: 1154875943}
   eventSelectorBG: {fileID: 110654310}
   Timeline: {fileID: 1861169747}
   GameEventSelectorTitle: {fileID: 246861490}
@@ -33237,7 +33239,7 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 1292844878}
   m_HandleRect: {fileID: 1292844877}
   m_Direction: 2
-  m_Value: 0
+  m_Value: 1
   m_Size: 1
   m_NumberOfSteps: 0
   m_OnValueChanged:
