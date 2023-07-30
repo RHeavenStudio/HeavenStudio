@@ -120,51 +120,67 @@ namespace HeavenStudio.InputSystem
             0x888888
         };
 
-        static readonly int[] defaultMappings = new[]
-        {
-            ButtonMaskUp,
-            ButtonMaskDown,
-            ButtonMaskLeft,
-            ButtonMaskRight,
-            ButtonMaskS,
-            ButtonMaskE,
-            ButtonMaskW,
-            ButtonMaskN,
-            ButtonMaskL,
-            ButtonMaskR,
-            ButtonMaskPlus,
-            -1
-        };
-        static readonly int[] defaultMappingsL = new[]
-        {
-            20,
-            21,
-            22,
-            23,
-            ButtonMaskLeft,
-            ButtonMaskDown,
-            ButtonMaskUp,
-            ButtonMaskRight,
-            ButtonMaskSL,
-            ButtonMaskSR,
-            ButtonMaskMinus,
-            -1
-        };
-        static readonly int[] defaultMappingsR = new[]
-        {
-            20,
-            21,
-            22,
-            23,
-            ButtonMaskE,
-            ButtonMaskN,
-            ButtonMaskS,
-            ButtonMaskW,
-            ButtonMaskSL,
-            ButtonMaskSR,
-            ButtonMaskPlus,
-            -1
-        };
+        static int[] defaultMappings {
+            get
+            {
+                return new[]
+                {
+                    ButtonMaskUp,
+                    ButtonMaskDown,
+                    ButtonMaskLeft,
+                    ButtonMaskRight,
+                    ButtonMaskS,
+                    ButtonMaskE,
+                    ButtonMaskW,
+                    ButtonMaskN,
+                    ButtonMaskL,
+                    ButtonMaskR,
+                    ButtonMaskPlus,
+                    -1
+                };
+            }
+        }
+        static int[] defaultMappingsL {
+            get
+            {
+                return new[]
+                {
+                    20,
+                    21,
+                    22,
+                    23,
+                    ButtonMaskLeft,
+                    ButtonMaskDown,
+                    ButtonMaskUp,
+                    ButtonMaskRight,
+                    ButtonMaskSL,
+                    ButtonMaskSR,
+                    ButtonMaskMinus,
+                    -1
+                };
+            }
+        }
+
+        static int[] defaultMappingsR {
+            get
+            {
+                return new[]
+                {
+                    20,
+                    21,
+                    22,
+                    23,
+                    ButtonMaskE,
+                    ButtonMaskN,
+                    ButtonMaskS,
+                    ButtonMaskW,
+                    ButtonMaskSL,
+                    ButtonMaskSR,
+                    ButtonMaskPlus,
+                    -1
+                };
+            }
+        }
 
         static readonly string[] nsProButtonNames = new[]
         {
@@ -484,7 +500,7 @@ namespace HeavenStudio.InputSystem
         async void SelectionVibrate()
         {
             JslSetRumbleFrequency(GetHandle(), 0.5f, 0.5f, 80f, 160f);
-            await Task.Delay(100);
+            await Task.Delay(50);
             JslSetRumbleFrequency(GetHandle(), 0.75f, 0.75f, 160f, 320f);
             await Task.Delay(50);
             JslSetRumbleFrequency(GetHandle(), 0f, 0f, 0f, 0f);
@@ -592,7 +608,6 @@ namespace HeavenStudio.InputSystem
         public override void SetCurrentBindings(ControlBindings newBinds)
         {
             currentBindings = newBinds;
-            SaveBindings();
         }
 
         public override bool GetIsActionUnbindable(int action, ControlStyles style)
@@ -635,18 +650,30 @@ namespace HeavenStudio.InputSystem
                     return i;
                 }
             }
+            if (otherHalf != null)
+            { 
+                return otherHalf.GetLastActionDown();
+            }
             return -1;
         }
 
         public override bool GetAction(int button)
         {
             if (button == -1) {return false;}
+            if (otherHalf != null)
+            {
+                return actionStates[button].pressed || otherHalf.actionStates[button].pressed;
+            }
             return actionStates[button].pressed;
         }
 
         public override bool GetActionDown(int button, out double dt)
         {
             if (button == -1) {dt = 0; return false;}
+            if (otherHalf != null && otherHalf.GetActionDown(button, out dt))
+            {
+                return true;
+            }
             dt = actionStates[button].dt;
             return actionStates[button].pressed && actionStates[button].isDelta;
         }
@@ -654,6 +681,10 @@ namespace HeavenStudio.InputSystem
         public override bool GetActionUp(int button, out double dt)
         {
             if (button == -1) {dt = 0; return false;}
+            if (otherHalf != null && otherHalf.GetActionUp(button, out dt))
+            {
+                return true;
+            }
             dt = actionStates[button].dt;
             return !actionStates[button].pressed && actionStates[button].isDelta;
         }
@@ -689,19 +720,23 @@ namespace HeavenStudio.InputSystem
             switch (direction)
             {
                 case InputDirection.Up:
-                    bt = GetButtonForSplitType(0);
+                    bt = 0;
                     break;
                 case InputDirection.Down:
-                    bt = GetButtonForSplitType(1);
+                    bt = 1;
                     break;
                 case InputDirection.Left:
-                    bt = GetButtonForSplitType(2);
+                    bt = 2;
                     break;
                 case InputDirection.Right:
-                    bt = GetButtonForSplitType(3);
+                    bt = 3;
                     break;
                 default:
                     return false;
+            }
+            if (otherHalf != null)
+            {
+                return GetAction(bt) || BitwiseUtils.WantCurrent(otherHalf.directionStateCurrent, 1 << (int) direction) || BitwiseUtils.WantCurrent(directionStateCurrent, 1 << (int) direction);
             }
             return GetAction(bt) || BitwiseUtils.WantCurrent(directionStateCurrent, 1 << (int) direction);
         }
@@ -712,16 +747,16 @@ namespace HeavenStudio.InputSystem
             switch (direction)
             {
                 case InputDirection.Up:
-                    bt = GetButtonForSplitType(0);
+                    bt = 0;
                     break;
                 case InputDirection.Down:
-                    bt = GetButtonForSplitType(1);
+                    bt = 1;
                     break;
                 case InputDirection.Left:
-                    bt = GetButtonForSplitType(2);
+                    bt = 2;
                     break;
                 case InputDirection.Right:
-                    bt = GetButtonForSplitType(3);
+                    bt = 3;
                     break;
                 default:
                     dt = 0;
@@ -729,6 +764,10 @@ namespace HeavenStudio.InputSystem
             }
             bool btbool = GetActionDown(bt, out dt);
             if (!btbool) dt = 0;
+            if (otherHalf != null)
+            {
+                return btbool || BitwiseUtils.WantCurrentAndNotLast(otherHalf.directionStateCurrent, otherHalf.directionStateLast, 1 << (int)direction) || BitwiseUtils.WantCurrentAndNotLast(directionStateCurrent, directionStateLast, 1 << (int)direction);
+            }
             return btbool || BitwiseUtils.WantCurrentAndNotLast(directionStateCurrent, directionStateLast, 1 << (int) direction);
         }
 
@@ -738,16 +777,16 @@ namespace HeavenStudio.InputSystem
             switch (direction)
             {
                 case InputDirection.Up:
-                    bt = GetButtonForSplitType(0);
+                    bt = 0;
                     break;
                 case InputDirection.Down:
-                    bt = GetButtonForSplitType(1);
+                    bt = 1;
                     break;
                 case InputDirection.Left:
-                    bt = GetButtonForSplitType(2);
+                    bt = 2;
                     break;
                 case InputDirection.Right:
-                    bt = GetButtonForSplitType(3);
+                    bt = 3;
                     break;
                 default:
                     dt = 0;
@@ -755,6 +794,10 @@ namespace HeavenStudio.InputSystem
             }
             bool btbool = GetActionUp(bt, out dt);
             if (!btbool) dt = 0;
+            if (otherHalf != null)
+            {
+                return btbool || BitwiseUtils.WantNotCurrentAndLast(otherHalf.directionStateCurrent, otherHalf.directionStateLast, 1 << (int) direction) || BitwiseUtils.WantNotCurrentAndLast(directionStateCurrent, directionStateLast, 1 << (int) direction);
+            }
             return btbool || BitwiseUtils.WantNotCurrentAndLast(directionStateCurrent, directionStateLast, 1 << (int) direction);
         }
 
@@ -772,9 +815,9 @@ namespace HeavenStudio.InputSystem
             int ledMask = (int) this.playerNum;
             if (type == TypeDualSense)
             {
-                if (playerNum <= 4)
+                if (playerNum <= 5)
                 {
-                    ledMask = DualSensePlayerMask[(int) this.playerNum];
+                    ledMask = DualSensePlayerMask[Math.Max((int) this.playerNum + 1, 1)];
                 }
             }
             JslSetPlayerNumber(joyshockHandle, ledMask);
@@ -799,6 +842,8 @@ namespace HeavenStudio.InputSystem
 
         public Color GetButtonColor()
         {
+            if (joySettings.buttonColour == 0xFFFFFF)
+                return GetBodyColor();
             return BitwiseUtils.IntToRgb(joySettings.buttonColour);
         }
 
@@ -808,6 +853,8 @@ namespace HeavenStudio.InputSystem
             {
                 return BitwiseUtils.IntToRgb(splitType == SplitLeft ? joySettings.lGripColour : GetOtherHalf().joySettings.lGripColour);
             }
+            if (joySettings.lGripColour == 0xFFFFFF)
+                return GetBodyColor();
             return BitwiseUtils.IntToRgb(joySettings.lGripColour);
         }
 
@@ -817,6 +864,8 @@ namespace HeavenStudio.InputSystem
             {
                 return BitwiseUtils.IntToRgb(splitType == SplitRight ? joySettings.rGripColour : GetOtherHalf().joySettings.rGripColour);
             }
+            if (joySettings.rGripColour == 0xFFFFFF)
+                return GetBodyColor();
             return BitwiseUtils.IntToRgb(joySettings.rGripColour);
         }
 

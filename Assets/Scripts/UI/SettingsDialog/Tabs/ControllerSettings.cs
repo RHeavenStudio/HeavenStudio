@@ -123,13 +123,18 @@ namespace HeavenStudio.Editor
                 }
                 if (currentBindingBt > (int)InputController.ActionsPad.Pause)
                 {
+                    currentController.SaveBindings();
                     CancelBind();
                     return;
                 }
                 
                 currentControllerLabel.text = $"Now Binding: {(InputController.ActionsPad) currentBindingBt}";
             }
-            else CancelBind();
+            else
+            {
+                currentController.SaveBindings();
+                CancelBind();
+            }
         }
 
         void AssignController(InputController newController, InputController lastController)
@@ -180,6 +185,7 @@ namespace HeavenStudio.Editor
         {
             CancelBind();
             InputController lastController = PlayerInput.GetInputController(1);
+            lastController.SaveBindings();
             InputController newController = PlayerInput.GetInputControllers()[controllersDropdown.value];
 
             AssignController(newController, lastController);
@@ -217,6 +223,7 @@ namespace HeavenStudio.Editor
             InputController controller = PlayerInput.GetInputController(1);
             controller.ResetBindings();
             ShowControllerBinds(controller);
+            controller.SaveBindings();
         }
 
         public void StartAutoSearch() {
