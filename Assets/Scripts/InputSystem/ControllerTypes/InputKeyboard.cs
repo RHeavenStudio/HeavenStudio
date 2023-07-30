@@ -40,23 +40,28 @@ namespace HeavenStudio.InputSystem
         .Where(k => ((int)k < (int)KeyCode.Mouse0))
         .ToArray();
 
-        static readonly ControlBindings defaultBindings = new()
-        {
-            Pad = new int[]
+        static ControlBindings defaultBindings {
+            get
             {
-                (int)KeyCode.W,
-                (int)KeyCode.S,
-                (int)KeyCode.A,
-                (int)KeyCode.D,
-                (int)KeyCode.K,
-                (int)KeyCode.J,
-                (int)KeyCode.I,
-                (int)KeyCode.U,
-                (int)KeyCode.C,
-                (int)KeyCode.N,
-                (int)KeyCode.Escape,
-            },
-        };
+                return new ControlBindings()
+                {
+                    Pad = new int[]
+                    {
+                        (int)KeyCode.W,
+                        (int)KeyCode.S,
+                        (int)KeyCode.A,
+                        (int)KeyCode.D,
+                        (int)KeyCode.J,
+                        (int)KeyCode.K,
+                        (int)KeyCode.I,
+                        (int)KeyCode.U,
+                        (int)KeyCode.E,
+                        (int)KeyCode.U,
+                        (int)KeyCode.Escape,
+                    },
+                };
+            }
+        }
 
         InputDirection hatDirectionCurrent;
         InputDirection hatDirectionLast;
@@ -108,9 +113,7 @@ namespace HeavenStudio.InputSystem
 
         public override ControlBindings GetDefaultBindings()
         {
-            ControlBindings b = new();
-            b.Pad = defaultBindings.Pad.DeepClone();
-            return b;
+            return defaultBindings;
         }
 
         public override void ResetBindings()
