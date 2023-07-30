@@ -35,7 +35,7 @@ namespace HeavenStudio.Editor
         [Header("Rect")]
         [SerializeField] private RenderTexture ScreenRenderTexture;
         [SerializeField] private RawImage Screen;
-        [SerializeField] private RectTransform GridGameSelector;
+        [SerializeField] private RectTransform GridGameSelectorRect;
         public RectTransform eventSelectorBG;
 
         [Header("Components")]
@@ -132,12 +132,15 @@ namespace HeavenStudio.Editor
         public void AddIcon(Minigames.Minigame minigame)
         {
             if (minigame.hidden) return;
-            GameObject GameIcon_ = Instantiate(GridGameSelector.GetChild(0).gameObject, GridGameSelector);
+            GameObject GameIcon_ = Instantiate(GridGameSelectorRect.GetChild(0).gameObject, GridGameSelectorRect);
             GameIcon_.GetComponent<Image>().sprite = GameIcon(minigame.name);
             GameIcon_.GetComponent<GridGameSelectorGame>().MaskTex = GameIconMask(minigame.name);
             GameIcon_.GetComponent<GridGameSelectorGame>().UnClickIcon();
             GameIcon_.gameObject.SetActive(true);
             GameIcon_.name = minigame.name;
+
+            var ggs = GridGameSelectorRect.GetComponent<GridGameSelector>();
+            (minigame.fxOnly ? ggs.fxActive : ggs.mgsActive).Add(GameIcon_.GetComponent<RectTransform>());
         }
 
         public void LateUpdate()

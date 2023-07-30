@@ -31,14 +31,14 @@ namespace HeavenStudio.Editor
 
         [Header("Properties")]
         [SerializeField] private int currentEventIndex;
+        public List<RectTransform> mgsActive = new List<RectTransform>();
+        public List<RectTransform> fxActive = new List<RectTransform>();
         public float posDif;
         public int ignoreSelectCount;
         private int dragTimes;
         private bool gameOpen;
         private float selectorHeight;
         private float eventSize;
-        private List<Transform> mgsActive = new List<Transform>();
-        private List<Transform> fxActive = new List<Transform>();
 
         public static GridGameSelector instance;
 
@@ -48,14 +48,6 @@ namespace HeavenStudio.Editor
             GameEventSelectorRect = GameEventSelector.GetComponent<RectTransform>();
             selectorHeight = GameEventSelectorRect.rect.height;
             eventSize = EventRef.GetComponent<RectTransform>().rect.height;
-            for (int i = 0; i < transform.childCount; i++)
-            {
-                var icon = transform.GetChild(i);
-                if (icon.gameObject.activeInHierarchy) {
-                    if (EventCaller.instance.GetMinigame(icon.name).fxOnly) fxActive.Add(icon);
-                    else mgsActive.Add(icon);
-                }
-            }
 
             eventsParent = EventRef.transform.parent.GetChild(2).GetComponent<RectTransform>();
             SelectGame(fxActive[0].name);
@@ -228,11 +220,11 @@ namespace HeavenStudio.Editor
         }
 
         // method called when clicking the sort button in the editor, skips sorting fx only "games"
-        // sorts by favorites if there are any, and sorts alphabetically if there aren't.
+        // sorts depending on which sorting button you click
         public void Sort(string type)
         {
             var mgsSort = mgsActive;
-            mgsSort.OrderBy(x => x.name);
+            mgsSort.Sort((x, y) => string.Compare(x.name, y.name));
 
             switch (type)
             {
@@ -248,7 +240,7 @@ namespace HeavenStudio.Editor
             }
         }
 
-        void SortAlphabet(List<Transform> mgs)
+        void SortAlphabet(List<RectTransform> mgs)
         {
             for (int i = 0; i < mgsActive.Count; i++) {
                 mgs[i].SetSiblingIndex(i + fxActive.Count + 1);
@@ -256,10 +248,10 @@ namespace HeavenStudio.Editor
         }
 
         // if there are no favorites, the games will sort alphabetically
-        void SortFavorites(List<Transform> allMgs)
+        void SortFavorites(List<RectTransform> allMgs)
         {
-            var favs = allMgs.FindAll(x => x.GetComponent<GridGameSelectorGame>().StarActive);
-            var mgs  = allMgs.FindAll(x => !x.GetComponent<GridGameSelectorGame>().StarActive);
+            var favs = allMgs.FindAll(mg => mg.GetComponent<GridGameSelectorGame>().StarActive);
+            var mgs  = allMgs.FindAll(mg => !mg.GetComponent<GridGameSelectorGame>().StarActive);
 
             if (Input.GetKey(KeyCode.LeftShift)) {
                 foreach (var fav in favs)
@@ -275,19 +267,20 @@ namespace HeavenStudio.Editor
             }
         }
 
-        void SortChronologic(List<Transform> mgs)
+        void SortChronologic(List<RectTransform> mgs)
         {
-            var systems = new List<Transform>[] {
-                new List<Transform>(),
-                new List<Transform>(),
-                new List<Transform>(),
-                new List<Transform>(),
-                new List<Transform>(),
+            var systems = new List<RectTransform>[] {
+                new List<RectTransform>(),
+                new List<RectTransform>(),
+                new List<RectTransform>(),
+                new List<RectTransform>(),
+                new List<RectTransform>(),
             };
             for (int i = 0; i < mgs.Count; i++)
             {
-                var tags = EventCaller.instance.GetMinigame(mgs[i].name).tags;
-                if (tags.Count != 0) {
+                var mg = EventCaller.instance.GetMinigame(mgs[i].name);
+                var tags = mg.tags;
+                if (tags.Count != 0 || mg.inferred) {
                     systems[tags[0] switch {
                         "agb" => 0,
                         "ntr" => 1,
@@ -296,13 +289,13 @@ namespace HeavenStudio.Editor
                         _     => 4,
                     }].Add(mgs[i]);
                 } else {
-                    Debug.LogWarning("Chronological sorting has failed, does \""+mgs[i].name+"\" have an asset bundle assigned to it?");
+                    Debug.LogWarning($"Chronological sorting has failed, does \"{mg.displayName}\" ({mg.name}) have an asset bundle assigned to it?");
                 }
             }
             int j = fxActive.Count + 1;
             foreach (var system in systems)
             {
-                system.OrderBy(x => x.name);
+                system.OrderBy(mg => mg.name);
                 for (int i = 0; i < system.Count; i++)
                 {
                     system[i].SetSiblingIndex(j);
