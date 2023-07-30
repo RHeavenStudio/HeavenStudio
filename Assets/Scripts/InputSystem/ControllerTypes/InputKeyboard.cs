@@ -63,7 +63,7 @@ namespace HeavenStudio.InputSystem
 
         public override void InitializeController()
         {
-            currentBindings = GetDefaultBindings();
+            LoadBindings();
         }
 
         public override void UpdateState()
@@ -126,6 +126,7 @@ namespace HeavenStudio.InputSystem
         public override void SetCurrentBindings(ControlBindings newBinds)
         {
             currentBindings = newBinds;
+            SaveBindings();
         }
 
         public override bool GetIsActionUnbindable(int action, ControlStyles style)

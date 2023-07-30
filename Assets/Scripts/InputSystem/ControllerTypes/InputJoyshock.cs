@@ -371,9 +371,9 @@ namespace HeavenStudio.InputSystem
 
             splitType = joySettings.splitType;
 
-            currentBindings = GetDefaultBindings();
-
             joyshocks.Add(joyshockHandle, this);
+
+            LoadBindings();
         }
 
         public void CleanUp()
@@ -592,6 +592,7 @@ namespace HeavenStudio.InputSystem
         public override void SetCurrentBindings(ControlBindings newBinds)
         {
             currentBindings = newBinds;
+            SaveBindings();
         }
 
         public override bool GetIsActionUnbindable(int action, ControlStyles style)

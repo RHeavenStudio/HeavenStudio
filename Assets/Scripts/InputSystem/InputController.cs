@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using System.IO;
 
 namespace HeavenStudio.InputSystem
 {
@@ -142,6 +143,29 @@ namespace HeavenStudio.InputSystem
         public abstract InputFeatures GetFeatures(); // Get the features of the controller
         public abstract bool GetIsConnected();
         public abstract bool GetIsPoorConnection();
+
+        public void SaveBindings()
+        {
+            if (!Directory.Exists($"{Application.persistentDataPath}/controls"))
+                Directory.CreateDirectory($"{Application.persistentDataPath}/controls");
+            string path = $"{Application.persistentDataPath}/controls/{GetDeviceName()}.json";
+            string json = JsonUtility.ToJson(currentBindings);
+            File.WriteAllText(path, json);
+        }
+
+        public void LoadBindings()
+        {
+            string path = $"{Application.persistentDataPath}/controls/{GetDeviceName()}.json";
+            if (File.Exists(path))
+            {
+                string json = File.ReadAllText(path);
+                currentBindings = JsonUtility.FromJson<ControlBindings>(json);
+            }
+            else
+            {
+                ResetBindings();
+            }
+        }
 
         /// <summary>
         /// Gets the controller's default mappings
