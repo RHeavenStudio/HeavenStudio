@@ -169,6 +169,24 @@ namespace HeavenStudio.Games.Loaders
                         new Param("ease", EasingFunction.Ease.Linear, "Ease")
                     }
                 },
+                new GameAction("tree", "Trees")
+                {
+                    function = delegate
+                    {
+                        AirRally.instance.SetTreeRates(e.currentEntity["enable"], e.currentEntity.beat, e.currentEntity.length, e.currentEntity["main"], e.currentEntity["side"],
+                            e.currentEntity["speed"], e.currentEntity["endSpeed"], e.currentEntity["ease"]);
+                    },
+                    resizable = true,
+                    parameters = new List<Param>()
+                    {
+                        new Param("enable", true, "Enable"),
+                        new Param("main", new EntityTypes.Integer(0, 300, 50), "Main Trees", "How many trees per second?"),
+                        new Param("side", new EntityTypes.Integer(0, 100, 30), "Side Trees", "How many trees per second?"),
+                        new Param("speed", new EntityTypes.Float(-10, 10, 1), "Speed Multiplier"),
+                        new Param("endSpeed", new EntityTypes.Float(-10, 10, 1), "End Speed Multiplier"),
+                        new Param("ease", EasingFunction.Ease.Linear, "Ease")
+                    }
+                },
                 new GameAction("islandSpeed", "Islands Speed")
                 {
                     function = delegate
@@ -223,6 +241,8 @@ namespace HeavenStudio.Games
         public GameObject ActiveShuttle;
         [SerializeField] GameObject objHolder;
         [SerializeField] private CloudsManager cloudManagerMain, cloudManagerLeft, cloudManagerRight, cloudManagerTop, snowflakeManager;
+        [SerializeField] private CloudsManager treeManagerMain, treeManagerLeft, treeManagerRight, treeManagerLeftInner, treeManagerRightInner;
+        [SerializeField] private GameObject treeHolder;
         [SerializeField] private IslandsManager islandManager;
         [SerializeField] private RvlBirds pterosaurs, geese, bluebirds, rainbow;
 
@@ -304,6 +324,7 @@ namespace HeavenStudio.Games
             DayNightCycleUpdate();
             WeatherUpdate();
             IslandSpeedUpdate();
+            TreeUpdate();
         }
 
         public void Forward(bool reset)
@@ -432,6 +453,47 @@ namespace HeavenStudio.Games
             snowflakeEndSpeed = endSpeed;
             snowflakeSpeed = speed;
             snowflakeSpeedEase = (Util.EasingFunction.Ease)ease;
+            WeatherUpdate();
+        }
+
+        private double startBeatTreeSpeed = -1f;
+        private float treeSpeedLength = 0f;
+        private float treeSpeed = 1f;
+        private float treeEndSpeed = 1f;
+        private Util.EasingFunction.Ease treeSpeedEase = Util.EasingFunction.Ease.Linear;
+
+        public void SetTreeRates(bool enable, double beat, float length, int cpsMain, int cpsSides, float speed, float endSpeed, int ease)
+        {
+            treeHolder.SetActive(enable);
+            islandManager.gameObject.SetActive(!enable);
+            treeManagerMain.SetCloudsPerSecond(cpsMain);
+            treeManagerRightInner.SetCloudsPerSecond(cpsMain);
+            treeManagerLeftInner.SetCloudsPerSecond(cpsMain);
+            treeManagerRight.SetCloudsPerSecond(cpsSides);
+            treeManagerLeft.SetCloudsPerSecond(cpsSides);
+
+            startBeatTreeSpeed = beat;
+            treeSpeedLength = length;
+            treeSpeed = speed;
+            treeEndSpeed = endSpeed;
+            treeSpeedEase = (Util.EasingFunction.Ease)ease;
+
+            TreeUpdate();
+        }
+
+        private void TreeUpdate()
+        {
+            float normalizedBeat = Mathf.Clamp01(Conductor.instance.GetPositionFromBeat(startBeatTreeSpeed, treeSpeedLength));
+
+            var func = Util.EasingFunction.GetEasingFunction(treeSpeedEase);
+
+            float newSpeed = func(treeSpeed, treeEndSpeed, normalizedBeat);
+
+            treeManagerMain.speedMult = newSpeed;
+            treeManagerRightInner.speedMult = newSpeed;
+            treeManagerLeftInner.speedMult = newSpeed;
+            treeManagerRight.speedMult = newSpeed;
+            treeManagerLeft.speedMult = newSpeed;
         }
 
         private Color objectsColorFrom = Color.white;
@@ -950,6 +1012,19 @@ namespace HeavenStudio.Games
             }
 
             snowflakeManager.Init();
+
+            var treeEvent = EventCaller.GetAllInGameManagerList("airRally", new string[] { "tree" }).Find(x => x.beat == beat);
+            if (treeEvent != null)
+            {
+                SetTreeRates(treeEvent["enable"], treeEvent.beat, treeEvent.length, treeEvent["main"], treeEvent["side"], treeEvent["speed"],
+                    treeEvent["endSpeed"], treeEvent["ease"]);
+            }
+
+            treeManagerMain.Init();
+            treeManagerLeft.Init();
+            treeManagerRight.Init();
+            treeManagerLeftInner.Init();
+            treeManagerRightInner.Init();
         }
 
         private void PersistEnter(double beat)
