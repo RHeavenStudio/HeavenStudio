@@ -280,7 +280,7 @@ namespace HeavenStudio.Editor
             {
                 var mg = EventCaller.instance.GetMinigame(mgs[i].name);
                 var tags = mg.tags;
-                if (tags.Count != 0 || mg.inferred) {
+                if (tags.Count != 0) {
                     systems[tags[0] switch {
                         "agb" => 0,
                         "ntr" => 1,
@@ -288,6 +288,8 @@ namespace HeavenStudio.Editor
                         "ctr" => 3,
                         _     => 4,
                     }].Add(mgs[i]);
+                } else if (mg.inferred) {
+                    systems[4].Add(mgs[i]);
                 } else {
                     Debug.LogWarning($"Chronological sorting has failed, does \"{mg.displayName}\" ({mg.name}) have an asset bundle assigned to it?");
                 }
