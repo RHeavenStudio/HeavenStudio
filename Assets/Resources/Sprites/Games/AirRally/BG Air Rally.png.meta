@@ -1100,7 +1100,7 @@ TextureImporter:
         width: 3570
         height: 148
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
@@ -1121,7 +1121,7 @@ TextureImporter:
         width: 2177
         height: 218
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
@@ -1129,6 +1129,111 @@ TextureImporter:
       bones: []
       spriteID: 0bff2af9e731d2d43ab38573f72621de
       internalID: 1054732398
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: bigballoon
+      rect:
+        serializedVersion: 2
+        x: 4161
+        y: 2259
+        width: 265
+        height: 403
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 5ef08e969e393164fa477bc561919d42
+      internalID: -632401587
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: smallballoon
+      rect:
+        serializedVersion: 2
+        x: 4308
+        y: 1879
+        width: 173
+        height: 233
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 42b2dafada827a446822ef0a275b0399
+      internalID: -1803085771
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: boat
+      rect:
+        serializedVersion: 2
+        x: 3301
+        y: 64
+        width: 353
+        height: 224
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: a6f1bcfebe5f46141825d1b0f7ac9e4f
+      internalID: 1267272731
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: boatwater0
+      rect:
+        serializedVersion: 2
+        x: 5735
+        y: 2874
+        width: 379
+        height: 212
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 1dfe0dc87a7e6d44fbc1c933e5d0e421
+      internalID: 446317751
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: boatwater1
+      rect:
+        serializedVersion: 2
+        x: 5742
+        y: 3324
+        width: 359
+        height: 189
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 3a1dff5d5e615914ebd9f7ae917876ea
+      internalID: 949645101
       vertices: []
       indices: 
       edges: []
@@ -1155,7 +1260,11 @@ TextureImporter:
       bbwing4: -1890838444
       bgclouds0: -299807539
       bgclouds1: 1054732398
+      bigballoon: -632401587
       bluebirdbody: 126674409
+      boat: 1267272731
+      boatwater0: 446317751
+      boatwater1: 949645101
       captainbody: 1358497370
       captainwing0: -1763083724
       captainwing1: 1106544584
@@ -1190,6 +1299,7 @@ TextureImporter:
       ptrightwing3: 1712622973
       ptrightwing4: 710652352
       rainbow: -1115395127
+      smallballoon: -1803085771
       smallisle0: 1996268707
       smallisle1: 632036711
       snowflake: 960454226

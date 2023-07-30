@@ -173,11 +173,15 @@ namespace HeavenStudio.Games.Loaders
                 {
                     function = delegate
                     {
-                        AirRally.instance.SetIslandSpeed(e.currentEntity["speed"]);
+                        AirRally.instance.SetIslandSpeed(e.currentEntity.beat, e.currentEntity.length, e.currentEntity["speed"],
+                            e.currentEntity["endSpeed"], e.currentEntity["ease"]);
                     },
+                    resizable = true,
                     parameters = new List<Param>()
                     {
-                        new Param("speed", new EntityTypes.Float(0, 10, 1), "Speed")
+                        new Param("speed", new EntityTypes.Float(-10, 10, 1), "Speed"),
+                        new Param("endSpeed", new EntityTypes.Float(-10, 10, 1), "End Speed"),
+                        new Param("ease", EasingFunction.Ease.Linear, "Ease")
                     }
                 },
                 new GameAction("silence", "Silence")
@@ -299,6 +303,7 @@ namespace HeavenStudio.Games
             }
             DayNightCycleUpdate();
             WeatherUpdate();
+            IslandSpeedUpdate();
         }
 
         public void Forward(bool reset)
@@ -310,8 +315,8 @@ namespace HeavenStudio.Games
         //lol funny name
         private void WeatherUpdate()
         {
-            float normalizedBeatC = Conductor.instance.GetPositionFromBeat(startBeatCloudSpeed, cloudSpeedLength);
-            float normalizedBeatS = Conductor.instance.GetPositionFromBeat(startBeatSnowflakeSpeed, snowflakeSpeedLength);
+            float normalizedBeatC = Mathf.Clamp01(Conductor.instance.GetPositionFromBeat(startBeatCloudSpeed, cloudSpeedLength));
+            float normalizedBeatS = Mathf.Clamp01(Conductor.instance.GetPositionFromBeat(startBeatSnowflakeSpeed, snowflakeSpeedLength));
 
             var funcC = Util.EasingFunction.GetEasingFunction(cloudSpeedEase);
 
@@ -365,9 +370,31 @@ namespace HeavenStudio.Games
             spawnedRainbow.FadeIn(beat);
         }
 
-        public void SetIslandSpeed(float speed)
+        public void SetIslandSpeed(double beat, float length, float speed, float endSpeed, int ease)
         {
-            islandManager.additionalSpeedMult = speed;
+            islandStartBeat = beat;
+            islandLength = length;
+            islandSpeed = speed;
+            islandEndSpeed = endSpeed;
+            islandEase = (Util.EasingFunction.Ease)ease;
+            IslandSpeedUpdate();
+        }
+
+        private double islandStartBeat = -1f;
+        private float islandLength = 0;
+        private float islandSpeed = 1f;
+        private float islandEndSpeed = 1f;
+        private Util.EasingFunction.Ease islandEase = Util.EasingFunction.Ease.Linear;
+
+        private void IslandSpeedUpdate()
+        {
+            float normalizedBeat = Mathf.Clamp01(Conductor.instance.GetPositionFromBeat(islandStartBeat, islandLength));
+
+            var func = Util.EasingFunction.GetEasingFunction(islandEase);
+
+            float newSpeed = func(islandSpeed, islandEndSpeed, normalizedBeat);
+
+            islandManager.additionalSpeedMult = newSpeed;
         }
 
         private double startBeatCloudSpeed = -1f;
@@ -388,6 +415,7 @@ namespace HeavenStudio.Games
             cloudEndSpeed = endSpeed;
             cloudSpeed = speed;
             cloudSpeedEase = (Util.EasingFunction.Ease)ease;
+            WeatherUpdate();
         }
 
         private double startBeatSnowflakeSpeed = -1f;
@@ -965,7 +993,7 @@ namespace HeavenStudio.Games
 
             var e = allSpeeds[^1];
 
-            SetIslandSpeed(e["speed"]);
+            SetIslandSpeed(e.beat, e.length, e["speed"], e["endSpeed"], e["ease"]);
         }
 
         public static void PreStartRally(double beat)
