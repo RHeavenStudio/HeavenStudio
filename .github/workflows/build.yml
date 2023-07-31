@@ -51,6 +51,14 @@ jobs:
           buildsPath: build
           buildMethod: UnityBuilderAction.BuildScript.Build
           targetPlatform: ${{ matrix.targetPlatform }}
+      
+      # clean up stuff we no longer need
+      - name: Clean up
+        run: |
+          rm -rf ./Assets
+          rm -rf ./Library
+          rm -rf ./Packages
+          rm -rf ./ProjectSettings
 
       # Required on Mac/Linux to keep executable permissions
       - name: Tar files
