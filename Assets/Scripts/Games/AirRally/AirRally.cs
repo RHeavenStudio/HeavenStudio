@@ -248,6 +248,10 @@ namespace HeavenStudio.Games
             0f //farthest
         };
 
+        //both of the whoosh offsets are scheduled for the beat that the player hits the birdie,
+        //offset them to end just before the player hits the birdie
+
+        //for normal rally
         private static readonly float[] whooshOffsetsRally = new float[4]
         {
             0f, //leave be
@@ -256,6 +260,7 @@ namespace HeavenStudio.Games
             0f //farthest
         };
 
+        // for ba bum bum bum
         private static readonly float[] whooshOffsetsBaBum = new float[4]
         {
             0f, //leave be
