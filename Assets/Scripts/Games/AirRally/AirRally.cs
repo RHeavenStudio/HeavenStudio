@@ -73,6 +73,10 @@ namespace HeavenStudio.Games.Loaders
                     {
                         AirRally.ForthCountIn4(e.currentEntity.beat, e.currentEntity.length);
                     },
+                    function = delegate
+                    {
+                        AirRally.instance.ForthCountIn4Do(e.currentEntity.beat, e.currentEntity.length);
+                    }
                 },
                 new GameAction("8beat", "8 Beat Count-In")
                 {
@@ -82,6 +86,10 @@ namespace HeavenStudio.Games.Loaders
                     {
                         AirRally.ForthCountIn8(e.currentEntity.beat, e.currentEntity.length);
                     },
+                    function = delegate
+                    {
+                        AirRally.instance.ForthCountIn8Do(e.currentEntity.beat, e.currentEntity.length);
+                    }
                 },
                 new GameAction("forthington voice lines", "Count")
                 {
@@ -299,7 +307,7 @@ namespace HeavenStudio.Games
             if(PlayerInput.Pressed() && !IsExpectingInputNow())
             {
                 Baxter.DoScaledAnimationAsync("Hit", 0.5f);
-                SoundByte.PlayOneShotGame("airRally/whooshForth_Close", -1f);
+                SoundByte.PlayOneShotGame("airRally/swing");
             }
 
             float normalizedEnterBeat = Conductor.instance.GetPositionFromBeat(enterStartBeat, enterLength);
@@ -718,11 +726,16 @@ namespace HeavenStudio.Games
                 new MultiSound.Sound("airRally/countIn3" + GetDistanceStringAtBeat(beat + (2 * realLength), true), beat + (2 * realLength), 1, 1, false, 0.107f),
                 new MultiSound.Sound("airRally/countIn4" + GetDistanceStringAtBeat(beat + (3 * realLength), true), beat + (3 * realLength), 1, 1, false, 0.051f),
             }, forcePlay: true);
+        }
 
-            if (GameManager.instance.currentGame == "airRally")
-            {
-                BeatAction.New(instance.gameObject, instance.ForthCountIn4Action(beat, length));
-            }
+        public void ForthCountIn4Do(double beat, float length)
+        {
+            BeatAction.New(instance.gameObject, instance.ForthCountIn4Action(beat, length));
+        }
+
+        public void ForthCountIn8Do(double beat, float length)
+        {
+            BeatAction.New(instance.gameObject, instance.ForthCountIn8Action(beat, length));
         }
 
         private List<BeatAction.Action> ForthCountIn4Action(double beat, float length)
@@ -795,11 +808,6 @@ namespace HeavenStudio.Games
                 new MultiSound.Sound("airRally/countIn3" + GetDistanceStringAtBeat(beat + (6 * realLength), true), beat + (6 * realLength), 1, 1, false, 0.107f),
                 new MultiSound.Sound("airRally/countIn4" + GetDistanceStringAtBeat(beat + (7 * realLength), true), beat + (7 * realLength), 1, 1, false, 0.051f),
             }, forcePlay: true);
-
-            if (GameManager.instance.currentGame == "airRally")
-            {
-                BeatAction.New(instance.gameObject, instance.ForthCountIn8Action(beat, length));
-            }
         }
 
         private BeatAction.Action ForthVoiceAction(double beat)
