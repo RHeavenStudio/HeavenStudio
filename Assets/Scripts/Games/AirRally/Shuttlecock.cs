@@ -25,6 +25,7 @@ namespace HeavenStudio.Games.Scripts_AirRally
         [NonSerialized] public float flyPos;
         [NonSerialized] public bool isReturning;
         [NonSerialized] public bool isTossed = false;
+        [NonSerialized] public AirRally.DistanceSound currentDist = AirRally.DistanceSound.close;
         AirRally game;
 
         private void Awake()
@@ -38,18 +39,27 @@ namespace HeavenStudio.Games.Scripts_AirRally
             transform.position = OtherTarget.position;
         }
 
-        // Update is called once per frame
-        void Update()
-        {
-            var cond = Conductor.instance;
+        private Vector3 startPos;
+        private Vector3 endPos;
 
-            Vector3 startPos = isReturning ? PlayerTarget.position : OtherTarget.position;
-            Vector3 endPos = isReturning ? OtherTarget.position : PlayerTarget.position;
+        public void SetStartAndEndPos()
+        {
+            startPos = isReturning ? PlayerTarget.position : OtherTarget.position;
+            endPos = isReturning ? OtherTarget.position : PlayerTarget.position;
             if (isTossed)
             {
                 startPos = OtherTarget.position;
                 endPos = OtherTarget.position;
             }
+        }
+
+        // Update is called once per frame
+        void Update()
+        {
+            var cond = Conductor.instance;
+
+            bool isFartherOrMore = currentDist != AirRally.DistanceSound.close && currentDist != AirRally.DistanceSound.far;
+
             Vector3 lastPos = transform.position;
             if (!rb.simulated)
             {
@@ -87,7 +97,14 @@ namespace HeavenStudio.Games.Scripts_AirRally
                 }
 
 
-                this.transform.eulerAngles = new Vector3(0, 0, rotation - 90f);
+                if (isFartherOrMore)
+                {
+                    transform.eulerAngles = new Vector3(0, 0, isReturning ? -90f : 90f);
+                }
+                else
+                {
+                    transform.eulerAngles = new Vector3(0, 0, rotation - 90f);
+                }
             }
 
             if (miss && flyPos > 4f)

@@ -245,8 +245,8 @@ namespace HeavenStudio.Games
         [SerializeField] Animator Forthington;
         private Transform forthTrans;
         private Transform baxterTrans;
-        [SerializeField] GameObject Shuttlecock;
-        public GameObject ActiveShuttle;
+        [SerializeField] Shuttlecock Shuttlecock;
+        private Shuttlecock ActiveShuttle;
         [SerializeField] GameObject objHolder;
         [SerializeField] private CloudsManager cloudManagerMain, cloudManagerLeft, cloudManagerRight, cloudManagerTop, snowflakeManager;
         [SerializeField] private CloudsManager treeManagerMain, treeManagerLeft, treeManagerRight, treeManagerLeftInner, treeManagerRightInner;
@@ -334,6 +334,8 @@ namespace HeavenStudio.Games
             IslandSpeedUpdate();
             TreeUpdate();
         }
+
+        #region visual doodads
 
         public void Forward(bool reset)
         {
@@ -530,6 +532,7 @@ namespace HeavenStudio.Games
                 float newZ = func(lastWayPointZForForth, wayPointZForForth, normalizedBeat);
 
                 forthTrans.position = new Vector3(forthTrans.position.x, forthTrans.position.y, newZ);
+                if (shuttleActive) ActiveShuttle.SetStartAndEndPos();
             }
             else if (normalizedBeat > 1f)
             {
@@ -635,6 +638,8 @@ namespace HeavenStudio.Games
             DayNightCycleUpdate();
         }
 
+        #endregion
+
         private static bool IsCatchBeat(double beat)
         {
             return EventCaller.GetAllInGameManagerList("airRally", new string[] { "catch" }).Find(x => beat == x.beat) != null;
@@ -676,13 +681,13 @@ namespace HeavenStudio.Games
                 {
                     if (!shuttleActive)
                     {
-                        ActiveShuttle = GameObject.Instantiate(Shuttlecock, objHolder.transform);
-                        ActiveShuttle.SetActive(true);
-                        var shuttleScript = ActiveShuttle.GetComponent<Shuttlecock>();
-                        shuttleScript.flyPos = 0f;
-                        shuttleScript.startBeat = beat - 0.5;
-                        shuttleScript.flyBeats = 0.5;
-                        shuttleScript.isTossed = true;
+                        ActiveShuttle = Instantiate(Shuttlecock, objHolder.transform);
+                        ActiveShuttle.gameObject.SetActive(true);
+                        ActiveShuttle.flyPos = 0f;
+                        ActiveShuttle.startBeat = beat - 0.5;
+                        ActiveShuttle.flyBeats = 0.5;
+                        ActiveShuttle.isTossed = true;
+                        ActiveShuttle.SetStartAndEndPos();
 
                         shuttleActive = true;
 
@@ -691,13 +696,14 @@ namespace HeavenStudio.Games
                 }),
                 new BeatAction.Action(beat, delegate
                 {
-                    var shuttleScript = ActiveShuttle.GetComponent<Shuttlecock>();
-                    shuttleScript.flyPos = 0f;
-                    shuttleScript.isReturning = false;
-                    shuttleScript.startBeat = beat;
-                    shuttleScript.flyBeats = targetBeat - beat;
-                    shuttleScript.flyType = type;
-                    shuttleScript.isTossed = false;
+                    ActiveShuttle.flyPos = 0f;
+                    ActiveShuttle.isReturning = false;
+                    ActiveShuttle.startBeat = beat;
+                    ActiveShuttle.flyBeats = targetBeat - beat;
+                    ActiveShuttle.flyType = type;
+                    ActiveShuttle.isTossed = false;
+                    ActiveShuttle.currentDist = DistanceAtBeat(beat);
+                    ActiveShuttle.SetStartAndEndPos();
 
                     Forthington.DoScaledAnimationAsync("Hit", 0.5f);
                 })
@@ -706,13 +712,14 @@ namespace HeavenStudio.Games
 
         public void ReturnObject(double beat, double targetBeat, bool type)
         {
-            var shuttleScript = ActiveShuttle.GetComponent<Shuttlecock>();
-            shuttleScript.flyPos = 0f;
-            shuttleScript.isReturning = true;
-            shuttleScript.startBeat = beat;
-            shuttleScript.flyBeats = targetBeat - beat;
-            shuttleScript.flyType = type;
-            shuttleScript.isTossed = false;
+            ActiveShuttle.flyPos = 0f;
+            ActiveShuttle.isReturning = true;
+            ActiveShuttle.startBeat = beat;
+            ActiveShuttle.flyBeats = targetBeat - beat;
+            ActiveShuttle.flyType = type;
+            ActiveShuttle.isTossed = false;
+            ActiveShuttle.currentDist = DistanceAtBeat(beat);
+            ActiveShuttle.SetStartAndEndPos();
         }
 
         #region count-ins
@@ -999,6 +1006,8 @@ namespace HeavenStudio.Games
             InitClouds(beat);
         }
 
+        #region persist
+
         private void InitClouds(double beat)
         {
             var cloudEvent = EventCaller.GetAllInGameManagerList("airRally", new string[] { "cloud" }).Find(x => x.beat == beat);
@@ -1078,6 +1087,7 @@ namespace HeavenStudio.Games
 
             SetIslandSpeed(e.beat, e.length, e["speed"], e["endSpeed"], e["ease"]);
         }
+        #endregion
 
         public static void PreStartRally(double beat)
         {
@@ -1133,7 +1143,7 @@ namespace HeavenStudio.Games
 
             BeatAction.New(gameObject, new List<BeatAction.Action>()
             {
-                new BeatAction.Action(beat - 0.5, delegate
+                new BeatAction.Action(beat - 1, delegate
                 {
                     ServeObject(beat, beat + 1, false);
 
@@ -1326,7 +1336,11 @@ namespace HeavenStudio.Games
                     _ => throw new System.NotImplementedException()
                 };
 
-                SoundByte.PlayOneShotGame("airRally/hitBaxter_" + distanceString);
+                if (distanceString == "Close")
+                {
+                    SoundByte.PlayOneShotGame("airRally/hitBaxter_Close");
+                }
+                else SoundByte.PlayOneShotGame("airRally/hitBaxter_" + distanceString + "2");
 
                 if (IsCatchBeat(caller.startBeat + caller.timer + 2))
                 {
