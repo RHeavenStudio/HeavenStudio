@@ -1,3 +1,5 @@
+using HeavenStudio.Util;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -14,6 +16,112 @@ namespace HeavenStudio.Games.Scripts_TramAndPauline
         [Header("Properties")]
         [SerializeField] private float jumpHeight = 3f;
         [SerializeField] private float jumpHeightIdle = 0.8f;
+        [SerializeField] private float prepareHeight = 0.5f;
+
+        private double jumpBeat = double.MinValue;
+        private double prepareBeat = double.MinValue;
+        private bool preparing = false;
+        private bool isFox = true;
+
+        private EasingFunction.Function upFunc;
+        private EasingFunction.Function downFunc;
+
+        private void Awake()
+        {
+            upFunc = EasingFunction.GetEasingFunction(EasingFunction.Ease.EaseOutQuad);
+            downFunc = EasingFunction.GetEasingFunction(EasingFunction.Ease.EaseInQuad);
+        }
+
+        private void Update()
+        {
+            var cond = Conductor.instance;
+
+            if (!cond.isPlaying) return;
+
+            float newY = 0f;
+
+            float normalizedUpBeat = cond.GetPositionFromBeat(jumpBeat, 1);
+            float normalizedDownBeat = cond.GetPositionFromBeat(jumpBeat + 1, 1);
+
+            if (normalizedUpBeat >= 0f && normalizedUpBeat <= 1f)
+            {
+                newY = upFunc(0, jumpHeight, normalizedUpBeat);
+            }
+            else if (normalizedDownBeat >= 0f && normalizedDownBeat <= 1f)
+            {
+                newY = downFunc(jumpHeight, 0, normalizedDownBeat);
+            }
+            else if (!preparing)
+            {
+                bodyAnim.Play("FoxIdle", 0, 0);
+                BounceUpdate(cond, ref newY);
+            }
+            else
+            {
+                PrepareUpdate(cond, ref newY);
+            }
+
+            rootBody.transform.localPosition = new Vector3(0, newY, 0);
+        }
+
+        private void BounceUpdate(Conductor cond, ref float newY)
+        {
+            double startBeat = (jumpBeat != double.MinValue) ? jumpBeat : 0;
+            float normalizedBeat = cond.GetPositionFromBeat(startBeat, 1) % 1;
+            float trampolinePos = 0f;
+
+            if (normalizedBeat < 0.5f)
+            {
+                newY = upFunc(0, jumpHeightIdle, normalizedBeat * 2);
+                trampolinePos = upFunc(0, 1, normalizedBeat * 2);
+            }
+            else
+            {
+                newY = downFunc(jumpHeightIdle, 0, (normalizedBeat - 0.5f) * 2);
+                trampolinePos = downFunc(1, 0, (normalizedBeat - 0.5f) * 2);
+            }
+
+            trampolineAnim.DoNormalizedAnimation("Bounce", trampolinePos);
+        }
+
+        private void PrepareUpdate(Conductor cond, ref float newY)
+        {
+            float normalizedBeat = cond.GetPositionFromBeat(prepareBeat, 0.5f);
+
+            if (normalizedBeat >= 0f && normalizedBeat <= 1f)
+            {
+                newY = upFunc(prepareHeight, 0, normalizedBeat);
+                trampolineAnim.DoNormalizedAnimation("Prepare", normalizedBeat);
+            }
+            else if (normalizedBeat > 1f)
+            {
+                trampolineAnim.DoNormalizedAnimation("Prepare", 1);
+                newY = 0f;
+            }
+        }
+
+        public void Jump(double beat)
+        {
+            jumpBeat = beat;
+            preparing = false;
+            bodyAnim.Play("JumpFox", 0, 0);
+            trampolineAnim.DoScaledAnimationAsync("Jump", 0.5f);
+        }
+
+        public void Prepare(double beat, bool inactive = false)
+        {
+            if (preparing) return;
+            prepareBeat = beat;
+            preparing = true;
+            if (inactive)
+            {
+                bodyAnim.DoNormalizedAnimation("Prepare", 1);
+            }
+            else
+            {
+                bodyAnim.DoScaledAnimationAsync("Prepare", 0.25f);
+            }
+        }
     }
 }
 

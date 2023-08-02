@@ -733,8 +733,9 @@ MonoBehaviour:
   rootBody: {fileID: 5473061888112335790}
   trampolineAnim: {fileID: 938616028678069810}
   bodyAnim: {fileID: 5773323318970315060}
-  jumpHeight: 3
-  jumpHeightIdle: 0.8
+  jumpHeight: 5
+  jumpHeightIdle: 1
+  prepareHeight: 0.2
 --- !u!1 &1349655083962155158
 GameObject:
   m_ObjectHideFlags: 0
@@ -844,7 +845,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1364816024564154936}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -3.83, y: -3.34, z: 0}
+  m_LocalPosition: {x: -3.83, y: -3.44, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -924,8 +925,9 @@ MonoBehaviour:
   rootBody: {fileID: 2135360474132312097}
   trampolineAnim: {fileID: 890188783679420663}
   bodyAnim: {fileID: 7825962202232344729}
-  jumpHeight: 3
-  jumpHeightIdle: 0.8
+  jumpHeight: 5
+  jumpHeightIdle: 1
+  prepareHeight: 0.2
 --- !u!1 &1634042355783585647
 GameObject:
   m_ObjectHideFlags: 0
@@ -1940,7 +1942,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 6219297600856558313}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 4.11, y: -3.34, z: 0}
+  m_LocalPosition: {x: 4.11, y: -3.44, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:

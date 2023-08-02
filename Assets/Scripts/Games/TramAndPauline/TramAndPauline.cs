@@ -14,7 +14,7 @@ namespace HeavenStudio.Games.Loaders
             {
                 new GameAction("prepare", "Prepare")
                 {
-                    function = delegate { TramAndPauline.instance.Prepare(eventCaller.currentEntity["who"]); },
+                    function = delegate { TramAndPauline.instance.Prepare(eventCaller.currentEntity.beat, (TramAndPauline.TramOrPauline)eventCaller.currentEntity["who"]); },
                     parameters = new List<Param>()
                     {
                         new Param("who", TramAndPauline.TramOrPauline.Pauline, "Who Prepares?")
@@ -72,9 +72,21 @@ namespace HeavenStudio.Games
             instance = this;
         }
 
-        public void Prepare(TramOrPauline who)
+        public void Prepare(double beat, TramOrPauline who)
         {
-
+            switch (who)
+            {
+                case TramOrPauline.Pauline:
+                    pauline.Prepare(beat);
+                    break;
+                case TramOrPauline.Tram:
+                    tram.Prepare(beat);
+                    break;
+                case TramOrPauline.Both:
+                    pauline.Prepare(beat);
+                    tram.Prepare(beat);
+                    break;
+            }
         }
 
         public void Jump(double beat, TramOrPauline who)
@@ -97,12 +109,14 @@ namespace HeavenStudio.Games
         private void TramJump(double beat)
         {
             SoundByte.PlayOneShotGame("tramAndPauline/jump" + UnityEngine.Random.Range(1, 3));
+            tram.Jump(beat);
             ScheduleInput(beat, 1, InputType.DIRECTION_DOWN, TramJust, Empty, Empty);
         }
 
         private void PaulineJump(double beat)
         {
             SoundByte.PlayOneShotGame("tramAndPauline/jump" + UnityEngine.Random.Range(1, 3));
+            pauline.Jump(beat);
             ScheduleInput(beat, 1, InputType.STANDARD_DOWN, PaulineJust, Empty, Empty);
         }
 
