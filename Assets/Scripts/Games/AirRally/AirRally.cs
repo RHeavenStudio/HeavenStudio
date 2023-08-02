@@ -357,6 +357,7 @@ namespace HeavenStudio.Games
         private float lastWayPointZForForth = 3.16f;
         private float wayPointZForForth = 3.16f;
         private HeavenStudio.Util.EasingFunction.Ease currentEase = HeavenStudio.Util.EasingFunction.Ease.EaseOutQuad;
+        private double nextGameSwitchBeatGlobal = double.MaxValue;
 
         void Start()
         {
@@ -1022,6 +1023,8 @@ namespace HeavenStudio.Games
 
         public override void OnGameSwitch(double beat)
         {
+            var nextGameSwitch = EventCaller.GetAllInGameManagerList("gameManager", new string[] { "switchGame" }).Find(x => x.beat > beat);
+            if (nextGameSwitch != null) nextGameSwitchBeatGlobal = nextGameSwitch.beat;
             PersistDayNight(beat);
             PersistEnter(beat);
             PersistIslandSpeed(beat);
@@ -1067,6 +1070,8 @@ namespace HeavenStudio.Games
 
         public override void OnPlay(double beat)
         {
+            var nextGameSwitch = EventCaller.GetAllInGameManagerList("gameManager", new string[] { "switchGame" }).Find(x => x.beat > beat);
+            if (nextGameSwitch != null) nextGameSwitchBeatGlobal = nextGameSwitch.beat;
             PersistDayNight(beat);
             PersistEnter(beat);
             PersistIslandSpeed(beat);
@@ -1200,6 +1205,7 @@ namespace HeavenStudio.Games
 
         private void RallyRecursion(double beat)
         {
+            if (beat >= nextGameSwitchBeatGlobal) return;
             bool isBaBumBeat = IsBaBumBeat(beat);
             bool countBaBum = CountBaBum(beat);
             bool silent = IsSilentAtBeat(beat);
@@ -1265,6 +1271,7 @@ namespace HeavenStudio.Games
 
         private void BaBumBumBum(double beat, bool count, bool alt)
         {
+            if (beat >= nextGameSwitchBeatGlobal) return;
             bool isCatch = IsCatchBeat(beat + 6);
             bool isBaBumBeat = IsBaBumBeat(beat + 4);
             bool countBaBum = CountBaBum(beat + 4);
