@@ -153,6 +153,11 @@ namespace HeavenStudio.Games.Scripts_TramAndPauline
             transformParticle.Play();
             isFox = !isFox;
         }
+
+        public void SetTransform(bool fox)
+        {
+            isFox = fox;
+        }
     }
 }
 

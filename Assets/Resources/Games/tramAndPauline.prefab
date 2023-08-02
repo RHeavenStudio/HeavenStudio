@@ -261,6 +261,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 6889510192684449246}
+  - component: {fileID: 2232628654249543969}
   m_Layer: 0
   m_Name: audience
   m_TagString: Untagged
@@ -288,6 +289,27 @@ Transform:
   m_Father: {fileID: 3385761414716595358}
   m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!95 &2232628654249543969
+Animator:
+  serializedVersion: 5
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 414978524968826885}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: 84535b03f820eaa45bde120568b0e395, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorStateOnDisable: 0
+  m_WriteDefaultValuesOnDisable: 0
 --- !u!1 &447405195684902416
 GameObject:
   m_ObjectHideFlags: 0
@@ -544,6 +566,8 @@ MonoBehaviour:
   scheduledInputs: []
   tram: {fileID: 6436903307986279996}
   pauline: {fileID: 2176275447357796304}
+  curtainAnim: {fileID: 5995665118927552899}
+  audienceAnim: {fileID: 2232628654249543969}
 --- !u!1 &784645515269670419
 GameObject:
   m_ObjectHideFlags: 0
@@ -974,6 +998,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1000577978182497232}
+  - component: {fileID: 5995665118927552899}
   m_Layer: 0
   m_Name: Curtain
   m_TagString: Untagged
@@ -998,6 +1023,27 @@ Transform:
   m_Father: {fileID: 3385761414716595358}
   m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!95 &5995665118927552899
+Animator:
+  serializedVersion: 5
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2251394220411124772}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: 8f21f0b59f31f2c4bbbeb175b26b1cc6, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorStateOnDisable: 0
+  m_WriteDefaultValuesOnDisable: 0
 --- !u!1 &2777966149626945308
 GameObject:
   m_ObjectHideFlags: 0
