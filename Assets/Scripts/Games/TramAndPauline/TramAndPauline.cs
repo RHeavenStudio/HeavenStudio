@@ -10,9 +10,30 @@ namespace HeavenStudio.Games.Loaders
     {
         public static Minigame AddGame(EventCaller eventCaller)
         {
-            return new Minigame("tramAndPauline", "Tram & Pauline \n<color=#eb5454>[INITIALIZATION ONLY]</color>", "adb5e7", true, false, new List<GameAction>()
+            return new Minigame("tramAndPauline", "Tram & Pauline", "adb5e7", false, false, new List<GameAction>()
             {
-
+                new GameAction("pauline", "Pauline")
+                {
+                    defaultLength = 2f
+                },
+                new GameAction("tram", "Tram")
+                {
+                    defaultLength = 2f
+                },
+                new GameAction("shape", "Change Transformation")
+                {
+                    defaultLength = 0.5f,
+                    parameters = new List<Param>()
+                    {
+                        new Param("pauline", false, "Pauline is Human?"),
+                        new Param("tram", false, "Tram is Human?")
+                    }
+                },
+                new GameAction("curtains", "Curtains")
+                {
+                    defaultLength = 4f,
+                    resizable = true
+                }
             }
             );
         }
