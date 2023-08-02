@@ -54,8 +54,6 @@ namespace HeavenStudio.Games.Loaders
                 new GameAction("passTurn", "Pass Turn")
                 {
                     preFunction = delegate {var e = eventCaller.currentEntity; QuizShow.PrePassTurn(e.beat, e["sound"], e["con"], e["visual"], e["audio"]); },
-                    defaultLength = 1f,
-                    resizable = true,
                     parameters = new List<Param>()
                     {
                         new Param("sound", true, "Play Time-Up Sound?", "Should the Time-Up sound play at the end of the interval?"),
