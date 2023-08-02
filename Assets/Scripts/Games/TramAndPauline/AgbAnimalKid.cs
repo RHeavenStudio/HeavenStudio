@@ -54,7 +54,11 @@ namespace HeavenStudio.Games.Scripts_TramAndPauline
             }
             else if (!preparing)
             {
-                bodyAnim.Play(isFox ? "FoxIdle" : "HumanIdle", 0, 0);
+                if (isBarely)
+                {
+                    bodyAnim.Play("BarelyIdle", 0, 0);
+                }
+                else bodyAnim.Play(isFox ? "FoxIdle" : "HumanIdle", 0, 0);
                 BounceUpdate(cond, ref newY);
             }
             else
@@ -105,7 +109,11 @@ namespace HeavenStudio.Games.Scripts_TramAndPauline
         {
             jumpBeat = beat;
             preparing = false;
-            bodyAnim.Play(isFox ? "JumpFox" : "JumpHuman", 0, 0);
+            if (isBarely)
+            {
+                bodyAnim.Play("JumpBarely", 0, 0);
+            }
+            else bodyAnim.Play(isFox ? "JumpFox" : "JumpHuman", 0, 0);
             trampolineAnim.DoScaledAnimationAsync("Jump", 0.5f);
         }
 
@@ -116,17 +124,32 @@ namespace HeavenStudio.Games.Scripts_TramAndPauline
             preparing = true;
             if (inactive)
             {
-                bodyAnim.DoNormalizedAnimation(isFox ? "Prepare" : "PrepareHuman", 1);
+                if (isBarely)
+                {
+                    bodyAnim.DoNormalizedAnimation("PrepareBarely", 1);
+                }
+                else bodyAnim.DoNormalizedAnimation(isFox ? "Prepare" : "PrepareHuman", 1);
             }
             else
             {
-                bodyAnim.DoScaledAnimationAsync(isFox ? "Prepare" : "PrepareHuman", 0.25f);
+                if (isBarely)
+                {
+                    bodyAnim.DoScaledAnimationAsync("PrepareBarely", 0.25f);
+                }
+                else bodyAnim.DoScaledAnimationAsync(isFox ? "Prepare" : "PrepareHuman", 0.25f);
             }
         }
 
+        private bool isBarely = false;
+
         public void Transform(bool barely)
         {
-            bodyAnim.DoScaledAnimationAsync(isFox ? "TransformHuman" : "TransformFox", 0.25f);
+            isBarely = barely;
+            if (isBarely)
+            {
+                bodyAnim.DoScaledAnimationAsync("TransformBarely", 0.25f);
+            }
+            else bodyAnim.DoScaledAnimationAsync(isFox ? "TransformHuman" : "TransformFox", 0.25f);
             transformParticle.Play();
             isFox = !isFox;
         }
