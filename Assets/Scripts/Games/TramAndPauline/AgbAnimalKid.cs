@@ -12,6 +12,7 @@ namespace HeavenStudio.Games.Scripts_TramAndPauline
         [SerializeField] private Transform rootBody;
         [SerializeField] private Animator trampolineAnim;
         [SerializeField] private Animator bodyAnim;
+        [SerializeField] private ParticleSystem transformParticle;
 
         [Header("Properties")]
         [SerializeField] private float jumpHeight = 3f;
@@ -53,7 +54,7 @@ namespace HeavenStudio.Games.Scripts_TramAndPauline
             }
             else if (!preparing)
             {
-                bodyAnim.Play("FoxIdle", 0, 0);
+                bodyAnim.Play(isFox ? "FoxIdle" : "HumanIdle", 0, 0);
                 BounceUpdate(cond, ref newY);
             }
             else
@@ -104,7 +105,7 @@ namespace HeavenStudio.Games.Scripts_TramAndPauline
         {
             jumpBeat = beat;
             preparing = false;
-            bodyAnim.Play("JumpFox", 0, 0);
+            bodyAnim.Play(isFox ? "JumpFox" : "JumpHuman", 0, 0);
             trampolineAnim.DoScaledAnimationAsync("Jump", 0.5f);
         }
 
@@ -115,12 +116,19 @@ namespace HeavenStudio.Games.Scripts_TramAndPauline
             preparing = true;
             if (inactive)
             {
-                bodyAnim.DoNormalizedAnimation("Prepare", 1);
+                bodyAnim.DoNormalizedAnimation(isFox ? "Prepare" : "PrepareHuman", 1);
             }
             else
             {
-                bodyAnim.DoScaledAnimationAsync("Prepare", 0.25f);
+                bodyAnim.DoScaledAnimationAsync(isFox ? "Prepare" : "PrepareHuman", 0.25f);
             }
+        }
+
+        public void Transform(bool barely)
+        {
+            bodyAnim.DoScaledAnimationAsync(isFox ? "TransformHuman" : "TransformFox", 0.25f);
+            transformParticle.Play();
+            isFox = !isFox;
         }
     }
 }

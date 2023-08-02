@@ -122,6 +122,7 @@ namespace HeavenStudio.Games
 
         private void TramJust(PlayerActionEvent caller, float state)
         {
+            tram.Transform(state >= 1f || state <= -1f);
             if (state >= 1f || state <= -1f)
             {
                 SoundByte.PlayOneShot("miss");
@@ -132,6 +133,7 @@ namespace HeavenStudio.Games
 
         private void PaulineJust(PlayerActionEvent caller, float state)
         {
+            pauline.Transform(state >= 1f || state <= -1f);
             if (state >= 1f || state <= -1f)
             {
                 SoundByte.PlayOneShot("miss");
