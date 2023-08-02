@@ -132,12 +132,14 @@ namespace HeavenStudio.Games
         {
             PersistCurtain(beat);
             PersistTransformation(beat);
+            PersistPrepare(beat);
         }
 
         public override void OnPlay(double beat)
         {
             PersistCurtain(beat);
             PersistTransformation(beat);
+            PersistPrepare(beat);
         }
 
         private void PersistCurtain(double beat)
@@ -173,19 +175,32 @@ namespace HeavenStudio.Games
             SetTransformation(isFoxTram, isFoxPauline);
         }
 
-        public void Prepare(double beat, TramOrPauline who)
+        private void PersistPrepare(double beat)
+        {
+            var allEvents = EventCaller.GetAllInGameManagerList("tramAndPauline", new string[] { "prepare", "tram", "pauline" }).FindAll(x => x.beat < beat);
+            if (allEvents.Count == 0) return;
+            allEvents.Sort((x, y) => x.beat.CompareTo(y.beat));
+            var lastEvent = allEvents[allEvents.Count - 1];
+
+            if (lastEvent != null && lastEvent.datamodel == "tramAndPauline/prepare")
+            {
+                Prepare(lastEvent.beat, (TramOrPauline)lastEvent["who"], true);
+            }
+        }
+
+        public void Prepare(double beat, TramOrPauline who, bool instant = false)
         {
             switch (who)
             {
                 case TramOrPauline.Pauline:
-                    pauline.Prepare(beat);
+                    pauline.Prepare(beat, instant);
                     break;
                 case TramOrPauline.Tram:
-                    tram.Prepare(beat);
+                    tram.Prepare(beat, instant);
                     break;
                 case TramOrPauline.Both:
-                    pauline.Prepare(beat);
-                    tram.Prepare(beat);
+                    pauline.Prepare(beat, instant);
+                    tram.Prepare(beat, instant);
                     break;
             }
         }
