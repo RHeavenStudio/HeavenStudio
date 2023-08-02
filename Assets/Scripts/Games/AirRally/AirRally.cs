@@ -242,10 +242,10 @@ namespace HeavenStudio.Games
 
         private static readonly float[] nyaOffsets = new float[4]
         {
-            0.004f, //close
-            0.012f, //far
-            0.005f, //farther
-            0.040f //farthest
+            -0.01f, //close
+            -0.01f, //far
+            0.003f, //farther
+            -0.01f //farthest
         };
 
         //both of the whoosh offsets are scheduled for the beat that the player hits the birdie,
@@ -255,18 +255,18 @@ namespace HeavenStudio.Games
         private static readonly float[] whooshOffsetsRally = new float[4]
         {
             0f, //leave be
-            0f, //far
-            0f, //farther
-            0f //farthest
+            0.210f, //far
+            0.210f, //farther
+            0.170f //farthest
         };
 
         // for ba bum bum bum
         private static readonly float[] whooshOffsetsBaBum = new float[4]
         {
             0f, //leave be
-            0f, //far
-            0f, //farther
-            0f //farthest
+            0.380f, //far
+            0.380f, //farther
+            0.380f //farthest
         };
 
         private static readonly float[,] baBumBumBumOffsets = new float[4, 4]
@@ -285,8 +285,8 @@ namespace HeavenStudio.Games
             },
             { // farther
                 0.008f, // ba
-                0.060f, // bum1
-                0.055f, // bum2
+                0.080f, // bum1
+                0.075f, // bum2
                 0.028f, // bum3
             },
             { // farthest
