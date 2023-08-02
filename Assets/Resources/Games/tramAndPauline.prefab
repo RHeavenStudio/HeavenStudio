@@ -25,7 +25,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 15126918320645623}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0.9, y: 1.26, z: 0}
+  m_LocalPosition: {x: 0.9, y: 1.1300001, z: 0}
   m_LocalScale: {x: 0.4, y: 0.4, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -73,7 +73,7 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
-  m_Sprite: {fileID: 1624462638, guid: 4bb254c95297bab478253f58952b6c19, type: 3}
+  m_Sprite: {fileID: -1628330866, guid: 4bb254c95297bab478253f58952b6c19, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -542,6 +542,8 @@ MonoBehaviour:
   SoundSequences: []
   EligibleHits: []
   scheduledInputs: []
+  tram: {fileID: 0}
+  pauline: {fileID: 0}
 --- !u!1 &784645515269670419
 GameObject:
   m_ObjectHideFlags: 0
@@ -669,6 +671,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 2427349028145526181}
+  - component: {fileID: 6436903307986279996}
   m_Layer: 0
   m_Name: TramObjects
   m_TagString: Untagged
@@ -693,6 +696,23 @@ Transform:
   m_Father: {fileID: 8559434615307097093}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &6436903307986279996
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 938930595586899217}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 96cf69d4e4c5c534da4eb8d03709eb78, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  rootBody: {fileID: 5473061888112335790}
+  trampolineAnim: {fileID: 0}
+  bodyAnim: {fileID: 0}
+  jumpHeight: 3
+  jumpHeightIdle: 0.8
 --- !u!1 &1349655083962155158
 GameObject:
   m_ObjectHideFlags: 0
@@ -801,7 +821,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1364816024564154936}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -3.83, y: -3.02, z: 0}
+  m_LocalPosition: {x: -3.83, y: -3.34, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -820,6 +840,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 2771193672260247378}
+  - component: {fileID: 2176275447357796304}
   m_Layer: 0
   m_Name: PaulineObjects
   m_TagString: Untagged
@@ -844,6 +865,23 @@ Transform:
   m_Father: {fileID: 8559434615307097093}
   m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &2176275447357796304
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1442348992482908719}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 96cf69d4e4c5c534da4eb8d03709eb78, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  rootBody: {fileID: 2135360474132312097}
+  trampolineAnim: {fileID: 0}
+  bodyAnim: {fileID: 0}
+  jumpHeight: 3
+  jumpHeightIdle: 0.8
 --- !u!1 &1634042355783585647
 GameObject:
   m_ObjectHideFlags: 0
@@ -1438,7 +1476,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 4352193249429516356}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0.9, y: 1.26, z: 0}
+  m_LocalPosition: {x: 0.9, y: 1.13, z: 0}
   m_LocalScale: {x: 0.4, y: 0.4, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -1486,7 +1524,7 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
-  m_Sprite: {fileID: 1624462638, guid: 4bb254c95297bab478253f58952b6c19, type: 3}
+  m_Sprite: {fileID: -1628330866, guid: 4bb254c95297bab478253f58952b6c19, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -1857,7 +1895,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 6219297600856558313}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 4.11, y: -3.05, z: 0}
+  m_LocalPosition: {x: 4.11, y: -3.34, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
