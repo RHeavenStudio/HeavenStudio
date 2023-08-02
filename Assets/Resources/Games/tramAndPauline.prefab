@@ -542,8 +542,8 @@ MonoBehaviour:
   SoundSequences: []
   EligibleHits: []
   scheduledInputs: []
-  tram: {fileID: 0}
-  pauline: {fileID: 0}
+  tram: {fileID: 6436903307986279996}
+  pauline: {fileID: 2176275447357796304}
 --- !u!1 &784645515269670419
 GameObject:
   m_ObjectHideFlags: 0
@@ -637,6 +637,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 5492679872714518608}
+  - component: {fileID: 890188783679420663}
   m_Layer: 0
   m_Name: TrampolineRight
   m_TagString: Untagged
@@ -662,6 +663,27 @@ Transform:
   m_Father: {fileID: 2771193672260247378}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!95 &890188783679420663
+Animator:
+  serializedVersion: 5
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 915323190608638924}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: f81221256861028438521080c3ba49ec, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorStateOnDisable: 0
+  m_WriteDefaultValuesOnDisable: 0
 --- !u!1 &938930595586899217
 GameObject:
   m_ObjectHideFlags: 0
@@ -709,8 +731,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   rootBody: {fileID: 5473061888112335790}
-  trampolineAnim: {fileID: 0}
-  bodyAnim: {fileID: 0}
+  trampolineAnim: {fileID: 938616028678069810}
+  bodyAnim: {fileID: 5773323318970315060}
   jumpHeight: 3
   jumpHeightIdle: 0.8
 --- !u!1 &1349655083962155158
@@ -806,6 +828,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 7562893763080193444}
+  - component: {fileID: 5773323318970315060}
   m_Layer: 0
   m_Name: Tram
   m_TagString: Untagged
@@ -831,6 +854,27 @@ Transform:
   m_Father: {fileID: 5473061888112335790}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!95 &5773323318970315060
+Animator:
+  serializedVersion: 5
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1364816024564154936}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: 87aacc1af48e0a441bd39c5175c19b40, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorStateOnDisable: 0
+  m_WriteDefaultValuesOnDisable: 0
 --- !u!1 &1442348992482908719
 GameObject:
   m_ObjectHideFlags: 0
@@ -878,8 +922,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   rootBody: {fileID: 2135360474132312097}
-  trampolineAnim: {fileID: 0}
-  bodyAnim: {fileID: 0}
+  trampolineAnim: {fileID: 890188783679420663}
+  bodyAnim: {fileID: 7825962202232344729}
   jumpHeight: 3
   jumpHeightIdle: 0.8
 --- !u!1 &1634042355783585647
@@ -1880,6 +1924,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 8416001287782257620}
+  - component: {fileID: 7825962202232344729}
   m_Layer: 0
   m_Name: Pauline
   m_TagString: Untagged
@@ -1905,6 +1950,27 @@ Transform:
   m_Father: {fileID: 2135360474132312097}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!95 &7825962202232344729
+Animator:
+  serializedVersion: 5
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6219297600856558313}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: 99582661e27567948a446697c43747c3, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorStateOnDisable: 0
+  m_WriteDefaultValuesOnDisable: 0
 --- !u!1 &8147283560578660073
 GameObject:
   m_ObjectHideFlags: 0
@@ -1946,6 +2012,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 5915851441418552251}
+  - component: {fileID: 938616028678069810}
   m_Layer: 0
   m_Name: TrampolineLeft
   m_TagString: Untagged
@@ -1971,6 +2038,27 @@ Transform:
   m_Father: {fileID: 2427349028145526181}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!95 &938616028678069810
+Animator:
+  serializedVersion: 5
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8227542714231597168}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: f81221256861028438521080c3ba49ec, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorStateOnDisable: 0
+  m_WriteDefaultValuesOnDisable: 0
 --- !u!1 &8587786475192692421
 GameObject:
   m_ObjectHideFlags: 0
