@@ -234,18 +234,18 @@ namespace HeavenStudio.Games
     {
         private static readonly float[] countInOffsets = new float[4]
         {
-            0f, //one
-            0f, //two
-            0f, //three
-            0f, //four
+            0.142f, //one
+            0.140f, //two
+            0.150f, //three
+            0.160f, //four
         };
 
         private static readonly float[] nyaOffsets = new float[4]
         {
-            0f, //close
-            0f, //far
-            0f, //farther
-            0f //farthest
+            0.004f, //close
+            0.012f, //far
+            0.005f, //farther
+            0.040f //farthest
         };
 
         //both of the whoosh offsets are scheduled for the beat that the player hits the birdie,
@@ -272,37 +272,37 @@ namespace HeavenStudio.Games
         private static readonly float[,] baBumBumBumOffsets = new float[4, 4]
         {
             { // close
-                0f, // ba
-                0f, // bum1
-                0f, // bum2
-                0f, // bum3
+                0.009f, // ba
+                0.017f, // bum1
+                0.014f, // bum2
+                0.010f, // bum3
             },
             { // far
-                0f, // ba
-                0f, // bum1
-                0f, // bum2
-                0f, // bum3
+                0.003f, // ba
+                0.020f, // bum1
+                0.004f, // bum2
+                0.010f, // bum3
             },
             { // farther
-                0f, // ba
-                0f, // bum1
-                0f, // bum2
-                0f, // bum3
+                0.008f, // ba
+                0.060f, // bum1
+                0.055f, // bum2
+                0.028f, // bum3
             },
             { // farthest
-                0f, // ba
-                0f, // bum1
-                0f, // bum2
-                0f, // bum3
+                0.012f, // ba
+                0.040f, // bum1
+                0.026f, // bum2
+                0.040f, // bum3
             },
         };
 
         private static readonly float[] baBumBumBumFarAltOffsets = new float[4]
         {
-                0f, // ba
-                0f, // bum1
-                0f, // bum2
-                0f, // bum3
+                0.001f, // ba
+                0.012f, // bum1
+                0.012f, // bum2
+                0.012f, // bum3
         };
 
         public enum BirdType
