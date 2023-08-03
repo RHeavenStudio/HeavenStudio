@@ -271,7 +271,7 @@ namespace HeavenStudio.Games
             {
                 new BeatAction.Action(caller.startBeat + caller.timer + 1, delegate
                 {
-                    audienceAnim.DoScaledAnimationAsync("Happy", 0.75f);
+                    audienceAnim.DoScaledAnimationAsync("Happy", 0.5f);
                 })
             });
 
@@ -290,7 +290,7 @@ namespace HeavenStudio.Games
             {
                 new BeatAction.Action(caller.startBeat + caller.timer + 1, delegate
                 {
-                    audienceAnim.DoScaledAnimationAsync("Happy", 0.75f);
+                    audienceAnim.DoScaledAnimationAsync("Happy", 0.5f);
                 })
             });
         }

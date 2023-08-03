@@ -13,6 +13,7 @@ namespace HeavenStudio.Games.Scripts_TramAndPauline
         [SerializeField] private Animator trampolineAnim;
         [SerializeField] private Animator bodyAnim;
         [SerializeField] private ParticleSystem transformParticle;
+        [SerializeField] private ParticleSystem smokeParticle;
 
         [Header("Properties")]
         [SerializeField] private float jumpHeight = 3f;
@@ -114,7 +115,7 @@ namespace HeavenStudio.Games.Scripts_TramAndPauline
                 bodyAnim.Play("JumpBarely", 0, 0);
             }
             else bodyAnim.Play(isFox ? "JumpFox" : "JumpHuman", 0, 0);
-            trampolineAnim.DoScaledAnimationAsync("Jump", 0.5f);
+            trampolineAnim.DoScaledAnimationAsync("Jump", 0.25f);
         }
 
         public void Prepare(double beat, bool inactive = false)
@@ -134,9 +135,9 @@ namespace HeavenStudio.Games.Scripts_TramAndPauline
             {
                 if (isBarely)
                 {
-                    bodyAnim.DoScaledAnimationAsync("PrepareBarely", 0.25f);
+                    bodyAnim.DoScaledAnimationAsync("PrepareBarely", 0.15f);
                 }
-                else bodyAnim.DoScaledAnimationAsync(isFox ? "Prepare" : "PrepareHuman", 0.25f);
+                else bodyAnim.DoScaledAnimationAsync(isFox ? "Prepare" : "PrepareHuman", 0.15f);
             }
         }
 
@@ -147,10 +148,11 @@ namespace HeavenStudio.Games.Scripts_TramAndPauline
             isBarely = barely;
             if (isBarely)
             {
-                bodyAnim.DoScaledAnimationAsync("TransformBarely", 0.25f);
+                bodyAnim.DoScaledAnimationAsync("TransformBarely", 0.15f);
             }
-            else bodyAnim.DoScaledAnimationAsync(isFox ? "TransformHuman" : "TransformFox", 0.25f);
-            transformParticle.Play();
+            else bodyAnim.DoScaledAnimationAsync(isFox ? "TransformHuman" : "TransformFox", 0.15f);
+            smokeParticle.SetAsyncScaling(0.5f);
+            transformParticle.PlayScaledAsync(0.5f);
             isFox = !isFox;
         }
 
