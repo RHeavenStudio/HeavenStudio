@@ -26,9 +26,25 @@ namespace HeavenStudio.Games
     {
         public static MonkeyWatch instance;
 
+        [Header("Components")]
+        [SerializeField] private Transform cameraAnchor;
+        [SerializeField] private Transform cameraTransform;
+        [SerializeField] private Transform cameraMoveable;
+
         private void Awake()
         {
             instance = this;
+            CameraUpdate();
+        }
+
+        private void Update()
+        {
+            CameraUpdate();
+        }
+
+        private void CameraUpdate()
+        {
+            cameraMoveable.position = -cameraTransform.position;
         }
     }
 }
