@@ -20238,12 +20238,6 @@ MonoBehaviour:
   SoundSequences: []
   EligibleHits: []
   scheduledInputs: []
-  monkeyPlayer: {fileID: 5368117777341597701}
-  yellowMonkey: {fileID: 3151069026564347634, guid: 224742d4a2c74034997943856f560054, type: 3}
-  pinkMonkey: {fileID: 0}
-  watchHoleParent: {fileID: 3735448262030941676}
-  monkeyParent: {fileID: 0}
-  cameraTransform: {fileID: 6302321823436949001}
 --- !u!1 &6181011653585253546
 GameObject:
   m_ObjectHideFlags: 0
@@ -22824,7 +22818,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 6857749598573628903}
-  - component: {fileID: 5368117777341597701}
   - component: {fileID: 910339928251400446}
   m_Layer: 0
   m_Name: WatchHand
@@ -22849,23 +22842,6 @@ Transform:
   m_Father: {fileID: 1686621416582726728}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &5368117777341597701
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7415731391529710915}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c7855e771979ce7448c422fd15a506e1, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  rotation: 0
-  MonkeyAnim: {fileID: 4873567491568184609}
-  ClickerAnim: {fileID: 910339928251400446}
-  YellowStars: {fileID: 8899231323861109608}
-  PinkStars: {fileID: 5162462144302245337}
 --- !u!95 &910339928251400446
 Animator:
   serializedVersion: 5
