@@ -3,7 +3,6 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 using Jukebox;
-using DG.Tweening;
 
 namespace HeavenStudio.Games.Loaders
 {
@@ -16,6 +15,11 @@ namespace HeavenStudio.Games.Loaders
             {
                 new GameAction("clap", "Clapping")
                 {
+                    preFunction = delegate 
+                    {
+                        MonkeyWatch.PreStartClapping(eventCaller.currentEntity.beat);
+                    },
+                    preFunctionLength = 1f,
                     defaultLength = 2f,
                     parameters = new List<Param>()
                     {
@@ -77,7 +81,7 @@ namespace HeavenStudio.Games.Loaders
 
 namespace HeavenStudio.Games
 {
-    //using Scripts_MonkeyWatch;
+    using Scripts_MonkeyWatch;
     public class MonkeyWatch : Minigame
     {
         private const float degreePerMonkey = 6f;
@@ -92,6 +96,10 @@ namespace HeavenStudio.Games
         [SerializeField] private Transform cameraAnchor;
         [SerializeField] private Transform cameraTransform;
         [SerializeField] private Transform cameraMoveable;
+        [SerializeField] private MonkeyClockArrow monkeyClockArrow;
+
+        [Header("Properties")]
+        [SerializeField] private int maxMonkeys = 30;
 
         private float lastAngle = 0f;
         private int cameraIndex = 0;
@@ -106,6 +114,8 @@ namespace HeavenStudio.Games
         private void Awake()
         {
             instance = this;
+            pinkMonkeys = EventCaller.GetAllInGameManagerList("monkeyWatch", new string[] { "off", "offStretch" });
+            pinkMonkeysCustom = EventCaller.GetAllInGameManagerList("monkeyWatch", new string[] { "offInterval" });
             CameraUpdate();
         }
 
@@ -114,47 +124,145 @@ namespace HeavenStudio.Games
             CameraUpdate();
         }
 
-        private void CameraUpdate()
-        {
-            var cond = Conductor.instance;
-            if (cond.isPlaying && !cond.isPaused && cameraMovements.Count > 0)
-            {
-                if (cameraIndex + 1 < cameraMovements.Count && cond.songPositionInBeats >= cameraMovements[cameraIndex].beat + cameraMovements[cameraIndex].length)
-                {
-                    lastAngle = cameraMovements[cameraIndex].degreeTo;
-                    cameraIndex++;
-                }
-
-                float normalizedBeat = cond.GetPositionFromBeat(cameraMovements[cameraIndex].beat, cameraMovements[cameraIndex].length);
-
-                float newAngle;
-
-                if (normalizedBeat < 0)
-                {
-                    newAngle = lastAngle;
-                }
-                else
-                {
-                    newAngle = Mathf.LerpUnclamped(lastAngle, cameraMovements[cameraIndex].degreeTo, normalizedBeat);
-                }
-
-                cameraAnchor.localEulerAngles = new Vector3(0, 0, newAngle);
-            }
-            cameraMoveable.position = new Vector3(cameraTransform.position.x, cameraTransform.position.y * -1);
-        }
-
-        #region Persist
-
         public override void OnGameSwitch(double beat)
         {
             GetCameraMovements(beat, false);
+            monkeyClockArrow.MoveToAngle(lastAngle);
+            if (wantClap >= beat && IsClapBeat(wantClap))
+            {
+                StartClapping(wantClap);
+            }
+
+            bool IsClapBeat(double clapBeat)
+            {
+                return EventCaller.GetAllInGameManagerList("monkeyWatch", new string[] { "clap" }).Find(x => x.beat == clapBeat) != null;
+            }
         }
 
         public override void OnPlay(double beat)
         {
             GetCameraMovements(beat, true);
+            monkeyClockArrow.MoveToAngle(lastAngle);
         }
 
+        #region clapping
+
+        private bool clapRecursing = false;
+        private List<RiqEntity> pinkMonkeys = new();
+        private List<RiqEntity> pinkMonkeysCustom = new();
+
+        private bool IsPinkMonkeyAtBeat(double beat, out float length)
+        {
+            length = 2;
+            var e = pinkMonkeys.Find(x => x.beat == beat);
+            bool isNotNull = e != null;
+            if (isNotNull) length = e.length;
+            return isNotNull;
+        }
+
+        private bool IsCustomPinkMonkeyAtBeat(double beat, out float length)
+        {
+            length = 2;
+            var e = pinkMonkeysCustom.Find(x => x.beat == beat);
+            bool isNotNull = e != null;
+            if (isNotNull) length = e.length;
+            return isNotNull;
+        }
+
+        private static double wantClap = double.MinValue;
+
+        public static void PreStartClapping(double beat)
+        {
+            if (GameManager.instance.currentGame == "monkeyWatch")
+            {
+                instance.StartClapping(beat);
+            }
+            else
+            {
+                wantClap = beat;
+            }
+        }
+
+        private void StartClapping(double beat)
+        {
+            if (clapRecursing) return;
+            clapRecursing = true;
+
+            ClapRecursing(beat);
+        }
+
+        private void ClapRecursing(double beat)
+        {
+            if (IsPinkMonkeyAtBeat(beat, out float length1))
+            {
+                PinkClap(length1);
+            }
+            else if (IsCustomPinkMonkeyAtBeat(beat, out float length2))
+            {
+                PinkClapCustom(length2);
+            }
+            else
+            {
+                NormalClap();
+            }
+
+            void NormalClap()
+            {
+                BeatAction.New(instance.gameObject, new List<BeatAction.Action>()
+                {
+                    new BeatAction.Action(beat + 1, delegate
+                    {
+                        ClapRecursing(beat + 2);
+                        monkeyClockArrow.Move();
+                    })
+                });
+            }
+
+            void PinkClap(float length)
+            {
+                List<BeatAction.Action> actions = new List<BeatAction.Action>()
+                {
+                    new BeatAction.Action(beat, delegate
+                    {
+                        ClapRecursing(beat + length);
+                    })
+                };
+
+                for (int i = 0; i < length; i++)
+                {
+                    actions.Add(new BeatAction.Action(beat + i + 0.5, delegate
+                    {
+                        monkeyClockArrow.Move();
+                    }));
+                }
+                BeatAction.New(instance.gameObject, actions);
+            }
+
+            void PinkClapCustom(float length)
+            {
+                List<BeatAction.Action> actions = new List<BeatAction.Action>()
+                {
+                    new BeatAction.Action(beat, delegate
+                    {
+                        ClapRecursing(beat + length);
+                    })
+                };
+
+                var relevantEvents = FindCustomOffbeatMonkeysBetweenBeat(beat, beat + length);
+
+                foreach (var e in relevantEvents)
+                {
+                    actions.Add(new BeatAction.Action(e.beat, delegate
+                    {
+                        monkeyClockArrow.Move();
+                    }));
+                }
+                BeatAction.New(instance.gameObject, actions);
+            }
+        }
+        #endregion
+
+        #region Camera
         private void GetCameraMovements(double beat, bool onPlay)
         {
             double lastGameSwitchBeat = beat;
@@ -190,7 +298,7 @@ namespace HeavenStudio.Games
             {
                 clappingEvents.Sort((x, y) => x.beat.CompareTo(y.beat));
                 startClappingBeat = clappingEvents[0].beat;
-                startAngle = clappingEvents[0]["min"];
+                startAngle = clappingEvents[0]["min"] * degreePerMonkey;
                 overrideStartBeat = false;
             }
             lastAngle = startAngle;
@@ -210,6 +318,7 @@ namespace HeavenStudio.Games
                 for (int i = 0; i < relevantPinkClappingEvents.Count; i++)
                 {
                     var e = relevantPinkClappingEvents[i];
+                    if (e.beat < lastClappingBeat) continue;
                     if (e.beat - lastClappingBeat > 0)
                     {
                         cameraMovements.Add(new MonkeyCamera()
@@ -260,13 +369,42 @@ namespace HeavenStudio.Games
                 Debug.Log("Beat: " + cameraMovement.beat + ", Length: " + cameraMovement.length + " , DegreeTo: " + cameraMovement.degreeTo);
             }
         }
+        private void CameraUpdate()
+        {
+            var cond = Conductor.instance;
+            if (cond.isPlaying && !cond.isPaused && cameraMovements.Count > 0)
+            {
+                if (cameraIndex + 1 < cameraMovements.Count && cond.songPositionInBeats >= cameraMovements[cameraIndex].beat + cameraMovements[cameraIndex].length)
+                {
+                    lastAngle = cameraMovements[cameraIndex].degreeTo;
+                    cameraIndex++;
+                }
 
+                float normalizedBeat = cond.GetPositionFromBeat(cameraMovements[cameraIndex].beat, cameraMovements[cameraIndex].length);
+
+                float newAngle;
+
+                if (normalizedBeat < 0)
+                {
+                    newAngle = lastAngle;
+                }
+                else
+                {
+                    newAngle = Mathf.LerpUnclamped(lastAngle, cameraMovements[cameraIndex].degreeTo, normalizedBeat);
+                }
+
+                cameraAnchor.localEulerAngles = new Vector3(0, 0, newAngle);
+            }
+            cameraMoveable.position = new Vector3(cameraTransform.position.x, cameraTransform.position.y * -1);
+        }
         #endregion
 
         private static List<RiqEntity> FindCustomOffbeatMonkeysBetweenBeat(double beat, double endBeat)
         {
             return EventCaller.GetAllInGameManagerList("monkeyWatch", new string[] { "offCustom" }).FindAll(x => x.beat >= beat && x.beat < endBeat);
         }
+
+        #region pink monkey sounds
 
         public static void PinkMonkeySound(double beat, float length, bool muteOoki, bool muteEek)
         {
@@ -338,5 +476,7 @@ namespace HeavenStudio.Games
 
             if (soundsToPlay.Count > 0) MultiSound.Play(soundsToPlay.ToArray(), forcePlay: true);
         }
+
+        #endregion
     }
 }

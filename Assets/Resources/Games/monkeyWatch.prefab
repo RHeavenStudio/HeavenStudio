@@ -20239,6 +20239,8 @@ MonoBehaviour:
   cameraAnchor: {fileID: 6302321823436949001}
   cameraTransform: {fileID: 16600283237656001}
   cameraMoveable: {fileID: 7676047881968251921}
+  monkeyClockArrow: {fileID: 8220690735241008560}
+  maxMonkeys: 30
 --- !u!1 &6181011653585253546
 GameObject:
   m_ObjectHideFlags: 0
@@ -22820,6 +22822,7 @@ GameObject:
   m_Component:
   - component: {fileID: 6857749598573628903}
   - component: {fileID: 910339928251400446}
+  - component: {fileID: 8220690735241008560}
   m_Layer: 0
   m_Name: WatchHand
   m_TagString: Untagged
@@ -22864,6 +22867,20 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
+--- !u!114 &8220690735241008560
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7415731391529710915}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bb4fe7e944029da4b950e4ed4957b63b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  anim: {fileID: 910339928251400446}
+  anchorRotateTransform: {fileID: 609139906039373078}
 --- !u!1 &7446072329631304920
 GameObject:
   m_ObjectHideFlags: 0
