@@ -28,7 +28,7 @@ namespace HeavenStudio.Games.Loaders
                     {
                         MonkeyWatch.PreStartClapping(eventCaller.currentEntity.beat);
                     },
-                    preFunctionLength = 1f,
+                    preFunctionLength = 4f,
                     defaultLength = 2f,
                     parameters = new List<Param>()
                     {
@@ -91,6 +91,8 @@ namespace HeavenStudio.Games.Loaders
 namespace HeavenStudio.Games
 {
     using Scripts_MonkeyWatch;
+    using System.Reflection;
+
     public class MonkeyWatch : Minigame
     {
         private const float degreePerMonkey = 6f;
@@ -103,9 +105,6 @@ namespace HeavenStudio.Games
         [SerializeField] private Transform cameraMoveable;
         [SerializeField] private MonkeyClockArrow monkeyClockArrow;
         [SerializeField] private WatchMonkeyHandler monkeyHandler;
-
-        [Header("Properties")]
-        [SerializeField] private int maxMonkeys = 30;
 
         private float lastAngle = 0f;
         private int cameraIndex = 0;
@@ -135,10 +134,15 @@ namespace HeavenStudio.Games
             monkeyClockArrow.PlayerClap(big, barely, false);
         }
 
+        private double persistBeat = 0;
+        private double theNextGameSwitchBeat = double.MaxValue;
+
         public override void OnGameSwitch(double beat)
         {
+            persistBeat = beat;
             GetCameraMovements(beat, false);
             monkeyClockArrow.MoveToAngle(lastAngle);
+            monkeyHandler.Init((int)(lastAngle / degreePerMonkey));
             if (wantClap >= beat && IsClapBeat(wantClap))
             {
                 StartClapping(wantClap);
@@ -152,8 +156,10 @@ namespace HeavenStudio.Games
 
         public override void OnPlay(double beat)
         {
+            persistBeat = beat;
             GetCameraMovements(beat, true);
             monkeyClockArrow.MoveToAngle(lastAngle);
+            monkeyHandler.Init((int)(lastAngle / degreePerMonkey));
         }
 
         #region clapping
@@ -188,10 +194,7 @@ namespace HeavenStudio.Games
             {
                 instance.StartClapping(beat);
             }
-            else
-            {
-                wantClap = beat;
-            }
+            wantClap = beat;
         }
 
         private void StartClapping(double beat)
@@ -204,6 +207,7 @@ namespace HeavenStudio.Games
 
         private void ClapRecursing(double beat)
         {
+            if (beat >= theNextGameSwitchBeat) return;
             if (IsPinkMonkeyAtBeat(beat, out float length1))
             {
                 PinkClap(length1);
@@ -221,9 +225,17 @@ namespace HeavenStudio.Games
             {
                 BeatAction.New(instance.gameObject, new List<BeatAction.Action>()
                 {
+                    new BeatAction.Action(beat - 4, delegate
+                    {
+                        monkeyHandler.SpawnMonkey(beat, false, beat - 4 < persistBeat);
+                        ClapRecursing(beat + 2);
+                    }),
+                    new BeatAction.Action(beat - 1, delegate
+                    {
+                        monkeyHandler.GetMonkeyAtBeat(beat).Prepare(beat, beat + 1);
+                    }),
                     new BeatAction.Action(beat + 1, delegate
                     {
-                        ClapRecursing(beat + 2);
                         monkeyClockArrow.Move();
                     })
                 });
@@ -233,7 +245,7 @@ namespace HeavenStudio.Games
             {
                 List<BeatAction.Action> actions = new List<BeatAction.Action>()
                 {
-                    new BeatAction.Action(beat, delegate
+                    new BeatAction.Action(beat - 4, delegate
                     {
                         ClapRecursing(beat + length);
                     })
@@ -241,11 +253,24 @@ namespace HeavenStudio.Games
 
                 for (int i = 0; i < length; i++)
                 {
-                    actions.Add(new BeatAction.Action(beat + i + 0.5, delegate
+                    int index = i;
+                    actions.AddRange(new List<BeatAction.Action>() 
                     {
-                        monkeyClockArrow.Move();
-                    }));
+                        new BeatAction.Action(beat + i - 4, delegate
+                        {
+                            monkeyHandler.SpawnMonkey(beat + index, false, beat + index - 4 < persistBeat);
+                        }),
+                        new BeatAction.Action(beat + i - 1, delegate
+                        {
+                            monkeyHandler.GetMonkeyAtBeat(beat + index).Prepare(beat + index, beat + index + 0.5);
+                        }),
+                        new BeatAction.Action(beat + i + 0.5, delegate
+                        {
+                            monkeyClockArrow.Move();
+                        })
+                    });
                 }
+                actions.Sort((x, y) => x.beat.CompareTo(y.beat));
                 BeatAction.New(instance.gameObject, actions);
             }
 
@@ -253,21 +278,35 @@ namespace HeavenStudio.Games
             {
                 List<BeatAction.Action> actions = new List<BeatAction.Action>()
                 {
-                    new BeatAction.Action(beat, delegate
+                    new BeatAction.Action(beat - 4, delegate
                     {
                         ClapRecursing(beat + length);
                     })
                 };
 
                 var relevantEvents = FindCustomOffbeatMonkeysBetweenBeat(beat, beat + length);
+                relevantEvents.Sort((x, y) => x.beat.CompareTo(y.beat));
 
-                foreach (var e in relevantEvents)
+                for (int i = 0; i < relevantEvents.Count; i++)
                 {
-                    actions.Add(new BeatAction.Action(e.beat, delegate
+                    var e = relevantEvents[i];
+                    actions.AddRange(new List<BeatAction.Action>()
                     {
-                        monkeyClockArrow.Move();
-                    }));
+                        new BeatAction.Action(e.beat - 4, delegate
+                        {
+                            monkeyHandler.SpawnMonkey(e.beat, true, e.beat - 4 < persistBeat);
+                        }),
+                        new BeatAction.Action(e.beat - 1.5, delegate
+                        {
+                            monkeyHandler.GetMonkeyAtBeat(e.beat).Prepare(e.beat - 0.5, e.beat);
+                        }),
+                        new BeatAction.Action(e.beat, delegate
+                        {
+                            monkeyClockArrow.Move();
+                        })
+                    });
                 }
+                actions.Sort((x, y) => x.beat.CompareTo(y.beat));
                 BeatAction.New(instance.gameObject, actions);
             }
         }
@@ -299,6 +338,8 @@ namespace HeavenStudio.Games
                 allEnds.Sort((x, y) => x.beat.CompareTo(y.beat));
                 nextGameSwitchBeat = allEnds[0].beat;
             }
+
+            theNextGameSwitchBeat = nextGameSwitchBeat;
 
             double startClappingBeat = 0;
             float startAngle = 0;
@@ -347,7 +388,7 @@ namespace HeavenStudio.Games
                     }
                     else
                     {
-                        angleToAdd = Mathf.Round(e.length) * degreePerMonkey;
+                        angleToAdd = Mathf.Ceil(e.length) * degreePerMonkey;
                     }
                     cameraMovements.Add(new MonkeyCamera()
                     {
@@ -380,6 +421,17 @@ namespace HeavenStudio.Games
                 Debug.Log("Beat: " + cameraMovement.beat + ", Length: " + cameraMovement.length + " , DegreeTo: " + cameraMovement.degreeTo);
             }
         }
+
+        private void UpdateCamera()
+        {
+            lastAngle = cameraMovements[cameraIndex].degreeTo;
+            cameraIndex++;
+            if (cameraIndex + 1 < cameraMovements.Count && Conductor.instance.songPositionInBeats >= cameraMovements[cameraIndex].beat + cameraMovements[cameraIndex].length)
+            {
+                UpdateCamera();
+            }
+        }
+
         private void CameraUpdate()
         {
             var cond = Conductor.instance;
@@ -387,8 +439,7 @@ namespace HeavenStudio.Games
             {
                 if (cameraIndex + 1 < cameraMovements.Count && cond.songPositionInBeats >= cameraMovements[cameraIndex].beat + cameraMovements[cameraIndex].length)
                 {
-                    lastAngle = cameraMovements[cameraIndex].degreeTo;
-                    cameraIndex++;
+                    UpdateCamera();
                 }
 
                 float normalizedBeat = cond.GetPositionFromBeat(cameraMovements[cameraIndex].beat, cameraMovements[cameraIndex].length);
@@ -410,7 +461,7 @@ namespace HeavenStudio.Games
         }
         #endregion
 
-        private static List<RiqEntity> FindCustomOffbeatMonkeysBetweenBeat(double beat, double endBeat)
+        public static List<RiqEntity> FindCustomOffbeatMonkeysBetweenBeat(double beat, double endBeat)
         {
             return EventCaller.GetAllInGameManagerList("monkeyWatch", new string[] { "offCustom" }).FindAll(x => x.beat >= beat && x.beat < endBeat);
         }
