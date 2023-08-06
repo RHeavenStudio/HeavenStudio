@@ -24,6 +24,11 @@ namespace HeavenStudio.Games.Loaders
                 },
                 new GameAction("off", "Pink Monkeys")
                 {
+                    preFunction = delegate
+                    {
+                        var e = eventCaller.currentEntity;
+                        MonkeyWatch.PinkMonkeySound(e.beat, e.length, e["muteC"], e["muteE"]);
+                    },
                     defaultLength = 2f,
                     parameters = new List<Param>()
                     {
@@ -33,6 +38,11 @@ namespace HeavenStudio.Games.Loaders
                 },
                 new GameAction("offStretch", "Pink Monkeys (Stretchable)")
                 {
+                    preFunction = delegate
+                    {
+                        var e = eventCaller.currentEntity;
+                        MonkeyWatch.PinkMonkeySound(e.beat, e.length, e["muteC"], e["muteE"]);
+                    },
                     defaultLength = 2f,
                     resizable = true,
                     parameters = new List<Param>()
@@ -43,6 +53,11 @@ namespace HeavenStudio.Games.Loaders
                 },
                 new GameAction("offInterval", "Custom Pink Monkey Interval")
                 {
+                    preFunction = delegate
+                    {
+                        var e = eventCaller.currentEntity;
+                        MonkeyWatch.PinkMonkeySoundCustom(e.beat, e.length, e["muteC"], e["muteE"]);
+                    },
                     defaultLength = 2f,
                     resizable = true,
                     parameters = new List<Param>()
@@ -228,7 +243,7 @@ namespace HeavenStudio.Games
                 startAngle = lastAngleToCheck;
             }
 
-            if (clappingEvents.Count > 0)
+            if (clappingEvents.Count > 0 || pinkClappingEvents.Count > 0)
             {
                 cameraMovements.Add(new MonkeyCamera
                 {
@@ -248,9 +263,80 @@ namespace HeavenStudio.Games
 
         #endregion
 
-        private List<RiqEntity> FindCustomOffbeatMonkeysBetweenBeat(double beat, double endBeat)
+        private static List<RiqEntity> FindCustomOffbeatMonkeysBetweenBeat(double beat, double endBeat)
         {
             return EventCaller.GetAllInGameManagerList("monkeyWatch", new string[] { "offCustom" }).FindAll(x => x.beat >= beat && x.beat < endBeat);
+        }
+
+        public static void PinkMonkeySound(double beat, float length, bool muteOoki, bool muteEek)
+        {
+            List<MultiSound.Sound> soundsToPlay = new();
+            if (!muteOoki)
+            {
+                soundsToPlay.AddRange(new List<MultiSound.Sound>()
+                {
+                    new MultiSound.Sound("monkeyWatch/voiceUki1", beat - 2),
+                    new MultiSound.Sound("monkeyWatch/voiceUki1Echo1", beat - 1.75),
+                    new MultiSound.Sound("monkeyWatch/voiceUki2", beat - 1),
+                    new MultiSound.Sound("monkeyWatch/voiceUki2Echo1", beat - 0.75),
+                    new MultiSound.Sound("monkeyWatch/voiceUki3", beat),
+                    new MultiSound.Sound("monkeyWatch/voiceUki3Echo1", beat + 0.25),
+                });
+            }
+
+            if (!muteEek)
+            {
+                for (int i = 0; i < length; i++)
+                {
+                    int randomKi = UnityEngine.Random.Range(1, 3);
+                    soundsToPlay.AddRange(new List<MultiSound.Sound>()
+                    {
+                        new MultiSound.Sound($"monkeyWatch/voiceKi{randomKi}", beat + i + 0.5),
+                        new MultiSound.Sound($"monkeyWatch/voiceKi{randomKi}Echo{UnityEngine.Random.Range(1, 3)}", beat + i + 0.75),
+                    });
+                }
+            }
+
+            if (soundsToPlay.Count > 0) MultiSound.Play(soundsToPlay.ToArray(), forcePlay: true);
+        }
+
+        public static void PinkMonkeySoundCustom(double beat, float length, bool muteOoki, bool muteEek)
+        {
+            List<MultiSound.Sound> soundsToPlay = new();
+            var allCustoms = FindCustomOffbeatMonkeysBetweenBeat(beat, beat + length);
+            if (!muteOoki)
+            {
+                soundsToPlay.AddRange(new List<MultiSound.Sound>()
+                {
+                    new MultiSound.Sound("monkeyWatch/voiceUki1", beat - 2),
+                    new MultiSound.Sound("monkeyWatch/voiceUki1Echo1", beat - 1.75),
+                    new MultiSound.Sound("monkeyWatch/voiceUki2", beat - 1),
+                    new MultiSound.Sound("monkeyWatch/voiceUki2Echo1", beat - 0.75),
+                });
+                if (allCustoms.Find(x => x.beat == beat) == null)
+                {
+                    soundsToPlay.AddRange(new List<MultiSound.Sound>()
+                    {
+                        new MultiSound.Sound("monkeyWatch/voiceUki3", beat),
+                        new MultiSound.Sound("monkeyWatch/voiceUki3Echo1", beat + 0.25),
+                    });
+                }
+            }
+
+            if (!muteEek)
+            {
+                foreach (var custom in allCustoms)
+                {
+                    int randomKi = UnityEngine.Random.Range(1, 3);
+                    soundsToPlay.AddRange(new List<MultiSound.Sound>()
+                    {
+                        new MultiSound.Sound($"monkeyWatch/voiceKi{randomKi}", custom.beat),
+                        new MultiSound.Sound($"monkeyWatch/voiceKi{randomKi}Echo{UnityEngine.Random.Range(1, 3)}", custom.beat + 0.25),
+                    });
+                }
+            }
+
+            if (soundsToPlay.Count > 0) MultiSound.Play(soundsToPlay.ToArray(), forcePlay: true);
         }
     }
 }
