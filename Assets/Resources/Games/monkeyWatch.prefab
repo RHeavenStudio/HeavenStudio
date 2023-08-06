@@ -7058,8 +7058,9 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 3735448262030941676}
+  - component: {fileID: 8572779002997729184}
   m_Layer: 0
-  m_Name: WatchHoles
+  m_Name: MonkeyHandler
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -7140,6 +7141,20 @@ Transform:
   m_Father: {fileID: 7676047881968251921}
   m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &8572779002997729184
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1093165643910593156}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e0769f835f6039b41b98b9487eb743d9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  yellowMonkeyRef: {fileID: -9193613041847046406, guid: 224742d4a2c74034997943856f560054, type: 3}
+  pinkMonkeyRef: {fileID: 8621594802119604348, guid: 277f8b23f1f26f64290a2461c18d4b80, type: 3}
 --- !u!1 &1093770155466988112
 GameObject:
   m_ObjectHideFlags: 0
@@ -20240,6 +20255,7 @@ MonoBehaviour:
   cameraTransform: {fileID: 16600283237656001}
   cameraMoveable: {fileID: 7676047881968251921}
   monkeyClockArrow: {fileID: 8220690735241008560}
+  monkeyHandler: {fileID: 8572779002997729184}
   maxMonkeys: 30
 --- !u!1 &6181011653585253546
 GameObject:
@@ -22881,6 +22897,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   anim: {fileID: 910339928251400446}
   anchorRotateTransform: {fileID: 609139906039373078}
+  playerMonkeyAnim: {fileID: 4873567491568184609}
+  yellowClap: {fileID: 8899231323861109608}
+  pinkClap: {fileID: 5162462144302245337}
 --- !u!1 &7446072329631304920
 GameObject:
   m_ObjectHideFlags: 0

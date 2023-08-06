@@ -13,6 +13,15 @@ namespace HeavenStudio.Games.Loaders
         {
             return new Minigame("monkeyWatch", "Monkey Watch", "f0338d", false, false, new List<GameAction>()
             {
+                new GameAction("appear", "Monkeys Appear")
+                {
+                    defaultLength = 2f,
+                    resizable = true,
+                    parameters = new List<Param>()
+                    {
+                        new Param("value", new EntityTypes.Integer(1, 30, 4), "Repeat Amount")
+                    }
+                },
                 new GameAction("clap", "Clapping")
                 {
                     preFunction = delegate 
@@ -85,11 +94,7 @@ namespace HeavenStudio.Games
     public class MonkeyWatch : Minigame
     {
         private const float degreePerMonkey = 6f;
-        public enum WatchPoint
-        {
-            PersistGameSwitch,
-            SetTime
-        }
+
         public static MonkeyWatch instance;
 
         [Header("Components")]
@@ -97,6 +102,7 @@ namespace HeavenStudio.Games
         [SerializeField] private Transform cameraTransform;
         [SerializeField] private Transform cameraMoveable;
         [SerializeField] private MonkeyClockArrow monkeyClockArrow;
+        [SerializeField] private WatchMonkeyHandler monkeyHandler;
 
         [Header("Properties")]
         [SerializeField] private int maxMonkeys = 30;
@@ -122,6 +128,11 @@ namespace HeavenStudio.Games
         private void Update()
         {
             CameraUpdate();
+        }
+
+        public void PlayerMonkeyClap(bool big, bool barely)
+        {
+            monkeyClockArrow.PlayerClap(big, barely, false);
         }
 
         public override void OnGameSwitch(double beat)

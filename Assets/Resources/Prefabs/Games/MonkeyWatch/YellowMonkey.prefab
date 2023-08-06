@@ -178,6 +178,7 @@ GameObject:
   m_Component:
   - component: {fileID: 7591110402097765485}
   - component: {fileID: 7211266264008123551}
+  - component: {fileID: -9193613041847046406}
   m_Layer: 0
   m_Name: YellowMonkey
   m_TagString: Untagged
@@ -230,6 +231,19 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
+--- !u!114 &-9193613041847046406
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3151069026564347634}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 23217e6c428ce954e8fd08940b856233, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  isPink: 0
 --- !u!1 &4343136497418508153
 GameObject:
   m_ObjectHideFlags: 0
