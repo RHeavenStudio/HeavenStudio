@@ -258,7 +258,7 @@ namespace HeavenStudio.Games
                     {
                         new BeatAction.Action(beat + i - 4, delegate
                         {
-                            monkeyHandler.SpawnMonkey(beat + index, false, beat + index - 4 < persistBeat);
+                            monkeyHandler.SpawnMonkey(beat + index, true, beat + index - 4 < persistBeat);
                         }),
                         new BeatAction.Action(beat + i - 1, delegate
                         {

@@ -32,7 +32,7 @@ namespace HeavenStudio.Games.Scripts_MonkeyWatch
             direction = dir;
             holeAnim = hole;
             holeAnim.DoScaledAnimationAsync("HoleOpen", 0.5f);
-            anim.DoScaledAnimationAsync(isPink ? "Pink" : "" + "Appear", 0.5f, instant ? 1 : 0);
+            anim.DoScaledAnimationAsync(isPink ? "PinkAppear" : "Appear", 0.5f, instant ? 1 : 0);
         }
 
         public void Disappear()
@@ -43,32 +43,37 @@ namespace HeavenStudio.Games.Scripts_MonkeyWatch
 
         public void Prepare(double prepareBeat, double inputBeat)
         {
-            anim.DoScaledAnimationAsync(isPink ? "Pink" : "" + "Prepare" + direction, 0);
+            anim.DoScaledAnimationAsync(isPink ? "PinkPrepare" + direction : "Prepare" + direction, 0);
             inputEvent = game.ScheduleInput(prepareBeat, inputBeat - prepareBeat, InputType.STANDARD_DOWN, Just, Miss, Empty);
             BeatAction.New(gameObject, new List<BeatAction.Action>() 
             {
                 new BeatAction.Action(prepareBeat, delegate
                 {
-                    anim.DoScaledAnimationAsync(isPink ? "Pink" : "" + "Prepare" + direction, 0.5f);
+                    anim.DoScaledAnimationAsync(isPink ? "PinkPrepare" + direction : "Prepare" + direction, 0.5f);
                 })
             });
         }
 
         private void Just(PlayerActionEvent caller, float state)
         {
-            game.PlayerMonkeyClap(isPink, state >= 1f || state <= -1f);
             if (state >= 1f || state <= -1f)
             {
                 SoundByte.PlayOneShot("miss");
-                return;
+                anim.SetInteger("hitState", 1);
             }
-            SoundByte.PlayOneShotGame(isPink ? "monkeyWatch/clapOffbeat" : $"monkeyWatch/clapOnbeat{UnityEngine.Random.Range(1, 6)}");
-            anim.DoScaledAnimationAsync(isPink ? "Pink" : "" + "Clap" + direction, 0.5f);
+            else
+            {
+                SoundByte.PlayOneShotGame(isPink ? "monkeyWatch/clapOffbeat" : $"monkeyWatch/clapOnbeat{UnityEngine.Random.Range(1, 6)}");
+                anim.SetInteger("hitState", 2);
+            }
+            
+            game.PlayerMonkeyClap(isPink, state >= 1f || state <= -1f);
+            anim.DoScaledAnimationAsync(isPink ? "PinkClap" + direction : "Clap" + direction, 0.5f);
         }
 
         private void Miss(PlayerActionEvent caller)
         {
-
+            anim.DoScaledAnimationAsync(isPink ? "PinkMiss" : "Miss", 0.5f);
         }
 
         private void Empty(PlayerActionEvent caller) { }
