@@ -25,17 +25,9 @@ namespace HeavenStudio.Games.Scripts_MonkeyWatch
         private void Awake()
         {
             game = MonkeyWatch.instance;
-            int sortIndex = 0;
-            bool goDown = false;
             for (int i = 0; i < 60; i++)
             {
                 watchHoles.Add(transform.GetChild(i));
-                watchHoles[i].GetComponent<SortingGroup>().sortingOrder = sortIndex;
-                sortIndex += goDown ? -1 : 1;
-                if (sortIndex >= 30)
-                {
-                    goDown = true;
-                }
             }
         }
 
@@ -63,6 +55,9 @@ namespace HeavenStudio.Games.Scripts_MonkeyWatch
             WatchMonkey spawnedMonkey = Instantiate(isPink ? pinkMonkeyRef : yellowMonkeyRef, hole);
             spawnedMonkey.Appear(beat, instant, hole.GetComponent<Animator>(), GetMonkeyAngle(index));
             spawnedMonkey.transform.eulerAngles = Vector3.zero;
+            var sortingGroup = spawnedMonkey.GetComponent<SortingGroup>();
+            if (index <= 30) sortingGroup.sortingOrder = 50 + watchHoleIndex;
+            else sortingGroup.sortingOrder = 50 + watchHoleIndex - (watchHoleIndex - 29);
             currentMonkeys.Add(spawnedMonkey);
             if (currentMonkeys.Count > maxMonkeys)
             {

@@ -179,6 +179,7 @@ GameObject:
   - component: {fileID: 7591110402097765485}
   - component: {fileID: 7211266264008123551}
   - component: {fileID: -9193613041847046406}
+  - component: {fileID: -7082706312707440325}
   m_Layer: 0
   m_Name: YellowMonkey
   m_TagString: Untagged
@@ -244,6 +245,18 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   isPink: 0
+  monkeyBeat: 0
+--- !u!210 &-7082706312707440325
+SortingGroup:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3151069026564347634}
+  m_Enabled: 1
+  m_SortingLayerID: 0
+  m_SortingLayer: 0
+  m_SortingOrder: 50
 --- !u!1 &4343136497418508153
 GameObject:
   m_ObjectHideFlags: 0
