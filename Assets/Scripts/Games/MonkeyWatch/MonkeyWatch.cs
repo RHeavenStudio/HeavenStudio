@@ -15,6 +15,11 @@ namespace HeavenStudio.Games.Loaders
             {
                 new GameAction("appear", "Monkeys Appear")
                 {
+                    function = delegate 
+                    {
+                        var e = eventCaller.currentEntity;
+                        MonkeyWatch.instance.MonkeysAppear(e.beat, e.length, e["value"], e.beat);
+                    },
                     defaultLength = 2f,
                     resizable = true,
                     parameters = new List<Param>()
@@ -136,6 +141,7 @@ namespace HeavenStudio.Games
 
         private double persistBeat = 0;
         private double theNextGameSwitchBeat = double.MaxValue;
+        private double clappingBeat = 0;
 
         public override void OnGameSwitch(double beat)
         {
@@ -147,6 +153,7 @@ namespace HeavenStudio.Games
             {
                 StartClapping(wantClap);
             }
+            PersistAppear(beat);
 
             bool IsClapBeat(double clapBeat)
             {
@@ -160,6 +167,78 @@ namespace HeavenStudio.Games
             GetCameraMovements(beat, true);
             monkeyClockArrow.MoveToAngle(lastAngle);
             monkeyHandler.Init((int)(lastAngle / degreePerMonkey));
+            PersistAppear(beat);
+        }
+
+        private void PersistAppear(double beat)
+        {
+            var allEvents = EventCaller.GetAllInGameManagerList("monkeyWatch", new string[] { "appear" }).FindAll(x => x.beat + x["value"] > beat && x.beat < beat);
+
+            foreach (var e in allEvents)
+            {
+                MonkeysAppear(e.beat, e.length, e["value"], beat);
+            }
+        }
+
+        public void MonkeysAppear(double beat, float length, int repeatAmount, double gameSwitchBeat)
+        {
+            List<BeatAction.Action> actions = new();
+
+            double lastBeat = clappingBeat;
+
+            int index = 0;
+            while (index < repeatAmount)
+            {
+                
+                if (IsPinkMonkeyAtBeat(lastBeat, out float pinkLength))
+                {
+                    for (int i = 0; i < pinkLength; i++)
+                    {
+                        if (index >= repeatAmount) break;
+                        int realerIndex = index;
+                        double realLastBeat = lastBeat;
+                        actions.Add(new BeatAction.Action(beat + (index * length), delegate
+                        {
+                            monkeyHandler.SpawnMonkey(realLastBeat, true, beat + (realerIndex * length) < gameSwitchBeat);
+                        }));
+                        index++;
+                        lastBeat += 1;
+                    }
+                }
+                else if (IsCustomPinkMonkeyAtBeat(lastBeat, out float pinkCustomLength))
+                {
+                    var relevantPinks = FindCustomOffbeatMonkeysBetweenBeat(lastBeat, lastBeat + pinkCustomLength);
+                    relevantPinks.Sort((x, y) => x.beat.CompareTo(y.beat));
+
+                    for (int i = 0; i < relevantPinks.Count; i++)
+                    {
+                        if (index >= repeatAmount) break;
+                        int jindex = i;
+                        int realerIndex = index;
+                        actions.Add(new BeatAction.Action(beat + (index * length), delegate
+                        {
+                            monkeyHandler.SpawnMonkey(relevantPinks[jindex].beat, true, beat + (realerIndex * length) < gameSwitchBeat);
+                        }));
+                        index++;
+                    }
+                    lastBeat += pinkCustomLength;
+                }
+                else
+                {
+                    int realIndex = index;
+                    double realLastBeat = lastBeat;
+                    actions.Add(new BeatAction.Action(beat + (index * length), delegate
+                    {
+                        monkeyHandler.SpawnMonkey(realLastBeat, false, beat + (realIndex * length) < gameSwitchBeat);
+                    }));
+                    index++;
+                    lastBeat += 2;
+                }
+                Debug.Log(index);
+            }
+
+            actions.Sort((x, y) => x.beat.CompareTo(y.beat));
+            BeatAction.New(instance.gameObject, actions);
         }
 
         #region clapping
@@ -354,12 +433,14 @@ namespace HeavenStudio.Games
                 overrideStartBeat = false;
             }
             lastAngle = startAngle;
+            clappingBeat = startClappingBeat;
 
             var pinkClappingEvents = EventCaller.GetAllInGameManagerList("monkeyWatch", new string[] { "off", "offStretch", "offInterval" }).FindAll(x => x.beat >= lastGameSwitchBeat && x.beat < nextGameSwitchBeat);
             if (pinkClappingEvents.Count > 0)
             {
                 pinkClappingEvents.Sort((x, y) => x.beat.CompareTo(y.beat));
                 if (overrideStartBeat) startClappingBeat = pinkClappingEvents[0].beat;
+                clappingBeat = startClappingBeat;
 
                 var relevantPinkClappingEvents = pinkClappingEvents.FindAll(x => (x.beat - startClappingBeat) % 2 == 0);
                 relevantPinkClappingEvents.Sort((x, y) => x.beat.CompareTo(y.beat));

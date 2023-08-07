@@ -33,6 +33,7 @@ namespace HeavenStudio.Games.Scripts_MonkeyWatch
         public void Init(int minute)
         {
             startMinute = minute;
+            watchHoleIndex = startMinute;
         }
         private Transform GetNextAvailableWatchHole()
         {
