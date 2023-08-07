@@ -31,17 +31,6 @@ namespace HeavenStudio.Games.Scripts_MonkeyWatch
 
         private void Update()
         {
-            if (inputEvent != null && inputEvent.enabled)
-            {
-                if (PlayerInput.Pressed() && !game.IsExpectingInputNow(InputType.STANDARD_DOWN) && !game.monkeyClockArrow.PlayerIsClapAnim())
-                {
-                    SoundByte.PlayOneShot("miss");
-                    Miss(inputEvent);
-                    inputEvent.Disable();
-                    game.ScoreMiss();
-                }
-            }
-
             if (disappear)
             {
                 float normalizedBeat = Conductor.instance.GetPositionFromBeat(disappearBeat, 0.5f);
@@ -115,7 +104,10 @@ namespace HeavenStudio.Games.Scripts_MonkeyWatch
             game.monkeyClockArrow.Move();
         }
 
-        private void Empty(PlayerActionEvent caller) { }
+        private void Empty(PlayerActionEvent caller) 
+        {
+
+        }
     }
 }
 
