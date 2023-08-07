@@ -66,7 +66,7 @@ namespace HeavenStudio.Games.Scripts_MonkeyWatch
             currentMonkeys.Add(spawnedMonkey);
             if (currentMonkeys.Count > maxMonkeys)
             {
-                currentMonkeys[0].Disappear();
+                currentMonkeys[0].Disappear(Conductor.instance.songPositionInBeats);
                 currentMonkeys.Remove(currentMonkeys[0]);
             }
         }

@@ -18,6 +18,9 @@ namespace HeavenStudio.Games.Scripts_MonkeyWatch
         private int direction = 0;
         public double monkeyBeat;
 
+        private double disappearBeat = 0;
+        private bool disappear = false;
+
         private PlayerActionEvent inputEvent;
 
         private void Awake()
@@ -38,6 +41,18 @@ namespace HeavenStudio.Games.Scripts_MonkeyWatch
                     game.ScoreMiss();
                 }
             }
+
+            if (disappear)
+            {
+                float normalizedBeat = Conductor.instance.GetPositionFromBeat(disappearBeat, 0.5f);
+                anim.DoNormalizedAnimation(isPink ? "PinkAppear" : "Appear", 1 - normalizedBeat);
+                float normalizedBeatClose = Conductor.instance.GetPositionFromBeat(disappearBeat + 0.25f, 0.25f);
+                holeAnim.DoNormalizedAnimation("HoleClose", Mathf.Clamp01(normalizedBeatClose));
+                if (normalizedBeat > 1f)
+                {
+                    Destroy(gameObject);
+                }
+            }
         }
 
         public void Appear(double beat, bool instant, Animator hole, int dir)
@@ -49,17 +64,11 @@ namespace HeavenStudio.Games.Scripts_MonkeyWatch
             anim.DoScaledAnimationAsync(isPink ? "PinkAppear" : "Appear", 0.4f, instant ? 1 : 0);
         }
 
-        public void Disappear()
+        public void Disappear(double beat)
         {
-            holeAnim.DoScaledAnimationAsync("HoleClose", 0.4f);
-            anim.DoScaledAnimationAsync(isPink ? "PinkAppear" : "Appear", -0.4f, 1);
-            StartCoroutine(DisappearCoroutine());
-        }
-
-        private IEnumerator DisappearCoroutine()
-        {
-            yield return !anim.IsAnimationNotPlaying();
-            Destroy(gameObject);
+            disappear = true;
+            disappearBeat = beat;
+            Update();
         }
 
         public void Prepare(double prepareBeat, double inputBeat)
