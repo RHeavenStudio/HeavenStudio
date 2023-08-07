@@ -195,11 +195,11 @@ namespace HeavenStudio.Games
                     for (int i = 0; i < pinkLength; i++)
                     {
                         if (index >= repeatAmount) break;
-                        int realerIndex = index;
+                        bool beforeGameSwitch = beat + (index * length) < gameSwitchBeat;
                         double realLastBeat = lastBeat;
                         actions.Add(new BeatAction.Action(beat + (index * length), delegate
                         {
-                            monkeyHandler.SpawnMonkey(realLastBeat, true, beat + (realerIndex * length) < gameSwitchBeat);
+                            monkeyHandler.SpawnMonkey(realLastBeat, true, beforeGameSwitch);
                         }));
                         index++;
                         lastBeat += 1;
@@ -214,10 +214,10 @@ namespace HeavenStudio.Games
                     {
                         if (index >= repeatAmount) break;
                         int jindex = i;
-                        int realerIndex = index;
+                        bool beforeGameSwitch = beat + (index * length) < gameSwitchBeat;
                         actions.Add(new BeatAction.Action(beat + (index * length), delegate
                         {
-                            monkeyHandler.SpawnMonkey(relevantPinks[jindex].beat, true, beat + (realerIndex * length) < gameSwitchBeat);
+                            monkeyHandler.SpawnMonkey(relevantPinks[jindex].beat, true, beforeGameSwitch);
                         }));
                         index++;
                     }
@@ -225,11 +225,11 @@ namespace HeavenStudio.Games
                 }
                 else
                 {
-                    int realIndex = index;
                     double realLastBeat = lastBeat;
+                    bool beforeGameSwitch = beat + (index * length) < gameSwitchBeat;
                     actions.Add(new BeatAction.Action(beat + (index * length), delegate
                     {
-                        monkeyHandler.SpawnMonkey(realLastBeat, false, beat + (realIndex * length) < gameSwitchBeat);
+                        monkeyHandler.SpawnMonkey(realLastBeat, false, beforeGameSwitch);
                     }));
                     index++;
                     lastBeat += 2;

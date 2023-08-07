@@ -31,7 +31,7 @@ namespace HeavenStudio.Games.Scripts_MonkeyWatch
             monkeyBeat = beat;
             direction = dir;
             holeAnim = hole;
-            holeAnim.DoScaledAnimationAsync("HoleOpen", 0.5f);
+            holeAnim.DoScaledAnimationAsync("HoleOpen", 0.5f, instant ? 1 : 0);
             anim.DoScaledAnimationAsync(isPink ? "PinkAppear" : "Appear", 0.5f, instant ? 1 : 0);
         }
 
