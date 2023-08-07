@@ -365,10 +365,6 @@ namespace HeavenStudio.Games
                     {
                         monkeyHandler.GetMonkeyAtBeat(beat).Prepare(beat, beat + 1);
                     }),
-                    new BeatAction.Action(beat + 1, delegate
-                    {
-                        monkeyClockArrow.Move();
-                    })
                 });
             }
 
@@ -395,10 +391,6 @@ namespace HeavenStudio.Games
                         {
                             monkeyHandler.GetMonkeyAtBeat(beat + index).Prepare(beat + index, beat + index + 0.5);
                         }),
-                        new BeatAction.Action(beat + i + 0.5, delegate
-                        {
-                            monkeyClockArrow.Move();
-                        })
                     });
                 }
                 actions.Sort((x, y) => x.beat.CompareTo(y.beat));
@@ -431,10 +423,6 @@ namespace HeavenStudio.Games
                         {
                             monkeyHandler.GetMonkeyAtBeat(e.beat).Prepare(e.beat - 0.5, e.beat);
                         }),
-                        new BeatAction.Action(e.beat, delegate
-                        {
-                            monkeyClockArrow.Move();
-                        })
                     });
                 }
                 actions.Sort((x, y) => x.beat.CompareTo(y.beat));

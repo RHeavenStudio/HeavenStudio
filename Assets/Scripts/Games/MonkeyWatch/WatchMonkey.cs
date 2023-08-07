@@ -89,14 +89,15 @@ namespace HeavenStudio.Games.Scripts_MonkeyWatch
             bool barely = state >= 1f || state <= -1f;
             if (barely)
             {
-                SoundByte.PlayOneShot("miss");
+                SoundByte.PlayOneShot("nearMiss");
             }
             else
             {
                 SoundByte.PlayOneShotGame(isPink ? "monkeyWatch/clapOffbeat" : $"monkeyWatch/clapOnbeat{UnityEngine.Random.Range(1, 6)}");
             }
-            
+            game.monkeyClockArrow.Move();
             game.PlayerMonkeyClap(isPink, barely);
+            
             anim.DoScaledAnimationAsync(isPink ? "PinkClap" + direction : "Clap" + direction, 0.4f);
             BeatAction.New(gameObject, new List<BeatAction.Action>()
             {
@@ -111,6 +112,7 @@ namespace HeavenStudio.Games.Scripts_MonkeyWatch
         private void Miss(PlayerActionEvent caller)
         {
             anim.DoScaledAnimationAsync(isPink ? "PinkMiss" : "Miss", 0.4f);
+            game.monkeyClockArrow.Move();
         }
 
         private void Empty(PlayerActionEvent caller) { }
