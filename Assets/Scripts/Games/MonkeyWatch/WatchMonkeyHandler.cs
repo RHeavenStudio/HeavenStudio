@@ -53,6 +53,7 @@ namespace HeavenStudio.Games.Scripts_MonkeyWatch
             var hole = GetNextAvailableWatchHole();
             WatchMonkey spawnedMonkey = Instantiate(isPink ? pinkMonkeyRef : yellowMonkeyRef, hole);
             spawnedMonkey.Appear(beat, instant, hole.GetComponent<Animator>(), GetMonkeyAngle(index));
+            spawnedMonkey.transform.eulerAngles = Vector3.zero;
             currentMonkeys.Add(spawnedMonkey);
             if (currentMonkeys.Count > maxMonkeys)
             {

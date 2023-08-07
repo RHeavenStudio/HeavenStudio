@@ -32,7 +32,7 @@ namespace HeavenStudio.Games.Scripts_MonkeyWatch
         public void Move()
         {
             anchorRotateTransform.localEulerAngles = new Vector3(0, 0, anchorRotateTransform.localEulerAngles.z - 6);
-            anim.DoScaledAnimationAsync("Click", 0.5f);
+            anim.DoScaledAnimationAsync("Click", 0.4f);
         }
 
         public void MoveToAngle(float angle)
@@ -46,22 +46,22 @@ namespace HeavenStudio.Games.Scripts_MonkeyWatch
 
             if (barely || whiff)  
             {
-                playerMonkeyAnim.DoScaledAnimationAsync("PlayerClapBarely", 0.5f);
+                playerMonkeyAnim.DoScaledAnimationAsync("PlayerClapBarely", 0.4f);
             }
             else
             {
-                playerMonkeyAnim.DoScaledAnimationAsync(big ? "PlayerClapBig" : "PlayerClap", 0.5f);
+                playerMonkeyAnim.DoScaledAnimationAsync(big ? "PlayerClapBig" : "PlayerClap", 0.4f);
                 if (big)
                 {
                     pinkClap.transform.eulerAngles = Vector3.zero;
-                    pinkClap.transform.GetChild(0).GetComponent<ParticleSystem>().SetAsyncScaling(0.5f);
-                    pinkClap.PlayScaledAsync(0.5f);
+                    pinkClap.transform.GetChild(0).GetComponent<ParticleSystem>().SetAsyncScaling(0.4f);
+                    pinkClap.PlayScaledAsync(0.4f);
                 }
                 else
                 {
                     yellowClap.transform.eulerAngles = Vector3.zero;
-                    yellowClap.transform.GetChild(0).GetComponent<ParticleSystem>().SetAsyncScaling(0.5f);
-                    yellowClap.PlayScaledAsync(0.5f);
+                    yellowClap.transform.GetChild(0).GetComponent<ParticleSystem>().SetAsyncScaling(0.4f);
+                    yellowClap.PlayScaledAsync(0.4f);
                 }
             }
         }

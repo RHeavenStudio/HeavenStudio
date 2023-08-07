@@ -31,13 +31,13 @@ namespace HeavenStudio.Games.Scripts_MonkeyWatch
             monkeyBeat = beat;
             direction = dir;
             holeAnim = hole;
-            holeAnim.DoScaledAnimationAsync("HoleOpen", 0.5f, instant ? 1 : 0);
-            anim.DoScaledAnimationAsync(isPink ? "PinkAppear" : "Appear", 0.5f, instant ? 1 : 0);
+            holeAnim.DoScaledAnimationAsync("HoleOpen", 0.4f, instant ? 1 : 0);
+            anim.DoScaledAnimationAsync(isPink ? "PinkAppear" : "Appear", 0.4f, instant ? 1 : 0);
         }
 
         public void Disappear()
         {
-            holeAnim.DoScaledAnimationAsync("HoleClose", 0.5f);
+            holeAnim.DoScaledAnimationAsync("HoleClose", 0.4f);
             Destroy(gameObject);
         }
 
@@ -49,31 +49,38 @@ namespace HeavenStudio.Games.Scripts_MonkeyWatch
             {
                 new BeatAction.Action(prepareBeat, delegate
                 {
-                    anim.DoScaledAnimationAsync(isPink ? "PinkPrepare" + direction : "Prepare" + direction, 0.5f);
+                    anim.DoScaledAnimationAsync(isPink ? "PinkPrepare" + direction : "Prepare" + direction, 0.4f);
                 })
             });
         }
 
         private void Just(PlayerActionEvent caller, float state)
         {
-            if (state >= 1f || state <= -1f)
+            bool barely = state >= 1f || state <= -1f;
+            if (barely)
             {
                 SoundByte.PlayOneShot("miss");
-                anim.SetInteger("hitState", 1);
             }
             else
             {
                 SoundByte.PlayOneShotGame(isPink ? "monkeyWatch/clapOffbeat" : $"monkeyWatch/clapOnbeat{UnityEngine.Random.Range(1, 6)}");
-                anim.SetInteger("hitState", 2);
             }
             
-            game.PlayerMonkeyClap(isPink, state >= 1f || state <= -1f);
-            anim.DoScaledAnimationAsync(isPink ? "PinkClap" + direction : "Clap" + direction, 0.5f);
+            game.PlayerMonkeyClap(isPink, barely);
+            anim.DoScaledAnimationAsync(isPink ? "PinkClap" + direction : "Clap" + direction, 0.4f);
+            BeatAction.New(gameObject, new List<BeatAction.Action>()
+            {
+                new BeatAction.Action(caller.timer + caller.startBeat + 1, delegate
+                {
+                    string whichAnim = barely ? "Barely" : "Just";
+                    anim.DoScaledAnimationAsync(isPink ? "Pink" + whichAnim : whichAnim, 0.4f);
+                })
+            });
         }
 
         private void Miss(PlayerActionEvent caller)
         {
-            anim.DoScaledAnimationAsync(isPink ? "PinkMiss" : "Miss", 0.5f);
+            anim.DoScaledAnimationAsync(isPink ? "PinkMiss" : "Miss", 0.4f);
         }
 
         private void Empty(PlayerActionEvent caller) { }
