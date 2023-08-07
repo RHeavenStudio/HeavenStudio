@@ -40,6 +40,11 @@ namespace HeavenStudio.Games.Scripts_MonkeyWatch
             anchorRotateTransform.localEulerAngles = new Vector3(0, 0, -angle);
         }
 
+        public bool PlayerIsClapAnim()
+        {
+            return !playerMonkeyAnim.IsAnimationNotPlaying();
+        }
+
         public void PlayerClap(bool big, bool barely, bool whiff)
         {
             if (!playerMonkeyAnim.IsAnimationNotPlaying() && whiff) return;

@@ -129,7 +129,7 @@ namespace HeavenStudio.Games
         [SerializeField] private Transform cameraAnchor;
         [SerializeField] private Transform cameraTransform;
         [SerializeField] private Transform cameraMoveable;
-        [SerializeField] private MonkeyClockArrow monkeyClockArrow;
+        public MonkeyClockArrow monkeyClockArrow;
         [SerializeField] private WatchMonkeyHandler monkeyHandler;
         [SerializeField] private WatchBackgroundHandler backgroundHandler;
 

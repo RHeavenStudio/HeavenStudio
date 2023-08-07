@@ -26,6 +26,20 @@ namespace HeavenStudio.Games.Scripts_MonkeyWatch
             anim = GetComponent<Animator>();
         }
 
+        private void Update()
+        {
+            if (inputEvent != null && inputEvent.enabled)
+            {
+                if (PlayerInput.Pressed() && !game.IsExpectingInputNow(InputType.STANDARD_DOWN) && !game.monkeyClockArrow.PlayerIsClapAnim())
+                {
+                    SoundByte.PlayOneShot("miss");
+                    Miss(inputEvent);
+                    inputEvent.Disable();
+                    game.ScoreMiss();
+                }
+            }
+        }
+
         public void Appear(double beat, bool instant, Animator hole, int dir)
         {
             monkeyBeat = beat;
@@ -38,6 +52,13 @@ namespace HeavenStudio.Games.Scripts_MonkeyWatch
         public void Disappear()
         {
             holeAnim.DoScaledAnimationAsync("HoleClose", 0.4f);
+            anim.DoScaledAnimationAsync(isPink ? "PinkAppear" : "Appear", -0.4f, 1);
+            StartCoroutine(DisappearCoroutine());
+        }
+
+        private IEnumerator DisappearCoroutine()
+        {
+            yield return !anim.IsAnimationNotPlaying();
             Destroy(gameObject);
         }
 
@@ -49,7 +70,7 @@ namespace HeavenStudio.Games.Scripts_MonkeyWatch
             {
                 new BeatAction.Action(prepareBeat, delegate
                 {
-                    anim.DoScaledAnimationAsync(isPink ? "PinkPrepare" + direction : "Prepare" + direction, 0.4f);
+                    if (inputEvent != null && inputEvent.enabled) anim.DoScaledAnimationAsync(isPink ? "PinkPrepare" + direction : "Prepare" + direction, 0.4f);
                 })
             });
         }
