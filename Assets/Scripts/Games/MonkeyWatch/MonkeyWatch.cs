@@ -132,6 +132,7 @@ namespace HeavenStudio.Games
         public MonkeyClockArrow monkeyClockArrow;
         [SerializeField] private WatchMonkeyHandler monkeyHandler;
         [SerializeField] private WatchBackgroundHandler backgroundHandler;
+        public Animator middleMonkey;
 
         [Header("Properties")]
         [SerializeField] private float fullZoomOut = 40f;
@@ -154,9 +155,15 @@ namespace HeavenStudio.Games
             CameraUpdate();
         }
 
+        private double lastReportedBeat = 0;
+
         private void Update()
         {
             CameraUpdate();
+            if (Conductor.instance.ReportBeat(ref lastReportedBeat))
+            {
+                middleMonkey.DoScaledAnimationAsync("MiddleMonkeyBop", 0.4f);
+            }
         }
 
         public void PlayerMonkeyClap(bool big, bool barely)
