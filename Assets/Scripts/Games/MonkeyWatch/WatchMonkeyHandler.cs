@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using HeavenStudio.Util;
+using UnityEngine.Rendering;
 
 namespace HeavenStudio.Games.Scripts_MonkeyWatch
 {
@@ -24,9 +25,17 @@ namespace HeavenStudio.Games.Scripts_MonkeyWatch
         private void Awake()
         {
             game = MonkeyWatch.instance;
+            int sortIndex = 0;
+            bool goDown = false;
             for (int i = 0; i < 60; i++)
             {
                 watchHoles.Add(transform.GetChild(i));
+                watchHoles[i].GetComponent<SortingGroup>().sortingOrder = sortIndex;
+                sortIndex += goDown ? -1 : 1;
+                if (sortIndex >= 30)
+                {
+                    goDown = true;
+                }
             }
         }
 

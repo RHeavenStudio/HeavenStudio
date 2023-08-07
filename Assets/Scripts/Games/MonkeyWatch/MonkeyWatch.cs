@@ -37,7 +37,7 @@ namespace HeavenStudio.Games.Loaders
                     defaultLength = 2f,
                     parameters = new List<Param>()
                     {
-                        new Param("min", new EntityTypes.Integer(0, 60, 0), "Start Minutes", "1 minute is equivalent to 1 monkey.")
+                        new Param("min", new EntityTypes.Integer(0, 59, 0), "Set Starting Second", "1 second is equivalent to 1 monkey.")
                     }
                 },
                 new GameAction("off", "Pink Monkeys")
@@ -87,6 +87,22 @@ namespace HeavenStudio.Games.Loaders
                 new GameAction("offCustom", "Custom Pink Monkey")
                 {
                     defaultLength = 0.5f
+                },
+                new GameAction("zoomOut", "Zoom Out")
+                {
+                    function = delegate
+                    {
+                        var e = eventCaller.currentEntity;
+                        MonkeyWatch.instance.ZoomOut(e.beat, e.length, e["timeMode"], e["hour"], e["minute"]);
+                    },
+                    resizable = true,
+                    defaultLength = 4f,
+                    parameters = new List<Param>()
+                    {
+                        new Param("timeMode", MonkeyWatch.TimeMode.RealTime, "Time Mode", "Will the clock set the time to the current time or a certain time?"),
+                        new Param("hour", new EntityTypes.Integer(0, 12, 3), "Hour"),
+                        new Param("minute", new EntityTypes.Integer(0, 59, 0), "Minute")
+                    }
                 }
             });
         }
@@ -96,10 +112,15 @@ namespace HeavenStudio.Games.Loaders
 namespace HeavenStudio.Games
 {
     using Scripts_MonkeyWatch;
-    using System.Reflection;
 
     public class MonkeyWatch : Minigame
     {
+        public enum TimeMode
+        {
+            RealTime,
+            SetTime
+        }
+
         private const float degreePerMonkey = 6f;
 
         public static MonkeyWatch instance;
@@ -110,6 +131,7 @@ namespace HeavenStudio.Games
         [SerializeField] private Transform cameraMoveable;
         [SerializeField] private MonkeyClockArrow monkeyClockArrow;
         [SerializeField] private WatchMonkeyHandler monkeyHandler;
+        [SerializeField] private WatchBackgroundHandler backgroundHandler;
 
         private float lastAngle = 0f;
         private int cameraIndex = 0;
@@ -137,6 +159,18 @@ namespace HeavenStudio.Games
         public void PlayerMonkeyClap(bool big, bool barely)
         {
             monkeyClockArrow.PlayerClap(big, barely, false);
+        }
+
+        public void ZoomOut(double beat, float length, int timeMode, int hours, int minutes)
+        {
+            backgroundHandler.SetFade(beat, 0.25f, true, (TimeMode)timeMode, hours, minutes);
+            BeatAction.New(instance.gameObject, new List<BeatAction.Action>()
+            {
+                new BeatAction.Action(beat + length - 0.25, delegate
+                {
+                    backgroundHandler.SetFade(beat + length - 0.25, 0.25f, false, (TimeMode)timeMode, hours, minutes);
+                })
+            });
         }
 
         private double persistBeat = 0;
