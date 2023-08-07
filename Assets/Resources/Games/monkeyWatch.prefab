@@ -7155,6 +7155,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   yellowMonkeyRef: {fileID: -9193613041847046406, guid: 224742d4a2c74034997943856f560054, type: 3}
   pinkMonkeyRef: {fileID: 8621594802119604348, guid: 277f8b23f1f26f64290a2461c18d4b80, type: 3}
+  maxMonkeys: 30
 --- !u!1 &1093770155466988112
 GameObject:
   m_ObjectHideFlags: 0
@@ -9489,7 +9490,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2389975408046036148}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 17.58, y: -0.01, z: 0}
+  m_LocalPosition: {x: 17.13, y: -0.01, z: 0}
   m_LocalScale: {x: 1.6764871, y: 1.6764871, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -20256,7 +20257,6 @@ MonoBehaviour:
   cameraMoveable: {fileID: 7676047881968251921}
   monkeyClockArrow: {fileID: 8220690735241008560}
   monkeyHandler: {fileID: 8572779002997729184}
-  maxMonkeys: 30
 --- !u!1 &6181011653585253546
 GameObject:
   m_ObjectHideFlags: 0
@@ -21629,8 +21629,8 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 6779194753244902019}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0.11, y: -0.19, z: 0}
-  m_LocalScale: {x: 1.0523052, y: 1.0523052, z: 1.0523052}
+  m_LocalPosition: {x: 0.03, y: -0.22, z: 0}
+  m_LocalScale: {x: 1.0883431, y: 1.0611343, z: 1.0883431}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 719687156567031387}
