@@ -59,7 +59,7 @@ namespace HeavenStudio.Games.Scripts_MonkeyWatch
             {
                 var nowTime = System.DateTime.Now;
 
-                SetArrowsToTime(nowTime.Hour, nowTime.Minute);
+                SetArrowsToTime(nowTime.Hour, nowTime.Minute, nowTime.Second);
             }
         }
 
@@ -71,17 +71,17 @@ namespace HeavenStudio.Games.Scripts_MonkeyWatch
             realTime = timeMode == MonkeyWatch.TimeMode.RealTime;
             if (!realTime)
             {
-                SetArrowsToTime(hours, minutes);
+                SetArrowsToTime(hours, minutes, 0);
             }
             Update();
         }
 
-        private void SetArrowsToTime(int hours, int minutes)
+        private void SetArrowsToTime(int hours, int minutes, int seconds)
         {
-            float normalizedHour = Mathp.Normalize(hours + (minutes / 60f), 0f, 12f);
+            float normalizedHour = Mathp.Normalize(hours + (minutes / 60f) + (seconds / 3600f), 0f, 12f);
             anchorHour.localEulerAngles = new Vector3(0, 0, -Mathf.LerpUnclamped(0, 360, normalizedHour));
 
-            float normalizedMinute = Mathp.Normalize(minutes, 0, 60);
+            float normalizedMinute = Mathp.Normalize(minutes + (seconds / 60f), 0, 60);
             anchorMinute.localEulerAngles = new Vector3(0, 0, -Mathf.LerpUnclamped(0, 360, normalizedMinute));
         }
     }
