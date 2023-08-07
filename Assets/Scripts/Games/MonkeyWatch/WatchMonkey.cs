@@ -77,7 +77,7 @@ namespace HeavenStudio.Games.Scripts_MonkeyWatch
             inputEvent = game.ScheduleInput(prepareBeat, inputBeat - prepareBeat, InputType.STANDARD_DOWN, Just, Miss, Empty);
             BeatAction.New(gameObject, new List<BeatAction.Action>() 
             {
-                new BeatAction.Action(prepareBeat, delegate
+                new BeatAction.Action(prepareBeat - 0.25, delegate
                 {
                     if (inputEvent != null && inputEvent.enabled) anim.DoScaledAnimationAsync(isPink ? "PinkPrepare" + direction : "Prepare" + direction, 0.4f);
                 })
