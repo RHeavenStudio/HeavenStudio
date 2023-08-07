@@ -78,7 +78,7 @@ namespace HeavenStudio.Games.Scripts_MonkeyWatch
 
         private void SetArrowsToTime(int hours, int minutes)
         {
-            float normalizedHour = Mathp.Normalize(hours, 0, 12);
+            float normalizedHour = Mathp.Normalize(hours + (minutes / 60f), 0f, 12f);
             anchorHour.localEulerAngles = new Vector3(0, 0, -Mathf.LerpUnclamped(0, 360, normalizedHour));
 
             float normalizedMinute = Mathp.Normalize(minutes, 0, 60);
