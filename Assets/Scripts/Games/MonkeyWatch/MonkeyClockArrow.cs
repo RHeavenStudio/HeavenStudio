@@ -47,8 +47,8 @@ namespace HeavenStudio.Games.Scripts_MonkeyWatch
 
         public void PlayerClap(bool big, bool barely, bool whiff)
         {
-            if (!playerMonkeyAnim.IsAnimationNotPlaying() && whiff) return;
-
+            if (playerMonkeyAnim.IsPlayingAnimationName("PlayerClapBarely") && whiff) return;
+            if (whiff) SoundByte.PlayOneShot("miss");
             if (barely || whiff)  
             {
                 playerMonkeyAnim.DoScaledAnimationAsync("PlayerClapBarely", 0.4f);
