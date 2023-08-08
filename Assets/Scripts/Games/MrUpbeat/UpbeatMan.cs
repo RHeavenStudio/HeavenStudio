@@ -18,40 +18,42 @@ namespace HeavenStudio.Games.Scripts_MrUpbeat
         [SerializeField] GameObject[] shadows;
         [SerializeField] TMP_Text blipText;
 
-        public int stepTimes = 0;
         public int blipSize = 0;
         public bool shouldGrow;
         public string blipString = "M";
 
-        public void Blip()
+        static MrUpbeat game; 
+
+        void Awake()
         {
-            double c = Conductor.instance.songPositionInBeatsAsDouble;
+            game = MrUpbeat.instance;
+        }
+
+        public void RecursiveBlipping(double beat)
+        {
+            if (game.stopBlipping) {
+                game.stopBlipping = false;
+                return;
+            } 
+            SoundByte.PlayOneShotGame("mrUpbeat/blip");
+            blipAnim.Play("Blip"+(blipSize+1), 0, 0);
+            blipText.text = (blipSize == 4 && blipString != "") ? blipString : "";
+            if (shouldGrow && blipSize < 4) blipSize++;
             BeatAction.New(gameObject, new List<BeatAction.Action>() {
-                new BeatAction.Action(Math.Floor(c) + 0.5f, delegate {
-                    if (MrUpbeat.shouldBlip) {
-                        SoundByte.PlayOneShotGame("mrUpbeat/blip");
-                        blipAnim.Play("Blip"+(blipSize+1), 0, 0);
-                        blipText.text = (blipSize == 4 && blipString != "") ? blipString : "";
-                        if (shouldGrow && blipSize < 4) blipSize++;
-                    }
-                }),
-                new BeatAction.Action(Math.Floor(c) + 1f, delegate { 
-                    Blip();
-                }),
+                new BeatAction.Action(beat + 1, delegate { RecursiveBlipping(beat + 1); })
             });
         }
 
-        public void Step()
+        public void Step(bool isInput = false)
         {
-            stepTimes++;
+            if (isInput || ((game.stepIterate % 2 == 0) == IsMirrored())) {
+                shadows[0].SetActive(IsMirrored());
+                shadows[1].SetActive(!IsMirrored());
+                transform.localScale = new Vector3((IsMirrored() ? 1 : -1), 1, 1);
+            }
             
-            bool x = (stepTimes % 2 == 1);
-            shadows[0].SetActive(!x);
-            shadows[1].SetActive(x);
-            transform.localScale = new Vector3(x ? -1 : 1, 1);
-
             anim.DoScaledAnimationAsync("Step", 0.5f);
-            letterAnim.DoScaledAnimationAsync(x ? "StepRight" : "StepLeft", 0.5f);
+            letterAnim.DoScaledAnimationAsync(IsMirrored() ? "StepRight" : "StepLeft", 0.5f);
             SoundByte.PlayOneShotGame("mrUpbeat/step");
         }
 
@@ -60,11 +62,17 @@ namespace HeavenStudio.Games.Scripts_MrUpbeat
             blipSize = 0;
             blipAnim.Play("Idle", 0, 0);
             blipText.text = "";
-            
-            anim.DoScaledAnimationAsync("Fall", 0.5f);
+
+            anim.DoScaledAnimationAsync((game.stepIterate % 2 == 0) == IsMirrored() ? "FallR" : "FallL", 1f);
             SoundByte.PlayOneShot("miss");
             shadows[0].SetActive(false);
             shadows[1].SetActive(false);
+            transform.localScale = new Vector3((IsMirrored() ? 1 : -1), 1, 1);
+        }
+
+        bool IsMirrored()
+        {
+            return transform.localScale != Vector3.one;
         }
     }
 }

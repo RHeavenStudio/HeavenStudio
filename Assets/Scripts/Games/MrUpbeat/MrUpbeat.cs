@@ -15,27 +15,36 @@ namespace HeavenStudio.Games.Loaders
         public static Minigame AddGame(EventCaller eventCaller) {
             return new Minigame("mrUpbeat", "Mr. Upbeat", "E0E0E0", false, false, new List<GameAction>()
             {
-                
                 new GameAction("prepare", "Prepare")
                 {
-                    preFunction = delegate {
+                    function = delegate {
                         var e = eventCaller.currentEntity;
-                        MrUpbeat.StartStepping(e.beat, e.length);
+                        MrUpbeat.Prepare(e.beat, e.length, e["forceOnbeat"]);
                     },
+                    inactiveFunction = delegate {
+                        var e = eventCaller.currentEntity;
+                        MrUpbeat.Prepare(e.beat, e.length, e["forceOnbeat"]);
+                    },
+                    parameters = new List<Param>()
+                    {
+                        new Param("forceOnbeat", false, "Mr. Downbeat", "Force Mr. Upbeat to step on the beat of the block instead of on the offbeat."),
+                    },
+                    preFunctionLength = 0.5f,
                     defaultLength = 4f,
                     resizable = true,
                 },
                 new GameAction("ding", "Ding!")
                 {
-                    preFunction = delegate { 
+                    function = delegate { 
                         var e = eventCaller.currentEntity; 
-                        MrUpbeat.Ding(e.beat, e["toggle"], e["stopBlipping"]); 
+                        MrUpbeat.instance.Ding(e["toggle"], e["stopBlipping"], e["playDing"]); 
                     },
                     defaultLength = 0.5f,
                     parameters = new List<Param>()
                     {
                         new Param("toggle", false, "Applause", "Plays an applause sound effect."),
                         new Param("stopBlipping", true, "Stop Blipping?", "When the stepping stops, should the blipping stop too?"),
+                        new Param("playDing", true, "Play Ding!", "Should this block play a Ding! sound effect?"),
                     },
                     preFunctionLength = 1f,
                 },
@@ -82,33 +91,26 @@ namespace HeavenStudio.Games.Loaders
                         new Param("blip", true, "Should Blip?", "Should Mr. Upbeat blip every offbeat?"),
                     }
                 },
-                // will implement these soon
                 new GameAction("fourBeatCountInOffbeat", "4 Beat Count-In")
                 {
                     preFunction = delegate {
                         var e = eventCaller.currentEntity;
-                        //MrUpbeat.CountIn(e.beat, e.length);
+                        MrUpbeat.CountIn(e.beat, e.length, e["a"]);
+                    },
+                    parameters = new List<Param>()
+                    {
+                        new Param("a", true, "A", "A"),
                     },
                     defaultLength = 4f,
                     resizable = true,
-                    hidden = true,
                 },
-                new GameAction("countOffbeat", "4 Beat Count-In")
+                new GameAction("countOffbeat", "Count")
                 {
-                    //function = delegate { MrUpbeat.Count(eventCaller.currentEntity["number"]); },
+                    function = delegate { MrUpbeat.Count(eventCaller.currentEntity["number"]); },
                     parameters = new List<Param>()
                     {
-                        new Param("number", SoundEffects.CountNumbers.One, "Number", "The sound to play"),
+                        new Param("number", MrUpbeat.Counts.One, "Number", "The sound to play"),
                     },
-                    hidden = true,
-                },
-
-                // backwards compatibility !!!!
-                new GameAction("start stepping", "Start Stepping")
-                {
-                    hidden = true,
-                    preFunction = delegate {var e = eventCaller.currentEntity; MrUpbeat.StartStepping(e.beat, e.length); },
-                    resizable = true,
                 },
             },
             new List<string>() {"agb", "keep"},
@@ -122,10 +124,17 @@ namespace HeavenStudio.Games.Loaders
 namespace HeavenStudio.Games
 {
     using Scripts_MrUpbeat;
-
+    using Jukebox;
     public class MrUpbeat : Minigame
     {
-        static List<double> queuedInputs = new();
+        public enum Counts 
+        {
+            One,
+            Two,
+            Three,
+            Four,
+            A,
+        }
 
         [Header("References")]
         [SerializeField] Animator metronomeAnim;
@@ -136,34 +145,29 @@ namespace HeavenStudio.Games
 
         [Header("Properties")]
         private Tween bgColorTween;
+        private static MultiSound blips = null;
         public int stepIterate = 0;
-        public static bool shouldBlip;
-        static bool isStepping;
-        static bool shouldntStop;
+        private static double startSteppingBeat = double.MaxValue;
+        private static double startBlippingBeat = double.MaxValue;
+        private bool stopStepping;
+        public bool stopBlipping;
 
         public static MrUpbeat instance;
 
         private void Awake()
         {
             instance = this;
-            isStepping = false;
-
-            blipMaterial.SetColor("_ColorBravo", new Color(0, 1f, 0));
-        }
-
-        private void Start()
-        {
-            man.Blip();
         }
 
         void OnDestroy()
         {
-            if (!Conductor.instance.isPlaying || Conductor.instance.isPaused) {
-                if (queuedInputs.Count > 0) queuedInputs.Clear();
+            var cond = Conductor.instance;
+            if (!cond.isPlaying || cond.isPaused) {
+                
             }
 
-            shouldBlip = false;
-            isStepping = false;
+            startSteppingBeat = double.MaxValue;
+            startBlippingBeat = double.MaxValue;
             stepIterate = 0;
             foreach (var evt in scheduledInputs)
             {
@@ -171,82 +175,102 @@ namespace HeavenStudio.Games
             }
         }
 
+        public override void OnGameSwitch(double beat)
+        {
+            List<RiqEntity> prevEntities = GameManager.instance.Beatmap.Entities.FindAll(c => c.beat <= beat && c.datamodel.Split(0) == "mrUpbeat");
+            var bgColorEntity = prevEntities.FindLast(x => x.datamodel.Split(1) == "changeBG" && x.beat <= beat);
+            var upbeatColorEntity = prevEntities.FindLast(x => x.datamodel.Split(1) == "upbeatColors" && x.beat <= beat);
+
+            bg.color = bgColorEntity["end"];
+
+            if (upbeatColorEntity != null) {
+                blipMaterial.SetColor("_ColorBravo", upbeatColorEntity["blipColor"]);
+                Color shadowColor = upbeatColorEntity["shadowColor"];
+                if (upbeatColorEntity["setShadow"]) foreach (var shadow in shadowSr) {
+                    shadow.color = new Color(shadowColor.r, shadowColor.g, shadowColor.b, 1);
+                }
+            } else {
+                blipMaterial.SetColor("_ColorBravo", new Color(0, 1f, 0));
+            }
+        }
+
         public void Update()
         {
+            var cond = Conductor.instance;
             if (Conductor.instance.isPlaying && !Conductor.instance.isPaused) {
-                if (queuedInputs.Count > 0) {
-                    foreach (var input in queuedInputs) {
-                        string dir = stepIterate % 2 == 1 ? "Right" : "Left";
-                        BeatAction.New(instance.gameObject, new List<BeatAction.Action>() {
-                            new BeatAction.Action(input, delegate {
-                                instance.metronomeAnim.DoScaledAnimationAsync("MetronomeGo" + dir, 0.5f);
-                                SoundByte.PlayOneShotGame("mrUpbeat/metronome" + dir);
-                                ScheduleInput(input, 0.5f, InputType.STANDARD_DOWN, Success, Miss, Nothing);
-                                if (MrUpbeat.shouldntStop) queuedInputs.Add(input + 1);
-                            }),
-                        });
-                        stepIterate++;
-                    }
-                    queuedInputs.Clear();
+                if (cond.songPositionInBeats >= startSteppingBeat) {
+                    RecursiveStepping(startSteppingBeat);
+                    startSteppingBeat = double.MaxValue;
+                }
+
+                if (cond.songPositionInBeats >= startBlippingBeat) {
+                    blips.Delete();
+                    man.RecursiveBlipping(startBlippingBeat);
+                    startBlippingBeat = double.MaxValue;
                 }
 
                 if (PlayerInput.Pressed() && !IsExpectingInputNow(InputType.STANDARD_DOWN)) {
-                    man.Step();
+                    man.Step(true);
                 }
             }
         }
 
-        public static void Ding(double beat, bool applause, bool stopBlipping)
+        public void Ding(bool applause, bool stopBlipping, bool playDing)
         {
-            MrUpbeat.shouldntStop = false;
-            BeatAction.New(instance.gameObject, new List<BeatAction.Action>() {
-                new BeatAction.Action(beat, delegate {
-                    MrUpbeat.isStepping = false;
-                    SoundByte.PlayOneShotGame("mrUpbeat/ding");
-                    if (applause) SoundByte.PlayOneShot("applause");
-                    if (stopBlipping) MrUpbeat.shouldBlip = false;
-                }),
-            });
+            stopStepping = true;
+            if (stopBlipping) this.stopBlipping = true;
+            if (playDing) SoundByte.PlayOneShotGame("mrUpbeat/ding");
+            if (applause) SoundByte.PlayOneShot("applause");
         }
 
-        public static void StartStepping(double beat, float length)
+        public static void Prepare(double beat, float length, bool forceOffbeat)
         {
-            if (MrUpbeat.isStepping) return;
-            MrUpbeat.isStepping = true;
-            if (GameManager.instance.currentGame != "mrUpbeat") {
-                Blipping(beat, length);
-                MrUpbeat.shouldBlip = true;
+            bool isGame = GameManager.instance.currentGame == "mrUpbeat";
+            if (forceOffbeat) {
+                startBlippingBeat = beat;
+                startSteppingBeat = beat + length - 0.5f;
+                if (!isGame) Blipping(beat, length);
             } else {
-                BeatAction.New(instance.gameObject, new List<BeatAction.Action>() {
-                    new BeatAction.Action(Math.Floor(beat), delegate { 
-                        MrUpbeat.shouldBlip = true; 
-                    }),
-                });
+                startBlippingBeat = Mathf.Floor((float)beat) + 0.5;
+                startSteppingBeat = Mathf.Floor((float)beat) + Mathf.Round(length);
+                if (!isGame) Blipping(Mathf.Round((float)beat) + 0.5f, length);
             }
+            
+            if (isGame) {
+                double tempBeat = startSteppingBeat;
+                BeatAction.New(instance.gameObject, new List<BeatAction.Action>() {
+                    new BeatAction.Action(startSteppingBeat, delegate { instance.RecursiveStepping(tempBeat); })
+                });
+                instance.man.RecursiveBlipping(startBlippingBeat);
+                startBlippingBeat = double.MaxValue;
+                startSteppingBeat = double.MaxValue;
+            }
+        }
 
-            MrUpbeat.shouldntStop = true;
-            queuedInputs.Add(Math.Floor(beat+length));
+        private void RecursiveStepping(double beat)
+        {
+            if (stopStepping) {
+                stopStepping = false;
+                return;
+            }
+            string dir = (stepIterate % 2 == 1) ? "Right" : "Left";
+            metronomeAnim.DoScaledAnimationAsync("MetronomeGo" + dir, 0.5f);
+            SoundByte.PlayOneShotGame("mrUpbeat/metronome" + dir);
+            ScheduleInput(beat, 0.5f, InputType.STANDARD_DOWN, Success, Miss, Nothing);
+            BeatAction.New(gameObject, new List<BeatAction.Action>() {
+                new BeatAction.Action(beat + 1, delegate { RecursiveStepping(beat + 1); })
+            });
+            stepIterate++;
         }
 
         public static void Blipping(double beat, float length)
         {
-            List<MultiSound.Sound> blips = new List<MultiSound.Sound>();
-            var switchGames = EventCaller.GetAllInGameManagerList("gameManager", new string[] { "switchGame" });
-            int whichSwitch = 0;
-            if (switchGames.Count != 0) {
-                for (int i = 0; i < switchGames.Count; i++) {
-                    if (switchGames[i].beat > beat) {
-                        whichSwitch = i;
-                        break;
-                    }
-                }
+            List<MultiSound.Sound> inactiveBlips = new List<MultiSound.Sound>();
+            for (int i = 0; i < beat + length + 2; i++) {
+                inactiveBlips.Add(new MultiSound.Sound("mrUpbeat/blip", beat + i));
             }
 
-            for (int i = 0; i < switchGames[whichSwitch].beat - Math.Floor(beat) - 0.5f; i++) {
-                blips.Add(new MultiSound.Sound("mrUpbeat/blip", Math.Floor(beat) + 0.5f + i));
-            }
-
-            MultiSound.Play(blips.ToArray(), forcePlay: true);
+            blips = MultiSound.Play(inactiveBlips.ToArray(), forcePlay: true);
         }
 
         public void Success(PlayerActionEvent caller, float state)
@@ -296,24 +320,23 @@ namespace HeavenStudio.Games
                 man.shouldGrow = false;
             }
             man.blipString = inputLetter;
-            shouldBlip = blip;
         }
 
-        /*
         public static void Count(int number)
         {
-            Jukebox.PlayOneShotGame("mrUpbeat/count"+(number + 1), forcePlay: true);
+            SoundByte.PlayOneShotGame("mrUpbeat/"+ (number < 4 ? number + 1 : "a"), forcePlay: true);
         }
 
-        public static void CountIn(float beat, float length)
+        public static void CountIn(double beat, float length, bool a)
         {
-            var sound = new List<MultiSound.Sound>() {
-                
-            };
+            var sound = new List<MultiSound.Sound>();
+            if (a) sound.Add(new MultiSound.Sound("mrUpbeat/a", beat - (0.5f * (length/4))));
+            for (int i = 0; i < 4; i++) {
+                sound.Add(new MultiSound.Sound("mrUpbeat/" + (i + 1), beat + (i * (length/4)), offset: (i == 3 ? 0.05 : 0)));
+            }
             
             MultiSound.Play(sound.ToArray(), forcePlay: true);
         }
-        */
 
         public void Nothing(PlayerActionEvent caller) {}
     }
