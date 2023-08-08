@@ -1,8 +1,3 @@
-# TEMPORARY ------------------------------
-/Assets/Test
-/Assets/Resources/Music/Unconfirmed
-# ----------------------------------------
-
 /[Ll]ibrary/
 /[Tt]emp/
 /[Oo]bj/
@@ -84,3 +79,10 @@ crashlytics-build.properties
 
 # macOS
 .DS_Store
+
+# Built AssetBundles
+/[Aa]ssets/[Ss]treamingAssets/*/*
+/[Aa]ssets/[Ss]treamingAssets/*.manifest
+/[Aa]ssets/[Ss]treamingAssets/*.meta
+/[Aa]ssets/[Ss]treamingAssets/[Ss]treamingAssets
+Assets/TextMesh Pro/Resources/Fonts & Materials/LiberationSans SDF - Fallback.asset

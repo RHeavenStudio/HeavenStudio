@@ -27,6 +27,7 @@ namespace HeavenStudio.Games.Scripts_CropStomp
         private int veggieState = 0;
         private bool boinked; // Player got barely when trying to pick.
         private bool pickEligible = true;
+        private int veggieType;
 
         private double landBeat;
 
@@ -43,7 +44,8 @@ namespace HeavenStudio.Games.Scripts_CropStomp
 
             if (!isMole)
             {
-                veggieSprite.sprite = veggieSprites[UnityEngine.Random.Range(0, veggieSprites.Length)];
+                veggieType = UnityEngine.Random.Range(0, veggieSprites.Length);
+                veggieSprite.sprite = veggieSprites[veggieType];
             }
             else
             {
@@ -206,7 +208,7 @@ namespace HeavenStudio.Games.Scripts_CropStomp
                 veggieTrans.localScale = Vector2.one * veggieScale;
                 if (pickPosition >= 1f)
                 {
-                    game.CollectPlant();
+                    game.CollectPlant(veggieType);
                 }
             }
         }
@@ -233,7 +235,7 @@ namespace HeavenStudio.Games.Scripts_CropStomp
 
             stompedBeat = cond.songPositionInBeatsAsDouble;
 
-            landBeat = targetBeat + (float)cond.SecsToBeats(Minigame.EndTime()-1, cond.GetBpmAtBeat(targetBeat));
+            landBeat = targetBeat + (float)cond.SecsToBeats(Minigame.NgLateTime()-1, cond.GetBpmAtBeat(targetBeat));
 
             if (autoTriggered)
             {

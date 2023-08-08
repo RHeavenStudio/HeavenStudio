@@ -60,7 +60,9 @@ body:
     id: riq
     attributes:
       label: RIQ file
-      description: If relevant, upload a RIQ file where this bug happens
+      description: |
+        If relevant, upload a RIQ file where this bug happens.
+        GitHub doesn't allow .riq files to be uploaded, so you'll have to put it in a .zip
       placeholder: Upload a RIQ here
     validations:
       required: false

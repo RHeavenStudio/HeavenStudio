@@ -9,7 +9,7 @@ namespace HeavenStudio.Games
 {
     public class Minigame : MonoBehaviour
     {
-        public static double earlyTime = 0.075f, perfectTime = 0.06f, aceEarlyTime = 0.01f, aceLateTime = 0.01f, lateTime = 0.06f, endTime = 0.075f;
+        public static double ngEarlyTime = 0.075f, justEarlyTime = 0.06f, aceEarlyTime = 0.01f, aceLateTime = 0.01f, justLateTime = 0.06f, ngLateTime = 0.075f;
         public static float rankHiThreshold = 0.8f, rankOkThreshold = 0.6f;
         [SerializeField] public SoundSequence.SequenceKeyValue[] SoundSequences;
 
@@ -45,7 +45,9 @@ namespace HeavenStudio.Games
             InputType inputType,
             PlayerActionEvent.ActionEventCallbackState OnHit,
             PlayerActionEvent.ActionEventCallback OnMiss,
-            PlayerActionEvent.ActionEventCallback OnBlank)
+            PlayerActionEvent.ActionEventCallback OnBlank,
+            PlayerActionEvent.ActionEventHittableQuery HittableQuery = null
+            )
         {
 
             GameObject evtObj = new GameObject("ActionEvent" + (startBeat+timer));
@@ -59,6 +61,7 @@ namespace HeavenStudio.Games
             evt.OnHit = OnHit;
             evt.OnMiss = OnMiss;
             evt.OnBlank = OnBlank;
+            evt.IsHittable = HittableQuery;
 
             evt.OnDestroy = RemoveScheduledInput;
 
@@ -91,14 +94,13 @@ namespace HeavenStudio.Games
             InputType inputType,
             PlayerActionEvent.ActionEventCallbackState OnHit,
             PlayerActionEvent.ActionEventCallback OnMiss,
-            PlayerActionEvent.ActionEventCallback OnBlank)
+            PlayerActionEvent.ActionEventCallback OnBlank,
+            PlayerActionEvent.ActionEventHittableQuery HittableQuery = null)
         {
-            PlayerActionEvent evt = ScheduleInput(startBeat, timer, inputType, OnHit, OnMiss, OnBlank);
+            PlayerActionEvent evt = ScheduleInput(startBeat, timer, inputType, OnHit, OnMiss, OnBlank, HittableQuery);
             evt.noAutoplay = true;
             return evt;
         }
-
-
 
         //Clean up method used whenever a PlayerActionEvent has finished
         public void RemoveScheduledInput(PlayerActionEvent evt)
@@ -151,48 +153,35 @@ namespace HeavenStudio.Games
         }
 
         // now should fix the fast bpm problem
-        public static double EarlyTime()
+        public static double NgEarlyTime()
         {
-            return 1f - earlyTime;
+            return 1f - ngEarlyTime;
         }
 
-        public static double PerfectTime()
+        public static double JustEarlyTime()
         {
-            return 1f - perfectTime;
+            return 1f - justEarlyTime;
         }
 
-        public static double LateTime()
+        public static double JustLateTime()
         {
-            return 1f + lateTime;
+            return 1f + justLateTime;
         }
 
-        public static double EndTime()
+        public static double NgLateTime()
         {
-            return 1f + endTime;
+            return 1f + ngLateTime;
         }
 
-        public static double AceStartTime()
+        public static double AceEarlyTime()
         {
             return 1f - aceEarlyTime;
         }
 
-        public static double AceEndTime()
+        public static double AceLateTime()
         {
             return 1f + aceLateTime;
         }
-
-        // DEPRECATED: scales timing windows to the BPM in an ""intelligent"" manner
-        // only left for historical reasons
-        static float ScaleTimingMargin(float f)
-        {
-            float bpm = Conductor.instance.songBpm * Conductor.instance.musicSource.pitch;
-            float a = bpm / 120f;
-            float b = (Mathf.Log(a) + 2f) * 0.5f;
-            float r = Mathf.Lerp(a, b, 0.25f);
-            return r * f;
-        }
-
-        public int firstEnable = 0;
 
         public virtual void OnGameSwitch(double beat)
         {
@@ -263,7 +252,7 @@ namespace HeavenStudio.Games
 
         public void ScoreMiss(double weight = 1f)
         {
-            GameManager.instance.ScoreInputAccuracy(0, true, EndTime(), weight, false);
+            GameManager.instance.ScoreInputAccuracy(0, true, NgLateTime(), weight, false);
             if (weight > 0)
             {
                 GoForAPerfect.instance.Miss();

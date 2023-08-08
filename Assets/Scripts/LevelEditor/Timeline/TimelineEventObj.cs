@@ -110,11 +110,13 @@ namespace HeavenStudio.Editor.Track
 
             if (selected)
             {
+                /*
                 if (Input.GetKeyDown(KeyCode.Delete))
                 {
-                    /*Selections.instance.Deselect(this);
-                    Timeline.instance.DestroyEventObject(entity);*/
+                    Selections.instance.Deselect(this);
+                    Timeline.instance.DestroyEventObject(entity);
                 }
+                */
 
                 selectedImage.gameObject.SetActive(true);
                 for (int i = 0; i < outline.childCount; i++)
@@ -158,8 +160,8 @@ namespace HeavenStudio.Editor.Track
                 if (Timeline.instance.eventObjs.FindAll(c => c.moving).Count > 0 && selected)
                 {
                     Vector3 mousePos = Editor.instance.EditorCamera.ScreenToWorldPoint(Input.mousePosition);
-                    //duplicate the entity if holding alt or m-click
-                    if ((!wasDuplicated) && (Input.GetKey(KeyCode.LeftAlt) || Input.GetMouseButton(2)))
+                    // duplicate the entity if holding alt
+                    if ((!wasDuplicated) && Input.GetKey(KeyCode.LeftAlt))
                     {
                         Selections.instance.Deselect(this);
                         this.wasDuplicated = false;
@@ -197,37 +199,17 @@ namespace HeavenStudio.Editor.Track
 
                     lastPos = transform.localPosition;
                 }
-            }
-            else if (resizingLeft)
-            {
-                if (moving)
-                    moving = false;
-
-                SetPivot(new Vector2(1, rectTransform.pivot.y));
-                Vector2 sizeDelta = rectTransform.sizeDelta;
-
-                Vector2 mousePos;
-                RectTransformUtility.ScreenPointToLocalPointInRectangle(rectTransform, Input.mousePosition, Editor.instance.EditorCamera, out mousePos);
-
-                sizeDelta = new Vector2(-mousePos.x + 0.15f, sizeDelta.y);
-                sizeDelta = new Vector2(Mathf.Clamp(sizeDelta.x, Timeline.SnapInterval(), rectTransform.localPosition.x), sizeDelta.y);
-
-                rectTransform.sizeDelta = new Vector2(Mathp.Round2Nearest(sizeDelta.x, Timeline.SnapInterval()), sizeDelta.y);
-                SetPivot(new Vector2(0, rectTransform.pivot.y));
-                OnComplete(false);
-            }
-            else if (resizingRight)
-            {
-                if (moving)
-                    moving = false;
+            } else {
+                if (moving) moving = false;
+                if (resizingLeft) SetPivot(new Vector2(1, rectTransform.pivot.y));
 
                 Vector2 sizeDelta = rectTransform.sizeDelta;
-
                 Vector2 mousePos;
+
                 RectTransformUtility.ScreenPointToLocalPointInRectangle(rectTransform, Input.mousePosition, Editor.instance.EditorCamera, out mousePos);
 
-                sizeDelta = new Vector2(mousePos.x + 0.15f, sizeDelta.y);
-                sizeDelta = new Vector2(Mathf.Clamp(sizeDelta.x, Timeline.SnapInterval(), Mathf.Infinity), sizeDelta.y);
+                sizeDelta = new Vector2((resizingLeft ? -mousePos.x : mousePos.x) + 0.15f, sizeDelta.y);
+                sizeDelta = new Vector2(Mathf.Clamp(sizeDelta.x, Timeline.SnapInterval(), (resizingLeft ? rectTransform.localPosition.x : Mathf.Infinity)), sizeDelta.y);
 
                 rectTransform.sizeDelta = new Vector2(Mathp.Round2Nearest(sizeDelta.x, Timeline.SnapInterval()), sizeDelta.y);
                 SetPivot(new Vector2(0, rectTransform.pivot.y));
@@ -243,7 +225,7 @@ namespace HeavenStudio.Editor.Track
             if (resizing && selected || inResizeRegion && selected)
             {
                 if (resizable)
-                Cursor.SetCursor(Resources.Load<Texture2D>("Cursors/horizontal_resize"), new Vector2(8, 8), CursorMode.Auto);
+                    Cursor.SetCursor(Resources.Load<Texture2D>("Cursors/horizontal_resize"), new Vector2(8, 8), CursorMode.Auto);
             }
             // should consider adding this someday
             // else if (moving && selected || mouseHovering && selected)
@@ -300,6 +282,22 @@ namespace HeavenStudio.Editor.Track
             else if (Input.GetMouseButton(1))
             {
                 EventParameterManager.instance.StartParams(entity);
+            }
+            else if (Input.GetMouseButton(2))
+            {
+                var mgs = EventCaller.instance.minigames;
+                string[] datamodels = entity.datamodel.Split('/');
+
+                bool isSwitchGame = (datamodels[1] == "switchGame");
+                int gameIndex = mgs.FindIndex(c => c.name == datamodels[isSwitchGame ? 2 : 0]);
+                int block = isSwitchGame ? 0 : mgs[gameIndex].actions.FindIndex(c => c.actionName == datamodels[1]) + 1;
+
+                if (!isSwitchGame) {
+                    if (datamodels[0] == "gameManager") block -= 2;
+                    else if (datamodels[0] is "countIn" or "vfx") block--;
+                }
+                
+                GridGameSelector.instance.SelectGame(datamodels[isSwitchGame ? 2 : 0], block);
             }
         }
 
@@ -368,7 +366,6 @@ namespace HeavenStudio.Editor.Track
                 ResetResize();
             }
         }
-
 
         public void OnRightDown()
         {

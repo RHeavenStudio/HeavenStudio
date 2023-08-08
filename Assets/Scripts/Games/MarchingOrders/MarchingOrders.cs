@@ -18,12 +18,51 @@ using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
 
+using Jukebox;
+
 namespace HeavenStudio.Games.Loaders
 {
     using static Minigames;
     public static class AgbMarcherLoader
     {
-        public static Minigame AddGame(EventCaller eventCaller) {
+        public static Minigame AddGame(EventCaller eventCaller)
+        {
+            RiqEntity FaceTurnUpdater(string datamodel, RiqEntity entity)
+            {
+                if (datamodel == "marchingOrders/face turn")
+                {
+                    if (entity["type2"] == (int)MarchingOrders.FaceTurnLength.Normal)
+                    {
+                        entity.datamodel = "marchingOrders/faceTurn";
+                    }
+                    else
+                    {
+                        entity.datamodel = "marchingOrders/faceTurnFast";
+                    }
+                    entity.CreateProperty("direction", entity["type"]);
+                    entity.CreateProperty("point", false);
+                    // don't actually need to do this here
+                    //entity.version = 1;
+
+                    entity.dynamicData.Remove("type");
+                    entity.dynamicData.Remove("type2");
+                    return entity;
+                }
+                return null;
+            }
+            RiqBeatmap.OnUpdateEntity += FaceTurnUpdater;
+
+            RiqEntity MarchUpdater(string datamodel, RiqEntity entity)
+            {
+                if (datamodel == "marchingOrders/marching")
+                {
+                    entity.beat = double.NaN;
+                    return entity;
+                }
+                return null;
+            }
+            RiqBeatmap.OnUpdateEntity += MarchUpdater;
+
             return new Minigame("marchingOrders", "Marching Orders", "ffb108", false, false, new List<GameAction>()
                 {
                     new GameAction("bop", "Bop")
@@ -46,12 +85,13 @@ namespace HeavenStudio.Games.Loaders
                     },
                     new GameAction("march", "March!")
                     {
-                        function = delegate { var e = eventCaller.currentEntity; MarchingOrders.SargeMarch(e.beat, e["disableVoice"]); },
-                        inactiveFunction = delegate { var e = eventCaller.currentEntity; MarchingOrders.SargeMarch(e.beat, e["disableVoice"]); },
+                        function = delegate { var e = eventCaller.currentEntity; MarchingOrders.SargeMarch(e.beat, e["disableVoice"], e["shouldMarch"]); },
+                        inactiveFunction = delegate { var e = eventCaller.currentEntity; MarchingOrders.SargeMarch(e.beat, e["disableVoice"], e["shouldMarch"]); },
                         defaultLength = 2f,
                         parameters = new List<Param>
                         {
-                            new Param("disableVoice", false, "Disable Voice", "Disable the Drill Sergeant's call")
+                            new Param("disableVoice", false, "Disable Voice", "Disable the Drill Sergeant's call"),
+                            new Param("shouldMarch", true, "March", "Disable automatic marching"),
                         },
                         priority = 5,
                     },
@@ -96,7 +136,7 @@ namespace HeavenStudio.Games.Loaders
                         parameters = new List<Param>()
                         {
                             new Param("start", true, "Start Moving", "Start moving the conveyor"),
-                            new Param("direction", MarchingOrders.Direction.Right, "Direction", "Direction"),
+                            new Param("direction", MarchingOrders.Direction.Right, "Direction", "The direction the cadets will move"),
                         },
                         defaultLength = 7f,
                         resizable = true,
@@ -129,7 +169,7 @@ namespace HeavenStudio.Games.Loaders
                             var e = eventCaller.currentEntity;
                             MarchingOrders.instance.ForceMarching(e.beat, e.length);
                         },
-                        preFunctionLength = 1,
+                        preFunctionLength = 0.2f,
                         resizable = true,
                     },
                     
@@ -137,21 +177,10 @@ namespace HeavenStudio.Games.Loaders
                     new GameAction("marching", "Start Marching (old)")
                     {
                         hidden = true,
-                        preFunction = delegate {
-                            var e = eventCaller.currentEntity;
-                            MarchingOrders.instance.ForceMarching(e.beat, e.length);
-                        },
-                        preFunctionLength = 1,
-                        resizable = true,
                     },
                     new GameAction("face turn", "Direction to Turn (old)")
                     {
                         hidden = true,
-                        function = delegate {
-                            var e = eventCaller.currentEntity;
-                            MarchingOrders.instance.FaceTurn(e.beat, e["type"], e["type2"], false);
-                        },
-                        defaultLength = 4f,
                         parameters = new List<Param>()
                         {
                             new Param("type", MarchingOrders.Direction.Right, "Direction", "The direction the sergeant wants the cadets to face"),
@@ -169,7 +198,6 @@ namespace HeavenStudio.Games.Loaders
 
 namespace HeavenStudio.Games
 {
-    using Scripts_MarchingOrders;
     public class MarchingOrders : Minigame
     {
         public static MarchingOrders instance;
@@ -196,10 +224,10 @@ namespace HeavenStudio.Games
         bool goBop;
         bool shouldClap;
         bool keepMarching;
-        private int marchOtherCount;
-        private int marchPlayerCount;
-        private double lastMissBeat;
-        private double lastReportedBeat;
+        int marchOtherCount;
+        int marchPlayerCount;
+        double lastMissBeat;
+        double lastReportedBeat;
         public static double wantMarch = double.MinValue;
         
 
@@ -267,8 +295,8 @@ namespace HeavenStudio.Games
 
             if (ConveyorGo[0].AutoScroll && (ConveyorGo[1].gameObject.transform.position.x < 0)) {
                 foreach (var scroll in ConveyorGo) scroll.AutoScroll = false;
-                ConveyorGo[0].gameObject.transform.position = new Vector3(0, 0);
-                ConveyorGo[1].gameObject.transform.position = new Vector3(6.181f, -3.37f);
+                ConveyorGo[0].gameObject.transform.position = new Vector3(6.181f, -3.37f);
+                ConveyorGo[1].gameObject.transform.position = new Vector3(0, 0);
             }
 
             // input stuff below
@@ -377,11 +405,9 @@ namespace HeavenStudio.Games
             });
         }
         
-        public static void SargeMarch(double beat, bool noVoice)
+        public static void SargeMarch(double beat, bool noVoice, bool march)
         {
-            if (MarchingOrders.wantMarch != double.MinValue) return;
-            MarchingOrders.wantMarch = beat + 1;
-
+            if (march) MarchingOrders.wantMarch = beat + 1;
             if (!noVoice) PlaySoundSequence("marchingOrders", "susume", beat);
 
             if (GameManager.instance.currentGame == "marchingOrders") {
@@ -393,7 +419,7 @@ namespace HeavenStudio.Games
         public void ForceMarching(double beat, float length)
         {
             for (int i = 0; i < length; i++) {
-                ScheduleInput(beat + i - 1, 1f, InputType.STANDARD_DOWN, MarchHit, GenericMiss, Empty);
+                ScheduleInput(beat + i - 0.2f, 0.2f, InputType.STANDARD_DOWN, MarchHit, GenericMiss, Empty);
                 BeatAction.New(instance.gameObject, new List<BeatAction.Action>() {
                     new BeatAction.Action(beat + i, delegate {
                         marchOtherCount++;

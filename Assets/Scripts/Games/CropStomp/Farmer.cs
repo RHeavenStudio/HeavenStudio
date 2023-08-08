@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 using HeavenStudio.Util;
+using System;
 
 namespace HeavenStudio.Games.Scripts_CropStomp
 {
@@ -18,15 +19,20 @@ namespace HeavenStudio.Games.Scripts_CropStomp
 
         [SerializeField] private GameObject plantLeftRef;
         [SerializeField] private GameObject plantRightRef;
+        [SerializeField] private GameObject plantLastRef;
+        [SerializeField] private Sprite[] veggieSprites;
+        [SerializeField] private GameObject startPlant;
         private List<GameObject> spawnedPlants = new List<GameObject>();
+        private int lastVeggieType;
 
         [SerializeField] private float plantDistance = 0.5f;
+        [SerializeField] private float plantStartDistance = 0.1f;
 
-        public int plantThreshold = 8;
+        [NonSerialized] public int plantThreshold = 8;
 
-        public int plantLimit = 80;
+        [NonSerialized] public int plantLimit = 80;
 
-        private static int collectedPlants = 0;
+        public static int collectedPlants = 0;
 
         private void OnDestroy()
         {
@@ -68,15 +74,17 @@ namespace HeavenStudio.Games.Scripts_CropStomp
             }
         }
 
-        public void CollectPlant()
+        public void CollectPlant(int veggieType)
         {
-            if (collectedPlants >= plantLimit) return;
+            if (collectedPlants > plantLimit) return;
+            if (collectedPlants <= plantLimit - plantThreshold) lastVeggieType = veggieType;
             collectedPlants++;
             UpdatePlants();
         }
 
         public void UpdatePlants()
         {
+            startPlant.SetActive(collectedPlants >= plantThreshold);
             if (spawnedPlants.Count > 0)
             {
                 foreach (var plant in spawnedPlants)
@@ -85,11 +93,19 @@ namespace HeavenStudio.Games.Scripts_CropStomp
                 }
                 spawnedPlants.Clear();
             }
-            for (int i = 0; i < collectedPlants && i < plantLimit; i += plantThreshold)
+            for (int i = 0; i <= collectedPlants - (plantThreshold * 2) && i <= plantLimit - (plantThreshold * 2); i += plantThreshold)
             {
-                GameObject spawnedPlant = Instantiate(((i / plantThreshold) % 2 == 0) ? plantRightRef : plantLeftRef, collectedHolder);
-                spawnedPlant.transform.localPosition = new Vector3(0, (i / plantThreshold) * plantDistance + plantDistance, 0);
-                spawnedPlant.GetComponent<SpriteRenderer>().sortingOrder = (i / plantThreshold) - 2;
+                bool isLast = i == plantLimit - (plantThreshold * 2);
+                int realIndex = i / plantThreshold;
+                GameObject spawnedPlant;
+                if (isLast)
+                {
+                    spawnedPlant = Instantiate(plantLastRef, collectedHolder);
+                    spawnedPlant.GetComponent<SpriteRenderer>().sprite = veggieSprites[lastVeggieType];
+                }
+                else spawnedPlant = Instantiate((realIndex % 2 == 0) ? plantRightRef : plantLeftRef, collectedHolder);
+                spawnedPlant.transform.localPosition = new Vector3(0, (realIndex * plantDistance) + plantStartDistance, 0);
+                spawnedPlant.GetComponent<SpriteRenderer>().sortingOrder = -realIndex - 2;
                 spawnedPlant.SetActive(true);
                 spawnedPlants.Add(spawnedPlant);
             }
@@ -101,7 +117,7 @@ namespace HeavenStudio.Games.Scripts_CropStomp
             Stomp(state >= 1f || state <= -1f);
         }
 
-        private void Miss(PlayerActionEvent caller) 
+        private void Miss(PlayerActionEvent caller)
         {
             if (GameManager.instance.currentGame != "cropStomp") return;
             if (!game.isMarching)

@@ -32,6 +32,7 @@ namespace HeavenStudio.Games.Loaders
                         var e = eventCaller.currentEntity; 
                         MunchyMonk.instance.MonkMove(e.beat, e.length, e["goToSide"], e["ease"]); 
                     },
+                    defaultLength = 8f,
                     resizable = true,
                     parameters = new List<Param>()
                     {
@@ -133,6 +134,20 @@ namespace HeavenStudio.Games.Loaders
                         new Param("ease", EasingFunction.Ease.Linear, "Ease", "Which ease should the scroll ramp up have?"),
                     }
                 },
+                new GameAction("CloudMonkey", "Cloud Monkey")
+                {
+                    function = delegate {
+                        var e = eventCaller.currentEntity;
+                        MunchyMonk.instance.MoveCloudMonkey(e.beat, e.length, e["start"], e["direction"]);
+                    },
+                    parameters = new List<Param>()
+                    {
+                        new Param("start", true, "Start Moving", "Start moving the monkey"),
+                        new Param("direction", MunchyMonk.WhichSide.Right, "Direction", "The direction the monkey will move."),
+                    },
+                    defaultLength = 8f,
+                    resizable = true,
+                },
             },
             new List<string>() {"ntr", "normal"},
             "ntrshugyo", "en",
@@ -176,6 +191,8 @@ namespace HeavenStudio.Games
         [SerializeField] GameObject BrowHolder;
         [SerializeField] GameObject StacheHolder;
         [SerializeField] GameObject DumplingObj;
+        [SerializeField] GameObject CloudMonkey;
+        [SerializeField] ScrollObject CloudMonkeyScroll;
 
         [Header("Animators")]
         [SerializeField] Animator OneGiverAnim;
@@ -204,7 +221,7 @@ namespace HeavenStudio.Games
         // the variables for scroll
         bool scrollRampUp;
         double scrollBeat;
-        float scrollLength;
+        double scrollLength;
         float scrollMod;
         static float scrollModCurrent = 0;
         EasingFunction.Ease scrollEase;
@@ -212,7 +229,7 @@ namespace HeavenStudio.Games
         // the variables for the monk moving 
         bool isMoving;
         double movingStartBeat;
-        float movingLength;
+        double movingLength;
         string moveAnim;
         EasingFunction.Ease lastEase;
         ScrollObject[] scrollObjects;
@@ -230,31 +247,39 @@ namespace HeavenStudio.Games
         {
             scrollObjects = FindObjectsByType<ScrollObject>(FindObjectsSortMode.None);
             foreach (var obj in scrollObjects) obj.SpeedMod = scrollModCurrent;
+            if (growLevel > 0) {
+                StacheHolder.SetActive(true);
+                StacheAnim.Play($"Idle{growLevel}");
+                if (growLevel == 4) {
+                    BrowHolder.SetActive(true);
+                    BrowAnim.Play("Idle");
+                }
+            }
         }
 
         private void OnDestroy() 
         {
-            // reset static variables
-            if (queuedOnes.Count > 0) queuedOnes.Clear();
-            if (queuedTwoTwos.Count > 0) queuedThrees.Clear();
-            if (queuedThrees.Count > 0) queuedThrees.Clear();
+            // reset static variables only when the game is stopped (so that it carries over between game switches)
+            if (!Conductor.instance.NotStopped()) {
+                if (queuedOnes.Count > 0) queuedOnes.Clear();
+                if (queuedTwoTwos.Count > 0) queuedThrees.Clear();
+                if (queuedThrees.Count > 0) queuedThrees.Clear();
 
-            howManyGulps = 0;
-            growLevel = 0;
-            inputsTilGrow = 10;
-            noBlush = false;
-            disableBaby = false;
-
-            foreach (var evt in scheduledInputs)
-            {
-                evt.Disable();
+                howManyGulps = 0;
+                growLevel = 0;
+                inputsTilGrow = 10;
+                noBlush = false;
+                disableBaby = false;
             }
+
+            foreach (var evt in scheduledInputs) evt.Disable();
         }
 
         private void Update() 
         {
             // input stuff
-            if (PlayerInput.Pressed(true) && (!IsExpectingInputNow(InputType.STANDARD_DOWN) || !IsExpectingInputNow(InputType.DIRECTION_DOWN))) {
+            if (PlayerInput.Pressed(true) && !IsExpectingInputNow(InputType.STANDARD_DOWN)) {
+                Debug.Log("ooops" + PlayerInput.Pressed(true));
                 MonkArmsAnim.DoScaledAnimationAsync("WristSlap", 0.5f);
                 SoundByte.PlayOneShotGame(sfxName+"slap");
                 isStaring = false;
@@ -304,6 +329,10 @@ namespace HeavenStudio.Games
                 foreach (var obj in scrollObjects) obj.SpeedMod = newPos;
             }
 
+            if (CloudMonkey.transform.position.x < -5 || CloudMonkey.transform.position.x > 15.5) {
+                CloudMonkey.SetActive(false);
+            }
+
             // cue queuing stuff
             if (queuedOnes.Count > 0) {
                 foreach (var dumpling in queuedOnes) OneGoCue(dumpling.beat, dumpling.color1);
@@ -334,6 +363,10 @@ namespace HeavenStudio.Games
                 if (!MonkAnim.IsPlayingAnimationName("Blush") || !MonkAnim.IsPlayingAnimationName("Stare")) {
                     if (growLevel == 4) BrowAnim.DoScaledAnimationAsync("Bop", 0.5f);
                     if (growLevel > 0) StacheAnim.DoScaledAnimationAsync($"Bop{growLevel}", 0.5f);
+                }
+
+                if (CloudMonkey.activeInHierarchy) {
+                    CloudMonkey.GetComponent<Animator>().DoScaledAnimationAsync("Bop", 0.5f);
                 }
             }
         }
@@ -382,8 +415,10 @@ namespace HeavenStudio.Games
         {
             PlaySoundSequence("munchyMonk", "one_go", beat);
 
-            queuedOnes.Add(new QueuedDumpling() 
-                { beat = beat, color1 = firstColor, });
+            queuedOnes.Add(new QueuedDumpling() { 
+                beat = beat, 
+                color1 = firstColor, 
+            });
         }
 
         public void OneGoCue(double beat, Color firstColor)
@@ -528,7 +563,7 @@ namespace HeavenStudio.Games
             if (vineBoom) SoundByte.PlayOneShotGame("fanClub/arisa_dab", forcePlay: true);
         }
 
-        public void MonkMove(double beat, float length, int goToSide, int ease)
+        public void MonkMove(double beat, double length, int goToSide, int ease)
         {
             movingStartBeat = beat;
             movingLength = length;
@@ -539,29 +574,50 @@ namespace HeavenStudio.Games
 
         public static void Modifiers(double beat, int inputsTilGrow, bool resetLevel, int setLevel, bool disableBaby, bool shouldBlush)
         {
-            if (MunchyMonk.inputsTilGrow != inputsTilGrow) MunchyMonk.howManyGulps = inputsTilGrow * MunchyMonk.growLevel;
-            if (setLevel != 0) MunchyMonk.growLevel = setLevel;
+            if (MunchyMonk.inputsTilGrow != inputsTilGrow) {
+                // no matter what you set inputsTilGrow to, it will reset howManyGulps to a value inbetween the level-ups relative to the old level and old inputsTilGrow.
+                MunchyMonk.howManyGulps = ((inputsTilGrow * MunchyMonk.growLevel) + inputsTilGrow * (MunchyMonk.howManyGulps % MunchyMonk.inputsTilGrow)/MunchyMonk.inputsTilGrow);
+                MunchyMonk.inputsTilGrow = inputsTilGrow;
+            }
+            
+            if (setLevel != 0) {
+                MunchyMonk.growLevel = setLevel;
+                MunchyMonk.howManyGulps = setLevel*inputsTilGrow;
+                if (GameManager.instance.currentGame == "munchyMonk") {
+                    MunchyMonk.instance.StacheAnim.Play($"Idle{setLevel}", 0, 0);
+                    MunchyMonk.instance.StacheHolder.SetActive(true);
+                }
+            }
+            
             if (resetLevel) {
                 MunchyMonk.growLevel = 0;
                 MunchyMonk.howManyGulps = 0;
+                if (GameManager.instance.currentGame == "munchyMonk") MunchyMonk.instance.StacheHolder.SetActive(false);
             }
             
-
             MunchyMonk.noBlush = !shouldBlush;
-            MunchyMonk.inputsTilGrow = inputsTilGrow;
             MunchyMonk.disableBaby = disableBaby;
 
             if (GameManager.instance.currentGame == "munchyMonk") 
                 MunchyMonk.instance.Baby.SetActive(!disableBaby);
         }
 
-        public void ScrollBG(double beat, float length, float scrollSpeed, int ease)
+        public void ScrollBG(double beat, double length, float scrollSpeed, int ease)
         {
             scrollBeat = beat;
             scrollLength = length;
             scrollMod = scrollSpeed;
             scrollRampUp = true;
             scrollEase = (EasingFunction.Ease)ease;
+        }
+
+        public void MoveCloudMonkey(double beat, double length, bool go, int direction)
+        {
+            bool wasActive = CloudMonkey.activeInHierarchy;
+            CloudMonkey.SetActive(true);
+            CloudMonkeyScroll.SpeedMod = (float)((direction == 0 ? 34 : -34)/length)*(Conductor.instance.songBpm/100);
+            CloudMonkeyScroll.AutoScroll = go;
+            if (!wasActive) CloudMonkey.transform.position = new Vector3((direction == 0 ? -5f : 15.5f), 0, 0);
         }
     }
 }

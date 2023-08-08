@@ -317,7 +317,7 @@ SpriteRenderer:
   m_Size: {x: 5.12, y: 5.12}
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
-  m_WasSpriteAssigned: 1
+  m_WasSpriteAssigned: 0
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
 --- !u!1 &646572621760847893
@@ -1408,7 +1408,7 @@ SpriteRenderer:
   m_Size: {x: 5.12, y: 5.12}
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
-  m_WasSpriteAssigned: 1
+  m_WasSpriteAssigned: 0
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
 --- !u!1 &2618106657828263176
@@ -4191,19 +4191,16 @@ MonoBehaviour:
   alienSpeakCount: 0
   translatorSpeakCount: 0
   hasMissed: 0
-  alien: {fileID: 7783123803599722790}
-  translator: {fileID: 179726693367595051}
-  dummyHolder: {fileID: 0}
+  alien: {fileID: 1725356918350344904}
+  translator: {fileID: 2669316826032871973}
   missionControl: {fileID: 1703073459706337243}
-  liveBar: {fileID: 6386057715023792916}
+  liveBar: {fileID: 6529724687638495651}
   alienTextbox: {fileID: 4232889953588772276}
   alienText: {fileID: 8658955634054422971}
   translateTextbox: {fileID: 2397353702484880984}
   translateText: {fileID: 115920198331035770}
   translateFailTextbox: {fileID: 224928759238017390}
   translateFailText: {fileID: 907427456758261759}
-  intervalStarted: 0
-  beatInterval: 4
   noHitOnce: 0
   isSpeaking: 0
   lookAtLength: 1

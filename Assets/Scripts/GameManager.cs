@@ -6,8 +6,7 @@ using UnityEngine;
 
 using Starpelly;
 using Jukebox;
-using Jukebox.Legacy;
-using Newtonsoft.Json;
+using HeavenStudio.Util;
 using HeavenStudio.Games;
 using HeavenStudio.Common;
 
@@ -46,6 +45,9 @@ namespace HeavenStudio
         [NonSerialized] public bool canInput = true;
         [NonSerialized] public RiqEntity currentSection, nextSection;
         public double sectionProgress { get; private set; }
+
+        bool AudioLoadDone;
+        bool ChartLoadError;
 
         public event Action<double> onBeatChanged;
         public event Action<RiqEntity> onSectionChange;
@@ -105,6 +107,8 @@ namespace HeavenStudio
 
         public void Init(bool preLoaded = false)
         {
+            AudioLoadDone = false;
+            ChartLoadError = false;
             currentPreEvent= 0;
             currentPreSwitch = 0;
             currentPreSequence = 0;
@@ -142,6 +146,7 @@ namespace HeavenStudio
             }
             else
             {
+                RiqFileHandler.ClearCache();
                 NewRemix();
             }
 
@@ -164,7 +169,8 @@ namespace HeavenStudio
         }
 
         public void NewRemix()
-        {
+        {         
+            AudioLoadDone = false;
             Beatmap = new("1", "HeavenStudio");
             Beatmap.data.properties = Minigames.propertiesModel;
             Beatmap.AddNewTempoChange(0, 120f);
@@ -172,10 +178,12 @@ namespace HeavenStudio
             Beatmap.data.offset = 0f;
             Conductor.instance.musicSource.clip = null;
             RiqFileHandler.WriteRiq(Beatmap);
+            AudioLoadDone = true;
         }
 
         public IEnumerator LoadMusic()
         {
+            ChartLoadError = false;
             IEnumerator load = RiqFileHandler.LoadSong();
             while (true)
             {
@@ -192,20 +200,27 @@ namespace HeavenStudio
                 {
                     Debug.LogWarning("chart has no music: " + f.Message);
                     Conductor.instance.musicSource.clip = null;
+                    AudioLoadDone = true;
+                    yield break;
                 }
                 catch (Exception e)
                 {
                     Debug.LogError($"Failed to load music: {e.Message}");
                     GlobalGameManager.ShowErrorMessage("Error Loading Music", e.Message + "\n\n" + e.StackTrace);
+                    AudioLoadDone = true;
+                    ChartLoadError = true;
                     yield break;
                 }
                 yield return current;
             }
             Conductor.instance.musicSource.clip = RiqFileHandler.StreamedAudioClip;
+            AudioLoadDone = true;
         }
 
         public void LoadRemix(bool editor = false)
         {
+            AudioLoadDone = false;
+            ChartLoadError = false;
             try
             {
                 Beatmap = RiqFileHandler.ReadRiq();
@@ -214,6 +229,7 @@ namespace HeavenStudio
             {
                 Debug.LogError($"Failed to load remix: {e.Message}");
                 GlobalGameManager.ShowErrorMessage("Error Loading RIQ", e.Message + "\n\n" + e.StackTrace);
+                ChartLoadError = true;
                 return;
             }
             if (!editor)
@@ -236,6 +252,17 @@ namespace HeavenStudio
             else
             {
                 SetGame("noGame");
+            }
+
+            if (editor)
+            {
+                Debug.Log(Beatmap.data.riqOrigin);
+                if (Beatmap.data.riqOrigin != "HeavenStudio")
+                {
+                    string origin = Beatmap.data.riqOrigin?.DisplayName() ?? "Unknown Origin";
+                    GlobalGameManager.ShowErrorMessage("Warning", 
+                        $"This chart came from\n<alpha=#AA>{origin}</color>\nand uses content not included in Heaven Studio.\n\n<color=\"yellow\">You may be able to edit this chart in Heaven Studio to be used in its original program.</color>");
+                }
             }
         }
 
@@ -551,7 +578,7 @@ namespace HeavenStudio
             // wait for first game to be loaded
             yield return new WaitUntil(() => Beatmap != null && Beatmap.Entities.Count > 0);
             //wait for audio clip to be loaded
-            yield return new WaitUntil(() => Conductor.instance.musicSource.clip != null);
+            yield return new WaitUntil(() => AudioLoadDone || (ChartLoadError && !GlobalGameManager.IsShowingDialog));
 
             SkillStarManager.instance.KillStar();
             TimingAccuracyDisplay.instance.StopStarFlash();
@@ -736,24 +763,25 @@ namespace HeavenStudio
 
         IEnumerator SwitchGameIE(string game, double beat, bool flash)
         {
-            if(flash == true)
+            if(flash)
             {
                 HeavenStudio.StaticCamera.instance.ToggleCanvasVisibility(false);
             }
 
-            SetGame(game);
+            SetGame(game, false);
 
             Minigame miniGame = currentGameO.GetComponent<Minigame>();
             if (miniGame != null)
                 miniGame.OnGameSwitch(beat);
 
-            //TODO: wait time in beats instead of seconds
-            yield return new WaitForSeconds(0.1f);
+            //before beat-based: yield return new WaitForSeconds(0.1f);
+            yield return new WaitForSeconds(Conductor.instance.pitchedSecPerBeat / 4);
 
             HeavenStudio.StaticCamera.instance.ToggleCanvasVisibility(true);
+            SetAmbientGlowToCurrentMinigameColor();
         }
 
-        private void SetGame(string game)
+        private void SetGame(string game, bool useMinigameColor = true)
         {
             Destroy(currentGameO);
 
@@ -761,7 +789,7 @@ namespace HeavenStudio
             currentGameO.transform.parent = eventCaller.GamesHolder.transform;
             currentGameO.name = game;
 
-            SetCurrentGame(game);
+            SetCurrentGame(game, useMinigameColor);
 
             ResetCamera();
         }
@@ -808,19 +836,28 @@ namespace HeavenStudio
             return EventCaller.instance.minigames.Find(c => c.name == name);
         }
 
-        public void SetCurrentGame(string game)
+        public void SetCurrentGame(string game, bool useMinigameColor = true)
         {
             currentGame = game;
             if (GetGameInfo(currentGame) != null)
             {
                 CircleCursor.InnerCircle.GetComponent<SpriteRenderer>().color = Colors.Hex2RGB(GetGameInfo(currentGame).color);
-                HeavenStudio.StaticCamera.instance.SetAmbientGlowColour(Colors.Hex2RGB(GetGameInfo(currentGame).color));
+                if (useMinigameColor) HeavenStudio.StaticCamera.instance.SetAmbientGlowColour(Colors.Hex2RGB(GetGameInfo(currentGame).color), true);
+                //else HeavenStudio.StaticCamera.instance.SetAmbientGlowColour(HeavenStudio.GameCamera.currentColor, false);
+                else HeavenStudio.StaticCamera.instance.SetAmbientGlowColour(Color.black, false);
             }
             else
             {
                 CircleCursor.InnerCircle.GetComponent<SpriteRenderer>().color = Color.white;
-                HeavenStudio.StaticCamera.instance.SetAmbientGlowColour(Color.black);
+                //HeavenStudio.StaticCamera.instance.SetAmbientGlowColour(HeavenStudio.GameCamera.currentColor, false);
+                HeavenStudio.StaticCamera.instance.SetAmbientGlowColour(Color.black, false);
             }
+        }
+
+        private void SetAmbientGlowToCurrentMinigameColor()
+        {
+            if (GetGameInfo(currentGame) != null) 
+                HeavenStudio.StaticCamera.instance.SetAmbientGlowColour(Colors.Hex2RGB(GetGameInfo(currentGame).color), true);
         }
 
         private bool SongPosLessThanClipLength(float t)

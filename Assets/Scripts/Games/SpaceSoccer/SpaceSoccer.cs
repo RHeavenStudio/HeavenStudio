@@ -98,8 +98,8 @@ namespace HeavenStudio.Games.Loaders
                     function = delegate { var e = eventCaller.currentEntity; SpaceSoccer.instance.UpdateScrollSpeed(e["x"], e["y"]); },
                     defaultLength = 1f,
                     parameters = new List<Param>() {
-                        new Param("x", new EntityTypes.Float(-5f, 5f, 0.09f), "Horizontal", "How fast does the background move horizontally?"),
-                        new Param("y", new EntityTypes.Float(-5f, 5f, 0.32f), "Vertical", "How fast does the background move vertically?"),
+                        new Param("x", new EntityTypes.Float(-10f, 10, 0.1f), "Horizontal", "How fast does the background move horizontally?"),
+                        new Param("y", new EntityTypes.Float(-10, 10f, 0.3f), "Vertical", "How fast does the background move vertically?"),
                     }
                 },
                 new GameAction("stopBall", "Stop Ball")
@@ -202,11 +202,10 @@ namespace HeavenStudio.Games
         [SerializeField] SuperCurveObject.Path[] ballPaths;
         public bool ballDispensed;
         double lastDispensedBeat;
-        float scrollBeat;
-        float scrollOffsetX;
-        float scrollOffsetY;
-        float currentScrollLengthX = 0.09f;
-        float currentScrollLengthY = 0.32f;
+        float xScrollMultiplier = 0.1f;
+        float yScrollMultiplier = 0.3f;
+        [SerializeField] private float xBaseSpeed = 1;
+        [SerializeField] private float yBaseSpeed = 1;
         Tween bgColorTween;
         Tween dotColorTween;
         #region Space Kicker Position Easing
@@ -244,10 +243,8 @@ namespace HeavenStudio.Games
         private void Update()
         {
             var cond = Conductor.instance;
-            float normalizedX = (Time.realtimeSinceStartup - scrollBeat) * currentScrollLengthX;
-            float normalizedY = (Time.realtimeSinceStartup - scrollBeat) * currentScrollLengthY;
-            backgroundSprite.NormalizedX = -scrollOffsetX - normalizedX;
-            backgroundSprite.NormalizedY = scrollOffsetY + normalizedY;
+            backgroundSprite.NormalizedX -= xBaseSpeed * xScrollMultiplier * Time.deltaTime;
+            backgroundSprite.NormalizedY += yBaseSpeed * yScrollMultiplier * Time.deltaTime;
 
             float normalizedEaseBeat = cond.GetPositionFromBeat(easeBeat, easeLength);
             if (normalizedEaseBeat <= 1 && normalizedEaseBeat > 0)
@@ -322,7 +319,9 @@ namespace HeavenStudio.Games
                 {
                     continue;
                 }
-                Dispense(entity.beat, false);
+                bool isOnGameSwitchBeat = entity.beat == beat;
+                Debug.Log(isOnGameSwitchBeat);
+                Dispense(entity.beat, isOnGameSwitchBeat && !entity["toggle"], false, isOnGameSwitchBeat && entity["down"]);
                 break;
             }
         }
@@ -341,11 +340,8 @@ namespace HeavenStudio.Games
 
         public void UpdateScrollSpeed(float scrollSpeedX, float scrollSpeedY) 
         {
-            scrollOffsetX = (Time.realtimeSinceStartup - scrollBeat) * currentScrollLengthX;
-            scrollOffsetY = (Time.realtimeSinceStartup - scrollBeat) * currentScrollLengthY;
-            currentScrollLengthX = scrollSpeedX;
-            currentScrollLengthY = scrollSpeedY;
-            scrollBeat = Time.realtimeSinceStartup;
+            xScrollMultiplier = scrollSpeedX;
+            yScrollMultiplier = scrollSpeedY;
         }
 
         public void EaseSpaceKickersPositions(double beat, float length, int ease, float xDistance, float yDistance, float zDistance)
@@ -455,9 +451,8 @@ namespace HeavenStudio.Games
             for (int i = 0; i < kickers.Count; i++)
             {
                 Kicker kicker = kickers[i];
-                if (i == 0) kicker.player = true;
-
-                if (kicker.ball != null || (ignorePlayer && i == 0)) continue;
+                kicker.player = i == 0;
+                if (kicker.ball != null || (ignorePlayer && kicker.player)) continue;
 
                 GameObject ball = Instantiate(ballRef, kicker.transform.GetChild(0));
                 ball.SetActive(true);

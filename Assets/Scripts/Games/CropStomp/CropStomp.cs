@@ -27,20 +27,36 @@ namespace HeavenStudio.Games.Loaders
                 },
                 new GameAction("mole", "Mole")
                 {
+                    preFunction = delegate
+                    {
+                        if (eventCaller.currentEntity["mute"]) return;
+                        CropStomp.MoleSound(eventCaller.currentEntity.beat);
+                    },
                     defaultLength = 2f,
                     parameters = new List<Param>()
                     {
                         new Param("mute", false, "Mute", "Should the mole laugh sound be muted?")
+                    },
+                    preFunctionLength = 6
+                },
+                new GameAction("end", "End")
+                {
+                    parameters = new List<Param>()
+                    {
+                        new Param("mute", true, "Mute Humming?")
                     }
                 },
                 new GameAction("plantCollect", "Veggie Collection Values")
                 {
-                    function = delegate { var e = eventCaller.currentEntity; CropStomp.instance.SetCollectThresholds(e["threshold"], e["limit"]); },
+                    function = delegate { var e = eventCaller.currentEntity; 
+                        CropStomp.instance.SetCollectThresholds(e["threshold"], e["limit"], e["force"], e["forceAmount"]); },
                     defaultLength = 0.5f,
                     parameters = new List<Param>()
                     {
                         new Param("threshold", new EntityTypes.Integer(1, 80, 8), "Threshold", "For each time the threshold is met a new plant will appear in the veggie bag."),
-                        new Param("limit", new EntityTypes.Integer(1, 1000, 80), "Limit", "What is the limit for plants collected?")
+                        new Param("limit", new EntityTypes.Integer(1, 1000, 80), "Limit", "What is the limit for plants collected?"),
+                        new Param("force", false, "Force Amount of Collected Plants"),
+                        new Param("forceAmount", new EntityTypes.Integer(0, 1000, 0), "Force Amount")
                     }
                 }
             },
@@ -59,7 +75,7 @@ namespace HeavenStudio.Games
     public class CropStomp : Minigame
     {
         const float stepDistance = 2.115f;
-        public static float[] moleSoundOffsets = new float[]{ 0.134f, 0.05f, 0.061f };
+        //public static float[] moleSoundOffsets = new float[]{ 0.134f, 0.05f, 0.061f };
 
         float scrollRate => stepDistance / (Conductor.instance.pitchedSecPerBeat * 2f);
         float grassWidth;
@@ -67,6 +83,8 @@ namespace HeavenStudio.Games
 
         private double newBeat = -1f; // So that marching can happen on beat 0.
         private double marchStartBeat = -1f;
+        private double marchEndBeat = double.MaxValue;
+        private bool willNotHum = true;
         private double marchOffset;
         private int currentMarchBeat;
         private int stepCount;
@@ -171,7 +189,7 @@ namespace HeavenStudio.Games
                 //get the beat of the closest end event
                 foreach (var end in allEnds)
                 {
-                    if (end.datamodel.Split(2) == "cropStomp") continue;
+                    if (end.datamodel != "gameManager/end" && end.datamodel.Split(2) == "cropStomp") continue;
                     if (end.beat > startBeat)
                     {
                         endBeat = end.beat;
@@ -219,6 +237,43 @@ namespace HeavenStudio.Games
         }
 
         List<RiqEntity> cuedMoleSounds = new List<RiqEntity>();
+
+        public override void OnGameSwitch(double beat)
+        {
+            SetInitTresholds(beat);
+            SetMarchEndBeat(beat);
+        }
+
+        public override void OnPlay(double beat)
+        {
+            SetInitTresholds(beat);
+            SetMarchEndBeat(beat);
+        }
+
+        private void SetMarchEndBeat(double beat)
+        {
+            double nextEndBeat = double.MaxValue;
+            var nextEnd = EventCaller.GetAllInGameManagerList("gameManager", new string[] { "switchGame", "end" }).Find(e => e.beat > beat);
+            if (nextEnd != null) nextEndBeat = nextEnd.beat;
+
+            var allEnds = EventCaller.GetAllInGameManagerList("cropStomp", new string[] { "end" });
+            var tempEnds = allEnds.FindAll(x => x.beat >= beat && x.beat < nextEndBeat);
+            if (tempEnds.Count == 0) return;
+
+            marchEndBeat = tempEnds[0].beat;
+            willNotHum = tempEnds[0]["mute"];
+        }
+
+        public static void MoleSound(double beat)
+        {
+            MultiSound.Play(new MultiSound.Sound[] 
+            { 
+                new MultiSound.Sound("cropStomp/moleNyeh", beat - 2, 1, 1, false, 0.134),
+                new MultiSound.Sound("cropStomp/moleHeh1", beat - 1.5, 1, 1, false, 0.05),
+                new MultiSound.Sound("cropStomp/moleHeh2", beat - 1, 1, 1, false, 0.061) 
+            }, forcePlay: true);
+        }
+
         private void Update()
         {
             var cond = Conductor.instance;
@@ -226,36 +281,25 @@ namespace HeavenStudio.Games
             if (!cond.isPlaying)
                 return;
 
-            // Mole sounds.
-            var moleEvents = GameManager.instance.Beatmap.Entities.FindAll(m => m.datamodel == "cropStomp/mole");
-            for (int i = 0; i < moleEvents.Count; i++)
-            {
-                var moleEvent = moleEvents[i];
-                if (moleEvent["mute"]) continue;
-                var timeToEvent = moleEvent.beat - cond.songPositionInBeatsAsDouble;
-                if (timeToEvent <= 4f && timeToEvent > 2f && !cuedMoleSounds.Contains(moleEvent))
-                {
-                    cuedMoleSounds.Add(moleEvent);
-                    MultiSound.Play(new MultiSound.Sound[] { new MultiSound.Sound("cropStomp/moleNyeh", (moleEvent.beat - 2f) - moleSoundOffsets[0] * Conductor.instance.songBpm / 60f),
-                                                            new MultiSound.Sound("cropStomp/moleHeh1", (moleEvent.beat - 1.5f) - moleSoundOffsets[1] * Conductor.instance.songBpm / 60f),
-                                                            new MultiSound.Sound("cropStomp/moleHeh2", (moleEvent.beat - 1f) - moleSoundOffsets[2] * Conductor.instance.songBpm / 60f) });
-                }
-            }
-
             if (!isMarching)
                 return;
             // Debug.Log(newBeat);
+
+            bool cameraLocked = cond.songPositionInBeats >= marchEndBeat;
+            bool isHumming = !(cameraLocked && willNotHum);
 
             if (cond.ReportBeat(ref newBeat, marchOffset, true))
             {
                 currentMarchBeat += 1;
 
                 PlayAnims();
-                if (currentMarchBeat % 2 != 0) //step sound
+                if (currentMarchBeat % 2 != 0 && isHumming) //step sound
                 {
                     MultiSound.Play(new MultiSound.Sound[] {new MultiSound.Sound("cropStomp/hmm", newBeat + marchOffset)});
                 }
             }
+
+            if (cameraLocked) return;
 
             // Object scroll.
             var scrollPos = scrollingHolder.localPosition;
@@ -294,16 +338,27 @@ namespace HeavenStudio.Games
             isFlicking = false;
         }
 
-        public void SetCollectThresholds(int thresholdEvolve, int limit)
+        public void SetCollectThresholds(int thresholdEvolve, int limit, bool force, int forceAmount)
         {
             farmer.plantThreshold = thresholdEvolve;
             farmer.plantLimit = limit;
+            if (force) Farmer.collectedPlants = forceAmount;
             farmer.UpdatePlants();
         }
 
-        public void CollectPlant()
+        private void SetInitTresholds(double beat)
         {
-            farmer.CollectPlant();
+            var allCollects = EventCaller.GetAllInGameManagerList("cropStomp", new string[] { "plantCollect" });
+            if (allCollects.Count == 0) return;
+
+            var tempCollect = allCollects.FindLast(x => x.beat < beat);
+            if (tempCollect == null) return;
+            SetCollectThresholds(tempCollect["threshold"], tempCollect["limit"], tempCollect["force"], tempCollect["forceAmount"]);
+        }
+
+        public void CollectPlant(int veggieType)
+        {
+            farmer.CollectPlant(veggieType);
         }
 
         private void PlayAnims()

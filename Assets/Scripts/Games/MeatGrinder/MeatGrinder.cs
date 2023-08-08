@@ -79,7 +79,7 @@ namespace HeavenStudio.Games
         struct QueuedInterval
         {
             public double beat;
-            public float length;
+            public double length;
         }
 
         [Header("Objects")]
@@ -93,7 +93,7 @@ namespace HeavenStudio.Games
         bool intervalStarted;
         double intervalStartBeat;
         bool bossBop = true;
-        public float beatInterval = 4f;
+        public double beatInterval = 4f;
         public bool bossAnnoyed = false;
         private double lastReportedBeat = 0f;
         const string sfxName = "meatGrinder/";
@@ -119,10 +119,7 @@ namespace HeavenStudio.Games
                 intervalStarted = false;
                 beatInterval = 4f;
             }
-            foreach (var evt in scheduledInputs)
-            {
-                evt.Disable();
-            }
+            foreach (var evt in scheduledInputs) evt.Disable();
         }
 
         private void Update() 
@@ -131,13 +128,13 @@ namespace HeavenStudio.Games
                 TackAnim.DoScaledAnimationAsync("TackEmptyHit", 0.5f);
                 TackAnim.SetBool("tackMeated", false);
                 SoundByte.PlayOneShotGame(sfxName+"whiff");
-                if (bossAnnoyed) BossAnim.DoScaledAnimationAsync("Bop", 0.5f);
+                bossAnnoyed = false;
             }
 
             if (bossAnnoyed) BossAnim.SetBool("bossAnnoyed", true);
 
             if (queuedIntervals.Count > 0) {
-                foreach (var interval in queuedIntervals) { StartInterval(interval.beat, interval.length); }
+                foreach (var interval in queuedIntervals) StartInterval(interval.beat, interval.length);
                 queuedIntervals.Clear();
             }
         }
@@ -153,7 +150,7 @@ namespace HeavenStudio.Games
             }
         }
 
-        public void Bop(double beat, float length, bool doesBop, bool autoBop)
+        public void Bop(double beat, double length, bool doesBop, bool autoBop)
         {
             bossBop = autoBop;
             if (doesBop) {
@@ -169,7 +166,7 @@ namespace HeavenStudio.Games
             }
         }
 
-        public static void PreInterval(double beat, float length)
+        public static void PreInterval(double beat, double length)
         {
             if (MeatGrinder.instance.intervalStarted || MeatGrinder.queuedIntervals.Count > 0) return;
 
@@ -178,9 +175,7 @@ namespace HeavenStudio.Games
                 length = length,
             });
 
-            MultiSound.Play(new MultiSound.Sound[] {
-                new MultiSound.Sound("meatGrinder/startSignal", beat - 1),
-            }, forcePlay: true);
+            SoundByte.PlayOneShotGame("meatGrinder/startSignal", beat - 1, forcePlay: true);
 
             if (GameManager.instance.currentGame == "meatGrinder") {
                 BeatAction.New(MeatGrinder.instance.gameObject, new List<BeatAction.Action>() {
@@ -191,7 +186,7 @@ namespace HeavenStudio.Games
             }
         }
 
-        public void StartInterval(double beat, float length)
+        public void StartInterval(double beat, double length)
         {
             if (MeatGrinder.instance.intervalStarted) return;
 

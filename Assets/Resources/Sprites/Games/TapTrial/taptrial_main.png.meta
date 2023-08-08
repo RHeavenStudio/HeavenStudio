@@ -1571,7 +1571,7 @@ TextureImporter:
         width: 216
         height: 248
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
@@ -1592,7 +1592,7 @@ TextureImporter:
         width: 184
         height: 216
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
@@ -1600,6 +1600,132 @@ TextureImporter:
       bones: []
       spriteID: 24da12583cf417590800000000000000
       internalID: -7678268188519191230
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: taptrial_main_0
+      rect:
+        serializedVersion: 2
+        x: 1060
+        y: 681
+        width: 220
+        height: 293
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 2a4eca041ab3c0e49bc5f37c9ba798f5
+      internalID: -796690921
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: taptrial_main_1
+      rect:
+        serializedVersion: 2
+        x: 1311
+        y: 682
+        width: 213
+        height: 294
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 45e8e1b6da0cd6c49a7c3eabcf424320
+      internalID: 1850945584
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: taptrial_main_2
+      rect:
+        serializedVersion: 2
+        x: 1538
+        y: 684
+        width: 195
+        height: 292
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 6ed3763615853e2438a84e7ea8e23ca1
+      internalID: -1887236934
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: taptrial_main_3
+      rect:
+        serializedVersion: 2
+        x: 785
+        y: 745
+        width: 194
+        height: 186
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 8235ca5b15fbfa14691d5e92cfd1d184
+      internalID: -1431682805
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: taptrial_main_4
+      rect:
+        serializedVersion: 2
+        x: 773
+        y: 990
+        width: 205
+        height: 170
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 46356e4670d54ac44b526c65fe68d90f
+      internalID: -1412322936
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: taptrial_main_5
+      rect:
+        serializedVersion: 2
+        x: 1105
+        y: 1070
+        width: 151
+        height: 160
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: c213ebc8d3849d04899c172ca30d0adc
+      internalID: -1981152341
       vertices: []
       indices: 
       edges: []
@@ -1677,6 +1803,12 @@ TextureImporter:
       monkey_mouth_1: 5275794459429879604
       tap_effect: -465010420825850716
       tap_effect_star: 7599070281986493235
+      taptrial_main_0: -796690921
+      taptrial_main_1: 1850945584
+      taptrial_main_2: -1887236934
+      taptrial_main_3: -1431682805
+      taptrial_main_4: -1412322936
+      taptrial_main_5: -1981152341
   spritePackingTag: 
   pSDRemoveMatte: 0
   pSDShowRemoveMatteOption: 0
