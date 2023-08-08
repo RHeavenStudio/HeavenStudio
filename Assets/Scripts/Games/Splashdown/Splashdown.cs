@@ -103,7 +103,7 @@ namespace HeavenStudio.Games
         {
             var cond = Conductor.instance;
 
-            if (cond.isPlaying && !cond.isPaused)
+            if (cond.isPlaying && !cond.isPaused && !IsIntroing())
             {
                 if (PlayerInput.Pressed() && !IsExpectingInputNow(InputType.STANDARD_DOWN))
                 {
@@ -144,8 +144,19 @@ namespace HeavenStudio.Games
             }
         }
 
+        private double introBeat = -1;
+        private float introLength = 0;
+
+        private bool IsIntroing()
+        {
+            float normalized = Conductor.instance.GetPositionFromBeat(introBeat, introLength);
+            return normalized >= 0f && normalized <= 1f;
+        }
+
         public void Intro(double beat, float length)
         {
+            introBeat = beat;
+            introLength = length;
             List<BeatAction.Action> actions = new List<BeatAction.Action>();
             for (int i = 0; i < length - 1; i++)
             {
@@ -172,6 +183,7 @@ namespace HeavenStudio.Games
 
         public void GoDown(double beat, float length)
         {
+            if (IsIntroing()) return;
             List<BeatAction.Action> actions = new List<BeatAction.Action>();
             for (int i = 0; i < currentSynchrettes.Count; i++)
             {
@@ -191,6 +203,7 @@ namespace HeavenStudio.Games
 
         public void GoUp(double beat, float length, int appearType)
         {
+            if (IsIntroing()) return;
             List<BeatAction.Action> actions = new List<BeatAction.Action>();
             for (int i = 0; i < currentSynchrettes.Count; i++)
             {
@@ -221,6 +234,7 @@ namespace HeavenStudio.Games
 
         public void Jump(double beat, float length, bool dolphin)
         {
+            if (IsIntroing()) return;
             List<BeatAction.Action> actions = new List<BeatAction.Action>();
             for (int i = 0; i < currentSynchrettes.Count; i++)
             {
@@ -242,7 +256,8 @@ namespace HeavenStudio.Games
 
         public void TogetherJump(double beat, bool alleyoop)
         {
-            SoundByte.PlayOneShotGame("splashdown/together", beat, Conductor.instance.songBpm / 120);
+            if (IsIntroing()) return;
+            SoundByte.PlayOneShotGame("splashdown/together");
             BeatAction.New(instance.gameObject, new List<BeatAction.Action>()
             {
                 new BeatAction.Action(beat + 2, delegate
@@ -278,7 +293,8 @@ namespace HeavenStudio.Games
 
         public void TogetherJumpRemix9(double beat, bool alleyoop)
         {
-            SoundByte.PlayOneShotGame("splashdown/togetherRemix9", beat, Conductor.instance.songBpm / 120);
+            if (IsIntroing()) return;
+            SoundByte.PlayOneShotGame("splashdown/togetherRemix9");
             BeatAction.New(instance.gameObject, new List<BeatAction.Action>()
             {
                 new BeatAction.Action(beat + 1, delegate
