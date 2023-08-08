@@ -715,6 +715,31 @@ namespace HeavenStudio
                         }
                     ),
 
+                    new GameAction("pan window", "Move Window", 1f, true, new List<Param>()
+                        {
+                            new Param("valA", new EntityTypes.Integer(-100, 200, 100), "Window X", "The Window's destination X coordinate. Can go off screen. Measured in percent."),
+                            new Param("valB", new EntityTypes.Integer(-100, 200, 100), "Window Y", "The Window's destination Y coordinate. Can go off screen. Measured in percent."),
+                            new Param("ease", Util.EasingFunction.Ease.Linear, "Ease Type"),
+                            new Param("axis", WindowController.ViewAxis.All, "Axis", "Idk why i would need this")
+                        }
+                    ),
+
+                    new GameAction("scale window", "Scale Window", 1f, true, new List<Param>()
+                        {
+                            new Param("valA", new EntityTypes.Integer(0, 200, 100), "Scale X", "How much the window is scaled on the X axis, measured in percent."),
+                            new Param("valB", new EntityTypes.Integer(0, 200, 100), "Scale Y", "How much the window is scaled on the Y axis, measured in percent."),
+                            new Param("ease", Util.EasingFunction.Ease.Linear, "Ease Type"),
+                            new Param("axis", WindowController.ViewAxis.All, "Axis", "AAAAAAA")
+                        }
+                    ),
+
+                    new GameAction("shake window", "Shake Window", 1f, true, new List<Param>()
+                        {
+                            new Param("valA", new EntityTypes.Float(0, 10, 0), "Horizontal Intensity"),
+                            new Param("valB", new EntityTypes.Float(0, 10, 1), "Vertical Intensity")
+                        }
+                    ),
+
                     new GameAction("display textbox", "Display Textbox", 1f, true, new List<Param>() 
                         {
                             new Param("text1", "", "Text", "The text to display in the textbox (Rich Text is supported!)"),
