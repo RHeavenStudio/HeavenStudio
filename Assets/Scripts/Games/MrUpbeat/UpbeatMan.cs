@@ -1,8 +1,5 @@
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using System;
-using Starpelly;
 using TMPro;
 
 using HeavenStudio.Util;
@@ -14,12 +11,12 @@ namespace HeavenStudio.Games.Scripts_MrUpbeat
         [Header("References")]
         [SerializeField] Animator anim;
         [SerializeField] Animator blipAnim;
-        [SerializeField] Animator letterAnim;
         [SerializeField] GameObject[] shadows;
         [SerializeField] TMP_Text blipText;
 
         public int blipSize = 0;
         public bool shouldGrow;
+        public bool shouldBlip = true;
         public string blipString = "M";
 
         static MrUpbeat game; 
@@ -29,19 +26,35 @@ namespace HeavenStudio.Games.Scripts_MrUpbeat
             game = MrUpbeat.instance;
         }
 
+        void Update() 
+        {
+            blipText.transform.localScale = Vector3.one;
+            
+            if (PlayerInput.Pressed() && !game.IsExpectingInputNow(InputType.STANDARD_DOWN)) {
+                Step(true);
+            }
+        }
+
         public void RecursiveBlipping(double beat)
         {
             if (game.stopBlipping) {
                 game.stopBlipping = false;
                 return;
-            } 
+            }
+            if (shouldBlip) {
+                Blipping(beat);
+            }
+            BeatAction.New(gameObject, new List<BeatAction.Action>() {
+                new BeatAction.Action(beat + 1, delegate { RecursiveBlipping(beat + 1); })
+            });
+        }
+
+        public void Blipping(double beat)
+        {
             SoundByte.PlayOneShotGame("mrUpbeat/blip");
             blipAnim.Play("Blip"+(blipSize+1), 0, 0);
             blipText.text = (blipSize == 4 && blipString != "") ? blipString : "";
             if (shouldGrow && blipSize < 4) blipSize++;
-            BeatAction.New(gameObject, new List<BeatAction.Action>() {
-                new BeatAction.Action(beat + 1, delegate { RecursiveBlipping(beat + 1); })
-            });
         }
 
         public void Step(bool isInput = false)
@@ -53,16 +66,11 @@ namespace HeavenStudio.Games.Scripts_MrUpbeat
             }
             
             anim.DoScaledAnimationAsync("Step", 0.5f);
-            letterAnim.DoScaledAnimationAsync(IsMirrored() ? "StepRight" : "StepLeft", 0.5f);
             SoundByte.PlayOneShotGame("mrUpbeat/step");
         }
 
         public void Fall()
         {
-            blipSize = 0;
-            blipAnim.Play("Idle", 0, 0);
-            blipText.text = "";
-
             anim.DoScaledAnimationAsync((game.stepIterate % 2 == 0) == IsMirrored() ? "FallR" : "FallL", 1f);
             SoundByte.PlayOneShot("miss");
             shadows[0].SetActive(false);
