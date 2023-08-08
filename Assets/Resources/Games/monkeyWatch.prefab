@@ -21654,6 +21654,10 @@ MonoBehaviour:
   balloonHandler: {fileID: 4712471487160862613}
   middleMonkey: {fileID: 5520703815918216618}
   fullZoomOut: 80
+  zoomOutEase: 3
+  zoomOutBeatLength: 2
+  zoomInBeatLength: 2
+  zoomInEase: 9
 --- !u!1 &6181011653585253546
 GameObject:
   m_ObjectHideFlags: 0
@@ -24299,6 +24303,7 @@ MonoBehaviour:
   pinkClap: {fileID: 5162462144302245337}
   shadowTrans: {fileID: 4357628429498402732}
   shadowXRange: -0.5
+  shadowYRange: 1
 --- !u!1 &7446072329631304920
 GameObject:
   m_ObjectHideFlags: 0
