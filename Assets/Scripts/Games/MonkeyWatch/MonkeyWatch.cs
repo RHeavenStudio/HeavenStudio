@@ -165,7 +165,7 @@ namespace HeavenStudio.Games
         {
             instance = this;
             funcOut = Util.EasingFunction.GetEasingFunction(Util.EasingFunction.Ease.EaseOutQuad);
-            funcIn = Util.EasingFunction.GetEasingFunction(Util.EasingFunction.Ease.EaseOutQuart);
+            funcIn = Util.EasingFunction.GetEasingFunction(Util.EasingFunction.Ease.EaseOutQuad);
             pinkMonkeys = EventCaller.GetAllInGameManagerList("monkeyWatch", new string[] { "off", "offStretch" });
             pinkMonkeysCustom = EventCaller.GetAllInGameManagerList("monkeyWatch", new string[] { "offInterval" });
             CameraUpdate();
