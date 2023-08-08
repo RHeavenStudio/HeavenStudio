@@ -717,8 +717,8 @@ namespace HeavenStudio
 
                     new GameAction("pan window", "Move Window", 1f, true, new List<Param>()
                         {
-                            new Param("valA", new EntityTypes.Integer(-100, 200, 0), "Window X", "The Window's destination X coordinate. Can go off screen. Measured in percent."),
-                            new Param("valB", new EntityTypes.Integer(-100, 200, 0), "Window Y", "The Window's destination Y coordinate. Can go off screen. Measured in percent."),
+                            new Param("valA", new EntityTypes.Float(-100, 200, 0), "Window X", "The Window's destination X coordinate. Can go off screen. Measured in percent."),
+                            new Param("valB", new EntityTypes.Float(-100, 200, 0), "Window Y", "The Window's destination Y coordinate. Can go off screen. Measured in percent."),
                             new Param("ease", Util.EasingFunction.Ease.Linear, "Ease Type"),
                             new Param("axis", WindowController.ViewAxis.All, "Axis", "Idk why i would need this")
                         }
@@ -726,8 +726,8 @@ namespace HeavenStudio
 
                     new GameAction("scale window", "Scale Window", 1f, true, new List<Param>()
                         {
-                            new Param("valA", new EntityTypes.Integer(0, 200, 100), "Scale X", "How much the window is scaled on the X axis, measured in percent."),
-                            new Param("valB", new EntityTypes.Integer(0, 200, 100), "Scale Y", "How much the window is scaled on the Y axis, measured in percent."),
+                            new Param("valA", new EntityTypes.Float(0, 200, 100), "Scale X", "How much the window is scaled on the X axis, measured in percent."),
+                            new Param("valB", new EntityTypes.Float(0, 200, 100), "Scale Y", "How much the window is scaled on the Y axis, measured in percent."),
                             new Param("ease", Util.EasingFunction.Ease.Linear, "Ease Type"),
                             new Param("axis", WindowController.ViewAxis.All, "Axis", "AAAAAAA")
                         }

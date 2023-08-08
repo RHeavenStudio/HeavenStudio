@@ -154,14 +154,14 @@ namespace HeavenStudio
                     switch (e["axis"])
                     {
                         case (int) ViewAxis.X:
-                            pan.x = func(panLast.x/Screen.width, e["valA"], Mathf.Min(prog, 1f)) * Screen.width;
+                            pan.x = func(panLast.x, e["valA"] * .01f * Screen.mainWindowDisplayInfo.width, Mathf.Min(prog, 1f));
                             break;
                         case (int) ViewAxis.Y:
-                            pan.y = func(panLast.y/Screen.height, e["valB"], Mathf.Min(prog, 1f)) * Screen.height;
+                            pan.y = func(panLast.y, e["valB"]* .01f * Screen.mainWindowDisplayInfo.height, Mathf.Min(prog, 1f));
                             break;
                         default:
-                            float dx = func(panLast.x/Screen.width, e["valA"], Mathf.Min(prog, 1f)) * Screen.width; 
-                            float dy = func(panLast.y/Screen.height, e["valB"], Mathf.Min(prog, 1f)) * Screen.height;
+                            float dx = func(panLast.x, e["valA"] * .01f * Screen.mainWindowDisplayInfo.width, Mathf.Min(prog, 1f)); 
+                            float dy = func(panLast.y, e["valB"] * .01f * Screen.mainWindowDisplayInfo.height, Mathf.Min(prog, 1f));
                             pan = new Vector3(dx, dy, 0);
                             break;
                     }
@@ -171,13 +171,13 @@ namespace HeavenStudio
                     switch (e["axis"])
                     {
                         case (int) ViewAxis.X:
-                            panLast.x = e["valA"];
+                            panLast.x = e["valA"] * .01f * Screen.mainWindowDisplayInfo.width;
                             break;
                         case (int) ViewAxis.Y:
-                            panLast.y = e["valB"];
+                            panLast.y = e["valB"] * .01f * Screen.mainWindowDisplayInfo.height;
                             break;
                         default:
-                            panLast = new Vector3(e["valA"], e["valB"], 0);
+                            panLast = new Vector3(e["valA"] * .01f * Screen.mainWindowDisplayInfo.width, e["valB"] * .01f * Screen.mainWindowDisplayInfo.height, 0);
                             break;
                     }
                 }
@@ -211,13 +211,13 @@ namespace HeavenStudio
                     switch (e["axis"])
                     {
                         case (int) ViewAxis.X:
-                            scaleLast.x = e["valA"];
+                            scaleLast.x = e["valA"] * .01f * Screen.mainWindowDisplayInfo.width;
                             break;
                         case (int) ViewAxis.Y:
-                            scaleLast.y = e["valB"];
+                            scaleLast.y = e["valB"] * .01f * Screen.mainWindowDisplayInfo.height;
                             break;
                         default:
-                            scaleLast = new Vector3(e["valA"], e["valB"], 1);
+                            scaleLast = new Vector3(e["valA"] * .01f * Screen.mainWindowDisplayInfo.width, e["valB"] * .01f * Screen.mainWindowDisplayInfo.height, 1);
                             break;
                     }
                 }
