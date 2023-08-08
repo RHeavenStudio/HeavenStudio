@@ -123,7 +123,7 @@ namespace HeavenStudio
 
             UpdateScale();
             UpdatePan();
-            SetShakeIntensity();
+            //SetShakeIntensity();
         }
 
         // Update is called once per frame
@@ -136,10 +136,10 @@ namespace HeavenStudio
             //prob isnt
             UpdateScale();
             UpdatePan();
-            SetShakeIntensity();
+            //SetShakeIntensity();
             
             
-            SetPosition(hWnd, Convert.ToInt16(pan.x), Convert.ToInt16(pan.y), Convert.ToInt16(scale.x), Convert.ToInt16(scale.y));
+            SetPosition(hWnd, Convert.ToInt16(pan.x + shakeResult.x), Convert.ToInt16(pan.y + shakeResult.y), Convert.ToInt16(scale.x), Convert.ToInt16(scale.y));
         }
 
         private void UpdatePan()
@@ -223,6 +223,7 @@ namespace HeavenStudio
             }
         }
 
+        /*
         private void SetShakeIntensity()
         {
             foreach (var e in shakeEvents)
@@ -232,13 +233,15 @@ namespace HeavenStudio
                 {
                     float fac = Mathf.Cos(Time.time * 80f) * 0.5f;
                     shakeResult = new Vector3(fac * e["valA"], fac * e["valB"]);
+                    Debug.Log(shakeResult);
                 }
                 if (prog > 1f)
                 {
-                    shakeResult = new Vector3(0, 0);
+                    shakeResult = new Vector3(0, 0, 0);
+                    Debug.Log(shakeResult);
                 }
             }
-        }
+        }*/
 
         public static void Reset()
         {
