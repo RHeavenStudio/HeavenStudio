@@ -54,12 +54,24 @@ namespace HeavenStudio.Games.Scripts_MonkeyWatch
             {
                 float normalizedAngle = Mathp.Normalize(realAngle, 0, 180);
                 x = Mathf.Lerp(0, shadowXRange, normalizedAngle);
-                y = Mathf.Lerp(0, shadowYRange, normalizedAngle);
             }
             else
             {
                 float normalizedAngle = Mathp.Normalize(realAngle, 180, 360);
                 x = Mathf.Lerp(shadowXRange, 0, normalizedAngle);
+            }
+
+            float realAngleY = anchorRotateTransform.localEulerAngles.z % 180 - 180;
+            realAngleY *= -1;
+
+            if (realAngleY <= 90)
+            {
+                float normalizedAngle = Mathp.Normalize(realAngleY, 0, 90);
+                y = Mathf.Lerp(0, shadowYRange, normalizedAngle);
+            }
+            else
+            {
+                float normalizedAngle = Mathp.Normalize(realAngleY, 90, 180);
                 y = Mathf.Lerp(shadowYRange, 0, normalizedAngle);
             }
             shadowTrans.localPosition = new Vector3(x, y);
