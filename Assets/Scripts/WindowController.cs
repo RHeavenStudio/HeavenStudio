@@ -77,7 +77,7 @@ namespace HeavenStudio
 
         public void SetPosition(System.IntPtr ptr, short x, short y, short resX, short resY)
         {
-            if(Application.isEditor) return;
+            if(Application.isEditor || !Editor.Editor.instance.fullscreen) return;
             SetWindowPos(ptr, HWND_NOTOPMOST, x, y, resX, resY, SWP_SHOWWINDOW);
         }
 
@@ -139,7 +139,8 @@ namespace HeavenStudio
             //SetShakeIntensity();
             
             
-            SetPosition(hWnd, Convert.ToInt16(pan.x + shakeResult.x), Convert.ToInt16(pan.y + shakeResult.y), Convert.ToInt16(scale.x), Convert.ToInt16(scale.y));
+            SetPosition(hWnd, Convert.ToInt16(pan.x), Convert.ToInt16(pan.y), Convert.ToInt16(scale.x), Convert.ToInt16(scale.y));
+            //SetPosition(hWnd, Convert.ToInt16(pan.x + shakeResult.x), Convert.ToInt16(pan.y + shakeResult.y), Convert.ToInt16(scale.x), Convert.ToInt16(scale.y));
         }
 
         private void UpdatePan()
@@ -243,11 +244,12 @@ namespace HeavenStudio
             }
         }*/
 
-        public static void Reset()
+        public void Reset()
         {
             pan = defaultPan;
             scale = defaultScale;
             shakeResult = defaultShake;
+            SetWindowPos(hWnd, HWND_NOTOPMOST, Convert.ToInt16(pan.x), Convert.ToInt16(pan.y), Convert.ToInt16(scale.x), Convert.ToInt16(scale.y), SWP_SHOWWINDOW);
         }
     }
 }
