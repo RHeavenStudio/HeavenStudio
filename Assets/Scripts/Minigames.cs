@@ -717,8 +717,8 @@ namespace HeavenStudio
 
                     new GameAction("pan window", "Move Window", 1f, true, new List<Param>()
                         {
-                            new Param("valA", new EntityTypes.Integer(-100, 200, 100), "Window X", "The Window's destination X coordinate. Can go off screen. Measured in percent."),
-                            new Param("valB", new EntityTypes.Integer(-100, 200, 100), "Window Y", "The Window's destination Y coordinate. Can go off screen. Measured in percent."),
+                            new Param("valA", new EntityTypes.Integer(-100, 200, 0), "Window X", "The Window's destination X coordinate. Can go off screen. Measured in percent."),
+                            new Param("valB", new EntityTypes.Integer(-100, 200, 0), "Window Y", "The Window's destination Y coordinate. Can go off screen. Measured in percent."),
                             new Param("ease", Util.EasingFunction.Ease.Linear, "Ease Type"),
                             new Param("axis", WindowController.ViewAxis.All, "Axis", "Idk why i would need this")
                         }
