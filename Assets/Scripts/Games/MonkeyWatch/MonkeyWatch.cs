@@ -165,7 +165,7 @@ namespace HeavenStudio.Games
         {
             instance = this;
             funcOut = Util.EasingFunction.GetEasingFunction(Util.EasingFunction.Ease.EaseOutQuad);
-            funcIn = Util.EasingFunction.GetEasingFunction(Util.EasingFunction.Ease.EaseOutQuad);
+            funcIn = Util.EasingFunction.GetEasingFunction(Util.EasingFunction.Ease.EaseOutQuart);
             pinkMonkeys = EventCaller.GetAllInGameManagerList("monkeyWatch", new string[] { "off", "offStretch" });
             pinkMonkeysCustom = EventCaller.GetAllInGameManagerList("monkeyWatch", new string[] { "offInterval" });
             CameraUpdate();
@@ -189,13 +189,13 @@ namespace HeavenStudio.Games
 
         public void ZoomOut(double beat, float length, int timeMode, int hours, int minutes)
         {
-            length = Mathf.Max(3, length);
+            length = Mathf.Max(4, length);
             zoomOutStartBeat = beat;
             zoomOutLength = length;
             backgroundHandler.SetFade(beat, 0.25f, true, (TimeMode)timeMode, hours, minutes);
             BeatAction.New(instance.gameObject, new List<BeatAction.Action>()
             {
-                new BeatAction.Action(beat + length - 1, delegate
+                new BeatAction.Action(beat + length - 2, delegate
                 {
                     backgroundHandler.SetFade(beat + length - 1, 0.25f, false, (TimeMode)timeMode, hours, minutes);
                 })
@@ -620,7 +620,7 @@ namespace HeavenStudio.Games
                 float newZ = 0f;
 
                 float normalizedZoomFirst = cond.GetPositionFromBeat(zoomOutStartBeat, 2);
-                float normalizedZoomLast = cond.GetPositionFromBeat(zoomOutStartBeat + zoomOutLength - 1, 1);
+                float normalizedZoomLast = cond.GetPositionFromBeat(zoomOutStartBeat + zoomOutLength - 2, 2);
 
                 if (normalizedZoomFirst > 1)
                 {
