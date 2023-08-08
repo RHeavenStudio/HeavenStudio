@@ -2,6 +2,8 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using HeavenStudio.Util;
+using Starpelly;
+using UnityEngine.UIElements;
 
 namespace HeavenStudio.Games.Scripts_MonkeyWatch
 {
@@ -13,6 +15,9 @@ namespace HeavenStudio.Games.Scripts_MonkeyWatch
         [SerializeField] private Animator playerMonkeyAnim;
         [SerializeField] private ParticleSystem yellowClap;
         [SerializeField] private ParticleSystem pinkClap;
+        [SerializeField] private Transform shadowTrans;
+        [Header("Properties")]
+        [SerializeField] private float shadowXRange = 2f;
 
         private MonkeyWatch game;
 
@@ -33,6 +38,30 @@ namespace HeavenStudio.Games.Scripts_MonkeyWatch
         {
             anchorRotateTransform.localEulerAngles = new Vector3(0, 0, anchorRotateTransform.localEulerAngles.z - 6);
             anim.DoScaledAnimationAsync("Click", 0.4f);
+            MoveShadow();
+        }
+
+        private void MoveShadow()
+        {
+            float realAngle = anchorRotateTransform.localEulerAngles.z % 360 - 360;
+            realAngle *= -1;
+
+            float x;
+
+            if (realAngle <= 180)
+            {
+                float normalizedAngle = Mathp.Normalize(realAngle, 0, 180);
+                Debug.Log("normalizedAngle: " + normalizedAngle);
+                x = Mathf.Lerp(0, shadowXRange, normalizedAngle);
+            }
+            else
+            {
+                float normalizedAngle = Mathp.Normalize(realAngle, 180, 360);
+                Debug.Log("normalizedAngle: " + normalizedAngle);
+                x = Mathf.Lerp(shadowXRange, 0, normalizedAngle);
+            }
+            Debug.Log("X: " + x);
+            shadowTrans.localPosition = new Vector3(x, 0);
         }
 
         public void MoveToAngle(float angle)

@@ -179,9 +179,9 @@ namespace HeavenStudio.Games
             backgroundHandler.SetFade(beat, 0.25f, true, (TimeMode)timeMode, hours, minutes);
             BeatAction.New(instance.gameObject, new List<BeatAction.Action>()
             {
-                new BeatAction.Action(beat + length - 0.25, delegate
+                new BeatAction.Action(beat + length - 0.5, delegate
                 {
-                    backgroundHandler.SetFade(beat + length - 0.25, 0.25f, false, (TimeMode)timeMode, hours, minutes);
+                    backgroundHandler.SetFade(beat + length - 0.5, 0.25f, false, (TimeMode)timeMode, hours, minutes);
                 })
             });
             CameraUpdate();
