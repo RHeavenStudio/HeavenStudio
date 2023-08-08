@@ -103,6 +103,20 @@ namespace HeavenStudio.Games.Loaders
                         new Param("hour", new EntityTypes.Integer(0, 12, 3), "Hour"),
                         new Param("minute", new EntityTypes.Integer(0, 59, 0), "Minute")
                     }
+                },
+                new GameAction("balloon", "Balloon Movement")
+                {
+                    resizable = true,
+                    defaultLength = 4f,
+                    parameters = new List<Param>()
+                    {
+                        new Param("angleStart", new EntityTypes.Float(0, 360, 0), "Start Angle"),
+                        new Param("angleEnd", new EntityTypes.Float(0, 360, 0), "End Angle"),
+                        new Param("yStart", new EntityTypes.Float(0, 200, 15), "Y Start"),
+                        new Param("yEnd", new EntityTypes.Float(0, 200, 15), "Y End"),
+                        new Param("xStart", new EntityTypes.Float(0, 200, 15), "X Start"),
+                        new Param("xEnd", new EntityTypes.Float(0, 200, 15), "X End"),
+                    }
                 }
             });
         }
@@ -132,6 +146,7 @@ namespace HeavenStudio.Games
         public MonkeyClockArrow monkeyClockArrow;
         [SerializeField] private WatchMonkeyHandler monkeyHandler;
         [SerializeField] private WatchBackgroundHandler backgroundHandler;
+        [SerializeField] private BalloonHandler balloonHandler;
         public Animator middleMonkey;
 
         [Header("Properties")]
@@ -149,7 +164,8 @@ namespace HeavenStudio.Games
         private void Awake()
         {
             instance = this;
-            funcInOut = Util.EasingFunction.GetEasingFunction(Util.EasingFunction.Ease.EaseOutQuad);
+            funcOut = Util.EasingFunction.GetEasingFunction(Util.EasingFunction.Ease.EaseOutQuad);
+            funcIn = Util.EasingFunction.GetEasingFunction(Util.EasingFunction.Ease.EaseOutQuart);
             pinkMonkeys = EventCaller.GetAllInGameManagerList("monkeyWatch", new string[] { "off", "offStretch" });
             pinkMonkeysCustom = EventCaller.GetAllInGameManagerList("monkeyWatch", new string[] { "offInterval" });
             CameraUpdate();
@@ -179,9 +195,9 @@ namespace HeavenStudio.Games
             backgroundHandler.SetFade(beat, 0.25f, true, (TimeMode)timeMode, hours, minutes);
             BeatAction.New(instance.gameObject, new List<BeatAction.Action>()
             {
-                new BeatAction.Action(beat + length - 0.5, delegate
+                new BeatAction.Action(beat + length - 2, delegate
                 {
-                    backgroundHandler.SetFade(beat + length - 0.5, 0.25f, false, (TimeMode)timeMode, hours, minutes);
+                    backgroundHandler.SetFade(beat + length - 2, 0.25f, false, (TimeMode)timeMode, hours, minutes);
                 })
             });
             CameraUpdate();
@@ -202,6 +218,7 @@ namespace HeavenStudio.Games
 
         public override void OnGameSwitch(double beat)
         {
+            balloonHandler.Init(beat);
             persistBeat = beat;
             GetCameraMovements(beat, false);
             monkeyClockArrow.MoveToAngle(lastAngle);
@@ -221,6 +238,7 @@ namespace HeavenStudio.Games
 
         public override void OnPlay(double beat)
         {
+            balloonHandler.Init(beat);
             persistBeat = beat;
             GetCameraMovements(beat, true);
             monkeyClockArrow.MoveToAngle(lastAngle);
@@ -564,7 +582,8 @@ namespace HeavenStudio.Games
 
         private double zoomOutStartBeat = double.MinValue;
         private float zoomOutLength = 4;
-        private Util.EasingFunction.Function funcInOut;
+        private Util.EasingFunction.Function funcOut;
+        private Util.EasingFunction.Function funcIn;
 
         private void CameraUpdate()
         {
@@ -605,15 +624,15 @@ namespace HeavenStudio.Games
 
                 if (normalizedZoomFirst > 1)
                 {
-                    newX = funcInOut(0, cameraTransform.position.x, Mathf.Clamp01(normalizedZoomLast));
-                    newY = funcInOut(0, cameraTransform.position.y, Mathf.Clamp01(normalizedZoomLast));
-                    newZ = funcInOut(fullZoomOut, 0, Mathf.Clamp01(normalizedZoomLast));
+                    newX = funcIn(0, cameraTransform.position.x, Mathf.Clamp01(normalizedZoomLast));
+                    newY = funcIn(0, cameraTransform.position.y, Mathf.Clamp01(normalizedZoomLast));
+                    newZ = funcIn(fullZoomOut, 0, Mathf.Clamp01(normalizedZoomLast));
                 }
                 else
                 {
-                    newX = funcInOut(cameraTransform.position.x, 0, Mathf.Clamp01(normalizedZoomFirst));
-                    newY = funcInOut(cameraTransform.position.y, 0, Mathf.Clamp01(normalizedZoomFirst));
-                    newZ = funcInOut(0, fullZoomOut, Mathf.Clamp01(normalizedZoomFirst));
+                    newX = funcOut(cameraTransform.position.x, 0, Mathf.Clamp01(normalizedZoomFirst));
+                    newY = funcOut(cameraTransform.position.y, 0, Mathf.Clamp01(normalizedZoomFirst));
+                    newZ = funcOut(0, fullZoomOut, Mathf.Clamp01(normalizedZoomFirst));
                 }
 
                 cameraMoveable.position = new Vector3(newX, -newY, newZ);

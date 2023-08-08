@@ -18,6 +18,7 @@ namespace HeavenStudio.Games.Scripts_MonkeyWatch
         [SerializeField] private Transform shadowTrans;
         [Header("Properties")]
         [SerializeField] private float shadowXRange = 2f;
+        [SerializeField] private float shadowYRange = 1f;
 
         private MonkeyWatch game;
 
@@ -47,21 +48,21 @@ namespace HeavenStudio.Games.Scripts_MonkeyWatch
             realAngle *= -1;
 
             float x;
+            float y;
 
             if (realAngle <= 180)
             {
                 float normalizedAngle = Mathp.Normalize(realAngle, 0, 180);
-                Debug.Log("normalizedAngle: " + normalizedAngle);
                 x = Mathf.Lerp(0, shadowXRange, normalizedAngle);
+                y = Mathf.Lerp(0, shadowYRange, normalizedAngle);
             }
             else
             {
                 float normalizedAngle = Mathp.Normalize(realAngle, 180, 360);
-                Debug.Log("normalizedAngle: " + normalizedAngle);
                 x = Mathf.Lerp(shadowXRange, 0, normalizedAngle);
+                y = Mathf.Lerp(shadowYRange, 0, normalizedAngle);
             }
-            Debug.Log("X: " + x);
-            shadowTrans.localPosition = new Vector3(x, 0);
+            shadowTrans.localPosition = new Vector3(x, y);
         }
 
         public void MoveToAngle(float angle)
