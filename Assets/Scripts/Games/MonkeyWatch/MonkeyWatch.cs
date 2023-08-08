@@ -499,16 +499,7 @@ namespace HeavenStudio.Games
                 {
                     var e = relevantPinkClappingEvents[i];
                     if (e.beat < lastClappingBeat) continue;
-                    if (e.beat - lastClappingBeat > 0)
-                    {
-                        cameraMovements.Add(new MonkeyCamera()
-                        {
-                            beat = lastClappingBeat,
-                            length = (float)(e.beat - lastClappingBeat),
-                            degreeTo = lastAngleToCheck + (float)((e.beat - lastClappingBeat) / 2) * degreePerMonkey
-                        });
-                        lastAngleToCheck += (float)((e.beat - lastClappingBeat) / 2) * degreePerMonkey;
-                    }
+
                     float angleToAdd;
                     if (e.datamodel == "monkeyWatch/offInterval")
                     {
@@ -517,6 +508,17 @@ namespace HeavenStudio.Games
                     else
                     {
                         angleToAdd = Mathf.Ceil(e.length) * degreePerMonkey;
+                    }
+
+                    if (e.beat - lastClappingBeat > 0)
+                    {
+                        cameraMovements.Add(new MonkeyCamera()
+                        {
+                            beat = lastClappingBeat,
+                            length = (float)(e.beat - lastClappingBeat),
+                            degreeTo = lastAngleToCheck + (float)((e.beat - lastClappingBeat) / 2) * degreePerMonkey + (angleToAdd / 2)
+                        });
+                        lastAngleToCheck += (float)((e.beat - lastClappingBeat) / 2) * degreePerMonkey;
                     }
                     cameraMovements.Add(new MonkeyCamera()
                     {
