@@ -249,6 +249,7 @@ namespace HeavenStudio
             pan = defaultPan;
             scale = defaultScale;
             shakeResult = defaultShake;
+            if(Application.isEditor) return;
             SetWindowPos(hWnd, HWND_NOTOPMOST, Convert.ToInt16(pan.x), Convert.ToInt16(pan.y), Convert.ToInt16(scale.x), Convert.ToInt16(scale.y), SWP_SHOWWINDOW);
         }
     }
