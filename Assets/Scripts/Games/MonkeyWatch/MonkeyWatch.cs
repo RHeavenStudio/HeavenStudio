@@ -93,10 +93,24 @@ namespace HeavenStudio.Games.Loaders
                     function = delegate
                     {
                         var e = eventCaller.currentEntity;
-                        MonkeyWatch.instance.ZoomOut(e.beat, e.length, e["timeMode"], e["hour"], e["minute"]);
+                        MonkeyWatch.instance.ZoomOut(e.beat, e["timeMode"], e["hour"], e["minute"]);
                     },
-                    resizable = true,
-                    defaultLength = 8f,
+                    defaultLength = 2f,
+                    parameters = new List<Param>()
+                    {
+                        new Param("timeMode", MonkeyWatch.TimeMode.RealTime, "Time Mode", "Will the clock set the time to the current time or a certain time?"),
+                        new Param("hour", new EntityTypes.Integer(0, 12, 3), "Hour"),
+                        new Param("minute", new EntityTypes.Integer(0, 59, 0), "Minute")
+                    }
+                },
+                new GameAction("zoomIn", "Zoom In")
+                {
+                    function = delegate
+                    {
+                        var e = eventCaller.currentEntity;
+                        MonkeyWatch.instance.ZoomIn(e.beat, e["timeMode"], e["hour"], e["minute"]);
+                    },
+                    defaultLength = 2f,
                     parameters = new List<Param>()
                     {
                         new Param("timeMode", MonkeyWatch.TimeMode.RealTime, "Time Mode", "Will the clock set the time to the current time or a certain time?"),
@@ -191,28 +205,32 @@ namespace HeavenStudio.Games
             monkeyClockArrow.PlayerClap(big, barely, false);
         }
 
-        public void ZoomOut(double beat, float length, int timeMode, int hours, int minutes)
+        public void ZoomOut(double beat, int timeMode, int hours, int minutes)
         {
-            length = Mathf.Max(zoomOutBeatLength + zoomInBeatLength, length);
             zoomOutStartBeat = beat;
-            zoomOutLength = length;
+            zoomIn = false;
             backgroundHandler.SetFade(beat, 0.25f, true, (TimeMode)timeMode, hours, minutes);
-            BeatAction.New(instance.gameObject, new List<BeatAction.Action>()
-            {
-                new BeatAction.Action(beat + length - zoomInBeatLength, delegate
-                {
-                    backgroundHandler.SetFade(beat + length - zoomInBeatLength, 0.25f, false, (TimeMode)timeMode, hours, minutes);
-                })
-            });
+            CameraUpdate();
+        }
+        public void ZoomIn(double beat, int timeMode, int hours, int minutes)
+        {
+            zoomOutStartBeat = beat;
+            zoomIn = true;
+            backgroundHandler.SetFade(beat, 0.25f, false, (TimeMode)timeMode, hours, minutes);
             CameraUpdate();
         }
 
         public void PersistZoomOut(double beat)
         {
-            var allZooms = EventCaller.GetAllInGameManagerList("monkeyWatch", new string[] { "zoomOut" }).FindAll(x => x.beat < beat && x.beat + Mathf.Max(4, x.length) > beat);
+            var allZooms = EventCaller.GetAllInGameManagerList("monkeyWatch", new string[] { "zoomOut" }).FindAll(x => x.beat < beat && x.beat + x.length > beat);
             foreach (var zoom in allZooms)
             {
-                ZoomOut(zoom.beat, zoom.length, zoom["timeMode"], zoom["hour"], zoom["minute"]);
+                ZoomOut(zoom.beat, zoom["timeMode"], zoom["hour"], zoom["minute"]);
+            }
+            var allZoomsIn = EventCaller.GetAllInGameManagerList("monkeyWatch", new string[] { "zoomIn" }).FindAll(x => x.beat < beat && x.beat + x.length > beat);
+            foreach (var zoom in allZoomsIn)
+            {
+                ZoomIn(zoom.beat, zoom["timeMode"], zoom["hour"], zoom["minute"]);
             }
         }
 
@@ -584,8 +602,8 @@ namespace HeavenStudio.Games
             }
         }
 
-        private double zoomOutStartBeat = double.MinValue;
-        private float zoomOutLength = 4;
+        private double zoomOutStartBeat = -2;
+        private bool zoomIn = true;
         private Util.EasingFunction.Function funcOut;
         private Util.EasingFunction.Function funcIn;
 
@@ -615,35 +633,30 @@ namespace HeavenStudio.Games
                 cameraAnchor.localEulerAngles = new Vector3(0, 0, newAngle);
             }
 
-            float normalizedZoomBeat = cond.GetPositionFromBeat(zoomOutStartBeat, zoomOutLength);
-
-            if (normalizedZoomBeat >= 0f && normalizedZoomBeat <= 1f)
+            float normalizedZoomBeat = cond.GetPositionFromBeat(zoomOutStartBeat, zoomIn ? zoomInBeatLength : zoomOutBeatLength);
+            float newX = 0f;
+            float newY = 0f;
+            float newZ = 0f;
+            if (zoomIn)
             {
-                float newX = 0f;
-                float newY = 0f;
-                float newZ = 0f;
-
-                float normalizedZoomFirst = cond.GetPositionFromBeat(zoomOutStartBeat, zoomOutBeatLength);
-                float normalizedZoomLast = cond.GetPositionFromBeat(zoomOutStartBeat + zoomOutLength - zoomInBeatLength, zoomInBeatLength);
-
-                if (normalizedZoomFirst > 1)
-                {
-                    newX = funcIn(0, cameraTransform.position.x, Mathf.Clamp01(normalizedZoomLast));
-                    newY = funcIn(0, cameraTransform.position.y, Mathf.Clamp01(normalizedZoomLast));
-                    newZ = funcIn(fullZoomOut, 0, Mathf.Clamp01(normalizedZoomLast));
-                }
-                else
-                {
-                    newX = funcOut(cameraTransform.position.x, 0, Mathf.Clamp01(normalizedZoomFirst));
-                    newY = funcOut(cameraTransform.position.y, 0, Mathf.Clamp01(normalizedZoomFirst));
-                    newZ = funcOut(0, fullZoomOut, Mathf.Clamp01(normalizedZoomFirst));
-                }
-
-                cameraMoveable.position = new Vector3(newX, -newY, newZ);
+                newX = funcIn(0, cameraTransform.position.x, Mathf.Clamp01(normalizedZoomBeat));
+                newY = funcIn(0, cameraTransform.position.y, Mathf.Clamp01(normalizedZoomBeat));
+                newZ = funcIn(fullZoomOut, 0, Mathf.Clamp01(normalizedZoomBeat));
             }
             else
             {
+                newX = funcOut(cameraTransform.position.x, 0, Mathf.Clamp01(normalizedZoomBeat));
+                newY = funcOut(cameraTransform.position.y, 0, Mathf.Clamp01(normalizedZoomBeat));
+                newZ = funcOut(0, fullZoomOut, Mathf.Clamp01(normalizedZoomBeat));
+            }
+
+            if (zoomIn && normalizedZoomBeat > 1f)
+            {
                 cameraMoveable.position = new Vector3(cameraTransform.position.x, cameraTransform.position.y * -1);
+            }
+            else
+            {
+                cameraMoveable.position = new Vector3(newX, -newY, newZ);
             }
         }
         #endregion
