@@ -10,12 +10,17 @@ namespace HeavenStudio.Games.Scripts_MonkeyWatch
         [SerializeField] private Transform anchor;
         [SerializeField] private Transform target;
         [SerializeField] private Transform balloonTrans;
+        [SerializeField] private SpriteRenderer[] srs;
+        [SerializeField] private SpriteRenderer shadow;
         [Header("Properties")]
         [SerializeField] private float xOffset;
         [SerializeField] private float yOffset;
 
+        private float shadowOpacity;
         private float additionalXOffset;
         private float additionalYOffset;
+        private double movementFirstBeat = -2;
+        private double movementLastBeat = -1;
 
         private List<Movement> movements = new();
         private int movementIndex = 0;
@@ -34,10 +39,20 @@ namespace HeavenStudio.Games.Scripts_MonkeyWatch
             public Util.EasingFunction.Ease ease;
         }
 
+        private void Awake()
+        {
+            shadowOpacity = shadow.color.a;
+        }
+
         public void Init(double beat)
         {
             var allEvents = EventCaller.GetAllInGameManagerList("monkeyWatch", new string[] { "balloon" });
             allEvents.Sort((x, y) => x.beat.CompareTo(y.beat));
+            if (allEvents.Count > 0)
+            {
+                movementFirstBeat = allEvents[0].beat;
+                movementLastBeat = allEvents[^1].beat + allEvents[^1].length - 0.25;
+            }
             foreach (var e in allEvents)
             {
                 movements.Add(new Movement
@@ -59,7 +74,8 @@ namespace HeavenStudio.Games.Scripts_MonkeyWatch
         private void UpdateIndex()
         {
             movementIndex++;
-            if (movementIndex + 1 < movements.Count && Conductor.instance.songPositionAsDouble > movements[movementIndex].beat + movements[movementIndex].length)
+            if (movementIndex >= movements.Count) return;
+            if (Conductor.instance.songPositionInBeatsAsDouble > movements[movementIndex].beat + movements[movementIndex].length)
             {
                 UpdateIndex();
             }
@@ -68,12 +84,30 @@ namespace HeavenStudio.Games.Scripts_MonkeyWatch
         private void Update()
         {
             var cond = Conductor.instance;
-            balloonTrans.gameObject.SetActive(movements.Count > 0);
-            if (movements.Count > 0)
+            float normalizedFirst = Mathf.Clamp01(cond.GetPositionFromBeat(movementFirstBeat, 0.25f));
+            float normalizedLast = Mathf.Clamp01(cond.GetPositionFromBeat(movementLastBeat, 0.25f));
+            if (normalizedFirst >= 1)
             {
-                if (movementIndex + 1 < movements.Count && cond.songPositionAsDouble > movements[movementIndex].beat + movements[movementIndex].length)
+                foreach (var sr in srs)
+                {
+                    sr.color = new Color(sr.color.r, sr.color.g, sr.color.b, 1 - normalizedLast);
+                }
+                shadow.color = new Color(shadow.color.r, shadow.color.g, shadow.color.b, Mathf.Lerp(shadowOpacity, 0, normalizedLast));
+            }
+            else
+            {
+                foreach (var sr in srs)
+                {
+                    sr.color = new Color(sr.color.r, sr.color.g, sr.color.b, normalizedFirst);
+                }
+                shadow.color = new Color(shadow.color.r, shadow.color.g, shadow.color.b, Mathf.Lerp(0, shadowOpacity, normalizedFirst));
+            }
+            if (movements.Count > 0 && movementIndex < movements.Count)
+            {
+                if (cond.songPositionInBeatsAsDouble > movements[movementIndex].beat + movements[movementIndex].length)
                 {
                     UpdateIndex();
+                    if (movementIndex >= movements.Count) return;
                 }
 
                 var e = movements[movementIndex];

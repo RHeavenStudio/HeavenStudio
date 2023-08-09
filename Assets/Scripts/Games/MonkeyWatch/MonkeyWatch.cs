@@ -126,12 +126,12 @@ namespace HeavenStudio.Games.Loaders
                     defaultLength = 4f,
                     parameters = new List<Param>()
                     {
-                        new Param("angleStart", new EntityTypes.Float(0, 360, 0), "Start Angle"),
-                        new Param("angleEnd", new EntityTypes.Float(0, 360, 0), "End Angle"),
-                        new Param("yStart", new EntityTypes.Float(0, 200, 15), "Y Start"),
-                        new Param("yEnd", new EntityTypes.Float(0, 200, 15), "Y End"),
-                        new Param("xStart", new EntityTypes.Float(0, 200, 15), "X Start"),
-                        new Param("xEnd", new EntityTypes.Float(0, 200, 15), "X End"),
+                        new Param("angleStart", new EntityTypes.Float(-360, 360, 0), "Start Angle"),
+                        new Param("angleEnd", new EntityTypes.Float(-360, 360, 0), "End Angle"),
+                        new Param("yStart", new EntityTypes.Float(-200, 200, 0), "Y Start"),
+                        new Param("yEnd", new EntityTypes.Float(-200, 200, 0), "Y End"),
+                        new Param("xStart", new EntityTypes.Float(-200, 200, 0), "X Start"),
+                        new Param("xEnd", new EntityTypes.Float(-200, 200, 0), "X End"),
                         new Param("ease", Util.EasingFunction.Ease.Linear, "Ease")
                     }
                 }
