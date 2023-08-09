@@ -93,11 +93,12 @@ namespace HeavenStudio.Games.Loaders
                     function = delegate
                     {
                         var e = eventCaller.currentEntity;
-                        MonkeyWatch.instance.ZoomOut(e.beat, e["timeMode"], e["hour"], e["minute"]);
+                        MonkeyWatch.instance.ZoomOut(e.beat, e["timeMode"], e["hour"], e["minute"], e["instant"]);
                     },
                     defaultLength = 2f,
                     parameters = new List<Param>()
                     {
+                        new Param("instant", false, "Instant"),
                         new Param("timeMode", MonkeyWatch.TimeMode.RealTime, "Time Mode", "Will the clock set the time to the current time or a certain time?"),
                         new Param("hour", new EntityTypes.Integer(0, 12, 3), "Hour"),
                         new Param("minute", new EntityTypes.Integer(0, 59, 0), "Minute")
@@ -108,11 +109,12 @@ namespace HeavenStudio.Games.Loaders
                     function = delegate
                     {
                         var e = eventCaller.currentEntity;
-                        MonkeyWatch.instance.ZoomIn(e.beat, e["timeMode"], e["hour"], e["minute"]);
+                        MonkeyWatch.instance.ZoomIn(e.beat, e["timeMode"], e["hour"], e["minute"], e["instant"]);
                     },
                     defaultLength = 2f,
                     parameters = new List<Param>()
                     {
+                        new Param("instant", false, "Instant"),
                         new Param("timeMode", MonkeyWatch.TimeMode.RealTime, "Time Mode", "Will the clock set the time to the current time or a certain time?"),
                         new Param("hour", new EntityTypes.Integer(0, 12, 3), "Hour"),
                         new Param("minute", new EntityTypes.Integer(0, 59, 0), "Minute")
@@ -205,18 +207,18 @@ namespace HeavenStudio.Games
             monkeyClockArrow.PlayerClap(big, barely, false);
         }
 
-        public void ZoomOut(double beat, int timeMode, int hours, int minutes)
+        public void ZoomOut(double beat, int timeMode, int hours, int minutes, bool instant)
         {
-            zoomOutStartBeat = beat;
+            zoomOutStartBeat = beat - (instant ? zoomOutBeatLength : 0);
             zoomIn = false;
-            backgroundHandler.SetFade(beat, 0.25f, true, (TimeMode)timeMode, hours, minutes);
+            backgroundHandler.SetFade(beat, instant ? 0 : 0.25f, true, (TimeMode)timeMode, hours, minutes);
             CameraUpdate();
         }
-        public void ZoomIn(double beat, int timeMode, int hours, int minutes)
+        public void ZoomIn(double beat, int timeMode, int hours, int minutes, bool instant)
         {
-            zoomOutStartBeat = beat;
+            zoomOutStartBeat = beat - (instant ? zoomInBeatLength : 0);
             zoomIn = true;
-            backgroundHandler.SetFade(beat, 0.25f, false, (TimeMode)timeMode, hours, minutes);
+            backgroundHandler.SetFade(beat, instant ? 0 : 0.25f, false, (TimeMode)timeMode, hours, minutes);
             CameraUpdate();
         }
 
@@ -225,12 +227,12 @@ namespace HeavenStudio.Games
             var allZooms = EventCaller.GetAllInGameManagerList("monkeyWatch", new string[] { "zoomOut" }).FindAll(x => x.beat < beat && x.beat + x.length > beat);
             foreach (var zoom in allZooms)
             {
-                ZoomOut(zoom.beat, zoom["timeMode"], zoom["hour"], zoom["minute"]);
+                ZoomOut(zoom.beat, zoom["timeMode"], zoom["hour"], zoom["minute"], zoom["instant"]);
             }
             var allZoomsIn = EventCaller.GetAllInGameManagerList("monkeyWatch", new string[] { "zoomIn" }).FindAll(x => x.beat < beat && x.beat + x.length > beat);
             foreach (var zoom in allZoomsIn)
             {
-                ZoomIn(zoom.beat, zoom["timeMode"], zoom["hour"], zoom["minute"]);
+                ZoomIn(zoom.beat, zoom["timeMode"], zoom["hour"], zoom["minute"], zoom["instant"]);
             }
         }
 
