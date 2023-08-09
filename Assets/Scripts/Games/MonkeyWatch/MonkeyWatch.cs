@@ -132,6 +132,7 @@ namespace HeavenStudio.Games.Loaders
                         new Param("yEnd", new EntityTypes.Float(0, 200, 15), "Y End"),
                         new Param("xStart", new EntityTypes.Float(0, 200, 15), "X Start"),
                         new Param("xEnd", new EntityTypes.Float(0, 200, 15), "X End"),
+                        new Param("ease", Util.EasingFunction.Ease.Linear, "Ease")
                     }
                 }
             });
