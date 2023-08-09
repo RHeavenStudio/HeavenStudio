@@ -250,7 +250,7 @@ namespace HeavenStudio.Games
                 double goodBeat = tempEvents[0].beat + tempEvents[0].length;
                 for (int i = 1; i < tempEvents.Count; i++)
                 {
-                    if (tempEvents[i].beat != goodBeat)
+                    if (tempEvents[i].beat < goodBeat)
                     {
                         tempEvents2.Add(tempEvents[i]);
                     }
