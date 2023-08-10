@@ -77,7 +77,7 @@ namespace HeavenStudio
 
         public void SetPosition(System.IntPtr ptr, short x, short y, short resX, short resY)
         {
-            if(Application.isEditor && !Editor.Editor.instance.fullscreen && (pan != defaultPan | scale != defaultScale)) Reset();
+            if(!Application.isEditor && !Editor.Editor.instance.fullscreen && (pan != defaultPan | scale != defaultScale)) Reset();
             if(Application.isEditor || !Editor.Editor.instance.fullscreen) return;
             SetWindowPos(ptr, HWND_NOTOPMOST, x, y, resX, resY, SWP_SHOWWINDOW);
         }
