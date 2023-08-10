@@ -36,7 +36,7 @@ namespace HeavenStudio.Games.Scripts_SeeSaw
         [SerializeField] bool see;
         [NonSerialized] public bool dead = false;
         public bool strum;
-        public Animator anim;
+        [NonSerialized] public Animator anim;
         JumpState lastState;
         JumpState currentState;
         Path currentPath;
@@ -48,6 +48,7 @@ namespace HeavenStudio.Games.Scripts_SeeSaw
         [SerializeField] Transform landOutTrans;
         public Transform landInTrans;
         [SerializeField] Transform groundTrans;
+        [SerializeField] Transform gameTrans;
         bool hasChangedAnimMidAir;
         [SerializeField] ParticleSystem deathParticle;
         double wantChoke = -1;
@@ -141,31 +142,22 @@ namespace HeavenStudio.Games.Scripts_SeeSaw
                         transform.position = GetPathPositionFromBeat(currentPath, Math.Max(startBeat, currentBeat), startBeat);
                         break;
                 }
-            }
-        }
-
-        private void LateUpdate()
-        {
-            var cond = Conductor.instance;
-
-            double currentBeat = cond.songPositionInBeatsAsDouble;
-
-            if (!see && game.cameraMove && cond.isPlaying && !cond.isPaused)
-            {
-                switch (currentState)
+                if (!see && game.cameraMove)
                 {
-                    default:
-                        return;
-                    case JumpState.HighOutOut:
-                    case JumpState.HighOutIn:
-                    case JumpState.HighInOut:
-                    case JumpState.HighInIn:
-                        float newCamY = Math.Max(GetPathPositionFromBeat(cameraPath, Math.Max(startBeat, currentBeat), startBeat).y, 0);
-                        GameCamera.additionalPosition = new Vector3(0, newCamY, 0);
-                        break;
+                    switch (currentState)
+                    {
+                        default:
+                            return;
+                        case JumpState.HighOutOut:
+                        case JumpState.HighOutIn:
+                        case JumpState.HighInOut:
+                        case JumpState.HighInIn:
+                            float newCamY = Math.Max(GetPathPositionFromBeat(cameraPath, Math.Max(startBeat, currentBeat), startBeat).y, 0);
+                            gameTrans.localPosition = new Vector3(0, -newCamY, 0);
+                            break;
+                    }
                 }
             }
-
         }
 
         public void Choke(double beat, float length)
