@@ -33,7 +33,6 @@ namespace HeavenStudio.Util
             }
         }
 
-
         public static MultiSound Play(Sound[] snds, bool game = true, bool forcePlay = false)
         {
             List<Sound> sounds = snds.ToList();
@@ -70,6 +69,7 @@ namespace HeavenStudio.Util
 
         public void Delete()
         {
+            foreach (var sound in playingSounds) Destroy(sound);
             GameManager.instance.SoundObjects.Remove(gameObject);
             Destroy(gameObject);
         }
