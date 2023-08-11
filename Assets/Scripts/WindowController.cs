@@ -43,6 +43,12 @@ namespace HeavenStudio
         private static Vector3 panLast;
         private static Vector3 scaleLast;
 
+        /*For anyone with a mac who knows how to code this stuff:
+        here's a google doc with helpful sites(i think) for getting this working on mac
+        https://docs.google.com/document/d/1mvHNNsXC6mo7PV6yZitpKam1fYnud7CXP73YLsebEo8/edit?usp=sharing
+        good luck i cant figure this out
+        */
+
         //Credit to Grizmu on the unity forums for this
         //DLL Stuff for windows
         #region WinDLLstuff
