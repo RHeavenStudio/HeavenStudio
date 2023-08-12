@@ -1,7 +1,6 @@
 using HeavenStudio.Util;
 using System;
 using System.Collections.Generic;
-using DG.Tweening;
 using UnityEngine;
 using TMPro;
 // using GhostlyGuy's Balls;
@@ -122,12 +121,12 @@ namespace HeavenStudio.Games.Loaders
                 {
                     function = delegate {
                         var e = eventCaller.currentEntity;
-                        OctopusMachine.instance.ChangeColor(e["color1"], e["color2"], e["octoColor"], e["squeezedColor"], e.length, e["bgInstant"]);
+                        OctopusMachine.instance.BackgroundColor(e.beat, e.length, e["color1"], e["color2"], e["octoColor"], e["squeezedColor"], e["ease"]);
                     },
                     parameters = new List<Param>() {
                         new Param("color1", new Color(1f, 0.87f, 0.24f), "Background Start Color", "Set the beginning background color"),
                         new Param("color2", new Color(1f, 0.87f, 0.24f), "Background End Color", "Set the end background color"),
-                        new Param("bgInstant", false, "Instant Background?", "Set the end background color instantly"),
+                        new Param("ease", Util.EasingFunction.Ease.Linear, "Ease"),
                         new Param("octoColor", new Color(0.97f, 0.235f, 0.54f), "Octopodes Color", "Set the octopodes' colors"),
                         new Param("squeezedColor", new Color(1f, 0f, 0f), "Squeezed Color", "Set the octopodes' colors when they're squeezed"),
                     },
@@ -184,7 +183,6 @@ namespace HeavenStudio.Games
         [Header("Variables")]
         public bool hasMissed;
         public int bopStatus = 0;
-        Tween bgColorTween;
         int bopIterate = 0;
         bool intervalStarted;
         bool autoAction;
@@ -218,7 +216,6 @@ namespace HeavenStudio.Games
 
         private void Start() 
         {
-            bg.color = backgroundColor;
             foreach (var octo in octopodes) octo.AnimationColor(0);
             bopStatus = 0;
         }
@@ -239,6 +236,7 @@ namespace HeavenStudio.Games
 
         private void Update() 
         {
+            BackgroundColorUpdate();
             if (queuePrepare) {
                 foreach (var octo in octopodes) octo.queuePrepare = true;
                 if (Text.text is "Wrong! Try Again!" or "Good!") Text.text = "";
@@ -328,25 +326,58 @@ namespace HeavenStudio.Games
             }
         }
 
-        public void FadeBackgroundColor(Color color, float beats)
+        private double colorStartBeat = -1;
+        private float colorLength = 0f;
+        private Color colorStart = new Color(1, 0.87f, 0.24f); //obviously put to the default color of the game
+        private Color colorEnd = new Color(1, 0.87f, 0.24f);
+        private Util.EasingFunction.Ease colorEase; //putting Util in case this game is using jukebox
+
+        //call this in update
+        private void BackgroundColorUpdate()
         {
-            var seconds = Conductor.instance.secPerBeat * beats;
+            float normalizedBeat = Mathf.Clamp01(Conductor.instance.GetPositionFromBeat(colorStartBeat, colorLength));
 
-            if (bgColorTween != null)
-                bgColorTween.Kill(true);
+            var func = Util.EasingFunction.GetEasingFunction(colorEase);
 
-            if (seconds == 0) bg.color = color;
-            else bgColorTween = bg.DOColor(color, seconds);
+            float newR = func(colorStart.r, colorEnd.r, normalizedBeat);
+            float newG = func(colorStart.g, colorEnd.g, normalizedBeat);
+            float newB = func(colorStart.b, colorEnd.b, normalizedBeat);
+
+            bg.color = new Color(newR, newG, newB);
         }
 
-        public void ChangeColor(Color bgStart, Color bgEnd, Color octoColor, Color octoSqueezedColor, float beats, bool bgInstant)
+        public void BackgroundColor(double beat, float length, Color colorStartSet, Color colorEndSet, Color octoColor, Color octoSqueezeColor, int ease)
         {
-            FadeBackgroundColor(bgStart, 0f);
-            if (!bgInstant) FadeBackgroundColor(bgEnd, beats);
-            backgroundColor = bgEnd;
+            colorStartBeat = beat;
+            colorLength = length;
+            colorStart = colorStartSet;
+            colorEnd = colorEndSet;
+            colorEase = (Util.EasingFunction.Ease)ease;
             octopodesColor = octoColor;
-            octopodesSqueezedColor = octoSqueezedColor;
+            octopodesSqueezedColor = octoSqueezeColor;
             foreach (var octo in octopodes) octo.AnimationColor(octo.isSqueezed ? 1 : 0);
+        }
+
+        //call this in OnPlay(double beat) and OnGameSwitch(double beat)
+        private void PersistColor(double beat)
+        {
+            var allEventsBeforeBeat = EventCaller.GetAllInGameManagerList("octopusMachine", new string[] { "changeColor" }).FindAll(x => x.beat < beat);
+            if (allEventsBeforeBeat.Count > 0)
+            {
+                allEventsBeforeBeat.Sort((x, y) => x.beat.CompareTo(y.beat)); //just in case
+                var lastEvent = allEventsBeforeBeat[^1];
+                BackgroundColor(lastEvent.beat, lastEvent.length, lastEvent["color1"], lastEvent["color2"], lastEvent["octoColor"], lastEvent["squeezedColor"], lastEvent["ease"]);
+            }
+        }
+
+        public override void OnPlay(double beat)
+        {
+            PersistColor(beat);
+        }
+
+        public override void OnGameSwitch(double beat)
+        {
+            PersistColor(beat);
         }
 
         public void OctopusModifiers(double beat, float oct1x, float oct2x, float oct3x, float oct1y, float oct2y, float oct3y, bool oct1, bool oct2, bool oct3)
