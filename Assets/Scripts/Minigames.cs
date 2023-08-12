@@ -706,12 +706,20 @@ namespace HeavenStudio
                             new Param("axis", StaticCamera.ViewAxis.All, "Axis", "The axis to scale the viewport in" )
                         }
                     ),
-
                     new GameAction("screen shake", "Screen Shake", 1f, true,
                         new List<Param>()
                         {
                             new Param("valA", new EntityTypes.Float(0, 10, 0), "Horizontal Intensity"),
                             new Param("valB", new EntityTypes.Float(0, 10, 1), "Vertical Intensity")
+                        }
+                    ),
+                    new GameAction("scale letterbox", "Scale Letterbox", 1f, true, new List<Param>()
+                        {
+                            new Param("valA", new EntityTypes.Float(0, 50, 1), "Scale Letterbox X"),
+                            new Param("valB", new EntityTypes.Float(0, 50, 1), "Scale Letterbox Y"),
+                            new Param("ease", Util.EasingFunction.Ease.Linear, "Ease Type"),
+                            new Param("axis", StaticCamera.ViewAxis.All, "Axis", "The axis to scale the letterbox in"),
+                            new Param("toggle", true, "Mirror scaling", "Mirror the scaling of the letterbox via scaling the minigame as well.")
                         }
                     ),
 
