@@ -231,6 +231,17 @@ namespace HeavenStudio.Games
             bachEvents = EventCaller.GetAllInGameManagerList("lockstep", new string[] { "bach" });
         }
 
+        private void PersistColors(double beat)
+        {
+            var allEventsBeforeBeat = EventCaller.GetAllInGameManagerList("lockstep", new string[] { "" }).FindAll(x => x.beat < beat);
+            if (allEventsBeforeBeat.Count > 0)
+            {
+                allEventsBeforeBeat.Sort((x, y) => x.beat.CompareTo(y.beat));
+                var lastEvent = allEventsBeforeBeat[^1];
+                SetBackgroundColours(lastEvent["colorA"], lastEvent["colorB"], lastEvent["objColA"], lastEvent["objColB"], lastEvent["objColC"]);
+            }
+        }
+
         private bool BachOnBeat(double beat)
         {
             return bachEvents.Find(x => beat >= x.beat && beat < x.beat + x.length) != null;
@@ -238,11 +249,13 @@ namespace HeavenStudio.Games
         public override void OnGameSwitch(double beat)
         {
             QueueSwitchBGs(beat);
+            PersistColors(beat);
         }
 
         public override void OnPlay(double beat)
         {
             QueueSwitchBGs(beat);
+            PersistColors(beat);
         }
 
         private void QueueSwitchBGs(double beat)

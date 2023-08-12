@@ -2,7 +2,6 @@ using HeavenStudio.Util;
 using System;
 using System.Collections.Generic;
 using UnityEngine;
-using DG.Tweening;
 using Jukebox;
 
 namespace HeavenStudio.Games.Loaders
@@ -60,26 +59,15 @@ namespace HeavenStudio.Games.Loaders
                 },
                 new GameAction("fade background", "Background Color")
                 {
-                    function = delegate {var e = eventCaller.currentEntity; Tambourine.instance.FadeBackgroundColor(e["colorA"], e["colorB"], e.length, e["instant"]); },
+                    function = delegate {var e = eventCaller.currentEntity; Tambourine.instance.BackgroundColor(e.beat, e.length, e["colorStart"], e["colorEnd"], e["ease"]); },
                     defaultLength = 4f,
                     resizable = true,
                     parameters = new List<Param>()
                     {
-                        new Param("colorA", Color.white, "Start Color", "The starting color of the fade."),
-                        new Param("colorB", Tambourine.defaultBGColor, "End Color", "The ending color of the fade."),
-                        new Param("instant", false, "Instant", "Instantly set the color of the background to the start color?")
+                        new Param("colorStart", Color.white, "Start Color", "The starting color of the fade."),
+                        new Param("colorEnd", Tambourine.defaultBGColor, "End Color", "The ending color of the fade."),
+                        new Param("ease", Util.EasingFunction.Ease.Linear, "Ease")
                     }
-                },
-                //backwards-compatibility
-                new GameAction("set background color", "Background Color")
-                {
-                    function = delegate {var e = eventCaller.currentEntity; Tambourine.instance.ChangeBackgroundColor(e["colorA"], 0f); },
-                    defaultLength = 0.5f,
-                    parameters = new List<Param>()
-                    {
-                        new Param("colorA", Tambourine.defaultBGColor, "Background Color", "The background color to change to.")
-                    },
-                    hidden = true
                 },
             },
             new List<string>() {"rvl", "repeat"},
@@ -119,8 +107,6 @@ namespace HeavenStudio.Games
         bool frogPresent;
         bool monkeyGoBop;
         bool handsGoBop;
-
-        Tween bgColorTween;
         public GameEvent bop = new GameEvent();
 
         public enum WhoBops
@@ -140,10 +126,13 @@ namespace HeavenStudio.Games
             frogAnimator.Play("FrogExited", 0, 0);
             handsAnimator.Play("Idle", 0, 0);
             monkeyAnimator.Play("MonkeyIdle", 0, 0);
+            colorStart = defaultBGColor;
+            colorEnd = defaultBGColor;
         }
 
         void Update()
         {
+            BackgroundColorUpdate();
             if (Conductor.instance.ReportBeat(ref bop.lastReportedBeat, bop.startBeat % 1))
             {
                 if (monkeyGoBop)
@@ -228,6 +217,7 @@ namespace HeavenStudio.Games
                 }
                 queuedIntervals.Clear();
             }
+            PersistColor(beat);
         }
 
         private struct QueuedInterval
@@ -454,27 +444,50 @@ namespace HeavenStudio.Games
             }
         }
 
-        public void ChangeBackgroundColor(Color color, float beats)
+        private double colorStartBeat = -1;
+        private float colorLength = 0f;
+        private Color colorStart = Color.white; //obviously put to the default color of the game
+        private Color colorEnd = Color.white;
+        private Util.EasingFunction.Ease colorEase; //putting Util in case this game is using jukebox
+
+        //call this in update
+        private void BackgroundColorUpdate()
         {
-            var seconds = Conductor.instance.secPerBeat * beats;
+            float normalizedBeat = Mathf.Clamp01(Conductor.instance.GetPositionFromBeat(colorStartBeat, colorLength));
 
-            if (bgColorTween != null)
-                bgColorTween.Kill(true);
+            var func = Util.EasingFunction.GetEasingFunction(colorEase);
 
-            if (seconds == 0)
+            float newR = func(colorStart.r, colorEnd.r, normalizedBeat);
+            float newG = func(colorStart.g, colorEnd.g, normalizedBeat);
+            float newB = func(colorStart.b, colorEnd.b, normalizedBeat);
+
+            bg.color = new Color(newR, newG, newB);
+        }
+
+        public void BackgroundColor(double beat, float length, Color colorStartSet, Color colorEndSet, int ease)
+        {
+            colorStartBeat = beat;
+            colorLength = length;
+            colorStart = colorStartSet;
+            colorEnd = colorEndSet;
+            colorEase = (Util.EasingFunction.Ease)ease;
+        }
+
+        //call this in OnPlay(double beat) and OnGameSwitch(double beat)
+        private void PersistColor(double beat)
+        {
+            var allEventsBeforeBeat = EventCaller.GetAllInGameManagerList("tambourine", new string[] { "fade background" }).FindAll(x => x.beat < beat);
+            if (allEventsBeforeBeat.Count > 0)
             {
-                bg.color = color;
-            }
-            else
-            {
-                bgColorTween = bg.DOColor(color, seconds);
+                allEventsBeforeBeat.Sort((x, y) => x.beat.CompareTo(y.beat)); //just in case
+                var lastEvent = allEventsBeforeBeat[^1];
+                BackgroundColor(lastEvent.beat, lastEvent.length, lastEvent["colorStart"], lastEvent["colorEnd"], lastEvent["ease"]);
             }
         }
 
-        public void FadeBackgroundColor(Color start, Color end, float beats, bool instant)
+        public override void OnPlay(double beat)
         {
-            ChangeBackgroundColor(start, 0f);
-            if (!instant) ChangeBackgroundColor(end, beats);
+            PersistColor(beat);
         }
 
         public void SummonFrog()
