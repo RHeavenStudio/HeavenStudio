@@ -700,8 +700,8 @@ namespace HeavenStudio
                     ),
                     new GameAction("scale view", "Scale Viewport", 1f, true, new List<Param>() 
                         {
-                            new Param("valA", new EntityTypes.Float(0, 50, 1), "Width", "Next viewport width"),
-                            new Param("valB", new EntityTypes.Float(0, 50, 1), "Height", "Next viewport height"),
+                            new Param("valA", new EntityTypes.Float(0, 300, 100), "Width", "Next viewport width"),
+                            new Param("valB", new EntityTypes.Float(0, 300, 100), "Height", "Next viewport height"),
                             new Param("ease", Util.EasingFunction.Ease.Linear, "Ease Type"),
                             new Param("axis", StaticCamera.ViewAxis.All, "Axis", "The axis to scale the viewport in" )
                         }

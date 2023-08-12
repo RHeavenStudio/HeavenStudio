@@ -169,14 +169,14 @@ namespace HeavenStudio
                     switch (e["axis"])
                     {
                         case (int) ViewAxis.X:
-                            scale.x = func(scaleLast.x, e["valA"], Mathf.Min(prog, 1f)) * AspectRatioWidth;
+                            scale.x = func(scaleLast.x, e["valA"] * .01f, Mathf.Min(prog, 1f)) * AspectRatioWidth;
                             break;
                         case (int) ViewAxis.Y:
-                            scale.y = func(scaleLast.y, e["valB"], Mathf.Min(prog, 1f)) * AspectRatioHeight;
+                            scale.y = func(scaleLast.y, e["valB"] * .01f, Mathf.Min(prog, 1f)) * AspectRatioHeight;
                             break;
                         default:
-                            float dx = func(scaleLast.x, e["valA"], Mathf.Min(prog, 1f)) * AspectRatioWidth;
-                            float dy = func(scaleLast.y, e["valB"], Mathf.Min(prog, 1f)) * AspectRatioHeight;
+                            float dx = func(scaleLast.x, e["valA"] * .01f, Mathf.Min(prog, 1f)) * AspectRatioWidth;
+                            float dy = func(scaleLast.y, e["valB"] * .01f, Mathf.Min(prog, 1f)) * AspectRatioHeight;
                             scale = new Vector3(dx, dy, 1);
                             break;
                     }
@@ -186,13 +186,13 @@ namespace HeavenStudio
                     switch (e["axis"])
                     {
                         case (int) ViewAxis.X:
-                            scaleLast.x = e["valA"] * AspectRatioWidth;
+                            scaleLast.x = e["valA"] * .01f * AspectRatioWidth;
                             break;
                         case (int) ViewAxis.Y:
-                            scaleLast.y = e["valB"] * AspectRatioHeight;
+                            scaleLast.y = e["valB"] * .01f * AspectRatioHeight;
                             break;
                         default:
-                            scaleLast = new Vector3(e["valA"] * AspectRatioWidth, e["valB"] * AspectRatioHeight, 1);
+                            scaleLast = new Vector3(e["valA"] * .01f * AspectRatioWidth, e["valB"] * .01f * AspectRatioHeight, 1);
                             break;
                     }
                 }
