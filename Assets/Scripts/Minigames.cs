@@ -718,8 +718,23 @@ namespace HeavenStudio
                             new Param("valA", new EntityTypes.Float(0, 50, 1), "Scale Letterbox X"),
                             new Param("valB", new EntityTypes.Float(0, 50, 1), "Scale Letterbox Y"),
                             new Param("ease", Util.EasingFunction.Ease.Linear, "Ease Type"),
-                            new Param("axis", StaticCamera.ViewAxis.All, "Axis", "The axis to scale the letterbox in"),
-                            new Param("toggle", true, "Mirror scaling", "Mirror the scaling of the letterbox via scaling the minigame as well.")
+                            new Param("axis", StaticCamera.ViewAxis.All, "Axis", "The axis to scale the letterbox in")
+                        }
+                    ),
+                    new GameAction("complex pan", "Scale Viewport(Complex)", 1f, true, new List<Param>()
+                        {
+                            new Param("valA", new EntityTypes.Float(-50, 50, 1), "Pan Viewport X"),
+                            new Param("valB", new EntityTypes.Float(-50, 50, 1), "Pan Viewport Y"),
+                            new Param("ease", Util.EasingFunction.Ease.Linear, "Ease Type"),
+                            new Param("axis", StaticCamera.ViewAxis.All, "Axis", "The axis to pan the viewport in")
+                        }
+                    ),
+                    new GameAction("complex scale", "Scale Viewport(Complex)", 1f, true, new List<Param>()
+                        {
+                            new Param("valA", new EntityTypes.Float(0, 50, 1), "Scale Viewport X"),
+                            new Param("valB", new EntityTypes.Float(0, 50, 1), "Scale Viewport Y"),
+                            new Param("ease", Util.EasingFunction.Ease.Linear, "Ease Type"),
+                            new Param("axis", StaticCamera.ViewAxis.All, "Axis", "The axis to scale the viewport in")
                         }
                     ),
 
