@@ -13810,6 +13810,10 @@ PrefabInstance:
       propertyPath: letterboxMask
       value: 
       objectReference: {fileID: 2105509201}
+    - target: {fileID: 4035854539513523048, guid: 720073bc7682b1441bece7116681f72c, type: 3}
+      propertyPath: viewportTexture
+      value: 
+      objectReference: {fileID: 1638236456}
     - target: {fileID: 4820152107260776423, guid: 720073bc7682b1441bece7116681f72c, type: 3}
       propertyPath: m_RaycastTarget
       value: 0
@@ -33693,6 +33697,17 @@ GameObject:
   m_CorrespondingSourceObject: {fileID: 2464883521749415129, guid: 720073bc7682b1441bece7116681f72c, type: 3}
   m_PrefabInstance: {fileID: 631525709}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &1638236456 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 647613278910435637, guid: 720073bc7682b1441bece7116681f72c, type: 3}
+  m_PrefabInstance: {fileID: 631525709}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1638236449}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1344c3c82d62a2a41a3576d8abb8e3ea, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1647324172
 GameObject:
   m_ObjectHideFlags: 0

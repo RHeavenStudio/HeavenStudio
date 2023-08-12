@@ -329,14 +329,14 @@ namespace HeavenStudio
                     switch (e["axis"])
                     {
                         case (int) ViewAxis.X:
-                            complexScale.x = func(complexScaleLast.x, e["valA"], Mathf.Min(prog, 1f)) * AspectRatioWidth;
+                            complexScale.x = func(complexScaleLast.x, e["valA"] * .01f, Mathf.Min(prog, 1f)) * AspectRatioWidth;
                             break;
                         case (int) ViewAxis.Y:
-                            complexScale.y = func(complexScaleLast.y, e["valB"], Mathf.Min(prog, 1f)) * AspectRatioHeight;
+                            complexScale.y = func(complexScaleLast.y, e["valB"] * .01f, Mathf.Min(prog, 1f)) * AspectRatioHeight;
                             break;
                         default:
-                            float dx = func(complexScaleLast.x, e["valA"], Mathf.Min(prog, 1f)) * AspectRatioWidth;
-                            float dy = func(complexScaleLast.y, e["valB"], Mathf.Min(prog, 1f)) * AspectRatioHeight;
+                            float dx = func(complexScaleLast.x, e["valA"] * .01f, Mathf.Min(prog, 1f)) * AspectRatioWidth;
+                            float dy = func(complexScaleLast.y, e["valB"] * .01f, Mathf.Min(prog, 1f)) * AspectRatioHeight;
                             complexScale = new Vector3(dx, dy, 1);
                             break;
                     }
@@ -346,13 +346,13 @@ namespace HeavenStudio
                     switch (e["axis"])
                     {
                         case (int) ViewAxis.X:
-                            complexScaleLast.x = e["valA"] * AspectRatioWidth;
+                            complexScaleLast.x = e["valA"] * .01f * AspectRatioWidth;
                             break;
                         case (int) ViewAxis.Y:
-                            complexScaleLast.y = e["valB"] * AspectRatioHeight;
+                            complexScaleLast.y = e["valB"] * .01f * AspectRatioHeight;
                             break;
                         default:
-                            complexScaleLast = new Vector3(e["valA"] * AspectRatioWidth, e["valB"] * AspectRatioHeight, 1);
+                            complexScaleLast = new Vector3(e["valA"] * .01f * AspectRatioWidth, e["valB"] * .01f * AspectRatioHeight, 1);
                             break;
                     }
                 }
