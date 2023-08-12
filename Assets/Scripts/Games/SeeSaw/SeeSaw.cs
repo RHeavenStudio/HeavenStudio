@@ -205,12 +205,29 @@ namespace HeavenStudio.Games
         {
             GrabJumpEvents(beat);
             PersistColor(beat);
+            PersistColors(beat);
         }
 
         public override void OnGameSwitch(double beat)
         {
             GrabJumpEvents(beat);
             PersistColor(beat);
+            PersistColors(beat);
+        }
+
+        private void PersistColors(double beat)
+        {
+            var allEventsBeforeBeat = EventCaller.GetAllInGameManagerList("seeSaw", new string[] { "recolor" }).FindAll(x => x.beat < beat);
+            if (allEventsBeforeBeat.Count > 0)
+            {
+                allEventsBeforeBeat.Sort((x, y) => x.beat.CompareTo(y.beat));
+                var e = allEventsBeforeBeat[^1];
+                ChangeMappingColor(e["fill"], e["outline"]);
+            }
+            else
+            {
+                ChangeMappingColor(Color.white, defaultOtherColor);
+            }
         }
 
         private void Start()
