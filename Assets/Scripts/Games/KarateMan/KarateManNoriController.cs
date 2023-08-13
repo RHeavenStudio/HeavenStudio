@@ -83,6 +83,17 @@ namespace HeavenStudio.Games.Scripts_KarateMan
 
                     inputsToSwitch = KarateMan.CountHitsToEnd(fromBeat);
                     break;
+                case (int) KarateMan.NoriMode.ManiaHorizontal:
+                    MaxNori = 10;
+                    Nori = Mathf.Clamp(startingNori, 0, MaxNori);
+                    scaleFactor = ScaleFactorMania;
+                    NoriHolder = NoriHolderMania01;
+                    NoriManiaInk00.SetActive(true);
+                    NoriManiaInk01.SetActive(true);
+                    playedJust = false;
+
+                    inputsToSwitch = KarateMan.CountHitsToEnd(fromBeat);
+                    break;
                 default:
                     MaxNori = 0;
                     Nori = 0;
@@ -143,7 +154,7 @@ namespace HeavenStudio.Games.Scripts_KarateMan
             if (KarateMan.instance.NoriPerformance >= 0.6f && oldNori / MaxNori < 0.6f && !playedJust)
             {
                 playedJust = true;
-                SoundByte.PlayOneShotGame("karateman/nori_just");
+                SoundByte.PlayOneShotGame("karateMan/nori_just");
             }
             UpdateHeartColours();
         }
@@ -182,7 +193,7 @@ namespace HeavenStudio.Games.Scripts_KarateMan
             if (KarateMan.instance.NoriPerformance < 0.6f && oldNori / MaxNori >= 0.6f)
             {
                 playedJust = false;
-                SoundByte.PlayOneShotGame("karateman/nori_ng");
+                SoundByte.PlayOneShotGame("karateMan/nori_ng");
             }
             UpdateHeartColours();
         }
@@ -194,7 +205,7 @@ namespace HeavenStudio.Games.Scripts_KarateMan
             if (noriMode == (int) KarateMan.NoriMode.Tengoku)
             {
                 if (Nori >= MaxNori)
-                    SoundByte.PlayOneShotGame("karateman/nori_through");
+                    SoundByte.PlayOneShotGame("karateMan/nori_through");
                 playedJust = false;
                 Nori = 0;
                 foreach (Animator anim in NoriHeartAnimators)
