@@ -76,7 +76,7 @@ namespace HeavenStudio
             Reset();
 
             panEvents = EventCaller.GetAllInGameManagerList("vfx", new string[] { "pan view" });
-            scaleEvents = EventCaller.GetAllInGameManagerList("vfx", new string[] { "scale view" });
+            scaleEvents = EventCaller.GetAllInGameManagerList("vfx", new string[] { "scale view2" });
             rotationEvents = EventCaller.GetAllInGameManagerList("vfx", new string[] { "rotate view" });
 
             panLast = defaultPan;

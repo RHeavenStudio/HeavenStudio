@@ -505,6 +505,21 @@ namespace HeavenStudio
 
         public static void Init(EventCaller eventCaller)
         {
+            RiqEntity scaleViewUpdater(string datamodel, RiqEntity entity)
+            {
+                if(datamodel == "vfx/scale view")
+                {
+                    entity.datamodel = "vfx/scale view2";
+                    if(entity["valA"] * 100 > 5000) entity["valA"] = 5000;
+                    else entity["valA"] *= 100;
+                    if(entity["valB"] * 100 > 5000) entity["valB"] = 5000;
+                    else entity["valB"] *= 100;
+                    return entity;
+                }
+                return null;
+            }
+            RiqBeatmap.OnUpdateEntity += scaleViewUpdater;
+
             eventCaller.minigames = new List<Minigame>()
             {
                 new Minigame("gameManager", "Game Manager", "", false, true, new List<GameAction>()
@@ -698,10 +713,10 @@ namespace HeavenStudio
                             new Param("ease", Util.EasingFunction.Ease.Linear, "Ease Type"),
                         }
                     ),
-                    new GameAction("scale view", "Scale Viewport", 1f, true, new List<Param>() 
+                    new GameAction("scale view2", "Scale Viewport", 1f, true, new List<Param>() 
                         {
-                            new Param("valA", new EntityTypes.Float(0, 300, 100), "Width", "Next viewport width"),
-                            new Param("valB", new EntityTypes.Float(0, 300, 100), "Height", "Next viewport height"),
+                            new Param("valA", new EntityTypes.Float(0, 5000, 100), "Width", "Next viewport width"),
+                            new Param("valB", new EntityTypes.Float(0, 5000, 100), "Height", "Next viewport height"),
                             new Param("ease", Util.EasingFunction.Ease.Linear, "Ease Type"),
                             new Param("axis", StaticCamera.ViewAxis.All, "Axis", "The axis to scale the viewport in" )
                         }
@@ -747,6 +762,14 @@ namespace HeavenStudio
                             new Param("text2", "", "Artist", "Text to display in the lower label (Rich Text is supported!)"),
                         }
                     ),
+                    new GameAction("scale view", "", 1f, true, new List<Param>()
+                        {
+                            new Param("valA", new EntityTypes.Float(0, 50, 1), "Width", "Next viewport width"),
+                            new Param("valB", new EntityTypes.Float(0, 50, 1), "Height", "Next viewport height"),
+                            new Param("ease", Util.EasingFunction.Ease.Linear, "Ease Type"),
+                            new Param("axis", StaticCamera.ViewAxis.All, "Axis", "The axis to scale the viewport in" )
+                        },
+                    hidden: true),
                 }),
             };
 
