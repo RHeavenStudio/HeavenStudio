@@ -41,14 +41,17 @@ namespace HeavenStudio.Games.Loaders
                     {
                         new Param("preset", SpaceSoccer.EnterExitPresets.FiveKickers, "Preset", "Which preset should be used?", new List<Param.CollapseParam>()
                         {
-                            new Param.CollapseParam(x => (int)x == (int)SpaceSoccer.EnterExitPresets.Custom, new string[] { "amount" })
+                            new Param.CollapseParam(x => (int)x == (int)SpaceSoccer.EnterExitPresets.Custom, new string[] { "amount", "x", "y", "z" })
                         }),
+                        
+                        
                         new Param("amount", new EntityTypes.Integer(2, 30, 5), "Amount", "Amount of Space Kickers."),
-                        new Param("choice", SpaceSoccer.AnimationToPlay.Enter, "Enter Or Exit", "Whether the kickers should exit or enter."),
-                        new Param("ease", EasingFunction.Ease.Linear, "Ease", "The Ease of the entering or exiting."),
                         new Param("x", new EntityTypes.Float(-30, 30, 2f), "X Distance", "How much distance should there be between the space kickers on the x axis?"),
                         new Param("y", new EntityTypes.Float(-30, 30, -0.5f), "Y Distance", "How much distance should there be between the space kickers on the y axis?"),
                         new Param("z", new EntityTypes.Float(-30, 30, 1.25f), "Z Distance", "How much distance should there be between the space kickers on the z axis?"),
+
+                        new Param("choice", SpaceSoccer.AnimationToPlay.Enter, "Enter Or Exit", "Whether the kickers should exit or enter."),
+                        new Param("ease", EasingFunction.Ease.Linear, "Ease", "The Ease of the entering or exiting."),
                         new Param("override", true, "Override Easing", "Should this block override the easing of the space kickers' positions?")
                     },
                     resizable = true

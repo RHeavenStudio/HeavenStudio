@@ -34,7 +34,7 @@ namespace HeavenStudio.Editor
             {
                 foreach (var c in p.collapseables)
                 {
-                    c.SetActive(p.collapseOn(type));
+                    c.SetActive(p.collapseOn(type) && gameObject.activeSelf);
                 }
             }
         }
