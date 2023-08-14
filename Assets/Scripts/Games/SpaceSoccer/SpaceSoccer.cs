@@ -20,7 +20,7 @@ namespace HeavenStudio.Games.Loaders
                         new Param("toggle", false, "Disable Sound", "Disables the dispense sound"),
                         new Param("down", false, "Down Sound", "Will the Down sound be played?")
                     },
-                    inactiveFunction = delegate 
+                    inactiveFunction = delegate
                     {
                         if (!eventCaller.currentEntity["toggle"]) { SpaceSoccer.DispenseSound(eventCaller.currentEntity.beat, eventCaller.currentEntity["down"]);}
                     }
@@ -73,7 +73,10 @@ namespace HeavenStudio.Games.Loaders
                     resizable = true,
                     parameters = new List<Param>()
                     {
-                        new Param("preset", SpaceSoccer.PlayerPresets.LaunchStart, "Preset", "Which preset should be used?"),
+                        new Param("preset", SpaceSoccer.PlayerPresets.LaunchStart, "Preset", "Which preset should be used?", new List<Param.CollapseParam>()
+                        {
+                            new Param.CollapseParam(x => (int)x == (int)SpaceSoccer.PlayerPresets.Custom, new string[] { "x", "y", "z", "ease", "sound" })
+                        }),
                         new Param("x", new EntityTypes.Float(-30, 30, 0f), "X Pos", "Which position should the player move to on the x axis?"),
                         new Param("y", new EntityTypes.Float(-30, 30, 0f), "Y Pos", "Which position should the player move to on the y axis?"),
                         new Param("z", new EntityTypes.Float(-30, 30, 0f), "Z Pos", "Which position should the player move to on the z axis?"),
@@ -95,7 +98,7 @@ namespace HeavenStudio.Games.Loaders
                         new Param("ease", Util.EasingFunction.Ease.Linear, "Ease")
                     }
                 },
-                new GameAction("scroll", "Scrolling Background") 
+                new GameAction("scroll", "Scrolling Background")
                 {
                     function = delegate { var e = eventCaller.currentEntity; SpaceSoccer.instance.UpdateScrollSpeed(e["x"], e["y"]); },
                     defaultLength = 1f,
@@ -121,8 +124,8 @@ namespace HeavenStudio.Games.Loaders
                 },
                 new GameAction("npc kickers instant enter or exit", "NPC Kickers Instant Enter or Exit")
                 {
-                    function = delegate 
-                    { 
+                    function = delegate
+                    {
                         var e = eventCaller.currentEntity;
                         int choice;
                         if (e["toggle"])
@@ -143,9 +146,9 @@ namespace HeavenStudio.Games.Loaders
                     hidden = true
                 },
             },
-            new List<string>() {"ntr", "keep"},
+            new List<string>() { "ntr", "keep" },
             "ntrsoccer", "en",
-            new List<string>() {"en"}
+            new List<string>() { "en" }
             );
         }
     }
