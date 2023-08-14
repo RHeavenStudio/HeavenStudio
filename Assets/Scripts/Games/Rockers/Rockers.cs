@@ -818,15 +818,18 @@ namespace HeavenStudio.Games
                 if (moveCamera) instance.MoveCamera(beat - 1);
                 instance.StartInterval(beat, length, beat, autoPassTurn, movePass);
             }
-            if (moveCamera) queuedCameraEvents.Add(beat - 1);
-            queuedIntervals.Add(new QueuedInterval()
+            else
             {
-                beat = beat,
-                length = length,
-                autoPassTurn = autoPassTurn,
-                moveCamera = moveCamera,
-                moveCameraPass = movePass
-            });
+                queuedIntervals.Add(new QueuedInterval()
+                {
+                    beat = beat,
+                    length = length,
+                    autoPassTurn = autoPassTurn,
+                    moveCamera = moveCamera,
+                    moveCameraPass = movePass
+                });
+            }
+            if (moveCamera) queuedCameraEvents.Add(beat - 1);
         }
 
         private void MoveCamera(double beat)
@@ -899,7 +902,7 @@ namespace HeavenStudio.Games
                     }
                 }),
             });
-            if (autoPassTurn) PassTurn(beat + length, moveCamera, beat, length);
+            if (autoPassTurn && beat + (length * 2) > gameSwitchBeat) PassTurn(beat + length, moveCamera, beat, length);
         }
 
         public void Riff(double beat, float length, int[] pitches, bool gleeClubJJ, int sampleJJ, int sampleTonesJJ, bool noRespond)

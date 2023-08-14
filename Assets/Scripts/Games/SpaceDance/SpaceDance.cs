@@ -2,7 +2,6 @@ using HeavenStudio.Util;
 using System;
 using System.Collections.Generic;
 using UnityEngine;
-using DG.Tweening;
 using HeavenStudio.Common;
 
 namespace HeavenStudio.Games.Loaders
@@ -58,14 +57,14 @@ namespace HeavenStudio.Games.Loaders
                 },
                 new GameAction("changeBG", "Change Background Color")
                 {
-                    function = delegate {var e = eventCaller.currentEntity; SpaceDance.instance.FadeBackgroundColor(e["start"], e["end"], e.length, e["toggle"]); },
+                    function = delegate {var e = eventCaller.currentEntity; SpaceDance.instance.BackgroundColor(e.beat, e.length, e["start"], e["end"], e["ease"]); },
                     defaultLength = 1f,
                     resizable = true,
                     parameters = new List<Param>()
                     {
                         new Param("start", SpaceDance.defaultBGColor, "Start Color", "The start color for the fade or the color that will be switched to if -instant- is ticked on."),
                         new Param("end", SpaceDance.defaultBGColor, "End Color", "The end color for the fade."),
-                        new Param("toggle", false, "Instant", "Should the background instantly change color?")
+                        new Param("ease", Util.EasingFunction.Ease.Linear, "Ease")
                     }
                 },
                 new GameAction("bop", "Bop")
@@ -135,7 +134,6 @@ namespace HeavenStudio.Games
             Talk = 1,
             Sniff = 2
         }
-        Tween bgColorTween;
         [SerializeField] SpriteRenderer bg;
         [SerializeField] Animator shootingStarAnim;
         public Animator DancerP;
@@ -170,12 +168,15 @@ namespace HeavenStudio.Games
         void Awake()
         {
             instance = this;
+            colorStart = defaultBGColor;
+            colorEnd = defaultBGColor;
         }
 
         // Update is called once per frame
         void Update()
         {
             var cond = Conductor.instance;
+            BackgroundColorUpdate();
             if (cond.isPlaying && !cond.isPaused)
             {
                 scroll.NormalizedX -= xBaseSpeed * xScrollMultiplier * Time.deltaTime;
@@ -633,27 +634,55 @@ namespace HeavenStudio.Games
             Gramps.DoScaledAnimationAsync("GrampsBop", 0.5f);
         }
 
-        public void ChangeBackgroundColor(Color color, float beats)
+        private double colorStartBeat = -1;
+        private float colorLength = 0f;
+        private Color colorStart; //obviously put to the default color of the game
+        private Color colorEnd;
+        private Util.EasingFunction.Ease colorEase; //putting Util in case this game is using jukebox
+
+        //call this in update
+        private void BackgroundColorUpdate()
         {
-            var seconds = Conductor.instance.secPerBeat * beats;
+            float normalizedBeat = Mathf.Clamp01(Conductor.instance.GetPositionFromBeat(colorStartBeat, colorLength));
 
-            if (bgColorTween != null)
-                bgColorTween.Kill(true);
+            var func = Util.EasingFunction.GetEasingFunction(colorEase);
 
-            if (seconds == 0)
+            float newR = func(colorStart.r, colorEnd.r, normalizedBeat);
+            float newG = func(colorStart.g, colorEnd.g, normalizedBeat);
+            float newB = func(colorStart.b, colorEnd.b, normalizedBeat);
+
+            bg.color = new Color(newR, newG, newB);
+        }
+
+        public void BackgroundColor(double beat, float length, Color colorStartSet, Color colorEndSet, int ease)
+        {
+            colorStartBeat = beat;
+            colorLength = length;
+            colorStart = colorStartSet;
+            colorEnd = colorEndSet;
+            colorEase = (Util.EasingFunction.Ease)ease;
+        }
+
+        //call this in OnPlay(double beat) and OnGameSwitch(double beat)
+        private void PersistColor(double beat)
+        {
+            var allEventsBeforeBeat = EventCaller.GetAllInGameManagerList("spaceDance", new string[] { "changeBG" }).FindAll(x => x.beat < beat);
+            if (allEventsBeforeBeat.Count > 0)
             {
-                bg.color = color;
-            }
-            else
-            {
-                bgColorTween = bg.DOColor(color, seconds);
+                allEventsBeforeBeat.Sort((x, y) => x.beat.CompareTo(y.beat)); //just in case
+                var lastEvent = allEventsBeforeBeat[^1];
+                BackgroundColor(lastEvent.beat, lastEvent.length, lastEvent["start"], lastEvent["end"], lastEvent["ease"]);
             }
         }
 
-        public void FadeBackgroundColor(Color start, Color end, float beats, bool instant)
+        public override void OnPlay(double beat)
         {
-            ChangeBackgroundColor(start, 0f);
-            if (!instant) ChangeBackgroundColor(end, beats);
+            PersistColor(beat);
+        }
+
+        public override void OnGameSwitch(double beat)
+        {
+            PersistColor(beat);
         }
 
         public void JustRight(PlayerActionEvent caller, float state)
