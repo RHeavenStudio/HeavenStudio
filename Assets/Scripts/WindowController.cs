@@ -10,7 +10,10 @@ using Jukebox;
 using Jukebox.Legacy;
 using System;
 
+
 using System.Runtime.InteropServices;
+
+
 
 namespace HeavenStudio
 {
@@ -47,11 +50,17 @@ namespace HeavenStudio
         here's a google doc with helpful sites(i think) for getting this working on mac
         https://docs.google.com/document/d/1mvHNNsXC6mo7PV6yZitpKam1fYnud7CXP73YLsebEo8/edit?usp=sharing
         good luck i cant figure this out
+
+        update: just some default values for nscontroller or whatever it is:
+
+        windowstyle is closable; resizable; tilted
+        nsbackthingy's default is buffer
         */
 
         //Credit to Grizmu on the unity forums for this
         //DLL Stuff for windows
         #region WinDLLstuff
+        #if UNITY_STANDALONE_WIN
         const int SWP_HIDEWINDOW = 0x80; //idk why you would want this but here you go
         const int SWP_SHOWWINDOW = 0x40; //show window flag.
         const int SWP_NOMOVE = 0x0002; //don't move the window flag. idk why this either
@@ -81,16 +90,28 @@ namespace HeavenStudio
             uint uFlags
         );
 
+        System.IntPtr hWnd;
+        System.IntPtr HWND_TOP = new System.IntPtr(0);
+        System.IntPtr HWND_TOPMOST = new System.IntPtr(-1);
+        System.IntPtr HWND_NOTOPMOST = new System.IntPtr(-2);
+
+        #endif
+
+
         public void SetPosition(System.IntPtr ptr, short x, short y, short resX, short resY)
         {
             if(!Application.isEditor && !Editor.Editor.instance.fullscreen && (pan != defaultPan | scale != defaultScale)) Reset();
             if(Application.isEditor || !Editor.Editor.instance.fullscreen) return;
+            #if UNITY_STANDALONE_WIN
             SetWindowPos(ptr, HWND_NOTOPMOST, x, y, resX, resY, SWP_SHOWWINDOW);
+            #endif
         }
-
+        
         private void Awake()
         {
+            #if UNITY_STANDALONE_WIN
             hWnd = GetActiveWindow();
+            #endif
             AspectRatioWidth = Screen.mainWindowDisplayInfo.width;
             AspectRatioHeight = Screen.mainWindowDisplayInfo.height;
             defaultScale = new Vector3(Screen.width, Screen.height, 0);
@@ -98,10 +119,7 @@ namespace HeavenStudio
             instance = this;
         }
         
-        System.IntPtr hWnd;
-        System.IntPtr HWND_TOP = new System.IntPtr(0);
-        System.IntPtr HWND_TOPMOST = new System.IntPtr(-1);
-        System.IntPtr HWND_NOTOPMOST = new System.IntPtr(-2);
+        
 
         #endregion
 
@@ -145,9 +163,9 @@ namespace HeavenStudio
             UpdatePan();
             //SetShakeIntensity();
             
-            
+            #if UNITY_STANDALONE_WIN
             SetPosition(hWnd, Convert.ToInt16(pan.x), Convert.ToInt16(pan.y), Convert.ToInt16(scale.x), Convert.ToInt16(scale.y));
-            //SetPosition(hWnd, Convert.ToInt16(pan.x + shakeResult.x), Convert.ToInt16(pan.y + shakeResult.y), Convert.ToInt16(scale.x), Convert.ToInt16(scale.y));
+            #endif
         }
 
         private void UpdatePan()
@@ -257,7 +275,9 @@ namespace HeavenStudio
             scale = defaultScale;
             shakeResult = defaultShake;
             if(Application.isEditor) return;
+            #if UNITY_STANDALONE_WIN
             SetWindowPos(hWnd, HWND_NOTOPMOST, Convert.ToInt16(pan.x), Convert.ToInt16(pan.y), Convert.ToInt16(scale.x), Convert.ToInt16(scale.y), SWP_SHOWWINDOW);
+            #endif
         }
     }
 }
