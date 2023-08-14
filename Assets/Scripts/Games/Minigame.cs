@@ -188,8 +188,8 @@ namespace HeavenStudio.Games
             //Below is a template that can be used for handling previous entities.
             //section below is if you only want to look at entities that overlap the game switch
             /*
-            List<Beatmap.Entity> prevEntities = GameManager.instance.Beatmap.Entities.FindAll(c => c.beat <= beat && c.datamodel.Split(0) == [insert game name]);
-            foreach(Beatmap.Entity entity in prevEntities)
+            List<RiqEntity> prevEntities = GameManager.instance.Beatmap.Entities.FindAll(c => c.beat <= beat && c.datamodel.Split(0) == [insert game name]);
+            foreach(RiqEntity entity in prevEntities)
             {
                 if(entity.beat + entity.length >= beat)
                 {

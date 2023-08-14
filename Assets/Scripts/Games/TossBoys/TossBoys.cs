@@ -2,7 +2,6 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using HeavenStudio.Util;
-using DG.Tweening;
 using Jukebox;
 
 namespace HeavenStudio.Games.Loaders
@@ -81,14 +80,14 @@ namespace HeavenStudio.Games.Loaders
                 },
                 new GameAction("changeBG", "Change Background Color")
                 {
-                    function = delegate {var e = eventCaller.currentEntity; TossBoys.instance.FadeBackgroundColor(e["start"], e["end"], e.length, e["toggle"]); },
+                    function = delegate {var e = eventCaller.currentEntity; TossBoys.instance.BackgroundColor(e.beat, e.length, e["start"], e["end"], e["ease"]); },
                     defaultLength = 1f,
                     resizable = true,
                     parameters = new List<Param>()
                     {
                         new Param("start", TossBoys.defaultBGColor, "Start Color", "The start color for the fade or the color that will be switched to if -instant- is ticked on."),
                         new Param("end", TossBoys.defaultBGColor, "End Color", "The end color for the fade."),
-                        new Param("toggle", false, "Instant", "Should the background instantly change color?")
+                        new Param("ease", Util.EasingFunction.Ease.Linear, "Ease")
                     }
                 },
             },
@@ -140,7 +139,6 @@ namespace HeavenStudio.Games
         [SerializeField] SpriteRenderer bg;
 
         [Header("Properties")]
-        Tween bgColorTween;
         [SerializeField] SuperCurveObject.Path[] ballPaths;
         WhichTossKid lastReceiver = WhichTossKid.None;
         WhichTossKid currentReceiver = WhichTossKid.None;
@@ -155,6 +153,8 @@ namespace HeavenStudio.Games
         private void Awake()
         {
             instance = this;
+            colorStart = defaultBGColor;
+            colorEnd = defaultBGColor;
         }
 
         new void OnDrawGizmos()
@@ -184,6 +184,7 @@ namespace HeavenStudio.Games
         private void Update()
         {
             var cond = Conductor.instance;
+            BackgroundColorUpdate();
             if (cond.isPlaying && !cond.isPaused)
             {
                 if (cond.ReportBeat(ref bop.lastReportedBeat, bop.startBeat % 1))
@@ -208,27 +209,55 @@ namespace HeavenStudio.Games
             }
         }
 
-        public void ChangeBackgroundColor(Color color, float beats)
+        private double colorStartBeat = -1;
+        private float colorLength = 0f;
+        private Color colorStart = Color.white; //obviously put to the default color of the game
+        private Color colorEnd = Color.white;
+        private Util.EasingFunction.Ease colorEase; //putting Util in case this game is using jukebox
+
+        //call this in update
+        private void BackgroundColorUpdate()
         {
-            var seconds = Conductor.instance.secPerBeat * beats;
+            float normalizedBeat = Mathf.Clamp01(Conductor.instance.GetPositionFromBeat(colorStartBeat, colorLength));
 
-            if (bgColorTween != null)
-                bgColorTween.Kill(true);
+            var func = Util.EasingFunction.GetEasingFunction(colorEase);
 
-            if (seconds == 0)
+            float newR = func(colorStart.r, colorEnd.r, normalizedBeat);
+            float newG = func(colorStart.g, colorEnd.g, normalizedBeat);
+            float newB = func(colorStart.b, colorEnd.b, normalizedBeat);
+
+            bg.color = new Color(newR, newG, newB);
+        }
+
+        public void BackgroundColor(double beat, float length, Color colorStartSet, Color colorEndSet, int ease)
+        {
+            colorStartBeat = beat;
+            colorLength = length;
+            colorStart = colorStartSet;
+            colorEnd = colorEndSet;
+            colorEase = (Util.EasingFunction.Ease)ease;
+        }
+
+        //call this in OnPlay(double beat) and OnGameSwitch(double beat)
+        private void PersistColor(double beat)
+        {
+            var allEventsBeforeBeat = EventCaller.GetAllInGameManagerList("tossBoys", new string[] { "changeBG" }).FindAll(x => x.beat < beat);
+            if (allEventsBeforeBeat.Count > 0)
             {
-                bg.color = color;
-            }
-            else
-            {
-                bgColorTween = bg.DOColor(color, seconds);
+                allEventsBeforeBeat.Sort((x, y) => x.beat.CompareTo(y.beat)); //just in case
+                var lastEvent = allEventsBeforeBeat[^1];
+                BackgroundColor(lastEvent.beat, lastEvent.length, lastEvent["start"], lastEvent["end"], lastEvent["ease"]);
             }
         }
 
-        public void FadeBackgroundColor(Color start, Color end, float beats, bool instant)
+        public override void OnPlay(double beat)
         {
-            ChangeBackgroundColor(start, 0f);
-            if (!instant) ChangeBackgroundColor(end, beats);
+            PersistColor(beat);
+        }
+
+        public override void OnGameSwitch(double beat)
+        {
+            PersistColor(beat);
         }
 
         #region Bop 

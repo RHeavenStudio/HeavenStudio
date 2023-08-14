@@ -26,7 +26,7 @@ namespace HeavenStudio.Games.Loaders
                 },
                 new GameAction("tapping", "Tapping")
                 {
-                    preFunction = delegate { var e = eventCaller.currentEntity; TapTroupe.PreTapping(e.beat, e.length, e["okay"], e["okayType"], e["animType"], e["popperBeats"], e["randomVoiceLine"]); },
+                    preFunction = delegate { var e = eventCaller.currentEntity; TapTroupe.PreTapping(e.beat, e.length, e["okay"], e["okayType"], e["animType"], e["popperBeats"], e["randomVoiceLine"], e["noReady"]); },
                     defaultLength = 3f,
                     resizable = true,
                     parameters = new List<Param>()
@@ -35,7 +35,8 @@ namespace HeavenStudio.Games.Loaders
                         new Param("okayType", TapTroupe.OkayType.OkayA, "Okay Type", "Which version of the okay voice line should the tappers say?"),
                         new Param("animType", TapTroupe.OkayAnimType.Normal, "Okay Animation", "Which animations should be played when the tapper say OK?"),
                         new Param("popperBeats", new EntityTypes.Float(0f, 80f, 2f), "Popper Beats", "How many beats until the popper will pop?"),
-                        new Param("randomVoiceLine", true, "Extra Random Voice Line", "Whether there should be randomly said woos or laughs after the tappers say OK!")
+                        new Param("randomVoiceLine", true, "Extra Random Voice Line", "Whether there should be randomly said woos or laughs after the tappers say OK!"),
+                        new Param("noReady", false, "Mute Ready")
                     }
                 },
                 new GameAction("bop", "Bop")
@@ -368,13 +369,16 @@ namespace HeavenStudio.Games
             });
         }
 
-        public static void PreTapping(double beat, float length, bool okay, int okayType, int animType, float popperBeats, bool randomVoiceLine)
+        public static void PreTapping(double beat, float length, bool okay, int okayType, int animType, float popperBeats, bool randomVoiceLine, bool noReady)
         {
-            MultiSound.Play(new MultiSound.Sound[]
+            if (!noReady)
             {
-                new MultiSound.Sound("tapTroupe/tapReady1", beat - 2f),
-                new MultiSound.Sound("tapTroupe/tapReady2", beat - 1f),
-            }, forcePlay: true);
+                MultiSound.Play(new MultiSound.Sound[]
+                {
+                    new MultiSound.Sound("tapTroupe/tapReady1", beat - 2f),
+                    new MultiSound.Sound("tapTroupe/tapReady2", beat - 1f),
+                }, forcePlay: true);
+            }
             if (GameManager.instance.currentGame == "tapTroupe")
             {
                 TapTroupe.instance.Tapping(beat, length, okay, okayType, animType, popperBeats, randomVoiceLine);

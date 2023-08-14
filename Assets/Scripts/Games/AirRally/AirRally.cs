@@ -1365,7 +1365,7 @@ namespace HeavenStudio.Games
             SoundByte.PlayOneShotGame("airRally/birdieCatch");
             shuttleActive = false;
             recursingRally = false;
-            if (ActiveShuttle != null) Destroy(ActiveShuttle);
+            if (ActiveShuttle != null) Destroy(ActiveShuttle.gameObject);
         }
 
         public void RallyOnHit(PlayerActionEvent caller, float state)
@@ -1374,7 +1374,7 @@ namespace HeavenStudio.Games
 
             if (state >= 1 || state <= -1)
             { 
-                ActiveShuttle.GetComponent<Shuttlecock>().DoNearMiss();
+                ActiveShuttle.DoNearMiss();
                 hasMissed = true;
                 shuttleActive = false;
                 ActiveShuttle = null;
@@ -1383,7 +1383,7 @@ namespace HeavenStudio.Games
             {
                 ReturnObject(Conductor.instance.songPositionInBeatsAsDouble, caller.startBeat + caller.timer + 1f, false);
                 hasMissed = false;
-                ActiveShuttle.GetComponent<Shuttlecock>().DoHit(DistanceAtBeat(caller.startBeat + caller.timer));
+                ActiveShuttle.DoHit(DistanceAtBeat(caller.startBeat + caller.timer));
                 string distanceString = DistanceAtBeat(caller.startBeat + caller.timer) switch
                 {
                     DistanceSound.close => "Close",
@@ -1414,7 +1414,7 @@ namespace HeavenStudio.Games
 
             if (state >= 1 || state <= -1)
             { 
-                ActiveShuttle.GetComponent<Shuttlecock>().DoThrough();
+                ActiveShuttle.DoThrough();
                 hasMissed = true;
                 shuttleActive = false;
             }
@@ -1422,7 +1422,7 @@ namespace HeavenStudio.Games
             {
                 ReturnObject(Conductor.instance.songPositionInBeatsAsDouble, caller.startBeat + caller.timer + 2f, true);
                 hasMissed = false;
-                ActiveShuttle.GetComponent<Shuttlecock>().DoHit(DistanceAtBeat(caller.startBeat + caller.timer));
+                ActiveShuttle.DoHit(DistanceAtBeat(caller.startBeat + caller.timer));
 
                 string distanceString = DistanceAtBeat(caller.startBeat + caller.timer) switch
                 {
@@ -1454,7 +1454,7 @@ namespace HeavenStudio.Games
 
         public void RallyOnMiss(PlayerActionEvent caller)
         {
-            ActiveShuttle.GetComponent<Shuttlecock>().DoThrough();
+            ActiveShuttle.DoThrough();
             hasMissed = true;
             shuttleActive = false;
             ActiveShuttle = null;
