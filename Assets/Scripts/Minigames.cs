@@ -706,12 +706,35 @@ namespace HeavenStudio
                             new Param("axis", StaticCamera.ViewAxis.All, "Axis", "The axis to scale the viewport in" )
                         }
                     ),
-
                     new GameAction("screen shake", "Screen Shake", 1f, true,
                         new List<Param>()
                         {
                             new Param("valA", new EntityTypes.Float(0, 10, 0), "Horizontal Intensity"),
                             new Param("valB", new EntityTypes.Float(0, 10, 1), "Vertical Intensity")
+                        }
+                    ),
+                    new GameAction("scale letterbox", "Scale Letterbox", 1f, true, new List<Param>()
+                        {
+                            new Param("valA", new EntityTypes.Float(0, 50, 1), "Scale Letterbox X"),
+                            new Param("valB", new EntityTypes.Float(0, 50, 1), "Scale Letterbox Y"),
+                            new Param("ease", Util.EasingFunction.Ease.Linear, "Ease Type"),
+                            new Param("axis", StaticCamera.ViewAxis.All, "Axis", "The axis to scale the letterbox in")
+                        }
+                    ),
+                    new GameAction("complex pan", "Pan Viewport(Complex)", 1f, true, new List<Param>()
+                        {
+                            new Param("valA", new EntityTypes.Float(-50, 50, 1), "Pan Viewport X"),
+                            new Param("valB", new EntityTypes.Float(-50, 50, 1), "Pan Viewport Y"),
+                            new Param("ease", Util.EasingFunction.Ease.Linear, "Ease Type"),
+                            new Param("axis", StaticCamera.ViewAxis.All, "Axis", "The axis to pan the viewport in")
+                        }
+                    ),
+                    new GameAction("complex scale", "Scale Viewport(Complex)", 1f, true, new List<Param>()
+                        {
+                            new Param("valA", new EntityTypes.Float(0, 200, 100), "Scale Viewport X"),
+                            new Param("valB", new EntityTypes.Float(0, 200, 100), "Scale Viewport Y"),
+                            new Param("ease", Util.EasingFunction.Ease.Linear, "Ease Type"),
+                            new Param("axis", StaticCamera.ViewAxis.All, "Axis", "The axis to scale the viewport in")
                         }
                     ),
 
