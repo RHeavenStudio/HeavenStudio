@@ -17,13 +17,14 @@ namespace HeavenStudio.Editor
         [Header("Dropdown")]
         [Space(10)]
         public TMP_Dropdown dropdown;
+        private Array enumVals;
 
         new public void SetProperties(string propertyName, object type, string caption)
         {
             InitProperties(propertyName, caption);
 
             var enumType = type.GetType();
-            var enumVals = Enum.GetValues(enumType);
+            enumVals = Enum.GetValues(enumType);
             var enumNames = Enum.GetNames(enumType).ToList();
 
             // Can we assume non-holey enum?
@@ -40,6 +41,12 @@ namespace HeavenStudio.Editor
             dropdown.onValueChanged.AddListener(_ =>
                 parameterManager.entity[propertyName] = (int) enumVals.GetValue(dropdown.value)
             );
+        }
+
+        public override void SetCollapses(object type)
+        {
+            dropdown.onValueChanged.AddListener(_ => UpdateCollapse((int)enumVals.GetValue(dropdown.value)));
+            UpdateCollapse((int)enumVals.GetValue(dropdown.value));
         }
 
         private void Update()

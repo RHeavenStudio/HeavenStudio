@@ -467,6 +467,7 @@ namespace HeavenStudio
             public object parameter;
             public string propertyCaption;
             public string tooltip;
+            public List<CollapseParam> collapseParams;
 
             /// <summary>
             /// A parameter that changes the function of a GameAction.
@@ -474,12 +475,29 @@ namespace HeavenStudio
             /// <param name="propertyName">The name of the variable that's being changed.</param>
             /// <param name="parameter">The value of the parameter</param>
             /// <param name="propertyCaption">The name shown in the editor. Can be anything you want.</param>
-            public Param(string propertyName, object parameter, string propertyCaption, string tooltip = "")
+            public Param(string propertyName, object parameter, string propertyCaption, string tooltip = "", List<CollapseParam> collapseParams = null)
             {
                 this.propertyName = propertyName;
                 this.parameter = parameter;
                 this.propertyCaption = propertyCaption;
                 this.tooltip = tooltip;
+                this.collapseParams = collapseParams;
+            }
+
+            public class CollapseParam
+            {
+                public Func<object, bool> CollapseOn;
+                public string[] collapseables;
+                /// <summary>
+                /// Class that decides how other parameters will be collapsed
+                /// </summary>
+                /// <param name="collapseOn">What values should make it collapse/uncollapse?</param>
+                /// <param name="collapseables">IDs of the parameters to collapse</param>
+                public CollapseParam(Func<object, bool> collapseOn, string[] collapseables)
+                {
+                    CollapseOn = collapseOn;
+                    this.collapseables = collapseables;
+                }
             }
         }
 

@@ -94,6 +94,56 @@ namespace HeavenStudio.Editor
             }
         }
 
+        public override void SetCollapses(object type)
+        {
+            switch (type)
+            {
+                case EntityTypes.Integer integer:
+                    slider.onValueChanged.AddListener(
+                        _ =>
+                        {
+                            UpdateCollapse((int)slider.value);
+                        }
+                    );
+
+                    inputField.onEndEdit.AddListener(
+                        _ =>
+                        {
+                            UpdateCollapse((int)slider.value);
+                        }
+                    );
+
+                    UpdateCollapse((int)slider.value);
+
+                    break;
+
+                case EntityTypes.Float fl:
+                    slider.onValueChanged.AddListener(
+                        _ =>
+                        {
+                            var newValue = (float)Math.Round(slider.value, 4);
+                            UpdateCollapse(newValue);
+                        }
+                    );
+
+                    var newValue = (float)Math.Round(slider.value, 4);
+                    UpdateCollapse(newValue);
+
+                    inputField.onEndEdit.AddListener(
+                        _ =>
+                        {
+                            UpdateCollapse(slider.value);
+                        }
+                    );
+                    break;
+
+                default:
+                    throw new ArgumentOutOfRangeException(
+                        nameof(type), type, "I don't know how to make a property of this type!"
+                    );
+            }
+        }
+
         private void Update()
         {
         }

@@ -42,6 +42,16 @@ namespace HeavenStudio.Editor
             );
         }
 
+        public override void SetCollapses(object type)
+        {
+            inputFieldString.onValueChanged.AddListener(
+                _ =>
+                {
+                    UpdateCollapse(inputFieldString.text);
+                });
+            UpdateCollapse(inputFieldString.text);
+        }
+
         private void Update()
         {
         }

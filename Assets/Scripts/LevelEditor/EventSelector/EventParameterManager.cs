@@ -94,14 +94,31 @@ namespace HeavenStudio.Editor
 
                 DestroyParams();
 
+                Dictionary<string, GameObject> ePrefabs = new();
+
                 for (int i = 0; i < action.parameters.Count; i++)
                 {
                     object param = action.parameters[i].parameter;
                     string caption = action.parameters[i].propertyCaption;
                     string propertyName = action.parameters[i].propertyName;
                     string tooltip = action.parameters[i].tooltip;
+                    ePrefabs.Add(propertyName, AddParam(propertyName, param, caption, tooltip));
+                }
 
-                    AddParam(propertyName, param, caption, tooltip);
+                foreach (var p in action.parameters)
+                {
+                    if (p.collapseParams == null) return;
+                    EventPropertyPrefab input = ePrefabs[p.propertyName].GetComponent<EventPropertyPrefab>();
+                    foreach (var c in p.collapseParams)
+                    {
+                        List<GameObject> collapseables = new();
+                        foreach (var s in c.collapseables)
+                        {
+                            collapseables.Add(ePrefabs[s]);
+                        }
+                        input.propertyCollapses.Add(new EventPropertyPrefab.PropertyCollapse(collapseables, c.CollapseOn));
+                    }
+                    input.SetCollapses(p.parameter);
                 }
 
                 active = true;
@@ -112,7 +129,7 @@ namespace HeavenStudio.Editor
             }
         }
 
-        private void AddParam(string propertyName, object type, string caption, string tooltip = "")
+        private GameObject AddParam(string propertyName, object type, string caption, string tooltip = "")
         {
             GameObject prefab = IntegerP;
             GameObject input;
@@ -164,8 +181,9 @@ namespace HeavenStudio.Editor
             else
             {
                 Debug.LogError("Can't make property interface of type: " + type.GetType());
-                return;
+                return null;
             }
+            return input;
         }
 
         private GameObject InitPrefab(GameObject prefab, string tooltip = "")
