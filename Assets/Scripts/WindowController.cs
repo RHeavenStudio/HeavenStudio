@@ -10,12 +10,12 @@ using Jukebox;
 using Jukebox.Legacy;
 using System;
 
-#if UNITY_STANDALONE_WIN
+
 using System.Runtime.InteropServices;
-#elif UNITY_STANDALONE_OSX
+/*#if UNITY_STANDALONE_OSX
+using AppKit;
 using Foundation;
-using Appkit;
-#endif
+#endif*/
 
 
 
@@ -98,7 +98,7 @@ namespace HeavenStudio
         System.IntPtr HWND_TOP = new System.IntPtr(0);
         System.IntPtr HWND_TOPMOST = new System.IntPtr(-1);
         System.IntPtr HWND_NOTOPMOST = new System.IntPtr(-2);
-        #elif UNITY_STANDALONE_OSX
+        /*#elif UNITY_STANDALONE_OSX
 
         NSWindow _window;
         var style = NSWindowStyle.Closable | NSWindowStyle.Resizable | NSWindowStyle.tilted;
@@ -117,7 +117,7 @@ namespace HeavenStudio
         public override NSWindow mainWindowDisplayInfo
         {
             get { return _window; }
-        }
+        }*/
 
         #endif
 
@@ -128,8 +128,8 @@ namespace HeavenStudio
             if(Application.isEditor || !Editor.Editor.instance.fullscreen) return;
             #if UNITY_STANDALONE_WIN
             SetWindowPos(ptr, HWND_NOTOPMOST, x, y, resX, resY, SWP_SHOWWINDOW);
-            #elif UNITY_STANDALONE_OSX
-            SetWindowPos(x, y, resX, resY);
+            //#elif UNITY_STANDALONE_OSX
+            //SetWindowPos(x, y, resX, resY);
             #endif
         }
         
@@ -192,7 +192,7 @@ namespace HeavenStudio
             #if UNITY_STANDALONE_WIN
             SetPosition(hWnd, Convert.ToInt16(pan.x), Convert.ToInt16(pan.y), Convert.ToInt16(scale.x), Convert.ToInt16(scale.y));
             #elif UNITY_STANDALONE_OSX
-            SetPosition(pan.x, pan.y, scale.x, scale.y);
+            //SetPosition(pan.x, pan.y, scale.x, scale.y);
             #endif
             //SetPosition(hWnd, Convert.ToInt16(pan.x + shakeResult.x), Convert.ToInt16(pan.y + shakeResult.y), Convert.ToInt16(scale.x), Convert.ToInt16(scale.y));
         }
@@ -307,7 +307,7 @@ namespace HeavenStudio
             #if UNITY_STANDALONE_WIN
             SetWindowPos(hWnd, HWND_NOTOPMOST, Convert.ToInt16(pan.x), Convert.ToInt16(pan.y), Convert.ToInt16(scale.x), Convert.ToInt16(scale.y), SWP_SHOWWINDOW);
             #elif UNITY_STANDALONE_OSX
-            SetWindowPos(pan.x, pan.y, scale.x, scale.y);
+            //SetWindowPos(pan.x, pan.y, scale.x, scale.y);
             #endif
         }
     }
