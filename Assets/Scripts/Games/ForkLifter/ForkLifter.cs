@@ -4,8 +4,6 @@ using UnityEngine;
 
 using HeavenStudio.Util;
 
-using DG.Tweening;
-
 namespace HeavenStudio.Games.Loaders
 {
     using static Minigames;
@@ -39,23 +37,23 @@ namespace HeavenStudio.Games.Loaders
                 },
                 new GameAction("color", "Background Color")
                 {
-                    function = delegate { var e = eventCaller.currentEntity; ForkLifter.instance.FadeBackgroundColor(e["start"], e["end"], e.length, e["instant"]); },
+                    function = delegate { var e = eventCaller.currentEntity; ForkLifter.instance.BackgroundColor(e.beat, e.length, e["start"], e["end"], e["ease"]); },
                     parameters = new List<Param>()
                     {
                         new Param("start", Color.white, "Start Color", "The color to start fading from."),
                         new Param("end", Color.white, "End Color", "The color to end the fade."),
-                        new Param("instant", false, "Instant", "If checked, the background color will instantly change to the start color.")
+                        new Param("ease", Util.EasingFunction.Ease.Linear, "Ease")
                     },
                     resizable = true
                 },
                 new GameAction("colorGrad", "Gradient Color")
                 {
-                    function = delegate { var e = eventCaller.currentEntity; ForkLifter.instance.FadeGradientColor(e["start"], e["end"], e.length, e["instant"]); },
+                    function = delegate { var e = eventCaller.currentEntity; ForkLifter.instance.BackgroundColorGrad(e.beat, e.length, e["start"], e["end"], e["ease"]); },
                     parameters = new List<Param>()
                     {
                         new Param("start", Color.white, "Start Color", "The color to start fading from."),
                         new Param("end", Color.white, "End Color", "The color to end the fade."),
-                        new Param("instant", false, "Instant", "If checked, the gradient color will instantly change to the start color.")
+                        new Param("ease", Util.EasingFunction.Ease.Linear, "Ease")
                     },
                     resizable = true
                 },
@@ -134,11 +132,6 @@ namespace HeavenStudio.Games
         [SerializeField] SpriteRenderer viewerCircle;
         [SerializeField] SpriteRenderer playerShadow;
         [SerializeField] SpriteRenderer handShadow;
-        Tween bgColorTween;
-        Tween bgGradientColorTween;
-        Tween viewerCircleColorTween;
-        Tween playerShadowColorTween;
-        Tween handShadowColorTween;
 
         public Sprite[] peaSprites;
         public Sprite[] peaHitSprites;
@@ -148,10 +141,16 @@ namespace HeavenStudio.Games
             instance = this;
         }
 
+        private void Update()
+        {
+            BackgroundColorUpdate();
+        }
+
         public override void OnGameSwitch(double beat)
         {
             base.OnGameSwitch(beat);
             ForkLifterHand.CheckNextFlick();
+            PersistColor(beat);
         }
 
         
@@ -180,61 +179,86 @@ namespace HeavenStudio.Games
             fo.SetActive(true);
         }
 
-        public void ChangeBackgroundColor(Color color, float beats)
+        private double colorStartBeat = -1;
+        private float colorLength = 0f;
+        private Color colorStart = Color.white; //obviously put to the default color of the game
+        private Color colorEnd = Color.white;
+        private Util.EasingFunction.Ease colorEase; //putting Util in case this game is using jukebox
+
+        private double colorStartBeatGrad = -1;
+        private float colorLengthGrad = 0f;
+        private Color colorStartGrad = Color.white; //obviously put to the default color of the game
+        private Color colorEndGrad = Color.white;
+        private Util.EasingFunction.Ease colorEaseGrad; //putting Util in case this game is using jukebox
+
+        //call this in update
+        private void BackgroundColorUpdate()
         {
-            var seconds = Conductor.instance.secPerBeat * beats;
+            float normalizedBeat = Mathf.Clamp01(Conductor.instance.GetPositionFromBeat(colorStartBeat, colorLength));
 
-            if (bgColorTween != null)
-                bgColorTween.Kill(true);
-            if (viewerCircleColorTween != null)
-                viewerCircleColorTween.Kill(true);
-            if (handShadowColorTween != null) handShadowColorTween.Kill(true);
+            var func = Util.EasingFunction.GetEasingFunction(colorEase);
 
-            if (seconds == 0)
+            float newR = func(colorStart.r, colorEnd.r, normalizedBeat);
+            float newG = func(colorStart.g, colorEnd.g, normalizedBeat);
+            float newB = func(colorStart.b, colorEnd.b, normalizedBeat);
+
+            bg.color = new Color(newR, newG, newB);
+            viewerCircle.color = new Color(newR, newG, newB);
+            handShadow.color = new Color(newR, newG, newB);
+
+            float normalizedBeatGrad = Mathf.Clamp01(Conductor.instance.GetPositionFromBeat(colorStartBeatGrad, colorLengthGrad));
+
+            var funcGrad = Util.EasingFunction.GetEasingFunction(colorEaseGrad);
+
+            float newRGrad = func(colorStartGrad.r, colorEndGrad.r, normalizedBeatGrad);
+            float newGGrad = func(colorStartGrad.g, colorEndGrad.g, normalizedBeatGrad);
+            float newBGrad = func(colorStartGrad.b, colorEndGrad.b, normalizedBeatGrad);
+
+            bgGradient.color = new Color(newRGrad, newGGrad, newBGrad);
+            playerShadow.color = new Color(newRGrad, newGGrad, newBGrad);
+        }
+
+        public void BackgroundColor(double beat, float length, Color colorStartSet, Color colorEndSet, int ease)
+        {
+            colorStartBeat = beat;
+            colorLength = length;
+            colorStart = colorStartSet;
+            colorEnd = colorEndSet;
+            colorEase = (Util.EasingFunction.Ease)ease;
+        }
+
+        public void BackgroundColorGrad(double beat, float length, Color colorStartSet, Color colorEndSet, int ease)
+        {
+            colorStartBeatGrad = beat;
+            colorLengthGrad = length;
+            colorStartGrad = colorStartSet;
+            colorEndGrad = colorEndSet;
+            colorEaseGrad = (Util.EasingFunction.Ease)ease;
+        }
+
+        //call this in OnPlay(double beat) and OnGameSwitch(double beat)
+        private void PersistColor(double beat)
+        {
+            var allEventsBeforeBeat = EventCaller.GetAllInGameManagerList("forkLifter", new string[] { "color" }).FindAll(x => x.beat < beat);
+            if (allEventsBeforeBeat.Count > 0)
             {
-                bg.color = color;
-                viewerCircle.color = color;
-                handShadow.color = color;
+                allEventsBeforeBeat.Sort((x, y) => x.beat.CompareTo(y.beat)); //just in case
+                var lastEvent = allEventsBeforeBeat[^1];
+                BackgroundColor(lastEvent.beat, lastEvent.length, lastEvent["start"], lastEvent["end"], lastEvent["ease"]);
             }
-            else
+
+            var allEventsBeforeBeatGrad = EventCaller.GetAllInGameManagerList("forkLifter", new string[] { "colorGrad" }).FindAll(x => x.beat < beat);
+            if (allEventsBeforeBeatGrad.Count > 0)
             {
-                bgColorTween = bg.DOColor(color, seconds);
-                handShadowColorTween = handShadow.DOColor(color, seconds);
-                viewerCircleColorTween = viewerCircle.DOColor(color, seconds);
+                allEventsBeforeBeatGrad.Sort((x, y) => x.beat.CompareTo(y.beat)); //just in case
+                var lastEventGrad = allEventsBeforeBeatGrad[^1];
+                BackgroundColorGrad(lastEventGrad.beat, lastEventGrad.length, lastEventGrad["start"], lastEventGrad["end"], lastEventGrad["ease"]);
             }
         }
 
-        public void FadeBackgroundColor(Color start, Color end, float beats, bool instant)
+        public override void OnPlay(double beat)
         {
-            ChangeBackgroundColor(start, 0f);
-            if (!instant) ChangeBackgroundColor(end, beats);
-        }
-
-        public void ChangeGradientColor(Color color, float beats)
-        {
-            var seconds = Conductor.instance.secPerBeat * beats;
-
-            if (bgGradientColorTween != null)
-                bgGradientColorTween.Kill(true);
-            if (playerShadowColorTween != null) playerShadowColorTween.Kill(true);
-
-            if (seconds == 0)
-            {
-                bgGradient.color = color;
-                playerShadow.color = color;
-            }
-            else
-            {
-                bgGradientColorTween = bgGradient.DOColor(color, seconds);
-                playerShadowColorTween = playerShadow.DOColor(color, seconds);
-            }
-        }
-
-        public void FadeGradientColor(Color start, Color end, float beats, bool instant)
-        {
-            ChangeGradientColor(start, 0f);
-            if (!instant) ChangeGradientColor(end, beats);
+            PersistColor(beat);
         }
     }
-
 }

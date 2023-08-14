@@ -171,8 +171,8 @@ namespace HeavenStudio.Games
         [NonSerialized] public bool sawShouldBop;
         [NonSerialized] public bool seeShouldBop;
         GameEvent bop = new GameEvent();
-        double bgColorStartBeat;
-        float bgColorLength;
+        double bgColorStartBeat = -1;
+        float bgColorLength = 0;
         Util.EasingFunction.Ease lastEase;
         Color colorFrom;
         Color colorTo;
@@ -195,13 +195,39 @@ namespace HeavenStudio.Games
         private void Awake()
         {
             instance = this;
-            if (allJumpEvents.Count > 0) return;
-            GrabJumpEvents(Conductor.instance.songPositionInBeatsAsDouble);
+            colorFrom = defaultBGColor;
+            colorTo = defaultBGColor;
+            colorFrom2 = defaultBGColorBottom;
+            colorTo2 = defaultBGColorBottom;
+        }
+
+        public override void OnPlay(double beat)
+        {
+            GrabJumpEvents(beat);
+            PersistColor(beat);
+            PersistColors(beat);
         }
 
         public override void OnGameSwitch(double beat)
         {
             GrabJumpEvents(beat);
+            PersistColor(beat);
+            PersistColors(beat);
+        }
+
+        private void PersistColors(double beat)
+        {
+            var allEventsBeforeBeat = EventCaller.GetAllInGameManagerList("seeSaw", new string[] { "recolor" }).FindAll(x => x.beat < beat);
+            if (allEventsBeforeBeat.Count > 0)
+            {
+                allEventsBeforeBeat.Sort((x, y) => x.beat.CompareTo(y.beat));
+                var e = allEventsBeforeBeat[^1];
+                ChangeMappingColor(e["fill"], e["outline"]);
+            }
+            else
+            {
+                ChangeMappingColor(Color.white, defaultOtherColor);
+            }
         }
 
         private void Start()
@@ -250,7 +276,7 @@ namespace HeavenStudio.Games
                 double goodBeat = tempEvents[0].beat + tempEvents[0].length;
                 for (int i = 1; i < tempEvents.Count; i++)
                 {
-                    if (tempEvents[i].beat != goodBeat)
+                    if (tempEvents[i].beat < goodBeat)
                     {
                         tempEvents2.Add(tempEvents[i]);
                     }
@@ -271,25 +297,38 @@ namespace HeavenStudio.Games
             }
         }
 
+        private void PersistColor(double beat)
+        {
+            var allEventsBeforeBeat = EventCaller.GetAllInGameManagerList("seeSaw", new string[] { "changeBgColor" }).FindAll(x => x.beat < beat);
+            if (allEventsBeforeBeat.Count > 0)
+            {
+                allEventsBeforeBeat.Sort((x, y) => x.beat.CompareTo(y.beat)); //just in case
+                var lastEvent = allEventsBeforeBeat[^1];
+                ChangeColor(lastEvent.beat, lastEvent.length, lastEvent["colorFrom"], lastEvent["colorTo"], lastEvent["colorFrom2"], lastEvent["colorTo2"], lastEvent["ease"]);
+            }
+        }
+
+        private void BackgroundColorUpdate(Conductor cond)
+        {
+            float normalizedBeat = Mathf.Clamp01(cond.GetPositionFromBeat(bgColorStartBeat, bgColorLength));
+            Util.EasingFunction.Function func = Util.EasingFunction.GetEasingFunction(lastEase);
+            float newColorR = func(colorFrom.r, colorTo.r, normalizedBeat);
+            float newColorG = func(colorFrom.g, colorTo.g, normalizedBeat);
+            float newColorB = func(colorFrom.b, colorTo.b, normalizedBeat);
+            bgHigh.color = new Color(newColorR, newColorG, newColorB);
+            gradient.color = new Color(newColorR, newColorG, newColorB);
+            newColorR = func(colorFrom2.r, colorTo2.r, normalizedBeat);
+            newColorG = func(colorFrom2.g, colorTo2.g, normalizedBeat);
+            newColorB = func(colorFrom2.b, colorTo2.b, normalizedBeat);
+            bgLow.color = new Color(newColorR, newColorG, newColorB);
+        }
+
         private void Update()
         {
             var cond = Conductor.instance;
             if (cond.isPlaying && !cond.isPaused)
             {
-                float normalizedBeat = cond.GetPositionFromBeat(bgColorStartBeat, bgColorLength);
-                if (normalizedBeat > 0 && normalizedBeat <= 1)
-                {
-                    Util.EasingFunction.Function func = Util.EasingFunction.GetEasingFunction(lastEase);
-                    float newColorR = func(colorFrom.r, colorTo.r, normalizedBeat);
-                    float newColorG = func(colorFrom.g, colorTo.g, normalizedBeat);
-                    float newColorB = func(colorFrom.b, colorTo.b, normalizedBeat);
-                    bgHigh.color = new Color(newColorR, newColorG, newColorB);
-                    gradient.color = new Color(newColorR, newColorG, newColorB);
-                    newColorR = func(colorFrom2.r, colorTo2.r, normalizedBeat);
-                    newColorG = func(colorFrom2.g, colorTo2.g, normalizedBeat);
-                    newColorB = func(colorFrom2.b, colorTo2.b, normalizedBeat);
-                    bgLow.color = new Color(newColorR, newColorG, newColorB);
-                }
+                BackgroundColorUpdate(cond);
                 if (allJumpEvents.Count > 0 && !(see.dead || saw.dead))
                 {
                     if (currentJumpIndex < allJumpEvents.Count && currentJumpIndex >= 0)

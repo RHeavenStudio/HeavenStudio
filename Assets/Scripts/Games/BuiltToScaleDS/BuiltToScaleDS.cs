@@ -203,6 +203,27 @@ namespace HeavenStudio.Games
             UpdateColors();
         }
 
+        private void PersistColors(double beat)
+        {
+            var allEventsBeforeBeat = EventCaller.GetAllInGameManagerList("builtToScaleDS", new string[] { "color" }).FindAll(x => x.beat < beat);
+            if (allEventsBeforeBeat.Count > 0)
+            {
+                allEventsBeforeBeat.Sort((x, y) => x.beat.CompareTo(y.beat));
+                var lastEvent = allEventsBeforeBeat[^1];
+                UpdateMappingColors(lastEvent["object"], lastEvent["shooter"], lastEvent["bg"]);
+            }
+        }
+
+        public override void OnGameSwitch(double beat)
+        {
+            PersistColors(beat);
+        }
+
+        public override void OnPlay(double beat)
+        {
+            PersistColors(beat);
+        }
+
         private void UpdateColors()
         {
             objectMaterial.SetColor("_Color", currentObjectColor);

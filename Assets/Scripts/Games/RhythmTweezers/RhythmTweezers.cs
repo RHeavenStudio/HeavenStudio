@@ -4,7 +4,6 @@ using UnityEngine;
 using System;
 using Starpelly;
 using DG.Tweening;
-
 using HeavenStudio.Util;
 
 namespace HeavenStudio.Games.Loaders
@@ -65,26 +64,19 @@ namespace HeavenStudio.Games.Loaders
                         new Param("type", RhythmTweezers.NoPeekSignType.Full, "Sign Type", "Which sign will be used?")
                     }
                 },
-                new GameAction("fade background color", "Background Fade")
+                new GameAction("fade background color", "Background Color")
                 {
                     function = delegate 
                     { 
-                        var e = eventCaller.currentEntity; 
-                        if (e["instant"])
-                        {
-                            RhythmTweezers.instance.ChangeBackgroundColor(e["colorA"], 0f);
-                        }
-                        else
-                        {
-                            RhythmTweezers.instance.FadeBackgroundColor(e["colorA"], e["colorB"], e.length);
-                        }
+                        var e = eventCaller.currentEntity;
+                        RhythmTweezers.instance.BackgroundColor(e.beat, e.length, e["colorA"], e["colorB"], e["ease"]);
                     },
                     resizable = true, 
                     parameters = new List<Param>() 
                     {
                         new Param("colorA", Color.white, "Start Color", "The starting color in the fade"),
                         new Param("colorB", RhythmTweezers.defaultBgColor, "End Color", "The ending color in the fade"),
-                        new Param("instant", false, "Instant", "Instantly change color to start color?")
+                        new Param("ease", Util.EasingFunction.Ease.Linear, "Ease")
                     } 
                 },
                 new GameAction("altSmile", "Use Alt Smile")
@@ -107,16 +99,6 @@ namespace HeavenStudio.Games.Loaders
                         new Param("colorB", RhythmTweezers.defaultPotatoColor, "Potato Color", "The color of the potato")
                     },
                     hidden = true,
-                },
-                new GameAction("set background color", "Background Colour")
-                {
-                    function = delegate { var e = eventCaller.currentEntity; RhythmTweezers.instance.ChangeBackgroundColor(e["colorA"], 0f); },
-                    defaultLength = 0.5f,
-                    parameters = new List<Param>()
-                    {
-                        new Param("colorA", RhythmTweezers.defaultBgColor, "Background Color", "The background color to change to")
-                    },
-                    hidden = true
                 },
             },
             new List<string>() {"agb", "repeat"},
@@ -179,9 +161,7 @@ namespace HeavenStudio.Games
         public Sprite onionSprite;
         public Sprite potatoSprite;
 
-        Tween transitionTween;
         bool transitioning = false;
-        Tween bgColorTween;
 
         private static Color _defaultOnionColor;
         public static Color defaultOnionColor
@@ -231,6 +211,8 @@ namespace HeavenStudio.Games
         private void Awake()
         {
             instance = this;
+            colorStart = defaultBgColor;
+            colorEnd = defaultBgColor;
             if (crHandlerInstance != null && crHandlerInstance.queuedEvents.Count > 0)
             {
                 foreach (var crEvent in crHandlerInstance.queuedEvents)
@@ -262,6 +244,7 @@ namespace HeavenStudio.Games
         public override void OnPlay(double beat)
         {
             crHandlerInstance = null;
+            PersistColor(beat);
         }
 
         private void OnDestroy()
@@ -474,6 +457,8 @@ namespace HeavenStudio.Games
             }
         }
 
+        Tween transitionTween;
+
         const float vegDupeOffset = 16.7f;
         public void NextVegetable(double beat, int type, Color onionColor, Color potatoColor)
         {
@@ -517,27 +502,45 @@ namespace HeavenStudio.Games
             VegetableDupe.color = newColor;
         }
 
-        public void ChangeBackgroundColor(Color color, float beats)
+        private double colorStartBeat = -1;
+        private float colorLength = 0f;
+        private Color colorStart = Color.white; //obviously put to the default color of the game
+        private Color colorEnd = Color.white;
+        private Util.EasingFunction.Ease colorEase; //putting Util in case this game is using jukebox
+
+        //call this in update
+        private void BackgroundColorUpdate()
         {
-            var seconds = Conductor.instance.secPerBeat * beats;
+            float normalizedBeat = Mathf.Clamp01(Conductor.instance.GetPositionFromBeat(colorStartBeat, colorLength));
 
-            if (bgColorTween != null)
-                bgColorTween.Kill(true);
+            var func = Util.EasingFunction.GetEasingFunction(colorEase);
 
-            if (seconds == 0)
-            {
-                bg.color = color;
-            }
-            else
-            {
-                bgColorTween = bg.DOColor(color, seconds);
-            }
+            float newR = func(colorStart.r, colorEnd.r, normalizedBeat);
+            float newG = func(colorStart.g, colorEnd.g, normalizedBeat);
+            float newB = func(colorStart.b, colorEnd.b, normalizedBeat);
+
+            bg.color = new Color(newR, newG, newB);
         }
 
-        public void FadeBackgroundColor(Color start, Color end, float beats)
+        public void BackgroundColor(double beat, float length, Color colorStartSet, Color colorEndSet, int ease)
         {
-            ChangeBackgroundColor(start, 0f);
-            ChangeBackgroundColor(end, beats);
+            colorStartBeat = beat;
+            colorLength = length;
+            colorStart = colorStartSet;
+            colorEnd = colorEndSet;
+            colorEase = (Util.EasingFunction.Ease)ease;
+        }
+
+        //call this in OnPlay(double beat) and OnGameSwitch(double beat)
+        private void PersistColor(double beat)
+        {
+            var allEventsBeforeBeat = EventCaller.GetAllInGameManagerList("rhythmTweezers", new string[] { "fade background color" }).FindAll(x => x.beat < beat);
+            if (allEventsBeforeBeat.Count > 0)
+            {
+                allEventsBeforeBeat.Sort((x, y) => x.beat.CompareTo(y.beat)); //just in case
+                var lastEvent = allEventsBeforeBeat[^1];
+                BackgroundColor(lastEvent.beat, lastEvent.length, lastEvent["colorA"], lastEvent["colorB"], lastEvent["ease"]);
+            }
         }
 
         public static void PreNoPeeking(double beat, float length, int type)
@@ -585,6 +588,8 @@ namespace HeavenStudio.Games
                     queuedPeeks.Clear();
                 }
             }
+
+            BackgroundColorUpdate();
         }
 
         public override void OnGameSwitch(double beat)
@@ -600,6 +605,7 @@ namespace HeavenStudio.Games
                     queuedIntervals.Clear();
                 }
             }
+            PersistColor(beat);
         }
 
         private void ResetVegetable()

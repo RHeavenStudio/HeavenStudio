@@ -199,7 +199,9 @@ namespace HeavenStudio.Editor.Track
 
                     lastPos = transform.localPosition;
                 }
-            } else {
+            } 
+            else 
+            {
                 if (moving) moving = false;
                 if (resizingLeft) SetPivot(new Vector2(1, rectTransform.pivot.y));
 
@@ -287,14 +289,17 @@ namespace HeavenStudio.Editor.Track
             {
                 var mgs = EventCaller.instance.minigames;
                 string[] datamodels = entity.datamodel.Split('/');
+                Debug.Log("Selected entity's datamodel : "+entity.datamodel);
 
-                bool isSwitchGame = (datamodels[1] == "switchGame");
+                bool isSwitchGame = datamodels[1] == "switchGame";
                 int gameIndex = mgs.FindIndex(c => c.name == datamodels[isSwitchGame ? 2 : 0]);
                 int block = isSwitchGame ? 0 : mgs[gameIndex].actions.FindIndex(c => c.actionName == datamodels[1]) + 1;
 
                 if (!isSwitchGame) {
+                    // hardcoded stuff
+                    // needs to happen because hidden blocks technically change the event index
                     if (datamodels[0] == "gameManager") block -= 2;
-                    else if (datamodels[0] is "countIn" or "vfx") block--;
+                    else if (datamodels[0] is "countIn" or "vfx") block -= 1;
                 }
                 
                 GridGameSelector.instance.SelectGame(datamodels[isSwitchGame ? 2 : 0], block);
