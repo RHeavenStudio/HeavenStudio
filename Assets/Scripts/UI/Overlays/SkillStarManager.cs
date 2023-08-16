@@ -20,11 +20,11 @@ namespace HeavenStudio.Common
         [SerializeField] private Animator starAnim;
         [SerializeField] private ParticleSystem starParticle;
 
-        public float StarTargetTime { get { return starStart + starLength; } }
+        public double StarTargetTime { get { return starStart + starLength; } }
         public bool IsEligible { get; private set; }
         public bool IsCollected { get { return state == StarState.Collected; } }
 
-        float starStart = float.MaxValue;
+        double starStart = double.MaxValue;
         float starLength = float.MaxValue;
         StarState state = StarState.None;
         Conductor cond;
@@ -41,13 +41,13 @@ namespace HeavenStudio.Common
         {
             if (cond.songPositionInBeatsAsDouble > starStart && state == StarState.In)
             {
-                double offset = cond.SecsToBeats(Minigame.AceStartTime()-1, cond.GetBpmAtBeat(StarTargetTime));
+                double offset = cond.SecsToBeats(Minigame.AceEarlyTime()-1, cond.GetBpmAtBeat(StarTargetTime));
                 if (cond.songPositionInBeatsAsDouble <= starStart + starLength + offset)
                     starAnim.DoScaledAnimation("StarIn", starStart, starLength + (float)offset);
                 else
                     starAnim.Play("StarIn", -1, 1f);
                 
-                offset = cond.SecsToBeats(Minigame.AceEndTime()-1, cond.GetBpmAtBeat(StarTargetTime));
+                offset = cond.SecsToBeats(Minigame.AceLateTime()-1, cond.GetBpmAtBeat(StarTargetTime));
                 if (cond.songPositionInBeatsAsDouble > starStart + starLength + offset)
                     KillStar();
             }
@@ -74,11 +74,11 @@ namespace HeavenStudio.Common
             state = StarState.None;
             starAnim.Play("NoPose", -1, 0f);
             starAnim.speed = 1f;
-            starStart = float.MaxValue;
+            starStart = double.MaxValue;
             starLength = float.MaxValue;
         }
 
-        public void DoStarIn(float beat, float length)
+        public void DoStarIn(double beat, float length)
         {
             if (!OverlaysManager.OverlaysEnabled) return;
             IsEligible = true;
@@ -94,14 +94,14 @@ namespace HeavenStudio.Common
         public bool DoStarJust()
         {
             if (state == StarState.In && 
-                cond.songPositionInBeatsAsDouble >= StarTargetTime + cond.SecsToBeats(Minigame.AceStartTime()-1, cond.GetBpmAtBeat(StarTargetTime)) &&
-                cond.songPositionInBeatsAsDouble <= StarTargetTime + cond.SecsToBeats(Minigame.AceEndTime()-1, cond.GetBpmAtBeat(StarTargetTime))
+                cond.songPositionInBeatsAsDouble >= StarTargetTime + cond.SecsToBeats(Minigame.AceEarlyTime()-1, cond.GetBpmAtBeat(StarTargetTime)) &&
+                cond.songPositionInBeatsAsDouble <= StarTargetTime + cond.SecsToBeats(Minigame.AceLateTime()-1, cond.GetBpmAtBeat(StarTargetTime))
             )
             {
                 state = StarState.Collected;
                 starAnim.Play("StarJust", -1, 0f);
                 starParticle.Play();
-                Jukebox.PlayOneShot("skillStar");
+                SoundByte.PlayOneShot("skillStar");
 
                 TimingAccuracyDisplay.instance.StopStarFlash();
                 return true;

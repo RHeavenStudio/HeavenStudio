@@ -13,24 +13,21 @@ namespace HeavenStudio.Games.Scripts_ForkLifter
         public static ForkLifterPlayer instance { get; set; }
 
         [Header("Objects")]
-        public GameObject fork;
-        public Sprite peaSprite;
         public Sprite hitFX;
         public Sprite hitFXG;
         public Sprite hitFXMiss;
         public Sprite hitFX2;
         public Transform early, perfect, late;
 
-        [SerializeField]
-        private BoxCollider2D col;
-
         private Animator anim;
 
         private int currentHitInList = 0;
 
+        public bool shouldBop;
         public int currentEarlyPeasOnFork;
         public int currentPerfectPeasOnFork;
         public int currentLatePeasOnFork;
+        private double lastReportedBeat;
 
         private bool isEating = false;
 
@@ -57,6 +54,11 @@ namespace HeavenStudio.Games.Scripts_ForkLifter
             {
                 currentHitInList = 0;
             }
+
+            if (Conductor.instance.ReportBeat(ref lastReportedBeat) && anim.IsAnimationNotPlaying() && shouldBop) 
+            {
+                anim.DoScaledAnimationAsync("Player_Bop", 0.5f);
+            }
         }
 
         public void Eat()
@@ -68,21 +70,22 @@ namespace HeavenStudio.Games.Scripts_ForkLifter
             }
         }
 
+        // used in an animation event
         public void EatConfirm()
         {
             if (topbun && middleburger && bottombun)
             {
-                Jukebox.PlayOneShotGame("forkLifter/burger");
+                SoundByte.PlayOneShotGame("forkLifter/burger");
             }
             else
             {
                 if (currentEarlyPeasOnFork > 0 || currentLatePeasOnFork > 0)
                 {
-                    Jukebox.PlayOneShotGame($"forkLifter/cough_{Random.Range(1, 3)}");
+                    SoundByte.PlayOneShotGame($"forkLifter/cough_{Random.Range(1, 3)}");
                 }
                 else
                 {
-                    Jukebox.PlayOneShotGame("forkLifter/gulp");
+                    SoundByte.PlayOneShotGame("forkLifter/gulp");
                 }
             }
 
@@ -118,7 +121,7 @@ namespace HeavenStudio.Games.Scripts_ForkLifter
 
             if (p == null)
             {
-                Jukebox.PlayOneShotGame("forkLifter/stabnohit");
+                SoundByte.PlayOneShotGame("forkLifter/stabnohit");
             }
 
             anim.Play("Player_Stab", 0, 0);

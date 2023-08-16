@@ -13,10 +13,19 @@ namespace HeavenStudio.Games.Loaders
             {
                 new GameAction("spawnGhost", "Ghost")
                 {
-                    preFunction = delegate { var e = eventCaller.currentEntity; SneakySpirits.PreSpawnGhost(e.beat, e.length, e["slowDown"], e["volume1"], e["volume2"], e["volume3"], e["volume4"], e["volume5"], e["volume6"],
+                    preFunction = delegate { var e = eventCaller.currentEntity; SneakySpirits.PreSpawnGhost(e.beat, e.length, e["volume1"], e["volume2"], e["volume3"], e["volume4"], e["volume5"], e["volume6"],
                         e["volume7"]); },
                     defaultLength = 1f,
                     resizable = true,
+                    function = delegate 
+                    { 
+                        var e = eventCaller.currentEntity; 
+                        SneakySpirits.instance.SpawnGhost(e.beat, e.beat, e.length, e["slowDown"], new List<int>()
+                        {
+                            e["volume1"], e["volume2"], e["volume3"], e["volume4"], e["volume5"], e["volume6"],
+                        e["volume7"]
+                        }); 
+                    },
                     parameters = new List<Param>()
                     {
                         new Param("slowDown", true, "Slowdown Effect", "Should there be a slowdown effect when the ghost is hit?"),
@@ -59,13 +68,6 @@ namespace HeavenStudio.Games
     using Scripts_SneakySpirits;
     public class SneakySpirits : Minigame
     {
-        public struct QueuedGhost
-        {
-            public float beat;
-            public float length;
-            public bool slowDown;
-            public List<int> volumes;
-        }
         [Header("Components")]
         [SerializeField] Animator bowAnim;
         [SerializeField] Animator bowHolderAnim;
@@ -79,11 +81,10 @@ namespace HeavenStudio.Games
         [SerializeField] GameObject slowRain;
         [SerializeField] GameObject normalTree;
         [SerializeField] GameObject slowTree;
-        [Header("Variables")]
-        private static List<QueuedGhost> queuedGhosts = new List<QueuedGhost>();
+
         private bool hasArrowLoaded;
         float movingLength;
-        float movingStartBeat;
+        double movingStartBeat;
         bool isMoving;
         string moveAnim;
         EasingFunction.Ease lastEase;
@@ -92,8 +93,33 @@ namespace HeavenStudio.Games
 
         void OnDestroy()
         {
-            if (queuedGhosts.Count > 0) queuedGhosts.Clear();
             Conductor.instance.SetMinigamePitch(1f);
+            foreach (var evt in scheduledInputs)
+            {
+                evt.Disable();
+            }
+        }
+
+        public override void OnGameSwitch(double beat)
+        {
+            InitGhosts(beat);
+        }
+
+        private void InitGhosts(double beat)
+        {
+            var allGhosts = EventCaller.GetAllInGameManagerList("sneakySpirits", new string[] { "spawnGhost" });
+
+            foreach (var ghost in allGhosts)
+            {
+                if (ghost.beat < beat && ghost.beat + (ghost.length * 7) >= beat)
+                {
+                    SpawnGhost(ghost.beat, beat, ghost.length, ghost["slowDown"], new List<int>()
+                    {
+                        ghost["volume1"], ghost["volume2"], ghost["volume3"], ghost["volume4"], ghost["volume5"], ghost["volume6"],
+                        ghost["volume7"],
+                    });
+                }
+            }
         }
 
         void Awake()
@@ -107,17 +133,9 @@ namespace HeavenStudio.Games
             var cond = Conductor.instance;
             if (cond.isPlaying && !cond.isPaused)
             {
-                if (queuedGhosts.Count > 0)
-                {
-                    foreach(var ghost in queuedGhosts)
-                    {
-                        SpawnGhost(ghost.beat, ghost.length, ghost.slowDown, ghost.volumes);
-                    }
-                    queuedGhosts.Clear();
-                }
                 if (PlayerInput.Pressed() && !IsExpectingInputNow(InputType.STANDARD_DOWN) && hasArrowLoaded)
                 {
-                    WhiffArrow(cond.songPositionInBeats);
+                    WhiffArrow(cond.songPositionInBeatsAsDouble);
                 }
                 if (isMoving)
                 {
@@ -133,7 +151,6 @@ namespace HeavenStudio.Games
             }
             else if (!cond.isPlaying)
             {
-                queuedGhosts.Clear();
                 Conductor.instance.SetMinigamePitch(1f);
             }
         }
@@ -145,7 +162,7 @@ namespace HeavenStudio.Games
             hasArrowLoaded = true;
         }
 
-        public void MoveBow(float beat, float length, bool enter, int ease)
+        public void MoveBow(double beat, float length, bool enter, int ease)
         {
             movingStartBeat = beat;
             movingLength = length;
@@ -154,7 +171,7 @@ namespace HeavenStudio.Games
             lastEase = (EasingFunction.Ease)ease;
         }
 
-        public static void PreSpawnGhost(float beat, float length, bool slowDown, int volume1, int volume2, int volume3, int volume4, int volume5, int volume6, int volume7)
+        public static void PreSpawnGhost(double beat, float length, int volume1, int volume2, int volume3, int volume4, int volume5, int volume6, int volume7)
         {
             MultiSound.Play(new MultiSound.Sound[]
             {
@@ -166,29 +183,9 @@ namespace HeavenStudio.Games
                 new MultiSound.Sound("sneakySpirits/moving", beat + length * 5, 1f, volume6 * 0.01f),
                 new MultiSound.Sound("sneakySpirits/moving", beat + length * 6, 1f, volume7 * 0.01f),
             }, forcePlay: true);
-            if (GameManager.instance.currentGame == "sneakySpirits")
-            {
-                SneakySpirits.instance.SpawnGhost(beat, length, slowDown, new List<int>()
-                {
-                    volume1, volume2, volume3, volume4, volume5, volume6, volume7
-                });
-            }
-            else
-            {
-                queuedGhosts.Add(new QueuedGhost
-                {
-                    beat = beat,
-                    length = length,
-                    volumes = new List<int>()
-                    {
-                        volume1, volume2, volume3, volume4, volume5, volume6, volume7
-                    },
-                    slowDown = slowDown,
-                });
-            }
         }
 
-        public void SpawnGhost(float beat, float length, bool slowDown, List<int> volumes)
+        public void SpawnGhost(double beat, double gameSwitchBeat, float length, bool slowDown, List<int> volumes)
         {
             if (slowDown)
             {
@@ -206,8 +203,8 @@ namespace HeavenStudio.Games
             List<BeatAction.Action> ghostSpawns = new List<BeatAction.Action>();
             for(int i = 0; i < 7; i++)
             {
-                float spawnBeat = beat + length * i;
-                if (spawnBeat >= Conductor.instance.songPositionInBeats)
+                double spawnBeat = beat + length * i;
+                if (spawnBeat >= gameSwitchBeat)
                 {
                     SneakySpiritsGhost spawnedGhost = Instantiate(movingGhostPrefab, ghostPositions[i], false);
                     spawnedGhost.transform.position = new Vector3(spawnedGhost.transform.position.x, spawnedGhost.transform.position.y - (1 - volumes[i] * 0.01f) * 2.5f, spawnedGhost.transform.position.z);
@@ -216,14 +213,14 @@ namespace HeavenStudio.Games
             }
         }
 
-        void WhiffArrow(float beat)
+        void WhiffArrow(double beat)
         {
             GameObject spawnedArrow = Instantiate(arrowMissPrefab, transform);
             spawnedArrow.SetActive(true);
             spawnedArrow.GetComponent<Animator>().DoScaledAnimationAsync("ArrowRecoil", 0.5f);
             bowAnim.DoScaledAnimationAsync("BowRecoil", 0.25f);
             hasArrowLoaded = false;
-            Jukebox.PlayOneShotGame("sneakySpirits/arrowMiss", -1, 2);
+            SoundByte.PlayOneShotGame("sneakySpirits/arrowMiss", -1, 2);
             BeatAction.New(instance.gameObject, new List<BeatAction.Action>()
             {
                 new BeatAction.Action(beat + 3f, delegate { 
@@ -240,7 +237,7 @@ namespace HeavenStudio.Games
             if (!hasArrowLoaded) return;
             if (state >= 1f || state <= -1f)
             {
-                Jukebox.PlayOneShotGame("sneakySpirits/ghostScared");
+                SoundByte.PlayOneShotGame("sneakySpirits/ghostScared");
                 WhiffArrow(caller.startBeat + caller.timer);
                 GameObject spawnedGhost = Instantiate(ghostMissPrefab, transform);
                 spawnedGhost.SetActive(true);
@@ -264,7 +261,7 @@ namespace HeavenStudio.Games
             if (!hasArrowLoaded) return;
             if (state >= 1f || state <= -1f)
             {
-                Jukebox.PlayOneShotGame("sneakySpirits/ghostScared");
+                SoundByte.PlayOneShotGame("sneakySpirits/ghostScared");
                 WhiffArrow(caller.startBeat + caller.timer);
                 GameObject spawnedGhost = Instantiate(ghostMissPrefab, transform);
                 spawnedGhost.SetActive(true);
@@ -307,7 +304,7 @@ namespace HeavenStudio.Games
             spawnedDeath.startBeat = caller.startBeat + caller.timer;
             spawnedDeath.length = 1f;
             spawnedDeath.gameObject.SetActive(true);
-            Jukebox.PlayOneShotGame("sneakySpirits/hit");
+            SoundByte.PlayOneShotGame("sneakySpirits/hit");
             bowAnim.DoScaledAnimationAsync("BowRecoil", 0.25f);
             if (slowDown) 
             {
@@ -335,7 +332,7 @@ namespace HeavenStudio.Games
 
         void Miss(PlayerActionEvent caller)
         {
-            Jukebox.PlayOneShotGame("sneakySpirits/ghostEscape");
+            SoundByte.PlayOneShotGame("sneakySpirits/ghostEscape");
             GameObject spawnedGhost = Instantiate(ghostMissPrefab, transform);
             spawnedGhost.SetActive(true);
             spawnedGhost.GetComponent<Animator>().DoScaledAnimationAsync("GhostMiss", 0.5f);
@@ -344,7 +341,7 @@ namespace HeavenStudio.Games
                 new BeatAction.Action(caller.startBeat + caller.timer + 1f, delegate {
                     if (GameManager.instance.currentGame == "sneakySpirits")
                     {
-                        Jukebox.PlayOneShotGame("sneakySpirits/laugh", -1, 1.2f);
+                        SoundByte.PlayOneShotGame("sneakySpirits/laugh", -1, 1.2f);
                         spawnedGhost.GetComponent<Animator>().DoScaledAnimationAsync("GhostLaugh", 0.25f);
                     }
                 }),

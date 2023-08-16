@@ -6,6 +6,9 @@ using UnityEngine.UI;
 using HeavenStudio.Util;
 using HeavenStudio.Common;
 using HeavenStudio.Editor;
+using Jukebox;
+using Jukebox.Legacy;
+using System;
 
 namespace HeavenStudio
 {
@@ -31,9 +34,9 @@ namespace HeavenStudio
         const float AspectRatioWidth = 1;
         const float AspectRatioHeight = 1;
 
-        private List<DynamicBeatmap.DynamicEntity> panEvents = new List<DynamicBeatmap.DynamicEntity>();
-        private List<DynamicBeatmap.DynamicEntity> scaleEvents = new List<DynamicBeatmap.DynamicEntity>();
-        private List<DynamicBeatmap.DynamicEntity> rotationEvents = new List<DynamicBeatmap.DynamicEntity>();
+        private List<RiqEntity> panEvents = new();
+        private List<RiqEntity> scaleEvents = new();
+        private List<RiqEntity> rotationEvents = new();
 
         static Vector3 defaultPan = new Vector3(0, 0, 0);
         static Vector3 defaultScale = new Vector3(1, 1, 1);
@@ -68,7 +71,7 @@ namespace HeavenStudio
             ToggleLetterboxGlow(PersistentDataManager.gameSettings.letterboxFxEnable);
         }
 
-        public void OnBeatChanged(float beat)
+        public void OnBeatChanged(double beat)
         { 
             Reset();
 
@@ -104,7 +107,7 @@ namespace HeavenStudio
                 float prog = Conductor.instance.GetPositionFromBeat(e.beat, e.length);
                 if (prog >= 0f)
                 {
-                    EasingFunction.Function func = EasingFunction.GetEasingFunction((EasingFunction.Ease) e["ease"]);
+                    Util.EasingFunction.Function func = Util.EasingFunction.GetEasingFunction((Util.EasingFunction.Ease) e["ease"]);
                     switch (e["axis"])
                     {
                         case (int) ViewAxis.X:
@@ -145,7 +148,7 @@ namespace HeavenStudio
                 float prog = Conductor.instance.GetPositionFromBeat(e.beat, e.length);
                 if (prog >= 0f)
                 {
-                    EasingFunction.Function func = EasingFunction.GetEasingFunction((EasingFunction.Ease) e["ease"]);
+                    Util.EasingFunction.Function func = Util.EasingFunction.GetEasingFunction((Util.EasingFunction.Ease) e["ease"]);
                     rotation = func(rotationLast, -e["valA"], Mathf.Min(prog, 1f));
                 }
                 if (prog > 1f)
@@ -162,7 +165,7 @@ namespace HeavenStudio
                 float prog = Conductor.instance.GetPositionFromBeat(e.beat, e.length);
                 if (prog >= 0f)
                 {
-                    EasingFunction.Function func = EasingFunction.GetEasingFunction((EasingFunction.Ease) e["ease"]);
+                    Util.EasingFunction.Function func = Util.EasingFunction.GetEasingFunction((Util.EasingFunction.Ease) e["ease"]);
                     switch (e["axis"])
                     {
                         case (int) ViewAxis.X:
@@ -208,8 +211,11 @@ namespace HeavenStudio
             overlayView.SetActive(toggle);
         }
 
-        public void SetAmbientGlowColour(Color colour)
+        [NonSerialized] public bool usingMinigameAmbientColor;
+
+        public void SetAmbientGlowColour(Color colour, bool minigameColor, bool overrideMinigameColor = true)
         {
+            if (overrideMinigameColor) usingMinigameAmbientColor = minigameColor;
             ambientBg.color = colour;
             GameSettings.UpdatePreviewAmbient(colour);
         }

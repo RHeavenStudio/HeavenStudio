@@ -91,7 +91,7 @@ namespace HeavenStudio.Games
         }
         public struct QueuedFirework
         {
-            public float beat;
+            public double beat;
             public bool isSparkler;
             public int whereToSpawn;
             public bool practice;
@@ -132,6 +132,10 @@ namespace HeavenStudio.Games
         void OnDestroy()
         {
             if (queuedFireworks.Count > 0) queuedFireworks.Clear();
+            foreach (var evt in scheduledInputs)
+            {
+                evt.Disable();
+            }
         }
 
         void Awake()
@@ -162,7 +166,7 @@ namespace HeavenStudio.Games
             stars.SetActive(!doIt);
         }
 
-        public static void CountIn(float beat, int count)
+        public static void CountIn(double beat, int count)
         {
             switch (count)
             {
@@ -193,7 +197,7 @@ namespace HeavenStudio.Games
             }
         }
 
-        public static void PreSpawnFirework(float beat, bool isSparkler, int whereToSpawn, bool practice, int explosionType, bool applause, float verticalOffset)
+        public static void PreSpawnFirework(double beat, bool isSparkler, int whereToSpawn, bool practice, int explosionType, bool applause, float verticalOffset)
         {
             if (isSparkler)
             {
@@ -226,7 +230,7 @@ namespace HeavenStudio.Games
 
         }
 
-        void SpawnFirework(float beat, bool isSparkler, int whereToSpawn, bool practice, int explosionType, bool applause, float verticalOffset)
+        void SpawnFirework(double beat, bool isSparkler, int whereToSpawn, bool practice, int explosionType, bool applause, float verticalOffset)
         {
             if (isSparkler && practice)
             {
@@ -266,9 +270,9 @@ namespace HeavenStudio.Games
             spawnedRocket.Init(beat, explosionType);
         }
 
-        public void SpawnBomb(float beat, bool practice, bool applause)
+        public void SpawnBomb(double beat, bool practice, bool applause)
         {
-            Jukebox.PlayOneShotGame("fireworks/tamaya_4");
+            SoundByte.PlayOneShotGame("fireworks/tamaya_4");
             if (practice)
             {
                 MultiSound.Play(new MultiSound.Sound[]

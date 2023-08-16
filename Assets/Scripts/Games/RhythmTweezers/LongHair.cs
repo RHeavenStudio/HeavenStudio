@@ -9,7 +9,7 @@ namespace HeavenStudio.Games.Scripts_RhythmTweezers
 {
     public class LongHair : MonoBehaviour
     {
-        public float createBeat;
+        public double createBeat;
         public GameObject hairSprite;
         public GameObject stubbleSprite;
         private RhythmTweezers game;
@@ -22,19 +22,15 @@ namespace HeavenStudio.Games.Scripts_RhythmTweezers
 
         private Sound pullSound;
 
-        private float inputBeat;
+        private double inputBeat;
 
         PlayerActionEvent endEvent;
 
-        private void Awake()
+        public void StartInput(double beat, double length, Tweezers tweezer)
         {
             game = RhythmTweezers.instance;
             anim = GetComponent<Animator>();
-            tweezers = game.Tweezers;
-        }
-
-        public void StartInput(float beat, float length)
-        {
+            tweezers = tweezer;
             inputBeat = beat + length;
             game.ScheduleInput(beat, length, InputType.STANDARD_DOWN | InputType.DIRECTION_DOWN, StartJust, StartMiss, Out);
         }
@@ -56,8 +52,8 @@ namespace HeavenStudio.Games.Scripts_RhythmTweezers
                     endEvent.Disable();
                 }
                 // Auto-release if holding at release time.
-                if (normalizedBeat >= 1f && !game.IsExpectingInputNow(InputType.STANDARD_UP | InputType.DIRECTION_DOWN_UP))
-                    EndAce();
+                if (normalizedBeat >= 1f)
+                    endEvent.Hit(0, 1);
             }
 
             loop.transform.localScale = Vector2.one / holder.transform.localScale;
@@ -94,7 +90,7 @@ namespace HeavenStudio.Games.Scripts_RhythmTweezers
                 pluckState = -1;
                 return; 
             }
-            pullSound = Jukebox.PlayOneShotGame($"rhythmTweezers/longPull{UnityEngine.Random.Range(1, 5)}");
+            pullSound = SoundByte.PlayOneShotGame($"rhythmTweezers/longPull{UnityEngine.Random.Range(1, 5)}");
             pluckState = 1;
             endEvent = game.ScheduleInput(inputBeat, 0.5f, InputType.STANDARD_UP | InputType.DIRECTION_DOWN_UP, EndJust, Out, Out);
         }

@@ -8,6 +8,7 @@ using UnityEngine;
 using UnityEngine.Rendering;
 using static HeavenStudio.EntityTypes;
 using static HeavenStudio.Games.CheerReaders;
+using Jukebox;
 
 namespace HeavenStudio.Games.Loaders
 {
@@ -18,7 +19,7 @@ namespace HeavenStudio.Games.Loaders
         {
             return new Minigame("cheerReaders", "Cheer Readers", "ffffde", false, false, new List<GameAction>()
             {
-                new GameAction("oneTwoThree", "One Two Three!")
+                new GameAction("oneTwoThree", "One! Two! Three!")
                 {
                     function = delegate {var e = eventCaller.currentEntity; CheerReaders.instance.OneTwoThree(e.beat, e["solo"]); CheerReaders.instance.SetIsDoingCue(e.beat, e.length);},
                     defaultLength = 3f,
@@ -45,7 +46,7 @@ namespace HeavenStudio.Games.Loaders
                         new Param("solo", CheerReaders.WhoSpeaks.Both, "Who Speaks", "Who should say the voice line?")
                     }
                 },
-                new GameAction("rahRahSisBoomBaBoom", "Rah-Rah Sis Boom Bah-Boom!")
+                new GameAction("rahRahSisBoomBaBoom", "Rah-Rah Sis Boom Bah-BOOM!")
                 {
                     function = delegate {var e = eventCaller.currentEntity; CheerReaders.instance.RahRahSisBoomBaBoom(e.beat, e["solo"], e["consecutive"]); CheerReaders.instance.SetIsDoingCue(e.beat, e.length);},
                     defaultLength = 4f,
@@ -55,7 +56,7 @@ namespace HeavenStudio.Games.Loaders
                         new Param("consecutive", false, "Consecutive", "Is this cue using the alternate consecutive version?")
                     }
                 },
-                new GameAction("okItsOn", "OK It's On!")
+                new GameAction("okItsOn", "OK, It's On!")
                 {
                     function = delegate {var e = eventCaller.currentEntity; CheerReaders.instance.OkItsOnStretchable(e.beat, e.length, e["solo"], e["toggle"], e["poster"], e["happy"]); CheerReaders.instance.SetIsDoingCue(e.beat, e.length, false);},
                     defaultLength = 4f,
@@ -63,11 +64,11 @@ namespace HeavenStudio.Games.Loaders
                     {
                         new Param("solo", CheerReaders.WhoSpeaks.Both, "Who Speaks", "Who should say the voice line?"),
                         new Param("toggle", true, "Whistle", "Should the whistle sound play?"),
-                        new Param("poster", CheerReaders.PosterToChoose.Random, "Poster", "Which image should the cheer readers display?"),
-                        new Param("happy", true, "Do Happy Face?", "Will the cheer readers do a happy smile 2 beats after showing off their books?")
+                        new Param("poster", CheerReaders.PosterToChoose.Random, "Poster", "Which image should the School Library Pep Squad display?"),
+                        new Param("happy", true, "Make Happy Face?", "Will the School Library Pep Squad smile happily 2 beats after flipping their books?")
                     }
                 },
-                new GameAction("okItsOnStretch", "OK It's On! (Stretchable)")
+                new GameAction("okItsOnStretch", "OK, It's On! (Stretchable)")
                 {
                     function = delegate {var e = eventCaller.currentEntity; CheerReaders.instance.OkItsOnStretchable(e.beat, e.length, e["solo"], e["toggle"], e["poster"], e["happy"]); CheerReaders.instance.SetIsDoingCue(e.beat, e.length, false); },
                     defaultLength = 4f,
@@ -76,11 +77,11 @@ namespace HeavenStudio.Games.Loaders
                     {
                         new Param("solo", CheerReaders.WhoSpeaks.Both, "Who Speaks", "Who should say the voice line?"),
                         new Param("toggle", true, "Whistle", "Should the whistle sound play?"),
-                        new Param("poster", CheerReaders.PosterToChoose.Random, "Poster", "Which image should the cheer readers display?"),
-                        new Param("happy", true, "Do Happy Face?", "Will the cheer readers do a happy smile 2 beats after showing off their books?")
+                        new Param("poster", CheerReaders.PosterToChoose.Random, "Poster", "Which image should the School Library Pep Squad display?"),
+                        new Param("happy", true, "Do Happy Face?", "Will the School Library Pep Squad smile happily 2 beats after showing off their books?")
                     }
                 },
-                new GameAction("yay", "Yay")
+                new GameAction("yay", "Yay!")
                 {
                     function = delegate {CheerReaders.instance.Yay(eventCaller.currentEntity["solo"]); },
                     defaultLength = 0.5f,
@@ -95,8 +96,8 @@ namespace HeavenStudio.Games.Loaders
                     resizable = true,
                     parameters = new List<Param>()
                     {
-                        new Param("toggle", true, "Should bop?", "Should the nerds bop?"),
-                        new Param("toggle2", false, "Should auto bop?", "Should the nerds auto bop?")
+                        new Param("toggle", true, "Should bop?", "Should the girls bop?"),
+                        new Param("toggle2", false, "Should auto bop?", "Should the girls bop automatically?")
                     }
                 },
                 new GameAction("resetPose", "Reset Pose")
@@ -164,20 +165,24 @@ namespace HeavenStudio.Games
         bool shouldBop = true;
         bool canBop = true;
         public bool doingCue;
-        float cueLength;
-        float cueBeat;
+        double cueLength;
+        double cueBeat;
         bool shouldYay;
         bool shouldDoSuccessZoom;
         public bool shouldBeBlack = false;
         public GameEvent bop = new GameEvent();
         int currentZoomIndex;
-        float currentZoomCamBeat;
+        double currentZoomCamBeat;
         float currentZoomCamLength;
-        private List<DynamicBeatmap.DynamicEntity> allCameraEvents = new List<DynamicBeatmap.DynamicEntity>();
+        private List<RiqEntity> allCameraEvents = new List<RiqEntity>();
 
         void OnDestroy()
         {
-            Jukebox.KillLoop(SpinningLoop, 0.5f);
+            SoundByte.KillLoop(SpinningLoop, 0.5f);
+            foreach (var evt in scheduledInputs)
+            {
+                evt.Disable();
+            }
         }
 
         public override void OnTimeChange()
@@ -206,10 +211,10 @@ namespace HeavenStudio.Games
             allGirls.AddRange(thirdRow);
             var camEvents = EventCaller.GetAllInGameManagerList("cheerReaders", new string[] { "okItsOn" });
             camEvents.AddRange(EventCaller.GetAllInGameManagerList("cheerReaders", new string[] { "okItsOnStretch" }));
-            List<DynamicBeatmap.DynamicEntity> tempEvents = new List<DynamicBeatmap.DynamicEntity>();
+            List<RiqEntity> tempEvents = new List<RiqEntity>();
             for (int i = 0; i < camEvents.Count; i++)
             {
-                if (camEvents[i].beat + camEvents[i].beat >= Conductor.instance.songPositionInBeats)
+                if (camEvents[i].beat + camEvents[i].beat >= Conductor.instance.songPositionInBeatsAsDouble)
                 {
                     tempEvents.Add(camEvents[i]);
                 }
@@ -234,7 +239,7 @@ namespace HeavenStudio.Games
                 {
                     if (currentZoomIndex < allCameraEvents.Count && currentZoomIndex >= 0)
                     {
-                        if (Conductor.instance.songPositionInBeats >= allCameraEvents[currentZoomIndex].beat)
+                        if (Conductor.instance.songPositionInBeatsAsDouble >= allCameraEvents[currentZoomIndex].beat)
                         {
                             UpdateCameraZoom();
                             currentZoomIndex++;
@@ -252,7 +257,7 @@ namespace HeavenStudio.Games
                         }
                         else
                         {
-                            EasingFunction.Function func = EasingFunction.GetEasingFunction(EasingFunction.Ease.EaseInOutQuint);
+                            Util.EasingFunction.Function func = Util.EasingFunction.GetEasingFunction(Util.EasingFunction.Ease.EaseInOutQuint);
                             float newZoom = func(shouldDoSuccessZoom ? 4f : 1.5f, 0, normalizedZoomOutAgainBeat);
                             GameCamera.additionalPosition = new Vector3(0, 0, newZoom);
                         }
@@ -265,7 +270,7 @@ namespace HeavenStudio.Games
                         }
                         else
                         {
-                            EasingFunction.Function func = EasingFunction.GetEasingFunction(EasingFunction.Ease.EaseOutQuint);
+                            Util.EasingFunction.Function func = Util.EasingFunction.GetEasingFunction(Util.EasingFunction.Ease.EaseOutQuint);
                             float newZoom = func(-1, shouldDoSuccessZoom ? 4f : 1.5f, normalizedZoomInBeat);
                             GameCamera.additionalPosition = new Vector3(0, 0, newZoom);
                         }
@@ -278,7 +283,7 @@ namespace HeavenStudio.Games
                         }
                         else
                         {
-                            EasingFunction.Function func = EasingFunction.GetEasingFunction(EasingFunction.Ease.EaseOutQuint);
+                            Util.EasingFunction.Function func = Util.EasingFunction.GetEasingFunction(Util.EasingFunction.Ease.EaseOutQuint);
                             float newZoom = func(0f, 1f, normalizedZoomOutBeat);
                             GameCamera.additionalPosition = new Vector3(0, 0, newZoom * -1);
                         }
@@ -288,22 +293,22 @@ namespace HeavenStudio.Games
                 {
                     player.FlipBook(false);
                     missPoster.SetActive(false);
-                    Jukebox.PlayOneShotGame("cheerReaders/miss");
+                    SoundByte.PlayOneShotGame("cheerReaders/miss");
                     ScoreMiss(1f);
                 }
                 if (PlayerInput.AltPressed() && !IsExpectingInputNow(InputType.STANDARD_ALT_DOWN)) 
                 {
-                    Jukebox.PlayOneShotGame("cheerReaders/doingoing");
+                    SoundByte.PlayOneShotGame("cheerReaders/doingoing");
                     player.StartSpinBook();
                     missPoster.SetActive(false);
-                    SpinningLoop = Jukebox.PlayOneShotGame("cheerReaders/bookSpinLoop", -1, 1, 1, true);
+                    SpinningLoop = SoundByte.PlayOneShotGame("cheerReaders/bookSpinLoop", -1, 1, 1, true);
                     ScoreMiss(1f);
                 }
                 if (PlayerInput.AltPressedUp() && !IsExpectingInputNow(InputType.STANDARD_ALT_UP))
                 {
-                    Jukebox.PlayOneShotGame("cheerReaders/doingoing");
+                    SoundByte.PlayOneShotGame("cheerReaders/doingoing");
                     player.StopSpinBook();
-                    Jukebox.KillLoop(SpinningLoop, 0f);
+                    SoundByte.KillLoop(SpinningLoop, 0f);
                     ScoreMiss(1f);
                     missPoster.SetActive(true);
                 }
@@ -322,7 +327,7 @@ namespace HeavenStudio.Games
             }
             else if (!cond.isPlaying)
             {
-                Jukebox.KillLoop(SpinningLoop, 0.5f);
+                SoundByte.KillLoop(SpinningLoop, 0.5f);
             }
         }
 
@@ -339,9 +344,9 @@ namespace HeavenStudio.Games
         {
             canBop = true;
             player.ResetPose();
-            foreach (var nerd in allGirls)
+            foreach (var girl in allGirls)
             {
-                nerd.ResetPose();
+                girl.ResetPose();
             }
             foreach (var mask in topMasks)
             {
@@ -395,33 +400,33 @@ namespace HeavenStudio.Games
             switch (whoSpeaks)
             {
                 case (int)WhoSpeaks.Solo:
-                    Jukebox.PlayOneShotGame("cheerReaders/Solo/yayS");
+                    SoundByte.PlayOneShotGame("cheerReaders/Solo/yayS");
                     player.Yay(true);
-                    foreach (var nerd in allGirls)
+                    foreach (var girl in allGirls)
                     {
-                        nerd.Yay(true);
+                        girl.Yay(true);
                     }
                     break;
                 case (int)WhoSpeaks.Girls:
-                    Jukebox.PlayOneShotGame("cheerReaders/Girls/yayGirls");
-                    foreach (var nerd in allGirls)
+                    SoundByte.PlayOneShotGame("cheerReaders/Girls/yayGirls");
+                    foreach (var girl in allGirls)
                     {
-                        nerd.Yay(true);
+                        girl.Yay(true);
                     }
                     player.Yay(false);
                     break;
                 default:
-                    Jukebox.PlayOneShotGame("cheerReaders/All/yay");
-                    foreach (var nerd in allGirls)
+                    SoundByte.PlayOneShotGame("cheerReaders/All/yay");
+                    foreach (var girl in allGirls)
                     {
-                        nerd.Yay(true);
+                        girl.Yay(true);
                     }
                     player.Yay(true);
                     break;
             }
         }
 
-        public void BopToggle(float beat, float length, bool startBop, bool bopAuto)
+        public void BopToggle(double beat, float length, bool startBop, bool bopAuto)
         {
             shouldBop = bopAuto;
             if (startBop)
@@ -443,23 +448,23 @@ namespace HeavenStudio.Games
         {
             if (canBop)
             {
-                foreach (var nerd in firstRow)
+                foreach (var girl in firstRow)
                 {
-                    nerd.Bop();
+                    girl.Bop();
                 }
-                foreach (var nerd in secondRow)
+                foreach (var girl in secondRow)
                 {
-                    nerd.Bop();
+                    girl.Bop();
                 }
-                foreach (var nerd in thirdRow)
+                foreach (var girl in thirdRow)
                 {
-                    nerd.Bop();
+                    girl.Bop();
                 }
                 player.Bop();
             }
         }
 
-        public void SetIsDoingCue(float beat, float length, bool shouldSwitchColor = true)
+        public void SetIsDoingCue(double beat, float length, bool shouldSwitchColor = true)
         {
             if (!doingCue) shouldYay = false;
             foreach (var girl in allGirls)
@@ -477,7 +482,7 @@ namespace HeavenStudio.Games
             });
         }
 
-        public void OneTwoThree(float beat, int whoSpeaks)
+        public void OneTwoThree(double beat, int whoSpeaks)
         {
             canBop = false;
             ScheduleInput(beat, 2, InputType.STANDARD_DOWN, JustFlip, MissFlip, Nothing);
@@ -522,9 +527,9 @@ namespace HeavenStudio.Games
             {
                 new BeatAction.Action(beat, delegate
                 {
-                    foreach (var nerd in firstRow)
+                    foreach (var girl in firstRow)
                     {
-                        nerd.FlipBook();
+                        girl.FlipBook();
                     }
                     switch (whoSpeaks)
                     {
@@ -532,25 +537,25 @@ namespace HeavenStudio.Games
                             player.OneTwoThree(1);
                             break;
                         case (int)WhoSpeaks.Girls:
-                            foreach (var nerd in allGirls)
+                            foreach (var girl in allGirls)
                             {
-                                nerd.OneTwoThree(1);
+                                girl.OneTwoThree(1);
                             }
                             break;
                         case (int)WhoSpeaks.Both:
                             player.OneTwoThree(1);
-                            foreach (var nerd in allGirls)
+                            foreach (var girl in allGirls)
                             {
-                                nerd.OneTwoThree(1);
+                                girl.OneTwoThree(1);
                             }
                             break;
                     }
                 }),
                 new BeatAction.Action(beat + 1, delegate
                 {
-                    foreach (var nerd in secondRow)
+                    foreach (var girl in secondRow)
                     {
-                        nerd.FlipBook();
+                        girl.FlipBook();
                     }
                     switch (whoSpeaks)
                     {
@@ -558,25 +563,25 @@ namespace HeavenStudio.Games
                             player.OneTwoThree(2);
                             break;
                         case (int)WhoSpeaks.Girls:
-                            foreach (var nerd in allGirls)
+                            foreach (var girl in allGirls)
                             {
-                                nerd.OneTwoThree(2);
+                                girl.OneTwoThree(2);
                             }
                             break;
                         case (int)WhoSpeaks.Both:
                             player.OneTwoThree(2);
-                            foreach (var nerd in allGirls)
+                            foreach (var girl in allGirls)
                             {
-                                nerd.OneTwoThree(2);
+                                girl.OneTwoThree(2);
                             }
                             break;
                     }
                 }),
                 new BeatAction.Action(beat + 2, delegate
                 {
-                    foreach (var nerd in thirdRow)
+                    foreach (var girl in thirdRow)
                     {
-                        nerd.FlipBook();
+                        girl.FlipBook();
                     }
                     switch (whoSpeaks)
                     {
@@ -584,16 +589,16 @@ namespace HeavenStudio.Games
                             player.OneTwoThree(3);
                             break;
                         case (int)WhoSpeaks.Girls:
-                            foreach (var nerd in allGirls)
+                            foreach (var girl in allGirls)
                             {
-                                nerd.OneTwoThree(3);
+                                girl.OneTwoThree(3);
                             }
                             break;
                         case (int)WhoSpeaks.Both:
                             player.OneTwoThree(3);
-                            foreach (var nerd in allGirls)
+                            foreach (var girl in allGirls)
                             {
-                                nerd.OneTwoThree(3);
+                                girl.OneTwoThree(3);
                             }
                             break;
                     }
@@ -605,7 +610,7 @@ namespace HeavenStudio.Games
             });
         }
 
-        public void ItsUpToYou(float beat, int whoSpeaks)
+        public void ItsUpToYou(double beat, int whoSpeaks)
         {
             canBop = false;
             ScheduleInput(beat, 2, InputType.STANDARD_DOWN, JustFlip, MissFlip, Nothing);
@@ -668,16 +673,16 @@ namespace HeavenStudio.Games
                             player.ItsUpToYou(1);
                             break;
                         case (int)WhoSpeaks.Girls:
-                            foreach (var nerd in allGirls)
+                            foreach (var girl in allGirls)
                             {
-                                nerd.ItsUpToYou(1);
+                                girl.ItsUpToYou(1);
                             }
                             break;
                         case (int)WhoSpeaks.Both:
                             player.ItsUpToYou(1);
-                            foreach (var nerd in allGirls)
+                            foreach (var girl in allGirls)
                             {
-                                nerd.ItsUpToYou(1);
+                                girl.ItsUpToYou(1);
                             }
                             break;
                     }
@@ -693,16 +698,16 @@ namespace HeavenStudio.Games
                             player.ItsUpToYou(2);
                             break;
                         case (int)WhoSpeaks.Girls:
-                            foreach (var nerd in allGirls)
+                            foreach (var girl in allGirls)
                             {
-                                nerd.ItsUpToYou(2);
+                                girl.ItsUpToYou(2);
                             }
                             break;
                         case (int)WhoSpeaks.Both:
                             player.ItsUpToYou(2);
-                            foreach (var nerd in allGirls)
+                            foreach (var girl in allGirls)
                             {
-                                nerd.ItsUpToYou(2);
+                                girl.ItsUpToYou(2);
                             }
                             break;
                     }
@@ -718,16 +723,16 @@ namespace HeavenStudio.Games
                             player.ItsUpToYou(3);
                             break;
                         case (int)WhoSpeaks.Girls:
-                            foreach (var nerd in allGirls)
+                            foreach (var girl in allGirls)
                             {
-                                nerd.ItsUpToYou(3);
+                                girl.ItsUpToYou(3);
                             }
                             break;
                         case (int)WhoSpeaks.Both:
                             player.ItsUpToYou(3);
-                            foreach (var nerd in allGirls)
+                            foreach (var girl in allGirls)
                             {
-                                nerd.ItsUpToYou(3);
+                                girl.ItsUpToYou(3);
                             }
                             break;
                     }
@@ -742,16 +747,16 @@ namespace HeavenStudio.Games
                             player.ItsUpToYou(4);
                             break;
                         case (int)WhoSpeaks.Girls:
-                            foreach (var nerd in allGirls)
+                            foreach (var girl in allGirls)
                             {
-                                nerd.ItsUpToYou(4);
+                                girl.ItsUpToYou(4);
                             }
                             break;
                         case (int)WhoSpeaks.Both:
                             player.ItsUpToYou(4);
-                            foreach (var nerd in allGirls)
+                            foreach (var girl in allGirls)
                             {
-                                nerd.ItsUpToYou(4);
+                                girl.ItsUpToYou(4);
                             }
                             break;
                     }
@@ -763,7 +768,7 @@ namespace HeavenStudio.Games
             });
         }
 
-        public void LetsGoReadABunchaBooks(float beat, int whoSpeaks)
+        public void LetsGoReadABunchaBooks(double beat, int whoSpeaks)
         {
             canBop = false;
             ScheduleInput(beat, 2, InputType.STANDARD_DOWN, JustFlip, MissFlip, Nothing);
@@ -841,16 +846,16 @@ namespace HeavenStudio.Games
                             player.ItsUpToYou(1);
                             break;
                         case (int)WhoSpeaks.Girls:
-                            foreach (var nerd in allGirls)
+                            foreach (var girl in allGirls)
                             {
-                                nerd.ItsUpToYou(1);
+                                girl.ItsUpToYou(1);
                             }
                             break;
                         case (int)WhoSpeaks.Both:
                             player.ItsUpToYou(1);
-                            foreach (var nerd in allGirls)
+                            foreach (var girl in allGirls)
                             {
-                                nerd.ItsUpToYou(1);
+                                girl.ItsUpToYou(1);
                             }
                             break;
                     }
@@ -869,16 +874,16 @@ namespace HeavenStudio.Games
                             player.ItsUpToYou(1);
                             break;
                         case (int)WhoSpeaks.Girls:
-                            foreach (var nerd in allGirls)
+                            foreach (var girl in allGirls)
                             {
-                                nerd.ItsUpToYou(1);
+                                girl.ItsUpToYou(1);
                             }
                             break;
                         case (int)WhoSpeaks.Both:
                             player.ItsUpToYou(1);
-                            foreach (var nerd in allGirls)
+                            foreach (var girl in allGirls)
                             {
-                                nerd.ItsUpToYou(1);
+                                girl.ItsUpToYou(1);
                             }
                             break;
                     }
@@ -901,16 +906,16 @@ namespace HeavenStudio.Games
                             player.ItsUpToYou(3);
                             break;
                         case (int)WhoSpeaks.Girls:
-                            foreach (var nerd in allGirls)
+                            foreach (var girl in allGirls)
                             {
-                                nerd.ItsUpToYou(3);
+                                girl.ItsUpToYou(3);
                             }
                             break;
                         case (int)WhoSpeaks.Both:
                             player.ItsUpToYou(3);
-                            foreach (var nerd in allGirls)
+                            foreach (var girl in allGirls)
                             {
-                                nerd.ItsUpToYou(3);
+                                girl.ItsUpToYou(3);
                             }
                             break;
                     }
@@ -928,16 +933,16 @@ namespace HeavenStudio.Games
                             player.ItsUpToYou(3);
                             break;
                         case (int)WhoSpeaks.Girls:
-                            foreach (var nerd in allGirls)
+                            foreach (var girl in allGirls)
                             {
-                                nerd.ItsUpToYou(3);
+                                girl.ItsUpToYou(3);
                             }
                             break;
                         case (int)WhoSpeaks.Both:
                             player.ItsUpToYou(3);
-                            foreach (var nerd in allGirls)
+                            foreach (var girl in allGirls)
                             {
-                                nerd.ItsUpToYou(3);
+                                girl.ItsUpToYou(3);
                             }
                             break;
                     }
@@ -949,7 +954,7 @@ namespace HeavenStudio.Games
             });
         }
 
-        public void RahRahSisBoomBaBoom(float beat, int whoSpeaks, bool consecutive)
+        public void RahRahSisBoomBaBoom(double beat, int whoSpeaks, bool consecutive)
         {
             canBop = false;
             ScheduleInput(beat, 2.5f, InputType.STANDARD_DOWN, JustFlipBoom, MissFlip, Nothing);
@@ -1018,16 +1023,16 @@ namespace HeavenStudio.Games
                             player.ItsUpToYou(1);
                             break;
                         case (int)WhoSpeaks.Girls:
-                            foreach (var nerd in allGirls)
+                            foreach (var girl in allGirls)
                             {
-                                nerd.ItsUpToYou(1);
+                                girl.ItsUpToYou(1);
                             }
                             break;
                         case (int)WhoSpeaks.Both:
                             player.ItsUpToYou(1);
-                            foreach (var nerd in allGirls)
+                            foreach (var girl in allGirls)
                             {
-                                nerd.ItsUpToYou(1);
+                                girl.ItsUpToYou(1);
                             }
                             break;
                     }
@@ -1042,16 +1047,16 @@ namespace HeavenStudio.Games
                             player.ItsUpToYou(3);
                             break;
                         case (int)WhoSpeaks.Girls:
-                            foreach (var nerd in allGirls)
+                            foreach (var girl in allGirls)
                             {
-                                nerd.ItsUpToYou(3);
+                                girl.ItsUpToYou(3);
                             }
                             break;
                         case (int)WhoSpeaks.Both:
                             player.ItsUpToYou(3);
-                            foreach (var nerd in allGirls)
+                            foreach (var girl in allGirls)
                             {
-                                nerd.ItsUpToYou(3);
+                                girl.ItsUpToYou(3);
                             }
                             break;
                     }
@@ -1067,16 +1072,16 @@ namespace HeavenStudio.Games
                             player.ItsUpToYou(1);
                             break;
                         case (int)WhoSpeaks.Girls:
-                            foreach (var nerd in allGirls)
+                            foreach (var girl in allGirls)
                             {
-                                nerd.ItsUpToYou(1);
+                                girl.ItsUpToYou(1);
                             }
                             break;
                         case (int)WhoSpeaks.Both:
                             player.ItsUpToYou(1);
-                            foreach (var nerd in allGirls)
+                            foreach (var girl in allGirls)
                             {
-                                nerd.ItsUpToYou(1);
+                                girl.ItsUpToYou(1);
                             }
                             break;
                     }
@@ -1092,16 +1097,16 @@ namespace HeavenStudio.Games
                             player.OneTwoThree(2);
                             break;
                         case (int)WhoSpeaks.Girls:
-                            foreach (var nerd in allGirls)
+                            foreach (var girl in allGirls)
                             {
-                                nerd.OneTwoThree(2);
+                                girl.OneTwoThree(2);
                             }
                             break;
                         case (int)WhoSpeaks.Both:
                             player.OneTwoThree(2);
-                            foreach (var nerd in allGirls)
+                            foreach (var girl in allGirls)
                             {
-                                nerd.OneTwoThree(2);
+                                girl.OneTwoThree(2);
                             }
                             break;
                     }
@@ -1116,16 +1121,16 @@ namespace HeavenStudio.Games
                             player.ItsUpToYou(3);
                             break;
                         case (int)WhoSpeaks.Girls:
-                            foreach (var nerd in allGirls)
+                            foreach (var girl in allGirls)
                             {
-                                nerd.ItsUpToYou(3);
+                                girl.ItsUpToYou(3);
                             }
                             break;
                         case (int)WhoSpeaks.Both:
                             player.ItsUpToYou(3);
-                            foreach (var nerd in allGirls)
+                            foreach (var girl in allGirls)
                             {
-                                nerd.ItsUpToYou(3);
+                                girl.ItsUpToYou(3);
                             }
                             break;
                     }
@@ -1138,16 +1143,16 @@ namespace HeavenStudio.Games
                             player.Boom();
                             break;
                         case (int)WhoSpeaks.Girls:
-                            foreach (var nerd in allGirls)
+                            foreach (var girl in allGirls)
                             {
-                                nerd.Boom();
+                                girl.Boom();
                             }
                             break;
                         case (int)WhoSpeaks.Both:
                             player.Boom();
-                            foreach (var nerd in allGirls)
+                            foreach (var girl in allGirls)
                             {
-                                nerd.Boom();
+                                girl.Boom();
                             }
                             break;
                     }
@@ -1159,7 +1164,7 @@ namespace HeavenStudio.Games
             });
         }
 
-        public void OkItsOnStretchable(float beat, float length, int whoSpeaks, bool whistle, int posterToChoose, bool shouldHappyFace)
+        public void OkItsOnStretchable(double beat, float length, int whoSpeaks, bool whistle, int posterToChoose, bool shouldHappyFace)
         {
             canBop = false;
             float actualLength = length * 0.25f;
@@ -1223,16 +1228,16 @@ namespace HeavenStudio.Games
                             player.ItsUpToYou(3);
                             break;
                         case (int)WhoSpeaks.Girls:
-                            foreach (var nerd in allGirls)
+                            foreach (var girl in allGirls)
                             {
-                                nerd.ItsUpToYou(3);
+                                girl.ItsUpToYou(3);
                             }
                             break;
                         case (int)WhoSpeaks.Both:
                             player.ItsUpToYou(3);
-                            foreach (var nerd in allGirls)
+                            foreach (var girl in allGirls)
                             {
-                                nerd.ItsUpToYou(3);
+                                girl.ItsUpToYou(3);
                             }
                             break;
                     }
@@ -1245,33 +1250,33 @@ namespace HeavenStudio.Games
                             player.ItsUpToYou(1);
                             break;
                         case (int)WhoSpeaks.Girls:
-                            foreach (var nerd in allGirls)
+                            foreach (var girl in allGirls)
                             {
-                                nerd.ItsUpToYou(1);
+                                girl.ItsUpToYou(1);
                             }
                             break;
                         case (int)WhoSpeaks.Both:
                             player.ItsUpToYou(1);
-                            foreach (var nerd in allGirls)
+                            foreach (var girl in allGirls)
                             {
-                                nerd.ItsUpToYou(1);
+                                girl.ItsUpToYou(1);
                             }
                             break;
                     }
                 }),
                 new BeatAction.Action(beat + 2f * actualLength, delegate
                 {
-                    foreach (var nerd in firstRow)
+                    foreach (var girl in firstRow)
                     {
-                        nerd.StartSpinBook();
+                        girl.StartSpinBook();
                     }
-                    foreach (var nerd in secondRow)
+                    foreach (var girl in secondRow)
                     {
-                        nerd.StartSpinBook();
+                        girl.StartSpinBook();
                     }
-                    foreach (var nerd in thirdRow)
+                    foreach (var girl in thirdRow)
                     {
-                        nerd.StartSpinBook();
+                        girl.StartSpinBook();
                     }
                     switch (whoSpeaks)
                     {
@@ -1279,16 +1284,16 @@ namespace HeavenStudio.Games
                             player.ItsUpToYou(3);
                             break;
                         case (int)WhoSpeaks.Girls:
-                            foreach (var nerd in allGirls)
+                            foreach (var girl in allGirls)
                             {
-                                nerd.ItsUpToYou(3);
+                                girl.ItsUpToYou(3);
                             }
                             break;
                         case (int)WhoSpeaks.Both:
                             player.ItsUpToYou(3);
-                            foreach (var nerd in allGirls)
+                            foreach (var girl in allGirls)
                             {
-                                nerd.ItsUpToYou(3);
+                                girl.ItsUpToYou(3);
                             }
                             break;
                     }
@@ -1296,17 +1301,17 @@ namespace HeavenStudio.Games
                 new BeatAction.Action(beat + 3f * actualLength, delegate
                 {
                     SetPosterImage(posterToChoose);
-                    foreach (var nerd in firstRow)
+                    foreach (var girl in firstRow)
                     {
-                        nerd.StopSpinBook();
+                        girl.StopSpinBook();
                     }
-                    foreach (var nerd in secondRow)
+                    foreach (var girl in secondRow)
                     {
-                        nerd.StopSpinBook();
+                        girl.StopSpinBook();
                     }
-                    foreach (var nerd in thirdRow)
+                    foreach (var girl in thirdRow)
                     {
-                        nerd.StopSpinBook();
+                        girl.StopSpinBook();
                     }
                     switch (whoSpeaks)
                     {
@@ -1321,9 +1326,9 @@ namespace HeavenStudio.Games
                             }
                             break;
                         case (int)WhoSpeaks.Girls:
-                            foreach (var nerd in allGirls)
+                            foreach (var girl in allGirls)
                             {
-                                nerd.ItsUpToYou(3);
+                                girl.ItsUpToYou(3);
                             }
                             if (shouldHappyFace)
                             {
@@ -1332,9 +1337,9 @@ namespace HeavenStudio.Games
                             break;
                         case (int)WhoSpeaks.Both:
                             player.ItsUpToYou(3);
-                            foreach (var nerd in allGirls)
+                            foreach (var girl in allGirls)
                             {
-                                nerd.ItsUpToYou(3);
+                                girl.ItsUpToYou(3);
                             }
                             break;
                     }
@@ -1356,7 +1361,7 @@ namespace HeavenStudio.Games
             missPoster.SetActive(false);
             if (state >= 1f || state <= -1f)
             {
-                Jukebox.PlayOneShotGame("cheerReaders/doingoing");
+                SoundByte.PlayOneShotGame("cheerReaders/doingoing");
                 player.FlipBook(); //Need near miss anims
                 return;
             }
@@ -1368,7 +1373,7 @@ namespace HeavenStudio.Games
             missPoster.SetActive(false);
             if (state >= 1f || state <= -1f)
             {
-                Jukebox.PlayOneShotGame("cheerReaders/doingoing");
+                SoundByte.PlayOneShotGame("cheerReaders/doingoing");
                 player.FlipBook(); //Need near miss anims
                 return;
             }
@@ -1381,11 +1386,11 @@ namespace HeavenStudio.Games
             shouldYay = true;
             if (boom)
             {
-                Jukebox.PlayOneShotGame("cheerReaders/bookBoom");
+                SoundByte.PlayOneShotGame("cheerReaders/bookBoom");
             }
             else
             {
-                Jukebox.PlayOneShotGame("cheerReaders/bookPlayer");
+                SoundByte.PlayOneShotGame("cheerReaders/bookPlayer");
             }
         }
 
@@ -1394,9 +1399,9 @@ namespace HeavenStudio.Games
             missPoster.SetActive(false);
             if (state >= 1f || state <= -1f)
             {
-                Jukebox.PlayOneShotGame("cheerReaders/doingoing");
+                SoundByte.PlayOneShotGame("cheerReaders/doingoing");
                 player.StartSpinBook();
-                SpinningLoop = Jukebox.PlayOneShotGame("cheerReaders/bookSpinLoop", -1, 1, 1, true);
+                SpinningLoop = SoundByte.PlayOneShotGame("cheerReaders/bookSpinLoop", -1, 1, 1, true);
                 return;
             }
             SuccessHoldSpin();
@@ -1405,16 +1410,16 @@ namespace HeavenStudio.Games
         void SuccessHoldSpin()
         {
             player.StartSpinBook();
-            Jukebox.PlayOneShotGame("cheerReaders/bookSpin");
-            SpinningLoop = Jukebox.PlayOneShotScheduledGame("cheerReaders/bookSpinLoop", Jukebox.GetClipLengthGame("cheerReaders/bookSpin"), 1, 1, true);
+            SoundByte.PlayOneShotGame("cheerReaders/bookSpin");
+            SpinningLoop = SoundByte.PlayOneShotScheduledGame("cheerReaders/bookSpinLoop", SoundByte.GetClipLengthGame("cheerReaders/bookSpin"), 1, 1, true);
         }
 
         void JustReleaseSpin(PlayerActionEvent caller, float state)
         {
-            Jukebox.KillLoop(SpinningLoop, 0f);
+            SoundByte.KillLoop(SpinningLoop, 0f);
             if (state >= 1f || state <= -1f)
             {
-                Jukebox.PlayOneShotGame("cheerReaders/doingoing");
+                SoundByte.PlayOneShotGame("cheerReaders/doingoing");
                 player.StopSpinBook();
                 shouldDoSuccessZoom = false;
                 missPoster.SetActive(true);
@@ -1425,7 +1430,7 @@ namespace HeavenStudio.Games
 
         void SuccessReleaseSpin()
         {
-            Jukebox.PlayOneShotGame("cheerReaders/bookOpen");
+            SoundByte.PlayOneShotGame("cheerReaders/bookOpen");
             player.StopSpinBook();
             shouldYay = true;
             shouldDoSuccessZoom = true;
@@ -1436,7 +1441,7 @@ namespace HeavenStudio.Games
         {
             playerMask.SetActive(false);
             missPoster.SetActive(false);
-            Jukebox.PlayOneShotGame("cheerReaders/doingoing");
+            SoundByte.PlayOneShotGame("cheerReaders/doingoing");
             player.Miss();
             shouldDoSuccessZoom = false;
             foreach (var girl in allGirls)

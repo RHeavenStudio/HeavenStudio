@@ -10,7 +10,7 @@ namespace HeavenStudio.Games.Scripts_MunchyMonk
     public class Dumpling : MonoBehaviour
     {
         public Color dumplingColor;
-        public float startBeat;
+        public double startBeat;
         
         const string sfxName = "munchyMonk/";
         public bool canDestroy;
@@ -47,14 +47,14 @@ namespace HeavenStudio.Games.Scripts_MunchyMonk
         {
             smearSr.color = dumplingColor;
             game.MonkArmsAnim.DoScaledAnimationAsync("WristSlap", 0.5f);
-            Jukebox.PlayOneShotGame(sfxName+"slap");
+            SoundByte.PlayOneShotGame(sfxName+"slap");
             game.isStaring = false;
             
             if (state >= 1f || state <= -1f)
             {
                 game.MonkAnim.DoScaledAnimationAsync("Barely", 0.5f);
                 anim.DoScaledAnimationAsync("HitHead", 0.5f);
-                Jukebox.PlayOneShotGame(sfxName+"barely");
+                SoundByte.PlayOneShotGame(sfxName+"barely");
                 canDestroy = true;
                 game.needBlush = false;
             } else {
@@ -62,7 +62,7 @@ namespace HeavenStudio.Games.Scripts_MunchyMonk
                 game.dumplings[0].anim.DoScaledAnimationAsync("FollowHand", 0.5f);
                 smearAnim.Play("SmearAppear", 0, 0);
                 game.needBlush = true;
-                Jukebox.PlayOneShotGame(sfxName+"gulp");
+                SoundByte.PlayOneShotGame(sfxName+"gulp");
                 MunchyMonk.howManyGulps++;
                 for (int i = 1; i <= 4; i++)
                 {
@@ -89,8 +89,8 @@ namespace HeavenStudio.Games.Scripts_MunchyMonk
             smearAnim.Play("SmearAppear", 0, 0);
             anim.DoScaledAnimationAsync("HitHead", 0.5f);
             MultiSound.Play(new MultiSound.Sound[] {
-                new MultiSound.Sound(sfxName+"slap", Conductor.instance.songPositionInBeats),
-                new MultiSound.Sound(sfxName+"miss", Conductor.instance.songPositionInBeats),
+                new MultiSound.Sound(sfxName+"slap", Conductor.instance.songPositionInBeatsAsDouble),
+                new MultiSound.Sound(sfxName+"miss", Conductor.instance.songPositionInBeatsAsDouble),
             });
             canDestroy = true;
             game.needBlush = false;

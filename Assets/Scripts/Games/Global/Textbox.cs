@@ -5,6 +5,8 @@ using UnityEngine.UI;
 
 using TMPro;
 using HeavenStudio.TextboxUtilities;
+using Jukebox;
+using Jukebox.Legacy;
 
 namespace HeavenStudio.Games.Global
 {
@@ -27,10 +29,10 @@ namespace HeavenStudio.Games.Global
             Bottom,
         }
 
-        private List<DynamicBeatmap.DynamicEntity> textboxEvents = new List<DynamicBeatmap.DynamicEntity>();
-        private List<DynamicBeatmap.DynamicEntity> openCaptionsEvents = new List<DynamicBeatmap.DynamicEntity>();
-        private List<DynamicBeatmap.DynamicEntity> idolEvents = new List<DynamicBeatmap.DynamicEntity>();
-        private List<DynamicBeatmap.DynamicEntity> closedCaptionsEvents = new List<DynamicBeatmap.DynamicEntity>();
+        private List<RiqEntity> textboxEvents = new List<RiqEntity>();
+        private List<RiqEntity> openCaptionsEvents = new List<RiqEntity>();
+        private List<RiqEntity> idolEvents = new List<RiqEntity>();
+        private List<RiqEntity> closedCaptionsEvents = new List<RiqEntity>();
 
         public static Textbox instance { get; private set; }
 
@@ -83,7 +85,7 @@ namespace HeavenStudio.Games.Global
             UpdateClosedCaptionsDisplay();
         }
 
-        public void OnBeatChanged(float beat)
+        public void OnBeatChanged(double beat)
         {
             TextboxEnabler.SetActive(false);
             OpenCaptionsEnabler.SetActive(false);

@@ -2,6 +2,8 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using Jukebox;
+using Jukebox.Legacy;
 
 using HeavenStudio.Editor.Track;
 
@@ -98,7 +100,7 @@ namespace HeavenStudio.Editor.Commands
         {
             if (pos[id].eventObj == null)
             {
-                pos[id].eventObj = GameManager.instance.Beatmap.entities.Find(c => c.eventObj.eventObjID == pos[id].eventObj.eventObjID).eventObj;
+                pos[id].eventObj = Timeline.instance.eventObjs.Find(c => c.eventObjID == pos[id].eventObj.eventObjID);
             }
         }
     }
@@ -119,7 +121,7 @@ namespace HeavenStudio.Editor.Commands
 
         public void Redo()
         {
-            deletedObj = Timeline.instance.AddEventObject(deletedObj.entity.datamodel, false, new Vector3(deletedObj.entity.beat, -deletedObj.entity.track * Timeline.instance.LayerHeight()), deletedObj.entity, true, deletedObj.entity.eventObj.eventObjID);
+            deletedObj = Timeline.instance.AddEventObject(deletedObj.entity.datamodel, false, new Vector3((float) deletedObj.entity.beat, -deletedObj.entity["track"] * Timeline.instance.LayerHeight()), deletedObj.entity, true);
         }
 
         public void Undo()
@@ -127,7 +129,7 @@ namespace HeavenStudio.Editor.Commands
             deletedObj = eventObj;
             Selections.instance.Deselect(eventObj);
             Timeline.instance.DestroyEventObject(eventObj.entity);
-            // DynamicBeatmap.DynamicEntity e = deletedObjs[i].entity;
+            // RiqEntity e = deletedObjs[i].entity;
             // Timeline.instance.AddEventObject(e.datamodel, false, new Vector3(e.beat, -e.track * Timeline.instance.LayerHeight()), e, true, e.eventObj.eventObjID);
         }
     }
@@ -166,8 +168,8 @@ namespace HeavenStudio.Editor.Commands
         {
             for (int i = 0; i < deletedObjs.Count; i++)
             {
-                DynamicBeatmap.DynamicEntity e = deletedObjs[i].entity;
-                eventObjs[i] = Timeline.instance.AddEventObject(e.datamodel, false, new Vector3(e.beat, -e.track * Timeline.instance.LayerHeight()), e, true, e.eventObj.eventObjID);
+                RiqEntity e = deletedObjs[i].entity;
+                eventObjs[i] = Timeline.instance.AddEventObject(e.datamodel, false, new Vector3((float)e.beat, -e["track"] * Timeline.instance.LayerHeight()), e, true);
             }
         }
     }
@@ -190,8 +192,8 @@ namespace HeavenStudio.Editor.Commands
         {
             for (int i = 0; i < copiedObjs.Count; i++)
             {
-                DynamicBeatmap.DynamicEntity e = copiedObjs[i].entity;
-                eventObjs[i] = Timeline.instance.AddEventObject(e.datamodel, false, new Vector3(e.beat, -e.track * Timeline.instance.LayerHeight()), e, true, e.eventObj.eventObjID);
+                RiqEntity e = copiedObjs[i].entity;
+                eventObjs[i] = Timeline.instance.AddEventObject(e.datamodel, false, new Vector3((float)e.beat, -e["track"] * Timeline.instance.LayerHeight()), e, true);
             }
         }
 

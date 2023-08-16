@@ -35,52 +35,57 @@ namespace HeavenStudio.Games.Loaders
                 },
                 new GameAction("poseThree", "Pose Horizontal")
                 {
-                    preFunction = delegate { var e = eventCaller.currentEntity; TheDazzles.PrePose(e.beat, e.length, 0f, 1f, 2f, 0f, 1f, 2f, e["toggle"]); },
+                    preFunction = delegate { var e = eventCaller.currentEntity; TheDazzles.PrePose(e.beat, e.length, 0f, 1f, 2f, 0f, 1f, 2f, e["toggle"], e["toggle2"]); },
                     defaultLength = 3f,
                     parameters = new List<Param>()
                     {
-                        new Param("toggle", false, "Stars", "Should stars appear when successfully posing?")
+                        new Param("toggle", false, "Stars", "Should stars appear when successfully posing?"),
+                        new Param("toggle2", true, "Cheer Sounds")
                     }
                 },
                 new GameAction("poseTwo", "Pose Vertical")
                 {
-                    preFunction = delegate { var e = eventCaller.currentEntity; TheDazzles.PrePose(e.beat, e.length, 0f, 0f, 0f, 2f, 2f, 2f, e["toggle"]); },
+                    preFunction = delegate { var e = eventCaller.currentEntity; TheDazzles.PrePose(e.beat, e.length, 0f, 0f, 0f, 2f, 2f, 2f, e["toggle"], e["toggle2"]); },
                     defaultLength = 4f,
                     parameters = new List<Param>()
                     {
-                        new Param("toggle", true, "Stars", "Should stars appear when successfully posing?")
+                        new Param("toggle", true, "Stars", "Should stars appear when successfully posing?"),
+                        new Param("toggle2", true, "Cheer Sounds")
                     }
                 },
                 new GameAction("poseSixDiagonal", "Pose Diagonal")
                 {
-                    preFunction = delegate { var e = eventCaller.currentEntity; TheDazzles.PrePose(e.beat, e.length, 0f, 2.75f, 1.5f, 2f, 0.75f, 3.5f, e["toggle"]); },
+                    preFunction = delegate { var e = eventCaller.currentEntity; TheDazzles.PrePose(e.beat, e.length, 0f, 2.75f, 1.5f, 2f, 0.75f, 3.5f, e["toggle"], e["toggle2"]); },
                     defaultLength = 4.5f,
                     parameters = new List<Param>()
                     {
-                        new Param("toggle", false, "Stars", "Should stars appear when successfully posing?")
+                        new Param("toggle", false, "Stars", "Should stars appear when successfully posing?"),
+                        new Param("toggle2", true, "Cheer Sounds")
                     }
                 },
                 new GameAction("poseSixColumns", "Pose Rows")
                 {
-                    preFunction = delegate { var e = eventCaller.currentEntity; TheDazzles.PrePose(e.beat, e.length, 0f, 0.5f, 1f, 2f, 2.5f, 3f, e["toggle"]); },
+                    preFunction = delegate { var e = eventCaller.currentEntity; TheDazzles.PrePose(e.beat, e.length, 0f, 0.5f, 1f, 2f, 2.5f, 3f, e["toggle"], e["toggle2"]); },
                     defaultLength = 4f,
                     parameters = new List<Param>()
                     {
-                        new Param("toggle", false, "Stars", "Should stars appear when successfully posing?")
+                        new Param("toggle", false, "Stars", "Should stars appear when successfully posing?"),
+                        new Param("toggle2", true, "Cheer Sounds")
                     }
                 },
                 new GameAction("poseSix", "Pose Six")
                 {
-                    preFunction = delegate { var e = eventCaller.currentEntity; TheDazzles.PrePose(e.beat, e.length, 0f, 0.5f, 1f, 1.5f, 2f, 2.5f, e["toggle"]); },
+                    preFunction = delegate { var e = eventCaller.currentEntity; TheDazzles.PrePose(e.beat, e.length, 0f, 0.5f, 1f, 1.5f, 2f, 2.5f, e["toggle"], e["toggle2"]); },
                     defaultLength = 4.5f,
                     parameters = new List<Param>()
                     {
-                        new Param("toggle", true, "Stars", "Should stars appear when successfully posing?")
+                        new Param("toggle", true, "Stars", "Should stars appear when successfully posing?"),
+                        new Param("toggle2", true, "Cheer Sounds")
                     }
                 },
                 new GameAction("customPose", "Custom Pose")
                 {
-                    preFunction = delegate { var e = eventCaller.currentEntity; TheDazzles.PrePose(e.beat, e.length, e["upLeft"], e["upMiddle"], e["upRight"], e["downLeft"], e["downMiddle"], e["player"], e["toggle"]); },
+                    preFunction = delegate { var e = eventCaller.currentEntity; TheDazzles.PrePose(e.beat, e.length, e["upLeft"], e["upMiddle"], e["upRight"], e["downLeft"], e["downMiddle"], e["player"], e["toggle"], e["toggle2"]); },
                     defaultLength = 3f,
                     resizable = true,
                     parameters = new List<Param>()
@@ -91,7 +96,8 @@ namespace HeavenStudio.Games.Loaders
                         new Param("downLeft", new EntityTypes.Float(0, 30f, 0f), "Down Left Girl Pose Beat", "How many beats after the event has started will this girl pose?"),
                         new Param("downMiddle", new EntityTypes.Float(0, 30f, 1f), "Down Middle Girl Pose Beat", "How many beats after the event has started will this girl pose?"),
                         new Param("player", new EntityTypes.Float(0, 30f, 2f), "Player Pose Beat", "How many beats after the event has started should the player pose?"),
-                        new Param("toggle", false, "Stars", "Should stars appear when successfully posing?")
+                        new Param("toggle", false, "Stars", "Should stars appear when successfully posing?"),
+                        new Param("toggle2", true, "Cheer Sounds")
                     }
                 },
                 new GameAction("forceHold", "Force Hold")
@@ -125,6 +131,31 @@ namespace HeavenStudio.Games
     {
         public struct PosesToPerform : IComparable<PosesToPerform>
         {
+            // override object.Equals
+            public override bool Equals(object obj)
+            {
+                //
+                // See the full list of guidelines at
+                //   http://go.microsoft.com/fwlink/?LinkID=85237
+                // and also the guidance for operator== at
+                //   http://go.microsoft.com/fwlink/?LinkId=85238
+                //
+                
+                if (obj == null || GetType() != obj.GetType())
+                {
+                    return false;
+                }
+                
+                // TODO: write your implementation of Equals() here
+                throw new System.NotImplementedException();
+            }
+            
+            // override object.GetHashCode
+            public override int GetHashCode()
+            {
+                // TODO: write your implementation of GetHashCode() here
+                throw new System.NotImplementedException();
+            }
             public int CompareTo(PosesToPerform other)
             {
                 if (other == null) return 1;
@@ -166,7 +197,7 @@ namespace HeavenStudio.Games
         }
         public struct QueuedPose
         {
-            public float beat;
+            public double beat;
             public float length;
             public float upLeftBeat;
             public float upMiddleBeat;
@@ -175,10 +206,11 @@ namespace HeavenStudio.Games
             public float downMiddleBeat;
             public float playerBeat;
             public bool stars;
+            public bool cheer;
         }
         public struct QueuedCrouch
         {
-            public float beat;
+            public double beat;
             public float length;
             public int countInType;
         }
@@ -194,7 +226,7 @@ namespace HeavenStudio.Games
         bool canBop = true;
         bool doingPoses = false;
         bool shouldHold = false;
-        float crouchEndBeat;
+        double crouchEndBeat;
         public bool shouldBop = true;
         public GameEvent bop = new GameEvent();
         static List<QueuedPose> queuedPoses = new List<QueuedPose>();
@@ -209,6 +241,10 @@ namespace HeavenStudio.Games
         {
             if (queuedPoses.Count > 0) queuedPoses.Clear();
             if (queuedCrouches.Count > 0) queuedCrouches.Clear();
+            foreach (var evt in scheduledInputs)
+            {
+                evt.Disable();
+            }
         }
 
         void Awake()
@@ -237,7 +273,7 @@ namespace HeavenStudio.Games
                 {
                     foreach (var pose in queuedPoses)
                     {
-                        Pose(pose.beat, pose.length, pose.upLeftBeat, pose.upMiddleBeat, pose.upRightBeat, pose.downLeftBeat, pose.downMiddleBeat, pose.playerBeat, pose.stars);
+                        Pose(pose.beat, pose.length, pose.upLeftBeat, pose.upMiddleBeat, pose.upRightBeat, pose.downLeftBeat, pose.downMiddleBeat, pose.playerBeat, pose.stars, pose.cheer);
                     }
                     queuedPoses.Clear();
                 }
@@ -252,7 +288,7 @@ namespace HeavenStudio.Games
                 if (PlayerInput.Pressed() && !IsExpectingInputNow(InputType.STANDARD_DOWN))
                 {
                     player.Prepare(false);
-                    Jukebox.PlayOneShotGame("theDazzles/miss");
+                    SoundByte.PlayOneShotGame("theDazzles/miss");
                     foreach (var girl in npcGirls)
                     {
                         if (girl.currentEmotion != TheDazzlesGirl.Emotion.Ouch) girl.currentEmotion = TheDazzlesGirl.Emotion.Angry;
@@ -263,7 +299,7 @@ namespace HeavenStudio.Games
                     if (doingPoses)
                     {
                         player.Pose(false);
-                        Jukebox.PlayOneShotGame("theDazzles/miss");
+                        SoundByte.PlayOneShotGame("theDazzles/miss");
                         foreach (var girl in npcGirls)
                         {
                             girl.Ouch();
@@ -280,7 +316,7 @@ namespace HeavenStudio.Games
                     if (doingPoses)
                     {
                         player.Pose(false);
-                        Jukebox.PlayOneShotGame("theDazzles/miss");
+                        SoundByte.PlayOneShotGame("theDazzles/miss");
                         foreach (var girl in npcGirls)
                         {
                             girl.Ouch();
@@ -300,7 +336,7 @@ namespace HeavenStudio.Games
             }
         }
 
-        public void Bop(float beat, float length, bool goBop, bool autoBop)
+        public void Bop(double beat, float length, bool goBop, bool autoBop)
         {
             shouldBop = autoBop;
             if (goBop)
@@ -332,7 +368,7 @@ namespace HeavenStudio.Games
             player.Prepare();
         }
 
-        public static void PreCrouch(float beat, float length, int countInType)
+        public static void PreCrouch(double beat, float length, int countInType)
         {
             float actualLength = length / 3;
             int realCountInType = countInType;
@@ -370,7 +406,7 @@ namespace HeavenStudio.Games
             }
         }
 
-        public void CrouchStretchable(float beat, float length, int countInType)
+        public void CrouchStretchable(double beat, float length, int countInType)
         {
             float actualLength = length / 3;
             crouchEndBeat = beat + length;
@@ -400,30 +436,30 @@ namespace HeavenStudio.Games
             });
         }
 
-        public static void PrePose(float beat, float length, float upLeftBeat, float upMiddleBeat, float upRightBeat, float downLeftBeat, float downMiddleBeat, float playerBeat, bool stars)
+        public static void PrePose(double beat, float length, float upLeftBeat, float upMiddleBeat, float upRightBeat, float downLeftBeat, float downMiddleBeat, float playerBeat, bool stars, bool cheer)
         {
             if (GameManager.instance.currentGame == "theDazzles")
             {
-                instance.Pose(beat, length, upLeftBeat, upMiddleBeat, upRightBeat, downLeftBeat, downMiddleBeat, playerBeat, stars);
+                instance.Pose(beat, length, upLeftBeat, upMiddleBeat, upRightBeat, downLeftBeat, downMiddleBeat, playerBeat, stars, cheer);
             }
             else
             {
                 queuedPoses.Add(new QueuedPose { beat = beat, upLeftBeat = upLeftBeat, stars = stars, length = length, 
-                    downLeftBeat = downLeftBeat, playerBeat = playerBeat, upMiddleBeat = upMiddleBeat, downMiddleBeat = downMiddleBeat, upRightBeat = upRightBeat});
+                    downLeftBeat = downLeftBeat, playerBeat = playerBeat, upMiddleBeat = upMiddleBeat, downMiddleBeat = downMiddleBeat, upRightBeat = upRightBeat, cheer = cheer});
             }
         }
 
-        public void Pose(float beat, float length, float upLeftBeat, float upMiddleBeat, float upRightBeat, float downLeftBeat, float downMiddleBeat, float playerBeat, bool stars)
+        public void Pose(double beat, float length, float upLeftBeat, float upMiddleBeat, float upRightBeat, float downLeftBeat, float downMiddleBeat, float playerBeat, bool stars, bool cheer)
         {
             if (stars)
             {
-                ScheduleInput(beat, playerBeat, InputType.STANDARD_UP, JustPoseStars, MissPose, Nothing);
+                ScheduleInput(beat, playerBeat, InputType.STANDARD_UP, cheer ? JustPoseStars : JustPoseStarsNoCheer, MissPose, Nothing);
             }
             else
             {
-                ScheduleInput(beat, playerBeat, InputType.STANDARD_UP, JustPose, MissPose, Nothing);
+                ScheduleInput(beat, playerBeat, InputType.STANDARD_UP, cheer ? JustPose : JustPoseNoCheer, MissPose, Nothing);
             }
-            float crouchBeat = beat - 1f;
+            double crouchBeat = beat - 1f;
             if (crouchBeat < crouchEndBeat) 
             { 
                 crouchBeat = crouchEndBeat - 1f;
@@ -541,33 +577,59 @@ namespace HeavenStudio.Games
         void JustPose(PlayerActionEvent caller, float state)
         {
             shouldHold = false;
-            Jukebox.PlayOneShotGame("theDazzles/pose");
-            Jukebox.PlayOneShotGame("theDazzles/posePlayer");
+            SoundByte.PlayOneShotGame("theDazzles/pose");
+            SoundByte.PlayOneShotGame("theDazzles/posePlayer");
             if (state >= 1f || state <= -1f)
             {
                 player.Pose();
                 return;
             }
-            SuccessPose(false);
+            SuccessPose(false, true);
         }
 
         void JustPoseStars(PlayerActionEvent caller, float state)
         {
             shouldHold = false;
-            Jukebox.PlayOneShotGame("theDazzles/pose");
-            Jukebox.PlayOneShotGame("theDazzles/posePlayer");
+            SoundByte.PlayOneShotGame("theDazzles/pose");
+            SoundByte.PlayOneShotGame("theDazzles/posePlayer");
             if (state >= 1f || state <= -1f)
             {
                 player.Pose();
                 return;
             }
-            SuccessPose(true);
+            SuccessPose(true, true);
         }
 
-        void SuccessPose(bool stars)
+        void JustPoseNoCheer(PlayerActionEvent caller, float state)
+        {
+            shouldHold = false;
+            SoundByte.PlayOneShotGame("theDazzles/pose");
+            SoundByte.PlayOneShotGame("theDazzles/posePlayer");
+            if (state >= 1f || state <= -1f)
+            {
+                player.Pose();
+                return;
+            }
+            SuccessPose(false, false);
+        }
+
+        void JustPoseStarsNoCheer(PlayerActionEvent caller, float state)
+        {
+            shouldHold = false;
+            SoundByte.PlayOneShotGame("theDazzles/pose");
+            SoundByte.PlayOneShotGame("theDazzles/posePlayer");
+            if (state >= 1f || state <= -1f)
+            {
+                player.Pose();
+                return;
+            }
+            SuccessPose(true, false);
+        }
+
+        void SuccessPose(bool stars, bool cheer)
         {
             player.Pose();
-            Jukebox.PlayOneShotGame("theDazzles/applause");
+            if (cheer) SoundByte.PlayOneShotGame("theDazzles/applause");
             foreach (var girl in npcGirls)
             {
                 girl.currentEmotion = TheDazzlesGirl.Emotion.Happy;
@@ -576,7 +638,7 @@ namespace HeavenStudio.Games
             if (stars) 
             {
                 starsEffect.Play();
-                Jukebox.PlayOneShotGame($"theDazzles/stars{UnityEngine.Random.Range(1, 6)}");
+                SoundByte.PlayOneShotGame($"theDazzles/stars{UnityEngine.Random.Range(1, 6)}");
             } 
             else poseEffect.Play();
         }

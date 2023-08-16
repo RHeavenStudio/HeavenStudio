@@ -25,7 +25,6 @@ namespace HeavenStudio.Editor.Track
         private float lastTimelineSize;
 
         private float contentPosX => Mathf.Abs(scrollRect.content.localPosition.x / scrollRect.content.localScale.x);
-        private float secPerBeat => 60.0f / GameManager.instance.Beatmap.bpm;
 
         private List<GameObject> Lines = new List<GameObject>();
 

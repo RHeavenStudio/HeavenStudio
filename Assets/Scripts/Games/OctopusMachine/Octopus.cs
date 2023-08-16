@@ -16,8 +16,8 @@ namespace HeavenStudio.Games.Scripts_OctopusMachine
         public bool isSqueezed;
         public bool isPreparing;
         public bool queuePrepare;
-        public float lastReportedBeat = 0f;
-        float lastSqueezeBeat;
+        public double lastReportedBeat = 0f;
+        double lastSqueezeBeat;
         bool isActive = true;
 
         private OctopusMachine game;
@@ -40,11 +40,16 @@ namespace HeavenStudio.Games.Scripts_OctopusMachine
             
             if (isActive && player)
             {
-                if (PlayerInput.Pressed() && !game.IsExpectingInputNow(InputType.STANDARD_DOWN)) 
+                if (PlayerInput.Pressed() && !game.IsExpectingInputNow(InputType.STANDARD_DOWN)) {
                     OctoAction("Squeeze");
+                    SoundByte.PlayOneShotGame("nearMiss");
+                    game.hasMissed = true;
+                }
 
                 if (PlayerInput.PressedUp() && !game.IsExpectingInputNow(InputType.STANDARD_UP)) {
                     OctoAction(PlayerInput.Pressing(true) ? "Pop" : "Release");
+                    SoundByte.PlayOneShotGame("nearMiss");
+                    game.hasMissed = true;
                 }
             }
         }
@@ -74,7 +79,10 @@ namespace HeavenStudio.Games.Scripts_OctopusMachine
                 1 => "Happy",
                 2 => "Angry",
                 3 => "Oops",
+                _ => "Bop"
             }, 0.5f);
+            isPreparing =
+            isSqueezed = false;
         }
 
         public void ForceSqueeze()
@@ -92,8 +100,8 @@ namespace HeavenStudio.Games.Scripts_OctopusMachine
 
         public void OctoAction(string action) 
         {
-            if (action != "Release" || (Conductor.instance.songPositionInBeats - lastSqueezeBeat) > 0.15f) Jukebox.PlayOneShotGame($"octopusMachine/{action.ToLower()}");
-            if (action == "Squeeze") lastSqueezeBeat = Conductor.instance.songPositionInBeats;
+            if (action != "Release" || (Conductor.instance.songPositionInBeatsAsDouble - lastSqueezeBeat) > 0.15f) SoundByte.PlayOneShotGame($"octopusMachine/{action.ToLower()}");
+            if (action == "Squeeze") lastSqueezeBeat = Conductor.instance.songPositionInBeatsAsDouble;
 
             anim.DoScaledAnimationAsync(action, 0.5f);
             isSqueezed = (action == "Squeeze");

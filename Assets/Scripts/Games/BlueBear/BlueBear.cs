@@ -93,7 +93,7 @@ namespace HeavenStudio.Games
         static int rightCrumbAppearThreshold = 15;
         static int leftCrumbAppearThreshold = 30;
         static int eatenTreats = 0;
-        float emotionStartBeat;
+        double emotionStartBeat;
         float emotionLength;
         string emotionAnimName;
         bool crying;
@@ -116,6 +116,10 @@ namespace HeavenStudio.Games
             rightCrumbAppearThreshold = 15;
             leftCrumbAppearThreshold = 30;
             eatenTreats = 0;
+            foreach (var evt in scheduledInputs)
+            {
+                evt.Disable();
+            }
         }
 
         private void Awake()
@@ -212,7 +216,7 @@ namespace HeavenStudio.Games
             }
         }
 
-        public void SetEmotion(float beat, float length, int emotion)
+        public void SetEmotion(double beat, float length, int emotion)
         {
             switch (emotion)
             {
@@ -266,7 +270,7 @@ namespace HeavenStudio.Games
             }
         }
 
-        public void SpawnTreat(float beat, bool isCake)
+        public void SpawnTreat(double beat, bool isCake)
         {
             var objectToSpawn = isCake ? cakeBase : donutBase;
             var newTreat = GameObject.Instantiate(objectToSpawn, foodHolder);
@@ -277,7 +281,7 @@ namespace HeavenStudio.Games
 
             newTreat.SetActive(true);
 
-            Jukebox.PlayOneShotGame(isCake ? "blueBear/cake" : "blueBear/donut");
+            SoundByte.PlayOneShotGame(isCake ? "blueBear/cake" : "blueBear/donut");
 
             SquashBag(isCake);
         }

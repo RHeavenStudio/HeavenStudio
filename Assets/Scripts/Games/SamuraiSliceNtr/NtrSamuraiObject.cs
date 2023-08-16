@@ -19,7 +19,7 @@ namespace HeavenStudio.Games.Scripts_NtrSamurai
         public Transform doubleLaunchPos;
         public Transform heldPos;
         
-        public float startBeat;
+        public double startBeat;
         public int type;
         public bool isDebris = false;
         public int holdingCash = 1;
@@ -89,7 +89,7 @@ namespace HeavenStudio.Games.Scripts_NtrSamurai
                 SamuraiSliceNtr.instance.ScheduleAutoplayInput(startBeat, 1.75f, InputType.STANDARD_ALT_UP, DoUnStepAutoplay, LaunchThrough, LaunchThrough).countsForAccuracy = false;
 
                 currentCurve = SamuraiSliceNtr.instance.InCurve;
-                transform.rotation = Quaternion.Euler(0, 0, transform.rotation.eulerAngles.z + (360f * startBeat));
+                transform.rotation = Quaternion.Euler(0, 0, transform.rotation.eulerAngles.z + (360f * (float) startBeat));
 
                 var cond = Conductor.instance;
                 float flyPos = cond.GetPositionFromBeat(launchProg.startBeat, 3f);
@@ -133,7 +133,7 @@ namespace HeavenStudio.Games.Scripts_NtrSamurai
 
                         if (flyPos > 1f)
                         {
-                            Jukebox.PlayOneShotGame("samuraiSliceNtr/ntrSamurai_catch");
+                            SoundByte.PlayOneShotGame("samuraiSliceNtr/ntrSamurai_catch");
                             if (!isDebris)
                             {
                                 NtrSamuraiChild child = SamuraiSliceNtr.instance.CreateChild(startBeat + 1f);
@@ -210,7 +210,7 @@ namespace HeavenStudio.Games.Scripts_NtrSamurai
                         SamuraiSliceNtr.instance.ScheduleAutoplayInput(startBeat + 4f, 2f, InputType.STANDARD_DOWN, DoSliceAutoplay, LaunchThrough, LaunchThrough);
                         currentCurve = SamuraiSliceNtr.instance.LaunchCurve;
 
-                        Jukebox.PlayOneShotGame("samuraiSliceNtr/holy_mackerel" + UnityEngine.Random.Range(1, 4), pitch: UnityEngine.Random.Range(0.95f, 1.05f), volume: 1f/4);
+                        SoundByte.PlayOneShotGame("samuraiSliceNtr/holy_mackerel" + UnityEngine.Random.Range(1, 4), pitch: UnityEngine.Random.Range(0.95f, 1.05f), volume: 1f/4);
                     }
                     else 
                     {
@@ -221,7 +221,7 @@ namespace HeavenStudio.Games.Scripts_NtrSamurai
                         SamuraiSliceNtr.instance.ScheduleAutoplayInput(startBeat + 2f, 1.75f, InputType.STANDARD_ALT_UP, DoUnStepAutoplay, LaunchThrough, LaunchThrough).countsForAccuracy = false;
                         currentCurve = null;
 
-                        Jukebox.PlayOneShotGame("samuraiSliceNtr/holy_mackerel" + UnityEngine.Random.Range(1, 4), pitch: UnityEngine.Random.Range(0.95f, 1.05f), volume: 0.8f);
+                        SoundByte.PlayOneShotGame("samuraiSliceNtr/holy_mackerel" + UnityEngine.Random.Range(1, 4), pitch: UnityEngine.Random.Range(0.95f, 1.05f), volume: 0.8f);
                     }
                     break;
                 case (int) SamuraiSliceNtr.ObjectType.Demon:
@@ -264,13 +264,13 @@ namespace HeavenStudio.Games.Scripts_NtrSamurai
                 startBeat = launchProg.startBeat + 2f;
                 currentCurve = SamuraiSliceNtr.instance.NgLaunchCurve;
                 flyProg = -3;
-                Jukebox.PlayOneShotGame("samuraiSliceNtr/ntrSamurai_launchImpact", pitch: 2f);
+                SoundByte.PlayOneShotGame("samuraiSliceNtr/ntrSamurai_launchImpact", pitch: 2f);
                 launchProg.Disable();
                 return;
             }
             launchProg.Disable();
             DoLaunch();
-            Jukebox.PlayOneShotGame("samuraiSliceNtr/ntrSamurai_launchImpact", pitch: UnityEngine.Random.Range(0.85f, 1.05f));
+            SoundByte.PlayOneShotGame("samuraiSliceNtr/ntrSamurai_launchImpact", pitch: UnityEngine.Random.Range(0.85f, 1.05f));
 
         }
 
@@ -288,16 +288,16 @@ namespace HeavenStudio.Games.Scripts_NtrSamurai
                 startBeat = hitProg.startBeat + hitProg.timer;
                 currentCurve = SamuraiSliceNtr.instance.NgDebrisCurve;
                 flyProg = -3;
-                Jukebox.PlayOneShotGame("samuraiSliceNtr/ntrSamurai_ng");
+                SoundByte.PlayOneShotGame("samuraiSliceNtr/ntrSamurai_ng");
                 hitProg.Disable();
                 return;
             }
             flyProg = -1;
             hitProg.Disable();
             if (UnityEngine.Random.Range(0f, 1f) >= 0.5f)
-                Jukebox.PlayOneShotGame("samuraiSliceNtr/ntrSamurai_just00", pitch: UnityEngine.Random.Range(0.95f, 1.05f));
+                SoundByte.PlayOneShotGame("samuraiSliceNtr/ntrSamurai_just00", pitch: UnityEngine.Random.Range(0.95f, 1.05f));
             else
-                Jukebox.PlayOneShotGame("samuraiSliceNtr/ntrSamurai_just01", pitch: UnityEngine.Random.Range(0.95f, 1.05f));
+                SoundByte.PlayOneShotGame("samuraiSliceNtr/ntrSamurai_just01", pitch: UnityEngine.Random.Range(0.95f, 1.05f));
 
             currentCurve = SamuraiSliceNtr.instance.DebrisRightCurve;
 
@@ -320,7 +320,7 @@ namespace HeavenStudio.Games.Scripts_NtrSamurai
                 anim.Play("ObjDemonDebris01");
             else if (type == (int) SamuraiSliceNtr.ObjectType.Melon2B2T)
             {
-                Jukebox.PlayOneShotGame("samuraiSliceNtr/melon_dig");
+                SoundByte.PlayOneShotGame("samuraiSliceNtr/melon_dig");
                 pickelBurst.Play();
                 anim.Play("ObjMelonPickelDebris01");
             }
@@ -328,7 +328,7 @@ namespace HeavenStudio.Games.Scripts_NtrSamurai
             if (holdingCash > 0)
             {
                 moneyBurst.Emit(holdingCash);
-                Jukebox.PlayOneShotGame((holdingCash > 2) ? "samuraiSliceNtr/ntrSamurai_scoreMany" : "samuraiSliceNtr/ntrSamurai_ng", pitch: UnityEngine.Random.Range(0.95f, 1.05f));
+                SoundByte.PlayOneShotGame((holdingCash > 2) ? "samuraiSliceNtr/ntrSamurai_scoreMany" : "samuraiSliceNtr/ntrSamurai_ng", pitch: UnityEngine.Random.Range(0.95f, 1.05f));
             }
         }
 

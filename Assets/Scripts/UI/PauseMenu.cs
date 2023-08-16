@@ -42,12 +42,14 @@ namespace HeavenStudio.Common
 
         void Pause()
         {
+            if (GlobalGameManager.IsShowingDialog) return;
+            if (!Conductor.instance.isPlaying) return;
             Conductor.instance.Pause();
             pauseBeat = Conductor.instance.songPositionInBeatsAsDouble;
             chartTitleText.text = GameManager.instance.Beatmap["remixtitle"];
             chartArtistText.text = GameManager.instance.Beatmap["remixauthor"];
             animator.Play("PauseShow");
-            Jukebox.PlayOneShot("ui/PauseIn");
+            SoundByte.PlayOneShot("ui/PauseIn");
 
             isPaused = true;
             canPick = false;
@@ -56,6 +58,7 @@ namespace HeavenStudio.Common
 
         void UnPause(bool instant = false)
         {
+            if ((!instant) && (!Conductor.instance.isPaused)) return;
             Conductor.instance.Play(pauseBeat);
             if (instant)
             {
@@ -64,7 +67,7 @@ namespace HeavenStudio.Common
             else
             {
                 animator.Play("PauseHide");
-                Jukebox.PlayOneShot("ui/PauseOut");
+                SoundByte.PlayOneShot("ui/PauseOut");
             }
             
             isPaused = false;
@@ -82,7 +85,7 @@ namespace HeavenStudio.Common
         void Update()
         {
             if (isQuitting) return;
-            if (PlayerInput.GetInputController(1).GetButtonDown((int) InputController.ButtonsPad.PadPause))
+            if (PlayerInput.GetInputController(1).GetActionDown((int) InputController.ActionsPad.Pause, out _))
             {
                 if (isPaused)
                 {
@@ -95,7 +98,7 @@ namespace HeavenStudio.Common
             }
             else if (isPaused && canPick && !settingsDialog.IsOpen)
             {
-                if (Input.GetKeyDown(KeyCode.UpArrow) || PlayerInput.GetInputController(1).GetButtonDown((int)InputController.ButtonsPad.PadUp))
+                if (Input.GetKeyDown(KeyCode.UpArrow) || PlayerInput.GetInputController(1).GetActionDown((int)InputController.ActionsPad.Up, out _))
                 {
                     optionSelected--;
                     if (optionSelected < 0)
@@ -104,7 +107,7 @@ namespace HeavenStudio.Common
                     }
                     ChooseOption((Options) optionSelected);
                 }
-                else if (Input.GetKeyDown(KeyCode.DownArrow) || PlayerInput.GetInputController(1).GetButtonDown((int)InputController.ButtonsPad.PadDown))
+                else if (Input.GetKeyDown(KeyCode.DownArrow) || PlayerInput.GetInputController(1).GetActionDown((int)InputController.ActionsPad.Down, out _))
                 {
                     optionSelected++;
                     if (optionSelected > optionHolder.transform.childCount - 1)
@@ -113,7 +116,7 @@ namespace HeavenStudio.Common
                     }
                     ChooseOption((Options) optionSelected);
                 }
-                else if (Input.GetKeyDown(KeyCode.Return) || PlayerInput.GetInputController(1).GetButtonDown((int)InputController.ButtonsPad.PadE))
+                else if (Input.GetKeyDown(KeyCode.Return) || PlayerInput.GetInputController(1).GetActionDown((int)InputController.ActionsPad.East, out _))
                 {
                     UseOption((Options) optionSelected);
                 }
@@ -141,7 +144,7 @@ namespace HeavenStudio.Common
             }
             optionHolder.transform.GetChild((int) option).transform.localScale = new Vector3(1.2f, 1.2f, 1.2f);
             if (sound)
-                Jukebox.PlayOneShot("ui/UIOption");
+                SoundByte.PlayOneShot("ui/UIOption");
         }
 
         void UseOption(Options option)
@@ -156,7 +159,7 @@ namespace HeavenStudio.Common
                     break;
                 case Options.Settings:
                     OnSettings();
-                    Jukebox.PlayOneShot("ui/UISelect");
+                    SoundByte.PlayOneShot("ui/UISelect");
                     break;
                 case Options.Quit:
                     OnQuit();
@@ -174,13 +177,13 @@ namespace HeavenStudio.Common
             UnPause(true);
             GlobalGameManager.ForceFade(0, 1f, 0.5f);
             GameManager.instance.Stop(0, true, 1.5f);
-            Jukebox.PlayOneShot("ui/UIEnter");
+            SoundByte.PlayOneShot("ui/UIEnter");
         }
 
         void OnQuit()
         {
             isQuitting = true;
-            Jukebox.PlayOneShot("ui/PauseQuit");
+            SoundByte.PlayOneShot("ui/PauseQuit");
             GlobalGameManager.LoadScene("Editor", 0, 0.1f);
         }
 

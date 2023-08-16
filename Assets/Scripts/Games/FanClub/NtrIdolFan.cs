@@ -21,14 +21,14 @@ namespace HeavenStudio.Games.Scripts_FanClub
 
         [Header("Properties")]
         [NonSerialized] public bool player = false;
-        public float jumpStartTime = Single.MinValue;
+        public double jumpStartTime = double.MinValue;
         bool stopBeat = false;
         bool stopCharge = false;
         bool hasJumped = false;
 
-        float clappingStartTime = Single.MinValue;
+        double clappingStartTime = double.MinValue;
 
-        public void AddHit(float beat, int type = 0)
+        public void AddHit(double beat, int type = 0)
         {
             if (player)
             {
@@ -114,7 +114,7 @@ namespace HeavenStudio.Games.Scripts_FanClub
                 }
                 if (PlayerInput.Pressing())
                 {
-                    if (clappingStartTime != Single.MinValue && cond.songPositionInBeats > clappingStartTime + 2f && !stopCharge)
+                    if (clappingStartTime != double.MinValue && cond.songPositionInBeatsAsDouble > clappingStartTime + 2f && !stopCharge)
                     {
                         animator.speed = 1f;
                         animator.Play("FanClapCharge", -1, 0);
@@ -123,7 +123,7 @@ namespace HeavenStudio.Games.Scripts_FanClub
                 }
                 if (PlayerInput.PressedUp())
                 {
-                    if (clappingStartTime != Single.MinValue && cond.songPositionInBeats > clappingStartTime + 2f && stopCharge && !FanClub.instance.IsExpectingInputNow(InputType.STANDARD_UP))
+                    if (clappingStartTime != double.MinValue && cond.songPositionInBeatsAsDouble > clappingStartTime + 2f && stopCharge && !FanClub.instance.IsExpectingInputNow(InputType.STANDARD_UP))
                     {
                         if (FanClub.instance.JudgementPaused)
                         {
@@ -140,13 +140,13 @@ namespace HeavenStudio.Games.Scripts_FanClub
                         animator.speed = 1f;
                         animator.Play("FanFree", -1, 0);
                         stopBeat = false;
-                        clappingStartTime = Single.MinValue;
+                        clappingStartTime = double.MinValue;
                     }
                 }
             }
             
             float jumpPos = cond.GetPositionFromBeat(jumpStartTime, 1f);
-            if (cond.songPositionInBeats >= jumpStartTime && cond.songPositionInBeats < jumpStartTime + 1f)
+            if (cond.songPositionInBeatsAsDouble >= jumpStartTime && cond.songPositionInBeatsAsDouble < jumpStartTime + 1f)
             {
                 hasJumped = true;
                 float yMul = jumpPos * 2f - 1f;
@@ -161,7 +161,7 @@ namespace HeavenStudio.Games.Scripts_FanClub
                 shadow.transform.localScale = new Vector3(1.4f, 1.4f, 1f);
                 if (hasJumped)
                 {
-                    Jukebox.PlayOneShotGame("fanClub/landing_impact", pitch: UnityEngine.Random.Range(0.95f, 1f), volume: 1f/4);
+                    SoundByte.PlayOneShotGame("fanClub/landing_impact", pitch: UnityEngine.Random.Range(0.95f, 1f), volume: 1f/4);
                     if (player)
                     {
                         animator.Play("FanPrepare", -1, 0);
@@ -191,14 +191,14 @@ namespace HeavenStudio.Games.Scripts_FanClub
             jumpStartTime = -99f;
             animator.speed = 1f;
             animator.Play("FanClap", -1, 0);
-            Jukebox.PlayOneShotGame("fanClub/play_clap");
-            Jukebox.PlayOneShotGame("fanClub/crap_impact");
-            clappingStartTime = cond.songPositionInBeats;
+            SoundByte.PlayOneShotGame("fanClub/play_clap");
+            SoundByte.PlayOneShotGame("fanClub/crap_impact");
+            clappingStartTime = cond.songPositionInBeatsAsDouble;
 
             if (doCharge)
                 BeatAction.New(this.gameObject, new List<BeatAction.Action>()
                 {
-                    new BeatAction.Action(cond.songPositionInBeats + 0.1f, delegate { 
+                    new BeatAction.Action(cond.songPositionInBeatsAsDouble + 0.1f, delegate { 
                         if (PlayerInput.Pressing() || autoplayRelease > 0f)
                         {
                             animator.Play("FanClapCharge", -1, 0);
@@ -211,7 +211,7 @@ namespace HeavenStudio.Games.Scripts_FanClub
             {
                 BeatAction.New(this.gameObject, new List<BeatAction.Action>()
                 {
-                    new BeatAction.Action(cond.songPositionInBeats + autoplayRelease, delegate { 
+                    new BeatAction.Action(cond.songPositionInBeatsAsDouble + autoplayRelease, delegate { 
                         animator.Play("FanFree", -1, 0);
                         stopBeat = false;
                     }),
@@ -229,16 +229,16 @@ namespace HeavenStudio.Games.Scripts_FanClub
 
             var cond = Conductor.instance;
             animator.Play("FanJump", -1, 0);
-            Jukebox.PlayOneShotGame("fanClub/play_jump");
-            jumpStartTime = cond.songPositionInBeats;
-            clappingStartTime = Single.MinValue;
+            SoundByte.PlayOneShotGame("fanClub/play_jump");
+            jumpStartTime = cond.songPositionInBeatsAsDouble;
+            clappingStartTime = double.MinValue;
             stopCharge = false;
         }
 
         public bool IsJumping()
         {
             var cond = Conductor.instance;
-            return (cond.songPositionInBeats >= jumpStartTime && cond.songPositionInBeats < jumpStartTime + 1f);
+            return (cond.songPositionInBeatsAsDouble >= jumpStartTime && cond.songPositionInBeatsAsDouble < jumpStartTime + 1f);
         }
 
         public void Bop()

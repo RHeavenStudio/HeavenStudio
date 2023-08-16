@@ -11,7 +11,7 @@ namespace HeavenStudio.Games.Scripts_TrickClass
     public class MobTrickObj : MonoBehaviour
     {
         public bool flyType;
-        public float startBeat;
+        public double startBeat;
         bool miss = false;
 
         float flyBeats;
@@ -33,7 +33,7 @@ namespace HeavenStudio.Games.Scripts_TrickClass
 
             float flyPos = cond.GetPositionFromBeat(startBeat, flyBeats);
             transform.position = curve.GetPoint(flyPos);
-            hitProg = game.ScheduleInput(startBeat, dodgeBeats, InputType.STANDARD_DOWN, DodgeJustOrNg, DodgeMiss, DodgeThrough);
+            hitProg = game.ScheduleInput(startBeat, dodgeBeats, InputType.STANDARD_DOWN, DodgeJustOrNg, DodgeMiss, DodgeThrough, CanDodge);
         }
 
         // Update is called once per frame
@@ -113,44 +113,38 @@ namespace HeavenStudio.Games.Scripts_TrickClass
             startBeat += dodgeBeats;
         }
 
+        public bool CanDodge()
+        {
+            return game.playerCanDodge <= Conductor.instance.songPositionInBeatsAsDouble;
+        }
+
         public void DodgeJustOrNg(PlayerActionEvent caller, float state)
         {
-            if (game.playerCanDodge <= Conductor.instance.songPositionInBeats)
+            if (state <= -1f || state >= 1f)
             {
-                if (state <= -1f || state >= 1f)
-                {
-                    //NG
-                    game.PlayerDodgeNg();
-                    MultiSound.Play(new MultiSound.Sound[] { 
-                        new MultiSound.Sound(GetDodgeSound(), startBeat + flyBeats, volume: 0.4f), 
-                    });
-                    Jukebox.PlayOneShotGame(GetDodgeSound(), volume: 0.6f);
-                    Jukebox.PlayOneShot("miss");
-                    DoObjMiss();
-                }
-                else
-                {
-                    //just
-                    game.PlayerDodge();
-                    Jukebox.PlayOneShotGame("trickClass/player_dodge_success", volume: 0.8f, pitch: UnityEngine.Random.Range(0.85f, 1.15f));
-                    MultiSound.Play(new MultiSound.Sound[] { 
-                        new MultiSound.Sound(GetDodgeSound(), startBeat + flyBeats, volume: 0.4f), 
-                    });
-                }
+                //NG
+                game.PlayerDodgeNg();
+                MultiSound.Play(new MultiSound.Sound[] { 
+                    new MultiSound.Sound(GetDodgeSound(), startBeat + flyBeats, volume: 0.4f), 
+                });
+                SoundByte.PlayOneShotGame(GetDodgeSound(), volume: 0.6f);
+                SoundByte.PlayOneShot("miss");
+                DoObjMiss();
             }
             else
             {
-                Jukebox.PlayOneShotGame(GetDodgeSound());
-                DoObjMiss();
-                game.PlayerThrough();
-                caller.isEligible = false;
-                game.ScoreMiss();
+                //just
+                game.PlayerDodge();
+                SoundByte.PlayOneShotGame("trickClass/player_dodge_success", volume: 0.8f, pitch: UnityEngine.Random.Range(0.85f, 1.15f));
+                MultiSound.Play(new MultiSound.Sound[] { 
+                    new MultiSound.Sound(GetDodgeSound(), startBeat + flyBeats, volume: 0.4f), 
+                });
             }
         }
 
         public void DodgeMiss(PlayerActionEvent caller)
         {
-            Jukebox.PlayOneShotGame(GetDodgeSound());
+            SoundByte.PlayOneShotGame(GetDodgeSound());
             DoObjMiss();
             game.PlayerThrough();
         }

@@ -6,8 +6,8 @@ namespace HeavenStudio.Util
     {
         public static bool IsAnimationNotPlaying(this Animator anim)
         {
-            float compare = anim.GetCurrentAnimatorStateInfo(0).speed;
-            return anim.GetCurrentAnimatorStateInfo(0).normalizedTime >= compare && !anim.IsInTransition(0);
+            var stateInfo = anim.GetCurrentAnimatorStateInfo(0);
+            return (stateInfo.normalizedTime >= stateInfo.speed || stateInfo.loop) && !anim.IsInTransition(0);
         }
         /// <summary>
         /// Returns true if animName is currently playing on animator
@@ -16,8 +16,8 @@ namespace HeavenStudio.Util
         /// <param name="animName">name of animation to look out for</param>
         public static bool IsPlayingAnimationName(this Animator anim, string animName) 
         {
-            float compare = anim.GetCurrentAnimatorStateInfo(0).speed;
-            return anim.GetCurrentAnimatorStateInfo(0).IsName(animName) && anim.GetCurrentAnimatorStateInfo(0).normalizedTime < compare;
+            var stateInfo = anim.GetCurrentAnimatorStateInfo(0);
+            return (stateInfo.normalizedTime < stateInfo.speed || stateInfo.loop) && stateInfo.IsName(animName);
         }
 
         /// <summary>
@@ -30,7 +30,7 @@ namespace HeavenStudio.Util
         /// <param name="length">duration of animation (progress 1.0)</param>
         /// <param name="timeScale">multiplier for animation progress (smaller values make animation slower)</param>
         /// <param name="animLayer">animator layer to play animation on</param>
-        public static void DoScaledAnimation(this Animator anim, string animName, float startTime, float length = 1f, float timeScale = 1f, int animLayer = -1)
+        public static void DoScaledAnimation(this Animator anim, string animName, double startTime, float length = 1f, float timeScale = 1f, int animLayer = -1)
         {
             float pos = Conductor.instance.GetPositionFromBeat(startTime, length) * timeScale;
             anim.Play(animName, animLayer, pos);

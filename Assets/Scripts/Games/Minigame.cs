@@ -9,7 +9,7 @@ namespace HeavenStudio.Games
 {
     public class Minigame : MonoBehaviour
     {
-        public static double earlyTime = 0.075f, perfectTime = 0.06f, aceEarlyTime = 0.01f, aceLateTime = 0.01f, lateTime = 0.06f, endTime = 0.075f;
+        public static double ngEarlyTime = 0.075f, justEarlyTime = 0.06f, aceEarlyTime = 0.01f, aceLateTime = 0.01f, justLateTime = 0.06f, ngLateTime = 0.075f;
         public static float rankHiThreshold = 0.8f, rankOkThreshold = 0.6f;
         [SerializeField] public SoundSequence.SequenceKeyValue[] SoundSequences;
 
@@ -40,12 +40,14 @@ namespace HeavenStudio.Games
         /// <param name="OnBlank">Method to run whenever there's an Input while this is Scheduled (Shouldn't be used too much)</param>
         /// <returns></returns>
         public PlayerActionEvent ScheduleInput(
-            float startBeat,
-            float timer,
+            double startBeat,
+            double timer,
             InputType inputType,
             PlayerActionEvent.ActionEventCallbackState OnHit,
             PlayerActionEvent.ActionEventCallback OnMiss,
-            PlayerActionEvent.ActionEventCallback OnBlank)
+            PlayerActionEvent.ActionEventCallback OnBlank,
+            PlayerActionEvent.ActionEventHittableQuery HittableQuery = null
+            )
         {
 
             GameObject evtObj = new GameObject("ActionEvent" + (startBeat+timer));
@@ -59,6 +61,7 @@ namespace HeavenStudio.Games
             evt.OnHit = OnHit;
             evt.OnMiss = OnMiss;
             evt.OnBlank = OnBlank;
+            evt.IsHittable = HittableQuery;
 
             evt.OnDestroy = RemoveScheduledInput;
 
@@ -74,8 +77,8 @@ namespace HeavenStudio.Games
             return evt;
         }
 
-        public PlayerActionEvent ScheduleAutoplayInput(float startBeat,
-            float timer,
+        public PlayerActionEvent ScheduleAutoplayInput(double startBeat,
+            double timer,
             InputType inputType,
             PlayerActionEvent.ActionEventCallbackState OnHit,
             PlayerActionEvent.ActionEventCallback OnMiss,
@@ -86,19 +89,18 @@ namespace HeavenStudio.Games
             return evt;
         }
 
-        public PlayerActionEvent ScheduleUserInput(float startBeat,
-            float timer,
+        public PlayerActionEvent ScheduleUserInput(double startBeat,
+            double timer,
             InputType inputType,
             PlayerActionEvent.ActionEventCallbackState OnHit,
             PlayerActionEvent.ActionEventCallback OnMiss,
-            PlayerActionEvent.ActionEventCallback OnBlank)
+            PlayerActionEvent.ActionEventCallback OnBlank,
+            PlayerActionEvent.ActionEventHittableQuery HittableQuery = null)
         {
-            PlayerActionEvent evt = ScheduleInput(startBeat, timer, inputType, OnHit, OnMiss, OnBlank);
+            PlayerActionEvent evt = ScheduleInput(startBeat, timer, inputType, OnHit, OnMiss, OnBlank, HittableQuery);
             evt.noAutoplay = true;
             return evt;
         }
-
-
 
         //Clean up method used whenever a PlayerActionEvent has finished
         public void RemoveScheduledInput(PlayerActionEvent evt)
@@ -124,8 +126,8 @@ namespace HeavenStudio.Games
                         closest = toCompare;
                 } else
                 {
-                    float t1 = closest.startBeat + closest.timer;
-                    float t2 = toCompare.startBeat + toCompare.timer;
+                    double t1 = closest.startBeat + closest.timer;
+                    double t2 = toCompare.startBeat + toCompare.timer;
 
                     // Debug.Log("t1=" + t1 + " -- t2=" + t2);
 
@@ -151,56 +153,43 @@ namespace HeavenStudio.Games
         }
 
         // now should fix the fast bpm problem
-        public static double EarlyTime()
+        public static double NgEarlyTime()
         {
-            return 1f - earlyTime;
+            return 1f - ngEarlyTime;
         }
 
-        public static double PerfectTime()
+        public static double JustEarlyTime()
         {
-            return 1f - perfectTime;
+            return 1f - justEarlyTime;
         }
 
-        public static double LateTime()
+        public static double JustLateTime()
         {
-            return 1f + lateTime;
+            return 1f + justLateTime;
         }
 
-        public static double EndTime()
+        public static double NgLateTime()
         {
-            return 1f + endTime;
+            return 1f + ngLateTime;
         }
 
-        public static double AceStartTime()
+        public static double AceEarlyTime()
         {
             return 1f - aceEarlyTime;
         }
 
-        public static double AceEndTime()
+        public static double AceLateTime()
         {
             return 1f + aceLateTime;
         }
 
-        // DEPRECATED: scales timing windows to the BPM in an ""intelligent"" manner
-        // only left for historical reasons
-        static float ScaleTimingMargin(float f)
-        {
-            float bpm = Conductor.instance.songBpm * Conductor.instance.musicSource.pitch;
-            float a = bpm / 120f;
-            float b = (Mathf.Log(a) + 2f) * 0.5f;
-            float r = Mathf.Lerp(a, b, 0.25f);
-            return r * f;
-        }
-
-        public int firstEnable = 0;
-
-        public virtual void OnGameSwitch(float beat)
+        public virtual void OnGameSwitch(double beat)
         {
             //Below is a template that can be used for handling previous entities.
             //section below is if you only want to look at entities that overlap the game switch
             /*
-            List<Beatmap.Entity> prevEntities = GameManager.instance.Beatmap.entities.FindAll(c => c.beat <= beat && c.datamodel.Split(0) == [insert game name]);
-            foreach(Beatmap.Entity entity in prevEntities)
+            List<RiqEntity> prevEntities = GameManager.instance.Beatmap.Entities.FindAll(c => c.beat <= beat && c.datamodel.Split(0) == [insert game name]);
+            foreach(RiqEntity entity in prevEntities)
             {
                 if(entity.beat + entity.length >= beat)
                 {
@@ -215,12 +204,12 @@ namespace HeavenStudio.Games
 
         }
 
-        public virtual void OnPlay(float beat)
+        public virtual void OnPlay(double beat)
         {
 
         }
 
-        public virtual void OnStop(float beat)
+        public virtual void OnStop(double beat)
         {
             foreach (var evt in scheduledInputs)
             {
@@ -246,7 +235,7 @@ namespace HeavenStudio.Games
             return sameTime;
         }
 
-        public static MultiSound PlaySoundSequence(string game, string name, float startBeat, params SoundSequence.SequenceParams[] args)
+        public static MultiSound PlaySoundSequence(string game, string name, double startBeat, params SoundSequence.SequenceParams[] args)
         {
             Minigames.Minigame gameInfo = GameManager.instance.GetGameInfo(game);
             foreach (SoundSequence.SequenceKeyValue pair in gameInfo.LoadedSoundSequences)
@@ -263,7 +252,7 @@ namespace HeavenStudio.Games
 
         public void ScoreMiss(double weight = 1f)
         {
-            GameManager.instance.ScoreInputAccuracy(0, true, EndTime(), weight, false);
+            GameManager.instance.ScoreInputAccuracy(0, true, NgLateTime(), weight, false);
             if (weight > 0)
             {
                 GoForAPerfect.instance.Miss();

@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using System.IO;
 
 namespace HeavenStudio.InputSystem
 {
@@ -10,34 +11,6 @@ namespace HeavenStudio.InputSystem
     /// </summary>
     public abstract class InputController
     {
-        //Buttons and Axis used by most controllers
-        public enum InputButtons : int
-        {
-            ButtonPadUp = 0,
-            ButtonPadDown = 1,
-            ButtonPadLeft = 2,
-            ButtonPadRight = 3,
-            ButtonPlus = 4,
-            ButtonOptions = 4,
-            ButtonMinus = 5,
-            ButtonShare = 5,
-            ButtonLClick = 6,
-            ButtonRClick = 7,
-            ButtonL = 8,
-            ButtonR = 9,
-            ButtonZL = 10,
-            ButtonZR = 11,
-            ButtonFaceS = 12,
-            ButtonFaceE = 13,
-            ButtonFaceW = 14,
-            ButtonFaceN = 15,
-            ButtonHome = 16,
-            ButtonPS = 16,
-            ButtonCapture = 17,
-            ButtonTouchpadClick = 17,
-            ButtonSL = 18,
-            ButtonSR = 19,
-        }
         public enum InputAxis : int
         {
             AxisLTrigger = 4,
@@ -97,50 +70,65 @@ namespace HeavenStudio.InputSystem
         {
             Pad,
             Baton,
-            Touch
+            Touch,
+            Move
         }
 
+        public const int BINDS_MAX = 12; //maximum number of binds per controller
+
         //buttons used in Heaven Studio gameplay (Pad Style)
-        public enum ButtonsPad : int
+        public enum ActionsPad : int
         {
-            PadUp = 0,
-            PadDown = 1,
-            PadLeft = 2,
-            PadRight = 3,
-            PadS = 4,
-            PadE = 5,
-            PadW = 6,
-            PadN = 7,
-            PadL = 8,
-            PadR = 9,
-            PadPause = 10,
+            Up = 0,
+            Down = 1,
+            Left = 2,
+            Right = 3,
+            South = 4,
+            East = 5,
+            West = 6,
+            North = 7,
+            L = 8,
+            R = 9,
+            Pause = 10,
         }
 
         //FUTURE: buttons used in Heaven Studio gameplay ("Form Baton" / WiiMote Style)
-        public enum ButtonsBaton : int
+        public enum ActionsBaton : int
         {
-            BatonS = 0, //-- all these...
-            BatonE = 1, // |
-            BatonW = 2, // |
-            BatonN = 3, //--
-            BatonA = 4, // < ...map to this, but are directional
-            BatonB = 5, // should never be used alone
-            Baton1 = 6,
-            Baton2 = 7,
-            BatonPause = 8,
+            South = 0,      //-- all these...
+            East = 1,       // |
+            West = 2,       // |
+            North = 3,      //--
+            Face = 4,       // < ...are also equivalent to this, but with added directionality
+            Trigger = 5,    // should never be used alone, but still bindable separately (controller logic should handle confirming & timestamping face + trigger input)
+            Up = 6,     // Wiimote 1
+            Down = 7,   // Wiimote 2
+            Pause = 8,
         }
 
         //FUTURE: buttons used in Heaven Studio gameplay (Touch Style)
-        public enum ButtonsTouch : int
+        public enum ActionsTouch : int
         {
-            TouchL = 0,
-            TouchR = 1,
-            TouchTap = 2,
-            TouchFlick = 3,
-            TouchButtonL = 4,
-            TouchButtonR = 4,
+            Tap = 0,   // flicks are handled like a motion, don't have a binding
+            Left = 1,     // also maps to tap, but with directionality (tap the left side of the panel)
+            Right = 2,    // also maps to tap, but with directionality (tap the right side of the panel)
+            ButtonL = 3,
+            ButtonR = 4,
+            Pause = 5,
         }
-    
+
+        [System.Serializable]
+        public struct ControlBindings
+        {
+            public int[] Pad;
+            public int[] Baton;
+            public int[] Touch;
+        }
+
+        // FUTURE: Move Style needs to be implemented per-game (maybe implement checks for common actions?)
+
+        protected ControlBindings currentBindings;
+
         protected int? playerNum;
         protected int directionStateCurrent = 0;
         protected int directionStateLast = 0;
@@ -148,21 +136,144 @@ namespace HeavenStudio.InputSystem
         public abstract void InitializeController();
         public abstract void UpdateState(); // Update the state of the controller
 
+        public abstract void OnSelected();
+
         public abstract string GetDeviceName(); // Get the name of the controller
+        public abstract string[] GetButtonNames(); // Get the names of the buttons on the controller
         public abstract InputFeatures GetFeatures(); // Get the features of the controller
+        public abstract bool GetIsConnected();
+        public abstract bool GetIsPoorConnection();
 
-        public abstract int GetLastButtonDown();    // Get the last button down
-        public abstract KeyCode GetLastKeyDown();   // Get the last key down (used for keyboards and other devices that use Keycode)
-        public abstract bool GetButton(int button); // is button currently pressed?
-        public abstract bool GetButtonDown(int button); // is button just pressed?
-        public abstract bool GetButtonUp(int button);   // is button just released?
-        public abstract float GetAxis(InputAxis axis);    // Get the value of an axis
-        public abstract bool GetHatDirection(InputDirection direction);    // is direction active?
-        public abstract bool GetHatDirectionDown(InputDirection direction); // direction just became active?
-        public abstract bool GetHatDirectionUp(InputDirection direction);  // direction just became inactive?
+        public void SaveBindings()
+        {
+            if (!Directory.Exists($"{Application.persistentDataPath}/controls"))
+                Directory.CreateDirectory($"{Application.persistentDataPath}/controls");
+            string path = $"{Application.persistentDataPath}/controls/{GetDeviceName()}.json";
+            string json = JsonUtility.ToJson(currentBindings);
+            File.WriteAllText(path, json);
+        }
 
-        public abstract void SetPlayer(int? playerNum);  // Set the player number (starts at 1, set to -1 or null for no player)
-        public abstract int? GetPlayer();            // Get the player number (null if no player)
+        public void LoadBindings()
+        {
+            string path = $"{Application.persistentDataPath}/controls/{GetDeviceName()}.json";
+            if (File.Exists(path))
+            {
+                string json = File.ReadAllText(path);
+                currentBindings = JsonUtility.FromJson<ControlBindings>(json);
+            }
+            else
+            {
+                ResetBindings();
+            }
+        }
+
+        /// <summary>
+        /// Gets the controller's default mappings
+        /// </summary>
+        /// <returns></returns>
+        public abstract ControlBindings GetDefaultBindings();
+
+        /// <summary>
+        /// Resets the controller's mappings to default
+        /// </summary>
+        public abstract void ResetBindings();
+
+        /// <summary>
+        /// Gets the controller's current mappings
+        /// </summary>
+        /// <returns></returns>
+        public abstract ControlBindings GetCurrentBindings();
+
+        /// <summary>
+        /// Sets the controller's current mappings
+        /// </summary>
+        /// <param name="newBinds"></param>
+        public abstract void SetCurrentBindings(ControlBindings newBinds);
+
+        /// <summary>
+        /// Whether a given action can have be rebount
+        /// </summary>
+        /// <param name="action">action to check</param>
+        /// <param name="style">control style to check</param>
+        /// <returns></returns>
+        public abstract bool GetIsActionUnbindable(int action, ControlStyles style);
+
+        /// <summary>
+        /// Gets the last pressed physical button
+        /// </summary>
+        /// <returns></returns>
+        public abstract int GetLastButtonDown();
+
+        /// <summary>
+        /// Gets the last pressed virtual action
+        /// </summary>
+        /// <returns></returns>
+        public abstract int GetLastActionDown();
+
+        /// <summary>
+        /// True if the given action is being held
+        /// </summary>
+        /// <param name="action"></param>
+        /// <returns></returns>
+        public abstract bool GetAction(int action);
+
+        /// <summary>
+        /// True if the action was just pressed this Update
+        /// </summary>
+        /// <param name="action"></param>
+        /// <param name="dt">time since the reported event, use to compensate for controller delays</param>
+        /// <returns></returns>
+        public abstract bool GetActionDown(int action, out double dt);
+
+        /// <summary>
+        /// True if the action was just released this Update
+        /// </summary>
+        /// <param name="action"></param>
+        /// <param name="dt">time since the reported event, use to compensate for controller delays</param>
+        /// <returns></returns>
+        public abstract bool GetActionUp(int action, out double dt);
+
+        /// <summary>
+        /// Get the value of an analogue axis
+        /// </summary>
+        /// <param name="axis"></param>
+        /// <returns></returns>
+        public abstract float GetAxis(InputAxis axis);
+
+        /// <summary>
+        /// True if the current direction is active
+        /// </summary>
+        /// <param name="direction"></param>
+        /// <returns></returns>
+        public abstract bool GetHatDirection(InputDirection direction);
+
+        /// <summary>
+        /// True if the current direction just became active this Update
+        /// </summary>
+        /// <param name="direction"></param>
+        /// <param name="dt">time since the reported event, use to compensate for controller delays</param>
+        /// <returns></returns>
+        public abstract bool GetHatDirectionDown(InputDirection direction, out double dt);
+
+        /// <summary>
+        /// True if the current direction just became inactive this Update
+        /// </summary>
+        /// <param name="direction"></param>
+        /// <param name="dt">time since the reported event, use to compensate for controller delays</param>
+        /// <returns></returns>
+        public abstract bool GetHatDirectionUp(InputDirection direction, out double dt);
+
+        /// <summary>
+        /// Sets the player number (starts at 1, set to -1 or null for no player)
+        /// </summary>
+        /// <param name="playerNum"></param>
+        public abstract void SetPlayer(int? playerNum);
+
+        /// <summary>
+        /// Gets the player number (starts at 1, -1 or null for no player)
+        /// </summary>
+        /// <returns></returns>
+        public abstract int? GetPlayer();
 
         //public abstract Sprite GetDisplayIcon();    //"big icon" for the controller in the settings menu
         //public abstract Sprite GetPlaybackIcon();   //"small icon" for the controller during playback

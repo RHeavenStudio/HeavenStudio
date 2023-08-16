@@ -14,7 +14,7 @@ namespace HeavenStudio.Games.Scripts_Fireworks
         [SerializeField] Animator anim;
         public bool isSparkler;
         private Fireworks game;
-        public float startBeat;
+        public double startBeat;
         public bool applause;
         private bool exploded;
         private float startY;
@@ -63,7 +63,7 @@ namespace HeavenStudio.Games.Scripts_Fireworks
             }
         }
 
-        public void Init(float beat, int explosionToChoose)
+        public void Init(double beat, int explosionToChoose)
         {
             startBeat = beat;
             startY = transform.position.y - offSet;
@@ -89,7 +89,7 @@ namespace HeavenStudio.Games.Scripts_Fireworks
         {
             if (state >= 1f || state <= -1f)
             {
-                Jukebox.PlayOneShotGame("fireworks/miss");
+                SoundByte.PlayOneShotGame("fireworks/miss");
                 particleBarelyEffect.Play();
                 anim.gameObject.SetActive(false);
                 return;
@@ -99,10 +99,10 @@ namespace HeavenStudio.Games.Scripts_Fireworks
 
         void Success(PlayerActionEvent caller)
         {
-            Jukebox.PlayOneShotGame("fireworks/explode_5");
+            SoundByte.PlayOneShotGame("fireworks/explode_5");
             selectedParticleEffect.Play();
             anim.gameObject.SetActive(false);
-            if (applause) Jukebox.PlayOneShot("applause", caller.timer + caller.startBeat + 1f);
+            if (applause) SoundByte.PlayOneShot("applause", caller.timer + caller.startBeat + 1f);
         }
 
         void Out(PlayerActionEvent caller) { }

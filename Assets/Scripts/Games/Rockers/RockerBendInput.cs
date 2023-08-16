@@ -11,7 +11,7 @@ namespace HeavenStudio.Games.Scripts_Rockers
 
         private Rockers game;
 
-        public void Init(int pitch, float beat, float length)
+        public void Init(int pitch, double beat, double length)
         {
             game = Rockers.instance;
             this.pitch = pitch;

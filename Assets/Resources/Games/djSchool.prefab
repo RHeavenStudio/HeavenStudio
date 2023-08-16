@@ -1595,7 +1595,7 @@ MonoBehaviour:
   - {fileID: -3051697614590913775, guid: f2d230e6db7d69846996476f169cf643, type: 3}
   - {fileID: 2538339475596086665, guid: f2d230e6db7d69846996476f169cf643, type: 3}
   - {fileID: -7628408153488696044, guid: f2d230e6db7d69846996476f169cf643, type: 3}
-  djYellowHeadSrpite: {fileID: 7458467574167296016}
+  djYellowHeadSprite: {fileID: 7458467574167296016}
 --- !u!1 &9200174622447092558
 GameObject:
   m_ObjectHideFlags: 0
@@ -1846,7 +1846,7 @@ MonoBehaviour:
   firstEnable: 0
   student: {fileID: 9200174623731220607}
   djYellow: {fileID: 9200174622253846102}
-  djYellowScript: {fileID: 0}
+  djYellowScript: {fileID: 1858649782518014752}
   djYellowHolding: 0
   andStop: 0
   goBop: 0
@@ -2288,18 +2288,14 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   anim: {fileID: 0}
-  holdBeat: 0
-  swipeBeat: 0
   isHolding: 0
   shouldBeHolding: 0
-  eligible: 0
   missed: 0
   swiping: 0
   flash: {fileID: 9200174624107298571}
   flashFX: {fileID: 9200174622447092558}
   flashFXInverse: {fileID: 9200174624170226256}
   TurnTable: {fileID: 9200174623714755289}
-  slamFX: {fileID: 0}
 --- !u!1 &9200174624050258610
 GameObject:
   m_ObjectHideFlags: 0

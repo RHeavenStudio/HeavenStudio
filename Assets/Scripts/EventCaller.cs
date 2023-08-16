@@ -3,13 +3,15 @@ using System.Linq;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
+using Jukebox;
+using Jukebox.Legacy;
 
 namespace HeavenStudio
 {
     public class EventCaller : MonoBehaviour
     {
         public Transform GamesHolder;
-        public DynamicBeatmap.DynamicEntity currentEntity = new DynamicBeatmap.DynamicEntity();
+        public RiqEntity currentEntity = new RiqEntity();
         public string currentSwitchGame;
 
         public delegate void EventCallback();
@@ -37,15 +39,15 @@ namespace HeavenStudio
         {
             instance = this;
 
-            currentEntity = new DynamicBeatmap.DynamicEntity();
+            currentEntity = new RiqEntity();
 
             Minigames.Init(this);
 
             List<Minigames.Minigame> minigamesInBeatmap = new List<Minigames.Minigame>();
-            for (int i = 0; i < GameManager.instance.Beatmap.entities.Count; i++)
+            for (int i = 0; i < GameManager.instance.Beatmap.Entities.Count; i++)
             {
                 //go through every entity in the timeline and add the game that they're from to the minigamesInBeatmap list (ignore entities from FX only categories, i.e. Game Manager and Count-Ins)
-                Minigames.Minigame game = GetMinigame(GameManager.instance.Beatmap.entities[i].datamodel.Split('/')[0]);
+                Minigames.Minigame game = GetMinigame(GameManager.instance.Beatmap.Entities[i].datamodel.Split('/')[0]);
                 if (!minigamesInBeatmap.Contains(game) && !FXOnlyGames().Contains(game))
                 {
                     minigamesInBeatmap.Add(game);
@@ -63,7 +65,7 @@ namespace HeavenStudio
             
         }
 
-        public void CallEvent(DynamicBeatmap.DynamicEntity entity, bool gameActive)
+        public void CallEvent(RiqEntity entity, bool gameActive)
         {
             string[] details = entity.datamodel.Split('/');
             Minigames.Minigame game = minigames.Find(c => c.name == details[0]);
@@ -89,7 +91,7 @@ namespace HeavenStudio
             }
         }
 
-        public void CallPreEvent(DynamicBeatmap.DynamicEntity entity)
+        public void CallPreEvent(RiqEntity entity)
         {
             string[] details = entity.datamodel.Split('/');
             Minigames.Minigame game = minigames.Find(c => c.name == details[0]);
@@ -106,10 +108,10 @@ namespace HeavenStudio
             }
         }
 
-        public static List<DynamicBeatmap.DynamicEntity> GetAllInGameManagerList(string gameName, string[] include)
+        public static List<RiqEntity> GetAllInGameManagerList(string gameName, string[] include)
         {
-            List<DynamicBeatmap.DynamicEntity> temp1 = GameManager.instance.Beatmap.entities.FindAll(c => c.datamodel.Split('/')[0] == gameName);
-            List<DynamicBeatmap.DynamicEntity> temp2 = new List<DynamicBeatmap.DynamicEntity>();
+            List<RiqEntity> temp1 = GameManager.instance.Beatmap.Entities.FindAll(c => c.datamodel.Split('/')[0] == gameName);
+            List<RiqEntity> temp2 = new List<RiqEntity>();
             foreach (string s in include)
             {
                 temp2.AddRange(temp1.FindAll(c => c.datamodel.Split('/')[1].Equals(s)));
@@ -117,10 +119,10 @@ namespace HeavenStudio
             return temp2;
         }
 
-        public static List<DynamicBeatmap.DynamicEntity> GetAllInGameManagerListExclude(string gameName, string[] exclude)
+        public static List<RiqEntity> GetAllInGameManagerListExclude(string gameName, string[] exclude)
         {
-            List<DynamicBeatmap.DynamicEntity> temp1 = GameManager.instance.Beatmap.entities.FindAll(c => c.datamodel.Split('/')[0] == gameName);
-            List<DynamicBeatmap.DynamicEntity> temp2 = new List<DynamicBeatmap.DynamicEntity>();
+            List<RiqEntity> temp1 = GameManager.instance.Beatmap.Entities.FindAll(c => c.datamodel.Split('/')[0] == gameName);
+            List<RiqEntity> temp2 = new List<RiqEntity>();
             foreach (string s in exclude)
             {
                 temp2.AddRange(temp1.FindAll(c => !c.datamodel.Split('/')[1].Equals(s)));

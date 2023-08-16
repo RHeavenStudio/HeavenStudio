@@ -6,6 +6,8 @@ using System;
 
 using TMPro;
 using Starpelly;
+using Jukebox;
+using Jukebox.Legacy;
 
 namespace HeavenStudio.Editor.Track
 {
@@ -45,14 +47,23 @@ namespace HeavenStudio.Editor.Track
         public void Setup()
         {
             ClearSpecialTimeline();
+            GameManager.instance.SortEventsList();
+            
+            bool first = true;
+            foreach (var tempoChange in GameManager.instance.Beatmap.TempoChanges)
+            {
+                AddTempoChange(false, tempoChange, first);
+                first = false;
+            }
 
-            foreach (var tempoChange in GameManager.instance.Beatmap.tempoChanges)
-                AddTempoChange(false, tempoChange);
+            first = true;
+            foreach (var volumeChange in GameManager.instance.Beatmap.VolumeChanges)
+            {
+                AddVolumeChange(false, volumeChange, first);
+                first = false;
+            }
 
-            foreach (var volumeChange in GameManager.instance.Beatmap.volumeChanges)
-                AddVolumeChange(false, volumeChange);
-
-            foreach (var sectionChange in GameManager.instance.Beatmap.beatmapSections)
+            foreach (var sectionChange in GameManager.instance.Beatmap.SectionMarkers)
                 AddChartSection(false, sectionChange);
 
             Timeline.instance.timelineState.SetState(Timeline.CurrentTimelineState.State.Selection);
@@ -114,7 +125,7 @@ namespace HeavenStudio.Editor.Track
             specialTimelineObjs.Clear();
         }
 
-        public void AddTempoChange(bool create, DynamicBeatmap.TempoChange tempoChange_ = null)
+        public void AddTempoChange(bool create, RiqEntity tempoChange_ = null, bool first = false)
         {      
             GameObject tempoChange = Instantiate(RefTempoChange.gameObject, this.transform);
 
@@ -131,29 +142,23 @@ namespace HeavenStudio.Editor.Track
                 tempoChange.transform.position = new Vector3(Editor.instance.EditorCamera.ScreenToWorldPoint(Input.mousePosition).x + 0.08f, tempoChange.transform.position.y);
                 tempoChange.transform.localPosition = new Vector3(Starpelly.Mathp.Round2Nearest(tempoChange.transform.localPosition.x, Timeline.SnapInterval()), tempoChange.transform.localPosition.y);
 
-                DynamicBeatmap.TempoChange tempoC = new DynamicBeatmap.TempoChange();
-                tempoC.beat = tempoChange.transform.localPosition.x;
+                float lastTempo = Conductor.instance.GetBpmAtBeat(tempoChange.transform.localPosition.x);
                 if (Input.GetKey(KeyCode.LeftShift) || Input.GetKey(KeyCode.RightShift))
                 {
-                    tempoC.tempo = GameManager.instance.Beatmap.bpm * 2f;
+                    lastTempo = lastTempo * 2f;
                 }
                 else if (Input.GetKey(KeyCode.LeftControl) || Input.GetKey(KeyCode.RightControl))
                 {
-                    tempoC.tempo = GameManager.instance.Beatmap.bpm / 2f;
+                    lastTempo = lastTempo / 2f;
                 }
-                else
-                {
-                    tempoC.tempo = GameManager.instance.Beatmap.bpm;
-                }
-
+                RiqEntity tempoC = GameManager.instance.Beatmap.AddNewTempoChange(tempoChange.transform.localPosition.x, lastTempo);
                 tempoTimelineObj.tempoChange = tempoC;
-                GameManager.instance.Beatmap.tempoChanges.Add(tempoC);
             }
             else
             {
-                tempoChange.transform.localPosition = new Vector3(tempoChange_.beat, tempoChange.transform.localPosition.y);
-
                 tempoTimelineObj.tempoChange = tempoChange_;
+                tempoChange.transform.localPosition = new Vector3((float) tempoTimelineObj.tempoChange.beat, tempoChange.transform.localPosition.y);
+                tempoTimelineObj.first = first;
             }
             tempoTimelineObj.SetVisibility(Timeline.instance.timelineState.currentState);
 
@@ -162,7 +167,7 @@ namespace HeavenStudio.Editor.Track
             Timeline.instance.FitToSong();
         }
 
-        public void AddVolumeChange(bool create, DynamicBeatmap.VolumeChange volumeChange_ = null)
+        public void AddVolumeChange(bool create, RiqEntity volumeChange_ = null, bool first = false)
         {      
             GameObject volumeChange = Instantiate(RefVolumeChange.gameObject, this.transform);
 
@@ -179,25 +184,22 @@ namespace HeavenStudio.Editor.Track
                 volumeChange.transform.position = new Vector3(Editor.instance.EditorCamera.ScreenToWorldPoint(Input.mousePosition).x + 0.08f, volumeChange.transform.position.y);
                 volumeChange.transform.localPosition = new Vector3(Starpelly.Mathp.Round2Nearest(volumeChange.transform.localPosition.x, Timeline.SnapInterval()), volumeChange.transform.localPosition.y);
 
-                DynamicBeatmap.VolumeChange volumeC = new DynamicBeatmap.VolumeChange();
-                volumeC.beat = volumeChange.transform.localPosition.x;
-                volumeC.volume = GameManager.instance.Beatmap.musicVolume;
-
+                RiqEntity volumeC = GameManager.instance.Beatmap.AddNewVolumeChange(volumeChange.transform.localPosition.x, 100f);
                 volumeTimelineObj.volumeChange = volumeC;
-                GameManager.instance.Beatmap.volumeChanges.Add(volumeC);
+                GameManager.instance.Beatmap.VolumeChanges.Add(volumeC);
             }
             else
             {
-                volumeChange.transform.localPosition = new Vector3(volumeChange_.beat, volumeChange.transform.localPosition.y);
-
                 volumeTimelineObj.volumeChange = volumeChange_;
+                volumeChange.transform.localPosition = new Vector3((float) volumeTimelineObj.volumeChange.beat, volumeChange.transform.localPosition.y);
+                volumeTimelineObj.first = first;
             }
             volumeTimelineObj.SetVisibility(Timeline.instance.timelineState.currentState);
 
             specialTimelineObjs.Add(volumeTimelineObj);
         }
 
-        public void AddChartSection(bool create, DynamicBeatmap.ChartSection chartSection_ = null)
+        public void AddChartSection(bool create, RiqEntity chartSection_ = null)
         {      
             GameObject chartSection = Instantiate(RefSectionChange.gameObject, this.transform);
 
@@ -215,20 +217,15 @@ namespace HeavenStudio.Editor.Track
                 chartSection.transform.position = new Vector3(Editor.instance.EditorCamera.ScreenToWorldPoint(Input.mousePosition).x + 0.08f, chartSection.transform.position.y);
                 chartSection.transform.localPosition = new Vector3(Starpelly.Mathp.Round2Nearest(chartSection.transform.localPosition.x, Timeline.SnapInterval()), chartSection.transform.localPosition.y);
 
-                DynamicBeatmap.ChartSection sectionC = new DynamicBeatmap.ChartSection();
-                sectionC.beat = chartSection.transform.localPosition.x;
-                sectionC.sectionName = "New Section";
-                sectionC.startPerfect = false;
-                sectionC.isCheckpoint = false;
+                RiqEntity sectionC = GameManager.instance.Beatmap.AddNewSectionMarker(chartSection.transform.localPosition.x, "New Section");
 
                 sectionTimelineObj.chartSection = sectionC;
-                GameManager.instance.Beatmap.beatmapSections.Add(sectionC);
+                GameManager.instance.Beatmap.SectionMarkers.Add(sectionC);
             }
             else
             {
-                chartSection.transform.localPosition = new Vector3(chartSection_.beat, chartSection.transform.localPosition.y);
-
                 sectionTimelineObj.chartSection = chartSection_;
+                chartSection.transform.localPosition = new Vector3((float) sectionTimelineObj.chartSection.beat, chartSection.transform.localPosition.y);
             }
             sectionTimelineObj.SetVisibility(Timeline.instance.timelineState.currentState);
 

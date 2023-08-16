@@ -1,5 +1,3 @@
-using DG.Tweening;
-using NaughtyBezierCurves;
 using HeavenStudio.Util;
 using System;
 using System.Collections.Generic;
@@ -24,53 +22,33 @@ namespace HeavenStudio.Games.Loaders
                         new Param("toggle", false, "Audience Reaction", "Enable Audience Reaction"),
                     }
                 },
-                new GameAction("set background color", "Set Background Color")
+                new GameAction("fade background color", "Background Color")
                 {
-                    function = delegate { var e = eventCaller.currentEntity; CoinToss.instance.ChangeBackgroundColor(e["colorA"], 0f); CoinToss.instance.ChangeBackgroundColor(e["colorB"], 0f, true); }, 
-                    defaultLength = 0.5f,  
-                    parameters = new List<Param>()
-                    {
-                        new Param("colorA", CoinToss.defaultBgColor, "Background Color", "The background color to change to"),
-                        new Param("colorB", CoinToss.defaultFgColor, "Foreground Color", "The foreground color to change to")
-                    } 
-                },
-                new GameAction("fade background color", "Fade Background Color")
-                {
-                    function = delegate { var e = eventCaller.currentEntity; CoinToss.instance.FadeBackgroundColor(e["colorA"], e["colorB"], e.length); CoinToss.instance.FadeBackgroundColor(e["colorC"], e["colorD"], e.length, true); },
+                    function = delegate { var e = eventCaller.currentEntity;
+                        CoinToss.instance.BackgroundColor(e.beat, e.length, e["colorStart"], e["colorEnd"], e["colorStartF"], e["colorEndF"], e["ease"]); },
                     resizable = true, 
+                    defaultLength = 4f,
                     parameters = new List<Param>()
                     {
-                        new Param("colorA", Color.white, "BG Start Color", "The starting color in the fade"),
-                        new Param("colorB", CoinToss.defaultBgColor, "BG End Color", "The ending color in the fade"),
-                        new Param("colorC", Color.white, "FG Start Color", "The starting color in the fade"),
-                        new Param("colorD", CoinToss.defaultFgColor, "FG End Color", "The ending color in the fade")
+                        new Param("colorStart", CoinToss.defaultBgColor, "BG Start Color", "The starting color in the fade"),
+                        new Param("colorEnd", CoinToss.defaultBgColor, "BG End Color", "The ending color in the fade"),
+                        new Param("colorStartF", CoinToss.defaultBgColor, "FG Start Color", "The starting color in the fade"),
+                        new Param("colorEndF", CoinToss.defaultBgColor, "FG End Color", "The ending color in the fade"),
+                        new Param("ease", Util.EasingFunction.Ease.Linear, "Ease")
                     } 
                 },
 
                 //left in for backwards-compatibility, but cannot be placed
-                new GameAction("set foreground color", "")
+                new GameAction("set background color", "Set Background Color")
                 {
-                    function = delegate { var e = eventCaller.currentEntity; CoinToss.instance.ChangeBackgroundColor(e["colorA"], 0f, true); }, 
-                    defaultLength = 0.5f, 
-                    parameters = new List<Param>
-            
-                    {
-                        new Param("colorA", CoinToss.defaultFgColor, "Foreground Color", "The foreground color to change to")
-
-                    }, 
-                    hidden = true 
-                },
-
-                new GameAction("fade foreground color", "")
-                {
-                    function = delegate { var e = eventCaller.currentEntity; CoinToss.instance.FadeBackgroundColor(e["colorA"], e["colorB"], e.length, true); },
-                    resizable = true, 
+                    function = delegate { var e = eventCaller.currentEntity; CoinToss.instance.BackgroundColor(e.beat, e.length, e["colorA"], e["colorA"], e["colorB"], e["colorB"], (int)Util.EasingFunction.Ease.Instant); },
+                    defaultLength = 0.5f,
                     parameters = new List<Param>()
                     {
-                        new Param("colorA", Color.white, "Start Color", "The starting color in the fade"),
-                        new Param("colorB", CoinToss.defaultFgColor, "End Color", "The ending color in the fade")
-                    }, 
-                    hidden = true 
+                        new Param("colorA", CoinToss.defaultBgColor, "Background Color", "The background color to change to"),
+                        new Param("colorB", CoinToss.defaultFgColor, "Foreground Color", "The foreground color to change to")
+                    },
+                    hidden = true
                 },
             },
             new List<string>() {"ntr", "aim"},
@@ -119,9 +97,6 @@ namespace HeavenStudio.Games
         public SpriteRenderer fg;
         public SpriteRenderer bg;
 
-        Tween bgColorTween;
-        Tween fgColorTween;
-
         [Header("Animators")]
         public Animator handAnimator;
 
@@ -143,24 +118,25 @@ namespace HeavenStudio.Games
             isThrowing = false;
 
             coin = null;
+
+            colorStart = defaultBgColor;
+            colorEnd = defaultBgColor;
+            colorStartF = defaultBgColor;
+            colorEndF = defaultBgColor;
+            BackgroundColorUpdate();
         }
 
         private void Update()
         {
-           //nothing
+            BackgroundColorUpdate();
         }
 
-        private void LateUpdate()
-        {
-            //nothing
-        }
-
-        public void TossCoin(float beat, int type, bool audienceReacting)
+        public void TossCoin(double beat, int type, bool audienceReacting)
         {
             if (coin != null) return;
 
             //Play sound and animations
-            Jukebox.PlayOneShotGame("coinToss/throw");
+            SoundByte.PlayOneShotGame("coinToss/throw");
             handAnimator.Play("Throw", 0, 0);
             //Game state says the hand is throwing the coin
             isThrowing = true;
@@ -169,7 +145,7 @@ namespace HeavenStudio.Games
                 {
                     case (int) CoinToss.CoinVariation.Cowbell:
                         //this was intentional. it was to avoid the throw and cowbells to go offbeat.
-                        Jukebox.PlayOneShotGame("coinToss/cowbell1");
+                        SoundByte.PlayOneShotGame("coinToss/cowbell1");
                         MultiSound.Play(new MultiSound.Sound[] {
                         new MultiSound.Sound("coinToss/cowbell2", beat + 1f, offset: 0.01f),
                         new MultiSound.Sound("coinToss/cowbell1", beat + 2f, offset: 0.01f),
@@ -189,12 +165,12 @@ namespace HeavenStudio.Games
             //coin.perfectOnly = true;
         }
 
-        public void TossCoin(float beat)
+        public void TossCoin(double beat)
         {
             if (coin != null) return;
 
             //Play sound and animations
-            Jukebox.PlayOneShotGame("coinToss/throw");
+            SoundByte.PlayOneShotGame("coinToss/throw");
             handAnimator.Play("Throw", 0, 0);
             //Game state says the hand is throwing the coin
             isThrowing = true;
@@ -206,8 +182,8 @@ namespace HeavenStudio.Games
 
         public void CatchSuccess(PlayerActionEvent caller, float state)
         {
-            Jukebox.PlayOneShotGame("coinToss/catch");
-            if(this.audienceReacting) Jukebox.PlayOneShot("applause");
+            SoundByte.PlayOneShotGame("coinToss/catch");
+            if(this.audienceReacting) SoundByte.PlayOneShot("applause");
             handAnimator.Play("Catch_success", 0, 0);
 
             isThrowing = false; 
@@ -215,8 +191,8 @@ namespace HeavenStudio.Games
 
         public void CatchMiss(PlayerActionEvent caller)
         {
-            Jukebox.PlayOneShot("miss");
-            if(this.audienceReacting) Jukebox.PlayOneShot("audience/disappointed");
+            SoundByte.PlayOneShot("miss");
+            if(this.audienceReacting) SoundByte.PlayOneShot("audience/disappointed");
             handAnimator.Play("Pickup", 0, 0);
 
             isThrowing = false;
@@ -230,37 +206,65 @@ namespace HeavenStudio.Games
             coin.CanHit(false);
         }
 
-        public void ChangeBackgroundColor(Color color, float beats, bool isFg = false)
+        private double colorStartBeat = -1;
+        private float colorLength = 0f;
+        private Color colorStart; //obviously put to the default color of the game
+        private Color colorEnd;
+        private Color colorStartF; //obviously put to the default color of the game
+        private Color colorEndF;
+        private Util.EasingFunction.Ease colorEase; //putting Util in case this game is using jukebox
+
+        //call this in update
+        private void BackgroundColorUpdate()
         {
-            var seconds = Conductor.instance.secPerBeat * beats;
+            float normalizedBeat = Mathf.Clamp01(Conductor.instance.GetPositionFromBeat(colorStartBeat, colorLength));
 
-            if(!isFg)
-            {
-                if (bgColorTween != null)
-                    bgColorTween.Kill(true);
-            } else
-            {
-                if (fgColorTween != null)
-                    fgColorTween.Kill(true);
-            }
-            
+            var func = Util.EasingFunction.GetEasingFunction(colorEase);
 
-            if (seconds == 0)
+            float newR = func(colorStart.r, colorEnd.r, normalizedBeat);
+            float newG = func(colorStart.g, colorEnd.g, normalizedBeat);
+            float newB = func(colorStart.b, colorEnd.b, normalizedBeat);
+
+            bg.color = new Color(newR, newG, newB);
+
+            float newRF = func(colorStartF.r, colorEndF.r, normalizedBeat);
+            float newGF = func(colorStartF.g, colorEndF.g, normalizedBeat);
+            float newBF = func(colorStartF.b, colorEndF.b, normalizedBeat);
+
+            fg.color = new Color(newRF, newGF, newBF);
+        }
+
+        public void BackgroundColor(double beat, float length, Color colorStartSet, Color colorEndSet, Color colorStartSetF, Color colorEndSetF, int ease)
+        {
+            colorStartBeat = beat;
+            colorLength = length;
+            colorStart = colorStartSet;
+            colorEnd = colorEndSet;
+            colorStartF = colorStartSetF;
+            colorEndF = colorEndSetF;
+            colorEase = (Util.EasingFunction.Ease)ease;
+        }
+
+        //call this in OnPlay(double beat) and OnGameSwitch(double beat)
+        private void PersistColor(double beat)
+        {
+            var allEventsBeforeBeat = EventCaller.GetAllInGameManagerList("coinToss", new string[] { "fade background color" }).FindAll(x => x.beat < beat);
+            if (allEventsBeforeBeat.Count > 0)
             {
-                if(!isFg) bg.color = color;
-                if (isFg) fg.color = color;
-            }
-            else
-            {
-                if(!isFg) bgColorTween = bg.DOColor(color, seconds);
-                if(isFg)  fgColorTween = fg.DOColor(color, seconds);
+                allEventsBeforeBeat.Sort((x, y) => x.beat.CompareTo(y.beat)); //just in case
+                var lastEvent = allEventsBeforeBeat[^1];
+                BackgroundColor(lastEvent.beat, lastEvent.length, lastEvent["colorStart"], lastEvent["colorEnd"], lastEvent["colorStartF"], lastEvent["colorEndF"], lastEvent["ease"]);
             }
         }
 
-        public void FadeBackgroundColor(Color start, Color end, float beats, bool isFg = false)
+        public override void OnPlay(double beat)
         {
-            ChangeBackgroundColor(start, 0f, isFg);
-            ChangeBackgroundColor(end, beats, isFg);
+            PersistColor(beat);
+        }
+
+        public override void OnGameSwitch(double beat)
+        {
+            PersistColor(beat);
         }
     }
 }

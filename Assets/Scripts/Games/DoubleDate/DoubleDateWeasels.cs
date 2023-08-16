@@ -42,7 +42,7 @@ namespace HeavenStudio.Games.Scripts_DoubleDate
             }
         }
 
-        public void Hide(float beat)
+        public void Hide(double beat)
         {
             if (notHit)
             {
@@ -69,7 +69,7 @@ namespace HeavenStudio.Games.Scripts_DoubleDate
             }
         }
 
-        public void Hit(float beat)
+        public void Hit(double beat)
         {
             if (notHit)
             {

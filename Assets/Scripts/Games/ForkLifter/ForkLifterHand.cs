@@ -4,6 +4,8 @@ using System.Linq;
 using UnityEngine;
 
 using HeavenStudio.Util;
+using Jukebox;
+using Jukebox.Legacy;
 
 namespace HeavenStudio.Games.Scripts_ForkLifter
 {
@@ -13,17 +15,17 @@ namespace HeavenStudio.Games.Scripts_ForkLifter
 
         public Sprite[] fastSprites;
 
-        private List<DynamicBeatmap.DynamicEntity> allFlickEntities = new List<DynamicBeatmap.DynamicEntity>();
+        private List<RiqEntity> allFlickEntities = new List<RiqEntity>();
 
         public int currentFlickIndex;
 
         private void Awake()
         {
             var flickEntities = EventCaller.GetAllInGameManagerList("forkLifter", new string[] { "flick" });
-            List<DynamicBeatmap.DynamicEntity> tempEvents = new List<DynamicBeatmap.DynamicEntity>();
+            List<RiqEntity> tempEvents = new List<RiqEntity>();
             for (int i = 0; i < flickEntities.Count; i++)
             {
-                if (flickEntities[i].beat >= Conductor.instance.songPositionInBeats)
+                if (flickEntities[i].beat >= Conductor.instance.songPositionInBeatsAsDouble)
                 {
                     tempEvents.Add(flickEntities[i]);
                 }
@@ -63,7 +65,7 @@ namespace HeavenStudio.Games.Scripts_ForkLifter
 
         public void Prepare()
         {
-            Jukebox.PlayOneShotGame("forkLifter/flickPrepare");
+            SoundByte.PlayOneShotGame("forkLifter/flickPrepare");
             GetComponent<Animator>().Play("Hand_Prepare", 0, 0);
         }
     }

@@ -5499,7 +5499,7 @@ Transform:
   m_Children:
   - {fileID: 6937774587879996168}
   - {fileID: 6303891717114021071}
-  m_Father: {fileID: 3633341235378833335}
+  m_Father: {fileID: 5710094661470770154}
   m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &808713880637306799
@@ -6130,7 +6130,7 @@ Transform:
   m_Children:
   - {fileID: 1002359337703785928}
   - {fileID: 2508380951532202043}
-  m_Father: {fileID: 3633341235378833335}
+  m_Father: {fileID: 5710094661470770154}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1849261866392104100
@@ -6280,7 +6280,7 @@ Transform:
   - {fileID: 2524015641006572918}
   - {fileID: 1822687361797999217}
   - {fileID: 6158954199404205346}
-  m_Father: {fileID: 3633341235378833335}
+  m_Father: {fileID: 5710094661470770154}
   m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!95 &4966767534030877218
@@ -16767,6 +16767,42 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
+--- !u!1 &3361305518886199315
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 5710094661470770154}
+  m_Layer: 0
+  m_Name: Game
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &5710094661470770154
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3361305518886199315}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children:
+  - {fileID: 3791026570574951446}
+  - {fileID: 7411713793856201450}
+  - {fileID: 473263972156862217}
+  - {fileID: 8462602350738547360}
+  - {fileID: 8358101486431240047}
+  m_Father: {fileID: 3633341235378833335}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &3448851667809046100
 GameObject:
   m_ObjectHideFlags: 0
@@ -18126,7 +18162,7 @@ Transform:
   - {fileID: 5274751490841509764}
   - {fileID: 8181555474337227701}
   - {fileID: 8462103955933728927}
-  m_Father: {fileID: 3633341235378833335}
+  m_Father: {fileID: 5710094661470770154}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!95 &8076492646190865917
@@ -24434,10 +24470,10 @@ MonoBehaviour:
   offset: {x: 0, y: 0, z: 0}
   see: 0
   strum: 0
-  anim: {fileID: 0}
   landOutTrans: {fileID: 2459174272852480971}
   landInTrans: {fileID: 100253302601816244}
   groundTrans: {fileID: 0}
+  gameTrans: {fileID: 5710094661470770154}
   deathParticle: {fileID: 2871689559573922175}
   invertAnim: {fileID: 6891751768879330768}
 --- !u!95 &6891751768879330768
@@ -44686,7 +44722,7 @@ Transform:
   - {fileID: 2549008253857903964}
   - {fileID: 3444445728475462229}
   - {fileID: 8646107867988672452}
-  m_Father: {fileID: 3633341235378833335}
+  m_Father: {fileID: 5710094661470770154}
   m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &7542046829682146307
@@ -54717,10 +54753,10 @@ MonoBehaviour:
   offset: {x: 0, y: 0, z: 0}
   see: 1
   strum: 0
-  anim: {fileID: 0}
   landOutTrans: {fileID: 306947710665962224}
   landInTrans: {fileID: 6011569602460589798}
   groundTrans: {fileID: 1721751377086680254}
+  gameTrans: {fileID: 5710094661470770154}
   deathParticle: {fileID: 2401480996724232829}
   invertAnim: {fileID: 3117044548849714659}
 --- !u!95 &3117044548849714659
@@ -54773,11 +54809,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
-  - {fileID: 3791026570574951446}
-  - {fileID: 7411713793856201450}
-  - {fileID: 473263972156862217}
-  - {fileID: 8462602350738547360}
-  - {fileID: 8358101486431240047}
+  - {fileID: 5710094661470770154}
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -54796,7 +54828,6 @@ MonoBehaviour:
   SoundSequences: []
   EligibleHits: []
   scheduledInputs: []
-  firstEnable: 0
   seeSawAnim: {fileID: 8076492646190865917}
   see: {fileID: 7807565663565079643}
   saw: {fileID: 803512772772987110}

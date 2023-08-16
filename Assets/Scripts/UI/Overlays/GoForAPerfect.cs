@@ -19,8 +19,8 @@ namespace HeavenStudio.Common
         public bool perfect;
 
         Conductor cond;
-        float lastReportedBeat = 0f;
-        float currentBeat = 0f;
+        double lastReportedBeat = 0f;
+        double currentBeat = 0f;
         long currentBlink = 0;
 
 
@@ -87,7 +87,7 @@ namespace HeavenStudio.Common
 
             texAnim.Play("GoForAPerfect_Miss");
             pAnim.Play("PerfectIcon_Miss", -1, 0);
-            Jukebox.PlayOneShot("perfectMiss");
+            SoundByte.PlayOneShot("perfectMiss");
 
             if (GameProfiler.instance != null)
                 GameProfiler.instance.perfect = false;

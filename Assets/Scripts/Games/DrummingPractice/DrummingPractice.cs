@@ -56,15 +56,20 @@ namespace HeavenStudio.Games.Loaders
                         new Param("ease", EasingFunction.Ease.Linear, "Ease", "Which ease should the movement have?")
                     }
                 },
-                new GameAction("set background color", "Set Background Color")
+                new GameAction("set background color", "Background Color")
                 {
-                    function = delegate {var e = eventCaller.currentEntity; DrummingPractice.instance.SetBackgroundColor(e["colorA"], e["colorB"], e["colorC"]); }, 
-                    defaultLength = 0.5f,
+                    function = delegate {var e = eventCaller.currentEntity;
+                    DrummingPractice.instance.BackgroundColor(e.beat, e.length, e["colorAStart"], e["colorA"], e["colorBStart"], e["colorB"], e["colorC"], e["ease"]); }, 
+                    defaultLength = 4f,
+                    resizable = true,
                     parameters = new List<Param>()
                     {
-                        new Param("colorA", new Color(43/255f, 207/255f, 51/255f), "Color A", "The top-most color of the background gradient"),
-                        new Param("colorB", new Color(1, 1, 1), "Color B", "The bottom-most color of the background gradient"),
-                        new Param("colorC", new Color(1, 247/255f, 0), "Streak Color", "The color of streaks that appear on a successful hit")
+                        new Param("colorAStart", new Color(43/255f, 207/255f, 51/255f), "Color A Start", "The top-most color of the background gradient"),
+                        new Param("colorA", new Color(43/255f, 207/255f, 51/255f), "Color A End", "The top-most color of the background gradient"),
+                        new Param("colorBStart", new Color(1, 1, 1), "Color B Start", "The bottom-most color of the background gradient"),
+                        new Param("colorB", new Color(1, 1, 1), "Color B End", "The bottom-most color of the background gradient"),
+                        new Param("colorC", new Color(1, 247/255f, 0), "Streak Color", "The color of streaks that appear on a successful hit"),
+                        new Param("ease", Util.EasingFunction.Ease.Linear, "Ease")
                     }
                 }
             },
@@ -109,7 +114,7 @@ namespace HeavenStudio.Games
 
         [Header("Variables")]
         float movingLength;
-        float movingStartBeat;
+        double movingStartBeat;
         bool isMoving;
         string moveAnim;
         EasingFunction.Ease lastEase;
@@ -126,13 +131,14 @@ namespace HeavenStudio.Games
             SetMiis();
         }
         
-        public override void OnGameSwitch(float beat)
+        public override void OnGameSwitch(double beat)
         {
-            var changeMii = GameManager.instance.Beatmap.entities.FindLast(c => c.datamodel == "drummingPractice/set mii" && c.beat <= beat);
+            var changeMii = GameManager.instance.Beatmap.Entities.FindLast(c => c.datamodel == "drummingPractice/set mii" && c.beat <= beat);
             if(changeMii != null)
             {
                 EventCaller.instance.CallEvent(changeMii, true);
             }
+            PersistColor(beat);
         }
 
         private void Update()
@@ -162,9 +168,11 @@ namespace HeavenStudio.Games
                 Color col = streak.color;
                 streak.color = new Color(col.r, col.g, col.b, Mathf.Lerp(col.a, 0, 3.5f * Time.deltaTime));
             }
+
+            BackgroundColorUpdate();
         }
 
-        public void NPCDrummersEnterOrExit(float beat, float length, bool exit, int ease)
+        public void NPCDrummersEnterOrExit(double beat, float length, bool exit, int ease)
         {
             movingStartBeat = beat;
             movingLength = length;
@@ -177,7 +185,7 @@ namespace HeavenStudio.Games
             });
         }
 
-        public void SetBop(float beat, float length, bool shouldBop, bool autoBop)
+        public void SetBop(double beat, float length, bool shouldBop, bool autoBop)
         {
             goBop = autoBop;
             if (shouldBop)
@@ -199,7 +207,7 @@ namespace HeavenStudio.Games
             rightDrummer.Bop();
         }
 
-        public void Prepare(float beat, bool applause)
+        public void Prepare(double beat, bool applause)
         {
             int type = count % 2;
             player.Prepare(beat, type);
@@ -208,7 +216,7 @@ namespace HeavenStudio.Games
             count++;
 
             SetFaces(0);
-            Jukebox.PlayOneShotGame("drummingPractice/prepare");
+            SoundByte.PlayOneShotGame("drummingPractice/prepare");
 
             GameObject hit = Instantiate(hitPrefab);
             hit.transform.parent = hitPrefab.transform.parent;
@@ -271,14 +279,65 @@ namespace HeavenStudio.Games
             SetFaces(0);
         }
 
-        public void SetBackgroundColor(Color col1, Color col2, Color col3)
+        private double colorStartBeat = -1;
+        private float colorLength = 0f;
+        private Color colorStart = new Color(43 / 255f, 207 / 255f, 51 / 255f); //obviously put to the default color of the game
+        private Color colorEnd = new Color(43 / 255f, 207 / 255f, 51 / 255f);
+        private Color colorStartB = Color.white; //obviously put to the default color of the game
+        private Color colorEndB = Color.white;
+        private Util.EasingFunction.Ease colorEase; //putting Util in case this game is using jukebox
+
+        //call this in update
+        private void BackgroundColorUpdate()
         {
-            backgroundGradient.color = col1;
-            background.color = col2;
-            foreach(SpriteRenderer streak in streaks)
+            float normalizedBeat = Mathf.Clamp01(Conductor.instance.GetPositionFromBeat(colorStartBeat, colorLength));
+
+            var func = Util.EasingFunction.GetEasingFunction(colorEase);
+
+            float newR = func(colorStart.r, colorEnd.r, normalizedBeat);
+            float newG = func(colorStart.g, colorEnd.g, normalizedBeat);
+            float newB = func(colorStart.b, colorEnd.b, normalizedBeat);
+
+            backgroundGradient.color = new Color(newR, newG, newB);
+
+            float newRB = func(colorStartB.r, colorEndB.r, normalizedBeat);
+            float newGB = func(colorStartB.g, colorEndB.g, normalizedBeat);
+            float newBB = func(colorStartB.b, colorEndB.b, normalizedBeat);
+
+            background.color = new Color(newRB, newGB, newBB);
+        }
+
+        public void BackgroundColor(double beat, float length, Color colorStartSet, Color colorEndSet, Color colorStartSetB, Color colorEndSetB, Color setStreak, int ease)
+        {
+            colorStartBeat = beat;
+            colorLength = length;
+            colorStart = colorStartSet;
+            colorEnd = colorEndSet;
+            colorStartB = colorStartSetB;
+            colorEndB = colorEndSetB;
+            colorEase = (Util.EasingFunction.Ease)ease;
+
+            foreach (SpriteRenderer streak in streaks)
             {
-                streak.color = new Color(col3.r, col3.g, col3.b, streak.color.a);
+                streak.color = new Color(setStreak.r, setStreak.g, setStreak.b, streak.color.a);
             }
+        }
+
+        //call this in OnPlay(double beat) and OnGameSwitch(double beat)
+        private void PersistColor(double beat)
+        {
+            var allEventsBeforeBeat = EventCaller.GetAllInGameManagerList("drummingPractice", new string[] { "set background color" }).FindAll(x => x.beat < beat);
+            if (allEventsBeforeBeat.Count > 0)
+            {
+                allEventsBeforeBeat.Sort((x, y) => x.beat.CompareTo(y.beat)); //just in case
+                var lastEvent = allEventsBeforeBeat[^1];
+                BackgroundColor(lastEvent.beat, lastEvent.length, lastEvent["colorAStart"], lastEvent["colorA"], lastEvent["colorBStart"], lastEvent["colorB"], lastEvent["colorC"], lastEvent["ease"]);
+            }
+        }
+
+        public override void OnPlay(double beat)
+        {
+            PersistColor(beat);
         }
 
         public void Streak()

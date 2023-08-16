@@ -160,9 +160,9 @@ namespace HeavenStudio.Editor
 
             int selected = 0;
 
-            for (int i = 0; i < GameManager.instance.Beatmap.entities.Count; i++)
+            for (int i = 0; i < Timeline.instance.eventObjs.Count; i++)
             {
-                TimelineEventObj e = GameManager.instance.Beatmap.entities[i].eventObj;
+                TimelineEventObj e = Timeline.instance.eventObjs[i];
 
                 if (selectionBox.Overlaps(GetWorldRect(e.GetComponent<RectTransform>())))
                 {

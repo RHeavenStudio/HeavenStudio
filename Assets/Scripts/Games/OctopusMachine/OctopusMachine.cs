@@ -1,7 +1,6 @@
 using HeavenStudio.Util;
 using System;
 using System.Collections.Generic;
-using DG.Tweening;
 using UnityEngine;
 using TMPro;
 // using GhostlyGuy's Balls;
@@ -75,13 +74,14 @@ namespace HeavenStudio.Games.Loaders
                 {
                     function = delegate { 
                         var e = eventCaller.currentEntity;
-                        OctopusMachine.instance.AutoAction(e["autoBop"], e["autoText"], e["hitText"], e["missText"]); 
+                        OctopusMachine.instance.AutoAction(e["forceBop"], e["autoBop"], e["autoText"], e["hitText"], e["missText"]); 
                     },
                     parameters = new List<Param>() {
+                        new Param("forceBop", true, "Force Bop", "Forces a bop, even if an animation is playing."),
                         new Param("autoBop", true, "Hit/Miss Bop", "Plays a bop depending on if you hit or missed the cues."),
                         new Param("autoText", true, "Display Text", "Displays text depending on if you hit or missed the cues."),
                         new Param("hitText", "Good!", "Hit Text", "The text to display if you hit the cues."),
-                        new Param("missText", "Wrong! n/ Try again!", "Miss Text", "The text to display if you missed the cues."),
+                        new Param("missText", "Wrong! Try again!", "Miss Text", "The text to display if you missed the cues."),
                     },
                 },
                 new GameAction("forceSqueeze", "Force Squeeze")
@@ -121,12 +121,12 @@ namespace HeavenStudio.Games.Loaders
                 {
                     function = delegate {
                         var e = eventCaller.currentEntity;
-                        OctopusMachine.instance.ChangeColor(e["color1"], e["color2"], e["octoColor"], e["squeezedColor"], e.length, e["bgInstant"]);
+                        OctopusMachine.instance.BackgroundColor(e.beat, e.length, e["color1"], e["color2"], e["octoColor"], e["squeezedColor"], e["ease"]);
                     },
                     parameters = new List<Param>() {
                         new Param("color1", new Color(1f, 0.87f, 0.24f), "Background Start Color", "Set the beginning background color"),
                         new Param("color2", new Color(1f, 0.87f, 0.24f), "Background End Color", "Set the end background color"),
-                        new Param("bgInstant", false, "Instant Background?", "Set the end background color instantly"),
+                        new Param("ease", Util.EasingFunction.Ease.Linear, "Ease"),
                         new Param("octoColor", new Color(0.97f, 0.235f, 0.54f), "Octopodes Color", "Set the octopodes' colors"),
                         new Param("squeezedColor", new Color(1f, 0f, 0f), "Squeezed Color", "Set the octopodes' colors when they're squeezed"),
                     },
@@ -183,17 +183,16 @@ namespace HeavenStudio.Games
         [Header("Variables")]
         public bool hasMissed;
         public int bopStatus = 0;
-        Tween bgColorTween;
         int bopIterate = 0;
         bool intervalStarted;
         bool autoAction;
-        float intervalStartBeat;
+        double intervalStartBeat;
         float beatInterval = 1f;
-        float lastReportedBeat;
+        double lastReportedBeat;
 
-        static List<float> queuedSqueezes = new List<float>();
-        static List<float> queuedReleases = new List<float>();
-        static List<float> queuedPops = new List<float>();
+        static List<double> queuedSqueezes = new();
+        static List<double> queuedReleases = new();
+        static List<double> queuedPops = new();
 
         public static OctopusMachine instance;
 
@@ -217,7 +216,6 @@ namespace HeavenStudio.Games
 
         private void Start() 
         {
-            bg.color = backgroundColor;
             foreach (var octo in octopodes) octo.AnimationColor(0);
             bopStatus = 0;
         }
@@ -229,13 +227,19 @@ namespace HeavenStudio.Games
             if (queuedPops.Count > 0) queuedPops.Clear();
             
             mat.SetColor("_ColorAlpha", new Color(0.97f, 0.235f, 0.54f));
+
+            foreach (var evt in scheduledInputs)
+            {
+                evt.Disable();
+            }
         }
 
         private void Update() 
         {
+            BackgroundColorUpdate();
             if (queuePrepare) {
                 foreach (var octo in octopodes) octo.queuePrepare = true;
-                if (Text.text is "Wrong! \nTry Again!" or "Good!") Text.text = "";
+                if (Text.text is "Wrong! Try Again!" or "Good!") Text.text = "";
                 queuePrepare = false;
             }
 
@@ -251,7 +255,7 @@ namespace HeavenStudio.Games
             }
         }
 
-        public static void Prepare(float beat, float prepBeats)
+        public static void Prepare(double beat, float prepBeats)
         {
             if (GameManager.instance.currentGame != "octopusMachine") {
                 OctopusMachine.queuePrepare = true;
@@ -271,12 +275,15 @@ namespace HeavenStudio.Games
             YouArrow.SetActive(youText != "");
         }
 
-        public void AutoAction(bool autoBop, bool autoText, string hitText, string missText)
+        public void AutoAction(bool forceBop, bool autoBop, bool autoText, string hitText, string missText)
         {
             autoAction = true;
             if (autoBop) bopStatus = hasMissed ? 2 : 1;
             if (autoText) Text.text = hasMissed ? missText : hitText;
-            foreach (var octo in octopodes) octo.cantBop = false;
+            foreach (var octo in octopodes) {
+                if (forceBop) octo.PlayAnimation(bopStatus);
+                octo.cantBop = false;
+            }
             hasMissed = false;
         }
 
@@ -297,7 +304,7 @@ namespace HeavenStudio.Games
             }
         }
 
-        public void OctoAction(float beat, float length, string action)
+        public void OctoAction(double beat, float length, string action)
         {
             if (action != "Squeeze" && !octopodes[0].isSqueezed) return;
             if (!intervalStarted) StartInterval(beat, length);
@@ -310,7 +317,7 @@ namespace HeavenStudio.Games
             queuedList.Add(beat - intervalStartBeat);
         }
 
-        public void Bop(float length, int whichBop, bool singleBop, bool keepBop)
+        public void Bop(double length, int whichBop, bool singleBop, bool keepBop)
         {
             foreach (var octo in octopodes) {
                 if (singleBop) octo.PlayAnimation(whichBop);
@@ -319,28 +326,61 @@ namespace HeavenStudio.Games
             }
         }
 
-        public void FadeBackgroundColor(Color color, float beats)
+        private double colorStartBeat = -1;
+        private float colorLength = 0f;
+        private Color colorStart = new Color(1, 0.87f, 0.24f); //obviously put to the default color of the game
+        private Color colorEnd = new Color(1, 0.87f, 0.24f);
+        private Util.EasingFunction.Ease colorEase; //putting Util in case this game is using jukebox
+
+        //call this in update
+        private void BackgroundColorUpdate()
         {
-            var seconds = Conductor.instance.secPerBeat * beats;
+            float normalizedBeat = Mathf.Clamp01(Conductor.instance.GetPositionFromBeat(colorStartBeat, colorLength));
 
-            if (bgColorTween != null)
-                bgColorTween.Kill(true);
+            var func = Util.EasingFunction.GetEasingFunction(colorEase);
 
-            if (seconds == 0) bg.color = color;
-            else bgColorTween = bg.DOColor(color, seconds);
+            float newR = func(colorStart.r, colorEnd.r, normalizedBeat);
+            float newG = func(colorStart.g, colorEnd.g, normalizedBeat);
+            float newB = func(colorStart.b, colorEnd.b, normalizedBeat);
+
+            bg.color = new Color(newR, newG, newB);
         }
 
-        public void ChangeColor(Color bgStart, Color bgEnd, Color octoColor, Color octoSqueezedColor, float beats, bool bgInstant)
+        public void BackgroundColor(double beat, float length, Color colorStartSet, Color colorEndSet, Color octoColor, Color octoSqueezeColor, int ease)
         {
-            FadeBackgroundColor(bgStart, 0f);
-            if (!bgInstant) FadeBackgroundColor(bgEnd, beats);
-            backgroundColor = bgEnd;
+            colorStartBeat = beat;
+            colorLength = length;
+            colorStart = colorStartSet;
+            colorEnd = colorEndSet;
+            colorEase = (Util.EasingFunction.Ease)ease;
             octopodesColor = octoColor;
-            octopodesSqueezedColor = octoSqueezedColor;
+            octopodesSqueezedColor = octoSqueezeColor;
             foreach (var octo in octopodes) octo.AnimationColor(octo.isSqueezed ? 1 : 0);
         }
 
-        public void OctopusModifiers(float beat, float oct1x, float oct2x, float oct3x, float oct1y, float oct2y, float oct3y, bool oct1, bool oct2, bool oct3)
+        //call this in OnPlay(double beat) and OnGameSwitch(double beat)
+        private void PersistColor(double beat)
+        {
+            var allEventsBeforeBeat = EventCaller.GetAllInGameManagerList("octopusMachine", new string[] { "changeColor" }).FindAll(x => x.beat < beat);
+            if (allEventsBeforeBeat.Count > 0)
+            {
+                allEventsBeforeBeat.Sort((x, y) => x.beat.CompareTo(y.beat)); //just in case
+                var lastEvent = allEventsBeforeBeat[^1];
+                BackgroundColor(lastEvent.beat, lastEvent.length, lastEvent["color1"], lastEvent["color2"], lastEvent["octoColor"], lastEvent["squeezedColor"], lastEvent["ease"]);
+            }
+        }
+
+        public override void OnPlay(double beat)
+        {
+            PersistColor(beat);
+        }
+
+        public override void OnGameSwitch(double beat)
+        {
+            PersistColor(beat);
+        }
+
+        public void OctopusModifiers(double beat, float oct1x, float oct2x, float oct3x, float oct1y, float oct2y, float oct3y, bool oct1, bool oct2, bool oct3)
         {
             octopodes[0].OctopusModifiers(oct1x, oct1y, oct1);
             octopodes[1].OctopusModifiers(oct2x, oct2y, oct2);
@@ -352,7 +392,7 @@ namespace HeavenStudio.Games
             foreach (var octo in octopodes) octo.ForceSqueeze();
         }
         
-        public void StartInterval(float beat, float length)
+        public void StartInterval(double beat, float length)
         {
             intervalStartBeat = beat;
             beatInterval = length;
@@ -364,7 +404,7 @@ namespace HeavenStudio.Games
             });
         }
 
-        public void PassTurn(float beat)
+        public void PassTurn(double beat)
         {
             intervalStarted = false;
             var queuedInputs = new List<BeatAction.Action>();
@@ -393,21 +433,21 @@ namespace HeavenStudio.Games
         private void SqueezeHit(PlayerActionEvent caller, float state)
         {
             octopodes[2].OctoAction("Squeeze");
+            if (state <= -1f || state >= 1f) SoundByte.PlayOneShotGame("nearMiss");
         }
 
         private void ReleaseHit(PlayerActionEvent caller, float state)
         {
             octopodes[2].OctoAction("Release");
+            if (state <= -1f || state >= 1f) SoundByte.PlayOneShotGame("nearMiss");
         }
 
         private void PopHit(PlayerActionEvent caller, float state)
         {
             octopodes[2].OctoAction("Pop");
+            if (state <= -1f || state >= 1f) SoundByte.PlayOneShotGame("nearMiss");
         }
 
-        private void Miss(PlayerActionEvent caller)
-        {
-            hasMissed = true;
-        }
+        private void Miss(PlayerActionEvent caller) { }
     }
 }

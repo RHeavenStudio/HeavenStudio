@@ -3,6 +3,8 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using HeavenStudio.Editor.Track;
+using Jukebox;
+using Jukebox.Legacy;
 
 using TMPro;
 
@@ -32,7 +34,7 @@ namespace HeavenStudio.Editor
         [SerializeField] public GameObject HeaderP;
         [SerializeField] public GameObject SubHeaderP;
 
-        [NonSerialized] public DynamicBeatmap chart;
+        [NonSerialized] public RiqBeatmap chart;
         List<GameObject> tabContents;
 
         private void Start() { }
@@ -73,9 +75,9 @@ namespace HeavenStudio.Editor
 
             foreach (PropertyTag property in tags)
             {
-                if (chart.properties.ContainsKey(property.tag))
+                if (chart.data.properties.ContainsKey(property.tag))
                 {
-                    container.AddParam(this, property.tag, chart.properties[property.tag], property.label, property.isReadOnly);
+                    container.AddParam(this, property.tag, chart.data.properties[property.tag], property.label, property.isReadOnly);
                 }
                 else
                 {

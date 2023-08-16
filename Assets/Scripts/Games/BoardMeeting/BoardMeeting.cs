@@ -77,6 +77,7 @@ namespace HeavenStudio.Games.Loaders
 namespace HeavenStudio.Games
 {
     using Scripts_BoardMeeting;
+    using System;
 
     public class BoardMeeting : Minigame
     {
@@ -94,7 +95,7 @@ namespace HeavenStudio.Games
         bool assistantCanBop = true;
         bool executivesCanBop = true;
         public GameEvent bop = new GameEvent();
-        Sound chairLoopSound = null;
+        [NonSerialized] public Sound chairLoopSound = null;
         int missCounter = 0;
         private Tween shakeTween;
 
@@ -104,6 +105,19 @@ namespace HeavenStudio.Games
         {
             instance = this;
             InitExecutives();
+        }
+
+        private void OnDestroy()
+        {
+            foreach(var evt in scheduledInputs)
+            {
+                evt.Disable();
+            }
+            if (chairLoopSound != null)
+            {
+                chairLoopSound.KillLoop(0);
+                chairLoopSound = null;
+            }
         }
 
         private void Update()
@@ -121,9 +135,13 @@ namespace HeavenStudio.Games
                     if (executives[executiveCount - 1].spinning)
                     {
                         executives[executiveCount - 1].Stop(false);
-                        Jukebox.PlayOneShotGame("boardMeeting/miss");
-                        Jukebox.PlayOneShot("miss");
+                        SoundByte.PlayOneShotGame("boardMeeting/miss");
+                        SoundByte.PlayOneShot("miss");
                         ScoreMiss();
+                        foreach (var evt in scheduledInputs)
+                        {
+                            evt.Disable();
+                        }
                     }
                 }
             }
@@ -144,7 +162,7 @@ namespace HeavenStudio.Games
             }
         }
 
-        public void Bop(float beat, float length, bool goBop, bool autoBop)
+        public void Bop(double beat, float length, bool goBop, bool autoBop)
         {
             shouldBop = autoBop;
             if (goBop)
@@ -162,7 +180,7 @@ namespace HeavenStudio.Games
             }
         }
 
-        public void AssistantStop(float beat)
+        public void AssistantStop(double beat)
         {
             assistantCanBop = false;
             string twoSound = "boardMeeting/two";
@@ -199,7 +217,7 @@ namespace HeavenStudio.Games
             ScheduleInput(beat, 2f, InputType.STANDARD_DOWN, JustAssistant, MissAssistant, Empty);
         }
 
-        public void Stop(float beat, float length)
+        public void Stop(double beat, float length)
         {
             executivesCanBop = false;
             List<BeatAction.Action> stops = new List<BeatAction.Action>();
@@ -213,15 +231,15 @@ namespace HeavenStudio.Games
                     if (executiveCount < 4) ex = 4;
                     if (index < ex - 3)
                     {
-                        Jukebox.PlayOneShotGame("boardMeeting/stopA");
+                        SoundByte.PlayOneShotGame("boardMeeting/stopA");
                     }
                     else if (index == ex - 3) 
                     {
-                        Jukebox.PlayOneShotGame("boardMeeting/stopB");
+                        SoundByte.PlayOneShotGame("boardMeeting/stopB");
                     }
                     else if (index == ex - 2)
                     {
-                        Jukebox.PlayOneShotGame("boardMeeting/stopC");
+                        SoundByte.PlayOneShotGame("boardMeeting/stopC");
                     }
 
                     if (index == executiveCount - 2 && !executives[executiveCount - 1].spinning)
@@ -242,16 +260,16 @@ namespace HeavenStudio.Games
 
         public void Prepare()
         {
-            Jukebox.PlayOneShotGame("boardMeeting/prepare");
+            SoundByte.PlayOneShotGame("boardMeeting/prepare");
             foreach (var executive in executives)
             {
                 executive.Prepare();
             }
         }
 
-        public void SpinEqui(float beat, float length)
+        public void SpinEqui(double beat, float length)
         {
-            if (chairLoopSound == null) chairLoopSound = Jukebox.PlayOneShotGame("boardMeeting/chairLoop", -1, 1, 1, true);
+            if (chairLoopSound == null) chairLoopSound = SoundByte.PlayOneShotGame("boardMeeting/chairLoop", -1, 1, 1, true);
             firstSpinner = executives[0];
             List<BeatAction.Action> rolls = new List<BeatAction.Action>();
             for (int i = 0; i < executiveCount; i++)
@@ -287,7 +305,7 @@ namespace HeavenStudio.Games
             bool forceStart = false;
             if (chairLoopSound == null)
             {
-                chairLoopSound = Jukebox.PlayOneShotGame("boardMeeting/chairLoop", -1, 1, 1, true);
+                chairLoopSound = SoundByte.PlayOneShotGame("boardMeeting/chairLoop", -1, 1, 1, true);
                 firstSpinner = executives[start - 1];
                 forceStart = true;
             }
@@ -309,6 +327,16 @@ namespace HeavenStudio.Games
                     soundToPlay = "Player";
                 }
                 executives[i].Spin(soundToPlay, forceStart);
+            }
+        }
+
+        public void StopChairLoopSoundIfLastToStop()
+        {
+            if (executives.FindAll(x => x.spinning).Count > 1) return;
+            if (chairLoopSound != null)
+            {
+                chairLoopSound.KillLoop(0);
+                chairLoopSound = null;
             }
         }
 
@@ -367,12 +395,12 @@ namespace HeavenStudio.Games
             }
             if (state >= 1f || state <= -1f)
             {
-                Jukebox.PlayOneShotGame("boardMeeting/missThrough");
-                Jukebox.PlayOneShot("miss");
+                SoundByte.PlayOneShotGame("boardMeeting/missThrough");
+                SoundByte.PlayOneShot("miss");
                 executives[executiveCount - 1].Stop(false);
                 return;
             }
-            Jukebox.PlayOneShotGame("boardMeeting/stopPlayer");
+            SoundByte.PlayOneShotGame("boardMeeting/stopPlayer");
             executives[executiveCount - 1].Stop();
             BeatAction.New(instance.gameObject, new List<BeatAction.Action>()
             {
@@ -395,8 +423,8 @@ namespace HeavenStudio.Games
             }
             if (state >= 1f || state <= -1f)
             {
-                Jukebox.PlayOneShotGame("boardMeeting/missThrough");
-                Jukebox.PlayOneShot("miss");
+                SoundByte.PlayOneShotGame("boardMeeting/missThrough");
+                SoundByte.PlayOneShot("miss");
                 executives[executiveCount - 1].Stop(false);
                 return;
             }
@@ -407,7 +435,7 @@ namespace HeavenStudio.Games
                 Conductor.instance.pitchedSecPerBeat * 0.5f, 18, 1f);
             executives[executiveCount - 1].Stop();
             assistantAnim.DoScaledAnimationAsync("Stop", 0.5f);
-            Jukebox.PlayOneShotGame("boardMeeting/stopAllPlayer");
+            SoundByte.PlayOneShotGame("boardMeeting/stopAllPlayer");
             BeatAction.New(instance.gameObject, new List<BeatAction.Action>()
             {
                 new BeatAction.Action(caller.timer + caller.startBeat + 1f, delegate
@@ -425,8 +453,8 @@ namespace HeavenStudio.Games
             if (executives[executiveCount - 1].spinning)
             {
                 executives[executiveCount - 1].Stop(false);
-                Jukebox.PlayOneShotGame("boardMeeting/missThrough");
-                Jukebox.PlayOneShot("miss");
+                SoundByte.PlayOneShotGame("boardMeeting/missThrough");
+                SoundByte.PlayOneShot("miss");
                 if (chairLoopSound != null)
                 {
                     chairLoopSound.KillLoop(0);
@@ -440,8 +468,8 @@ namespace HeavenStudio.Games
             if (executives[executiveCount - 1].spinning)
             {
                 executives[executiveCount - 1].Stop(false);
-                Jukebox.PlayOneShotGame("boardMeeting/missThrough");
-                Jukebox.PlayOneShot("miss");
+                SoundByte.PlayOneShotGame("boardMeeting/missThrough");
+                SoundByte.PlayOneShot("miss");
                 if (chairLoopSound != null)
                 {
                     chairLoopSound.KillLoop(0);

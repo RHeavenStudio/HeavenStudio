@@ -52,7 +52,7 @@ namespace HeavenStudio.Games.Scripts_Spaceball
         {
             if (b == null)
             {
-                Jukebox.PlayOneShotGame("spaceball/swing");
+                SoundByte.PlayOneShotGame("spaceball/swing");
             }
             else
             {

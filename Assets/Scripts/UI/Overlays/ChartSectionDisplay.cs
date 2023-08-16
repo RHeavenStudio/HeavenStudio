@@ -6,6 +6,8 @@ using UnityEngine.UI;
 using TMPro;
 
 using HeavenStudio.Editor;
+using Jukebox;
+using Jukebox.Legacy;
 
 namespace HeavenStudio.Common
 {
@@ -25,26 +27,26 @@ namespace HeavenStudio.Common
         // Update is called once per frame
         void Update()
         {
-            SectionProgress.value = GameManager.instance.sectionProgress;
+            SectionProgress.value = (float) GameManager.instance.sectionProgress;
         }
 
-        public void OnBeatChanged(float beat)
+        public void OnBeatChanged(double beat)
         {
             gameObject.SetActive(GameManager.instance.currentSection != null);
-            SectionProgress.value = GameManager.instance.sectionProgress;
+            SectionProgress.value = (float) GameManager.instance.sectionProgress;
         }
 
-        public void OnSectionChange(DynamicBeatmap.ChartSection section)
+        public void OnSectionChange(RiqEntity section)
         {
             if (section != null)
             {
                 gameObject.SetActive(true);
-                SectionText.text = section.sectionName;
-                SectionProgress.value = GameManager.instance.sectionProgress;
+                SectionText.text = section["sectionName"];
+                SectionProgress.value = (float) GameManager.instance.sectionProgress;
 
                 if (PersistentDataManager.gameSettings.perfectChallengeType == PersistentDataManager.PerfectChallengeType.Off) return;
                 if (!OverlaysManager.OverlaysEnabled) return;
-                if (section.startPerfect && GoForAPerfect.instance != null && GoForAPerfect.instance.perfect && !GoForAPerfect.instance.gameObject.activeSelf)
+                if (section["startPerfect"] && GoForAPerfect.instance != null && GoForAPerfect.instance.perfect && !GoForAPerfect.instance.gameObject.activeSelf)
                 {
                     GoForAPerfect.instance.Enable(section.beat);
                 }
