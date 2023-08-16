@@ -48,7 +48,6 @@ namespace HeavenStudio
         {
             menuAnim = GetComponent<Animator>();
             musicSource = GetComponent<AudioSource>();
-            createButton.onClick.AddListener(delegate { GlobalGameManager.LoadScene("Editor"); Jukebox.PlayOneShot("ui/UIEnter"); });
             musicSource.Play();
             var _rand = new System.Random();
             starAnims = starAnims.OrderBy(_ => _rand.Next()).ToList();
@@ -131,6 +130,32 @@ namespace HeavenStudio
         {
             float a = Mathp.Normalize((float)songPosBeat, startBeat, startBeat + length);
             return a;
+        }
+
+        public void CreatePressed()
+        {
+            GlobalGameManager.LoadScene("Editor");
+            SoundByte.PlayOneShot("ui/UIEnter");
+        }
+
+        public void PlayPressed()
+        {
+            // go into the play mode menu
+        }
+
+        public void SocialsPressed()
+        {
+            // show a panel with our SNS links
+        }
+
+        public void SettingsPressed()
+        {
+            // show the settings menu prefab
+        }
+
+        public void QuitPressed()
+        {
+            Application.Quit();
         }
     }
 }
