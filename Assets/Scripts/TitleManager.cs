@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine.UI;
 using UnityEngine;
 using HeavenStudio.Util;
+using HeavenStudio.Common;
 using Starpelly;
 using System.Linq;
 
@@ -28,6 +29,8 @@ namespace HeavenStudio
 
         [SerializeField] private Collider2D logoHoverCollider;
 
+        [SerializeField] private SettingsDialog settingsPanel;
+
         private AudioSource musicSource;
 
         private double songPosBeat;
@@ -38,6 +41,7 @@ namespace HeavenStudio
         private int loops;
 
         private double lastAbsTime;
+        private double startTime;
 
         private bool altBop;
 
@@ -51,7 +55,8 @@ namespace HeavenStudio
         {
             menuAnim = GetComponent<Animator>();
             musicSource = GetComponent<AudioSource>();
-            musicSource.Play();
+            musicSource.PlayScheduled(AudioSettings.dspTime);
+            startTime = Time.realtimeSinceStartupAsDouble;
             var _rand = new System.Random();
             starAnims = starAnims.OrderBy(_ => _rand.Next()).ToList();
         }
@@ -65,7 +70,7 @@ namespace HeavenStudio
                 targetBopBeat = 0;
                 loops++;
             }
-            double absTime = Time.realtimeSinceStartup;
+            double absTime = Time.realtimeSinceStartupAsDouble - startTime;
             double dt = absTime - lastAbsTime;
             lastAbsTime = absTime;
 
@@ -80,7 +85,7 @@ namespace HeavenStudio
                 menuAnim.Play("Revealed", 0, 0);
                 pressAnyKeyAnim.Play("PressKeyFadeOut", 0, 0);
             }
-            if (loops == 0)
+            if (loops == 0 && !logoRevealed)
             {
                 float normalizedBeat = GetPositionFromBeat(4, 1);
                 if (normalizedBeat > 0 && normalizedBeat <= 1f)
@@ -121,9 +126,9 @@ namespace HeavenStudio
                     altBop = !altBop;
                 }
                 targetBopBeat += 1;
-                if (logoRevealed && logoHoverCollider.OverlapPoint(Camera.main.ScreenToWorldPoint(Input.mousePosition)))
+                if ((!settingsPanel.IsOpen) && logoRevealed && logoHoverCollider.OverlapPoint(Camera.main.ScreenToWorldPoint(Input.mousePosition)))
                 {
-                    SoundByte.PlayOneShotScheduled("count-ins/cowbell", AudioSettings.dspTime + BeatsToSecs(targetBopBeat - songPosBeat, bpm));
+                    SoundByte.PlayOneShot("count-ins/cowbell");
                 }
             }
         }
@@ -162,7 +167,10 @@ namespace HeavenStudio
 
         public void SettingsPressed()
         {
-            // show the settings menu prefab
+            settingsPanel.SwitchSettingsDialog();
+            // notes:
+            //  gameplay settings currently don't work due to the overlay pereview requiring the screen composition setup from a gameplay prefab
+            //  adding the attract screen will fix this since we'd need to add that prefab for it anyways
         }
 
         public void QuitPressed()

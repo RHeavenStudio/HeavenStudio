@@ -27,7 +27,7 @@ namespace HeavenStudio.Editor
         {
             SecretCounter++;
             Debug.Log("SecretCounter: " + SecretCounter);
-            if (SecretCounter == 10)
+            if (SecretCounter == 10 && Editor.instance != null)
             {
                 secretObject.SetActive(true);
             }
