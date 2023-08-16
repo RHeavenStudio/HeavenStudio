@@ -37,6 +37,7 @@ namespace HeavenStudio.Common
                 true,
                 false,
                 true,
+                true,
                 true
             );
 
@@ -113,7 +114,8 @@ namespace HeavenStudio.Common
                 bool timingDisplayMinMode = false,
                 bool overlaysInEditor = true,
                 bool letterboxBgEnable = true,
-                bool letterboxFxEnable = true
+                bool letterboxFxEnable = true,
+                bool windowDanceEnable = true
                 )
             {
                 this.showSplash = showSplash;
@@ -139,6 +141,7 @@ namespace HeavenStudio.Common
                 this.overlaysInEditor = overlaysInEditor;
                 this.letterboxBgEnable = true;
                 this.letterboxFxEnable = true;
+                this.windowDanceEnable = true;
 
                 this.timingDisplayComponents = new List<OverlaysManager.TimingDisplayComponent>()
                 {
@@ -177,6 +180,7 @@ namespace HeavenStudio.Common
             public bool overlaysInEditor;
             public bool letterboxBgEnable;
             public bool letterboxFxEnable;
+            public bool windowDanceEnable;
             public List<OverlaysManager.TimingDisplayComponent> timingDisplayComponents;
             public List<OverlaysManager.SkillStarComponent> skillStarComponents;
             public List<OverlaysManager.SectionComponent> sectionComponents;

@@ -102,9 +102,12 @@ namespace HeavenStudio
         {
             if(!Application.isEditor && !Editor.Editor.instance.fullscreen && (pan != defaultPan | scale != defaultScale)) Reset();
             if(Application.isEditor || !Editor.Editor.instance.fullscreen) return;
-            #if UNITY_STANDALONE_WIN
-            SetWindowPos(ptr, HWND_NOTOPMOST, x, y, resX, resY, SWP_SHOWWINDOW);
-            #endif
+            if(PersistentDataManager.gameSettings.windowDanceEnable)
+            {
+                #if UNITY_STANDALONE_WIN
+                SetWindowPos(ptr, HWND_NOTOPMOST, x, y, resX, resY, SWP_SHOWWINDOW);
+                #endif
+            }
         }
         
         private void Awake()
@@ -162,10 +165,12 @@ namespace HeavenStudio
             UpdateScale();
             UpdatePan();
             //SetShakeIntensity();
-            
-            #if UNITY_STANDALONE_WIN
-            SetPosition(hWnd, Convert.ToInt16(pan.x), Convert.ToInt16(pan.y), Convert.ToInt16(scale.x), Convert.ToInt16(scale.y));
-            #endif
+            if(PersistentDataManager.gameSettings.windowDanceEnable)
+            {
+                #if UNITY_STANDALONE_WIN
+                SetPosition(hWnd, Convert.ToInt16(pan.x), Convert.ToInt16(pan.y), Convert.ToInt16(scale.x), Convert.ToInt16(scale.y));
+                #endif
+            }
         }
 
         private void UpdatePan()
@@ -275,9 +280,12 @@ namespace HeavenStudio
             scale = defaultScale;
             shakeResult = defaultShake;
             if(Application.isEditor) return;
-            #if UNITY_STANDALONE_WIN
-            SetWindowPos(hWnd, HWND_NOTOPMOST, Convert.ToInt16(pan.x), Convert.ToInt16(pan.y), Convert.ToInt16(scale.x), Convert.ToInt16(scale.y), SWP_SHOWWINDOW);
-            #endif
+            if(PersistentDataManager.gameSettings.windowDanceEnable)
+            {
+                #if UNITY_STANDALONE_WIN
+                SetWindowPos(hWnd, HWND_NOTOPMOST, Convert.ToInt16(pan.x), Convert.ToInt16(pan.y), Convert.ToInt16(scale.x), Convert.ToInt16(scale.y), SWP_SHOWWINDOW);
+                #endif
+            }
         }
     }
 }
