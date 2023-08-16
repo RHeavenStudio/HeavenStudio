@@ -236,7 +236,8 @@ namespace HeavenStudio.Util
             snd.scheduled = true;
             snd.scheduledTime = targetTime;
             
-            GameManager.instance.SoundObjects.Add(oneShot);
+            if (GameManager.instance != null)
+                GameManager.instance.SoundObjects.Add(oneShot);
 
             return snd;
         }

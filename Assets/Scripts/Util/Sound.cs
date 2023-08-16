@@ -56,8 +56,11 @@ namespace HeavenStudio.Util
             else
             {
                 playInstant = false;
-                scheduledPitch = cnd.SongPitch;
-                startTime = (AudioSettings.dspTime + (cnd.GetSongPosFromBeat(beat) - cnd.songPositionAsDouble)/(double)scheduledPitch) - offset;
+                if (cnd != null)
+                {
+                    scheduledPitch = cnd?.SongPitch ?? 1f;
+                    startTime = (AudioSettings.dspTime + (cnd.GetSongPosFromBeat(beat) - cnd.songPositionAsDouble)/(double)scheduledPitch) - offset;
+                }
 
                 if (scheduledPitch != 0 && AudioSettings.dspTime >= startTime)
                 {
@@ -173,7 +176,8 @@ namespace HeavenStudio.Util
 
         public void Delete()
         {
-            GameManager.instance.SoundObjects.Remove(gameObject);
+            if (GameManager.instance != null)
+                GameManager.instance.SoundObjects.Remove(gameObject);
             Destroy(gameObject);
         }
 

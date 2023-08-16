@@ -1955,6 +1955,10 @@ PrefabInstance:
       propertyPath: m_AnchoredPosition.y
       value: 27.1
       objectReference: {fileID: 0}
+    - target: {fileID: 6291913669464459655, guid: 0254202fd7d5ca84c8cf0950a645230b, type: 3}
+      propertyPath: m_Enabled
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 6344996612592602760, guid: 0254202fd7d5ca84c8cf0950a645230b, type: 3}
       propertyPath: m_AnchoredPosition.x
       value: -28.5
@@ -2709,6 +2713,11 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1178120458}
   m_CullTransparentMesh: 1
+--- !u!61 &1269393217 stripped
+BoxCollider2D:
+  m_CorrespondingSourceObject: {fileID: 6291913669464459655, guid: 0254202fd7d5ca84c8cf0950a645230b, type: 3}
+  m_PrefabInstance: {fileID: 869323822}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1336149017
 GameObject:
   m_ObjectHideFlags: 0
@@ -3829,9 +3838,11 @@ MonoBehaviour:
   - {fileID: 1400026815}
   pressAnyKeyAnim: {fileID: 976586349}
   bpm: 114
+  offset: 0.082
   bg: {fileID: 1178120460}
   bgXSpeed: -0.08
   bgYSpeed: 0.08
+  logoHoverCollider: {fileID: 1269393217}
 --- !u!82 &1811344143
 AudioSource:
   m_ObjectHideFlags: 0

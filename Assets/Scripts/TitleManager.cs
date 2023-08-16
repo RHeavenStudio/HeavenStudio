@@ -19,11 +19,14 @@ namespace HeavenStudio
         [SerializeField] private Animator pressAnyKeyAnim;
 
         [SerializeField] private float bpm = 114f;
+        [SerializeField] private float offset = 0f;
 
         [SerializeField] private RawImage bg;
 
         [SerializeField] private float bgXSpeed;
         [SerializeField] private float bgYSpeed;
+
+        [SerializeField] private Collider2D logoHoverCollider;
 
         private AudioSource musicSource;
 
@@ -68,7 +71,7 @@ namespace HeavenStudio
 
             time += dt;
 
-            songPos = time;
+            songPos = time + offset;
 
             songPosBeat = SecsToBeats(songPos);
             if (logoRevealed && !menuMode && Input.anyKeyDown)
@@ -118,12 +121,21 @@ namespace HeavenStudio
                     altBop = !altBop;
                 }
                 targetBopBeat += 1;
+                if (logoRevealed && logoHoverCollider.OverlapPoint(Camera.main.ScreenToWorldPoint(Input.mousePosition)))
+                {
+                    SoundByte.PlayOneShotScheduled("count-ins/cowbell", AudioSettings.dspTime + BeatsToSecs(targetBopBeat - songPosBeat, bpm));
+                }
             }
         }
 
         public double SecsToBeats(double s)
         {
             return s / 60f * bpm;
+        }
+
+        public double BeatsToSecs(double beats, float bpm)
+        {
+            return beats / bpm * 60f;
         }
 
         public float GetPositionFromBeat(float startBeat, float length)
