@@ -128,7 +128,7 @@ namespace HeavenStudio
                 targetBopBeat += 1;
                 if ((!settingsPanel.IsOpen) && logoRevealed && logoHoverCollider.OverlapPoint(Camera.main.ScreenToWorldPoint(Input.mousePosition)))
                 {
-                    SoundByte.PlayOneShot("count-ins/cowbell");
+                    SoundByte.PlayOneShot("metronome");
                 }
             }
         }
