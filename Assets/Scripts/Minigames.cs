@@ -715,8 +715,8 @@ namespace HeavenStudio
                     ),
                     new GameAction("scale letterbox", "Scale Letterbox", 1f, true, new List<Param>()
                         {
-                            new Param("valA", new EntityTypes.Float(0, 50, 1), "Scale Letterbox X"),
-                            new Param("valB", new EntityTypes.Float(0, 50, 1), "Scale Letterbox Y"),
+                            new Param("valA", new EntityTypes.Float(0, 200, 100), "Scale Letterbox X"),
+                            new Param("valB", new EntityTypes.Float(0, 200, 100), "Scale Letterbox Y"),
                             new Param("ease", Util.EasingFunction.Ease.Linear, "Ease Type"),
                             new Param("axis", StaticCamera.ViewAxis.All, "Axis", "The axis to scale the letterbox in")
                         }

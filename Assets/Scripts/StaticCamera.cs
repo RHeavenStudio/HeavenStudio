@@ -16,6 +16,7 @@ namespace HeavenStudio
     {
         [SerializeField] RectTransform canvas;
         [SerializeField] GameObject overlayView;
+        [SerializeField] RectTransform parentView;
 
         [SerializeField] Image ambientBg;
         [SerializeField] GameObject ambientBgGO;
@@ -247,14 +248,14 @@ namespace HeavenStudio
                     switch (e["axis"])
                     {
                         case (int) ViewAxis.X:
-                            letterbox.x = func(letterboxLast.x, e["valA"], Mathf.Min(prog, 1f)) * AspectRatioWidth;
+                            letterbox.x = func(letterboxLast.x, e["valA"] * .01f * parentView.localScale.x, Mathf.Min(prog, 1f)) * AspectRatioWidth;
                             break;
                         case (int) ViewAxis.Y:
-                            letterbox.y = func(letterboxLast.y, e["valB"], Mathf.Min(prog, 1f)) * AspectRatioHeight;
+                            letterbox.y = func(letterboxLast.y, e["valB"] * .01f * parentView.localScale.y, Mathf.Min(prog, 1f)) * AspectRatioHeight;
                             break;
                         default:
-                            float dx = func(letterboxLast.x, e["valA"], Mathf.Min(prog, 1f)) * AspectRatioWidth;
-                            float dy = func(letterboxLast.y, e["valB"], Mathf.Min(prog, 1f)) * AspectRatioHeight;
+                            float dx = func(letterboxLast.x, e["valA"] * .01f * parentView.localScale.x, Mathf.Min(prog, 1f)) * AspectRatioWidth;
+                            float dy = func(letterboxLast.y, e["valB"] * .01f * parentView.localScale.y, Mathf.Min(prog, 1f)) * AspectRatioHeight;
                             letterbox = new Vector3(dx, dy, 1);
                             break;
                     }
@@ -264,13 +265,13 @@ namespace HeavenStudio
                     switch (e["axis"])
                     {
                         case (int) ViewAxis.X:
-                            letterboxLast.x = e["valA"] * AspectRatioWidth;
+                            letterboxLast.x = e["valA"] * .01f * parentView.localScale.x * AspectRatioWidth;
                             break;
                         case (int) ViewAxis.Y:
-                            letterboxLast.y = e["valB"] * AspectRatioHeight;
+                            letterboxLast.y = e["valB"] * .01f * parentView.localScale.y * AspectRatioHeight;
                             break;
                         default:
-                            letterboxLast = new Vector3(e["valA"] * AspectRatioWidth, e["valB"] * AspectRatioHeight, 1);
+                            letterboxLast = new Vector3(e["valA"] * .01f * parentView.localScale.x * AspectRatioWidth, e["valB"] * .01f * canvas.localScale.y * AspectRatioHeight, 1);
                             break;
                     }
                 }
