@@ -142,6 +142,7 @@ namespace HeavenStudio.Games.Scripts_SeeSaw
                         transform.position = GetPathPositionFromBeat(currentPath, Math.Max(startBeat, currentBeat), startBeat);
                         break;
                 }
+                float newCamY = 0f;
                 if (!see && game.cameraMove)
                 {
                     switch (currentState)
@@ -152,11 +153,11 @@ namespace HeavenStudio.Games.Scripts_SeeSaw
                         case JumpState.HighOutIn:
                         case JumpState.HighInOut:
                         case JumpState.HighInIn:
-                            float newCamY = Math.Max(GetPathPositionFromBeat(cameraPath, Math.Max(startBeat, currentBeat), startBeat).y, 0);
-                            gameTrans.localPosition = new Vector3(0, -newCamY, 0);
+                            newCamY = Math.Max(GetPathPositionFromBeat(cameraPath, Math.Max(startBeat, currentBeat), startBeat).y, 0);
                             break;
                     }
                 }
+                gameTrans.localPosition = new Vector3(0, -newCamY, 0);
             }
         }
 

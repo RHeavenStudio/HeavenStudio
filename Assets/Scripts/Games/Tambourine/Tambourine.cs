@@ -16,7 +16,7 @@ namespace HeavenStudio.Games.Loaders
                 new GameAction("beat intervals", "Start Interval")
                 {
                     preFunction = delegate {var e = eventCaller.currentEntity; Tambourine.PreInterval(e.beat, e.length, e["auto"]); },
-                    defaultLength = 8f,
+                    defaultLength = 7f,
                     resizable = true,
                     parameters = new List<Param>()
                     {
@@ -37,7 +37,7 @@ namespace HeavenStudio.Games.Loaders
                     {
                         Tambourine.PrePassTurn(eventCaller.currentEntity.beat);
                     },
-                    defaultLength = 1f,
+                    resizable = true,
                     preFunctionLength = 1f
                 },
                 new GameAction("bop", "Bop")
@@ -260,7 +260,7 @@ namespace HeavenStudio.Games
 
             if (autoPassTurn)
             {
-                PassTurn(beat + interval, beat, interval);
+                PassTurn(beat + interval, beat, interval, 1);
             }
         }
 
@@ -300,10 +300,11 @@ namespace HeavenStudio.Games
         private void PassTurnStandalone(double beat)
         {
             var lastInterval = GetLastIntervalBeforeBeat(beat);
-            if (lastInterval != null) PassTurn(beat, lastInterval.beat, lastInterval.length);
+            float length = EventCaller.GetAllInGameManagerList("tambourine", new string[] { "pass turn" }).Find(x => x.beat == beat).length;
+            if (lastInterval != null) PassTurn(beat, lastInterval.beat, lastInterval.length, length);
         }
 
-        private void PassTurn(double beat, double intervalBeat, float intervalLength)
+        private void PassTurn(double beat, double intervalBeat, float intervalLength, float length)
         {
             SoundByte.PlayOneShotGame($"tambourine/monkey/turnPass/{UnityEngine.Random.Range(1, 6)}", beat);
             List<BeatAction.Action> actions = new()
@@ -323,9 +324,9 @@ namespace HeavenStudio.Games
                 double inputBeat = relevantInputs[i].beat - intervalBeat;
                 actions.Add(new BeatAction.Action(inputBeat, delegate
                 {
-                    if (isHit) ScheduleInput(beat + 1, inputBeat, InputType.STANDARD_ALT_DOWN, JustHit, Miss, Nothing);
-                    else ScheduleInput(beat + 1, inputBeat, InputType.STANDARD_DOWN, JustShake, Miss, Nothing);
-                    Bop(beat + 1 + inputBeat, 1, (int)WhoBops.Monkey, (int)WhoBops.None);
+                    if (isHit) ScheduleInput(beat + length, inputBeat, InputType.STANDARD_ALT_DOWN, JustHit, Miss, Nothing);
+                    else ScheduleInput(beat + length, inputBeat, InputType.STANDARD_DOWN, JustShake, Miss, Nothing);
+                    Bop(beat + length + inputBeat, 1, (int)WhoBops.Monkey, (int)WhoBops.None);
                 }));
             }
             BeatAction.New(gameObject, actions);
