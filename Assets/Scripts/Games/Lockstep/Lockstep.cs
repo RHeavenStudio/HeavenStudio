@@ -104,7 +104,10 @@ namespace HeavenStudio.Games.Loaders
                     preFunction = delegate {var e = eventCaller.currentEntity; Lockstep.Marching(e.beat, e["sound"], e["amount"], e["visual"], true, e.length);},
                     parameters = new List<Param>()
                     {
-                        new Param("sound", false, "Sound", "Hai if onbeat, ho if offbeat."),
+                        new Param("sound", false, "Sound", "Hai if onbeat, ho if offbeat.", new List<Param.CollapseParam>()
+                        {
+                            new Param.CollapseParam(x => (bool)x, new string[] { "amount" })
+                        }),
                         new Param("amount", new EntityTypes.Integer(1, 50, 1), "Sound Amount", "How many sounds will play consecutively?"),
                         new Param("visual", true, "Background Visual")
                     },

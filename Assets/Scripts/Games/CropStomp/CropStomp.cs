@@ -55,7 +55,10 @@ namespace HeavenStudio.Games.Loaders
                     {
                         new Param("threshold", new EntityTypes.Integer(1, 80, 8), "Threshold", "For each time the threshold is met a new plant will appear in the veggie bag."),
                         new Param("limit", new EntityTypes.Integer(1, 1000, 80), "Limit", "What is the limit for plants collected?"),
-                        new Param("force", false, "Force Amount of Collected Plants"),
+                        new Param("force", false, "Force Amount of Collected Plants", "", new List<Param.CollapseParam>()
+                        {
+                            new Param.CollapseParam(x => (bool)x, new string[] { "forceAmount" })
+                        }),
                         new Param("forceAmount", new EntityTypes.Integer(0, 1000, 0), "Force Amount")
                     }
                 }
