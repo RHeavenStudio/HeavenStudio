@@ -731,8 +731,8 @@ namespace HeavenStudio
                     ),
                     new GameAction("pan tiles", "Pan Tiles", 1f, true, new List<Param>()
                         {
-                            new Param("valA", new EntityTypes.Float(-50, 50, 1), "Pan Tiles X"),
-                            new Param("valB", new EntityTypes.Float(-50, 50, 1), "Pan Tiles Y"),
+                            new Param("valA", new EntityTypes.Float(-50, 50, 0), "Pan Tiles X"),
+                            new Param("valB", new EntityTypes.Float(-50, 50, 0), "Pan Tiles Y"),
                             new Param("ease", Util.EasingFunction.Ease.Linear, "Ease Type"),
                             new Param("axis", StaticCamera.ViewAxis.All, "Axis", "The axis to pan the tiles in")
                         }
