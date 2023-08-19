@@ -16,6 +16,7 @@ namespace HeavenStudio
     {
         [SerializeField] RectTransform canvas;
         [SerializeField] GameObject overlayView;
+        [SerializeField] RectTransform parentView;
 
         [SerializeField] Image ambientBg;
         [SerializeField] GameObject ambientBgGO;
@@ -40,15 +41,15 @@ namespace HeavenStudio
         private List<RiqEntity> scaleEvents = new();
         private List<RiqEntity> rotationEvents = new();
         private List<RiqEntity> letterboxEvents = new();
-        private List<RiqEntity> complexPanEvents = new();
-        private List<RiqEntity> complexScaleEvents = new();
+        private List<RiqEntity> panTileEvents = new();
+        private List<RiqEntity> tileScreenEvents = new();
 
         static Vector3 defaultPan = new Vector3(0, 0, 0);
         static Vector3 defaultScale = new Vector3(1, 1, 1);
         static float defaultRotation = 0;
         static Vector3 defaultLetterbox = new Vector3(1, 1, 1);
-        static Vector3 defaultComplexPan = new Vector3(0, 0, 0);
-        static Vector3 defaultComplexScale = new Vector3(1, 1, 1);
+        static Vector3 defaultTilePan = new Vector3(0, 0, 0);
+        static Vector3 defaultScreenTile = new Vector3(1, 1, 1);
 
         private static Vector3 pan;
         private static Vector3 scale;
@@ -56,15 +57,15 @@ namespace HeavenStudio
         private static Vector3 letterbox;
         private static Vector3 panInv;
         private static Vector3 scaleInv;
-        private static Vector3 complexPan;
-        private static Vector3 complexScale;
+        private static Vector3 tilePan;
+        private static Vector3 screenTile;
 
         private static Vector3 panLast;
         private static Vector3 scaleLast;
         private static float rotationLast;
         private static Vector3 letterboxLast;
-        private static Vector3 complexPanLast;
-        private static Vector3 complexScaleLast;
+        private static Vector3 tilePanLast;
+        private static Vector3 screenTileLast;
 
         private void Awake()
         {
@@ -83,8 +84,8 @@ namespace HeavenStudio
             letterboxLast = defaultLetterbox;
             scaleLast = defaultScale;
             rotationLast = defaultRotation;
-            complexPanLast = defaultComplexPan;
-            complexScaleLast = defaultComplexScale;
+            tilePanLast = defaultTilePan;
+            screenTileLast = defaultScreenTile;
 
             ToggleLetterboxBg(PersistentDataManager.gameSettings.letterboxBgEnable);
             ToggleLetterboxGlow(PersistentDataManager.gameSettings.letterboxFxEnable);
@@ -98,22 +99,22 @@ namespace HeavenStudio
             scaleEvents = EventCaller.GetAllInGameManagerList("vfx", new string[] { "scale view" });
             rotationEvents = EventCaller.GetAllInGameManagerList("vfx", new string[] { "rotate view" });
             letterboxEvents = EventCaller.GetAllInGameManagerList("vfx", new string[] { "scale letterbox" });
-            complexPanEvents = EventCaller.GetAllInGameManagerList("vfx", new string[] { "complex pan"});
-            complexScaleEvents = EventCaller.GetAllInGameManagerList("vfx", new string[] { "complex scale" });
+            panTileEvents = EventCaller.GetAllInGameManagerList("vfx", new string[] { "pan tiles"});
+            tileScreenEvents = EventCaller.GetAllInGameManagerList("vfx", new string[] { "tile screen" });
 
             panLast = defaultPan;
             letterboxLast = defaultLetterbox;
             scaleLast = defaultScale;
             rotationLast = defaultRotation;
-            complexPanLast = defaultComplexPan;
-            complexScaleLast = defaultComplexScale;
+            tilePanLast = defaultTilePan;
+            screenTileLast = defaultScreenTile;
             
             UpdatePan();
             UpdateRotation();
             UpdateScale();
             UpdateLetterbox();
-            UpdateComplexPan();
-            UpdatecomplexScale();
+            UpdateTilePan();
+            UpdateScreenTile();
         }
 
         // Update is called once per frame
@@ -123,8 +124,8 @@ namespace HeavenStudio
             UpdatePan();
             UpdateRotation();
             UpdateScale();
-            UpdateComplexPan();
-            UpdatecomplexScale();
+            UpdateTilePan();
+            UpdateScreenTile();
             
             canvas.localPosition = pan;
             canvas.eulerAngles = new Vector3(0, 0, rotation);
@@ -134,7 +135,7 @@ namespace HeavenStudio
             scaleInv.y /= letterbox.y;
             scaleInv.z /= letterbox.z;
             canvas.localScale = scaleInv;
-            viewportTexture.uvRect = new Rect(complexPan.x, complexPan.y, complexScale.x, complexScale.y);
+            viewportTexture.uvRect = new Rect(tilePan.x, tilePan.y, screenTile.x, screenTile.y);
         }
 
         private void UpdatePan()
@@ -247,14 +248,14 @@ namespace HeavenStudio
                     switch (e["axis"])
                     {
                         case (int) ViewAxis.X:
-                            letterbox.x = func(letterboxLast.x, e["valA"], Mathf.Min(prog, 1f)) * AspectRatioWidth;
+                            letterbox.x = func(letterboxLast.x, e["valA"] * .01f * parentView.localScale.x, Mathf.Min(prog, 1f)) * AspectRatioWidth;
                             break;
                         case (int) ViewAxis.Y:
-                            letterbox.y = func(letterboxLast.y, e["valB"], Mathf.Min(prog, 1f)) * AspectRatioHeight;
+                            letterbox.y = func(letterboxLast.y, e["valB"] * .01f * parentView.localScale.y, Mathf.Min(prog, 1f)) * AspectRatioHeight;
                             break;
                         default:
-                            float dx = func(letterboxLast.x, e["valA"], Mathf.Min(prog, 1f)) * AspectRatioWidth;
-                            float dy = func(letterboxLast.y, e["valB"], Mathf.Min(prog, 1f)) * AspectRatioHeight;
+                            float dx = func(letterboxLast.x, e["valA"] * .01f * parentView.localScale.x, Mathf.Min(prog, 1f)) * AspectRatioWidth;
+                            float dy = func(letterboxLast.y, e["valB"] * .01f * parentView.localScale.y, Mathf.Min(prog, 1f)) * AspectRatioHeight;
                             letterbox = new Vector3(dx, dy, 1);
                             break;
                     }
@@ -264,22 +265,22 @@ namespace HeavenStudio
                     switch (e["axis"])
                     {
                         case (int) ViewAxis.X:
-                            letterboxLast.x = e["valA"] * AspectRatioWidth;
+                            letterboxLast.x = e["valA"] * .01f * parentView.localScale.x * AspectRatioWidth;
                             break;
                         case (int) ViewAxis.Y:
-                            letterboxLast.y = e["valB"] * AspectRatioHeight;
+                            letterboxLast.y = e["valB"] * .01f * parentView.localScale.y * AspectRatioHeight;
                             break;
                         default:
-                            letterboxLast = new Vector3(e["valA"] * AspectRatioWidth, e["valB"] * AspectRatioHeight, 1);
+                            letterboxLast = new Vector3(e["valA"] * .01f * parentView.localScale.x * AspectRatioWidth, e["valB"] * .01f * canvas.localScale.y * AspectRatioHeight, 1);
                             break;
                     }
                 }
             }
         }
 
-        private void UpdateComplexPan()
+        private void UpdateTilePan()
         {
-            foreach (var e in complexPanEvents)
+            foreach (var e in panTileEvents)
             {
                 float prog = Conductor.instance.GetPositionFromBeat(e.beat, e.length);
                 if (prog >= 0f)
@@ -288,15 +289,15 @@ namespace HeavenStudio
                     switch (e["axis"])
                     {
                         case (int) ViewAxis.X:
-                            complexPan.x = func(complexPanLast.x, e["valA"], Mathf.Min(prog, 1f));
+                            tilePan.x = func(tilePanLast.x, e["valA"], Mathf.Min(prog, 1f));
                             break;
                         case (int) ViewAxis.Y:
-                            complexPan.y = func(complexPan.y, e["valB"], Mathf.Min(prog, 1f));
+                            tilePan.y = func(tilePan.y, e["valB"], Mathf.Min(prog, 1f));
                             break;
                         default:
-                            float dx = func(complexPanLast.x, e["valA"], Mathf.Min(prog, 1f));
-                            float dy = func(complexPanLast.y, e["valB"], Mathf.Min(prog, 1f));
-                            complexPan = new Vector3(dx, dy, 0);
+                            float dx = func(tilePanLast.x, e["valA"], Mathf.Min(prog, 1f));
+                            float dy = func(tilePanLast.y, e["valB"], Mathf.Min(prog, 1f));
+                            tilePan = new Vector3(dx, dy, 0);
                             break;
                     }
                 }
@@ -305,22 +306,22 @@ namespace HeavenStudio
                     switch (e["axis"])
                     {
                         case (int) ViewAxis.X:
-                            complexPanLast.x = e["valA"];
+                            tilePanLast.x = e["valA"];
                             break;
                         case (int) ViewAxis.Y:
-                            complexPanLast.y = e["valB"];
+                            tilePanLast.y = e["valB"];
                             break;
                         default:
-                            complexPanLast = new Vector3(e["valA"], e["valB"], 0);
+                            tilePanLast = new Vector3(e["valA"], e["valB"], 0);
                             break;
                     }
                 }
             }
         }
 
-        private void UpdatecomplexScale()
+        private void UpdateScreenTile()
         {
-            foreach (var e in complexScaleEvents)
+            foreach (var e in tileScreenEvents)
             {
                 float prog = Conductor.instance.GetPositionFromBeat(e.beat, e.length);
                 if (prog >= 0f)
@@ -329,15 +330,15 @@ namespace HeavenStudio
                     switch (e["axis"])
                     {
                         case (int) ViewAxis.X:
-                            complexScale.x = func(complexScaleLast.x, e["valA"] * .01f, Mathf.Min(prog, 1f)) * AspectRatioWidth;
+                            screenTile.x = func(screenTileLast.x, e["valA"] * canvas.localScale.x, Mathf.Min(prog, 1f)) * AspectRatioWidth;
                             break;
                         case (int) ViewAxis.Y:
-                            complexScale.y = func(complexScaleLast.y, e["valB"] * .01f, Mathf.Min(prog, 1f)) * AspectRatioHeight;
+                            screenTile.y = func(screenTileLast.y, e["valB"] * canvas.localScale.y, Mathf.Min(prog, 1f)) * AspectRatioHeight;
                             break;
                         default:
-                            float dx = func(complexScaleLast.x, e["valA"] * .01f, Mathf.Min(prog, 1f)) * AspectRatioWidth;
-                            float dy = func(complexScaleLast.y, e["valB"] * .01f, Mathf.Min(prog, 1f)) * AspectRatioHeight;
-                            complexScale = new Vector3(dx, dy, 1);
+                            float dx = func(screenTileLast.x, e["valA"] * canvas.localScale.x, Mathf.Min(prog, 1f)) * AspectRatioWidth;
+                            float dy = func(screenTileLast.y, e["valB"] * canvas.localScale.y, Mathf.Min(prog, 1f)) * AspectRatioHeight;
+                            screenTile = new Vector3(dx, dy, 1);
                             break;
                     }
                 }
@@ -346,13 +347,13 @@ namespace HeavenStudio
                     switch (e["axis"])
                     {
                         case (int) ViewAxis.X:
-                            complexScaleLast.x = e["valA"] * .01f * AspectRatioWidth;
+                            screenTileLast.x = e["valA"] * canvas.localScale.x * AspectRatioWidth;
                             break;
                         case (int) ViewAxis.Y:
-                            complexScaleLast.y = e["valB"] * .01f * AspectRatioHeight;
+                            screenTileLast.y = e["valB"] * canvas.localScale.y * AspectRatioHeight;
                             break;
                         default:
-                            complexScaleLast = new Vector3(e["valA"] * .01f * AspectRatioWidth, e["valB"] * .01f * AspectRatioHeight, 1);
+                            screenTileLast = new Vector3(e["valA"] * canvas.localScale.x * AspectRatioWidth, e["valB"] * canvas.localScale.y * AspectRatioHeight, 1);
                             break;
                     }
                 }
@@ -365,8 +366,8 @@ namespace HeavenStudio
             scale = defaultScale;
             rotation = defaultRotation;
             letterbox = defaultLetterbox;
-            complexPan = defaultComplexPan;
-            complexScale = defaultComplexScale;
+            tilePan = defaultTilePan;
+            screenTile = defaultScreenTile;
         }
 
         public void ToggleOverlayView(bool toggle)
