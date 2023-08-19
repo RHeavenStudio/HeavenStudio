@@ -13807,6 +13807,10 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 1638236449}
     - target: {fileID: 4035854539513523048, guid: 720073bc7682b1441bece7116681f72c, type: 3}
+      propertyPath: parentView
+      value: 
+      objectReference: {fileID: 1112762038}
+    - target: {fileID: 4035854539513523048, guid: 720073bc7682b1441bece7116681f72c, type: 3}
       propertyPath: letterboxMask
       value: 
       objectReference: {fileID: 2105509201}
@@ -23634,6 +23638,11 @@ RectTransform:
   m_AnchoredPosition: {x: -408.97968, y: -17}
   m_SizeDelta: {x: -817.96, y: -46.29}
   m_Pivot: {x: 0.5, y: 0.5}
+--- !u!224 &1112762038 stripped
+RectTransform:
+  m_CorrespondingSourceObject: {fileID: 2077856143944097172, guid: 720073bc7682b1441bece7116681f72c, type: 3}
+  m_PrefabInstance: {fileID: 631525709}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1121370303
 GameObject:
   m_ObjectHideFlags: 0
