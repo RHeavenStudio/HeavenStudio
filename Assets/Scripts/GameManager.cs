@@ -763,7 +763,7 @@ namespace HeavenStudio
 
         IEnumerator SwitchGameIE(string game, double beat, bool flash)
         {
-            if(flash)
+            if (flash)
             {
                 HeavenStudio.StaticCamera.instance.ToggleCanvasVisibility(false);
             }
@@ -774,8 +774,16 @@ namespace HeavenStudio
             if (miniGame != null)
                 miniGame.OnGameSwitch(beat);
 
-            //before beat-based: yield return new WaitForSeconds(0.1f);
-            yield return new WaitForSeconds(Conductor.instance.pitchedSecPerBeat / 4);
+            while(beat + 0.25 > Conductor.instance.songPositionInBeats)
+            {
+                if (!Conductor.instance.isPlaying)
+                {
+                    HeavenStudio.StaticCamera.instance.ToggleCanvasVisibility(true);
+                    SetAmbientGlowToCurrentMinigameColor();
+                    StopCoroutine(currentGameSwitchIE);
+                }
+                yield return null;
+            }
 
             HeavenStudio.StaticCamera.instance.ToggleCanvasVisibility(true);
             SetAmbientGlowToCurrentMinigameColor();
