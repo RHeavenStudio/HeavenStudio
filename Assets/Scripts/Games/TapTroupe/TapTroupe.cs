@@ -31,9 +31,15 @@ namespace HeavenStudio.Games.Loaders
                     resizable = true,
                     parameters = new List<Param>()
                     {
-                        new Param("okay", true, "Okay Voice Line", "Whether or not the tappers should say -Okay!- after successfully tapping."),
+                        new Param("okay", true, "Okay Voice Line", "Whether or not the tappers should say -Okay!- after successfully tapping.", new List<Param.CollapseParam>()
+                        {
+                            new Param.CollapseParam(x => (bool)x, new string[] { "okayType" })
+                        }),
                         new Param("okayType", TapTroupe.OkayType.OkayA, "Okay Type", "Which version of the okay voice line should the tappers say?"),
-                        new Param("animType", TapTroupe.OkayAnimType.Normal, "Okay Animation", "Which animations should be played when the tapper say OK?"),
+                        new Param("animType", TapTroupe.OkayAnimType.Normal, "Okay Animation", "Which animations should be played when the tapper say OK?", new List<Param.CollapseParam>()
+                        {
+                            new Param.CollapseParam(x => (int)x == (int)TapTroupe.OkayAnimType.Popper, new string[]{ "popperBeats"})
+                        }),
                         new Param("popperBeats", new EntityTypes.Float(0f, 80f, 2f), "Popper Beats", "How many beats until the popper will pop?"),
                         new Param("randomVoiceLine", true, "Extra Random Voice Line", "Whether there should be randomly said woos or laughs after the tappers say OK!"),
                         new Param("noReady", false, "Mute Ready")
