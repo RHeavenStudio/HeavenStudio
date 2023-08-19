@@ -622,6 +622,17 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1344c3c82d62a2a41a3576d8abb8e3ea, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &23905937 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 4500092555783399993, guid: 720073bc7682b1441bece7116681f72c, type: 3}
+  m_PrefabInstance: {fileID: 631525709}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0cd44c1031e13a943bb63640046fad76, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1001 &26008187
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -13793,6 +13804,10 @@ PrefabInstance:
       propertyPath: m_RaycastTarget
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 4035854539513523048, guid: 720073bc7682b1441bece7116681f72c, type: 3}
+      propertyPath: parent
+      value: 
+      objectReference: {fileID: 23905937}
     - target: {fileID: 4035854539513523048, guid: 720073bc7682b1441bece7116681f72c, type: 3}
       propertyPath: parentView
       value: 
