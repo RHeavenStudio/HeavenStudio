@@ -17,6 +17,7 @@ namespace HeavenStudio
         [SerializeField] RectTransform canvas;
         [SerializeField] GameObject overlayView;
         [SerializeField] RectTransform parentView;
+        [SerializeField] UnityEngine.UI.CanvasScaler parent;
 
         [SerializeField] Image ambientBg;
         [SerializeField] GameObject ambientBgGO;
@@ -43,6 +44,7 @@ namespace HeavenStudio
         private List<RiqEntity> letterboxEvents = new();
         private List<RiqEntity> panTileEvents = new();
         private List<RiqEntity> tileScreenEvents = new();
+        private List<RiqEntity> fitToScreenEvents = new();
 
         static Vector3 defaultPan = new Vector3(0, 0, 0);
         static Vector3 defaultScale = new Vector3(1, 1, 1);
@@ -50,6 +52,7 @@ namespace HeavenStudio
         static Vector3 defaultLetterbox = new Vector3(1, 1, 1);
         static Vector3 defaultTilePan = new Vector3(0, 0, 0);
         static Vector3 defaultScreenTile = new Vector3(1, 1, 1);
+        static bool defaultFitToScreen = false;
 
         private static Vector3 pan;
         private static Vector3 scale;
@@ -59,6 +62,7 @@ namespace HeavenStudio
         private static Vector3 scaleInv;
         private static Vector3 tilePan;
         private static Vector3 screenTile;
+        private static bool fitToScreen;
 
         private static Vector3 panLast;
         private static Vector3 scaleLast;
@@ -86,6 +90,7 @@ namespace HeavenStudio
             rotationLast = defaultRotation;
             tilePanLast = defaultTilePan;
             screenTileLast = defaultScreenTile;
+            fitToScreen = defaultFitToScreen;
 
             ToggleLetterboxBg(PersistentDataManager.gameSettings.letterboxBgEnable);
             ToggleLetterboxGlow(PersistentDataManager.gameSettings.letterboxFxEnable);
@@ -99,6 +104,7 @@ namespace HeavenStudio
             scaleEvents = EventCaller.GetAllInGameManagerList("vfx", new string[] { "scale view" });
             rotationEvents = EventCaller.GetAllInGameManagerList("vfx", new string[] { "rotate view" });
             letterboxEvents = EventCaller.GetAllInGameManagerList("vfx", new string[] { "scale letterbox" });
+            fitToScreenEvents = EventCaller.GetAllInGameManagerList("vfx", new string[] { "fit to screen" });
             panTileEvents = EventCaller.GetAllInGameManagerList("vfx", new string[] { "pan tiles"});
             tileScreenEvents = EventCaller.GetAllInGameManagerList("vfx", new string[] { "tile screen" });
 
@@ -108,6 +114,7 @@ namespace HeavenStudio
             rotationLast = defaultRotation;
             tilePanLast = defaultTilePan;
             screenTileLast = defaultScreenTile;
+            fitToScreen = defaultFitToScreen;
             
             UpdatePan();
             UpdateRotation();
@@ -127,6 +134,8 @@ namespace HeavenStudio
             UpdateTilePan();
             UpdateScreenTile();
             
+            if(fitToScreen) parent.screenMatchMode = CanvasScaler.ScreenMatchMode.MatchWidthOrHeight;
+            else if (!fitToScreen) parent.screenMatchMode = CanvasScaler.ScreenMatchMode.Expand;
             canvas.localPosition = pan;
             canvas.eulerAngles = new Vector3(0, 0, rotation);
             letterboxMask.localScale = letterbox;
@@ -360,6 +369,11 @@ namespace HeavenStudio
             }
         }
 
+        public void UpdateFitToScreen(bool toggle)
+        {
+            fitToScreen = toggle;
+        }
+
         public static void Reset()
         {
             pan = defaultPan;
@@ -368,6 +382,7 @@ namespace HeavenStudio
             letterbox = defaultLetterbox;
             tilePan = defaultTilePan;
             screenTile = defaultScreenTile;
+            fitToScreen = defaultFitToScreen;
         }
 
         public void ToggleOverlayView(bool toggle)

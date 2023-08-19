@@ -713,12 +713,22 @@ namespace HeavenStudio
                             new Param("valB", new EntityTypes.Float(0, 10, 1), "Vertical Intensity")
                         }
                     ),
+                    /* kinda broken idk if its useful but its here
                     new GameAction("scale letterbox", "Scale Letterbox", 1f, true, new List<Param>()
                         {
                             new Param("valA", new EntityTypes.Integer(0, 200, 100), "Scale Letterbox X"),
                             new Param("valB", new EntityTypes.Integer(0, 200, 100), "Scale Letterbox Y"),
                             new Param("ease", Util.EasingFunction.Ease.Linear, "Ease Type"),
                             new Param("axis", StaticCamera.ViewAxis.All, "Axis", "The axis to scale the letterbox in")
+                        }
+                    ),*/
+                    new GameAction("fit to screen", "Fit Game To Screen", 0.5f, false, new List<Param>()
+                        {
+                            new Param("toggle", false, "Toggle", "Toggle the game fitting to the screen.")
+                        },
+                        delegate
+                        {
+                            StaticCamera.instance.UpdateFitToScreen(eventCaller.currentEntity["toggle"]);
                         }
                     ),
                     new GameAction("tile screen", "Tile Screen", 1f, true, new List<Param>()
