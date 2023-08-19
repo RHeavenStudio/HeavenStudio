@@ -13794,6 +13794,10 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4035854539513523048, guid: 720073bc7682b1441bece7116681f72c, type: 3}
+      propertyPath: parentView
+      value: 
+      objectReference: {fileID: 631525714}
+    - target: {fileID: 4035854539513523048, guid: 720073bc7682b1441bece7116681f72c, type: 3}
       propertyPath: letterboxMask
       value: 
       objectReference: {fileID: 2110609005}
@@ -13885,6 +13889,11 @@ GameObject:
 --- !u!1 &631525713 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 6052331674369862802, guid: 720073bc7682b1441bece7116681f72c, type: 3}
+  m_PrefabInstance: {fileID: 631525709}
+  m_PrefabAsset: {fileID: 0}
+--- !u!224 &631525714 stripped
+RectTransform:
+  m_CorrespondingSourceObject: {fileID: 2077856143944097172, guid: 720073bc7682b1441bece7116681f72c, type: 3}
   m_PrefabInstance: {fileID: 631525709}
   m_PrefabAsset: {fileID: 0}
 --- !u!1 &632795495
