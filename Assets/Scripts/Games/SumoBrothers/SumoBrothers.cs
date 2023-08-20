@@ -18,7 +18,7 @@ namespace HeavenStudio.Games.Loaders
                     parameters = new List<Param>()
                     {
                         new Param("inuT", true, "Inu Sensei", "Whether Inu Sensei bops or not."),
-                        new Param("sumoT", true, "Sumo Brothers", "Whether the Sumo Brothers bop or not."),
+                        new Param("sumoT", true, "Sumo Brothers", "Whether the Sumo Brothers bop or not.")
                     },
                     defaultLength = 0.5f
                 },
@@ -29,21 +29,29 @@ namespace HeavenStudio.Games.Loaders
                     parameters = new List<Param>()
                     {
                         new Param("inuT", true, "Inu Sensei", "Whether Inu Sensei crouches or not."),
-                        new Param("sumoT", true, "Sumo Brothers", "Whether the Sumo Brothers crouch or not."),
+                        new Param("sumoT", true, "Sumo Brothers", "Whether the Sumo Brothers crouch or not.")
                     },
                     defaultLength = 1f,
                     resizable = true
                 },
 
-                 new GameAction("stompSignal", "Stomp Signal")
+                 new GameAction("stompSignal", "Stomp")
                 {
-                    function = delegate { var e = eventCaller.currentEntity; SumoBrothers.instance.StompSignal(e.beat); },
+                    function = delegate { var e = eventCaller.currentEntity; SumoBrothers.instance.StompSignal(e.beat, e["mute"]); },
+                    parameters = new List<Param>()
+                    {
+                        new Param("mute", false, "Mute", "Disables the sound and animations that cue for the transition to stomping.")
+                    },
                     defaultLength = 4f
                 },
 
-                 new GameAction("slapSignal", "Slap Signal")
+                 new GameAction("slapSignal", "Slap")
                 {
-                    function = delegate { var e = eventCaller.currentEntity; SumoBrothers.instance.SlapSignal(e.beat); },
+                    function = delegate { var e = eventCaller.currentEntity; SumoBrothers.instance.SlapSignal(e.beat, e["mute"]); },
+                    parameters = new List<Param>()
+                    {
+                        new Param("mute", false, "Mute", "Disables the sound and animations that cue for the transition to slapping.")
+                    },
                     defaultLength = 4f
                 },
 
@@ -89,7 +97,7 @@ namespace HeavenStudio.Games
         private bool allowBopSumo;
         private bool allowBopInu;
 
-        private float lastReportedBeat = 0f;
+        private double lastReportedBeat = 0f;
 
         public static SumoBrothers instance;
 
@@ -129,10 +137,8 @@ namespace HeavenStudio.Games
         // Update is called once per frame
         void Update()
         {
-            // This is cond
             var cond = Conductor.instance;
 
-            // Run once every beat
             if (cond.ReportBeat(ref lastReportedBeat))
             {
                 // Bop Code - Inu Sensei
@@ -182,31 +188,50 @@ namespace HeavenStudio.Games
             goBopSumo = sumo;
         }
 
-        public void StompSignal(float beat)
+        public void StompSignal(double beat, bool mute)
         {
-            BeatAction.New(instance.gameObject, new List<BeatAction.Action>() {
-                new BeatAction.Action(beat, delegate { inuSensei.DoScaledAnimationAsync("InuBounce", 0.5f); }),
-                new BeatAction.Action(beat, delegate { Jukebox.PlayOneShotGame("sumoBrothers/stompsignal"); }),
-                new BeatAction.Action(beat + 2, delegate { inuSensei.DoScaledAnimationAsync("InuBounce", 0.5f); }),
-                new BeatAction.Action(beat + 2, delegate { Jukebox.PlayOneShotGame("sumoBrothers/stompsignal"); })
-            });
+            if (mute == false)
+            {
+                BeatAction.New(instance.gameObject, new List<BeatAction.Action>()
+                {
+                    new BeatAction.Action(beat, delegate { inuSensei.DoScaledAnimationAsync("InuBounce", 0.5f); }),
+                    new BeatAction.Action(beat + 2, delegate { inuSensei.DoScaledAnimationAsync("InuBounce", 0.5f); })
+                });
+
+                MultiSound.Play(new MultiSound.Sound[]
+                {
+                    new MultiSound.Sound("sumoBrothers/stompsignal", beat),
+                    new MultiSound.Sound("sumoBrothers/stompsignal", beat + 2f)
+                }, forcePlay: true);
+            
+            }
+
         }
 
-        public void SlapSignal(float beat)
+        public void SlapSignal(double beat, bool mute)
         {
-            BeatAction.New(instance.gameObject, new List<BeatAction.Action>() {
+            if (mute == false)
+            {
+                BeatAction.New(instance.gameObject, new List<BeatAction.Action>()
+                {
                 new BeatAction.Action(beat, delegate { inuSensei.DoScaledAnimationAsync("InuBounce", 0.5f); }),
-                new BeatAction.Action(beat, delegate { Jukebox.PlayOneShotGame("sumoBrothers/slapsignal"); }),
                 new BeatAction.Action(beat + 1, delegate { inuSensei.DoScaledAnimationAsync("InuBounce", 0.5f); }),
-                new BeatAction.Action(beat + 1, delegate { Jukebox.PlayOneShotGame("sumoBrothers/slapsignal"); }),
                 new BeatAction.Action(beat + 2, delegate { inuSensei.DoScaledAnimationAsync("InuBounce", 0.5f); }),
-                new BeatAction.Action(beat + 2, delegate { Jukebox.PlayOneShotGame("sumoBrothers/slapsignal"); }),
-                new BeatAction.Action(beat + 3, delegate { inuSensei.DoScaledAnimationAsync("InuBounce", 0.5f); }),
-                new BeatAction.Action(beat + 3, delegate { Jukebox.PlayOneShotGame("sumoBrothers/slapsignal"); })
-            });
+                new BeatAction.Action(beat + 3, delegate { inuSensei.DoScaledAnimationAsync("InuBounce", 0.5f); })
+                });
+
+                MultiSound.Play(new MultiSound.Sound[]
+                {
+                new MultiSound.Sound("sumoBrothers/slapsignal", beat),
+                new MultiSound.Sound("sumoBrothers/slapsignal", beat + 1f),
+                new MultiSound.Sound("sumoBrothers/slapsignal", beat + 2f),
+                new MultiSound.Sound("sumoBrothers/slapsignal", beat + 3f)
+                }, forcePlay: true);
+            }
+
         }
 
-        public void Crouch(float beat, float length, bool inu, bool sumo)
+        public void Crouch(double beat, float length, bool inu, bool sumo)
         {
             if (inu)
             {
@@ -230,7 +255,7 @@ namespace HeavenStudio.Games
 
         }
 
-        public void EndPose(float beat)
+        public void EndPose(double beat)
         {
             var cond = Conductor.instance;
             #region Old Goofy as Hell Tweet Code
@@ -255,7 +280,7 @@ namespace HeavenStudio.Games
 
             ScheduleInput(beat, 4f, InputType.STANDARD_ALT_DOWN, PoseHit, PoseMiss, Nothing);
 
-            var tweet = Jukebox.PlayOneShotGame("sumoBrothers/posesignal", -1, 1f, 1f, true);
+            var tweet = SoundByte.PlayOneShotGame("sumoBrothers/posesignal", -1, 1f, 1f, true);
             tweet.SetLoopParams(beat + 3, 0.05f);
 
             allowBopInu = false;
@@ -270,14 +295,22 @@ namespace HeavenStudio.Games
 
         void PoseHit(PlayerActionEvent caller, float state)
         {
-            Jukebox.PlayOneShotGame("sumoBrothers/pose");
+            if (state >= 1f || state <= -1f)
+            {
+                SoundByte.PlayOneShotGame("nearmiss");
+            }
+            else
+            {
+
+            }
+            SoundByte.PlayOneShotGame("sumoBrothers/pose");
 
 
         }
 
         void PoseMiss(PlayerActionEvent caller)
         {
-
+            SoundByte.PlayOneShotGame("sumoBrothers/miss");
 
 
         }
