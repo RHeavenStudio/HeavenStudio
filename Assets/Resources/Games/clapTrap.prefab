@@ -641,7 +641,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &8444650765001324532
 Transform:
   m_ObjectHideFlags: 0
@@ -743,6 +743,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1d289b64976e38a4697250b3ebb8afb6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  cueStart: 0
+  cueLength: 0
+  cueType: 
+  spotlightToggle: 0
 --- !u!1 &2223775769324835506
 GameObject:
   m_ObjectHideFlags: 0
@@ -950,7 +954,7 @@ MonoBehaviour:
   clapEffect: {fileID: 6051233720251957680}
   sword: {fileID: 8514225053392700252}
   swordObj: {fileID: 1797424800963142273}
-  swordScript: {fileID: 0}
+  currentSpotlightClaps: 0
 --- !u!1 &3589471550903157943
 GameObject:
   m_ObjectHideFlags: 0
