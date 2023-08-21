@@ -199,6 +199,11 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 327024}
   m_CullTransparentMesh: 1
+--- !u!224 &496671 stripped
+RectTransform:
+  m_CorrespondingSourceObject: {fileID: 8512930684284350359, guid: 720073bc7682b1441bece7116681f72c, type: 3}
+  m_PrefabInstance: {fileID: 631525709}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &5490983
 GameObject:
   m_ObjectHideFlags: 0
@@ -13332,7 +13337,7 @@ MonoBehaviour:
   m_HandleRect: {fileID: 704039020}
   m_Direction: 0
   m_Value: 0
-  m_Size: 0.10518809
+  m_Size: 0.10518808
   m_NumberOfSteps: 0
   m_OnValueChanged:
     m_PersistentCalls:
@@ -13816,6 +13821,10 @@ PrefabInstance:
       propertyPath: letterboxMask
       value: 
       objectReference: {fileID: 2110609005}
+    - target: {fileID: 4035854539513523048, guid: 720073bc7682b1441bece7116681f72c, type: 3}
+      propertyPath: overlayCanvas
+      value: 
+      objectReference: {fileID: 496671}
     - target: {fileID: 4035854539513523048, guid: 720073bc7682b1441bece7116681f72c, type: 3}
       propertyPath: viewportTexture
       value: 
@@ -24805,7 +24814,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0.5}
   m_AnchorMax: {x: 1, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: 103.926414}
+  m_AnchoredPosition: {x: 0, y: 117.31037}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 1}
 --- !u!114 &1154875944
