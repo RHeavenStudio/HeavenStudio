@@ -521,8 +521,8 @@ namespace HeavenStudio.Games
 
         private void PassTurn(double beat, double intervalBeat, float intervalLength, bool timeUpSound, bool consecutive, bool visualClock, int audioClock, float length)
         {
-            playerStartBeat = beat + length;
-            playerLength = intervalLength;
+            playerStartBeat = beat + length - Conductor.instance.SecsToBeats(ngEarlyTime, Conductor.instance.GetBpmAtBeat(beat + length));
+            playerLength = intervalLength + (float)Conductor.instance.SecsToBeats(ngEarlyTime, Conductor.instance.GetBpmAtBeat(beat + length));
             var relevantInputs = GetInputsBetweenBeat(intervalBeat, intervalBeat + intervalLength);
             relevantInputs.Sort((x, y) => x.beat.CompareTo(y.beat));
 
