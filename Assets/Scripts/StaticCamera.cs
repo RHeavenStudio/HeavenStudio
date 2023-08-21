@@ -16,8 +16,8 @@ namespace HeavenStudio
     {
         [SerializeField] RectTransform canvas;
         [SerializeField] GameObject overlayView;
+        [SerializeField] RectTransform overlayCanvas;
         [SerializeField] RectTransform parentView;
-        [SerializeField] UnityEngine.UI.CanvasScaler parent;
 
         [SerializeField] Image ambientBg;
         [SerializeField] GameObject ambientBgGO;
@@ -134,16 +134,20 @@ namespace HeavenStudio
             UpdateTilePan();
             UpdateScreenTile();
             
-            if(fitToScreen) parent.screenMatchMode = CanvasScaler.ScreenMatchMode.MatchWidthOrHeight;
-            else if (!fitToScreen) parent.screenMatchMode = CanvasScaler.ScreenMatchMode.Expand;
             canvas.localPosition = pan;
             canvas.eulerAngles = new Vector3(0, 0, rotation);
-            letterboxMask.localScale = letterbox;
-            scaleInv = scale;
-            scaleInv.x /= letterbox.x;
-            scaleInv.y /= letterbox.y;
-            scaleInv.z /= letterbox.z;
-            canvas.localScale = scaleInv;
+            //letterboxMask.localScale = letterbox;
+            if(fitToScreen)
+            {
+                letterboxMask.localScale = new Vector3(parentView.sizeDelta.x/16, parentView.sizeDelta.y/9, 1);
+                overlayCanvas.localScale = new Vector3(parentView.sizeDelta.x/16, parentView.sizeDelta.y/9, 1);
+            }
+            else 
+            {
+                letterboxMask.localScale = new Vector3(1, 1, 1);
+                overlayCanvas.localScale = new Vector3(1, 1, 1);
+            }
+            canvas.localScale = scale;
             viewportTexture.uvRect = new Rect(tilePan.x, tilePan.y, screenTile.x, screenTile.y);
         }
 
