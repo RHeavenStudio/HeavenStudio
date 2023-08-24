@@ -24,7 +24,7 @@ namespace HeavenStudio
         [SerializeField] GameObject letterboxBgGO;
         [SerializeField] RectTransform letterboxMask;
         [SerializeField] RawImage viewportTexture;
-        [SerializeField] RawImage overlayTexture;
+        //[SerializeField] RawImage overlayTexture;
 
         public static StaticCamera instance { get; private set; }
         public new Camera camera;
