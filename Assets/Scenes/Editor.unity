@@ -1700,6 +1700,11 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 58525995}
   m_CullTransparentMesh: 1
+--- !u!224 &66970446 stripped
+RectTransform:
+  m_CorrespondingSourceObject: {fileID: 8512930684284350359, guid: 720073bc7682b1441bece7116681f72c, type: 3}
+  m_PrefabInstance: {fileID: 631525709}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &73172994
 GameObject:
   m_ObjectHideFlags: 0
@@ -13801,6 +13806,30 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 198071653306764931, guid: 720073bc7682b1441bece7116681f72c, type: 3}
+      propertyPath: m_Enabled
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 198071653306764931, guid: 720073bc7682b1441bece7116681f72c, type: 3}
+      propertyPath: m_PixelPerfect
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1535126665250126034, guid: 720073bc7682b1441bece7116681f72c, type: 3}
+      propertyPath: m_SizeDelta.x
+      value: 16
+      objectReference: {fileID: 0}
+    - target: {fileID: 1535126665250126034, guid: 720073bc7682b1441bece7116681f72c, type: 3}
+      propertyPath: m_SizeDelta.y
+      value: 9
+      objectReference: {fileID: 0}
+    - target: {fileID: 1535126665250126034, guid: 720073bc7682b1441bece7116681f72c, type: 3}
+      propertyPath: m_LocalScale.x
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1535126665250126034, guid: 720073bc7682b1441bece7116681f72c, type: 3}
+      propertyPath: m_ConstrainProportionsScale
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 3558106557710386107, guid: 720073bc7682b1441bece7116681f72c, type: 3}
       propertyPath: m_BlockingMask.m_Bits
       value: 0
@@ -13826,9 +13855,21 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 496671}
     - target: {fileID: 4035854539513523048, guid: 720073bc7682b1441bece7116681f72c, type: 3}
+      propertyPath: overlayCanvas
+      value: 
+      objectReference: {fileID: 66970446}
+    - target: {fileID: 4035854539513523048, guid: 720073bc7682b1441bece7116681f72c, type: 3}
       propertyPath: viewportTexture
       value: 
-      objectReference: {fileID: 22565105}
+      objectReference: {fileID: 1638236456}
+    - target: {fileID: 4035854539513523048, guid: 720073bc7682b1441bece7116681f72c, type: 3}
+      propertyPath: gameRenderTexture
+      value: 
+      objectReference: {fileID: 8400000, guid: da1c23fc8a9167c438d0d771189a6157, type: 2}
+    - target: {fileID: 4500092555783399993, guid: 720073bc7682b1441bece7116681f72c, type: 3}
+      propertyPath: m_ScreenMatchMode
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 4820152107260776423, guid: 720073bc7682b1441bece7116681f72c, type: 3}
       propertyPath: m_RaycastTarget
       value: 0
@@ -13892,6 +13933,18 @@ PrefabInstance:
     - target: {fileID: 6136050241491700490, guid: 720073bc7682b1441bece7116681f72c, type: 3}
       propertyPath: m_RaycastTarget
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8925473620302868482, guid: 720073bc7682b1441bece7116681f72c, type: 3}
+      propertyPath: m_SizeDelta.x
+      value: 16
+      objectReference: {fileID: 0}
+    - target: {fileID: 8925473620302868482, guid: 720073bc7682b1441bece7116681f72c, type: 3}
+      propertyPath: m_LocalScale.x
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8925473620302868482, guid: 720073bc7682b1441bece7116681f72c, type: 3}
+      propertyPath: m_LocalScale.y
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 720073bc7682b1441bece7116681f72c, type: 3}
