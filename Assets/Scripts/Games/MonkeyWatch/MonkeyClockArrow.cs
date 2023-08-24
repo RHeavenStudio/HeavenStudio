@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using UnityEngine;
 using HeavenStudio.Util;
 using Starpelly;
-using UnityEngine.UIElements;
 
 namespace HeavenStudio.Games.Scripts_MonkeyWatch
 {
@@ -16,6 +15,7 @@ namespace HeavenStudio.Games.Scripts_MonkeyWatch
         [SerializeField] private ParticleSystem yellowClap;
         [SerializeField] private ParticleSystem pinkClap;
         [SerializeField] private Transform shadowTrans;
+        [SerializeField] private Transform camMoveTrans;
         [Header("Properties")]
         [SerializeField] private float shadowXRange = 2f;
         [SerializeField] private float shadowYRange = 1f;
@@ -102,18 +102,11 @@ namespace HeavenStudio.Games.Scripts_MonkeyWatch
             else
             {
                 playerMonkeyAnim.DoScaledAnimationAsync(big ? "PlayerClapBig" : "PlayerClap", 0.4f);
-                if (big)
-                {
-                    pinkClap.transform.eulerAngles = Vector3.zero;
-                    pinkClap.transform.GetChild(0).GetComponent<ParticleSystem>().SetAsyncScaling(0.4f);
-                    pinkClap.PlayScaledAsync(0.4f);
-                }
-                else
-                {
-                    yellowClap.transform.eulerAngles = Vector3.zero;
-                    yellowClap.transform.GetChild(0).GetComponent<ParticleSystem>().SetAsyncScaling(0.4f);
-                    yellowClap.PlayScaledAsync(0.4f);
-                }
+                ParticleSystem clapToSpawn = big ? pinkClap : yellowClap;
+                ParticleSystem spawnedClap = Instantiate(clapToSpawn, camMoveTrans, true);
+                spawnedClap.transform.eulerAngles = Vector3.zero;
+                spawnedClap.transform.GetChild(0).GetComponent<ParticleSystem>().SetAsyncScaling(0.4f);
+                spawnedClap.PlayScaledAsync(0.4f);
             }
         }
     }
