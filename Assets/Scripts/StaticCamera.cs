@@ -24,7 +24,6 @@ namespace HeavenStudio
         [SerializeField] GameObject letterboxBgGO;
         [SerializeField] RectTransform letterboxMask;
         [SerializeField] RawImage viewportTexture;
-        //[SerializeField] RawImage overlayTexture;
 
         public static StaticCamera instance { get; private set; }
         public new Camera camera;
@@ -137,7 +136,6 @@ namespace HeavenStudio
             
             canvas.localPosition = pan;
             canvas.eulerAngles = new Vector3(0, 0, rotation);
-            //letterboxMask.localScale = letterbox;
             if(fitToScreen)
             {
                 letterboxMask.localScale = new Vector3(parentView.sizeDelta.x/16, parentView.sizeDelta.y/9, 1);
@@ -150,8 +148,7 @@ namespace HeavenStudio
                 overlayCanvas.localScale = new Vector3(1, 1, 1);
             }
             canvas.localScale = scale;
-            //viewportTexture.uvRect = new Rect(tilePan.x, tilePan.y, screenTile.x, screenTile.y);
-            //overlayTexture.uvRect = new Rect(tilePan.x, tilePan.y, screenTile.x, screenTile.y);
+            viewportTexture.uvRect = new Rect(tilePan.x, tilePan.y, screenTile.x, screenTile.y);
         }
 
         private void UpdatePan()
