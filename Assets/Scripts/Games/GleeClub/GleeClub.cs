@@ -284,7 +284,7 @@ namespace HeavenStudio.Games
                 new MultiSound.Sound("gleeClub/togetherEN-04", beat + 2f, conductorPitch, 1, false, 0.02f),
             });
 
-            BeatAction.New(instance.gameObject, new List<BeatAction.Action>()
+            BeatAction.New(instance, new List<BeatAction.Action>()
             {
                 new BeatAction.Action(beat + 1.5f, delegate
                 {
@@ -336,7 +336,7 @@ namespace HeavenStudio.Games
             {
                 StartInterval(beat, length);
             }
-            BeatAction.New(instance.gameObject, new List<BeatAction.Action>()
+            BeatAction.New(instance, new List<BeatAction.Action>()
             {
                 new BeatAction.Action(beat, delegate { if (closeMouth != (int)MouthOpenClose.OnlyClose) leftChorusKid.currentPitch = pitch; leftChorusKid.StartSinging(); }),
                 new BeatAction.Action(beat + length, delegate { if (closeMouth != (int)MouthOpenClose.OnlyOpen) leftChorusKid.StopSinging(); }),
@@ -374,7 +374,7 @@ namespace HeavenStudio.Games
                 float pitchLeft2 = SoundByte.GetPitchFromSemiTones(sing.semiTonesLeft2, true);
                 float pitchLeft3 = SoundByte.GetPitchFromSemiTones(sing.semiTonesLeft3, true);
                 float pitchMiddle2 = SoundByte.GetPitchFromSemiTones(sing.semiTonesMiddle2, true);
-                BeatAction.New(instance.gameObject, new List<BeatAction.Action>()
+                BeatAction.New(instance, new List<BeatAction.Action>()
                 {
                     new BeatAction.Action(beat + length + sing.startBeat, delegate
                     {
@@ -441,7 +441,7 @@ namespace HeavenStudio.Games
         {
             missed = false;
             if (!playerChorusKid.disappeared) ScheduleInput(beat, 1, InputType.STANDARD_DOWN, JustBaton, MissBaton, Out);
-            BeatAction.New(instance.gameObject, new List<BeatAction.Action>()
+            BeatAction.New(instance, new List<BeatAction.Action>()
             {
                 new BeatAction.Action(beat, delegate
                 {
@@ -476,7 +476,7 @@ namespace HeavenStudio.Games
         public void ShowHeart(double beat)
         {
 
-            BeatAction.New(instance.gameObject, new List<BeatAction.Action>()
+            BeatAction.New(instance, new List<BeatAction.Action>()
             {
                 new BeatAction.Action(beat, delegate
                 {

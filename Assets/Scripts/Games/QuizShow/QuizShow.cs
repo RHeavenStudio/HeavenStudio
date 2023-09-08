@@ -471,7 +471,7 @@ namespace HeavenStudio.Games
                     HostPressButton(inputBeat, isDpad);
                 }));
             }
-            BeatAction.New(gameObject, actions);
+            BeatAction.New(this, actions);
 
             if (autoPassTurn)
             {
@@ -595,7 +595,7 @@ namespace HeavenStudio.Games
             ),
                 new BeatAction.Action(beat + length + intervalLength + timeUpBeat, delegate { if (timeUpSound && !consecutive) SoundByte.PlayOneShotGame("quizShow/timeUp"); }),
             };
-            BeatAction.New(instance.gameObject, actions);
+            BeatAction.New(instance, actions);
         }
 
         void ContesteePressButton(bool dpad)
@@ -677,7 +677,7 @@ namespace HeavenStudio.Games
         public void RevealAnswer(double beat, float length)
         {
             blackOut.SetActive(true);
-            BeatAction.New(instance.gameObject, new List<BeatAction.Action>()
+            BeatAction.New(instance, new List<BeatAction.Action>()
             {
                 new BeatAction.Action(beat + length, delegate 
                 { 

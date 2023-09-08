@@ -225,7 +225,7 @@ namespace HeavenStudio.Games
                     foreach (var tap in queuedTaps)
                     {
                         Tapping(tap.beat, tap.length, tap.okay, tap.okayType, tap.animType, tap.popperBeats, tap.randomVoiceLine);
-                        BeatAction.New(instance.gameObject, new List<BeatAction.Action>()
+                        BeatAction.New(instance, new List<BeatAction.Action>()
                         {
                             new BeatAction.Action(tap.beat - 1.1f, delegate { prepareTap = true; }),
                             new BeatAction.Action(tap.beat, delegate { prepareTap = false; })
@@ -352,7 +352,7 @@ namespace HeavenStudio.Games
             for (int i = 0; i < length; i++)
             {
                 TapTroupe.instance.ScheduleInput(beat - 1, 1 + i, InputType.STANDARD_DOWN, TapTroupe.instance.JustStep, TapTroupe.instance.MissStep, TapTroupe.instance.Nothing);
-                BeatAction.New(instance.gameObject, new List<BeatAction.Action>()
+                BeatAction.New(instance, new List<BeatAction.Action>()
                 {
                     new BeatAction.Action(beat + i, delegate
                     {
@@ -361,7 +361,7 @@ namespace HeavenStudio.Games
                     })
                 });
             }
-            BeatAction.New(instance.gameObject, new List<BeatAction.Action>()
+            BeatAction.New(instance, new List<BeatAction.Action>()
             {
                 new BeatAction.Action(beat - 1, delegate
                 {
@@ -388,7 +388,7 @@ namespace HeavenStudio.Games
             if (GameManager.instance.currentGame == "tapTroupe")
             {
                 TapTroupe.instance.Tapping(beat, length, okay, okayType, animType, popperBeats, randomVoiceLine);
-                BeatAction.New(instance.gameObject, new List<BeatAction.Action>()
+                BeatAction.New(instance, new List<BeatAction.Action>()
                 {
                     new BeatAction.Action(beat - 1.1f, delegate { prepareTap = true; }),
                     new BeatAction.Action(beat, delegate { prepareTap = false; })
@@ -422,7 +422,7 @@ namespace HeavenStudio.Games
                     otherSoundToPlay = "other2";
                     beatToSpawn = Math.Ceiling(beat + i);
                     finalBeatToSpawn = beatToSpawn;
-                    BeatAction.New(instance.gameObject, new List<BeatAction.Action>()
+                    BeatAction.New(instance, new List<BeatAction.Action>()
                     {
                         new BeatAction.Action(beatToSpawn - 0.3f, delegate { currentTapAnim = TapTroupeTapper.TapAnim.LastTap; shouldSwitchStep = false; }),
                         new BeatAction.Action(beatToSpawn, delegate { NPCTap(TapTroupeTapper.TapAnim.LastTap, true, false);}),
@@ -432,7 +432,7 @@ namespace HeavenStudio.Games
                 else if (i + 1.5f >= actualLength)
                 {
                     soundToPlay = "tapvoice2";
-                    BeatAction.New(instance.gameObject, new List<BeatAction.Action>()
+                    BeatAction.New(instance, new List<BeatAction.Action>()
                     {
                         new BeatAction.Action(beatToSpawn - 0.3f, delegate { currentTapAnim = TapTroupeTapper.TapAnim.Tap; shouldSwitchStep = false; }),
                         new BeatAction.Action(beatToSpawn, delegate { NPCTap(TapTroupeTapper.TapAnim.Tap, true, false); })
@@ -443,7 +443,7 @@ namespace HeavenStudio.Games
                     soundToPlay = "tapvoice1";
                     if (actualLength == 2.25f)
                     {
-                        BeatAction.New(instance.gameObject, new List<BeatAction.Action>()
+                        BeatAction.New(instance, new List<BeatAction.Action>()
                         {
                             new BeatAction.Action(beatToSpawn - 0.3f, delegate { currentTapAnim = TapTroupeTapper.TapAnim.Tap; shouldSwitchStep = true; }),
                             new BeatAction.Action(beatToSpawn, delegate { NPCTap(TapTroupeTapper.TapAnim.Tap); })
@@ -451,7 +451,7 @@ namespace HeavenStudio.Games
                     }
                     else
                     {
-                        BeatAction.New(instance.gameObject, new List<BeatAction.Action>()
+                        BeatAction.New(instance, new List<BeatAction.Action>()
                         {
                             new BeatAction.Action(beatToSpawn - 0.3f, delegate { currentTapAnim = TapTroupeTapper.TapAnim.Tap; shouldSwitchStep = false; }),
                             new BeatAction.Action(beatToSpawn, delegate { NPCTap(TapTroupeTapper.TapAnim.Tap, true, false); })
@@ -465,7 +465,7 @@ namespace HeavenStudio.Games
                     {
                         if (actualLength == 3f)
                         {
-                            BeatAction.New(instance.gameObject, new List<BeatAction.Action>()
+                            BeatAction.New(instance, new List<BeatAction.Action>()
                             {
                                 new BeatAction.Action(beatToSpawn - 0.3f, delegate { currentTapAnim = TapTroupeTapper.TapAnim.Tap; shouldSwitchStep = true; }),
                                 new BeatAction.Action(beatToSpawn, delegate { NPCTap(TapTroupeTapper.TapAnim.Tap); })
@@ -473,7 +473,7 @@ namespace HeavenStudio.Games
                         }
                         else
                         {
-                            BeatAction.New(instance.gameObject, new List<BeatAction.Action>()
+                            BeatAction.New(instance, new List<BeatAction.Action>()
                             {
                                 new BeatAction.Action(beatToSpawn - 0.3f, delegate { currentTapAnim = TapTroupeTapper.TapAnim.BamTapReady; shouldSwitchStep = true; }),
                                 new BeatAction.Action(beatToSpawn, delegate { NPCTap(TapTroupeTapper.TapAnim.BamTapReady); })
@@ -482,7 +482,7 @@ namespace HeavenStudio.Games
                     }
                     else if (i == 0)
                     {
-                        BeatAction.New(instance.gameObject, new List<BeatAction.Action>()
+                        BeatAction.New(instance, new List<BeatAction.Action>()
                         {
                             new BeatAction.Action(beatToSpawn - 0.3f, delegate { currentTapAnim = TapTroupeTapper.TapAnim.BamReady; shouldSwitchStep = false; }),
                             new BeatAction.Action(beatToSpawn, delegate { NPCTap(TapTroupeTapper.TapAnim.BamReady, true, false); })
@@ -491,7 +491,7 @@ namespace HeavenStudio.Games
                     else
                     {
                         
-                        BeatAction.New(instance.gameObject, new List<BeatAction.Action>()
+                        BeatAction.New(instance, new List<BeatAction.Action>()
                         {
                             new BeatAction.Action(beatToSpawn - 0.3f, delegate { currentTapAnim = TapTroupeTapper.TapAnim.Bam; shouldSwitchStep = true; }),
                             new BeatAction.Action(beatToSpawn, delegate { NPCTap(TapTroupeTapper.TapAnim.Bam); }),
@@ -540,7 +540,7 @@ namespace HeavenStudio.Games
                     okayOneVoiceLine = "A";
                     break;
             }
-            BeatAction.New(instance.gameObject, new List<BeatAction.Action>()
+            BeatAction.New(instance, new List<BeatAction.Action>()
             {
                 new BeatAction.Action(beat - 1f, delegate 
                 { 
@@ -599,7 +599,7 @@ namespace HeavenStudio.Games
             {
                 for (int i = 0; i < length; i++)
                 {
-                    BeatAction.New(instance.gameObject, new List<BeatAction.Action>()
+                    BeatAction.New(instance, new List<BeatAction.Action>()
                     {
                         new BeatAction.Action(beat + i, delegate
                         {
@@ -724,7 +724,7 @@ namespace HeavenStudio.Games
             {
                 corner.ResetFace();
             }
-            BeatAction.New(instance.gameObject, new List<BeatAction.Action>()
+            BeatAction.New(instance, new List<BeatAction.Action>()
             {
                 new BeatAction.Action(caller.startBeat + caller.timer + 0.1f, delegate { if (playerTapper.transform.localScale.x != npcTappers[0].transform.localScale.x) playerTapper.dontSwitchNextStep = true; })
             });

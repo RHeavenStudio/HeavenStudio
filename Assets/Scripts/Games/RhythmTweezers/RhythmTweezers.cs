@@ -297,7 +297,7 @@ namespace HeavenStudio.Games
             Hair hair = Instantiate(hairBase, transform).GetComponent<Hair>();
             spawnedHairs.Add(hair);
 
-            BeatAction.New(instance.gameObject, new List<BeatAction.Action>()
+            BeatAction.New(instance, new List<BeatAction.Action>()
             {
                 new BeatAction.Action(beat, delegate
                 {
@@ -322,7 +322,7 @@ namespace HeavenStudio.Games
             SoundByte.PlayOneShotGame("rhythmTweezers/longAppear", beat);
             LongHair hair = Instantiate(longHairBase, transform).GetComponent<LongHair>();
             spawnedLongs.Add(hair);
-            BeatAction.New(instance.gameObject, new List<BeatAction.Action>()
+            BeatAction.New(instance, new List<BeatAction.Action>()
             {
                 new BeatAction.Action(beat, delegate
                 {
@@ -417,7 +417,7 @@ namespace HeavenStudio.Games
             Tweezers spawnedTweezers = Instantiate(Tweezers, transform);
             spawnedTweezers.gameObject.SetActive(true);
             spawnedTweezers.Init(beat, beat + length);
-            BeatAction.New(instance.gameObject, new List<BeatAction.Action>()
+            BeatAction.New(instance, new List<BeatAction.Action>()
             {
                 new BeatAction.Action(beat - 0.25, delegate
                 {

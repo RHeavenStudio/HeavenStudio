@@ -270,7 +270,7 @@ namespace HeavenStudio.Games
                     AlienSpeakInactive(speakEventToCheck["spaceNum"]);
                 }
             }
-            BeatAction.New(gameObject, queuedSpeaks);
+            BeatAction.New(this, queuedSpeaks);
         }
 
         public override void OnGameSwitch(double beat)
@@ -404,7 +404,7 @@ namespace HeavenStudio.Games
                 ScheduleInput(beat, length + relativeBeat, InputType.STANDARD_DOWN | InputType.DIRECTION_DOWN, AlienTapping, AlienOnMiss, AlienEmpty);
                 callDiagList.Add(input["dialogue"]);
             }
-            BeatAction.New(gameObject, new List<BeatAction.Action>()
+            BeatAction.New(this, new List<BeatAction.Action>()
             {
                 new BeatAction.Action(beat, delegate
                 {
@@ -450,7 +450,7 @@ namespace HeavenStudio.Games
 
             MultiSound.Play(sound.ToArray());
 
-            BeatAction.New(gameObject, new List<BeatAction.Action>()
+            BeatAction.New(this, new List<BeatAction.Action>()
             {
                 new BeatAction.Action(beat, delegate { alien.Play(animString, 0, 0); }),
                 new BeatAction.Action(beat + .5f, delegate { alien.Play(animString, 0, 0); }),
@@ -512,7 +512,7 @@ namespace HeavenStudio.Games
 
             if (!stay)
             {
-                BeatAction.New(missionControl, new List<BeatAction.Action>()
+                BeatAction.New(instance, new List<BeatAction.Action>()
                     {
                         new BeatAction.Action(beat + length, delegate { missionControl.SetActive(false); }),
                     });

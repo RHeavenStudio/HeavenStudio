@@ -182,7 +182,7 @@ namespace HeavenStudio.Games
             moveAnim = exit ? "NPCDrummersExit" : "NPCDrummersEnter";
             isMoving = true;
             lastEase = (EasingFunction.Ease)ease;
-            BeatAction.New(instance.gameObject, new List<BeatAction.Action>()
+            BeatAction.New(instance, new List<BeatAction.Action>()
             {
                 new BeatAction.Action(beat + length - 0.01f, delegate { isMoving = false; })
             });
@@ -195,7 +195,7 @@ namespace HeavenStudio.Games
             {
                 for (int i = 0; i < length; i++)
                 {
-                    BeatAction.New(instance.gameObject, new List<BeatAction.Action>()
+                    BeatAction.New(instance, new List<BeatAction.Action>()
                     {
                         new BeatAction.Action(beat + i, delegate { Bop(); })
                     });

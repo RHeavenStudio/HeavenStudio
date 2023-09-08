@@ -175,7 +175,7 @@ namespace HeavenStudio.Games
         {
             if (beat >= startBlippingBeat) {
                 double tempBeat = ((beat % 1 == 0.5) ? Mathf.Floor((float)beat) : Mathf.Round((float)beat)) + (startBlippingBeat % 1);
-                BeatAction.New(instance.gameObject, new List<BeatAction.Action>() {
+                BeatAction.New(instance, new List<BeatAction.Action>() {
                     new BeatAction.Action(tempBeat, delegate { man.RecursiveBlipping(tempBeat); })
                 });
                 startBlippingBeat = double.MaxValue;
@@ -223,7 +223,7 @@ namespace HeavenStudio.Games
             if (stopBlipping) instance.stopBlipping = true;
             if (playDing) SoundByte.PlayOneShotGame("mrUpbeat/ding", beat: beat, forcePlay: true);
             if (applause) SoundByte.PlayOneShot("applause", beat: beat);
-            BeatAction.New(instance.gameObject, new List<BeatAction.Action>() {
+            BeatAction.New(instance, new List<BeatAction.Action>() {
                 new BeatAction.Action(beat + 0.5, delegate { 
                     instance.stopStepping = false;
                     instance.stopBlipping = false; 
@@ -255,7 +255,7 @@ namespace HeavenStudio.Games
             metronomeAnim.DoScaledAnimationAsync("MetronomeGo" + dir, 0.5f);
             SoundByte.PlayOneShotGame("mrUpbeat/metronome" + dir);
             ScheduleInput(beat, 0.5f, InputType.STANDARD_DOWN, Success, Miss, Nothing);
-            BeatAction.New(gameObject, new List<BeatAction.Action>() {
+            BeatAction.New(this, new List<BeatAction.Action>() {
                 new BeatAction.Action(beat + 1, delegate { RecursiveStepping(beat + 1); })
             });
             stepIterate++;
@@ -274,7 +274,7 @@ namespace HeavenStudio.Games
                     stepIterate++;
                 }));
             }
-            BeatAction.New(gameObject, actions);
+            BeatAction.New(this, actions);
         }
 
         public static void Blipping(double beat, float length)

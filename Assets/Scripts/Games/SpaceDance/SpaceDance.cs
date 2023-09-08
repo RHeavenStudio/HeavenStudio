@@ -283,7 +283,7 @@ namespace HeavenStudio.Games
         {
             if (!grampsLoopingAnim || !grampsSniffing) return;
             spaceGrampsShouldBop = false;
-            BeatAction.New(instance.gameObject, new List<BeatAction.Action>()
+            BeatAction.New(instance, new List<BeatAction.Action>()
             {
                 new BeatAction.Action(beat, delegate
                 {
@@ -317,7 +317,7 @@ namespace HeavenStudio.Games
         {
             if (!grampsLoopingAnim || grampsSniffing) return;
             spaceGrampsShouldBop = false;
-            BeatAction.New(instance.gameObject, new List<BeatAction.Action>()
+            BeatAction.New(instance, new List<BeatAction.Action>()
             {
                 new BeatAction.Action(beat + 0.66666f , delegate
                 {
@@ -412,7 +412,7 @@ namespace HeavenStudio.Games
             if (grampsTurns) grampsCanBop = false;
             ScheduleInput(beat, 1f, InputType.DIRECTION_RIGHT_DOWN, JustRight, RightMiss, Empty);
 
-            BeatAction.New(Player, new List<BeatAction.Action>() 
+            BeatAction.New(instance, new List<BeatAction.Action>() 
             {
                 new BeatAction.Action(beat,     delegate 
                 {
@@ -481,7 +481,7 @@ namespace HeavenStudio.Games
             if (grampsSits) grampsCanBop = false;
             ScheduleInput(beat, 1f, InputType.DIRECTION_DOWN_DOWN, JustSit, SitMiss, Empty);
 
-            BeatAction.New(Player, new List<BeatAction.Action>() 
+            BeatAction.New(instance, new List<BeatAction.Action>() 
             {
                 new BeatAction.Action(beat,     delegate 
                 {
@@ -556,7 +556,7 @@ namespace HeavenStudio.Games
             if (grampsPunches) grampsCanBop = false;
             ScheduleInput(beat, 1.5f, InputType.STANDARD_DOWN, JustPunch, PunchMiss, Empty);
 
-            BeatAction.New(Player, new List<BeatAction.Action>() 
+            BeatAction.New(instance, new List<BeatAction.Action>() 
                 {
                 new BeatAction.Action(beat, delegate 
                 {
@@ -615,7 +615,7 @@ namespace HeavenStudio.Games
                         bops.Add(new BeatAction.Action(beat + i, delegate { GrampsBop(); }));
                     }
                 }
-                BeatAction.New(instance.gameObject, bops);
+                BeatAction.New(instance, bops);
             }
         }
 

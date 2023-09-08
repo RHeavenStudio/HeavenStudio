@@ -400,7 +400,7 @@ namespace HeavenStudio.Games
             goBopSpec = targetAuto == (int)IdolBopType.Both || targetAuto == (int)IdolBopType.Spectators;
             for (int i = 0; i < length; i++)
             {
-                BeatAction.New(instance.gameObject, new List<BeatAction.Action>()
+                BeatAction.New(instance, new List<BeatAction.Action>()
                 {
                     new BeatAction.Action(beat + i, delegate { BopSingle(target); })
                 });
@@ -494,7 +494,7 @@ namespace HeavenStudio.Games
                         idolAnimator.Play("IdolCrap" + GetPerformanceSuffix(), -1, 0);
                         break;
                     case (int)IdolAnimations.Call:
-                        BeatAction.New(Arisa, new List<BeatAction.Action>()
+                        BeatAction.New(instance, new List<BeatAction.Action>()
                     {
                         new BeatAction.Action(beat,             delegate { Arisa.GetComponent<Animator>().Play("IdolCall0" + GetPerformanceSuffix(), -1, 0); }),
                         new BeatAction.Action(beat + 0.75f,     delegate { Arisa.GetComponent<Animator>().Play("IdolCall1" + GetPerformanceSuffix(), -1, 0); }),
@@ -507,21 +507,21 @@ namespace HeavenStudio.Games
                         DoIdolJump(beat, length);
                         break;
                     case (int)IdolAnimations.BigCall:
-                        BeatAction.New(Arisa, new List<BeatAction.Action>()
+                        BeatAction.New(instance, new List<BeatAction.Action>()
                     {
                         new BeatAction.Action(beat,             delegate { Arisa.GetComponent<Animator>().Play("IdolBigCall0" + GetPerformanceSuffix(), -1, 0); }),
                         new BeatAction.Action(beat + length,    delegate { Arisa.GetComponent<Animator>().Play("IdolBigCall1" + GetPerformanceSuffix(), -1, 0); }),
                     });
                         break;
                     case (int)IdolAnimations.Squat:
-                        BeatAction.New(Arisa, new List<BeatAction.Action>()
+                        BeatAction.New(instance, new List<BeatAction.Action>()
                     {
                         new BeatAction.Action(beat,             delegate { Arisa.GetComponent<Animator>().Play("IdolSquat0" + GetPerformanceSuffix(), -1, 0); }),
                         new BeatAction.Action(beat + length,    delegate { Arisa.GetComponent<Animator>().Play("IdolSquat1" + GetPerformanceSuffix(), -1, 0); }),
                     });
                         break;
                     case (int)IdolAnimations.Wink:
-                        BeatAction.New(Arisa, new List<BeatAction.Action>()
+                        BeatAction.New(instance, new List<BeatAction.Action>()
                     {
                         new BeatAction.Action(beat,             delegate { Arisa.GetComponent<Animator>().Play("IdolWink0" + GetPerformanceSuffix(), -1, 0); }),
                         new BeatAction.Action(beat + length,    delegate { Arisa.GetComponent<Animator>().Play("IdolWink1" + GetPerformanceSuffix(), -1, 0); }),
@@ -573,7 +573,7 @@ namespace HeavenStudio.Games
             idolJumpStartTime = beat;
 
             //play anim
-            BeatAction.New(Arisa, new List<BeatAction.Action>()
+            BeatAction.New(instance, new List<BeatAction.Action>()
             {
                 new BeatAction.Action(beat,                     delegate { Arisa.GetComponent<Animator>().Play("IdolJump" + GetPerformanceSuffix(), -1, 0); }),
                 new BeatAction.Action(beat + 1f,                delegate { Arisa.GetComponent<Animator>().Play("IdolLand" + GetPerformanceSuffix(), -1, 0); }),
@@ -641,7 +641,7 @@ namespace HeavenStudio.Games
             Prepare(beat + 5f); 
             Prepare(beat + 6f); 
 
-            BeatAction.New(Arisa, new List<BeatAction.Action>()
+            BeatAction.New(instance, new List<BeatAction.Action>()
             {
                 new BeatAction.Action(beat,         delegate { DoIdolPeace();}),
                 new BeatAction.Action(beat + 1f,    delegate { DoIdolPeace();}),
@@ -691,7 +691,7 @@ namespace HeavenStudio.Games
             Prepare(beat + 3f, 2);
             Prepare(beat + 4f, 1);
 
-            BeatAction.New(Arisa, new List<BeatAction.Action>()
+            BeatAction.New(instance, new List<BeatAction.Action>()
             {
                 new BeatAction.Action(beat,                         delegate { DoIdolCall(0, isBig); Blue.PlayAnimState("Beat"); Orange.PlayAnimState("Beat"); }),
                 new BeatAction.Action(beat + (isBig ? 1f : 0.75f),  delegate { DoIdolCall(1, isBig); }),
@@ -753,7 +753,7 @@ namespace HeavenStudio.Games
             DisableSpecBop(beat, 3.75f);
 
             PlayAnimationAll("FanBigReady", onlyOverrideBop: true);
-            BeatAction.New(this.gameObject, new List<BeatAction.Action>()
+            BeatAction.New(this, new List<BeatAction.Action>()
             {
                 new BeatAction.Action(beat + 1.5f,   delegate { PlayAnimationAll("FanBigReady", onlyOverrideBop: true); }),
                 new BeatAction.Action(beat + 2f,    delegate { PlayAnimationAll("FanBigReady", onlyOverrideBop: true); }),
@@ -846,7 +846,7 @@ namespace HeavenStudio.Games
                 }
                 // Jukebox.PlayOneShotGame("fanClub/play_clap", volume: 0.08f);
                 SoundByte.PlayOneShotGame("fanClub/crap_impact", pitch: UnityEngine.Random.Range(0.95f, 1.05f), volume: 0.1f);
-                BeatAction.New(Spectators[who], new List<BeatAction.Action>()
+                BeatAction.New(Spectators[who].GetComponent<NtrIdolFan>(), new List<BeatAction.Action>()
                 {
                     new BeatAction.Action(beat, delegate { Spectators[who].GetComponent<Animator>().Play("FanClap", -1, 0); }),
                     new BeatAction.Action(beat + 0.1f, delegate { Spectators[who].GetComponent<Animator>().Play("FanFree", -1, 0); }),
@@ -855,7 +855,7 @@ namespace HeavenStudio.Games
             }
             else
             {
-                BeatAction.New(this.gameObject, new List<BeatAction.Action>()
+                BeatAction.New(this, new List<BeatAction.Action>()
                 {
                     new BeatAction.Action(beat, delegate { PlayAnimationAll("FanClap", true, true);}),
                     new BeatAction.Action(beat + 0.1f, delegate { PlayAnimationAll("FanFree", true, true);}),
@@ -865,7 +865,7 @@ namespace HeavenStudio.Games
 
         private void PlayLongClap(double beat)
         {
-            BeatAction.New(this.gameObject, new List<BeatAction.Action>()
+            BeatAction.New(this, new List<BeatAction.Action>()
             {
                 new BeatAction.Action(beat, delegate { PlayAnimationAll("FanClap", true, true);}),
                 new BeatAction.Action(beat + 1f, delegate { PlayAnimationAll("FanFree", true, true);}),
@@ -874,7 +874,7 @@ namespace HeavenStudio.Games
 
         private void PlayChargeClap(double beat)
         {
-            BeatAction.New(this.gameObject, new List<BeatAction.Action>()
+            BeatAction.New(this, new List<BeatAction.Action>()
             {
                 new BeatAction.Action(beat, delegate { PlayAnimationAll("FanClap", true, true);}),
                 new BeatAction.Action(beat + 0.1f, delegate { PlayAnimationAll("FanClapCharge", true, true);}),
@@ -884,7 +884,7 @@ namespace HeavenStudio.Games
         private void StartJump(int idx, double beat)
         {
             Spectators[idx].GetComponent<NtrIdolFan>().jumpStartTime = beat;
-            BeatAction.New(Spectators[idx], new List<BeatAction.Action>()
+            BeatAction.New(Spectators[idx].GetComponent<NtrIdolFan>(), new List<BeatAction.Action>()
             {
                 new BeatAction.Action(beat, delegate { Spectators[idx].GetComponent<Animator>().Play("FanJump", -1, 0);}),
                 new BeatAction.Action(beat + 1f, delegate { Spectators[idx].GetComponent<Animator>().Play("FanPrepare", -1, 0);}),
@@ -934,7 +934,7 @@ namespace HeavenStudio.Games
             goBopSpec = false;
 
             // recreation of sub61
-            BeatAction.New(this.gameObject, new List<BeatAction.Action>()
+            BeatAction.New(this, new List<BeatAction.Action>()
             {
                 new BeatAction.Action(beat, delegate { StartClapLoop(beat, 1);}),
                 
@@ -972,7 +972,7 @@ namespace HeavenStudio.Games
 
         void StartClapLoop(double beat, int who)
         {
-            BeatAction.New(Spectators[who], new List<BeatAction.Action>()
+            BeatAction.New(Spectators[who].GetComponent<NtrIdolFan>(), new List<BeatAction.Action>()
             {
                 new BeatAction.Action(beat, delegate { PlayOneClap(beat, who); }),
                 new BeatAction.Action(beat + 0.5f, delegate { StartClapLoop(beat + 0.5f, who); }),

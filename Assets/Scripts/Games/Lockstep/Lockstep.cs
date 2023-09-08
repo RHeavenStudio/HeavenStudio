@@ -410,7 +410,7 @@ namespace HeavenStudio.Games
             {
                 for (int i = 0; i < length; i++)
                 {
-                    BeatAction.New(instance.gameObject, new List<BeatAction.Action>()
+                    BeatAction.New(instance, new List<BeatAction.Action>()
                     {
                         new BeatAction.Action(beat + i, delegate
                         {
@@ -493,7 +493,7 @@ namespace HeavenStudio.Games
             {
                 if (action.beat >= gameswitchBeat) actions.Add(action);
             }
-            if (actions.Count > 0) BeatAction.New(instance.gameObject, actions);
+            if (actions.Count > 0) BeatAction.New(instance, actions);
         }
 
         public static void OffbeatSwitchSound(double beat, bool hoSound, bool sound)
@@ -556,7 +556,7 @@ namespace HeavenStudio.Games
             {
                 if (action.beat >= gameswitchBeat) actions.Add(action);
             }
-            if (actions.Count > 0) BeatAction.New(instance.gameObject, actions);
+            if (actions.Count > 0) BeatAction.New(instance, actions);
         }
 
         private struct QueuedMarch
@@ -627,7 +627,7 @@ namespace HeavenStudio.Games
                 }));
                 ScheduleInput(stepBeat - 1, 1, InputType.STANDARD_DOWN, offBeat ? JustOff : JustOn, offBeat ? MissOff : MissOn, Nothing);
             }
-            BeatAction.New(gameObject, steps);
+            BeatAction.New(this, steps);
         }
 
         private void StartMarching(double beat, bool sound, int amount, bool visual)
@@ -636,7 +636,7 @@ namespace HeavenStudio.Games
             bool offBeat = beat % 1 != 0;
             if (visual)
             {
-                BeatAction.New(instance.gameObject, new List<BeatAction.Action>()
+                BeatAction.New(instance, new List<BeatAction.Action>()
                 {
                     new BeatAction.Action(beat, delegate { ChangeBeatBackGroundColour(offBeat); })
                 });
@@ -661,7 +661,7 @@ namespace HeavenStudio.Games
             bool offBeat = beat % 1 != 0;
             bool bachOnBeat = BachOnBeat(beat);
             ScheduleInput(beat - 1, 1, InputType.STANDARD_DOWN, offBeat ? JustOff : JustOn, offBeat ? MissOff : MissOn, Nothing);
-            BeatAction.New(instance.gameObject, new List<BeatAction.Action>()
+            BeatAction.New(instance, new List<BeatAction.Action>()
             {
                 new BeatAction.Action(beat, delegate 
                 { 

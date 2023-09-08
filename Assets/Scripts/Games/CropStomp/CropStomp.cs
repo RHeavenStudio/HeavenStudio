@@ -171,7 +171,7 @@ namespace HeavenStudio.Games
                 startBeat = inactiveStart + (stepsPassed * 2f);
 
                 // Cue the marching proper to begin when applicable.
-                BeatAction.New(gameObject, new List<BeatAction.Action>()
+                BeatAction.New(this, new List<BeatAction.Action>()
                 {
                     new BeatAction.Action(startBeat - 0.25f, delegate { StartMarching(startBeat); })
                 });

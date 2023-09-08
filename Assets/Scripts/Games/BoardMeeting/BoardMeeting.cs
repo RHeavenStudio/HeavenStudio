@@ -169,7 +169,7 @@ namespace HeavenStudio.Games
             {
                 for (int i = 0; i < length; i++)
                 {
-                    BeatAction.New(instance.gameObject, new List<BeatAction.Action>()
+                    BeatAction.New(instance, new List<BeatAction.Action>()
                     {
                         new BeatAction.Action(beat + i, delegate
                         {
@@ -192,7 +192,7 @@ namespace HeavenStudio.Games
                 new MultiSound.Sound("boardMeeting/three", beat + 1),
                 new MultiSound.Sound("boardMeeting/stopAll", beat + 2)
             });
-            BeatAction.New(instance.gameObject, new List<BeatAction.Action>()
+            BeatAction.New(instance, new List<BeatAction.Action>()
             {
                 new BeatAction.Action(beat, delegate { assistantAnim.DoScaledAnimationAsync("One", 0.5f); }),
                 new BeatAction.Action(beat + 1, delegate { assistantAnim.DoScaledAnimationAsync("Three", 0.5f); }),
@@ -254,7 +254,7 @@ namespace HeavenStudio.Games
                 }));
             }
             stops.Add(new BeatAction.Action(beat + length * executiveCount + 0.5f, delegate { executivesCanBop = true; }));
-            BeatAction.New(instance.gameObject, stops);
+            BeatAction.New(instance, stops);
             ScheduleInput(beat, length * (executiveCount - 1), InputType.STANDARD_DOWN, Just, Miss, Empty);
         }
 
@@ -295,7 +295,7 @@ namespace HeavenStudio.Games
                     executives[index].Spin(soundToPlay);
                 }));
             }
-            BeatAction.New(instance.gameObject, rolls);
+            BeatAction.New(instance, rolls);
 
         }
 
@@ -402,7 +402,7 @@ namespace HeavenStudio.Games
             }
             SoundByte.PlayOneShotGame("boardMeeting/stopPlayer");
             executives[executiveCount - 1].Stop();
-            BeatAction.New(instance.gameObject, new List<BeatAction.Action>()
+            BeatAction.New(instance, new List<BeatAction.Action>()
             {
                 new BeatAction.Action(caller.timer + caller.startBeat + 1f, delegate
                 {
@@ -436,7 +436,7 @@ namespace HeavenStudio.Games
             executives[executiveCount - 1].Stop();
             assistantAnim.DoScaledAnimationAsync("Stop", 0.5f);
             SoundByte.PlayOneShotGame("boardMeeting/stopAllPlayer");
-            BeatAction.New(instance.gameObject, new List<BeatAction.Action>()
+            BeatAction.New(instance, new List<BeatAction.Action>()
             {
                 new BeatAction.Action(caller.timer + caller.startBeat + 1f, delegate
                 {

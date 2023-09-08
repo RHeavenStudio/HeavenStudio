@@ -55,7 +55,7 @@ namespace HeavenStudio.Games.Scripts_DoubleDate
 
         void Just(PlayerActionEvent caller, float state)
         {
-            BeatAction.New(gameObject, new List<BeatAction.Action>()
+            BeatAction.New(this, new List<BeatAction.Action>()
             {
                 new BeatAction.Action(conductor.songPositionInBeatsAsDouble + 3f, delegate
                 {
@@ -89,7 +89,7 @@ namespace HeavenStudio.Games.Scripts_DoubleDate
             SoundByte.PlayOneShotGame("doubleDate/weasel_hide");
             game.MissKick(pathStartBeat + 2.25f);
 
-            BeatAction.New(gameObject, new List<BeatAction.Action>()
+            BeatAction.New(this, new List<BeatAction.Action>()
             {
                 new BeatAction.Action(conductor.songPositionInBeatsAsDouble + 4f, delegate
                 {

@@ -322,7 +322,7 @@ namespace HeavenStudio.Games
             goBopTuck = whoBopsAuto == (int)WhoBops.CaptainTuck || whoBopsAuto == (int)WhoBops.Both;
             for (int i = 0; i < length; i++)
             {
-                BeatAction.New(instance.gameObject, new List<BeatAction.Action>()
+                BeatAction.New(instance, new List<BeatAction.Action>()
                 {
                     new BeatAction.Action(beat + i, delegate
                     {
@@ -410,13 +410,13 @@ namespace HeavenStudio.Games
                 {
                     ScheduleInput(beat - 1, 1 + i, InputType.STANDARD_ALT_DOWN, JustFlipperRoll, MissFlipperRoll, Nothing);
                     queuedMovements.Add(beat + i);
-                    BeatAction.New(instance.gameObject, new List<BeatAction.Action>()
+                    BeatAction.New(instance, new List<BeatAction.Action>()
                     {
                         new BeatAction.Action(beat + i - 0.5f, delegate { moveLeft = flippers[0].left;})
                     });
                     foreach (var flipper in flippers)
                     {
-                        BeatAction.New(instance.gameObject, new List<BeatAction.Action>()
+                        BeatAction.New(instance, new List<BeatAction.Action>()
                         {
                             new BeatAction.Action(beat + i, delegate { flipper.Flip(roll, true);})
                         });
@@ -448,7 +448,7 @@ namespace HeavenStudio.Games
                         soundToPlay = $"flipperFlop/count/flopNoise{noiseToPlay}";
                         if (thatsItBarberShop)
                         {
-                            BeatAction.New(instance.gameObject, new List<BeatAction.Action>()
+                            BeatAction.New(instance, new List<BeatAction.Action>()
                             {
                                 new BeatAction.Action(beat + i, delegate
                                 {
@@ -462,7 +462,7 @@ namespace HeavenStudio.Games
                         }
                         else
                         {
-                            BeatAction.New(instance.gameObject, new List<BeatAction.Action>()
+                            BeatAction.New(instance, new List<BeatAction.Action>()
                             {
                                 new BeatAction.Action(beat + i - 0.5f, delegate
                                 {
@@ -482,7 +482,7 @@ namespace HeavenStudio.Games
                     else
                     {
                         string failingSoundToPlay = $"flipperFlop/count/flopCountFail{flopCount}";
-                        BeatAction.New(instance.gameObject, new List<BeatAction.Action>()
+                        BeatAction.New(instance, new List<BeatAction.Action>()
                         {
                             new BeatAction.Action(beat + i, delegate {
                                 string voiceLine = soundToPlay;
@@ -507,7 +507,7 @@ namespace HeavenStudio.Games
 
                     if (appreciation != (int)AppreciationType.None && uh == 0 && i + 1 == length)
                     {
-                        BeatAction.New(instance.gameObject, new List<BeatAction.Action>()
+                        BeatAction.New(instance, new List<BeatAction.Action>()
                         {
                             new BeatAction.Action(beat + i + 1f, delegate
                             {
@@ -537,7 +537,7 @@ namespace HeavenStudio.Games
                     }
                     if (appreciation == (int)AppreciationType.None && uh == 0 && i + 1 == length)
                     {
-                        BeatAction.New(instance.gameObject, new List<BeatAction.Action>()
+                        BeatAction.New(instance, new List<BeatAction.Action>()
                         {
                             new BeatAction.Action(beat + length - 0.1f, delegate { missed = false; currentCaptainBop = CaptainTuckBopType.Normal; captainTuckFaceAnim.Play("CaptainTuckNeutralExpression", 0, 0); })
                         });
@@ -559,7 +559,7 @@ namespace HeavenStudio.Games
                     ScheduleInput(beat - 1, 1 + i, InputType.STANDARD_DOWN, JustFlip, MissFlip, Nothing);
                     foreach (var flipper in flippers)
                     {
-                        BeatAction.New(instance.gameObject, new List<BeatAction.Action>()
+                        BeatAction.New(instance, new List<BeatAction.Action>()
                         {
                             new BeatAction.Action(beat + i, delegate { flipper.Flip(roll, true); CaptainTuckBop(); })
                         });
@@ -574,7 +574,7 @@ namespace HeavenStudio.Games
                     string voiceLine = $"flipperFlop/uh{voiceLineIndex}";
                     string failVoiceLine = $"flipperFlop/uhfail{voiceLineIndex}";
 
-                    BeatAction.New(instance.gameObject, new List<BeatAction.Action>()
+                    BeatAction.New(instance, new List<BeatAction.Action>()
                     {
                         new BeatAction.Action(beat + length + i, delegate {
                             string voiceLineToPlay = voiceLine;
@@ -596,7 +596,7 @@ namespace HeavenStudio.Games
                         }),
                     });
                 }
-                BeatAction.New(instance.gameObject, new List<BeatAction.Action>()
+                BeatAction.New(instance, new List<BeatAction.Action>()
                 {
                     new BeatAction.Action(beat + length + uh, delegate 
                     { 
@@ -626,7 +626,7 @@ namespace HeavenStudio.Games
             }
             else if (uh > 0 && flopCount == 4)
             {
-                BeatAction.New(instance.gameObject, new List<BeatAction.Action>()
+                BeatAction.New(instance, new List<BeatAction.Action>()
                 {
                     new BeatAction.Action(beat + length, delegate
                     {
@@ -668,14 +668,14 @@ namespace HeavenStudio.Games
                     SoundByte.PlayOneShotGame("flipperFlop/appreciation/good");
                     if (heart)
                     {
-                        BeatAction.New(instance.gameObject, new List<BeatAction.Action>()
+                        BeatAction.New(instance, new List<BeatAction.Action>()
                         {
                             new BeatAction.Action(beat, delegate { instance.captainTuckFaceAnim.DoScaledAnimationAsync("CaptainTuckBlushExpression", 0.5f); })
                         });
                     }
                     else
                     {
-                        BeatAction.New(instance.gameObject, new List<BeatAction.Action>()
+                        BeatAction.New(instance, new List<BeatAction.Action>()
                         {
                             new BeatAction.Action(beat, delegate { instance.captainTuckFaceAnim.DoScaledAnimationAsync("CaptainTuckSpeakExpression", 0.5f); })
                         });
@@ -685,14 +685,14 @@ namespace HeavenStudio.Games
                     SoundByte.PlayOneShotGame("flipperFlop/appreciation/goodjob");
                     if (heart)
                     {
-                        BeatAction.New(instance.gameObject, new List<BeatAction.Action>()
+                        BeatAction.New(instance, new List<BeatAction.Action>()
                         {
                             new BeatAction.Action(beat, delegate { instance.captainTuckFaceAnim.DoScaledAnimationAsync("CaptainTuckBlushExpression", 0.5f); })
                         });
                     }
                     else
                     {
-                        BeatAction.New(instance.gameObject, new List<BeatAction.Action>()
+                        BeatAction.New(instance, new List<BeatAction.Action>()
                         {
                             new BeatAction.Action(beat, delegate { instance.captainTuckFaceAnim.DoScaledAnimationAsync("CaptainTuckSpeakExpression", 1f); }),
                             new BeatAction.Action(beat + 0.5f, delegate { instance.captainTuckFaceAnim.DoScaledAnimationAsync("CaptainTuckSpeakExpression", 0.5f); })
@@ -703,14 +703,14 @@ namespace HeavenStudio.Games
                     SoundByte.PlayOneShotGame("flipperFlop/appreciation/nice");
                     if (heart)
                     {
-                        BeatAction.New(instance.gameObject, new List<BeatAction.Action>()
+                        BeatAction.New(instance, new List<BeatAction.Action>()
                         {
                             new BeatAction.Action(beat, delegate { instance.captainTuckFaceAnim.DoScaledAnimationAsync("CaptainTuckBlushExpression", 0.5f); })
                         });
                     }
                     else
                     {
-                        BeatAction.New(instance.gameObject, new List<BeatAction.Action>()
+                        BeatAction.New(instance, new List<BeatAction.Action>()
                         {
                             new BeatAction.Action(beat, delegate { instance.captainTuckFaceAnim.DoScaledAnimationAsync("CaptainTuckSpeakExpression", 0.5f); })
                         });
@@ -720,14 +720,14 @@ namespace HeavenStudio.Games
                     SoundByte.PlayOneShotGame("flipperFlop/appreciation/welldone");
                     if (heart)
                     {
-                        BeatAction.New(instance.gameObject, new List<BeatAction.Action>()
+                        BeatAction.New(instance, new List<BeatAction.Action>()
                         {
                             new BeatAction.Action(beat, delegate { instance.captainTuckFaceAnim.DoScaledAnimationAsync("CaptainTuckBlushExpression", 0.5f); })
                         });
                     }
                     else
                     {
-                        BeatAction.New(instance.gameObject, new List<BeatAction.Action>()
+                        BeatAction.New(instance, new List<BeatAction.Action>()
                         {
                             new BeatAction.Action(beat, delegate { instance.captainTuckFaceAnim.DoScaledAnimationAsync("CaptainTuckSpeakExpression", 1f); }),
                             new BeatAction.Action(beat + 0.5f, delegate { instance.captainTuckFaceAnim.DoScaledAnimationAsync("CaptainTuckSpeakExpression", 0.5f); })
@@ -738,14 +738,14 @@ namespace HeavenStudio.Games
                     SoundByte.PlayOneShotGame("flipperFlop/appreciation/yes");
                     if (heart)
                     {
-                        BeatAction.New(instance.gameObject, new List<BeatAction.Action>()
+                        BeatAction.New(instance, new List<BeatAction.Action>()
                         {
                             new BeatAction.Action(beat, delegate { instance.captainTuckFaceAnim.DoScaledAnimationAsync("CaptainTuckBlushExpression", 0.5f); })
                         });
                     }
                     else
                     {
-                        BeatAction.New(instance.gameObject, new List<BeatAction.Action>()
+                        BeatAction.New(instance, new List<BeatAction.Action>()
                         {
                             new BeatAction.Action(beat, delegate { instance.captainTuckFaceAnim.DoScaledAnimationAsync("CaptainTuckSpeakExpression", 0.5f); })
                         });
@@ -770,14 +770,14 @@ namespace HeavenStudio.Games
             ScheduleInput(beat, 3, InputType.STANDARD_DOWN, JustFlip, MissFlip, Nothing);
             foreach (var flipper in flippers)
             {
-                BeatAction.New(instance.gameObject, new List<BeatAction.Action>()
+                BeatAction.New(instance, new List<BeatAction.Action>()
                 {
                     new BeatAction.Action(beat + 2, delegate { flipper.Flip(false, true);}),
                     new BeatAction.Action(beat + 2.5f, delegate { flipper.Flip(false, true);}),
                     new BeatAction.Action(beat + 3, delegate { flipper.Flip(false, true);})
                 });
             }
-            BeatAction.New(instance.gameObject, new List<BeatAction.Action>()
+            BeatAction.New(instance, new List<BeatAction.Action>()
             {
                 new BeatAction.Action(beat + 2, delegate {captainTuckAnim.DoScaledAnimationAsync("CaptainBop", 0.5f); }),
                 new BeatAction.Action(beat + 3, delegate {captainTuckAnim.DoScaledAnimationAsync("CaptainBop", 0.5f); }),
@@ -892,7 +892,7 @@ namespace HeavenStudio.Games
                 }
             }
 
-            BeatAction.New(instance.gameObject, speaks);
+            BeatAction.New(instance, speaks);
         }
 
         public static void FlipperRollVoiceLine(double beat, int amount, bool now)
@@ -1043,7 +1043,7 @@ namespace HeavenStudio.Games
                 }
             }
 
-            BeatAction.New(instance.gameObject, speaks);
+            BeatAction.New(instance, speaks);
         }
 
         public void JustFlip(PlayerActionEvent caller, float state)

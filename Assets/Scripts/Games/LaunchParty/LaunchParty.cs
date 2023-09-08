@@ -405,7 +405,7 @@ namespace HeavenStudio.Games
                     rocketScript.InitBowlingPin(beat);
                     break;
             }
-            BeatAction.New(instance.gameObject, new List<BeatAction.Action>()
+            BeatAction.New(instance, new List<BeatAction.Action>()
             {
                 new BeatAction.Action(beat + beatOffset, delegate { rocketScript.Rise(); })
             });

@@ -278,7 +278,7 @@ namespace HeavenStudio.Games
             if (GameManager.instance.currentGame != "octopusMachine") {
                 OctopusMachine.queuePrepare = true;
             } else {
-                BeatAction.New(instance.gameObject, new List<BeatAction.Action>() {
+                BeatAction.New(instance, new List<BeatAction.Action>() {
                     new BeatAction.Action(beat - prepBeats, delegate { 
                         OctopusMachine.queuePrepare = true;
                     })
@@ -415,7 +415,7 @@ namespace HeavenStudio.Games
             intervalStartBeat = beat;
             beatInterval = length;
             intervalStarted = true;
-            BeatAction.New(gameObject, new List<BeatAction.Action>() {
+            BeatAction.New(this, new List<BeatAction.Action>() {
                 new BeatAction.Action(beat + length, delegate {
                     PassTurn(beat + length);
                 }),
@@ -445,7 +445,7 @@ namespace HeavenStudio.Games
             // thanks to ras for giving me this line of code
             // i do NOT understand how it works
             queuedInputs.Sort((s1, s2) => s1.beat.CompareTo(s2.beat));
-            BeatAction.New(gameObject, queuedInputs);
+            BeatAction.New(this, queuedInputs);
         }
         
         private void SqueezeHit(PlayerActionEvent caller, float state)

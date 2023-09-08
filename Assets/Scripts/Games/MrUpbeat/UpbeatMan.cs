@@ -44,7 +44,7 @@ namespace HeavenStudio.Games.Scripts_MrUpbeat
             if (shouldBlip) {
                 Blipping(beat);
             }
-            BeatAction.New(gameObject, new List<BeatAction.Action>() {
+            BeatAction.New(this, new List<BeatAction.Action>() {
                 new BeatAction.Action(beat + 1, delegate { RecursiveBlipping(beat + 1); })
             });
         }

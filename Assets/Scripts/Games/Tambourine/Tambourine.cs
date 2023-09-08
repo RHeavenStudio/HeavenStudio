@@ -256,7 +256,7 @@ namespace HeavenStudio.Games
                 }
             }
 
-            BeatAction.New(gameObject, actions);
+            BeatAction.New(this, actions);
 
             if (autoPassTurn)
             {
@@ -329,7 +329,7 @@ namespace HeavenStudio.Games
                     Bop(beat + length + inputBeat, 1, (int)WhoBops.Monkey, (int)WhoBops.None);
                 }));
             }
-            BeatAction.New(gameObject, actions);
+            BeatAction.New(this, actions);
         }
 
         public void Bop(double beat, float length, int whoBops, int whoBopsAuto)
@@ -338,7 +338,7 @@ namespace HeavenStudio.Games
             handsGoBop = whoBopsAuto == (int)WhoBops.Player || whoBopsAuto == (int)WhoBops.Both;
             for (int i = 0; i < length; i++)
             {
-                BeatAction.New(instance.gameObject, new List<BeatAction.Action>()
+                BeatAction.New(instance, new List<BeatAction.Action>()
                 {
                     new BeatAction.Action(beat + i, delegate
                     {
@@ -377,7 +377,7 @@ namespace HeavenStudio.Games
                 new MultiSound.Sound("tambourine/player/turnPass/note3", beat + 0.3f),
             }, forcePlay: true);
             happyFace.SetActive(true);
-            BeatAction.New(instance.gameObject, new List<BeatAction.Action>()
+            BeatAction.New(instance, new List<BeatAction.Action>()
             {
                 new BeatAction.Action(beat + 1, delegate { happyFace.SetActive(false); }),
             });

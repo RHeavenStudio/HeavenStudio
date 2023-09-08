@@ -208,7 +208,7 @@ namespace HeavenStudio.Games.Scripts_PajamaParty
             else
             {
                 anim.DoScaledAnimationAsync("MakoThrowOut", 0.5f);
-                BeatAction.New(Player, new List<BeatAction.Action>()
+                BeatAction.New(this, new List<BeatAction.Action>()
                 {
                     new BeatAction.Action(
                         beat + 0.5f,
@@ -231,7 +231,7 @@ namespace HeavenStudio.Games.Scripts_PajamaParty
             charging = false;
             canCharge = false;
             canJump = false;
-            BeatAction.New(Player, new List<BeatAction.Action>()
+            BeatAction.New(this, new List<BeatAction.Action>()
             {
                 new BeatAction.Action(
                     beat + 0.5f,
@@ -366,7 +366,7 @@ namespace HeavenStudio.Games.Scripts_PajamaParty
                     longSleep = true;
                 }
 
-                BeatAction.New(Player, new List<BeatAction.Action>()
+                BeatAction.New(this, new List<BeatAction.Action>()
                 {
                     new BeatAction.Action(
                         beat,
@@ -418,7 +418,7 @@ namespace HeavenStudio.Games.Scripts_PajamaParty
 
                     if (!longSleep)
                     {
-                        BeatAction.New(Player, new List<BeatAction.Action>()
+                        BeatAction.New(this, new List<BeatAction.Action>()
                         {
                             new BeatAction.Action(
                                 caller.startBeat + 7f,

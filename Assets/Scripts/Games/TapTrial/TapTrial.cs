@@ -259,7 +259,7 @@ namespace HeavenStudio.Games
                 {
                     actions.Add(new BeatAction.Action(beat + i, delegate { SingleBop(); }));
                 }
-                BeatAction.New(gameObject, actions);
+                BeatAction.New(this, actions);
             }
         }
 
@@ -278,7 +278,7 @@ namespace HeavenStudio.Games
         public void Tap(double beat)
         {
             canBop = false;
-            BeatAction.New(instance.gameObject, new List<BeatAction.Action>()
+            BeatAction.New(instance, new List<BeatAction.Action>()
             {
                 new BeatAction.Action(beat, delegate
                 {
@@ -308,7 +308,7 @@ namespace HeavenStudio.Games
         public void DoubleTap(double beat)
         {
             canBop = false;
-            BeatAction.New(instance.gameObject, new List<BeatAction.Action>()
+            BeatAction.New(instance, new List<BeatAction.Action>()
             {
                 new BeatAction.Action(beat, delegate
                 {
@@ -347,7 +347,7 @@ namespace HeavenStudio.Games
         public void TripleTap(double beat)
         {
             canBop = false;
-            BeatAction.New(instance.gameObject, new List<BeatAction.Action>()
+            BeatAction.New(instance, new List<BeatAction.Action>()
             {
                 new BeatAction.Action(beat, delegate
                 {
@@ -400,7 +400,7 @@ namespace HeavenStudio.Games
         {
             canBop = false;
             jumpStartBeat = beat;
-            BeatAction.New(gameObject, new List<BeatAction.Action>()
+            BeatAction.New(this, new List<BeatAction.Action>()
             {
                 new BeatAction.Action(beat, delegate
                 {

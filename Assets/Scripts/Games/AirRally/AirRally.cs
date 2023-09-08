@@ -753,7 +753,7 @@ namespace HeavenStudio.Games
 
         public void ServeObject(double beat, double targetBeat, bool type)
         {
-            BeatAction.New(gameObject, new List<BeatAction.Action>
+            BeatAction.New(this, new List<BeatAction.Action>
             {
                 new BeatAction.Action(beat - 0.5, delegate
                 {
@@ -815,12 +815,12 @@ namespace HeavenStudio.Games
 
         public void ForthCountIn4Do(double beat, float length)
         {
-            BeatAction.New(instance.gameObject, instance.ForthCountIn4Action(beat, length));
+            BeatAction.New(instance, instance.ForthCountIn4Action(beat, length));
         }
 
         public void ForthCountIn8Do(double beat, float length)
         {
-            BeatAction.New(instance.gameObject, instance.ForthCountIn8Action(beat, length));
+            BeatAction.New(instance, instance.ForthCountIn8Action(beat, length));
         }
 
         private List<BeatAction.Action> ForthCountIn4Action(double beat, float length)
@@ -905,7 +905,7 @@ namespace HeavenStudio.Games
 
         public void ForthVoiceDo(double beat)
         {
-            BeatAction.New(instance.gameObject, new List<BeatAction.Action>()
+            BeatAction.New(instance, new List<BeatAction.Action>()
             {
                 instance.ForthVoiceAction(beat)
             });
@@ -1068,7 +1068,7 @@ namespace HeavenStudio.Games
 
             tempCounts.Sort((x, y) => x.beat.CompareTo(y.beat));
 
-            BeatAction.New(instance.gameObject, tempCounts);
+            BeatAction.New(instance, tempCounts);
         }
 
         public override void OnPlay(double beat)
@@ -1220,7 +1220,7 @@ namespace HeavenStudio.Games
             if (!(silent || isBaBumBeat) || (isCatch && !silent)) 
                 SoundByte.PlayOneShotGame("airRally/nya_" + distanceString, beat, 1, 1, false, false, nyaOffsets[(int)DistanceAtBeat(beat)]);
 
-            BeatAction.New(gameObject, new List<BeatAction.Action>()
+            BeatAction.New(this, new List<BeatAction.Action>()
             {
                 new BeatAction.Action(beat - 1, delegate
                 {
@@ -1336,7 +1336,7 @@ namespace HeavenStudio.Games
 
             MultiSound.Play(sounds.ToArray());
 
-            BeatAction.New(gameObject, new List<BeatAction.Action>()
+            BeatAction.New(this, new List<BeatAction.Action>()
             {
                 new BeatAction.Action(beat, delegate 
                 {
@@ -1400,7 +1400,7 @@ namespace HeavenStudio.Games
 
                 if (IsCatchBeat(caller.startBeat + caller.timer + 1))
                 {
-                    BeatAction.New(instance.gameObject, new List<BeatAction.Action>()
+                    BeatAction.New(instance, new List<BeatAction.Action>()
                     {
                         new BeatAction.Action(caller.startBeat + caller.timer + 1, delegate
                         {
@@ -1444,7 +1444,7 @@ namespace HeavenStudio.Games
 
                 if (IsCatchBeat(caller.startBeat + caller.timer + 2))
                 {
-                    BeatAction.New(instance.gameObject, new List<BeatAction.Action>()
+                    BeatAction.New(instance, new List<BeatAction.Action>()
                     {
                         new BeatAction.Action(caller.startBeat + caller.timer + 2, delegate
                         {

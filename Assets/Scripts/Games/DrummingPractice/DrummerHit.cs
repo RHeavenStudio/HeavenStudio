@@ -22,7 +22,7 @@ namespace HeavenStudio.Games.Scripts_DrummingPractice
         { 
             game.ScheduleInput(startBeat, 1f, InputType.STANDARD_DOWN, Just, Miss, Out);
 
-            BeatAction.New(game.gameObject, new List<BeatAction.Action>()
+            BeatAction.New(game, new List<BeatAction.Action>()
             {
                 new BeatAction.Action(startBeat+1f, delegate { 
                     SoundByte.PlayOneShotGame("drummingPractice/drum");
@@ -46,7 +46,7 @@ namespace HeavenStudio.Games.Scripts_DrummingPractice
         private void Miss(PlayerActionEvent caller) 
         {
             game.SetFaces(2);
-            BeatAction.New(game.gameObject, new List<BeatAction.Action>()
+            BeatAction.New(game, new List<BeatAction.Action>()
             {
                 new BeatAction.Action(startBeat+2f, delegate { 
                     game.SetFaces(0);
@@ -64,7 +64,7 @@ namespace HeavenStudio.Games.Scripts_DrummingPractice
 
             if (!_hit)
             {
-                BeatAction.New(game.gameObject, new List<BeatAction.Action>()
+                BeatAction.New(game, new List<BeatAction.Action>()
                 {
                     new BeatAction.Action(startBeat+2f, delegate { 
                         game.SetFaces(0);

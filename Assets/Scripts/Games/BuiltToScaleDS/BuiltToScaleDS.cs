@@ -343,7 +343,7 @@ namespace HeavenStudio.Games
                         }
                     }));
                 }
-                BeatAction.New(instance.gameObject, actions);
+                BeatAction.New(instance, actions);
             }
             if (!autoLights && !shouldLights)
             {
@@ -470,7 +470,7 @@ namespace HeavenStudio.Games
         public void MultiplePiano(double beat, float length, bool silent, int note1, int note2, int note3, int note4, int note5, int note6)
         {
             if (silent) return;
-            BeatAction.New(instance.gameObject, new List<BeatAction.Action>()
+            BeatAction.New(instance, new List<BeatAction.Action>()
             {
                 new BeatAction.Action(beat, delegate { PlayPiano(beat, length, note1); }),
                 new BeatAction.Action(beat + length, delegate { PlayPiano(beat + length, length, note2); }),

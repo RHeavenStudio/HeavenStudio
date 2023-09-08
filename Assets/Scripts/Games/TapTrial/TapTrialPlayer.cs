@@ -124,7 +124,7 @@ namespace HeavenStudio.Games.Scripts_TapTrial
             anim.DoScaledAnimationAsync("PosePrepare_1", 0.5f);
             state = TapState.TripleTap;
             tripleTaps = 0;
-            BeatAction.New(gameObject, new List<BeatAction.Action>()
+            BeatAction.New(this, new List<BeatAction.Action>()
             {
                 new BeatAction.Action(beat + 0.5, delegate
                 {
