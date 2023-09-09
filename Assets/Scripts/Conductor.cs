@@ -1,16 +1,24 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 using Starpelly;
 using Jukebox;
-using Jukebox.Legacy;
 
 namespace HeavenStudio
 {
     // [RequireComponent(typeof(AudioSource))]
     public class Conductor : MonoBehaviour
     {
+        public struct AddedPitchChange
+        {
+            public double time;
+            public float pitch;
+        }
+
+        public List<AddedPitchChange> addedPitchChanges = new List<AddedPitchChange>();
+
         // Song beats per minute
         // This is determined by the song you're trying to sync up to
         public float songBpm;
@@ -35,8 +43,9 @@ namespace HeavenStudio
 
         // Current time of the song
         private double time;
-        double dspTime, lastDspTime;
-        double absTime, lastAbsTime;
+        double dspTime;
+        double absTime, absTimeAdjust;
+        double dspMargin = 128/44100.0;
 
         // the dspTime we started at
         private double dspStart;
@@ -45,6 +54,7 @@ namespace HeavenStudio
         DateTime startTime;
 
         //the beat we started at
+        private double startPos;
         private double startBeat;
         public double startBeatAsDouble => startBeat;
 
@@ -79,12 +89,37 @@ namespace HeavenStudio
 
         public void SetTimelinePitch(float pitch)
         {
+            if (pitch != 0 && pitch * minigamePitch != SongPitch)
+            {    
+                Debug.Log("added pitch change " + pitch * minigamePitch + " at" + absTime);
+                addedPitchChanges.Add(new AddedPitchChange { time = absTime, pitch = pitch * minigamePitch });
+            }
+
             timelinePitch = pitch;
             musicSource.pitch = SongPitch;
+            
         }
 
         public void SetMinigamePitch(float pitch)
         {
+            if (pitch != 0 && pitch * timelinePitch != SongPitch)
+            {    
+                Debug.Log("added pitch change " + pitch * timelinePitch + " at" + absTime);
+                addedPitchChanges.Add(new AddedPitchChange { time = absTime, pitch = pitch * timelinePitch });
+            }
+
+            minigamePitch = pitch;
+            musicSource.pitch = SongPitch;
+        }
+
+        public void SetMinigamePitch(float pitch, double beat)
+        {
+            if (pitch != 0 && pitch * timelinePitch != SongPitch)
+            {
+                Debug.Log("added pitch change " + pitch * timelinePitch + " at" + GetSongPosFromBeat(beat));
+                addedPitchChanges.Add(new AddedPitchChange { time = GetSongPosFromBeat(beat) - startPos, pitch = pitch * timelinePitch });
+            }
+
             minigamePitch = pitch;
             musicSource.pitch = SongPitch;
         }
@@ -97,13 +132,16 @@ namespace HeavenStudio
         void Start()
         {
             musicSource.priority = 0;
+            AudioConfiguration config = AudioSettings.GetConfiguration();
+            dspMargin = 2 * (config.dspBufferSize / (double)config.sampleRate);
+            addedPitchChanges.Clear();
         }
 
         public void SetBeat(double beat)
         {
             var chart = GameManager.instance.Beatmap;
             double offset = chart.data.offset;
-            double startPos = GetSongPosFromBeat(beat);
+            startPos = GetSongPosFromBeat(beat);
 
             double dspTime = AudioSettings.dspTime;
 
@@ -120,12 +158,21 @@ namespace HeavenStudio
         public void Play(double beat)
         {
             if (isPlaying) return;
+
+            if (!isPaused)
+            {
+                AudioConfiguration config = AudioSettings.GetConfiguration();
+                dspMargin = 2 * (config.dspBufferSize / (double)config.sampleRate);
+                addedPitchChanges.Clear();
+                addedPitchChanges.Add(new AddedPitchChange { time = 0, pitch = SongPitch });
+            }
+
             var chart = GameManager.instance.Beatmap;
             double offset = chart.data.offset;
             double dspTime = AudioSettings.dspTime;
             GameManager.instance.SortEventsList();
 
-            double startPos = GetSongPosFromBeat(beat);
+            startPos = GetSongPosFromBeat(beat);
             firstBeatOffset = offset;
             time = startPos;
 
@@ -149,11 +196,10 @@ namespace HeavenStudio
             }
 
             songPosBeat = GetBeatFromSongPos(time);
-            startTime = DateTime.Now;
-            lastAbsTime = 0;
-            lastDspTime = AudioSettings.dspTime;
+            absTimeAdjust = 0;
             dspStart = dspTime;
             startBeat = songPosBeat;
+            startTime = DateTime.Now;
             
             isPlaying = true;
             isPaused = false;
@@ -181,13 +227,48 @@ namespace HeavenStudio
             musicSource.Stop();
         }
 
-        void SeekMusicToTime(double startPos)
+        /// <summary>
+        /// stops playback of the audio without stopping beatkeeping
+        /// </summary>
+        public void StopOnlyAudio()
+        {
+            musicSource.Stop();
+        }
+
+        /// <summary>
+        /// fades out the audio over a duration
+        /// </summary>
+        /// <param name="duration">duration of the fade</param>
+        public void FadeOutAudio(float duration)
+        {
+            StartCoroutine(FadeOutAudioCoroutine(duration));
+        }
+
+        IEnumerator FadeOutAudioCoroutine(float duration)
+        {
+            float startVolume = musicSource.volume;
+            float endVolume = 0f;
+            float startTime = Time.time;
+            float endTime = startTime + duration;
+
+            while (Time.time < endTime)
+            {
+                float t = (Time.time - startTime) / duration;
+                musicSource.volume = Mathf.Lerp(startVolume, endVolume, t);
+                yield return null;
+            }
+
+            musicSource.volume = endVolume;
+            StopOnlyAudio();
+        }
+
+        void SeekMusicToTime(double fStartPos)
         {
             double offset = GameManager.instance.Beatmap.data.offset;
-            if (musicSource.clip != null && startPos < musicSource.clip.length - offset)
+            if (musicSource.clip != null && fStartPos < musicSource.clip.length - offset)
             {
                 // https://www.desmos.com/calculator/81ywfok6xk
-                double musicStartDelay = -offset - startPos;
+                double musicStartDelay = -offset - fStartPos;
                 if (musicStartDelay > 0)
                 {
                     musicSource.timeSamples = 0;
@@ -195,23 +276,12 @@ namespace HeavenStudio
                 else
                 {
                     int freq = musicSource.clip.frequency;
-                    int samples = (int)(freq * (startPos + offset));
+                    int samples = (int)(freq * (fStartPos + offset));
 
                     musicSource.timeSamples = samples;
                 }
             }
         }
-        double deltaTimeReal { get { 
-            double ret = absTime - lastAbsTime; 
-            lastAbsTime = absTime;
-            return ret;
-        }}
-
-        double deltaTimeDsp { get { 
-            double ret = dspTime - lastDspTime; 
-            lastDspTime = dspTime;
-            return ret;
-        }}
         
         public void Update()
         {
@@ -235,18 +305,43 @@ namespace HeavenStudio
                 }
 
                 absTime = (DateTime.Now - startTime).TotalSeconds;
+
+                //dspTime to sync with audio thread in case of drift
                 dspTime = AudioSettings.dspTime - dspStart;
-                double dt = deltaTimeReal;
+                if (Math.Abs((absTime + absTimeAdjust) - dspTime) > dspMargin)
+                {
+                    // Debug.Log($"dsp drift detected; dspTime {dspTime}, absTime {absTime}, diff {(absTime + absTimeAdjust) - dspTime}");
+                    absTimeAdjust = absTime - dspTime - absTimeAdjust;
+                }
 
-                //todo: dspTime to sync with audio thread in case of drift
-
-                time += dt * SongPitch;
-
-                songPos = time;
+                time = MapTimeToPitchChanges(absTime + absTimeAdjust);
+                
+                songPos = startPos + time;
                 songPosBeat = GetBeatFromSongPos(songPos);
             }
         }
 
+        double MapTimeToPitchChanges(double time)
+        {
+            double counter = 0;
+            double lastChangeTime = 0;
+            float pitch = addedPitchChanges[0].pitch;
+            foreach (var pch in addedPitchChanges)
+            {
+                double changeTime = pch.time;
+                if (changeTime > time)
+                {
+                    break;
+                }
+
+                counter += (changeTime - lastChangeTime) * pitch;
+                lastChangeTime = changeTime;
+                pitch = pch.pitch;
+            }
+
+            counter += (time - lastChangeTime) * pitch;
+            return counter;
+        }
 
         public void LateUpdate()
         {

@@ -210,12 +210,14 @@ namespace HeavenStudio.Util
         // minenice: consider doing these in the audio thread so they can work per-sample?
         public void BendUp(float bendTime, float bendedPitch)
         {
+            if (!gameObject.activeSelf) return;
             this.bendedPitch = bendedPitch;
             StartCoroutine(BendUpLoop(bendTime));
         }
 
         public void BendDown(float bendTime)
         {
+            if (!gameObject.activeSelf) return;
             StartCoroutine(BendDownLoop(bendTime));
         }
 
@@ -253,6 +255,7 @@ namespace HeavenStudio.Util
 
         public void KillLoop(double fadeTime)
         {
+            if (!gameObject.activeSelf) return;
             StartCoroutine(FadeLoop(fadeTime));
         }
 
