@@ -43,9 +43,10 @@ namespace HeavenStudio.Util
         IEnumerator BeatActionRoutine()
         {
             int idx = 0;
+            WaitUntil waitUntil = new WaitUntil(() => Conductor.instance.songPositionInBeatsAsDouble >= actions[idx].beat || !Conductor.instance.isPlaying);
             while (idx < actions.Count)
             {
-                yield return new WaitUntil(() => Conductor.instance.songPositionInBeatsAsDouble >= actions[idx].beat || !Conductor.instance.isPlaying);
+                yield return waitUntil;
 
                 if (!Conductor.instance.isPlaying)
                 {

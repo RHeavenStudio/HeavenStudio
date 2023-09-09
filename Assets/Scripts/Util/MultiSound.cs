@@ -54,7 +54,6 @@ namespace HeavenStudio.Util
                 ms.playingSounds.Add(s);
             }
 
-            GameManager.instance.SoundObjects.Add(go);
             return ms;
         }
 
@@ -62,7 +61,7 @@ namespace HeavenStudio.Util
         {
             foreach (Util.Sound sound in playingSounds)
             {
-                if (sound != null)
+                if (!sound.available)
                     return;
             }
             Delete();
@@ -70,7 +69,10 @@ namespace HeavenStudio.Util
 
         public void Delete()
         {
-            GameManager.instance.SoundObjects.Remove(gameObject);
+            foreach (Util.Sound sound in playingSounds)
+            {
+                sound.Stop();
+            }
             Destroy(gameObject);
         }
     }

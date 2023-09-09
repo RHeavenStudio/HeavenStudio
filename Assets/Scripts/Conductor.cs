@@ -265,7 +265,7 @@ namespace HeavenStudio
             {
                 if (metronomeSound != null)
                 {
-                    metronomeSound.Delete();
+                    metronomeSound.Stop();
                     metronomeSound = null;
                 }
             }

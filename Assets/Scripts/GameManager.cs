@@ -14,10 +14,12 @@ namespace HeavenStudio
 {
     public class GameManager : MonoBehaviour
     {
+        const int SoundPoolSize = 64;
+
         [Header("Lists")]
         [NonSerialized] public RiqBeatmap Beatmap = new();
-        private List<GameObject> preloadedGames = new List<GameObject>();
-        [NonSerialized] public List<GameObject> SoundObjects = new List<GameObject>();
+        private List<GameObject> preloadedGames = new();
+        [NonSerialized] public List<Sound> SoundObjects = new();
 
         [Header("Components")]
         [NonSerialized] public Camera GameCamera, CursorCam, OverlayCamera, StaticCamera;
@@ -138,6 +140,22 @@ namespace HeavenStudio
 
             GoForAPerfect.instance.Disable();
             /////
+
+            if (SoundObjects.Count == 0)
+            {
+                SoundObjects.Clear();
+                for (int i = 0; i < SoundPoolSize; i++)
+                {
+                    GameObject oneShot = new GameObject($"Pooled Scheduled Sound {i}");
+                    oneShot.transform.SetParent(transform);
+
+                    AudioSource audioSource = oneShot.AddComponent<AudioSource>();
+                    audioSource.playOnAwake = false;
+
+                    Sound snd = oneShot.AddComponent<Sound>();
+                    SoundObjects.Add(snd);
+                }
+            }
             
 
             if (preLoaded)
@@ -592,10 +610,9 @@ namespace HeavenStudio
 
         public void KillAllSounds()
         {
-            for (int i = 0; i < SoundObjects.Count; i++)
-                Destroy(SoundObjects[i].gameObject);
+            foreach (Sound snd in SoundObjects)
+                snd.Stop();
             
-            SoundObjects.Clear();
             Util.SoundByte.KillOneShots();
         }
 
@@ -632,6 +649,42 @@ namespace HeavenStudio
                 return double.MinValue;
         }
 
+        public static int GetIndexAfter(List<double> list, double compareTo)
+        {
+            list.Sort();
+            if (list.Count > 0)
+            {
+                foreach (double item in list)
+                {
+                    if (item >= compareTo)
+                    {
+                        Debug.Log("Next index after " + compareTo + " is " + list.IndexOf(item));
+                        return Math.Max(list.IndexOf(item), 0);
+                    }
+                }
+                return list.Count;
+            }
+            return 0;
+        }
+
+        public static int GetIndexBefore(List<double> list, double compareTo)
+        {
+            list.Sort();
+            if (list.Count > 0)
+            {
+                foreach (double item in list)
+                {
+                    if (item >= compareTo)
+                    {
+                        Debug.Log("Last index before " + compareTo + " is " + (list.IndexOf(item) - 1));
+                        return Math.Max(list.IndexOf(item) - 1, 0);
+                    }
+                }
+                return list.Count - 1;
+            }
+            return 0;
+        }
+
         public void SetCurrentEventToClosest(double beat)
         {
             SortEventsList();
@@ -640,17 +693,17 @@ namespace HeavenStudio
             {
                 List<double> entities = Beatmap.Entities.Select(c => c.beat).ToList();
 
-                currentEvent = entities.IndexOf(GetClosestInList(entities, beat));
-                currentPreEvent = entities.IndexOf(GetClosestInList(entities, beat));
-                currentPreSequence = entities.IndexOf(GetClosestInList(entities, beat));
+                currentEvent = GetIndexAfter(entities, beat);
+                currentPreEvent = GetIndexAfter(entities, beat);
+                currentPreSequence = GetIndexAfter(entities, beat);
 
                 var gameSwitchs = Beatmap.Entities.FindAll(c => c.datamodel.Split(1) == "switchGame");
 
-                string newGame = Beatmap.Entities[currentEvent].datamodel.Split(0);
+                string newGame = Beatmap.Entities[Math.Min(currentEvent, entities.Count - 1)].datamodel.Split(0);
 
                 if (gameSwitchs.Count > 0)
                 {
-                    int index = gameSwitchs.FindIndex(c => c.beat == GetClosestInList(gameSwitchs.Select(c => c.beat).ToList(), beat));
+                    int index = GetIndexBefore(gameSwitchs.Select(c => c.beat).ToList(), beat);
                     currentPreSwitch = index;
                     var closestGameSwitch = gameSwitchs[index];
                     if (closestGameSwitch.beat <= beat)
