@@ -49,9 +49,7 @@ namespace HeavenStudio.Util
                 yield return waitUntil;
 
                 if (!Conductor.instance.isPlaying)
-                {
                     yield break;
-                }
 
                 actions[idx].function.Invoke();
                 idx++;

@@ -658,7 +658,6 @@ namespace HeavenStudio
                 {
                     if (item >= compareTo)
                     {
-                        Debug.Log("Next index after " + compareTo + " is " + list.IndexOf(item));
                         return Math.Max(list.IndexOf(item), 0);
                     }
                 }
@@ -676,7 +675,6 @@ namespace HeavenStudio
                 {
                     if (item >= compareTo)
                     {
-                        Debug.Log("Last index before " + compareTo + " is " + (list.IndexOf(item) - 1));
                         return Math.Max(list.IndexOf(item) - 1, 0);
                     }
                 }

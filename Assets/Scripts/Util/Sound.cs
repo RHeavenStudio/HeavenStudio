@@ -156,7 +156,6 @@ namespace HeavenStudio.Util
             if (played && !looping) // Looping sounds are destroyed manually.
             {
                 yield return new WaitUntil(() => !audioSource.isPlaying);
-                Debug.Log($"{gameObject.name} finished playing");
                 Stop();
                 yield break;
             }
