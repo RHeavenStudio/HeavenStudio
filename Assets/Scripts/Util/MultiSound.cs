@@ -64,14 +64,14 @@ namespace HeavenStudio.Util
                 if (!sound.available)
                     return;
             }
-            Delete();
+            Destroy(gameObject);
         }
 
         public void Delete()
         {
             foreach (Util.Sound sound in playingSounds)
             {
-                sound.Stop();
+                GameManager.instance.SoundObjects.Release(sound);
             }
             Destroy(gameObject);
         }

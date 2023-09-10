@@ -19,10 +19,12 @@ namespace HeavenStudio.Util
 
         public static Sound GetAvailableScheduledSound()
         {
-            soundIdx++;
-            soundIdx %= GameManager.instance.SoundObjects.Count;
-            GameManager.instance.SoundObjects[soundIdx].Stop();
-            return GameManager.instance.SoundObjects[soundIdx];
+            // soundIdx++;
+            // soundIdx %= GameManager.instance.SoundObjects.Count;
+            // GameManager.instance.SoundObjects[soundIdx].Stop();
+            // return GameManager.instance.SoundObjects[soundIdx];
+
+            return GameManager.instance.SoundObjects.Get();
         }
 
         /// <summary>
@@ -172,15 +174,6 @@ namespace HeavenStudio.Util
             if (looping || beat != -1 || pitch != 1f)
             {
                 Sound snd = GetAvailableScheduledSound();
-                if (snd == null)
-                {
-                    GameObject oneShot = new GameObject("oneShot");
-
-                    AudioSource audioSource = oneShot.AddComponent<AudioSource>();
-                    audioSource.playOnAwake = false;
-                    snd = oneShot.AddComponent<Sound>();
-                    GameManager.instance.SoundObjects.Add(snd);
-                }
 
                 snd.clip = clip;
                 snd.beat = beat;
@@ -212,16 +205,6 @@ namespace HeavenStudio.Util
         public static Sound PlayOneShotScheduled(string name, double targetTime, float pitch = 1f, float volume = 1f, bool looping = false, string game = null)
         {
             Sound snd = GetAvailableScheduledSound();
-            if (snd == null)
-            {
-                GameObject oneShot = new GameObject("oneShot");
-
-                AudioSource audioSource = oneShot.AddComponent<AudioSource>();
-                //audioSource.outputAudioMixerGroup = Settings.GetSFXMixer();
-                audioSource.playOnAwake = false;
-                snd = oneShot.AddComponent<Sound>();
-                GameManager.instance.SoundObjects.Add(snd);
-            }
 
             AudioClip clip = null;
             if (game != null)
