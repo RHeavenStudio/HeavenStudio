@@ -22,6 +22,11 @@ Shader "TextMeshPro/Distance Field External Outline"
         _BevelClamp ("Bevel Clamp", Range(0,1)) = 0
         _BevelRoundness ("Bevel Roundness", Range(0,1)) = 0
 
+        _ShaderFlags ("Flags", float) = 0
+        _ScaleRatioA ("Scale RatioA", float) = 1
+        _ScaleRatioB ("Scale RatioB", float) = 1
+        _ScaleRatioC ("Scale RatioC", float) = 1
+
         _LightAngle ("Light Angle", Range(0.0, 6.2831853)) = 3.1416
         _SpecularColor ("Specular", Color) = (1,1,1,1)
         _SpecularPower ("Specular", Range(0,4)) = 2.0
@@ -53,11 +58,6 @@ Shader "TextMeshPro/Distance Field External Outline"
 
         _WeightNormal ("Weight Normal", float) = 0
         _WeightBold ("Weight Bold", float) = 0.5
-
-        _ShaderFlags ("Flags", float) = 0
-        _ScaleRatioA ("Scale RatioA", float) = 1
-        _ScaleRatioB ("Scale RatioB", float) = 1
-        _ScaleRatioC ("Scale RatioC", float) = 1
 
         _MainTex ("Font Atlas", 2D) = "white" {}
         _TextureWidth ("Texture Width", float) = 512
