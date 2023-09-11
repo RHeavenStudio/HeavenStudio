@@ -5,6 +5,7 @@ using UnityEngine;
 
 using Starpelly;
 using Jukebox;
+using HeavenStudio.Util;
 
 namespace HeavenStudio
 {
@@ -114,14 +115,13 @@ namespace HeavenStudio
 
         public void SetMinigamePitch(float pitch, double beat)
         {
-            if (pitch != 0 && pitch * timelinePitch != SongPitch)
-            {
-                Debug.Log("added pitch change " + pitch * timelinePitch + " at" + GetSongPosFromBeat(beat));
-                addedPitchChanges.Add(new AddedPitchChange { time = GetSongPosFromBeat(beat) - startPos, pitch = pitch * timelinePitch });
-            }
-
-            minigamePitch = pitch;
-            musicSource.pitch = SongPitch;
+            BeatAction.New( this,
+                new List<BeatAction.Action> {
+                    new BeatAction.Action(beat, delegate {
+                        SetMinigamePitch(pitch);
+                    }),
+                }
+            );
         }
 
         void Awake()

@@ -313,6 +313,7 @@ namespace HeavenStudio.Games
                 slowTree.SetActive(true);
                 normalTree.SetActive(false);
                 Conductor.instance.SetMinigamePitch(0.25f);
+                Conductor.instance.SetMinigamePitch(1f, caller.startBeat + caller.timer + 1f); 
             }
 
             doorAnim.DoScaledAnimationAsync("DoorOpen", 0.5f);
@@ -320,7 +321,6 @@ namespace HeavenStudio.Games
             {
                 new BeatAction.Action(caller.startBeat + caller.timer + 1f, delegate 
                 { 
-                    if (slowDown) Conductor.instance.SetMinigamePitch(1f); 
                     doorAnim.DoScaledAnimationAsync("DoorClose", 0.5f);
                     slowRain.SetActive(false);
                     normalRain.SetActive(true);
