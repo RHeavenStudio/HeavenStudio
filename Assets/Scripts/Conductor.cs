@@ -170,6 +170,10 @@ namespace HeavenStudio
             var chart = GameManager.instance.Beatmap;
             double offset = chart.data.offset;
             double dspTime = AudioSettings.dspTime;
+            absTimeAdjust = 0;
+            dspStart = dspTime;
+            startTime = DateTime.Now;
+
             GameManager.instance.SortEventsList();
 
             startPos = GetSongPosFromBeat(beat);
@@ -196,10 +200,7 @@ namespace HeavenStudio
             }
 
             songPosBeat = GetBeatFromSongPos(time);
-            absTimeAdjust = 0;
-            dspStart = dspTime;
             startBeat = songPosBeat;
-            startTime = DateTime.Now;
 
             isPlaying = true;
             isPaused = false;
@@ -220,6 +221,7 @@ namespace HeavenStudio
 
             songPos = time;
             songPosBeat = 0;
+            absTimeAdjust = 0;
 
             isPlaying = false;
             isPaused = false;
@@ -310,8 +312,16 @@ namespace HeavenStudio
                 dspTime = AudioSettings.dspTime - dspStart;
                 if (Math.Abs((absTime + absTimeAdjust) - dspTime) > dspMargin)
                 {
-                    // Debug.Log($"dsp drift detected; dspTime {dspTime}, absTime {absTime}, diff {(absTime + absTimeAdjust) - dspTime}");
-                    absTimeAdjust = absTime - dspTime - absTimeAdjust;
+                    Debug.Log($"dsp drift detected; dspTime {dspTime}, absTime {absTime + absTimeAdjust}, diff {(absTime + absTimeAdjust) - dspTime}");
+                    int i = 0;
+                    while (Math.Abs((absTime + absTimeAdjust) - dspTime) > dspMargin)
+                    {
+                        i++;
+                        absTimeAdjust = ((dspTime - absTime) + absTimeAdjust) * 0.5;
+                        if (i > 8) break;
+                    }
+
+                    Debug.Log($"new adjustment is {absTimeAdjust}");
                 }
 
                 time = MapTimeToPitchChanges(absTime + absTimeAdjust);

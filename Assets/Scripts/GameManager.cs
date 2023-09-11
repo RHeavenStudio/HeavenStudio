@@ -332,15 +332,25 @@ namespace HeavenStudio
 
         public void SeekAheadAndPreload(double start, float seekTime = 8f)
         {
+            List<RiqEntity> entitiesAtSameBeat = ListPool<RiqEntity>.Get();
+            List<RiqEntity> gameSwitchs = ListPool<RiqEntity>.Get();
+            Minigames.Minigame inf;
+
             //seek ahead to preload games that have assetbundles
             //check game switches first
-            var gameSwitchs = Beatmap.Entities.FindAll(c => c.datamodel.Split(1) == "switchGame");
+            foreach (RiqEntity entity in Beatmap.Entities)
+            {
+                if (entity.datamodel.Split(1) == "switchGame")
+                {
+                    gameSwitchs.Add(entity);
+                }
+            }
             if (currentPreSwitch < gameSwitchs.Count && currentPreSwitch >= 0)
             {
                 if (start + seekTime >= gameSwitchs[currentPreSwitch].beat)
                 {
                     string gameName = gameSwitchs[currentPreSwitch].datamodel.Split(2);
-                    var inf = GetGameInfo(gameName);
+                    inf = GetGameInfo(gameName);
                     if (inf != null && inf.usesAssetBundle && !inf.AssetsLoaded)
                     {
                         Debug.Log($"ASYNC loading assetbundles for game {gameName}");
@@ -351,17 +361,22 @@ namespace HeavenStudio
                 }
             }
             //then check game entities
-            List<double> entities = Beatmap.Entities.Select(c => c.beat).ToList();
             if (currentPreEvent < Beatmap.Entities.Count && currentPreEvent >= 0)
             {
-                if (start + seekTime >= entities[currentPreEvent])
+                if (start + seekTime >= eventBeats[currentPreEvent])
                 {
-                    var entitiesAtSameBeat = Beatmap.Entities.FindAll(c => c.beat == Beatmap.Entities[currentPreEvent].beat && !EventCaller.FXOnlyGames().Contains(eventCaller.GetMinigame(c.datamodel.Split('/')[0])));
+                    foreach (RiqEntity entity in Beatmap.Entities)
+                    {
+                        if (entity.beat == Beatmap.Entities[currentPreEvent].beat && !EventCaller.FXOnlyGames().Contains(eventCaller.GetMinigame(entity.datamodel.Split('/')[0])))
+                        {
+                            entitiesAtSameBeat.Add(entity);
+                        }
+                    }
                     SortEventsByPriority(entitiesAtSameBeat);
                     foreach (RiqEntity entity in entitiesAtSameBeat)
                     {
                         string gameName = entity.datamodel.Split('/')[0];
-                        var inf = GetGameInfo(gameName);
+                        inf = GetGameInfo(gameName);
                         if (inf != null && inf.usesAssetBundle && !inf.AssetsLoaded)
                         {
                             Debug.Log($"ASYNC loading assetbundles for game {gameName}");
@@ -372,23 +387,32 @@ namespace HeavenStudio
                     }
                 }
             }
+
+            ListPool<RiqEntity>.Release(entitiesAtSameBeat);
+            ListPool<RiqEntity>.Release(gameSwitchs);
         }
 
         public void SeekAheadAndDoPreEvent(double start)
         {
-            List<double> entities = Beatmap.Entities.Select(c => c.beat).ToList();
             if (currentPreSequence < Beatmap.Entities.Count && currentPreSequence >= 0)
             {
-                var seekEntity = Beatmap.Entities[currentPreSequence];
+                List<RiqEntity> entitiesAtSameBeat = ListPool<RiqEntity>.Get();
+                RiqEntity seekEntity = Beatmap.Entities[currentPreSequence];
+
+                foreach (RiqEntity entity in Beatmap.Entities)
+                {
+                    if (entity.beat == seekEntity.beat)
+                    {
+                        entitiesAtSameBeat.Add(entity);
+                    }
+                }
+                SortEventsByPriority(entitiesAtSameBeat);
 
                 float seekTime = eventCaller.GetGameAction(
                     eventCaller.GetMinigame(seekEntity.datamodel.Split(0)), seekEntity.datamodel.Split(1)).preFunctionLength;
 
-                if (start + seekTime >= entities[currentPreSequence])
+                if (start + seekTime >= eventBeats[currentPreSequence])
                 {
-                    double beat = seekEntity.beat;
-                    var entitiesAtSameBeat = Beatmap.Entities.FindAll(c => c.beat == seekEntity.beat);
-                    SortEventsByPriority(entitiesAtSameBeat);
                     foreach (RiqEntity entity in entitiesAtSameBeat)
                     {
                         currentPreSequence++;
@@ -402,6 +426,7 @@ namespace HeavenStudio
                         eventCaller.CallPreEvent(entity);
                     }
                 }
+                ListPool<RiqEntity>.Release(entitiesAtSameBeat);
             }
         }
 
@@ -456,24 +481,33 @@ namespace HeavenStudio
             {
                 if (cond.songPositionInBeatsAsDouble >= eventBeats[currentEvent])
                 {
-                    var entitiesAtSameBeat = ListPool<RiqEntity>.Get();
-                    var fxEntities = ListPool<RiqEntity>.Get();
+                    List<RiqEntity> entitiesAtSameBeat = ListPool<RiqEntity>.Get();
+                    List<RiqEntity> fxEntities = ListPool<RiqEntity>.Get();
 
                     // allows for multiple events on the same beat to be executed on the same frame, so no more 1-frame delay
-                    using (var pool = ListPool<RiqEntity>.Get(out List<RiqEntity> currentBeatEntities))
+                    using (PooledObject<List<RiqEntity>> pool = ListPool<RiqEntity>.Get(out List<RiqEntity> currentBeatEntities))
                     {
                         currentBeatEntities = Beatmap.Entities.FindAll(c => c.beat == Beatmap.Entities[currentEvent].beat);
-                        entitiesAtSameBeat = currentBeatEntities.FindAll(c => !EventCaller.FXOnlyGames().Contains(eventCaller.GetMinigame(c.datamodel.Split('/')[0])));
-                        fxEntities = currentBeatEntities.FindAll(c => EventCaller.FXOnlyGames().Contains(eventCaller.GetMinigame(c.datamodel.Split('/')[0])));
+                        foreach (RiqEntity entity in currentBeatEntities)
+                        {
+                            if (EventCaller.FXOnlyGames().Contains(eventCaller.GetMinigame(entity.datamodel.Split('/')[0])))
+                            {
+                                fxEntities.Add(entity);
+                            }
+                            else
+                            {
+                                entitiesAtSameBeat.Add(entity);
+                            }
+                        }
                     }
 
                     SortEventsByPriority(fxEntities);
                     SortEventsByPriority(entitiesAtSameBeat);
 
                     // FX entities should ALWAYS execute before gameplay entities
-                    for (int i = 0; i < fxEntities.Count; i++)
+                    foreach (RiqEntity entity in fxEntities)
                     {
-                        eventCaller.CallEvent(fxEntities[i], true);
+                        eventCaller.CallEvent(entity, true);
                         currentEvent++;
                     }
 
