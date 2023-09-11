@@ -217,6 +217,10 @@ namespace HeavenStudio
 
         public void Stop(double time)
         {
+            if (absTimeAdjust != 0)
+            {
+                Debug.Log($"Last playthrough had a dsp (audio) drift of {absTimeAdjust}.\nConsider increasing audio buffer size if audio distortion was present.");
+            }
             this.time = time;
 
             songPos = time;
@@ -310,18 +314,15 @@ namespace HeavenStudio
 
                 //dspTime to sync with audio thread in case of drift
                 dspTime = AudioSettings.dspTime - dspStart;
-                if (Math.Abs((absTime + absTimeAdjust) - dspTime) > dspMargin)
+                if (Math.Abs(absTime + absTimeAdjust - dspTime) > dspMargin)
                 {
-                    Debug.Log($"dsp drift detected; dspTime {dspTime}, absTime {absTime + absTimeAdjust}, diff {(absTime + absTimeAdjust) - dspTime}");
                     int i = 0;
-                    while (Math.Abs((absTime + absTimeAdjust) - dspTime) > dspMargin)
+                    while (Math.Abs(absTime + absTimeAdjust - dspTime) > dspMargin)
                     {
                         i++;
-                        absTimeAdjust = ((dspTime - absTime) + absTimeAdjust) * 0.5;
+                        absTimeAdjust = (dspTime - absTime + absTimeAdjust) * 0.5;
                         if (i > 8) break;
                     }
-
-                    Debug.Log($"new adjustment is {absTimeAdjust}");
                 }
 
                 time = MapTimeToPitchChanges(absTime + absTimeAdjust);
