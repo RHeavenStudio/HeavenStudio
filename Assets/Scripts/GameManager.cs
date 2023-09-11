@@ -38,7 +38,8 @@ namespace HeavenStudio
         [NonSerialized] public string txt = null;
         [NonSerialized] public string ext = null;
 
-        [NonSerialized] public int currentEvent, currentTempoEvent, currentVolumeEvent, currentSectionEvent,
+        [NonSerialized]
+        public int currentEvent, currentTempoEvent, currentVolumeEvent, currentSectionEvent,
             currentPreEvent, currentPreSwitch, currentPreSequence;
         [NonSerialized] public double endBeat;
         [NonSerialized] public float startOffset;
@@ -115,7 +116,7 @@ namespace HeavenStudio
         {
             AudioLoadDone = false;
             ChartLoadError = false;
-            currentPreEvent= 0;
+            currentPreEvent = 0;
             currentPreSwitch = 0;
             currentPreSequence = 0;
 
@@ -146,7 +147,7 @@ namespace HeavenStudio
             /////
 
             SoundObjects = new ObjectPool<Sound>(CreatePooledSound, OnTakePooledSound, OnReturnPooledSound, OnDestroyPooledSound, true, SoundPoolSizeMin, SoundPoolSizeMax);
-            
+
 
             if (preLoaded)
             {
@@ -185,7 +186,7 @@ namespace HeavenStudio
             audioSource.playOnAwake = false;
 
             Sound snd = oneShot.AddComponent<Sound>();
-            
+
             oneShot.SetActive(false);
 
             return snd;
@@ -211,7 +212,7 @@ namespace HeavenStudio
         }
 
         public void NewRemix()
-        {         
+        {
             AudioLoadDone = false;
             Beatmap = new("1", "HeavenStudio");
             Beatmap.data.properties = Minigames.propertiesModel;
@@ -302,7 +303,7 @@ namespace HeavenStudio
                 if (Beatmap.data.riqOrigin != "HeavenStudio")
                 {
                     string origin = Beatmap.data.riqOrigin?.DisplayName() ?? "Unknown Origin";
-                    GlobalGameManager.ShowErrorMessage("Warning", 
+                    GlobalGameManager.ShowErrorMessage("Warning",
                         $"This chart came from\n<alpha=#AA>{origin}</color>\nand uses content not included in Heaven Studio.\n\n<color=\"yellow\">You may be able to edit this chart in Heaven Studio to be used in its original program.</color>");
                 }
             }
@@ -317,7 +318,7 @@ namespace HeavenStudio
             {
                 SkillStarManager.instance.KillStar();
             }
-            
+
             if (SkillStarManager.instance.IsEligible && !skillStarCollected && accuracy >= 1f)
             {
                 if (SkillStarManager.instance.DoStarJust())
@@ -340,7 +341,7 @@ namespace HeavenStudio
                 {
                     string gameName = gameSwitchs[currentPreSwitch].datamodel.Split(2);
                     var inf = GetGameInfo(gameName);
-                    if (inf != null && inf.usesAssetBundle && !inf.AssetsLoaded) 
+                    if (inf != null && inf.usesAssetBundle && !inf.AssetsLoaded)
                     {
                         Debug.Log($"ASYNC loading assetbundles for game {gameName}");
                         StartCoroutine(inf.LoadCommonAssetBundleAsync());
@@ -361,7 +362,7 @@ namespace HeavenStudio
                     {
                         string gameName = entity.datamodel.Split('/')[0];
                         var inf = GetGameInfo(gameName);
-                        if (inf != null && inf.usesAssetBundle && !inf.AssetsLoaded) 
+                        if (inf != null && inf.usesAssetBundle && !inf.AssetsLoaded)
                         {
                             Debug.Log($"ASYNC loading assetbundles for game {gameName}");
                             StartCoroutine(inf.LoadCommonAssetBundleAsync());
@@ -393,7 +394,7 @@ namespace HeavenStudio
                         currentPreSequence++;
                         string gameName = entity.datamodel.Split('/')[0];
                         var inf = GetGameInfo(gameName);
-                        if (inf != null && inf.usesAssetBundle && inf.AssetsLoaded && !inf.SequencesPreloaded) 
+                        if (inf != null && inf.usesAssetBundle && inf.AssetsLoaded && !inf.SequencesPreloaded)
                         {
                             Debug.Log($"Preloading game {gameName}");
                             PreloadGameSequences(gameName);
@@ -512,7 +513,8 @@ namespace HeavenStudio
             }
         }
 
-        private void LateUpdate() {
+        private void LateUpdate()
+        {
             OverlaysManager.instance.TogleOverlaysVisibility(Editor.Editor.instance == null || Editor.Editor.instance.fullscreen || ((PersistentDataManager.gameSettings.overlaysInEditor) && (!Editor.Editor.instance.fullscreen)) || HeavenStudio.Editor.GameSettings.InPreview);
         }
 
@@ -561,7 +563,7 @@ namespace HeavenStudio
             {
                 Util.SoundByte.UnpauseOneShots();
             }
-            else 
+            else
             {
                 Conductor.instance.SetBpm(Beatmap.TempoChanges[0]["tempo"]);
                 Conductor.instance.SetVolume(Beatmap.VolumeChanges[0]["volume"]);
@@ -601,7 +603,7 @@ namespace HeavenStudio
             // pass this data to rating screen + stats
             Debug.Log($"== Playthrough statistics of {Beatmap["remixtitle"]} (played at {System.DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss")}) ==");
             Debug.Log($"Average input offset for playthrough: {averageInputOffset}ms");
-            Debug.Log($"Accuracy for playthrough: {(PlayerAccuracy * 100) : 0.00}");
+            Debug.Log($"Accuracy for playthrough: {(PlayerAccuracy * 100): 0.00}");
             Debug.Log($"Cleared {clearedSections.FindAll(c => c).Count} sections out of {Beatmap.SectionMarkers.Count}");
             if (SkillStarManager.instance.IsCollected)
                 Debug.Log($"Skill Star collected");
@@ -609,7 +611,7 @@ namespace HeavenStudio
                 Debug.Log($"Skill Star not collected");
             if (GoForAPerfect.instance.perfect)
                 Debug.Log($"Perfect Clear!");
-            
+
             KillAllSounds();
             if (playOnStart || restart)
             {
@@ -668,7 +670,8 @@ namespace HeavenStudio
 
         void SortEventsByPriority(List<RiqEntity> entities)
         {
-            entities.Sort((x, y) => {
+            entities.Sort((x, y) =>
+            {
                 Minigames.Minigame xGame = eventCaller.GetMinigame(x.datamodel.Split(0));
                 Minigames.GameAction xAction = eventCaller.GetGameAction(xGame, x.datamodel.Split(1));
                 Minigames.Minigame yGame = eventCaller.GetMinigame(y.datamodel.Split(0));
@@ -858,7 +861,7 @@ namespace HeavenStudio
             if (miniGame != null)
                 miniGame.OnGameSwitch(beat);
 
-            while(beat + 0.25 > Conductor.instance.songPositionInBeats)
+            while (beat + 0.25 > Conductor.instance.songPositionInBeats)
             {
                 if (!Conductor.instance.isPlaying)
                 {
@@ -949,7 +952,7 @@ namespace HeavenStudio
 
         private void SetAmbientGlowToCurrentMinigameColor()
         {
-            if (GetGameInfo(currentGame) != null) 
+            if (GetGameInfo(currentGame) != null)
                 HeavenStudio.StaticCamera.instance.SetAmbientGlowColour(Colors.Hex2RGB(GetGameInfo(currentGame).color), true);
         }
 

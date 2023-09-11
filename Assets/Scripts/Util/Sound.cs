@@ -50,7 +50,7 @@ namespace HeavenStudio.Util
                 GameManager.instance.SoundObjects.Release(this);
                 return;
             }
-            
+
             audioSource = GetComponent<AudioSource>();
             cond = Conductor.instance;
 
@@ -76,7 +76,7 @@ namespace HeavenStudio.Util
             {
                 playInstant = false;
                 scheduledPitch = cond.SongPitch;
-                startTime = (AudioSettings.dspTime + (cond.GetSongPosFromBeat(beat) - cond.songPositionAsDouble)/(double)scheduledPitch) - offset;
+                startTime = (AudioSettings.dspTime + (cond.GetSongPosFromBeat(beat) - cond.songPositionAsDouble) / (double)scheduledPitch) - offset;
 
                 if (scheduledPitch != 0 && AudioSettings.dspTime >= startTime)
                 {
@@ -114,7 +114,7 @@ namespace HeavenStudio.Util
                 {
                     if (!queued && dspTime > startTime - PREBAKE_TIME)
                     {
-                        startTime = (dspTime + (cond.GetSongPosFromBeat(beat) - cond.songPositionAsDouble)/(double)scheduledPitch) - offset;
+                        startTime = (dspTime + (cond.GetSongPosFromBeat(beat) - cond.songPositionAsDouble) / (double)scheduledPitch) - offset;
                         audioSource.PlayScheduled(startTime);
                         queued = true;
                     }
@@ -140,7 +140,7 @@ namespace HeavenStudio.Util
                                     audioSource.UnPause();
                                 }
                                 scheduledPitch = cond.SongPitch;
-                                startTime = (dspTime + (cond.GetSongPosFromBeat(beat) - cond.songPositionAsDouble)/(double)scheduledPitch);
+                                startTime = (dspTime + (cond.GetSongPosFromBeat(beat) - cond.songPositionAsDouble) / (double)scheduledPitch);
                                 if (queued)
                                     audioSource.SetScheduledStartTime(startTime);
                             }
@@ -268,7 +268,7 @@ namespace HeavenStudio.Util
             StartCoroutine(FadeLoop(fadeTime));
         }
 
-        float loopFadeTimer = 0f;
+        double loopFadeTimer = 0f;
         IEnumerator FadeLoop(double fadeTime)
         {
             float startingVol = audioSource.volume;
@@ -276,7 +276,7 @@ namespace HeavenStudio.Util
             while (loopFadeTimer < fadeTime)
             {
                 loopFadeTimer += Time.deltaTime;
-                audioSource.volume = (float) Math.Max((1f - (loopFadeTimer / fadeTime)) * startingVol, 0.0);
+                audioSource.volume = (float)Math.Max((1f - (loopFadeTimer / fadeTime)) * startingVol, 0.0);
                 yield return null;
             }
             yield return null;

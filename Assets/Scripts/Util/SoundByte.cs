@@ -38,7 +38,7 @@ namespace HeavenStudio.Util
                 Jukebox.AddComponent<AudioSource>();
                 Jukebox.tag = "Jukebox";
 
-                
+
             }
             if (oneShotAudioSourceObject == null)
             {
@@ -225,14 +225,14 @@ namespace HeavenStudio.Util
             //can't load from assetbundle, load from resources
             if (clip == null)
                 clip = Resources.Load<AudioClip>($"Sfx/{name}");
-            
+
             // abort if no clip found
 
             snd.clip = clip;
             snd.pitch = pitch;
             snd.volume = volume;
             snd.looping = looping;
-            
+
             snd.scheduled = true;
             snd.scheduledTime = targetTime;
             snd.Play();

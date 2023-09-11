@@ -33,19 +33,19 @@ namespace HeavenStudio
 
         // Current song position, in seconds
         private double songPos; // for Conductor use only
-        public float songPosition => (float) songPos;
+        public float songPosition => (float)songPos;
         public double songPositionAsDouble => songPos;
 
         // Current song position, in beats
         public double songPosBeat; // for Conductor use only
-        public float songPositionInBeats => (float) songPosBeat;
+        public float songPositionInBeats => (float)songPosBeat;
         public double songPositionInBeatsAsDouble => songPosBeat;
 
         // Current time of the song
         private double time;
         double dspTime;
         double absTime, absTimeAdjust;
-        double dspMargin = 128/44100.0;
+        double dspMargin = 128 / 44100.0;
 
         // the dspTime we started at
         private double dspStart;
@@ -69,7 +69,7 @@ namespace HeavenStudio
 
         // Conductor is currently playing song
         public bool isPlaying;
-        
+
         // Conductor is currently paused, but not fully stopped
         public bool isPaused;
 
@@ -90,20 +90,20 @@ namespace HeavenStudio
         public void SetTimelinePitch(float pitch)
         {
             if (pitch != 0 && pitch * minigamePitch != SongPitch)
-            {    
+            {
                 Debug.Log("added pitch change " + pitch * minigamePitch + " at" + absTime);
                 addedPitchChanges.Add(new AddedPitchChange { time = absTime, pitch = pitch * minigamePitch });
             }
 
             timelinePitch = pitch;
             musicSource.pitch = SongPitch;
-            
+
         }
 
         public void SetMinigamePitch(float pitch)
         {
             if (pitch != 0 && pitch * timelinePitch != SongPitch)
-            {    
+            {
                 Debug.Log("added pitch change " + pitch * timelinePitch + " at" + absTime);
                 addedPitchChanges.Add(new AddedPitchChange { time = absTime, pitch = pitch * timelinePitch });
             }
@@ -151,7 +151,7 @@ namespace HeavenStudio
             SeekMusicToTime(startPos);
 
             songPosBeat = GetBeatFromSongPos(time);
-            
+
             GameManager.instance.SetCurrentEventToClosest(beat);
         }
 
@@ -200,7 +200,7 @@ namespace HeavenStudio
             dspStart = dspTime;
             startBeat = songPosBeat;
             startTime = DateTime.Now;
-            
+
             isPlaying = true;
             isPaused = false;
         }
@@ -282,7 +282,7 @@ namespace HeavenStudio
                 }
             }
         }
-        
+
         public void Update()
         {
             if (isPlaying)
@@ -299,7 +299,7 @@ namespace HeavenStudio
                             musicSource.UnPause();
                         musicScheduledPitch = SongPitch;
 
-                        musicScheduledTime = (AudioSettings.dspTime + (-GameManager.instance.Beatmap.data.offset - songPositionAsDouble)/(double)SongPitch);
+                        musicScheduledTime = (AudioSettings.dspTime + (-GameManager.instance.Beatmap.data.offset - songPositionAsDouble) / (double)SongPitch);
                         musicSource.SetScheduledStartTime(musicScheduledTime);
                     }
                 }
@@ -315,7 +315,7 @@ namespace HeavenStudio
                 }
 
                 time = MapTimeToPitchChanges(absTime + absTimeAdjust);
-                
+
                 songPos = startPos + time;
                 songPosBeat = GetBeatFromSongPos(songPos);
             }
@@ -447,53 +447,53 @@ namespace HeavenStudio
                     break;
                 }
 
-                counter += (t.beat - lastTempoChangeBeat) * 60/bpm;
+                counter += (t.beat - lastTempoChangeBeat) * 60 / bpm;
                 bpm = t["tempo"];
                 lastTempoChangeBeat = t.beat;
             }
 
-            counter += (beat - lastTempoChangeBeat) * 60/bpm;
+            counter += (beat - lastTempoChangeBeat) * 60 / bpm;
 
             return counter;
         }
 
         //thank you @wooningcharithri#7419 for the psuedo-code
-            public double BeatsToSecs(double beats, float bpm)
-            {
-                return beats / bpm * 60f;
-            }
-            public double SecsToBeats(double s, float bpm)
-            {
-                return s / 60f * bpm;
-            }
+        public double BeatsToSecs(double beats, float bpm)
+        {
+            return beats / bpm * 60f;
+        }
+        public double SecsToBeats(double s, float bpm)
+        {
+            return s / 60f * bpm;
+        }
 
-            public double GetBeatFromSongPos(double seconds)
-            {
-                double lastTempoChangeBeat = 0f;
-                double counterSeconds = 0;
-                float lastBpm = 120f;
-                
-                foreach (RiqEntity t in GameManager.instance.Beatmap.TempoChanges)
-                {
-                    double beatToNext = t.beat - lastTempoChangeBeat;
-                    double secToNext = BeatsToSecs(beatToNext, lastBpm);
-                    double nextSecs = counterSeconds + secToNext;
+        public double GetBeatFromSongPos(double seconds)
+        {
+            double lastTempoChangeBeat = 0f;
+            double counterSeconds = 0;
+            float lastBpm = 120f;
 
-                    if (nextSecs >= seconds)
-                        break;
-                    
-                    lastTempoChangeBeat = t.beat;
-                    lastBpm = t["tempo"];
-                    counterSeconds = nextSecs;
-                }
-                return lastTempoChangeBeat + SecsToBeats(seconds - counterSeconds, lastBpm);
+            foreach (RiqEntity t in GameManager.instance.Beatmap.TempoChanges)
+            {
+                double beatToNext = t.beat - lastTempoChangeBeat;
+                double secToNext = BeatsToSecs(beatToNext, lastBpm);
+                double nextSecs = counterSeconds + secToNext;
+
+                if (nextSecs >= seconds)
+                    break;
+
+                lastTempoChangeBeat = t.beat;
+                lastBpm = t["tempo"];
+                counterSeconds = nextSecs;
             }
+            return lastTempoChangeBeat + SecsToBeats(seconds - counterSeconds, lastBpm);
+        }
         //
 
         // convert real seconds to beats
         public double GetRestFromRealTime(double seconds)
         {
-            return seconds/pitchedSecPerBeat;
+            return seconds / pitchedSecPerBeat;
         }
 
         public void SetBpm(float bpm)
