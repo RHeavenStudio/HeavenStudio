@@ -501,6 +501,16 @@ namespace HeavenStudio
             }
         }
 
+        public class InputAction
+        {
+            public string name;
+            public List<InputActionEntry> mappings;
+        }
+
+        public class InputActionEntry
+        {
+        }
+
         public delegate void EventCallback();
         public delegate void ParamChangeCallback(string paramName, object paramValue, RiqEntity entity);
 

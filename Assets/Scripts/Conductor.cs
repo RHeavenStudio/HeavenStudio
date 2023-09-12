@@ -170,11 +170,10 @@ namespace HeavenStudio
             var chart = GameManager.instance.Beatmap;
             double offset = chart.data.offset;
             double dspTime = AudioSettings.dspTime;
+
             absTimeAdjust = 0;
             dspStart = dspTime;
             startTime = DateTime.Now;
-
-            GameManager.instance.SortEventsList();
 
             startPos = GetSongPosFromBeat(beat);
             firstBeatOffset = offset;
