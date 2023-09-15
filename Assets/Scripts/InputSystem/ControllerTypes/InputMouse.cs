@@ -1,72 +1,68 @@
 using System;
 using System.Linq;
+using System.Threading.Tasks;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using HeavenStudio.Util;
 
 namespace HeavenStudio.InputSystem.Loaders
 {
-    public static class InputKeyboardInitializer
+    namespace HeavenStudio.InputSystem.Loaders
     {
-        [LoadOrder(0)]
-        public static InputController[] Initialize()
+        public static class InputMouseInitializer
         {
-            PlayerInput.PlayerInputRefresh.Add(Refresh);
+            [LoadOrder(1)]
+            public static InputController[] Initialize()
+            {
+                PlayerInput.PlayerInputRefresh.Add(Refresh);
 
-            InputKeyboard keyboard = new InputKeyboard();
-            keyboard.SetPlayer(1);
-            keyboard.InitializeController();
-            return new InputController[] { keyboard };
-        }
+                InputMouse mouse = new InputMouse();
+                mouse.SetPlayer(null);
+                mouse.InitializeController();
+                return new InputController[] { mouse };
+            }
 
-        public static InputController[] Refresh()
-        {
-            InputKeyboard keyboard = new InputKeyboard();
-            keyboard.SetPlayer(1);
-            keyboard.InitializeController();
-            return new InputController[] { keyboard };
+            public static InputController[] Refresh()
+            {
+                InputMouse mouse = new InputMouse();
+                mouse.SetPlayer(null);
+                mouse.InitializeController();
+                return new InputController[] { mouse };
+            }
         }
     }
 }
 
 namespace HeavenStudio.InputSystem
 {
-    public class InputKeyboard : InputController
+    public class InputMouse : InputController
     {
         private static readonly KeyCode[] keyCodes = Enum.GetValues(typeof(KeyCode))
-        .Cast<KeyCode>()
-        .Where(k => ((int)k < (int)KeyCode.Mouse0))
-        .ToArray();
+            .Cast<KeyCode>()
+            .Where(k => ((int)k <= (int)KeyCode.Mouse6))
+            .ToArray();
 
         static ControlBindings defaultBindings {
             get
             {
                 return new ControlBindings()
                 {
-                    Pad = new int[]
+                    Touch = new int[]
                     {
-                        (int)KeyCode.W,
-                        (int)KeyCode.S,
-                        (int)KeyCode.A,
-                        (int)KeyCode.D,
-                        (int)KeyCode.J,
-                        (int)KeyCode.K,
-                        (int)KeyCode.I,
-                        (int)KeyCode.U,
-                        (int)KeyCode.E,
-                        (int)KeyCode.U,
-                        (int)KeyCode.Escape,
+                        -1,
+                        (int)KeyCode.Mouse0,
+                        (int)KeyCode.Mouse1,
+                        (int)KeyCode.Z,
+                        (int)KeyCode.X,
+                        (int)KeyCode.Escape
                     },
                 };
             }
         }
 
-        InputDirection hatDirectionCurrent;
-        InputDirection hatDirectionLast;
-
         public override void InitializeController()
         {
-            LoadBindings();
         }
 
         public override void UpdateState()
@@ -81,12 +77,12 @@ namespace HeavenStudio.InputSystem
         
         public override string GetDeviceName()
         {
-            return "Keyboard";
+            return "Mouse";
         }
 
         public override string[] GetButtonNames()
         {
-            string[] names = new string[(int)KeyCode.Mouse0];
+            string[] names = new string[(int)KeyCode.Mouse6];
             for (int i = 0; i < keyCodes.Length; i++)
             {
                 names[(int)keyCodes[i]] = keyCodes[i].ToString();
@@ -96,7 +92,7 @@ namespace HeavenStudio.InputSystem
 
         public override InputFeatures GetFeatures()
         {
-            return InputFeatures.Readable_StringInput | InputFeatures.Style_Pad | InputFeatures.Style_Baton;
+            return InputFeatures.Readable_Pointer | InputFeatures.Style_Touch;
         }
 
         public override bool GetIsConnected()
@@ -131,7 +127,7 @@ namespace HeavenStudio.InputSystem
 
         public override bool GetIsActionUnbindable(int action, ControlStyles style)
         {
-            return false;
+            return action is 0;
         }
 
         public override int GetLastButtonDown()

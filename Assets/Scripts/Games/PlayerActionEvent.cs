@@ -8,6 +8,7 @@ using HeavenStudio.Util;
 using Starpelly;
 
 using HeavenStudio.Common;
+using HeavenStudio.InputSystem;
 
 namespace HeavenStudio.Games
 {
@@ -26,6 +27,8 @@ namespace HeavenStudio.Games
         public ActionEventHittableQuery IsHittable; //Checks if an input can be hit. Returning false will skip button checks.
 
         public ActionEventCallback OnDestroy; //Function to trigger whenever this event gets destroyed. /!\ Shouldn't be used for a minigame! Use OnMiss instead /!\
+
+        public PlayerInput.InputAction InputAction;
 
         public double startBeat;
         public double timer;
@@ -69,6 +72,10 @@ namespace HeavenStudio.Games
         public bool IsCorrectInput(out double dt)
         {
             dt = 0;
+            if (InputAction != null)
+            {
+                return PlayerInput.GetIsAction(InputAction, out dt);
+            }
             return (
                 //General inputs, both down and up
                 (PlayerInput.Pressed(out dt) && inputType.HasFlag(InputType.STANDARD_DOWN)) ||
@@ -160,8 +167,16 @@ namespace HeavenStudio.Games
             {
                 if (toCompare == this) continue;
                 if (toCompare.autoplayOnly) continue;
-                if ((toCompare.inputType & this.inputType) == 0) continue;
-                if (!toCompare.IsExpectingInputNow()) continue;
+                if (InputAction != null)
+                {
+                    if (toCompare.InputAction == null) continue;
+                    if (toCompare.InputAction != null && toCompare.InputAction == InputAction) continue;
+                }
+                else
+                {
+                    if ((toCompare.inputType & this.inputType) == 0) continue;
+                    if (!toCompare.IsExpectingInputNow()) continue;
+                }
 
                 double t1 = this.startBeat + this.timer;
                 double t2 = toCompare.startBeat + toCompare.timer;

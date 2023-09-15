@@ -1,4 +1,5 @@
 using System;
+using System.Linq;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -15,6 +16,8 @@ namespace HeavenStudio.Editor
 {
     public class ControllerSettings : TabsContent
     {
+        [SerializeField] private TMP_Dropdown stylesDropdown;
+
         [SerializeField] private TMP_Text numConnectedLabel;
         [SerializeField] private TMP_Text currentControllerLabel;
         [SerializeField] private TMP_Dropdown controllersDropdown;
@@ -43,6 +46,7 @@ namespace HeavenStudio.Editor
         private int currentBindingBt;
 
         private void Start() {
+            PopulateStylesDropdown();
             numConnectedLabel.text = "Connected: " + PlayerInput.GetNumControllersConnected();
             currentControllerLabel.text = "Current Controller: " + PlayerInput.GetInputController(1).GetDeviceName();
             PopulateControllersDropdown();
@@ -260,6 +264,17 @@ namespace HeavenStudio.Editor
             numConnectedLabel.text = "Connected: " + connected;
             currentControllerLabel.text = "Current Controller: " + PlayerInput.GetInputController(1).GetDeviceName();
             PopulateControllersDropdown();
+        }
+
+        public void PopulateStylesDropdown()
+        {
+            List<TMP_Dropdown.OptionData> dropDownData = new List<TMP_Dropdown.OptionData>();
+
+            var enumNames = Enum.GetNames(typeof(InputController.ControlStyles)).ToList();
+
+            controllersDropdown.ClearOptions();
+            stylesDropdown.AddOptions(enumNames);
+            stylesDropdown.value = (int) PlayerInput.CurrentControlStyle;
         }
 
         public void PopulateControllersDropdown()

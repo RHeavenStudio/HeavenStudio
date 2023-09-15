@@ -50,7 +50,7 @@ namespace HeavenStudio.Games
             )
         {
 
-            GameObject evtObj = new GameObject("ActionEvent" + (startBeat+timer));
+            GameObject evtObj = new GameObject("ActionEvent" + (startBeat + timer));
             evtObj.AddComponent<PlayerActionEvent>();
 
             PlayerActionEvent evt = evtObj.GetComponent<PlayerActionEvent>();
@@ -115,16 +115,17 @@ namespace HeavenStudio.Games
         {
             PlayerActionEvent closest = null;
 
-            foreach(PlayerActionEvent toCompare in scheduledInputs)
+            foreach (PlayerActionEvent toCompare in scheduledInputs)
             {
                 // ignore inputs that are for sequencing in autoplay
                 if (toCompare.autoplayOnly) continue;
 
-                if(closest == null)
+                if (closest == null)
                 {
                     if (input == InputType.ANY || (toCompare.inputType & input) != 0)
                         closest = toCompare;
-                } else
+                }
+                else
                 {
                     double t1 = closest.startBeat + closest.timer;
                     double t2 = toCompare.startBeat + toCompare.timer;
@@ -142,12 +143,53 @@ namespace HeavenStudio.Games
             return closest;
         }
 
+        public PlayerActionEvent GetClosestScheduledInput(string action)
+        {
+            if (action == null) return null;
+
+            PlayerActionEvent closest = null;
+
+            foreach (PlayerActionEvent toCompare in scheduledInputs)
+            {
+                // ignore inputs that are for sequencing in autoplay
+                if (toCompare.autoplayOnly) continue;
+
+                if (closest == null)
+                {
+                    if (toCompare.InputAction.name == action)
+                        closest = toCompare;
+                }
+                else
+                {
+                    double t1 = closest.startBeat + closest.timer;
+                    double t2 = toCompare.startBeat + toCompare.timer;
+
+                    // Debug.Log("t1=" + t1 + " -- t2=" + t2);
+
+                    if (t2 < t1)
+                    {
+                        if (toCompare.InputAction.name == action)
+                            closest = toCompare;
+                    }
+                }
+            }
+
+            return closest;
+        }
+
         //Hasn't been tested yet. *Should* work.
         //Can be used to detect if the user is expected to input something now or not
         //Useful for strict call and responses games like Tambourine
         public bool IsExpectingInputNow(InputType wantInput = InputType.ANY)
         {
             PlayerActionEvent input = GetClosestScheduledInput(wantInput);
+            if (input == null) return false;
+            return input.IsExpectingInputNow();
+        }
+
+        public bool IsExpectingInputNow(string wantAction)
+        {
+            PlayerActionEvent input = GetClosestScheduledInput(wantAction);
             if (input == null) return false;
             return input.IsExpectingInputNow();
         }
@@ -260,14 +302,16 @@ namespace HeavenStudio.Games
             }
         }
 
-        private void OnDestroy() {
+        private void OnDestroy()
+        {
             foreach (var evt in scheduledInputs)
             {
                 evt.Disable();
             }
         }
 
-        protected void OnDrawGizmos() {
+        protected void OnDrawGizmos()
+        {
             Gizmos.color = Color.magenta;
             Gizmos.DrawWireCube(Vector3.zero, new Vector3(17.77695f, 10, 0));
         }

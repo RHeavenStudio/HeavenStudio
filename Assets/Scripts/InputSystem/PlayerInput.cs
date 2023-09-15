@@ -24,14 +24,31 @@ namespace HeavenStudio
 {
     public class PlayerInput
     {
+        public class InputAction
+        {
+            public delegate bool ActionQuery(out double dt);
+
+            public string name;
+            public ActionQuery padAction, touchAction, batonAction;
+
+            public InputAction(string name, ActionQuery pad, ActionQuery touch, ActionQuery baton)
+            {
+                this.name = name;
+                padAction = pad;
+                touchAction = touch;
+                batonAction = baton;
+            }
+        }
+
         //Clockwise
         public const int UP = 0;
         public const int RIGHT = 1;
         public const int DOWN = 2;
         public const int LEFT = 3;
+
+        public static InputController.ControlStyles CurrentControlStyle = InputController.ControlStyles.Pad;
         
         static List<InputController> inputDevices;
-        static InputController.ControlStyles currentControlStyle = InputController.ControlStyles.Pad;
 
         public delegate InputController[] InputControllerInitializer();
 
@@ -188,13 +205,22 @@ namespace HeavenStudio
         /* MAIN INPUT METHODS */
         /*--------------------*/
 
-        public static bool GetIsAction(string action)
+        public static bool GetIsAction(InputAction action, out double dt)
         {
+            dt = 0;
+            switch (CurrentControlStyle)
+            {
+                case InputController.ControlStyles.Pad:
+                    return action.padAction(out dt);
+                case InputController.ControlStyles.Touch:
+                    return action.touchAction(out dt);
+                case InputController.ControlStyles.Baton:
+                    return action.batonAction(out dt);
+            }
             return false;
         }
         
         // BUTTONS
-        //TODO: refactor for controller and custom binds, currently uses temporary button checks
         
         public static bool Pressed(bool includeDPad = false)
         {

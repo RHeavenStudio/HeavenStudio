@@ -23,6 +23,15 @@ namespace HeavenStudio.InputSystem
             TouchpadY = 7
         }
 
+        public enum InputVector: int
+        {
+            LStick = 0,
+            RStick = 1,
+            Touchpad = 2,
+            Gyroscope = 3,
+            Accelerometer = 4,
+        }
+
         //D-Pad directions, usable to adapt analogue sticks to cardinal directions
         public enum InputDirection : int
         {
@@ -69,9 +78,9 @@ namespace HeavenStudio.InputSystem
         public enum ControlStyles
         {
             Pad,
-            Baton,
             Touch,
-            Move
+            Baton,
+            // Move
         }
 
         public const int BINDS_MAX = 12; //maximum number of binds per controller
@@ -239,6 +248,10 @@ namespace HeavenStudio.InputSystem
         /// <param name="axis"></param>
         /// <returns></returns>
         public abstract float GetAxis(InputAxis axis);
+
+        public abstract Vector3 GetVector(InputVector vector);
+
+        public abstract Vector2 GetPointer();
 
         /// <summary>
         /// True if the current direction is active
