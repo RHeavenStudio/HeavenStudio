@@ -199,7 +199,7 @@ namespace HeavenStudio.Games.Scripts_ForkLifter
         private void Miss(PlayerActionEvent caller) 
         {
             SoundByte.PlayOneShot("forkLifter/disappointed");
-            BeatAction.New(game.gameObject, new List<BeatAction.Action>()
+            BeatAction.New(game, new List<BeatAction.Action>()
             {
                 new BeatAction.Action(startBeat+ 2.45f, delegate { 
                     Destroy(this.gameObject);

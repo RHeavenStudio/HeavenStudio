@@ -278,7 +278,7 @@ namespace HeavenStudio.Games
                 {
                     bops.Add(new BeatAction.Action(beat + i, delegate { SingleBop(); }));
                 }
-                BeatAction.New(instance.gameObject, bops);
+                BeatAction.New(instance, bops);
             }
         }
         #endregion
@@ -353,14 +353,14 @@ namespace HeavenStudio.Games
                 ScheduleInput(beat, length, GetInputTypeBasedOnCurrentReceiver(), JustHitBall, Miss, Empty);
                 if (passBallDict[beat + length].datamodel == "tossBoys/dual" || passBallDict[beat + length].datamodel == "tossBoys/lightning" || passBallDict[beat + length].datamodel == "tossBoys/blur")
                 {
-                    BeatAction.New(instance.gameObject, new List<BeatAction.Action>()
+                    BeatAction.New(instance, new List<BeatAction.Action>()
                     {
                         new BeatAction.Action(beat + length - 1, delegate { DoSpecialBasedOnReceiver(beat + length - 1); })
                     });
                 }
                 else if (passBallDict[beat + length].datamodel == "tossBoys/pop")
                 {
-                    BeatAction.New(instance.gameObject, new List<BeatAction.Action>()
+                    BeatAction.New(instance, new List<BeatAction.Action>()
                     {
                         new BeatAction.Action(beat + length - 1, delegate { GetCurrentReceiver().PopBallPrepare(); })
                     });
@@ -368,7 +368,7 @@ namespace HeavenStudio.Games
             }
             else
             {
-                BeatAction.New(instance.gameObject, new List<BeatAction.Action>()
+                BeatAction.New(instance, new List<BeatAction.Action>()
                 {
                     new BeatAction.Action(beat + length, delegate { Miss(null); })
                 });
@@ -436,7 +436,7 @@ namespace HeavenStudio.Games
             }
             if (passBallDict.ContainsKey(beat + currentEventLength) && passBallDict[beat + currentEventLength].datamodel == "tossBoys/pop")
             {
-                BeatAction.New(instance.gameObject, new List<BeatAction.Action>()
+                BeatAction.New(instance, new List<BeatAction.Action>()
                 {
                     new BeatAction.Action(beat + currentEventLength - 1, delegate { GetCurrentReceiver().PopBallPrepare(); })
                 });
@@ -488,7 +488,7 @@ namespace HeavenStudio.Games
             };
             if (passBallDict.ContainsKey(beat + length) && (passBallDict[beat + length].datamodel is "tossBoys/dual" or "tossBoys/lightning" or "tossBoys/blur"))
             {
-                BeatAction.New(instance.gameObject, new List<BeatAction.Action>()
+                BeatAction.New(instance, new List<BeatAction.Action>()
                 {
                     new BeatAction.Action(beat + length - 1, delegate { DoSpecialBasedOnReceiver(beat + length - 1); })
                 });
@@ -543,7 +543,7 @@ namespace HeavenStudio.Games
             };
             if (passBallDict.ContainsKey(beat + length) && (passBallDict[beat + length].datamodel is "tossBoys/lightning" or "tossBoys/blur"))
             {
-                BeatAction.New(instance.gameObject, new List<BeatAction.Action>()
+                BeatAction.New(instance, new List<BeatAction.Action>()
                 {
                     new BeatAction.Action(beat + length - 1, delegate { DoSpecialBasedOnReceiver(beat + length - 1); })
                 });
@@ -597,7 +597,7 @@ namespace HeavenStudio.Games
             };
             if (passBallDict.ContainsKey(beat + length) && (passBallDict[beat + length].datamodel is "tossBoys/dual" or "tossBoys/lightning" or "tossBoys/blur"))
             {
-                BeatAction.New(instance.gameObject, new List<BeatAction.Action>()
+                BeatAction.New(instance, new List<BeatAction.Action>()
                 {
                     new BeatAction.Action(beat + length - 1, delegate { DoSpecialBasedOnReceiver(beat + length - 1); })
                 });
@@ -653,7 +653,7 @@ namespace HeavenStudio.Games
             if (secondBeat == 0.25f) soundsToPlay.Add(new MultiSound.Sound("tossBoys/" + last + current + "Low" + 3, beat + 0.5f, 1, 1, false, thirdOffset));
             if (passBallDict.ContainsKey(beat + length) && (passBallDict[beat + length].datamodel is "tossBoys/dual" or "tossBoys/blur"))
             {
-                BeatAction.New(instance.gameObject, new List<BeatAction.Action>()
+                BeatAction.New(instance, new List<BeatAction.Action>()
                 {
                     new BeatAction.Action(beat + length - 1, delegate { DoSpecialBasedOnReceiver(beat + length - 1); })
                 });

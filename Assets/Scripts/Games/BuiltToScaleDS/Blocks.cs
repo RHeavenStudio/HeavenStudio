@@ -73,7 +73,7 @@ namespace HeavenStudio.Games.Scripts_BuiltToScaleDS
                 }, forcePlay: true
             );
 
-            BeatAction.New(this.gameObject, new List<BeatAction.Action>()
+            BeatAction.New(this, new List<BeatAction.Action>()
             {
                 new BeatAction.Action(sinkBeat, delegate { moving = false; }),
             });

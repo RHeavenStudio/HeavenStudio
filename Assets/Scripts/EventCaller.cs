@@ -108,6 +108,27 @@ namespace HeavenStudio
             }
         }
 
+        static bool StringStartsWith(string a, string b)
+        {
+            int aLen = a.Length;
+            int bLen = b.Length;
+        
+            int ap = 0; int bp = 0;
+        
+            while (ap < aLen && bp < bLen && a [ap] == b [bp])
+            {
+                ap++;
+                bp++;
+            }
+        
+            return (bp == bLen);
+        }
+
+        public static bool IsGameSwitch(RiqEntity entity)
+        {
+            return StringStartsWith(entity.datamodel, "gameManager/switchGame");
+        }
+
         public static List<RiqEntity> GetAllInGameManagerList(string gameName, string[] include)
         {
             List<RiqEntity> temp1 = GameManager.instance.Beatmap.Entities.FindAll(c => c.datamodel.Split('/')[0] == gameName);

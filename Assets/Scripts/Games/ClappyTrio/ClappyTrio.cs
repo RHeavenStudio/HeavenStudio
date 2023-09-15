@@ -216,7 +216,7 @@ namespace HeavenStudio.Games
                 }
             }
             if (sounds.Count > 0) clapSounds = MultiSound.Play(sounds.ToArray());
-            if (actions.Count > 0) clapAction = BeatAction.New(this.gameObject, actions);
+            if (actions.Count > 0) clapAction = BeatAction.New(this, actions);
 
             // prepare player input
             ClappyTrioPlayer.QueueClap(beat, length * (Lion.Count - 1));
@@ -249,7 +249,7 @@ namespace HeavenStudio.Games
                         bops.Add(new BeatAction.Action(spawnBeat, delegate { misses = 0; }));
                     }
                 }
-                if (bops.Count > 0) BeatAction.New(instance.gameObject, bops);
+                if (bops.Count > 0) BeatAction.New(instance, bops);
             }
         }
 

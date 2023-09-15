@@ -8,6 +8,7 @@ using UnityEngine;
 using HeavenStudio.InputSystem;
 
 using static JSL;
+using HeavenStudio.Games;
 
 namespace HeavenStudio.InputSystem
 {
@@ -186,6 +187,11 @@ namespace HeavenStudio
         /*--------------------*/
         /* MAIN INPUT METHODS */
         /*--------------------*/
+
+        public static bool GetIsAction(string action)
+        {
+            return false;
+        }
         
         // BUTTONS
         //TODO: refactor for controller and custom binds, currently uses temporary button checks

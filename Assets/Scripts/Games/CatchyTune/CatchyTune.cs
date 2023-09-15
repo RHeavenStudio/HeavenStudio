@@ -20,7 +20,10 @@ namespace HeavenStudio.Games.Loaders
                     parameters = new List<Param>()
                     {
                         new Param("side", CatchyTune.Side.Left, "Side", "The side the orange falls down"),
-                        new Param("smile", false, "Smile", "If the characters smile with the heart message after catching"),
+                        new Param("smile", false, "Smile", "If the characters smile with the heart message after catching", new List<Param.CollapseParam>()
+                        {
+                            new Param.CollapseParam(x => (bool)x, new string[] { "endSmile" })
+                        }),
                         new Param("endSmile", new EntityTypes.Float(2, 100), "End Smile Beat", "How many beats after the catch should the smile end?")
                     },
                     preFunction = delegate {var e = eventCaller.currentEntity; CatchyTune.PreDropFruit(e.beat, e["side"], e["smile"], false, e["endSmile"]); },
@@ -32,7 +35,10 @@ namespace HeavenStudio.Games.Loaders
                     parameters = new List<Param>()
                     {
                         new Param("side", CatchyTune.Side.Left, "Side", "The side the pineapple falls down"),
-                        new Param("smile", false, "Smile", "If the characters smile with the heart message after catching"),
+                        new Param("smile", false, "Smile", "If the characters smile with the heart message after catching", new List<Param.CollapseParam>()
+                        {
+                            new Param.CollapseParam(x => (bool)x, new string[] { "endSmile" })
+                        }),
                         new Param("endSmile", new EntityTypes.Float(2, 100), "End Smile Beat", "How many beats after the catch should the smile end?")
                     },
                     preFunction = delegate {var e = eventCaller.currentEntity; CatchyTune.PreDropFruit(e.beat, e["side"], e["smile"], true, e["endSmile"]); },
@@ -223,7 +229,7 @@ namespace HeavenStudio.Games
             beat = beat - (isPineapple ? 2f : 1f);
             if (GameManager.instance.currentGame == "catchyTune")
             {
-                BeatAction.New(instance.gameObject, new List<BeatAction.Action>()
+                BeatAction.New(instance, new List<BeatAction.Action>()
                 {
                     new BeatAction.Action(spawnBeat, delegate { if (instance != null) instance.DropFruit(beat, side, smile, isPineapple, endSmile); }),
                 });
@@ -268,7 +274,7 @@ namespace HeavenStudio.Games
             bopRight = whoBopsAuto == (int)WhoBops.Alalin || whoBopsAuto == (int)WhoBops.Both;
             for (int i = 0; i < length; i++)
             {
-                BeatAction.New(instance.gameObject, new List<BeatAction.Action>()
+                BeatAction.New(instance, new List<BeatAction.Action>()
                 {
                     new BeatAction.Action(beat + i, delegate
                     {

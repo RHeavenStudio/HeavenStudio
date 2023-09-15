@@ -197,6 +197,8 @@ namespace HeavenStudio.Editor.Track
             UpdateOffsetText();
             UpdateStartingBPMText();
             UpdateStartingVolText();
+
+            GameManager.instance.SortEventsList();
         }
 
         public void Init()
@@ -368,21 +370,22 @@ namespace HeavenStudio.Editor.Track
 
         private void Update()
         {
+            Conductor cond = Conductor.instance;
             // waveform.rectTransform.anchoredPosition = new Vector2(
             //     -(GameManager.instance.Beatmap.data.offset / (60.0f / GameManager.instance.Beatmap.bpm)), 
             //     waveform.rectTransform.anchoredPosition.y);
 
-            // WaveformBTN.transform.GetChild(0).GetComponent<Image>().color = (Conductor.instance.musicSource.clip != null && waveform.gameObject.activeInHierarchy) ? Color.white : Color.gray;
+            // WaveformBTN.transform.GetChild(0).GetComponent<Image>().color = (cond.musicSource.clip != null && waveform.gameObject.activeInHierarchy) ? Color.white : Color.gray;
 
-            if (!Conductor.instance.isPlaying && !Conductor.instance.isPaused)
+            if (!cond.isPlaying && !cond.isPaused)
             {
                 SongBeat.text = $"Beat {string.Format("{0:0.000}", TimelineSlider.localPosition.x)}";
-                SongPos.text = FormatTime((float) Conductor.instance.GetSongPosFromBeat(TimelineSlider.localPosition.x));
+                SongPos.text = FormatTime(cond.GetSongPosFromBeat(TimelineSlider.localPosition.x));
             }
             else
             {
-                SongBeat.text = $"Beat {string.Format("{0:0.000}", Conductor.instance.songPositionInBeats)}";
-                SongPos.text = FormatTime(Conductor.instance.songPosition);
+                SongBeat.text = $"Beat {string.Format("{0:0.000}", cond.songPositionInBeats)}";
+                SongPos.text = FormatTime(cond.songPositionAsDouble);
             }
 
             SliderControl();
@@ -449,11 +452,11 @@ namespace HeavenStudio.Editor.Track
             }
             #endregion
 
-            if (Input.GetMouseButton(1) && !Conductor.instance.isPlaying && Editor.MouseInRectTransform(TimelineGridSelect))
+            if (Input.GetMouseButton(1) && !cond.isPlaying && Editor.MouseInRectTransform(TimelineGridSelect))
             {
                 movingPlayback = true;
             }
-            else if (Input.GetMouseButtonUp(1) || Conductor.instance.isPlaying)
+            else if (Input.GetMouseButtonUp(1) || cond.isPlaying)
             {
                 movingPlayback = false;
             }
@@ -463,17 +466,17 @@ namespace HeavenStudio.Editor.Track
                 TimelineSlider.localPosition = new Vector3(Mathf.Max(Mathp.Round2Nearest(lastMousePos.x + 0.12f, Timeline.SnapInterval()), 0), TimelineSlider.transform.localPosition.y);
 
                 if (TimelineSlider.localPosition.x != lastBeatPos)
-                    Conductor.instance.SetBeat(TimelineSlider.transform.localPosition.x);
+                    cond.SetBeat(TimelineSlider.transform.localPosition.x);
 
                 lastBeatPos = TimelineSlider.localPosition.x;
             }
 
-            if (Conductor.instance.isPlaying)
+            if (cond.isPlaying)
                 PlaybackFocus(true);
 
             TimelineContent.transform.localPosition = new Vector3(Mathf.Clamp(TimelineContent.transform.localPosition.x, Mathf.NegativeInfinity, 0), TimelineContent.transform.localPosition.y);
 
-            CurrentTempo.text = $"    = {Conductor.instance.songBpm}";
+            CurrentTempo.text = $"    = {cond.songBpm}";
 
             LayersRect.GetWorldCorners(LayerCorners);
         }
@@ -610,7 +613,7 @@ namespace HeavenStudio.Editor.Track
 
 
         #region Extras
-        private string FormatTime(float time)
+        private string FormatTime(double time)
         {
             int minutes = (int)time / 60;
             int seconds = (int)time - 60 * minutes;
@@ -793,7 +796,6 @@ namespace HeavenStudio.Editor.Track
                 if (entity == null)
                 {
                     RiqEntity en = GameManager.instance.Beatmap.AddNewEntity(eventName, g.transform.localPosition.x, gameAction.defaultLength);
-                    GameManager.instance.SortEventsList();
 
                     tempEntity = en;
 
@@ -828,9 +830,9 @@ namespace HeavenStudio.Editor.Track
                 else
                 {
                     GameManager.instance.Beatmap.Entities.Add(tempEntity);
-                    GameManager.instance.SortEventsList();
                 }
 
+                GameManager.instance.SortEventsList();
                 eventObj.entity = tempEntity;
             }
             else

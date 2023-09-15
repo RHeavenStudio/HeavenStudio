@@ -111,7 +111,7 @@ namespace HeavenStudio.Games
                 backArm.Play("BackArmLift", 0, 0);
                 FrontArm.DoScaledAnimationAsync("ArmSlurp", 0.5f);
                 hasSlurped = true;
-                BeatAction.New(instance.gameObject, new List<BeatAction.Action>()
+                BeatAction.New(instance, new List<BeatAction.Action>()
                 {
                     new BeatAction.Action(beat + 1f, delegate
                     {
@@ -132,7 +132,7 @@ namespace HeavenStudio.Games
             {
                 for (int i = 0; i < length; i++)
                 {
-                    BeatAction.New(instance.gameObject, new List<BeatAction.Action>()
+                    BeatAction.New(instance, new List<BeatAction.Action>()
                     {
                         new BeatAction.Action(beat + i, delegate
                         {
@@ -153,7 +153,7 @@ namespace HeavenStudio.Games
             new MultiSound.Sound("rhythmSomen/somen_woosh", beat + 1.5f),
             });
 
-            BeatAction.New(Player, new List<BeatAction.Action>()
+            BeatAction.New(instance, new List<BeatAction.Action>()
                 {
                 new BeatAction.Action(beat,     delegate { FarCrane.Play("Drop", -1, 0);}),
                 new BeatAction.Action(beat + 1.0f,     delegate { FarCrane.Play("Open", -1, 0);}),
@@ -172,7 +172,7 @@ namespace HeavenStudio.Games
             new MultiSound.Sound("rhythmSomen/somen_woosh", beat + 1.5f),
             });
 
-            BeatAction.New(Player, new List<BeatAction.Action>()
+            BeatAction.New(instance, new List<BeatAction.Action>()
                 {
                 new BeatAction.Action(beat,     delegate { CloseCrane.Play("DropClose", -1, 0);}),
                 new BeatAction.Action(beat + 1.0f,     delegate { CloseCrane.Play("OpenClose", -1, 0);}),
@@ -193,7 +193,7 @@ namespace HeavenStudio.Games
             new MultiSound.Sound("rhythmSomen/somen_woosh", beat + 1.5f),
             });
 
-            BeatAction.New(Player, new List<BeatAction.Action>()
+            BeatAction.New(instance, new List<BeatAction.Action>()
                 {
                 new BeatAction.Action(beat,     delegate { CloseCrane.Play("DropClose", -1, 0);}),
                 new BeatAction.Action(beat,     delegate { FarCrane.Play("Drop", -1, 0);}),
@@ -210,7 +210,7 @@ namespace HeavenStudio.Games
             //Bell Sound lol
             SoundByte.PlayOneShotGame("rhythmSomen/somen_bell");
 
-            BeatAction.New(Player, new List<BeatAction.Action>()
+            BeatAction.New(instance, new List<BeatAction.Action>()
                     {
                     new BeatAction.Action(beat,     delegate { EffectExclam.Play("ExclamAppear", -1, 0);}),
                     });

@@ -623,7 +623,7 @@ namespace HeavenStudio.Games
                 cameraMoveBeat = beat + 2;
             }
 
-            BeatAction.New(instance.gameObject, new List<BeatAction.Action>()
+            BeatAction.New(instance, new List<BeatAction.Action>()
             {
                 new BeatAction.Action(beat + 2, delegate
                 {
@@ -678,7 +678,7 @@ namespace HeavenStudio.Games
                 targetCameraX = 0;
                 cameraMoveBeat = beat + 2;
             }
-            BeatAction.New(instance.gameObject, new List<BeatAction.Action>()
+            BeatAction.New(instance, new List<BeatAction.Action>()
             {
                 new BeatAction.Action(beat + 2, delegate
                 {
@@ -748,7 +748,7 @@ namespace HeavenStudio.Games
                 targetCameraX = 0;
                 cameraMoveBeat = beat + goToMiddleBeat;
             }
-            BeatAction.New(instance.gameObject, new List<BeatAction.Action>()
+            BeatAction.New(instance, new List<BeatAction.Action>()
             {
                 new BeatAction.Action(beat + goToMiddleBeat, delegate
                 {
@@ -808,7 +808,7 @@ namespace HeavenStudio.Games
                     break;
                 }
             }
-            BeatAction.New(instance.gameObject, actions);
+            BeatAction.New(instance, actions);
         }
 
         public static void PreInterval(double beat, float length, bool autoPassTurn, bool moveCamera, bool movePass)
@@ -854,7 +854,7 @@ namespace HeavenStudio.Games
                     riffUsedBeats.Add(input.beat);
                     if (input.beat >= gameSwitchBeat)
                     {
-                        BeatAction.New(instance.gameObject, new List<BeatAction.Action>()
+                        BeatAction.New(instance, new List<BeatAction.Action>()
                         {
                             new BeatAction.Action(input.beat, delegate { Riff(input.beat, input.length, new int[]
                             {
@@ -879,7 +879,7 @@ namespace HeavenStudio.Games
                     bendUsedBeats.Add(beat);
                     if (input.beat >= gameSwitchBeat)
                     {
-                        BeatAction.New(instance.gameObject, new List<BeatAction.Action>()
+                        BeatAction.New(instance, new List<BeatAction.Action>()
                         {
                             new BeatAction.Action(input.beat, delegate
                             {
@@ -889,7 +889,7 @@ namespace HeavenStudio.Games
                     }
                 }
             }
-            BeatAction.New(instance.gameObject, new List<BeatAction.Action>()
+            BeatAction.New(instance, new List<BeatAction.Action>()
             {
                 new BeatAction.Action(beat, delegate
                 {
@@ -908,7 +908,7 @@ namespace HeavenStudio.Games
         public void Riff(double beat, float length, int[] pitches, bool gleeClubJJ, int sampleJJ, int sampleTonesJJ, bool noRespond)
         {
             JJ.StrumStrings(gleeClubJJ, pitches, (PremadeSamples)sampleJJ, sampleTonesJJ, noRespond);
-            BeatAction.New(instance.gameObject, new List<BeatAction.Action>()
+            BeatAction.New(instance, new List<BeatAction.Action>()
             {
                 new BeatAction.Action(beat + length, delegate { JJ.Mute(); })
             });
@@ -932,7 +932,7 @@ namespace HeavenStudio.Games
         public void Bend(double beat, float length, int pitchJJ)
         {
             JJ.BendUp(pitchJJ);
-            BeatAction.New(instance.gameObject, new List<BeatAction.Action>()
+            BeatAction.New(instance, new List<BeatAction.Action>()
             {
                 new BeatAction.Action(beat + length, delegate { JJ.BendDown(); })
             });
@@ -990,7 +990,7 @@ namespace HeavenStudio.Games
             var relevantInputs = GrabAllInputsBetween(intervalStartBeat, intervalStartBeat + intervalLength);
             if (relevantInputs.Count > 0)
             {
-                BeatAction.New(instance.gameObject, new List<BeatAction.Action>()
+                BeatAction.New(instance, new List<BeatAction.Action>()
                 {
                     new BeatAction.Action(beat - 1, delegate
                     {
