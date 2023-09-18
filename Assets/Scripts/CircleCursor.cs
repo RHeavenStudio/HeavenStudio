@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 using DG.Tweening;
+using HeavenStudio.Games;
 
 namespace HeavenStudio
 {
@@ -25,7 +26,7 @@ namespace HeavenStudio
 
         private void Update()
         {
-            Vector3 pos = GameManager.instance.CursorCam.ScreenToWorldPoint(Input.mousePosition);
+            Vector3 pos = PlayerInput.GetInputController(1).GetPointer();
 
             if (follow)
             {
@@ -36,9 +37,8 @@ namespace HeavenStudio
             {
                 this.gameObject.transform.position = new Vector3(pos.x, pos.y, 0);
 
-                if (PlayerInput.Pressed())
+                if (PlayerInput.GetIsAction(Minigame.InputAction_BasicPress, out _))
                 {
-                    // Cursor.visible = false;
                     Circle.transform.DOScale(0, 0.5f).SetEase(Ease.OutExpo);
                     InnerCircle.SetActive(true);
                     outerCircleTween.Kill();
@@ -48,7 +48,7 @@ namespace HeavenStudio
                     eyesTween.Kill();
                     eyesTween = Eyes.transform.DOLocalMoveY(0.15f, 0.15f).SetEase(Ease.OutExpo);
                 }
-                else if (PlayerInput.PressedUp())
+                else if (PlayerInput.GetIsAction(Minigame.InputAction_BasicRelease, out _))
                 {
                     Circle.transform.DOScale(0.2f, 0.5f).SetEase(Ease.OutExpo);
                     InnerCircle.SetActive(false);
@@ -61,5 +61,4 @@ namespace HeavenStudio
             }
         }
     }
-
 }

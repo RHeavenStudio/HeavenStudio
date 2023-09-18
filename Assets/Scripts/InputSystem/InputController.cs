@@ -294,8 +294,8 @@ namespace HeavenStudio.InputSystem
         /// <returns></returns>
         public abstract bool GetHatDirectionUp(InputDirection direction, out double dt);
 
-        public abstract bool GetFlick(out double dt, out InputDirection direction);
-        public abstract bool GetSwipe(out double dt, out InputDirection direction);
+        public abstract bool GetFlick(out double dt);
+        public abstract bool GetSwipe(out double dt);
 
         /// <summary>
         /// Sets the player number (starts at 1, set to -1 or null for no player)

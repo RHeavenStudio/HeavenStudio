@@ -45,7 +45,7 @@ namespace HeavenStudio.Games.Scripts_ForkLifter
 
         private void LateUpdate()
         {
-            if (PlayerInput.Pressed() && !ForkLifter.instance.IsExpectingInputNow(InputType.STANDARD_DOWN))
+            if (PlayerInput.GetIsAction(ForkLifter.InputAction_BasicPress, out _) && !ForkLifter.instance.IsExpectingInputNow(ForkLifter.InputAction_BasicPress.inputLockCategory))
             {
                 Stab(null);
             }

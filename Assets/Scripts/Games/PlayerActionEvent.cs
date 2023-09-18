@@ -1,14 +1,8 @@
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-using DG.Tweening;
-using HeavenStudio.Util;
-using Starpelly;
-
 using HeavenStudio.Common;
-using HeavenStudio.InputSystem;
 
 namespace HeavenStudio.Games
 {
@@ -170,7 +164,9 @@ namespace HeavenStudio.Games
                 if (InputAction != null)
                 {
                     if (toCompare.InputAction == null) continue;
-                    if (toCompare.InputAction != null && toCompare.InputAction == InputAction) continue;
+                    int catIdx = (int)PlayerInput.CurrentControlStyle;
+                    if (toCompare.InputAction != null
+                        && toCompare.InputAction.inputLockCategory[catIdx] == InputAction.inputLockCategory[catIdx]) continue;
                 }
                 else
                 {

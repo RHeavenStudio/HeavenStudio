@@ -9,6 +9,7 @@ using HeavenStudio.InputSystem;
 
 using static JSL;
 using HeavenStudio.Games;
+using System.Diagnostics.Contracts;
 
 namespace HeavenStudio.InputSystem
 {
@@ -31,11 +32,13 @@ namespace HeavenStudio
             public delegate bool ActionQuery(out double dt);
 
             public string name;
+            public int[] inputLockCategory;
             public ActionQuery padAction, touchAction, batonAction;
 
-            public InputAction(string name, ActionQuery pad, ActionQuery touch, ActionQuery baton)
+            public InputAction(string name, int[] inputLockCategory, ActionQuery pad, ActionQuery touch, ActionQuery baton)
             {
                 this.name = name;
+                this.inputLockCategory = inputLockCategory;
                 padAction = pad;
                 touchAction = touch;
                 batonAction = baton;
@@ -231,73 +234,115 @@ namespace HeavenStudio
         public static bool GetPadDown(InputController.ActionsPad ac, out double dt)
         {
             bool a = GetInputController(1).GetActionDown(InputController.ControlStyles.Pad, (int)ac, out dt);
-            return a && !GameManager.instance.autoplay && Conductor.instance.isPlaying && GameManager.instance.canInput;
+            return a && PlayerHasControl();
         }
 
         public static bool GetPadDown(InputController.ActionsPad ac)
         {
             bool a = GetInputController(1).GetActionDown(InputController.ControlStyles.Pad, (int)ac, out _);
-            return a && !GameManager.instance.autoplay && Conductor.instance.isPlaying && GameManager.instance.canInput;
+            return a && PlayerHasControl();
         }
 
         public static bool GetPadUp(InputController.ActionsPad ac, out double dt)
         {
             bool a = GetInputController(1).GetActionUp(InputController.ControlStyles.Pad, (int)ac, out dt);
-            return a && !GameManager.instance.autoplay && Conductor.instance.isPlaying && GameManager.instance.canInput;
+            return a && PlayerHasControl();
         }
 
         public static bool GetPadUp(InputController.ActionsPad ac)
         {
             bool a = GetInputController(1).GetActionUp(InputController.ControlStyles.Pad, (int)ac, out _);
-            return a && !GameManager.instance.autoplay && Conductor.instance.isPlaying && GameManager.instance.canInput;
+            return a && PlayerHasControl();
         }
 
         public static bool GetPad(InputController.ActionsPad ac)
         {
             bool a = GetInputController(1).GetAction(InputController.ControlStyles.Pad, (int)ac);
-            return a && !GameManager.instance.autoplay && Conductor.instance.isPlaying && GameManager.instance.canInput;
+            return a && PlayerHasControl();
         }
 
-        public static bool GetTouchDown(InputController.ActionsPad ac, out double dt)
+        public static bool GetBatonDown(InputController.ActionsBaton ac, out double dt)
+        {
+            bool a = GetInputController(1).GetActionDown(InputController.ControlStyles.Baton, (int)ac, out dt);
+            return a && PlayerHasControl();
+        }
+
+        public static bool GetBatonDown(InputController.ActionsBaton ac)
+        {
+            bool a = GetInputController(1).GetActionDown(InputController.ControlStyles.Baton, (int)ac, out _);
+            return a && PlayerHasControl();
+        }
+
+        public static bool GetBatonUp(InputController.ActionsBaton ac, out double dt)
+        {
+            bool a = GetInputController(1).GetActionUp(InputController.ControlStyles.Baton, (int)ac, out dt);
+            return a && PlayerHasControl();
+        }
+
+        public static bool GetBatonUp(InputController.ActionsBaton ac)
+        {
+            bool a = GetInputController(1).GetActionUp(InputController.ControlStyles.Baton, (int)ac, out _);
+            return a && PlayerHasControl();
+        }
+
+        public static bool GetBaton(InputController.ActionsBaton ac)
+        {
+            bool a = GetInputController(1).GetAction(InputController.ControlStyles.Baton, (int)ac);
+            return a && PlayerHasControl();
+        }
+
+        public static bool GetTouchDown(InputController.ActionsTouch ac, out double dt)
         {
             bool a = GetInputController(1).GetActionDown(InputController.ControlStyles.Touch, (int)ac, out dt);
-            return a && !GameManager.instance.autoplay && Conductor.instance.isPlaying && GameManager.instance.canInput;
+            return a && PlayerHasControl();
         }
 
-        public static bool GetTouchDown(InputController.ActionsPad ac)
+        public static bool GetTouchDown(InputController.ActionsTouch ac)
         {
             bool a = GetInputController(1).GetActionDown(InputController.ControlStyles.Touch, (int)ac, out _);
-            return a && !GameManager.instance.autoplay && Conductor.instance.isPlaying && GameManager.instance.canInput;
+            return a && PlayerHasControl();
         }
 
-        public static bool GetTouchUp(InputController.ActionsPad ac, out double dt)
+        public static bool GetTouchUp(InputController.ActionsTouch ac, out double dt)
         {
             bool a = GetInputController(1).GetActionUp(InputController.ControlStyles.Touch, (int)ac, out dt);
-            return a && !GameManager.instance.autoplay && Conductor.instance.isPlaying && GameManager.instance.canInput;
+            return a && PlayerHasControl();
         }
 
-        public static bool GetTouchUp(InputController.ActionsPad ac)
+        public static bool GetTouchUp(InputController.ActionsTouch ac)
         {
             bool a = GetInputController(1).GetActionUp(InputController.ControlStyles.Touch, (int)ac, out _);
-            return a && !GameManager.instance.autoplay && Conductor.instance.isPlaying && GameManager.instance.canInput;
+            return a && PlayerHasControl();
         }
 
         public static bool GetTouch(InputController.ActionsTouch ac)
         {
             bool a = GetInputController(1).GetAction(InputController.ControlStyles.Touch, (int)ac);
-            return a && !GameManager.instance.autoplay && Conductor.instance.isPlaying && GameManager.instance.canInput;
+            return a && PlayerHasControl();
         }
 
         public static bool GetSwipe()
         {
-            bool a = false;
-            return a && !GameManager.instance.autoplay && Conductor.instance.isPlaying && GameManager.instance.canInput;
+            bool a = GetInputController(1).GetSwipe(out _);
+            return a && PlayerHasControl();
+        }
+
+        public static bool GetSwipe(out double dt)
+        {
+            bool a = GetInputController(1).GetSwipe(out dt);
+            return a && PlayerHasControl();
         }
 
         public static bool GetFlick()
         {
-            bool a = false;
-            return a && !GameManager.instance.autoplay && Conductor.instance.isPlaying && GameManager.instance.canInput;
+            bool a = GetInputController(1).GetFlick(out _);
+            return a && PlayerHasControl();
+        }
+
+        public static bool GetFlick(out double dt)
+        {
+            bool a = GetInputController(1).GetFlick(out dt);
+            return a && PlayerHasControl();
         }
 
         #region Deprecated Input Methods
@@ -305,35 +350,35 @@ namespace HeavenStudio
         public static bool Pressed()
         {
             bool keyDown = GetInputController(1).GetActionDown(InputController.ControlStyles.Pad, (int)InputController.ActionsPad.East, out _);
-            return keyDown && !GameManager.instance.autoplay && Conductor.instance.isPlaying && GameManager.instance.canInput;
+            return keyDown && PlayerHasControl();
         }
 
         [Obsolete("Use GetPadDown instead")]
         public static bool Pressed(out double dt)
         {
             bool keyDown = GetInputController(1).GetActionDown(InputController.ControlStyles.Pad, (int)InputController.ActionsPad.East, out dt);
-            return keyDown && !GameManager.instance.autoplay && Conductor.instance.isPlaying && GameManager.instance.canInput;
+            return keyDown && PlayerHasControl();
         }
 
         [Obsolete("Use GetPadUp instead")]
         public static bool PressedUp()
         {
             bool keyUp = GetInputController(1).GetActionUp(InputController.ControlStyles.Pad, (int)InputController.ActionsPad.East, out _);
-            return keyUp && !GameManager.instance.autoplay && Conductor.instance.isPlaying && GameManager.instance.canInput;
+            return keyUp && PlayerHasControl();
         }
 
         [Obsolete("Use GetPadUp instead")]
         public static bool PressedUp(out double dt)
         {
             bool keyUp = GetInputController(1).GetActionUp(InputController.ControlStyles.Pad, (int)InputController.ActionsPad.East, out dt);
-            return keyUp && !GameManager.instance.autoplay && Conductor.instance.isPlaying && GameManager.instance.canInput;
+            return keyUp && PlayerHasControl();
         }
 
         [Obsolete("Use GetPad instead")]
         public static bool Pressing()
         {
             bool pressing = GetInputController(1).GetAction(InputController.ControlStyles.Pad, (int)InputController.ActionsPad.East);
-            return pressing && !GameManager.instance.autoplay && Conductor.instance.isPlaying && GameManager.instance.canInput;
+            return pressing && PlayerHasControl();
         }
 
         [Obsolete("Use GetPadDown instead")]

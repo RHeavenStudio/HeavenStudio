@@ -35,8 +35,9 @@ namespace HeavenStudio.InputSystem
 {
     public class InputMouse : InputController
     {
-        const double FlickMarginTime = 0.1;
-        const double BigMoveMarginRate = 1.25;
+        const double FlickMarginTime = 0.05;
+        const double BigMoveMarginSpd = 0.1;
+        const double SmallMoveMarginSpd = 0.025;
 
         private static readonly KeyCode[] keyCodes = Enum.GetValues(typeof(KeyCode))
             .Cast<KeyCode>()
@@ -73,10 +74,12 @@ namespace HeavenStudio.InputSystem
             }
         }
 
+        Vector3 realPos, lastRealPos;
         Vector3 rawPointerPos, lastRawPointerPos, startPointerPos, lastDownPointerPos, lastUpPointerPos;
         Vector3 deltaPointerPos, lastDeltaPointerPos;
         double timeMoveChange, timeDirectionChange;
         byte dirLeftRight, dirUpDown;
+        bool hasFlicked, hasSwiped, isInMove;
 
         public override void InitializeController()
         {
@@ -85,15 +88,55 @@ namespace HeavenStudio.InputSystem
 
         public override void UpdateState()
         {
-            // Update the state of the controller
-            lastRawPointerPos = rawPointerPos;
-            lastDeltaPointerPos = deltaPointerPos;
-            rawPointerPos = Input.mousePosition;
-            deltaPointerPos = rawPointerPos - lastRawPointerPos;
+            Camera cam = GameManager.instance.CursorCam;
 
+            hasFlicked = false;
+            hasSwiped = false;
+            lastRawPointerPos = rawPointerPos;
+            lastRealPos = realPos;
+            lastDeltaPointerPos = deltaPointerPos;
+
+            rawPointerPos = Input.mousePosition;
+            rawPointerPos.z = Mathf.Abs(cam.gameObject.transform.position.z);
+            realPos = cam.ScreenToWorldPoint(rawPointerPos);
+            deltaPointerPos = realPos - lastRealPos;
+
+            float speed = deltaPointerPos.magnitude;
             if (GetAction(ControlStyles.Touch, 0))
             {
-                Debug.Log(deltaPointerPos.normalized);
+                Debug.Log($"pointer speed: {deltaPointerPos.magnitude}, direction: {deltaPointerPos.normalized}");
+                if (speed >= BigMoveMarginSpd)
+                {
+                    timeMoveChange = Time.realtimeSinceStartupAsDouble;
+                    if (!isInMove)
+                    {
+                        isInMove = true;
+                        hasSwiped = true;
+                        Debug.Log($"just started moving or direction change");
+                    }
+                }
+                else
+                {
+                    if (isInMove && speed < SmallMoveMarginSpd)
+                    {
+                        Debug.Log($"just stopped moving");
+                        isInMove = false;
+                    }
+                }
+            }
+
+            double dMoveChange = Time.realtimeSinceStartupAsDouble - timeMoveChange;
+            if (GetActionUp(ControlStyles.Touch, 0, out double dt))
+            {
+                isInMove = false;
+                lastRawPointerPos = rawPointerPos;
+                lastRealPos = realPos;
+                lastDeltaPointerPos = deltaPointerPos;
+                hasFlicked = dMoveChange < FlickMarginTime && speed >= BigMoveMarginSpd;
+                if (hasFlicked)
+                {
+                    Debug.Log($"flicked (speed: {dMoveChange})");
+                }
             }
         }
 
@@ -283,7 +326,7 @@ namespace HeavenStudio.InputSystem
 
         public override Vector2 GetPointer()
         {
-            return Vector2.zero;
+            return realPos;
         }
 
         //todo: directionals
@@ -355,18 +398,16 @@ namespace HeavenStudio.InputSystem
             return playerNum;
         }
 
-        public override bool GetFlick(out double dt, out InputDirection direction)
+        public override bool GetFlick(out double dt)
         {
             dt = 0;
-            direction = InputDirection.Up;
-            return false;
+            return hasFlicked;
         }
 
-        public override bool GetSwipe(out double dt, out InputDirection direction)
+        public override bool GetSwipe(out double dt)
         {
-            dt = 0;
-            direction = InputDirection.Up;
-            return false;
+            dt = hasSwiped ? Time.realtimeSinceStartupAsDouble - timeMoveChange : 0;
+            return hasSwiped;
         }
 
         public override void SetMaterialProperties(Material m)

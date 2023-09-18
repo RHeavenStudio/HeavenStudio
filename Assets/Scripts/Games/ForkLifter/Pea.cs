@@ -35,7 +35,7 @@ namespace HeavenStudio.Games.Scripts_ForkLifter
                 transform.GetChild(0).GetChild(i).GetComponent<SpriteRenderer>().sprite = transform.GetChild(0).GetComponent<SpriteRenderer>().sprite;
             }
 
-            game.ScheduleInput(startBeat, 2f, InputType.STANDARD_DOWN, Just, Miss, Out);
+            game.ScheduleInput(startBeat, 2f, ForkLifter.InputAction_BasicPress, Just, Miss, Out);
         }
 
         public void Hit()

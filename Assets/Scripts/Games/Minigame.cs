@@ -4,6 +4,7 @@ using UnityEngine;
 
 using HeavenStudio.Util;
 using HeavenStudio.Common;
+using HeavenStudio.InputSystem;
 
 namespace HeavenStudio.Games
 {
@@ -27,7 +28,138 @@ namespace HeavenStudio.Games
             public float createBeat;
         }
 
+        #region Premade Input Actions
+        const int IAEmptyCat = -1;
+        const int IAPressCat = 0;
+        const int IAReleaseCat = 1;
+        const int IAFlickCat = 2;
+
+        protected static bool IA_Empty(out double dt)
+        {
+            dt = 0;
+            return false;
+        }
+
+        protected static bool IA_PadBasicPress(out double dt)
+        {
+            return PlayerInput.GetPadDown(InputController.ActionsPad.East, out dt);
+        }
+        protected static bool IA_TouchBasicPress(out double dt)
+        {
+            return PlayerInput.GetTouchDown(InputController.ActionsTouch.Tap, out dt);
+        }
+        protected static bool IA_BatonBasicPress(out double dt)
+        {
+            return PlayerInput.GetBatonDown(InputController.ActionsBaton.Face, out dt);
+        }
+
+        protected static bool IA_PadBasicRelease(out double dt)
+        {
+            return PlayerInput.GetPadUp(InputController.ActionsPad.East, out dt);
+        }
+        protected static bool IA_TouchBasicRelease(out double dt)
+        {
+            return PlayerInput.GetTouchUp(InputController.ActionsTouch.Tap, out dt);
+        }
+        protected static bool IA_BatonBasicRelease(out double dt)
+        {
+            return PlayerInput.GetBatonUp(InputController.ActionsBaton.Face, out dt);
+        }
+
+        protected static bool IA_TouchFlick(out double dt)
+        {
+            return PlayerInput.GetFlick(out dt);
+        }
+
+        public static PlayerInput.InputAction InputAction_BasicPress =
+            new("BasicPress", new int[] { IAPressCat, IAPressCat, IAPressCat },
+            IA_PadBasicPress, IA_TouchBasicPress, IA_BatonBasicPress);
+        public static PlayerInput.InputAction InputAction_BasicRelease =
+            new("BasicPress", new int[] { IAReleaseCat, IAReleaseCat, IAReleaseCat },
+            IA_PadBasicRelease, IA_TouchBasicRelease, IA_BatonBasicRelease);
+
+        public static PlayerInput.InputAction InputAction_FlickPress =
+            new("BasicPress", new int[] { IAPressCat, IAFlickCat, IAPressCat },
+            IA_PadBasicPress, IA_TouchFlick, IA_BatonBasicPress);
+        public static PlayerInput.InputAction InputAction_FlickRelease =
+            new("BasicPress", new int[] { IAReleaseCat, IAFlickCat, IAReleaseCat },
+            IA_PadBasicRelease, IA_TouchFlick, IA_BatonBasicRelease);
+        #endregion
+
         public List<PlayerActionEvent> scheduledInputs = new List<PlayerActionEvent>();
+
+        /// <summary>
+        /// Schedule an Input for a later time in the minigame. Executes the methods put in parameters
+        /// </summary>
+        /// <param name="startBeat">When the scheduling started (in beats)</param>
+        /// <param name="timer">How many beats later should the input be expected</param>
+        /// <param name="inputAction">The input action that's expected</param>
+        /// <param name="OnHit">Method to run if the Input has been Hit</param>
+        /// <param name="OnMiss">Method to run if the Input has been Missed</param>
+        /// <param name="OnBlank">Method to run whenever there's an Input while this is Scheduled (Shouldn't be used too much)</param>
+        /// <returns></returns>
+        public PlayerActionEvent ScheduleInput(
+            double startBeat,
+            double timer,
+            PlayerInput.InputAction inputAction,
+            PlayerActionEvent.ActionEventCallbackState OnHit,
+            PlayerActionEvent.ActionEventCallback OnMiss,
+            PlayerActionEvent.ActionEventCallback OnBlank,
+            PlayerActionEvent.ActionEventHittableQuery HittableQuery = null
+            )
+        {
+
+            GameObject evtObj = new GameObject("ActionEvent" + (startBeat + timer));
+            evtObj.AddComponent<PlayerActionEvent>();
+
+            PlayerActionEvent evt = evtObj.GetComponent<PlayerActionEvent>();
+
+            evt.startBeat = startBeat;
+            evt.timer = timer;
+            evt.InputAction = inputAction;
+            evt.OnHit = OnHit;
+            evt.OnMiss = OnMiss;
+            evt.OnBlank = OnBlank;
+            evt.IsHittable = HittableQuery;
+
+            evt.OnDestroy = RemoveScheduledInput;
+
+            evt.canHit = true;
+            evt.enabled = true;
+
+            evt.transform.parent = this.transform.parent;
+
+            evtObj.SetActive(true);
+
+            scheduledInputs.Add(evt);
+
+            return evt;
+        }
+
+        public PlayerActionEvent ScheduleAutoplayInput(double startBeat,
+            double timer,
+            PlayerInput.InputAction inputAction,
+            PlayerActionEvent.ActionEventCallbackState OnHit,
+            PlayerActionEvent.ActionEventCallback OnMiss,
+            PlayerActionEvent.ActionEventCallback OnBlank)
+        {
+            PlayerActionEvent evt = ScheduleInput(startBeat, timer, inputAction, OnHit, OnMiss, OnBlank);
+            evt.autoplayOnly = true;
+            return evt;
+        }
+
+        public PlayerActionEvent ScheduleUserInput(double startBeat,
+            double timer,
+            PlayerInput.InputAction inputAction,
+            PlayerActionEvent.ActionEventCallbackState OnHit,
+            PlayerActionEvent.ActionEventCallback OnMiss,
+            PlayerActionEvent.ActionEventCallback OnBlank,
+            PlayerActionEvent.ActionEventHittableQuery HittableQuery = null)
+        {
+            PlayerActionEvent evt = ScheduleInput(startBeat, timer, inputAction, OnHit, OnMiss, OnBlank, HittableQuery);
+            evt.noAutoplay = true;
+            return evt;
+        }
 
         /// <summary>
         /// Schedule an Input for a later time in the minigame. Executes the methods put in parameters
@@ -143,10 +275,10 @@ namespace HeavenStudio.Games
             return closest;
         }
 
-        public PlayerActionEvent GetClosestScheduledInput(string action)
+        public PlayerActionEvent GetClosestScheduledInput(int[] actionCats)
         {
-            if (action == null) return null;
-
+            int catIdx = (int)PlayerInput.CurrentControlStyle;
+            int cat = actionCats[catIdx];
             PlayerActionEvent closest = null;
 
             foreach (PlayerActionEvent toCompare in scheduledInputs)
@@ -156,7 +288,7 @@ namespace HeavenStudio.Games
 
                 if (closest == null)
                 {
-                    if (toCompare.InputAction.name == action)
+                    if (toCompare.InputAction.inputLockCategory[catIdx] == cat)
                         closest = toCompare;
                 }
                 else
@@ -164,11 +296,9 @@ namespace HeavenStudio.Games
                     double t1 = closest.startBeat + closest.timer;
                     double t2 = toCompare.startBeat + toCompare.timer;
 
-                    // Debug.Log("t1=" + t1 + " -- t2=" + t2);
-
                     if (t2 < t1)
                     {
-                        if (toCompare.InputAction.name == action)
+                        if (toCompare.InputAction.inputLockCategory[catIdx] == cat)
                             closest = toCompare;
                     }
                 }
@@ -187,9 +317,9 @@ namespace HeavenStudio.Games
             return input.IsExpectingInputNow();
         }
 
-        public bool IsExpectingInputNow(string wantAction)
+        public bool IsExpectingInputNow(int[] wantActionCategory)
         {
-            PlayerActionEvent input = GetClosestScheduledInput(wantAction);
+            PlayerActionEvent input = GetClosestScheduledInput(wantActionCategory);
             if (input == null) return false;
             return input.IsExpectingInputNow();
         }

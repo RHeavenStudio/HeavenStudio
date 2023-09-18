@@ -190,7 +190,10 @@ namespace HeavenStudio.InputSystem
 
         public override Vector2 GetPointer()
         {
-            return Vector2.zero;
+            Camera cam = GameManager.instance.CursorCam;
+            Vector3 rawPointerPos = Input.mousePosition;
+            rawPointerPos.z = Mathf.Abs(cam.gameObject.transform.position.z);
+            return cam.ScreenToWorldPoint(rawPointerPos);
         }
 
         //todo: directionals
@@ -262,17 +265,15 @@ namespace HeavenStudio.InputSystem
             return playerNum;
         }
 
-        public override bool GetFlick(out double dt, out InputDirection direction)
+        public override bool GetFlick(out double dt)
         {
             dt = 0;
-            direction = InputDirection.Up;
             return false;
         }
 
-        public override bool GetSwipe(out double dt, out InputDirection direction)
+        public override bool GetSwipe(out double dt)
         {
             dt = 0;
-            direction = InputDirection.Up;
             return false;
         }
 
