@@ -438,9 +438,12 @@ namespace HeavenStudio.Editor
                 MainCanvas.enabled = false;
                 EditorCamera.enabled = false;
                 GameManager.instance.StaticCamera.targetTexture = null;
-                GameManager.instance.CursorCam.enabled = false;
+                GameManager.instance.CursorCam.enabled = (PlayerInput.CurrentControlStyle == InputSystem.InputController.ControlStyles.Touch)
+                    && isCursorEnabled;
+                GameManager.instance.CursorCam.targetTexture = null;
+                
+                GameManager.instance.CursorCam.rect = new Rect(0, 0, 1, 1);
                 fullscreen = true;
-
             }
             else
             {
@@ -448,6 +451,7 @@ namespace HeavenStudio.Editor
                 EditorCamera.enabled = true;
                 GameManager.instance.StaticCamera.targetTexture = ScreenRenderTexture;
                 GameManager.instance.CursorCam.enabled = true && isCursorEnabled;
+                GameManager.instance.CursorCam.targetTexture = ScreenRenderTexture;
                 fullscreen = false;
 
                 GameCamera.instance.camera.rect = new Rect(0, 0, 1, 1);

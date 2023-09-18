@@ -104,7 +104,7 @@ namespace HeavenStudio.InputSystem
             float speed = deltaPointerPos.magnitude;
             if (GetAction(ControlStyles.Touch, 0))
             {
-                Debug.Log($"pointer speed: {deltaPointerPos.magnitude}, direction: {deltaPointerPos.normalized}");
+                // Debug.Log($"pointer speed: {deltaPointerPos.magnitude}, direction: {deltaPointerPos.normalized}");
                 if (speed >= BigMoveMarginSpd)
                 {
                     timeMoveChange = Time.realtimeSinceStartupAsDouble;
@@ -112,14 +112,14 @@ namespace HeavenStudio.InputSystem
                     {
                         isInMove = true;
                         hasSwiped = true;
-                        Debug.Log($"just started moving or direction change");
+                        // Debug.Log($"just started moving or direction change");
                     }
                 }
                 else
                 {
                     if (isInMove && speed < SmallMoveMarginSpd)
                     {
-                        Debug.Log($"just stopped moving");
+                        // Debug.Log($"just stopped moving");
                         isInMove = false;
                     }
                 }
@@ -133,10 +133,10 @@ namespace HeavenStudio.InputSystem
                 lastRealPos = realPos;
                 lastDeltaPointerPos = deltaPointerPos;
                 hasFlicked = dMoveChange < FlickMarginTime && speed >= BigMoveMarginSpd;
-                if (hasFlicked)
-                {
-                    Debug.Log($"flicked (speed: {dMoveChange})");
-                }
+                // if (hasFlicked)
+                // {
+                //     Debug.Log($"flicked (speed: {dMoveChange})");
+                // }
             }
         }
 
@@ -332,55 +332,19 @@ namespace HeavenStudio.InputSystem
         //todo: directionals
         public override bool GetHatDirection(InputDirection direction)
         {
-            switch (direction)
-            {
-                case InputDirection.Up:
-                    return Input.GetKey((KeyCode)currentBindings.Pad[0]);
-                case InputDirection.Down:
-                    return Input.GetKey((KeyCode)currentBindings.Pad[1]);
-                case InputDirection.Left:
-                    return Input.GetKey((KeyCode)currentBindings.Pad[2]);
-                case InputDirection.Right:
-                    return Input.GetKey((KeyCode)currentBindings.Pad[3]);
-                default:
-                    return false;
-            }
+            return false;
         }
 
         public override bool GetHatDirectionDown(InputDirection direction, out double dt)
         {
             dt = 0;
-            switch (direction)
-            {
-                case InputDirection.Up:
-                    return Input.GetKeyDown((KeyCode)currentBindings.Pad[0]);
-                case InputDirection.Down:
-                    return Input.GetKeyDown((KeyCode)currentBindings.Pad[1]);
-                case InputDirection.Left:
-                    return Input.GetKeyDown((KeyCode)currentBindings.Pad[2]);
-                case InputDirection.Right:
-                    return Input.GetKeyDown((KeyCode)currentBindings.Pad[3]);
-                default:
-                    return false;
-            }
+            return false;
         }
 
         public override bool GetHatDirectionUp(InputDirection direction, out double dt)
         {
-            dt = 0;
-            switch (direction)
-            {
-                case InputDirection.Up:
-                    return Input.GetKeyUp((KeyCode)currentBindings.Pad[0]);
-                case InputDirection.Down:
-                    return Input.GetKeyUp((KeyCode)currentBindings.Pad[1]);
-                case InputDirection.Left:
-                    return Input.GetKeyUp((KeyCode)currentBindings.Pad[2]);
-                case InputDirection.Right:
-                    return Input.GetKeyUp((KeyCode)currentBindings.Pad[3]);
-                default:
-                    return false;
-            }
+           dt = 0;
+            return false;
         }
 
         public override void SetPlayer(int? playerNum)

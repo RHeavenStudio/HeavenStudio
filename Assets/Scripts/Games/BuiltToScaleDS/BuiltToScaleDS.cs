@@ -258,6 +258,7 @@ namespace HeavenStudio.Games
         List<RiqEntity> spawnedBlockEvents = new List<RiqEntity>();
         void Update()
         {
+            shootingThisFrame = false;
             if (!Conductor.instance.isPlaying && !Conductor.instance.isPaused)
                 return;
 
@@ -283,21 +284,13 @@ namespace HeavenStudio.Games
                 HandleLights();
             }
 
-            currentBeltOffset = (currentBeltOffset + Time.deltaTime * -beltSpeed) % 1f;
-            beltMaterial.mainTextureOffset = new Vector2(0f, currentBeltOffset);
-            environmentRenderer.materials = environmentMaterials;
-            elevatorRenderer.materials = elevatorMaterials;
-        }
-
-        void LateUpdate()
-        {
             var shooterState = shooterAnim.GetCurrentAnimatorStateInfo(0);
             bool canShoot = (!shooterState.IsName("Shoot") || shooterAnim.IsAnimationNotPlaying()) && !shootingThisFrame;
 
             if (canShoot && lastShotOut)
                 lastShotOut = false;
 
-            if (canShoot && !lastShotOut && PlayerInput.Pressed() && !IsExpectingInputNow(InputType.STANDARD_DOWN))
+            if (canShoot && !lastShotOut && PlayerInput.GetIsAction(InputAction_FlickPress, out _) && !IsExpectingInputNow(InputAction_FlickPress.inputLockCategory))
             {
                 lastShotOut = true;
                 shootingThisFrame = true;
@@ -306,15 +299,36 @@ namespace HeavenStudio.Games
                 SoundByte.PlayOneShotGame("builtToScaleDS/Boing");
             }
 
-            if (!shootingThisFrame)
+            currentBeltOffset = (currentBeltOffset + Time.deltaTime * -beltSpeed) % 1f;
+            beltMaterial.mainTextureOffset = new Vector2(0f, currentBeltOffset);
+            environmentRenderer.materials = environmentMaterials;
+            elevatorRenderer.materials = elevatorMaterials;
+
+            if (PlayerInput.PlayerHasControl() && PlayerInput.CurrentControlStyle is InputSystem.InputController.ControlStyles.Touch)
             {
-                if (blocksHolder.childCount == 0 && shooterState.IsName("Windup") && shooterAnim.IsAnimationNotPlaying())
+                if (PlayerInput.GetIsAction(InputAction_BasicPress, out _))
                 {
-                    shooterAnim.Play("WindDown", 0, 0);
+                    shooterAnim.Play("Windup", 0, 0);
+                }
+                if (PlayerInput.GetIsAction(InputAction_BasicRelease, out _) && !shootingThisFrame)
+                {
+                    shooterAnim.Play("WindDown", 0, 23 / 28f);
                 }
             }
+            else
+            {
+                if (!shootingThisFrame)
+                {
+                    if (blocksHolder.childCount == 0 && shooterState.IsName("Windup") && shooterAnim.IsAnimationNotPlaying())
+                    {
+                        shooterAnim.Play("WindDown", 0, 0);
+                    }
+                }
+            }
+        }
 
-            shootingThisFrame = false;
+        void LateUpdate()
+        {
         }
 
         public void Lights(double beat, float length, bool autoLights, bool shouldLights)
