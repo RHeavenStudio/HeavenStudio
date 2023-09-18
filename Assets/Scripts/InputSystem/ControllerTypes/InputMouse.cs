@@ -234,14 +234,14 @@ namespace HeavenStudio.InputSystem
                     case 0:
                         return bt;
                     case 1:
-                        if (bt && rawPointerPos.x <= screenBounds.x * 0.5f)
+                        if (bt && rawPointerPos.x <= ScreenBounds.x * 0.5f)
                         {
                             lastDownPointerPos = rawPointerPos;
                             return true;
                         }
                         return false;
                     case 2:
-                        if (bt && rawPointerPos.x >= screenBounds.x * 0.5f)
+                        if (bt && rawPointerPos.x >= ScreenBounds.x * 0.5f)
                         {
                             lastDownPointerPos = rawPointerPos;
                             return true;
@@ -264,7 +264,7 @@ namespace HeavenStudio.InputSystem
                     case 0:
                         return bt;
                     case 1:
-                        if (bt && rawPointerPos.x <= screenBounds.x * 0.5f)
+                        if (bt && rawPointerPos.x <= ScreenBounds.x * 0.5f)
                         {
                             lastDownPointerPos = rawPointerPos;
                             startPointerPos = rawPointerPos;
@@ -272,7 +272,7 @@ namespace HeavenStudio.InputSystem
                         }
                         return false;
                     case 2:
-                        if (bt && rawPointerPos.x >= screenBounds.x * 0.5f)
+                        if (bt && rawPointerPos.x >= ScreenBounds.x * 0.5f)
                         {
                             lastDownPointerPos = rawPointerPos;
                             startPointerPos = rawPointerPos;
@@ -296,14 +296,14 @@ namespace HeavenStudio.InputSystem
                     case 0:
                         return bt;
                     case 1:
-                        if (bt && rawPointerPos.x <= screenBounds.x * 0.5f)
+                        if (bt && rawPointerPos.x <= ScreenBounds.x * 0.5f)
                         {
                             lastUpPointerPos = rawPointerPos;
                             return true;
                         }
                         return false;
                     case 2:
-                        if (bt && rawPointerPos.x >= screenBounds.x * 0.5f)
+                        if (bt && rawPointerPos.x >= ScreenBounds.x * 0.5f)
                         {
                             lastUpPointerPos = rawPointerPos;
                             return true;

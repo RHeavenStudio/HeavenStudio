@@ -5,6 +5,7 @@ using UnityEngine;
 using HeavenStudio.Util;
 using HeavenStudio.Common;
 using HeavenStudio.InputSystem;
+using System;
 
 namespace HeavenStudio.Games
 {
@@ -171,6 +172,7 @@ namespace HeavenStudio.Games
         /// <param name="OnMiss">Method to run if the Input has been Missed</param>
         /// <param name="OnBlank">Method to run whenever there's an Input while this is Scheduled (Shouldn't be used too much)</param>
         /// <returns></returns>
+        [Obsolete("Use Input Action ScheduleInput instead")]
         public PlayerActionEvent ScheduleInput(
             double startBeat,
             double timer,
@@ -209,6 +211,7 @@ namespace HeavenStudio.Games
             return evt;
         }
 
+        [Obsolete("Use Input Action ScheduleInput instead")]
         public PlayerActionEvent ScheduleAutoplayInput(double startBeat,
             double timer,
             InputType inputType,
@@ -221,6 +224,7 @@ namespace HeavenStudio.Games
             return evt;
         }
 
+        [Obsolete("Use Input Action ScheduleInput instead")]
         public PlayerActionEvent ScheduleUserInput(double startBeat,
             double timer,
             InputType inputType,
