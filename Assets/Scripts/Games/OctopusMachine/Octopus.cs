@@ -47,7 +47,7 @@ namespace HeavenStudio.Games.Scripts_OctopusMachine
                 }
 
                 if (PlayerInput.PressedUp() && !game.IsExpectingInputNow(InputType.STANDARD_UP)) {
-                    OctoAction(PlayerInput.Pressing(true) ? "Pop" : "Release");
+                    OctoAction(PlayerInput.Pressing() ? "Pop" : "Release");
                     SoundByte.PlayOneShotGame("nearMiss");
                     game.hasMissed = true;
                 }

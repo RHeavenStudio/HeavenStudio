@@ -31,7 +31,7 @@ namespace HeavenStudio.Common
 
         [SerializeField] RectTransform patternL;
         [SerializeField] RectTransform patternR;
-        
+
         public static bool IsPaused { get { return isPaused; } }
 
         private static bool isPaused = false;
@@ -39,6 +39,8 @@ namespace HeavenStudio.Common
         private bool canPick = false;
         private bool isQuitting = false;
         private int optionSelected = 0;
+
+        int btPause, btUp, btDown, btConfirm;
 
         void Pause()
         {
@@ -69,7 +71,7 @@ namespace HeavenStudio.Common
                 animator.Play("PauseHide");
                 SoundByte.PlayOneShot("ui/PauseOut");
             }
-            
+
             isPaused = false;
             canPick = false;
         }
@@ -84,8 +86,31 @@ namespace HeavenStudio.Common
         // Update is called once per frame
         void Update()
         {
+            switch (PlayerInput.CurrentControlStyle)
+            {
+                case InputController.ControlStyles.Touch:
+                    btPause = (int)InputController.ActionsTouch.Pause;
+                    btConfirm = (int)InputController.ActionsTouch.Tap;
+                    btUp = -1;
+                    btDown = -1;
+                    break;
+                case InputController.ControlStyles.Baton:
+                    btPause = (int)InputController.ActionsBaton.Pause;
+                    btUp = (int)InputController.ActionsBaton.Up;
+                    btDown = (int)InputController.ActionsBaton.Down;
+                    btConfirm = (int)InputController.ActionsBaton.Face;
+                    break;
+                default:
+                    btPause = (int)InputController.ActionsPad.Pause;
+                    btUp = (int)InputController.ActionsPad.Up;
+                    btDown = (int)InputController.ActionsPad.Down;
+                    btConfirm = (int)InputController.ActionsPad.East;
+                    break;
+            }
+
             if (isQuitting) return;
-            if (PlayerInput.GetInputController(1).GetActionDown((int) InputController.ActionsPad.Pause, out _))
+
+            if (PlayerInput.GetInputController(1).GetActionDown(PlayerInput.CurrentControlStyle, btPause, out _))
             {
                 if (isPaused)
                 {
@@ -98,27 +123,27 @@ namespace HeavenStudio.Common
             }
             else if (isPaused && canPick && !settingsDialog.IsOpen)
             {
-                if (Input.GetKeyDown(KeyCode.UpArrow) || PlayerInput.GetInputController(1).GetActionDown((int)InputController.ActionsPad.Up, out _))
+                if (Input.GetKeyDown(KeyCode.UpArrow) || PlayerInput.GetInputController(1).GetActionDown(PlayerInput.CurrentControlStyle, btUp, out _))
                 {
                     optionSelected--;
                     if (optionSelected < 0)
                     {
                         optionSelected = optionHolder.transform.childCount - 1;
                     }
-                    ChooseOption((Options) optionSelected);
+                    ChooseOption((Options)optionSelected);
                 }
-                else if (Input.GetKeyDown(KeyCode.DownArrow) || PlayerInput.GetInputController(1).GetActionDown((int)InputController.ActionsPad.Down, out _))
+                else if (Input.GetKeyDown(KeyCode.DownArrow) || PlayerInput.GetInputController(1).GetActionDown(PlayerInput.CurrentControlStyle, btDown, out _))
                 {
                     optionSelected++;
                     if (optionSelected > optionHolder.transform.childCount - 1)
                     {
                         optionSelected = 0;
                     }
-                    ChooseOption((Options) optionSelected);
+                    ChooseOption((Options)optionSelected);
                 }
-                else if (Input.GetKeyDown(KeyCode.Return) || PlayerInput.GetInputController(1).GetActionDown((int)InputController.ActionsPad.East, out _))
+                else if (Input.GetKeyDown(KeyCode.Return) || PlayerInput.GetInputController(1).GetActionDown(PlayerInput.CurrentControlStyle, btConfirm, out _))
                 {
-                    UseOption((Options) optionSelected);
+                    UseOption((Options)optionSelected);
                 }
             }
 
@@ -131,18 +156,18 @@ namespace HeavenStudio.Common
 
         public void ChooseCurrentOption()
         {
-            ChooseOption((Options) optionSelected, false);
+            ChooseOption((Options)optionSelected, false);
             canPick = true;
         }
 
         public void ChooseOption(Options option, bool sound = true)
         {
-            optionArrow.transform.position = new Vector3(optionArrow.transform.position.x, optionHolder.transform.GetChild((int) option).position.y, optionArrow.transform.position.z);
+            optionArrow.transform.position = new Vector3(optionArrow.transform.position.x, optionHolder.transform.GetChild((int)option).position.y, optionArrow.transform.position.z);
             foreach (Transform child in optionHolder.transform)
             {
                 child.transform.localScale = new Vector3(1f, 1f, 1f);
             }
-            optionHolder.transform.GetChild((int) option).transform.localScale = new Vector3(1.2f, 1.2f, 1.2f);
+            optionHolder.transform.GetChild((int)option).transform.localScale = new Vector3(1.2f, 1.2f, 1.2f);
             if (sound)
                 SoundByte.PlayOneShot("ui/UIOption");
         }

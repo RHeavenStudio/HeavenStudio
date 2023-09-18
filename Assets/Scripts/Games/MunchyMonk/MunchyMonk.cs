@@ -278,8 +278,8 @@ namespace HeavenStudio.Games
         private void Update() 
         {
             // input stuff
-            if (PlayerInput.Pressed(true) && !IsExpectingInputNow(InputType.STANDARD_DOWN)) {
-                Debug.Log("ooops" + PlayerInput.Pressed(true));
+            if (PlayerInput.Pressed() && !IsExpectingInputNow(InputType.STANDARD_DOWN)) {
+                Debug.Log("ooops" + PlayerInput.Pressed());
                 MonkArmsAnim.DoScaledAnimationAsync("WristSlap", 0.5f);
                 SoundByte.PlayOneShotGame(sfxName+"slap");
                 isStaring = false;

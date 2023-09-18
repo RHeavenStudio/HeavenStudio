@@ -199,7 +199,7 @@ namespace HeavenStudio.Games
                 DogAnim.SetBool("needPrepare", true);
             }
             
-            if (PlayerInput.Pressed(true) && !IsExpectingInputNow(InputType.STANDARD_DOWN))
+            if ((PlayerInput.Pressed() || PlayerInput.GetAnyDirectionDown()) && !IsExpectingInputNow(InputType.STANDARD_DOWN | InputType.DIRECTION_DOWN))
             {
                 System.Random rd = new System.Random();
                 string slice;

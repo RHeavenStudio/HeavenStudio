@@ -312,12 +312,12 @@ namespace HeavenStudio.Games
                 CadetPlayer.DoScaledAnimationAsync("Halt", 0.5f);
             }
 
-            if (PlayerInput.Pressed(true) && PlayerInput.GetSpecificDirection(PlayerInput.LEFT) && !IsExpectingInputNow(InputType.DIRECTION_LEFT_DOWN)) {
+            if (PlayerInput.GetSpecificDirectionDown((int) InputSystem.InputController.InputDirection.Left) && !IsExpectingInputNow(InputType.DIRECTION_LEFT_DOWN)) {
                 Miss();
                 CadetHeadPlayer.DoScaledAnimationAsync("FaceL", 0.5f);
             }
 
-            if (PlayerInput.Pressed(true) && PlayerInput.GetSpecificDirection(PlayerInput.RIGHT) && !IsExpectingInputNow(InputType.DIRECTION_RIGHT_DOWN)) {
+            if (PlayerInput.GetSpecificDirectionDown((int) InputSystem.InputController.InputDirection.Right) && !IsExpectingInputNow(InputType.DIRECTION_RIGHT_DOWN)) {
                 Miss();
                 CadetHeadPlayer.DoScaledAnimationAsync("FaceR", 0.5f);
             }

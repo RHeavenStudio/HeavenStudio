@@ -662,7 +662,7 @@ namespace HeavenStudio.InputSystem
             return -1;
         }
 
-        public override bool GetAction(int button)
+        public override bool GetAction(ControlStyles style, int button)
         {
             if (button == -1) { return false; }
             if (otherHalf != null)
@@ -672,10 +672,10 @@ namespace HeavenStudio.InputSystem
             return actionStates[button].pressed;
         }
 
-        public override bool GetActionDown(int button, out double dt)
+        public override bool GetActionDown(ControlStyles style, int button, out double dt)
         {
             if (button == -1) { dt = 0; return false; }
-            if (otherHalf != null && otherHalf.GetActionDown(button, out dt))
+            if (otherHalf != null && otherHalf.GetActionDown(style, button, out dt))
             {
                 return true;
             }
@@ -683,10 +683,10 @@ namespace HeavenStudio.InputSystem
             return actionStates[button].pressed && actionStates[button].isDelta;
         }
 
-        public override bool GetActionUp(int button, out double dt)
+        public override bool GetActionUp(ControlStyles style, int button, out double dt)
         {
             if (button == -1) { dt = 0; return false; }
-            if (otherHalf != null && otherHalf.GetActionUp(button, out dt))
+            if (otherHalf != null && otherHalf.GetActionUp(style, button, out dt))
             {
                 return true;
             }
@@ -764,9 +764,9 @@ namespace HeavenStudio.InputSystem
             }
             if (otherHalf != null)
             {
-                return GetAction(bt) || BitwiseUtils.WantCurrent(otherHalf.directionStateCurrent, 1 << (int)direction) || BitwiseUtils.WantCurrent(directionStateCurrent, 1 << (int)direction);
+                return GetAction(ControlStyles.Pad, bt) || BitwiseUtils.WantCurrent(otherHalf.directionStateCurrent, 1 << (int)direction) || BitwiseUtils.WantCurrent(directionStateCurrent, 1 << (int)direction);
             }
-            return GetAction(bt) || BitwiseUtils.WantCurrent(directionStateCurrent, 1 << (int)direction);
+            return GetAction(ControlStyles.Pad, bt) || BitwiseUtils.WantCurrent(directionStateCurrent, 1 << (int)direction);
         }
 
         public override bool GetHatDirectionDown(InputDirection direction, out double dt)
@@ -790,7 +790,7 @@ namespace HeavenStudio.InputSystem
                     dt = 0;
                     return false;
             }
-            bool btbool = GetActionDown(bt, out dt);
+            bool btbool = GetActionDown(ControlStyles.Pad, bt, out dt);
             if (!btbool) dt = 0;
             if (otherHalf != null)
             {
@@ -820,7 +820,7 @@ namespace HeavenStudio.InputSystem
                     dt = 0;
                     return false;
             }
-            bool btbool = GetActionUp(bt, out dt);
+            bool btbool = GetActionUp(ControlStyles.Pad, bt, out dt);
             if (!btbool) dt = 0;
             if (otherHalf != null)
             {
@@ -965,6 +965,69 @@ namespace HeavenStudio.InputSystem
         public InputJoyshock GetOtherHalf()
         {
             return otherHalf;
+        }
+
+        public override bool GetFlick(out double dt, out InputDirection direction)
+        {
+            dt = 0;
+            direction = InputDirection.Up;
+            return false;
+        }
+
+        public override bool GetSwipe(out double dt, out InputDirection direction)
+        {
+            dt = 0;
+            direction = InputDirection.Up;
+            return false;
+        }
+
+        public override void SetMaterialProperties(Material m)
+        {
+            Color colour;
+            switch (GetDeviceName())
+            {
+                case "Joy-Con (L)":
+                case "Joy-Con (R)":
+                    m.SetColor("_BodyColor", GetBodyColor());
+                    m.SetColor("_BtnColor", GetButtonColor());
+                    m.SetColor("_LGripColor", ColorUtility.TryParseHtmlString("#2F353A", out colour) ? colour : Color.white);
+                    m.SetColor("_RGripColor", ColorUtility.TryParseHtmlString("#2F353A", out colour) ? colour : Color.white);
+                    break;
+                case "Joy-Con Pair":
+                    m.SetColor("_BodyColor", splitType == SplitRight ? GetButtonColor() : GetOtherHalf().GetButtonColor());
+                    m.SetColor("_BtnColor", splitType == SplitLeft ? GetButtonColor() : GetOtherHalf().GetButtonColor());
+                    m.SetColor("_LGripColor", GetLeftGripColor());
+                    m.SetColor("_RGripColor", GetRightGripColor());
+                    break;
+                case "DualShock 4":
+                    m.SetColor("_BodyColor", ColorUtility.TryParseHtmlString("#E1E2E4", out colour) ? colour : Color.white);
+                    m.SetColor("_BtnColor", ColorUtility.TryParseHtmlString("#414246", out colour) ? colour : Color.white);
+                    m.SetColor("_LGripColor", GetLightbarColour());
+                    m.SetColor("_RGripColor", GetLightbarColour());
+                    break;
+                case "DualSense":
+                    m.SetColor("_BodyColor", ColorUtility.TryParseHtmlString("#DEE0EB", out colour) ? colour : Color.white);
+                    m.SetColor("_BtnColor", ColorUtility.TryParseHtmlString("#272D39", out colour) ? colour : Color.white);
+                    m.SetColor("_LGripColor", GetLightbarColour());
+                    m.SetColor("_RGripColor", GetLightbarColour());
+                    break;
+                default:
+                    m.SetColor("_BodyColor", GetBodyColor());
+                    m.SetColor("_BtnColor", GetButtonColor());
+                    m.SetColor("_LGripColor", GetLeftGripColor());
+                    m.SetColor("_RGripColor", GetRightGripColor());
+                    break;
+            }
+        }
+
+        public override bool GetCurrentStyleSupported()
+        {
+            return PlayerInput.CurrentControlStyle is ControlStyles.Pad; // or ControlStyles.Baton
+        }
+
+        public override ControlStyles GetDefaultStyle()
+        {
+            return ControlStyles.Pad;
         }
     }
 }

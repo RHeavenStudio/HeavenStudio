@@ -64,7 +64,7 @@ namespace HeavenStudio.Games.Scripts_RhythmTweezers
 
         private void LateUpdate()
         {
-            if (PlayerInput.Pressed(true))
+            if (PlayerInput.Pressed() || PlayerInput.GetAnyDirectionDown())
             {
                 if (!pluckingThisFrame) // Did you do a successful pluck earlier in the frame?
                 {

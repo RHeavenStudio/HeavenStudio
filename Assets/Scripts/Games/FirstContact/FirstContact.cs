@@ -299,7 +299,7 @@ namespace HeavenStudio.Games
                 lastReportedBeat = Math.Round(Conductor.instance.songPositionInBeatsAsDouble);
             }
 
-            if (PlayerInput.Pressed(true) && !IsExpectingInputNow(InputType.STANDARD_DOWN | InputType.DIRECTION_DOWN))
+            if ((PlayerInput.Pressed() || PlayerInput.GetAnyDirectionDown()) && !IsExpectingInputNow(InputType.STANDARD_DOWN | InputType.DIRECTION_DOWN))
             {
                 translator.DoScaledAnimationAsync("translator_eh", 0.5f);
                 if (isSpeaking)

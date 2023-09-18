@@ -46,7 +46,7 @@ namespace HeavenStudio.Games.Scripts_RhythmTweezers
                 float normalizedBeat = Conductor.instance.GetPositionFromBeat(inputBeat, 0.5f);
                 anim.Play("LoopPull", 0, normalizedBeat);
                 tweezers.anim.Play("Tweezers_LongPluck", 0, normalizedBeat);
-                if (!game.IsExpectingInputNow(InputType.STANDARD_UP | InputType.DIRECTION_DOWN_UP) && PlayerInput.PressedUp(true) && normalizedBeat < 1f)
+                if (!game.IsExpectingInputNow(InputType.STANDARD_UP | InputType.DIRECTION_DOWN_UP) && (PlayerInput.PressedUp() || PlayerInput.GetAnyDirectionUp()) && normalizedBeat < 1f)
                 {
                     EndEarly();
                     endEvent.Disable();

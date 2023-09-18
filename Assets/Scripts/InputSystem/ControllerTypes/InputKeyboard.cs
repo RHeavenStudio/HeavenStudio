@@ -38,7 +38,8 @@ namespace HeavenStudio.InputSystem
         .Where(k => ((int)k < (int)KeyCode.Mouse0))
         .ToArray();
 
-        static ControlBindings defaultBindings {
+        static ControlBindings defaultBindings
+        {
             get
             {
                 return new ControlBindings()
@@ -75,10 +76,10 @@ namespace HeavenStudio.InputSystem
         }
 
         public override void OnSelected()
-        { 
+        {
 
         }
-        
+
         public override string GetDeviceName()
         {
             return "Keyboard";
@@ -157,20 +158,23 @@ namespace HeavenStudio.InputSystem
             return -1;
         }
 
-        public override bool GetAction(int button)
+        public override bool GetAction(ControlStyles style, int button)
         {
+            if (button < 0) return false;
             return Input.GetKey((KeyCode)currentBindings.Pad[button]);
         }
 
-        public override bool GetActionDown(int button, out double dt)
+        public override bool GetActionDown(ControlStyles style, int button, out double dt)
         {
             dt = 0;
+            if (button < 0) return false;
             return Input.GetKeyDown((KeyCode)currentBindings.Pad[button]);
         }
 
-        public override bool GetActionUp(int button, out double dt)
+        public override bool GetActionUp(ControlStyles style, int button, out double dt)
         {
             dt = 0;
+            if (button < 0) return false;
             return Input.GetKeyUp((KeyCode)currentBindings.Pad[button]);
         }
 
@@ -250,12 +254,42 @@ namespace HeavenStudio.InputSystem
                 this.playerNum = null;
                 return;
             }
-            this.playerNum = (int) playerNum;
+            this.playerNum = (int)playerNum;
         }
 
         public override int? GetPlayer()
         {
             return playerNum;
+        }
+
+        public override bool GetFlick(out double dt, out InputDirection direction)
+        {
+            dt = 0;
+            direction = InputDirection.Up;
+            return false;
+        }
+
+        public override bool GetSwipe(out double dt, out InputDirection direction)
+        {
+            dt = 0;
+            direction = InputDirection.Up;
+            return false;
+        }
+
+        public override void SetMaterialProperties(Material m)
+        {
+            bool b = ColorUtility.TryParseHtmlString("#F4F4F4", out Color colour);
+            m.SetColor("_BodyColor", b ? colour : Color.white);
+        }
+
+        public override bool GetCurrentStyleSupported()
+        {
+            return PlayerInput.CurrentControlStyle is ControlStyles.Pad; // or ControlStyles.Baton
+        }
+
+        public override ControlStyles GetDefaultStyle()
+        {
+            return ControlStyles.Pad;
         }
     }
 }

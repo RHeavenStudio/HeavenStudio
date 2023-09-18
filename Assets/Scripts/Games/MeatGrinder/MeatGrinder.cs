@@ -124,7 +124,7 @@ namespace HeavenStudio.Games
 
         private void Update() 
         {
-            if (PlayerInput.Pressed(true) && (!IsExpectingInputNow(InputType.STANDARD_DOWN) || !IsExpectingInputNow(InputType.DIRECTION_DOWN))) {
+            if ((PlayerInput.Pressed() || PlayerInput.GetAnyDirectionDown()) && (!IsExpectingInputNow(InputType.STANDARD_DOWN) || !IsExpectingInputNow(InputType.DIRECTION_DOWN))) {
                 TackAnim.DoScaledAnimationAsync("TackEmptyHit", 0.5f);
                 TackAnim.SetBool("tackMeated", false);
                 SoundByte.PlayOneShotGame(sfxName+"whiff");

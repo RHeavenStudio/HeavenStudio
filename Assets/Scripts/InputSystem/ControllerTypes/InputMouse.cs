@@ -8,28 +8,25 @@ using HeavenStudio.Util;
 
 namespace HeavenStudio.InputSystem.Loaders
 {
-    namespace HeavenStudio.InputSystem.Loaders
+    public static class InputMouseInitializer
     {
-        public static class InputMouseInitializer
+        [LoadOrder(1)]
+        public static InputController[] Initialize()
         {
-            [LoadOrder(1)]
-            public static InputController[] Initialize()
-            {
-                PlayerInput.PlayerInputRefresh.Add(Refresh);
+            PlayerInput.PlayerInputRefresh.Add(Refresh);
 
-                InputMouse mouse = new InputMouse();
-                mouse.SetPlayer(null);
-                mouse.InitializeController();
-                return new InputController[] { mouse };
-            }
+            InputMouse mouse = new InputMouse();
+            mouse.SetPlayer(null);
+            mouse.InitializeController();
+            return new InputController[] { mouse };
+        }
 
-            public static InputController[] Refresh()
-            {
-                InputMouse mouse = new InputMouse();
-                mouse.SetPlayer(null);
-                mouse.InitializeController();
-                return new InputController[] { mouse };
-            }
+        public static InputController[] Refresh()
+        {
+            InputMouse mouse = new InputMouse();
+            mouse.SetPlayer(null);
+            mouse.InitializeController();
+            return new InputController[] { mouse };
         }
     }
 }
@@ -38,12 +35,16 @@ namespace HeavenStudio.InputSystem
 {
     public class InputMouse : InputController
     {
+        const double FlickMarginTime = 0.1;
+        const double BigMoveMarginRate = 1.25;
+
         private static readonly KeyCode[] keyCodes = Enum.GetValues(typeof(KeyCode))
             .Cast<KeyCode>()
             .Where(k => ((int)k <= (int)KeyCode.Mouse6))
             .ToArray();
 
-        static ControlBindings defaultBindings {
+        static ControlBindings defaultBindings
+        {
             get
             {
                 return new ControlBindings()
@@ -61,20 +62,46 @@ namespace HeavenStudio.InputSystem
             }
         }
 
+        static Vector3 screenBounds = Vector3.zero;
+        static Vector3 ScreenBounds
+        {
+            get
+            {
+                screenBounds.x = Screen.width;
+                screenBounds.y = Screen.height;
+                return screenBounds;
+            }
+        }
+
+        Vector3 rawPointerPos, lastRawPointerPos, startPointerPos, lastDownPointerPos, lastUpPointerPos;
+        Vector3 deltaPointerPos, lastDeltaPointerPos;
+        double timeMoveChange, timeDirectionChange;
+        byte dirLeftRight, dirUpDown;
+
         public override void InitializeController()
         {
+            LoadBindings();
         }
 
         public override void UpdateState()
         {
             // Update the state of the controller
+            lastRawPointerPos = rawPointerPos;
+            lastDeltaPointerPos = deltaPointerPos;
+            rawPointerPos = Input.mousePosition;
+            deltaPointerPos = rawPointerPos - lastRawPointerPos;
+
+            if (GetAction(ControlStyles.Touch, 0))
+            {
+                Debug.Log(deltaPointerPos.normalized);
+            }
         }
 
         public override void OnSelected()
-        { 
+        {
 
         }
-        
+
         public override string GetDeviceName()
         {
             return "Mouse";
@@ -82,7 +109,7 @@ namespace HeavenStudio.InputSystem
 
         public override string[] GetButtonNames()
         {
-            string[] names = new string[(int)KeyCode.Mouse6];
+            string[] names = new string[(int)KeyCode.Mouse6 + 1];
             for (int i = 0; i < keyCodes.Length; i++)
             {
                 names[(int)keyCodes[i]] = keyCodes[i].ToString();
@@ -97,7 +124,7 @@ namespace HeavenStudio.InputSystem
 
         public override bool GetIsConnected()
         {
-            return true;
+            return Input.mousePresent;
         }
 
         public override bool GetIsPoorConnection()
@@ -134,7 +161,7 @@ namespace HeavenStudio.InputSystem
         {
             if (Input.anyKeyDown)
             {
-                for (KeyCode i = keyCodes[1]; i <= KeyCode.Menu; i++)
+                for (KeyCode i = keyCodes[1]; i <= KeyCode.Mouse6; i++)
                 {
                     if (Input.GetKeyDown(i))
                         return (int)i;
@@ -153,21 +180,95 @@ namespace HeavenStudio.InputSystem
             return -1;
         }
 
-        public override bool GetAction(int button)
+        public override bool GetAction(ControlStyles style, int button)
         {
-            return Input.GetKey((KeyCode)currentBindings.Pad[button]);
+            if (button < 0) return false;
+            if (button is 0 or 1 or 2)
+            {
+                bool bt = Input.GetKey((KeyCode)currentBindings.Touch[1]) || Input.GetKey((KeyCode)currentBindings.Touch[2]);
+                switch (button)
+                {
+                    case 0:
+                        return bt;
+                    case 1:
+                        if (bt && rawPointerPos.x <= screenBounds.x * 0.5f)
+                        {
+                            lastDownPointerPos = rawPointerPos;
+                            return true;
+                        }
+                        return false;
+                    case 2:
+                        if (bt && rawPointerPos.x >= screenBounds.x * 0.5f)
+                        {
+                            lastDownPointerPos = rawPointerPos;
+                            return true;
+                        }
+                        return false;
+                }
+            }
+            return Input.GetKey((KeyCode)currentBindings.Touch[button]);
         }
 
-        public override bool GetActionDown(int button, out double dt)
+        public override bool GetActionDown(ControlStyles style, int button, out double dt)
         {
             dt = 0;
-            return Input.GetKeyDown((KeyCode)currentBindings.Pad[button]);
+            if (button < 0) return false;
+            if (button is 0 or 1 or 2)
+            {
+                bool bt = Input.GetKeyDown((KeyCode)currentBindings.Touch[1]) || Input.GetKeyDown((KeyCode)currentBindings.Touch[2]);
+                switch (button)
+                {
+                    case 0:
+                        return bt;
+                    case 1:
+                        if (bt && rawPointerPos.x <= screenBounds.x * 0.5f)
+                        {
+                            lastDownPointerPos = rawPointerPos;
+                            startPointerPos = rawPointerPos;
+                            return true;
+                        }
+                        return false;
+                    case 2:
+                        if (bt && rawPointerPos.x >= screenBounds.x * 0.5f)
+                        {
+                            lastDownPointerPos = rawPointerPos;
+                            startPointerPos = rawPointerPos;
+                            return true;
+                        }
+                        return false;
+                }
+            }
+            return Input.GetKeyDown((KeyCode)currentBindings.Touch[button]);
         }
 
-        public override bool GetActionUp(int button, out double dt)
+        public override bool GetActionUp(ControlStyles style, int button, out double dt)
         {
             dt = 0;
-            return Input.GetKeyUp((KeyCode)currentBindings.Pad[button]);
+            if (button < 0) return false;
+            if (button is 0 or 1 or 2)
+            {
+                bool bt = Input.GetKeyUp((KeyCode)currentBindings.Touch[1]) || Input.GetKeyUp((KeyCode)currentBindings.Touch[2]);
+                switch (button)
+                {
+                    case 0:
+                        return bt;
+                    case 1:
+                        if (bt && rawPointerPos.x <= screenBounds.x * 0.5f)
+                        {
+                            lastUpPointerPos = rawPointerPos;
+                            return true;
+                        }
+                        return false;
+                    case 2:
+                        if (bt && rawPointerPos.x >= screenBounds.x * 0.5f)
+                        {
+                            lastUpPointerPos = rawPointerPos;
+                            return true;
+                        }
+                        return false;
+                }
+            }
+            return Input.GetKeyUp((KeyCode)currentBindings.Touch[button]);
         }
 
         public override float GetAxis(InputAxis axis)
@@ -246,12 +347,42 @@ namespace HeavenStudio.InputSystem
                 this.playerNum = null;
                 return;
             }
-            this.playerNum = (int) playerNum;
+            this.playerNum = (int)playerNum;
         }
 
         public override int? GetPlayer()
         {
             return playerNum;
+        }
+
+        public override bool GetFlick(out double dt, out InputDirection direction)
+        {
+            dt = 0;
+            direction = InputDirection.Up;
+            return false;
+        }
+
+        public override bool GetSwipe(out double dt, out InputDirection direction)
+        {
+            dt = 0;
+            direction = InputDirection.Up;
+            return false;
+        }
+
+        public override void SetMaterialProperties(Material m)
+        {
+            bool b = ColorUtility.TryParseHtmlString("#F4F4F4", out Color colour);
+            m.SetColor("_BodyColor", b ? colour : Color.white);
+        }
+
+        public override bool GetCurrentStyleSupported()
+        {
+            return PlayerInput.CurrentControlStyle is ControlStyles.Touch;
+        }
+
+        public override ControlStyles GetDefaultStyle()
+        {
+            return ControlStyles.Touch;
         }
     }
 }

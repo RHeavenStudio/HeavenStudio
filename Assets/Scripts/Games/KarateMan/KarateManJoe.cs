@@ -135,7 +135,7 @@ namespace HeavenStudio.Games.Scripts_KarateMan
                 }
             }
 
-            if (PlayerInput.Pressed(true) && !inSpecial)
+            if ((PlayerInput.Pressed() || PlayerInput.GetAnyDirectionDown()) && !inSpecial)
             {
                 if (!KarateMan.instance.IsExpectingInputNow(InputType.STANDARD_DOWN | InputType.DIRECTION_DOWN))
                 {
@@ -164,7 +164,7 @@ namespace HeavenStudio.Games.Scripts_KarateMan
                 }
             }
 
-            if ((!GameManager.instance.autoplay) && (PlayerInput.PressedUp(true) && !PlayerInput.Pressing(true)))
+            if ((!GameManager.instance.autoplay) && (PlayerInput.PressedUp() || PlayerInput.GetAnyDirectionUp()) && !(PlayerInput.Pressing() || PlayerInput.GetAnyDirection()))
             {
                 if (wantKick)
                 {
