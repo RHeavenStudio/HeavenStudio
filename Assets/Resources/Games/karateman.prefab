@@ -62121,6 +62121,7 @@ MonoBehaviour:
   startBeat: 0
   type: 0
   path: 1
+  hitSfxOverride: 
   Shadow: {fileID: 2136808730019920255}
   ShadowInstance: {fileID: 0}
   HitMark: {fileID: 5218911297968347512}
@@ -62160,6 +62161,7 @@ MonoBehaviour:
   - {r: 1, g: 1, b: 1, a: 0}
   - {r: 0, g: 0, b: 0, a: 0}
   KickBarrelContent: 0
+  ShouldGlow: 0
   OnHitExpression: 0
   comboId: -1
   HitPosition:
@@ -97616,13 +97618,6 @@ MonoBehaviour:
   BGRadial: {fileID: 8238140095837895901}
   Wind: {fileID: 9003203273337395302}
   Effects: []
-  EffectsGO: []
-  SnowEffect: {fileID: 6887086164110906535}
-  SnowEffectGO: {fileID: 1216083719847348373}
-  FireEffect: {fileID: 5127881687583584282}
-  FireEffectGO: {fileID: 3592020714774141813}
-  RainEffect: {fileID: 2673878087330023132}
-  RainEffectGO: {fileID: 3977551198845255891}
 --- !u!1 &6574514768376321096
 GameObject:
   m_ObjectHideFlags: 0

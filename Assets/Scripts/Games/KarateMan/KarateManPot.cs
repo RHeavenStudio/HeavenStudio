@@ -34,6 +34,7 @@ namespace HeavenStudio.Games.Scripts_KarateMan
         [SerializeField] Color[] ItemCookingLidMap;
 
         public bool KickBarrelContent = false;
+        public bool ShouldGlow = false;
         public int OnHitExpression = (int) KarateMan.KarateManFaces.Normal;
 
         public int comboId = -1;
@@ -320,7 +321,7 @@ namespace HeavenStudio.Games.Scripts_KarateMan
                         GameObject.Destroy(ShadowInstance.gameObject);
                         GameObject.Destroy(gameObject);
 
-                        SoundByte.PlayOneShotGame("karateMan/bombBreak", volume: 0.25f);
+                        SoundByte.PlayOneShotGame("karateman/bombBreak", volume: 0.25f);
                         return;
                     }
                     else if (cond.songPositionInBeatsAsDouble >= startBeat + Mathf.Max(2f, curveTargetBeat) || CurrentCurve == null) {
@@ -439,8 +440,7 @@ namespace HeavenStudio.Games.Scripts_KarateMan
                 case ItemType.Bulb:
                     CurrentCurve = ItemCurves[straight ? 1 : 0];
                     curveTargetBeat = straight ? 1f : 1.5f;
-                    Debug.Log(hitSfxOverride);
-                    SoundByte.PlayOneShotGame(hitSfxOverride ?? "karateMan/lightbulbHit", forcePlay: true);
+                    SoundByte.PlayOneShotGame(hitSfxOverride ?? "karateman/lightbulbHit", forcePlay: true);
                     p = Instantiate(HitParticles[5], HitPosition[1].position, Quaternion.Euler(0, 0, UnityEngine.Random.Range(0f, 360f)), game.ItemHolder);
 
                     if (effectTint.a == 0)
@@ -464,115 +464,114 @@ namespace HeavenStudio.Games.Scripts_KarateMan
                 case ItemType.Rock:
                     CurrentCurve = ItemCurves[1];
                     curveTargetBeat = 1f;
-                    SoundByte.PlayOneShotGame("karateMan/rockHit", forcePlay: true);
+                    SoundByte.PlayOneShotGame("karateman/rockHit", forcePlay: true);
                     p = Instantiate(HitParticles[4], HitPosition[1].position, Quaternion.identity, game.ItemHolder);
                     p.Play();
 
                     if (game.IsNoriActive && game.NoriPerformance >= 1f)
-                        SoundByte.PlayOneShotGame("karateMan/rockHit_fullNori", forcePlay: true);
+                        SoundByte.PlayOneShotGame("karateman/rockHit_fullNori", forcePlay: true);
                     break;
                 case ItemType.Ball:
                     CurrentCurve = ItemCurves[1];
                     curveTargetBeat = 1f;
-                    SoundByte.PlayOneShotGame("karateMan/soccerHit", forcePlay: true);
+                    SoundByte.PlayOneShotGame("karateman/soccerHit", forcePlay: true);
                     p = Instantiate(HitParticles[1], HitPosition[1].position, Quaternion.Euler(0, 0, UnityEngine.Random.Range(0f, 360f)), game.ItemHolder);
                     p.Play();
                     break;
                 case ItemType.Cooking:
                     CurrentCurve = ItemCurves[1];
                     curveTargetBeat = 1f;
-                    SoundByte.PlayOneShotGame("karateMan/cookingPot", forcePlay: true);
+                    SoundByte.PlayOneShotGame("karateman/cookingPot", forcePlay: true);
                     p = Instantiate(HitParticles[1], HitPosition[1].position, Quaternion.Euler(0, 0, UnityEngine.Random.Range(0f, 360f)), game.ItemHolder);
                     p.Play();
                     game.CreateItemInstance(startBeat + 1f, "Item09", 0, ItemType.CookingLid);
                     GetComponent<Animator>().Play("Item08", -1, 0);
 
                     if (game.IsNoriActive && game.NoriPerformance >= 1f)
-                        SoundByte.PlayOneShotGame("karateMan/rockHit_fullNori", forcePlay: true);
+                        SoundByte.PlayOneShotGame("karateman/rockHit_fullNori", forcePlay: true);
                     break;
                 case ItemType.Alien:
                     CurrentCurve = ItemCurves[1];
                     curveTargetBeat = 1f;
-                    SoundByte.PlayOneShotGame("karateMan/alienHit", forcePlay: true);
+                    SoundByte.PlayOneShotGame("karateman/alienHit", forcePlay: true);
                     p = Instantiate(HitParticles[1], HitPosition[1].position, Quaternion.Euler(0, 0, UnityEngine.Random.Range(0f, 360f)), game.ItemHolder);
                     p.Play();
 
                     if (game.IsNoriActive && game.NoriPerformance >= 1f)
-                        SoundByte.PlayOneShotGame("karateMan/rockHit_fullNori", forcePlay: true);
+                        SoundByte.PlayOneShotGame("karateman/rockHit_fullNori", forcePlay: true);
                     break;
                 case ItemType.Bomb:
                     CurrentCurve = ItemCurves[1];
                     curveTargetBeat = 1f;
-                    SoundByte.PlayOneShotGame("karateMan/bombHit", forcePlay: true);
+                    SoundByte.PlayOneShotGame("karateman/bombHit", forcePlay: true);
                     p = Instantiate(HitParticles[2], HitPosition[1].position, Quaternion.Euler(0, 0, UnityEngine.Random.Range(0f, 360f)), game.ItemHolder);
                     p.Play();
                     game.Joe.RemoveBombGlow(startBeat + 1f, 1f);
 
                     if (game.IsNoriActive && game.NoriPerformance >= 1f)
-                        SoundByte.PlayOneShotGame("karateMan/rockHit_fullNori", forcePlay: true);
+                        SoundByte.PlayOneShotGame("karateman/rockHit_fullNori", forcePlay: true);
                     break;
                 case ItemType.TacoBell:
                     CurrentCurve = ItemCurves[1];
                     curveTargetBeat = 1f;
-                    SoundByte.PlayOneShotGame("karateMan/rockHit", forcePlay: true);
-                    SoundByte.PlayOneShotGame("karateMan/tacobell", forcePlay: true);
+                    SoundByte.PlayOneShotGame("karateman/rockHit", forcePlay: true);
+                    SoundByte.PlayOneShotGame("karateman/tacobell", forcePlay: true);
                     p = Instantiate(HitParticles[1], HitPosition[1].position, Quaternion.Euler(0, 0, UnityEngine.Random.Range(0f, 360f)), game.ItemHolder);
                     p.Play();
 
                     if (game.IsNoriActive && game.NoriPerformance >= 1f)
-                        SoundByte.PlayOneShotGame("karateMan/rockHit_fullNori", forcePlay: true);
+                        SoundByte.PlayOneShotGame("karateman/rockHit_fullNori", forcePlay: true);
                     break;
                 case ItemType.ComboPot1:
                     CurrentCurve = ItemCurves[straight ? 1 : 0];
                     curveTargetBeat = 1.5f;
-                    SoundByte.PlayOneShotGame("karateMan/comboHit1", forcePlay: true);
+                    SoundByte.PlayOneShotGame("karateman/comboHit1", forcePlay: true);
                     p = Instantiate(HitParticles[1], HitPosition[1].position, Quaternion.Euler(0, 0, UnityEngine.Random.Range(0f, 360f)), game.ItemHolder);
                     p.Play();
                     break;
                 case ItemType.ComboPot2:
                     CurrentCurve = ItemCurves[0];
                     curveTargetBeat = 1.5f;
-                    SoundByte.PlayOneShotGame("karateMan/comboHit1", forcePlay: true);
+                    SoundByte.PlayOneShotGame("karateman/comboHit1", forcePlay: true);
                     p = Instantiate(HitParticles[1], HitPosition[1].position, Quaternion.Euler(0, 0, UnityEngine.Random.Range(0f, 360f)), game.ItemHolder);
                     p.Play();
                     break;
                 case ItemType.ComboPot3:
                     CurrentCurve = ItemCurves[2];
                     curveTargetBeat = 1f;
-                    SoundByte.PlayOneShotGame("karateMan/comboHit2", forcePlay: true);
+                    SoundByte.PlayOneShotGame("karateman/comboHit2", forcePlay: true);
                     p = Instantiate(HitParticles[1], HitPosition[2].position, Quaternion.Euler(0, 0, UnityEngine.Random.Range(0f, 360f)), game.ItemHolder);
                     p.Play();
                     break;
                 case ItemType.ComboPot4:
                     CurrentCurve = ItemCurves[3];
                     curveTargetBeat = 1f;
-                    SoundByte.PlayOneShotGame("karateMan/comboHit3", forcePlay: true);
+                    SoundByte.PlayOneShotGame("karateman/comboHit3", forcePlay: true);
                     p = Instantiate(HitParticles[1], HitPosition[3].position, Quaternion.Euler(0, 0, UnityEngine.Random.Range(0f, 360f)), game.ItemHolder);
                     p.Play();
                     break;
                 case ItemType.ComboPot5:
                     CurrentCurve = ItemCurves[4];
                     curveTargetBeat = 1f;
-                    SoundByte.PlayOneShotGame("karateMan/comboHit3", forcePlay: true);
+                    SoundByte.PlayOneShotGame("karateman/comboHit3", forcePlay: true);
                     p = Instantiate(HitParticles[1], HitPosition[4].position, Quaternion.Euler(0, 0, UnityEngine.Random.Range(0f, 360f)), game.ItemHolder);
                     p.Play();
                     break;
                 case ItemType.ComboBarrel:
-                    SoundByte.PlayOneShotGame("karateMan/comboHit4", forcePlay: true);
+                    SoundByte.PlayOneShotGame("karateman/comboHit4", forcePlay: true);
                     p = Instantiate(HitParticles[0], HitPosition[5].position, Quaternion.identity, game.ItemHolder);
                     p.Play();
                     p = Instantiate(HitParticles[1], HitPosition[5].position, Quaternion.Euler(0, 0, UnityEngine.Random.Range(0f, 360f)), game.ItemHolder);
                     p.Play();
                     break;
                 case ItemType.KickBarrel:
-                    if (KickBarrelContent)
+                    if (KickBarrelContent) {
                         game.CreateItemInstance(startBeat + 1f, "Item03", OnHitExpression, ItemType.KickBall);
-                    else
-                    {
-                        game.Joe.ApplyBombGlow();
+                    } else {
+                        if (ShouldGlow) game.Joe.ApplyBombGlow();
                         game.CreateItemInstance(startBeat + 1f, "Item04", OnHitExpression, ItemType.KickBomb);
                     }
-                    SoundByte.PlayOneShotGame("karateMan/barrelBreak", forcePlay: true);
+                    SoundByte.PlayOneShotGame("karateman/barrelBreak", forcePlay: true);
                     p = Instantiate(HitParticles[0], HitPosition[1].position, Quaternion.Euler(0, 0, -5f), game.ItemHolder);
                     p.Play();
                     p = Instantiate(HitParticles[1], HitPosition[1].position, Quaternion.Euler(0, 0, UnityEngine.Random.Range(0f, 360f)), game.ItemHolder);
@@ -580,14 +579,14 @@ namespace HeavenStudio.Games.Scripts_KarateMan
 
                     break;
                 case ItemType.KickBomb:
-                    SoundByte.PlayOneShotGame("karateMan/bombKick", forcePlay: true);
+                    SoundByte.PlayOneShotGame("karateman/bombKick", forcePlay: true);
                     p = Instantiate(HitParticles[2], ItemCurves[6].GetPoint(0.5f), Quaternion.identity, game.ItemHolder);
                     p.Play();
 
                     game.Joe.RemoveBombGlow(startBeat + 0.75f);
                     break;
                 case ItemType.KickBall:
-                    SoundByte.PlayOneShotGame("karateMan/bombKick", forcePlay: true);
+                    SoundByte.PlayOneShotGame("karateman/bombKick", forcePlay: true);
                     p = Instantiate(HitParticles[1], ItemCurves[6].GetPoint(0.5f), Quaternion.identity, game.ItemHolder);
                     p.Play();
                     break;
@@ -596,11 +595,11 @@ namespace HeavenStudio.Games.Scripts_KarateMan
                     curveTargetBeat = straight ? 1f : 1.5f;
                     if (game.IsNoriActive && game.NoriPerformance < 0.6f)
                     {
-                        SoundByte.PlayOneShotGame("karateMan/potHit_lowNori", forcePlay: true);
-                        SoundByte.PlayOneShotGame("karateMan/potHit", volume: 0.66f, forcePlay: true);
+                        SoundByte.PlayOneShotGame("karateman/potHit_lowNori", forcePlay: true);
+                        SoundByte.PlayOneShotGame("karateman/potHit", volume: 0.66f, forcePlay: true);
                     }
                     else
-                        SoundByte.PlayOneShotGame("karateMan/potHit", forcePlay: true);
+                        SoundByte.PlayOneShotGame("karateman/potHit", forcePlay: true);
                     p = Instantiate(HitParticles[3], HitPosition[1].position, Quaternion.identity, game.ItemHolder);
                     p.Play();
 
@@ -657,7 +656,7 @@ namespace HeavenStudio.Games.Scripts_KarateMan
 
         void JoeComboSequence()
         {
-            if (GameManager.instance.currentGame != "karateMan") return;
+            if (GameManager.instance.currentGame != "karateman") return;
             var joe = KarateMan.instance.Joe;
             if (joe.GetShouldComboId() != comboId || !joe.inCombo) return;
             switch (type)
@@ -665,7 +664,7 @@ namespace HeavenStudio.Games.Scripts_KarateMan
                 case ItemType.ComboPot2:
                     joe.Punch(2);
                     if (joe.GetComboId() != comboId)
-                        SoundByte.PlayOneShotGame("karateMan/swingNoHit_Alt", forcePlay: true);
+                        SoundByte.PlayOneShotGame("karateman/swingNoHit_Alt", forcePlay: true);
                     else
                     {
                         ItemHitEffect();
@@ -683,7 +682,7 @@ namespace HeavenStudio.Games.Scripts_KarateMan
                     //if the button isn't held anymore make Joe spin
                     if (joe.GetComboId() != comboId) {
                         joe.ComboMiss(startBeat + 1f);
-                        SoundByte.PlayOneShotGame("karateMan/comboMiss", forcePlay: true);
+                        SoundByte.PlayOneShotGame("karateman/comboMiss", forcePlay: true);
                         joe.SetShouldComboId(-2);
                     }
                     else
@@ -730,7 +729,7 @@ namespace HeavenStudio.Games.Scripts_KarateMan
 
         public void ItemJustOrNg(PlayerActionEvent caller, float state)
         {
-            if (GameManager.instance.currentGame != "karateMan") return;
+            if (GameManager.instance.currentGame != "karateman") return;
             var joe = KarateMan.instance.Joe;
             if (state <= -1f || state >= 1f) {
                 bool straight = joe.Punch(ItemPunchHand());
@@ -758,7 +757,7 @@ namespace HeavenStudio.Games.Scripts_KarateMan
                         CreateHitMark(false);
                         startBeat = Conductor.instance.songPositionInBeatsAsDouble;
                         status = FlyStatus.HitWeak;
-                        SoundByte.PlayOneShotGame("karateMan/hitNoNori", forcePlay: true);
+                        SoundByte.PlayOneShotGame("karateman/hitNoNori", forcePlay: true);
                         joe.Punch(3);
                         transform.rotation = Quaternion.Euler(0, 0, transform.rotation.eulerAngles.z - 30f);
                         KarateMan.instance.Nori.DoNG();
@@ -775,7 +774,7 @@ namespace HeavenStudio.Games.Scripts_KarateMan
 
         public void ItemWrongAction(PlayerActionEvent caller, float state)
         { 
-            if (GameManager.instance.currentGame != "karateMan") return;
+            if (GameManager.instance.currentGame != "karateman") return;
             if (!KarateMan.IsComboEnable) return;
             //hitting a normal object with the alt input
             //WHEN SCORING THIS IS A MISS
@@ -809,13 +808,13 @@ namespace HeavenStudio.Games.Scripts_KarateMan
         public void ItemThrough(PlayerActionEvent caller)
         {
             var joe = KarateMan.instance.Joe;
-            if (GameManager.instance.currentGame != "karateMan") return;
+            if (GameManager.instance.currentGame != "karateman") return;
             if (status != FlyStatus.Fly || gameObject == null) return;
             BeatAction.New(joe, new List<BeatAction.Action>()
             {
                 new BeatAction.Action(startBeat + 2f, delegate { 
                     joe.SetFaceExpression((int) KarateMan.KarateManFaces.Surprise);
-                    SoundByte.PlayOneShotGame("karateMan/karate_through", forcePlay: true);
+                    SoundByte.PlayOneShotGame("karateman/karate_through", forcePlay: true);
                 }),
                 new BeatAction.Action(startBeat + 5f, delegate {
                     if (joe.wantFace == -1)
@@ -835,7 +834,7 @@ namespace HeavenStudio.Games.Scripts_KarateMan
 
         public void ComboStartJustOrNg(PlayerActionEvent caller, float state)
         {
-            if (GameManager.instance.currentGame != "karateMan") return;
+            if (GameManager.instance.currentGame != "karateman") return;
             var joe = KarateMan.instance.Joe;
             joe.inCombo = true;
             joe.Punch(1);
@@ -860,13 +859,13 @@ namespace HeavenStudio.Games.Scripts_KarateMan
         public void ComboStartThrough(PlayerActionEvent caller) 
         {
             var joe = KarateMan.instance.Joe;
-            if (GameManager.instance.currentGame != "karateMan") return;
+            if (GameManager.instance.currentGame != "karateman") return;
             if (status != FlyStatus.Fly || gameObject == null) return;
             BeatAction.New(joe, new List<BeatAction.Action>()
             {
                 new BeatAction.Action(startBeat + 2f, delegate {
                     joe.SetFaceExpression((int) KarateMan.KarateManFaces.Surprise);
-                    SoundByte.PlayOneShotGame("karateMan/karate_through", forcePlay: true);
+                    SoundByte.PlayOneShotGame("karateman/karate_through", forcePlay: true);
                 }),
                 new BeatAction.Action(startBeat + 5f, delegate {
                     if (joe.wantFace == -1)
@@ -880,7 +879,7 @@ namespace HeavenStudio.Games.Scripts_KarateMan
 
         public void ComboStartWrongAction(PlayerActionEvent caller, float state)
         { 
-            if (GameManager.instance.currentGame != "karateMan") return;
+            if (GameManager.instance.currentGame != "karateman") return;
             //hitting a combo start with the normal input
             //WHEN SCORING THIS IS A MISS
             var joe = KarateMan.instance.Joe;
@@ -906,7 +905,7 @@ namespace HeavenStudio.Games.Scripts_KarateMan
 
         public void ComboEndJustOrNg(PlayerActionEvent caller, float state)
         {
-            if (GameManager.instance.currentGame != "karateMan") return;
+            if (GameManager.instance.currentGame != "karateman") return;
             var joe = KarateMan.instance.Joe;
             joe.inCombo = false;
             joe.SetComboId(-1);
@@ -939,7 +938,7 @@ namespace HeavenStudio.Games.Scripts_KarateMan
         }
 
         public void ComboEndOut(PlayerActionEvent caller) {
-            if (GameManager.instance.currentGame != "karateMan") return;
+            if (GameManager.instance.currentGame != "karateman") return;
             var joe = KarateMan.instance.Joe;
             if (status == FlyStatus.Fly && joe.inCombo && joe.GetComboId() == comboId && joe.comboWaiting)
             {
@@ -947,14 +946,14 @@ namespace HeavenStudio.Games.Scripts_KarateMan
                 joe.SetComboId(-1);
                 joe.SetShouldComboId(-1);
                 joe.ComboSequence(3);
-                SoundByte.PlayOneShotGame("karateMan/swingKick", forcePlay: true);
+                SoundByte.PlayOneShotGame("karateman/swingKick", forcePlay: true);
             }
             OnHit.CanHit(false);
         }
 
         public void ComboEndThrough(PlayerActionEvent caller) 
         {
-            if (GameManager.instance.currentGame != "karateMan") return;
+            if (GameManager.instance.currentGame != "karateman") return;
             if (status != FlyStatus.Fly || gameObject == null) return;
             var joe = KarateMan.instance.Joe;
             if (joe.GetComboId() != comboId || !joe.inCombo)
@@ -995,7 +994,7 @@ namespace HeavenStudio.Games.Scripts_KarateMan
 
         public void KickChargeJustOrNg(PlayerActionEvent caller, float state)
         {
-            if (GameManager.instance.currentGame != "karateMan") return;
+            if (GameManager.instance.currentGame != "karateman") return;
             var joe = KarateMan.instance.Joe;
 
             joe.Punch(ItemPunchHand());
@@ -1028,13 +1027,13 @@ namespace HeavenStudio.Games.Scripts_KarateMan
         public void KickChargeThrough(PlayerActionEvent caller)
         {
             var joe = KarateMan.instance.Joe;
-            if (GameManager.instance.currentGame != "karateMan") return;
+            if (GameManager.instance.currentGame != "karateman") return;
             if (status != FlyStatus.Fly || gameObject == null) return;
             BeatAction.New(joe, new List<BeatAction.Action>()
             {
                 new BeatAction.Action(startBeat + 2f, delegate {
                     joe.SetFaceExpression((int) KarateMan.KarateManFaces.Surprise);
-                    SoundByte.PlayOneShotGame("karateMan/karate_through", forcePlay: true);
+                    SoundByte.PlayOneShotGame("karateman/karate_through", forcePlay: true);
                 }),
                 new BeatAction.Action(startBeat + 5f, delegate {
                     if (joe.wantFace == -1)
@@ -1054,7 +1053,7 @@ namespace HeavenStudio.Games.Scripts_KarateMan
 
         public void KickJustOrNg(PlayerActionEvent caller, float state)
         {
-            if (GameManager.instance.currentGame != "karateMan") return;
+            if (GameManager.instance.currentGame != "karateman") return;
             var joe = KarateMan.instance.Joe;
 
             joe.Kick(Conductor.instance.songPositionInBeatsAsDouble);
@@ -1094,7 +1093,7 @@ namespace HeavenStudio.Games.Scripts_KarateMan
 
         public void KickThrough(PlayerActionEvent caller)
         {
-            if (GameManager.instance.currentGame != "karateMan") return;
+            if (GameManager.instance.currentGame != "karateman") return;
             if (status != FlyStatus.Fly || gameObject == null) return;
             BeatAction.New(KarateMan.instance.Joe, new List<BeatAction.Action>()
             {

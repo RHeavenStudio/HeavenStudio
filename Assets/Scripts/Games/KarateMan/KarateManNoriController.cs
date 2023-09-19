@@ -154,7 +154,7 @@ namespace HeavenStudio.Games.Scripts_KarateMan
             if (KarateMan.instance.NoriPerformance >= 0.6f && oldNori / MaxNori < 0.6f && !playedJust)
             {
                 playedJust = true;
-                SoundByte.PlayOneShotGame("karateMan/nori_just");
+                SoundByte.PlayOneShotGame("karateman/nori_just");
             }
             UpdateHeartColours();
         }
@@ -193,7 +193,7 @@ namespace HeavenStudio.Games.Scripts_KarateMan
             if (KarateMan.instance.NoriPerformance < 0.6f && oldNori / MaxNori >= 0.6f)
             {
                 playedJust = false;
-                SoundByte.PlayOneShotGame("karateMan/nori_ng");
+                SoundByte.PlayOneShotGame("karateman/nori_ng");
             }
             UpdateHeartColours();
         }
@@ -205,7 +205,7 @@ namespace HeavenStudio.Games.Scripts_KarateMan
             if (noriMode == (int) KarateMan.NoriMode.Tengoku)
             {
                 if (Nori >= MaxNori)
-                    SoundByte.PlayOneShotGame("karateMan/nori_through");
+                    SoundByte.PlayOneShotGame("karateman/nori_through");
                 playedJust = false;
                 Nori = 0;
                 foreach (Animator anim in NoriHeartAnimators)
