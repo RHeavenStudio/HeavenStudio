@@ -37,7 +37,7 @@ namespace HeavenStudio
             {
                 this.gameObject.transform.position = new Vector3(pos.x, pos.y, 0);
 
-                if (PlayerInput.GetIsAction(Minigame.InputAction_BasicPress, out _))
+                if (PlayerInput.GetIsAction(Minigame.InputAction_BasicPress))
                 {
                     Circle.transform.DOScale(0, 0.5f).SetEase(Ease.OutExpo);
                     InnerCircle.SetActive(true);
@@ -48,7 +48,7 @@ namespace HeavenStudio
                     eyesTween.Kill();
                     eyesTween = Eyes.transform.DOLocalMoveY(0.15f, 0.15f).SetEase(Ease.OutExpo);
                 }
-                else if (PlayerInput.GetIsAction(Minigame.InputAction_BasicRelease, out _))
+                else if (PlayerInput.GetIsAction(Minigame.InputAction_BasicRelease))
                 {
                     Circle.transform.DOScale(0.2f, 0.5f).SetEase(Ease.OutExpo);
                     InnerCircle.SetActive(false);

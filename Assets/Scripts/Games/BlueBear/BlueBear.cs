@@ -160,11 +160,11 @@ namespace HeavenStudio.Games
         }
 
         public static PlayerInput.InputAction InputAction_Left =
-            new("BlueBearLeft", new int[] { IALeft, IALeft, IALeft },
+            new("CtrBearLeft", new int[] { IALeft, IALeft, IALeft },
             IA_PadLeft, IA_TouchLeft, IA_BatonLeft);
 
         public static PlayerInput.InputAction InputAction_Right =
-            new("BlueBearRight", new int[] { IARight, IARight, IARight },
+            new("CtrBearRight", new int[] { IARight, IARight, IARight },
             IA_PadRight, IA_TouchRight, IA_BatonRight);
 
         void OnDestroy()
@@ -189,11 +189,11 @@ namespace HeavenStudio.Games
         {
             headAndBodyAnim.SetBool("ShouldOpenMouth", foodHolder.childCount != 0);
 
-            if (PlayerInput.GetIsAction(InputAction_Left, out _) && !IsExpectingInputNow(InputAction_Left.inputLockCategory))
+            if (PlayerInput.GetIsAction(InputAction_Left) && !IsExpectingInputNow(InputAction_Left.inputLockCategory))
             {
                 Bite(true);
             }
-            else if (PlayerInput.GetIsAction(InputAction_Right, out _) && !IsExpectingInputNow(InputAction_Right.inputLockCategory))
+            else if (PlayerInput.GetIsAction(InputAction_Right) && !IsExpectingInputNow(InputAction_Right.inputLockCategory))
             {
                 Bite(false);
             }

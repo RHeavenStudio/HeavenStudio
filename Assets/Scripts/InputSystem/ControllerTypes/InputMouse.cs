@@ -290,7 +290,8 @@ namespace HeavenStudio.InputSystem
             if (button < 0) return false;
             if (button is 0 or 1 or 2)
             {
-                bool bt = Input.GetKeyUp((KeyCode)currentBindings.Touch[1]) || Input.GetKeyUp((KeyCode)currentBindings.Touch[2]);
+                bool bt = (Input.GetKeyUp((KeyCode)currentBindings.Touch[1]) || Input.GetKeyUp((KeyCode)currentBindings.Touch[2]))
+                    && !(Input.GetKey((KeyCode)currentBindings.Touch[1]) || Input.GetKey((KeyCode)currentBindings.Touch[2]));
                 switch (button)
                 {
                     case 0:

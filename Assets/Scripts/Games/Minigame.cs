@@ -30,10 +30,11 @@ namespace HeavenStudio.Games
         }
 
         #region Premade Input Actions
-        const int IAEmptyCat = -1;
-        const int IAPressCat = 0;
-        const int IAReleaseCat = 1;
-        const int IAFlickCat = 2;
+        protected const int IAEmptyCat = -1;
+        protected const int IAPressCat = 0;
+        protected const int IAReleaseCat = 1;
+        protected const int IAPressingCat = 2;
+        protected const int IAFlickCat = 3;
 
         protected static bool IA_Empty(out double dt)
         {
@@ -67,6 +68,22 @@ namespace HeavenStudio.Games
             return PlayerInput.GetBatonUp(InputController.ActionsBaton.Face, out dt);
         }
 
+        protected static bool IA_PadBasicPressing(out double dt)
+        {
+            dt = 0;
+            return PlayerInput.GetPad(InputController.ActionsPad.East);
+        }
+        protected static bool IA_TouchBasicPressing(out double dt)
+        {
+            dt = 0;
+            return PlayerInput.GetTouch(InputController.ActionsTouch.Tap);
+        }
+        protected static bool IA_BatonBasicPressing(out double dt)
+        {
+            dt = 0;
+            return PlayerInput.GetBaton(InputController.ActionsBaton.Face);
+        }
+
         protected static bool IA_TouchFlick(out double dt)
         {
             return PlayerInput.GetFlick(out dt);
@@ -76,14 +93,17 @@ namespace HeavenStudio.Games
             new("BasicPress", new int[] { IAPressCat, IAPressCat, IAPressCat },
             IA_PadBasicPress, IA_TouchBasicPress, IA_BatonBasicPress);
         public static PlayerInput.InputAction InputAction_BasicRelease =
-            new("BasicPress", new int[] { IAReleaseCat, IAReleaseCat, IAReleaseCat },
+            new("BasicRelease", new int[] { IAReleaseCat, IAReleaseCat, IAReleaseCat },
             IA_PadBasicRelease, IA_TouchBasicRelease, IA_BatonBasicRelease);
+        public static PlayerInput.InputAction InputAction_BasicPressing =
+            new("BasicRelease", new int[] { IAReleaseCat, IAReleaseCat, IAReleaseCat },
+            IA_PadBasicPressing, IA_TouchBasicPressing, IA_BatonBasicPressing);
 
         public static PlayerInput.InputAction InputAction_FlickPress =
-            new("BasicPress", new int[] { IAPressCat, IAFlickCat, IAPressCat },
+            new("FlickPress", new int[] { IAPressCat, IAFlickCat, IAPressCat },
             IA_PadBasicPress, IA_TouchFlick, IA_BatonBasicPress);
         public static PlayerInput.InputAction InputAction_FlickRelease =
-            new("BasicPress", new int[] { IAReleaseCat, IAFlickCat, IAReleaseCat },
+            new("FlickRelease", new int[] { IAReleaseCat, IAFlickCat, IAReleaseCat },
             IA_PadBasicRelease, IA_TouchFlick, IA_BatonBasicRelease);
         #endregion
 
@@ -289,6 +309,7 @@ namespace HeavenStudio.Games
             {
                 // ignore inputs that are for sequencing in autoplay
                 if (toCompare.autoplayOnly) continue;
+                if (toCompare.InputAction == null) continue;
 
                 if (closest == null)
                 {

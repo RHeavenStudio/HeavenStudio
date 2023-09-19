@@ -161,7 +161,7 @@ namespace HeavenStudio.Games
             
             this.audienceReacting = audienceReacting;
 
-            coin = ScheduleInput(beat, 6f, InputType.STANDARD_DOWN, CatchSuccess, CatchMiss, CatchEmpty);
+            coin = ScheduleInput(beat, 6f, InputAction_BasicPress, CatchSuccess, CatchMiss, CatchEmpty);
             //coin.perfectOnly = true;
         }
 
@@ -176,7 +176,7 @@ namespace HeavenStudio.Games
             isThrowing = true;
             this.audienceReacting = false;
 
-            coin = ScheduleInput(beat, 6f, InputType.STANDARD_DOWN, CatchSuccess, CatchMiss, CatchEmpty);
+            coin = ScheduleInput(beat, 6f, InputAction_BasicPress, CatchSuccess, CatchMiss, CatchEmpty);
             //coin.perfectOnly = true;
         }
 

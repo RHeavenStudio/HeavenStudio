@@ -226,6 +226,10 @@ namespace HeavenStudio.Games
         //game scene
         public static FanClub instance;
 
+        public static PlayerInput.InputAction InputAction_TouchRelease =
+            new("NtrIdolTouchRelease", new int[] { IAEmptyCat, IAReleaseCat, IAEmptyCat },
+            IA_Empty, IA_TouchBasicRelease, IA_Empty);
+
         const int FAN_COUNT = 12;
         const float RADIUS = 1.5f;
         private void Awake()

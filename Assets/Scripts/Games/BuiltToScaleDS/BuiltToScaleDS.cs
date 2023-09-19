@@ -290,7 +290,7 @@ namespace HeavenStudio.Games
             if (canShoot && lastShotOut)
                 lastShotOut = false;
 
-            if (canShoot && !lastShotOut && PlayerInput.GetIsAction(InputAction_FlickPress, out _) && !IsExpectingInputNow(InputAction_FlickPress.inputLockCategory))
+            if (canShoot && !lastShotOut && PlayerInput.GetIsAction(InputAction_FlickPress) && !IsExpectingInputNow(InputAction_FlickPress.inputLockCategory))
             {
                 lastShotOut = true;
                 shootingThisFrame = true;
@@ -306,11 +306,11 @@ namespace HeavenStudio.Games
 
             if (PlayerInput.PlayerHasControl() && PlayerInput.CurrentControlStyle is InputSystem.InputController.ControlStyles.Touch)
             {
-                if (PlayerInput.GetIsAction(InputAction_BasicPress, out _))
+                if (PlayerInput.GetIsAction(InputAction_BasicPress))
                 {
                     shooterAnim.Play("Windup", 0, 0);
                 }
-                if (PlayerInput.GetIsAction(InputAction_BasicRelease, out _) && !shootingThisFrame)
+                if (PlayerInput.GetIsAction(InputAction_BasicRelease) && !shootingThisFrame)
                 {
                     shooterAnim.Play("WindDown", 0, 23 / 28f);
                 }

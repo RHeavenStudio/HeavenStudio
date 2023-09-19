@@ -50,7 +50,7 @@ namespace HeavenStudio.Games.Scripts_Spaceball
 
         private void Start()
         {
-            Spaceball.instance.ScheduleInput(startBeat, high ? 2f : 1f, InputType.STANDARD_DOWN, Just, Miss, Out);
+            Spaceball.instance.ScheduleInput(startBeat, high ? 2f : 1f, Spaceball.InputAction_BasicPress, Just, Miss, Out);
         }
 
         private void Update()

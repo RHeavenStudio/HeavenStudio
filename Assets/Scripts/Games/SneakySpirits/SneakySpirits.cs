@@ -133,7 +133,7 @@ namespace HeavenStudio.Games
             var cond = Conductor.instance;
             if (cond.isPlaying && !cond.isPaused)
             {
-                if (PlayerInput.Pressed() && !IsExpectingInputNow(InputType.STANDARD_DOWN) && hasArrowLoaded)
+                if (PlayerInput.GetIsAction(InputAction_FlickPress, out _) && !IsExpectingInputNow(InputAction_FlickPress.inputLockCategory) && hasArrowLoaded)
                 {
                     WhiffArrow(cond.songPositionInBeatsAsDouble);
                 }
@@ -189,11 +189,11 @@ namespace HeavenStudio.Games
         {
             if (slowDown)
             {
-                ScheduleInput(beat, length * 7, InputType.STANDARD_DOWN, Just, Miss, Out);
+                ScheduleInput(beat, length * 7, InputAction_FlickPress, Just, Miss, Out);
             }
             else
             {
-                ScheduleInput(beat, length * 7, InputType.STANDARD_DOWN, JustNoSlowDown, Miss, Out);
+                ScheduleInput(beat, length * 7, InputAction_FlickPress, JustNoSlowDown, Miss, Out);
             }
             BeatAction.New(instance, new List<BeatAction.Action>()
             {

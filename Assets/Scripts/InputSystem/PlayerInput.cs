@@ -231,6 +231,20 @@ namespace HeavenStudio
             return false;
         }
 
+        public static bool GetIsAction(InputAction action)
+        {
+            switch (CurrentControlStyle)
+            {
+                case InputController.ControlStyles.Pad:
+                    return action.padAction(out _);
+                case InputController.ControlStyles.Touch:
+                    return action.touchAction(out _);
+                case InputController.ControlStyles.Baton:
+                    return action.batonAction(out _);
+            }
+            return false;
+        }
+
         public static bool GetPadDown(InputController.ActionsPad ac, out double dt)
         {
             bool a = GetInputController(1).GetActionDown(InputController.ControlStyles.Pad, (int)ac, out dt);

@@ -130,7 +130,7 @@ namespace HeavenStudio.Games
                 {
                     SingleBop();
                 }
-                if(PlayerInput.Pressed() && !IsExpectingInputNow(InputType.STANDARD_DOWN))
+                if (PlayerInput.GetIsAction(InputAction_BasicPressing) && !IsExpectingInputNow(InputAction_BasicPress.inputLockCategory))
                 {
                     if (executives[executiveCount - 1].spinning)
                     {
@@ -214,7 +214,7 @@ namespace HeavenStudio.Games
                 }),
                 new BeatAction.Action(beat + 2.5f, delegate { assistantCanBop = true; })
             });
-            ScheduleInput(beat, 2f, InputType.STANDARD_DOWN, JustAssistant, MissAssistant, Empty);
+            ScheduleInput(beat, 2f, InputAction_BasicPress, JustAssistant, MissAssistant, Empty);
         }
 
         public void Stop(double beat, float length)
@@ -255,7 +255,7 @@ namespace HeavenStudio.Games
             }
             stops.Add(new BeatAction.Action(beat + length * executiveCount + 0.5f, delegate { executivesCanBop = true; }));
             BeatAction.New(instance, stops);
-            ScheduleInput(beat, length * (executiveCount - 1), InputType.STANDARD_DOWN, Just, Miss, Empty);
+            ScheduleInput(beat, length * (executiveCount - 1), InputAction_BasicPress, Just, Miss, Empty);
         }
 
         public void Prepare()

@@ -134,6 +134,10 @@ namespace HeavenStudio.Games
                 normalizedTime -= dt;
                 if (IsExpectingInputNow())
                 {
+                    if (InputAction != null)
+                    {
+                        Debug.Log("Hit " + InputAction.name);
+                    }
                     double stateProg = ((normalizedTime - Minigame.JustEarlyTime()) / (Minigame.JustLateTime() - Minigame.JustEarlyTime()) - 0.5f) * 2;
                     Hit(stateProg, normalizedTime);
                 }
@@ -146,7 +150,8 @@ namespace HeavenStudio.Games
 
         public void LateUpdate() {
             if (markForDeletion) {
-                CleanUp();
+                allEvents.Remove(this);
+                OnDestroy(this);
                 Destroy(this.gameObject);
             }
             foreach (PlayerActionEvent evt in allEvents)
@@ -166,7 +171,7 @@ namespace HeavenStudio.Games
                     if (toCompare.InputAction == null) continue;
                     int catIdx = (int)PlayerInput.CurrentControlStyle;
                     if (toCompare.InputAction != null
-                        && toCompare.InputAction.inputLockCategory[catIdx] == InputAction.inputLockCategory[catIdx]) continue;
+                        && toCompare.InputAction.inputLockCategory[catIdx] != InputAction.inputLockCategory[catIdx]) continue;
                 }
                 else
                 {
@@ -216,7 +221,6 @@ namespace HeavenStudio.Games
             }
             if (!enabled) return false;
             if (!isEligible) return false;
-            if (markForDeletion) return false;
 
             double normalizedBeat = GetNormalizedTime();
             return normalizedBeat > Minigame.NgEarlyTime() && normalizedBeat < Minigame.NgLateTime();
@@ -353,8 +357,6 @@ namespace HeavenStudio.Games
         public void CleanUp()
         {
             if (markForDeletion) return;
-            allEvents.Remove(this);
-            OnDestroy(this);
             markForDeletion = true;
         }
     }

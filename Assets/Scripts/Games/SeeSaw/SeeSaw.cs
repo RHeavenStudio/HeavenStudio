@@ -483,7 +483,7 @@ namespace HeavenStudio.Games
                 });
             }
 
-            ScheduleInput(beat, 2f, InputType.STANDARD_DOWN, high ? JustLongHigh : JustLong, MissLong, Empty);
+            ScheduleInput(beat, 2f, InputAction_BasicPress, high ? JustLongHigh : JustLong, MissLong, Empty);
             if (currentJumpIndex < allJumpEvents.Count) 
             { 
                 if (currentJumpIndex >= 0)
@@ -542,7 +542,7 @@ namespace HeavenStudio.Games
                     new MultiSound.Sound("seeSaw/otherVoiceLong2", beat + 1),
                 });
             }
-            ScheduleInput(beat, 2f, InputType.STANDARD_DOWN, high ? JustShortHigh : JustShort, MissShort, Empty);
+            ScheduleInput(beat, 2f, InputAction_BasicPress, high ? JustShortHigh : JustShort, MissShort, Empty);
             if (currentJumpIndex < allJumpEvents.Count)
             {
                 if (currentJumpIndex >= 0)
@@ -602,7 +602,7 @@ namespace HeavenStudio.Games
                     new MultiSound.Sound("seeSaw/otherVoiceShort2", beat + 0.5f),
                 });
             }
-            ScheduleInput(beat, 1f, InputType.STANDARD_DOWN, high ? JustLongHigh : JustLong, MissLong, Empty);
+            ScheduleInput(beat, 1f, InputAction_BasicPress, high ? JustLongHigh : JustLong, MissLong, Empty);
             if (currentJumpIndex < allJumpEvents.Count)
             {
                 if (currentJumpIndex >= 0)
@@ -662,7 +662,7 @@ namespace HeavenStudio.Games
                     new MultiSound.Sound("seeSaw/otherVoiceShort2", beat + 0.5f),
                 });
             }
-            ScheduleInput(beat, 1f, InputType.STANDARD_DOWN, high ? JustShortHigh : JustShort, MissShort, Empty);
+            ScheduleInput(beat, 1f, InputAction_BasicPress, high ? JustShortHigh : JustShort, MissShort, Empty);
             if (currentJumpIndex < allJumpEvents.Count)
             {
                 if (currentJumpIndex >= 0)
