@@ -544,12 +544,16 @@ namespace HeavenStudio.Games
 
         public SpriteRenderer BGPlane;
         public GameObject BGEffect;
+
+        public SpriteRenderer[] BGTextures;
+
         public GameObject BGGradient;
         SpriteRenderer bgGradientRenderer;
-        public GameObject BGBlood;
-        SpriteRenderer bgBloodRenderer;
         public GameObject BGRadial;
         SpriteRenderer bgRadialRenderer;
+        public GameObject BGBlood;
+        SpriteRenderer bgBloodRenderer;
+
         Animator bgEffectAnimator;
         SpriteRenderer bgEffectSpriteRenderer;
 
@@ -569,10 +573,6 @@ namespace HeavenStudio.Games
             instance = this;
             KarateManPot.ResetLastCombo();
             cameraPosition = CameraPosition[0].position;
-            
-            bgGradientRenderer = BGGradient.GetComponent<SpriteRenderer>();
-            bgBloodRenderer = BGBlood.GetComponent<SpriteRenderer>();
-            bgRadialRenderer = BGRadial.GetComponent<SpriteRenderer>();
 
             colorEnds =
             colorStarts = new Color[] {
@@ -581,9 +581,7 @@ namespace HeavenStudio.Games
                 new(),
             };
             
-            if (!Conductor.instance.NotStopped()) {
-                OnGameSwitch(Conductor.instance.songPositionInBeatsAsDouble);
-            }
+            OnGameSwitch(Conductor.instance.songPositionInBeatsAsDouble);
         }
 
         public override void OnGameSwitch(double beat)
@@ -618,8 +616,8 @@ namespace HeavenStudio.Games
             }
 
             // init colors
-            RiqEntity bg = prevEntities.FindLast(c => c.beat < beat && c.datamodel.Split(1) == "background appearance");
-            RiqEntity obj = prevEntities.FindLast(c => c.beat < beat && c.datamodel.Split(1) == "set object colors");
+            RiqEntity bg = prevEntities.FindLast(c => c.beat <= beat && c.datamodel.Split(1) == "background appearance");
+            RiqEntity obj = prevEntities.FindLast(c => c.beat <= beat && c.datamodel.Split(1) == "set object colors");
             
             if (bg != null) {
                 BackgroundColor(
@@ -652,6 +650,7 @@ namespace HeavenStudio.Games
         public override void OnStop(double beat)
         {
             OnGameSwitch(beat);
+            Debug.Log("ONSTOP BEAT : " + beat);
         }
 
         public override void OnPlay(double beat)
@@ -664,10 +663,6 @@ namespace HeavenStudio.Games
             GameCamera.additionalPosition = cameraPosition - GameCamera.defaultPosition;
             bgEffectAnimator = BGEffect.GetComponent<Animator>();
             bgEffectSpriteRenderer = BGEffect.GetComponent<SpriteRenderer>();
-
-            bgGradientRenderer = BGGradient.GetComponent<SpriteRenderer>();
-            bgBloodRenderer = BGBlood.GetComponent<SpriteRenderer>();
-            bgRadialRenderer = BGRadial.GetComponent<SpriteRenderer>();
         }
 
         private void Update()
@@ -725,7 +720,6 @@ namespace HeavenStudio.Games
             }
 
             BackgroundColorUpdate();
-            Debug.Log(colorEnds[0]);
             
             GameCamera.additionalPosition = cameraPosition - GameCamera.defaultPosition;
             BGEffect.transform.position = new Vector3(GameCamera.instance.transform.position.x, GameCamera.instance.transform.position.y, 0);
@@ -747,47 +741,6 @@ namespace HeavenStudio.Games
 
         private Color TintColor(Color color) => Color.LerpUnclamped(color, new Color(195 / 255f, 48 / 255f, 2 / 255f), 0.45f);
 
-        static List<RiqEntity> allHits = new List<RiqEntity>();
-        static List<RiqEntity> allEnds = new List<RiqEntity>();
-        public static int CountHitsToEnd(double fromBeat)
-        {
-            allHits = EventCaller.GetAllInGameManagerList("karateman", new string[] { "hit", "bulb", "kick", "combo" });
-            allEnds = EventCaller.GetAllInGameManagerList("gameManager", new string[] { "switchGame", "end" });
-
-            allHits.Sort((x, y) => x.beat.CompareTo(y.beat));
-            allEnds.Sort((x, y) => x.beat.CompareTo(y.beat));
-            double endBeat = double.MaxValue;
-
-            //get the beat of the closest end event
-            foreach (var end in allEnds)
-            {
-                if (end.beat > fromBeat)
-                {
-                    endBeat = end.beat;
-                    break;
-                }
-            }
-
-            //count each hit event beginning from our current beat to the beat of the closest game switch or end
-            int count = 0;
-            string type;
-            for (int i = 0; i < allHits.Count; i++)
-            {
-                RiqEntity h = allHits[i];
-                if (h.beat >= fromBeat)
-                {
-                    if (h.beat < endBeat) {
-                        //kicks and combos count for 2 hits
-                        type = h.datamodel.Split('/')[1];
-                        count += (type is "kick" or "combo") ? 2 : 1;
-                    } else {
-                        break;
-                    }
-                }
-            }
-            return count;
-        }
-
         public static void DoSpecialCamera(double beat, float length, bool returns)
         {
             if (cameraAngle == CameraAngle.Normal)
@@ -796,7 +749,7 @@ namespace HeavenStudio.Games
                 cameraAngle = CameraAngle.Special;
             }
             wantsReturn = returns ? beat + length - 0.001f : double.MaxValue;
-            cameraReturnLength = Mathf.Min(2f, length*0.5f);
+            cameraReturnLength = Mathf.Min(2f, length * 0.5f);
         }
 
         public void DoWord(double beat, double length, int type, bool pitchVoice, float forcePitch, bool customLength, bool doSound = true)
@@ -947,7 +900,7 @@ namespace HeavenStudio.Games
         {
             int comboId = KarateManPot.GetNewCombo();
 
-            BeatAction.New(this, new List<BeatAction.Action>() 
+            BeatAction.New(this, new List<BeatAction.Action>()
             { 
                 new BeatAction.Action(beat, delegate { CreateItemInstance(beat, "Item00", 0, KarateManPot.ItemType.ComboPot1, comboId); }),
                 new BeatAction.Action(beat + 0.25f, delegate { CreateItemInstance(beat + 0.25f, "Item00", 0, KarateManPot.ItemType.ComboPot2, comboId); }),
@@ -1068,47 +1021,65 @@ namespace HeavenStudio.Games
             colorStarts[1] = tinted ? Joe.Shadows[0].color : shadowStart;
             colorEnds[1] = tinted ? (preset ? ShadowColors[presetBG] : TintColor(colorEnd)) : shadowEnd;
 
-            colorStarts[2] = autoColor ? bgBloodRenderer.color : filterStart;
+            colorStarts[2] = autoColor ? BGTextures[0].color : filterStart;
             colorEnds[2] = autoColor ? TintColor(filterEnd) : filterEnd;
 
-            BGBlood.SetActive(textureType == (int)BackgroundTextureType.Blood);
-            BGGradient.SetActive(textureType == (int)BackgroundTextureType.Gradient);
-            BGRadial.SetActive(textureType == (int)BackgroundTextureType.Radial);
+            for (int i = 0; i < BGTextures.Length; i++) {
+                BGTextures[i].gameObject.SetActive(textureType == (i + 1));
+            }
+            // BGGradient.SetActive(textureType == (int)BackgroundTextureType.Gradient);
+            // BGRadial.SetActive(textureType == (int)BackgroundTextureType.Radial);
+            // BGBlood.SetActive(textureType == (int)BackgroundTextureType.Blood);
 
             BackgroundColorUpdate();
         }
 
         private void BackgroundColorUpdate()
         {
-            float[,] newRgb = new float[3, 3];
+            //float[,] newRgb = new float[3, 3];
+            SpriteRenderer[][] spriteRenderers = new[] {
+                new[] {BGPlane},
+                Joe.Shadows,
+                BGTextures,
+            };
 
-            for (int i = 0; i < newRgb.GetLength(0); i++)
+            for (int i = 0; i < spriteRenderers.Length; i++)
             {
+                Debug.Log(colorStartBeats[i] + " and " + colorLengths[i]);
                 float normalizedBeat = Mathf.Clamp01(Conductor.instance.GetPositionFromBeat(colorStartBeats[i], colorLengths[i]));
+                if (double.IsNaN(normalizedBeat)) normalizedBeat = 0;
+                Debug.Log("normalizedBeat : " + normalizedBeat);
                 var func = Util.EasingFunction.GetEasingFunction(colorEases[i]);
+                Debug.Log("func : " + func);
+                float[] color = new float[3];
 
-                for (int j = 0; j < newRgb.GetLength(1); j++)
+                for (int j = 0; j < color.Length; j++)
                 {
                     float Hue(Color[] whichColors) => j switch {
                         0 => whichColors[i].r,
                         1 => whichColors[i].g,
-                        2 => whichColors[i].b,
-                        _ => 0,
+                        _ => whichColors[i].b,
                     };
-                    newRgb[i, j] = double.IsNaN(normalizedBeat) ? Hue(colorEnds) : func(Hue(colorStarts), Hue(colorEnds), normalizedBeat);
+                    color[j] = func(Hue(colorStarts), Hue(colorEnds), normalizedBeat);
+                    Debug.Log("color " + j + " : " + color[j]);
                 }
+
+                foreach (var renderer in spriteRenderers[i]) {   
+                    renderer.color = new Color(color[0], color[1], color[2]);
+                }
+                
             }
 
-            Debug.Log("newRgb[0, 0] : " + newRgb[0, 0]);
-            BGPlane.color = new Color(newRgb[0, 0], newRgb[0, 1], newRgb[0, 2]);
+            // manual color setting. remove this if the loop works
+            // BGPlane.color = new Color(newRgb[0, 0], newRgb[0, 1], newRgb[0, 2]);
 
-            foreach (var shadow in Joe.Shadows) {
-                shadow.color = new Color(newRgb[1, 0], newRgb[1, 1], newRgb[1, 2]);
-            }
+            // foreach (var shadow in Joe.Shadows) {
+            //     shadow.color = new Color(newRgb[1, 0], newRgb[1, 1], newRgb[1, 2]);
+            // }
 
-            bgGradientRenderer.color =
-            bgBloodRenderer.color =
-            bgRadialRenderer.color = new Color(newRgb[2, 0], newRgb[2, 1], newRgb[2, 2]);
+            // foreach (var texture in BGTextures) {
+            //     texture.color = new Color(newRgb[2, 0], newRgb[2, 1], newRgb[2, 2]);
+            // }
         }
 
         public void SetGameplayMods(double beat, int mode, bool combo)
