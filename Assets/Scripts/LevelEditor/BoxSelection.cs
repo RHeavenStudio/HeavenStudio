@@ -20,6 +20,11 @@ namespace HeavenStudio.Editor
 
         public bool selecting = false;
 
+        /// <summary>
+        /// Are we currently drag selecting?
+        /// </summary>
+        public bool ActivelySelecting = false;
+
         private bool clickedInTimeline = false;
 
         private TMPro.TMP_Text sizeText;
@@ -86,6 +91,8 @@ namespace HeavenStudio.Editor
 
                 startPosition = MousePosition();
                 selectionBox = new Rect();
+
+                ActivelySelecting = true;
             }
 
             // dragging
@@ -105,6 +112,8 @@ namespace HeavenStudio.Editor
                 endPosition = Vector2.zero;
                 SelectEvents();
                 DrawVisual();
+
+                ActivelySelecting = false;
             }
 
             timelineLastX = timelineContent.transform.localPosition.x;
