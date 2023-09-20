@@ -33,6 +33,7 @@ namespace HeavenStudio.Editor.Track
 
         [Header("Components")]
         [SerializeField] private RawImage waveform;
+        public Texture2D resizeCursor;
 
         public static float SnapInterval() { return instance.snapInterval; }
 
@@ -307,6 +308,8 @@ namespace HeavenStudio.Editor.Track
             timelineState.SetState(CurrentTimelineState.State.Selection);
 
             AutoBtnUpdate();
+
+            resizeCursor = Resources.Load<Texture2D>("Cursors/horizontal_resize");
         }
 
         public void FitToSong()
@@ -743,9 +746,9 @@ namespace HeavenStudio.Editor.Track
             var action = EventCaller.instance.GetGameAction(game, eventName.Split(1));
             GameObject g = Instantiate(TimelineEventObjRef.gameObject, TimelineEventObjRef.parent);
             g.transform.localPosition = pos;
-            g.transform.GetChild(3).GetComponent<TMP_Text>().text = action.displayName;
 
             TimelineEventObj eventObj = g.GetComponent<TimelineEventObj>();
+            eventObj.eventLabel.text = action.displayName;
 
             if (eventName.Split(1) == "switchGame")
                 eventObj.Icon.sprite = Editor.GameIcon(eventName.Split(2));
