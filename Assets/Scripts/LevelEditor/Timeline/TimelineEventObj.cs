@@ -128,6 +128,8 @@ namespace HeavenStudio.Editor.Track
             #endregion
 
             // We need a helper function for this
+            // I'm aware how messy this is, but considering this is all going to be destroyed in a while and nobody
+            // wants to touch it, I think it's fine.
             if (visible)
             {
                 var timelineScale = 100.0f / Timeline.instance.TimelineContent.localScale.x;
