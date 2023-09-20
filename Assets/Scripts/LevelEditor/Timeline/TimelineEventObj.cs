@@ -128,28 +128,37 @@ namespace HeavenStudio.Editor.Track
             #endregion
 
             // We need a helper function for this
-            var timelineScale = 100.0f / Timeline.instance.TimelineContent.localScale.x;
-            Icon.rectTransform.localScale = new Vector3(timelineScale, Icon.rectTransform.localScale.y, Icon.rectTransform.localScale.z);
-            Icon.rectTransform.anchoredPosition = new Vector2(0.08f * timelineScale, Icon.rectTransform.anchoredPosition.y);
+            if (visible)
+            {
+                var timelineScale = 100.0f / Timeline.instance.TimelineContent.localScale.x;
+                Icon.rectTransform.localScale = new Vector3(timelineScale, Icon.rectTransform.localScale.y, Icon.rectTransform.localScale.z);
+                Icon.rectTransform.anchoredPosition = new Vector2(0.08f * timelineScale, Icon.rectTransform.anchoredPosition.y);
 
-            resizeGraphicHolder.offsetMin = new Vector2(0.04f * timelineScale, resizeGraphicHolder.offsetMin.y);
-            resizeGraphicHolder.offsetMax = new Vector2(0.04f * -timelineScale, resizeGraphicHolder.offsetMax.y);
-            resizeGraphicLeft.localScale = new Vector3(timelineScale, resizeGraphicLeft.localScale.y, resizeGraphicLeft.localScale.z);
-            resizeGraphicRight.localScale = new Vector3(-timelineScale, resizeGraphicRight.localScale.y, resizeGraphicRight.localScale.z);
-            resizeGraphicLine.offsetMin = new Vector2(0.132f * timelineScale, resizeGraphicLine.offsetMin.y);
-            resizeGraphicLine.offsetMax = new Vector2(0.132f * -timelineScale, resizeGraphicLine.offsetMax.y);
+                if (resizeGraphicHolder != null)
+                {
+                    resizeGraphicHolder.offsetMin = new Vector2(0.04f * timelineScale, resizeGraphicHolder.offsetMin.y);
+                    resizeGraphicHolder.offsetMax = new Vector2(0.04f * -timelineScale, resizeGraphicHolder.offsetMax.y);
+                    resizeGraphicLeft.localScale = new Vector3(timelineScale, resizeGraphicLeft.localScale.y, resizeGraphicLeft.localScale.z);
+                    resizeGraphicRight.localScale = new Vector3(-timelineScale, resizeGraphicRight.localScale.y, resizeGraphicRight.localScale.z);
+                    resizeGraphicLine.offsetMin = new Vector2(0.132f * timelineScale, resizeGraphicLine.offsetMin.y);
+                    resizeGraphicLine.offsetMax = new Vector2(0.132f * -timelineScale, resizeGraphicLine.offsetMax.y);
+                }
 
-            eventLabel.rectTransform.offsetMax = new Vector2(0.04f * -timelineScale, eventLabel.rectTransform.offsetMax.y);
-            eventLabel.rectTransform.localScale = new Vector3(timelineScale * 0.01f, eventLabel.rectTransform.localScale.y, eventLabel.rectTransform.localScale.z);
+                eventLabel.rectTransform.offsetMax = new Vector2(0.04f * -timelineScale, eventLabel.rectTransform.offsetMax.y);
+                eventLabel.rectTransform.localScale = new Vector3(timelineScale * 0.01f, eventLabel.rectTransform.localScale.y, eventLabel.rectTransform.localScale.z);
 
-            outline1.localScale = new Vector3(timelineScale, outline1.localScale.y, outline1.localScale.z);
-            outline2.localScale = new Vector3(timelineScale, outline2.localScale.y, outline2.lossyScale.z);
-            outline3.offsetMin = new Vector2(0.04f * timelineScale, outline3.offsetMin.y);
-            outline3.offsetMax = new Vector2(0.04f * -timelineScale, outline3.offsetMax.y);
-            outline4.offsetMin = new Vector2(0.04f * timelineScale, outline4.offsetMin.y);
-            outline4.offsetMax = new Vector2(0.04f * -timelineScale, outline4.offsetMax.y);
+                outline1.localScale = new Vector3(timelineScale, outline1.localScale.y, outline1.localScale.z);
+                outline2.localScale = new Vector3(timelineScale, outline2.localScale.y, outline2.lossyScale.z);
+                outline3.offsetMin = new Vector2(0.04f * timelineScale, outline3.offsetMin.y);
+                outline3.offsetMax = new Vector2(0.04f * -timelineScale, outline3.offsetMax.y);
+                outline4.offsetMin = new Vector2(0.04f * timelineScale, outline4.offsetMin.y);
+                outline4.offsetMax = new Vector2(0.04f * -timelineScale, outline4.offsetMax.y);
 
-            SetColor(entity["track"]);
+                leftDrag.localScale = new Vector3(timelineScale, leftDrag.localScale.y, leftDrag.localScale.z);
+                rightDrag.localScale = new Vector3(timelineScale, rightDrag.localScale.y, rightDrag.localScale.z);
+
+                SetColor(entity["track"]);
+            }
 
             if (selected)
             {

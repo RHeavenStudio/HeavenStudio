@@ -260,11 +260,11 @@ namespace HeavenStudio.Editor.Track
 
             ZoomInBTN.onClick.AddListener(delegate
             {
-                zoomComponent.ZoomIn(1, Vector2.zero);
+                zoomComponent.ZoomIn(0.015f * TimelineContent.localScale.x, Vector2.zero);
             });
             ZoomOutBTN.onClick.AddListener(delegate
             {
-                zoomComponent.ZoomOut(-1, Vector2.zero);
+                zoomComponent.ZoomOut(-0.0125f * TimelineContent.localScale.x, Vector2.zero);
             });
             ZoomResetBTN.onClick.AddListener(delegate
             {
