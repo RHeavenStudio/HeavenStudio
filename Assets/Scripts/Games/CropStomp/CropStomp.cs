@@ -119,6 +119,10 @@ namespace HeavenStudio.Games
 
         public static CropStomp instance;
 
+        public static PlayerInput.InputAction InputAction_Flick =
+            new("NtrStompFlick", new int[] { IAEmptyCat, IAFlickCat, IAEmptyCat },
+            IA_Empty, IA_TouchFlick, IA_Empty);
+
         private void Awake()
         {
             instance = this;// Finding grass sprite width for grass scrolling.
@@ -302,6 +306,15 @@ namespace HeavenStudio.Games
                 }
             }
 
+            if (PlayerInput.GetIsAction(InputAction_BasicRelease) && !IsExpectingInputNow(InputAction_BasicRelease))
+            {
+                bodyAnim.Play("Raise");
+            }
+            if (PlayerInput.GetIsAction(InputAction_Flick) && !IsExpectingInputNow(InputAction_FlickRelease))
+            {
+                bodyAnim.Play("Pick");
+            }
+
             if (cameraLocked) return;
 
             // Object scroll.
@@ -330,13 +343,6 @@ namespace HeavenStudio.Games
         {
             if (!isMarching)
                 return;
-
-            if (PlayerInput.PressedUp())
-            {
-                // Don't play raise animation if successfully flicked.
-                if (!isFlicking)
-                    bodyAnim.Play("Raise");
-            }
 
             isFlicking = false;
         }

@@ -1,5 +1,6 @@
 using NaughtyBezierCurves;
 using HeavenStudio.Util;
+using HeavenStudio.InputSystem;
 using System;
 using System.Collections.Generic;
 using UnityEngine;
@@ -174,7 +175,27 @@ namespace HeavenStudio.Games
             TacoBell,
             //YaseiNoIkiG3M4,
         }
-        
+
+        protected static bool IA_PadAny(out double dt)
+        {
+            return PlayerInput.GetPadDown(InputController.ActionsPad.East, out dt)
+                    || PlayerInput.GetPadDown(InputController.ActionsPad.Up, out dt)
+                    || PlayerInput.GetPadDown(InputController.ActionsPad.Down, out dt)
+                    || PlayerInput.GetPadDown(InputController.ActionsPad.Left, out dt)
+                    || PlayerInput.GetPadDown(InputController.ActionsPad.Right, out dt);
+        }
+
+        public static PlayerInput.InputAction InputAction_Press =
+            new("NtrNinjaPress", new int[] { IAPressCat, IAFlickCat, IAPressCat },
+            IA_PadAny, IA_TouchFlick, IA_BatonBasicPress);
+        public static PlayerInput.InputAction InputAction_TouchPress =
+            new("NtrNinjaTouchRelease", new int[] { IAEmptyCat, IAPressCat, IAEmptyCat },
+            IA_Empty, IA_TouchBasicPress, IA_Empty);
+        public static PlayerInput.InputAction InputAction_TouchRelease =
+            new("NtrNinjaTouchRelease", new int[] { IAEmptyCat, IAReleaseCat, IAEmptyCat },
+            IA_Empty, IA_TouchBasicRelease, IA_Empty);
+
+
         private void Awake()
         {
             instance = this;
@@ -198,8 +219,19 @@ namespace HeavenStudio.Games
                 DogAnim.DoScaledAnimationAsync("Prepare", 0.5f);
                 DogAnim.SetBool("needPrepare", true);
             }
-            
-            if ((PlayerInput.Pressed() || PlayerInput.GetAnyDirectionDown()) && !IsExpectingInputNow(InputType.STANDARD_DOWN | InputType.DIRECTION_DOWN))
+
+            if (PlayerInput.GetIsAction(InputAction_TouchPress))
+            {
+                DogAnim.SetBool("needPrepare", true);
+                DogAnim.DoScaledAnimationAsync("Prepare", 0.5f);
+            }
+            if (PlayerInput.GetIsAction(InputAction_TouchRelease) && !IsExpectingInputNow(InputAction_Press))
+            {
+                DogAnim.SetBool("needPrepare", false);
+                DogAnim.DoScaledAnimationAsync("Bop", 0.5f);
+            }
+
+            if (PlayerInput.GetIsAction(InputAction_Press) && !IsExpectingInputNow(InputAction_Press))
             {
                 System.Random rd = new System.Random();
                 string slice;
@@ -219,8 +251,6 @@ namespace HeavenStudio.Games
                 foreach (var obj in queuedThrows) { ThrowObject(obj.beat, obj.direction, obj.typeL, obj.typeR, obj.sfxNumL, obj.sfxNumR); }
                 queuedThrows.Clear();
             }
-
-            //if () queuedThrows.Clear();
         }
 
         private void LateUpdate() 
@@ -268,6 +298,7 @@ namespace HeavenStudio.Games
                 sfxNumR = sfxNumR,
             });
 
+            prepare = prepare && PlayerInput.CurrentControlStyle != InputController.ControlStyles.Touch;
             if (prepare) DogNinja.instance.DogAnim.SetBool("needPrepare", true);
         }
 
@@ -318,6 +349,7 @@ namespace HeavenStudio.Games
 
         public void Prepare(double beat)
         {
+            if (PlayerInput.CurrentControlStyle == InputController.ControlStyles.Touch) return;
             if (!DogAnim.GetBool("needPrepare")) DogAnim.DoScaledAnimationAsync("Prepare", 0.5f);
             DogAnim.SetBool("needPrepare", true);
         }

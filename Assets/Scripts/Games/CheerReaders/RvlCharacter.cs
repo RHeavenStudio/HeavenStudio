@@ -149,7 +149,7 @@ namespace HeavenStudio.Games.Scripts_CheerReaders
         {
             posterBook.SetActive(false);
             canOpenBook = !hit;
-            isSpinning = hit;
+            isSpinning = false;
             if (bookIsWhite != game.shouldBeBlack && hit && player) 
             {
                 RepositionBook(); 

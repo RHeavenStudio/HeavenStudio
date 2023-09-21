@@ -210,7 +210,7 @@ namespace HeavenStudio.Games
             new("RvlBookAltFinish", new int[] { IAAltUpCat, IAFlickCat, IAAltUpCat },
             IA_PadAltRelease, IA_TouchFlick, IA_BatonAltRelease);
         public static PlayerInput.InputAction InputAction_TouchRelease =
-            new("NtrIdolTouchRelease", new int[] { IAEmptyCat, IAReleaseCat, IAEmptyCat },
+            new("RvlBookTouchRelease", new int[] { IAEmptyCat, IAReleaseCat, IAEmptyCat },
             IA_Empty, IA_TouchBasicRelease, IA_Empty);
 
         void OnDestroy()
