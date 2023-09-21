@@ -130,10 +130,9 @@ namespace HeavenStudio.Games
             )
         {
 
-            GameObject evtObj = new GameObject("ActionEvent" + (startBeat + timer));
-            evtObj.AddComponent<PlayerActionEvent>();
+            GameObject evtObj = new("ActionEvent" + (startBeat + timer));
 
-            PlayerActionEvent evt = evtObj.GetComponent<PlayerActionEvent>();
+            PlayerActionEvent evt = evtObj.AddComponent<PlayerActionEvent>();
 
             evt.startBeat = startBeat;
             evt.timer = timer;
@@ -332,6 +331,11 @@ namespace HeavenStudio.Games
             return closest;
         }
 
+        public PlayerActionEvent GetClosestScheduledInput(PlayerInput.InputAction action)
+        {
+            return GetClosestScheduledInput(action.inputLockCategory);
+        }
+
         //Hasn't been tested yet. *Should* work.
         //Can be used to detect if the user is expected to input something now or not
         //Useful for strict call and responses games like Tambourine
@@ -347,6 +351,11 @@ namespace HeavenStudio.Games
             PlayerActionEvent input = GetClosestScheduledInput(wantActionCategory);
             if (input == null) return false;
             return input.IsExpectingInputNow();
+        }
+
+        public bool IsExpectingInputNow(PlayerInput.InputAction wantAction)
+        {
+            return IsExpectingInputNow(wantAction.inputLockCategory);
         }
 
         // now should fix the fast bpm problem
