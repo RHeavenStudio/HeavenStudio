@@ -16,7 +16,9 @@ namespace HeavenStudio.Games.Scripts_KarateMan
         public string hitSfxOverride;
 
         public GameObject Shadow;
-        public GameObject ShadowInstance;
+        private GameObject ShadowInstance;
+        private SpriteRenderer shadowRenderer;
+
 
         //hit effects
         public GameObject HitMark;
@@ -255,8 +257,11 @@ namespace HeavenStudio.Games.Scripts_KarateMan
 
             transform.rotation = Quaternion.Euler(0, 0, transform.rotation.eulerAngles.z + (-360f * Time.deltaTime) + UnityEngine.Random.Range(0f, 360f));
 
-            ShadowInstance = GameObject.Instantiate(Shadow, KarateMan.instance.ItemHolder);
-            //shadowRenderer.color = KarateMan.instance.GetShadowColor();
+            
+
+            ShadowInstance = Instantiate(Shadow, KarateMan.instance.ItemHolder);
+            shadowRenderer = ShadowInstance.GetComponent<SpriteRenderer>();
+            shadowRenderer.color = KarateMan.instance.Joe.Shadows[0].color;
             ShadowInstance.SetActive(true);
             ShadowInstance.transform.position = new Vector3(transform.position.x, floorHeight - 0.5f, transform.position.z);
         }
@@ -289,8 +294,8 @@ namespace HeavenStudio.Games.Scripts_KarateMan
                         ParticleSystem p = Instantiate(HitParticles[7], transform.position, Quaternion.identity, KarateMan.instance.ItemHolder);
                         p.Play();
 
-                        GameObject.Destroy(ShadowInstance.gameObject);
-                        GameObject.Destroy(gameObject);
+                        Destroy(ShadowInstance.gameObject);
+                        Destroy(gameObject);
                         return;
                     }
                     else if (prog >= 2f || (ItemKickable() && prog >= 1f)) {
@@ -299,8 +304,8 @@ namespace HeavenStudio.Games.Scripts_KarateMan
                             ParticleSystem p = Instantiate(HitParticles[7], ItemCurves[6].GetPoint(1f), Quaternion.identity, KarateMan.instance.ItemHolder);
                             p.Play();
                         }
-                        GameObject.Destroy(ShadowInstance.gameObject);
-                        GameObject.Destroy(gameObject);
+                        Destroy(ShadowInstance.gameObject);
+                        Destroy(gameObject);
                         return;
                     }
                     else if (CurrentCurve == null && prog < 1f - ItemSlipRt[path]) {
@@ -318,8 +323,8 @@ namespace HeavenStudio.Games.Scripts_KarateMan
                         ParticleSystem p = Instantiate(HitParticles[7], CurrentCurve.GetPoint(1f), Quaternion.identity, KarateMan.instance.ItemHolder);
                         p.Play();
 
-                        GameObject.Destroy(ShadowInstance.gameObject);
-                        GameObject.Destroy(gameObject);
+                        Destroy(ShadowInstance.gameObject);
+                        Destroy(gameObject);
 
                         SoundByte.PlayOneShotGame("karateman/bombBreak", volume: 0.25f);
                         return;
@@ -334,8 +339,8 @@ namespace HeavenStudio.Games.Scripts_KarateMan
                         else if (type == ItemType.KickBall && cond.songPositionInBeatsAsDouble < startBeat + curveTargetBeat + 1f)
                             return;
                         
-                        GameObject.Destroy(ShadowInstance.gameObject);
-                        GameObject.Destroy(gameObject);
+                        Destroy(ShadowInstance.gameObject);
+                        Destroy(gameObject);
                         return;
                     }
                     else {
@@ -359,8 +364,8 @@ namespace HeavenStudio.Games.Scripts_KarateMan
                         ParticleSystem p = Instantiate(HitParticles[7], CurrentCurve.GetPoint(1f), Quaternion.identity, KarateMan.instance.ItemHolder);
                         p.Play();
 
-                        GameObject.Destroy(ShadowInstance.gameObject);
-                        GameObject.Destroy(gameObject);
+                        Destroy(ShadowInstance.gameObject);
+                        Destroy(gameObject);
                         return;
                     }
                     else if (cond.songPositionInBeatsAsDouble >= startBeat + Mathf.Max(2f, curveTargetBeat) || (ItemKickable() && prog >= 1f) || CurrentCurve == null) {
@@ -369,8 +374,8 @@ namespace HeavenStudio.Games.Scripts_KarateMan
                             ParticleSystem p = Instantiate(HitParticles[7], ItemCurves[8].GetPoint(1f), Quaternion.identity, KarateMan.instance.ItemHolder);
                             p.Play();
                         }
-                        GameObject.Destroy(ShadowInstance.gameObject);
-                        GameObject.Destroy(gameObject);
+                        Destroy(ShadowInstance.gameObject);
+                        Destroy(gameObject);
                         return;
                     }
                     else {
@@ -396,14 +401,14 @@ namespace HeavenStudio.Games.Scripts_KarateMan
                         ParticleSystem p = Instantiate(HitParticles[7], pos, Quaternion.identity, KarateMan.instance.ItemHolder);
                         p.Play();
 
-                        GameObject.Destroy(ShadowInstance.gameObject);
-                        GameObject.Destroy(gameObject);
+                        Destroy(ShadowInstance.gameObject);
+                        Destroy(gameObject);
                         return;
                     }
                     else if (cond.songPositionInBeatsAsDouble >= startBeat + 3f)
                     {
-                        GameObject.Destroy(ShadowInstance.gameObject);
-                        GameObject.Destroy(gameObject);
+                        Destroy(ShadowInstance.gameObject);
+                        Destroy(gameObject);
                         return;
                     }
                     if (prog <= 1f)
@@ -414,13 +419,13 @@ namespace HeavenStudio.Games.Scripts_KarateMan
                     break;
             }
             ShadowInstance.transform.position = new Vector3(transform.position.x, floorHeight - 0.5f, transform.position.z);
-            //shadowRenderer.color = KarateMan.instance.GetShadowColor();
+            shadowRenderer.color = KarateMan.instance.Joe.Shadows[0].color;
             SetColourMapping();
         }
 
         void CreateHitMark(bool useLocalPos = false)
         {
-            GameObject hitMark = GameObject.Instantiate(HitMark, KarateMan.instance.ItemHolder);
+            GameObject hitMark = Instantiate(HitMark, KarateMan.instance.ItemHolder);
             if (useLocalPos)
                 hitMark.transform.localPosition = transform.position;
             else
