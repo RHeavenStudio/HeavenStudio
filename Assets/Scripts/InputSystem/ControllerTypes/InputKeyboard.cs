@@ -271,7 +271,7 @@ namespace HeavenStudio.InputSystem
             return false;
         }
 
-        public override bool GetSwipe(out double dt)
+        public override bool GetSlide(out double dt)
         {
             dt = 0;
             return false;
@@ -291,6 +291,23 @@ namespace HeavenStudio.InputSystem
         public override ControlStyles GetDefaultStyle()
         {
             return ControlStyles.Pad;
+        }
+
+        public override bool GetSqueezeDown(out double dt)
+        {
+            dt = 0;
+            return false;
+        }
+
+        public override bool GetSqueezeUp(out double dt)
+        {
+            dt = 0;
+            return false;
+        }
+
+        public override bool GetSqueeze()
+        {
+            return false;
         }
     }
 }

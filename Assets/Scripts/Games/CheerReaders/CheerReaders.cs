@@ -1,4 +1,5 @@
 using HeavenStudio.Util;
+using HeavenStudio.InputSystem;
 using JetBrains.Annotations;
 using Starpelly.Transformer;
 using System;
@@ -106,9 +107,9 @@ namespace HeavenStudio.Games.Loaders
                     defaultLength = 0.5f
                 }
             },
-            new List<string>() {"rvl", "normal"},
+            new List<string>() { "rvl", "normal" },
             "rvlbooks", "en",
-             new List<string>() {"en"}
+             new List<string>() { "en" }
             );
         }
     }
@@ -175,6 +176,42 @@ namespace HeavenStudio.Games
         double currentZoomCamBeat;
         float currentZoomCamLength;
         private List<RiqEntity> allCameraEvents = new List<RiqEntity>();
+
+        const int IAAltDownCat = 4;
+        const int IAAltUpCat = 5;
+
+        protected static bool IA_PadAltPress(out double dt)
+        {
+            return PlayerInput.GetPadDown(InputController.ActionsPad.South, out dt);
+        }
+        protected static bool IA_BatonAltPress(out double dt)
+        {
+            return PlayerInput.GetSqueezeDown(out dt);
+        }
+        protected static bool IA_TouchAltPress(out double dt)
+        {
+            return PlayerInput.GetTouchDown(InputController.ActionsTouch.Tap, out dt)
+                && instance.IsExpectingInputNow(InputAction_AltStart);
+        }
+
+        protected static bool IA_PadAltRelease(out double dt)
+        {
+            return PlayerInput.GetPadUp(InputController.ActionsPad.South, out dt);
+        }
+        protected static bool IA_BatonAltRelease(out double dt)
+        {
+            return PlayerInput.GetSqueezeUp(out dt);
+        }
+
+        public static PlayerInput.InputAction InputAction_AltStart =
+            new("RvlBookAltStart", new int[] { IAAltDownCat, IAAltDownCat, IAAltDownCat },
+            IA_PadAltPress, IA_TouchAltPress, IA_BatonAltPress);
+        public static PlayerInput.InputAction InputAction_AltFinish =
+            new("RvlBookAltFinish", new int[] { IAAltUpCat, IAFlickCat, IAAltUpCat },
+            IA_PadAltRelease, IA_TouchFlick, IA_BatonAltRelease);
+        public static PlayerInput.InputAction InputAction_TouchRelease =
+            new("NtrIdolTouchRelease", new int[] { IAEmptyCat, IAReleaseCat, IAEmptyCat },
+            IA_Empty, IA_TouchBasicRelease, IA_Empty);
 
         void OnDestroy()
         {
@@ -289,14 +326,29 @@ namespace HeavenStudio.Games
                         }
                     }
                 }
-                if (PlayerInput.Pressed() && !IsExpectingInputNow(InputType.STANDARD_DOWN))
+                if (PlayerInput.GetIsAction(InputAction_BasicPress) && !IsExpectingInputNow(InputAction_BasicPress))
                 {
-                    player.FlipBook(false);
-                    missPoster.SetActive(false);
-                    SoundByte.PlayOneShotGame("cheerReaders/miss");
-                    ScoreMiss(1f);
+                    if (PlayerInput.CurrentControlStyle != InputController.ControlStyles.Touch
+                        || (PlayerInput.CurrentControlStyle == InputController.ControlStyles.Touch && !IsExpectingInputNow(InputAction_AltStart)))
+                    {
+                        player.FlipBook(false);
+                        missPoster.SetActive(false);
+                        SoundByte.PlayOneShotGame("cheerReaders/miss");
+                        ScoreMiss(1f);
+                    }
                 }
-                if (PlayerInput.AltPressed() && !IsExpectingInputNow(InputType.STANDARD_ALT_DOWN)) 
+                if (PlayerInput.GetIsAction(InputAction_TouchRelease) && player.isSpinning)
+                {
+                    if (PlayerInput.CurrentControlStyle == InputController.ControlStyles.Touch && !IsExpectingInputNow(InputAction_AltFinish))
+                    {
+                        player.FlipBook(false);
+                        missPoster.SetActive(false);
+                        SoundByte.PlayOneShotGame("cheerReaders/miss");
+                        SoundByte.KillLoop(SpinningLoop, 0f);
+                        ScoreMiss(1f);
+                    }
+                }
+                if (PlayerInput.GetIsAction(InputAction_AltStart) && !IsExpectingInputNow(InputAction_AltStart))
                 {
                     SoundByte.PlayOneShotGame("cheerReaders/doingoing");
                     player.StartSpinBook();
@@ -304,7 +356,7 @@ namespace HeavenStudio.Games
                     SpinningLoop = SoundByte.PlayOneShotGame("cheerReaders/bookSpinLoop", -1, 1, 1, true);
                     ScoreMiss(1f);
                 }
-                if (PlayerInput.AltPressedUp() && !IsExpectingInputNow(InputType.STANDARD_ALT_UP))
+                if (PlayerInput.GetIsAction(InputAction_AltFinish) && !IsExpectingInputNow(InputAction_AltFinish) && player.isSpinning)
                 {
                     SoundByte.PlayOneShotGame("cheerReaders/doingoing");
                     player.StopSpinBook();
@@ -485,7 +537,7 @@ namespace HeavenStudio.Games
         public void OneTwoThree(double beat, int whoSpeaks)
         {
             canBop = false;
-            ScheduleInput(beat, 2, InputType.STANDARD_DOWN, JustFlip, MissFlip, Nothing);
+            ScheduleInput(beat, 2, InputAction_BasicPress, JustFlip, MissFlip, Nothing);
             List<MultiSound.Sound> soundsToPlay = new List<MultiSound.Sound>()
             {
                 new MultiSound.Sound("cheerReaders/bookHorizontal", beat),
@@ -613,7 +665,7 @@ namespace HeavenStudio.Games
         public void ItsUpToYou(double beat, int whoSpeaks)
         {
             canBop = false;
-            ScheduleInput(beat, 2, InputType.STANDARD_DOWN, JustFlip, MissFlip, Nothing);
+            ScheduleInput(beat, 2, InputAction_BasicPress, JustFlip, MissFlip, Nothing);
             List<MultiSound.Sound> soundsToPlay = new List<MultiSound.Sound>()
             {
                 new MultiSound.Sound("cheerReaders/bookVertical", beat),
@@ -771,7 +823,7 @@ namespace HeavenStudio.Games
         public void LetsGoReadABunchaBooks(double beat, int whoSpeaks)
         {
             canBop = false;
-            ScheduleInput(beat, 2, InputType.STANDARD_DOWN, JustFlip, MissFlip, Nothing);
+            ScheduleInput(beat, 2, InputAction_BasicPress, JustFlip, MissFlip, Nothing);
             List<MultiSound.Sound> soundsToPlay = new List<MultiSound.Sound>()
             {
                 new MultiSound.Sound("cheerReaders/letsGoRead", beat),
@@ -957,7 +1009,7 @@ namespace HeavenStudio.Games
         public void RahRahSisBoomBaBoom(double beat, int whoSpeaks, bool consecutive)
         {
             canBop = false;
-            ScheduleInput(beat, 2.5f, InputType.STANDARD_DOWN, JustFlipBoom, MissFlip, Nothing);
+            ScheduleInput(beat, 2.5f, InputAction_BasicPress, JustFlipBoom, MissFlip, Nothing);
             List<MultiSound.Sound> soundsToPlay = new List<MultiSound.Sound>()
             {
                 new MultiSound.Sound("cheerReaders/bookDiagonal", beat + 0.5f),
@@ -1168,8 +1220,8 @@ namespace HeavenStudio.Games
         {
             canBop = false;
             float actualLength = length * 0.25f;
-            ScheduleInput(beat, 2 * actualLength, InputType.STANDARD_ALT_DOWN, JustHoldSpin, MissFlip, Nothing);
-            ScheduleInput(beat, 3 * actualLength, InputType.STANDARD_ALT_UP, JustReleaseSpin, MissFlip, Nothing);
+            ScheduleInput(beat, 2 * actualLength, InputAction_AltStart, JustHoldSpin, MissFlip, Nothing);
+            ScheduleInput(beat, 3 * actualLength, InputAction_AltFinish, JustReleaseSpin, MissFlip, Nothing).IsHittable = IsReleaseSpinHittable;
             List<MultiSound.Sound> soundsToPlay = new List<MultiSound.Sound>();
             if (whistle)
             {
@@ -1442,6 +1494,10 @@ namespace HeavenStudio.Games
             playerMask.SetActive(false);
             missPoster.SetActive(false);
             SoundByte.PlayOneShotGame("cheerReaders/doingoing");
+
+            if (SpinningLoop != null)
+                SoundByte.KillLoop(SpinningLoop, 0f);
+
             player.Miss();
             shouldDoSuccessZoom = false;
             foreach (var girl in allGirls)
@@ -1450,6 +1506,11 @@ namespace HeavenStudio.Games
             }
         }
 
-        void Nothing(PlayerActionEvent caller) {}
+        void Nothing(PlayerActionEvent caller) { }
+
+        bool IsReleaseSpinHittable()
+        {
+            return player.isSpinning;
+        }
     }
 }

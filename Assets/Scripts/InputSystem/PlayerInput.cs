@@ -305,6 +305,36 @@ namespace HeavenStudio
             return a && PlayerHasControl();
         }
 
+        public static bool GetSqueeze()
+        {
+            bool a = GetInputController(1).GetSqueeze();
+            return a && PlayerHasControl();
+        }
+
+        public static bool GetSqueezeDown()
+        {
+            bool a = GetInputController(1).GetSqueezeDown(out _);
+            return a && PlayerHasControl();
+        }
+
+        public static bool GetSqueezeDown(out double dt)
+        {
+            bool a = GetInputController(1).GetSqueezeDown(out dt);
+            return a && PlayerHasControl();
+        }
+
+        public static bool GetSqueezeUp()
+        {
+            bool a = GetInputController(1).GetSqueezeUp(out _);
+            return a && PlayerHasControl();
+        }
+
+        public static bool GetSqueezeUp(out double dt)
+        {
+            bool a = GetInputController(1).GetSqueezeUp(out dt);
+            return a && PlayerHasControl();
+        }
+
         public static bool GetTouchDown(InputController.ActionsTouch ac, out double dt)
         {
             bool a = GetInputController(1).GetActionDown(InputController.ControlStyles.Touch, (int)ac, out dt);
@@ -335,15 +365,15 @@ namespace HeavenStudio
             return a && PlayerHasControl();
         }
 
-        public static bool GetSwipe()
+        public static bool GetSlide()
         {
-            bool a = GetInputController(1).GetSwipe(out _);
+            bool a = GetInputController(1).GetSlide(out _);
             return a && PlayerHasControl();
         }
 
-        public static bool GetSwipe(out double dt)
+        public static bool GetSlide(out double dt)
         {
-            bool a = GetInputController(1).GetSwipe(out dt);
+            bool a = GetInputController(1).GetSlide(out dt);
             return a && PlayerHasControl();
         }
 

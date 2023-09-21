@@ -710,9 +710,9 @@ namespace HeavenStudio.InputSystem
                     return joyBtStateCurrent.stickRX;
                 case InputAxis.AxisRStickY:
                     return joyBtStateCurrent.stickRY;
-                case InputAxis.TouchpadX:   //isn't updated for now, so always returns 0f
+                case InputAxis.PointerX:   //isn't updated for now, so always returns 0f
                                             //return joyTouchStateCurrent.t0X;
-                case InputAxis.TouchpadY:
+                case InputAxis.PointerY:
                 //return joyTouchStateCurrent.t0Y;
                 default:
                     return 0f;
@@ -727,7 +727,7 @@ namespace HeavenStudio.InputSystem
                     return new Vector3(joyBtStateCurrent.stickLX, joyBtStateCurrent.stickLY, 0f);
                 case InputVector.RStick:
                     return new Vector3(joyBtStateCurrent.stickRX, joyBtStateCurrent.stickRY, 0f);
-                case InputVector.Touchpad:
+                case InputVector.Pointer:
                     return new Vector3(joyTouchStateCurrent.t0X, joyTouchStateCurrent.t0Y, 0f);
                 case InputVector.Accelerometer:
                     return new Vector3(joyImuStateCurrent.accelX, joyImuStateCurrent.accelY, joyImuStateCurrent.accelZ);
@@ -976,7 +976,7 @@ namespace HeavenStudio.InputSystem
             return false;
         }
 
-        public override bool GetSwipe(out double dt)
+        public override bool GetSlide(out double dt)
         {
             dt = 0;
             return false;
@@ -1029,6 +1029,23 @@ namespace HeavenStudio.InputSystem
         public override ControlStyles GetDefaultStyle()
         {
             return ControlStyles.Pad;
+        }
+
+        public override bool GetSqueezeDown(out double dt)
+        {
+            dt = 0;
+            return false;
+        }
+
+        public override bool GetSqueezeUp(out double dt)
+        {
+            dt = 0;
+            return false;
+        }
+
+        public override bool GetSqueeze()
+        {
+            return false;
         }
     }
 }

@@ -19,17 +19,20 @@ namespace HeavenStudio.InputSystem
             AxisLStickY = 1,
             AxisRStickX = 2,
             AxisRStickY = 3,
-            TouchpadX = 6,
-            TouchpadY = 7
+            PointerX = 6,
+            PointerY = 7,
+            PointerDeltaX = 8,
+            PointerDeltaY = 9
         }
 
         public enum InputVector : int
         {
             LStick = 0,
             RStick = 1,
-            Touchpad = 2,
-            Gyroscope = 3,
-            Accelerometer = 4,
+            Pointer = 2,
+            PointerSpeed = 3,
+            Gyroscope = 4,
+            Accelerometer = 5,
         }
 
         //D-Pad directions, usable to adapt analogue sticks to cardinal directions
@@ -295,7 +298,10 @@ namespace HeavenStudio.InputSystem
         public abstract bool GetHatDirectionUp(InputDirection direction, out double dt);
 
         public abstract bool GetFlick(out double dt);
-        public abstract bool GetSwipe(out double dt);
+        public abstract bool GetSlide(out double dt);
+        public abstract bool GetSqueezeDown(out double dt);
+        public abstract bool GetSqueezeUp(out double dt);
+        public abstract bool GetSqueeze();
 
         /// <summary>
         /// Sets the player number (starts at 1, set to -1 or null for no player)

@@ -369,7 +369,7 @@ namespace HeavenStudio.InputSystem
             return hasFlicked;
         }
 
-        public override bool GetSwipe(out double dt)
+        public override bool GetSlide(out double dt)
         {
             dt = hasSwiped ? Time.realtimeSinceStartupAsDouble - timeMoveChange : 0;
             return hasSwiped;
@@ -389,6 +389,23 @@ namespace HeavenStudio.InputSystem
         public override ControlStyles GetDefaultStyle()
         {
             return ControlStyles.Touch;
+        }
+
+        public override bool GetSqueezeDown(out double dt)
+        {
+            dt = 0;
+            return false;
+        }
+
+        public override bool GetSqueezeUp(out double dt)
+        {
+            dt = 0;
+            return false;
+        }
+
+        public override bool GetSqueeze()
+        {
+            return false;
         }
     }
 }
