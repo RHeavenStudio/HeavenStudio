@@ -100,7 +100,7 @@ namespace HeavenStudio.Editor.Commands
         {
             if (pos[id].eventObj == null)
             {
-                pos[id].eventObj = Timeline.instance.eventObjs.Find(c => c.eventObjID == pos[id].eventObj.eventObjID);
+                // pos[id].eventObj = Timeline.instance.eventObjs.Find(c => c.eventObjID == pos[id].eventObj.eventObjID);
             }
         }
     }

@@ -38,6 +38,7 @@ namespace HeavenStudio.Editor
         {
             DeselectAll();
             eventsSelected.Add(eventToAdd);
+            eventToAdd.selected = true;
 
             // CommandManager.instance.Execute(new Commands.Selection(new List<TimelineEventObj>() { eventToAdd } ));
         }
@@ -46,10 +47,12 @@ namespace HeavenStudio.Editor
         {
             if (!eventsSelected.Contains(eventToAdd))
             {
+                eventToAdd.selected = true;
                 eventsSelected.Add(eventToAdd);
             }
             else
             {
+                eventToAdd.selected = false;
                 eventsSelected.Remove(eventToAdd);
             }
         }
@@ -58,6 +61,7 @@ namespace HeavenStudio.Editor
         {
             if (!eventsSelected.Contains(eventToAdd))
             {
+                eventToAdd.selected = true;
                 eventsSelected.Add(eventToAdd);
             }
         }
@@ -67,11 +71,18 @@ namespace HeavenStudio.Editor
             DeselectAll();
             var eventObjs = Timeline.instance.eventObjs;
             for (int i = 0; i < eventObjs.Count; i++)
+            {
+                eventObjs[i].selected = true;
                 eventsSelected.Add(eventObjs[i]);
+            }
         }
 
         public void DeselectAll()
         {
+            foreach (var @event in eventsSelected)
+            {
+                @event.selected = false;
+            }
             eventsSelected.Clear();
         }
 
@@ -79,6 +90,7 @@ namespace HeavenStudio.Editor
         {
             if (eventsSelected.Contains(eventToDeselect))
             {
+                eventToDeselect.selected = false;
                 eventsSelected.Remove(eventToDeselect);
             }
         }
