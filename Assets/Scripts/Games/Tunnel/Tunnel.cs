@@ -110,7 +110,7 @@ namespace HeavenStudio.Games
             {
                 return;
             }
-            if (PlayerInput.Pressed() && !IsExpectingInputNow())
+            if (PlayerInput.GetIsAction(InputAction_BasicPress) && !IsExpectingInputNow(InputAction_BasicPress))
             {
                 HitCowbell();
                 //print("unexpected input");
@@ -154,7 +154,7 @@ namespace HeavenStudio.Games
             started = true;
             for(int i = 0; i < length; i++)
             {
-                ScheduleInput(beat, i, InputType.STANDARD_DOWN, CowbellSuccess, CowbellMiss, CowbellEmpty);
+                ScheduleInput(beat, i, InputAction_BasicPress, CowbellSuccess, CowbellMiss, CowbellEmpty);
             }
         }
 

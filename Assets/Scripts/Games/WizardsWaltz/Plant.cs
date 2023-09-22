@@ -25,7 +25,7 @@ namespace HeavenStudio.Games.Scripts_WizardsWaltz
 
         public void StartInput(double beat, float length)
         {
-            game.ScheduleInput(beat, length, InputType.STANDARD_DOWN | InputType.DIRECTION_DOWN, Just, Miss, Out);
+            game.ScheduleInput(beat, length, WizardsWaltz.InputAction_Press, Just, Miss, Out);
         }
 
         private void Update()

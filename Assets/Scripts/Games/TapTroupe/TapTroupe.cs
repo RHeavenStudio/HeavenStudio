@@ -233,7 +233,7 @@ namespace HeavenStudio.Games
                     }
                     queuedTaps.Clear();
                 }
-                if (PlayerInput.Pressed() && !IsExpectingInputNow(InputType.STANDARD_DOWN))
+                if (PlayerInput.GetIsAction(InputAction_BasicPress) && !IsExpectingInputNow(InputAction_BasicPress))
                 {
                     if (canSpit && !useTutorialMissFace) SoundByte.PlayOneShotGame("tapTroupe/spit", -1, 1, 0.5f);
                     SoundByte.PlayOneShotGame("tapTroupe/miss");
@@ -351,7 +351,7 @@ namespace HeavenStudio.Games
         {
             for (int i = 0; i < length; i++)
             {
-                TapTroupe.instance.ScheduleInput(beat - 1, 1 + i, InputType.STANDARD_DOWN, TapTroupe.instance.JustStep, TapTroupe.instance.MissStep, TapTroupe.instance.Nothing);
+                TapTroupe.instance.ScheduleInput(beat - 1, 1 + i, InputAction_BasicPress, TapTroupe.instance.JustStep, TapTroupe.instance.MissStep, TapTroupe.instance.Nothing);
                 BeatAction.New(instance, new List<BeatAction.Action>()
                 {
                     new BeatAction.Action(beat + i, delegate
@@ -503,7 +503,7 @@ namespace HeavenStudio.Games
                 soundsToPlay.Add(new MultiSound.Sound($"tapTroupe/{otherSoundToPlay}", beatToSpawn));
                 shouldDoSecondBam = secondBam;
                 secondBam = !secondBam;
-                ScheduleInput(beatToSpawn - 1, 1f, InputType.STANDARD_DOWN, JustTap, MissTap, Nothing);
+                ScheduleInput(beatToSpawn - 1, 1f, InputAction_BasicPress, JustTap, MissTap, Nothing);
             }
             int actualOkayType = okayType;
             if (actualOkayType == (int)OkayType.Random) actualOkayType = UnityEngine.Random.Range(0, 3);

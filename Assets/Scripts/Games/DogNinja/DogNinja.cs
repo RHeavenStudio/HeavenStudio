@@ -297,7 +297,7 @@ namespace HeavenStudio.Games
                 sfxNumR = sfxNumR,
             });
 
-            prepare = prepare && PlayerInput.CurrentControlStyle != InputController.ControlStyles.Touch;
+            prepare = prepare && PlayerInput.CurrentControlStyle != InputController.ControlStyles.Touch && PlayerInput.PlayerHasControl();
             if (prepare) DogNinja.instance.DogAnim.SetBool("needPrepare", true);
         }
 
@@ -348,7 +348,7 @@ namespace HeavenStudio.Games
 
         public void Prepare(double beat)
         {
-            if (PlayerInput.CurrentControlStyle == InputController.ControlStyles.Touch) return;
+            if (PlayerInput.CurrentControlStyle == InputController.ControlStyles.Touch && PlayerInput.PlayerHasControl()) return;
             if (!DogAnim.GetBool("needPrepare")) DogAnim.DoScaledAnimationAsync("Prepare", 0.5f);
             DogAnim.SetBool("needPrepare", true);
         }

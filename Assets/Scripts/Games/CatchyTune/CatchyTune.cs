@@ -146,8 +146,8 @@ namespace HeavenStudio.Games
             if (!want)
             {
                 simul = PlayerInput.GetTouchDown(InputController.ActionsTouch.Right, out dt)
-                            && instance.IsExpectingInputNow(InputAction_Left.inputLockCategory)
-                            && instance.IsExpectingInputNow(InputAction_Right.inputLockCategory);
+                            && instance.IsExpectingInputNow(InputAction_Left)
+                            && instance.IsExpectingInputNow(InputAction_Right);
             }
             return want || simul;
         }
@@ -167,8 +167,8 @@ namespace HeavenStudio.Games
             if (!want)
             {
                 simul = PlayerInput.GetTouchDown(InputController.ActionsTouch.Left, out dt)
-                            && instance.IsExpectingInputNow(InputAction_Left.inputLockCategory)
-                            && instance.IsExpectingInputNow(InputAction_Right.inputLockCategory);
+                            && instance.IsExpectingInputNow(InputAction_Left)
+                            && instance.IsExpectingInputNow(InputAction_Right);
             }
             return want || simul;
         }

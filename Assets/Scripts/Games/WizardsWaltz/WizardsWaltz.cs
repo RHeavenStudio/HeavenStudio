@@ -6,6 +6,7 @@ using System;
 using Starpelly;
 
 using HeavenStudio.Util;
+using HeavenStudio.InputSystem;
 
 namespace HeavenStudio.Games.Loaders
 {
@@ -70,6 +71,18 @@ namespace HeavenStudio.Games
         public static WizardsWaltz instance;
 
         private static CallAndResponseHandler crHandlerInstance;
+
+        protected static bool IA_PadAnyDown(out double dt)
+        {
+            return PlayerInput.GetPadDown(InputController.ActionsPad.East, out dt)
+                    || PlayerInput.GetPadDown(InputController.ActionsPad.Up, out dt)
+                    || PlayerInput.GetPadDown(InputController.ActionsPad.Down, out dt)
+                    || PlayerInput.GetPadDown(InputController.ActionsPad.Left, out dt)
+                    || PlayerInput.GetPadDown(InputController.ActionsPad.Right, out dt);
+        }
+        public static PlayerInput.InputAction InputAction_Press =
+            new("AgbWizardPress", new int[] { IAPressCat, IAPressCat, IAPressCat },
+            IA_PadAnyDown, IA_TouchBasicPress, IA_BatonBasicPress);
 
         private void Awake()
         {
