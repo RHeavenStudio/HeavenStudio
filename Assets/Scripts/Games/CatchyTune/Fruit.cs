@@ -78,11 +78,11 @@ namespace HeavenStudio.Games.Scripts_CatchyTune
         {
             if (barelyStart > 0f)
             {
-                anim.DoScaledAnimation("barely", barelyStart, isPineapple ? 2f : 1f);
+                anim.DoScaledAnimation("barely", barelyStart, isPineapple ? 2f : 1f, clamp: true);
             }
             else
             {
-                anim.DoScaledAnimation("fruit bounce", startBeat, beatLength + (isPineapple ? 4f : 2f));
+                anim.DoScaledAnimation("fruit bounce", startBeat, beatLength + (isPineapple ? 4f : 2f), clamp: true);
             }
         }
 

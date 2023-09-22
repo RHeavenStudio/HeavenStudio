@@ -61,7 +61,7 @@ namespace HeavenStudio.Games
         }
         protected static bool IA_TouchBasicRelease(out double dt)
         {
-            return PlayerInput.GetTouchUp(InputController.ActionsTouch.Tap, out dt);
+            return PlayerInput.GetTouchUp(InputController.ActionsTouch.Tap, out dt) && !PlayerInput.GetFlick(out _);
         }
         protected static bool IA_BatonBasicRelease(out double dt)
         {

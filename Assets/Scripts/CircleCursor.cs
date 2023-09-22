@@ -24,6 +24,29 @@ namespace HeavenStudio
             // Cursor.visible = false;
         }
 
+        private void Open()
+        {
+            Circle.transform.DOScale(0, 0.5f).SetEase(Ease.OutExpo);
+            InnerCircle.SetActive(true);
+            outerCircleTween.Kill();
+            outerCircleTween = OuterCircle.transform.DOScale(1, 0.15f).SetEase(Ease.OutExpo);
+
+            Eyes.SetActive(true);
+            eyesTween.Kill();
+            eyesTween = Eyes.transform.DOLocalMoveY(0.15f, 0.15f).SetEase(Ease.OutExpo);
+        }
+
+        private void Close()
+        {
+            Circle.transform.DOScale(0.2f, 0.5f).SetEase(Ease.OutExpo);
+            InnerCircle.SetActive(false);
+            outerCircleTween.Kill();
+            outerCircleTween = OuterCircle.transform.DOScale(0, 0.15f);
+
+            eyesTween.Kill();
+            eyesTween = Eyes.transform.DOLocalMoveY(-0.66f, 0.15f).OnComplete(delegate { Eyes.SetActive(false); });
+        }
+
         private void Update()
         {
             Vector3 pos = PlayerInput.GetInputController(1).GetPointer();
@@ -39,24 +62,21 @@ namespace HeavenStudio
 
                 if (PlayerInput.GetIsAction(Minigame.InputAction_BasicPress))
                 {
-                    Circle.transform.DOScale(0, 0.5f).SetEase(Ease.OutExpo);
-                    InnerCircle.SetActive(true);
-                    outerCircleTween.Kill();
-                    outerCircleTween = OuterCircle.transform.DOScale(1, 0.15f).SetEase(Ease.OutExpo);
-
-                    Eyes.SetActive(true);
-                    eyesTween.Kill();
-                    eyesTween = Eyes.transform.DOLocalMoveY(0.15f, 0.15f).SetEase(Ease.OutExpo);
+                    Open();
                 }
                 else if (PlayerInput.GetIsAction(Minigame.InputAction_BasicRelease))
                 {
-                    Circle.transform.DOScale(0.2f, 0.5f).SetEase(Ease.OutExpo);
-                    InnerCircle.SetActive(false);
-                    outerCircleTween.Kill();
-                    outerCircleTween = OuterCircle.transform.DOScale(0, 0.15f);
+                    Close();
+                }
+                else if (PlayerInput.GetIsAction(Minigame.InputAction_FlickRelease))
+                {
+                    // TODO: flick animation
+                    Close();
+                }
 
-                    eyesTween.Kill();
-                    eyesTween = Eyes.transform.DOLocalMoveY(-0.66f, 0.15f).OnComplete(delegate { Eyes.SetActive(false); });
+                if ((!PlayerInput.PlayerHasControl()) && InnerCircle.activeSelf)
+                {
+                    Close();
                 }
             }
         }

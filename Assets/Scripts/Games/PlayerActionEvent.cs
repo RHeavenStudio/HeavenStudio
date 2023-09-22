@@ -134,10 +134,10 @@ namespace HeavenStudio.Games
                 normalizedTime -= dt;
                 if (IsExpectingInputNow())
                 {
-                    if (InputAction != null)
-                    {
-                        Debug.Log("Hit " + InputAction.name);
-                    }
+                    // if (InputAction != null)
+                    // {
+                    //     Debug.Log("Hit " + InputAction.name);
+                    // }
                     double stateProg = ((normalizedTime - Minigame.JustEarlyTime()) / (Minigame.JustLateTime() - Minigame.JustEarlyTime()) - 0.5f) * 2;
                     Hit(stateProg, normalizedTime);
                 }

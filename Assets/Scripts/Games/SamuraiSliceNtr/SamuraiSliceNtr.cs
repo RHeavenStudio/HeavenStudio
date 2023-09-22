@@ -1,4 +1,5 @@
 using HeavenStudio.Util;
+using HeavenStudio.InputSystem;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -131,6 +132,38 @@ namespace HeavenStudio.Games
 
         public GameEvent bop = new GameEvent();
 
+        const int IAAltDownCat = 4;
+        const int IAAltUpCat = 5;
+
+        protected static bool IA_PadAltPress(out double dt)
+        {
+            return PlayerInput.GetPadDown(InputController.ActionsPad.South, out dt);
+        }
+        protected static bool IA_BatonAltPress(out double dt)
+        {
+            return PlayerInput.GetSqueezeDown(out dt);
+        }
+        protected static bool IA_TouchAltPress(out double dt)
+        {
+            return PlayerInput.GetTouchDown(InputController.ActionsTouch.Tap, out dt);
+        }
+
+        protected static bool IA_PadAltRelease(out double dt)
+        {
+            return PlayerInput.GetPadUp(InputController.ActionsPad.South, out dt);
+        }
+        protected static bool IA_BatonAltRelease(out double dt)
+        {
+            return PlayerInput.GetSqueezeUp(out dt);
+        }
+
+        public static PlayerInput.InputAction InputAction_AltDown =
+            new("NtrSamuraiAltDown", new int[] { IAAltDownCat, IAAltDownCat, IAAltDownCat },
+            IA_PadAltPress, IA_TouchAltPress, IA_BatonAltPress);
+        public static PlayerInput.InputAction InputAction_AltUp =
+            new("NtrSamuraiAltUp", new int[] { IAAltUpCat, IAFlickCat, IAAltUpCat },
+            IA_PadAltRelease, IA_TouchBasicRelease, IA_BatonAltRelease);
+
         private void Awake()
         {
             instance = this;
@@ -146,11 +179,11 @@ namespace HeavenStudio.Games
                 if (goBopChild) childParent.GetComponent<NtrSamuraiChild>().Bop();
             }
 
-            if (PlayerInput.AltPressed())
+            if (PlayerInput.GetIsAction(InputAction_AltDown))
                 DoStep();
-            if (PlayerInput.AltPressedUp() && player.isStepping())
+            if (PlayerInput.GetIsAction(InputAction_AltUp) && player.isStepping())
                 DoUnStep();
-            if (PlayerInput.Pressed())
+            if (PlayerInput.GetIsAction(InputAction_FlickPress))
                 DoSlice();
         }
 

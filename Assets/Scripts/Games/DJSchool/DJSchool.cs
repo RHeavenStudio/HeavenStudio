@@ -128,6 +128,10 @@ namespace HeavenStudio.Games
 
         public static DJSchool instance { get; private set; }
 
+        public static PlayerInput.InputAction InputAction_TouchRelease =
+            new("NtrDjTouchRelease", new int[] { IAEmptyCat, IAReleaseCat, IAEmptyCat },
+            IA_Empty, IA_TouchBasicRelease, IA_Empty);
+
         private void Awake()
         {
             instance = this;
@@ -250,33 +254,30 @@ namespace HeavenStudio.Games
                 lastReportedBeat = Math.Round(Conductor.instance.songPositionInBeatsAsDouble);
             }
 
-            if(PlayerInput.Pressed() && !IsExpectingInputNow() && !student.isHolding) //Start hold miss
+            if(PlayerInput.GetIsAction(InputAction_BasicPress) && !IsExpectingInputNow(InputAction_BasicPress) && !student.isHolding) //Start hold miss
             {
                 student.OnMissHoldForPlayerInput();
                 student.isHolding = true;
                 ScoreMiss();
             }
-            else if(PlayerInput.PressedUp() && !IsExpectingInputNow() && student.isHolding) //Let go during hold
+            else if(((PlayerInput.GetIsAction(InputAction_BasicRelease) && !IsExpectingInputNow(InputAction_FlickRelease))
+                || PlayerInput.GetIsAction(InputAction_TouchRelease))
+                && student.isHolding) //Let go during hold
             {
                 student.UnHold();
                 shouldBeHolding = false;
             }
-            else if (!GameManager.instance.autoplay && shouldBeHolding && !PlayerInput.Pressing() && !IsExpectingInputNow(InputType.STANDARD_UP))
+            else if(PlayerInput.GetIsAction(InputAction_FlickRelease) && !IsExpectingInputNow(InputAction_FlickRelease) && student.isHolding) //Flick during hold
+            {
+                student.OnFlickSwipe();
+                shouldBeHolding = false;
+            }
+            else if (!GameManager.instance.autoplay && shouldBeHolding && !PlayerInput.GetIsAction(InputAction_BasicPressing) && !IsExpectingInputNow(InputAction_FlickRelease))
             {
                 student.UnHold();
                 shouldBeHolding = false;
             }
-            //else if(PlayerInput.PressedUp() && !IsExpectingInputNow() && !student.isHolding)
-            //{
-            //    student.OnMissSwipeForPlayerInput();
-            //}
         }
-
-        //public void Bop(float beat, float length)
-        //{
-        //    bop.startBeat = beat;
-        //    bop.length = length;
-        //}
 
         public void ForceHold()
         {
@@ -401,7 +402,7 @@ namespace HeavenStudio.Games
                 }),
             });
             andStop = true;
-            ScheduleInput(beat, 2f, InputType.STANDARD_DOWN, student.OnHitHold, student.OnMissHold, student.OnEmpty);
+            ScheduleInput(beat, 2f, InputAction_BasicPress, student.OnHitHold, student.OnMissHold, student.OnEmpty);
         }
 
         public void AndStop(double beat, bool ooh, bool doSound = true)
@@ -447,7 +448,7 @@ namespace HeavenStudio.Games
             });
             andStop = true;
 
-            ScheduleInput(beat, 1.5f, InputType.STANDARD_DOWN, student.OnHitHold, student.OnMissHold, student.OnEmpty);
+            ScheduleInput(beat, 1.5f, InputAction_BasicPress, student.OnHitHold, student.OnMissHold, student.OnEmpty);
         }
 
         public void ScratchoHey(double beat, int type, bool remix4, bool cheer)
@@ -511,11 +512,11 @@ namespace HeavenStudio.Games
 
             if (cheer)
             {
-                ScheduleInput(beat, timing, InputType.STANDARD_UP, student.OnHitSwipeCheer, student.OnMissSwipe, student.OnEmpty);
+                ScheduleInput(beat, timing, InputAction_FlickRelease, student.OnHitSwipeCheer, student.OnMissSwipe, student.OnEmpty);
             }
             else
             {
-                ScheduleInput(beat, timing, InputType.STANDARD_UP, student.OnHitSwipe, student.OnMissSwipe, student.OnEmpty);
+                ScheduleInput(beat, timing, InputAction_FlickRelease, student.OnHitSwipe, student.OnMissSwipe, student.OnEmpty);
             }
             andStop = false;
 

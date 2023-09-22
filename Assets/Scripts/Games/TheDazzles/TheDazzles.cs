@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 using HeavenStudio.Util;
+using HeavenStudio.InputSystem;
 
 namespace HeavenStudio.Games.Loaders
 {
@@ -237,6 +238,10 @@ namespace HeavenStudio.Games
         [SerializeField] ParticleSystem poseEffect;
         [SerializeField] ParticleSystem starsEffect;
 
+        public static PlayerInput.InputAction InputAction_TouchRelease =
+            new("NtrBoxshowTouchRelease", new int[] { IAEmptyCat, IAReleaseCat, IAEmptyCat },
+            IA_Empty, IA_TouchBasicRelease, IA_Empty);
+
         void OnDestroy()
         {
             if (queuedPoses.Count > 0) queuedPoses.Clear();
@@ -285,7 +290,8 @@ namespace HeavenStudio.Games
                     }
                     queuedCrouches.Clear();
                 }
-                if (PlayerInput.Pressed() && !IsExpectingInputNow(InputType.STANDARD_DOWN))
+
+                if (PlayerInput.GetIsAction(InputAction_BasicPress) && !IsExpectingInputNow(InputAction_BasicPress))
                 {
                     player.Prepare(false);
                     SoundByte.PlayOneShotGame("theDazzles/miss");
@@ -294,15 +300,18 @@ namespace HeavenStudio.Games
                         if (girl.currentEmotion != TheDazzlesGirl.Emotion.Ouch) girl.currentEmotion = TheDazzlesGirl.Emotion.Angry;
                     }
                 }
-                if (PlayerInput.PressedUp() && !IsExpectingInputNow(InputType.STANDARD_UP))
+                if (PlayerInput.GetIsAction(InputAction_FlickRelease) && !IsExpectingInputNow(InputAction_FlickRelease))
                 {
-                    if (doingPoses)
+                    if (doingPoses || PlayerInput.CurrentControlStyle == InputController.ControlStyles.Touch)
                     {
-                        player.Pose(false);
+                        player.Pose(false, doingPoses);
                         SoundByte.PlayOneShotGame("theDazzles/miss");
-                        foreach (var girl in npcGirls)
+                        if (doingPoses)
                         {
-                            girl.Ouch();
+                            foreach (var girl in npcGirls)
+                            {
+                                girl.Ouch();
+                            }
                         }
                     }
                     else
@@ -311,7 +320,12 @@ namespace HeavenStudio.Games
                     }
                     shouldHold = false;
                 }
-                else if (!PlayerInput.Pressing() && !IsExpectingInputNow(InputType.STANDARD_UP) && shouldHold && !GameManager.instance.autoplay)
+                if (PlayerInput.GetIsAction(InputAction_TouchRelease) && !GameManager.instance.autoplay)
+                {
+                    player.UnPrepare();
+                    shouldHold = false;
+                }
+                if (PlayerInput.GetIsAction(InputAction_BasicRelease) && shouldHold && !GameManager.instance.autoplay)
                 {
                     if (doingPoses)
                     {
@@ -410,7 +424,7 @@ namespace HeavenStudio.Games
         {
             float actualLength = length / 3;
             crouchEndBeat = beat + length;
-            ScheduleInput(beat, 2f * actualLength, InputType.STANDARD_DOWN, JustCrouch, Nothing, Nothing);
+            ScheduleInput(beat, 2f * actualLength, InputAction_BasicPress, JustCrouch, Nothing, Nothing);
 
             BeatAction.New(instance, new List<BeatAction.Action>()
             {
@@ -453,11 +467,11 @@ namespace HeavenStudio.Games
         {
             if (stars)
             {
-                ScheduleInput(beat, playerBeat, InputType.STANDARD_UP, cheer ? JustPoseStars : JustPoseStarsNoCheer, MissPose, Nothing);
+                ScheduleInput(beat, playerBeat, InputAction_FlickRelease, cheer ? JustPoseStars : JustPoseStarsNoCheer, MissPose, Nothing);
             }
             else
             {
-                ScheduleInput(beat, playerBeat, InputType.STANDARD_UP, cheer ? JustPose : JustPoseNoCheer, MissPose, Nothing);
+                ScheduleInput(beat, playerBeat, InputAction_FlickRelease, cheer ? JustPose : JustPoseNoCheer, MissPose, Nothing);
             }
             double crouchBeat = beat - 1f;
             if (crouchBeat < crouchEndBeat) 

@@ -45,7 +45,7 @@ namespace HeavenStudio.Games.Scripts_DJSchool
 
         private void Update()
         {
-            
+
         }
 
         #region old hold
@@ -127,7 +127,7 @@ namespace HeavenStudio.Games.Scripts_DJSchool
                 Sound booSound = SoundByte.PlayOneShotGame("djSchool/boo", -1, 1, 0.8f);
                 CancelInvoke();
                 canBoo = false;
-                Invoke("EnableBoo", booSound.clip.length);
+                Invoke("EnableBoo", 1f);
             }
 
             if (!game.djYellowScript.HeadSpriteCheck(DJYellow.DJExpression.UpFirst) && !game.djYellowScript.HeadSpriteCheck(DJYellow.DJExpression.UpSecond))
@@ -146,7 +146,7 @@ namespace HeavenStudio.Games.Scripts_DJSchool
             missed = true;
 
             SoundByte.PlayOneShotGame("djSchool/recordStop");
-            
+
             anim.DoScaledAnimationAsync("Hold", 0.5f);
             tableAnim.DoScaledAnimationAsync("Student_Turntable_StartHold", 0.5f);
             if (!game.djYellowScript.HeadSpriteCheck(DJYellow.DJExpression.UpFirst) && !game.djYellowScript.HeadSpriteCheck(DJYellow.DJExpression.UpSecond))
@@ -173,7 +173,7 @@ namespace HeavenStudio.Games.Scripts_DJSchool
                 Sound booSound = SoundByte.PlayOneShotGame("djSchool/boo", -1, 1, 0.8f);
                 CancelInvoke();
                 canBoo = false;
-                Invoke("EnableBoo", booSound.clip.length);
+                Invoke("EnableBoo", 1f);
             }
             missed = true;
             mixer.audioMixer.FindSnapshot("Main").TransitionTo(.01f);
@@ -224,7 +224,7 @@ namespace HeavenStudio.Games.Scripts_DJSchool
             }
             else
             {
-                OnMissSwipeForPlayerInput(caller.timer + caller.startBeat + 1f);
+                OnMissSwipeForPlayerInput(caller.timer + caller.startBeat + 1);
                 SoundByte.PlayOneShotGame("djSchool/recordSwipe");
                 BeatAction.New(this, new List<BeatAction.Action>()
                 {
@@ -238,7 +238,7 @@ namespace HeavenStudio.Games.Scripts_DJSchool
                 //Instantiate(slamFX, this.transform.parent).SetActive(true);
                 mixer.audioMixer.FindSnapshot("Main").TransitionTo(.01f);
             }
-            
+
         }
 
         public void OnMissSwipe(PlayerActionEvent caller)
@@ -252,11 +252,11 @@ namespace HeavenStudio.Games.Scripts_DJSchool
                 Sound booSound = SoundByte.PlayOneShotGame("djSchool/boo", caller.timer + caller.startBeat + 1f, 1, 0.8f);
                 CancelInvoke();
                 canBoo = false;
-                Invoke("EnableBoo", booSound.clip.length);
+                Invoke("EnableBoo", 1);
             }
             BeatAction.New(game, new List<BeatAction.Action>()
             {
-                new BeatAction.Action(caller.timer + caller.startBeat + 1f, delegate
+                new BeatAction.Action(caller.timer + caller.startBeat + 1, delegate
                 {
                     if (game.goBop)
                     {
@@ -273,8 +273,6 @@ namespace HeavenStudio.Games.Scripts_DJSchool
             isHolding = false;
 
             missed = true;
-            //swiping = false;
-            mixer.audioMixer.FindSnapshot("Main").TransitionTo(.01f);
 
             BeatAction.New(game, new List<BeatAction.Action>()
             {
@@ -288,6 +286,21 @@ namespace HeavenStudio.Games.Scripts_DJSchool
                     }
                 })
             });
+        }
+
+        public void OnFlickSwipe()
+        {
+            anim.Play("Swipe", 0, 0);
+            tableAnim.speed = 1;
+            tableAnim.DoScaledAnimationAsync("Student_Turntable_Swipe", 0.5f);
+
+            isHolding = false;
+
+            missed = true;
+            mixer.audioMixer.FindSnapshot("Main").TransitionTo(.01f);
+
+            OnMissSwipeForPlayerInput(Conductor.instance.songPositionAsDouble + 1);
+            SoundByte.PlayOneShotGame("djSchool/recordSwipe");
         }
 
         #endregion
@@ -351,7 +364,7 @@ namespace HeavenStudio.Games.Scripts_DJSchool
             flash.color = "D0FBFF".Hex2RGB();
             flash.color = new Color(flash.color.r, flash.color.g, flash.color.b, 0.85f);
             flash.DOColor(new Color(flash.color.r, flash.color.g, flash.color.b, 0), 0.15f);
-            Destroy(flashFX_, 0.5f);         
+            Destroy(flashFX_, 0.5f);
         }
 
         public void TransitionBackToIdle()
