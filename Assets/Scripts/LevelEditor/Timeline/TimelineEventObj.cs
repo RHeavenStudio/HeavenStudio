@@ -1,12 +1,8 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
 using Starpelly;
-using DG.Tweening;
 using Jukebox;
-using Jukebox.Legacy;
 using TMPro;
 
 namespace HeavenStudio.Editor.Track

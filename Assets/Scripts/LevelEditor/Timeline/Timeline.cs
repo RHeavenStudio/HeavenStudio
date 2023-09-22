@@ -900,12 +900,12 @@ namespace HeavenStudio.Editor.Track
         public float SnapToLayer(float y)
         {
             float size = LayerHeight();
-            return Mathf.Clamp(Mathp.Round2Nearest(y, size), -size * 4f, 0f);
+            return Mathf.Clamp(Mathp.Round2Nearest(y, size), -size * (LayerCount - 1), 0f);
         }
 
         public float LayerHeight()
         {
-            return LayersRect.rect.height / 5f;
+            return LayersRect.rect.height / LayerCount;
         }
 
         const float SpeedSnap = 0.25f;
