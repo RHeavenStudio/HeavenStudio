@@ -89,7 +89,7 @@ namespace HeavenStudio.Editor
                 eventSelector.SetActive(false);
                 this.entity = entity;
 
-                string col = TrackToThemeColour(entity["track"]);
+                string col = TrackToThemeColour((int)entity["track"]);
                 Editor.instance.SetGameEventTitle($"Properties for <color=#{col}>{action.displayName}</color> on Beat {entity.beat}");
 
                 DestroyParams();
@@ -194,7 +194,7 @@ namespace HeavenStudio.Editor
             GameObject input = Instantiate(prefab);
             input.transform.SetParent(this.gameObject.transform);
             input.SetActive(true);
-            input.transform.localScale = Vector2.one;
+            input.transform.localScale = Vector3.one;
 
             if(tooltip != string.Empty)
                 Tooltip.AddTooltip(input, "", tooltip);

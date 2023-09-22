@@ -40,6 +40,7 @@ namespace HeavenStudio.Editor.Track
         public float PixelsPerBeat => WidthPerBeat * Zoom;
         public float Zoom { get; private set; } = 1.0f;
         public float MousePos2Beat { get; private set; }
+        public float MousePos2Layer { get; private set; }
         public float MousePos2BeatSnap => Mathp.Round2Nearest(MousePos2Beat + (SnapInterval() * 0.5f), SnapInterval());
 
         private Vector2 relativeMousePos;
@@ -391,6 +392,7 @@ namespace HeavenStudio.Editor.Track
             RectTransformUtility.ScreenPointToLocalPointInRectangle(TimelineContent, Input.mousePosition, Editor.instance.EditorCamera, out relativeMousePos);
 
             MousePos2Beat = relativeMousePos.x / PixelsPerBeat;
+            MousePos2Layer = Mathf.Clamp(Mathf.FloorToInt(-(relativeMousePos.y - TimelineEventsHolder.offsetMax.y) / LayerHeight()), 0, LayerCount - 1);
 
             Conductor cond = Conductor.instance;
             // waveform.rectTransform.anchoredPosition = new Vector2(
@@ -501,6 +503,7 @@ namespace HeavenStudio.Editor.Track
             LayersRect.GetWorldCorners(LayerCorners);
 
             TimelineBlockManager.Instance.UpdateMarkers();
+            BoxSelection.instance.UpdateSelection();
         }
 
         public static float GetScaleModifier()
@@ -985,16 +988,6 @@ namespace HeavenStudio.Editor.Track
             GameManager.instance.Beatmap.Entities.Remove(entity);
             
             GameManager.instance.SortEventsList();
-        }
-
-        public bool IsMouseAboveEvents()
-        {
-            return Timeline.instance.eventObjs.FindAll(c => c.mouseHovering == true).Count > 0;
-        }
-
-        public bool InteractingWithEvents()
-        {
-            return eventObjs.FindAll(c => c.moving == true).Count > 0 || eventObjs.FindAll(c => c.resizing == true).Count > 0;
         }
 
         public float SnapToLayer(float y)

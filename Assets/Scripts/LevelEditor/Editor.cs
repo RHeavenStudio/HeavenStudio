@@ -220,6 +220,7 @@ namespace HeavenStudio.Editor
 
             if (Timeline.instance.timelineState.selected && Editor.instance.canSelect)
             {
+                /*
                 if (Input.GetMouseButtonUp(0))
                 {
                     List<TimelineEventObj> selectedEvents = Timeline.instance.eventObjs.FindAll(c => c.selected == true && c.eligibleToMove == true);
@@ -240,6 +241,7 @@ namespace HeavenStudio.Editor
                         CommandManager.instance.Execute(new Commands.Move(result));
                     }
                 }
+                */
             }
         }
 

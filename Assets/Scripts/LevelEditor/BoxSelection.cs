@@ -51,18 +51,12 @@ namespace HeavenStudio.Editor
             text = boxVisual.transform.GetChild(1).GetComponent<RectTransform>();
         }
 
-        private void Update()
+        public void UpdateSelection()
         {
             if (Editor.instance == null) return;
             float deltaTimelineX = timelineContent.transform.localPosition.x - timelineLastX;
 
-            Camera camera = Editor.instance.EditorCamera;
-            Vector3 scale = Editor.instance.MainCanvas.transform.localScale;
-
-            boxVisual.transform.localScale = new Vector2((1f / Timeline.instance.TimelineContent.localScale.x) / scale.x, 1f / scale.y);
-            text.transform.localScale = scale;
-
-            if (Selections.instance.eventsSelected.Count > 0 && Timeline.instance.InteractingWithEvents())
+            if (Selections.instance.eventsSelected.Count > 0 && TimelineBlockManager.Instance.InteractingWithEvents)
             {
                 startPosition = Vector2.zero;
                 endPosition = Vector2.zero;
@@ -98,7 +92,7 @@ namespace HeavenStudio.Editor
             // dragging
             if (Input.GetMouseButton(0) && clickedInTimeline)
             {
-                startPosition.x += deltaTimelineX * scale.x;
+                startPosition.x += deltaTimelineX;
                 endPosition = MousePosition();
                 DrawSelection();
                 SelectEvents(); //kek
@@ -165,7 +159,8 @@ namespace HeavenStudio.Editor
 
         private void SelectEvents()
         {
-            if (!Input.GetKey(KeyCode.LeftShift) && !Timeline.instance.InteractingWithEvents() && Editor.instance.canSelect) Selections.instance.DeselectAll();
+            if (!Input.GetKey(KeyCode.LeftShift) && !TimelineBlockManager.Instance.InteractingWithEvents && Editor.instance.canSelect)
+                Selections.instance.DeselectAll();
 
             int selected = 0;
 

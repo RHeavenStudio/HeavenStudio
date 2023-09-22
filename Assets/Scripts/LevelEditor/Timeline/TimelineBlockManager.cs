@@ -22,6 +22,8 @@ namespace HeavenStudio.Editor.Track
 
         private RiqEntity entityToSet;
 
+        public bool InteractingWithEvents { get; private set; } = false;
+
         public void SetEntityToSet(RiqEntity entity)
         {
             entityToSet = entity;
@@ -97,6 +99,13 @@ namespace HeavenStudio.Editor.Track
                     if (EntityMarkers.ContainsKey(entity.uid))
                         Pool.Release(EntityMarkers[entity.uid]);
                 }
+            }
+
+            InteractingWithEvents = false;
+            foreach (var marker in EntityMarkers.Values)
+            {
+                if (marker.moving || marker.resizing || marker.mouseHovering)
+                    InteractingWithEvents = true;
             }
         }
 

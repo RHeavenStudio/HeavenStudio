@@ -20,12 +20,15 @@ namespace HeavenStudio.Editor
 
         private void Update()
         {
+            // Should never happen to begin with.
+            /*
             var buggedSelections = eventsSelected.FindAll(c => c == null);
             if (buggedSelections.Count > 0)
             {
                 for (int i = 0; i < buggedSelections.Count; i++)
                     Deselect(buggedSelections[i]);
             }
+            */
             if (Editor.instance.isShortcutsEnabled)
             {
                 if (Input.GetKey(KeyCode.LeftControl))
