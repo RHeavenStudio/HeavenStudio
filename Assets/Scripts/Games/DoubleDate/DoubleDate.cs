@@ -96,6 +96,13 @@ namespace HeavenStudio.Games
             public BallType type;
         }
 
+        public static PlayerInput.InputAction InputAction_TouchPress =
+            new("RvlDateTouchRelease", new int[] { IAEmptyCat, IAPressCat, IAEmptyCat },
+            IA_Empty, IA_TouchBasicPress, IA_Empty);
+        public static PlayerInput.InputAction InputAction_TouchRelease =
+            new("RvlDateTouchRelease", new int[] { IAEmptyCat, IAReleaseCat, IAEmptyCat },
+            IA_Empty, IA_TouchBasicRelease, IA_Empty);
+
         // Editor gizmo to draw trajectories
         new void OnDrawGizmos()
         {
@@ -167,7 +174,15 @@ namespace HeavenStudio.Games
                     queuedBalls.Clear();
                 }
             }
-            if (PlayerInput.Pressed() && !IsExpectingInputNow(InputType.STANDARD_DOWN))
+            if (PlayerInput.GetIsAction(InputAction_TouchPress))
+            {
+                boyAnim.DoScaledAnimationAsync("Ready", 1f);
+            }
+            if (PlayerInput.GetIsAction(InputAction_TouchRelease) && !IsExpectingInputNow(InputAction_FlickPress))
+            {
+                boyAnim.DoScaledAnimationAsync("UnReady", 1f);
+            }
+            if (PlayerInput.GetIsAction(InputAction_FlickPress) && !IsExpectingInputNow(InputAction_FlickPress))
             {
                 SoundByte.PlayOneShotGame("doubleDate/kick_whiff");
                 Kick(true, true, false);

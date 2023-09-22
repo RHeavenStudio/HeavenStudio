@@ -1310,7 +1310,7 @@ SpriteRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 0
+  m_SortingOrder: -1
   m_Sprite: {fileID: 471275613544938806, guid: 1f442840d85d9e944819c7e21ab38483, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 0.41960785}
   m_FlipX: 0
@@ -12337,7 +12337,7 @@ ParticleSystemRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 4
+  m_SortingOrder: 0
   m_RenderMode: 0
   m_MeshDistribution: 0
   m_SortMode: 0
@@ -14435,7 +14435,6 @@ MonoBehaviour:
   SoundSequences: []
   EligibleHits: []
   scheduledInputs: []
-  firstEnable: 0
   soccer: {fileID: 6033749656558512970, guid: 3f09924efb4db354aa2899ebbebfbcf5, type: 3}
   basket: {fileID: 5811262171106880114, guid: 5f00b13cb8a13dc49b2fc7d78e9c8a5d, type: 3}
   football: {fileID: 8037004963704552774, guid: 8945cdc8b29cf4640b7f7d1c678be884, type: 3}
@@ -14457,7 +14456,7 @@ MonoBehaviour:
     anchor: {fileID: 0}
     positions:
     - tag: 
-      pos: {x: -12.2, y: -2.75, z: 0}
+      pos: {x: -12.5, y: -2.75, z: 0}
       target: {fileID: 0}
       height: 4.4
       duration: 1
@@ -14466,7 +14465,7 @@ MonoBehaviour:
       - key: rot
         value: 135
     - tag: 
-      pos: {x: -6.7, y: -2.75, z: 0}
+      pos: {x: -7.75, y: -2.75, z: 0}
       target: {fileID: 0}
       height: 2.75
       duration: 1.2
@@ -14475,19 +14474,19 @@ MonoBehaviour:
       - key: rot
         value: 202.5
     - tag: 
-      pos: {x: -1.2, y: -2.75, z: 0}
+      pos: {x: -2.15, y: -2.75, z: 0}
       target: {fileID: 0}
       height: 2.5
-      duration: 1.2
+      duration: 1.25
       useLastRealPos: 0
       values:
       - key: rot
         value: 151.875
     - tag: 
-      pos: {x: 4.3, y: -2.75, z: 0}
+      pos: {x: 3.5, y: -2.75, z: 0}
       target: {fileID: 0}
       height: 1.8
-      duration: 1.5
+      duration: 1.6
       useLastRealPos: 0
       values:
       - key: rot
@@ -14582,7 +14581,7 @@ MonoBehaviour:
     anchor: {fileID: 0}
     positions:
     - tag: 
-      pos: {x: -12, y: -2.75, z: 0}
+      pos: {x: -12.25, y: -2.75, z: 0}
       target: {fileID: 0}
       height: 4.4
       duration: 1

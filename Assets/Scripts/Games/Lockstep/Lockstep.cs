@@ -363,7 +363,7 @@ namespace HeavenStudio.Games
                     }
                     queuedInputs.Clear();
                 }
-                if (PlayerInput.Pressed() && !IsExpectingInputNow(InputType.STANDARD_DOWN))
+                if (PlayerInput.GetIsAction(InputAction_BasicPress) && !IsExpectingInputNow(InputAction_BasicPress))
                 {
                     currentMissStage = HowMissed.NotMissed;
                     double beatAnimCheck = cond.songPositionInBeatsAsDouble - 0.25;
@@ -616,7 +616,7 @@ namespace HeavenStudio.Games
                     EvaluateMarch(offBeat);
                 })
             };
-            ScheduleInput(beat - 1, 1, InputType.STANDARD_DOWN, offBeat ? JustOff : JustOn, offBeat ? MissOff : MissOn, Nothing);
+            ScheduleInput(beat - 1, 1, InputAction_BasicPress, offBeat ? JustOff : JustOn, offBeat ? MissOff : MissOn, Nothing);
             for (int i = 1; i < length; i++)
             {
                 double stepBeat = beat + i;
@@ -625,7 +625,7 @@ namespace HeavenStudio.Games
                     if (BachOnBeat(stepBeat)) bach.DoScaledAnimationAsync(offBeat ? "BachOff" : "BachOn", 0.5f);
                     EvaluateMarch(offBeat);
                 }));
-                ScheduleInput(stepBeat - 1, 1, InputType.STANDARD_DOWN, offBeat ? JustOff : JustOn, offBeat ? MissOff : MissOn, Nothing);
+                ScheduleInput(stepBeat - 1, 1, InputAction_BasicPress, offBeat ? JustOff : JustOn, offBeat ? MissOff : MissOn, Nothing);
             }
             BeatAction.New(this, steps);
         }
@@ -660,7 +660,7 @@ namespace HeavenStudio.Games
             if (NextStepIsSwitch(beat)) beat -= 0.5;
             bool offBeat = beat % 1 != 0;
             bool bachOnBeat = BachOnBeat(beat);
-            ScheduleInput(beat - 1, 1, InputType.STANDARD_DOWN, offBeat ? JustOff : JustOn, offBeat ? MissOff : MissOn, Nothing);
+            ScheduleInput(beat - 1, 1, InputAction_BasicPress, offBeat ? JustOff : JustOn, offBeat ? MissOff : MissOn, Nothing);
             BeatAction.New(instance, new List<BeatAction.Action>()
             {
                 new BeatAction.Action(beat, delegate 

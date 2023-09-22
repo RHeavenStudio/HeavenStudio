@@ -278,8 +278,7 @@ namespace HeavenStudio.Games
         private void Update() 
         {
             // input stuff
-            if (PlayerInput.Pressed() && !IsExpectingInputNow(InputType.STANDARD_DOWN)) {
-                Debug.Log("ooops" + PlayerInput.Pressed());
+            if (PlayerInput.GetIsAction(InputAction_BasicPress) && !IsExpectingInputNow(InputAction_BasicPress)) {
                 MonkArmsAnim.DoScaledAnimationAsync("WristSlap", 0.5f);
                 SoundByte.PlayOneShotGame(sfxName+"slap");
                 isStaring = false;
@@ -432,7 +431,7 @@ namespace HeavenStudio.Games
                     DumplingClone.startBeat = beat;
                     DumplingClone.sr.sprite = dumplingSprites[0];
                     dumplings.Add(DumplingClone);
-                    ScheduleInput(beat, 1f, InputType.STANDARD_DOWN, Hit, Miss, Early); 
+                    ScheduleInput(beat, 1f, InputAction_BasicPress, Hit, Miss, Early); 
                 }),
                 new BeatAction.Action(beat+0.5f, delegate { 
                     OneGiverAnim.DoScaledAnimationAsync("GiveOut", 0.5f); 
@@ -462,7 +461,7 @@ namespace HeavenStudio.Games
                     DumplingClone1.startBeat = beat-0.5f;
                     DumplingClone1.sr.sprite = dumplingSprites[1];
                     dumplings.Add(DumplingClone1);
-                    ScheduleInput(beat, 1f, InputType.STANDARD_DOWN, Hit, Miss, Early);
+                    ScheduleInput(beat, 1f, InputAction_BasicPress, Hit, Miss, Early);
                     //DumplingClone1.otherAnim = DumplingClone2.gameObject.GetComponent<Animator>();
                 }),
                 new BeatAction.Action(beat, delegate { 
@@ -473,7 +472,7 @@ namespace HeavenStudio.Games
                     DumplingClone2.startBeat = beat-0.5f;
                     DumplingClone2.sr.sprite = dumplingSprites[2];
                     dumplings.Add(DumplingClone2);
-                    ScheduleInput(beat, 1.5f, InputType.STANDARD_DOWN, Hit, Miss, Early);
+                    ScheduleInput(beat, 1.5f, InputAction_BasicPress, Hit, Miss, Early);
                 }),
             });
         }
@@ -502,7 +501,7 @@ namespace HeavenStudio.Games
                     DumplingClone1.startBeat = beat;
                     DumplingClone1.sr.sprite = dumplingSprites[3];
                     dumplings.Add(DumplingClone1);
-                    ScheduleInput(beat, 1f, InputType.STANDARD_DOWN, Hit, Miss, Early); }),
+                    ScheduleInput(beat, 1f, InputAction_BasicPress, Hit, Miss, Early); }),
 
                 new BeatAction.Action(beat+0.5f, delegate { 
                     // first out
@@ -517,7 +516,7 @@ namespace HeavenStudio.Games
                     DumplingClone2.startBeat = beat+1.3f;
                     DumplingClone2.sr.sprite = dumplingSprites[4];
                     dumplings.Add(DumplingClone2);
-                    ScheduleInput(beat, 2f, InputType.STANDARD_DOWN, Hit, Miss, Early); }),
+                    ScheduleInput(beat, 2f, InputAction_BasicPress, Hit, Miss, Early); }),
 
                 new BeatAction.Action(beat+1.75f, delegate { 
                     // second out
@@ -532,7 +531,7 @@ namespace HeavenStudio.Games
                     DumplingClone3.startBeat = beat+2.3f;
                     DumplingClone3.sr.sprite = dumplingSprites[5];
                     dumplings.Add(DumplingClone3);
-                    ScheduleInput(beat, 3f, InputType.STANDARD_DOWN, Hit, Miss, Early); }),
+                    ScheduleInput(beat, 3f, InputAction_BasicPress, Hit, Miss, Early); }),
 
                 new BeatAction.Action(beat+2.75f, delegate {
                     // third out

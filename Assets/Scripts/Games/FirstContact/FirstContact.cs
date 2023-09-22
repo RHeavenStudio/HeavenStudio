@@ -3,6 +3,7 @@ using System.Text;
 using System.Collections.Generic;
 using UnityEngine;
 using HeavenStudio.Util;
+using HeavenStudio.InputSystem;
 using TMPro;
 using Jukebox;
 using UnityEngine.Assertions.Must;
@@ -159,6 +160,19 @@ namespace HeavenStudio.Games
             idle
         }
 
+        protected static bool IA_PadAny(out double dt)
+        {
+            return PlayerInput.GetPadDown(InputController.ActionsPad.East, out dt)
+                    || PlayerInput.GetPadDown(InputController.ActionsPad.Up, out dt)
+                    || PlayerInput.GetPadDown(InputController.ActionsPad.Down, out dt)
+                    || PlayerInput.GetPadDown(InputController.ActionsPad.Left, out dt)
+                    || PlayerInput.GetPadDown(InputController.ActionsPad.Right, out dt);
+        }
+
+        public static PlayerInput.InputAction InputAction_Press =
+            new("CtrInterpreterPress", new int[] { IAPressCat, IAFlickCat, IAPressCat },
+            IA_PadAny, IA_TouchBasicPress, IA_BatonBasicPress);
+
         void OnDestroy()
         {
             foreach (var evt in scheduledInputs)
@@ -299,7 +313,7 @@ namespace HeavenStudio.Games
                 lastReportedBeat = Math.Round(Conductor.instance.songPositionInBeatsAsDouble);
             }
 
-            if ((PlayerInput.Pressed() || PlayerInput.GetAnyDirectionDown()) && !IsExpectingInputNow(InputType.STANDARD_DOWN | InputType.DIRECTION_DOWN))
+            if (PlayerInput.GetIsAction(InputAction_Press) && !IsExpectingInputNow(InputAction_Press))
             {
                 translator.DoScaledAnimationAsync("translator_eh", 0.5f);
                 if (isSpeaking)
@@ -401,7 +415,7 @@ namespace HeavenStudio.Games
             {
                 var input = inputs[i];
                 double relativeBeat = input.beat - intervalBeat;
-                ScheduleInput(beat, length + relativeBeat, InputType.STANDARD_DOWN | InputType.DIRECTION_DOWN, AlienTapping, AlienOnMiss, AlienEmpty);
+                ScheduleInput(beat, length + relativeBeat, InputAction_Press, AlienTapping, AlienOnMiss, AlienEmpty);
                 callDiagList.Add(input["dialogue"]);
             }
             BeatAction.New(this, new List<BeatAction.Action>()

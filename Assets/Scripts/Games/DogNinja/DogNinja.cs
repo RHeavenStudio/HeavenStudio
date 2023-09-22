@@ -195,7 +195,6 @@ namespace HeavenStudio.Games
             new("NtrNinjaTouchRelease", new int[] { IAEmptyCat, IAReleaseCat, IAEmptyCat },
             IA_Empty, IA_TouchBasicRelease, IA_Empty);
 
-
         private void Awake()
         {
             instance = this;

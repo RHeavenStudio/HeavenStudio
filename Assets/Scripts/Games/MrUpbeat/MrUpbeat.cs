@@ -255,7 +255,7 @@ namespace HeavenStudio.Games
             string dir = (stepIterate % 2 == 1) ? "Right" : "Left";
             metronomeAnim.DoScaledAnimationAsync("MetronomeGo" + dir, 0.5f);
             SoundByte.PlayOneShotGame("mrUpbeat/metronome" + dir);
-            ScheduleInput(beat, 0.5f, InputType.STANDARD_DOWN, Success, Miss, Nothing);
+            ScheduleInput(beat, 0.5f, InputAction_BasicPress, Success, Miss, Nothing);
             BeatAction.New(this, new List<BeatAction.Action>() {
                 new(beat + 1, delegate { RecursiveStepping(beat + 1); })
             });
@@ -267,7 +267,7 @@ namespace HeavenStudio.Games
             var actions = new List<BeatAction.Action>();
             for (int i = 0; i < length; i++)
             {
-                ScheduleInput(beat + i, 0.5f, InputType.STANDARD_DOWN, Success, Miss, Nothing);
+                ScheduleInput(beat + i, 0.5f, InputAction_BasicPress, Success, Miss, Nothing);
                 actions.Add(new BeatAction.Action(beat + i, delegate { 
                     string dir = (stepIterate % 2 == 1) ? "Right" : "Left";
                     metronomeAnim.DoScaledAnimationAsync("MetronomeGo" + dir, 0.5f);

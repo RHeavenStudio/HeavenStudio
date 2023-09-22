@@ -35,7 +35,7 @@ namespace HeavenStudio.Games.Loaders
                 {
                     function = delegate { RhythmSomen.instance.Slurp(eventCaller.currentEntity.beat); }
                 },
-                new GameAction("bop", "Bop") 
+                new GameAction("bop", "Bop")
                 {
                     function = delegate { var e = eventCaller.currentEntity; RhythmSomen.instance.ToggleBop(e.beat, e.length, e["toggle2"], e["toggle"]); },
                     resizable = true,
@@ -46,9 +46,9 @@ namespace HeavenStudio.Games.Loaders
                     }
                 }
             },
-            new List<string>() {"pco", "normal"},
+            new List<string>() { "pco", "normal" },
             "pcosomen", "en",
-            new List<string>() {}
+            new List<string>() { }
             );
         }
     }
@@ -93,7 +93,7 @@ namespace HeavenStudio.Games
                 SomenPlayer.Play("HeadBob", -1, 0);
             }
 
-            if (PlayerInput.Pressed() && !IsExpectingInputNow())
+            if (PlayerInput.GetIsAction(InputAction_BasicPress) && !IsExpectingInputNow(InputAction_BasicPress))
             {
                 SoundByte.PlayOneShotGame("rhythmSomen/somen_mistake");
                 FrontArm.Play("ArmPluck", -1, 0);
@@ -146,7 +146,7 @@ namespace HeavenStudio.Games
         public void DoFarCrane(double beat)
         {
             //Far Drop Multisound
-            ScheduleInput(beat, 3f, InputType.STANDARD_DOWN, CatchSuccess, CatchMiss, CatchEmpty);
+            ScheduleInput(beat, 3f, InputAction_BasicPress, CatchSuccess, CatchMiss, CatchEmpty);
             MultiSound.Play(new MultiSound.Sound[] {
             new MultiSound.Sound("rhythmSomen/somen_lowerfar", beat),
             new MultiSound.Sound("rhythmSomen/somen_drop", beat + 1f),
@@ -165,7 +165,7 @@ namespace HeavenStudio.Games
         public void DoCloseCrane(double beat)
         {
             //Close Drop Multisound
-            ScheduleInput(beat, 2f, InputType.STANDARD_DOWN, CatchSuccess, CatchMiss, CatchEmpty);
+            ScheduleInput(beat, 2f, InputAction_BasicPress, CatchSuccess, CatchMiss, CatchEmpty);
             MultiSound.Play(new MultiSound.Sound[] {
             new MultiSound.Sound("rhythmSomen/somen_lowerclose", beat),
             new MultiSound.Sound("rhythmSomen/somen_drop", beat + 1f),
@@ -184,24 +184,24 @@ namespace HeavenStudio.Games
         public void DoBothCrane(double beat)
         {
             //Both Drop Multisound
-            ScheduleInput(beat, 2f, InputType.STANDARD_DOWN, CatchSuccess, CatchMiss, CatchEmpty);
-            ScheduleInput(beat, 3f, InputType.STANDARD_DOWN, CatchSuccess, CatchMiss, CatchEmpty);
+            ScheduleInput(beat, 2f, InputAction_BasicPress, CatchSuccess, CatchMiss, CatchEmpty);
+            ScheduleInput(beat, 3f, InputAction_BasicPress, CatchSuccess, CatchMiss, CatchEmpty);
             MultiSound.Play(new MultiSound.Sound[] {
-            new MultiSound.Sound("rhythmSomen/somen_lowerfar", beat),
-            new MultiSound.Sound("rhythmSomen/somen_doublealarm", beat),
-            new MultiSound.Sound("rhythmSomen/somen_drop", beat + 1f),
-            new MultiSound.Sound("rhythmSomen/somen_woosh", beat + 1.5f),
+                new MultiSound.Sound("rhythmSomen/somen_lowerfar", beat),
+                new MultiSound.Sound("rhythmSomen/somen_doublealarm", beat),
+                new MultiSound.Sound("rhythmSomen/somen_drop", beat + 1f),
+                new MultiSound.Sound("rhythmSomen/somen_woosh", beat + 1.5f),
             });
 
             BeatAction.New(instance, new List<BeatAction.Action>()
-                {
+            {
                 new BeatAction.Action(beat,     delegate { CloseCrane.Play("DropClose", -1, 0);}),
                 new BeatAction.Action(beat,     delegate { FarCrane.Play("Drop", -1, 0);}),
                 new BeatAction.Action(beat + 1.0f,     delegate { CloseCrane.Play("OpenClose", -1, 0);}),
                 new BeatAction.Action(beat + 1.0f,     delegate { FarCrane.Play("Open", -1, 0);}),
                 new BeatAction.Action(beat + 1.5f,     delegate { CloseCrane.Play("LiftClose", -1, 0);}),
                 new BeatAction.Action(beat + 1.5f,     delegate { FarCrane.Play("Lift", -1, 0);}),
-                });
+            });
 
         }
 
@@ -211,9 +211,9 @@ namespace HeavenStudio.Games
             SoundByte.PlayOneShotGame("rhythmSomen/somen_bell");
 
             BeatAction.New(instance, new List<BeatAction.Action>()
-                    {
-                    new BeatAction.Action(beat,     delegate { EffectExclam.Play("ExclamAppear", -1, 0);}),
-                    });
+            {
+            new BeatAction.Action(beat,     delegate { EffectExclam.Play("ExclamAppear", -1, 0);}),
+            });
 
         }
 

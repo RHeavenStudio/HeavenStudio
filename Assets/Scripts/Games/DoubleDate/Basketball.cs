@@ -39,7 +39,7 @@ namespace HeavenStudio.Games.Scripts_DoubleDate
 
         public void Init(double beat)
         {
-            game.ScheduleInput(beat, 1f, InputType.STANDARD_DOWN, Just, Miss, Empty);
+            game.ScheduleInput(beat, 1f, DoubleDate.InputAction_FlickPress, Just, Miss, Empty);
             path = game.GetPath("BasketBallIn");
             UpdateLastRealPos();
             pathStartBeat = beat - 1f;

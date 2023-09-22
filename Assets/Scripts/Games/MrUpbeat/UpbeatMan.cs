@@ -30,7 +30,7 @@ namespace HeavenStudio.Games.Scripts_MrUpbeat
         {
             blipText.transform.localScale = Vector3.one;
             
-            if (PlayerInput.Pressed() && !game.IsExpectingInputNow(InputType.STANDARD_DOWN)) {
+            if (PlayerInput.GetIsAction(MrUpbeat.InputAction_BasicPress) && !game.IsExpectingInputNow(MrUpbeat.InputAction_BasicPress)) {
                 Step(true);
             }
         }

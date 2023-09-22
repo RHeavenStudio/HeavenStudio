@@ -32,7 +32,7 @@ namespace HeavenStudio.Games.Scripts_LaunchParty
         void Update()
         {
             if (GameManager.instance.currentGame != "launchParty") Destroy(gameObject);
-            if (PlayerInput.Pressed() && !game.IsExpectingInputNow(InputType.STANDARD_DOWN) && !noInput)
+            if (PlayerInput.GetIsAction(LaunchParty.InputAction_BasicPress) && !game.IsExpectingInputNow(LaunchParty.InputAction_BasicPress) && !noInput)
             {
                 SoundByte.PlayOneShotGame("launchParty/miss");
                 SoundByte.PlayOneShotGame("launchParty/rocket_endBad");
@@ -50,7 +50,7 @@ namespace HeavenStudio.Games.Scripts_LaunchParty
 
         public void InitFamilyRocket(double beat)
         {
-            game.ScheduleInput(beat, 3f, InputType.STANDARD_DOWN, JustFamilyRocket, Miss, Nothing);
+            game.ScheduleInput(beat, 3f, LaunchParty.InputAction_BasicPress, JustFamilyRocket, Miss, Nothing);
 
             MultiSound.Play(new MultiSound.Sound[]
             {
@@ -74,7 +74,7 @@ namespace HeavenStudio.Games.Scripts_LaunchParty
 
         public void InitPartyCracker(double beat)
         {
-            game.ScheduleInput(beat, 2f, InputType.STANDARD_DOWN, JustPartyCracker, Miss, Nothing);
+            game.ScheduleInput(beat, 2f, LaunchParty.InputAction_BasicPress, JustPartyCracker, Miss, Nothing);
 
             MultiSound.Play(new MultiSound.Sound[]
             {
@@ -102,7 +102,7 @@ namespace HeavenStudio.Games.Scripts_LaunchParty
 
         public void InitBell(double beat)
         {
-            game.ScheduleInput(beat, 2f, InputType.STANDARD_DOWN, JustBell, Miss, Nothing);
+            game.ScheduleInput(beat, 2f, LaunchParty.InputAction_BasicPress, JustBell, Miss, Nothing);
 
             MultiSound.Play(new MultiSound.Sound[]
             {
@@ -134,7 +134,7 @@ namespace HeavenStudio.Games.Scripts_LaunchParty
 
         public void InitBowlingPin(double beat)
         {
-            game.ScheduleInput(beat, 2f, InputType.STANDARD_DOWN, JustBowlingPin, Miss, Nothing);
+            game.ScheduleInput(beat, 2f, LaunchParty.InputAction_BasicPress, JustBowlingPin, Miss, Nothing);
 
             MultiSound.Play(new MultiSound.Sound[]
             {

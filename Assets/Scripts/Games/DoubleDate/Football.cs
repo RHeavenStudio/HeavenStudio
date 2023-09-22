@@ -39,7 +39,7 @@ namespace HeavenStudio.Games.Scripts_DoubleDate
 
         public void Init(double beat)
         {
-            game.ScheduleInput(beat, 1.5f, InputType.STANDARD_DOWN, Just, Miss, Empty);
+            game.ScheduleInput(beat, 1.5f, DoubleDate.InputAction_FlickPress, Just, Miss, Empty);
             path = game.GetPath("FootBallInNoHit");  // there's a second path for footballs that hit the weasels, use that if the weasels haven't been hit recently
             UpdateLastRealPos();
             pathStartBeat = beat - 1f;
