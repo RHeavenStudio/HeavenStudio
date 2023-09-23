@@ -13,6 +13,7 @@ using HeavenStudio.Editor.Track;
 
 namespace HeavenStudio.Editor
 {
+    // I hate the antichrist.
     public class GridGameSelector : MonoBehaviour
     {
         public Minigames.Minigame SelectedMinigame;
@@ -39,6 +40,7 @@ namespace HeavenStudio.Editor
         private bool gameOpen;
         private float selectorHeight;
         private float eventSize;
+        private float timeSinceUpdateIndex = 0.0f;
 
         public static GridGameSelector instance;
 
@@ -93,6 +95,7 @@ namespace HeavenStudio.Editor
                 currentEventIndex = 0;
 
             CurrentSelected.transform.DOLocalMoveY(eventsParent.transform.GetChild(currentEventIndex).localPosition.y + eventsParent.transform.localPosition.y, 0.35f).SetEase(Ease.OutExpo);
+            timeSinceUpdateIndex = 0;
         }
 
         private void UpdateScrollPosition()
@@ -115,6 +118,13 @@ namespace HeavenStudio.Editor
                 Mathf.Lerp(lastPos.y, end, 12 * Time.deltaTime),
                 lastPos.z
             );
+
+            timeSinceUpdateIndex += Time.deltaTime;
+
+            CurrentSelected.GetComponent<RectTransform>().anchoredPosition =
+                new Vector2(
+                    (Mathf.Cos(timeSinceUpdateIndex * 2.65f) * 12) + 12,
+                    CurrentSelected.GetComponent<RectTransform>().anchoredPosition.y);
             SetColors();
         }
 
@@ -192,9 +202,23 @@ namespace HeavenStudio.Editor
             //CurrentSelected.GetComponent<Image>().color = EditorTheme.theme.properties.EventSelectedCol.Hex2RGB();
 
             for (int i = 0; i < eventsParent.transform.childCount; i++)
-                            eventsParent.GetChild(i).GetComponent<TMP_Text>().color = EditorTheme.theme.properties.EventNormalCol.Hex2RGB();
-
-            eventsParent.GetChild(currentEventIndex).GetComponent<TMP_Text>().color = EditorTheme.theme.properties.EventSelectedCol.Hex2RGB();
+            {
+                var eventTxt = eventsParent.GetChild(i).GetComponent<TMP_Text>();
+                var goalX = 25;
+                if (i == currentEventIndex)
+                {
+                    eventTxt.color = EditorTheme.theme.properties.EventSelectedCol.Hex2RGB();
+                    goalX = 45 + 16;
+                }
+                else
+                {
+                    eventTxt.color = EditorTheme.theme.properties.EventNormalCol.Hex2RGB();
+                }
+                eventTxt.rectTransform.anchoredPosition =
+                    new Vector2(
+                        Mathf.Lerp(eventTxt.rectTransform.anchoredPosition.x, goalX, Time.deltaTime * 12f),
+                        eventTxt.rectTransform.anchoredPosition.y);
+            }
         }
 
         // TODO: find the equation to get the sizes automatically, nobody's been able to figure one out yet (might have to be manual?)

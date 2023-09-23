@@ -34,6 +34,7 @@ namespace HeavenStudio.Editor.Track
 
         [Header("Components")]
         [SerializeField] private RawImage waveform;
+        [SerializeField] private RawImage layerBG;
         public Texture2D resizeCursor;
 
         public float WidthPerBeat { get; private set; } = 100.0f;
@@ -142,6 +143,7 @@ namespace HeavenStudio.Editor.Track
         [SerializeField] private TMP_Text TimelinePlaybackBeat;
         public ScrollRect TimelineScroll;
         public RectTransform TimelineContent;
+        public RectTransform EventContent;
         [SerializeField] private ZoomComponent zoomComponent;
         [SerializeField] private RectTransform TimelineSongPosLineRef;
         [SerializeField] private RectTransform TimelineEventObjRef;
@@ -222,6 +224,13 @@ namespace HeavenStudio.Editor.Track
         public void Init()
         {
             instance = this;
+
+            for (var i = 0; i < LayerCount; i++)
+            {
+                var bg = Instantiate(layerBG.gameObject, layerBG.rectTransform.parent).GetComponent<RawImage>();
+                if (i % 2 == 0) bg.enabled = false;
+            }
+            layerBG.gameObject.SetActive(false);
 
             LoadRemix();
 
@@ -389,10 +398,10 @@ namespace HeavenStudio.Editor.Track
 
         private void Update()
         {
-            RectTransformUtility.ScreenPointToLocalPointInRectangle(TimelineContent, Input.mousePosition, Editor.instance.EditorCamera, out relativeMousePos);
+            RectTransformUtility.ScreenPointToLocalPointInRectangle(EventContent, Input.mousePosition, Editor.instance.EditorCamera, out relativeMousePos);
 
             MousePos2Beat = relativeMousePos.x / PixelsPerBeat;
-            MousePos2Layer = Mathf.Clamp(Mathf.FloorToInt(-(relativeMousePos.y - TimelineEventsHolder.offsetMax.y) / LayerHeight()), 0, LayerCount - 1);
+            MousePos2Layer = Mathf.Clamp(Mathf.FloorToInt(-(relativeMousePos.y) / LayerHeight()), 0, LayerCount - 1);
 
             Conductor cond = Conductor.instance;
             // waveform.rectTransform.anchoredPosition = new Vector2(
@@ -503,7 +512,7 @@ namespace HeavenStudio.Editor.Track
             LayersRect.GetWorldCorners(LayerCorners);
 
             TimelineBlockManager.Instance.UpdateMarkers();
-            BoxSelection.instance.UpdateSelection();
+            BoxSelection.instance.LayerSelectUpdate();
         }
 
         public static float GetScaleModifier()
@@ -647,7 +656,7 @@ namespace HeavenStudio.Editor.Track
 
         public bool CheckIfMouseInTimeline()
         {
-            return (this.gameObject.activeSelf && RectTransformUtility.RectangleContainsScreenPoint(TimelineEventGrid, Input.mousePosition, Editor.instance.EditorCamera));
+            return (this.gameObject.activeSelf && RectTransformUtility.RectangleContainsScreenPoint(EventContent, Input.mousePosition, Editor.instance.EditorCamera));
         }
 
         #endregion
@@ -999,6 +1008,11 @@ namespace HeavenStudio.Editor.Track
         public float LayerHeight()
         {
             return LayersRect.rect.height / LayerCount;
+        }
+
+        public float LayerToY(int layer)
+        {
+            return (-layer * LayerHeight());
         }
 
         const float SpeedSnap = 0.25f;

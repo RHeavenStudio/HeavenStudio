@@ -96,7 +96,7 @@ namespace HeavenStudio.Editor.Track
                 }
             }
 
-            rectTransform.anchoredPosition = new Vector2((float)entity.beat * Timeline.instance.PixelsPerBeat, -entity["track"] * Timeline.instance.LayerHeight());
+            rectTransform.anchoredPosition = new Vector2((float)entity.beat * Timeline.instance.PixelsPerBeat, (int)-entity["track"] * Timeline.instance.LayerHeight());
             resizeGraphic.gameObject.SetActive(resizable);
             eventLabel.text = action.displayName;
 
@@ -110,7 +110,9 @@ namespace HeavenStudio.Editor.Track
 
         public void UpdateMarker()
         {
-            mouseHovering = Timeline.instance.timelineState.selected && Timeline.instance.MousePos2Beat.IsWithin((float)entity.beat, (float)entity.beat + entity.length);
+            mouseHovering = Timeline.instance.timelineState.selected && 
+                Timeline.instance.MousePos2Beat.IsWithin((float)entity.beat, (float)entity.beat + entity.length) &&
+                Timeline.instance.MousePos2Layer == (int)entity["track"];
 
             Icon.rectTransform.sizeDelta = new Vector2(Timeline.instance.LayerHeight() - 8, Timeline.instance.LayerHeight() - 8);
             eventLabel.rectTransform.offsetMin = new Vector2(Icon.rectTransform.anchoredPosition.x + Icon.rectTransform.sizeDelta.x + 4, eventLabel.rectTransform.offsetMin.y);
@@ -277,7 +279,7 @@ namespace HeavenStudio.Editor.Track
             }
 
             rectTransform.sizeDelta = new Vector2(rectTransform.sizeDelta.x, Timeline.instance.LayerHeight());
-            rectTransform.anchoredPosition = new Vector2((float)entity.beat * Timeline.instance.PixelsPerBeat, -entity["track"] * Timeline.instance.LayerHeight());
+            rectTransform.anchoredPosition = new Vector2((float)entity.beat * Timeline.instance.PixelsPerBeat, -(int)entity["track"] * Timeline.instance.LayerHeight());
         }
 
         public void BeginMoving(bool setMovedEntity = true)

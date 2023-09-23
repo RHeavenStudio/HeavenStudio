@@ -69,12 +69,22 @@ namespace HeavenStudio.Editor.Track
             var timeLeft = timeline.leftSide;
             var timeRight = timeline.rightSide;
 
+            var markersActiveBeats = new List<float>();
+            foreach (var marker in EntityMarkers.Values)
+            {
+                if (marker.selected || marker.moving)
+                {
+                    markersActiveBeats.Add((float)marker.entity.beat);
+                }
+            }
+
             for (var i = 0; i < GameManager.instance.Beatmap.Entities.Count; i++)
             {
                 var entity = GameManager.instance.Beatmap.Entities[i];
 
                 var vLeft = entity.beat + entity.length >= timeLeft;
                 var vRight = entity.beat < timeRight;
+
                 var active = vLeft && vRight;
 
                 var containsMarker = EntityMarkers.ContainsKey(entity.uid);
