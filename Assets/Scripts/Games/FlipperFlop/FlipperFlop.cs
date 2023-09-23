@@ -1,4 +1,5 @@
 using HeavenStudio.Util;
+using HeavenStudio.InputSystem;
 using System;
 using System.Collections.Generic;
 using UnityEngine;
@@ -71,7 +72,7 @@ namespace HeavenStudio.Games.Loaders
                     defaultLength = 4f,
                     resizable = true
                 },
-                new GameAction("bop", "Bop") 
+                new GameAction("bop", "Bop")
                 {
                     function = delegate {var e = eventCaller.currentEntity; FlipperFlop.instance.Bop(e.beat, e.length, e["whoBops"], e["whoBopsAuto"]); },
                     resizable = true,
@@ -97,9 +98,9 @@ namespace HeavenStudio.Games.Loaders
                     defaultLength = 0.5f
                 }
             },
-            new List<string>() {"ntr", "keep"},
+            new List<string>() { "ntr", "keep" },
             "rvlseal", "en",
-            new List<string>() {"en"}
+            new List<string>() { "en" }
             );
         }
     }
@@ -132,6 +133,7 @@ namespace HeavenStudio.Games
         float lastCameraXPos;
         float currentCameraXPos;
         bool isWalking;
+        bool readyRoll;
         public GameEvent bop = new GameEvent();
         bool goBopFlip;
         bool goBopTuck;
@@ -182,6 +184,34 @@ namespace HeavenStudio.Games
         }
         public static FlipperFlop instance;
 
+        const int IAAltDownCat = 4;
+
+        protected static bool IA_TouchPress(out double dt)
+        {
+            return PlayerInput.GetTouchDown(InputController.ActionsTouch.Tap, out dt)
+                && (instance.IsExpectingInputNow(InputAction_Nrm) || !(instance.IsExpectingInputNow(InputAction_Alt) || instance.readyRoll));
+        }
+
+        protected static bool IA_PadAltPress(out double dt)
+        {
+            return PlayerInput.GetPadDown(InputController.ActionsPad.South, out dt);
+        }
+        protected static bool IA_BatonAltPress(out double dt)
+        {
+            return PlayerInput.GetSqueezeDown(out dt);
+        }
+        protected static bool IA_TouchAltPress(out double dt)
+        {
+            return PlayerInput.GetSlide(out dt);
+        }
+
+        public static PlayerInput.InputAction InputAction_Alt =
+            new("RvlSealAlt", new int[] { IAAltDownCat, IAAltDownCat, IAAltDownCat },
+            IA_PadAltPress, IA_TouchAltPress, IA_BatonAltPress);
+        public static PlayerInput.InputAction InputAction_Nrm =
+            new("RvlSealNrm", new int[] { IAPressCat, IAPressCat, IAPressCat },
+            IA_PadBasicPress, IA_TouchPress, IA_BatonBasicPress);
+
         void Awake()
         {
             instance = this;
@@ -203,7 +233,7 @@ namespace HeavenStudio.Games
         private void Update()
         {
             var cond = Conductor.instance;
-            if(cond.isPlaying && !cond.isPaused)
+            if (cond.isPlaying && !cond.isPaused)
             {
                 if (cond.ReportBeat(ref bop.lastReportedBeat, bop.startBeat % 1))
                 {
@@ -221,14 +251,14 @@ namespace HeavenStudio.Games
                         isWalking = false;
                     }
                 }
-                if ((PlayerInput.Pressed() && !IsExpectingInputNow(InputType.STANDARD_DOWN)) || (PlayerInput.AltPressed() && !IsExpectingInputNow(InputType.STANDARD_ALT_DOWN)))
+                if ((PlayerInput.GetIsAction(InputAction_Nrm) && !IsExpectingInputNow(InputAction_Nrm)) || (PlayerInput.GetIsAction(InputAction_Alt) && !IsExpectingInputNow(InputAction_Alt)))
                 {
                     flipperPlayer.Flip(false, false, false, true);
                 }
                 if (queuedInputs.Count > 0)
                 {
-                    foreach (var input in queuedInputs) 
-                    { 
+                    foreach (var input in queuedInputs)
+                    {
                         QueueFlips(input.beat, input.length, input.roll, input.uh, input.thatsIt, input.appreciation, input.heart, input.thatsItBarberShop);
                     }
                     queuedInputs.Clear();
@@ -301,7 +331,7 @@ namespace HeavenStudio.Games
 
         public void ToggleTuck()
         {
-            captainTuckAnim.gameObject.SetActive(!captainTuckAnim.gameObject.active);
+            captainTuckAnim.gameObject.SetActive(!captainTuckAnim.gameObject.activeSelf);
         }
 
         public void BumpIntoOtherSeal(bool toTheLeft)
@@ -408,11 +438,12 @@ namespace HeavenStudio.Games
             {
                 if (roll)
                 {
-                    ScheduleInput(beat - 1, 1 + i, InputType.STANDARD_ALT_DOWN, JustFlipperRoll, MissFlipperRoll, Nothing);
+                    ScheduleInput(beat - 1, 1 + i, InputAction_Alt, JustFlipperRoll, MissFlipperRoll, Nothing);
                     queuedMovements.Add(beat + i);
                     BeatAction.New(instance, new List<BeatAction.Action>()
                     {
-                        new BeatAction.Action(beat + i - 0.5f, delegate { moveLeft = flippers[0].left;})
+                        new BeatAction.Action(beat + i - NgEarlyTime() - 1.5, delegate { readyRoll = true; }),
+                        new BeatAction.Action(beat + i - 0.5, delegate { moveLeft = flippers[0].left; readyRoll = true; }),
                     });
                     foreach (var flipper in flippers)
                     {
@@ -469,9 +500,9 @@ namespace HeavenStudio.Games
                                     SoundByte.PlayOneShotGame("flipperFlop/appreciation/thatsit1");
                                     captainTuckFaceAnim.DoScaledAnimationAsync("CaptainTuckSpeakExpression", 0.5f);
                                 }),
-                                new BeatAction.Action(beat + i, delegate 
-                                { 
-                                    SoundByte.PlayOneShotGame("flipperFlop/appreciation/thatsit2"); 
+                                new BeatAction.Action(beat + i, delegate
+                                {
+                                    SoundByte.PlayOneShotGame("flipperFlop/appreciation/thatsit2");
                                     captainTuckFaceAnim.DoScaledAnimationAsync("CaptainTuckSpeakExpression", 0.5f);
                                     SoundByte.PlayOneShotGame(soundToPlay);
                                     captainTuckAnim.DoScaledAnimationAsync("CaptainBop", 0.5f);
@@ -500,7 +531,7 @@ namespace HeavenStudio.Games
                                 }
                                 CaptainTuckBop();
 
-                                SoundByte.PlayOneShotGame(voiceLine); 
+                                SoundByte.PlayOneShotGame(voiceLine);
                             }),
                         });
                     }
@@ -556,7 +587,11 @@ namespace HeavenStudio.Games
                 }
                 else
                 {
-                    ScheduleInput(beat - 1, 1 + i, InputType.STANDARD_DOWN, JustFlip, MissFlip, Nothing);
+                    ScheduleInput(beat - 1, 1 + i, InputAction_Nrm, JustFlip, MissFlip, Nothing);
+                    BeatAction.New(instance, new List<BeatAction.Action>()
+                    {
+                        new BeatAction.Action(beat + i - NgEarlyTime() - 1, delegate { readyRoll = false; }),
+                    });
                     foreach (var flipper in flippers)
                     {
                         BeatAction.New(instance, new List<BeatAction.Action>()
@@ -565,6 +600,13 @@ namespace HeavenStudio.Games
                         });
                     }
                 }
+            }
+            if (roll)
+            {
+                BeatAction.New(instance, new List<BeatAction.Action>()
+                {
+                    new BeatAction.Action(beat + length + NgLateTime() - 1, delegate { readyRoll = false; }),
+                });
             }
             if (uh > 0 && flopCount != 4)
             {
@@ -579,7 +621,7 @@ namespace HeavenStudio.Games
                         new BeatAction.Action(beat + length + i, delegate {
                             string voiceLineToPlay = voiceLine;
                             string failVoiceLineToPlay = failVoiceLine;
-                            if (missed) 
+                            if (missed)
                             {
                                 voiceLineToPlay = failVoiceLineToPlay;
                                 currentCaptainBop = CaptainTuckBopType.Miss;
@@ -592,14 +634,14 @@ namespace HeavenStudio.Games
                             }
 
                             CaptainTuckBop();
-                            SoundByte.PlayOneShotGame(voiceLineToPlay); 
+                            SoundByte.PlayOneShotGame(voiceLineToPlay);
                         }),
                     });
                 }
                 BeatAction.New(instance, new List<BeatAction.Action>()
                 {
-                    new BeatAction.Action(beat + length + uh, delegate 
-                    { 
+                    new BeatAction.Action(beat + length + uh, delegate
+                    {
                         AppreciationVoiceLine(beat + length + uh, appreciation, heart);
                         if (!missed && appreciation != (int)AppreciationType.None)
                         {
@@ -611,7 +653,7 @@ namespace HeavenStudio.Games
                             captainTuckFaceAnim.Play("CaptainTuckNeutralExpression", 0, 0);
                         }
                         CaptainTuckBop();
-                        missed = false; 
+                        missed = false;
                     }),
                     new BeatAction.Action(beat + length + uh + 1f, delegate
                     {
@@ -765,9 +807,9 @@ namespace HeavenStudio.Games
                 new MultiSound.Sound("flipperFlop/ding", beat + 1f),
             }, forcePlay: true);
 
-            ScheduleInput(beat, 2, InputType.STANDARD_DOWN, JustFlip, MissFlip, Nothing);
-            ScheduleInput(beat, 2.5f, InputType.STANDARD_DOWN, JustFlip, MissFlip, Nothing);
-            ScheduleInput(beat, 3, InputType.STANDARD_DOWN, JustFlip, MissFlip, Nothing);
+            ScheduleInput(beat, 2, InputAction_Nrm, JustFlip, MissFlip, Nothing);
+            ScheduleInput(beat, 2.5f, InputAction_Nrm, JustFlip, MissFlip, Nothing);
+            ScheduleInput(beat, 3, InputAction_Nrm, JustFlip, MissFlip, Nothing);
             foreach (var flipper in flippers)
             {
                 BeatAction.New(instance, new List<BeatAction.Action>()
@@ -779,6 +821,7 @@ namespace HeavenStudio.Games
             }
             BeatAction.New(instance, new List<BeatAction.Action>()
             {
+                new BeatAction.Action(beat + 3 - NgEarlyTime(), delegate {readyRoll = false; }),
                 new BeatAction.Action(beat + 2, delegate {captainTuckAnim.DoScaledAnimationAsync("CaptainBop", 0.5f); }),
                 new BeatAction.Action(beat + 3, delegate {captainTuckAnim.DoScaledAnimationAsync("CaptainBop", 0.5f); }),
             });
@@ -823,9 +866,9 @@ namespace HeavenStudio.Games
                 new BeatAction.Action(beat - 0.25f, delegate { captainTuckFaceAnim.DoScaledAnimationAsync("CaptainTuckSpeakExpression", 0.5f); }),
                 new BeatAction.Action(beat, delegate { captainTuckFaceAnim.DoScaledAnimationAsync("CaptainTuckSpeakExpression", 0.5f); }),
                 new BeatAction.Action(beat + 0.5f, delegate { captainTuckFaceAnim.DoScaledAnimationAsync("CaptainTuckSpeakExpression", 0.0625f); }),
-                new BeatAction.Action(beat + 2f, delegate 
-                { 
-                    captainTuckFaceAnim.DoScaledAnimationAsync("CaptainTuckSpeakExpression", 0.5f); 
+                new BeatAction.Action(beat + 2f, delegate
+                {
+                    captainTuckFaceAnim.DoScaledAnimationAsync("CaptainTuckSpeakExpression", 0.5f);
                     if (remix5)
                     {
                         foreach (var flipper in flippers)
@@ -837,7 +880,7 @@ namespace HeavenStudio.Games
                 }),
                 new BeatAction.Action(beat + 2.25f, delegate { captainTuckFaceAnim.DoScaledAnimationAsync("CaptainTuckSpeakExpression", 0.5f); }),
                 new BeatAction.Action(beat + 2.5f, delegate { captainTuckFaceAnim.DoScaledAnimationAsync("CaptainTuckSpeakExpression", 0.5f); }),
-                new BeatAction.Action(beat + 3f, delegate 
+                new BeatAction.Action(beat + 3f, delegate
                 {
                     if (remix5) return;
                     foreach (var flipper in flippers)
@@ -1082,6 +1125,6 @@ namespace HeavenStudio.Games
             missed = true;
         }
 
-        public void Nothing(PlayerActionEvent caller) {}
+        public void Nothing(PlayerActionEvent caller) { }
     }
 }

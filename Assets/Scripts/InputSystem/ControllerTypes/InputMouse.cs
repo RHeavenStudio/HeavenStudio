@@ -35,9 +35,10 @@ namespace HeavenStudio.InputSystem
 {
     public class InputMouse : InputController
     {
-        const double FlickMarginTime = 0.05;
-        const double BigMoveMarginSpd = 0.1;
-        const double SmallMoveMarginSpd = 0.025;
+        const double SlideMarginTime = 0.25;
+        const double BigMoveMarginSpd = 0.15;
+        const double SmallMoveMarginSpd = 0.02;
+        const double SlideDist = 0.75;
 
         private static readonly KeyCode[] keyCodes = Enum.GetValues(typeof(KeyCode))
             .Cast<KeyCode>()
@@ -79,7 +80,7 @@ namespace HeavenStudio.InputSystem
         Vector3 deltaPointerPos, lastDeltaPointerPos;
         double timeMoveChange, timeDirectionChange;
         byte dirLeftRight, dirUpDown;
-        bool hasFlicked, hasSwiped, isInMove;
+        bool hasFlicked, hasSwiped, isInMove, isInSwipe;
 
         public override void InitializeController()
         {
@@ -107,36 +108,40 @@ namespace HeavenStudio.InputSystem
                 // Debug.Log($"pointer speed: {deltaPointerPos.magnitude}, direction: {deltaPointerPos.normalized}");
                 if (speed >= BigMoveMarginSpd)
                 {
-                    timeMoveChange = Time.realtimeSinceStartupAsDouble;
                     if (!isInMove)
                     {
                         isInMove = true;
+                    }
+                    if ((!isInSwipe)
+                        && (Time.realtimeSinceStartupAsDouble - timeMoveChange <= SlideMarginTime)
+                        && (realPos - startPointerPos).magnitude > SlideDist)
+                    {
                         hasSwiped = true;
-                        // Debug.Log($"just started moving or direction change");
+                        isInSwipe = true;
+                        Debug.Log($"swipe (speed: {speed})");
                     }
                 }
                 else
                 {
-                    if (isInMove && speed < SmallMoveMarginSpd)
+                    if (speed < SmallMoveMarginSpd)
                     {
-                        // Debug.Log($"just stopped moving");
+                        timeMoveChange = Time.realtimeSinceStartupAsDouble;
                         isInMove = false;
+                        isInSwipe = false;
+                        startPointerPos = realPos;
                     }
                 }
             }
 
-            double dMoveChange = Time.realtimeSinceStartupAsDouble - timeMoveChange;
             if (GetActionUp(ControlStyles.Touch, 0, out double dt))
             {
                 isInMove = false;
+                isInSwipe = false;
                 lastRawPointerPos = rawPointerPos;
                 lastRealPos = realPos;
+                startPointerPos = realPos;
                 lastDeltaPointerPos = deltaPointerPos;
-                hasFlicked = dMoveChange < FlickMarginTime && speed >= BigMoveMarginSpd;
-                // if (hasFlicked)
-                // {
-                //     Debug.Log($"flicked (speed: {dMoveChange})");
-                // }
+                hasFlicked = speed >= BigMoveMarginSpd;
             }
         }
 
