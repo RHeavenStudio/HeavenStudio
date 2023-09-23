@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using HeavenStudio.Util;
+using HeavenStudio.InputSystem;
 using System.Diagnostics.CodeAnalysis;
 
 namespace HeavenStudio.Games.Loaders
@@ -198,6 +199,39 @@ namespace HeavenStudio.Games
 
         private List<RandomPress> randomPresses = new();
 
+        const int IALeft = 0;
+        const int IARight = 1;
+
+        protected static bool IA_PadLeft(out double dt)
+        {
+            return PlayerInput.GetPadDown(InputController.ActionsPad.Up, out dt)
+                    || PlayerInput.GetPadDown(InputController.ActionsPad.Down, out dt)
+                    || PlayerInput.GetPadDown(InputController.ActionsPad.Left, out dt)
+                    || PlayerInput.GetPadDown(InputController.ActionsPad.Right, out dt);
+        }
+        protected static bool IA_TouchLeft(out double dt)
+        {
+            return PlayerInput.GetTouchDown(InputController.ActionsTouch.Left, out dt);
+        }
+
+        protected static bool IA_PadRight(out double dt)
+        {
+            return PlayerInput.GetPadDown(InputController.ActionsPad.East, out dt);
+        }
+        protected static bool IA_TouchRight(out double dt)
+        {
+            return PlayerInput.GetTouchDown(InputController.ActionsTouch.Right, out dt);
+        }
+
+        public static PlayerInput.InputAction InputAction_Left =
+            new("AgbQuizLeft", new int[] { IALeft, IALeft, IALeft },
+            IA_PadLeft, IA_TouchLeft, IA_BatonBasicPress);
+
+        // Baton Style only has one button
+        public static PlayerInput.InputAction InputAction_Right =
+            new("AgbQuizRight", new int[] { IARight, IARight, IAEmptyCat },
+            IA_PadRight, IA_TouchRight, IA_Empty);
+
         void Awake()
         {
             instance = this;
@@ -225,11 +259,11 @@ namespace HeavenStudio.Games
                 float normalizedBeat = cond.GetPositionFromBeat(playerStartBeat, playerLength);
                 if (normalizedBeat >= 0f && normalizedBeat <= 1f)
                 {
-                    if (PlayerInput.Pressed())
+                    if (PlayerInput.GetIsAction(InputAction_Right))
                     {
                         ContesteePressButton(false);
                     }
-                    if (PlayerInput.GetAnyDirectionDown())
+                    if (PlayerInput.GetIsAction(InputAction_Left))
                     {
                         ContesteePressButton(true);
                     }
@@ -532,11 +566,11 @@ namespace HeavenStudio.Games
                 bool isDpad = relevantInputs[i].datamodel == "quizShow/dPad";
                 if (isDpad)
                 {
-                    ScheduleAutoplayInput(beat, length + inputBeat, InputType.DIRECTION_DOWN, AutoplayDPad, Nothing, Nothing);
+                    ScheduleAutoplayInput(beat, length + inputBeat, InputAction_Left, AutoplayDPad, Nothing, Nothing);
                 }
                 else
                 {
-                    ScheduleAutoplayInput(beat, length + inputBeat, InputType.STANDARD_DOWN, AutoplayAButton, Nothing, Nothing);
+                    ScheduleAutoplayInput(beat, length + inputBeat, InputAction_Right, AutoplayAButton, Nothing, Nothing);
                 }
             }
 

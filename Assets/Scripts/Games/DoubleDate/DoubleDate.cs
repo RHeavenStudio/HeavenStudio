@@ -97,7 +97,7 @@ namespace HeavenStudio.Games
         }
 
         public static PlayerInput.InputAction InputAction_TouchPress =
-            new("RvlDateTouchRelease", new int[] { IAEmptyCat, IAPressCat, IAEmptyCat },
+            new("RvlDateTouchPress", new int[] { IAEmptyCat, IAPressCat, IAEmptyCat },
             IA_Empty, IA_TouchBasicPress, IA_Empty);
         public static PlayerInput.InputAction InputAction_TouchRelease =
             new("RvlDateTouchRelease", new int[] { IAEmptyCat, IAReleaseCat, IAEmptyCat },

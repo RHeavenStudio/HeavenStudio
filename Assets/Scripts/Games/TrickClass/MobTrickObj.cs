@@ -19,7 +19,6 @@ namespace HeavenStudio.Games.Scripts_TrickClass
         public int type;
 
         [NonSerialized] public BezierCurve3D curve;
-        PlayerActionEvent hitProg;
 
         private TrickClass game;
 
@@ -33,7 +32,7 @@ namespace HeavenStudio.Games.Scripts_TrickClass
 
             float flyPos = cond.GetPositionFromBeat(startBeat, flyBeats);
             transform.position = curve.GetPoint(flyPos);
-            hitProg = game.ScheduleInput(startBeat, dodgeBeats, InputType.STANDARD_DOWN, DodgeJustOrNg, DodgeMiss, DodgeThrough, CanDodge);
+            game.ScheduleInput(startBeat, dodgeBeats, TrickClass.InputAction_FlickPress, DodgeJustOrNg, DodgeMiss, DodgeThrough, CanDodge);
         }
 
         // Update is called once per frame

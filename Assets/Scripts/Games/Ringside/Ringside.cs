@@ -1,4 +1,5 @@
 using HeavenStudio.Util;
+using HeavenStudio.InputSystem;
 using System;
 using System.Collections.Generic;
 using UnityEngine;
@@ -162,6 +163,26 @@ namespace HeavenStudio.Games
 
         public static Ringside instance;
 
+        const int IAAltDownCat = 4;
+
+        protected static bool IA_PadAltPress(out double dt)
+        {
+            return PlayerInput.GetPadDown(InputController.ActionsPad.South, out dt);
+        }
+        protected static bool IA_BatonAltPress(out double dt)
+        {
+            return PlayerInput.GetSqueezeDown(out dt);
+        }
+        protected static bool IA_TouchAltPress(out double dt)
+        {
+            return PlayerInput.GetTouchDown(InputController.ActionsTouch.Tap, out dt)
+                && instance.IsExpectingInputNow(InputAction_Alt);
+        }
+
+        public static PlayerInput.InputAction InputAction_Alt =
+            new("RvlInterviewAlt", new int[] { IAAltDownCat, IAAltDownCat, IAAltDownCat },
+            IA_PadAltPress, IA_TouchAltPress, IA_BatonAltPress);
+
         void OnDestroy()
         {
             if (queuedPoses.Count > 0) queuedPoses.Clear();
@@ -217,15 +238,29 @@ namespace HeavenStudio.Games
                         }
                     }
                 }
-                if (PlayerInput.Pressed() && !IsExpectingInputNow(InputType.STANDARD_DOWN) && !shouldNotInput)
+                if (PlayerInput.GetIsAction(InputAction_BasicPress) && !IsExpectingInputNow(InputAction_BasicPress) && !shouldNotInput)
+                {
+                    if ((PlayerInput.CurrentControlStyle != InputController.ControlStyles.Touch)
+                        || (PlayerInput.CurrentControlStyle == InputController.ControlStyles.Touch && !IsExpectingInputNow(InputAction_Alt)))
+                    {
+                        Ringside.instance.ScoreMiss(0.5);
+
+                        wrestlerAnim.DoScaledAnimationAsync("YeMiss", 0.25f);
+                        SoundByte.PlayOneShotGame($"ringside/confusedanswer");
+                        if (reporterAnim.IsPlayingAnimationName("IdleReporter")) reporterAnim.Play("IdleLate", 0, 0);
+                    }
+                }
+                if ( PlayerInput.CurrentControlStyle == InputController.ControlStyles.Touch
+                    && PlayerInput.GetIsAction(InputAction_FlickPress) && !IsExpectingInputNow(InputAction_FlickPress) && !shouldNotInput)
                 {
                     Ringside.instance.ScoreMiss(0.5);
-
-                    wrestlerAnim.DoScaledAnimationAsync("YeMiss", 0.25f);
-                    SoundByte.PlayOneShotGame($"ringside/confusedanswer");
-                    if (reporterAnim.IsPlayingAnimationName("IdleReporter")) reporterAnim.Play("IdleLate", 0, 0);
+                    
+                    SoundByte.PlayOneShotGame($"ringside/muscles2");
+                    wrestlerAnim.DoScaledAnimationAsync("BigGuyTwo", 0.5f);
+                    reporterAnim.Play("FlinchReporter", 0, 0);
+                    SoundByte.PlayOneShotGame("ringside/barely");
                 }
-                if (PlayerInput.AltPressed() && !IsExpectingInputNow(InputType.STANDARD_ALT_DOWN) && !shouldNotInput)
+                if (PlayerInput.GetIsAction(InputAction_Alt) && !IsExpectingInputNow(InputAction_Alt) && !shouldNotInput)
                 {
                     Ringside.instance.ScoreMiss(0.5);
                     
@@ -233,7 +268,6 @@ namespace HeavenStudio.Games
                     wrestlerAnim.Play($"Pose{randomPose}", 0, 0);
                     reporterAnim.Play("FlinchReporter", 0, 0);
                     SoundByte.PlayOneShotGame($"ringside/yell{UnityEngine.Random.Range(1, 7)}Raw");
-                    SoundByte.PlayOneShotGame("ringside/barely");
                     wrestlerTransform.localScale = new Vector3(1.1f, 1.1f, 1f);
                     BeatAction.New(instance, new List<BeatAction.Action>()
                     {
@@ -391,7 +425,7 @@ namespace HeavenStudio.Games
                 new MultiSound.Sound($"ringside/that{currentQuestion}", beat + 0.5f),
                 new MultiSound.Sound($"ringside/true{currentQuestion}", beat + 1f),
             }, forcePlay: true);
-            ScheduleInput(beat, 2f, InputType.STANDARD_DOWN, JustQuestion, Miss, Nothing);
+            ScheduleInput(beat, 2f, InputAction_BasicPress, JustQuestion, Miss, Nothing);
             BeatAction.New(instance, new List<BeatAction.Action>()
             {
                 new BeatAction.Action(beat + 0.5f, delegate { reporterAnim.DoScaledAnimationAsync("ThatTrue", 0.5f); }),
@@ -416,8 +450,8 @@ namespace HeavenStudio.Games
                 new MultiSound.Sound($"ringside/guy{currentQuestion}", beat + 2f),
             }, forcePlay: true);
 
-            ScheduleInput(beat, 2.5f, InputType.STANDARD_DOWN, JustBigGuyFirst, MissBigGuyOne, Nothing);
-            ScheduleInput(beat, 3f, InputType.STANDARD_DOWN, JustBigGuySecond, MissBigGuyTwo, Nothing);
+            ScheduleInput(beat, 2.5f, InputAction_BasicPress, JustBigGuyFirst, MissBigGuyOne, Nothing);
+            ScheduleInput(beat, 3f, InputAction_FlickPress, JustBigGuySecond, MissBigGuyTwo, Nothing);
             BeatAction.New(instance, new List<BeatAction.Action>()
             {
                 new BeatAction.Action(beat + 2f, delegate { reporterAnim.Play("True", 0, 0); }),
@@ -617,7 +651,7 @@ namespace HeavenStudio.Games
 
         public void PoseCheck(double beat)
         {
-            ScheduleInput(beat, 2f, InputType.STANDARD_ALT_DOWN, JustPoseForTheFans, MissPose, Nothing);
+            ScheduleInput(beat, 2f, InputAction_Alt, JustPoseForTheFans, MissPose, Nothing);
         }
 
         public void ChangeFlashColor(Color color, float beats)

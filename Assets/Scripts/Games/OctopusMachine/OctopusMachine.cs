@@ -428,15 +428,15 @@ namespace HeavenStudio.Games
             var queuedInputs = new List<BeatAction.Action>();
             foreach (var squeeze in queuedSqueezes) {
                 queuedInputs.Add(new BeatAction.Action(beat + squeeze, delegate { octopodes[1].OctoAction("Squeeze"); }));
-                ScheduleInput(beat, beatInterval + squeeze, InputType.STANDARD_DOWN, SqueezeHit, Miss, Miss);
+                ScheduleInput(beat, beatInterval + squeeze, InputAction_BasicPress, SqueezeHit, Miss, Miss);
             }
             foreach (var release in queuedReleases) {
                 queuedInputs.Add(new BeatAction.Action(beat + release, delegate { octopodes[1].OctoAction("Release"); }));
-                ScheduleInput(beat, beatInterval + release, InputType.STANDARD_UP, ReleaseHit, Miss, Miss);
+                ScheduleInput(beat, beatInterval + release, InputAction_BasicRelease, ReleaseHit, Miss, Miss);
             }
             foreach (var pop in queuedPops) {
                 queuedInputs.Add(new BeatAction.Action(beat + pop, delegate { octopodes[1].OctoAction("Pop"); }));
-                ScheduleInput(beat, beatInterval + pop, InputType.STANDARD_UP, PopHit, Miss, Miss);
+                ScheduleInput(beat, beatInterval + pop, InputAction_FlickRelease, PopHit, Miss, Miss);
             }
             queuedSqueezes.Clear();
             queuedReleases.Clear();
