@@ -89,6 +89,7 @@ namespace HeavenStudio.InputSystem
 
         public override void UpdateState()
         {
+            if (GameManager.instance == null) return;
             Camera cam = GameManager.instance.CursorCam;
 
             hasFlicked = false;
