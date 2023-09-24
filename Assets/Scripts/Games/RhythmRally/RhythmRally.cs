@@ -374,7 +374,7 @@ namespace HeavenStudio.Games
             {
                 for (int i = 0; i < length; i++)
                 {
-                    BeatAction.New(instance.gameObject, new List<BeatAction.Action>()
+                    BeatAction.New(instance, new List<BeatAction.Action>()
                     {
                         new BeatAction.Action(beat + i, delegate
                         {
@@ -500,7 +500,7 @@ namespace HeavenStudio.Games
         {
             if (speedChange == RallySpeed.Fast)
             {
-                BeatAction.New(gameObject, new List<BeatAction.Action>()
+                BeatAction.New(this, new List<BeatAction.Action>()
                 {
                     new BeatAction.Action(beat + 2f, delegate { Serve(beat + 2f, RallySpeed.Fast); })
                 });
@@ -538,7 +538,7 @@ namespace HeavenStudio.Games
                 double beatToSpawn = beat + i;
                 servesToPerform.Add( new BeatAction.Action(beatToSpawn, delegate { Serve(beatToSpawn, RallySpeed.SuperFast); }) );
             }
-            BeatAction.New(gameObject, servesToPerform);
+            BeatAction.New(this, servesToPerform);
         }
     }
 }

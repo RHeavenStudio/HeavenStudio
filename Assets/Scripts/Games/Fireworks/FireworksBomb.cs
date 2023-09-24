@@ -40,7 +40,7 @@ namespace HeavenStudio.Games.Scripts_Fireworks
         {
             anim.DoScaledAnimationAsync("ExplodeBomb", 0.25f);
             exploded = true;
-            BeatAction.New(game.gameObject, new List<BeatAction.Action>()
+            BeatAction.New(game, new List<BeatAction.Action>()
             {
                 new BeatAction.Action(startBeat + 3f, delegate { Destroy(gameObject); })
             });

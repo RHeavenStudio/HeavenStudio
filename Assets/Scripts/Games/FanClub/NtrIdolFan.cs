@@ -196,7 +196,7 @@ namespace HeavenStudio.Games.Scripts_FanClub
             clappingStartTime = cond.songPositionInBeatsAsDouble;
 
             if (doCharge)
-                BeatAction.New(this.gameObject, new List<BeatAction.Action>()
+                BeatAction.New(this, new List<BeatAction.Action>()
                 {
                     new BeatAction.Action(cond.songPositionInBeatsAsDouble + 0.1f, delegate { 
                         if (PlayerInput.Pressing() || autoplayRelease > 0f)
@@ -209,7 +209,7 @@ namespace HeavenStudio.Games.Scripts_FanClub
 
             if (autoplayRelease > 0f && !doCharge)
             {
-                BeatAction.New(this.gameObject, new List<BeatAction.Action>()
+                BeatAction.New(this, new List<BeatAction.Action>()
                 {
                     new BeatAction.Action(cond.songPositionInBeatsAsDouble + autoplayRelease, delegate { 
                         animator.Play("FanFree", -1, 0);

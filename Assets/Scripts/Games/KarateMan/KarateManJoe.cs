@@ -276,7 +276,7 @@ namespace HeavenStudio.Games.Scripts_KarateMan
         public void ForceFailCombo(double beat)
         {
             if (inCombo) return;
-            BeatAction.New(gameObject, new List<BeatAction.Action>()
+            BeatAction.New(this, new List<BeatAction.Action>()
             {
                 new BeatAction.Action(beat, delegate { Punch(1); inCombo = true; inComboId = -1; shouldComboId = -1;}),
                 new BeatAction.Action(beat + 0.25f, delegate { Punch(2); }),
@@ -297,7 +297,7 @@ namespace HeavenStudio.Games.Scripts_KarateMan
         {
             wantKick = true;
             unPrepareTime = double.MinValue;
-            BeatAction.New(gameObject, new List<BeatAction.Action>()
+            BeatAction.New(this, new List<BeatAction.Action>()
             {
                 new BeatAction.Action(beat, delegate { 
                     if (wantKick)

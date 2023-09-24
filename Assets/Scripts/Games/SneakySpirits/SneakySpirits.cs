@@ -195,7 +195,7 @@ namespace HeavenStudio.Games
             {
                 ScheduleInput(beat, length * 7, InputType.STANDARD_DOWN, JustNoSlowDown, Miss, Out);
             }
-            BeatAction.New(instance.gameObject, new List<BeatAction.Action>()
+            BeatAction.New(instance, new List<BeatAction.Action>()
             {
                 new BeatAction.Action(beat + length * 3, delegate { ForceReload(); })
             });
@@ -221,7 +221,7 @@ namespace HeavenStudio.Games
             bowAnim.DoScaledAnimationAsync("BowRecoil", 0.25f);
             hasArrowLoaded = false;
             SoundByte.PlayOneShotGame("sneakySpirits/arrowMiss", -1, 2);
-            BeatAction.New(instance.gameObject, new List<BeatAction.Action>()
+            BeatAction.New(instance, new List<BeatAction.Action>()
             {
                 new BeatAction.Action(beat + 3f, delegate { 
                     if (GameManager.instance.currentGame == "sneakySpirits") 
@@ -242,7 +242,7 @@ namespace HeavenStudio.Games
                 GameObject spawnedGhost = Instantiate(ghostMissPrefab, transform);
                 spawnedGhost.SetActive(true);
                 spawnedGhost.GetComponent<Animator>().DoScaledAnimationAsync("GhostBarely", 0.5f);
-                BeatAction.New(instance.gameObject, new List<BeatAction.Action>()
+                BeatAction.New(instance, new List<BeatAction.Action>()
                 {
                     new BeatAction.Action(caller.startBeat + caller.timer + 2f, delegate {
                         if (GameManager.instance.currentGame == "sneakySpirits")
@@ -266,7 +266,7 @@ namespace HeavenStudio.Games
                 GameObject spawnedGhost = Instantiate(ghostMissPrefab, transform);
                 spawnedGhost.SetActive(true);
                 spawnedGhost.GetComponent<Animator>().DoScaledAnimationAsync("GhostBarely", 0.5f);
-                BeatAction.New(instance.gameObject, new List<BeatAction.Action>()
+                BeatAction.New(instance, new List<BeatAction.Action>()
                 {
                     new BeatAction.Action(caller.startBeat + caller.timer + 2f, delegate {
                         if (GameManager.instance.currentGame == "sneakySpirits")
@@ -313,14 +313,14 @@ namespace HeavenStudio.Games
                 slowTree.SetActive(true);
                 normalTree.SetActive(false);
                 Conductor.instance.SetMinigamePitch(0.25f);
+                Conductor.instance.SetMinigamePitch(1f, caller.startBeat + caller.timer + 1f); 
             }
 
             doorAnim.DoScaledAnimationAsync("DoorOpen", 0.5f);
-            BeatAction.New(instance.gameObject, new List<BeatAction.Action>()
+            BeatAction.New(instance, new List<BeatAction.Action>()
             {
                 new BeatAction.Action(caller.startBeat + caller.timer + 1f, delegate 
                 { 
-                    if (slowDown) Conductor.instance.SetMinigamePitch(1f); 
                     doorAnim.DoScaledAnimationAsync("DoorClose", 0.5f);
                     slowRain.SetActive(false);
                     normalRain.SetActive(true);
@@ -336,7 +336,7 @@ namespace HeavenStudio.Games
             GameObject spawnedGhost = Instantiate(ghostMissPrefab, transform);
             spawnedGhost.SetActive(true);
             spawnedGhost.GetComponent<Animator>().DoScaledAnimationAsync("GhostMiss", 0.5f);
-            BeatAction.New(instance.gameObject, new List<BeatAction.Action>()
+            BeatAction.New(instance, new List<BeatAction.Action>()
             {
                 new BeatAction.Action(caller.startBeat + caller.timer + 1f, delegate {
                     if (GameManager.instance.currentGame == "sneakySpirits")

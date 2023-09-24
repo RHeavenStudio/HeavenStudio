@@ -62,10 +62,10 @@ namespace HeavenStudio.Games.Loaders
 
                 new GameAction("bgcolor", "Background Color")
                 {
-                    function = delegate 
+                    function = delegate
                     {
                         var e = eventCaller.currentEntity;
-                        Kitties.instance.BackgroundColor(e.beat, e.length, e["colorStart"], e["colorEnd"], e["ease"]); 
+                        Kitties.instance.BackgroundColor(e.beat, e.length, e["colorStart"], e["colorEnd"], e["ease"]);
                     },
                     defaultLength = 4,
                     resizable = true,
@@ -77,9 +77,9 @@ namespace HeavenStudio.Games.Loaders
                     }
                 }
             },
-            new List<string>() {"ctr", "normal"},
+            new List<string>() { "ctr", "normal" },
             "ctrteppan", "en",
-            new List<string>() {}
+            new List<string>() { }
             );
         }
     }
@@ -130,23 +130,23 @@ namespace HeavenStudio.Games
                 new MultiSound.Sound("kitties/nya3", beat + 1.5f)
             });
 
-            if(type == 3)
+            if (type == 3)
             {
-                BeatAction.New(Cats[0], new List<BeatAction.Action>()
+                BeatAction.New(instance, new List<BeatAction.Action>()
             {
                     new BeatAction.Action(beat, delegate { Spawn(type, 0, isMice, isInverse, true, false);}),
                     new BeatAction.Action(beat + 2.5f, delegate { kitties[0].Play("FaceClap", 0, 0);}),
                     new BeatAction.Action(beat + 3f, delegate { kitties[0].Play("FaceClap", 0, 0);}),
                 });
 
-                BeatAction.New(Cats[1], new List<BeatAction.Action>()
+                BeatAction.New(instance, new List<BeatAction.Action>()
             {
                 new BeatAction.Action(beat + .75f, delegate { Spawn(type, 1, isMice, isInverse, false, false);}),
                 new BeatAction.Action(beat + 2.5f, delegate { kitties[1].Play("FaceClap", 0, 0);}),
                 new BeatAction.Action(beat + 3f, delegate { kitties[1].Play("FaceClap", 0, 0);}),
                 });
 
-                BeatAction.New(Cats[2], new List<BeatAction.Action>()
+                BeatAction.New(instance, new List<BeatAction.Action>()
             {
                 new BeatAction.Action(beat + 1.5f, delegate { Spawn(type, 2, isMice, isInverse, false, false);}),
                 new BeatAction.Action(beat + 1.5f, delegate { player.canClap = true;}),
@@ -155,21 +155,21 @@ namespace HeavenStudio.Games
 
             else if (!isMice)
             {
-                BeatAction.New(Cats[0], new List<BeatAction.Action>()
+                BeatAction.New(instance, new List<BeatAction.Action>()
             {
                     new BeatAction.Action(beat, delegate { Spawn(type, 0, isMice, isInverse, true, false);}),
                     new BeatAction.Action(beat + 2.5f, delegate { kitties[0].Play("Clap1", 0, 0);}),
                     new BeatAction.Action(beat + 3f, delegate { kitties[0].Play("Clap2", 0, 0);}),
                 });
 
-                BeatAction.New(Cats[1], new List<BeatAction.Action>()
+                BeatAction.New(instance, new List<BeatAction.Action>()
             {
                 new BeatAction.Action(beat + .75f, delegate { Spawn(type, 1, isMice, isInverse, false, false);}),
                 new BeatAction.Action(beat + 2.5f, delegate { kitties[1].Play("Clap1", 0, 0);}),
                 new BeatAction.Action(beat + 3f, delegate { kitties[1].Play("Clap2", 0, 0);}),
                 });
 
-                BeatAction.New(Cats[2], new List<BeatAction.Action>()
+                BeatAction.New(instance, new List<BeatAction.Action>()
             {
                 new BeatAction.Action(beat + 1.5f, delegate { Spawn(type, 2, isMice, isInverse, false, false);}),
                 new BeatAction.Action(beat + 1.5f, delegate { player.canClap = true;}),
@@ -178,21 +178,21 @@ namespace HeavenStudio.Games
             }
             else
             {
-                BeatAction.New(Cats[0], new List<BeatAction.Action>()
+                BeatAction.New(instance, new List<BeatAction.Action>()
             {
                     new BeatAction.Action(beat, delegate { Spawn(type, 0, isMice, isInverse, true, false);}),
                     new BeatAction.Action(beat + 2.5f, delegate { kitties[0].Play("MiceClap1", 0, 0);}),
                     new BeatAction.Action(beat + 3f, delegate { kitties[0].Play("MiceClap2", 0, 0);}),
                 });
 
-                BeatAction.New(Cats[1], new List<BeatAction.Action>()
+                BeatAction.New(instance, new List<BeatAction.Action>()
             {
                 new BeatAction.Action(beat + .75f, delegate { Spawn(type, 1, isMice, isInverse, false, false);}),
                 new BeatAction.Action(beat + 2.5f, delegate { kitties[1].Play("MiceClap1", 0, 0);}),
                 new BeatAction.Action(beat + 3f, delegate { kitties[1].Play("MiceClap2", 0, 0);}),
                 });
 
-                BeatAction.New(Cats[2], new List<BeatAction.Action>()
+                BeatAction.New(instance, new List<BeatAction.Action>()
             {
                 new BeatAction.Action(beat + 1.5f, delegate { Spawn(type, 2, isMice, isInverse, false, false);}),
                 new BeatAction.Action(beat + 1.5f, delegate { player.canClap = true;}),
@@ -202,7 +202,7 @@ namespace HeavenStudio.Games
 
             if (!keepSpawned)
             {
-                BeatAction.New(Cats[0], new List<BeatAction.Action>()
+                BeatAction.New(instance, new List<BeatAction.Action>()
             {
                     new BeatAction.Action(beat + 3.5f, delegate { RemoveCats(false);})
                 });
@@ -221,7 +221,7 @@ namespace HeavenStudio.Games
                 new MultiSound.Sound("kitties/roll4", beat + 1.5f)
 
             });
-            BeatAction.New(Cats[0], new List<BeatAction.Action>()
+            BeatAction.New(instance, new List<BeatAction.Action>()
                 {
                     new BeatAction.Action(beat, delegate { kitties[0].Play("RollStart", 0, 0); }),
                     new BeatAction.Action(beat + .5f, delegate { kitties[0].Play("RollStart", 0, 0); }),
@@ -231,7 +231,7 @@ namespace HeavenStudio.Games
                     new BeatAction.Action(beat + 2.75f, delegate { kitties[0].Play("RollEnd", 0, 0); })
                     });
 
-            BeatAction.New(Cats[1], new List<BeatAction.Action>()
+            BeatAction.New(instance, new List<BeatAction.Action>()
                 {
                     new BeatAction.Action(beat, delegate { kitties[1].Play("RollStart", 0, 0); }),
                     new BeatAction.Action(beat + .5f, delegate { kitties[1].Play("RollStart", 0, 0); }),
@@ -241,7 +241,7 @@ namespace HeavenStudio.Games
                     new BeatAction.Action(beat + 2.75f, delegate { kitties[1].Play("RollEnd", 0, 0); })
                     });
 
-            BeatAction.New(Cats[2], new List<BeatAction.Action>()
+            BeatAction.New(instance, new List<BeatAction.Action>()
                 {
                     new BeatAction.Action(beat, delegate { kitties[2].Play("RollStart", 0, 0); }),
                     new BeatAction.Action(beat + .5f, delegate { kitties[2].Play("RollStart", 0, 0); }),
@@ -252,7 +252,7 @@ namespace HeavenStudio.Games
 
             if (!keepSpawned)
             {
-                BeatAction.New(Cats[0], new List<BeatAction.Action>()
+                BeatAction.New(instance, new List<BeatAction.Action>()
             {
                     new BeatAction.Action(beat + 3.5f, delegate { RemoveCats(false);})
                 });
@@ -263,7 +263,7 @@ namespace HeavenStudio.Games
         {
             //if (!player.canClap)
             //    return;
-            
+
             player.ScheduleFish(beat);
             MultiSound.Play(new MultiSound.Sound[] {
                 new MultiSound.Sound("kitties/fish1", beat + 2f),
@@ -272,20 +272,20 @@ namespace HeavenStudio.Games
 
             });
 
-            BeatAction.New(Cats[0], new List<BeatAction.Action>()
+            BeatAction.New(instance, new List<BeatAction.Action>()
             {
                 new BeatAction.Action(beat, delegate { if (isInverted)
                     Fish.transform.localScale = new Vector3(-1f, 1f, 1f);
                     else
                         Fish.transform.localScale = new Vector3(1f, 1f, 1f); }),
-                new BeatAction.Action(beat, delegate { Fish.SetActive(true); }),             
+                new BeatAction.Action(beat, delegate { Fish.SetActive(true); }),
                 new BeatAction.Action(beat, delegate { Fish.GetComponent<Animator>().DoScaledAnimationAsync("FishDangle", 0.5f); }),
                 new BeatAction.Action(beat + 2f, delegate { kitties[0].Play("FishNotice", 0, 0);  }),
                 new BeatAction.Action(beat + 2.25f, delegate { kitties[1].Play("FishNotice2", 0, 0);  }),
                 new BeatAction.Action(beat + 2.5f, delegate { kitties[2].Play("FishNotice3", 0, 0);  })
                 });
 
-                BeatAction.New(Fish, new List<BeatAction.Action>()
+            BeatAction.New(instance, new List<BeatAction.Action>()
             {
                     new BeatAction.Action(beat + 4f, delegate { Fish.SetActive(false);})
                 });
@@ -400,7 +400,7 @@ namespace HeavenStudio.Games
             }
             else
             {
-                if(pos == 3)
+                if (pos == 3)
                     kitties[catNum].Play("FaceIdle", 0, 0);
                 else if (!isMice)
                     kitties[catNum].Play("Idle", 0, 0);
@@ -429,12 +429,12 @@ namespace HeavenStudio.Games
             }
             else
                 Fish.SetActive(false);
-                player.canClap = false;
+            player.canClap = false;
         }
 
         public void InstantSpawn(bool isMice, bool isInverse, double beat, int pos)
         {
-            BeatAction.New(Cats[0], new List<BeatAction.Action>()
+            BeatAction.New(instance, new List<BeatAction.Action>()
                 {
                 new BeatAction.Action(beat, delegate { Spawn(pos, 0, isMice, isInverse, true, true); }),
                 new BeatAction.Action(beat, delegate { Spawn(pos, 1, isMice, isInverse, true, true); }),

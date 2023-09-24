@@ -274,7 +274,7 @@ namespace HeavenStudio.Games
             {
                 PassTurn(beat + interval, interval, beat);
             }
-            BeatAction.New(ballTransporterLeftNPC, new List<BeatAction.Action>()
+            BeatAction.New(instance, new List<BeatAction.Action>()
             {
                 new BeatAction.Action(beat - 1, delegate
                 {
@@ -314,7 +314,7 @@ namespace HeavenStudio.Games
 
         private void PassTurn(double beat, double length, double startBeat)
         {
-            BeatAction.New(instance.gameObject, new List<BeatAction.Action>()
+            BeatAction.New(instance, new List<BeatAction.Action>()
             {
                 new BeatAction.Action(beat - 1, delegate
                 {
@@ -374,7 +374,7 @@ namespace HeavenStudio.Games
             var ballComponent = spawnedBall.GetComponent<NPCDoughBall>();
             spawnedBall.SetActive(true);
             ballComponent.Init(beat, hasGandw);
-            BeatAction.New(doughDudesNPC, new List<BeatAction.Action>()
+            BeatAction.New(instance, new List<BeatAction.Action>()
             {
                 //Jump and play sound
                 new BeatAction.Action(beat, delegate { arrowSRLeftNPC.sprite = redArrowSprite; }),
@@ -402,7 +402,7 @@ namespace HeavenStudio.Games
             spawnedBall.SetActive(true);
             ballComponent.Init(beat, isBig, hasGandw);
 
-            BeatAction.New(doughDudesPlayer, new List<BeatAction.Action>()
+            BeatAction.New(instance, new List<BeatAction.Action>()
             {
                 new BeatAction.Action(beat, delegate { arrowSRLeftPlayer.sprite = redArrowSprite; }),
                 new BeatAction.Action(beat + 0.1f, delegate { arrowSRLeftPlayer.sprite = whiteArrowSprite; }),
@@ -483,7 +483,7 @@ namespace HeavenStudio.Games
             var ballComponent = spawnedBall.GetComponent<BGBall>();
             spawnedBall.SetActive(true);
             ballComponent.Init(beat, hasGandw);
-            BeatAction.New(instance.gameObject, new List<BeatAction.Action>()
+            BeatAction.New(instance, new List<BeatAction.Action>()
             {
                 new BeatAction.Action(beat + 9f, delegate { if (!spaceshipRisen && !bgDisabled) spaceshipAnimator.Play("AbsorbBall", 0, 0); }),
             });
@@ -501,7 +501,7 @@ namespace HeavenStudio.Games
             liftingLength = length;
             liftingDoughDudes = true;
             doughDudesHolderAnim.DoScaledAnimation(liftingAnimName, liftingStartBeat, liftingLength);
-            BeatAction.New(instance.gameObject, new List<BeatAction.Action>()
+            BeatAction.New(instance, new List<BeatAction.Action>()
             {
                 new BeatAction.Action(beat + length - 0.1f, delegate { liftingDoughDudes = false; }),
             });
@@ -517,7 +517,7 @@ namespace HeavenStudio.Games
                 spaceshipLights.GetComponent<Animator>().Play("SpaceshipLights", 0, 0);
             }
             spaceshipAnimator.Play("SpaceshipShake", 0, 0);
-            BeatAction.New(instance.gameObject, new List<BeatAction.Action>()
+            BeatAction.New(instance, new List<BeatAction.Action>()
             {
                 new BeatAction.Action(beat + length, delegate { spaceshipAnimator.Play("SpaceshipLaunch", 0, 0); }),
                 new BeatAction.Action(beat + length, delegate { SoundByte.PlayOneShotGame("workingDough/LaunchRobot"); }),
@@ -537,7 +537,7 @@ namespace HeavenStudio.Games
                 spaceshipLights.GetComponent<Animator>().Play("SpaceshipLights", 0, 0);
             }
             spaceshipAnimator.DoScaledAnimation("RiseSpaceship", risingStartBeat, risingLength);
-            BeatAction.New(instance.gameObject, new List<BeatAction.Action>()
+            BeatAction.New(instance, new List<BeatAction.Action>()
             {
                 new BeatAction.Action(beat + length - 0.1f, delegate { spaceshipRising = false; }),
             });
@@ -552,7 +552,7 @@ namespace HeavenStudio.Games
             gandMovingStartBeat = beat;
             gandwMovingAnimName = shouldExit ? "GANDWLeave" : "GANDWEnter";
             gandwAnim.DoScaledAnimation(gandwMovingAnimName, gandMovingStartBeat, gandMovingLength);
-            BeatAction.New(instance.gameObject, new List<BeatAction.Action>()
+            BeatAction.New(instance, new List<BeatAction.Action>()
             {
                 new BeatAction.Action(beat + length - 0.1f, delegate { gandwMoving = false; }),
                 new BeatAction.Action(beat + length, delegate { gandwHasEntered = shouldExit ? false : true; }),

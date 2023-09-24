@@ -124,7 +124,7 @@ namespace HeavenStudio.Editor
             UpdateEditorStatus(true);
 
             BuildDateDisplay.text = GlobalGameManager.buildTime;
-            isCursorEnabled  = PersistentDataManager.gameSettings.editorCursorEnable;
+            isCursorEnabled = PersistentDataManager.gameSettings.editorCursorEnable;
             isDiscordEnabled = PersistentDataManager.gameSettings.discordRPCEnable;
             GameManager.instance.CursorCam.enabled = isCursorEnabled;
         }
@@ -262,7 +262,7 @@ namespace HeavenStudio.Editor
                 new ExtensionFilter("Music Files", "mp3", "ogg", "wav", "aiff", "aif", "aifc")
             };
 
-            #if UNITY_STANDALONE_WINDOWS
+#if UNITY_STANDALONE_WINDOWS
             StandaloneFileBrowser.OpenFilePanelAsync("Open File", "", extensions, false, async (string[] paths) => 
             {
                 if (paths.Length > 0)
@@ -285,7 +285,7 @@ namespace HeavenStudio.Editor
                 await Task.Yield();
             } 
             );
-            #else
+#else
             StandaloneFileBrowser.OpenFilePanelAsync("Open File", "", extensions, false, async (string[] paths) =>
             {
                 if (paths.Length > 0)
@@ -308,7 +308,7 @@ namespace HeavenStudio.Editor
                 await Task.Yield();
             }
             );
-            #endif
+#endif
         }
 
         IEnumerator LoadMusic()
@@ -343,7 +343,7 @@ namespace HeavenStudio.Editor
             {
                 new ExtensionFilter("Heaven Studio Remix File", "riq")
             };
-            
+
             StandaloneFileBrowser.SaveFilePanelAsync("Save Remix As", "", "remix_level", extensions, (string path) =>
             {
                 if (path != String.Empty)
@@ -404,7 +404,7 @@ namespace HeavenStudio.Editor
             {
                 var path = Path.Combine(paths);
                 if (path == string.Empty) return;
-                
+
                 try
                 {
                     string tmpDir = RiqFileHandler.ExtractRiq(path);
@@ -479,7 +479,7 @@ namespace HeavenStudio.Editor
 
             if (game != null)
             {
-                foreach(FreeCam c in game.GetComponentsInChildren<FreeCam>(true))
+                foreach (FreeCam c in game.GetComponentsInChildren<FreeCam>(true))
                 {
                     c.enabled = !c.enabled;
                 }

@@ -74,7 +74,7 @@ namespace HeavenStudio.Games.Scripts_TossBoys
 
         public void ShowArrow(double startBeat, float length)
         {
-            BeatAction.New(game.gameObject, new List<BeatAction.Action>(){
+            BeatAction.New(game, new List<BeatAction.Action>(){
                 new BeatAction.Action(startBeat, delegate { arrow.SetActive(true); }),
                 new BeatAction.Action(startBeat + length, delegate { arrow.SetActive(false); }),
             });

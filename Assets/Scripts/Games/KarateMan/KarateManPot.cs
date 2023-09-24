@@ -186,20 +186,20 @@ namespace HeavenStudio.Games.Scripts_KarateMan
                     break;
                 case ItemType.ComboPot2:
                     path = 1;
-                    BeatAction.New(gameObject, new List<BeatAction.Action>() { new BeatAction.Action(startBeat + 1f, delegate { JoeComboSequence(); }) });
+                    BeatAction.New(this, new List<BeatAction.Action>() { new BeatAction.Action(startBeat + 1f, delegate { JoeComboSequence(); }) });
                     break;
                 case ItemType.ComboPot3:
                     path = 2;
-                    BeatAction.New(gameObject, new List<BeatAction.Action>() { new BeatAction.Action(startBeat + 1f, delegate { JoeComboSequence(); }) });
+                    BeatAction.New(this, new List<BeatAction.Action>() { new BeatAction.Action(startBeat + 1f, delegate { JoeComboSequence(); }) });
                     break;
                 case ItemType.ComboPot4:
                     path = 3;
                     //if the button isn't held anymore make Joe spin
-                    BeatAction.New(gameObject, new List<BeatAction.Action>() { new BeatAction.Action(startBeat + 1f, delegate { JoeComboSequence(); }) });
+                    BeatAction.New(this, new List<BeatAction.Action>() { new BeatAction.Action(startBeat + 1f, delegate { JoeComboSequence(); }) });
                     break;
                 case ItemType.ComboPot5:
                     path = 4;
-                    BeatAction.New(gameObject, new List<BeatAction.Action>() { new BeatAction.Action(startBeat + 1f, delegate { JoeComboSequence(); }) });
+                    BeatAction.New(this, new List<BeatAction.Action>() { new BeatAction.Action(startBeat + 1f, delegate { JoeComboSequence(); }) });
                     break;
                 case ItemType.ComboBarrel:
                     OnHit =             KarateMan.instance.ScheduleInput(startBeat, 1f, InputType.STANDARD_ALT_UP, ComboEndJustOrNg, ComboEndThrough, ComboEndOut, CanComboEnd);
@@ -711,7 +711,7 @@ namespace HeavenStudio.Games.Scripts_KarateMan
             if (OnHitExpression == (int) KarateMan.KarateManFaces.Normal)
                 return;
             var joe = KarateMan.instance.Joe;
-            BeatAction.New(joe.gameObject, new List<BeatAction.Action>()
+            BeatAction.New(joe, new List<BeatAction.Action>()
             {
                 new BeatAction.Action(offset, delegate {
                     joe.SetFaceExpression(OnHitExpression);
@@ -741,7 +741,7 @@ namespace HeavenStudio.Games.Scripts_KarateMan
                 status = FlyStatus.NG;
 
                 joe.SetFaceExpression((int) KarateMan.KarateManFaces.Sad);
-                BeatAction.New(joe.gameObject, new List<BeatAction.Action>()
+                BeatAction.New(joe, new List<BeatAction.Action>()
                 {
                     new BeatAction.Action(startBeat + 2f, delegate {
                         joe.SetFaceExpression((int) KarateMan.KarateManFaces.Normal);
@@ -792,7 +792,7 @@ namespace HeavenStudio.Games.Scripts_KarateMan
                 ItemHitEffect();
             }
 
-            BeatAction.New(joe.gameObject, new List<BeatAction.Action>()
+            BeatAction.New(joe, new List<BeatAction.Action>()
             {
                 new BeatAction.Action(startBeat + 4f, delegate {
                     joe.SetFaceExpression((int) KarateMan.KarateManFaces.Sad);
@@ -811,7 +811,7 @@ namespace HeavenStudio.Games.Scripts_KarateMan
             var joe = KarateMan.instance.Joe;
             if (GameManager.instance.currentGame != "karateman") return;
             if (status != FlyStatus.Fly || gameObject == null) return;
-            BeatAction.New(joe.gameObject, new List<BeatAction.Action>()
+            BeatAction.New(joe, new List<BeatAction.Action>()
             {
                 new BeatAction.Action(startBeat + 2f, delegate { 
                     joe.SetFaceExpression((int) KarateMan.KarateManFaces.Surprise);
@@ -862,7 +862,7 @@ namespace HeavenStudio.Games.Scripts_KarateMan
             var joe = KarateMan.instance.Joe;
             if (GameManager.instance.currentGame != "karateman") return;
             if (status != FlyStatus.Fly || gameObject == null) return;
-            BeatAction.New(joe.gameObject, new List<BeatAction.Action>()
+            BeatAction.New(joe, new List<BeatAction.Action>()
             {
                 new BeatAction.Action(startBeat + 2f, delegate {
                     joe.SetFaceExpression((int) KarateMan.KarateManFaces.Surprise);
@@ -919,7 +919,7 @@ namespace HeavenStudio.Games.Scripts_KarateMan
                 SoundByte.PlayOneShot("miss");
                 status = FlyStatus.NG;
 
-                BeatAction.New(joe.gameObject, new List<BeatAction.Action>()
+                BeatAction.New(joe, new List<BeatAction.Action>()
                 {
                     new BeatAction.Action(startBeat + 2f, delegate {
                         joe.SetFaceExpression((int) KarateMan.KarateManFaces.Sad);
@@ -959,7 +959,7 @@ namespace HeavenStudio.Games.Scripts_KarateMan
             var joe = KarateMan.instance.Joe;
             if (joe.GetComboId() != comboId || !joe.inCombo)
             {
-                BeatAction.New(joe.gameObject, new List<BeatAction.Action>()
+                BeatAction.New(joe, new List<BeatAction.Action>()
                 {
                     new BeatAction.Action(startBeat + 2f, delegate { 
                         joe.SetFaceExpression((int) KarateMan.KarateManFaces.Surprise);
@@ -973,7 +973,7 @@ namespace HeavenStudio.Games.Scripts_KarateMan
             else
             {
                 joe.SetFaceExpression((int) KarateMan.KarateManFaces.VerySad);
-                BeatAction.New(joe.gameObject, new List<BeatAction.Action>()
+                BeatAction.New(joe, new List<BeatAction.Action>()
                 {
                     new BeatAction.Action(startBeat + 1.5f, delegate { 
                         joe.inCombo = false;
@@ -1007,7 +1007,7 @@ namespace HeavenStudio.Games.Scripts_KarateMan
                 status = FlyStatus.NG;
 
                 joe.SetFaceExpression((int) KarateMan.KarateManFaces.Sad);
-                BeatAction.New(joe.gameObject, new List<BeatAction.Action>()
+                BeatAction.New(joe, new List<BeatAction.Action>()
                 {
                     new BeatAction.Action(startBeat + 2f, delegate {
                         joe.SetFaceExpression((int) KarateMan.KarateManFaces.Normal);
@@ -1030,7 +1030,7 @@ namespace HeavenStudio.Games.Scripts_KarateMan
             var joe = KarateMan.instance.Joe;
             if (GameManager.instance.currentGame != "karateman") return;
             if (status != FlyStatus.Fly || gameObject == null) return;
-            BeatAction.New(joe.gameObject, new List<BeatAction.Action>()
+            BeatAction.New(joe, new List<BeatAction.Action>()
             {
                 new BeatAction.Action(startBeat + 2f, delegate {
                     joe.SetFaceExpression((int) KarateMan.KarateManFaces.Surprise);
@@ -1065,7 +1065,7 @@ namespace HeavenStudio.Games.Scripts_KarateMan
                 SoundByte.PlayOneShot("miss");
                 status = FlyStatus.NG;
 
-                BeatAction.New(joe.gameObject, new List<BeatAction.Action>()
+                BeatAction.New(joe, new List<BeatAction.Action>()
                 {
                     new BeatAction.Action(startBeat + 1.25f, delegate {
                         joe.SetFaceExpression((int) KarateMan.KarateManFaces.Sad);
@@ -1096,7 +1096,7 @@ namespace HeavenStudio.Games.Scripts_KarateMan
         {
             if (GameManager.instance.currentGame != "karateman") return;
             if (status != FlyStatus.Fly || gameObject == null) return;
-            BeatAction.New(KarateMan.instance.Joe.gameObject, new List<BeatAction.Action>()
+            BeatAction.New(KarateMan.instance.Joe, new List<BeatAction.Action>()
             {
                 new BeatAction.Action(startBeat + 2f, delegate { 
                     KarateMan.instance.Joe.SetFaceExpression((int) KarateMan.KarateManFaces.VerySad);

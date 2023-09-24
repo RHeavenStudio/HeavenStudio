@@ -116,7 +116,7 @@ namespace HeavenStudio.Games.Scripts_WorkingDough
             double beat = Conductor.instance.songPositionInBeats;
             startBeat = beat;
             game.playerImpact.SetActive(true);
-            BeatAction.New(game.gameObject, new List<BeatAction.Action>()
+            BeatAction.New(game, new List<BeatAction.Action>()
             {
                 new BeatAction.Action(beat + 0.1f, delegate { game.playerImpact.SetActive(false); }),
             });
@@ -153,7 +153,7 @@ namespace HeavenStudio.Games.Scripts_WorkingDough
             }
             bool hasGandw = false;
             if (gandw != null) hasGandw = gandw.activeSelf;
-            BeatAction.New(game.gameObject, new List<BeatAction.Action>()
+            BeatAction.New(game, new List<BeatAction.Action>()
             {
                 new BeatAction.Action(beat + 0.9f, delegate { game.arrowSRRightPlayer.sprite = game.redArrowSprite; }),
                 new BeatAction.Action(beat + 1f, delegate { game.arrowSRRightPlayer.sprite = game.whiteArrowSprite; }),
@@ -167,7 +167,7 @@ namespace HeavenStudio.Games.Scripts_WorkingDough
             double beat = Conductor.instance.songPositionInBeats;
             rightInput.Disable();
             game.playerImpact.SetActive(true);
-            BeatAction.New(game.gameObject, new List<BeatAction.Action>()
+            BeatAction.New(game, new List<BeatAction.Action>()
             {
                 new BeatAction.Action(beat + 0.1f, delegate { game.playerImpact.SetActive(false); }),
             });
@@ -196,7 +196,7 @@ namespace HeavenStudio.Games.Scripts_WorkingDough
             currentState = State.Miss;
             startBeat = beat;
             Update();
-            BeatAction.New(game.gameObject, new List<BeatAction.Action>()
+            BeatAction.New(game, new List<BeatAction.Action>()
             {
                 new BeatAction.Action(beat + 0.25f, delegate { game.missImpact.SetActive(true); }),
                 new BeatAction.Action(beat + 0.25f, delegate { SoundByte.PlayOneShotGame("workingDough/BallMiss"); }),

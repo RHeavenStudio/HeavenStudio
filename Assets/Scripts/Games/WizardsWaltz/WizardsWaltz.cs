@@ -199,7 +199,7 @@ namespace HeavenStudio.Games
 
         private void PassTurn(double beat, CallAndResponseHandler crHandler)
         {
-            BeatAction.New(gameObject, new List<BeatAction.Action>()
+            BeatAction.New(this, new List<BeatAction.Action>()
             {
                 new BeatAction.Action(beat - 0.25, delegate
                 {
@@ -262,7 +262,7 @@ namespace HeavenStudio.Games
 
             plant.createBeat = beat;
 
-            BeatAction.New(gameObject, new List<BeatAction.Action>()
+            BeatAction.New(this, new List<BeatAction.Action>()
             {
                 new BeatAction.Action(beat, delegate
                 {

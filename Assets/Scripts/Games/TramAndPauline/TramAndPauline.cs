@@ -267,7 +267,7 @@ namespace HeavenStudio.Games
                 return;
             }
             SoundByte.PlayOneShotGame("tramAndPauline/transformTram");
-            BeatAction.New(instance.gameObject, new List<BeatAction.Action>()
+            BeatAction.New(instance, new List<BeatAction.Action>()
             {
                 new BeatAction.Action(caller.startBeat + caller.timer + 1, delegate
                 {
@@ -286,7 +286,7 @@ namespace HeavenStudio.Games
                 return;
             }
             SoundByte.PlayOneShotGame("tramAndPauline/transformPauline");
-            BeatAction.New(instance.gameObject, new List<BeatAction.Action>()
+            BeatAction.New(instance, new List<BeatAction.Action>()
             {
                 new BeatAction.Action(caller.startBeat + caller.timer + 1, delegate
                 {

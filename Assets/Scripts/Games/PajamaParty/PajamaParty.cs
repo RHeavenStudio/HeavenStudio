@@ -204,7 +204,7 @@ namespace HeavenStudio.Games
                         }
                     }));
                 }
-                BeatAction.New(gameObject, actions);
+                BeatAction.New(this, actions);
             }
         }
 
@@ -218,7 +218,7 @@ namespace HeavenStudio.Games
                     new MultiSound.Sound("pajamaParty/three3", beat + 2f),
                 });
 
-            BeatAction.New(Bed, new List<BeatAction.Action>()
+            BeatAction.New(instance, new List<BeatAction.Action>()
             {
                 new BeatAction.Action(
                     beat,
@@ -265,7 +265,7 @@ namespace HeavenStudio.Games
                     new MultiSound.Sound("pajamaParty/five5", beat + 2f)
                 });
 
-            BeatAction.New(Bed, new List<BeatAction.Action>()
+            BeatAction.New(instance, new List<BeatAction.Action>()
             {
                 new BeatAction.Action( beat,        delegate { JumpRow(4, beat); }),
                 new BeatAction.Action( beat + 0.5f, delegate { JumpRow(3, beat + 0.5f, 2); }),
@@ -293,7 +293,7 @@ namespace HeavenStudio.Games
             if (doSound)
                 PlayThrowSequenceSound(beat);
 
-            BeatAction.New(Mako.Player, new List<BeatAction.Action>()
+            BeatAction.New(Mako, new List<BeatAction.Action>()
             {
                 new BeatAction.Action(beat + 2f, delegate { MonkeyCharge(beat + 2f); } ),
                 new BeatAction.Action(beat + 3f, delegate { MonkeyThrow(beat + 3f); } ),
@@ -358,7 +358,7 @@ namespace HeavenStudio.Games
             }
 
             if (action == 1) return;
-            BeatAction.New(gameObject, new List<BeatAction.Action>() {
+            BeatAction.New(this, new List<BeatAction.Action>() {
                 new BeatAction.Action(deslumber, delegate { 
                     Mako.anim.DoScaledAnimationAsync("MakoAwake", 0.5f);
                     SoundByte.PlayOneShotGame("pajamaParty/siestaDone"); 

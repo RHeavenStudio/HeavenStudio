@@ -158,7 +158,7 @@ namespace HeavenStudio.Games
         {
             playerInstance.shouldBop = (autoBop || doesBop);
             if (!autoBop && doesBop) {
-                BeatAction.New(gameObject, new List<BeatAction.Action>() {
+                BeatAction.New(this, new List<BeatAction.Action>() {
                     new BeatAction.Action(beat + length, delegate {
                         playerInstance.shouldBop = false;
                     })

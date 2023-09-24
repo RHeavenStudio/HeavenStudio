@@ -433,7 +433,7 @@ namespace HeavenStudio.Games
             {
                 for (int i = 0; i < length; i++)
                 {
-                    BeatAction.New(instance.gameObject, new List<BeatAction.Action>()
+                    BeatAction.New(instance, new List<BeatAction.Action>()
                     {
                         new BeatAction.Action(beat + i, delegate
                         {
@@ -476,7 +476,7 @@ namespace HeavenStudio.Games
             cueBeat = beat;
             cueLength = length - 1f;
             if (!shouldSwitchColor) return;
-            BeatAction.New(instance.gameObject, new List<BeatAction.Action>()
+            BeatAction.New(instance, new List<BeatAction.Action>()
             {
                 new BeatAction.Action(beat + length * 0.5f, delegate { shouldBeBlack = !shouldBeBlack; })
             });
@@ -523,7 +523,7 @@ namespace HeavenStudio.Games
             }
             MultiSound.Play(soundsToPlay.ToArray(), forcePlay: true);
 
-            BeatAction.New(instance.gameObject, new List<BeatAction.Action>()
+            BeatAction.New(instance, new List<BeatAction.Action>()
             {
                 new BeatAction.Action(beat, delegate
                 {
@@ -660,7 +660,7 @@ namespace HeavenStudio.Games
             }
             MultiSound.Play(soundsToPlay.ToArray(), forcePlay: true);
 
-            BeatAction.New(instance.gameObject, new List<BeatAction.Action>()
+            BeatAction.New(instance, new List<BeatAction.Action>()
             {
                 new BeatAction.Action(beat, delegate
                 {
@@ -836,7 +836,7 @@ namespace HeavenStudio.Games
                     break;
             }
             MultiSound.Play(soundsToPlay.ToArray(), forcePlay: true);
-            BeatAction.New(instance.gameObject, new List<BeatAction.Action>()
+            BeatAction.New(instance, new List<BeatAction.Action>()
             {
                 new BeatAction.Action(beat, delegate
                 {
@@ -1012,7 +1012,7 @@ namespace HeavenStudio.Games
                 soundsToPlay.Add(new MultiSound.Sound("cheerReaders/bookDiagonal", beat));
             }
             MultiSound.Play(soundsToPlay.ToArray(), forcePlay: true);
-            BeatAction.New(instance.gameObject, new List<BeatAction.Action>()
+            BeatAction.New(instance, new List<BeatAction.Action>()
             {
                 new BeatAction.Action(beat, delegate
                 {
@@ -1218,7 +1218,7 @@ namespace HeavenStudio.Games
                     break;
             }
             MultiSound.Play(soundsToPlay.ToArray(), forcePlay: true);
-            BeatAction.New(instance.gameObject, new List<BeatAction.Action>()
+            BeatAction.New(instance, new List<BeatAction.Action>()
             {
                 new BeatAction.Action(beat, delegate
                 {

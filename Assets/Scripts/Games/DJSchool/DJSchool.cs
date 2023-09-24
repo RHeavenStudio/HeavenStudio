@@ -294,7 +294,7 @@ namespace HeavenStudio.Games
             {
                 for (int i = 0; i < length; i++)
                 {
-                    BeatAction.New(instance.gameObject, new List<BeatAction.Action>()
+                    BeatAction.New(instance, new List<BeatAction.Action>()
                     {
                         new BeatAction.Action(beat + i, delegate
                         {
@@ -363,7 +363,7 @@ namespace HeavenStudio.Games
             }
             
 
-            BeatAction.New(djYellow, new List<BeatAction.Action>()
+            BeatAction.New(djYellowScript, new List<BeatAction.Action>()
             {
                 new BeatAction.Action(beat, delegate 
                 { 
@@ -422,7 +422,7 @@ namespace HeavenStudio.Games
             }
             
 
-            BeatAction.New(djYellow, new List<BeatAction.Action>()
+            BeatAction.New(djYellowScript, new List<BeatAction.Action>()
             {
                 new BeatAction.Action(beat + 0.5f, delegate 
                 {
@@ -494,7 +494,7 @@ namespace HeavenStudio.Games
             });
 
 
-            BeatAction.New(djYellow, new List<BeatAction.Action>()
+            BeatAction.New(djYellowScript, new List<BeatAction.Action>()
             {
                 new BeatAction.Action(beat, delegate { djYellow.GetComponent<Animator>().DoScaledAnimationAsync("Scratcho", 0.5f); }),
                 new BeatAction.Action(beat + .5f, delegate { djYellow.GetComponent<Animator>().DoScaledAnimationAsync("Scratcho2", 0.5f); }),

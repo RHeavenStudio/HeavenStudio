@@ -148,7 +148,7 @@ namespace HeavenStudio.Games.Scripts_CatchyTune
                 // play near miss animation
                 anim.DoScaledAnimation("barely", barelyStart, isPineapple ? 2f : 1f);
 
-                BeatAction.New(gameObject, new List<BeatAction.Action>()
+                BeatAction.New(this, new List<BeatAction.Action>()
                 {
                     new BeatAction.Action(barelyStart + (isPineapple ? 2f : 1f), delegate { Destroy(this.gameObject); }),
                 });
@@ -166,7 +166,7 @@ namespace HeavenStudio.Games.Scripts_CatchyTune
         {
             game.catchMiss(side, isPineapple);
 
-            BeatAction.New(gameObject, new List<BeatAction.Action>()
+            BeatAction.New(this, new List<BeatAction.Action>()
             {
                 new BeatAction.Action(startBeat + beatLength + (isPineapple ? 3f : 1.5f), delegate { Destroy(this.gameObject); }),
             });

@@ -343,7 +343,7 @@ namespace HeavenStudio.Games
             {
                 for (int i = 0; i < length; i++)
                 {
-                    BeatAction.New(instance.gameObject, new List<BeatAction.Action>()
+                    BeatAction.New(instance, new List<BeatAction.Action>()
                     {
                         new BeatAction.Action(beat + i, delegate
                         {
@@ -412,7 +412,7 @@ namespace HeavenStudio.Games
             crouchEndBeat = beat + length;
             ScheduleInput(beat, 2f * actualLength, InputType.STANDARD_DOWN, JustCrouch, Nothing, Nothing);
 
-            BeatAction.New(instance.gameObject, new List<BeatAction.Action>()
+            BeatAction.New(instance, new List<BeatAction.Action>()
             {
                 new BeatAction.Action(beat, delegate
                 {
@@ -555,7 +555,7 @@ namespace HeavenStudio.Games
                 }
                 player.canBop = true;
             }));
-            BeatAction.New(instance.gameObject, posesToDo);
+            BeatAction.New(instance, posesToDo);
         }
 
         void JustCrouch(PlayerActionEvent caller, float state)

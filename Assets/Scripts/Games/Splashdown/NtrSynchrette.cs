@@ -143,7 +143,7 @@ namespace HeavenStudio.Games.Scripts_Splashdown
         {
             anim.Play("Idle", 0, 0);
             SetState(MovementState.JumpIntoWater, beat);
-            BeatAction.New(gameObject, new List<BeatAction.Action>()
+            BeatAction.New(this, new List<BeatAction.Action>()
             {
                 new BeatAction.Action(beat + 0.75, delegate
                 {
@@ -171,7 +171,7 @@ namespace HeavenStudio.Games.Scripts_Splashdown
             {
                 anim.DoScaledAnimationAsync(missed ? "DolphinMiss" : "Dolphin", 0.5f);
             }
-            BeatAction.New(gameObject, new List<BeatAction.Action>()
+            BeatAction.New(this, new List<BeatAction.Action>()
             {
                 new BeatAction.Action(beat + 1.75, delegate { Instantiate(splashPrefab, splashHolder).Init("BigSplash"); }),
                 new BeatAction.Action(beat + 2, delegate
