@@ -1,5 +1,12 @@
 {
   "dependencies": {
+    "com.nobi.roundedcorners": {
+      "version": "https://github.com/kirevdokimov/Unity-UI-Rounded-Corners.git",
+      "depth": 0,
+      "source": "git",
+      "dependencies": {},
+      "hash": "88623988179d35ce2da93b7740d6e7be59fcc971"
+    },
     "com.rheavenstudio.jukebox": {
       "version": "https://github.com/RHeavenStudio/Jukebox.git?path=/Assets/Scripts/Jukebox",
       "depth": 0,
@@ -9,6 +16,13 @@
         "jillejr.newtonsoft.json-for-unity.converters": "1.5.1"
       },
       "hash": "4f75a6f71362da8c873da1e85728757213ad9017"
+    },
+    "com.tayx.graphy": {
+      "version": "https://github.com/Tayx94/graphy.git",
+      "depth": 0,
+      "source": "git",
+      "dependencies": {},
+      "hash": "7b634c383ae631e7f4efaf08235c2d829a7d3ecc"
     },
     "com.unity.2d.sprite": {
       "version": "1.0.0",
