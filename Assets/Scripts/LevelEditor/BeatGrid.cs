@@ -53,7 +53,8 @@ namespace HeavenStudio.Editor.Track
             var x = Mathp.Round2Nearest(contentPosX, Timeline.instance.PixelsPerBeat);
             var pos = new Vector3(x, transform.localPosition.y, transform.localPosition.z);
             transform.localPosition = pos;
-            GetComponent<RectTransform>().anchoredPosition = new Vector3(rectTransform.anchoredPosition.x, rectTransform.anchoredPosition.y, 0);
+            rectTransform.anchoredPosition = new Vector3(rectTransform.anchoredPosition.x, rectTransform.anchoredPosition.y, 0);
+            rectTransform.sizeDelta = new Vector2(rectTransform.sizeDelta.x, transform.parent.parent.parent.GetComponent<RectTransform>().rect.height);
 
             UpdateCount();
         }

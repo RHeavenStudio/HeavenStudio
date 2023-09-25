@@ -36,7 +36,7 @@ namespace HeavenStudio.Editor.Track
 
         [Header("Components")]
         [SerializeField] private RawImage waveform;
-        [SerializeField] private RawImage layerBG;
+        [SerializeField] private Image layerBG;
         public Texture2D resizeCursor;
 
         public float WidthPerBeat { get; private set; } = 100.0f;
@@ -139,6 +139,12 @@ namespace HeavenStudio.Editor.Track
             }
         }
 
+        [Header("Panels")]
+        [SerializeField] private RectTransform TopPanel;
+        [SerializeField] private RectTransform TopPanelContent;
+        [SerializeField] private RectTransform ContentPanel;
+        [SerializeField] private RectTransform OverlayPanel, OverlayPanelContent;
+
         [Header("Timeline Components")]
         [SerializeField] private RectTransform TimelineSlider;
         [SerializeField] private RectTransform TimelineGridSelect;
@@ -230,7 +236,7 @@ namespace HeavenStudio.Editor.Track
 
             for (var i = 0; i < LayerCount; i++)
             {
-                var bg = Instantiate(layerBG.gameObject, layerBG.rectTransform.parent).GetComponent<RawImage>();
+                var bg = Instantiate(layerBG.gameObject, layerBG.rectTransform.parent).GetComponent<Image>();
                 if (i % 2 == 0) bg.enabled = false;
             }
             layerBG.gameObject.SetActive(false);
@@ -516,8 +522,35 @@ namespace HeavenStudio.Editor.Track
 
             LayersRect.GetWorldCorners(LayerCorners);
 
+            for (var i = 0; i < LayersRect.childCount; i++)
+            {
+                var layerRect = LayersRect.GetChild(i).GetComponent<RectTransform>();
+                layerRect.anchoredPosition = new Vector2(layerRect.anchoredPosition.x, -LayerHeight() * (i - 1));
+                layerRect.sizeDelta = new Vector2(layerRect.sizeDelta.x, LayerHeight());
+            }
+
+            for (var i = 0; i < layerBG.rectTransform.parent.childCount; i++)
+            {
+                var layerRect = layerBG.rectTransform.parent.GetChild(i).GetComponent<RectTransform>();
+                layerRect.anchoredPosition = new Vector2(layerRect.anchoredPosition.x, -LayerHeight() * (i - 1));
+                layerRect.sizeDelta = new Vector2(layerRect.sizeDelta.x, LayerHeight());
+            }
+
+            TimelineContent.sizeDelta = new Vector2(TimelineContent.sizeDelta.x, LayerHeight() * LayerCount);
+
             TimelineBlockManager.Instance.UpdateMarkers();
             BoxSelection.instance.LayerSelectUpdate();
+        }
+
+        public void LateUpdate()
+        {
+            TopPanelContent.anchoredPosition = new Vector2(TimelineContent.anchoredPosition.x, TopPanelContent.anchoredPosition.y);
+            TopPanelContent.sizeDelta = new Vector2(TimelineContent.sizeDelta.x, TopPanelContent.sizeDelta.y);
+
+            OverlayPanelContent.anchoredPosition = new Vector2(TimelineContent.anchoredPosition.x, OverlayPanelContent.anchoredPosition.y);
+            OverlayPanelContent.sizeDelta = new Vector2(TimelineContent.sizeDelta.x, OverlayPanelContent.sizeDelta.y);
+
+            LayersRect.anchoredPosition = new Vector2(LayersRect.anchoredPosition.x, TimelineContent.anchoredPosition.y);
         }
 
         public static float GetScaleModifier()
@@ -1007,7 +1040,9 @@ namespace HeavenStudio.Editor.Track
 
         public float LayerHeight()
         {
-            return LayersRect.rect.height / LayerCount;
+            var defaultHeight = 32;
+            return Mathf.Max(defaultHeight, (LayersRect.rect.height / LayerCount));
+            // return LayersRect.rect.height / LayerCount;
         }
 
         public float LayerToY(int layer)
