@@ -339,6 +339,8 @@ namespace HeavenStudio.Editor.Track
 
             SetTimeButtonColors(true, false, false);
             MetronomeBTN.transform.GetChild(0).GetComponent<Image>().color = Color.gray;
+            MetronomeBTN.transform.GetChild(1).GetComponent<Image>().color = Color.gray;
+            MetronomeBTN.transform.GetChild(2).GetComponent<Image>().color = Color.gray;
 
             timelineState.SetState(CurrentTimelineState.State.Selection);
 
@@ -389,11 +391,15 @@ namespace HeavenStudio.Editor.Track
             if (!Conductor.instance.metronome)
             {
                 MetronomeBTN.transform.GetChild(0).GetComponent<Image>().color = "009FC6".Hex2RGB();
+                MetronomeBTN.transform.GetChild(1).GetComponent<Image>().color = "009FC6".Hex2RGB();
+                MetronomeBTN.transform.GetChild(2).GetComponent<Image>().color = "009FC6".Hex2RGB();
                 Conductor.instance.metronome = true;
             }
             else
             {
                 MetronomeBTN.transform.GetChild(0).GetComponent<Image>().color = Color.gray;
+                MetronomeBTN.transform.GetChild(1).GetComponent<Image>().color = Color.gray;
+                MetronomeBTN.transform.GetChild(2).GetComponent<Image>().color = Color.gray;
                 Conductor.instance.metronome = false;
             }
         }
@@ -431,6 +437,29 @@ namespace HeavenStudio.Editor.Track
                 SongBeat.text = $"Beat {string.Format("{0:0.000}", cond.songPositionInBeats)}";
                 SongPos.text = FormatTime(cond.songPositionAsDouble);
             }
+
+            // Metronome animation
+            {
+                var rectTransform = MetronomeBTN.transform.GetChild(1).GetComponent<RectTransform>();
+                var rot = 0.0f;
+                if (Conductor.instance.metronome)
+                {
+                    var startBeat = Mathf.FloorToInt(Conductor.instance.songPositionInBeats - 0.5f);
+                    var nm = Conductor.instance.GetLoopPositionFromBeat(0.5f, 1f);
+                    var loop = (startBeat % 2 == 0) ? Mathf.SmoothStep(-1.1f, 1f, nm) : Mathf.SmoothStep(1f, -1f, nm);
+
+                    rot = loop * 45f;
+                }
+                else
+                {
+                    rot = Mathf.LerpAngle(rectTransform.localEulerAngles.z, 0.0f, Time.deltaTime * 16);
+                }
+
+                rectTransform.localEulerAngles =
+                    new Vector3(rectTransform.localEulerAngles.x, rectTransform.localEulerAngles.y,
+                    rot);
+            }
+
 
             SliderControl();
 

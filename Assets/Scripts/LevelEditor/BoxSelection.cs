@@ -43,7 +43,7 @@ namespace HeavenStudio.Editor
         {
             if (Input.GetMouseButtonDown(0))
             {
-                if (!Timeline.instance.MouseInTimeline || TimelineBlockManager.Instance.InteractingWithEvents)
+                if (!Timeline.instance.MouseInTimeline || TimelineBlockManager.Instance.InteractingWithEvents || Conductor.instance.NotStopped())
                 {
                     return;
                 }
