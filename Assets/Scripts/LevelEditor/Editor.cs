@@ -22,6 +22,9 @@ using Jukebox;
 
 using System.IO.Compression;
 using System.Text;
+using static Jukebox.Legacy.Beatmap;
+using UnityEditor;
+using System.Linq;
 
 namespace HeavenStudio.Editor
 {
@@ -155,24 +158,24 @@ namespace HeavenStudio.Editor
 
                 if (Input.GetKeyDown(KeyCode.Delete) || Input.GetKeyDown(KeyCode.Backspace))
                 {
-                    List<TimelineEventObj> ev = new List<TimelineEventObj>();
-                    for (int i = 0; i < Selections.instance.eventsSelected.Count; i++) ev.Add(Selections.instance.eventsSelected[i]);
-                    CommandManager.instance.Execute(new Commands.Deletion(ev));
+                    CommandManager.Instance.AddCommand(new Commands.Delete(Selections.instance.eventsSelected.Select(c => c.entity.guid).ToList()));
                 }
 
                 if (Input.GetKey(KeyCode.LeftControl))
                 {
+                    /*
                     if (Input.GetKeyDown(KeyCode.Z))
                     {
                         if (Input.GetKey(KeyCode.LeftShift))
-                            CommandManager.instance.Redo();
+                            CommandManager.Instance.Redo();
                         else
-                            CommandManager.instance.Undo();
+                            CommandManager.Instance.Undo();
                     }
                     else if (Input.GetKeyDown(KeyCode.Y))
                     {
-                        CommandManager.instance.Redo();
+                        CommandManager.Instance.Redo();
                     }
+                    */
 
                     if (Input.GetKey(KeyCode.LeftShift))
                     {
@@ -208,12 +211,12 @@ namespace HeavenStudio.Editor
             }
             #endregion
 
-            if (CommandManager.instance.canUndo())
+            if (CommandManager.Instance.CanUndo())
                 UndoBTN.transform.GetChild(0).GetComponent<Image>().color = Color.white;
             else
                 UndoBTN.transform.GetChild(0).GetComponent<Image>().color = Color.gray;
 
-            if (CommandManager.instance.canRedo())
+            if (CommandManager.Instance.CanRedo())
                 RedoBTN.transform.GetChild(0).GetComponent<Image>().color = Color.white;
             else
                 RedoBTN.transform.GetChild(0).GetComponent<Image>().color = Color.gray;
@@ -426,7 +429,7 @@ namespace HeavenStudio.Editor
                 currentRemixPath = path;
                 remixName = Path.GetFileName(path);
                 UpdateEditorStatus(false);
-                CommandManager.instance.Clear();
+                CommandManager.Instance.Clear();
             });
         }
 

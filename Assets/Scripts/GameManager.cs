@@ -683,7 +683,7 @@ namespace HeavenStudio
             GoForAPerfect.instance.Disable();
             SectionMedalsManager.instance?.OnRemixEnd();
 
-            GlobalGameManager.UpdateDiscordStatus(Beatmap["remixtitle"], false, true);
+            GlobalGameManager.UpdateDiscordStatus(Beatmap["remixtitle"].ToString(), false, true);
 
             Play(beat, 1f);
             yield break;

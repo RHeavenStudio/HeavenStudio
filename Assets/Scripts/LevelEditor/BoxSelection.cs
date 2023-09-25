@@ -34,6 +34,7 @@ namespace HeavenStudio.Editor
             boxVisual.GetChild(0).GetChild(0).GetComponent<Image>().color = EditorTheme.theme.properties.BoxSelectionOutlineCol.Hex2RGB();
 
             sizeText = boxVisual.GetChild(0).GetChild(1).GetComponent<TMPro.TMP_Text>();
+            sizeText.text = string.Empty;
 
             boxGroup = boxVisual.GetComponent<CanvasGroup>();
         }
@@ -42,7 +43,7 @@ namespace HeavenStudio.Editor
         {
             if (Input.GetMouseButtonDown(0))
             {
-                if (!Timeline.instance.CheckIfMouseInTimeline() || TimelineBlockManager.Instance.InteractingWithEvents)
+                if (!Timeline.instance.MouseInTimeline || TimelineBlockManager.Instance.InteractingWithEvents)
                 {
                     return;
                 }
@@ -103,7 +104,7 @@ namespace HeavenStudio.Editor
             // This doesn't take into account blocks the user cannot see, this is intentional.
             foreach (var marker in TimelineBlockManager.Instance.EntityMarkers.Values)
             {
-                var markerRect = new Rect((float)marker.entity.beat, marker.entity["track"], marker.entity.length, 1);
+                var markerRect = new Rect((float)marker.entity.beat, (int)marker.entity["track"], marker.entity.length, 1);
 
                 var boxOverMarker = boxRect.Overlaps(markerRect);
                 if (boxOverMarker)

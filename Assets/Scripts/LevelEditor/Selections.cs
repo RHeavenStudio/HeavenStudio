@@ -43,6 +43,8 @@ namespace HeavenStudio.Editor
             eventsSelected.Add(eventToAdd);
             eventToAdd.selected = true;
 
+            TimelineBlockManager.Instance.SortMarkers();
+
             // CommandManager.instance.Execute(new Commands.Selection(new List<TimelineEventObj>() { eventToAdd } ));
         }
 
@@ -58,6 +60,7 @@ namespace HeavenStudio.Editor
                 eventToAdd.selected = false;
                 eventsSelected.Remove(eventToAdd);
             }
+            TimelineBlockManager.Instance.SortMarkers();
         }
 
         public void DragSelect(TimelineEventObj eventToAdd)
@@ -78,6 +81,7 @@ namespace HeavenStudio.Editor
                 eventObjs[i].selected = true;
                 eventsSelected.Add(eventObjs[i]);
             }
+            TimelineBlockManager.Instance.SortMarkers();
         }
 
         public void DeselectAll()
@@ -87,6 +91,7 @@ namespace HeavenStudio.Editor
                 @event.selected = false;
             }
             eventsSelected.Clear();
+            TimelineBlockManager.Instance.SortMarkers();
         }
 
         public void Deselect(TimelineEventObj eventToDeselect)
@@ -96,6 +101,7 @@ namespace HeavenStudio.Editor
                 eventToDeselect.selected = false;
                 eventsSelected.Remove(eventToDeselect);
             }
+            TimelineBlockManager.Instance.SortMarkers();
         }
     }
 }

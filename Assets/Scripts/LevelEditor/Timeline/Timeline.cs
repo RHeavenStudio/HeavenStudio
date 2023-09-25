@@ -12,6 +12,8 @@ using Jukebox.Legacy;
 using UnityEditor;
 using static HeavenStudio.Minigames;
 using static HeavenStudio.Util.BeatAction;
+using System.Linq;
+using Newtonsoft.Json;
 
 namespace HeavenStudio.Editor.Track
 {
@@ -43,6 +45,7 @@ namespace HeavenStudio.Editor.Track
         public float MousePos2Beat { get; private set; }
         public float MousePos2Layer { get; private set; }
         public float MousePos2BeatSnap => Mathp.Round2Nearest(MousePos2Beat + (SnapInterval() * 0.5f), SnapInterval());
+        public bool MouseInTimeline { get; private set; }
 
         private Vector2 relativeMousePos;
         public Vector2 RelativeMousePos => relativeMousePos;
@@ -403,6 +406,8 @@ namespace HeavenStudio.Editor.Track
             MousePos2Beat = relativeMousePos.x / PixelsPerBeat;
             MousePos2Layer = Mathf.Clamp(Mathf.FloorToInt(-(relativeMousePos.y) / LayerHeight()), 0, LayerCount - 1);
 
+            MouseInTimeline = this.gameObject.activeSelf && RectTransformUtility.RectangleContainsScreenPoint(EventContent, Input.mousePosition, Editor.instance.EditorCamera);
+
             Conductor cond = Conductor.instance;
             // waveform.rectTransform.anchoredPosition = new Vector2(
             //     -(GameManager.instance.Beatmap.data.offset / (60.0f / GameManager.instance.Beatmap.bpm)), 
@@ -654,11 +659,6 @@ namespace HeavenStudio.Editor.Track
             return string.Format("{0:00}:{1:00}:{2:000}", minutes, seconds, milliseconds);
         }
 
-        public bool CheckIfMouseInTimeline()
-        {
-            return (this.gameObject.activeSelf && RectTransformUtility.RectangleContainsScreenPoint(EventContent, Input.mousePosition, Editor.instance.EditorCamera));
-        }
-
         #endregion
 
         #region Functions
@@ -817,7 +817,8 @@ namespace HeavenStudio.Editor.Track
                 }
                 else
                 {
-                    GameManager.instance.Beatmap.Entities.Add(tempEntity);
+                    // GameManager.instance.Beatmap.Entities.Add(tempEntity);
+                    Debug.LogWarning("Weird as fuck case called?");
                 }
 
                 GameManager.instance.SortEventsList();
@@ -829,9 +830,6 @@ namespace HeavenStudio.Editor.Track
             }
 
             var marker = TimelineBlockManager.Instance.Pool.Get();
-
-            
-
 
             marker.SetMarkerInfo();
 
@@ -846,6 +844,14 @@ namespace HeavenStudio.Editor.Track
             }
 
             eventObjs.Add(marker);
+
+            var entitySerialize = JsonConvert.SerializeObject(marker.entity, Formatting.None, new JsonSerializerSettings()
+            {
+                TypeNameHandling = TypeNameHandling.None,
+                NullValueHandling = NullValueHandling.Include,
+                ReferenceLoopHandling = ReferenceLoopHandling.Ignore,
+            });
+            CommandManager.Instance.AddCommand(new Commands.Place(entitySerialize, marker.entity.guid));
 
             return marker;
         }
@@ -971,12 +977,6 @@ namespace HeavenStudio.Editor.Track
             duplicatedEventObjs.Add(dup);
 
             return dup;
-        }
-
-        public void FinalizeDuplicateEventStack()
-        {
-            CommandManager.instance.Execute(new Commands.Duplicate(duplicatedEventObjs));
-            duplicatedEventObjs = new List<TimelineEventObj>();
         }
 
         public void DestroyEventObject(RiqEntity entity)

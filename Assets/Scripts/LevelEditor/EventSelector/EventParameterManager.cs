@@ -90,7 +90,7 @@ namespace HeavenStudio.Editor
                 this.entity = entity;
 
                 string col = TrackToThemeColour((int)entity["track"]);
-                Editor.instance.SetGameEventTitle($"Properties for <color=#{col}>{action.displayName}</color> on Beat {entity.beat}");
+                Editor.instance.SetGameEventTitle($"Properties for <color=#{col}>{action.displayName}</color> on Beat {entity.beat.ToString("F2")} on <color=#{col}>Track {(int)entity["track"] + 1}</color>");
 
                 DestroyParams();
 

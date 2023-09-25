@@ -5,6 +5,7 @@ using UnityEngine.Pool;
 
 using Jukebox;
 using static System.Windows.Forms.VisualStyles.VisualStyleElement.Header;
+using System.Linq;
 
 namespace HeavenStudio.Editor.Track
 {
@@ -13,7 +14,7 @@ namespace HeavenStudio.Editor.Track
         public static TimelineBlockManager Instance { get; private set; }
 
         public TimelineEventObj EntityTemplate;
-        public Dictionary<int, TimelineEventObj> EntityMarkers = new();
+        public Dictionary<Guid, TimelineEventObj> EntityMarkers = new();
         public ObjectPool<TimelineEventObj> Pool { get; private set; }
 
         private int firstMarkerToCareAbout = 0;
@@ -23,6 +24,7 @@ namespace HeavenStudio.Editor.Track
         private RiqEntity entityToSet;
 
         public bool InteractingWithEvents { get; private set; } = false;
+        public bool MovingAnyEvents { get; private set; } = false;
 
         public void SetEntityToSet(RiqEntity entity)
         {
@@ -64,6 +66,15 @@ namespace HeavenStudio.Editor.Track
             }
         }
 
+        public TimelineEventObj CreateEntity(RiqEntity entity)
+        {
+            entityToSet = entity;
+            var marker = Pool.Get();
+            marker.UpdateMarker();
+
+            return marker;
+        }
+
         public void UpdateMarkers()
         {
             var timeLeft = timeline.leftSide;
@@ -87,11 +98,11 @@ namespace HeavenStudio.Editor.Track
 
                 var active = vLeft && vRight;
 
-                var containsMarker = EntityMarkers.ContainsKey(entity.uid);
+                var containsMarker = EntityMarkers.ContainsKey(entity.guid);
 
                 if (containsMarker)
                 {
-                    var marker = EntityMarkers[entity.uid];
+                    var marker = EntityMarkers[entity.guid];
                     if (marker.selected || marker.moving) active = true;
                 }
 
@@ -102,20 +113,40 @@ namespace HeavenStudio.Editor.Track
                         entityToSet = entity;
                         Pool.Get();
                     }
-                    EntityMarkers[entity.uid].UpdateMarker();
+                    EntityMarkers[entity.guid].UpdateMarker();
                 }
                 else
                 {
-                    if (EntityMarkers.ContainsKey(entity.uid))
-                        Pool.Release(EntityMarkers[entity.uid]);
+                    if (EntityMarkers.ContainsKey(entity.guid))
+                        Pool.Release(EntityMarkers[entity.guid]);
                 }
             }
 
             InteractingWithEvents = false;
+            MovingAnyEvents = false;
             foreach (var marker in EntityMarkers.Values)
             {
                 if (marker.moving || marker.resizing || marker.mouseHovering)
                     InteractingWithEvents = true;
+                if (marker.moving)
+                    MovingAnyEvents = true;
+            }
+        }
+
+        public void SortMarkers()
+        {
+            Debug.Log("Sorted timeline blocks.");
+
+            var sortedBlocks = EntityMarkers.Values.OrderByDescending(c => c.entity.length).ToList();
+
+            var i = 0;
+            foreach (var block in EntityMarkers.Values)
+            {
+                var index = sortedBlocks.FindIndex(c => c.entity.guid == block.entity.guid);
+                Debug.Log(index);
+                block.transform.SetSiblingIndex(index + 1);
+
+                i++;
             }
         }
 
@@ -130,13 +161,15 @@ namespace HeavenStudio.Editor.Track
             marker.SetEntity(entityToSet);
             marker.SetMarkerInfo();
 
+            SortMarkers();
+
             marker.gameObject.SetActive(true);
-            EntityMarkers.Add(entityToSet.uid, marker);
+            EntityMarkers.Add(entityToSet.guid, marker);
         }
 
         private void OnReturnMarkerToPool(TimelineEventObj marker)
         {
-            EntityMarkers.Remove(marker.entity.uid);
+            EntityMarkers.Remove(marker.entity.guid);
             marker.gameObject.SetActive(false);
         }
 

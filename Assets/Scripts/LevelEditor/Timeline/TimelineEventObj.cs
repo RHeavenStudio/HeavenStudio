@@ -5,6 +5,8 @@ using Starpelly;
 using Jukebox;
 using TMPro;
 using UnityEngine.Timeline;
+using System.Linq;
+using System.Collections.Generic;
 
 namespace HeavenStudio.Editor.Track
 {
@@ -27,6 +29,9 @@ namespace HeavenStudio.Editor.Track
         [SerializeField] private RectTransform rightDrag;
 
         [SerializeField] private Image outline;
+        [SerializeField] private Image hasPropertiesIcon;
+
+        [SerializeField] private RectTransform visibleRegion;
 
         // private GameObject moveTemp;
 
@@ -54,7 +59,15 @@ namespace HeavenStudio.Editor.Track
         private float lastBeat = 0.0f;
         private int lastLayer = 0;
 
-        float leftSide, rightSide;
+        private int lastSiblingIndex;
+        private bool changedSiblingIndex;
+
+        public float zPriority { get; private set; }
+
+        // Difference between mouseHovering is this is regardless if the user can see it.
+        private bool mouseOver;
+
+        private float clickTimer = 0.0f;
 
         [Header("Colors")]
         public Color NormalCol;
@@ -100,6 +113,8 @@ namespace HeavenStudio.Editor.Track
             resizeGraphic.gameObject.SetActive(resizable);
             eventLabel.text = action.displayName;
 
+            hasPropertiesIcon.enabled = action.actionName != "switchGame" && action.parameters != null && action.parameters.Count > 0;
+
             SetColor((int)entity["track"]);
         }
 
@@ -108,15 +123,25 @@ namespace HeavenStudio.Editor.Track
             this.entity = entity;
         }
 
+        public void Update()
+        {
+            clickTimer += Time.deltaTime;
+        }
+
         public void UpdateMarker()
         {
-            mouseHovering = Timeline.instance.timelineState.selected && 
+            mouseOver = Timeline.instance.timelineState.selected && Timeline.instance.MouseInTimeline &&
                 Timeline.instance.MousePos2Beat.IsWithin((float)entity.beat, (float)entity.beat + entity.length) &&
                 Timeline.instance.MousePos2Layer == (int)entity["track"];
 
+            eventLabel.overflowMode = (mouseHovering || moving) ? TextOverflowModes.Overflow : TextOverflowModes.Ellipsis;
+
+            rectTransform.sizeDelta = new Vector2(rectTransform.sizeDelta.x, Timeline.instance.LayerHeight());
             Icon.rectTransform.sizeDelta = new Vector2(Timeline.instance.LayerHeight() - 8, Timeline.instance.LayerHeight() - 8);
             eventLabel.rectTransform.offsetMin = new Vector2(Icon.rectTransform.anchoredPosition.x + Icon.rectTransform.sizeDelta.x + 4, eventLabel.rectTransform.offsetMin.y);
             SetColor((int)entity["track"]);
+
+            selectedImage.gameObject.SetActive(selected || mouseHovering);
 
             if (selected)
             {
@@ -128,7 +153,6 @@ namespace HeavenStudio.Editor.Track
                 }
                 */
 
-                selectedImage.gameObject.SetActive(true);
                 if (moving)
                     outline.color = Color.magenta;
                 else
@@ -136,8 +160,6 @@ namespace HeavenStudio.Editor.Track
             }
             else
             {
-                selectedImage.gameObject.SetActive(false);
-
                 outline.color = new Color32(0, 0, 0, 51);
             }
 
@@ -154,10 +176,6 @@ namespace HeavenStudio.Editor.Track
                     selectedImage.gameObject.SetActive(false);
                     outline.color = new Color32(0, 0, 0, 51);
                 }
-
-
-                // rectTransform.sizeDelta = new Vector2(rectTransform.sizeDelta.x, Timeline.instance.LayerHeight());
-                // this.transform.localPosition = new Vector3(this.transform.localPosition.x, -entity["track"] * Timeline.instance.LayerHeight());
                 return;
             }
 
@@ -185,7 +203,27 @@ namespace HeavenStudio.Editor.Track
                     {
                         moving = false;
 
+                        if (!isCreating && movedEntity)
+                        {
+                            List<double> lastBeats = new();
+                            List<int> lastLayers = new();
+                            foreach (var marker in Selections.instance.eventsSelected)
+                            {
+                                var entity = marker.entity;
+
+                                lastBeats.Add(marker.entity.beat);
+                                lastLayers.Add((int)marker.entity["track"]);
+
+                                entity.beat = marker.lastBeat;
+                                entity["track"] = marker.lastLayer;
+                            }
+                            CommandManager.Instance.AddCommand(new Commands.Move(Selections.instance.eventsSelected.Select(c => c.entity).ToList(), lastBeats, lastLayers));
+                        }
+
+                        isCreating = false;
+
                         GameManager.instance.SortEventsList();
+                        TimelineBlockManager.Instance.SortMarkers();
                     }
                 }
 
@@ -195,65 +233,8 @@ namespace HeavenStudio.Editor.Track
                     {
                         marker.entity.beat = Mathf.Max(Timeline.instance.MousePos2BeatSnap - marker.initMoveX, 0);
                         marker.entity["track"] = Mathf.Clamp(Timeline.instance.MousePos2Layer - marker.initMoveY, 0, Timeline.instance.LayerCount - 1);
-
                     }
                 }
-
-                /*
-                int count = 0;
-                foreach (TimelineEventObj e in Timeline.instance.eventObjs)
-                {
-                    if (e.moving)
-                    {
-                        count++;
-                    }
-                }
-
-                if (count > 0 && selected)
-                {
-                    Vector3 mousePos = Editor.instance.EditorCamera.ScreenToWorldPoint(Input.mousePosition);
-                    // duplicate the entity if holding alt
-                    if ((!wasDuplicated) && Input.GetKey(KeyCode.LeftAlt))
-                    {
-                        Selections.instance.Deselect(this);
-                        this.wasDuplicated = false;
-                        this.moving = false;
-
-                        transform.localPosition = moveStartPos;
-                        OnComplete(false);
-
-                        TimelineEventObj te = Timeline.instance.CopyEventObject(this);
-                        TimelineEventObj obj;
-
-                        Selections.instance.DragSelect(te);
-
-                        te.wasDuplicated = true;
-                        te.transform.localPosition = transform.localPosition;
-                        te.moveStartPos = transform.localPosition;
-
-                        for (int i = 0; i < Timeline.instance.eventObjs.Count; i++)
-                        {
-                            obj = Timeline.instance.eventObjs[i];
-                            obj.startPosX = mousePos.x - obj.transform.position.x;
-                            obj.startPosY = mousePos.y - obj.transform.position.y;
-                        }
-
-                        te.moving = true;
-                    }
-                    else
-                    {
-                        this.transform.position = new Vector3(mousePos.x - startPosX, mousePos.y - startPosY - 0.40f, 0);
-                        this.transform.localPosition = new Vector3(Mathf.Max(Mathp.Round2Nearest(this.transform.localPosition.x * Timeline.instance.PixelsPerBeat, Timeline.SnapInterval()), 0), Timeline.instance.SnapToLayer(this.transform.localPosition.y));
-                    }
-
-                    if (lastPos != transform.localPosition)
-                    {
-                        OnMove();
-                    }
-
-                    lastPos = transform.localPosition;
-                }
-                */
             }
 
             if (Input.GetMouseButtonUp(0))
@@ -278,8 +259,25 @@ namespace HeavenStudio.Editor.Track
                 Cursor.SetCursor(null, Vector2.zero, CursorMode.Auto);
             }
 
-            rectTransform.sizeDelta = new Vector2(rectTransform.sizeDelta.x, Timeline.instance.LayerHeight());
             rectTransform.anchoredPosition = new Vector2((float)entity.beat * Timeline.instance.PixelsPerBeat, -(int)entity["track"] * Timeline.instance.LayerHeight());
+
+            zPriority = entity.length;
+
+            if (selected)
+                zPriority += 10000;
+        }
+
+        public void LateUpdate()
+        {
+            var followXL = (Timeline.instance.leftSide - (float)entity.beat) * Timeline.instance.PixelsPerBeat;
+            visibleRegion.offsetMin = new Vector2(
+                Mathf.Clamp(followXL - 2, 0, (entity.length * Timeline.instance.PixelsPerBeat) - Timeline.instance.LayerHeight()),
+                visibleRegion.offsetMin.y);
+
+            var followXR = (Timeline.instance.rightSide - ((float)entity.beat + entity.length)) * Timeline.instance.PixelsPerBeat;
+            visibleRegion.offsetMax = new Vector2(
+                Mathf.Clamp(followXR, -(entity.length * Timeline.instance.PixelsPerBeat) + 8, 0),
+                visibleRegion.offsetMax.y);
         }
 
         public void BeginMoving(bool setMovedEntity = true)
@@ -298,6 +296,27 @@ namespace HeavenStudio.Editor.Track
         }
 
         #region ClickEvents
+
+        public void HoverEnter()
+        {
+            if (!TimelineBlockManager.Instance.MovingAnyEvents)
+            {
+                lastSiblingIndex = gameObject.transform.GetSiblingIndex();
+                gameObject.transform.SetAsLastSibling();
+                changedSiblingIndex = true;
+            }
+            else
+                changedSiblingIndex = false;
+
+            mouseHovering = true;
+        }
+
+        public void HoverExit()
+        {
+            if (changedSiblingIndex)
+                gameObject.transform.SetSiblingIndex(lastSiblingIndex);
+            mouseHovering = false;
+        }
 
         public void OnDragMain()
         {
@@ -333,7 +352,21 @@ namespace HeavenStudio.Editor.Track
                 }
                 else
                 {
-                    Selections.instance.ClickSelect(this);
+                    if (selected && clickTimer < 0.315f)
+                    {
+                        foreach (var marker in TimelineBlockManager.Instance.EntityMarkers.Values)
+                        {
+                            if (marker == this) continue;
+                            if (marker.mouseOver)
+                            {
+                                Selections.instance.ClickSelect(marker);
+                                marker.clickTimer = 0;
+                                break;
+                            }
+                        }
+                    }
+                    else
+                        Selections.instance.ClickSelect(this);
                 }
             }
             else if (Input.GetMouseButton(1))
@@ -360,6 +393,8 @@ namespace HeavenStudio.Editor.Track
 
                 GridGameSelector.instance.SelectGame(datamodels[isSwitchGame ? 2 : 0], block);
             }
+
+            clickTimer = 0;
         }
 
         #endregion
@@ -475,6 +510,10 @@ namespace HeavenStudio.Editor.Track
             // better safety net than canada's healthcare system
             // this is still hilarious
             // GameManager.instance.Beatmap.Entities.Remove(GameManager.instance.Beatmap.Entities.Find(c => c.eventObj = this));
+
+            // FINALLY, A USE CASE FOR THIS FUNCTION
+            if (Timeline.instance.eventObjs.Contains(this))
+                Timeline.instance.eventObjs.Remove(this);
         }
 
         #endregion
