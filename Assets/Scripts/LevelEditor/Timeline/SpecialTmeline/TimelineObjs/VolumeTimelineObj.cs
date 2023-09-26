@@ -31,7 +31,7 @@ namespace HeavenStudio.Editor.Track
                     if (Input.GetKey(KeyCode.LeftShift))
                         newVolume *= 5f;
                     if (Input.GetKey(KeyCode.LeftControl))
-                        newVolume /= 100f;
+                        newVolume *= 0.01f;
 
                     volumeChange["volume"] += newVolume;
 
@@ -47,7 +47,8 @@ namespace HeavenStudio.Editor.Track
 
         private void UpdateVolume()
         {
-            volumeTXT.text = $"{volumeChange["volume"]}%";
+            volumeTXT.text = $"{volumeChange["volume"].ToString("F")}%";
+            SetX(volumeChange);
         }
 
         public override void Init()

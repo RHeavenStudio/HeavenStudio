@@ -5,6 +5,7 @@ using UnityEngine;
 using TMPro;
 
 using DG.Tweening;
+using Jukebox;
 
 namespace HeavenStudio.Editor.Track
 {
@@ -49,15 +50,12 @@ namespace HeavenStudio.Editor.Track
 
                 if (moving)
                 {
-                    Vector3 mousePos = Editor.instance.EditorCamera.ScreenToWorldPoint(Input.mousePosition);
-
-                    transform.position = new Vector3(mousePos.x - startPosX, transform.position.y, 0);
-                    transform.localPosition = new Vector3(Mathf.Clamp(Starpelly.Mathp.Round2Nearest(transform.localPosition.x, Timeline.SnapInterval()), 0, Mathf.Infinity), transform.localPosition.y);
+                    OnMove(Timeline.instance.MousePos2BeatSnap);
 
                     if (Input.GetMouseButtonUp(0))
                     {
-                        if (!OnMove(transform.localPosition.x))
-                            transform.localPosition = new Vector3(lastPosX, transform.localPosition.y);
+                        /*if (!OnMove(transform.localPosition.x))
+                            transform.localPosition = new Vector3(lastPosX, transform.localPosition.y);*/
 
                         moving = false;
                         lastPosX = transform.localPosition.x;
@@ -66,6 +64,7 @@ namespace HeavenStudio.Editor.Track
             }
             else
             {
+                /*
                 if (moving)
                 {
                     if (!OnMove(transform.localPosition.x))
@@ -73,8 +72,14 @@ namespace HeavenStudio.Editor.Track
                     moving = false;
                     lastPosX = transform.localPosition.x;
                 }
+                */
                 hovering = false;
             }
+        }
+
+        public void SetX(RiqEntity entity)
+        {
+            rectTransform.anchoredPosition = new Vector2((float)entity.beat * Timeline.instance.PixelsPerBeat, rectTransform.anchoredPosition.y);
         }
 
         public void StartMove()

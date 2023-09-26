@@ -139,9 +139,6 @@ namespace HeavenStudio.Editor.Track
 
             if (create == true)
             {
-                tempoChange.transform.position = new Vector3(Editor.instance.EditorCamera.ScreenToWorldPoint(Input.mousePosition).x + 0.08f, tempoChange.transform.position.y);
-                tempoChange.transform.localPosition = new Vector3(Starpelly.Mathp.Round2Nearest(tempoChange.transform.localPosition.x, Timeline.SnapInterval()), tempoChange.transform.localPosition.y);
-
                 float lastTempo = Conductor.instance.GetBpmAtBeat(tempoChange.transform.localPosition.x);
                 if (Input.GetKey(KeyCode.LeftShift) || Input.GetKey(KeyCode.RightShift))
                 {
@@ -151,13 +148,12 @@ namespace HeavenStudio.Editor.Track
                 {
                     lastTempo = lastTempo / 2f;
                 }
-                RiqEntity tempoC = GameManager.instance.Beatmap.AddNewTempoChange(tempoChange.transform.localPosition.x, lastTempo);
+                RiqEntity tempoC = GameManager.instance.Beatmap.AddNewTempoChange(Timeline.instance.MousePos2BeatSnap, lastTempo);
                 tempoTimelineObj.tempoChange = tempoC;
             }
             else
             {
                 tempoTimelineObj.tempoChange = tempoChange_;
-                tempoChange.transform.localPosition = new Vector3((float) tempoTimelineObj.tempoChange.beat, tempoChange.transform.localPosition.y);
                 tempoTimelineObj.first = first;
             }
             tempoTimelineObj.SetVisibility(Timeline.instance.timelineState.currentState);
@@ -181,17 +177,13 @@ namespace HeavenStudio.Editor.Track
 
             if (create == true)
             {
-                volumeChange.transform.position = new Vector3(Editor.instance.EditorCamera.ScreenToWorldPoint(Input.mousePosition).x + 0.08f, volumeChange.transform.position.y);
-                volumeChange.transform.localPosition = new Vector3(Starpelly.Mathp.Round2Nearest(volumeChange.transform.localPosition.x, Timeline.SnapInterval()), volumeChange.transform.localPosition.y);
-
-                RiqEntity volumeC = GameManager.instance.Beatmap.AddNewVolumeChange(volumeChange.transform.localPosition.x, 100f);
+                RiqEntity volumeC = GameManager.instance.Beatmap.AddNewVolumeChange(Timeline.instance.MousePos2BeatSnap, 100f);
                 volumeTimelineObj.volumeChange = volumeC;
                 GameManager.instance.Beatmap.VolumeChanges.Add(volumeC);
             }
             else
             {
                 volumeTimelineObj.volumeChange = volumeChange_;
-                volumeChange.transform.localPosition = new Vector3((float) volumeTimelineObj.volumeChange.beat, volumeChange.transform.localPosition.y);
                 volumeTimelineObj.first = first;
             }
             volumeTimelineObj.SetVisibility(Timeline.instance.timelineState.currentState);
@@ -214,10 +206,7 @@ namespace HeavenStudio.Editor.Track
 
             if (create == true)
             {
-                chartSection.transform.position = new Vector3(Editor.instance.EditorCamera.ScreenToWorldPoint(Input.mousePosition).x + 0.08f, chartSection.transform.position.y);
-                chartSection.transform.localPosition = new Vector3(Starpelly.Mathp.Round2Nearest(chartSection.transform.localPosition.x, Timeline.SnapInterval()), chartSection.transform.localPosition.y);
-
-                RiqEntity sectionC = GameManager.instance.Beatmap.AddNewSectionMarker(chartSection.transform.localPosition.x, "New Section");
+                RiqEntity sectionC = GameManager.instance.Beatmap.AddNewSectionMarker(Timeline.instance.MousePos2BeatSnap, "New Section");
 
                 sectionTimelineObj.chartSection = sectionC;
                 GameManager.instance.Beatmap.SectionMarkers.Add(sectionC);
@@ -225,7 +214,6 @@ namespace HeavenStudio.Editor.Track
             else
             {
                 sectionTimelineObj.chartSection = chartSection_;
-                chartSection.transform.localPosition = new Vector3((float) sectionTimelineObj.chartSection.beat, chartSection.transform.localPosition.y);
             }
             sectionTimelineObj.SetVisibility(Timeline.instance.timelineState.currentState);
 

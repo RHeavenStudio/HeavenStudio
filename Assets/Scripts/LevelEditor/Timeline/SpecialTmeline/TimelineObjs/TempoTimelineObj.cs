@@ -31,7 +31,7 @@ namespace HeavenStudio.Editor.Track
                     if (Input.GetKey(KeyCode.LeftShift))
                         newTempo *= 5f;
                     if (Input.GetKey(KeyCode.LeftControl))
-                        newTempo /= 100f;
+                        newTempo *= 0.01f;
 
                     tempoChange["tempo"] += newTempo;
 
@@ -49,8 +49,9 @@ namespace HeavenStudio.Editor.Track
 
         private void UpdateTempo()
         {
-            tempoTXT.text = $"{tempoChange["tempo"]} BPM";
+            tempoTXT.text = tempoChange["tempo"].ToString("F") + $" BPM";
             Timeline.instance.FitToSong();
+            SetX(tempoChange);
         }
 
         public override void Init()

@@ -32,6 +32,7 @@ namespace HeavenStudio.Editor.Track
         public void UpdateLabel()
         {
             sectionLabel.text = chartSection["sectionName"];
+            SetX(chartSection);
         }
 
         public override void Init()
