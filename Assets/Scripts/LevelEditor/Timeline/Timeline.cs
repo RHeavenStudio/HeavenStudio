@@ -730,6 +730,7 @@ namespace HeavenStudio.Editor.Track
             var lerpSpd = (lerp) ? 12f : 10000000; // im lazy
 
             var newPos = new Vector3((-Conductor.instance.songPositionInBeats * PixelsPerBeat) + 200, TimelineContent.transform.localPosition.y);
+            newPos.x = Mathf.Max(newPos.x, -(TimelineContent.rect.width - TimelineScroll.viewport.rect.width));
             TimelineContent.transform.localPosition =
                 Vector3.Lerp(TimelineContent.transform.localPosition, newPos, Time.deltaTime * lerpSpd);
         }
