@@ -37,7 +37,14 @@ namespace HeavenStudio.Editor
                 // Naive way of doing it? Possibly, but we should have a theme editor in the future.
                 if (defaultTheme.properties.LayerColors != null)
                 {
-                    theme.properties.LayerColors = defaultTheme.properties.LayerColors;
+                    theme.properties.LayerColors = new string[]
+                    {
+                        theme.properties.Layer1Col,
+                        theme.properties.Layer2Col,
+                        theme.properties.Layer3Col,
+                        theme.properties.Layer4Col,
+                        theme.properties.Layer5Col
+                    };
                     // Create a function for this in the future.
                     var savedTheme = JsonConvert.SerializeObject(theme, Formatting.Indented, new JsonSerializerSettings()
                     {

@@ -124,7 +124,7 @@ namespace HeavenStudio.Editor.Commands
     public class Duplicate : ICommand
     {
         public List<RiqEntity> dupEntityData = new();
-        private readonly List<System.Guid> placedEntityIDs = new();
+        private readonly List<Guid> placedEntityIDs = new();
 
         public Duplicate(List<TimelineEventObj> original)
         {
@@ -199,6 +199,81 @@ namespace HeavenStudio.Editor.Commands
         }
     }
 
+    public class Paste : ICommand
+    {
+        private List<RiqEntity> pasteEntityData = new();
+        private readonly List<Guid> entityIds = new();
+
+        public Paste(List<RiqEntity> original)
+        {
+            original.Sort((x, y) => x.beat.CompareTo(y.beat));
+            var firstEntityBeat = original[0].beat;
+            for (var i = 0; i < original.Count; i++)
+            {
+                var entity = original[i].DeepCopy();
+                entity.beat = Conductor.instance.songPositionInBeatsAsDouble + (entity.beat - firstEntityBeat);
+                entityIds.Add(Guid.NewGuid());
+
+                pasteEntityData.Add(entity);
+            }
+        }
+
+        public void Execute()
+        {
+            var entities = new List<RiqEntity>();
+            foreach (var entity in pasteEntityData)
+            {
+                entities.Add(entity.DeepCopy());
+            }
+
+            Selections.instance.DeselectAll();
+            for (var i = 0; i < entities.Count; i++)
+            {
+                var entity = entities[i];
+                entity.guid = entityIds[i];
+
+                GameManager.instance.Beatmap.Entities.Add(entity);
+                var marker = TimelineBlockManager.Instance.CreateEntity(entity);
+
+                Selections.instance.DragSelect(marker);
+            }
+
+            GameManager.instance.SortEventsList();
+        }
+
+        public void Undo()
+        {
+            var deletedEntities = new List<RiqEntity>();
+            for (var i = 0; i < entityIds.Count; i++)
+            {
+                var pastedEntityID = entityIds[i];
+                var pastedEntity = GameManager.instance.Beatmap.Entities.Find(c => c.guid == pastedEntityID);
+
+                if (pastedEntity != null)
+                {
+                    deletedEntities.Add(pastedEntity);
+
+                    if (TimelineBlockManager.Instance.EntityMarkers.ContainsKey(pastedEntityID))
+                    {
+                        var marker = TimelineBlockManager.Instance.EntityMarkers[pastedEntityID];
+                        Selections.instance.Deselect(marker);
+
+                        TimelineBlockManager.Instance.EntityMarkers.Remove(pastedEntityID);
+                        GameObject.Destroy(marker.gameObject);
+                    }
+
+                    GameManager.instance.Beatmap.Entities.Remove(pastedEntity);
+                }
+            }
+            GameManager.instance.SortEventsList();
+            pasteEntityData.Clear();
+            foreach (var entity in deletedEntities)
+            {
+                pasteEntityData.Add(entity.DeepCopy());
+            }
+        }
+    }
+
     public class Move : ICommand
     {
         private readonly List<Guid> entityIDs = new();
@@ -238,6 +313,9 @@ namespace HeavenStudio.Editor.Commands
 
                 entity.beat = newMove.beat[i];
                 entity["track"] = newMove.layer[i];
+
+                if (TimelineBlockManager.Instance.EntityMarkers.ContainsKey(entity.guid))
+                    TimelineBlockManager.Instance.EntityMarkers[entity.guid].SetColor((int)entity["track"]);
             }
         }
 
@@ -249,6 +327,9 @@ namespace HeavenStudio.Editor.Commands
 
                 entity.beat = lastMove.beat[i];
                 entity["track"] = lastMove.layer[i];
+
+                if (TimelineBlockManager.Instance.EntityMarkers.ContainsKey(entity.guid))
+                    TimelineBlockManager.Instance.EntityMarkers[entity.guid].SetColor((int)entity["track"]);
             }
         }
     }

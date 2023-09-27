@@ -9,6 +9,7 @@ using TMPro;
 using Starpelly;
 using Jukebox;
 using Newtonsoft.Json;
+using System.Linq;
 
 namespace HeavenStudio.Editor.Track
 {
@@ -185,6 +186,9 @@ namespace HeavenStudio.Editor.Track
         public float rightSide => (TimelineScroll.viewport.rect.width / PixelsPerBeat) + leftSide;
         
         public static Timeline instance { get; private set; }
+
+        [HideInInspector]
+        public List<RiqEntity> CopiedEntities = new();
 
         public bool userIsEditingInputField
         {
@@ -955,6 +959,28 @@ namespace HeavenStudio.Editor.Track
             return marker;
         }
 
+        public void CopySelected()
+        {
+            CopyEntities(Selections.instance.eventsSelected.Select(c => c.entity).ToList());
+        }
+
+        public void CopyEntities(List<RiqEntity> original)
+        {
+            if (original.Count <= 0) return;
+
+            CopiedEntities.Clear();
+
+            foreach (RiqEntity entity in original)
+            {
+                CopiedEntities.Add(entity.DeepCopy());
+            }
+        }
+
+        public void Paste()
+        {
+            CommandManager.Instance.AddCommand(new Commands.Paste(CopiedEntities));
+        }
+
         /*
         public TimelineEventObj AddEventObject(string eventName, bool dragNDrop = false, Vector3 pos = new Vector3(), RiqEntity entity = null, bool addEvent = false)
         {
@@ -1138,6 +1164,9 @@ namespace HeavenStudio.Editor.Track
         public void OnZoom(float zoom)
         {
             Zoom = zoom;
+
+            TimelineSlider.localPosition = new Vector3(Conductor.instance.songPositionInBeats * PixelsPerBeat, TimelineSlider.transform.localPosition.y);
+
             FitToSong();
             TimelineBlockManager.Instance.OnZoom();
         }

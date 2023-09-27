@@ -169,7 +169,7 @@ namespace HeavenStudio.Editor.Track
 
                 if (selected)
                 {
-                    selected = false;
+                    Selections.instance.Deselect(this);
                     outline.color = new Color32(0, 0, 0, 51);
                 }
                 return;
@@ -407,6 +407,7 @@ namespace HeavenStudio.Editor.Track
 
         public void ResizeEnter()
         {
+            if (Conductor.instance.NotStopped()) return;
             if (BoxSelection.instance.ActivelySelecting || !resizable || moving) return;
 
             inResizeRegion = true;

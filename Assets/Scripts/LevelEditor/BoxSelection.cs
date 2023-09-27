@@ -72,6 +72,15 @@ namespace HeavenStudio.Editor
                 endPos = new Vector2(endPos.x, Mathf.Clamp(endPos.y, 0, Timeline.instance.LayerCount));
 
                 ActivelySelecting = true;
+
+                if (Conductor.instance.NotStopped())
+                {
+                    validClick = false;
+                    boxGroup.DOFade(0.0f, 0.3f).SetEase(Ease.OutExpo);
+
+                    ActivelySelecting = false;
+                    return;
+                }
             }
 
             var start = new Vector2(Mathf.Min(startPos.x, endPos.x),

@@ -1,28 +1,18 @@
 using System;
 using System.IO;
 using System.Collections;
-using System.Collections.Generic;
 using System.Threading.Tasks;
 
 using UnityEngine;
 using UnityEngine.UI;
-using UnityEngine.Networking;
-
-using Newtonsoft.Json;
 using TMPro;
-using Starpelly;
 using SFB;
 
 using HeavenStudio.Common;
 using HeavenStudio.Editor.Track;
-using HeavenStudio.Util;
 using HeavenStudio.StudioDance;
 
 using Jukebox;
-
-using System.IO.Compression;
-using System.Text;
-using static Jukebox.Legacy.Beatmap;
 using UnityEditor;
 using System.Linq;
 
@@ -53,6 +43,8 @@ namespace HeavenStudio.Editor
         [SerializeField] private Button SaveBTN;
         [SerializeField] private Button UndoBTN;
         [SerializeField] private Button RedoBTN;
+        [SerializeField] private Button CopyBTN;
+        [SerializeField] private Button PasteBTN;
         [SerializeField] private Button MusicSelectBTN;
         [SerializeField] private Button FullScreenBTN;
         [SerializeField] private Button TempoFinderBTN;
@@ -115,6 +107,8 @@ namespace HeavenStudio.Editor
             Tooltip.AddTooltip(SaveBTN.gameObject, "Save Project <color=#adadad>[Ctrl+S]</color>\nSave Project As <color=#adadad>[Ctrl+Alt+S]</color>");
             Tooltip.AddTooltip(UndoBTN.gameObject, "Undo <color=#adadad>[Ctrl+Z]</color>");
             Tooltip.AddTooltip(RedoBTN.gameObject, "Redo <color=#adadad>[Ctrl+Y or Ctrl+Shift+Z]</color>");
+            Tooltip.AddTooltip(CopyBTN.gameObject, "Copy <color=#adadad>[Ctrl+C]</color>");
+            Tooltip.AddTooltip(PasteBTN.gameObject, "Paste <color=#adadad>[Ctrl+V]</color>");
             Tooltip.AddTooltip(MusicSelectBTN.gameObject, "Music Select");
             Tooltip.AddTooltip(FullScreenBTN.gameObject, "Preview <color=#adadad>[Tab]</color>");
             Tooltip.AddTooltip(TempoFinderBTN.gameObject, "Tempo Finder");
@@ -165,19 +159,25 @@ namespace HeavenStudio.Editor
 
                 if (Input.GetKey(KeyCode.LeftControl))
                 {
-                    /*
                     if (Input.GetKeyDown(KeyCode.Z))
                     {
                         if (Input.GetKey(KeyCode.LeftShift))
-                            CommandManager.Instance.Redo();
+                            CommandManager.Instance.RedoCommand();
                         else
-                            CommandManager.Instance.Undo();
+                            CommandManager.Instance.UndoCommand();
                     }
                     else if (Input.GetKeyDown(KeyCode.Y))
                     {
-                        CommandManager.Instance.Redo();
+                        CommandManager.Instance.RedoCommand();
                     }
-                    */
+                    else if (Input.GetKeyDown(KeyCode.C))
+                    {
+                        Timeline.instance.CopySelected();
+                    }
+                    else if (Input.GetKeyDown(KeyCode.V))
+                    {
+                        Timeline.instance.Paste();
+                    }
 
                     if (Input.GetKey(KeyCode.LeftShift))
                     {
@@ -218,15 +218,26 @@ namespace HeavenStudio.Editor
             }
             #endregion
 
+            // Undo+Redo
             if (CommandManager.Instance.CanUndo())
                 UndoBTN.transform.GetChild(0).GetComponent<Image>().color = Color.white;
             else
                 UndoBTN.transform.GetChild(0).GetComponent<Image>().color = Color.gray;
-
             if (CommandManager.Instance.CanRedo())
                 RedoBTN.transform.GetChild(0).GetComponent<Image>().color = Color.white;
             else
                 RedoBTN.transform.GetChild(0).GetComponent<Image>().color = Color.gray;
+
+            // Copy+Paste
+            if (Selections.instance.eventsSelected.Count > 0)
+                CopyBTN.transform.GetChild(0).GetComponent<Image>().color = Color.white;
+            else
+                CopyBTN.transform.GetChild(0).GetComponent<Image>().color = Color.gray;
+            if (Timeline.instance.CopiedEntities.Count > 0)
+                PasteBTN.transform.GetChild(0).GetComponent<Image>().color = Color.white;
+            else
+                PasteBTN.transform.GetChild(0).GetComponent<Image>().color = Color.gray;
+
 
             if (Timeline.instance.timelineState.selected && Editor.instance.canSelect)
             {
