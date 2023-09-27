@@ -950,13 +950,7 @@ namespace HeavenStudio.Editor.Track
 
             eventObjs.Add(marker);
 
-            var entitySerialize = JsonConvert.SerializeObject(marker.entity, Formatting.None, new JsonSerializerSettings()
-            {
-                TypeNameHandling = TypeNameHandling.None,
-                NullValueHandling = NullValueHandling.Include,
-                ReferenceLoopHandling = ReferenceLoopHandling.Ignore,
-            });
-            CommandManager.Instance.AddCommand(new Commands.Place(entitySerialize, marker.entity.guid));
+            CommandManager.Instance.AddCommand(new Commands.Place(marker.entity, marker.entity.guid));
 
             return marker;
         }

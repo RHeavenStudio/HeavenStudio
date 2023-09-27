@@ -72,15 +72,15 @@ namespace HeavenStudio.Editor.Commands
 
     public class Place : ICommand
     {
-        private string placedEventJson;
+        private RiqEntity placedEntityData;
         private Guid placedEventID;
 
         // Redo times basically
         private int placeTimes = 0;
 
-        public Place(string placedEventJson, Guid placedEventID)
+        public Place(RiqEntity entity, Guid placedEventID)
         {
-            this.placedEventJson = placedEventJson;
+            this.placedEntityData = entity.DeepCopy();
             this.placedEventID = placedEventID;
         }
 
@@ -88,10 +88,7 @@ namespace HeavenStudio.Editor.Commands
         {
             if (placeTimes > 0)
             {
-                var entity = JsonConvert.DeserializeObject<RiqEntity>(placedEventJson, new JsonSerializerSettings()
-                {
-                    TypeNameHandling = TypeNameHandling.None,
-                });
+                var entity = placedEntityData.DeepCopy();
                 entity.guid = placedEventID;
 
                 GameManager.instance.Beatmap.Entities.Add(entity);
@@ -108,12 +105,7 @@ namespace HeavenStudio.Editor.Commands
             var createdEntity = GameManager.instance.Beatmap.Entities.Find(c => c.guid == placedEventID);
             if (createdEntity != null)
             {
-                placedEventJson = JsonConvert.SerializeObject(createdEntity, Formatting.None, new JsonSerializerSettings()
-                {
-                    TypeNameHandling = TypeNameHandling.None,
-                    NullValueHandling = NullValueHandling.Include,
-                    ReferenceLoopHandling = ReferenceLoopHandling.Ignore,
-                });
+                placedEntityData = createdEntity.DeepCopy();
 
                 var marker = TimelineBlockManager.Instance.EntityMarkers[createdEntity.guid];
 
