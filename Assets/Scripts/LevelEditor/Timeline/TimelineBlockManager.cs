@@ -146,7 +146,7 @@ namespace HeavenStudio.Editor.Track
 
         public void SortMarkers()
         {
-            Debug.Log("Sorted timeline blocks.");
+            // Debug.Log("Sorted timeline blocks.");
 
             var sortedBlocks = EntityMarkers.Values.OrderByDescending(c => c.entity.length).ToList();
 
