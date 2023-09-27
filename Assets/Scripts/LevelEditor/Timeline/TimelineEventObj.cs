@@ -259,7 +259,7 @@ namespace HeavenStudio.Editor.Track
 
         public void LateUpdate()
         {
-            rectTransform.sizeDelta = new Vector2(rectTransform.sizeDelta.x, Timeline.instance.LayerHeight());
+            SetWidthHeight();
 
             var followXL = (Timeline.instance.leftSide - (float)entity.beat) * Timeline.instance.PixelsPerBeat;
             visibleRegion.offsetMin = new Vector2(
