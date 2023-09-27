@@ -4355,8 +4355,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 1, y: 0}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 0.18000007, y: 0}
+  m_AnchoredPosition: {x: 1, y: 0}
+  m_SizeDelta: {x: 6, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &184364177
 MonoBehaviour:
@@ -4408,8 +4408,8 @@ MonoBehaviour:
       m_PersistentCalls:
         m_Calls:
         - m_Target: {fileID: 798021450}
-          m_TargetAssemblyTypeName: RhythmHeavenMania.Editor.TimelineEventObj, Assembly-CSharp
-          m_MethodName: DragEnter
+          m_TargetAssemblyTypeName: HeavenStudio.Editor.Track.TimelineEventObj, Assembly-CSharp
+          m_MethodName: ResizeEnter
           m_Mode: 1
           m_Arguments:
             m_ObjectArgument: {fileID: 0}
@@ -4424,8 +4424,8 @@ MonoBehaviour:
       m_PersistentCalls:
         m_Calls:
         - m_Target: {fileID: 798021450}
-          m_TargetAssemblyTypeName: RhythmHeavenMania.Editor.TimelineEventObj, Assembly-CSharp
-          m_MethodName: DragExit
+          m_TargetAssemblyTypeName: HeavenStudio.Editor.Track.TimelineEventObj, Assembly-CSharp
+          m_MethodName: ResizeExit
           m_Mode: 1
           m_Arguments:
             m_ObjectArgument: {fileID: 0}
@@ -4643,7 +4643,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: -399.99994, y: 0}
+  m_AnchoredPosition: {x: -400, y: 0}
   m_SizeDelta: {x: -800.0001, y: 194}
   m_Pivot: {x: 0.5, y: 1}
 --- !u!114 &195260752
@@ -7138,7 +7138,7 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 9.95
+  m_fontSize: 14
   m_fontSizeBase: 14.3
   m_fontWeight: 400
   m_enableAutoSizing: 1
@@ -16032,11 +16032,11 @@ RectTransform:
   m_Father: {fileID: 1791483803}
   m_RootOrder: 6
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0.5, y: 0}
-  m_AnchorMax: {x: 0.5, y: 0}
-  m_AnchoredPosition: {x: -45, y: -110}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 0, y: 0}
+  m_AnchoredPosition: {x: 486, y: -110}
   m_SizeDelta: {x: 100, y: 100}
-  m_Pivot: {x: 0.5, y: 0}
+  m_Pivot: {x: 0, y: 0}
 --- !u!114 &683816223
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -18668,7 +18668,6 @@ MonoBehaviour:
   selected: 0
   mouseHovering: 0
   resizable: 0
-  resizing: 0
   moving: 0
   wasDuplicated: 0
   isCreating: 0
@@ -25084,7 +25083,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0.5}
   m_AnchorMax: {x: 1, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: 142.53061}
+  m_AnchoredPosition: {x: 0, y: 162.32657}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 1}
 --- !u!222 &1154875945
@@ -29981,7 +29980,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: -399.99994, y: 0}
+  m_AnchoredPosition: {x: -400, y: 0}
   m_SizeDelta: {x: -800.0001, y: 194}
   m_Pivot: {x: 0.5, y: 1}
 --- !u!114 &1426168094
@@ -33860,8 +33859,8 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 1220118245}
   m_HandleRect: {fileID: 1220118244}
   m_Direction: 2
-  m_Value: 1.0000004
-  m_Size: 0.78268224
+  m_Value: 1.0000017
+  m_Size: 0.9467054
   m_NumberOfSteps: 0
   m_OnValueChanged:
     m_PersistentCalls:
@@ -40882,7 +40881,7 @@ RectTransform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2046851079}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -40892,8 +40891,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 0, y: 0.000019073486}
-  m_SizeDelta: {x: 0.18, y: 0}
+  m_AnchoredPosition: {x: -1, y: 0.000019073486}
+  m_SizeDelta: {x: 6, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &2046851081
 MonoBehaviour:
@@ -40983,8 +40982,8 @@ MonoBehaviour:
       m_PersistentCalls:
         m_Calls:
         - m_Target: {fileID: 798021450}
-          m_TargetAssemblyTypeName: RhythmHeavenMania.Editor.TimelineEventObj, Assembly-CSharp
-          m_MethodName: DragEnter
+          m_TargetAssemblyTypeName: HeavenStudio.Editor.Track.TimelineEventObj, Assembly-CSharp
+          m_MethodName: ResizeEnter
           m_Mode: 1
           m_Arguments:
             m_ObjectArgument: {fileID: 0}
@@ -40999,8 +40998,8 @@ MonoBehaviour:
       m_PersistentCalls:
         m_Calls:
         - m_Target: {fileID: 798021450}
-          m_TargetAssemblyTypeName: RhythmHeavenMania.Editor.TimelineEventObj, Assembly-CSharp
-          m_MethodName: DragExit
+          m_TargetAssemblyTypeName: HeavenStudio.Editor.Track.TimelineEventObj, Assembly-CSharp
+          m_MethodName: ResizeExit
           m_Mode: 1
           m_Arguments:
             m_ObjectArgument: {fileID: 0}

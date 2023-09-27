@@ -44,12 +44,15 @@ namespace HeavenStudio.Editor.Track
         public bool selected;
         public bool mouseHovering;
         public bool resizable;
-        public bool resizing;
         public bool moving;
         public bool wasDuplicated;
+
+        public bool resizing => resizingLeft || resizingRight;
         private bool resizingLeft;
         private bool resizingRight;
         private bool inResizeRegion;
+        private float resizingLeftBL;
+
         public bool isCreating;
 
         private bool altWhenClicked = false;
@@ -138,7 +141,7 @@ namespace HeavenStudio.Editor.Track
                 Timeline.instance.MousePos2Beat.IsWithin((float)entity.beat, (float)entity.beat + entity.length) &&
                 Timeline.instance.MousePos2Layer == (int)entity["track"];
 
-            eventLabel.overflowMode = (mouseHovering || moving) ? TextOverflowModes.Overflow : TextOverflowModes.Ellipsis;
+            eventLabel.overflowMode = (mouseHovering || moving || resizing || inResizeRegion) ? TextOverflowModes.Overflow : TextOverflowModes.Ellipsis;
 
             if (selected)
             {
@@ -162,27 +165,25 @@ namespace HeavenStudio.Editor.Track
                 if (selected)
                 {
                     selected = false;
-                    selectedImage.gameObject.SetActive(false);
                     outline.color = new Color32(0, 0, 0, 51);
                 }
                 return;
             }
 
-            if (resizing)
+            if (resizingRight)
             {
                 if (moving) moving = false;
-                if (resizingLeft) SetPivot(new Vector2(1, rectTransform.pivot.y));
 
-                Vector2 sizeDelta = rectTransform.sizeDelta;
-                Vector2 mousePos;
+                entity.length = Mathf.Max(Timeline.instance.MousePos2BeatSnap - (float)entity.beat, Timeline.instance.snapInterval);
+                SetWidthHeight();
+            }
+            else if (resizingLeft)
+            {
+                if (moving) moving = false;
 
-                RectTransformUtility.ScreenPointToLocalPointInRectangle(rectTransform, Input.mousePosition, Editor.instance.EditorCamera, out mousePos);
-
-                sizeDelta = new Vector2((resizingLeft ? -mousePos.x : mousePos.x) + 0.15f, sizeDelta.y);
-                sizeDelta = new Vector2(Mathf.Clamp(sizeDelta.x, Timeline.SnapInterval(), resizingLeft ? rectTransform.localPosition.x : Mathf.Infinity), sizeDelta.y);
-
-                rectTransform.sizeDelta = new Vector2(Mathp.Round2Nearest(sizeDelta.x, Timeline.SnapInterval()), sizeDelta.y);
-                SetPivot(new Vector2(0, rectTransform.pivot.y));
+                entity.beat = Mathf.Min(Timeline.instance.MousePos2BeatSnap, resizingLeftBL - Timeline.instance.snapInterval);
+                entity.length = Mathf.Max(resizingLeftBL - (float)entity.beat, Timeline.instance.snapInterval);
+                SetWidthHeight();
             }
             else
             {
@@ -300,19 +301,22 @@ namespace HeavenStudio.Editor.Track
                 changedSiblingIndex = false;
 
             mouseHovering = true;
-            selectedImage.gameObject.SetActive(true);
+            if (!selected && !TimelineBlockManager.Instance.MovingAnyEvents) selectedImage.gameObject.SetActive(true);
         }
 
         public void HoverExit()
         {
             if (changedSiblingIndex)
                 gameObject.transform.SetSiblingIndex(lastSiblingIndex);
+
             mouseHovering = false;
             selectedImage.gameObject.SetActive(false);
         }
 
         public void OnDragMain()
         {
+            if (Conductor.instance.NotStopped()) return;
+
             if (Input.GetMouseButton(1) || Input.GetMouseButton(2)) return;
             if (!moving)
                 altWhenClicked = Input.GetKey(KeyCode.LeftAlt);
@@ -337,6 +341,9 @@ namespace HeavenStudio.Editor.Track
 
         public void OnDown()
         {
+            if (Conductor.instance.NotStopped()) return;
+            if (moving) return;
+
             if (Input.GetMouseButton(0) && Timeline.instance.timelineState.selected)
             {
                 if (Input.GetKey(KeyCode.LeftShift))
@@ -358,7 +365,7 @@ namespace HeavenStudio.Editor.Track
                             }
                         }
                     }
-                    else
+                    else if (!selected)
                         Selections.instance.ClickSelect(this);
                 }
             }
@@ -394,12 +401,12 @@ namespace HeavenStudio.Editor.Track
 
         #region ResizeEvents
 
-        public void DragEnter()
+        public void ResizeEnter()
         {
             inResizeRegion = true;
         }
 
-        public void DragExit()
+        public void ResizeExit()
         {
             inResizeRegion = false;
         }
@@ -409,8 +416,8 @@ namespace HeavenStudio.Editor.Track
             if (resizable && selected)
             {
                 ResetResize();
-                resizing = true;
                 resizingLeft = true;
+                resizingLeftBL = (float)entity.beat + entity.length;
             }
         }
 
@@ -427,7 +434,6 @@ namespace HeavenStudio.Editor.Track
             if (resizable && selected)
             {
                 ResetResize();
-                resizing = true;
                 resizingRight = true;
             }
         }
@@ -444,7 +450,6 @@ namespace HeavenStudio.Editor.Track
         {
             resizingLeft = false;
             resizingRight = false;
-            resizing = false;
         }
 
         private void SetPivot(Vector2 pivot)
@@ -501,12 +506,12 @@ namespace HeavenStudio.Editor.Track
 
         public void OnSelect()
         {
-            selectedImage.gameObject.SetActive(true);
+            // selectedImage.gameObject.SetActive(true);
         }
 
         public void OnDeselect()
         {
-            selectedImage.gameObject.SetActive(false);
+            // selectedImage.gameObject.SetActive(false);
         }
     }
 }

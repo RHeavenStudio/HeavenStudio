@@ -606,13 +606,13 @@ namespace HeavenStudio.Editor.Track
             }
 
             RealTimelineContent.sizeDelta = new Vector2(RealTimelineContent.sizeDelta.x, LayerHeight() * LayerCount);
-
-            TimelineBlockManager.Instance.UpdateMarkers();
-            BoxSelection.instance.LayerSelectUpdate();
         }
 
         public void LateUpdate()
         {
+            TimelineBlockManager.Instance.UpdateMarkers();
+            BoxSelection.instance.LayerSelectUpdate();
+
             TimelineContent.anchoredPosition = RealTimelineContent.anchoredPosition;
 
             TopPanelContent.anchoredPosition = new Vector2(TimelineContent.anchoredPosition.x, TopPanelContent.anchoredPosition.y);
