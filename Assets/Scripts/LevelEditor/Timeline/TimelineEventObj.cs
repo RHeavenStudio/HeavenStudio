@@ -100,6 +100,7 @@ namespace HeavenStudio.Editor.Track
 
             if (gameAction != null)
             {
+                this.resizable = gameAction.resizable;
                 if (gameAction.resizable == false)
                 {
                     rectTransform.sizeDelta = new Vector2(gameAction.defaultLength * Timeline.instance.PixelsPerBeat, Timeline.instance.LayerHeight());
@@ -107,7 +108,6 @@ namespace HeavenStudio.Editor.Track
                 }
                 else
                 {
-                    this.resizable = true;
                     if (entity != null && gameAction.defaultLength != entity.length)
                     {
                         rectTransform.sizeDelta = new Vector2(entity.length * Timeline.instance.PixelsPerBeat, Timeline.instance.LayerHeight());
@@ -528,10 +528,6 @@ namespace HeavenStudio.Editor.Track
             // better safety net than canada's healthcare system
             // this is still hilarious
             // GameManager.instance.Beatmap.Entities.Remove(GameManager.instance.Beatmap.Entities.Find(c => c.eventObj = this));
-
-            // FINALLY, A USE CASE FOR THIS FUNCTION
-            if (Timeline.instance.eventObjs.Contains(this))
-                Timeline.instance.eventObjs.Remove(this);
         }
 
         #endregion

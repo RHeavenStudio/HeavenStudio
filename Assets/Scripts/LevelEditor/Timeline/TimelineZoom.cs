@@ -5,6 +5,8 @@ namespace HeavenStudio.Editor.Track
 {
     public class TimelineZoom : MonoBehaviour, IScrollHandler
     {
+        public Vector3 Scale => _scale;
+
         [SerializeField] private float minScale = 0.5f;
         [SerializeField] private float maxScale => float.MaxValue;
         [SerializeField] private Vector2 initialScale = Vector2.one;
@@ -77,6 +79,7 @@ namespace HeavenStudio.Editor.Track
         {
             _scale.Set(1, 1, 1);
             rectTransform.localScale = _scale;
+            Timeline.instance.OnZoom(_scale.x);
         }
     }
 }

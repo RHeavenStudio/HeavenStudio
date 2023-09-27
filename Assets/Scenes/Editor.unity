@@ -4719,7 +4719,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: -400, y: 0}
+  m_AnchoredPosition: {x: -399.99994, y: 0}
   m_SizeDelta: {x: -800.0001, y: 194}
   m_Pivot: {x: 0.5, y: 1}
 --- !u!114 &195260752
@@ -10073,7 +10073,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 177.66986, y: -60.01}
+  m_AnchoredPosition: {x: 177.66988, y: -60.01}
   m_SizeDelta: {x: 42, y: 42}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &449176922
@@ -12015,7 +12015,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3312d7739989d2b4e91e6319e9a96d76, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_Padding: {x: 0, y: 0, z: 0, w: 0}
+  m_Padding: {x: 0, y: 0, z: 0, w: -1}
   m_Softness: {x: 0, y: 0}
 --- !u!1 &552375320
 GameObject:
@@ -25238,7 +25238,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0.5}
   m_AnchorMax: {x: 1, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: 162.32652}
+  m_AnchoredPosition: {x: 0, y: 135.38774}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 1}
 --- !u!222 &1154875945
@@ -30404,7 +30404,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: -400, y: 0}
+  m_AnchoredPosition: {x: -399.99994, y: 0}
   m_SizeDelta: {x: -800.0001, y: 194}
   m_Pivot: {x: 0.5, y: 1}
 --- !u!114 &1426168094
@@ -34283,8 +34283,8 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 1220118245}
   m_HandleRect: {fileID: 1220118244}
   m_Direction: 2
-  m_Value: 1.0000017
-  m_Size: 0.9467054
+  m_Value: 1.0000004
+  m_Size: 0.72349864
   m_NumberOfSteps: 0
   m_OnValueChanged:
     m_PersistentCalls:
@@ -37984,6 +37984,7 @@ MonoBehaviour:
   snapInterval: 0.25
   waveform: {fileID: 743531237}
   layerBG: {fileID: 1268674681}
+  zoomComponent: {fileID: 1702073032}
   resizeCursor: {fileID: 0}
   PlaybackBeat: 0
   TopPanel: {fileID: 861177305}

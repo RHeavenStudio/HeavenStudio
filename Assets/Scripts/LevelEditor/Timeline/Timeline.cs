@@ -21,7 +21,6 @@ namespace HeavenStudio.Editor.Track
         [SerializeField] private TMP_Text CurrentTempo;
 
         [Header("Timeline Properties")]
-        public List<TimelineEventObj> eventObjs = new List<TimelineEventObj>();
         private bool lastFrameDrag;
         public int LayerCount = 5;
         public bool metronomeEnabled;
@@ -33,6 +32,7 @@ namespace HeavenStudio.Editor.Track
         [Header("Components")]
         [SerializeField] private RawImage waveform;
         [SerializeField] private Image layerBG;
+        [SerializeField] private TimelineZoom zoomComponent;
         public Texture2D resizeCursor;
 
         public float WidthPerBeat { get; private set; } = 100.0f;
@@ -203,13 +203,6 @@ namespace HeavenStudio.Editor.Track
 
         public void LoadRemix()
         {
-            // beatmap entities
-            for (int i = 0; i < eventObjs.Count; i++)
-            {
-                Destroy(eventObjs[i].gameObject);
-            }
-            eventObjs.Clear();
-
             /*
             for (int i = 0; i < GameManager.instance.Beatmap.Entities.Count; i++)
             {
@@ -294,15 +287,15 @@ namespace HeavenStudio.Editor.Track
 
             ZoomInBTN.onClick.AddListener(delegate
             {
-                // zoomComponent.ZoomIn(0.015f * TimelineContent.localScale.x, Vector2.zero);
+                zoomComponent.Zoom(0.25f * zoomComponent.Scale.x, Vector2.zero);
             });
             ZoomOutBTN.onClick.AddListener(delegate
             {
-                // zoomComponent.ZoomOut(-0.0125f * TimelineContent.localScale.x, Vector2.zero);
+                zoomComponent.Zoom(-0.2f * zoomComponent.Scale.x, Vector2.zero);
             });
             ZoomResetBTN.onClick.AddListener(delegate
             {
-                // zoomComponent.ResetZoom();
+                zoomComponent.ResetZoom();
             });
             WaveformBTN.onClick.AddListener(delegate
             {
@@ -952,8 +945,6 @@ namespace HeavenStudio.Editor.Track
                 entity["track"] = marker.GetTrack();
             }
 
-            eventObjs.Add(marker);
-
             CommandManager.Instance.AddCommand(new Commands.Place(marker.entity, marker.entity.guid));
 
             return marker;
@@ -1102,26 +1093,6 @@ namespace HeavenStudio.Editor.Track
             duplicatedEventObjs.Add(dup);
 
             return dup;
-        }
-
-        public void DestroyEventObject(RiqEntity entity)
-        {
-            if (EventParameterManager.instance.entity == entity)
-                EventParameterManager.instance.Disable();
-
-            // eventObjs.Remove(entity.eventObj);
-            foreach (TimelineEventObj e in eventObjs)
-            {
-                if (e.entity == entity)
-                {
-                    Destroy(e.gameObject);
-                    eventObjs.Remove(e);
-                    break;
-                }
-            }
-            GameManager.instance.Beatmap.Entities.Remove(entity);
-            
-            GameManager.instance.SortEventsList();
         }
 
         public float SnapToLayer(float y)

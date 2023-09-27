@@ -78,6 +78,8 @@ namespace HeavenStudio.Editor
 
         public void SelectAll()
         {
+            return;
+            /*
             DeselectAll();
             var eventObjs = Timeline.instance.eventObjs;
             for (int i = 0; i < eventObjs.Count; i++)
@@ -88,6 +90,7 @@ namespace HeavenStudio.Editor
                 eventsSelected.Add(eventObjs[i]);
             }
             TimelineBlockManager.Instance.SortMarkers();
+            */
         }
 
         public void DeselectAll()
