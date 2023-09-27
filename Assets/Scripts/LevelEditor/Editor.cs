@@ -380,6 +380,7 @@ namespace HeavenStudio.Editor
         {
             try
             {
+                RiqFileHandler.UnlockCache();
                 RiqFileHandler.WriteRiq(GameManager.instance.Beatmap);
                 RiqFileHandler.PackRiq(path, true);
                 Debug.Log("Packed RIQ successfully!");
@@ -430,6 +431,7 @@ namespace HeavenStudio.Editor
 
                 try
                 {
+                    RiqFileHandler.UnlockCache();
                     string tmpDir = RiqFileHandler.ExtractRiq(path);
                     Debug.Log("Imported RIQ successfully!");
                     LoadRemix();

@@ -64,6 +64,8 @@ namespace HeavenStudio.Editor.Track
 
                 entityToSet = entity;
                 Pool.Get();
+
+                Debug.Log(entity.datamodel);
             }
         }
 

@@ -348,8 +348,6 @@ namespace HeavenStudio.Editor.Track
             if (songBeats == 0) songBeats = 320;
             else songBeats += 10;
 
-            Debug.Log("test");
-
             TimelineContent.sizeDelta = new Vector2(songBeats * PixelsPerBeat, currentSizeDelta.y);
             // TimelineEventGrid.sizeDelta = new Vector2(songBeats * PixelsPerBeat, currentSizeDelta.y);
             RealTimelineContent.sizeDelta = new Vector2(TimelineContent.sizeDelta.x / Zoom, RealTimelineContent.sizeDelta.y);

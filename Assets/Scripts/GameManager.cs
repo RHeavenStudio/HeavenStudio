@@ -222,6 +222,7 @@ namespace HeavenStudio
             Beatmap.AddNewVolumeChange(0, 100f);
             Beatmap.data.offset = 0f;
             Conductor.instance.musicSource.clip = null;
+            RiqFileHandler.UnlockCache();
             RiqFileHandler.WriteRiq(Beatmap);
             AudioLoadDone = true;
         }
