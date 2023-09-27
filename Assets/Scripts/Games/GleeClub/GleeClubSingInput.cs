@@ -22,8 +22,8 @@ namespace HeavenStudio.Games.Scripts_GleeClub
         {
             shouldClose = close != (int)GleeClub.MouthOpenClose.OnlyOpen;
             shouldOpen = close != (int)GleeClub.MouthOpenClose.OnlyClose;
-            if (shouldOpen) game.ScheduleInput(beat - 1, 1, InputType.STANDARD_UP, Just, Miss, Out);
-            if (shouldClose) game.ScheduleInput(beat, length, InputType.STANDARD_DOWN, JustClose, MissClose, Out);
+            if (shouldOpen) game.ScheduleInput(beat - 1, 1, GleeClub.InputAction_BasicRelease, Just, Miss, Out);
+            if (shouldClose) game.ScheduleInput(beat, length, GleeClub.InputAction_BasicPress, JustClose, MissClose, Out);
         }
 
         public void Just(PlayerActionEvent caller, float state)

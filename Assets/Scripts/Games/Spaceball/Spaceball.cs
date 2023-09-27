@@ -121,10 +121,6 @@ namespace HeavenStudio.Games
         {
             for (int i = 1; i < BallsHolder.transform.childCount; i++)
                 Destroy(BallsHolder.transform.GetChild(i).gameObject);
-            GameCamera.instance.camera.orthographic = false;
-
-            if (EligibleHits.Count > 0)
-                EligibleHits.RemoveRange(0, EligibleHits.Count);
         }
 
         public override void OnTimeChange()

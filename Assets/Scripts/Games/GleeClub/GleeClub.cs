@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using HeavenStudio.Util;
+using HeavenStudio.InputSystem;
 using Jukebox;
 
 namespace HeavenStudio.Games.Loaders
@@ -20,7 +21,7 @@ namespace HeavenStudio.Games.Loaders
                 },
                 new GameAction("sing", "Sing")
                 {
-                    function = delegate { var e = eventCaller.currentEntity; GleeClub.instance.Sing(e.beat, e.length, e["semiTones"], e["semiTones1"], e["semiTonesPlayer"], 
+                    function = delegate { var e = eventCaller.currentEntity; GleeClub.instance.Sing(e.beat, e.length, e["semiTones"], e["semiTones1"], e["semiTonesPlayer"],
                         e["close"], e["repeat"], e["semiTonesLeft2"], e["semiTonesLeft3"], e["semiTonesMiddle2"]); },
                     resizable = true,
                     parameters = new List<Param>()
@@ -96,9 +97,9 @@ namespace HeavenStudio.Games.Loaders
                     hidden = true
                 },
             },
-            new List<string>() {"ntr", "repeat"},
+            new List<string>() { "ntr", "repeat" },
             "ntrchorus", "en",
-            new List<string>() {"en"}
+            new List<string>() { "en" }
             );
         }
     }
@@ -167,7 +168,7 @@ namespace HeavenStudio.Games
 
         void Start()
         {
-            if (!PlayerInput.Pressing() && Conductor.instance.isPlaying && !GameManager.instance.autoplay)
+            if (!PlayerInput.GetIsAction(InputAction_BasicPressing) && Conductor.instance.isPlaying && !GameManager.instance.autoplay)
             {
                 playerChorusKid.StartSinging();
                 leftChorusKid.MissPose();
@@ -192,19 +193,29 @@ namespace HeavenStudio.Games
         {
             if (!playerChorusKid.disappeared)
             {
-                if (PlayerInput.Pressed() && !IsExpectingInputNow(InputType.STANDARD_DOWN))
+                if (PlayerInput.GetIsAction(InputAction_BasicPress) && !IsExpectingInputNow(InputAction_BasicPress))
                 {
                     playerChorusKid.StopSinging();
                     leftChorusKid.MissPose();
                     middleChorusKid.MissPose();
                     ScoreMiss();
                 }
-                if (PlayerInput.PressedUp() && !IsExpectingInputNow(InputType.STANDARD_UP))
+                if (PlayerInput.GetIsAction(InputAction_BasicRelease) && !IsExpectingInputNow(InputAction_BasicRelease))
                 {
                     playerChorusKid.StartSinging();
                     leftChorusKid.MissPose();
                     middleChorusKid.MissPose();
                     ScoreMiss();
+                }
+                if (PlayerInput.GetIsAction(InputAction_FlickRelease) && !IsExpectingInputNow(InputAction_FlickRelease))
+                {
+                    if (PlayerInput.CurrentControlStyle == InputController.ControlStyles.Touch)
+                    {
+                        playerChorusKid.StartYell();
+                        leftChorusKid.MissPose();
+                        middleChorusKid.MissPose();
+                        ScoreMiss();
+                    }
                 }
             }
 
@@ -265,14 +276,14 @@ namespace HeavenStudio.Games
             playerChorusKid.currentPitch = SoundByte.GetPitchFromSemiTones(semiTonesPlayer, true);
             leftChorusKid.StartSinging(true);
             middleChorusKid.StartSinging(true);
-            if (!PlayerInput.Pressing() || GameManager.instance.autoplay) playerChorusKid.StartSinging(true);
+            if (!PlayerInput.GetIsAction(InputAction_BasicPressing) || GameManager.instance.autoplay) playerChorusKid.StartSinging(true);
             else missed = true;
         }
 
         public void TogetherNow(double beat, int semiTones, int semiTones1, int semiTonesPlayer, float conductorPitch)
         {
-            if (!playerChorusKid.disappeared) ScheduleInput(beat, 2.5f, InputType.STANDARD_UP, JustTogetherNow, Out, Out);
-            if (!playerChorusKid.disappeared) ScheduleInput(beat, 3.5f, InputType.STANDARD_DOWN, JustTogetherNowClose, MissBaton, Out);
+            if (!playerChorusKid.disappeared) ScheduleInput(beat, 2.5f, InputAction_FlickRelease, JustTogetherNow, Out, Out);
+            if (!playerChorusKid.disappeared) ScheduleInput(beat, 3.5f, InputAction_BasicPress, JustTogetherNowClose, MissBaton, Out);
             float pitch = SoundByte.GetPitchFromSemiTones(semiTones, true);
             float pitch1 = SoundByte.GetPitchFromSemiTones(semiTones1, true);
             currentYellPitch = SoundByte.GetPitchFromSemiTones(semiTonesPlayer, true);
@@ -378,7 +389,7 @@ namespace HeavenStudio.Games
                 {
                     new BeatAction.Action(beat + length + sing.startBeat, delegate
                     {
-                        if (sing.closeMouth != (int)MouthOpenClose.OnlyClose) 
+                        if (sing.closeMouth != (int)MouthOpenClose.OnlyClose)
                         {
                             middleChorusKid.currentPitch = pitch;
                             middleChorusKid.StartSinging();
@@ -387,15 +398,15 @@ namespace HeavenStudio.Games
                                 leftChorusKid.currentPitch = pitchLeft2;
                                 leftChorusKid.StartSinging();
                             }
-                        } 
+                        }
                     }),
                     new BeatAction.Action(beat + length + sing.startBeat + sing.length, delegate
                     {
-                        if (sing.closeMouth != (int)MouthOpenClose.OnlyOpen) 
+                        if (sing.closeMouth != (int)MouthOpenClose.OnlyOpen)
                         {
                             middleChorusKid.StopSinging();
                             if (sing.repeating) leftChorusKid.StopSinging();
-                        } 
+                        }
                     }),
                     new BeatAction.Action(beat + length + sing.startBeat + beatInterval, delegate
                     {
@@ -440,7 +451,7 @@ namespace HeavenStudio.Games
         public void Baton(double beat)
         {
             missed = false;
-            if (!playerChorusKid.disappeared) ScheduleInput(beat, 1, InputType.STANDARD_DOWN, JustBaton, MissBaton, Out);
+            if (!playerChorusKid.disappeared) ScheduleInput(beat, 1, InputAction_BasicPress, JustBaton, MissBaton, Out);
             BeatAction.New(instance, new List<BeatAction.Action>()
             {
                 new BeatAction.Action(beat, delegate

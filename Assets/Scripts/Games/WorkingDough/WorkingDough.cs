@@ -1,4 +1,5 @@
 using HeavenStudio.Util;
+using HeavenStudio.InputSystem;
 using System;
 using System.Collections.Generic;
 using UnityEngine;
@@ -206,6 +207,34 @@ namespace HeavenStudio.Games
         public Sprite redArrowSprite;
 
         public static WorkingDough instance;
+
+        const int IA_AltPress = IAMAXCAT;
+        protected static bool IA_TouchNrmPress(out double dt)
+        {
+            return PlayerInput.GetTouchDown(InputController.ActionsTouch.Tap, out dt)
+                && !instance.IsExpectingInputNow(InputAction_Alt);
+        }
+
+        protected static bool IA_PadAltPress(out double dt)
+        {
+            return PlayerInput.GetPadDown(InputController.ActionsPad.South, out dt);
+        }
+        protected static bool IA_BatonAltPress(out double dt)
+        {
+            return PlayerInput.GetSqueezeDown(out dt);
+        }
+        protected static bool IA_TouchAltPress(out double dt)
+        {
+            return PlayerInput.GetTouchDown(InputController.ActionsTouch.Tap, out dt)
+                && instance.IsExpectingInputNow(InputAction_Alt);
+        }
+
+        public static PlayerInput.InputAction InputAction_Nrm =
+            new("RvlDoughAlt", new int[] { IAPressCat, IAPressCat, IAPressCat },
+            IA_PadBasicPress, IA_TouchNrmPress, IA_BatonBasicPress);
+        public static PlayerInput.InputAction InputAction_Alt =
+            new("RvlDoughAlt", new int[] { IA_AltPress, IA_AltPress, IA_AltPress },
+            IA_PadAltPress, IA_TouchAltPress, IA_BatonAltPress);
 
         void Awake()
         {
@@ -463,12 +492,12 @@ namespace HeavenStudio.Games
                 }
                 passedTurns.Clear();
             }
-            if (PlayerInput.Pressed() && !IsExpectingInputNow(InputType.STANDARD_DOWN))
+            if (PlayerInput.GetIsAction(InputAction_Nrm) && !IsExpectingInputNow(InputAction_Nrm))
             {
                 doughDudesPlayer.GetComponent<Animator>().DoScaledAnimationAsync("SmallDoughJump", 0.5f);
                 SoundByte.PlayOneShotGame("workingDough/smallPlayer");
             }
-            else if (PlayerInput.AltPressed() && !IsExpectingInputNow(InputType.STANDARD_ALT_DOWN))
+            else if (PlayerInput.GetIsAction(InputAction_Alt) && !IsExpectingInputNow(InputAction_Alt))
             {
                 doughDudesPlayer.GetComponent<Animator>().DoScaledAnimationAsync("BigDoughJump", 0.5f);
                 SoundByte.PlayOneShotGame("workingDough/bigPlayer");

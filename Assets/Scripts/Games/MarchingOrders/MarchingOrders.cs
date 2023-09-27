@@ -237,9 +237,9 @@ namespace HeavenStudio.Games
             Custom,
         }
 
-        const int IAAltDownCat = 4;
-        const int IALeft = 5;
-        const int IARight = 6;
+        const int IAAltDownCat = IAMAXCAT;
+        const int IALeft = IAMAXCAT + 1;
+        const int IARight = IAMAXCAT + 2;
         protected static bool IA_PadLeft(out double dt)
         {
             return PlayerInput.GetPadDown(InputController.ActionsPad.Left, out dt);

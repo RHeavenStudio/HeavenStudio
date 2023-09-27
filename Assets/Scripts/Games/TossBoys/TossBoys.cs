@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using HeavenStudio.Util;
+using HeavenStudio.InputSystem;
 using Jukebox;
 
 namespace HeavenStudio.Games.Loaders
@@ -150,6 +151,86 @@ namespace HeavenStudio.Games
         public GameEvent bop = new GameEvent();
         float currentEventLength;
 
+        const int IAAka = IAMAXCAT;
+        const int IAAo = IAMAXCAT + 1;
+        const int IAKii = IAMAXCAT + 2;
+
+        protected static bool IA_PadDir(out double dt)
+        {
+            return PlayerInput.GetPadDown(InputController.ActionsPad.Up, out dt)
+                    || PlayerInput.GetPadDown(InputController.ActionsPad.Down, out dt)
+                    || PlayerInput.GetPadDown(InputController.ActionsPad.Left, out dt)
+                    || PlayerInput.GetPadDown(InputController.ActionsPad.Right, out dt);
+        }
+        protected static bool IA_PadAlt(out double dt)
+        {
+            return PlayerInput.GetPadDown(InputController.ActionsPad.South, out dt);
+        }
+
+        protected static bool IA_TouchNrm(out double dt)
+        {
+            return PlayerInput.GetFlick(out dt)
+                && (instance.currentReceiver is WhichTossKid.Akachan
+                    || (instance.lastReceiver is WhichTossKid.Akachan or WhichTossKid.None
+                        && instance.currentReceiver is WhichTossKid.None)
+                    || (instance.IsExpectingInputNow(InputAction_Aka)
+                        && !(instance.IsExpectingInputNow(InputAction_Ao) || instance.IsExpectingInputNow(InputAction_Kii))));
+        }
+        protected static bool IA_TouchDir(out double dt)
+        {
+            return PlayerInput.GetFlick(out dt)
+                && (instance.currentReceiver is WhichTossKid.Kiiyan
+                    || (instance.lastReceiver is WhichTossKid.Kiiyan
+                        && instance.currentReceiver is WhichTossKid.None)
+                    || (instance.IsExpectingInputNow(InputAction_Kii)
+                        && !(instance.IsExpectingInputNow(InputAction_Ao) || instance.IsExpectingInputNow(InputAction_Aka))));
+        }
+        protected static bool IA_TouchAlt(out double dt)
+        {
+            return PlayerInput.GetFlick(out dt)
+                && (instance.currentReceiver is WhichTossKid.Aokun
+                    || (instance.lastReceiver is WhichTossKid.Aokun
+                        && instance.currentReceiver is WhichTossKid.None)
+                    || (instance.IsExpectingInputNow(InputAction_Ao)
+                        && !(instance.IsExpectingInputNow(InputAction_Aka) || instance.IsExpectingInputNow(InputAction_Kii))));
+        }
+
+        protected static bool IA_BatonNrm(out double dt)
+        {
+            return PlayerInput.GetBatonDown(InputController.ActionsBaton.Face, out dt)
+                && (instance.currentReceiver is WhichTossKid.Akachan
+                    || (instance.lastReceiver is WhichTossKid.Akachan or WhichTossKid.None
+                        && instance.currentReceiver is WhichTossKid.None)
+                    || (instance.IsExpectingInputNow(InputAction_Aka)
+                        && !(instance.IsExpectingInputNow(InputAction_Ao) || instance.IsExpectingInputNow(InputAction_Kii))));
+        }
+        protected static bool IA_BatonDir(out double dt)
+        {
+            return PlayerInput.GetBatonDown(InputController.ActionsBaton.Face, out dt)
+                && (instance.currentReceiver is WhichTossKid.Kiiyan
+                    || (instance.lastReceiver is WhichTossKid.Kiiyan
+                        && instance.currentReceiver is WhichTossKid.None)
+                    || (instance.IsExpectingInputNow(InputAction_Ao)
+                        && !(instance.IsExpectingInputNow(InputAction_Aka) || instance.IsExpectingInputNow(InputAction_Kii))));
+        }
+        protected static bool IA_BatonAlt(out double dt)
+        {
+            return PlayerInput.GetBatonDown(InputController.ActionsBaton.Face, out dt)
+                && (instance.currentReceiver is WhichTossKid.Aokun
+                    || (instance.lastReceiver is WhichTossKid.Aokun
+                        && instance.currentReceiver is WhichTossKid.None));
+        }
+
+        public static PlayerInput.InputAction InputAction_Aka =
+            new("BasicPress", new int[] { IAAka, IAAka, IAAka },
+            IA_PadBasicPress, IA_TouchNrm, IA_BatonNrm);
+        public static PlayerInput.InputAction InputAction_Ao =
+            new("BasicPress", new int[] { IAAo, IAAo, IAAo },
+            IA_PadAlt, IA_TouchAlt, IA_BatonAlt);
+        public static PlayerInput.InputAction InputAction_Kii =
+            new("BasicPress", new int[] { IAKii, IAKii, IAKii },
+            IA_PadDir, IA_TouchDir, IA_BatonDir);
+
         private void Awake()
         {
             instance = this;
@@ -194,15 +275,54 @@ namespace HeavenStudio.Games
                         SingleBop();
                     }
                 }
-                if (PlayerInput.Pressed() && !IsExpectingInputNow(InputType.STANDARD_DOWN))
+
+                if (PlayerInput.CurrentControlStyle == InputController.ControlStyles.Touch)
+                {
+                    TossKid next = GetCurrentReceiver();
+                    if (currentReceiver == WhichTossKid.None && lastReceiver != WhichTossKid.None)
+                    {
+                        next = GetReceiver(lastReceiver);
+                    }
+                    else if (currentReceiver == WhichTossKid.None && lastReceiver == WhichTossKid.None)
+                    {
+                        next = akachan;
+                    }
+                    if (PlayerInput.GetIsAction(InputAction_BasicPress))
+                    {
+                        if (currentBall != null && next != null)
+                        {
+                            if (currentBall.willBePopped)
+                            {
+                                next.PopBallPrepare();
+                            }
+                            else
+                            {
+                                next.Crouch();
+                            }
+                        }
+                        else if (next != null)
+                        {
+                            next.Crouch();
+                        }
+                    }
+                    else if (PlayerInput.GetIsAction(InputAction_BasicRelease))
+                    {
+                        if (next != null)
+                        {
+                            next.UnCrouch();
+                        }
+                    }
+                }
+
+                if (PlayerInput.GetIsAction(InputAction_Aka) && !IsExpectingInputNow(InputAction_Aka))
                 {
                     akachan.HitBall(false);
                 }
-                if (PlayerInput.AltPressed() && !IsExpectingInputNow(InputType.STANDARD_ALT_DOWN))
+                if (PlayerInput.GetIsAction(InputAction_Ao) && !IsExpectingInputNow(InputAction_Ao))
                 {
                     aokun.HitBall(false);
                 }
-                if (PlayerInput.GetAnyDirectionDown() && !IsExpectingInputNow(InputType.DIRECTION_DOWN))
+                if (PlayerInput.GetIsAction(InputAction_Kii) && !IsExpectingInputNow(InputAction_Kii))
                 {
                     kiiyan.HitBall(false);
                 }
@@ -360,10 +480,12 @@ namespace HeavenStudio.Games
                 }
                 else if (passBallDict[beat + length].datamodel == "tossBoys/pop")
                 {
-                    BeatAction.New(instance, new List<BeatAction.Action>()
-                    {
-                        new BeatAction.Action(beat + length - 1, delegate { GetCurrentReceiver().PopBallPrepare(); })
-                    });
+                    currentBall.willBePopped = true;
+                    if (PlayerInput.CurrentControlStyle != InputController.ControlStyles.Touch)
+                        BeatAction.New(instance, new List<BeatAction.Action>()
+                        {
+                            new BeatAction.Action(beat + length - 1, delegate { GetCurrentReceiver().PopBallPrepare(); })
+                        });
                 }
             }
             else
@@ -436,10 +558,12 @@ namespace HeavenStudio.Games
             }
             if (passBallDict.ContainsKey(beat + currentEventLength) && passBallDict[beat + currentEventLength].datamodel == "tossBoys/pop")
             {
-                BeatAction.New(instance, new List<BeatAction.Action>()
-                {
-                    new BeatAction.Action(beat + currentEventLength - 1, delegate { GetCurrentReceiver().PopBallPrepare(); })
-                });
+                currentBall.willBePopped = true;
+                if (PlayerInput.CurrentControlStyle != InputController.ControlStyles.Touch)
+                    BeatAction.New(instance, new List<BeatAction.Action>()
+                    {
+                        new BeatAction.Action(beat + currentEventLength - 1, delegate { GetCurrentReceiver().PopBallPrepare(); })
+                    });
             }
         }
 
@@ -978,7 +1102,10 @@ namespace HeavenStudio.Games
             specialKii.SetActive(false);
             if (currentSpecialKid != null) currentSpecialKid.crouch = false;
             currentSpecialKid = GetCurrentReceiver();
-            GetCurrentReceiver().Crouch();
+
+            if (PlayerInput.CurrentControlStyle != InputController.ControlStyles.Touch)
+                GetCurrentReceiver().Crouch();
+
             GetSpecialBasedOnReceiver().SetActive(true);
             switch (currentReceiver)
             {
@@ -1044,23 +1171,21 @@ namespace HeavenStudio.Games
             currentReceiver = (WhichTossKid)who;
         }
 
-        InputType GetInputTypeBasedOnCurrentReceiver()
+        PlayerInput.InputAction GetInputTypeBasedOnCurrentReceiver()
         {
             return GetInputBasedOnTossKid(currentReceiver);
         }
 
-        InputType GetInputBasedOnTossKid(WhichTossKid tossKid)
+        PlayerInput.InputAction GetInputBasedOnTossKid(WhichTossKid tossKid)
         {
             switch (tossKid)
             {
-                case WhichTossKid.Akachan:
-                    return InputType.STANDARD_DOWN;
                 case WhichTossKid.Aokun:
-                    return InputType.STANDARD_ALT_DOWN;
+                    return InputAction_Ao;
                 case WhichTossKid.Kiiyan:
-                    return InputType.DIRECTION_DOWN;
+                    return InputAction_Kii;
                 default:
-                    return InputType.ANY;
+                    return InputAction_Aka;
             }
         }
 

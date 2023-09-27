@@ -50,11 +50,6 @@ namespace HeavenStudio.Games.Scripts_ForkLifter
                 Stab(null);
             }
 
-            if (ForkLifter.instance.EligibleHits.Count == 0)
-            {
-                currentHitInList = 0;
-            }
-
             if (Conductor.instance.ReportBeat(ref lastReportedBeat) && anim.IsAnimationNotPlaying() && shouldBop) 
             {
                 anim.DoScaledAnimationAsync("Player_Bop", 0.5f);

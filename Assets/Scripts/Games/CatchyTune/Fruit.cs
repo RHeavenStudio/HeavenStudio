@@ -25,8 +25,6 @@ namespace HeavenStudio.Games.Scripts_CatchyTune
 
         private string soundText;
 
-        private Minigame.Eligible e = new Minigame.Eligible();
-
         private CatchyTune game;
 
         private float beatLength = 4f;
@@ -34,8 +32,6 @@ namespace HeavenStudio.Games.Scripts_CatchyTune
         private void Awake()
         {
             game = CatchyTune.instance;
-
-            e.gameObject = this.gameObject;
 
             var cond = Conductor.instance;
             var tempo = cond.songBpm;

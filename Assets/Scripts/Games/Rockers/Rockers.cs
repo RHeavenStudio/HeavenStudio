@@ -117,7 +117,7 @@ namespace HeavenStudio.Games.Loaders
                         e["pS1"],
                         e["pS2"],
                         e["pS3"],
-                        e["pS4"], 
+                        e["pS4"],
                     }, e["moveCamera"]
                     ); },
                     defaultLength = 11,
@@ -190,8 +190,8 @@ namespace HeavenStudio.Games.Loaders
                     {
                         new Param("count", Rockers.CountIn.One, "Count", "Which voiceline?")
                     },
-                    preFunction = delegate 
-                    { 
+                    preFunction = delegate
+                    {
                         var e = eventCaller.currentEntity;
                         float offSet = 0;
                         switch (e["count"])
@@ -207,7 +207,7 @@ namespace HeavenStudio.Games.Loaders
                                 offSet = 0.034f;
                                 break;
                         }
-                        SoundByte.PlayOneShot($"games/rockers/count/{e["count"]}", e.beat, 1, 1, false, null, offSet); 
+                        SoundByte.PlayOneShot($"games/rockers/count/{e["count"]}", e.beat, 1, 1, false, null, offSet);
                     }
                 },
                 new GameAction("voiceLine", "Together Voice Line")
@@ -223,7 +223,7 @@ namespace HeavenStudio.Games.Loaders
                 },
                 new GameAction("prepareTogether", "Custom Together Prepare")
                 {
-                    function = delegate { var e = eventCaller.currentEntity; Rockers.instance.TogetherPrepare(e.beat, e["cmon"] == (int)Rockers.VoiceLineSelection.Cmon, e["cmon"] == (int)Rockers.VoiceLineSelection.None, 
+                    function = delegate { var e = eventCaller.currentEntity; Rockers.instance.TogetherPrepare(e.beat, e["cmon"] == (int)Rockers.VoiceLineSelection.Cmon, e["cmon"] == (int)Rockers.VoiceLineSelection.None,
                         e["muteBeat"], e["middleBeat"], e["moveCamera"]); },
                     defaultLength = 3f,
                     parameters = new List<Param>()
@@ -564,8 +564,8 @@ namespace HeavenStudio.Games
         {
             var cond = Conductor.instance;
 
-            if (cond.isPlaying && !cond.isPaused) 
-            { 
+            if (cond.isPlaying && !cond.isPaused)
+            {
                 if (PlayerInput.Pressed())
                 {
                     Soshi.Mute();
@@ -768,7 +768,7 @@ namespace HeavenStudio.Games
                 var e = togetherEvents[i];
                 if (togetherEvents[i].datamodel == "rockers/riffTogether")
                 {
-                    actions.Add(new BeatAction.Action(e.beat, delegate 
+                    actions.Add(new BeatAction.Action(e.beat, delegate
                     {
                         JJ.StrumStrings(e["gcJJ"], new int[6]
                         {
@@ -778,7 +778,7 @@ namespace HeavenStudio.Games
                             e["4JJ"],
                             e["5JJ"],
                             e["6JJ"],
-                        }, (PremadeSamples)e["sampleJJ"], e["pitchSampleJJ"]); 
+                        }, (PremadeSamples)e["sampleJJ"], e["pitchSampleJJ"]);
                     }));
                     actions.Add(new BeatAction.Action(e.beat + e.length, delegate { JJ.Mute(); }));
                     RockersInput riffComp = Instantiate(rockerInputRef, transform);
@@ -845,8 +845,8 @@ namespace HeavenStudio.Games
             List<RiqEntity> relevantInputs = GrabAllInputsBetween(beat, beat + length);
             List<double> riffUsedBeats = new List<double>();
             List<double> bendUsedBeats = new();
-            foreach (var input in relevantInputs) 
-            { 
+            foreach (var input in relevantInputs)
+            {
                 if (input.datamodel == "rockers/riff")
                 {
                     RiqEntity foundEvent = riffEvents.Find(x => x.beat == input.beat);
@@ -1036,8 +1036,8 @@ namespace HeavenStudio.Games
                             }
                         }
                     }),
-                    new BeatAction.Action(beat, delegate 
-                    { 
+                    new BeatAction.Action(beat, delegate
+                    {
                         JJ.UnHold();
                     })
                 });
@@ -1047,7 +1047,7 @@ namespace HeavenStudio.Games
         private void JustMute(PlayerActionEvent caller, float state)
         {
             Soshi.Mute();
-        } 
+        }
 
         private void MuteMiss(PlayerActionEvent caller)
         {

@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 using HeavenStudio.Common;
+using HeavenStudio.InputSystem;
 
 namespace HeavenStudio.Games.Loaders
 {
@@ -164,6 +165,61 @@ namespace HeavenStudio.Games
 
         public static SpaceDance instance;
 
+        const int IA_TurnPress = IAMAXCAT;
+        const int IA_DownPress = IAMAXCAT + 1;
+        const int IA_PunchPress = IAMAXCAT + 2;
+
+        protected static bool IA_PadTurnPress(out double dt)
+        {
+            return PlayerInput.GetPadDown(InputController.ActionsPad.Right, out dt);
+        }
+        protected static bool IA_BatonTurnPress(out double dt)
+        {
+            return PlayerInput.GetBatonDown(InputController.ActionsBaton.East, out dt)
+                && !instance.IsExpectingInputNow(InputAction_Punch);
+        }
+        protected static bool IA_TouchTurnPress(out double dt)
+        {
+            return PlayerInput.GetTouchDown(InputController.ActionsTouch.Tap, out dt)
+                && !(instance.IsExpectingInputNow(InputAction_Down) || instance.IsExpectingInputNow(InputAction_Punch));
+        }
+
+        protected static bool IA_PadDownPress(out double dt)
+        {
+            return PlayerInput.GetPadDown(InputController.ActionsPad.Down, out dt);
+        }
+        protected static bool IA_BatonDownPress(out double dt)
+        {
+            return PlayerInput.GetBatonDown(InputController.ActionsBaton.South, out dt)
+                && !instance.IsExpectingInputNow(InputAction_Punch);
+        }
+        protected static bool IA_TouchDownPress(out double dt)
+        {
+            return PlayerInput.GetTouchDown(InputController.ActionsTouch.Tap, out dt)
+                && instance.IsExpectingInputNow(InputAction_Down);
+        }
+
+        protected static bool IA_BatonPunchPress(out double dt)
+        {
+            return PlayerInput.GetBatonDown(InputController.ActionsBaton.Face, out dt)
+                && instance.IsExpectingInputNow(InputAction_Punch);
+        }
+        protected static bool IA_TouchPunchPress(out double dt)
+        {
+            return PlayerInput.GetTouchDown(InputController.ActionsTouch.Tap, out dt)
+                && instance.IsExpectingInputNow(InputAction_Punch);
+        }
+
+        public static PlayerInput.InputAction InputAction_Turn =
+            new("AgbSpaceDanceTurn", new int[] { IA_TurnPress, IA_TurnPress, IA_TurnPress },
+            IA_PadTurnPress, IA_TouchTurnPress, IA_BatonTurnPress);
+        public static PlayerInput.InputAction InputAction_Down =
+            new("AgbSpaceDanceDown", new int[] { IA_DownPress, IA_DownPress, IA_DownPress },
+            IA_PadDownPress, IA_TouchDownPress, IA_BatonDownPress);
+        public static PlayerInput.InputAction InputAction_Punch =
+            new("AgbSpaceDancePunch", new int[] { IA_PunchPress, IA_PunchPress, IA_PunchPress },
+            IA_PadBasicPress, IA_TouchPunchPress, IA_BatonPunchPress);
+
         // Start is called before the first frame update
         void Awake()
         {
@@ -211,21 +267,21 @@ namespace HeavenStudio.Games
                 }
                 if (!DancerP.IsPlayingAnimationName("PunchDo") && !DancerP.IsPlayingAnimationName("TurnRightDo") && !DancerP.IsPlayingAnimationName("SitDownDo"))
                 {
-                    if (PlayerInput.Pressed() && !IsExpectingInputNow(InputType.STANDARD_DOWN))
+                    if (PlayerInput.GetIsAction(InputAction_Punch) && !IsExpectingInputNow(InputAction_Punch))
                     {
                         SoundByte.PlayOneShotGame("spaceDance/inputBad");
                         DancerP.DoScaledAnimationAsync("PunchDo", 0.5f);
                         Gramps.Play("GrampsOhFuck", 0, 0);
                     }
-                    if (PlayerInput.GetSpecificDirectionDown(1) && !IsExpectingInputNow(InputType.DIRECTION_RIGHT_DOWN))
+                    if (PlayerInput.GetIsAction(InputAction_Down) && !IsExpectingInputNow(InputAction_Down))
                     {
-                        DancerP.DoScaledAnimationAsync("TurnRightDo", 0.5f);
+                        DancerP.DoScaledAnimationAsync("SitDownDo", 0.5f);
                         SoundByte.PlayOneShotGame("spaceDance/inputBad");
                         Gramps.Play("GrampsOhFuck", 0, 0);
                     }
-                    if (PlayerInput.GetSpecificDirectionDown(2) && !IsExpectingInputNow(InputType.DIRECTION_DOWN_DOWN))
+                    if (PlayerInput.GetIsAction(InputAction_Turn) && !IsExpectingInputNow(InputAction_Turn))
                     {
-                        DancerP.DoScaledAnimationAsync("SitDownDo", 0.5f);
+                        DancerP.DoScaledAnimationAsync("TurnRightDo", 0.5f);
                         SoundByte.PlayOneShotGame("spaceDance/inputBad");
                         Gramps.Play("GrampsOhFuck", 0, 0);
                     }
@@ -410,7 +466,7 @@ namespace HeavenStudio.Games
         {
             canBop = false;
             if (grampsTurns) grampsCanBop = false;
-            ScheduleInput(beat, 1f, InputType.DIRECTION_RIGHT_DOWN, JustRight, RightMiss, Empty);
+            ScheduleInput(beat, 1f, InputAction_Turn, JustRight, RightMiss, Empty);
 
             BeatAction.New(instance, new List<BeatAction.Action>() 
             {
@@ -479,7 +535,7 @@ namespace HeavenStudio.Games
         {
             canBop = false;
             if (grampsSits) grampsCanBop = false;
-            ScheduleInput(beat, 1f, InputType.DIRECTION_DOWN_DOWN, JustSit, SitMiss, Empty);
+            ScheduleInput(beat, 1f, InputAction_Down, JustSit, SitMiss, Empty);
 
             BeatAction.New(instance, new List<BeatAction.Action>() 
             {
@@ -554,7 +610,7 @@ namespace HeavenStudio.Games
         {
             canBop = false;
             if (grampsPunches) grampsCanBop = false;
-            ScheduleInput(beat, 1.5f, InputType.STANDARD_DOWN, JustPunch, PunchMiss, Empty);
+            ScheduleInput(beat, 1.5f, InputAction_Punch, JustPunch, PunchMiss, Empty);
 
             BeatAction.New(instance, new List<BeatAction.Action>() 
                 {

@@ -42,8 +42,14 @@ namespace HeavenStudio.Games.Scripts_KarateMan
         bool canEmote = false;
         public int wantFace = 0;
 
-        public bool inSpecial { get { return inCombo || lockedInCombo || 
-            Conductor.instance.GetPositionFromBeat(lastChargeTime, 2.75f) <= 0.25f || inNuriLock; } }
+        public bool inSpecial
+        {
+            get
+            {
+                return inCombo || lockedInCombo ||
+            Conductor.instance.GetPositionFromBeat(lastChargeTime, 2.75f) <= 0.25f || inNuriLock;
+            }
+        }
         public bool inNuriLock { get { return (Conductor.instance.songPositionInBeatsAsDouble >= noNuriJabTime && Conductor.instance.songPositionInBeatsAsDouble < noNuriJabTime + 1f); } }
 
         private void Awake()
@@ -73,7 +79,7 @@ namespace HeavenStudio.Games.Scripts_KarateMan
             if (canEmote && wantFace >= 0)
             {
                 SetFaceExpressionForced(wantFace);
-                if (wantFace == (int) KarateMan.KarateManFaces.Surprise) wantFace = -1;
+                if (wantFace == (int)KarateMan.KarateManFaces.Surprise) wantFace = -1;
             }
 
             if (cond.songPositionInBeatsAsDouble >= noNuriJabTime && cond.songPositionInBeatsAsDouble < noNuriJabTime + 1f)
@@ -143,7 +149,7 @@ namespace HeavenStudio.Games.Scripts_KarateMan
                     SoundByte.PlayOneShotGame("karateman/swingNoHit", forcePlay: true);
                 }
             }
-            
+
             if (PlayerInput.AltPressed() && KarateMan.IsComboEnable && !inSpecial)
             {
                 if (!KarateMan.instance.IsExpectingInputNow(InputType.STANDARD_ALT_DOWN))
@@ -284,12 +290,12 @@ namespace HeavenStudio.Games.Scripts_KarateMan
                 new BeatAction.Action(beat + 0.75f, delegate { shouldComboId = -2; ComboMiss(beat + 0.75f); }),
             });
 
-            MultiSound.Play(new MultiSound.Sound[] 
+            MultiSound.Play(new MultiSound.Sound[]
             {
-                new MultiSound.Sound("karateman/swingNoHit", beat), 
-                new MultiSound.Sound("karateman/swingNoHit_Alt", beat + 0.25f), 
-                new MultiSound.Sound("karateman/swingNoHit_Alt", beat + 0.5f), 
-                new MultiSound.Sound("karateman/comboMiss", beat + 0.75f),  
+                new MultiSound.Sound("karateman/swingNoHit", beat),
+                new MultiSound.Sound("karateman/swingNoHit_Alt", beat + 0.25f),
+                new MultiSound.Sound("karateman/swingNoHit_Alt", beat + 0.5f),
+                new MultiSound.Sound("karateman/comboMiss", beat + 0.75f),
             }, forcePlay: true);
         }
 
@@ -299,7 +305,7 @@ namespace HeavenStudio.Games.Scripts_KarateMan
             unPrepareTime = double.MinValue;
             BeatAction.New(this, new List<BeatAction.Action>()
             {
-                new BeatAction.Action(beat, delegate { 
+                new BeatAction.Action(beat, delegate {
                     if (wantKick)
                     {
                         wantKick = false;

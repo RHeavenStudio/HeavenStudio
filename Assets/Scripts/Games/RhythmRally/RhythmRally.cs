@@ -5,13 +5,15 @@ using NaughtyBezierCurves;
 using DG.Tweening;
 
 using HeavenStudio.Util;
+using HeavenStudio.InputSystem;
 
 namespace HeavenStudio.Games.Loaders
 {
     using static Minigames;
     public static class NtrPingpongLoader
     {
-        public static Minigame AddGame(EventCaller eventCaller) {
+        public static Minigame AddGame(EventCaller eventCaller)
+        {
             return new Minigame("rhythmRally", "Rhythm Rally", "ffffff", false, false, new List<GameAction>()
             {
                 new GameAction("bop", "Bop")
@@ -99,9 +101,9 @@ namespace HeavenStudio.Games.Loaders
                     }
                 },
             },
-            new List<string>() {"ntr", "keep"},
+            new List<string>() { "ntr", "keep" },
             "ntrpingpong", "en",
-            new List<string>() {}
+            new List<string>() { }
             );
         }
     }
@@ -152,7 +154,7 @@ namespace HeavenStudio.Games
 
         public GameEvent bop = new GameEvent();
         private bool goBop = true;
-        
+
         public static RhythmRally instance;
 
         private void Awake()
@@ -170,7 +172,7 @@ namespace HeavenStudio.Games
         {
             var cond = Conductor.instance;
             var currentBeat = cond.songPositionInBeatsAsDouble;
-            
+
             var hitBeat = serveBeat; // Beat when the last paddler hit the ball
             var beatDur1 = 1f; // From paddle to table
             var beatDur2 = 1f; // From table to other paddle
@@ -314,8 +316,11 @@ namespace HeavenStudio.Games
                 {
                     if (served)
                     {
-                        if ((playerState.IsName("Swing") && playerAnim.IsAnimationNotPlaying()) || (!playerState.IsName("Swing") && !playerState.IsName("Ready1")))
-                            playerAnim.Play("Ready1");
+                        if (PlayerInput.CurrentControlStyle != InputController.ControlStyles.Touch || GameManager.instance.autoplay)
+                        {
+                            if ((playerState.IsName("Swing") && playerAnim.IsAnimationNotPlaying()) || (!playerState.IsName("Swing") && !playerState.IsName("Ready1")))
+                                playerAnim.Play("Ready1");
+                        }
                     }
                     else if (!opponentServing)
                     {
@@ -334,7 +339,7 @@ namespace HeavenStudio.Games
                                 Toss(hitBeat + beatDur1, beatDur2, tossHeight);
                             }
                         }
-                        
+
                         // If player never swung and is still in ready state, snap them out of it.
                         if (missed && playerState.IsName("Ready1"))
                             playerAnim.Play("Beat");
@@ -412,7 +417,7 @@ namespace HeavenStudio.Games
             started = true;
             opponentServing = true;
             tossing = false;
-            
+
             serveBeat = beat;
             rallySpeed = speed;
 
@@ -439,7 +444,7 @@ namespace HeavenStudio.Games
             MultiSound.Play(new MultiSound.Sound[] { new MultiSound.Sound("rhythmRally/Serve", serveBeat), new MultiSound.Sound("rhythmRally/ServeBounce", bounceBeat) });
             paddlers.BounceFX(bounceBeat);
 
-            ScheduleInput(serveBeat, targetBeat, InputType.STANDARD_DOWN, paddlers.Just, paddlers.Miss, paddlers.Out);
+            ScheduleInput(serveBeat, targetBeat, InputAction_FlickPress, paddlers.Just, paddlers.Miss, paddlers.Out);
         }
 
         public void Toss(double beat, float length, float height, bool firstToss = false)
@@ -448,7 +453,7 @@ namespace HeavenStudio.Games
             ballTrail.gameObject.SetActive(false);
 
             if (firstToss)
-                height *= length/2f;
+                height *= length / 2f;
 
             tossCurve.transform.localScale = new Vector3(1f, height, 1f);
             tossBeat = beat;
@@ -521,7 +526,7 @@ namespace HeavenStudio.Games
         {
             List<MultiSound.Sound> soundsToPlay = new List<MultiSound.Sound>();
             bool tink = false;
-            for (float i = 0; i < length; i += 0.5f) 
+            for (float i = 0; i < length; i += 0.5f)
             {
                 soundsToPlay.Add(new MultiSound.Sound(tink ? "rhythmRally/Tink" : "rhythmRally/Tonk", beat + i));
                 tink = !tink;
@@ -536,7 +541,7 @@ namespace HeavenStudio.Games
             for (int i = 0; i < length; i += 2)
             {
                 double beatToSpawn = beat + i;
-                servesToPerform.Add( new BeatAction.Action(beatToSpawn, delegate { Serve(beatToSpawn, RallySpeed.SuperFast); }) );
+                servesToPerform.Add(new BeatAction.Action(beatToSpawn, delegate { Serve(beatToSpawn, RallySpeed.SuperFast); }));
             }
             BeatAction.New(this, servesToPerform);
         }

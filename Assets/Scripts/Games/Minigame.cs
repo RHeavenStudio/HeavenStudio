@@ -11,23 +11,9 @@ namespace HeavenStudio.Games
 {
     public class Minigame : MonoBehaviour
     {
-        public static double ngEarlyTime = 0.075f, justEarlyTime = 0.06f, aceEarlyTime = 0.01f, aceLateTime = 0.01f, justLateTime = 0.06f, ngLateTime = 0.075f;
+        public static double ngEarlyTime = 0.085f, justEarlyTime = 0.06f, aceEarlyTime = 0.01f, aceLateTime = 0.01f, justLateTime = 0.06f, ngLateTime = 0.085f;
         public static float rankHiThreshold = 0.8f, rankOkThreshold = 0.6f;
         [SerializeField] public SoundSequence.SequenceKeyValue[] SoundSequences;
-
-        public List<Minigame.Eligible> EligibleHits = new List<Minigame.Eligible>();
-
-        [System.Serializable]
-        public class Eligible
-        {
-            public GameObject gameObject;
-            public bool early;
-            public bool perfect;
-            public bool late;
-            public bool notPerfect() { return early || late; }
-            public bool eligible() { return early || perfect || late; }
-            public float createBeat;
-        }
 
         #region Premade Input Actions
         protected const int IAEmptyCat = -1;
@@ -35,6 +21,7 @@ namespace HeavenStudio.Games
         protected const int IAReleaseCat = 1;
         protected const int IAPressingCat = 2;
         protected const int IAFlickCat = 3;
+        protected const int IAMAXCAT = 4;
 
         protected static bool IA_Empty(out double dt)
         {
@@ -266,6 +253,7 @@ namespace HeavenStudio.Games
         //Get the scheduled input that should happen the **Soonest**
         //Can return null if there's no scheduled inputs
         // remark: need a check for specific button(s)
+        [Obsolete("Use GetClosestScheduledInput InputAction or InputAction category instead")]
         public PlayerActionEvent GetClosestScheduledInput(InputType input = InputType.ANY)
         {
             PlayerActionEvent closest = null;
@@ -339,6 +327,7 @@ namespace HeavenStudio.Games
         //Hasn't been tested yet. *Should* work.
         //Can be used to detect if the user is expected to input something now or not
         //Useful for strict call and responses games like Tambourine
+        [Obsolete("Use IsExpectingInputNow InputAction or InputAction category instead")]
         public bool IsExpectingInputNow(InputType wantInput = InputType.ANY)
         {
             PlayerActionEvent input = GetClosestScheduledInput(wantInput);
@@ -421,24 +410,6 @@ namespace HeavenStudio.Games
             {
                 evt.Disable();
             }
-        }
-
-        public int MultipleEventsAtOnce()
-        {
-            int sameTime = 0;
-            for (int i = 0; i < EligibleHits.Count; i++)
-            {
-                float createBeat = EligibleHits[i].createBeat;
-                if (EligibleHits.FindAll(c => c.createBeat == createBeat).Count > 0)
-                {
-                    sameTime += 1;
-                }
-            }
-
-            if (sameTime == 0 && EligibleHits.Count > 0)
-                sameTime = 1;
-
-            return sameTime;
         }
 
         public static MultiSound PlaySoundSequence(string game, string name, double startBeat, params SoundSequence.SequenceParams[] args)

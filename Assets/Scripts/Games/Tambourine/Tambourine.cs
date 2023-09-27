@@ -1,4 +1,5 @@
 using HeavenStudio.Util;
+using HeavenStudio.InputSystem;
 using System;
 using System.Collections.Generic;
 using UnityEngine;
@@ -119,6 +120,34 @@ namespace HeavenStudio.Games
 
         public static Tambourine instance;
 
+        const int IA_AltPress = IAMAXCAT;
+        protected static bool IA_TouchNrmPress(out double dt)
+        {
+            return PlayerInput.GetTouchDown(InputController.ActionsTouch.Tap, out dt)
+                && !instance.IsExpectingInputNow(InputAction_Alt);
+        }
+
+        protected static bool IA_PadAltPress(out double dt)
+        {
+            return PlayerInput.GetPadDown(InputController.ActionsPad.South, out dt);
+        }
+        protected static bool IA_BatonAltPress(out double dt)
+        {
+            return PlayerInput.GetSqueezeDown(out dt);
+        }
+        protected static bool IA_TouchAltPress(out double dt)
+        {
+            return PlayerInput.GetTouchDown(InputController.ActionsTouch.Tap, out dt)
+                && instance.IsExpectingInputNow(InputAction_Alt);
+        }
+
+        public static PlayerInput.InputAction InputAction_Nrm =
+            new("RvlDrumAlt", new int[] { IAPressCat, IAPressCat, IAPressCat },
+            IA_PadBasicPress, IA_TouchNrmPress, IA_BatonBasicPress);
+        public static PlayerInput.InputAction InputAction_Alt =
+            new("RvlDrumAlt", new int[] { IA_AltPress, IA_AltPress, IA_AltPress },
+            IA_PadAltPress, IA_TouchAltPress, IA_BatonAltPress);
+
         void Awake()
         {
             instance = this;
@@ -144,7 +173,7 @@ namespace HeavenStudio.Games
                     handsAnimator.Play("Bop", 0, 0);
                 }
             }
-            if (PlayerInput.Pressed() && !IsExpectingInputNow(InputType.STANDARD_DOWN))
+            if (PlayerInput.GetIsAction(InputAction_Nrm) && !IsExpectingInputNow(InputAction_Nrm))
             {
                 handsAnimator.Play("Shake", 0, 0);
                 SoundByte.PlayOneShotGame($"tambourine/player/shake/{UnityEngine.Random.Range(1, 6)}");
@@ -156,7 +185,7 @@ namespace HeavenStudio.Games
                     sadFace.SetActive(true);
                 }
             }
-            else if (PlayerInput.AltPressed() && !IsExpectingInputNow(InputType.STANDARD_ALT_DOWN))
+            else if (PlayerInput.GetIsAction(InputAction_Alt) && !IsExpectingInputNow(InputAction_Alt))
             {
                 handsAnimator.Play("Smack", 0, 0);
                 SoundByte.PlayOneShotGame($"tambourine/player/hit/{UnityEngine.Random.Range(1, 6)}");
@@ -324,8 +353,8 @@ namespace HeavenStudio.Games
                 double inputBeat = relevantInputs[i].beat - intervalBeat;
                 actions.Add(new BeatAction.Action(inputBeat, delegate
                 {
-                    if (isHit) ScheduleInput(beat + length, inputBeat, InputType.STANDARD_ALT_DOWN, JustHit, Miss, Nothing);
-                    else ScheduleInput(beat + length, inputBeat, InputType.STANDARD_DOWN, JustShake, Miss, Nothing);
+                    if (isHit) ScheduleInput(beat + length, inputBeat, InputAction_Alt, JustHit, Miss, Nothing);
+                    else ScheduleInput(beat + length, inputBeat, InputAction_Nrm, JustShake, Miss, Nothing);
                     Bop(beat + length + inputBeat, 1, (int)WhoBops.Monkey, (int)WhoBops.None);
                 }));
             }

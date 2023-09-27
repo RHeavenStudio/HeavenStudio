@@ -5,6 +5,7 @@ using UnityEngine;
 using DG.Tweening;
 
 using HeavenStudio.Util;
+using HeavenStudio.InputSystem;
 
 namespace HeavenStudio.Games.Scripts_RhythmRally
 {
@@ -25,12 +26,25 @@ namespace HeavenStudio.Games.Scripts_RhythmRally
 
         void Update()
         {
-            if (!game.served || game.missed || !game.started) return;
-
-            if (PlayerInput.Pressed() && !game.IsExpectingInputNow(InputType.STANDARD_DOWN))
+            if (PlayerInput.CurrentControlStyle == InputController.ControlStyles.Touch && !GameManager.instance.autoplay)
+            {
+                if (PlayerInput.GetIsAction(RhythmRally.InputAction_BasicPress))
+                {
+                    playerAnim.Play("Ready1");
+                }
+                if (PlayerInput.GetIsAction(RhythmRally.InputAction_BasicRelease))
+                {
+                    playerAnim.Play("UnReady1");
+                }
+            }
+            else
+            {
+                if (!game.served || game.missed || !game.started) return;
+            }
+            if (PlayerInput.GetIsAction(RhythmRally.InputAction_FlickPress) && !game.IsExpectingInputNow(RhythmRally.InputAction_FlickPress))
             {
                 // Play "whoosh" sound here
-                playerAnim.DoScaledAnimationAsync("Swing", 0.5f); ;
+                playerAnim.DoScaledAnimationAsync("Swing", 0.5f);
             }
         }
 
@@ -104,18 +118,19 @@ namespace HeavenStudio.Games.Scripts_RhythmRally
 
         public void Just(PlayerActionEvent caller, float state)
         {
-            if (state >= 1f || state <= -1f) {
+            if (state >= 1f || state <= -1f)
+            {
                 NearMiss(state);
-                return; 
+                return;
             }
             Ace();
         }
 
-        public void Miss(PlayerActionEvent caller) 
+        public void Miss(PlayerActionEvent caller)
         {
             MissBall();
         }
 
-        public void Out(PlayerActionEvent caller) {}
+        public void Out(PlayerActionEvent caller) { }
     }
 }

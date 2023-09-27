@@ -163,7 +163,7 @@ namespace HeavenStudio.Games
 
         public static Ringside instance;
 
-        const int IAAltDownCat = 4;
+        const int IAAltDownCat = IAMAXCAT;
 
         protected static bool IA_PadAltPress(out double dt)
         {

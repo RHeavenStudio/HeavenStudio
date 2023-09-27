@@ -184,7 +184,7 @@ namespace HeavenStudio.Games
         }
         public static FlipperFlop instance;
 
-        const int IAAltDownCat = 4;
+        const int IAAltDownCat = IAMAXCAT;
 
         protected static bool IA_TouchPress(out double dt)
         {

@@ -112,8 +112,8 @@ namespace HeavenStudio.Games
             NoAwake,
         }
 
-        const int IAAltDownCat = 4;
-        const int IAAltUpCat = 5;
+        const int IAAltDownCat = IAMAXCAT;
+        const int IAAltUpCat = IAMAXCAT + 1;
 
         protected static bool IA_PadAltPress(out double dt)
         {
