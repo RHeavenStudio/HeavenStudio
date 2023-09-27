@@ -41,6 +41,8 @@ namespace HeavenStudio.Editor.Track
                     
                     if (first && newTempo != 0)
                         Timeline.instance.UpdateStartingBPMText();
+
+                    Timeline.instance.FitToSong();
                 }
             }
 
@@ -50,7 +52,6 @@ namespace HeavenStudio.Editor.Track
         private void UpdateTempo()
         {
             tempoTXT.text = tempoChange["tempo"].ToString("F") + $" BPM";
-            Timeline.instance.FitToSong();
             SetX(tempoChange);
         }
 

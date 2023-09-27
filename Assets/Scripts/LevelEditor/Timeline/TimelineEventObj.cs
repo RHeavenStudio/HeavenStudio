@@ -12,6 +12,8 @@ namespace HeavenStudio.Editor.Track
 {
     public class TimelineEventObj : MonoBehaviour
     {
+        public bool interacting;
+
         private Vector3 lastPos;
         public Vector2 moveStartPos;
         private RectTransform rectTransform;
@@ -116,6 +118,8 @@ namespace HeavenStudio.Editor.Track
             hasPropertiesIcon.enabled = action.actionName != "switchGame" && action.parameters != null && action.parameters.Count > 0;
 
             SetColor((int)entity["track"]);
+            SetWidthHeight();
+            selectedImage.gameObject.SetActive(false);
         }
 
         public void SetEntity(RiqEntity entity)
@@ -136,23 +140,8 @@ namespace HeavenStudio.Editor.Track
 
             eventLabel.overflowMode = (mouseHovering || moving) ? TextOverflowModes.Overflow : TextOverflowModes.Ellipsis;
 
-            rectTransform.sizeDelta = new Vector2(rectTransform.sizeDelta.x, Timeline.instance.LayerHeight());
-            Icon.rectTransform.sizeDelta = new Vector2(Timeline.instance.LayerHeight() - 8, Timeline.instance.LayerHeight() - 8);
-            eventLabel.rectTransform.offsetMin = new Vector2(Icon.rectTransform.anchoredPosition.x + Icon.rectTransform.sizeDelta.x + 4, eventLabel.rectTransform.offsetMin.y);
-            SetColor((int)entity["track"]);
-
-            selectedImage.gameObject.SetActive(selected || mouseHovering);
-
             if (selected)
             {
-                /*
-                if (Input.GetKeyDown(KeyCode.Delete))
-                {
-                    Selections.instance.Deselect(this);
-                    Timeline.instance.DestroyEventObject(entity);
-                }
-                */
-
                 if (moving)
                     outline.color = Color.magenta;
                 else
@@ -233,6 +222,8 @@ namespace HeavenStudio.Editor.Track
                     {
                         marker.entity.beat = Mathf.Max(Timeline.instance.MousePos2BeatSnap - marker.initMoveX, 0);
                         marker.entity["track"] = Mathf.Clamp(Timeline.instance.MousePos2Layer - marker.initMoveY, 0, Timeline.instance.LayerCount - 1);
+                        marker.SetColor((int)entity["track"]);
+                        marker.SetWidthHeight();
                     }
                 }
             }
@@ -309,6 +300,7 @@ namespace HeavenStudio.Editor.Track
                 changedSiblingIndex = false;
 
             mouseHovering = true;
+            selectedImage.gameObject.SetActive(true);
         }
 
         public void HoverExit()
@@ -316,6 +308,7 @@ namespace HeavenStudio.Editor.Track
             if (changedSiblingIndex)
                 gameObject.transform.SetSiblingIndex(lastSiblingIndex);
             mouseHovering = false;
+            selectedImage.gameObject.SetActive(false);
         }
 
         public void OnDragMain()
@@ -471,26 +464,7 @@ namespace HeavenStudio.Editor.Track
 
         public void SetColor(int type)
         {
-            Color c = Color.white;
-            switch (type)
-            {
-                case 0:
-                    c = EditorTheme.theme.properties.Layer1Col.Hex2RGB();
-                    break;
-                case 1:
-                    c = EditorTheme.theme.properties.Layer2Col.Hex2RGB();
-                    break;
-                case 2:
-                    c = EditorTheme.theme.properties.Layer3Col.Hex2RGB();
-                    break;
-                case 3:
-                    c = EditorTheme.theme.properties.Layer4Col.Hex2RGB();
-                    break;
-                case 4:
-                    c = EditorTheme.theme.properties.Layer5Col.Hex2RGB();
-                    break;
-            }
-            // c = new Color(c.r, c.g, c.b, 0.85f);
+            var c = EditorTheme.theme.LayersGradient.Evaluate(type / (float)(Timeline.instance.LayerCount - 1));
             transform.GetChild(0).GetComponent<Image>().color = c;
 
             if (resizable)
@@ -498,6 +472,13 @@ namespace HeavenStudio.Editor.Track
                 c = new Color(0, 0, 0, 0.35f);
                 resizeGraphic.color = c;
             }
+        }
+
+        public void SetWidthHeight()
+        {
+            rectTransform.sizeDelta = new Vector2(entity.length * Timeline.instance.PixelsPerBeat, Timeline.instance.LayerHeight());
+            Icon.rectTransform.sizeDelta = new Vector2(Timeline.instance.LayerHeight() - 8, Timeline.instance.LayerHeight() - 8);
+            eventLabel.rectTransform.offsetMin = new Vector2(Icon.rectTransform.anchoredPosition.x + Icon.rectTransform.sizeDelta.x + 4, eventLabel.rectTransform.offsetMin.y);
         }
 
         public int GetTrack()
@@ -517,5 +498,15 @@ namespace HeavenStudio.Editor.Track
         }
 
         #endregion
+
+        public void OnSelect()
+        {
+            selectedImage.gameObject.SetActive(true);
+        }
+
+        public void OnDeselect()
+        {
+            selectedImage.gameObject.SetActive(false);
+        }
     }
 }

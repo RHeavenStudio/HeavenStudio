@@ -42,6 +42,7 @@ namespace HeavenStudio.Editor
             DeselectAll();
             eventsSelected.Add(eventToAdd);
             eventToAdd.selected = true;
+            eventToAdd.OnSelect();
 
             TimelineBlockManager.Instance.SortMarkers();
 
@@ -53,11 +54,13 @@ namespace HeavenStudio.Editor
             if (!eventsSelected.Contains(eventToAdd))
             {
                 eventToAdd.selected = true;
+                eventToAdd.OnSelect();
                 eventsSelected.Add(eventToAdd);
             }
             else
             {
                 eventToAdd.selected = false;
+                eventToAdd.OnDeselect();
                 eventsSelected.Remove(eventToAdd);
             }
             TimelineBlockManager.Instance.SortMarkers();
@@ -69,6 +72,7 @@ namespace HeavenStudio.Editor
             {
                 eventToAdd.selected = true;
                 eventsSelected.Add(eventToAdd);
+                eventToAdd.OnSelect();
             }
         }
 
@@ -79,6 +83,8 @@ namespace HeavenStudio.Editor
             for (int i = 0; i < eventObjs.Count; i++)
             {
                 eventObjs[i].selected = true;
+                eventObjs[i].OnSelect();
+
                 eventsSelected.Add(eventObjs[i]);
             }
             TimelineBlockManager.Instance.SortMarkers();
@@ -89,6 +95,7 @@ namespace HeavenStudio.Editor
             foreach (var @event in eventsSelected)
             {
                 @event.selected = false;
+                @event.OnSelect();
             }
             eventsSelected.Clear();
             TimelineBlockManager.Instance.SortMarkers();
@@ -99,6 +106,7 @@ namespace HeavenStudio.Editor
             if (eventsSelected.Contains(eventToDeselect))
             {
                 eventToDeselect.selected = false;
+                eventToDeselect.OnDeselect();
                 eventsSelected.Remove(eventToDeselect);
             }
             TimelineBlockManager.Instance.SortMarkers();

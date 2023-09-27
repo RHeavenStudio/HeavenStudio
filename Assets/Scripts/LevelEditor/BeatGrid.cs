@@ -23,8 +23,7 @@ namespace HeavenStudio.Editor.Track
         private float lastPosX;
         private float lastContentScale;
         private float lastTimelineSize;
-
-        private float contentPosX => Mathf.Abs(scrollRect.content.localPosition.x / scrollRect.content.localScale.x);
+        private float lastZoom;
 
         private List<GameObject> Lines = new List<GameObject>();
 
@@ -50,7 +49,8 @@ namespace HeavenStudio.Editor.Track
         {
             if (Editor.instance.fullscreen) return;
 
-            var x = Mathp.Round2Nearest(contentPosX, Timeline.instance.PixelsPerBeat);
+            // var x = Mathp.Round2Nearest(contentPosX, Timeline.instance.PixelsPerBeat);
+            var x = Mathp.Round2Nearest(-scrollRect.content.anchoredPosition.x, Timeline.instance.PixelsPerBeat);
             var pos = new Vector3(x, transform.localPosition.y, transform.localPosition.z);
             transform.localPosition = pos;
             rectTransform.anchoredPosition = new Vector3(rectTransform.anchoredPosition.x, rectTransform.anchoredPosition.y, 0);
@@ -63,7 +63,8 @@ namespace HeavenStudio.Editor.Track
 
         private void UpdateCount()
         {
-            var changeScale = (scrollRect.viewport.rect.size.x != lastTimelineSize || scrollRect.content.localScale.x != lastContentScale);
+            var changeScale = (scrollRect.viewport.rect.size.x != lastTimelineSize || scrollRect.content.localScale.x != lastContentScale) || 
+                (Timeline.instance.Zoom != lastZoom);
             if (changeScale)
             {
                 for (int i = 0; i < Lines.Count; i++)
@@ -95,6 +96,7 @@ namespace HeavenStudio.Editor.Track
 
             lastContentScale = scrollRect.content.localScale.x;
             lastTimelineSize = scrollRect.viewport.rect.size.x;
+            lastZoom = Timeline.instance.Zoom;
             lastPosX = rectTransform.anchoredPosition.x;
         }
 

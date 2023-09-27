@@ -21,6 +21,7 @@ namespace HeavenStudio.Editor.Track
         private int lastMarkerToCareAbout = 0;
         private Timeline timeline;
 
+
         private RiqEntity entityToSet;
 
         public bool InteractingWithEvents { get; private set; } = false;
@@ -73,6 +74,14 @@ namespace HeavenStudio.Editor.Track
             marker.UpdateMarker();
 
             return marker;
+        }
+
+        public void OnZoom()
+        {
+            foreach (var marker in EntityMarkers.Values)
+            {
+                marker.SetWidthHeight();
+            }
         }
 
         public void UpdateMarkers()
@@ -143,7 +152,6 @@ namespace HeavenStudio.Editor.Track
             foreach (var block in EntityMarkers.Values)
             {
                 var index = sortedBlocks.FindIndex(c => c.entity.guid == block.entity.guid);
-                Debug.Log(index);
                 block.transform.SetSiblingIndex(index + 1);
 
                 i++;
