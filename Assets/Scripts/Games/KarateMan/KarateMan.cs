@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 using HeavenStudio.Util;
+using HeavenStudio.InputSystem;
 using Jukebox;
 
 namespace HeavenStudio.Games.Loaders
@@ -441,6 +442,97 @@ namespace HeavenStudio.Games
         public static int WantNoriType = (int) NoriMode.None;
         public static double WantBgChangeStart = double.MinValue;
         public static float WantBgChangeLength = 0f;
+        
+        const int IAAltDownCat = IAMAXCAT;
+        const int IAAltUpCat = IAMAXCAT + 1;
+
+        protected static bool IA_PadAnyDown(out double dt)
+        {
+            return PlayerInput.GetPadDown(InputController.ActionsPad.East, out dt)
+                    || PlayerInput.GetPadDown(InputController.ActionsPad.Up, out dt)
+                    || PlayerInput.GetPadDown(InputController.ActionsPad.Down, out dt)
+                    || PlayerInput.GetPadDown(InputController.ActionsPad.Left, out dt)
+                    || PlayerInput.GetPadDown(InputController.ActionsPad.Right, out dt);
+        }
+        protected static bool IA_PadAnyUp(out double dt)
+        {
+            return PlayerInput.GetPadUp(InputController.ActionsPad.East, out dt)
+                    || PlayerInput.GetPadUp(InputController.ActionsPad.Up, out dt)
+                    || PlayerInput.GetPadUp(InputController.ActionsPad.Down, out dt)
+                    || PlayerInput.GetPadUp(InputController.ActionsPad.Left, out dt)
+                    || PlayerInput.GetPadUp(InputController.ActionsPad.Right, out dt);
+        }
+        protected static bool IA_PadAny(out double dt)
+        {
+            dt = 0;
+            return PlayerInput.GetPad(InputController.ActionsPad.East)
+                    || PlayerInput.GetPad(InputController.ActionsPad.Up)
+                    || PlayerInput.GetPad(InputController.ActionsPad.Down)
+                    || PlayerInput.GetPad(InputController.ActionsPad.Left)
+                    || PlayerInput.GetPad(InputController.ActionsPad.Right);
+        }
+        protected static bool IA_TouchDown(out double dt)
+        {
+            return PlayerInput.GetTouchDown(InputController.ActionsTouch.Tap, out dt)
+                && !instance.IsExpectingInputNow(InputAction_AltDown);
+        }
+        protected static bool IA_TouchUp(out double dt)
+        {
+            return PlayerInput.GetTouchUp(InputController.ActionsTouch.Tap, out dt)
+                && !instance.IsExpectingInputNow(InputAction_AltDown);
+        }
+
+        protected static bool IA_EmptyTouchUp(out double dt)
+        {
+            return PlayerInput.GetTouchUp(InputController.ActionsTouch.Tap, out dt) && !PlayerInput.GetFlick(out _);
+        }
+
+        protected static bool IA_PadAltDown(out double dt)
+        {
+            return PlayerInput.GetPadDown(InputController.ActionsPad.South, out dt);
+        }
+        protected static bool IA_BatonAltDown(out double dt)
+        {
+            return PlayerInput.GetSqueezeDown(out dt);
+        }
+        protected static bool IA_TouchAltDown(out double dt)
+        {
+            return PlayerInput.GetTouchDown(InputController.ActionsTouch.Tap, out dt)
+                && instance.IsExpectingInputNow(InputAction_AltDown);
+        }
+
+        protected static bool IA_PadAltUp(out double dt)
+        {
+            return PlayerInput.GetPadUp(InputController.ActionsPad.South, out dt);
+        }
+        protected static bool IA_BatonAltUp(out double dt)
+        {
+            return PlayerInput.GetSqueezeUp(out dt);
+        }
+        protected static bool IA_TouchAltUp(out double dt)
+        {
+            return PlayerInput.GetFlick(out dt)
+                && instance.IsExpectingInputNow(InputAction_AltUp);
+        }
+
+        public static PlayerInput.InputAction InputAction_Press =
+            new("KaratePress", new int[] { IAPressCat, IAPressCat, IAPressCat },
+            IA_PadAnyDown, IA_TouchDown, IA_BatonBasicPress);
+        public static PlayerInput.InputAction InputAction_Flick =
+            new("KaratePress", new int[] { IAFlickCat, IAFlickCat, IAFlickCat },
+            IA_PadAnyUp, IA_TouchFlick, IA_BatonBasicRelease);
+        public static PlayerInput.InputAction InputAction_Pressing =
+            new("KaratePress", new int[] { IAPressingCat, IAPressingCat, IAPressingCat },
+            IA_PadAny, IA_TouchBasicPressing, IA_BatonBasicPressing);
+        public static PlayerInput.InputAction InputAction_AltDown =
+            new("KarateAltDown", new int[] { IAAltDownCat, IAAltDownCat, IAAltDownCat },
+            IA_PadAltDown, IA_TouchAltDown, IA_BatonAltDown);
+        public static PlayerInput.InputAction InputAction_AltUp =
+            new("KarateAltUp", new int[] { IAAltUpCat, IAAltUpCat, IAAltUpCat },
+            IA_PadAltUp, IA_TouchAltUp, IA_BatonAltUp);
+        public static PlayerInput.InputAction InputAction_TouchUp =
+            new("KarateAltUp", new int[] { IAEmptyCat, IAReleaseCat, IAEmptyCat },
+            IA_PadAltUp, IA_EmptyTouchUp, IA_BatonAltUp);
 
         private void Awake()
         {

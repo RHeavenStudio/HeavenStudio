@@ -3,8 +3,8 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-using HeavenStudio;
 using HeavenStudio.Util;
+using HeavenStudio.InputSystem;
 
 namespace HeavenStudio.Games.Scripts_KarateMan
 {
@@ -35,7 +35,7 @@ namespace HeavenStudio.Games.Scripts_KarateMan
         public int GetShouldComboId() { return shouldComboId; }
 
         public bool wantKick = false;
-        public bool inKick = false;
+        public bool inKick = false, inTouchCharge = false;
         double lastChargeTime = double.MinValue;
         double unPrepareTime = double.MinValue;
         double noNuriJabTime = double.MinValue;
@@ -46,8 +46,7 @@ namespace HeavenStudio.Games.Scripts_KarateMan
         {
             get
             {
-                return inCombo || lockedInCombo ||
-            Conductor.instance.GetPositionFromBeat(lastChargeTime, 2.75f) <= 0.25f || inNuriLock;
+                return inCombo || lockedInCombo || inKick || inNuriLock || inTouchCharge;
             }
         }
         public bool inNuriLock { get { return (Conductor.instance.songPositionInBeatsAsDouble >= noNuriJabTime && Conductor.instance.songPositionInBeatsAsDouble < noNuriJabTime + 1f); } }
@@ -126,42 +125,59 @@ namespace HeavenStudio.Games.Scripts_KarateMan
 
             if (inKick)
             {
-                float chargeProg = cond.GetPositionFromBeat(lastChargeTime, 2.75f);
+                float chargeProg = cond.GetPositionFromBeat(lastChargeTime, 1.75f);
                 if (chargeProg >= 0f && chargeProg < 1f)
                 {
-                    anim.DoScaledAnimation("ManCharge", lastChargeTime, 2.75f);
+                    anim.DoScaledAnimation("ManCharge", lastChargeTime, 1.75f);
                     bop.startBeat = lastChargeTime + 1.75f;
                 }
-                else if (chargeProg >= 1f)
+                else if (cond.songPositionAsDouble >= lastChargeTime + 2.75f)
                 {
                     anim.speed = 1f;
-                    bop.startBeat = lastChargeTime + 1.75f;
+                    bop.startBeat = lastChargeTime + 2.75f;
                     lastChargeTime = double.MinValue;
                     inKick = false;
                 }
             }
 
-            if ((PlayerInput.Pressed() || PlayerInput.GetAnyDirectionDown()) && !inSpecial)
+            if (PlayerInput.GetIsAction(KarateMan.InputAction_Press) && !inSpecial)
             {
-                if (!KarateMan.instance.IsExpectingInputNow(InputType.STANDARD_DOWN | InputType.DIRECTION_DOWN))
+                if (!KarateMan.instance.IsExpectingInputNow(KarateMan.InputAction_Press))
                 {
-                    Punch(1);
+                    Punch(1, PlayerInput.CurrentControlStyle == InputController.ControlStyles.Touch);
                     SoundByte.PlayOneShotGame("karateman/swingNoHit", forcePlay: true);
                 }
             }
-
-            if (PlayerInput.AltPressed() && KarateMan.IsComboEnable && !inSpecial)
+            if (PlayerInput.GetIsAction(KarateMan.InputAction_TouchUp) && lastChargeTime != double.MinValue && !(inTouchCharge || inKick))
             {
-                if (!KarateMan.instance.IsExpectingInputNow(InputType.STANDARD_ALT_DOWN))
+                lastChargeTime = double.MinValue;
+            }
+            if (lastChargeTime != double.MinValue && cond.songPositionInBeatsAsDouble > lastChargeTime + 0.25 && PlayerInput.GetIsAction(KarateMan.InputAction_Pressing) && !(inKick || inTouchCharge))
+            {
+                if (PlayerInput.CurrentControlStyle == InputController.ControlStyles.Touch)
+                {
+                    Debug.Log("Touch charge");
+                    inTouchCharge = true;
+                    anim.DoScaledAnimationAsync("ManChargeOut", 0.5f);
+                }
+            }
+
+            if (PlayerInput.GetIsAction(KarateMan.InputAction_AltDown) && KarateMan.IsComboEnable && !inSpecial)
+            {
+                if (!KarateMan.instance.IsExpectingInputNow(KarateMan.InputAction_AltDown))
                 {
                     //start a forced-fail combo sequence
                     ForceFailCombo(cond.songPositionInBeatsAsDouble);
                     KarateMan.instance.ScoreMiss(2);
                 }
             }
-            else if (PlayerInput.AltPressedUp())
+            else if (PlayerInput.GetIsAction(KarateMan.InputAction_AltUp) || PlayerInput.GetIsAction(KarateMan.InputAction_TouchUp))
             {
-                if (!KarateMan.instance.IsExpectingInputNow(InputType.STANDARD_ALT_UP))
+                if (PlayerInput.GetIsAction(KarateMan.InputAction_TouchUp) && inComboId != -1 && !lockedInCombo)
+                {
+                    inComboId = -1;
+                }
+                if (!KarateMan.instance.IsExpectingInputNow(KarateMan.InputAction_AltUp))
                 {
                     if (inComboId != -1 && !lockedInCombo)
                     {
@@ -170,17 +186,26 @@ namespace HeavenStudio.Games.Scripts_KarateMan
                 }
             }
 
-            if ((!GameManager.instance.autoplay) && (PlayerInput.PressedUp() || PlayerInput.GetAnyDirectionUp()) && !(PlayerInput.Pressing() || PlayerInput.GetAnyDirection()))
+            if ((!GameManager.instance.autoplay)
+                && (PlayerInput.GetIsAction(KarateMan.InputAction_Flick) || PlayerInput.GetIsAction(KarateMan.InputAction_BasicRelease))
+                && !PlayerInput.GetIsAction(KarateMan.InputAction_Pressing))
             {
                 if (wantKick)
                 {
                     //stopped holding, don't charge
                     wantKick = false;
                 }
-                else if (inKick && cond.GetPositionFromBeat(lastChargeTime, 2.75f) <= 0.5f && !KarateMan.instance.IsExpectingInputNow(InputType.STANDARD_UP | InputType.DIRECTION_UP))
+                else if (inKick || inTouchCharge)
                 {
-                    Kick(cond.songPositionInBeatsAsDouble);
-                    SoundByte.PlayOneShotGame("karateman/swingKick", forcePlay: true);
+                    if (PlayerInput.GetIsAction(KarateMan.InputAction_Flick) && !KarateMan.instance.IsExpectingInputNow(KarateMan.InputAction_Flick))
+                    {
+                        Kick(cond.songPositionInBeatsAsDouble);
+                        SoundByte.PlayOneShotGame("karateman/swingKick", forcePlay: true);
+                    }
+                    else if (PlayerInput.GetIsAction(KarateMan.InputAction_TouchUp))
+                    {
+                        Kick(cond.songPositionInBeatsAsDouble, true);
+                    }
                 }
             }
 
@@ -193,7 +218,7 @@ namespace HeavenStudio.Games.Scripts_KarateMan
             lastChargeTime = double.MinValue;
         }
 
-        public bool Punch(int forceHand = 0)
+        public bool Punch(int forceHand = 0, bool touchCharge = false)
         {
             if (GameManager.instance.currentGame != "karateman") return false;
             var cond = Conductor.instance;
@@ -232,7 +257,15 @@ namespace HeavenStudio.Games.Scripts_KarateMan
                     noNuriJabTime = cond.songPositionInBeatsAsDouble;
                     break;
             }
-            bop.startBeat = cond.songPositionInBeatsAsDouble + 0.5f;
+            if (touchCharge)
+            {
+                lastChargeTime = cond.songPositionInBeatsAsDouble;
+                bop.startBeat = double.MaxValue;
+            }
+            else
+            {
+                bop.startBeat = cond.songPositionInBeatsAsDouble + 0.5f;
+            }
             return straight;    //returns what hand was used to punch the object
         }
 
@@ -317,17 +350,25 @@ namespace HeavenStudio.Games.Scripts_KarateMan
             });
         }
 
-        public void Kick(double beat)
+        public void Kick(double beat, bool oldReturn = false)
         {
-            if (!inKick) return;
+            if (!(inKick || inTouchCharge)) return;
             //play the kick animation and reset stance
             anim.speed = 1f;
             bop.startBeat = beat + 1f;
             unPrepareTime = double.MinValue;
             lastChargeTime = double.MinValue;
             inKick = false;
+            inTouchCharge = false;
 
-            anim.DoScaledAnimationAsync("ManKick", 0.5f);
+            if (oldReturn)
+            {
+                anim.DoScaledAnimationAsync("ManReturn", 0.5f);
+            }
+            else
+            {
+                anim.DoScaledAnimationAsync("ManKick", 0.5f);
+            }
         }
 
         public void MarkCanEmote()

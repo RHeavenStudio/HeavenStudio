@@ -5,6 +5,7 @@ using UnityEngine;
 using NaughtyBezierCurves;
 
 using HeavenStudio.Util;
+using HeavenStudio.InputSystem;
 
 namespace HeavenStudio.Games.Scripts_KarateMan
 {
@@ -186,8 +187,8 @@ namespace HeavenStudio.Games.Scripts_KarateMan
             switch (type)
             {
                 case ItemType.ComboPot1:
-                    OnHit = KarateMan.instance.ScheduleInput(startBeat, 1f, InputType.STANDARD_ALT_DOWN, ComboStartJustOrNg, ComboStartThrough, ComboStartOut, CanCombo);
-                    OnHitWrongAction = KarateMan.instance.ScheduleUserInput(startBeat, 1f, InputType.STANDARD_DOWN | InputType.DIRECTION_DOWN, ComboStartWrongAction, ComboStartOut, ComboStartOut, CanHit);
+                    OnHit = KarateMan.instance.ScheduleInput(startBeat, 1f, KarateMan.InputAction_AltDown, ComboStartJustOrNg, ComboStartThrough, ComboStartOut, CanCombo);
+                    OnHitWrongAction = KarateMan.instance.ScheduleUserInput(startBeat, 1f, KarateMan.InputAction_Press, ComboStartWrongAction, ComboStartOut, ComboStartOut, CanHitWrong);
                     path = 1;
                     break;
                 case ItemType.ComboPot2:
@@ -208,24 +209,24 @@ namespace HeavenStudio.Games.Scripts_KarateMan
                     BeatAction.New(this, new List<BeatAction.Action>() { new BeatAction.Action(startBeat + 1f, delegate { JoeComboSequence(); }) });
                     break;
                 case ItemType.ComboBarrel:
-                    OnHit = KarateMan.instance.ScheduleInput(startBeat, 1f, InputType.STANDARD_ALT_UP, ComboEndJustOrNg, ComboEndThrough, ComboEndOut, CanComboEnd);
+                    OnHit = KarateMan.instance.ScheduleInput(startBeat, 1f, KarateMan.InputAction_AltUp, ComboEndJustOrNg, ComboEndThrough, ComboEndOut, CanComboEnd);
                     path = 5;
                     break;
                 case ItemType.KickBarrel:
-                    OnHit = KarateMan.instance.ScheduleInput(startBeat, 1f, InputType.STANDARD_DOWN | InputType.DIRECTION_DOWN, KickChargeJustOrNg, ItemThrough, ItemOut, CanCombo);
-                    OnHitWrongAction = KarateMan.instance.ScheduleUserInput(startBeat, 1f, InputType.STANDARD_ALT_DOWN, ItemWrongAction, ItemOut, ItemOut, CanCombo);
+                    OnHit = KarateMan.instance.ScheduleInput(startBeat, 1f, KarateMan.InputAction_Press, KickChargeJustOrNg, ItemThrough, ItemOut, CanCombo);
+                    OnHitWrongAction = KarateMan.instance.ScheduleUserInput(startBeat, 1f, KarateMan.InputAction_AltDown, ItemWrongAction, ItemOut, ItemOut, CanComboWrong);
                     path = 1;
                     comboId = -1;
                     break;
                 case ItemType.KickBomb:
-                    OnHit = KarateMan.instance.ScheduleInput(startBeat, 0.75f, InputType.STANDARD_UP | InputType.DIRECTION_UP, KickJustOrNg, KickThrough, KickOut, CanKick);
+                    OnHit = KarateMan.instance.ScheduleInput(startBeat, 0.75f, KarateMan.InputAction_Flick, KickJustOrNg, KickThrough, KickOut, CanKick);
                     CurrentCurve = ItemCurves[6];
                     curveTargetBeat = 2 * 0.75f;
                     path = 1;
                     comboId = -1;
                     break;
                 case ItemType.KickBall:
-                    OnHit = KarateMan.instance.ScheduleInput(startBeat, 0.75f, InputType.STANDARD_UP | InputType.DIRECTION_UP, KickJustOrNg, KickThrough, KickOut, CanKick);
+                    OnHit = KarateMan.instance.ScheduleInput(startBeat, 0.75f, KarateMan.InputAction_Flick, KickJustOrNg, KickThrough, KickOut, CanKick);
                     CurrentCurve = ItemCurves[6];
                     curveTargetBeat = 2 * 0.75f;
                     path = 1;
@@ -239,14 +240,14 @@ namespace HeavenStudio.Games.Scripts_KarateMan
                     comboId = -1;
                     break;
                 case ItemType.Bomb:
-                    OnHit = KarateMan.instance.ScheduleInput(startBeat, 1f, InputType.STANDARD_DOWN | InputType.DIRECTION_DOWN, ItemJustOrNg, ItemThrough, ItemOut, CanHit);
-                    OnHitWrongAction = KarateMan.instance.ScheduleUserInput(startBeat, 1f, InputType.STANDARD_ALT_DOWN, ItemWrongAction, ItemOut, ItemOut, CanHit);
+                    OnHit = KarateMan.instance.ScheduleInput(startBeat, 1f, KarateMan.InputAction_Press, ItemJustOrNg, ItemThrough, ItemOut, CanHit);
+                    OnHitWrongAction = KarateMan.instance.ScheduleUserInput(startBeat, 1f, KarateMan.InputAction_AltDown, ItemWrongAction, ItemOut, ItemOut, CanHitWrong);
                     path = 1;
                     comboId = -1;
                     break;
                 default:
-                    OnHit = KarateMan.instance.ScheduleInput(startBeat, 1f, InputType.STANDARD_DOWN | InputType.DIRECTION_DOWN, ItemJustOrNg, ItemThrough, ItemOut, CanHit);
-                    OnHitWrongAction = KarateMan.instance.ScheduleUserInput(startBeat, 1f, InputType.STANDARD_ALT_DOWN, ItemWrongAction, ItemOut, ItemOut, CanHit);
+                    OnHit = KarateMan.instance.ScheduleInput(startBeat, 1f, KarateMan.InputAction_Press, ItemJustOrNg, ItemThrough, ItemOut, CanHit);
+                    OnHitWrongAction = KarateMan.instance.ScheduleUserInput(startBeat, 1f, KarateMan.InputAction_AltDown, ItemWrongAction, ItemOut, ItemOut, CanHitWrong);
                     path = 1;
                     comboId = -1;
                     break;
@@ -738,7 +739,14 @@ namespace HeavenStudio.Games.Scripts_KarateMan
         public bool CanHit()
         {
             var joe = KarateMan.instance.Joe;
-            return status == FlyStatus.Fly && !(joe.inCombo || joe.inNuriLock);
+            return status == FlyStatus.Fly && !joe.inSpecial;
+        }
+
+        public bool CanHitWrong()
+        {
+            if (PlayerInput.CurrentControlStyle == InputController.ControlStyles.Touch) return false;
+            var joe = KarateMan.instance.Joe;
+            return status == FlyStatus.Fly && !joe.inSpecial;
         }
 
         public void ItemJustOrNg(PlayerActionEvent caller, float state)
@@ -841,13 +849,20 @@ namespace HeavenStudio.Games.Scripts_KarateMan
             });
             KarateMan.instance.Nori.DoThrough();
             OnHit.CanHit(false);
-            OnHitWrongAction.CanHit(false);
+            if (OnHitWrongAction != null)
+                OnHitWrongAction.CanHit(false);
         }
 
         public bool CanCombo()
         {
             var joe = KarateMan.instance.Joe;
-            return status == FlyStatus.Fly && !(joe.inKick || joe.wantKick || joe.inCombo || joe.inNuriLock);
+            return status == FlyStatus.Fly && !(joe.inSpecial || joe.wantKick);
+        }
+        public bool CanComboWrong()
+        {
+            if (PlayerInput.CurrentControlStyle == InputController.ControlStyles.Touch) return false;
+            var joe = KarateMan.instance.Joe;
+            return status == FlyStatus.Fly && !(joe.inSpecial || joe.wantKick);
         }
 
         public void ComboStartJustOrNg(PlayerActionEvent caller, float state)
@@ -894,7 +909,8 @@ namespace HeavenStudio.Games.Scripts_KarateMan
             });
             KarateMan.instance.Nori.DoThrough();
             OnHit.CanHit(false);
-            OnHitWrongAction.CanHit(false);
+            if (OnHitWrongAction != null)
+                OnHitWrongAction.CanHit(false);
         }
 
         public void ComboStartWrongAction(PlayerActionEvent caller, float state)
@@ -1069,12 +1085,14 @@ namespace HeavenStudio.Games.Scripts_KarateMan
             });
             KarateMan.instance.Nori.DoThrough();
             OnHit.CanHit(false);
-            OnHitWrongAction.CanHit(false);
+            if (OnHitWrongAction != null)
+                OnHitWrongAction.CanHit(false);
         }
 
         public bool CanKick()
         {
             var joe = KarateMan.instance.Joe;
+            Debug.Log(joe.inKick);
             return status == FlyStatus.Fly && joe.inKick;
         }
 
@@ -1082,6 +1100,7 @@ namespace HeavenStudio.Games.Scripts_KarateMan
         {
             if (GameManager.instance.currentGame != "karateman") return;
             var joe = KarateMan.instance.Joe;
+            Debug.Log("KickJustOrNg");
 
             joe.Kick(Conductor.instance.songPositionInBeatsAsDouble);
             if (state <= -1f || state >= 1f)
