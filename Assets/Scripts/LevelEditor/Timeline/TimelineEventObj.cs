@@ -249,8 +249,6 @@ namespace HeavenStudio.Editor.Track
             //     Cursor.SetCursor(Resources.Load<Texture2D>("Cursors/move"), new Vector2(8, 8), CursorMode.Auto);
             // }
 
-            rectTransform.anchoredPosition = new Vector2((float)entity.beat * Timeline.instance.PixelsPerBeat, -(int)entity["track"] * Timeline.instance.LayerHeight());
-
             zPriority = entity.length;
 
             if (selected)
@@ -259,6 +257,7 @@ namespace HeavenStudio.Editor.Track
 
         public void LateUpdate()
         {
+            rectTransform.anchoredPosition = new Vector2((float)entity.beat * Timeline.instance.PixelsPerBeat, -(int)entity["track"] * Timeline.instance.LayerHeight());
             SetWidthHeight();
 
             var followXL = (Timeline.instance.leftSide - (float)entity.beat) * Timeline.instance.PixelsPerBeat;
@@ -270,7 +269,6 @@ namespace HeavenStudio.Editor.Track
             visibleRegion.offsetMax = new Vector2(
                 Mathf.Clamp(followXR, -(entity.length * Timeline.instance.PixelsPerBeat) + 8, 0),
                 visibleRegion.offsetMax.y);
-
         }
 
         public void BeginMoving(bool setMovedEntity = true)
