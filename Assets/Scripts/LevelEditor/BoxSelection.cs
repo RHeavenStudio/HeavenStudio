@@ -13,7 +13,7 @@ namespace HeavenStudio.Editor
         /// <summary>
         /// Are we currently drag selecting?
         /// </summary>
-        public bool ActivelySelecting = false;
+        public bool ActivelySelecting { get; private set; } = false;
 
         private Vector2 startPosition = Vector2.zero;
         private Vector2 endPosition = Vector2.zero;
@@ -70,6 +70,8 @@ namespace HeavenStudio.Editor
 
                 startPos = new Vector2(startPos.x, Mathf.Clamp(startPos.y, 0, Timeline.instance.LayerCount));
                 endPos = new Vector2(endPos.x, Mathf.Clamp(endPos.y, 0, Timeline.instance.LayerCount));
+
+                ActivelySelecting = true;
             }
 
             var start = new Vector2(Mathf.Min(startPos.x, endPos.x),
@@ -81,6 +83,8 @@ namespace HeavenStudio.Editor
             {
                 validClick = false;
                 boxGroup.DOFade(0.0f, 0.3f).SetEase(Ease.OutExpo);
+
+                ActivelySelecting = false;
                 return;
             }
 

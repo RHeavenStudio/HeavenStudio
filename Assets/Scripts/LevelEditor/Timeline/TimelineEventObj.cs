@@ -7,6 +7,7 @@ using TMPro;
 using UnityEngine.Timeline;
 using System.Linq;
 using System.Collections.Generic;
+using HeavenStudio.Editor.Commands;
 
 namespace HeavenStudio.Editor.Track
 {
@@ -53,9 +54,13 @@ namespace HeavenStudio.Editor.Track
         private bool inResizeRegion;
         private float resizingLeftBL;
 
+        private double lastResizeBeat = 0;
+        private float lastResizeLength = 0;
+
         public bool isCreating;
 
         private bool altWhenClicked = false;
+        private bool dragging = false;
 
         private float initMoveX = 0.0f;
         private float initMoveY = 0.0f;
@@ -175,6 +180,7 @@ namespace HeavenStudio.Editor.Track
                 if (moving) moving = false;
 
                 entity.length = Mathf.Max(Timeline.instance.MousePos2BeatSnap - (float)entity.beat, Timeline.instance.snapInterval);
+
                 SetWidthHeight();
             }
             else if (resizingLeft)
@@ -183,6 +189,7 @@ namespace HeavenStudio.Editor.Track
 
                 entity.beat = Mathf.Min(Timeline.instance.MousePos2BeatSnap, resizingLeftBL - Timeline.instance.snapInterval);
                 entity.length = Mathf.Max(resizingLeftBL - (float)entity.beat, Timeline.instance.snapInterval);
+
                 SetWidthHeight();
             }
             else
@@ -215,6 +222,9 @@ namespace HeavenStudio.Editor.Track
                         GameManager.instance.SortEventsList();
                         TimelineBlockManager.Instance.SortMarkers();
                     }
+
+                    altWhenClicked = false;
+                    dragging = false;
                 }
 
                 if (moving)
@@ -235,21 +245,11 @@ namespace HeavenStudio.Editor.Track
                 OnRightUp();
             }
 
-            if (!BoxSelection.instance.ActivelySelecting)
-            if (resizing && selected || inResizeRegion && selected)
-            {
-                if (resizable)
-                    Cursor.SetCursor(Timeline.instance.resizeCursor, new Vector2(14, 14), CursorMode.Auto);
-            }
             // should consider adding this someday
             // else if (moving && selected || mouseHovering && selected)
             // {
             //     Cursor.SetCursor(Resources.Load<Texture2D>("Cursors/move"), new Vector2(8, 8), CursorMode.Auto);
             // }
-            else
-            {
-                Cursor.SetCursor(null, Vector2.zero, CursorMode.Auto);
-            }
 
             rectTransform.anchoredPosition = new Vector2((float)entity.beat * Timeline.instance.PixelsPerBeat, -(int)entity["track"] * Timeline.instance.LayerHeight());
 
@@ -331,12 +331,16 @@ namespace HeavenStudio.Editor.Track
                 return;
             }
 
+            if (dragging) return;
+
             var entities = Selections.instance.eventsSelected;
             if (entities.Count == 0)
             {
                 entities = new() { this };
             }
+            CommandManager.Instance.AddCommand(new Commands.Duplicate(entities));
 
+            dragging = true;
         }
 
         public void OnDown()
@@ -403,46 +407,84 @@ namespace HeavenStudio.Editor.Track
 
         public void ResizeEnter()
         {
+            if (BoxSelection.instance.ActivelySelecting || !resizable || moving) return;
+
             inResizeRegion = true;
+
+            Cursor.SetCursor(Timeline.instance.resizeCursor, new Vector2(14, 14), CursorMode.Auto);
         }
 
         public void ResizeExit()
         {
             inResizeRegion = false;
+
+            if (!resizing)
+                Cursor.SetCursor(null, Vector2.zero, CursorMode.Auto);
         }
 
         public void OnLeftDown()
         {
+            if (BoxSelection.instance.ActivelySelecting) return;
+
             if (resizable && selected)
             {
                 ResetResize();
+
                 resizingLeft = true;
+
                 resizingLeftBL = (float)entity.beat + entity.length;
+
+                lastResizeBeat = entity.beat;
+                lastResizeLength = entity.length;
             }
         }
 
         public void OnLeftUp()
         {
-            if (resizable && selected)
+            if (resizable && resizingLeft)
             {
                 ResetResize();
+                Cursor.SetCursor(null, Vector2.zero, CursorMode.Auto);
+
+                var b = entity.beat;
+                var l = entity.length;
+
+                entity.beat = lastResizeBeat;
+                entity.length = lastResizeLength;
+
+                CommandManager.Instance.AddCommand(new Commands.Resize(entity.guid, b, l));
             }
         }
 
         public void OnRightDown()
         {
+            if (BoxSelection.instance.ActivelySelecting) return;
+
             if (resizable && selected)
             {
                 ResetResize();
+
                 resizingRight = true;
+
+                lastResizeBeat = entity.beat;
+                lastResizeLength = entity.length;
             }
         }
 
         public void OnRightUp()
         {
-            if (resizable && selected)
+            if (resizable && resizingRight)
             {
                 ResetResize();
+                Cursor.SetCursor(null, Vector2.zero, CursorMode.Auto);
+
+                var b = entity.beat;
+                var l = entity.length;
+
+                entity.beat = lastResizeBeat;
+                entity.length = lastResizeLength;
+
+                CommandManager.Instance.AddCommand(new Commands.Resize(entity.guid, b, l));
             }
         }
 
@@ -450,17 +492,6 @@ namespace HeavenStudio.Editor.Track
         {
             resizingLeft = false;
             resizingRight = false;
-        }
-
-        private void SetPivot(Vector2 pivot)
-        {
-            if (rectTransform == null) return;
-
-            Vector2 size = rectTransform.rect.size;
-            Vector2 deltaPivot = rectTransform.pivot - pivot;
-            Vector3 deltaPosition = new Vector3(deltaPivot.x * size.x, deltaPivot.y * size.y);
-            rectTransform.pivot = pivot;
-            rectTransform.localPosition -= deltaPosition;
         }
 
         #endregion

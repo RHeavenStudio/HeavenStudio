@@ -7,6 +7,7 @@ using Jukebox;
 using HeavenStudio.Editor.Track;
 using Newtonsoft.Json;
 using UnityEditor;
+using UnityEngine.Timeline;
 
 namespace HeavenStudio.Editor.Commands
 {
@@ -128,6 +129,84 @@ namespace HeavenStudio.Editor.Commands
         }
     }
 
+    public class Duplicate : ICommand
+    {
+        public List<RiqEntity> dupEntityData = new();
+        private readonly List<System.Guid> placedEntityIDs = new();
+
+        public Duplicate(List<TimelineEventObj> original)
+        {
+            var entities = original.Select(c => c.entity).ToList();
+
+            foreach (var entity in entities)
+            {
+                dupEntityData.Add(entity.DeepCopy());
+            }
+
+            for (var i = 0; i < original.Count; i++)
+            {
+                placedEntityIDs.Add(Guid.NewGuid());
+            }
+        }
+
+        public void Execute()
+        {
+            var entities = new List<RiqEntity>();
+            foreach (var entity in dupEntityData)
+            {
+                entities.Add(entity.DeepCopy());
+            }
+
+            Selections.instance.DeselectAll();
+
+            for (var i = 0; i < entities.Count; i++)
+            {
+                var entity = entities[i];
+                entity.guid = placedEntityIDs[i];
+
+                GameManager.instance.Beatmap.Entities.Add(entity);
+                var marker = TimelineBlockManager.Instance.CreateEntity(entity);
+                Selections.instance.DragSelect(marker);
+
+                if (i == entities.Count - 1)
+                    marker.BeginMoving(false);
+            }
+            GameManager.instance.SortEventsList();
+        }
+
+        public void Undo()
+        {
+            var deletedEntities = new List<RiqEntity>();
+            for (var i = 0; i < placedEntityIDs.Count; i++)
+            {
+                var placedEntityID = placedEntityIDs[i];
+                var createdEntity = GameManager.instance.Beatmap.Entities.Find(c => c.guid == placedEntityID);
+
+                if (createdEntity != null)
+                {
+                    deletedEntities.Add(createdEntity);
+
+                    if (TimelineBlockManager.Instance.EntityMarkers.ContainsKey(placedEntityID))
+                    {
+                        var marker = TimelineBlockManager.Instance.EntityMarkers[placedEntityID];
+                        Selections.instance.Deselect(marker);
+
+                        TimelineBlockManager.Instance.EntityMarkers.Remove(placedEntityID);
+                        GameObject.Destroy(marker.gameObject);
+                    }
+
+                    GameManager.instance.Beatmap.Entities.Remove(createdEntity);
+                }
+            }
+            GameManager.instance.SortEventsList();
+            dupEntityData.Clear();
+            foreach (var entity in deletedEntities)
+            {
+                dupEntityData.Add(entity.DeepCopy());
+            }
+        }
+    }
+
     public class Move : ICommand
     {
         private readonly List<Guid> entityIDs = new();
@@ -178,36 +257,57 @@ namespace HeavenStudio.Editor.Commands
 
                 entity.beat = lastMove.beat[i];
                 entity["track"] = lastMove.layer[i];
-                Debug.Log(lastMove.beat[i]);
             }
         }
     }
 
-    public class Duplicate : ICommand
+    public class Resize : ICommand
     {
-        public string dupEntityJson;
-        private readonly List<System.Guid> placedEntityIDs = new();
+        public Guid entityId;
+        private EntityResize newResize;
+        private EntityResize lastResize;
 
-        public Duplicate(List<RiqEntity> original)
+        public struct EntityResize
         {
-            dupEntityJson = JsonConvert.SerializeObject(original, Formatting.None, new JsonSerializerSettings()
-            {
-                TypeNameHandling = TypeNameHandling.None,
-                NullValueHandling = NullValueHandling.Include,
-                ReferenceLoopHandling = ReferenceLoopHandling.Ignore,
-            });
+            public double beat;
+            public float length;
 
+            public EntityResize(double beat, float length)
+            {
+                this.beat = beat;
+                this.length = length;
+            }
+        }
+
+        public Resize(Guid entityId, double newBeat, float newLength)
+        {
+            this.entityId = entityId;
+            newResize = new EntityResize(newBeat, newLength);
 
         }
 
         public void Execute()
         {
+            var entity = GameManager.instance.Beatmap.Entities.Find(c => c.guid == entityId);
 
+            lastResize = new EntityResize(entity.beat, entity.length);
+
+            entity.beat = newResize.beat;
+            entity.length = newResize.length;
+
+            if (TimelineBlockManager.Instance.EntityMarkers.ContainsKey(entityId))
+                TimelineBlockManager.Instance.EntityMarkers[entityId].SetWidthHeight();
         }
 
         public void Undo()
         {
+            var entity = GameManager.instance.Beatmap.Entities.Find(c => c.guid == entityId);
 
+            entity.beat = lastResize.beat;
+            entity.length = lastResize.length;
+
+            if (TimelineBlockManager.Instance.EntityMarkers.ContainsKey(entityId))
+                TimelineBlockManager.Instance.EntityMarkers[entityId].SetWidthHeight();
         }
     }
 }
