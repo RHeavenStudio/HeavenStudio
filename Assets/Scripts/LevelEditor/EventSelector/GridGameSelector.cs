@@ -142,8 +142,6 @@ namespace HeavenStudio.Editor
             SelectedMinigame = EventCaller.instance.GetMinigame(gameName);
             if (SelectedMinigame == null) {
                 SelectGame("gameManager");
-                currentEventIndex = 0;
-                UpdateIndex(0, false);
                 Debug.LogWarning($"SelectGame() has failed, did you mean to input '{gameName}'?");
                 return;
             }

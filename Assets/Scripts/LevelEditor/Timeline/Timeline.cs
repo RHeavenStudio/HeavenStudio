@@ -185,7 +185,7 @@ namespace HeavenStudio.Editor.Track
         public float leftSide => (RealTimelineContent.anchoredPosition.x / PixelsPerBeat) * -1;
         public float rightSide => (TimelineScroll.viewport.rect.width / PixelsPerBeat) + leftSide;
 
-        private Vector2 lastViewportSize;
+        private Vector2 lastScreenSize;
         
         public static Timeline instance { get; private set; }
 
@@ -607,14 +607,6 @@ namespace HeavenStudio.Editor.Track
 
         public void LateUpdate()
         {
-            if (TimelineScroll.viewport.rect.size != lastViewportSize)
-            {
-                foreach (var block in TimelineBlockManager.Instance.EntityMarkers)
-                {
-                    block.Value.SetWidthHeight();
-                }
-            }
-
             TimelineBlockManager.Instance.UpdateMarkers();
             BoxSelection.instance.LayerSelectUpdate();
 
@@ -627,8 +619,6 @@ namespace HeavenStudio.Editor.Track
             OverlayPanelContent.sizeDelta = new Vector2(TimelineContent.sizeDelta.x, OverlayPanelContent.sizeDelta.y);
 
             LayersRect.anchoredPosition = new Vector2(LayersRect.anchoredPosition.x, TimelineContent.anchoredPosition.y);
-
-            lastViewportSize = TimelineScroll.viewport.rect.size;
         }
 
         public static float GetScaleModifier()

@@ -81,6 +81,8 @@ namespace HeavenStudio.Editor
 
         public bool isShortcutsEnabled { get { return (!inAuthorativeMenu) && (!editingInputField); } }
 
+        private Vector2 lastScreenSize = Vector2.zero;
+
         public static Editor instance { get; private set; }
 
         private void Start()
@@ -144,6 +146,12 @@ namespace HeavenStudio.Editor
 
         public void LateUpdate()
         {
+            if (lastScreenSize != new Vector2(UnityEngine.Screen.width, UnityEngine.Screen.height))
+            {
+                // Timeline.OnScreenResize();
+            }
+            lastScreenSize = new Vector2(UnityEngine.Screen.width, UnityEngine.Screen.height);
+
             #region Keyboard Shortcuts
             if (isShortcutsEnabled)
             {

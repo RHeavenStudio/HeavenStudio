@@ -259,6 +259,8 @@ namespace HeavenStudio.Editor.Track
 
         public void LateUpdate()
         {
+            rectTransform.sizeDelta = new Vector2(rectTransform.sizeDelta.x, Timeline.instance.LayerHeight());
+
             var followXL = (Timeline.instance.leftSide - (float)entity.beat) * Timeline.instance.PixelsPerBeat;
             visibleRegion.offsetMin = new Vector2(
                 Mathf.Clamp(followXL - 2, 0, (entity.length * Timeline.instance.PixelsPerBeat) - Timeline.instance.LayerHeight()),
@@ -268,6 +270,7 @@ namespace HeavenStudio.Editor.Track
             visibleRegion.offsetMax = new Vector2(
                 Mathf.Clamp(followXR, -(entity.length * Timeline.instance.PixelsPerBeat) + 8, 0),
                 visibleRegion.offsetMax.y);
+
         }
 
         public void BeginMoving(bool setMovedEntity = true)
