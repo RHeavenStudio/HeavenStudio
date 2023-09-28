@@ -1100,7 +1100,6 @@ namespace HeavenStudio.Games.Scripts_KarateMan
         {
             if (GameManager.instance.currentGame != "karateman") return;
             var joe = KarateMan.instance.Joe;
-            Debug.Log("KickJustOrNg");
 
             joe.Kick(Conductor.instance.songPositionInBeatsAsDouble);
             if (state <= -1f || state >= 1f)

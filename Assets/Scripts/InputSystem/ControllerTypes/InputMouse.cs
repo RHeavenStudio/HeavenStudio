@@ -119,7 +119,6 @@ namespace HeavenStudio.InputSystem
                     {
                         hasSwiped = true;
                         isInSwipe = true;
-                        Debug.Log($"swipe (speed: {speed})");
                     }
                 }
                 else

@@ -99,8 +99,8 @@ namespace HeavenStudio.InputSystem
             East = 5,
             West = 6,
             North = 7,
-            L = 8,
-            R = 9,
+            ButtonL = 8,
+            ButtonR = 9,
             Pause = 10,
         }
 

@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using HeavenStudio.Util;
+using HeavenStudio.InputSystem;
 
 using Jukebox;
 
@@ -387,6 +388,54 @@ namespace HeavenStudio.Games
 
         private static List<QueuedInterval> queuedIntervals = new();
 
+        const int IATriggerDown = IAMAXCAT;
+        const int IATriggerUp = IAMAXCAT + 1;
+
+        static bool IA_PadTriggerDown(out double dt)
+        {
+            return PlayerInput.GetPadDown(InputController.ActionsPad.Up, out dt)
+                    || PlayerInput.GetPadDown(InputController.ActionsPad.Down, out dt)
+                    || PlayerInput.GetPadDown(InputController.ActionsPad.Left, out dt)
+                    || PlayerInput.GetPadDown(InputController.ActionsPad.Right, out dt)
+                    || PlayerInput.GetPadDown(InputController.ActionsPad.ButtonR, out dt)
+                    || PlayerInput.GetPadDown(InputController.ActionsPad.ButtonL, out dt);
+        }
+        static bool IA_BatonTriggerDown(out double dt)
+        {
+            return PlayerInput.GetBatonDown(InputController.ActionsBaton.Trigger, out dt);
+        }
+        static bool IA_TouchTriggerDown(out double dt)
+        {
+            return PlayerInput.GetTouchDown(InputController.ActionsTouch.ButtonR, out dt)
+                    || PlayerInput.GetTouchDown(InputController.ActionsTouch.ButtonL, out dt);
+        }
+
+        static bool IA_PadTriggerUp(out double dt)
+        {
+            return PlayerInput.GetPadUp(InputController.ActionsPad.Up, out dt)
+                    || PlayerInput.GetPadUp(InputController.ActionsPad.Down, out dt)
+                    || PlayerInput.GetPadUp(InputController.ActionsPad.Left, out dt)
+                    || PlayerInput.GetPadUp(InputController.ActionsPad.Right, out dt)
+                    || PlayerInput.GetPadUp(InputController.ActionsPad.ButtonR, out dt)
+                    || PlayerInput.GetPadUp(InputController.ActionsPad.ButtonL, out dt);
+        }
+        static bool IA_BatonTriggerUp(out double dt)
+        {
+            return PlayerInput.GetBatonUp(InputController.ActionsBaton.Trigger, out dt);
+        }
+        static bool IA_TouchTriggerUp(out double dt)
+        {
+            return PlayerInput.GetTouchUp(InputController.ActionsTouch.ButtonR, out dt)
+                    || PlayerInput.GetTouchUp(InputController.ActionsTouch.ButtonL, out dt);
+        }
+
+        public static PlayerInput.InputAction InputAction_TriggerDown =
+            new("NtrRockersBend", new int[] { IATriggerDown, IATriggerDown, IATriggerDown },
+            IA_PadTriggerDown, IA_TouchTriggerDown, IA_BatonTriggerDown);
+        public static PlayerInput.InputAction InputAction_TriggerUp =
+            new("NtrRockersUnbend", new int[] { IATriggerUp, IATriggerUp, IATriggerUp },
+            IA_PadTriggerUp, IA_TouchTriggerUp, IA_PadTriggerUp);
+
         private void Awake()
         {
             instance = this;
@@ -533,7 +582,7 @@ namespace HeavenStudio.Games
 
         private void Start()
         {
-            if (PlayerInput.Pressing())
+            if (PlayerInput.GetIsAction(InputAction_BasicPressing))
             {
                 Soshi.Mute();
             }
@@ -566,19 +615,32 @@ namespace HeavenStudio.Games
 
             if (cond.isPlaying && !cond.isPaused)
             {
-                if (PlayerInput.Pressed())
+                if (PlayerInput.GetIsAction(InputAction_BasicPress))
                 {
                     Soshi.Mute();
                 }
-                if (PlayerInput.PressedUp() && !IsExpectingInputNow(InputType.STANDARD_UP))
+                if (PlayerInput.CurrentControlStyle == InputController.ControlStyles.Touch
+                    && PlayerInput.GetIsAction(InputAction_FlickRelease) && !IsExpectingInputNow(InputAction_FlickRelease))
                 {
+                    // todo: strum
                     Soshi.UnHold();
                 }
-                if (PlayerInput.GetAnyDirectionDown() && !IsExpectingInputNow(InputType.DIRECTION_DOWN))
+                if (PlayerInput.GetIsAction(InputAction_BasicRelease))
+                {
+                    if (PlayerInput.CurrentControlStyle == InputController.ControlStyles.Touch)
+                    {
+                        Soshi.UnHold();
+                    }
+                    else if (!IsExpectingInputNow(InputAction_FlickRelease))
+                    {
+                        Soshi.UnHold();
+                    }
+                }
+                if (PlayerInput.GetIsAction(InputAction_TriggerDown) && !IsExpectingInputNow(InputAction_TriggerDown))
                 {
                     Soshi.BendUp(Soshi.lastBendPitch);
                 }
-                if (PlayerInput.GetAnyDirectionUp() && !IsExpectingInputNow(InputType.DIRECTION_UP))
+                if (PlayerInput.GetIsAction(InputAction_TriggerUp) && !IsExpectingInputNow(InputAction_TriggerUp))
                 {
                     Soshi.BendDown();
                 }
@@ -658,15 +720,15 @@ namespace HeavenStudio.Games
             });
             RockersInput riffComp = Instantiate(rockerInputRef, transform);
             riffComp.Init(false, new int[6], beat, 3, (PremadeSamples)SoshiSamples[0], SoshiPitches[0]);
-            ScheduleInput(beat, 3.5f, InputType.STANDARD_DOWN, JustMute, MuteMiss, Empty);
+            ScheduleInput(beat, 3.5f, InputAction_TriggerDown, JustMute, MuteMiss, Empty);
 
             RockersInput riffComp2 = Instantiate(rockerInputRef, transform);
             riffComp2.Init(false, new int[6], beat, 4.5f, (PremadeSamples)SoshiSamples[1], SoshiPitches[1]);
-            ScheduleInput(beat, 5f, InputType.STANDARD_DOWN, JustMute, MuteMiss, Empty);
+            ScheduleInput(beat, 5f, InputAction_TriggerDown, JustMute, MuteMiss, Empty);
 
             RockersInput riffComp3 = Instantiate(rockerInputRef, transform);
             riffComp3.Init(false, new int[6], beat, 6, (PremadeSamples)SoshiSamples[2], SoshiPitches[2]);
-            ScheduleInput(beat, 6.5f, InputType.STANDARD_DOWN, JustMute, MuteMiss, Empty);
+            ScheduleInput(beat, 6.5f, InputAction_TriggerDown, JustMute, MuteMiss, Empty);
         }
 
         public void DefaultCmon(double beat, int[] JJSamples, int[] JJPitches, int[] SoshiSamples, int[] SoshiPitches, bool moveCamera)
@@ -721,19 +783,19 @@ namespace HeavenStudio.Games
             });
             RockersInput riffComp = Instantiate(rockerInputRef, transform);
             riffComp.Init(false, new int[6], beat, 3, (PremadeSamples)SoshiSamples[0], SoshiPitches[0]);
-            ScheduleInput(beat, 4, InputType.STANDARD_DOWN, JustMute, MuteMiss, Empty);
+            ScheduleInput(beat, 4, InputAction_BasicPress, JustMute, MuteMiss, Empty);
 
             RockersInput riffComp2 = Instantiate(rockerInputRef, transform);
             riffComp2.Init(false, new int[6], beat, 4.5f, (PremadeSamples)SoshiSamples[1], SoshiPitches[1]);
-            ScheduleInput(beat, 5.5f, InputType.STANDARD_DOWN, JustMute, MuteMiss, Empty);
+            ScheduleInput(beat, 5.5f, InputAction_BasicPress, JustMute, MuteMiss, Empty);
 
             RockersInput riffComp3 = Instantiate(rockerInputRef, transform);
             riffComp3.Init(false, new int[6], beat, 6, (PremadeSamples)SoshiSamples[2], SoshiPitches[2]);
-            ScheduleInput(beat, 6.5f, InputType.STANDARD_DOWN, JustMute, MuteMiss, Empty);
+            ScheduleInput(beat, 6.5f, InputAction_BasicPress, JustMute, MuteMiss, Empty);
 
             RockersInput riffComp4 = Instantiate(rockerInputRef, transform);
             riffComp4.Init(false, new int[6], beat, 7, (PremadeSamples)SoshiSamples[3], SoshiPitches[3], true);
-            ScheduleInput(beat, 10, InputType.STANDARD_DOWN, JustMute, MuteMiss, Empty);
+            ScheduleInput(beat, 10, InputAction_BasicPress, JustMute, MuteMiss, Empty);
         }
 
         public void TogetherPrepare(double beat, bool cmon, bool muteSound, float muteBeat, float goToMiddleBeat, bool moveCamera)
@@ -784,7 +846,7 @@ namespace HeavenStudio.Games
                     RockersInput riffComp = Instantiate(rockerInputRef, transform);
                     riffComp.Init(e["gcS"], new int[6] { e["1S"], e["2S"], e["3S"], e["4S"], e["5S"], e["6S"] }, beat, e.beat - beat,
                         (PremadeSamples)e["sampleS"], e["pitchSampleS"]);
-                    ScheduleInput(beat, e.beat - beat + e.length, InputType.STANDARD_DOWN, JustMute, MuteMiss, Empty);
+                    ScheduleInput(beat, e.beat - beat + e.length, InputAction_BasicPress, JustMute, MuteMiss, Empty);
                 }
                 else
                 {
@@ -804,7 +866,7 @@ namespace HeavenStudio.Games
                     RockersInput riffComp = Instantiate(rockerInputRef, transform);
                     riffComp.Init(e["gcS"], new int[6] { e["1S"], e["2S"], e["3S"], e["4S"], e["5S"], e["6S"] }, beat, e.beat - beat,
                         (PremadeSamples)e["sampleS"], e["pitchSampleS"], true);
-                    ScheduleInput(beat, e.beat - beat + e.length, InputType.STANDARD_DOWN, JustMute, MuteMiss, Empty);
+                    ScheduleInput(beat, e.beat - beat + e.length, InputAction_BasicPress, JustMute, MuteMiss, Empty);
                     break;
                 }
             }
@@ -1018,8 +1080,8 @@ namespace HeavenStudio.Games
                                 RockersInput riffComp = Instantiate(rockerInputRef, transform);
                                 riffComp.Init(crEvent["gcS"], new int[6] { crEvent["1S"], crEvent["2S"], crEvent["3S"], crEvent["4S"], crEvent["5S"], crEvent["6S"] }, beat, relativeBeat,
                                     (PremadeSamples)crEvent["sampleS"], crEvent["pitchSampleS"]);
-                                if (crEvent.length > 0.5f) ScheduleAutoplayInput(beat, relativeBeat + crEvent.length, InputType.STANDARD_DOWN, JustMute, MuteMiss, Empty);
-                                else ScheduleInput(beat, relativeBeat + crEvent.length, InputType.STANDARD_DOWN, JustMute, MuteMiss, Empty);
+                                if (crEvent.length > 0.5f) ScheduleAutoplayInput(beat, relativeBeat + crEvent.length, InputAction_BasicPress, JustMute, MuteMiss, Empty);
+                                else ScheduleInput(beat, relativeBeat + crEvent.length, InputAction_BasicPress, JustMute, MuteMiss, Empty);
                             }
                             else
                             {
@@ -1032,7 +1094,7 @@ namespace HeavenStudio.Games
 
                                 RockerBendInput bendComp = Instantiate(rockerBendInputRef, transform);
                                 bendComp.Init(crEvent["1S"], beat, relativeBeat);
-                                ScheduleAutoplayInput(beat, relativeBeat + crEvent.length, InputType.DIRECTION_UP, JustUnBend, UnBendMiss, Empty);
+                                ScheduleAutoplayInput(beat, relativeBeat + crEvent.length, InputAction_TriggerUp, JustUnBend, UnBendMiss, Empty);
                             }
                         }
                     }),
