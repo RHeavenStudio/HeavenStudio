@@ -47,8 +47,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   follow: 1
   mouseMoveSpeed: 249.1
-  Eyes: {fileID: 0}
-  OuterCircle: {fileID: 0}
+  DSGuy: {fileID: 0}
+  DSGuyAnimator: {fileID: 0}
+  flickCoeff: 0.35
+  flickInitMul: 1.5
   InnerCircle: {fileID: 0}
   Circle: {fileID: 0}
 --- !u!50 &285182279131759466
@@ -119,8 +121,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   follow: 0
   mouseMoveSpeed: 0
-  Eyes: {fileID: 285182279528619885}
-  OuterCircle: {fileID: 285182279354310575}
+  DSGuy: {fileID: 285182280031512481}
+  DSGuyAnimator: {fileID: 4592128791974829295}
+  flickCoeff: 4
+  flickInitMul: 64
   InnerCircle: {fileID: 285182279842109877}
   Circle: {fileID: 285182279897966106}
 --- !u!1 &285182279354310575
@@ -150,7 +154,7 @@ Transform:
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 0, y: 0, z: 1}
-  m_ConstrainProportionsScale: 0
+  m_ConstrainProportionsScale: 1
   m_Children: []
   m_Father: {fileID: 285182280031512482}
   m_RootOrder: 0
@@ -366,7 +370,7 @@ Transform:
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: -0.66, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
+  m_ConstrainProportionsScale: 1
   m_Children: []
   m_Father: {fileID: 285182280031512482}
   m_RootOrder: 2
@@ -540,7 +544,7 @@ Transform:
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
+  m_ConstrainProportionsScale: 1
   m_Children:
   - {fileID: 285182279492467814}
   m_Father: {fileID: 285182280031512482}
@@ -705,6 +709,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 285182280031512482}
+  - component: {fileID: 4592128791974829295}
   m_Layer: 3
   m_Name: DSGUY
   m_TagString: Untagged
@@ -730,6 +735,27 @@ Transform:
   m_Father: {fileID: 285182279419378161}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!95 &4592128791974829295
+Animator:
+  serializedVersion: 5
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 285182280031512481}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: a050595e43364bb4e9840d98fc70be72, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorStateOnDisable: 0
+  m_WriteDefaultValuesOnDisable: 0
 --- !u!1 &285182280367868641
 GameObject:
   m_ObjectHideFlags: 0

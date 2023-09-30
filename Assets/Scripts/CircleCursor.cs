@@ -13,11 +13,14 @@ namespace HeavenStudio
         [SerializeField] private float mouseMoveSpeed;
 
         [Header("DSGuy")]
-        [SerializeField] private GameObject Eyes;
-        [SerializeField] private GameObject OuterCircle;
+        [SerializeField] private GameObject DSGuy;
+        [SerializeField] private Animator DSGuyAnimator;
+        [SerializeField] private float flickCoeff = 0.35f;
+        [SerializeField] private float flickInitMul = 1.5f;
         public GameObject InnerCircle;
         [SerializeField] private GameObject Circle;
-        private Tween outerCircleTween, eyesTween;
+        private bool isOpen;
+        private Vector3 vel, flickStart, flickDeltaPos;
 
         private void Start()
         {
@@ -26,30 +29,33 @@ namespace HeavenStudio
 
         private void Open()
         {
-            Circle.transform.DOScale(0, 0.5f).SetEase(Ease.OutExpo);
-            InnerCircle.SetActive(true);
-            outerCircleTween.Kill();
-            outerCircleTween = OuterCircle.transform.DOScale(1, 0.15f).SetEase(Ease.OutExpo);
-
-            Eyes.SetActive(true);
-            eyesTween.Kill();
-            eyesTween = Eyes.transform.DOLocalMoveY(0.15f, 0.15f).SetEase(Ease.OutExpo);
+            vel = Vector3.zero;
+            flickDeltaPos = Vector3.zero;
+            DSGuyAnimator.Play("Open", -1);
+            Circle.SetActive(false);
+            isOpen = true;
         }
 
         private void Close()
         {
-            Circle.transform.DOScale(0.2f, 0.5f).SetEase(Ease.OutExpo);
-            InnerCircle.SetActive(false);
-            outerCircleTween.Kill();
-            outerCircleTween = OuterCircle.transform.DOScale(0, 0.15f);
+            DSGuyAnimator.Play("Close", -1);
+            Circle.SetActive(true);
+            isOpen = false;
+        }
 
-            eyesTween.Kill();
-            eyesTween = Eyes.transform.DOLocalMoveY(-0.66f, 0.15f).OnComplete(delegate { Eyes.SetActive(false); });
+        private void Flick(Vector3 startPos, Vector3 newVel)
+        {
+            flickStart = startPos;
+            vel = newVel;
+            DSGuyAnimator.Play("Flick", -1);
+            Circle.SetActive(true);
+            isOpen = false;
         }
 
         private void Update()
         {
             Vector3 pos = PlayerInput.GetInputController(1).GetPointer();
+            Vector3 deltaPos = pos - transform.position;
 
             if (follow)
             {
@@ -58,7 +64,20 @@ namespace HeavenStudio
             }
             else
             {
-                this.gameObject.transform.position = new Vector3(pos.x, pos.y, 0);
+                gameObject.transform.position = pos;
+                if (vel.magnitude > 0.05f)
+                {
+                    vel -= flickCoeff * Time.deltaTime * vel;
+                    flickDeltaPos += vel * Time.deltaTime;
+                    DSGuy.transform.position = flickStart + flickDeltaPos;
+                    Debug.Log(vel.magnitude);
+                }
+                else
+                {
+                    vel = Vector3.zero;
+                    flickDeltaPos = Vector3.zero;
+                    DSGuy.transform.position = pos;
+                }
 
                 if (PlayerInput.GetIsAction(Minigame.InputAction_BasicPress))
                 {
@@ -70,11 +89,11 @@ namespace HeavenStudio
                 }
                 else if (PlayerInput.GetIsAction(Minigame.InputAction_FlickRelease))
                 {
-                    // TODO: flick animation
-                    Close();
+                    Debug.Log(deltaPos.magnitude * flickInitMul);
+                    Flick(pos, deltaPos * flickInitMul);
                 }
 
-                if ((!PlayerInput.PlayerHasControl()) && InnerCircle.activeSelf)
+                if ((!PlayerInput.PlayerHasControl()) && isOpen)
                 {
                     Close();
                 }
