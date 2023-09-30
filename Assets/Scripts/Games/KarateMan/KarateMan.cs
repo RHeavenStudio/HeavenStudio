@@ -138,13 +138,13 @@ namespace HeavenStudio.Games.Loaders
                 {
                     function = delegate {
                         var e = eventCaller.currentEntity;
-                        KarateMan.instance.CreateBulbSpecial(e.beat, e["type"], e["colorA"], e["type2"]);
-                        KarateMan.CreateBulbSFX(e.beat, e["type"], false);
+                        KarateMan.instance.CreateBulbSpecial(e.beat, e["ntrSfx"] ? 4 : e["type"], e["colorA"], e["type2"]);
+                        if (!e["mute"]) KarateMan.CreateBulbSFX(e.beat, e["type"], e["ntrSfx"]);
                     },
                     inactiveFunction = delegate {
                         var e = eventCaller.currentEntity;
-                        KarateMan.QueueBulb(e.beat, e["type"], e["colorA"], e["type2"]);
-                        KarateMan.CreateBulbSFX(e.beat, e["type"], false);
+                        KarateMan.QueueBulb(e.beat, e["ntrSfx"] ? 4 : e["type"], e["colorA"], e["type2"]);
+                        if (!e["mute"]) KarateMan.CreateBulbSFX(e.beat, e["type"], e["ntrSfx"]);
                     },
                     defaultLength = 2,
                     parameters = new List<Param>()
@@ -156,6 +156,7 @@ namespace HeavenStudio.Games.Loaders
                         new Param("colorA", new Color(1f,1f,1f), "Custom Color", "The color to use when the bulb type is set to Custom"),
                         new Param("type2", KarateMan.KarateManFaces.Normal, "Success Expression", "The facial expression to set Joe to on hit"),
                         new Param("mute", false, "Mute", "Should the throwing sound be muted?"),
+                        new Param("ntrSfx", false, "DS SFX", "Use DS's lightbulb sfx?"),
                     },
                 },
                 new GameAction("kick", "Special: Kick")
@@ -450,7 +451,7 @@ namespace HeavenStudio.Games
             Normal,
             Blue,
             Yellow,
-            Custom 
+            Custom
         }
 
         public enum BackgroundType
@@ -549,13 +550,12 @@ namespace HeavenStudio.Games
         [Header("Colour Map")]
         public Material MappingMaterial;
         public static Color BodyColor = Color.white;
-        public static Color HighlightColor = new Color(0.81f,0.81f,0.81f,1);
+        public static Color HighlightColor = new Color(0.81f, 0.81f, 0.81f);
         public static Color ItemColor = Color.white;
 
         [Header("Word")]
         public Animator Word;
         static double wordClearTime = double.MinValue;
-        const float hitVoiceOffset = 0.042f;
 
         [Header("Backgrounds")]
         // 0 = bg color, 1 = shadow color, 2 = filter color
@@ -587,7 +587,7 @@ namespace HeavenStudio.Games
         SpriteRenderer bgEffectSpriteRenderer;
 
         [Header("Particles")]
-            //wind
+        // wind
         public WindZone Wind;
         public ParticleSystem[] Effects;
 
@@ -609,8 +609,12 @@ namespace HeavenStudio.Games
                 TintColor(BackgroundColors[0]),
                 new(),
             };
+
+            if (!Conductor.instance.isPlaying) {
+                OnGameSwitch(Conductor.instance.songPositionInBeatsAsDouble);
+            }
             
-            OnGameSwitch(Conductor.instance.songPositionInBeatsAsDouble);
+            GameCamera.additionalPosition = cameraPosition - GameCamera.defaultPosition;
         }
 
         public override void OnGameSwitch(double beat)
@@ -803,7 +807,7 @@ namespace HeavenStudio.Games
                 string number = ((HitThree)type).ToString()[3..];
                 number = char.ToLower(number[0]).ToString() + number[1..];
                 var sounds = new MultiSound.Sound[] {
-                    new MultiSound.Sound($"karateman/{(type == (int)HitThree.HitThreeAlt ? "hitAlt" : "hit")}", beat + 0.5f, offset: hitVoiceOffset),
+                    new MultiSound.Sound($"karateman/{(type == (int)HitThree.HitThreeAlt ? "hitAlt" : "hit")}", beat + 0.5f, offset: 0.042f),
                     new MultiSound.Sound($"karateman/{number}", beat + 1f),
                 };
                 if (pitchVoice) {
@@ -826,14 +830,10 @@ namespace HeavenStudio.Games
             if (!muteSound) SoundByte.PlayOneShotGame($"karateman/{(beat % 1.0 == 0.5 ? $"offbeatObject" : "object")}Out", forcePlay: true);
         }
 
-        public static void CreateBulbSFX(double beat, int type, bool muteSound = false)
+        public static void CreateBulbSFX(double beat, int type, bool ntrSfx = false)
         {
-            string obj = type switch {
-                //(int)LightBulbType.Normal => "LightbulbAgb",
-                (int)LightBulbType.Yellow => "LightbulbNtr",
-                _ => "Lightbulb",
-            };
-            if (!muteSound) SoundByte.PlayOneShotGame($"karateman/{(beat % 1.0 == 0.5 ? $"offbeat{obj}" : obj.ToLower())}Out", forcePlay: true);
+            string obj = type == (int)LightBulbType.Yellow || ntrSfx ? "LightbulbNtr" : "Lightbulb";
+            SoundByte.PlayOneShotGame($"karateman/{(beat % 1.0 == 0.5 ? $"offbeat{obj}" : obj.ToLower())}Out", forcePlay: true);
         }
 
         public static void QueueItem(double beat, int type, int expression)
@@ -892,11 +892,7 @@ namespace HeavenStudio.Games
 
         public void CreateBulbSpecial(double beat, int type, Color color, int expression)
         {
-            string obj = type switch {
-                //(int)LightBulbType.Normal => "LightbulbAgb",
-                (int)LightBulbType.Yellow => "LightbulbNtr",
-                _ => "Lightbulb",
-            };
+            string obj = (type is (int)LightBulbType.Yellow or 4) ? "LightbulbNtr" : "Lightbulb";
             var mobj = CreateItemInstance(beat, "Item01", expression, KarateManPot.ItemType.Bulb, hitSfxOverride: $"karateman/{obj}Hit").GetComponent<KarateManPot>();
 
             mobj.SetBulbColor((type == (int)LightBulbType.Custom) ? color : LightBulbColors[type]);
@@ -1055,16 +1051,12 @@ namespace HeavenStudio.Games
             for (int i = 0; i < BGTextures.Length; i++) {
                 BGTextures[i].gameObject.SetActive(textureType == (i + 1));
             }
-            // BGGradient.SetActive(textureType == (int)BackgroundTextureType.Gradient);
-            // BGRadial.SetActive(textureType == (int)BackgroundTextureType.Radial);
-            // BGBlood.SetActive(textureType == (int)BackgroundTextureType.Blood);
 
             BackgroundColorUpdate();
         }
 
         private void BackgroundColorUpdate()
         {
-            //float[,] newRgb = new float[3, 3];
             SpriteRenderer[][] spriteRenderers = new[] {
                 new[] {BGPlane},
                 Joe.Shadows,
@@ -1073,40 +1065,19 @@ namespace HeavenStudio.Games
 
             for (int i = 0; i < spriteRenderers.Length; i++)
             {
-                // Debug.Log(colorStartBeats[i] + " and " + colorLengths[i]);
                 float normalizedBeat = Mathf.Clamp01(Conductor.instance.GetPositionFromBeat(colorStartBeats[i], colorLengths[i]));
-                if (double.IsNaN(normalizedBeat)) normalizedBeat = 0;
-                // Debug.Log("normalizedBeat : " + normalizedBeat);
+                if (double.IsNaN(normalizedBeat)) normalizedBeat = 0; // happens if the game is stopped, then put onto the first beat
                 var func = Util.EasingFunction.GetEasingFunction(colorEases[i]);
-                // Debug.Log("func : " + colorEases[i]);
-                float[] color = new float[3];
-
-                for (int j = 0; j < color.Length; j++)
-                {
-                    float Hue(Color[] whichColors) => j switch {
-                        0 => whichColors[i].r,
-                        1 => whichColors[i].g,
-                        _ => whichColors[i].b,
-                    };
-                    // Debug.Log(j + ": Hue(colorStarts) : " + Hue(colorStarts) + ", Hue(colorEnds) : " + Hue(colorEnds));
-                    color[j] = func(Hue(colorStarts), Hue(colorEnds), normalizedBeat);
-                }
+                float[] color = new float[3] {
+                    func(colorStarts[i].r, colorEnds[i].r, normalizedBeat),
+                    func(colorStarts[i].g, colorEnds[i].g, normalizedBeat),
+                    func(colorStarts[i].b, colorEnds[i].b, normalizedBeat),
+                };
 
                 foreach (var renderer in spriteRenderers[i]) {   
                     renderer.color = new Color(color[0], color[1], color[2]);
                 }
             }
-
-            // manual color setting. remove this if the loop works
-            // BGPlane.color = new Color(newRgb[0, 0], newRgb[0, 1], newRgb[0, 2]);
-
-            // foreach (var shadow in Joe.Shadows) {
-            //     shadow.color = new Color(newRgb[1, 0], newRgb[1, 1], newRgb[1, 2]);
-            // }
-
-            // foreach (var texture in BGTextures) {
-            //     texture.color = new Color(newRgb[2, 0], newRgb[2, 1], newRgb[2, 2]);
-            // }
         }
 
         public void SetGameplayMods(double beat, int fxType, int mode, bool combo)
