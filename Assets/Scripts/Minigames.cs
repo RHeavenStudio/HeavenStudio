@@ -7,6 +7,7 @@ using DG.Tweening;
 using HeavenStudio.Util;
 using HeavenStudio.Editor.Track;
 using HeavenStudio.Games;
+using HeavenStudio.InputSystem;
 using Jukebox;
 using Jukebox.Legacy;
 
@@ -42,6 +43,7 @@ namespace HeavenStudio
                 {"icontype", 0},                    // chart icon (presets, custom - future)
                 {"iconurl", ""},                    // custom icon location (future)
                 {"challengetype", 0},               // perfect challenge type
+                {"playstyle", InputController.ControlStyles.Pad},                   // recommended control style
 
                 // chart song info
                 {"idolgenre", "Song Genre"},        // song genre
