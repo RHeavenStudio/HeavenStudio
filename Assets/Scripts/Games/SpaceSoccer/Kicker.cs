@@ -62,7 +62,7 @@ namespace HeavenStudio.Games.Scripts_SpaceSoccer
                 if (beatToKick < Conductor.instance.songPositionInBeatsAsDouble) beatToKick = ball.nextAnimBeat;
                 if (ball.state == Ball.State.HighKicked)
                 {
-                    BeatAction.New(this.gameObject, new List<BeatAction.Action>()
+                    BeatAction.New(this, new List<BeatAction.Action>()
                     {
                         new BeatAction.Action(beatToKick - 0.5f, delegate { Kick(true, true); }),
                         new BeatAction.Action(beatToKick, delegate { Toe(true); }),
@@ -71,7 +71,7 @@ namespace HeavenStudio.Games.Scripts_SpaceSoccer
                 }
                 else
                 {
-                    BeatAction.New(this.gameObject, new List<BeatAction.Action>()
+                    BeatAction.New(this, new List<BeatAction.Action>()
                     {
                         new BeatAction.Action(beatToKick, delegate { KickCheck(true, false, beatToKick); }),
                     });
@@ -296,7 +296,7 @@ namespace HeavenStudio.Games.Scripts_SpaceSoccer
                 HighKick(hit);
                 if (!player)
                 {
-                    BeatAction.New(this.gameObject, new List<BeatAction.Action>()
+                    BeatAction.New(this, new List<BeatAction.Action>()
                     {
                         new BeatAction.Action(beat + ball.GetAnimLength(Ball.State.Kicked), delegate { Kick(true, true); }),
                         new BeatAction.Action(beat + ball.GetAnimLength(Ball.State.Toe), delegate { Toe(true); }),
@@ -309,7 +309,7 @@ namespace HeavenStudio.Games.Scripts_SpaceSoccer
                 Kick(hit);
                 if (!player)
                 {
-                    BeatAction.New(this.gameObject, new List<BeatAction.Action>()
+                    BeatAction.New(this, new List<BeatAction.Action>()
                     {
                         new BeatAction.Action(beat + ball.GetAnimLength(Ball.State.Kicked), delegate { KickCheck(true, false, beat + ball.GetAnimLength(Ball.State.Kicked)); }),
                     });
@@ -320,7 +320,7 @@ namespace HeavenStudio.Games.Scripts_SpaceSoccer
                 Kick(hit);
                 if (!player)
                 {
-                    BeatAction.New(this.gameObject, new List<BeatAction.Action>()
+                    BeatAction.New(this, new List<BeatAction.Action>()
                     {
                         new BeatAction.Action(beat + ball.GetAnimLength(Ball.State.Kicked), delegate { KickCheck(true, false, beat + ball.GetAnimLength(Ball.State.Kicked)); }),
                     });
@@ -343,7 +343,7 @@ namespace HeavenStudio.Games.Scripts_SpaceSoccer
             var cond = Conductor.instance;
             ball = null;
             // queue the miss sound
-            MultiSound.Play(new MultiSound.Sound[] { new MultiSound.Sound("spaceSoccer/missNeutral", targetBeat + (float)cond.SecsToBeats(Minigame.EndTime()-1, 
+            MultiSound.Play(new MultiSound.Sound[] { new MultiSound.Sound("spaceSoccer/missNeutral", targetBeat + (float)cond.SecsToBeats(Minigame.NgLateTime()-1, 
                 cond.GetBpmAtBeat(targetBeat)), SoundByte.GetPitchFromCents(UnityEngine.Random.Range(-75, 75), false)) });
         }
 

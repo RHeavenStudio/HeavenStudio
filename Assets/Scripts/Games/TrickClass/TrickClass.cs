@@ -130,7 +130,7 @@ namespace HeavenStudio.Games
                 {
                     foreach (var input in queuedInputs)
                     {
-                        BeatAction.New(instance.gameObject, new List<BeatAction.Action>()
+                        BeatAction.New(instance, new List<BeatAction.Action>()
                         {
                             new BeatAction.Action(input.beat - 1f, delegate
                             {
@@ -170,7 +170,7 @@ namespace HeavenStudio.Games
             {
                 for (int i = 0; i < length; i++)
                 {
-                    BeatAction.New(instance.gameObject, new List<BeatAction.Action>()
+                    BeatAction.New(instance, new List<BeatAction.Action>()
                     {
                         new BeatAction.Action(beat + i, delegate
                         {
@@ -194,7 +194,7 @@ namespace HeavenStudio.Games
         {
             if (GameManager.instance.currentGame == "trickClass")
             {
-                BeatAction.New(instance.gameObject, new List<BeatAction.Action>()
+                BeatAction.New(instance, new List<BeatAction.Action>()
                 {
                     new BeatAction.Action(beat - 1, delegate 
                 {

@@ -44,7 +44,7 @@ namespace HeavenStudio.Games.Scripts_FirstContact
                 SoundByte.PlayOneShotGame("firstContact/failContact");
             }
 
-            BeatAction.New(this.gameObject, new List<BeatAction.Action>()
+            BeatAction.New(this, new List<BeatAction.Action>()
             {
                 new BeatAction.Action(.5f, delegate { anim.Play("translator_speak", 0, 0);}),
             });
@@ -53,7 +53,7 @@ namespace HeavenStudio.Games.Scripts_FirstContact
         public void EhTranslation()
         {
             SoundByte.PlayOneShotGame("firstContact/slightlyFail");
-            BeatAction.New(this.gameObject, new List<BeatAction.Action>()
+            BeatAction.New(this, new List<BeatAction.Action>()
             {
                 new BeatAction.Action(.5f, delegate { anim.Play("translator_eh", 0, 0);}),
             });

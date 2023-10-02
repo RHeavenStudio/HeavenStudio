@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.EventSystems;
@@ -10,30 +11,30 @@ using Starpelly;
 
 using HeavenStudio.Editor.Track;
 
-
 namespace HeavenStudio.Editor
 {
     public class GridGameSelector : MonoBehaviour
     {
-        public string SelectedMinigame;
+        public Minigames.Minigame SelectedMinigame;
 
         [Header("Components")]
         public GameObject SelectedGameIcon;
         public GameObject GameEventSelector;
         public GameObject EventRef;
         public GameObject CurrentSelected;
-        public GameObject Scrollbar;
+        public Scrollbar Scrollbar;
         public RectTransform GameSelectionRect;
         public RectTransform GameEventSelectorCanScroll;
+        public TMP_InputField SearchBar;
         private RectTransform GameEventSelectorRect;
         private RectTransform eventsParent;
 
         [Header("Properties")]
         [SerializeField] private int currentEventIndex;
-        private Minigames.Minigame mg;
+        public List<RectTransform> mgsActive = new List<RectTransform>();
+        public List<RectTransform> fxActive = new List<RectTransform>();
         public float posDif;
         public int ignoreSelectCount;
-        private int sortStatus;
         private int dragTimes;
         private bool gameOpen;
         private float selectorHeight;
@@ -49,9 +50,7 @@ namespace HeavenStudio.Editor
             eventSize = EventRef.GetComponent<RectTransform>().rect.height;
 
             eventsParent = EventRef.transform.parent.GetChild(2).GetComponent<RectTransform>();
-            SelectGame("gameManager");
-
-            //SetColors();
+            SelectGame(fxActive[0].name);
         }
 
         private void Update()
@@ -119,25 +118,25 @@ namespace HeavenStudio.Editor
             SetColors();
         }
 
-        // will automatically select game + game icon, and scroll to the game if it's offscreen
+        // will automatically select game + game icon, and (eventually?) scroll to the game if it's offscreen
         // index is the event it will highlight (which was basically just added for pick block)
-        // TODO: automatically scroll if the game is offscreen, because i can't figure it out/can't figure out a good way to do it rn. -AJ
+        // TODO: automatically scroll if the game is offscreen, because i can't figure out a good way to do it rn. -AJ
         public void SelectGame(string gameName, int index = 0)
         {
-            EventParameterManager.instance.Disable();
             if (SelectedGameIcon != null)
             {
                 SelectedGameIcon.GetComponent<GridGameSelectorGame>().UnClickIcon();
             }
 
-            mg = EventCaller.instance.GetMinigame(gameName);
-            if (mg == null) {
+            SelectedMinigame = EventCaller.instance.GetMinigame(gameName);
+            if (SelectedMinigame == null) {
                 SelectGame("gameManager");
                 Debug.LogWarning($"SelectGame() has failed, did you mean to input '{gameName}'?");
                 return;
             }
-            
-            SelectedMinigame = gameName;
+
+            EventParameterManager.instance.Disable();
+
             gameOpen = true;
 
             DestroyEvents();
@@ -149,21 +148,12 @@ namespace HeavenStudio.Editor
             currentEventIndex = index;
             UpdateIndex(index, false);
 
-            Editor.instance?.SetGameEventTitle($"Select game event for {mg.displayName.Replace("\n", "")}");
-
-            // should auto scroll if it's offscreen
-            // just barely doesn't work, and works even less with zooming. im sure there's a much better way to do it
-            /*
-            var pos = 1 - ((mgIndex / 4)-0.02f) / (Mathf.Ceil(mgsActive / 4) - 3);
-            var posMin = (pos + Viewport.rect.height); //+ (pos * 0.01f);
-            if (Scrollbar.value < pos) Scrollbar.value = pos;
-            else if (Scrollbar.value > posMin) Scrollbar.value = posMin;
-            */
+            Editor.instance?.SetGameEventTitle($"Select game event for {SelectedMinigame.displayName.Replace("\n", "")}");
         }
 
         private void AddEvents(int index = 0)
         {
-            if (!EventCaller.FXOnlyGames().Contains(EventCaller.instance.GetMinigame(mg.name)))
+            if (!EventCaller.FXOnlyGames().Contains(SelectedMinigame))
             {
                 GameObject sg = Instantiate(EventRef, eventsParent);
                 sg.GetComponent<TMP_Text>().text = "Switch Game";
@@ -171,14 +161,14 @@ namespace HeavenStudio.Editor
                 if (index == 0) sg.GetComponent<TMP_Text>().color = EditorTheme.theme.properties.EventSelectedCol.Hex2RGB();
             } else {
                 index++;
-                if (mg.name == "gameManager") index++;
+                if (SelectedMinigame.name == "gameManager") index++;
             }
 
-            for (int i = 0; i < mg.actions.Count; i++)
+            for (int i = 0; i < SelectedMinigame.actions.Count; i++)
             {
-                if (mg.actions[i].actionName == "switchGame" || mg.actions[i].hidden) continue;
+                if (SelectedMinigame.actions[i].actionName == "switchGame" || SelectedMinigame.actions[i].hidden) continue;
                 GameObject g = Instantiate(EventRef, eventsParent);
-                g.GetComponent<TMP_Text>().text = mg.actions[i].displayName;
+                g.GetComponent<TMP_Text>().text = SelectedMinigame.actions[i].displayName;
                 g.SetActive(true);
                 if (index - 1 == i) g.GetComponent<TMP_Text>().color = EditorTheme.theme.properties.EventSelectedCol.Hex2RGB();
             }
@@ -220,42 +210,113 @@ namespace HeavenStudio.Editor
                 37.9f,
                 30.8f,
                 25.7f,
-                24.3f,
+                //21.9f,
             };
 
             if (glg.constraintCount + 1 > sizes.Count && Input.GetAxisRaw("Mouse ScrollWheel") < 0) return;
 
             glg.constraintCount += (Input.GetAxisRaw("Mouse ScrollWheel") > 0) ? -1 : 1;
-            glg.cellSize = new Vector2(sizes[glg.constraintCount - 1], sizes[glg.constraintCount - 1]);
+            glg.cellSize = Vector2.one * sizes[glg.constraintCount - 1];
         }
 
-        // method called when clicking the sort button in the editor, skips sorting first three "games"
-        // sorts by favorites if there are any, and sorts alphabetically if there aren't.
-        public void Sort()
+        // method called when clicking the sort button in the editor, skips sorting fx only "games"
+        // sorts depending on which sorting button you click
+        public void Sort(string type)
         {
-            var mgs = EventCaller.instance.minigames;
-            var mgsActive = new List<string>();
-            for (int i = 3; i < mgs.Count; i++)
+            var mgsSort = mgsActive;
+            mgsSort.Sort((x, y) => string.Compare(x.name, y.name));
+
+            switch (type)
             {
-                if (!mgs[i].hidden) mgsActive.Add(mgs[i].name);
+                case "favorites":
+                SortFavorites(mgsSort);
+                break;
+                case "chronologic":
+                SortChronologic(mgsSort);
+                break;
+                default: // "alphabet"
+                SortAlphabet(mgsSort);
+                break;
             }
-            mgsActive.Sort();
-            var favs = new List<Transform>();
-            bool fav = false;
-            for (int i = 0; i < mgsActive.Count; i++)
+        }
+
+        void SortAlphabet(List<RectTransform> mgs)
+        {
+            for (int i = 0; i < mgsActive.Count; i++) {
+                mgs[i].SetSiblingIndex(i + fxActive.Count + 1);
+            }
+        }
+
+        // if there are no favorites, the games will sort alphabetically
+        void SortFavorites(List<RectTransform> allMgs)
+        {
+            var favs = allMgs.FindAll(mg => mg.GetComponent<GridGameSelectorGame>().StarActive);
+            var mgs  = allMgs.FindAll(mg => !mg.GetComponent<GridGameSelectorGame>().StarActive);
+
+            if (Input.GetKey(KeyCode.LeftShift)) {
+                foreach (var fav in favs)
+                    fav.GetComponent<GridGameSelectorGame>().Star();
+                return;
+            }
+
+            for (int i = 0; i < favs.Count; i++) {
+                favs[i].SetSiblingIndex(i + fxActive.Count + 1);
+            }
+            for (int i = 0; i < mgs.Count; i++) {
+                mgs[i].SetSiblingIndex(i + fxActive.Count + favs.Count + 1);
+            }
+        }
+
+        void SortChronologic(List<RectTransform> mgs)
+        {
+            var systems = new List<RectTransform>[] {
+                new List<RectTransform>(),
+                new List<RectTransform>(),
+                new List<RectTransform>(),
+                new List<RectTransform>(),
+                new List<RectTransform>(),
+            };
+            for (int i = 0; i < mgs.Count; i++)
             {
-                var mg = transform.Find(mgsActive[i]);
-                if (mg.GetComponent<GridGameSelectorGame>().StarActive) {
-                    favs.Add(mg);
-                    fav = true;
+                var mg = EventCaller.instance.GetMinigame(mgs[i].name);
+                var tags = mg.tags;
+                if (tags.Count != 0) {
+                    systems[tags[0] switch {
+                        "agb" => 0,
+                        "ntr" => 1,
+                        "rvl" => 2,
+                        "ctr" => 3,
+                        _     => 4,
+                    }].Add(mgs[i]);
+                } else if (mg.inferred) {
+                    systems[4].Add(mgs[i]);
+                } else {
+                    Debug.LogWarning($"Chronological sorting has failed, does \"{mg.displayName}\" ({mg.name}) have an asset bundle assigned to it?");
                 }
             }
-            if (!fav) {
-                for (int i = 0; i < mgsActive.Count; i++)
-                    transform.Find(mgsActive[i]).SetSiblingIndex(i+4);
-            } else {
-                for (int i = 0; i < favs.Count; i++)
-                    favs[i].SetSiblingIndex(i+4);
+            int j = fxActive.Count + 1;
+            foreach (var system in systems)
+            {
+                system.OrderBy(mg => mg.name);
+                for (int i = 0; i < system.Count; i++)
+                {
+                    system[i].SetSiblingIndex(j);
+                    j++;
+                }
+            }
+        }
+
+        public void Search()
+        {
+            for (int i = 0; i < mgsActive.Count; i++)
+            {
+                mgsActive[i].gameObject.SetActive(
+                    System.Text.RegularExpressions.Regex.IsMatch(
+                        EventCaller.instance.GetMinigame(mgsActive[i].name).displayName,
+                        SearchBar.text,
+                        System.Text.RegularExpressions.RegexOptions.IgnoreCase
+                    )
+                );
             }
         }
 
@@ -301,39 +362,39 @@ namespace HeavenStudio.Editor
 
                 if (currentEventIndex == 0)
                 {
-                    if (EventCaller.FXOnlyGames().Contains(EventCaller.instance.GetMinigame(mg.name)))
+                    if (EventCaller.FXOnlyGames().Contains(SelectedMinigame))
                     {
                         int index = currentEventIndex + 1;
-                        if (currentEventIndex - 1 > mg.actions.Count)
+                        if (currentEventIndex - 1 > SelectedMinigame.actions.Count)
                         {
                             index = currentEventIndex;
                         }
                         else if (currentEventIndex - 1 < 0)
                         {
-                            if (mg.actions[0].actionName == "switchGame")
+                            if (SelectedMinigame.actions[0].actionName == "switchGame")
                                 index = 1;
                             else
                                 index = 0;
                         }
 
-                        eventObj = Timeline.instance.AddEventObject(mg.name + "/" + mg.actions[index].actionName, true, new Vector3(0, 0), null, true);
+                        eventObj = Timeline.instance.AddEventObject(SelectedMinigame.name + "/" + SelectedMinigame.actions[index].actionName, true, new Vector3(0, 0), null, true);
                     }
                     else
-                        eventObj = Timeline.instance.AddEventObject($"gameManager/switchGame/{mg.name}", true, new Vector3(0, 0), null, true);
+                        eventObj = Timeline.instance.AddEventObject($"gameManager/switchGame/{SelectedMinigame.name}", true, new Vector3(0, 0), null, true);
                 }
                 else
                 {
                     int index = currentEventIndex - 1;
-                    if (mg.actions[0].actionName == "switchGame")
+                    if (SelectedMinigame.actions[0].actionName == "switchGame")
                     {
                         index = currentEventIndex + 1;
                     }
-                    else if (EventCaller.FXOnlyGames().Contains(EventCaller.instance.GetMinigame(mg.name)) && mg.actions[0].actionName != "switchGame")
+                    else if (EventCaller.FXOnlyGames().Contains(SelectedMinigame) && SelectedMinigame.actions[0].actionName != "switchGame")
                     {
                         index = currentEventIndex;
                     }
 
-                    eventObj = Timeline.instance.AddEventObject(mg.name + "/" + mg.actions[index].actionName, true, new Vector3(0, 0), null, true);
+                    eventObj = Timeline.instance.AddEventObject(SelectedMinigame.name + "/" + SelectedMinigame.actions[index].actionName, true, new Vector3(0, 0), null, true);
                 }
 
                 eventObj.isCreating = true;

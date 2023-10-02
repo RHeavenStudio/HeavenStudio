@@ -187,7 +187,7 @@ namespace HeavenStudio.Games
             {
                 for (int i = 0; i < length; i++)
                 {
-                    BeatAction.New(instance.gameObject, new List<BeatAction.Action>()
+                    BeatAction.New(instance, new List<BeatAction.Action>()
                     {
                         new BeatAction.Action(beat + i, delegate { SingleBop(); })
                     });
@@ -220,7 +220,7 @@ namespace HeavenStudio.Games
                 else if (weaselsHappy) weasels.Happy();
                 if (!forceNoLeaves)
                 {
-                    BeatAction.New(instance.gameObject, new List<BeatAction.Action>()
+                    BeatAction.New(instance, new List<BeatAction.Action>()
                     {
                         new BeatAction.Action(Conductor.instance.songPositionInBeatsAsDouble + 1f, delegate
                         {
@@ -321,7 +321,7 @@ namespace HeavenStudio.Games
             if (hit)
             {
                 lastHitWeasel = Conductor.instance.songPositionInBeatsAsDouble;
-                BeatAction.New(gameObject, new List<BeatAction.Action>()
+                BeatAction.New(this, new List<BeatAction.Action>()
                 {
                     new BeatAction.Action(beat - (0.25f/3f), delegate { weasels.Hit(beat); }),
                 });
@@ -329,7 +329,7 @@ namespace HeavenStudio.Games
             else
             {
                 lastHitWeasel = Conductor.instance.songPositionInBeatsAsDouble;
-                BeatAction.New(gameObject, new List<BeatAction.Action>()
+                BeatAction.New(this, new List<BeatAction.Action>()
                 {
                     new BeatAction.Action(beat + 0.25, delegate { weasels.Hide(beat + 0.25f); }),
                 });

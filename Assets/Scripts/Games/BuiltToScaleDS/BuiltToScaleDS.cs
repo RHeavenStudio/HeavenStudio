@@ -22,7 +22,10 @@ namespace HeavenStudio.Games.Loaders
                     resizable = true,
                     parameters = new List<Param>()
                     {
-                        new Param("silent", false, "Mute Audio", "Whether the piano notes should be muted or not."),
+                        new Param("silent", false, "Mute Audio", "Whether the piano notes should be muted or not.", new List<Param.CollapseParam>()
+                        {
+                            new Param.CollapseParam(x => !(bool)x, new string[] { "note1", "note2", "note3", "note4", "note5", "note6"})
+                        }),
                         new Param("note1", new EntityTypes.Integer(-24, 24, 0), "1st note", "The number of semitones up or down this note should be pitched"),
                         new Param("note2", new EntityTypes.Integer(-24, 24, 2), "2nd note", "The number of semitones up or down this note should be pitched"),
                         new Param("note3", new EntityTypes.Integer(-24, 24, 4), "3rd note", "The number of semitones up or down this note should be pitched"),
@@ -203,6 +206,27 @@ namespace HeavenStudio.Games
             UpdateColors();
         }
 
+        private void PersistColors(double beat)
+        {
+            var allEventsBeforeBeat = EventCaller.GetAllInGameManagerList("builtToScaleDS", new string[] { "color" }).FindAll(x => x.beat < beat);
+            if (allEventsBeforeBeat.Count > 0)
+            {
+                allEventsBeforeBeat.Sort((x, y) => x.beat.CompareTo(y.beat));
+                var lastEvent = allEventsBeforeBeat[^1];
+                UpdateMappingColors(lastEvent["object"], lastEvent["shooter"], lastEvent["bg"]);
+            }
+        }
+
+        public override void OnGameSwitch(double beat)
+        {
+            PersistColors(beat);
+        }
+
+        public override void OnPlay(double beat)
+        {
+            PersistColors(beat);
+        }
+
         private void UpdateColors()
         {
             objectMaterial.SetColor("_Color", currentObjectColor);
@@ -319,7 +343,7 @@ namespace HeavenStudio.Games
                         }
                     }));
                 }
-                BeatAction.New(instance.gameObject, actions);
+                BeatAction.New(instance, actions);
             }
             if (!autoLights && !shouldLights)
             {
@@ -446,7 +470,7 @@ namespace HeavenStudio.Games
         public void MultiplePiano(double beat, float length, bool silent, int note1, int note2, int note3, int note4, int note5, int note6)
         {
             if (silent) return;
-            BeatAction.New(instance.gameObject, new List<BeatAction.Action>()
+            BeatAction.New(instance, new List<BeatAction.Action>()
             {
                 new BeatAction.Action(beat, delegate { PlayPiano(beat, length, note1); }),
                 new BeatAction.Action(beat + length, delegate { PlayPiano(beat + length, length, note2); }),

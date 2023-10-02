@@ -35,7 +35,7 @@ namespace HeavenStudio.Editor
         [Header("Rect")]
         [SerializeField] private RenderTexture ScreenRenderTexture;
         [SerializeField] private RawImage Screen;
-        [SerializeField] private RectTransform GridGameSelector;
+        [SerializeField] private RectTransform GridGameSelectorRect;
         public RectTransform eventSelectorBG;
 
         [Header("Components")]
@@ -55,7 +55,10 @@ namespace HeavenStudio.Editor
         [SerializeField] private Button TempoFinderBTN;
         [SerializeField] private Button SnapDiagBTN;
         [SerializeField] private Button ChartParamBTN;
-        [SerializeField] private Button SortGamesBTN;
+        [SerializeField] private Button SortAlphabetBTN;
+        [SerializeField] private Button SortFavoritesBTN;
+        [SerializeField] private Button SortChronologicBTN;
+        [SerializeField] private TMP_InputField SearchBar;
 
         [SerializeField] private Button EditorThemeBTN;
         [SerializeField] private Button EditorSettingsBTN;
@@ -112,13 +115,16 @@ namespace HeavenStudio.Editor
             Tooltip.AddTooltip(TempoFinderBTN.gameObject, "Tempo Finder");
             Tooltip.AddTooltip(SnapDiagBTN.gameObject, "Snap Settings");
             Tooltip.AddTooltip(ChartParamBTN.gameObject, "Remix Properties");
-            Tooltip.AddTooltip(SortGamesBTN.gameObject, "Sort By Favorite");
+            Tooltip.AddTooltip(SortAlphabetBTN.gameObject, "Sort Alphabetically");
+            Tooltip.AddTooltip(SortFavoritesBTN.gameObject, "Sort By Favorite");
+            Tooltip.AddTooltip(SortChronologicBTN.gameObject, "Sort Chronologically");
+            Tooltip.AddTooltip(SearchBar.gameObject, "Search Games");
 
             Tooltip.AddTooltip(EditorSettingsBTN.gameObject, "Editor Settings <color=#adadad>[Ctrl+Shift+O]</color>");
             UpdateEditorStatus(true);
 
             BuildDateDisplay.text = GlobalGameManager.buildTime;
-            isCursorEnabled  = PersistentDataManager.gameSettings.editorCursorEnable;
+            isCursorEnabled = PersistentDataManager.gameSettings.editorCursorEnable;
             isDiscordEnabled = PersistentDataManager.gameSettings.discordRPCEnable;
             GameManager.instance.CursorCam.enabled = isCursorEnabled;
         }
@@ -126,12 +132,15 @@ namespace HeavenStudio.Editor
         public void AddIcon(Minigames.Minigame minigame)
         {
             if (minigame.hidden) return;
-            GameObject GameIcon_ = Instantiate(GridGameSelector.GetChild(0).gameObject, GridGameSelector);
+            GameObject GameIcon_ = Instantiate(GridGameSelectorRect.GetChild(0).gameObject, GridGameSelectorRect);
             GameIcon_.GetComponent<Image>().sprite = GameIcon(minigame.name);
             GameIcon_.GetComponent<GridGameSelectorGame>().MaskTex = GameIconMask(minigame.name);
             GameIcon_.GetComponent<GridGameSelectorGame>().UnClickIcon();
             GameIcon_.gameObject.SetActive(true);
             GameIcon_.name = minigame.name;
+
+            var ggs = GridGameSelectorRect.GetComponent<GridGameSelector>();
+            (minigame.fxOnly ? ggs.fxActive : ggs.mgsActive).Add(GameIcon_.GetComponent<RectTransform>());
         }
 
         public void LateUpdate()
@@ -253,7 +262,7 @@ namespace HeavenStudio.Editor
                 new ExtensionFilter("Music Files", "mp3", "ogg", "wav", "aiff", "aif", "aifc")
             };
 
-            #if UNITY_STANDALONE_WINDOWS
+#if UNITY_STANDALONE_WINDOWS
             StandaloneFileBrowser.OpenFilePanelAsync("Open File", "", extensions, false, async (string[] paths) => 
             {
                 if (paths.Length > 0)
@@ -276,7 +285,7 @@ namespace HeavenStudio.Editor
                 await Task.Yield();
             } 
             );
-            #else
+#else
             StandaloneFileBrowser.OpenFilePanelAsync("Open File", "", extensions, false, async (string[] paths) =>
             {
                 if (paths.Length > 0)
@@ -299,7 +308,7 @@ namespace HeavenStudio.Editor
                 await Task.Yield();
             }
             );
-            #endif
+#endif
         }
 
         IEnumerator LoadMusic()
@@ -334,7 +343,7 @@ namespace HeavenStudio.Editor
             {
                 new ExtensionFilter("Heaven Studio Remix File", "riq")
             };
-            
+
             StandaloneFileBrowser.SaveFilePanelAsync("Save Remix As", "", "remix_level", extensions, (string path) =>
             {
                 if (path != String.Empty)
@@ -395,7 +404,7 @@ namespace HeavenStudio.Editor
             {
                 var path = Path.Combine(paths);
                 if (path == string.Empty) return;
-                
+
                 try
                 {
                     string tmpDir = RiqFileHandler.ExtractRiq(path);
@@ -470,7 +479,7 @@ namespace HeavenStudio.Editor
 
             if (game != null)
             {
-                foreach(FreeCam c in game.GetComponentsInChildren<FreeCam>(true))
+                foreach (FreeCam c in game.GetComponentsInChildren<FreeCam>(true))
                 {
                     c.enabled = !c.enabled;
                 }

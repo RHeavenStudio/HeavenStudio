@@ -7,6 +7,7 @@ using Starpelly;
 using DG.Tweening;
 using Jukebox;
 using Jukebox.Legacy;
+using TMPro;
 
 namespace HeavenStudio.Editor.Track
 {
@@ -24,10 +25,22 @@ namespace HeavenStudio.Editor.Track
         [SerializeField] private RectTransform PosPreviewRef;
         [SerializeField] public Image Icon;
         [SerializeField] private Image selectedImage;
-        [SerializeField] private RectTransform outline;
-        [SerializeField] private RectTransform resizeGraphic;
+        [SerializeField] public TMP_Text eventLabel;
+
+        [SerializeField] private RectTransform resizeGraphicHolder;
+        [SerializeField] private RectTransform resizeGraphicLeft;
+        [SerializeField] private RectTransform resizeGraphicRight;
+        [SerializeField] private RectTransform resizeGraphicLine;
+
         [SerializeField] private RectTransform leftDrag;
         [SerializeField] private RectTransform rightDrag;
+
+        [SerializeField] private RectTransform outline;
+        [SerializeField] private RectTransform outline1;
+        [SerializeField] private RectTransform outline2;
+        [SerializeField] private RectTransform outline3;
+        [SerializeField] private RectTransform outline4;
+
         // private GameObject moveTemp;
 
         [Header("Properties")]
@@ -47,6 +60,9 @@ namespace HeavenStudio.Editor.Track
         public bool isCreating;
         public int eventObjID;
 
+        Timeline tl;
+        float leftSide, rightSide;
+
         [Header("Colors")]
         public Color NormalCol;
 
@@ -58,10 +74,10 @@ namespace HeavenStudio.Editor.Track
 
             if (!resizable)
             {
-                Destroy(resizeGraphic.gameObject);
+                Destroy(resizeGraphicHolder.gameObject);
             }
 
-            // what the fuck????
+            // what the fuck???? -- I wonder if I wrote this?
             // moveTemp = new GameObject();
             // moveTemp.transform.SetParent(this.transform.parent);
 
@@ -71,10 +87,15 @@ namespace HeavenStudio.Editor.Track
                 if (i != 4)
                     this.transform.GetChild(i).gameObject.SetActive(visible);
             }
+
+            tl = Timeline.instance;
         }
 
         private void Update()
         {
+            if (tl == null)
+                tl = Timeline.instance;
+
             selected = Selections.instance.eventsSelected.Contains(this);
             if (eventObjID != entity.uid)
             {
@@ -82,23 +103,23 @@ namespace HeavenStudio.Editor.Track
                 Debug.Log($"assigning uid {eventObjID}");
             }
 
-            mouseHovering = RectTransformUtility.RectangleContainsScreenPoint(rectTransform, Input.mousePosition, Editor.instance.EditorCamera) && Timeline.instance.timelineState.selected;
+            mouseHovering = tl.timelineState.selected && RectTransformUtility.RectangleContainsScreenPoint(rectTransform, Input.mousePosition, Editor.instance.EditorCamera);
 
             #region Optimizations
 
             // thank you to @chrislo27 for suggesting the fix for this.
             // only renders blocks if they're in view of the timeline viewport
-            var leftSide = rectTransform.localPosition.x;
-            var rightSide = leftSide + rectTransform.sizeDelta.x;
+            leftSide = rectTransform.localPosition.x;
+            rightSide = leftSide + rectTransform.sizeDelta.x;
 
-            bool visible = (rightSide >= Timeline.instance.leftSide && leftSide <= Timeline.instance.rightSide);
+            bool visible = rightSide >= tl.leftSide && leftSide <= tl.rightSide;
 
             if (visible != lastVisible)
             {
                 for (int i = 0; i < this.transform.childCount; i++)
                 {
-                    if (transform.GetChild(i).gameObject != selectedImage)
-                        this.transform.GetChild(i).gameObject.SetActive(visible);
+                    // if (transform.GetChild(i).gameObject != selectedImage)
+                    this.transform.GetChild(i).gameObject.SetActive(visible);
                 }
             }
 
@@ -106,7 +127,40 @@ namespace HeavenStudio.Editor.Track
 
             #endregion
 
-            SetColor(entity["track"]);
+            // We need a helper function for this
+            // I'm aware how messy this is, but considering this is all going to be destroyed in a while and nobody
+            // wants to touch it, I think it's fine.
+            if (visible)
+            {
+                var timelineScale = 100.0f / Timeline.instance.TimelineContent.localScale.x;
+                Icon.rectTransform.localScale = new Vector3(timelineScale, Icon.rectTransform.localScale.y, Icon.rectTransform.localScale.z);
+                Icon.rectTransform.anchoredPosition = new Vector2(0.08f * timelineScale, Icon.rectTransform.anchoredPosition.y);
+
+                if (resizeGraphicHolder != null)
+                {
+                    resizeGraphicHolder.offsetMin = new Vector2(0.04f * timelineScale, resizeGraphicHolder.offsetMin.y);
+                    resizeGraphicHolder.offsetMax = new Vector2(0.04f * -timelineScale, resizeGraphicHolder.offsetMax.y);
+                    resizeGraphicLeft.localScale = new Vector3(timelineScale, resizeGraphicLeft.localScale.y, resizeGraphicLeft.localScale.z);
+                    resizeGraphicRight.localScale = new Vector3(-timelineScale, resizeGraphicRight.localScale.y, resizeGraphicRight.localScale.z);
+                    resizeGraphicLine.offsetMin = new Vector2(0.132f * timelineScale, resizeGraphicLine.offsetMin.y);
+                    resizeGraphicLine.offsetMax = new Vector2(0.132f * -timelineScale, resizeGraphicLine.offsetMax.y);
+                }
+
+                eventLabel.rectTransform.offsetMax = new Vector2(0.04f * -timelineScale, eventLabel.rectTransform.offsetMax.y);
+                eventLabel.rectTransform.localScale = new Vector3(timelineScale * 0.01f, eventLabel.rectTransform.localScale.y, eventLabel.rectTransform.localScale.z);
+
+                outline1.localScale = new Vector3(timelineScale, outline1.localScale.y, outline1.localScale.z);
+                outline2.localScale = new Vector3(timelineScale, outline2.localScale.y, outline2.lossyScale.z);
+                outline3.offsetMin = new Vector2(0.04f * timelineScale, outline3.offsetMin.y);
+                outline3.offsetMax = new Vector2(0.04f * -timelineScale, outline3.offsetMax.y);
+                outline4.offsetMin = new Vector2(0.04f * timelineScale, outline4.offsetMin.y);
+                outline4.offsetMax = new Vector2(0.04f * -timelineScale, outline4.offsetMax.y);
+
+                leftDrag.localScale = new Vector3(timelineScale, leftDrag.localScale.y, leftDrag.localScale.z);
+                rightDrag.localScale = new Vector3(timelineScale, rightDrag.localScale.y, rightDrag.localScale.z);
+
+                SetColor(entity["track"]);
+            }
 
             if (selected)
             {
@@ -114,7 +168,7 @@ namespace HeavenStudio.Editor.Track
                 if (Input.GetKeyDown(KeyCode.Delete))
                 {
                     Selections.instance.Deselect(this);
-                    Timeline.instance.DestroyEventObject(entity);
+                    tl.DestroyEventObject(entity);
                 }
                 */
 
@@ -140,8 +194,10 @@ namespace HeavenStudio.Editor.Track
                 Cancel();
 
                 if (moving)
+                {
                     moving = false;
-            
+                }
+
                 if (selected)
                 {
                     selected = false;
@@ -150,14 +206,23 @@ namespace HeavenStudio.Editor.Track
                         outline.GetChild(i).GetComponent<Image>().color = new Color32(0, 0, 0, 51);
                 }
 
-                rectTransform.sizeDelta = new Vector2(rectTransform.sizeDelta.x, Timeline.instance.LayerHeight());
-                this.transform.localPosition = new Vector3(this.transform.localPosition.x, -entity["track"] * Timeline.instance.LayerHeight());
+                rectTransform.sizeDelta = new Vector2(rectTransform.sizeDelta.x, tl.LayerHeight());
+                this.transform.localPosition = new Vector3(this.transform.localPosition.x, -entity["track"] * tl.LayerHeight());
                 return;
             }
 
             if (!resizing)
             {
-                if (Timeline.instance.eventObjs.FindAll(c => c.moving).Count > 0 && selected)
+                int count = 0;
+                foreach (TimelineEventObj e in tl.eventObjs)
+                {
+                    if (e.moving)
+                    {
+                        count++;
+                    }
+                }
+
+                if (count > 0 && selected)
                 {
                     Vector3 mousePos = Editor.instance.EditorCamera.ScreenToWorldPoint(Input.mousePosition);
                     // duplicate the entity if holding alt
@@ -170,7 +235,8 @@ namespace HeavenStudio.Editor.Track
                         transform.localPosition = moveStartPos;
                         OnComplete(false);
 
-                        var te = Timeline.instance.CopyEventObject(this);
+                        TimelineEventObj te = tl.CopyEventObject(this);
+                        TimelineEventObj obj;
 
                         Selections.instance.DragSelect(te);
 
@@ -178,10 +244,11 @@ namespace HeavenStudio.Editor.Track
                         te.transform.localPosition = transform.localPosition;
                         te.moveStartPos = transform.localPosition;
 
-                        for (int i = 0; i < Timeline.instance.eventObjs.Count; i++)
+                        for (int i = 0; i < tl.eventObjs.Count; i++)
                         {
-                            Timeline.instance.eventObjs[i].startPosX = mousePos.x - Timeline.instance.eventObjs[i].transform.position.x;
-                            Timeline.instance.eventObjs[i].startPosY = mousePos.y - Timeline.instance.eventObjs[i].transform.position.y;
+                            obj = tl.eventObjs[i];
+                            obj.startPosX = mousePos.x - obj.transform.position.x;
+                            obj.startPosY = mousePos.y - obj.transform.position.y;
                         }
 
                         te.moving = true;
@@ -189,7 +256,7 @@ namespace HeavenStudio.Editor.Track
                     else
                     {
                         this.transform.position = new Vector3(mousePos.x - startPosX, mousePos.y - startPosY - 0.40f, 0);
-                        this.transform.localPosition = new Vector3(Mathf.Max(Mathp.Round2Nearest(this.transform.localPosition.x, Timeline.SnapInterval()), 0), Timeline.instance.SnapToLayer(this.transform.localPosition.y));
+                        this.transform.localPosition = new Vector3(Mathf.Max(Mathp.Round2Nearest(this.transform.localPosition.x, Timeline.SnapInterval()), 0), tl.SnapToLayer(this.transform.localPosition.y));
                     }
 
                     if (lastPos != transform.localPosition)
@@ -199,7 +266,9 @@ namespace HeavenStudio.Editor.Track
 
                     lastPos = transform.localPosition;
                 }
-            } else {
+            }
+            else
+            {
                 if (moving) moving = false;
                 if (resizingLeft) SetPivot(new Vector2(1, rectTransform.pivot.y));
 
@@ -209,7 +278,7 @@ namespace HeavenStudio.Editor.Track
                 RectTransformUtility.ScreenPointToLocalPointInRectangle(rectTransform, Input.mousePosition, Editor.instance.EditorCamera, out mousePos);
 
                 sizeDelta = new Vector2((resizingLeft ? -mousePos.x : mousePos.x) + 0.15f, sizeDelta.y);
-                sizeDelta = new Vector2(Mathf.Clamp(sizeDelta.x, Timeline.SnapInterval(), (resizingLeft ? rectTransform.localPosition.x : Mathf.Infinity)), sizeDelta.y);
+                sizeDelta = new Vector2(Mathf.Clamp(sizeDelta.x, Timeline.SnapInterval(), resizingLeft ? rectTransform.localPosition.x : Mathf.Infinity), sizeDelta.y);
 
                 rectTransform.sizeDelta = new Vector2(Mathp.Round2Nearest(sizeDelta.x, Timeline.SnapInterval()), sizeDelta.y);
                 SetPivot(new Vector2(0, rectTransform.pivot.y));
@@ -222,10 +291,11 @@ namespace HeavenStudio.Editor.Track
                 OnRightUp();
             }
 
+            if (!BoxSelection.instance.ActivelySelecting)
             if (resizing && selected || inResizeRegion && selected)
             {
                 if (resizable)
-                    Cursor.SetCursor(Resources.Load<Texture2D>("Cursors/horizontal_resize"), new Vector2(8, 8), CursorMode.Auto);
+                    Cursor.SetCursor(tl.resizeCursor, new Vector2(14, 14), CursorMode.Auto);
             }
             // should consider adding this someday
             // else if (moving && selected || mouseHovering && selected)
@@ -237,15 +307,15 @@ namespace HeavenStudio.Editor.Track
                 Cursor.SetCursor(null, Vector2.zero, CursorMode.Auto);
             }
 
-            rectTransform.sizeDelta = new Vector2(rectTransform.sizeDelta.x, Timeline.instance.LayerHeight());
-            this.transform.localPosition = new Vector3(this.transform.localPosition.x, -entity["track"] * Timeline.instance.LayerHeight());
+            rectTransform.sizeDelta = new Vector2(rectTransform.sizeDelta.x, tl.LayerHeight());
+            this.transform.localPosition = new Vector3(this.transform.localPosition.x, -entity["track"] * tl.LayerHeight());
         }
 
         #region ClickEvents
 
         public void OnClick()
         {
-            if (Input.GetMouseButton(0) && Timeline.instance.timelineState.selected)
+            if (Input.GetMouseButton(0) && tl.timelineState.selected)
             {
                 if (Input.GetKey(KeyCode.LeftShift))
                 {
@@ -265,15 +335,15 @@ namespace HeavenStudio.Editor.Track
         {
             if (Input.GetMouseButton(0))
             {
-                if (selected && Timeline.instance.timelineState.selected)
+                if (selected && tl.timelineState.selected)
                 {
                     moveStartPos = transform.localPosition;
 
-                    for (int i = 0; i < Timeline.instance.eventObjs.Count; i++)
+                    for (int i = 0; i < tl.eventObjs.Count; i++)
                     {
                         Vector3 mousePos = Editor.instance.EditorCamera.ScreenToWorldPoint(Input.mousePosition);
-                        Timeline.instance.eventObjs[i].startPosX = mousePos.x - Timeline.instance.eventObjs[i].transform.position.x;
-                        Timeline.instance.eventObjs[i].startPosY = mousePos.y - Timeline.instance.eventObjs[i].transform.position.y;
+                        tl.eventObjs[i].startPosX = mousePos.x - tl.eventObjs[i].transform.position.x;
+                        tl.eventObjs[i].startPosY = mousePos.y - tl.eventObjs[i].transform.position.y;
                     }
 
                     moving = true;
@@ -287,16 +357,20 @@ namespace HeavenStudio.Editor.Track
             {
                 var mgs = EventCaller.instance.minigames;
                 string[] datamodels = entity.datamodel.Split('/');
+                Debug.Log("Selected entity's datamodel : " + entity.datamodel);
 
-                bool isSwitchGame = (datamodels[1] == "switchGame");
+                bool isSwitchGame = datamodels[1] == "switchGame";
                 int gameIndex = mgs.FindIndex(c => c.name == datamodels[isSwitchGame ? 2 : 0]);
                 int block = isSwitchGame ? 0 : mgs[gameIndex].actions.FindIndex(c => c.actionName == datamodels[1]) + 1;
 
-                if (!isSwitchGame) {
+                if (!isSwitchGame)
+                {
+                    // hardcoded stuff
+                    // needs to happen because hidden blocks technically change the event index
                     if (datamodels[0] == "gameManager") block -= 2;
-                    else if (datamodels[0] is "countIn" or "vfx") block--;
+                    else if (datamodels[0] is "countIn" or "vfx") block -= 1;
                 }
-                
+
                 GridGameSelector.instance.SelectGame(datamodels[isSwitchGame ? 2 : 0], block);
             }
         }
@@ -306,11 +380,11 @@ namespace HeavenStudio.Editor.Track
             // lastPos_ = this.lastPos_;
             // previousPos = this.transform.localPosition;
 
-            if (selected && Timeline.instance.timelineState.selected)
+            if (selected && tl.timelineState.selected)
             {
                 if (wasDuplicated)
                 {
-                    Timeline.instance.FinalizeDuplicateEventStack();
+                    tl.FinalizeDuplicateEventStack();
                     wasDuplicated = false;
                 }
                 if (eligibleToMove)
@@ -425,8 +499,9 @@ namespace HeavenStudio.Editor.Track
         {
             entity.length = rectTransform.sizeDelta.x;
             entity.beat = this.transform.localPosition.x;
-            GameManager.instance.SortEventsList();
             entity["track"] = GetTrack();
+            
+            GameManager.instance.SortEventsList();
         }
 
         #endregion
@@ -458,7 +533,6 @@ namespace HeavenStudio.Editor.Track
                     c = EditorTheme.theme.properties.Layer5Col.Hex2RGB();
                     break;
             }
-
             // c = new Color(c.r, c.g, c.b, 0.85f);
             transform.GetChild(0).GetComponent<Image>().color = c;
 

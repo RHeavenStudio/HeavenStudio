@@ -10,9 +10,6 @@ namespace HeavenStudio.Games.Scripts_WizardsWaltz
         public Animator animator;
         public GameObject shadow;
 
-        private float newBeat = 0;
-        private int beats = 0;
-
         private WizardsWaltz game;
         private float songPos;
 
@@ -25,17 +22,20 @@ namespace HeavenStudio.Games.Scripts_WizardsWaltz
         {
             songPos = (float)(Conductor.instance.songPositionInBeatsAsDouble - game.wizardBeatOffset);
             var am = game.beatInterval / 2f;
-            var x = Mathf.Sin(Mathf.PI * songPos / am) * 6;
-            var y = Mathf.Cos(Mathf.PI * songPos / am);
-            var scale = 1 - Mathf.Cos(Mathf.PI * songPos / am) * 0.35f;
-            
-            transform.position = new Vector3(x, 3f - y * 0.5f, 0);
-            shadow.transform.position = new Vector3(x, -3f + y * 1.5f, 0);
+            var x = Mathf.Sin(Mathf.PI * songPos / am) * game.xRange;
+            var y = Mathf.Cos(Mathf.PI * songPos / am) * game.yRange;
+            var z = Mathf.Cos(Mathf.PI * songPos / am) * game.zRange;
+            //var scale = 1 - Mathf.Cos(Mathf.PI * songPos / am) * 0.35f;
 
-            var xscale = scale;
+            transform.position = new Vector3(x, 3f - y * 0.5f, z);
+            shadow.transform.position = new Vector3(x, game.plantYOffset + y * 1.5f, z);
+
+            /*var xscale = scale;
             if (y > 0) xscale *= -1;
             transform.localScale = new Vector3(xscale, scale, 1);
-            shadow.transform.localScale = new Vector3(scale, scale, 1);
+            shadow.transform.localScale = new Vector3(scale, scale, 1);*/
+
+            transform.localScale = new Vector3((y > 0) ? -1 : 1, 1, 1);
         }
 
         private void LateUpdate()

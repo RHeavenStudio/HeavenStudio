@@ -327,11 +327,20 @@ namespace HeavenStudio
                 height = (int)(width / 16f * 9f);
             }
 
+            GameRenderTexture.Release();
+
             GameRenderTexture.width = width;
             GameRenderTexture.height = height;
 
+            GameRenderTexture.Create();
+
+
+            OverlayRenderTexture.Release();
+
             OverlayRenderTexture.width = (int)(width * 1.5f);
             OverlayRenderTexture.height = (int)(height * 1.5f);
+
+            OverlayRenderTexture.Create();
         }
 
         public static void ChangeMasterVolume(float value)
@@ -371,7 +380,7 @@ namespace HeavenStudio
         void OnApplicationQuit()
         {
             Debug.Log("Disconnecting JoyShocks...");
-            PlayerInput.DisconnectJoyshocks();
+            PlayerInput.CleanUp();
             Debug.Log("Clearing RIQ Cache...");
             Jukebox.RiqFileHandler.ClearCache();
         }

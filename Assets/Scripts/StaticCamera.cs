@@ -8,6 +8,7 @@ using HeavenStudio.Common;
 using HeavenStudio.Editor;
 using Jukebox;
 using Jukebox.Legacy;
+using System;
 
 namespace HeavenStudio
 {
@@ -210,8 +211,11 @@ namespace HeavenStudio
             overlayView.SetActive(toggle);
         }
 
-        public void SetAmbientGlowColour(Color colour)
+        [NonSerialized] public bool usingMinigameAmbientColor;
+
+        public void SetAmbientGlowColour(Color colour, bool minigameColor, bool overrideMinigameColor = true)
         {
+            if (overrideMinigameColor) usingMinigameAmbientColor = minigameColor;
             ambientBg.color = colour;
             GameSettings.UpdatePreviewAmbient(colour);
         }

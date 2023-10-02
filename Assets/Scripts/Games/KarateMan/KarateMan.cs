@@ -746,17 +746,14 @@ namespace HeavenStudio.Games
 
         public void CreateBulbSpecial(double beat, int type, Color c, int expression)
         {
-            string outSound;
-            if (beat + 0.5f % 1.0 == 0f)
-                outSound = "karateman/offbeatLightbulbOut";
-            else
-                outSound = "karateman/lightbulbOut";
             var mobj = CreateItemInstance(beat, "Item01", expression, KarateManPot.ItemType.Bulb);
 
             if (type == (int) LightBulbType.Custom)
                 mobj.GetComponent<KarateManPot>().SetBulbColor(c);
             else
                 mobj.GetComponent<KarateManPot>().SetBulbColor(LightBulbColors[type]);
+
+            string outSound = "karateman/" + ((beat + 0.5) % 1 == 0 ? "offbeatLightbulbOut" : "lightbulbOut");
             SoundByte.PlayOneShotGame(outSound, forcePlay: true);
         }
 
@@ -766,7 +763,7 @@ namespace HeavenStudio.Games
 
             int comboId = KarateManPot.GetNewCombo();
 
-            BeatAction.New(gameObject, new List<BeatAction.Action>() 
+            BeatAction.New(this, new List<BeatAction.Action>() 
             { 
                 new BeatAction.Action(beat, delegate { CreateItemInstance(beat, "Item00", 0, KarateManPot.ItemType.ComboPot1, comboId); }),
                 new BeatAction.Action(beat + 0.25f, delegate { CreateItemInstance(beat + 0.25f, "Item00", 0, KarateManPot.ItemType.ComboPot2, comboId); }),
@@ -1046,7 +1043,7 @@ namespace HeavenStudio.Games
             {
                 for (int i = 0; i < length; i++)
                 {
-                    BeatAction.New(instance.gameObject, new List<BeatAction.Action>()
+                    BeatAction.New(instance, new List<BeatAction.Action>()
                     {
                         new BeatAction.Action(beat + i, delegate
                         {

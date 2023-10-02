@@ -30,6 +30,14 @@ namespace HeavenStudio.Editor
             );
         }
 
+        public override void SetCollapses(object type)
+        {
+            toggle.onValueChanged.AddListener(
+             _ => UpdateCollapse(toggle.isOn)
+            );
+            UpdateCollapse(toggle.isOn);
+        }
+
         private void Update()
         {
         }

@@ -200,7 +200,7 @@ namespace UnityBuilderAction
                     dataPath = $"_Data/";
                     break;
                 case BuildTarget.StandaloneOSX:
-                    dataPath = $".app/Contents/";
+                    dataPath = $".app/Contents/Resources/Data/";
                     break;
                 case BuildTarget.StandaloneLinux64:
                     dataPath = $"_Data/";

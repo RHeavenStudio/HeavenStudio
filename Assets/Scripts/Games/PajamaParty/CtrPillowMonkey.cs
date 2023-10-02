@@ -181,7 +181,7 @@ namespace HeavenStudio.Games.Scripts_PajamaParty
             if (action != (int) PajamaParty.SleepType.NoAwake)
                 seq.Add(new BeatAction.Action( beat + 7f, delegate { anim.DoScaledAnimationAsync("MonkeyAwake"); }));
 
-            BeatAction.New(Monkey, seq);
+            BeatAction.New(this, seq);
         }
     }
 }
