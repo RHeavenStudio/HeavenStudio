@@ -7,9 +7,7 @@ using DG.Tweening;
 using HeavenStudio.Util;
 using HeavenStudio.Editor.Track;
 using HeavenStudio.Games;
-using HeavenStudio.InputSystem;
 using Jukebox;
-using Jukebox.Legacy;
 
 using System;
 using System.Linq;
@@ -21,6 +19,13 @@ namespace HeavenStudio
 
     public class Minigames
     {
+        public enum RecommendedControlStyle
+        {
+            Any,
+            Pad,
+            Touch,
+            Baton,
+        }
 
         public static void InitPreprocessor()
         {
@@ -43,7 +48,7 @@ namespace HeavenStudio
                 {"icontype", 0},                    // chart icon (presets, custom - future)
                 {"iconurl", ""},                    // custom icon location (future)
                 {"challengetype", 0},               // perfect challenge type
-                {"playstyle", InputController.ControlStyles.Pad},                   // recommended control style
+                {"playstyle", RecommendedControlStyle.Any},                   // recommended control style
 
                 // chart song info
                 {"idolgenre", "Song Genre"},        // song genre
@@ -293,6 +298,7 @@ namespace HeavenStudio
             public bool AssetsLoaded => (((hasLocales && localeLoaded && currentLoadedLocale == defaultLocale) || (!hasLocales)) && commonLoaded);
             public bool SequencesPreloaded => soundSequences != null;
             public string LoadableName => inferred ? "noGame" : name;
+            public GameObject LoadedPrefab => loadedPrefab;
 
             private AssetBundle bundleCommon = null;
             private bool commonLoaded = false;
@@ -301,6 +307,7 @@ namespace HeavenStudio
             private AssetBundle bundleLocalized = null;
             private bool localeLoaded = false;
             private bool localePreloaded = false;
+            private GameObject loadedPrefab = null;
 
             private SoundSequence.SequenceKeyValue[] soundSequences = null;
 
@@ -365,14 +372,23 @@ namespace HeavenStudio
                 if (bundleCommon != null) yield break;
                 yield return asyncBundleRequest;
 
-                AssetBundle localAssetBundle = asyncBundleRequest.assetBundle;
-                if (bundleCommon != null) yield break;
-                yield return localAssetBundle;
-
-                if (localAssetBundle == null) yield break;
-
-                bundleCommon = localAssetBundle;
+                bundleCommon = asyncBundleRequest.assetBundle;
                 commonLoaded = true;
+
+                //load game prefab
+                AssetBundleRequest prefabRequest = bundleCommon.LoadAssetAsync<GameObject>(name);
+                yield return prefabRequest;
+                loadedPrefab = prefabRequest.asset as GameObject;
+
+                // preload audioclips
+                AssetBundleRequest audioRequest = bundleCommon.LoadAllAssetsAsync<AudioClip>();
+                yield return audioRequest;
+
+                // load sound sequences here for now
+                if (loadedPrefab.TryGetComponent<Games.Minigame>(out Games.Minigame minigame))
+                {
+                    soundSequences = minigame.SoundSequences;
+                }
             }
 
             public IEnumerator LoadLocalizedAssetBundleAsync()
@@ -387,15 +403,13 @@ namespace HeavenStudio
                 if (localeLoaded && bundleLocalized != null && currentLoadedLocale == defaultLocale) yield break;
                 yield return asyncBundleRequest;
 
-                AssetBundle localAssetBundle = asyncBundleRequest.assetBundle;
-                if (localeLoaded && bundleLocalized != null && currentLoadedLocale == defaultLocale) yield break;
-                yield return localAssetBundle;
-
-                if (localAssetBundle == null) yield break;
-
-                bundleLocalized = localAssetBundle;
+                bundleLocalized = asyncBundleRequest.assetBundle;
                 currentLoadedLocale = defaultLocale;
                 localeLoaded = true;
+
+                // preload audioclips
+                AssetBundleRequest audioRequest = bundleLocalized.LoadAllAssetsAsync<AudioClip>();
+                yield return audioRequest;
             }
         }
 

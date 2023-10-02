@@ -971,6 +971,7 @@ namespace HeavenStudio
                     {
                         //game is packed in an assetbundle, load from that instead
                         // this is fucked!! figure out a way to make this async
+                        if (gameInfo.LoadedPrefab != null) return gameInfo.LoadedPrefab;
                         return gameInfo.GetCommonAssetBundle().LoadAsset<GameObject>(name);
                     }
                     name = gameInfo.LoadableName;
