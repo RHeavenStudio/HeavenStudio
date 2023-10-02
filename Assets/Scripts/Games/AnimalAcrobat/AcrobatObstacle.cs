@@ -43,7 +43,7 @@ namespace HeavenStudio.Games.Scripts_AnimalAcrobat
             if (type is ObstacleType.Elephant or ObstacleType.Giraffe)
             {
                 bool isElephant = type is ObstacleType.Elephant;
-                BeatAction.New(gameObject, new List<BeatAction.Action>()
+                BeatAction.New(this, new List<BeatAction.Action>()
                 {
                     new BeatAction.Action(startBeat + holdLength - 2, delegate
                     {
