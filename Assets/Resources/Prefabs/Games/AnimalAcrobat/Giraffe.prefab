@@ -300,13 +300,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2f9ee457016acdc4eb5dbfdc03be0d6f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _fullRotRange: 0
-  _spawnDistance: 0
-  _spawnOffset: 0
-  _holdLength: 0
+  _fullRotRange: 160
+  _spawnDistance: 20.816
+  _spawnOffset: 10.408
+  _holdLength: 4
   _ease: 4
-  _rotateRoot: {fileID: 0}
-  _gripPoint: {fileID: 0}
+  _rotateRoot: {fileID: 4208995891253938729}
+  _gripPoint: {fileID: 8714220451416272075}
 --- !u!1 &3911272779464478738
 GameObject:
   m_ObjectHideFlags: 0
@@ -477,6 +477,37 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
+--- !u!1 &5214429821920297548
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 8714220451416272075}
+  m_Layer: 0
+  m_Name: Grip
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &8714220451416272075
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5214429821920297548}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: -11.27, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 4208995891253938729}
+  m_RootOrder: 2
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &5674205584559157106
 GameObject:
   m_ObjectHideFlags: 0
@@ -508,6 +539,7 @@ Transform:
   m_Children:
   - {fileID: 3480602545201534448}
   - {fileID: 2906124188001935517}
+  - {fileID: 8714220451416272075}
   m_Father: {fileID: 1701002327333926128}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
