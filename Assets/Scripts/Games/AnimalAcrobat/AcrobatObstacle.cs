@@ -10,14 +10,17 @@ namespace HeavenStudio.Games.Scripts_AnimalAcrobat
         [Header("Values")]
         [SerializeField] private float _fullRotRange;
         [SerializeField] private float _spawnDistance;
+        [SerializeField] private float _spawnOffset;
         [SerializeField] private double _holdLength;
         [SerializeField] private EasingFunction.Ease _ease = EasingFunction.Ease.EaseInOutQuad;
 
         private double _startBeat;
+        private double _expirationBeat = -1;
         private float _halfRotRange;
         private EasingFunction.Function _func;
 
         public float SpawnDistance => _spawnDistance;
+        public float SpawnOffset => _spawnOffset;
 
         [Header("Components")]
         [SerializeField] private Transform _rotateRoot;
@@ -29,9 +32,10 @@ namespace HeavenStudio.Games.Scripts_AnimalAcrobat
             _func = EasingFunction.GetEasingFunction(_ease);
         }
 
-        public void SetStartBeat(double beat)
+        public void Init(double beat, double expirationBeat)
         {
             _startBeat = beat;
+            _expirationBeat = expirationBeat;
             Update();
         }
 
@@ -46,9 +50,10 @@ namespace HeavenStudio.Games.Scripts_AnimalAcrobat
             var cond = Conductor.instance;
             if (!cond.isPlaying) return;
 
-            float normalNoMod = cond.GetPositionFromBeat(_startBeat, _holdLength);
+            float normalNoMod = Mathf.Abs(cond.GetPositionFromBeat(_startBeat, _holdLength));
 
             float normalizedBeat = normalNoMod % 1;
+            
             if (Mathf.Floor(normalNoMod) % 2 != 0)
             {
                 normalizedBeat = 1 - normalizedBeat;
@@ -56,6 +61,16 @@ namespace HeavenStudio.Games.Scripts_AnimalAcrobat
 
             float newAngleZ = _func(-_halfRotRange, _halfRotRange, normalizedBeat);
             _rotateRoot.localEulerAngles = new Vector3(0, 0, newAngleZ);
+
+            if (cond.songPositionInBeatsAsDouble >= _expirationBeat)
+            {
+                gameObject.SetActive(false);
+            }
+        }
+
+        public bool IsAvailableAtBeat(double beat)
+        {
+            return beat >= _expirationBeat;
         }
     }
 }

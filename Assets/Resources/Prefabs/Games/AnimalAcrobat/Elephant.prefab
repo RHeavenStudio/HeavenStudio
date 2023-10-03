@@ -505,7 +505,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &6285390310926959546
 Transform:
   m_ObjectHideFlags: 0
@@ -560,6 +560,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _fullRotRange: 120
   _spawnDistance: 2.602
+  _spawnOffset: 0
   _holdLength: 2
   _ease: 4
   _rotateRoot: {fileID: 2616646720197201304}

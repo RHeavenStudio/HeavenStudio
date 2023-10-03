@@ -1897,7 +1897,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &3439047595127619699
 Transform:
   m_ObjectHideFlags: 0
@@ -1928,11 +1928,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2f9ee457016acdc4eb5dbfdc03be0d6f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  holdLength: 3
-  fullRotateAngle: 160
-  anim: {fileID: 8483464683545527156}
-  type: 2
-  rotatePivot: {fileID: 3903953954711634507}
+  _fullRotRange: 0
+  _spawnDistance: 0
+  _spawnOffset: 0
+  _holdLength: 0
+  _ease: 4
+  _rotateRoot: {fileID: 0}
+  _gripPoint: {fileID: 0}
 --- !u!1 &8302616130811808557
 GameObject:
   m_ObjectHideFlags: 0
