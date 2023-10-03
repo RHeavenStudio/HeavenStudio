@@ -70,7 +70,6 @@ namespace HeavenStudio
                     vel -= flickCoeff * Time.deltaTime * vel;
                     flickDeltaPos += vel * Time.deltaTime;
                     DSGuy.transform.position = flickStart + flickDeltaPos;
-                    Debug.Log(vel.magnitude);
                 }
                 else
                 {
@@ -89,7 +88,6 @@ namespace HeavenStudio
                 }
                 else if (PlayerInput.GetIsAction(Minigame.InputAction_FlickRelease))
                 {
-                    Debug.Log(deltaPos.magnitude * flickInitMul);
                     Flick(pos, deltaPos * flickInitMul);
                 }
 

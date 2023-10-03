@@ -364,8 +364,8 @@ namespace HeavenStudio
                     if (inf != null && inf.usesAssetBundle && !inf.AssetsLoaded)
                     {
                         Debug.Log($"ASYNC loading assetbundles for game {gameName}");
-                        StartCoroutine(inf.LoadCommonAssetBundleAsync());
-                        StartCoroutine(inf.LoadLocalizedAssetBundleAsync());
+                        StartCoroutine(inf.LoadCommonAssetBundleAsync(this));
+                        StartCoroutine(inf.LoadLocalizedAssetBundleAsync(this));
                     }
                     currentPreSwitch++;
                 }
@@ -390,8 +390,8 @@ namespace HeavenStudio
                         if (inf != null && inf.usesAssetBundle && !inf.AssetsLoaded)
                         {
                             Debug.Log($"ASYNC loading assetbundles for game {gameName}");
-                            StartCoroutine(inf.LoadCommonAssetBundleAsync());
-                            StartCoroutine(inf.LoadLocalizedAssetBundleAsync());
+                            StartCoroutine(inf.LoadCommonAssetBundleAsync(this));
+                            StartCoroutine(inf.LoadLocalizedAssetBundleAsync(this));
                         }
                         currentPreEvent++;
                     }
@@ -945,7 +945,7 @@ namespace HeavenStudio
         {
             var gameInfo = GetGameInfo(game);
             //load the games' sound sequences
-            // TODO: this blocks the main thread, and sound sequences sould be stored in a ScriptableObject
+            // TODO: sound sequences sould be stored in a ScriptableObject
             if (gameInfo != null && gameInfo.LoadedSoundSequences == null)
                 gameInfo.LoadedSoundSequences = GetGame(game).GetComponent<Minigame>().SoundSequences;
         }
@@ -970,8 +970,9 @@ namespace HeavenStudio
                     if (gameInfo.usesAssetBundle)
                     {
                         //game is packed in an assetbundle, load from that instead
-                        // this is fucked!! figure out a way to make this async
                         if (gameInfo.LoadedPrefab != null) return gameInfo.LoadedPrefab;
+                        // StartCoroutine(gameInfo.LoadCommonAudioClipsAsync());
+                        // StartCoroutine(gameInfo.LoadLocalizedAudioClipsAsync());
                         return gameInfo.GetCommonAssetBundle().LoadAsset<GameObject>(name);
                     }
                     name = gameInfo.LoadableName;

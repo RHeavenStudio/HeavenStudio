@@ -361,37 +361,29 @@ namespace HeavenStudio
                 return bundleCommon;
             }
 
-            public IEnumerator LoadCommonAssetBundleAsync()
+            AssetBundleCreateRequest commonBundleRequest;
+            public IEnumerator LoadCommonAssetBundleAsync(MonoBehaviour runner)
             {
                 if (commonPreloaded || commonLoaded) yield break;
                 commonPreloaded = true;
                 if (!usesAssetBundle) yield break;
                 if (bundleCommon != null) yield break;
 
-                AssetBundleCreateRequest asyncBundleRequest = AssetBundle.LoadFromFileAsync(Path.Combine(Application.streamingAssetsPath, wantAssetBundle + "/common"));
+                if (commonBundleRequest == null)
+                    commonBundleRequest = AssetBundle.LoadFromFileAsync(Path.Combine(Application.streamingAssetsPath, wantAssetBundle + "/common"));
                 if (bundleCommon != null) yield break;
-                yield return asyncBundleRequest;
+                yield return commonBundleRequest;
 
-                bundleCommon = asyncBundleRequest.assetBundle;
+                bundleCommon = commonBundleRequest.assetBundle;
                 commonLoaded = true;
+                commonBundleRequest = null;
 
-                //load game prefab
-                AssetBundleRequest prefabRequest = bundleCommon.LoadAssetAsync<GameObject>(name);
-                yield return prefabRequest;
-                loadedPrefab = prefabRequest.asset as GameObject;
-
-                // preload audioclips
-                AssetBundleRequest audioRequest = bundleCommon.LoadAllAssetsAsync<AudioClip>();
-                yield return audioRequest;
-
-                // load sound sequences here for now
-                if (loadedPrefab.TryGetComponent<Games.Minigame>(out Games.Minigame minigame))
-                {
-                    soundSequences = minigame.SoundSequences;
-                }
+                runner.StartCoroutine(LoadGamePrefabAsync());
+                // runner.StartCoroutine(LoadCommonAudioClipsAsync());
             }
 
-            public IEnumerator LoadLocalizedAssetBundleAsync()
+            AssetBundleCreateRequest localeBundleRequest;
+            public IEnumerator LoadLocalizedAssetBundleAsync(MonoBehaviour runner)
             {
                 if (localePreloaded) yield break;
                 localePreloaded = true;
@@ -399,17 +391,74 @@ namespace HeavenStudio
                 if (!usesAssetBundle) yield break;
                 if (localeLoaded && bundleLocalized != null && currentLoadedLocale == defaultLocale) yield break;
 
-                AssetBundleCreateRequest asyncBundleRequest = AssetBundle.LoadFromFileAsync(Path.Combine(Application.streamingAssetsPath, wantAssetBundle + "/locale." + defaultLocale));
+                if (localeBundleRequest == null)
+                    localeBundleRequest = AssetBundle.LoadFromFileAsync(Path.Combine(Application.streamingAssetsPath, wantAssetBundle + "/locale." + defaultLocale));
                 if (localeLoaded && bundleLocalized != null && currentLoadedLocale == defaultLocale) yield break;
-                yield return asyncBundleRequest;
+                yield return localeBundleRequest;
 
-                bundleLocalized = asyncBundleRequest.assetBundle;
+                bundleLocalized = localeBundleRequest.assetBundle;
                 currentLoadedLocale = defaultLocale;
                 localeLoaded = true;
+                localeBundleRequest = null;
 
-                // preload audioclips
-                AssetBundleRequest audioRequest = bundleLocalized.LoadAllAssetsAsync<AudioClip>();
-                yield return audioRequest;
+                // runner.StartCoroutine(LoadLocalizedAudioClipsAsync());
+            }
+
+            AssetBundleRequest prefabRequest;
+            public IEnumerator LoadGamePrefabAsync()
+            {
+                if (!usesAssetBundle) yield break;
+                if (!commonLoaded) yield break;
+                if (bundleCommon == null) yield break;
+
+                if (prefabRequest == null)
+                {
+                    prefabRequest = bundleCommon.LoadAssetAsync<GameObject>(name);
+                    prefabRequest.priority = 0;
+                }
+                yield return prefabRequest;
+                loadedPrefab = prefabRequest.asset as GameObject;
+                prefabRequest = null;
+
+                // load sound sequences here for now
+                // this is taxing and is still done synchronously
+                // move sequences to their own assets so that we don't have to look up a component
+                if (loadedPrefab.TryGetComponent<Games.Minigame>(out Games.Minigame minigame))
+                {
+                    soundSequences = minigame.SoundSequences;
+                }
+            }
+
+            AssetBundleRequest audioCommonRequest;
+            public IEnumerator LoadCommonAudioClipsAsync()
+            {
+                if (!usesAssetBundle) yield break;
+                if (!commonLoaded) yield break;
+                if (bundleCommon == null) yield break;
+
+                if (audioCommonRequest == null)
+                {
+                    audioCommonRequest = bundleCommon.LoadAllAssetsAsync<AudioClip>();
+                    audioCommonRequest.priority = 1;
+                }
+                yield return audioCommonRequest;
+                audioCommonRequest = null;
+            }
+
+            AssetBundleRequest audioLocaleRequest;
+            public IEnumerator LoadLocalizedAudioClipsAsync()
+            {
+                if (!usesAssetBundle) yield break;
+                if (!localeLoaded) yield break;
+                if (bundleLocalized == null) yield break;
+
+                if (audioLocaleRequest == null)
+                {
+                    audioLocaleRequest = bundleLocalized.LoadAllAssetsAsync<AudioClip>();
+                    audioLocaleRequest.priority = 1;
+                }
+                yield return audioLocaleRequest;
+                audioLocaleRequest = null;
             }
         }
 
