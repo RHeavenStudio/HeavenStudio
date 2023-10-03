@@ -124,6 +124,7 @@ namespace HeavenStudio.Games
             animal.Init(currentAnimal.startBeat, expBeat);
 
             animal.transform.localPosition = new Vector3(_animalSummatedDistance, 0, 0);
+            _animalSummatedDistance += animal.NextAnimalDistance;
 
             _animalPoolIndex++;
         }

@@ -11,6 +11,7 @@ namespace HeavenStudio.Games.Scripts_AnimalAcrobat
         [SerializeField] private float _fullRotRange;
         [SerializeField] private float _spawnDistance;
         [SerializeField] private float _spawnOffset;
+        [SerializeField] private float _nextAnimalDistance;
         [SerializeField] private double _holdLength;
         [SerializeField] private EasingFunction.Ease _ease = EasingFunction.Ease.EaseInOutQuad;
 
@@ -21,6 +22,7 @@ namespace HeavenStudio.Games.Scripts_AnimalAcrobat
 
         public float SpawnDistance => _spawnDistance;
         public float SpawnOffset => _spawnOffset;
+        public float NextAnimalDistance => _nextAnimalDistance;
 
         [Header("Components")]
         [SerializeField] private Transform _rotateRoot;
