@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using Jukebox;
+using HeavenStudio.Util;
 
 namespace HeavenStudio.Games.Loaders
 {
@@ -39,11 +40,18 @@ namespace HeavenStudio.Games.Loaders
 
 namespace HeavenStudio.Games
 {
-    using HeavenStudio.Games.Scripts_AnimalAcrobat;
-    using HeavenStudio.Util;
+    using Scripts_AnimalAcrobat;
+
     public class AnimalAcrobat : Minigame
     {
-        
+        [Header("Animal Prefabs")]
+        [SerializeField] private AcrobatObstacle _elephant;
+        [SerializeField] private AcrobatObstacle _giraffe, _monkeysLong, _monkeysShort;
+
+        private void Awake()
+        {
+            Instantiate(_elephant, transform);
+        }
     }
 }
 
