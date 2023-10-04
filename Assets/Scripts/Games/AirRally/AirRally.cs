@@ -394,7 +394,7 @@ namespace HeavenStudio.Games
                     Baxter.DoScaledAnimationAsync("Idle", 0.5f);
                 }
             }
-            if (PlayerInput.GetIsAction(InputAction_FlickRelease) && !IsExpectingInputNow(InputAction_FlickRelease))
+            if (PlayerInput.GetIsAction(InputAction_FlickPress) && !IsExpectingInputNow(InputAction_FlickPress))
             {
                 Baxter.DoScaledAnimationAsync("Hit", 0.5f);
                 SoundByte.PlayOneShotGame("airRally/swing");

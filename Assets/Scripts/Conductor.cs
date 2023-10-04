@@ -151,7 +151,7 @@ namespace HeavenStudio
             time = startPos;
             firstBeatOffset = offset;
 
-            SeekMusicToTime(startPos);
+            SeekMusicToTime(startPos, offset);
 
             songPosBeat = GetBeatFromSongPos(time);
 
@@ -182,7 +182,7 @@ namespace HeavenStudio
 
             if (musicSource.clip != null && startPos < musicSource.clip.length - offset)
             {
-                SeekMusicToTime(startPos);
+                SeekMusicToTime(startPos, offset);
                 double musicStartDelay = -offset - startPos;
                 if (musicStartDelay > 0)
                 {
@@ -274,9 +274,8 @@ namespace HeavenStudio
             StopOnlyAudio();
         }
 
-        void SeekMusicToTime(double fStartPos)
+        void SeekMusicToTime(double fStartPos, double offset)
         {
-            double offset = GameManager.instance.Beatmap.data.offset;
             if (musicSource.clip != null && fStartPos < musicSource.clip.length - offset)
             {
                 // https://www.desmos.com/calculator/81ywfok6xk
