@@ -207,9 +207,11 @@ namespace HeavenStudio.Games
 
             animal.Init(currentAnimal.startBeat, expBeat, _lastAnimalWasGiraffe);
 
+            _animalSummatedDistance += (animal.GetRotationDistance() * 0.5f);
+
             animal.transform.localPosition = new Vector3(_animalSummatedDistance, 0, 0);
             
-            _animalSummatedDistance += animal.GetRotationDistance() + ((currentAnimal.type == AnimalType.Giraffe) ? _jumpDistanceGiraffe : _jumpDistance);
+            _animalSummatedDistance += (animal.GetRotationDistance() * 0.5f) + ((currentAnimal.type == AnimalType.Giraffe) ? _jumpDistanceGiraffe : _jumpDistance);
             _lastAnimalWasGiraffe = currentAnimal.type == AnimalType.Giraffe;
 
             _animalPoolIndex++;
