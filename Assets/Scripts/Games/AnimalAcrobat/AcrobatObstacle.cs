@@ -44,8 +44,13 @@ namespace HeavenStudio.Games.Scripts_AnimalAcrobat
 
         public float GetRotationDistance()
         {
-            float result = Mathf.Cos((_fullRotRange + 180) * Mathf.Deg2Rad) * _gripPoint.localPosition.y;
+            float result = Mathf.Cos((_fullRotRange + 180) * Mathf.Deg2Rad) * GetRotationHeight();
             return Mathf.Abs(result * 2);
+        }
+
+        public float GetRotationHeight()
+        {
+            return _gripPoint.localPosition.y;
         }
 
         private void Update()

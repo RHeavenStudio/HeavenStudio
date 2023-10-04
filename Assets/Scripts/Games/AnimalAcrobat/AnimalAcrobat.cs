@@ -51,8 +51,13 @@ namespace HeavenStudio.Games
         [SerializeField] private AcrobatObstacle _elephant;
         [SerializeField] private AcrobatObstacle _giraffe, _monkeysLong, _monkeysShort;
 
+        [Header("Components")]
+        [SerializeField] private Transform _scroll;
+
         [Header("Values")]
         [SerializeField] private float _jumpDistance = 8;
+        [SerializeField] private float _jumpDistanceGiraffe = 16;
+        [SerializeField] private float _jumpStartCameraDistance = 4;
 
         private List<AcrobatObstacle> _pooledElephants = new(), _pooledGiraffes = new(), _pooledMonkeysLong = new(), _pooledMonkeysShort = new();
 
@@ -69,6 +74,20 @@ namespace HeavenStudio.Games
             public AnimalType type;
             public double startBeat;
             public double length;
+            public float rotationDistance;
+            public float rotationHeight;
+
+            public double GetHoldLengthFromType()
+            {
+                return type switch
+                {
+                    AnimalType.Elephant => 2,
+                    AnimalType.Giraffe => 4,
+                    AnimalType.MonkeysLong => 3,
+                    AnimalType.MonkeysShort => 1,
+                    _ => throw new System.NotImplementedException(),
+                };
+            }
         }
 
         private List<QueuedAnimal> _queuedAnimals = new();
@@ -76,11 +95,18 @@ namespace HeavenStudio.Games
         private float _animalSummatedDistance = 0;
         private bool _lastAnimalWasGiraffe = false;
 
+        private Util.EasingFunction.Function _funcEaseInOut;
+        private Util.EasingFunction.Function _funcEaseIn;
+        private Util.EasingFunction.Function _funcEaseOut;
+
         public static AnimalAcrobat instance;
 
         private void Awake()
         {
             instance = this;
+            _funcEaseInOut = Util.EasingFunction.GetEasingFunction(Util.EasingFunction.Ease.EaseInOutQuad);
+            _funcEaseIn = Util.EasingFunction.GetEasingFunction(Util.EasingFunction.Ease.EaseInQuad);
+            _funcEaseOut = Util.EasingFunction.GetEasingFunction(Util.EasingFunction.Ease.EaseOutQuad);
         }
 
         private void Update()
@@ -88,6 +114,53 @@ namespace HeavenStudio.Games
             var cond = Conductor.instance;
             if (!cond.isPlaying) return;
             AnimalPoolUpdate(cond);
+            CameraUpdate(cond);
+        }
+
+        private int _animalCameraIndex = 0;
+        private float _lastCameraX = 0;
+        private double _cameraHoldTime = 1;
+
+        private void CameraUpdate(Conductor cond)
+        {
+            if (_animalCameraIndex >= _queuedAnimals.Count || cond.songPositionInBeatsAsDouble < _queuedAnimals[0].startBeat - 1) return;
+
+            var currentAnimal = _queuedAnimals[_animalCameraIndex];
+
+            float distance = (_animalCameraIndex == 0) ? _jumpStartCameraDistance : _jumpDistance;
+
+            float normalizedHold = cond.GetPositionFromBeat(currentAnimal.startBeat, currentAnimal.GetHoldLengthFromType());
+
+            if (normalizedHold < 0)
+            {
+                float normalizedTravel = cond.GetPositionFromBeat(currentAnimal.startBeat - _cameraHoldTime, _cameraHoldTime);
+
+                float newX = Mathf.Lerp(_lastCameraX, _lastCameraX + distance, normalizedTravel);
+                _scroll.localPosition = new Vector3(-newX, 0, 0);
+
+                return;
+            }
+            if (normalizedHold >= 0 && normalizedHold <= 1)
+            {
+                float newX = _funcEaseInOut(_lastCameraX + distance, _lastCameraX + distance + currentAnimal.rotationDistance, normalizedHold);
+                float newY = 0;
+                if (normalizedHold <= 0.5)
+                {
+                    float normalizedHoldIn = cond.GetPositionFromBeat(currentAnimal.startBeat, currentAnimal.GetHoldLengthFromType() * 0.5);
+                    newY = _funcEaseIn(0, -currentAnimal.rotationHeight, Mathf.Clamp01(normalizedHoldIn));
+                }
+                else
+                {
+                    float normalizedHoldOut = cond.GetPositionFromBeat(currentAnimal.startBeat + (currentAnimal.GetHoldLengthFromType() * 0.5), currentAnimal.GetHoldLengthFromType() * 0.5);
+                    newY = _funcEaseOut(-currentAnimal.rotationHeight, 0, Mathf.Clamp01(normalizedHoldOut));
+                }
+
+                _scroll.localPosition = new Vector3(-newX, newY, 0);
+                return;
+            }
+            _cameraHoldTime = (currentAnimal.type == AnimalType.Giraffe) ? 4 : 2;
+            _lastCameraX += distance + currentAnimal.rotationDistance;
+            _animalCameraIndex++;
         }
 
         private void AnimalPoolUpdate(Conductor cond)
@@ -135,7 +208,8 @@ namespace HeavenStudio.Games
             animal.Init(currentAnimal.startBeat, expBeat, _lastAnimalWasGiraffe);
 
             animal.transform.localPosition = new Vector3(_animalSummatedDistance, 0, 0);
-            _animalSummatedDistance += animal.GetRotationDistance() + _jumpDistance;
+            
+            _animalSummatedDistance += animal.GetRotationDistance() + ((currentAnimal.type == AnimalType.Giraffe) ? _jumpDistanceGiraffe : _jumpDistance);
             _lastAnimalWasGiraffe = currentAnimal.type == AnimalType.Giraffe;
 
             _animalPoolIndex++;
@@ -155,10 +229,10 @@ namespace HeavenStudio.Games
         {
             for (int i = 0; i < POOL_NUMBER; i++)
             {
-                _pooledElephants.Add(Instantiate(_elephant, transform));
-                _pooledGiraffes.Add(Instantiate(_giraffe, transform));
-                _pooledMonkeysLong.Add(Instantiate(_monkeysLong, transform));
-                _pooledMonkeysShort.Add(Instantiate(_monkeysShort, transform));
+                _pooledElephants.Add(Instantiate(_elephant, _scroll));
+                _pooledGiraffes.Add(Instantiate(_giraffe, _scroll));
+                _pooledMonkeysLong.Add(Instantiate(_monkeysLong, _scroll));
+                _pooledMonkeysShort.Add(Instantiate(_monkeysShort, _scroll));
             }
 
             var allGameSwitches = EventCaller.GetAllInGameManagerList("gameManager", new string[] { "switchGame" }).FindAll(x => x.beat > beat);
@@ -170,6 +244,7 @@ namespace HeavenStudio.Games
                 "elephant", "giraffe", "monkeys", "monkeyLong", "monkeyShort"
             }).FindAll(x => x.beat >= beat && x.beat < nextGameSwitchBeat);
             if (allAnimals.Count == 0) return;
+            allAnimals.Sort((x, y) => x.beat.CompareTo(y.beat));
 
             double goodBeat = allAnimals[0].beat;
             for (int i = 0; i < allAnimals.Count; i++)
@@ -185,12 +260,16 @@ namespace HeavenStudio.Games
                         startBeat = animal.beat,
                         length = 5,
                         type = AnimalType.MonkeysLong,
+                        rotationDistance = _monkeysLong.GetRotationDistance(),
+                        rotationHeight = _monkeysLong.GetRotationHeight()
                     });
                     _queuedAnimals.Add(new QueuedAnimal()
                     {
                         startBeat = animal.beat + 5,
                         length = 3,
                         type = AnimalType.MonkeysShort,
+                        rotationDistance = _monkeysShort.GetRotationDistance(),
+                        rotationHeight = _monkeysShort.GetRotationHeight()
                     });
                     continue;
                 }
@@ -213,16 +292,33 @@ namespace HeavenStudio.Games
                         "animalAcrobat/monkeyShort" => AnimalType.MonkeysShort,
                         _ => throw new System.NotImplementedException()
                     },
+                    rotationDistance = animal.datamodel switch
+                    {
+                        "animalAcrobat/elephant" => _elephant.GetRotationDistance(),
+                        "animalAcrobat/giraffe" => _giraffe.GetRotationDistance(),
+                        "animalAcrobat/monkeyLong" => _monkeysLong.GetRotationDistance(),
+                        "animalAcrobat/monkeyShort" => _monkeysShort.GetRotationDistance(),
+                        _ => throw new System.NotImplementedException()
+                    },
+                    rotationHeight = animal.datamodel switch
+                    {
+                        "animalAcrobat/elephant" => _elephant.GetRotationHeight(),
+                        "animalAcrobat/giraffe" => _giraffe.GetRotationHeight(),
+                        "animalAcrobat/monkeyLong" => _monkeysLong.GetRotationHeight(),
+                        "animalAcrobat/monkeyShort" => _monkeysShort.GetRotationHeight(),
+                        _ => throw new System.NotImplementedException()
+                    }
                 });
             }
 
             if (_queuedAnimals.Count > 0) 
             {
-                _queuedAnimals.Sort((x, y) => x.startBeat.CompareTo(y.startBeat));
                 for (int i = 0; i < POOL_NUMBER; i++)
                 {
                     BakeNextAvailableAnimal();
                 }
+
+                SoundByte.PlayOneShotGame("animalAcrobat/start", _queuedAnimals[0].startBeat - 1);
             }
         }
     }

@@ -22,7 +22,7 @@ namespace HeavenStudio.Games.Scripts_AnimalAcrobat
 
         private void OnDestroy()
         {
-            if (_drumRollSound != null) _drumRollSound.Stop();
+            if (_drumRollSound != null) _drumRollSound.KillLoop(0.587);
         }
 
         public void Init(double beat, bool beforeGiraffe)

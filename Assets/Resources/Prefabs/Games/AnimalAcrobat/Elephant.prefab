@@ -559,23 +559,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2f9ee457016acdc4eb5dbfdc03be0d6f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _onInit:
-    m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: -4645702950898394595}
-        m_TargetAssemblyTypeName: HeavenStudio.Games.Scripts_AnimalAcrobat.ObstacleInput,
-          Assembly-CSharp
-        m_MethodName: Init
-        m_Mode: 0
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
-  _fullRotRange: 120
+  _fullRotRange: 160
   _spawnOffset: 0
   _holdLength: 2
   _ease: 4

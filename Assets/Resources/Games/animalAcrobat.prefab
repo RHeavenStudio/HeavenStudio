@@ -931,7 +931,7 @@ Transform:
   m_Children:
   - {fileID: 8794133928851332470}
   m_Father: {fileID: 5840730152797502065}
-  m_RootOrder: 3
+  m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!212 &8577280407175396528
 SpriteRenderer:
@@ -1017,6 +1017,7 @@ Transform:
   - {fileID: 2661844662320053337}
   - {fileID: 4037202497222682790}
   - {fileID: 4618914047223908314}
+  - {fileID: 6038557817912069913}
   - {fileID: 4131922717252530528}
   m_Father: {fileID: 0}
   m_RootOrder: 0
@@ -1040,3 +1041,37 @@ MonoBehaviour:
   _giraffe: {fileID: 5248028064811562821, guid: 72e69b6337a6bc04f86ffcf5bcedab92, type: 3}
   _monkeysLong: {fileID: -3114631264593203074, guid: f52ef60e472be3047bb77f54d5a3229d, type: 3}
   _monkeysShort: {fileID: 7370747047491091311, guid: 0dfca7cb5fedf0d40aa26ffd9b4595ae, type: 3}
+  _scroll: {fileID: 6038557817912069913}
+  _jumpDistance: 8
+  _jumpDistanceGiraffe: 32
+--- !u!1 &9154566379104488428
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 6038557817912069913}
+  m_Layer: 0
+  m_Name: Scroll
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &6038557817912069913
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9154566379104488428}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 5840730152797502065}
+  m_RootOrder: 3
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
