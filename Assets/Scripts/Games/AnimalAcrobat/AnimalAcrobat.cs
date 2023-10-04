@@ -120,6 +120,7 @@ namespace HeavenStudio.Games
         private int _animalCameraIndex = 0;
         private float _lastCameraX = 0;
         private double _cameraHoldTime = 1;
+        private bool _lastCameraAnimalWasGiraffe = false;
 
         private void CameraUpdate(Conductor cond)
         {
@@ -127,7 +128,7 @@ namespace HeavenStudio.Games
 
             var currentAnimal = _queuedAnimals[_animalCameraIndex];
 
-            float distance = (_animalCameraIndex == 0) ? _jumpStartCameraDistance : _jumpDistance;
+            float distance = (_animalCameraIndex == 0) ? _jumpStartCameraDistance : (_lastCameraAnimalWasGiraffe ? _jumpDistanceGiraffe : _jumpDistance);
 
             float normalizedHold = cond.GetPositionFromBeat(currentAnimal.startBeat, currentAnimal.GetHoldLengthFromType());
 
@@ -161,6 +162,7 @@ namespace HeavenStudio.Games
             _cameraHoldTime = (currentAnimal.type == AnimalType.Giraffe) ? 4 : 2;
             _lastCameraX += distance + currentAnimal.rotationDistance;
             _animalCameraIndex++;
+            _lastCameraAnimalWasGiraffe = currentAnimal.type == AnimalType.Giraffe;
         }
 
         private void AnimalPoolUpdate(Conductor cond)
