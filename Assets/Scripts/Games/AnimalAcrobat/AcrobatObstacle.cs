@@ -2,16 +2,17 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using HeavenStudio.Util;
+using UnityEngine.Events;
 
 namespace HeavenStudio.Games.Scripts_AnimalAcrobat
 {
     public class AcrobatObstacle : MonoBehaviour
     {
+        [SerializeField] private UnityEvent<double> _onInit;
+
         [Header("Values")]
         [SerializeField] private float _fullRotRange;
-        [SerializeField] private float _spawnDistance;
         [SerializeField] private float _spawnOffset;
-        [SerializeField] private float _nextAnimalDistance;
         [SerializeField] private double _holdLength;
         [SerializeField] private EasingFunction.Ease _ease = EasingFunction.Ease.EaseInOutQuad;
 
@@ -20,9 +21,7 @@ namespace HeavenStudio.Games.Scripts_AnimalAcrobat
         private float _halfRotRange;
         private EasingFunction.Function _func;
 
-        public float SpawnDistance => _spawnDistance;
         public float SpawnOffset => _spawnOffset;
-        public float NextAnimalDistance => _nextAnimalDistance;
 
         [Header("Components")]
         [SerializeField] private Transform _rotateRoot;
@@ -38,6 +37,7 @@ namespace HeavenStudio.Games.Scripts_AnimalAcrobat
         {
             _startBeat = beat;
             _expirationBeat = expirationBeat;
+            _onInit.Invoke(_startBeat);
             Update();
         }
 

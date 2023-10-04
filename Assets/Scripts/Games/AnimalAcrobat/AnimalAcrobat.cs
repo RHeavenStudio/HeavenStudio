@@ -51,6 +51,9 @@ namespace HeavenStudio.Games
         [SerializeField] private AcrobatObstacle _elephant;
         [SerializeField] private AcrobatObstacle _giraffe, _monkeysLong, _monkeysShort;
 
+        [Header("Values")]
+        [SerializeField] private float _jumpDistance = 8;
+
         private List<AcrobatObstacle> _pooledElephants = new(), _pooledGiraffes = new(), _pooledMonkeysLong = new(), _pooledMonkeysShort = new();
 
         private enum AnimalType
@@ -104,7 +107,7 @@ namespace HeavenStudio.Games
             };
 
             var animal = pooledObstacles.Find(x => x.IsAvailableAtBeat(currentAnimal.startBeat));
-            _animalSummatedDistance += (_animalPoolIndex == 0) ? animal.SpawnOffset : animal.SpawnDistance;
+            _animalSummatedDistance += (_animalPoolIndex == 0) ? animal.SpawnOffset : animal.GetRotationDistance() + _jumpDistance;
             animal.gameObject.SetActive(true);
 
             double expBeat = currentAnimal.startBeat + currentAnimal.length;
@@ -124,7 +127,6 @@ namespace HeavenStudio.Games
             animal.Init(currentAnimal.startBeat, expBeat);
 
             animal.transform.localPosition = new Vector3(_animalSummatedDistance, 0, 0);
-            _animalSummatedDistance += animal.NextAnimalDistance;
 
             _animalPoolIndex++;
         }
