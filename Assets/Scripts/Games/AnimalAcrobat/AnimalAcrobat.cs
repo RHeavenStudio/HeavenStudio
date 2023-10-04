@@ -58,6 +58,7 @@ namespace HeavenStudio.Games
         [SerializeField] private float _jumpDistance = 8;
         [SerializeField] private float _jumpDistanceGiraffe = 16;
         [SerializeField] private float _jumpStartCameraDistance = 4;
+        [SerializeField] private float _giraffeCameraZoom = 5;
 
         private List<AcrobatObstacle> _pooledElephants = new(), _pooledGiraffes = new(), _pooledMonkeysLong = new(), _pooledMonkeysShort = new();
 
@@ -98,6 +99,7 @@ namespace HeavenStudio.Games
         private Util.EasingFunction.Function _funcEaseInOut;
         private Util.EasingFunction.Function _funcEaseIn;
         private Util.EasingFunction.Function _funcEaseOut;
+        private Util.EasingFunction.Function _funcSharp;
 
         public static AnimalAcrobat instance;
 
@@ -107,6 +109,7 @@ namespace HeavenStudio.Games
             _funcEaseInOut = Util.EasingFunction.GetEasingFunction(Util.EasingFunction.Ease.EaseInOutQuad);
             _funcEaseIn = Util.EasingFunction.GetEasingFunction(Util.EasingFunction.Ease.EaseInQuad);
             _funcEaseOut = Util.EasingFunction.GetEasingFunction(Util.EasingFunction.Ease.EaseOutQuad);
+            _funcSharp = Util.EasingFunction.GetEasingFunction(Util.EasingFunction.Ease.EaseOutQuart);
         }
 
         private void Update()
@@ -137,7 +140,22 @@ namespace HeavenStudio.Games
                 float normalizedTravel = cond.GetPositionFromBeat(currentAnimal.startBeat - _cameraHoldTime, _cameraHoldTime);
 
                 float newX = Mathf.Lerp(_lastCameraX, _lastCameraX + distance, normalizedTravel);
-                _scroll.localPosition = new Vector3(-newX, 0, 0);
+                float newZ = 0;
+                if (_lastCameraAnimalWasGiraffe)
+                {
+                    if (normalizedTravel < 0.5)
+                    {
+                        float normalizedOut = Mathf.Clamp01(cond.GetPositionFromBeat(currentAnimal.startBeat - _cameraHoldTime, 1));
+                        newZ = _funcSharp(0, _giraffeCameraZoom, normalizedOut);
+                    }
+                    else
+                    {
+                        float normalizedIn = Mathf.Clamp01(cond.GetPositionFromBeat(currentAnimal.startBeat - _cameraHoldTime + 3, 1));
+                        newZ = _funcEaseOut(_giraffeCameraZoom, 0, normalizedIn);
+                    }
+                }
+
+                _scroll.localPosition = new Vector3(-newX, 0, newZ);
 
                 return;
             }
