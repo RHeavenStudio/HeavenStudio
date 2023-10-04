@@ -107,7 +107,7 @@ namespace HeavenStudio.Games
             };
 
             var animal = pooledObstacles.Find(x => x.IsAvailableAtBeat(currentAnimal.startBeat));
-            _animalSummatedDistance += (_animalPoolIndex == 0) ? animal.SpawnOffset : animal.GetRotationDistance() + _jumpDistance;
+            if (_animalPoolIndex == 0) _animalSummatedDistance = animal.SpawnOffset;
             animal.gameObject.SetActive(true);
 
             double expBeat = currentAnimal.startBeat + currentAnimal.length;
@@ -127,6 +127,7 @@ namespace HeavenStudio.Games
             animal.Init(currentAnimal.startBeat, expBeat);
 
             animal.transform.localPosition = new Vector3(_animalSummatedDistance, 0, 0);
+            _animalSummatedDistance += animal.GetRotationDistance() + _jumpDistance;
 
             _animalPoolIndex++;
         }
