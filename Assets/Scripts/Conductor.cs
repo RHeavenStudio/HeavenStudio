@@ -6,6 +6,7 @@ using UnityEngine;
 using Starpelly;
 using Jukebox;
 using HeavenStudio.Util;
+using System.Data.Common;
 
 namespace HeavenStudio
 {
@@ -46,6 +47,7 @@ namespace HeavenStudio
         private double time;
         double dspTime;
         double absTime, absTimeAdjust;
+        double dspSizeSeconds;
         double dspMargin = 128 / 44100.0;
 
         // the dspTime we started at
@@ -133,7 +135,8 @@ namespace HeavenStudio
         {
             musicSource.priority = 0;
             AudioConfiguration config = AudioSettings.GetConfiguration();
-            dspMargin = 2 * (config.dspBufferSize / (double)config.sampleRate);
+            dspSizeSeconds = config.dspBufferSize / (double)config.sampleRate;
+            dspMargin = 2 * dspSizeSeconds;
             addedPitchChanges.Clear();
         }
 
@@ -162,7 +165,9 @@ namespace HeavenStudio
             if (!isPaused)
             {
                 AudioConfiguration config = AudioSettings.GetConfiguration();
-                dspMargin = 2 * (config.dspBufferSize / (double)config.sampleRate);
+                dspSizeSeconds = config.dspBufferSize / (double)config.sampleRate;
+                Debug.Log($"dsp size: {dspSizeSeconds}");
+                dspMargin = 2 * dspSizeSeconds;
                 addedPitchChanges.Clear();
                 addedPitchChanges.Add(new AddedPitchChange { time = 0, pitch = SongPitch });
             }
@@ -170,8 +175,6 @@ namespace HeavenStudio
             var chart = GameManager.instance.Beatmap;
             double offset = chart.data.offset;
             double dspTime = AudioSettings.dspTime;
-
-            dspStart = dspTime;
 
             startPos = GetSongPosFromBeat(beat);
             firstBeatOffset = offset;
@@ -184,21 +187,26 @@ namespace HeavenStudio
                 if (musicStartDelay > 0)
                 {
                     musicScheduledTime = dspTime + musicStartDelay / SongPitch;
-                    musicScheduledPitch = SongPitch;
+                    dspStart = dspTime;
                 }
                 else
                 {
-                    musicScheduledTime = dspTime;
-                    musicScheduledPitch = SongPitch;
+                    musicScheduledTime = dspTime + dspMargin;
+                    dspStart = dspTime + dspMargin;
                 }
+                musicScheduledPitch = SongPitch;
                 musicSource.PlayScheduled(musicScheduledTime);
+            }
+            if (musicSource.clip == null)
+            {
+                dspStart = dspTime;
             }
 
             songPosBeat = GetBeatFromSongPos(time);
             startBeat = songPosBeat;
 
-            absTimeAdjust = 0;
             startTime = DateTime.Now;
+            absTimeAdjust = 0;
 
             isPlaying = true;
             isPaused = false;
