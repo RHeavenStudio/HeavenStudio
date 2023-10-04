@@ -1892,6 +1892,7 @@ GameObject:
   m_Component:
   - component: {fileID: 3439047595127619699}
   - component: {fileID: -3114631264593203074}
+  - component: {fileID: 3068772248330600904}
   m_Layer: 0
   m_Name: WhiteMonkeys
   m_TagString: Untagged
@@ -1931,13 +1932,39 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _onInit:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 3068772248330600904}
+        m_TargetAssemblyTypeName: HeavenStudio.Games.Scripts_AnimalAcrobat.ObstacleInput,
+          Assembly-CSharp
+        m_MethodName: Init
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
   _fullRotRange: 160
   _spawnOffset: 9.244
   _holdLength: 3
   _ease: 4
   _rotateRoot: {fileID: 3903953954711634507}
   _gripPoint: {fileID: 3800820123473635694}
+--- !u!114 &3068772248330600904
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7969179947406382610}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9a934a7ab91ef694e94df3dce43f43ca, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _holdLength: 3
 --- !u!1 &8302616130811808557
 GameObject:
   m_ObjectHideFlags: 0

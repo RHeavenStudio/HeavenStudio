@@ -3,12 +3,13 @@ using System.Collections.Generic;
 using UnityEngine;
 using HeavenStudio.Util;
 using UnityEngine.Events;
+using System;
 
 namespace HeavenStudio.Games.Scripts_AnimalAcrobat
 {
     public class AcrobatObstacle : MonoBehaviour
     {
-        [SerializeField] private UnityEvent<double> _onInit;
+        public Action<double, bool> OnInit;
 
         [Header("Values")]
         [SerializeField] private float _fullRotRange;
@@ -33,11 +34,11 @@ namespace HeavenStudio.Games.Scripts_AnimalAcrobat
             _func = EasingFunction.GetEasingFunction(_ease);
         }
 
-        public void Init(double beat, double expirationBeat)
+        public void Init(double beat, double expirationBeat, bool behindGiraffe)
         {
             _startBeat = beat;
             _expirationBeat = expirationBeat;
-            _onInit.Invoke(_startBeat);
+            OnInit(beat, behindGiraffe);
             Update();
         }
 

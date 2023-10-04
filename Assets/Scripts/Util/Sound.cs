@@ -43,6 +43,11 @@ namespace HeavenStudio.Util
         {
         }
 
+        public void SetVolume(float volume)
+        {
+            audioSource.volume = volume;
+        }
+
         public void Play()
         {
             if (!available)

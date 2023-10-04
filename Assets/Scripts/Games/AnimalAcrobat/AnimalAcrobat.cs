@@ -74,6 +74,14 @@ namespace HeavenStudio.Games
         private List<QueuedAnimal> _queuedAnimals = new();
         private int _animalPoolIndex = 0;
         private float _animalSummatedDistance = 0;
+        private bool _lastAnimalWasGiraffe = false;
+
+        public static AnimalAcrobat instance;
+
+        private void Awake()
+        {
+            instance = this;
+        }
 
         private void Update()
         {
@@ -124,10 +132,11 @@ namespace HeavenStudio.Games
                 expBeat += seekedAnimal.length;
             }
 
-            animal.Init(currentAnimal.startBeat, expBeat);
+            animal.Init(currentAnimal.startBeat, expBeat, _lastAnimalWasGiraffe);
 
             animal.transform.localPosition = new Vector3(_animalSummatedDistance, 0, 0);
             _animalSummatedDistance += animal.GetRotationDistance() + _jumpDistance;
+            _lastAnimalWasGiraffe = currentAnimal.type == AnimalType.Giraffe;
 
             _animalPoolIndex++;
         }

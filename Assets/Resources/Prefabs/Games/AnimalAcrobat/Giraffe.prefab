@@ -263,6 +263,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1701002327333926128}
   - component: {fileID: 5248028064811562821}
+  - component: {fileID: 3253363150451868373}
   m_Layer: 0
   m_Name: Giraffe
   m_TagString: Untagged
@@ -301,12 +302,23 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _fullRotRange: 160
-  _spawnDistance: 20.816
   _spawnOffset: 10.408
   _holdLength: 4
   _ease: 4
   _rotateRoot: {fileID: 4208995891253938729}
   _gripPoint: {fileID: 8714220451416272075}
+--- !u!114 &3253363150451868373
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2939598505969617365}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f87e00a2ffbd0af4baae18b3c11268db, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &3911272779464478738
 GameObject:
   m_ObjectHideFlags: 0
