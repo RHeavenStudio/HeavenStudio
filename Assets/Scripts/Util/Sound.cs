@@ -43,9 +43,21 @@ namespace HeavenStudio.Util
         {
         }
 
-        public void SetVolume(float volume)
+        public void LerpVolume(double beat, double length, float volumeStart, float volumeEnd)
         {
-            audioSource.volume = volume;
+            if (!gameObject.activeSelf) return;
+            StartCoroutine(LerpVolumeCo(beat, length, volumeStart, volumeEnd));
+        }
+
+        private IEnumerator LerpVolumeCo(double beat, double length, float volumeStart, float volumeEnd)
+        {
+            float normalized = 0;
+            while (normalized <= 1)
+            {
+                normalized = cond.GetPositionFromBeat(beat, length);
+                audioSource.volume = Mathf.Lerp(volumeStart, volumeEnd, normalized);
+                yield return null;
+            }
         }
 
         public void Play()

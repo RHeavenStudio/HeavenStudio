@@ -54,7 +54,7 @@ namespace HeavenStudio.Games.Scripts_AnimalAcrobat
             double beat = caller.startBeat + caller.timer;
 
             _drumRollSound = SoundByte.PlayOneShotGame("animalAcrobat/giraffeDrumroll", beat, 1, 1, true);
-            StartCoroutine(GiraffeDrumRollLoop(beat));
+            GiraffeDrumRollLoop(beat);
 
             MultiSound.Play(new MultiSound.Sound[]
             {
@@ -64,37 +64,21 @@ namespace HeavenStudio.Games.Scripts_AnimalAcrobat
             });
         }
 
-        private IEnumerator GiraffeDrumRollLoop(double beat)
+        private void GiraffeDrumRollLoop(double beat)
         {
-            float fadeOutNormalized = 0;
-            var cond = Conductor.instance;
-            while (fadeOutNormalized <= 1)
+            _drumRollSound.LerpVolume(beat, 1, 1, 0.125f);
+
+            BeatAction.New(this, new List<BeatAction.Action>()
             {
-                fadeOutNormalized = cond.GetPositionFromBeat(beat, 1);
-                _drumRollSound.SetVolume(Mathf.Lerp(1, 0.125f, fadeOutNormalized));
-                yield return null;
-            }
-
-            float fadeInNormalized = 0;
-
-            while (fadeInNormalized <= 1)
-            {
-                fadeInNormalized = cond.GetPositionFromBeat(beat + 1, 3);
-                _drumRollSound.SetVolume(Mathf.Lerp(0.125f, 1, fadeOutNormalized));
-                yield return null;
-            }
-
-            float fadeOutFinal = 0;
-            double fadeOutLength = cond.SecsToBeats(0.587, cond.GetBpmAtBeat(beat + 4));
-
-            while (fadeOutFinal <= 1)
-            {
-                fadeOutFinal = cond.GetPositionFromBeat(beat + 4, fadeOutLength);
-                _drumRollSound.SetVolume(Mathf.Lerp(1, 0, fadeOutNormalized));
-                yield return null;
-            }
-            _drumRollSound.Stop();
-            _drumRollSound = null;
+                new BeatAction.Action(beat + 1, delegate
+                {
+                    _drumRollSound.LerpVolume(beat + 1, 3, 0.125f, 1);
+                }),
+                new BeatAction.Action(beat + 4, delegate
+                {
+                    _drumRollSound.KillLoop(0.587);
+                })
+            });
         }
 
         private void Empty(PlayerActionEvent caller) { }
