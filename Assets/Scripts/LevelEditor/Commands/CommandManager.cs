@@ -17,8 +17,6 @@ namespace HeavenStudio.Editor
 
         private int maxItems = 128;
 
-
-
         private void Awake()
         {
             Instance = this;

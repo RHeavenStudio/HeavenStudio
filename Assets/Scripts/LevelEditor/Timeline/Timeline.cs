@@ -186,7 +186,7 @@ namespace HeavenStudio.Editor.Track
         public float rightSide => (TimelineScroll.viewport.rect.width / PixelsPerBeat) + leftSide;
 
         private Vector2 lastScreenSize;
-        
+
         public static Timeline instance { get; private set; }
 
         [HideInInspector]
@@ -243,25 +243,25 @@ namespace HeavenStudio.Editor.Track
             TimelineSlider.GetChild(3).GetComponent<TMP_Text>().color = EditorTheme.theme.properties.BeatMarkerCol.Hex2RGB();
             TimelineSongPosLineRef.GetComponent<Image>().color = EditorTheme.theme.properties.CurrentTimeMarkerCol.Hex2RGB();
 
-            PlayBTN.onClick.AddListener(delegate 
+            PlayBTN.onClick.AddListener(delegate
             {
                 if (Conductor.instance.isPaused)
                     PlayCheck(false);
                 else
-                    PlayCheck(true); 
+                    PlayCheck(true);
             });
-            PauseBTN.onClick.AddListener(delegate 
+            PauseBTN.onClick.AddListener(delegate
             {
                 if (Conductor.instance.isPlaying && !Conductor.instance.isPaused)
-                PlayCheck(false); 
+                    PlayCheck(false);
             });
-            StopBTN.onClick.AddListener(delegate 
+            StopBTN.onClick.AddListener(delegate
             {
                 if (Conductor.instance.isPlaying || Conductor.instance.isPaused)
-                PlayCheck(true);
+                    PlayCheck(true);
             });
 
-            MetronomeBTN.onClick.AddListener(delegate 
+            MetronomeBTN.onClick.AddListener(delegate
             {
                 MetronomeToggle();
             });
@@ -503,7 +503,7 @@ namespace HeavenStudio.Editor.Track
             #region Keyboard Shortcuts
             if ((!userIsEditingInputField) && Editor.instance.isShortcutsEnabled)
             {
-                
+
                 if (Input.GetKeyDown(KeyCode.Space))
                 {
                     if (Input.GetKey(KeyCode.LeftShift))
@@ -624,7 +624,7 @@ namespace HeavenStudio.Editor.Track
         public static float GetScaleModifier()
         {
             Camera cam = Editor.instance.EditorCamera;
-            return Mathf.Pow(cam.pixelWidth/1280f, 1f) * Mathf.Pow(cam.pixelHeight/720f, 0f);
+            return Mathf.Pow(cam.pixelWidth / 1280f, 1f) * Mathf.Pow(cam.pixelHeight / 720f, 0f);
         }
 
         public Vector2 LayerCornersToDist()
@@ -656,7 +656,7 @@ namespace HeavenStudio.Editor.Track
                 {
                     Stop(PlaybackBeat);
                 }
-                    
+
             }
             else
             {
@@ -707,7 +707,7 @@ namespace HeavenStudio.Editor.Track
             // timelineSlider.value = 0;
 
             if (TimelineSongPosLine != null)
-            Destroy(TimelineSongPosLine.gameObject);
+                Destroy(TimelineSongPosLine.gameObject);
 
             GameManager.instance.Stop(time);
 
@@ -733,10 +733,11 @@ namespace HeavenStudio.Editor.Track
                 PauseBTN.transform.GetChild(0).GetComponent<Image>().color = Color.white;
             }
             else
-            {   PauseBTN.transform.GetChild(0).GetComponent<Image>().color = Color.gray;
+            {
+                PauseBTN.transform.GetChild(0).GetComponent<Image>().color = Color.gray;
                 PauseBTN.enabled = false;
             }
-            
+
             if (stopEnabled)
             {
                 StopBTN.enabled = true;
@@ -1153,7 +1154,7 @@ namespace HeavenStudio.Editor.Track
             // Failsafe against empty string.
             if (String.IsNullOrEmpty(FirstBeatOffset.text))
                 FirstBeatOffset.text = "0";
-            
+
             // Convert ms to s.
             double newOffset = Convert.ToDouble(FirstBeatOffset.text) / 1000f;
 
@@ -1175,7 +1176,7 @@ namespace HeavenStudio.Editor.Track
             // Failsafe against empty string.
             if (String.IsNullOrEmpty(text))
                 text = "120";
-            
+
             var newBPM = Convert.ToDouble(text);
 
             // Failsafe against negative BPM.
@@ -1189,7 +1190,7 @@ namespace HeavenStudio.Editor.Track
             newBPM = System.Math.Round(newBPM, 4);
 
             RiqEntity tempoChange = GameManager.instance.Beatmap.TempoChanges[0];
-            tempoChange["tempo"] = (float) newBPM;
+            tempoChange["tempo"] = (float)newBPM;
             GameManager.instance.Beatmap.TempoChanges[0] = tempoChange;
 
             // In case the newBPM ended up differing from the inputted string.
@@ -1208,7 +1209,7 @@ namespace HeavenStudio.Editor.Track
             // Failsafe against empty string.
             if (String.IsNullOrEmpty(StartingVolumeSpecialVolume.text))
                 StartingVolumeSpecialVolume.text = "100";
-            
+
             var newVol = Convert.ToInt32(StartingVolumeSpecialVolume.text);
             newVol = Mathf.Clamp(newVol, 0, 100);
 
@@ -1224,7 +1225,7 @@ namespace HeavenStudio.Editor.Track
         #region Commands
 
         public void Move()
-        { 
+        {
         }
 
         public void Undo()

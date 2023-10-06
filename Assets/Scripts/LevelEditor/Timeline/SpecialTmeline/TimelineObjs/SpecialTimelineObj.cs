@@ -18,9 +18,12 @@ namespace HeavenStudio.Editor.Track
         private float startPosX;
         private float lastPosX;
 
+        public SpecialTimeline.HoveringTypes type;
         public bool moving = false;
         public bool hovering;
         public bool first = false;
+
+        public RiqEntity chartEntity;
 
         private void Start()
         {
@@ -58,6 +61,7 @@ namespace HeavenStudio.Editor.Track
                             transform.localPosition = new Vector3(lastPosX, transform.localPosition.y);*/
 
                         moving = false;
+                        OnMove(Timeline.instance.MousePos2BeatSnap, true);
                         lastPosX = transform.localPosition.x;
                     }
                 }
@@ -82,6 +86,11 @@ namespace HeavenStudio.Editor.Track
             rectTransform.anchoredPosition = new Vector2((float)entity.beat * Timeline.instance.PixelsPerBeat, rectTransform.anchoredPosition.y);
         }
 
+        public void SetX(float beat)
+        {
+            rectTransform.anchoredPosition = new Vector2(beat * Timeline.instance.PixelsPerBeat, rectTransform.anchoredPosition.y);
+        }
+
         public void StartMove()
         {
             if (first) return;
@@ -94,18 +103,19 @@ namespace HeavenStudio.Editor.Track
         public void DeleteObj()
         {
             if (first) return;
-            transform.parent.GetComponent<SpecialTimeline>().specialTimelineObjs.Remove(this);
-            Destroy(this.gameObject);
+            CommandManager.Instance.AddCommand(new Commands.DeleteMarker(chartEntity.guid, type));
+            // transform.parent.GetComponent<SpecialTimeline>().specialTimelineObjs.Remove(this);
+            // Destroy(this.gameObject);
         }
 
         //events
-        public virtual void Init() {}
-        public virtual void OnLeftClick() {}
-        public virtual void OnRightClick() {}
-        public virtual bool OnMove(float beat)
+        public virtual void Init() { }
+        public virtual void OnLeftClick() { }
+        public virtual void OnRightClick() { }
+        public virtual bool OnMove(float beat, bool final = false)
         {
             return true;
         }
-        public virtual void SetVisibility(Timeline.CurrentTimelineState.State state) {}
+        public virtual void SetVisibility(Timeline.CurrentTimelineState.State state) { }
     }
 }
