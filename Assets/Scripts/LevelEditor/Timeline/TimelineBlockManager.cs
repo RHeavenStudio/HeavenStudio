@@ -4,7 +4,6 @@ using UnityEngine;
 using UnityEngine.Pool;
 
 using Jukebox;
-using static System.Windows.Forms.VisualStyles.VisualStyleElement.Header;
 using System.Linq;
 
 namespace HeavenStudio.Editor.Track
