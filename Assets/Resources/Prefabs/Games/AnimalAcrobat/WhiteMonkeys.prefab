@@ -1894,6 +1894,7 @@ GameObject:
   - component: {fileID: 3439047595127619699}
   - component: {fileID: -3114631264593203074}
   - component: {fileID: 3068772248330600904}
+  - component: {fileID: 6573424568878642626}
   m_Layer: 0
   m_Name: WhiteMonkeys
   m_TagString: Untagged
@@ -1932,7 +1933,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _fullRotRange: 160
-  _spawnOffset: 9.244
+  _spawnOffset: 3.0813334
   _holdLength: 3
   _ease: 4
   _rotateRoot: {fileID: 3903953954711634507}
@@ -1951,6 +1952,22 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _monkey: {fileID: 7753963699734426661}
   _holdLength: 3
+--- !u!114 &6573424568878642626
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7969179947406382610}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9286671ea1a56f543bfc2114c45006fa, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _anim: {fileID: 8483464683545527156}
+  _animLength: 0.6
+  _beatLength: 2.5
+  _ease: 4
 --- !u!1 &8302616130811808557
 GameObject:
   m_ObjectHideFlags: 0
