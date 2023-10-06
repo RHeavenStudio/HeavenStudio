@@ -7,6 +7,7 @@ namespace HeavenStudio.Games.Scripts_AnimalAcrobat
 {
     public class GiraffeInput : MonoBehaviour
     {
+        [SerializeField] private Animator _monkey;
         private AcrobatObstacle _mainScript;
 
         private AnimalAcrobat _game;
@@ -29,6 +30,7 @@ namespace HeavenStudio.Games.Scripts_AnimalAcrobat
         {
             _game.ScheduleInput(beat - 1, 1, InputType.STANDARD_DOWN, beforeGiraffe ? JustHoldGiraffe : JustHold, Empty, Empty);
             _game.ScheduleInput(beat, 4, InputType.STANDARD_UP, JustRelease, Empty, Empty);
+            _monkey.gameObject.SetActive(false);
 
             MultiSound.Play(new MultiSound.Sound[]
             {
@@ -45,11 +47,21 @@ namespace HeavenStudio.Games.Scripts_AnimalAcrobat
         private void JustHoldGiraffe(PlayerActionEvent caller, float state)
         {
             SoundByte.PlayOneShotGame("animalAcrobat/giraffeCatch");
+            _monkey.gameObject.SetActive(true);
+            _monkey.DoScaledAnimationAsync("PlayerHang", 0.5f);
+            BeatAction.New(this, new List<BeatAction.Action>()
+            {
+                new BeatAction.Action(caller.startBeat + caller.timer + 2, delegate
+                {
+                    _monkey.DoScaledAnimationAsync("PlayerHanging", 0.5f);
+                })
+            });
         }
 
         private void JustRelease(PlayerActionEvent caller, float state)
         {
             SoundByte.PlayOneShotGame("animalAcrobat/giraffeJump");
+            _monkey.gameObject.SetActive(false);
 
             double beat = caller.startBeat + caller.timer;
 
