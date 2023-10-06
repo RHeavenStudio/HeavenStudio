@@ -46,8 +46,8 @@ namespace HeavenStudio.Common
             if (!Conductor.instance.isPlaying) return;
             Conductor.instance.Pause();
             pauseBeat = Conductor.instance.songPositionInBeatsAsDouble;
-            chartTitleText.text = GameManager.instance.Beatmap["remixtitle"];
-            chartArtistText.text = GameManager.instance.Beatmap["remixauthor"];
+            chartTitleText.text = GameManager.instance.Beatmap["remixtitle"].ToString();
+            chartArtistText.text = GameManager.instance.Beatmap["remixauthor"].ToString();
             animator.Play("PauseShow");
             SoundByte.PlayOneShot("ui/PauseIn");
 
