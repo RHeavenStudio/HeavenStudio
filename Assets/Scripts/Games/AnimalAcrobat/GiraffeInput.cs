@@ -42,6 +42,15 @@ namespace HeavenStudio.Games.Scripts_AnimalAcrobat
         private void JustHold(PlayerActionEvent caller, float state)
         {
             SoundByte.PlayOneShotGame("animalAcrobat/catch");
+            _monkey.gameObject.SetActive(true);
+            _monkey.DoScaledAnimationAsync("PlayerHang", 0.5f);
+            BeatAction.New(this, new List<BeatAction.Action>()
+            {
+                new BeatAction.Action(caller.startBeat + caller.timer + 2, delegate
+                {
+                    _monkey.DoScaledAnimationAsync("PlayerHanging", 0.5f);
+                })
+            });
         }
 
         private void JustHoldGiraffe(PlayerActionEvent caller, float state)
