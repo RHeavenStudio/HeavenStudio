@@ -19,6 +19,8 @@ namespace HeavenStudio.Editor
         public TMP_Dropdown dropdown;
         private Array enumVals;
 
+        private bool openedDropdown = false;
+
         new public void SetProperties(string propertyName, object type, string caption)
         {
             InitProperties(propertyName, caption);
@@ -51,6 +53,24 @@ namespace HeavenStudio.Editor
 
         private void Update()
         {
+            var scrollbar = GetComponentInChildren<ScrollRect>()?.verticalScrollbar;
+
+            // This is bad but we'll fix it later.
+            if (scrollbar != null)
+            {
+                if (openedDropdown == false)
+                {
+                    openedDropdown = true;
+
+                    var valuePos = (float)dropdown.value / (dropdown.options.Count - 1);
+                    var scrollVal = scrollbar.direction == Scrollbar.Direction.TopToBottom ? valuePos : 1.0f - valuePos;
+                    scrollbar.value = Mathf.Max(0.001f, scrollVal);
+                }
+            }
+            else
+            {
+                openedDropdown = false;
+            }
         }
     }
 }

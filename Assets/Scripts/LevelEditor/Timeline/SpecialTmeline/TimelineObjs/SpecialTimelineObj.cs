@@ -5,6 +5,7 @@ using UnityEngine;
 using TMPro;
 
 using DG.Tweening;
+using Jukebox;
 
 namespace HeavenStudio.Editor.Track
 {
@@ -17,9 +18,12 @@ namespace HeavenStudio.Editor.Track
         private float startPosX;
         private float lastPosX;
 
+        public SpecialTimeline.HoveringTypes type;
         public bool moving = false;
         public bool hovering;
         public bool first = false;
+
+        public RiqEntity chartEntity;
 
         private void Start()
         {
@@ -49,23 +53,22 @@ namespace HeavenStudio.Editor.Track
 
                 if (moving)
                 {
-                    Vector3 mousePos = Editor.instance.EditorCamera.ScreenToWorldPoint(Input.mousePosition);
-
-                    transform.position = new Vector3(mousePos.x - startPosX, transform.position.y, 0);
-                    transform.localPosition = new Vector3(Mathf.Clamp(Starpelly.Mathp.Round2Nearest(transform.localPosition.x, Timeline.SnapInterval()), 0, Mathf.Infinity), transform.localPosition.y);
+                    OnMove(Timeline.instance.MousePos2BeatSnap);
 
                     if (Input.GetMouseButtonUp(0))
                     {
-                        if (!OnMove(transform.localPosition.x))
-                            transform.localPosition = new Vector3(lastPosX, transform.localPosition.y);
+                        /*if (!OnMove(transform.localPosition.x))
+                            transform.localPosition = new Vector3(lastPosX, transform.localPosition.y);*/
 
                         moving = false;
+                        OnMove(Timeline.instance.MousePos2BeatSnap, true);
                         lastPosX = transform.localPosition.x;
                     }
                 }
             }
             else
             {
+                /*
                 if (moving)
                 {
                     if (!OnMove(transform.localPosition.x))
@@ -73,8 +76,19 @@ namespace HeavenStudio.Editor.Track
                     moving = false;
                     lastPosX = transform.localPosition.x;
                 }
+                */
                 hovering = false;
             }
+        }
+
+        public void SetX(RiqEntity entity)
+        {
+            rectTransform.anchoredPosition = new Vector2((float)entity.beat * Timeline.instance.PixelsPerBeat, rectTransform.anchoredPosition.y);
+        }
+
+        public void SetX(float beat)
+        {
+            rectTransform.anchoredPosition = new Vector2(beat * Timeline.instance.PixelsPerBeat, rectTransform.anchoredPosition.y);
         }
 
         public void StartMove()
@@ -89,18 +103,19 @@ namespace HeavenStudio.Editor.Track
         public void DeleteObj()
         {
             if (first) return;
-            transform.parent.GetComponent<SpecialTimeline>().specialTimelineObjs.Remove(this);
-            Destroy(this.gameObject);
+            CommandManager.Instance.AddCommand(new Commands.DeleteMarker(chartEntity.guid, type));
+            // transform.parent.GetComponent<SpecialTimeline>().specialTimelineObjs.Remove(this);
+            // Destroy(this.gameObject);
         }
 
         //events
-        public virtual void Init() {}
-        public virtual void OnLeftClick() {}
-        public virtual void OnRightClick() {}
-        public virtual bool OnMove(float beat)
+        public virtual void Init() { }
+        public virtual void OnLeftClick() { }
+        public virtual void OnRightClick() { }
+        public virtual bool OnMove(float beat, bool final = false)
         {
             return true;
         }
-        public virtual void SetVisibility(Timeline.CurrentTimelineState.State state) {}
+        public virtual void SetVisibility(Timeline.CurrentTimelineState.State state) { }
     }
 }

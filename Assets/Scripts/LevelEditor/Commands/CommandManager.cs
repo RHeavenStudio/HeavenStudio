@@ -8,37 +8,30 @@ namespace HeavenStudio.Editor
 {
     public class CommandManager : MonoBehaviour
     {
-        private Stack<IAction> historyStack = new Stack<IAction>();
-        private Stack<IAction> redoHistoryStack = new Stack<IAction>();
+        public static CommandManager Instance { get; private set; }
 
-        int maxItems = 128;
+        private Stack<ICommand> historyStack = new Stack<ICommand>();
+        private Stack<ICommand> redoHistoryStack = new Stack<ICommand>();
 
-        public bool canUndo()
-        {
-            return historyStack.Count > 0;
-        }
-        public bool canRedo()
-        {
-            return redoHistoryStack.Count > 0;
-        }
+        public int HistoryCount => historyStack.Count;
 
-        public static CommandManager instance { get; private set; }
+        private int maxItems = 128;
 
         private void Awake()
         {
-            instance = this;
+            Instance = this;
         }
 
-        public void Execute(IAction action)
+        public void AddCommand(ICommand command)
         {
-            action.Execute();
-            historyStack.Push(action);
+            command.Execute();
+            historyStack.Push(command);
             redoHistoryStack.Clear();
         }
 
-        public void Undo()
+        public void UndoCommand()
         {
-            if (!canUndo() || Conductor.instance.NotStopped()) return;
+            if (!CanUndo() || Conductor.instance.NotStopped()) return;
 
             if (historyStack.Count > 0)
             {
@@ -47,22 +40,14 @@ namespace HeavenStudio.Editor
             }
         }
 
-        public void Redo()
+        public void RedoCommand()
         {
-            if (!canRedo() || Conductor.instance.NotStopped()) return;
+            if (!CanRedo() || Conductor.instance.NotStopped()) return;
 
             if (redoHistoryStack.Count > 0)
             {
                 historyStack.Push(redoHistoryStack.Peek());
-                redoHistoryStack.Pop().Redo();
-            }
-        }
-
-        // this is here as to not hog up memory, "max undos" basically
-        private void EnsureCapacity()
-        {
-            if (maxItems > 0)
-            {
+                redoHistoryStack.Pop().Execute();
             }
         }
 
@@ -71,5 +56,15 @@ namespace HeavenStudio.Editor
             historyStack.Clear();
             redoHistoryStack.Clear();
         }
+
+        public bool CanUndo()
+        {
+            return historyStack.Count > 0;
+        }
+        public bool CanRedo()
+        {
+            return redoHistoryStack.Count > 0;
+        }
+
     }
 }
