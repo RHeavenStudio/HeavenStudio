@@ -30,9 +30,9 @@ namespace HeavenStudio.Games.Scripts_KarateMan
 
         [SerializeField] SpriteRenderer[] cellRenderers;
         Material[] cellMaterials;
+        public Color[] ItemBarrelMap;
         [SerializeField] Color[] ItemAlienMap;
         [SerializeField] Color[] ItemBombMap;
-        [SerializeField] Color[] ItemBarrelMap;
         [SerializeField] Color[] ItemCookingLidMap;
 
         public bool KickBarrelContent = false;
@@ -131,13 +131,13 @@ namespace HeavenStudio.Games.Scripts_KarateMan
                 case ItemType.Alien:
                     alpha = ItemAlienMap[0];
                     bravo = ItemAlienMap[1];
-                    delta = KarateMan.ItemColor;
+                    delta = KarateMan.instance.ItemColor;
                     break;
                 case ItemType.Bomb:
                 case ItemType.KickBomb:
                     alpha = ItemBombMap[0];
                     bravo = ItemBombMap[1];
-                    delta = KarateMan.ItemColor;
+                    delta = KarateMan.instance.ItemColor;
                     break;
                 case ItemType.KickBarrel:
                 case ItemType.ComboBarrel:
@@ -149,12 +149,10 @@ namespace HeavenStudio.Games.Scripts_KarateMan
                 case ItemType.CookingLid:
                     alpha = ItemCookingLidMap[0];
                     bravo = ItemCookingLidMap[1];
-                    delta = KarateMan.ItemColor;
+                    delta = KarateMan.instance.ItemColor;
                     break;
                 default:
-                    alpha = KarateMan.ItemColor;
-                    bravo = KarateMan.ItemColor;
-                    delta = KarateMan.ItemColor;
+                    alpha = bravo = delta = KarateMan.instance.ItemColor;
                     break;
             }
             for (int i = 0; i < cellRenderers.Length; i++) {

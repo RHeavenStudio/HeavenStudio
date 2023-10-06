@@ -332,8 +332,8 @@ namespace HeavenStudio.Games.Scripts_KarateMan
 
         public void UpdateJoeColour()
         {
-            Color mainCol = KarateMan.BodyColor;
-            Color highlightCol = KarateMan.HighlightColor;
+            Color mainCol = KarateMan.instance.BodyColor;
+            Color highlightCol = KarateMan.instance.HighlightColor;
 
             if (bombGlowIntensity > 0)
             {
