@@ -18,7 +18,7 @@ namespace HeavenStudio.Games.Scripts_KarateMan
         public Color BombGlowTint;
         double bombGlowStart = double.MinValue;
         float bombGlowLength = 0f;
-        float bombGlowIntensity;
+        float bombGlowIntensity = 0f;
         const float bombGlowRatio = 1f;
 
         double lastPunchTime = double.MinValue;
@@ -51,10 +51,6 @@ namespace HeavenStudio.Games.Scripts_KarateMan
         }
         public bool inNuriLock { get { return (Conductor.instance.songPositionInBeatsAsDouble >= noNuriJabTime && Conductor.instance.songPositionInBeatsAsDouble < noNuriJabTime + 1f); } }
 
-        private void Awake()
-        {
-        }
-
         private void Update()
         {
             var cond = Conductor.instance;
@@ -73,7 +69,7 @@ namespace HeavenStudio.Games.Scripts_KarateMan
                     bombGlowLength = 0f;
                 }
             }
-            UpdateShadowColour();
+            UpdateJoeColour();
 
             if (canEmote && wantFace >= 0)
             {
@@ -381,15 +377,10 @@ namespace HeavenStudio.Games.Scripts_KarateMan
             canEmote = false;
         }
 
-        public void UpdateShadowColour()
+        public void UpdateJoeColour()
         {
-            foreach (var shadow in Shadows)
-            {
-                shadow.color = KarateMan.instance.GetShadowColor();
-            }
-
-            Color mainCol = KarateMan.BodyColor;
-            Color highlightCol = KarateMan.HighlightColor;
+            Color mainCol = KarateMan.instance.BodyColor;
+            Color highlightCol = KarateMan.instance.HighlightColor;
 
             if (bombGlowIntensity > 0)
             {
@@ -430,6 +421,7 @@ namespace HeavenStudio.Games.Scripts_KarateMan
 
         public void RemoveBombGlow(double beat, float length = 0.5f)
         {
+            if (double.IsNaN(bombGlowIntensity)) return;
             bombGlowStart = beat;
             bombGlowLength = length;
             bombGlowIntensity = 0f;
