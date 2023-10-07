@@ -13,6 +13,15 @@ namespace HeavenStudio.Games.Loaders
         {
             return new Minigame("animalAcrobat", "Animal Acrobat", "FFFFFF", false, false, new List<GameAction>()
             {
+                new GameAction("bop", "Bop")
+                {
+                    function = delegate
+                    {
+                        var e = eventCaller.currentEntity;
+                        AnimalAcrobat.instance.Bop(e.beat, e.length);
+                    },
+                    resizable = true
+                },
                 new GameAction("elephant", "Elephant")
                 {
                     defaultLength = 4
@@ -53,6 +62,7 @@ namespace HeavenStudio.Games
 
         [Header("Components")]
         [SerializeField] private Transform _scroll;
+        [SerializeField] private Animator _playerMonkeyAnim;
 
         [Header("Values")]
         [SerializeField] private float _jumpDistance = 8;
@@ -97,7 +107,6 @@ namespace HeavenStudio.Games
         private bool _lastAnimalWasGiraffe = false;
 
         private Util.EasingFunction.Function _funcEaseInOut;
-        private Util.EasingFunction.Function _funcEaseIn;
         private Util.EasingFunction.Function _funcEaseOut;
         private Util.EasingFunction.Function _funcSharp;
 
@@ -107,7 +116,6 @@ namespace HeavenStudio.Games
         {
             instance = this;
             _funcEaseInOut = Util.EasingFunction.GetEasingFunction(Util.EasingFunction.Ease.EaseInOutQuad);
-            _funcEaseIn = Util.EasingFunction.GetEasingFunction(Util.EasingFunction.Ease.EaseInQuad);
             _funcEaseOut = Util.EasingFunction.GetEasingFunction(Util.EasingFunction.Ease.EaseOutQuad);
             _funcSharp = Util.EasingFunction.GetEasingFunction(Util.EasingFunction.Ease.EaseOutQuart);
         }
@@ -118,6 +126,22 @@ namespace HeavenStudio.Games
             if (!cond.isPlaying) return;
             AnimalPoolUpdate(cond);
             CameraUpdate(cond);
+        }
+
+        public void Bop(double beat, float length)
+        {
+            if (!_playerMonkeyAnim.gameObject.activeSelf) return;
+
+            List<BeatAction.Action> actions = new();
+            for (int i = 0; i < length; i++)
+            {
+                actions.Add(new BeatAction.Action(beat + i, delegate
+                {
+                    _playerMonkeyAnim.DoScaledAnimationAsync("PlayerBop", 0.5f);
+                }));
+            }
+
+            BeatAction.New(this, actions);
         }
 
         private int _animalCameraIndex = 0;
@@ -145,8 +169,8 @@ namespace HeavenStudio.Games
                 {
                     if (normalizedTravel < 0.5)
                     {
-                        float normalizedOut = Mathf.Clamp01(cond.GetPositionFromBeat(currentAnimal.startBeat - _cameraHoldTime, 1));
-                        newZ = _funcSharp(0, _giraffeCameraZoom, normalizedOut);
+                        float normalizedOut = cond.GetPositionFromBeat(currentAnimal.startBeat - _cameraHoldTime, 1);
+                        newZ = _funcSharp(0, _giraffeCameraZoom, Mathf.Clamp01(normalizedOut));
                     }
                     else
                     {
